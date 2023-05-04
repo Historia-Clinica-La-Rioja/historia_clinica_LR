@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {UIComponentDto, UILabelDto} from '@extensions/extensions-model';
 import {
 	ChartDefinitionService,
@@ -37,18 +37,26 @@ const  MEASURE_PROFESSIONAL_SELF_DETERMINATION = "profesional_autopercibido";
 	templateUrl: './cubejs-dashboard.component.html',
 	styleUrls: ['./cubejs-dashboard.component.scss']
 })
-export class CubejsDashboardComponent implements OnInit {
+export class CubejsDashboardComponent {
 
 	@Input() set content(content: UIComponentDto[]) {
+		this.chartDefinitionService = new ChartDefinitionService(this.http, this.context);
+		this.chartDefinitionService.next([]);
 		this.setChartService(content);
 		this._content = content;
 	}
 
-	@Input() filters: QueryFilters;
+	@Input() set filters(filters: QueryFilters){
+		this._filters = filters;
+		this.params = {};
+		this.configureSelfDeterminationFilter();
+	};
+
 	@Input() title?: UILabelDto;
 
 	private params: FilterValues = {};
 	public _content: UIComponentDto[];
+	public _filters: QueryFilters;
 	public chartDefinitionService: ChartDefinitionService;
 
 	constructor(
@@ -56,12 +64,6 @@ export class CubejsDashboardComponent implements OnInit {
 		private context: ContextService,
 		private featureFlagService: FeatureFlagService
 	) {
-		this.chartDefinitionService = new ChartDefinitionService(http, context);
-	}
-
-	ngOnInit(): void {
-		this.chartDefinitionService.next([]);
-		this.configureSelfDeterminationFilter();
 	}
 
 	changeValue(key: string, values: string[]) {
@@ -69,7 +71,7 @@ export class CubejsDashboardComponent implements OnInit {
 
 		let filtersToAdd: FilterValue[] = Object.entries(this.params)
 			.map(([key, values]) => ({
-				...this.filters[key].filter,
+				...this._filters[key].filter,
 				values,
 			}));
 		filtersToAdd = filtersToAdd.filter(filter => filter.values);
@@ -91,7 +93,7 @@ export class CubejsDashboardComponent implements OnInit {
 	configureSelfDeterminationFilter(): void {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
 			if (isOn) {
-				const professionalFilter = this.filters[PROFESSIONAL_FILTER_KEY];
+				const professionalFilter = this._filters[PROFESSIONAL_FILTER_KEY];
 				if (professionalFilter)
 					professionalFilter.filter.member = professionalFilter.filter.member.split(".")[0] + "." + MEASURE_PROFESSIONAL_SELF_DETERMINATION ;
 			}

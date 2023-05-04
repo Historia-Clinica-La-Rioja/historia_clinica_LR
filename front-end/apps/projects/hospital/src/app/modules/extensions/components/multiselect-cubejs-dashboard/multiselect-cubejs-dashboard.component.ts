@@ -10,13 +10,12 @@ import {UIComponentDto} from "@extensions/extensions-model";
 export class MultiselectCubejsDashboardComponent {
 
 	@Input() content: UIComponentDto[];
-	public selectedTab: UIComponentDto[];
-
+	public selectedDashboards: UIComponentDto[] = [];
 	constructor() {
 	}
 
-	onChange(category: any) {
-		this.selectedTab = category.content;
+	onChange(category: UIComponentDto) {
+		this.selectedDashboards = [category];
 	}
 
 }

@@ -1,6 +1,6 @@
 <h2 class="title"> {{title?.text}}</h2>
 <div class="container-filters" fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="start start">
-	<ng-container *ngFor="let filterInput of filters | keyvalue" >
+	<ng-container *ngFor="let filterInput of _filters | keyvalue" >
 		<ng-container [ngSwitch]="filterInput.value.type">
 			<div  *ngSwitchCase="'dateRangeISO'" class="filter">
 				<app-date-only-iso-form-input

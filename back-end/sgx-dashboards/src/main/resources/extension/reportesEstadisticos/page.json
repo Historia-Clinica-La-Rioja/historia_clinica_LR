@@ -2,13 +2,17 @@
   "layout" : "components",
   "content" : [
     {
-      "type" : "multiselect-cubejs",
-      "args" : {
-        "options" : [
+      "type": "tabs",
+      "args": {
+        "tabs": [
           {
             "args" : {
               "label" : "Consultas",
               "content" : [
+                {
+                  "type": "multiselect-cubejs",
+                  "args": {
+                  "options": [
                 {
                   "type" : "cubejs-dashboard",
                   "args" : {
@@ -16,6 +20,7 @@
                     "title" : {
                       "text" : "Evolución de consultas del año actual"
                     },
+                    "label": "Evolución de consultas del año actual",
                     "content" : [
                       {
                         "type" : "cubejs-chart",
@@ -45,6 +50,7 @@
                     "title" : {
                       "text" : "Consultas por especialidad y profesional del último trimestre"
                     },
+                    "label": "Consultas por especialidad y profesional",
                     "content" : [
                       {
                         "type" : "cubejs-chart",
@@ -78,6 +84,7 @@
                     "title" : {
                       "text" : "Evolución de consultas por fecha"
                     },
+                    "label": "Evolución de consultas por fecha",
                     "filters" : {
                       "date" : {
                         "filter" : {
@@ -117,7 +124,7 @@
                   "type" : "cubejs-dashboard",
                   "args" : {
                     "filters" : {
-                      "fecha" : {
+                      "date" : {
                         "filter" : {
                           "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
                           "operator" : "inDateRange"
@@ -129,6 +136,7 @@
                     "title" : {
                       "text" : "Consultas por especialidad"
                     },
+                    "label": "Consultas por especialidad",
                     "content" : [
                       {
                         "type" : "cubejs-chart",
@@ -153,7 +161,7 @@
                   "type" : "cubejs-dashboard",
                   "args" : {
                     "filters" : {
-                      "fecha" : {
+                      "date" : {
                         "filter" : {
                           "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
                           "operator" : "inDateRange"
@@ -165,6 +173,7 @@
                     "title" : {
                       "text" : "Consultas por identidad de género"
                     },
+                    "label": "Consultas por identidad de género",
                     "content" : [
                       {
                         "type" : "cubejs-chart",
@@ -217,6 +226,7 @@
                     "title" : {
                       "text" : "Consultas por género"
                     },
+                    "label": "Consultas por género",
                     "content" : [
                       {
                         "type" : "card",
@@ -301,6 +311,9 @@
                     ]
                   }
                 }
+                  ]
+              }
+                }
               ]
             }
           },
@@ -309,129 +322,50 @@
               "label" : "Turnos",
               "content" : [
                 {
-                  "type" : "cubejs-dashboard",
-                  "args" : {
-                    "filters" : {},
-                    "title" : {
-                      "text" : "Evolución de turnos del año actual"
-                    },
-                    "content" : [
+                  "type": "multiselect-cubejs",
+                  "args": {
+                    "options": [
                       {
-                        "type" : "cubejs-chart",
+                        "type" : "cubejs-dashboard",
                         "args" : {
-                          "query" : "cantidadTurnos",
-                          "chartOptions" : {
-                            "responsive" : true,
-                            "maintainAspectRatio" : false,
-                            "elements" : {
-                              "line" : {
-                                "fill" : false,
-                                "tension" : 0.4
-                              }
-                            }
-                          }
-                        }
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type" : "cubejs-dashboard",
-                  "args" : {
-                    "filters" : {},
-                    "title" : {
-                      "text" : "Turnos por especialidad del año actual"
-                    },
-                    "content" : [
-                      {
-                        "type" : "cubejs-chart",
-                        "args" : {
-                          "query" : "cantidadTurnosPorEspecialidad",
-                          "chartOptions" : {
-                            "responsive" : true,
-                            "maintainAspectRatio" : false,
-                            "plugins" : {
-                              "legend" : {
-                                "display" : false
-                              }
-                            }
-                          }
-                        }
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type" : "cubejs-dashboard",
-                  "args" : {
-                    "filters" : {},
-                    "title" : {
-                      "text" : "Turnos por profesional del año actual"
-                    },
-                    "content" : [
-                      {
-                        "type" : "cubejs-chart",
-                        "args" : {
-                          "query" : "cantidadTurnosPorProfesional",
-                          "chartOptions" : {
-                            "responsive" : true,
-                            "maintainAspectRatio" : false,
-                            "plugins" : {
-                              "legend" : {
-                                "display" : false
-                              }
-                            }
-                          }
-                        }
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type" : "cubejs-dashboard",
-                  "args" : {
-                    "filters" : {
-                      "specialty" : {
-                        "filter" : {
-                          "member" : "CantidadTurnosTotal.especialidad",
-                          "operator" : "equals"
-                        },
-                        "type" : "specialty",
-                        "label" : "Especialidad"
-                      },
-                      "professional" : {
-                        "filter" : {
-                          "member" : "CantidadTurnosTotal.profesional",
-                          "operator" : "equals"
-                        },
-                        "type" : "professional",
-                        "label" : "Profesional"
-                      },
-                      "date" : {
-                        "filter" : {
-                          "member" : "CantidadTurnosTotal.fecha_consulta",
-                          "operator" : "inDateRange"
-                        },
-                        "type" : "dateRangeISO",
-                        "label" : "Fecha"
-                      }
-                    },
-                    "title" : {
-                      "text" : "Turnos por estado"
-                    },
-                    "content" : [
-                      {
-                        "type" : "card",
-                        "args" : {
-                          "mode" : "flat",
+                          "filters" : {},
+                          "title" : {
+                            "text" : "Evolución de turnos del año actual"
+                          },
+                          "label": "Evolución de turnos del año actual",
                           "content" : [
                             {
                               "type" : "cubejs-chart",
                               "args" : {
-                                "query" : "cantidadTurnosTotal",
-                                "title" : {
-                                  "text" : "TURNOS"
-                                },
+                                "query" : "cantidadTurnos",
+                                "chartOptions" : {
+                                  "responsive" : true,
+                                  "maintainAspectRatio" : false,
+                                  "elements" : {
+                                    "line" : {
+                                      "fill" : false,
+                                      "tension" : 0.4
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "type" : "cubejs-dashboard",
+                        "args" : {
+                          "filters" : {},
+                          "title" : {
+                            "text" : "Turnos por especialidad del año actual"
+                          },
+                          "label": "Turnos por especialidad del año actual",
+                          "content" : [
+                            {
+                              "type" : "cubejs-chart",
+                              "args" : {
+                                "query" : "cantidadTurnosPorEspecialidad",
                                 "chartOptions" : {
                                   "responsive" : true,
                                   "maintainAspectRatio" : false,
@@ -442,14 +376,23 @@
                                   }
                                 }
                               }
-                            },
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "type" : "cubejs-dashboard",
+                        "args" : {
+                          "filters" : {},
+                          "title" : {
+                            "text" : "Turnos por profesional del año actual"
+                          },
+                          "label": "Turnos por profesional del año actual",
+                          "content" : [
                             {
                               "type" : "cubejs-chart",
                               "args" : {
-                                "query" : "cantidadTurnosTotalAsignados",
-                                "title" : {
-                                  "text" : "ASIGNADOS"
-                                },
+                                "query" : "cantidadTurnosPorProfesional",
                                 "chartOptions" : {
                                   "responsive" : true,
                                   "maintainAspectRatio" : false,
@@ -460,59 +403,140 @@
                                   }
                                 }
                               }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "type" : "cubejs-dashboard",
+                        "args" : {
+                          "filters" : {
+                            "specialty" : {
+                              "filter" : {
+                                "member" : "CantidadTurnosTotal.especialidad",
+                                "operator" : "equals"
+                              },
+                              "type" : "specialty",
+                              "label" : "Especialidad"
                             },
+                            "professional" : {
+                              "filter" : {
+                                "member" : "CantidadTurnosTotal.profesional",
+                                "operator" : "equals"
+                              },
+                              "type" : "professional",
+                              "label" : "Profesional"
+                            },
+                            "date" : {
+                              "filter" : {
+                                "member" : "CantidadTurnosTotal.fecha_consulta",
+                                "operator" : "inDateRange"
+                              },
+                              "type" : "dateRangeISO",
+                              "label" : "Fecha"
+                            }
+                          },
+                          "title" : {
+                            "text" : "Turnos por estado"
+                          },
+                          "label": "Turnos por estado",
+                          "content" : [
                             {
-                              "type" : "cubejs-chart",
+                              "type" : "card",
                               "args" : {
-                                "query" : "cantidadTurnosTotalCancelados",
-                                "title" : {
-                                  "text" : "CANCELADOS"
-                                },
-                                "chartOptions" : {
-                                  "responsive" : true,
-                                  "maintainAspectRatio" : false,
-                                  "plugins" : {
-                                    "legend" : {
-                                      "display" : false
+                                "mode" : "flat",
+                                "content" : [
+                                  {
+                                    "type" : "cubejs-chart",
+                                    "args" : {
+                                      "query" : "cantidadTurnosTotal",
+                                      "title" : {
+                                        "text" : "TURNOS"
+                                      },
+                                      "chartOptions" : {
+                                        "responsive" : true,
+                                        "maintainAspectRatio" : false,
+                                        "plugins" : {
+                                          "legend" : {
+                                            "display" : false
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "type" : "cubejs-chart",
+                                    "args" : {
+                                      "query" : "cantidadTurnosTotalAsignados",
+                                      "title" : {
+                                        "text" : "ASIGNADOS"
+                                      },
+                                      "chartOptions" : {
+                                        "responsive" : true,
+                                        "maintainAspectRatio" : false,
+                                        "plugins" : {
+                                          "legend" : {
+                                            "display" : false
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "type" : "cubejs-chart",
+                                    "args" : {
+                                      "query" : "cantidadTurnosTotalCancelados",
+                                      "title" : {
+                                        "text" : "CANCELADOS"
+                                      },
+                                      "chartOptions" : {
+                                        "responsive" : true,
+                                        "maintainAspectRatio" : false,
+                                        "plugins" : {
+                                          "legend" : {
+                                            "display" : false
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "type" : "cubejs-chart",
+                                    "args" : {
+                                      "query" : "cantidadTurnosTotalAtendidos",
+                                      "title" : {
+                                        "text" : "ATENDIDOS"
+                                      },
+                                      "chartOptions" : {
+                                        "responsive" : true,
+                                        "maintainAspectRatio" : false,
+                                        "plugins" : {
+                                          "legend" : {
+                                            "display" : false
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "type" : "cubejs-chart",
+                                    "args" : {
+                                      "query" : "cantidadTurnosTotalAusentes",
+                                      "title" : {
+                                        "text" : "AUSENTES"
+                                      },
+                                      "chartOptions" : {
+                                        "responsive" : true,
+                                        "maintainAspectRatio" : false,
+                                        "plugins" : {
+                                          "legend" : {
+                                            "display" : false
+                                          }
+                                        }
+                                      }
                                     }
                                   }
-                                }
-                              }
-                            },
-                            {
-                              "type" : "cubejs-chart",
-                              "args" : {
-                                "query" : "cantidadTurnosTotalAtendidos",
-                                "title" : {
-                                  "text" : "ATENDIDOS"
-                                },
-                                "chartOptions" : {
-                                  "responsive" : true,
-                                  "maintainAspectRatio" : false,
-                                  "plugins" : {
-                                    "legend" : {
-                                      "display" : false
-                                    }
-                                  }
-                                }
-                              }
-                            },
-                            {
-                              "type" : "cubejs-chart",
-                              "args" : {
-                                "query" : "cantidadTurnosTotalAusentes",
-                                "title" : {
-                                  "text" : "AUSENTES"
-                                },
-                                "chartOptions" : {
-                                  "responsive" : true,
-                                  "maintainAspectRatio" : false,
-                                  "plugins" : {
-                                    "legend" : {
-                                      "display" : false
-                                    }
-                                  }
-                                }
+                                ]
                               }
                             }
                           ]
