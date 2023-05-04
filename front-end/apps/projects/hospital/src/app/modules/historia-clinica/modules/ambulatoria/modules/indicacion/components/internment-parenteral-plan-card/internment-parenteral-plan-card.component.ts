@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, Output } from '@angular/core';
 import { ParenteralPlanDto } from '@api-rest/api-model';
 import { IndicationStatus, IndicationStatusScss, INDICATION_TYPE, PARENTERAL_PLAN, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { Content } from "@presentation/components/indication/indication.component";
@@ -7,6 +7,7 @@ import { loadExtraInfoParenteralPlan } from '../../constants/load-information';
 import { MatDialog } from '@angular/material/dialog';
 import { InternmentIndicationDetailComponent } from '../../dialogs/internment-indication-detail/internment-indication-detail.component';
 import { IndicationService } from '@api-rest/services/indication.service';
+import { Subject } from 'rxjs';
 
 const DIALOG_SIZE = '35%';
 @Component({
@@ -21,6 +22,7 @@ export class InternmentParenteralPlanCardComponent implements OnChanges {
 	vias: any[] = [];
 	@Input() parenteralPlans: ParenteralPlanDto[];
 	@Input() internmentEpisodeId: number;
+	@Output() actioned = new Subject();
 
 	constructor(
 		private readonly internacionMasterdataService: InternacionMasterDataService,
@@ -33,6 +35,10 @@ export class InternmentParenteralPlanCardComponent implements OnChanges {
 			this.vias = v;
 			this.indicationContent = this.mapToIndicationContent();
 		});
+	}
+
+	action(event) {
+		this.actioned.next(event);
 	}
 
 	mapToIndicationContent(): Content[] {
@@ -52,18 +58,18 @@ export class InternmentParenteralPlanCardComponent implements OnChanges {
 		});
 	}
 
-	openDetailDialog(content: Content): void{
+	openDetailDialog(content: Content): void {
 		this.indicationService.getParenteralPlan(content.id)
-		.subscribe(parenteralPlan => {
-			this.dialog.open(InternmentIndicationDetailComponent, {
-				data: {
-					indication: parenteralPlan,
-					header: this.PARENTERAL_PLAN,
-					status: content.status
-				},
-				disableClose: false,
-				width: DIALOG_SIZE
+			.subscribe(parenteralPlan => {
+				this.dialog.open(InternmentIndicationDetailComponent, {
+					data: {
+						indication: parenteralPlan,
+						header: this.PARENTERAL_PLAN,
+						status: content.status
+					},
+					disableClose: false,
+					width: DIALOG_SIZE
+				});
 			});
-		});
 	}
 }

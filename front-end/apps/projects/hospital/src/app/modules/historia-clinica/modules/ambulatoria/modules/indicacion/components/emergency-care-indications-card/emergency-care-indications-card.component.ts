@@ -1,33 +1,31 @@
-import { Component, Input, OnInit, } from '@angular/core';
-import { INTERNMENT_INDICATIONS } from "@historia-clinica/constants/summaries";
-import { isSameDay } from "date-fns";
-import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
-import { DiagnosesGeneralStateDto, DietDto, OtherIndicationDto, ParenteralPlanDto, PharmacoDto, PharmacoSummaryDto } from "@api-rest/api-model";
-
+import { Component, Input, OnInit } from '@angular/core';
+import { DiagnosesGeneralStateDto, DietDto, OtherIndicationDto, ParenteralPlanDto, PharmacoDto, PharmacoSummaryDto, ResponseEmergencyCareDto } from '@api-rest/api-model';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
-import { IndicationsFacadeService } from "@historia-clinica/modules/ambulatoria/modules/indicacion/services/indications-facade.service";
-import { dateDtoToDate } from "@api-rest/mapper/date-dto.mapper";
-import { InternmentIndicationService, OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
-
-
+import { EMERGENCY_CARE_INDICATIONS } from '@historia-clinica/constants/summaries';
 import { ActionsButtonService } from '../../services/actions-button.service';
+import { isSameDay } from 'date-fns';
+import { dateDtoToDate, dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { EmergencyCareIndicationsFacadeService } from '../../services/emergency-care-indications-facade.service';
+import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
+import { EmergencyCareIndicationService } from '@api-rest/services/emergency-care-indication.service';
+import { OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
 import { INDICATION_TYPE } from '../../constants/internment-indications';
 import { IndicationByProfessionalService } from '@api-rest/services/indication-by-professional.service';
-import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
+import { EmergencyCareStateService } from '@api-rest/services/emergency-care-state.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { InternmentStateService } from '@api-rest/services/internment-state.service';
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
-@Component({
-	selector: 'app-internment-indications-card',
-	templateUrl: './internment-indications-card.component.html',
-	styleUrls: ['./internment-indications-card.component.scss'],
-	providers: [ActionsButtonService]
 
+@Component({
+	selector: 'app-emergency-care-indications-card',
+	templateUrl: './emergency-care-indications-card.component.html',
+	styleUrls: ['./emergency-care-indications-card.component.scss'],
+	providers: [ActionsButtonService]
 })
-export class InternmentIndicationsCardComponent implements OnInit {
-	internmentIndication = INTERNMENT_INDICATIONS;
+export class EmergencyCareIndicationsCardComponent implements OnInit {
+	emergencyCareIndication = EMERGENCY_CARE_INDICATIONS;
 	actualDate: Date;
 	entryDate: Date;
 	professionalId: number;
@@ -37,55 +35,71 @@ export class InternmentIndicationsCardComponent implements OnInit {
 	othersIndicatiosType: OtherIndicationTypeDto[];
 	parenteralPlan: ParenteralPlanDto[] = [];
 	pharmacos: PharmacoDto[] = [];
-	@Input() internmentEpisodeId: number;
-	@Input() epicrisisConfirmed: boolean;
+	@Input() emergencyCareEpisodeId: number;
 	@Input() patientId: number;
 
 	constructor(
-		private readonly indicationsFacadeService: IndicationsFacadeService,
-		private readonly internmentEpisode: InternmentEpisodeService,
-		private readonly internmentIndicationService: InternmentIndicationService,
+		private readonly emergencyCareIndicationsFacadeService: EmergencyCareIndicationsFacadeService,
+		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
+		private readonly emergencyCareIndicationService: EmergencyCareIndicationService, // cpoinciden asique vamos a reutilizarlo ( podriamos mover el servicio tanto en FE como BE)
 		private readonly healthcareProfessionalService: HealthcareProfessionalService,
 		private readonly actionsButtonService: ActionsButtonService,
 		private readonly indicationByProfessionalService: IndicationByProfessionalService,
+		private readonly emergencyCareStateService: EmergencyCareStateService,
 		private readonly internacionMasterdataService: InternacionMasterDataService,
-		private readonly internmentStateService: InternmentStateService,
 		private readonly dialog: MatDialog,
 		private readonly snackBarService: SnackBarService,
 	) {
 	}
 
 	ngOnInit(): void {
-		this.actionsButtonService.internmentEpisodeId = this.internmentEpisodeId;
-		this.actionsButtonService.epicrisisConfirmed = this.epicrisisConfirmed;
+		this.actionsButtonService.internmentEpisodeId = this.emergencyCareEpisodeId;
 		this.actionsButtonService.patientId = this.patientId;
-		this.internmentEpisode.getInternmentEpisode(this.internmentEpisodeId).subscribe(
-			internmentEpisode => {
-				this.entryDate = new Date(internmentEpisode.entryDate);
+
+		this.emergencyCareEpisodeService.getAdministrative(this.emergencyCareEpisodeId).subscribe(
+			(emergencyCareEpisode: ResponseEmergencyCareDto) => {
+				this.entryDate = dateTimeDtoToDate(emergencyCareEpisode.creationDate);
 				this.actionsButtonService.entryDate = this.entryDate;
 			}
-		);
+		)
 
 		this.healthcareProfessionalService.getHealthcareProfessionalByUserId().subscribe((professionalId: number) => this.professionalId = professionalId);
 
-		this.indicationsFacadeService.setInternmentEpisodeId(this.internmentEpisodeId);
+		this.emergencyCareIndicationsFacadeService.setEmergencyCareEpisodeId(this.emergencyCareEpisodeId);
 
-		this.internmentIndicationService.getOtherIndicationTypes().subscribe((othersIndicationsType: OtherIndicationTypeDto[]) => this.othersIndicatiosType = othersIndicationsType);
+		this.emergencyCareIndicationService.getOtherIndicationTypes().subscribe((othersIndicationsType: OtherIndicationTypeDto[]) => this.othersIndicatiosType = othersIndicationsType);
 	}
 
 	openDiet() {
 		const ref = this.actionsButtonService.openDialog(INDICATION_TYPE.DIET);
 		ref.afterClosed().subscribe((diet: DietDto) => {
 			if (diet) {
-				this.internmentIndicationService.addDiet(diet, this.internmentEpisodeId).subscribe(_ => {
+				this.emergencyCareIndicationService.addDiet(diet, this.emergencyCareEpisodeId).subscribe(_ => {
 					this.snackBarService.showSuccess('indicacion.internment-card.dialogs.diet.messages.SUCCESS');
-					this.indicationsFacadeService.updateIndication({ diets: true });
+					this.emergencyCareIndicationsFacadeService.updateIndication({ diets: true });
 				},
 					error => {
 						error?.text ?
 							this.snackBarService.showError(error.text) : this.snackBarService.showError('indicacion.internment-card.dialogs.diet.messages.ERROR');
 					}
 				);
+			}
+		});
+	}
+
+	openOtherIndication() {
+		const ref = this.actionsButtonService.openDialog(INDICATION_TYPE.OTHER_INDICATION);
+		ref.afterClosed().subscribe(otherIndicatio => {
+
+			if (otherIndicatio) {
+				this.emergencyCareIndicationsFacadeService.addOtherIndication(otherIndicatio).subscribe(_ => {
+					this.snackBarService.showSuccess('indicacion.internment-card.dialogs.other-indication.messages.SUCCESS');
+					this.emergencyCareIndicationsFacadeService.updateIndication({ otherIndication: true });
+				},
+					error => {
+						error?.text ?
+							this.snackBarService.showError(error.text) : this.snackBarService.showError('indicacion.internment-card.dialogs.other-indication.messages.ERROR');
+					});
 			}
 		});
 	}
@@ -98,10 +112,10 @@ export class InternmentIndicationsCardComponent implements OnInit {
 					const ref = this.actionsButtonService.openParenteralPlanDialog(result.pharmaco);
 					ref.afterClosed().subscribe((resultDialogPharmaco: ResultDialogPharmaco<ParenteralPlanDto>) => {
 						if (resultDialogPharmaco?.pharmaco) {
-							this.indicationsFacadeService.addParenteralPlan(resultDialogPharmaco.pharmaco).subscribe(
+							this.emergencyCareIndicationsFacadeService.addParenteralPlan(resultDialogPharmaco.pharmaco).subscribe(
 								success => {
 									this.snackBarService.showSuccess('indicacion.internment-card.dialogs.parenteral-plan.messages.SUCCESS');
-									this.indicationsFacadeService.updateIndication({ parenteralPlan: true });
+									this.emergencyCareIndicationsFacadeService.updateIndication({ parenteralPlan: true });
 								}
 								, error => error?.text ? this.snackBarService.showError(error.text) : this.snackBarService.showError('indicacion.internment-card.dialogs.parenteral-plan.messages.ERROR')
 							);
@@ -123,7 +137,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 			const ref = this.actionsButtonService.openDialog(INDICATION_TYPE.PHARMACO, mostFrequent);
 			ref.afterClosed().subscribe((result: DialogPharmacosFrequent<PharmacoSummaryDto>) => {
 				if (result?.openFormPharmaco) {
-					this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeId).subscribe((diagnostics: DiagnosesGeneralStateDto[]) => {
+					this.emergencyCareStateService.getEmergencyCareEpisodeDiagnoses(this.emergencyCareEpisodeId).subscribe((diagnostics: DiagnosesGeneralStateDto[]) => {
 						if (diagnostics)
 							this.internacionMasterdataService.getHealthClinical().subscribe(healthClinical => {
 								const clinicalStatus = healthClinical?.filter(s => s.description === this.actionsButtonService.ACTIVE_STATE);
@@ -135,9 +149,9 @@ export class InternmentIndicationsCardComponent implements OnInit {
 									const ref = this.actionsButtonService.openFormPharmacoDialog(result.pharmaco, this.diagnostics);
 									ref.afterClosed().subscribe((result: ResultDialogPharmaco<PharmacoDto>) => {
 										if (result?.pharmaco) {
-											this.indicationsFacadeService.addPharmaco(result.pharmaco).subscribe(_sucess => {
+											this.emergencyCareIndicationsFacadeService.addPharmaco(result.pharmaco).subscribe(_sucess => {
 												this.snackBarService.showSuccess('indicacion.internment-card.dialogs.pharmaco.messages.SUCCESS');
-												this.indicationsFacadeService.updateIndication({ pharmaco: true });
+												this.emergencyCareIndicationsFacadeService.updateIndication({ pharmaco: true });
 											},
 												error => {
 													error?.text ?
@@ -167,22 +181,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		})
 	}
 
-	openOtherIndication() {
-		const ref = this.actionsButtonService.openDialog(INDICATION_TYPE.OTHER_INDICATION);
-		ref.afterClosed().subscribe(otherIndicatio => {
 
-			if (otherIndicatio) {
-				this.indicationsFacadeService.addOtherIndication(otherIndicatio).subscribe(_ => {
-					this.snackBarService.showSuccess('indicacion.internment-card.dialogs.other-indication.messages.SUCCESS');
-					this.indicationsFacadeService.updateIndication({ otherIndication: true });
-				},
-					error => {
-						error?.text ?
-							this.snackBarService.showError(error.text) : this.snackBarService.showError('indicacion.internment-card.dialogs.other-indication.messages.ERROR');
-					});
-			}
-		});
-	}
 
 	loadActualDateAndFilter(actualDate: Date) {
 		this.actionsButtonService.actualDate = actualDate;
@@ -191,10 +190,10 @@ export class InternmentIndicationsCardComponent implements OnInit {
 	}
 
 	filterIndications() {
-		this.indicationsFacadeService.diets$.subscribe(d => this.diets = d.filter((diet: DietDto) => isSameDay(dateDtoToDate(diet.indicationDate), this.actualDate)));
-		this.indicationsFacadeService.otherIndications$.subscribe(d => this.otherIndications = d.filter((otherIndications: OtherIndicationDto) => isSameDay(dateDtoToDate(otherIndications.indicationDate), this.actualDate)));
-		this.indicationsFacadeService.parenteralPlans$.subscribe(p => this.parenteralPlan = p.filter((plan: ParenteralPlanDto) => isSameDay(dateDtoToDate(plan.indicationDate), this.actualDate)));
-		this.indicationsFacadeService.pharmacos$.subscribe(p => this.pharmacos = p.filter((pharmaco: PharmacoDto) => isSameDay(dateDtoToDate(pharmaco.indicationDate), this.actualDate)));
+		this.emergencyCareIndicationsFacadeService.diets$.subscribe(d => this.diets = d.filter((diet: DietDto) => isSameDay(dateDtoToDate(diet.indicationDate), this.actualDate)));
+		this.emergencyCareIndicationsFacadeService.otherIndications$.subscribe(d => this.otherIndications = d.filter((otherIndications: OtherIndicationDto) => isSameDay(dateDtoToDate(otherIndications.indicationDate), this.actualDate)));
+		this.emergencyCareIndicationsFacadeService.parenteralPlans$.subscribe(p => this.parenteralPlan = p.filter((plan: ParenteralPlanDto) => isSameDay(dateDtoToDate(plan.indicationDate), this.actualDate)));
+		this.emergencyCareIndicationsFacadeService.pharmacos$.subscribe(p => this.pharmacos = p.filter((pharmaco: PharmacoDto) => isSameDay(dateDtoToDate(pharmaco.indicationDate), this.actualDate)));
 	}
 
 }

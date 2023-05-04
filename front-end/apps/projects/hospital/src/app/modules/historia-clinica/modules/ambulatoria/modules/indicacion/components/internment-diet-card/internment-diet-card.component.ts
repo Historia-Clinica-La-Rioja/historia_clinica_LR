@@ -1,10 +1,11 @@
-import { Component, Input, OnChanges } from "@angular/core";
+import { Component, Input, OnChanges, Output } from "@angular/core";
 import { DIET, IndicationStatus, IndicationStatusScss, INDICATION_TYPE, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
-import { DietDto } from "@api-rest/api-model";
+import { DietDto, EIndicationType } from "@api-rest/api-model";
 import { Content } from '@presentation/components/indication/indication.component';
 import { MatDialog } from "@angular/material/dialog";
 import { InternmentIndicationDetailComponent } from "../../dialogs/internment-indication-detail/internment-indication-detail.component";
 import { IndicationService } from "@api-rest/services/indication.service";
+import { Subject } from "rxjs";
 
 
 const DIALOG_SIZE = '35%';
@@ -19,7 +20,7 @@ export class InternmentDietCardComponent implements OnChanges {
 	DIET = DIET;
 	indicationContent: Content[] = [];
 	@Input() diets: DietDto[];
-	@Input() internmentEpisodeId: number;
+	@Output() actioned: Subject<EIndicationType> = new Subject();
 
 	constructor(
 		private readonly dialog: MatDialog,
@@ -30,6 +31,9 @@ export class InternmentDietCardComponent implements OnChanges {
 		this.indicationContent = this.mapToIndicationContent();
 	}
 
+	action(event) {
+		this.actioned.next(event)
+	}
 
 	mapToIndicationContent(): Content[] {
 		return this.diets?.map((diet: DietDto) => {
@@ -47,18 +51,18 @@ export class InternmentDietCardComponent implements OnChanges {
 		});
 	}
 
-	openDetailDialog(content: Content): void{
+	openDetailDialog(content: Content): void {
 		this.indicationService.getDiet(content.id)
-		.subscribe(diet => {
-			this.dialog.open(InternmentIndicationDetailComponent, {
-				data: {
-					indication: diet,
-					header: this.DIET,
-					status: content.status
-				},
-				disableClose: false,
-				width: DIALOG_SIZE
+			.subscribe(diet => {
+				this.dialog.open(InternmentIndicationDetailComponent, {
+					data: {
+						indication: diet,
+						header: this.DIET,
+						status: content.status
+					},
+					disableClose: false,
+					width: DIALOG_SIZE
+				});
 			});
-		});
 	}
 }

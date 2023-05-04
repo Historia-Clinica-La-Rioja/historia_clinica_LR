@@ -2,7 +2,8 @@
 	<app-category-header-divider
 		[header]="header"
 		[buttonIndication]="buttonIndication"
-		[canEdit]="canEdit">
+		[canEdit]="canEdit"
+		(actioned)="action($event)">
 	</app-category-header-divider>
 
 	<div id="content" *ngIf="contents.length; else noData" fxLayout="column" fxLayoutGap="20px">

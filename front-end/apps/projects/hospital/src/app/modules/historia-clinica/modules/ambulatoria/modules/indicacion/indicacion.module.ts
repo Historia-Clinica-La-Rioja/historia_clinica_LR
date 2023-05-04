@@ -31,6 +31,7 @@ import { InternmentIndicationDetailComponent } from './dialogs/internment-indica
 import { PrescripcionValidatorPopupComponent } from './dialogs/prescripcion-validator-popup/prescripcion-validator-popup.component';
 import { WarningMessageComponent } from './components/warning-message/warning-message.component';
 import { ShowViaPipe } from './pipes/show-via.pipe';
+import { EmergencyCareIndicationsCardComponent } from './components/emergency-care-indications-card/emergency-care-indications-card.component';
 
 @NgModule({
 	declarations: [
@@ -58,13 +59,15 @@ import { ShowViaPipe } from './pipes/show-via.pipe';
 		RegisterNursingRecordComponent,
 		RelativeDatePipe,
 		InternmentIndicationDetailComponent,
- 		PrescripcionValidatorPopupComponent,
-  		WarningMessageComponent,
+		PrescripcionValidatorPopupComponent,
+		WarningMessageComponent,
+		EmergencyCareIndicationsCardComponent,
 	],
 	exports: [
 		CardMedicacionesComponent,
 		ItemPrescripcionesComponent,
 		InternmentIndicationsCardComponent,
+		EmergencyCareIndicationsCardComponent,
 		NursingCareComponent,
 	],
 	imports: [

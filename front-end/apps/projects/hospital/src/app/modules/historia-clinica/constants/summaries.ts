@@ -127,6 +127,11 @@ export const INTERNMENT_INDICATIONS: SummaryHeader = {
 	matIcon: 'event_available',
 }
 
+export const EMERGENCY_CARE_INDICATIONS: SummaryHeader = {
+	title: 'Indicaciones de Guardia',
+	matIcon: 'event_available',
+}
+
 export const NURSING_CARE: SummaryHeader = {
 	title: 'indicacion.nursing-care.TITLE_CARD',
 	matIcon: 'event_available',

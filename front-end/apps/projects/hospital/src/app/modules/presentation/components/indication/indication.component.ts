@@ -1,5 +1,6 @@
 import { EIndicationType, ERole } from '@api-rest/api-model';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Component({
 	selector: 'app-indication',
@@ -14,11 +15,16 @@ export class IndicationComponent {
 	@Input() noInformation: string;
 	@Input() menuOption: string;
 	@Output() onMenuOptionClick = new EventEmitter<Content>();
+	@Output() actioned: Subject<EIndicationType> = new Subject();
 
 	constructor() { }
 
-	menuOptionClick(content: Content): void{
+	menuOptionClick(content: Content): void {
 		this.onMenuOptionClick.emit(content);
+	}
+
+	action(event) {
+		this.actioned.next(event);
 	}
 }
 

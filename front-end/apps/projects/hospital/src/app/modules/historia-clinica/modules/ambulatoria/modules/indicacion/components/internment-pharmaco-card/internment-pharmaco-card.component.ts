@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MasterDataDto, PharmacoDto } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
@@ -7,6 +7,7 @@ import { Content } from "@presentation/components/indication/indication.componen
 import { loadExtraInfoPharmaco } from '../../constants/load-information';
 import { InternmentIndicationDetailComponent } from '../../dialogs/internment-indication-detail/internment-indication-detail.component';
 import { IndicationService } from '@api-rest/services/indication.service';
+import { Subject } from 'rxjs';
 
 
 const DIALOG_SIZE = '35%';
@@ -22,6 +23,8 @@ export class InternmentPharmacoCardComponent implements OnChanges {
 	vias: MasterDataDto[] = [];
 	@Input() pharmacos: PharmacoDto[];
 	@Input() internmentEpisodeId: number;
+	@Output() actioned = new Subject();
+
 	constructor(
 		private readonly internacionMasterdataService: InternacionMasterDataService,
 		private readonly dialog: MatDialog,
@@ -31,6 +34,10 @@ export class InternmentPharmacoCardComponent implements OnChanges {
 	}
 	ngOnChanges(): void {
 		this.indicationContent = this.mapToIndicationContent();
+	}
+
+	action(event) {
+		this.actioned.next(event)
 	}
 
 	mapToIndicationContent(): Content[] {
@@ -51,19 +58,19 @@ export class InternmentPharmacoCardComponent implements OnChanges {
 		});
 	}
 
-	openDetailDialog(content: Content): void{
+	openDetailDialog(content: Content): void {
 		this.indicationService.getPharmaco(content.id)
-		.subscribe(pharmaco => {
-			this.dialog.open(InternmentIndicationDetailComponent, {
-				data: {
-					indication: pharmaco,
-					header: this.PHARMACO,
-					status: content.status
-				},
-				disableClose: false,
-				width: DIALOG_SIZE
+			.subscribe(pharmaco => {
+				this.dialog.open(InternmentIndicationDetailComponent, {
+					data: {
+						indication: pharmaco,
+						header: this.PHARMACO,
+						status: content.status
+					},
+					disableClose: false,
+					width: DIALOG_SIZE
+				});
 			});
-		});
 	}
 }
 

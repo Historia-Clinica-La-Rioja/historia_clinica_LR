@@ -110,7 +110,7 @@
 				<div buttons-content fxLayout="column" fxLayoutGap="10px" fxLayout.xs="row"
 					fxLayoutAlign="center center">
 					<app-clinical-history-actions id="actions" [internmentEpisodeProcess]="internmentEpisodeProcess"
-						[emergencyCareEpisode]="emergencyCareEpisode$ | async" [patientId]="patientId"
+						[emergencyCareEpisode]="emergencyCareEpisode" [patientId]="patientId"
 						(popUpOpen)="dialogRef = $event">
 					</app-clinical-history-actions>
 					<button mat-stroked-button color="primary" (click)="goToPatient()" btn-block>
@@ -186,6 +186,9 @@
 							<span>{{ 'indicacion.TITLE' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
+							<app-emergency-care-indications-card *ngIf="emergencyCareEpisodeInProgress?.inProgress && emergencyCareEpisodeState != EstadosEpisodio.CON_ALTA_MEDICA " [patientId]="patientId"
+								[emergencyCareEpisodeId]="emergencyCareEpisodeInProgress.id"></app-emergency-care-indications-card>
+
 							<div *ngIf="hasInternmentEpisodeInThisInstitution && !canOnlyViewSelfAddedProblems">
 								<app-internment-indications-card [patientId]="patientId"
 									[epicrisisConfirmed]="epicrisisDoc?.confirmed"

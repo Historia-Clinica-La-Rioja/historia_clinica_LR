@@ -102,8 +102,9 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 	isNewConsultationOpen: boolean;
 	isEmergencyCareTemporalPatient = false;
 
-	emergencyCareEpisode$: Observable<ResponseEmergencyCareDto>;
-
+	emergencyCareEpisode: ResponseEmergencyCareDto;
+	emergencyCareEpisodeState: EstadosEpisodio;
+	EstadosEpisodio = EstadosEpisodio;
 	private timeOut = 15000;
 	private isOpenOdontologyConsultation = false;
 
@@ -186,14 +187,19 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 						this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId).subscribe(
 							emergencyCareEpisodeInProgressDto => {
 
-								if (emergencyCareEpisodeInProgressDto.id)
-									this.emergencyCareEpisode$ = this.emergencyCareEpisodeService.getAdministrative(emergencyCareEpisodeInProgressDto.id);
+								if (emergencyCareEpisodeInProgressDto.id) {
+
+									this.emergencyCareEpisodeService.getAdministrative(emergencyCareEpisodeInProgressDto.id).subscribe(ec => {
+										this.emergencyCareEpisode = ec;
+									});
+								}
 
 								this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto;
 								if (emergencyCareEpisodeInProgressDto?.id) {
 									this.emergencyCareEpisodeStateService.getState(emergencyCareEpisodeInProgressDto.id).subscribe(
 										state => {
 											const episodeState = state.id;
+											this.emergencyCareEpisodeState  = state.id;
 											const emergencyEpisodeWithAdminDischarge = (EstadosEpisodio.CON_ALTA_ADMINISTRATIVA === episodeState);
 											this.hasEpisodeToShow = (this.emergencyCareEpisodeInProgress?.inProgress && !emergencyEpisodeWithAdminDischarge);
 											this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_GUARDIA)

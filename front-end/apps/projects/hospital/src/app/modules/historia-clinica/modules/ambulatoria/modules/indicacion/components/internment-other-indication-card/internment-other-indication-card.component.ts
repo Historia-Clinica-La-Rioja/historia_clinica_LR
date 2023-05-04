@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, Output } from '@angular/core';
 import { IndicationStatus, IndicationStatusScss, INDICATION_TYPE, OTHER_INDICATION, OTHER_INDICATION_ID, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { Content } from '@presentation/components/indication/indication.component';
 import { OtherIndicationDto } from '@api-rest/api-model';
@@ -8,6 +8,7 @@ import { showFrequency } from '../../constants/load-information';
 import { MatDialog } from '@angular/material/dialog';
 import { InternmentIndicationDetailComponent } from '../../dialogs/internment-indication-detail/internment-indication-detail.component';
 import { IndicationService } from '@api-rest/services/indication.service';
+import { Subject } from 'rxjs';
 
 
 const DIALOG_SIZE = '35%';
@@ -29,6 +30,7 @@ export class InternmentOtherIndicationCardComponent implements OnChanges {
 
 	@Input() otherIndications: OtherIndicationDto[];
 	@Input() internmentEpisodeId: number;
+	@Output() actioned = new Subject();
 
 
 	constructor(
@@ -41,6 +43,9 @@ export class InternmentOtherIndicationCardComponent implements OnChanges {
 		this.internacionMasterdataService.getOtherIndicationTypes().subscribe(i => {
 			this.othersIndicatiosType = i; this.indicationContent = this.mapToIndicationContent();
 		});
+	}
+	action(event) {
+		this.actioned.next(event)
 	}
 
 
@@ -69,18 +74,18 @@ export class InternmentOtherIndicationCardComponent implements OnChanges {
 
 	}
 
-	openDetailDialog(content: Content): void{
+	openDetailDialog(content: Content): void {
 		this.indicationService.getOtherIndication(content.id)
-		.subscribe(otherIndication => {
-			this.dialog.open(InternmentIndicationDetailComponent, {
-				data: {
-					indication: otherIndication,
-					header: this.OTHER_INDICATION,
-					status: content.status
-				},
-				disableClose: false,
-				width: DIALOG_SIZE
+			.subscribe(otherIndication => {
+				this.dialog.open(InternmentIndicationDetailComponent, {
+					data: {
+						indication: otherIndication,
+						header: this.OTHER_INDICATION,
+						status: content.status
+					},
+					disableClose: false,
+					width: DIALOG_SIZE
+				});
 			});
-		});
 	}
 }
