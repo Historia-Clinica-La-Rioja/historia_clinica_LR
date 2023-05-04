@@ -11,5 +11,5 @@ public interface DietService {
 
 	DietDto getDiet(Integer dietId);
 
-	Integer addDiet(GenericDietBo dietBo, Short sourceTypeId);
+	Integer addDiet(GenericDietBo dietBo);
 }

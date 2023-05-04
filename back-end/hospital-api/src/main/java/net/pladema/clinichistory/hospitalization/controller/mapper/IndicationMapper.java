@@ -38,22 +38,22 @@ public class IndicationMapper {
 
 	private final LocalDateMapper localDateMapper;
 
-	public GenericDietBo mapToDietBo(DietDto dto, Integer institutionId, Integer internmentEpisodeId) {
+	public GenericDietBo mapToDietBo(DietDto dto, Integer institutionId, Integer internmentEpisodeId, Short sourceTypeId) {
 		GenericDietBo result = new GenericDietBo();
 		result.setDescription(dto.getDescription());
-		return (GenericDietBo) setIndicationInfoBo(dto,result,institutionId,internmentEpisodeId);
+		return (GenericDietBo) setIndicationInfoBo(dto, result, institutionId, internmentEpisodeId, sourceTypeId);
 	}
 
-	public GenericOtherIndicationBo mapToOtherIndicationBo(OtherIndicationDto dto, Integer institutionId, Integer internmentEpisodeId) {
+	public GenericOtherIndicationBo mapToOtherIndicationBo(OtherIndicationDto dto, Integer institutionId, Integer internmentEpisodeId, Short sourceTypeId) {
 		GenericOtherIndicationBo result = new GenericOtherIndicationBo();
 		result.setDescription(dto.getDescription());
 		result.setOtherIndicationTypeId(dto.getOtherIndicationTypeId());
 		result.setOtherType(dto.getOtherType());
 		result.setDosageBo(toDosageBo(dto.getDosage(),dto.getIndicationDate()));
-		return (GenericOtherIndicationBo) setIndicationInfoBo(dto,result,institutionId,internmentEpisodeId);
+		return (GenericOtherIndicationBo) setIndicationInfoBo(dto, result, institutionId, internmentEpisodeId, sourceTypeId);
 	}
 
-	public GenericPharmacoBo mapToPharmacoBo(PharmacoDto dto, Integer institutionId, Integer internmentEpisodeId) {
+	public GenericPharmacoBo mapToPharmacoBo(PharmacoDto dto, Integer institutionId, Integer internmentEpisodeId, Short sourceTypeId) {
 		GenericPharmacoBo result = new GenericPharmacoBo();
 		result.setSnomed(dto.getSnomed() != null? new SnomedBo(dto.getSnomed().getSctid(), dto.getSnomed().getPt()) : null);
 		result.setDosage(toDosageBo(dto.getDosage(),dto.getIndicationDate()));
@@ -66,10 +66,10 @@ public class IndicationMapper {
 		DocumentObservationsBo documentObservationsBo = new DocumentObservationsBo();
 		documentObservationsBo.setOtherNote(dto.getNote());
 		result.setNotes(documentObservationsBo);
-		return (GenericPharmacoBo) setIndicationInfoBo(dto, result, institutionId, internmentEpisodeId);
+		return (GenericPharmacoBo) setIndicationInfoBo(dto, result, institutionId, internmentEpisodeId, sourceTypeId);
 	}
 
-	public GenericParenteralPlanBo mapToInternmentParenteralPlanBo (ParenteralPlanDto dto, Integer institutionId, Integer internmentEpisodeId){
+	public GenericParenteralPlanBo mapToInternmentParenteralPlanBo (ParenteralPlanDto dto, Integer institutionId, Integer internmentEpisodeId, Short sourceTypeId){
 		GenericParenteralPlanBo result = new GenericParenteralPlanBo();
 		result.setDosage(toDosageBo(dto.getDosage(), dto.getIndicationDate()));
 		result.setFrequency(mapToFrequencyBo(dto.getFrequency()));
@@ -77,10 +77,10 @@ public class IndicationMapper {
 		result.setVia(dto.getVia());
 		result.setPharmacos(dto.getPharmacos().stream().
 				map(p -> toOtherPharmacoBo(p, dto.getIndicationDate())).collect(Collectors.toList()));
-		return (GenericParenteralPlanBo) setIndicationInfoBo(dto, result, institutionId, internmentEpisodeId);
+		return (GenericParenteralPlanBo) setIndicationInfoBo(dto, result, institutionId, internmentEpisodeId, sourceTypeId);
 	}
 
-	private GenericIndicationBo setIndicationInfoBo (IndicationDto dto, GenericIndicationBo bo, Integer institutionId, Integer internmentEpisodeId) {
+	private GenericIndicationBo setIndicationInfoBo (IndicationDto dto, GenericIndicationBo bo, Integer institutionId, Integer internmentEpisodeId, Short sourceTypeId) {
 		bo.setPatientId(dto.getPatientId());
 		bo.setTypeId(dto.getType().getId());
 		bo.setProfessionalId(dto.getProfessionalId());
@@ -88,6 +88,7 @@ public class IndicationMapper {
 		bo.setIndicationDate(localDateMapper.fromDateDto(dto.getIndicationDate()));
 		bo.setInstitutionId(institutionId);
 		bo.setEncounterId(internmentEpisodeId);
+		bo.setSourceTypeId(sourceTypeId);
 		return bo;
 	}
 

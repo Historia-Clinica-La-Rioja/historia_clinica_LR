@@ -48,10 +48,10 @@ public class DietServiceImpl implements DietService {
 		return result;
 	}
 	@Override
-	public Integer addDiet(GenericDietBo dietBo, Short sourceTypeId) {
-		log.debug("Input parameter -> dietBo {}, sourceTypeId {}", dietBo, sourceTypeId);
-		assertInternmentEpisodeCanCreateIndication(dietBo.getEncounterId(), sourceTypeId);
-		Integer result = sharedIndicationPort.addDiet(mapToDietDto(dietBo), sourceTypeId);
+	public Integer addDiet(GenericDietBo dietBo) {
+		log.debug("Input parameter -> dietBo {}", dietBo);
+		assertInternmentEpisodeCanCreateIndication(dietBo.getEncounterId(), dietBo.getSourceTypeId());
+		Integer result = sharedIndicationPort.addDiet(mapToDietDto(dietBo), dietBo.getSourceTypeId());
 		dietBo.setId(documentFactory.run(dietBo, false));
 		sharedIndicationPort.saveDocument(dietBo.getId(),result);
 		log.debug("Output -> {}", result);

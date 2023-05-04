@@ -62,7 +62,7 @@ public class EmergencyCareIndicationController {
 										   @PathVariable(name = "episodeId") Integer episodeId,
 										   @RequestBody DietDto dietDto) {
 		log.debug("Input parameters -> institutionId {}, episodeId {}, dietDto {}", institutionId, episodeId, dietDto);
-		Integer result = dietService.addDiet(indicationMapper.mapToDietBo(dietDto, institutionId, episodeId), SourceType.EMERGENCY_CARE);
+		Integer result = dietService.addDiet(indicationMapper.mapToDietBo(dietDto, institutionId, episodeId, SourceType.EMERGENCY_CARE));
 		log.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}
@@ -73,7 +73,7 @@ public class EmergencyCareIndicationController {
 													  @PathVariable(name = "episodeId") Integer episodeId,
 													  @RequestBody OtherIndicationDto otherIndicationDto) {
 		log.debug("Input parameters -> institutionId {}, episodeId {}, otherIndicationDto {}", institutionId, episodeId, otherIndicationDto);
-		Integer result = otherIndicationService.add(indicationMapper.mapToOtherIndicationBo(otherIndicationDto, institutionId, episodeId), SourceType.EMERGENCY_CARE);
+		Integer result = otherIndicationService.add(indicationMapper.mapToOtherIndicationBo(otherIndicationDto, institutionId, episodeId, SourceType.EMERGENCY_CARE));
 		log.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}
@@ -94,7 +94,7 @@ public class EmergencyCareIndicationController {
 											   @PathVariable(name = "episodeId") Integer episodeId,
 											   @RequestBody PharmacoDto pharmacoDto) {
 		log.debug("Input parameters -> institutionId {}, episodeId {}, pharmacoDto {}", institutionId, episodeId, pharmacoDto);
-		Integer result = pharmacoService.add(indicationMapper.mapToPharmacoBo(pharmacoDto, institutionId, episodeId), SourceType.EMERGENCY_CARE);
+		Integer result = pharmacoService.add(indicationMapper.mapToPharmacoBo(pharmacoDto, institutionId, episodeId, SourceType.EMERGENCY_CARE));
 		log.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}
@@ -115,7 +115,7 @@ public class EmergencyCareIndicationController {
 													 @PathVariable(name = "episodeId") Integer episodeId,
 													 @RequestBody ParenteralPlanDto parenteralPlan) {
 		log.debug("Input parameters -> institutionId {}, episodeId {}, parenteralPlanDto {}", institutionId, episodeId, parenteralPlan);
-		Integer result = parenteralPlanService.add(indicationMapper.mapToInternmentParenteralPlanBo(parenteralPlan, institutionId, episodeId), SourceType.EMERGENCY_CARE);
+		Integer result = parenteralPlanService.add(indicationMapper.mapToInternmentParenteralPlanBo(parenteralPlan, institutionId, episodeId, SourceType.EMERGENCY_CARE));
 		log.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}

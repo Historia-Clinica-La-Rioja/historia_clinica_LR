@@ -40,10 +40,10 @@ public class PharmacoServiceImpl implements PharmacoService {
 
 
 	@Override
-	public Integer add(GenericPharmacoBo pharmacoBo, Short sourceTypeId) {
-		log.debug("Input parameter -> pharmacoBo {}, sourceTypeId {}", pharmacoBo, sourceTypeId);
-		assertInternmentEpisodeCanCreateIndication(pharmacoBo.getEncounterId(), sourceTypeId);
-		Integer result = sharedIndicationPort.addPharmaco(toPharmacoDto(pharmacoBo), sourceTypeId);
+	public Integer add(GenericPharmacoBo pharmacoBo) {
+		log.debug("Input parameter -> pharmacoBo {}", pharmacoBo);
+		assertInternmentEpisodeCanCreateIndication(pharmacoBo.getEncounterId(), pharmacoBo.getSourceTypeId());
+		Integer result = sharedIndicationPort.addPharmaco(toPharmacoDto(pharmacoBo), pharmacoBo.getSourceTypeId());
 		pharmacoBo.setId(documentFactory.run(pharmacoBo, false));
 		sharedIndicationPort.saveDocument(pharmacoBo.getId(), result);
 		log.debug("Output -> {}", result);

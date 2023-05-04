@@ -44,10 +44,10 @@ public class ParenteralPlanServiceImpl implements ParenteralPlanService {
 	private final InternmentEpisodeService internmentEpisodeService;
 
 	@Override
-	public Integer add(GenericParenteralPlanBo parenteralPlanBo, Short sourceTypeId) {
-		log.debug("Input parameter -> parenteralPlanBo {}, sourceTypeId {}", parenteralPlanBo, sourceTypeId);
-		assertInternmentEpisodeCanCreateIndication(parenteralPlanBo.getEncounterId(), sourceTypeId);
-		Integer result = sharedIndicationPort.addParenteralPlan(toParenteralPlanDto(parenteralPlanBo), sourceTypeId);
+	public Integer add(GenericParenteralPlanBo parenteralPlanBo) {
+		log.debug("Input parameter -> parenteralPlanBo {}", parenteralPlanBo);
+		assertInternmentEpisodeCanCreateIndication(parenteralPlanBo.getEncounterId(), parenteralPlanBo.getSourceTypeId());
+		Integer result = sharedIndicationPort.addParenteralPlan(toParenteralPlanDto(parenteralPlanBo), parenteralPlanBo.getSourceTypeId());
 		parenteralPlanBo.setId(documentFactory.run(parenteralPlanBo, false));
 		sharedIndicationPort.saveDocument(parenteralPlanBo.getId(), result);
 		log.debug("Output -> {}", result);

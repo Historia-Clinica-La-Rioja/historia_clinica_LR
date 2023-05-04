@@ -31,6 +31,8 @@ public abstract class GenericIndicationBo implements IDocumentBo {
 
 	protected Integer professionalId;
 
+	protected Short sourceTypeId;
+
 	@Override
 	public short getDocumentType() {
 		return DocumentType.INDICATION;
@@ -38,6 +40,6 @@ public abstract class GenericIndicationBo implements IDocumentBo {
 
 	@Override
 	public Short getDocumentSource() {
-		return SourceType.HOSPITALIZATION;
+		return sourceTypeId;
 	}
 }

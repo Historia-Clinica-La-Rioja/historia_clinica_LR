@@ -34,10 +34,10 @@ public class OtherIndicationServiceImpl implements OtherIndicationService {
 	private final LocalDateMapper localDateMapper;
 
 	@Override
-	public Integer add(GenericOtherIndicationBo otherIndicationBo, Short sourceTypeId) {
-		log.debug("Input parameter -> otherIndicationBo {}, sourceTypeId {}", otherIndicationBo, sourceTypeId);
-		assertInternmentEpisodeCanCreateIndication(otherIndicationBo.getEncounterId(), sourceTypeId);
-		Integer result = sharedIndicationPort.addOtherIndication(toOtherIndicationDto(otherIndicationBo), sourceTypeId);
+	public Integer add(GenericOtherIndicationBo otherIndicationBo) {
+		log.debug("Input parameter -> otherIndicationBo {}", otherIndicationBo);
+		assertInternmentEpisodeCanCreateIndication(otherIndicationBo.getEncounterId(), otherIndicationBo.getSourceTypeId());
+		Integer result = sharedIndicationPort.addOtherIndication(toOtherIndicationDto(otherIndicationBo), otherIndicationBo.getSourceTypeId());
 		otherIndicationBo.setId(documentFactory.run(otherIndicationBo, false));
 		sharedIndicationPort.saveDocument(otherIndicationBo.getId(), result);
 		log.debug("Output -> {}", result);
