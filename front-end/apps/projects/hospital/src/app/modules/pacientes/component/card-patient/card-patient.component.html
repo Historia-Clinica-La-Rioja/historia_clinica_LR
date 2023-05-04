@@ -1,6 +1,6 @@
 <mat-card id="card">
 	<div id="content-card" *ngFor="let patient of pageSlice;last as isLast">
-		<app-card id="patient" [cardContent]="patient">
+		<app-card id="patient" [cardContent]="patient" [viewCardToAudit]="viewCardToAudit">
 			<div fxLayout="row" fxLayout.lt-sm="column">
 				<div id="content-patient" fxLayoutAlign="space-around start" fxFlex="84%">
 
@@ -22,15 +22,24 @@
 					</div>
 
 					<div id="ranking" *ngIf="patient?.ranking" fxLayout="column" fxLayoutAlign="center center"
-						class="color-primary">
+						class="color-green">
 						<span class="percentage">{{patient.ranking}}% </span>
 						<span class="ranking"> {{ 'ambulatoria.card-patient.COINCIDENCE' | translate}}</span>
 					</div>
 
+					<div id="state" *ngIf="patient?.patientTypeId" fxLayout="column">
+						<span >{{getPatientType(patient?.patientTypeId) | uppercase}}</span>
+					</div>
+					<div id="toAudit" *ngIf="patient?.toAudit !== null" fxLayout="column">
+						<span *ngIf="patient?.toAudit">{{'pacientes.audit.PENDING_TO_AUDIT' | translate}}</span>
+						<span *ngIf="!patient?.toAudit">{{'pacientes.audit.AUDITED' | translate}}</span>
+					</div>
+
+
 				</div>
-				<button id="view-button" *ngIf="patient?.ranking"  mat-flat-button color="primary" fxFlex="16%" class="button"
+				<button id="view-button" *ngIf="patient?.ranking"  mat-stroked-button color="primary" fxFlex="16%" class="button"
 					(click)="openDialog(patient.id)">
-					<span>{{ 'ambulatoria.card-patient.BUTTON' | translate}}</span>
+					<span>{{ 'ambulatoria.card-patient.BUTTON' | translate | uppercase}}</span>
 				</button>
 			</div>
 

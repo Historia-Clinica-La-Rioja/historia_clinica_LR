@@ -319,7 +319,9 @@
 		"LABEL_PATIENT_ID":"Id paciente",
 		"LABEL_PERSONAL_INFORMATION":"Datos personales",
 		"SUBTITLE_FILTER_BY":"Filtrar por",
-		"LABEL_STATE_VALIDATION":"Validación del estado"
+		"LABEL_STATE_VALIDATION":"Validación del estado",
+		"PENDING_TO_AUDIT": "Pendiente de auditoría",
+		"AUDITED":"Auditado"
 
 
 	}

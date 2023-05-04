@@ -14,3 +14,10 @@
 	align-items: center;
 	max-width: 50%;
 }
+
+::ng-deep .mat-dialog-container-fusion{
+	mat-dialog-container.mat-dialog-container{
+		padding: 0px!important;
+		overflow-y: hidden;
+	}
+}

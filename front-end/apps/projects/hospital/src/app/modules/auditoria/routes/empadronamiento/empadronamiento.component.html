@@ -203,4 +203,10 @@
 			</mat-tab>
 		</mat-tab-group>
 	</section>
+	<section>
+		<app-card-patient [patientData]="patientRegistrationSearch"	[viewCardToAudit]="viewCardToAudit" [genderTableView]="genderTableView"  *ngIf="patientRegistrationSearch?.length > 0 else noInfo"></app-card-patient>
+	</section>
+	<ng-template #noInfo>
+		<app-no-data></app-no-data>
+	</ng-template>
 </app-content>

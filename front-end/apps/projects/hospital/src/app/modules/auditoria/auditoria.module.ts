@@ -12,6 +12,7 @@ import { WarningFusionComponent } from './dialogs/warning-fusion/warning-fusion.
 import { ConfirmedFusionComponent } from './dialogs/confirmed-fusion/confirmed-fusion.component';
 import { PatientProfilePopupComponent } from './dialogs/patient-profile-popup/patient-profile-popup.component';
 import { EmpadronamientoComponent } from './routes/empadronamiento/empadronamiento.component';
+import { PacientesModule } from '@pacientes/pacientes.module';
 
 
 
@@ -31,6 +32,7 @@ import { EmpadronamientoComponent } from './routes/empadronamiento/empadronamien
     AuditoriaRoutingModule,
 	LazyMaterialModule,
 	PresentationModule,
+	PacientesModule,
   ],
 })
 export class AuditoriaModule { }

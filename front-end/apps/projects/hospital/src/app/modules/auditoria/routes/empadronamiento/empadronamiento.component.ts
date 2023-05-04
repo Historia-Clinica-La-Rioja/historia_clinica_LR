@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { GenderDto, IdentificationTypeDto, PatientType } from '@api-rest/api-model';
+import { GenderDto, IdentificationTypeDto, PatientRegistrationSearchDto } from '@api-rest/api-model';
 import { AuditPatientService } from '@api-rest/services/audit-patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { PERSON } from '@core/constants/validation-constants';
@@ -28,6 +28,9 @@ export class EmpadronamientoComponent implements OnInit {
 	formSubmitted: boolean = false;
 	optionsValidations = OptionsValidations;
 	tabActiveIndex = 0;
+	patientRegistrationSearch: PatientRegistrationSearchDto[];
+	genderTableView:string[] = [];
+	viewCardToAudit=true;
 
 	readonly validations = PERSON;
 	constructor(private readonly formBuilder: FormBuilder, private readonly personMasterDataService: PersonMasterDataService,
@@ -37,6 +40,12 @@ export class EmpadronamientoComponent implements OnInit {
 	ngOnInit(): void {
 		this.setMasterData();
 		this.initForms();
+		this.personMasterDataService.getGenders().subscribe(
+			genders => {
+				genders.forEach(gender => {
+					this.genderTableView[gender.id] = gender.description;
+				});
+			});
 	}
 
 	private setMasterData(): void {
@@ -75,7 +84,8 @@ export class EmpadronamientoComponent implements OnInit {
 		let patientSearchFilter = this.prepareSearchDto();
 		this.formSubmitted = true;
 		if ((this.tabActiveIndex === 0 && this.personalInformationForm.valid) || (this.tabActiveIndex === 1 && this.patientIdForm.valid)) {
-			this.auditPatientService.getSearchRegistrationPatient(patientSearchFilter).subscribe(res => {
+			this.auditPatientService.getSearchRegistrationPatient(patientSearchFilter).subscribe(( patientRegistrationSearchDto:PatientRegistrationSearchDto[]) => {
+			this.patientRegistrationSearch=patientRegistrationSearchDto;
 			})
 		}
 

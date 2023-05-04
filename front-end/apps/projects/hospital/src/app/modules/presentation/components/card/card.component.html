@@ -1,7 +1,6 @@
 <div id="content" fxLayoutGap="5px" fxLayout="row" fxLayout.lt-sm="column" class="card">
-
-	<div fxLayout="column" fxLayout.gt-sm="row" fxFlex="90%">
-		<div fxLayoutAlign="start center" fxLayoutGap="15px" fxFlex="40%">
+	<div fxLayout="column" fxLayout.gt-sm="row" [ngClass]="viewCardToAudit ? 'cardToAudit' : 'cardNoAudit'">
+		<div fxLayoutAlign="start center" fxLayoutGap="15px" [ngClass]="viewCardToAudit ? 'headerCardToAudit' : 'headerCard'">
 			<div fxLayoutAlign="center" fxFlex="20%">
 				<img mat-card-avatar [src]="cardContent?.avatar"
 					onerror="this.src='../../../../../assets/images/empty-profile.png'" alt>
@@ -15,7 +14,7 @@
 			</div>
 		</div>
 
-		<mat-card-content fxFlex="60%">
+		<mat-card-content [ngClass]="viewCardToAudit ? 'contentCardToAudit' : 'contentCard'">
 			<ng-content></ng-content>
 		</mat-card-content>
 	</div>

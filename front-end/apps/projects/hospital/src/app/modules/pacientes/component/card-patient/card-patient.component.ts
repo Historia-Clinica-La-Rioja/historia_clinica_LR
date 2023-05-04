@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { MasterDataDto, PatientSearchDto } from '@api-rest/api-model';
+import { MasterDataDto, PatientSearchDto, PatientType } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
@@ -12,6 +12,8 @@ import { CardModel, ValueAction } from '@presentation/components/card/card.compo
 import { ViewPatientDetailComponent } from '../view-patient-detail/view-patient-detail.component';
 import { MatDialog } from "@angular/material/dialog";
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { PatientMasterDataService } from '@api-rest/services/patient-master-data.service';
+import { PatientProfilePopupComponent } from '../../../auditoria/dialogs/patient-profile-popup/patient-profile-popup.component';
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 const PAGE_MIN_SIZE = 5;
@@ -27,7 +29,9 @@ export class CardPatientComponent {
 	pageSlice = [];
 	numberOfPatients = 0;
 	printClinicalHistoryFFIsOn = false;
-	@Input() patientData: PatientSearchDto[] = [];
+	patientsTypes: PatientType[];
+	@Input() viewCardToAudit?: boolean;
+	@Input() patientData: any[] = [];
 	@Input() identificationTypes: MasterDataDto[] = [];
 	@Input() genderTableView: MasterDataDto[] = [];
 
@@ -39,12 +43,17 @@ export class CardPatientComponent {
 		private readonly datePipe: DatePipe,
 		private readonly contextService: ContextService,
 		private readonly permissionsService: PermissionsService,
-		private readonly featureFlagService: FeatureFlagService
+		private readonly featureFlagService: FeatureFlagService,
+		private readonly patientMasterDataService: PatientMasterDataService,
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.featureFlagService.isActive(AppFeature.HABILITAR_IMPRESION_HISTORIA_CLINICA_EN_DESARROLLO).subscribe(isOn => {
 			this.printClinicalHistoryFFIsOn = isOn;
 		});
+		this.patientMasterDataService.getTypesPatient().subscribe((patientsTypes: PatientType[]) => {
+			this.patientsTypes = patientsTypes;
+		})
+
 	}
 
 	ngOnChanges() {
@@ -66,19 +75,22 @@ export class CardPatientComponent {
 					ERole.PERSONAL_DE_LABORATORIO,
 					ERole.PERSONAL_DE_IMAGENES,
 					ERole.PERSONAL_DE_FARMACIA,
-					ERole.PRESCRIPTOR
+					ERole.PRESCRIPTOR,
+					ERole.AUDITOR_MPI,
 				]);
 			legalPerson = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_LEGALES]);
 		});
 
-		return this.patientData?.map((patient: PatientSearchDto) => {
+		return this.patientData?.map((patient: any) => {
 			return {
 				header: [{ title: " ", value: this.patientNameService.getFullName(patient.person.firstName, patient.person.nameSelfDetermination, patient.person?.middleNames) + ' ' + this.getLastNames(patient) }],
-				id: patient.idPatient,
+				id: patient.idPatient ? patient.idPatient : patient.patientId,
 				dni: patient.person.identificationNumber || "-",
 				gender: this.genderTableView[patient.person.genderId]?.description,
 				date: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DatePipeFormat.SHORT_DATE) : '',
 				ranking: patient?.ranking,
+				patientTypeId: patient?.patientTypeId,
+				toAudit: patient?.toAudit !== undefined ? patient?.toAudit : null,
 				action: this.setActionByRole(medicalSpecialist, legalPerson, patient.idPatient)
 			}
 		});
@@ -113,25 +125,46 @@ export class CardPatientComponent {
 	}
 
 	openDialog(idPatient: number) {
-		const patient = this.patientData.find((p: PatientSearchDto) => p.idPatient === idPatient);
-		this.dialog.open(ViewPatientDetailComponent, {
-			width: '450px',
-			data: {
-				id: idPatient,
-				firstName: this.patientNameService.getFullName(patient.person.firstName, patient.person.nameSelfDetermination, patient.person?.middleNames) + ' ' + this.getLastNames(patient),
-				lastName: '',
-				age: calculateAge(String(patient.person.birthDate)),
-				gender: this.genderTableView.find(p => p.id === patient.person.genderId)?.description,
-				birthDate: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DatePipeFormat.SHORT_DATE) : '',
-				identificationNumber: patient.person.identificationNumber,
-				identificationTypeId: this.identificationTypes.find(i => i.id === patient.person.identificationTypeId)?.description,
+		if (!this.viewCardToAudit) {
+			const patient = this.patientData.find((p: PatientSearchDto) => p.idPatient === idPatient);
+			this.dialog.open(ViewPatientDetailComponent, {
+				width: '450px',
+				data: {
+					id: idPatient,
+					firstName: this.patientNameService.getFullName(patient.person.firstName, patient.person.nameSelfDetermination, patient.person?.middleNames) + ' ' + this.getLastNames(patient),
+					lastName: '',
+					age: calculateAge(String(patient.person.birthDate)),
+					gender: this.genderTableView.find(p => p.id === patient.person.genderId)?.description,
+					birthDate: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DatePipeFormat.SHORT_DATE) : '',
+					identificationNumber: patient.person.identificationNumber,
+					identificationTypeId: this.identificationTypes.find(i => i.id === patient.person.identificationTypeId)?.description,
+				}
+
+			})
+			function calculateAge(birthDate: string): number {
+				const todayDate: Date = new Date();
+				const birthDateDate: Date = new Date(birthDate);
+				return todayDate.getFullYear() - birthDateDate.getFullYear();
 			}
 
-		})
-		function calculateAge(birthDate: string): number {
-			const todayDate: Date = new Date();
-			const birthDateDate: Date = new Date(birthDate);
-			return todayDate.getFullYear() - birthDateDate.getFullYear();
+		} else {
+			this.dialog.open(PatientProfilePopupComponent, {
+				data: {
+					patientId: idPatient,
+				},
+				height: "600px",
+				width: '30%',
+				disableClose: true,
+				autoFocus: false,
+				panelClass: 'mat-dialog-container-fusion'
+			})
 		}
+
 	}
+
+	getPatientType(value: number) {
+		return this.patientsTypes?.find(type => type.id === value).description
+	}
+
+
 }

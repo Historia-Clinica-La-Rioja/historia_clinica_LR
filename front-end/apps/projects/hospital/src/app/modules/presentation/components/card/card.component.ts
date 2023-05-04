@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 export class CardComponent {
 
 	@Input() cardContent: CardModel;
+	@Input() viewCardToAudit?:boolean;
 	constructor(
 		private readonly router: Router
 	) { }
