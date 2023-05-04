@@ -123,7 +123,7 @@ export class NewAppointmentComponent implements OnInit {
 			patientMedicalCoverage: [null],
 			phonePrefix: [null, [Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]],
 			phoneNumber: [null, [Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]],
-			appointmentMedicalOrder: [null, Validators.required]
+			appointmentMedicalOrder: [null]
 		});
 
 		this.associateReferenceForm = this.formBuilder.group({
@@ -164,6 +164,9 @@ export class NewAppointmentComponent implements OnInit {
 			this.patientSearch(this.data.patientId);
 		}
 
+		if (this.data.isEquipmentAppointment) {
+			updateControlValidator(this.appointmentInfoForm, 'appointmentMedicalOrder', [Validators.required]);
+		}
 	}
 
 	search(): void {
@@ -283,7 +286,8 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	submit(itComesFromStep3?: boolean): void {
-		updateControlValidator(this.appointmentInfoForm, 'appointmentMedicalOrder', [Validators.required]);
+		if (this.data.isEquipmentAppointment)
+			updateControlValidator(this.appointmentInfoForm, 'appointmentMedicalOrder', [Validators.required]);
 		if (this.isAppointmentFormValid()) {
 			this.isSubmitButtonDisabled = true;
 			this.verifyExistingAppointment().subscribe((appointmentShortSummary: AppointmentShortSummaryDto) => {
