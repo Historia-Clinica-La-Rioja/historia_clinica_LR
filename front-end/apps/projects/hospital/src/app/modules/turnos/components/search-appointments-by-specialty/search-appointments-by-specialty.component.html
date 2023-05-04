@@ -1,14 +1,17 @@
 <div fxLayout="column" fxLayoutGap="40px">
-	<div style="padding-top: 16px;" [formGroup]="searchBySpecialtyForm">
+	<form [formGroup]="searchBySpecialtyForm" style="padding-top: 16px;" (ngSubmit)="submit()">
 		<span [translate]="'turnos.home.SEARCH_BY_SPECIALTY_CRITERIA'"></span>
 		<div class="form-category" fxLayout="column" fxLayoutGap="5px">
 			<span class="category-title" [translate]="'turnos.home.SPECIALTY_SEARCH'"></span>
 			<app-typeahead
 				style="max-width: 25%;"
-				[placeholder]="'turnos.home.SPECIALTY_SEARCH'"
+				[titleInput]="'turnos.home.SPECIALTY_SEARCH' | translate"
 				[options]="aliasTypeaheadOptions$ | async"
 				(selectionChange)="setClinicalSpecialty($event)">
 			</app-typeahead>
+			<div class="error-space">
+                <mat-error *ngIf="showClinicalSpecialtyError">{{ 'forms.REQUIRED' | translate }}</mat-error>
+            </div>
 		</div>
 		<div class="form-category" fxLayout="column" fxLayoutGap="5px">
 			<span class="category-title" [translate]="'turnos.home.AVAILABLE_DAYS'"></span>
@@ -65,10 +68,10 @@
 			</div>
 			<span class="disclaimer-text" [translate]="'turnos.home.SEARCH_DISCLAIMER'"></span>
 		</div>
-		<button mat-flat-button color="primary" id="searchAppointmentButton" [disabled]="!searchBySpecialtyForm.valid" (click)="submit()">
+		<button mat-flat-button type="submit" color="primary" id="searchAppointmentButton">
 			<span class="uppercase" [translate]="'turnos.home.actions.SEARCH_APPOINTMENTS'"></span>
 		</button>
-	</div>
+	</form>
 	<div *ngIf="emptyAppointments">
 		<h2 [translate]="'turnos.home.APPOINTMENTS_FOUND'"></h2>
 		<div *ngIf="emptyAppointments.length > 0 else noInfo" fxLayout="column" fxLayoutGap="15px">

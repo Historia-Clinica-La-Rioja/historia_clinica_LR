@@ -25,6 +25,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	emptyAppointments: EmptyAppointmentDto[];
 	emptyAppointmentsFiltered: EmptyAppointmentDto[];
 	patientId: number;
+	showClinicalSpecialtyError = false;
 	private today: Date;
 
 	dateSearchFilter = (d: Moment): boolean => {
@@ -69,7 +70,6 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	ngOnChanges(changes: SimpleChanges): void {
 		if (changes['isVisible'].previousValue && !changes['isVisible'].currentValue) {
 			this.ngOnInit();
-			this.initializeTimeFilters();
 			this.resetEmptyAppointmentList(null);
 		}
 	}
@@ -121,56 +121,66 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
 	setClinicalSpecialty(clinicalSpecialty: ClinicalSpecialtyDto) {
 		this.searchBySpecialtyForm.controls.clinicalSpecialty.setValue(clinicalSpecialty);
+		this.showClinicalSpecialtyError = false;
 	}
 
 	updateSearchEndingDate(changedValue) {
-		const newInitialDate = changedValue.value.clone();
-		this.searchBySpecialtyForm.controls.searchEndingDate.setValue(newInitialDate.add(21, "days"));
+		if (changedValue.value) {
+			const newInitialDate = changedValue.value.clone();
+			this.searchBySpecialtyForm.controls.searchEndingDate.setValue(newInitialDate.add(21, "days"));
+		}
 	}
 
 	submit() {
-		const selectedDaysOfWeek = [];
-		if (this.searchBySpecialtyForm.value.mondayControl)
-			selectedDaysOfWeek.push(1);
-		if (this.searchBySpecialtyForm.value.tuesdayControl)
-			selectedDaysOfWeek.push(2);
-		if (this.searchBySpecialtyForm.value.wednesdayControl)
-			selectedDaysOfWeek.push(3);
-		if (this.searchBySpecialtyForm.value.thursdayControl)
-			selectedDaysOfWeek.push(4);
-		if (this.searchBySpecialtyForm.value.fridayControl)
-			selectedDaysOfWeek.push(5);
-		if (this.searchBySpecialtyForm.value.saturdayControl)
-			selectedDaysOfWeek.push(6);
-		if (this.searchBySpecialtyForm.value.sundayControl)
-			selectedDaysOfWeek.push(0);
-		this.diaryService.generateEmptyAppointments(
-			{
-				aliasOrSpecialtyName: this.searchBySpecialtyForm.value.clinicalSpecialty,
-				daysOfWeek: selectedDaysOfWeek,
-				endSearchTime: {
-					hours: this.searchBySpecialtyForm.value.endingTime.hours,
-					minutes: this.searchBySpecialtyForm.value.endingTime.minutes
-				},
-				initialSearchTime: {
-					hours: this.searchBySpecialtyForm.value.initialTime.hours,
-					minutes: this.searchBySpecialtyForm.value.initialTime.minutes
-				},
-				initialSearchDate: {
-					year: this.searchBySpecialtyForm.value.searchInitialDate.year(),
-					month: this.searchBySpecialtyForm.value.searchInitialDate.month() + 1,
-					day: this.searchBySpecialtyForm.value.searchInitialDate.date()
-				},
-				endingSearchDate: {
-					year: this.searchBySpecialtyForm.controls.searchEndingDate.value.year(),
-					month: this.searchBySpecialtyForm.controls.searchEndingDate.value.month() + 1,
-					day: this.searchBySpecialtyForm.controls.searchEndingDate.value.date()
+		if (this.searchBySpecialtyForm.valid) {
+			const selectedDaysOfWeek = [];
+			if (this.searchBySpecialtyForm.value.mondayControl)
+				selectedDaysOfWeek.push(1);
+			if (this.searchBySpecialtyForm.value.tuesdayControl)
+				selectedDaysOfWeek.push(2);
+			if (this.searchBySpecialtyForm.value.wednesdayControl)
+				selectedDaysOfWeek.push(3);
+			if (this.searchBySpecialtyForm.value.thursdayControl)
+				selectedDaysOfWeek.push(4);
+			if (this.searchBySpecialtyForm.value.fridayControl)
+				selectedDaysOfWeek.push(5);
+			if (this.searchBySpecialtyForm.value.saturdayControl)
+				selectedDaysOfWeek.push(6);
+			if (this.searchBySpecialtyForm.value.sundayControl)
+				selectedDaysOfWeek.push(0);
+			this.diaryService.generateEmptyAppointments(
+				{
+					aliasOrSpecialtyName: this.searchBySpecialtyForm.value.clinicalSpecialty,
+					daysOfWeek: selectedDaysOfWeek,
+					endSearchTime: {
+						hours: this.searchBySpecialtyForm.value.endingTime.hours,
+						minutes: this.searchBySpecialtyForm.value.endingTime.minutes
+					},
+					initialSearchTime: {
+						hours: this.searchBySpecialtyForm.value.initialTime.hours,
+						minutes: this.searchBySpecialtyForm.value.initialTime.minutes
+					},
+					initialSearchDate: {
+						year: this.searchBySpecialtyForm.value.searchInitialDate.year(),
+						month: this.searchBySpecialtyForm.value.searchInitialDate.month() + 1,
+						day: this.searchBySpecialtyForm.value.searchInitialDate.date()
+					},
+					endingSearchDate: {
+						year: this.searchBySpecialtyForm.controls.searchEndingDate.value.year(),
+						month: this.searchBySpecialtyForm.controls.searchEndingDate.value.month() + 1,
+						day: this.searchBySpecialtyForm.controls.searchEndingDate.value.date()
+					}
 				}
+			).subscribe(emptyAppointments => {
+				this.emptyAppointments = emptyAppointments;
+				this.emptyAppointmentsFiltered = this.emptyAppointments.slice(0, 5);
+			});
+		}
+		else {
+			if (!this.searchBySpecialtyForm.value.clinicalSpecialty) {
+				this.showClinicalSpecialtyError = true;
 			}
-		).subscribe(emptyAppointments => {
-			this.emptyAppointments = emptyAppointments;
-			this.emptyAppointmentsFiltered = this.emptyAppointments.slice(0, 5);
-		});
+		}
 	}
 
 	onPageChange($event) {
