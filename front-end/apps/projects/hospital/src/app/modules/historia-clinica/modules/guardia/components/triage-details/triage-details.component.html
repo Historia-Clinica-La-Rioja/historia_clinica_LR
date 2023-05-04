@@ -110,7 +110,7 @@
 				{{ 'guardia.episode.triage.ultimo.EVALUACION' | translate }}
 			</span>
 		</div>
-		<span *ngIf="triage.notes else noInfo">
+		<span class="line-break-text" *ngIf="triage.notes else noInfo">
 			{{ triage.notes }}
 		</span>
 	</section>
