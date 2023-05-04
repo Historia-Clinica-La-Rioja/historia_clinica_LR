@@ -14,7 +14,11 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
-import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
+import ar.lamansys.sgx.shared.security.UserInfo;
+import net.pladema.permissions.repository.enums.ERole;
+import net.pladema.user.application.getrolesbyuser.GetRolesByUser;
+import net.pladema.user.infrastructure.input.rest.dto.UserRoleDto;
+import net.pladema.user.infrastructure.input.rest.mapper.HospitalUserRoleMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,11 +103,14 @@ public class PatientController {
 
 	private final FederarExternalService federarExternalService;
 
+	private final GetRolesByUser getRolesByUser;
+
+	private final HospitalUserRoleMapper hospitalUserRoleMapper;
 
 	public PatientController(PatientService patientService, PersonExternalService personExternalService,
 							 AddressExternalService addressExternalService, PatientMapper patientMapper, PersonMapper personMapper,
 							 ObjectMapper jackson, PatientTypeRepository patientTypeRepository, AdditionalDoctorService additionalDoctorService,
-							 FederarExternalService federarExternalService) {
+							 FederarExternalService federarExternalService, GetRolesByUser getRolesByUser, HospitalUserRoleMapper hospitalUserRoleMapper) {
 		this.patientService = patientService;
 		this.personExternalService = personExternalService;
 		this.addressExternalService = addressExternalService;
@@ -113,6 +120,8 @@ public class PatientController {
 		this.personMapper = personMapper;
 		this.additionalDoctorService = additionalDoctorService;
 		this.federarExternalService = federarExternalService;
+		this.getRolesByUser = getRolesByUser;
+		this.hospitalUserRoleMapper = hospitalUserRoleMapper;
 	}
 
 	@GetMapping(value = "/search")
@@ -152,7 +161,7 @@ public class PatientController {
 		BMPersonDto createdPerson = personExternalService.addPerson(patientDto);
 		AddressDto addressToAdd = persistPatientAddress(patientDto, Optional.empty());
 		personExternalService.addPersonExtended(patientDto, createdPerson.getId(), addressToAdd.getId());
-		Patient createdPatient = persistPatientData(patientDto, createdPerson, null);
+		Patient createdPatient = persistPatientData(patientDto, createdPerson, null, institutionId);
 		if (createdPatient.isValidated()) {
 			Person person = personMapper.fromPersonDto(createdPerson);
 
@@ -191,7 +200,7 @@ public class PatientController {
 		PersonExtended personExtendedUpdated = personExternalService.updatePersonExtended(patientDto,
 				createdPerson.getId());
 		persistPatientAddress(patientDto, Optional.of(personExtendedUpdated.getAddressId()));
-		Patient createdPatient = persistPatientData(patientDto, createdPerson, patient);
+		Patient createdPatient = persistPatientData(patientDto, createdPerson, patient, institutionId);
 
 		patientService.auditActionPatient(institutionId,patientId, EActionType.UPDATE);
 
@@ -311,11 +320,13 @@ public class PatientController {
 		return addressExternalService.addAddress(addressToAdd);
 	}
 
-	private Patient persistPatientData(APatientDto patientDto, BMPersonDto createdPerson, Patient patientEntity) {
+	private Patient persistPatientData(APatientDto patientDto, BMPersonDto createdPerson, Patient patientEntity, Integer institutionId) {
 		Patient patientToAdd = patientMapper.fromPatientDto(patientDto);
 		patientToAdd.setPersonId(createdPerson.getId());
-		if (patientEntity != null)
+		if (patientEntity != null) {
 			setPatientData(patientToAdd, patientEntity);
+			setPatientType(patientToAdd, patientEntity, institutionId);
+		}
 		Patient createdPatient = patientService.addPatient(patientToAdd);
 		if (patientDto.getGeneralPractitioner() != null && patientDto.getPamiDoctor() != null) {
 			DoctorsBo doctorsBo = new DoctorsBo(patientDto.getGeneralPractitioner(), patientDto.getPamiDoctor());
@@ -323,6 +334,18 @@ public class PatientController {
 		}
 		LOG.debug(OUTPUT, createdPatient.getId());
 		return createdPatient;
+	}
+
+	private boolean usuarioTieneRol(Integer institutionId) {
+		List<UserRoleDto> auditorRole = hospitalUserRoleMapper.toListUserRoleDto(getRolesByUser.execute(UserInfo.getCurrentAuditor(), institutionId))
+				.stream().filter(a -> a.getRoleId() == ERole.AUDITOR_MPI.getId()).collect(Collectors.toList());
+
+		return !auditorRole.isEmpty();
+	}
+
+	private void setPatientType(Patient patientToAdd, Patient patientHistory, Integer institutionId) {
+		if (!usuarioTieneRol(institutionId))
+			patientToAdd.setTypeId(patientHistory.getTypeId());
 	}
 
 	private void setPatientData (Patient patientToAdd, Patient patientHistory) {
@@ -334,13 +357,11 @@ public class PatientController {
 		patientToAdd.setNationalId(patientHistory.getNationalId());
 		patientToAdd.setCreatedBy(patientHistory.getCreatedBy());
 		patientToAdd.setCreatedOn(patientHistory.getCreatedOn());
-		patientToAdd.setUpdatedBy(SecurityContextUtils.getUserDetails().userId);
+		patientToAdd.setUpdatedBy(UserInfo.getCurrentAuditor());
 		patientToAdd.setUpdatedOn(LocalDateTime.now().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")).toLocalDateTime());
 		patientToAdd.setDeletedBy(patientHistory.getDeletedBy());
 		patientToAdd.setDeletedOn(patientHistory.getDeletedOn());
 		patientToAdd.setDeleted(patientHistory.getDeleteable().getDeleted());
-
-
 	}
 
 	private List<Integer> getPersonsIds(List<Patient> patients) {
