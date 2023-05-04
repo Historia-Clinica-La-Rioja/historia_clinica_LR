@@ -28,6 +28,7 @@ import { TriageDefinitionsService } from '@historia-clinica/modules/guardia/serv
 import { EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
 import { PatientType } from '@historia-clinica/constants/summaries';
 import { NotaDeEvolucionDockPopupComponent } from '@historia-clinica/components/nota-de-evolucion-dock-popup/nota-de-evolucion-dock-popup.component';
+import { EmergencyCareStateChangedService } from '../../services/emergency-care-state-changed.service';
 
 @Component({
 	selector: 'app-clinical-history-actions',
@@ -76,6 +77,10 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	@Input() set emergencyCareEpisode(emergencyCareEpisode: ResponseEmergencyCareDto) {
 		if (emergencyCareEpisode) {
 			this.episode = emergencyCareEpisode;
+			this.emergencyCareStateChangedService.emergencyCareStateChanged$.subscribe(state => {
+				this.episode.emergencyCareState.id = state;
+			});
+			this.emergencyCareStateChangedService.emergencyCareStateChanged(this.episode.emergencyCareState.id);
 			this.isEmergencyCareTemporaryPatient = emergencyCareEpisode.patient.typeId === PatientType.EMERGENCY_CARE_TEMPORARY;
 			this.anyEmergencyCareAction = emergencyCareEpisode?.emergencyCareState?.id !== EstadosEpisodio.CON_ALTA_MEDICA;
 			this.triageDefinitionsService.getTriagePath(emergencyCareEpisode.emergencyCareType?.id)
@@ -105,6 +110,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		readonly internmentActions: InternmentActionsService,
 		private readonly documentActions: DocumentActionsService,
 		private readonly triageDefinitionsService: TriageDefinitionsService,
+		private readonly emergencyCareStateChangedService: EmergencyCareStateChangedService,
 	) { }
 
 	ngOnInit(): void {

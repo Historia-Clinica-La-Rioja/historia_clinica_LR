@@ -24,6 +24,7 @@ import { SelectConsultorioComponent } from '../../dialogs/select-consultorio/sel
 import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-care-episode-state.service';
 import { ContextService } from '@core/services/context.service';
 import { PatientNameService } from "@core/services/patient-name.service";
+import { EmergencyCareStateChangedService } from '@historia-clinica/modules/ambulatoria/services/emergency-care-state-changed.service';
 
 @Component({
 	selector: 'app-episode-details',
@@ -67,6 +68,7 @@ export class EpisodeDetailsComponent implements OnInit {
 		private readonly emergencyCareEpisodeStateService: EmergencyCareEpisodeStateService,
 		private readonly contextService: ContextService,
 		private readonly patientNameService: PatientNameService,
+		private readonly emergencyCareStateChangedService: EmergencyCareStateChangedService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId;
 	}
@@ -208,6 +210,7 @@ export class EpisodeDetailsComponent implements OnInit {
 			if (consultorio) {
 				this.episodeStateService.cancelar(this.episodeId, consultorio.id).subscribe(changed => {
 					if (changed) {
+						this.emergencyCareStateChangedService.emergencyCareStateChanged(EstadosEpisodio.EN_ESPERA);
 						this.snackBarService.showSuccess(`guardia.episode.cancel_attention.SUCCESS`);
 						this.episodeState = EstadosEpisodio.EN_ESPERA;
 					} else {

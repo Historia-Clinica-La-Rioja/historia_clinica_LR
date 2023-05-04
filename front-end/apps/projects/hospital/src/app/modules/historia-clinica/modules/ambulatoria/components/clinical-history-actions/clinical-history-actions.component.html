@@ -31,7 +31,7 @@
                 {{ 'ambulatoria.paciente.guardia.NUEVO_TRIAGE' | translate }}
             </button>
 
-            <button mat-menu-item id="new_triage" color="primary" (click)="openNotaDeEvolucion()" class="actions">
+            <button *ngIf="episode.emergencyCareState.id === EstadosEpisodio.EN_ATENCION" mat-menu-item id="new_triage" color="primary" (click)="openNotaDeEvolucion()" class="actions">
                 Nota de evolución
             </button>
         </div>

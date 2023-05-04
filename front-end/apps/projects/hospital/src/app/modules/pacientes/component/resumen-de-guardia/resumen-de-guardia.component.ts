@@ -23,6 +23,7 @@ import { EmergencyCareEpisodeAdministrativeDischargeService } from '@api-rest/se
 import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
 import { NewTriageService } from '@historia-clinica/services/new-triage.service';
+import { EmergencyCareStateChangedService } from '@historia-clinica/modules/ambulatoria/services/emergency-care-state-changed.service';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -71,7 +72,8 @@ export class ResumenDeGuardiaComponent implements OnInit {
 		private readonly emergencyCareEpisodeStateService: EmergencyCareEpisodeStateService,
 		private readonly emergencyCareEpisodeAdministrativeDischargeService: EmergencyCareEpisodeAdministrativeDischargeService,
 		private readonly permissionsService: PermissionsService,
-		private readonly newTriageService: NewTriageService
+		private readonly newTriageService: NewTriageService,
+		private readonly emergencyCareStateChangedService: EmergencyCareStateChangedService,
 	) {
 
 	}
@@ -125,6 +127,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 				this.doctorsOfficeDescription = consultorio?.description;
 				this.episodeStateService.cancelar(this.episodeId, consultorio.id).subscribe(changed => {
 					if (changed) {
+						this.emergencyCareStateChangedService.emergencyCareStateChanged(EstadosEpisodio.EN_ESPERA);
 						this.snackBarService.showSuccess('ambulatoria.paciente.guardia.CANCEL_ATTENTION_SUCCESS');
 						this.episodeState = EstadosEpisodio.EN_ESPERA;
 						this.calculateAvailableActions();
@@ -165,6 +168,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 				this.doctorsOfficeDescription = consultorio?.description;
 				this.episodeStateService.atender(this.episodeId, consultorio.id).subscribe(changed => {
 					if (changed) {
+						this.emergencyCareStateChangedService.emergencyCareStateChanged(EstadosEpisodio.EN_ATENCION);
 						this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
 						this.episodeState = EstadosEpisodio.EN_ATENCION;
 						this.calculateAvailableActions();

@@ -35,6 +35,7 @@ import { anyMatch } from '@core/utils/array.utils';
 import { PermissionsService } from '@core/services/permissions.service';
 import { GuardiaRouterService } from '../../services/guardia-router.service';
 import { PatientType } from '@historia-clinica/constants/summaries';
+import { EmergencyCareStateChangedService } from '@historia-clinica/modules/ambulatoria/services/emergency-care-state-changed.service';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -87,6 +88,7 @@ export class HomeComponent implements OnInit {
 		private readonly patientNameService: PatientNameService,
 		private readonly permissionsService: PermissionsService,
 		private readonly guardiaRouterService: GuardiaRouterService,
+		private readonly emergencyCareStateChangedService: EmergencyCareStateChangedService,
 	) {
 		this.filterService = new EpisodeFilterService(formBuilder, triageMasterDataService, emergencyCareMasterDataService);
 	}
@@ -139,6 +141,7 @@ export class HomeComponent implements OnInit {
 			if (consultorio) {
 				this.episodeStateService.atender(episode.id, consultorio.id).subscribe(changed => {
 					if (changed) {
+						this.emergencyCareStateChangedService.emergencyCareStateChanged(EstadosEpisodio.EN_ATENCION);
 						this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
 						this.goToEpisode(episode, { typeId: episode.patient.typeId, id: episode.patient.id });
 					} else {
