@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.hospitalization.service.indication.pharmaco.domain;
+package net.pladema.clinichistory.indication.service.pharmaco.domain;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
@@ -8,13 +8,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.pladema.clinichistory.hospitalization.service.indication.diet.domain.InternmentIndicationBo;
+import net.pladema.clinichistory.indication.service.diet.domain.GenericIndicationBo;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class InternmentPharmacoBo extends InternmentIndicationBo {
+public class GenericPharmacoBo extends GenericIndicationBo {
 
 	private SnomedBo snomed;
 

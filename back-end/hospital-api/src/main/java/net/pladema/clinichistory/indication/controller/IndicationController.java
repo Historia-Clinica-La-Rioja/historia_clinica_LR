@@ -8,10 +8,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.pladema.clinichistory.hospitalization.service.indication.diet.InternmentDietService;
-import net.pladema.clinichistory.hospitalization.service.indication.otherindication.InternmentOtherIndicationService;
-import net.pladema.clinichistory.hospitalization.service.indication.parenteralplan.InternmentParenteralPlanService;
-import net.pladema.clinichistory.hospitalization.service.indication.pharmaco.InternmentPharmacoService;
+import net.pladema.clinichistory.indication.service.diet.DietService;
+import net.pladema.clinichistory.indication.service.otherindication.OtherIndicationService;
+import net.pladema.clinichistory.indication.service.parenteralplan.ParenteralPlanService;
+import net.pladema.clinichistory.indication.service.pharmaco.PharmacoService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,20 +29,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class IndicationController {
 
-	private final InternmentDietService internmentDietService;
+	private final DietService dietService;
 
-	private final InternmentOtherIndicationService otherIndicationService;
+	private final OtherIndicationService otherIndicationService;
 
-	private final InternmentPharmacoService internmentPharmacoService;
+	private final PharmacoService pharmacoService;
 
-	private final InternmentParenteralPlanService internmentParenteralPlanService;
+	private final ParenteralPlanService parenteralPlanService;
 
 	@GetMapping("/diets/{dietId}")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA')")
 	public ResponseEntity<DietDto> getInternmentEpisodeDiet(@PathVariable(name = "institutionId") Integer institutionId,
 															@PathVariable(name = "dietId") Integer dietId) {
 		log.debug("Input parameters -> institutionId {}, dietId {}", institutionId, dietId);
-		DietDto result = internmentDietService.getInternmentEpisodeDiet(dietId);
+		DietDto result = dietService.getDiet(dietId);
 		log.debug("Get active internment episode diet by id => {}", result);
 		return ResponseEntity.ok(result);
 	}
@@ -52,7 +52,7 @@ public class IndicationController {
 	public ResponseEntity<OtherIndicationDto> getInternmentEpisodeOtherIndication(@PathVariable(name = "institutionId") Integer institutionId,
 																				  @PathVariable(name = "otherIndicationId") Integer otherIndicationId) {
 		log.debug("Input parameters -> institutionId {}, otherIndicationId {}", institutionId, otherIndicationId);
-		OtherIndicationDto result = otherIndicationService.getInternmentEpisodeOtherIndication(otherIndicationId);
+		OtherIndicationDto result = otherIndicationService.getOtherIndication(otherIndicationId);
 		log.debug("Get active internment episode other indication by id => {}", result);
 		return ResponseEntity.ok(result);
 	}
@@ -62,7 +62,7 @@ public class IndicationController {
 	public ResponseEntity<PharmacoDto> getInternmentEpisodePharmaco(@PathVariable(name = "institutionId") Integer institutionId,
 																	@PathVariable(name = "pharmacoId") Integer pharmacoId) {
 		log.debug("Input parameters -> institutionId {}, pharmacoId {}", institutionId, pharmacoId);
-		PharmacoDto result = internmentPharmacoService.getInternmentEpisodePharmaco(pharmacoId);
+		PharmacoDto result = pharmacoService.getPharmaco(pharmacoId);
 		log.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}
@@ -72,7 +72,7 @@ public class IndicationController {
 	public ResponseEntity<ParenteralPlanDto> getInternmentEpisodeParenteralPlan(@PathVariable(name = "institutionId") Integer institutionId,
 																				@PathVariable(name = "parenteralPlanId") Integer parenteralPlanId) {
 		log.debug("Input parameters -> institutionId {}, parenteralPlanId {}", institutionId, parenteralPlanId);
-		ParenteralPlanDto result = internmentParenteralPlanService.getInternmentEpisodeParenteralPlan(parenteralPlanId);
+		ParenteralPlanDto result = parenteralPlanService.getParenteralPlan(parenteralPlanId);
 		log.debug("Output => {}", result.toString());
 		return ResponseEntity.ok(result);
 	}

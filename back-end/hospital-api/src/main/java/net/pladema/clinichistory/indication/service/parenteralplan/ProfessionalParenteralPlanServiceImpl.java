@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.hospitalization.service.indication.parenteralplan;
+package net.pladema.clinichistory.indication.service.parenteralplan;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.ParenteralPlanDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedIndicationPort;

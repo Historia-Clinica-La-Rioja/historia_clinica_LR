@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.hospitalization.service.indication.otherindication;
+package net.pladema.clinichistory.indication.service.otherindication;
 
 import java.util.Collections;
 import java.util.List;
@@ -6,6 +6,8 @@ import java.util.List;
 import javax.validation.ConstraintViolationException;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+
+import net.pladema.clinichistory.indication.service.otherindication.domain.GenericOtherIndicationBo;
 
 import org.springframework.stereotype.Service;
 
@@ -17,12 +19,11 @@ import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
-import net.pladema.clinichistory.hospitalization.service.indication.otherindication.domain.InternmentOtherIndicationBo;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class InternmentOtherIndicationServiceImpl implements InternmentOtherIndicationService {
+public class OtherIndicationServiceImpl implements OtherIndicationService {
 
 	private final SharedIndicationPort sharedIndicationPort;
 
@@ -33,7 +34,7 @@ public class InternmentOtherIndicationServiceImpl implements InternmentOtherIndi
 	private final LocalDateMapper localDateMapper;
 
 	@Override
-	public Integer add(InternmentOtherIndicationBo otherIndicationBo, Short sourceTypeId) {
+	public Integer add(GenericOtherIndicationBo otherIndicationBo, Short sourceTypeId) {
 		log.debug("Input parameter -> otherIndicationBo {}, sourceTypeId {}", otherIndicationBo, sourceTypeId);
 		assertInternmentEpisodeCanCreateIndication(otherIndicationBo.getEncounterId(), sourceTypeId);
 		Integer result = sharedIndicationPort.addOtherIndication(toOtherIndicationDto(otherIndicationBo), sourceTypeId);
@@ -44,7 +45,7 @@ public class InternmentOtherIndicationServiceImpl implements InternmentOtherIndi
 	}
 
 	@Override
-	public List<OtherIndicationDto> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId, Short sourceTypeId){
+	public List<OtherIndicationDto> getEpisodeOtherIndications(Integer internmentEpisodeId, Short sourceTypeId){
 		log.debug("Input parameter -> internmentEpisodeId {}, sourceTypeId {}", internmentEpisodeId, sourceTypeId);
 		List<OtherIndicationDto> result = sharedIndicationPort.getInternmentEpisodeOtherIndications(internmentEpisodeId, sourceTypeId);
 		log.debug("Output -> {}", result);
@@ -52,7 +53,7 @@ public class InternmentOtherIndicationServiceImpl implements InternmentOtherIndi
 	}
 
 	@Override
-	public OtherIndicationDto getInternmentEpisodeOtherIndication(Integer otherIndicationId){
+	public OtherIndicationDto getOtherIndication(Integer otherIndicationId){
 		log.debug("Input parameter -> otherIndicationId {}", otherIndicationId);
 		OtherIndicationDto result = sharedIndicationPort.getInternmentEpisodeOtherIndication(otherIndicationId);
 		log.debug("Output -> {}", result);
@@ -65,7 +66,7 @@ public class InternmentOtherIndicationServiceImpl implements InternmentOtherIndi
 		}
 	}
 
-	private OtherIndicationDto toOtherIndicationDto(InternmentOtherIndicationBo bo) {
+	private OtherIndicationDto toOtherIndicationDto(GenericOtherIndicationBo bo) {
 		NewDosageDto dosageDto = new NewDosageDto();
 		dosageDto.setFrequency(bo.getDosageBo().getFrequency());
 		dosageDto.setPeriodUnit(bo.getDosageBo().getPeriodUnit());

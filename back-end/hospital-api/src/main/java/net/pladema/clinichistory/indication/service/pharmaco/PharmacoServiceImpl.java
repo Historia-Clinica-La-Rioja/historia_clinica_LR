@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.hospitalization.service.indication.pharmaco;
+package net.pladema.clinichistory.indication.service.pharmaco;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
-import net.pladema.clinichistory.hospitalization.service.indication.pharmaco.domain.InternmentPharmacoBo;
+import net.pladema.clinichistory.indication.service.pharmaco.domain.GenericPharmacoBo;
 
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class InternmentPharmacoServiceImpl implements InternmentPharmacoService {
+public class PharmacoServiceImpl implements PharmacoService {
 
 	private final SharedIndicationPort sharedIndicationPort;
 
@@ -40,7 +40,7 @@ public class InternmentPharmacoServiceImpl implements InternmentPharmacoService 
 
 
 	@Override
-	public Integer add(InternmentPharmacoBo pharmacoBo, Short sourceTypeId) {
+	public Integer add(GenericPharmacoBo pharmacoBo, Short sourceTypeId) {
 		log.debug("Input parameter -> pharmacoBo {}, sourceTypeId {}", pharmacoBo, sourceTypeId);
 		assertInternmentEpisodeCanCreateIndication(pharmacoBo.getEncounterId(), sourceTypeId);
 		Integer result = sharedIndicationPort.addPharmaco(toPharmacoDto(pharmacoBo), sourceTypeId);
@@ -51,7 +51,7 @@ public class InternmentPharmacoServiceImpl implements InternmentPharmacoService 
 	}
 
 	@Override
-	public List<PharmacoSummaryDto> getInternmentEpisodePharmacos(Integer internmentEpisodeId, Short sourceTypeId) {
+	public List<PharmacoSummaryDto> getEpisodePharmacos(Integer internmentEpisodeId, Short sourceTypeId) {
 		log.debug("Input parameter -> internmentEpisodeId {}, sourceTypeId {}", internmentEpisodeId, sourceTypeId);
 		List<PharmacoSummaryDto> result = sharedIndicationPort.getInternmentEpisodePharmacos(internmentEpisodeId, sourceTypeId);
 		log.debug("Output -> {}", result);
@@ -59,7 +59,7 @@ public class InternmentPharmacoServiceImpl implements InternmentPharmacoService 
 	}
 
 	@Override
-	public PharmacoDto getInternmentEpisodePharmaco(Integer pharmacoId) {
+	public PharmacoDto getPharmaco(Integer pharmacoId) {
 		log.debug("Input parameter -> pharmacoId {}", pharmacoId);
 		PharmacoDto result = sharedIndicationPort.getInternmentEpisodePharmaco(pharmacoId);
 		log.debug("Output -> {}", result);
@@ -72,7 +72,7 @@ public class InternmentPharmacoServiceImpl implements InternmentPharmacoService 
 		}
 	}
 
-	private PharmacoDto toPharmacoDto(InternmentPharmacoBo bo) {
+	private PharmacoDto toPharmacoDto(GenericPharmacoBo bo) {
 		NewDosageDto dosageDto = toDosageDto(bo.getDosage());
 
 		return new PharmacoDto(null,

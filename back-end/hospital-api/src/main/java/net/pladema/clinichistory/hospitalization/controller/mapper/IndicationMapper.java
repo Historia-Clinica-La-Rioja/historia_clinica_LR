@@ -20,11 +20,11 @@ import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
 import lombok.AllArgsConstructor;
-import net.pladema.clinichistory.hospitalization.service.indication.diet.domain.InternmentDietBo;
-import net.pladema.clinichistory.hospitalization.service.indication.diet.domain.InternmentIndicationBo;
-import net.pladema.clinichistory.hospitalization.service.indication.otherindication.domain.InternmentOtherIndicationBo;
-import net.pladema.clinichistory.hospitalization.service.indication.parenteralplan.domain.InternmentParenteralPlanBo;
-import net.pladema.clinichistory.hospitalization.service.indication.pharmaco.domain.InternmentPharmacoBo;
+import net.pladema.clinichistory.indication.service.diet.domain.GenericDietBo;
+import net.pladema.clinichistory.indication.service.diet.domain.GenericIndicationBo;
+import net.pladema.clinichistory.indication.service.otherindication.domain.GenericOtherIndicationBo;
+import net.pladema.clinichistory.indication.service.parenteralplan.domain.GenericParenteralPlanBo;
+import net.pladema.clinichistory.indication.service.pharmaco.domain.GenericPharmacoBo;
 
 import org.springframework.stereotype.Service;
 
@@ -38,23 +38,23 @@ public class IndicationMapper {
 
 	private final LocalDateMapper localDateMapper;
 
-	public InternmentDietBo mapToDietBo(DietDto dto, Integer institutionId, Integer internmentEpisodeId) {
-		InternmentDietBo result = new InternmentDietBo();
+	public GenericDietBo mapToDietBo(DietDto dto, Integer institutionId, Integer internmentEpisodeId) {
+		GenericDietBo result = new GenericDietBo();
 		result.setDescription(dto.getDescription());
-		return (InternmentDietBo) setIndicationInfoBo(dto,result,institutionId,internmentEpisodeId);
+		return (GenericDietBo) setIndicationInfoBo(dto,result,institutionId,internmentEpisodeId);
 	}
 
-	public InternmentOtherIndicationBo mapToOtherIndicationBo(OtherIndicationDto dto, Integer institutionId, Integer internmentEpisodeId) {
-		InternmentOtherIndicationBo result = new InternmentOtherIndicationBo();
+	public GenericOtherIndicationBo mapToOtherIndicationBo(OtherIndicationDto dto, Integer institutionId, Integer internmentEpisodeId) {
+		GenericOtherIndicationBo result = new GenericOtherIndicationBo();
 		result.setDescription(dto.getDescription());
 		result.setOtherIndicationTypeId(dto.getOtherIndicationTypeId());
 		result.setOtherType(dto.getOtherType());
 		result.setDosageBo(toDosageBo(dto.getDosage(),dto.getIndicationDate()));
-		return (InternmentOtherIndicationBo) setIndicationInfoBo(dto,result,institutionId,internmentEpisodeId);
+		return (GenericOtherIndicationBo) setIndicationInfoBo(dto,result,institutionId,internmentEpisodeId);
 	}
 
-	public InternmentPharmacoBo mapToPharmacoBo(PharmacoDto dto, Integer institutionId, Integer internmentEpisodeId) {
-		InternmentPharmacoBo result = new InternmentPharmacoBo();
+	public GenericPharmacoBo mapToPharmacoBo(PharmacoDto dto, Integer institutionId, Integer internmentEpisodeId) {
+		GenericPharmacoBo result = new GenericPharmacoBo();
 		result.setSnomed(dto.getSnomed() != null? new SnomedBo(dto.getSnomed().getSctid(), dto.getSnomed().getPt()) : null);
 		result.setDosage(toDosageBo(dto.getDosage(),dto.getIndicationDate()));
 		if (dto.getSolvent() != null)
@@ -66,21 +66,21 @@ public class IndicationMapper {
 		DocumentObservationsBo documentObservationsBo = new DocumentObservationsBo();
 		documentObservationsBo.setOtherNote(dto.getNote());
 		result.setNotes(documentObservationsBo);
-		return (InternmentPharmacoBo) setIndicationInfoBo(dto, result, institutionId, internmentEpisodeId);
+		return (GenericPharmacoBo) setIndicationInfoBo(dto, result, institutionId, internmentEpisodeId);
 	}
 
-	public InternmentParenteralPlanBo mapToInternmentParenteralPlanBo (ParenteralPlanDto dto, Integer institutionId, Integer internmentEpisodeId){
-		InternmentParenteralPlanBo result = new InternmentParenteralPlanBo();
+	public GenericParenteralPlanBo mapToInternmentParenteralPlanBo (ParenteralPlanDto dto, Integer institutionId, Integer internmentEpisodeId){
+		GenericParenteralPlanBo result = new GenericParenteralPlanBo();
 		result.setDosage(toDosageBo(dto.getDosage(), dto.getIndicationDate()));
 		result.setFrequency(mapToFrequencyBo(dto.getFrequency()));
 		result.setSnomed(new SnomedBo(dto.getSnomed().getSctid(), dto.getSnomed().getPt()));
 		result.setVia(dto.getVia());
 		result.setPharmacos(dto.getPharmacos().stream().
 				map(p -> toOtherPharmacoBo(p, dto.getIndicationDate())).collect(Collectors.toList()));
-		return (InternmentParenteralPlanBo) setIndicationInfoBo(dto, result, institutionId, internmentEpisodeId);
+		return (GenericParenteralPlanBo) setIndicationInfoBo(dto, result, institutionId, internmentEpisodeId);
 	}
 
-	private InternmentIndicationBo setIndicationInfoBo (IndicationDto dto, InternmentIndicationBo bo, Integer institutionId, Integer internmentEpisodeId) {
+	private GenericIndicationBo setIndicationInfoBo (IndicationDto dto, GenericIndicationBo bo, Integer institutionId, Integer internmentEpisodeId) {
 		bo.setPatientId(dto.getPatientId());
 		bo.setTypeId(dto.getType().getId());
 		bo.setProfessionalId(dto.getProfessionalId());

@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.hospitalization.service.indication.diet.domain;
+package net.pladema.clinichistory.indication.service.diet.domain;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,7 +11,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public abstract class InternmentIndicationBo implements IDocumentBo {
+public abstract class GenericIndicationBo implements IDocumentBo {
 
 	protected Long id;
 

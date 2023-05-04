@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.hospitalization.service.indication.diet;
+package net.pladema.clinichistory.indication.service.diet;
 
 import java.util.Collections;
 import java.util.List;
@@ -7,6 +7,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.S
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
+import net.pladema.clinichistory.indication.service.diet.domain.GenericDietBo;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
@@ -14,14 +16,13 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.DietDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedIndicationPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.clinichistory.hospitalization.service.indication.diet.domain.InternmentDietBo;
 
 import javax.validation.ConstraintViolationException;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class InternmentDietServiceImpl implements InternmentDietService {
+public class DietServiceImpl implements DietService {
 
 	private final SharedIndicationPort sharedIndicationPort;
 
@@ -32,7 +33,7 @@ public class InternmentDietServiceImpl implements InternmentDietService {
 	private final LocalDateMapper localDateMapper;
 
 	@Override
-	public List<DietDto> getInternmentEpisodeDiets(Integer internmentEpisodeId, Short sourceTypeId) {
+	public List<DietDto> getEpisodeDiets(Integer internmentEpisodeId, Short sourceTypeId) {
 		log.debug("Input parameter -> internmentEpisodeId {}, sourceTypeId {}", internmentEpisodeId, sourceTypeId);
 		List<DietDto> result = sharedIndicationPort.getInternmentEpisodeDiets(internmentEpisodeId, sourceTypeId);
 		log.debug("Output -> {}", result);
@@ -40,14 +41,14 @@ public class InternmentDietServiceImpl implements InternmentDietService {
 	}
 
 	@Override
-	public DietDto getInternmentEpisodeDiet(Integer dietId) {
+	public DietDto getDiet(Integer dietId) {
 		log.debug("Input parameter -> dietId {}", dietId);
 		DietDto result = sharedIndicationPort.getInternmentEpisodeDiet(dietId);
 		log.debug("Output -> {}", result);
 		return result;
 	}
 	@Override
-	public Integer addDiet(InternmentDietBo dietBo, Short sourceTypeId) {
+	public Integer addDiet(GenericDietBo dietBo, Short sourceTypeId) {
 		log.debug("Input parameter -> dietBo {}, sourceTypeId {}", dietBo, sourceTypeId);
 		assertInternmentEpisodeCanCreateIndication(dietBo.getEncounterId(), sourceTypeId);
 		Integer result = sharedIndicationPort.addDiet(mapToDietDto(dietBo), sourceTypeId);
@@ -63,7 +64,7 @@ public class InternmentDietServiceImpl implements InternmentDietService {
 		}
 	}
 
-	private DietDto mapToDietDto(InternmentDietBo dietBo){
+	private DietDto mapToDietDto(GenericDietBo dietBo){
 		return new DietDto(
 				null,
 				dietBo.getPatientId(),

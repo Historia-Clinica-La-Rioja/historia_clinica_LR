@@ -2,7 +2,7 @@ package net.pladema.clinichistory.hospitalization.service.indication.nursingreco
 
 import lombok.Getter;
 import lombok.Setter;
-import net.pladema.clinichistory.hospitalization.service.indication.diet.domain.InternmentIndicationBo;
+import net.pladema.clinichistory.indication.service.diet.domain.GenericIndicationBo;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +12,7 @@ public class IntermentNursingRecordBo {
 
 	private Integer id;
 
-	private InternmentIndicationBo indication;
+	private GenericIndicationBo indication;
 
 	private LocalDateTime scheduledAdministrationTime;
 

@@ -11,10 +11,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.clinichistory.hospitalization.controller.mapper.IndicationMapper;
-import net.pladema.clinichistory.hospitalization.service.indication.diet.InternmentDietService;
-import net.pladema.clinichistory.hospitalization.service.indication.otherindication.InternmentOtherIndicationService;
-import net.pladema.clinichistory.hospitalization.service.indication.parenteralplan.InternmentParenteralPlanService;
-import net.pladema.clinichistory.hospitalization.service.indication.pharmaco.InternmentPharmacoService;
+import net.pladema.clinichistory.indication.service.diet.DietService;
+import net.pladema.clinichistory.indication.service.otherindication.OtherIndicationService;
+import net.pladema.clinichistory.indication.service.parenteralplan.ParenteralPlanService;
+import net.pladema.clinichistory.indication.service.pharmaco.PharmacoService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,13 +36,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmergencyCareIndicationController {
 
-	private final InternmentDietService internmentDietService;
+	private final DietService dietService;
 
-	private final InternmentOtherIndicationService otherIndicationService;
+	private final OtherIndicationService otherIndicationService;
 
-	private final InternmentPharmacoService internmentPharmacoService;
+	private final PharmacoService pharmacoService;
 
-	private final InternmentParenteralPlanService internmentParenteralPlanService;
+	private final ParenteralPlanService parenteralPlanService;
 
 	private final IndicationMapper indicationMapper;
 
@@ -51,7 +51,7 @@ public class EmergencyCareIndicationController {
 	public ResponseEntity<List<DietDto>> getEmergencyCareEpisodeDiets(@PathVariable(name = "institutionId") Integer institutionId,
 																	  @PathVariable(name = "episodeId") Integer episodeId) {
 		log.debug("Input parameters -> institutionId {}, episodeId {}", institutionId, episodeId);
-		List<DietDto> result = internmentDietService.getInternmentEpisodeDiets(episodeId, SourceType.EMERGENCY_CARE);
+		List<DietDto> result = dietService.getEpisodeDiets(episodeId, SourceType.EMERGENCY_CARE);
 		log.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}
@@ -62,7 +62,7 @@ public class EmergencyCareIndicationController {
 										   @PathVariable(name = "episodeId") Integer episodeId,
 										   @RequestBody DietDto dietDto) {
 		log.debug("Input parameters -> institutionId {}, episodeId {}, dietDto {}", institutionId, episodeId, dietDto);
-		Integer result = internmentDietService.addDiet(indicationMapper.mapToDietBo(dietDto, institutionId, episodeId), SourceType.EMERGENCY_CARE);
+		Integer result = dietService.addDiet(indicationMapper.mapToDietBo(dietDto, institutionId, episodeId), SourceType.EMERGENCY_CARE);
 		log.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}
@@ -83,7 +83,7 @@ public class EmergencyCareIndicationController {
 	public ResponseEntity<List<OtherIndicationDto>> getEmergencyCareEpisodeOtherIndications(@PathVariable(name = "institutionId") Integer institutionId,
 																							@PathVariable(name = "episodeId") Integer episodeId) {
 		log.debug("Input parameters -> institutionId {}, episodeId {}", institutionId, episodeId);
-		List<OtherIndicationDto> result = otherIndicationService.getInternmentEpisodeOtherIndications(episodeId, SourceType.EMERGENCY_CARE);
+		List<OtherIndicationDto> result = otherIndicationService.getEpisodeOtherIndications(episodeId, SourceType.EMERGENCY_CARE);
 		log.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}
@@ -94,7 +94,7 @@ public class EmergencyCareIndicationController {
 											   @PathVariable(name = "episodeId") Integer episodeId,
 											   @RequestBody PharmacoDto pharmacoDto) {
 		log.debug("Input parameters -> institutionId {}, episodeId {}, pharmacoDto {}", institutionId, episodeId, pharmacoDto);
-		Integer result = internmentPharmacoService.add(indicationMapper.mapToPharmacoBo(pharmacoDto, institutionId, episodeId), SourceType.EMERGENCY_CARE);
+		Integer result = pharmacoService.add(indicationMapper.mapToPharmacoBo(pharmacoDto, institutionId, episodeId), SourceType.EMERGENCY_CARE);
 		log.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}
@@ -104,7 +104,7 @@ public class EmergencyCareIndicationController {
 	public ResponseEntity<List<PharmacoSummaryDto>> getEmergencyCareEpisodePharmacos(@PathVariable(name = "institutionId") Integer institutionId,
 																					 @PathVariable(name = "episodeId") Integer episodeId) {
 		log.debug("Input parameters -> institutionId {}, episodeId {}", institutionId, episodeId);
-		List<PharmacoSummaryDto> result = internmentPharmacoService.getInternmentEpisodePharmacos(episodeId, SourceType.EMERGENCY_CARE);
+		List<PharmacoSummaryDto> result = pharmacoService.getEpisodePharmacos(episodeId, SourceType.EMERGENCY_CARE);
 		log.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}
@@ -115,7 +115,7 @@ public class EmergencyCareIndicationController {
 													 @PathVariable(name = "episodeId") Integer episodeId,
 													 @RequestBody ParenteralPlanDto parenteralPlan) {
 		log.debug("Input parameters -> institutionId {}, episodeId {}, parenteralPlanDto {}", institutionId, episodeId, parenteralPlan);
-		Integer result = internmentParenteralPlanService.add(indicationMapper.mapToInternmentParenteralPlanBo(parenteralPlan, institutionId, episodeId), SourceType.EMERGENCY_CARE);
+		Integer result = parenteralPlanService.add(indicationMapper.mapToInternmentParenteralPlanBo(parenteralPlan, institutionId, episodeId), SourceType.EMERGENCY_CARE);
 		log.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}
@@ -125,7 +125,7 @@ public class EmergencyCareIndicationController {
 	public ResponseEntity<List<ParenteralPlanDto>> getEmergencyCareEpisodeParenteralPlans(@PathVariable(name = "institutionId") Integer institutionId,
 																						  @PathVariable(name = "episodeId") Integer episodeId) {
 		log.debug("Input parameters -> institutionId {}, episodeId {}", institutionId, episodeId);
-		List<ParenteralPlanDto> result = internmentParenteralPlanService.getInternmentEpisodeParenteralPlans(episodeId, SourceType.EMERGENCY_CARE);
+		List<ParenteralPlanDto> result = parenteralPlanService.getEpisodeParenteralPlans(episodeId, SourceType.EMERGENCY_CARE);
 		log.debug("Output => {}", result.toString());
 		return ResponseEntity.ok(result);
 	}

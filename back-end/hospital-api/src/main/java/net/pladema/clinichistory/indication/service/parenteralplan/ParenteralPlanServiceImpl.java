@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.hospitalization.service.indication.parenteralplan;
+package net.pladema.clinichistory.indication.service.parenteralplan;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
-import net.pladema.clinichistory.hospitalization.service.indication.parenteralplan.domain.InternmentParenteralPlanBo;
+import net.pladema.clinichistory.indication.service.parenteralplan.domain.GenericParenteralPlanBo;
 
 import org.springframework.stereotype.Service;
 
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class InternmentParenteralPlanServiceImpl implements InternmentParenteralPlanService {
+public class ParenteralPlanServiceImpl implements ParenteralPlanService {
 
 	private final SharedIndicationPort sharedIndicationPort;
 
@@ -44,7 +44,7 @@ public class InternmentParenteralPlanServiceImpl implements InternmentParenteral
 	private final InternmentEpisodeService internmentEpisodeService;
 
 	@Override
-	public Integer add(InternmentParenteralPlanBo parenteralPlanBo, Short sourceTypeId) {
+	public Integer add(GenericParenteralPlanBo parenteralPlanBo, Short sourceTypeId) {
 		log.debug("Input parameter -> parenteralPlanBo {}, sourceTypeId {}", parenteralPlanBo, sourceTypeId);
 		assertInternmentEpisodeCanCreateIndication(parenteralPlanBo.getEncounterId(), sourceTypeId);
 		Integer result = sharedIndicationPort.addParenteralPlan(toParenteralPlanDto(parenteralPlanBo), sourceTypeId);
@@ -55,7 +55,7 @@ public class InternmentParenteralPlanServiceImpl implements InternmentParenteral
 	}
 
 	@Override
-	public List<ParenteralPlanDto> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId, Short sourceTypeId) {
+	public List<ParenteralPlanDto> getEpisodeParenteralPlans(Integer internmentEpisodeId, Short sourceTypeId) {
 		log.debug("Input parameter -> internmentEpisodeId {}, sourceTypeId {}", internmentEpisodeId, sourceTypeId);
 		List<ParenteralPlanDto> result = sharedIndicationPort.getInternmentEpisodeParenteralPlans(internmentEpisodeId, sourceTypeId);
 		log.debug("Output -> {}", result);
@@ -63,7 +63,7 @@ public class InternmentParenteralPlanServiceImpl implements InternmentParenteral
 	}
 
 	@Override
-	public ParenteralPlanDto getInternmentEpisodeParenteralPlan(Integer parenteralPlanId) {
+	public ParenteralPlanDto getParenteralPlan(Integer parenteralPlanId) {
 		log.debug("Input parameter -> parenteralPlanId {}", parenteralPlanId);
 		ParenteralPlanDto result = sharedIndicationPort.getInternmentEpisodeParenteralPlan(parenteralPlanId);
 		log.debug("Output -> {}", result);
@@ -76,7 +76,7 @@ public class InternmentParenteralPlanServiceImpl implements InternmentParenteral
 		}
 	}
 
-	private ParenteralPlanDto toParenteralPlanDto (InternmentParenteralPlanBo bo){
+	private ParenteralPlanDto toParenteralPlanDto (GenericParenteralPlanBo bo){
 		ParenteralPlanDto result = new ParenteralPlanDto();
 		result.setSnomed(new SharedSnomedDto(bo.getSnomed().getSctid(), bo.getSnomed().getPt()));
 		result.setPharmacos(bo.getPharmacos().stream().map(this::toOtherPharmacoDto).collect(Collectors.toList()));

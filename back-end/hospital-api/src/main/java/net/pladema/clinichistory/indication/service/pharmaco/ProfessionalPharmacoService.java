@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.hospitalization.service.indication.pharmaco;
+package net.pladema.clinichistory.indication.service.pharmaco;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.PharmacoSummaryDto;
 
