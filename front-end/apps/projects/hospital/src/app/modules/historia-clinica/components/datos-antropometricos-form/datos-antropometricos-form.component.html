@@ -1,12 +1,14 @@
-<app-new-consultation-expansion-section id="datos_antropometricos"
-	[title]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.TITLE' | translate" icon="accessibility"
-	[fixedExpanded]="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()"
-	[isEmpty]="!datosAntropometricosNuevaConsultaService.hasAtLeastOneValueLoaded()"
-	collapsed="true">
+<div style="margin-bottom: 20px;margin-top: 10px;">
 
-	<app-datos-antropometricos-nueva-consulta
-		[showPreloadData]="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()"
-		[datosAntropometricosNuevaConsultaService]="datosAntropometricosNuevaConsultaService">
-	</app-datos-antropometricos-nueva-consulta>
+	<app-new-consultation-expansion-section id="datos_antropometricos"
+		[title]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.TITLE' | translate" icon="accessibility"
+		[fixedExpanded]="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()"
+		[isEmpty]="!datosAntropometricosNuevaConsultaService.hasAtLeastOneValueLoaded()" collapsed="true">
 
-</app-new-consultation-expansion-section>
+		<app-datos-antropometricos-nueva-consulta
+			[showPreloadData]="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()"
+			[datosAntropometricosNuevaConsultaService]="datosAntropometricosNuevaConsultaService">
+		</app-datos-antropometricos-nueva-consulta>
+
+	</app-new-consultation-expansion-section>
+</div>
