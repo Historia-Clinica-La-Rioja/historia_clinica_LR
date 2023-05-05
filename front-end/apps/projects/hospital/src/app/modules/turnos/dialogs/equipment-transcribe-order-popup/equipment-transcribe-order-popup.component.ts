@@ -20,6 +20,8 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
     selectedStudy = null;
     selectedProblem = null;
     healthProblems = null;
+    selectedFiles: File[] = [];
+    selectedFilesShow: any[] = [];
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data,
@@ -49,6 +51,18 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
 			});
 		});
     }
+
+    onFileSelected($event){
+        Array.from($event.target.files).forEach((file: File) => {
+			this.selectedFiles.push(file);
+			this.selectedFilesShow.push(file.name);
+		});
+    }
+
+    removeSelectedFile(index): void {
+		this.selectedFiles.splice(index, 1);
+		this.selectedFilesShow.splice(index, 1);
+	}
 
     handleStudySelected(study) {
 		this.selectedStudy = study;

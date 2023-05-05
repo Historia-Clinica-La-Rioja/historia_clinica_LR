@@ -44,7 +44,8 @@
                 "STUDY": "Estudio",
                 "ASSOCIATED_PROBLEM": "Problema asociado",
                 "PROFESSIONAL": "Profesional solicitante",
-                "INSTITUTION": "Institucion"
+                "INSTITUTION": "Institucion",
+                "ATTACH_EXTERNAL_ORDER": "Adjuntar orden externa"
             }
 		},
         "worklist": {

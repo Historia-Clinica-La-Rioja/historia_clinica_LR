@@ -54,4 +54,25 @@
     </mat-form-field>
 
     <mat-divider></mat-divider>
+
+    <div class="file-attached"> 
+        <div>
+            <button mat-button color="primary" (click)="fileInput.click()">
+                <mat-icon>attachment</mat-icon>
+                <span [translate]="'image-network.appointments.medical-order.ATTACH_EXTERNAL_ORDER'"></span>
+            </button>
+            <input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file" (click)="$event.target.value=null"
+            accept="image/jpeg,image/jpg,image/png,application/pdf">
+        </div>
+
+        <div *ngIf="selectedFilesShow" class="selected-files">
+            <div *ngFor="let fileName of selectedFilesShow; let index = index" fxLayout="row" fxLayoutAlign="space-between center">
+                <span class="mat-body element-light-color">
+                    {{fileName}}
+                </span>
+                <button mat-button color="warn"
+                    (click)="removeSelectedFile(index)"><mat-icon>delete</mat-icon></button>
+            </div>
+        </div>
+    </div>
 </form>
