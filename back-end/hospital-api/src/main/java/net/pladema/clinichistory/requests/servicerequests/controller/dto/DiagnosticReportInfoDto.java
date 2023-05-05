@@ -31,6 +31,8 @@ public class DiagnosticReportInfoDto {
 	private String category;
 	private String source;
 
+	private Integer sourceId;
+
     public DiagnosticReportInfoDto( DiagnosticReportInfoDto diagnosticReportInfoDto) {
         this.snomed = diagnosticReportInfoDto.getSnomed();
         this.healthCondition = diagnosticReportInfoDto.getHealthCondition();

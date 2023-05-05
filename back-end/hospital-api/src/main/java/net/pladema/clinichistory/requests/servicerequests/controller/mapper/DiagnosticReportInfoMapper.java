@@ -30,6 +30,7 @@ public class DiagnosticReportInfoMapper {
         result.setCreationDate(diagnosticReportBo.getEffectiveTime());
 		result.setCategory(diagnosticReportBo.getCategory());
 		result.setSource(diagnosticReportBo.getSource());
+		result.setSourceId(diagnosticReportBo.getSourceId());
         LOG.debug("Output: {}", result);
         return result;
     }

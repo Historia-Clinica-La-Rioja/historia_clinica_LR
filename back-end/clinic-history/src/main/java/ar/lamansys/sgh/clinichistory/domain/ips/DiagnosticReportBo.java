@@ -28,4 +28,6 @@ public class DiagnosticReportBo extends ClinicalTerm {
 	private String source;
 
     private List<FileBo> files;
+
+	private Integer sourceId;
 }

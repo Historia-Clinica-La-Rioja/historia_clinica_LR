@@ -821,6 +821,7 @@ export interface DiagnosticReportInfoDto {
     serviceRequestId: number;
     snomed: SnomedDto;
     source: string;
+    sourceId: number;
     statusId: string;
 }
 

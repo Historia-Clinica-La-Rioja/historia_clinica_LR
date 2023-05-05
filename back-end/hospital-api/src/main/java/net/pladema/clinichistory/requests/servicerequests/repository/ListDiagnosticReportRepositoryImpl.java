@@ -31,7 +31,7 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
                 "dr.id, dr.snomed_id, dr.status_id, dr.health_condition_id, dr.note_id, " +
                 "dr.effective_time, d.source_id, d.created_by, dr.updated_on, sr.category_id AS sr_categoryId, " +
                 "row_number() OVER (PARTITION by sr.id, dr.snomed_id, dr.health_condition_id ORDER BY dr.updated_on desc) AS rw, " +
-				"src.description AS category, st.description AS source " +
+				"src.description AS category, st.description AS source, sr.source_id AS procedure_source_id " +
                 "FROM {h-schema}document d " +
                 "JOIN {h-schema}document_diagnostic_report ddr ON d.id = ddr.document_id " +
                 "JOIN {h-schema}diagnostic_report dr ON ddr.diagnostic_report_id = dr.id " +
@@ -46,7 +46,7 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
                 ", drs.id AS statusId, drs.description AS status " +
                 ", h.id AS hid, h.s_id AS h_id, h.pt AS h_pt, n.description AS note " +
                 ", t.source_id AS sr_id, t.created_by AS user_id, s.sctid AS d_sctid, " +
-                "h.sctid AS h_sctid, t.effective_time, t.category, t.source " +
+                "h.sctid AS h_sctid, t.effective_time, t.category, t.source, t.procedure_source_id " +
                 "FROM temporal t " +
                 "JOIN {h-schema}snomed s ON (t.snomed_id = s.id) " +
                 "JOIN {h-schema}diagnostic_report_status drs ON (drs.id = t.status_id) " +
