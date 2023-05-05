@@ -5,6 +5,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 // deps
 import { PresentationModule } from '@presentation/presentation.module';
 import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
+import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
 // routing
 import { TurnosRoutingModule } from './turnos-routing.module';
 import { AgendaComponent } from './routes/agenda/agenda.component';
@@ -22,6 +23,7 @@ import { SearchAppointmentsBySpecialtyComponent } from './components/search-appo
 import { AppointmentDetailsComponent } from './components/appointment-details/appointment-details.component';
 import { SearchAppointmentsInCareNetworkComponent } from './components/search-appointments-in-care-network/search-appointments-in-care-network.component';
 import { SearchAppointmentsByEquipmentComponent } from './components/search-appointments-by-equipment/search-appointments-by-equipment.component';
+import { EquipmentTranscribeOrderPopupComponent } from './dialogs/equipment-transcribe-order-popup/equipment-transcribe-order-popup.component';
 
 // dialogs
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
@@ -67,6 +69,7 @@ import { EquipmentAppointmentsFacadeService } from './services/equipment-appoint
 		NewAttentionComponent,
 		ConfirmPrintAppointmentComponent,
 		ImageNetworkAppointmentComponent,
+  		EquipmentTranscribeOrderPopupComponent,
 	],
 	imports: [
 		CommonModule,
@@ -76,6 +79,7 @@ import { EquipmentAppointmentsFacadeService } from './services/equipment-appoint
 		// deps
 		PresentationModule,
 		LazyMaterialModule,
+		HistoriaClinicaModule
 	],
 	exports: [
 		CalendarProfessionalViewComponent

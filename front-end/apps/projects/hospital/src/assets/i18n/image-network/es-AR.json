@@ -36,7 +36,16 @@
 			"ORDER": "Orden",
 			"STUDY_COMPLETED": "El estudio se ha marcado como completado",
 			"STUDY_ERROR": "El estudio no pudo marcarse como completado porque no se encontraron resultados",
-			"TRANSCRIBE_ORDER": "Transcribir orden impresa / externa"
+			"medical-order": {
+                "NEW_MEDICAL_ORDER": "Nueva Orden Médica",
+                "ORDER": "Orden",
+                "TRANSCRIBE_ORDER": "Transcribir orden impresa / externa",
+                "TRANSCRIBE_ORDER_TITLE": "Transcribir orden impresa",
+                "STUDY": "Estudio",
+                "ASSOCIATED_PROBLEM": "Problema asociado",
+                "PROFESSIONAL": "Profesional solicitante",
+                "INSTITUTION": "Institucion"
+            }
 		},
         "worklist": {
             "status": {

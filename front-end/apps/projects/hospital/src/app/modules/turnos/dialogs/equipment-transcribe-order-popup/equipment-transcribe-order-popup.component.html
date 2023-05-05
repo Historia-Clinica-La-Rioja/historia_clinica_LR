@@ -1,0 +1,57 @@
+<div class="header-container" fxLayout="row" fxLayoutAlign="space-between">
+    <h1 class="title" [translate]="'image-network.appointments.medical-order.TRANSCRIBE_ORDER_TITLE'"></h1>
+    <button mat-icon-button mat-dialog-close>
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<form [formGroup]="transcribeOrderForm">
+
+    <!-- STUDY SELECTION -->
+    <app-concept-typeahead-search *ngIf="!selectedStudy else studySelectedField"
+        [placeholder]="'image-network.appointments.medical-order.STUDY' | translate" [debounceTime]="0"
+        [ecl]="this.studyECL" [appearanceOutline]="true" (conceptSelected)="handleStudySelected($event)">
+    </app-concept-typeahead-search>
+
+    <ng-template #studySelectedField>
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label [translate]="'image-network.appointments.medical-order.STUDY'"></mat-label>
+            <input formControlName="study" type="text" matInput readonly matTooltip="{{ this.getStudyDisplayName() }}">
+            <button mat-button matSuffix color="warn" mat-icon-button (click)="resetStudySelector()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+    </ng-template>
+
+    <!-- PROBLEM SELECTION -->
+    <app-concept-typeahead-search *ngIf="!selectedProblem else problemSelectedField"
+        [placeholder]="'image-network.appointments.medical-order.ASSOCIATED_PROBLEM' | translate" [debounceTime]="0"
+        [ecl]="this.problemECL" [appearanceOutline]="true" (conceptSelected)="handleProblemSelected($event)">
+    </app-concept-typeahead-search>
+
+    <ng-template #problemSelectedField>
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label [translate]="'image-network.appointments.medical-order.ASSOCIATED_PROBLEM'"></mat-label>
+            <input formControlName="assosiatedProblem" type="text" matInput readonly matTooltip="{{ this.getProblemDisplayName() }}">
+            <button mat-button matSuffix color="warn" mat-icon-button (click)="resetProblemSelector()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+    </ng-template>
+
+    <!-- PROFESSIONAL SELECTION -->
+    <mat-form-field appearance="outline" class="full-width">
+        <mat-label translate="image-network.appointments.medical-order.PROFESSIONAL"></mat-label>
+        <input formControlName="professional" type="text" matInput>
+        <mat-error *ngIf="hasError(transcribeOrderForm, 'required', 'professional')">
+            <span translate="forms.REQUIRED"></span>
+        </mat-error>
+    </mat-form-field>
+
+    <!-- INSTITUTION SELECTION -->
+    <mat-form-field appearance="outline" class="full-width">
+        <mat-label translate="image-network.appointments.medical-order.INSTITUTION"></mat-label>
+        <input formControlName="institution" type="text" matInput>
+    </mat-form-field>
+
+    <mat-divider></mat-divider>
+</form>

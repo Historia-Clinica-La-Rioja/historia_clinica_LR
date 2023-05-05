@@ -61,7 +61,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequestMapping("/institutions/{institutionId}/patient/{patientId}/hce/general-state")
 @Tag(name = "HCE General State", description = "HCE General State")
 @Validated
-@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, PERSONAL_DE_FARMACIA, PRESCRIPTOR')")
+@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, PERSONAL_DE_FARMACIA, PRESCRIPTOR, ADMINISTRATIVO_RED_DE_IMAGENES')")
 public class HCEGeneralStateController {
 
     private static final Logger LOG = LoggerFactory.getLogger(HCEGeneralStateController.class);

@@ -40,6 +40,7 @@ import { EquipmentAppointmentsFacadeService } from '@turnos/services/equipment-a
 import { Observable } from 'rxjs';
 import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { TranslateService } from '@ngx-translate/core';
+import { EquipmentTranscribeOrderPopupComponent } from '../equipment-transcribe-order-popup/equipment-transcribe-order-popup.component';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -210,10 +211,10 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	generateTooltipOnMedicalOrderChange() {
-		this.translateService.get('image-network.appointments.ORDER').subscribe(translatedText =>
-			this.patientMedicalOrderTooltipDescription =
-				`${translatedText} #
-				${this.appointmentInfoForm.controls.appointmentMedicalOrder.value?.serviceRequestId} -
+		this.translateService.get('image-network.appointments.medical-order.ORDER').subscribe(translatedText => 
+			this.patientMedicalOrderTooltipDescription = 
+				`${translatedText} # 
+				${this.appointmentInfoForm.controls.appointmentMedicalOrder.value?.serviceRequestId} - 
 				${this.titleCasePipe.transform(this.appointmentInfoForm.controls.appointmentMedicalOrder.value?.snomed?.pt)}`
 		);
 	}
@@ -448,6 +449,20 @@ export class NewAppointmentComponent implements OnInit {
 
 	getPatientMedicalOrders() {
 		this.patientMedicalOrders$ = this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, MEDICAL_ORDER_PENDING_STATUS, null, null, null, MEDICAL_ORDER_CATEGORY_ID);
+	}
+
+	newTranscribedOrder() {
+		const dialogRef = this.dialog.open(EquipmentTranscribeOrderPopupComponent, {
+			width: '35%',
+			autoFocus: false,
+			data: {
+				patientId: this.patientId
+			}
+		});
+
+		/*dialogRef.afterClosed().subscribe(
+
+		);*/
 	}
 
 	private setPhonePrefix(itComesFromStep3: boolean): string {
