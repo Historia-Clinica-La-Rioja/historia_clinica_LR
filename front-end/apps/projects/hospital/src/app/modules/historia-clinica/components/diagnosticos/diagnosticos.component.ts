@@ -15,7 +15,7 @@ import { ComponentEvaluationManagerService } from '@historia-clinica/modules/amb
 	providers: [ComponentEvaluationManagerService]
 })
 export class DiagnosticosComponent {
-
+	@Input() showTitle = false;
 	@Output() diagnosisChange = new EventEmitter();
 	@Output() mainDiagnosisChange = new EventEmitter();
 

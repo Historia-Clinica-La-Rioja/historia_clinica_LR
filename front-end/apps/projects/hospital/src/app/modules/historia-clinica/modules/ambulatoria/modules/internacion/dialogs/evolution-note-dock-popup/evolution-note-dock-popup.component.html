@@ -3,7 +3,7 @@
 		<form id="nota-evolucion-form" (keydown.enter)="false" [formGroup]="form">
 			<div id="diagnosticos"
 				*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-				<app-diagnosticos [(mainDiagnosis)]="mainDiagnosis" [(diagnosticos)]="diagnosticos"
+				<app-diagnosticos [showTitle]="true" [(mainDiagnosis)]="mainDiagnosis" [(diagnosticos)]="diagnosticos"
 					[type]="'EVOLUTION'"></app-diagnosticos>
 			</div>
 			<div id="procedimientos"
@@ -223,10 +223,10 @@
 				</div>
 			</div>
 			<div id="alergias" *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR']">
-				<app-alergias [(allergies)]="allergies"></app-alergias>
+				<app-alergias [showTitle]="true" [(allergies)]="allergies"></app-alergias>
 			</div>
 			<div id="vacunas" *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
-				<app-vacunas [(immunizations)]="immunizations"></app-vacunas>
+				<app-vacunas [showTitle]="true" [(immunizations)]="immunizations"></app-vacunas>
 			</div>
 			<div id="validations" *ngIf="apiErrors.length > 0">
 				<mat-card>
