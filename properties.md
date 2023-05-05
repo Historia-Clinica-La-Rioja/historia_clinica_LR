@@ -197,6 +197,14 @@ La funcionalidad para reporte epimediológico se activa solamente si el feature 
 | ws.oauth.url.accesstoken  |  | /auth/realms/REALM_NAME/protocol/openid-connect/token | Opcional | Ruta relativa de obtención de *access tokens*. No debería cambiar | v1.32.0  |
 | ws.oauth.url.createuser  |  | /auth/admin/realms/REALM_NAME/users | Opcional | Ruta relativa de obtención/creación/modificación de datos de usuario. No debería cambiar | v1.32.0  |
 
+### CLAP - Sistema informático perinatal (SIP)
+| Propiedad                    | Variable de ambiente | Valor por defecto                                        | Condición | Descripción                                                                          | Desde   |
+|------------------------------| ------ |----------------------------------------------------------| -------- |--------------------------------------------------------------------------------------|---------|
+| ws.sip.plus.url.base         | | -                                                        | Opcional | Dominio desde el cual se van a consumir los servicios de SIP                         | v1.53.0 |
+| ws.sip.plus.embed-system     | | -                                                        | Opcional | Nombre que se le asocia a hsi como recurso embebedor dentro del archivo .conf de SIP | v1.53.0 |
+| ws.sip.plus.username         |	| -                                                        | Opcional | Usuario provisto por SIP para consumir sus recursos                                  | v1.53.0 |
+| ws.sip.plus.password         |  | -                                                        | Opcional | Contraseña provista por SIP para consumir sus recursos                               | v1.53.0 |
+
 ## Integración con sistemas relacionados
 | Propiedad | Variable de ambiente   | Valor por defecto       | Necesidad | Descripcion | Desde |
 | ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
