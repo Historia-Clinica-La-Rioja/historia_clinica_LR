@@ -2,6 +2,8 @@ package net.pladema.establishment.repository;
 
 import net.pladema.establishment.repository.domain.BedInfoVo;
 import net.pladema.establishment.repository.entity.Bed;
+import net.pladema.establishment.repository.entity.SectorType;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -87,12 +89,13 @@ public interface BedRepository extends JpaRepository<Bed, Integer> {
 			+ " FROM Bed b "
 			+ " JOIN Room r ON b.roomId = r.id"
 			+ " JOIN Sector s ON r.sectorId = s.id "
-			+ " LEFT JOIN InternmentEpisode ie ON b.id = ie.bedId"
-			+ " LEFT JOIN Patient pat ON ie.patientId = pat.id "
+			+ " LEFT JOIN InternmentEpisode ie ON b.id = ie.bedId "
+			+ " LEFT JOIN EmergencyCareEpisode ece ON b.id = ece.bedId "
+			+ " LEFT JOIN Patient pat ON ie.patientId = pat.id OR pat.id = ece.patientId "
 			+ " LEFT JOIN Person per ON pat.personId = per.id "
 			+ " LEFT JOIN IdentificationType it ON per.identificationTypeId = it.id "
 			+ " WHERE b.id =:bedId AND "
-			+ " ( b.free = true OR (b.free = false AND ie.statusId = "+ ACTIVE + ") "
+			+ " ( b.free = true OR (b.free = false AND ie.statusId = "+ ACTIVE + " OR s.sectorTypeId = 3) "
 			+ " AND NOT EXISTS (SELECT pd.id FROM PatientDischarge pd where pd.internmentEpisodeId = ie.id AND pd.physicalDischargeDate IS NOT NULL) )")
 	Stream<BedInfoVo> getBedInfo(@Param("bedId") Integer bedId);
 	

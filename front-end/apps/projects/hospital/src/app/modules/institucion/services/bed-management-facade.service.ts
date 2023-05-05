@@ -32,8 +32,8 @@ export class BedManagementFacadeService {
 		this.bedManagementFilterSubject.next(initialFilters);
 	}
 
-	public getBedManagement(): Observable<BedSummaryDto[]> {
-		this.bedService.getBedsSummary().pipe(
+	public getBedManagement(sectorType?: number): Observable<BedSummaryDto[]> {
+		this.bedService.getBedsSummary(sectorType).pipe(
 			tap((bedsSummary: BedSummaryDto[]) => this.filterOptions(bedsSummary))
 		).subscribe(data => {
 			this.originalBedManagement = data;

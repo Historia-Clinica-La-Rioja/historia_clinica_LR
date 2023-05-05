@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { BedManagementFacadeService } from '@institucion/services/bed-management-facade.service';
 import { BedInfoDto } from '@api-rest/api-model';
 import { tap } from 'rxjs/operators';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-bed-assignment',
@@ -21,8 +21,9 @@ export class BedAssignmentComponent implements OnInit, OnDestroy {
 
 	constructor(
 		public dialogRef: MatDialogRef<BedAssignmentComponent>,
-		private bedManagementFacadeService: BedManagementFacadeService
-  	) { }
+		private bedManagementFacadeService: BedManagementFacadeService,
+		@Inject(MAT_DIALOG_DATA) public data: number,
+  	) {}
 
 	ngOnInit(): void {
 		this.bedManagementFacadeService.setInitialFilters({
@@ -31,8 +32,7 @@ export class BedAssignmentComponent implements OnInit, OnDestroy {
 			probableDischargeDate: null,
 			filled: false
 		});
-
-		this.managementBed$ = this.bedManagementFacadeService.getBedManagement().pipe(
+		this.managementBed$ = this.bedManagementFacadeService.getBedManagement(this.data).pipe(
 			tap(bedsSummary => this.bedsAmount = bedsSummary ? bedsSummary.length : 0)
 		).subscribe(data => {
 			this.existBedManagementList = data ? true : false;

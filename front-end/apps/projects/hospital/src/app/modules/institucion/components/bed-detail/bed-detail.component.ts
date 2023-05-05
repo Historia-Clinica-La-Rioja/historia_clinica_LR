@@ -6,9 +6,7 @@ import { InternacionService } from "@api-rest/services/internacion.service";
 import { ConfirmDialogComponent } from "@presentation/dialogs/confirm-dialog/confirm-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
-import { PermissionsService } from "@core/services/permissions.service";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
-import { BedManagementFacadeService } from "@institucion/services/bed-management-facade.service";
 
 @Component({
 	selector: 'app-bed-detail',
@@ -32,9 +30,7 @@ export class BedDetailComponent implements OnInit, OnChanges {
 		private readonly internmentService: InternacionService,
 		private readonly dialog: MatDialog,
 		private readonly snackBarService: SnackBarService,
-		private readonly permissionsService: PermissionsService,
 		private readonly internmentEpisodeService: InternmentEpisodeService,
-		private readonly bedManagementFacadeService: BedManagementFacadeService,
 	) { }
 
 	ngOnInit(): void {

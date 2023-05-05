@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.pladema.establishment.controller.mapper.BedMapper;
@@ -60,9 +61,10 @@ public class BedController {
 
 	@GetMapping("/summary-list")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ADMINISTRADOR_DE_CAMAS')")
-	public ResponseEntity<List<BedSummaryDto>> getNewBedSummaryDto(@PathVariable(name = "institutionId") Integer institutionId){
-		LOG.debug("Input parameter -> institutionId {}", institutionId);
-		List<BedSummaryVo> beds = bedService.getBedSummary(institutionId);
+	public ResponseEntity<List<BedSummaryDto>> getNewBedSummaryDto(@PathVariable(name = "institutionId") Integer institutionId,
+																   @RequestParam(name = "sectorType", required = false) Integer sectorType){
+		LOG.debug("Input parameter -> institutionId {}, sectorType {}", institutionId, sectorType);
+		List<BedSummaryVo> beds = bedService.getBedSummary(institutionId, sectorType);
 		LOG.trace("Output -> {}", beds);
 		LOG.debug("Result size {}", beds.size());
 		return ResponseEntity.ok(bedMapper.toListBedSummaryDto(beds));
@@ -77,7 +79,4 @@ public class BedController {
 		LOG.debug("Get free Beds by ClinicalSpecialty response=> {}", beds);
 		return ResponseEntity.ok(bedMapper.toListBedDto(beds));
 	}
-	
-	
-
 }

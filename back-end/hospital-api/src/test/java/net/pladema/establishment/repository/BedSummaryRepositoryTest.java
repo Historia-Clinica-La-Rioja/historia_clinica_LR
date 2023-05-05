@@ -81,7 +81,7 @@ class BedSummaryRepositoryTest extends UnitRepository {
         mockBed(bc, r2, "Bed 4");
         mockBed(bc, r2, "Bed 5");
 
-        List<BedSummaryVo> bedSummaries = bedSummaryRepository.execute(institutionId);
+        List<BedSummaryVo> bedSummaries = bedSummaryRepository.execute(institutionId, null);
 
         assertThat(bedSummaries)
                 .hasSize(5);

@@ -21,6 +21,6 @@ public interface BedService {
 	
 	public Optional<BedInfoVo> getBedInfo(Integer bedId);
 	
-	public List<BedSummaryVo> getBedSummary(Integer institutionId);
+	public List<BedSummaryVo> getBedSummary(Integer institutionId, Integer sectorType);
 
 }

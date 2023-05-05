@@ -12,7 +12,6 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ShockroomService } from '@api-rest/services/shockroom.service';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AttendPlace } from '../../routes/home/home.component';
-import { BedAssignmentComponent } from '@historia-clinica/dialogs/bed-assignment/bed-assignment.component';
 
 const CONFIRM: string = 'guardia.dialog.attention_place.CONFIRM';
 const BED_ASSIGN: string = 'guardia.dialog.attention_place.BED_ASSIGN';
@@ -38,7 +37,6 @@ export class AttentionPlaceDialogComponent {
 		private readonly shockroomService: ShockroomService,
 		private readonly formBuilder: FormBuilder,
 		private readonly dialogRef: MatDialogRef<AttentionPlaceDialogComponent>,
-		private readonly dialog: MatDialog,
 	) {
 		this.places$ = this.emergencyCareMasterDataService.getEmergencyEpisodeSectorType();
 		this.setForm();

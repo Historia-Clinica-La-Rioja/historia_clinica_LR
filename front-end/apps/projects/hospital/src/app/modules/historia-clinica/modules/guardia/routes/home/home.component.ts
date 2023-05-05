@@ -10,7 +10,7 @@ import {
 	EmergencyCarePatientDto,
 	MasterDataDto, MasterDataInterface,
 	PatientPhotoDto,
-	ProfessionalPersonDto
+	ProfessionalPersonDto,
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
@@ -41,6 +41,7 @@ import { FormBuilder } from '@angular/forms';
 import { BedAssignmentComponent } from '@historia-clinica/dialogs/bed-assignment/bed-assignment.component';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
+const GUARDIA: number = 3;
 
 @Component({
 	selector: 'app-home',
@@ -140,6 +141,8 @@ export class HomeComponent implements OnInit {
 		});
 
 		dialogRef.afterClosed().subscribe((attendPlace: AttendPlace) => {
+			if (!attendPlace) return;
+			
 			if (attendPlace.attentionPlace === AttentionPlace.CONSULTORIO) {
 				this.episodeStateService.atender(episode.id, attendPlace.id).subscribe(changed => {
 					if (changed) {
@@ -162,12 +165,12 @@ export class HomeComponent implements OnInit {
 				}, (error: ApiErrorDto) => processErrors(error, (msg) => this.snackBarService.showError(msg)))
 			}
 
-			if (attendPlace.attentionPlace === AttentionPlace.HABITACION)
-				this.dialog.open(BedAssignmentComponent)
+			if (attendPlace.attentionPlace === AttentionPlace.HABITACION) {
+				this.dialog.open(BedAssignmentComponent, {data: GUARDIA})
 					.afterClosed()
 					.subscribe((bed: BedInfoDto) => {
 						if (!bed) return;
-						
+
 						this.episodeStateService.atender(episode.id, null, null, bed.bed.id).subscribe((response: boolean) => {
 							if (!response) this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
 
@@ -176,6 +179,7 @@ export class HomeComponent implements OnInit {
 
 						}, (error: ApiErrorDto) => processErrors(error, (msg) => this.snackBarService.showError(msg)))
 					});
+			}
 		});
 	}
 

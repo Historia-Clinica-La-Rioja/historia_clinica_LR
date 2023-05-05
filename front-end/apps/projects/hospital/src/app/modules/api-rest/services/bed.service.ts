@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 import { BedDto, PatientBedRelocationDto, BedSummaryDto, BedInfoDto } from '@api-rest/api-model';
@@ -18,9 +18,11 @@ export class BedService {
 		return this.http.get<BedDto[]>(url);
 	}
 
-	getBedsSummary(): Observable<BedSummaryDto[]> {
+	getBedsSummary(sectorType?: number): Observable<BedSummaryDto[]> {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/bed/summary-list`;
-		return this.http.get<BedSummaryDto[]>(url);
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = sectorType ? queryParams.append('sectorType', sectorType) : queryParams;
+		return this.http.get<BedSummaryDto[]>(url, {params: queryParams});
 	}
 
 	getBedInfo(bedId): Observable<BedInfoDto> {
