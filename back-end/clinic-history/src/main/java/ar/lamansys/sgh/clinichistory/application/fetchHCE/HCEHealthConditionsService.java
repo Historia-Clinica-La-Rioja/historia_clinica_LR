@@ -20,4 +20,6 @@ public interface HCEHealthConditionsService {
     List<HCEPersonalHistoryBo> getSolvedProblems(Integer patientId);
 
     List<HCEHospitalizationBo> getHospitalizationHistory(Integer patientId);
+
+	List<HCEHospitalizationBo> getEmergencyCareHistory(Integer patientId);
 }

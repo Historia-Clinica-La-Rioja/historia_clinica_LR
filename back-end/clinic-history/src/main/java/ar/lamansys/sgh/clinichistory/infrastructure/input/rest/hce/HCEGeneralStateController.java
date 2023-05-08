@@ -330,6 +330,17 @@ public class HCEGeneralStateController {
         return ResponseEntity.ok().body(result);
     }
 
+	@GetMapping("/emergency-care")
+	public ResponseEntity<List<HCEHospitalizationHistoryDto>> getEmergencyCareHistory(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "patientId") Integer patientId) {
+		LOG.debug(LOGGING_INPUT, institutionId, patientId);
+		List<HCEHospitalizationBo> resultService = hceHealthConditionsService.getEmergencyCareHistory(patientId);
+		List<HCEHospitalizationHistoryDto> result = groupHospitalizationsBySource(resultService);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
+
     private List<HCEHospitalizationHistoryDto> groupHospitalizationsBySource(List<HCEHospitalizationBo> hospitalizationList){
             Map<Integer, List<HCEHospitalizationBo>> hospitalizationsBySource = hospitalizationList.stream()
                     .collect(Collectors.groupingBy(h -> h.getSourceId()));

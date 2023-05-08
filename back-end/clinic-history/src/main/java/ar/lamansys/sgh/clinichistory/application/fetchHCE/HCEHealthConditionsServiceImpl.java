@@ -125,4 +125,13 @@ public class HCEHealthConditionsServiceImpl implements HCEHealthConditionsServic
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
+
+	@Override
+	public List<HCEHospitalizationBo> getEmergencyCareHistory(Integer patientId) {
+		LOG.debug(LOGGING_INPUT, patientId);
+		List<HCEHospitalizationVo> resultQuery = hceHealthConditionRepository.getEmergencyCareHistory(patientId);
+		List<HCEHospitalizationBo> result = resultQuery.stream().map(HCEHospitalizationBo::new).collect(Collectors.toList());
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
+	}
 }
