@@ -13,6 +13,7 @@ import { forkJoin } from 'rxjs';
 import { anyMatch } from "@core/utils/array.utils";
 import { PermissionsService } from "@core/services/permissions.service";
 import { ActionsButtonService } from '../../../indicacion/services/actions-button.service';
+import { CreatedDuring } from '../study-list-element/study-list-element.component';
 
 const IMAGE_DIAGNOSIS = 'Diagnóstico por imágenes';
 
@@ -81,7 +82,7 @@ export class StudyComponent implements OnInit {
 				content: diagnosticReport.healthCondition.snomed.pt
 			}],
 			createdBy: diagnosticReport.doctor.firstName + " " + diagnosticReport.doctor.lastName,
-			timeElapsed: updateDate.toLocaleDateString('es-AR') + ' - ' + updateDate.toLocaleTimeString('es-AR', {hour: '2-digit', minute:'2-digit'})
+			timeElapsed: updateDate.toLocaleDateString('es-AR') + ' - ' + updateDate.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
 		}
 	}
 
@@ -105,15 +106,15 @@ export class StudyComponent implements OnInit {
 			});
 
 		newCompleteStudy.afterClosed().subscribe((completed: any) => {
-				if (completed) {
-					if (completed.completed) {
-						this.updateCurrentReportsEventEmitter.emit();
-						this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_SUCCESS');
-					}
-					else
-						this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_ERROR');
+			if (completed) {
+				if (completed.completed) {
+					this.updateCurrentReportsEventEmitter.emit();
+					this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_SUCCESS');
 				}
-			});
+				else
+					this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_ERROR');
+			}
+		});
 	}
 
 	showStudyResults(diagnosticReport: DiagnosticReportInfoDto) {
@@ -146,8 +147,11 @@ export class StudyComponent implements OnInit {
 		);
 	}
 
-	wasCreatedDuringSource(source: String): boolean {
-		return this.translateService.instant('app.menu.INTERNACION') === source;
+	wasCreatedDuringSource(source: String): CreatedDuring {
+		if (this.translateService.instant('app.menu.INTERNACION') === source)
+			return CreatedDuring.INTERNMENT
+		if (source === 'Guardia')
+			return CreatedDuring.EMERGENCY_CARE
 	}
 
 	private classifyStudiesWithTheSameOrder(reports: StudyInformation[]): StudyInformation[] {

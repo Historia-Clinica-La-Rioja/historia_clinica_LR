@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { DiagnosticReportInfoDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
+import { DiagnosesGeneralStateDto, DiagnosticReportInfoDto, EmergencyCareListDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
-import { ESTUDIOS } from '@historia-clinica/constants/summaries';
+import { ESTUDIOS, PatientType } from '@historia-clinica/constants/summaries';
 import { STUDY_STATUS } from '../../constants/prescripciones-masterdata';
 import { ConfirmarPrescripcionComponent } from '../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { StudyCategories } from '../../modules/estudio/constants/internment-studies';
@@ -18,6 +18,12 @@ import { InternmentStateService } from "@api-rest/services/internment-state.serv
 import { CreateOutpatientOrderComponent, NewOutpatientOrder } from "@historia-clinica/modules/ambulatoria/dialogs/create-outpatient-order/create-outpatient-order.component";
 import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
 import { PermissionsService } from "@core/services/permissions.service";
+import { EmergencyCareEpisodeSummaryService } from '@api-rest/services/emergency-care-episode-summary.service';
+import { map, switchMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
+import { EmergencyCareStateService } from '@api-rest/services/emergency-care-state.service';
+import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/guardia/services/new-emergency-care-evolution-note.service';
 
 @Component({
 	selector: 'app-card-estudios',
@@ -43,9 +49,14 @@ export class CardEstudiosComponent implements OnInit {
 	hasPicturesStaffRole = false;
 	hasLaboratoryStaffRole = false;
 	hasPharmacyStaffRole = false;
+	episodeEnAtencion = false;
+	notEmergencyCareTemporaryPatient = true;
+	intermentDiagnosis;
+	emergencyCareDiagnosis;
+	episodeId: number;
 
 	@Input() patientId: number;
-	
+
 	@Input() epicrisisConfirmed: boolean;
 
 	@Input()
@@ -76,6 +87,9 @@ export class CardEstudiosComponent implements OnInit {
 		private readonly translateService: TranslateService,
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly permissionsService: PermissionsService,
+		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService,
+		private readonly emergencyCareStateService: EmergencyCareStateService,
+		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService
 	) { }
 
 	ngOnInit(): void {
@@ -96,7 +110,40 @@ export class CardEstudiosComponent implements OnInit {
 
 		this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId).subscribe(internmentEpisodeInProgress => {
 			this.internmentEpisodeInProgressId = internmentEpisodeInProgress.id;
-		})
+
+			if (this.internmentEpisodeInProgressId) {
+				this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeInProgressId).subscribe(diagnoses => {
+					this.intermentDiagnosis = diagnoses.map(this.mapDiagnosesGeneralStateDto);
+				});
+			}
+		});
+
+		this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
+			.pipe(
+				switchMap(
+					inProgressEpisode => {
+						return inProgressEpisode.inProgress ? this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeSummary(inProgressEpisode.id) : of(null)
+					}
+				)
+			).subscribe(
+				(episode: EmergencyCareListDto) => {
+					if (episode) {
+						this.episodeId = episode.id;
+						this.episodeEnAtencion = episode.state.id === EstadosEpisodio.EN_ATENCION;
+						this.notEmergencyCareTemporaryPatient = episode.patient.typeId != PatientType.EMERGENCY_CARE_TEMPORARY;
+						this.getEmergencyCareEpisodeDiagnoses().subscribe(
+							d => this.emergencyCareDiagnosis = d
+						)
+					}
+				}
+			);
+
+		this.newEmergencyCareEvolutionNoteService.new$.subscribe(
+			_ => this.getEmergencyCareEpisodeDiagnoses().subscribe(r =>
+				this.emergencyCareDiagnosis = r
+			)
+		)
+
 	}
 
 	setActionsLayout(): void {
@@ -132,7 +179,7 @@ export class CardEstudiosComponent implements OnInit {
 			else {
 				this.dialog.open(OperationDeniedComponent, {
 					width: '35%',
-					data: { message : 'ambulatoria.paciente.internment-order.diagnosis-required-dialog.MESSAGE' }
+					data: { message: 'ambulatoria.paciente.internment-order.diagnosis-required-dialog.MESSAGE' }
 				});
 			}
 		})
@@ -142,7 +189,7 @@ export class CardEstudiosComponent implements OnInit {
 		const newOrderComponent = this.dialog.open(CreateInternmentOrderComponent,
 			{
 				width: '28%',
-				data: { internmentEpisodeId: this.internmentEpisodeInProgressId, patientId: this.patientId },
+				data: { diagnoses: this.intermentDiagnosis, patientId: this.patientId },
 			})
 
 		newOrderComponent.afterClosed().subscribe((newInternmentOrder: NewInternmentOrder) => {
@@ -154,10 +201,10 @@ export class CardEstudiosComponent implements OnInit {
 
 	openNewOutpatientOrderDialog() {
 		this.hceGeneralStateService.getActiveProblems(this.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
-			const activeProblemsList = activeProblems.map(problem => ({id: problem.id, description: problem.snomed.pt, sctId: problem.snomed.sctid}));
+			const activeProblemsList = activeProblems.map(problem => ({ id: problem.id, description: problem.snomed.pt, sctId: problem.snomed.sctid }));
 
 			this.hceGeneralStateService.getChronicConditions(this.patientId).subscribe((chronicProblems: HCEPersonalHistoryDto[]) => {
-				const chronicProblemsList = chronicProblems.map(problem => ({id: problem.id, description: problem.snomed.pt,  sctId: problem.snomed.sctid}));
+				const chronicProblemsList = chronicProblems.map(problem => ({ id: problem.id, description: problem.snomed.pt, sctId: problem.snomed.sctid }));
 				const healthProblems = activeProblemsList.concat(chronicProblemsList);
 
 				if (healthProblems.length) {
@@ -166,7 +213,7 @@ export class CardEstudiosComponent implements OnInit {
 				else {
 					this.dialog.open(OperationDeniedComponent, {
 						width: '35%',
-						data: { message : 'ambulatoria.paciente.outpatient-order.problem-required-dialog.MESSAGE' }
+						data: { message: 'ambulatoria.paciente.outpatient-order.problem-required-dialog.MESSAGE' }
 					});
 				}
 
@@ -174,6 +221,27 @@ export class CardEstudiosComponent implements OnInit {
 
 		});
 
+	}
+
+	openNewEmergencyCareOrderDialog() {
+		if (this.emergencyCareDiagnosis.length) {
+			const newOrderComponent = this.dialog.open(CreateInternmentOrderComponent,
+				{
+					width: '28%',
+					data: { diagnoses: this.emergencyCareDiagnosis, patientId: this.patientId, emergencyCareId: this.episodeId, },
+				});
+			newOrderComponent.afterClosed().subscribe((newOrder: NewInternmentOrder) => {
+				if (newOrder) {
+					this.openNewEmergencyCareStudyConfirmationDialog(newOrder);
+				}
+			});
+		}
+		else {
+			this.dialog.open(OperationDeniedComponent, {
+				width: '35%',
+				data: { message: 'El episodio de guardia debe tener un diagnóstico asociado' }
+			});
+		}
 	}
 
 	openCreateOutpatientOrderDialog(healthProblems) {
@@ -307,6 +375,39 @@ export class CardEstudiosComponent implements OnInit {
 				this.educationDiagnotics = [];
 				break;
 		}
+	}
+
+	private getEmergencyCareEpisodeDiagnoses(): Observable<any[]> {
+		return this.emergencyCareStateService.getEmergencyCareEpisodeDiagnoses(this.episodeId).
+			pipe(
+				map((d: DiagnosesGeneralStateDto[]) => d.map(this.mapDiagnosesGeneralStateDto))
+			)
+	}
+
+	private mapDiagnosesGeneralStateDto(diagnosesGeneralStateDto: DiagnosesGeneralStateDto) {
+		return {
+			id: diagnosesGeneralStateDto.id,
+			main: diagnosesGeneralStateDto.main,
+			description: diagnosesGeneralStateDto.snomed.pt,
+			sctid: diagnosesGeneralStateDto.snomed.sctid
+		}
+	}
+
+	private openNewEmergencyCareStudyConfirmationDialog(newOutpatientOrder: NewOutpatientOrder) {
+		this.dialog.open(ConfirmarPrescripcionComponent,
+			{
+				disableClose: true,
+				data: {
+					titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.STUDY_TITLE',
+					downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_STUDY',
+					successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_STUDY_SUCCESS',
+					prescriptionType: PrescriptionTypes.STUDY,
+					patientId: this.patientId,
+					prescriptionRequest: newOutpatientOrder.prescriptionRequestResponse,
+				},
+				width: '35%',
+			});
+		this.getStudy();
 	}
 
 }

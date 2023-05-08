@@ -18,6 +18,8 @@
 			<button mat-menu-item (click)="openNewOutpatientOrderDialog()">
 				{{ 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_menu.NEW_OUTPATIENT_PRESCRIPTION'  | translate }}
 			</button>
+
+			<button *ngIf="episodeEnAtencion && notEmergencyCareTemporaryPatient" mat-menu-item (click)="openNewEmergencyCareOrderDialog()">Nueva orden de Guardia</button>
 		</ng-container>
 	</mat-menu>
 

@@ -3,8 +3,14 @@
 		<app-list-element-item fxFlex [content]="content"></app-list-element-item>
 		<ng-content select="[actions]"></ng-content>
 	</div>
-	<div class="internment-dialog message-label" fxLayout="row" fxLayoutAlign="none center" fxLayoutGap="10px" *ngIf="wasCreatedDuringInternment">
+	<div class="internment-dialog message-label" fxLayout="row" fxLayoutAlign="none center" fxLayoutGap="10px"
+		*ngIf="createdDuring === CreatedDuring.INTERNMENT">
 		<mat-icon>error_outline</mat-icon>
 		<span class="color-black" [translate]="'ambulatoria.paciente.studies.INTERNMENT_MEDICAL_STUDY'"></span>
+	</div>
+	<div class="internment-dialog message-label" fxLayout="row" fxLayoutAlign="none center" fxLayoutGap="10px"
+		*ngIf="createdDuring === CreatedDuring.EMERGENCY_CARE">
+		<mat-icon>error_outline</mat-icon>
+		<span class="color-black">Estudio solicitado durante una guardia</span>
 	</div>
 </div>

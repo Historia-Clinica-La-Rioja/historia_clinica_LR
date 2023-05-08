@@ -4,7 +4,7 @@
 	<div id="content" fxLayout="column" fxLayoutGap="50px">
 		<div fxLayout="row" *ngFor="let study of _studies">
 			<app-study-list-element fxFlex="100" [content]="contentBuilder(study.diagnosticInformation)"
-				[wasCreatedDuringInternment]="wasCreatedDuringSource(study.diagnosticInformation.source)"></app-study-list-element>
+				[createdDuring]="wasCreatedDuringSource(study.diagnosticInformation.source)"></app-study-list-element>
 			<div actions *ngIf="study.diagnosticInformation.statusId !== STUDY_STATUS.ERROR.id">
 				<button mat-icon-button [matMenuTriggerFor]="menu" >
 					<mat-icon>more_vert</mat-icon>

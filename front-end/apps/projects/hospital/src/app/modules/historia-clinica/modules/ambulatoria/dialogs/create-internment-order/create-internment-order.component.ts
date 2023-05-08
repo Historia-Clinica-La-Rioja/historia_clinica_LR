@@ -12,11 +12,12 @@ import { OrderStudiesService, Study } from "@historia-clinica/services/order-stu
 import { InternmentOrderService } from "@api-rest/services/internment-order.service";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { ConceptsTypeaheadSearchDialogComponent } from "@historia-clinica/dialogs/concepts-typeahead-search-dialog/concepts-typeahead-search-dialog.component";
+import { EmergencyCareServiceRequestService } from '@api-rest/services/emergency-care-serive-request.service';
 
 @Component({
-  selector: 'app-create-order',
-  templateUrl: './create-internment-order.component.html',
-  styleUrls: ['./create-internment-order.component.scss']
+	selector: 'app-create-order',
+	templateUrl: './create-internment-order.component.html',
+	styleUrls: ['./create-internment-order.component.scss']
 })
 export class CreateInternmentOrderComponent implements OnInit {
 
@@ -32,21 +33,22 @@ export class CreateInternmentOrderComponent implements OnInit {
 	selectedStudy: TemplateOrConceptOption = null;
 
 	orderStudiesService: OrderStudiesService;
-
-  	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: { internmentEpisodeId: number, patientId: number },
-  		public dialogRef: MatDialogRef<CreateInternmentOrderComponent>,
+	title = this.data.emergencyCareId ? 'Nueva orden de Guardia': 'ambulatoria.paciente.internment-order.create-order-dialog.TITLE';
+	constructor(
+		@Inject(MAT_DIALOG_DATA) public data: { diagnoses: any[], patientId: number, emergencyCareId?: number },
+		public dialogRef: MatDialogRef<CreateInternmentOrderComponent>,
 		private readonly formBuilder: FormBuilder,
 		private readonly requestMasterDataService: RequestMasterDataService,
 		private readonly internmentStateService: InternmentStateService,
 		private readonly internmentOrderService: InternmentOrderService,
 		private readonly snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,
+		private readonly emergencyCareServiceRequestService: EmergencyCareServiceRequestService
 	) {
-  		this.orderStudiesService = new OrderStudiesService();
+		this.orderStudiesService = new OrderStudiesService();
 	}
 
-  	ngOnInit(): void {
+	ngOnInit(): void {
 		this.form = this.formBuilder.group({
 			studyCategory: [null, Validators.required],
 			studySelection: [null, Validators.required],
@@ -58,47 +60,40 @@ export class CreateInternmentOrderComponent implements OnInit {
 			this.studyCategoryOptions = categories;
 		});
 
-		this.internmentStateService.getDiagnosesGeneralState(this.data.internmentEpisodeId).subscribe(diagnoses => {
-			this.healthProblemOptions = diagnoses.map(problem => ({
-				id: problem.id,
-				main: problem.main,
-				description: problem.snomed.pt,
-				sctid: problem.snomed.sctid
-			}));
-			this.setMainDiagnosisAsDefaultHealthProblem();
-		})
-  	}
+		this.healthProblemOptions = this.data.diagnoses;
+		this.setMainDiagnosisAsDefaultHealthProblem();
+	}
 
-  	private setMainDiagnosisAsDefaultHealthProblem() {
+	private setMainDiagnosisAsDefaultHealthProblem() {
 		const mainDiagnosis = this.healthProblemOptions.filter((d) => { return d.main }).pop();
 		this.form.controls.healthProblem.setValue(mainDiagnosis);
 	}
 
-  	handleStudySelected(study) {
-  		this.selectedStudy = study;
-  		this.form.controls.studySelection.setValue(this.getStudyDisplayName());
+	handleStudySelected(study) {
+		this.selectedStudy = study;
+		this.form.controls.studySelection.setValue(this.getStudyDisplayName());
 	}
 
 	resetStudySelector() {
-  		this.selectedStudy = null;
-  		this.form.controls.studySelection.setValue(null);
+		this.selectedStudy = null;
+		this.form.controls.studySelection.setValue(null);
 	}
 
 	selectedStudyIsTemplate(): boolean {
-  		return this.selectedStudy.type === TemplateOrConceptType.TEMPLATE;
+		return this.selectedStudy.type === TemplateOrConceptType.TEMPLATE;
 	}
 
 	getStudyDisplayName(): string {
-  		return (this.selectedStudyIsTemplate()) ? this.selectedStudy?.data?.description : this.selectedStudy?.data?.pt.term;
+		return (this.selectedStudyIsTemplate()) ? this.selectedStudy?.data?.description : this.selectedStudy?.data?.pt.term;
 	}
 
 	getTemplateIncludedConceptsDisplayText(): string {
-  		return this.selectedStudy.data.concepts.map(c => c.pt.term).join(', ');
+		return this.selectedStudy.data.concepts.map(c => c.pt.term).join(', ');
 	}
 
 	goToConfirmationStep() {
-  		this.firstStepCompleted = true;
-  		this.loadSelectedConceptsIntoOrderStudiesService();
+		this.firstStepCompleted = true;
+		this.loadSelectedConceptsIntoOrderStudiesService();
 	}
 
 	private loadSelectedConceptsIntoOrderStudiesService() {
@@ -155,13 +150,26 @@ export class CreateInternmentOrderComponent implements OnInit {
 				};
 			})
 		};
-		this.saveInternmentOrder(newInternmentOrder);
+		if (this.data.emergencyCareId) {
+			this.saveEmergencyCareOrder(newInternmentOrder);
+		} else {
+			this.saveInternmentOrder(newInternmentOrder);
+		}
+	}
+
+	private saveEmergencyCareOrder(newInternmentOrder: PrescriptionDto) {
+		this.emergencyCareServiceRequestService.create(this.data.patientId, this.data.emergencyCareId, newInternmentOrder).subscribe(
+			{
+				next: prescriptionRequestResponse => this.closeModal({ prescriptionDto: newInternmentOrder, prescriptionRequestResponse: prescriptionRequestResponse }),
+				error: (err: ApiErrorDto) => this.snackBarService.showError(err.errors[0])
+			}
+		)
 	}
 
 	private saveInternmentOrder(newInternmentOrder: PrescriptionDto) {
 		this.internmentOrderService.create(this.data.patientId, newInternmentOrder).subscribe(prescriptionRequestResponse => {
-				this.closeModal({ prescriptionDto: newInternmentOrder, prescriptionRequestResponse: prescriptionRequestResponse });
-			},
+			this.closeModal({ prescriptionDto: newInternmentOrder, prescriptionRequestResponse: prescriptionRequestResponse });
+		},
 			(err: ApiErrorDto) => {
 				this.snackBarService.showError(err.errors[0]);
 			});
@@ -183,7 +191,7 @@ export class CreateInternmentOrderComponent implements OnInit {
 
 		addStudy.afterClosed().subscribe((addStudyDialogData) => {
 			if (addStudyDialogData?.selectedConcept) {
-				let added = this.orderStudiesService.add({snomed: addStudyDialogData.selectedConcept});
+				let added = this.orderStudiesService.add({ snomed: addStudyDialogData.selectedConcept });
 				if (!added)
 					this.snackBarService.showError('ambulatoria.paciente.internment-order.create-order-dialog.STUDY_REPEATED')
 			}

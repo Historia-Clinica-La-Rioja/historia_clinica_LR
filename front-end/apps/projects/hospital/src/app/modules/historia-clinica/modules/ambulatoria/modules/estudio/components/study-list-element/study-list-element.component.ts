@@ -9,11 +9,17 @@ import { Content } from '@presentation/components/indication/indication.componen
 export class StudyListElementComponent implements OnInit {
 
 	@Input() content: Content;
-	@Input() wasCreatedDuringInternment: boolean;
+	@Input() createdDuring: CreatedDuring;
 
+
+	CreatedDuring = CreatedDuring;
 	constructor() { }
 
 	ngOnInit(): void {
 	}
 
+}
+
+export enum CreatedDuring {
+	INTERNMENT, EMERGENCY_CARE
 }
