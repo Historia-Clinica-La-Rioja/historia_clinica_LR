@@ -1,0 +1,17 @@
+<div>
+	<div class="header-container" fxLayout="row" fxLayoutAlign="space-between">
+		<div mat-dialog-title>
+			<div translate="image-network.appointments.FINISH_STUDY"></div>
+		</div>
+	</div>
+
+	<div class="inputs-container" fxLayout="column">
+		<mat-form-field appearance="outline">
+			<textarea class="observations-container" matInput type="text" id="observations" name="observations" placeholder="Observations"></textarea>
+		</mat-form-field>
+
+		<button class="complete-btn" mat-flat-button color="primary">
+			<span class="uppercase" [translate]="'image-network.appointments.CONFIRM'"></span>
+		</button>
+	</div>
+</div>

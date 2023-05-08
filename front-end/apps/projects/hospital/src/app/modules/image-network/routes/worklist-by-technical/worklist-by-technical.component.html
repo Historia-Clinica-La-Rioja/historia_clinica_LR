@@ -61,7 +61,7 @@
                                     </span>
                                 </div>
 								<div fxFlex.gt-sm="15" fxFlex.gt-md="13">
-									<button mat-flat-button color="primary" fxFlex="100" *ngIf="appointment.canBeCompleted">
+									<button mat-flat-button color="primary" fxFlex="100" *ngIf="appointment.canBeFinished" (click)="openFinishStudyDialog()">
 										<span class="uppercase" [translate]="'image-network.appointments.FINISH'"></span>
 									</button>
 								</div>

@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { EquipmentAppointmentListDto, EquipmentDto } from '@api-rest/api-model';
@@ -12,6 +13,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { Color } from '@presentation/colored-label/colored-label.component';
 import { WORKLIST_APPOINTMENT_STATES, APPOINTMENT_STATES_ID, AppointmentState } from '@turnos/constants/appointment';
 import { Observable } from 'rxjs';
+import { FinishStudyComponent } from "../../dialogs/finish-study/finish-study.component";
 
 const PAGE_SIZE_OPTIONS = [10];
 const PAGE_MIN_SIZE = 10;
@@ -50,7 +52,8 @@ export class WorklistByTechnicalComponent implements OnInit {
 
     constructor(private readonly equipmentService: EquipmentService,
 		private readonly featureFlagService: FeatureFlagService,
-        private readonly appointmentsService: AppointmentsService
+        private readonly appointmentsService: AppointmentsService,
+				public dialog: MatDialog
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
 			this.nameSelfDeterminationFF = isOn
@@ -140,7 +143,7 @@ export class WorklistByTechnicalComponent implements OnInit {
                 firstName: this.capitalizeWords(a.patient.person.firstName),
                 lastName: this.capitalizeWords(a.patient.person.lastName),
                 nameSelfDetermination: this.capitalizeWords(a.patient.person.nameSelfDetermination),
-				canBeCompleted: a.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED || a.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED
+				canBeFinished: a.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED
             }
         })
     }
@@ -158,6 +161,16 @@ export class WorklistByTechnicalComponent implements OnInit {
 		const startPage = page.pageIndex * page.pageSize;
 		this.pageSlice = this.detailedAppointments.slice(startPage, $event.pageSize + startPage);
 	}
+
+	openFinishStudyDialog() {
+		const dialogRef = this.dialog.open(FinishStudyComponent, {
+			width: '35%',
+			autoFocus: false
+		});
+
+		dialogRef.afterClosed().subscribe();
+	}
+
 }
 
 export interface detailedAppointment {
@@ -169,5 +182,5 @@ export interface detailedAppointment {
     firstName: string,
     lastName: string,
     nameSelfDetermination: string,
-	canBeCompleted: boolean
+	canBeFinished: boolean
 }
