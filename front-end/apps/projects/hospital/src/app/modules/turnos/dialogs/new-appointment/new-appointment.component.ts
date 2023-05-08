@@ -69,7 +69,7 @@ export class NewAppointmentComponent implements OnInit {
 	public showAddPatient = false;
 	public editable = true;
 	patientMedicalCoverages: PatientMedicalCoverage[];
-	patientMedicalOrders$: Observable<DiagnosticReportInfoDto[]>
+	patientMedicalOrders: medicalOrderInfo[];
 	patient: ReducedPatientDto;
 	public readonly hasError = hasError;
 	readonly TEMPORARY_PATIENT_ID = TEMPORARY_PATIENT_ID;
@@ -215,7 +215,7 @@ export class NewAppointmentComponent implements OnInit {
 			this.patientMedicalOrderTooltipDescription = 
 				`${translatedText} # 
 				${this.appointmentInfoForm.controls.appointmentMedicalOrder.value?.serviceRequestId} - 
-				${this.titleCasePipe.transform(this.appointmentInfoForm.controls.appointmentMedicalOrder.value?.snomed?.pt)}`
+				${this.titleCasePipe.transform(this.appointmentInfoForm.controls.appointmentMedicalOrder.value?.studyName)}`
 		);
 	}
 
@@ -448,7 +448,19 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	getPatientMedicalOrders() {
-		this.patientMedicalOrders$ = this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, MEDICAL_ORDER_PENDING_STATUS, null, null, null, MEDICAL_ORDER_CATEGORY_ID);
+		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, MEDICAL_ORDER_PENDING_STATUS, null, null, null, MEDICAL_ORDER_CATEGORY_ID).subscribe(medicalOrders => {
+			this.patientMedicalOrders = this.mapDiagnosticReportInfoDtoToMedicalOrderInfo(medicalOrders);
+		});
+	}
+
+	mapDiagnosticReportInfoDtoToMedicalOrderInfo(patientMedicalOrders: DiagnosticReportInfoDto[]): medicalOrderInfo[]{
+		return patientMedicalOrders.map(diagnosticReportInfo => {
+			return {
+				serviceRequestId: diagnosticReportInfo.serviceRequestId,
+				studyName: diagnosticReportInfo.snomed.pt,
+				studyId: diagnosticReportInfo.id
+			}
+		})
 	}
 
 	newTranscribedOrder() {
@@ -461,7 +473,7 @@ export class NewAppointmentComponent implements OnInit {
 		});
 
 		/*dialogRef.afterClosed().subscribe(
-
+			
 		);*/
 	}
 
@@ -501,4 +513,10 @@ export class NewAppointmentComponent implements OnInit {
 		else
 			return this.appointmentFacade.addAppointment(newAppointment);
 	}
+}
+
+export interface medicalOrderInfo {
+	serviceRequestId: number,
+	studyName: string,
+	studyId: number
 }

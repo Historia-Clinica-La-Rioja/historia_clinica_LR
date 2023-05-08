@@ -31,7 +31,7 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
 
     ngOnInit(): void {
         this.transcribeOrderForm = this.formBuilder.group({
-            study: [null],
+            study: [null, Validators.required],
             assosiatedProblem: [null, Validators.required],
             professional: [null, Validators.required],
             institution: [null]
@@ -50,6 +50,16 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
                 this.healthProblems = healthProblems;
 			});
 		});
+    }
+
+    saveOrder() {
+        
+    }
+
+    isFormValid(): boolean {
+        if(this.selectedFiles.length)
+            return this.transcribeOrderForm.valid;
+        return false
     }
 
     onFileSelected($event){

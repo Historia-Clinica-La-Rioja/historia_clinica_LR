@@ -31,7 +31,8 @@
     <ng-template #problemSelectedField>
         <mat-form-field appearance="outline" class="full-width">
             <mat-label [translate]="'image-network.appointments.medical-order.ASSOCIATED_PROBLEM'"></mat-label>
-            <input formControlName="assosiatedProblem" type="text" matInput readonly matTooltip="{{ this.getProblemDisplayName() }}">
+            <input formControlName="assosiatedProblem" type="text" matInput readonly
+                matTooltip="{{ this.getProblemDisplayName() }}">
             <button mat-button matSuffix color="warn" mat-icon-button (click)="resetProblemSelector()">
                 <mat-icon>close</mat-icon>
             </button>
@@ -55,24 +56,30 @@
 
     <mat-divider></mat-divider>
 
-    <div class="file-attached"> 
+    <div class="file-attached">
         <div>
             <button mat-button color="primary" (click)="fileInput.click()">
                 <mat-icon>attachment</mat-icon>
                 <span [translate]="'image-network.appointments.medical-order.ATTACH_EXTERNAL_ORDER'"></span>
             </button>
-            <input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file" (click)="$event.target.value=null"
-            accept="image/jpeg,image/jpg,image/png,application/pdf">
+            <input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file"
+                (click)="$event.target.value=null" accept="image/jpeg,image/jpg,image/png,application/pdf">
         </div>
 
         <div *ngIf="selectedFilesShow" class="selected-files">
-            <div *ngFor="let fileName of selectedFilesShow; let index = index" fxLayout="row" fxLayoutAlign="space-between center">
+            <div *ngFor="let fileName of selectedFilesShow; let index = index" fxLayout="row"
+                fxLayoutAlign="space-between center">
                 <span class="mat-body element-light-color">
                     {{fileName}}
                 </span>
-                <button mat-button color="warn"
-                    (click)="removeSelectedFile(index)"><mat-icon>delete</mat-icon></button>
+                <button mat-button color="warn" (click)="removeSelectedFile(index)"><mat-icon>delete</mat-icon></button>
             </div>
         </div>
     </div>
+
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="end" class="confirm-btn">
+        <button mat-raised-button color="primary" [disabled]="!isFormValid()" (click)="saveOrder()">
+            <span [translate]="'buttons.CONFIRM'"></span>
+        </button>
+    </mat-dialog-actions>
 </form>

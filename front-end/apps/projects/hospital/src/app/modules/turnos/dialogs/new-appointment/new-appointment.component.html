@@ -112,9 +112,9 @@
 							<mat-select formControlName="appointmentMedicalOrder" (selectionChange)="generateTooltipOnMedicalOrderChange()"
 							matTooltip="{{patientMedicalOrderTooltipDescription}}">
 								<mat-option id="medicalOrder" name="medicalOrder"
-									*ngFor="let patientMedicalOrder of patientMedicalOrders$ | async"
-									[value]="patientMedicalOrder" matTooltip="{{'image-network.appointments.medical-order.ORDER' | translate}} # {{patientMedicalOrder.serviceRequestId}} - {{patientMedicalOrder.snomed.pt | titlecase}}">
-									{{'image-network.appointments.medical-order.ORDER' | translate}} # {{patientMedicalOrder.serviceRequestId}} - {{patientMedicalOrder.snomed.pt | titlecase}}
+									*ngFor="let patientMedicalOrder of patientMedicalOrders"
+									[value]="patientMedicalOrder" matTooltip="{{'image-network.appointments.medical-order.ORDER' | translate}} # {{patientMedicalOrder.serviceRequestId}} - {{patientMedicalOrder.studyName | titlecase}}">
+									{{'image-network.appointments.medical-order.ORDER' | translate}} # {{patientMedicalOrder.serviceRequestId}} - {{patientMedicalOrder.studyName | titlecase}}
 								</mat-option>
 								<mat-divider></mat-divider>
 								<mat-option (click)="newTranscribedOrder()">
