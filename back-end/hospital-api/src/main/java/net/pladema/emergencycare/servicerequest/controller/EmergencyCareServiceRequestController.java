@@ -61,7 +61,7 @@ public class EmergencyCareServiceRequestController {
 	@PostMapping("/patient/{patientId}")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	@Transactional
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PROFESIONAL_DE_SALUD')")
 	public List<Integer> create(@PathVariable(name = "institutionId") Integer institutionId,
 								@PathVariable(name = "episodeId") Integer episodeId,
 								@PathVariable(name = "patientId") Integer patientId,

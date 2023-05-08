@@ -25,7 +25,7 @@ import java.util.List;
 @RequestMapping("/institution/{institutionId}/emergency-care/episode/{episodeId}")
 @Tag(name = "Emergency care states", description = "Emergency care states")
 @Validated
-@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, PERSONAL_DE_FARMACIA')")
 @AllArgsConstructor
 public class EmergencyCareStateController {
 
