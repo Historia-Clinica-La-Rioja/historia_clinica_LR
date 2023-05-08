@@ -10,7 +10,7 @@
 			<textarea class="observations-container" matInput type="text" id="observations" name="observations" placeholder="Observations"></textarea>
 		</mat-form-field>
 
-		<button class="complete-btn" mat-flat-button color="primary">
+		<button class="complete-btn" mat-flat-button color="primary" (click)="openStatusDialog()">
 			<span class="uppercase" [translate]="'image-network.appointments.CONFIRM'"></span>
 		</button>
 	</div>

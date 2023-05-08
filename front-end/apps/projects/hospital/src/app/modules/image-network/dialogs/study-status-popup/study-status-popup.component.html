@@ -1,0 +1,20 @@
+<div class="align-end">
+	<button id="cancel_button" name="cancel_button" mat-icon-button (click)="closeDialog()">
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+<div class="study-status" *ngIf="data.status; else errorStatus">
+	<div class="icon">
+		<mat-icon [inline]="true" class="material-icons-outlined" style="color:limegreen">check_circle</mat-icon>
+	</div>
+	<h2 translate="image-network.appointments.STUDY_COMPLETED"></h2>
+</div>
+
+<ng-template #errorStatus>
+	<div class="study-status">
+		<div class="icon">
+			<mat-icon [inline]="true" class="material-icons-outlined" style="color:red">cancel</mat-icon>
+		</div>
+		<h2 translate="image-network.appointments.STUDY_ERROR"></h2>
+	</div>
+</ng-template>

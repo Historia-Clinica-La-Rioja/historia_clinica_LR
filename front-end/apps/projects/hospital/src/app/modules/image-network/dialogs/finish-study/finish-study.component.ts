@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
+import { StudyStatusPopupComponent } from '../study-status-popup/study-status-popup.component';
 
 @Component({
 	selector: 'app-finish-study',
@@ -11,10 +12,23 @@ export class FinishStudyComponent implements OnInit {
 
 	constructor(
 		public dialogRef: MatDialogRef<FinishStudyComponent>,
-		public translateService: TranslateService) {
+		public translateService: TranslateService,
+		public dialog: MatDialog) {
 	}
 
 	ngOnInit(): void {
+	}
+
+	openStatusDialog() {
+		const dialogRef = this.dialog.open(StudyStatusPopupComponent, {
+			width: '30%',
+			autoFocus: false,
+			data: {
+				status: true
+			}
+		});
+
+		dialogRef.afterClosed().subscribe( () => this.closeDialog());
 	}
 
 	closeDialog() {
