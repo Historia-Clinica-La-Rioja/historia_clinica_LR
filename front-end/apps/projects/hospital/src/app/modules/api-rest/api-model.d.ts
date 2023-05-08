@@ -296,6 +296,12 @@ export interface AssignedAppointmentDto {
     specialties: string[];
 }
 
+export interface AttentionPlacesQuantityDto {
+    bed: number;
+    doctorsOffice: number;
+    shockroom: number;
+}
+
 export interface AttentionTypeReportDto {
     appointments: AttentionTypeReportItemDto[];
     medicalAttentionTypeId: number;

@@ -3,6 +3,8 @@ package net.pladema.establishment.repository;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.establishment.repository.entity.Sector;
 
+import net.pladema.establishment.service.domain.AttentionPlacesQuantityBo;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -62,5 +64,17 @@ public interface SectorRepository extends SGXAuditableEntityJPARepository<Sector
 			"WHERE s.sectorId = :sectorId " +
 			"AND deleted IS FALSE")
 	List<Sector> getChildSectorsBySectorId(@Param("sectorId") Integer sectorId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT new net.pladema.establishment.service.domain.AttentionPlacesQuantityBo(COUNT(DISTINCT s.id), COUNT(DISTINCT do.id), COUNT(DISTINCT b.id)) " +
+			"FROM Sector AS se " +
+			"LEFT JOIN DoctorsOffice AS do ON do.sectorId = se.id " +
+			"LEFT JOIN Shockroom AS s ON s.sectorId = se.id " +
+			"LEFT JOIN Room AS r ON r.sectorId = se.id " +
+			"LEFT JOIN Bed AS b ON b.roomId = r.id " +
+			"WHERE se.institutionId = :institutionId " +
+			"AND se.sectorTypeId = :sectorTypeId")
+	AttentionPlacesQuantityBo quantityAttentionPlacesBySectorType(@Param("institutionId") Integer institutionId,
+															@Param("sectorTypeId") Short sectorTypeId);
 
 }

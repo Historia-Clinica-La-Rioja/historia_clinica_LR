@@ -4,6 +4,7 @@ import net.pladema.establishment.repository.SectorRepository;
 import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.establishment.service.SectorService;
 
+import net.pladema.establishment.service.domain.AttentionPlacesQuantityBo;
 import net.pladema.establishment.service.domain.SectorBO;
 
 import org.slf4j.Logger;
@@ -36,6 +37,14 @@ public  class SectorServiceImpl implements SectorService {
 		LOG.trace(OUTPUT, result);
 		return result;
 
+	}
+
+	@Override
+	public AttentionPlacesQuantityBo quantityAttentionPlacesBySectorType(Integer institutionId, Short sectorTypeId) {
+		LOG.debug("Input parameter ->, institutionId {}, sectorTypeId {}", institutionId, sectorTypeId);
+		AttentionPlacesQuantityBo result = sectorRepository.quantityAttentionPlacesBySectorType(institutionId, sectorTypeId);
+		LOG.trace(OUTPUT, result);
+		return result;
 	}
 
 	private SectorBO createSectorBoInstance(Sector sector) {

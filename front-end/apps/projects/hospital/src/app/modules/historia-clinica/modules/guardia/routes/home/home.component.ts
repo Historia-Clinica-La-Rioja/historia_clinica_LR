@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import {
 	ApiErrorDto,
+	AttentionPlacesQuantityDto,
 	BedInfoDto,
 	DateTimeDto,
 	DoctorsOfficeDto, EmergencyCareEpisodeListTriageDto,
@@ -39,6 +40,8 @@ import { AttentionPlace, PatientType } from '@historia-clinica/constants/summari
 import { AttentionPlaceDialogComponent } from '../../dialogs/attention-place-dialog/attention-place-dialog.component';
 import { FormBuilder } from '@angular/forms';
 import { BedAssignmentComponent } from '@historia-clinica/dialogs/bed-assignment/bed-assignment.component';
+import { SectorService } from '@api-rest/services/sector.service';
+import { OperationDeniedComponent } from '@historia-clinica/modules/ambulatoria/dialogs/diagnosis-required/operation-denied.component';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 export const GUARDIA: number = 3;
@@ -93,6 +96,7 @@ export class HomeComponent implements OnInit {
 		private readonly permissionsService: PermissionsService,
 		private readonly guardiaRouterService: GuardiaRouterService,
 		private readonly emergencyCareStateChangedService: EmergencyCareStateChangedService,
+		private readonly sectorService: SectorService
 	) {
 		this.filterService = new EpisodeFilterService(formBuilder, triageMasterDataService, emergencyCareMasterDataService);
 	}
@@ -136,10 +140,23 @@ export class HomeComponent implements OnInit {
 
 	atender(episode: Episode, patientId: number): void {
 
+		this.sectorService.quantityAttentionPlacesBySectorType(GUARDIA).subscribe((quantity: AttentionPlacesQuantityDto) => {
+			if (quantity.shockroom == 0 && quantity.doctorsOffice == 0 && quantity.bed == 0) {
+				return this.dialog.open(OperationDeniedComponent, {
+					data: {
+						message: 'No existen lugares disponibles para realizar la atención'
+					}
+				})
+			} 
+			this.openPlaceAttendDialog(episode);
+		});
+	}
+	
+	private openPlaceAttendDialog(episode: Episode) {
 		const dialogRef = this.dialog.open(AttentionPlaceDialogComponent, {
 			width: '35%',
 		});
-
+	
 		dialogRef.afterClosed().subscribe((attendPlace: AttendPlace) => {
 			if (!attendPlace) return;
 			
@@ -154,29 +171,29 @@ export class HomeComponent implements OnInit {
 					}
 				}, (error: ApiErrorDto) => processErrors(error, (msg) => this.snackBarService.showError(msg)))
 			}
-
+	
 			if (attendPlace.attentionPlace === AttentionPlace.SHOCKROOM) {
 				this.episodeStateService.atender(episode.id, null, attendPlace.id).subscribe((response: boolean) => {
 					if (!response) this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
-
+	
 					this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
 					this.goToEpisode(episode, { typeId: episode.patient.typeId, id: episode.patient.id });
-
+	
 				}, (error: ApiErrorDto) => processErrors(error, (msg) => this.snackBarService.showError(msg)))
 			}
-
+	
 			if (attendPlace.attentionPlace === AttentionPlace.HABITACION) {
 				this.dialog.open(BedAssignmentComponent, {data: GUARDIA})
 					.afterClosed()
 					.subscribe((bed: BedInfoDto) => {
 						if (!bed) return;
-
+	
 						this.episodeStateService.atender(episode.id, null, null, bed.bed.id).subscribe((response: boolean) => {
 							if (!response) this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
-
+	
 							this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
 							this.goToEpisode(episode, { typeId: episode.patient.typeId, id: episode.patient.id });
-
+	
 						}, (error: ApiErrorDto) => processErrors(error, (msg) => this.snackBarService.showError(msg)))
 					});
 			}

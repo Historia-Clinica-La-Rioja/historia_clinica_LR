@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 import { ContextService } from '@core/services/context.service';
-import { MasterDataDto, SectorDto } from '@api-rest/api-model';
+import { AttentionPlacesQuantityDto, MasterDataDto, SectorDto } from '@api-rest/api-model';
 
 @Injectable({
 	providedIn: 'root'
@@ -31,6 +31,11 @@ export class SectorService {
 	getTypes(): Observable<MasterDataDto[]> {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/sector/sectortype`;
 		return this.http.get<MasterDataDto[]>(url);
+	}
+
+	quantityAttentionPlacesBySectorType(sectorTypeId: number): Observable<AttentionPlacesQuantityDto> {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/sector/attentionPlaces/${sectorTypeId}`;
+		return this.http.get<AttentionPlacesQuantityDto>(url);
 	}
 }
 

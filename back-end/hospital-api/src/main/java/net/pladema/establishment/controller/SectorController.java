@@ -3,6 +3,7 @@ package net.pladema.establishment.controller;
 import ar.lamansys.sgx.shared.masterdata.domain.EnumWriter;
 import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import net.pladema.establishment.controller.dto.AttentionPlacesQuantityDto;
 import net.pladema.establishment.controller.dto.RoomDto;
 import net.pladema.establishment.controller.dto.SectorDto;
 import net.pladema.establishment.controller.mapper.RoomMapper;
@@ -14,6 +15,7 @@ import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.establishment.service.SectorBOMapper;
 import net.pladema.establishment.service.SectorService;
 
+import net.pladema.establishment.service.domain.AttentionPlacesQuantityBo;
 import net.pladema.establishment.service.domain.ESectorType;
 import net.pladema.establishment.service.domain.SectorBO;
 
@@ -89,5 +91,13 @@ public class SectorController  {
 	public ResponseEntity<Collection<MasterDataDto>> getSectorType() {
 		LOG.debug("{}", "All Sector types");
 		return ResponseEntity.ok().body(EnumWriter.writeList(ESectorType.getAll()));
+	}
+
+	@GetMapping(value = "/attentionPlaces/{sectorTypeId}")
+	public ResponseEntity<AttentionPlacesQuantityDto> quantityAttentionPlacesBySectorType(@PathVariable(name = "institutionId") Integer institutionId,
+																@PathVariable(name = "sectorTypeId") Short sectorTypeId) {
+		LOG.debug("Input parameters -> institutionId {}, sectorTypeId {}", institutionId, sectorTypeId);
+		AttentionPlacesQuantityBo result = sectorOfTypeService.quantityAttentionPlacesBySectorType(institutionId, sectorTypeId);
+		return ResponseEntity.ok().body(new AttentionPlacesQuantityDto(result.getShockroom(), result.getDoctorsOffice(), result.getBed()));
 	}
 }

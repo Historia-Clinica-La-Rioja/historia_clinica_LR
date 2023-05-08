@@ -5,13 +5,12 @@ import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-car
 import { hasError } from '@core/utils/form.utils';
 import { AttentionPlace } from '@historia-clinica/constants/summaries';
 import { Observable } from 'rxjs';
-import { SECTOR_AMBULATORIO } from '../../constants/masterdata';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { map } from 'rxjs/operators';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { ShockroomService } from '@api-rest/services/shockroom.service';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AttendPlace } from '../../routes/home/home.component';
+import { AttendPlace, GUARDIA } from '../../routes/home/home.component';
 
 const CONFIRM: string = 'guardia.dialog.attention_place.CONFIRM';
 const BED_ASSIGN: string = 'guardia.dialog.attention_place.BED_ASSIGN';
@@ -47,7 +46,7 @@ export class AttentionPlaceDialogComponent {
 		const id: number = Number(this.form.get('place').value);
 		if (id === AttentionPlace.CONSULTORIO) {
 			const office: AbstractControl = this.form.get('office');
-			this.offices$ = this.doctorsOfficeService.getBySectorType(SECTOR_AMBULATORIO);
+			this.offices$ = this.doctorsOfficeService.getBySectorType(GUARDIA);
 			this.officesTypeaheadOptions$ = this.getTypeaheadOptions$(this.offices$);
 			office.addValidators(Validators.required);
 			office.updateValueAndValidity();
