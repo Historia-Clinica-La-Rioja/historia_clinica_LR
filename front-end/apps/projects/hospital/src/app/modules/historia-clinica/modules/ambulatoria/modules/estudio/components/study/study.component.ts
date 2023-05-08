@@ -179,7 +179,7 @@ export class StudyComponent implements OnInit {
 
 }
 
-interface StudyInformation {
+export interface StudyInformation {
     diagnosticInformation: DiagnosticReportInfoDto;
     canBeDeleted: boolean;
 }
