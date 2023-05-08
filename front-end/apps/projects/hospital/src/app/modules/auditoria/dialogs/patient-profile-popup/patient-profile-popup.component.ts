@@ -14,7 +14,10 @@ import { AuditablePatientInfo } from '@pacientes/routes/edit-patient/edit-patien
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
+import { ContextService } from '@core/services/context.service';
 
+const ROUTE_EDIT_PATIENT = 'pacientes/edit';
 @Component({
 	selector: 'app-patient-profile-popup',
 	templateUrl: './patient-profile-popup.component.html',
@@ -24,6 +27,7 @@ export class PatientProfilePopupComponent implements OnInit {
 
 	patientId: number;
 	showButtonGoToMedicalHistory = false;
+	private readonly routePrefix;
 	public patientBasicData: PatientBasicData;
 	public personalInformation: PersonalInformation;
 	public patientTypeData: PatientTypeData;
@@ -42,9 +46,14 @@ export class PatientProfilePopupComponent implements OnInit {
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService,
 		private readonly datePipe: DatePipe,
-		 @Inject(MAT_DIALOG_DATA) public data: {
+		private router: Router,
+		private contextService: ContextService,
+		@Inject(MAT_DIALOG_DATA) public data: {
 			patientId: number,
-		}) { this.patientId = this.data.patientId; }
+		}) {
+			this.patientId = this.data.patientId;
+		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
+	}
 
 	ngOnInit(): void {
 
@@ -93,6 +102,9 @@ export class PatientProfilePopupComponent implements OnInit {
 
 	}
 
-
-
+	goToEditPatient() {
+		this.router.navigate([this.routePrefix + ROUTE_EDIT_PATIENT], {
+			queryParams: { id: this.patientId }
+		});
+	}
 }

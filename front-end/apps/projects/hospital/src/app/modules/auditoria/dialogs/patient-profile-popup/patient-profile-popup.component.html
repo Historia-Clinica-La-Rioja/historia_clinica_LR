@@ -5,9 +5,14 @@
 		<div header id="header" fxLayout="row" fxLayoutAlign="space-between center">
 			<app-patient-type-logo fxFlex="62%" [patientTypeData]="patientTypeData"
 				class="patientTypeData"></app-patient-type-logo>
-			<button mat-icon-button mat-dialog-close>
-				<mat-icon>close</mat-icon>
-			</button>
+			<div>
+				<button mat-icon-button mat-dialog-close (click)="goToEditPatient()">
+					<mat-icon>edit</mat-icon>
+				</button>
+				<button mat-icon-button mat-dialog-close>
+					<mat-icon>close</mat-icon>
+				</button>
+			</div>
 		</div>
 
 		<mat-dialog-content content>
