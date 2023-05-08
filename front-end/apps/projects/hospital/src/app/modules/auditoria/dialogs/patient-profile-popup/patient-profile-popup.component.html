@@ -11,6 +11,7 @@
 		</div>
 
 		<mat-dialog-content content>
+			<app-message-flagged-for-audit *ngIf="auditablePatientInfo" [auditablePatientInfo]="auditablePatientInfo"></app-message-flagged-for-audit>
 			<app-personal-information [personalInformation]="personalInformation"
 				[patientMedicalCoverage]="patientMedicalCoverage"
 				[showButtonGoToMedicalHistory]="showButtonGoToMedicalHistory">

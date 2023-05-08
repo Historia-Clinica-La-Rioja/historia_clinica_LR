@@ -33,26 +33,8 @@
 							</button>
 						</ng-container>
 					</div>
-					<div content *appHasRole="['ADMINISTRATIVO', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']">
-						<div *ngIf="auditablePatientInfo" id="marked_for_audit_section">
-							<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" class="title">
-								<mat-icon>error</mat-icon>
-								<strong> {{ 'pacientes.profile.MARKED_FOR_AUDIT' | translate | uppercase }} </strong>
-							</div>
-							<div fxLayout="column" fxLayoutGap="5px">
-								<span id="message_for_audit"> "{{ auditablePatientInfo.message }}" </span>
-								<div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="5px"
-									fxLayoutAlign.lt-lg="start end" fxLayoutGap.lt-lg="15%" class="mat-caption">
-									<div fxLayout="row" fxLayoutGap="5px" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="0">
-										<span>{{ auditablePatientInfo.createdBy }}</span>
-										<span fxHide.lt-lg> - </span>
-										<span>{{ auditablePatientInfo.institutionName }}</span>
-										<span fxHide.lt-lg> - </span>
-									</div>
-									<span>{{ auditablePatientInfo.createdOn }}</span>
-								</div>
-							</div>
-						</div>
+					<div content *ngIf="auditablePatientInfo">
+						<app-message-flagged-for-audit [auditablePatientInfo]="auditablePatientInfo"></app-message-flagged-for-audit>
 					</div>
 					<div content *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
 						<button mat-stroked-button color="primary" class="reports" *ngIf="downloadReportIsEnabled"

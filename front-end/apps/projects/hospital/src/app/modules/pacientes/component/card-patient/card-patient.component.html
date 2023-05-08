@@ -32,7 +32,7 @@
 					</div>
 					<div id="toAudit" *ngIf="patient?.toAudit !== null" fxLayout="column">
 						<span *ngIf="patient?.toAudit">{{'pacientes.audit.PENDING_TO_AUDIT' | translate}}</span>
-						<span *ngIf="!patient?.toAudit">{{'pacientes.audit.AUDITED' | translate}}</span>
+						<span *ngIf="!patient?.toAudit">-</span>
 					</div>
 
 

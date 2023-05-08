@@ -1,0 +1,21 @@
+#marked_for_audit_section {
+	margin-top: 15px;
+	background-color: rgba(255, 165, 0, 0.15);
+	padding: 15px;
+
+	mat-icon.mat-icon {
+		color: rgba(255, 165, 0, 1);
+	}
+
+	div.title {
+		margin-bottom: 5px;
+	}
+
+	#message_for_audit {
+		font-weight: 500;
+	}
+
+	.mat-caption {
+		color: #a8a8a8;
+	}
+}

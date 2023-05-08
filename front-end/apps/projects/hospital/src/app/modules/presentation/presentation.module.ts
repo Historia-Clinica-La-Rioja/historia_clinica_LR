@@ -62,6 +62,7 @@ import { AsignPatientButtonComponent } from './components/asign-patient-button/a
 import { EmergencyCareTemporaryPatientHeader } from './components/emergency-care-temporary-patient-header/emergency-care-temporary-patient-header.component';
 import { PatientCardHeaderComponent } from './components/patient-card-header/patient-card-header.component';
 import { TitledContentComponent } from './components/titled-content/titled-content.component';
+import { MessageFlaggedForAuditComponent } from './components/message-flagged-for-audit/message-flagged-for-audit.component';
 
 @NgModule({
 	declarations: [
@@ -122,6 +123,7 @@ import { TitledContentComponent } from './components/titled-content/titled-conte
 		EmergencyCareTemporaryPatientHeader,
 		PatientCardHeaderComponent,
 		TitledContentComponent,
+		MessageFlaggedForAuditComponent,
 	],
 	imports: [
 		CommonModule,
@@ -187,7 +189,8 @@ import { TitledContentComponent } from './components/titled-content/titled-conte
 		AsignPatientButtonComponent,
 		EmergencyCareTemporaryPatientHeader,
 		PatientCardHeaderComponent,
-		TitledContentComponent
+		TitledContentComponent,
+		MessageFlaggedForAuditComponent
 	],
 	entryComponents: [
 		DockPopupComponent

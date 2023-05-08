@@ -321,7 +321,8 @@
 		"SUBTITLE_FILTER_BY":"Filtrar por",
 		"LABEL_STATE_VALIDATION":"Validación del estado",
 		"PENDING_TO_AUDIT": "Pendiente de auditoría",
-		"AUDITED":"Auditado"
+		"AUDITED":"Auditado",
+		"FLAGGED_FOR_AUDIT":"Marcado para auditar"
 
 
 	}
