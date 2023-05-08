@@ -2201,6 +2201,7 @@ export interface OdontologyConsultationDto extends Serializable {
     diagnostics?: OdontologyDiagnosticDto[];
     evolutionNote?: string;
     medications?: OdontologyMedicationDto[];
+    patientMedicalCoverageId?: number;
     permanentTeethPresent?: number;
     personalHistories?: OdontologyPersonalHistoryDto[];
     procedures?: OdontologyProcedureDto[];

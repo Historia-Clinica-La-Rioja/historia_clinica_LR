@@ -115,8 +115,11 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
         processDentalActions(consultationBo);
         drawOdontogramService.run(consultationBo.getPatientId(), consultationBo.getDentalActions());
 
-        Integer medicalCoverageId = odontologyAppointmentStorage.getPatientMedicalCoverageId(consultationBo.getPatientId(), doctorInfoBo.getId());
-        LocalDate now = dateTimeProvider.nowDate();
+		Integer medicalCoverageId = consultationBo.getPatientMedicalCoverageId();
+		if (medicalCoverageId == null)
+			medicalCoverageId = odontologyAppointmentStorage.getPatientMedicalCoverageId(consultationBo.getPatientId(), doctorInfoBo.getId());
+
+		LocalDate now = dateTimeProvider.nowDate();
         Integer encounterId = odontologyConsultationStorage.save(
                 new ConsultationInfoBo(null,
                         consultationBo,
