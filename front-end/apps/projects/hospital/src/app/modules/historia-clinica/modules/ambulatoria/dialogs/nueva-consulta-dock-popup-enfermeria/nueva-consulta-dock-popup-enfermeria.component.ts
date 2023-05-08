@@ -290,6 +290,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 			problem: this.formEvolucion.value?.clinicalProblem,
 			procedures: this.procedimientoNuevaConsultaService.getProcedimientos(),
 			riskFactors: this.factoresDeRiesgoFormService.getFactoresDeRiesgo(),
+			patientMedicalCoverageId: null
 		}
 	}
 

@@ -57,7 +57,10 @@ public class CreateNursingConsultation {
         assertContextValid(nursingConsultationBo, doctorInfoBo);
 
         LocalDate now = dateTimeProvider.nowDate();
-        Integer medicalCoverageId = nursingAppointmentStorage.getPatientMedicalCoverageId(nursingConsultationBo.getPatientId(), doctorInfoBo.getId());
+
+		Integer medicalCoverageId = nursingConsultationBo.getPatientMedicalCoverageId();
+		if (medicalCoverageId == null)
+        	medicalCoverageId = nursingAppointmentStorage.getPatientMedicalCoverageId(nursingConsultationBo.getPatientId(), doctorInfoBo.getId());
 
         var encounterId = nursingConsultationStorage.save(
                 new NursingConsultationInfoBo(null,

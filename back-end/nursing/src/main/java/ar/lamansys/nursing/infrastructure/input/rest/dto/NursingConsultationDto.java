@@ -45,4 +45,7 @@ public class NursingConsultationDto implements Serializable {
     @Nullable
     private String evolutionNote;
 
+	@Nullable
+	private Integer patientMedicalCoverageId;
+
 }
