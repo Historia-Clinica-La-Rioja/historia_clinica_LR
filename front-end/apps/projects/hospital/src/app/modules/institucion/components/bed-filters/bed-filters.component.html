@@ -17,7 +17,7 @@
         </button>
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" *ngIf="!isGuard">
         <mat-label [translate]="'gestion-camas.filters.SERVICE'"></mat-label>
         <mat-select formControlName="service" (selectionChange)="sendAllFiltersOnFilterChange()" name="service">
             <mat-option *ngFor="let service of services" [value]="service.serviceId">

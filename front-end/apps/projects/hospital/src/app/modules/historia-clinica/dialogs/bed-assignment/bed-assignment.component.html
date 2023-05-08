@@ -14,7 +14,7 @@
                             <mat-card-subtitle>
                                 <span *ngIf="existBedManagementList" id="bed_id">Resultado: {{bedsAmount}} camas</span>
                             </mat-card-subtitle>
-                            <app-bed-filters></app-bed-filters>
+                            <app-bed-filters [sectorTypeId]="data"></app-bed-filters>
                         </div>
                         <div class="spinner" *ngIf="!existBedManagementList">
                             <mat-spinner color="primary"></mat-spinner>

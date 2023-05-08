@@ -41,7 +41,7 @@ import { FormBuilder } from '@angular/forms';
 import { BedAssignmentComponent } from '@historia-clinica/dialogs/bed-assignment/bed-assignment.component';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
-const GUARDIA: number = 3;
+export const GUARDIA: number = 3;
 
 @Component({
 	selector: 'app-home',
