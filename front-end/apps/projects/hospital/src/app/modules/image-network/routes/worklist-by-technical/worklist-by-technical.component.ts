@@ -132,14 +132,15 @@ export class WorklistByTechnicalComponent implements OnInit {
     private mapAppointmentsToDetailedAppointments(appointments): detailedAppointment[]{
         return appointments.map(a => {
             return {
-                data: a, 
+                data: a,
                 color: this.getAppointmentStateColor(a.appointmentStateId),
                 description: this.getAppointmentDescription(a.appointmentStateId),
                 date: mapDateWithHypenToDateWithSlash(a.date),
                 time: timeToString(a.hour),
                 firstName: this.capitalizeWords(a.patient.person.firstName),
                 lastName: this.capitalizeWords(a.patient.person.lastName),
-                nameSelfDetermination: this.capitalizeWords(a.patient.person.nameSelfDetermination)
+                nameSelfDetermination: this.capitalizeWords(a.patient.person.nameSelfDetermination),
+				canBeCompleted: a.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED || a.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED
             }
         })
     }
@@ -167,5 +168,6 @@ export interface detailedAppointment {
     time: string,
     firstName: string,
     lastName: string,
-    nameSelfDetermination: string
+    nameSelfDetermination: string,
+	canBeCompleted: boolean
 }

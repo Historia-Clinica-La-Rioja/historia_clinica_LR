@@ -11,10 +11,10 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-    
+
             <mat-card class="worklist-card">
-    
-                <div class="filters-container"> 
+
+                <div class="filters-container">
                     <mat-form-field class="state-dropdown-container" appearance="outline">
                         <mat-label>{{'image-network.appointments.FILTER_BY_STATE' | translate }}</mat-label>
                         <mat-select #select [formControl]="states" (selectionChange)="onStatusChange($event)" multiple>
@@ -39,7 +39,7 @@
                                     fxFlex.gt-sm="13" description={{appointment.description}}
                                     color="{{appointment.color}}"></app-colored-label>
 
-                                <div class="patient-information" fxFlex.gt-sm="55">
+                                <div class="patient-information" fxFlex.gt-sm="50">
                                     <span class="patient-name"> {{appointment.lastName}}
                                         <span class="naming"
                                             *ngIf="nameSelfDeterminationFF && appointment.nameSelfDetermination.length">
@@ -54,12 +54,17 @@
                                         {{appointment.data.patient.person.identificationNumber}} - ID
                                         {{appointment.data.patient.id}}</span>
                                 </div>
-                                
+
                                 <div class="appointment-date-information smaller-font" fxFlex.gt-sm="15">
                                     <span class="grey">{{appointment.date}}</span>
                                     <span class="grey">{{appointment.time}} hs.
                                     </span>
                                 </div>
+								<div fxFlex.gt-sm="15" fxFlex.gt-md="13">
+									<button mat-flat-button color="primary" fxFlex="100" *ngIf="appointment.canBeCompleted">
+										<span class="uppercase" [translate]="'image-network.appointments.FINISH'"></span>
+									</button>
+								</div>
                             </div>
                         </mat-list-item>
                         <mat-divider></mat-divider>

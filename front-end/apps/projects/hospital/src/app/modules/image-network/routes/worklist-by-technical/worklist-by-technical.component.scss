@@ -3,8 +3,7 @@
 }
 
 .main-card {
-    padding: 2% 4%;
-    padding-bottom: 6%;
+	padding: 2% 4% 6%;
 }
 
 .worklist-card {
@@ -29,11 +28,11 @@
 }
 
 .select-all{
-    margin: 0px 16px;
+    margin: 0 16px;
     height: 3em;
     display: flex;
     align-items: center;
-} 
+}
 
 #equipment{
     padding-left: 2%;
@@ -41,12 +40,13 @@
 
 .appointment-detail {
     display: block;
-    padding: 2%;
+    padding: 2% 0;
     height: fit-content;
 }
 
-.appointment-container{
+.appointment-container {
     display: flex;
+	align-items: center;
 }
 
 .page-title {
@@ -79,7 +79,7 @@
 // Colored-label styles
 .personalized-label{
     display: flex;
-    margin-right: 8%;
+    margin-right: 6%;
     align-self: center;
 }
 
@@ -104,6 +104,9 @@
     .state-dropdown-container {
         width: 30%;
     }
+	.appointment-container {
+		align-items: start;
+	}
 }
 
 @media (max-width: 640px) {
