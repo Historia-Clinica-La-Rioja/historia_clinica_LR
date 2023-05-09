@@ -1,5 +1,6 @@
 package net.pladema.patient.service;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitRepository;
@@ -120,6 +121,7 @@ class PatientServiceImplIntegrationTest extends UnitRepository {
             Patient mockedPatient = new Patient();
             mockedPatient.setPersonId(mockedPersonId);
             mockedPatient.setTypeId(patientTypeId);
+			mockedPatient.setAuditTypeId(EAuditType.UNAUDITED.getId());
             save(mockedPatient);
 
             PersonExtended mockedPersonExtended = new PersonExtended();

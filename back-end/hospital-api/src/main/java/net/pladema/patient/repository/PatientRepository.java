@@ -52,7 +52,7 @@ public interface PatientRepository extends SGXAuditableEntityJPARepository<Patie
 			"WHERE pa.id = :patientId")
 	Optional<String> getIdentificationNumber(@Param("patientId") Integer patientId);
 
-	@Query(value = " SELECT new net.pladema.patient.service.domain.PatientRegistrationSearch(pe, p.id, p.typeId, p.toAudit, pee.nameSelfDetermination) " +
+	@Query(value = " SELECT new net.pladema.patient.service.domain.PatientRegistrationSearch(pe, p.id, p.typeId, p.auditTypeId, pee.nameSelfDetermination) " +
 			"FROM Patient p " +
 			"JOIN Person pe ON p.personId = pe.id " +
 			"LEFT JOIN PersonExtended pee ON pee.id = pe.id " +

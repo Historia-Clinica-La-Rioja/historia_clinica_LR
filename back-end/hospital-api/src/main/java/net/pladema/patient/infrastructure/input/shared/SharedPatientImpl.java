@@ -1,6 +1,7 @@
 package net.pladema.patient.infrastructure.input.shared;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.*;
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
 import net.pladema.audit.service.domain.enums.EActionType;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.patient.controller.mapper.PatientMapper;
@@ -113,7 +114,7 @@ public class SharedPatientImpl implements SharedPatientPort {
         aPatientDto.setIdentificationNumber(requiredPatientDataDto.getIdentificationNumber());
         aPatientDto.setPhoneNumber(requiredPatientDataDto.getPhoneNumber());
         aPatientDto.setEmail(requiredPatientDataDto.getEmail());
-		aPatientDto.setToAudit(false);
+		aPatientDto.setTypeId(EAuditType.UNAUDITED.getId());
         return aPatientDto;
     }
 

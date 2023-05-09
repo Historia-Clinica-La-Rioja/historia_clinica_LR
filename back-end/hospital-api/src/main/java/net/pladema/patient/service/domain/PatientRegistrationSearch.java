@@ -20,16 +20,16 @@ public class PatientRegistrationSearch {
 
 	private Short patientTypeId;
 
-	private Boolean toAudit;
+	private Short auditTypeId;
 
 	private String nameSelfDetermination;
 
-	public PatientRegistrationSearch(Person person, Integer patientId, Short patientTypeId, Boolean toAudit, String nameSelfDetermination) {
+	public PatientRegistrationSearch(Person person, Integer patientId, Short patientTypeId, Short auditTypeId, String nameSelfDetermination) {
 		this.person = person;
 		this.patientId = patientId;
 		this.ranking = 0.0f;
 		this.patientTypeId = patientTypeId;
-		this.toAudit = toAudit;
+		this.auditTypeId = auditTypeId;
 		this.nameSelfDetermination = nameSelfDetermination;
 	}
 }

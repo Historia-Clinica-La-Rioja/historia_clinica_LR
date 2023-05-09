@@ -69,7 +69,7 @@ public class PatientRegistrationSearchQuery {
 				" person.identification_number, \n" +
 				" person.birth_date, \n" +
 				" patient.type_id as patientTypeId, \n" +
-				" patient.to_audit as patientToAudit , \n" +
+				" patient.audit_type_id as auditTypeId , \n" +
 				" personExtended.name_self_determination \n";
 		return new QueryPart(select);
 	}
@@ -141,7 +141,7 @@ public class PatientRegistrationSearchQuery {
 		String clause = "";
 
 		if (toAudit != null && toAudit) {
-			clause = " AND ( patient.to_audit = true ) ";
+			clause = " AND ( patient.audit_type_id = 2 ) ";
 		}
 
 		return new QueryPart(clause);
@@ -160,7 +160,7 @@ public class PatientRegistrationSearchQuery {
 		diagnosisByDocuments.forEach((id,v) -> {
 			Object[] tuple = v.get(0);
 
-			result.add(new PatientRegistrationSearch(mapPerson(tuple), id, (Short) tuple[10], (Boolean) tuple[11], (String) tuple[12]));
+			result.add(new PatientRegistrationSearch(mapPerson(tuple), id, (Short) tuple[10], (Short) tuple[11], (String) tuple[12]));
 
 		});
 		return result;

@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.user.application.getrolesbyuser.GetRolesByUser;
@@ -204,7 +205,7 @@ public class PatientController {
 
 		patientService.auditActionPatient(institutionId,patientId, EActionType.UPDATE);
 
-		if (patientDto.getToAudit() != null && patientDto.getToAudit())
+		if (patientDto.getAuditTypeId() != null && patientDto.getAuditTypeId().equals(EAuditType.TO_AUDIT.getId()))
 			patientService.persistSelectionForAnAudict(patientId, institutionId, patientDto.getMessage());
 
 		return ResponseEntity.created(new URI("")).body(createdPatient.getId());
@@ -296,7 +297,7 @@ public class PatientController {
 						? new AAdditionalDoctorDto(doctorsBo.getGeneralPractitionerBo())
 						: null,
 				doctorsBo.getPamiDoctorBo() != null ? new AAdditionalDoctorDto(doctorsBo.getPamiDoctorBo()) : null);
-		if(patient.getToAudit())
+		if(patient.getAuditTypeId().equals(EAuditType.TO_AUDIT.getId()))
 			result.setAuditablePatientInfo(patientService.getAuditablePatientInfo(patientId));
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
@@ -349,8 +350,8 @@ public class PatientController {
 	}
 
 	private void setPatientData (Patient patientToAdd, Patient patientHistory) {
-		if (patientToAdd.getToAudit() == null)
-			patientToAdd.setToAudit(patientHistory.getToAudit());
+		if (patientToAdd.getAuditTypeId() == null)
+			patientToAdd.setAuditTypeId(patientHistory.getAuditTypeId());
 		patientToAdd.setId(patientHistory.getId());
 		patientToAdd.setIdentityVerificationStatusId(patientHistory.getIdentityVerificationStatusId());
 		patientToAdd.setComments(patientHistory.getComments());

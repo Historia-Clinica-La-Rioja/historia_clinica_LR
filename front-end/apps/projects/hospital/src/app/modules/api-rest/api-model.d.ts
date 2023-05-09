@@ -29,12 +29,12 @@ export interface AMedicalDischargeDto extends MedicalDischargeDto {
 }
 
 export interface APatientDto extends APersonDto {
+    auditTypeId: number;
     comments: string;
     generalPractitioner: AAdditionalDoctorDto;
     identityVerificationStatusId: number;
     message?: string;
     pamiDoctor: AAdditionalDoctorDto;
-    toAudit?: boolean;
     typeId: number;
 }
 
@@ -2584,11 +2584,11 @@ export interface PatientPhotoDto {
 
 export interface PatientRegistrationSearchDto {
     idPatient: number;
+    auditTypeId: number;
     nameSelfDetermination: string;
     patientTypeId: number;
     person: BMPersonDto;
     ranking: number;
-    toAudit: boolean;
 }
 
 export interface PatientSearchDto {

@@ -18,7 +18,7 @@ public class PatientRegistrationSearchDto {
 
 	private Short patientTypeId;
 
-	private Boolean toAudit;
+	private Short auditTypeId;
 
 	private String nameSelfDetermination;
 

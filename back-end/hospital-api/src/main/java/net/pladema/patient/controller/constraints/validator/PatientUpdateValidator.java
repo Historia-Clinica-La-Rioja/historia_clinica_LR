@@ -1,6 +1,7 @@
 package net.pladema.patient.controller.constraints.validator;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.patient.controller.constraints.PatientUpdateValid;
 import net.pladema.patient.controller.dto.APatientDto;
@@ -119,7 +120,7 @@ public class PatientUpdateValidator implements ConstraintValidator<PatientUpdate
     }
 
     private boolean auditablePatientDataIsComplete(ConstraintValidatorContext context, APatientDto patientDto) {
-		boolean auditablePatientDataIsComplete = patientDto.getToAudit() == null || (!patientDto.getToAudit() || (patientDto.getToAudit() == true && patientDto.getMessage() != null));
+		boolean auditablePatientDataIsComplete = patientDto.getAuditTypeId() == null || (patientDto.getAuditTypeId().equals(EAuditType.UNAUDITED.getId()) || (patientDto.getAuditTypeId().equals(EAuditType.TO_AUDIT.getId()) && patientDto.getMessage() != null));
     	if (!auditablePatientDataIsComplete)
 			buildResponse(context, "{patient.auditable.message.null}");
     	return auditablePatientDataIsComplete;

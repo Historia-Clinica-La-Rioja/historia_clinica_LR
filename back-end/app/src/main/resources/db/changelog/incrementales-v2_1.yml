@@ -164,3 +164,75 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: hierarchical_unit_type
               validate: true
+    
+    - changeSet:
+        id: audit_type-createTable
+        comment: Create table audit_type
+        author: mvalin
+        changes:
+          - createTable:
+              tableName: audit_type
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_audit_type
+                    name: id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(30)
+    - changeSet:
+        id: audit_type-metadata
+        comment: Set data of audit_types
+        author: mvalin
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO audit_type (id,description) VALUES (1,'Sin Auditar');
+                INSERT INTO audit_type (id,description) VALUES (2,'Pendiente de Auditoria');
+                INSERT INTO audit_type (id,description) VALUES (3,'Auditado');
+
+    - changeSet:
+        id: add-audit_type-column-patient-table
+        author: mvalin
+        changes:
+          - addColumn:
+              tableName: patient
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: audit_type(id)
+                      foreignKeyName: FK_patient_audit_type_id
+                    name: audit_type_id
+                    type: smallint
+                    defaultValue: 1
+
+    - changeSet:
+        id: set-audit-type
+        comment: Set audit_type on patient
+        author: mvalin
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                UPDATE patient
+                SET audit_type_id =
+                CASE
+                    WHEN to_audit = false
+                    THEN 1
+                    ELSE 2
+                END
+
+    - changeSet:
+        id: drop-to_audit-column-patient-table
+        comment: Drop to_audit column on patient table
+        author: mvalin
+        changes:
+          - dropColumn:
+              columnName: to_audit
+              tableName: patient

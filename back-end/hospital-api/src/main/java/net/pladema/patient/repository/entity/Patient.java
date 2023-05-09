@@ -58,8 +58,8 @@ public class Patient extends SGXAuditableEntity<Integer> {
 	@Column(name = "identity_verification_status_id")
 	private Short identityVerificationStatusId;
 
-	@Column(name = "to_audit", nullable = false)
-	private Boolean toAudit = false;
+	@Column(name = "audit_type_id", nullable = false)
+	private Short auditTypeId;
 
 
 	public Patient(PatientPersonVo patientPersonVo) {

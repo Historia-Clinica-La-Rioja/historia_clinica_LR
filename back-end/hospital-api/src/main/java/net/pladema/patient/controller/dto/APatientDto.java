@@ -25,8 +25,7 @@ public class APatientDto extends APersonDto{
 
     private AAdditionalDoctorDto pamiDoctor;
 
-    @Nullable
-    private Boolean toAudit;
+    private Short auditTypeId;
 
 	@Nullable
 	private String message;
