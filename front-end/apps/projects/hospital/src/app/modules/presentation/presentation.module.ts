@@ -50,6 +50,7 @@ import { CtrlTemplateDirective } from './directives/ctrl-template.directive';
 // pipes
 import { DayTimeRangePipe } from './pipes/day-time-range.pipe';
 import { FullHouseAddressPipe } from './pipes/fullHouseAddress.pipe';
+import { FullMedicalCoveragePipe } from './pipes/full-medical-coverage.pipe';
 import { PatientToPersonPipe } from "./pipes/PatientToPersonPipe";
 import { PaginatePipe } from './pipes/paginate.pipe';
 import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
@@ -112,6 +113,7 @@ import { MessageFlaggedForAuditComponent } from './components/message-flagged-fo
 		// pipes
 		DayTimeRangePipe,
 		FullHouseAddressPipe,
+		FullMedicalCoveragePipe,
 		PatientToPersonPipe,
 		PaginatePipe,
 		PersonIdentificationPipe,
@@ -179,6 +181,7 @@ import { MessageFlaggedForAuditComponent } from './components/message-flagged-fo
 		// pipes
 		DayTimeRangePipe,
 		FullHouseAddressPipe,
+		FullMedicalCoveragePipe,
 		PatientToPersonPipe,
 		PaginatePipe,
 		PersonIdentificationPipe,
