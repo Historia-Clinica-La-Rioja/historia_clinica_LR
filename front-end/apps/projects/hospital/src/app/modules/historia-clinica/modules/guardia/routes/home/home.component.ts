@@ -148,13 +148,16 @@ export class HomeComponent implements OnInit {
 					}
 				})
 			} 
-			this.openPlaceAttendDialog(episode);
+			this.openPlaceAttendDialog(episode, quantity);
 		});
 	}
 	
-	private openPlaceAttendDialog(episode: Episode) {
+	private openPlaceAttendDialog(episode: Episode, quantity: AttentionPlacesQuantityDto) {
 		const dialogRef = this.dialog.open(AttentionPlaceDialogComponent, {
 			width: '35%',
+			data: {
+				quantity
+			}
 		});
 	
 		dialogRef.afterClosed().subscribe((attendPlace: AttendPlace) => {

@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
-import { DoctorsOfficeDto, MasterDataInterface, ShockroomDto } from '@api-rest/api-model';
+import { Component, Inject, OnInit } from '@angular/core';
+import { AttentionPlacesQuantityDto, DoctorsOfficeDto, MasterDataInterface, ShockroomDto } from '@api-rest/api-model';
 import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { hasError } from '@core/utils/form.utils';
 import { AttentionPlace } from '@historia-clinica/constants/summaries';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
-import { map } from 'rxjs/operators';
-import { MatDialogRef } from '@angular/material/dialog';
+import { filter, map } from 'rxjs/operators';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ShockroomService } from '@api-rest/services/shockroom.service';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AttendPlace, GUARDIA } from '../../routes/home/home.component';
@@ -20,7 +20,7 @@ const BED_ASSIGN: string = 'guardia.dialog.attention_place.BED_ASSIGN';
 	templateUrl: './attention-place-dialog.component.html',
 	styleUrls: ['./attention-place-dialog.component.scss'],
 })
-export class AttentionPlaceDialogComponent {
+export class AttentionPlaceDialogComponent implements OnInit {
 	places$: Observable<MasterDataInterface<number>[]>;
 	offices$: Observable<DoctorsOfficeDto[]>;
 	officesTypeaheadOptions$: Observable<TypeaheadOption<DoctorsOfficeDto>[]>;
@@ -36,8 +36,12 @@ export class AttentionPlaceDialogComponent {
 		private readonly shockroomService: ShockroomService,
 		private readonly formBuilder: FormBuilder,
 		private readonly dialogRef: MatDialogRef<AttentionPlaceDialogComponent>,
-	) {
+		@Inject(MAT_DIALOG_DATA) public data: { quantity: AttentionPlacesQuantityDto },
+	) { }
+	
+	ngOnInit(): void {
 		this.places$ = this.emergencyCareMasterDataService.getEmergencyEpisodeSectorType();
+		this.filterPlaces();
 		this.setForm();
 	}
 
@@ -45,13 +49,13 @@ export class AttentionPlaceDialogComponent {
 		this.clearData();
 		const id: number = Number(this.form.get('place').value);
 		if (id === AttentionPlace.CONSULTORIO) {
-			const office: AbstractControl = this.form.get('office');
 			this.offices$ = this.doctorsOfficeService.getBySectorType(GUARDIA);
+			const office: AbstractControl = this.form.get('office');
 			this.officesTypeaheadOptions$ = this.getTypeaheadOptions$(this.offices$);
 			office.addValidators(Validators.required);
 			office.updateValueAndValidity();
 		}
-
+		
 		if (id === AttentionPlace.SHOCKROOM) {
 			const shockroom: AbstractControl = this.form.get('shockroom');
 			this.shockrooms$ = this.shockroomService.getShockrooms();
@@ -99,6 +103,21 @@ export class AttentionPlaceDialogComponent {
 			}
 			this.dialogRef.close(attendPlace);
 		}
+	}
+
+	private filterPlaces() {
+		this.places$.subscribe((places: MasterDataInterface<number>[]) => {
+			if (this.data.quantity.doctorsOffice == 0) {
+				const index: number = places.indexOf(places.find(val => val.id == AttentionPlace.CONSULTORIO));
+				places.splice(index, 1);
+			}
+
+			if (this.data.quantity.shockroom == 0) {
+				const index: number = places.indexOf(places.find(val => val.id == AttentionPlace.SHOCKROOM));
+				places.splice(index, 1);
+			}
+			this.places$ = of(places);
+		});
 	}
 
 	private getTypeaheadOptions$(attentionPlace$): Observable<TypeaheadOption<any>[]> {

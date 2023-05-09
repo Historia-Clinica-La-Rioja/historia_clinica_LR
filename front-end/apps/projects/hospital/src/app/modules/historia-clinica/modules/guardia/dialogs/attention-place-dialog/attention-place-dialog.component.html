@@ -10,7 +10,7 @@
         <mat-form-field appearance="outline">
             <mat-label translate="guardia.dialog.attention_place.PLACE"></mat-label>
             <mat-select formControlName="place" (selectionChange)="verifyPlaceType()">
-              <mat-option [value]="place.id" *ngFor="let place of places$ | async">{{place.description}}</mat-option>
+                <mat-option [value]="place.id" *ngFor="let place of places$ | async">{{place.description}}</mat-option>
             </mat-select>
             <mat-error *ngIf="hasError(this.form, 'required', 'place')" translate="guardia.dialog.attention_place.ATTENTION_REQUIRED"></mat-error>
         </mat-form-field>
