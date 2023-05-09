@@ -249,6 +249,50 @@
                       }
                     },
                 {
+                      "type" : "cubejs-dashboard",
+                      "args" : {
+                        "filters" : {
+                          "date" : {
+                            "filter" : {
+                              "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
+                              "operator" : "inDateRange"
+                            },
+                            "type" : "dateRangeISO",
+                            "label" : "Fecha"
+                          }
+                        },
+                        "title" : {
+                          "text" : "Consultas por rango etario"
+                        },
+                        "label": "Rango etario",
+                        "content" : [
+                          {
+                            "type" : "cubejs-chart",
+                            "args" : {
+                              "query" : "cantidadConsultasAmbulatoriasRangoEtario",
+                              "chartOptions" : {
+                                "responsive" : true,
+                                "maintainAspectRatio" : false,
+                                "scales" : {
+                                  "x" : {
+                                    "stacked" : true
+                                  },
+                                  "y" : {
+                                    "stacked" : true
+                                  }
+                                },
+                                "plugins" : {
+                                  "legend" : {
+                                    "display" : true
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                {
                   "type" : "cubejs-dashboard",
                   "args" : {
                     "filters" : {

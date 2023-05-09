@@ -134,14 +134,18 @@ cube(`CantidadConsultasAmbulatorias`, {
     // Rango etario
     age_range: {
       sql: `CASE 
-      WHEN age BETWEEN 0 AND 3 THEN '0-3'
-      WHEN age BETWEEN 3 AND 11 THEN '03-11'
-      WHEN age BETWEEN 11 AND 17 THEN '11-17'
-      WHEN age BETWEEN 17 AND 29 THEN '18-29'
-      WHEN age BETWEEN 29 AND 39 THEN '30-39'
-      WHEN age BETWEEN 39 AND 49 THEN '40-49'
-      WHEN age BETWEEN 49 AND 59 THEN '50-59'
-      ELSE '>60'
+      WHEN age BETWEEN 0 AND 3 THEN '0 - 3'
+      WHEN age BETWEEN 3 AND 11 THEN '03 - 11'
+      WHEN age BETWEEN 11 AND 17 THEN '11 - 17'
+      WHEN age BETWEEN 17 AND 29 THEN '18 - 29'
+      WHEN age BETWEEN 29 AND 39 THEN '30 - 39'
+      WHEN age BETWEEN 39 AND 49 THEN '40 - 49'
+      WHEN age BETWEEN 49 AND 59 THEN '50 - 59'
+	  WHEN age BETWEEN 59 AND 69 THEN '60 - 69'
+	  WHEN age BETWEEN 69 AND 79 THEN '70 - 79'
+	  WHEN age BETWEEN 79 AND 89 THEN '80 - 89'
+	  WHEN age BETWEEN 89 AND 99 THEN '90 - 99'
+      ELSE '> 99'
     END`,
       type: `string`,
       title: 'Rango etario',
