@@ -1,7 +1,7 @@
 {
   "label": {
-    "text": "Reportes Estadisticos"
+    "text": "Estadísticas"
   },
-  "icon": "summarize",
+  "icon": "query_stats",
   "id": "reportesEstadisticos"
 }
