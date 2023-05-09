@@ -1,0 +1,49 @@
+<mat-card>
+	<mat-card-content [formGroup]="form">
+
+		<div id="specialty" fxLayoutGap="10px">
+			<div fxLayoutAlign="start center" fxLayoutGap="10px">
+				<mat-icon color="gray" fontSet="material-icons-outlined">medical_services</mat-icon>
+				<span class="title">
+					{{'ambulatoria.paciente.nueva-consulta.SPECIALTY'|translate}}
+				</span>
+			</div>
+			<mat-form-field appearance="outline">
+				<mat-select id="clinicalSpecialtyId" name="clinicalSpecialty" formControlName="clinicalSpecialty"
+					(selectionChange)="setDefaultSpecialty()" [attr.disabled]="fixedSpecialty">
+					<mat-option *ngFor="let clinicalSpecialty of specialties" [value]="clinicalSpecialty">
+						<span>{{clinicalSpecialty.name}}</span>
+					</mat-option>
+				</mat-select>
+				<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+			</mat-form-field>
+		</div>
+
+		<div id="medicalCoverage" fxLayoutGap="10px">
+			<div fxLayoutAlign="start center" fxLayoutGap="10px">
+				<mat-icon fontSet="material-icons-outlined">health_and_safety</mat-icon>
+
+				<span class="title">
+					{{'ambulatoria.paciente.nueva-consulta.COVERAGE'|translate}}
+				</span>
+			</div>
+			<mat-form-field appearance="outline">
+				<mat-select [placeholder]="'ambulatoria.paciente.nueva-consulta.NO_MEDICAL_COVERAGE'|translate"
+					(selectionChange)="setMedicalCoverage()" formControlName="patientMedicalCoverage">
+					<mat-option name="coverage" *ngFor="let patientMedicalCoverage of patientMedicalCoverages"
+						[value]="patientMedicalCoverage">
+						{{ patientMedicalCoverage | fullMedicalCoverage }}
+					</mat-option>
+					<mat-divider></mat-divider>
+					<mat-option (click)="openMedicalCoverageDialog()">
+						<span
+							class="color-primary">{{'ambulatoria.paciente.nueva-consulta.episode-data.UPDATE_CONVERGE'|translate}}
+						</span>
+					</mat-option>
+				</mat-select>
+
+			</mat-form-field>
+		</div>
+
+	</mat-card-content>
+</mat-card>

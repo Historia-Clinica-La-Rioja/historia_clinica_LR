@@ -68,6 +68,7 @@ import { EnviarRecetaDigitalPorEmailComponent } from './dialogs/enviar-receta-di
 import { DestinationInstitutionReferenceComponent } from './components/destination-institution-reference/destination-institution-reference.component';
 import { CarelinesAndSpecialtiesReferenceComponent } from './components/carelines-and-specialties-reference/carelines-and-specialties-reference.component';
 import { OriginInstitutionReferenceComponent } from './components/origin-institution-reference/origin-institution-reference.component';
+import { EpisodeDataComponent } from '@historia-clinica/components/episode-data/episode-data.component';
 
 @NgModule({
 	declarations: [
