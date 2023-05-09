@@ -41,11 +41,13 @@ import { Observable } from 'rxjs';
 import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { TranslateService } from '@ngx-translate/core';
 import { EquipmentTranscribeOrderPopupComponent } from '../equipment-transcribe-order-popup/equipment-transcribe-order-popup.component';
+import { differenceInDays } from 'date-fns';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
 const MEDICAL_ORDER_PENDING_STATUS = '1';
 const MEDICAL_ORDER_CATEGORY_ID = '363679005'
+const ORDER_EXPIRED_DAYS = 30;
 
 @Component({
 	selector: 'app-new-appointment',
@@ -455,12 +457,13 @@ export class NewAppointmentComponent implements OnInit {
 
 	mapDiagnosticReportInfoDtoToMedicalOrderInfo(patientMedicalOrders: DiagnosticReportInfoDto[]): medicalOrderInfo[]{
 		return patientMedicalOrders.map(diagnosticReportInfo => {
-			return {
-				serviceRequestId: diagnosticReportInfo.serviceRequestId,
-				studyName: diagnosticReportInfo.snomed.pt,
-				studyId: diagnosticReportInfo.id
-			}
-		})
+			if (differenceInDays(new Date(), new Date(diagnosticReportInfo.creationDate)) <= ORDER_EXPIRED_DAYS){
+				return {
+					serviceRequestId: diagnosticReportInfo.serviceRequestId,
+					studyName: diagnosticReportInfo.snomed.pt,
+					studyId: diagnosticReportInfo.id
+				}}
+		}).filter(value => value !== null && value !== undefined);
 	}
 
 	newTranscribedOrder() {
