@@ -23,7 +23,7 @@ public interface AppointmentOrderImageRepository extends JpaRepository<Appointme
             "SET aoi.completed = :completed " +
             "WHERE aoi.pk.appointmentId = :appointmentId")
     void updateCompleted(@Param("appointmentId") Integer appointmentId,
-						 @Param("completed") Boolean completed );
+						 @Param("completed") Boolean completed);
 
 	@Transactional
 	@Modifying
@@ -45,6 +45,13 @@ public interface AppointmentOrderImageRepository extends JpaRepository<Appointme
 			"FROM AppointmentOrderImage AS aoi " +
 			"WHERE aoi.orderId = :orderId")
 	Optional<Integer>  findById(@Param("orderId") Integer orderId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT 1 " +
+			"FROM AppointmentOrderImage AS aoi " +
+			"WHERE aoi.pk.appointmentId = :appointmentId " +
+			"AND aoi.completed = TRUE")
+	Optional<Integer> isAlreadyCompleted(@Param("appointmentId") Integer appointmentId);
 
 	@Transactional
 	@Modifying

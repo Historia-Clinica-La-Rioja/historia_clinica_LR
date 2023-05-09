@@ -141,3 +141,60 @@ databaseChangeLog:
               sql: |-
                 INSERT INTO clinical_specialty(name, sctid_code, clinical_specialty_type_id) 
                   VALUES ('Medico', '309343006', 2);
+
+    - changeSet:
+        id: details_order_image-createTable
+        comment: Create table details_order_image
+        author: mromero
+        changes:
+          - createTable:
+              tableName: details_order_image
+              columns:
+                - column:
+                    name: appointment_id
+                    constraints:
+                      nullable: false
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: role_id
+                    type: smallint
+                - column:
+                    name: observations
+                    type: ${varchar.max}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: completed_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: completed_by
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: appointment_id, role_id
+              constraintName: PK_details_order_image
+              tableName: details_order_image
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: completed_by
+              baseTableName: details_order_image
+              constraintName: FK_details_order_image_users
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: role_id
+              baseTableName: details_order_image
+              constraintName: FK_details_order_image_role
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: role
+              validate: true
