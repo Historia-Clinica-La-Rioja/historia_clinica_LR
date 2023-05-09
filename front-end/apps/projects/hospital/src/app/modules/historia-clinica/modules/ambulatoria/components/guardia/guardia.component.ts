@@ -67,13 +67,7 @@ export class GuardiaComponent implements OnInit {
                 this.episodeState = state.id;
 
                 this.withoutMedicalDischarge = (this.episodeState !== this.STATES.CON_ALTA_MEDICA);
-
-                if (this.isActive(this.episodeState)) {
-                    this.showEmergencyCareSummary = true;
-                } else {
-                    this.snackBarService.showError('ambulatoria.paciente.guardia.NOT_ACTIVE');
-                    this.goToEmergencyCareHome();
-                }
+				this.showEmergencyCareSummary = true;
             }, error => {
                 this.snackBarService.showError(error.text);
                 this.goToEmergencyCareHome();
@@ -81,11 +75,6 @@ export class GuardiaComponent implements OnInit {
         );
     }
 
-    private isActive(episodeStateId: number): boolean {
-        return episodeStateId === this.STATES.EN_ATENCION
-            || episodeStateId === this.STATES.EN_ESPERA
-            || episodeStateId === this.STATES.CON_ALTA_MEDICA;
-    }
 
     private goToEmergencyCareHome() {
         this.router.navigateByUrl(this.routePrefix + '/guardia');

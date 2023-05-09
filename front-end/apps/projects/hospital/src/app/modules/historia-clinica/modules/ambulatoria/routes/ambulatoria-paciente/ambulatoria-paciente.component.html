@@ -229,7 +229,8 @@
 						</ng-template>
 						<ng-template matTabContent>
 							<app-problemas [nuevaConsultaRef]="dialogRef"
-								[internmentInProcess]="internmentEpisodeProcess">
+								[internmentInProcess]="internmentEpisodeProcess"
+								(goToEmergencyCareEpisode)="goToEmergencyCareEpisode($event)">
 							</app-problemas>
 						</ng-template>
 					</mat-tab>

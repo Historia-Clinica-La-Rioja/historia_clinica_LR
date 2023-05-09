@@ -57,7 +57,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.actionsButtonService.internmentEpisodeId = this.internmentEpisodeId;
-		this.actionsButtonService.epicrisisConfirmed = this.epicrisisConfirmed;
+		this.actionsButtonService.notShowActionButton = this.epicrisisConfirmed;
 		this.actionsButtonService.patientId = this.patientId;
 		this.internmentEpisode.getInternmentEpisode(this.internmentEpisodeId).subscribe(
 			internmentEpisode => {

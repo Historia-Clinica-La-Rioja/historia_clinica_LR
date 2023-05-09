@@ -65,11 +65,11 @@ export class ActionsButtonService {
 		this.internmentEpisodeIdSubject.next(internmentEpisodeId);
 	}
 
-	set epicrisisConfirmed(epicrisisConfirmed: boolean) {
+	set notShowActionButton(epicrisisConfirmed: boolean) {
 		this.epicrisisConfirmedSubject.next(epicrisisConfirmed);
 	}
 
-	get epicrisisConfirmed() {
+	get notShowActionButton() {
 		return this.epicrisisConfirmedSubject.value;
 	}
 

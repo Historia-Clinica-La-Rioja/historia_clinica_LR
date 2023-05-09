@@ -55,10 +55,13 @@ export class CardEstudiosComponent implements OnInit {
 	emergencyCareDiagnosis;
 	episodeId: number;
 
+	@Input() filterBy: {
+		source: string,
+		id: number,
+	}
+	@Input() hideActions = false;
 	@Input() patientId: number;
-
 	@Input() epicrisisConfirmed: boolean;
-
 	@Input()
 	set categories(categories: any[]) {
 		this._categories = categories;
@@ -160,6 +163,7 @@ export class CardEstudiosComponent implements OnInit {
 		this.clearLoadedReports();
 		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, value.statusId, null, value.healthCondition, value.study, value.categoryId)
 			.subscribe((response: DiagnosticReportInfoDto[]) => {
+				response = this.filterBy ? response.filter(r => r.sourceId === this.filterBy.id && r.source === this.filterBy.source) : response;
 				response.forEach(report => {
 					report.creationDate = new Date(report.creationDate);
 					this.classifyReport(report);

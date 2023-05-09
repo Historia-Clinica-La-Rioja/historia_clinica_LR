@@ -1,143 +1,148 @@
 <app-content width="full">
 
-<ng-template #noInfo>
-	<mat-divider></mat-divider>
-    <app-no-data></app-no-data>
-</ng-template>
-<app-summary-card id="estudios" [header]="estudios"
-                                [canEdit]="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_IMAGENES', 'PERSONAL_DE_LABORATORIO', 'PROFESIONAL_DE_SALUD']"
-								[matMenu]="newPrescriptionMenu"
-								[menu]="hasHealthRelatedRole">
+	<ng-template #noInfo>
+		<mat-divider></mat-divider>
+		<app-no-data></app-no-data>
+	</ng-template>
+	<app-summary-card id="estudios" [header]="estudios"
+		[canEdit]="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_IMAGENES', 'PERSONAL_DE_LABORATORIO', 'PROFESIONAL_DE_SALUD']"
+		[matMenu]="newPrescriptionMenu" [menu]="hasHealthRelatedRole && !hideActions">
 
-	<mat-menu #newPrescriptionMenu="matMenu">
-		<ng-container>
-			<button *ngIf="this.isNewInternmentOrderEnabled()" mat-menu-item (click)="openNewInternmentOrderDialog()">
-				{{ 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_menu.NEW_INTERNMENT_PRESCRIPTION'  | translate }}
+		<mat-menu #newPrescriptionMenu="matMenu">
+			<ng-container>
+				<button *ngIf="this.isNewInternmentOrderEnabled()" mat-menu-item
+					(click)="openNewInternmentOrderDialog()">
+					{{
+					'ambulatoria.paciente.ordenes_prescripciones.new_prescription_menu.NEW_INTERNMENT_PRESCRIPTION'
+					| translate }}
+				</button>
+
+				<button mat-menu-item (click)="openNewOutpatientOrderDialog()">
+					{{
+					'ambulatoria.paciente.ordenes_prescripciones.new_prescription_menu.NEW_OUTPATIENT_PRESCRIPTION'
+					| translate }}
+				</button>
+
+				<button *ngIf="episodeEnAtencion && notEmergencyCareTemporaryPatient" mat-menu-item
+					(click)="openNewEmergencyCareOrderDialog()">Nueva orden de Guardia</button>
+			</ng-container>
+
+		</mat-menu>
+
+		<div class="header-filters" fxLayout="row" fxLayoutGap="15px" *ngIf="hasHealthRelatedRole">
+			<button mat-button class="filter-button" color="primary" (click)="hideFilters()">
+				<mat-icon fontSet="material-icons-outlined">filter_alt</mat-icon> FILTRAR
 			</button>
+		</div>
 
-			<button mat-menu-item (click)="openNewOutpatientOrderDialog()">
-				{{ 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_menu.NEW_OUTPATIENT_PRESCRIPTION'  | translate }}
-			</button>
-
-			<button *ngIf="episodeEnAtencion && notEmergencyCareTemporaryPatient" mat-menu-item (click)="openNewEmergencyCareOrderDialog()">Nueva orden de Guardia</button>
-		</ng-container>
-	</mat-menu>
-
-	<div class="header-filters" fxLayout="row" fxLayoutGap="15px" *ngIf="hasHealthRelatedRole">
-		<button mat-button class="filter-button" color="primary" (click)="hideFilters()">
-			<mat-icon fontSet="material-icons-outlined">filter_alt</mat-icon> FILTRAR
-		</button>
-	</div>
-
-	<div id="filter" *ngIf="hideFilterPanel" >
-		<form id="filter-form" [formGroup]="formFilter" (ngSubmit)="filter()" fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="15px" style="margin: 15px" >
+		<div id="filter" *ngIf="hideFilterPanel">
+			<form id="filter-form" [formGroup]="formFilter" (ngSubmit)="filter()" fxLayout="row wrap"
+				fxLayoutAlign="center center" fxLayoutGap="15px" style="margin: 15px">
 				<mat-form-field appearance="outline">
 					<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.STUDY'"></mat-label>
-					<input matInput type="text"
-									id="study"
-									name="study"
-									formControlName="study">
+					<input matInput type="text" id="study" name="study" formControlName="study">
 					<button id="clear-study" type="button" mat-button *ngIf="formFilter.controls.study.value" matSuffix
-							color="warn"
-							mat-icon-button
-							(click)="clearFilterField(formFilter.controls.study); $event.stopPropagation()">
+						color="warn" mat-icon-button
+						(click)="clearFilterField(formFilter.controls.study); $event.stopPropagation()">
 						<mat-icon>close</mat-icon>
 					</button>
 				</mat-form-field>
 				<mat-form-field appearance="outline">
 					<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.CATEGORY'"></mat-label>
-					<mat-select id="categories"
-								name="categories"
-								formControlName="categoryId">
+					<mat-select id="categories" name="categories" formControlName="categoryId">
 						<mat-option *ngFor="let category of categories" [value]="category.id">
-								{{category.description | translate}}
-							</mat-option>
+							{{category.description | translate}}
+						</mat-option>
 					</mat-select>
-					<button id="clear-categoryId-study" type="button" mat-button *ngIf="formFilter.controls.categoryId.value" matSuffix
-							color="warn"
-							mat-icon-button
-							(click)="clearFilterField(formFilter.controls.categoryId); $event.stopPropagation()">
+					<button id="clear-categoryId-study" type="button" mat-button
+						*ngIf="formFilter.controls.categoryId.value" matSuffix color="warn" mat-icon-button
+						(click)="clearFilterField(formFilter.controls.categoryId); $event.stopPropagation()">
 						<mat-icon>close</mat-icon>
 					</button>
 				</mat-form-field>
 				<mat-form-field appearance="outline">
 					<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.STATE'"></mat-label>
-					<mat-select id="statusId"
-								name="statusId"
-								formControlName="statusId">
-						<mat-option *ngFor="let diagnosticReportStatus of diagnosticReportsStatus" [value]="diagnosticReportStatus.id">
-								{{diagnosticReportStatus.description | translate}}
-							</mat-option>
+					<mat-select id="statusId" name="statusId" formControlName="statusId">
+						<mat-option *ngFor="let diagnosticReportStatus of diagnosticReportsStatus"
+							[value]="diagnosticReportStatus.id">
+							{{diagnosticReportStatus.description | translate}}
+						</mat-option>
 					</mat-select>
-					<button id="clear-status-study" type="button" mat-button *ngIf="formFilter.controls.statusId.value" matSuffix
-							color="warn"
-							mat-icon-button
-							(click)="clearFilterField(formFilter.controls.statusId); $event.stopPropagation()">
+					<button id="clear-status-study" type="button" mat-button *ngIf="formFilter.controls.statusId.value"
+						matSuffix color="warn" mat-icon-button
+						(click)="clearFilterField(formFilter.controls.statusId); $event.stopPropagation()">
 						<mat-icon>close</mat-icon>
 					</button>
 				</mat-form-field>
 				<mat-form-field appearance="outline">
 					<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.PROBLEM'"></mat-label>
-					<input matInput type="text"
-									id="healthCondition"
-									name="healthCondition"
-									formControlName="healthCondition">
-					<button id="clear-healthCondition-study" type="button" mat-button *ngIf="formFilter.controls.healthCondition.value" matSuffix
-							color="warn"
-							mat-icon-button
-							(click)="clearFilterField(formFilter.controls.healthCondition); $event.stopPropagation()">
+					<input matInput type="text" id="healthCondition" name="healthCondition"
+						formControlName="healthCondition">
+					<button id="clear-healthCondition-study" type="button" mat-button
+						*ngIf="formFilter.controls.healthCondition.value" matSuffix color="warn" mat-icon-button
+						(click)="clearFilterField(formFilter.controls.healthCondition); $event.stopPropagation()">
 						<mat-icon>close</mat-icon>
 					</button>
 				</mat-form-field>
-			<div class="filter-button">
-				<button mat-flat-button color="primary" type="submit">
-					<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.BUTTON_FILTER'"></span>
-				</button>
-			</div>
-		</form>
-	</div>
-	<mat-divider></mat-divider>
-    <div *ngIf="theresReports() else noInfo" fxLayout="column">
+				<div class="filter-button">
+					<button mat-flat-button color="primary" type="submit">
+						<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.BUTTON_FILTER'"></span>
+					</button>
+				</div>
+			</form>
+		</div>
+		<mat-divider></mat-divider>
+		<div *ngIf="theresReports() else noInfo" fxLayout="column">
 
-		<app-study-images-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[0].id)" *ngIf="imageDiagnotics.length > 0 && (hasHealthRelatedRole || hasPicturesStaffRole)"
-		fxFlex="100%" mat-list-item class="item-padding" [images]="imageDiagnotics" [patientId]="patientId">
-		</app-study-images-card>
+			<app-study-images-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[0].id)"
+				*ngIf="imageDiagnotics.length > 0 && (hasHealthRelatedRole || hasPicturesStaffRole)" fxFlex="100%"
+				mat-list-item class="item-padding" [images]="imageDiagnotics" [patientId]="patientId">
+			</app-study-images-card>
 
-		<app-study-laboratory-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[1].id)" *ngIf="laboratoryDiagnotics.length > 0 && (hasHealthRelatedRole || hasLaboratoryStaffRole)"
-		fxFlex="100%" mat-list-item class="item-padding" [laboratories]="laboratoryDiagnotics" [patientId]="patientId">
-		</app-study-laboratory-card>
+			<app-study-laboratory-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[1].id)"
+				*ngIf="laboratoryDiagnotics.length > 0 && (hasHealthRelatedRole || hasLaboratoryStaffRole)"
+				fxFlex="100%" mat-list-item class="item-padding" [laboratories]="laboratoryDiagnotics"
+				[patientId]="patientId">
+			</app-study-laboratory-card>
 
-		<app-study-pathologic-anatomy-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[2].id)"
-		*ngIf="pathologicAnatomyDiagnotics.length > 0 && hasHealthRelatedRole" fxFlex="100%" mat-list-item class="item-padding"
-		[pathologicAnatomies]="pathologicAnatomyDiagnotics" [patientId]="patientId">
-		</app-study-pathologic-anatomy-card>
+			<app-study-pathologic-anatomy-card
+				(updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[2].id)"
+				*ngIf="pathologicAnatomyDiagnotics.length > 0 && hasHealthRelatedRole" fxFlex="100%" mat-list-item
+				class="item-padding" [pathologicAnatomies]="pathologicAnatomyDiagnotics" [patientId]="patientId">
+			</app-study-pathologic-anatomy-card>
 
-		<app-study-hemotherapy-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[3].id)"
-		*ngIf="hemotherapyDiagnotics.length > 0 && hasHealthRelatedRole" fxFlex="100%" mat-list-item class="item-padding" [hemotherapies]="hemotherapyDiagnotics"
-		[patientId]="patientId">
-		</app-study-hemotherapy-card>
+			<app-study-hemotherapy-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[3].id)"
+				*ngIf="hemotherapyDiagnotics.length > 0 && hasHealthRelatedRole" fxFlex="100%" mat-list-item
+				class="item-padding" [hemotherapies]="hemotherapyDiagnotics" [patientId]="patientId">
+			</app-study-hemotherapy-card>
 
-        <app-study-surgical-procedure-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[4].id)"
-		*ngIf="surgicalProceduresDiagnotics.length > 0 && hasHealthRelatedRole" fxFlex="100%" mat-list-item class="item-padding"
-		[surgicalProcedures]="surgicalProceduresDiagnotics" [patientId]="patientId">
-		</app-study-surgical-procedure-card>
+			<app-study-surgical-procedure-card
+				(updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[4].id)"
+				*ngIf="surgicalProceduresDiagnotics.length > 0 && hasHealthRelatedRole" fxFlex="100%" mat-list-item
+				class="item-padding" [surgicalProcedures]="surgicalProceduresDiagnotics" [patientId]="patientId">
+			</app-study-surgical-procedure-card>
 
-		<app-study-other-procedures-and-practices-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[5].id)"
-		*ngIf="otherProceduresAndPracticesDiagnotics.length > 0 && hasHealthRelatedRole" fxFlex="100%" mat-list-item class="item-padding"
-		[otherProceduresAndPractices]="otherProceduresAndPracticesDiagnotics" [patientId]="patientId">
-		</app-study-other-procedures-and-practices-card>
+			<app-study-other-procedures-and-practices-card
+				(updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[5].id)"
+				*ngIf="otherProceduresAndPracticesDiagnotics.length > 0 && hasHealthRelatedRole" fxFlex="100%"
+				mat-list-item class="item-padding" [otherProceduresAndPractices]="otherProceduresAndPracticesDiagnotics"
+				[patientId]="patientId">
+			</app-study-other-procedures-and-practices-card>
 
-		<app-study-advice-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[6].id)" *ngIf="adviceDiagnotics.length > 0 && hasHealthRelatedRole"
-		fxFlex="100%" mat-list-item class="item-padding" [advices]="adviceDiagnotics" [patientId]="patientId" [categoryId]="categories[6].id">
-		</app-study-advice-card>
+			<app-study-advice-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[6].id)"
+				*ngIf="adviceDiagnotics.length > 0 && hasHealthRelatedRole" fxFlex="100%" mat-list-item
+				class="item-padding" [advices]="adviceDiagnotics" [patientId]="patientId"
+				[categoryId]="categories[6].id">
+			</app-study-advice-card>
 
-		<app-study-education-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[7].id)" *ngIf="educationDiagnotics.length > 0 && hasHealthRelatedRole"
-		fxFlex="100%" mat-list-item class="item-padding" [educations]="educationDiagnotics" [patientId]="patientId">
-		</app-study-education-card>
+			<app-study-education-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[7].id)"
+				*ngIf="educationDiagnotics.length > 0 && hasHealthRelatedRole" fxFlex="100%" mat-list-item
+				class="item-padding" [educations]="educationDiagnotics" [patientId]="patientId">
+			</app-study-education-card>
 
-    </div>
-	<ng-template #noInfo>
-		<app-no-data></app-no-data>
-	</ng-template>
-</app-summary-card>
+		</div>
+		<ng-template #noInfo>
+			<app-no-data></app-no-data>
+		</ng-template>
+	</app-summary-card>
 </app-content>

@@ -234,6 +234,7 @@
 					</app-summary-card>
 				</div>
 			</div>
+			<app-emergency-care-problems [patientId]="patientId" (goToEpisode)="goToEpisode($event)"></app-emergency-care-problems>
 		</div>
 	</section>
 
@@ -344,7 +345,8 @@
 															{{historicalProblem.professionalFullName}}
 														</div>
 														<div>
-															<h3 class="mat-h2 primary" [translate]="'ambulatoria.paciente.problemas.historical-problems.CONSULTATION_INSTITUTION'">
+															<h3 class="mat-h2 primary"
+																[translate]="'ambulatoria.paciente.problemas.historical-problems.CONSULTATION_INSTITUTION'">
 															</h3>
 															{{historicalProblem.institutionName}}
 														</div>
@@ -382,7 +384,8 @@
 															<span>{{reference.institution}}</span>
 														</div>
 
-														<div fxLayout="row" fxLayoutGap="10px" *ngIf="reference.careLine">
+														<div fxLayout="row" fxLayoutGap="10px"
+															*ngIf="reference.careLine">
 															<strong
 																[translate]="'ambulatoria.paciente.problemas.historical-problems.CARE_LINE'"></strong>
 															<span>{{reference.careLine}}</span>

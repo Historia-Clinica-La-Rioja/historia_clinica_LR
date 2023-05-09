@@ -16,6 +16,7 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
 
 
 @Component({
@@ -60,6 +61,7 @@ export class EmergencyCareIndicationsCardComponent implements OnInit {
 			(emergencyCareEpisode: ResponseEmergencyCareDto) => {
 				this.entryDate = dateTimeDtoToDate(emergencyCareEpisode.creationDate);
 				this.actionsButtonService.entryDate = this.entryDate;
+				this.actionsButtonService.notShowActionButton = emergencyCareEpisode.emergencyCareState.id !== EstadosEpisodio.EN_ATENCION
 			}
 		)
 

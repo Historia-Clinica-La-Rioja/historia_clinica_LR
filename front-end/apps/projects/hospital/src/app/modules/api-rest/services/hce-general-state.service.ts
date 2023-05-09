@@ -94,6 +94,11 @@ export class HceGeneralStateService {
 		return this.http.get<HCEHospitalizationHistoryDto[]>(url);
 	}
 
+	getEmergencyCareHistory(patientId: number): Observable<HCEHospitalizationHistoryDto[]> {
+		const url = this.URL_BASE + patientId + this.URL_SUFFIX + `emergency-care`;
+		return this.http.get<HCEHospitalizationHistoryDto[]>(url);
+	}
+
 	getToothRecords(patientId: number, toothSctid: string): Observable<HCEToothRecordDto[]> {
 		const url = this.URL_BASE + patientId + this.URL_SUFFIX + `toothRecords/tooth/${toothSctid}`;
 		return this.http.get<HCEToothRecordDto[]>(url);

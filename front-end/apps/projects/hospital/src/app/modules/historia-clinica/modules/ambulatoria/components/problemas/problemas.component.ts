@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Injector, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import {
 	PROBLEMAS_ACTIVOS,
 	PROBLEMAS_CRONICOS,
@@ -18,7 +18,7 @@ import { HceGeneralStateService } from '@api-rest/services/hce-general-state.ser
 import { ActivatedRoute, Router } from '@angular/router';
 import { DateFormat, dateToMoment, momentFormat, momentParseDate } from '@core/utils/moment.utils';
 import { map, take, tap } from 'rxjs/operators';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { SolveProblemComponent } from '../../../../dialogs/solve-problem/solve-problem.component';
 import { HistoricalProblems, HistoricalProblemsFacadeService } from '../../services/historical-problems-facade.service';
@@ -36,7 +36,7 @@ import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { CounterreferenceFileService } from '@api-rest/services/counterreference-file.service';
 import { DocumentService } from "@api-rest/services/document.service";
-import {PatientNameService} from "@core/services/patient-name.service";
+import { PatientNameService } from "@core/services/patient-name.service";
 import { Color } from '@presentation/colored-label/colored-label.component';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
@@ -74,7 +74,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	public historicalProblemsAmount: number;
 	public hideFilterPanel = false;
 	private historicalProblems$: Subscription;
-	private patientId: number;
+	patientId: number;
 	private nuevaConsultaAmbulatoriaRef: DockPopupRef;
 	private nuevaConsultaFromProblemaRef: DockPopupRef;
 	private severityTypeMasterData: any[];
@@ -95,6 +95,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	private readonly externalClinicalHistoryService: ExternalClinicalHistoryFacadeService;
 	private readonly featureFlagService: FeatureFlagService;
 	@Input() internmentInProcess: InternmentEpisodeProcessDto;
+	@Output() goToEmergencyCareEpisode = new Subject<number>();
 
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
@@ -315,5 +316,9 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 
 	getFullName(firstName: string, nameSelfDetermination: string): string {
 		return `${this.patientNameService.getPatientName(firstName, nameSelfDetermination)}`;
+	}
+
+	goToEpisode(episodeId: number) {
+		this.goToEmergencyCareEpisode.next(episodeId);
 	}
 }

@@ -8,7 +8,7 @@
 			</div>
 			<span class="color-primary title">{{ header.title | translate | uppercase }}</span>
 		</div>
-		<ng-container *ngIf="!actionsButtonService.epicrisisConfirmed">
+		<ng-container *ngIf="!actionsButtonService.notShowActionButton">
 			<button mat-stroked-button color="primary" *appHasRole="canEdit" (click)="openDialog()" btn-block
 				fxLayout="end">
 				+{{ 'presentation.indications.INDICATE' | translate | uppercase }}

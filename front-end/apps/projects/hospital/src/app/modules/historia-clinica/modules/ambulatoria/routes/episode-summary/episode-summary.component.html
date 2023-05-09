@@ -1,0 +1,63 @@
+<app-content>
+
+	<h2>Resumen Episodio</h2>
+	<div fxLayout="column" fxLayoutGap="10px">
+
+		<mat-card>
+			<div fxLayout="row">
+
+				<app-patient-card-header [patient]="patient" [personPhoto]="personPhoto">
+				</app-patient-card-header>
+				<mat-divider class="header-divider" [vertical]="true"></mat-divider>
+				<div fxLayout="column" fxLayoutAlign="center start">
+					<h2>Episodio de Guardia N° {{emergencyCareEpisodeInProgress.id}}</h2>
+					<span *ngIf="responseEmergencyCareDto" class="color-disabled">Finalizado
+						{{responseEmergencyCareDto.endDate | viewDateDto: 'datetime' | date : 'short' }}</span>
+				</div>
+			</div>
+		</mat-card>
+
+		<mat-card>
+			<mat-card-content>
+				<mat-tab-group>
+					<mat-tab>
+						<ng-template mat-tab-label>
+							<span>GUARDIA</span>
+						</ng-template>
+						<ng-template matTabContent>
+							<div>
+								<app-guardia [emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress">
+								</app-guardia>
+							</div>
+						</ng-template>
+					</mat-tab>
+
+					<mat-tab>
+						<ng-template mat-tab-label>
+							<span>INDICACIONES</span>
+						</ng-template>
+						<ng-template matTabContent>
+							<div>
+								<app-emergency-care-indications-card [patientId]="responseEmergencyCareDto?.patient.id"
+									[emergencyCareEpisodeId]="responseEmergencyCareDto.id"></app-emergency-care-indications-card>
+							</div>
+						</ng-template>
+					</mat-tab>
+					<mat-tab>
+						<ng-template mat-tab-label>
+							<span>ESTUDIOS</span>
+						</ng-template>
+						<ng-template matTabContent>
+							<div>
+								<app-card-estudios [patientId]="responseEmergencyCareDto.patient.id"
+									[diagnosticReportsStatus]="diagnosticReportsStatus$ | async"
+									[categories]="studyCategories$ | async" [filterBy]="filterBy" hideActions="true">
+								</app-card-estudios>
+							</div>
+						</ng-template>
+					</mat-tab>
+				</mat-tab-group>
+			</mat-card-content>
+		</mat-card>
+	</div>
+</app-content>
