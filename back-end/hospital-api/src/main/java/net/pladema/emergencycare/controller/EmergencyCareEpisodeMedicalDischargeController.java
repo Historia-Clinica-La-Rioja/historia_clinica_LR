@@ -74,8 +74,6 @@ public class EmergencyCareEpisodeMedicalDischargeController {
         Integer medicalDischargeBy = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
 
         EmergencyCareBo emergencyCareBo = emergencyCareEpisodeService.get(episodeId, institutionId);
-        if (emergencyCareBo.getPatient() == null)
-            throw new NotFoundException("El episodio debe tener asociado un paciente", "El episodio debe tener asociado un paciente");
 
         Integer patientId = emergencyCareBo.getPatient().getId();
         BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);

@@ -46,16 +46,4 @@ public class EmergencyCareEpisodeAdministrativeDischargeController {
         return ResponseEntity.ok().body(saved);
     }
 
-
-    @PostMapping("/absence")
-    public ResponseEntity<Boolean> newAdministrativeDischargeByAbsence(
-            @PathVariable(name = "institutionId") Integer institutionId,
-            @PathVariable(name = "episodeId") Integer episodeId) {
-        LOG.debug("New administrative discharge by absence -> episodeId {}, institutionId {}", episodeId, institutionId);
-        Integer userId = UserInfo.getCurrentAuditor();
-        ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
-        boolean saved = emergencyCareEpisodeAdministrativeDischargeService.newAdministrativeDischargeByAbsence(episodeId, institutionId, userId, institutionZoneId);
-        LOG.debug("Output -> {}", saved);
-        return ResponseEntity.ok().body(saved);
-    }
 }

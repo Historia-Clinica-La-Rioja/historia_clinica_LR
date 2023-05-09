@@ -52,17 +52,6 @@ public class EmergencyCareEpisodeAdministrativeDischargeServiceImpl implements E
         return true;
     }
 
-    @Override
-	@Transactional
-    public boolean newAdministrativeDischargeByAbsence(Integer episodeId, Integer institutionId, Integer userId, ZoneId institutionZoneId) {
-        LOG.debug("New administrative discharge by absence  -> episodeId {}, institutionId{}, userId{}, institutionZoneId{}", episodeId, institutionId, userId, institutionZoneId);
-        LocalDateTime localDateTIme = dateTimeProvider.nowDateTimeWithZone(institutionZoneId);
-        EmergencyCareDischarge emergencyCareDischarge = new EmergencyCareDischarge(episodeId,localDateTIme,userId, DischargeType.RETIRO_VOLUNTARIO, WITHOUT_DOCTOR);
-        emergencyCareDischarge = emergencyCareEpisodeDischargeRepository.save(emergencyCareDischarge);
-        emergencyCareEpisodeStateService.changeState(emergencyCareDischarge.getEmergencyCareEpisodeId(), institutionId, EmergencyCareState.CON_ALTA_ADMINISTRATIVA, null, null, null);
-        return true;
-    }
-
     private void assertValidDischarge(AdministrativeDischargeBo administrativeDischargeBo, LocalDateTime medicalDischargeDate, ZoneId institutionZoneId) {
         LocalDateTime administrativeDischargeOn = administrativeDischargeBo.getAdministrativeDischargeOn();
         Assert.isTrue( !administrativeDischargeOn.isBefore(medicalDischargeDate), "care-episode.administrative-discharge.exceeds-min-date");
