@@ -14,6 +14,7 @@ public interface ShockroomRepository extends SGXAuditableEntityJPARepository<Sho
 	@Transactional(readOnly = true)
 	@Query("SELECT s " +
 			"FROM Shockroom s " +
-			"WHERE s.institutionId = :institutionId")
+			"WHERE s.institutionId = :institutionId " +
+			"AND s.deleteable.deleted = false")
 	List<Shockroom> getShockrooms(@Param("institutionId") Integer institutionId);
 }

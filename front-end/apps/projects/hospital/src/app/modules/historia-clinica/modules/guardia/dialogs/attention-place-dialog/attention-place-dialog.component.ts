@@ -116,6 +116,11 @@ export class AttentionPlaceDialogComponent implements OnInit {
 				const index: number = places.indexOf(places.find(val => val.id == AttentionPlace.SHOCKROOM));
 				places.splice(index, 1);
 			}
+
+			if (this.data.quantity.bed == 0) {
+				const index: number = places.indexOf(places.find(val => val.id == AttentionPlace.HABITACION));
+				places.splice(index, 1);
+			}
 			this.places$ = of(places);
 		});
 	}
