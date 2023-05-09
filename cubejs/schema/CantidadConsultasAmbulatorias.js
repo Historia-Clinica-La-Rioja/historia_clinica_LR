@@ -1,6 +1,6 @@
 cube(`CantidadConsultasAmbulatorias`, {
   sql: `SELECT 
-            oc.id, 'Ambulatoria' as tipo, oc.start_date as fecha_consulta, g.description as gender, spg.description as self_perceived_gender, pe.birth_date, cs.name as especialidad,
+            oc.id, 'Ambulatoria' as tipo, oc.start_date as fecha_consulta, g.description as gender, spg.description as self_perceived_gender, date_part('year', age(oc.created_on, pe.birth_date)) as age, cs.name as especialidad,
             concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN pex.name_self_determination IS NULL OR pex.name_self_determination LIKE '' THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE pex.name_self_determination END) AS profesional_autopercibido,
             concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), concat_ws(' ', doc.first_name, doc.middle_names)) AS profesional,
             oc.institution_id AS institucion_id
@@ -25,7 +25,7 @@ cube(`CantidadConsultasAmbulatorias`, {
             AND u.id = ${SECURITY_CONTEXT.userId.unsafeValue()}))` : ''}
     UNION ALL
         SELECT 
-            oc.id, 'Odontología' as tipo, oc.performed_date as fecha_consulta, g.description as gender, spg.description as self_perceived_gender, pe.birth_date, cs.name as especialidad,
+            oc.id, 'Odontología' as tipo, oc.performed_date as fecha_consulta, g.description as gender, spg.description as self_perceived_gender, date_part('year', age(oc.created_on, pe.birth_date)) as age, cs.name as especialidad,
             concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN pex.name_self_determination IS NULL OR pex.name_self_determination LIKE '' THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE pex.name_self_determination END) AS profesional_autopercibido,
             concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), concat_ws(' ', doc.first_name, doc.middle_names)) AS profesional,
             oc.institution_id AS institucion_id
@@ -50,7 +50,7 @@ cube(`CantidadConsultasAmbulatorias`, {
             AND u.id = ${SECURITY_CONTEXT.userId.unsafeValue()}))` : ''}
       UNION ALL
         SELECT 
-            nc.id, 'Enfermería' as tipo, nc.performed_date as fecha_consulta, g.description as gender, spg.description as self_perceived_gender, pe.birth_date, cs.name as especialidad,
+            nc.id, 'Enfermería' as tipo, nc.performed_date as fecha_consulta, g.description as gender, spg.description as self_perceived_gender, date_part('year', age(nc.created_on, pe.birth_date)) as age, cs.name as especialidad,
             concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN pex.name_self_determination IS NULL OR pex.name_self_determination LIKE '' THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE pex.name_self_determination END) AS profesional_autopercibido,
             concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), concat_ws(' ', doc.first_name, doc.middle_names)) AS profesional,
             nc.institution_id AS institucion_id
@@ -131,7 +131,22 @@ cube(`CantidadConsultasAmbulatorias`, {
       type: `number`,
       title: 'Institución',
     },
-  },
+    // Rango etario
+    age_range: {
+      sql: `CASE 
+      WHEN age BETWEEN 0 AND 3 THEN '0-3'
+      WHEN age BETWEEN 3 AND 11 THEN '03-11'
+      WHEN age BETWEEN 11 AND 17 THEN '11-17'
+      WHEN age BETWEEN 17 AND 29 THEN '18-29'
+      WHEN age BETWEEN 29 AND 39 THEN '30-39'
+      WHEN age BETWEEN 39 AND 49 THEN '40-49'
+      WHEN age BETWEEN 49 AND 59 THEN '50-59'
+      ELSE '>60'
+    END`,
+      type: `string`,
+      title: 'Rango etario',
+    },
+    },
   title:` `,
   dataSource: `default`
 });
