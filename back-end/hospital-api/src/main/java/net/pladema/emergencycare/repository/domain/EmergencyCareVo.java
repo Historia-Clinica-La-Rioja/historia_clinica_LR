@@ -58,6 +58,8 @@ public class EmergencyCareVo implements Serializable {
 
 	private BedVo bed;
 
+	private LocalDateTime endDate;
+
 	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId,
 						   String nameSelfDetermination, String doctorsOfficeDescription, TriageCategory triage,
 						   String shockroomDescription, Bed bed){
@@ -80,8 +82,9 @@ public class EmergencyCareVo implements Serializable {
 
 	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId, String nameSalfeDetermination,
 						   String doctorsOfficeDescription, TriageCategory triage, PoliceInterventionDetails policeInterventionDetails,
-						   String shockroomDescription, Bed bed){
+						   String shockroomDescription, Bed bed, LocalDateTime endDate){
 		this(emergencyCareEpisode, person, patientTypeId, nameSalfeDetermination, doctorsOfficeDescription, triage, shockroomDescription, bed);
 		this.policeInterventionDetails = policeInterventionDetails != null ? new PoliceInterventionDetailsVo(policeInterventionDetails) : null;
+		this.endDate = endDate;
 	}
 }

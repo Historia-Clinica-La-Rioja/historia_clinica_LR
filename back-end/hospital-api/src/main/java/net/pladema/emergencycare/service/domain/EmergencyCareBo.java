@@ -63,6 +63,8 @@ public class EmergencyCareBo {
 	private ShockRoomBo shockroom;
 
 	private BedBo bed;
+	
+	private LocalDateTime endDate;
 
     public EmergencyCareBo(EmergencyCareVo emergencyCareVo){
         this.id = emergencyCareVo.getId();
@@ -82,6 +84,7 @@ public class EmergencyCareBo {
         this.hasPoliceIntervention = emergencyCareVo.getHasPoliceIntervention();
 		this.shockroom = emergencyCareVo.getShockroom() != null ? new ShockRoomBo(emergencyCareVo.getShockroom().getId(), emergencyCareVo.getShockroom().getDescription()) : null;
 		this.bed = emergencyCareVo.getBed() != null ? new BedBo(emergencyCareVo.getBed().getId(), emergencyCareVo.getBed().getBedNumber(), null) : null;
+		this.endDate = emergencyCareVo.getEndDate();
     }
 
     public EmergencyCareBo(EmergencyCareEpisode emergencyCareEpisode) {

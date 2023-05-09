@@ -32,6 +32,8 @@ public class ResponseEmergencyCareDto extends EmergencyCareDto {
 	private ShockroomDto shockroom;
 
 	private BedDto bed;
+	
+	private DateTimeDto endDate;
 
     public ResponseEmergencyCareDto(Integer id, List<SnomedDto> reasons, MasterDataDto emergencyCareType,
                                     MasterDataDto entranceType, Boolean hasPoliceIntervention, PoliceInterventionDetailsDto policeIntervention,

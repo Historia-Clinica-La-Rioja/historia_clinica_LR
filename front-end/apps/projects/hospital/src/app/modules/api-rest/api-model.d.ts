@@ -3001,6 +3001,7 @@ export interface ResponseEmergencyCareDto extends EmergencyCareDto {
     creationDate: DateTimeDto;
     doctorsOffice: DoctorsOfficeDto;
     emergencyCareState: MasterDataDto;
+    endDate: DateTimeDto;
     id: number;
     shockroom: ShockroomDto;
 }
