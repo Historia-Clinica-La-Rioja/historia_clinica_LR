@@ -73,6 +73,8 @@
             "nueva-consulta": {
                 "TITLE": "Nueva consulta",
                 "SPECIALTY": "Especialidad",
+				"COVERAGE": "Cobertura",
+				"NO_MEDICAL_COVERAGE": "Sin cobertura",
                 "TITLE_MENU": "Consulta",
                 "TENSION_SISTOLICA": "Tensión sistólica",
                 "TENSION_DIASTOLICA": "Tensión diastólica",
@@ -81,6 +83,12 @@
                 "MOTIVO": "Motivos de consulta",
                 "PROBLEMA": "Problema de la consulta",
                 "RECOMENDADO": "*Recomendado",
+				"EPISODE_DATA": "Datos del episodio",
+				"episode-data":{
+					"UPDATE_CONVERGE": "Actualizar cobertura",
+					"UPDATE_CONVERGE_CORRECTLY": "Las coberturas fueron actualizadas correctamente",
+					"ERROR_CONVERGE_CORRECTLY": "Ocurrió un error al actualizar las coberturas"
+				},
                 "evolucion": {
                     "TITLE": "Evolución",
                     "DESCRIPCION": "Descripción"
