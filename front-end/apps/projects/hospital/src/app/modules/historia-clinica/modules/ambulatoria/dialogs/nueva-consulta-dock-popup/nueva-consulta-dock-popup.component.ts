@@ -46,6 +46,7 @@ import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialog
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
+import { PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 
 const TIME_OUT = 5000;
 
@@ -85,6 +86,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 	snowstormServiceNotAvailable = false;
 	snowstormServiceErrorMessage: string;
+	patientMedicalCoverage: PatientMedicalCoverage;
+	clinicalSpecialty: ClinicalSpecialtyDto;
 
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 
@@ -97,7 +100,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly outpatientConsultationService: OutpatientConsultationService,
 		private readonly healthConditionService: HealthConditionService,
-		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly dialog: MatDialog,
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly featureFlagService: FeatureFlagService,
@@ -121,23 +123,9 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA).subscribe(isEnabled => this.isEnablePopUpConfirm = isEnabled);
 	}
 
-	setProfessionalSpecialties() {
-		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe(specialties => {
-			this.setSpecialtyFields(specialties, false);
-		});
-	}
 
-	setSpecialtyFields(specialtyArray, fixedSpecialty) {
-		this.specialties = specialtyArray;
-		this.fixedSpecialty = fixedSpecialty;
-		this.defaultSpecialty = specialtyArray[0];
-		this.formEvolucion.get('clinicalSpecialty').setValue(this.defaultSpecialty);
-		this.formEvolucion.controls['clinicalSpecialty'].markAsTouched();
-	}
 
 	ngOnInit(): void {
-
-		this.setProfessionalSpecialties();
 
 		if (this.data.idProblema) {
 			this.healthConditionService.getHealthCondition(this.data.idProblema).subscribe(p => {
@@ -147,7 +135,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 		this.formEvolucion = this.formBuilder.group({
 			evolucion: [],
-			clinicalSpecialty: [null, [Validators.required]],
 		});
 
 		if (this.data.problem) {
@@ -418,6 +405,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				};
 			}
 			),
+			patientMedicalCoverageId: this.patientMedicalCoverage?.id,
 			problems: this.ambulatoryConsultationProblemsService.getProblemas().map(
 				(problema: Problema) => {
 					return {
@@ -432,9 +420,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			procedures: this.procedimientoNuevaConsultaService.getProcedimientos(),
 			reasons: this.motivoNuevaConsultaService.getMotivosConsulta(),
 			riskFactors: this.factoresDeRiesgoFormService.getFactoresDeRiesgo(),
-			clinicalSpecialtyId: this.defaultSpecialty?.id,
+			clinicalSpecialtyId: this.clinicalSpecialty?.id,
 			references: this.ambulatoryConsultationReferenceService.getOutpatientReferences(),
-			patientMedicalCoverageId: null
 		};
 	}
 
@@ -597,6 +584,14 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			width: '35%',
 			disableClose: true,
 		});
+	}
+
+	setPatientMedicalCoverage(patientMedicalCoverage: PatientMedicalCoverage) {
+		this.patientMedicalCoverage = patientMedicalCoverage;
+	}
+
+	setClinicalSpecialty(clinicalSpecialty: ClinicalSpecialtyDto) {
+		this.clinicalSpecialty = clinicalSpecialty;
 	}
 }
 
