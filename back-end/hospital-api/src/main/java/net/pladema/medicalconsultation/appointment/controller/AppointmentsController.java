@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.appointment.controller;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
@@ -13,38 +14,9 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
-import ar.lamansys.mqtt.application.ports.MqttClientService;
-import ar.lamansys.mqtt.domain.MqttMetadataBo;
-import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
+import net.pladema.medicalconsultation.appointment.controller.constraints.ValidDetailsOrderImage;
 
-
-import net.pladema.establishment.service.EquipmentService;
-import net.pladema.establishment.service.OrchestratorService;
-import net.pladema.establishment.service.domain.EquipmentBO;
-import net.pladema.establishment.service.domain.OrchestratorBO;
-import net.pladema.medicalconsultation.appointment.controller.constraints.ValidEquipmentAppointment;
-import net.pladema.medicalconsultation.appointment.controller.constraints.ValidEquipmentAppointmentDiary;
-import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentEquipmentShortSummaryDto;
-import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
-import net.pladema.medicalconsultation.appointment.controller.dto.EquipmentAppointmentListDto;
-import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointmentDateDto;
-import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentOrderImage;
-import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
-import net.pladema.medicalconsultation.appointment.service.AppointmentOrderImageService;
-import net.pladema.medicalconsultation.appointment.service.CreateEquipmentAppointmentService;
-
-import net.pladema.medicalconsultation.appointment.service.EquipmentAppointmentService;
-
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentOrderImageBo;
-import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryService;
-
-import net.pladema.medicalconsultation.equipmentdiary.service.domain.CompleteEquipmentDiaryBo;
-
-import net.pladema.modality.service.ModalityService;
-
-import net.pladema.modality.service.domain.ModalityBO;
-import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
+import net.pladema.permissions.repository.enums.ERole;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -61,35 +33,61 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import ar.lamansys.mqtt.application.ports.MqttClientService;
+import ar.lamansys.mqtt.domain.MqttMetadataBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCoverageDto;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.establishment.service.EquipmentService;
+import net.pladema.establishment.service.OrchestratorService;
+import net.pladema.establishment.service.domain.EquipmentBO;
+import net.pladema.establishment.service.domain.OrchestratorBO;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentDiary;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentState;
+import net.pladema.medicalconsultation.appointment.controller.constraints.ValidEquipmentAppointment;
+import net.pladema.medicalconsultation.appointment.controller.constraints.ValidEquipmentAppointmentDiary;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentBasicPatientDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDailyAmountDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentEquipmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.DetailsOrderImageDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.EquipmentAppointmentListDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointmentDateDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.AppointmentMapper;
 import net.pladema.medicalconsultation.appointment.controller.mapper.ExternalPatientCoverageMapper;
 import net.pladema.medicalconsultation.appointment.repository.domain.BookingPersonBo;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.service.AppointmentDailyAmountService;
+import net.pladema.medicalconsultation.appointment.service.AppointmentOrderImageService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentValidatorService;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
+import net.pladema.medicalconsultation.appointment.service.CreateEquipmentAppointmentService;
+import net.pladema.medicalconsultation.appointment.service.EquipmentAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.booking.BookingPersonService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDailyAmountBo;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentOrderImageBo;
+import net.pladema.medicalconsultation.appointment.service.domain.DetailsOrderImageBo;
+import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.notifypatient.NotifyPatient;
+import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryService;
+import net.pladema.medicalconsultation.equipmentdiary.service.domain.CompleteEquipmentDiaryBo;
+import net.pladema.modality.service.ModalityService;
+import net.pladema.modality.service.domain.ModalityBO;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
@@ -628,14 +626,21 @@ public class AppointmentsController {
 		return ResponseEntity.ok().body(imageId);
 	}
 
-	@GetMapping("/completed-study/{appointmentId}")
+	@PostMapping("/study-observations/{appointmentId}")
 	@PreAuthorize("hasPermission(#institutionId, 'TECNICO')")
-	public ResponseEntity<Boolean> completedStudy(
+	@ValidDetailsOrderImage
+	public ResponseEntity<Boolean> addStudyObservations(
 			@PathVariable(name = "institutionId") Integer institutionId,
-			@PathVariable(name = "appointmentId") Integer appointmentId
-	){
-		appointmentOrderImageService.updateCompleted(appointmentId, true);
-		return ResponseEntity.ok().body(true);
+			@PathVariable(name = "appointmentId") Integer appointmentId,
+			@RequestBody DetailsOrderImageDto detailsOrderImageDto
+			) {
+		Integer technicianId = UserInfo.getCurrentAuditor();
+		log.debug("Input parameters -> institutionId {}, appointmentId {}, technicianId {}, {}", institutionId, appointmentId, technicianId, detailsOrderImageDto);
+		Short roleId = ERole.TECNICO.getId();
+		DetailsOrderImageBo detailsOrderImageBo = new DetailsOrderImageBo(appointmentId, detailsOrderImageDto.getObservations(), LocalDateTime.now(), technicianId, roleId);
+		boolean result = appointmentOrderImageService.updateCompleted(detailsOrderImageBo, true);
+		log.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
 	}
 
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRATIVO_RED_DE_IMAGENES')")
