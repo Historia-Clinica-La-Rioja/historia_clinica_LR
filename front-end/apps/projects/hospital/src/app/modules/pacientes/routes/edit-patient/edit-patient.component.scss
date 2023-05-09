@@ -63,3 +63,12 @@ button.medical-coverage {
 .matInput{
 	max-width: none;
 }
+#updateDNI{
+	padding-bottom: 1.3em;
+}
+#updateDNI button{
+	text-decoration-line: underline ;
+}
+ :host ::ng-deep .inputDni .mat-form-field-wrapper{
+	padding-bottom: 0px!important;
+}

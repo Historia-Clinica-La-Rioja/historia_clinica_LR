@@ -91,6 +91,8 @@ export class EditPatientComponent implements OnInit {
 	hasInstitutionalAdministratorRole = false;
 	hasToSaveFiles: boolean = false;
 	typesPatient: PatientType[];
+	hasAuditorRole: boolean = false;
+	idTypeDni:number;
 
 	constructor(
 		private formBuilder: UntypedFormBuilder,
@@ -115,6 +117,9 @@ export class EditPatientComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.permissionsService.hasContextAssignments$([ERole.AUDITOR_MPI]).subscribe(isAuditor => {
+			this.hasAuditorRole = isAuditor;
+		})
 		this.route.queryParams
 			.subscribe(params => {
 				this.patientId = params.id;
@@ -207,6 +212,10 @@ export class EditPatientComponent implements OnInit {
 								this.form.setControl('pamiDoctor', new UntypedFormControl(completeData.pamiDoctor?.fullName));
 								this.form.setControl('pamiDoctorPhoneNumber', new UntypedFormControl(completeData.pamiDoctor?.phoneNumber));
 								this.restrictFormEdit();
+								if (this.hasAuditorRole) {
+									this.form.controls.patientId.disable();
+									this.form.controls.identificationNumber.disable();
+								}
 
 								this.form.get("addressCountryId").valueChanges.subscribe(
 									countryId => {
@@ -277,6 +286,7 @@ export class EditPatientComponent implements OnInit {
 		this.personMasterDataService.getIdentificationTypes()
 			.subscribe(identificationTypes => {
 				this.identificationTypeList = identificationTypes;
+				this.idTypeDni = this.identificationTypeList.find(type => type.description === 'DNI').id;
 			});
 
 		this.personMasterDataService.getEthnicities()
@@ -299,13 +309,21 @@ export class EditPatientComponent implements OnInit {
 				this.countries = countries;
 			});
 
-		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR]).subscribe(hasInstitutionalAdministratorRole => this.hasInstitutionalAdministratorRole = hasInstitutionalAdministratorRole);
+		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE,
+		ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR]).subscribe(hasInstitutionalAdministratorRole =>
+			this.hasInstitutionalAdministratorRole = hasInstitutionalAdministratorRole);
+
+
+
+	}
+	setDisabled() {
+
 	}
 
 	updatePhoneValidators() {
 		if (this.form.controls.phoneNumber.value || this.form.controls.phonePrefix.value) {
-			updateControlValidator(this.form, 'phoneNumber', [Validators.required,Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
-			updateControlValidator(this.form, 'phonePrefix', [Validators.required,Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
+			updateControlValidator(this.form, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
+			updateControlValidator(this.form, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
 		} else {
 			updateControlValidator(this.form, 'phoneNumber', []);
 			updateControlValidator(this.form, 'phonePrefix', []);
@@ -573,6 +591,21 @@ export class EditPatientComponent implements OnInit {
 			});
 	}
 
+	setIdentificationType(value:any){
+		const button = document.getElementById('updateDNI');
+
+		if(value !== this.idTypeDni ){
+			this.form.controls.identificationNumber.enable();
+			button.style.display = "none";
+		}else{
+			this.form.controls.identificationNumber.disable();
+			button.style.display = "block";
+		}
+	}
+
+	setDNI() {
+
+	}
 }
 
 export interface AuditablePatientInfo {

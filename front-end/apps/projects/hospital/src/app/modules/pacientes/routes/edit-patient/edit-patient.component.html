@@ -14,8 +14,6 @@
 			<h3 [translate]="'pacientes.edit.SUBTITLE_PATIENT'"></h3>
 		</ng-template>
 
-
-
 		<div class="content">
 			<form [formGroup]="form" (ngSubmit)="save()">
 				<div fxLayout="row" fxLayoutGap="15px">
@@ -26,9 +24,9 @@
 						<mat-form-field appearance="outline" class="matInput">
 							<mat-select id="identificationTypeId" name="identificationTypeId"
 								formControlName="identificationTypeId"
-								placeholder="{{'pacientes.form.SELECT' | translate}}">
+								placeholder="{{'pacientes.form.SELECT' | translate}}" (ngModelChange)="setIdentificationType($event)" >
 								<mat-option *ngFor="let identificationType of identificationTypeList"
-									[value]="identificationType.id">
+									[value]="identificationType.id" >
 									{{identificationType.description}}
 								</mat-option>
 							</mat-select>
@@ -40,7 +38,7 @@
 						<div>
 							<span [translate]="'pacientes.form.IDENTIFICATION_NUMBER'"></span>*
 						</div>
-						<mat-form-field appearance="outline" class="matInput">
+						<mat-form-field appearance="outline" class="matInput " [ngClass]="hasAuditorRole ? 'inputDni' : ''">
 							<input id="identificationNumber" name="identificationNumber"
 								formControlName="identificationNumber"
 								placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}" matInput>
@@ -50,47 +48,53 @@
 								Introduzca como máximo 11 caracteres
 							</mat-error>
 						</mat-form-field>
+						<div id="updateDNI">
+							<button *ngIf="hasAuditorRole" mat-button type="button" color="primary"  (click)="setDNI()">{{'pacientes.form.UPDATE_IDENTIFICATION_NUMBER' | translate}}</button>
+						</div>
 					</div>
 				</div>
 
-				<div *ngIf="!auditablePatientInfo else messageForAuditSection">
-					<button mat-button type="button" id="mark_for_audit" color="primary" (click)="openAuditDialog()">
-						<mat-icon fontSet="material-icons-outlined">sms_failed</mat-icon>
-						{{ 'pacientes.edit.MARK_FOR_AUDIT' | translate }}
-					</button>
-					<br><br>
-				</div>
+				<div *ngIf="!hasAuditorRole">
+					<div *ngIf="!auditablePatientInfo else messageForAuditSection">
+						<button mat-button type="button" id="mark_for_audit" color="primary"
+							(click)="openAuditDialog()">
+							<mat-icon fontSet="material-icons-outlined">sms_failed</mat-icon>
+							{{ 'pacientes.edit.MARK_FOR_AUDIT' | translate }}
+						</button>
+						<br><br>
+					</div>
 
-				<ng-template #messageForAuditSection>
-					<div fxLayout="column" fxLayoutGap="10px" id="message_for_audit_section">
-						<span [translate]="'pacientes.edit.MESSAGE_FOR_AUDIT'"></span>
+					<ng-template #messageForAuditSection>
+						<div fxLayout="column" fxLayoutGap="10px" id="message_for_audit_section">
+							<span [translate]="'pacientes.edit.MESSAGE_FOR_AUDIT'"></span>
 
-						<div>
-							<span id="message_for_audit"> "{{ auditablePatientInfo.message }}" </span>
-							<div class="mat-caption">
-								<span *ngIf="auditablePatientInfo.createdBy">{{ auditablePatientInfo.createdBy }} -
-								</span>
-								<span *ngIf="auditablePatientInfo.institutionName">
-									{{ auditablePatientInfo.institutionName }} - </span>
-								<span>{{ auditablePatientInfo.createdOn | translate }}</span>
+							<div>
+								<span id="message_for_audit"> "{{ auditablePatientInfo.message }}" </span>
+								<div class="mat-caption">
+									<span *ngIf="auditablePatientInfo.createdBy">{{ auditablePatientInfo.createdBy }} -
+									</span>
+									<span *ngIf="auditablePatientInfo.institutionName">
+										{{ auditablePatientInfo.institutionName }} - </span>
+									<span>{{ auditablePatientInfo.createdOn | translate }}</span>
+								</div>
+							</div>
+
+							<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" fxLayout.lt-sm="column"
+								fxLayoutAlign.lt-sm="start start" fxLayoutGap.lt-sm="3px">
+								<button mat-button type="button" id="edit_message_for_audit" color="primary"
+									(click)="openAuditDialog(auditablePatientInfo.message)">
+									<mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+									{{ 'pacientes.edit.EDIT_MESSAGE_FOR_AUDIT' | translate }}
+								</button>
+								<button mat-button type="button" id="unmark_patient_for_audit" color="warn"
+									(click)="openUnmarkPatientWarning()">
+									<mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
+									{{ 'pacientes.edit.UNMARK_PATIENT_FOR_AUDIT' | translate }}
+								</button>
 							</div>
 						</div>
-
-						<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" fxLayout.lt-sm="column"
-							fxLayoutAlign.lt-sm="start start" fxLayoutGap.lt-sm="3px">
-							<button mat-button type="button" id="edit_message_for_audit" color="primary"
-								(click)="openAuditDialog(auditablePatientInfo.message)">
-								<mat-icon fontSet="material-icons-outlined">edit</mat-icon>
-								{{ 'pacientes.edit.EDIT_MESSAGE_FOR_AUDIT' | translate }}
-							</button>
-							<button mat-button type="button" id="unmark_patient_for_audit" color="warn"
-								(click)="openUnmarkPatientWarning()">
-								<mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
-								{{ 'pacientes.edit.UNMARK_PATIENT_FOR_AUDIT' | translate }}
-							</button>
-						</div>
-					</div>
-				</ng-template>
+					</ng-template>
+				</div>
 				<div class="form-row" fxLayoutGap="15px">
 					<div>
 						<div>

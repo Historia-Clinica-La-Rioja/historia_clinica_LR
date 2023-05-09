@@ -68,7 +68,8 @@
       "IDENTIFICATION_NUMBER_MAXLENGHT_ERROR": "Introduzca como máximo 11 caracteres",
 	  "STATE":"Estado",
 	  "UPLOAD_FILES": "ADJUNTAR DOCUMENTO",
-	  "ATTACHED_DOCUMENTS": "Documentos adjuntos"
+	  "ATTACHED_DOCUMENTS": "Documentos adjuntos",
+	  "UPDATE_IDENTIFICATION_NUMBER":"Cambiar N° de DNI"
     },
     "home": {
       "TITLE": "Pacientes",
