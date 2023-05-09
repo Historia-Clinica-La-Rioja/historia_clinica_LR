@@ -41,6 +41,7 @@ import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/n
 import { NewConsultationPersonalHistoryFormComponent } from '../../dialogs/new-consultation-personal-history-form/new-consultation-personal-history-form.component';
 import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
 import { ReferenceInformation } from '@historia-clinica/modules/ambulatoria/services/ambulatory-consultation-reference.service';
+import { PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -67,6 +68,8 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	odontologyReferenceService: OdontologyReferenceService;
 
 	searchConceptsLocallyFFIsOn = false;
+	patientMedicalCoverage: PatientMedicalCoverage;
+	clinicalSpecialty: ClinicalSpecialtyDto;
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	public hasError = hasError;
 	public today = newMoment();
@@ -80,7 +83,6 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		private readonly snomedService: SnomedService,
 		private readonly formBuilder: FormBuilder,
 		private readonly internmentMasterDataService: InternacionMasterDataService,
-		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly odontogramService: OdontogramService,
 		private readonly conceptsFacadeService: ConceptsFacadeService,
 		private readonly surfacesNamesFacadeService: SurfacesNamesFacadeService,
@@ -106,15 +108,8 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 
 		this.form = this.formBuilder.group({
 			evolution: [null, null],
-			clinicalSpecialty: [null, [Validators.required]],
 			permanentTeethPresent: [null, [Validators.maxLength(2), Validators.pattern('^[0-9]+$')]],
 			temporaryTeethPresent: [null, [Validators.maxLength(2), Validators.pattern('^[0-9]+$')]],
-		});
-
-		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe(clinicalSpecialties => {
-			this.form.patchValue({ clinicalSpecialty: clinicalSpecialties[0]?.id });
-			this.form.controls['clinicalSpecialty'].markAsTouched();
-			this.clinicalSpecialties = clinicalSpecialties;
 		});
 
 		this.internmentMasterDataService.getAllergyCriticality().subscribe(allergyCriticalities => {
@@ -297,13 +292,13 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			diagnostics: this.otherDiagnosticsNewConsultationService.getProblemas().map(toOdontologyDiagnosticDto),
 			procedures: this.otherProceduresService.getProcedimientos().map(toOdontologyProcedureDto),
 			reasons: this.reasonNewConsultationService.getMotivosConsulta(),
-			clinicalSpecialtyId: this.form.value.clinicalSpecialty,
+			clinicalSpecialtyId: this.clinicalSpecialty.id,
 			dentalActions,
 			personalHistories: this.personalHistoriesNewConsultationService.getAntecedentes().map(toOdontologyPersonalHistoryDto),
 			permanentTeethPresent: this.form.value.permanentTeethPresent,
 			temporaryTeethPresent: this.form.value.temporaryTeethPresent,
 			references: this.odontologyReferenceService.getOdontologyReferences(),
-			patientMedicalCoverageId: null
+			patientMedicalCoverageId: this.patientMedicalCoverage.id
 		};
 	}
 
@@ -398,6 +393,14 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			)
 		}
 		return null;
+	}
+
+	setPatientMedicalCoverage(patientMedicalCoverage: PatientMedicalCoverage) {
+		this.patientMedicalCoverage = patientMedicalCoverage;
+	}
+
+	setClinicalSpecialty(clinicalSpecialty: ClinicalSpecialtyDto) {
+		this.clinicalSpecialty = clinicalSpecialty;
 	}
 }
 

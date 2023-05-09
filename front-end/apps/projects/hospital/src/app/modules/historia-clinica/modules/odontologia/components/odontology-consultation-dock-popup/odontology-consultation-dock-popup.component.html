@@ -6,22 +6,10 @@
 		<app-new-consultation-expansion-section id="clinical_specialty"
 			[title]="'odontologia.odontology-consultation-dock-popup.SPECIALTY' | translate" icon="medical_services"
 			[isEmpty]="!form.value.clinicalSpecialty" [collapsed]="false" [hideBorder]="true">
-			<app-document-section>
-				<ng-container concept-form>
-					<form [formGroup]="form">
-						<mat-form-field appearance="outline">
-							<mat-select formControlName="clinicalSpecialty" name="clinicalSpecialty">
-								<mat-option *ngFor="let clinicalSpecialty of clinicalSpecialties"
-									[value]="clinicalSpecialty.id">
-									{{clinicalSpecialty.name}}
-								</mat-option>
-							</mat-select>
-							<mat-error *ngIf="hasError(form, 'required', 'clinicalSpecialty')"
-								[translate]="'forms.REQUIRED'"></mat-error>
-						</mat-form-field>
-					</form>
-				</ng-container>
-			</app-document-section>
+
+			<app-episode-data [idPatient]="data.patientId" (clinicalSpecialty)="setClinicalSpecialty($event)"
+				(medicalCoverage)="setPatientMedicalCoverage($event)">
+			</app-episode-data>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="reasons"
