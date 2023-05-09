@@ -1,0 +1,43 @@
+{
+  "cubeQuery": {
+    "measures": [
+      "CantidadConsultasAmbulatorias.cantidad_turnos_estado"
+    ],
+    "timeDimensions": [
+      {
+        "dimension": "CantidadConsultasAmbulatorias.fecha_consulta"
+      }
+    ],
+    "filters": [
+      {
+        "dimension": "CantidadConsultasAmbulatorias.institucion_id",
+        "operator": "equals",
+        "values": [
+          "[(${institutionId})]"
+        ]
+      },
+      {
+        "member": "CantidadConsultasAmbulatorias.gender",
+        "operator": "set",
+        "values": []
+      }
+    ],
+    "order": {
+      "CantidadConsultasAmbulatorias.cantidad_turnos_estado": "desc"
+    },
+    "dimensions": [
+      "CantidadConsultasAmbulatorias.gender"
+    ]
+  },
+  "chartType": "doughnut",
+  "pivotConfig": {
+    "x": [
+      "CantidadConsultasAmbulatorias.gender"
+    ],
+    "y": [
+      "measures"
+    ],
+    "fillMissingDates": true,
+    "joinDateRange": false
+  }
+}

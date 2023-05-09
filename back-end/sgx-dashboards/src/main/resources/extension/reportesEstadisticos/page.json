@@ -213,6 +213,42 @@
                   }
                 },
                 {
+                      "type" : "cubejs-dashboard",
+                      "args" : {
+                        "filters" : {
+                          "date" : {
+                            "filter" : {
+                              "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
+                              "operator" : "inDateRange"
+                            },
+                            "type" : "dateRangeISO",
+                            "label" : "Fecha"
+                          }
+                        },
+                        "title" : {
+                          "text" : "Consultas por sexo del DNI"
+                        },
+                        "label": "Sexo DNI - anillo",
+                        "content" : [
+                          {
+                            "type" : "cubejs-chart",
+                            "args" : {
+                              "query" : "cantidadConsultasPorGeneroDNI",
+                              "chartOptions" : {
+                                "responsive" : true,
+                                "maintainAspectRatio" : false,
+                                "plugins" : {
+                                  "legend" : {
+                                    "display" : true
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                {
                   "type" : "cubejs-dashboard",
                   "args" : {
                     "filters" : {
@@ -242,7 +278,7 @@
                       }
                     },
                     "title" : {
-                      "text" : "Consultas por género"
+                      "text" : "Consultas por sexo del DNI"
                     },
                     "label": "Sexo DNI - tarjetas",
                     "content" : [
