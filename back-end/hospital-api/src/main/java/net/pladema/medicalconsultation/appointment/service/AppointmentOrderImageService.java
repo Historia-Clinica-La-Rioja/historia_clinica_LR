@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.appointment.service;
 
 
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentOrderImageBo;
+import net.pladema.medicalconsultation.appointment.service.domain.DetailsOrderImageBo;
 
 import java.util.Optional;
 
@@ -9,15 +10,15 @@ import java.util.Optional;
 public interface AppointmentOrderImageService {
 
 
-	void updateCompleted(Integer appointmentId, boolean completed);
+	boolean isAlreadyCompleted(Integer appointmentId);
+
+	boolean updateCompleted(DetailsOrderImageBo detailsOrderImageBo, boolean finished);
 
 	Optional<String> getImageId(Integer appointmentId);
 
 	void save(AppointmentOrderImageBo appointmentOrderImageBo);
 
 	void setImageId(Integer appointmentId, String imageId);
-
-
 
 
 }

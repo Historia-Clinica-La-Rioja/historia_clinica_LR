@@ -1,18 +1,20 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
 
-import lombok.RequiredArgsConstructor;
-import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
-import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentOrderImage;
-import net.pladema.medicalconsultation.appointment.service.AppointmentOrderImageService;
-
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentOrderImageBo;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
+import net.pladema.medicalconsultation.appointment.repository.DetailsOrderImageRepository;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentOrderImage;
+import net.pladema.medicalconsultation.appointment.repository.entity.DetailsOrderImage;
+import net.pladema.medicalconsultation.appointment.service.AppointmentOrderImageService;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentOrderImageBo;
+import net.pladema.medicalconsultation.appointment.service.domain.DetailsOrderImageBo;
 
 @Service
 @RequiredArgsConstructor
@@ -21,12 +23,23 @@ public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageSe
 	private static final Logger LOG = LoggerFactory.getLogger(AppointmentOrderImageServiceImpl.class);
 
 	private final AppointmentOrderImageRepository appointmentOrderImageRepository;
+	private final DetailsOrderImageRepository detailsOrderImageRepository;
 
 
 	@Override
-	public void updateCompleted(Integer appointmentId, boolean completed) {
-		LOG.debug("Input parameters -> appointmentId {}, completed {} ", appointmentId, completed);
-		appointmentOrderImageRepository.updateCompleted(appointmentId, completed);
+	public boolean isAlreadyCompleted(Integer appointmentId) {
+		return appointmentOrderImageRepository.isAlreadyCompleted(appointmentId).isPresent();
+	}
+
+	@Override
+	public boolean updateCompleted(DetailsOrderImageBo detailsOrderImageBo, boolean completed) {
+		LOG.debug("Input parameters -> details {} to finish with '{}'", detailsOrderImageBo, completed);
+		DetailsOrderImage doi = detailsOrderImageRepository.save(new DetailsOrderImage(detailsOrderImageBo.getAppointmentId(),
+				detailsOrderImageBo.getObservations(), detailsOrderImageBo.getCompletedOn(),
+				detailsOrderImageBo.getProfessionalId(), detailsOrderImageBo.getRoleId()));
+		appointmentOrderImageRepository.updateCompleted(detailsOrderImageBo.getAppointmentId(), completed);
+		LOG.debug("Output -> appointmentId {} study finished", doi.getAppointmentId());
+		return true;
 	}
 
 	@Override
