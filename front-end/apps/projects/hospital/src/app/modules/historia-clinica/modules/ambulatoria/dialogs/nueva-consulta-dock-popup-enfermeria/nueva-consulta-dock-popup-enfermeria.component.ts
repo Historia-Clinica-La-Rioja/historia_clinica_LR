@@ -26,6 +26,7 @@ import { FactoresDeRiesgoFormService } from '../../../../services/factores-de-ri
 import { NuevaConsultaData } from '../nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
+import { PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 
 export interface FieldsToUpdate {
 	riskFactors: boolean;
@@ -64,6 +65,8 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	specialties: ClinicalSpecialtyDto[];
 	problems: ClinicalTermDto[];
 	searchConceptsLocallyFFIsOn = false;
+	patientMedicalCoverage: PatientMedicalCoverage;
+	clinicalSpecialty: ClinicalSpecialtyDto;
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 
 
@@ -96,20 +99,6 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		this.datosAntropometricosNuevaConsultaService =
 			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService, this.translateService);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
-	}
-
-	setProfessionalSpecialties() {
-		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe(specialties => {
-			this.setSpecialtyFields(specialties, false);
-		});
-	}
-
-
-	setSpecialtyFields(specialtyArray, fixedSpecialty) {
-		this.specialties = specialtyArray;
-		this.fixedSpecialty = fixedSpecialty;
-		this.defaultSpecialty = specialtyArray[0];
-		this.formEvolucion.get('clinicalSpecialty').setValue(this.defaultSpecialty);
 	}
 
 	setProblem() {
@@ -162,12 +151,10 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 
 	ngOnInit(): void {
 
-		this.setProfessionalSpecialties();
 		this.setProblem();
 
 		this.formEvolucion = this.formBuilder.group({
 			evolucion: [],
-			clinicalSpecialty: [],
 			clinicalProblem: []
 		});
 
@@ -285,12 +272,12 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	private buildCreateOutpatientDto(): NursingConsultationDto {
 		return {
 			anthropometricData: this.datosAntropometricosNuevaConsultaService.getDatosAntropometricos(),
-			clinicalSpecialtyId: this.defaultSpecialty.id,
+			clinicalSpecialtyId: this.clinicalSpecialty?.id,
 			evolutionNote: this.formEvolucion.value?.evolucion,
 			problem: this.formEvolucion.value?.clinicalProblem,
 			procedures: this.procedimientoNuevaConsultaService.getProcedimientos(),
 			riskFactors: this.factoresDeRiesgoFormService.getFactoresDeRiesgo(),
-			patientMedicalCoverageId: null
+			patientMedicalCoverageId: this.patientMedicalCoverage?.id
 		}
 	}
 
@@ -306,6 +293,14 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 
 	clear(control: AbstractControl): void {
 		control.reset();
+	}
+
+	setPatientMedicalCoverage(patientMedicalCoverage: PatientMedicalCoverage) {
+		this.patientMedicalCoverage = patientMedicalCoverage;
+	}
+
+	setClinicalSpecialty(clinicalSpecialty: ClinicalSpecialtyDto) {
+		this.clinicalSpecialty = clinicalSpecialty;
 	}
 
 }
