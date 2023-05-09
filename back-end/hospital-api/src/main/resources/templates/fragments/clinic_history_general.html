@@ -66,14 +66,14 @@
                 <th>Fecha de nacimiento:</th>
             </tr>
             <tr>
-                <td th:text="${}"></td>
-                <td th:text="${}"></td>
-                <td th:text="${}"></td>
-                <td th:text="${}"></td>
-                <td th:text="${}"></td>
+                <td th:text="${patient.person.completeName()}"></td>
+                <td th:text="${patient.person.identificationNumber}"></td>
+                <td th:text="${patient.id}"></td>
+                <td th:text="${patientAge}"></td>
+                <td th:text="${#temporals.format(patient.person.birthDate, 'dd/MM/yyyy')}"></td>
             </tr>
         </table>
-        <hr>
+        <hr/>
     </div>
 
     <div th:fragment="encounterData">
@@ -86,13 +86,13 @@
                 <th>Fecha fin:</th>
             </tr>
             <tr>
-                <td th:text="${}"></td>
-                <td th:text="${}"></td>
-                <td th:text="${}"></td>
-                <td th:text="${}"></td>
+                <td th:text="${encounterId}"></td>
+                <td th:text="${encounterType}"></td>
+                <td th:text="${#temporals.format(startDate, 'dd-MM-yyyy HH:mm') + ' hs'}"></td>
+                <td th:text="${#temporals.format(endDate, 'dd-MM-yyyy HH:mm') + ' hs'}"></td>
             </tr>
         </table>
-        <br>
+        <br/>
         <table>
             <tr>
                 <th>Institucion:</th>
@@ -100,25 +100,25 @@
                 <th>Lugar: </th>
             </tr>
             <tr>
-                <td th:text="${}"></td>
-                <td th:text="${}"></td>
-                <td th:text="${}"></td>
+                <td th:text="${institution}"></td>
+                <td th:text="${sector != null ? sector : ''}"></td>
+                <td th:text="${place != null ? place : ''}"></td>
             </tr>
         </table>
-        <br>
+        <br/>
         <table>
             <tr>
                 <th>Cobertura:</th>
                 <th>Nro. de credencial:</th>
                 <th>Plan: </th>
             </tr>
-            <tr>
-                <td th:text="${}"></td>
-                <td th:text="${}"></td>
-                <td th:text="${}"></td>
+            <tr th:if="${medicalCoverage != null}">
+                <td th:text="${medicalCoverage.medicalCoverage.name}"></td>
+                <td th:text="${medicalCoverage?.affiliateNumber}"></td>
+                <td th:text="${medicalCoverage?.planName}"></td>
             </tr>
         </table>
-        <hr>
+        <hr/>
     </div>
 
     <div th:fragment="professionalData">
@@ -131,20 +131,20 @@
                 <th>Matricula</th>
             </tr>
             <tr>
-                <td th:text="${}"></td>
-                <td th:text="${}"></td>
-                <td th:text="${}"></td>
-                <td th:text="${}"></td>
+                <td th:text="${professionalCompleteName}"></td>
+                <td th:text="${professionalProfession}"></td>
+                <td th:text="${clinicalSpecialty}"></td>
+                <td th:text="${(nationalLicense != null ? nationalLicense : '') + '|' + stateLicense != null ? stateLicense : ''}"></td>
             </tr>
         </table>
-        <hr>
+        <hr/>
     </div>
 
     <footer th:fragment="footer">
-        <hr>
+        <hr/>
         <div>
-            <span th:text="'Historia Clinica impresa el ' + ${} + ' a las ' + ${} + ' por ' + ${} + ' en ' + ${}"></span>
-            <span style="float:right;" th:text="'Página ' + ${} + ' de ' + ${}"></span>
+            <span th:text="'Historia Clinica impresa el ' + ${printDate} + ' a las ' + ${printTime} + ' por ' + ${user} + ' en ' + ${currentInstitution}"></span>
+            <span style="float:right;" th:text="'Página ' + ${actualPage} + ' de ' + ${totalPages}"></span>
         </div>
     </footer>
 

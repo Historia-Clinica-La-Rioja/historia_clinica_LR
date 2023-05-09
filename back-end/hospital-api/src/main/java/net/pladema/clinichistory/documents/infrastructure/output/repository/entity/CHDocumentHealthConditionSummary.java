@@ -7,6 +7,10 @@ import lombok.ToString;
 
 import javax.persistence.Embeddable;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Embeddable
 @Getter
 @Setter
@@ -25,5 +29,12 @@ public class CHDocumentHealthConditionSummary {
 	private String outpatientConsultationReasons;
 	private String odontologyProcedure;
 	private String odontologyDiagnostic;
+
+	public List<String> getList(){
+		List<String> result = Arrays.asList(problems, familyRecord, personalRecord, medicines, allergies, riskFactors, outpatientConsultationReasons, outpatientConsultationReasons, odontologyProcedure, odontologyDiagnostic, odontologyProcedure);
+		return result.stream()
+				.filter(healthCondition -> (healthCondition != null && !healthCondition.isBlank()))
+				.collect(Collectors.toList());
+	}
 
 }

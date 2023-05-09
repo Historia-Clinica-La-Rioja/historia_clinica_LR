@@ -26,5 +26,11 @@ public interface MedicationRequestRepository extends SGXAuditableEntityJPAReposi
 			"JOIN Document d ON d.sourceId = mr.id " +
 			"WHERE d.id = :documentId")
 	Optional<Integer> getIdByDocumentId(@Param("documentId") Long documentId);
+	
+	@Transactional(readOnly = true)
+	@Query("SELECT mr.medicalCoverageId " +
+			"FROM MedicationRequest mr " +
+			"WHERE mr.id = :id")
+	Optional<Integer> getMedicalCoverageId (@Param("id") Integer id);
 
 }

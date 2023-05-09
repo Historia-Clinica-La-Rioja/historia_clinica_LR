@@ -7,6 +7,11 @@ import lombok.ToString;
 
 import javax.persistence.Embeddable;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Embeddable
 @Getter
 @Setter
@@ -21,5 +26,11 @@ public class CHDocumentNotesSummary {
 	private String otherNote;
 	private String indicationNote;
 	private String observations;
+
+	public List<String> getList(){
+		List<String> result = Arrays.asList(currentIllness, physicalExam, evolution, clinicalImpression, otherNote);
+		return result.stream()
+				.filter(note -> note != null && !note.isBlank()).collect(Collectors.toList());
+	}
 
 }

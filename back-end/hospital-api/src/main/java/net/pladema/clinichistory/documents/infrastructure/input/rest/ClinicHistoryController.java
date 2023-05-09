@@ -2,10 +2,19 @@ package net.pladema.clinichistory.documents.infrastructure.input.rest;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.lowagie.text.DocumentException;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import net.pladema.clinichistory.documents.application.DownloadClinicHistoryDocuments.DownloadClinicHistoryDocuments;
 import net.pladema.clinichistory.documents.application.getPatientClinicHistory.GetPatientClinicHistory;
 
 import net.pladema.clinichistory.documents.domain.CHSearchFilterBo;
@@ -13,8 +22,11 @@ import net.pladema.clinichistory.documents.infrastructure.input.rest.dto.CHDocum
 import net.pladema.clinichistory.documents.infrastructure.input.rest.dto.CHSearchFilterDto;
 import net.pladema.clinichistory.documents.infrastructure.input.rest.mapper.ClinicHistoryMapper;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +49,8 @@ public class ClinicHistoryController {
 
 	private final GetPatientClinicHistory getPatientClinicHistory;
 
+	private final DownloadClinicHistoryDocuments downloadClinicHistoryDocuments;
+
 	private final LocalDateMapper localDateMapper;
 
 	private final ClinicHistoryMapper clinicHistoryMapper;
@@ -45,10 +59,12 @@ public class ClinicHistoryController {
 
 
 	public ClinicHistoryController(GetPatientClinicHistory getPatientClinicHistory,
+								   DownloadClinicHistoryDocuments downloadClinicHistoryDocuments,
 								   LocalDateMapper localDateMapper,
 								   ClinicHistoryMapper clinicHistoryMapper,
 								   ObjectMapper jackson){
 		this.getPatientClinicHistory = getPatientClinicHistory;
+		this.downloadClinicHistoryDocuments = downloadClinicHistoryDocuments;
 		this.localDateMapper = localDateMapper;
 		this.clinicHistoryMapper = clinicHistoryMapper;
 		this.jackson = jackson;
@@ -70,6 +86,18 @@ public class ClinicHistoryController {
 				.collect(Collectors.toList());
 		LOG.debug(OUTPUT, result.toString());
 		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping(value = "/download")
+	@PreAuthorize("hasPermission(#institutionId, 'PERSONAL_DE_LEGALES')")
+	public ResponseEntity<Resource> downloadClinicHistoryDocuments (@PathVariable(name = "institutionId") Integer institutionId,
+														   @RequestParam(name = "ids") List<Long> ids) throws IOException, DocumentException {
+		LOG.debug("Input parameters -> ids{}, institutionId{}", ids, institutionId);
+		StoredFileBo result = downloadClinicHistoryDocuments.run(ids, institutionId);
+		if (result!=null){
+			return StoredFileResponse.sendFile(result);
+		}
+		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 	}
 
 	private CHSearchFilterBo mapFilter(String searchFilterStr) {

@@ -40,4 +40,6 @@ public interface DiaryService {
 
 	List<EmptyAppointmentBo> getEmptyAppointmentsBySearchCriteria(Integer institutionId, AppointmentSearchBo searchCriteria);
 
+	Optional<CompleteDiaryBo> getCompleteDiaryByAppointment (Integer appointmentId);
+
 }

@@ -22,9 +22,9 @@
         <br/>
         <table class="ch_table">
             <tbody>
-            <tr class="ch_tr" th:each="">
-                <th style="text-align: center" th:text="${}"></th>
-                <td th:text="${}"></td>
+            <tr class="ch_tr" th:each="record, iter: ${clinicalRecords}">
+                <th style="text-align: center" th:text="${record.prefix}"></th>
+                <td th:text="${record.description}"></td>
             </tr>
             </tbody>
         </table>

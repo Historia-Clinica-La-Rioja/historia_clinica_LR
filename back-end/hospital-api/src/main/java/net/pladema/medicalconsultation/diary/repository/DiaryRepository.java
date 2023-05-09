@@ -211,4 +211,16 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 			"WHERE doctorsOfficeId = :doctorsOfficeId " +
 			"AND deleted = :isDeleted ")
 	List<Diary> findByDoctorsOfficeId(@Param("doctorsOfficeId") Integer doctorsOfficeId, @Param("isDeleted") Boolean isDeleted);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo( " +
+			"d, do.description, s.id, s.description, d.healthcareProfessionalId, cs.name) " +
+			"FROM Diary d " +
+			"JOIN DoctorsOffice do ON do.id = d.doctorsOfficeId " +
+			"JOIN Sector s ON s.id = do.sectorId " +
+			"JOIN ClinicalSpecialty cs ON cs.id = d.clinicalSpecialtyId " +
+			"JOIN AppointmentAssn aa ON aa.pk.diaryId = d.id " +
+			"WHERE aa.pk.appointmentId = :appointmentId ")
+	Optional<CompleteDiaryListVo> getCompleteDiaryByAppointment(@Param("appointmentId") Integer appointmentId);
+
 }

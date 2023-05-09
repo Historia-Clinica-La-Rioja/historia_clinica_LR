@@ -368,6 +368,16 @@ public class DiaryServiceImpl implements DiaryService {
 	}
 
 	@Override
+	public Optional<CompleteDiaryBo> getCompleteDiaryByAppointment(Integer appointmentId){
+		LOG.debug("Input parameters -> appointmentId {}", appointmentId);
+		Optional<CompleteDiaryBo> result = diaryRepository.getCompleteDiaryByAppointment(appointmentId).map(this::createCompleteDiaryBoInstance);
+		LOG.debug(OUTPUT, result);
+		return result;
+
+	}
+
+
+	@Override
 	public Boolean hasActiveDiariesInInstitution(Integer healthcareProfessionalId, Integer institutionId){
 		LOG.debug("Input parameters -> healthcareProfessionalId {}, institutionId {}", healthcareProfessionalId, institutionId);
 		Boolean result = diaryRepository.hasActiveDiariesInInstitution(healthcareProfessionalId, institutionId);
