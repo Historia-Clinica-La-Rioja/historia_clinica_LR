@@ -564,7 +564,7 @@ public class AppointmentsController {
 		}
 
 
-		String UID= ThreadLocalRandom.current().nextInt(1,10) + "." +
+		String UID= "1." + ThreadLocalRandom.current().nextInt(1,10) + "." +
 					ThreadLocalRandom.current().nextInt(1,10) + "." +
 					ThreadLocalRandom.current().nextInt(1,100) + "." +
 					ThreadLocalRandom.current().nextInt(1,100) + "." +
@@ -573,27 +573,45 @@ public class AppointmentsController {
 					basicDataPatient.getIdentificationNumber();
 		String date = appointment.getDate().toString().replace("-","");
 		String time = appointment.getHour().toString().replace(":","") + "00";
-		String studyInstanceUID =   "   \"StudyInstanceUID\": \"" + UID + "\", \n";
+		String birthDate = null;
+		char gender = 0;
+		BasicDataPersonDto person = basicDataPatient.getPerson();
+		if (person != null) {
+			birthDate = person.getBirthDate() != null ? person.getBirthDate().toString().replace("-", "") : null;
+
+			gender = person.getGender() != null 
+					&& person.getGender().getDescription() != null 
+					&& basicDataPatient.getPerson().getGender().getDescription().toCharArray().length > 0 ? basicDataPatient.getPerson().getGender().getDescription().toCharArray()[0] : ' ';
+		}
+		String accessionNumber =   "   \"AccessionNumber\": \"" + institutionId +"-" + appointmentId + "\", \n";
+		String studyInstanceUID =   "   \"StudyInstanceUID\": \"" + UID+ "\", \n";
 		String aeTitle =   "    \"ScheduledStationAETitle\": \"" + equipmentBO.getAeTitle() + "\",\n";
 		String startDate = "    \"ScheduledProcedureStepStartDate\": \"" + date + "\",\n";
 		String startTime = "    \"ScheduledProcedureStepStartTime\": \"" + time + "\",\n";
 		String patientIdStr = "    \"PatientID\": \"" + basicDataPatient.getIdentificationNumber() + "\",\n";
 		String patientName = "    \"PatientName\": \"" + basicDataPatient.getFirstName() + " " + basicDataPatient.getLastName() + "\",\n";
+		String patientBirthDate = "    \"PatientBirthDate\": \"" + birthDate + "\",\n";
+		String patientSex = "    \"PatientSex\": \"" + gender + "\",\n";
+		String studyDescription = "    \"StudyDescription\": \"" + "description order" + "\",\n";
 		String modality = "    \"Modality\": \"" + modalityBO.getAcronym() + "\"\n";
 		String json =  "{\n"
-							+ studyInstanceUID
-							+ aeTitle
-							+ startDate
-							+ startTime
-							+ patientIdStr
-							+ patientName
-							+ modality
-						+ "}";
+				+ accessionNumber
+				+ studyInstanceUID
+				+ aeTitle
+				+ startDate
+				+ startTime
+				+ patientIdStr
+				+ patientName
+				+ patientSex
+				+ studyDescription
+				+ patientBirthDate
+				+ modality
+				+ "}";
 
 		String topic = orchestrator.getBaseTopic() + "/LISTATRABAJO";
 
 
-		MqttMetadataBo data = new MqttMetadataBo(topic, json,true,1);
+		MqttMetadataBo data = new MqttMetadataBo(topic, json,false,2);
 		mqttClientService.publish(data);
 		AppointmentOrderImageBo appointmentOrderImageBO = new AppointmentOrderImageBo(appointmentId,12, 12, false,UID);
 		appointmentOrderImageService.save(appointmentOrderImageBO);
