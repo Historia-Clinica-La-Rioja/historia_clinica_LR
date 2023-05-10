@@ -25,6 +25,14 @@ public interface AppointmentOrderImageRepository extends JpaRepository<Appointme
     void updateCompleted(@Param("appointmentId") Integer appointmentId,
 						 @Param("completed") Boolean completed );
 
+	@Transactional
+	@Modifying
+	@Query("UPDATE AppointmentOrderImage AS aoi " +
+			"SET aoi.imageId = :imageId " +
+			"WHERE aoi.pk.appointmentId = :appointmentId")
+	void updateImageId(@Param("appointmentId") Integer appointmentId,
+						 @Param("imageId") String imageId );
+
 	@Transactional(readOnly = true)
 	@Query("SELECT aoi.imageId " +
 			"FROM AppointmentOrderImage AS aoi " +

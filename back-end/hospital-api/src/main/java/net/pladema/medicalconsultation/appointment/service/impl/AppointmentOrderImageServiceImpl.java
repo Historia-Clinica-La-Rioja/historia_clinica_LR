@@ -45,4 +45,10 @@ public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageSe
 		appointmentOrderImageRepository.save(entity);
 		LOG.debug("Output -> AppointmentOrderImage {}", entity);
 	}
+
+	@Override
+	public void setImageId(Integer appointmentId, String imageId) {
+		LOG.debug("Input parameters -> appointmentId {}, imageId {} ", appointmentId, imageId);
+		appointmentOrderImageRepository.updateImageId(appointmentId, imageId);
+	}
 }

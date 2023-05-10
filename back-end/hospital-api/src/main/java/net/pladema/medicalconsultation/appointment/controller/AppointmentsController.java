@@ -613,8 +613,7 @@ public class AppointmentsController {
 
 		MqttMetadataBo data = new MqttMetadataBo(topic, json,false,2);
 		mqttClientService.publish(data);
-		AppointmentOrderImageBo appointmentOrderImageBO = new AppointmentOrderImageBo(appointmentId,12, 12, false,UID);
-		appointmentOrderImageService.save(appointmentOrderImageBO);
+		appointmentOrderImageService.setImageId(appointmentId,	UID);
 		return ResponseEntity.ok().body(true);
 	}
 

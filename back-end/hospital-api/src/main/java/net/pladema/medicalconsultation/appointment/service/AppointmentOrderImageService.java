@@ -15,6 +15,8 @@ public interface AppointmentOrderImageService {
 
 	void save(AppointmentOrderImageBo appointmentOrderImageBo);
 
+	void setImageId(Integer appointmentId, String imageId);
+
 
 
 
