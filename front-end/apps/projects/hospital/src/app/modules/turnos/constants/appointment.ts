@@ -90,15 +90,15 @@ export const WORKLIST_APPOINTMENT_STATES: AppointmentState[] = [
 	{
 		id: APPOINTMENT_STATES_ID.ABSENT,
 		description: APPOINTMENT_STATES_DESCRIPTION.ABSENT
-	},/* Queda para un futuro sprint
-	{
-		id: APPOINTMENT_STATES_ID.CANCELLED,
-		description: 'Rechazado'
 	},
 	{
 		id: APPOINTMENT_STATES_ID.SERVED,
-		description: 'Atendido'
-	}*/
+		description: APPOINTMENT_STATES_DESCRIPTION.SERVED
+	},
+	// {
+	// 	id: APPOINTMENT_STATES_ID.CANCELLED,
+	// 	description: 'Rechazado'
+	// }
 ];
 
 export interface AppointmentState {

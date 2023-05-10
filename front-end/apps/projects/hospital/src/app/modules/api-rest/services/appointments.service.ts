@@ -6,6 +6,7 @@ import {
 	AppointmentListDto, AppointmentShortSummaryDto,
 	AssignedAppointmentDto,
 	CreateAppointmentDto,
+	DetailsOrderImageDto,
 	EquipmentAppointmentListDto,
 	ExternalPatientCoverageDto,
 	UpdateAppointmentDateDto,
@@ -138,6 +139,11 @@ export class AppointmentsService {
 	publishWorkList(appoinmentId: number):  Observable<boolean> {
 		const url = `${this.BASE_URL}/publish-work-list/${appoinmentId}`;
 		return this.http.get<boolean>(url);
+	}
+
+	addStudyObservations(appoinmentId: number, observations: DetailsOrderImageDto): Observable<boolean> {
+		const url = `${this.BASE_URL}/study-observations/${appoinmentId}`;
+		return this.http.post<boolean>(url, observations);
 	}
 
 	updatePhoneNumber(appointmentId: number, phonePrefix: string, phoneNumber: string): Observable<boolean> {

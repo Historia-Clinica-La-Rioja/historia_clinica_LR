@@ -785,6 +785,10 @@ export interface DependencyDto extends Serializable {
     id: number;
 }
 
+export interface DetailsOrderImageDto {
+    observations: string;
+}
+
 export interface DiagnosesGeneralStateDto extends DiagnosisDto {
     main: boolean;
 }

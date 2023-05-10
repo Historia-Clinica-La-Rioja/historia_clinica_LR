@@ -7,10 +7,10 @@
 
 	<div class="inputs-container" fxLayout="column">
 		<mat-form-field appearance="outline">
-			<textarea class="observations-container" matInput type="text" id="observations" name="observations" placeholder="Observations"></textarea>
+			<textarea class="observations-container" matInput [(ngModel)]="observations" type="text" id="observations" name="observations" placeholder="{{'turnos.appointment.observations.OBSERVATIONS' | translate}}"></textarea>
 		</mat-form-field>
 
-		<button class="complete-btn" mat-flat-button color="primary" (click)="openStatusDialog()">
+		<button class="complete-btn" mat-flat-button color="primary" (click)="confirm()">
 			<span class="uppercase" [translate]="'image-network.appointments.CONFIRM'"></span>
 		</button>
 	</div>

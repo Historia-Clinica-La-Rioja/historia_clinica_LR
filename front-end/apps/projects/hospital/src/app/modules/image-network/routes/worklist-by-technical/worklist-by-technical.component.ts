@@ -11,7 +11,11 @@ import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { EquipmentService } from '@api-rest/services/equipment.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { Color } from '@presentation/colored-label/colored-label.component';
-import { WORKLIST_APPOINTMENT_STATES, APPOINTMENT_STATES_ID, AppointmentState } from '@turnos/constants/appointment';
+import {
+	WORKLIST_APPOINTMENT_STATES,
+	APPOINTMENT_STATES_ID,
+	AppointmentState,
+} from '@turnos/constants/appointment';
 import { Observable } from 'rxjs';
 import { FinishStudyComponent } from "../../dialogs/finish-study/finish-study.component";
 
@@ -49,6 +53,7 @@ export class WorklistByTechnicalComponent implements OnInit {
 
     pageSizeOptions = PAGE_SIZE_OPTIONS;
     pageSlice = [];
+	selectedAppointment: EquipmentAppointmentListDto;
 
     constructor(private readonly equipmentService: EquipmentService,
 		private readonly featureFlagService: FeatureFlagService,
@@ -162,13 +167,23 @@ export class WorklistByTechnicalComponent implements OnInit {
 		this.pageSlice = this.detailedAppointments.slice(startPage, $event.pageSize + startPage);
 	}
 
-	openFinishStudyDialog() {
+	finishStudy(appointment) {
+		this.selectedAppointment = appointment;
+		this.openFinishStudyDialog();
+	}
+
+	private openFinishStudyDialog() {
 		const dialogRef = this.dialog.open(FinishStudyComponent, {
 			width: '35%',
-			autoFocus: false
+			autoFocus: false,
+			data: {
+				appointmentId: this.selectedAppointment.id
+			}
 		});
 
-		dialogRef.afterClosed().subscribe();
+		dialogRef.afterClosed().subscribe(_ => {
+			this.selectedAppointment = null;
+		});
 	}
 
 }
