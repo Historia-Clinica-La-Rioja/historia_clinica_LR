@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BasicPatientDto, DateDto, PersonPhotoDto } from '@api-rest/api-model';
+import { BasicPatientDto, CHDocumentSummaryDto, DateDto, PersonPhotoDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
@@ -8,10 +8,15 @@ import { MapperService } from '@presentation/services/mapper.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { momentToDateDto } from '@core/utils/moment.utils';
 import * as moment from 'moment';
-import { EncounterTypes, DocumentTypes, ROUTE_HISTORY_CLINIC } from '../../constants/print-ambulatoria-masterdata';
+import { EncounterTypes, DocumentTypes, ROUTE_HISTORY_CLINIC, mockedTable } from '../../constants/print-ambulatoria-masterdata';
 import { ECHEncounterType } from "@api-rest/api-model";
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { ContextService } from '@core/services/context.service';
+import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { DatePipeFormat } from '@core/utils/date.utils';
+import { DatePipe } from '@angular/common';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
 	selector: 'app-print-ambulatoria',
@@ -45,6 +50,45 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	allChecked = true;
 	showDocuments = true;
 
+	documentSummary: CHDocumentSummaryDto[] = mockedTable;
+	showTable = true;
+
+	columns = [
+		{
+			columnDef: 'start',
+			header: 'Inicio',
+			cell: (element: CHDocumentSummaryDto) => `${element.startDate}`,
+		},
+		{
+			columnDef: 'end',
+			header: 'Fin',
+			cell: (element: CHDocumentSummaryDto) => `${element.endDate}`,
+		},
+		{
+			columnDef: 'encounterType',
+			header: 'Tipo de encuentro',
+			cell: (element: CHDocumentSummaryDto) => `${element.encounterType}`,
+		},
+		{
+			columnDef: 'problem',
+			header: 'Problema',
+			cell: (element: CHDocumentSummaryDto) => `${element.problems}`,
+		},
+		{
+			columnDef: 'institution',
+			header: 'Institucion',
+			cell: (element: CHDocumentSummaryDto) => `${element.institution}`,
+		},
+		{
+			columnDef: 'professional',
+			header: 'Profesional',
+			cell: (element: CHDocumentSummaryDto) => `${element.professional}`,
+		}
+	];
+
+	displayedColumns = this.columns.map(c => c.columnDef);
+	dataSource = new MatTableDataSource<CHDocumentSummaryDto>();
+
 	constructor(
 		private readonly route: ActivatedRoute,
 		private readonly patientService: PatientService,
@@ -52,6 +96,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		private readonly contextService: ContextService,
 		private readonly router: Router,
+		private readonly datePipe: DatePipe,
 	) {
 		this.route.paramMap.subscribe(
 			(params) => {
@@ -67,6 +112,8 @@ export class PrintAmbulatoriaComponent implements OnInit {
 			}
 		);
 	}
+
+	@ViewChild(MatPaginator) paginator: MatPaginator;
 
 	ngOnInit(): void {
 		this.dateRangeForm.valueChanges.subscribe(range => {
@@ -133,8 +180,8 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	}
 
 	search() {
-		const selectedEncounterTypes = this.encounterTypes.filter( e => this.encounterTypeForm.get(e.value).value);
-		const selectedDocumentTypes = this.documentTypes.filter( d => this.documentTypeForm.get(d.value).value)
+		const selectedEncounterTypes = this.encounterTypes.filter(e => this.encounterTypeForm.get(e.value).value);
+		const selectedDocumentTypes = this.documentTypes.filter(d => this.documentTypeForm.get(d.value).value)
 		const data = {
 			date: {
 				start: this.dateRange.start,
@@ -143,5 +190,9 @@ export class PrintAmbulatoriaComponent implements OnInit {
 			encounterTypes: selectedEncounterTypes,
 			documentTypes: selectedDocumentTypes
 		}
+
+		this.dataSource.data = mockedTable;
+		this.dataSource.paginator = this.paginator;
+		document.getElementById("encounter-list").style.display = "block";
 	}
 }

@@ -1,5 +1,4 @@
-import { ECHDocumentType, ECHEncounterType } from "@api-rest/api-model";
-
+import { ECHDocumentType, ECHEncounterType, CHDocumentSummaryDto } from "@api-rest/api-model";
 
 export const ROUTE_HISTORY_CLINIC = 'ambulatoria/';
 
@@ -43,5 +42,117 @@ export const DocumentTypes = [
 	{
 		value: ECHDocumentType.REPORTS,
 		label: DocumentType.REPORTS
+	},
+]
+
+
+export const mockedTable: CHDocumentSummaryDto[] = [
+	{
+		id: 1,
+		startDate: "20/1/2020",
+		endDate: "5/12/20",
+		encounterType: "Ambulatoria",
+		problems: "Asma",
+		institution: "Clinica Chacabuco",
+		professional: "Carlos Montevideo"
+	},
+	{
+		id: 2,
+		startDate: "2/1/2018",
+		endDate: "5/2/21",
+		encounterType: "Internacion",
+		problems: "Fiebre",
+		institution: "Clinica Chacabuco",
+		professional: "Carlos Montevideo"
+	},
+	{
+		id: 3,
+		startDate: "20/1/2020",
+		endDate: "5/12/20",
+		encounterType: "Ambulatoria",
+		problems: "Gripe",
+		institution: "Clinica Chacabuco",
+		professional: "Carlos Montevideo"
+	},
+	{
+		id: 4,
+		startDate: "20/1/2020",
+		endDate: "5/12/20",
+		encounterType: "Internacion",
+		problems: "Asma",
+		institution: "Clinica Chacabuco",
+		professional: "Carlos Montevideo"
+	},
+	{
+		id: 5,
+		startDate: "20/1/2020",
+		endDate: "5/12/20",
+		encounterType: "Ambulatoria",
+		problems: "Asma",
+		institution: "Clinica Chacabuco",
+		professional: "Carlos Montevideo"
+	},
+	{
+		id: 6,
+		startDate: "20/1/2020",
+		endDate: "5/12/20",
+		encounterType: "Ambulatoria",
+		problems: "Embarazada",
+		institution: "Clinica Chacabuco",
+		professional: "Carlos Montevideo"
+	},
+	{
+		id: 7,
+		startDate: "20/1/2020",
+		endDate: "5/12/20",
+		encounterType: "Ambulatoria",
+		problems: "Embarazada",
+		institution: "Clinica Chacabuco",
+		professional: "Carlos Montevideo"
+	},
+	{
+		id: 8,
+		startDate: "20/1/2020",
+		endDate: "5/12/20",
+		encounterType: "Ambulatoria",
+		problems: "Embarazada",
+		institution: "Clinica Chacabuco",
+		professional: "Carlos Montevideo"
+	},
+	{
+		id: 9,
+		startDate: "20/1/2020",
+		endDate: "5/12/20",
+		encounterType: "Ambulatoria",
+		problems: "Embarazada",
+		institution: "Clinica Chacabuco",
+		professional: "Carlos Montevideo"
+	},
+	{
+		id: 10,
+		startDate: "20/1/2020",
+		endDate: "5/12/20",
+		encounterType: "Ambulatoria",
+		problems: "Gastroenteritis",
+		institution: "Clinica Chacabuco",
+		professional: "Carlos Montevideo"
+	},
+	{
+		id: 11,
+		startDate: "20/1/2020",
+		endDate: "5/12/20",
+		encounterType: "Ambulatoria",
+		problems: "Fiebre",
+		institution: "Hospital Publico",
+		professional: "Carlos Aragon"
+	},
+	{
+		id: 12,
+		startDate: "20/1/2020",
+		endDate: "5/12/20",
+		encounterType: "Internacion",
+		problems: "Gripe",
+		institution: "Clinica Chacabuco",
+		professional: "Fernanda Calvo"
 	},
 ]

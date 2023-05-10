@@ -709,6 +709,10 @@
 				"EPICRISIS": "Epicrisis",
 				"MEDICAL_PRESCRIPTIONS": "Prescripciones médicas",
 				"REPORTS": "Informes de los resultados de los estudios complementarios"
+			},
+			"encounter-list": {
+				"TITLE": "Listado de encuentros",
+				"SUBTITLE": "Seleccione los episodios que desea incluir en la impresión de la historia clínica"
 			}
 		},
         "screen_change_warning_dialog": {
