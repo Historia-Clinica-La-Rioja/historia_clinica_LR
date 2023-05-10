@@ -124,7 +124,7 @@ const messages = {
                 enabled: 'Habilitada',
                 available: 'Disponible',
                 free: 'Libre',
-                internmentepisodes: 'Episodios de internación activos para esta cama'
+                episodes: 'Episodios activos para esta cama'
             },
             createRelated: 'Crear Cama'
         },

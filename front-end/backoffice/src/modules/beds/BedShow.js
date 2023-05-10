@@ -25,7 +25,7 @@ const BedShow = props => (
             <BooleanField source="free" />
             <ReferenceManyField
                 addLabel={true}
-                label="resources.beds.fields.internmentepisodes"
+                label="resources.beds.fields.episodes"
                 reference="internmentepisodes"
                 target="bedId"
                 sort={{ field: 'entryDate', order: 'DESC' }}
