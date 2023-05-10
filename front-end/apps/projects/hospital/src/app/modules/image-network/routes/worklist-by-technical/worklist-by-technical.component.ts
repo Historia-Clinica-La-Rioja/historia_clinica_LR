@@ -181,7 +181,11 @@ export class WorklistByTechnicalComponent implements OnInit {
 			}
 		});
 
-		dialogRef.afterClosed().subscribe(_ => {
+		dialogRef.afterClosed().subscribe(result => {
+			if (result.updateState) {
+				this.selectedAppointment.appointmentStateId = result.updateState;
+				this.filterAppointments(this.states.value);
+			}
 			this.selectedAppointment = null;
 		});
 	}

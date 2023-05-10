@@ -481,7 +481,7 @@ public class AppointmentsController {
     }
 
 	@PutMapping(value = "/{appointmentId}/equipment-change-state")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES, TECNICO')")
 	public ResponseEntity<Boolean> equipmentChangeState(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@ValidEquipmentAppointmentDiary @PathVariable(name = "appointmentId") Integer appointmentId,
