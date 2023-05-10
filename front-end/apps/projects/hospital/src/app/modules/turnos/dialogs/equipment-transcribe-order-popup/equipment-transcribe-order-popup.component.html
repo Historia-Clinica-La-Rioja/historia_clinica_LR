@@ -56,6 +56,7 @@
 
     <mat-divider></mat-divider>
 
+    <!-- FILE SELECTION -->
     <div class="file-attached">
         <div>
             <button mat-button color="primary" (click)="fileInput.click()">
@@ -75,6 +76,10 @@
                 <button mat-button color="warn" (click)="removeSelectedFile(index)"><mat-icon>delete</mat-icon></button>
             </div>
         </div>
+
+        <mat-error class="smaller-font" *ngIf="filesExtension">
+            <span translate="image-network.appointments.medical-order.FILES_EXTENSION"></span>
+        </mat-error>
     </div>
 
     <mat-dialog-actions fxLayout="row" fxLayoutAlign="end" class="confirm-btn">

@@ -22,6 +22,8 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
     healthProblems = null;
     selectedFiles: File[] = [];
     selectedFilesShow: any[] = [];
+    filesExtension = false;
+    allowedExtensions = ['jpg','jpeg','png','pdf'];
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data,
@@ -53,11 +55,20 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
     }
 
     saveOrder() {
-        
+
+    }
+
+    private checkFileExtensions(){
+        this.selectedFilesShow.map(file => {
+            let fileExt = file.split(".").pop();
+            if (!this.allowedExtensions.includes(fileExt)){
+                this.filesExtension = true;
+            }
+        })
     }
 
     isFormValid(): boolean {
-        if(this.selectedFiles.length)
+        if(this.selectedFiles.length && !this.filesExtension)
             return this.transcribeOrderForm.valid;
         return false
     }
@@ -67,11 +78,14 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
 			this.selectedFiles.push(file);
 			this.selectedFilesShow.push(file.name);
 		});
+        this.checkFileExtensions();
     }
 
     removeSelectedFile(index): void {
+        this.filesExtension = false;
 		this.selectedFiles.splice(index, 1);
 		this.selectedFilesShow.splice(index, 1);
+        this.checkFileExtensions();
 	}
 
     handleStudySelected(study) {
