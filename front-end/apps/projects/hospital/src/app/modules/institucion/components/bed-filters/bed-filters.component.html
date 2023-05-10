@@ -30,7 +30,7 @@
         </button>
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" *ngIf="!isGuard">
         <mat-label [translate]="'gestion-camas.filters.PROBABLE_DISCHARGE_DATE'"></mat-label>
         <input matInput id="date" [matDatepicker]="myDatepicker" formControlName="probableDischargeDate" (dateChange)="sendAllFiltersOnFilterChange()">
         <mat-icon id="clear-probable-discharge-date" *ngIf="form.controls.probableDischargeDate.value" matDatepickerToggleIcon
