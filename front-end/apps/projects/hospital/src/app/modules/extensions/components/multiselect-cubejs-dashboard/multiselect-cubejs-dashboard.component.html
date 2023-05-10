@@ -1,11 +1,21 @@
-<mat-form-field appearance="outline" >
-	<mat-label>Seleccione gráfico</mat-label>
-	<mat-select  >
-		<mat-option id="category" name="category" *ngFor="let category of content"
-					[value]="category" (click)="onChange(category)">
+<mat-form-field appearance="outline">
+	<mat-label>Seleccione los gráficos que desea visualizar</mat-label>
+	<mat-select>
+		<mat-option id="category" name="category" *ngFor="let category of options" [value]="category"
+			(click)="onChange(category)">
 			{{category.args.label}}
 		</mat-option>
 	</mat-select>
 </mat-form-field>
+<mat-chip-list>
+	<mat-chip *ngFor="let dashboard of selectedDashboards"
+		selected
+		color="primary"
+		(removed)="removeDashboard(dashboard)">
+		{{dashboard.args.label}}
+		<button matChipRemove>
+			<mat-icon>cancel</mat-icon>
+		</button>
+	</mat-chip>
+</mat-chip-list>
 <app-ui-component-list [list]="selectedDashboards"></app-ui-component-list>
-

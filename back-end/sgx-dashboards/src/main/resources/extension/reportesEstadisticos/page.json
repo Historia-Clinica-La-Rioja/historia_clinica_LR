@@ -68,7 +68,7 @@
                     "title" : {
                       "text" : "Consultas por especialidad y profesional"
                     },
-                    "label": "Consultas por especialidad y profesional",
+                    "label": "Especialidad y profesional",
                     "content" : [
                       {
                         "type" : "cubejs-chart",
@@ -154,7 +154,7 @@
                     "title" : {
                       "text" : "Consultas por especialidad"
                     },
-                    "label": "Consultas por especialidad",
+                    "label": "Especialidad",
                     "content" : [
                       {
                         "type" : "cubejs-chart",
@@ -191,7 +191,7 @@
                     "title" : {
                       "text" : "Consultas por identidad de género"
                     },
-                    "label": "Consultas por identidad de género",
+                    "label": "Identidad de género",
                     "content" : [
                       {
                         "type" : "cubejs-chart",

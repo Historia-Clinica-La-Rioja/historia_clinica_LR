@@ -1,5 +1,5 @@
 <mat-card>
-	<mat-tab-group>
+	<mat-tab-group dynamicHeight>
 		<mat-tab *ngFor="let tab of tabs" [label]="tab.args.label.toUpperCase()">
 			<app-ui-component-list [list]="tab.args.content" [listOnTab]="tab.args.label"></app-ui-component-list>
 		</mat-tab>
