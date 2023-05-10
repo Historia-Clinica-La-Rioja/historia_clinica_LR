@@ -211,8 +211,8 @@ public class AppointmentsController {
 	@ValidEquipmentAppointment
 	public ResponseEntity<Integer> createEquipmentAppoiment(
 			@PathVariable(name = "institutionId") Integer institutionId,
-			@RequestParam(name = "order_id", required = true) Integer order_id,
-			@RequestParam(name = "study_id", required = true) Integer study_id,
+			@RequestParam(name = "order_id", required = false) Integer order_id,
+			@RequestParam(name = "study_id", required = false) Integer study_id,
 			@RequestBody @Valid CreateAppointmentDto createAppointmentDto
 	) {
 		log.debug("Input parameters -> institutionId {}, appointmentDto {}", institutionId, createAppointmentDto);
