@@ -18,7 +18,7 @@ import SectionTitle from '../components/SectionTitle';
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 import CustomToolbar from "../components/CustomToolbar";
 import SgxDateField from "../../dateComponents/sgxDateField";
-import { CreateSector, CreateDoctorsOffice, CreateRooms, ShowServiceSectorData, CreateOrchestrator, UserIsAdmin, CreateEquipment, RenderModality} from './SectorShow';
+import { CreateSector, CreateDoctorsOffice, CreateRooms, ShowServiceSectorData, CreateOrchestrator, UserIsAdmin, CreateEquipment, RenderModality, CreateShockroom} from './SectorShow';
 
 const redirect = (basePath, id, data) => `/sectors/${data.id}/show`;
 
@@ -191,6 +191,22 @@ const SectorEdit = props => (
                     <TextField source="type" />
                     <SgxDateField source="dischargeDate" />
                     <EditButton/>
+                </Datagrid>
+            </ReferenceManyField>
+
+            <CreateShockroom/>
+            <ReferenceManyField
+                id='shockroom'
+                addLabel={false}
+                reference="shockroom"
+                target="sectorId"
+                sort={{ field: 'description', order: 'DESC' }}
+                filter={{ deleted: false }}
+            >
+                <Datagrid rowClick="show"
+                          empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin Shockrooms definidos</p>}>
+                    <TextField source="description"/>
+                    <EditButton />
                 </Datagrid>
             </ReferenceManyField>
         </SimpleForm>

@@ -382,4 +382,4 @@ const SectorShow = props => (
 );
 
 export default SectorShow;
-export { CreateSector, CreateDoctorsOffice, CreateRooms, ShowServiceSectorData, CreateOrchestrator, UserIsAdmin, CreateEquipment, RenderModality};
+export { CreateSector, CreateDoctorsOffice, CreateRooms, ShowServiceSectorData, CreateOrchestrator, UserIsAdmin, CreateEquipment, RenderModality, CreateShockroom};
