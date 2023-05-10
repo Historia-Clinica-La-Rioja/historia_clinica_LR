@@ -654,13 +654,6 @@ export class AppointmentComponent implements OnInit {
 		this.formEdit.controls.phoneNumber.setValue(this.data.appointmentData.phoneNumber);
 	}
 
-	getFullMedicalCoverageText(patientMedicalCoverage): string {
-		const condition = (patientMedicalCoverage.condition) ? patientMedicalCoverage.condition.toLowerCase() : null;
-		const medicalCoverageText = [patientMedicalCoverage.medicalCoverage.acronym, patientMedicalCoverage.medicalCoverage.name, patientMedicalCoverage.affiliateNumber, condition]
-			.filter(Boolean).join(' - ');
-		return [medicalCoverageText].filter(Boolean).join(' / ');
-	}
-
 	closeDialog(returnValue?: string) {
 		if (!returnValue && (this.appointment.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED || this.appointment.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED))
 			this.medicalCoverageInfo.setAppointmentMCoverage(this.summaryCoverageData);

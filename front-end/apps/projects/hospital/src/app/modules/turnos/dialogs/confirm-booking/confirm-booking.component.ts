@@ -156,12 +156,6 @@ export class ConfirmBookingComponent implements OnInit {
 		this.showAddPatient = true;
 	}
 
-	getFullMedicalCoverageText(patientMedicalCoverage): string {
-		const medicalCoverageText = [patientMedicalCoverage.medicalCoverage.acronym, patientMedicalCoverage.medicalCoverage.name]
-			.filter(Boolean).join(' - ');
-		return [medicalCoverageText, patientMedicalCoverage.affiliateNumber].filter(Boolean).join(' / ');
-	}
-
 	submit(): void {
 		this.isSubmitButtonDisabled = true;
 		const newAppointment: UpdateAppointmentDto = {

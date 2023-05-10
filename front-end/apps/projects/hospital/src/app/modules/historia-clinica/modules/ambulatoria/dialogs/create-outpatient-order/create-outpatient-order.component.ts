@@ -89,13 +89,6 @@ export class CreateOutpatientOrderComponent implements OnInit {
 			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) => this.patientMedicalCoverages = patientMedicalCoverages);
 	}
 
-	getFullMedicalCoverageText(patientMedicalCoverage): string {
-		const condition = (patientMedicalCoverage.condition) ? patientMedicalCoverage.condition.toLowerCase() : null;
-		const medicalCoverageText = [patientMedicalCoverage.medicalCoverage.acronym, patientMedicalCoverage.medicalCoverage.name]
-			.filter(Boolean).join(' - ');
-		return [medicalCoverageText, patientMedicalCoverage.affiliateNumber,condition].filter(Boolean).join(' / ');
-	}
-
 	openMedicalCoverageDialog(): void {
 		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
 			data: {

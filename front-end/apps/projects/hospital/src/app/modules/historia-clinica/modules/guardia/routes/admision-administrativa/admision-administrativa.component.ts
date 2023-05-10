@@ -156,13 +156,6 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		this.form.controls.patientMedicalCoverageId.setValue(null);
 	}
 
-	getFullMedicalCoverageText(patientMedicalCoverage): string {
-		const condition = (patientMedicalCoverage.condition) ? patientMedicalCoverage.condition.toLowerCase() : null;
-		const medicalCoverageText = [patientMedicalCoverage.medicalCoverage.acronym, patientMedicalCoverage.medicalCoverage.name]
-			.filter(Boolean).join(' - ');
-		return [medicalCoverageText, patientMedicalCoverage.affiliateNumber,condition].filter(Boolean).join(' / ');
-	}
-
 	continue(): void {
 		this.form.controls.reasons.setValue(this.motivoNuevaConsultaService.getMotivosConsulta());
 		const formValue: AdministrativeAdmission = this.form.getRawValue();

@@ -96,7 +96,7 @@
 						<mat-select formControlName="newCoverageData">
 							<mat-option *ngFor="let patientMedicalCoverage of patientMedicalCoverages"
 								[value]="patientMedicalCoverage.id">
-								{{getFullMedicalCoverageText(patientMedicalCoverage)}}
+								{{ patientMedicalCoverage | fullMedicalCoverage }}
 							</mat-option>
 							<mat-option (click)="openMedicalCoverageDialog()">
 								<span class="color-primary">

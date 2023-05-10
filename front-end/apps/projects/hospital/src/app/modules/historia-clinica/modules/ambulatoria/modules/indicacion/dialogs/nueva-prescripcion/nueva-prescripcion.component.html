@@ -15,7 +15,7 @@
                         id="medicalCoverage"
                         name="medicalCoverage"
                         *ngFor="let patientMedicalCoverage of patientMedicalCoverages" [value]="patientMedicalCoverage">
-                        {{getFullMedicalCoverageText(patientMedicalCoverage)}}
+						{{ patientMedicalCoverage | fullMedicalCoverage }}
 					</mat-option>
 					<mat-divider></mat-divider>
 					<mat-option (click)="openMedicalCoverageDialog()">
@@ -70,11 +70,11 @@
                     </mat-hint>
                 </ng-template>
 				<mat-error *ngIf="hasError(prescriptionForm, 'required', 'posdatadas')" translate="forms.REQUIRED"></mat-error>
-                <mat-error *ngIf="hasError(prescriptionForm, 'min', 'posdatadas')" 
+                <mat-error *ngIf="hasError(prescriptionForm, 'min', 'posdatadas')"
                     [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_ERROR'"
                     [translateParams]="{min: POSDATADAS_MIN, max: POSDATADAS_MAX}">
                 </mat-error>
-                <mat-error *ngIf="hasError(prescriptionForm, 'max', 'posdatadas')" 
+                <mat-error *ngIf="hasError(prescriptionForm, 'max', 'posdatadas')"
                     [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_ERROR'"
                     [translateParams]="{min: POSDATADAS_MIN, max: POSDATADAS_MAX}">
                 </mat-error>

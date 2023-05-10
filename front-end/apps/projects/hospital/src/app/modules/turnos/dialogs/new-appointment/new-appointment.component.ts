@@ -211,10 +211,10 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	generateTooltipOnMedicalOrderChange() {
-		this.translateService.get('image-network.appointments.ORDER').subscribe(translatedText => 
-			this.patientMedicalOrderTooltipDescription = 
-				`${translatedText} # 
-				${this.appointmentInfoForm.controls.appointmentMedicalOrder.value?.serviceRequestId} - 
+		this.translateService.get('image-network.appointments.ORDER').subscribe(translatedText =>
+			this.patientMedicalOrderTooltipDescription =
+				`${translatedText} #
+				${this.appointmentInfoForm.controls.appointmentMedicalOrder.value?.serviceRequestId} -
 				${this.titleCasePipe.transform(this.appointmentInfoForm.controls.appointmentMedicalOrder.value?.snomed?.pt)}`
 		);
 	}
@@ -276,13 +276,6 @@ export class NewAppointmentComponent implements OnInit {
 	private patientNotFound() {
 		this.snackBarService.showError('turnos.new-appointment.messages.ERROR');
 		this.showAddPatient = this.data.protectedAppointment ? false : true;
-	}
-
-	getFullMedicalCoverageText(patientMedicalCoverage): string {
-		const condition = (patientMedicalCoverage.condition) ? patientMedicalCoverage.condition.toLowerCase() : null;
-		const medicalCoverageText = [patientMedicalCoverage.medicalCoverage.acronym, patientMedicalCoverage.medicalCoverage.name]
-			.filter(Boolean).join(' - ');
-		return [medicalCoverageText, patientMedicalCoverage.affiliateNumber, condition].filter(Boolean).join(' / ');
 	}
 
 	submit(itComesFromStep3?: boolean): void {

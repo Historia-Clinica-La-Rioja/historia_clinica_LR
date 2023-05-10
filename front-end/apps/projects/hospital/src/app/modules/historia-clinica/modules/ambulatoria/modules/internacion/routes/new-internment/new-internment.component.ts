@@ -79,7 +79,7 @@ export class NewInternmentComponent implements OnInit {
 	public selectedBedInfo: BedInfoDto;
 	private readonly routePrefix;
 	private patientData: BasicPatientDto;
-	
+
 	@ViewChild('errorDoctor') errorDoctor: ElementRef;
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -173,7 +173,7 @@ export class NewInternmentComponent implements OnInit {
 			if (!this.selectedBedInfo) {
 				this.snackBarService.showError('internaciones.new-internment.messages.ERROR_BED_ASSIGNMENT');
 			}
-			if (!this.form.value.doctorId) 
+			if (!this.form.value.doctorId)
 				this.errorDoctor.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
 			if (!this.form.value.patientMedicalCoverage)
 				scrollIntoError(this.form, this.el);
@@ -253,13 +253,6 @@ export class NewInternmentComponent implements OnInit {
 			}
 		}
 		return response;
-	}
-
-	getFullMedicalCoverageText(patientMedicalCoverage): string {
-		const condition = (patientMedicalCoverage.condition) ? patientMedicalCoverage.condition.toLowerCase() : null;
-		const medicalCoverageText = [patientMedicalCoverage.medicalCoverage.acronym, patientMedicalCoverage.medicalCoverage.name]
-			.filter(Boolean).join(MIDDLE_DASH_SYMBOL);
-		return [medicalCoverageText, patientMedicalCoverage.affiliateNumber, condition].filter(Boolean).join(SLASH_SYMBOL);
 	}
 
 	private setMedicalCoverages(): void {

@@ -96,7 +96,7 @@
 					id="medicalCoverage"
 					name="medicalCoverage"
 					*ngFor="let patientMedicalCoverage of patientMedicalCoverages" [value]="patientMedicalCoverage">
-					{{getFullMedicalCoverageText(patientMedicalCoverage)}}
+					{{ patientMedicalCoverage | fullMedicalCoverage }}
 				</mat-option>
 				<mat-divider></mat-divider>
 				<mat-option (click)="openMedicalCoverageDialog()">

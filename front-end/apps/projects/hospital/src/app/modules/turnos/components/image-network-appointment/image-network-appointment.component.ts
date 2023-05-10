@@ -119,7 +119,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		this.formMotive = this.formBuilder.group({
 			motive: ['', [Validators.required, Validators.maxLength(MAX_LENGTH_MOTIVE)]]
 		});
-		
+
 		this.formEdit = this.formBuilder.group({
 			//Medical Coverage selected in Edit Mode
 			newCoverageData: null,
@@ -269,7 +269,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		const dialogRefCancelAppointment = this.dialog.open(CancelAppointmentComponent, {
 			data: {
 				appointmentId: this.data.appointmentData.appointmentId,
-				imageNetworkAppointment: true	
+				imageNetworkAppointment: true
 			}
 		});
 		dialogRefCancelAppointment.afterClosed().subscribe(canceledAppointment => {
@@ -441,13 +441,6 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		this.formEdit.controls.newCoverageData.setValue(this.coverageData?.id);
 		this.formEdit.controls.phonePrefix.setValue(this.data.appointmentData.phonePrefix);
 		this.formEdit.controls.phoneNumber.setValue(this.data.appointmentData.phoneNumber);
-	}
-
-	getFullMedicalCoverageText(patientMedicalCoverage): string {
-		const condition = (patientMedicalCoverage.condition) ? patientMedicalCoverage.condition.toLowerCase() : null;
-		const medicalCoverageText = [patientMedicalCoverage.medicalCoverage.acronym, patientMedicalCoverage.medicalCoverage.name, patientMedicalCoverage.affiliateNumber, condition]
-			.filter(Boolean).join(' - ');
-		return [medicalCoverageText].filter(Boolean).join(' / ');
 	}
 
 	closeDialog(returnValue?: string) {

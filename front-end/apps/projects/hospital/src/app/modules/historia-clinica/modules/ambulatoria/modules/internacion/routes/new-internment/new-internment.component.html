@@ -50,7 +50,7 @@
 								<mat-option id="medicalConverge"
 									*ngFor="let patientMedicalCoverage of patientMedicalCoverages"
 									[value]="patientMedicalCoverage">
-									{{getFullMedicalCoverageText(patientMedicalCoverage)}}
+									{{ patientMedicalCoverage | fullMedicalCoverage }}
 								</mat-option>
 								<mat-option [value]="'null'" >{{'internaciones.new-internment.NO_MEDICAL_CONVERGE'
 									|translate}}</mat-option>
