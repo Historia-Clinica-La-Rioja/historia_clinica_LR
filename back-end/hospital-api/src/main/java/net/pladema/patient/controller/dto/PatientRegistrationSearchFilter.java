@@ -27,6 +27,6 @@ public class PatientRegistrationSearchFilter extends PatientSearchFilter{
 
 	private Boolean validated;
 
-	private Boolean rejected;
+	private Boolean permanent;
 
 }

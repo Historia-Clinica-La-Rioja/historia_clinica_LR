@@ -37,7 +37,7 @@ public class PatientRegistrationSearchQuery {
 	Boolean temporary;
 	Boolean permanentNotValidated;
 	Boolean validated;
-	Boolean rejected;
+	Boolean permanent;
 
 	public PatientRegistrationSearchQuery(PatientRegistrationSearchFilter patientRegistrationSearchFilter) {
 		this.firstName = patientRegistrationSearchFilter.getFirstName();
@@ -54,7 +54,7 @@ public class PatientRegistrationSearchQuery {
 		this.temporary = patientRegistrationSearchFilter.getTemporary();
 		this.permanentNotValidated = patientRegistrationSearchFilter.getPermanentNotValidated();
 		this.validated = patientRegistrationSearchFilter.getValidated();
-		this.rejected = patientRegistrationSearchFilter.getRejected();
+		this.permanent = patientRegistrationSearchFilter.getPermanent();
 	}
 
 	public QueryPart select() {
@@ -124,8 +124,8 @@ public class PatientRegistrationSearchQuery {
 			String clause = " patient.type_id = 3 ";
 			whereString.add(clause);
 		}
-		if (rejected != null && rejected) {
-			String clause = " patient.type_id = 6 ";
+		if (permanent != null && permanent) {
+			String clause = " patient.type_id = 1 ";
 			whereString.add(clause);
 		}
 
