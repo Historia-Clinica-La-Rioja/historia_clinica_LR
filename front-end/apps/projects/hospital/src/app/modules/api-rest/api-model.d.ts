@@ -2547,8 +2547,8 @@ export interface PatientPhotoDto {
 }
 
 export interface PatientRegistrationSearchDto {
+    idPatient: number;
     nameSelfDetermination: string;
-    patientId: number;
     patientTypeId: number;
     person: BMPersonDto;
     ranking: number;

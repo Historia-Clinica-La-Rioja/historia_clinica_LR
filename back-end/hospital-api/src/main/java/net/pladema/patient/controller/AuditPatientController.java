@@ -27,7 +27,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -43,7 +45,6 @@ public class AuditPatientController {
 	private final PatientMapper patientMapper;
 
 	private final ObjectMapper jackson;
-
 
 	@GetMapping("/duplicate-patients-by-filter")
 	@PreAuthorize("hasPermission(#institutionId, 'AUDITOR_MPI')")
@@ -89,13 +90,16 @@ public class AuditPatientController {
 			searchFilter = jackson.readValue(searchFilterStr, PatientRegistrationSearchFilter.class);
 		} catch (IOException e) {
 			log.error(String.format("Error mappeando filter: %s", searchFilterStr), e);
+			if (e.getMessage().contains("out of range") || e.getMessage().contains("not a valid `int` value")) {
+				return ResponseEntity.ok((Collections.emptyList()));
+			}
 		}
 		List<PatientRegistrationSearch> result;
 		if (searchFilter.getPatientId() != null)
 			result = patientService.getPatientRegistrationById(searchFilter.getPatientId());
 		else
 			result = patientService.getPatientsRegistrationByFilter(searchFilter);
-		return ResponseEntity.ok(patientMapper.fromListPatientRegistrationSearch(result));
+		return ResponseEntity.ok(result.stream().map(patientMapper::toPatientRegistrationSearchDto).collect(Collectors.toList()));
 	}
 
 	private void validateFilter(AuditPatientSearch auditPatientSearch) {

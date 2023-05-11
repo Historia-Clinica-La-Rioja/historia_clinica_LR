@@ -12,9 +12,11 @@ import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.controller.mapper.PersonMapper;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper(uses = {PersonMapper.class, LocalDateMapper.class})
 public interface PatientMapper {
@@ -23,7 +25,9 @@ public interface PatientMapper {
 
 	List<PatientSearchDto> fromListPatientSearch(List<PatientSearch> patientSearch);
 
-	List<PatientRegistrationSearchDto> fromListPatientRegistrationSearch(List<PatientRegistrationSearch> patientRegistrationSearch);
+	@Named("toPatientRegistrationSearchDto")
+	@Mapping(target = "idPatient", source = "patientId")
+	PatientRegistrationSearchDto toPatientRegistrationSearchDto(PatientRegistrationSearch patientRegistrationSearch);
 
 	AddressDto updatePatientAddress(APatientDto patient);
 

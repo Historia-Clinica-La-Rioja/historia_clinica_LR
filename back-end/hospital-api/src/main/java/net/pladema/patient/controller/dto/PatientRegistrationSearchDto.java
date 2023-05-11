@@ -12,7 +12,7 @@ public class PatientRegistrationSearchDto {
 
 	private BMPersonDto person;
 
-	private Integer patientId;
+	private Integer idPatient;
 
 	private float ranking;
 
