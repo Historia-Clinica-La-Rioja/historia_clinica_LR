@@ -50,7 +50,7 @@
 	<mat-divider [hidden]="patientContent?.length"></mat-divider>
 
 	<mat-paginator *ngIf="(patientContent?.length !== 0)" [length]="numberOfPatients"
-		[pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)" showFirstLastButtons>
+		[pageSizeOptions]="pageSizeOptions" [pageSize]="initialSize" (page)="onPageChange($event)" showFirstLastButtons>
 	</mat-paginator>
 
 </mat-card>

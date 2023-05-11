@@ -15,6 +15,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PatientMasterDataService } from '@api-rest/services/patient-master-data.service';
 import { PatientProfilePopupComponent } from '../../../auditoria/dialogs/patient-profile-popup/patient-profile-popup.component';
 import { Router } from '@angular/router';
+import { Observable, of } from 'rxjs';
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 const PAGE_MIN_SIZE = 5;
@@ -31,6 +32,7 @@ export class CardPatientComponent {
 	numberOfPatients = 0;
 	printClinicalHistoryFFIsOn = false;
 	patientsTypes: PatientType[];
+	initialSize:Observable<any>;
 	@Input() viewCardToAudit?: boolean;
 	@Input() patientData: any[] = [];
 	@Input() identificationTypes: MasterDataDto[] = [];
@@ -62,6 +64,7 @@ export class CardPatientComponent {
 		this.patientContent = this.mapToPatientContent();
 		this.numberOfPatients = this.patientContent?.length;
 		this.pageSlice = this.patientContent.slice(0, PAGE_MIN_SIZE);
+		this.initialSize=of(PAGE_MIN_SIZE);
 	}
 
 	private mapToPatientContent(): CardModel[] {
@@ -86,7 +89,7 @@ export class CardPatientComponent {
 		return this.patientData?.map((patient: any) => {
 			return {
 				header: [{ title: " ", value: this.patientNameService.getFullName(patient.person.firstName, patient.person.nameSelfDetermination, patient.person?.middleNames) + ' ' + this.getLastNames(patient) }],
-				id: patient.idPatient ? patient.idPatient : patient.patientId,
+				id: patient.idPatient,
 				dni: patient.person.identificationNumber || "-",
 				gender: this.genderTableView[patient.person.genderId]?.description,
 				date: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DatePipeFormat.SHORT_DATE) : '',
