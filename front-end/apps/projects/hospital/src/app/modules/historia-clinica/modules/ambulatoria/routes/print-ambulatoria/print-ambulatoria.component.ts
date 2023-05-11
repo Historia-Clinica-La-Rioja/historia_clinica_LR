@@ -17,6 +17,7 @@ import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
 	selector: 'app-print-ambulatoria',
@@ -86,8 +87,9 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		}
 	];
 
-	displayedColumns = this.columns.map(c => c.columnDef);
+	displayedColumns = ['select'].concat(this.columns.map(c => c.columnDef));
 	dataSource = new MatTableDataSource<CHDocumentSummaryDto>();
+	selection = new SelectionModel<CHDocumentSummaryDto>(true, []);
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -96,7 +98,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		private readonly contextService: ContextService,
 		private readonly router: Router,
-		private readonly datePipe: DatePipe,
+		readonly datePipe: DatePipe,
 	) {
 		this.route.paramMap.subscribe(
 			(params) => {
@@ -174,6 +176,20 @@ export class PrintAmbulatoriaComponent implements OnInit {
 			this.showDocuments = false;
 	}
 
+	isAllTableSelected() {
+		const numSelected = this.selection.selected.length;
+		const numRows = this.dataSource.data.length;
+		return numSelected === numRows;
+	}
+
+	toggleAllRows() {
+		if (this.isAllTableSelected()) {
+			this.selection.clear();
+			return;
+		}
+		this.selection.select(...this.dataSource.data);
+	}
+
 	goBack() {
 		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/${ROUTE_HISTORY_CLINIC}`;
 		this.router.navigate([url]);
@@ -194,5 +210,6 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		this.dataSource.data = mockedTable;
 		this.dataSource.paginator = this.paginator;
 		document.getElementById("encounter-list").style.display = "block";
+		this.toggleAllRows();
 	}
 }

@@ -712,7 +712,8 @@
 			},
 			"encounter-list": {
 				"TITLE": "Listado de encuentros",
-				"SUBTITLE": "Seleccione los episodios que desea incluir en la impresión de la historia clínica"
+				"SUBTITLE": "Seleccione los episodios que desea incluir en la impresión de la historia clínica",
+				"ALL": "Todos"
 			}
 		},
         "screen_change_warning_dialog": {

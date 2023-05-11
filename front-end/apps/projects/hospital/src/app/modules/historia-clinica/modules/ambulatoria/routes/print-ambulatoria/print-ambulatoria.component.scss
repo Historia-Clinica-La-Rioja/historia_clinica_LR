@@ -20,9 +20,25 @@
 	color: black;
 	font-size: 14px;
 	font-weight: bold;
-	width: 16.66%;
+	width: 15.75%;
 }
 
 #encounter-list {
 	display: none;
+}
+
+.table-card {
+	padding: 1em 0 0 0;
+}
+
+.table {
+	box-shadow: none;
+}
+
+.all-table-checkbox {
+	margin: 1em 1.75em;
+
+	span {
+		margin-left: 1.15em;
+	}
 }
