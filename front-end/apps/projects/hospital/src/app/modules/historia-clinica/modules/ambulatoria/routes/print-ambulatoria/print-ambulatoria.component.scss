@@ -22,7 +22,14 @@
 	color: black;
 	font-size: 14px;
 	font-weight: bold;
-	width: 14%;
+}
+
+.short{
+	width: 5%;
+}
+
+.long{
+	width: 15%;
 }
 
 #encounter-list {
@@ -51,4 +58,8 @@
 	span {
 		margin-right: 0.5em;
 	}
+}
+
+.download-button {
+	margin: 1em 0;
 }
