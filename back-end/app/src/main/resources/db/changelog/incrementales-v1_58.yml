@@ -1,2 +1,133 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_58
+
+    - changeSet:
+        id: shockroom-createTable
+        comment: Create table shockroom
+        author: fdemuguruza
+        changes:
+          - createTable:
+              tableName: shockroom
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_shockroom
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: institution(id)
+                      foreignKeyName: FK_institution_shockroom
+                    name: institution_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: sector(id)
+                      foreignKeyName: FK_sector_shockroom
+                    name: sector_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(255)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+
+    - changeSet:
+        id: add-shockroom_id
+        author: fdemuguruza
+        changes:
+          - addColumn:
+              tableName: emergency_care_episode
+              columns:
+                - column:
+                    constraints:
+                      nullable: true
+                      references: shockroom(id)
+                      foreignKeyName: FK_emergency_care_episode_shockroom
+                    name: shockroom_id
+                    type: int
+
+    - changeSet:
+        id: add-shockroom_id_historic_emergency_episode
+        author: fdemuguruza
+        changes:
+          - addColumn:
+              tableName: historic_emergency_episode
+              columns:
+                - column:
+                    constraints:
+                      nullable: true
+                      references: shockroom(id)
+                      foreignKeyName: FK_historic_emergency_episode_shockroom
+                    name: shockroom_id
+                    type: int
+
+    - changeSet:
+        id: add-bed_id_historic_emergency_episode
+        author: fdemuguruza
+        changes:
+          - addColumn:
+              tableName: historic_emergency_episode
+              columns:
+                - column:
+                    constraints:
+                      nullable: true
+                      references: bed(id)
+                      foreignKeyName: FK_historic_emergency_episode_bed
+                    name: bed_id
+                    type: int
+
+    - changeSet:
+        id: add-bed_id_emergency_care_episode
+        author: fdemuguruza
+        changes:
+          - addColumn:
+              tableName: emergency_care_episode
+              columns:
+                - column:
+                    constraints:
+                      nullable: true
+                      references: bed(id)
+                      foreignKeyName: FK_emergency_care_episode_bed
+                    name: bed_id
+                    type: int
