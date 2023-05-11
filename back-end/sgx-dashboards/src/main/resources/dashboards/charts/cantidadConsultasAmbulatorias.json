@@ -6,7 +6,6 @@
     "timeDimensions": [
       {
         "dimension": "CantidadConsultasAmbulatorias.fecha_consulta",
-        "dateRange": "This year",
         "granularity": "month"
       }
     ],

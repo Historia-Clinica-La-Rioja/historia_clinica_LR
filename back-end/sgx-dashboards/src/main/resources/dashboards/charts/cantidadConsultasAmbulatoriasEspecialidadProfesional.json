@@ -5,8 +5,7 @@
     ],
     "timeDimensions": [
       {
-        "dimension": "CantidadConsultasAmbulatorias.fecha_consulta",
-        "dateRange": "This quarter"
+        "dimension": "CantidadConsultasAmbulatorias.fecha_consulta"
       }
     ],
     "filters": [

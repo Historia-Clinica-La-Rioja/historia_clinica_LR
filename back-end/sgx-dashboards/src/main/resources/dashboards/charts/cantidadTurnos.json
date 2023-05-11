@@ -6,8 +6,7 @@
     "timeDimensions": [
       {
         "dimension": "CantidadTurnos.fecha_consulta",
-        "granularity": "month",
-        "dateRange": "This year"
+        "granularity": "month"
       }
     ],
     "filters": [

@@ -5,8 +5,7 @@
     ],
     "timeDimensions": [
       {
-        "dimension": "CantidadTurnos.fecha_consulta",
-        "dateRange": "This year"
+        "dimension": "CantidadTurnos.fecha_consulta"
       }
     ],
     "filters": [

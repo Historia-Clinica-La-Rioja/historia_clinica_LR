@@ -16,11 +16,20 @@
                 {
                   "type" : "cubejs-dashboard",
                   "args" : {
-                    "filters" : {},
-                    "title" : {
-                      "text" : "Evolución de consultas del año actual"
+                    "filters" : {
+                      "date" : {
+                        "filter" : {
+                          "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
+                          "operator" : "inDateRange"
+                        },
+                        "type" : "dateRangeISO",
+                        "label" : "Fecha"
+                      }
                     },
-                    "label": "Evolución de consultas del año actual",
+                    "title" : {
+                      "text" : "Evolución de consultas por fecha"
+                    },
+                    "label": "Evolución - barra",
                     "content" : [
                       {
                         "type" : "cubejs-chart",
@@ -46,9 +55,18 @@
                 {
                   "type" : "cubejs-dashboard",
                   "args" : {
-                    "filters" : {},
+                    "filters" : {
+                      "date" : {
+                        "filter" : {
+                          "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
+                          "operator" : "inDateRange"
+                        },
+                        "type" : "dateRangeISO",
+                        "label" : "Fecha"
+                      }
+                    },
                     "title" : {
-                      "text" : "Consultas por especialidad y profesional del último trimestre"
+                      "text" : "Consultas por especialidad y profesional"
                     },
                     "label": "Consultas por especialidad y profesional",
                     "content" : [
@@ -84,7 +102,7 @@
                     "title" : {
                       "text" : "Evolución de consultas por fecha"
                     },
-                    "label": "Evolución de consultas por fecha",
+                    "label": "Evolución - línea",
                     "filters" : {
                       "date" : {
                         "filter" : {
@@ -226,7 +244,7 @@
                     "title" : {
                       "text" : "Consultas por género"
                     },
-                    "label": "Consultas por género",
+                    "label": "Sexo DNI - tarjetas",
                     "content" : [
                       {
                         "type" : "card",
@@ -328,11 +346,20 @@
                       {
                         "type" : "cubejs-dashboard",
                         "args" : {
-                          "filters" : {},
-                          "title" : {
-                            "text" : "Evolución de turnos del año actual"
+                          "filters" : {
+                            "date" : {
+                              "filter" : {
+                                "member" : "CantidadTurnos.fecha_consulta",
+                                "operator" : "inDateRange"
+                              },
+                              "type" : "dateRangeISO",
+                              "label" : "Fecha"
+                            }
                           },
-                          "label": "Evolución de turnos del año actual",
+                          "title" : {
+                            "text" : "Evolución de turnos por fecha"
+                          },
+                          "label": "Evolución - línea",
                           "content" : [
                             {
                               "type" : "cubejs-chart",
@@ -356,11 +383,20 @@
                       {
                         "type" : "cubejs-dashboard",
                         "args" : {
-                          "filters" : {},
-                          "title" : {
-                            "text" : "Turnos por especialidad del año actual"
+                          "filters" : {
+                            "date" : {
+                              "filter" : {
+                                "member" : "CantidadTurnos.fecha_consulta",
+                                "operator" : "inDateRange"
+                              },
+                              "type" : "dateRangeISO",
+                              "label" : "Fecha"
+                            }
                           },
-                          "label": "Turnos por especialidad del año actual",
+                          "title" : {
+                            "text" : "Turnos por especialidad"
+                          },
+                          "label": "Especialidad",
                           "content" : [
                             {
                               "type" : "cubejs-chart",
@@ -383,11 +419,20 @@
                       {
                         "type" : "cubejs-dashboard",
                         "args" : {
-                          "filters" : {},
-                          "title" : {
-                            "text" : "Turnos por profesional del año actual"
+                          "filters" : {
+                            "date" : {
+                              "filter" : {
+                                "member" : "CantidadTurnos.fecha_consulta",
+                                "operator" : "inDateRange"
+                              },
+                              "type" : "dateRangeISO",
+                              "label" : "Fecha"
+                            }
                           },
-                          "label": "Turnos por profesional del año actual",
+                          "title" : {
+                            "text" : "Turnos por profesional"
+                          },
+                          "label": "Profesional",
                           "content" : [
                             {
                               "type" : "cubejs-chart",
@@ -439,7 +484,7 @@
                           "title" : {
                             "text" : "Turnos por estado"
                           },
-                          "label": "Turnos por estado",
+                          "label": "Estado",
                           "content" : [
                             {
                               "type" : "card",
