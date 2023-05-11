@@ -39,6 +39,7 @@
 			"medical-order": {
                 "NEW_MEDICAL_ORDER": "Nueva Orden Médica",
                 "ORDER": "Orden",
+                "TRANSCRIBED_ORDER": "Orden transcripta",
                 "TRANSCRIBE_ORDER": "Transcribir orden impresa / externa",
                 "TRANSCRIBE_ORDER_TITLE": "Transcribir orden impresa",
                 "STUDY": "Estudio",

@@ -1,10 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SnomedECL } from '@api-rest/api-model';
 import { HCEPersonalHistoryDto } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { hasError } from '@core/utils/form.utils';
+import { PrescripcionesService } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-equipment-transcribe-order-popup',
@@ -26,9 +28,12 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
     allowedExtensions = ['jpg','jpeg','png','pdf'];
 
     constructor(
+        public dialogRef: MatDialogRef<EquipmentTranscribeOrderPopupComponent>,
         @Inject(MAT_DIALOG_DATA) public data,
         private readonly formBuilder: FormBuilder,
-		private readonly hceGeneralStateService: HceGeneralStateService
+		private readonly hceGeneralStateService: HceGeneralStateService,
+		private prescriptionService: PrescripcionesService,
+		private readonly translateService: TranslateService
         ) { }
 
     ngOnInit(): void {
@@ -55,7 +60,18 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
     }
 
     saveOrder() {
-
+        // Falta mandarle los archivos adjuntos
+        //this.prescriptionService.createTranscribedOrder(this.data.patientId, studySCTID, problemSCTID, professional, institution)
+        //    .subscribe(medicalOrderInfo => //emit studyPt && studyId && orderId)
+        let text = 'image-network.appointments.medical-order.TRANSCRIBED_ORDER';
+        this.translateService.get(text).subscribe(translatedText => {
+            this.dialogRef.close({
+                serviceRequestId: 1,
+                studyName: this.selectedStudy.pt,
+                studyId: 1,
+                displayText: `${translatedText} - ${this.selectedStudy.pt}`
+            })
+        });
     }
 
     private checkFileExtensions(){

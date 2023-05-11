@@ -71,7 +71,7 @@ export class NewAppointmentComponent implements OnInit {
 	public showAddPatient = false;
 	public editable = true;
 	patientMedicalCoverages: PatientMedicalCoverage[];
-	patientMedicalOrders: medicalOrderInfo[];
+	patientMedicalOrders: medicalOrderInfo[] = [];
 	patient: ReducedPatientDto;
 	public readonly hasError = hasError;
 	readonly TEMPORARY_PATIENT_ID = TEMPORARY_PATIENT_ID;
@@ -83,6 +83,8 @@ export class NewAppointmentComponent implements OnInit {
 	lastAppointmentId = -1;
 	readonly dateFormats = DatePipeFormat;
 	patientMedicalOrderTooltipDescription = '';
+	isOrderTranscribed = false;
+
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean, patientId?: number,
@@ -165,10 +167,6 @@ export class NewAppointmentComponent implements OnInit {
 			this.isFormSubmitted = true;
 			this.patientSearch(this.data.patientId);
 		}
-
-		if (this.data.isEquipmentAppointment) {
-			updateControlValidator(this.appointmentInfoForm, 'appointmentMedicalOrder', [Validators.required]);
-		}
 	}
 
 	search(): void {
@@ -213,12 +211,9 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	generateTooltipOnMedicalOrderChange() {
-		this.translateService.get('image-network.appointments.medical-order.ORDER').subscribe(translatedText => 
-			this.patientMedicalOrderTooltipDescription = 
-				`${translatedText} # 
-				${this.appointmentInfoForm.controls.appointmentMedicalOrder.value?.serviceRequestId} - 
-				${this.titleCasePipe.transform(this.appointmentInfoForm.controls.appointmentMedicalOrder.value?.studyName)}`
-		);
+		if (this.appointmentInfoForm.controls.appointmentMedicalOrder?.value){
+			this.patientMedicalOrderTooltipDescription = this.appointmentInfoForm.controls.appointmentMedicalOrder.value.displayText;
+		}
 	}
 
 	private patientSearch(patientId: number) {
@@ -451,20 +446,43 @@ export class NewAppointmentComponent implements OnInit {
 
 	getPatientMedicalOrders() {
 		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, MEDICAL_ORDER_PENDING_STATUS, null, null, null, MEDICAL_ORDER_CATEGORY_ID).subscribe(medicalOrders => {
-			this.patientMedicalOrders = this.mapDiagnosticReportInfoDtoToMedicalOrderInfo(medicalOrders);
+			this.mapDiagnosticReportInfoDtoToMedicalOrderInfo(medicalOrders);
 		});
 	}
 
-	mapDiagnosticReportInfoDtoToMedicalOrderInfo(patientMedicalOrders: DiagnosticReportInfoDto[]): medicalOrderInfo[]{
-		return patientMedicalOrders.map(diagnosticReportInfo => {
-			if (differenceInDays(new Date(), new Date(diagnosticReportInfo.creationDate)) <= ORDER_EXPIRED_DAYS){
-				return {
-					serviceRequestId: diagnosticReportInfo.serviceRequestId,
-					studyName: diagnosticReportInfo.snomed.pt,
-					studyId: diagnosticReportInfo.id
-				}}
-		}).filter(value => value !== null && value !== undefined);
+	mapDiagnosticReportInfoDtoToMedicalOrderInfo(patientMedicalOrders: DiagnosticReportInfoDto[]){
+		let text = 'image-network.appointments.medical-order.ORDER';
+
+		this.translateService.get(text).subscribe(translatedText => {
+			patientMedicalOrders.map(diagnosticReportInfo => {
+				if (differenceInDays(new Date(), new Date(diagnosticReportInfo.creationDate)) <= ORDER_EXPIRED_DAYS){
+					this.patientMedicalOrders.push({
+						serviceRequestId: diagnosticReportInfo.serviceRequestId,
+						studyName: diagnosticReportInfo.snomed.pt,
+						studyId: diagnosticReportInfo.id,
+						displayText: `${translatedText} # ${diagnosticReportInfo.serviceRequestId} - ${diagnosticReportInfo.snomed.pt}`
+					})}
+			}).filter(value => value !== null && value !== undefined);
+		});
 	}
+
+	/*
+	mapTranscribeOrderToMedicalOrderInfo(transcribedOrders){
+		let text = 'image-network.appointments.medical-order.TRANSCRIBED_ORDER';
+
+		this.translateService.get(text).subscribe(translatedText => {
+			transcribedOrders.map(medicalOrder => {
+				if (differenceInDays(new Date(), new Date(medicalOrder.creationDate)) <= ORDER_EXPIRED_DAYS){
+					this.patientMedicalOrders.push({
+						serviceRequestId: medicalOrder.serviceRequestId,
+						studyName: medicalOrder.studyName,
+						studyId: medicalOrder.studyId,
+						displayText: `${translatedText} - ${medicalOrder.studyName}`
+					})}
+			}).filter(value => value !== null && value !== undefined);
+		});
+	}
+	*/
 
 	newTranscribedOrder() {
 		const dialogRef = this.dialog.open(EquipmentTranscribeOrderPopupComponent, {
@@ -475,9 +493,19 @@ export class NewAppointmentComponent implements OnInit {
 			}
 		});
 
-		/*dialogRef.afterClosed().subscribe(
-			
-		);*/
+		dialogRef.afterClosed().subscribe(order =>{
+			this.patientMedicalOrderTooltipDescription = '';
+			if (order){
+				if (this.isOrderTranscribed) {
+					this.patientMedicalOrders[this.patientMedicalOrders.length - 1] = order;
+				} else {
+					this.patientMedicalOrders.push(order);
+				}
+				this.appointmentInfoForm.controls.appointmentMedicalOrder.setValue(order);
+				this.generateTooltipOnMedicalOrderChange();
+				this.isOrderTranscribed = true;
+			}
+		})
 	}
 
 	cleanInput(){
@@ -515,7 +543,7 @@ export class NewAppointmentComponent implements OnInit {
 	private addAppointment(newAppointment: CreateAppointmentDto): Observable<number> {
 		if (this.data.isEquipmentAppointment) {
 			let orderId = this.appointmentInfoForm.controls.appointmentMedicalOrder?.value?.serviceRequestId;
-			let studyId = this.appointmentInfoForm.controls.appointmentMedicalOrder?.value?.id;
+			let studyId = this.appointmentInfoForm.controls.appointmentMedicalOrder?.value?.studyId;
 			return this.equipmentAppointmentFacade.addAppointment(newAppointment, orderId, studyId);
 		}
 		else
@@ -526,5 +554,6 @@ export class NewAppointmentComponent implements OnInit {
 export interface medicalOrderInfo {
 	serviceRequestId: number,
 	studyName: string,
-	studyId: number
+	studyId: number,
+	displayText: string
 }

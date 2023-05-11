@@ -110,11 +110,11 @@
 						<mat-form-field *ngIf="data.isEquipmentAppointment" appearance="outline">
 							<mat-label translate="image-network.appointments.medical-order.NEW_MEDICAL_ORDER"></mat-label>
 							<mat-select formControlName="appointmentMedicalOrder" (selectionChange)="generateTooltipOnMedicalOrderChange()"
-							matTooltip="{{patientMedicalOrderTooltipDescription}}">
+							matTooltip="{{patientMedicalOrderTooltipDescription | titlecase}}">
 								<mat-option id="medicalOrder" name="medicalOrder"
 									*ngFor="let patientMedicalOrder of patientMedicalOrders"
-									[value]="patientMedicalOrder" matTooltip="{{'image-network.appointments.medical-order.ORDER' | translate}} # {{patientMedicalOrder.serviceRequestId}} - {{patientMedicalOrder.studyName | titlecase}}">
-									{{'image-network.appointments.medical-order.ORDER' | translate}} # {{patientMedicalOrder.serviceRequestId}} - {{patientMedicalOrder.studyName | titlecase}}
+									[value]="patientMedicalOrder" matTooltip="{{patientMedicalOrder.displayText | titlecase}}">
+									{{patientMedicalOrder.displayText | titlecase}}
 								</mat-option>
 								<mat-divider></mat-divider>
 								<mat-option (click)="newTranscribedOrder()">
