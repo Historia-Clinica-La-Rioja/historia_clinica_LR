@@ -65,7 +65,7 @@ import { AttentionPlaceDialogComponent } from './dialogs/attention-place-dialog/
 		EmergencyCareEvolutionsComponent,
 		LastTriageComponent,
 		EmergencyCareEvolutionNoteComponent,
- 		 AttentionPlaceDialogComponent
+ 		AttentionPlaceDialogComponent,
 	],
 	imports: [
 		CommonModule,
@@ -81,7 +81,7 @@ import { AttentionPlaceDialogComponent } from './dialogs/attention-place-dialog/
 		TriageDetailsComponent,
 		TriageChipComponent,
 		EmergencyCareEvolutionsComponent,
-		LastTriageComponent
+		LastTriageComponent,
 	],
 	providers: [
 		// services

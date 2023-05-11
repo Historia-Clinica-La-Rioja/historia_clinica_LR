@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 import { BedManagementFacadeService, Sector, Service } from '../../services/bed-management-facade.service';
 import { momentFormat, DateFormat, momentParse } from '@core/utils/moment.utils';
 import { Subscription } from 'rxjs';
-import { GUARDIA } from '@historia-clinica/modules/guardia/routes/home/home.component';
+import { SECTOR_GUARDIA } from '@historia-clinica/modules/guardia/constants/masterdata';
 
 @Component({
   selector: 'app-bed-filters',
@@ -19,7 +19,7 @@ export class BedFiltersComponent implements OnInit, OnDestroy {
 	private bedManagementFilter$: Subscription;
 
 	@Input() sectorTypeId?: number;
-	isGuard: boolean = false;
+	isEmergencyEpisode: boolean = false;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -27,7 +27,7 @@ export class BedFiltersComponent implements OnInit, OnDestroy {
   	) { }
 	
 	ngOnInit(): void {
-		this.isGuard = this.sectorTypeId === GUARDIA;
+		this.isEmergencyEpisode = this.sectorTypeId === SECTOR_GUARDIA;
 		this.form = this.formBuilder.group({
 			sector: [null],
 			service: [null],

@@ -6,11 +6,12 @@ import { hasError } from '@core/utils/form.utils';
 import { AttentionPlace } from '@historia-clinica/constants/summaries';
 import { Observable, of } from 'rxjs';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
-import { filter, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ShockroomService } from '@api-rest/services/shockroom.service';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AttendPlace, GUARDIA } from '../../routes/home/home.component';
+import { AttendPlace } from '../../routes/home/home.component';
+import { SECTOR_GUARDIA } from '../../constants/masterdata';
 
 const CONFIRM: string = 'guardia.dialog.attention_place.CONFIRM';
 const BED_ASSIGN: string = 'guardia.dialog.attention_place.BED_ASSIGN';
@@ -49,7 +50,7 @@ export class AttentionPlaceDialogComponent implements OnInit {
 		this.clearData();
 		const id: number = Number(this.form.get('place').value);
 		if (id === AttentionPlace.CONSULTORIO) {
-			this.offices$ = this.doctorsOfficeService.getBySectorType(GUARDIA);
+			this.offices$ = this.doctorsOfficeService.getBySectorType(SECTOR_GUARDIA);
 			const office: AbstractControl = this.form.get('office');
 			this.officesTypeaheadOptions$ = this.getTypeaheadOptions$(this.offices$);
 			office.addValidators(Validators.required);
@@ -107,22 +108,22 @@ export class AttentionPlaceDialogComponent implements OnInit {
 
 	private filterPlaces() {
 		this.places$.subscribe((places: MasterDataInterface<number>[]) => {
-			if (this.data.quantity.doctorsOffice == 0) {
-				const index: number = places.indexOf(places.find(val => val.id == AttentionPlace.CONSULTORIO));
-				places.splice(index, 1);
-			}
+			if (this.data.quantity.doctorsOffice == 0) 
+				this.deletePlace(AttentionPlace.CONSULTORIO, places);
 
-			if (this.data.quantity.shockroom == 0) {
-				const index: number = places.indexOf(places.find(val => val.id == AttentionPlace.SHOCKROOM));
-				places.splice(index, 1);
-			}
+			if (this.data.quantity.shockroom == 0)
+				this.deletePlace(AttentionPlace.SHOCKROOM, places);
 
-			if (this.data.quantity.bed == 0) {
-				const index: number = places.indexOf(places.find(val => val.id == AttentionPlace.HABITACION));
-				places.splice(index, 1);
-			}
+			if (this.data.quantity.bed == 0)
+				this.deletePlace(AttentionPlace.HABITACION, places);
+
 			this.places$ = of(places);
 		});
+	}
+
+	private deletePlace(attentionPlace: AttentionPlace, places: MasterDataInterface<number>[]) {
+		const index: number = places.indexOf(places.find(val => val.id == attentionPlace));
+		places.splice(index, 1);
 	}
 
 	private getTypeaheadOptions$(attentionPlace$): Observable<TypeaheadOption<any>[]> {

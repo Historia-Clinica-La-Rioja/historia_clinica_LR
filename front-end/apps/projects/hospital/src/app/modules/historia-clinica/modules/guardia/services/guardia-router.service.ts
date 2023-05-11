@@ -5,7 +5,6 @@ import { ContextService } from '@core/services/context.service';
 import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
 import { PatientType } from '@historia-clinica/constants/summaries';
-import { Episode } from '../routes/home/home.component';
 
 @Injectable({
 	providedIn: 'root'

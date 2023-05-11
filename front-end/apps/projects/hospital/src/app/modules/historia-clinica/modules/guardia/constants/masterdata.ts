@@ -21,4 +21,6 @@ export enum EmergencyCareTypes {
 
 export const SECTOR_AMBULATORIO = 1;
 
+export const SECTOR_GUARDIA = 3;
+
 export const TRIAGE_LEVEL_V_ID = 5;

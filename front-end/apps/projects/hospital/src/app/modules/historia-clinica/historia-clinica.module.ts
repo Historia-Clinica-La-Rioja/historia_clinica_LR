@@ -58,6 +58,7 @@ import { MedicacionesFormComponent } from './components/medicaciones-form/medica
 import { ProcedimientosFormComponent } from './components/procedimientos-form/procedimientos-form.component';
 import { FactoresDeRiesgoFormV2Component } from './components/factores-de-riesgo-form-v2/factores-de-riesgo-form-v2.component';
 import { AlergiasFormComponent } from './components/alergias-form/alergias-form.component';
+import { EmergencyCareEpisodeAttendService } from './services/emergency-care-episode-attend.service';
 
 @NgModule({
 	declarations: [
@@ -155,7 +156,8 @@ import { AlergiasFormComponent } from './components/alergias-form/alergias-form.
 		DatosAntropometricosNuevaConsultaComponent
 	],
 	providers: [
-		InternmentSummaryFacadeService
+		InternmentSummaryFacadeService,
+		EmergencyCareEpisodeAttendService
 	]
 })
 export class HistoriaClinicaModule {

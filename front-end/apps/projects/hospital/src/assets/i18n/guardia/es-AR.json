@@ -226,6 +226,11 @@
 				}
 			}
 		},
+		"select_consultorio": {
+			"ATENDER": "Atender",
+			"CONSULTORIO": "Consultorio",
+			"SUBTITLE": "Consultorio destino para el paciente"
+		},
 		"dialog": {
 			"attention_place": {
 				"TITLE": "Atender",

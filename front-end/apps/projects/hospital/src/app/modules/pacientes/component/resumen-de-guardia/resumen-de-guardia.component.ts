@@ -1,12 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ERole } from '@api-rest/api-model';
-import { ResponseEmergencyCareDto, TriageListDto } from '@api-rest/api-model';
+import { ERole } from '@api-rest/api-model.d';
+import { ResponseEmergencyCareDto, TriageListDto } from '@api-rest/api-model.d';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { TriageService } from '@api-rest/services/triage.service';
 import { PatientNameService } from '@core/services/patient-name.service';
 import { TriageCategory } from '@historia-clinica/modules/guardia/components/triage-chip/triage-chip.component';
 import { GuardiaMapperService } from '@historia-clinica/modules/guardia/services/guardia-mapper.service';
-import { TriageDefinitionsService } from '@historia-clinica/modules/guardia/services/triage-definitions.service';
 import { GUARDIA } from '@historia-clinica/constants/summaries';
 import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
 import { RiskFactorFull, Triage } from '@historia-clinica/modules/guardia/components/triage-details/triage-details.component';
@@ -24,6 +23,8 @@ import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
 import { NewTriageService } from '@historia-clinica/services/new-triage.service';
 import { EmergencyCareStateChangedService } from '@historia-clinica/modules/ambulatoria/services/emergency-care-state-changed.service';
+import { EmergencyCareEpisodeAttendService } from '@historia-clinica/services/emergency-care-episode-attend.service';
+import { TriageDefinitionsService } from '@historia-clinica/modules/guardia/services/triage-definitions.service';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -75,6 +76,8 @@ export class ResumenDeGuardiaComponent implements OnInit {
 		private readonly permissionsService: PermissionsService,
 		private readonly newTriageService: NewTriageService,
 		private readonly emergencyCareStateChangedService: EmergencyCareStateChangedService,
+		private readonly emergencyCareEpisodeAttend: EmergencyCareEpisodeAttendService,
+		private readonly triageDefinitionsService: TriageDefinitionsService
 	) {
 
 	}
@@ -86,14 +89,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 				this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD]);
 				this.hasRoleAdministrative = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES]);
 
-				this.emergencyCareEpisodeStateService.getState(this.episodeId).subscribe(
-					state => {
-						this.episodeState = state.id;
-						this.calculateAvailableActions();
-						this.withoutMedicalDischarge = (this.episodeState !== this.STATES.CON_ALTA_MEDICA);
-					}
-				);
-
+				this.setEpisodeState();
 			}
 		);
 
@@ -103,6 +99,12 @@ export class ResumenDeGuardiaComponent implements OnInit {
 			_ => this.loadTriages()
 		)
 
+		this.emergencyCareEpisodeAttend.loadEpisode$.subscribe((response: boolean) => {
+			if (!response) return;
+
+			this.loadEpisode();
+			this.setEpisodeState();
+		});
 	}
 
 	newTriage() {
@@ -157,32 +159,6 @@ export class ResumenDeGuardiaComponent implements OnInit {
 		this.router.navigate([`/institucion/${this.contextService.institutionId}/guardia/episodio/${this.episodeId}/edit`]);
 	}
 
-	atender(): void {
-
-		const dialogRef = this.dialog.open(SelectConsultorioComponent, {
-			width: '25%',
-			data: { title: 'guardia.select_consultorio.ATENDER' }
-		});
-
-		dialogRef.afterClosed().subscribe(consultorio => {
-			if (consultorio) {
-				this.doctorsOfficeDescription = consultorio?.description;
-				this.episodeStateService.atender(this.episodeId, consultorio.id).subscribe(changed => {
-					if (changed) {
-						this.emergencyCareStateChangedService.emergencyCareStateChanged(EstadosEpisodio.EN_ATENCION);
-						this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
-						this.episodeState = EstadosEpisodio.EN_ATENCION;
-						this.calculateAvailableActions();
-					}
-					else {
-						this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
-					}
-				}, _ => this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`)
-				);
-			}
-		});
-	}
-
 	finalizar(): void {
 		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
 			data: {
@@ -210,6 +186,33 @@ export class ResumenDeGuardiaComponent implements OnInit {
 				);
 			}
 		});
+	}
+
+	attend() {
+		this.emergencyCareEpisodeAttend.attend(this.episodeId, false);
+	}
+
+	private setEpisodeState() {
+		this.emergencyCareEpisodeStateService.getState(this.episodeId).subscribe(
+			state => {
+				this.episodeState = state.id;
+				this.calculateAvailableActions();
+				this.withoutMedicalDischarge = (this.episodeState !== this.STATES.CON_ALTA_MEDICA);
+			}
+		);
+	}
+
+	private loadEpisode() {
+		this.emergencyCareEpisodeService.getAdministrative(this.episodeId)
+			.subscribe((responseEmergencyCare: ResponseEmergencyCareDto) => {
+				this.responseEmergencyCare = responseEmergencyCare;
+				this.emergencyCareType = responseEmergencyCare.emergencyCareType?.id;
+				this.doctorsOfficeDescription = responseEmergencyCare.doctorsOffice?.description;
+				this.shockroomDescription = responseEmergencyCare.shockroom?.description;
+				this.bedDescription = responseEmergencyCare.bed?.bedNumber;
+			});
+
+		this.loadTriages();
 	}
 
 	private calculateAvailableActions() {
@@ -248,7 +251,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 			let action: ActionInfo = {
 				label: 'guardia.home.episodes.episode.actions.atender.TITLE',
 				id: 'attend',
-				callback: this.atender.bind(this)
+				callback: this.attend.bind(this)
 			}
 			this.availableActions.push(action);
 		}
@@ -283,19 +286,6 @@ export class ResumenDeGuardiaComponent implements OnInit {
 
 	private getFullName(triage: TriageReduced): string {
 		return `${this.patientNameService.getPatientName(triage.createdBy.firstName, triage.createdBy.nameSelfDetermination)}, ${triage.createdBy.lastName}`;
-	}
-
-	private loadEpisode() {
-		this.emergencyCareEpisodeService.getAdministrative(this.episodeId)
-			.subscribe((responseEmergencyCare: ResponseEmergencyCareDto) => {
-				this.responseEmergencyCare = responseEmergencyCare;
-				this.emergencyCareType = responseEmergencyCare.emergencyCareType?.id;
-				this.doctorsOfficeDescription = responseEmergencyCare.doctorsOffice?.description;
-				this.shockroomDescription = responseEmergencyCare.shockroom?.description;
-				this.bedDescription = responseEmergencyCare.bed?.bedNumber;
-			});
-
-		this.loadTriages();
 	}
 
 	private loadTriages() {
