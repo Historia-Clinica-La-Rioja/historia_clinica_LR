@@ -14,6 +14,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PatientMasterDataService } from '@api-rest/services/patient-master-data.service';
 import { PatientProfilePopupComponent } from '../../../auditoria/dialogs/patient-profile-popup/patient-profile-popup.component';
+import { Router } from '@angular/router';
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 const PAGE_MIN_SIZE = 5;
@@ -45,6 +46,7 @@ export class CardPatientComponent {
 		private readonly permissionsService: PermissionsService,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly patientMasterDataService: PatientMasterDataService,
+		private readonly router: Router,
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.featureFlagService.isActive(AppFeature.HABILITAR_IMPRESION_HISTORIA_CLINICA_EN_DESARROLLO).subscribe(isOn => {
@@ -125,7 +127,7 @@ export class CardPatientComponent {
 	}
 
 	openDialog(idPatient: number) {
-		if (!this.viewCardToAudit) {
+		if (this.router.url.includes('pacientes/search')) {
 			const patient = this.patientData.find((p: PatientSearchDto) => p.idPatient === idPatient);
 			this.dialog.open(ViewPatientDetailComponent, {
 				width: '450px',
