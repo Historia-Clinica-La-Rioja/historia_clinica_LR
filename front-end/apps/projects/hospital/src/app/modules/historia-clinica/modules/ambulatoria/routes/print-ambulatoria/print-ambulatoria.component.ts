@@ -87,7 +87,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		}
 	];
 
-	displayedColumns = ['select'].concat(this.columns.map(c => c.columnDef));
+	displayedColumns = ['select'].concat(this.columns.map(c => c.columnDef).concat('download'));
 	dataSource = new MatTableDataSource<CHDocumentSummaryDto>();
 	selection = new SelectionModel<CHDocumentSummaryDto>(true, []);
 
