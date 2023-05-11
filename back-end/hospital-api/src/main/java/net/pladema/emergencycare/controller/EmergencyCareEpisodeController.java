@@ -206,6 +206,16 @@ public class EmergencyCareEpisodeController {
         return ResponseEntity.ok().body(output);
     }
 
+	@GetMapping("/{episodeId}/has-evolution-note")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+	public ResponseEntity<Boolean> hasEvolutionNote(@PathVariable(name = "institutionId") Integer institutionId,
+													   @PathVariable(name = "episodeId") Integer episodeId) {
+		LOG.debug("Get episode creation date -> institutionId {}, episodeId {}", institutionId, episodeId);
+		Boolean output = emergencyCareEpisodeService.hasEvolutionNote(episodeId);
+		LOG.debug("Output -> {}", output);
+		return ResponseEntity.ok().body(output);
+	}
+
     private List<Integer> getRiskFactorIds(NewRiskFactorsObservationDto riskFactorsObservationDto){
         LOG.debug("Input parameter -> riskFactorsObservationDto {}", riskFactorsObservationDto);
         List<Integer> result = new ArrayList<>();

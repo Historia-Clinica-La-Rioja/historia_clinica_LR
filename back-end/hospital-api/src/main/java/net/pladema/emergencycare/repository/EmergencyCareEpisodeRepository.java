@@ -1,5 +1,6 @@
 package net.pladema.emergencycare.repository;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.ObservationRiskFactor;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
@@ -186,4 +187,13 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 	@Transactional(readOnly = true)
 	@Query("SELECT COUNT(ece.id) > 0 FROM EmergencyCareEpisode ece WHERE ece.bedId = :bedId AND ece.emergencyCareStateId = " + EmergencyCareState.EN_ATENCION)
 	boolean isBedOccupiedByEmergencyEpisode(@Param("bedId") Integer bedId);
+	
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT COUNT(*) > 0 " +
+			"FROM EmergencyCareEpisode ece " +
+			"JOIN Document d ON (ece.id = d.sourceId) " +
+			"WHERE ece.id = :episodeId " +
+			"AND d.typeId = " + DocumentType.EMERGENCY_CARE_EVOLUTION_NOTE)
+	Boolean episodeHasEvolutionNote(@Param("episodeId") Integer episodeId);
+	
 }

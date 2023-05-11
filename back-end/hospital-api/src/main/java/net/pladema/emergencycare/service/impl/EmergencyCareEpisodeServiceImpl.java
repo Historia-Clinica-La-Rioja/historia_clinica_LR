@@ -203,6 +203,14 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
+	
+	@Override
+	public Boolean hasEvolutionNote(Integer episodeId) {
+		LOG.debug("Input parameters -> emergencyCareEpisodeId {}", episodeId);
+		Boolean result = emergencyCareEpisodeRepository.episodeHasEvolutionNote(episodeId);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
 
 	private void validateUpdate(EmergencyCareEpisode persisted, EmergencyCareBo toUpdate){
         if (persisted.getEmergencyCareEntranceTypeId() != null && toUpdate.getEmergencyCareEntranceId() == null)
