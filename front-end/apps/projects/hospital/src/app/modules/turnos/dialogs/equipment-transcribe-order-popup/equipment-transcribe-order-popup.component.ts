@@ -43,8 +43,20 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
             professional: [null, Validators.required],
             institution: [null]
         });
+        if (this.data.transcribedOrder){
+            this.selectedStudy = this.data.transcribedOrder.study;
+            this.selectedProblem = this.data.transcribedOrder.problem;
+            this.setFormValues(this.data.transcribedOrder);
+        }
 
         this.getPatientHealthProblems();
+    }
+
+    private setFormValues(order){
+        this.transcribeOrderForm.controls.study.setValue(order.study.pt)
+        this.transcribeOrderForm.controls.assosiatedProblem.setValue(order.problem.pt)
+        this.transcribeOrderForm.controls.professional.setValue(order.professional)
+        this.transcribeOrderForm.controls.institution.setValue(order.institution)
     }
 
     private getPatientHealthProblems() {
@@ -60,17 +72,25 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
     }
 
     saveOrder() {
+        let transcribedOrder = {
+            study: this.selectedStudy,
+            problem: this.selectedProblem,
+            professional: this.transcribeOrderForm.controls.professional.value,
+            institution: this.transcribeOrderForm.controls.institution?.value
+        }
         // Falta mandarle los archivos adjuntos
         //this.prescriptionService.createTranscribedOrder(this.data.patientId, studySCTID, problemSCTID, professional, institution)
         //    .subscribe(medicalOrderInfo => //emit studyPt && studyId && orderId)
         let text = 'image-network.appointments.medical-order.TRANSCRIBED_ORDER';
         this.translateService.get(text).subscribe(translatedText => {
             this.dialogRef.close({
-                serviceRequestId: 1,
-                studyName: this.selectedStudy.pt,
-                studyId: 1,
-                displayText: `${translatedText} - ${this.selectedStudy.pt}`
-            })
+                transcribedOrder,
+                order: {
+                    serviceRequestId: 1,
+                    studyName: this.selectedStudy.pt,
+                    studyId: 1,
+                    displayText: `${translatedText} - ${this.selectedStudy.pt}`
+            }})
         });
     }
 

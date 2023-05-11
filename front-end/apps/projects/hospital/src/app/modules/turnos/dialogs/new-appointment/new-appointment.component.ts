@@ -84,6 +84,7 @@ export class NewAppointmentComponent implements OnInit {
 	readonly dateFormats = DatePipeFormat;
 	patientMedicalOrderTooltipDescription = '';
 	isOrderTranscribed = false;
+	transcribedOrder = null;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
@@ -489,19 +490,21 @@ export class NewAppointmentComponent implements OnInit {
 			width: '35%',
 			autoFocus: false,
 			data: {
-				patientId: this.patientId
+				patientId: this.patientId,
+				transcribedOrder: this.transcribedOrder
 			}
 		});
 
-		dialogRef.afterClosed().subscribe(order =>{
+		dialogRef.afterClosed().subscribe(response =>{
 			this.patientMedicalOrderTooltipDescription = '';
-			if (order){
+			if (response?.order){
 				if (this.isOrderTranscribed) {
-					this.patientMedicalOrders[this.patientMedicalOrders.length - 1] = order;
+					this.patientMedicalOrders[this.patientMedicalOrders.length - 1] = response.order;
 				} else {
-					this.patientMedicalOrders.push(order);
+					this.patientMedicalOrders.push(response.order);
 				}
-				this.appointmentInfoForm.controls.appointmentMedicalOrder.setValue(order);
+				this.transcribedOrder = response.transcribedOrder;
+				this.appointmentInfoForm.controls.appointmentMedicalOrder.setValue(response.order);
 				this.generateTooltipOnMedicalOrderChange();
 				this.isOrderTranscribed = true;
 			}
