@@ -32,6 +32,7 @@ interface PatientInformation {
 }
 
 export interface State {
+	id?: number;
 	description: string;
 	color: string;
 }

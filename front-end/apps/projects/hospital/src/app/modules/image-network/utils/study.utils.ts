@@ -1,0 +1,20 @@
+import { Color } from "@presentation/colored-label/colored-label.component"
+import { State } from "../components/worklist/worklist.component"
+
+export enum InformerStatus {
+	COMPLETED = 1,
+	DERIVED,
+	PENDING
+}
+
+export function mapToState(statusId: number): State {
+	if (statusId === InformerStatus.PENDING) {
+		return { id: statusId, description: 'image-network.worklist.status.PENDING', color: Color.YELLOW }
+	}
+
+	if (statusId === InformerStatus.DERIVED) {
+		return { id: statusId, description: 'image-network.worklist.status.DERIVED', color: Color.GREY }
+	}
+
+	return { id: statusId, description: 'image-network.worklist.status.COMPLETED', color: Color.GREEN }
+}

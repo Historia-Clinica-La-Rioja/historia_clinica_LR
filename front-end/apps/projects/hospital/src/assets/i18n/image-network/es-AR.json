@@ -44,9 +44,9 @@
 				"COMPLETED": "completado"
 			 },
 			"WORKLIST_BY_INFORMER": "Lista de informes",
-			"MODALITIES": "Seleccione modalidades"
-
-		}
-
+			"MODALITIES": "Seleccione modalidades",
+            "FINISH": "finalizar",
+            "VIEW_DETAILS": "ver detalle"
+        }
 	}
 }

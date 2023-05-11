@@ -13,9 +13,23 @@
         <mat-card *ngIf="modalityId" class="worklist-card">
             <mat-list class="mat-form-field-wrapper" *ngIf="worklists.length else noInfo">
                 <div fxLayout="row" *ngFor="let worklist of worklists" fxLayout.xs="column">
-                    <mat-list-item class="detail">
-                        <app-worklist fxLayout="row" fxLayoutAlign="space-between end" fxFlex="100" fxLayoutGap="10px" fxLayout.xs="column"
-                            fxLayoutGap.xs="10px" [worklist]="worklist"></app-worklist>
+                    <mat-list-item class="detail" fxFlex="100%">
+                        <app-worklist fxLayout="row" fxLayoutAlign="space-between end" fxFlex="90%" fxLayoutGap="10px"
+                            fxLayout.xs="column" fxLayoutGap.xs="10px" [worklist]="worklist">
+                        </app-worklist>
+
+                        <button id="complete_study" *ngIf="worklist.state.id == PENDING else studyCompleted"
+                            mat-flat-button color="primary" mat-button fxFlex="13%"
+                            >
+                            {{ 'image-network.worklist.FINISH' | translate | uppercase }}
+                        </button>
+                        <ng-template #studyCompleted>
+                            <button id="view_details" *ngIf="worklist.state.id == COMPLETED" mat-stroked-button
+                                color="primary" mat-button fxFlex="13%">
+                                {{ 'image-network.worklist.VIEW_DETAILS' | translate | uppercase }}
+                            </button>
+                        </ng-template>
+
                     </mat-list-item>
                 </div>
             </mat-list>

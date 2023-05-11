@@ -1,18 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { State, Worklist } from '../worklist/worklist.component';
+import { Worklist } from '../worklist/worklist.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { IdentificationTypeDto, MasterDataDto, ModalityDto, WorklistDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
-import { Color } from '@presentation/colored-label/colored-label.component';
 import { ModalityService } from '@api-rest/services/modality.service';
 import { Observable } from 'rxjs';
 import { WorklistService } from '@api-rest/services/worklist.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { MatSelectChange } from '@angular/material/select';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
+import { InformerStatus, mapToState } from '../../utils/study.utils';
 
-const DERIVED = 2;
-const PENDING = 3;
 @Component({
 	selector: 'app-worklist-by-informer',
 	templateUrl: './worklist-by-informer.component.html',
@@ -26,6 +24,9 @@ export class WorklistByInformerComponent implements OnInit {
 	modalities$: Observable<ModalityDto[]>;
 	identificationTypes: IdentificationTypeDto[] = [];
 	worklistStatus: MasterDataDto[] = [];
+
+	readonly COMPLETED = InformerStatus.COMPLETED;
+	readonly PENDING = InformerStatus.PENDING;
 
 	constructor(
 		private readonly featureFlagService: FeatureFlagService,
@@ -67,16 +68,4 @@ export class WorklistByInformerComponent implements OnInit {
 	private getIdentificationType(id: number): string {
 		return this.identificationTypes.find(identificationType => identificationType.id === id).description
 	}
-}
-
-export function mapToState(statusId: number): State {
-	if (statusId === PENDING) {
-		return { description: 'image-network.worklist.status.PENDING', color: Color.YELLOW }
-	}
-
-	if (statusId === DERIVED) {
-		return { description: 'image-network.worklist.status.DERIVED', color: Color.GREY }
-	}
-
-	return { description: 'image-network.worklist.status.COMPLETED', color: Color.GREEN }
 }
