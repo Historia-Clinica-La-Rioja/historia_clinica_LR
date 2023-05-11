@@ -1,52 +1,56 @@
 {
-	"image-network": {
-		"home": {
-			"PICTURES": "Imágenes",
-			"SEARCH_BY_EQUIPMENT": "Diagnóstico por Imágenes",
-			"NO_EQUIPMENT_MSG_TITLE": "El equipo no posee una agenda activa",
-			"NO_PERMISSION":  "El módulo de red de imágenes no se encuentra activado en su dominio"
-		},
-		"equipment-diary-setup": {
-			"EQUIPMENT": "Equipo",
-			"NO_EQUIPMENT": "No existen equipos para ese sector",
-			"EQUIPMENT_SELECT": "Seleccione equipo"
-		},
-		"equipment-calendar": {
-			"TODAY": "hoy",
-			"PREVIOUS": "anterior",
-			"NEXT": "próximo",
-			"MONTH": "mes",
-			"WEEK": "semana",
-			"DAY": "día"
-		},
-		"form": {
-			"EDIT_DIARY": "Editar agenda",
-			"NEW_DIARY": "Nueva agenda",
-			"CONFIRM_EDIT_DIARY": "¿Desea confirmar la edición de esta agenda?",
-			"CONFIRM_NEW_DIARY": "¿Desea confirmar la creación de esta agenda?"
-		},
-		"appointments": {
-			"FINISH": "Finalizar",
-			"FINISH_STUDY": "Finalizar estudio",
-			"CONFIRM": "Completar",
-			"WORKLIST": "Lista de trabajo",
-			"FILTER_BY_STATE": "Filtrar por estado",
-			"MEDICAL_COVERAGE": "Cobertura Médica",
-			"NEW_MEDICAL_ORDER": "Nueva Orden Médica",
-			"ORDER": "Orden",
-			"STUDY_COMPLETED": "El estudio se ha marcado como completado",
-			"STUDY_ERROR": "El estudio no pudo marcarse como completado porque no se encontraron resultados"
-		},
-		"worklist": {
-			"status": {
-				"PENDING": "pendiente",
-				"DERIVED": "derivado",
-				"COMPLETED": "completado"
-			 },
-			"WORKLIST_BY_INFORMER": "Lista de informes",
-			"MODALITIES": "Seleccione modalidades",
+    "image-network": {
+        "home": {
+            "PICTURES": "Imágenes",
+            "SEARCH_BY_EQUIPMENT": "Diagnóstico por Imágenes",
+            "NO_EQUIPMENT_MSG_TITLE": "El equipo no posee una agenda activa",
+            "NO_PERMISSION": "El módulo de red de imágenes no se encuentra activado en su dominio"
+        },
+        "equipment-diary-setup": {
+            "EQUIPMENT": "Equipo",
+            "NO_EQUIPMENT": "No existen equipos para ese sector",
+            "EQUIPMENT_SELECT": "Seleccione equipo"
+        },
+        "equipment-calendar": {
+            "TODAY": "hoy",
+            "PREVIOUS": "anterior",
+            "NEXT": "próximo",
+            "MONTH": "mes",
+            "WEEK": "semana",
+            "DAY": "día"
+        },
+        "form": {
+            "EDIT_DIARY": "Editar agenda",
+            "NEW_DIARY": "Nueva agenda",
+            "CONFIRM_EDIT_DIARY": "¿Desea confirmar la edición de esta agenda?",
+            "CONFIRM_NEW_DIARY": "¿Desea confirmar la creación de esta agenda?"
+        },
+        "appointments": {
+            "FINISH": "Finalizar",
+            "FINISH_STUDY": "Finalizar estudio",
+            "CONFIRM": "Completar",
+            "WORKLIST": "Lista de trabajo",
+            "FILTER_BY_STATE": "Filtrar por estado",
+            "MEDICAL_COVERAGE": "Cobertura Médica",
+            "NEW_MEDICAL_ORDER": "Nueva Orden Médica",
+            "ORDER": "Orden",
+            "STUDY_COMPLETED": "El estudio se ha marcado como completado",
+            "STUDY_ERROR": "El estudio no pudo marcarse como completado porque no se encontraron resultados"
+        },
+        "worklist": {
+            "status": {
+                "PENDING": "pendiente",
+                "DERIVED": "derivado",
+                "COMPLETED": "completado"
+            },
+            "details_study": {
+                "DETAILS_STUDY": "Detalle de estudio",
+                "BACK_TO_WORKLIST": "Volver al listado de informes"
+            },
+            "WORKLIST_BY_INFORMER": "Lista de informes",
+            "MODALITIES": "Seleccione modalidades",
             "FINISH": "finalizar",
             "VIEW_DETAILS": "ver detalle"
         }
-	}
+    }
 }

@@ -8,6 +8,7 @@ import { FinishStudyComponent } from './dialogs/finish-study/finish-study.compon
 import { StudyStatusPopupComponent } from './dialogs/study-status-popup/study-status-popup.component';
 import { WorklistComponent } from './components/worklist/worklist.component';
 import { WorklistByInformerComponent } from './components/worklist-by-informer/worklist-by-informer.component';
+import { StudyDetailsComponent } from './routes/study-details/study-details.component';
 
 @NgModule({
 	declarations: [
@@ -16,7 +17,8 @@ import { WorklistByInformerComponent } from './components/worklist-by-informer/w
 		FinishStudyComponent,
 		StudyStatusPopupComponent,
 		WorklistComponent,
-		WorklistByInformerComponent
+		WorklistByInformerComponent,
+		StudyDetailsComponent
 	],
 	imports: [
 		CommonModule,

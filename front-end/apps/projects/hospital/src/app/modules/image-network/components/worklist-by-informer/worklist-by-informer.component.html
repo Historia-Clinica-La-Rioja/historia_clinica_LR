@@ -20,12 +20,12 @@
 
                         <button id="complete_study" *ngIf="worklist.state.id == PENDING else studyCompleted"
                             mat-flat-button color="primary" mat-button fxFlex="13%"
-                            >
+                            (click)="goToDetails(worklist.appointmentId)">
                             {{ 'image-network.worklist.FINISH' | translate | uppercase }}
                         </button>
                         <ng-template #studyCompleted>
                             <button id="view_details" *ngIf="worklist.state.id == COMPLETED" mat-stroked-button
-                                color="primary" mat-button fxFlex="13%">
+                                color="primary" mat-button fxFlex="13%" (click)="goToDetails(worklist.appointmentId)">
                                 {{ 'image-network.worklist.VIEW_DETAILS' | translate | uppercase }}
                             </button>
                         </ng-template>

@@ -10,6 +10,8 @@ import { PersonMasterDataService } from '@api-rest/services/person-master-data.s
 import { MatSelectChange } from '@angular/material/select';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { InformerStatus, mapToState } from '../../utils/study.utils';
+import { Router } from '@angular/router';
+import { ContextService } from '@core/services/context.service';
 
 @Component({
 	selector: 'app-worklist-by-informer',
@@ -24,6 +26,7 @@ export class WorklistByInformerComponent implements OnInit {
 	modalities$: Observable<ModalityDto[]>;
 	identificationTypes: IdentificationTypeDto[] = [];
 	worklistStatus: MasterDataDto[] = [];
+	routePrefix: string;
 
 	readonly COMPLETED = InformerStatus.COMPLETED;
 	readonly PENDING = InformerStatus.PENDING;
@@ -33,9 +36,12 @@ export class WorklistByInformerComponent implements OnInit {
 		private readonly modalityService: ModalityService,
 		private readonly worklistService: WorklistService,
 		private readonly personMasterData: PersonMasterDataService,
+		private readonly router: Router,
+		private readonly contextService: ContextService,
 	) { }
 
 	ngOnInit(): void {
+		this.routePrefix = `institucion/${this.contextService.institutionId}/imagenes/lista-trabajos`;
 		this.personMasterData.getIdentificationTypes().subscribe(types => this.identificationTypes = types);
 		this.modalities$ = this.modalityService.getModalitiesByStudiesCompleted();
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
@@ -49,6 +55,10 @@ export class WorklistByInformerComponent implements OnInit {
 		this.worklistService.getByModalityAndInstitution(this.modalityId).subscribe((worklist: WorklistDto[]) => {
 			this.worklists = this.mapToWorklist(worklist);
 		});
+	}
+
+	goToDetails(appointmentId: number) {
+		this.router.navigate([`${this.routePrefix}/detalle-estudio/${appointmentId}`], );
 	}
 
 	private mapToWorklist(worklist: WorklistDto[]): Worklist[] {
