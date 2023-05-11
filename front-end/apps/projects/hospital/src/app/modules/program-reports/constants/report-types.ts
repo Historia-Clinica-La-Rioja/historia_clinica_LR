@@ -42,6 +42,10 @@ export const ODONTO_REPORT_TYPES = [
         description: 'Consultas de Odontología - Endodoncia Segundo Nivel',
         id: 5,
     },
+    {
+        description: 'Recupero Odontológico',
+        id: 6,
+    },
 ];
 
 export const GENERAL_REPORT_TYPES = [
