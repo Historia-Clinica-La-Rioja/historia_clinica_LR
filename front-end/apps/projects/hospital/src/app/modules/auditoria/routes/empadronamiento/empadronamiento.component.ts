@@ -24,7 +24,7 @@ export class EmpadronamientoComponent implements OnInit {
 	identificationTypeList: IdentificationTypeDto[];
 	today: Moment = newMoment();
 	minDate = MIN_DATE;
-	patientStates = ["Temporal", "Permanente no validado", "Validado", "Permanente"];
+	patientStates = ["Temporario", "Permanente no validado", "Validado", "Permanente"];
 	formSubmitted: boolean = false;
 	optionsValidations = OptionsValidations;
 	tabActiveIndex = 0;
@@ -105,7 +105,7 @@ export class EmpadronamientoComponent implements OnInit {
 				identificationNumber: this.personalInformationForm.controls.identificationNumber.value,
 				birthDate: this.personalInformationForm.controls.birthDate.value !== null ? momentFormat(this.personalInformationForm.controls.birthDate.value, DateFormat.API_DATE) : null,
 				toAudit: this.personalInformationForm.controls.filterAudit.value ? this.personalInformationForm.controls.filterAudit.value === 'true' : true,
-				temporary: this.personalInformationForm.controls.filterState.value.includes("Temporal") ? true : false,
+				temporary: this.personalInformationForm.controls.filterState.value.includes("Temporario") ? true : false,
 				permanentNotValidated: this.personalInformationForm.controls.filterState.value.includes("Permanente no validado") ? true : false,
 				validated: this.personalInformationForm.controls.filterState.value.includes("Validado") ? true : false,
 				permanent: this.personalInformationForm.controls.filterState.value.includes("Permanente") ? true : false,
