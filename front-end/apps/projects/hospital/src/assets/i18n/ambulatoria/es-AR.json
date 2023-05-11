@@ -715,7 +715,8 @@
 				"SUBTITLE": "Seleccione los episodios que desea incluir en la impresión de la historia clínica",
 				"ALL": "Todos",
 				"SELECTED_ROWS": "Filas seleccionadas:",
-				"DOWNLOAD": "Descargar"
+				"DOWNLOAD": "Descargar",
+				"LAST_PRINTED": "Última impresión realizada por "
 			}
 		},
         "screen_change_warning_dialog": {

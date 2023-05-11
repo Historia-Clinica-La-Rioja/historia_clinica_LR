@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BasicPatientDto, CHDocumentSummaryDto, DateDto, PersonPhotoDto } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
@@ -18,6 +19,9 @@ import { DatePipe } from '@angular/common';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
+import { AccountService } from '@api-rest/services/account.service';
+import { mapToFullName, mapToUserInfo } from '@api-presentation/mappers/user-person-dto.mapper';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
 	selector: 'app-print-ambulatoria',
@@ -25,6 +29,11 @@ import { SelectionModel } from '@angular/cdk/collections';
 	styleUrls: ['./print-ambulatoria.component.scss']
 })
 export class PrintAmbulatoriaComponent implements OnInit {
+
+	datePipeFormat = DatePipeFormat;
+	nowDate: string;
+	userFullName: string;
+	nameSelfDeterminationFF: boolean;
 
 	patient: PatientBasicData;
 	patientId: number;
@@ -53,6 +62,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 	documentSummary: CHDocumentSummaryDto[] = mockedTable;
 	showTable = true;
+	showLastPrinted = false;
 
 	columns = [
 		{
@@ -99,6 +109,9 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		private readonly contextService: ContextService,
 		private readonly router: Router,
 		readonly datePipe: DatePipe,
+		private featureFlagService: FeatureFlagService,
+		private readonly accountService: AccountService,
+
 	) {
 		this.route.paramMap.subscribe(
 			(params) => {
@@ -113,6 +126,9 @@ export class PrintAmbulatoriaComponent implements OnInit {
 					.subscribe((personPhotoDto: PersonPhotoDto) => { this.personPhoto = personPhotoDto; });
 			}
 		);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
+			this.nameSelfDeterminationFF = isOn
+		});
 	}
 
 	@ViewChild(MatPaginator) paginator: MatPaginator;
@@ -137,6 +153,10 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		});
 
 		this.documentTypeForm = this.formBuilder.group(documentTypeControls, { validators: this.atLeastOneChecked });
+		this.accountService.getInfo()
+			.subscribe(userInfo =>
+				this.userFullName = mapToFullName(userInfo.personDto, this.nameSelfDeterminationFF)
+			);
 	}
 
 	dateRangeChange(range): void {
@@ -211,5 +231,10 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		this.dataSource.paginator = this.paginator;
 		document.getElementById("encounter-list").style.display = "block";
 		this.toggleAllRows();
+	}
+
+	download() {
+		this.nowDate = this.datePipe.transform(Date.now(), DatePipeFormat.SHORT);
+		this.showLastPrinted = true;
 	}
 }

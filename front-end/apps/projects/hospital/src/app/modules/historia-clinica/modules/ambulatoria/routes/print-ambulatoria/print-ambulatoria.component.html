@@ -121,14 +121,14 @@
 				<ng-container matColumnDef="download" class="short header">
 					<th mat-header-cell *matHeaderCellDef></th>
 					<td mat-cell *matCellDef="let row">
-						<button mat-icon-button>
+						<button mat-icon-button (click)="download()">
 							<mat-icon class="material-icons" [color]="'primary'">download</mat-icon>
 						</button>
 					</td>
 				</ng-container>
 				<ng-container matColumnDef="download-button">
 					<td mat-footer-cell *matFooterCellDef colspan="2">
-						<button mat-flat-button type="button" color="primary" class="download-button">
+						<button mat-flat-button type="button" color="primary" class="download-button" (click)="download()">
 							<mat-icon class="material-icons">download</mat-icon>
 							<span>{{'ambulatoria.print.encounter-list.DOWNLOAD' | translate | uppercase}}</span>
 						</button>
@@ -144,5 +144,10 @@
 				<tr mat-footer-row *matFooterRowDef="['download-button','paginator']"></tr>
 			</table>
 		</mat-card>
+		<p class="last-printed" *ngIf="showLastPrinted">
+			<span>{{'ambulatoria.print.encounter-list.LAST_PRINTED' | translate}}</span>
+			<span>{{userFullName}} | </span>
+			<span>{{nowDate}} hs</span>
+		</p>
 	</section>
 </app-content>
