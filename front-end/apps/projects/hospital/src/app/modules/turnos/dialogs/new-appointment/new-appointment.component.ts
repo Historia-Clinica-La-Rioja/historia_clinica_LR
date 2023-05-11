@@ -480,6 +480,11 @@ export class NewAppointmentComponent implements OnInit {
 		);*/
 	}
 
+	cleanInput(){
+		this.appointmentInfoForm.controls.appointmentMedicalOrder.setValue(null);
+		this.patientMedicalOrderTooltipDescription = '';
+	}
+
 	private setPhonePrefix(itComesFromStep3: boolean): string {
 		if (!this.appointmentInfoForm.controls.phonePrefix.value && !itComesFromStep3)
 			return "";

@@ -121,6 +121,9 @@
 									<span class="color-primary" [translate]="'image-network.appointments.medical-order.TRANSCRIBE_ORDER'"></span>
 								</mat-option>
 							</mat-select>
+							<button *ngIf="appointmentInfoForm.controls.appointmentMedicalOrder.value" mat-button matSuffix color="warn" mat-icon-button (click)="cleanInput(); $event.stopPropagation()">
+								<mat-icon>close</mat-icon>
+							</button>
 						</mat-form-field>
 						<div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column">
 							<mat-form-field fxFlex="30%" appearance="outline">
