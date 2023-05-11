@@ -1,3 +1,5 @@
+@import "../../../../../../../assets/styles/mixins";
+
 .subtitle {
 	font-weight: bold;
 	font-size: 14px;
@@ -40,5 +42,13 @@
 
 	span {
 		margin-left: 1.15em;
+	}
+}
+
+.selected-rows {
+	margin: 1em 2em;
+
+	span {
+		margin-right: 0.5em;
 	}
 }

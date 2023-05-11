@@ -89,19 +89,24 @@
 		<h3 class="subtitle">{{'ambulatoria.print.encounter-list.TITLE' | translate}}</h3>
 		<h4>{{'ambulatoria.print.encounter-list.SUBTITLE' | translate}}</h4>
 		<mat-card class="table-card">
-			<mat-checkbox [color]="'primary'" class="all-table-checkbox" (change)="$event ? toggleAllRows() : null"
-				[checked]="selection.hasValue() && isAllTableSelected()"
-				[indeterminate]="selection.hasValue() && !isAllTableSelected()">
-				<span>{{'ambulatoria.print.encounter-list.ALL' | translate}}</span>
-			</mat-checkbox>
+			<div fxLayout="row" fxLayoutAlign="space-between">
+				<mat-checkbox [color]="'primary'" class="all-table-checkbox" (change)="$event ? toggleAllRows() : null"
+					[checked]="selection.hasValue() && isAllTableSelected()"
+					[indeterminate]="selection.hasValue() && !isAllTableSelected()">
+					<span>{{'ambulatoria.print.encounter-list.ALL' | translate}}</span>
+				</mat-checkbox>
+				<p class="selected-rows color-primary">
+					<span>{{'ambulatoria.print.encounter-list.SELECTED_ROWS' | translate}}</span>
+					<span>{{selection.selected.length}}</span>
+				</p>
+			</div>
 			<mat-divider></mat-divider>
 			<table mat-table [dataSource]="dataSource" class="table mat-elevation-z8">
 				<ng-container matColumnDef="select">
 					<th mat-header-cell *matHeaderCellDef></th>
 					<td mat-cell *matCellDef="let row">
 						<mat-checkbox [color]="'primary'" (click)="$event.stopPropagation()"
-							(change)="$event ? selection.toggle(row) : null"
-							[checked]="selection.isSelected(row)">
+							(change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
 						</mat-checkbox>
 					</td>
 				</ng-container>
