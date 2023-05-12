@@ -131,3 +131,13 @@ databaseChangeLog:
                       foreignKeyName: FK_emergency_care_episode_bed
                     name: bed_id
                     type: int
+
+    - changeSet:
+        id: clinical_specialty-metadata4
+        author: mromero
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO clinical_specialty(name, sctid_code, clinical_specialty_type_id) 
+                  VALUES ('Medico', '309343006', 2);
