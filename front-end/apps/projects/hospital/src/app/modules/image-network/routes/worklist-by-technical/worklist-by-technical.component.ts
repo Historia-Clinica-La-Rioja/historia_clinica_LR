@@ -182,7 +182,7 @@ export class WorklistByTechnicalComponent implements OnInit {
 		});
 
 		dialogRef.afterClosed().subscribe(result => {
-			if (result.updateState) {
+			if (result?.updateState) {
 				this.selectedAppointment.appointmentStateId = result.updateState;
 				this.filterAppointments(this.states.value);
 			}
