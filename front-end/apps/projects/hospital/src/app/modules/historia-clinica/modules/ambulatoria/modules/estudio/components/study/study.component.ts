@@ -26,16 +26,13 @@ const IMAGE_DIAGNOSIS = 'Diagnóstico por imágenes';
 export class StudyComponent implements OnInit {
 
 	@Input() set studies(studies: DiagnosticReportInfoDto[]){
-		this.sameOrderStudies = new Map();
 		studies.forEach(study => {
 			if (study.category === IMAGE_DIAGNOSIS) {
 				this.prescripcionesService.getPrescriptionStatus(this.patientId, study.serviceRequestId).subscribe( hasActiveAppointment => {
 					this._studies.push(this.mapToStudyInformation(study, !hasActiveAppointment));
-					this._studies = this.classifyStudiesWithTheSameOrder(this._studies);
 				})
 			} else {
 				this._studies.push(this.mapToStudyInformation(study,true));
-				this._studies = this.classifyStudiesWithTheSameOrder(this._studies);
 			}
 		})
 	};
