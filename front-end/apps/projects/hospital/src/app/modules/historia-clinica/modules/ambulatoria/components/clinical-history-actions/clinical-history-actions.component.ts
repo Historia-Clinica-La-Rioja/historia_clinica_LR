@@ -10,7 +10,7 @@ import { anyMatch } from '@core/utils/array.utils';
 import { ReferenceNotificationService } from '@historia-clinica/services/reference-notification.service';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, take } from 'rxjs';
 import { REFERENCE_CONSULTATION_TYPE } from '../../constants/reference-masterdata';
 import { NuevaConsultaDockPopupEnfermeriaComponent } from '../../dialogs/nueva-consulta-dock-popup-enfermeria/nueva-consulta-dock-popup-enfermeria.component';
 import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
@@ -179,13 +179,15 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 			this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(true);
 			this.dialogRef = this.dockPopupService.open(NuevaConsultaDockPopupComponent, { idPaciente: this.patientId });
 			this.popUpOpen.next(this.dialogRef);
-			this.dialogRef.afterClosed().subscribe(fieldsToUpdate => {
+			this.dialogRef.afterClosed().pipe(take(1)).subscribe(fieldsToUpdate => {
 				delete this.dialogRef;
 				this.popUpOpen.next(this.dialogRef);
-				this.medicacionesService.updateMedication();
-				this.historialProblemsFacadeService.loadEvolutionSummaryList(this.patientId);
-				if (fieldsToUpdate)
+
+				if (fieldsToUpdate) {
+					this.medicacionesService.updateMedication();
+					this.historialProblemsFacadeService.loadEvolutionSummaryList(this.patientId);
 					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
+				}
 				if (this.internmentEpisode?.inProgress && this.internmentEpisode?.id) {
 					if (fieldsToUpdate?.allergies)
 						this.internmentSummaryFacadeService.unifyAllergies(this.patientId);
@@ -207,13 +209,14 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 			this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(true);
 			this.dialogRef = this.dockPopupService.open(NuevaConsultaDockPopupEnfermeriaComponent, { idPaciente: this.patientId });
 			this.popUpOpen.next(this.dialogRef);
-			this.dialogRef.afterClosed().subscribe(fieldsToUpdate => {
+			this.dialogRef.afterClosed().pipe(take(1)).subscribe(fieldsToUpdate => {
 				delete this.dialogRef;
 				this.popUpOpen.next(this.dialogRef);
-				this.medicacionesService.updateMedication();
-				this.historialProblemsFacadeService.loadEvolutionSummaryList(this.patientId);
-				if (fieldsToUpdate)
+				if (fieldsToUpdate) {
 					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
+					this.medicacionesService.updateMedication();
+					this.historialProblemsFacadeService.loadEvolutionSummaryList(this.patientId);
+				}
 				this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(false);
 			});
 		} else {

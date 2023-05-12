@@ -17,7 +17,7 @@ import { AppFeature } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DateFormat, dateToMoment, momentFormat, momentParseDate } from '@core/utils/moment.utils';
-import { map, tap } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { SolveProblemComponent } from '../../../../dialogs/solve-problem/solve-problem.component';
@@ -231,7 +231,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		const idPaciente = this.route.snapshot.paramMap.get('idPaciente');
 		this.nuevaConsultaFromProblemaRef =
 			this.dockPopupService.open(NuevaConsultaDockPopupComponent, { idPaciente, idProblema });
-		this.nuevaConsultaFromProblemaRef.afterClosed().subscribe(fieldsToUpdate => {
+		this.nuevaConsultaFromProblemaRef.afterClosed().pipe(take(1)).subscribe(fieldsToUpdate => {
 			if (fieldsToUpdate) {
 				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
 			}

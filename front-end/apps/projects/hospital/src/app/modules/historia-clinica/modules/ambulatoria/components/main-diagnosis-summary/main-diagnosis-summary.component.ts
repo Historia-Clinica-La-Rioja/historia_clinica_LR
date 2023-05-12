@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { DIAGNOSTICO_PRINCIPAL } from '../../../../constants/summaries';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { HealthConditionDto } from '@api-rest/api-model';
-import { Observable, of } from 'rxjs';
+import { Observable, of, take } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { InternmentFields, InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
@@ -61,7 +61,7 @@ export class MainDiagnosisSummaryComponent implements OnInit {
 				autoFocus: false,
 				disableClose: true,
 			});
-			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
+			this.dialogRef.afterClosed().pipe(take(1)).subscribe((fieldsToUpdate: InternmentFields) => {
 				delete this.dialogRef;
 				if (fieldsToUpdate) {
 					this.internmentSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
@@ -81,7 +81,7 @@ export class MainDiagnosisSummaryComponent implements OnInit {
 				autoFocus: false,
 				disableClose: true,
 			});
-			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
+			this.dialogRef.afterClosed().pipe(take(1)).subscribe((fieldsToUpdate: InternmentFields) => {
 				delete this.dialogRef;
 				if (fieldsToUpdate) {
 					this.internmentSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);

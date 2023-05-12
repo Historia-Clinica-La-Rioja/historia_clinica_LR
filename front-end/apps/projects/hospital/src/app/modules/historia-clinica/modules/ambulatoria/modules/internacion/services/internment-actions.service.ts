@@ -8,7 +8,7 @@ import { DockPopupRef } from "@presentation/services/dock-popup-ref";
 import { DockPopupService } from "@presentation/services/dock-popup.service";
 import { MatDialog } from "@angular/material/dialog";
 import { DiagnosisDto, HealthConditionDto } from "@api-rest/api-model";
-import { Subject } from 'rxjs';
+import { Subject, take } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
@@ -62,7 +62,7 @@ export class InternmentActionsService {
 				diagnosticos: this.diagnosticos
 			});
 			this.popUpOpenSubject.next(true);
-			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
+			this.dialogRef.afterClosed().pipe(take(1)).subscribe((fieldsToUpdate: InternmentFields) => {
 				delete this.dialogRef;
 				this.anamnesisSubject.next(fieldsToUpdate);
 				this.popUpOpenSubject.next(false);
@@ -86,7 +86,7 @@ export class InternmentActionsService {
 				documentType: documentType
 			});
 			this.popUpOpenSubject.next(true);
-			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
+			this.dialogRef.afterClosed().pipe(take(1)).subscribe((fieldsToUpdate: InternmentFields) => {
 				delete this.dialogRef;
 				this.evolutionNoteSubject.next(fieldsToUpdate);
 				this.popUpOpenSubject.next(false);
@@ -111,7 +111,7 @@ export class InternmentActionsService {
 				disableClose: true,
 			});
 			this.popUpOpenSubject.next(true);
-			this.dialogRef.afterClosed().subscribe((epicrisisClose: EpicrisisClose) => {
+			this.dialogRef.afterClosed().pipe(take(1)).subscribe((epicrisisClose: EpicrisisClose) => {
 				delete this.dialogRef;
 				this.epicrisisSubject.next(epicrisisClose?.fieldsToUpdate);
 				if (epicrisisClose?.openMedicalDischarge)

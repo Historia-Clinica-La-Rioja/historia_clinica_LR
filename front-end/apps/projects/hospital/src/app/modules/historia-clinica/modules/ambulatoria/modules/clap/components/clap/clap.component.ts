@@ -12,6 +12,7 @@ import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { NewGestationPopupComponent } from '../../dialogs/new-gestation-popup/new-gestation-popup.component';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { PREGNANCY_EVOLUTION, PREGNANCY_PROBLEM } from '../../constants/problem-information';
+import { take } from 'rxjs';
 
 @Component({
 	selector: 'app-clap',
@@ -130,7 +131,7 @@ export class ClapComponent implements OnInit {
 			evolution: PREGNANCY_EVOLUTION
 		});
 		this.nuevaConsultaRef.minimize();
-		this.nuevaConsultaRef.afterClosed().subscribe(fieldsToUpdate => {
+		this.nuevaConsultaRef.afterClosed().pipe(take(1)).subscribe(fieldsToUpdate => {
 			if (fieldsToUpdate) {
 				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
 			}

@@ -12,7 +12,7 @@ import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { FieldsToUpdate, OdontologyConsultationDockPopupComponent } from '../odontology-consultation-dock-popup/odontology-consultation-dock-popup.component';
 import { ToothDialogComponent } from '../tooth-dialog/tooth-dialog.component';
 import { OdontologyConsultationService } from '../../api-rest/odontology-consultation.service';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { ReferenceService } from '@api-rest/services/reference.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { MedicacionesService } from '@historia-clinica/modules/ambulatoria/services/medicaciones.service';
@@ -137,7 +137,7 @@ export class OdontogramComponent implements OnInit {
 		if (!this.dialogRef) {
 			this.isOpenOdontologyConsultation.emit(true);
 			this.dialogRef = this.dockPopupService.open(OdontologyConsultationDockPopupComponent, { patientId: this.patientId });
-			this.dialogRef.afterClosed().subscribe(consultationResult => {
+			this.dialogRef.afterClosed().pipe(take(1)).subscribe(consultationResult => {
 				this.isOpenOdontologyConsultation.emit(false);
 				delete this.dialogRef;
 				if (consultationResult && consultationResult.confirmed) {

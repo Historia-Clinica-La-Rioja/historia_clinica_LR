@@ -3,7 +3,7 @@ import {HCEPersonalHistoryDto} from '@api-rest/api-model';
 import {SummaryHeader} from '@presentation/components/summary-card/summary-card.component';
 import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
 import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
@@ -114,7 +114,7 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 		this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(true);
 		this.nuevaConsultaFromProblemaRef =
 			this.dockPopupService.open(NuevaConsultaDockPopupComponent, { idPaciente: this.patientId, idProblema });
-		this.nuevaConsultaFromProblemaRef.afterClosed().subscribe(fieldsToUpdate => {
+		this.nuevaConsultaFromProblemaRef.afterClosed().pipe(take(1)).subscribe(fieldsToUpdate => {
 			if (fieldsToUpdate) {
 				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
 			}
