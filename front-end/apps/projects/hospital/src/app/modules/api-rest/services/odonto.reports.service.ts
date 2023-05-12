@@ -47,11 +47,6 @@ export class OdontoReportService {
 		const url = `${environment.apiBase}/odontologyreports/${this.contextService.institutionId}/monthlyEndodonciaSegundoNivel`;
 		return this.getOdontoReport(params, fileName, url);
 	}
-
-  getMonthlyRecuperoReport(params: any, fileName: string): Observable<any> {
-		const url = `${environment.apiBase}/odontologyreports/${this.contextService.institutionId}/recuperoOdontology`;
-		return this.getOdontoReport(params, fileName, url);
-	}
     
 }
 

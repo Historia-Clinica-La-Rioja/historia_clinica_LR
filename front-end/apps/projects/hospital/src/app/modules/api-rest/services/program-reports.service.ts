@@ -54,5 +54,11 @@ export class ProgramReportsService {
 		const url = `${environment.apiBase}/programreports/${this.contextService.institutionId}/odontology`;
 		return this.getReportProgram(params, fileName, url);
 	}
+
+  getMonthlyRecuperoReport(params: any, fileName: string): Observable<any> {
+		const url = `${environment.apiBase}/programreports/${this.contextService.institutionId}/odontology`;
+		return this.getReportProgram(params, fileName, url);
+	}
+
 }
 

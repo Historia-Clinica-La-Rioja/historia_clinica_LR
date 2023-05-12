@@ -193,6 +193,9 @@ export class HomeComponent implements OnInit {
         case 5:
           this.reportsService.getMonthlyOdontologyReport(params, `${this.PROGRAM_REPORT_TYPES[4].description}.xls`).subscribe();          
         break;
+		case 6:
+          this.reportsService.getMonthlyRecuperoReport(params, `${this.PROGRAM_REPORT_TYPES[5].description}.xls`).subscribe();          
+        break;
         default:
       }
     }
