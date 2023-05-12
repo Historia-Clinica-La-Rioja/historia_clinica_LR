@@ -45,7 +45,8 @@
             },
             "details_study": {
                 "DETAILS_STUDY": "Detalle de estudio",
-                "BACK_TO_WORKLIST": "Volver al listado de informes"
+                "BACK_TO_WORKLIST": "Volver al listado de informes",
+                "GO_TO_HC": "ver historia clínica"
             },
             "WORKLIST_BY_INFORMER": "Lista de informes",
             "MODALITIES": "Seleccione modalidades",

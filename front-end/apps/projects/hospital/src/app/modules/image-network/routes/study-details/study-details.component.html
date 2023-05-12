@@ -17,6 +17,10 @@
                             <span class="smaller-font grey"> {{ datePipe.transform(study.actionTime, datePipeFormat.SHORT)}}hs</span>
                         </div>
                     </div>
+                    <a id="go_to_HC" mat-stroked-button color="primary" target="_blank" class="buttons"
+                        *appHasRole="['ESPECIALISTA_MEDICO']" [href]="url + study.patientId">
+                        <span>{{'image-network.worklist.details_study.GO_TO_HC' | translate | uppercase }}</span>
+                    </a>
                 </div>
             </div>
         </div>

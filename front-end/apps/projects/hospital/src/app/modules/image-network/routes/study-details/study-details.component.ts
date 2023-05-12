@@ -19,16 +19,18 @@ export class StudyDetailsComponent implements OnInit {
 	study: StudyAppointment;
 	appointmentId: number;
 	datePipeFormat = DatePipeFormat;
+	url: string;
 
 	constructor(
 		private readonly router: Router,
-		private readonly contextService: ContextService,
+		readonly contextService: ContextService,
 		private readonly route: ActivatedRoute,
 		private readonly worklistService: WorklistService,
 		readonly datePipe: DatePipe,
 	) { }
 
 	ngOnInit(): void {
+		this.url = `institucion/${this.contextService.institutionId}/ambulatoria/paciente/`
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.appointmentId = Number(params.get('id'));
