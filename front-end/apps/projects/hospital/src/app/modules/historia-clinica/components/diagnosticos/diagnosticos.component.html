@@ -12,7 +12,7 @@
 			</div>
 		</mat-card-subtitle>
 		<app-elemento-diagnostico *ngIf="_mainDiagnosis" [diagnosis]="_mainDiagnosis" [isMain]="true"></app-elemento-diagnostico>
-		<div *appHasRole="['ESPECIALISTA_MEDICO']">
+		<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
 			<button *ngIf="!_mainDiagnosis" class="diagnoses-action-button" mat-button color="primary" [disabled]="type=='EVOLUTION'" (click)="openCreationDialog(true)">
 				{{ 'internaciones.anamnesis.diagnosticos.ADD_MAIN_DIAGNOSIS' | translate }}
 			</button>
