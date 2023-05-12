@@ -96,18 +96,38 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 			assertAttentionPlace(doctorsOfficeId, shockroomId);
 
 		if (bedId != null) {
-			saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, bedId);
-			emergencyCareEpisodeRepository.updateStateWithBed(episodeId, institutionId, emergencyCareStateId, bedId);
-			bedExternalService.updateBedStatusOccupied(bedId);
+			if (emergencyCareStateId.equals(EEmergencyCareState.ATENCION.getId())) {
+				saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, bedId);
+				emergencyCareEpisodeRepository.updateStateWithBed(episodeId, institutionId, emergencyCareStateId, bedId);
+				bedExternalService.updateBedStatusOccupied(bedId);
+			}
+			if (emergencyCareStateId.equals(EEmergencyCareState.ESPERA.getId()) || emergencyCareStateId.equals(EEmergencyCareState.ALTA_MEDICA.getId())) {
+				saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, null);
+				emergencyCareEpisodeRepository.updateStateWithBed(episodeId, institutionId, emergencyCareStateId, null);
+				bedExternalService.freeBed(bedId);
+			}
 		}
 		if (shockroomId != null) {
-			saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, shockroomId);
-			emergencyCareEpisodeRepository.updateStateWithShockroom(episodeId, institutionId, emergencyCareStateId, shockroomId);
+			if (emergencyCareStateId.equals(EEmergencyCareState.ATENCION.getId())) {
+				saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, shockroomId);
+				emergencyCareEpisodeRepository.updateStateWithShockroom(episodeId, institutionId, emergencyCareStateId, shockroomId);
+			}
+			if (emergencyCareStateId.equals(EEmergencyCareState.ESPERA.getId()) || emergencyCareStateId.equals(EEmergencyCareState.ALTA_MEDICA.getId())) {
+				saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, null);
+				emergencyCareEpisodeRepository.updateStateWithShockroom(episodeId, institutionId, emergencyCareStateId, null);
+			}
 		}
 		if (doctorsOfficeId != null || (bedId == null && shockroomId == null)) {
-			HistoricEmergencyEpisodeBo toSave = new HistoricEmergencyEpisodeBo(episodeId, emergencyCareStateId, doctorsOfficeId);
-			emergencyCareEpisodeRepository.updateState(episodeId, institutionId, emergencyCareStateId, doctorsOfficeId);
-			historicEmergencyEpisodeService.saveChange(toSave);
+			if (emergencyCareStateId.equals(EEmergencyCareState.ATENCION.getId())) {
+				HistoricEmergencyEpisodeBo toSave = new HistoricEmergencyEpisodeBo(episodeId, emergencyCareStateId, doctorsOfficeId);
+				emergencyCareEpisodeRepository.updateState(episodeId, institutionId, emergencyCareStateId, doctorsOfficeId);
+				historicEmergencyEpisodeService.saveChange(toSave);
+			}
+			if (emergencyCareStateId.equals(EEmergencyCareState.ESPERA.getId()) || emergencyCareStateId.equals(EEmergencyCareState.ALTA_MEDICA.getId())) {
+				HistoricEmergencyEpisodeBo toSave = new HistoricEmergencyEpisodeBo(episodeId, emergencyCareStateId, null);
+				emergencyCareEpisodeRepository.updateState(episodeId, institutionId, emergencyCareStateId, null);
+				historicEmergencyEpisodeService.saveChange(toSave);
+			}
 		}
 	}
 
