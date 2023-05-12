@@ -288,11 +288,12 @@ export class NewAppointmentComponent implements OnInit {
 	submit(itComesFromStep3?: boolean): void {
 		if (this.isAppointmentFormValid()) {
 			this.isSubmitButtonDisabled = true;
-			this.verifyExistingAppointment().subscribe((appointmentShortSummary: AppointmentShortSummaryDto) => {
+			this.verifyExistingAppointment().subscribe((appointmentShortSummary) => {
 				if (appointmentShortSummary) {
+					let appointmentFor = this.data.isEquipmentAppointment ? appointmentShortSummary.equipmentName : appointmentShortSummary.doctorFullName;
 					const date = this.datePipe.transform(dateDtoToDate(appointmentShortSummary.date), DatePipeFormat.SHORT_DATE)
 					const hour = this.datePipe.transform(timeDtoToDate(appointmentShortSummary.hour), DatePipeFormat.SHORT_TIME)
-					const content = `El paciente ya tiene un turno el ${date} a las ${hour} hs para ${appointmentShortSummary.doctorFullName} en ${appointmentShortSummary.institution}`
+					const content = `El paciente ya tiene un turno el ${date} a las ${hour} hs para ${appointmentFor} en ${appointmentShortSummary.institution}`
 
 					const warnignComponent = this.dialog.open(DiscardWarningComponent,
 						{
@@ -475,10 +476,9 @@ export class NewAppointmentComponent implements OnInit {
 			return this.associateReferenceForm.controls.reference.value.phoneNumber;
 	}
 
-	private verifyExistingAppointment(): Observable<AppointmentShortSummaryDto> {
+	private verifyExistingAppointment(): Observable<any> {
 		if (this.data.isEquipmentAppointment) {
 			return this.equipmentAppointmentFacade.verifyExistingEquipmentAppointment(this.patientId, this.data.date)
-
 		}
 		else {
 			return this.appointmentFacade.verifyExistingAppointment(this.patientId, this.data.date, this.data.hour)
