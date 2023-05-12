@@ -195,5 +195,23 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 			"WHERE ece.id = :episodeId " +
 			"AND d.typeId = " + DocumentType.EMERGENCY_CARE_EVOLUTION_NOTE)
 	Boolean episodeHasEvolutionNote(@Param("episodeId") Integer episodeId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT bedId " +
+			"FROM EmergencyCareEpisode ece " +
+			"WHERE id = :emergencyCareEpisodeId ")
+	Integer getEmergencyCareEpisodeBedId(@Param("emergencyCareEpisodeId") Integer emergencyCareEpisodeId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT shockroomId " +
+			"FROM EmergencyCareEpisode ece " +
+			"WHERE id = :emergencyCareEpisodeId ")
+	Integer getEmergencyCareEpisodeShockroomId(@Param("emergencyCareEpisodeId") Integer emergencyCareEpisodeId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT doctorsOfficeId " +
+			"FROM EmergencyCareEpisode ece " +
+			"WHERE id = :emergencyCareEpisodeId ")
+	Integer getEmergencyCareEpisodeDoctorsOfficeId(@Param("emergencyCareEpisodeId") Integer emergencyCareEpisodeId);
 	
 }

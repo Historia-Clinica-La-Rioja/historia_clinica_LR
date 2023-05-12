@@ -62,7 +62,36 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 	public Boolean changeState(Integer episodeId, Integer institutionId, Short emergencyCareStateId, Integer doctorsOfficeId, Integer shockroomId, Integer bedId) {
 		LOG.debug("Input parameters -> episodeId {}, emergencyCareStateId {}, doctorsOfficeId {}, shockroomId {}, bedId {}",
 				episodeId, emergencyCareStateId, doctorsOfficeId, shockroomId, bedId);
+		if (emergencyCareStateId.equals(EEmergencyCareState.ATENCION.getId()))
+			occupyEmergencyCareSpace(episodeId, institutionId, emergencyCareStateId, doctorsOfficeId, shockroomId, bedId);
+		if (emergencyCareStateId.equals(EEmergencyCareState.ESPERA.getId()) || emergencyCareStateId.equals(EEmergencyCareState.ALTA_MEDICA.getId()))
+			freeOccupiedEmergencyCareSpace(episodeId, institutionId, emergencyCareStateId);
+		return true;
+	}
 
+	private void freeOccupiedEmergencyCareSpace(Integer episodeId, Integer institutionId, Short emergencyCareStateId) {
+		Integer occupiedBedId = emergencyCareEpisodeRepository.getEmergencyCareEpisodeBedId(episodeId);
+		if (occupiedBedId != null) {
+			saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, null);
+			emergencyCareEpisodeRepository.updateStateWithBed(episodeId, institutionId, emergencyCareStateId, null);
+			bedExternalService.freeBed(occupiedBedId);
+			return;
+		}
+
+		if (emergencyCareEpisodeRepository.getEmergencyCareEpisodeShockroomId(episodeId) != null) {
+			saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, null);
+			emergencyCareEpisodeRepository.updateStateWithShockroom(episodeId, institutionId, emergencyCareStateId, null);
+			return;
+		}
+
+		if (emergencyCareEpisodeRepository.getEmergencyCareEpisodeDoctorsOfficeId(episodeId) != null) {
+			HistoricEmergencyEpisodeBo toSave = new HistoricEmergencyEpisodeBo(episodeId, emergencyCareStateId, null);
+			emergencyCareEpisodeRepository.updateState(episodeId, institutionId, emergencyCareStateId, null);
+			historicEmergencyEpisodeService.saveChange(toSave);
+		}
+	}
+
+	private void occupyEmergencyCareSpace(Integer episodeId, Integer institutionId, Short emergencyCareStateId, Integer doctorsOfficeId, Integer shockroomId, Integer bedId) {
 		if (doctorsOfficeId != null || shockroomId != null)
 			assertAttentionPlace(doctorsOfficeId, shockroomId);
 
@@ -80,7 +109,6 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 			emergencyCareEpisodeRepository.updateState(episodeId, institutionId, emergencyCareStateId, doctorsOfficeId);
 			historicEmergencyEpisodeService.saveChange(toSave);
 		}
-		return true;
 	}
 
 	private void saveHistoricEmergencyEpisode(Integer episodeId, Short emergencyCareStateId, Integer placeId) {
