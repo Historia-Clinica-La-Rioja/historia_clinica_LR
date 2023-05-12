@@ -1,10 +1,12 @@
 package net.pladema.establishment.controller;
 
 import net.pladema.clinichistory.hospitalization.controller.externalservice.InternmentEpisodeExternalService;
+import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.establishment.controller.constraints.validator.entities.BackofficeBedEntityValidator;
 import net.pladema.establishment.controller.constraints.validator.permissions.BackofficeBedValidator;
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.entity.Bed;
+import net.pladema.establishment.service.BedService;
 import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 import net.pladema.sgx.backoffice.rest.SingleAttributeBackofficeQueryAdapter;
@@ -47,11 +49,12 @@ public class BackofficeBedController extends AbstractBackofficeController<Bed, I
 
 	public BackofficeBedController(BedRepository repository,
 								   InternmentEpisodeExternalService internmentEpisodeExternalService,
-								   BackofficeBedValidator backofficeBedValidator) {
+								   BackofficeBedValidator backofficeBedValidator,
+								   EmergencyCareEpisodeService emergencyCareEpisodeService) {
 		super(new BackofficeRepository<Bed, Integer>(
 						repository,
 						new SingleAttributeBackofficeQueryAdapter<Bed>("bedNumber")
-				), backofficeBedValidator, new BackofficeBedEntityValidator(internmentEpisodeExternalService));
+				), backofficeBedValidator, new BackofficeBedEntityValidator(internmentEpisodeExternalService, emergencyCareEpisodeService));
 	}
 
 }

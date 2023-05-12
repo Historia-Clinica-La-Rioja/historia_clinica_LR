@@ -199,6 +199,14 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 		return result;
 	}
 
+	@Override
+	public boolean isBedOccupiedByEmergencyEpisode(Integer bedId) {
+		LOG.debug("Input parameters -> bedId {}", bedId);
+		boolean result = emergencyCareEpisodeRepository.isBedOccupiedByEmergencyEpisode(bedId);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
 	private void validateUpdate(EmergencyCareEpisode persisted, EmergencyCareBo toUpdate){
         if (persisted.getEmergencyCareEntranceTypeId() != null && toUpdate.getEmergencyCareEntranceId() == null)
             throw new ValidationException("care-episode.entrance.invalid.update");

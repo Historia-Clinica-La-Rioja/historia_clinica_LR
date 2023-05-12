@@ -33,4 +33,6 @@ public interface  EmergencyCareEpisodeService {
 
 	Integer getPatientMedicalCoverageIdByEpisode(Integer emergencyCareEpisodeId);
 
+	boolean isBedOccupiedByEmergencyEpisode(Integer bedId);
+
 }

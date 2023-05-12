@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.doctorsoffice.controller;
 
+import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.medicalconsultation.diary.repository.DiaryRepository;
 import net.pladema.medicalconsultation.doctorsoffice.controller.constraints.BackofficeDoctorsOfficeEntityValidator;
 import net.pladema.medicalconsultation.doctorsoffice.controller.permissions.BackofficeDoctorsOfficeValidator;
@@ -20,8 +21,9 @@ public class BackofficeDoctorsOfficeController extends AbstractBackofficeControl
     public BackofficeDoctorsOfficeController(DoctorsOfficeRepository repository,
 											 BackofficeDoctorsOfficeValidator doctorsOfficeValidator,
 											 BackofficeDoctorsOfficeEntityValidator doctorsOfficeEntityValidator,
-											 DiaryRepository diaryRepository) {
-        super(new DoctorsOfficeStore(repository, diaryRepository), doctorsOfficeValidator, doctorsOfficeEntityValidator);
+											 DiaryRepository diaryRepository,
+											 EmergencyCareEpisodeRepository emergencyCareEpisodeRepository) {
+        super(new DoctorsOfficeStore(repository, diaryRepository, emergencyCareEpisodeRepository), doctorsOfficeValidator, doctorsOfficeEntityValidator);
     }
 
 
