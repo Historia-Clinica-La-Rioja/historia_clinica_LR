@@ -53,7 +53,8 @@ public class JWTExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ BadOTPException.class })
 	public ApiErrorMessageDto invalidCredentials(BadOTPException ex) {
-		log.warn(ex.getMessage(), ex);
+		log.info(ex.getMessage());
+		log.debug(ex.getMessage(), ex);
 		return new ApiErrorMessageDto(ex.getCode().name(), "Código de verificación inválido");
 	}
 
