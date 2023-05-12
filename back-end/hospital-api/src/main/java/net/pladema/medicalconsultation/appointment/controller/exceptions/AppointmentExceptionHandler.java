@@ -2,8 +2,8 @@ package net.pladema.medicalconsultation.appointment.controller.exceptions;
 
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentException;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateException;
-import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentNotFoundException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryNotFoundException;
 
 import org.springframework.http.HttpStatus;
@@ -31,9 +31,9 @@ public class AppointmentExceptionHandler {
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler({ AppointmentNotFoundException.class })
-	protected ApiErrorMessageDto handleAppointmentNotFoundException(AppointmentNotFoundException ex, Locale locale) {
-		log.debug("AppointmentNotFoundException exception -> {}", ex.getMessage());
+	@ExceptionHandler({ AppointmentException.class })
+	protected ApiErrorMessageDto handleAppointmentNotFoundException(AppointmentException ex, Locale locale) {
+		log.debug("AppointmentException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode(), ex.getMessage());
 	}
 }

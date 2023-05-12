@@ -54,8 +54,8 @@ import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
-import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentNotFoundEnumException;
-import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentNotFoundException;
+import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentEnumException;
+import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentException;
 import net.pladema.medicalconsultation.appointment.service.ports.AppointmentStorage;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
@@ -502,7 +502,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public AppointmentTicketBo getAppointmentTicketData(Integer appointmentId) {
 		log.debug("Input parameters -> appointmentId {}", appointmentId);
 		var result = this.appointmentRepository.getAppointmentTicketData(appointmentId).orElseThrow(
-				()-> new AppointmentNotFoundException(AppointmentNotFoundEnumException.APPOINTMENT_ID_NOT_FOUND, "el id no corresponde con ningun turno asignado")
+				()-> new AppointmentException(AppointmentEnumException.APPOINTMENT_ID_NOT_FOUND, "el id no corresponde con ningun turno asignado")
 		);
 		result.setIncludeNameSelfDetermination(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS.isActive());
 		log.trace(OUTPUT, result);

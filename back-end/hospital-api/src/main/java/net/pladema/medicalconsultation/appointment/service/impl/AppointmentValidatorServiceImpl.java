@@ -11,10 +11,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import javax.validation.ValidationException;
-
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
+import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentEnumException;
+import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentException;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateException;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateExceptionEnum;
 import net.pladema.medicalconsultation.diary.service.DiaryAssociatedProfessionalService;
@@ -89,12 +89,12 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
                 appointmentStateId, reason);
         Optional<AppointmentBo> apmtOpt = appointmentService.getAppointmentSummary(appointmentId);
 
-        if (apmtOpt.isPresent() && !validStateTransition(appointmentStateId, apmtOpt.get())) {
-            throw new ValidationException("appointment.state.transition.invalid");
-        }
+		if (apmtOpt.isPresent() && !validStateTransition(appointmentStateId, apmtOpt.get())) {
+			throw new AppointmentException(AppointmentEnumException.TRANSITION_STATE_INVALID, "Nuevo estado de turno inválido");
+		}
         if (!validReason(appointmentStateId, reason)) {
-            throw new ValidationException("appointment.state.reason.invalid");
-        }
+			throw new AppointmentException(AppointmentEnumException.ABSENT_REASON_REQUIRED, "Debe especificarse el motivo");
+		}
         validateRole(institutionId, apmtOpt);
         LOG.debug(OUTPUT, Boolean.TRUE);
         return Boolean.TRUE;
@@ -108,8 +108,8 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
             Integer professionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
 			List<Integer> associatedHealthcareProfessionals = diaryAssociatedProfessionalService.getAllAssociatedWithProfessionalsByHealthcareProfessionalId(institutionId, professionalId);
             if (Boolean.TRUE.equals(hasProfessionalRole.apply(institutionId)) && !diary.getHealthcareProfessionalId().equals(professionalId) && !associatedHealthcareProfessionals.contains(diary.getHealthcareProfessionalId())) {
-                throw new ValidationException("appointment.new.professional.id.invalid}");
-            }
+ 				throw new AppointmentException(AppointmentEnumException.DIARY_PROFESSIONAL_INVALID, "La agenda no pertenece al profesional indicado");
+			}
         }
     }
 
