@@ -247,7 +247,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 			this.availableActions.push(action);
 		}
 
-		if (this.episodeState === this.STATES.EN_ESPERA) {
+		if ((this.hasEmergencyCareRelatedRole || this.hasRoleAdministrative) && this.episodeState === this.STATES.EN_ESPERA) {
 			let action: ActionInfo = {
 				label: 'guardia.home.episodes.episode.actions.atender.TITLE',
 				id: 'attend',

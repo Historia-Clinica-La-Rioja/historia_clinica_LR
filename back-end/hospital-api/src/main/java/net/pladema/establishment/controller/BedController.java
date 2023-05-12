@@ -50,7 +50,7 @@ public class BedController {
 	}
 	
 	@GetMapping("/{bedId}/info")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ADMINISTRADOR_DE_CAMAS, ESPECIALISTA_MEDICO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ADMINISTRADOR_DE_CAMAS, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
 	public ResponseEntity<BedInfoDto> getBedInfo(@PathVariable(name = "institutionId") Integer institutionId, 
 			@PathVariable(name = "bedId") Integer bedId) {
 		Optional<BedInfoVo> bed = bedService.getBedInfo(bedId);
@@ -60,7 +60,7 @@ public class BedController {
 	}
 
 	@GetMapping("/summary-list")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ADMINISTRADOR_DE_CAMAS, ESPECIALISTA_MEDICO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ADMINISTRADOR_DE_CAMAS, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
 	public ResponseEntity<List<BedSummaryDto>> getNewBedSummaryDto(@PathVariable(name = "institutionId") Integer institutionId,
 																   @RequestParam(name = "sectorType", required = false) Integer sectorType){
 		LOG.debug("Input parameter -> institutionId {}, sectorType {}", institutionId, sectorType);
