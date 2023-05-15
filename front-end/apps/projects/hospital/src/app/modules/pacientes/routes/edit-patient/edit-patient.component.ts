@@ -78,7 +78,7 @@ export class EditPatientComponent implements OnInit {
 	public completeDataPatient: CompletePatientDto;
 	public auditablePatientInfo: AuditablePatientInfo;
 	private auditableFullDate: Date;
-	private toAudit: boolean = null;
+	private auditTypeId: number = null;
 	private wasMarked = false;
 	public patientId: any;
 	public filesId: number[];
@@ -415,7 +415,7 @@ export class EditPatientComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe(message => {
 			if (message) {
-				this.toAudit = true;
+				this.auditTypeId = 2;
 				this.auditableFullDate = new Date();
 				this.auditablePatientInfo = {
 					message: message,
@@ -441,7 +441,7 @@ export class EditPatientComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe((unmark: boolean) => {
 			if (unmark) {
-				this.toAudit = false;
+				this.auditTypeId = 1;
 				this.auditablePatientInfo = undefined;
 				this.auditableFullDate = undefined;
 			}
@@ -480,6 +480,7 @@ export class EditPatientComponent implements OnInit {
 
 	private mapToPersonRequest(): APatientDto {
 		let patient: APatientDto = {
+			auditTypeId: 1,
 			birthDate: this.form.controls.birthDate.value,
 			firstName: this.form.controls.firstName.value,
 			genderId: this.form.controls.genderId.value,
@@ -532,12 +533,12 @@ export class EditPatientComponent implements OnInit {
 			fileIds: this.filesId,
 		};
 
-		if (this.toAudit) {
-			patient.toAudit = true;
+		if (this.auditTypeId === 2) {
+			patient.auditTypeId = 2;
 			patient.message = this.auditablePatientInfo?.message ? this.auditablePatientInfo.message : '';
 		}
-		else if (this.wasMarked && this.toAudit === false) {
-			patient.toAudit = false;
+		else if (this.wasMarked && this.auditTypeId === 1) {
+			patient.auditTypeId = 1;
 		}
 
 		if (patient.genderSelfDeterminationId === this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID)

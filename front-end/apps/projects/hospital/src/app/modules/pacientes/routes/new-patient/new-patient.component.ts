@@ -374,7 +374,7 @@ export class NewPatientComponent implements OnInit {
 
 			},
 			// Select for an audict
-			toAudit: false,
+			auditTypeId: 1,
 			fileIds: []
 		};
 

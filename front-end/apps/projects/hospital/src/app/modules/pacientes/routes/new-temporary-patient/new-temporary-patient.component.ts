@@ -337,7 +337,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 				generalPractitioner: false
 			},
 			// Select for an audict
-			toAudit: false,
+			auditTypeId: 1,
 			fileIds: []
 		};
 
