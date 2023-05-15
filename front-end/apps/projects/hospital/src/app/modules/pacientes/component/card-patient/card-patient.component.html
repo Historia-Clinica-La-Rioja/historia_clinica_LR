@@ -9,7 +9,7 @@
 					</div>
 
 					<div id="dni">
-						<span> {{'ambulatoria.card-patient.DNI' | translate}} {{patient.dni}}</span>
+						<span> {{getIdentificationType(patient?.identificationTypeId)}} {{patient.dni}}</span>
 					</div>
 
 					<div id="gender">
