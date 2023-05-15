@@ -761,6 +761,42 @@
                             }
                           }
                         }
+                      },
+                      {
+                        "type" : "cubejs-dashboard",
+                        "args" : {
+                          "filters" : {
+                            "date" : {
+                              "filter" : {
+                                "member" : "CantidadTurnos.fecha_consulta",
+                                "operator" : "inDateRange"
+                              },
+                              "type" : "dateRangeISO",
+                              "label" : "Fecha"
+                            }
+                          },
+                          "title" : {
+                            "text" : "Turnos según estado"
+                          },
+                          "label": "Estado - anillo",
+                          "content" : [
+                            {
+                              "type" : "cubejs-chart",
+                              "args" : {
+                                "query" : "cantidadTurnosEstado",
+                                "chartOptions" : {
+                                  "responsive" : true,
+                                  "maintainAspectRatio" : false,
+                                  "plugins" : {
+                                    "legend" : {
+                                      "display" : true
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
                       }
                     ]
                   }
