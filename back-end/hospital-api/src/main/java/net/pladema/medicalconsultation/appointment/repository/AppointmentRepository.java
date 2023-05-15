@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
+import net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import ar.lamansys.sgx.shared.migratable.SGXDocumentEntityRepository;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
@@ -360,5 +361,21 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"WHERE a.patientId IN :patients")
 	List<Appointment> getAppointmentsFromPatients(@Param("patients") List<Integer> patients);
 
-
+	@Transactional(readOnly = true)
+	@Query( "SELECT new net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo(p.id, pe.identificationTypeId, pe.identificationNumber, pe.firstName, pe.middleNames, pe.lastName, pe.otherLastNames, pex.nameSelfDetermination, a.id, doi.completedOn) " +
+			"FROM EquipmentAppointmentAssn eaa " +
+			"JOIN EquipmentDiary ed ON ed.id = eaa.pk.equipmentDiaryId " +
+			"JOIN Equipment e ON ed.equipmentId = e.id " +
+			"JOIN Sector s ON e.sectorId = s.id " +
+			"JOIN AppointmentOrderImage aoi ON eaa.pk.appointmentId = aoi.pk.appointmentId " +
+			"JOIN DetailsOrderImage doi ON eaa.pk.appointmentId = doi.pk.appointmentId " +
+			"JOIN Appointment a ON eaa.pk.appointmentId = a.id " +
+			"JOIN Patient p ON a.patientId = p.id " +
+			"JOIN Person pe ON p.personId = pe.id " +
+			"JOIN PersonExtended pex ON pe.id = pex.id " +
+			"WHERE e.modalityId = :modalityId " +
+			"AND s.institutionId = :institutionId " +
+			"AND aoi.completed = true " +
+			"AND doi.pk.roleId = :technicalRoleId ")
+	List<WorklistBo> getPendingWorklistByModalityAndInstitution(@Param("modalityId") Integer modalityId, @Param("institutionId") Integer institutionId, @Param("technicalRoleId") Short technicalRoleId);
 }

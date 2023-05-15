@@ -3573,6 +3573,16 @@ export interface VerificationCodeDto {
     code: string;
 }
 
+export interface WorklistDto {
+    actionTime: DateTimeDto;
+    appointmentId: number;
+    patientFullName: string;
+    patientId: number;
+    patientIdentificationNumber: string;
+    patientIdentificationTypeId: number;
+    statusId: number;
+}
+
 export const enum AppFeature {
     HABILITAR_ALTA_SIN_EPICRISIS = "HABILITAR_ALTA_SIN_EPICRISIS",
     MAIN_DIAGNOSIS_REQUIRED = "MAIN_DIAGNOSIS_REQUIRED",
