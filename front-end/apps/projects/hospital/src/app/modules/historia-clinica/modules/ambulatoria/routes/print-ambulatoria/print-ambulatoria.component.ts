@@ -10,9 +10,9 @@ import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { MapperService } from '@presentation/services/mapper.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { DateFormat, momentFormat, momentToDateDto } from '@core/utils/moment.utils';
+import { DateFormat, momentFormat} from '@core/utils/moment.utils';
 import * as moment from 'moment';
-import { EncounterTypes, DocumentTypes, ROUTE_HISTORY_CLINIC } from '../../constants/print-ambulatoria-masterdata';
+import { EncounterTypes, DocumentTypes, ROUTE_HISTORY_CLINIC, EncounterType } from '../../constants/print-ambulatoria-masterdata';
 import { ECHEncounterType } from "@api-rest/api-model";
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { ContextService } from '@core/services/context.service';
@@ -22,9 +22,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AccountService } from '@api-rest/services/account.service';
-import { mapToFullName, mapToUserInfo } from '@api-presentation/mappers/user-person-dto.mapper';
+import { mapToFullName} from '@api-presentation/mappers/user-person-dto.mapper';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PrintAmbulatoryService } from '@api-rest/services/print-ambulatory.service';
+import { mapDateWithHypenToDateWithSlash } from '@api-rest/mapper/date-dto.mapper';
 
 @Component({
 	selector: 'app-print-ambulatoria',
@@ -239,12 +240,29 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 		this.printAmbulatoryService.getPatientClinicHistory(this.patientId, this.dateRange.start, this.dateRange.end, searchFilterStr)
 			.subscribe(response => {
+				console.log(response);
+
 				this.noInfo = response.length > 0 ? false : true;
-				this.dataSource.data = response;
+				this.dataSource.data = response.map(data => this.mapToDocumentSummary(data));
 				this.dataSource.paginator = this.paginator;
 				document.getElementById("encounter-list").style.display = "block";
 				this.toggleAllRows();
 			});
+	}
+
+	private mapToDocumentSummary(data): CHDocumentSummaryDto {
+		if (data) {
+			return {
+				id: data.id,
+				startDate: mapDateWithHypenToDateWithSlash(data.startDate.slice(0, 10)),
+				endDate: mapDateWithHypenToDateWithSlash(data.endDate.slice(0, 10)),
+				encounterType: EncounterType[data.encounterType],
+				institution: data.institution,
+				problems: data.problems,
+				professional: data.professional
+			}
+		}
+		return null;
 	}
 
 	download() {

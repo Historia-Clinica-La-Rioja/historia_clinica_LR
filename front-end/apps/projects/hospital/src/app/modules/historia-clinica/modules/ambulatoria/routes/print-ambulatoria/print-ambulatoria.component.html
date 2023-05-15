@@ -117,7 +117,7 @@
 							{{column.header}}
 						</th>
 						<td mat-cell *matCellDef="let row">
-							{{column.cell(row)}}
+							{{column.cell(row) | translate}}
 						</td>
 					</ng-container>
 					<ng-container matColumnDef="download" class="short header">
