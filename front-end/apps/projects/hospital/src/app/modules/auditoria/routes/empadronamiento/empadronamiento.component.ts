@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { GenderDto, IdentificationTypeDto, PatientRegistrationSearchDto } from '@api-rest/api-model';
 import { AuditPatientService } from '@api-rest/services/audit-patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
@@ -29,8 +30,8 @@ export class EmpadronamientoComponent implements OnInit {
 	optionsValidations = OptionsValidations;
 	tabActiveIndex = 0;
 	patientRegistrationSearch: PatientRegistrationSearchDto[];
-	genderTableView:string[] = [];
-	viewCardToAudit=true;
+	genderTableView: string[] = [];
+	viewCardToAudit = true;
 
 	readonly validations = PERSON;
 	constructor(private readonly formBuilder: FormBuilder, private readonly personMasterDataService: PersonMasterDataService,
@@ -80,22 +81,28 @@ export class EmpadronamientoComponent implements OnInit {
 			filterStateValidation: [this.optionsValidations.BothValidations]
 		});
 	}
+
 	search() {
 		let patientSearchFilter = this.prepareSearchDto();
 		this.formSubmitted = true;
 		if ((this.tabActiveIndex === 0 && this.personalInformationForm.valid) || (this.tabActiveIndex === 1 && this.patientIdForm.valid)) {
-			this.auditPatientService.getSearchRegistrationPatient(patientSearchFilter).subscribe(( patientRegistrationSearchDto:PatientRegistrationSearchDto[]) => {
-			this.patientRegistrationSearch=patientRegistrationSearchDto;
+			this.auditPatientService.getSearchRegistrationPatient(patientSearchFilter).subscribe((patientRegistrationSearchDto: PatientRegistrationSearchDto[]) => {
+				this.patientRegistrationSearch = patientRegistrationSearchDto;
 			})
 		}
-
-
 	}
+
+	tabChanged(tabChangeEvent: MatTabChangeEvent): void {
+		this.tabActiveIndex = tabChangeEvent.index;
+		this.patientRegistrationSearch = [];
+		this.initForms();
+	}
+
 	prepareSearchDto() {
 		let filterDto: any;
 		if (this.tabActiveIndex === 0) {
 			filterDto = {
-				patientId: this.patientIdForm.controls.patientId.value,
+				patientId: null,
 				lastName: this.personalInformationForm.controls.lastName.value,
 				firstName: this.personalInformationForm.controls.firstName.value,
 				middleNames: this.personalInformationForm.controls.middleNames.value,
@@ -129,7 +136,7 @@ export class EmpadronamientoComponent implements OnInit {
 			}
 		}
 
-		if (this.personalInformationForm.controls.filterStateValidation.value === OptionsValidations.ManualValidation ) {
+		if (this.personalInformationForm.controls.filterStateValidation.value === OptionsValidations.ManualValidation) {
 			filterDto.automaticValidation = false;
 			filterDto.manualValidation = true;
 		} else if (this.personalInformationForm.controls.filterStateValidation.value === OptionsValidations.AutomaticValidation) {

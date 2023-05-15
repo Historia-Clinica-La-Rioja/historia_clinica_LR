@@ -5,7 +5,7 @@
 		<p>{{'pacientes.audit.LABEL_PATIENT_SEARCH' | translate}}</p>
 	</section>
 	<section>
-		<mat-tab-group [selectedIndex]="tabActiveIndex">
+		<mat-tab-group (selectedTabChange)="tabChanged($event)" [selectedIndex]="tabActiveIndex">
 			<mat-tab id="tab_datos_personales">
 				<ng-template mat-tab-label>
 					<span>{{ 'pacientes.audit.LABEL_PERSONAL_INFORMATION' | translate | uppercase }}</span>
