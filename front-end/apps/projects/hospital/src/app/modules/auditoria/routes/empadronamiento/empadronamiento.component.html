@@ -207,6 +207,6 @@
 		<app-card-patient [patientData]="patientRegistrationSearch"	[viewCardToAudit]="viewCardToAudit" [genderTableView]="genderTableView"  *ngIf="patientRegistrationSearch?.length > 0 else noInfo"></app-card-patient>
 	</section>
 	<ng-template #noInfo>
-		<app-no-data></app-no-data>
+		<app-no-data message="pacientes.audit.NO_INFO"></app-no-data>
 	</ng-template>
 </app-content>
