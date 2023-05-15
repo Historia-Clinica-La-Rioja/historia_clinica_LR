@@ -2,7 +2,7 @@
 	<div id="content-card" *ngFor="let patient of pageSlice;last as isLast">
 		<app-card id="patient" [cardContent]="patient" [viewCardToAudit]="viewCardToAudit">
 			<div fxLayout="row" fxLayout.lt-sm="column">
-				<div id="content-patient" fxLayoutAlign="space-around start" fxFlex="84%">
+				<div id="content-patient" fxLayoutAlign="space-around start" fxFlex="90%">
 
 					<div id="id">
 						<span>{{'ambulatoria.card-patient.ID' | translate}} {{ patient.id}}</span>
@@ -30,7 +30,7 @@
 					<div id="state" *ngIf="patient?.patientTypeId" fxLayout="column">
 						<span >{{getPatientType(patient?.patientTypeId) | uppercase}}</span>
 					</div>
-					<div id="toAudit" *ngIf="patient?.toAudit !== null" fxLayout="column">
+					<div id="toAudit" *ngIf="patient?.toAudit !== null" fxLayout="column" fxFlex="10%">
 						<span *ngIf="patient?.toAudit">{{'pacientes.audit.PENDING_TO_AUDIT' | translate}}</span>
 						<span *ngIf="!patient?.toAudit">-</span>
 					</div>
