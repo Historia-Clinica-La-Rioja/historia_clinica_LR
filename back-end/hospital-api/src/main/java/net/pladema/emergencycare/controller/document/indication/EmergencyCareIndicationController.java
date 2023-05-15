@@ -47,7 +47,7 @@ public class EmergencyCareIndicationController {
 	private final IndicationMapper indicationMapper;
 
 	@GetMapping("/diets")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA')")
 	public ResponseEntity<List<DietDto>> getEmergencyCareEpisodeDiets(@PathVariable(name = "institutionId") Integer institutionId,
 																	  @PathVariable(name = "episodeId") Integer episodeId) {
 		log.debug("Input parameters -> institutionId {}, episodeId {}", institutionId, episodeId);
@@ -57,7 +57,7 @@ public class EmergencyCareIndicationController {
 	}
 
 	@PostMapping("/diet")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
 	public ResponseEntity<Integer> addDiet(@PathVariable(name = "institutionId") Integer institutionId,
 										   @PathVariable(name = "episodeId") Integer episodeId,
 										   @RequestBody DietDto dietDto) {
@@ -68,7 +68,7 @@ public class EmergencyCareIndicationController {
 	}
 
 	@PostMapping("/other-indication")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
 	public ResponseEntity<Integer> addOtherIndication(@PathVariable(name = "institutionId") Integer institutionId,
 													  @PathVariable(name = "episodeId") Integer episodeId,
 													  @RequestBody OtherIndicationDto otherIndicationDto) {
@@ -79,7 +79,7 @@ public class EmergencyCareIndicationController {
 	}
 
 	@GetMapping("/other-indications")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA')")
 	public ResponseEntity<List<OtherIndicationDto>> getEmergencyCareEpisodeOtherIndications(@PathVariable(name = "institutionId") Integer institutionId,
 																							@PathVariable(name = "episodeId") Integer episodeId) {
 		log.debug("Input parameters -> institutionId {}, episodeId {}", institutionId, episodeId);
@@ -89,7 +89,7 @@ public class EmergencyCareIndicationController {
 	}
 
 	@PostMapping("/pharmaco")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<Integer> addPharmaco(@PathVariable(name = "institutionId") Integer institutionId,
 											   @PathVariable(name = "episodeId") Integer episodeId,
 											   @RequestBody PharmacoDto pharmacoDto) {
@@ -100,7 +100,7 @@ public class EmergencyCareIndicationController {
 	}
 
 	@GetMapping("/pharmacos")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA')")
 	public ResponseEntity<List<PharmacoSummaryDto>> getEmergencyCareEpisodePharmacos(@PathVariable(name = "institutionId") Integer institutionId,
 																					 @PathVariable(name = "episodeId") Integer episodeId) {
 		log.debug("Input parameters -> institutionId {}, episodeId {}", institutionId, episodeId);
@@ -110,7 +110,7 @@ public class EmergencyCareIndicationController {
 	}
 
 	@PostMapping("/parenteral-plan")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<Integer> addParenteralPlan(@PathVariable(name = "institutionId") Integer institutionId,
 													 @PathVariable(name = "episodeId") Integer episodeId,
 													 @RequestBody ParenteralPlanDto parenteralPlan) {
@@ -121,7 +121,7 @@ public class EmergencyCareIndicationController {
 	}
 
 	@GetMapping("/parenteral-plans")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PROFESIONAL_DE_SALUD, ENFERMERO, PERSONAL_DE_FARMACIA')")
 	public ResponseEntity<List<ParenteralPlanDto>> getEmergencyCareEpisodeParenteralPlans(@PathVariable(name = "institutionId") Integer institutionId,
 																						  @PathVariable(name = "episodeId") Integer episodeId) {
 		log.debug("Input parameters -> institutionId {}, episodeId {}", institutionId, episodeId);
