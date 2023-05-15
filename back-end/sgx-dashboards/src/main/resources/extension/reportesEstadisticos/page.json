@@ -533,24 +533,36 @@
                                   },
                                   "header" : "dateRangeISO",
                                   "title" : "Fecha"
+                                },
+                                "appointmentState" : {
+                                  "filter" : {
+                                    "member" : "CantidadTurnos.estado",
+                                    "operator" : "equals"
+                                  },
+                                  "type" : "appointmentState",
+                                  "label" : "Estado de turno"
                                 }
                               },
-                              "label" : "Especialidad",
-                              "content" : [
-                                {
-                                  "type" : "cubejs-chart",
-                                  "args" : {
-                                    "query" : "cantidadTurnosPorEspecialidad",
-                                    "chartOptions" : {
-                                      "responsive" : true,
-                                      "maintainAspectRatio" : false,
-                                      "plugins" : {
-                                        "legend" : {
-                                          "display" : false
-                                        }
-                                      }
+                      
+                          "title" : {
+                            "text" : "Turnos por especialidad"
+                          },
+                          "label": "Especialidad",
+                          "content" : [
+                            {
+                              "type" : "cubejs-chart",
+                              "args" : {
+                                "query" : "cantidadTurnosPorEspecialidad",
+                                "chartOptions" : {
+                                  "responsive" : true,
+                                  "maintainAspectRatio" : false,
+                                  "plugins" : {
+                                    "legend" : {
+                                      "display" : false
                                     }
                                   }
+                                }
+                              }
                                 }
                               ]
                             }
@@ -574,22 +586,34 @@
                                   },
                                   "type" : "dateRangeISO",
                                   "label" : "Fecha"
+                                },
+                                "appointmentState" : {
+                                  "filter" : {
+                                    "member" : "CantidadTurnos.estado",
+                                    "operator" : "equals"
+                                  },
+                                  "type" : "appointmentState",
+                                  "label" : "Estado de turno"
                                 }
                               },
-                              "label" : "Profesional",
-                              "content" : [
-                                {
-                                  "type" : "cubejs-chart",
-                                  "args" : {
-                                    "query" : "cantidadTurnosPorProfesional",
-                                    "chartOptions" : {
-                                      "responsive" : true,
-                                      "maintainAspectRatio" : false,
-                                      "plugins" : {
-                                        "legend" : {
-                                          "display" : false
-                                        }
-                                      }
+                            
+                          "title" : {
+                            "text" : "Turnos por profesional"
+                          },
+                          "label": "Profesional",
+                          "content" : [
+                            {
+                              "type" : "cubejs-chart",
+                              "args" : {
+                                "query" : "cantidadTurnosPorProfesional",
+                                "chartOptions" : {
+                                  "responsive" : true,
+                                  "maintainAspectRatio" : false,
+                                  "plugins" : {
+                                    "legend" : {
+                                      "display" : false
+                                    }
+                                  }
                                     }
                                   }
                                 }
