@@ -72,6 +72,8 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	public today = newMoment();
 	minDate = MIN_DATE;
 
+	disableConfirmButton = false;
+
 	constructor(
 		@Inject(OVERLAY_DATA) public data: OdontologyConsultationData,
 		public dockPopupRef: DockPopupRef,
@@ -153,6 +155,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 				})
 		}
 		else {
+			this.disableConfirmButton = false;
 			this.snackBarService.showError('Error al guardar documento de nueva consulta odontológica');
 			scrollIntoError(this.form, this.el);
 		}
@@ -304,7 +307,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	}
 
 	private uploadRefFilesAndCreateConsultation(odontologyDto: OdontologyConsultationDto) {
-
+		this.disableConfirmButton = true;
 		let references: ReferenceInformation[] = this.odontologyReferenceService.getReferences();
 		if (!references.length) {
 			this.createConsultation(odontologyDto);
