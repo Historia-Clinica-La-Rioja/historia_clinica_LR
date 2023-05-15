@@ -230,10 +230,9 @@ export class QueryRendererComponent {
 		this.chartLabels = resultSet.chartPivot(pivotConfig).map((row) =>
 			isDate(row.x) ? parseDate(row.x, this.getGranularityDate(pivotConfig.x[0])) : row.x);
 
-		if (!this.chartData?.length) {
-			this.noData = true;
-		}
-		else {
+		this.noData = !this.chartData?.length;
+
+		if(!this.noData) {
 			if (this.chartType === 'pie' || this.chartType === 'doughnut') {
 				this.loadPieData();
 			}
