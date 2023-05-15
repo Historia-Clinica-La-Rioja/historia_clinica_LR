@@ -482,24 +482,35 @@
                                   "label" : "Fecha"
                                 }
                               },
-                              "label" : "Evolución - línea",
-                              "content" : [
-                                {
-                                  "type" : "cubejs-chart",
-                                  "args" : {
-                                    "query" : "cantidadTurnos",
-                                    "chartOptions" : {
-                                      "responsive" : true,
-                                      "maintainAspectRatio" : false,
-                                      "elements" : {
-                                        "line" : {
-                                          "fill" : false,
-                                          "tension" : 0.4
-                                        }
-                                      }
+                          "title" : {
+                            "text" : "Evolución de turnos por fecha de creación"
+                          },
+                          "label": "Evolución - línea",
+                          "content" : [
+                            {
+                              "type" : "cubejs-chart",
+                              "args" : {
+                                "query" : "cantidadTurnos",
+                                "chartOptions" : {
+                                  "responsive" : true,
+                                  "maintainAspectRatio" : false,
+                                  "scales" : {
+                                    "x" : {
+                                      "stacked" : true
+                                    },
+                                    "y" : {
+                                      "stacked" : true
+                                    }
+                                  },
+                                  "elements" : {
+                                    "line" : {
+                                      "fill" : true,
+                                      "tension" : 0.2
                                     }
                                   }
                                 }
+                              }
+                            }
                               ]
                             }
                           }

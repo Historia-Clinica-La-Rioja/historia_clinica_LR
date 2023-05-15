@@ -191,7 +191,6 @@ export class QueryRendererComponent {
 
 	updateChartData(resultSet, pivotConfig) {
 		this.chartData = resultSet.series(pivotConfig).map((item) => {
-
 			if (this.chartType === 'pie' || this.chartType === 'doughnut') {
 				return {
 					data: item.series.map(({ value }) => value * (this.reverse ? -1 : 1)),
@@ -206,19 +205,14 @@ export class QueryRendererComponent {
 				};
 			}
 
-			if (this.chartType === 'line') {
+			if (this.chartType === 'line' || this.chartType === 'bar') {
+				let title = (pivotConfig.y.length>1) ? item.title.charAt(0).toUpperCase() + item.title.slice(1, -5) : item.title;
 				return {
-					label: item.title,
+					label: title,
 					data: item.series.map(({ value }) => value * (this.reverse ? -1 : 1))
 				};
 			}
-
-			if (this.chartType === 'bar') {
-				return {
-					label: item.title.charAt(0).toUpperCase() + item.title.slice(1, -5),
-					data: item.series.map(({ value }) => value * (this.reverse ? -1 : 1)),
-				};
-			}
+			
 
 			return {
 				label: item.title,

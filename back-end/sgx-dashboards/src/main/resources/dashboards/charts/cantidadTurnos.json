@@ -21,15 +21,18 @@
     "order": {
       "CantidadTurnos.fecha_consulta": "asc"
     },
-    "dimensions": []
+    "dimensions": [
+      "CantidadTurnos.estado"
+    ]
   },
   "chartType": "line",
   "pivotConfig": {
     "x": [
-      "CantidadTurnos.fecha_consulta.month"
+      "CantidadTurnos.fecha_consulta.month-year"
     ],
     "y": [
-      "measures"
+      "measures",
+      "CantidadTurnos.estado"
     ],
     "fillMissingDates": true,
     "joinDateRange": false
