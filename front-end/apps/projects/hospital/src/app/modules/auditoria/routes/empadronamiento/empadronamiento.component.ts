@@ -68,10 +68,10 @@ export class EmpadronamientoComponent implements OnInit {
 		})
 
 		this.personalInformationForm = this.formBuilder.group({
-			firstName: [null, [Validators.maxLength(PERSON.MAX_LENGTH.firstName), Validators.pattern(/^\S*$/)]],
-			middleNames: [null, [Validators.maxLength(PERSON.MAX_LENGTH.middleNames), Validators.pattern(/^\S*$/)]],
-			lastName: [null, [Validators.maxLength(PERSON.MAX_LENGTH.lastName), Validators.pattern(/^\S*$/)]],
-			otherLastNames: [null, [Validators.maxLength(PERSON.MAX_LENGTH.otherLastNames), Validators.pattern(/^\S*$/)]],
+			firstName: [null, [Validators.maxLength(PERSON.MAX_LENGTH.firstName), Validators.pattern(/^(?!\s)/)]],
+			middleNames: [null, [Validators.maxLength(PERSON.MAX_LENGTH.middleNames), Validators.pattern(/^(?!\s)/)]],
+			lastName: [null, [Validators.maxLength(PERSON.MAX_LENGTH.lastName), Validators.pattern(/^(?!\s)/)]],
+			otherLastNames: [null, [Validators.maxLength(PERSON.MAX_LENGTH.otherLastNames), Validators.pattern(/^(?!\s)/)]],
 			genderId: [null],
 			identificationNumber: [, [Validators.maxLength(PERSON.MAX_LENGTH.identificationNumber), Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.pattern(/^\S*$/)]],
 			identificationTypeId: [IDENTIFICATION_TYPE_IDS.DNI],
