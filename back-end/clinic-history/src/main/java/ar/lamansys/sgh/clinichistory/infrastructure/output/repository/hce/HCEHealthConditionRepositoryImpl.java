@@ -242,8 +242,8 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                                 (String)h[3],
                                 (boolean)h[4],
                                 (Integer)h[5],
-                                h[6] != null ? ((Timestamp)h[6]).toLocalDateTime().toLocalDate() : null,
-                                h[7] != null ? ((Timestamp)h[7]).toLocalDateTime().toLocalDate() : null,
+                                h[6] != null ? ((Timestamp)h[6]).toLocalDateTime() : null,
+                                h[7] != null ? ((Timestamp)h[7]).toLocalDateTime() : null,
                                 (Integer) h[8]))
 
         );
@@ -295,8 +295,8 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
 								(String)h[3],
 								(boolean)h[4],
 								(Integer)h[5],
-								h[6] != null ? ((Timestamp)h[6]).toLocalDateTime().toLocalDate() : null,
-								h[7] != null ? ((Timestamp)h[7]).toLocalDateTime().toLocalDate() : null,
+								h[6] != null ? ((Timestamp)h[6]).toLocalDateTime() : null,
+								h[7] != null ? ((Timestamp)h[7]).toLocalDateTime() : null,
 								(Integer) h[8]))
 
 		);

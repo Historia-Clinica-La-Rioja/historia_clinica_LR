@@ -347,8 +347,8 @@ public class HCEGeneralStateController {
             List<HCEHospitalizationHistoryDto> hospitalizationsGrouped = hospitalizationsBySource.entrySet().stream()
                     .map(hg ->
                             new HCEHospitalizationHistoryDto(hg.getKey(),
-                                    localDateMapper.fromLocalDateToString(hg.getValue().get(0).getEntryDate()),
-                                    localDateMapper.fromLocalDateToString(hg.getValue().get(0).getDischargeDate()),
+                                    localDateMapper.toDateTimeDto(hg.getValue().get(0).getEntryDate()),
+                                    localDateMapper.toDateTimeDto(hg.getValue().get(0).getDischargeDate()),
                                     hg.getValue().stream().filter(HCEHospitalizationBo::isMain).map(hceGeneralStateMapper::toHCEDiagnoseDto).collect(Collectors.toList()),
                                     hg.getValue().stream().filter(hbo -> !hbo.isMain()).map(hceGeneralStateMapper::toHCEDiagnoseDto).collect(Collectors.toList())))
                     .collect(Collectors.toList());

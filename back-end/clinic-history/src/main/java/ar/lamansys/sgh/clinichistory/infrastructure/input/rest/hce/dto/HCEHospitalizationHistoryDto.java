@@ -1,11 +1,11 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 
 import java.util.List;
 
@@ -17,17 +17,15 @@ public class HCEHospitalizationHistoryDto {
 
     private Integer sourceId;
 
-    @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
-    private String entryDate;
+    private DateTimeDto entryDate;
 
-    @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
-    private String dischargeDate;
+    private DateTimeDto dischargeDate;
 
     private HCEDiagnoseDto mainDiagnose;
 
     private List<HCEDiagnoseDto> alternativeDiagnoses;
 
-    public HCEHospitalizationHistoryDto(int sourceId, String entryDate, String dischargeDate, List<HCEDiagnoseDto> mainDiagnose, List<HCEDiagnoseDto> alternativeDiagnoses) {
+    public HCEHospitalizationHistoryDto(int sourceId, DateTimeDto entryDate, DateTimeDto dischargeDate, List<HCEDiagnoseDto> mainDiagnose, List<HCEDiagnoseDto> alternativeDiagnoses) {
         this.sourceId = sourceId;
         this.entryDate = entryDate;
         this.dischargeDate = dischargeDate;

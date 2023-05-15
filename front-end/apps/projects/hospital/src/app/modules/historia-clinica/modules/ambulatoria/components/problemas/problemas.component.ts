@@ -32,12 +32,13 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 import { ExternalClinicalHistoryFacadeService } from '../../services/external-clinical-history-facade.service';
 import { Moment } from 'moment';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { dateDtoToDate, dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { CounterreferenceFileService } from '@api-rest/services/counterreference-file.service';
 import { DocumentService } from "@api-rest/services/document.service";
 import { PatientNameService } from "@core/services/patient-name.service";
 import { Color } from '@presentation/colored-label/colored-label.component';
+import { dateToDateTimeDto } from '@api-rest/mapper/date-dto.mapper';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
@@ -187,8 +188,8 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		this.hospitalizationProblems$ = this.hceGeneralStateService.getHospitalizationHistory(this.patientId).pipe(
 			map((problemas: HCEHospitalizationHistoryDto[]) => {
 				return problemas.map((problema: HCEHospitalizationHistoryDto) => {
-					problema.entryDate = momentFormat(momentParseDate(problema.entryDate), DateFormat.VIEW_DATE);
-					problema.dischargeDate = problema.dischargeDate ? momentFormat(momentParseDate(problema.dischargeDate), DateFormat.VIEW_DATE) : undefined;
+					problema.entryDate = dateToDateTimeDto(dateTimeDtotoLocalDate(problema.entryDate));
+					problema.dischargeDate = problema.dischargeDate ? dateToDateTimeDto(dateTimeDtotoLocalDate(problema.entryDate)) : undefined;
 					return problema;
 				});
 			})

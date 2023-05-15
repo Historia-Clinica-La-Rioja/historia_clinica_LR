@@ -6,7 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEHospitalizationVo;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -18,9 +18,9 @@ public class HCEHospitalizationBo extends HCEClinicalTermBo {
 
     private Integer sourceId;
 
-    private LocalDate entryDate;
+    private LocalDateTime entryDate;
 
-    private LocalDate dischargeDate;
+    private LocalDateTime dischargeDate;
 
     private Integer patientId;
 

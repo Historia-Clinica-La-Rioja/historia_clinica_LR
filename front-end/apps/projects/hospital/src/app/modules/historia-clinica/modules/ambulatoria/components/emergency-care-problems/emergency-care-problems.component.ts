@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, Output } from '@angular/core';
 import { HCEHospitalizationHistoryDto } from '@api-rest/api-model';
+import { dateTimeDtotoLocalDate, dateToDateTimeDto } from '@api-rest/mapper/date-dto.mapper';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
-import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
 import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
 import { Observable, Subject, map } from 'rxjs';
 
@@ -30,8 +30,8 @@ export class EmergencyCareProblemsComponent implements OnInit {
 		this.emergencyCareProblems$ = this.hceGeneralStateService.getEmergencyCareHistory(this.patientId).pipe(
 			map((problemas: HCEHospitalizationHistoryDto[]) => {
 				return problemas.map((problema: HCEHospitalizationHistoryDto) => {
-					problema.entryDate = momentFormat(momentParseDate(problema.entryDate), DateFormat.VIEW_DATE);
-					problema.dischargeDate = problema.dischargeDate ? momentFormat(momentParseDate(problema.dischargeDate), DateFormat.VIEW_DATE) : undefined;
+					problema.entryDate = dateToDateTimeDto(dateTimeDtotoLocalDate(problema.entryDate));
+					problema.dischargeDate = problema.dischargeDate ? dateToDateTimeDto(dateTimeDtotoLocalDate(problema.dischargeDate)) : undefined;
 					return problema;
 				});
 			})

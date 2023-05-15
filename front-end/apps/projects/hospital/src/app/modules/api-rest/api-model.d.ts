@@ -764,7 +764,7 @@ export interface DateDto {
     year: number;
 }
 
-export interface DateTimeDto {
+export interface DateTimeDto extends Comparable<DateTimeDto> {
     date: DateDto;
     time: TimeDto;
 }
@@ -1481,8 +1481,8 @@ export interface HCEHealthcareProfessionalDto {
 
 export interface HCEHospitalizationHistoryDto {
     alternativeDiagnoses: HCEDiagnoseDto[];
-    dischargeDate: string;
-    entryDate: string;
+    dischargeDate: DateTimeDto;
+    entryDate: DateTimeDto;
     mainDiagnose: HCEDiagnoseDto;
     sourceId: number;
 }
