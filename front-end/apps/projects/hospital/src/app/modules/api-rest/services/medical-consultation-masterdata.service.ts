@@ -25,4 +25,9 @@ export class MedicalConsultationMasterdataService {
 		return this.http.get<MasterDataInterface<number>[]>(url);
 	}
 
+	getAppointmentState(): Observable<MasterDataInterface<number>[]> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/masterdata/appointmentState`;
+		return this.http.get<MasterDataInterface<number>[]>(url);
+	}
+
 }

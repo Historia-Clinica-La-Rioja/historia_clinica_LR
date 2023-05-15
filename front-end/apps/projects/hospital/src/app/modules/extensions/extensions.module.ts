@@ -26,6 +26,7 @@ import { SpecialtyFormInputComponent } from './components/specialty-form-input/s
 import { ProfessionalFormInputComponent } from './components/professional-form-input/professional-form-input.component';
 import { MultiselectCubejsDashboardComponent } from './components/multiselect-cubejs-dashboard/multiselect-cubejs-dashboard.component';
 import { CubejsCardComponent } from './components/cubejs-card/cubejs-card.component';
+import { AppointmentStateInputComponent } from './components/appointment-state-input/appointment-state-input.component';
 
 @NgModule({
 	imports: [
@@ -57,6 +58,7 @@ import { CubejsCardComponent } from './components/cubejs-card/cubejs-card.compon
 		ProfessionalFormInputComponent,
   MultiselectCubejsDashboardComponent,
   CubejsCardComponent,
+  AppointmentStateInputComponent,
 	],
 	exports: [
 		// components

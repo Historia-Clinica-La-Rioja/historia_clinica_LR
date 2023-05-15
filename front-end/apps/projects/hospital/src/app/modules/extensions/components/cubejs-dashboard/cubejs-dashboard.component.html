@@ -16,6 +16,12 @@
 					(professionalChange)="changeValue(filterInput.key, $event)">
 				</app-professional-form-input>
 			</div>
+			<div  *ngSwitchCase="'appointmentState'" class="filter" style="margin-top: 4px">
+				<app-appointment-state-input
+					[label]="filterInput.value.label"
+					(appointmentStateChange)="changeValue(filterInput.key, $event)">
+				</app-appointment-state-input>
+			</div>
 		</ng-container>
 	</ng-container>
 </div>
