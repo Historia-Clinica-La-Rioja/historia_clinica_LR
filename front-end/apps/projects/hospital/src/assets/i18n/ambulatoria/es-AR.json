@@ -697,8 +697,8 @@
 			"encounter-type": {
 				"TITLE": "Tipo de episodio/encuentro",
 				"HOSPITALIZATION": "Internación",
-				"EMERGENCY_CARE": "Ambulatoria",
-				"OUTPATIENT": "Guardia",
+				"EMERGENCY_CARE": "Guardia",
+				"OUTPATIENT": "Ambulatorio",
 				"ERROR": "Por favor, tildar al menos un tipo de encuentro"
 			},
 			"document-type": {

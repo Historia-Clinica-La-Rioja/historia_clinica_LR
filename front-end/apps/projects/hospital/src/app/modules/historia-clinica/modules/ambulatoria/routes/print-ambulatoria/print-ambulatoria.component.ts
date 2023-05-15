@@ -1,19 +1,21 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BasicPatientDto, CHDocumentSummaryDto, DateDto, PersonPhotoDto } from '@api-rest/api-model';
+import { BasicPatientDto, PersonPhotoDto } from '@api-rest/api-model';
+import { CHDocumentSummaryDto } from '@api-rest/api-model';
+import { CHSearchFilterDto } from '@api-rest/api-model';
+import { ECHDocumentType } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { MapperService } from '@presentation/services/mapper.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { momentToDateDto } from '@core/utils/moment.utils';
+import { DateFormat, momentFormat, momentToDateDto } from '@core/utils/moment.utils';
 import * as moment from 'moment';
-import { EncounterTypes, DocumentTypes, ROUTE_HISTORY_CLINIC, mockedTable } from '../../constants/print-ambulatoria-masterdata';
+import { EncounterTypes, DocumentTypes, ROUTE_HISTORY_CLINIC } from '../../constants/print-ambulatoria-masterdata';
 import { ECHEncounterType } from "@api-rest/api-model";
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { ContextService } from '@core/services/context.service';
-import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
 import { MatPaginator } from '@angular/material/paginator';
@@ -22,6 +24,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { AccountService } from '@api-rest/services/account.service';
 import { mapToFullName, mapToUserInfo } from '@api-presentation/mappers/user-person-dto.mapper';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { PrintAmbulatoryService } from '@api-rest/services/print-ambulatory.service';
 
 @Component({
 	selector: 'app-print-ambulatoria',
@@ -41,8 +44,8 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	personPhoto: PersonPhotoDto;
 
 	dateRange: {
-		start: DateDto,
-		end: DateDto,
+		start: string,
+		end: string,
 	}
 
 	maxDate = moment();
@@ -60,9 +63,10 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	allChecked = true;
 	showDocuments = true;
 
-	documentSummary: CHDocumentSummaryDto[] = mockedTable;
 	showTable = true;
 	showLastPrinted = false;
+
+	noInfo = false;
 
 	columns = [
 		{
@@ -111,7 +115,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		readonly datePipe: DatePipe,
 		private featureFlagService: FeatureFlagService,
 		private readonly accountService: AccountService,
-
+		private readonly printAmbulatoryService: PrintAmbulatoryService,
 	) {
 		this.route.paramMap.subscribe(
 			(params) => {
@@ -161,8 +165,8 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 	dateRangeChange(range): void {
 		this.dateRange = {
-			start: momentToDateDto(range.start),
-			end: momentToDateDto(range.end)
+			start: momentFormat(range.start, DateFormat.API_DATE),
+			end: momentFormat(range.end, DateFormat.API_DATE),
 		}
 	}
 
@@ -188,7 +192,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 	encounterCheckedChange() {
 		this.documentTypes = [];
-		if (!this.atLeastOneChecked(this.encounterTypeForm)){
+		if (!this.atLeastOneChecked(this.encounterTypeForm)) {
 			this.documentTypes = DocumentTypes;
 			this.showDocuments = true;
 		}
@@ -216,21 +220,31 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	}
 
 	search() {
-		const selectedEncounterTypes = this.encounterTypes.filter(e => this.encounterTypeForm.get(e.value).value);
-		const selectedDocumentTypes = this.documentTypes.filter(d => this.documentTypeForm.get(d.value).value)
-		const data = {
-			date: {
-				start: this.dateRange.start,
-				end: this.dateRange.end
-			},
-			encounterTypes: selectedEncounterTypes,
-			documentTypes: selectedDocumentTypes
+		const selectedEncounterTypes: ECHEncounterType[] = [];
+		this.encounterTypes.forEach(elem => {
+			if (this.encounterTypeForm.get(elem.value).value)
+				selectedEncounterTypes.push(elem.value);
+		})
+
+		const selectedDocumentTypes: ECHDocumentType[] = [];
+		this.documentTypes.forEach(elem => {
+			if (this.documentTypeForm.get(elem.value).value)
+				selectedDocumentTypes.push(elem.value);
+		})
+
+		const searchFilterStr: CHSearchFilterDto = {
+			documentTypeList: selectedDocumentTypes,
+			encounterTypeList: selectedEncounterTypes
 		}
 
-		this.dataSource.data = mockedTable;
-		this.dataSource.paginator = this.paginator;
-		document.getElementById("encounter-list").style.display = "block";
-		this.toggleAllRows();
+		this.printAmbulatoryService.getPatientClinicHistory(this.patientId, this.dateRange.start, this.dateRange.end, searchFilterStr)
+			.subscribe(response => {
+				this.noInfo = response.length > 0 ? false : true;
+				this.dataSource.data = response;
+				this.dataSource.paginator = this.paginator;
+				document.getElementById("encounter-list").style.display = "block";
+				this.toggleAllRows();
+			});
 	}
 
 	download() {
