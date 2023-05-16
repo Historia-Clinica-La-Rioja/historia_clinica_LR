@@ -28,7 +28,7 @@
 				</span>
 			</div>
 			<mat-form-field appearance="outline">
-				<mat-select [placeholder]="'ambulatoria.paciente.nueva-consulta.NO_MEDICAL_COVERAGE'|translate"
+				<mat-select [disabled]="disabledCoverage" [placeholder]="'ambulatoria.paciente.nueva-consulta.NO_MEDICAL_COVERAGE'|translate"
 					(selectionChange)="setMedicalCoverage()" formControlName="patientMedicalCoverage">
 					<mat-option name="coverage" *ngFor="let patientMedicalCoverage of patientMedicalCoverages"
 						[value]="patientMedicalCoverage">

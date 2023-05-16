@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ClinicalSpecialtyDto, PatientMedicalCoverageDto, ReducedPatientDto } from '@api-rest/api-model';
+import { ClinicalSpecialtyDto, ExternalCoverageDto, ExternalPatientCoverageDto, PatientMedicalCoverageDto, ReducedPatientDto } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { MapperService } from '@core/services/mapper.service';
+import { MedicalCoverageInfoService } from '@historia-clinica/modules/ambulatoria/services/medical-coverage-info.service';
 import { MedicalCoverageComponent, PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { map } from 'rxjs';
@@ -25,6 +26,8 @@ export class EpisodeDataComponent implements OnInit {
 	patientMedicalCoverages: PatientMedicalCoverage[] = [];
 	patient: ReducedPatientDto;
 	patientId: number;
+	disabledCoverage = false;
+	appointmentConfirmedCoverageInfo: ExternalCoverageDto;
 	@Input() idPatient: number;
 	@Output() medicalCoverage = new EventEmitter<PatientMedicalCoverage>();
 	@Output() clinicalSpecialty = new EventEmitter<ClinicalSpecialtyDto>();
@@ -37,7 +40,7 @@ export class EpisodeDataComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly patientService: PatientService,
-
+		private readonly medicalCoverageInfoService: MedicalCoverageInfoService,
 
 	) {
 		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe(specialties => {
@@ -56,7 +59,7 @@ export class EpisodeDataComponent implements OnInit {
 			clinicalSpecialty: [null, [Validators.required]],
 			patientMedicalCoverage: [null],
 		});
-
+		this.appointmentConfirmedCoverageInfo = this.medicalCoverageInfoService?.appointmentConfirmedCoverageInfo?.medicalCoverage;
 		this.setMedicalCoverages();
 	}
 
@@ -107,6 +110,13 @@ export class EpisodeDataComponent implements OnInit {
 
 	}
 
+	private setCoverage(p: PatientMedicalCoverage) {
+		this.form.get('patientMedicalCoverage').patchValue(p);
+		this.form.get('patientMedicalCoverage').markAsTouched();
+		//this.disabledCoverage = true;
+		this.setMedicalCoverage();
+	}
+
 	private setMedicalCoverages(): void {
 		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.idPatient)
 			.pipe(
@@ -115,6 +125,15 @@ export class EpisodeDataComponent implements OnInit {
 						patientMedicalCoveragesDto.map(s => this.mapperService.toPatientMedicalCoverage(s))
 				)
 			)
-			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) => this.patientMedicalCoverages = patientMedicalCoverages);
+			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) => {
+				this.patientMedicalCoverages = patientMedicalCoverages;
+				this.patientMedicalCoverages.find(p => {
+					if (p?.medicalCoverage?.id === this.appointmentConfirmedCoverageInfo?.id) {
+						this.disabledCoverage = true;
+						this.setCoverage(p);
+					}
+				})
+
+			});
 	}
 }
