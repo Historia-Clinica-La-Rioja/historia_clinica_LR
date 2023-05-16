@@ -104,7 +104,7 @@ export class CardPatientComponent {
 				date: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DateFormat.VIEW_DATE) : '',
 				ranking: patient?.ranking,
 				patientTypeId: patient?.patientTypeId,
-				toAudit: patient?.toAudit !== undefined ? patient?.toAudit : null,
+				auditTypeId: patient?.auditTypeId,
 				action: this.setActionByRole(medicalSpecialist, legalPerson, patient.idPatient)
 			}
 		});
