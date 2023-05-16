@@ -137,7 +137,7 @@
 							<div>
 								<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
 									<mat-label>{{'pacientes.audit.LABEL_STATE'| translate}}</mat-label>
-									<mat-select formControlName="filterState" multiple>
+									<mat-select formControlName="filterState" multiple  [matTooltip]="personalInformationForm.controls.filterState.value">
 										<mat-option *ngFor="let state of patientStates"
 											[value]="state">{{state}}</mat-option>
 									</mat-select>
