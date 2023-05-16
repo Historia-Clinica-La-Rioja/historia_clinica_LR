@@ -10,7 +10,7 @@ import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { MapperService } from '@presentation/services/mapper.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { DateFormat, momentFormat} from '@core/utils/moment.utils';
+import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import * as moment from 'moment';
 import { EncounterTypes, DocumentTypes, ROUTE_HISTORY_CLINIC, EncounterType, TableColumns } from '../../constants/print-ambulatoria-masterdata';
 import { ECHEncounterType } from "@api-rest/api-model";
@@ -22,7 +22,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AccountService } from '@api-rest/services/account.service';
-import { mapToFullName} from '@api-presentation/mappers/user-person-dto.mapper';
+import { mapToFullName } from '@api-presentation/mappers/user-person-dto.mapper';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PrintAmbulatoryService } from '@api-rest/services/print-ambulatory.service';
 import { mapDateWithHypenToDateWithSlash } from '@api-rest/mapper/date-dto.mapper';
@@ -42,6 +42,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 	patient: PatientBasicData;
 	patientId: number;
+	patientDni: string;
 	personInformation: AdditionalInfo[] = [];
 	personPhoto$: Observable<PersonPhotoDto>
 
@@ -96,6 +97,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 					patient => {
 						this.personInformation.push({ description: patient.person.identificationType, data: patient.person.identificationNumber });
 						this.patient = this.mapperService.toPatientBasicData(patient);
+						this.patientDni = patient.person.identificationNumber;
 					}
 				);
 				this.personPhoto$ = this.patientService.getPatientPhoto(this.patientId);
@@ -252,5 +254,8 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	download(): void {
 		this.nowDate = this.datePipe.transform(Date.now(), DatePipeFormat.SHORT);
 		this.showLastPrinted = true;
+		let selectedIds = []
+		this.selection.selected.forEach(e => selectedIds.push(e.id));
+		this.printAmbulatoryService.downloadClinicHistory(this.patientDni, selectedIds).subscribe();
 	}
 }
