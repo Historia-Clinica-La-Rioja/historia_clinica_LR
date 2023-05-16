@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.documents.infrastructure.input.rest;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedHospitalUserPort;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
@@ -17,9 +18,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.documents.application.DownloadClinicHistoryDocuments.DownloadClinicHistoryDocuments;
 import net.pladema.clinichistory.documents.application.getPatientClinicHistory.GetPatientClinicHistory;
 
+import net.pladema.clinichistory.documents.application.getPatientClinicHistoryLastDownload.GetPatientClinicHistoryLastDownload;
 import net.pladema.clinichistory.documents.domain.CHSearchFilterBo;
+import net.pladema.clinichistory.documents.domain.HistoricClinicHistoryDownloadBo;
 import net.pladema.clinichistory.documents.infrastructure.input.rest.dto.CHDocumentSummaryDto;
 import net.pladema.clinichistory.documents.infrastructure.input.rest.dto.CHSearchFilterDto;
+import net.pladema.clinichistory.documents.infrastructure.input.rest.dto.HistoricClinicHistoryDownloadDto;
 import net.pladema.clinichistory.documents.infrastructure.input.rest.mapper.ClinicHistoryMapper;
 
 
@@ -51,23 +55,37 @@ public class ClinicHistoryController {
 
 	private final DownloadClinicHistoryDocuments downloadClinicHistoryDocuments;
 
+	private final GetPatientClinicHistoryLastDownload getPatientClinicHistoryLastDownload;
+
 	private final LocalDateMapper localDateMapper;
 
 	private final ClinicHistoryMapper clinicHistoryMapper;
 
 	private final ObjectMapper jackson;
 
+	private final SharedHospitalUserPort sharedHospitalUserPort;
+
+	private final FeatureFlagsService featureFlagsService;
+
+
 
 	public ClinicHistoryController(GetPatientClinicHistory getPatientClinicHistory,
 								   DownloadClinicHistoryDocuments downloadClinicHistoryDocuments,
+								   GetPatientClinicHistoryLastDownload getPatientClinicHistoryLastDownload,
 								   LocalDateMapper localDateMapper,
 								   ClinicHistoryMapper clinicHistoryMapper,
-								   ObjectMapper jackson){
+								   ObjectMapper jackson,
+								   SharedHospitalUserPort sharedHospitalUserPort,
+								   FeatureFlagsService featureFlagsService)
+	{
 		this.getPatientClinicHistory = getPatientClinicHistory;
 		this.downloadClinicHistoryDocuments = downloadClinicHistoryDocuments;
+		this.getPatientClinicHistoryLastDownload = getPatientClinicHistoryLastDownload;
 		this.localDateMapper = localDateMapper;
 		this.clinicHistoryMapper = clinicHistoryMapper;
 		this.jackson = jackson;
+		this.sharedHospitalUserPort = sharedHospitalUserPort;
+		this.featureFlagsService = featureFlagsService;
 	}
 
 	@GetMapping(value = "/{patientId}")
@@ -100,6 +118,15 @@ public class ClinicHistoryController {
 		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 	}
 
+	@GetMapping(value = "/{patientId}/lastDownload")
+	@PreAuthorize("hasPermission(#institutionId, 'PERSONAL_DE_LEGALES')")
+	public ResponseEntity<HistoricClinicHistoryDownloadDto> getPatientClinicHistoryLastDownload(@PathVariable(name = "institutionId") Integer institutionId,
+																									   @PathVariable(name = "patientId") Integer patientId){
+		LOG.debug("Input parameters -> insitutionId {}, patientId {}", institutionId, patientId);
+		var result = getPatientClinicHistoryLastDownload.run(patientId, institutionId);
+		return ResponseEntity.ok().body(this.mapToHistoricClinicHistoryDownloadDto(result));
+	}
+
 	private CHSearchFilterBo mapFilter(String searchFilterStr) {
 		try {
 			if(searchFilterStr != null && !searchFilterStr.equals("undefined") && !searchFilterStr.equals("null")) {
@@ -111,6 +138,20 @@ public class ClinicHistoryController {
 			LOG.error(String.format("Error mapping filter: %s", searchFilterStr), e);
 		}
 		return new CHSearchFilterBo();
+	}
+
+	private HistoricClinicHistoryDownloadDto mapToHistoricClinicHistoryDownloadDto(HistoricClinicHistoryDownloadBo bo){
+		HistoricClinicHistoryDownloadDto result = new HistoricClinicHistoryDownloadDto();
+		if(bo.getUserId() != null) {
+			var userInfo = sharedHospitalUserPort.getUserCompleteInfo(bo.getUserId());
+			String userFullName = (featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && userInfo.getNameSelfDetermination() != null ? userInfo.getNameSelfDetermination() : userInfo.getFirstName()) + ' ' + userInfo.getLastName();
+			result.setUser(userFullName);
+		}
+		result.setId(bo.getId());
+		result.setInstitutionId(bo.getInstitutionId());
+		result.setPatientId(bo.getPatientId());
+		result.setDownloadDate(localDateMapper.toDateTimeDto(bo.getDownloadDate()));
+		return result;
 	}
 
 }

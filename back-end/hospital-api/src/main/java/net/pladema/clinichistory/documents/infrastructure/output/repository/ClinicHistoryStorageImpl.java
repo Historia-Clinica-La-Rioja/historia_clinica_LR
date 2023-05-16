@@ -20,6 +20,7 @@ import net.pladema.clinichistory.documents.domain.ECHEncounterType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ESourceType;
 
+import net.pladema.clinichistory.documents.domain.HistoricClinicHistoryDownloadBo;
 import net.pladema.clinichistory.documents.infrastructure.output.repository.entity.HistoricClinicHistoryDownload;
 import net.pladema.clinichistory.documents.infrastructure.output.repository.entity.VClinicHistory;
 
@@ -32,6 +33,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -79,6 +82,12 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 	public Integer savePatientClinicHistoryLastPrint(Integer userId, Integer patientId, Integer institutionId){
 		return historicClinicHistoryDownloadRepository
 				.save(new HistoricClinicHistoryDownload(null, userId, patientId, LocalDateTime.now(), institutionId)).getId();
+	}
+
+	@Override
+	public Optional<HistoricClinicHistoryDownloadBo> getPatientClinicHistoryLastDownload(Integer patientId, Integer institutionId){
+		var lastDownload = historicClinicHistoryDownloadRepository.getPatientClinicHistoryHistoricDownloads(patientId, institutionId).stream().findFirst();
+		return lastDownload.map(HistoricClinicHistoryDownloadBo::new);
 	}
 
 	private CHDocumentBo mapToBo(VClinicHistory row){
