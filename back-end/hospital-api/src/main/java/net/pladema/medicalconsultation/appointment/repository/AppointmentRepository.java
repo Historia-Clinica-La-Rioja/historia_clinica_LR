@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmentBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import ar.lamansys.sgx.shared.migratable.SGXDocumentEntityRepository;
@@ -365,7 +368,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	@Transactional(readOnly = true)
 	@Query( "SELECT new net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo(p.id, pe.identificationTypeId, pe.identificationNumber, pe.firstName, pe.middleNames, pe.lastName, pe.otherLastNames, pex.nameSelfDetermination, a.id, doi.completedOn) " +
 			"FROM EquipmentAppointmentAssn eaa " +
-			"JOIN EquipmentDiary ed ON ed.id = eaa.pk.equipmentDiaryId " +
+			"JOIN EquipmentDiary ed ON eaa.pk.equipmentDiaryId = ed.id " +
 			"JOIN Equipment e ON ed.equipmentId = e.id " +
 			"JOIN Sector s ON e.sectorId = s.id " +
 			"JOIN AppointmentOrderImage aoi ON eaa.pk.appointmentId = aoi.pk.appointmentId " +
@@ -377,7 +380,15 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"WHERE e.modalityId = :modalityId " +
 			"AND s.institutionId = :institutionId " +
 			"AND aoi.completed = true " +
-			"AND doi.pk.roleId = :technicalRoleId ")
+			"AND doi.pk.roleId = :technicalRoleId " +
+			"AND a.id NOT IN ( SELECT aoi2.pk.appointmentId " +
+			"					FROM AppointmentOrderImage aoi2 " +
+			"					JOIN Document d ON aoi2.documentId = d.id " +
+			"					WHERE d.statusId = '" + DocumentStatus.FINAL + "'" + " " +
+			"					AND d.sourceTypeId =" + SourceType.MEDICAL_IMAGE + "  " +
+			"					AND d.typeId =" + DocumentType.MEDICAL_IMAGE_REPORT + " " +
+			"					AND (d.deleteable.deleted = false OR d.deleteable.deleted is null) " +
+			"					AND aoi2.pk.appointmentId = a.id) ")
 	List<WorklistBo> getPendingWorklistByModalityAndInstitution(@Param("modalityId") Integer modalityId, @Param("institutionId") Integer institutionId, @Param("technicalRoleId") Short technicalRoleId);
 
 	@Transactional(readOnly = true)
@@ -396,5 +407,26 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"FROM Appointment a " +
 			"WHERE a.id = :appointmentId")
 	Integer getPatientByAppointmentId(@Param("appointmentId") Integer appointmentId);
+
+
+	@Transactional(readOnly = true)
+	@Query( "SELECT new net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo(p.id, pe.identificationTypeId, pe.identificationNumber, pe.firstName, pe.middleNames, pe.lastName, pe.otherLastNames, pex.nameSelfDetermination, a.id, d.updateable.updatedOn) " +
+			"FROM EquipmentAppointmentAssn eaa " +
+			"JOIN EquipmentDiary ed ON ed.id = eaa.pk.equipmentDiaryId " +
+			"JOIN Equipment e ON ed.equipmentId = e.id " +
+			"JOIN Sector s ON e.sectorId = s.id " +
+			"JOIN Appointment a ON eaa.pk.appointmentId = a.id " +
+			"JOIN Patient p ON a.patientId = p.id " +
+			"JOIN Person pe ON p.personId = pe.id " +
+			"JOIN PersonExtended pex ON pe.id = pex.id " +
+			"JOIN AppointmentOrderImage aoi ON a.id = aoi.pk.appointmentId " +
+			"JOIN Document d ON aoi.documentId = d.id " +
+			"WHERE e.modalityId = :modalityId " +
+			"AND s.institutionId = :institutionId " +
+			"AND d.statusId = '" + DocumentStatus.FINAL + "'"	+ "  " +
+			"AND d.sourceTypeId =" + SourceType.MEDICAL_IMAGE + "  " +
+			"AND d.typeId =" + DocumentType.MEDICAL_IMAGE_REPORT + " " +
+			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" )
+	List<WorklistBo> getCompletedWorklistByModalityAndInstitution(@Param("modalityId") Integer modalityId, @Param("institutionId") Integer institutionId);
 
 }

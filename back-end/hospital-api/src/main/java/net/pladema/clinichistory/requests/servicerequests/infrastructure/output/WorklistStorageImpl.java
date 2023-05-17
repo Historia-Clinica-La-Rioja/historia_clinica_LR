@@ -32,10 +32,16 @@ public class WorklistStorageImpl implements WorklistStorage {
 		log.debug("Get worklist by modalityId {}, institutionId {}", modalityId, institutionId);
 
 		List<WorklistBo> result = appointmentRepository.getPendingWorklistByModalityAndInstitution(modalityId, institutionId, ERole.TECNICO.getId()).stream().map(w -> {
-				w.setPatientFullName(w.getFullName(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)));
-				w.setStatusId(EInformerWorklistStatus.PENDING.getId());
-				return w;
+			w.setPatientFullName(w.getFullName(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)));
+			w.setStatusId(EInformerWorklistStatus.PENDING.getId());
+			return w;
 		}).collect(Collectors.toList());
+
+		result.addAll(appointmentRepository.getCompletedWorklistByModalityAndInstitution(modalityId, institutionId).stream().map( w-> {
+			w.setPatientFullName(w.getFullName(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)));
+			w.setStatusId(EInformerWorklistStatus.COMPLETED.getId());
+			return w;
+		}).collect(Collectors.toList()));
 
 		result.sort(Comparator.comparing(WorklistBo::getActionTime));
 
