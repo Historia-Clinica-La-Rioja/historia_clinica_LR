@@ -13,7 +13,9 @@
 			<h2 class="page-title" [translate]="'pacientes.edit.TITLE_PATIENT'"></h2>
 			<h3 [translate]="'pacientes.edit.SUBTITLE_PATIENT'"></h3>
 		</ng-template>
-
+		<div *ngIf="auditablePatientInfo" id="cardMessageAudit" class="mb-2 ">
+			<app-message-flagged-for-audit [auditablePatientInfo]="auditablePatientInfo"></app-message-flagged-for-audit>
+		</div>
 		<div class="content">
 			<form [formGroup]="form" (ngSubmit)="save()">
 				<div fxLayout="row" fxLayoutGap="15px">
