@@ -13,8 +13,15 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { AttendPlace } from '../../routes/home/home.component';
 import { SECTOR_GUARDIA } from '../../constants/masterdata';
 
-const CONFIRM: string = 'guardia.dialog.attention_place.CONFIRM';
-const BED_ASSIGN: string = 'guardia.dialog.attention_place.BED_ASSIGN';
+const CONFIRM: ButtonData = {
+	text: 'guardia.dialog.attention_place.CONFIRM',
+	id: 'confirm'
+}
+
+const BED_ASSIGN = {
+	text: 'guardia.dialog.attention_place.BED_ASSIGN',
+	id: 'bed-assign'
+}
 
 @Component({
 	selector: 'app-attention-place-dialog',
@@ -27,7 +34,7 @@ export class AttentionPlaceDialogComponent implements OnInit {
 	officesTypeaheadOptions$: Observable<TypeaheadOption<DoctorsOfficeDto>[]>;
 	shockrooms$: Observable<ShockroomDto[]>;
 	shockroomsTypeaheadOptions$: Observable<TypeaheadOption<ShockroomDto>[]>
-	buttonText: string = CONFIRM;
+	currentButton: ButtonData = CONFIRM;
 	form: FormGroup;
 	hasError = hasError;
 
@@ -66,7 +73,7 @@ export class AttentionPlaceDialogComponent implements OnInit {
 		}
 
 		if (id === AttentionPlace.HABITACION) 
-			this.buttonText = BED_ASSIGN;
+			this.currentButton = BED_ASSIGN;
 	}
 
 	setOffice(value: Event) {
@@ -152,7 +159,7 @@ export class AttentionPlaceDialogComponent implements OnInit {
 		shockroom.clearValidators();
 		shockroom.updateValueAndValidity();
 		shockroom.setValue(null);
-		this.buttonText = CONFIRM;
+		this.currentButton = CONFIRM;
 	}
 
 	private setForm() {
@@ -162,4 +169,9 @@ export class AttentionPlaceDialogComponent implements OnInit {
 			shockroom: [null]
 		});
 	}
+}
+
+interface ButtonData {
+	text: string,
+	id: string
 }
