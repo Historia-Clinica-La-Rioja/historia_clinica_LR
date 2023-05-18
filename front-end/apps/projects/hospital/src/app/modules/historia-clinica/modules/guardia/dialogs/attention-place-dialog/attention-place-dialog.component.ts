@@ -11,7 +11,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ShockroomService } from '@api-rest/services/shockroom.service';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AttendPlace } from '../../routes/home/home.component';
-import { SECTOR_GUARDIA } from '../../constants/masterdata';
+import { EstadosEpisodio, SECTOR_GUARDIA } from '../../constants/masterdata';
+import { EmergencyCareStateChangedService } from '@historia-clinica/modules/ambulatoria/services/emergency-care-state-changed.service';
 
 const CONFIRM: ButtonData = {
 	text: 'guardia.dialog.attention_place.CONFIRM',
@@ -22,13 +23,13 @@ const BED_ASSIGN = {
 	text: 'guardia.dialog.attention_place.BED_ASSIGN',
 	id: 'bed-assign'
 }
-
 @Component({
 	selector: 'app-attention-place-dialog',
 	templateUrl: './attention-place-dialog.component.html',
 	styleUrls: ['./attention-place-dialog.component.scss'],
 })
 export class AttentionPlaceDialogComponent implements OnInit {
+
 	places$: Observable<MasterDataInterface<number>[]>;
 	offices$: Observable<DoctorsOfficeDto[]>;
 	officesTypeaheadOptions$: Observable<TypeaheadOption<DoctorsOfficeDto>[]>;
@@ -45,8 +46,9 @@ export class AttentionPlaceDialogComponent implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		private readonly dialogRef: MatDialogRef<AttentionPlaceDialogComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: { quantity: AttentionPlacesQuantityDto },
+		private readonly emergencyCareStateChangedService: EmergencyCareStateChangedService
 	) { }
-	
+
 	ngOnInit(): void {
 		this.places$ = this.emergencyCareMasterDataService.getEmergencyEpisodeSectorType();
 		this.filterPlaces();
@@ -63,7 +65,7 @@ export class AttentionPlaceDialogComponent implements OnInit {
 			office.addValidators(Validators.required);
 			office.updateValueAndValidity();
 		}
-		
+
 		if (id === AttentionPlace.SHOCKROOM) {
 			const shockroom: AbstractControl = this.form.get('shockroom');
 			this.shockrooms$ = this.shockroomService.getShockrooms();
@@ -72,7 +74,7 @@ export class AttentionPlaceDialogComponent implements OnInit {
 			shockroom.updateValueAndValidity();
 		}
 
-		if (id === AttentionPlace.HABITACION) 
+		if (id === AttentionPlace.HABITACION)
 			this.currentButton = BED_ASSIGN;
 	}
 
@@ -88,34 +90,32 @@ export class AttentionPlaceDialogComponent implements OnInit {
 		if (this.form.invalid) return;
 
 		const id: number = Number(this.form.get('place').value);
+		let attendPlace: AttendPlace;
 		if (id === AttentionPlace.CONSULTORIO) {
-			const attendPlace: AttendPlace = {
+			attendPlace = {
 				id: this.form.get('office').value.id,
 				attentionPlace: AttentionPlace.CONSULTORIO
 			}
-			this.dialogRef.close(attendPlace);
 		}
-
 		if (id === AttentionPlace.SHOCKROOM) {
-			const attendPlace: AttendPlace = {
+			attendPlace = {
 				id: this.form.get('shockroom').value.id,
 				attentionPlace: AttentionPlace.SHOCKROOM
 			}
-			this.dialogRef.close(attendPlace);
 		}
-
 		if (id === AttentionPlace.HABITACION) {
-			const attendPlace: AttendPlace = {
+			attendPlace = {
 				id: null,
 				attentionPlace: AttentionPlace.HABITACION
 			}
-			this.dialogRef.close(attendPlace);
 		}
+		this.dialogRef.close(attendPlace);
+		this.emergencyCareStateChangedService.emergencyCareStateChanged(EstadosEpisodio.EN_ATENCION);
 	}
 
 	private filterPlaces() {
 		this.places$.subscribe((places: MasterDataInterface<number>[]) => {
-			if (this.data.quantity.doctorsOffice == 0) 
+			if (this.data.quantity.doctorsOffice == 0)
 				this.deletePlace(AttentionPlace.CONSULTORIO, places);
 
 			if (this.data.quantity.shockroom == 0)
