@@ -1,5 +1,6 @@
 package net.pladema.edMonton.get.service;
 
+import net.pladema.edMonton.get.controller.dto.EdMontonSummary;
 import net.pladema.edMonton.repository.EdMontonRepository;
 import net.pladema.edMonton.repository.domain.Answer;
 
@@ -18,5 +19,11 @@ public class GetEdMontonServiceImpl implements GetEdMontonService{
 
 	public List<Answer> findPatientEdMonton(Integer patientId) {
 		return this.edMontonRepository.findPatientEdMontonTest(patientId);
+	}
+
+	public EdMontonSummary findEdMontonSummary(Integer edMontonId) {
+
+		return this.edMontonRepository.findEdMontonSummary(edMontonId);
+
 	}
 }
