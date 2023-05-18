@@ -1,3 +1,18 @@
 .button-attach{
 	margin-bottom: 10px;
 }
+mat-card{
+	width: 400px;
+	max-height: 200px;
+}
+p{
+	font-weight: 500;
+}
+a{
+	padding-left: 0px;
+}
+mat-dialog-content.mat-dialog-content {
+	display: block;
+	height: 135px;
+	overflow-y: auto;
+}
