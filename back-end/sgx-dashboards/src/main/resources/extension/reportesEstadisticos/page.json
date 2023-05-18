@@ -797,6 +797,42 @@
                             }
                           ]
                         }
+                      },
+                      {
+                        "type" : "cubejs-dashboard",
+                        "args" : {
+                          "filters" : {
+                            "date" : {
+                              "filter" : {
+                                "member" : "CantidadTurnos.fecha_consulta",
+                                "operator" : "inDateRange"
+                              },
+                              "type" : "dateRangeISO",
+                              "label" : "Fecha"
+                            }
+                          },
+                          "title" : {
+                            "text" : "Sobreturno"
+                          },
+                          "label": "Sobreturno - anillo",
+                          "content" : [
+                            {
+                              "type" : "cubejs-chart",
+                              "args" : {
+                                "query" : "cantidadSobreturnos",
+                                "chartOptions" : {
+                                  "responsive" : true,
+                                  "maintainAspectRatio" : false,
+                                  "plugins" : {
+                                    "legend" : {
+                                      "display" : true
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
                       }
                     ]
                   }

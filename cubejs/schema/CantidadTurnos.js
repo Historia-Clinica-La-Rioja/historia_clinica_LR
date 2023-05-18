@@ -1,6 +1,6 @@
 cube(`CantidadTurnos`, {
   sql: `SELECT 
-          ap.id as id, COALESCE(has.changed_state_date, ap.created_on) as fecha_consulta, cs.name as especialidad, aState.description as estado,
+          ap.id as id, COALESCE(has.changed_state_date, ap.created_on) as fecha_consulta, ap.is_overturn as es_sobreturno, cs.name as especialidad, aState.description as estado,
           concat_ws(', ', concat_ws(' ', p.last_name, p.other_last_names), CASE WHEN pex.name_self_determination IS NULL OR pex.name_self_determination LIKE '' THEN concat_ws(' ', p.first_name, p.middle_names) ELSE pex.name_self_determination END) AS profesional_autopercibido,
           concat_ws(', ', concat_ws(' ', p.last_name, p.other_last_names), concat_ws(' ', p.first_name, p.middle_names)) AS profesional,
           dof.institution_id AS institucion_id
@@ -72,6 +72,14 @@ cube(`CantidadTurnos`, {
       type: `string`,
       title: 'Estado',
     },
+	// Sobreturno
+	es_sobreturno :{
+		sql: `CASE 
+      WHEN es_sobreturno = true THEN 'Si' ELSE 'No'
+    END`,
+		type:  `boolean`,
+		title: 'Sobreturno'
+  }
   },
   title:` `,
   dataSource: `default`

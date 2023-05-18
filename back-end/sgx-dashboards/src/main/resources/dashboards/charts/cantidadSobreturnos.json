@@ -1,0 +1,38 @@
+{
+  "cubeQuery": {
+    "measures": [
+      "CantidadTurnos.cantidad_turnos"
+    ],
+    "timeDimensions": [
+      {
+        "dimension": "CantidadTurnos.fecha_consulta"
+      }
+    ],
+    "filters": [
+      {
+        "dimension": "CantidadTurnos.institucion_id",
+        "operator": "equals",
+        "values": [
+          "[(${institutionId})]"
+        ]
+      }
+    ],
+    "order": {
+      "CantidadTurnos.cantidad_turnos": "desc"
+    },
+    "dimensions": [
+      "CantidadTurnos.es_sobreturno"
+    ]
+  },
+  "chartType": "doughnut",
+  "pivotConfig": {
+    "x": [
+      "CantidadTurnos.es_sobreturno"
+    ],
+    "y": [
+      "measures"
+    ],
+    "fillMissingDates": true,
+    "joinDateRange": false
+  }
+}
