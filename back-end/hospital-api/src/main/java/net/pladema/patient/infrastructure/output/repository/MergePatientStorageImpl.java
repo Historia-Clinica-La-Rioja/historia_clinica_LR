@@ -3,10 +3,13 @@ package net.pladema.patient.infrastructure.output.repository;
 import java.util.List;
 
 import ar.lamansys.sgx.auth.user.infrastructure.input.service.UserExternalService;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.patient.application.port.MigratePatientStorage;
 import net.pladema.patient.infrastructure.output.repository.entity.EMergeTable;
 import net.pladema.patient.repository.AdditionalDoctorRepository;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
+import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.user.repository.UserPersonRepository;
 
 import org.springframework.stereotype.Service;
@@ -52,6 +55,8 @@ public class MergePatientStorageImpl implements MergePatientStorage {
 
 	private final PatientMedicalCoverageRepository patientMedicalCoverageRepository;
 
+	private final FeatureFlagsService featureFlagsService;
+
 	@Override
 	public void inactivatePatient(Integer patientIdToInactivate, Integer referencePatientId, Integer institutionId) {
 		log.debug("Input parameters -> patientIdToInactivate {}, referencePatientId {}, institutionId {} ", patientIdToInactivate, referencePatientId, institutionId);
@@ -87,6 +92,13 @@ public class MergePatientStorageImpl implements MergePatientStorage {
 		person.setIdentificationNumber(basicPersonData.getIdentificationNumber());
 		person.setBirthDate(basicPersonData.getBirthDate());
 		personService.addPerson(person);
+
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && basicPersonData.getNameSelfDetermination() != null) {
+			PersonExtended personExtended = personService.getPersonExtended(person.getId());
+			personExtended.setNameSelfDetermination(basicPersonData.getNameSelfDetermination());
+			personService.addPersonExtended(personExtended);
+		}
+
 		auditActionPatient(institutionId, patientId, EActionType.UPDATE);
 	}
 

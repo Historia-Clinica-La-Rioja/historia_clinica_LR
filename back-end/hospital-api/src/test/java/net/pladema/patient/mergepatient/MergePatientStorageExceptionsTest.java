@@ -1,6 +1,7 @@
 package net.pladema.patient.mergepatient;
 
 import ar.lamansys.sgx.auth.user.infrastructure.input.service.UserExternalService;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.patient.application.mergepatient.MergePatient;
@@ -81,10 +82,13 @@ public class MergePatientStorageExceptionsTest {
 	@Mock
 	private MergeClinicHistoryStorage mergeClinicHistoryStorage;
 
+	@Mock
+	private FeatureFlagsService featureFlagsService;
+
 	@BeforeEach
 	void setUp() {
 		mergePatientStorage = new MergePatientStorageImpl(patientRepository,patientService,personService,mergedPatientRepository,mergedInactivePatientRepository,
-				userPersonRepository,userExternalService,migratePatientStorage,additionalDoctorRepository,patientMedicalCoverageRepository);
+				userPersonRepository,userExternalService,migratePatientStorage,additionalDoctorRepository,patientMedicalCoverageRepository,featureFlagsService);
 
 		mergePatient = new MergePatient(mergePatientStorage,migrateClinicHistory,internmentEpisodeService,emergencyCareEpisodeService);
 
