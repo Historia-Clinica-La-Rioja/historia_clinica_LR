@@ -116,7 +116,7 @@
       "SUBTITLE_TWO": "Complete los siguientes datos para una búsqueda avanzada.",
       "NEW_PATIENT": "Crear nuevo paciente",
       "NEW_PERSON": "Crear nueva persona",
-      "RENAPER_TIMEOUT": "No hubo respuesta del servicio de Renaper",
+      "RENAPER_TIMEOUT": "No hubo respuesta del servicio de Renaper, por favor intente más tarde.",
       "ROW_TABLE": "ID Paciente"
     },
     "edit": {
