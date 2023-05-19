@@ -2,11 +2,7 @@ package net.pladema.permissions.controller;
 
 import java.util.List;
 
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
-
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-
-import net.pladema.permissions.repository.enums.ERole;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -2,7 +2,6 @@ package net.pladema.establishment.repository;
 
 import net.pladema.establishment.repository.domain.BedInfoVo;
 import net.pladema.establishment.repository.entity.Bed;
-import net.pladema.establishment.repository.entity.SectorType;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

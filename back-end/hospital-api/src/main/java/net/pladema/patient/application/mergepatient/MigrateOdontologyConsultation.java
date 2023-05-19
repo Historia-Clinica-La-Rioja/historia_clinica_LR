@@ -19,7 +19,6 @@ import net.pladema.patient.application.port.MergeClinicHistoryStorage;
 
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service

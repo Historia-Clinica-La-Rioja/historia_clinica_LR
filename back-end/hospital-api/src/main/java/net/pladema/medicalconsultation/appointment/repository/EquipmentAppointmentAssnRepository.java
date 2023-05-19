@@ -1,9 +1,7 @@
 package net.pladema.medicalconsultation.appointment.repository;
 
 import net.pladema.medicalconsultation.appointment.repository.domain.EquipmentAppointmentVo;
-import net.pladema.medicalconsultation.appointment.repository.entity.EquipmentAppointmentAssn;
 
-import net.pladema.medicalconsultation.appointment.repository.entity.EquipmentAppointmentAssnPK;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;

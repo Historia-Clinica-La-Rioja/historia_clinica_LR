@@ -1,7 +1,6 @@
 package net.pladema.medicalconsultation.equipmentdiary.controller.constraints.validator;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryDto;
 import net.pladema.medicalconsultation.equipmentdiary.controller.constraints.ExistingEquipmentDiaryPeriodValid;
 import net.pladema.medicalconsultation.equipmentdiary.controller.dto.EquipmentDiaryDto;
 import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryService;

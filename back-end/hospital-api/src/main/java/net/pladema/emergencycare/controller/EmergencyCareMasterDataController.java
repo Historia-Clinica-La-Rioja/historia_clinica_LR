@@ -2,7 +2,6 @@ package net.pladema.emergencycare.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.emergencycare.controller.mapper.DischargeTypeMasterDataMapper;
-import net.pladema.emergencycare.repository.EmergencyEpisodeAttendSectorType;
 import net.pladema.emergencycare.service.DischargeTypeMasterDataService;
 import net.pladema.emergencycare.service.EmergencyCareMasterDataService;
 import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
-import java.util.List;
 
 @RestController
 @RequestMapping("/emergency-care/masterdata")

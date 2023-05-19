@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import net.pladema.staff.controller.dto.HealthcareProfessionalDto;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 public class EmergencyCareEvolutionNoteDocumentDto {

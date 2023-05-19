@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.repository.entity.Person;
 
 @Getter

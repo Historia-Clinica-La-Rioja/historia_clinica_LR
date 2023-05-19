@@ -10,9 +10,6 @@ import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.SingleAttributeBackofficeQueryAdapter;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
 
-import javax.validation.ConstraintViolationException;
-
-import java.util.Collections;
 import java.util.List;
 
 

@@ -1,7 +1,6 @@
 package net.pladema.establishment.controller.constraints.validator.entities;
 
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
-import net.pladema.establishment.service.BedService;
 
 import org.springframework.stereotype.Component;
 

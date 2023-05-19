@@ -1,10 +1,7 @@
 package net.pladema.medicalconsultation.appointment.service.domain;
 
 import lombok.*;
-import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
-import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.EquipmentAppointmentVo;
-import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

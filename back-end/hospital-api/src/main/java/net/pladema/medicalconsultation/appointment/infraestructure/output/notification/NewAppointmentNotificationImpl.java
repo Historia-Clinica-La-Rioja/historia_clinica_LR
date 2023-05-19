@@ -5,7 +5,6 @@ import net.pladema.medicalconsultation.appointment.infraestructure.output.notifi
 import net.pladema.medicalconsultation.appointment.infraestructure.output.notification.exceptions.NewAppointmentNotificationException;
 import net.pladema.medicalconsultation.appointment.service.booking.BookingPersonService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
-import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.patient.service.PatientMedicalCoverageService;
 import net.pladema.patient.service.PatientService;

@@ -1,6 +1,5 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ESourceType;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 
 public enum EExternalCauseType {

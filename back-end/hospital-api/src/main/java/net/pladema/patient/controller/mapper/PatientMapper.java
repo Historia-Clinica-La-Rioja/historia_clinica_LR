@@ -16,7 +16,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Mapper(uses = {PersonMapper.class, LocalDateMapper.class})
 public interface PatientMapper {

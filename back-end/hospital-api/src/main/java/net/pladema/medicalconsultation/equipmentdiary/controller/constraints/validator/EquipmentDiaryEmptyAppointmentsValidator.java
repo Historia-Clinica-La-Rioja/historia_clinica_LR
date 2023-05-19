@@ -5,11 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import net.pladema.medicalconsultation.diary.controller.constraints.DiaryEmptyAppointmentsValid;
 import net.pladema.medicalconsultation.diary.controller.constraints.validator.DiaryEmptyAppointmentsValidator;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryDto;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursDto;
-import net.pladema.medicalconsultation.diary.controller.dto.OpeningHoursDto;
 
 import net.pladema.medicalconsultation.equipmentdiary.controller.constraints.EquipmentDiaryEmptyAppointmentsValid;
 

@@ -1,7 +1,6 @@
 package net.pladema.medicalconsultation.equipmentdiary.repository;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
-import net.pladema.medicalconsultation.diary.repository.entity.Diary;
 import net.pladema.medicalconsultation.equipmentdiary.repository.domain.CompleteEquipmentDiaryListVo;
 import net.pladema.medicalconsultation.equipmentdiary.repository.entity.EquipmentDiary;
 

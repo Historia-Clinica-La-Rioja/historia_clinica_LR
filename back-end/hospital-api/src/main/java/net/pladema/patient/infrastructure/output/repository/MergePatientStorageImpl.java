@@ -1,7 +1,6 @@
 package net.pladema.patient.infrastructure.output.repository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import ar.lamansys.sgx.auth.user.infrastructure.input.service.UserExternalService;
 import net.pladema.patient.application.port.MigratePatientStorage;

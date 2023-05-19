@@ -9,20 +9,15 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Indica
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.MedicationStatementRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.ObservationLabRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.ObservationRiskFactorRepository;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.OdontologyDiagnosticRepository;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.OdontologyProcedureRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.ProceduresRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.patient.application.port.MergeClinicHistoryStorage;
 
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Service

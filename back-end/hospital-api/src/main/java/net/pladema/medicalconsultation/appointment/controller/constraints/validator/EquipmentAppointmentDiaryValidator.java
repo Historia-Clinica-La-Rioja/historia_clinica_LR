@@ -2,7 +2,6 @@ package net.pladema.medicalconsultation.appointment.controller.constraints.valid
 
 import lombok.RequiredArgsConstructor;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidEquipmentAppointmentDiary;
-import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 
 import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryService;
 

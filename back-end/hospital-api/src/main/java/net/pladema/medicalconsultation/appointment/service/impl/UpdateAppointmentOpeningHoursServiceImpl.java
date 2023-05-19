@@ -6,8 +6,6 @@ import net.pladema.medicalconsultation.appointment.repository.AppointmentReposit
 import net.pladema.medicalconsultation.appointment.repository.EquipmentAppointmentAssnRepository;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 
-import net.pladema.medicalconsultation.appointment.repository.entity.EquipmentAppointmentAssn;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

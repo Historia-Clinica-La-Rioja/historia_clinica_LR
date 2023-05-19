@@ -1,6 +1,5 @@
 package net.pladema.user.controller;
 
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.permissions.repository.RoleRepository;
 import net.pladema.permissions.repository.entity.Role;

@@ -4,7 +4,6 @@ package ar.lamansys.sgh.publicapi.infrastructure.input.rest.appointment;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
 

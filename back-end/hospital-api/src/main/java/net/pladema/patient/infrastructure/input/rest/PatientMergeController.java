@@ -2,8 +2,6 @@ package net.pladema.patient.infrastructure.input.rest;
 
 import net.pladema.patient.application.unmergepatient.UnmergePatient;
 
-import net.pladema.person.controller.dto.BasicPersonalDataDto;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
