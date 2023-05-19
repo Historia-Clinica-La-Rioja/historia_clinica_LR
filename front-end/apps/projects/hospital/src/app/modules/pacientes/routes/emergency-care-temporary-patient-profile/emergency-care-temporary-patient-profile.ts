@@ -1,11 +1,12 @@
-
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PatientToMergeDto } from '@api-rest/api-model';
 import { EmergencyCareEpisodeSummaryService } from '@api-rest/services/emergency-care-episode-summary.service';
 import { PatientToMergeService } from '@api-rest/services/patient-to-merge.service';
+import { ContextService } from '@core/services/context.service';
 import { Patient } from '@pacientes/component/search-patient/search-patient.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -23,6 +24,8 @@ export class EmergencyCareTemporaryPatientProfile {
 		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService,
 		private readonly patientToMergeService: PatientToMergeService,
 		private readonly snackBarService: SnackBarService,
+		private readonly contextService: ContextService,
+		private readonly router: Router,
 	) {
 		this.route.paramMap.subscribe(
 			(params) => {
@@ -57,6 +60,8 @@ export class EmergencyCareTemporaryPatientProfile {
 		this.patientToMergeService.merge(patientToMergeDto).subscribe(
 			_ => {
 				this.snackBarService.showSuccess('Se ha asignado correctamente el paciente');
+				const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/pacientes/profile/${patient.basicData.id}`;
+				this.router.navigate([url]);
 			},
 			error => this.snackBarService.showError(error.text || 'No cuenta con los roles suficientes para realizar esta accion'),
 		)

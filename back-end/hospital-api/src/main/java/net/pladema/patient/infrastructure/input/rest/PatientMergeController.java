@@ -33,7 +33,7 @@ public class PatientMergeController {
 
 	@PostMapping("/merge")
 	@Transactional
-	@PreAuthorize("hasPermission(#institutionId, 'AUDITOR_MPI')")
+	@PreAuthorize("hasPermission(#institutionId, 'AUDITOR_MPI, ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
 	public ResponseEntity<Integer> merge(@PathVariable(name = "institutionId") Integer institutionId, @RequestBody PatientToMergeDto patientToMerge) {
 		log.debug("Input parameters -> institutionId {}, patientToMerge {}", institutionId, patientToMerge);
 		Integer result = mergePatient.run(institutionId,  patientToMerge);
