@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.imagenetwork.application.getpacwherestudyishosted.GetPacWhereStudyIsHosted;
 import net.pladema.imagenetwork.domain.PacsListBo;
-import net.pladema.imagenetwork.infrastructure.input.rest.dto.PacsUrlDTO;
+import net.pladema.imagenetwork.infrastructure.input.rest.dto.PacsUrlDto;
 
 @RequestMapping("/institutions/{institutionId}/imagenetwork/pacs")
 @Tag(name = "Image Network Pacs", description = "Image Network Pacs")
@@ -29,15 +29,15 @@ public class StudyPacAssociationController {
 
 	@GetMapping(value = "/{studyInstanceUID}")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, INFORMADOR')")
-	public ResponseEntity<PacsUrlDTO> getPacGlobalURL(@PathVariable Integer institutionId, @PathVariable String studyInstanceUID) throws MalformedURLException {
+	public ResponseEntity<PacsUrlDto> getPacGlobalURL(@PathVariable Integer institutionId, @PathVariable String studyInstanceUID) throws MalformedURLException {
 		log.debug("Input -> institutionId '{}' studyInstanceUID '{}'", institutionId, studyInstanceUID);
-		PacsUrlDTO url = mapToDto(getPacWhereStudyIsHosted.run(studyInstanceUID));
+		PacsUrlDto url = mapToDto(getPacWhereStudyIsHosted.run(studyInstanceUID));
 		log.debug("Output -> {}", url);
 		return ResponseEntity.ok().body(url);
 	}
 
-	private static PacsUrlDTO mapToDto(PacsListBo pacsListBo) {
-		return PacsUrlDTO.builder().pacs(pacsListBo
+	private static PacsUrlDto mapToDto(PacsListBo pacsListBo) {
+		return PacsUrlDto.builder().pacs(pacsListBo
 						.getPacs().stream()
 						.map(URI::toString)
 						.collect(Collectors.toList()))

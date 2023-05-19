@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.imagenetwork.application.generatetokenstudypermissions.GenerateStudyTokenJWT;
 import net.pladema.imagenetwork.application.generatetokenstudypermissions.GenerateStudyTokenUUID;
-import net.pladema.imagenetwork.infrastructure.input.rest.dto.TokenDTO;
+import net.pladema.imagenetwork.infrastructure.input.rest.dto.TokenDto;
 
 @RequestMapping("/institutions/{institutionId}/imagenetwork/{studyInstanceUID}/permission")
 @Tag(name = "Image Network Study Permission", description = "Image Network Study Permission")
@@ -25,21 +25,21 @@ public class StudyPermissionController {
 
 	@GetMapping("/generate/uuid")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, INFORMADOR')")
-	public ResponseEntity<TokenDTO> generatePermissionsUUID(@PathVariable String studyInstanceUID, @PathVariable Integer institutionId) {
+	public ResponseEntity<TokenDto> generatePermissionsUUID(@PathVariable String studyInstanceUID, @PathVariable Integer institutionId) {
 		log.trace("Input -> studyInstanceUID '{}' institutionId '{}'", studyInstanceUID, institutionId);
 		String result = generateStudyTokenUUID.run(studyInstanceUID);
 		log.trace("Output -> {}", result);
 		return ResponseEntity.ok()
-				.body(new TokenDTO(result));
+				.body(new TokenDto(result));
 	}
 
 	@GetMapping("/generate/jwt")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, INFORMADOR')")
-	public ResponseEntity<TokenDTO> generatePermissionsJWT(@PathVariable String studyInstanceUID, @PathVariable Integer institutionId) {
+	public ResponseEntity<TokenDto> generatePermissionsJWT(@PathVariable String studyInstanceUID, @PathVariable Integer institutionId) {
 		log.trace("Input -> studyInstanceUID '{}' institutionId '{}'", studyInstanceUID, institutionId);
 		String result = generateStudyTokenJWT.run(studyInstanceUID);
 		log.trace("Output -> {}", result);
 		return ResponseEntity.ok()
-				.body(new TokenDTO(result));
+				.body(new TokenDto(result));
 	}
 }

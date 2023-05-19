@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import ar.lamansys.pac.domain.StudyPermissionBo;
-import ar.lamansys.pac.infrastructure.input.rest.dto.TokenDTO;
+import ar.lamansys.pac.infrastructure.input.rest.dto.TokenDto;
 import ar.lamansys.pac.infrastructure.input.rest.exceptions.StudyAccessException;
 import ar.lamansys.pac.infrastructure.input.rest.exceptions.StudyAccessExceptionEnum;
 import ar.lamansys.pac.infrastructure.input.rest.interceptors.AuthInterceptor;
@@ -97,7 +97,7 @@ public abstract class AbstractAuthInterceptor implements AuthInterceptor {
         log.trace("URI to check token: '{}'", uri);
 		HttpHeaders headers = new HttpHeaders();
 		headers.set(apiKeyHeader, apiKey);
-        ResponseEntity<TokenDTO> response = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(headers), TokenDTO.class);
+        ResponseEntity<TokenDto> response = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(headers), TokenDto.class);
 
         if (response.getStatusCode() != HttpStatus.OK)
             return Optional.empty();

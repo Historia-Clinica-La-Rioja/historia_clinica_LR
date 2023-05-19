@@ -7,6 +7,6 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class TokenDTO {
+public class TokenDto {
 	private String token;
 }
