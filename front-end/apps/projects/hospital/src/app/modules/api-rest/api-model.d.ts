@@ -3370,6 +3370,13 @@ export interface ToothSurfacesDto {
     right: OdontologySnomedDto;
 }
 
+export interface TranscribedPrescriptionDto extends Serializable {
+    healthCondition: SnomedDto;
+    healthcareProfessionalName: string;
+    institutionName?: string;
+    study: SnomedDto;
+}
+
 export interface TriageAdministrativeDto extends TriageDto {
 }
 

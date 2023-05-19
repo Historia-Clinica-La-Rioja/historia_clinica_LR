@@ -10,8 +10,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import net.pladema.clinichistory.requests.servicerequests.service.ExistCheckDiagnosticReportService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -50,6 +48,7 @@ import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
+import net.pladema.clinichistory.requests.controller.dto.TranscribedPrescriptionDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.CompleteRequestDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoWithFilesDto;
@@ -60,8 +59,10 @@ import net.pladema.clinichistory.requests.servicerequests.controller.mapper.File
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyMapper;
 import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportService;
 import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
+import net.pladema.clinichistory.requests.servicerequests.service.CreateTranscribedServiceRequestService;
 import net.pladema.clinichistory.requests.servicerequests.service.DeleteDiagnosticReportService;
 import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
+import net.pladema.clinichistory.requests.servicerequests.service.ExistCheckDiagnosticReportService;
 import net.pladema.clinichistory.requests.servicerequests.service.GetServiceRequestInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.ListDiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.UpdateDiagnosticReportFileService;
@@ -87,6 +88,7 @@ public class ServiceRequestController {
 
     private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
     private final CreateServiceRequestService createServiceRequestService;
+	private final CreateTranscribedServiceRequestService createTranscribedServiceRequestService;
     private final CreateServiceRequestMapper createServiceRequestMapper;
     private final PatientExternalService patientExternalService;
     private final StudyMapper studyMapper;
@@ -111,8 +113,7 @@ public class ServiceRequestController {
 
 
 	public ServiceRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService,
-									CreateServiceRequestService createServiceRequestService,
-									CreateServiceRequestMapper createServiceRequestMapper,
+									CreateServiceRequestService createServiceRequestService, CreateTranscribedServiceRequestService createTranscribedServiceRequestService, CreateServiceRequestMapper createServiceRequestMapper,
 									PatientExternalService patientExternalService,
 									StudyMapper studyMapper,
 									DiagnosticReportInfoMapper diagnosticReportInfoMapper,
@@ -131,6 +132,7 @@ public class ServiceRequestController {
 									SharedInstitutionPort sharedInstitutionPort, ExistCheckDiagnosticReportService existCheckDiagnosticReportService) {
 		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
 		this.createServiceRequestService = createServiceRequestService;
+		this.createTranscribedServiceRequestService = createTranscribedServiceRequestService;
 		this.createServiceRequestMapper = createServiceRequestMapper;
 		this.patientExternalService = patientExternalService;
 		this.listDiagnosticReportInfoService = listDiagnosticReportInfoService;
@@ -187,6 +189,21 @@ public class ServiceRequestController {
         LOG.debug(OUTPUT, result);
         return result;
     }
+
+	@PostMapping("/transcribed")
+	@ResponseStatus(code = HttpStatus.CREATED)
+	@Transactional
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
+	public Integer createTranscribed(@PathVariable(name = "institutionId") Integer institutionId,
+										   @PathVariable(name = "patientId") Integer patientId,
+										   @RequestBody @Valid TranscribedPrescriptionDto prescription
+	) {
+		LOG.debug("Input parameters -> institutionId {}, patientId {}, TranscriptPrescriptionDto {}", institutionId, patientId, prescription);
+		BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
+		Integer srId = createTranscribedServiceRequestService.execute(prescription, patientDto);
+		LOG.debug(OUTPUT, srId);
+		return srId;
+	}
 
     @PutMapping("/{diagnosticReportId}/complete")
     @Transactional
