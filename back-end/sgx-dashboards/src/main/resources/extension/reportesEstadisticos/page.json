@@ -482,35 +482,35 @@
                                   "label" : "Fecha"
                                 }
                               },
-                          "title" : {
-                            "text" : "Evolución de turnos por fecha de creación"
-                          },
-                          "label": "Evolución - línea",
-                          "content" : [
-                            {
-                              "type" : "cubejs-chart",
-                              "args" : {
-                                "query" : "cantidadTurnos",
-                                "chartOptions" : {
-                                  "responsive" : true,
-                                  "maintainAspectRatio" : false,
-                                  "scales" : {
-                                    "x" : {
-                                      "stacked" : true
-                                    },
-                                    "y" : {
-                                      "stacked" : true
-                                    }
-                                  },
-                                  "elements" : {
-                                    "line" : {
-                                      "fill" : true,
-                                      "tension" : 0.2
+                              "title" : {
+                                "text" : "Evolución de turnos por fecha de creación"
+                              },
+                              "label" : "Evolución - línea",
+                              "content" : [
+                                {
+                                  "type" : "cubejs-chart",
+                                  "args" : {
+                                    "query" : "cantidadTurnos",
+                                    "chartOptions" : {
+                                      "responsive" : true,
+                                      "maintainAspectRatio" : false,
+                                      "scales" : {
+                                        "x" : {
+                                          "stacked" : true
+                                        },
+                                        "y" : {
+                                          "stacked" : true
+                                        }
+                                      },
+                                      "elements" : {
+                                        "line" : {
+                                          "fill" : true,
+                                          "tension" : 0.2
+                                        }
+                                      }
                                     }
                                   }
                                 }
-                              }
-                            }
                               ]
                             }
                           }
@@ -543,26 +543,25 @@
                                   "label" : "Estado de turno"
                                 }
                               },
-                      
-                          "title" : {
-                            "text" : "Turnos por especialidad"
-                          },
-                          "label": "Especialidad",
-                          "content" : [
-                            {
-                              "type" : "cubejs-chart",
-                              "args" : {
-                                "query" : "cantidadTurnosPorEspecialidad",
-                                "chartOptions" : {
-                                  "responsive" : true,
-                                  "maintainAspectRatio" : false,
-                                  "plugins" : {
-                                    "legend" : {
-                                      "display" : false
+                              "title" : {
+                                "text" : "Turnos por especialidad"
+                              },
+                              "label" : "Especialidad",
+                              "content" : [
+                                {
+                                  "type" : "cubejs-chart",
+                                  "args" : {
+                                    "query" : "cantidadTurnosPorEspecialidad",
+                                    "chartOptions" : {
+                                      "responsive" : true,
+                                      "maintainAspectRatio" : false,
+                                      "plugins" : {
+                                        "legend" : {
+                                          "display" : false
+                                        }
+                                      }
                                     }
                                   }
-                                }
-                              }
                                 }
                               ]
                             }
@@ -596,24 +595,23 @@
                                   "label" : "Estado de turno"
                                 }
                               },
-                            
-                          "title" : {
-                            "text" : "Turnos por profesional"
-                          },
-                          "label": "Profesional",
-                          "content" : [
-                            {
-                              "type" : "cubejs-chart",
-                              "args" : {
-                                "query" : "cantidadTurnosPorProfesional",
-                                "chartOptions" : {
-                                  "responsive" : true,
-                                  "maintainAspectRatio" : false,
-                                  "plugins" : {
-                                    "legend" : {
-                                      "display" : false
-                                    }
-                                  }
+                              "title" : {
+                                "text" : "Turnos por profesional"
+                              },
+                              "label" : "Profesional",
+                              "content" : [
+                                {
+                                  "type" : "cubejs-chart",
+                                  "args" : {
+                                    "query" : "cantidadTurnosPorProfesional",
+                                    "chartOptions" : {
+                                      "responsive" : true,
+                                      "maintainAspectRatio" : false,
+                                      "plugins" : {
+                                        "legend" : {
+                                          "display" : false
+                                        }
+                                      }
                                     }
                                   }
                                 }
@@ -789,75 +787,144 @@
                         }
                       },
                       {
-                        "type" : "cubejs-dashboard",
+                        "type" : "cubejs-card",
                         "args" : {
-                          "filters" : {
-                            "date" : {
-                              "filter" : {
-                                "member" : "CantidadTurnos.fecha_consulta",
-                                "operator" : "inDateRange"
+                          "header" : {
+                            "title" : "Turnos según estado"
+                          },
+                          "content" : {
+                            "type" : "cubejs-dashboard",
+                            "args" : {
+                              "filters" : {
+                                "date" : {
+                                  "filter" : {
+                                    "member" : "CantidadTurnos.fecha_consulta",
+                                    "operator" : "inDateRange"
+                                  },
+                                  "type" : "dateRangeISO",
+                                  "label" : "Fecha"
+                                }
                               },
-                              "type" : "dateRangeISO",
-                              "label" : "Fecha"
-                            }
-                          },
-                          "title" : {
-                            "text" : "Turnos según estado"
-                          },
-                          "label": "Estado - anillo",
-                          "content" : [
-                            {
-                              "type" : "cubejs-chart",
-                              "args" : {
-                                "query" : "cantidadTurnosEstado",
-                                "chartOptions" : {
-                                  "responsive" : true,
-                                  "maintainAspectRatio" : false,
-                                  "plugins" : {
-                                    "legend" : {
-                                      "display" : true
+                              "title" : {
+                                "text" : "Turnos según estado"
+                              },
+                              "label" : "Estado - anillo",
+                              "content" : [
+                                {
+                                  "type" : "cubejs-chart",
+                                  "args" : {
+                                    "query" : "cantidadTurnosEstado",
+                                    "chartOptions" : {
+                                      "responsive" : true,
+                                      "maintainAspectRatio" : false,
+                                      "plugins" : {
+                                        "legend" : {
+                                          "display" : true
+                                        }
+                                      }
                                     }
                                   }
                                 }
-                              }
+                              ]
                             }
-                          ]
+                          }
                         }
                       },
                       {
-                        "type" : "cubejs-dashboard",
+                        "type" : "cubejs-card",
                         "args" : {
-                          "filters" : {
-                            "date" : {
-                              "filter" : {
-                                "member" : "CantidadTurnos.fecha_consulta",
-                                "operator" : "inDateRange"
+                          "header" : {
+                            "title" : "Sobreturno - anillo"
+                          },
+                          "content" : {
+                            "type" : "cubejs-dashboard",
+                            "args" : {
+                              "filters" : {
+                                "date" : {
+                                  "filter" : {
+                                    "member" : "CantidadTurnos.fecha_consulta",
+                                    "operator" : "inDateRange"
+                                  },
+                                  "type" : "dateRangeISO",
+                                  "label" : "Fecha"
+                                }
                               },
-                              "type" : "dateRangeISO",
-                              "label" : "Fecha"
-                            }
-                          },
-                          "title" : {
-                            "text" : "Sobreturno"
-                          },
-                          "label": "Sobreturno - anillo",
-                          "content" : [
-                            {
-                              "type" : "cubejs-chart",
-                              "args" : {
-                                "query" : "cantidadSobreturnos",
-                                "chartOptions" : {
-                                  "responsive" : true,
-                                  "maintainAspectRatio" : false,
-                                  "plugins" : {
-                                    "legend" : {
-                                      "display" : true
+                              "title" : {
+                                "text" : "Sobreturno"
+                              },
+                              "label" : "Sobreturno - anillo",
+                              "content" : [
+                                {
+                                  "type" : "cubejs-chart",
+                                  "args" : {
+                                    "query" : "cantidadSobreturnos",
+                                    "chartOptions" : {
+                                      "responsive" : true,
+                                      "maintainAspectRatio" : false,
+                                      "plugins" : {
+                                        "legend" : {
+                                          "display" : true
+                                        }
+                                      }
                                     }
                                   }
                                 }
-                              }
+                              ]
                             }
-                          ]
+                          }
+                        }
+                      },
+                      {
+                        "type" : "cubejs-card",
+                        "args" : {
+                          "header" : {
+                            "title" : "Turnos por rango etario"
+                          },
+                          "content" : {
+                            "type" : "cubejs-dashboard",
+                            "args" : {
+                              "filters" : {
+                                "date" : {
+                                  "filter" : {
+                                    "member" : "CantidadTurnosPacientes.fecha_consulta",
+                                    "operator" : "inDateRange"
+                                  },
+                                  "type" : "dateRangeISO",
+                                  "label" : "Fecha"
+                                }
+                              },
+                              "title" : {
+                                "text" : "Turnos por rango etario"
+                              },
+                              "label" : "Rango etario",
+                              "content" : [
+                                {
+                                  "type" : "cubejs-chart",
+                                  "args" : {
+                                    "query" : "cantidadTurnosRangoEtario",
+                                    "chartOptions" : {
+                                      "responsive" : true,
+                                      "maintainAspectRatio" : false,
+                                      "scales" : {
+                                        "x" : {
+                                          "stacked" : true
+                                        },
+                                        "y" : {
+                                          "stacked" : true
+                                        }
+                                      },
+                                      "plugins" : {
+                                        "legend" : {
+                                          "display" : true,
+                                          "position" : "right"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
                         }
                       }
                     ]

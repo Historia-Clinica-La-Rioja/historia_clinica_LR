@@ -1,0 +1,35 @@
+{
+  "cubeQuery": {
+    "measures": [
+      "CantidadTurnosPacientes.cantidad_turnos"
+    ],
+    "timeDimensions": [],
+    "filters": [
+      {
+        "dimension": "CantidadTurnosPacientes.institucion_id",
+        "operator": "equals",
+        "values": [
+          "[(${institutionId})]"
+        ]
+      }
+    ],
+    "order": {
+      "CantidadTurnosPacientes.age_range": "asc"
+    },
+    "dimensions": [
+      "CantidadTurnosPacientes.age_range",
+      "CantidadTurnosPacientes.especialidad"
+    ]
+  },
+  "chartType": "bar",
+  "pivotConfig": {
+    "x": [
+      "CantidadTurnosPacientes.age_range"
+    ],
+    "y": [
+      "CantidadTurnosPacientes.especialidad",
+      "measures"],
+    "fillMissingDates": true,
+    "joinDateRange": false
+  }
+}
