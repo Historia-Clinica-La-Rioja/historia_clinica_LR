@@ -7,14 +7,14 @@ import {
 	DocumentRequestDto,
 	MedicationInfoDto,
 	PrescriptionDto,
-	ProfessionalLicenseNumberValidationResponseDto
+	ProfessionalLicenseNumberValidationResponseDto,
+	SnomedDto
 } from '@api-rest/api-model';
 import { MedicationRequestService } from '@api-rest/services/medication-request.service';
 import { ServiceRequestService } from '@api-rest/services/service-request.service';
 import { MEDICATION_STATUS, MedicationStatusChange, PRESCRIPTION_STATES, STUDY_STATUS } from '../constants/prescripciones-masterdata';
 import { NewPrescriptionItem } from '../dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { saveAs } from 'file-saver';
 import { DocumentService } from '@api-rest/services/document.service';
 import { PrescriptionLineState } from '../modules/indicacion/components/item-prescripciones/item-prescripciones.component';
 import { Color } from '@presentation/colored-label/colored-label.component';
@@ -42,6 +42,10 @@ export class PrescripcionesService {
 			case PrescriptionTypes.STUDY:
 				return this.serviceRequestService.create(patientId, newPrescription);
 		}
+	}
+
+	createTranscribedOrder(patientId: number, studySCTID: SnomedDto, problemSCTID: SnomedDto, professional: string, institution: string): Observable<number>{
+		return this.serviceRequestService.createTranscribedOrder(patientId, studySCTID, problemSCTID, professional, institution);
 	}
 
 	getPrescription(prescriptionType: PrescriptionTypes, patientId: number, statusId: string, medicationStatement: string, healthCondition: string, study?: string, categoryId?: string): Observable<any> {

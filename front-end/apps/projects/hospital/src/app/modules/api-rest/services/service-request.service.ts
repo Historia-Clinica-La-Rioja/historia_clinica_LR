@@ -6,7 +6,9 @@ import { Observable } from 'rxjs';
 import {
 	CompleteRequestDto,
 	DiagnosticReportInfoDto, DiagnosticReportInfoWithFilesDto,
-	PrescriptionDto
+	PrescriptionDto,
+	SnomedDto,
+	TranscribedPrescriptionDto,
 } from '@api-rest/api-model';
 
 import { switchMap } from 'rxjs/operators';
@@ -53,6 +55,17 @@ export class ServiceRequestService {
 	create(patientId: number, prescriptionDto: PrescriptionDto): Observable<number[]> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests`;
 		return this.http.post<number[]>(url, prescriptionDto);
+	}
+
+	createTranscribedOrder(patientId: number, study: SnomedDto, healthCondition: SnomedDto, professional: string, institution: string){
+		let data: TranscribedPrescriptionDto = {
+			study,
+			healthCondition,
+			healthcareProfessionalName: professional,
+			institutionName: institution
+		}
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/transcribed`;
+		return this.http.post<number>(url, data)
 	}
 
 	complete(patientId: number, diagnosticReportId: number, completeRequestDto: CompleteRequestDto, files: File[]): Observable<void> {
