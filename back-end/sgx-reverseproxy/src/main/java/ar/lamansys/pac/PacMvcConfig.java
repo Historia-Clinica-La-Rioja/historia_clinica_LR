@@ -29,6 +29,6 @@ public class PacMvcConfig implements WebMvcConfigurer {
 				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 				return false;
 			}
-		}).excludePathPatterns("/token/**", "/dicom-web/studies/**", "/wado/**");
+		}).excludePathPatterns("/dicom-web/studies/**", "/wado/**");
 	}
 }

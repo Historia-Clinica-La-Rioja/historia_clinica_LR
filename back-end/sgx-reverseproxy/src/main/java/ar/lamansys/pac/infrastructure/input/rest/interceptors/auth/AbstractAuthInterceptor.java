@@ -1,23 +1,29 @@
 package ar.lamansys.pac.infrastructure.input.rest.interceptors.auth;
 
+import static ar.lamansys.base.application.reverseproxyrest.configuration.RestUtils.removeContext;
+
+import java.net.URI;
+import java.time.Duration;
+import java.util.Objects;
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import ar.lamansys.pac.domain.StudyPermissionBo;
 import ar.lamansys.pac.infrastructure.input.rest.dto.TokenDTO;
 import ar.lamansys.pac.infrastructure.input.rest.exceptions.StudyAccessException;
 import ar.lamansys.pac.infrastructure.input.rest.exceptions.StudyAccessExceptionEnum;
 import ar.lamansys.pac.infrastructure.input.rest.interceptors.AuthInterceptor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import javax.servlet.http.HttpServletRequest;
-import java.net.URI;
-import java.time.Duration;
-import java.util.Objects;
-import java.util.Optional;
-
-import static ar.lamansys.base.application.reverseproxyrest.configuration.RestUtils.removeContext;
 
 @Slf4j
 public abstract class AbstractAuthInterceptor implements AuthInterceptor {
@@ -30,6 +36,10 @@ public abstract class AbstractAuthInterceptor implements AuthInterceptor {
 
     @Value("${app.hsi.url}")
     private String url;
+	@Value("${app.hsi.api-key.header}")
+	private String apiKeyHeader;
+	@Value("${app.hsi.api-key.value}")
+	private String apiKey;
     @Value("${app.imagenetwork.token.expiration}")
     private Duration tokenExpiration;
     private final RestTemplate restTemplate;
@@ -85,7 +95,9 @@ public abstract class AbstractAuthInterceptor implements AuthInterceptor {
 
         URI uri = uriBuilder.build().toUri();
         log.trace("URI to check token: '{}'", uri);
-        ResponseEntity<TokenDTO> response = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(new HttpHeaders()), TokenDTO.class);
+		HttpHeaders headers = new HttpHeaders();
+		headers.set(apiKeyHeader, apiKey);
+        ResponseEntity<TokenDTO> response = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(headers), TokenDTO.class);
 
         if (response.getStatusCode() != HttpStatus.OK)
             return Optional.empty();
