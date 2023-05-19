@@ -131,25 +131,29 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 	@Override
 	public BasicDataPersonDto getBasicDataPerson(Integer personId) {
 		LOG.debug(ONE_INPUT_PARAMETER, personId);
-		Person person = personService.getPerson(personId);
-		PersonExtended personExtended = personService.getPersonExtended(personId);
-		List<PersonFileDto> personFileDtoList = personFileExternalService.getFiles(personId);
-		BasicDataPersonDto result = personMapper.basicDataFromPerson(
-				person,
-				getGender(person.getGenderId()),
-				getSelfPerceivedGender(personExtended.getGenderSelfDeterminationId(), personExtended.getId()),
-				getIdentificationType(person.getIdentificationTypeId()),
-				getOccupation(personExtended.getOccupationId()),
-				getEducationLevel(personExtended.getEducationLevelId()),
-				personExtended.getReligion(),
-				getEthnicity(personExtended.getEthnicityId())
-		);
-		result.setNameSelfDetermination(personExtended.getNameSelfDetermination());
-		if (!personFileDtoList.isEmpty()) {
-			result.setFiles(personFileDtoList);
+		if (personId != null) {
+			Person person = personService.getPerson(personId);
+			PersonExtended personExtended = personService.getPersonExtended(personId);
+			List<PersonFileDto> personFileDtoList = personFileExternalService.getFiles(personId);
+			BasicDataPersonDto result = personMapper.basicDataFromPerson(
+					person,
+					getGender(person.getGenderId()),
+					getSelfPerceivedGender(personExtended.getGenderSelfDeterminationId(), personExtended.getId()),
+					getIdentificationType(person.getIdentificationTypeId()),
+					getOccupation(personExtended.getOccupationId()),
+					getEducationLevel(personExtended.getEducationLevelId()),
+					personExtended.getReligion(),
+					getEthnicity(personExtended.getEthnicityId())
+			);
+			result.setNameSelfDetermination(personExtended.getNameSelfDetermination());
+			if (!personFileDtoList.isEmpty()) {
+				result.setFiles(personFileDtoList);
+			}
+			LOG.debug(OUTPUT, result);
+			return result;
 		}
-		LOG.debug(OUTPUT, result);
-		return result;
+		else
+			return new BasicDataPersonDto();
 	}
 
 

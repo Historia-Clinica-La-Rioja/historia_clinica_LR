@@ -59,7 +59,8 @@ export class PatientProfileComponent implements OnInit {
 					.subscribe(completeData => {
 						this.patientTypeData = this.mapperService.toPatientTypeData(completeData.patientType);
 						this.patientBasicData = this.mapperService.toPatientBasicData(completeData);
-						this.personService.getPersonalInformation<PersonalInformationDto>(completeData.person.id)
+						if (completeData.person.id)
+							this.personService.getPersonalInformation<PersonalInformationDto>(completeData.person.id)
 							.subscribe(personInformationData => {
 								this.personalInformation = this.mapperService.toPersonalInformationData(completeData, personInformationData);
 							});

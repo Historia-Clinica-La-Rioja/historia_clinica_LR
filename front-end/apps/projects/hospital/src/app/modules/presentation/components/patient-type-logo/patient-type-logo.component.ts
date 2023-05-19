@@ -25,7 +25,8 @@ enum PatientTypeColors {
 	HISTORICO = '#585E62',
 	TELEFONICO = '#585E62',
 	RECHAZADO = '#585E62',
-	PERMANENTE_NO_VALIDO = '#33AFFF'
+	PERMANENTE_NO_VALIDO = '#33AFFF',
+	TEMPORAL_DE_GUARDIA = '#D34444'
 }
 
 const colorsById = {
@@ -35,7 +36,8 @@ const colorsById = {
 	4: { color: PatientTypeColors.HISTORICO },
 	5: { color: PatientTypeColors.TELEFONICO },
 	6: { color: PatientTypeColors.RECHAZADO },
-	7: { color: PatientTypeColors.PERMANENTE_NO_VALIDO }
+	7: { color: PatientTypeColors.PERMANENTE_NO_VALIDO },
+	8: { color: PatientTypeColors.TEMPORAL_DE_GUARDIA }
 };
 
 export class PatientTypeData {

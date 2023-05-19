@@ -71,7 +71,7 @@ export class MapperService {
 			middleNames: patient.person?.middleNames,
 			lastName: patient.person?.lastName,
 			otherLastNames: patient.person?.otherLastNames,
-			gender: patient.person?.gender.description,
+			gender: patient.person?.gender?.description,
 			age: patient.person?.age,
 			nameSelfDetermination: patient.person?.nameSelfDetermination,
 			selfPerceivedGender: patient.person?.selfPerceivedGender
