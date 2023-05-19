@@ -1,20 +1,20 @@
 {
   "cubeQuery": {
     "measures": [
-      "CantidadTurnosTotal.cantidad_turnos"
+      "CantidadTurnos.cantidad_turnos"
     ],
     "timeDimensions": [],
     "order": {},
     "filters": [
       {
-        "member": "CantidadTurnosTotal.estado",
+        "member": "CantidadTurnos.estado",
         "operator": "equals",
         "values": [
-          "3"
+          "Ausente"
         ]
       },
       {
-        "dimension": "CantidadTurnosTotal.institucion_id",
+        "dimension": "CantidadTurnos.institucion_id",
         "operator": "equals",
         "values": [
           "[(${institutionId})]"

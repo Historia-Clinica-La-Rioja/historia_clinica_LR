@@ -628,6 +628,32 @@
                           "header" : {
                             "title" : "Turnos por estado"
                           },
+                          "filters" : {
+                            "specialty" : {
+                              "filter" : {
+                                "member" : "CantidadTurnos.especialidad",
+                                "operator" : "equals"
+                              },
+                              "type" : "specialty",
+                              "label" : "Especialidad"
+                            },
+                            "professional" : {
+                              "filter" : {
+                                "member" : "CantidadTurnos.profesional",
+                                "operator" : "equals"
+                              },
+                              "type" : "professional",
+                              "label" : "Profesional"
+                            },
+                            "date" : {
+                              "filter" : {
+                                "member" : "CantidadTurnos.fecha_consulta",
+                                "operator" : "inDateRange"
+                              },
+                              "type" : "dateRangeISO",
+                              "label" : "Fecha"
+                            }
+                          },
                           "content" : {
                             "type" : "cubejs-dashboard",
                             "args" : {
