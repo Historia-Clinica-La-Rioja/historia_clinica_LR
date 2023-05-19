@@ -56,22 +56,26 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
     @Override
     public Optional<AnnexIIOutpatientVo> getConsultationAnnexInfo(Long documentId) {
         String query = "WITH t AS (" +
-                "       SELECT d.id as doc_id, oc.start_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id " +
+                "       SELECT d.id as doc_id, oc.start_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id " +
                 "       FROM {h-schema}document AS d " +
                 "       JOIN {h-schema}outpatient_consultation AS oc ON (d.source_id = oc.id  AND d.source_type_id = 1)" +
                 "       WHERE d.id = :documentId " +
                 "       UNION ALL " +
-                "       SELECT d.id as doc_id, vc.performed_date as start_date, vc.institution_id, vc.patient_id, vc.clinical_specialty_id " +
+                "       SELECT d.id as doc_id, vc.performed_date as start_date, vc.institution_id, vc.patient_id, vc.clinical_specialty_id, vc.patient_medical_coverage_id " +
                 "       FROM {h-schema}document AS d " +
                 "       JOIN {h-schema}vaccine_consultation AS vc ON (d.source_id = vc.id  AND d.source_type_id = 5)" +
                 "       WHERE d.id = :documentId " +
                 "       )" +
                 "       SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
                 "               pe.birth_date, it.description as idType, pe.identification_number, t.start_date, pr.proced as hasProcedures, " +
-                "               cs.name, i.sisa_code, prob.descriptions as problems  " +
+                "               cs.name, i.sisa_code, prob.descriptions as problems, mc.name as medicalCoverageName, pmc.affiliate_number, " +
+				"				pmc.start_date as medicalCoverageStartDate, pmc.end_date as medicalCoverageEndDate, hi.rnos  " +
                 "       FROM t " +
                 "           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
                 "           JOIN {h-schema}Patient AS pa ON (t.patient_id = pa.id) " +
+				"           LEFT JOIN {h-schema}patient_medical_coverage AS pmc ON (t.patient_medical_coverage_id = pmc.id) " +
+				"           LEFT JOIN {h-schema}medical_coverage AS mc ON (pmc.medical_coverage_id = mc.id) " +
+				"			LEFT JOIN {h-schema}health_insurance AS hi ON (mc.id = hi.id) " +
                 "           LEFT JOIN {h-schema}Person AS pe ON (pe.id = pa.person_id) " +
                 "           LEFT JOIN {h-schema}Identification_type AS it ON (it.id = pe.identification_type_id)" +
                 "           LEFT JOIN {h-schema}Gender AS g ON (pe.gender_id = g.id) " +
@@ -111,7 +115,12 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
                 (Boolean) a[10],
                 (String) a[11],
                 (String) a[12],
-                (String) a[13]
+                (String) a[13],
+				(String) a[14],
+				(String) a[15],
+				a[16] != null ? ((Date) a[16]).toLocalDate() : null,
+				a[17] != null ? ((Date) a[17]).toLocalDate() : null,
+				(Integer) a[18]
         ));
         return result;
     }
@@ -119,16 +128,20 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 	@Override
 	public Optional<AnnexIIOutpatientVo> getOdontologyConsultationAnnexGeneralInfo(Long documentId) {
 		String query = "WITH t AS (" +
-				"       SELECT d.id as doc_id, oc.performed_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id " +
+				"       SELECT d.id as doc_id, oc.performed_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id " +
 				"       FROM {h-schema}document AS d " +
 				"       JOIN {h-schema}odontology_consultation AS oc ON (d.source_id = oc.id  AND d.source_type_id = 6)" +
 				"       WHERE d.id = :documentId) " +
 				"       SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
 				"               pe.birth_date, it.description as idType, pe.identification_number, t.performed_date, null as hasProcedures, " +
-				"               null, i.sisa_code, null as problems  " +
+				"               null, i.sisa_code, null as problems, mc.name as medicalCoverageName, pmc.affiliate_number, " +
+				"  				pmc.start_date as medicalCoverageStartDate, pmc.end_date as medicalCoverageEndDate, hi.rnos	" +
 				"       FROM t " +
 				"           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
 				"           JOIN {h-schema}Patient AS pa ON (t.patient_id = pa.id) " +
+				"			LEFT JOIN {h-schema}patient_medical_coverage AS pmc ON (t.patient_medical_coverage_id = pmc.id) " +
+				"           LEFT JOIN {h-schema}medical_coverage AS mc ON (pmc.medical_coverage_id = mc.id) " +
+				"			LEFT JOIN {h-schema}health_insurance AS hi ON (mc.id = hi.id) " +
 				"           LEFT JOIN {h-schema}Person AS pe ON (pe.id = pa.person_id) " +
 				"           LEFT JOIN {h-schema}Identification_type AS it ON (it.id = pe.identification_type_id)" +
 				"           LEFT JOIN {h-schema}Gender AS g ON (pe.gender_id = g.id) " +
@@ -153,7 +166,12 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 				(Boolean) a[10],
 				(String) a[11],
 				(String) a[12],
-				(String) a[13]
+				(String) a[13],
+				(String) a[14],
+				(String) a[15],
+				a[16] != null ? ((Date) a[16]).toLocalDate() : null,
+				a[17] != null ? ((Date) a[17]).toLocalDate() : null,
+				(Integer) a[18]
 		));
 		return result;
 	}
@@ -221,16 +239,20 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 	@Override
 	public Optional<AnnexIIOutpatientVo> getNursingConsultationAnnexGeneralInfo(Long documentId) {
 		String query = "WITH t AS (" +
-				"       SELECT d.id as doc_id, oc.performed_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id " +
+				"       SELECT d.id as doc_id, oc.performed_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id " +
 				"       FROM {h-schema}document AS d " +
 				"       JOIN {h-schema}nursing_consultation AS oc ON (d.source_id = oc.id  AND d.source_type_id = 7)" +
 				"       WHERE d.id = :documentId) " +
 				"       SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
 				"               pe.birth_date, it.description as idType, pe.identification_number, t.performed_date, null as hasProcedures, " +
-				"               null, i.sisa_code, null as problems  " +
+				"               null, i.sisa_code, null as problems, mc.name as medicalCoverageName, pmc.affiliate_number, " +
+				"				pmc.start_date as medicalCoverageStartDate, pmc.end_date as medicalCoverageEndDate, hi.rnos   " +
 				"       FROM t " +
 				"           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
 				"           JOIN {h-schema}Patient AS pa ON (t.patient_id = pa.id) " +
+				"			LEFT JOIN {h-schema}patient_medical_coverage AS pmc ON (t.patient_medical_coverage_id = pmc.id) " +
+				"           LEFT JOIN {h-schema}medical_coverage AS mc ON (pmc.medical_coverage_id = mc.id) " +
+				"			LEFT JOIN {h-schema}health_insurance AS hi ON (mc.id = hi.id) " +
 				"           LEFT JOIN {h-schema}Person AS pe ON (pe.id = pa.person_id) " +
 				"           LEFT JOIN {h-schema}Identification_type AS it ON (it.id = pe.identification_type_id)" +
 				"           LEFT JOIN {h-schema}Gender AS g ON (pe.gender_id = g.id) " +
@@ -255,7 +277,12 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 				(Boolean) a[10],
 				(String) a[11],
 				(String) a[12],
-				(String) a[13]
+				(String) a[13],
+				(String) a[14],
+				(String) a[15],
+				a[16] != null ? ((Date) a[16]).toLocalDate() : null,
+				a[17] != null ? ((Date) a[17]).toLocalDate() : null,
+				(Integer) a[18]
 		));
 		return result;
 	}

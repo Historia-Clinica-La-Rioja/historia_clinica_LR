@@ -57,14 +57,14 @@ public class FormReportRepositoryImpl implements FormReportRepository {
     @Transactional(readOnly = true)
     public Optional<FormVOutpatientVo> getConsultationFormVInfo(Long documentId) {
         String query = "WITH t AS (" +
-                "       SELECT d.id as doc_id, oc.start_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id "
+                "       SELECT d.id as doc_id, oc.start_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id "
                 +
                 "       FROM {h-schema}document AS d " +
                 "       JOIN {h-schema}outpatient_consultation AS oc ON (d.source_id = oc.id  AND d.source_type_id = 1)"
                 +
                 "       WHERE d.id = :documentId " +
                 "       UNION ALL " +
-                "       SELECT d.id as doc_id, vc.performed_date as start_date, vc.institution_id, vc.patient_id, vc.clinical_specialty_id "
+                "       SELECT d.id as doc_id, vc.performed_date as start_date, vc.institution_id, vc.patient_id, vc.clinical_specialty_id, vc.patient_medical_coverage_id "
                 +
                 "       FROM {h-schema}document AS d " +
                 "       JOIN {h-schema}vaccine_consultation AS vc ON (d.source_id = vc.id  AND d.source_type_id = 5)" +
@@ -73,11 +73,13 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                 "       SELECT i.name, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
                 "              g.description, pe.birth_date, it.description as idType, pe.identification_number, " +
                 "              t.start_date, prob.descriptions as problems, " +
-                "              ad.street, ad.number, ci.description as city, i.sisa_code, prob.cie10Codes as cie10Codes"
-                +
+                "              ad.street, ad.number, ci.description as city, i.sisa_code, prob.cie10Codes as cie10Codes, " +
+				"				mc.name as medicalCoverageName, pmc.affiliate_number " +
                 "       FROM t " +
                 "           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
                 "           JOIN {h-schema}Patient AS pa ON (t.patient_id = pa.id) " +
+				"           LEFT JOIN {h-schema}patient_medical_coverage AS pmc ON (t.patient_medical_coverage_id = pmc.id) " +
+				"           LEFT JOIN {h-schema}medical_coverage AS mc ON (pmc.medical_coverage_id = mc.id) " +
                 "           LEFT JOIN {h-schema}Person AS pe ON (pe.id = pa.person_id) " +
                 "           LEFT JOIN {h-schema}Person_extended AS pex ON (pe.id = pex.person_id) " +
                 "           LEFT JOIN {h-schema}Address AS ad ON (pex.address_id = ad.id) " +
@@ -116,7 +118,9 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                 (String) a[12],
                 (String) a[13],
                 (String) a[14],
-                (String) a[15]
+                (String) a[15],
+				(String) a[16],
+				(String) a[17]
 
         ));
         return result;
@@ -125,7 +129,7 @@ public class FormReportRepositoryImpl implements FormReportRepository {
     @Override
     public Optional<FormVOutpatientVo> getOdontologyConsultationFormVGeneralInfo(Long documentId) {
         String query = "WITH t AS (" +
-                "       SELECT d.id as doc_id, oc.performed_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id "
+                "       SELECT d.id as doc_id, oc.performed_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id "
                 +
                 "       FROM {h-schema}document AS d " +
                 "       JOIN {h-schema}odontology_consultation AS oc ON (d.source_id = oc.id  AND d.source_type_id = 6)"
@@ -134,10 +138,13 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                 "       SELECT i.name, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
                 "              g.description, pe.birth_date, it.description as idType, pe.identification_number, " +
                 "              t.performed_date, null as problems, " +
-                "              ad.street, ad.number, ci.description as city, i.sisa_code, null as cie10Codes" +
+                "              ad.street, ad.number, ci.description as city, i.sisa_code, null as cie10Codes, " +
+				"				mc.name as medicalCoverageName, pmc.affiliate_number " +
                 "       FROM t " +
                 "           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
                 "           JOIN {h-schema}Patient AS pa ON (t.patient_id = pa.id) " +
+				"           LEFT JOIN {h-schema}patient_medical_coverage AS pmc ON (t.patient_medical_coverage_id = pmc.id) " +
+				"           LEFT JOIN {h-schema}medical_coverage AS mc ON (pmc.medical_coverage_id = mc.id) " +
                 "           LEFT JOIN {h-schema}Person AS pe ON (pe.id = pa.person_id) " +
                 "           LEFT JOIN {h-schema}Person_extended AS pex ON (pe.id = pex.person_id) " +
                 "           LEFT JOIN {h-schema}Address AS ad ON (pex.address_id = ad.id) " +
@@ -165,7 +172,9 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                 (String) a[12],
                 (String) a[13],
                 (String) a[14],
-                (String) a[15]
+                (String) a[15],
+				(String) a[16],
+				(String) a[17]
 
         ));
         return result;
@@ -206,17 +215,20 @@ public class FormReportRepositoryImpl implements FormReportRepository {
 	@Override
 	public Optional<FormVOutpatientVo> getNursingConsultationFormVGeneralInfo(Long documentId) {
 		String query = "WITH t AS (" +
-				"       SELECT d.id as doc_id, nc.performed_date, nc.institution_id, nc.patient_id, nc.clinical_specialty_id " +
+				"       SELECT d.id as doc_id, nc.performed_date, nc.institution_id, nc.patient_id, nc.clinical_specialty_id, nc.patient_medical_coverage_id " +
 				"       FROM {h-schema}document AS d " +
 				"       JOIN {h-schema}nursing_consultation AS nc ON (d.source_id = nc.id  AND d.source_type_id = 7)" +
 				"       WHERE d.id = :documentId)" +
 				"       SELECT i.name, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
 				"              g.description, pe.birth_date, it.description as idType, pe.identification_number, " +
 				"              t.performed_date, null as problems, "+
-				"              ad.street, ad.number, ci.description as city, i.sisa_code, null as cie10Codes"+
+				"              ad.street, ad.number, ci.description as city, i.sisa_code, null as cie10Codes, "+
+				"				mc.name as medicalCoverageName, pmc.affiliate_number " +
 				"       FROM t "+
 				"           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
 				"           JOIN {h-schema}Patient AS pa ON (t.patient_id = pa.id) " +
+				"           LEFT JOIN {h-schema}patient_medical_coverage AS pmc ON (t.patient_medical_coverage_id = pmc.id) " +
+				"           LEFT JOIN {h-schema}medical_coverage AS mc ON (pmc.medical_coverage_id = mc.id) " +
 				"           LEFT JOIN {h-schema}Person AS pe ON (pe.id = pa.person_id) " +
 				"           LEFT JOIN {h-schema}Person_extended AS pex ON (pe.id = pex.person_id) " +
 				"           LEFT JOIN {h-schema}Address AS ad ON (pex.address_id = ad.id) " +
@@ -244,7 +256,9 @@ public class FormReportRepositoryImpl implements FormReportRepository {
 				(String) a[12],
 				(String) a[13],
 				(String) a[14],
-				(String) a[15]
+				(String) a[15],
+				(String) a[16],
+				(String) a[17]
 
 		));
 		return result;

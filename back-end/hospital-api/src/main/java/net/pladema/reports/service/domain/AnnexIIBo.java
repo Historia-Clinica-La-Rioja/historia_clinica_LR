@@ -47,6 +47,10 @@ public class AnnexIIBo {
 
 	private Integer rnos;
 
+	private LocalDate medicalCoverageStartDate;
+
+	private LocalDate medicalCoverageEndDate;
+
     public AnnexIIBo(AnnexIIOutpatientVo annexIIOutpatientVo){
         this.reportDate = LocalDate.now();
         this.establishment = annexIIOutpatientVo.getEstablishment();
@@ -62,6 +66,12 @@ public class AnnexIIBo {
         this.specialty = annexIIOutpatientVo.getSpecialty();
         this.consultationDate = annexIIOutpatientVo.getConsultationDate();
         this.problems = annexIIOutpatientVo.getProblems();
+
+		this.medicalCoverage = annexIIOutpatientVo.getMedicalCoverage();
+		this.affiliateNumber = annexIIOutpatientVo.getAffiliateNumber();
+		this.medicalCoverageStartDate = annexIIOutpatientVo.getStartDate();
+		this.medicalCoverageEndDate = annexIIOutpatientVo.getEndDate();
+		this.rnos = annexIIOutpatientVo.getRnos();
     }
 
     public AnnexIIBo(AnnexIIAppointmentVo annexIIAppointmentVo){

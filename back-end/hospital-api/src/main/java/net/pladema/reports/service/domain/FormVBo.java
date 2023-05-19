@@ -59,6 +59,9 @@ public class FormVBo {
         this.problems = formVOutpatientVo.getProblems();
         this.sisaCode = formVOutpatientVo.getSisaCode();
         this.cie10Codes = formVOutpatientVo.getCie10Codes();
+
+		this.medicalCoverage = formVOutpatientVo.getMedicalCoverage();
+		this.affiliateNumber = formVOutpatientVo.getAffiliateNumber();
     }
 
     public FormVBo(FormVAppointmentVo formVAppointmentVo){

@@ -17,14 +17,20 @@ public class FormVOutpatientVo extends FormVVo{
 
     private String cie10Codes;
 
+	private String medicalCoverage;
+
+	private String affiliateNumber;
+
     public FormVOutpatientVo(String establishment, String firstName, String middleNames, String lastName, String otherLastNames, String patientGender,
                              LocalDate patientBirthDate, String documentType, String documentNumber, LocalDate consultationDate, String problems,
-                             String streetName, String streetNumber, String city, String sisaCode, String cie10Codes){
+                             String streetName, String streetNumber, String city, String sisaCode, String cie10Codes, String medicalCoverage, String affiliateNumber){
         super(establishment, firstName, middleNames, lastName, otherLastNames, patientGender, patientBirthDate, documentType,
                 documentNumber, streetName, streetNumber, city, sisaCode);
         this.consultationDate = consultationDate;
         this.problems = problems;
         this.cie10Codes = cie10Codes;
+		this.medicalCoverage = medicalCoverage;
+		this.affiliateNumber = affiliateNumber;
     }
 
     @JsonIgnore

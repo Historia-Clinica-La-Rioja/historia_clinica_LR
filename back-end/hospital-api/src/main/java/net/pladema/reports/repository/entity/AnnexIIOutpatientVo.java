@@ -21,6 +21,16 @@ public class AnnexIIOutpatientVo extends AnnexIIVo{
 
     private String problems;
 
+	private String medicalCoverage;
+
+	private String affiliateNumber;
+
+	private LocalDate startDate;
+
+	private LocalDate endDate;
+
+	private Integer rnos;
+
     public AnnexIIOutpatientVo(String establishment, String firstName, String middleNames, String lastName, String otherLastNames, String patientGender, LocalDate patientBirthDate,
                                String documentType, String documentNumber, LocalDate consultationDate, Boolean hasProcedures, String specialty, String sisaCode, String problems){
         super(establishment, firstName, middleNames, lastName, otherLastNames, patientGender, patientBirthDate, documentType, documentNumber, sisaCode);
@@ -30,6 +40,22 @@ public class AnnexIIOutpatientVo extends AnnexIIVo{
         this.specialty = specialty;
         this.problems = problems;
     }
+
+	public AnnexIIOutpatientVo(String establishment, String firstName, String middleNames, String lastName, String otherLastNames, String patientGender, LocalDate patientBirthDate,
+							   String documentType, String documentNumber, LocalDate consultationDate, Boolean hasProcedures, String specialty, String sisaCode, String problems,
+							   String medicalCoverageName, String medicalCoverageAffiliateNumber, LocalDate medicalCoverageStartDate, LocalDate medicalCoverageEndDate, Integer rnos){
+		super(establishment, firstName, middleNames, lastName, otherLastNames, patientGender, patientBirthDate, documentType, documentNumber, sisaCode);
+		this.consultationDate = consultationDate;
+		this.hasProcedures = hasProcedures == null ? false : hasProcedures;
+		this.existsConsultation = true;
+		this.specialty = specialty;
+		this.problems = problems;
+		this.medicalCoverage = medicalCoverageName;
+		this.affiliateNumber = medicalCoverageAffiliateNumber;
+		this.startDate = medicalCoverageStartDate;
+		this.endDate = medicalCoverageEndDate;
+		this.rnos = rnos;
+	}
 
     @JsonIgnore
     public Short getAge(){
