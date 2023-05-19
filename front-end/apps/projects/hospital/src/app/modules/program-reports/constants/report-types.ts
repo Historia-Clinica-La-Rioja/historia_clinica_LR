@@ -18,7 +18,11 @@ export const PROGRAM_REPORT_TYPES = [
     {
         description: 'Reporte Odontología - SUMAR',
         id: 5,
-    }
+    },
+    {
+        description: 'Recupero Odontológico',
+        id: 6,
+    },
 ];
 
 export const ODONTO_REPORT_TYPES = [
@@ -42,6 +46,7 @@ export const ODONTO_REPORT_TYPES = [
         description: 'Consultas de Odontología - Endodoncia Segundo Nivel',
         id: 5,
     },
+    
 ];
 
 export const GENERAL_REPORT_TYPES = [
