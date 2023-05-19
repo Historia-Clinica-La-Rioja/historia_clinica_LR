@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +24,7 @@ import net.pladema.imagenetwork.domain.StudyPacBo;
 import net.pladema.imagenetwork.infrastructure.input.rest.dto.PacsUrlDTO;
 import net.pladema.imagenetwork.infrastructure.input.rest.dto.StudyPacAssociationDTO;
 
-@RequestMapping("/imagenetwork/pacs")
+@RequestMapping("/institutions/{institutionId}/imagenetwork/pacs")
 @Tag(name = "Image Network Pacs", description = "Image Network Pacs")
 @Slf4j
 @RequiredArgsConstructor
@@ -34,8 +35,9 @@ public class StudyPacAssociationController {
 	private final SavePacWhereStudyIsHosted savePacWhereStudyIsHosted;
 
 	@GetMapping(value = "/{studyInstanceUID}")
-	public ResponseEntity<PacsUrlDTO> getPacGlobalURL(@PathVariable(name = "studyInstanceUID") String studyInstanceUID) throws MalformedURLException {
-		log.debug("Input -> studyInstanceUID {}", studyInstanceUID);
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, INFORMADOR')")
+	public ResponseEntity<PacsUrlDTO> getPacGlobalURL(@PathVariable Integer institutionId, @PathVariable String studyInstanceUID) throws MalformedURLException {
+		log.debug("Input -> institutionId '{}' studyInstanceUID '{}'", institutionId, studyInstanceUID);
 		PacsUrlDTO url = mapToDto(getPacWhereStudyIsHosted.run(studyInstanceUID));
 		log.debug("Output -> {}", url);
 		return ResponseEntity.ok().body(url);
