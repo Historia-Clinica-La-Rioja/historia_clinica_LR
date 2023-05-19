@@ -231,3 +231,58 @@ databaseChangeLog:
               sql: |-
                 UPDATE blood_type SET description = '0−' WHERE id = 1;
                 UPDATE observation_lab SET value = '0−' WHERE value = '0-';
+              
+    - changeSet:
+        id: transcribed_service_request-createTable
+        comment: Create table transcribed_service_request
+        author: lbergottini
+        changes:
+          - createTable:
+              tableName: transcribed_service_request
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_transcribed_service_request
+                    name: id
+                    type: int
+                - column:
+                    name: study_id
+                    type: int
+                    constraints:
+                        nullable: false
+                - column:
+                    name: healthcare_professional_name
+                    type: ${varchar.max}
+                    constraints:
+                        nullable: false
+                - column:
+                    name: institution_name
+                    type: ${varchar.max}
+                - column:
+                    name: patient_id
+                    type: int
+                    constraints:
+                        nullable: false
+                - column:
+                    name: creation_date
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: study_id
+              baseTableName: transcribed_service_request
+              constraintName: FK_transcribed_service_request_diagnostic_report_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: diagnostic_report
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: patient_id
+              baseTableName: transcribed_service_request
+              constraintName: FK_transcribed_service_request_patient_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: patient
+              validate: true
