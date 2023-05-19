@@ -5,7 +5,6 @@ import java.net.URISyntaxException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -31,12 +30,5 @@ public class ImageNetworkExceptionHandler {
 	protected ApiErrorMessageDto handleImageNetworkException(URISyntaxException ex) {
 		log.debug("URISyntaxException message -> {}", ex.getMessage(), ex);
 		return new ApiErrorMessageDto(HttpStatus.BAD_REQUEST.toString(), ex.getMessage());
-	}
-
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler({ MissingServletRequestParameterException.class })
-	protected ApiErrorMessageDto handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
-		log.debug("MissingServletRequestParameterException message -> {}", ex.getMessage(), ex);
-		return new ApiErrorMessageDto(HttpStatus.BAD_REQUEST.toString(), "Faltan parámetros en la URL para completar la solicitud");
 	}
 }

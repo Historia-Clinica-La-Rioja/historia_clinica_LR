@@ -1,5 +1,17 @@
 package ar.lamansys.sgh.publicapi.infrastructure.input.rest.exceptions;
 
+import java.util.Locale;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 import ar.lamansys.sgh.publicapi.application.deleteexternalencounter.exceptions.DeleteExternalEncounterException;
 import ar.lamansys.sgh.publicapi.application.port.out.exceptions.ActivityStorageException;
 import ar.lamansys.sgh.publicapi.application.port.out.exceptions.ExternalClinicalHistoryStorageException;
@@ -9,16 +21,6 @@ import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalEncounterBoException;
 import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalPatientBoException;
 import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalPatientExtendedBoException;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.Locale;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice(basePackages = "ar.lamansys.sgh.publicapi")
@@ -84,5 +86,12 @@ public class HospitalPublicApiExceptionHandler {
 	protected ApiErrorMessageDto handleExternalClinicalHistoryStorageException(ExternalClinicalHistoryStorageException ex) {
 		logger.error("ExternalClinicalHistoryStorageException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ MissingServletRequestParameterException.class })
+	protected ApiErrorMessageDto handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
+		logger.debug("MissingServletRequestParameterException message -> {}", ex.getMessage(), ex);
+		return new ApiErrorMessageDto(HttpStatus.BAD_REQUEST.toString(), "Faltan parámetros en la URL para completar la solicitud");
 	}
 }

@@ -38,7 +38,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 			"/swagger-ui/**"
 	};
 
-	private static final String IMAGENETWORK = "/imagenetwork";
 
 	private String[] BOOKING_API_RESOURCES = new String[]{};
 
@@ -108,7 +107,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/fhir/**").permitAll()
 				.antMatchers(BOOKING_API_RESOURCES).permitAll()
 				.antMatchers("/public-api/**").hasAnyAuthority(ERole.API_CONSUMER.getValue())
-				.antMatchers(IMAGENETWORK + "/**/permission/check").permitAll()
 				.antMatchers("/**").authenticated()
 		.anyRequest().authenticated();
 
