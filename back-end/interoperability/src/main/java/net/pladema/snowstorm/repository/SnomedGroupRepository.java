@@ -2,6 +2,8 @@ package net.pladema.snowstorm.repository;
 
 import net.pladema.snowstorm.repository.domain.SnomedTemplateSearchVo;
 import net.pladema.snowstorm.repository.entity.SnomedGroup;
+import net.pladema.snowstorm.repository.entity.SnomedRelatedGroup;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -38,12 +40,14 @@ public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Intege
 			" 	AND baseGroup.groupId IS NULL " +
 			" 	AND (sg.institutionId IS NULL OR sg.institutionId = :institutionId) " +
 			" 	AND (sg.userId IS NULL OR sg.userId = :userId) ")
-	List<SnomedTemplateSearchVo> searchByTemplateName(@Param("searchTerm") String searchTerm,
-													  @Param("baseGroupEcl") String baseGroupEcl,
-													  @Param("baseGroupDescription") String baseGroupDescription,
-													  @Param("institutionId") Integer institutionId,
-													  @Param("userId") Integer userId,
-													  @Param("templateGroupType") Short templateGroupType);
+	List<SnomedTemplateSearchVo> searchByTemplateName(
+			@Param("searchTerm") String searchTerm,
+			@Param("baseGroupEcl") String baseGroupEcl,
+			@Param("baseGroupDescription") String baseGroupDescription,
+			@Param("institutionId") Integer institutionId,
+			@Param("userId") Integer userId,
+			@Param("templateGroupType") Short templateGroupType
+	);
 
 	@Query( " SELECT NEW net.pladema.snowstorm.repository.domain.SnomedTemplateSearchVo(sg.id, sg.description, s.id, s.sctid, s.pt) " +
 			" FROM SnomedGroup sg " +

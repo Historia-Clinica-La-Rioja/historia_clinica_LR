@@ -57,30 +57,23 @@ public class SnowstormController {
 
 	private final SearchCachedConcepts searchCachedConcepts;
 
-    private final UpdateSnomedConceptsByCsv updateSnomedConceptsByCsv;
-
 	private final FeatureFlagsService featureFlagsService;
 
 	private final SearchTemplates searchTemplates;
-
-	private final UpdateSnomedConceptsSynonymsByCsv updateSnomedConceptsSynonymsByCsv;
 
     public SnowstormController(SnowstormService snowstormService,
 							   FetchAllSnomedEcl fetchAllSnomedEcl,
 							   SearchCachedConceptsWithResultCount searchCachedConceptsWithResultCount,
 							   SearchCachedConcepts searchCachedConcepts,
-							   UpdateSnomedConceptsByCsv updateSnomedConceptsByCsv,
 							   FeatureFlagsService featureFlagsService,
-							   SearchTemplates searchTemplates,
-							   UpdateSnomedConceptsSynonymsByCsv updateSnomedConceptsSynonymsByCsv) {
+							   SearchTemplates searchTemplates
+	) {
 		this.snowstormService = snowstormService;
         this.fetchAllSnomedEcl = fetchAllSnomedEcl;
         this.searchCachedConceptsWithResultCount = searchCachedConceptsWithResultCount;
 		this.searchCachedConcepts = searchCachedConcepts;
-        this.updateSnomedConceptsByCsv = updateSnomedConceptsByCsv;
 		this.featureFlagsService = featureFlagsService;
 		this.searchTemplates = searchTemplates;
-		this.updateSnomedConceptsSynonymsByCsv = updateSnomedConceptsSynonymsByCsv;
 	}
 
     @GetMapping(value = CONCEPTS)
@@ -194,43 +187,5 @@ public class SnowstormController {
                 .map(snomedECLBo -> new SnomedEclDto(snomedECLBo.getKey(), snomedECLBo.getValue()))
                 .collect(Collectors.toList());
     }
-
-    @PostMapping("/load-concepts-csv")
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
-	public UpdateConceptsResultDto loadConceptsByCsv(@RequestParam("file") MultipartFile file,
-						   @RequestParam(value = "ecl") String eclKey) {
-        LOG.debug("Input parameters -> file {}, eclKey {}", file.getOriginalFilename(), eclKey);
-		UpdateConceptsResultDto result = mapToUpdateConceptsResultDto(updateSnomedConceptsByCsv.run(file, eclKey));
-		LOG.debug("Output -> {}", result);
-		return result;
-    }
-
-	@PostMapping("/load-concepts-synonyms-csv")
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
-	public UpdateConceptsSynonymsResultDto loadConceptsSynonymsByCsv(@RequestParam("file") MultipartFile file,
-													 @RequestParam(value = "ecl") String eclKey) {
-		LOG.debug("Input parameters -> file {}, eclKey {}", file.getOriginalFilename(), eclKey);
-		UpdateConceptsSynonymsResultDto result = mapToUpdateConceptsSynonymsResultDto(updateSnomedConceptsSynonymsByCsv.run(file, eclKey));
-		LOG.debug("Output -> {}", result);
-		return result;
-	}
-
-	private UpdateConceptsResultDto mapToUpdateConceptsResultDto(UpdateConceptsResultBo updateConceptsResultBo) {
-		return new UpdateConceptsResultDto(
-				updateConceptsResultBo.getEclKey(),
-				updateConceptsResultBo.getConceptsLoaded(),
-				updateConceptsResultBo.getErroneousConcepts(),
-				updateConceptsResultBo.getErrorMessages());
-	}
-
-	private UpdateConceptsSynonymsResultDto mapToUpdateConceptsSynonymsResultDto(UpdateConceptsSynonymsResultBo updateConceptsSynonymsResultBo) {
-		return new UpdateConceptsSynonymsResultDto(
-				updateConceptsSynonymsResultBo.getEclKey(),
-				updateConceptsSynonymsResultBo.getConceptsLoaded(),
-				updateConceptsSynonymsResultBo.getErroneousConcepts(),
-				updateConceptsSynonymsResultBo.getMissingMainConcepts(),
-				updateConceptsSynonymsResultBo.getErrorMessages());
-	}
-
 
 }

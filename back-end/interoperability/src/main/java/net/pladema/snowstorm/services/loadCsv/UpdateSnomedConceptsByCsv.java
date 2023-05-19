@@ -1,6 +1,7 @@
 package net.pladema.snowstorm.services.loadCsv;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,17 +57,22 @@ public class UpdateSnomedConceptsByCsv {
 			throw new UpdateSnomedConceptsException(UpdateSnomedConceptsExceptionEnum.UPDATE_ALREADY_IN_PROGRESS,
 					"Hay otra actualización en marcha. Intente nuevamente más tarde");
 		}
+		SnomedConceptsCsvReader.hasCsvFormat(csvFile);
 		UpdateConceptsResultBo result = updateSnomedConcepts(csvFile, eclKey);
 		this.semaphore.release();
 		return result;
     }
 
-	private UpdateConceptsResultBo updateSnomedConcepts(MultipartFile csvFile, String eclKey) {
+	public UpdateConceptsResultBo updateSnomedConcepts(
+			InputStreamSource csvFile,
+			String eclKey
+	) {
 		Integer conceptsProcessed = 0;
 		Integer erroneousConcepts = 0;
 		List<String> errorMessages = new ArrayList<>();
 		Integer batchSize = batchMaxSize;
 		Integer totalConcepts = SnomedConceptsCsvReader.getTotalRecords(csvFile);
+
 		LocalDate today = dateTimeProvider.nowDate();
 		Integer snomedGroupId = saveSnomedGroup(eclKey, today);
 		List<SnomedConceptBo> conceptBatch = null;
@@ -117,7 +124,7 @@ public class UpdateSnomedConceptsByCsv {
 		return allConcepts.subList(conceptsProcessed, batchFinishIndex);
 	}
 
-	private List<SnomedConceptBo> getNextBatch(Integer batchSize, Integer conceptsProcessed, Integer totalConcepts, MultipartFile csvFile) {
+	private List<SnomedConceptBo> getNextBatch(Integer batchSize, Integer conceptsProcessed, Integer totalConcepts, InputStreamSource csvFile) {
 		int batchFinishIndex = Math.min(conceptsProcessed + batchSize, totalConcepts);
 		return getConcepts(csvFile, conceptsProcessed, batchFinishIndex);
 	}
@@ -142,16 +149,15 @@ public class UpdateSnomedConceptsByCsv {
 		return result;
     }
 
-	private List<SnomedConceptBo> getConcepts(MultipartFile csvFile, int start, int end) {
-		log.debug("Input parameter -> csvFile {}, start {}, end {}", csvFile.getOriginalFilename(), start, end);
+	private List<SnomedConceptBo> getConcepts(InputStreamSource csvFile, int start, int end) {
 		List<SnomedConceptBo> result = new ArrayList<>();
-		if (SnomedConceptsCsvReader.hasCsvFormat(csvFile)) {
-			try {
-				result = SnomedConceptsCsvReader.csvToSnomedConceptsBo(csvFile.getInputStream(), start, end);
-			} catch (IOException e) {
-				log.error(e.getMessage());
-			}
+
+		try {
+ 			result = SnomedConceptsCsvReader.csvToSnomedConceptsBo(csvFile.getInputStream(), start, end);
+		} catch (IOException e) {
+			log.error(e.getMessage());
 		}
+
 		log.debug("Output size -> {}", result.size());
 		return result;
 	}

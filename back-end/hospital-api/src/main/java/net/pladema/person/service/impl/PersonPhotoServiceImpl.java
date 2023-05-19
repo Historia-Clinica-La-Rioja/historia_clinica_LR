@@ -91,7 +91,6 @@ public class PersonPhotoServiceImpl implements PersonPhotoService {
             return false;
         }
         String uuid = imageFileService.createUuid();
-		String newFileName = uuid.concat(FILE_EXTENSION);
         String relativePath = RELATIVE_DIRECTORY
 				.replace("{personIdSubdivision}", getNLastDigits(SUBDIVISION_DIGITS, personId))
 				.replace("{personId}", personId.toString())

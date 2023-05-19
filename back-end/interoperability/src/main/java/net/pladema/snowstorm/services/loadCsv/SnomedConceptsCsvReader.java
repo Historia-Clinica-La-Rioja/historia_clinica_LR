@@ -3,6 +3,7 @@ package net.pladema.snowstorm.services.loadCsv;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
@@ -21,8 +22,15 @@ public class SnomedConceptsCsvReader {
         return TYPE.equals(file.getContentType());
     }
 
-    public static Integer getTotalRecords(MultipartFile file) {
-        try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
+	public static Integer getTotalRecords(InputStreamSource file) {
+		try {
+			return getTotalRecords(file.getInputStream());
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to parse CSV file: " + e.getMessage());
+		}
+	}
+    public static Integer getTotalRecords(InputStream inputStream) {
+        try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
              CSVParser csvParser = new CSVParser(fileReader,
                      CSVFormat.EXCEL.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim())) {
             return csvParser.getRecords().size();

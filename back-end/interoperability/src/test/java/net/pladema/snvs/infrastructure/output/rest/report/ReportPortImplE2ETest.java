@@ -4,7 +4,6 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import net.pladema.snvs.infrastructure.output.repository.snvs.ManualClassificationRepository;
 import net.pladema.snvs.application.ports.report.ReportPort;
 import net.pladema.snvs.application.ports.report.exceptions.ReportPortException;
 import net.pladema.snvs.domain.event.SnvsEventInfoBo;
@@ -44,9 +43,6 @@ class ReportPortImplE2ETest {
 
     @MockBean
     private SharedStaffPort sharedStaffPort;
-
-    @MockBean
-    private ManualClassificationRepository manualClassificationRepository;
 
     @MockBean
     private DateTimeProvider dateTimeProvider;
