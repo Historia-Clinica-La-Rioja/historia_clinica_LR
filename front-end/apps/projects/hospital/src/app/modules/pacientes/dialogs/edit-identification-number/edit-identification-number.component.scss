@@ -1,0 +1,12 @@
+@import "../../../../../assets/styles/mixins.scss";
+
+.mat-radio-button {
+	@include form-radio-button;
+}
+.mat-dialog-content{
+	overflow: hidden;
+	min-height: 210px;
+}
+.mat-dialog-actions{
+	margin-bottom: 0px;
+}

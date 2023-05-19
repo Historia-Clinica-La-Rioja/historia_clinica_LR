@@ -40,6 +40,7 @@ import { MessageForAuditComponent } from './dialogs/message-for-audit/message-fo
 import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-and-specialty.pipe';
 import { FilesUploaderComponent } from './component/files-uploader/files-uploader.component';
 import { EmergencyCareTemporaryPatientProfile } from './routes/emergency-care-temporary-patient-profile/emergency-care-temporary-patient-profile';
+import { EditIdentificationNumberComponent } from './dialogs/edit-identification-number/edit-identification-number.component';
 
 @NgModule({
 	declarations: [
@@ -79,6 +80,7 @@ import { EmergencyCareTemporaryPatientProfile } from './routes/emergency-care-te
 		FilesUploaderComponent,
 		ResumenDeGuardiaComponent,
 		EmergencyCareTemporaryPatientProfile,
+  		EditIdentificationNumberComponent,
 	],
 	exports: [
 		CardPatientComponent,

@@ -45,6 +45,7 @@ import { Observable } from 'rxjs';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { PatientMasterDataService } from '@api-rest/services/patient-master-data.service';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
+import { EditIdentificationNumberComponent } from '@pacientes/dialogs/edit-identification-number/edit-identification-number.component';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -314,9 +315,6 @@ export class EditPatientComponent implements OnInit {
 			this.hasInstitutionalAdministratorRole = hasInstitutionalAdministratorRole);
 
 
-
-	}
-	setDisabled() {
 
 	}
 
@@ -604,7 +602,10 @@ export class EditPatientComponent implements OnInit {
 	}
 
 	setDNI() {
-
+		const dialogRef = this.dialog.open(EditIdentificationNumberComponent, {
+			disableClose: true,
+			autoFocus: false
+		});
 	}
 }
 

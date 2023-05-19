@@ -70,7 +70,9 @@
 	  "UPLOAD_FILES": "ADJUNTAR DOCUMENTO",
 	  "ATTACHED_DOCUMENTS": "Documentos adjuntos",
 	  "UPDATE_IDENTIFICATION_NUMBER":"Cambiar N° de DNI",
-	  "NOT_ATTACHED_DOCUMENTS":" Sin documentos adjuntos"
+	  "NOT_ATTACHED_DOCUMENTS":" Sin documentos adjuntos",
+	  "TITLE_UPDATE_IDENTIFICATION_NUMBER":"Cambiar N° de documento",
+	  "DNI":"DNI"
     },
     "home": {
       "TITLE": "Pacientes",

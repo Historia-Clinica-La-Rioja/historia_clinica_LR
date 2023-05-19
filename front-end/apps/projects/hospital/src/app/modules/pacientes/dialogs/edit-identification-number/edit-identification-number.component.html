@@ -1,0 +1,56 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<span mat-dialog-title [translate]="'pacientes.form.TITLE_UPDATE_IDENTIFICATION_NUMBER'"></span>
+	<button mat-icon-button mat-dialog-close>
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+<div mat-dialog-content>
+	<form [formGroup]="form" (ngSubmit)="save()">
+		<div fxLayout="row" fxLayoutGap="10px"  fxLayout.xs="column"   >
+			<div fxLayout="column">
+				<div>
+					<span [translate]="'pacientes.form.IDENTIFICATION_TYPE'"></span>*
+				</div>
+				<mat-form-field appearance="outline" class="matInput">
+					<input matInput type="text" [value]="'pacientes.form.DNI' | translate" disabled>
+				</mat-form-field>
+			</div>
+			<div fxLayout="column">
+
+				<div>
+					<span [translate]="'pacientes.form.IDENTIFICATION_NUMBER'"></span>*
+				</div>
+				<mat-form-field appearance="outline" class="matInput ">
+					<input id="identificationNumber" name="identificationNumber" formControlName="identificationNumber"
+						placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}" matInput>
+					<mat-error *ngIf="hasError(form, 'required', 'identificationNumber')"
+						[translate]="'pacientes.form.REQUIRED'"></mat-error>
+					<mat-error *ngIf="hasError(form, 'maxlength', 'identificationNumber')">
+						Introduzca como máximo 11 caracteres
+					</mat-error>
+				</mat-form-field>
+			</div>
+		</div>
+		<div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="space-around start" >
+			<div>
+				<span [translate]="'pacientes.form.GENDER'"></span>*
+			</div>
+			<div>
+				<mat-radio-group formControlName="genderId">
+					<mat-radio-button *ngFor="let gender of genders" [value]="gender.id">{{gender.description}}
+					</mat-radio-button>
+				</mat-radio-group>
+				<mat-error *ngIf="hasError(form,'required','genderId') && formSubmitted"
+					[translate]="'pacientes.form.REQUIRED'"></mat-error>
+			</div>
+		</div>
+		<mat-dialog-actions align="end">
+			<button mat-stroked-button color="primary" mat-dialog-close><span [translate]="'buttons.CANCEL'"></span>
+			</button>
+			<button mat-raised-button color="primary" type="submit">
+				<span [translate]="'buttons.SEARCH'"></span>
+			</button>
+		</mat-dialog-actions>
+	</form>
+</div>
+
