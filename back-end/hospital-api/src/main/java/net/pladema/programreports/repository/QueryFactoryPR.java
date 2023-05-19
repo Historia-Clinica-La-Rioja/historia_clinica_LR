@@ -65,7 +65,7 @@ public class QueryFactoryPR {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ConsultationDetailRecupero> querySumar(Integer institutionId, LocalDate start, LocalDate end,
+	public List<ConsultationDetailRecuperoSumar> querySumar(Integer institutionId, LocalDate start, LocalDate end,
 													   Integer clinicalSpecialtyId, Integer doctorId){
 
 		var startDate = LocalDateTime.of(start.getYear(), start.getMonth(), start.getDayOfMonth(), 0, 0);
@@ -75,7 +75,7 @@ public class QueryFactoryPR {
 		query.setParameter("institutionId", institutionId);
 		query.setParameter("startDate", startDate);
 		query.setParameter("endDate", endDate);
-		List<ConsultationDetailRecupero> data = query.getResultList();
+		List<ConsultationDetailRecuperoSumar> data = query.getResultList();
 
 		return data.stream()
 				.filter(doctorId != null ? oc -> oc.getProfessionalId().equals(doctorId) : c -> true)
