@@ -14,7 +14,7 @@ import { REFERENCE_STATES } from '../constants/reference-masterdata';
 import {HceGeneralStateService} from "@api-rest/services/hce-general-state.service";
 import {PatientNameService} from "@core/services/patient-name.service";
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class HistoricalProblemsFacadeService {
 
 	public specialties: ClinicalSpecialtyDto[] = [];

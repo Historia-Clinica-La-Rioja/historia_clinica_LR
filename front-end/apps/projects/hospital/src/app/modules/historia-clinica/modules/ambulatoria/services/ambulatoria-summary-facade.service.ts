@@ -5,7 +5,7 @@ import { HistoricalProblemsFacadeService } from './historical-problems-facade.se
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { HCEAnthropometricDataDto } from '@api-rest/api-model';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class AmbulatoriaSummaryFacadeService {
 
 	private idPaciente: number;
