@@ -64,6 +64,8 @@ import { EmergencyCareTemporaryPatientHeader } from './components/emergency-care
 import { PatientCardHeaderComponent } from './components/patient-card-header/patient-card-header.component';
 import { TitledContentComponent } from './components/titled-content/titled-content.component';
 import { MessageFlaggedForAuditComponent } from './components/message-flagged-for-audit/message-flagged-for-audit.component';
+import { RichTextEditorComponent } from './components/rich-text-editor/rich-text-editor.component';
+import { QuillModule } from 'ngx-quill';
 
 @NgModule({
 	declarations: [
@@ -126,6 +128,7 @@ import { MessageFlaggedForAuditComponent } from './components/message-flagged-fo
 		PatientCardHeaderComponent,
 		TitledContentComponent,
 		MessageFlaggedForAuditComponent,
+		RichTextEditorComponent,
 	],
 	imports: [
 		CommonModule,
@@ -135,6 +138,7 @@ import { MessageFlaggedForAuditComponent } from './components/message-flagged-fo
 		CoreModule,
 		AppMaterialModule,
 		PdfViewerModule,
+		QuillModule.forRoot()
 	],
 	exports: [
 		FlexModule,
@@ -176,6 +180,7 @@ import { MessageFlaggedForAuditComponent } from './components/message-flagged-fo
 		TypeaheadComponent,
 		UserBadgeComponent,
 		LogoComponent,
+		RichTextEditorComponent,
 		// dialogs
 		// directives
 		CtrlTemplateDirective,

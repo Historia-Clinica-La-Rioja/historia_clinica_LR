@@ -1,0 +1,8 @@
+<form [formGroup]="formParent">
+    <quill-editor formControlName="observations" [modules]="config" 
+        [styles]="{height: '400px', backgroundColor:'#faf8f8'}" [placeholder]="placeholder">
+    </quill-editor>
+    <mat-error>
+        <ng-content></ng-content>
+    </mat-error>
+</form>
