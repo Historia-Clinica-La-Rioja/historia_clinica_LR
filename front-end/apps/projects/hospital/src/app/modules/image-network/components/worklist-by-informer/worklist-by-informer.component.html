@@ -1,0 +1,27 @@
+<section class="worklist-section">
+    <mat-card class="main-card">
+        <h2 class="page-title">{{'image-network.worklist.WORKLIST_BY_INFORMER' | translate }}</h2>
+
+        <mat-form-field class="dropdown-container" appearance="outline">
+            <mat-label [translate]="'image-network.worklist.MODALITIES'"></mat-label>
+            <mat-select id="modalities" (selectionChange)="setWorklist($event)" fxFlex="98%">
+                <mat-option *ngFor="let modality of modalities$ | async" [value]="modality.id">
+                    {{modality.description}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-card *ngIf="modalityId" class="worklist-card">
+            <mat-list class="mat-form-field-wrapper" *ngIf="worklists.length else noInfo">
+                <div fxLayout="row" *ngFor="let worklist of worklists" fxLayout.xs="column">
+                    <mat-list-item class="detail">
+                        <app-worklist fxLayout="row" fxLayoutAlign="space-between end" fxFlex="100" fxLayoutGap="10px" fxLayout.xs="column"
+                            fxLayoutGap.xs="10px" [worklist]="worklist"></app-worklist>
+                    </mat-list-item>
+                </div>
+            </mat-list>
+            <ng-template #noInfo>
+                <app-no-data></app-no-data>
+            </ng-template>
+        </mat-card>
+    </mat-card>
+</section>
