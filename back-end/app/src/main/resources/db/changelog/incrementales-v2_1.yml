@@ -237,7 +237,6 @@ databaseChangeLog:
               columnName: to_audit
               tableName: patient
 
-
     - changeSet:
         id: change-orchestrator-add_column
         author: amurrie
@@ -405,3 +404,24 @@ databaseChangeLog:
               referencedTableName: pac_server
               validate: true
 
+    - changeSet:
+        id: appointment_order_image-alterTable
+        comment: Alter table study_appointment_report
+        author: jvaldez
+        changes:
+          - addColumn:
+              tableName: appointment_order_image
+              columns:
+                - column:
+                    name: report_document_id
+                    type: bigint
+
+          - addForeignKeyConstraint:
+              baseColumnNames: report_document_id
+              baseTableName: appointment_order_image
+              constraintName: FK_appointment_order_image_report_document_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: document
+              validate: true
