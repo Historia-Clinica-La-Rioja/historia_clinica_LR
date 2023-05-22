@@ -461,7 +461,8 @@ export class NewAppointmentComponent implements OnInit {
 						serviceRequestId: diagnosticReportInfo.serviceRequestId,
 						studyName: diagnosticReportInfo.snomed.pt,
 						studyId: diagnosticReportInfo.id,
-						displayText: `${translatedText} # ${diagnosticReportInfo.serviceRequestId} - ${diagnosticReportInfo.snomed.pt}`
+						displayText: `${translatedText} # ${diagnosticReportInfo.serviceRequestId} - ${diagnosticReportInfo.snomed.pt}`,
+						isTranscribed: false
 					})}
 			}).filter(value => value !== null && value !== undefined);
 		});
@@ -477,8 +478,8 @@ export class NewAppointmentComponent implements OnInit {
 					this.patientMedicalOrders.push({
 						serviceRequestId: medicalOrder.serviceRequestId,
 						studyName: medicalOrder.studyName,
-						studyId: medicalOrder.studyId,
-						displayText: `${translatedText} - ${medicalOrder.studyName}`
+						displayText: `${translatedText} - ${medicalOrder.studyName}`,
+						isTranscribed: true
 					})}
 			}).filter(value => value !== null && value !== undefined);
 		});
@@ -545,8 +546,12 @@ export class NewAppointmentComponent implements OnInit {
 
 	private addAppointment(newAppointment: CreateAppointmentDto): Observable<number> {
 		if (this.data.isEquipmentAppointment) {
-			let orderId = this.appointmentInfoForm.controls.appointmentMedicalOrder?.value?.serviceRequestId;
-			let studyId = this.appointmentInfoForm.controls.appointmentMedicalOrder?.value?.studyId;
+			let medicalOrder = this.appointmentInfoForm.controls.appointmentMedicalOrder?.value;
+			let orderId = medicalOrder?.serviceRequestId;
+			let studyId = medicalOrder?.studyId;
+			if (medicalOrder?.isTranscribed) {
+				return this.equipmentAppointmentFacade.addAppointmentWithTranscribedOrder(newAppointment, orderId);
+			}
 			return this.equipmentAppointmentFacade.addAppointment(newAppointment, orderId, studyId);
 		}
 		else
@@ -557,6 +562,7 @@ export class NewAppointmentComponent implements OnInit {
 export interface medicalOrderInfo {
 	serviceRequestId: number,
 	studyName: string,
-	studyId: number,
-	displayText: string
+	studyId?: number,
+	displayText: string,
+	isTranscribed: boolean
 }

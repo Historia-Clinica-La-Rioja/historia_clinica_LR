@@ -46,8 +46,17 @@ export class AppointmentsService {
 		const url = `${this.BASE_URL}/equipment`;
 
 		let queryParams: HttpParams = new HttpParams();
-		if (orderId) queryParams = queryParams.append('order_id', JSON.stringify(orderId));
-		if (studyId) queryParams = queryParams.append('study_id', JSON.stringify(studyId));
+		if (orderId) queryParams = queryParams.append('orderId', JSON.stringify(orderId));
+		if (studyId) queryParams = queryParams.append('studyId', JSON.stringify(studyId));
+
+		return this.http.post<number>(url, appointment, { params: queryParams });
+	}
+
+	createAppointmentEquipmentWithTranscribedOrder(appointment: CreateAppointmentDto, transcribedOrderId?: number): Observable<number> {
+		const url = `${this.BASE_URL}/transcribedEquipment`;
+
+		let queryParams: HttpParams = new HttpParams();
+		if (transcribedOrderId) queryParams = queryParams.append('transcribedOrderId', JSON.stringify(transcribedOrderId));
 
 		return this.http.post<number>(url, appointment, { params: queryParams });
 	}

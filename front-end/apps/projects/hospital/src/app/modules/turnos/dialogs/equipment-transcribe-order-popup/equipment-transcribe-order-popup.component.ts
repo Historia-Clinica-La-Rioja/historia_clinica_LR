@@ -88,7 +88,8 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
                         order: {
                             serviceRequestId: serviceRequestId,
                             studyName: this.selectedStudy.pt,
-                            displayText: `${translatedText} - ${this.selectedStudy.pt}`
+                            displayText: `${translatedText} - ${this.selectedStudy.pt}`,
+                            isTranscribed: true
                     }})
             });
         })

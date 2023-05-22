@@ -77,6 +77,18 @@ export class EquipmentAppointmentsFacadeService {
 			);
 	}
 
+	addAppointmentWithTranscribedOrder(newAppointment: CreateAppointmentDto, transcribedOrderId: number): Observable<number> {
+		return this.appointmentsService.createAppointmentEquipmentWithTranscribedOrder(newAppointment, transcribedOrderId)
+			.pipe(
+				map((response: number) => {
+					if (response) {
+						return response;
+					}
+					return -1;
+				})
+			);
+	}
+
 	cancelAppointment(appointmentId: number, motivo: string): Observable<boolean> {
 		return this.appointmentsService.changeStateAppointmentEquipment(appointmentId, CANCEL_STATE_ID, motivo)
 			.pipe(
