@@ -33,8 +33,7 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 	@Input() personalHistoriesHeader: SummaryHeader;
 	@Input()
 	set personalHistory(personalHistory: HCEPersonalHistoryDto[]){
-		this.setSeverityMasterData();
-		this.setProblems(personalHistory);
+		this.onPersonalHistoryChange(personalHistory);
 	};
 
 	constructor(
@@ -51,6 +50,11 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 
 	ngOnInit(): void {
 		this.hasNewConsultationEnabled$ = this.ambulatoriaSummaryFacadeService.hasNewConsultationEnabled$;
+	}
+
+	private async onPersonalHistoryChange(personalHistory: HCEPersonalHistoryDto[]){
+		await this.setSeverityMasterData();
+		this.setProblems(personalHistory);
 	}
 
 	getSeverityTypeDisplayByCode(severityCode): string {
@@ -129,14 +133,19 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 		});
 	}
 
-	private setSeverityMasterData(){
-		if (!this.severityTypesMasterData.length){
-			this.internacionMasterDataService.getHealthSeverity().subscribe(
-				severityTypes => {
-					this.severityTypesMasterData = severityTypes;
-				}
-			);
-		}
+	private async setSeverityMasterData(){
+		return new Promise((resolve) => {
+			if (!this.severityTypesMasterData.length){
+				this.internacionMasterDataService.getHealthSeverity().subscribe(
+					severityTypes => {
+						this.severityTypesMasterData = severityTypes;
+						resolve(true);
+					}
+				);
+			} else {
+				resolve(true);
+			}
+		  });
 	}
 
 	private mapToProblem(problem: HCEPersonalHistoryDto): Problem {
