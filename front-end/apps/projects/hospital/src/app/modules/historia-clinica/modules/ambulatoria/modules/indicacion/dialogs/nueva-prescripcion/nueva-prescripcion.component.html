@@ -5,13 +5,13 @@
     </button>
 </div>
 
-<div mat-dialog-content>
-    <form [formGroup]="prescriptionForm" class="form">
+<div mat-dialog-content #dialog>
+    <form [formGroup]="prescriptionForm" class="form" id="form">
         <div fxLayout="column">
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" class="mb-1">
                 <mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SELECT_MEDICAL_COVERAGE' | translate}}</mat-label>
                 <mat-select formControlName="patientMedicalCoverage">
-                    <mat-option
+                    <mat-option (click)="selectPatientMedicalCoverage(patientMedicalCoverage)"
                         id="medicalCoverage"
                         name="medicalCoverage"
                         *ngFor="let patientMedicalCoverage of patientMedicalCoverages" [value]="patientMedicalCoverage">
@@ -26,9 +26,84 @@
                     color="warn" mat-icon-button (click)="clear(prescriptionForm.controls.patientMedicalCoverage); $event.stopPropagation()">
                     <mat-icon>close</mat-icon>
                 </button>
+                <mat-hint *ngIf="this.showCoverageMessage"
+                    translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICAL_COVERAGE_SUGGESTION">
+                </mat-hint>
 			</mat-form-field>
 
-            <div class="margin-checkbox" *ngIf="isMedication()">
+            <section formGroupName="patientData" *ngIf="isHabilitarRecetaDigitalEnabled">
+                <section class="phone-container">
+					<mat-form-field appearance="outline" class="prefix">
+						<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PHONE_PREFIX'"></mat-label>
+						<input matInput formControlName="phonePrefix" type="text">
+                        <mat-error *ngIf="hasError(prescriptionForm, 'required', 'patientData.phonePrefix')" [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+					<mat-form-field appearance="outline" class="number">
+						<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PHONE_NUMBER'"></mat-label>
+						<input matInput formControlName="phoneNumber" type="text">
+                        <mat-error *ngIf="hasError(prescriptionForm, 'required', 'patientData.phoneNumber')" [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+                </section>
+
+                <section class="countries-container">
+                    <mat-form-field appearance="outline" class="country">
+                        <mat-select id="country" name="country" formControlName="country"
+                                    placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.COUNTRY' | translate}}">
+                            <mat-option *ngFor="let country of countries$ | async" [value]="country.id">
+                                {{country.description}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </section>
+
+				<section class="provinces-departments-container">
+					<mat-form-field appearance="outline" class="province">
+						<mat-select id="province" name="province" formControlName="province" (selectionChange)="setDepartments($event.value)"
+									placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PROVINCE' | translate}}">
+							<mat-option *ngFor="let province of provinces$ | async" [value]="province.id">
+								{{province.description}}
+							</mat-option>
+						</mat-select>
+                        <mat-error *ngIf="hasError(prescriptionForm, 'required', 'patientData.province')" [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+
+                    <mat-form-field appearance="outline" class="locality">
+						<mat-select id="locality" name="locality" formControlName="locality" (selectionChange)="setCities($event.value)"
+									placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.LOCALITY' | translate}}">
+							<mat-option *ngFor="let department of departments$ | async" [value]="department.id">
+								{{department.description}}
+							</mat-option>
+						</mat-select>
+                        <mat-error *ngIf="hasError(prescriptionForm, 'required', 'patientData.locality')" [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+
+                    <mat-form-field appearance="outline" class="city">
+						<mat-select id="city" name="city" formControlName="city"
+									placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.CITY' | translate}}">
+							<mat-option *ngFor="let city of cities$ | async" [value]="city.id">
+								{{city.description}}
+							</mat-option>
+						</mat-select>
+                        <mat-error *ngIf="hasError(prescriptionForm, 'required', 'patientData.city')" [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+				</section>
+
+                <section class="street-container">
+                    <mat-form-field appearance="outline" class="street">
+						<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.STREET'"></mat-label>
+						<input matInput formControlName="street" type="text">
+                        <mat-error *ngIf="hasError(prescriptionForm, 'required', 'patientData.street')" [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+
+                    <mat-form-field appearance="outline" class="streetNumber">
+						<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.STREET_NUMBER'"></mat-label>
+						<input matInput formControlName="streetNumber" type="text">
+                        <mat-error *ngIf="hasError(prescriptionForm, 'required', 'patientData.streetNumber')" [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+                </section>
+            </section>
+
+            <div *ngIf="isMedication()">
                 <mat-checkbox formControlName="withoutRecipe">
                     <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.WITHOUT_RECIPE'"></span>
                 </mat-checkbox>
@@ -50,6 +125,12 @@
 
             <mat-checkbox class="mb-1"
 				*ngIf="isHabilitarRecetaDigitalEnabled"
+				formControlName="archived">
+				<span translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ARCHIVED"></span>
+			</mat-checkbox>
+
+            <mat-checkbox class="mb-1"
+				*ngIf="isHabilitarRecetaDigitalEnabled"
 				formControlName="prolongedTreatment"
 				(change)="setProlongedTreatment($event.checked)">
 				<span translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PROLONGED_TREATMENT"></span>
@@ -59,7 +140,7 @@
 				<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_LABEL'">
                 </mat-label>
                 <input formControlName="posdatadas" type="number" matInput>
-                <mat-hint *ngIf="prescriptionForm.controls.posdatadas.value <= POSDATADAS_DEFAULT else posdatadasHintPlural"
+                <mat-hint *ngIf="prescriptionForm.controls.posdatadas.value == POSDATADAS_MIN else posdatadasHintPlural"
                     [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_HINT_SINGULAR'"
                     [translateParams]="{posdatadas: prescriptionForm.controls.posdatadas.value}">
                 </mat-hint>
@@ -88,27 +169,31 @@
                 <h3 fxFlex="80%" id="prescriptionItemName" class="mat-subheading-2 capitalize-first-letter">{{prescriptionItem.snomed.pt}}</h3>
 
                 <div fxFlex="20%" fxLayoutAlign="end start">
-                    <button mat-icon-button color="primary" (click)="openPrescriptionItemDialog(prescriptionItem)">
+                    <button mat-icon-button color="primary" (click)="openPrescriptionItemDialog(prescriptionItem)" [disabled]="submitted">
                         <mat-icon>edit</mat-icon>
                     </button>
-                    <button mat-icon-button color="warn" (click)="deletePrescriptionItem(prescriptionItem)">
+                    <button mat-icon-button color="warn" (click)="deletePrescriptionItem(prescriptionItem)" [disabled]="submitted">
                         <mat-icon>delete_outline</mat-icon>
                     </button>
                 </div>
             </div>
             <section class="prescription-list gray">
-                <div *ngIf="prescriptionItem.unitDose && prescriptionItem.administrationTimeDays && prescriptionItem.dayDose">
-                    <span
+                <div *ngIf="prescriptionItem.administrationTimeDays">
+                    <span *ngIf="prescriptionItem.unitDose"
                         [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UNIT_DOSE'"
                         [translateParams]="{unitDose: prescriptionItem.unitDose}">
+                    </span>
+                    <span *ngIf="prescriptionItem.dayDose"
+                        [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.DAY_DOSE'"
+                        [translateParams]="{dayDose: prescriptionItem.dayDose}">
                     </span>
                     <span
                         [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.TREATMENT_DAYS'"
                         [translateParams]="{treatmentDays: prescriptionItem.administrationTimeDays}">
                     </span>
-                    <span
-                        [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.DAY_DOSE'"
-                        [translateParams]="{dayDose: prescriptionItem.dayDose}">
+                    <span *ngIf="prescriptionItem.quantity"
+                        [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.QUANTITY'"
+                        [translateParams]="{quantity: prescriptionItem.quantity.value}">
                     </span>
                 </div>
                 <div>
@@ -134,13 +219,15 @@
         <mat-divider></mat-divider>
     </div>
 
-    <button mat-stroked-button color="primary" (click)="openPrescriptionItemDialog()" fxFlexFill.xs>
+    <mat-error class="mb-1" *ngIf="this.showAddMedicationError" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.REQUIRED_MEDICATION'"></mat-error>
+
+    <button mat-stroked-button color="primary" (click)="openPharmacosFrequestDialog()" [disabled]="submitted" fxFlexFill.xs>
         <span class="uppercase">{{data.addLabel | translate}}</span>
     </button>
 </div>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
-    <button mat-flat-button color="primary" *ngIf="prescriptionItems.length" (click)="confirmPrescription()" fxFlexFill.xs [disabled]="! this.prescriptionForm.valid">
+    <button mat-flat-button color="primary" (click)="confirmPrescription()" fxFlexFill.xs [disabled]="submitted">
         <span class="uppercase" *ngIf="isHabilitarRecetaDigitalEnabled">{{'buttons.ELECTRONIC_FIRM' | translate}}</span>
         <span class="uppercase" *ngIf="! isHabilitarRecetaDigitalEnabled">{{'buttons.CONFIRM' | translate}}</span>
     </button>

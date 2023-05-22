@@ -13,7 +13,7 @@ import java.util.Objects;
 @Getter
 public class GenericMedicationBo {
 	String name;
-	Integer snomedId;
+	String snomedId;
 
 	@Override
 	public boolean equals(Object o) {

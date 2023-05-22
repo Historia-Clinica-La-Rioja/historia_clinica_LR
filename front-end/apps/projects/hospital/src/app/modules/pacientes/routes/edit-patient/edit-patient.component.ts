@@ -251,6 +251,10 @@ export class EditPatientComponent implements OnInit {
 								//Tooltips
 								this.currentOccupationDescription = this.occupations.find(occupation => occupation.id === personInformationData.occupationId)?.description;
 								this.currentEducationLevelDescription = this.educationLevels.find(educationLevel => educationLevel.id === personInformationData.educationLevelId)?.description;
+								this.personService.canEditUserData(completeData.person.id).subscribe(canEditUserData => {
+									if(!canEditUserData)
+										this.form.controls.email.disable();
+								});
 							});
 					});
 			});

@@ -1,7 +1,3 @@
-.margin-checkbox {
-    margin-bottom: 15px;
-}
-
 .form {
     margin-bottom: 25px;
 }
@@ -38,4 +34,42 @@ h3#prescriptionItemName {
 
 .mb-1 {
     margin-bottom: 1rem;
+}
+
+.phone-container, .provinces-departments-container, .street-container, .countries-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.phone-container {
+	.prefix {
+		width: 33%;
+	}
+
+	.number {
+		width: 60%;
+	}
+}
+
+.street, .streetNumber {
+    width: 45%;
+}
+
+.province, .locality, .city {
+    width: 30%;
+}
+
+.country {
+    width: 100%;
+}
+
+@media (max-width: 360px) {
+    .phone-container, .provinces-departments-container, .street-container, .countries-container {
+        flex-direction: column;
+
+        .prefix, .number, .province, .locality, .city, .street, .streetNumber {
+            width: 100%;
+        }
+    }
 }

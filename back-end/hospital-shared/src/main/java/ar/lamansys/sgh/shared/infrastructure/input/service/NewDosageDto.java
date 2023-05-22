@@ -41,9 +41,9 @@ public class NewDosageDto implements Serializable {
 	private QuantityDto quantity;
 
 	@Nullable
-	private Integer dosesByUnit;
+	private Double dosesByUnit;
 
 	@Nullable
-	private Integer dosesByDay;
+	private Double dosesByDay;
 
 }

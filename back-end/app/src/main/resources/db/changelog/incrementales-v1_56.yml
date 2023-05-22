@@ -268,3 +268,38 @@ databaseChangeLog:
                    FROM sector AS s
                    WHERE s.sector_id IS NULL)
 
+    - changeSet:
+        id: cipres_encounter-createTable
+        comment: Create table cipres_encounter
+        author: bchacon
+        changes:
+          - createTable:
+              tableName: cipres_encounter
+              columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_cipres_encounter
+                - column:
+                    name: encounter_id
+                    type: int
+                    constraints:
+                      foreignKeyName: FK_cipres_encounter_encounter_id
+                      references: outpatient_consultation(id)
+                      nullable: false
+                - column:
+                    name: encounter_api_id
+                    type: int
+                - column:
+                    name: status
+                    type: text
+                    constraints:
+                      nullable: false
+                - column:
+                    name: response_code
+                    type: smallint
+                    constraints:
+                      nullable: false

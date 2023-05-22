@@ -50,7 +50,7 @@ export class HceGeneralStateService {
 	}
 
 	getPersonalHistoriesByRole(patientId: number): Observable<HCEPersonalHistoryDto[]> {
-		const url = this.URL_BASE + patientId + this.URL_SUFFIX + `/personalHistoriesByRole`;
+		const url = this.URL_BASE + patientId + this.URL_SUFFIX + `personalHistoriesByRole`;
 		return this.http.get<HCEPersonalHistoryDto[]>(url);
 	}
 

@@ -287,6 +287,13 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
+	
+	public boolean saveEmail(Integer personId, String email) {
+		PersonExtended entity = personService.getPersonExtended(personId);
+		entity.setEmail(email);
+		personService.addPersonExtended(entity);
+		return Boolean.TRUE;
+	}
 
 	@Override
 	public List<PatientPersonalInfoDto> getPatientsPersonalInfo(DuplicatePatientDto duplicatePatientDto) {

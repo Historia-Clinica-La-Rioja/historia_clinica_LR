@@ -48,4 +48,5 @@ interface ProblemData {
   severityTypes: any[],
   epidemiologicalReportFF: boolean,
   searchConceptsLocallyFF: boolean,
+  isFromRecetaDigital?: boolean
 }

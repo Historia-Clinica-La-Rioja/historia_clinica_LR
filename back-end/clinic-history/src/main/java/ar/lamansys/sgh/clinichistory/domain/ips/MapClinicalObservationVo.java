@@ -119,6 +119,9 @@ public class MapClinicalObservationVo {
         getLastNClinicalObservationByCode(EObservationLab.BLOOD_TYPE.getSctidCode(),n).ifPresent(v ->
             result.setBloodType(new ClinicalObservationBo(v))
         );
+		getLastNClinicalObservationByCode(ERiskFactor.HEAD_CIRCUMFERENCE.getSctidCode(),n).ifPresent(v ->
+				result.setHeadCircumference(new ClinicalObservationBo(v))
+		);
         LOG.debug(OUTPUT, result);
         if (result.hasValues())
             return Optional.of(result);

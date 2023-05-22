@@ -15,6 +15,7 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.requests.medicationrequests.repository.MedicationRequestRepository;
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
+import net.pladema.clinichistory.requests.medicationrequests.service.domain.DocumentRequestBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -296,10 +297,10 @@ class CreateMedicationRequestServiceImplTest extends UnitRepository {
                         createDosageBo(7d, 12, EUnitsOfTimeBo.HOUR))));
 		when(healthConditionService.getHealthCondition(any())).thenReturn(mockActiveHealthCondition());
 		when(healthConditionService.getLastHealthCondition(any(), any())).thenReturn(mockHealthConditionMap());
-		Integer medicationRequestId = createMedicationRequestService.execute(medicationRequest);
+		List<DocumentRequestBo> medicationRequestDocumentId = createMedicationRequestService.execute(medicationRequest);
 
 		Assertions.assertEquals(1, medicationRequestRepository.count());
-		Assertions.assertNotNull(medicationRequestId);
+		Assertions.assertNotNull(medicationRequestDocumentId);
 	}
 
 	private Map<Integer, HealthConditionBo> mockHealthConditionMap() {

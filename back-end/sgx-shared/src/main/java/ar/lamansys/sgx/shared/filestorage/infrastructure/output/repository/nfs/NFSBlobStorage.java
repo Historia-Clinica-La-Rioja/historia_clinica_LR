@@ -18,6 +18,7 @@ import ar.lamansys.sgx.shared.filestorage.application.FileContentBo;
 import ar.lamansys.sgx.shared.filestorage.application.FilePathBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.output.repository.BlobStorage;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.output.repository.BucketObjectInfo;
+import ar.lamansys.sgx.shared.stats.TimeProfilingUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,10 +52,15 @@ public class NFSBlobStorage implements BlobStorage {
 
 	@Override
 	public BucketObjectInfo put(FilePathBo path, FileContentBo object) throws IOException {
+		var saveFileStat = TimeProfilingUtil.start("IO save");
+
 		NFSUtils.validateLocation(path.fullPath.getParent().toFile());
 		NFSUtils.validateFreeSpace(path.fullPath.getParent().toFile(), object.size);
 
 		copyInputStreamToFile(object.stream, path.fullPath.toFile());
+
+		saveFileStat.done(path.relativePath);
+
 		return new BucketObjectInfo(
 				path,
 				object.size,

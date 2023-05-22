@@ -106,33 +106,53 @@
                                 </button>
                                 <mat-menu #menu="matMenu">
 									<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_FARMACIA', 'PRESCRIPTOR']">
-										<button mat-menu-item *ngIf="hasRecipe(medicationInfo)" (click)="downloadRecipe(medicationInfo.medicationRequestId)">
+										<button mat-menu-item 
+											*ngIf="(hasRecipe(medicationInfo) 
+											&& medicationInfo.prescriptionLineState != DISPENSED_STATE_ID 
+											&& medicationInfo.prescriptionLineState != CANCELED_STATE_ID
+											&& medicationInfo.prescriptionLineState != PROVISIONAL_DISPENSED_STATE_ID)" 
+											(click)="downloadRecipe(medicationInfo.hceDocumentData)">
 											<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DOWNLOAD'"></span>
 										</button>
 									</ng-container>
-									<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_FARMACIA']">
-										<button mat-menu-item *ngIf="hasRecipe(medicationInfo) && isHabilitarRecetaDigitalEnabled" (click)="openSendEmailDialog()">
+									<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_FARMACIA', 'PRESCRIPTOR']">
+										<button mat-menu-item *ngIf="medicationInfo.isDigital 
+										&& isHabilitarRecetaDigitalEnabled 
+										&& medicationInfo.prescriptionLineState != DISPENSED_STATE_ID 
+										&& medicationInfo.prescriptionLineState != CANCELED_STATE_ID
+										&& medicationInfo.prescriptionLineState != PROVISIONAL_DISPENSED_STATE_ID" (click)="openSendEmailDialog(medicationInfo)">
 											<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.SEND_EMAIL'"></span>
 										</button>
 									</ng-container>
 									<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PRESCRIPTOR']">
-										<button mat-menu-item (click)="openDialogNewMedication(false, medicationInfo)">
+										<button *ngIf="(isHabilitarRecetaDigitalEnabled && medicationInfo.isDigital) || (!isHabilitarRecetaDigitalEnabled && !medicationInfo.isDigital)" mat-menu-item (click)="openDialogNewMedication(false, medicationInfo)">
 											<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.RE_PRESCRIBE'"></span>
 										</button>
 									</ng-container>
 									<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PRESCRIPTOR']">
-										<button mat-menu-item *ngIf="medicationInfo.statusId === MEDICATION_STATUS.ACTIVE.id" (click)="openSuspendMedicationDialog(medicationInfo)">
+										<button mat-menu-item *ngIf="medicationInfo.statusId === MEDICATION_STATUS.ACTIVE.id && !medicationInfo.isDigital" (click)="openSuspendMedicationDialog(medicationInfo)">
 											<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.SUSPEND'"></span>
 										</button>
 									</ng-container>
 									<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PRESCRIPTOR']">
-										<button mat-menu-item *ngIf="medicationInfo.statusId === MEDICATION_STATUS.SUSPENDED.id" (click)="changeMedicationStatus(medicationStatusChange.REACTIVATE, medicationInfo)">
+										<button mat-menu-item *ngIf="medicationInfo.statusId === MEDICATION_STATUS.SUSPENDED.id && !medicationInfo.isDigital" (click)="changeMedicationStatus(medicationStatusChange.REACTIVATE, medicationInfo)">
 											<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.REACTIVATE'"></span>
 										</button>
 									</ng-container>
 									<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PRESCRIPTOR']">
-										<button mat-menu-item *ngIf="medicationInfo.statusId !== MEDICATION_STATUS.STOPPED.id" (click)="changeMedicationStatus(medicationStatusChange.FINALIZE, medicationInfo)">
+										<button mat-menu-item *ngIf="medicationInfo.statusId !== MEDICATION_STATUS.STOPPED.id && !medicationInfo.isDigital" (click)="changeMedicationStatus(medicationStatusChange.FINALIZE, medicationInfo)">
 											<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.FINALIZE'"></span>
+										</button>
+									</ng-container>
+									<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PRESCRIPTOR']">
+										<button mat-menu-item 
+											*ngIf="medicationInfo.isDigital 
+											&& isHabilitarRecetaDigitalEnabled 
+											&& medicationInfo.prescriptionLineState != DISPENSED_STATE_ID
+											&& medicationInfo.prescriptionLineState != CANCELED_STATE_ID
+											&& medicationInfo.prescriptionLineState != PROVISIONAL_DISPENSED_STATE_ID" 
+											(click)="openCancelDialog(medicationInfo.id)">
+											<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.cancel.CANCEL_BUTTON'"></span>
 										</button>
 									</ng-container>
                                 </mat-menu>

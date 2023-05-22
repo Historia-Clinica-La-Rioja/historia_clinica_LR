@@ -7,6 +7,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import ar.lamansys.sgx.shared.emails.configuration.EmailConfiguration;
 import ar.lamansys.sgx.shared.emails.domain.EmailMessageBo;
 import ar.lamansys.sgx.shared.emails.domain.MailMessageBo;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import ar.lamansys.sgx.shared.notifications.application.NotificationChannel;
 import ar.lamansys.sgx.shared.notifications.domain.RecipientBo;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +34,7 @@ public class EmailNotificationChannel implements NotificationChannel<MailMessage
 		this.emailSender = mailSender;
 	}
 
-	private void sendImpl(EmailMessageBo emailMessage) throws MessagingException, UnsupportedEncodingException {
+	private void sendImpl(EmailMessageBo emailMessage) throws MessagingException, UnsupportedEncodingException{
 		MimeMessage message = emailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(
 				message,
@@ -46,7 +48,9 @@ public class EmailNotificationChannel implements NotificationChannel<MailMessage
 
 		helper.setSubject(emailMessage.subject);
 		helper.setText(emailMessage.html, true);
-
+		for (StoredFileBo storedFileBo : emailMessage.attachments) {
+			helper.addAttachment(storedFileBo.filename, new InputStreamResource(storedFileBo.resource.stream));
+		}
 		emailSender.send(message);
 	}
 
@@ -58,7 +62,8 @@ public class EmailNotificationChannel implements NotificationChannel<MailMessage
 					recipient.email,
 					fullname(recipient),
 					message.subject,
-					message.body
+					message.body,
+					message.attachments
 			));
 		} catch (MessagingException | UnsupportedEncodingException e) {
 			log.error("Sending email fail: {}", e.getMessage(), e);

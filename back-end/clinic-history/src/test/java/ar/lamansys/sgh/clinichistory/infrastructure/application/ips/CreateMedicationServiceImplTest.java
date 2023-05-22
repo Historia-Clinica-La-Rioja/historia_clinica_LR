@@ -7,6 +7,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadMedications;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
@@ -14,6 +15,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DosageRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.MedicationStatementRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.QuantityRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Dosage;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.MedicationStatement;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.MedicamentStatementStatusRepository;
@@ -45,6 +47,9 @@ class CreateMedicationServiceImplTest extends UnitRepository {
     @Autowired
     private MedicamentStatementStatusRepository medicamentStatementStatusRepository;
 
+	@Autowired
+	private QuantityRepository quantityRepository;
+
     @MockBean
     private DocumentService documentService;
 
@@ -71,7 +76,8 @@ class CreateMedicationServiceImplTest extends UnitRepository {
                 medicamentStatementStatusRepository,
                 documentService,
                 snomedService,
-                noteService
+                noteService,
+                quantityRepository
         );
     }
 
@@ -94,7 +100,7 @@ class CreateMedicationServiceImplTest extends UnitRepository {
 
 
         MedicationBo medication = createMedicationBo("IBUPROFENO", 13,
-                createDosageBo(15d,8, false, EUnitsOfTimeBo.HOUR, LocalDateTime.of(2020,05,25,0,0,0)));
+                createDosageBo(15d,8, false, EUnitsOfTimeBo.HOUR, LocalDateTime.of(2020,05,25,0,0,0), new QuantityBo(1,"ml")));
         var result = medicationServiceImpl.run(patientInfo, 1l, List.of(medication));
         Assertions.assertThat(result.size())
                 .isEqualTo(1);
@@ -154,7 +160,7 @@ class CreateMedicationServiceImplTest extends UnitRepository {
 
 
         MedicationBo medication = createMedicationBo("IBUPROFENO", 13,
-                createDosageBo(15d,8, true, EUnitsOfTimeBo.HOUR, LocalDateTime.of(2020,05,25,0,0,0)));
+                createDosageBo(15d,8, true, EUnitsOfTimeBo.HOUR, LocalDateTime.of(2020,05,25,0,0,0), new QuantityBo(1,"ml")));
         var result = medicationServiceImpl.run(patientInfo, 1l, List.of(medication));
         Assertions.assertThat(result.size())
                 .isEqualTo(1);
@@ -212,7 +218,7 @@ class CreateMedicationServiceImplTest extends UnitRepository {
         when(documentService.createDocumentMedication(any(), any())).thenReturn(null);
 
 
-        MedicationBo medication = createMedicationBo("IBUPROFENO", null,null);
+        MedicationBo medication = createMedicationBo("IBUPROFENO", null,createDosageBo(15d,8, true, EUnitsOfTimeBo.HOUR, LocalDateTime.of(2020,05,25,0,0,0), new QuantityBo(2,"ml")));
         var result = medicationServiceImpl.run(patientInfo, 1l, List.of(medication));
         Assertions.assertThat(result.size())
                 .isEqualTo(1);
@@ -240,17 +246,18 @@ class CreateMedicationServiceImplTest extends UnitRepository {
                 .isNull();
 
         Assertions.assertThat(medicationStatement.getDosageId())
-                .isNull();
+                .isNotNull();
     }
 
 
-    private DosageBo createDosageBo(Double duration, Integer frequency, boolean chronic, EUnitsOfTimeBo unitsOfTimeBo, LocalDateTime startDate) {
+    private DosageBo createDosageBo(Double duration, Integer frequency, boolean chronic, EUnitsOfTimeBo unitsOfTimeBo, LocalDateTime startDate, QuantityBo quantityBo) {
         DosageBo result = new DosageBo();
         result.setDuration(chronic ? null : duration);
         result.setFrequency(frequency);
         result.setPeriodUnit(unitsOfTimeBo);
         result.setStartDate(startDate);
         result.setChronic(chronic);
+		result.setQuantity(quantityBo);
         return result;
     }
 

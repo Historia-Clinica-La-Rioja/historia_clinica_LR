@@ -33,3 +33,22 @@ export const STUDY_STATUS = {
 		description: 'Eliminado'
 	}
 };
+
+export const PRESCRIPTION_STATES = {
+	INDICADA: {
+		id: 1,
+		description: 'Indicada'
+	},
+	ANULADA: {
+		id: 6,
+		description: 'Anulada'
+	},
+	DISPENSADA: {
+		id: 2,
+		description: 'Dispensada'
+	},
+	PROVISORIO_DISPENSADA: {
+		id: 3,
+		description: 'Dispensado provisorio'
+	}
+}

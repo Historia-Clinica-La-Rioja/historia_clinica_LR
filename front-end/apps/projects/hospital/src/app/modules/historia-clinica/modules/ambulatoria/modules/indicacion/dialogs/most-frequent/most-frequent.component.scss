@@ -1,12 +1,5 @@
-button {
-	margin: 0 0 15px 0;
-}
-
-.serch {
-	height: 100%;
-	min-height: 100%;
-	min-width: 90%;
-	width: 90%;
+.add-button {
+	margin-top: .75rem;
 }
 
 .grey {
@@ -19,4 +12,25 @@ button {
 
 .mat-stroked-button {
 	height: 100%;
+}
+
+form, mat-form-field {
+	width: 80%;
+}
+
+.search-container {
+	display: flex;
+	justify-content: space-between;
+}
+
+@media (max-width: 600px) {
+	.search-container {
+		flex-direction: column;
+		align-items: start;
+		margin-bottom: 1rem;
+	}
+
+	form, mat-form-field {
+		width: 100%;
+	}
 }

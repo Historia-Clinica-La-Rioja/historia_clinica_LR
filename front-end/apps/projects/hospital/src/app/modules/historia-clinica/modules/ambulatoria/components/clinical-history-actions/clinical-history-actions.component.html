@@ -1,24 +1,23 @@
 <div fxLayout="column" fxLayoutGap="10px" fxLayout.xs="row" fxLayoutAlign="center center">
 
-	<ng-container
-		*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PRESCRIPTOR']">
-		<button id="acciones" mat-flat-button color="primary" mat-button [matMenuTriggerFor]="menu"
-			*ngIf="(hasInternmentActionsToDo || currentUserIsAllowedToMakeBothConsultation || anyEmergencyCareAction) else showNewConsultationButton">
-			{{ 'ambulatoria.paciente.card.buttons.actions.ACTIONS' | translate | uppercase }}
-		</button>
-	</ng-container>
+    <ng-container
+        *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+        <button id="acciones" mat-flat-button color="primary" mat-button [matMenuTriggerFor]="menu"
+            *ngIf="(hasInternmentActionsToDo || currentUserIsAllowedToMakeBothConsultation) else showNewConsultationButton">
+            {{ 'ambulatoria.paciente.card.buttons.actions.ACTIONS' | translate | uppercase }}
+        </button>
+    </ng-container>
 
-	<ng-template #showNewConsultationButton>
-		<ng-container *ngIf="hasNewConsultationEnabled$ | async">
-			<ng-container *appHasRole="['ENFERMERO']">
-				<div *ngTemplateOutlet="nurseConsultation"></div>
-			</ng-container>
-			<ng-container
-				*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR', 'PROFESIONAL_DE_SALUD', 'PRESCRIPTOR']">
-				<div *ngTemplateOutlet="ambulatoryConsultation"></div>
-			</ng-container>
-		</ng-container>
-	</ng-template>
+    <ng-template #showNewConsultationButton>
+        <ng-container *ngIf="hasNewConsultationEnabled$ | async">
+            <ng-container *appHasRole="['ENFERMERO']">
+                <div *ngTemplateOutlet="nurseConsultation"></div>
+            </ng-container>
+            <ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR', 'PROFESIONAL_DE_SALUD']">
+                <div *ngTemplateOutlet="ambulatoryConsultation"></div>
+            </ng-container>
+        </ng-container>
+    </ng-template>
 
 	<mat-menu #menu="matMenu">
 

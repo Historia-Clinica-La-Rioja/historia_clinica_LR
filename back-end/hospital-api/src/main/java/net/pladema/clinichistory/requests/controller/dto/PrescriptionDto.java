@@ -31,6 +31,9 @@ public class PrescriptionDto implements Serializable {
 	@Nullable
 	private Integer clinicalSpecialtyId;
 
+	@Nullable
+	private Boolean isArchived;
+
     @NotEmpty
     private List<@Valid PrescriptionItemDto> items = new ArrayList<>();
 }

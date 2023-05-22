@@ -33,10 +33,11 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
         String sqlString = "with temporal as (" +
                 "SELECT DISTINCT " +
                 "ms.id, ms.snomed_id, ms.status_id, ms.health_condition_id, ms.note_id, ms.dosage_id, ms.created_on, d.source_id, d.source_type_id, d.created_by, ms.updated_on, " +
-                "row_number() OVER (PARTITION by ms.snomed_id, ms.health_condition_id ORDER BY ms.updated_on desc) AS rw " +
+                "row_number() OVER (PARTITION by ms.snomed_id, ms.health_condition_id, ms.due_date, ms.dosage_id ORDER BY ms.updated_on desc) AS rw, d.id as document_id, df.file_name " +
                 "FROM document d " +
                 "JOIN document_medicamention_statement dms ON d.id = dms.document_id " +
                 "JOIN medication_statement ms ON dms.medication_statement_id = ms.id " +
+				"LEFT JOIN document_file df ON (d.id = df.id) " +
                 "WHERE ms.patient_id = :patientId  " +
                 "AND d.type_id IN :documentType "+
                 "AND d.status_id = :documentStatusId " +
@@ -47,26 +48,28 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
                 ", d.id AS d_id, d.duration AS duration, d.frequency, d.period_unit, d.chronic, d.start_date, d.end_date " +
                 ", d.suspended_start_date, d.suspended_end_date " +
                 ", mr.id AS mr_id, CASE WHEN mr.has_recipe IS NULL THEN false ELSE mr.has_recipe END, t.created_by AS user_id " +
-                ", t.created_on AS m_created_on " +
+                ", t.created_on AS m_created_on, t.document_id, t.file_name, d.doses_by_day, d.doses_by_unit, q.value, q.unit, ms.is_digital, ms.prescription_line_state " +
                 "FROM temporal t " +
                 "JOIN {h-schema}snomed s ON (t.snomed_id = s.id) " +
                 "LEFT JOIN {h-schema}medication_request mr ON (mr.id = t.source_id AND t.source_type_id = "+ SourceType.RECIPE + ") " +
                 "LEFT JOIN {h-schema}medication_statement_status mss ON (mss.id = t.status_id)" +
                 "LEFT JOIN {h-schema}note n ON (t.note_id = n.id) " +
                 "LEFT JOIN {h-schema}dosage d ON (t.dosage_id = d.id) " +
+				"LEFT JOIN {h-schema}quantity q ON (d.dose_quantity_id = q.id) " +
+				"LEFT JOIN {h-schema}medication_statement ms ON (d.id = ms.dosage_id) " +
                 "LEFT JOIN ( SELECT h1.id, s1.id as s_id, s1.sctid as sctid_id, s1.pt " +
                 "            FROM {h-schema}health_condition h1 " +
                 "            JOIN {h-schema}snomed s1 ON (h1.snomed_id = s1.id) " +
                 "          ) AS h ON (h.id = t.health_condition_id) " +
-                "WHERE rw = 1 " +
+				"WHERE rw = 1 " +
                 (filter.getMedicationStatement() != null ? "AND UPPER(s.pt) LIKE :medication " : "") +
                 (filter.getHealthCondition() != null ? "AND UPPER(h.pt) LIKE :healthCondition " : "") +
-                "ORDER BY t.updated_on";
+                "ORDER BY mr.id DESC";
         Query query = entityManager.createNativeQuery(sqlString);
 
         query.setParameter("documentStatusId", DocumentStatus.FINAL)
              .setParameter("patientId", filter.getPatientId())
-             .setParameter("documentType", List.of(DocumentType.RECIPE, DocumentType.OUTPATIENT, DocumentType.EPICRISIS, DocumentType.COUNTER_REFERENCE));
+             .setParameter("documentType", List.of(DocumentType.RECIPE, DocumentType.OUTPATIENT, DocumentType.EPICRISIS, DocumentType.COUNTER_REFERENCE, DocumentType.DIGITAL_RECIPE));
 
         if (filter.getMedicationStatement() != null)
             query.setParameter("medication", "%"+filter.getMedicationStatement().toUpperCase()+"%");
@@ -86,10 +89,11 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
 		String sqlString = "with temporal as (" +
 				"SELECT DISTINCT " +
 				"ms.id, ms.snomed_id, ms.status_id, ms.health_condition_id, ms.note_id, ms.dosage_id, ms.created_on, d.source_id, d.source_type_id, d.created_by, ms.updated_on, " +
-				"row_number() OVER (PARTITION by ms.snomed_id, ms.health_condition_id ORDER BY ms.updated_on desc) AS rw " +
+				"row_number() OVER (PARTITION by ms.snomed_id, ms.health_condition_id, ms.due_date ORDER BY ms.updated_on desc) AS rw, d.id as document_id, df.file_name " +
 				"FROM document d " +
 				"JOIN document_medicamention_statement dms ON d.id = dms.document_id " +
 				"JOIN medication_statement ms ON dms.medication_statement_id = ms.id " +
+				"LEFT JOIN document_file df ON (d.id = df.id) " +
 				"WHERE ms.patient_id = :patientId  " +
 				"AND d.type_id IN :documentType "+
 				"AND d.status_id = :documentStatusId " +
@@ -100,16 +104,18 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
 				", d.id AS d_id, d.duration AS duration, d.frequency, d.period_unit, d.chronic, d.start_date, d.end_date " +
 				", d.suspended_start_date, d.suspended_end_date " +
 				", mr.id AS mr_id, CASE WHEN mr.has_recipe IS NULL THEN false ELSE mr.has_recipe END, t.created_by AS user_id " +
-				", t.created_on AS m_created_on " +
+				", t.created_on AS m_created_on, t.document_id, t.file_name, d.doses_by_day, d.doses_by_unit, q.value, q.unit, ms.is_digital " +
 				"FROM temporal t " +
 				"JOIN {h-schema}snomed s ON (t.snomed_id = s.id) " +
 				"LEFT JOIN {h-schema}medication_request mr ON (mr.id = t.source_id AND t.source_type_id = "+ SourceType.RECIPE + ") " +
 				"LEFT JOIN {h-schema}healthcare_professional hcp ON (mr.doctor_id = hcp.id) " +
 				"LEFT JOIN {h-schema}person p ON (hcp.person_id = p.id) " +
 				"LEFT JOIN {h-schema}user_person up ON (up.person_id = p.id) " +
-				"LEFT JOIN {h-schema}medication_statement_status mss ON (mss.id = t.status_id)" +
+				"LEFT JOIN {h-schema}medication_statement_status mss ON (mss.id = t.status_id) " +
 				"LEFT JOIN {h-schema}note n ON (t.note_id = n.id) " +
 				"LEFT JOIN {h-schema}dosage d ON (t.dosage_id = d.id) " +
+				"LEFT JOIN {h-schema}quantity q ON (d.dose_quantity_id = q.id) " +
+				"LEFT JOIN {h-schema}medication_statement ms ON (d.id = ms.dosage_id) " +
 				"LEFT JOIN ( SELECT h1.id, s1.id as s_id, s1.sctid as sctid_id, s1.pt " +
 				"            FROM {h-schema}health_condition h1 " +
 				"            JOIN {h-schema}snomed s1 ON (h1.snomed_id = s1.id) " +
@@ -118,13 +124,13 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
 				"AND up.user_id = (:userId)" +
 				(filter.getMedicationStatement() != null ? "AND UPPER(s.pt) LIKE :medication " : "") +
 				(filter.getHealthCondition() != null ? "AND UPPER(h.pt) LIKE :healthCondition " : "") +
-				"ORDER BY t.updated_on";
+				"ORDER BY mr.id DESC";
 		Query query = entityManager.createNativeQuery(sqlString);
 
 		query.setParameter("documentStatusId", DocumentStatus.FINAL)
 				.setParameter("patientId", filter.getPatientId())
 				.setParameter("userId", userId)
-				.setParameter("documentType", List.of(DocumentType.RECIPE, DocumentType.OUTPATIENT, DocumentType.EPICRISIS, DocumentType.COUNTER_REFERENCE));
+				.setParameter("documentType", List.of(DocumentType.RECIPE, DocumentType.OUTPATIENT, DocumentType.EPICRISIS, DocumentType.COUNTER_REFERENCE, DocumentType.DIGITAL_RECIPE));
 
 		if (filter.getMedicationStatement() != null)
 			query.setParameter("medication", "%"+filter.getMedicationStatement().toUpperCase()+"%");

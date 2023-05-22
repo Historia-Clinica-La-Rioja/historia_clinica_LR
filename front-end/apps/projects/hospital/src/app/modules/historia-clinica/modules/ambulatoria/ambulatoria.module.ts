@@ -68,9 +68,9 @@ import { EnviarRecetaDigitalPorEmailComponent } from './dialogs/enviar-receta-di
 import { DestinationInstitutionReferenceComponent } from './components/destination-institution-reference/destination-institution-reference.component';
 import { CarelinesAndSpecialtiesReferenceComponent } from './components/carelines-and-specialties-reference/carelines-and-specialties-reference.component';
 import { OriginInstitutionReferenceComponent } from './components/origin-institution-reference/origin-institution-reference.component';
-import { EpisodeDataComponent } from '@historia-clinica/components/episode-data/episode-data.component';
 import { EpisodeSummaryComponent } from './routes/episode-summary/episode-summary.component';
 import { EmergencyCareProblemsComponent } from './components/emergency-care-problems/emergency-care-problems.component';
+import { PatientValidatorPopupComponent } from './dialogs/patient-validator-popup/patient-validator-popup.component';
 
 @NgModule({
 	declarations: [
@@ -117,12 +117,13 @@ import { EmergencyCareProblemsComponent } from './components/emergency-care-prob
 		VaccineSearchComponent,
 		ClinicalHistoryActionsComponent,
 		GuardiaComponent,
-    	EnviarRecetaDigitalPorEmailComponent,
-    	DestinationInstitutionReferenceComponent,
-   		CarelinesAndSpecialtiesReferenceComponent,
-    	OriginInstitutionReferenceComponent,
+		EnviarRecetaDigitalPorEmailComponent,
+		DestinationInstitutionReferenceComponent,
+		CarelinesAndSpecialtiesReferenceComponent,
+		OriginInstitutionReferenceComponent,
 		EpisodeSummaryComponent,
-  EmergencyCareProblemsComponent
+		EmergencyCareProblemsComponent,
+		PatientValidatorPopupComponent,
 	],
 	imports: [
 		CommonModule,

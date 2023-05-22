@@ -3,6 +3,7 @@ package net.pladema.person.controller;
 import net.pladema.IntegrationController;
 import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.person.controller.mapper.PersonMapper;
+import net.pladema.person.controller.service.CanEditUserData;
 import net.pladema.person.service.PersonService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,9 @@ class PersonControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private PersonMapper personMapper;
+
+	@MockBean
+	private CanEditUserData canEditUserData;
 
 	@BeforeEach
 	void setup() {

@@ -145,19 +145,14 @@ export class AmbulatoryConsultationProblemsService {
 										});
 										nuevoProblema.snvsReports = result.reports;
 									}
-									this.addControlAndResetForm(nuevoProblema);
+									return this.addControlAndResetForm(nuevoProblema);
 								}
 							})
-						}
-						else {
-							this.addControlAndResetForm(nuevoProblema);
 						}
 					}
 				);
 			}
-			else {
-				this.addControlAndResetForm(nuevoProblema);
-			}
+			return this.addControlAndResetForm(nuevoProblema);
 		}
 	}
 

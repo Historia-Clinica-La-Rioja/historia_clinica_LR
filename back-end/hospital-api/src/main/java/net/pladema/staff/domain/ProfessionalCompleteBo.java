@@ -20,13 +20,15 @@ public class ProfessionalCompleteBo {
     private String firstName;
     private String lastName;
 	private String nameSelfDetermination;
+	private String otherLastNames;
 
 	private List<ProfessionBo> professions;
-	public ProfessionalCompleteBo(Integer id, Integer personId, String firstName, String lastName, String nameSelfDetermination){
+	public ProfessionalCompleteBo(Integer id, Integer personId, String firstName, String lastName, String nameSelfDetermination, String otherLastNames){
 		this.id = id;
 		this.personId = personId;
 		this.firstName = firstName;
         this.lastName = lastName;
 		this.nameSelfDetermination = (nameSelfDetermination == null || nameSelfDetermination.isEmpty() || nameSelfDetermination.isBlank()) ? firstName : nameSelfDetermination;
+		this.otherLastNames = otherLastNames;
     }
 }

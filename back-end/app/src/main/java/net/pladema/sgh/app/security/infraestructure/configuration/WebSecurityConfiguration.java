@@ -38,6 +38,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 			"/swagger-ui/**"
 	};
 
+	private static final String[] PUBLIC_DOCUMENT_RESOURCES = {
+			"/external-document-access/**"
+	};
 
 	private String[] BOOKING_API_RESOURCES = new String[]{};
 
@@ -90,14 +93,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/actuator/**").access(actuatorConfiguration.getAccessInfo())
 				.antMatchers( "/auth/**").permitAll()
 				.antMatchers(SWAGGER_RESOURCES).permitAll()
+				.antMatchers(PUBLIC_DOCUMENT_RESOURCES).permitAll()
 				.antMatchers(BACKOFFICE + "/properties").hasAnyAuthority(
 						ERole.ROOT.getValue(),
 						ERole.ADMINISTRADOR.getValue())
 				.antMatchers(BACKOFFICE + "/**").hasAnyAuthority(
 					ERole.ROOT.getValue(),
 					ERole.ADMINISTRADOR.getValue(),
-					ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.getValue(),
-					ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR.getValue())
+					ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.getValue())
 				.antMatchers(RECAPTCHA + "/**").permitAll()
 				.antMatchers("/oauth/**").permitAll()
 				.antMatchers(HttpMethod.GET,PUBLIC + "/**").permitAll()

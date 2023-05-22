@@ -386,7 +386,8 @@
                     "DAY_DOSE": "Dosis / Día",
                     "TREATMENT_DAYS": "Días de tratamiento",
                     "ADD_CHARACTERS": "Ingrese al menos 3 caracteres",
-                    "ADD_NEW_PROBLEM": "+ Agregar nuevo problema asociado"
+                    "ADD_NEW_PROBLEM": "+ Agregar nuevo problema asociado",
+                    "QUANTITY": "Cantidad"
                 },
                 "validators_dialog": {
                     "TITLE": "Sin permiso para recetar",
@@ -415,22 +416,34 @@
                     "ADMINISTRATION_TIME_DAYS": "Durante: {{days}} días",
                     "UNIT_DOSE": "Dosis / Unidad: {{unitDose}}",
                     "DAY_DOSE": "Dosis / Día: {{dayDose}}",
+                    "QUANTITY": "Cantidad: {{quantity}}",
                     "TREATMENT_DAYS": "Días de tratamiento: {{treatmentDays}}",
                     "INTERVAL": "Cada {{interval}} hs.",
                     "USUAL": "Habitual",
                     "DAILY": "Diario",
                     "DIAGNOSIS": "Diagnóstico: {{healthProblem}}",
                     "PROLONGED_TREATMENT": "Tratamiento prolongado",
+                    "ARCHIVED": "Archivada",
                     "POSDATADAS_LABEL": "Repeticiones (posdatadas)",
                     "POSDATADAS_HINT_SINGULAR": "Se generará {{posdatadas}} receta posdatada, adicional a la original",
                     "POSDATADAS_HINT_PLURAL": "Se generarán {{posdatadas}} recetas posdatadas, adicionales a la original",
                     "POSDATADAS_ERROR": "Las posdatadas deben ir entre {{min}} y {{max}}",
                     "SPECIALTY": "Especialidad",
-                    "SPECIALTY_REQUIRED": "El profesional no tiene especialidades asociadas"
+                    "SPECIALTY_REQUIRED": "El profesional no tiene especialidades asociadas",
+                    "PHONE_PREFIX": "Prefijo",
+                    "PHONE_NUMBER": "Teléfono del paciente",
+                    "COUNTRY": "País",
+					"PROVINCE": "Provincia",
+					"LOCALITY": "Localidad",
+                    "CITY": "Ciudad",
+					"STREET": "Calle",
+                    "STREET_NUMBER": "Número",
+                    "MEDICAL_COVERAGE_SUGGESTION": "Atención: no está cargado el número de afiliado",
+                    "REQUIRED_MEDICATION": "Debes agregar una medicación"
                 },
                 "send_digital_recipe_email_dialog": {
                     "TITLE": "Enviar receta digital por email",
-                    "INPUT_TEXT": "Por favor confirme el mail de paciente:",
+                    "INPUT_TEXT": "Por favor confirme el mail del paciente:",
                     "LABEL": "Email del paciente",
                     "SEND_RECIPE": "Enviar receta",
                     "REQUIRED_EMAIL": "El email del paciente es obligatorio"
@@ -487,7 +500,18 @@
                     "COMPLETE": "Completar",
                     "DELETE": "Eliminar",
                     "REACTIVATE": "Reactivar",
-                    "SHOW_RESULTS": "Ver resultados"
+                    "SHOW_RESULTS": "Ver resultados",
+                    "cancel": {
+                        "CANCEL_BUTTON": "Anular",
+                        "dialog": {
+                            "TITLE": "Anular receta",
+                            "CONTENT": "Si anula la receta, la misma perderá toda validez y ya no podrá ser utilizada por el paciente.",
+                            "QUESTION": "¿Está seguro que desea anular la receta?",
+                            "AGREE": "Sí, anular",
+                            "DISAGREE": "No, cancelar",
+                            "SUCCESS": "Receta anulada correctamente"
+                        }
+                    }
                 },
                 "filter": {
                     "STATE": "Estado",

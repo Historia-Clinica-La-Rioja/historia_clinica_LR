@@ -1,5 +1,6 @@
 import {Component, Injector, Input, OnInit} from '@angular/core';
 import {HCEPersonalHistoryDto} from '@api-rest/api-model';
+import { ERole } from '@api-rest/api-model';
 import {SummaryHeader} from '@presentation/components/summary-card/summary-card.component';
 import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
 import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
@@ -11,6 +12,8 @@ import { ActivatedRoute } from '@angular/router';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { NuevaConsultaDockPopupComponent } from '@historia-clinica/modules/ambulatoria/dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 import { SolveProblemComponent } from '@historia-clinica/dialogs/solve-problem/solve-problem.component';
+import { anyMatch } from '@core/utils/array.utils';
+import { PermissionsService } from '@core/services/permissions.service';
 
 @Component({
 	selector: 'app-antecedentes-personales-summary',
@@ -30,6 +33,8 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 	private nuevaConsultaAmbulatoriaRef: DockPopupRef;
 	private nuevaConsultaFromProblemaRef: DockPopupRef;
 	private dockPopupService: DockPopupService;
+	canOnlyViewSelfAddedProblems = false;
+	rolesThatCanOnlyViewSelfAddedProblems = [ERole.PRESCRIPTOR];
 	@Input() personalHistoriesHeader: SummaryHeader;
 	@Input()
 	set personalHistory(personalHistory: HCEPersonalHistoryDto[]){
@@ -39,6 +44,7 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 	constructor(
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
+		private readonly permissionsService: PermissionsService,
 		public dialog: MatDialog,
 		private route: ActivatedRoute,
 		private injector: Injector
@@ -49,6 +55,7 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 	}
 
 	ngOnInit(): void {
+		this.setPermissions();
 		this.hasNewConsultationEnabled$ = this.ambulatoriaSummaryFacadeService.hasNewConsultationEnabled$;
 	}
 
@@ -56,6 +63,13 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 		await this.setSeverityMasterData();
 		this.setProblems(personalHistory);
 	}
+
+	private setPermissions(): void {
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.canOnlyViewSelfAddedProblems = anyMatch<ERole>(userRoles, this.rolesThatCanOnlyViewSelfAddedProblems);
+		});
+	}
+
 
 	getSeverityTypeDisplayByCode(severityCode): string {
 		return (severityCode && this.severityTypesMasterData.length) ?
@@ -109,7 +123,9 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 			}
 		}).afterClosed().subscribe(submitted => {
 			if (submitted) {
-				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({ personalHistories: true, problems: true });
+				this.canOnlyViewSelfAddedProblems ?
+				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({ personalHistoriesByRole: true, problems: true })
+				: this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({ personalHistories: true, problems: true });
 			}
 		});
 	}

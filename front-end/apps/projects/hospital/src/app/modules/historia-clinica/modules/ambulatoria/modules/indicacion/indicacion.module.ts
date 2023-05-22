@@ -32,6 +32,7 @@ import { PrescripcionValidatorPopupComponent } from './dialogs/prescripcion-vali
 import { WarningMessageComponent } from './components/warning-message/warning-message.component';
 import { ShowViaPipe } from './pipes/show-via.pipe';
 import { EmergencyCareIndicationsCardComponent } from './components/emergency-care-indications-card/emergency-care-indications-card.component';
+import { PharmacosFrequentComponent } from './dialogs/pharmacos-frequent/pharmacos-frequent.component';
 
 @NgModule({
 	declarations: [
@@ -55,6 +56,7 @@ import { EmergencyCareIndicationsCardComponent } from './components/emergency-ca
 		DietComponent,
 		OtherIndicationComponent,
 		ParenteralPlanComponent,
+		PharmacosFrequentComponent,
 		PharmacoComponent,
 		RegisterNursingRecordComponent,
 		RelativeDatePipe,

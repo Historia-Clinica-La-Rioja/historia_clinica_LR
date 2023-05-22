@@ -21,7 +21,7 @@
     <button mat-stroked-button color="primary" mat-dialog-close>
         <span translate="buttons.CANCEL"></span>
     </button>
-    <button mat-flat-button color="primary" [disabled]=" ! this.emailForm.valid">
+    <button mat-flat-button color="primary" [disabled]=" ! this.emailForm.valid" (click)="sendEmail()">
         <span translate="ambulatoria.paciente.ordenes_prescripciones.send_digital_recipe_email_dialog.SEND_RECIPE"></span>
     </button>
 </mat-dialog-actions>

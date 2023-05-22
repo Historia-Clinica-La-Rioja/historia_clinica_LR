@@ -45,14 +45,19 @@ public class AssetsServiceImpl implements AssetsService {
 
     private static final Assets APP_LOGO = new Assets("image/svg+xml", "app_logo.svg");
 
+	private static final Assets DIGITAL_PRESCRIPTION_HEADER = new Assets("image/png", "pdf/digital_recipe_header_logo.png");
 
-    private final FileService fileService;
+	private static final Assets DIGITAL_PRESCRIPTION_LOGO = new Assets("image/png", "pdf/digital_recipe_logo.png");
+
+
+	private final FileService fileService;
     private final BlobStorage blobStorage;
 
     private final List<Assets> assetsList = new ArrayList<>(Arrays.asList(
             SPONSOR_LOGO, FAVICON,
             ICON_72, ICON_96, ICON_128, ICON_144, ICON_152, ICON_192, ICON_384, ICON_512,
-            FOOTER_LEFT, FOOTER_CENTER, FOOTER_RIGHT, APP_LOGO));
+            FOOTER_LEFT, FOOTER_CENTER, FOOTER_RIGHT, APP_LOGO, DIGITAL_PRESCRIPTION_HEADER,
+			DIGITAL_PRESCRIPTION_LOGO));
 
     @Override
     public Optional<Assets> findByName(String name) {

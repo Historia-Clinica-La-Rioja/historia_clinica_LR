@@ -2,6 +2,8 @@ package net.pladema.sisa.refeps.controller.service;
 
 import net.pladema.sisa.refeps.controller.RefepsExternalService;
 
+import net.pladema.sisa.refeps.controller.dto.LicenseDataDto;
+import net.pladema.sisa.refeps.controller.dto.ValidatedLicenseDataDto;
 import net.pladema.sisa.refeps.services.RefepsService;
 
 import net.pladema.sisa.refeps.services.domain.ValidatedLicenseNumberBo;
@@ -31,4 +33,11 @@ public class RefepsExternalServiceImpl implements RefepsExternalService {
 		LOG.debug("Validating license numbers => {}", licenseNumbers);
 		return refepsService.validateLicenseNumber(identificationNumber, licenseNumbers);
 	}
+
+	@Override
+	public List<ValidatedLicenseDataDto> validateLicenseNumberAndType(String identificationNumber, List<LicenseDataDto> licenseData) throws RefepsApiException, RefepsLicenseException {
+		LOG.debug("Validating license data => {}", licenseData);
+		return refepsService.validateLicenseNumberAndType(identificationNumber, licenseData);
+	}
+
 }

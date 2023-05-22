@@ -37,7 +37,7 @@ public class PrescriptionAccessController {
 	private static final String OUTPUT = "Output -> {}";
 	private static final String INPUT = "Input data -> ";
 
-	private static final String ID_DIVIDER = "\\.";
+	private static final String ID_DIVIDER = "-";
 
 	private final FetchPrescriptionsByIdAndDni fetchPrescriptionsByIdAndDni;
 
@@ -66,7 +66,7 @@ public class PrescriptionAccessController {
 			assertFormatPrescriptionId(parts);
 			assertDomainNumber(parts[0]);
 
-			var result = prescriptionMapper.mapTo(fetchPrescriptionsByIdAndDni.run(parts[1], identificationNumber));
+			var result = prescriptionMapper.mapTo(fetchPrescriptionsByIdAndDni.run(prescriptionId, identificationNumber));
 
 			LOG.debug(OUTPUT, result);
 			return ResponseEntity.ok().body(result);

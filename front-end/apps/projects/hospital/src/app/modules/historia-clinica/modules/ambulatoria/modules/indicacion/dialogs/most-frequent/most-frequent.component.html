@@ -1,7 +1,7 @@
 <div mat-dialog-content>
 	<div fxLayout="row" fxLayoutAlign="space-between">
 		<div mat-dialog-title class="mat-h3">
-			{{data.title | translate | titlecase}}
+			{{'indicacion.card-pharmaco-frequent.TITLE' | translate}}
 		</div>
 
 		<button type="button" mat-icon-button mat-dialog-close (click)="close(false)">
@@ -9,13 +9,13 @@
 		</button>
 	</div>
 
-	<h2>{{'indicacion.most-frequent.SUBTITLE' | translate | titlecase}} </h2>
+	<h2>{{'indicacion.card-pharmaco-frequent.SUBTITLE' | translate}} </h2>
 
-	<div fxLayout="row" fxLayoutAlign="space-between">
-		<form id="filter-form" [formGroup]="formFilter" fxLayoutGap="15px" fxFlex="50%">
-			<mat-form-field appearance="outline" class="serch">
+	<div class="search-container">
+		<form id="filter-form" [formGroup]="formFilter" fxLayoutGap="15px">
+			<mat-form-field appearance="outline">
 				<mat-label>
-					{{'indicacion.most-frequent.SUBTITLE' | translate | titlecase}}
+					{{'indicacion.card-pharmaco-frequent.SEARCH' | translate}}
 				</mat-label>
 				<input formControlName="description" matInput (keyup)="applyFilter($event)">
 
@@ -31,8 +31,8 @@
 			</mat-form-field>
 		</form>
 
-		<button mat-stroked-button color="primary" (click)="close(true)">
-			{{'indicacion.most-frequent.ADD_NEW'| translate | uppercase}}
+		<button mat-stroked-button color="primary" (click)="close(true)" class="add-button">
+			{{'indicacion.card-pharmaco-frequent.ADD_NEW'| translate | uppercase}}
 		</button>
 	</div>
 

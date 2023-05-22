@@ -13,7 +13,7 @@ import java.util.Objects;
 @Getter
 public class PrescriptionProblemBo {
 	String pt;
-	Integer snomedId;
+	String snomedId;
 	String problemType;
 
 	@Override

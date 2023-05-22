@@ -49,6 +49,8 @@ public class PrescriptionMapper {
 				.domain(prescriptionBo.getDomain())
 				.prescriptionId(prescriptionBo.getPrescriptionId())
 				.dueDate(prescriptionBo.getDueDate())
+				.link(prescriptionBo.getLink())
+				.isArchived(prescriptionBo.getIsArchived())
 				.institutionPrescriptionDto(mapTo(prescriptionBo.getInstitutionPrescriptionBo()))
 				.prescriptionDate(prescriptionBo.getPrescriptionDate())
 				.patientPrescriptionDto(mapTo(prescriptionBo.getPatientPrescriptionBo()))
@@ -65,7 +67,7 @@ public class PrescriptionMapper {
 	}
 
 	private PrescriptionLineDto mapTo(PrescriptionLineBo prescriptionLineBo, LocalDateTime dueDate) {
-		var due = localDateMapper.fromLocalDateTime(LocalDateTime.now()).plusDays(30).isAfter(localDateMapper.fromLocalDateTime(dueDate));
+		var due = localDateMapper.fromLocalDateTime(LocalDateTime.now()).plusDays(30).isBefore(localDateMapper.fromLocalDateTime(dueDate));
 		return PrescriptionLineDto.builder()
 				.prescriptionLineNumber(prescriptionLineBo.getPrescriptionLineNumber())
 				.prescriptionLineStatus(due ? PrescriptionValidStatesEnum.map(VENCIDO).toString() : prescriptionLineBo.getPrescriptionLineStatus())
@@ -77,6 +79,7 @@ public class PrescriptionMapper {
 				.prescriptionProblemDto(mapTo(prescriptionLineBo.getPrescriptionProblemBo()))
 				.genericMedicationDto(mapTo(prescriptionLineBo.getGenericMedicationBo()))
 				.commercialMedicationDto(mapTo(prescriptionLineBo.getCommercialMedicationBo()))
+				.quantity(prescriptionLineBo.getQuantity())
 				.build();
 
 	}
@@ -152,6 +155,7 @@ public class PrescriptionMapper {
 				.identificationNumber(patientPrescriptionBo.getIdentificationNumber())
 				.identificationType(patientPrescriptionBo.getIdentificationType())
 				.lastName(patientPrescriptionBo.getLastName())
+				.name(patientPrescriptionBo.getName())
 				.medicalCoverage(patientPrescriptionBo.getMedicalCoverage())
 				.medicalCoverageCuit(patientPrescriptionBo.getMedicalCoverageCuit())
 				.medicalCoveragePlan(patientPrescriptionBo.getMedicalCoveragePlan())

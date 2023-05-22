@@ -2,7 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
-import { MedicationInfoDto, PrescriptionDto, ProfessionalLicenseNumberValidationResponseDto } from '@api-rest/api-model';
+import {
+	DocumentRequestDto,
+	MedicationInfoDto,
+	PrescriptionDto,
+	ProfessionalLicenseNumberValidationResponseDto,
+	SnomedDto
+} from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { of } from 'rxjs';
 import { ViewPdfService } from '@presentation/dialogs/view-pdf/view-pdf.service';
@@ -19,9 +25,9 @@ export class MedicationRequestService {
 	  ) { }
 
 
-	create(patientId: number, newMedicationRequestDto: PrescriptionDto): Observable<number> {
+	create(patientId: number, newMedicationRequestDto: PrescriptionDto): Observable<DocumentRequestDto[]> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests`;
-		return this.http.post<number>(url, newMedicationRequestDto);
+		return this.http.post<DocumentRequestDto[]>(url, newMedicationRequestDto);
 	}
 
 	suspend(patientId: number, dayQuantity: number, observations: string, medicationsIds: number[]): Observable<void> {
@@ -89,5 +95,24 @@ export class MedicationRequestService {
 	validateProfessional(patientId: number): Observable<ProfessionalLicenseNumberValidationResponseDto> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/validate`;
 		return this.http.get<ProfessionalLicenseNumberValidationResponseDto>(url);
+	}
+
+	sendEmail(patientId: number, patientEmail: string, documentId: number): Observable<any> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/documentId/${documentId}/notify`;
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = queryParams.append('patientEmail', patientEmail);
+		return this.http.get<any>(url, {params: queryParams});
+	}
+
+	mostFrequentPharmacosPreinscription(patientId: number): Observable<SnomedDto[]> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/most-frequent-pharmacos`;
+		return this.http.get<SnomedDto[]>(url);
+	}
+
+	cancelPrescriptionLineState(medicationStatementId: number, patientId: number): Observable<void> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/cancel-prescription-line-state`;
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = queryParams.append('medicationStatementId', medicationStatementId);
+		return this.http.put<void>(url, queryParams);
 	}
 }

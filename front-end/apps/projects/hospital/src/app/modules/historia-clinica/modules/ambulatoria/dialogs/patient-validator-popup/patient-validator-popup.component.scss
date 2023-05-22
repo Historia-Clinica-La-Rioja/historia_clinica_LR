@@ -1,0 +1,38 @@
+h1 {
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.error-outline {
+    font-size: 5rem;
+}
+
+section {
+    display: flex;
+    flex-direction: column;
+
+    span {
+        font-size: 1rem;
+        font-weight: 500;
+    }
+}
+
+.edit-patient {
+    margin-left: 1rem;
+}
+
+mat-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media (max-width: 450px) {
+    mat-dialog-actions {
+        flex-direction: column;
+    }
+
+    .edit-patient {
+        margin-left: 0;
+        margin-top: .50rem;
+    }
+}

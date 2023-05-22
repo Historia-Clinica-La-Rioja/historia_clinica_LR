@@ -1,6 +1,7 @@
 {
 	"indicacion": {
 		"TITLE": "Indicaciones",
+		"INDICACIONES_DISABLED": "La opción de INDICACIONES se encuentra deshabilitada ya que el paciente es temporal o no está validado",
 		"internment-card": {
 			"TITLE": "Indicaciones de internación",
 			"TODAY": "Hoy, ",
@@ -161,11 +162,23 @@
 						"ERROR": "Error al guardar un nuevo fármaco",
 						"SUCCESS": "El fármaco se guardó exitosamente"
 					}
+				},
+				"patient-validator": {
+					"TEMPORARY_PATIENT_TITLE": "Paciente temporal",
+					"TEMPORARY_PATIENT_DESCRIPTION": "No pueden realizarse indicaciones a pacientes en estado temporal.",
+					"PERMANENT_INVALID_TITLE": "Paciente permanente no validado",
+					"PERMANENT_INVALID_DESCRIPTION": "No pueden realizarse indicaciones a pacientes en estado permanente no validado",
+					"buttons": {
+						"PATIENT_VALIDATE": "Validar paciente"
+					}
 				}
 			}
 		},
 		"card-pharmaco": {
-			"SELECTION": "Seleccionar"
+			"SELECTION": "Seleccionar",
+			"UNIT_DOSE": "Dosis / Unidad: {{unitDose}}",
+			"DAY_DOSE": "Dosis / Día: {{dayDose}}",
+			"QUANTITY": "Cantidad: {{quantity}}"
 		},
 		"most-frequent": {
 			"TITLE": "Fármacos recetados más frecuentes",

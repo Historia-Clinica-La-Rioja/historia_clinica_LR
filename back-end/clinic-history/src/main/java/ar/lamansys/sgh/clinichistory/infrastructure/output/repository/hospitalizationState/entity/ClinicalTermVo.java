@@ -38,4 +38,13 @@ public abstract class ClinicalTermVo {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+
+	public String getSnomedSctid() {
+		return this.getSnomed().getSctid();
+	}
+
+	public String getSnomedPt() {
+		return this.getSnomed().getPt();
+	}
 }

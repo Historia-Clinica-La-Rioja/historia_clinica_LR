@@ -1,5 +1,7 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service;
 
+import org.springframework.core.io.InputStreamResource;
+
 public interface SharedDocumentPort {
 
 	void deleteDocument(Long documentId, String reason);

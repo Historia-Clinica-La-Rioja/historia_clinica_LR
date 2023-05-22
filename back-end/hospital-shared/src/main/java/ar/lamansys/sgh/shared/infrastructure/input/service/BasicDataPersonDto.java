@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class BasicDataPersonDto implements Serializable {
 
 

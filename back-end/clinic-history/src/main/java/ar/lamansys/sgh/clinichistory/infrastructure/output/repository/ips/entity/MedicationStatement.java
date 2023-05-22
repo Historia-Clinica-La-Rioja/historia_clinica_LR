@@ -45,7 +45,7 @@ public class MedicationStatement extends SGXAuditableEntity<Integer> implements 
 	@Column(name = "snomed_id", nullable = false)
 	private Integer snomedId;
 
-	@Column(name = "cie10_codes", length = 255, nullable = true)
+	@Column(name = "cie10_codes")
 	private String cie10Codes;
 
 	@Column(name = "status_id", length = 20, nullable = false)
@@ -62,6 +62,9 @@ public class MedicationStatement extends SGXAuditableEntity<Integer> implements 
 
 	@Column(name = "due_date")
 	private LocalDate dueDate;
+
+	@Column(name = "prescription_date")
+	private LocalDate prescriptionDate;
 
 	@Column(name = "is_digital")
 	private Boolean isDigital;
@@ -85,7 +88,7 @@ public class MedicationStatement extends SGXAuditableEntity<Integer> implements 
 	}
 
 	public MedicationStatement(Integer patientId, Integer snomedId, String statusId, Long noteId,
-							   Integer healthConditionId, Integer dosageId, Integer prescriptionLineNumber, Boolean isDigital) {
+							   Integer healthConditionId, Integer dosageId, Integer prescriptionLineNumber, Boolean isDigital, LocalDate prescriptionDate, LocalDate dueDate) {
 		super();
 		this.patientId = patientId;
 		this.snomedId = snomedId;
@@ -96,6 +99,8 @@ public class MedicationStatement extends SGXAuditableEntity<Integer> implements 
 		this.dosageId = dosageId;
 		this.prescriptionLineNumber = prescriptionLineNumber;
 		this.isDigital = isDigital;
+		this.prescriptionDate = prescriptionDate;
+		this.dueDate = dueDate;
 	}
 
 	@Override
@@ -114,10 +119,13 @@ public class MedicationStatement extends SGXAuditableEntity<Integer> implements 
 
 	@PrePersist
 	public void setPrecalculatedData() {
-		this.dueDate = LocalDate.now().plusDays(MEDICATION_STATEMENT_DUE_DATE);
 		this.prescriptionLineState = MEDICATION_STATEMENT_INITIAL_STATE;
 		if (this.isDigital == null)
 			this.isDigital = false;
+		if (this.dueDate == null)
+			this.dueDate = LocalDate.now();
+		if (this.prescriptionDate == null)
+			this.prescriptionDate = LocalDate.now();
 	}
 
 }

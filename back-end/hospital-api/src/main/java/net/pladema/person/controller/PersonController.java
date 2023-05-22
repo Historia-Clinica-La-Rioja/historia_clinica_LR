@@ -8,6 +8,7 @@ import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.PersonalInformationDto;
 import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.controller.mock.MocksPerson;
+import net.pladema.person.controller.service.CanEditUserData;
 import net.pladema.person.repository.domain.CompletePersonVo;
 import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Person;
@@ -45,12 +46,16 @@ public class PersonController {
 
     private final PersonMapper personMapper;
 
+	private final CanEditUserData canEditUserData;
 
-    public PersonController(PersonService personService, PersonMapper personMapper, AddressExternalService addressExternalService) {
+
+    public PersonController(PersonService personService, PersonMapper personMapper, AddressExternalService addressExternalService,
+							CanEditUserData canEditUserData) {
         super();
         this.personService = personService;
         this.personMapper = personMapper;
         this.addressExternalService = addressExternalService;
+		this.canEditUserData = canEditUserData;
     }
     
     @PostMapping
@@ -120,6 +125,15 @@ public class PersonController {
         }
         return ResponseEntity.noContent().build();
     }
+
+	@GetMapping("/{personId}/institutionId/{institutionId}/can-edit-user-data")
+	public ResponseEntity<Boolean> canEditUserData(@PathVariable(name = "personId") Integer personId,
+												   @PathVariable(name = "institutionId") Integer institutionId){
+		LOG.debug("Input parameters -> personId {}, institutionId {}", personId, institutionId);
+		Boolean result = canEditUserData.run(personId, institutionId);
+		LOG.debug("Output result -> {}", result);
+		return ResponseEntity.ok().body(result);
+	}
     
     
 }

@@ -12,9 +12,11 @@ import lombok.ToString;
 @Getter
 public class PrescriptionDto {
 	String domain;
-	Integer prescriptionId;
+	String prescriptionId;
 	LocalDateTime prescriptionDate;
 	LocalDateTime dueDate;
+	String link;
+	Boolean isArchived;
 	PatientPrescriptionDto patientPrescriptionDto;
 	InstitutionPrescriptionDto institutionPrescriptionDto;
 	ProfessionalPrescriptionDto professionalPrescriptionDto;

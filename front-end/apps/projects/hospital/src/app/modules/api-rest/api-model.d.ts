@@ -971,6 +971,11 @@ export interface DocumentReduceInfoDto extends Serializable {
     typeId: number;
 }
 
+export interface DocumentRequestDto {
+    documentId: number;
+    requestId: number;
+}
+
 export interface DocumentSearchDto extends Serializable {
     confirmed: boolean;
     createdOn: DateTimeDto;
@@ -1009,11 +1014,14 @@ export interface DocumentsSummaryDto extends Serializable {
 export interface DosageInfoDto extends Serializable {
     chronic: boolean;
     dailyInterval: boolean;
+    dosesByDay: number;
+    dosesByUnit: number;
     duration: number;
     expired: boolean;
     frequency: number;
     id: number;
     periodUnit: string;
+    quantityDto: QuantityDto;
     startDate: DateDto;
 }
 
@@ -1852,6 +1860,11 @@ export interface Last2RiskFactorsDto extends Serializable {
     previous: RiskFactorDto;
 }
 
+export interface LicenseDataDto {
+    licenseNumber: string;
+    licenseType: number;
+}
+
 export interface LicenseNumberDto {
     id: number;
     info: string;
@@ -1949,10 +1962,13 @@ export interface MedicationInfoDto extends Serializable {
     doctor: DoctorInfoDto;
     dosage: DosageInfoDto;
     hasRecipe: boolean;
+    hceDocumentData: HCEDocumentDataDto;
     healthCondition: HealthConditionInfoDto;
     id: number;
+    isDigital: boolean;
     medicationRequestId: number;
     observations: string;
+    prescriptionLineState: number;
     snomed: SnomedDto;
     statusId: string;
     totalDays: number;
@@ -2337,6 +2353,18 @@ export interface OutpatientAnthropometricDataDto extends Serializable {
     weight: ClinicalObservationDto;
 }
 
+export interface OutpatientConsultationDto {
+    anthropometricData: SharedAnthropometricDataDto;
+    clinicalSpecialtySctid: string;
+    date: string;
+    id: number;
+    institutionSisaCode: string;
+    patient: BasicPatientDto;
+    problems: SharedSnomedDto[];
+    procedures: SharedSnomedDto[];
+    riskFactor: SharedRiskFactorDto;
+}
+
 export interface OutpatientEvolutionSummaryDto extends Serializable {
     clinicalSpecialty: ClinicalSpecialtyDto;
     consultationID: number;
@@ -2447,6 +2475,10 @@ export interface PacServerProtocolDto extends Serializable {
 export interface PacServerTypeDto extends Serializable {
     description: string;
     id: number;
+}
+
+export interface PacsUrlDto {
+    pacs: string[];
 }
 
 export interface ParenteralPlanDto extends IndicationDto {
@@ -2680,6 +2712,7 @@ export interface PreferredTermDto {
 export interface PrescriptionDto extends Serializable {
     clinicalSpecialtyId?: number;
     hasRecipe: boolean;
+    isArchived?: boolean;
     isPostDated?: boolean;
     items: PrescriptionItemDto[];
     medicalCoverageId?: number;
@@ -2754,6 +2787,7 @@ export interface ProfessionalCompleteDto {
     id: number;
     lastName: string;
     nameSelfDetermination: string;
+    otherLastNames: string;
     personId: number;
     professions: ProfessionCompleteDto[];
 }
@@ -3129,6 +3163,19 @@ export interface ServiceRequestCategoryDto {
     id: string;
 }
 
+export interface SharedAnthropometricDataDto {
+    bloodType: string;
+    bmi: string;
+    headCircumference: string;
+    height: string;
+    weight: string;
+}
+
+export interface SharedRiskFactorDto {
+    diastolicBloodPressure: string;
+    systolicBloodPressure: string;
+}
+
 export interface SharedSnomedDto extends Serializable {
     parentFsn: string;
     parentId: string;
@@ -3238,6 +3285,11 @@ export interface StudyDto extends Serializable {
     snomed: SnomedDto;
 }
 
+export interface StudyPacAssociationDto {
+    pacGlobalURL: string;
+    studyInstanceUID: string;
+}
+
 export interface TimeDto {
     hours: number;
     minutes: number;
@@ -3247,6 +3299,10 @@ export interface TimeDto {
 export interface TimeRangeDto {
     from: string;
     to: string;
+}
+
+export interface TokenDto {
+    token: string;
 }
 
 export interface ToothDrawingsDto extends Serializable {
@@ -3484,6 +3540,13 @@ export interface VaccineSchemeInfoDto extends AbstractMasterdataDto<number> {
     id: number;
 }
 
+export interface ValidatedLicenseDataDto {
+    licenseNumber: string;
+    licenseType: number;
+    validLicenseNumber: boolean;
+    validLicenseType: boolean;
+}
+
 export interface ValidatedLicenseNumberDto {
     isValid: boolean;
     licenseNumber: string;
@@ -3664,4 +3727,5 @@ export const enum SnomedECL {
     CONSULTATION_REASON = "CONSULTATION_REASON",
     DIAGNOSIS = "DIAGNOSIS",
     EVENT = "EVENT",
+    MEDICINE_WITH_UNIT_OF_PRESENTATION = "MEDICINE_WITH_UNIT_OF_PRESENTATION",
 }

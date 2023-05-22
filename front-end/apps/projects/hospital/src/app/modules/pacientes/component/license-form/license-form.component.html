@@ -17,11 +17,11 @@
 			{{'pacientes.edit_license.form_license.LICENSE_PATTERN_ERROR' | translate }}
 		</mat-error>
 	</mat-form-field>
-	
+
 	<div fxLayout="column" fxLayoutGap="15px">
 
 		<mat-radio-group id="radio-option" aria-label="Select an option" fxLayoutGap="15px" formControlName="typeId"
-			[value]="RADIO_OPTION_NATIONAL">
+			[value]="RADIO_OPTION_NATIONAL" (change)="resetLicenseError($event)">
 			<mat-radio-button [value]="RADIO_OPTION_NATIONAL">{{'pacientes.edit_license.form_license.NATIONAL'|
 				translate}}
 			</mat-radio-button>

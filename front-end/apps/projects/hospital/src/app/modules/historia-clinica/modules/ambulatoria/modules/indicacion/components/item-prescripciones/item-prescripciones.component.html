@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="space-between">
-	<div class="label" [ngSwitch]="prescriptionItemData.prescriptionStatus">
+	<div class="label" [ngSwitch]="prescriptionItemData.prescriptionStatus" *ngIf="!isRecetaDigital else isRecetaDigital">
 		<app-colored-label *ngSwitchCase="medication_status.ACTIVE.description || STUDY_STATUS.FINAL.description"
 			[description]="prescriptionItemData.prescriptionStatus | translate | uppercase"
 			[color]="Color.BLUE">
@@ -18,6 +18,13 @@
 		<ng-content select="[actions]"></ng-content>
 	</div>
 </div>
+
+<ng-template #isRecetaDigital>
+	<app-colored-label
+		[description]="prescriptionItemData.prescriptionLineState.description | uppercase"
+		[color]="prescriptionItemData.prescriptionLineState.color">
+	</app-colored-label>
+</ng-template>
 
 <div class="element-margin" fxLayout="column-reverse" fxLayout.gt-sm="row" fxLayoutAlign="space-between start">
 	<span class="mat-subheading-2 capitalize-first-letter" style="margin: 0" fxFlex="70%">

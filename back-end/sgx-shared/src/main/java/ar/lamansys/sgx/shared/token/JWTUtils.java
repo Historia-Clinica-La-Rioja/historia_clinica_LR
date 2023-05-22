@@ -38,6 +38,17 @@ public class JWTUtils {
 				.compact();
 	}
 
+	public static String generate256(Map<String, Object> claims, String subject, String secret, Duration expiration) {
+		Date expirationDate = generateExpirationDate(expiration);
+		return Jwts.builder()
+				.addClaims(claims)
+				.setSubject(subject)
+				.setIssuedAt(new Date(System.currentTimeMillis()))
+				.setExpiration(expirationDate)
+				.signWith(SignatureAlgorithm.HS256, secret.getBytes(StandardCharsets.UTF_8))
+				.compact();
+	}
+
 	private static Date generateExpirationDate(Duration expiration) {
 		return new Date(System.currentTimeMillis() + expiration.toMillis());
 	}

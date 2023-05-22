@@ -27,7 +27,7 @@ public class PersonRecipientMapper implements RecipientMapper<PersonRecipient> {
 								? personRecipientVo.nameSelfDetermination
 								: personRecipientVo.firstName,
 						personRecipientVo.lastName,
-						personRecipientVo.email,
+						personRecipient.email!=null ? personRecipient.email : personRecipientVo.email,
 						personRecipientVo.phonePrefix + personRecipientVo.phoneNumber
 				));
 	}

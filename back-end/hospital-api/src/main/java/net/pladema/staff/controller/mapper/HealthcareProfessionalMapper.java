@@ -59,7 +59,7 @@ public interface HealthcareProfessionalMapper {
 	default ProfessionalCompleteDto fromProfessionalCompleteBo(ProfessionalCompleteBo professionalCompleteBo) {
 		return new ProfessionalCompleteDto(professionalCompleteBo.getId(), professionalCompleteBo.getPersonId(), professionalCompleteBo.getFirstName(),
 				professionalCompleteBo.getLastName(), professionalCompleteBo.getNameSelfDetermination(),
-				mapProfessions(professionalCompleteBo.getProfessions()));
+				mapProfessions(professionalCompleteBo.getProfessions()), professionalCompleteBo.getOtherLastNames());
 	}
 
 	private List<ProfessionCompleteDto> mapProfessions(List<ProfessionBo> professions) {

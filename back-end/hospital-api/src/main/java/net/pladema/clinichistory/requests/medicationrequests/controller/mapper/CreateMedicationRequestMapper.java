@@ -4,6 +4,7 @@ import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
@@ -13,6 +14,7 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
+import net.pladema.clinichistory.requests.medicationrequests.service.domain.DigitalRecipeMedicationRequestBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
@@ -33,20 +35,22 @@ public class CreateMedicationRequestMapper {
 	private FeatureFlagsService featureFlagsService;
 
     @Named("parseTo")
-    public MedicationRequestBo parseTo(Integer doctorId, BasicPatientDto patientDto, PrescriptionDto medicationRequest) {
-        LOG.debug("parseTo -> doctorId {}, patientDto {}, medicationRequest {} ", doctorId, patientDto, medicationRequest);
-        MedicationRequestBo result = new MedicationRequestBo();
-        result.setDoctorId(doctorId);
-		if (patientDto.getPerson() != null)
-        	result.setPatientInfo(new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()));
+    public MedicationRequestBo parseTo(Integer doctorId, Integer patientId, PrescriptionDto medicationRequest) {
+        LOG.debug("parseTo -> doctorId {}, patientId {}, medicationRequest {} ", doctorId, patientId, medicationRequest);
+		MedicationRequestBo result;
+		if (!featureFlagsService.isOn(AppFeature.HABILITAR_RECETA_DIGITAL))
+			result = new MedicationRequestBo();
 		else
-			result.setPatientInfo(new PatientInfoBo(patientDto.getId()));
+			result = new DigitalRecipeMedicationRequestBo();
+        result.setDoctorId(doctorId);
+		result.setPatientInfo(new PatientInfoBo(patientId));
         result.setHasRecipe(medicationRequest.isHasRecipe());
         result.setMedicalCoverageId(medicationRequest.getMedicalCoverageId());
         result.setMedications(medicationRequest.getItems().stream().map(this::parseTo).collect(Collectors.toList()));
 		result.setRepetitions(medicationRequest.getRepetitions());
 		result.setIsPostDated(medicationRequest.getIsPostDated());
 		result.setClinicalSpecialtyId(medicationRequest.getClinicalSpecialtyId());
+		result.setIsArchived(medicationRequest.getIsArchived());
         LOG.debug(OUTPUT, result);
         return result;
     }
@@ -91,6 +95,10 @@ public class CreateMedicationRequestMapper {
         result.setChronic(dosage.isChronic());
 		result.setDosesByDay(dosage.getDosesByDay());
 		result.setDosesByUnit(dosage.getDosesByUnit());
+
+		assert dosage.getQuantity() != null;
+		QuantityBo quantity = new QuantityBo(dosage.getQuantity().getValue(), dosage.getQuantity().getUnit() == null ? "" : dosage.getQuantity().getUnit());
+		result.setQuantity(quantity);
         LOG.debug(OUTPUT, result);
         return result;
     }

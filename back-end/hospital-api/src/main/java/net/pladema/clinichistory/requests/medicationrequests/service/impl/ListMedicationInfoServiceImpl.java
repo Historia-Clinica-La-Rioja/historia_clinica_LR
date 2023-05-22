@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.MedicationCalculateStatus;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
@@ -15,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
@@ -54,7 +56,7 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
 		LOG.debug("Input parameters -> filter {}", filter);
 		var filterVo = new MedicationFilterVo(filter.getPatientId(), filter.getStatusId(),
 				filter.getMedicationStatement(), filter.getHealthCondition());
-		List<MedicationBo> result = listMedicationRepository.execute(filterVo).stream()
+		List<MedicationBo> result = listMedicationRepository.execute(filterVo, userId).stream()
 				.map(this::createMedicationBo)
 				.filter(mb -> byStatus(mb, filter.getStatusId()))
 				.collect(Collectors.toList());
@@ -76,7 +78,7 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
         healthConditionBo.setId((Integer) row[6]);
         healthConditionBo.setSnomed(new SnomedBo((Integer) row[7], (String) row[8], (String) row[9]));
         result.setHealthCondition(healthConditionBo);
-
+		result.setIsDigital(row[30] != null ? (Boolean) row[30] : false);
 
         result.setNote((String) row[10]);
 
@@ -91,8 +93,10 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
             d.setEndDate(row[17] != null ? ((Timestamp) row[17]).toLocalDateTime() : null);
             d.setSuspendedStartDate(row[18] != null ? ((Date) row[18]).toLocalDate() : null);
             d.setSuspendedEndDate(row[19] != null ? ((Date) row[19]).toLocalDate() : null);
-
-        }
+			d.setDosesByDay((Double) row[26]);
+			d.setDosesByUnit((Double) row[27]);
+			d.setQuantity(new QuantityBo(row[28] != null ? ((Double) row[28]).intValue() : null, row[29] != null ? (String) row[29] : null));
+		}
         result.setDosage(d);
         result.setEncounterId((Integer)row[20]);
         result.setHasRecipe(row[21] != null && (Boolean)row[21]);
@@ -100,6 +104,9 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
 
         result.setUserId((Integer) row[22]);
         result.setCreatedOn(row[23] != null ? ((Timestamp) row[23]).toLocalDateTime().toLocalDate() : null);
+		result.setRelatedDocumentId((BigInteger) row[24]);
+		result.setRelatedDocumentName((String) row[25]);
+		result.setPrescriptionLineState((Short) row[31]);
         LOG.trace("OUTPUT -> {}", result);
         return result;
     }

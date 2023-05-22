@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ApiErrorMessageDto, AppFeature, ProfessionalLicenseNumberDto, ValidatedLicenseNumberDto } from '@api-rest/api-model.d';
+import { ApiErrorMessageDto, AppFeature, LicenseDataDto, ProfessionalLicenseNumberDto, ValidatedLicenseDataDto, ValidatedLicenseNumberDto } from '@api-rest/api-model.d';
 import { ProfessionalLicenseService } from '@api-rest/services/professional-license.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { processErrors } from '@core/utils/form.utils';
@@ -104,12 +104,12 @@ export class EditLicenseComponent implements OnInit {
 		if (! this.isHabilitarValidacionMatriculasSisaEnabled)
 			return this.save();
 
-		const licenseNumbers: string[] = this.form.controls.professionalSpecialties.value.map(value => value.combo?.licenseNumber);
-		this.professionalLicenseService.validateLicenseNumber(this.data.healthcareProfessionalId, licenseNumbers)
-			.subscribe((licenseNumbers: ValidatedLicenseNumberDto[]) => {
-				this.licenseNumberService.setLicenseNumbers(licenseNumbers);
+		const licenseData: LicenseDataDto[] = this.form.controls.professionalSpecialties.value.map(value => ({ licenseNumber: value.combo?.licenseNumber, licenseType: value.combo?.typeId }));
+		this.professionalLicenseService.validateLicenseNumber(this.data.healthcareProfessionalId, licenseData)
+			.subscribe((licensesData: ValidatedLicenseDataDto[]) => {
+				this.licenseNumberService.setLicenseNumbers(licensesData);
 
-				if (licenseNumbers.some(combo => ! combo.isValid)) return;
+				if (licensesData.some(combo => !combo.validLicenseNumber || !combo.validLicenseType)) return;
 
 				this.save();
 			},

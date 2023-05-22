@@ -87,7 +87,7 @@ public class PrescriptionStatusValidator implements ConstraintValidator<ValidPre
 				.stream()
 				.filter(changePrescriptionStateMedicationDto ->
 						changePrescriptionStateMedicationDto.getObservations() == null &&
-						PrescriptionValidStatesEnum.CANCELADO.equals(
+						PrescriptionValidStatesEnum.CANCELADO_DISPENSA.equals(
 								PrescriptionValidStatesEnum.map(changePrescriptionStateMedicationDto.getPrescriptionStateId())))
 				.map(ChangePrescriptionStateMedicationDto::getPrescriptionLine)
 				.collect(Collectors.toList());

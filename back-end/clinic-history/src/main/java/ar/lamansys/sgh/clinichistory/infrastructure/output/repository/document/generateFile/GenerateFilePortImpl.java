@@ -6,11 +6,14 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
+
 import org.springframework.stereotype.Component;
 
 import ar.lamansys.sgh.clinichistory.domain.document.event.GenerateFilePort;
 import ar.lamansys.sgh.clinichistory.domain.document.event.OnGenerateDocumentEvent;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentFile;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgx.shared.files.FileService;
 import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
 import ar.lamansys.sgx.shared.files.pdf.PdfService;
@@ -35,9 +38,16 @@ public class GenerateFilePortImpl implements GenerateFilePort {
 
 		var path = fileService.buildCompletePath(event.getRelativeDirectory());
 		String realFileName = event.getUuid();
-		String fictitiousFileName = event.buildDownloadName();
+		String fictitiousFileName;
+		if (event.getDocumentType().equals(EDocumentType.DIGITAL_RECIPE.getValue()))
+			fictitiousFileName = generateDigitalRecipeFileName(contextMap);
+		else
+			fictitiousFileName = event.buildDownloadName();
+
 		try {
-			var pdfStream = pdfService.generate(event.getTemplateName(), contextMap);
+			var pdfStream = !event.getTemplateName().equals(EDocumentType.DIGITAL_RECIPE.getTemplate())
+			? pdfService.generate(event.getTemplateName(), contextMap)
+			: pdfService.customizableGenerate(event.getTemplateName(), contextMap);
 			var file = fileService.saveStreamInPath(path, realFileName, "DOCUMENTO_DE_ENCUENTRO",false, pdfStream);
 			return Optional.of(new DocumentFile(
 					event.getDocumentBo().getId(),
@@ -54,8 +64,19 @@ public class GenerateFilePortImpl implements GenerateFilePort {
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 		ArrayList<ImmunizationInfoDto> vaccinesData = (ArrayList<ImmunizationInfoDto>) context.get("nonBillableImmunizations");
-		vaccinesData.stream().filter(immunizationInfoDto -> immunizationInfoDto.getAdministrationDate() != null)
-				.forEach(immunizationInfoDto -> immunizationInfoDto.setAdministrationDate(LocalDate.parse(immunizationInfoDto.getAdministrationDate()).format(dateTimeFormatter)));
+		if(vaccinesData != null) {
+			vaccinesData.stream()
+					.filter(immunizationInfoDto -> immunizationInfoDto.getAdministrationDate() != null)
+					.forEach(immunizationInfoDto -> immunizationInfoDto.setAdministrationDate(LocalDate.parse(immunizationInfoDto.getAdministrationDate())
+							.format(dateTimeFormatter)));
+		}
+	}
+
+
+	private String generateDigitalRecipeFileName(Map<String,Object> context) {
+		String recipeNumber = (String) context.get("recipeNumber");
+		String identificationNumber = ((BasicPatientDto) context.get("patient")).getIdentificationNumber();
+		return identificationNumber + "_" + recipeNumber + ".pdf";
 	}
 
 }

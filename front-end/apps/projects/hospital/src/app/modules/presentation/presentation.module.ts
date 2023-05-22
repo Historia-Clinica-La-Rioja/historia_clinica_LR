@@ -175,6 +175,7 @@ import { MessageFlaggedForAuditComponent } from './components/message-flagged-fo
 		TableComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
+		LogoComponent,
 		// dialogs
 		// directives
 		CtrlTemplateDirective,

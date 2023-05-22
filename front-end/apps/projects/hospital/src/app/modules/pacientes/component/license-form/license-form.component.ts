@@ -53,10 +53,10 @@ export class LicenseFormComponent implements ControlValueAccessor, OnDestroy {
 	setUpLicenseNumberError() {
 		this.licenseNumberService.getLicenseNumbers()
 			.subscribe((result: ValidatedLicenseNumberDto[]) => {
-				(result[this.index]?.isValid) 
+				(result[this.index]?.isValid)
 					? this.form.controls.licenseNumber.setErrors(null)
 					: this.form.controls.licenseNumber.setErrors({invalid: true});
-					
+
 				this.cdRef.detectChanges();
 			})
 	}
@@ -106,6 +106,10 @@ export class LicenseFormComponent implements ControlValueAccessor, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.onChangeSub.unsubscribe();
+	}
+
+	resetLicenseError(event): void {
+		this.form.controls.licenseNumber.reset();
 	}
 
 }

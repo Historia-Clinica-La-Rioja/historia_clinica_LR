@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.requests.medicationrequests.controller.mapper;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEDocumentDataDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DoctorInfoDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DosageInfoDto;
@@ -39,6 +40,13 @@ public class ListMedicationInfoMapper {
                 medicationBo.getCreatedOn().getMonthValue(),
                 medicationBo.getCreatedOn().getDayOfMonth()));
         result.setTotalDays(calculateTotalDays(medicationBo.getDosage().getStartDate(), medicationBo.getCreatedOn()));
+
+		HCEDocumentDataDto documentData = new HCEDocumentDataDto();
+		documentData.setId(medicationBo.getRelatedDocumentId().longValue());
+		documentData.setFilename(medicationBo.getRelatedDocumentName());
+		result.setHceDocumentData(documentData);
+		result.setIsDigital(medicationBo.getIsDigital());
+		result.setPrescriptionLineState(medicationBo.getPrescriptionLineState());
         LOG.trace("parseTo result -> {} ", result);
         return result;
     }

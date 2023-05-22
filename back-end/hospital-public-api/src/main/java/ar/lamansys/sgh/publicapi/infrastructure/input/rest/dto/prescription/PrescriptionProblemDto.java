@@ -11,6 +11,6 @@ import lombok.ToString;
 @Builder
 public class PrescriptionProblemDto {
 	String pt;
-	Integer snomedId;
+	String snomedId;
 	String problemType;
 }

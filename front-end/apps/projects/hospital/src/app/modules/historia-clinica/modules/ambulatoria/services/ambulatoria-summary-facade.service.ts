@@ -13,6 +13,7 @@ export class AmbulatoriaSummaryFacadeService {
 	private allergiesSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private familyHistoriesSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private personalHistoriesSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private personalHistoriesByRoleSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private medicationsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private riskFactorsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private bloodTypeSubject: Subject<string> = new BehaviorSubject<string>(null);
@@ -26,6 +27,7 @@ export class AmbulatoriaSummaryFacadeService {
 	public readonly allergies$ = this.allergiesSubject.asObservable();
 	public readonly familyHistories$ = this.familyHistoriesSubject.asObservable();
 	public readonly personalHistories$ = this.personalHistoriesSubject.asObservable();
+	public readonly personalHistoriesByRole$ = this.personalHistoriesByRoleSubject.asObservable();
 	public readonly medications$ = this.medicationsSubject.asObservable();
 	public readonly riskFactors$ = this.riskFactorsSubject.asObservable();
 	public readonly bloodType$ = this.bloodTypeSubject.asObservable();
@@ -49,6 +51,7 @@ export class AmbulatoriaSummaryFacadeService {
 			allergies: true,
 			familyHistories: true,
 			personalHistories: true,
+			personalHistoriesByRole: true,
 			riskFactors: true,
 			medications: true,
 			anthropometricData: true,
@@ -67,6 +70,10 @@ export class AmbulatoriaSummaryFacadeService {
 
 		if (fieldsToUpdate.personalHistories) {
 			this.hceGeneralStateService.getPersonalHistories(this.idPaciente).subscribe(ph => this.personalHistoriesSubject.next(ph));
+		}
+	
+		if (fieldsToUpdate.personalHistoriesByRole) {
+			this.hceGeneralStateService.getPersonalHistoriesByRole(this.idPaciente).subscribe(ph => this.personalHistoriesByRoleSubject.next(ph));
 		}
 
 		if (fieldsToUpdate.riskFactors) {
@@ -111,6 +118,7 @@ export interface AmbulatoriaFields {
 	allergies?: boolean;
 	familyHistories?: boolean;
 	personalHistories?: boolean;
+	personalHistoriesByRole?: boolean;
 	riskFactors?: boolean;
 	medications?: boolean;
 	anthropometricData?: boolean;

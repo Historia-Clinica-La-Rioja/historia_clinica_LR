@@ -61,6 +61,9 @@ public class MedicationRequest extends SGXAuditableEntity<Integer> {
 	@Column(name = "clinical_specialty_id")
 	private Integer clinicalSpecialtyId;
 
+	@Column(name = "is_archived")
+	private Boolean isArchived;
+
 
 	public MedicationRequest(Integer patientId, Integer institutionId, String statusId,
 							 String intentId, String categoryId, Integer doctorId, Boolean hasRecipe) {

@@ -14,18 +14,24 @@ import lombok.ToString;
 @Setter
 public class PrescriptionBo {
 	private String domain;
-	private Integer prescriptionId;
+	private String prescriptionId;
 	private LocalDateTime prescriptionDate;
 	private LocalDateTime dueDate;
+
+	private String link;
+
+	private Boolean isArchived;
 	private PatientPrescriptionBo patientPrescriptionBo;
 	private InstitutionPrescriptionBo institutionPrescriptionBo;
 	private ProfessionalPrescriptionBo professionalPrescriptionBo;
 	private List<PrescriptionLineBo> prescriptionsLineBo;
 
 	public PrescriptionBo(String domain,
-						  Integer prescriptionId,
+						  String prescriptionId,
 						  LocalDateTime prescriptionDate,
 						  LocalDateTime dueDate,
+						  String link,
+						  Boolean isArchived,
 						  PatientPrescriptionBo patientPrescriptionBo,
 						  InstitutionPrescriptionBo institutionPrescriptionBo,
 						  ProfessionalPrescriptionBo professionalPrescriptionBo,
@@ -34,6 +40,8 @@ public class PrescriptionBo {
 		this.prescriptionDate = prescriptionDate;
 		this.prescriptionId = prescriptionId;
 		this.dueDate = dueDate;
+		this.link = link;
+		this.isArchived = isArchived;
 		this.patientPrescriptionBo = patientPrescriptionBo;
 		this.institutionPrescriptionBo = institutionPrescriptionBo;
 		this.professionalPrescriptionBo = professionalPrescriptionBo;

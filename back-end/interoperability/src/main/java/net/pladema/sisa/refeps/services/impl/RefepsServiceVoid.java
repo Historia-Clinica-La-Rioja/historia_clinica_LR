@@ -3,6 +3,9 @@ package net.pladema.sisa.refeps.services.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import net.pladema.sisa.refeps.controller.dto.LicenseDataDto;
+import net.pladema.sisa.refeps.controller.dto.ValidatedLicenseDataDto;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +38,16 @@ public class RefepsServiceVoid implements RefepsService {
 		}
 		return licenses.stream()
 				.map(licence -> new ValidatedLicenseNumberBo(licence, true))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<ValidatedLicenseDataDto> validateLicenseNumberAndType(String identificationNumber, List<LicenseDataDto> licensesData) throws RefepsApiException, RefepsLicenseException {
+		if (!featureFlagsService.isOn(AppFeature.HABILITAR_VALIDACION_MATRICULAS_SISA)) {
+			throw new RefepsLicenseException(RefepsExceptionsEnum.GENERIC_ERROR, "El servicio de REFEPS no se encuentra habilitado");
+		}
+		return licensesData.stream()
+				.map(licenceData -> new ValidatedLicenseDataDto(licenceData.getLicenseNumber(), licenceData.getLicenseType(), true, true))
 				.collect(Collectors.toList());
 	}
 }

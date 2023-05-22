@@ -1,14 +1,28 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CompleteRequestDto, DiagnosticReportInfoDto, DiagnosticReportInfoWithFilesDto, MedicationInfoDto, PrescriptionDto, ProfessionalLicenseNumberValidationResponseDto } from '@api-rest/api-model';
+import {
+	CompleteRequestDto,
+	DiagnosticReportInfoDto,
+	DiagnosticReportInfoWithFilesDto,
+	DocumentRequestDto,
+	MedicationInfoDto,
+	PrescriptionDto,
+	ProfessionalLicenseNumberValidationResponseDto
+} from '@api-rest/api-model';
 import { MedicationRequestService } from '@api-rest/services/medication-request.service';
 import { ServiceRequestService } from '@api-rest/services/service-request.service';
-import { MEDICATION_STATUS, MedicationStatusChange, STUDY_STATUS } from '../constants/prescripciones-masterdata';
+import { MEDICATION_STATUS, MedicationStatusChange, PRESCRIPTION_STATES, STUDY_STATUS } from '../constants/prescripciones-masterdata';
 import { NewPrescriptionItem } from '../dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { saveAs } from 'file-saver';
+import { DocumentService } from '@api-rest/services/document.service';
+import { PrescriptionLineState } from '../modules/indicacion/components/item-prescripciones/item-prescripciones.component';
+import { Color } from '@presentation/colored-label/colored-label.component';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class PrescripcionesService {
 
 	public readonly STUDY_STATUS = STUDY_STATUS;
@@ -17,9 +31,11 @@ export class PrescripcionesService {
 	constructor(
 		private medicationRequestService: MedicationRequestService,
 		private serviceRequestService: ServiceRequestService,
+		private snackBarService: SnackBarService,
+		private readonly documentService: DocumentService
 	) { }
 
-	createPrescription(prescriptionType: PrescriptionTypes, newPrescription: PrescriptionDto, patientId: number): Observable<number | number[]> {
+	createPrescription(prescriptionType: PrescriptionTypes, newPrescription: PrescriptionDto, patientId: number): Observable<DocumentRequestDto[] | number[]> {
 		switch (prescriptionType) {
 			case PrescriptionTypes.MEDICATION:
 				return this.medicationRequestService.create(patientId, newPrescription);
@@ -37,13 +53,8 @@ export class PrescripcionesService {
 		}
 	}
 
-	getPrescriptionByRoles(prescriptionType: PrescriptionTypes, patientId: number, statusId: string, medicationStatement: string, healthCondition: string, study?: string, categoryId?: string): Observable<any> {
-		switch (prescriptionType) {
-			case PrescriptionTypes.MEDICATION:
-				return this.medicationRequestService.medicationRequestListByRoles(patientId, statusId, medicationStatement, healthCondition);
-			case PrescriptionTypes.STUDY:
-				return this.serviceRequestService.getListByRoles(patientId, statusId, study, healthCondition, categoryId);
-		}
+	getPrescriptionByRoles(patientId: number, statusId: string, medicationStatement: string, healthCondition: string): Observable<any> {
+			return this.medicationRequestService.medicationRequestListByRoles(patientId, statusId, medicationStatement, healthCondition);
 	}
 
 	getPrescriptionStatus(patientId: number, serviceRequestId: number): Observable<boolean>{
@@ -61,11 +72,14 @@ export class PrescripcionesService {
 		}
 	}
 
-	downloadPrescriptionPdf(patientId: number, prescriptionPdfInfo: number[], prescriptionType: PrescriptionTypes): void {
+	downloadPrescriptionPdf(patientId: number, prescriptionPdfInfo: number[], prescriptionType: PrescriptionTypes, fileName?: string): void {
 		switch (prescriptionType) {
 			case PrescriptionTypes.MEDICATION:
-				const recipeId = prescriptionPdfInfo[0];
-				this.medicationRequestService.download(patientId, recipeId);
+				const documentId = prescriptionPdfInfo[0];
+				if (fileName)
+					this.documentService.downloadFile({ id: documentId, filename: fileName });
+				else
+					this.documentService.downloadUnnamedFile(documentId);
 				break;
 			case PrescriptionTypes.STUDY:
 				prescriptionPdfInfo.forEach(orderId => {
@@ -104,6 +118,10 @@ export class PrescripcionesService {
 		}
 	}
 
+	cancelPrescriptionLineState(medicationStatementId: number, patientId: number): Observable<void> {
+		return this.medicationRequestService.cancelPrescriptionLineState(medicationStatementId, patientId);
+	}
+
 	private mapMedication(medicationItem: MedicationInfoDto): NewPrescriptionItem {
 		return {
 			id: medicationItem.id,
@@ -120,8 +138,10 @@ export class PrescripcionesService {
 			intervalHours: medicationItem.dosage?.frequency ? String(medicationItem.dosage.frequency) : null,
 			administrationTimeDays: medicationItem.dosage?.duration ? String(medicationItem.dosage.duration) : null,
 			observations: medicationItem.observations,
-			unitDose: null,
-			dayDose: null,
+			unitDose: medicationItem.dosage.dosesByUnit,
+			dayDose: medicationItem.dosage.dosesByDay,
+			quantity: medicationItem.dosage.quantityDto
+
 		};
 	}
 
@@ -139,6 +159,7 @@ export class PrescripcionesService {
 			observations: studyItem.observations,
 			unitDose: null,
 			dayDose: null,
+			quantity: null
 		};
 	}
 
@@ -171,6 +192,29 @@ export class PrescripcionesService {
 			case this.STUDY_STATUS.ERROR.id:
 				return this.STUDY_STATUS.ERROR.description;
 		}
+	}
+
+	renderPrescriptionLineState(prescriptionLineState: number): PrescriptionLineState {
+		let state: PrescriptionLineState = {
+			description: PRESCRIPTION_STATES.INDICADA.description,
+			color: Color.BLUE
+		}
+
+		if (PRESCRIPTION_STATES.ANULADA.id === prescriptionLineState) {
+			state.description = PRESCRIPTION_STATES.ANULADA.description;
+			state.color = Color.RED;
+		}
+
+		if (PRESCRIPTION_STATES.DISPENSADA.id === prescriptionLineState) {
+			state.description = PRESCRIPTION_STATES.DISPENSADA.description;
+			state.color = Color.GREEN;
+		}
+
+		if (PRESCRIPTION_STATES.PROVISORIO_DISPENSADA.id === prescriptionLineState) {
+			state.description = PRESCRIPTION_STATES.PROVISORIO_DISPENSADA.description;
+			state.color = Color.GREEN;
+		}
+		return state;
 	}
 }
 

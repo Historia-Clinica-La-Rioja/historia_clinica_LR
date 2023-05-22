@@ -1,0 +1,26 @@
+<div mat-dialog-content>
+    <mat-icon class="error-outline" color="warn">error_outline</mat-icon>
+    
+    <section *ngIf="isTemporaryPatient else isPermanentInvalid">
+        <h1>{{ 'indicacion.internment-card.dialogs.patient-validator.TEMPORARY_PATIENT_TITLE' | translate }}</h1>
+        <span>{{ 'indicacion.internment-card.dialogs.patient-validator.TEMPORARY_PATIENT_DESCRIPTION' | translate }}</span>
+    </section>
+
+    <ng-template #isPermanentInvalid>
+        <section>
+            <h1>{{ 'indicacion.internment-card.dialogs.patient-validator.PERMANENT_INVALID_TITLE' | translate }}</h1>
+            <span>{{ 'indicacion.internment-card.dialogs.patient-validator.PERMANENT_INVALID_DESCRIPTION' | translate }}</span>
+        </section>
+    </ng-template>
+</div>
+
+<mat-dialog-actions>
+    <button mat-stroked-button color="primary" mat-dialog-close>
+        <span class="uppercase" translate="buttons.CANCEL"></span>
+    </button>
+    <div *appHasRole="[PRESCRIPTOR]" class="edit-patient">
+        <button mat-flat-button color="primary" *ngIf="isTemporaryPatient" (click)="goToEditPatient()">
+            <span class="uppercase" translate="indicacion.internment-card.dialogs.patient-validator.buttons.PATIENT_VALIDATE"></span>
+        </button>
+    </div>
+</mat-dialog-actions>

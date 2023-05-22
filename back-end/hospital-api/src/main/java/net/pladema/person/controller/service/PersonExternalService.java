@@ -42,9 +42,11 @@ public interface PersonExternalService {
     List<PersonPhotoDto> getPersonsPhotos(List<Integer> personIds);
 
     boolean savePersonPhoto(Integer personId, String imageData);
-	
+
 	List<DuplicatePatientDto> getDuplicatePersonsByFilter(AuditPatientSearch auditPatientSearch);
 
 	List<PatientPersonalInfoDto> getPatientsPersonalInfo(DuplicatePatientDto duplicatePatientDto);
+
+	boolean saveEmail(Integer personId, String email);
 
 }

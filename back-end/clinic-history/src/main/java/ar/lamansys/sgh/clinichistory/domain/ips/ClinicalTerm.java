@@ -50,4 +50,9 @@ public abstract class ClinicalTerm extends SelfValidating<ClinicalTerm> {
     protected ClinicalTerm(@Valid @NotNull(message = "{value.mandatory}") SnomedBo snomed) {
         this.snomed = snomed;
     }
+
+	public String getSnomedPt(){
+		return getSnomed() != null ? getSnomed().getPt() : null;
+	}
+
 }

@@ -20,8 +20,7 @@ public class HasBackofficeRole {
 		Boolean result = userRoleStorage.getRolesByUser(userId).stream()
 				.filter(userRoleBo -> (
 						userRoleBo.getRoleId() == ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.getId() ||
-								userRoleBo.getRoleId() == ERole.ADMINISTRADOR.getId()) ||
-								userRoleBo.getRoleId() == ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR.getId()
+								userRoleBo.getRoleId() == ERole.ADMINISTRADOR.getId())
 				).collect(Collectors.toList()).stream().findAny().isPresent();
 		log.debug("Output ->{}", result);
 		return result;

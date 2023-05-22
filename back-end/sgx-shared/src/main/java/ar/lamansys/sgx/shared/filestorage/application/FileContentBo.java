@@ -4,11 +4,14 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import lombok.Getter;
+
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 
 public class FileContentBo {
 	public final long size;
+	@Getter
 	public final InputStream stream;
 
 	private FileContentBo(long size, InputStream stream) {

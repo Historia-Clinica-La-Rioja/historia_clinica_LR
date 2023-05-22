@@ -21,7 +21,7 @@ public class PatientRecipientMapper implements RecipientMapper<PatientRecipient>
 	public Optional<RecipientBo> toRecipient(PatientRecipient patientRecipient) {
 		return patientRepository.findById(patientRecipient.patientId)
 				.map(Patient::getPersonId)
-				.map(PersonRecipient::new)
+				.map(personId -> new PersonRecipient(personId, patientRecipient.email))
 				.flatMap(personRecipientMapper::toRecipient);
 	}
 

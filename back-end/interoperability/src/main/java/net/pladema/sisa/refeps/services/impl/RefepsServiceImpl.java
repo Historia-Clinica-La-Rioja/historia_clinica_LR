@@ -8,8 +8,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.sisa.refeps.controller.dto.LicenseDataDto;
+import net.pladema.sisa.refeps.controller.dto.ValidatedLicenseDataDto;
 import net.pladema.sisa.refeps.services.RefepsService;
 import net.pladema.sisa.refeps.configuration.RefepsWSConfig;
+import net.pladema.sisa.refeps.services.domain.ELicenseNumberType;
 import net.pladema.sisa.refeps.services.domain.ValidatedLicenseNumberBo;
 import net.pladema.sisa.refeps.services.domain.RefepsLicensePayload;
 import net.pladema.sisa.refeps.services.domain.RefepsLicenseSearchResponse;
@@ -66,7 +69,7 @@ public class RefepsServiceImpl implements RefepsService {
 			if (response != null) {
 				responseMessage = response.getResultMessage();
 				if (response.getResponse() != null) {
-					processExistingLicenses(licenses, processedLicenses, response);
+					processExistingLicensesNumber(licenses, processedLicenses, response);
 					return processedLicenses;
 				}
 			}
@@ -76,19 +79,65 @@ public class RefepsServiceImpl implements RefepsService {
 		}
 	}
 
-	private void processExistingLicenses(List<String> licenses, List<ValidatedLicenseNumberBo> processedLicenses, RefepsLicenseSearchResponse response) {
+	@Override
+	public List<ValidatedLicenseDataDto> validateLicenseNumberAndType(String identificationNumber, List<LicenseDataDto> licensesData) throws RefepsApiException, RefepsLicenseException {
+		log.debug("Parameters: identificationNumber {}, licenses {}", identificationNumber, licensesData);
+		String responseMessage = null;
+		String url = "&nrodoc=" + identificationNumber;
+		try {
+			RefepsLicenseSearchResponse response = restClientInterface.exchangeGet(url, RefepsLicenseSearchResponse.class).getBody();
+			if (response != null) {
+				responseMessage = response.getResultMessage();
+				if (response.getResponse() != null)
+					return processExistingLicensesData(licensesData, response);
+			}
+			throw generateCustomException(Objects.requireNonNull(responseMessage));
+		} catch (RestTemplateApiException e) {
+			throw processRestTemplateException(e);
+		}
+	}
+
+	private void processExistingLicensesNumber(List<String> licenses, List<ValidatedLicenseNumberBo> processedLicenses, RefepsLicenseSearchResponse response) {
 		licenses.forEach(license -> {
-			Optional<RefepsLicensePayload> relatedLicenseData = response.getResponse().stream().filter(licenseData -> licenseData.getLicenseNumber().equals(license)).findFirst();
+			Optional<RefepsLicensePayload> relatedLicenseData = response.getResponse().stream().filter(licenseData -> licenseData.getLicenseNumber().equals(license) && licenseData.getStatus().equals(refepsWSConfig.ENABLED)).findFirst();
 			if (relatedLicenseData.isPresent()) {
 				if (validStates.stream().filter(state -> state.equals(relatedLicenseData.get().getState())).findFirst().isEmpty())
 					throw new RefepsLicenseException(RefepsExceptionsEnum.WRONG_STATE, "La/s matricula/s ingresadas pertenecen a otra jurisdiccion de la permitida");
-				if (!relatedLicenseData.get().getStatus().equals(refepsWSConfig.ENABLED))
-					processedLicenses.add(new ValidatedLicenseNumberBo(license, false));
-				else processedLicenses.add(new ValidatedLicenseNumberBo(license, true));
+				processedLicenses.add(new ValidatedLicenseNumberBo(license, true));
 			}
 			else
 				processedLicenses.add(new ValidatedLicenseNumberBo(license, false));
 		});
+	}
+
+	private List<ValidatedLicenseDataDto> processExistingLicensesData(List<LicenseDataDto> licenses, RefepsLicenseSearchResponse response) {
+		List<ValidatedLicenseDataDto> processedLicenses = new ArrayList<>();
+		licenses.forEach(license -> {
+			Optional<RefepsLicensePayload> relatedLicenseData = response.getResponse().stream().filter(licenseData -> licenseData.getLicenseNumber().equals(license.getLicenseNumber()) && licenseData.getStatus().equals(refepsWSConfig.ENABLED)).findFirst();
+
+			ValidatedLicenseDataDto licenseData = new ValidatedLicenseDataDto();
+			initValidatedLicenseDataDto(license, licenseData);
+
+			if (relatedLicenseData.isPresent()) {
+				if (validStates.stream().filter(state -> state.equals(relatedLicenseData.get().getState())).findFirst().isEmpty())
+					throw new RefepsLicenseException(RefepsExceptionsEnum.WRONG_STATE, "La/s matricula/s ingresadas pertenecen a otra jurisdiccion de la permitida");
+				licenseData.setValidLicenseNumber(true);
+				Boolean isNationalLicense = license.getLicenseType().equals(ELicenseNumberType.NATIONAL.getId().intValue()) && relatedLicenseData.get().getState().equals("CABA");
+				Boolean isStateLicense = license.getLicenseType().equals(ELicenseNumberType.PROVINCE.getId().intValue()) && !relatedLicenseData.get().getState().equals("CABA");
+				licenseData.setValidLicenseType(isNationalLicense || isStateLicense);
+			}
+			else {
+				licenseData.setValidLicenseNumber(false);
+				licenseData.setValidLicenseType(false);
+			}
+			processedLicenses.add(licenseData);
+		});
+		return processedLicenses;
+	}
+
+	private void initValidatedLicenseDataDto(LicenseDataDto license, ValidatedLicenseDataDto licenseData) {
+		licenseData.setLicenseNumber(license.getLicenseNumber());
+		licenseData.setLicenseType(license.getLicenseType());
 	}
 
 	private RefepsLicenseException generateCustomException(String responseMessage) {

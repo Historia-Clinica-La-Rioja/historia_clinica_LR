@@ -317,8 +317,10 @@ public class PatientController {
 		if (patientEntity != null)
 			setPatientData(patientToAdd, patientEntity);
 		Patient createdPatient = patientService.addPatient(patientToAdd);
-		DoctorsBo doctorsBo = new DoctorsBo(patientDto.getGeneralPractitioner(), patientDto.getPamiDoctor());
-		additionalDoctorService.addAdditionalDoctors(doctorsBo, createdPatient.getId());
+		if (patientDto.getGeneralPractitioner() != null && patientDto.getPamiDoctor() != null) {
+			DoctorsBo doctorsBo = new DoctorsBo(patientDto.getGeneralPractitioner(), patientDto.getPamiDoctor());
+			additionalDoctorService.addAdditionalDoctors(doctorsBo, createdPatient.getId());
+		}
 		LOG.debug(OUTPUT, createdPatient.getId());
 		return createdPatient;
 	}

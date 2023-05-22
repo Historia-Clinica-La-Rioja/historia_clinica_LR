@@ -68,7 +68,7 @@ public class GetMedicationRequestInfoServiceImpl implements GetMedicationRequest
         healthConditionBo.setCie10codes((String) row[12]);
         result.setHealthCondition(healthConditionBo);
 		result.setPrescriptionLineNumber((Integer) row[14]);
-		result.setDosage(new DosageBo((Double) row[15], (Integer) row[16], (Integer) row[17]));
+		result.setDosage(new DosageBo((Double) row[15], (Double) row[16], (Double) row[17]));
         return result;
     }
 }

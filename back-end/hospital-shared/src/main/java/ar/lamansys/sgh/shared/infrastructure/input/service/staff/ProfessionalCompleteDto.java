@@ -22,6 +22,7 @@ public class ProfessionalCompleteDto {
     private String lastName;
 	private String nameSelfDetermination;
 	private List<ProfessionCompleteDto> professions;
+	private String otherLastNames;
 
 	public String getCompleteLicenseInfo() {
 		return professions.stream()
@@ -38,6 +39,8 @@ public class ProfessionalCompleteDto {
 	}
 
 	public String getCompleteName(String name){
+		if (otherLastNames != null)
+			return String.format("%s %s %s", name, lastName, otherLastNames);
 		return String.format("%s %s", name, lastName);
 	}
 }

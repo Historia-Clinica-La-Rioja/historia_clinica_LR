@@ -10,6 +10,7 @@ import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,9 +44,16 @@ public class MedicationRequestBo implements IDocumentBo {
 
 	private Integer clinicalSpecialtyId;
 
+	private Boolean isArchived;
+
     public short getDocumentType() {
         return DocumentType.RECIPE;
     }
+
+	@Override
+	public LocalDateTime getPerformedDate() {
+		return requestDate.atStartOfDay();
+	}
 
     @Override
     public Short getDocumentSource() {

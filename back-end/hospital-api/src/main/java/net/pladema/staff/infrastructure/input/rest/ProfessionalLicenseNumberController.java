@@ -4,9 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.sisa.refeps.controller.RefepsExternalService;
-import net.pladema.sisa.refeps.controller.dto.ValidatedLicenseNumberDto;
-import net.pladema.sisa.refeps.controller.mapper.ValidatedLicenceNumberMapper;
-import net.pladema.sisa.refeps.services.domain.ValidatedLicenseNumberBo;
+import net.pladema.sisa.refeps.controller.dto.LicenseDataDto;
+import net.pladema.sisa.refeps.controller.dto.ValidatedLicenseDataDto;
 import net.pladema.staff.application.deleteprofessionallicensenumber.DeleteProfessionalLicenseNumber;
 import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNumberByProfessional;
 import net.pladema.staff.application.saveprofessionallicensesnumber.SaveProfessionalLicensesNumber;
@@ -47,8 +46,6 @@ public class ProfessionalLicenseNumberController {
 
 	private final RefepsExternalService refepsExternalService;
 
-	private final ValidatedLicenceNumberMapper validatedLicenceNumberMapper;
-
 	@GetMapping()
 	@ResponseStatus(code = HttpStatus.OK)
 	public List<ProfessionalLicenseNumberDto> getAllByProfessional(@PathVariable(name = "institutionId") Integer institutionId,
@@ -70,19 +67,19 @@ public class ProfessionalLicenseNumberController {
 
 	@PostMapping("/validate")
 	@ResponseStatus(code = HttpStatus.OK)
-	public List<ValidatedLicenseNumberDto> validateLicenseNumbers(@PathVariable(name = "institutionId") Integer institutionId,
+	public List<ValidatedLicenseDataDto> validateLicenseNumbers(@PathVariable(name = "institutionId") Integer institutionId,
 																  @PathVariable(name = "healthcareprofessionalId") Integer healthcareProfessionalId,
-																  @RequestBody List<String> licenseNumbers) {
-		log.debug("Input parameters -> healthcareProfessionalId: {}, licenseNumbers {}", healthcareProfessionalId, licenseNumbers);
+																  @RequestBody List<LicenseDataDto> licenseData) {
+		log.debug("Input parameters -> healthcareProfessionalId: {}, licenseNumbers {}", healthcareProfessionalId, licenseData);
 		HealthcareProfessionalBo currentProfessional = healthcareProfessionalService.findActiveProfessionalById(healthcareProfessionalId);
-		List<ValidatedLicenseNumberBo> validatedLicenceNumbers = new ArrayList<>();
+		List<ValidatedLicenseDataDto> validatedLicenceNumbers = new ArrayList<>();
 		try {
-			validatedLicenceNumbers = refepsExternalService.validateLicenseNumber(currentProfessional.getIdentificationNumber(), licenseNumbers);
+			validatedLicenceNumbers = refepsExternalService.validateLicenseNumberAndType(currentProfessional.getIdentificationNumber(), licenseData);
 		} catch (Exception e) {
 			log.error("Fallo en la comunicación => {}", e.getMessage());
 			throw new RuntimeException(e);
 		}
-		return validatedLicenceNumberMapper.toListValidatedLicenseNumberDto(validatedLicenceNumbers);
+		return validatedLicenceNumbers;
 	}
 
 	@PostMapping("/delete")

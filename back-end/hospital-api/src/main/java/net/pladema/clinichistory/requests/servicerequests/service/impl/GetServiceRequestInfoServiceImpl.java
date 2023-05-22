@@ -54,7 +54,7 @@ public class GetServiceRequestInfoServiceImpl implements GetServiceRequestInfoSe
     private DiagnosticReportBo createDiagnosticReportBo(Object[] row) {
         DiagnosticReportBo result = new DiagnosticReportBo();
 
-        result.setObservations((String) row[4]);
+        result.setObservations( row[4] != null ? (String) row[4] : null);
 
         result.setSnomed(new SnomedBo((Integer) row[5], (String) row[6],(String) row[7]));
 

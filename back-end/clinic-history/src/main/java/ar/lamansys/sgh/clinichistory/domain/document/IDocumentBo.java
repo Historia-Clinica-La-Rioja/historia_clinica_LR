@@ -129,11 +129,13 @@ public interface IDocumentBo {
 	default Long getInitialDocumentId() { return null; }
 
 	default List<HealthConditionBo> getOtherProblems() { return Collections.emptyList(); }
-    
+
 	default ExternalCauseBo getExternalCause() { return null; }
 
 	default ObstetricEventBo getObstetricEvent() { return null; }
-	
+
 	default OtherRiskFactorBo getOtherRiskFactors() { return null; }
+
+	default Boolean getIsArchived() { return null; }
 
 }

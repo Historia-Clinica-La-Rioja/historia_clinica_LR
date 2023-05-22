@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Dosage;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,14 +35,31 @@ public class DosageBo {
 
 	private QuantityBo quantity;
 
-	private Integer dosesByUnit;
+	private Double dosesByUnit;
 
-	private Integer dosesByDay;
+	private Double dosesByDay;
 
-	public DosageBo(Double duration, Integer dosesByUnit, Integer dosesByDay) {
+	public DosageBo(Double duration, Double dosesByUnit, Double dosesByDay) {
 		this.duration = duration;
 		this.dosesByUnit = dosesByUnit;
 		this.dosesByDay = dosesByDay;
+	}
+
+	public DosageBo(Dosage dosage, Double quantityValue, String quantityUnit) {
+		this.id = dosage.getId();
+		this.duration = dosage.getDuration();
+		this.frequency = dosage.getFrequency();
+		this.periodUnit = EUnitsOfTimeBo.map(dosage.getPeriodUnit());
+		this.startDate = dosage.getStartDate();
+		this.endDate = dosage.getEndDate();
+		this.suspendedStartDate = dosage.getSuspendedStartDate();
+		this.suspendedEndDate = dosage.getSuspendedEndDate();
+		this.chronic = dosage.getChronic();
+		this.event = dosage.getEvent();
+		this.dosesByUnit = dosage.getDosesByUnit();
+		this.dosesByDay = dosage.getDosesByDay();
+		if (quantityValue != null)
+			this.quantity = new QuantityBo(quantityValue.intValue(), quantityUnit);
 	}
 
 	public String getPeriodUnit(){

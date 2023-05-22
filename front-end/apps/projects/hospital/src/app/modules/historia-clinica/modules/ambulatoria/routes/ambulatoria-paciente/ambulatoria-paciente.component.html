@@ -189,16 +189,17 @@
 							<app-emergency-care-indications-card *ngIf="emergencyCareEpisodeInProgress?.inProgress && emergencyCareEpisodeState != EstadosEpisodio.CON_ALTA_MEDICA " [patientId]="patientId"
 								[emergencyCareEpisodeId]="emergencyCareEpisodeInProgress.id"></app-emergency-care-indications-card>
 
-							<div *ngIf="hasInternmentEpisodeInThisInstitution && !canOnlyViewSelfAddedProblems">
-								<app-internment-indications-card [patientId]="patientId"
-									[epicrisisConfirmed]="epicrisisDoc?.confirmed"
-									[internmentEpisodeId]="internmentEpisodeProcess.id">
-								</app-internment-indications-card>
+							<div *ngIf=" ! isTemporaryOrPermanentInvalidPatient">
+								<div *ngIf="hasInternmentEpisodeInThisInstitution && !canOnlyViewSelfAddedProblems">
+									<app-internment-indications-card [patientId]="patientId"
+										[epicrisisConfirmed]="epicrisisDoc?.confirmed"
+										[internmentEpisodeId]="internmentEpisodeProcess.id">
+									</app-internment-indications-card>
+								</div>
+								<app-card-medicaciones
+									[patientId]="patientId" [personId]="personId" [medicamentStatus]="medicamentStatus$ | async">
+								</app-card-medicaciones>
 							</div>
-							<app-card-medicaciones
-								*ngIf="! isHabilitarRecetaDigitalEnabled || (! isTemporaryPatient && isHabilitarRecetaDigitalEnabled)"
-								[patientId]="patientId" [medicamentStatus]="medicamentStatus$ | async">
-							</app-card-medicaciones>
 						</ng-template>
 					</mat-tab>
 					<mat-tab id="tab_studies"

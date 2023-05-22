@@ -15,6 +15,12 @@ import net.pladema.clinichistory.requests.medicationrequests.service.ValidateMed
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import net.pladema.clinichistory.requests.medicationrequests.service.CancelPrescriptionLineState;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -22,9 +28,24 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import ar.lamansys.sgx.shared.files.pdf.PdfService;
+import net.pladema.IntegrationController;
+import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.CreateMedicationRequestMapper;
+import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.ListMedicationInfoMapper;
+import net.pladema.clinichistory.requests.medicationrequests.service.ChangeStateMedicationService;
+import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
+import net.pladema.clinichistory.requests.medicationrequests.service.FetchMostFrequentPharmacos;
+import net.pladema.clinichistory.requests.medicationrequests.service.GetMedicationRequestByDocument;
+import net.pladema.clinichistory.requests.medicationrequests.service.GetMedicationRequestInfoService;
+import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
+import net.pladema.clinichistory.requests.medicationrequests.service.NewMedicationRequestNotification;
+import net.pladema.clinichistory.requests.medicationrequests.service.ValidateMedicationRequestGenerationService;
+import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
+import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 
 @WebMvcTest(MedicationRequestController.class)
 class MedicationRequestControllerIntegrationTest extends IntegrationController {
@@ -72,6 +93,21 @@ class MedicationRequestControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private SharedInstitutionPort sharedInstitutionPort;
+
+	@MockBean
+	private NewMedicationRequestNotification newMedicationRequestNotification;
+
+	@MockBean
+	private SharedDocumentPort sharedDocumentPort;
+
+	@MockBean
+	private GetMedicationRequestByDocument getMedicationRequestByDocument;
+
+	@MockBean
+	private FetchMostFrequentPharmacos fetchMostFrequentPharmacos;
+
+	@MockBean
+	private CancelPrescriptionLineState cancelPrescriptionLineState;
 
     @BeforeEach
     void setup() {

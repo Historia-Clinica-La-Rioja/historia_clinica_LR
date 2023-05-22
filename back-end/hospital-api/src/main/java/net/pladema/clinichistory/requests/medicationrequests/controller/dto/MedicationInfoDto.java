@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.medicationrequests.controller.dto;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEDocumentDataDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,4 +37,10 @@ public class MedicationInfoDto implements Serializable {
     private DateDto createdOn;
 
     private int totalDays;
+
+	private HCEDocumentDataDto hceDocumentData;
+
+	private Boolean isDigital;
+
+	private Short prescriptionLineState;
 }

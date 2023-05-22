@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ProfessionalLicenseNumberDto, ValidatedLicenseNumberDto } from '@api-rest/api-model';
+import { LicenseDataDto, ProfessionalLicenseNumberDto, ValidatedLicenseDataDto, ValidatedLicenseNumberDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -28,8 +28,8 @@ export class ProfessionalLicenseService {
 		return this.http.get<ProfessionalLicenseNumberDto[]>(url);
 	}
 
-	validateLicenseNumber(healthcareProfessionalId: number, licenseNumbers: string[]): Observable<ValidatedLicenseNumberDto[]> {
+	validateLicenseNumber(healthcareProfessionalId: number, licenseNumbers: LicenseDataDto[]): Observable<ValidatedLicenseDataDto[]> {
 		const url =  this.URL_PREFIX + `${healthcareProfessionalId}/validate`;
-		return this.http.post<ValidatedLicenseNumberDto[]>(url, licenseNumbers);
+		return this.http.post<ValidatedLicenseDataDto[]>(url, licenseNumbers);
 	}
 }

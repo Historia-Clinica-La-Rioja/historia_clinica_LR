@@ -24,8 +24,9 @@ public class MedicationStatementCommercial extends SGXAuditableEntity<Integer> {
 	@Column(name = "id")
 	private Integer id;
 
+	//this field is the sctid, not the actual id of the snomed table
 	@Column(name = "snomed_id")
-	private Integer snomedId;
+	private String snomedId;
 
 	@Column(name = "commercial_name")
 	private String commercialName;
@@ -58,7 +59,7 @@ public class MedicationStatementCommercial extends SGXAuditableEntity<Integer> {
 	private String observations;
 
 	public MedicationStatementCommercial(Integer id,
-										 Integer snomedId,
+										 String snomedId,
 										 String commercialName,
 										 String commercialPresentation,
 										 Integer presentationQuantity,

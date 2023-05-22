@@ -17,10 +17,13 @@ public class PrescriptionLineBo {
 	private PrescriptionProblemBo prescriptionProblemBo;
 	private GenericMedicationBo genericMedicationBo;
 	private CommercialMedicationBo commercialMedicationBo;
-	private Integer unitDosis;
-	private Integer dayDosis;
+	private Double unitDosis;
+	private Double dayDosis;
 	private Double duration;
 	private String presentation;
+
+	Integer presentationQuantity;
+	private Double quantity;
 
 	@Override
 	public boolean equals(Object o) {
@@ -32,8 +35,7 @@ public class PrescriptionLineBo {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(prescriptionLineNumber, prescriptionLineStatus, prescriptionProblemBo, genericMedicationBo, commercialMedicationBo, unitDosis, dayDosis, duration, presentation, presentationQuantity);
+		return Objects.hash(prescriptionLineNumber, prescriptionLineStatus, prescriptionProblemBo, genericMedicationBo, commercialMedicationBo, unitDosis, dayDosis, duration, presentation, presentationQuantity, quantity);
 	}
 
-	Integer presentationQuantity;
 }

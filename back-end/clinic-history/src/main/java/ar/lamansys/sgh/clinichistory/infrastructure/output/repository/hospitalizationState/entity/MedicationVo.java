@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Dosage;
 import lombok.*;
 
 import java.util.Objects;
@@ -16,6 +17,16 @@ public class MedicationVo extends ClinicalTermVo{
 
     private String note;
 
+	private Integer prescriptionLineNumber;
+
+	private Dosage dosage;
+
+	private Double quantityValue;
+
+	private String quantityUnit;
+
+	private Snomed healthConditionDiagnosis;
+
     public MedicationVo(Integer id, Snomed snomed, String statusId, Long noteId,
 						String note) {
         super(id, snomed, statusId);
@@ -27,6 +38,18 @@ public class MedicationVo extends ClinicalTermVo{
 						String note) {
 		this(id, snomed, statusId, noteId, note);
 		this.setStatus(status);
+	}
+
+	public MedicationVo(Integer id, Snomed snomed, String statusId, Long noteId,
+						String note, Integer prescriptionLineNumber, Dosage dosage, Double quantityValue, String quantityUnit, Snomed healthConditionDiagnosis) {
+		super(id, snomed, statusId);
+		this.noteId = noteId;
+		this.note = note;
+		this.prescriptionLineNumber = prescriptionLineNumber;
+		this.dosage = dosage;
+		this.quantityValue = quantityValue;
+		this.quantityUnit = quantityUnit;
+		this.healthConditionDiagnosis = healthConditionDiagnosis;
 	}
     
 	@Override

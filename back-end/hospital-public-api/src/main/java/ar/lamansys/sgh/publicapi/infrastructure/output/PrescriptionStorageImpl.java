@@ -1,11 +1,12 @@
 package ar.lamansys.sgh.publicapi.infrastructure.output;
 
 import java.sql.Date;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,40 +34,61 @@ import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionProfessionBo;
 import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionProfessionalRegistrationBo;
 import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionValidStatesEnum;
 import ar.lamansys.sgh.publicapi.domain.prescription.ProfessionalPrescriptionBo;
-import lombok.RequiredArgsConstructor;
+import ar.lamansys.sgx.shared.token.JWTUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
 public class PrescriptionStorageImpl implements PrescriptionStorage {
 
 	private final EntityManager entityManager;
 
-	private final static Integer RECETA = 5;
+	private final static Short RECETA = 5;
+	private final static Short RECETA_DIGITAL = 14;
+	private final static Short RECETA_CANCELADA = 6;
 	private final static String CONFIRMADO = "59156000";
 	private final static String ACTIVO = "55561003";
 	private final static String COMPLETO = "255594003";
+	private final static String CRONICO = "-55607006";
+
+	private static final String ID_DIVIDER = "-";
+
+	private final String secret;
+
+	private final Duration tokenExpiration;
 
 	private final MedicationStatementCommercialRepository medicationStatementCommercialRepository;
 
+	public PrescriptionStorageImpl(EntityManager entityManager, @Value("${token.secret}") String secret,
+								   @Value("${prescription.token.duration}") Duration tokenExpiration,
+								   MedicationStatementCommercialRepository medicationStatementCommercialRepository) {
+		this.entityManager = entityManager;
+
+		this.secret = secret;
+		this.tokenExpiration = tokenExpiration;
+		this.medicationStatementCommercialRepository = medicationStatementCommercialRepository;
+	}
+
 	@Override
 	public Optional<PrescriptionBo> getPrescriptionByIdAndDni(String prescriptionId, String identificationNumber) {
-		Integer numericPrescriptionId = Integer.valueOf(prescriptionId);
-		String stringQuery = "select mr.id as mrid, ms.created_on, ms.due_date, " +
+		String domainNumber = prescriptionId.split(ID_DIVIDER)[0];
+		Integer numericPrescriptionId = Integer.valueOf(prescriptionId.split(ID_DIVIDER)[1]);
+		String stringQuery = "select mr.id as mrid, ms.prescription_date, ms.due_date, " +
 		"p2.first_name as p2fn, p2.last_name as p2ln, pe.name_self_determination, g.description as gd, spg.description as spgd, p2.birth_date, it.description as itd, p2.identification_number, " +
 		"mc.name as mcn, mc.cuit, mcp.plan, pmc.affiliate_number, i.name, i.sisa_code, i.province_code, " +
 		"CONCAT(a.street, ' ', a.number, ' ', case WHEN a.floor is not null THEN CONCAT('Piso ', a.floor) else '' END)," +
 		"p3.first_name as p3fn, p3.last_name, it2.description as it2d, p3.identification_number as p3d, pe2.phone_number, pe2.email as EMAIL, ps.description as psd, " +
 		"ps.sctid_code, " +
-		"pln.license_number, case when pln.type_license_number = 1 then 'NACIONAL' else 'PROVINCIAL' end, ms.prescription_line_number as msid, msls.description as mssd, s.pt as spt, s.id as sid, " +
-		"pt.description as ptd, s2.pt as s2pt, s2.id as s2id, " +
-		"1 as unit_dose, d2.frequency, d2.duration, '' as presentation, 0 as presentation_quantity " +
+		"pln.license_number, case when pln.type_license_number = 1 then 'NACIONAL' else 'PROVINCIAL' end, ms.prescription_line_number as msid, msls.description as mssd, s.pt as spt, s.sctid as sid, " +
+		"pt.description as ptd, s2.pt as s2pt, s2.sctid as s2id, " +
+		"d2.doses_by_unit as unit_dose, d2.doses_by_day, d2.duration, '' as presentation, 0 as presentation_quantity, d.id, mr.is_archived, " +
+		"case when d2.dose_quantity_id is null then null else q.value end, " +
+		"msls.id as status_id " +
 		"from medication_statement ms join document_medicamention_statement dms on ms.id = dms.medication_statement_id " +
 		"join document d on d.id = dms.document_id " +
 		"join medication_request mr on mr.id = d.source_id join patient p on p.id = ms.patient_id " +
 		"join person p2 on p2.id = p.person_id " +
-		"join person_extended pe on pe.person_id = p.id " +
+		"left join person_extended pe on pe.person_id = p2.id " +
 		"join gender g on g.id = p2.gender_id " +
 		"left join self_perceived_gender spg on spg.id = pe.gender_self_determination " +
 		"join identification_type it on it.id = p2.identification_type_id " +
@@ -77,19 +100,21 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		"join healthcare_professional hp on hp.id = mr.doctor_id " +
 		"join person p3 on p3.id = hp.person_id " +
 		"join identification_type it2 on it2.id = p3.identification_type_id " +
-		"join person_extended pe2 on pe2.person_id = p3.id " +
+		"left join person_extended pe2 on pe2.person_id = p3.id " +
 		"join professional_professions pp on pp.healthcare_professional_id = hp.id " +
+		"join healthcare_professional_specialty hps on hps.professional_profession_id = pp.id " +
 		"join professional_specialty ps on ps.id = pp.professional_specialty_id " +
-		"join professional_license_numbers pln on pln.professional_profession_id = pp.id " +
+		"join professional_license_numbers pln on (pln.professional_profession_id = pp.id or pln.healthcare_professional_specialty_id = hps.id)" +
 		"join health_condition hc on hc.id = ms.health_condition_id " +
 		"join snomed s on s.id = hc.snomed_id " +
 		"join problem_type pt on pt.id = hc.problem_id " +
 		"join snomed s2 on ms.snomed_id = s2.id " +
 		"left join dosage d2 on d2.id = ms.dosage_id " +
+		"left join quantity q on d2.dose_quantity_id = q.id " +
 		"left join medication_statement_line_state msls on msls.id = ms.prescription_line_state " +
 		"where p2.identification_number LIKE :identificationNumber " +
 		"and mr.id = :numericPrescriptionId " +
-		"and d.type_id = " + RECETA + " and hc.verification_status_id LIKE CAST(" + CONFIRMADO + "AS VARCHAR) " +
+		"and (d.type_id = " + RECETA + " or d.type_id = " + RECETA_DIGITAL + ") and hc.verification_status_id LIKE CAST(" + CONFIRMADO + "AS VARCHAR) " +
 				"and (ms.status_id LIKE CAST(" + COMPLETO + "AS varchar) OR ms.status_id LIKE CAST(" + ACTIVO + "AS varchar)) " +
 		"order by mr.id desc";
 
@@ -102,6 +127,10 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				.map(this::processPrescriptionQuery)
 				.collect(Collectors.toList());
 		PrescriptionBo mergedResult = mergeResults(result);
+		if(mergedResult.getPrescriptionId() != null) {
+			mergedResult.setPrescriptionId(domainNumber + ID_DIVIDER + mergedResult.getPrescriptionId());
+		}
+		mergedResult.setDomain(domainNumber);
 		return Optional.of(mergedResult);
 	}
 
@@ -110,7 +139,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 	@Modifying
 	public void changePrescriptionState(ChangePrescriptionStateBo changePrescriptionLineStateBo, String prescriptionId, String identificationNumber) {
 
-		Integer prescriptionIdInt = Integer.valueOf(changePrescriptionLineStateBo.getPrescriptionId().split("\\.")[1]);
+		Integer prescriptionIdInt = Integer.valueOf(changePrescriptionLineStateBo.getPrescriptionId().split(ID_DIVIDER)[1]);
 		List<Integer> prescriptionLineNumbers = changePrescriptionLineStateBo.getChangePrescriptionStateLineMedicationList()
 				.stream()
 				.map(ChangePrescriptionStateMedicationBo::getPrescriptionLine)
@@ -163,7 +192,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 
 			lastStatusStr = PrescriptionValidStatesEnum.map(oldS.getPrescriptionLineState()).toString();
 			lastNewStatusStr = PrescriptionValidStatesEnum.map(newS.getPrescriptionLineState()).toString();
-			if(PrescriptionValidStatesEnum.map(newS.getPrescriptionLineState()).equals(PrescriptionValidStatesEnum.CANCELADO)) {
+			if(PrescriptionValidStatesEnum.map(newS.getPrescriptionLineState()).equals(PrescriptionValidStatesEnum.CANCELADO_DISPENSA)) {
 				Integer id = getMedicationStamentId(linesStatus, newS.getPrescriptionLineNumber());
 				if(id != null) {
 					var medication = medicationStatementCommercialRepository.findById(id);
@@ -226,7 +255,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 			message.append(" no existen en la receta indicada.");
 			throw  new ConstraintViolationException(message.toString(), Collections.emptySet());
 		}
-		
+
 
 	}
 
@@ -240,14 +269,14 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 					"JOIN document_medicamention_statement dms ON ms2.id = dms.medication_statement_id " +
 					"JOIN document d on d.id = dms.document_id " +
 					"JOIN medication_request mr ON mr.id = d.source_id " +
-					"WHERE mr.id = :prescriptionId and d.type_id = " + RECETA + " AND ms2.prescription_line_number = :lineNumber " +
+					"WHERE mr.id = :prescriptionId and (d.type_id = " + RECETA + " or d.type_id = " + RECETA_DIGITAL + ") AND ms2.prescription_line_number = :lineNumber " +
 				")";
 
 		Query query = entityManager.createNativeQuery(updateQuery);
 		for(int i = 0; i < prescriptionLineNumbers.size(); i++) {
 			var stateId = newStatus.get(i).getPrescriptionLineState();
 			var state = PrescriptionValidStatesEnum.map(stateId);
-			var stateToSave = state.equals(PrescriptionValidStatesEnum.CANCELADO) ?
+			var stateToSave = state.equals(PrescriptionValidStatesEnum.CANCELADO_DISPENSA) ?
 					1 : stateId;
 			query.setParameter("status", stateToSave)
 					.setParameter("prescriptionId", prescriptionId)
@@ -267,7 +296,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				"join patient p on p.id = d.patient_id " +
 				"join person pp on pp.id = p.person_id " +
 				"left join medication_statement_commercial msc on msc.id = ms.id " +
-				"where mr.id = :prescriptionId  and d.type_id = " + RECETA;
+				"where mr.id = :prescriptionId and (d.type_id = " + RECETA + " or d.type_id = " + RECETA_DIGITAL +")";
 
 		List<Object[]> queryResult = entityManager.createNativeQuery(getQuery)
 				.setParameter("prescriptionId", prescriptionId)
@@ -330,6 +359,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		result.setPrescriptionId(unmergedResults.get(0).getPrescriptionId());
 		result.setPrescriptionDate(unmergedResults.get(0).getPrescriptionDate());
 		result.setDueDate(unmergedResults.get(0).getDueDate());
+		result.setLink(unmergedResults.get(0).getLink());
+		result.setIsArchived(unmergedResults.get(0).getIsArchived());
 		result.setPatientPrescriptionBo(unmergedResults.get(0).getPatientPrescriptionBo());
 		result.setInstitutionPrescriptionBo(unmergedResults.get(0).getInstitutionPrescriptionBo());
 		result.setPrescriptionsLineBo(unmergedResults.get(0).getPrescriptionsLineBo());
@@ -361,13 +392,17 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 	private PrescriptionBo processPrescriptionQuery(Object[] queryResult) {
 
 		var dueDate = queryResult[2] != null ?
-				((Timestamp)queryResult[2]).toLocalDateTime() : ((Timestamp)queryResult[1]).toLocalDateTime().plusDays(30);
+				((Date)queryResult[2]).toLocalDate() : ((Date)queryResult[1]).toLocalDate().plusDays(30);
+
+		var accessId = JWTUtils.generate256(Map.of("accessId", queryResult[41].toString()), "prescription", secret, tokenExpiration);
 
 		return new PrescriptionBo(
-				"1.",
-				(Integer)queryResult[0],
-				((Timestamp)queryResult[1]).toLocalDateTime(),
-				dueDate,
+				"1",
+				((Integer)queryResult[0]).toString(),
+				((Date)queryResult[1]).toLocalDate().atStartOfDay(),
+				dueDate.atStartOfDay(),
+				"api/external-document-access/download-prescription/" + accessId,
+				queryResult[42] == null ? Boolean.FALSE : (Boolean)queryResult[42],
 				new PatientPrescriptionBo(
 						(String)queryResult[3],
 						(String)queryResult[4],
@@ -406,22 +441,23 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				),
 				List.of(new PrescriptionLineBo(
 						(Integer)queryResult[29],
-						dueDate.isBefore(LocalDateTime.now()) ? "VENCIDA" : (String)queryResult[30],
+						queryResult[44].equals(RECETA_CANCELADA) || dueDate.isAfter(LocalDate.now()) ? (String)queryResult[30] : "VENCIDO",
 						new PrescriptionProblemBo(
 								(String)queryResult[31],
-								(Integer)queryResult[32],
-								(String)queryResult[33]
+								(String)queryResult[32],
+								queryResult[33].equals(CRONICO) ? "Crónico" : "Agudo"
 						),
 						new GenericMedicationBo(
 								(String)queryResult[34],
-								(Integer)queryResult[35]
+								(String)queryResult[35]
 						),
 						new CommercialMedicationBo(),
-						(Integer)queryResult[36],
-						(Integer)queryResult[37],
-						queryResult[38] != null ? (Double)queryResult[38] : null,
+						queryResult[36] != null ? (Double)queryResult[36] : 0,
+						queryResult[37] != null ? (Double) queryResult[37] : 0,
+						queryResult[38] != null ? (Double)queryResult[38] : 1,
 						(String)queryResult[39],
-						(Integer)queryResult[40]
+						(Integer)queryResult[40],
+						queryResult[43] != null ? (Double)queryResult[43] : null
 				))
 		);
 	}

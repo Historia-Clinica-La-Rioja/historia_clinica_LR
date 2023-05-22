@@ -13,4 +13,5 @@ public interface PatientExternalService {
     Map<Integer, BasicPatientDto> getBasicDataFromPatientsId(Set<Integer> patientId);
 
     PatientMedicalCoverageDto getCoverage(Integer patientMedicalCoverageId);
+
 }

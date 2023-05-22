@@ -2,10 +2,13 @@ package ar.lamansys.sgh.clinichistory.domain.ips.services;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
+import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DosageRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.MedicationStatementRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.QuantityRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Dosage;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.MedicationStatement;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Quantity;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.MedicamentStatementStatusRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
@@ -37,18 +40,22 @@ public class LoadMedications {
     private final SnomedService snomedService;
     private final NoteService noteService;
 
+	private final QuantityRepository quantityRepository;
+
     public LoadMedications(MedicationStatementRepository medicationStatementRepository,
                            DosageRepository dosageRepository,
                            MedicamentStatementStatusRepository medicamentStatementStatusRepository,
                            DocumentService documentService,
                            SnomedService snomedService,
-                           NoteService noteService){
+                           NoteService noteService,
+						   QuantityRepository quantityRepository){
         this.medicationStatementRepository = medicationStatementRepository;
         this.dosageRepository = dosageRepository;
         this.medicamentStatementStatusRepository = medicamentStatementStatusRepository;
         this.documentService = documentService;
         this.snomedService = snomedService;
         this.noteService = noteService;
+		this.quantityRepository = quantityRepository;
     }
 
     public List<MedicationBo> run(Integer patientId, Long documentId, List<MedicationBo> medications) {
@@ -73,7 +80,8 @@ public class LoadMedications {
 
     private MedicationStatement saveMedicationStatement(Integer patientId, MedicationBo medicationBo, Integer snomedId) {
         LOG.debug("Input parameters -> patientId {}, medication {}, snomedId {}", patientId, medicationBo, snomedId);
-		Dosage newDosage = createDosage(medicationBo.getDosage());
+		Long quantityId = createQuantity(medicationBo.getDosage());
+		Dosage newDosage = createDosage(medicationBo.getDosage(), quantityId);
 		MedicationStatement medicationStatement = new MedicationStatement(
                 patientId,
                 snomedId,
@@ -82,7 +90,9 @@ public class LoadMedications {
                 medicationBo.getHealthCondition() != null ? medicationBo.getHealthCondition().getId() : null,
                 newDosage != null ? newDosage.getId() : null,
 				medicationBo.getPrescriptionLineNumber(),
-				medicationBo.getIsDigital());
+				medicationBo.getIsDigital(),
+				medicationBo.getPrescriptionDate(),
+				medicationBo.getDueDate());
 
         medicationStatement = medicationStatementRepository.save(medicationStatement);
         LOG.debug("medicationStatement saved -> {}", medicationStatement.getId());
@@ -95,7 +105,24 @@ public class LoadMedications {
         Assert.notNull(documentId, "El identificador de la institución es obligatorio");
     }
 
-    private Dosage createDosage(DosageBo dosage) {
+	private Long createQuantity(DosageBo dosageBo) {
+		LOG.debug("Input parameters -> dosageBo {}", dosageBo);
+		if (dosageBo == null) {
+			return null;
+		}
+		QuantityBo quantityBo = dosageBo.getQuantity();
+		Quantity quantity = new Quantity();
+		Long quantityId = null;
+		if (quantityBo.getValue() != null) {
+			quantity.setValue(quantityBo.getValue().doubleValue());
+			quantity.setUnit(quantityBo.getUnit());
+			quantityId = quantityRepository.save(quantity).getId();
+		}
+		LOG.debug(OUTPUT, quantityId);
+		return quantityId;
+	}
+
+    private Dosage createDosage(DosageBo dosage, Long id) {
         LOG.debug("Input parameters -> dosage {}", dosage);
         if (dosage == null)
             return null;
@@ -110,6 +137,7 @@ public class LoadMedications {
         newDosage.setPeriodUnit(dosage.getPeriodUnit());
 		newDosage.setDosesByDay(dosage.getDosesByDay());
 		newDosage.setDosesByUnit(dosage.getDosesByUnit());
+		newDosage.setDoseQuantityId(id);
         if (EUnitsOfTimeBo.DAY.getValue().equals(dosage.getPeriodUnit()))
             newDosage.setFrequency(1);
         else newDosage.setFrequency(dosage.getFrequency());

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ValidatedLicenseNumberDto } from '@api-rest/api-model';
+import { ValidatedLicenseDataDto, ValidatedLicenseNumberDto } from '@api-rest/api-model';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -11,7 +11,7 @@ export class MatriculaService {
 
   constructor() { }
 
-  setLicenseNumbers(newArray: ValidatedLicenseNumberDto[]) {
+  setLicenseNumbers(newArray: ValidatedLicenseDataDto[]) {
     this.licenseNumbers$.next(newArray);
   }
 

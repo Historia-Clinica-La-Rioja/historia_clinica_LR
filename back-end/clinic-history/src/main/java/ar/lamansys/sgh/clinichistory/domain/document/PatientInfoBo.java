@@ -15,8 +15,8 @@ public class PatientInfoBo{
 
 	private Short age;
 
-	public PatientInfoBo(Integer id) {
-		this.id = id;
+	public PatientInfoBo(Integer patientId) {
+		this.id = patientId;
 	}
 
 }

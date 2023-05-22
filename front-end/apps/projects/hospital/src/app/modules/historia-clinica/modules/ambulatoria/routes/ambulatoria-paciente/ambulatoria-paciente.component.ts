@@ -41,12 +41,15 @@ import { ComponentCanDeactivate } from '@core/guards/PendingChangesGuard';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { PatientToMergeService } from '@api-rest/services/patient-to-merge.service';
 import { Patient } from '@pacientes/component/search-patient/search-patient.component';
+import { PatientValidatorPopupComponent } from '../../dialogs/patient-validator-popup/patient-validator-popup.component';
+import { PATIENT_TYPE } from '@core/utils/patient.utils';
 
 const RESUMEN_INDEX = 0;
 const VOLUNTARY_ID = 1;
 const FEMENINO = 'Femenino';
 const EMERGENCY_CARE_INDEX = 0;
 const EMERGENCY_CARE_INDEX_WHEN_INTERNED = 1;
+const TAB_INDICACIONES = 1;
 
 @Component({
 	selector: 'app-ambulatoria-paciente',
@@ -59,6 +62,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 	dialogRef: DockPopupRef;
 	patient: PatientBasicData;
 	patientId: number;
+	personId: number;
 	extensionTabs$: Observable<{ head: MenuItem, body$: Observable<UIPageDto> }[]>;
 	extensionWCTabs$: Observable<SlotedInfo[]>;
 	medicamentStatus$: Observable<any>;
@@ -91,7 +95,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 	showNursingSection = false;
 	femenino = FEMENINO;
 	selectedTab = 0;
-	isTemporaryPatient: boolean = false;
+	previousSelectedTab = 0;
 	isHabilitarRecetaDigitalEnabled: boolean = false;
 	emergencyCareTabIndex: number;
 	showEmergencyCareTab: boolean;
@@ -101,6 +105,8 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 	rolesThatCanOnlyViewSelfAddedProblems = [ERole.PRESCRIPTOR];
 	isNewConsultationOpen: boolean;
 	isEmergencyCareTemporalPatient = false;
+	patientType: number;
+	isTemporaryOrPermanentInvalidPatient: boolean = false;
 
 	emergencyCareEpisode: ResponseEmergencyCareDto;
 	emergencyCareEpisodeState: EstadosEpisodio;
@@ -144,13 +150,16 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 				this.patientId = Number(params.get('idPaciente'));
 				this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).subscribe(
 					patient => {
-						this.isEmergencyCareTemporalPatient = patient.typeId === PatientType.EMERGENCY_CARE_TEMPORARY;
-						(patient.typeId === PatientType.TEMPORARY)
-							? this.isTemporaryPatient = true
-							: this.isTemporaryPatient = false
-
 						this.personInformation.push({ description: patient.person?.identificationType, data: patient.person?.identificationNumber });
 						this.patient = this.mapperService.toPatientBasicData(patient);
+						this.personId = patient.person.id;
+						this.patientType = patient.typeId;
+
+						if (this.isHabilitarRecetaDigitalEnabled
+							&& (this.patientType === PATIENT_TYPE.PERMANENT_INVALID
+							|| this.patientType === PATIENT_TYPE.TEMPORARY)) {
+								this.isTemporaryOrPermanentInvalidPatient = true;
+							}
 					}
 				);
 				this.ambulatoriaSummaryFacadeService.setIdPaciente(this.patientId);
@@ -233,6 +242,16 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 	canDeactivate(): Observable<boolean> | boolean {
 		return this.isNewConsultationOpen || this.isOpenOdontologyConsultation || this.odontogramService.existActionedTeeth();
 	};
+
+	openValidatorDialog() {
+		this.dialog.open(PatientValidatorPopupComponent, {
+			data: {
+				patientType: this.patientType,
+				patientId: this.patientId
+			},
+			width: '35%',
+		});
+	}
 
 	ngOnInit(): void {
 		this.setActionsLayout();
@@ -357,11 +376,20 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 				allergies: false,
 				familyHistories: false,
 				personalHistories: false,
+				personalHistoriesByRole: true,
 				riskFactors: false,
 				medications: true,
 				anthropometricData: false,
 				problems: false
 			});
+		}
+
+		if (this.isTemporaryOrPermanentInvalidPatient) {
+			if (event.index == TAB_INDICACIONES) {
+				this.openValidatorDialog();
+				this.selectedTab = this.previousSelectedTab;
+			}
+			this.previousSelectedTab = this.selectedTab;
 		}
 	}
 

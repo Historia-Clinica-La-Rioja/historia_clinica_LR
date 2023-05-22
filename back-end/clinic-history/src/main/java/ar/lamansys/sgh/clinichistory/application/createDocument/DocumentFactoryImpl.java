@@ -7,6 +7,7 @@ import java.util.Optional;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadExternalCause;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadObstetricEvent;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,7 +126,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
         documentBo.setId(doc.getId());
         PatientInfoBo patientInfo = documentBo.getPatientInfo();
-		Integer patientId = documentBo.getPatientId();
+		Integer patientId = Optional.ofNullable(patientInfo).map(info-> info.getId()).orElse(documentBo.getPatientId());
         healthConditionService.loadMainDiagnosis(patientInfo, doc.getId(), Optional.ofNullable(documentBo.getMainDiagnosis()));
         healthConditionService.loadDiagnosis(patientInfo, doc.getId(), documentBo.getDiagnosis());
         healthConditionService.loadPersonalHistories(patientInfo, doc.getId(), documentBo.getPersonalHistories());

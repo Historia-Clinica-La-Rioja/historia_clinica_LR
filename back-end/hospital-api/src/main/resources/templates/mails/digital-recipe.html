@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="fragments/header :: header"></head>
+<body>
+    <p>Esta receta corresponde a:</p>
+    <p>
+        <strong>Paciente:</strong>
+        <span th:text="${args.patient.person.completeName()}">Juan Perez</span>
+    </p>
+
+
+    <p th:if="${args.patient.identificationNumber}">
+        <strong th:if="${args.patient.identificationType + ': '}">DNI:</strong>
+        <span th:text="${args.patient.identificationNumber}">99.999.999</span>
+    </p>
+
+    <p th:if="${args.recipeIdWithDomain}">
+        <strong>Número de receta:</strong>
+        <span th:text="${args.recipeIdWithDomain}">1058</span>
+    </p>
+    <p>
+        Presentá esta receta junto con tu <strong>documento</strong> en cualquier farmacia de la Provincia de Buenos Aires.
+    </p>
+    <strong>
+        ¡Gracias por utilizar la Receta Electrónica Bonaerense!
+    </strong>
+    <p>
+        Seguimos mejorando tu atención y ampliando tus derechos.
+    </p>
+
+</body>
+</html>
