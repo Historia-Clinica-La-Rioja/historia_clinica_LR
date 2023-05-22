@@ -1,2 +1,74 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v2_1
+
+    - changeSet:
+        id: hierarchical_unit_type-createTable
+        comment: Create table hierarchical_unit_type
+        author: bchacon
+        changes:
+          - createTable:
+              tableName: hierarchical_unit_type
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_hierarchical_unit_type
+                    name: id
+                    type: int
+                - column:
+                    name: description
+                    type: varchar(100)
+                    constraints:
+                      nullable: false
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: hierarchical_unit_type-metadata
+        author: bchacon
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO hierarchical_unit_type (description) VALUES('Dirección');
+                INSERT INTO hierarchical_unit_type (description) VALUES('Unidad de diagnóstico y tratamiento');
+                INSERT INTO hierarchical_unit_type (description) VALUES('Unidad de internación');
+                INSERT INTO hierarchical_unit_type (description) VALUES('Unidad de consulta');
+                INSERT INTO hierarchical_unit_type (description) VALUES('Unidad de enfermería');
+                INSERT INTO hierarchical_unit_type (description) VALUES('Jefatura de sala');
+                INSERT INTO hierarchical_unit_type (description) VALUES('Departamento');
+                INSERT INTO hierarchical_unit_type (description) VALUES('Servicio');
