@@ -286,3 +286,18 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: patient
               validate: true
+              
+    - changeSet:
+        id: add-transcribed_order_id
+        author: lbergottini
+        changes:
+          - addColumn:
+              tableName: appointment_order_image
+              columns:
+                - column:
+                    constraints:
+                      nullable: true
+                      references: transcribed_service_request(id)
+                      foreignKeyName: FK_appointment_order_image_transcribed_service_request
+                    name: transcribed_order_id
+                    type: int
