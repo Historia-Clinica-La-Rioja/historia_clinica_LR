@@ -267,6 +267,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
 				"   AND d.type_id = :documentType "+
 				"   AND hc.patient_id = :patientId " +
 				"   AND hc.problem_id = :problemType " +
+				"	AND ecd.medical_discharge_on IS NOT NULL" +
 				") " +
 				"SELECT t.id as id, s.sctid as sctid, s.pt, status_id, t.main, source_id," +
 				"t.created_on, administrative_discharge_on, patient_id " +
