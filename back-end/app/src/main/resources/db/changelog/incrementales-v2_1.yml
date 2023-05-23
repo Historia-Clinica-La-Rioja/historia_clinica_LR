@@ -305,3 +305,103 @@ databaseChangeLog:
                     defaultValue: 10
                     constraints:
                       nullable: false
+
+    - changeSet:
+        id: move_studies-createTable
+        comment: Create table move_studies
+        author: amurrie
+        changes:
+          - createTable:
+              tableName: move_studies
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_move_studies
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: appointment_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: orchestrator_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: image_id
+                    type: varchar(80)
+                - column:
+                    constraints:
+                      nullable: true
+                    name: size_image
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: pac_server_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: priority
+                    type: int
+                - column:
+                    constraints:
+                      nullable: true
+                    name: result
+                    type: varchar(150)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: move_date
+                    type: datetime
+                - column:
+                    constraints:
+                      nullable: false
+                    name: priority_max
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: attemps_number
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: status
+                    type: varchar(40)
+
+          - addForeignKeyConstraint:
+              baseColumnNames: appointment_id
+              baseTableName: move_studies
+              constraintName: FK_move_studies_appointment_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: appointment
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: orchestrator_id
+              baseTableName: move_studies
+              constraintName: FK_move_studies_orchestrator_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: orchestrator
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: pac_server_id
+              baseTableName: move_studies
+              constraintName: FK_move_studies_pac_server_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: pac_server
+              validate: true
+

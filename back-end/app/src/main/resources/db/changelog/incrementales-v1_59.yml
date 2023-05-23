@@ -79,7 +79,6 @@ databaseChangeLog:
               sql: |-
                 UPDATE clinical_specialty SET name = 'Médico' WHERE sctid_code = '309343006';
 
-
     - changeSet:
         id: dropNotNullConstraint-emergency_care_discharge
         author: mmalyvarni
