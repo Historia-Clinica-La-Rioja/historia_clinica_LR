@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
@@ -67,7 +67,7 @@ export class NewInternmentComponent implements OnInit {
 	patientMedicalCoverages: PatientMedicalCoverage[] = [];
 	hasError = hasError;
 	submitForm = false;
-	public form: FormGroup;
+	public form: UntypedFormGroup;
 	public doctors: HealthcareProfessionalDto[];
 	public doctorsTypehead: TypeaheadOption<HealthcareProfessionalDto>[] = [];
 	public patientId: number;
@@ -82,7 +82,7 @@ export class NewInternmentComponent implements OnInit {
 
 	@ViewChild('errorDoctor') errorDoctor: ElementRef;
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly el: ElementRef,
 		private readonly router: Router,
 		private readonly healthcareProfessionalService: HealthcareProfessionalByInstitutionService,

@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { ERole } from '@api-rest/api-model';
 import { APatientDto, BMPatientDto, EthnicityDto, PersonOccupationDto, EducationLevelDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto, SelfPerceivedGenderDto, BasicPatientDto } from '@api-rest/api-model';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID, updateControlValidator } from '@core/utils/form.utils';
@@ -37,7 +37,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 	private readonly NONE_SELF_PERCEIVED_GENDER_SELECTED_ID = 10; // Dato Maestro proveniente de género autopercibido "Ninguna de las anteriores"
 
 	hasInstitutionalAdministratorRole = false;
-	public form: FormGroup;
+	public form: UntypedFormGroup;
 	public personResponse: BMPatientDto;
 	public formSubmitted = false;
 	public isSubmitButtonDisabled = false;
@@ -75,7 +75,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 	patientId: number;
 
 	constructor(
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private router: Router,
 		private el: ElementRef,
 		private patientService: PatientService,

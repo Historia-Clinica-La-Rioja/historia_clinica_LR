@@ -1,4 +1,4 @@
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Episode } from '../routes/home/home.component';
 import { TriageCategoryDto, TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
@@ -18,7 +18,7 @@ const NO_INFO: MasterDataInterface<number> = {
 export class EpisodeFilterService {
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly triageMasterDataService: TriageMasterDataService,
 		private readonly emergencyCareMasterDataService: EmergencyCareMasterDataService
 	) {
@@ -35,7 +35,7 @@ export class EpisodeFilterService {
 		});
 	}
 
-	private form: FormGroup;
+	private form: UntypedFormGroup;
 
 	static filterByTriage(episode: Episode, filters: EpisodeFilters): boolean {
 		return (filters.triage ? episode.triage.id === filters.triage : true);
@@ -87,7 +87,7 @@ export class EpisodeFilterService {
 		return (filters.administrativeDischarge ? episode.state.id === EstadosEpisodio.CON_ALTA_ADMINISTRATIVA : true);
 	}
 
-	getForm(): FormGroup {
+	getForm(): UntypedFormGroup {
 		return this.form;
 	}
 

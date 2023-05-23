@@ -8,7 +8,7 @@ import {
 	HealthConditionDto, ResponseEvolutionNoteDto
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -44,7 +44,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 	getError = getError;
 	hasError = hasError;
 
-	form: FormGroup;
+	form: UntypedFormGroup;
 
 	bloodTypes: MasterDataInterface<string>[];
 	mainDiagnosis: HealthConditionDto;
@@ -64,7 +64,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
 		public dockPopupRef: DockPopupRef,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly evolutionNoteService: EvolutionNoteService,
 		private readonly snackBarService: SnackBarService,

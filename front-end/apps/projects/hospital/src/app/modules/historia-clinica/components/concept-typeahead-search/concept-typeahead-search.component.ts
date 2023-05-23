@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { Observable, of } from "rxjs";
 import { debounceTime, distinctUntilChanged, mergeMap, startWith } from "rxjs/operators";
 import { SnowstormService } from "@api-rest/services/snowstorm.service";
@@ -23,7 +23,7 @@ export class ConceptTypeaheadSearchComponent {
 	@Input() showSearchIcon = false;
 	@Output() conceptSelected = new EventEmitter<SnomedDto>();
 
-	myControl = new FormControl();
+	myControl = new UntypedFormControl();
 	filteredOptions: Observable<any[]>;
 	opts: SnomedDto[] = [];
 

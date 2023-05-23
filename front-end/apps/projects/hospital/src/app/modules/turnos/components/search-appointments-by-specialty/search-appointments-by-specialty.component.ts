@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ClinicalSpecialtyDto, EmptyAppointmentDto, TimeDto } from '@api-rest/api-model';
 import { DiaryService } from '@api-rest/services/diary.service';
@@ -21,7 +21,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	timesToFilter: TimeDto[];
 	initialTimes: TimeDto[];
 	endingTimes: TimeDto[];
-	searchBySpecialtyForm: FormGroup;
+	searchBySpecialtyForm: UntypedFormGroup;
 	emptyAppointments: EmptyAppointmentDto[];
 	emptyAppointmentsFiltered: EmptyAppointmentDto[];
 	patientId: number;
@@ -35,7 +35,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	};
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly diaryService: DiaryService,
 		private readonly route: ActivatedRoute
 	) { }

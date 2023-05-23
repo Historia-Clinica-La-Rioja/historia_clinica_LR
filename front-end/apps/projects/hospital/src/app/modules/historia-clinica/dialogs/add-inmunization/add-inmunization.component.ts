@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SnomedDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 import { MatDialogRef } from '@angular/material/dialog';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
@@ -18,7 +18,7 @@ import { MIN_DATE } from "@core/utils/date.utils";
 export class AddInmunizationComponent implements OnInit {
 
 	snomedConcept: SnomedDto;
-	form: FormGroup;
+	form: UntypedFormGroup;
 	loading = false;
 	today: Moment = newMoment();
 
@@ -31,7 +31,7 @@ export class AddInmunizationComponent implements OnInit {
 
 	constructor(
 		public dialogRef: MatDialogRef<AddInmunizationComponent>,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snowstormService: SnowstormService,
 		private readonly snackBarService: SnackBarService,
 	) {

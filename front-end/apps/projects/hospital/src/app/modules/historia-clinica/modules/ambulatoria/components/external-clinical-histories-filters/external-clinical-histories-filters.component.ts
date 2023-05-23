@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Moment } from 'moment';
 import { ExternalClinicalHistoryFacadeService } from '../../services/external-clinical-history-facade.service';
 
@@ -23,14 +23,14 @@ export interface ExternalClinicalHistoryFilter {
 })
 export class ExternalClinicalHistoriesFiltersComponent implements OnInit {
 
-	public form: FormGroup;
+	public form: UntypedFormGroup;
 	public specialties: string[] = [];
 	public professionals: string[] = [];
 	public institutions: string[] = [];
 	private filters: ExternalClinicalHistoryFilter = {};
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly externalClinicalHistoryFacadeService: ExternalClinicalHistoryFacadeService
 	) { }
 

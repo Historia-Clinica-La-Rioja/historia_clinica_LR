@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApiErrorMessageDto, AppFeature, LicenseDataDto, ProfessionalLicenseNumberDto, ValidatedLicenseDataDto, ValidatedLicenseNumberDto } from '@api-rest/api-model.d';
 import { ProfessionalLicenseService } from '@api-rest/services/professional-license.service';
@@ -16,7 +16,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 })
 export class EditLicenseComponent implements OnInit {
 
-	form: FormGroup;
+	form: UntypedFormGroup;
 	professionSpecialtiesSinMatriculas: ProfessionalSpecialties[] = [];
 	professionsWithLicense: ProfessionalLicenseNumberDto[] = [];
 	isHabilitarValidacionMatriculasSisaEnabled: boolean = false;
@@ -24,7 +24,7 @@ export class EditLicenseComponent implements OnInit {
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { personId: number, professionSpecialties: ProfessionalSpecialties[], healthcareProfessionalId: number },
 		public dialog: MatDialogRef<EditLicenseComponent>,
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private readonly professionalLicenseService: ProfessionalLicenseService,
 		private readonly licenseNumberService: MatriculaService,
 		private readonly featureFlagService: FeatureFlagService,
@@ -38,7 +38,7 @@ export class EditLicenseComponent implements OnInit {
 			.subscribe((result: boolean) => this.isHabilitarValidacionMatriculasSisaEnabled = result);
 
 		this.form = this.formBuilder.group({
-			professionalSpecialties: new FormArray([]),
+			professionalSpecialties: new UntypedFormArray([]),
 		});
 
 		if (this.data.healthcareProfessionalId) {
@@ -73,23 +73,23 @@ export class EditLicenseComponent implements OnInit {
 		}
 	}
 
-	private add(): FormGroup {
-		return new FormGroup({
-			combo: new FormControl(this.professionsWithLicense.length ? this.getComboProfessionLicense(this.professionsWithLicense.shift()) : null, [Validators.required]),
+	private add(): UntypedFormGroup {
+		return new UntypedFormGroup({
+			combo: new UntypedFormControl(this.professionsWithLicense.length ? this.getComboProfessionLicense(this.professionsWithLicense.shift()) : null, [Validators.required]),
 		});
 	}
 
 	addCombo(): void {
-		const array = this.form.get('professionalSpecialties') as FormArray;
+		const array = this.form.get('professionalSpecialties') as UntypedFormArray;
 		array.push(this.add());
 	}
 
-	getCtrl(key: string, form: FormGroup): any {
+	getCtrl(key: string, form: UntypedFormGroup): any {
 		return form.get(key);
 	}
 
 	isDisableConfirmButton(): boolean {
-		const array = this.form.get('professionalSpecialties') as FormArray;
+		const array = this.form.get('professionalSpecialties') as UntypedFormArray;
 		return array.at(array.length - 1)?.value.combo === null;
 	}
 
@@ -129,7 +129,7 @@ export class EditLicenseComponent implements OnInit {
 	}
 
 	private buildCreateProfessionalLicenseNumberDto(): ProfessionalLicenseNumberDto[] {
-		const array = this.form.get('professionalSpecialties') as FormArray;
+		const array = this.form.get('professionalSpecialties') as UntypedFormArray;
 		const refArray = array.value;
 		return refArray.map((e => this.convertToProfessionalLicenseNumberDto(e.combo)))
 	}

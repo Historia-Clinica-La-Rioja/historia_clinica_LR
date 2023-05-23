@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ClinicalSpecialtyDto, HealthcareProfessionalCompleteDto, HealthcareProfessionalSpecialtyDto, ProfessionalProfessionsDto, ProfessionalSpecialtyDto } from '@api-rest/api-model';
 import { hasError } from '@core/utils/form.utils';
@@ -10,7 +10,7 @@ import { hasError } from '@core/utils/form.utils';
 	styleUrls: ['./edit-prefessions-specialties.component.scss']
 })
 export class EditPrefessionsSpecialtiesComponent implements OnInit {
-	form: FormGroup;
+	form: UntypedFormGroup;
 	hasError = hasError;
 	confirmationValidation: boolean = false;
 	ownProfessionsAndSpecialties: ProfessionalProfessionsDto[] = null;
@@ -19,7 +19,7 @@ export class EditPrefessionsSpecialtiesComponent implements OnInit {
 
 		public dialog: MatDialogRef<EditPrefessionsSpecialtiesComponent>,
 		private changeDetectorRef: ChangeDetectorRef,
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 
 	) { }
 
@@ -27,7 +27,7 @@ export class EditPrefessionsSpecialtiesComponent implements OnInit {
 		this.ownProfessionsAndSpecialties = this.data.ownProfessionsAndSpecialties.map(e => e);
 
 		this.form = this.formBuilder.group({
-			professionalProfessions: new FormArray([])
+			professionalProfessions: new UntypedFormArray([])
 		});
 
 		this.setCombos(this.data.ownProfessionsAndSpecialties?.length);
@@ -46,23 +46,23 @@ export class EditPrefessionsSpecialtiesComponent implements OnInit {
 		}
 	}
 
-	add(): FormGroup {
-		return new FormGroup({
-			combo: new FormControl(null, [Validators.required]),
+	add(): UntypedFormGroup {
+		return new UntypedFormGroup({
+			combo: new UntypedFormControl(null, [Validators.required]),
 		});
 	}
 
 	addCombo(): void {
-		const array = this.form.get('professionalProfessions') as FormArray;
+		const array = this.form.get('professionalProfessions') as UntypedFormArray;
 		array.push(this.add());
 	}
 
-	getCtrl(key: string, form: FormGroup): any {
+	getCtrl(key: string, form: UntypedFormGroup): any {
 		return form.get(key);
 	}
 
 	isDisableConfirmButton(): boolean {
-		const array = this.form.get('professionalProfessions') as FormArray;
+		const array = this.form.get('professionalProfessions') as UntypedFormArray;
 		return array.at(array.length - 1)?.value.combo === null;
 	}
 
@@ -90,12 +90,12 @@ export class EditPrefessionsSpecialtiesComponent implements OnInit {
 	}
 
 	deleteCombo(pointIndex: number): void {
-		const array = this.form.get('professionalProfessions') as FormArray;
+		const array = this.form.get('professionalProfessions') as UntypedFormArray;
 		array.removeAt(pointIndex);
 	}
 
 	private buildCreateProfessionalDto(): HealthcareProfessionalCompleteDto {
-		const array = this.form.get('professionalProfessions') as FormArray;
+		const array = this.form.get('professionalProfessions') as UntypedFormArray;
 		const refArray = array.value;
 		return {
 			id: null,

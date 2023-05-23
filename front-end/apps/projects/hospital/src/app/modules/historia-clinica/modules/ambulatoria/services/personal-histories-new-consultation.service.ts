@@ -1,6 +1,6 @@
 import { SnomedDto, SnomedECL } from "@api-rest/api-model";
 import { Moment } from "moment";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { SnomedSemanticSearch, SnomedService } from "@historia-clinica/services/snomed.service";
 import { DateFormat, momentFormat, newMoment } from "@core/utils/moment.utils";
 import { pushIfNotExists, removeFrom } from "@core/utils/array.utils";
@@ -15,7 +15,7 @@ export interface AntecedentePersonal {
 
 export class PersonalHistoriesNewConsultationService {
 
-	private form: FormGroup;
+	private form: UntypedFormGroup;
 	private data: AntecedentePersonal[];
 	private snomedConcept: SnomedDto;
 
@@ -23,7 +23,7 @@ export class PersonalHistoriesNewConsultationService {
 	private readonly tableColumnConfig: TableColumnConfig[];
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService
 
@@ -107,7 +107,7 @@ export class PersonalHistoriesNewConsultationService {
 		return false;
 	}
 
-	getForm(): FormGroup {
+	getForm(): UntypedFormGroup {
 		return this.form;
 	}
 

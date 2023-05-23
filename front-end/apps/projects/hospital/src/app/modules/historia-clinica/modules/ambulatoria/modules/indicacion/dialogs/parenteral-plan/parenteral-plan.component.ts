@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder, FormGroup, Validators, AbstractControl, FormArray } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators, AbstractControl, UntypedFormArray } from "@angular/forms";
 import {
 	DateTimeDto,
 	MasterDataInterface,
@@ -33,7 +33,7 @@ import { isNumberOrDot } from '@core/utils/pattern.utils';
 })
 export class ParenteralPlanComponent implements OnInit {
 
-	parenteralPlanForm: FormGroup;
+	parenteralPlanForm: UntypedFormGroup;
 	searchSnomedConcept: SearchSnomedConceptsParenteralPlanService;
 	indicationDate: Date;
 	vias: MasterDataInterface<number>[] = [];
@@ -46,7 +46,7 @@ export class ParenteralPlanComponent implements OnInit {
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { entryDate: Date, actualDate: Date, patientId: number, professionalId: number, parenteralPlan?: ParenteralPlanDto },
 		private readonly dialogRef: MatDialogRef<ParenteralPlanComponent>,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snowstormService: SnowstormService,
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService,
@@ -121,16 +121,16 @@ export class ParenteralPlanComponent implements OnInit {
 		this.dialogRef.close({ openDialogPharmacosFrequent });
 	}
 
-	private getFrequencyForm(): FormGroup {
-		return <FormGroup>this.parenteralPlanForm.controls.frequency
+	private getFrequencyForm(): UntypedFormGroup {
+		return <UntypedFormGroup>this.parenteralPlanForm.controls.frequency
 	}
 
-	private getDurationForm(): FormGroup {
-		return <FormGroup>this.getFrequencyForm().controls.duration
+	private getDurationForm(): UntypedFormGroup {
+		return <UntypedFormGroup>this.getFrequencyForm().controls.duration
 	}
 
-	private getFlowForm(): FormGroup {
-		return <FormGroup>this.getFrequencyForm().controls.flow
+	private getFlowForm(): UntypedFormGroup {
+		return <UntypedFormGroup>this.getFrequencyForm().controls.flow
 	}
 
 	toParenteralPlanDto(): ParenteralPlanDto {
@@ -202,10 +202,10 @@ export class ParenteralPlanComponent implements OnInit {
 	}
 
 	loadPharmacos(): OtherPharmacoDto[] {
-		const pharmacos: FormArray = this.searchSnomedConcept.pharmacos;
+		const pharmacos: UntypedFormArray = this.searchSnomedConcept.pharmacos;
 		const otherPharmaco: OtherPharmacoDto[] = [];
 		for (let i = 0; i < pharmacos.length; i++) {
-			const snomedForm: FormGroup = this.searchSnomedConcept.getSnomed(i);
+			const snomedForm: UntypedFormGroup = this.searchSnomedConcept.getSnomed(i);
 			const snomed = { pt: snomedForm.value.pt, sctid: snomedForm.value.sctid };
 			otherPharmaco.push({
 				dosage: this.toNewDosageDto(pharmacos.at(i).value.dose),

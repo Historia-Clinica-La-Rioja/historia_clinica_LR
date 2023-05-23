@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormGroupDirective, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, FormGroupDirective, Validators } from "@angular/forms";
 import { ARTCoverageDto, CoverageDto } from "@api-rest/api-model";
 import { ArtCoverageService } from "@api-rest/services/art-coverage.service";
 import {
@@ -17,13 +17,13 @@ import { MatDialogRef } from "@angular/material/dialog";
 })
 export class ArtComponent implements OnInit {
 
-	artCoverageForm: FormGroup;
+	artCoverageForm: UntypedFormGroup;
 	artCoverageFilteredMasterData: ARTCoverageDto[];
 
 	private artCoverageMasterData: ARTCoverageDto[];
 	private artCoverageToAdd: MedicalCoverage;
 
-	constructor(private formBuilder: FormBuilder,
+	constructor(private formBuilder: UntypedFormBuilder,
 				public dialogRef: MatDialogRef<ArtComponent>,
 				public readonly artCoverageService: ArtCoverageService,) {
 	}

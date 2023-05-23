@@ -1,5 +1,5 @@
 import { SnomedDto, SnomedECL } from '@api-rest/api-model';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
@@ -15,7 +15,7 @@ export interface MotivoConsulta {
 export class MotivoNuevaConsultaService {
 
 	private motivoConsulta: MotivoConsulta[] = [];
-	private form: FormGroup;
+	private form: UntypedFormGroup;
 	private readonly columns: ColumnConfig[];
 	private readonly tableColumnConfig: TableColumnConfig[];
 	private snomedConcept: SnomedDto;
@@ -26,7 +26,7 @@ export class MotivoNuevaConsultaService {
 
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService
 
@@ -83,7 +83,7 @@ export class MotivoNuevaConsultaService {
 		}
 	}
 
-	getForm(): FormGroup {
+	getForm(): UntypedFormGroup {
 		return this.form;
 	}
 

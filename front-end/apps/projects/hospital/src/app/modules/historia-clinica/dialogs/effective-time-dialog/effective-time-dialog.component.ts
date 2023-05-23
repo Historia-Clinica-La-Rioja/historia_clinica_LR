@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, Validators, UntypedFormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Moment } from 'moment';
 import { newMoment, momentFormat, DateFormat } from '@core/utils/moment.utils';
@@ -13,7 +13,7 @@ import { MIN_DATE } from "@core/utils/date.utils";
 })
 export class EffectiveTimeDialogComponent implements OnInit {
 
-	timeForm: FormGroup;
+	timeForm: UntypedFormGroup;
 	today: Moment = newMoment();
 	minDate = MIN_DATE;
 
@@ -22,7 +22,7 @@ export class EffectiveTimeDialogComponent implements OnInit {
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { datetime: Moment },
 		public dialogRef: MatDialogRef<EffectiveTimeDialogComponent>,
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 	) { }
 
 	ngOnInit(): void {

@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { DoctorsOfficeDto } from '@api-rest/api-model';
 import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service';
 import { SECTOR_AMBULATORIO } from '../../constants/masterdata';
@@ -14,11 +14,11 @@ import { SECTOR_AMBULATORIO } from '../../constants/masterdata';
 export class SelectConsultorioComponent implements OnInit {
 
 	consultorios$: Observable<DoctorsOfficeDto[]>;
-	form: FormGroup;
+	form: UntypedFormGroup;
 
 	constructor(
 		private readonly dialogRef: MatDialogRef<SelectConsultorioComponent>,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly doctorsOfficeService: DoctorsOfficeService,
 		@Inject(MAT_DIALOG_DATA) public data: { title: string},
 	) {

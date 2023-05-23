@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { BasicPatientDto, GenderDto, IdentificationTypeDto, PersonPhotoDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -20,8 +20,8 @@ import { forkJoin, Observable } from 'rxjs';
 export class SearchPatientComponent implements OnInit {
 
 
-	formSearch: FormGroup;
-	formSearchById: FormGroup;
+	formSearch: UntypedFormGroup;
+	formSearchById: UntypedFormGroup;
 	identificationTypes$: Observable<IdentificationTypeDto[]>;
 	genders$: Observable<GenderDto[]>;
 	cardPatient: {
@@ -36,7 +36,7 @@ export class SearchPatientComponent implements OnInit {
 	constructor(
 		private dialogRef: MatDialogRef<SearchPatientComponent>,
 		private readonly personMasterDataService: PersonMasterDataService,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly patientService: PatientService,
 		private readonly snackBarService: SnackBarService,
 		private readonly mapperService: MapperService

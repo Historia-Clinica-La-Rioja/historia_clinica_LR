@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -47,7 +47,7 @@ export class WorklistByTechnicalComponent implements OnInit {
     readonly mssg = 'image-network.home.NO_PERMISSION';
 
     appointmentsStates = WORKLIST_APPOINTMENT_STATES;
-    states = new FormControl('');
+    states = new UntypedFormControl('');
     selectedStates: string = '';
     allSelected = false;
 

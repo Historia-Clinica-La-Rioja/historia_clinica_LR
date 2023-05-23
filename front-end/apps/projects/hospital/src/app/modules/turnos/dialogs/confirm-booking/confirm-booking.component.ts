@@ -1,13 +1,13 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { VALIDATIONS, processErrors, hasError } from '@core/utils/form.utils';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
-import { MatStepper, MatHorizontalStepper } from '@angular/material/stepper';
+import { MatStepper } from '@angular/material/stepper';
 import {
 	UpdateAppointmentDto,
 	MedicalCoverageDto,
@@ -38,8 +38,8 @@ export class ConfirmBookingComponent implements OnInit {
 
 	@ViewChild('stepper', { static: false }) stepper: MatStepper;
 
-	public formSearch: FormGroup;
-	public appointmentInfoForm: FormGroup;
+	public formSearch: UntypedFormGroup;
+	public appointmentInfoForm: UntypedFormGroup;
 	public identifyTypeArray: IdentificationTypeDto[];
 	public genderOptions: GenderDto[];
 	public healtInsuranceOptions: MedicalCoverageDto[] = [];
@@ -60,7 +60,7 @@ export class ConfirmBookingComponent implements OnInit {
 			identificationTypeId: number, idNumber: string, appointmentId: number, phoneNumber: string
 		},
 		public dialogRef: MatDialogRef<ConfirmBookingComponent>,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly personMasterDataService: PersonMasterDataService,
 		private readonly patientService: PatientService,
 		private readonly snackBarService: SnackBarService,
@@ -206,7 +206,7 @@ export class ConfirmBookingComponent implements OnInit {
 		return this.formSearch.controls.completed.value && this.appointmentInfoForm.valid;
 	}
 
-	disablePreviuosStep(stepperParam: MatHorizontalStepper) {
+	disablePreviuosStep(stepperParam: MatStepper) {
 		if (stepperParam.selectedIndex === 0) {
 			this.editable = false;
 		}

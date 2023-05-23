@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { DOCUMENTS, } from '../../../../constants/summaries';
-import { FormGroup, } from '@angular/forms';
-import { TriageListDto, EmergencyCareHistoricDocumentDto, TriageDocumentDto, EmergencyCareEvolutionNoteDocumentDto, } from '@api-rest/api-model';
+import { UntypedFormGroup, } from '@angular/forms';
+import { EmergencyCareHistoricDocumentDto, TriageDocumentDto, EmergencyCareEvolutionNoteDocumentDto, } from '@api-rest/api-model';
 import { hasError } from '@core/utils/form.utils';
 import { DocumentActionsService, DocumentSearch } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service";
 import { PatientNameService } from "@core/services/patient-name.service";
@@ -35,7 +35,7 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 
 	public documentsToShow: DocumentSearch[] = [];
 	public readonly documentsSummary = DOCUMENTS;
-	public form: FormGroup;
+	public form: UntypedFormGroup;
 	public activeDocument: Item;
 
 	public searchTriggered = false;

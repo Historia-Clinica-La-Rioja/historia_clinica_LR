@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 @Component({
 	selector: 'app-editable-field',
@@ -9,14 +9,14 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 export class EditableFieldComponent implements OnInit {
 
 	editMode = false;
-	form: FormGroup;
+	form: UntypedFormGroup;
 
 	@Output() newValueEmitted: EventEmitter<string> = new EventEmitter<string>();
 	@Input() fieldName: string;
 	@Input() value: string;
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 	) { }
 
 	ngOnInit(): void {

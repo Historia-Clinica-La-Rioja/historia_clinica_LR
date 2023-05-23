@@ -1,4 +1,4 @@
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { EffectiveClinicalObservationDto, HCELast2RiskFactorsDto } from '@api-rest/api-model';
@@ -42,13 +42,13 @@ export class FactoresDeRiesgoFormService {
 	private _glycosylatedHemoglobinError$ = this.glycosylatedHemoglobinErrorSource.asObservable();
 	private cardiovascularRiskErrorSource = new Subject<string | void>();
 	private _cardiovascularRiskError$ = this.cardiovascularRiskErrorSource.asObservable();
-	form: FormGroup;
+	form: UntypedFormGroup;
 	private notShowPreloadedRiskFactorsData = false;
 	private dateList: string[] = [];
 	private riskFactorsSubject = new BehaviorSubject<boolean>(true);
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly translateService: TranslateService,
 		private readonly hceGeneralStateService?: HceGeneralStateService,
 		private readonly patientId?: number,
@@ -285,10 +285,10 @@ export class FactoresDeRiesgoFormService {
 
 	setRiskFactorEffectiveTime(newEffectiveTime: Moment, formField: string): void {
 		this.riskFactorsSubject.next(true);
-		(this.form.controls[formField] as FormGroup).controls.effectiveTime.setValue(newEffectiveTime);
+		(this.form.controls[formField] as UntypedFormGroup).controls.effectiveTime.setValue(newEffectiveTime);
 	}
 
-	getForm(): FormGroup {
+	getForm(): UntypedFormGroup {
 		return this.form;
 	}
 
@@ -393,7 +393,7 @@ export class FactoresDeRiesgoFormService {
 
 	hasAtLeastOneValueLoaded(): boolean {
 		return !Object.values(this.form.value).every(
-			(riskFactor: FormGroup) => (riskFactor.value === null || riskFactor.value === '')
+			(riskFactor: UntypedFormGroup) => (riskFactor.value === null || riskFactor.value === '')
 		);
 	}
 
@@ -407,7 +407,7 @@ export class FactoresDeRiesgoFormService {
 			: undefined;
 	}
 
-	buildRiskFactorsValue(form: FormGroup): RiskFactorsValue {
+	buildRiskFactorsValue(form: UntypedFormGroup): RiskFactorsValue {
 		return isNull(form.value) ? undefined : {
 			bloodOxygenSaturation: this.getEffectiveObservation(form.value.bloodOxygenSaturation),
 			diastolicBloodPressure: this.getEffectiveObservation(form.value.diastolicBloodPressure),

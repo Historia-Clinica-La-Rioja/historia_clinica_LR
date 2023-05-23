@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SnvsEventManualClassificationsDto } from '@api-rest/api-model';
 
@@ -10,26 +10,26 @@ import { SnvsEventManualClassificationsDto } from '@api-rest/api-model';
 })
 export class EpidemiologicalReportComponent implements OnInit {
 
-	public form: FormGroup;
-	private formArray: FormArray;
+	public form: UntypedFormGroup;
+	private formArray: UntypedFormArray;
 	public tryToSubmit = false;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { problemName: string, snvsEventManualClassificationsList: SnvsEventManualClassificationsDto[] },
 		private dialogRef: MatDialogRef<EpidemiologicalReportComponent>,
-		private readonly formBuilder: FormBuilder
+		private readonly formBuilder: UntypedFormBuilder
 	) { }
 
 	ngOnInit(): void {
 		this.formArray = this.formBuilder.array([], this.requiredAtLeastOneSelected());
-		this.data.snvsEventManualClassificationsList.forEach(_ => this.formArray.push(new FormControl(null)));
+		this.data.snvsEventManualClassificationsList.forEach(_ => this.formArray.push(new UntypedFormControl(null)));
 		this.form = this.formBuilder.group({
 			classifications: this.formArray
 		});
 	}
 
 	private requiredAtLeastOneSelected(): ValidatorFn {
-		const validator: ValidatorFn = (formArray: FormArray) => {
+		const validator: ValidatorFn = (formArray: UntypedFormArray) => {
 			let result = { notSelected: true };
 			for (let i = 0; (i < formArray.length) && (result !== null); i++)
 				if (formArray.at(i).value !== null)
@@ -43,7 +43,7 @@ export class EpidemiologicalReportComponent implements OnInit {
 		if (this.form.valid) {
 			this.tryToSubmit = false;
 			let reports = [];
-			let controlsArray = this.form.get('classifications') as FormArray;
+			let controlsArray = this.form.get('classifications') as UntypedFormArray;
 			for (let i = 0; i < controlsArray.length; i++) {
 				if (controlsArray.at(i).value !== null) {
 					const report: EpidemiologicalReport = {
@@ -77,12 +77,12 @@ export class EpidemiologicalReportComponent implements OnInit {
 	}
 
 	clear(index: number): void {
-		let controlsArray = this.form.get('classifications') as FormArray;
+		let controlsArray = this.form.get('classifications') as UntypedFormArray;
 		controlsArray.at(index).setValue(null);
 	}
 
 	hadValue(index: number): boolean {
-		let controlsArray = this.form.get('classifications') as FormArray;
+		let controlsArray = this.form.get('classifications') as UntypedFormArray;
 		return controlsArray.at(index).value;
 	}
 

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MasterDataDto, NewEffectiveClinicalObservationDto, TriagePediatricDto } from '@api-rest/api-model';
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { getError, hasError } from '@core/utils/form.utils';
@@ -25,7 +25,7 @@ export class PediatricTriageComponent implements OnInit {
 	@Output() cancel = new EventEmitter();
 	private triageCategoryId: number;
 	private doctorsOfficeId: number;
-	pediatricForm: FormGroup;
+	pediatricForm: UntypedFormGroup;
 	bodyTemperatures$: Observable<MasterDataDto[]>;
 	muscleHypertonyaOptions$: Observable<MasterDataDto[]>;
 	perfusionOptions$: Observable<MasterDataDto[]>;
@@ -44,7 +44,7 @@ export class PediatricTriageComponent implements OnInit {
 	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
 
 	constructor(
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private readonly triageMasterDataService: TriageMasterDataService,
 		private readonly translateService: TranslateService,
 	) {
@@ -102,7 +102,7 @@ export class PediatricTriageComponent implements OnInit {
 	}
 
 	setRiskFactorEffectiveTime(newEffectiveTime: Moment, form: AbstractControl, field: string): void {
-		(form.get(field) as FormGroup).controls.effectiveTime.setValue(newEffectiveTime);
+		(form.get(field) as UntypedFormGroup).controls.effectiveTime.setValue(newEffectiveTime);
 	}
 
 	back(): void {

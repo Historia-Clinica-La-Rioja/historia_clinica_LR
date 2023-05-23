@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { ContextService } from '@core/services/context.service';
-import { DateDto, DateTimeDto, InternmentEpisodeBMDto, PatientDischargeDto, ProbableDischargeDateDto } from '@api-rest/api-model';
+import { DateTimeDto, InternmentEpisodeBMDto, PatientDischargeDto, ProbableDischargeDateDto } from '@api-rest/api-model';
 
 const BASIC_URL_PREFIX = '/institutions';
 const BASIC_URL_SUFIX = '/internments';

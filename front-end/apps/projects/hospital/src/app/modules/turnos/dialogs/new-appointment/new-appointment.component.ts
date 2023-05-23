@@ -1,13 +1,13 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { VALIDATIONS, processErrors, hasError, updateControlValidator } from '@core/utils/form.utils';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
-import { MatStepper, MatHorizontalStepper } from '@angular/material/stepper';
+import { MatStepper } from '@angular/material/stepper';
 import {
 	CreateAppointmentDto,
 	MedicalCoverageDto,
@@ -18,7 +18,6 @@ import {
 	PatientMedicalCoverageDto,
 	DiaryAvailableProtectedAppointmentsDto,
 	ReferenceSummaryDto,
-	AppointmentShortSummaryDto,
 	DiagnosticReportInfoDto,
 } from '@api-rest/api-model';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
@@ -58,9 +57,9 @@ export class NewAppointmentComponent implements OnInit {
 	@ViewChild('stepper', { static: false }) stepper: MatStepper;
 	initialIndex = 0;
 	preselectedPatient = false;
-	public formSearch: FormGroup;
-	public appointmentInfoForm: FormGroup;
-	public associateReferenceForm: FormGroup;
+	public formSearch: UntypedFormGroup;
+	public appointmentInfoForm: UntypedFormGroup;
+	public associateReferenceForm: UntypedFormGroup;
 	referenceList: ReferenceSummaryDto[] = [];
 	public identifyTypeArray: IdentificationTypeDto[];
 	public genderOptions: GenderDto[];
@@ -87,7 +86,7 @@ export class NewAppointmentComponent implements OnInit {
 			protectedAppointment?: DiaryAvailableProtectedAppointmentsDto, careLineId?: number, isEquipmentAppointment?: boolean,
 		},
 		public dialogRef: MatDialogRef<NewAppointmentComponent>,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly personMasterDataService: PersonMasterDataService,
 		private readonly patientService: PatientService,
 		private readonly snackBarService: SnackBarService,
@@ -381,7 +380,7 @@ export class NewAppointmentComponent implements OnInit {
 		);
 	}
 
-	disablePreviuosStep(stepperParam: MatHorizontalStepper) {
+	disablePreviuosStep(stepperParam: MatStepper) {
 		if (stepperParam.selectedIndex === 0) {
 			this.editable = false;
 		}

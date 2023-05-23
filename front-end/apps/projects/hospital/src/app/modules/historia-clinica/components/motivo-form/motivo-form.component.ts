@@ -1,10 +1,10 @@
 import { Component, forwardRef } from '@angular/core';
-import { FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormBuilder, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { NewConsultationAddReasonFormComponent } from '@historia-clinica/dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
-import { MotivoNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
+import { MotivoConsulta, MotivoNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Subscription } from 'rxjs';
@@ -25,7 +25,7 @@ export class MotivoFormComponent {
 
 
 	formMotivo = this.formBuilder.group({
-		motivo: [[]],
+		motivo: new FormControl<MotivoConsulta[] | null>([]),
 	});
 	onChangeSub: Subscription;
 

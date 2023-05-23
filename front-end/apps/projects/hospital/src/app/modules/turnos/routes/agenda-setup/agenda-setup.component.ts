@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
@@ -56,7 +56,7 @@ export class AgendaSetupComponent implements OnInit {
 	doctorOffices: DoctorsOfficeDto[];
 	editMode = false;
 	errors: string[] = [];
-	form: FormGroup;
+	form: UntypedFormGroup;
 	holidayWork = false;
 	hourSegments: number;
 	minDate = new Date();
@@ -104,19 +104,19 @@ export class AgendaSetupComponent implements OnInit {
 			this.mappedCurrentWeek[day.day()] = day;
 		});
 
-		this.form = new FormGroup({
-			sectorId: new FormControl(null, [Validators.required]),
-			doctorOffice: new FormControl(null, [Validators.required]),
-			healthcareProfessionalId: new FormControl(null, [Validators.required]),
-			startDate: new FormControl(null, [Validators.required]),
-			endDate: new FormControl(null, [Validators.required]),
-			appointmentDuration: new FormControl(null, [Validators.required]),
-			healthcareProfessionalSpecialtyId: new FormControl(null, [Validators.required]),
-			conjointDiary: new FormControl(false, [Validators.nullValidator]),
-			alias: new FormControl(null, [Validators.nullValidator]),
-			otherProfessionals: new FormArray([], [this.otherPossibleProfessionals()]),
-			protectedAppointmentsPercentage: new FormControl({ value: 0, disabled: true }, [Validators.pattern(PATTERN), Validators.max(MAX_INPUT)]),
-			careLines: new FormControl([null])
+		this.form = new UntypedFormGroup({
+			sectorId: new UntypedFormControl(null, [Validators.required]),
+			doctorOffice: new UntypedFormControl(null, [Validators.required]),
+			healthcareProfessionalId: new UntypedFormControl(null, [Validators.required]),
+			startDate: new UntypedFormControl(null, [Validators.required]),
+			endDate: new UntypedFormControl(null, [Validators.required]),
+			appointmentDuration: new UntypedFormControl(null, [Validators.required]),
+			healthcareProfessionalSpecialtyId: new UntypedFormControl(null, [Validators.required]),
+			conjointDiary: new UntypedFormControl(false, [Validators.nullValidator]),
+			alias: new UntypedFormControl(null, [Validators.nullValidator]),
+			otherProfessionals: new UntypedFormArray([], [this.otherPossibleProfessionals()]),
+			protectedAppointmentsPercentage: new UntypedFormControl({ value: 0, disabled: true }, [Validators.pattern(PATTERN), Validators.max(MAX_INPUT)]),
+			careLines: new UntypedFormControl([null])
 		});
 
 		this.form.controls.appointmentDuration.valueChanges
@@ -148,8 +148,8 @@ export class AgendaSetupComponent implements OnInit {
 
 	}
 
-	get careLinesAssociated(): FormControl {
-		return this.form.get('careLines') as FormControl;
+	get careLinesAssociated(): UntypedFormControl {
+		return this.form.get('careLines') as UntypedFormControl;
 	}
 
 	private setValuesFromExistingAgenda(diary: CompleteDiaryDto): void {
@@ -193,7 +193,7 @@ export class AgendaSetupComponent implements OnInit {
 		this.agendaHorarioService.setDiaryOpeningHours(diary.diaryOpeningHours);
 
 		if (diary.associatedProfessionalsInfo.length > 0) {
-			const professionalsReference = this.form.controls.otherProfessionals as FormArray;
+			const professionalsReference = this.form.controls.otherProfessionals as UntypedFormArray;
 			this.form.controls.conjointDiary.setValue(true);
 			diary.associatedProfessionalsInfo.forEach(diaryAssociatedProfessional => {
 				professionalsReference.push(this.initializeAnotherProfessional());
@@ -377,18 +377,18 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	addAssociatedProfessional() {
-		const currentOtherProfessionals = this.form.controls.otherProfessionals as FormArray;
+		const currentOtherProfessionals = this.form.controls.otherProfessionals as UntypedFormArray;
 		currentOtherProfessionals.push(this.initializeAnotherProfessional());
 	}
 
-	private initializeAnotherProfessional(): FormGroup {
-		return new FormGroup({
-			healthcareProfessionalId: new FormControl(null, [Validators.required]),
+	private initializeAnotherProfessional(): UntypedFormGroup {
+		return new UntypedFormGroup({
+			healthcareProfessionalId: new UntypedFormControl(null, [Validators.required]),
 		});
 	}
 
 	clear(i: number): void {
-		const professionalsReference = this.form.controls.otherProfessionals as FormArray;
+		const professionalsReference = this.form.controls.otherProfessionals as UntypedFormArray;
 		if (professionalsReference.length === 1) {
 			professionalsReference.controls[0].setValue({ healthcareProfessionalId: null });
 		}
@@ -398,7 +398,7 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	updateAssociatedProfessionalsForm() {
-		let professionalsReference = this.form.controls.otherProfessionals as FormArray;
+		let professionalsReference = this.form.controls.otherProfessionals as UntypedFormArray;
 		if (this.form.value.conjointDiary === true) {
 			professionalsReference.push(this.initializeAnotherProfessional());
 		}
@@ -409,18 +409,18 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	private otherPossibleProfessionals(): ValidatorFn {
-		return (control: FormArray): ValidationErrors | null => {
+		return (control: UntypedFormArray): ValidationErrors | null => {
 			return control.valid ? null : { validProfessionals: { valid: false } };
 		};
 	}
 
 	validExtraProfessionalsList(): boolean {
-		const professionalsReference = this.form.controls.otherProfessionals as FormArray;
+		const professionalsReference = this.form.controls.otherProfessionals as UntypedFormArray;
 		return professionalsReference.valid;
 	}
 
 	isProfessionalNonSelectable(professionalId: number): boolean {
-		const professionalsReference = this.form.controls.otherProfessionals as FormArray;
+		const professionalsReference = this.form.controls.otherProfessionals as UntypedFormArray;
 		return professionalsReference.value.map(professional => professional.healthcareProfessionalId).includes(professionalId);
 	}
 

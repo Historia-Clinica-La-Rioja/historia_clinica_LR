@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import { ApiErrorMessageDto, PersonDataDto } from '@api-rest/api-model';
 import { PublicUserService } from '@api-rest/services/public-user.service';
 import { AccessDataService } from '@api-rest/services/access-data.service';
@@ -16,7 +16,7 @@ import {Observable} from "rxjs";
 })
 export class AccessDataResetComponent implements OnInit {
 	public token: string;
-	public form: FormGroup;
+	public form: UntypedFormGroup;
 	public userPerson: PersonDataDto;
 	public apiResponse: any = null;
 	public location: string = window.location.href;
@@ -24,7 +24,7 @@ export class AccessDataResetComponent implements OnInit {
 	public hidePassword = true;
 
 	constructor(private route: ActivatedRoute,
-				private formBuilder: FormBuilder,
+				private formBuilder: UntypedFormBuilder,
 				private publicUserService: PublicUserService,
 				private accessDataService: AccessDataService,
 				private readonly passwordTokenExpirationService :PasswordTokenExpirationService,
@@ -39,7 +39,7 @@ export class AccessDataResetComponent implements OnInit {
 				(userPerson => {
 					this.userPerson = userPerson;
 					if (userPerson.username)
-						this.form.setControl('username', new FormControl((userPerson.username), Validators.required));
+						this.form.setControl('username', new UntypedFormControl((userPerson.username), Validators.required));
 				}, error => {
 					this.apiResponse = {
 						error

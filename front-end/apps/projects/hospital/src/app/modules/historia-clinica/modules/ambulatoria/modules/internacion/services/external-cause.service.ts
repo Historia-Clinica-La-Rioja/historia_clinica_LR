@@ -1,4 +1,4 @@
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { SnomedECL } from '@api-rest/api-model';
@@ -21,8 +21,8 @@ export class ExternalCauseService {
 
 	private tableSubject = new BehaviorSubject<BasicTable<SnomedDto>>(null);
 
-	formEvent = new FormGroup({
-		snomedEvent: new FormControl('', Validators.required)
+	formEvent = new UntypedFormGroup({
+		snomedEvent: new UntypedFormControl('', Validators.required)
 	});
 
 	table: BasicTable<SnomedDto> = {

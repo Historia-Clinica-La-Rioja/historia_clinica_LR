@@ -2,7 +2,7 @@ import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core'
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnomedService } from '../../../../services/snomed.service';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta.service';
 import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';
 import { Problema } from '../../../../services/problemas.service';
@@ -57,7 +57,7 @@ const TIME_OUT = 5000;
 })
 export class NuevaConsultaDockPopupComponent implements OnInit {
 	disableConfirmButton = false;
-	formEvolucion: FormGroup;
+	formEvolucion: UntypedFormGroup;
 	motivoNuevaConsultaService: MotivoNuevaConsultaService;
 	medicacionesNuevaConsultaService: MedicacionesNuevaConsultaService;
 	ambulatoryConsultationProblemsService: AmbulatoryConsultationProblemsService;
@@ -94,7 +94,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	constructor(
 		@Inject(OVERLAY_DATA) public data: NuevaConsultaData,
 		public dockPopupRef: DockPopupRef,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,

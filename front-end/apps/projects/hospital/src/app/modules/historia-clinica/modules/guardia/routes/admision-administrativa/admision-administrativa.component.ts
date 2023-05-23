@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import {
 	BasicPatientDto, DoctorsOfficeDto,
@@ -55,7 +55,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	patientMedicalCoverages: PatientMedicalCoverageDto[];
 	emergencyCareEntranceType$: Observable<MasterDataInterface<number>[]>;
 	emergencyCareType$: Observable<MasterDataInterface<number>[]>;
-	form: FormGroup;
+	form: UntypedFormGroup;
 	today: Date = new Date();
 
 	motivoNuevaConsultaService: MotivoNuevaConsultaService;
@@ -71,7 +71,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly emergencyCareMasterData: EmergencyCareMasterDataService,
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private readonly mapperService: MapperService,
 		private readonly patientMapperService: PatientMapperService,
 		private readonly snackBarService: SnackBarService,

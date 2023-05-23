@@ -36,7 +36,7 @@ import { ReportsComponent } from "@pacientes/dialogs/reports/reports.component";
 import { patientCompleteName } from '@core/utils/patient.utils';
 import { UserService } from "@api-rest/services/user.service";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { processErrors } from "@core/utils/form.utils";
 import { PermissionsService } from "@core/services/permissions.service";
 import { UserPasswordResetService } from "@api-rest/services/user-password-reset.service";
@@ -125,7 +125,7 @@ export class ProfileComponent implements OnInit {
 	public personId: number;
 	private professionalId: number;
 	private professionalSpecialtyId: number[] = [];
-	public form: FormGroup;
+	public form: UntypedFormGroup;
 
 	public downloadReportIsEnabled: boolean;
 	public createUsersIsEnable: boolean;
@@ -158,7 +158,7 @@ export class ProfileComponent implements OnInit {
 		private readonly professionalService: ProfessionalService,
 		private readonly professionalLicenseService: ProfessionalLicenseService,
 		private readonly specialtyService: SpecialtyService,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly rolesService: RolesService,
 		private readonly institutionService: InstitutionService,
 		private readonly permissionService: PermissionsService,

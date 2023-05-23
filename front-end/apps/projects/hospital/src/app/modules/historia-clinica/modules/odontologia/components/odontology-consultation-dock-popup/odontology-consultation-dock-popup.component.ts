@@ -3,7 +3,7 @@ import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { MotivoNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { AlergiasNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/alergias-nueva-consulta.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { MedicacionesNuevaConsultaService } from "@historia-clinica/modules/ambulatoria/services/medicaciones-nueva-consulta.service";
@@ -60,7 +60,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	criticalityTypes: any[];
 	personalHistoriesNewConsultationService: PersonalHistoriesNewConsultationService;
 	medicationsNewConsultationService: MedicacionesNuevaConsultaService;
-	form: FormGroup;
+	form: UntypedFormGroup;
 	clinicalSpecialties: ClinicalSpecialtyDto[];
 	diagnosticsNewConsultationService: ActionsNewConsultationService;
 	proceduresNewConsultationService: ActionsNewConsultationService;
@@ -81,7 +81,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		@Inject(OVERLAY_DATA) public data: OdontologyConsultationData,
 		public dockPopupRef: DockPopupRef,
 		private readonly snomedService: SnomedService,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly internmentMasterDataService: InternacionMasterDataService,
 		private readonly odontogramService: OdontogramService,
 		private readonly conceptsFacadeService: ConceptsFacadeService,

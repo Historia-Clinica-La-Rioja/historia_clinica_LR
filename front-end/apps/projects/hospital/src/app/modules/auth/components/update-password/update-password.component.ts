@@ -1,5 +1,5 @@
 import {Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {ApiErrorMessageDto} from "@api-rest/api-model";
 import {AuthService} from "@api-rest/services/auth.service";
 import {Router} from "@angular/router";
@@ -11,7 +11,7 @@ import {patternValidator} from "@core/utils/form.utils";
   styleUrls: ['./update-password.component.scss']
 })
 export class UpdatePasswordComponent implements OnInit {
-	public form: FormGroup;
+	public form: UntypedFormGroup;
 	public apiResponse: any = null;
 	private pass: string;
 	private newpass: string;
@@ -23,7 +23,7 @@ export class UpdatePasswordComponent implements OnInit {
 
 
 
-  constructor(private formBuilder: FormBuilder,
+  constructor(private formBuilder: UntypedFormBuilder,
 			  private authService: AuthService,
 			  private router: Router
 			  ) { }

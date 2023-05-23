@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DietDto } from "@api-rest/api-model";
 import { EIndicationStatus, EIndicationType } from "@api-rest/api-model";
@@ -14,12 +14,12 @@ import { openConfirmDialog } from "@historia-clinica/modules/ambulatoria/modules
 })
 
 export class DietComponent implements OnInit {
-	form: FormGroup;
+	form: UntypedFormGroup;
 	indicationDate: Date;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { entryDate:Date, actualDate:Date, patientId: number, professionalId: number},
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private dialogRef: MatDialogRef<DietComponent>,
 		private readonly dialog: MatDialog,
 	) {	}

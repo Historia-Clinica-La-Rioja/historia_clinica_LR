@@ -4,10 +4,15 @@ set -o errexit
 BASEDIR=$(dirname "$0")
 cd "$BASEDIR"
 
+echo "Node.js version:"
+node -v
+echo "Npm version:"
+npm -v
+
 start_apps=$(date +%s)
 echo "Building Webapp: start"
 cd apps
-[ -d "node_modules" ] || npm install --legacy-peer-deps
+[ -d "node_modules" ] || npm install
 npm run build:prod
 cd -
 

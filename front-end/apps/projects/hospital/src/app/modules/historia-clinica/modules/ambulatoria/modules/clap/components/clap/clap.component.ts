@@ -1,7 +1,7 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { SipPlusUrlDataDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
+import { SipPlusUrlDataDto } from '@api-rest/api-model';
 import { SipPlusMotherService } from '@api-rest/services/sip-plus-mother.service';
 import { SipPlusPregnanciesService } from '@api-rest/services/sip-plus-pregnancies.service';
 import { SipPlusService } from '@api-rest/services/sip-plus.service';
@@ -30,7 +30,7 @@ export class ClapComponent implements OnInit {
 	viewSip: boolean = false;
 	pregnancies: any[];
 	viewError: boolean = false;
-	messageError: String;
+	messageError: string;
 	dischargeMother: boolean = false;
 
 	private nuevaConsultaRef: DockPopupRef;
@@ -66,24 +66,28 @@ export class ClapComponent implements OnInit {
 	}
 
 	getPregnancies() {
-		this.sipPlusPregnanciesService.getPregnancies(this.patientId).subscribe(data => {
-			if (data.length) {
-				this.pregnancies = data;
-			} else {
-				this.viewError = true;
-			}
+		this.sipPlusPregnanciesService.getPregnancies(this.patientId).subscribe({
+			next: data => {
+				if (data.length) {
+					this.pregnancies = data;
+				} else {
+					this.viewError = true;
+				}
 
-		}, error => {
-			this.messageError = error.text;
-			if (error.code === 'NOT_FOUND') {
-				this.dischargeMother = true;
-				this.messageError = null;
-				this.viewError = true;
-			} else {
-				this.dischargeMother = false;
+			},
+			error: error => {
+				this.messageError = error.text;
+				if (error.code === 'NOT_FOUND') {
+					this.dischargeMother = true;
+					this.messageError = null;
+					this.viewError = true;
+				} else {
+					this.dischargeMother = false;
+				}
 			}
-		})
+		});
 	}
+
 	viewGestation(gestationId: number) {
 		this.makeUrlTrusted(gestationId);
 		this.viewSip = true;

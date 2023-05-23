@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { GenderDto, IdentificationTypeDto } from '@api-rest/api-model';
 import { PatientInformationScan } from "@pacientes/pacientes.model";
@@ -34,11 +34,11 @@ export const INVALID_INPUT = 'invalid_input';
 
 export class ScanPatientComponent implements OnInit {
 
-	public formScanPatient: FormGroup;
+	public formScanPatient: UntypedFormGroup;
 	private patientInformationScan: PatientInformationScan;
 
 	constructor(
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private dialogRef: MatDialogRef<ScanPatientComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: {
 			genderOptions: GenderDto[],

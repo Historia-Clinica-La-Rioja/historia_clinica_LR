@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ObstetricEventDto } from '@api-rest/api-model';
 import { EPregnancyTermination } from '@api-rest/api-model';
 import { dateDtoToDate, dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
@@ -16,13 +16,13 @@ export class PregnancyFormComponent {
 	VAGINAL = EPregnancyTermination.VAGINAL;
 	CESAREAN = EPregnancyTermination.CESAREAN;
 	UNDEFINED = EPregnancyTermination.UNDEFINED;
-	form: FormGroup;
+	form: UntypedFormGroup;
 	enableDelete = true;
 	currentPregnancyEndDate = new Subject<Date>();
 	currentPregnancyEndDate$ = this.currentPregnancyEndDate.asObservable();
 	@Output() event = new EventEmitter<ObstetricEventDto>();
 	constructor(
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		readonly obstetricFormService: ObstetricFormService,
 
 	) {

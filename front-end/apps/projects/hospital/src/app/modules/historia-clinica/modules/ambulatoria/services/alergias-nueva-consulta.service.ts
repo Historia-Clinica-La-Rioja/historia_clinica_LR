@@ -1,4 +1,4 @@
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
 import { SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
@@ -13,7 +13,7 @@ export interface Alergia {
 
 export class AlergiasNuevaConsultaService {
 
-	private form: FormGroup;
+	private form: UntypedFormGroup;
 	private data: Alergia[] = [];
 	private snomedConcept: SnomedDto;
 	private criticalityTypes: any[];
@@ -23,7 +23,7 @@ export class AlergiasNuevaConsultaService {
 	alergias$ = this.emitter.asObservable()
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
@@ -100,7 +100,7 @@ export class AlergiasNuevaConsultaService {
 		return false;
 	}
 
-	getForm(): FormGroup {
+	getForm(): UntypedFormGroup {
 		return this.form;
 	}
 

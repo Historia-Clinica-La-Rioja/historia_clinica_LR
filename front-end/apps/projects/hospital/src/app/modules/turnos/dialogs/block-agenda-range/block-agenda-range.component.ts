@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DateDto, MasterDataInterface, TimeDto } from '@api-rest/api-model';
+import { DateDto, MasterDataInterface } from '@api-rest/api-model';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { DiaryService } from '@api-rest/services/diary.service';
 import { hasError } from '@core/utils/form.utils';
@@ -16,12 +16,12 @@ import { AppointmentBlockMotivesFacadeService } from '@turnos/services/appointme
 export class BlockAgendaRangeComponent implements OnInit {
 
 	hasError = hasError;
-	blockForm: FormGroup;
-	unblockForm: FormGroup;
+	blockForm: UntypedFormGroup;
+	unblockForm: UntypedFormGroup;
 	appointmentBlockMotives: MasterDataInterface<number>[];
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		@Inject(MAT_DIALOG_DATA) public data: any,
 		private dialogRef: MatDialogRef<BlockAgendaRangeComponent>,
 		private readonly diaryService: DiaryService,

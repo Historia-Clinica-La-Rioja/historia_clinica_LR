@@ -1,5 +1,5 @@
 import { Component, OnInit, forwardRef } from '@angular/core';
-import { FormBuilder, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { ClinicalSpecialtyDto } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { Subscription } from 'rxjs';
@@ -22,7 +22,7 @@ export class EspecialidadFormComponent implements OnInit {
 	specialties: ClinicalSpecialtyDto[];
 	defaultSpecialty: ClinicalSpecialtyDto;
 	formEvolucion = this.formBuilder.group({
-		clinicalSpecialty: [null, [Validators.required]],
+		clinicalSpecialty: new FormControl<ClinicalSpecialtyDto | null>(null, Validators.required),
 	});
 
 

@@ -201,7 +201,7 @@ export class GuardiaMapperService {
 				};
 			}
 		});
-		return riskFactors !== {} ? riskFactors : undefined;
+		return Object.keys(riskFactors)?.length > 0 ? riskFactors : undefined;
 	}
 
 	static _mapEffectiveObservationToNewEffectiveClinicalObservationDto(effectiveObservation: EffectiveObservation): NewEffectiveClinicalObservationDto {

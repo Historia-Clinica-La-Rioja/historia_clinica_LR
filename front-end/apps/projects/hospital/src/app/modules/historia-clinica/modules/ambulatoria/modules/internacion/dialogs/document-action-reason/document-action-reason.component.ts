@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 
 @Component({
@@ -9,10 +9,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 })
 export class DocumentActionReasonComponent implements OnInit {
 
-	form: FormGroup
+	form: UntypedFormGroup
 	scssTitle: string;
 	constructor(
-		private readonly formB: FormBuilder,
+		private readonly formB: UntypedFormBuilder,
 		private dialogRef: MatDialogRef<DocumentActionReasonComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: { title: string, titleColor?: string, subtitle: string },
 	) { }

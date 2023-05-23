@@ -1,5 +1,5 @@
 
-@import "~@angular/material/theming";
+@import "@angular/material/theming";
 
 @mixin app-factor-de-riesgo($theme) {
 	$palette: map-get($theme, primary);

@@ -6,7 +6,7 @@ import { ContextService } from '@core/services/context.service';
 import { MapperService } from "@presentation/services/mapper.service";
 import { DocumentsSummaryDto, RoomDto } from '@api-rest/api-model';
 import { InternmentPatientService } from '@api-rest/services/internment-patient.service';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Sector } from '@institucion/services/bed-management-facade.service';
 import { SectorService } from '@api-rest/services/sector.service';
@@ -25,7 +25,7 @@ const PAGE_MIN_SIZE = 5;
 })
 
 export class InternmentPatientCardComponent {
-	formFilter: FormGroup;
+	formFilter: UntypedFormGroup;
 	panelOpenState = false;
 	pageSliceObs$: Observable<CardModel[]>;
 	sectors = [];
@@ -78,7 +78,7 @@ export class InternmentPatientCardComponent {
 		private readonly contextService: ContextService,
 		private readonly mapperService: MapperService,
 		private readonly internmentPatientService: InternmentPatientService,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly sectorService: SectorService,
 		private roomService: RoomService,
 

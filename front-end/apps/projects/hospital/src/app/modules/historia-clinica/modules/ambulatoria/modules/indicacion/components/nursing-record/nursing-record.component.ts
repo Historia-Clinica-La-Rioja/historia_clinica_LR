@@ -1,10 +1,9 @@
 import { ENursingRecordStatus } from '@api-rest/api-model';
 import { Component, Input } from '@angular/core';
-import { DateDto, DateTimeDto } from '@api-rest/api-model';
+import { DateTimeDto } from '@api-rest/api-model';
 import { ExtraInfo, Status } from '@presentation/components/indication/indication.component';
 import { MatDialog } from '@angular/material/dialog';
 import { RegisterNursingRecordComponent } from '../../dialogs/register-nursing-record/register-nursing-record.component';
-import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { NursingRecordFacadeService } from '../../services/nursing-record-facade.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { DatePipeFormat } from '@core/utils/date.utils';

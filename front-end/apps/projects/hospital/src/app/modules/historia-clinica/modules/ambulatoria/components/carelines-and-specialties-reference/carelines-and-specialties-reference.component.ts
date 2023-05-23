@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 import { CareLineDto, ClinicalSpecialtyDto, ReferenceProblemDto } from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
@@ -13,7 +13,7 @@ import { ReferenceProblemsService } from '../../services/reference-problems.serv
 })
 export class CarelinesAndSpecialtiesReferenceComponent implements OnInit, OnChanges {
 
-    @Input() formReference: FormGroup;
+    @Input() formReference: UntypedFormGroup;
     @Input() set updateFormFields(updateSpecialtiesAndCarelineFields: boolean) {
         if (updateSpecialtiesAndCarelineFields) {
             this.setInformation();
@@ -129,7 +129,7 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit, OnChan
 
         disableInputs(this.formReference, this.referenceProblemsService.mapProblems());
 
-        function disableInputs(formReference: FormGroup, referenceProblemDto: ReferenceProblemDto[]) {
+        function disableInputs(formReference: UntypedFormGroup, referenceProblemDto: ReferenceProblemDto[]) {
             if (!formReference.value.institutionDestinationId) {
                 formReference.controls.clinicalSpecialtyId.disable();
             }

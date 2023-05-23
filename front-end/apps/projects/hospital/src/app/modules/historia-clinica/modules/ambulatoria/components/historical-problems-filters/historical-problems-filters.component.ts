@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, AbstractControl } from '@angular/forms';
 import { momentFormat, DateFormat, momentParseDate } from '@core/utils/moment.utils';
 import { Subscription } from 'rxjs';
 import { ClinicalSpecialtyDto } from '@api-rest/api-model';
@@ -14,7 +14,7 @@ import { REFERENCE_STATES } from '../../constants/reference-masterdata';
 })
 export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 
-	public form: FormGroup;
+	public form: UntypedFormGroup;
 	public specialties: ClinicalSpecialtyDto[] = [];
 	public professionals: Professional[] = [];
 	public problems: Problem[] = [];
@@ -23,7 +23,7 @@ export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 	private historicalProblemsFilter$: Subscription;
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly historicalProblemsFacadeService: HistoricalProblemsFacadeService
 	) { }
 

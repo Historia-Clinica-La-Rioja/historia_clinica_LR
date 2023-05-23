@@ -1,6 +1,6 @@
 import { dateToDateTimeDtoUTC } from './../../../../../../../api-rest/mapper/date-dto.mapper';
 import { Component, Inject, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { OtherIndicationDto } from '@api-rest/api-model';
 import { EIndicationStatus, EIndicationType } from '@api-rest/api-model';
@@ -15,7 +15,7 @@ import { HOURS_LIST, INTERVALS_TIME, openConfirmDialog, OTHER_FREQUENCY, OTHER_I
 	styleUrls: ['./other-indication.component.scss']
 })
 export class OtherIndicationComponent implements OnInit {
-	form: FormGroup;
+	form: UntypedFormGroup;
 	othersIndicatiosType: OtherIndicationTypeDto[];
 	intervals = INTERVALS_TIME;
 	hoursList = HOURS_LIST;
@@ -26,7 +26,7 @@ export class OtherIndicationComponent implements OnInit {
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { entryDate: Date, actualDate: Date, patientId: number, professionalId: number, othersIndicatiosType: OtherIndicationTypeDto[] },
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private dialogRef: MatDialogRef<OtherIndicationComponent>,
 		private dialog: MatDialog
 

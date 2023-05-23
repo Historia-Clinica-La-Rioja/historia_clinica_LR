@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LicenseDataDto, ProfessionalLicenseNumberDto, ValidatedLicenseDataDto, ValidatedLicenseNumberDto } from '@api-rest/api-model';
+import { LicenseDataDto, ProfessionalLicenseNumberDto, ValidatedLicenseDataDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';

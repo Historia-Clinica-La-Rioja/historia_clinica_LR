@@ -1,4 +1,4 @@
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
 import { SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
@@ -14,7 +14,7 @@ export interface AntecedenteFamiliar {
 
 export class AntecedentesFamiliaresNuevaConsultaService {
 
-	private form: FormGroup;
+	private form: UntypedFormGroup;
 	private data: AntecedenteFamiliar[];
 	private snomedConcept: SnomedDto;
 	private readonly ECL = SnomedECL.FAMILY_RECORD;
@@ -23,7 +23,7 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 	data$ = this.dataEmitter.asObservable();
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService) {
 
@@ -80,7 +80,7 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 	}
 
 
-	getForm(): FormGroup {
+	getForm(): UntypedFormGroup {
 		return this.form;
 	}
 

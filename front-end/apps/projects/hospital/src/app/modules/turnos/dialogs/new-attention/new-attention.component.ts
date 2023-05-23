@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MasterDataInterface } from '../../../api-rest/api-model';
 import { MedicalConsultationMasterdataService } from '../../../api-rest/services/medical-consultation-masterdata.service';
@@ -15,7 +15,7 @@ import { AppFeature } from "@api-rest/api-model";
 })
 export class NewAttentionComponent implements OnInit {
 
-	form: FormGroup;
+	form: UntypedFormGroup;
 	public readonly SPONTANEOUS = MEDICAL_ATTENTION.SPONTANEOUS;
 	public medicalAttentionTypes: MasterDataInterface<number>[];
 	possibleStartingScheduleHours: Date[];
@@ -26,7 +26,7 @@ export class NewAttentionComponent implements OnInit {
 
 	constructor(
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly medicalConsultationMasterdataService: MedicalConsultationMasterdataService,
 		@Inject(MAT_DIALOG_DATA) public data: NewAttentionElements,
 		private readonly featureFlagService: FeatureFlagService

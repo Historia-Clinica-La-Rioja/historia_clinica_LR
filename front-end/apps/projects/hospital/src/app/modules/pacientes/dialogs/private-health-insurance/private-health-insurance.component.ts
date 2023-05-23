@@ -5,7 +5,7 @@ import { MedicalCoveragePlanDto } from "@api-rest/api-model";
 import { PrivateHealthInsuranceDto } from "@api-rest/api-model";
 
 import { MIN_DATE } from "@core/utils/date.utils";
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import {
 	EMedicalCoverageType,
 	PatientMedicalCoverage,
@@ -23,7 +23,7 @@ import { PrivateHealthInsuranceService } from "@api-rest/services/private-health
 export class PrivateHealthInsuranceComponent implements OnInit {
 
 	minDate = MIN_DATE;
-	prepagaForm: FormGroup;
+	prepagaForm: UntypedFormGroup;
 	selectedPlan : MedicalCoveragePlanDto;
 	patientMedicalCoverages: PatientMedicalCoverage[];
 	plans: MedicalCoveragePlanDto[];
@@ -34,7 +34,7 @@ export class PrivateHealthInsuranceComponent implements OnInit {
 	private privateHealthInsuranceMasterData: PrivateHealthInsuranceDto[];
 	private privateHealthInsuranceToAdd : PrivateHealthInsurance;
 
-	constructor(private formBuilder: FormBuilder,
+	constructor(private formBuilder: UntypedFormBuilder,
 				private readonly privateHealthInsuranceService: PrivateHealthInsuranceService,
 				public dialogRef: MatDialogRef<PrivateHealthInsuranceComponent>,
 				@Inject(MAT_DIALOG_DATA) public data: { privateHealthInsuranceToupdate: PatientMedicalCoverage},) {
@@ -73,15 +73,15 @@ export class PrivateHealthInsuranceComponent implements OnInit {
 
 	private uploadPrivateHealthInsuranceForm() {
 		this.privateHealthInsuranceToAdd = this.data.privateHealthInsuranceToupdate.medicalCoverage as PrivateHealthInsurance;
-		this.prepagaForm.setControl('name', new FormControl(this.data.privateHealthInsuranceToupdate.medicalCoverage.name));
-		this.prepagaForm.setControl('affiliateNumber', new FormControl(this.data.privateHealthInsuranceToupdate.affiliateNumber));
-		this.prepagaForm.setControl('condition', new FormControl(this.data.privateHealthInsuranceToupdate.condition ? this.data.privateHealthInsuranceToupdate.condition : EPatientMedicalCoverageCondition.VOLUNTARIA));
-		this.prepagaForm.setControl('startDate', new FormControl(this.data.privateHealthInsuranceToupdate.startDate));
-		this.prepagaForm.setControl('endDate', new FormControl(this.data.privateHealthInsuranceToupdate.endDate));
+		this.prepagaForm.setControl('name', new UntypedFormControl(this.data.privateHealthInsuranceToupdate.medicalCoverage.name));
+		this.prepagaForm.setControl('affiliateNumber', new UntypedFormControl(this.data.privateHealthInsuranceToupdate.affiliateNumber));
+		this.prepagaForm.setControl('condition', new UntypedFormControl(this.data.privateHealthInsuranceToupdate.condition ? this.data.privateHealthInsuranceToupdate.condition : EPatientMedicalCoverageCondition.VOLUNTARIA));
+		this.prepagaForm.setControl('startDate', new UntypedFormControl(this.data.privateHealthInsuranceToupdate.startDate));
+		this.prepagaForm.setControl('endDate', new UntypedFormControl(this.data.privateHealthInsuranceToupdate.endDate));
 		this.privateHealthInsuranceService.getAllPlansById(this.data.privateHealthInsuranceToupdate.medicalCoverage.id)
 			.subscribe(plans =>{
 				this.plans = plans;
-				this.prepagaForm.setControl('plan', new FormControl(this.data.privateHealthInsuranceToupdate.planId));
+				this.prepagaForm.setControl('plan', new UntypedFormControl(this.data.privateHealthInsuranceToupdate.planId));
 			});
 		this.prepagaForm.controls.name.disable();
 	}

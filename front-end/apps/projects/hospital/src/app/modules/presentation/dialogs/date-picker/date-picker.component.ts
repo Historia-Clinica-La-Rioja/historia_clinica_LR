@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
@@ -11,7 +11,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class DatePickerComponent implements OnInit {
 
 	okBottonColor: ThemePalette;
-	form: FormGroup;
+	form: UntypedFormGroup;
 
 	constructor(
 		public dialogRef: MatDialogRef<DatePickerComponent>,
@@ -20,7 +20,7 @@ export class DatePickerComponent implements OnInit {
 			cancelButtonLabel: string, okBottonColor?: ThemePalette,
 			minDate?, maxDate?,
 		},
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 	) { }
 
 	ngOnInit(): void {

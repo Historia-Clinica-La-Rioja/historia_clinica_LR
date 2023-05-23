@@ -1,6 +1,6 @@
 export const environment = {
 	production: true,
 	apiBase: '/api',
-	branchName: 'local-branch',
-	commitHash: 'local-full-commit',
+	branchName: 'tg-11016-B',
+	commitHash: 'cb3c70c7d',
 };

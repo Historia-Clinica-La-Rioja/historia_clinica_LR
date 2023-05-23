@@ -1,6 +1,6 @@
 import { ENursingRecordStatus } from '@api-rest/api-model';
 import { DateTimeDto } from '@api-rest/api-model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { dateTimeDtotoLocalDate, dateToDateTimeDtoUTC } from '@api-rest/mapper/date-dto.mapper';
@@ -18,7 +18,7 @@ import { DocumentActionReasonComponent } from '../../../internacion/dialogs/docu
 
 export class RegisterNursingRecordComponent implements OnInit {
 
-	form: FormGroup;
+	form: UntypedFormGroup;
 	today = new Date();
 	singleDigit = 9;
 	scheduledAdministrationTimeLocalDate: Date;
@@ -26,7 +26,7 @@ export class RegisterNursingRecordComponent implements OnInit {
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { indicationDate: Date, scheduledAdministrationTime: DateTimeDto },
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly dialogRef: MatDialogRef<RegisterNursingRecordComponent>,
 		private readonly datePipe: DatePipe,
 		private readonly dialog: MatDialog

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ImmunizationDto, SnomedDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Moment } from 'moment';
 import { DatePipe } from '@angular/common';
 import { DateFormat, newMoment } from '@core/utils/moment.utils';
@@ -34,7 +34,7 @@ export class VacunasComponent implements OnInit {
 
 	snomedConcept: SnomedDto;
 
-	form: FormGroup;
+	form: UntypedFormGroup;
 	today: Moment = newMoment();
 
 	// Mat table
@@ -55,7 +55,7 @@ export class VacunasComponent implements OnInit {
 	minDate = MIN_DATE;
 
 	constructor(
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private datePipe: DatePipe,
 		private snomedService: SnomedService,
 		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,

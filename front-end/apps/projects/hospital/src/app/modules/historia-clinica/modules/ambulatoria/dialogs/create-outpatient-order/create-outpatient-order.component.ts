@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { ApiErrorDto, BasicPatientDto, PatientMedicalCoverageDto, PrescriptionDto } from "@api-rest/api-model";
 import { SnomedECL } from "@api-rest/api-model";
-import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { TemplateOrConceptOption, TemplateOrConceptType } from "@historia-clinica/components/template-concept-typeahead-search/template-concept-typeahead-search.component";
 import { OrderStudiesService, Study } from "@historia-clinica/services/order-studies.service";
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
@@ -29,7 +29,7 @@ export class CreateOutpatientOrderComponent implements OnInit {
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	hasError = hasError;
 
-	form: FormGroup;
+	form: UntypedFormGroup;
 	firstStepCompleted = false;
 
 	private patientData: BasicPatientDto;
@@ -43,7 +43,7 @@ export class CreateOutpatientOrderComponent implements OnInit {
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { patientId: number, healthProblems },
 		public dialogRef: MatDialogRef<CreateOutpatientOrderComponent>,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly mapperService: MapperService,
 		private readonly requestMasterDataService: RequestMasterDataService,
 		private readonly hceGeneralStateService: HceGeneralStateService,

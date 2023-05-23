@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { GenderDto, IdentificationTypeDto, LimitedPatientSearchDto, PatientSearchDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
@@ -24,7 +24,7 @@ import { PatientNameService } from '@core/services/patient-name.service';
 export class HomeComponent implements OnInit {
 	patientData: PatientSearchDto[] = [];
 	genderTableView: string[] = [];
-	public personalInformationForm: FormGroup;
+	public personalInformationForm: UntypedFormGroup;
 	public genders: GenderDto[];
 	public identificationTypeList: IdentificationTypeDto[];
 	public hasError = hasError;
@@ -43,7 +43,7 @@ export class HomeComponent implements OnInit {
 	private readonly routePrefix;
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly personMasterDataService: PersonMasterDataService,
 		private readonly patientService: PatientService,
 		private readonly router: Router,

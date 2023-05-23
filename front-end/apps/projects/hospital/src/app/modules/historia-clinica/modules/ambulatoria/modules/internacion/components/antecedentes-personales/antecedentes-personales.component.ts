@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { HealthHistoryConditionDto, SnomedDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
@@ -30,7 +30,7 @@ export class AntecedentesPersonalesComponent implements OnInit {
 
 	snomedConcept: SnomedDto;
 
-	form: FormGroup;
+	form: UntypedFormGroup;
 
 	// Mat table
 	columns = [
@@ -43,7 +43,7 @@ export class AntecedentesPersonalesComponent implements OnInit {
 	displayedColumns: string[] = [];
 
 	constructor(
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private snomedService: SnomedService,
 		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
 

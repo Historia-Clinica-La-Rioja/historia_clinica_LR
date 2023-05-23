@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
 import {MasterDataInterface} from "@api-rest/api-model";
 import {TypeaheadOption} from "@presentation/components/typeahead/typeahead.component";
@@ -14,8 +14,8 @@ export class SpecialtyFormInputComponent implements OnInit {
 	@Input() label: string;
 	@Output() specialtyChange = new EventEmitter<string[]>();
 
-	specialtyForm = new FormGroup({
-		specialty: new FormControl(),
+	specialtyForm = new UntypedFormGroup({
+		specialty: new UntypedFormControl(),
 	});
 
 	specialtyList = [];

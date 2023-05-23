@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit } from '@angular/core';
 import { DOCUMENTS, DOCUMENTS_SEARCH_FIELDS } from '../../constants/summaries';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Moment } from 'moment';
 import {
 	DocumentSearchFilterDto,
@@ -37,7 +37,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	public documentsToShow: DocumentSearch[] = [];
 	public readonly documentsSummary = DOCUMENTS;
 	public today: Moment = newMoment();
-	public form: FormGroup;
+	public form: UntypedFormGroup;
 	public activeDocument: DocumentSearch;
 	public documentHistoric: DocumentHistoricDto;
 	public searchTriggered = false;
@@ -46,7 +46,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	isPopUpOpen = false;
 
 	constructor(
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private internmentSummaryFacadeService: InternmentSummaryFacadeService,
 		private changeDetectorRef: ChangeDetectorRef,
 		private readonly documentActions: DocumentActionsService,

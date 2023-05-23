@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service';
 import { DoctorsOfficeDto } from '@api-rest/api-model';
 import { TriageCategoryDto, TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
@@ -17,12 +17,12 @@ export class TriageComponent implements OnInit {
 	@Input() cancelFunction: () => void;
 	@Output() triageCategoryIdChange = new EventEmitter();
 	@Output() doctorsOfficeIdChange = new EventEmitter();
-	triageForm: FormGroup;
+	triageForm: UntypedFormGroup;
 	doctorsOffices$: Observable<DoctorsOfficeDto[]>;
 	triageCategories: TriageCategoryDto[];
 
 	constructor(
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private doctorsOfficeService: DoctorsOfficeService,
 		private triageMasterDataService: TriageMasterDataService,
 	) {

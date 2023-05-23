@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import { AppFeature } from '@api-rest/api-model';
 import { ProfessionalDto } from '@api-rest/api-model';
 
@@ -18,8 +18,8 @@ export class ProfessionalFormInputComponent implements OnInit {
 	@Input() label: string;
 	@Output() professionalChange = new EventEmitter<string[]>();
 
-	professionalForm = new FormGroup({
-		professional: new FormControl(),
+	professionalForm = new UntypedFormGroup({
+		professional: new UntypedFormControl(),
 	});
 
 	professionalList = [];

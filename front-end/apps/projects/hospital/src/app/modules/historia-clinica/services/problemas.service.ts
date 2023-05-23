@@ -1,4 +1,4 @@
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SnomedSemanticSearch, SnomedService } from './snomed.service';
@@ -20,7 +20,7 @@ export interface Problema {
 
 export class ProblemasService {
 
-	private readonly form: FormGroup;
+	private readonly form: UntypedFormGroup;
 	private snomedConcept: SnomedDto;
 	private readonly columns: TableColumnConfig[];
 	private data: Problema[];
@@ -28,7 +28,7 @@ export class ProblemasService {
 	private readonly ECL = SnomedECL.DIAGNOSIS;
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService
 
@@ -145,7 +145,7 @@ export class ProblemasService {
 		return newMoment();
 	}
 
-	getForm(): FormGroup {
+	getForm(): UntypedFormGroup {
 		return this.form;
 	}
 

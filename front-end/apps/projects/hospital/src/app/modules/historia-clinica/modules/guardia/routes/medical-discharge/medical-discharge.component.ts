@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AMedicalDischargeDto, DiagnosisDto, MasterDataInterface, ResponseEmergencyCareDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
@@ -32,7 +32,7 @@ export class MedicalDischargeComponent implements OnInit {
 	TIME_PATTERN = TIME_PATTERN;
 	hasError = hasError;
 
-	form: FormGroup;
+	form: UntypedFormGroup;
 	diagnosticos: DiagnosisDto[] = [];
 	dischargeTypes$: Observable<MasterDataInterface<number>[]>;
 
@@ -49,7 +49,7 @@ export class MedicalDischargeComponent implements OnInit {
 	constructor(
 		private readonly router: Router,
 		private readonly route: ActivatedRoute,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly contextService: ContextService,
 		private readonly emergencyCareEspisodeDischargeService: EmergencyCareEpisodeMedicalDischargeService,
 		private readonly guardiaMapperService: GuardiaMapperService,
@@ -128,7 +128,7 @@ export class MedicalDischargeComponent implements OnInit {
 	}
 
 	private setDateTimeValidation(episodeCreatedOn: Moment): void {
-		const dateControl: FormGroup = (this.form.controls.dateTime) as FormGroup;
+		const dateControl: UntypedFormGroup = (this.form.controls.dateTime) as UntypedFormGroup;
 		const timeControl: AbstractControl = dateControl.controls.time;
 		timeControl.setValidators([Validators.required, beforeTimeValidation(episodeCreatedOn),
 			futureTimeValidation, Validators.pattern(TIME_PATTERN)]);

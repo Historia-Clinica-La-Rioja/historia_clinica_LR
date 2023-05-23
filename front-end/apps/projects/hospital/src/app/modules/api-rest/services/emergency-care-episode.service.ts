@@ -6,8 +6,7 @@ import {
 	ECAdultGynecologicalDto,
 	ResponseEmergencyCareDto,
 	EmergencyCareListDto,
-	DateTimeDto,
-	EmergencyCareEpisodeInProgressDto
+	DateTimeDto
 } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 import { HttpClient } from '@angular/common/http';

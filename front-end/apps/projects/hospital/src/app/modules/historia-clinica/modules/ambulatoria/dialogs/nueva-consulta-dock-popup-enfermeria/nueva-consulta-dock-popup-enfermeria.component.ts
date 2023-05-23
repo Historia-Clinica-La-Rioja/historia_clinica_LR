@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ClinicalTermDto, ClinicalSpecialtyDto, NursingConsultationDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
@@ -48,7 +48,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	disableConfirmButton = false;
 	collapsedAnthropometricDataSection = false;
 	collapsedRiskFactorsSection = false;
-	formEvolucion: FormGroup;
+	formEvolucion: UntypedFormGroup;
 	motivoNuevaConsultaService: MotivoNuevaConsultaService;
 	medicacionesNuevaConsultaService: MedicacionesNuevaConsultaService;
 	problemasService: ProblemasService;
@@ -80,7 +80,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	constructor(
 		@Inject(OVERLAY_DATA) public data: NuevaConsultaData,
 		public dockPopupRef: DockPopupRef,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snomedService: SnomedService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly nursingPatientConsultationService: NursingPatientConsultationService,

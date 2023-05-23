@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { MatOptionSelectionChange } from '@angular/material/core';
 
@@ -18,11 +18,11 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	@Input() required :boolean;
 	@Input() disabled? :boolean;
 
-	form: FormGroup;
+	form: UntypedFormGroup;
 	optionsFiltered: TypeaheadOption<any>[];
 	optionSelected: TypeaheadOption<any>;
 
-	constructor(private readonly formBuilder: FormBuilder,
+	constructor(private readonly formBuilder: UntypedFormBuilder,
 	) {
 		this.form = this.formBuilder.group({
 			searchValue: [null]

@@ -7,7 +7,7 @@ import {
 import { SnomedECL } from '@api-rest/api-model';
 import { MainDiagnosesService } from '@api-rest/services/main-diagnoses.service';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
@@ -35,7 +35,7 @@ export class ChangeMainDiagnosisDockPopupComponent implements OnInit {
 	newMainDiagnosis: HealthConditionDto;
 
 	panelOpenState = true;
-	form: FormGroup;
+	form: UntypedFormGroup;
 	currentMainDiagnosis: HealthConditionDto;
 	internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
 	diagnostics$: Observable<HealthConditionDto[]>;
@@ -48,7 +48,7 @@ export class ChangeMainDiagnosisDockPopupComponent implements OnInit {
 		private readonly snomedService: SnomedService,
 		private readonly mainDiagnosesService: MainDiagnosesService,
 		private readonly mapperService: MapperService,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,
 	) { }

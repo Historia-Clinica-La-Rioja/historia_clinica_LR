@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { DiagnosisDto, EmergencyCareEvolutionNoteDocumentDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientProcedureDto } from '@api-rest/api-model';
+import { Component, Input } from '@angular/core';
+import { EmergencyCareEvolutionNoteDocumentDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientProcedureDto } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { HEALTH_VERIFICATIONS } from '../../../ambulatoria/modules/internacion/constants/ids';
 @Component({

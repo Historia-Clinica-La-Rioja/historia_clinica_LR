@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
 import { EquipmentAppointmentsFacadeService } from '@turnos/services/equipment-appointments-facade.service';
@@ -12,7 +12,7 @@ import { EquipmentAppointmentsFacadeService } from '@turnos/services/equipment-a
 })
 export class CancelAppointmentComponent implements OnInit {
 
-	formMotivo: FormGroup;
+	formMotivo: UntypedFormGroup;
 
 	constructor(
 		public dialogRef: MatDialogRef<CancelAppointmentComponent>,
@@ -20,7 +20,7 @@ export class CancelAppointmentComponent implements OnInit {
 			appointmentId: number,
 			imageNetworkAppointment?: boolean
 		},
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snackBarService: SnackBarService,
 		private readonly appointmentsFacade: AppointmentsFacadeService,
 		private readonly equipmentAppointmensFacade: EquipmentAppointmentsFacadeService,

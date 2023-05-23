@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ClinicalSpecialtyDto, ExternalCoverageDto, ExternalPatientCoverageDto, PatientMedicalCoverageDto, ReducedPatientDto } from '@api-rest/api-model';
+import { ClinicalSpecialtyDto, ExternalCoverageDto, PatientMedicalCoverageDto, ReducedPatientDto } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PatientService } from '@api-rest/services/patient.service';

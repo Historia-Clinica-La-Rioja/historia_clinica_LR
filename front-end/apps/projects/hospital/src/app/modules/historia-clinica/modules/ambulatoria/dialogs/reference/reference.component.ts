@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, ReferenceProblemDto } from '@api-rest/api-model';
 import { ReferenceOriginInstitutionService } from '../../services/reference-origin-institution.service';
@@ -13,7 +13,7 @@ import { ReferenceProblemsService } from '../../services/reference-problems.serv
 })
 export class ReferenceComponent implements OnInit, AfterContentChecked {
 
-	formReference: FormGroup;
+	formReference: UntypedFormGroup;
 	selectedFiles: File[] = [];
 	selectedFilesShow: any[] = [];
 	DEFAULT_RADIO_OPTION = '0';
@@ -23,7 +23,7 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: any,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly dialogRef: MatDialogRef<ReferenceComponent>,
 		private changeDetector: ChangeDetectorRef,
 		private readonly referenceProblemsService: ReferenceProblemsService

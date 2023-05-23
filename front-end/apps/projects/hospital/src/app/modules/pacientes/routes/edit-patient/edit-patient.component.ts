@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
+import { UntypedFormBuilder, Validators, UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Moment } from 'moment';
 import * as moment from 'moment';
@@ -60,7 +60,7 @@ export class EditPatientComponent implements OnInit {
 	readonly GENDER_MAX_LENGTH = VALIDATIONS.MAX_LENGTH.gender;
 	private readonly NONE_SELF_PERCEIVED_GENDER_SELECTED_ID = 10; // Dato Maestro proveniente de género autopercibido "Ninguna de las anteriores"
 
-	public form: FormGroup;
+	public form: UntypedFormGroup;
 	public personResponse: BMPatientDto;
 	public formSubmitted = false;
 	public today: Moment = moment();
@@ -93,7 +93,7 @@ export class EditPatientComponent implements OnInit {
 	typesPatient: PatientType[];
 
 	constructor(
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private router: Router,
 		private el: ElementRef,
 		private patientService: PatientService,
@@ -141,25 +141,25 @@ export class EditPatientComponent implements OnInit {
 						this.personService.getCompletePerson<BMPersonDto>(completeData.person.id)
 							.subscribe(personInformationData => {
 								if (personInformationData.identificationTypeId) {
-									this.form.setControl('identificationTypeId', new FormControl(Number(personInformationData.identificationTypeId), Validators.required));
+									this.form.setControl('identificationTypeId', new UntypedFormControl(Number(personInformationData.identificationTypeId), Validators.required));
 								}
-								this.form.setControl('identificationNumber', new FormControl(personInformationData.identificationNumber, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]));
+								this.form.setControl('identificationNumber', new UntypedFormControl(personInformationData.identificationNumber, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]));
 								// person
-								this.form.setControl('firstName', new FormControl(completeData.person.firstName, Validators.required));
-								this.form.setControl('middleNames', new FormControl(personInformationData.middleNames));
-								this.form.setControl('lastName', new FormControl(completeData.person.lastName, Validators.required));
-								this.form.setControl('otherLastNames', new FormControl(personInformationData.otherLastNames));
-								this.form.setControl('mothersLastName', new FormControl(personInformationData.mothersLastName));
-								this.form.setControl('patientId', new FormControl(completeData.id, Validators.required));
-								this.form.setControl('stateId', new FormControl(completeData.patientType.id, Validators.required));
+								this.form.setControl('firstName', new UntypedFormControl(completeData.person.firstName, Validators.required));
+								this.form.setControl('middleNames', new UntypedFormControl(personInformationData.middleNames));
+								this.form.setControl('lastName', new UntypedFormControl(completeData.person.lastName, Validators.required));
+								this.form.setControl('otherLastNames', new UntypedFormControl(personInformationData.otherLastNames));
+								this.form.setControl('mothersLastName', new UntypedFormControl(personInformationData.mothersLastName));
+								this.form.setControl('patientId', new UntypedFormControl(completeData.id, Validators.required));
+								this.form.setControl('stateId', new UntypedFormControl(completeData.patientType.id, Validators.required));
 
 								if (completeData.person.gender.id) {
-									this.form.setControl('genderId', new FormControl(Number(completeData.person.gender.id), Validators.required));
+									this.form.setControl('genderId', new UntypedFormControl(Number(completeData.person.gender.id), Validators.required));
 								}
-								this.form.setControl('genderSelfDeterminationId', new FormControl(Number(personInformationData.genderSelfDeterminationId)));
+								this.form.setControl('genderSelfDeterminationId', new UntypedFormControl(Number(personInformationData.genderSelfDeterminationId)));
 
 								const OTHER_GENDER_VALUE = personInformationData.otherGenderSelfDetermination ? personInformationData.otherGenderSelfDetermination : null;
-								this.form.setControl('otherGenderSelfDetermination', new FormControl(OTHER_GENDER_VALUE, [Validators.required, Validators.maxLength(this.GENDER_MAX_LENGTH)]));
+								this.form.setControl('otherGenderSelfDetermination', new UntypedFormControl(OTHER_GENDER_VALUE, [Validators.required, Validators.maxLength(this.GENDER_MAX_LENGTH)]));
 								if (personInformationData.genderSelfDeterminationId !== this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID) {
 									this.form.get('otherGenderSelfDetermination').disable();
 									this.showOtherGender = false;
@@ -167,45 +167,45 @@ export class EditPatientComponent implements OnInit {
 								else
 									this.showOtherGender = true;
 
-								this.form.setControl('nameSelfDetermination', new FormControl(personInformationData.nameSelfDetermination));
-								this.form.setControl('birthDate', new FormControl(new Date(personInformationData.birthDate), Validators.required));
-								this.form.setControl('cuil', new FormControl(personInformationData.cuil, [Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]));
-								this.form.setControl('email', new FormControl(personInformationData.email, Validators.email));
-								this.form.setControl('phonePrefix', new FormControl(personInformationData.phonePrefix,[Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]));
-								this.form.setControl('phoneNumber', new FormControl(personInformationData.phoneNumber,[Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]));
+								this.form.setControl('nameSelfDetermination', new UntypedFormControl(personInformationData.nameSelfDetermination));
+								this.form.setControl('birthDate', new UntypedFormControl(new Date(personInformationData.birthDate), Validators.required));
+								this.form.setControl('cuil', new UntypedFormControl(personInformationData.cuil, [Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]));
+								this.form.setControl('email', new UntypedFormControl(personInformationData.email, Validators.email));
+								this.form.setControl('phonePrefix', new UntypedFormControl(personInformationData.phonePrefix,[Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]));
+								this.form.setControl('phoneNumber', new UntypedFormControl(personInformationData.phoneNumber,[Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]));
 								if (personInformationData.phoneNumber) {
 									updateControlValidator(this.form, 'phoneNumber', [Validators.required]);
 									updateControlValidator(this.form, 'phonePrefix', [Validators.required]);
 								}
-								this.form.setControl('religion', new FormControl(personInformationData.religion));
-								this.form.setControl('ethnicityId', new FormControl(personInformationData.ethnicityId));
-								this.form.setControl('occupationId', new FormControl(personInformationData.occupationId));
-								this.form.setControl('educationLevelId', new FormControl(personInformationData.educationLevelId));
+								this.form.setControl('religion', new UntypedFormControl(personInformationData.religion));
+								this.form.setControl('ethnicityId', new UntypedFormControl(personInformationData.ethnicityId));
+								this.form.setControl('occupationId', new UntypedFormControl(personInformationData.occupationId));
+								this.form.setControl('educationLevelId', new UntypedFormControl(personInformationData.educationLevelId));
 								// address
 								if (personInformationData.countryId) {
-									this.form.setControl('addressCountryId', new FormControl(personInformationData.countryId));
+									this.form.setControl('addressCountryId', new UntypedFormControl(personInformationData.countryId));
 									this.provinces$ = this.addressMasterDataService.getByCountry(personInformationData.countryId);
 								}
 								if (personInformationData.provinceId) {
-									this.form.setControl('addressProvinceId', new FormControl(personInformationData.provinceId));
+									this.form.setControl('addressProvinceId', new UntypedFormControl(personInformationData.provinceId));
 									this.departments$ = this.addressMasterDataService.getDepartmentsByProvince(personInformationData.provinceId);
 								}
 								if (personInformationData.departmentId) {
-									this.form.setControl('addressDepartmentId', new FormControl(personInformationData.departmentId));
+									this.form.setControl('addressDepartmentId', new UntypedFormControl(personInformationData.departmentId));
 									this.cities$ = this.addressMasterDataService.getCitiesByDepartment(personInformationData.departmentId);
 								}
-								this.form.setControl('addressCityId', new FormControl(personInformationData.cityId));
-								this.form.setControl('addressStreet', new FormControl(personInformationData.street));
-								this.form.setControl('addressNumber', new FormControl(personInformationData.number));
-								this.form.setControl('addressFloor', new FormControl(personInformationData.floor));
-								this.form.setControl('addressApartment', new FormControl(personInformationData.apartment));
-								this.form.setControl('addressQuarter', new FormControl(personInformationData.quarter));
-								this.form.setControl('addressPostcode', new FormControl(personInformationData.postcode));
+								this.form.setControl('addressCityId', new UntypedFormControl(personInformationData.cityId));
+								this.form.setControl('addressStreet', new UntypedFormControl(personInformationData.street));
+								this.form.setControl('addressNumber', new UntypedFormControl(personInformationData.number));
+								this.form.setControl('addressFloor', new UntypedFormControl(personInformationData.floor));
+								this.form.setControl('addressApartment', new UntypedFormControl(personInformationData.apartment));
+								this.form.setControl('addressQuarter', new UntypedFormControl(personInformationData.quarter));
+								this.form.setControl('addressPostcode', new UntypedFormControl(personInformationData.postcode));
 								// doctors
-								this.form.setControl('generalPractitioner', new FormControl(completeData.generalPractitioner?.fullName));
-								this.form.setControl('generalPractitionerPhoneNumber', new FormControl(completeData.generalPractitioner?.phoneNumber));
-								this.form.setControl('pamiDoctor', new FormControl(completeData.pamiDoctor?.fullName));
-								this.form.setControl('pamiDoctorPhoneNumber', new FormControl(completeData.pamiDoctor?.phoneNumber));
+								this.form.setControl('generalPractitioner', new UntypedFormControl(completeData.generalPractitioner?.fullName));
+								this.form.setControl('generalPractitionerPhoneNumber', new UntypedFormControl(completeData.generalPractitioner?.phoneNumber));
+								this.form.setControl('pamiDoctor', new UntypedFormControl(completeData.pamiDoctor?.fullName));
+								this.form.setControl('pamiDoctorPhoneNumber', new UntypedFormControl(completeData.pamiDoctor?.phoneNumber));
 								this.restrictFormEdit();
 
 								this.form.get("addressCountryId").valueChanges.subscribe(

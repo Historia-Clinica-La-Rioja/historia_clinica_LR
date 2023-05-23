@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MasterDataDto } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
@@ -13,7 +13,7 @@ import { PAGE_MIN_SIZE, PAGE_SIZE_OPTIONS } from '../../constants/internment-ind
 })
 export class MostFrequentComponent<T> implements OnInit {
 	totalItems = 0;
-	formFilter: FormGroup;
+	formFilter: UntypedFormGroup;
 	filterSearch = ' ';
 	pageSize = PAGE_MIN_SIZE;
 	currentPage = 1;
@@ -21,7 +21,7 @@ export class MostFrequentComponent<T> implements OnInit {
 	vias: MasterDataDto[] = [];
 	constructor(@Inject(MAT_DIALOG_DATA) public data: MostFrequentIndication<T>,
 		private readonly dialogRef: MatDialogRef<T>,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly internacionMasterdataService: InternacionMasterDataService,
 
 	) {

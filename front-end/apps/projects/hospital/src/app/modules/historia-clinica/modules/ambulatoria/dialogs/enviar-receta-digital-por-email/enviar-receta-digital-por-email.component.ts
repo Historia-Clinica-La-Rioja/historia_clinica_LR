@@ -1,11 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MedicationRequestService } from '@api-rest/services/medication-request.service';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { hasError } from '@core/utils/form.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { forkJoin, Observable } from "rxjs";
 import { DocumentRequestDto } from "@api-rest/api-model";
+import { MedicationRequestService } from '@api-rest/services/medication-request.service';
 
 @Component({
   selector: 'app-enviar-receta-digital-por-email',
@@ -14,10 +14,10 @@ import { DocumentRequestDto } from "@api-rest/api-model";
 })
 export class EnviarRecetaDigitalPorEmailComponent implements OnInit {
 
-  emailForm: FormGroup;
+  emailForm: UntypedFormGroup;
   hasError = hasError;
 
-  constructor(private readonly formBuilder: FormBuilder,
+	constructor(private readonly formBuilder: UntypedFormBuilder,
               private readonly snackBarService: SnackBarService,
               private readonly medicationRequestService: MedicationRequestService,
               private dialogRef: MatDialogRef<EnviarRecetaDigitalPorEmailComponent>,

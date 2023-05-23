@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, forwardRef, Input, OnDestroy, Output } from '@angular/core';
-import { ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
+import { ControlValueAccessor, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { ClinicalSpecialtyDto, HealthcareProfessionalSpecialtyDto, ProfessionalProfessionsDto, ProfessionalSpecialtyDto } from '@api-rest/api-model';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { Subscription } from 'rxjs';
@@ -35,12 +35,12 @@ export class ProfessionSpecialtiesFormComponent implements ControlValueAccessor,
 	form = this.formBuilder.group({
 		id: null,
 		healthcareProfessionalId: null,
-		profession: new FormControl(null, Validators.required),
-		specialties: new FormArray([])
+		profession: new UntypedFormControl(null, Validators.required),
+		specialties: new UntypedFormArray([])
 	});
 
 	constructor(
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 	) { }
 
 	ngOnInit(): void {
@@ -62,7 +62,7 @@ export class ProfessionSpecialtiesFormComponent implements ControlValueAccessor,
 	}
 
 	setProfession($event: ProfessionalSpecialtyDto): void {
-		const arraySpecialties = this.form.get('specialties') as FormArray;
+		const arraySpecialties = this.form.get('specialties') as UntypedFormArray;
 
 		this.form.controls.profession.setValue($event);
 		if ($event === null) {
@@ -74,12 +74,12 @@ export class ProfessionSpecialtiesFormComponent implements ControlValueAccessor,
 	}
 
 	private checkIsSameSpecialty(pointIndex: number, $event: ClinicalSpecialtyDto): boolean {
-		const arraySpecialties = this.form.get('specialties') as FormArray;
+		const arraySpecialties = this.form.get('specialties') as UntypedFormArray;
 		return arraySpecialties.at(pointIndex).value.clinicalSpecialty.id === $event.id;
 	}
 
 	setSpecialty($event: ClinicalSpecialtyDto, pointIndex: number): void {
-		const arraySpecialties = this.form.get('specialties') as FormArray;
+		const arraySpecialties = this.form.get('specialties') as UntypedFormArray;
 
 		if ($event) {
 			arraySpecialties.at(pointIndex).setValue({
@@ -115,27 +115,27 @@ export class ProfessionSpecialtiesFormComponent implements ControlValueAccessor,
 		};
 	}
 
-	getCtrl(key: string, form: FormGroup): any {
+	getCtrl(key: string, form: UntypedFormGroup): any {
 		return form.get(key);
 	}
 
-	initFormSpecialties(elem?: HealthcareProfessionalSpecialtyDto): FormGroup {
-		const arraySpecialties = this.form.get('specialties') as FormArray;
+	initFormSpecialties(elem?: HealthcareProfessionalSpecialtyDto): UntypedFormGroup {
+		const arraySpecialties = this.form.get('specialties') as UntypedFormArray;
 		let length = arraySpecialties?.length;
 
-		return new FormGroup({
-			id: new FormControl(elem ? elem.id : null, []),
-			professionalProfessionId: new FormControl(elem ? elem.professionalProfessionId : null, []),
-			healthcareProfessionalId: new FormControl(elem ? elem.healthcareProfessionalId : null, []),
-			clinicalSpecialty: new FormGroup({
-				id: new FormControl(elem ? elem.clinicalSpecialty.id : null, length === 0 ? Validators.required : null),
-				specialty: new FormControl(elem ? elem.clinicalSpecialty.name : null)
+		return new UntypedFormGroup({
+			id: new UntypedFormControl(elem ? elem.id : null, []),
+			professionalProfessionId: new UntypedFormControl(elem ? elem.professionalProfessionId : null, []),
+			healthcareProfessionalId: new UntypedFormControl(elem ? elem.healthcareProfessionalId : null, []),
+			clinicalSpecialty: new UntypedFormGroup({
+				id: new UntypedFormControl(elem ? elem.clinicalSpecialty.id : null, length === 0 ? Validators.required : null),
+				specialty: new UntypedFormControl(elem ? elem.clinicalSpecialty.name : null)
 			})
 		});
 	}
 
 	addSpecialties(elem?: HealthcareProfessionalSpecialtyDto): void {
-		const arraySpecialties = this.form.get('specialties') as FormArray;
+		const arraySpecialties = this.form.get('specialties') as UntypedFormArray;
 		arraySpecialties.push(this.initFormSpecialties(elem));
 	}
 
@@ -144,13 +144,13 @@ export class ProfessionSpecialtiesFormComponent implements ControlValueAccessor,
 	}
 
 	hasErrorSpecialty(): boolean {
-		const arraySpecialties = this.form.get('specialties') as FormArray;
+		const arraySpecialties = this.form.get('specialties') as UntypedFormArray;
 		let length = arraySpecialties?.length;
 		return (this.confirmationValidation && length === 1 ? (arraySpecialties.at(length - 1).value.clinicalSpecialty.id === null) : false);
 	}
 
 	isDisableAddSpecialties(): boolean {
-		const arraySpecialties = this.form.get('specialties') as FormArray;
+		const arraySpecialties = this.form.get('specialties') as UntypedFormArray;
 		let length = arraySpecialties?.length;
 		return (!this.form.value?.profession?.id || (length > 0 ? (arraySpecialties.at(arraySpecialties.length - 1).value.clinicalSpecialty.id === null) : false));
 	}

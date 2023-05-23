@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { FormBuilder, Validators, FormGroup, AbstractControl } from '@angular/forms';
+import { UntypedFormBuilder, Validators, UntypedFormGroup, AbstractControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Moment } from 'moment';
 import * as moment from 'moment';
@@ -47,7 +47,7 @@ export class NewPatientComponent implements OnInit {
 	readonly GENDER_MAX_LENGTH = VALIDATIONS.MAX_LENGTH.gender;
 	private readonly NONE_SELF_PERCEIVED_GENDER_SELECTED_ID = 10; // Dato Maestro proveniente de género autopercibido "Ninguna de las anteriores"
 
-	public form: FormGroup;
+	public form: UntypedFormGroup;
 	public personResponse: BMPatientDto;
 	public formSubmitted = false;
 	public today: Moment = moment();
@@ -83,7 +83,7 @@ export class NewPatientComponent implements OnInit {
 	personId: number;
 
 	constructor(
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private router: Router,
 		private el: ElementRef,
 		private patientService: PatientService,

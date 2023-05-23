@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PermissionsDto, LoggedUserDto, TerminologyQueueItemDto, TerminologyCSVDto } from '@api-rest/api-model';
+import { TerminologyQueueItemDto, TerminologyCSVDto } from '@api-rest/api-model';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '@environments/environment';

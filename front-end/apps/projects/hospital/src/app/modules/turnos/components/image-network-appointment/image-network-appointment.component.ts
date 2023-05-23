@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { AppFeature, AppointmentDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto, CompleteEquipmentDiaryDto, UpdateAppointmentDto, AppointmentListDto } from '@api-rest/api-model.d';
 import { VALIDATIONS, getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
 import { MapperService } from '@core/services/mapper.service';
@@ -62,8 +62,8 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 	appointment: AppointmentDto;
 	appointments: CalendarEvent[];
 	selectedState: APPOINTMENT_STATES_ID;
-	formMotive: FormGroup;
-	formEdit: FormGroup;
+	formMotive: UntypedFormGroup;
+	formEdit: UntypedFormGroup;
 	institutionId = this.contextService.institutionId;
 	coverageText: string;
 	coverageNumber: any;
@@ -100,7 +100,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		private readonly appointmentService: AppointmentsService,
 		private readonly snackBarService: SnackBarService,
 		private readonly contextService: ContextService,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly equipmentAppointmensFacade: EquipmentAppointmentsFacadeService,
 		private readonly mapperService: MapperService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,

@@ -1,4 +1,4 @@
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SnomedDto, SnomedECL, SnvsEventDto, SnvsEventManualClassificationsDto } from '@api-rest/api-model';
 import { SnomedSemanticSearch, SnomedService } from './snomed.service';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
@@ -30,7 +30,7 @@ export enum SEVERITY_CODES {
 
 export class AmbulatoryConsultationProblemsService {
 
-	private readonly form: FormGroup;
+	private readonly form: UntypedFormGroup;
 	private snomedConcept: SnomedDto;
 	private data: AmbulatoryConsultationProblem[];
 	private severityTypes: any[];
@@ -40,7 +40,7 @@ export class AmbulatoryConsultationProblemsService {
 	reportFF = false;
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService,
 		private readonly snvsMasterDataService: SnvsMasterDataService,
@@ -189,7 +189,7 @@ export class AmbulatoryConsultationProblemsService {
 		return newMoment();
 	}
 
-	getForm(): FormGroup {
+	getForm(): UntypedFormGroup {
 		return this.form;
 	}
 

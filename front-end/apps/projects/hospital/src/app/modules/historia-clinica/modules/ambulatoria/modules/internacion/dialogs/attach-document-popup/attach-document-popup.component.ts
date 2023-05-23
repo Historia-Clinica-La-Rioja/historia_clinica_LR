@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DocumentTypeDto } from '@api-rest/api-model';
 import { InternmentEpisodeDocumentService } from '@api-rest/services/internment-episode-document.service';
@@ -15,20 +15,20 @@ import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.co
 export class AttachDocumentPopupComponent implements OnInit {
 
   hasError = hasError;
-  form: FormGroup;
+  form: UntypedFormGroup;
   documentTypes: TypeaheadOption<any>[];
   required: boolean = true;
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private internmentEpisodeDocument: InternmentEpisodeDocumentService,
               public dialogRef: MatDialogRef<AttachDocumentPopupComponent>,
               @Inject(MAT_DIALOG_DATA) public data) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      fileName: new FormControl({value: this.data.file.name, disabled: true}),
-      file: new FormControl(this.data.file, requiredFileType(ExtesionFile.PDF)),
-      type: new FormControl(null, Validators.required)
+      fileName: new UntypedFormControl({value: this.data.file.name, disabled: true}),
+      file: new UntypedFormControl(this.data.file, requiredFileType(ExtesionFile.PDF)),
+      type: new UntypedFormControl(null, Validators.required)
     });
     this.setDocumentTypesFilter();
   }

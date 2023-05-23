@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, ViewChild, ElementRef, AfterViewInit, AfterContentChecked, ChangeDetectorRef } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, FormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { AppFeature, CreateOutpatientDto, ERole, HCEPersonalHistoryDto, OutpatientProblemDto, QuantityDto, SnomedDto, SnomedECL } from '@api-rest/api-model.d';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
@@ -40,7 +40,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	snowstormServiceNotAvailable = false;
 	snowstormServiceErrorMessage: string;
 	snomedConcept: SnomedDto;
-	prescriptionItemForm: FormGroup;
+	prescriptionItemForm: UntypedFormGroup;
 	conceptsResultsTable: TableModel<any>;
 	healthProblemOptions: HCEPersonalHistoryDto[] = [];
 	studyCategoryOptions = [];
@@ -66,7 +66,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 
 	constructor(
 		private readonly snowstormService: SnowstormService,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly dialog: MatDialog,
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly requestMasterDataService: RequestMasterDataService,
@@ -298,7 +298,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			}
 		}
 	}
-	
+
 	private enableUnitDoseAndDayDose() {
 		this.prescriptionItemForm.controls.unitDose.setValidators([Validators.required, Validators.max(this.MAX_VALUE), Validators.min(this.MIN_VALUE)]);
 		this.prescriptionItemForm.controls.dayDose.setValidators([Validators.required, Validators.max(this.MAX_VALUE), Validators.min(this.MIN_VALUE)]);
@@ -329,7 +329,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		}
 
 		this.prescriptionItemForm.controls.healthProblem.setValue(prescriptionItem.healthProblem?.sctId);
-		
+
 		if (this.data.showDosage) {
 			if (prescriptionItem.isDailyInterval) {
 				this.prescriptionItemForm.controls.interval.setValue(this.DEFAULT_RADIO_OPTION);
@@ -391,7 +391,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			this.prescriptionItemForm.controls.quantity.setValidators([Validators.required, Validators.pattern(NUMBER_PATTERN), Validators.max(this.MAX_QUANTITY), Validators.min(this.MIN_VALUE)]);
 		}
 	}
-	
+
 	isValidForm() {
 		return ! this.prescriptionItemForm.valid || this.snomedConcept === undefined;
 	}

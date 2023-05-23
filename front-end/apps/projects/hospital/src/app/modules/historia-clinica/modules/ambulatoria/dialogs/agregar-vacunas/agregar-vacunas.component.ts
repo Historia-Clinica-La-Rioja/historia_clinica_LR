@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ClinicalSpecialtyDto, ImmunizationDto, ImmunizePatientDto } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
@@ -17,7 +17,7 @@ import { Color } from '@presentation/colored-label/colored-label.component';
 })
 export class AgregarVacunasComponent implements OnInit {
   hasConfirmedAppointment: boolean;
-  form: FormGroup;
+  form: UntypedFormGroup;
   specialties: ClinicalSpecialtyDto[];
   appliedVaccines: ImmunizationDto[];
   loading: boolean = false;
@@ -27,7 +27,7 @@ export class AgregarVacunasComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: {
       patientId: number,
     },
-    private readonly formBuilder: FormBuilder,
+    private readonly formBuilder: UntypedFormBuilder,
     private readonly dialog: MatDialog,
     private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
     public dialogRef: MatDialogRef<AgregarVacunasComponent>,

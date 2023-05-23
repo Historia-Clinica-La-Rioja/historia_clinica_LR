@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { VALIDATIONS, hasError, updateForm } from '@core/utils/form.utils';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -22,7 +22,7 @@ const ROUTE_PROFILE = 'pacientes/profile/';
 })
 export class SearchCreateComponent implements OnInit {
 
-	public formSearch: FormGroup;
+	public formSearch: UntypedFormGroup;
 	public formSearchSubmitted = false;
 	public genderOptions;
 	public noIdentity = false;
@@ -37,7 +37,7 @@ export class SearchCreateComponent implements OnInit {
 	private additionalInfoScanned: AdditionalInformationScanned;
 
 	constructor(
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private router: Router,
 		private patientService: PatientService,
 		private patientMasterDataService: PatientMasterDataService,

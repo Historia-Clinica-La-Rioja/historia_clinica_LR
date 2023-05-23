@@ -1,5 +1,5 @@
 import { SelectionModel } from "@angular/cdk/collections";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { DiagnosisDto, HealthConditionDto } from "@api-rest/api-model";
 import { InternacionMasterDataService } from "@api-rest/services/internacion-master-data.service";
 import { InternmentStateService } from "@api-rest/services/internment-state.service";
@@ -123,7 +123,7 @@ export class DiagnosisEpicrisisService {
 		}
 	}
 
-	public changeMainDiagnosis(newMainDiagnosis: DiagnosisDto, mainDiagnosisRadioButton?: FormControl): void {
+	public changeMainDiagnosis(newMainDiagnosis: DiagnosisDto, mainDiagnosisRadioButton?: UntypedFormControl): void {
 		if (mainDiagnosisRadioButton) {
 			mainDiagnosisRadioButton.setValue(newMainDiagnosis);
 		}

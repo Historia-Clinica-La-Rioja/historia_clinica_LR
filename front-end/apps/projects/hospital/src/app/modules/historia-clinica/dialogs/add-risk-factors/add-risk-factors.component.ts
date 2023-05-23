@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Moment } from 'moment';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { EvolutionNoteDto } from '@api-rest/api-model';
@@ -18,7 +18,7 @@ import { PermissionsService } from "@core/services/permissions.service";
 })
 export class AddRiskFactorsComponent implements OnInit {
 
-	form: FormGroup;
+	form: UntypedFormGroup;
 	loading = false;
 	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
 	isNursingEvolutionNote: boolean;
@@ -28,7 +28,7 @@ export class AddRiskFactorsComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA) public data,
 		private readonly evolutionNoteService: EvolutionNoteService,
 		private readonly snackBarService: SnackBarService,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly translateService: TranslateService,
 		private readonly permissionsService: PermissionsService
 	) {

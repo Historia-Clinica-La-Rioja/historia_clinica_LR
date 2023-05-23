@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DiagnosesGeneralStateDto, MasterDataInterface, NewDosageDto, PharmacoDto, PharmacoSummaryDto, QuantityDto, TimeDto } from '@api-rest/api-model';
+import { DiagnosesGeneralStateDto, MasterDataInterface, NewDosageDto, PharmacoDto, PharmacoSummaryDto, QuantityDto } from '@api-rest/api-model';
 import { SharedSnomedDto } from '@api-rest/api-model';
 import { SnomedDto } from '@api-rest/api-model';
 import { EIndicationType } from '@api-rest/api-model';
@@ -24,7 +24,7 @@ import { HOURS_LIST, INTERVALS_TIME, openConfirmDialog, OTHER_FREQUENCY, OTHER_I
 })
 export class PharmacoComponent implements OnInit {
 	pharmaco: PharmacoDto = null;
-	form: FormGroup;
+	form: UntypedFormGroup;
 	searchSnomedConcept: SearchSnomedConceptsPharmacoService;
 	indicationDate: Date;
 	vias: MasterDataInterface<number>[] = [];
@@ -56,7 +56,7 @@ export class PharmacoComponent implements OnInit {
 			units: MasterDataInterface<number>[], pharmaco?: PharmacoSummaryDto
 		},
 		private readonly dialogRef: MatDialogRef<PharmacoComponent>,
-		public formBuilder: FormBuilder,
+		public formBuilder: UntypedFormBuilder,
 		private readonly snowstormService: SnowstormService,
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService,

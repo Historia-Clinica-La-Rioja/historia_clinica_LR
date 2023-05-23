@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { AnthropometricDataDto, EvolutionNoteDto, MasterDataInterface } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
@@ -20,7 +20,7 @@ export class AddAnthropometricComponent implements OnInit {
 	getError = getError;
 	hasError = hasError;
 
-	form: FormGroup;
+	form: UntypedFormGroup;
 	loading = false;
 	bloodTypes: MasterDataInterface<string>[];
 
@@ -29,7 +29,7 @@ export class AddAnthropometricComponent implements OnInit {
 	constructor(
 		public dialogRef: MatDialogRef<AddAnthropometricComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly evolutionNoteService: EvolutionNoteService,
 		private readonly snackBarService: SnackBarService,

@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Moment } from 'moment';
@@ -13,14 +13,14 @@ import { MIN_DATE } from "@core/utils/date.utils";
 })
 export class ProbableDischargeDialogComponent implements OnInit {
 
-	form: FormGroup;
+	form: UntypedFormGroup;
 	loading = false;
 	minDate = MIN_DATE;
 
   	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { internmentEpisodeId: number, lastProbableDischargeDate: Date },
 		public dialogRef: MatDialogRef<ProbableDischargeDialogComponent>,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly internmentEpisodeService: InternmentEpisodeService,
 		private readonly snackBarService: SnackBarService,
   	) { }

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MedicationInfoDto } from '@api-rest/api-model';
 import { hasError } from '@core/utils/form.utils';
@@ -15,7 +15,7 @@ import { PrescripcionesService } from '../../../../services/prescripciones.servi
 export class SuspenderMedicacionComponent implements OnInit {
 
 	medications: MedicationInfoDto[];
-	suspendMedicationForm: FormGroup;
+	suspendMedicationForm: UntypedFormGroup;
 	hasError = hasError;
 
 	public readonly medicationStatusChange = MedicationStatusChange;
@@ -23,7 +23,7 @@ export class SuspenderMedicacionComponent implements OnInit {
 	constructor(
 		private prescripcionesService: PrescripcionesService,
 		private snackBarService: SnackBarService,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		public dialogRef: MatDialogRef<SuspenderMedicacionComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: {
 			medications: MedicationInfoDto[],

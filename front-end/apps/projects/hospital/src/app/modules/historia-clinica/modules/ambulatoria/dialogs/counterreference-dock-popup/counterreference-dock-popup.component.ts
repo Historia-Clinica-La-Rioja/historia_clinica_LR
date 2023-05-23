@@ -1,5 +1,5 @@
 import { Component, ElementRef, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { CounterReferenceDto, DateDto, ReferenceCounterReferenceFileDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
@@ -37,7 +37,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	procedimientoNuevaConsultaService: ProcedimientosService;
 	alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
 	criticalityTypes: any[];
-	formReferenceClosure: FormGroup;
+	formReferenceClosure: UntypedFormGroup;
 	hasError = hasError;
 	selectedFiles: File[] = [];
 	selectedFilesShow: any[] = [];
@@ -48,7 +48,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
 		public dockPopupRef: DockPopupRef,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,

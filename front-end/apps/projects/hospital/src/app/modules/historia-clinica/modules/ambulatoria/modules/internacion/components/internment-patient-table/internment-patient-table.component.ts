@@ -6,7 +6,7 @@ import { PatientNameService } from "@core/services/patient-name.service";
 import { ContextService } from '@core/services/context.service';
 import { InternmentPatientService } from "@api-rest/services/internment-patient.service";
 import { MapperService } from "@presentation/services/mapper.service";
-import { DocumentsSummaryDto, DocumentSummaryDto } from '@api-rest/api-model';
+import { DocumentsSummaryDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-internment-patient-table',

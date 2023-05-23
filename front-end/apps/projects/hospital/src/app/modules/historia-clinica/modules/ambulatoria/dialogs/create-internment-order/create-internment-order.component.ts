@@ -5,7 +5,7 @@ import { ApiErrorDto, PrescriptionDto } from "@api-rest/api-model";
 import { SnomedECL } from "@api-rest/api-model";
 import { TemplateOrConceptOption, TemplateOrConceptType } from "@historia-clinica/components/template-concept-typeahead-search/template-concept-typeahead-search.component";
 import { InternmentStateService } from "@api-rest/services/internment-state.service";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
 import { OrderStudiesService, Study } from "@historia-clinica/services/order-studies.service";
@@ -25,7 +25,7 @@ export class CreateInternmentOrderComponent implements OnInit {
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	hasError = hasError;
 
-	form: FormGroup;
+	form: UntypedFormGroup;
 	firstStepCompleted = false;
 
 	studyCategoryOptions = [];
@@ -37,7 +37,7 @@ export class CreateInternmentOrderComponent implements OnInit {
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { diagnoses: any[], patientId: number, emergencyCareId?: number },
 		public dialogRef: MatDialogRef<CreateInternmentOrderComponent>,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly requestMasterDataService: RequestMasterDataService,
 		private readonly internmentStateService: InternmentStateService,
 		private readonly internmentOrderService: InternmentOrderService,

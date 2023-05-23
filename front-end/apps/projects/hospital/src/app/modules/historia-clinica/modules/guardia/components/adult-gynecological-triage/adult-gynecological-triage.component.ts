@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TriageAdultGynecologicalDto } from '@api-rest/api-model';
 import { FactoresDeRiesgoFormService, RiskFactorsValue } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -21,13 +21,13 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 	private triageCategoryId: number;
 	private doctorsOfficeId: number;
 
-	adultGynecologicalForm: FormGroup;
-	riskFactorsForm: FormGroup;
+	adultGynecologicalForm: UntypedFormGroup;
+	riskFactorsForm: UntypedFormGroup;
 	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
 
 
 	constructor(
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private guardiaMapperService: GuardiaMapperService,
 		private readonly translateService: TranslateService,
 	) {

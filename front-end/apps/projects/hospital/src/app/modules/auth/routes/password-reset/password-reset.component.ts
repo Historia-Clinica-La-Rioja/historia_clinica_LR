@@ -3,7 +3,7 @@ import { PasswordResetService } from '../../../api-rest/services/password-reset.
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { ApiErrorMessageDto } from '@api-rest/api-model';
 import {patternValidator} from "@core/utils/form.utils";
 
@@ -14,13 +14,13 @@ import {patternValidator} from "@core/utils/form.utils";
 })
 export class PasswordResetComponent implements OnInit {
 	public passwordResetToken$: Observable<string>;
-	public form: FormGroup;
+	public form: UntypedFormGroup;
 	public apiResponse: any = null;
 	public hidePassword = true;
 
 	constructor(
 		private route: ActivatedRoute,
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private service: PasswordResetService
 	) { }
 

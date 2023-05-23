@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -41,7 +41,7 @@ export class DiagnosisClinicalEvaluationDockPopupComponent implements OnInit {
 	private healthClinicalStatus: MasterDataInterface<string>[];
 
 	verifications: MasterDataInterface<string>[];
-	form: FormGroup;
+	form: UntypedFormGroup;
 	internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
 	diagnostics: TableCheckbox<DiagnosesGeneralStateDto> = {
 		data: [],
@@ -84,7 +84,7 @@ export class DiagnosisClinicalEvaluationDockPopupComponent implements OnInit {
 		private readonly contextService: ContextService,
 		private readonly mapperService: MapperService,
 		private readonly tableService: TableService,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snackBarService: SnackBarService,
 		private readonly permissionsService: PermissionsService,
 	) {

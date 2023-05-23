@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SnomedECL } from "@api-rest/api-model";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { Observable, of } from "rxjs";
 import { SnowstormService } from "@api-rest/services/snowstorm.service";
 import { debounceTime, distinctUntilChanged, map, mergeMap, startWith } from "rxjs/operators";
@@ -18,7 +18,7 @@ export class TemplateConceptTypeaheadSearchComponent implements OnInit {
 	@Input() debounceTime = 300;
 	@Output() optionSelected = new EventEmitter<TemplateOrConceptOption>();
 
-	myControl = new FormControl();
+	myControl = new UntypedFormControl();
 	conceptOptions: TemplateOrConceptOption[];
 	templateOptions: TemplateOrConceptOption[];
 	opts = [];

@@ -16,7 +16,7 @@ import {
 	PersonPhotoDto
 } from '@api-rest/api-model';
 import { map } from 'rxjs/operators';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -46,7 +46,7 @@ export class PatientBedRelocationComponent implements OnInit {
 	hasError = hasError;
 	public minTimeStr;
 	public minDate;
-	public form: FormGroup;
+	public form: UntypedFormGroup;
 	public patientId: number;
 	public today: Moment = newMoment();
 	public internmentEpisode: InternmentSummaryDto;
@@ -61,7 +61,7 @@ export class PatientBedRelocationComponent implements OnInit {
 	private readonly routePrefix;
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly patientService: PatientService,
 		private readonly internmentService: InternacionService,
 		private readonly mapperService: MapperService,
@@ -97,7 +97,7 @@ export class PatientBedRelocationComponent implements OnInit {
 
 				this.internmentService.getInternmentEpisodeSummary(this.internmentId).subscribe(ies => {
 					this.internmentEpisode = ies;
-					this.form.addControl('originBedId', new FormControl({ value: this.internmentEpisode.bed.bedNumber, disabled: true }, [Validators.required]));
+					this.form.addControl('originBedId', new UntypedFormControl({ value: this.internmentEpisode.bed.bedNumber, disabled: true }, [Validators.required]));
 
 					this.bed.getLastPatientBedRelocation(this.internmentId).subscribe(patientBedRelocation => {
 						const lastRelocationDate = patientBedRelocation ? momentParseDateTime(patientBedRelocation.relocationDate).toDate() : null;

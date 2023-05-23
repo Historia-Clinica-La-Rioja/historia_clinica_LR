@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { hasError, VALIDATIONS } from '@core/utils/form.utils';
 import { IDENTIFICATION_TYPE_IDS, PATIENT_TYPE } from '@core/utils/patient.utils';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -45,7 +45,7 @@ export class SearchComponent implements OnInit {
 	genders: MasterDataDto[] = [];
 	identificationTypes: MasterDataDto[] = [];
 	public formSearchSubmitted = false;
-	public formSearch: FormGroup;
+	public formSearch: UntypedFormGroup;
 	public identifyTypeArray: IdentificationTypeDto[];
 	public identifyTypeViewPatientDetail = {};
 	public genderOptions: GenderDto[];
@@ -65,7 +65,7 @@ export class SearchComponent implements OnInit {
 	public identificationNumberFieldDisabled = false;
 
 	constructor(
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private patientService: PatientService,
 		private personService: PersonService,
 		private router: Router,

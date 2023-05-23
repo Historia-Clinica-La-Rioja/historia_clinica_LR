@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DiagnosesGeneralStateDto, DiagnosticReportInfoDto, EmergencyCareListDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
@@ -43,7 +43,7 @@ export class CardEstudiosComponent implements OnInit {
 	adviceDiagnotics: DiagnosticReportInfoDto[] = [];
 	educationDiagnotics: DiagnosticReportInfoDto[] = [];
 	public hideFilterPanel = false;
-	public formFilter: FormGroup;
+	public formFilter: UntypedFormGroup;
 	private internmentEpisodeInProgressId;
 	hasHealthRelatedRole = false;
 	hasPicturesStaffRole = false;
@@ -84,7 +84,7 @@ export class CardEstudiosComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly requestMasterDataService: RequestMasterDataService,
 		private prescripcionesService: PrescripcionesService,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly internmentPatientService: InternmentPatientService,
 		private readonly internmentStateService: InternmentStateService,
 		private readonly translateService: TranslateService,

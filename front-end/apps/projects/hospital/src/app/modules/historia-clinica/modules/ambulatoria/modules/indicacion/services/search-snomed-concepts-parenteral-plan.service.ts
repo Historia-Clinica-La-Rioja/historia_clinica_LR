@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from "@angular/forms";
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormArray, FormControl } from "@angular/forms";
 import { SnomedDto } from "@api-rest/api-model";
 import { SnomedService, SnomedSemanticSearch } from "@historia-clinica/services/snomed.service";
 import { SnomedECL } from "@api-rest/api-model";
@@ -13,8 +13,8 @@ import { SnowstormService } from "@api-rest/services/snowstorm.service";
 
 export class SearchSnomedConceptsParenteralPlanService {
 
-	salineForm: FormGroup;
-	pharmacoForm: FormGroup;
+	salineForm: UntypedFormGroup;
+	pharmacoForm: UntypedFormGroup;
 	salineSnomedConcept: SnomedDto;
 	searching = false;
 	showToSearchSnomedConcept = false;
@@ -23,7 +23,7 @@ export class SearchSnomedConceptsParenteralPlanService {
 	conceptsResultsTable: TableModel<any>;
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snowstormService: SnowstormService,
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService
@@ -103,13 +103,13 @@ export class SearchSnomedConceptsParenteralPlanService {
 
 	setPharmacoForm(selectedConcept: SnomedDto): void {
 		if (selectedConcept) {
-			const pharmacoFormArray = this.pharmacoForm.get('pharmaco') as FormArray;
+			const pharmacoFormArray = this.pharmacoForm.get('pharmaco') as UntypedFormArray;
 			pharmacoFormArray.push(this.addPharmaco(selectedConcept));
 			this.showToSearchSnomedConcept = false;
 		}
 	}
 
-	private addPharmaco(selectedConcept: SnomedDto): FormGroup {
+	private addPharmaco(selectedConcept: SnomedDto): UntypedFormGroup {
 		const pt = selectedConcept ? selectedConcept.pt : '';
 		const form = this.formBuilder.group({
 			snomed: this.formBuilder.group({
@@ -128,16 +128,16 @@ export class SearchSnomedConceptsParenteralPlanService {
 	}
 
 	loadTootip(i: number): string {
-		const pharmaco: FormGroup = <FormGroup>this.pharmacos.at(i);
+		const pharmaco: UntypedFormGroup = <UntypedFormGroup>this.pharmacos.at(i);
 		return pharmaco.controls.snomed.value.pt
 	}
 
-	get pharmacos(): FormArray {
-		return this.pharmacoForm.get('pharmaco') as FormArray
+	get pharmacos(): UntypedFormArray {
+		return this.pharmacoForm.get('pharmaco') as UntypedFormArray
 	}
 
-	getSnomed(i: number): FormGroup {
-		return <FormGroup>this.pharmacos.at(i).get('snomed')
+	getSnomed(i: number): UntypedFormGroup {
+		return <UntypedFormGroup>this.pharmacos.at(i).get('snomed')
 	}
 
 	searchPharmacoSnomedConcept() {

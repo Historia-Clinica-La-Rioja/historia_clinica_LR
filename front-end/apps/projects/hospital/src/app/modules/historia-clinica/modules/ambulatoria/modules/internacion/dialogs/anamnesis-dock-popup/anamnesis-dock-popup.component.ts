@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import {
 	AllergyConditionDto,
 	AnamnesisDto,
@@ -48,7 +48,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 
 	mainDiagnosisError = '';
 	anamnesis: ResponseAnamnesisDto;
-	form: FormGroup;
+	form: UntypedFormGroup;
 
 	bloodTypes: MasterDataInterface<string>[];
 	diagnosticos: DiagnosisDto[] = [];
@@ -71,7 +71,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		@Inject(OVERLAY_DATA) public data: any,
 		readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
 		public dockPopupRef: DockPopupRef,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly anamnesisService: AnamnesisService,
 		private readonly snackBarService: SnackBarService,

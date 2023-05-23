@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AllergyConditionDto, SnomedDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/snomed.service';
 import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
@@ -28,7 +28,7 @@ export class AlergiasComponent implements OnInit {
 	}
 
 	snomedConcept: SnomedDto;
-	form: FormGroup;
+	form: UntypedFormGroup;
 
 	// Mat table
 	columns = [
@@ -41,7 +41,7 @@ export class AlergiasComponent implements OnInit {
 	displayedColumns: string[] = [];
 
 	constructor(
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private snomedService: SnomedService,
 		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
 	) {

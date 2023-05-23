@@ -1,6 +1,6 @@
 import { DatePipe } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { dateTimeDtoToStringDate } from "@api-rest/mapper/date-dto.mapper";
 import { InternacionMasterDataService } from "@api-rest/services/internacion-master-data.service";
@@ -41,7 +41,7 @@ export class PatientDischargeComponent implements OnInit {
 	TIME_PATTERN = TIME_PATTERN;
 	minTime: string;
 	minDate: string;
-	public dischargeForm: FormGroup;
+	public dischargeForm: UntypedFormGroup;
 	public minDischargeDate: Date;
 	public patientBasicData: PatientBasicData;
 	public personalInformation: PersonalInformation;
@@ -58,7 +58,7 @@ export class PatientDischargeComponent implements OnInit {
 	public hasError = hasError;
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly patientService: PatientService,
 		private readonly mapperService: MapperService,
 		private readonly personService: PersonService,

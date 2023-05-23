@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, AbstractControl } from '@angular/forms';
 import { BedManagementFacadeService, Sector, Service } from '../../services/bed-management-facade.service';
 import { momentFormat, DateFormat, momentParse } from '@core/utils/moment.utils';
 import { Subscription } from 'rxjs';
@@ -12,7 +12,7 @@ import { SECTOR_GUARDIA } from '@historia-clinica/modules/guardia/constants/mast
 })
 export class BedFiltersComponent implements OnInit, OnDestroy {
 
-	public form: FormGroup;
+	public form: UntypedFormGroup;
 	public sectors: Sector[] = [];
 	public services: Service[] = [];
 
@@ -22,7 +22,7 @@ export class BedFiltersComponent implements OnInit, OnDestroy {
 	isEmergencyEpisode: boolean = false;
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly bedManagementFacadeService: BedManagementFacadeService
   	) { }
 	

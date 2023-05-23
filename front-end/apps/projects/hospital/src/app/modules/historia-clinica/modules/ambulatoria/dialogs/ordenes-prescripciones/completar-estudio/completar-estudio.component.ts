@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CompleteRequestDto, DiagnosticReportInfoDto, DoctorInfoDto } from '@api-rest/api-model';
 import { PrescriptionItemData } from '../../../modules/indicacion/components/item-prescripciones/item-prescripciones.component';
@@ -16,13 +16,13 @@ import { forkJoin } from 'rxjs';
 export class CompletarEstudioComponent implements OnInit {
 
 	diagnosticReport; //Puede ser de tipo DiagnosticReportInfoDto[] o StudyInformation[];
-	completeStudyForm: FormGroup;
+	completeStudyForm: UntypedFormGroup;
 	selectedFiles: File[] = [];
 	selectedFilesShow: any[] = [];
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	public hasError = hasError;
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private prescripcionesService: PrescripcionesService,
 		public dialogRef: MatDialogRef<CompletarEstudioComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: {

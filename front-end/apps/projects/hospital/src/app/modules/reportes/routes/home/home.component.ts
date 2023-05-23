@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Moment } from 'moment';
@@ -24,7 +24,7 @@ import { REPORT_TYPES } from '../../constants/report-types';
 })
 export class HomeComponent implements OnInit {
 
-	form: FormGroup;
+	form: UntypedFormGroup;
 	public submitted = false;
 
 	public hasError = hasError;
@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit {
 	minDate = MIN_DATE;
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly healthcareProfessionalService: HealthcareProfessionalByInstitutionService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly reportsService: ReportsService,

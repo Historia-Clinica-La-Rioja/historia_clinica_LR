@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ConceptsSearchDialogComponent } from '../concepts-search-dialog/concepts-search-dialog.component';
 import { HealthConditionDto, MasterDataInterface, EvolutionNoteDto, ResponseEvolutionNoteDto } from '@api-rest/api-model';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -21,7 +21,7 @@ export class RemoveDiagnosisComponent implements OnInit {
 	DESCARTADO = HEALTH_VERIFICATIONS.DESCARTADO;
 
 	loading = false;
-	removeForm: FormGroup;
+	removeForm: UntypedFormGroup;
 	diagnosis: HealthConditionDto;
 
 	verifications: MasterDataInterface<string>[];
@@ -33,7 +33,7 @@ export class RemoveDiagnosisComponent implements OnInit {
 		private internacionMasterDataService: InternacionMasterDataService,
 		private evolutionNoteService: EvolutionNoteService,
 		private snackBarService: SnackBarService,
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 	) {
 		this.diagnosis = this.data.diagnosis;
 	}

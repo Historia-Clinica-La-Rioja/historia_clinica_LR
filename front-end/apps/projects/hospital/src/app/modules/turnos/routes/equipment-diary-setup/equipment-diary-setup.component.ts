@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
@@ -41,7 +41,7 @@ export class EquipmentDiarySetupComponent implements OnInit {
 	closingTime: number;
 
 	errors: string[] = [];
-	form: FormGroup;
+	form: UntypedFormGroup;
 	holidayWork = false;
 	hourSegments: number;
 	minDate = new Date();
@@ -73,7 +73,7 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly equipmentDiaryOpeningHoursService: EquipmentDiaryOpeningHoursService,
 		private readonly equipmentService: EquipmentService,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly route: ActivatedRoute
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;

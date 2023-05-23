@@ -1,5 +1,5 @@
 import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
+import { ControlValueAccessor, UntypedFormBuilder, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { CompleteDiaryDto, DiaryOpeningHoursDto, TimeDto } from '@api-rest/api-model';
 import { stringToTimeDto, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { MINUTES_IN_HOUR } from '@turnos/constants/appointment';
@@ -51,7 +51,7 @@ export class DateRangeTimeFormComponent implements ControlValueAccessor, OnDestr
 
 	onChangeSub: Subscription;
 
-	constructor(private formBuilder: FormBuilder)
+	constructor(private formBuilder: UntypedFormBuilder)
 	{ }
 
 	ngOnInit(): void {

@@ -1,5 +1,5 @@
 import { AfterContentInit, Component, ElementRef, Inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Moment } from 'moment';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DateFormat, momentParseDate, newMoment } from '@core/utils/moment.utils';
@@ -39,14 +39,14 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 	ecl = SnomedECL.VACCINE;
 
 	// billable form attributes (new vaccine application)
-	billableForm: FormGroup;
-	searchBillableVaccineForm: FormGroup;
+	billableForm: UntypedFormGroup;
+	searchBillableVaccineForm: UntypedFormGroup;
 	newVaccineSnomedConcept: SnomedDto;
 	tryToSubmit: boolean = false;
 
 	// previous form attributes (register previous vaccine application)
-	previousForm: FormGroup;
-	searchPreviousVaccineForm: FormGroup;
+	previousForm: UntypedFormGroup;
+	searchPreviousVaccineForm: UntypedFormGroup;
 	previousVaccineSnomedConcept: SnomedDto;
 	tryToSubmitPrevious: boolean = false;
 
@@ -68,7 +68,7 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 				patientId: number,
 				hasConfirmedAppointment: boolean
 			},
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly vaccineService: VaccineService,
 		private readonly dialog: MatDialog,
 		private readonly el: ElementRef,
@@ -212,7 +212,7 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 		this.selectedTab = value;
 	}
 
-	public chosenYearHandler(newDate: Moment, form: FormGroup): void {
+	public chosenYearHandler(newDate: Moment, form: UntypedFormGroup): void {
 		if (form.controls.date.value !== null) {
 			const ctrlDate: Moment = form.controls.date.value;
 			ctrlDate.year(newDate.year());
@@ -222,7 +222,7 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 		}
 	}
 
-	public chosenMonthHandler(newDate: Moment, form: FormGroup): void {
+	public chosenMonthHandler(newDate: Moment, form: UntypedFormGroup): void {
 		if (form.controls.date.value !== null) {
 			const ctrlDate: Moment = form.controls.date.value;
 			ctrlDate.month(newDate.month());
@@ -369,7 +369,7 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 		this.disableConditions(this.previousForm);
 	}
 
-	private loadConditions(sctid: string, form: FormGroup): void {
+	private loadConditions(sctid: string, form: UntypedFormGroup): void {
 		this.vaccineService.vaccineInformation(sctid).subscribe(
 			(vaccineInformation: VaccineInformationDto) => {
 				this.disableDoses(form);
@@ -385,7 +385,7 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 		);
 	}
 
-	public loadSchemes(conditionIndex: number, form: FormGroup): void {
+	public loadSchemes(conditionIndex: number, form: UntypedFormGroup): void {
 		this.disableDoses(form);
 		if (form.value.condition != null) {
 			this.schemes = this.conditions[conditionIndex].schemes;
@@ -396,31 +396,31 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 			this.disableSchemes(form);
 	}
 
-	public loadDoses(schemeIndex: number, form: FormGroup): void {
+	public loadDoses(schemeIndex: number, form: UntypedFormGroup): void {
 		this.doses = this.schemes[schemeIndex].doses;
 		form.get("dose").enable();
 		form.get("dose").setValue(null);
 	}
 
-	private disableConditions(form: FormGroup): void {
+	private disableConditions(form: UntypedFormGroup): void {
 		delete this.conditions;
 		form.get("condition").setValue(null);
 		form.get("condition").disable();
 	}
 
-	private disableSchemes(form: FormGroup): void {
+	private disableSchemes(form: UntypedFormGroup): void {
 		delete this.schemes;
 		form.get("scheme").setValue(null);
 		form.get("scheme").disable();
 	}
 
-	private disableDoses(form: FormGroup): void {
+	private disableDoses(form: UntypedFormGroup): void {
 		delete this.doses;
 		form.get("dose").setValue(null);
 		form.get("dose").disable();
 	}
 
-	clear(control: AbstractControl, value: string, form: FormGroup): void {
+	clear(control: AbstractControl, value: string, form: UntypedFormGroup): void {
 		if (this.CLEAR_CASES[value]) {
 			this.CLEAR_CASES[value](form);
 		}

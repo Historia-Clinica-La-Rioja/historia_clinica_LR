@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AllergyConditionDto, EvolutionNoteDto, SnomedDto } from '@api-rest/api-model';
 import { SnomedECL} from '@api-rest/api-model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
@@ -17,7 +17,7 @@ import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambula
 export class AddAllergyComponent implements OnInit {
 
 	snomedConcept: SnomedDto;
-	form: FormGroup;
+	form: UntypedFormGroup;
 	loading = false;
 
 	searching = false;
@@ -28,7 +28,7 @@ export class AddAllergyComponent implements OnInit {
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { internmentEpisodeId: number },
 		public dialogRef: MatDialogRef<AddAllergyComponent>,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly evolutionNoteService: EvolutionNoteService,
 		private readonly snackBarService: SnackBarService,
 		private readonly snowstormService: SnowstormService,

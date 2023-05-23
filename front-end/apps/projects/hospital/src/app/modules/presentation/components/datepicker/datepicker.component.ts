@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, FormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import * as moment from 'moment';
 import { Moment } from "moment";
 
@@ -11,7 +11,7 @@ import { Moment } from "moment";
 
 export class DatepickerComponent implements OnInit {
 
-	form: FormGroup;
+	form: UntypedFormGroup;
 	@Input() enableDelete = false;
 	@Input() title: string;
 	@Input() dateToSetInDatepicker: Date;
@@ -22,7 +22,7 @@ export class DatepickerComponent implements OnInit {
 	@Output() selectDate: EventEmitter<Date> = new EventEmitter();
 
 	constructor(
-		private readonly formBuilder: FormBuilder
+		private readonly formBuilder: UntypedFormBuilder
 	) { }
 
 	ngOnInit(): void {

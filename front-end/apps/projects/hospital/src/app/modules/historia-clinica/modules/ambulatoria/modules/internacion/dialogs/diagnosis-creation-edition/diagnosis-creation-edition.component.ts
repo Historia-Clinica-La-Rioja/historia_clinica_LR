@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DiagnosisDto, HealthConditionDto, SnomedDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model'
@@ -15,7 +15,7 @@ export class DiagnosisCreationEditionComponent implements OnInit {
 
 	snomedError = false;
 
-	form: FormGroup;
+	form: UntypedFormGroup;
 	type: string;
 	selection = false;
 	diagnosis: DiagnosisDto;
@@ -26,7 +26,7 @@ export class DiagnosisCreationEditionComponent implements OnInit {
 
 	constructor(@Inject(MAT_DIALOG_DATA) public data: any,
 		public dialogRef: MatDialogRef<DiagnosisCreationEditionComponent>,
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private snomedService: SnomedService) {
 		this.type = data.type;
 		this.diagnosis = data.diagnosis;

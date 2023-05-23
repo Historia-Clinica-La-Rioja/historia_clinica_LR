@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { AddressDto, DepartmentDto, InstitutionBasicInfoDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
@@ -15,7 +15,7 @@ import { ReferenceProblemsService } from '../../services/reference-problems.serv
 })
 export class OriginInstitutionReferenceComponent implements OnInit {
 
-    @Input() formReference: FormGroup;
+    @Input() formReference: UntypedFormGroup;
     @Input() data: any;
     @Output() updateSpecialtiesAndCarelineFields = new EventEmitter();
 
@@ -91,8 +91,8 @@ export class OriginInstitutionReferenceComponent implements OnInit {
         this.problemsList$ = of(this.referenceProblemsService.setProblems(this.data));
     }
 
-    get associatedProblemsControls(): FormControl {
-        return this.formReference.get('problems') as FormControl;
+    get associatedProblemsControls(): UntypedFormControl {
+        return this.formReference.get('problems') as UntypedFormControl;
     }
 
     setProblemsReference(problemsArray: string[]) {

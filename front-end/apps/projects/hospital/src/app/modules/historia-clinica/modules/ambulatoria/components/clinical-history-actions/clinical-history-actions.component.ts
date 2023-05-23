@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { HealthConditionDto, DiagnosisDto, InternmentEpisodeProcessDto, AnamnesisSummaryDto, EpicrisisSummaryDto, EvaluationNoteSummaryDto, DocumentHistoricDto, DocumentSearchDto, EmergencyCareEpisodeInProgressDto, ResponseEmergencyCareDto } from '@api-rest/api-model';
+import { HealthConditionDto, DiagnosisDto, InternmentEpisodeProcessDto, AnamnesisSummaryDto, EpicrisisSummaryDto, EvaluationNoteSummaryDto, DocumentHistoricDto, DocumentSearchDto, ResponseEmergencyCareDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';

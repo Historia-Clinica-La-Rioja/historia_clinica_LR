@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, forwardRef, Input, OnDestroy, Output } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
+import { ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { ClinicalSpecialtyDto, ValidatedLicenseNumberDto } from '@api-rest/api-model';
 import { hasError } from '@core/utils/form.utils';
 import { ProfessionalSpecialties } from '@pacientes/routes/profile/profile.component';
@@ -36,16 +36,16 @@ export class LicenseFormComponent implements ControlValueAccessor, OnDestroy {
 
 	form = this.formBuilder.group({
 		id: null,
-		licenseNumber: new FormControl(null, [Validators.required, Validators.pattern(/^([a-zA-Z0-9])+$/), Validators.maxLength(MAX_LENGTH)]),
+		licenseNumber: new UntypedFormControl(null, [Validators.required, Validators.pattern(/^([a-zA-Z0-9])+$/), Validators.maxLength(MAX_LENGTH)]),
 
 		typeId: this.RADIO_OPTION_NATIONAL,
-		professionalProfessionId: new FormControl(null, [Validators.required]),
-		healthcareProfessionalSpecialtyId: new FormControl(null, []),
-		radioButtonOptionSpecialty: new FormControl(false, [])
+		professionalProfessionId: new UntypedFormControl(null, [Validators.required]),
+		healthcareProfessionalSpecialtyId: new UntypedFormControl(null, []),
+		radioButtonOptionSpecialty: new UntypedFormControl(false, [])
 	});
 
 	constructor(
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private readonly licenseNumberService: MatriculaService,
 		private cdRef: ChangeDetectorRef
 	) {}

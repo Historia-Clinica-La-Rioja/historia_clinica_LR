@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges, forwardRef } from '@angular/core';
-import { FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormBuilder, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DiagnosisDto, HealthConditionDto } from '@api-rest/api-model';
 import { Subscription } from 'rxjs';
 
@@ -31,8 +31,8 @@ export class DiagnosticosFormComponent implements OnChanges {
 	}
 
 	formDiagnosticos = this.formBuilder.group({
-		mainDiagnostico: [[]],
-		otrosDiagnosticos: [[]]
+		mainDiagnostico: new FormControl<HealthConditionDto | null>(null),
+		otrosDiagnosticos: new FormControl<DiagnosisDto[] | null>([]),
 	});
 
 	onChangeSub: Subscription;

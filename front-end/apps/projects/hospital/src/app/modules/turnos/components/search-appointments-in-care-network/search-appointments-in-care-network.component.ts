@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AddressDto, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableProtectedAppointmentsDto, InstitutionBasicInfoDto, ProvinceDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
@@ -24,7 +24,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 
 	@Input() isVisible = false;
 
-	searchForm: FormGroup;
+	searchForm: UntypedFormGroup;
 	provinces: ProvinceDto[] = [];
 	departments: DepartmentDto[] = [];
 	institutions: InstitutionBasicInfoDto[] = [];
@@ -60,7 +60,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 	careLineId: number;
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private institutionService: InstitutionService,
 		private contextService: ContextService,
 		private addressMasterDataService: AddressMasterDataService,

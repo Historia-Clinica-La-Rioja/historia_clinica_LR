@@ -6,7 +6,7 @@ import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVE } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { AppFeature, AppointmentDto, CompleteDiaryDto, DateTimeDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto, UpdateAppointmentDto, AppointmentListDto, UpdateAppointmentDateDto } from '@api-rest/api-model.d';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { VALIDATIONS, getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
@@ -68,10 +68,10 @@ export class AppointmentComponent implements OnInit {
 	appointment: AppointmentDto;
 	appointments: CalendarEvent[];
 	selectedState: APPOINTMENT_STATES_ID;
-	formMotive: FormGroup;
-	formEdit: FormGroup;
-	formDate: FormGroup;
-	formObservations: FormGroup;
+	formMotive: UntypedFormGroup;
+	formEdit: UntypedFormGroup;
+	formDate: UntypedFormGroup;
+	formObservations: UntypedFormGroup;
 	institutionId = this.contextService.institutionId;
 	coverageText: string;
 	coverageNumber: any;
@@ -117,7 +117,7 @@ export class AppointmentComponent implements OnInit {
 		private readonly appointmentService: AppointmentsService,
 		private readonly snackBarService: SnackBarService,
 		private readonly contextService: ContextService,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly appointmentFacade: AppointmentsFacadeService,
 		private readonly mapperService: MapperService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,

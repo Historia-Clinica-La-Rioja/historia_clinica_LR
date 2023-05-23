@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { format } from "date-fns";
 
@@ -22,10 +22,10 @@ import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/d
 })
 export class SolveProblemComponent implements OnInit {
 
-	removeForm: FormGroup;
+	removeForm: UntypedFormGroup;
 	clinicalStatus: MasterDataInterface<string>[];
 	problemasService: ProblemasService;
-	private readonly form: FormGroup;
+	private readonly form: UntypedFormGroup;
 	private problema: HealthConditionNewConsultationDto;
 	private dataDto: HCEPersonalHistoryDto;
 	private readonly patientId: number;
@@ -39,7 +39,7 @@ export class SolveProblemComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA) data,
 		private dialogRef: MatDialogRef<SolveProblemComponent>,
 		private snackBarService: SnackBarService,
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private readonly dialog: MatDialog,
 		private readonly healthConditionService: HealthConditionService,
 		private readonly snomedService: SnomedService,
@@ -127,7 +127,7 @@ export class SolveProblemComponent implements OnInit {
 		}
 	}
 
-	getForm(): FormGroup {
+	getForm(): UntypedFormGroup {
 		return this.form;
 	}
 

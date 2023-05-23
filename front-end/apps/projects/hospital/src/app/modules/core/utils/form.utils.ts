@@ -1,4 +1,4 @@
-import {FormGroup, FormArray, AbstractControl, FormControl, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {UntypedFormGroup, UntypedFormArray, AbstractControl, UntypedFormControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { Moment } from 'moment';
 import { newMoment, momentFormat, DateFormat } from './moment.utils';
@@ -25,7 +25,7 @@ export function getError(form: AbstractControl, type: string, control: string): 
 	return form.get(control).getError(type);
 }
 
-export function scrollIntoError(form: FormGroup, el: ElementRef) {
+export function scrollIntoError(form: UntypedFormGroup, el: ElementRef) {
 	for (const controlName of Object.keys(form.controls)) {
 		if (form.controls[controlName].invalid) {
 			const invalidControl = getInvalidElement(el, controlName, form);
@@ -34,8 +34,8 @@ export function scrollIntoError(form: FormGroup, el: ElementRef) {
 		}
 	}
 
-	function getInvalidElement(elementRef: ElementRef, controlName: string, formGroup: FormGroup) {
-		const formControl = formGroup.controls[controlName] as FormArray;
+	function getInvalidElement(elementRef: ElementRef, controlName: string, formGroup: UntypedFormGroup) {
+		const formControl = formGroup.controls[controlName] as UntypedFormArray;
 		if (formControl.controls) {
 			return elementRef.nativeElement.querySelector('[formgroupname="' + controlName + '"]');
 		}
@@ -43,11 +43,11 @@ export function scrollIntoError(form: FormGroup, el: ElementRef) {
 	}
 }
 
-export function atLeastOneValueInFormGroup(form: FormGroup): boolean {
+export function atLeastOneValueInFormGroup(form: UntypedFormGroup): boolean {
 	return !Object.values(form.value).every(x => (x === null || x === ''));
 }
 
-export function futureTimeValidation(control: FormControl): ValidationErrors | null {
+export function futureTimeValidation(control: UntypedFormControl): ValidationErrors | null {
 	const time: string = control.value;
 	const today: Moment = newMoment();
 	if (isValidTime(time)) {
@@ -61,7 +61,7 @@ export function futureTimeValidation(control: FormControl): ValidationErrors | n
 }
 
 export function beforeTimeValidation(moment: Moment) {
-	return (control: FormControl): ValidationErrors | null => {
+	return (control: UntypedFormControl): ValidationErrors | null => {
 		const time: string = control.value;
 		if (isValidTime(time)) {
 			if (time < momentFormat(moment, DateFormat.HOUR_MINUTE)) {
@@ -75,7 +75,7 @@ export function beforeTimeValidation(moment: Moment) {
 }
 
 export function beforeTimeDateValidation(date: string) {
-	return (control: FormControl): ValidationErrors | null => {
+	return (control: UntypedFormControl): ValidationErrors | null => {
 		const time: string = control.value;
 		if (isValidTime(time)) {
 			if (time < date) {
@@ -95,7 +95,7 @@ function isValidTime(time: string) {
 export class MinTimeValidator {
 	constructor(private readonly minDateTime: Moment) { }
 
-	minTimeValidation(control: FormControl): ValidationErrors | null {
+	minTimeValidation(control: UntypedFormControl): ValidationErrors | null {
 		const time: string = control.value;
 		if (isValidTime(time)) {
 			if (time <= momentFormat(this.minDateTime, DateFormat.HOUR_MINUTE)) {
@@ -123,12 +123,12 @@ export function processErrors(errorResponse, showMessageCallback) {
 	}
 }
 
-export function updateControlValidator(form: FormGroup, control: string, validations) {
+export function updateControlValidator(form: UntypedFormGroup, control: string, validations) {
 	form.controls[control].setValidators(validations);
 	form.controls[control].updateValueAndValidity();
 }
 
-export function updateForm(form: FormGroup) {
+export function updateForm(form: UntypedFormGroup) {
 	// Esta función se hizo porque no funciona form.updateValueAndValidity() - bug
 	Object.keys(form.controls).forEach((key: string) => {
 		const abstractControl = form.controls[key];

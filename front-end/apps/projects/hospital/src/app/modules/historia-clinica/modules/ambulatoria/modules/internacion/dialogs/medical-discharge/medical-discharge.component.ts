@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { DateTimeDto } from '@api-rest/api-model';
-import { Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { Validators, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import * as moment from 'moment';
@@ -26,7 +26,7 @@ export class MedicalDischargeComponent implements OnInit {
 	todayDate = new Date();
 	minTime: string;
 	minDate: string;
-	public dischargeForm: FormGroup;
+	public dischargeForm: UntypedFormGroup;
 	public minMedicalDischargeDate: Date;
 	public dischargeTypes: {};
 	public formSubmited: boolean;
@@ -34,7 +34,7 @@ export class MedicalDischargeComponent implements OnInit {
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: any,
 		private readonly dialogRef: MatDialogRef<MedicalDischargeComponent>,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly intermentEpisodeService: InternmentEpisodeService,
 		private readonly snackBarService: SnackBarService,

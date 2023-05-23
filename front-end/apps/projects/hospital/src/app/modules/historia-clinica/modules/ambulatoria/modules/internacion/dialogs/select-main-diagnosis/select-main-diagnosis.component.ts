@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DiagnosisDto, HealthConditionDto } from '@api-rest/api-model';
 
@@ -12,11 +12,11 @@ export class SelectMainDiagnosisComponent implements OnInit {
 
 	currentMainDiagnosis: HealthConditionDto;
 	otherDiagnoses: DiagnosisDto[];
-	form: FormGroup;
+	form: UntypedFormGroup;
 
 	constructor(@Inject(MAT_DIALOG_DATA) public data: any,
 		public dialogRef: MatDialogRef<SelectMainDiagnosisComponent>,
-		private formBuilder: FormBuilder) {
+		private formBuilder: UntypedFormBuilder) {
 			this.currentMainDiagnosis = data.currentMainDiagnosis;
 			this.otherDiagnoses = data.otherDiagnoses;
 	}

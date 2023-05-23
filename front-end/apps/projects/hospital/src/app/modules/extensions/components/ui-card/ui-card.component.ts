@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { UIComponentDto, UILabelDto } from '@extensions/extensions-model';
+import { UIComponentDto } from '@extensions/extensions-model';
 
 @Component({
 	selector: 'app-ui-card',

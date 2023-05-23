@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { hasError } from '@core/utils/form.utils';
 
 @Component({
@@ -19,10 +19,10 @@ export class ConceptsSearchComponent implements OnInit {
 	readonly MIN_LENGTH = 3;
 	hasError = hasError;
 	translatedLabel = '';
-	public form: FormGroup;
+	public form: UntypedFormGroup;
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly translateService: TranslateService,
 		public dialog: MatDialog,
 	) { }

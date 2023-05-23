@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
 import { catchError } from 'rxjs/operators';
 import { ApiErrorMessageDto, RecaptchaPublicConfigDto } from '@api-rest/api-model';
@@ -18,7 +18,7 @@ import { FeatureFlagService } from "@core/services/feature-flag.service";
 })
 export class HospitalLoginComponent implements OnInit {
 	apiError: ApiErrorMessageDto = null;
-	form: FormGroup;
+	form: UntypedFormGroup;
 	recaptchaRes: string;
 	recaptchaEnable = false;
 	recaptchaSiteKey = '';
@@ -28,7 +28,7 @@ export class HospitalLoginComponent implements OnInit {
 	private returnUrl: string;
 
 	constructor(
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private authenticationService: AuthenticationService,
 		private publicService: PublicService,
 		private route: ActivatedRoute,

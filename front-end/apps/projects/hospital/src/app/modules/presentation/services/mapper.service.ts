@@ -9,7 +9,7 @@ import {
 	BedSummaryDto,
 	InternmentPatientDto,
 	HCEEvolutionSummaryDto,
-	InternmentEpisodeDto, DocumentsSummaryDto,
+	InternmentEpisodeDto,
 } from '@api-rest/api-model';
 import { PatientBasicData } from '../components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';

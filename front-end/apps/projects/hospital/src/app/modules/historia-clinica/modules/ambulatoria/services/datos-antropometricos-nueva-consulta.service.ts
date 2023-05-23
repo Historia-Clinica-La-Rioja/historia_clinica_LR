@@ -1,6 +1,6 @@
 import { PATTERN_NUMBER_WITH_MAX_2_DECIMAL_DIGITS } from './../../../../core/utils/pattern.utils';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ClinicalObservationDto, HCEAnthropometricDataDto, MasterDataInterface } from '@api-rest/api-model';
 import { Observable, Subject } from 'rxjs';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
@@ -21,7 +21,7 @@ export interface DatosAntropometricos {
 
 export class DatosAntropometricosNuevaConsultaService {
 
-	form: FormGroup;
+	form: UntypedFormGroup;
 	private bloodTypes: MasterDataInterface<string>[];
 	private heightErrorSource = new Subject<string | void>();
 	private _heightError$ = this.heightErrorSource.asObservable();
@@ -35,7 +35,7 @@ export class DatosAntropometricosNuevaConsultaService {
 
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly patientId: number,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
@@ -117,7 +117,7 @@ export class DatosAntropometricosNuevaConsultaService {
 		});
 	}
 
-	getForm(): FormGroup {
+	getForm(): UntypedFormGroup {
 		return this.form;
 	}
 

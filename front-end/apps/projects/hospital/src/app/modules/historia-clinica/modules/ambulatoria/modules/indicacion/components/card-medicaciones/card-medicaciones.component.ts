@@ -12,7 +12,7 @@ import {
 import { PrescripcionesService, PrescriptionTypes } from '../../../../services/prescripciones.service';
 import { MedicationStatusChange, PRESCRIPTION_STATES } from '../../../../constants/prescripciones-masterdata';
 import { SuspenderMedicacionComponent } from '../../dialogs/suspender-medicacion/suspender-medicacion.component';
-import { FormBuilder, FormGroup, FormArray, AbstractControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, AbstractControl } from '@angular/forms';
 import { PrescriptionItemData } from '../item-prescripciones/item-prescripciones.component';
 import { MEDICATION_STATUS } from '../../../../constants/prescripciones-masterdata';
 import { PermissionsService } from '@core/services/permissions.service';
@@ -40,9 +40,9 @@ export class CardMedicacionesComponent implements OnInit {
 	public readonly medicationStatusChange = MedicationStatusChange;
 	public medicationsInfo: MedicationInfoDto[];
 	public selectedMedicationList: MedicationInfoDto[] = [];
-	public medicationCheckboxes: FormGroup;
+	public medicationCheckboxes: UntypedFormGroup;
 	public hideFilterPanel = false;
-	public formFilter: FormGroup;
+	public formFilter: UntypedFormGroup;
 	private hasRoleToEdit: boolean;
 	isHabilitarRecetaDigitalEnabled: boolean = false;
 	canOnlyViewSelfAddedProblems = false;
@@ -64,7 +64,7 @@ export class CardMedicacionesComponent implements OnInit {
 
 	constructor(
 		private readonly dialog: MatDialog,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly permissionsService: PermissionsService,
 		private prescripcionesService: PrescripcionesService,
 		private snackBarService: SnackBarService,
@@ -91,7 +91,7 @@ export class CardMedicacionesComponent implements OnInit {
 
 		this.medicacionesService.medicaments$.subscribe(response => {
 			this.medicationsInfo = response;
-			const checkboxArray = this.medicationCheckboxes.controls.checkboxArray as FormArray;
+			const checkboxArray = this.medicationCheckboxes.controls.checkboxArray as UntypedFormArray;
 
 			this.medicationsInfo.forEach(m => {
 				checkboxArray.push(this.formBuilder.group({ checked: false }));
@@ -284,7 +284,7 @@ export class CardMedicacionesComponent implements OnInit {
 	}
 
 	selectAllMedication(checked: boolean) {
-		const checkboxArray = this.medicationCheckboxes.controls.checkboxArray as FormArray;
+		const checkboxArray = this.medicationCheckboxes.controls.checkboxArray as UntypedFormArray;
 
 		checkboxArray.controls.forEach(control => {
 			control.setValue({ checked });
@@ -353,7 +353,7 @@ export class CardMedicacionesComponent implements OnInit {
 
 	cleanSelectedMedicationList() {
 		this.selectedMedicationList = [];
-		const checkboxArray = this.medicationCheckboxes.controls.checkboxArray as FormArray;
+		const checkboxArray = this.medicationCheckboxes.controls.checkboxArray as UntypedFormArray;
 		checkboxArray.controls.forEach(control => {
 			control.setValue({ checked: false });
 		});

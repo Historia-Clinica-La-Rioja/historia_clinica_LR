@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { formatDateOnlyISO } from '@core/utils/date.utils';
-import {FormGroup, FormControl} from '@angular/forms';
+import {UntypedFormGroup, UntypedFormControl} from '@angular/forms';
 import * as moment from "moment";
 
 @Component({
@@ -12,9 +12,9 @@ export class DateOnlyIsoFormInputComponent implements OnInit {
 	@Input() label: string;
 	@Output() rangeChange = new EventEmitter<string[]>();
 
-	dateRange = new FormGroup({
-		start: new FormControl(moment().startOf('year')),
-		end: new FormControl(moment()),
+	dateRange = new UntypedFormGroup({
+		start: new UntypedFormControl(moment().startOf('year')),
+		end: new UntypedFormControl(moment()),
 	});
 
 	public today: Date = new Date();

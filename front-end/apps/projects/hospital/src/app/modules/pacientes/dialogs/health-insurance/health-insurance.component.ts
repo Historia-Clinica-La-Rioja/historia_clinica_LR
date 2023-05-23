@@ -4,7 +4,7 @@ import { EPatientMedicalCoverageCondition } from "@api-rest/api-model";
 import { MedicalCoverageDto } from "@api-rest/api-model";
 import { MedicalCoveragePlanDto } from "@api-rest/api-model";
 import { MIN_DATE } from "@core/utils/date.utils";
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import {
 	EMedicalCoverageType,
 	HealthInsurance,
@@ -23,7 +23,7 @@ export class HealthInsuranceComponent implements OnInit {
 
 	minDate = MIN_DATE;
 
-	healthInsuranceForm: FormGroup;
+	healthInsuranceForm: UntypedFormGroup;
 	healthInsuranceFilteredMasterData: MedicalCoverageDto[];
 	plans: MedicalCoveragePlanDto[];
 	selectedPlan: MedicalCoveragePlanDto;
@@ -35,7 +35,7 @@ export class HealthInsuranceComponent implements OnInit {
 	constructor(public dialogRef: MatDialogRef<HealthInsuranceComponent>,
 				@Inject(MAT_DIALOG_DATA) public data: { healthInsuranceMasterData: MedicalCoverageDto[],
 					healthInsuranceToUpdate: PatientMedicalCoverage },
-				private formBuilder: FormBuilder,
+				private formBuilder: UntypedFormBuilder,
 				public readonly healthInsuranceService: HealthInsuranceService,
 	) {
 	}
@@ -68,13 +68,13 @@ export class HealthInsuranceComponent implements OnInit {
 
 	private uploadHealthInsuranceForm() {
 		this.healthInsuranceToAdd = this.fromHealthInsuranceMasterDataToHealthInsurance(this.toMedicalCoverageDto(this.data.healthInsuranceToUpdate.medicalCoverage as HealthInsurance));
-		this.healthInsuranceForm.setControl('healthInsurance', new FormControl(this.getFullHealthInsuranceText(this.data.healthInsuranceToUpdate.medicalCoverage)));
-		this.healthInsuranceForm.setControl('affiliateNumber', new FormControl(this.data.healthInsuranceToUpdate.affiliateNumber));
-		this.healthInsuranceForm.setControl('condition', new FormControl(this.data.healthInsuranceToUpdate.condition ? this.data.healthInsuranceToUpdate.condition : EPatientMedicalCoverageCondition.VOLUNTARIA));
+		this.healthInsuranceForm.setControl('healthInsurance', new UntypedFormControl(this.getFullHealthInsuranceText(this.data.healthInsuranceToUpdate.medicalCoverage)));
+		this.healthInsuranceForm.setControl('affiliateNumber', new UntypedFormControl(this.data.healthInsuranceToUpdate.affiliateNumber));
+		this.healthInsuranceForm.setControl('condition', new UntypedFormControl(this.data.healthInsuranceToUpdate.condition ? this.data.healthInsuranceToUpdate.condition : EPatientMedicalCoverageCondition.VOLUNTARIA));
 		this.healthInsuranceService.getAllPlansById(this.data.healthInsuranceToUpdate.medicalCoverage.id)
 			.subscribe(plans => {
 				this.plans = plans;
-				this.healthInsuranceForm.setControl('plan', new FormControl(this.data.healthInsuranceToUpdate.planId));
+				this.healthInsuranceForm.setControl('plan', new UntypedFormControl(this.data.healthInsuranceToUpdate.planId));
 			});
 		this.healthInsuranceForm.controls.healthInsurance.disable();
 	}

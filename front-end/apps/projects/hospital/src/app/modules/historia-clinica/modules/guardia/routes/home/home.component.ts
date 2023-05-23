@@ -33,7 +33,7 @@ import { anyMatch } from '@core/utils/array.utils';
 import { PermissionsService } from '@core/services/permissions.service';
 import { GuardiaRouterService } from '../../services/guardia-router.service';
 import { AttentionPlace, PatientType } from '@historia-clinica/constants/summaries';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { EmergencyCareEpisodeAttendService } from '@historia-clinica/services/emergency-care-episode-attend.service';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
@@ -81,7 +81,7 @@ export class HomeComponent implements OnInit {
 		public readonly episodeStateService: EpisodeStateService,
 		private readonly triageDefinitionsService: TriageDefinitionsService,
 		private readonly patientService: PatientService,
-		public readonly formBuilder: FormBuilder,
+		public readonly formBuilder: UntypedFormBuilder,
 		public readonly triageMasterDataService: TriageMasterDataService,
 		public readonly emergencyCareMasterDataService: EmergencyCareMasterDataService,
 		private readonly emergencyCareEpisodeAdministrativeDischargeService: EmergencyCareEpisodeAdministrativeDischargeService,

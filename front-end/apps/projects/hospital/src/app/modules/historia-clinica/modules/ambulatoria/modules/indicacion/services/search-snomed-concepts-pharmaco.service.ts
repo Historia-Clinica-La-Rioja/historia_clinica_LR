@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SnomedECL } from '@api-rest/api-model';
 import { SnomedDto } from '@api-rest/api-model';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
@@ -12,8 +12,8 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 	providedIn: 'root'
 })
 export class SearchSnomedConceptsPharmacoService {
-	pharmacoForm: FormGroup;
-	solventForm: FormGroup;
+	pharmacoForm: UntypedFormGroup;
+	solventForm: UntypedFormGroup;
 	searching = false;
 	showToSearchSnomedConcept = false;
 	showPharmacoTitle = false;
@@ -25,7 +25,7 @@ export class SearchSnomedConceptsPharmacoService {
 
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snowstormService: SnowstormService,
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService

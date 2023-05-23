@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@api-rest/services/auth.service';
 
@@ -9,7 +9,7 @@ import { AuthService } from '@api-rest/services/auth.service';
 	styleUrls: ['./password-recover.component.scss']
 })
 export class PasswordRecoverComponent implements OnInit {
-	form: FormGroup;
+	form: UntypedFormGroup;
 	spinner = false;
 	showTextError = false;
 	email = '';
@@ -17,7 +17,7 @@ export class PasswordRecoverComponent implements OnInit {
 	userFound = false;
 
 	constructor(
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private router: Router,
 		private route: ActivatedRoute,
 		private authService: AuthService,

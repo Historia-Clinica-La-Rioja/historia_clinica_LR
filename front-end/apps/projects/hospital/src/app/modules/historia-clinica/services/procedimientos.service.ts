@@ -1,4 +1,4 @@
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SnomedSemanticSearch, SnomedService } from './snomed.service';
 import { SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
@@ -17,7 +17,7 @@ export interface Procedimiento {
 
 export class ProcedimientosService {
 
-	private form: FormGroup;
+	private form: UntypedFormGroup;
 	private snomedConcept: SnomedDto;
 	private readonly columns: ColumnConfig[];
 	private readonly tableColumnConfig: TableColumnConfig[];
@@ -29,7 +29,7 @@ export class ProcedimientosService {
 	procedimientos$ = this.emitter.asObservable()
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService,
 
@@ -139,7 +139,7 @@ export class ProcedimientosService {
 		}
 	}
 
-	getForm(): FormGroup {
+	getForm(): UntypedFormGroup {
 		return this.form;
 	}
 

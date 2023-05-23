@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -9,12 +9,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class MessageForAuditComponent implements OnInit {
 
-	form: FormGroup;
+	form: UntypedFormGroup;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { initialMessage: string },
 		public dialog: MatDialogRef<MessageForAuditComponent>,
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 	) { }
 
 	ngOnInit(): void {

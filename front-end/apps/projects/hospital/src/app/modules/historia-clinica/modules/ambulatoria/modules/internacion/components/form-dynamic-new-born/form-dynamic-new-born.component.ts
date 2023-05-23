@@ -5,7 +5,7 @@ import { EGender } from '@api-rest/api-model';
 import { Subject } from 'rxjs/internal/Subject';
 import { ControlDynamicFormService } from '../../services/control-dynamic-form.service';
 import { TypeOfPregnancy } from '../type-of-pregnancy/type-of-pregnancy.component';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ObstetricFormService } from '../../services/obstetric-form.service';
 
 @Component({
@@ -22,18 +22,18 @@ export class FormDynamicNewBornComponent implements AfterViewInit {
 	MALE = EGender.MALE;
 	X = EGender.X;
 	selectedOption = 0;
-	form: FormGroup;
+	form: UntypedFormGroup;
 	disabledAddNewBorn = true;
 	formSend = false;
 
 	constructor(
 		private controlService: ControlDynamicFormService,
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		private obstetricFormService: ObstetricFormService,
 	) {
 
 		this.form = this.formBuilder.group({
-			newBorns: new FormArray([])
+			newBorns: new UntypedFormArray([])
 		});
 
 		this.obstetricFormService.getValue().subscribe((obstetricEvent: ObstetricEventDto) => {
@@ -49,7 +49,7 @@ export class FormDynamicNewBornComponent implements AfterViewInit {
 
 	ngAfterViewInit(): void {
 		this.controlService.selectedOption$.subscribe((option: TypeOfPregnancy) => {
-			const newBornsFormArray = this.form.get('newBorns') as FormArray;
+			const newBornsFormArray = this.form.get('newBorns') as UntypedFormArray;
 			if (option === TypeOfPregnancy.UNDEFINED) {
 				newBornsFormArray.clear();
 				this.disabledAddNewBorn = true;
@@ -69,17 +69,17 @@ export class FormDynamicNewBornComponent implements AfterViewInit {
 	}
 
 	addChild(newBorn?: NewbornDto) {
-		const arrayBorns = this.form.get('newBorns') as FormArray;
+		const arrayBorns = this.form.get('newBorns') as UntypedFormArray;
 		const addNewBorn = this.addNewBorn(newBorn);
 		arrayBorns.push(addNewBorn);
 	}
 
 	delete(i: number) {
-		const arrayBorns = this.form.get('newBorns') as FormArray;
+		const arrayBorns = this.form.get('newBorns') as UntypedFormArray;
 		arrayBorns.removeAt(i);
 	}
 
-	getCtrl(key: string, form: FormGroup): any {
+	getCtrl(key: string, form: UntypedFormGroup): any {
 		return form.get(key);
 	}
 
@@ -91,17 +91,17 @@ export class FormDynamicNewBornComponent implements AfterViewInit {
 
 	getForm(): NewbornDto[] {
 		this.form.markAllAsTouched();
-		const array = this.form.get('newBorns') as FormArray;
+		const array = this.form.get('newBorns') as UntypedFormArray;
 		const newborns = array?.getRawValue();
 		return this.form.valid ? newborns : null
 	}
 
-	private addNewBorn(newBorn?: NewbornDto): FormGroup {
+	private addNewBorn(newBorn?: NewbornDto): UntypedFormGroup {
 		return this.formBuilder.group({
-			birthConditionType: new FormControl(newBorn?.birthConditionType || null, Validators.required),
-			weight: new FormControl(newBorn?.weight || null, Validators.required),
-			genderId: new FormControl(newBorn?.genderId || null, Validators.required),
-			id: new FormControl(newBorn?.id || null)
+			birthConditionType: new UntypedFormControl(newBorn?.birthConditionType || null, Validators.required),
+			weight: new UntypedFormControl(newBorn?.weight || null, Validators.required),
+			genderId: new UntypedFormControl(newBorn?.genderId || null, Validators.required),
+			id: new UntypedFormControl(newBorn?.id || null)
 		});
 	}
 

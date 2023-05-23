@@ -18,7 +18,7 @@ import {
 import { Inject, OnInit, ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
 import { SnomedECL } from '@api-rest/api-model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { EpicrisisService } from '@api-rest/services/epicrisis.service';
 import { DatePipe } from '@angular/common';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -67,9 +67,9 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	snomedConceptProblem: SnomedDto;
 	verifications: MasterDataInterface<string>[];
 	anamnesis: ResponseAnamnesisDto;
-	form: FormGroup;
-	formDiagnosis: FormGroup;
-	formProblem: FormGroup;
+	form: UntypedFormGroup;
+	formDiagnosis: UntypedFormGroup;
+	formProblem: UntypedFormGroup;
 	showWarning: boolean = false;
 	isDraft = false;
 	isDisableConfirmButton = false;
@@ -143,7 +143,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		@Inject(OVERLAY_DATA) public data: any,
 		private readonly featureFlagService: FeatureFlagService,
 		public dockPopupRef: DockPopupRef,
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly epicrisisService: EpicrisisService,
 		private readonly datePipe: DatePipe,
 		private readonly snackBarService: SnackBarService,
@@ -384,7 +384,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 
 
 
-	private toEpicrisisObservationsDto(form: FormGroup): EpicrisisObservationsDto {
+	private toEpicrisisObservationsDto(form: UntypedFormGroup): EpicrisisObservationsDto {
 		return {
 			evolutionNote: form.value.evolutionNote,
 			indicationsNote: form.value.indicationsNote,

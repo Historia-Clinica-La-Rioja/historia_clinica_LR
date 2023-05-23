@@ -1,5 +1,5 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { map } from 'rxjs/operators';
 
@@ -45,7 +45,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 
 	prescriptionItems: NewPrescriptionItem[];
 	patientMedicalCoverages: PatientMedicalCoverage[];
-	prescriptionForm: FormGroup;
+	prescriptionForm: UntypedFormGroup;
 	specialties: ClinicalSpecialtyDto[];
 	itemCount = 0;
 	private patientData: BasicPatientDto;
@@ -67,7 +67,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 	showAddMedicationError: boolean = false;
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly mapperService: MapperService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly dialog: MatDialog,
