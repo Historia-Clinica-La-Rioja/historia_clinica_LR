@@ -760,6 +760,14 @@ const messages = {
             },
             createRelated: 'Crear Equipo',
             detailLabel:'Detalle de Equipo'
+        },
+        hierarchicalunittypes: {
+            name: 'Tipo de unidad jerárquica |||| Tipos de unidades jerárquicas',
+            fields: {
+                id: 'Identificador',
+                description: 'Descripción'
+            }
+        },
         }
     }
 };

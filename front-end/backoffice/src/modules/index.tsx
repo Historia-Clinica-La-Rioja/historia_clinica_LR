@@ -32,7 +32,7 @@ import medicalCoverage from './medicalcoverage';
 import snomedgroups from './snomedgroups';
 import carelineproblems from './carelineproblems';
 import userroles from './userroles';
-
+import hierarchicalunittypes from './hierarchicalunittypes';
 
 import { ROOT, ADMINISTRADOR } from './roles';
 import snomedconcepts from './snomedconcepts';
@@ -129,6 +129,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="properties" {...properties(permissions)} />,
     // masterData
     <Resource name="episodedocumenttypes" {...episodesDocumentTypes(permissions)} />,
+    <Resource name="hierarchicalunittypes" {...hierarchicalunittypes(permissions)} />,
     <Resource name="cities" {...cities(permissions)} />,
     <Resource name="departments" {...departments(permissions)} />,
     <Resource name="addresses" {...addresses} />,
