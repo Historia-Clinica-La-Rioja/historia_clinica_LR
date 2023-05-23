@@ -13,8 +13,18 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import static net.pladema.establishment.repository.entity.HierarchicalUnitType.DEPARTAMENTO;
+import static net.pladema.establishment.repository.entity.HierarchicalUnitType.DIRECCION;
+import static net.pladema.establishment.repository.entity.HierarchicalUnitType.JEFATURA_SALA;
+import static net.pladema.establishment.repository.entity.HierarchicalUnitType.SERVICIO;
+import static net.pladema.establishment.repository.entity.HierarchicalUnitType.UNIDAD_CONSULTA;
+import static net.pladema.establishment.repository.entity.HierarchicalUnitType.UNIDAD_DIAGNOSTICO_TRATAMIENTO;
+import static net.pladema.establishment.repository.entity.HierarchicalUnitType.UNIDAD_ENFERMERIA;
+import static net.pladema.establishment.repository.entity.HierarchicalUnitType.UNIDAD_INTERNACION;
 
 @Service
 @RequiredArgsConstructor
@@ -64,7 +74,15 @@ public class BackofficeHierarchicalUnitTypeStore implements BackofficeStore<Hier
 
 	@Override
 	public void deleteById(Integer id) {
+		assertDelete(id);
 		repository.deleteById(id);
+	}
+
+	private void assertDelete(Integer id) {
+		List<Short> hierarchicalUnitDefaultTypes = Arrays.asList(DIRECCION, UNIDAD_DIAGNOSTICO_TRATAMIENTO, UNIDAD_INTERNACION,
+				UNIDAD_CONSULTA, UNIDAD_ENFERMERIA, JEFATURA_SALA, DEPARTAMENTO, SERVICIO);
+		if (hierarchicalUnitDefaultTypes.contains(id.shortValue()))
+			throw new BackofficeValidationException("hierarchical-unit-type.restriction");
 	}
 
 	@Override
