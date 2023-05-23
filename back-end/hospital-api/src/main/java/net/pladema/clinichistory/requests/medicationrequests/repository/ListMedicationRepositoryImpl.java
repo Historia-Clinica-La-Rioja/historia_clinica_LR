@@ -104,7 +104,7 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
 				", d.id AS d_id, d.duration AS duration, d.frequency, d.period_unit, d.chronic, d.start_date, d.end_date " +
 				", d.suspended_start_date, d.suspended_end_date " +
 				", mr.id AS mr_id, CASE WHEN mr.has_recipe IS NULL THEN false ELSE mr.has_recipe END, t.created_by AS user_id " +
-				", t.created_on AS m_created_on, t.document_id, t.file_name, d.doses_by_day, d.doses_by_unit, q.value, q.unit, ms.is_digital " +
+				", t.created_on AS m_created_on, t.document_id, t.file_name, d.doses_by_day, d.doses_by_unit, q.value, q.unit, ms.is_digital, ms.prescription_line_state " +
 				"FROM temporal t " +
 				"JOIN {h-schema}snomed s ON (t.snomed_id = s.id) " +
 				"LEFT JOIN {h-schema}medication_request mr ON (mr.id = t.source_id AND t.source_type_id = "+ SourceType.RECIPE + ") " +
