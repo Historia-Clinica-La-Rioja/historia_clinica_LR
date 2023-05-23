@@ -4,15 +4,14 @@
     </button>
 </div>
 
-<mat-dialog-actions fxLayout="column" fxLayoutAlign="start center">
-    <div class="icon">
-        <mat-icon [inline]="true" class="material-icons-outlined" color="primary">check_circle</mat-icon>
-    </div>
-    <h1 class="mat-headline item-margin" style="padding-top: 1em;">{{data.titleLabel | translate}}</h1>
-    <button class="item-margin" mat-flat-button color="primary" (click)="downloadPrescription()" fxFlexFill.xs>
+<mat-dialog-actions fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px">
+    <mat-icon id="check_circle" class="material-icons-outlined" color="primary">check_circle</mat-icon>
+    <h1 class="mat-headline">{{data.titleLabel | translate}}</h1>
+    <button mat-flat-button color="primary" (click)="downloadPrescription()" fxFlexFill.xs>
         <span class="uppercase">{{data.downloadButtonLabel | translate}}</span>
     </button>
-    <button *ngIf="isHabilitarRecetaDigital" class="item-margin" mat-stroked-button color="primary" (click)="sendEmail()" fxFlexFill.xs>
+    <button *ngIf="isHabilitarRecetaDigital" id="send_email" mat-stroked-button color="primary" (click)="sendEmail()"
+        fxFlexFill.xs>
         <span class="uppercase">{{data.sendEmail | translate}}</span>
     </button>
 </mat-dialog-actions>

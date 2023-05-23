@@ -10,9 +10,11 @@ import { ProfessionalLicenseNumberValidationResponseDto } from '@api-rest/api-mo
 })
 export class PrescripcionValidatorPopupComponent {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: ProfessionalLicenseNumberValidationResponseDto,
-              public dialogRef: MatDialogRef<PrescripcionValidatorPopupComponent>,
-              private router: Router) {}
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: ProfessionalLicenseNumberValidationResponseDto,
+    public dialogRef: MatDialogRef<PrescripcionValidatorPopupComponent>,
+    private router: Router
+  ) { }
 
   toAccount() {
     this.router.navigate(['home/profile']);

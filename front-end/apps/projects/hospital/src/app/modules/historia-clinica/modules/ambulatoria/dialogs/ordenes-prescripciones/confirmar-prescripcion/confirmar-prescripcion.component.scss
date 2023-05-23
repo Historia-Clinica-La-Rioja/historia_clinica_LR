@@ -1,14 +1,19 @@
 @import '../../../../../../../../assets/styles/mixins';
 
 div.spinner {
-	@include centered-spinner;
+    @include centered-spinner;
 }
 
-.icon {
+h1 {
+    text-align: center;
+}
+
+#check_circle {
     font-size: 96px;
-    margin: 0 0 20px 0;
+    height: 96px;
+    width: 96px;
 }
 
-.item-margin {
-    margin-bottom: 25px;
+#send_email {
+    margin: 0 0 20px 0;
 }

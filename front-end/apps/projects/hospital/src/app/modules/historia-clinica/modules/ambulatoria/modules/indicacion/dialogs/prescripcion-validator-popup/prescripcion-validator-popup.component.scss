@@ -3,7 +3,9 @@
 }
 
 .error-outline {
-    font-size: 5rem;
+    font-size: 60px;
+    width: 60px;
+    height: 60px;
 }
 
 h1 {
@@ -32,15 +34,12 @@ h2 {
         display: grid;
         grid-template-columns: 1fr 8fr;
         min-width: 100%;
+        margin: 10px 0;
 
         div {
             margin-top: .25rem;
         }
 
-        mat-icon {
-            font-size: 2rem;
-        }
-    
         span {
             font-size: 1rem;
             font-weight: 500;
