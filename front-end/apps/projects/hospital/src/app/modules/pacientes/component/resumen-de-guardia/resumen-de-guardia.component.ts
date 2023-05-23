@@ -54,7 +54,6 @@ export class ResumenDeGuardiaComponent implements OnInit {
 	triagesHistory: TriageReduced[];
 	fullNamesHistoryTriage: string[];
 	lastTriage: Triage;
-	isEmergencyCareTemporalPatient = false;
 
 	private hasEmergencyCareRelatedRole: boolean;
 	private hasRoleAdministrative: boolean;
@@ -119,28 +118,33 @@ export class ResumenDeGuardiaComponent implements OnInit {
 			});
 	}
 
-	cancelAttention() {
-		const dialogRef = this.dialog.open(SelectConsultorioComponent, {
-			width: '25%',
-			data: { title: 'ambulatoria.paciente.guardia.CANCEL_BUTTON' }
-		});
-
-		dialogRef.afterClosed().subscribe(consultorio => {
-			if (consultorio) {
-				this.doctorsOfficeDescription = consultorio?.description;
-				this.episodeStateService.cancelar(this.episodeId, consultorio.id).subscribe(changed => {
-					if (changed) {
-						this.emergencyCareStateChangedService.emergencyCareStateChanged(EstadosEpisodio.EN_ESPERA);
-						this.snackBarService.showSuccess('ambulatoria.paciente.guardia.CANCEL_ATTENTION_SUCCESS');
-						this.episodeState = EstadosEpisodio.EN_ESPERA;
-						this.calculateAvailableActions();
-					} else {
-						this.snackBarService.showError('ambulatoria.paciente.guardia.CANCEL_ATTENTION_ERROR');
-					}
-				}, _ => this.snackBarService.showError('ambulatoria.paciente.guardia.CANCEL_ATTENTION_ERROR')
-				);
+	toEnEspera(): void {
+		const ref = this.dialog.open(ConfirmDialogComponent, {
+			data: {
+				title: `${TRANSLATE_KEY_PREFIX}.en_espera.TITLE`,
+				content: `${TRANSLATE_KEY_PREFIX}.en_espera.CONFIRM`,
+				okButtonLabel: 'Aceptar'
 			}
-		});
+		})
+
+		ref.afterClosed().subscribe(
+			closed => {
+				if (closed) {
+					this.episodeStateService.pasarAEspera(this.episodeId).subscribe(
+						changed => {
+							if (changed) {
+								this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.en_espera.SUCCESS`);
+								this.episodeState = EstadosEpisodio.EN_ESPERA;
+								this.calculateAvailableActions();
+							}
+							else {
+								this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.en_espera.ERROR`);
+							}
+						}
+					)
+				}
+			}
+		)
 	}
 
 	goToMedicalDischarge() {
@@ -159,30 +163,26 @@ export class ResumenDeGuardiaComponent implements OnInit {
 		this.router.navigate([`/institucion/${this.contextService.institutionId}/guardia/episodio/${this.episodeId}/edit`]);
 	}
 
-	finalizar(): void {
-		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-			data: {
-				title: 'guardia.home.episodes.episode.actions.finalizar_ausencia.TITLE',
-				content: 'guardia.home.episodes.episode.actions.finalizar_ausencia.CONFIRM'
-			}
+	atender(): void {
+
+		const dialogRef = this.dialog.open(SelectConsultorioComponent, {
+			width: '25%',
+			data: { title: 'guardia.select_consultorio.ATENDER' }
 		});
 
-		dialogRef.afterClosed().subscribe(confirmed => {
-			if (confirmed) {
-				this.emergencyCareEpisodeAdministrativeDischargeService.newAdministrativeDischargeByAbsence(this.episodeId).subscribe(
-					changed => {
-						if (changed) {
-							this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.SUCCESS`);
-							const currentUrl = this.router.url;
-							this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-								this.router.navigate([currentUrl]);
-							});
-						}
-						else {
-							this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.ERROR`);
-						}
-					},
-					_ => this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.ERROR`)
+		dialogRef.afterClosed().subscribe(consultorio => {
+			if (consultorio) {
+				this.doctorsOfficeDescription = consultorio?.description;
+				this.episodeStateService.atender(this.episodeId, consultorio.id).subscribe(changed => {
+					if (changed) {
+						this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
+						this.episodeState = EstadosEpisodio.EN_ATENCION;
+						this.calculateAvailableActions();
+					}
+					else {
+						this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
+					}
+				}, _ => this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`)
 				);
 			}
 		});
@@ -216,63 +216,61 @@ export class ResumenDeGuardiaComponent implements OnInit {
 	}
 
 	private calculateAvailableActions() {
-		this.availableActions = [];
 
-		// Following code within this function must be in this order
 
-		if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ATENCION) {
-			let action: ActionInfo = {
-				label: 'ambulatoria.paciente.guardia.MEDICAL_DISCHARGE_BUTTON',
-				id: 'medical_discharge',
-				callback: this.goToMedicalDischarge.bind(this)
+		this.emergencyCareEpisodeService.hasEvolutionNote(this.episodeId).subscribe(
+			hasEvolutionNote => {
+				this.availableActions = [];
+				// Following code within this function must be in this order
+
+				if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ATENCION) {
+					let action: ActionInfo = {
+						label: 'ambulatoria.paciente.guardia.MEDICAL_DISCHARGE_BUTTON',
+						id: 'medical_discharge',
+						callback: this.goToMedicalDischarge.bind(this)
+					}
+					this.availableActions.push(action);
+				}
+
+				const noTieneUnaNotaDeEvolucion = true;
+
+				if (this.hasRoleAdministrative && (this.episodeState === this.STATES.CON_ALTA_MEDICA || (this.episodeState === this.STATES.EN_ESPERA && !hasEvolutionNote))) {
+					let action: ActionInfo = {
+						label: 'ambulatoria.paciente.guardia.ADMINISTRATIVE_DISCHARGE_BUTTON',
+						id: 'administrative_discharge',
+						callback: this.goToAdministrativeDischarge.bind(this)
+					}
+					this.availableActions.push(action);
+				}
+
+				if (this.episodeState === this.STATES.EN_ATENCION || this.episodeState === this.STATES.EN_ESPERA) {
+					let action: ActionInfo = {
+						label: 'ambulatoria.paciente.guardia.EDIT_BUTTON',
+						id: 'edit_episode',
+						callback: this.goToEditEpisode.bind(this).bind(this)
+					}
+					this.availableActions.push(action);
+				}
+
+				if ((this.hasEmergencyCareRelatedRole || this.hasRoleAdministrative) && this.episodeState === this.STATES.EN_ESPERA) {
+					let action: ActionInfo = {
+						label: 'guardia.home.episodes.episode.actions.atender.TITLE',
+						id: 'attend',
+						callback: this.attend.bind(this)
+					}
+					this.availableActions.push(action);
+				}
+
+				if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ATENCION) {
+					let action: ActionInfo = {
+						label: 'Pasar a espera',
+						id: 'a-en-espera',
+						callback: this.toEnEspera.bind(this)
+					}
+					this.availableActions.push(action);
+				}
 			}
-			this.availableActions.push(action);
-		}
-
-		if (this.hasRoleAdministrative && this.episodeState === this.STATES.CON_ALTA_MEDICA) {
-			let action: ActionInfo = {
-				label: 'ambulatoria.paciente.guardia.ADMINISTRATIVE_DISCHARGE_BUTTON',
-				id: 'administrative_discharge',
-				callback: this.goToAdministrativeDischarge.bind(this)
-			}
-			this.availableActions.push(action);
-		}
-
-		if (this.episodeState === this.STATES.EN_ATENCION || this.episodeState === this.STATES.EN_ESPERA) {
-			let action: ActionInfo = {
-				label: 'ambulatoria.paciente.guardia.EDIT_BUTTON',
-				id: 'edit_episode',
-				callback: this.goToEditEpisode.bind(this).bind(this)
-			}
-			this.availableActions.push(action);
-		}
-
-		if ((this.hasEmergencyCareRelatedRole || this.hasRoleAdministrative) && this.episodeState === this.STATES.EN_ESPERA) {
-			let action: ActionInfo = {
-				label: 'guardia.home.episodes.episode.actions.atender.TITLE',
-				id: 'attend',
-				callback: this.attend.bind(this)
-			}
-			this.availableActions.push(action);
-		}
-
-		if (this.episodeState === this.STATES.EN_ATENCION) {
-			let action: ActionInfo = {
-				label: 'ambulatoria.paciente.guardia.CANCEL_BUTTON',
-				id: 'cancel_attention',
-				callback: this.cancelAttention.bind(this)
-			}
-			this.availableActions.push(action);
-		}
-
-		if (this.hasRoleAdministrative && this.episodeState === this.STATES.EN_ESPERA) {
-			let action: ActionInfo = {
-				label: 'guardia.home.episodes.episode.actions.finalizar_ausencia.TITLE',
-				id: 'finish_by_absence',
-				callback: this.finalizar.bind(this)
-			}
-			this.availableActions.push(action);
-		}
+		)
 	}
 
 	private loadFullNames() {

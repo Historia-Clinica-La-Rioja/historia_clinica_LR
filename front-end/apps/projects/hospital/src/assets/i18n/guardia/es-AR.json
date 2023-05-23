@@ -78,11 +78,11 @@
 							"SUCCESS": "Estado de episodio actualizado a En atención exitosamente",
 							"ERROR": "Error al actualizar estado de episodio a En atención"
 						},
-						"finalizar_ausencia": {
-							"TITLE": "Finalizar por ausencia",
-							"CONFIRM": "¿Está seguro que desea finalizar por ausencia el episodio?",
-							"SUCCESS": "Episodio finalizado por ausencia exitosamente",
-							"ERROR": "Error al finalizar por ausencia el episodio"
+						"en_espera": {
+							"TITLE": "Pasar a en espera",
+							"CONFIRM": "¿Está seguro que desea cambiar el estado del episodio a EN ESPERA?",
+							"SUCCESS": "Episodio con paciente en espera",
+							"ERROR": "Error al cambiar el estado del episodio"
 						},
 						"NUEVO_TRIAGE": "Nuevo triage"
 					},
@@ -116,13 +116,8 @@
 		},
 		"episode": {
 			"TITLE": "Episodio de guardia",
-			"CANCEL_ATTENTION": "Cancelar atención",
 			"EDIT_EPISODE": "Editar episodio",
 			"NOT_ACTIVE": "El episodio de guardia no se encuentra activo",
-			"cancel_attention": {
-				"SUCCESS": "La atención fue cancelada exitosamente",
-				"ERROR": "Ocurrio un error al cancelar la atención"
-			},
 			"administrative": {
 				"EPISODE": "Episodio",
 				"REASONS": "Motivos de consulta",

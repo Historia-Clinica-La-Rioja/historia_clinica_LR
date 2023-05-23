@@ -121,20 +121,15 @@ export class AdministrativeDischargeComponent implements OnInit {
 	}
 
 	goToEpisodeDetails(): void {
-		if (this.patientId) {
-			if (this.hasEmergencyCareRelatedRole) {
-				const url = `${this.routePrefix}/ambulatoria/paciente/${this.patientId}`;
-				this.router.navigateByUrl(url, { state: { toEmergencyCareTab: true } });
-			}
-			else {
-				const url = `${this.routePrefix}/pacientes/profile/${this.patientId}`;
-				this.router.navigateByUrl(url);
-			}
+		if (this.hasEmergencyCareRelatedRole) {
+			const url = `${this.routePrefix}/ambulatoria/paciente/${this.patientId}`;
+			this.router.navigateByUrl(url, { state: { toEmergencyCareTab: true } });
 		}
 		else {
-			const url = `${this.routePrefix}/guardia/episodio/${this.episodeId}`;
+			const url = `${this.routePrefix}/pacientes/profile/${this.patientId}`;
 			this.router.navigateByUrl(url);
 		}
+
 	}
 
 	private setDateTimeValidation(medicalDischargeOn: Moment): void {

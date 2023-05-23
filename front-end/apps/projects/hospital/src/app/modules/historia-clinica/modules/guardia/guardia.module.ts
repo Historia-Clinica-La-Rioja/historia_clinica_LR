@@ -10,7 +10,6 @@ import { GuardiaRoutingModule } from './guardia-routing.module';
 import { AdministrativeDischargeComponent } from './routes/administrative-discharge/administrative-discharge.component';
 import { AdmisionAdministrativaComponent } from './routes/admision-administrativa/admision-administrativa.component';
 import { EditEmergencyCareEpisodeComponent } from './routes/edit-emergency-care-episode/edit-emergency-care-episode.component';
-import { EpisodeDetailsComponent } from './routes/episode-details/episode-details.component';
 import { HomeComponent } from './routes/home/home.component';
 import { MedicalDischargeComponent } from './routes/medical-discharge/medical-discharge.component';
 import { NewEpisodeAdminTriageComponent } from './routes/new-episode-admin-triage/new-episode-admin-triage.component';
@@ -43,7 +42,6 @@ import { AttentionPlaceDialogComponent } from './dialogs/attention-place-dialog/
 		AdministrativeDischargeComponent,
 		AdmisionAdministrativaComponent,
 		EditEmergencyCareEpisodeComponent,
-		EpisodeDetailsComponent,
 		HomeComponent,
 		MedicalDischargeComponent,
 		NewEpisodeAdminTriageComponent,

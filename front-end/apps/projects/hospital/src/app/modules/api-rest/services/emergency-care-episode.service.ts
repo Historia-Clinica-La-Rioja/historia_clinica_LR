@@ -74,4 +74,10 @@ export class EmergencyCareEpisodeService {
 			BASIC_URL_SUFIX}/episodes/` + episodeId;
 		return this.http.put<number>(url, data);
 	}
+
+	hasEvolutionNote(episodeId: number): Observable<boolean> {
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
+			BASIC_URL_SUFIX}/episodes/` + episodeId + '/has-evolution-note';
+		return this.http.get<boolean>(url);
+	}
 }

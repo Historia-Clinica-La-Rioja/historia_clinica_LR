@@ -117,14 +117,9 @@ export class MedicalDischargeComponent implements OnInit {
 	}
 
 	goToEpisodeDetails(): void {
-		if (this.patientId) {
-			const url = `institucion/${this.contextService.institutionId}/ambulatoria/paciente/${this.patientId}`;
-			this.router.navigateByUrl(url, { state: { toEmergencyCareTab: true } });
-		}
-		else {
-			const url = `institucion/${this.contextService.institutionId}/guardia/episodio/${this.episodeId}`;
-			this.router.navigateByUrl(url);
-		}
+		const url = `institucion/${this.contextService.institutionId}/ambulatoria/paciente/${this.patientId}`;
+		this.router.navigateByUrl(url, { state: { toEmergencyCareTab: true } });
+
 	}
 
 	private setDateTimeValidation(episodeCreatedOn: Moment): void {
