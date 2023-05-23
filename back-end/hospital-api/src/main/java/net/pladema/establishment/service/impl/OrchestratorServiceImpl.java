@@ -35,6 +35,13 @@ public class OrchestratorServiceImpl implements OrchestratorService {
 		orchestratorBO.setName(orchestrator.getName());
 		orchestratorBO.setBaseTopic(orchestrator.getBaseTopic());
 		orchestratorBO.setSectorId(orchestrator.getSectorId());
+		orchestratorBO.setAttempsNumber(orchestrator.getAttempsNumber());
+		orchestratorBO.setExecutionStartTime(orchestrator.getExecutionStartTime());
+		orchestratorBO.setExecutionEndTime(orchestrator.getExecutionEndTime());
+		orchestratorBO.setWeightDays((double)orchestrator.getWeightDays());
+		orchestratorBO.setWeightSize((double)orchestrator.getWeightSize());
+		orchestratorBO.setWeightPriority((double)orchestrator.getWeightPriority());
+		orchestratorBO.setNumberToMove(orchestrator.getNumberToMove());
 
 		log.debug("Output -> OrchestratorBo {}", orchestratorBO);
 

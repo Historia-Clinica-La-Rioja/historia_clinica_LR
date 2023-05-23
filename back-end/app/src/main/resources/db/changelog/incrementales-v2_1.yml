@@ -236,3 +236,72 @@ databaseChangeLog:
           - dropColumn:
               columnName: to_audit
               tableName: patient
+
+
+    - changeSet:
+        id: change-orchestrator-add_column
+        author: amurrie
+        changes:
+          - addColumn:
+              tableName: orchestrator
+              columns:
+                - column:
+                    name: attemps_number
+                    type: int
+                    defaultValue: 3
+                    constraints:
+                      nullable: false
+          - addColumn:
+              tableName: orchestrator
+              columns:
+                - column:
+                    name: execution_start_time
+                    type: time
+                    defaultValue: '22:00:00'
+                    constraints:
+                      nullable: false
+          - addColumn:
+              tableName: orchestrator
+              columns:
+                - column:
+                    name: execution_end_time
+                    type: time
+                    defaultValue: '06:00:00'
+                    constraints:
+                      nullable: false
+          - addColumn:
+              tableName: orchestrator
+              columns:
+                - column:
+                    name: weight_size
+                    type: float
+                    defaultValue: '0.01'
+                    constraints:
+                      nullable: false
+          - addColumn:
+              tableName: orchestrator
+              columns:
+                - column:
+                    name: weight_days
+                    type: float
+                    defaultValue: '0.3'
+                    constraints:
+                      nullable: false
+          - addColumn:
+              tableName: orchestrator
+              columns:
+                - column:
+                    name: weight_priority
+                    type: float
+                    defaultValue: '0.2'
+                    constraints:
+                      nullable: false
+          - addColumn:
+              tableName: orchestrator
+              columns:
+                - column:
+                    name: number_to_move
+                    type: int
+                    defaultValue: 10
+                    constraints:
+                      nullable: false
