@@ -27,7 +27,7 @@
 	</mat-card-content>
 </mat-card>
 
-<section>
+<section *ngIf="allergies?.length">
 	<h3 class="mat-h2" [translate]="'internaciones.anamnesis.alergias.table.TITLE'"></h3>
 	<table mat-table [dataSource]="allergies" class="secondary">
 

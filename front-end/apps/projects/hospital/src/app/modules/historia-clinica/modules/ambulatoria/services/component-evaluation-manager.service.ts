@@ -10,9 +10,11 @@ export class ComponentEvaluationManagerService {
 	private vaccinesSubject = new BehaviorSubject<boolean>(true);
 	private medicationsSubject = new BehaviorSubject<boolean>(true);
 	private diagnosticosSubject = new BehaviorSubject<boolean>(true);
+	private mainDiagnosticosSubject = new BehaviorSubject<boolean>(true);
 	set anamnesis(anamnesis: ResponseAnamnesisDto) {
-		this.diagnosticos = anamnesis.diagnosis;
-		this.diagnosticos = anamnesis.mainDiagnosis
+
+		this.mainDiagnosis = anamnesis?.mainDiagnosis;
+		this.diagnosis = anamnesis.diagnosis;
 		this.allergies = anamnesis.allergies;
 		this.familyHistories = anamnesis.familyHistories;
 		this.personalHistories = anamnesis.personalHistories;
@@ -21,12 +23,12 @@ export class ComponentEvaluationManagerService {
 	}
 
 
-	set diagnosticos(diagnostico: DiagnosisDto[] | DiagnosisDto) {
-		if (Array.isArray(diagnostico)) {
-			this.diagnosticosSubject.next(!diagnostico || diagnostico.length === 0);
-		} else {
-			this.diagnosticosSubject.next(diagnostico == null);
-		}
+	set mainDiagnosis(mainDiagnosis: DiagnosisDto) {
+		this.mainDiagnosticosSubject.next(!mainDiagnosis);
+	}
+
+	set diagnosis(diagnosis: DiagnosisDto[]) {
+		this.diagnosticosSubject.next(!(diagnosis?.length > 0));
 	}
 
 	set allergies(allergies: AllergyConditionDto[]) {
@@ -48,8 +50,8 @@ export class ComponentEvaluationManagerService {
 		this.medicationsSubject.next(!medications || medications.length === 0);
 	}
 
-	isEmptyDiagnosticos(): Observable<boolean> {
-		return this.diagnosticosSubject.asObservable();
+	isEmptyDiagnosis(): Observable<boolean> {
+		return (this.mainDiagnosticosSubject.asObservable() || this.diagnosticosSubject.asObservable());
 	}
 
 	isEmptyAllergies(): Observable<boolean> {

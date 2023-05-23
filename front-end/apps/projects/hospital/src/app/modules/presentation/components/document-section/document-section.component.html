@@ -7,9 +7,8 @@
 	</mat-card-content>
 </mat-card>
 
-<section *ngIf="columns && data">
+<section *ngIf="columns && data?.length">
 	<h3 class="mat-body-2" [translate]="tableTitle"></h3>
-
 	<table mat-table [dataSource]="data" class="secondary">
 
 		<ng-container *ngFor="let column of columns" [matColumnDef]="column.def">

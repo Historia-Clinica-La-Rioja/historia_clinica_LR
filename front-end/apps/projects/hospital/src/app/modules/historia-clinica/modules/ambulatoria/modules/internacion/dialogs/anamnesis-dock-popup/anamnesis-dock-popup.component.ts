@@ -81,6 +81,8 @@ export class AnamnesisDockPopupComponent implements OnInit {
 	) {
 		this.mainDiagnosis = data.mainDiagnosis;
 		this.diagnosticos = data.diagnosticos;
+		this.componentEvaluationManagerService.mainDiagnosis = this.mainDiagnosis;
+		this.componentEvaluationManagerService.diagnosis = this.diagnosticos;
 		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
 	}

@@ -4,8 +4,9 @@
 
 		<app-new-consultation-expansion-section id="diagnosticos"
 			[title]="'internaciones.epicrisis.diagnosticos.TITLE' | translate" icon="error_outlined" [collapsed]="false"
-			[isEmpty]="componentEvaluationManagerService.isEmptyDiagnosticos() | async" [hideBorder]="true">
-			<app-diagnosticos [(mainDiagnosis)]="mainDiagnosis" [(diagnosticos)]="diagnosticos" [type]="'ANAMNESIS'">
+			[isEmpty]="componentEvaluationManagerService.isEmptyDiagnosis()| async" [hideBorder]="true">
+			<app-diagnosticos [showTitle]="true" [(mainDiagnosis)]="mainDiagnosis" [(diagnosticos)]="diagnosticos"
+				[type]="'ANAMNESIS'">
 			</app-diagnosticos>
 		</app-new-consultation-expansion-section>
 
@@ -200,7 +201,7 @@
 		<app-new-consultation-expansion-section id="factores-de-riesgo"
 			[title]="'historia-clinica.factores-de-riesgo-form.TITLE' | translate" icon="favorite_outlined"
 			[isEmpty]="!factoresDeRiesgoFormService.hasAtLeastOneValueLoaded()" [collapsed]="true" [hideBorder]="false">
-			<app-factores-de-riesgo-form [showTitle]="false"
+			<app-factores-de-riesgo-form [showTitle]="true"
 				[factoresDeRiesgoFormService]="factoresDeRiesgoFormService">
 			</app-factores-de-riesgo-form>
 		</app-new-consultation-expansion-section>
@@ -209,27 +210,27 @@
 			[title]="'internaciones.anamnesis.alergias.TITLE' | translate" icon="cancel"
 			[isEmpty]="componentEvaluationManagerService.isEmptyAllergies() | async" [collapsed]="true"
 			[hideBorder]="false">
-			<app-alergias [showTitle]="false" [(allergies)]="allergies"></app-alergias>
+			<app-alergias [showTitle]="true"  [(allergies)]="allergies"></app-alergias>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="vacunas" [title]="'ambulatoria.paciente.vacunas.VACCINE' | translate"
 			icon="vaccines" [isEmpty]="componentEvaluationManagerService.isEmptyVaccines() | async" [collapsed]="true"
 			[hideBorder]="false">
-			<app-vacunas [showTitle]="false" [(immunizations)]="immunizations"></app-vacunas>
+			<app-vacunas [showTitle]="true"  [(immunizations)]="immunizations"></app-vacunas>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="antecedentes-personales"
 			[title]="'internaciones.anamnesis.antecedentes-personales.TITLE' | translate" icon="report_outlined"
 			[isEmpty]="componentEvaluationManagerService.isEmptyPersonalHistories() | async" [collapsed]="true"
 			[hideBorder]="false">
-			<app-antecedentes-personales [(personalHistories)]="personalHistories"></app-antecedentes-personales>
+			<app-antecedentes-personales [showTitle]="true"  [(personalHistories)]="personalHistories"></app-antecedentes-personales>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="antecedentes-familiares"
 			[title]="'internaciones.anamnesis.antecedentes-familiares.TITLE' | translate" icon="report_outlined"
 			[isEmpty]="componentEvaluationManagerService.isEmptyFamilyHistories() | async" [collapsed]="true"
 			[hideBorder]="false">
-			<app-antecedentes-familiares [showTitle]="false" [(familyHistories)]="familyHistories">
+			<app-antecedentes-familiares [showTitle]="true"  [(familyHistories)]="familyHistories">
 			</app-antecedentes-familiares>
 		</app-new-consultation-expansion-section>
 
@@ -237,7 +238,7 @@
 			[title]="'internaciones.anamnesis.medicacion.TITLE' | translate" icon="event_available"
 			[isEmpty]="componentEvaluationManagerService.isEmptyMedications() | async" [collapsed]="true"
 			[hideBorder]="false">
-			<app-medicacion [showTitle]="false" [(medications)]="medications"></app-medicacion>
+			<app-medicacion [showTitle]="true"  [(medications)]="medications"></app-medicacion>
 		</app-new-consultation-expansion-section>
 
 	</form>

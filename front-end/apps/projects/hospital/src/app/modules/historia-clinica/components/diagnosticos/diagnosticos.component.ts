@@ -12,7 +12,7 @@ import { ComponentEvaluationManagerService } from '@historia-clinica/modules/amb
 	selector: 'app-diagnosticos',
 	templateUrl: './diagnosticos.component.html',
 	styleUrls: ['./diagnosticos.component.scss'],
-	providers: [ComponentEvaluationManagerService]
+	providers: []
 })
 export class DiagnosticosComponent {
 	@Input() showTitle = false;
@@ -53,9 +53,9 @@ export class DiagnosticosComponent {
 		dialogRef.afterClosed().subscribe(diagnosis => {
 			if (diagnosis) {
 				if (!this.diagnosticos.find(currentDiagnosis => currentDiagnosis.snomed.pt === diagnosis.snomed.pt) && diagnosis.snomed.pt != this._mainDiagnosis?.snomed.pt) {
-					this.componentEvaluationManagerService.diagnosticos = diagnosis;
 
 					if (isMainDiagnosis) {
+						this.componentEvaluationManagerService.mainDiagnosis = diagnosis;
 						diagnosis.presumptive = false;
 						diagnosis.verificationId = this.CONFIRMED;
 						diagnosis.statusId = this.ACTIVE;
@@ -63,6 +63,7 @@ export class DiagnosticosComponent {
 					}
 					else {
 						this.diagnosticos.push(diagnosis);
+						this.componentEvaluationManagerService.diagnosis = this.diagnosticos;
 						this.diagnosisChange.emit(this.diagnosticos);
 					}
 				}
@@ -84,6 +85,7 @@ export class DiagnosticosComponent {
 		dialogRef.afterClosed().subscribe(potentialNewMainDiagnosis => {
 			if (potentialNewMainDiagnosis) {
 				if (potentialNewMainDiagnosis != this._mainDiagnosis) {
+					this.componentEvaluationManagerService.mainDiagnosis = potentialNewMainDiagnosis;
 					let oldMainDiagnosis = this._mainDiagnosis;
 					this.diagnosticos.push(oldMainDiagnosis);
 					this.diagnosticos.splice(this.diagnosticos.indexOf(potentialNewMainDiagnosis), 1);
@@ -101,7 +103,7 @@ export class DiagnosticosComponent {
 		const index = this.diagnosticos.indexOf(event);
 		if (index !== -1) {
 			this.diagnosticos.splice(index, 1);
-			this.componentEvaluationManagerService.diagnosticos = this.diagnosticos;
+			this.componentEvaluationManagerService.diagnosis = this.diagnosticos;
 		}
 	}
 }

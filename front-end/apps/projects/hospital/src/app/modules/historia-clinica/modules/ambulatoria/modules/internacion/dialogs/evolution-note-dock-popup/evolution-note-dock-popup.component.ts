@@ -28,6 +28,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-evolution-note-dock-popup',
@@ -60,11 +61,13 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 	minDate = MIN_DATE;
 	evolutionNote: ResponseEvolutionNoteDto;
 	isDisableConfirmButton = false;
-
+	anthropometricDataSubject = new BehaviorSubject<boolean>(true);
+	observationsSubject = new BehaviorSubject<boolean>(true);
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
 		public dockPopupRef: DockPopupRef,
 		private readonly formBuilder: UntypedFormBuilder,
+		readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly evolutionNoteService: EvolutionNoteService,
 		private readonly snackBarService: SnackBarService,
@@ -73,8 +76,8 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		private readonly translateService: TranslateService,
 		private readonly dialog: MatDialog,
 	) {
-		this.mainDiagnosis = data.mainDiagnosis;
 		this.diagnosticos = data.diagnosticos;
+		this.mainDiagnosis = data.mainDiagnosis;
 		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
@@ -83,6 +86,8 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.componentEvaluationManagerService.mainDiagnosis = this.mainDiagnosis;
+		this.componentEvaluationManagerService.diagnosis = this.diagnosticos;
 		this.form = this.formBuilder.group({
 			anthropometricData: this.formBuilder.group({
 				bloodType: [null],
@@ -117,6 +122,20 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 				});
 			}
 		}
+
+		this.form.get('observations').valueChanges.pipe(
+			map(formData => Object.values(formData)),
+			map(formValues => formValues.every(value => value === null || value === ''))
+		).subscribe(allFormValuesAreNull => {
+			this.observationsSubject.next(allFormValuesAreNull);
+		});
+
+		this.form.get('anthropometricData').valueChanges.pipe(
+			map(formData => Object.values(formData)),
+			map(formValues => formValues.every(value => value === null))
+		).subscribe(allFormValuesAreNull => {
+			this.anthropometricDataSubject.next(allFormValuesAreNull);
+		});
 	}
 
 	save(): void {
@@ -289,6 +308,14 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 					});
 			}
 		});
+	}
+
+	getAnthropometricData(): Observable<boolean> {
+		return this.anthropometricDataSubject.asObservable();
+	}
+
+	getObservations(): Observable<boolean> {
+		return this.observationsSubject.asObservable();
 	}
 }
 
