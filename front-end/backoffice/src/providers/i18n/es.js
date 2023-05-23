@@ -767,7 +767,6 @@ const messages = {
                 id: 'Identificador',
                 description: 'Descripción'
             }
-        },
         }
     }
 };
