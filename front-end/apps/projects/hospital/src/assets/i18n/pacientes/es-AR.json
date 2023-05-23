@@ -327,9 +327,10 @@
 		"PENDING_TO_AUDIT": "Pendiente de auditoría",
 		"AUDITED":"Auditado",
 		"FLAGGED_FOR_AUDIT":"Marcado para auditar",
-		"NO_INFO":"No hay información encontrada. Intente mejorar los parámetros de búsqueda"
-
-
+		"NO_INFO":"No hay información encontrada. Intente mejorar los parámetros de búsqueda",
+		"BUTTON_CONFIRM_USE":"Si, utilizar",
+		"SUBTITLE_WARNING_EDIT_IDENTIFICATION_NUMBER":"Los datos encontrados por RENAPER para el DNI {{dni}} son los siguientes: ",
+		"QUESTION_WARNING_EDIT_IDENTIFICATION_NUMBER":"¿Desea utilizar estos datos?"
 	}
   }
 }

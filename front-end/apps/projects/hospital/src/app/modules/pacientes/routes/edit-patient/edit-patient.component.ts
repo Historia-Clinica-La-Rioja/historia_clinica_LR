@@ -45,7 +45,8 @@ import { Observable } from 'rxjs';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { PatientMasterDataService } from '@api-rest/services/patient-master-data.service';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
-import { EditIdentificationNumberComponent } from '@pacientes/dialogs/edit-identification-number/edit-identification-number.component';
+import { EditIdentificationNumberComponent, PersonBasicDataResponseCustom } from '@pacientes/dialogs/edit-identification-number/edit-identification-number.component';
+import { DateFormat, momentFormat, momentParseDate, momentParseDateTime } from '@core/utils/moment.utils';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -93,7 +94,8 @@ export class EditPatientComponent implements OnInit {
 	hasToSaveFiles: boolean = false;
 	typesPatient: PatientType[];
 	hasAuditorRole: boolean = false;
-	idTypeDni:number;
+	idTypeDni: number;
+	dniWasEdited:boolean=false;
 
 	constructor(
 		private formBuilder: UntypedFormBuilder,
@@ -589,13 +591,13 @@ export class EditPatientComponent implements OnInit {
 			});
 	}
 
-	setIdentificationType(value:any){
+	setIdentificationType(value: any) {
 		const button = document.getElementById('updateDNI');
 
-		if(value !== this.idTypeDni ){
+		if (value !== this.idTypeDni) {
 			this.form.controls.identificationNumber.enable();
 			button.style.display = "none";
-		}else{
+		} else {
 			this.form.controls.identificationNumber.disable();
 			button.style.display = "block";
 		}
@@ -606,6 +608,71 @@ export class EditPatientComponent implements OnInit {
 			disableClose: true,
 			autoFocus: false
 		});
+		dialogRef.afterClosed().subscribe(personData => {
+			if (personData) {
+				this.setValuesAndDisabled(personData);
+			}
+		})
+
+	}
+
+	setValuesAndDisabled(data: PersonBasicDataResponseCustom) {
+		this.dniWasEdited=true;
+		if (data.personData.firstName && data.personData.lastName) {
+			const splitedFirstName = this.splitStringByFirstSpaceCharacter(data.personData.firstName);
+			const splitedLastName = this.splitStringByFirstSpaceCharacter(data.personData.lastName);
+
+			this.form.controls.lastName.setValue(splitedLastName.firstSubstring);
+			this.form.controls.firstName.setValue(splitedFirstName.firstSubstring);
+
+			this.form.controls.middleNames.setValue(splitedFirstName.secondSubstring);
+			this.form.controls.otherLastNames.setValue(splitedLastName.secondSubstring);
+
+			this.form.controls.firstName.disable();
+			this.form.controls.middleNames.disable();
+			this.form.controls.lastName.disable();
+			this.form.controls.otherLastNames.disable();
+		}else{
+			this.form.controls.lastName.setValue(null);
+			this.form.controls.firstName.setValue(null);
+			this.form.controls.middleNames.setValue(null);
+			this.form.controls.otherLastNames.setValue(null);
+		}
+
+		this.form.controls.stateId.setValue(PATIENT_TYPE.VALID);
+		this.form.controls.stateId.disable();
+
+		this.form.controls.identificationNumber.setValue(data.identificationNumber);
+		this.form.controls.identificationNumber.disable();
+
+
+		if (data.personData.birthDate) {
+			this.form.controls.birthDate.setValue(momentParseDate(data.personData.birthDate));
+			this.form.controls.birthDate.disable();
+		}else{
+			this.form.controls.birthDate.setValue(null);
+		}
+
+		if(data.personData.cuil){
+			this.form.controls.birthDate.setValue(data.personData.cuil);
+		}else{
+			this.form.controls.birthDate.setValue(null);
+		}
+	}
+
+	private splitStringByFirstSpaceCharacter(text: string): any {
+		const spaceIndex: number = text.indexOf(' ');
+		if (spaceIndex === 0) {
+			return this.splitStringByFirstSpaceCharacter(text.substr(1));
+		} else {
+			return (spaceIndex !== -1) ?
+				{
+					firstSubstring: text.substr(0, spaceIndex),
+					secondSubstring: text.substr(spaceIndex + 1)
+				}
+				:
+				{ firstSubstring: text };
+		}
 	}
 }
 

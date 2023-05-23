@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { GenderDto } from '@api-rest/api-model';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { GenderDto, PersonBasicDataResponseDto } from '@api-rest/api-model';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { PersonService } from '@api-rest/services/person.service';
 import { hasError } from '@core/utils/form.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { finalize } from 'rxjs';
+import { WarningEditIdentificationNumberComponent } from '../warning-edit-identification-number/warning-edit-identification-number.component';
 
 @Component({
 	selector: 'app-edit-identification-number',
@@ -16,29 +18,31 @@ export class EditIdentificationNumberComponent implements OnInit {
 	hasError = hasError;
 	form: FormGroup;
 	genders: GenderDto[];
-	formSubmitted:boolean=false;
-	isLoading:boolean;
+	formSubmitted: boolean = false;
+	isLoading: boolean;
 
 	constructor(private formBuilder: FormBuilder,
 		private personMasterDataService: PersonMasterDataService,
 		private personService: PersonService,
-		private snackBarService: SnackBarService) { }
+		private snackBarService: SnackBarService,
+		private dialog: MatDialog,
+		public dialogRef: MatDialogRef<EditIdentificationNumberComponent>) { }
 
 	ngOnInit(): void {
 		this.personMasterDataService.getGenders()
-		.subscribe(genders => {
-			this.genders = genders;
-		});
+			.subscribe(genders => {
+				this.genders = genders;
+			});
 		this.form = this.formBuilder.group({
 			identificationNumber: [null, [Validators.required]],
-			genderId: [null,[Validators.required]]
+			genderId: [null, [Validators.required]]
 		})
 	}
 
 	save() {
-		this.formSubmitted=true;
-		if(this.form.valid){
-			this.formSubmitted=true;
+		this.formSubmitted = true;
+		if (this.form.valid) {
+			this.formSubmitted = true;
 			this.callRenaperService();
 		}
 	}
@@ -52,9 +56,31 @@ export class EditIdentificationNumberComponent implements OnInit {
 			.subscribe(
 				personData => {
 
+					const dialogRef = this.dialog.open(WarningEditIdentificationNumberComponent, {
+						data: {
+							personData: personData,
+							dni: this.form.controls.identificationNumber.value,
+						},
+						disableClose: true,
+						width: '40%',
+						autoFocus: false,
+					})
+					const personDataCustom: PersonBasicDataResponseCustom = {
+						personData: personData,
+						identificationNumber: this.form.controls.identificationNumber.value,
+					}
+					dialogRef.afterClosed().subscribe(confirmed => {
+						if (confirmed) {
+							this.dialogRef.close(personDataCustom);
+						}
+					})
 				}, () => {
 					this.snackBarService.showError('pacientes.search.RENAPER_TIMEOUT');
 				});
 	}
 
+}
+export interface PersonBasicDataResponseCustom {
+	personData: PersonBasicDataResponseDto,
+	identificationNumber: number,
 }

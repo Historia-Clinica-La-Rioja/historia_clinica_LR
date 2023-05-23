@@ -25,6 +25,8 @@ import { ProfessionSpecialtiesFormComponent } from './component/profession-speci
 import { SearchCreateComponent } from './component/search-create/search-create.component';
 import { ViewPatientDetailComponent } from './component/view-patient-detail/view-patient-detail.component';
 import { ResumenDeGuardiaComponent } from './component/resumen-de-guardia/resumen-de-guardia.component';
+import { EditIdentificationNumberComponent } from './dialogs/edit-identification-number/edit-identification-number.component';
+
 // dialogs
 import { ArtComponent } from './dialogs/art/art.component';
 import { EditLicenseComponent } from './dialogs/edit-license/edit-license.component';
@@ -36,11 +38,12 @@ import { PrivateHealthInsuranceComponent } from './dialogs/private-health-insura
 import { ReportsComponent } from './dialogs/reports/reports.component';
 import { ScanPatientComponent } from './dialogs/scan-patient/scan-patient.component';
 import { MessageForAuditComponent } from './dialogs/message-for-audit/message-for-audit.component';
+import { WarningEditIdentificationNumberComponent } from './dialogs/warning-edit-identification-number/warning-edit-identification-number.component';
+
 // pipes
 import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-and-specialty.pipe';
 import { FilesUploaderComponent } from './component/files-uploader/files-uploader.component';
 import { EmergencyCareTemporaryPatientProfile } from './routes/emergency-care-temporary-patient-profile/emergency-care-temporary-patient-profile';
-import { EditIdentificationNumberComponent } from './dialogs/edit-identification-number/edit-identification-number.component';
 
 @NgModule({
 	declarations: [
@@ -81,6 +84,7 @@ import { EditIdentificationNumberComponent } from './dialogs/edit-identification
 		ResumenDeGuardiaComponent,
 		EmergencyCareTemporaryPatientProfile,
   		EditIdentificationNumberComponent,
+    	WarningEditIdentificationNumberComponent,
 	],
 	exports: [
 		CardPatientComponent,

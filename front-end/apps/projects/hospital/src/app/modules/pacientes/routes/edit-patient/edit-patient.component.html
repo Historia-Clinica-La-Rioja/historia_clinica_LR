@@ -51,7 +51,7 @@
 							</mat-error>
 						</mat-form-field>
 						<div id="updateDNI">
-							<button *ngIf="hasAuditorRole" mat-button type="button" color="primary"  (click)="setDNI()">{{'pacientes.form.UPDATE_IDENTIFICATION_NUMBER' | translate}}</button>
+							<button *ngIf="hasAuditorRole && !dniWasEdited" mat-button type="button" color="primary"  (click)="setDNI()">{{'pacientes.form.UPDATE_IDENTIFICATION_NUMBER' | translate}}</button>
 						</div>
 					</div>
 				</div>
