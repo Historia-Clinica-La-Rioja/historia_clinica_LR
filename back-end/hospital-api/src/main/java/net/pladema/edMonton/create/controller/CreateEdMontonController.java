@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @Validated
-@RequestMapping("/institutions/{institutionId}/patient/{patientId}/hce/general-state")
+@RequestMapping("/institution/{institutionId}/patient/{patientId}/hce/general-state")
 public class CreateEdMontonController implements CreateEdMontonAPI{
 
 	private static final Logger LOG = LoggerFactory.getLogger(CreateEdMontonController.class);

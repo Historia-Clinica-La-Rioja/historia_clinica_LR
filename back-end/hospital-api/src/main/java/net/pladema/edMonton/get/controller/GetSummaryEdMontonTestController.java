@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RestController
 @Validated
-@RequestMapping("/institution/{institutionId}/patient/{patientId}/hce/general-state")
+@RequestMapping("/institution/{institutionId}/patient/{patientId}/hce/general-state/summary")
 public class GetSummaryEdMontonTestController implements GetSummaryEdMontonTest{
 	
 	private final GetEdMontonService getEdMontonService;
