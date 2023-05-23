@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>EdMonton Test</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
+
+    <style>
+        .question{
+            padding: 10px;
+        }
+
+        .container{
+        border: 1px solid black;
+        }
+
+       div>h4{
+           background-color: aliceblue ;
+           font-size: 18px;
+           color: #2687c5;
+           border-top: 0.5px solid black;
+
+
+        }
+
+        div>h1{
+           font-size: 25px;
+        }
+
+        div>p{
+           font-size: 14px;
+           margin-bottom: 5px;
+            font-weight: bold;
+            padding-top: 10px;
+        }
+        div>div>span{
+            font-size: 12px;
+
+        }
+        div>div>input{
+            height: 10px;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Escala de EdMonton</h1>
+
+        <div class="question">
+            <h4>Cognitivo</h4>
+            <p class=""> &nbsp;&nbsp;&nbsp;&nbsp;Por favor imagina que este círculo pre-dibujado es un reloj. Me gustaría que pusiera los números en las posiciones
+            correctas y luego poner las manillas o manecillas para indicar la hora "Las once con diez minutos".</p>
+            <input type="checkbox"><span>Sin errores</span></br>
+            <input type="checkbox"><span>Errores minimos de espaciado</span></br>
+            <input type="checkbox"><span>Otros errores</span></br>
+        </div>
+
+        <div class="question">
+            <h4>Estado de Salud General</h4>
+            <div>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp; En el ultimo año. ¿Cuantas veces ha estado hospitalizado?</p>
+                <input type="checkbox"><span>0</span></br>
+                <input type="checkbox"><span>1 o 2</span></br>
+                <input type="checkbox"><span>Mayor o igual a 3</span></br>
+            </div>
+            <div>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;En general, ¿Cómo describíria su salud?</p>
+                <input type="checkbox"><span>Excelente</span></br>
+                <input type="checkbox"><span>Razonable</span></br>
+                <input type="checkbox"><span>Mala</span></br>
+            </div>
+        </div>
+
+        <div class="question">
+            <h4>Independencia funcional</h4>
+            <div>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;¿Con cuántas de las siguientes actividades necesita ayuda?(Preparar la comida, compras, transporte,
+                comunicación telefónica, cuidado del hogar, lavado de ropa, manejo de dinero, tomar medicamentos).</p>
+                <input type="checkbox"><span>0 a 1</span></br>
+                <input type="checkbox"><span>2 a 4</span></br>
+                <input type="checkbox"><span>Mayor o igual a 4</span></br>
+            </div>
+        </div>
+
+        <div class="question">
+            <h4>Soporte Social</h4>
+            <div>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp; Cuando Ud. necesita ayuda, ¿puede contar con alguien que esté dispuesto y disponible para atender
+                sus necesidades o problemas?</p>
+                <input type="checkbox"><span>Siempre</span></br>
+                <input type="checkbox"><span>Aveces</span></br>
+                <input type="checkbox"><span>Nunca</span></br>
+            </div>
+        </div>
+
+        <div class="question">
+            <h4>Uso de medicamentos</h4>
+            <div>
+                <p> &nbsp;&nbsp;&nbsp;&nbsp;Usa 5 o más medicamentos en el día a día.</p>
+                <input type="checkbox"><span>No</span></br>
+                <input type="checkbox"><span>Si</span></br>
+            </div>
+            <div>
+                <p> &nbsp;&nbsp;&nbsp;&nbsp;En Ocasiones, ¿se le olvida tomarse los medicamentos?</p>
+                <input type="checkbox"><span>No</span></br>
+                <input type="checkbox"><span>Si</span></br>
+            </div>
+        </div>
+
+        <div class="question">
+            <h4>Nutrición</h4>
+            <div>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp; Recientemente, ¿ha perdido peso como para que su ropa le quede suelta?</p>
+                <input type="checkbox"><span>No</span></br>
+                <input type="checkbox"><span>Si</span></br>
+            </div>
+        </div>
+
+        <div class="question">
+            <h4>Ánimo</h4>
+            <div>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp; ¿Se siente con frecuencia triste o deprimido?</p>
+                <input type="checkbox"><span>No</span></br>
+                <input type="checkbox"><span>Si</span></br>
+            </div>
+        </div>
+
+        <div class="question">
+            <h4>Contigencia</h4>
+            <div>
+                <p> &nbsp;&nbsp;&nbsp;&nbsp;¿Tiene algún problema con el control para orinar, es decir puede contener la orina si así lo desea?</p>
+                <input type="checkbox"><span>No</span></br>
+                <input type="checkbox"><span>Si</span></br>
+            </div>
+        </div>
+
+        </br>
+        </br>
+        <div class="question">
+            <h4>Rendimiento Funcional</h4>
+            <div>
+                <p> &nbsp;&nbsp;&nbsp;&nbsp;Me gustaría que se sentara en esta silla con su espalda y brazos relajados. Luego, cuando diga "YA", por favor
+                párese y camine a un ritmo cómodo y seguro a la marca del suelo(aproximadamente a 3 metros de dsitancia), regrese
+                a su silla y se sienta.</p>
+                <input type="checkbox"><span>0 a 10 Segundos</span></br>
+                <input type="checkbox"><span>11 a 20 Segundos</span></br>
+                <input type="checkbox"><span>Más de 20 Segundos</span></br>
+                <input type="checkbox"><span>El paciente no quiere o no requiere ayuda</span></br>
+            </div>
+        </div>
+
+
+        <div class="question">
+            <h4>Total</h4>
+            <div>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp; La puntuación de la EFS se interpreta:</p>
+                <input type="checkbox"><span>0 a 4 = Individuo sano</span></br>
+                <input type="checkbox"><span>5 a 6 = Vulnerable</span></br>
+                <input type="checkbox"><span>7 de 8 = Fragilidad leve</span></br>
+                <input type="checkbox"><span>9 - 10 = Fragilidad moderada</span></br>
+                <input type="checkbox"><span>11 ó más = Fragilidad severa</span></br>
+            </div>
+        </div>
+
+
+
+    </div>
+</body>
+</html>

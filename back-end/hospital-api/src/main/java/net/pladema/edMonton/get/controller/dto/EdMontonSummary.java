@@ -26,9 +26,9 @@ public class EdMontonSummary {
 
 	private String licenseNumber;
 
-	private LocalDateTime createdOn;
+	private String createdOn;
 
-	public EdMontonSummary(String name, String middleNames, String lastName, String licenseNumber, LocalDateTime date){
+	public EdMontonSummary(String name, String middleNames, String lastName, String licenseNumber, String date){
 		this.nameProfessional = name;
 		this.middleNameProfessional = middleNames;
 		this.lastNameProfessional = lastName;

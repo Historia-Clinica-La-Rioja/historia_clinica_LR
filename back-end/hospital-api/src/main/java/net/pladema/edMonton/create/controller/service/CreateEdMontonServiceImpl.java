@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -47,6 +48,7 @@ public class CreateEdMontonServiceImpl implements CreateEdMontonService{
 		Answer answer;
 		Integer idCuestionario = 1;
 		Integer idStatus= 2;
+
 		questionnaireResponse.setPatientId(Math.toIntExact(edMontonBo.getPatientId()));
 		if( edMontonBo.getAnswers() != null && edMontonBo.getAnswers().size()>0){
 			questionnaireResponse.setAnswers( new ArrayList<Answer>());

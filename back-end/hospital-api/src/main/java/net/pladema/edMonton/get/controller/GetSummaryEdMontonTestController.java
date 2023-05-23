@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RestController
 @Validated
-@RequestMapping("/institution/{institutionId}/patient/{patientId}/hce/general-state")
+@RequestMapping("/institution/{institutionId}/patient/{patientId}/hce/general-state/summary")
 public class GetSummaryEdMontonTestController implements GetSummaryEdMontonTest{
 	
 	private final GetEdMontonService getEdMontonService;
@@ -30,14 +31,14 @@ public class GetSummaryEdMontonTestController implements GetSummaryEdMontonTest{
 
 		EdMontonSummary edMontonSummary = new EdMontonSummary();
 
-		EdMontonSummary result = getEdMontonService.findEdMontonSummary(edMonton);
+		Optional<EdMontonSummary> result = getEdMontonService.findEdMontonSummary(edMonton);
 
 		edMontonSummary.setTittle("Test EdMonton");
-		edMontonSummary.setNameProfessional(result.getNameProfessional());
-		edMontonSummary.setMiddleNameProfessional(result.getMiddleNameProfessional());
-		edMontonSummary.setLastNameProfessional(result.getLastNameProfessional());
-		edMontonSummary.setCreatedOn(result.getCreatedOn());
-		edMontonSummary.setLicenseNumber(result.getLicenseNumber());
+		edMontonSummary.setNameProfessional(result.get().getNameProfessional());
+		edMontonSummary.setMiddleNameProfessional(result.get().getMiddleNameProfessional());
+		edMontonSummary.setLastNameProfessional(result.get().getMiddleNameProfessional());
+		edMontonSummary.setCreatedOn(result.get().getCreatedOn());
+		edMontonSummary.setLicenseNumber(result.get().getLicenseNumber());
 		
 		return ResponseEntity.ok(edMontonSummary);
 		
