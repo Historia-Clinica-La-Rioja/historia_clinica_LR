@@ -79,7 +79,9 @@ public class NFSBlobStorage implements BlobStorage {
 
 	@Override
 	public void delete(FilePathBo relativePath) {
-
+		relativePath
+				.toFile()
+				.delete();
 	}
 
 	@Override
