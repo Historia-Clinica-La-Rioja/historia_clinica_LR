@@ -22,12 +22,4 @@ public interface EdMontonRepository extends SGXAuditableEntityJPARepository<Ques
 			"WHERE qr.patientId = :patientId ")
 	public List<Answer> findPatientEdMontonTest(@Param("patientId") Integer patientId);
 
-	@Query(value = "SELECT new net.pladema.edMonton.get.controller.dto.EdMontonSummary( p.firstName, p.middleNames, p.lastName, hp.licenseNumber, qr.createdOn) " +
-			"FROM QuestionnaireResponse qr " +
-			"INNER JOIN SharedHealthcareProfessional hp ON hp.id = qr.createdBy " +
-			"INNER JOIN Person p ON p.id = hp.personId " +
-			"WHERE qr.id = :edMontonId ")
-	public EdMontonSummary findEdMontonSummary(@Param("edMontonId") Integer edMontonId);
-
-
 }

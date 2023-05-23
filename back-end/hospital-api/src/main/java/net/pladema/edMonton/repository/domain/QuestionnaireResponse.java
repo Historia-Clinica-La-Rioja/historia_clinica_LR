@@ -15,13 +15,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
+
 import java.util.List;
 
 @Entity
@@ -52,12 +49,5 @@ public class QuestionnaireResponse extends SGXAuditableEntity<Integer> {
 
 	@Column(name = "status_id")
 	private Integer statusId;
-
-	@Column(name = "created_on", insertable = false, updatable = false)
-	private LocalDateTime createdOn;
-
-	@Column(name = "created_by", insertable = false, updatable = false)
-	private Integer createdBy;
-
 
 }
