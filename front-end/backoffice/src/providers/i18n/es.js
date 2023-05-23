@@ -200,7 +200,8 @@ const messages = {
                 addressId: 'Dirección',
                 sectors: 'Sectores',
                 dependencyId: 'Dependencia',
-                provinceCode: 'Código de provincia'
+                provinceCode: 'Código de provincia',
+                hierarchicalUnits: 'Unidades jerárquicas'
             },
         },
         "booking-institution": {
@@ -743,8 +744,8 @@ const messages = {
             name: 'Orquestador',
             fields: {
                 name: 'Nombre',
-                baseTopic:'Tópico Base',
-                sectorId:'Sector'
+                baseTopic: 'Tópico Base',
+                sectorId: 'Sector'
             },
             createRelated: 'Crear Orquestador'
         },
@@ -753,13 +754,13 @@ const messages = {
             fields: {
                 name: 'Nombre',
                 aeTitle: 'AE Title',
-                orchestratorId:'Orquestador asociado',
-                sectorId:'Sector',
-                pacServerId:'Nombre del servidor PAC',
-                modalityId:'Modalidad'
+                orchestratorId: 'Orquestador asociado',
+                sectorId: 'Sector',
+                pacServerId: 'Nombre del servidor PAC',
+                modalityId: 'Modalidad'
             },
             createRelated: 'Crear Equipo',
-            detailLabel:'Detalle de Equipo'
+            detailLabel: 'Detalle de Equipo'
         },
         hierarchicalunittypes: {
             name: 'Tipo de unidad jerárquica |||| Tipos de unidades jerárquicas',
@@ -767,6 +768,17 @@ const messages = {
                 id: 'Identificador',
                 description: 'Descripción'
             }
+        },
+        hierarchicalunits: {
+            name: 'Unidad jerárquica |||| Unidades jerárquicas',
+            fields: {
+                institutionId: 'Institución',
+                classificationId: 'Clasificación',
+                typeId: 'Tipo',
+                alias: 'Alias',
+                clinicalSpecialtyId: 'Servicio'
+            },
+            createRelated: 'Crear Unidad jérarquica'
         }
     }
 };

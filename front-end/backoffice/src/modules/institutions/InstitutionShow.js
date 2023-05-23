@@ -8,10 +8,12 @@ import {
     EditButton,
     ReferenceManyField,
     Datagrid,
-    ListButton
+    ListButton, 
+    usePermissions
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
+import {ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE} from "../roles";
 
 const InstitutionShowActions = ({ data }) => {
     return (!data || !data.id) ? <TopToolbar/> :
@@ -22,6 +24,23 @@ const InstitutionShowActions = ({ data }) => {
             </TopToolbar>
         )
 };
+
+const CreateHierarchicalUnit = ({ record }) => {
+    const customRecord = {institutionId: record.id};
+    return UserIsInstitutionalAdmin() ?( <CreateRelatedButton
+            customRecord={customRecord}
+            reference="hierarchicalunits"
+            refFieldName="institutionId"
+            label="resources.hierarchicalunits.createRelated"/>
+    ) : null;
+};
+
+const UserIsInstitutionalAdmin = function () {
+    const { permissions } = usePermissions();
+    const userAdmin= permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.role)).length > 0;
+    return userAdmin;
+}
+
 const InstitutionShow = props => (
     <Show actions={<InstitutionShowActions />} {...props}>
         <SimpleShowLayout>
@@ -67,8 +86,26 @@ const InstitutionShow = props => (
                     <EditButton />
                 </Datagrid>
             </ReferenceManyField>
+
+            <SectionTitle label="resources.institutions.fields.hierarchicalUnits"/>
+            <CreateHierarchicalUnit/>
+            <ReferenceManyField
+                id='hierarchicalunits'
+                addLabel={false}
+                reference="hierarchicalunits"
+                target="institutionId"
+                sort={{ field: 'alias', order: 'DESC' }}
+            >
+                <Datagrid rowClick="show"
+                          empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin unidades jerárquicas definidas</p>}>
+                    <TextField source="id" />
+                    <TextField source="alias"/>
+                    <EditButton disabled={!UserIsInstitutionalAdmin()}/>
+                </Datagrid>
+            </ReferenceManyField>
         </SimpleShowLayout>
     </Show>
 );
 
 export default InstitutionShow;
+export { CreateHierarchicalUnit, UserIsInstitutionalAdmin };

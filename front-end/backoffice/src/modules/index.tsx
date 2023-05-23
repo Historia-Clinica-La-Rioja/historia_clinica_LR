@@ -38,6 +38,7 @@ import { ROOT, ADMINISTRADOR } from './roles';
 import snomedconcepts from './snomedconcepts';
 import snomedrelatedgroups from './snomedrelatedgroups';
 import medicalcoverageplans from "./medicalcoverageplans";
+import hierarchicalunits from "./hierarchicalunits";
 
 // Ampliación
 import healthcareprofessionalhealthinsurances from './healthcareprofessionalhealthinsurances';
@@ -121,6 +122,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="practicesinstitution" />,
     <Resource name="carelinespecialtyinstitution" />,
     <Resource name="snowstormproblems" />,
+    <Resource name="hierarchicalunits" {...hierarchicalunits} />,
     // debug
     <Resource name="snvs"  {...snvs} />,
     <Resource name="documentfiles" {...documentFiles(permissions)} />,
