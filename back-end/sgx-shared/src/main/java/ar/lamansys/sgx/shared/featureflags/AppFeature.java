@@ -145,7 +145,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_CAMPOS_CIPRES_EPICRISIS,
 
 	@Label("Indica si está habilitada la acción de imprimir HC de pacientes")
-	HABILITAR_IMPRESION_HISTORIA_CLINICA_EN_DESARROLLO
+	HABILITAR_IMPRESION_HISTORIA_CLINICA_EN_DESARROLLO,
+
+	@Label("Indica si está habilitada la carga de caché de terminología")
+	HABILITAR_CARGA_CACHE_EN_DESARROLLO,
 	;
 
     public boolean isActive() {

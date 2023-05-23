@@ -1,0 +1,45 @@
+<mat-toolbar-row>
+	<span>Lista de terminología en CSV pendiente a agregar</span>
+	<span class="toolbar-spacer"></span>
+	<button mat-icon-button (click)="list()">
+		<mat-icon>sync</mat-icon>
+	</button>
+</mat-toolbar-row>
+<div *ngFor="let terminologyQueueItem of queue$ | async" class="card-list">
+	<mat-card class="example-card">
+		<mat-card-subtitle>
+			<span>{{terminologyQueueItem.createdOn | viewDateDto : 'datetime' | date: 'dd/MM/yyyy - HH:mm'}}</span>
+		</mat-card-subtitle>
+		<mat-card-title>
+			<span class="item-id">#{{terminologyQueueItem.id}} </span>
+			<span> {{terminologyQueueItem.ecl}} </span>
+		</mat-card-title>
+		<mat-card-subtitle>
+			<span> {{terminologyQueueItem.url}}</span>
+		</mat-card-subtitle>
+		<mat-card-content>
+			<div>
+				<span>{{terminologyQueueItem.downloadedError}}</span>
+			</div>
+			<div *ngIf="terminologyQueueItem.downloadedOn">
+				<span>{{terminologyQueueItem.downloadedOn | viewDateDto : 'datetime' | date: 'dd/MM/yyyy - HH:mm'}}</span>
+				<span *ngIf="terminologyQueueItem.downloadedFile">
+					Archivo descargado
+				</span>
+				<span *ngIf="!terminologyQueueItem.downloadedFile">
+					Archivo no existe
+				</span>
+			</div>
+			<div *ngIf="terminologyQueueItem.ingestedError">
+				<span *ngIf="terminologyQueueItem.ingestedOn">{{terminologyQueueItem.ingestedOn | viewDateDto : 'datetime' |
+					date: 'dd/MM/yyyy - HH:mm'}}</span>
+				<span *ngIf="!terminologyQueueItem.ingestedOn"> ... </span>
+				<span>{{terminologyQueueItem.ingestedError}}</span>
+			</div>
+		</mat-card-content>
+	</mat-card>
+
+</div>
+
+<app-snomed-cache-form (add)="addCsv($event)"></app-snomed-cache-form>
+

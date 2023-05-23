@@ -8,6 +8,7 @@ import { dateTimeDtoToStringDate } from '@api-rest/mapper/date-dto.mapper';
 export class TimeDtoToLocalTimePipe implements PipeTransform {
 
 	transform(value: DateTimeDto): string {
+		debugger;
 		const date = new Date(dateTimeDtoToStringDate(value));
 		return date.getHours().toLocaleString();
 	}

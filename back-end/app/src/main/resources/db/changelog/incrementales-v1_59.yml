@@ -1,2 +1,71 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_59
+    - changeSet:
+        id: snomed_cache_file-createTable
+        comment: Create table snomed_cache_file
+        author: sperruolo
+        changes:
+          - createTable:
+              tableName: snomed_cache_file
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_snomed_cache_file
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: ecl
+                    type: varchar(128)
+                - column:
+                    constraints:
+                      nullable: true
+                      references: file_info(id)
+                      foreignKeyName: FK_file_info_snomed_cache_file
+                    name: file_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: url
+                    type: varchar(512)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: true
+                    name: downloaded_on
+                    type: datetime
+                - column:
+                    constraints:
+                      nullable: true
+                    name: downloaded_error
+                    type: varchar(512)
+                - column:
+                    constraints:
+                      nullable: true
+                    name: ingested_on
+                    type: datetime
+                - column:
+                    constraints:
+                      nullable: true
+                    name: ingested_error
+                    type: varchar(512)
+                - column:
+                    constraints:
+                      nullable: true
+                    name: concepts_loaded
+                    type: int
+                - column:
+                    constraints:
+                      nullable: true
+                    name: concepts_erroneous
+                    type: int
+

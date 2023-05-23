@@ -29,6 +29,20 @@
 		},
 		"features": {
 			"TITLE": "Funcionalidad"
+		},
+		"snomed-cache": {
+			"TITLE": "Caché SNOMED",
+			"form": {
+				"ecl": {
+					"LABEL": "ECL",
+					"REQUIRED": "La ECL es requerida"
+				},
+				"url": {
+					"LABEL": "URL",
+					"REQUIRED": "La URL del CSV es requerida"
+				},
+				"SUBMIT": "Agregar"
+			}
 		}
 	},
 	"app": {

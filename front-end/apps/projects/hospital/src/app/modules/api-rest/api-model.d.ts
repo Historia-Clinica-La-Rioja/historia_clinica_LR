@@ -3290,6 +3290,23 @@ export interface StudyPacAssociationDto {
     studyInstanceUID: string;
 }
 
+export interface TerminologyCSVDto {
+    ecl: SnomedECL;
+    url: string;
+}
+
+export interface TerminologyQueueItemDto {
+    createdOn: DateTimeDto;
+    downloadedError: string;
+    downloadedFile: boolean;
+    downloadedOn: DateTimeDto;
+    ecl: SnomedECL;
+    id: number;
+    ingestedError: string;
+    ingestedOn: DateTimeDto;
+    url: string;
+}
+
 export interface TimeDto {
     hours: number;
     minutes: number;
@@ -3604,6 +3621,7 @@ export const enum AppFeature {
     HABILITAR_MODULO_AUDITORIA = "HABILITAR_MODULO_AUDITORIA",
     HABILITAR_CAMPOS_CIPRES_EPICRISIS = "HABILITAR_CAMPOS_CIPRES_EPICRISIS",
     HABILITAR_IMPRESION_HISTORIA_CLINICA_EN_DESARROLLO = "HABILITAR_IMPRESION_HISTORIA_CLINICA_EN_DESARROLLO",
+    HABILITAR_CARGA_CACHE_EN_DESARROLLO = "HABILITAR_CARGA_CACHE_EN_DESARROLLO",
 }
 
 export const enum EBirthCondition {

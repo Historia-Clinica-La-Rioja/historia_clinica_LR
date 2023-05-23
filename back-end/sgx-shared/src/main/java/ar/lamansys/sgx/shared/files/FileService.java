@@ -91,6 +91,17 @@ public class FileService {
 		}
 	}
 
+	public FileContentBo loadFile(Long fileId) {
+		var fileInfo = repository.findById(fileId);
+		if (fileInfo.isEmpty()) {
+			throw new FileServiceException(
+					FileServiceEnumException.NON_EXIST,
+					String.format("El archivo con id %s no existe", fileId)
+			);
+		}
+		return this.loadFileRelativePath(fileInfo.get().getRelativePath());
+	}
+
 	public FileInfo saveStreamInPath(FilePathBo path, String uuid, String generatedFrom, boolean override,
 									 FileContentBo content) {
 
@@ -124,7 +135,15 @@ public class FileService {
 	}
 
 	private static String parseToContentType(String fileName) {
-		return URLConnection.guessContentTypeFromName(fileName);
+
+		var contentType = URLConnection.guessContentTypeFromName(fileName);
+		if (contentType != null) {
+			return contentType;
+		}
+		if (fileName.endsWith(".csv")) {
+			return "text/csv";
+		}
+		return "application/octet-stream";
 	}
 
 	public String readFileAsString(FilePathBo path, Charset encoding) {
