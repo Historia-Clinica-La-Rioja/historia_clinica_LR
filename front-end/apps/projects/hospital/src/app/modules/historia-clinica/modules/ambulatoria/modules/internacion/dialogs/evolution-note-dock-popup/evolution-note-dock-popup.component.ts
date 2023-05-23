@@ -14,7 +14,6 @@ import { EvolutionNoteService } from '@api-rest/services/evolution-note.service'
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { getError, hasError } from '@core/utils/form.utils';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
-import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { DockPopupRef } from "@presentation/services/dock-popup-ref";
 import { OVERLAY_DATA } from "@presentation/presentation-model";
@@ -56,8 +55,6 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
 	isNursingEvolutionNote: boolean;
 
-	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
-
 	minDate = MIN_DATE;
 	evolutionNote: ResponseEvolutionNoteDto;
 	isDisableConfirmButton = false;
@@ -96,12 +93,12 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 			}),
 			riskFactors: this.factoresDeRiesgoFormService.getForm(),
 			observations: this.formBuilder.group({
-				currentIllnessNote: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
-				physicalExamNote: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
-				studiesSummaryNote: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
-				evolutionNote: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
-				clinicalImpressionNote: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
-				otherNote: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]]
+				currentIllnessNote: [null],
+				physicalExamNote: [null],
+				studiesSummaryNote: [null],
+				evolutionNote: [null],
+				clinicalImpressionNote: [null],
+				otherNote: [null]
 			})
 		});
 

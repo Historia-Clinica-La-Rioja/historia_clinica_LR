@@ -25,10 +25,6 @@
 								<textarea matInput type="text" id="currentIllnessNote" name="currentIllnessNote"
 									formControlName="currentIllnessNote">
 								</textarea>
-								<mat-error *ngIf="hasError(form.get('observations'), 'maxlength', 'currentIllnessNote')"
-									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
-								</mat-error>
-
 							</mat-form-field>
 						</div>
 						<div
@@ -39,9 +35,6 @@
 								<textarea matInput type="text" id="physicalExamNote" name="physicalExamNote"
 									formControlName="physicalExamNote">
 								</textarea>
-								<mat-error *ngIf="hasError(form.get('observations'), 'maxlength', 'physicalExamNote')"
-									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
-								</mat-error>
 							</mat-form-field>
 						</div>
 						<div
@@ -52,9 +45,6 @@
 								<textarea matInput type="text" id="studiesSummaryNote" name="studiesSummaryNote"
 									formControlName="studiesSummaryNote">
 								</textarea>
-								<mat-error *ngIf="hasError(form.get('observations'), 'maxlength', 'studiesSummaryNote')"
-									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
-								</mat-error>
 							</mat-form-field>
 						</div>
 						<div
@@ -65,9 +55,6 @@
 								<textarea matInput type="text" id="evolutionNote" name="evolutionNote"
 									formControlName="evolutionNote">
 								</textarea>
-								<mat-error *ngIf="hasError(form.get('observations'), 'maxlength', 'evolutionNote')"
-									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
-								</mat-error>
 							</mat-form-field>
 						</div>
 						<div
@@ -78,10 +65,6 @@
 								<textarea matInput type="text" id="clinicalImpressionNote" name="clinicalImpressionNote"
 									formControlName="clinicalImpressionNote">
 								</textarea>
-								<mat-error
-									*ngIf="hasError(form.get('observations'), 'maxlength', 'clinicalImpressionNote')"
-									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
-								</mat-error>
 							</mat-form-field>
 						</div>
 						<div
@@ -91,9 +74,6 @@
 								<textarea matInput type="text" id="otherNote" name="otherNote"
 									formControlName="otherNote">
 								</textarea>
-								<mat-error *ngIf="hasError(form.get('observations'), 'maxlength', 'otherNote')"
-									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
-								</mat-error>
 							</mat-form-field>
 						</div>
 
