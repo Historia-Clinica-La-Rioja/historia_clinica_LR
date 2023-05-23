@@ -72,3 +72,95 @@ databaseChangeLog:
                 INSERT INTO hierarchical_unit_type (description) VALUES('Jefatura de sala');
                 INSERT INTO hierarchical_unit_type (description) VALUES('Departamento');
                 INSERT INTO hierarchical_unit_type (description) VALUES('Servicio');
+
+
+    - changeSet:
+        id: hierarchical_unit-createTable
+        comment: Create table hierarchical_unit
+        author: bchacon
+        changes:
+          - createTable:
+              tableName: hierarchical_unit
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_hierarchical_unit
+                    name: id
+                    type: int
+                - column:
+                    name: institution_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: type_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: alias
+                    type: text
+                    constraints:
+                      nullable: false
+                - column:
+                    name: hierarchical_unit_id_to_report
+                    type: int
+                - column:
+                    name: clinical_specialty_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: institution_id
+              baseTableName: hierarchical_unit
+              constraintName: FK_hierarchical_unit_institution_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: institution
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: type_id
+              baseTableName: hierarchical_unit
+              constraintName: FK_hierarchical_unit_type_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: hierarchical_unit_type
+              validate: true
