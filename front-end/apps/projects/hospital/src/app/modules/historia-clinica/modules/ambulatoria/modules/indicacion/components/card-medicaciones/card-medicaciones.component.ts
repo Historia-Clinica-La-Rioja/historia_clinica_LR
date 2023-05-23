@@ -330,12 +330,13 @@ export class CardMedicacionesComponent implements OnInit {
 			doctor: medication.doctor,
 			totalDays: medication.totalDays,
 			observation: medication.observations ? medication.observations.trim() : '',
-			prescriptionLineState: this.prescripcionesService.renderPrescriptionLineState(medication.prescriptionLineState)
+			prescriptionLineState: this.prescripcionesService.renderPrescriptionLineState(medication.prescriptionLineState),
+			isDigital: medication.isDigital,
 		};
 	}
 
 	hasActionsMenu(medicationInfo: MedicationInfoDto): boolean {
-		if (!this.isHabilitarRecetaDigitalEnabled 
+		if (!this.isHabilitarRecetaDigitalEnabled
 			&& (medicationInfo.prescriptionLineState == this.DISPENSED_STATE_ID
 			|| medicationInfo.prescriptionLineState == this.PROVISIONAL_DISPENSED_STATE_ID
 			|| medicationInfo.prescriptionLineState == this.CANCELED_STATE_ID))

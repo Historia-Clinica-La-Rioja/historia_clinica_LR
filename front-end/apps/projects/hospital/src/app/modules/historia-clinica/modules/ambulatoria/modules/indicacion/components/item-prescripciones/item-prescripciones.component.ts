@@ -19,7 +19,7 @@ export class ItemPrescripcionesComponent {
 	Color = Color;
 
 	constructor(private readonly patientNameService: PatientNameService,
-				private readonly featureFlagService: FeatureFlagService) 
+				private readonly featureFlagService: FeatureFlagService)
 	{
 		this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL).subscribe((isOn: boolean) => this.isRecetaDigital = isOn);
 	}
@@ -38,9 +38,10 @@ export class PrescriptionItemData {
 	totalDays?: number | string;
 	observation?: string;
 	prescriptionLineState?: PrescriptionLineState;
+	isDigital?: boolean;
 }
 
 export interface PrescriptionLineState {
 	description: string,
-	color: string
+	color: Color
 }

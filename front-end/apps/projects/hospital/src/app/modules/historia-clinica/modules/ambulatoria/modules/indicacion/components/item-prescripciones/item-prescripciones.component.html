@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="space-between">
-	<div class="label" [ngSwitch]="prescriptionItemData.prescriptionStatus" *ngIf="!isRecetaDigital else isRecetaDigital">
+	<div class="label" [ngSwitch]="prescriptionItemData.prescriptionStatus" *ngIf="(!isRecetaDigital || !prescriptionItemData.isDigital) else isRecetaDigital">
 		<app-colored-label *ngSwitchCase="medication_status.ACTIVE.description || STUDY_STATUS.FINAL.description"
 			[description]="prescriptionItemData.prescriptionStatus | translate | uppercase"
 			[color]="Color.BLUE">
