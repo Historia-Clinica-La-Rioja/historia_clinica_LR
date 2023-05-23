@@ -145,7 +145,6 @@ export class AmbulatoryConsultationProblemsService {
 										});
 										nuevoProblema.snvsReports = result.reports;
 									}
-									return this.addControlAndResetForm(nuevoProblema);
 								}
 							})
 						}
