@@ -69,3 +69,12 @@ databaseChangeLog:
                     name: concepts_erroneous
                     type: int
 
+    - changeSet:
+        id: clinical_specialty-metadata5
+        comment: Update specialty Medico to Médico
+        author: mromero
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE clinical_specialty SET name = 'Médico' WHERE sctid_code = '309343006';
