@@ -26,7 +26,7 @@ export class ViewPdfComponent {
 		@Inject(MAT_DIALOG_DATA)
 		public data: ViewPdfBo,
 	) {
-		console.log('data.url.toString()', data.url.toString());
+
 	}
 
 	closeModal(): void {
@@ -45,8 +45,8 @@ export class ViewPdfComponent {
 		});
 
 		pdf.getMetadata().then(data => this.metadataFilename = data['contentDispositionFilename']);
-		pdf.getOutline().then(data => console.log('getOutline', data));
-		pdf.getMetadata().then(data => console.log('getMetadata', data));
+		// pdf.getOutline().then(data => console.log('getOutline', data));
+		// pdf.getMetadata().then(data => console.log('getMetadata', data));
 		// pdf.
 	}
 

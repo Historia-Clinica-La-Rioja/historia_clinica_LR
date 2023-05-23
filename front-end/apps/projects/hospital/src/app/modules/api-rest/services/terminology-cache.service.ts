@@ -18,7 +18,6 @@ export class TerminologyCacheService {
 	}
 
 	public addCsv(newCsv: TerminologyCSVDto): Observable<TerminologyQueueItemDto> {
-		console.log('post ', newCsv);
 		return this.http.post<TerminologyQueueItemDto>(`${environment.apiBase}/terminology/cache`, newCsv);
 	}
 
