@@ -1,5 +1,5 @@
-<div id="marked_for_audit_section"
-	*appHasRole="['ADMINISTRATIVO', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR','AUDITOR_MPI']">
+<mat-card id="marked_for_audit_section"
+	*appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR','AUDITOR_MPI']">
 
 	<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" class="title">
 		<mat-icon>error</mat-icon>
@@ -18,4 +18,4 @@
 			<span>{{ auditablePatientInfo.createdOn }}</span>
 		</div>
 	</div>
-</div>
+</mat-card>

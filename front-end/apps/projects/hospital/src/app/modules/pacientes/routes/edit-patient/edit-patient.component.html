@@ -13,7 +13,7 @@
 			<h2 class="page-title" [translate]="'pacientes.edit.TITLE_PATIENT'"></h2>
 			<h3 [translate]="'pacientes.edit.SUBTITLE_PATIENT'"></h3>
 		</ng-template>
-		<div *ngIf="auditablePatientInfo" id="cardMessageAudit" class="mb-2 ">
+		<div *ngIf="auditablePatientInfo && hasAuditorRole" id="cardMessageAudit" class="mb-2 ">
 			<app-message-flagged-for-audit [auditablePatientInfo]="auditablePatientInfo"></app-message-flagged-for-audit>
 		</div>
 		<div class="content">
@@ -67,7 +67,8 @@
 					</div>
 
 					<ng-template #messageForAuditSection>
-						<div fxLayout="column" fxLayoutGap="10px" id="message_for_audit_section">
+						<mat-card id="message_for_audit_section">
+						<div fxLayout="column" fxLayoutGap="10px" >
 							<span [translate]="'pacientes.edit.MESSAGE_FOR_AUDIT'"></span>
 
 							<div>
@@ -95,6 +96,7 @@
 								</button>
 							</div>
 						</div>
+					</mat-card>
 					</ng-template>
 				</div>
 				<div class="form-row" fxLayoutGap="15px">
@@ -531,7 +533,7 @@
 						</button>
 					</mat-form-field>
 				</div>
-				<div *appHasRole="['ADMINISTRATIVO', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR', 'PRESCRIPTOR']" class="form-buttons">
+				<div *appHasRole="['ADMINISTRATIVO', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR', 'PRESCRIPTOR','AUDITOR_MPI']" class="form-buttons">
 					<button mat-stroked-button type="button" (click)="goBack()">
 						<span [translate]="'buttons.BACK'"></span>
 					</button>
