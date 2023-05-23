@@ -205,7 +205,9 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		if (agendaId) {
 			this.snackBarService.showSuccess('turnos.agenda-setup.messages.SUCCESS');
 			const url = `${this.routePrefix}${ROUTE_APPOINTMENT}`;
-			this.router.navigate([url], { state: { tab: Tabs.DIAGNOSTICO_POR_IMAGEN } });
+			let selectedEquipment = window.history.state.selectedEquipment;
+			let selectedDiary = window.history.state.selectedDiary;
+			this.router.navigate([url], { state: { tab: Tabs.DIAGNOSTICO_POR_IMAGEN, selectedEquipment, selectedDiary} });
 		}
 	}
 

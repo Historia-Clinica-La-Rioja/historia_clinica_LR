@@ -4,7 +4,7 @@
 		(selectionChange)="filterEquipmentsByModality($event)">
 	</app-typeahead>
 	<app-typeahead id="equipments" style="width: 26%;"
-		[titleInput]="'image-network.equipment-diary-setup.EQUIPMENT' | translate" [options]="equipmentsTypeaheadList"
+		[titleInput]="'image-network.equipment-diary-setup.EQUIPMENT' | translate" [options]="equipmentsTypeaheadList" [externalSetValue]="externalSelectedEquipment"
 		(selectionChange)="loadDiaryByEquipment($event)">
 	</app-typeahead>
 </div>
@@ -14,7 +14,7 @@
 		fxLayoutAlign="space-between center" fxLayout.xs="column" fxLayoutAlign.xs="space-between center">
 		<mat-form-field fxFlex.gt-xs="35%" appearance="outline">
 			<mat-label [translate]="'turnos.home.SELECT_AGENDA'"></mat-label>
-			<mat-select id="equipment_diary_mat_select" [(value)]="diarySelected">
+			<mat-select id="equipment_diary_mat_select" [(value)]="diarySelected" [compareWith]="compareDiaries">
 				<mat-optgroup id="active_equipment_diaries" *ngIf="activeDiaries?.length">
 					<mat-label><strong>{{ 'turnos.home.ACTIVES_AGENDAS_LABEL' | translate }}</strong></mat-label>
 					<mat-option *ngFor="let diary of activeDiaries" [value]="diary"

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppFeature, ERole } from '@api-rest/api-model';
+import { EquipmentDiaryDto, EquipmentDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PermissionsService } from '@core/services/permissions.service';
@@ -22,6 +23,9 @@ export class HomeComponent implements OnInit {
 	noPermission = false;
 	hasRoleToViewTab = false;
 
+	selectedEquipment: EquipmentDto;
+	selectedDiary: EquipmentDiaryDto;
+
 	readonly mssg = 'image-network.home.NO_PERMISSION';
 
 	constructor(
@@ -39,6 +43,9 @@ export class HomeComponent implements OnInit {
 		if (window.history.state.tab) {
 			this.tabActiveIndex = window.history.state.tab;
 		}
+
+		this.selectedEquipment = window.history.state.selectedEquipment;
+		this.selectedDiary = window.history.state.selectedDiary;
 
 		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRATIVO_RED_DE_IMAGENES, ERole.ADMINISTRADOR_AGENDA]).subscribe(hasRole => {
 			this.featureFlagService.isActive(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES).subscribe(ffIsOn => {
