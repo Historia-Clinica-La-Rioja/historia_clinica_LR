@@ -138,6 +138,7 @@ public class AuditableContextBuilder {
 		var immunizations =  mapImmunizations(document.getImmunizations());
 		contextMap.put("billableImmunizations", immunizations.stream().filter(ImmunizationInfoDto::isBillable).collect(Collectors.toList()));
 		contextMap.put("nonBillableImmunizations", immunizations.stream().filter(i -> !i.isBillable()).collect(Collectors.toList()));
+		contextMap.put("institutionName",sharedInstitutionPort.fetchInstitutionById(document.getInstitutionId()).getName());
 		contextMap.put("medications", document.getMedications());
 		contextMap.put("anthropometricData", document.getAnthropometricData());
 		contextMap.put("riskFactors", riskFactorMapper.toRiskFactorsReportDto(document.getRiskFactors()));
