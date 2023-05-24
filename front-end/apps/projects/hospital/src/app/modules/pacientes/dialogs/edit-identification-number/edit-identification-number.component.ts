@@ -8,6 +8,7 @@ import { hasError } from '@core/utils/form.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { finalize } from 'rxjs';
 import { WarningEditIdentificationNumberComponent } from '../warning-edit-identification-number/warning-edit-identification-number.component';
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 
 @Component({
 	selector: 'app-edit-identification-number',
@@ -55,25 +56,40 @@ export class EditIdentificationNumberComponent implements OnInit {
 			.pipe(finalize(() => this.isLoading = false))
 			.subscribe(
 				personData => {
-
-					const dialogRef = this.dialog.open(WarningEditIdentificationNumberComponent, {
-						data: {
+					if (personData) {
+						const dialogRef = this.dialog.open(WarningEditIdentificationNumberComponent, {
+							data: {
+								personData: personData,
+								dni: this.form.controls.identificationNumber.value,
+							},
+							disableClose: true,
+							width: '40%',
+							autoFocus: false,
+						})
+						const personDataCustom: PersonBasicDataResponseCustom = {
 							personData: personData,
-							dni: this.form.controls.identificationNumber.value,
-						},
-						disableClose: true,
-						width: '40%',
-						autoFocus: false,
-					})
-					const personDataCustom: PersonBasicDataResponseCustom = {
-						personData: personData,
-						identificationNumber: this.form.controls.identificationNumber.value,
-					}
-					dialogRef.afterClosed().subscribe(confirmed => {
-						if (confirmed) {
-							this.dialogRef.close(personDataCustom);
+							identificationNumber: this.form.controls.identificationNumber.value,
 						}
-					})
+						dialogRef.afterClosed().subscribe(confirmed => {
+							if (confirmed) {
+								this.dialogRef.close(personDataCustom);
+							}
+						})
+					} else {
+						const dialogRefNoData = this.dialog.open(DiscardWarningComponent, {
+							data: {
+								title: 'pacientes.audit.TITLE_NO_DATA_RENAPER',
+								content: 'pacientes.audit.SUBTITLE_NO_DATA_RENAPER',
+								okButtonLabel: 'buttons.RETRY',
+							}
+						})
+						dialogRefNoData.afterClosed().subscribe(retry => {
+							if (!retry) {
+								this.dialogRef.close();
+							}
+						})
+					}
+
 				}, () => {
 					this.snackBarService.showError('pacientes.search.RENAPER_TIMEOUT');
 				});
