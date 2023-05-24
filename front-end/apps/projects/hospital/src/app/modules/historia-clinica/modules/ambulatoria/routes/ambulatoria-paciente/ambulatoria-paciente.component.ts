@@ -106,7 +106,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 	isNewConsultationOpen: boolean;
 	isEmergencyCareTemporalPatient = false;
 	patientType: number;
-	isTemporaryOrPermanentInvalidPatient: boolean = false;
+	isTemporaryPatient: boolean = false;
 
 	emergencyCareEpisode: ResponseEmergencyCareDto;
 	emergencyCareEpisodeState: EstadosEpisodio;
@@ -156,11 +156,8 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 						this.patientType = patient.typeId;
 						this.isEmergencyCareTemporalPatient = patient.typeId === PatientType.EMERGENCY_CARE_TEMPORARY;
 
-						if (this.isHabilitarRecetaDigitalEnabled
-							&& (this.patientType === PATIENT_TYPE.PERMANENT_INVALID
-							|| this.patientType === PATIENT_TYPE.TEMPORARY)) {
-								this.isTemporaryOrPermanentInvalidPatient = true;
-							}
+						if (this.isHabilitarRecetaDigitalEnabled && this.patientType === PATIENT_TYPE.TEMPORARY)
+								this.isTemporaryPatient = true;
 					}
 				);
 				this.ambulatoriaSummaryFacadeService.setIdPaciente(this.patientId);
@@ -384,8 +381,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 				problems: false
 			});
 		}
-
-		if (this.isTemporaryOrPermanentInvalidPatient) {
+		if (this.isTemporaryPatient && !this.emergencyCareEpisodeInProgress.inProgress && !this.hasInternmentEpisodeInThisInstitution) {
 			if (event.index == TAB_INDICACIONES) {
 				this.openValidatorDialog();
 				this.selectedTab = this.previousSelectedTab;

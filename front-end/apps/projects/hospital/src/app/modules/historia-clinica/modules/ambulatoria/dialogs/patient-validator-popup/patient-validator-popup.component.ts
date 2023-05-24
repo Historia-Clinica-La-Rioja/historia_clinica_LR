@@ -11,9 +11,9 @@ import { PATIENT_TYPE } from '@core/utils/patient.utils';
   styleUrls: ['./patient-validator-popup.component.scss']
 })
 export class PatientValidatorPopupComponent {
-  
+
   isTemporaryPatient: boolean = false;
-  URL_PATIENT_EDIT: string = `institucion/${this.contextService.institutionId}/pacientes/edit`; 
+  URL_PATIENT_EDIT: string = `institucion/${this.contextService.institutionId}/pacientes/edit`;
   PRESCRIPTOR: ERole = ERole.PRESCRIPTOR;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data,
