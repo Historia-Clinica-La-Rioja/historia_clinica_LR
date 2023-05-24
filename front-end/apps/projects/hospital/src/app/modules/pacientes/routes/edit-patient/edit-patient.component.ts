@@ -80,7 +80,7 @@ export class EditPatientComponent implements OnInit {
 	public completeDataPatient: CompletePatientDto;
 	public auditablePatientInfo: AuditablePatientInfo;
 	private auditableFullDate: Date;
-	private auditTypeId: number = null;
+	private auditTypeId: number = 1;
 	private wasMarked = false;
 	public patientId: any;
 	public filesId: number[];
@@ -95,7 +95,7 @@ export class EditPatientComponent implements OnInit {
 	typesPatient: PatientType[];
 	hasAuditorRole: boolean = false;
 	idTypeDni: number;
-	dniWasEdited:boolean=false;
+	dniWasEdited: boolean = false;
 
 	constructor(
 		private formBuilder: UntypedFormBuilder,
@@ -132,6 +132,7 @@ export class EditPatientComponent implements OnInit {
 						this.completeDataPatient = completeData;
 						if (completeData?.auditablePatientInfo) {
 							this.wasMarked = true;
+							this.auditTypeId = 1;
 							this.auditableFullDate = dateTimeDtotoLocalDate(
 								{
 									date: this.completeDataPatient.auditablePatientInfo.createdOn.date,
@@ -380,7 +381,30 @@ export class EditPatientComponent implements OnInit {
 	save(): void {
 		this.formSubmitted = true;
 		if (this.form.valid) {
-			this.hasToSaveFiles = true;
+			if (this.wasMarked) {
+				const dialogRef = this.dialog.open(DiscardWarningComponent, {
+					data: {
+						title: 'pacientes.audit.QUESTION_MARK_AUDIT_RESOLVED',
+						okButtonLabel: 'pacientes.audit.BUTTON_SAVE_RESOLVED',
+						cancelButtonLabel: 'pacientes.audit.BUTTON_SAVE_NOT_RESOLVED',
+						buttonClose: true,
+					},
+					disableClose: true,
+					width: '35%',
+					autoFocus: false,
+				})
+				dialogRef.afterClosed().subscribe(saveAndResolved => {
+					if (saveAndResolved) {
+						this.auditTypeId = 3;
+						this.hasToSaveFiles = true;
+					} else if (saveAndResolved !== '') {
+						this.auditTypeId = 2;
+						this.hasToSaveFiles = true;
+					}
+				})
+			} else {
+				this.hasToSaveFiles = true;
+			}
 		} else {
 			scrollIntoError(this.form, this.el);
 		}
@@ -489,8 +513,10 @@ export class EditPatientComponent implements OnInit {
 						}
 						this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
 						this.snackBarService.showSuccess(this.getMessagesSuccess());
+						if (this.auditTypeId === 3) {
+							this.snackBarService.showSuccess('pacientes.audit.SAVE_OK_EDIT_AUDIT');
+						}
 					}, _ => this.snackBarService.showError(this.getMessagesError()));
-
 			})
 		}
 
@@ -498,7 +524,8 @@ export class EditPatientComponent implements OnInit {
 
 	private mapToPersonRequest(): APatientDto {
 		let patient: APatientDto = {
-			auditTypeId: 1,
+			message: this.auditablePatientInfo?.message ? this.auditablePatientInfo.message : '',
+			auditTypeId: this.auditTypeId,
 			birthDate: this.form.controls.birthDate.value,
 			firstName: this.form.controls.firstName.value,
 			genderId: this.form.controls.genderId.value,
@@ -550,14 +577,6 @@ export class EditPatientComponent implements OnInit {
 			},
 			fileIds: this.filesId,
 		};
-
-		if (this.auditTypeId === 2) {
-			patient.auditTypeId = 2;
-			patient.message = this.auditablePatientInfo?.message ? this.auditablePatientInfo.message : '';
-		}
-		else if (this.wasMarked && this.auditTypeId === 1) {
-			patient.auditTypeId = 1;
-		}
 
 		if (patient.genderSelfDeterminationId === this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID)
 			patient.otherGenderSelfDetermination = this.form.value.otherGenderSelfDetermination;
@@ -617,7 +636,7 @@ export class EditPatientComponent implements OnInit {
 	}
 
 	setValuesAndDisabled(data: PersonBasicDataResponseCustom) {
-		this.dniWasEdited=true;
+		this.dniWasEdited = true;
 		if (data.personData.firstName && data.personData.lastName) {
 			const splitedFirstName = this.splitStringByFirstSpaceCharacter(data.personData.firstName);
 			const splitedLastName = this.splitStringByFirstSpaceCharacter(data.personData.lastName);
@@ -632,7 +651,7 @@ export class EditPatientComponent implements OnInit {
 			this.form.controls.middleNames.disable();
 			this.form.controls.lastName.disable();
 			this.form.controls.otherLastNames.disable();
-		}else{
+		} else {
 			this.form.controls.lastName.setValue(null);
 			this.form.controls.firstName.setValue(null);
 			this.form.controls.middleNames.setValue(null);
@@ -649,13 +668,13 @@ export class EditPatientComponent implements OnInit {
 		if (data.personData.birthDate) {
 			this.form.controls.birthDate.setValue(momentParseDate(data.personData.birthDate));
 			this.form.controls.birthDate.disable();
-		}else{
+		} else {
 			this.form.controls.birthDate.setValue(null);
 		}
 
-		if(data.personData.cuil){
+		if (data.personData.cuil) {
 			this.form.controls.birthDate.setValue(data.personData.cuil);
-		}else{
+		} else {
 			this.form.controls.birthDate.setValue(null);
 		}
 	}

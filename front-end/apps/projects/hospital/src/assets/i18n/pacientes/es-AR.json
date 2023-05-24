@@ -330,7 +330,11 @@
 		"NO_INFO":"No hay información encontrada. Intente mejorar los parámetros de búsqueda",
 		"BUTTON_CONFIRM_USE":"Si, utilizar",
 		"SUBTITLE_WARNING_EDIT_IDENTIFICATION_NUMBER":"Los datos encontrados por RENAPER para el DNI {{dni}} son los siguientes: ",
-		"QUESTION_WARNING_EDIT_IDENTIFICATION_NUMBER":"¿Desea utilizar estos datos?"
+		"QUESTION_WARNING_EDIT_IDENTIFICATION_NUMBER":"¿Desea utilizar estos datos?",
+		"QUESTION_MARK_AUDIT_RESOLVED":"¿Marcar como resuelto el pedido de auditoría?",
+		"BUTTON_SAVE_RESOLVED":"Guardar y resolver",
+		"BUTTON_SAVE_NOT_RESOLVED":"Guardar y no resolver",
+		"SAVE_OK_EDIT_AUDIT":"Indicación para auditar resuelta con éxito"
 	}
   }
 }
