@@ -11,8 +11,8 @@ import net.pladema.medicalconsultation.appointment.repository.entity.Appointment
 import net.pladema.medicalconsultation.appointment.repository.entity.EquipmentAppointmentAssn;
 import net.pladema.medicalconsultation.appointment.service.AppointmentOrderImageService;
 import net.pladema.medicalconsultation.appointment.service.CreateEquipmentAppointmentService;
+import net.pladema.medicalconsultation.appointment.service.CreateTranscribedEquipmentAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentOrderImageBo;
 
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @AllArgsConstructor
 @Service
-public class CreateEquipmentAppointmentServiceImpl implements CreateEquipmentAppointmentService {
+public class CreateTranscribedEquipmentAppointmentServiceImpl implements CreateTranscribedEquipmentAppointmentService {
 
 	private final AppointmentRepository appointmentRepository;
 
@@ -33,7 +33,7 @@ public class CreateEquipmentAppointmentServiceImpl implements CreateEquipmentApp
 
 	@Override
 	@Transactional
-	public AppointmentBo execute(AppointmentBo appointmentBo, Integer orderId, Integer studyId) {
+	public AppointmentBo execute(AppointmentBo appointmentBo, Integer transcribedOrderId) {
 		log.debug("Input parameters -> appointmentBo {}", appointmentBo);
 		Appointment appointment = Appointment.newFromAppointmentBo(appointmentBo);
 		appointment = appointmentRepository.save(appointment);
@@ -54,7 +54,7 @@ public class CreateEquipmentAppointmentServiceImpl implements CreateEquipmentApp
 				appointmentBo.getDiaryId()
 			));
 
-		AppointmentOrderImageBo appointmentOrderImageBO = new AppointmentOrderImageBo(appointment.getId(), orderId, studyId, false, null);
+		AppointmentOrderImageBo appointmentOrderImageBO = new AppointmentOrderImageBo(appointment.getId(), false, null, transcribedOrderId);
 		appointmentOrderImageService.save(appointmentOrderImageBO);
 
 		log.debug("Output -> {}", result);

@@ -30,6 +30,9 @@ public class AppointmentOrderImage implements Serializable {
 	@Column(name = "order_id")
 	private Integer orderId;
 
+	@Column(name = "transcribed_order_id")
+	private Integer transcribedOrderId;
+
 	@Column(name = "study_id")
 	private Integer studyId;
 
@@ -42,11 +45,12 @@ public class AppointmentOrderImage implements Serializable {
 	@Column(name = "document_id", nullable = false)
 	private Long documentId;
 
-    public AppointmentOrderImage( Integer appointmentId, Integer orderId, Integer studyId, String imageId, Boolean completed){
+    public AppointmentOrderImage( Integer appointmentId, Integer orderId, Integer studyId, String imageId, Boolean completed, Integer transcribedOrderId){
         this.pk = new AppointmentOrderImagePK(appointmentId);
 		this.imageId = imageId;
 		this.completed = completed;
 		this.orderId = orderId;
 		this.studyId = studyId;
+		this.transcribedOrderId = transcribedOrderId;
     }
 }

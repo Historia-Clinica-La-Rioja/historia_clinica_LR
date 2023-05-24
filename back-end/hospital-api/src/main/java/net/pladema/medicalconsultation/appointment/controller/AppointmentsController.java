@@ -14,12 +14,6 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
-import net.pladema.imagenetwork.derivedstudies.service.MoveStudiesService;
-import net.pladema.medicalconsultation.appointment.controller.constraints.ValidDetailsOrderImage;
-
-import net.pladema.medicalconsultation.appointment.controller.dto.StudyIntanceUIDDto;
-import net.pladema.permissions.repository.enums.ERole;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,11 +44,14 @@ import net.pladema.establishment.service.EquipmentService;
 import net.pladema.establishment.service.OrchestratorService;
 import net.pladema.establishment.service.domain.EquipmentBO;
 import net.pladema.establishment.service.domain.OrchestratorBO;
+import net.pladema.imagenetwork.derivedstudies.service.MoveStudiesService;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentDiary;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentState;
+import net.pladema.medicalconsultation.appointment.controller.constraints.ValidDetailsOrderImage;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidEquipmentAppointment;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidEquipmentAppointmentDiary;
+import net.pladema.medicalconsultation.appointment.controller.constraints.ValidTranscribedEquipmentAppointment;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentBasicPatientDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDailyAmountDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDto;
@@ -65,6 +62,7 @@ import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppoin
 import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.DetailsOrderImageDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.EquipmentAppointmentListDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.StudyIntanceUIDDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointmentDateDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.AppointmentMapper;
@@ -77,6 +75,7 @@ import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentValidatorService;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.CreateEquipmentAppointmentService;
+import net.pladema.medicalconsultation.appointment.service.CreateTranscribedEquipmentAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.EquipmentAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.booking.BookingPersonService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
@@ -90,6 +89,7 @@ import net.pladema.medicalconsultation.equipmentdiary.service.domain.CompleteEqu
 import net.pladema.modality.service.ModalityService;
 import net.pladema.modality.service.domain.ModalityBO;
 import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 
@@ -126,6 +126,8 @@ public class AppointmentsController {
 
 	private final CreateEquipmentAppointmentService createEquipmentAppointmentService;
 
+	private final CreateTranscribedEquipmentAppointmentService createTranscribedEquipmentAppointmentService;
+
     private final AppointmentMapper appointmentMapper;
 
     private final PatientExternalService patientExternalService;
@@ -155,6 +157,7 @@ public class AppointmentsController {
 			AppointmentService appointmentService, EquipmentAppointmentService equipmentAppointmentService, AppointmentValidatorService appointmentValidatorService,
 			CreateAppointmentService createAppointmentService,
 			CreateEquipmentAppointmentService createEquipmentAppointmentService,
+			CreateTranscribedEquipmentAppointmentService createTranscribedEquipmentAppointmentService,
 			AppointmentMapper appointmentMapper,
 			PatientExternalService patientExternalService,
 			HealthcareProfessionalExternalService healthcareProfessionalExternalService,
@@ -175,6 +178,7 @@ public class AppointmentsController {
 		this.equipmentAppointmentService = equipmentAppointmentService;
 		this.appointmentValidatorService = appointmentValidatorService;
         this.createAppointmentService = createAppointmentService;
+		this.createTranscribedEquipmentAppointmentService = createTranscribedEquipmentAppointmentService;
 		this.createEquipmentAppointmentService = createEquipmentAppointmentService;
         this.appointmentMapper = appointmentMapper;
         this.patientExternalService = patientExternalService;
@@ -209,18 +213,34 @@ public class AppointmentsController {
         return ResponseEntity.ok().body(result);
     }
 
-	@PostMapping(value="equipment")
+	@PostMapping(value="/equipment")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES')")
 	@ValidEquipmentAppointment
 	public ResponseEntity<Integer> createEquipmentAppoiment(
 			@PathVariable(name = "institutionId") Integer institutionId,
-			@RequestParam(name = "order_id", required = false) Integer order_id,
-			@RequestParam(name = "study_id", required = false) Integer study_id,
+			@RequestParam(name = "orderId", required = false) Integer orderId,
+			@RequestParam(name = "studyId", required = false) Integer studyId,
 			@RequestBody @Valid CreateAppointmentDto createAppointmentDto
 	) {
-		log.debug("Input parameters -> institutionId {}, appointmentDto {}", institutionId, createAppointmentDto);
+		log.debug("Input parameters -> institutionId {}, appointmentDto {}, orderId {}, studyId {}", institutionId, createAppointmentDto, orderId, studyId);
 		AppointmentBo newAppointmentBo = appointmentMapper.toAppointmentBo(createAppointmentDto);
-		newAppointmentBo = createEquipmentAppointmentService.execute(newAppointmentBo, order_id, study_id);
+		newAppointmentBo = createEquipmentAppointmentService.execute(newAppointmentBo, orderId, studyId);
+		Integer result = newAppointmentBo.getId();
+		log.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
+
+	@PostMapping(value="/transcribedEquipment")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES')")
+	@ValidTranscribedEquipmentAppointment
+	public ResponseEntity<Integer> createTranscribedEquipmentAppoiment(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@RequestParam(name = "transcribedOrderId", required = false) Integer transcribedOrderId,
+			@RequestBody @Valid CreateAppointmentDto createAppointmentDto
+	) {
+		log.debug("Input parameters -> institutionId {}, appointmentDto {}, transcribedOrderId {}", institutionId, createAppointmentDto, transcribedOrderId);
+		AppointmentBo newAppointmentBo = appointmentMapper.toAppointmentBo(createAppointmentDto);
+		newAppointmentBo = createTranscribedEquipmentAppointmentService.execute(newAppointmentBo, transcribedOrderId);
 		Integer result = newAppointmentBo.getId();
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);

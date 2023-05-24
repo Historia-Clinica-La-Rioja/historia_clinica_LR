@@ -54,7 +54,7 @@ public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageSe
 	public void save(AppointmentOrderImageBo appointmentOrderImageBo) {
 		LOG.debug("Input parameters -> appointmentOrderImageBo {}", appointmentOrderImageBo);
 		AppointmentOrderImage entity =new AppointmentOrderImage(appointmentOrderImageBo.getAppointmentId(),appointmentOrderImageBo.getOrderId(),
-				appointmentOrderImageBo.getStudyId(),appointmentOrderImageBo.getImageId(),appointmentOrderImageBo.isCompleted());
+				appointmentOrderImageBo.getStudyId(),appointmentOrderImageBo.getImageId(),appointmentOrderImageBo.isCompleted(), appointmentOrderImageBo.getTranscribedOrderId());
 		appointmentOrderImageRepository.save(entity);
 		LOG.debug("Output -> AppointmentOrderImage {}", entity);
 	}
