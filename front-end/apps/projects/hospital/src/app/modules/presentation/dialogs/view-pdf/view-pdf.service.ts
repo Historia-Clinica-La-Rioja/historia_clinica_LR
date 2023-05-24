@@ -16,10 +16,6 @@ export class ViewPdfService {
 
 	showDialog(url: string, filename: string, params: Record<string, string> = {}): void {
 
-		if (this.openDialog) {
-			console.error('Abriendo un segundo archivo', params);
-			return;
-		}
 		const data = newViewPdfBo(url + searchParamsString(params), filename);
 		this.openDialog = this.dialog.open(ViewPdfComponent, {
 			width: '100vw',
