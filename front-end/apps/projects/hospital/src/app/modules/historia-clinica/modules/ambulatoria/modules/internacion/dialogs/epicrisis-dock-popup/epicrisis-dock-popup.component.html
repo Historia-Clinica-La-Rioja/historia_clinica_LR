@@ -13,7 +13,7 @@
 		</div>
 		<form id="epicrisis-form" (keydown.enter)="false" [formGroup]="form">
 			<div id="mainDiagnosis">
-				<h2 class="mat-h2" [translate]="'internaciones.epicrisis.diagnosticos.TITLE'"></h2>
+				<h2  [translate]="'internaciones.epicrisis.diagnosticos.TITLE'"></h2>
 				<mat-card>
 					<mat-card-content>
 						<app-concepts-search *ngIf="!snomedConcept else diagnosisForm"
@@ -92,7 +92,7 @@
 			</div>
 
 			<div id="personalHistories">
-				<h2 class="mat-h2" [translate]="'internaciones.epicrisis.antecedentes-personales.TITLE'"></h2>
+				<h2  [translate]="'internaciones.epicrisis.antecedentes-personales.TITLE'"></h2>
 				<table mat-table [dataSource]="personalHistories.data" class="secondary" fxLayoutGap="20px">
 
 					<ng-container *ngFor="let column of personalHistories.columns" [matColumnDef]="column.def">
@@ -125,7 +125,7 @@
 			</div>
 
 			<div id="familyHistories">
-				<h2 class="mat-h2" [translate]="'internaciones.epicrisis.antecedentes-familiares.TITLE'"></h2>
+				<h2  [translate]="'internaciones.epicrisis.antecedentes-familiares.TITLE'"></h2>
 				<table mat-table [dataSource]="familyHistories.data" class="secondary" fxLayoutGap="20px">
 
 					<ng-container *ngFor="let column of familyHistories.columns" [matColumnDef]="column.def">
@@ -158,7 +158,7 @@
 			</div>
 
 			<div id="allergies">
-				<h2 class="mat-h2" [translate]="'internaciones.epicrisis.alergias.TITLE'"></h2>
+				<h2 [translate]="'internaciones.epicrisis.alergias.TITLE'"></h2>
 				<table mat-table [dataSource]="allergies.data" class="secondary" fxLayoutGap="20px">
 
 					<ng-container *ngFor="let column of allergies.columns" [matColumnDef]="column.def">
@@ -198,7 +198,7 @@
 			</div>
 
 			<div id="immunizations">
-				<h2 class="mat-h2" [translate]="'internaciones.epicrisis.vacunas.TITLE'"></h2>
+				<h2 [translate]="'internaciones.epicrisis.vacunas.TITLE'"></h2>
 				<table mat-table [dataSource]="immunizations.data" class="secondary" fxLayoutGap="20px">
 
 					<ng-container *ngFor="let column of immunizations.columns" [matColumnDef]="column.def">
@@ -316,7 +316,7 @@
 
 
 			<div id="problem" *ngIf="cipresEpicrisisFF">
-				<h2 class="mat-h2">{{'internaciones.epicrisis.problems.TITLE' | translate}}</h2>
+				<h2>{{'internaciones.epicrisis.problems.TITLE' | translate}}</h2>
 				<mat-card>
 					<mat-card-content>
  						<ng-container *ngIf="!searchConceptsLocallyFF else problemTypeaheadSearch">
