@@ -10,7 +10,7 @@
     <button mat-flat-button color="primary" (click)="downloadPrescription()" fxFlexFill.xs>
         <span class="uppercase">{{data.downloadButtonLabel | translate}}</span>
     </button>
-    <button *ngIf="isHabilitarRecetaDigital" id="send_email" mat-stroked-button color="primary" (click)="sendEmail()"
+    <button *ngIf="isHabilitarRecetaDigital && data?.sendEmail" id="send_email" mat-stroked-button color="primary" (click)="sendEmail()"
         fxFlexFill.xs>
         <span class="uppercase">{{data.sendEmail | translate}}</span>
     </button>

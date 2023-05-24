@@ -72,7 +72,7 @@ export class ConfirmarPrescripcionComponent implements OnInit {
 export class ConfirmPrescriptionData {
 	titleLabel: string;
 	downloadButtonLabel: string;
-	sendEmail: string;
+	sendEmail?: string;
 	successLabel: string;
 	prescriptionType: PrescriptionTypes;
 	patientId: number;
