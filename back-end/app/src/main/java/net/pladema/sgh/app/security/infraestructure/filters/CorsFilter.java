@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import ar.lamansys.sgx.shared.actuator.infrastructure.configuration.AppNode;
+import ar.lamansys.sgx.shared.stats.TimeProfilingUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -43,13 +44,9 @@ public class CorsFilter implements Filter {
 		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Accept-Language,  " + tokenHeader);
 		response.setHeader("App-Node", appNode.nodeId);
 
-		Instant start = Instant.now();
+		var entpointStat = TimeProfilingUtil.start("Endpoint");
 		chain.doFilter(req, res);
-		Instant finish = Instant.now();
-		long time = Duration.between(start, finish).toMillis();
-		if (time > 3000) {
-			log.warn("Long Operation {}: {} ms ", requestURI, time);
-		}
+		entpointStat.done(requestURI);
 	}
 
 	@Override
