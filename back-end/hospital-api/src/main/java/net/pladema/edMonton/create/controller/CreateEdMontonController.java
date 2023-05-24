@@ -62,15 +62,38 @@ public class CreateEdMontonController implements CreateEdMontonAPI{
 			EdMontonAnswerBo lstReg;
 			reg.setPatientId(patientId);
 			reg.setResult(0);
+			Integer count = 0;
 			if (createEdMontonDto.getEdMonton() != null && createEdMontonDto.getEdMonton().size()>0) {
 				reg.setAnswers(new ArrayList <EdMontonAnswerBo>() );
 				for(EdMontonAnswerDto dto : createEdMontonDto.getEdMonton()) {
 					lstReg = new EdMontonAnswerBo();
 					EedMontonTestAnswer eReg = EedMontonTestAnswer.getById(dto.getAnswerId());
 					lstReg.setAnswerId(eReg.getAnswerId());
-					lstReg.setQuestionId(eReg.getQuestionId());
 					lstReg.setValue(eReg.getValue());
-
+					if (eReg.getQuestionId() == 13) {
+						switch (count) {
+							case 0:
+								lstReg.setQuestionId(eReg.getQuestionId());
+								break;
+							case 1:
+								lstReg.setQuestionId((short) (eReg.getQuestionId() + 1));
+								break;
+							case 2:
+								lstReg.setQuestionId((short) (eReg.getQuestionId() + 3));
+								break;
+							case 3:
+								lstReg.setQuestionId((short) (eReg.getQuestionId() + 5));
+								break;
+							case 4:
+								lstReg.setQuestionId((short) (eReg.getQuestionId() + 7));
+								break;
+							default:
+								break;
+						}
+						count++;
+					} else {
+						lstReg.setQuestionId(eReg.getQuestionId());
+					}
 					reg.getAnswers().add(lstReg);
 					reg.setResult((reg.getResult() + eReg.getValue()));
 				}
