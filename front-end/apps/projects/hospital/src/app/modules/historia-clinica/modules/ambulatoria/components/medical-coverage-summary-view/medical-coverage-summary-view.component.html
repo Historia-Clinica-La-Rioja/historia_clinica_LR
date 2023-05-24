@@ -1,10 +1,12 @@
 <div fxLayout="column" fxLayoutAlign="center" fxFlexFill>
     <div fxLayout="row" fxLayoutGap="2px">
-        <mat-icon class="color-primary" fontSet="material-icons-outlined">
-            health_and_safety
-        </mat-icon>
         <div fxLayout="column" fxLayoutGap="6px">
-            <span class="color-primary bold line-height"> {{ title | translate }} </span>
+			<div fxLayout="row">
+				<mat-icon class="color-primary" fontSet="material-icons-outlined">
+					health_and_safety
+				</mat-icon>
+				<span class="color-primary bold line-height"> {{ title | translate }} </span>
+			</div>
             <div fxLayout="column" *ngIf="thereIsCoverageInfo() else noCoverage">
                 <span class="bold"> {{ coverageInfo?.name }} </span>
                 <span *ngIf="coverageInfo?.plan && coverageInfo?.condition else showPlanOrCondition"
