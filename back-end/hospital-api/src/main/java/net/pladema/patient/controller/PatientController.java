@@ -16,8 +16,10 @@ import javax.persistence.EntityNotFoundException;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
 import ar.lamansys.sgx.shared.security.UserInfo;
+import net.pladema.patient.controller.dto.PatientLastEditInfoDto;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.user.application.getrolesbyuser.GetRolesByUser;
+import net.pladema.user.application.port.HospitalUserStorage;
 import net.pladema.user.infrastructure.input.rest.dto.UserRoleDto;
 import net.pladema.user.infrastructure.input.rest.mapper.HospitalUserRoleMapper;
 
@@ -85,6 +87,8 @@ public class PatientController {
 	public static final String PATIENT_INVALID = "patient.invalid";
 	public static final String INPUT_PARAMETERS_PATIENT_ID = "Input parameters -> patientId {}";
 
+	public static final Integer NOT_EDITED = -1;
+
 	private final PatientService patientService;
 
 	private final PatientTypeRepository patientTypeRepository;
@@ -108,10 +112,12 @@ public class PatientController {
 
 	private final HospitalUserRoleMapper hospitalUserRoleMapper;
 
+	private final HospitalUserStorage hospitalUserStorage;
+
 	public PatientController(PatientService patientService, PersonExternalService personExternalService,
 							 AddressExternalService addressExternalService, PatientMapper patientMapper, PersonMapper personMapper,
 							 ObjectMapper jackson, PatientTypeRepository patientTypeRepository, AdditionalDoctorService additionalDoctorService,
-							 FederarExternalService federarExternalService, GetRolesByUser getRolesByUser, HospitalUserRoleMapper hospitalUserRoleMapper) {
+							 FederarExternalService federarExternalService, GetRolesByUser getRolesByUser, HospitalUserRoleMapper hospitalUserRoleMapper, HospitalUserStorage hospitalUserStorage) {
 		this.patientService = patientService;
 		this.personExternalService = personExternalService;
 		this.addressExternalService = addressExternalService;
@@ -123,6 +129,7 @@ public class PatientController {
 		this.federarExternalService = federarExternalService;
 		this.getRolesByUser = getRolesByUser;
 		this.hospitalUserRoleMapper = hospitalUserRoleMapper;
+		this.hospitalUserStorage = hospitalUserStorage;
 	}
 
 	@GetMapping(value = "/search")
@@ -297,6 +304,15 @@ public class PatientController {
 						? new AAdditionalDoctorDto(doctorsBo.getGeneralPractitionerBo())
 						: null,
 				doctorsBo.getPamiDoctorBo() != null ? new AAdditionalDoctorDto(doctorsBo.getPamiDoctorBo()) : null);
+		var lastEditOpt = hospitalUserStorage.getUserPersonInfo(patient.getUpdatedBy());
+
+		if (lastEditOpt.isPresent()) {
+			var lastEdit = lastEditOpt.get();
+			if (patient.getUpdatedOn().equals(patient.getCreatedOn()))
+				result.setPatientLastEditInfoDto(new PatientLastEditInfoDto(patient.getUpdatedOn(), lastEdit.getFullName(),false));
+			else
+				result.setPatientLastEditInfoDto(new PatientLastEditInfoDto(patient.getUpdatedOn(), lastEdit.getFullName(),true));
+		}
 		if(patient.getAuditTypeId().equals(EAuditType.TO_AUDIT.getId()))
 			result.setAuditablePatientInfo(patientService.getAuditablePatientInfo(patientId));
 		LOG.debug(OUTPUT, result);

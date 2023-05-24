@@ -1,5 +1,6 @@
 package net.pladema.user.controller.service.domain;
 
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -42,4 +43,19 @@ public class UserPersonInfoBo {
 		this.nameSelfDetermination = nameSelfDetermination;
 		this.previousLogin = previousLogin;
     }
+
+	public String getFullName() {
+		String fullName = this.lastName;
+		if (!(this.otherLastNames == null || this.otherLastNames.isBlank()))
+			fullName += " " + this.otherLastNames;
+		if (AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS.isActive() && !(nameSelfDetermination == null || nameSelfDetermination.isBlank()))
+			fullName = this.nameSelfDetermination + " " + fullName;
+		else {
+			if (!(this.middleNames == null || this.middleNames.isBlank()))
+				fullName = this.middleNames + " " + fullName;
+			fullName = this.firstName + " " + fullName;
+		}
+		return fullName;
+	}
+
 }

@@ -637,6 +637,7 @@ export interface CompletePatientDto extends BasicPatientDto {
     medicalCoverageAffiliateNumber: string;
     medicalCoverageName: string;
     pamiDoctor?: AAdditionalDoctorDto;
+    patientLastEditInfoDto: PatientLastEditInfoDto;
     patientType: PatientType;
 }
 
@@ -2546,6 +2547,12 @@ export interface PatientInteroperabilityDto {
     middlenames: string;
     otherLastName: string;
     phoneNumber: string;
+}
+
+export interface PatientLastEditInfoDto {
+    updatedBy: string;
+    updatedOn: Date;
+    wasEdited: boolean;
 }
 
 export interface PatientMedicalCoverageDto {
