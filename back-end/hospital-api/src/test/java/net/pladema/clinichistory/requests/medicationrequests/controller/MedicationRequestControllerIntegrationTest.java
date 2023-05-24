@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.medicationrequests.controller;
 
+import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.FetchDocumentFileById;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
@@ -108,6 +109,9 @@ class MedicationRequestControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private CancelPrescriptionLineState cancelPrescriptionLineState;
+
+	@MockBean
+	private FetchDocumentFileById fetchDocumentFileById;
 
     @BeforeEach
     void setup() {
