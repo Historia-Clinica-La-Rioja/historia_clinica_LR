@@ -137,7 +137,7 @@
 				</div>
 				<br>
 
-				<mat-action-row *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']">
+				<mat-action-row *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR', 'PRESCRIPTOR']">
 					<button mat-stroked-button type="button" (click)="back()">
 						<span [translate]="'buttons.BACK'"></span>
 					</button>
@@ -162,7 +162,7 @@
 		</ng-template>
 
 			<div class="new-patient-button" fxLayoutAlign="end none" >
-				<button *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']" mat-raised-button id="new_patient_button" color="primary" (click)="goToNewPatient()">
+				<button *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR', 'PRESCRIPTOR']" mat-raised-button id="new_patient_button" color="primary" (click)="goToNewPatient()">
 					<div *ngIf="hasInstitutionalAdministratorRole else titleForOtherRoles">
 						<span > {{ 'pacientes.search.NEW_PERSON' | translate }} </span>
 					</div>
