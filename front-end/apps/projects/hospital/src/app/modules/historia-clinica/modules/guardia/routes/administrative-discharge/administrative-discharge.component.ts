@@ -74,16 +74,20 @@ export class AdministrativeDischargeComponent implements OnInit {
 
 		this.route.paramMap.subscribe(params => {
 			this.episodeId = Number(params.get('id'));
-			this.administrativeDischarge$ = this.emergencyCareEspisodeMedicalDischargeService.getMedicalDischarge(this.episodeId);
-			const medicalDischargeOn$ = this.administrativeDischarge$.pipe(map(s => dateTimeDtoToDate(s.medicalDischargeOn)), map(dateToMoment));
-			medicalDischargeOn$.subscribe(medicalDischargeOn => {
-				this.medicalDischargeOn = medicalDischargeOn;
-				this.setDateTimeValidation(medicalDischargeOn);
+
+			this.emergencyCareEspisodeMedicalDischargeService.hasMedicalDischarge(this.episodeId).subscribe((hasMedicalDischarge) => {
+				if (hasMedicalDischarge) {
+					this.administrativeDischarge$ = this.emergencyCareEspisodeMedicalDischargeService.getMedicalDischarge(this.episodeId);
+					const medicalDischargeOn$ = this.administrativeDischarge$.pipe(map(s => dateTimeDtoToDate(s.medicalDischargeOn)), map(dateToMoment));
+					medicalDischargeOn$.subscribe(medicalDischargeOn => {
+						this.medicalDischargeOn = medicalDischargeOn;
+						this.setDateTimeValidation(medicalDischargeOn);
+					});
+				}
 			});
 			this.emergencyCareEpisodeService.getAdministrative(this.episodeId).subscribe((dto: ResponseEmergencyCareDto) => {
 				this.patientId = dto.patient ? dto.patient.id : null;
 			});
-
 		});
 
 		this.permissionsService.contextAssignments$().subscribe(

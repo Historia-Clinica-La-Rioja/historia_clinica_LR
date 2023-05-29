@@ -99,4 +99,14 @@ public class EmergencyCareEpisodeMedicalDischargeController {
         return ResponseEntity.ok().body(medicalDischargeDto);
     }
 
+	@GetMapping("/exists")
+	public ResponseEntity<Boolean> hasMedicalDischarge(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "episodeId") Integer episodeId) {
+		LOG.debug("Change emergency care state -> episodeId {}, institutionId {}", episodeId, institutionId);
+		Boolean result = emergencyCareEpisodeDischargeService.hasMedicalDischarge(episodeId);
+		LOG.debug("Output -> {}", result);
+		return ResponseEntity.ok().body(result);
+	}
+
 }

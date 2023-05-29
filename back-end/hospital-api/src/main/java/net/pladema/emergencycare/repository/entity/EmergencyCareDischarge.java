@@ -26,8 +26,7 @@ public class EmergencyCareDischarge {
     @Column(name = "medical_discharge_on")
     private LocalDateTime medicalDischargeOn;
 
-
-    @Column(name = "medical_discharge_by_professional", nullable = false, columnDefinition = "int default -1")
+    @Column(name = "medical_discharge_by_professional", columnDefinition = "int default -1")
     private Integer medicalDischargeByProfessional;
 
     @Column(name = "administrative_discharge_on")
@@ -55,6 +54,10 @@ public class EmergencyCareDischarge {
         this.autopsy = autopsy;
         this.dischargeTypeId = dischargeTypeId;
     }
+
+	public EmergencyCareDischarge(Short dischargeTypeId) {
+		this.dischargeTypeId = dischargeTypeId;
+	}
 
     @PrePersist
     void preInsert() {

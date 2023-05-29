@@ -1,9 +1,9 @@
 package net.pladema.emergencycare.service.impl;
 
 import io.jsonwebtoken.lang.Assert;
-import net.pladema.clinichistory.hospitalization.repository.domain.DischargeType;
 import net.pladema.emergencycare.controller.EmergencyCareEpisodeMedicalDischargeController;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeDischargeRepository;
+import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.emergencycare.repository.entity.EmergencyCareDischarge;
 import net.pladema.emergencycare.repository.entity.EmergencyCareState;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeAdministrativeDischargeService;
@@ -19,19 +19,23 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import static net.pladema.emergencycare.repository.entity.EmergencyCareDischarge.WITHOUT_DOCTOR;
-
 @Service
 public class EmergencyCareEpisodeAdministrativeDischargeServiceImpl implements EmergencyCareEpisodeAdministrativeDischargeService {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmergencyCareEpisodeMedicalDischargeController.class);
     private final EmergencyCareEpisodeStateService emergencyCareEpisodeStateService;
     private final EmergencyCareEpisodeDischargeRepository emergencyCareEpisodeDischargeRepository;
+
+	private final EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;
     private final DateTimeProvider dateTimeProvider;
 
-    public EmergencyCareEpisodeAdministrativeDischargeServiceImpl(EmergencyCareEpisodeStateService emergencyCareEpisodeStateService, EmergencyCareEpisodeDischargeRepository emergencyCareEpisodeDischargeRepository, DateTimeProvider dateTimeProvider) {
+    public EmergencyCareEpisodeAdministrativeDischargeServiceImpl(EmergencyCareEpisodeStateService emergencyCareEpisodeStateService,
+																  EmergencyCareEpisodeDischargeRepository emergencyCareEpisodeDischargeRepository,
+																  EmergencyCareEpisodeRepository emergencyCareEpisodeRepository,
+																  DateTimeProvider dateTimeProvider) {
         this.emergencyCareEpisodeStateService = emergencyCareEpisodeStateService;
         this.emergencyCareEpisodeDischargeRepository = emergencyCareEpisodeDischargeRepository;
+		this.emergencyCareEpisodeRepository = emergencyCareEpisodeRepository;
         this.dateTimeProvider = dateTimeProvider;
     }
 
@@ -39,18 +43,24 @@ public class EmergencyCareEpisodeAdministrativeDischargeServiceImpl implements E
 	@Transactional
     public boolean newAdministrativeDischarge(AdministrativeDischargeBo administrativeDischargeBo, Integer institutionId, ZoneId institutionZoneId){
         LOG.debug("New administrative discharge  -> administrativeDischargeBo {}, institutionId{}", administrativeDischargeBo, institutionId);
-        EmergencyCareDischarge emergencyCareDischarge = emergencyCareEpisodeDischargeRepository.findById(administrativeDischargeBo.getEpisodeId())
-                .orElseThrow(() -> new IllegalArgumentException("care-episode.administrative-discharge.after-medical-discharge"));
+        EmergencyCareDischarge emergencyCareDischarge = emergencyCareEpisodeDischargeRepository.findById(administrativeDischargeBo.getEpisodeId()).orElse(new EmergencyCareDischarge((short) 6));
+		if (emergencyCareDischarge.getEmergencyCareEpisodeId() == null)
+			assertHasEvolutionNote(administrativeDischargeBo.getEpisodeId());
         emergencyCareDischarge.setAdministrativeDischargeByUser(administrativeDischargeBo.getUserId());
         emergencyCareDischarge.setAdministrativeDischargeOn(administrativeDischargeBo.getAdministrativeDischargeOn());
         emergencyCareDischarge.setEmergencyCareEpisodeId(administrativeDischargeBo.getEpisodeId());
         emergencyCareDischarge.setHospitalTransportId(administrativeDischargeBo.getHospitalTransportId());
         emergencyCareDischarge.setAmbulanceCompanyId(administrativeDischargeBo.getAmbulanceCompanyId());
-        assertValidDischarge(administrativeDischargeBo, emergencyCareDischarge.getMedicalDischargeOn(), institutionZoneId);
+		if (emergencyCareDischarge.getMedicalDischargeOn() != null)
+        	assertValidDischarge(administrativeDischargeBo, emergencyCareDischarge.getMedicalDischargeOn(), institutionZoneId);
         emergencyCareDischarge = emergencyCareEpisodeDischargeRepository.save(emergencyCareDischarge);
         emergencyCareEpisodeStateService.changeState(emergencyCareDischarge.getEmergencyCareEpisodeId(), institutionId, EmergencyCareState.CON_ALTA_ADMINISTRATIVA, null, null, null);
         return true;
     }
+
+	private void assertHasEvolutionNote(Integer episodeId) {
+		Assert.isTrue(!emergencyCareEpisodeRepository.episodeHasEvolutionNote(episodeId), "El episodio requiere alta médica debido a que tiene notas de evolución asociadas");
+	}
 
     private void assertValidDischarge(AdministrativeDischargeBo administrativeDischargeBo, LocalDateTime medicalDischargeDate, ZoneId institutionZoneId) {
         LocalDateTime administrativeDischargeOn = administrativeDischargeBo.getAdministrativeDischargeOn();

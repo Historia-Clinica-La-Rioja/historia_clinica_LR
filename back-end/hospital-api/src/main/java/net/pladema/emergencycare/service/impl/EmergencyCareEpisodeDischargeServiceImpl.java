@@ -80,7 +80,14 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
         return episodeDischargeBo;
     }
 
-    private EmergencyCareDischarge toEmergencyCareDischarge(MedicalDischargeBo medicalDischarge ) {
+	@Override
+	public boolean hasMedicalDischarge(Integer episodeId) {
+		LOG.debug("Get discharge -> episodeId {}", episodeId);
+		EmergencyCareDischarge emergencyCareDischarge = emergencyCareEpisodeDischargeRepository.findById(episodeId).orElse(null);
+		return emergencyCareDischarge != null && emergencyCareDischarge.getMedicalDischargeOn() != null;
+	}
+
+	private EmergencyCareDischarge toEmergencyCareDischarge(MedicalDischargeBo medicalDischarge ) {
         return new EmergencyCareDischarge(medicalDischarge.getSourceId(),medicalDischarge.getMedicalDischargeOn(),medicalDischarge.getMedicalDischargeBy(),medicalDischarge.getAutopsy(), medicalDischarge.getDischargeTypeId());
     }
 

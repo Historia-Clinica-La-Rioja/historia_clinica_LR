@@ -29,4 +29,10 @@ export class EmergencyCareEpisodeMedicalDischargeService {
 		const url = this.URL_PREFIX + episodeId + `/medical-discharge`;
 		return this.http.get<VMedicalDischargeDto>(url);
 	}
+
+	hasMedicalDischarge(episodeId: number): Observable<boolean> {
+		const url = this.URL_PREFIX + episodeId + `/medical-discharge/exists`;
+		return this.http.get<boolean>(url);
+	}
+
 }

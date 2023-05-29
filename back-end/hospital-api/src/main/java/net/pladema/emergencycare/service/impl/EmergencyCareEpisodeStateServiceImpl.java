@@ -66,6 +66,10 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 			occupyEmergencyCareSpace(episodeId, institutionId, emergencyCareStateId, doctorsOfficeId, shockroomId, bedId);
 		if (emergencyCareStateId.equals(EEmergencyCareState.ESPERA.getId()) || emergencyCareStateId.equals(EEmergencyCareState.ALTA_MEDICA.getId()))
 			freeOccupiedEmergencyCareSpace(episodeId, institutionId, emergencyCareStateId);
+		if (emergencyCareStateId.equals(EEmergencyCareState.ALTA_ADMINISTRATIVA.getId())) {
+			saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, null);
+			emergencyCareEpisodeRepository.updateState(episodeId, institutionId, emergencyCareStateId, null);
+		}
 		return true;
 	}
 

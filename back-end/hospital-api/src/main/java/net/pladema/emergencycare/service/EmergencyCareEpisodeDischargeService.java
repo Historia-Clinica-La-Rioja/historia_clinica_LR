@@ -9,4 +9,7 @@ public interface EmergencyCareEpisodeDischargeService {
     boolean newMedicalDischarge(MedicalDischargeBo medicalDischargeBo, ZoneId institutionZoneId, Integer institutionId);
 
     EpisodeDischargeBo getDischarge(Integer episodeId);
+
+	boolean hasMedicalDischarge(Integer episodeId);
+
 }
