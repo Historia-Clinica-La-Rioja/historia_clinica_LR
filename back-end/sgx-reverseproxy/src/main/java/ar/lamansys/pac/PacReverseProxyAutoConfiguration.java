@@ -39,7 +39,7 @@ public class PacReverseProxyAutoConfiguration {
 	}
 
 	@PostConstruct
-	public void started() {
+	void started() {
 		defaultHeaders.setBasicAuth(username, password);
 		log.debug("PacReverseProxyAutoConfiguration -> Authorization {}", defaultHeaders.get(HttpHeaders.AUTHORIZATION));
 	}

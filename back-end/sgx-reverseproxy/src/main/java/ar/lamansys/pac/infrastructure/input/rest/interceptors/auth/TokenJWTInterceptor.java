@@ -38,8 +38,9 @@ public class TokenJWTInterceptor extends AbstractAuthInterceptor {
 	}
 
 	@PostConstruct
-	public void init() {
-		log.debug("secret JWT '{}'", secret);
+	void started() {
+		if (secret != null)
+			log.debug("secret JWT '{}'", secret);
 	}
 
 	@Override
