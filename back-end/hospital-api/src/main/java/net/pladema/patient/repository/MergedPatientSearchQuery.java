@@ -5,10 +5,20 @@ import ar.lamansys.sgx.shared.repositories.QueryPart;
 import ar.lamansys.sgx.shared.repositories.QueryStringHelper;
 import lombok.NoArgsConstructor;
 import net.pladema.patient.controller.dto.MergedPatientSearchFilter;
+import net.pladema.patient.service.domain.MergedPatientSearch;
+import net.pladema.patient.service.domain.PatientRegistrationSearch;
+import net.pladema.person.repository.entity.Person;
 
+import java.math.BigInteger;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @NoArgsConstructor
 public class MergedPatientSearchQuery {
@@ -29,6 +39,10 @@ public class MergedPatientSearchQuery {
 	Boolean permanentNotValidated;
 	Boolean validated;
 	Boolean permanent;
+	Boolean rejected;
+	Boolean toAudit;
+	Boolean automaticValidation;
+	Boolean manualValidation;
 
 	public MergedPatientSearchQuery(MergedPatientSearchFilter mergedPatientSearchFilter) {
 		this.firstName = mergedPatientSearchFilter.getFirstName();
@@ -43,10 +57,14 @@ public class MergedPatientSearchQuery {
 		this.permanentNotValidated = mergedPatientSearchFilter.getPermanentNotValidated();
 		this.validated = mergedPatientSearchFilter.getValidated();
 		this.permanent = mergedPatientSearchFilter.getPermanent();
+		this.rejected = mergedPatientSearchFilter.getRejected();
+		this.toAudit = mergedPatientSearchFilter.getToAudit();
+		this.automaticValidation = mergedPatientSearchFilter.getAutomaticValidation();
+		this.manualValidation = mergedPatientSearchFilter.getManualValidation();
 	}
 
 	public QueryPart with(){
-		String with = " with t as ( mp.active_patient_id, count(mp.active_patient_id) as mergedCount \n" +
+		String with = " with t as ( select mp.active_patient_id, count(mp.active_patient_id)+1 as mergedCount \n" +
 				"	from {h-schema}merged_inactive_patient as mip \n" +
 				"	join {h-schema}merged_patient as mp on (mip.merged_patient_id = mp.id) \n" +
 				"	group by mp.active_patient_id ) \n";
@@ -72,7 +90,7 @@ public class MergedPatientSearchQuery {
 
 	public QueryPart from() {
 		String from = "	{h-schema}t \n" +
-				"	join {h-schema}patient as patient \n" +
+				"	join {h-schema}patient as patient on (t.active_patient_id = patient.id) \n" +
 				"	join {h-schema}person as person on (patient.person_id = person.id) \n" +
 				" 	left join {h-schema}person_extended as personExtended on ( personExtended.person_id = person.id) \n";
 		return new QueryPart(from);
@@ -140,6 +158,10 @@ public class MergedPatientSearchQuery {
 			String clause = " patient.type_id = 1 ";
 			whereString.add(clause);
 		}
+		if (rejected != null && rejected) {
+			String clause = " patient.type_id = 6 ";
+			whereString.add(clause);
+		}
 
 		QueryPart result = new QueryPart(" AND ( ")
 				.concatPart(new QueryPart(String.join(" OR ", whereString)))
@@ -147,6 +169,48 @@ public class MergedPatientSearchQuery {
 
 		return result;
 
+	}
+
+	public QueryPart whereWithToAuditValidation() {
+		String clause = "";
+
+		if (toAudit != null && toAudit) {
+			clause = " AND ( patient.audit_type_id = 2 ) ";
+		}
+
+		return new QueryPart(clause);
+	}
+
+	public List<MergedPatientSearch> construct(List<Object[]> resultQuery){
+		List<MergedPatientSearch> result = new ArrayList<>();
+
+		Map<Integer, List<Object[]>> diagnosisByDocuments = resultQuery
+				.stream()
+				.collect(Collectors.groupingBy(
+						(Object[] t) -> (Integer)t[0],
+						LinkedHashMap::new,
+						toList())
+				);
+		diagnosisByDocuments.forEach((id,v) -> {
+			Object[] tuple = v.get(0);
+
+			result.add(new MergedPatientSearch(mapPerson(tuple), id, (Short) tuple[10], (Short) tuple[11], (String) tuple[12], (BigInteger) tuple[13]));
+
+		});
+		return result;
+	}
+
+	private Person mapPerson(Object[] tuple) {
+		Integer id = (Integer) tuple[1];
+		String firstNamePerson = (String) tuple[2];
+		String middleNamesPerson = (String) tuple[3];
+		String lastNamePerson = (String) tuple[4];
+		String otherLastNamesPerson = (String) tuple[5];
+		Short genderIdPerson = (Short) tuple[6];
+		Short identificationTypeIdPerson = (Short) tuple[7];
+		String identificationNumberPerson = (String) tuple[8];
+		LocalDate birthDatePerson = tuple[9] != null ? ((Date) tuple[9]).toLocalDate() : null;
+		return new Person(id, firstNamePerson, middleNamesPerson, lastNamePerson, otherLastNamesPerson, identificationTypeIdPerson, identificationNumberPerson, genderIdPerson, birthDatePerson);
 	}
 
 }

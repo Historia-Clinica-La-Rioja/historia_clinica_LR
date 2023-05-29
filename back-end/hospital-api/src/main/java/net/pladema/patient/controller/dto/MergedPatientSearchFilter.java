@@ -23,4 +23,12 @@ public class MergedPatientSearchFilter extends PatientSearchFilter {
 
 	private Boolean permanent;
 
+	private Boolean rejected;
+
+	private Boolean toAudit;
+
+	private Boolean automaticValidation;
+
+	private Boolean manualValidation;
+
 }

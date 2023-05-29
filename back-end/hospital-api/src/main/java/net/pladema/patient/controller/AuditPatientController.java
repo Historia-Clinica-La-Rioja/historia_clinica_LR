@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.patient.controller.dto.AuditPatientSearch;
 import net.pladema.patient.controller.dto.DuplicatePatientDto;
+import net.pladema.patient.controller.dto.MergedPatientSearchDto;
+import net.pladema.patient.controller.dto.MergedPatientSearchFilter;
 import net.pladema.patient.controller.dto.PatientPersonalInfoDto;
 import net.pladema.patient.controller.dto.PatientRegistrationSearchDto;
 import net.pladema.patient.controller.dto.PatientRegistrationSearchFilter;
@@ -16,6 +18,7 @@ import net.pladema.patient.controller.service.exception.AuditPatientException;
 import net.pladema.patient.controller.service.exception.AuditPatientExceptionEnum;
 import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.PatientService;
+import net.pladema.patient.service.domain.MergedPatientSearch;
 import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.person.controller.service.PersonExternalService;
 
@@ -109,6 +112,23 @@ public class AuditPatientController {
 		else
 			result = patientService.getPatientsRegistrationByFilter(searchFilter);
 		return ResponseEntity.ok(result.stream().map(patientMapper::toPatientRegistrationSearchDto).collect(Collectors.toList()));
+	}
+
+	@GetMapping("/search-merged-patients")
+	@PreAuthorize("hasPermission(#institutionId, 'AUDITOR_MPI')")
+	public  ResponseEntity<List<MergedPatientSearchDto>> searchMergedPatient(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@RequestParam String searchFilterStr) {
+		log.debug("Input data -> institutionId {}, searchFilterStr {}", institutionId, searchFilterStr);
+		MergedPatientSearchFilter searchFilter = null;
+		try {
+			searchFilter = jackson.readValue(searchFilterStr, MergedPatientSearchFilter.class);
+		} catch (IOException e) {
+			log.error(String.format("Error mappeando filter: %s", searchFilterStr), e);
+		}
+		List<MergedPatientSearch> result;
+		result = patientService.getMergedPatientsByFilter(searchFilter);
+		return ResponseEntity.ok(result.stream().map(patientMapper::toMergedPatientSearchDto).collect(Collectors.toList()));
 	}
 
 	private void validateFilter(AuditPatientSearch auditPatientSearch) {

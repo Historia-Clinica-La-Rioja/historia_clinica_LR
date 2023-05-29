@@ -2086,6 +2086,15 @@ export interface MedicationInteroperabilityDto {
     unitTime: string;
 }
 
+export interface MergedPatientSearchDto {
+    auditType: EAuditType;
+    idPatient: number;
+    nameSelfDetermination: string;
+    numberOfMergedPatients: number;
+    patientTypeId: number;
+    person: BMPersonDto;
+}
+
 export interface ModalityDto {
     acronym: string;
     description: string;
