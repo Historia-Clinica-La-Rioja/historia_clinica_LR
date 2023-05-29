@@ -135,6 +135,9 @@ export class ResumenDeGuardiaComponent implements OnInit {
 							if (changed) {
 								this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.en_espera.SUCCESS`);
 								this.episodeState = EstadosEpisodio.EN_ESPERA;
+								this.doctorsOfficeDescription = null;
+								this.shockroomDescription = null;
+								this.bedDescription = null;
 								this.calculateAvailableActions();
 							}
 							else {
