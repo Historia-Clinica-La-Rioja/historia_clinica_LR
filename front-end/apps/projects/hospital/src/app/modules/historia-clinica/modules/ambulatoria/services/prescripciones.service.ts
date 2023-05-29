@@ -8,7 +8,8 @@ import {
 	MedicationInfoDto,
 	PrescriptionDto,
 	ProfessionalLicenseNumberValidationResponseDto,
-	SnomedDto
+	SnomedDto,
+	TranscribedDiagnosticReportInfoDto
 } from '@api-rest/api-model';
 import { MedicationRequestService } from '@api-rest/services/medication-request.service';
 import { ServiceRequestService } from '@api-rest/services/service-request.service';
@@ -27,6 +28,7 @@ export class PrescripcionesService {
 
 	public readonly STUDY_STATUS = STUDY_STATUS;
 	public readonly MEDICATION_STATUS = MEDICATION_STATUS;
+	private transcribedOrders = [];
 
 	constructor(
 		private medicationRequestService: MedicationRequestService,
@@ -46,6 +48,10 @@ export class PrescripcionesService {
 
 	createTranscribedOrder(patientId: number, studySCTID: SnomedDto, problemSCTID: SnomedDto, professional: string, institution: string): Observable<number>{
 		return this.serviceRequestService.createTranscribedOrder(patientId, studySCTID, problemSCTID, professional, institution);
+	}
+
+	getTranscribedOrders(patientId: number): Observable<TranscribedDiagnosticReportInfoDto[]> {
+		return this.serviceRequestService.getTranscribedOrders(patientId);
 	}
 
 	getPrescription(prescriptionType: PrescriptionTypes, patientId: number, statusId: string, medicationStatement: string, healthCondition: string, study?: string, categoryId?: string): Observable<any> {

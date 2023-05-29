@@ -19,6 +19,7 @@ import {
 	DiaryAvailableProtectedAppointmentsDto,
 	ReferenceSummaryDto,
 	DiagnosticReportInfoDto,
+	TranscribedDiagnosticReportInfoDto,
 } from '@api-rest/api-model';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
 import { PersonIdentification } from '@presentation/pipes/person-identification.pipe';
@@ -37,7 +38,7 @@ import { ReferenceAppointmentService } from '@turnos/services/reference-appointm
 import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { EquipmentAppointmentsFacadeService } from '@turnos/services/equipment-appointments-facade.service';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { TranslateService } from '@ngx-translate/core';
 import { EquipmentTranscribeOrderPopupComponent } from '../equipment-transcribe-order-popup/equipment-transcribe-order-popup.component';
@@ -398,6 +399,7 @@ export class NewAppointmentComponent implements OnInit {
 	toFirstStep() {
 		this.formSearch.controls.completed.reset();
 		this.appointmentInfoForm.reset();
+		this.patientMedicalOrders = [];
 	}
 
 	openMedicalCoverageDialog(): void {
@@ -446,8 +448,11 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	getPatientMedicalOrders() {
-		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, MEDICAL_ORDER_PENDING_STATUS, null, null, null, MEDICAL_ORDER_CATEGORY_ID).subscribe(medicalOrders => {
-			this.mapDiagnosticReportInfoDtoToMedicalOrderInfo(medicalOrders);
+		const prescriptions$ = this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, MEDICAL_ORDER_PENDING_STATUS, null, null, null, MEDICAL_ORDER_CATEGORY_ID);
+		const transcribedOrders$ = this.prescripcionesService.getTranscribedOrders(this.patientId);
+		forkJoin([prescriptions$, transcribedOrders$]).subscribe(masterdataInfo => {
+			this.mapDiagnosticReportInfoDtoToMedicalOrderInfo(masterdataInfo[0]);
+			this.mapTranscribeOrderToMedicalOrderInfo(masterdataInfo[1]);
 		});
 	}
 
@@ -467,24 +472,21 @@ export class NewAppointmentComponent implements OnInit {
 			}).filter(value => value !== null && value !== undefined);
 		});
 	}
-
-	/*
-	mapTranscribeOrderToMedicalOrderInfo(transcribedOrders){
+	
+	mapTranscribeOrderToMedicalOrderInfo(transcribedOrders: TranscribedDiagnosticReportInfoDto[]){
 		let text = 'image-network.appointments.medical-order.TRANSCRIBED_ORDER';
 
 		this.translateService.get(text).subscribe(translatedText => {
 			transcribedOrders.map(medicalOrder => {
-				if (differenceInDays(new Date(), new Date(medicalOrder.creationDate)) <= ORDER_EXPIRED_DAYS){
-					this.patientMedicalOrders.push({
-						serviceRequestId: medicalOrder.serviceRequestId,
-						studyName: medicalOrder.studyName,
-						displayText: `${translatedText} - ${medicalOrder.studyName}`,
-						isTranscribed: true
-					})}
+				this.patientMedicalOrders.push({
+					serviceRequestId: medicalOrder.serviceRequestId,
+					studyName: medicalOrder.studyName,
+					displayText: `${translatedText} - ${medicalOrder.studyName}`,
+					isTranscribed: true
+				})
 			}).filter(value => value !== null && value !== undefined);
 		});
 	}
-	*/
 
 	newTranscribedOrder() {
 		const dialogRef = this.dialog.open(EquipmentTranscribeOrderPopupComponent, {

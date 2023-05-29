@@ -8,6 +8,7 @@ import {
 	DiagnosticReportInfoDto, DiagnosticReportInfoWithFilesDto,
 	PrescriptionDto,
 	SnomedDto,
+	TranscribedDiagnosticReportInfoDto,
 	TranscribedPrescriptionDto,
 } from '@api-rest/api-model';
 
@@ -66,6 +67,11 @@ export class ServiceRequestService {
 		}
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/transcribed`;
 		return this.http.post<number>(url, data)
+	}
+
+	getTranscribedOrders(patientId: number): Observable<TranscribedDiagnosticReportInfoDto[]>{
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/transcribedOrders`;
+		return this.http.get<TranscribedDiagnosticReportInfoDto[]>(url)
 	}
 
 	complete(patientId: number, diagnosticReportId: number, completeRequestDto: CompleteRequestDto, files: File[]): Observable<void> {
