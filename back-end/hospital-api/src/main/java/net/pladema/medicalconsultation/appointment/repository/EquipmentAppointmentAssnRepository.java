@@ -53,6 +53,6 @@ public interface EquipmentAppointmentAssnRepository extends JpaRepository<Equipm
 			"JOIN Person AS pe ON (pe.id = p.personId) " +
 			"JOIN PersonExtended AS pex ON (pe.id = pex.id) "+
 			"WHERE e.id = :equipmentId " +
-			"AND a.appointmentStateId IN (1,2,3)")
+			"AND a.appointmentStateId IN (1,2,3,5)")
 	List<EquipmentAppointmentVo> getAppointmentsByEquipmentId(@Param("equipmentId") Integer equipmentId);
 }
