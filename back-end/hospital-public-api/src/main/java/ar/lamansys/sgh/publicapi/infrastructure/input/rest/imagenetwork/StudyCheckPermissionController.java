@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/public-api/imagenetwork/{studyInstanceUID}/permission")
-@Tag(name = "Image Network Study Permission", description = "Image Network Study Permission")
+@Tag(name = "Public Api", description = "Image Network Study Permission")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
