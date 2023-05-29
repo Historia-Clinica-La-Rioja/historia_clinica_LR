@@ -113,7 +113,7 @@ public class LoadMedications {
 		QuantityBo quantityBo = dosageBo.getQuantity();
 		Quantity quantity = new Quantity();
 		Long quantityId = null;
-		if (quantityBo.getValue() != null) {
+		if (quantityBo != null && quantityBo.getValue() != null) {
 			quantity.setValue(quantityBo.getValue().doubleValue());
 			quantity.setUnit(quantityBo.getUnit());
 			quantityId = quantityRepository.save(quantity).getId();
