@@ -21,7 +21,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 @Configuration(value = "base")
 @Getter
@@ -31,17 +30,10 @@ import lombok.extern.slf4j.Slf4j;
 @ConfigurationProperties(prefix = "app.proxy")
 @ComponentScan(basePackages = {"ar.lamansys.base"})
 @EntityScan(basePackages = {"ar.lamansys.base"})
-@Slf4j
 public class ReverseProxyAutoConfiguration {
 
 	@NonNull
 	private String server;
-
-	@Bean
-	public HttpClientConfiguration configuration() {
-		return new HttpClientConfiguration();
-	}
-
 
 	@Bean
 	public RestTemplate restTemplate(HttpClientConfiguration configuration) throws Exception {
