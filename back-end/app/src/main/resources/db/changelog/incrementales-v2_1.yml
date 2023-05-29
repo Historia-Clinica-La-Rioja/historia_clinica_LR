@@ -467,3 +467,22 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: snomed
               validate: true
+
+    - changeSet:
+        id: document_type-data
+        context: "!schema-only"
+        author: jvaldez
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO document_type VALUES (17, 'Reporte de imagen médica'); 
+
+    - changeSet:
+        id: source_type-data
+        comment: Actualizar datos source_type
+        author: jvaldez
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO source_type VALUES (9, 'Imagen medica');
