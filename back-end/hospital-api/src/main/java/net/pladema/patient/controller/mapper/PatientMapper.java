@@ -30,6 +30,7 @@ public interface PatientMapper {
 
 	AddressDto updatePatientAddress(APatientDto patient);
 
+	@Mapping(target = "auditTypeId", source = "auditType.id")
 	Patient fromPatientDto(APatientDto patientDto);
 
 	@Named("toLimitedPatientSearchDto")

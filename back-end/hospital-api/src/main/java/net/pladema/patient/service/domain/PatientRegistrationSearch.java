@@ -1,5 +1,6 @@
 package net.pladema.patient.service.domain;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +21,7 @@ public class PatientRegistrationSearch {
 
 	private Short patientTypeId;
 
-	private Short auditTypeId;
+	private EAuditType auditType;
 
 	private String nameSelfDetermination;
 
@@ -29,7 +30,7 @@ public class PatientRegistrationSearch {
 		this.patientId = patientId;
 		this.ranking = 0.0f;
 		this.patientTypeId = patientTypeId;
-		this.auditTypeId = auditTypeId;
+		this.auditType = EAuditType.getById(auditTypeId);
 		this.nameSelfDetermination = nameSelfDetermination;
 	}
 }

@@ -120,7 +120,7 @@ public class PatientUpdateValidator implements ConstraintValidator<PatientUpdate
     }
 
     private boolean auditablePatientDataIsComplete(ConstraintValidatorContext context, APatientDto patientDto) {
-		boolean auditablePatientDataIsComplete = patientDto.getAuditTypeId() == null || (patientDto.getAuditTypeId().equals(EAuditType.UNAUDITED.getId()) || (patientDto.getAuditTypeId().equals(EAuditType.TO_AUDIT.getId()) && patientDto.getMessage() != null));
+		boolean auditablePatientDataIsComplete = patientDto.getAuditType() == null || (patientDto.getAuditType().equals(EAuditType.UNAUDITED) || patientDto.getAuditType().equals(EAuditType.AUDITED) || (patientDto.getAuditType().equals(EAuditType.TO_AUDIT) && patientDto.getMessage() != null));
     	if (!auditablePatientDataIsComplete)
 			buildResponse(context, "{patient.auditable.message.null}");
     	return auditablePatientDataIsComplete;

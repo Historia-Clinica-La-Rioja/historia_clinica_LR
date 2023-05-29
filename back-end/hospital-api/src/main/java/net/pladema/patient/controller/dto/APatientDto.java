@@ -1,5 +1,9 @@
 package net.pladema.patient.controller.dto;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
+
+import lombok.ToString;
+
 import org.hibernate.validator.constraints.Length;
 
 import lombok.Getter;
@@ -12,6 +16,7 @@ import javax.annotation.Nullable;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class APatientDto extends APersonDto{
 
 	private Short typeId;
@@ -25,7 +30,7 @@ public class APatientDto extends APersonDto{
 
     private AAdditionalDoctorDto pamiDoctor;
 
-    private Short auditTypeId;
+    private EAuditType auditType;
 
 	@Nullable
 	private String message;

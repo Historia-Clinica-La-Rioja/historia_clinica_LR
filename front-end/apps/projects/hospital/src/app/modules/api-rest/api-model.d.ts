@@ -29,7 +29,7 @@ export interface AMedicalDischargeDto extends MedicalDischargeDto {
 }
 
 export interface APatientDto extends APersonDto {
-    auditTypeId: number;
+    auditType: EAuditType;
     comments: string;
     generalPractitioner: AAdditionalDoctorDto;
     identityVerificationStatusId: number;
@@ -2590,7 +2590,7 @@ export interface PatientPhotoDto {
 }
 
 export interface PatientRegistrationSearchDto {
-    auditTypeId: number;
+    auditType: EAuditType;
     idPatient: number;
     nameSelfDetermination: string;
     patientTypeId: number;
@@ -3640,6 +3640,12 @@ export const enum AppFeature {
     HABILITAR_IMPRESION_HISTORIA_CLINICA_EN_DESARROLLO = "HABILITAR_IMPRESION_HISTORIA_CLINICA_EN_DESARROLLO",
     HABILITAR_CARGA_CACHE_EN_DESARROLLO = "HABILITAR_CARGA_CACHE_EN_DESARROLLO",
     HABILITAR_UNIDADES_JERARQUICAS_EN_DESARROLLO = "HABILITAR_UNIDADES_JERARQUICAS_EN_DESARROLLO",
+}
+
+export const enum EAuditType {
+    UNAUDITED = "UNAUDITED",
+    TO_AUDIT = "TO_AUDIT",
+    AUDITED = "AUDITED",
 }
 
 export const enum EBirthCondition {

@@ -326,6 +326,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 	private mapToAPatientDto(): APatientDto {
 		const patientDto: APatientDto = {
 			comments: null,
+			auditTypeId: null,
 			generalPractitioner: null,
 			identityVerificationStatusId: null,
 			pamiDoctor: null,

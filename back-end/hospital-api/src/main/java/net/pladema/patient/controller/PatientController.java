@@ -212,7 +212,7 @@ public class PatientController {
 
 		patientService.auditActionPatient(institutionId,patientId, EActionType.UPDATE);
 
-		if (patientDto.getAuditTypeId() != null && patientDto.getAuditTypeId().equals(EAuditType.TO_AUDIT.getId()))
+		if (patientDto.getAuditType() != null && patientDto.getAuditType().equals(EAuditType.TO_AUDIT))
 			patientService.persistSelectionForAnAudict(patientId, institutionId, patientDto.getMessage());
 
 		return ResponseEntity.created(new URI("")).body(createdPatient.getId());
