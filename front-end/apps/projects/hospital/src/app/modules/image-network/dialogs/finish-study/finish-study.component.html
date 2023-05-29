@@ -1,17 +1,16 @@
 <div>
-	<div class="header-container" fxLayout="row" fxLayoutAlign="space-between">
-		<div mat-dialog-title>
-			<div translate="image-network.appointments.FINISH_STUDY"></div>
-		</div>
-	</div>
-
-	<div class="inputs-container" fxLayout="column">
-		<mat-form-field appearance="outline">
-			<textarea class="observations-container" matInput [(ngModel)]="observations" type="text" id="observations" name="observations" placeholder="{{'turnos.appointment.observations.OBSERVATIONS' | translate}}"></textarea>
-		</mat-form-field>
-
-		<button class="complete-btn" mat-flat-button color="primary" (click)="confirm()">
-			<span class="uppercase" [translate]="'image-network.appointments.CONFIRM'"></span>
-		</button>
-	</div>
+    <div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between">
+        <div translate="image-network.appointments.FINISH_STUDY"></div>
+        <button id="cancel_button" name="cancel_button" mat-icon-button (click)="closeDialog()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <div class="inputs-container" fxLayout="column">
+        <mat-form-field appearance="outline">
+            <textarea class="observations-container" matInput [(ngModel)]="observations" type="text" id="observations" name="observations" placeholder="{{'turnos.appointment.observations.OBSERVATIONS' | translate}}"></textarea>
+        </mat-form-field>
+        <button class="complete-btn" mat-flat-button color="primary" (click)="confirm()">
+            <span class="uppercase" [translate]="'image-network.appointments.CONFIRM'"></span>
+        </button>
+    </div>
 </div>
