@@ -1,5 +1,16 @@
 package ar.lamansys.pac;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.HandlerInterceptor;
+
 import ar.lamansys.pac.infrastructure.input.rest.interceptors.AuthInterceptor;
 import ar.lamansys.pac.infrastructure.input.rest.interceptors.auth.PreFlightInterceptor;
 import ar.lamansys.pac.infrastructure.input.rest.interceptors.auth.TokenJWTInterceptor;
@@ -8,15 +19,6 @@ import ar.lamansys.pac.infrastructure.output.inmemory.repository.StudyPermission
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.HandlerInterceptor;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 @Getter
@@ -44,12 +46,13 @@ public class AuthChainConfiguration {
         return new PreFlightInterceptor(tokenJWTInterceptor);
     }
     @Bean("jwtInterceptorValidatorHSI")
-    @Primary
+	@ConditionalOnProperty(name = "app.imagenetwork.can-verify-token", havingValue = "false")
     public TokenJWTInterceptor TokenJWTInterceptor(TokenUUIDInterceptor uuidInterceptor, RestTemplate restTemplate) {
         return new TokenJWTInterceptor(uuidInterceptor, restTemplate);
     }
 
     @Bean("jwtInterceptorValidator")
+	@ConditionalOnProperty(name = "app.imagenetwork.can-verify-token", havingValue = "true")
     public TokenJWTInterceptor TokenJWTInterceptor(TokenUUIDInterceptor uuidInterceptor, @Value("${app.imagenetwork.token.secret}") String secret) {
         return new TokenJWTInterceptor(uuidInterceptor, secret);
     }
