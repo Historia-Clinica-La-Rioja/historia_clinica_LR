@@ -406,22 +406,64 @@ databaseChangeLog:
 
     - changeSet:
         id: appointment_order_image-alterTable
-        comment: Alter table study_appointment_report
+        comment: Alter table appointment_order_image
         author: jvaldez
         changes:
           - addColumn:
               tableName: appointment_order_image
               columns:
                 - column:
-                    name: report_document_id
+                    name: document_id
                     type: bigint
-
           - addForeignKeyConstraint:
-              baseColumnNames: report_document_id
+              baseColumnNames: document_id
               baseTableName: appointment_order_image
               constraintName: FK_appointment_order_image_report_document_id
               onDelete: NO ACTION
               onUpdate: NO ACTION
               referencedColumnNames: id
               referencedTableName: document
+              validate: true
+    
+    - changeSet:
+        id: report_snomed_concepts-createTable
+        comment: Create table report_snomed_concepts
+        author: jvaldez
+        changes:
+          - createTable:
+              tableName: report_snomed_concepts
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: snomed_id
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: document_id, snomed_id
+              constraintName: PK_report_snomed_concepts
+              tableName: report_snomed_concepts
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: document_id
+              baseTableName: report_snomed_concepts
+              constraintName: FK_report_snomed_concepts_document_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: document
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: snomed_id
+              baseTableName: report_snomed_concepts
+              constraintName: FK_report_snomed_concepts_snomed_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: snomed
               validate: true
