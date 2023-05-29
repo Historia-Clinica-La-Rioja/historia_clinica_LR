@@ -30,7 +30,7 @@ public abstract class AbstractAuthInterceptor implements AuthInterceptor {
 
     protected final AuthInterceptor nextAuthInterceptor;
     protected final String prefixAuth;
-    private static final String API_CONTEXT = "api";
+    private static final String API_CONTEXT = "api/public-api";
     private static final String IMAGENETWORK_PATH = "imagenetwork";
     private static final String PERMISSION_CHECK_PATH = "permission/check";
 
