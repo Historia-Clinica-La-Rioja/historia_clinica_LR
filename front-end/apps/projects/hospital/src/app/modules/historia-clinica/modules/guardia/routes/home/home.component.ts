@@ -64,7 +64,7 @@ export class HomeComponent implements OnInit {
 	emergencyCareTypes$: Observable<MasterDataInterface<number>[]>;
 
 	hasEmergencyCareRelatedRole: boolean;
-	rolesToEpisodeAttend: ERole[] = [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO];
+	rolesToEpisodeAttend: ERole[] = [ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 
 	private static calculateWaitingTime(dateTime: DateTimeDto): number {
 		const creationDate = dateTimeDtoToDate(dateTime);

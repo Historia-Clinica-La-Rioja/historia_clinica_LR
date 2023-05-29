@@ -42,7 +42,7 @@ public class EmergencyCareEpisodeStateController {
 	}
 
 	@PostMapping
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<Boolean> changeState(
 			@PathVariable(name = "episodeId") Integer episodeId,
 			@PathVariable(name = "institutionId") Integer institutionId,
