@@ -30,10 +30,10 @@ public class CheckTokenStudyPermissions {
 		StudyPermissionBo studyPermissionFromToken = (isUUID(tokenStudy) ?
 				processUUID(tokenStudy) :
 				processJWT(tokenStudy, studyInstanceUID))
-				.orElseThrow(() -> new StudyException(StudyExceptionEnum.TOKEN_INVALID, String.format(StudyExceptionEnum.TOKEN_INVALID.getMessage(), tokenStudy, studyInstanceUID)));
+				.orElseThrow(() -> new StudyException(StudyExceptionEnum.TOKEN_INVALID, String.format(StudyExceptionEnum.TOKEN_INVALID.getMessage(), studyInstanceUID)));
 
 		if (!studyPermissionFromToken.getStudyInstanceUID().equals(studyInstanceUID))
-			throw new StudyException(StudyExceptionEnum.TOKEN_INVALID, String.format(StudyExceptionEnum.TOKEN_INVALID.getMessage(), tokenStudy, studyInstanceUID));
+			throw new StudyException(StudyExceptionEnum.TOKEN_INVALID, String.format(StudyExceptionEnum.TOKEN_INVALID.getMessage(), studyInstanceUID));
 
 		String token = studyPermissionFromToken.getToken();
 		log.trace("Output -> token '{}' is valid", token);
@@ -53,7 +53,7 @@ public class CheckTokenStudyPermissions {
 		return JWTUtils.parseClaims(tokenStudy, secretJWT)
 				.filter(claims -> claims.containsKey("studyInstanceUID"))
 				.map(claims -> Optional.of(new StudyPermissionBo(tokenStudy, (String) claims.get("studyInstanceUID"))))
-				.orElseThrow(() -> new StudyException(StudyExceptionEnum.TOKEN_INVALID, String.format(StudyExceptionEnum.TOKEN_INVALID.getMessage(), tokenStudy, studyInstanceUID)));
+				.orElseThrow(() -> new StudyException(StudyExceptionEnum.TOKEN_INVALID, String.format(StudyExceptionEnum.TOKEN_INVALID.getMessage(), studyInstanceUID)));
 	}
 
 	private Optional<StudyPermissionBo> processUUID(String tokenStudy) {
