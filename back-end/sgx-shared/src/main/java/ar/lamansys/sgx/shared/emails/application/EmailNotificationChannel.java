@@ -1,13 +1,14 @@
 package ar.lamansys.sgx.shared.emails.application;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.mail.util.ByteArrayDataSource;
 
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,12 @@ public class EmailNotificationChannel implements NotificationChannel<MailMessage
 		helper.setSubject(emailMessage.subject);
 		helper.setText(emailMessage.html, true);
 		for (StoredFileBo storedFileBo : emailMessage.attachments) {
-			helper.addAttachment(storedFileBo.filename, new InputStreamResource(storedFileBo.resource.stream));
+			try {
+				ByteArrayDataSource attachment = new ByteArrayDataSource(storedFileBo.resource.stream, "application/octet-stream");
+				helper.addAttachment(storedFileBo.filename,attachment);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 		}
 		emailSender.send(message);
 	}
