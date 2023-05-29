@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
@@ -52,11 +53,13 @@ import net.pladema.clinichistory.requests.controller.dto.TranscribedPrescription
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.CompleteRequestDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoWithFilesDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.TranscribedDiagnosticReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CompleteDiagnosticReportMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CreateServiceRequestMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.DiagnosticReportInfoMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.FileMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyMapper;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.TranscribedDiagnosticReportInfoMapper;
 import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportService;
 import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
 import net.pladema.clinichistory.requests.servicerequests.service.CreateTranscribedServiceRequestService;
@@ -65,6 +68,7 @@ import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticRepo
 import net.pladema.clinichistory.requests.servicerequests.service.ExistCheckDiagnosticReportService;
 import net.pladema.clinichistory.requests.servicerequests.service.GetServiceRequestInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.ListDiagnosticReportInfoService;
+import net.pladema.clinichistory.requests.servicerequests.service.ListTranscribedDiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.UpdateDiagnosticReportFileService;
 import net.pladema.clinichistory.requests.servicerequests.service.UploadDiagnosticReportCompletedFileService;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
@@ -93,7 +97,11 @@ public class ServiceRequestController {
     private final PatientExternalService patientExternalService;
     private final StudyMapper studyMapper;
     private final ListDiagnosticReportInfoService listDiagnosticReportInfoService;
+
+	private final ListTranscribedDiagnosticReportInfoService listTranscribedDiagnosticReportInfoService;
     private final DiagnosticReportInfoMapper diagnosticReportInfoMapper;
+
+	private final TranscribedDiagnosticReportInfoMapper transcribedDiagnosticReportInfoMapper;
     private final DeleteDiagnosticReportService deleteDiagnosticReportService;
     private final CompleteDiagnosticReportService completeDiagnosticReportService;
     private final CompleteDiagnosticReportMapper completeDiagnosticReportMapper;
@@ -117,8 +125,7 @@ public class ServiceRequestController {
 									PatientExternalService patientExternalService,
 									StudyMapper studyMapper,
 									DiagnosticReportInfoMapper diagnosticReportInfoMapper,
-									ListDiagnosticReportInfoService listDiagnosticReportInfoService,
-									DeleteDiagnosticReportService deleteDiagnosticReportService,
+									ListDiagnosticReportInfoService listDiagnosticReportInfoService, ListTranscribedDiagnosticReportInfoService listTranscribedDiagnosticReportInfoService, TranscribedDiagnosticReportInfoMapper transcribedDiagnosticReportInfoMapper, DeleteDiagnosticReportService deleteDiagnosticReportService,
 									CompleteDiagnosticReportService completeDiagnosticReportService,
 									CompleteDiagnosticReportMapper completeDiagnosticReportMapper,
 									UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService,
@@ -138,6 +145,8 @@ public class ServiceRequestController {
 		this.listDiagnosticReportInfoService = listDiagnosticReportInfoService;
 		this.diagnosticReportInfoMapper = diagnosticReportInfoMapper;
 		this.studyMapper = studyMapper;
+		this.listTranscribedDiagnosticReportInfoService = listTranscribedDiagnosticReportInfoService;
+		this.transcribedDiagnosticReportInfoMapper = transcribedDiagnosticReportInfoMapper;
 		this.deleteDiagnosticReportService = deleteDiagnosticReportService;
 		this.completeDiagnosticReportService = completeDiagnosticReportService;
 		this.completeDiagnosticReportMapper = completeDiagnosticReportMapper;
@@ -304,6 +313,26 @@ public class ServiceRequestController {
         LOG.trace(OUTPUT, result);
         return result;
     }
+
+	@GetMapping("/transcribedOrders")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	public List<TranscribedDiagnosticReportInfoDto> getList(@PathVariable(name = "patientId") Integer patientId,
+												 @RequestParam(value = "orderId", required = false) String orderId) {
+		LOG.debug("Input parameters -> patientId {}, orderId) {}",
+				patientId,
+				orderId);
+
+		List<TranscribedDiagnosticReportBo> resultService = listTranscribedDiagnosticReportInfoService.execute(patientId);
+
+		List<TranscribedDiagnosticReportInfoDto> result = resultService.stream()
+				.map(transcribedDiagnosticReportBo -> {
+					return transcribedDiagnosticReportInfoMapper.parseTo(transcribedDiagnosticReportBo);
+				})
+				.collect(Collectors.toList());
+
+		LOG.trace(OUTPUT, result);
+		return result;
+	}
 
 	@ResponseStatus(code = HttpStatus.OK)
 	@GetMapping(value = "/{serviceRequestId}/existCheck")
