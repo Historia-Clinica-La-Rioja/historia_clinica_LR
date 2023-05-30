@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import {
+	EAuditType,
 	ERole
 } from '@api-rest/api-model';
 import {
@@ -80,7 +81,7 @@ export class EditPatientComponent implements OnInit {
 	public completeDataPatient: CompletePatientDto;
 	public auditablePatientInfo: AuditablePatientInfo;
 	private auditableFullDate: Date;
-	private auditTypeId: number = 1;
+	private auditTypeId: EAuditType = EAuditType.UNAUDITED;
 	private wasMarked = false;
 	public patientId: any;
 	public filesId: number[];
@@ -132,7 +133,7 @@ export class EditPatientComponent implements OnInit {
 						this.completeDataPatient = completeData;
 						if (completeData?.auditablePatientInfo) {
 							this.wasMarked = true;
-							this.auditTypeId = 1;
+							this.auditTypeId = EAuditType.UNAUDITED;
 							this.auditableFullDate = dateTimeDtotoLocalDate(
 								{
 									date: this.completeDataPatient.auditablePatientInfo.createdOn.date,
@@ -395,10 +396,10 @@ export class EditPatientComponent implements OnInit {
 				})
 				dialogRef.afterClosed().subscribe(saveAndResolved => {
 					if (saveAndResolved) {
-						this.auditTypeId = 3;
+						this.auditTypeId = EAuditType.AUDITED;
 						this.hasToSaveFiles = true;
 					} else if (saveAndResolved !== '') {
-						this.auditTypeId = 2;
+						this.auditTypeId = EAuditType.TO_AUDIT;
 						this.hasToSaveFiles = true;
 					}
 				})
@@ -457,7 +458,7 @@ export class EditPatientComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe(message => {
 			if (message) {
-				this.auditTypeId = 2;
+				this.auditTypeId =  EAuditType.TO_AUDIT;
 				this.auditableFullDate = new Date();
 				this.auditablePatientInfo = {
 					message: message,
@@ -483,7 +484,7 @@ export class EditPatientComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe((unmark: boolean) => {
 			if (unmark) {
-				this.auditTypeId = 1;
+				this.auditTypeId = EAuditType.UNAUDITED;
 				this.auditablePatientInfo = undefined;
 				this.auditableFullDate = undefined;
 			}
@@ -513,7 +514,7 @@ export class EditPatientComponent implements OnInit {
 						}
 						this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
 						this.snackBarService.showSuccess(this.getMessagesSuccess());
-						if (this.auditTypeId === 3) {
+						if (this.auditTypeId === EAuditType.AUDITED) {
 							this.snackBarService.showSuccess('pacientes.audit.SAVE_OK_EDIT_AUDIT');
 						}
 					}, _ => this.snackBarService.showError(this.getMessagesError()));
@@ -525,7 +526,7 @@ export class EditPatientComponent implements OnInit {
 	private mapToPersonRequest(): APatientDto {
 		let patient: APatientDto = {
 			message: this.auditablePatientInfo?.message ? this.auditablePatientInfo.message : '',
-			auditTypeId: this.auditTypeId,
+			auditType: this.auditTypeId,
 			birthDate: this.form.controls.birthDate.value,
 			firstName: this.form.controls.firstName.value,
 			genderId: this.form.controls.genderId.value,

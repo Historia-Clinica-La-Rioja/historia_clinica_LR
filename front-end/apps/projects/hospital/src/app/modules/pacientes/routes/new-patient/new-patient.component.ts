@@ -3,7 +3,7 @@ import { UntypedFormBuilder, Validators, UntypedFormGroup, AbstractControl } fro
 import { Router, ActivatedRoute } from '@angular/router';
 import { Moment } from 'moment';
 import * as moment from 'moment';
-import { ERole } from '@api-rest/api-model';
+import { EAuditType, ERole } from '@api-rest/api-model';
 import {
 	APatientDto,
 	BMPatientDto,
@@ -374,7 +374,7 @@ export class NewPatientComponent implements OnInit {
 
 			},
 			// Select for an audict
-			auditTypeId: 1,
+			auditType:EAuditType.UNAUDITED,
 			fileIds: []
 		};
 

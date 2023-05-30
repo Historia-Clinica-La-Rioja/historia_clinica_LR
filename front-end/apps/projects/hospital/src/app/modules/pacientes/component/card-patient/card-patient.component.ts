@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { IdentificationTypeDto, MasterDataDto, PatientSearchDto, PatientType } from '@api-rest/api-model';
+import { EAuditType, IdentificationTypeDto, MasterDataDto, PatientSearchDto, PatientType } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
@@ -36,6 +36,9 @@ export class CardPatientComponent {
 	patientsTypes: PatientType[];
 	initialSize: Observable<any>;
 	identificationTypeList: IdentificationTypeDto[];
+	UNAUDITED = EAuditType.UNAUDITED;
+	TO_AUDIT = EAuditType.TO_AUDIT;
+	AUDITED = EAuditType.AUDITED;
 	@Input() viewCardToAudit?: boolean;
 	@Input() patientData: any[] = [];
 	@Input() identificationTypes: MasterDataDto[] = [];
@@ -63,8 +66,8 @@ export class CardPatientComponent {
 		})
 
 		this.personMasterDataService.getIdentificationTypes().subscribe(identificationTypes => {
-				this.identificationTypeList = identificationTypes;
-			});
+			this.identificationTypeList = identificationTypes;
+		});
 
 	}
 
@@ -104,7 +107,7 @@ export class CardPatientComponent {
 				date: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DateFormat.VIEW_DATE) : '',
 				ranking: patient?.ranking,
 				patientTypeId: patient?.patientTypeId,
-				auditTypeId: patient?.auditTypeId,
+				auditType: patient?.auditType,
 				action: this.setActionByRole(medicalSpecialist, legalPerson, patient.idPatient)
 			}
 		});

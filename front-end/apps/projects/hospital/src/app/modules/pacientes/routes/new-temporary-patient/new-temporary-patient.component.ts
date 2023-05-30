@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators, AbstractControl } from '@angular/forms';
-import { ERole } from '@api-rest/api-model';
+import { EAuditType, ERole } from '@api-rest/api-model';
 import { APatientDto, BMPatientDto, EthnicityDto, PersonOccupationDto, EducationLevelDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto, SelfPerceivedGenderDto, BasicPatientDto } from '@api-rest/api-model';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID, updateControlValidator } from '@core/utils/form.utils';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -337,7 +337,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 				generalPractitioner: false
 			},
 			// Select for an audict
-			auditTypeId: 1,
+			auditType: EAuditType.UNAUDITED,
 			fileIds: []
 		};
 
