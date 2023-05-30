@@ -183,6 +183,7 @@ export class CardEstudiosComponent implements OnInit {
 			else {
 				this.dialog.open(OperationDeniedComponent, {
 					width: '35%',
+					autoFocus: false,
 					data: { message: 'ambulatoria.paciente.internment-order.diagnosis-required-dialog.MESSAGE' }
 				});
 			}
@@ -217,6 +218,7 @@ export class CardEstudiosComponent implements OnInit {
 				else {
 					this.dialog.open(OperationDeniedComponent, {
 						width: '35%',
+						autoFocus: false,
 						data: { message: 'ambulatoria.paciente.outpatient-order.problem-required-dialog.MESSAGE' }
 					});
 				}
@@ -243,6 +245,7 @@ export class CardEstudiosComponent implements OnInit {
 		else {
 			this.dialog.open(OperationDeniedComponent, {
 				width: '35%',
+				autoFocus: false,
 				data: { message: 'El episodio de guardia debe tener un diagnóstico asociado' }
 			});
 		}

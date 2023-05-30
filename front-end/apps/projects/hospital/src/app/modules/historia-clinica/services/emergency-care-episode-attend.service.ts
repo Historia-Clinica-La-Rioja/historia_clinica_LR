@@ -46,6 +46,7 @@ export class EmergencyCareEpisodeAttendService {
 		this.sectorService.quantityAttentionPlacesBySectorType(SECTOR_GUARDIA).subscribe((quantity: AttentionPlacesQuantityDto) => {
 			if (quantity.shockroom == 0 && quantity.doctorsOffice == 0 && quantity.bed == 0) {
 				return this.dialog.open(OperationDeniedComponent, {
+					autoFocus: false,
 					data: {
 						message: 'No existen lugares disponibles para realizar la atención'
 					}
