@@ -106,7 +106,7 @@
 			[translateParams]="{max: AMBULANCE.COMPANY_ID.max_length}"></mat-error>
 	</mat-form-field>
 
-	<mat-form-field appearance="outline">
+	<mat-form-field *ngIf="false" appearance="outline">
 		<mat-select formControlName="doctorsOfficeId" name="doctorsOfficeId" id="doctorsOfficeId"
 			matTooltip="{{'guardia.administrative_admision.form.waiting_room.DESCRIPTION' | translate}}"
 			placeholder="{{'guardia.administrative_admision.form.waiting_room.PLACEHOLDER' | translate}}">

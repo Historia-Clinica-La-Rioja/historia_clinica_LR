@@ -13,7 +13,7 @@
 			</span>
 		</div>
 
-		<div class="info" fxLayout="column" fxLayoutGap="3px">
+		<div *ngIf="false" class="info" fxLayout="column" fxLayoutGap="3px">
 			<span>{{ 'guardia.episode.triage.ultimo.UBICACION' | translate }}</span>
 			<span *ngIf="triage.doctorsOfficeDescription else noInfo" class="padding-to-align-chip">
 				{{ triage.doctorsOfficeDescription }}
