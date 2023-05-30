@@ -1,42 +1,37 @@
-<section >
+<section>
   <div class="container">
-<mat-accordion class="panel-container">
-  <mat-panel-title>
-    <div class="contenedor-title">
-      <span class="column-title">Nombre</span>
-      <span class="column-title">Sexo</span>
+    <mat-accordion class="panel-container">
+      <mat-panel-title>
+        <div class="contenedor-title">
+          <span class="column-title">Nombre</span>
+          <span class="column-title">Sexo</span>
+        </div>
+      </mat-panel-title>
+      <mat-divider role="separator" class="mat-divider mat-divider-horizontal"></mat-divider>
+
+      <ng-container *ngFor="let element of data">
+        <mat-expansion-panel class="dark-panel" [expanded]="panelOpenState === element.Orden">
+          <mat-expansion-panel-header (click)="panelOpenState = element.Orden">
+            <mat-panel-title>
+              <div class="contenedor-gral">
+                {{ element.Orden }}.- {{ element.Nombre }}
+              </div>
+              <div class="contenedor-sexo">
+                <!----{{ element.Sexo }}-->
+              </div>
+              <div class="contenedor-nina-nino">
+                <!--NIÑA/NIÑO-->
+              </div>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <!-- Contenido del panel -->
+          <div class="panel-content">
+            <!-- Agrega aquí el contenido adicional, como imágenes -->
+            <img [src]="getImagePath(element.Grafic)" alt="Imagen">
+          </div>
+        </mat-expansion-panel>
+      </ng-container>
+    </mat-accordion>
   </div>
-  </mat-panel-title>
-    <mat-divider ngcontent-rqs-c486 role="separator" class="mat-divider mat-divider-horizonal ng-star-inserted" aria-orientation="horizontal" style="margin-bottom: 20px;"></mat-divider>
-
-
-  <ng-container *ngFor="let element of data">
-    <mat-expansion-panel class="dark-panel" [expanded]="panelOpenState === element.Orden">
-      <mat-expansion-panel-header (click)="panelOpenState = element.Orden">
-        <mat-panel-title>
-          <div class="contenedor-gral">
-            {{ element.Orden }}.- {{ element.Nombre }}
-          </div>
-        
-          <div class="contenedor-sexo">
-            <!----{{ element.Sexo }}-->
-          </div>
-        
-          <div class="contenedor-nina-nino">
-        <!--NIÑA/NIÑO-->   
-          </div>
-        </mat-panel-title>
-        
-      </mat-expansion-panel-header>
-
-      <!-- Contenido del panel -->
-      <div class="panel-content">
-        <!-- Agrega aquí el contenido adicional, como imágenes -->
-        <img src="ruta-de-la-imagen" alt="Imagen">
-      </div>
-    </mat-expansion-panel>
-  </ng-container>
-</mat-accordion>
-
-</div>
 </section>
