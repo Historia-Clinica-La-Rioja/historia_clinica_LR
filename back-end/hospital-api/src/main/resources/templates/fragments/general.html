@@ -652,6 +652,14 @@
         </div>
     </div>
 
+     <!-- Report  -->
+     <div th:fragment="report">
+        <h3>Reporte</h3>
+        <div style="margin-left:30px">
+            [(${notes.evolutionNote})]
+        </div>
+    </div>
+
 </body>
 <footer class="footer-dark" th:fragment="footer" th:if="${author != null}">
     <div style="text-align:right">

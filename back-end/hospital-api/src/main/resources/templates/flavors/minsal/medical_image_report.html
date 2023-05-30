@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+    <th:block th:include="fragments/general.html :: headerfiles"></th:block>
+</head>
+<body>
+<div th:replace="fragments/general.html :: header(title='Informe', subtitle='')"></div>
+<div th:replace="fragments/general.html :: problems(message='Problemas')"></div>
+<div th:replace="fragments/general.html :: report"></div>
+</body>
+<footer>
+    <div th:replace="fragments/general.html :: footer"></div>
+</footer>
+
+</html>
