@@ -40,6 +40,7 @@ public class DocumentType implements Serializable {
 	public static final short DIGITAL_RECIPE = (short)14;
 	public static final short TRIAGE = (short) 15;
 	public static final short EMERGENCY_CARE_EVOLUTION_NOTE = (short) 16;
+	public static final short MEDICAL_IMAGE_REPORT = (short) 17;
 
 	@Id
 	@Column(name = "id")

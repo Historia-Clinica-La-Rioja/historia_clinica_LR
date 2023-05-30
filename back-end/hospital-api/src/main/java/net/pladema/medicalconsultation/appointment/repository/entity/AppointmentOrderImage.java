@@ -39,6 +39,9 @@ public class AppointmentOrderImage implements Serializable {
 	@Column(name = "completed", nullable = false)
 	private Boolean completed;
 
+	@Column(name = "document_id", nullable = false)
+	private Long documentId;
+
     public AppointmentOrderImage( Integer appointmentId, Integer orderId, Integer studyId, String imageId, Boolean completed){
         this.pk = new AppointmentOrderImagePK(appointmentId);
 		this.imageId = imageId;

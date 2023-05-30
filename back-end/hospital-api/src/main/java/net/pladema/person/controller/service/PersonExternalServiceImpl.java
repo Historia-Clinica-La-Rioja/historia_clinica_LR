@@ -2,6 +2,8 @@ package net.pladema.person.controller.service;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.PersonFileDto;
+import ar.lamansys.sgx.auth.user.infrastructure.output.user.User;
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.address.repository.CityRepository;
 import net.pladema.address.service.AddressMasterDataService;
@@ -29,6 +31,8 @@ import net.pladema.person.repository.entity.SelfPerceivedGender;
 import net.pladema.person.service.PersonMasterDataService;
 import net.pladema.person.service.PersonPhotoService;
 import net.pladema.person.service.PersonService;
+import net.pladema.user.controller.dto.UserPersonDto;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -38,6 +42,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class PersonExternalServiceImpl implements PersonExternalService {
 
@@ -300,6 +305,16 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		LOG.debug("Input parameters -> DuplicatePatientDto", duplicatePatientDto);
 		List<PatientPersonalInfoDto> result = personService.getPatientsPersonalInfo(new DuplicatePersonVo(duplicatePatientDto)).stream().map(PatientPersonalInfoDto::new).collect(Collectors.toList());
 		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public UserPersonDto getUserPersonInformation(Integer personId) {
+		log.debug("Input parameters -> personId {} ", personId);
+		Person person = personService.getPerson(personId);
+		PersonExtended personExtended = personService.getPersonExtended(personId);
+		UserPersonDto result = new UserPersonDto(person.getFirstName(), person.getLastName(), person.getMiddleNames(), person.getOtherLastNames(), personExtended.getNameSelfDetermination());
+		log.debug("Output", result);
 		return result;
 	}
 

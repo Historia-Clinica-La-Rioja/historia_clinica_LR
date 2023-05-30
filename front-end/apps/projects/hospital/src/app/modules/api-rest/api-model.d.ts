@@ -1747,6 +1747,15 @@ export interface IndicationDto {
     type: EIndicationType;
 }
 
+export interface InformerObservationDto {
+    actionTime: DateTimeDto;
+    confirmed: boolean;
+    createdBy: string;
+    evolutionNote: string;
+    id: number;
+    problems: ProblemDto[];
+}
+
 export interface InputStreamSource {
     inputStream: any;
 }
@@ -3287,6 +3296,14 @@ export interface SnvsToReportDto {
     problem: SnvsSnomedDto;
 }
 
+export interface StudyAppointmentDto {
+    actionTime: DateTimeDto;
+    informerObservations: InformerObservationDto;
+    patientFullName: string;
+    patientId: number;
+    statusId: number;
+}
+
 export interface StudyDto extends Serializable {
     diagosticReportCategoryId: string;
     healthConditionId: number;
@@ -3495,7 +3512,9 @@ export interface UserPersonDto extends Serializable {
     firstName: string;
     id?: number;
     lastName: string;
+    middleNames: string;
     nameSelfDetermination: string;
+    othersLastNames: string;
 }
 
 export interface UserRoleDto {

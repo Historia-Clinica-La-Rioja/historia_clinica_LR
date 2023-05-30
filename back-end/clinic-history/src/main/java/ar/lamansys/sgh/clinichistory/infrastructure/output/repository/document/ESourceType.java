@@ -13,7 +13,8 @@ public enum ESourceType {
     IMMUNIZATION(5, "immunization"),
     ODONTOLOGY(6, "odontology"),
     NURSING(7, "nursing"),
-    COUNTER_REFERENCE(8, "counter_reference");
+    COUNTER_REFERENCE(8, "counter_reference"),
+	MEDICAL_IMAGE(9, "medical_image");
 
     private Short id;
     private String value;

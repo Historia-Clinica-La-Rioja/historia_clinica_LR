@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
+import net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmentBo;
 import net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import ar.lamansys.sgx.shared.migratable.SGXDocumentEntityRepository;
@@ -378,4 +379,16 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"AND aoi.completed = true " +
 			"AND doi.pk.roleId = :technicalRoleId ")
 	List<WorklistBo> getPendingWorklistByModalityAndInstitution(@Param("modalityId") Integer modalityId, @Param("institutionId") Integer institutionId, @Param("technicalRoleId") Short technicalRoleId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmentBo(p.id, pe.firstName, pe.middleNames, pe.lastName, pe.otherLastNames, pex.nameSelfDetermination)" +
+			"FROM Appointment a " +
+			"JOIN Patient p ON p.id = a.patientId " +
+			"JOIN Person pe ON p.personId = pe.id " +
+			"JOIN PersonExtended pex ON pe.id = pex.id " +
+			"WHERE a.id = :appointmentId " +
+			"AND a.appointmentStateId = " + AppointmentState.SERVED + " " +
+			"AND (a.deleteable.deleted = false OR a.deleteable.deleted is null)" )
+	StudyAppointmentBo getPatientInfoByAppointmentId(@Param("appointmentId") Integer appointmentId);
+
 }

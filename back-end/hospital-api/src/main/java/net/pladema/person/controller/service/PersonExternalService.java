@@ -10,6 +10,7 @@ import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.person.controller.dto.PersonPhotoDto;
 import net.pladema.person.controller.dto.PersonalInformationDto;
 import net.pladema.person.repository.entity.PersonExtended;
+import net.pladema.user.controller.dto.UserPersonDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,5 +49,7 @@ public interface PersonExternalService {
 	List<PatientPersonalInfoDto> getPatientsPersonalInfo(DuplicatePatientDto duplicatePatientDto);
 
 	boolean saveEmail(Integer personId, String email);
+    
+	UserPersonDto getUserPersonInformation(Integer personId);
 
 }

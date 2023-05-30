@@ -20,7 +20,8 @@ public enum EDocumentType {
     NURSING_EVOLUTION_NOTE(13, "nursingEvolutionNote", "nursing_evolution_note"),
 	DIGITAL_RECIPE(14, "digitalRecipe", "digital_recipe"),
 	TRIAGE(15, "triage","triage"),
-	EMERGENCY_CARE_EVOLUTION(16, "emergencyCareEvolutionNote", "emergency_care_evolution_note");
+	EMERGENCY_CARE_EVOLUTION(16, "emergencyCareEvolutionNote", "emergency_care_evolution_note"),
+	MEDICAL_IMAGE_REPORT(17, "medicalImageReport", "medical_image_report");
 
     private Short id;
     private String value;
