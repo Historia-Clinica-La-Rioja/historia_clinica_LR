@@ -391,4 +391,10 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"AND (a.deleteable.deleted = false OR a.deleteable.deleted is null)" )
 	StudyAppointmentBo getPatientInfoByAppointmentId(@Param("appointmentId") Integer appointmentId);
 
+	@Transactional(readOnly = true)
+	@Query( "SELECT a.patientId " +
+			"FROM Appointment a " +
+			"WHERE a.id = :appointmentId")
+	Integer getPatientByAppointemntId(@Param("appointmentId") Integer appointmentId);
+
 }

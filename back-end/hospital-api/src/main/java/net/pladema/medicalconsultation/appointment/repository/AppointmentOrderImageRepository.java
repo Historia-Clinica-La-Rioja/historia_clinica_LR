@@ -17,12 +17,12 @@ import java.util.Optional;
 @Repository
 public interface AppointmentOrderImageRepository extends JpaRepository<AppointmentOrderImage, AppointmentOrderImagePK> {
 
-    @Transactional
-    @Modifying
-    @Query("UPDATE AppointmentOrderImage AS aoi " +
-            "SET aoi.completed = :completed " +
-            "WHERE aoi.pk.appointmentId = :appointmentId")
-    void updateCompleted(@Param("appointmentId") Integer appointmentId,
+	@Transactional
+	@Modifying
+	@Query("UPDATE AppointmentOrderImage AS aoi " +
+			"SET aoi.completed = :completed " +
+			"WHERE aoi.pk.appointmentId = :appointmentId")
+	void updateCompleted(@Param("appointmentId") Integer appointmentId,
 						 @Param("completed") Boolean completed);
 
 	@Transactional
@@ -31,7 +31,7 @@ public interface AppointmentOrderImageRepository extends JpaRepository<Appointme
 			"SET aoi.imageId = :imageId " +
 			"WHERE aoi.pk.appointmentId = :appointmentId")
 	void updateImageId(@Param("appointmentId") Integer appointmentId,
-						 @Param("imageId") String imageId );
+					   @Param("imageId") String imageId );
 
 	@Transactional(readOnly = true)
 	@Query("SELECT aoi.imageId " +
@@ -65,5 +65,13 @@ public interface AppointmentOrderImageRepository extends JpaRepository<Appointme
 			"FROM AppointmentOrderImage aoi " +
 			"WHERE aoi.pk.appointmentId = :appointmentId " )
 	Optional<Long> getReportDocumentIdByAppointmentId(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE AppointmentOrderImage aoi " +
+			"SET aoi.documentId = :documentId " +
+			"WHERE aoi.pk.appointmentId = :appointmentId")
+	void setReportDocumentId(@Param("appointmentId") Integer appointmentId,
+							 @Param("documentId") Long documentId );
 
 }

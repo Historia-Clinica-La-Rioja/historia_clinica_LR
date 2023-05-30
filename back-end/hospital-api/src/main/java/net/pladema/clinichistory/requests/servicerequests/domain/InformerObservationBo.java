@@ -32,7 +32,7 @@ public class InformerObservationBo implements IDocumentBo {
 	private LocalDateTime actionTime;
 	private PatientInfoBo patientInfo;
 	private boolean confirmed;
-	private LocalDateTime performedTime;
+	private LocalDateTime performedDate;
 
 	@Override
 	public short getDocumentType() { return DocumentType.MEDICAL_IMAGE_REPORT;	}

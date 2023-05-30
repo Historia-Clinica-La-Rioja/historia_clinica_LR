@@ -6,4 +6,5 @@ import net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmen
 public interface StudyAppointmentReportStorage {
 
 	StudyAppointmentBo getStudyByAppointment(Integer appointmentId);
+	Long createDraftReport(Integer appointmentId, InformerObservationBo informerObservations);
 }
