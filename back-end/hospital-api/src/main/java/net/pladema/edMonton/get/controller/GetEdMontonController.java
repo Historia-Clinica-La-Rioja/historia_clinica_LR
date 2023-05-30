@@ -38,11 +38,12 @@ public class GetEdMontonController implements GetEdMontonAPI {
 		EdMontonAnswers regDto;
 		for(Answer qr : lst){
 			regDto = new EdMontonAnswers();
-			regDto.setId(qr.getId());
 			regDto.setIdQuestion(qr.getItemId());
 			regDto.setIdAnswer(qr.getAnswerId());
 			lstEdMonton.add(regDto);
+			regDto.setId(qr.getId());
 		}
+
 		return lstEdMonton;
 	}
 }

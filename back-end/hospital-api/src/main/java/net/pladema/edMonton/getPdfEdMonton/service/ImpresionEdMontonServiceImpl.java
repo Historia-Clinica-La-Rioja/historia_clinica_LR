@@ -16,8 +16,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
+import org.springframework.stereotype.Service;
 
 
+@Service
 public class ImpresionEdMontonServiceImpl implements ImpresionEdMontonService{
 
 	private final Logger LOG = LoggerFactory.getLogger(ImpresionEdMontonServiceImpl.class);

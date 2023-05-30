@@ -16,7 +16,7 @@ import java.util.List;
 @Repository
 public interface EdMontonRepository extends SGXAuditableEntityJPARepository<QuestionnaireResponse, Integer> {
 
-	@Query(value = "SELECT new net.pladema.edMonton.repository.domain.Answer(la.id, la.itemId, la.questionnaireResponseId, la.answerId) " +
+	@Query(value = "SELECT new net.pladema.edMonton.repository.domain.Answer(qr.id, la.itemId, la.questionnaireResponseId, la.answerId) " +
 			"FROM Answer la " +
 			"INNER JOIN QuestionnaireResponse qr ON  qr.id = la.questionnaireResponseId " +
 			"WHERE qr.patientId = :patientId ")

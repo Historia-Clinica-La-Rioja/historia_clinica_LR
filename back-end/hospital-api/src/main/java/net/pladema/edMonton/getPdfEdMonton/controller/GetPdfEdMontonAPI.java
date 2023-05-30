@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public interface GetPdfEdMontonAPI {
 
-	@GetMapping("pdf/{edMontonId}")
+	@GetMapping("edMonton/{edMontonId}/pdf-download")
 	ResponseEntity<InputStreamResource> getEdMontonTestPdf(
-			@PathVariable(name = "edMontonId") Integer edMontonId) throws IOException, PDFDocumentException;
+			@PathVariable(name = "edMontonId") Long edMontonId) throws IOException, PDFDocumentException;
 }
