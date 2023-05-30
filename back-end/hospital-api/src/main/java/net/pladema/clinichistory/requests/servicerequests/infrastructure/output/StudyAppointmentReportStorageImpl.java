@@ -158,6 +158,26 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 
 	}
 
+	@Override
+	@Transactional
+	public Long closeDraftReport(Integer appointmentId, InformerObservationBo informerObservations) {
+		log.debug("Input parameters -> appointmentId {}, informerObservations {}", appointmentId, informerObservations);
+
+		assertEvolutionNoteIsNotNull(informerObservations.getEvolutionNote());
+		assertProblemsIsNotEmptyAndNull(informerObservations.getProblems());
+
+		Optional<Long> reportDocumentId = appointmentOrderImageRepository.getReportDocumentIdByAppointmentId(appointmentId);
+
+		if (reportDocumentId.isPresent()) {
+			sharedDocumentPort.deleteDocument(reportDocumentId.get(), DocumentStatus.ERROR);
+			deletedOldSnomedConcepts(reportDocumentId.get());
+		}
+
+		Long result = setRequiredFieldsAndSaveDocument(appointmentId, informerObservations, true);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
 	private void assertEvolutionNoteIsNotNull(String evolutionNote) {
 		Assert.notNull(evolutionNote, "Las observaciones son obligatorias");
 	}
@@ -181,7 +201,7 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		obs.setEncounterId(appointmentId);
 		obs.setConfirmed(createFile);
 
-		Integer patientId = appointmentRepository.getPatientByAppointemntId(appointmentId);
+		Integer patientId = appointmentRepository.getPatientByAppointmentId(appointmentId);
 		obs.setPatientId(patientId);
 		BasicPatientDto bpd = patientExternalService.getBasicDataFromPatient(patientId);
 		obs.setPatientInfo(new PatientInfoBo(bpd.getId(), bpd.getPerson().getGender().getId(), bpd.getPerson().getAge()));

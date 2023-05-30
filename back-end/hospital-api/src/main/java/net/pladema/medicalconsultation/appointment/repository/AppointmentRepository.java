@@ -395,6 +395,6 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	@Query( "SELECT a.patientId " +
 			"FROM Appointment a " +
 			"WHERE a.id = :appointmentId")
-	Integer getPatientByAppointemntId(@Param("appointmentId") Integer appointmentId);
+	Integer getPatientByAppointmentId(@Param("appointmentId") Integer appointmentId);
 
 }

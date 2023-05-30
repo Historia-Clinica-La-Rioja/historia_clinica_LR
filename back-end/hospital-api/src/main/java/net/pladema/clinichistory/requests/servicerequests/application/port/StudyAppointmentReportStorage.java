@@ -8,4 +8,5 @@ public interface StudyAppointmentReportStorage {
 	StudyAppointmentBo getStudyByAppointment(Integer appointmentId);
 	Long createDraftReport(Integer appointmentId, InformerObservationBo informerObservations);
 	Long updateDraftReport(Integer appointmentId, InformerObservationBo informerObservations);
+	Long closeDraftReport(Integer appointmentId, InformerObservationBo informerObservations);
 }

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.pladema.clinichistory.requests.servicerequests.application.CloseDraftStudyAppointmentReport;
 import net.pladema.clinichistory.requests.servicerequests.application.CreateDraftStudyAppointmentReport;
 import net.pladema.clinichistory.requests.servicerequests.application.GetStudyAppointment;
 import net.pladema.clinichistory.requests.servicerequests.application.UpdateDraftStudyAppointmentReport;
@@ -35,6 +36,7 @@ public class StudyAppointmentReportController {
 	private final StudyAppointmentMapper studyAppointmentMapper;
 	private final CreateDraftStudyAppointmentReport createDraftStudyAppointmentReport;
 	private final UpdateDraftStudyAppointmentReport updateDraftStudyAppointmentReport;
+	private final CloseDraftStudyAppointmentReport closeDraftStudyAppointmentReport;
 
 	@GetMapping(value = "/study/by-appointment")
 	public ResponseEntity<StudyAppointmentDto> getStudyByAppointment(
@@ -73,6 +75,21 @@ public class StudyAppointmentReportController {
 		informerObservationBo.setInstitutionId(institutionId);
 		Long result = updateDraftStudyAppointmentReport.execute(appointmentId, informerObservationBo);
 		log.debug("Output -> {}", result);
+		return ResponseEntity.ok().body(result);
+	}
+
+	@PutMapping(value = "/closeDraftReport/{appointmentId}")
+	@PreAuthorize("hasPermission(#institutionId, 'INFORMADOR')")
+	public ResponseEntity<Long> closeDraftReport(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "appointmentId") Integer appointmentId,
+			@RequestBody InformerObservationDto informerObservationDto
+	) {
+		log.debug("Input parameters to close draft report for study appointmentId {}, institutionId {}, informerObservationDto {}", institutionId, appointmentId, informerObservationDto);
+		InformerObservationBo informerObservationBo = studyAppointmentMapper.toInformerObservationBo(informerObservationDto);
+		informerObservationBo.setInstitutionId(institutionId);
+		Long result = closeDraftStudyAppointmentReport.execute(appointmentId, informerObservationBo);
+		log.debug("Output", result);
 		return ResponseEntity.ok().body(result);
 	}
 
