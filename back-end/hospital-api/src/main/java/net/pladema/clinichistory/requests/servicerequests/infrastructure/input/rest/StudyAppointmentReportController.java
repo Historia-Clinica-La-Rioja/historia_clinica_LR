@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.clinichistory.requests.servicerequests.application.CreateDraftStudyAppointmentReport;
 import net.pladema.clinichistory.requests.servicerequests.application.GetStudyAppointment;
+import net.pladema.clinichistory.requests.servicerequests.application.UpdateDraftStudyAppointmentReport;
 import net.pladema.clinichistory.requests.servicerequests.domain.InformerObservationBo;
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmentBo;
 
@@ -18,6 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +34,8 @@ public class StudyAppointmentReportController {
 	private final GetStudyAppointment getStudyAppointment;
 	private final StudyAppointmentMapper studyAppointmentMapper;
 	private final CreateDraftStudyAppointmentReport createDraftStudyAppointmentReport;
-	
+	private final UpdateDraftStudyAppointmentReport updateDraftStudyAppointmentReport;
+
 	@GetMapping(value = "/study/by-appointment")
 	public ResponseEntity<StudyAppointmentDto> getStudyByAppointment(
 			@PathVariable(name = "institutionId") Integer institutionId,
@@ -42,7 +45,7 @@ public class StudyAppointmentReportController {
 		StudyAppointmentBo result = getStudyAppointment.run(appointmentId);
 		return ResponseEntity.ok().body(studyAppointmentMapper.toStudyAppointmentDto(result));
 	}
-
+	
 	@PostMapping(value = "/createDraftReport/{appointmentId}")
 	@PreAuthorize("hasPermission(#institutionId, 'INFORMADOR')")
 	public ResponseEntity<Long> createDraftReport(
@@ -57,4 +60,20 @@ public class StudyAppointmentReportController {
 		log.debug("Output", result);
 		return ResponseEntity.ok().body(result);
 	}
+
+	@PutMapping(value = "/updateDraftReport/{appointmentId}")
+	@PreAuthorize("hasPermission(#institutionId, 'INFORMADOR')")
+	public ResponseEntity<Long> updateDraftReport(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "appointmentId") Integer appointmentId,
+			@RequestBody InformerObservationDto informerObservationDto
+	) {
+		log.debug("Input parameters to update draft report for study appointmentId {}, institutionId {}, informerObservationDto {}", institutionId, appointmentId, informerObservationDto);
+		InformerObservationBo informerObservationBo = studyAppointmentMapper.toInformerObservationBo(informerObservationDto);
+		informerObservationBo.setInstitutionId(institutionId);
+		Long result = updateDraftStudyAppointmentReport.execute(appointmentId, informerObservationBo);
+		log.debug("Output -> {}", result);
+		return ResponseEntity.ok().body(result);
+	}
+
 }

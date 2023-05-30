@@ -12,6 +12,10 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ESourceType;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,6 +50,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.transaction.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -65,7 +73,8 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 	private final PatientExternalService patientExternalService;
 	private final DocumentFactory documentFactory;
 	private final DateTimeProvider dateTimeProvider;
-	
+	private final SharedDocumentPort sharedDocumentPort;
+
 	@Override
 	public StudyAppointmentBo getStudyByAppointment(Integer appointmentId) {
 		log.debug("Get study by appointmentId {}", appointmentId);
@@ -113,7 +122,9 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		return result;
 	}
 
+
 	@Override
+	@Transactional
 	public Long createDraftReport(Integer appointmentId, InformerObservationBo informerObservations) {
 		log.debug("Input parameters -> appointmentId {}, informerObservations {}", appointmentId, informerObservations);
 
@@ -124,6 +135,27 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 
 		log.debug("Output -> {}", result);
 		return result;
+	}
+
+	@Override
+	@Transactional
+	public Long updateDraftReport(Integer appointmentId, InformerObservationBo informerObservations) {
+		log.debug("Input parameters -> appointmentId {}, informerObservations {}", appointmentId, informerObservations);
+
+		assertEvolutionNoteIsNotNull(informerObservations.getEvolutionNote());
+		assertProblemsIsNotEmptyAndNull(informerObservations.getProblems());
+
+		Optional<Long> reportDocumentId = appointmentOrderImageRepository.getReportDocumentIdByAppointmentId(appointmentId);
+
+		if (reportDocumentId.isPresent()) {
+			sharedDocumentPort.deleteDocument(reportDocumentId.get(), DocumentStatus.ERROR);
+			deletedOldSnomedConcepts(reportDocumentId.get());
+		}
+
+		Long result = setRequiredFieldsAndSaveDocument(appointmentId, informerObservations, false);
+		log.debug("Output -> {}", result);
+		return result;
+
 	}
 
 	private void assertEvolutionNoteIsNotNull(String evolutionNote) {
@@ -157,13 +189,17 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		LocalDateTime now = dateTimeProvider.nowDateTime();
 		obs.setPerformedDate(now);
 
-		Long documentId = documentFactory.run( obs, createFile);
+		Long documentId = documentFactory.run(obs, createFile);
 
 		appointmentOrderImageRepository.setReportDocumentId(appointmentId, documentId);
 
 		saveSnomedConceptReport(documentId, obs.getProblems());
 
 		return documentId;
+	}
+
+	private void deletedOldSnomedConcepts(Long reportDocumentId) {
+		reportSnomedConceptRepository.deleteByReportDocumentId(reportDocumentId);
 	}
 
 	private String getFullNameByUserId(Integer userId) {
