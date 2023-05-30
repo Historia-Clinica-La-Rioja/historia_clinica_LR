@@ -1,16 +1,30 @@
-.tabla-card{
-    background-color: lightblue;
-}
-
-.cardTablas{
-    width: 900px;
-    display: flex;
-    margin-left: 45px;
-    margin-right: 15px;
-    margin-bottom: 15px;
-    margin-top: 10px;
-}
-
-.titulo{
-    color: #2687c5;
-}
+.container{
+    padding-top: 15px;
+    padding: 20px;
+    max-width: 70%;
+    margin: auto;
+    border: 1px solid #e0eef7;
+    box-shadow: 0px 3px 3px 0px rgba(179,177,179,1);
+    margin-top: 3%;
+  
+  }
+   
+   .contenedor-title{
+      display: flex;
+      width: 100%;
+      justify-content: center;
+    }
+    
+  .contenedor-title>span{
+    padding: 0 15% 0;
+  
+   }
+  
+   
+  
+  .contenedor-nina-nino {
+    /* Estilos para el contenedor de NIÑA/NIÑO */
+    text-align: center; /* Alineación centrada */
+    margin-top: 10px; /* Espacio superior */
+  }
+  

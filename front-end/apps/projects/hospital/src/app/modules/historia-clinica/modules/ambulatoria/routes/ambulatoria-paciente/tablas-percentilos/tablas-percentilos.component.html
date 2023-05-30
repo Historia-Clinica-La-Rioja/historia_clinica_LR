@@ -1,319 +1,42 @@
-<div class="cardTablas">
-    <mat-card class="tabla-card">
-        <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-        <mat-card-title class="titulo">Peso para la edad niñas. Percentiles (nacimiento a 5 años)</mat-card-title>
-        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-        </mat-card-header>
-        <img mat-card-image src='../../../../../assets/images/Peso-para-la-edad-niñas(nacimiento-a-5-años).png' alt="Tabla">
-        <mat-card-content>
-        <p>
-            Patrones de crecimiento infantil de la OMS.
-        </p>
-        </mat-card-content>
-    </mat-card>
+<section >
+  <div class="container">
+<mat-accordion class="panel-container">
+  <mat-panel-title>
+    <div class="contenedor-title">
+      <span class="column-title">Nombre</span>
+      <span class="column-title">Sexo</span>
+  </div>
+  </mat-panel-title>
+    <mat-divider ngcontent-rqs-c486 role="separator" class="mat-divider mat-divider-horizonal ng-star-inserted" aria-orientation="horizontal" style="margin-bottom: 20px;"></mat-divider>
+
+
+  <ng-container *ngFor="let element of data">
+    <mat-expansion-panel class="dark-panel" [expanded]="panelOpenState === element.Orden">
+      <mat-expansion-panel-header (click)="panelOpenState = element.Orden">
+        <mat-panel-title>
+          <div class="contenedor-gral">
+            {{ element.Orden }}.- {{ element.Nombre }}
+          </div>
+        
+          <div class="contenedor-sexo">
+            <!----{{ element.Sexo }}-->
+          </div>
+        
+          <div class="contenedor-nina-nino">
+        <!--NIÑA/NIÑO-->   
+          </div>
+        </mat-panel-title>
+        
+      </mat-expansion-panel-header>
+
+      <!-- Contenido del panel -->
+      <div class="panel-content">
+        <!-- Agrega aquí el contenido adicional, como imágenes -->
+        <img src="ruta-de-la-imagen" alt="Imagen">
+      </div>
+    </mat-expansion-panel>
+  </ng-container>
+</mat-accordion>
+
 </div>
-
-<div class="cardTablas">
-  <mat-card class="tabla-card">
-    <mat-card-header>
-      <div mat-card-avatar class="example-header-image"></div>
-          <mat-card-title class="titulo">Peso para la edad niños. Percentiles (nacimiento a 5 años)</mat-card-title>
-      <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-        </mat-card-header>
-        <img mat-card-image src='../../../../../assets/images/Peso-para-la-edad-niños(nacimiento-a-5-años).png' alt="Tabla">
-        <mat-card-content>
-         <p>
-            Patrones de crecimiento infantil de la OMS.
-          </p>
-        </mat-card-content>
-  </mat-card>
-</div> 
-
-<div class="cardTablas">
-    <mat-card class="tabla-card">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title class="titulo">Longitud para la edad niñas. Percentiles (nacimiento a 2 años)</mat-card-title>
-        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-          </mat-card-header>
-          <img mat-card-image src='../../../../../assets/images/Longitud-para-la-edad-niñas(nacimiento-a-2-años).png' alt="Tabla">
-          <mat-card-content>
-           <p>
-              Patrones de crecimiento infantil de la OMS.
-            </p>
-          </mat-card-content>
-    </mat-card>
-  </div>
-
-  <div class="cardTablas">
-    <mat-card class="tabla-card">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title class="titulo">Longitud para la edad niños. Percentiles (nacimiento a 2 años)</mat-card-title>
-        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-          </mat-card-header>
-          <img mat-card-image src='../../../../../assets/images/Longitud-para-la-edad-niños(nacimiento-a-2-años).png' alt="Tabla">
-          <mat-card-content>
-           <p>
-              Patrones de crecimiento infantil de la OMS.
-            </p>
-          </mat-card-content>
-    </mat-card>
-  </div>
-  
-  <div class="cardTablas">
-    <mat-card class="tabla-card">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title class="titulo">Estatura para la edad niñas. Percentiles (2 a 5 años)</mat-card-title>
-        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-          </mat-card-header>
-          <img mat-card-image src='../../../../../assets/images/Estatura-para-la-edad-niñas(2-5-años).png' alt="Tabla">
-          <mat-card-content>
-           <p>
-              Patrones de crecimiento infantil de la OMS.
-            </p>
-          </mat-card-content>
-    </mat-card>
-  </div>
-
-  <div class="cardTablas">
-    <mat-card class="tabla-card">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title class="titulo">Estatura para la edad niños. Percentiles (2 a 5 años)</mat-card-title>
-        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-          </mat-card-header>
-          <img mat-card-image src='../../../../../assets/images/Estatura-para-la-edad-niños(2-5-años).png' alt="Tabla">
-          <mat-card-content>
-           <p>
-              Patrones de crecimiento infantil de la OMS.
-            </p>
-          </mat-card-content>
-    </mat-card>
-  </div>
-  
-  <div class="cardTablas">
-    <mat-card class="tabla-card">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title class="titulo">Perímetro craneal para la edad niños. Percentiles (nacimiento a 5 años)</mat-card-title>
-        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-          </mat-card-header>
-          <img mat-card-image src='../../../../../assets/images/Perimetro-craneal-para-la-edad-niños(nacimiento-a-5-años).png' alt="Tabla">
-          <mat-card-content>
-           <p>
-              Patrones de crecimiento infantil de la OMS.
-            </p>
-          </mat-card-content>
-    </mat-card>
-  </div>
-
-  <div class="cardTablas">
-    <mat-card class="tabla-card">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title class="titulo">Perímetro craneal para la edad niñas. Percentiles (nacimiento a 5 años)</mat-card-title>
-        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-          </mat-card-header>
-          <img mat-card-image src='../../../../../assets/images/Perimetro-craneal-para-la-edad-niñas(nacimiento-a-5-años).png' alt="Tabla">
-          <mat-card-content>
-           <p>
-              Patrones de crecimiento infantil de la OMS.
-            </p>
-          </mat-card-content>
-    </mat-card>
-  </div>
-  
-  <div class="cardTablas">
-    <mat-card class="tabla-card">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title class="titulo">Peso para la edad niñas. Percentiles (5-10 años)</mat-card-title>
-        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-          </mat-card-header>
-          <img mat-card-image src='../../../../../assets/images/Peso-para-la-edad-niñas(5-10-años).png' alt="Tabla">
-          <mat-card-content>
-           <p>
-              Patrones de crecimiento infantil de la OMS.
-            </p>
-          </mat-card-content>
-    </mat-card>
-  </div>
-
-  <div class="cardTablas">
-    <mat-card class="tabla-card">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title class="titulo">Peso para la edad niños. Percentiles (5-10 años)</mat-card-title>
-        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-          </mat-card-header>
-          <img mat-card-image src='../../../../../assets/images/Peso-para-la-edad-niños(5-10-años).png' alt="Tabla">
-          <mat-card-content>
-           <p>
-              Patrones de crecimiento infantil de la OMS.
-            </p>
-          </mat-card-content>
-    </mat-card>
-  </div>
-
-  <div class="cardTablas">
-    <mat-card class="tabla-card">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title class="titulo">Estatura para la edad niñas. Percentiles (5-19 años)</mat-card-title>
-        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-          </mat-card-header>
-          <img mat-card-image src='../../../../../assets/images/Estatura-para-la-edad-niñas(5-19-años).png' alt="Tabla">
-          <mat-card-content>
-           <p>
-              Patrones de crecimiento infantil de la OMS.
-            </p>
-          </mat-card-content>
-    </mat-card>
-  </div>
-
-  <div class="cardTablas">
-    <mat-card class="tabla-card">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title class="titulo">Estatura para la edad niños. Percentiles (5-19 años)</mat-card-title>
-        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-          </mat-card-header>
-          <img mat-card-image src='../../../../../assets/images/Estatura-para-la-edad-niños(5-19-años).png' alt="Tabla">
-          <mat-card-content>
-           <p>
-              Patrones de crecimiento infantil de la OMS.
-            </p>
-          </mat-card-content>
-    </mat-card>
-  </div>
-
-  <div class="cardTablas">
-    <mat-card class="tabla-card">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title class="titulo">Peso para la longitud niñas. Percentiles (nacimiento a 2 años)</mat-card-title>
-        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-          </mat-card-header>
-          <img mat-card-image src='../../../../../assets/images/Peso-para-la-longitud-niñas(nacimiento-a-2-años).png' alt="Tabla">
-          <mat-card-content>
-           <p>
-              Patrones de crecimiento infantil de la OMS.
-            </p>
-          </mat-card-content>
-    </mat-card>
-  </div>
-
-  <div class="cardTablas">
-    <mat-card class="tabla-card">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title class="titulo">Peso para la longitud niños. Percentiles (nacimiento a 2 años)</mat-card-title>
-        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-          </mat-card-header>
-          <img mat-card-image src='../../../../../assets/images/Peso-para-la-longitud-niños(nacimiento-a-2-años).png' alt="Tabla">
-          <mat-card-content>
-           <p>
-              Patrones de crecimiento infantil de la OMS.
-            </p>
-          </mat-card-content>
-    </mat-card>
-  </div>
-
-  <div class="cardTablas">
-    <mat-card class="tabla-card">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title class="titulo">Peso para la estatura niñas. Percentiles (2-5 años)</mat-card-title>
-        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-          </mat-card-header>
-          <img mat-card-image src='../../../../../assets/images/Peso-para-la-estatura-niñas(2-5-años).png' alt="Tabla">
-          <mat-card-content>
-           <p>
-              Patrones de crecimiento infantil de la OMS.
-            </p>
-          </mat-card-content>
-    </mat-card>
-  </div>
-
-  <div class="cardTablas">
-    <mat-card class="tabla-card">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title class="titulo">Peso para la estatura niños. Percentiles (2-5 años)</mat-card-title>
-        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-          </mat-card-header>
-          <img mat-card-image src='../../../../../assets/images/Peso-para-la-estatura-niños(2-5-años).png' alt="Tabla">
-          <mat-card-content>
-           <p>
-              Patrones de crecimiento infantil de la OMS.
-            </p>
-          </mat-card-content>
-    </mat-card>
-  </div>
-
-  <div class="cardTablas">
-    <mat-card class="tabla-card">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title class="titulo">IMC para la edad niñas. Percentiles (nacimiento a 2 años)</mat-card-title>
-        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-          </mat-card-header>
-          <img mat-card-image src='../../../../../assets/images/IMC-para-la-edad-niñas(nacimiento-a-2-años).png' alt="Tabla">
-          <mat-card-content>
-           <p>
-              Patrones de crecimiento infantil de la OMS.
-            </p>
-          </mat-card-content>
-    </mat-card>
-  </div>
-
-  <div class="cardTablas">
-    <mat-card class="tabla-card">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title class="titulo">IMC para la edad niños. Percentiles (nacimiento a 5 años)</mat-card-title>
-        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-          </mat-card-header>
-          <img mat-card-image src='../../../../../assets/images/IMC-para-la-edad-niños(nacimiento-a-5-años).png' alt="Tabla">
-          <mat-card-content>
-           <p>
-              Patrones de crecimiento infantil de la OMS.
-            </p>
-          </mat-card-content>
-    </mat-card>
-  </div>
-
-  <div class="cardTablas">
-    <mat-card class="tabla-card">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title class="titulo">IMC para la edad niñas. Percentiles (5 a 19 años)</mat-card-title>
-        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-          </mat-card-header>
-          <img mat-card-image src='../../../../../assets/images/IMC-para-la-edad-niñas(5-19-años).png' alt="Tabla">
-          <mat-card-content>
-           <p>
-              Patrones de crecimiento infantil de la OMS.
-            </p>
-          </mat-card-content>
-    </mat-card>
-  </div>
-
-  <div class="cardTablas">
-    <mat-card class="tabla-card">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title class="titulo">IMC para la edad niños. Percentiles (5 a 19 años)</mat-card-title>
-        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-          </mat-card-header>
-          <img mat-card-image src='../../../../../assets/images/IMC-para-la-edad-niños(5-19-años).png' alt="Tabla">
-          <mat-card-content>
-           <p>
-              Patrones de crecimiento infantil de la OMS.
-            </p>
-          </mat-card-content>
-    </mat-card>
-  </div>
+</section>
