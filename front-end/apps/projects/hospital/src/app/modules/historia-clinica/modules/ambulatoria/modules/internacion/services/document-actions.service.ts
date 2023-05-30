@@ -24,9 +24,9 @@ export class DocumentActionsService {
 		private readonly editDocumentAction: EditDocumentActionService,
 		private readonly internmentEpisodeService: InternmentEpisodeService,
 		readonly internmentActions: InternmentActionsService
-	) { 
+	) {
 		this.internmentActions.medicalDischarge$.subscribe(medicalDischarge => {
-			if (medicalDischarge) 
+			if (medicalDischarge)
 				this.hasMedicalDischarge = true;
 		});
 	}
@@ -99,8 +99,8 @@ export class DocumentActionsService {
 		return this.deleteDocumentAction.updateFields$;
 	}
 
-	editDocument(document: DocumentSearchDto) {
-		this.editDocumentAction.editDocument(document)
+	editDocument(document: DocumentSearchDto, internmentEpisodeId: number) {
+		this.editDocumentAction.editDocument(document, internmentEpisodeId)
 	}
 
 	editEpicrisisDraft(document: DocumentSearchDto) {

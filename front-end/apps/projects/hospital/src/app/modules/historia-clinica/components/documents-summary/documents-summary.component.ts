@@ -180,7 +180,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	}
 
 	edit(document: DocumentSearchDto) {
-		this.documentActions.editDocument(document);
+		this.documentActions.editDocument(document, this.internmentEpisodeId);
 		this.activeDocument = undefined;
 	}
 

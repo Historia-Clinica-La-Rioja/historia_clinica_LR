@@ -214,8 +214,12 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 
 	loadEvolutionNoteInfo() {
 		this.allergies = this.evolutionNote.allergies;
-		this.diagnosticos = this.evolutionNote.diagnosis;
-		this.diagnosticos.forEach(d => d.isAdded = true);
+
+		let evolutionNoteDiagnosis = this.evolutionNote.diagnosis;
+		evolutionNoteDiagnosis?.forEach(d => d.isAdded = true);
+		this.diagnosticos = this.diagnosticos.filter(d => !evolutionNoteDiagnosis.some(e => e.snomed.sctid === d.snomed.sctid));
+		this.diagnosticos = this.diagnosticos?.concat(evolutionNoteDiagnosis)
+
 		this.immunizations = this.evolutionNote.immunizations;
 		const procedure: Procedimiento[] = this.evolutionNote.procedures.map(p => {
 			return { snomed: p.snomed, performedDate: p.performedDate }
