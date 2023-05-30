@@ -1,5 +1,6 @@
 .add-button {
 	margin-top: .75rem;
+	min-width: 150px;
 }
 
 .grey {
@@ -32,5 +33,9 @@ form, mat-form-field {
 
 	form, mat-form-field {
 		width: 100%;
+	}
+	
+	.add-button {
+		margin-top: 0;
 	}
 }
