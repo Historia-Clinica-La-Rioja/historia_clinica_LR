@@ -129,6 +129,7 @@
       "EDIT_MESSAGE_FOR_AUDIT": "Editar mensaje",
       "UNMARK_PATIENT_FOR_AUDIT": "Desmarcar paciente para auditoría",
       "A_MOMENT_AGO": "Hace un momento",
+	  "EDIT_BY":"Editado por ",
       "unmark-patient-for-audit": {
         "DESCRIPTION": "Si desmarca al paciente, se perderán los motivos por los cuales fue marcado",
         "QUESTION": "¿Está seguro?",

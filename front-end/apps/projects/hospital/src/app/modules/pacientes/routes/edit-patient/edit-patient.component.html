@@ -543,6 +543,8 @@
 				</div>
 			</form>
 		</div>
-
+		<div fxLayaout="row">
+			<p class="grey">{{'pacientes.edit.EDIT_BY' | translate}} {{completeDataPatient.patientLastEditInfoDto.updatedBy}} - {{completeDataPatient.patientLastEditInfoDto.updatedOn | date: 'dd/MM/yyyy - HH:mm'}}</p>
+		</div>
 	</section>
 </app-content>
