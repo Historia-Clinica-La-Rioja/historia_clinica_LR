@@ -2,7 +2,8 @@ mat-card {
 	max-width: 420px;
 	margin: 15vh auto;
 }
-mat-card-title{
+
+mat-card-title {
 	padding: 20px;
 }
 
@@ -10,32 +11,39 @@ mat-card-title{
 	vertical-align: middle;
 	padding-left: 10px;
 }
-.person-info{
+
+.person-info {
 	padding-left: 8px;
 }
+
 .form {
 	min-width: 150px;
 	width: 100%;
 	margin-left: 16px;
 	margin-right: 16px;
 }
-.mat-list{
+
+.mat-list {
 	padding-top: 30px;
 }
-.mat-card-actions{
+
+.mat-card-actions {
 	padding-right: 17px;
 }
 
 .icon {
 	font-size: 96px;
-	margin-bottom: 45px;
-	margin-top: 50px;
+	height: 96px;
+	line-height: 96px;
+	margin: 50px 0 45px 0;
+	padding: 0;
 }
 
-.link{
+.link {
 	cursor: pointer;
 }
-.link:hover{
+
+.link:hover {
 	text-decoration: underline;
 }
 
@@ -66,4 +74,10 @@ mat-icon {
 	height: 14px;
 	width: 14px;
 	margin-right: 4px;
+}
+
+#password-visibility {
+	font-size: 21px;
+	height: 21px;
+	width: 21px;
 }
