@@ -26,8 +26,8 @@
                         "label" : "Fecha"
                       }
                     },
-                    "title" : {
-                      "text" : "Evolución de consultas por fecha"
+                    "header" : {
+                      "title" : "Evolución de consultas por fecha"
                     },
                     "label": "Evolución - barra",
                     "content" : [
@@ -65,8 +65,8 @@
                         "label" : "Fecha"
                       }
                     },
-                    "title" : {
-                      "text" : "Consultas por especialidad y profesional"
+                    "header" : {
+                      "title" : "Consultas por especialidad y profesional"
                     },
                     "label": "Especialidad y profesional",
                     "content" : [
@@ -99,8 +99,8 @@
                 {
                   "type" : "cubejs-dashboard",
                   "args" : {
-                    "title" : {
-                      "text" : "Evolución de consultas por fecha"
+                    "header" : {
+                      "title" : "Evolución de consultas por fecha"
                     },
                     "label": "Evolución - línea",
                     "filters" : {
@@ -151,8 +151,8 @@
                         "label" : "Fecha"
                       }
                     },
-                    "title" : {
-                      "text" : "Consultas por especialidad"
+                    "header" : {
+                      "title" : "Consultas por especialidad"
                     },
                     "label": "Especialidad",
                     "content" : [
@@ -188,8 +188,8 @@
                         "label" : "Fecha"
                       }
                     },
-                    "title" : {
-                      "text" : "Consultas por identidad de género"
+                    "header" : {
+                      "title" : "Consultas por identidad de género"
                     },
                     "label": "Identidad de género",
                     "content" : [
@@ -225,8 +225,8 @@
                             "label" : "Fecha"
                           }
                         },
-                        "title" : {
-                          "text" : "Consultas por sexo del DNI"
+                        "header" : {
+                          "title" : "Consultas por sexo del DNI"
                         },
                         "label": "Sexo DNI - anillo",
                         "content" : [
@@ -261,8 +261,8 @@
                             "label" : "Fecha"
                           }
                         },
-                        "title" : {
-                          "text" : "Consultas por rango etario"
+                        "header" : {
+                          "title" : "Consultas por rango etario"
                         },
                         "label": "Rango etario",
                         "content" : [
@@ -321,8 +321,8 @@
                         "label" : "Fecha"
                       }
                     },
-                    "title" : {
-                      "text" : "Consultas por sexo del DNI"
+                    "header" : {
+                      "title" : "Consultas por sexo del DNI"
                     },
                     "label": "Sexo DNI - tarjetas",
                     "content" : [
@@ -436,8 +436,8 @@
                               "label" : "Fecha"
                             }
                           },
-                          "title" : {
-                            "text" : "Evolución de turnos por fecha"
+                          "header" : {
+                            "title" : "Evolución de turnos por fecha"
                           },
                           "label": "Evolución - línea",
                           "content" : [
@@ -469,12 +469,12 @@
                                 "member" : "CantidadTurnos.fecha_consulta",
                                 "operator" : "inDateRange"
                               },
-                              "type" : "dateRangeISO",
-                              "label" : "Fecha"
+                              "header" : "dateRangeISO",
+                              "title" : "Fecha"
                             }
                           },
-                          "title" : {
-                            "text" : "Turnos por especialidad"
+                          "header" : {
+                            "title" : "Turnos por especialidad"
                           },
                           "label": "Especialidad",
                           "content" : [
@@ -509,8 +509,8 @@
                               "label" : "Fecha"
                             }
                           },
-                          "title" : {
-                            "text" : "Turnos por profesional"
+                          "header" : {
+                            "title" : "Turnos por profesional"
                           },
                           "label": "Profesional",
                           "content" : [
@@ -561,8 +561,8 @@
                               "label" : "Fecha"
                             }
                           },
-                          "title" : {
-                            "text" : "Turnos por estado"
+                          "header" : {
+                            "title" : "Turnos por estado"
                           },
                           "label": "Estado",
                           "content" : [

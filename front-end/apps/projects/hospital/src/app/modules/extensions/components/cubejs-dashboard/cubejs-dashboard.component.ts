@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {UIComponentDto, UILabelDto} from '@extensions/extensions-model';
+import {UIComponentDto} from '@extensions/extensions-model';
 import {
 	ChartDefinitionService,
 	FilterValue,
@@ -8,6 +8,7 @@ import {HttpClient} from "@angular/common/http";
 import {ContextService} from "@core/services/context.service";
 import {FeatureFlagService} from "@core/services/feature-flag.service";
 import {AppFeature} from "@api-rest/api-model";
+import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
 
 export interface FilterDefinition {
 	member: string;
@@ -52,7 +53,7 @@ export class CubejsDashboardComponent {
 		this.configureSelfDeterminationFilter();
 	};
 
-	@Input() title?: UILabelDto;
+	@Input() header?: SummaryHeader;
 
 	private params: FilterValues = {};
 	public _content: UIComponentDto[];

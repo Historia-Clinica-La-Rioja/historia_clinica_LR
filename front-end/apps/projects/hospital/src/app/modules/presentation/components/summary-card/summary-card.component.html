@@ -1,9 +1,9 @@
 <mat-card class="box">
 	<mat-card-header>
 		<mat-card-title>
-			<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
-				<mat-icon fontSet="material-icons-outlined">{{ header.matIcon }}</mat-icon>
-				<span>{{ header.title | translate }}</span>
+			<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px" >
+				<mat-icon fontSet="material-icons-outlined" *ngIf="header.matIcon">{{ header.matIcon }}</mat-icon>
+				<span>{{ header?.title | translate }}</span>
 			</div>
 		</mat-card-title>
 		<ng-container *ngIf="editable">
