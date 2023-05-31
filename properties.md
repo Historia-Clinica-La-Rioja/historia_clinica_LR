@@ -213,10 +213,23 @@ La funcionalidad para reporte epimediológico se activa solamente si el feature 
 | ws.cipres.password           |	| -                                                        | Opcional | Contraseña otorgada para acceder a los recursos de CIPRES        | v1.57.0 |
 | ws.cipres.realusername       |  | -                                                        | Opcional | Nombre real de usuario para acceder a los recursos de CIPRES     | v1.57.0 |
 
+### Plataforma de Firma Digital Remota
+| Propiedad | Variable de ambiente | Valor por defecto                       | Condición       | Descripcion                                                                                                                                                         | Desde  |
+| -------- | ------ |-----------------------------------------|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|
+| app.feature.HABILITAR_FIRMA_DIGITAL   | | false                                   | **Obligatorio** | Define si se va a habilitar el módulo de Firma digital                                                                                                              | v2.2.0 |
+| digital.signature.url.redirect | APP_DOMAIN | localhost:4200/firma-digital/documentos | **Único**       | Url necesaria para enviarle al servicio del firmador. Dicho servicio redirige al usuario desde su sistema a la url una vez firmado un documento. **[NO MODIFICAR]** | v2.2.0 |
+| ws.firmador.url.base |  | -                                       | Opcional | Url del servicio externo del firmador. **Obligatoria** si el FF de HABILITR_FIRMA_DIGITAL esta habilitado                                                           | v2.2.0 |
+| ws.firmador.api.key |  | -                                       | Opcional | Clave que provee el firmador. **Obligatoria** si el FF de HABILITR_FIRMA_DIGITAL esta habilitado                                                                    | v2.2.0 |
+| ws.firmador.api.token |  | -                                       | Opcional | Token que provee el firmador. **Obligatoria** si el FF de HABILITR_FIRMA_DIGITAL esta habilitado                                                                    | v2.2.0 |
+| ws.firmador.path.login |  | -                                       | Opcional | Path que provee el firmador para autenticarse al mismo. **Obligatoria** si el FF de HABILITR_FIRMA_DIGITAL esta habilitado                                          | v2.2.0 |
+| ws.firmador.path.multiple.sign |  | -                                       | Opcional | Path que provee el firmador para firmar multiples documentos. **Obligatoria** si el FF de HABILITR_FIRMA_DIGITAL esta habilitado                                    | v2.2.0 |
+
+
 ## Integración con sistemas relacionados
 | Propiedad | Variable de ambiente   | Valor por defecto       | Necesidad | Descripcion | Desde |
 | ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
 | integration.covid.encryption.key | | WillGriggIsOnFir | Opcional | Clave para la encriptación de datos provistos por endpoints de SGH a otras aplicaciones (ej: covid) | v1.9.0 |
+
 
 ## Propiedades específicas de flavors 
 

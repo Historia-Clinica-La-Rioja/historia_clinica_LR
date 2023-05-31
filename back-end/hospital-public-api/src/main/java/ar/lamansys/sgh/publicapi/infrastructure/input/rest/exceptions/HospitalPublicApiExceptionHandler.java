@@ -2,6 +2,8 @@ package ar.lamansys.sgh.publicapi.infrastructure.input.rest.exceptions;
 
 import java.util.Locale;
 
+import ar.lamansys.sgh.publicapi.digitalsignature.application.port.out.exception.DigitalSignatureCallbackException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -204,4 +206,12 @@ public class HospitalPublicApiExceptionHandler {
 		);
 	}
 
+	
+	@ResponseStatus(HttpStatus.PRECONDITION_FAILED)
+	@ExceptionHandler({ DigitalSignatureCallbackException.class })
+	protected ApiErrorMessageDto handleDigitalSignatureCallbackException(DigitalSignatureCallbackException ex) {
+		logger.error("DigitalSignatureCallbackException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+	}
+	
 }

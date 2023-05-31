@@ -8,6 +8,11 @@
 		},
         "filter-button": {
             "FILTER": "Filtrar"
+
+		},
+        "selectable-card": {
+            "SELECT_ALL": "Seleccionar todos",
+            "NO_DATA": "No hay información para mostrar"
         }
     }
 }

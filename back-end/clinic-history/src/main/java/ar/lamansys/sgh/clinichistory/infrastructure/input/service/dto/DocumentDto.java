@@ -38,6 +38,8 @@ public class DocumentDto {
 
     private Integer clinicalSpecialtyId;
 
+	private String clinicalSpecialtyName;
+
     private Integer medicalCoverageId;
 
     private DocumentObservationsDto notes;

@@ -239,6 +239,7 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		result.setPhonePrefix(personExtended.getPhonePrefix());
 		result.setPhoneNumber(personExtended.getPhoneNumber());
 		result.setNameSelfDetermination(personExtended.getNameSelfDetermination());
+		result.setCuil(personExtended.getCuil());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

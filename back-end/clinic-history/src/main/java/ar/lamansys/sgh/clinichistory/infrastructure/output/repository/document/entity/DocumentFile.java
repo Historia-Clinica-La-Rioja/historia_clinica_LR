@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity;
 
+import ar.lamansys.sgh.shared.infrastructure.output.entities.ESignatureStatus;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,6 +50,12 @@ public class DocumentFile extends SGXAuditableEntity<Long> {
 	@Column(name = "checksum", length = 512)
 	private String checksum;
 
+	@Column(name = "signature_status_id", nullable = false)
+	private Short signatureStatusId;
+
+	@Column(name = "digital_signature_hash", length = 44)
+	private String digitalSignatureHash;
+
 	public DocumentFile(Long documentId, Integer sourceId, Short sourceTypeId, Short documentType,
 						String filepath, String filename, String uuidFile, String checksum){
 		this.id = documentId;
@@ -59,6 +66,7 @@ public class DocumentFile extends SGXAuditableEntity<Long> {
 		this.filename = filename;
 		this.uuidfile = uuidFile;
 		this.checksum = checksum;
+		this.signatureStatusId = ESignatureStatus.PENDING.getId();
 	}
 
 	@Override

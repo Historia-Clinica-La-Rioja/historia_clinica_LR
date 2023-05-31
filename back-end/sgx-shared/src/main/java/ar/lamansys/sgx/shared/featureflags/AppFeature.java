@@ -158,6 +158,9 @@ public enum AppFeature implements Feature {
 	
 	@Label("Habilita la obligatoriedad del campo de unidades jerárquicas como requerido")
 	HABILITAR_OBLIGATORIEDAD_UNIDADES_JERARQUICAS,
+    
+	@Label("Indica si está habilitada la firma digital")
+	HABILITAR_FIRMA_DIGITAL,
 	;
 
     public boolean isActive() {

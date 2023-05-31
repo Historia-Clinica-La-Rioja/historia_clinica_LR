@@ -7,6 +7,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import javax.validation.ConstraintViolationException;
 import java.util.List;
@@ -36,6 +38,9 @@ class CreateOutpatientDocumentServiceImplTest extends UnitRepository {
 
     @Mock
     private DateTimeProvider dateTimeProvider;
+
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
 
     @BeforeEach
     public void setUp() {

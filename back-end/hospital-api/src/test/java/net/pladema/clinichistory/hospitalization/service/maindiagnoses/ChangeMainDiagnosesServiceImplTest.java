@@ -6,6 +6,8 @@ import java.util.Collections;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +36,8 @@ import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpi
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain.MainDiagnosisBo;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
+
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
 
@@ -68,6 +72,9 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
 
 	@Mock
 	private FeatureFlagsService featureFlagsService;
+
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
 
     @BeforeEach
     void setUp(){

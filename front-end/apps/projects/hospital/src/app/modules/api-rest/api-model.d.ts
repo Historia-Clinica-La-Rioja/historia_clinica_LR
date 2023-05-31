@@ -480,6 +480,7 @@ export interface BasicPatientDto extends Serializable {
 }
 
 export interface BasicPersonalDataDto extends IBasicPersonalData {
+    cuil?: string;
     genderId: number;
     nameSelfDetermination: string;
     phonePrefix: string;
@@ -1001,6 +1002,43 @@ export interface DietDto extends IndicationDto {
     description: string;
 }
 
+export interface DigitalSignatureCallbackRequestDto {
+    documentId: number;
+    documento: string;
+    hash: string;
+    metadata: { [index: string]: string };
+    personId: number;
+    status: DigitalSignatureStatusDto;
+}
+
+export interface DigitalSignatureDataDto {
+    cuil: string;
+    documents: DigitalSignatureDocumentContentDto[];
+    institutionId: number;
+    personId: number;
+}
+
+export interface DigitalSignatureDocumentContentDto {
+    content: FilePathBo;
+    hash: string;
+    id: number;
+}
+
+export interface DigitalSignatureDocumentDto extends Serializable {
+    createdOn: Date;
+    documentId: number;
+    documentTypeDto: DocumentTypeDto;
+    patientFullName: string;
+    professionalFullName: string;
+    snomedConcepts: SnomedConceptDto[];
+    sourceTypeDto: SourceTypeDto;
+}
+
+export interface DigitalSignatureStatusDto {
+    msg: string;
+    success: boolean;
+}
+
 export interface DoctorInfoDto {
     firstName: string;
     id: number;
@@ -1025,6 +1063,7 @@ export interface DocumentDto {
     allergies: AllergyConditionDto[];
     anthropometricData: AnthropometricDataDto;
     clinicalSpecialtyId: number;
+    clinicalSpecialtyName: string;
     dentalActions: DentalActionDto[];
     diagnosis: DiagnosisDto[];
     diagnosticReports: DiagnosticReportDto[];
@@ -1048,14 +1087,29 @@ export interface DocumentDto {
     riskFactors: RiskFactorDto;
 }
 
+export interface DocumentFileDataDto {
+    filename: string;
+    id: number;
+    signatureStatus: SignatureStatusTypeDto;
+}
+
 export interface DocumentFileDto {
     createdOn: Date;
     creationable: CreationableDto;
     filename: string;
     id: number;
+    signatureStatusId: number;
     sourceId: number;
     sourceTypeId: number;
     typeId: number;
+}
+
+export interface DocumentFileSummaryDto extends Serializable {
+    document: DocumentFileDataDto;
+    documentType: DocumentTypeDto;
+    sourceId: number;
+    sourceType: SourceTypeDto;
+    startDate: DateTimeDto;
 }
 
 export interface DocumentHistoricDto {
@@ -1076,6 +1130,7 @@ export interface DocumentObservationsDto extends Serializable {
 export interface DocumentReduceInfoDto extends Serializable {
     createdBy: number;
     createdOn: Date;
+    signatureStatus: ESignatureStatus;
     sourceId: number;
     typeId: number;
 }
@@ -1514,6 +1569,11 @@ export interface FileInfoDto {
     size: number;
     source: string;
     uuidfile: string;
+}
+
+export interface FilePathBo {
+    fullPath: Path;
+    relativePath: string;
 }
 
 export interface FormVDto {
@@ -2061,6 +2121,9 @@ export interface InternmentSummaryDto {
     totalInternmentDays: number;
 }
 
+export interface Iterable<T> {
+}
+
 export interface JWTokenDto {
     refreshToken: string;
     token: string;
@@ -2101,6 +2164,7 @@ export interface LoggedPersonDto {
 }
 
 export interface LoggedUserDto {
+    cuil?: string;
     email: string;
     id: number;
     personDto: LoggedPersonDto;
@@ -2244,6 +2308,10 @@ export interface MultipartFile extends InputStreamSource {
     originalFilename?: string;
     resource: Resource;
     size: number;
+}
+
+export interface MultipleDigitalSignatureCallbackRequestDto {
+    documentos: DigitalSignatureCallbackRequestDto[];
 }
 
 export interface NewDosageDto extends Serializable {
@@ -2728,6 +2796,9 @@ export interface PasswordResetDto {
 
 export interface PasswordResetResponseDto {
     username: string;
+}
+
+export interface Path extends Comparable<Path>, Iterable<Path>, Watchable {
 }
 
 export interface PatientBedRelocationDto extends Serializable {
@@ -3491,10 +3562,20 @@ export interface ShockroomDto {
     id: number;
 }
 
+export interface SignatureStatusTypeDto {
+    description: string;
+    id: number;
+}
+
 export interface SipPlusUrlDataDto {
     embedSystem: string;
     token: string;
     urlBase: string;
+}
+
+export interface SnomedConceptDto {
+    isMainHealthCondition: boolean;
+    pt: string;
 }
 
 export interface SnomedDto extends Serializable {
@@ -3564,6 +3645,11 @@ export interface SnvsToReportDto {
     groupEventId: number;
     manualClassificationId: number;
     problem: SnvsSnomedDto;
+}
+
+export interface SourceTypeDto {
+    description: string;
+    id: number;
 }
 
 export interface StudyAppointmentDto {
@@ -4024,6 +4110,9 @@ export interface VirtualConsultationStatusDto {
     status: EVirtualConsultationStatus;
 }
 
+export interface Watchable {
+}
+
 export interface WorklistDto {
     actionTime: DateTimeDto;
     appointmentId: number;
@@ -4087,6 +4176,7 @@ export const enum AppFeature {
     HABILITAR_TELEMEDICINA = "HABILITAR_TELEMEDICINA",
     HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO = "HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO",
     HABILITAR_OBLIGATORIEDAD_UNIDADES_JERARQUICAS = "HABILITAR_OBLIGATORIEDAD_UNIDADES_JERARQUICAS",
+    HABILITAR_FIRMA_DIGITAL = "HABILITAR_FIRMA_DIGITAL",
 }
 
 export const enum EAppointmentModality {
@@ -4228,6 +4318,12 @@ export const enum ERole {
     API_IMAGENES = "API_IMAGENES",
     API_ORQUESTADOR = "API_ORQUESTADOR",
     ADMINISTRADOR_DE_ACCESO_DOMINIO = "ADMINISTRADOR_DE_ACCESO_DOMINIO",
+}
+
+export const enum ESignatureStatus {
+    PENDING = "PENDING",
+    IN_PROGRESS = "IN_PROGRESS",
+    SIGNED = "SIGNED",
 }
 
 export const enum ESurfacePositionDto {

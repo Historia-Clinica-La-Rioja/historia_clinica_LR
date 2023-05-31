@@ -12,6 +12,8 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +47,8 @@ import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.Anamne
 import net.pladema.clinichistory.hospitalization.service.anamnesis.impl.CreateAnamnesisServiceImpl;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
+
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 
 class CreateAnamnesisServiceImplTest extends UnitRepository {
@@ -80,6 +84,9 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	private FeatureFlagsService featureFlagsService;
 
 	private AnamnesisValidator anamnesisValidator;
+
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
 
 	@BeforeEach
 	public void setUp() {

@@ -119,4 +119,18 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		permissions: [ERole.VIRTUAL_CONSULTATION_PROFESSIONAL, ERole.VIRTUAL_CONSULTATION_RESPONSIBLE],
 		featureFlag: AppFeature.HABILITAR_TELEMEDICINA
 	},
+	{
+		text: 'app.menu.DIGITAL_SIGNATURE',
+		icon: 'border_color',
+		id: 'digitalSignature',
+		url: './firma-digital/documentos',
+		permissions: [
+			ERole.ESPECIALISTA_MEDICO,
+			ERole.PROFESIONAL_DE_SALUD,
+			ERole.ENFERMERO_ADULTO_MAYOR,
+			ERole.ENFERMERO,
+			ERole.ESPECIALISTA_EN_ODONTOLOGIA
+		],
+		featureFlag: AppFeature.HABILITAR_FIRMA_DIGITAL
+	},
 ];

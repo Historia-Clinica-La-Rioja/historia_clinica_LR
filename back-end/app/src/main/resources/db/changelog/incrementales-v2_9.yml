@@ -142,3 +142,44 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: institution
               validate: true
+
+    - changeSet:
+        id: add-signature_status_id-column-document_file
+        author: mvenere
+        changes:
+          - addColumn:
+              tableName: document_file
+              columns:
+                - column:
+                    constraints:
+                      nullable: true
+                    name: signature_status_id
+                    type: smallint
+                    defaultValue: 1
+
+    - changeSet:
+        id: add-signature_status_id-column-document_file_history
+        author: mvenere
+        changes:
+          - addColumn:
+              tableName: document_file_history
+              columns:
+                - column:
+                    constraints:
+                      nullable: true
+                    name: signature_status_id
+                    type: smallint
+                    defaultValue: 1      
+
+    - changeSet:
+        id: add-digital_signature_hash-column-document_file
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: document_file
+              columns:
+                - column:
+                    constraints:
+                      nullable: true
+                    name: digital_signature_hash
+                    type: varchar(44)

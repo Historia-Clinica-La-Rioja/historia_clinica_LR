@@ -150,7 +150,7 @@ public class InternmentStateController {
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
         LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
         List<HealthHistoryConditionBo> personalHistories = fetchHospitalizationHealthConditionState.getPersonalHistoriesGeneralState(internmentEpisodeId);
-        List<HealthHistoryConditionDto> result = internmentStateMapper.toListHealthHistoryConditionDto(personalHistories);
+        List<HealthHistoryConditionDto> result = internmentStateMapper.toListInternmentHealthHistoryConditionDto(personalHistories);
                 LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }
@@ -162,7 +162,7 @@ public class InternmentStateController {
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
         LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
         List<HealthHistoryConditionBo> familyHistories = fetchHospitalizationHealthConditionState.getFamilyHistoriesGeneralState(internmentEpisodeId);
-        List<HealthHistoryConditionDto> result = internmentStateMapper.toListHealthHistoryConditionDto(familyHistories);
+        List<HealthHistoryConditionDto> result = internmentStateMapper.toListInternmentHealthHistoryConditionDto(familyHistories);
                 LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }
@@ -174,7 +174,7 @@ public class InternmentStateController {
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
         LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
         List<MedicationBo> medicationBos = fetchHospitalizationMedicationState.run(internmentEpisodeId);
-        List<MedicationDto> result = internmentStateMapper.toListMedicationDto(medicationBos);
+        List<MedicationDto> result = internmentStateMapper.toListInternmentMedicationDto(medicationBos);
         LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }

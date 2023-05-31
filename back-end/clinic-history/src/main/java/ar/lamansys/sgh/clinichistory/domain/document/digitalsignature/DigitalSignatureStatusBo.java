@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.hospitalization.controller.dto;
+package ar.lamansys.sgh.clinichistory.domain.document.digitalsignature;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,8 +11,9 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class DocumentTypeDto {
+public class DigitalSignatureStatusBo {
 
-	private Integer id;
-	private String description;
+	private Boolean success;
+
+	private String msg;
 }

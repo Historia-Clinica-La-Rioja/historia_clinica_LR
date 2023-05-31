@@ -83,6 +83,8 @@ import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ItemSummaryComponent } from './components/item-summary/item-summary.component';
+import { SelectableCardComponent } from './components/selectable-card/selectable-card.component';
+import { DetailedInformationComponent } from './components/detailed-information/detailed-information.component';
 
 @NgModule({
 	declarations: [
@@ -137,6 +139,10 @@ import { ItemSummaryComponent } from './components/item-summary/item-summary.com
 		FilterButtonComponent,
 		PaginatorComponent,
 		PrioritySelectComponent,
+		TitledContentCardComponent,
+		ViewPdfComponent,
+		SelectableCardComponent,
+		DetailedInformationComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
@@ -232,6 +238,9 @@ import { ItemSummaryComponent } from './components/item-summary/item-summary.com
 		FilterButtonComponent,
 		PrioritySelectComponent,
 		FiltersSelectComponent,
+		LogoComponent,
+		SelectableCardComponent,
+		DetailedInformationComponent,
 		// dialogs
 		// directives
 		CtrlTemplateDirective,

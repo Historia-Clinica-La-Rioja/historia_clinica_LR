@@ -21,4 +21,8 @@ public interface MedicationMapper {
     @Named("toListMedicationBo")
     @IterableMapping(qualifiedByName = "toMedicationBo")
     List<MedicationBo> toListMedicationBo(List<MedicationDto> medicationDto);
+
+	@Named("toListMedicationDto")
+	@IterableMapping(qualifiedByName = "toMedicationDto")
+	List<MedicationDto> toListMedicationDto(List<MedicationBo> medicationBo);
 }

@@ -41,17 +41,17 @@ public interface InternmentStateMapper {
     @IterableMapping(qualifiedByName = "toDiagnosisDto")
     List<DiagnosisDto> toListDiagnosisDto(List<DiagnosisBo> listDiagnosisBo);
 
-    @Named("toListHealthHistoryConditionDto")
+    @Named("toListInternmentHealthHistoryConditionDto")
     @IterableMapping(qualifiedByName = "toHealthHistoryConditionDto")
-    List<HealthHistoryConditionDto> toListHealthHistoryConditionDto(List<HealthHistoryConditionBo> listHealthHistoryCondition);
+    List<HealthHistoryConditionDto> toListInternmentHealthHistoryConditionDto(List<HealthHistoryConditionBo> listHealthHistoryCondition);
 
     @Named("toListDiagnosesGeneralStateDto")
     @IterableMapping(qualifiedByName = "toDiagnosesGeneralStateDto")
     List<DiagnosesGeneralStateDto> toListDiagnosesGeneralStateDto(List<HealthConditionBo> diagnoses);
 
-    @Named("toListMedicationDto")
+    @Named("toListInternmentMedicationDto")
     @IterableMapping(qualifiedByName = "toMedicationDto")
-    List<MedicationDto> toListMedicationDto(List<MedicationBo> listMedicationBo);
+    List<MedicationDto> toListInternmentMedicationDto(List<MedicationBo> listMedicationBo);
 
     @Named("toListImmunizationDto")
     @IterableMapping(qualifiedByName = "toImmunizationDto")

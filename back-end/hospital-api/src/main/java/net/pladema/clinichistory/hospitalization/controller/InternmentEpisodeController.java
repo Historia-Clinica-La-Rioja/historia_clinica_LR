@@ -38,7 +38,7 @@ import net.pladema.clinichistory.hospitalization.application.getEpisodeDocument.
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentDischargeValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentPhysicalDischargeValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.ProbableDischargeDateValid;
-import net.pladema.clinichistory.hospitalization.controller.dto.DocumentTypeDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.DocumentTypeDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentResponseDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentEpisodeADto;

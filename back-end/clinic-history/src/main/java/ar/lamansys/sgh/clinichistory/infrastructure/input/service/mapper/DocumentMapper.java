@@ -26,6 +26,16 @@ public interface DocumentMapper {
     @Mapping(target = "allergies", source = "allergies", qualifiedByName = "toListAllergyConditionBo")
     @Mapping(target = "personalHistories", source = "personalHistories", qualifiedByName = "toListHealthHistoryConditionBo")
     @Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toListHealthHistoryConditionBo")
-    DocumentBo from(DocumentDto documentDto);
+    DocumentBo fromDto(DocumentDto documentDto);
+
+	@Named("fromDocumentBo")
+	@Mapping(target = "riskFactors", source = "riskFactors", qualifiedByName = "fromRiskFactorBo")
+	@Mapping(target = "anthropometricData", source = "anthropometricData", qualifiedByName = "fromAnthropometricDataBo")
+	@Mapping(target = "medications", source = "medications", qualifiedByName = "toListMedicationDto")
+	@Mapping(target = "immunizations", source = "immunizations", qualifiedByName = "toListImmunizationDto")
+	@Mapping(target = "allergies", source = "allergies", qualifiedByName = "toListAllergyConditionDto")
+	@Mapping(target = "personalHistories", source = "personalHistories", qualifiedByName = "toListHealthHistoryConditionDto")
+	@Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toListHealthHistoryConditionDto")
+	DocumentDto fromBo(DocumentBo documentBo);
 
 }

@@ -1,5 +1,6 @@
 package net.pladema.establishment.repository;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import net.pladema.UnitRepository;
 import net.pladema.establishment.repository.domain.BedSummaryVo;
 import net.pladema.establishment.repository.entity.AgeGroup;
@@ -15,6 +16,7 @@ import net.pladema.staff.repository.entity.ClinicalSpecialty;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import javax.persistence.EntityManager;
 
@@ -29,6 +31,9 @@ class BedSummaryRepositoryTest extends UnitRepository {
     private EntityManager entityManager;
 
     private BedSummaryRepositoryImpl bedSummaryRepository;
+
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
 
     @BeforeEach
     void setUp(){

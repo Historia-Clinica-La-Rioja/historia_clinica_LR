@@ -47,4 +47,10 @@ public interface UserPersonRepository extends JpaRepository<UserPerson, UserPers
 			"WHERE up.pk.userId IN (:userIds)")
 	List<InstitutionUserPersonBo> findByUserIds(@Param("userIds") List<Integer> userIds);
 
+	@Query("SELECT pex.cuil " +
+			"FROM UserPerson up " +
+			"JOIN PersonExtended pex " +
+			"ON pex.id = up.pk.personId " +
+			"WHERE up.pk.userId = :userId")
+	Optional<String> getCuilByUserId(@Param("userId") Integer userId);
 }

@@ -12,6 +12,8 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
+
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,6 +58,8 @@ import net.pladema.permissions.service.dto.RoleAssignment;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.sgx.session.infrastructure.input.service.FetchLoggedUserRolesExternalService;
 
+import org.springframework.boot.test.mock.mockito.MockBean;
+
 class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 
     private CreateEvolutionNoteService createEvolutionNoteService;
@@ -93,6 +97,9 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 	private FeatureFlagsService featureFlagsService;
 
 	private EvolutionNoteValidator evolutionNoteValidator;
+
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
 
     @BeforeEach
     void setUp(){

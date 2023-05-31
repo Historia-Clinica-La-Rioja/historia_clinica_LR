@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { ContextService } from '@core/services/context.service';
-import {HCEDocumentDataDto} from "@api-rest/api-model";
+import {DocumentDto, HCEDocumentDataDto} from "@api-rest/api-model";
 import { ViewPdfService } from '@presentation/dialogs/view-pdf/view-pdf.service';
 import { HttpClient } from '@angular/common/http';
 import { saveAs } from 'file-saver';
+import { Observable } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
@@ -35,5 +36,10 @@ export class DocumentService {
 			{ responseType: 'blob' }
 		).subscribe(blob =>
 			saveAs(blob, 'HSI_NEW_DOCUMENT'));
+	}
+
+	getDocumentInfo(id: number): Observable<DocumentDto> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/documents/${id}/info`;
+		return this.http.get<DocumentDto>(url);
 	}
 }

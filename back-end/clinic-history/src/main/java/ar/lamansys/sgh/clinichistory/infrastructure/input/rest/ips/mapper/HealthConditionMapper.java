@@ -35,4 +35,8 @@ public interface HealthConditionMapper {
     @Name("toHealthConditionNewConsultationDto")
     HealthConditionNewConsultationDto toHealthConditionNewConsultationDto(HealthConditionNewConsultationBo bo);
 
+	@Named("toListHealthHistoryConditionDto")
+	@IterableMapping(qualifiedByName = "toHealthHistoryConditionDto")
+	List<HealthHistoryConditionDto> toListHealthHistoryConditionDto(List<HealthHistoryConditionBo> healthHistoryConditionBo);
+
 }

@@ -18,7 +18,8 @@
 			"REPORTES": "Reportes",
 			"LOGOUT": "Cerrar sesión",
 			"AUDIT": "Auditoria",
-			"TELEMEDICINE":"TeleSalud"
+			"TELEMEDICINE":"TeleSalud",
+			"DIGITAL_SIGNATURE": "Firma digital"
 		}
 	},
 	"buttons": {
@@ -51,7 +52,9 @@
 		"YES_CONTINUE":"Si, continuar",
 		"NO_CANCEL":"No, cancelar",
 		"FILTER":"Filtrar",
-		"IMPORT":"Importar"
+		"IMPORT":"Importar",
+		"PDF_DOWNLOAD": "DESCARGAR .PDF",
+		"SIGN": "Firmar documento"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",

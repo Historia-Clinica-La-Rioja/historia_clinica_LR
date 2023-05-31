@@ -4,4 +4,6 @@ public interface SharedPersonPort {
 
 	String getCountryIsoCodeFromPerson(Integer personId);
 
+	String getPersonFullNameById(Integer personId);
+
 }
