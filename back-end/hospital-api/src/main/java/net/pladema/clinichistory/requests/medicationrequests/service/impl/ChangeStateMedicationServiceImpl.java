@@ -82,7 +82,7 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
 
                 MedicationBo newMedication = updateMedication(medication, dosage, newStatusId, duration, changeStateMedicationRequestBo.getObservations());
 
-                var documentMedication = documentService.getDocumentFromMedication(mid);
+				var documentMedication = documentService.getDocumentFromMedication(mid);
                 loadMedications.run(patientId, documentMedication.getDocumentId(), List.of(newMedication));
             })
         );
@@ -139,6 +139,7 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
 
         var hc = new HealthConditionBo();
         hc.setId(medication.getHealthConditionId());
+		result.setId(medication.getId());
         result.setHealthCondition(hc);
 
         result.setStatusId(newStatusId);

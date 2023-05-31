@@ -68,6 +68,11 @@ public class LoadMedications {
 				medication.setId(medicationStatement.getId());
 				medication.setStatusId(medicationStatement.getStatusId());
 				medication.setStatus(getStatus(medication.getStatusId()));
+			} else {
+				medicationStatementRepository.findById(medication.getId()).ifPresent(med -> {
+					med.setStatusId(medication.getStatusId());
+					medicationStatementRepository.save(med);
+				});
 			}
             documentService.createDocumentMedication(documentId, medication.getId());
         });

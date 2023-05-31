@@ -47,14 +47,16 @@ public class MedicationCalculateStatus {
             return false;
         if (dosage.getId() == null)
             return true;
-        return dosage.getEndDate() != null && dateTimeProvider.nowDate().isAfter(dosage.getEndDate().toLocalDate());
-    }
+        return dosage.getEndDate() != null && !dateTimeProvider.nowDate().isBefore(dosage.getEndDate().toLocalDate());
+	}
 
     private boolean isSuspended(String statusId, DosageBo dosage) {
         if (dosage.getId() == null && !MedicationStatementStatus.SUSPENDED.equals(statusId))
             return false;
         if (dosage.getId() == null)
             return true;
-        return dosage.getSuspendedEndDate() != null &&  !dateTimeProvider.nowDate().isAfter(dosage.getSuspendedEndDate());
+		if (dosage.getSuspendedEndDate() != null &&  !dateTimeProvider.nowDate().isAfter(dosage.getSuspendedEndDate()))
+			return true;
+		return dosage.getSuspendedEndDate() == null && MedicationStatementStatus.SUSPENDED.equals(statusId);
     }
 }
