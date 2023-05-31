@@ -123,39 +123,39 @@
 						<div>
 							<section *ngIf="activeDocument.document.notes?.currentIllnessNote">
 								<div class="mat-body" [translate]="'internaciones.anamnesis.observations.CURRENT_DISEASE'"></div>
-								<div class="mat-body-strong">{{activeDocument.document.notes.currentIllnessNote}}</div>
+								<div class="mat-body-strong text">{{activeDocument.document.notes.currentIllnessNote}}</div>
 							</section>
 
 							<section *ngIf="activeDocument.document.notes?.physicalExamNote">
 								<div class="mat-body"
 									 [translate]="'internaciones.anamnesis.observations.PHYSICAL_EXAMINATION'"></div>
-								<div class="mat-body-strong">{{activeDocument.document.notes.physicalExamNote}}</div>
+								<div class="mat-body-strong text"> {{activeDocument.document.notes.physicalExamNote}}</div>
 							</section>
 
 							<section *ngIf="activeDocument.document.notes?.studiesSummaryNote">
 								<div class="mat-body" [translate]="'internaciones.anamnesis.observations.STUDIES_PROCEDURES'"></div>
-								<div class="mat-body-strong">{{activeDocument.document.notes.studiesSummaryNote}}</div>
+								<div class="mat-body-strong text">{{activeDocument.document.notes.studiesSummaryNote}}</div>
 							</section>
 
 							<section *ngIf="activeDocument.document.notes?.evolutionNote">
 								<div class="mat-body" [translate]="'internaciones.anamnesis.observations.PATIENT_PROGRESS'"></div>
-								<div class="mat-body-strong">{{activeDocument.document.notes.evolutionNote}}</div>
+								<div class="mat-body-strong text">{{activeDocument.document.notes.evolutionNote}}</div>
 							</section>
 
 							<section *ngIf="activeDocument.document.notes?.clinicalImpressionNote">
 								<div class="mat-body"
 									 [translate]="'internaciones.anamnesis.observations.CLINICAL_IMPRESSION'"></div>
-								<div class="mat-body-strong">{{activeDocument.document.notes.clinicalImpressionNote}}</div>
+								<div class="mat-body-strong text">{{activeDocument.document.notes.clinicalImpressionNote}}</div>
 							</section>
 
 							<section *ngIf="activeDocument.document.notes?.indicationsNote">
 								<div class="mat-body" [translate]="'internaciones.epicrisis.observations.INDICATIONS_NOTE'"></div>
-								<div class="mat-body-strong">{{activeDocument.document.notes.indicationsNote}}</div>
+								<div class="mat-body-strong text">{{activeDocument.document.notes.indicationsNote}}</div>
 							</section>
 
 							<section *ngIf="activeDocument.document.notes?.otherNote">
 								<div class="mat-body" [translate]="'internaciones.anamnesis.observations.OTHERS'"></div>
-								<div class="mat-body-strong">{{activeDocument.document.notes.otherNote}}</div>
+								<div class="mat-body-strong text">{{activeDocument.document.notes.otherNote}}</div>
 							</section>
 							<button *ngIf="!activeDocument.document.confirmed && !isPopUpOpen" id="edit-draft-button" type="button"  class="edit-draft-button" mat-flat-button color="primary" (click)="editDraftEpicrisis(activeDocument.document)">
 								<span [translate]="'internaciones.epicrisis.buttons.EDIT_DRAFT'">
