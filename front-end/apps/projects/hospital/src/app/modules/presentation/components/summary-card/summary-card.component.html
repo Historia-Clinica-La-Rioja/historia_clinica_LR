@@ -18,6 +18,11 @@
 				<mat-icon fontSet="material-icons-outlined">add_circle_outlined</mat-icon>
 			</button>
 		</ng-container>
+		<ng-container *ngIf="canClose">
+			<button matTooltip="{{ tooltip | translate }}" mat-icon-button (click)="close.emit()">
+				<mat-icon fontSet="material-icons-outlined">close</mat-icon>
+			</button>
+		</ng-container>
 	</mat-card-header>
 	<ng-content></ng-content>
 </mat-card>

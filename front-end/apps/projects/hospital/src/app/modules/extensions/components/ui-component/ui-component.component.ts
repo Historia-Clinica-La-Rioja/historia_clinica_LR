@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UIComponentDto } from '@extensions/extensions-model';
 
@@ -24,6 +24,7 @@ export class UiComponentComponent {
 	};
 	@Input() uiComponent: UIComponentDto;
 	@Input() listOnTab: string = null;
+	@Output() close = new EventEmitter();
 
 	constructor(
 		private sanitizer: DomSanitizer,
@@ -32,5 +33,4 @@ export class UiComponentComponent {
 	get valueAsHtml() {
 		return this.sanitizer.bypassSecurityTrustHtml(this.uiComponent.args.value);
 	}
-
 }

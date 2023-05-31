@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {UIComponentDto} from '@extensions/extensions-model';
 import {
 	ChartDefinitionService,
@@ -54,6 +54,8 @@ export class CubejsDashboardComponent {
 	};
 
 	@Input() header?: SummaryHeader;
+	@Output() close = new EventEmitter();
+
 
 	private params: FilterValues = {};
 	public _content: UIComponentDto[];

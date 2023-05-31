@@ -1,5 +1,5 @@
 <div class="dashboard">
-	<app-summary-card [header]="header">
+	<app-summary-card [header]="header" [canClose]="true" (close)="close.emit()">
 		<div class="card-content">
 			<div class="container-filters" fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="start start">
 				<ng-container *ngFor="let filterInput of _filters | keyvalue">

@@ -16,7 +16,9 @@ export class SummaryCardComponent {
 	@Input() editable = false;
 	@Input() menu: false;
 	@Input() matMenu: MatMenu;
+	@Input() canClose = false;
 	@Output() openInNew = new EventEmitter();
+	@Output() close = new EventEmitter();
 
 	constructor(
 		public dialog: MatDialog

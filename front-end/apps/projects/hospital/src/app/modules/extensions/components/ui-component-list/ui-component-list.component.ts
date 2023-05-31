@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UIComponentDto } from '@extensions/extensions-model';
 
 @Component({
@@ -9,6 +9,6 @@ import { UIComponentDto } from '@extensions/extensions-model';
 export class UiComponentListComponent {
 	@Input() list: UIComponentDto[];
 	@Input() listOnTab: string = null;
+	@Output() close = new EventEmitter();
 	constructor() { }
-
 }

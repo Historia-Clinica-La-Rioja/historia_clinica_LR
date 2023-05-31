@@ -18,4 +18,4 @@
 		</button>
 	</mat-chip>
 </mat-chip-list>
-<app-ui-component-list [list]="selectedDashboards"></app-ui-component-list>
+<app-ui-component-list [list]="selectedDashboards" (close)="removeDashboard($event.uiComponent)"></app-ui-component-list>

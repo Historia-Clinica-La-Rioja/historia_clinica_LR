@@ -38,5 +38,4 @@ export class MultiselectCubejsDashboardComponent implements OnInit{
 		this.options.push(dashboard);
 		this.options.sort((a, b) => a.args.label.localeCompare(b.args.label));
 	}
-
 }

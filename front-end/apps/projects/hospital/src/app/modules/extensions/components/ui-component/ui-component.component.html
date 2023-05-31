@@ -20,6 +20,7 @@
 			[content]="uiComponent.args.content"
 			[filters]="uiComponent.args.filters"
 			[header]="uiComponent.args.header"
+			(close)="close.emit(this)"
 		>
 		</app-cubejs-dashboard>
 	</div>
