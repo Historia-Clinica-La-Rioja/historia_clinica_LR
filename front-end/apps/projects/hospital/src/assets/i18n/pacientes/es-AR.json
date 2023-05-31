@@ -321,7 +321,7 @@
 		"TITLE_EMPADRONAMIENTO":"Empadronamiento",
 		"SUBTITLE_EMPADRONAMIENTO":"Búsqueda y edición de pacientes",
 		"SUBTITLE_PATIENT_SEARCH":"Búsqueda de pacientes",
-		"LABEL_PATIENT_SEARCH":"Ingrese datos del paciente para realizar la búsqueda.",
+		"LABEL_PATIENT_SEARCH":"Se recomienda completar todos los campos de búsqueda para lograr mayor porcentaje de coincidencia.",
 		"LABEL_PATIENT_ID":"Id paciente",
 		"LABEL_PERSONAL_INFORMATION":"Datos personales",
 		"SUBTITLE_FILTER_BY":"Filtrar por",
