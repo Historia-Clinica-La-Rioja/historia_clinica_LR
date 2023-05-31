@@ -19,7 +19,9 @@ public interface EdMontonRepository extends SGXAuditableEntityJPARepository<Ques
 	@Query(value = "SELECT new net.pladema.edMonton.repository.domain.Answer(qr.id, la.itemId, la.questionnaireResponseId, la.answerId) " +
 			"FROM Answer la " +
 			"INNER JOIN QuestionnaireResponse qr ON  qr.id = la.questionnaireResponseId " +
-			"WHERE qr.patientId = :patientId ")
+			"WHERE qr.patientId = :patientId " +
+			"AND qr.statusId = 2" +
+			"ORDER BY qr.id, la.itemId, la.questionnaireResponseId, la.answerId" )
 	public List<Answer> findPatientEdMontonTest(@Param("patientId") Integer patientId);
 
 }

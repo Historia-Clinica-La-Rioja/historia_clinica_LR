@@ -3,9 +3,9 @@ package net.pladema.edMonton.get.controller;
 import net.pladema.edMonton.get.controller.dto.EdMontonAnswers;
 
 import net.pladema.edMonton.get.service.GetEdMontonService;
+import net.pladema.edMonton.getPdfEdMonton.dto.QuestionnaireDto;
 import net.pladema.edMonton.repository.domain.Answer;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,13 +24,21 @@ public class GetEdMontonController implements GetEdMontonAPI {
 	public GetEdMontonController(GetEdMontonService getEdMontonService){this.getEdMontonService = getEdMontonService;}
 
 
-	public ResponseEntity<List<EdMontonAnswers>> getPatientConsultationEdMontonTest
+	public QuestionnaireDto getPatientConsultationEdMontonTest
 			(Integer institutionId,
 			 Integer patientId) throws IOException {
 
-		List<Answer> lst = getEdMontonService.findPatientEdMonton(patientId);
+		QuestionnaireDto questionnaireDto = new QuestionnaireDto();
 
-		return ResponseEntity.ok().body( createEdMontonDto( lst ));
+		List<Answer> lst = getEdMontonService.findPatientEdMonton(patientId);
+		for(Answer answer : lst){
+			Integer id;
+			id = answer.getQuestionnaireResponseId();
+			questionnaireDto.setIdQuestionnaire(id);
+		}
+		questionnaireDto.setAnswers(createEdMontonDto(lst));
+
+		return questionnaireDto;
 	}
 
 	private List<EdMontonAnswers> createEdMontonDto(List<Answer> lst){
@@ -41,9 +49,7 @@ public class GetEdMontonController implements GetEdMontonAPI {
 			regDto.setIdQuestion(qr.getItemId());
 			regDto.setIdAnswer(qr.getAnswerId());
 			lstEdMonton.add(regDto);
-			regDto.setId(qr.getId());
 		}
-
 		return lstEdMonton;
 	}
 }
