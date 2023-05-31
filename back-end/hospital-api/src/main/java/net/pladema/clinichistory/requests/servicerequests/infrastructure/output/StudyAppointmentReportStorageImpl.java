@@ -178,6 +178,18 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		return result;
 	}
 
+	@Override
+	public Long saveReport(Integer appointmentId, InformerObservationBo informerObservations) {
+		log.debug("Input parameters -> appointmentId {}, informerObservations {}", appointmentId, informerObservations);
+
+		assertEvolutionNoteIsNotNull(informerObservations.getEvolutionNote());
+		assertProblemsIsNotEmptyAndNull(informerObservations.getProblems());
+
+		Long result = setRequiredFieldsAndSaveDocument(appointmentId, informerObservations, true);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
 	private void assertEvolutionNoteIsNotNull(String evolutionNote) {
 		Assert.notNull(evolutionNote, "Las observaciones son obligatorias");
 	}

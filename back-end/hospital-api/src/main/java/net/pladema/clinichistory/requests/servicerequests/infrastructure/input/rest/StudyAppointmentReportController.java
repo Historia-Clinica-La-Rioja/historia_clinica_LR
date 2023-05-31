@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.application.CloseDraftStudyAppointmentReport;
 import net.pladema.clinichistory.requests.servicerequests.application.CreateDraftStudyAppointmentReport;
 import net.pladema.clinichistory.requests.servicerequests.application.GetStudyAppointment;
+import net.pladema.clinichistory.requests.servicerequests.application.SaveStudyAppointmentReport;
 import net.pladema.clinichistory.requests.servicerequests.application.UpdateDraftStudyAppointmentReport;
 import net.pladema.clinichistory.requests.servicerequests.domain.InformerObservationBo;
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmentBo;
@@ -37,8 +38,9 @@ public class StudyAppointmentReportController {
 	private final CreateDraftStudyAppointmentReport createDraftStudyAppointmentReport;
 	private final UpdateDraftStudyAppointmentReport updateDraftStudyAppointmentReport;
 	private final CloseDraftStudyAppointmentReport closeDraftStudyAppointmentReport;
+	private final SaveStudyAppointmentReport saveStudyAppointmentReport;
 
-	@GetMapping(value = "/study/by-appointment")
+	@GetMapping(value = "/study/by-appointment/{appointmentId}")
 	public ResponseEntity<StudyAppointmentDto> getStudyByAppointment(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "appointmentId") Integer appointmentId
@@ -89,6 +91,21 @@ public class StudyAppointmentReportController {
 		InformerObservationBo informerObservationBo = studyAppointmentMapper.toInformerObservationBo(informerObservationDto);
 		informerObservationBo.setInstitutionId(institutionId);
 		Long result = closeDraftStudyAppointmentReport.execute(appointmentId, informerObservationBo);
+		log.debug("Output", result);
+		return ResponseEntity.ok().body(result);
+	}
+
+	@PostMapping(value = "/saveReport/{appointmentId}")
+	@PreAuthorize("hasPermission(#institutionId, 'INFORMADOR')")
+	public ResponseEntity<Long> saveReport(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "appointmentId") Integer appointmentId,
+			@RequestBody InformerObservationDto informerObservationDto
+	) {
+		log.debug("Input parameters to save report for study appointmentId {}, institutionId {}, informerObservationDto {}", institutionId, appointmentId, informerObservationDto);
+		InformerObservationBo informerObservationBo = studyAppointmentMapper.toInformerObservationBo(informerObservationDto);
+		informerObservationBo.setInstitutionId(institutionId);
+		Long result = saveStudyAppointmentReport.execute(appointmentId, informerObservationBo);
 		log.debug("Output", result);
 		return ResponseEntity.ok().body(result);
 	}
