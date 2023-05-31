@@ -3,7 +3,7 @@
     <mat-accordion class="panel-container">
       <mat-panel-title>
         <div class="contenedor-title">
-          <span class="column-title">Nombre</span>
+          <span class="column-name-title">Nombre</span>
           <span class="column-title">Sexo</span>
         </div>
       </mat-panel-title>
@@ -14,21 +14,21 @@
           <mat-expansion-panel-header (click)="panelOpenState = element.Orden">
             <mat-panel-title>
               <div class="contenedor-gral">
-                {{ element.Orden }}.- {{ element.Nombre }}
+                {{ element.Orden }}. {{ element.Nombre }}
               </div>
               <div class="contenedor-sexo">
-                <!----{{ element.Sexo }}-->
+                {{ element.Sexo }}
               </div>
-              <div class="contenedor-nina-nino">
-                <!--NIÑA/NIÑO-->
-              </div>
+              <!--<div class="contenedor-nina-nino">
+                NIÑA/NIÑO
+              </div>-->
             </mat-panel-title>
           </mat-expansion-panel-header>
 
           <!-- Contenido del panel -->
           <div class="panel-content">
             <!-- Agrega aquí el contenido adicional, como imágenes -->
-            <img [src]="getImagePath(element.Grafic)" alt="Imagen">
+            <img class="grafic" [src]="getImagePath(element.Grafic)" alt="Image">
           </div>
         </mat-expansion-panel>
       </ng-container>
