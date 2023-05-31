@@ -19,14 +19,14 @@
 
     <div>
         <h2>Registro Clínico</h2>
-
+        <br/>
         <table class="ch_table">
             <tbody>
-            <tr class="ch_tr" th:each="">
-                <th style="text-align: center" th:text="${}"></th>
-                <td th:text="${}"></td>
-                <td style="text-align: center" th:text="${}"></td>
-                <td style="text-align: center" th:text="${}"></td>
+            <tr class="ch_tr" th:each="record, iter: ${clinicalRecords}">
+                <th style="text-align: center" th:text="${record.prefix}"></th>
+                <td th:utext="${record.description}"></td>
+                <td style="text-align: center" th:utext="${record.professionalInfo}"></td>
+                <td style="text-align: center" th:utext="${record.createdOn}"></td>
             </tr>
             </tbody>
         </table>

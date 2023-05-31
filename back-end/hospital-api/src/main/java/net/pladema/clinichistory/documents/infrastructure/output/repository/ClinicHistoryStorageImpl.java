@@ -5,10 +5,14 @@ import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.clinichistory.documents.application.ClinicHistoryStorage;
 
+import net.pladema.clinichistory.documents.domain.CHAnamnesisBo;
 import net.pladema.clinichistory.documents.domain.CHCounterReferenceBo;
 import net.pladema.clinichistory.documents.domain.CHDocumentBo;
 import net.pladema.clinichistory.documents.domain.CHDocumentSummaryBo;
 
+import net.pladema.clinichistory.documents.domain.CHEpicrisisBo;
+import net.pladema.clinichistory.documents.domain.CHEvolutionNoteBo;
+import net.pladema.clinichistory.documents.domain.CHIndicationBo;
 import net.pladema.clinichistory.documents.domain.CHMedicationRequestBo;
 import net.pladema.clinichistory.documents.domain.CHNursingConsultationBo;
 import net.pladema.clinichistory.documents.domain.CHOdontologyBo;
@@ -108,6 +112,10 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 		if (row.getDocumentTypeId().equals(EDocumentType.COUNTER_REFERENCE.getId())) return new CHCounterReferenceBo(row, encounterType, documentType);
 		if (row.getDocumentTypeId().equals(EDocumentType.RECIPE.getId())) return new CHMedicationRequestBo(row, encounterType, documentType);
 		if (row.getDocumentTypeId().equals(EDocumentType.NURSING.getId())) return new CHNursingConsultationBo(row, encounterType, documentType);
+		if (row.getDocumentTypeId().equals(EDocumentType.ANAMNESIS.getId())) return new CHAnamnesisBo(row, encounterType, documentType);
+		if (row.getDocumentTypeId().equals(EDocumentType.EVALUATION_NOTE.getId()) || row.getDocumentTypeId().equals(EDocumentType.NURSING_EVOLUTION_NOTE.getId())) return new CHEvolutionNoteBo(row, encounterType, documentType);
+		if (row.getDocumentTypeId().equals(EDocumentType.EPICRISIS.getId())) return new CHEpicrisisBo(row, encounterType, documentType);
+		if (row.getDocumentTypeId().equals(EDocumentType.INDICATION.getId())) return new CHIndicationBo(row, encounterType, documentType);
 		return null;
 	}
 	private CHDocumentSummaryBo mapToSummaryBo(VClinicHistory row){

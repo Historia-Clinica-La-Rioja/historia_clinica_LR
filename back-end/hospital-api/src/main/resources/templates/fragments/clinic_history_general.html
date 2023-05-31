@@ -25,13 +25,13 @@
         }
         th, td {
             text-align: left;
-            padding: 8px;
+            padding: 1px;
             background-color: white;
-            font-size : 10px;
+            font-size : 12px;
         }
         footer {
           position: fixed;
-          font-size: 8px;
+          font-size: 10px;
           bottom: 0;
           margin-bottom: 10px;
           width: 100%;
@@ -59,11 +59,11 @@
         <h4>Datos del paciente</h4>
         <table>
             <tr>
-                <th>Nombre y apellido:</th>
-                <th>Documento:</th>
-                <th>ID:</th>
-                <th>Edad:</th>
-                <th>Fecha de nacimiento:</th>
+                <th>Nombre y apellido</th>
+                <th>Documento</th>
+                <th>ID</th>
+                <th>Edad</th>
+                <th>Fecha de nacimiento</th>
             </tr>
             <tr>
                 <td th:text="${patient.person.completeName()}"></td>
@@ -80,10 +80,10 @@
         <h4>Episodio/Encuentro</h4>
         <table>
             <tr>
-                <th>Id del encuentro:</th>
-                <th>Tipo:</th>
-                <th>Fecha inicio: </th>
-                <th>Fecha fin:</th>
+                <th>Id del encuentro</th>
+                <th>Tipo</th>
+                <th>Fecha inicio</th>
+                <th>Fecha fin</th>
             </tr>
             <tr>
                 <td th:text="${encounterId}"></td>
@@ -95,9 +95,9 @@
         <br/>
         <table>
             <tr>
-                <th>Institución:</th>
-                <th>Sector/Servicio:</th>
-                <th>Lugar: </th>
+                <th>Institución</th>
+                <th>Sector/Servicio</th>
+                <th>Lugar</th>
             </tr>
             <tr>
                 <td th:text="${institution}"></td>
@@ -108,9 +108,9 @@
         <br/>
         <table>
             <tr>
-                <th>Cobertura:</th>
-                <th>Nro. de credencial:</th>
-                <th>Plan: </th>
+                <th>Cobertura</th>
+                <th>Nro. de credencial</th>
+                <th>Plan</th>
             </tr>
             <tr th:if="${medicalCoverage != null}">
                 <td th:text="${medicalCoverage.medicalCoverage.name}"></td>

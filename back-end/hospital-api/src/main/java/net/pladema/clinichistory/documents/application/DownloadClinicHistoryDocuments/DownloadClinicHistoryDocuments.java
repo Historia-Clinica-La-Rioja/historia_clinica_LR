@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,27 +46,48 @@ public class DownloadClinicHistoryDocuments {
 	}
 
 	public StoredFileBo run (List<Long> ids, Integer institutionId) throws DocumentException, IOException {
-		log.debug("Input parameters -> ids {}", ids);
-		List<CHDocumentBo> documents = clinicHistoryStorage.getClinicHistoryDocuments(ids)
-				.stream()
-				.filter(doc -> doc!= null && doc.getEncounterType().equals(ECHEncounterType.OUTPATIENT))
-				.collect(Collectors.toList());
-		if(!documents.isEmpty()){
-			Integer patientId = documents.stream().findFirst().get().getPatientId();
-			List<InputStream> inputStreams = new ArrayList<>();
-			int totalPages = documents.size();
-			int actualPage = 0;
-			for (CHDocumentBo document: documents){
-				actualPage ++;
-				Map<String, Object> context = clinicHistoryContextBuilder.buildContext(document, institutionId);
+		log.debug("Input parameters -> ids", ids);
+		List<CHDocumentBo> documents = clinicHistoryStorage.getClinicHistoryDocuments(ids);
+		Integer patientId = documents.stream().findFirst().get().getPatientId();
+		List<CHDocumentBo> outpatientDocuments = documents.stream().filter(doc -> doc.getEncounterType().equals(ECHEncounterType.OUTPATIENT)).collect(Collectors.toList());
+		Map<Integer, List<CHDocumentBo>> hospitalizationDocuments = mapHospitalizationDocuments(documents.stream().filter(doc -> doc.getEncounterType().equals(ECHEncounterType.HOSPITALIZATION)).collect(Collectors.toList()));
+		List<InputStream> inputStreams = new ArrayList<>();
+		int totalPages = outpatientDocuments.size() + hospitalizationDocuments.size();
+		int actualPage = 0;
+		if(!outpatientDocuments.isEmpty()) {
+			for (CHDocumentBo document : outpatientDocuments) {
+				actualPage++;
+				Map<String, Object> context = clinicHistoryContextBuilder.buildOutpatientContext(document, institutionId);
 				context.put("totalPages", totalPages);
 				context.put("actualPage", actualPage);
 				inputStreams.add(pdfService.generate("clinic_history_outpatient", context).stream);
 			}
+		}
+		if(!hospitalizationDocuments.isEmpty()){
+			hospitalizationDocuments.forEach((k,v) -> {
+				Map<String, Object> context = clinicHistoryContextBuilder.buildEpisodeContext(v, institutionId);
+				context.put("totalPages", totalPages);
+				inputStreams.add(pdfService.generate("clinic_history_hospitalization", context).stream);
+			});
+		}
+		if(!inputStreams.isEmpty()){
 			clinicHistoryStorage.savePatientClinicHistoryLastPrint(UserInfo.getCurrentAuditor(), patientId, institutionId);
 			return new StoredFileBo(FileContentBo.fromBytes(pdfService.mergePdfFiles(inputStreams)), MediaType.APPLICATION_PDF.toString(), "HCE_" + patientId + ".pdf");
 		}
 		return null;
+	}
+
+	private Map<Integer, List<CHDocumentBo>> mapHospitalizationDocuments (List<CHDocumentBo> documents){
+		List<Integer> sourceIds = new ArrayList<>();
+		Map<Integer, List<CHDocumentBo>> episodes = new HashMap<>();
+		documents.forEach(doc -> {
+			if ((doc.getRequestSourceId() != null && !sourceIds.contains(doc.getRequestSourceId())) || (doc.getRequestSourceId() == null && !sourceIds.contains(doc.getSourceId()) ))
+				sourceIds.add(doc.getSourceId());
+		});
+		sourceIds.forEach(sourceId -> {
+			episodes.put(sourceId, documents.stream().filter(doc -> ((doc.getRequestSourceId() != null && doc.getRequestSourceId().equals(sourceId)) || (doc.getRequestSourceId() == null && doc.getSourceId().equals(sourceId)))).sorted(Comparator.comparing(CHDocumentBo::getCreatedOn)).collect(Collectors.toList()));
+		});
+		return episodes;
 	}
 
 }
