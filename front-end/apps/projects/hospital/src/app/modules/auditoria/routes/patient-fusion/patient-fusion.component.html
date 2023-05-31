@@ -34,10 +34,13 @@
 				<div fxLayoutAlign="start center" class="content" fxFlex="15%">
 					<span>{{'pacientes.audit.LABEL_NAME' | translate}}</span>
 				</div>
+				<div *ngIf="nameSelfDeterminationFF" fxLayoutAlign="start center" class="content" fxFlex="13%">
+					<span>{{'pacientes.form.NAME_SELF_DETERMINATION' | translate}}</span>
+				</div>
 				<div fxLayoutAlign="start center" class="content" fxFlex="15%">
 					<span>{{'pacientes.audit.LABEL_LASTNAME' | translate}}</span>
 				</div>
-				<div fxLayoutAlign="start center" class="content" fxFlex="15%">
+				<div fxLayoutAlign="start center" class="content" fxFlex="12%">
 					<span>{{'pacientes.audit.LABEL_BIRTHDATE' | translate}}</span>
 				</div>
 				<div fxLayoutAlign="start center" class="content" fxFlex="15%">
@@ -70,13 +73,18 @@
 						<span *ngIf="patient.firstName else noData">{{patient?.firstName}}
 							{{patient?.middleNames}}</span>
 					</div>
+					<div *ngIf="nameSelfDeterminationFF" fxLayoutAlign="start center" class="content" fxFlex="15%">
+						<mat-radio-button color="primary" name="nameSelfDetermination" *ngIf="patient.selected"
+							(change)="setValuesPatientFusion(keyAttributes.NAMESELFDETERMINATION,patient.nameSelfDetermination,null,patient.patientId)"></mat-radio-button>
+						<span *ngIf="patient.nameSelfDetermination else noData">{{patient?.nameSelfDetermination}}</span>
+					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="15%">
 						<mat-radio-button color="primary" name="lastName" *ngIf="patient.selected"
 							(change)="setValuesPatientFusion(keyAttributes.LASTNAMES,patient.lastName,patient.otherLastNames,patient.patientId)"></mat-radio-button>
 						<span *ngIf="patient.lastName else noData">{{patient?.lastName}}
 							{{patient?.otherLastNames}}</span>
 					</div>
-					<div fxLayoutAlign="start center" class="content" fxFlex="15%">
+					<div fxLayoutAlign="start center" class="content" fxFlex="12%">
 						<mat-radio-button color="primary" name="birthdate" *ngIf="patient.selected"
 							(change)="setValuesPatientFusion(keyAttributes.BIRTHDATE,patient.birthdate,null,patient.patientId)"></mat-radio-button>
 						<span *ngIf="patient.lastName else noData">{{patient?.birthdate | date: 'dd/MM/yyyy'

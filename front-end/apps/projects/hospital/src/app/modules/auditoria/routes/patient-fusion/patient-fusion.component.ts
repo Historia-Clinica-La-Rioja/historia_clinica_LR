@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { DuplicatePatientDto, IdentificationTypeDto, PatientPersonalInfoDto, PatientToMergeDto, PatientType } from '@api-rest/api-model';
+import { AppFeature, DuplicatePatientDto, IdentificationTypeDto, PatientPersonalInfoDto, PatientToMergeDto, PatientType } from '@api-rest/api-model';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { ContextService } from '@core/services/context.service';
 import { AuditPatientService } from '@api-rest/services/audit-patient.service';
@@ -15,6 +15,7 @@ import { PAGE_MIN_SIZE } from '@historia-clinica/modules/ambulatoria/modules/ind
 import { PAGE_SIZE_OPTIONS } from '@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications';
 import { Filters } from '../control-patient-duplicate/control-patient-duplicate.component';
 import { PatientProfilePopupComponent } from '../../dialogs/patient-profile-popup/patient-profile-popup.component';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 const ROUTE_CONTROL_PATIENT_DUPLICATE = "auditoria/control-pacientes-duplicados"
 
@@ -42,11 +43,13 @@ export class PatientFusionComponent implements OnInit {
 	filters = Filters;
 	validationTwoSelectedPatients: boolean = false;
 	validationColumns: boolean = false;
+	nameSelfDeterminationFF: boolean;
 	patientToMergeAuxKeyId: any = {
 		names: null,
 		identification: null,
 		lastNames: null,
 		birthDate: null,
+		nameSelfDetermination:null
 	}
 	patientToMerge: PatientToMergeDto = {
 		activePatientId: null,
@@ -69,7 +72,8 @@ export class PatientFusionComponent implements OnInit {
 	constructor(private router: Router, private contextService: ContextService, private personMasterDataService: PersonMasterDataService,
 		private auditPatientService: AuditPatientService,
 		private patientMasterDataService: PatientMasterDataService, private patientMergeService: PatientMergeService, private dialog: MatDialog,
-		private readonly snackBarService: SnackBarService) {
+		private readonly snackBarService: SnackBarService,
+		private readonly featureFlagService: FeatureFlagService) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 
 	}
@@ -96,8 +100,9 @@ export class PatientFusionComponent implements OnInit {
 			this.numberOfPatients = this.listPatientData.length || 0;
 			this.initialSize = of(PAGE_MIN_SIZE);
 		})
-
-
+		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
+			this.nameSelfDeterminationFF = isOn
+		});
 	}
 
 	setInfo() {
@@ -182,6 +187,9 @@ export class PatientFusionComponent implements OnInit {
 				this.patientToMerge.registrationDataPerson.identificationNumber = value2;
 				this.patientToMergeAuxKeyId.identification = id;
 				break;
+			case this.keyAttributes.NAMESELFDETERMINATION:
+				this.patientToMerge.registrationDataPerson.nameSelfDetermination=value1;
+				this.patientToMergeAuxKeyId.nameSelfDetermination= id;
 		}
 	}
 
@@ -203,6 +211,9 @@ export class PatientFusionComponent implements OnInit {
 		}
 		if (this.patientToMerge.activePatientId === id) {
 			this.patientToMerge.activePatientId = null;
+		}
+		if(this.patientToMergeAuxKeyId.nameSelfDetermination === id){
+			this.patientToMerge.registrationDataPerson.nameSelfDetermination= null;
 		}
 	}
 
@@ -301,6 +312,7 @@ export class PatientFusionComponent implements OnInit {
 export enum KeyAttributes {
 	BIRTHDATE,
 	NAMES,
+	NAMESELFDETERMINATION,
 	LASTNAMES,
 	PATIENT_ID,
 	IDENTIFICATION,
