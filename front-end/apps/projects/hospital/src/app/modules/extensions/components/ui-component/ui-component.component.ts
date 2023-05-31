@@ -14,6 +14,7 @@ export class UiComponentComponent {
 		columns: 'columns',
 		cubejs_chart: 'cubejs-chart',
 		cubejs_dashboard: 'cubejs-dashboard',
+		cubejs_card: 'cubejs-card',
 		divider: 'divider',
 		html: 'html',
 		json: 'json',

@@ -25,6 +25,7 @@ import { RoutedExternalComponent } from './components/routed-external/routed-ext
 import { SpecialtyFormInputComponent } from './components/specialty-form-input/specialty-form-input.component';
 import { ProfessionalFormInputComponent } from './components/professional-form-input/professional-form-input.component';
 import { MultiselectCubejsDashboardComponent } from './components/multiselect-cubejs-dashboard/multiselect-cubejs-dashboard.component';
+import { CubejsCardComponent } from './components/cubejs-card/cubejs-card.component';
 
 @NgModule({
 	imports: [
@@ -55,6 +56,7 @@ import { MultiselectCubejsDashboardComponent } from './components/multiselect-cu
 		SpecialtyFormInputComponent,
 		ProfessionalFormInputComponent,
   MultiselectCubejsDashboardComponent,
+  CubejsCardComponent,
 	],
 	exports: [
 		// components

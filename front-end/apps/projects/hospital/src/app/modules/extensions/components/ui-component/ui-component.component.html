@@ -19,10 +19,17 @@
 		<app-cubejs-dashboard
 			[content]="uiComponent.args.content"
 			[filters]="uiComponent.args.filters"
-			[header]="uiComponent.args.header"
-			(close)="close.emit(this)"
 		>
 		</app-cubejs-dashboard>
+	</div>
+	<div *ngSwitchCase="TYPE_DEFINITIONS.cubejs_card">
+		<app-cubejs-card
+			[header]="uiComponent.args.header"
+			[content]="uiComponent.args.content"
+			[listOnTab]="listOnTab"
+			(close)="close.emit(this.uiComponent)"
+		>
+		</app-cubejs-card>
 	</div>
 	<div *ngSwitchCase="TYPE_DEFINITIONS.cubejs_chart">
 		<app-cubejs-chart

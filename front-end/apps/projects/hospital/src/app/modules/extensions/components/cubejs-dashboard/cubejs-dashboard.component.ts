@@ -53,10 +53,6 @@ export class CubejsDashboardComponent {
 		this.configureSelfDeterminationFilter();
 	};
 
-	@Input() header?: SummaryHeader;
-	@Output() close = new EventEmitter();
-
-
 	private params: FilterValues = {};
 	public _content: UIComponentDto[];
 	public _filters: QueryFilters;

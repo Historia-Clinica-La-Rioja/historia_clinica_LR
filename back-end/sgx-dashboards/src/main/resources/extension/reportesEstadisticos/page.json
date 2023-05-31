@@ -2,415 +2,455 @@
   "layout" : "components",
   "content" : [
     {
-      "type": "tabs",
-      "args": {
-        "tabs": [
+      "type" : "tabs",
+      "args" : {
+        "tabs" : [
           {
             "args" : {
               "label" : "Consultas",
               "content" : [
                 {
-                  "type": "multiselect-cubejs",
-                  "args": {
-                  "options": [
-                {
-                  "type" : "cubejs-dashboard",
+                  "type" : "multiselect-cubejs",
                   "args" : {
-                    "filters" : {
-                      "date" : {
-                        "filter" : {
-                          "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
-                          "operator" : "inDateRange"
-                        },
-                        "type" : "dateRangeISO",
-                        "label" : "Fecha"
-                      }
-                    },
-                    "header" : {
-                      "title" : "Evolución de consultas por fecha"
-                    },
-                    "label": "Evolución - barra",
-                    "content" : [
+                    "options" : [
                       {
-                        "type" : "cubejs-chart",
+                        "type" : "cubejs-card",
                         "args" : {
-                          "query" : "cantidadConsultasAmbulatorias",
-                          "chartOptions" : {
-                            "responsive" : true,
-                            "maintainAspectRatio" : false,
-                            "scales" : {
-                              "x" : {
-                                "stacked" : true
-                              },
-                              "y" : {
-                                "stacked" : true
-                              }
-                            }
-                          }
-                        }
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type" : "cubejs-dashboard",
-                  "args" : {
-                    "filters" : {
-                      "date" : {
-                        "filter" : {
-                          "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
-                          "operator" : "inDateRange"
-                        },
-                        "type" : "dateRangeISO",
-                        "label" : "Fecha"
-                      }
-                    },
-                    "header" : {
-                      "title" : "Consultas por especialidad y profesional"
-                    },
-                    "label": "Especialidad y profesional",
-                    "content" : [
-                      {
-                        "type" : "cubejs-chart",
-                        "args" : {
-                          "query" : "cantidadConsultasAmbulatoriasEspecialidadProfesional",
-                          "chartOptions" : {
-                            "responsive" : true,
-                            "maintainAspectRatio" : false,
-                            "scales" : {
-                              "x" : {
-                                "stacked" : true
-                              },
-                              "y" : {
-                                "stacked" : true
-                              }
-                            },
-                            "plugins" : {
-                              "legend" : {
-                                "display" : false
-                              }
-                            }
-                          }
-                        }
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type" : "cubejs-dashboard",
-                  "args" : {
-                    "header" : {
-                      "title" : "Evolución de consultas por fecha"
-                    },
-                    "label": "Evolución - línea",
-                    "filters" : {
-                      "date" : {
-                        "filter" : {
-                          "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
-                          "operator" : "inDateRange"
-                        },
-                        "type" : "dateRangeISO",
-                        "label" : "Fecha"
-                      }
-                    },
-                    "content" : [
-                      {
-                        "type" : "cubejs-chart",
-                        "args" : {
-                          "query" : "cantidadConsultasAmbulatoriasFecha",
-                          "chartOptions" : {
-                            "responsive" : true,
-                            "maintainAspectRatio" : false,
-                            "elements" : {
-                              "line" : {
-                                "tension" : 0,
-                                "fill" : true
-                              }
-                            },
-                            "plugins" : {
-                              "legend" : {
-                                "display" : false
-                              }
-                            }
-                          }
-                        }
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type" : "cubejs-dashboard",
-                  "args" : {
-                    "filters" : {
-                      "date" : {
-                        "filter" : {
-                          "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
-                          "operator" : "inDateRange"
-                        },
-                        "type" : "dateRangeISO",
-                        "label" : "Fecha"
-                      }
-                    },
-                    "header" : {
-                      "title" : "Consultas por especialidad"
-                    },
-                    "label": "Especialidad",
-                    "content" : [
-                      {
-                        "type" : "cubejs-chart",
-                        "args" : {
-                          "query" : "cantidadConsultasPorEspecialidad",
-                          "chartOptions" : {
-                            "responsive" : true,
-                            "maintainAspectRatio" : false,
-                            "plugins" : {
-                              "legend" : {
-                                "display" : true,
-                                "position" : "right"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type" : "cubejs-dashboard",
-                  "args" : {
-                    "filters" : {
-                      "date" : {
-                        "filter" : {
-                          "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
-                          "operator" : "inDateRange"
-                        },
-                        "type" : "dateRangeISO",
-                        "label" : "Fecha"
-                      }
-                    },
-                    "header" : {
-                      "title" : "Consultas por identidad de género"
-                    },
-                    "label": "Identidad de género",
-                    "content" : [
-                      {
-                        "type" : "cubejs-chart",
-                        "args" : {
-                          "query" : "cantidadConsultasPorIdentidadGenero",
-                          "chartOptions" : {
-                            "responsive" : true,
-                            "maintainAspectRatio" : false,
-                            "plugins" : {
-                              "legend" : {
-                                "display" : true,
-                                "position" : "right"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    ]
-                  }
-                },
-                {
-                      "type" : "cubejs-dashboard",
-                      "args" : {
-                        "filters" : {
-                          "date" : {
-                            "filter" : {
-                              "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
-                              "operator" : "inDateRange"
-                            },
-                            "type" : "dateRangeISO",
-                            "label" : "Fecha"
-                          }
-                        },
-                        "header" : {
-                          "title" : "Consultas por sexo del DNI"
-                        },
-                        "label": "Sexo DNI - anillo",
-                        "content" : [
-                          {
-                            "type" : "cubejs-chart",
+                          "header" : {
+                            "title" : "Evolución de consultas por fecha"
+                          },
+                          "content" : {
+                            "type" : "cubejs-dashboard",
                             "args" : {
-                              "query" : "cantidadConsultasPorGeneroDNI",
-                              "chartOptions" : {
-                                "responsive" : true,
-                                "maintainAspectRatio" : false,
-                                "plugins" : {
-                                  "legend" : {
-                                    "display" : true
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        ]
-                      }
-                    },
-                {
-                      "type" : "cubejs-dashboard",
-                      "args" : {
-                        "filters" : {
-                          "date" : {
-                            "filter" : {
-                              "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
-                              "operator" : "inDateRange"
-                            },
-                            "type" : "dateRangeISO",
-                            "label" : "Fecha"
-                          }
-                        },
-                        "header" : {
-                          "title" : "Consultas por rango etario"
-                        },
-                        "label": "Rango etario",
-                        "content" : [
-                          {
-                            "type" : "cubejs-chart",
-                            "args" : {
-                              "query" : "cantidadConsultasAmbulatoriasRangoEtario",
-                              "chartOptions" : {
-                                "responsive" : true,
-                                "maintainAspectRatio" : false,
-                                "scales" : {
-                                  "x" : {
-                                    "stacked" : true
+                              "filters" : {
+                                "date" : {
+                                  "filter" : {
+                                    "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
+                                    "operator" : "inDateRange"
                                   },
-                                  "y" : {
-                                    "stacked" : true
-                                  }
-                                },
-                                "plugins" : {
-                                  "legend" : {
-                                    "display" : true
+                                  "type" : "dateRangeISO",
+                                  "label" : "Fecha"
+                                }
+                              },
+                              "label" : "Evolución - barra",
+                              "content" : [
+                                {
+                                  "type" : "cubejs-chart",
+                                  "args" : {
+                                    "query" : "cantidadConsultasAmbulatorias",
+                                    "chartOptions" : {
+                                      "responsive" : true,
+                                      "maintainAspectRatio" : false,
+                                      "scales" : {
+                                        "x" : {
+                                          "stacked" : true
+                                        },
+                                        "y" : {
+                                          "stacked" : true
+                                        }
+                                      }
+                                    }
                                   }
                                 }
-                              }
+                              ]
                             }
                           }
-                        ]
-                      }
-                    },
-                {
-                  "type" : "cubejs-dashboard",
-                  "args" : {
-                    "filters" : {
-                      "specialty" : {
-                        "filter" : {
-                          "member" : "CantidadConsultasAmbulatorias.especialidad",
-                          "operator" : "equals"
-                        },
-                        "type" : "specialty",
-                        "label" : "Especialidad"
+                        }
                       },
-                      "professional" : {
-                        "filter" : {
-                          "member" : "CantidadConsultasAmbulatorias.profesional",
-                          "operator" : "equals"
-                        },
-                        "type" : "professional",
-                        "label" : "Profesional"
-                      },
-                      "date" : {
-                        "filter" : {
-                          "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
-                          "operator" : "inDateRange"
-                        },
-                        "type" : "dateRangeISO",
-                        "label" : "Fecha"
-                      }
-                    },
-                    "header" : {
-                      "title" : "Consultas por sexo del DNI"
-                    },
-                    "label": "Sexo DNI - tarjetas",
-                    "content" : [
                       {
-                        "type" : "card",
-                        "mode" : "flat",
-                        "args": {
-                          "content" : [
-                            {
-                              "type" : "cubejs-chart",
-                              "args" : {
-                                "query" : "cantidadConsultasTotal",
-                                "chartOptions" : {
-                                  "responsive" : true,
-                                  "maintainAspectRatio" : false,
-                                  "plugins" : {
-                                    "legend" : {
-                                      "display" : false
-                                    }
-                                  }
-                                },
-                                "title" : {
-                                  "text" : "CONSULTAS"
+                        "type" : "cubejs-card",
+                        "args" : {
+                          "header" : {
+                            "title" : "Consultas por especialidad y profesional"
+                          },
+                          "content" : {
+                            "type" : "cubejs-dashboard",
+                            "args" : {
+                              "filters" : {
+                                "date" : {
+                                  "filter" : {
+                                    "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
+                                    "operator" : "inDateRange"
+                                  },
+                                  "type" : "dateRangeISO",
+                                  "label" : "Fecha"
                                 }
-                              }
-                            },
-                            {
-                              "type" : "cubejs-chart",
-                              "args" : {
-                                "query" : "cantidadConsultasTotalSexoF",
-                                "title" : {
-                                  "text" : "FEMENINO"
-                                },
-                                "chartOptions" : {
-                                  "responsive" : true,
-                                  "maintainAspectRatio" : false,
-                                  "plugins" : {
-                                    "legend" : {
-                                      "display" : false
-                                    }
-                                  }
-                                }
-                              }
-                            },
-                            {
-                              "type" : "cubejs-chart",
-                              "args" : {
-                                "query" : "cantidadConsultasTotalSexoM",
-                                "title" : {
-                                  "text" : "MASCULINO"
-                                },
-                                "chartOptions" : {
-                                  "responsive" : true,
-                                  "maintainAspectRatio" : false,
-                                  "plugins" : {
-                                    "legend" : {
-                                      "display" : false
+                              },
+                              "label" : "Especialidad y profesional",
+                              "content" : [
+                                {
+                                  "type" : "cubejs-chart",
+                                  "args" : {
+                                    "query" : "cantidadConsultasAmbulatoriasEspecialidadProfesional",
+                                    "chartOptions" : {
+                                      "responsive" : true,
+                                      "maintainAspectRatio" : false,
+                                      "scales" : {
+                                        "x" : {
+                                          "stacked" : true
+                                        },
+                                        "y" : {
+                                          "stacked" : true
+                                        }
+                                      },
+                                      "plugins" : {
+                                        "legend" : {
+                                          "display" : false
+                                        }
+                                      }
                                     }
                                   }
                                 }
-                              }
-                            },
-                            {
-                              "type" : "cubejs-chart",
-                              "args" : {
-                                "query" : "cantidadConsultasTotalSexoX",
-                                "title" : {
-                                  "text" : "X"
-                                },
-                                "chartOptions" : {
-                                  "responsive" : true,
-                                  "maintainAspectRatio" : false,
-                                  "plugins" : {
-                                    "legend" : {
-                                      "display" : false
-                                    }
-                                  }
-                                }
-                              }
+                              ]
                             }
-                          ]
+                          }
+                        }
+                      },
+                      {
+                        "type" : "cubejs-card",
+                        "args" : {
+                          "header" : {
+                            "title" : "Evolución de consultas por fecha"
+                          },
+                          "content" : {
+                            "type" : "cubejs-dashboard",
+                            "args" : {
+                              "label" : "Evolución - línea",
+                              "filters" : {
+                                "date" : {
+                                  "filter" : {
+                                    "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
+                                    "operator" : "inDateRange"
+                                  },
+                                  "type" : "dateRangeISO",
+                                  "label" : "Fecha"
+                                }
+                              },
+                              "content" : [
+                                {
+                                  "type" : "cubejs-chart",
+                                  "args" : {
+                                    "query" : "cantidadConsultasAmbulatoriasFecha",
+                                    "chartOptions" : {
+                                      "responsive" : true,
+                                      "maintainAspectRatio" : false,
+                                      "elements" : {
+                                        "line" : {
+                                          "tension" : 0,
+                                          "fill" : true
+                                        }
+                                      },
+                                      "plugins" : {
+                                        "legend" : {
+                                          "display" : false
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "type" : "cubejs-card",
+                        "args" : {
+                          "header" : {
+                            "title" : "Consultas por especialidad"
+                          },
+                          "content" : {
+                            "type" : "cubejs-dashboard",
+                            "args" : {
+                              "filters" : {
+                                "date" : {
+                                  "filter" : {
+                                    "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
+                                    "operator" : "inDateRange"
+                                  },
+                                  "type" : "dateRangeISO",
+                                  "label" : "Fecha"
+                                }
+                              },
+                              "label" : "Especialidad",
+                              "content" : [
+                                {
+                                  "type" : "cubejs-chart",
+                                  "args" : {
+                                    "query" : "cantidadConsultasPorEspecialidad",
+                                    "chartOptions" : {
+                                      "responsive" : true,
+                                      "maintainAspectRatio" : false,
+                                      "plugins" : {
+                                        "legend" : {
+                                          "display" : true,
+                                          "position" : "right"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "type" : "cubejs-card",
+                        "args" : {
+                          "header" : {
+                            "title" : "Consultas por identidad de género"
+                          },
+                          "content" : {
+                            "type" : "cubejs-dashboard",
+                            "args" : {
+                              "filters" : {
+                                "date" : {
+                                  "filter" : {
+                                    "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
+                                    "operator" : "inDateRange"
+                                  },
+                                  "type" : "dateRangeISO",
+                                  "label" : "Fecha"
+                                }
+                              },
+                              "label" : "Identidad de género",
+                              "content" : [
+                                {
+                                  "type" : "cubejs-chart",
+                                  "args" : {
+                                    "query" : "cantidadConsultasPorIdentidadGenero",
+                                    "chartOptions" : {
+                                      "responsive" : true,
+                                      "maintainAspectRatio" : false,
+                                      "plugins" : {
+                                        "legend" : {
+                                          "display" : true,
+                                          "position" : "right"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "type" : "cubejs-card",
+                        "args" : {
+                          "header" : {
+                            "title" : "Consultas por sexo del DNI"
+                          },
+                          "content" : {
+                            "type" : "cubejs-dashboard",
+                            "args" : {
+                              "filters" : {
+                                "date" : {
+                                  "filter" : {
+                                    "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
+                                    "operator" : "inDateRange"
+                                  },
+                                  "type" : "dateRangeISO",
+                                  "label" : "Fecha"
+                                }
+                              },
+                              "label" : "Sexo DNI - anillo",
+                              "content" : [
+                                {
+                                  "type" : "cubejs-chart",
+                                  "args" : {
+                                    "query" : "cantidadConsultasPorGeneroDNI",
+                                    "chartOptions" : {
+                                      "responsive" : true,
+                                      "maintainAspectRatio" : false,
+                                      "plugins" : {
+                                        "legend" : {
+                                          "display" : true
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "type" : "cubejs-card",
+                        "args" : {
+                          "header" : {
+                            "title" : "Consultas por rango etario"
+                          },
+                          "content" : {
+                            "type" : "cubejs-dashboard",
+                            "args" : {
+                              "filters" : {
+                                "date" : {
+                                  "filter" : {
+                                    "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
+                                    "operator" : "inDateRange"
+                                  },
+                                  "type" : "dateRangeISO",
+                                  "label" : "Fecha"
+                                }
+                              },
+                              "label" : "Rango etario",
+                              "content" : [
+                                {
+                                  "type" : "cubejs-chart",
+                                  "args" : {
+                                    "query" : "cantidadConsultasAmbulatoriasRangoEtario",
+                                    "chartOptions" : {
+                                      "responsive" : true,
+                                      "maintainAspectRatio" : false,
+                                      "scales" : {
+                                        "x" : {
+                                          "stacked" : true
+                                        },
+                                        "y" : {
+                                          "stacked" : true
+                                        }
+                                      },
+                                      "plugins" : {
+                                        "legend" : {
+                                          "display" : true
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "type" : "cubejs-card",
+                        "args" : {
+                          "header" : {
+                            "title" : "Consultas por sexo del DNI"
+                          },
+                          "content" : {
+                            "type" : "cubejs-dashboard",
+                            "args" : {
+                              "filters" : {
+                                "specialty" : {
+                                  "filter" : {
+                                    "member" : "CantidadConsultasAmbulatorias.especialidad",
+                                    "operator" : "equals"
+                                  },
+                                  "type" : "specialty",
+                                  "label" : "Especialidad"
+                                },
+                                "professional" : {
+                                  "filter" : {
+                                    "member" : "CantidadConsultasAmbulatorias.profesional",
+                                    "operator" : "equals"
+                                  },
+                                  "type" : "professional",
+                                  "label" : "Profesional"
+                                },
+                                "date" : {
+                                  "filter" : {
+                                    "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
+                                    "operator" : "inDateRange"
+                                  },
+                                  "type" : "dateRangeISO",
+                                  "label" : "Fecha"
+                                }
+                              },
+                              "label" : "Sexo DNI - tarjetas",
+                              "content" : [
+                                {
+                                  "type" : "card",
+                                  "mode" : "flat",
+                                  "args" : {
+                                    "content" : [
+                                      {
+                                        "type" : "cubejs-chart",
+                                        "args" : {
+                                          "query" : "cantidadConsultasTotal",
+                                          "chartOptions" : {
+                                            "responsive" : true,
+                                            "maintainAspectRatio" : false,
+                                            "plugins" : {
+                                              "legend" : {
+                                                "display" : false
+                                              }
+                                            }
+                                          },
+                                          "title" : {
+                                            "text" : "CONSULTAS"
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "type" : "cubejs-chart",
+                                        "args" : {
+                                          "query" : "cantidadConsultasTotalSexoF",
+                                          "title" : {
+                                            "text" : "FEMENINO"
+                                          },
+                                          "chartOptions" : {
+                                            "responsive" : true,
+                                            "maintainAspectRatio" : false,
+                                            "plugins" : {
+                                              "legend" : {
+                                                "display" : false
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "type" : "cubejs-chart",
+                                        "args" : {
+                                          "query" : "cantidadConsultasTotalSexoM",
+                                          "title" : {
+                                            "text" : "MASCULINO"
+                                          },
+                                          "chartOptions" : {
+                                            "responsive" : true,
+                                            "maintainAspectRatio" : false,
+                                            "plugins" : {
+                                              "legend" : {
+                                                "display" : false
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "type" : "cubejs-chart",
+                                        "args" : {
+                                          "query" : "cantidadConsultasTotalSexoX",
+                                          "title" : {
+                                            "text" : "X"
+                                          },
+                                          "chartOptions" : {
+                                            "responsive" : true,
+                                            "maintainAspectRatio" : false,
+                                            "plugins" : {
+                                              "legend" : {
+                                                "display" : false
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
                         }
                       }
                     ]
                   }
-                }
-                  ]
-              }
                 }
               ]
             }
@@ -420,251 +460,271 @@
               "label" : "Turnos",
               "content" : [
                 {
-                  "type": "multiselect-cubejs",
-                  "args": {
-                    "options": [
+                  "type" : "multiselect-cubejs",
+                  "args" : {
+                    "options" : [
                       {
-                        "type" : "cubejs-dashboard",
+                        "type" : "cubejs-card",
                         "args" : {
-                          "filters" : {
-                            "date" : {
-                              "filter" : {
-                                "member" : "CantidadTurnos.fecha_consulta",
-                                "operator" : "inDateRange"
-                              },
-                              "type" : "dateRangeISO",
-                              "label" : "Fecha"
-                            }
-                          },
                           "header" : {
                             "title" : "Evolución de turnos por fecha"
                           },
-                          "label": "Evolución - línea",
-                          "content" : [
-                            {
-                              "type" : "cubejs-chart",
-                              "args" : {
-                                "query" : "cantidadTurnos",
-                                "chartOptions" : {
-                                  "responsive" : true,
-                                  "maintainAspectRatio" : false,
-                                  "elements" : {
-                                    "line" : {
-                                      "fill" : false,
-                                      "tension" : 0.4
+                          "content" : {
+                            "type" : "cubejs-dashboard",
+                            "args" : {
+                              "filters" : {
+                                "date" : {
+                                  "filter" : {
+                                    "member" : "CantidadTurnos.fecha_consulta",
+                                    "operator" : "inDateRange"
+                                  },
+                                  "type" : "dateRangeISO",
+                                  "label" : "Fecha"
+                                }
+                              },
+                              "label" : "Evolución - línea",
+                              "content" : [
+                                {
+                                  "type" : "cubejs-chart",
+                                  "args" : {
+                                    "query" : "cantidadTurnos",
+                                    "chartOptions" : {
+                                      "responsive" : true,
+                                      "maintainAspectRatio" : false,
+                                      "elements" : {
+                                        "line" : {
+                                          "fill" : false,
+                                          "tension" : 0.4
+                                        }
+                                      }
                                     }
                                   }
                                 }
-                              }
+                              ]
                             }
-                          ]
+                          }
                         }
                       },
                       {
-                        "type" : "cubejs-dashboard",
+                        "type" : "cubejs-card",
                         "args" : {
-                          "filters" : {
-                            "date" : {
-                              "filter" : {
-                                "member" : "CantidadTurnos.fecha_consulta",
-                                "operator" : "inDateRange"
-                              },
-                              "header" : "dateRangeISO",
-                              "title" : "Fecha"
-                            }
-                          },
                           "header" : {
                             "title" : "Turnos por especialidad"
                           },
-                          "label": "Especialidad",
-                          "content" : [
-                            {
-                              "type" : "cubejs-chart",
-                              "args" : {
-                                "query" : "cantidadTurnosPorEspecialidad",
-                                "chartOptions" : {
-                                  "responsive" : true,
-                                  "maintainAspectRatio" : false,
-                                  "plugins" : {
-                                    "legend" : {
-                                      "display" : false
+                          "content" : {
+                            "type" : "cubejs-dashboard",
+                            "args" : {
+                              "filters" : {
+                                "date" : {
+                                  "filter" : {
+                                    "member" : "CantidadTurnos.fecha_consulta",
+                                    "operator" : "inDateRange"
+                                  },
+                                  "header" : "dateRangeISO",
+                                  "title" : "Fecha"
+                                }
+                              },
+                              "label" : "Especialidad",
+                              "content" : [
+                                {
+                                  "type" : "cubejs-chart",
+                                  "args" : {
+                                    "query" : "cantidadTurnosPorEspecialidad",
+                                    "chartOptions" : {
+                                      "responsive" : true,
+                                      "maintainAspectRatio" : false,
+                                      "plugins" : {
+                                        "legend" : {
+                                          "display" : false
+                                        }
+                                      }
                                     }
                                   }
                                 }
-                              }
+                              ]
                             }
-                          ]
+                          }
                         }
                       },
                       {
-                        "type" : "cubejs-dashboard",
+                        "type" : "cubejs-card",
                         "args" : {
-                          "filters" : {
-                            "date" : {
-                              "filter" : {
-                                "member" : "CantidadTurnos.fecha_consulta",
-                                "operator" : "inDateRange"
-                              },
-                              "type" : "dateRangeISO",
-                              "label" : "Fecha"
-                            }
-                          },
                           "header" : {
                             "title" : "Turnos por profesional"
                           },
-                          "label": "Profesional",
-                          "content" : [
-                            {
-                              "type" : "cubejs-chart",
-                              "args" : {
-                                "query" : "cantidadTurnosPorProfesional",
-                                "chartOptions" : {
-                                  "responsive" : true,
-                                  "maintainAspectRatio" : false,
-                                  "plugins" : {
-                                    "legend" : {
-                                      "display" : false
+                          "content" : {
+                            "type" : "cubejs-dashboard",
+                            "args" : {
+                              "filters" : {
+                                "date" : {
+                                  "filter" : {
+                                    "member" : "CantidadTurnos.fecha_consulta",
+                                    "operator" : "inDateRange"
+                                  },
+                                  "type" : "dateRangeISO",
+                                  "label" : "Fecha"
+                                }
+                              },
+                              "label" : "Profesional",
+                              "content" : [
+                                {
+                                  "type" : "cubejs-chart",
+                                  "args" : {
+                                    "query" : "cantidadTurnosPorProfesional",
+                                    "chartOptions" : {
+                                      "responsive" : true,
+                                      "maintainAspectRatio" : false,
+                                      "plugins" : {
+                                        "legend" : {
+                                          "display" : false
+                                        }
+                                      }
                                     }
                                   }
                                 }
-                              }
+                              ]
                             }
-                          ]
+                          }
                         }
                       },
                       {
-                        "type" : "cubejs-dashboard",
+                        "type" : "cubejs-card",
                         "args" : {
-                          "filters" : {
-                            "specialty" : {
-                              "filter" : {
-                                "member" : "CantidadTurnosTotal.especialidad",
-                                "operator" : "equals"
-                              },
-                              "type" : "specialty",
-                              "label" : "Especialidad"
-                            },
-                            "professional" : {
-                              "filter" : {
-                                "member" : "CantidadTurnosTotal.profesional",
-                                "operator" : "equals"
-                              },
-                              "type" : "professional",
-                              "label" : "Profesional"
-                            },
-                            "date" : {
-                              "filter" : {
-                                "member" : "CantidadTurnosTotal.fecha_consulta",
-                                "operator" : "inDateRange"
-                              },
-                              "type" : "dateRangeISO",
-                              "label" : "Fecha"
-                            }
-                          },
                           "header" : {
                             "title" : "Turnos por estado"
                           },
-                          "label": "Estado",
-                          "content" : [
-                            {
-                              "type" : "card",
-                              "args" : {
-                                "mode" : "flat",
-                                "content" : [
-                                  {
-                                    "type" : "cubejs-chart",
-                                    "args" : {
-                                      "query" : "cantidadTurnosTotal",
-                                      "title" : {
-                                        "text" : "TURNOS"
-                                      },
-                                      "chartOptions" : {
-                                        "responsive" : true,
-                                        "maintainAspectRatio" : false,
-                                        "plugins" : {
-                                          "legend" : {
-                                            "display" : false
-                                          }
-                                        }
-                                      }
-                                    }
+                          "content" : {
+                            "type" : "cubejs-dashboard",
+                            "args" : {
+                              "filters" : {
+                                "specialty" : {
+                                  "filter" : {
+                                    "member" : "CantidadTurnosTotal.especialidad",
+                                    "operator" : "equals"
                                   },
-                                  {
-                                    "type" : "cubejs-chart",
-                                    "args" : {
-                                      "query" : "cantidadTurnosTotalAsignados",
-                                      "title" : {
-                                        "text" : "ASIGNADOS"
-                                      },
-                                      "chartOptions" : {
-                                        "responsive" : true,
-                                        "maintainAspectRatio" : false,
-                                        "plugins" : {
-                                          "legend" : {
-                                            "display" : false
-                                          }
-                                        }
-                                      }
-                                    }
+                                  "type" : "specialty",
+                                  "label" : "Especialidad"
+                                },
+                                "professional" : {
+                                  "filter" : {
+                                    "member" : "CantidadTurnosTotal.profesional",
+                                    "operator" : "equals"
                                   },
-                                  {
-                                    "type" : "cubejs-chart",
-                                    "args" : {
-                                      "query" : "cantidadTurnosTotalCancelados",
-                                      "title" : {
-                                        "text" : "CANCELADOS"
-                                      },
-                                      "chartOptions" : {
-                                        "responsive" : true,
-                                        "maintainAspectRatio" : false,
-                                        "plugins" : {
-                                          "legend" : {
-                                            "display" : false
-                                          }
-                                        }
-                                      }
-                                    }
+                                  "type" : "professional",
+                                  "label" : "Profesional"
+                                },
+                                "date" : {
+                                  "filter" : {
+                                    "member" : "CantidadTurnosTotal.fecha_consulta",
+                                    "operator" : "inDateRange"
                                   },
-                                  {
-                                    "type" : "cubejs-chart",
-                                    "args" : {
-                                      "query" : "cantidadTurnosTotalAtendidos",
-                                      "title" : {
-                                        "text" : "ATENDIDOS"
+                                  "type" : "dateRangeISO",
+                                  "label" : "Fecha"
+                                }
+                              },
+                              "label" : "Estado",
+                              "content" : [
+                                {
+                                  "type" : "card",
+                                  "args" : {
+                                    "mode" : "flat",
+                                    "content" : [
+                                      {
+                                        "type" : "cubejs-chart",
+                                        "args" : {
+                                          "query" : "cantidadTurnosTotal",
+                                          "title" : {
+                                            "text" : "TURNOS"
+                                          },
+                                          "chartOptions" : {
+                                            "responsive" : true,
+                                            "maintainAspectRatio" : false,
+                                            "plugins" : {
+                                              "legend" : {
+                                                "display" : false
+                                              }
+                                            }
+                                          }
+                                        }
                                       },
-                                      "chartOptions" : {
-                                        "responsive" : true,
-                                        "maintainAspectRatio" : false,
-                                        "plugins" : {
-                                          "legend" : {
-                                            "display" : false
+                                      {
+                                        "type" : "cubejs-chart",
+                                        "args" : {
+                                          "query" : "cantidadTurnosTotalAsignados",
+                                          "title" : {
+                                            "text" : "ASIGNADOS"
+                                          },
+                                          "chartOptions" : {
+                                            "responsive" : true,
+                                            "maintainAspectRatio" : false,
+                                            "plugins" : {
+                                              "legend" : {
+                                                "display" : false
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "type" : "cubejs-chart",
+                                        "args" : {
+                                          "query" : "cantidadTurnosTotalCancelados",
+                                          "title" : {
+                                            "text" : "CANCELADOS"
+                                          },
+                                          "chartOptions" : {
+                                            "responsive" : true,
+                                            "maintainAspectRatio" : false,
+                                            "plugins" : {
+                                              "legend" : {
+                                                "display" : false
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "type" : "cubejs-chart",
+                                        "args" : {
+                                          "query" : "cantidadTurnosTotalAtendidos",
+                                          "title" : {
+                                            "text" : "ATENDIDOS"
+                                          },
+                                          "chartOptions" : {
+                                            "responsive" : true,
+                                            "maintainAspectRatio" : false,
+                                            "plugins" : {
+                                              "legend" : {
+                                                "display" : false
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "type" : "cubejs-chart",
+                                        "args" : {
+                                          "query" : "cantidadTurnosTotalAusentes",
+                                          "title" : {
+                                            "text" : "AUSENTES"
+                                          },
+                                          "chartOptions" : {
+                                            "responsive" : true,
+                                            "maintainAspectRatio" : false,
+                                            "plugins" : {
+                                              "legend" : {
+                                                "display" : false
+                                              }
+                                            }
                                           }
                                         }
                                       }
-                                    }
-                                  },
-                                  {
-                                    "type" : "cubejs-chart",
-                                    "args" : {
-                                      "query" : "cantidadTurnosTotalAusentes",
-                                      "title" : {
-                                        "text" : "AUSENTES"
-                                      },
-                                      "chartOptions" : {
-                                        "responsive" : true,
-                                        "maintainAspectRatio" : false,
-                                        "plugins" : {
-                                          "legend" : {
-                                            "display" : false
-                                          }
-                                        }
-                                      }
-                                    }
+                                    ]
                                   }
-                                ]
-                              }
+                                }
+                              ]
                             }
-                          ]
+                          }
                         }
                       }
                     ]

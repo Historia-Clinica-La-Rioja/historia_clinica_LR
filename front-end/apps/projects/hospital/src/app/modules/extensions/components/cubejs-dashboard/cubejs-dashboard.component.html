@@ -1,28 +1,22 @@
-<div class="dashboard">
-	<app-summary-card [header]="header" [canClose]="true" (close)="close.emit()">
-		<div class="card-content">
-			<div class="container-filters" fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="start start">
-				<ng-container *ngFor="let filterInput of _filters | keyvalue">
-					<ng-container [ngSwitch]="filterInput.value.type">
-						<div *ngSwitchCase="'dateRangeISO'" class="filter">
-							<app-date-only-iso-form-input [label]="filterInput.value.label"
-								(rangeChange)="changeValue(filterInput.key, $event)">
-							</app-date-only-iso-form-input>
-						</div>
-						<div *ngSwitchCase="'specialty'" class="filter" style="margin-top: 4px">
-							<app-specialty-form-input [label]="filterInput.value.label"
-								(specialtyChange)="changeValue(filterInput.key, $event)">
-							</app-specialty-form-input>
-						</div>
-						<div *ngSwitchCase="'professional'" class="filter" style="margin-top: 4px">
-							<app-professional-form-input [label]="filterInput.value.label"
-								(professionalChange)="changeValue(filterInput.key, $event)">
-							</app-professional-form-input>
-						</div>
-					</ng-container>
-				</ng-container>
+<div class="container-filters" fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="start start">
+	<ng-container *ngFor="let filterInput of _filters | keyvalue">
+		<ng-container [ngSwitch]="filterInput.value.type">
+			<div *ngSwitchCase="'dateRangeISO'" class="filter">
+				<app-date-only-iso-form-input [label]="filterInput.value.label"
+					(rangeChange)="changeValue(filterInput.key, $event)">
+				</app-date-only-iso-form-input>
 			</div>
-			<app-ui-component-list [list]="_content"></app-ui-component-list>
-		</div>
-	</app-summary-card>
+			<div *ngSwitchCase="'specialty'" class="filter" style="margin-top: 4px">
+				<app-specialty-form-input [label]="filterInput.value.label"
+					(specialtyChange)="changeValue(filterInput.key, $event)">
+				</app-specialty-form-input>
+			</div>
+			<div *ngSwitchCase="'professional'" class="filter" style="margin-top: 4px">
+				<app-professional-form-input [label]="filterInput.value.label"
+					(professionalChange)="changeValue(filterInput.key, $event)">
+				</app-professional-form-input>
+			</div>
+		</ng-container>
+	</ng-container>
 </div>
+<app-ui-component-list [list]="_content"></app-ui-component-list>

@@ -3,7 +3,7 @@
 	<mat-select>
 		<mat-option id="category" name="category" *ngFor="let category of options" [value]="category"
 			(click)="onChange(category)">
-			{{category.args.label}}
+			{{category.args.content.args.label}}
 		</mat-option>
 	</mat-select>
 </mat-form-field>
@@ -12,10 +12,10 @@
 		selected
 		color="primary"
 		(removed)="removeDashboard(dashboard)">
-		{{dashboard.args.label}}
+		{{dashboard.args.content.args.label}}
 		<button matChipRemove>
 			<mat-icon>cancel</mat-icon>
 		</button>
 	</mat-chip>
 </mat-chip-list>
-<app-ui-component-list [list]="selectedDashboards" (close)="removeDashboard($event.uiComponent)"></app-ui-component-list>
+<app-ui-component-list [list]="selectedDashboards" (close)="removeDashboard($event)"></app-ui-component-list>

@@ -24,18 +24,18 @@ export class MultiselectCubejsDashboardComponent implements OnInit{
 	onChange(category: UIComponentDto) {
 		this.selectedDashboards.push(category);
 
-		const index = this.options.findIndex( elem => elem.args.label === category.args.label)
+		const index = this.options.findIndex( elem => elem.args.content.args.label === category.args.content.args.label)
 		if (index >= 0) {
 			this.options.splice(index, 1);
 		}
 	}
 
 	removeDashboard(dashboard) {
-		const index = this.selectedDashboards.findIndex( elem => elem.args.label === dashboard.args.label)
+		const index = this.selectedDashboards.findIndex( elem => elem.args.content.args.label === dashboard.args.content.args.label)
 		if (index >= 0) {
 			this.selectedDashboards.splice(index, 1);
 		}
 		this.options.push(dashboard);
-		this.options.sort((a, b) => a.args.label.localeCompare(b.args.label));
+		this.options.sort((a, b) => a.args.content.args.label.localeCompare(b.args.content.args.label));
 	}
 }

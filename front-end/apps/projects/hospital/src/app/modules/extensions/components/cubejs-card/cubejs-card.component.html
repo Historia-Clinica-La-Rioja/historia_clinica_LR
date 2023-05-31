@@ -1,0 +1,7 @@
+<div class="card">
+	<app-summary-card [header]="header" [canClose]="true" (close)="close.emit()">
+		<div class="card-content">
+			<app-ui-component [uiComponent]="content" [listOnTab]="listOnTab"></app-ui-component>
+		</div>
+	</app-summary-card>
+</div>
