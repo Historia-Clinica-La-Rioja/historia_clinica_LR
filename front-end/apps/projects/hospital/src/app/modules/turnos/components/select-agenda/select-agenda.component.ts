@@ -127,13 +127,17 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 	}
 
 	deleteAgenda(): void {
+		const content = this.agendaSelected.alias ? `¿Seguro desea eliminar su agenda? <br> ${this.agendaSelected.alias} (${this.agendaSelected.clinicalSpecialtyName}) <br>
+						Desde ${this.datePipe.transform(this.agendaSelected.startDate, 'dd/MM/yyyy')}, hasta
+						${this.datePipe.transform(this.agendaSelected.endDate, 'dd/MM/yyyy')} ` :
+						`¿Seguro desea eliminar su agenda? <br> ${this.agendaSelected.clinicalSpecialtyName} <br>
+						Desde ${this.datePipe.transform(this.agendaSelected.startDate, 'dd/MM/yyyy')}, hasta
+						${this.datePipe.transform(this.agendaSelected.endDate, 'dd/MM/yyyy')} `;
 		const dialogRef = this.dialog.open(ConfirmDialogComponent,
 			{
 				data: {
 					title: 'turnos.delete-agenda.DELETE',
-					content: `¿Seguro desea eliminar su agenda? <br> ${this.agendaSelected.doctorsOfficeDescription} <br>
-						Desde ${this.datePipe.transform(this.agendaSelected.startDate, 'dd/MM/yyyy')}, hasta
-						${this.datePipe.transform(this.agendaSelected.endDate, 'dd/MM/yyyy')} `,
+					content: content,
 					okButtonLabel: 'buttons.DELETE',
 					okBottonColor: 'warn'
 				}
