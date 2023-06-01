@@ -31,8 +31,8 @@
 						<span >{{getPatientType(patient?.patientTypeId) | uppercase}}</span>
 					</div>
 					<div id="toAudit" *ngIf="patient?.auditType !== null" fxLayout="column" fxFlex="10%">
-						<span *ngIf="patient?.auditType === UNAUDITED">{{'pacientes.audit.PENDING_TO_AUDIT' | translate}}</span>
-						<span *ngIf="patient?.auditType === TO_AUDIT">-</span>
+						<span *ngIf="patient?.auditType === TO_AUDIT">{{'pacientes.audit.PENDING_TO_AUDIT' | translate}}</span>
+						<span *ngIf="patient?.auditType === UNAUDITED">-</span>
 						<span *ngIf="patient?.auditType === AUDITED">{{'pacientes.audit.AUDITED' | translate}}</span>
 					</div>
 
