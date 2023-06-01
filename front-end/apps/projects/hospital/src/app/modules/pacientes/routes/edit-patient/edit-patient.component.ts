@@ -51,6 +51,7 @@ import { DateFormat, momentFormat, momentParseDate, momentParseDateTime } from '
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
+const ROUTE_EMPRADONAMIENTO = 'auditoria/empadronamiento';
 
 @Component({
 	selector: 'app-edit-patient',
@@ -179,10 +180,10 @@ export class EditPatientComponent implements OnInit {
 
 								this.form.setControl('nameSelfDetermination', new UntypedFormControl(personInformationData.nameSelfDetermination));
 								this.form.setControl('birthDate', new UntypedFormControl(new Date(personInformationData.birthDate), Validators.required));
-								this.form.setControl('cuil', new UntypedFormControl(personInformationData.cuil, [Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]));
+								this.form.setControl('cuil', new UntypedFormControl(personInformationData.cuil, [Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]));
 								this.form.setControl('email', new UntypedFormControl(personInformationData.email, Validators.email));
-								this.form.setControl('phonePrefix', new UntypedFormControl(personInformationData.phonePrefix,[Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]));
-								this.form.setControl('phoneNumber', new UntypedFormControl(personInformationData.phoneNumber,[Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]));
+								this.form.setControl('phonePrefix', new UntypedFormControl(personInformationData.phonePrefix, [Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]));
+								this.form.setControl('phoneNumber', new UntypedFormControl(personInformationData.phoneNumber, [Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]));
 								if (personInformationData.phoneNumber) {
 									updateControlValidator(this.form, 'phoneNumber', [Validators.required]);
 									updateControlValidator(this.form, 'phonePrefix', [Validators.required]);
@@ -266,7 +267,7 @@ export class EditPatientComponent implements OnInit {
 								this.currentOccupationDescription = this.occupations.find(occupation => occupation.id === personInformationData.occupationId)?.description;
 								this.currentEducationLevelDescription = this.educationLevels.find(educationLevel => educationLevel.id === personInformationData.educationLevelId)?.description;
 								this.personService.canEditUserData(completeData.person.id).subscribe(canEditUserData => {
-									if(!canEditUserData)
+									if (!canEditUserData)
 										this.form.controls.email.disable();
 								});
 								this.permissionsService.hasContextAssignments$([ERole.AUDITOR_MPI]).subscribe(canEditPatientStatus => {
@@ -430,7 +431,12 @@ export class EditPatientComponent implements OnInit {
 
 	goBack(): void {
 		this.formSubmitted = false;
-		this.router.navigate([this.routePrefix + ROUTE_PROFILE + `${this.patientId}`]);
+		if (this.hasAuditorRole) {
+			this.router.navigate([this.routePrefix + ROUTE_EMPRADONAMIENTO]);
+		} else {
+			this.router.navigate([this.routePrefix + ROUTE_PROFILE + `${this.patientId}`]);
+		}
+
 	}
 
 	showOtherSelfPerceivedGender(): void {
@@ -458,7 +464,7 @@ export class EditPatientComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe(message => {
 			if (message) {
-				this.auditTypeId =  EAuditType.TO_AUDIT;
+				this.auditTypeId = EAuditType.TO_AUDIT;
 				this.auditableFullDate = new Date();
 				this.auditablePatientInfo = {
 					message: message,
@@ -512,7 +518,12 @@ export class EditPatientComponent implements OnInit {
 							this.patientMedicalCoverageService.addPatientMedicalCoverages(this.patientId, patientMedicalCoveragesDto)
 								.subscribe();
 						}
-						this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
+						debugger
+						if (this.hasAuditorRole) {
+							this.router.navigate([this.routePrefix + ROUTE_EMPRADONAMIENTO]);
+						} else {
+							this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
+						}
 						this.snackBarService.showSuccess(this.getMessagesSuccess());
 						if (this.auditTypeId === EAuditType.AUDITED) {
 							this.snackBarService.showSuccess('pacientes.audit.SAVE_OK_EDIT_AUDIT');
