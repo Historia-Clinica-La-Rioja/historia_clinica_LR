@@ -41,6 +41,7 @@ import { UserBadgeComponent } from './components/user-badge/user-badge.component
 import { TitledContentCardComponent } from './components/titled-content-card/titled-content-card.component';
 import { ColoredLabelComponent } from './colored-label/colored-label.component';
 import { CardComponent } from './components/card/card.component';
+import { ColoredDivPatientStateComponent } from './components/colored-div-patient-state/colored-div-patient-state.component';
 // dialogs
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
 import { DiscardWarningComponent } from './dialogs/discard-warning/discard-warning.component';
@@ -106,6 +107,7 @@ import { QuillModule } from 'ngx-quill';
 		UserBadgeComponent,
 		TitledContentCardComponent,
 		ViewPdfComponent,
+		ColoredDivPatientStateComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
@@ -199,7 +201,8 @@ import { QuillModule } from 'ngx-quill';
 		EmergencyCareTemporaryPatientHeader,
 		PatientCardHeaderComponent,
 		TitledContentComponent,
-		MessageFlaggedForAuditComponent
+		MessageFlaggedForAuditComponent,
+		ColoredDivPatientStateComponent
 	],
 	entryComponents: [
 		DockPopupComponent

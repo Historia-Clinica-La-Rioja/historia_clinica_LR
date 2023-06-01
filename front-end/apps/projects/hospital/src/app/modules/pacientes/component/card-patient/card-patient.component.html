@@ -28,12 +28,12 @@
 					</div>
 
 					<div id="state" *ngIf="patient?.patientTypeId" fxLayout="column">
-						<span >{{getPatientType(patient?.patientTypeId) | uppercase}}</span>
+						<app-colored-div-patient-state [patientTypeId]="patient?.patientTypeId"></app-colored-div-patient-state>
 					</div>
 					<div id="toAudit" *ngIf="patient?.auditType !== null" fxLayout="column" fxFlex="10%">
-						<span *ngIf="patient?.auditType === TO_AUDIT">{{'pacientes.audit.PENDING_TO_AUDIT' | translate}}</span>
-						<span *ngIf="patient?.auditType === UNAUDITED">-</span>
-						<span *ngIf="patient?.auditType === AUDITED">{{'pacientes.audit.AUDITED' | translate}}</span>
+						<mat-icon matTooltip="{{'pacientes.audit.PENDING_TO_AUDIT' | translate}}" *ngIf="patient?.auditType === UNAUDITED"  class="color-orange">error</mat-icon>
+						<span *ngIf="patient?.auditType === TO_AUDIT">-</span>
+						<mat-icon matTooltip="{{'pacientes.audit.AUDITED' | translate}}" *ngIf="patient?.auditType === AUDITED"  class="color-green">check_circle_outline</mat-icon>
 					</div>
 
 
