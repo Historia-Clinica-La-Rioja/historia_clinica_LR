@@ -308,10 +308,13 @@ public class PatientController {
 
 		if (lastEditOpt.isPresent()) {
 			var lastEdit = lastEditOpt.get();
-			if (patient.getUpdatedOn().equals(patient.getCreatedOn()))
-				result.setPatientLastEditInfoDto(new PatientLastEditInfoDto(patient.getUpdatedOn(), lastEdit.getFullName(),false));
-			else
-				result.setPatientLastEditInfoDto(new PatientLastEditInfoDto(patient.getUpdatedOn(), lastEdit.getFullName(),true));
+			String name = lastEdit.getFullName();
+			if (!(name == null || name.isBlank())) {
+				if (patient.getUpdatedOn().equals(patient.getCreatedOn()))
+					result.setPatientLastEditInfoDto(new PatientLastEditInfoDto(patient.getUpdatedOn(), lastEdit.getFullName(), false));
+				else
+					result.setPatientLastEditInfoDto(new PatientLastEditInfoDto(patient.getUpdatedOn(), lastEdit.getFullName(), true));
+			}
 		}
 		if(patient.getAuditTypeId().equals(EAuditType.TO_AUDIT.getId()))
 			result.setAuditablePatientInfo(patientService.getAuditablePatientInfo(patientId));

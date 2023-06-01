@@ -45,7 +45,9 @@ public class UserPersonInfoBo {
     }
 
 	public String getFullName() {
-		String fullName = this.lastName;
+		String fullName = null;
+		if (!(this.lastName == null || this.lastName.isBlank()))
+			fullName = this.lastName;
 		if (!(this.otherLastNames == null || this.otherLastNames.isBlank()))
 			fullName += " " + this.otherLastNames;
 		if (AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS.isActive() && !(nameSelfDetermination == null || nameSelfDetermination.isBlank()))
@@ -53,7 +55,8 @@ public class UserPersonInfoBo {
 		else {
 			if (!(this.middleNames == null || this.middleNames.isBlank()))
 				fullName = this.middleNames + " " + fullName;
-			fullName = this.firstName + " " + fullName;
+			if (!(this.firstName == null || this.firstName.isBlank()))
+				fullName = this.firstName + " " + fullName;
 		}
 		return fullName;
 	}
