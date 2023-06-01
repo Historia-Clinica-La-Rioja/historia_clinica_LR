@@ -68,6 +68,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	showLastPrinted = false;
 
 	noInfo = false;
+	loadingTable = false;
 
 	columns = [
 		{
@@ -238,15 +239,15 @@ export class PrintAmbulatoriaComponent implements OnInit {
 			encounterTypeList: selectedEncounterTypes
 		}
 
+		this.loadingTable = true;
 		this.printAmbulatoryService.getPatientClinicHistory(this.patientId, this.dateRange.start, this.dateRange.end, searchFilterStr)
 			.subscribe(response => {
-				console.log(response);
-
 				this.noInfo = response.length > 0 ? false : true;
 				this.dataSource.data = response.map(data => this.mapToDocumentSummary(data));
 				this.dataSource.paginator = this.paginator;
 				document.getElementById("encounter-list").style.display = "block";
 				this.toggleAllRows();
+				this.loadingTable = false;
 			});
 	}
 

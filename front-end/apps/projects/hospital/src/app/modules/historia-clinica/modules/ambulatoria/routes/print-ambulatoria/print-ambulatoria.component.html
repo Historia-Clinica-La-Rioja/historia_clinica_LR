@@ -78,7 +78,7 @@
 			{{ 'ambulatoria.print.BACK' | translate }}
 		</button>
 		<button mat-flat-button type="button" color="primary" (click)="search()"
-			[disabled]="dateRangeForm.invalid || encounterTypeForm.invalid || documentTypeForm.invalid">
+			[disabled]="dateRangeForm.invalid || encounterTypeForm.invalid || documentTypeForm.invalid || loadingTable">
 			{{ 'ambulatoria.print.SEARCH' | translate }}
 		</button>
 	</section>
