@@ -486,3 +486,82 @@ databaseChangeLog:
           - sql:
               sql: |-
                 INSERT INTO source_type VALUES (9, 'Imagen medica');
+              
+    - changeSet:  
+        id:  createTable-OrderImageFile
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: order_image_file  
+            columns:  
+            - column: 
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_order_image_file
+                name:  id  
+                type:  int 
+            - column:
+                constraints:
+                    nullable: false
+                name: path
+                type: varchar
+            - column:
+                constraints:
+                    nullable: false
+                name: content_type
+                type: varchar
+            - column:
+                constraints:
+                    nullable: false
+                name: size
+                type: int8 
+            - column:
+                name: order_id
+                type: int
+                constraints:
+                    nullable: true
+                    references: transcribed_service_request(id)
+                    foreignKeyName: FK_transcribed_service_request
+            - column:
+                    constraints:
+                        nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: created_on
+                type: datetime
+                defaultValueDate: ${date.now}
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_on
+                type: datetime
+                defaultValueDate: ${date.now}
+            - column:
+                name: name
+                type: varchar(255)
+                constraints: 
+                    nullable: false
+                defaultValue: "-"
+            - column:
+                constraints:
+                    nullable: false
+                name: deleted
+                type: BOOLEAN
+                defaultValue: ${boolean.false}
+            - column:
+                name: deleted_by
+                type: INTEGER
+            - column:
+                name: deleted_on
+                type: DATETIME
