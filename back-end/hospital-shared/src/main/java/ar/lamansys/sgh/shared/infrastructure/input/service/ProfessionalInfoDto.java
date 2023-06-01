@@ -27,6 +27,10 @@ public class ProfessionalInfoDto {
 
 	private String nameSelfDetermination;
 
+	private String middleNames;
+
+	private String otherLastNames;
+
     public ProfessionalInfoDto(Integer id, String licenceNumber, String firstName, String lastName,
                                String identificationNumber, String phoneNumber, List<ClinicalSpecialtyDto> clinicalSpecialties, String nameSelfDetermination) {
         this.id = id;
@@ -38,4 +42,19 @@ public class ProfessionalInfoDto {
         this.clinicalSpecialties = clinicalSpecialties;
 		this.nameSelfDetermination = nameSelfDetermination;
     }
+
+	public ProfessionalInfoDto(Integer id, String licenceNumber, String firstName, String lastName,
+							   String identificationNumber, String phoneNumber, List<ClinicalSpecialtyDto> clinicalSpecialties, String nameSelfDetermination,
+							   String middleNames, String otherLastNames) {
+		this.id = id;
+		this.licenceNumber = licenceNumber;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.identificationNumber = identificationNumber;
+		this.phoneNumber = phoneNumber;
+		this.clinicalSpecialties = clinicalSpecialties;
+		this.nameSelfDetermination = nameSelfDetermination;
+		this.middleNames = middleNames;
+		this.otherLastNames = otherLastNames;
+	}
 }

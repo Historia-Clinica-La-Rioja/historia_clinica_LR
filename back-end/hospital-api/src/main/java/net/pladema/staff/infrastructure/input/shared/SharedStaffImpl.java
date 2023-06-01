@@ -47,7 +47,8 @@ public class SharedStaffImpl implements SharedStaffPort {
                     var specialties = clinicalSpecialtyService.getSpecialtiesByProfessional(professional.getId());
                     return new ProfessionalInfoDto(professional.getId(), professional.getLicenceNumber(), professional.getFirstName(),
                             professional.getLastName(), professional.getIdentificationNumber(), professional.getPhoneNumber(),
-                            clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(specialties), professional.getNameSelfDetermination());
+                            clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(specialties), professional.getNameSelfDetermination(),
+							professional.getMiddleNames(), professional.getOtherLastNames());
                 })
                 .get();
     }

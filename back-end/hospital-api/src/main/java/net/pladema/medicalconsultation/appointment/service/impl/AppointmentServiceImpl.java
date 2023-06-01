@@ -468,10 +468,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 					appointmentAssigned.setSpecialties(basicHealtcareDtoMap.getClinicalSpecialties().stream()
 							.map(specialty -> {return specialty.getName();})
 							.collect(Collectors.toList()));
-					if(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && basicHealtcareDtoMap.getNameSelfDetermination() != null && !basicHealtcareDtoMap.getNameSelfDetermination().isEmpty())
-						appointmentAssigned.setProfessionalName(basicHealtcareDtoMap.getNameSelfDetermination() + ' ' + basicHealtcareDtoMap.getLastName() + ' ' + basicHealtcareDtoMap.getId());
-					else
-						appointmentAssigned.setProfessionalName(basicHealtcareDtoMap.getFirstName() + ' ' + basicHealtcareDtoMap.getLastName());
+					appointmentAssigned.setRespectiveProfessionalName(basicHealtcareDtoMap.getFirstName(), basicHealtcareDtoMap.getMiddleNames(),
+							basicHealtcareDtoMap.getLastName(), basicHealtcareDtoMap.getOtherLastNames(), basicHealtcareDtoMap.getNameSelfDetermination(),
+							featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
 					return appointmentAssigned;
 				}).collect(Collectors.toList());
 		log.debug("Result size {}", result.size());

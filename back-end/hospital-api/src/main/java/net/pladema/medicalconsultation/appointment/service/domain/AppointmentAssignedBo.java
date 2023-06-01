@@ -44,4 +44,18 @@ public class AppointmentAssignedBo {
 
 		this.office = appointmentAssignedForPatientVo.getOffice();
 	}
+
+	public void setRespectiveProfessionalName(String firstName, String middleNames, String lastName, String otherLastNames, String nameSelfDetermination, boolean includeNameSelfDetermination) {
+		String fullName = lastName;
+		if(!(otherLastNames == null || otherLastNames.isBlank()))
+			fullName += " " + otherLastNames;
+		if(includeNameSelfDetermination && !(nameSelfDetermination == null || nameSelfDetermination.isBlank())) {
+			fullName = nameSelfDetermination + " " + fullName;
+		} else {
+			if(!(middleNames == null || middleNames.isBlank()))
+				fullName = middleNames + " " + fullName;
+			fullName = firstName + " " + fullName;
+		}
+		this.professionalName = fullName;
+	}
 }

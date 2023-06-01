@@ -2818,7 +2818,9 @@ export interface ProfessionalInfoDto {
     identificationNumber: string;
     lastName: string;
     licenceNumber: string;
+    middleNames: string;
     nameSelfDetermination: string;
+    otherLastNames: string;
     phoneNumber: string;
 }
 
