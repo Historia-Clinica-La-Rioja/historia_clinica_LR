@@ -20,7 +20,11 @@ import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
 import CustomToolbar from "../components/CustomToolbar";
 import {ADMINISTRADOR, ROOT} from "../roles";
-import { CreateHierarchicalUnit, UserIsInstitutionalAdmin } from './InstitutionShow';
+import {
+    CreateHierarchicalUnit,
+    ShowHierarchicalUnits,
+    UNIDADES_JEARQUICAS_FF
+} from './InstitutionShow';
 
 const Dependency = (sourceId) => {
     return (
@@ -79,23 +83,9 @@ const InstitutionEdit = props => {
                         <EditButton/>
                     </Datagrid>
                 </ReferenceManyField>
-                <SectionTitle label="resources.institutions.fields.hierarchicalUnits"/>
-
-                <CreateHierarchicalUnit/>
-                <ReferenceManyField
-                    id='hierarchicalunits'
-                    addLabel={false}
-                    reference="hierarchicalunits"
-                    target="institutionId"
-                    sort={{ field: 'alias', order: 'DESC' }}
-                >
-                    <Datagrid rowClick="show"
-                              empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin unidades jerárquicas definidas</p>}>
-                        <TextField source="id" />
-                        <TextField source="alias"/>
-                        <EditButton disabled={!UserIsInstitutionalAdmin()}/>
-                    </Datagrid>
-                </ReferenceManyField>
+                { permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <SectionTitle label="resources.institutions.fields.hierarchicalUnits"/>}
+                { permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <CreateHierarchicalUnit/>}
+                { permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <ShowHierarchicalUnits/>}
             </SimpleForm>
         </Edit>
     );

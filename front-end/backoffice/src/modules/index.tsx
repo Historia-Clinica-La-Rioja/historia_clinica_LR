@@ -122,7 +122,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="practicesinstitution" />,
     <Resource name="carelinespecialtyinstitution" />,
     <Resource name="snowstormproblems" />,
-    <Resource name="hierarchicalunits" {...hierarchicalunits} />,
+    <Resource name="hierarchicalunits" {...hierarchicalunits(permissions)} />,
     // debug
     <Resource name="snvs"  {...snvs} />,
     <Resource name="documentfiles" {...documentFiles(permissions)} />,

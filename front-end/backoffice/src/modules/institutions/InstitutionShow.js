@@ -8,12 +8,14 @@ import {
     EditButton,
     ReferenceManyField,
     Datagrid,
-    ListButton, 
+    ListButton,
     usePermissions
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
 import {ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE} from "../roles";
+
+const UNIDADES_JEARQUICAS_FF = 'HABILITAR_UNIDADES_JERARQUICAS_EN_DESARROLLO';
 
 const InstitutionShowActions = ({ data }) => {
     return (!data || !data.id) ? <TopToolbar/> :
@@ -27,7 +29,8 @@ const InstitutionShowActions = ({ data }) => {
 
 const CreateHierarchicalUnit = ({ record }) => {
     const customRecord = {institutionId: record.id};
-    return UserIsInstitutionalAdmin() ?( <CreateRelatedButton
+    return UserIsInstitutionalAdmin() ? (
+        <CreateRelatedButton
             customRecord={customRecord}
             reference="hierarchicalunits"
             refFieldName="institutionId"
@@ -41,71 +44,79 @@ const UserIsInstitutionalAdmin = function () {
     return userAdmin;
 }
 
-const InstitutionShow = props => (
-    <Show actions={<InstitutionShowActions />} {...props}>
-        <SimpleShowLayout>
+const ShowHierarchicalUnits = () => {
+    return  (
+    <ReferenceManyField
+        id='hierarchicalunits'
+        addLabel={false}
+        reference="hierarchicalunits"
+        target="institutionId"
+        sort={{ field: 'alias', order: 'DESC' }}
+    >
+        <Datagrid rowClick="show"
+                  empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin unidades jerárquicas definidas</p>}>
             <TextField source="id" />
-            <TextField source="name" />
-            <TextField source="website" />
-            <TextField source="phone" />
-            <TextField source="email" />
-            <TextField source="cuit" />
-            <TextField source="sisaCode" />
-            <ReferenceField source="dependencyId" reference="dependencies" link={false}>
-                <TextField source="description" />
-            </ReferenceField>
-            <TextField source="provinceCode" />
-            <ReferenceField source="addressId" reference="addresses" link={'show'}>
-                <TextField source="cityId"/>
-            </ReferenceField>
-            <ReferenceField label="Latitud" source="addressId" reference="addresses" link={false}>
-                <TextField  source="latitude" />
-            </ReferenceField>
-            <ReferenceField label="Longitud" source="addressId" reference="addresses" link={false}>
-                <TextField  source="longitude" />
-            </ReferenceField>
-            <SectionTitle label="resources.institutions.fields.sectors"/>
-            <CreateRelatedButton
-                reference="sectors"
-                refFieldName="institutionId"
-                label="resources.sectors.createRelated"
-            />
-            {/*TODO: Aislar esto en un componente. También se usa en edit.js*/}
-            <ReferenceManyField
-                addLabel={false}
-                reference="rootsectors"
-                target="institutionId"
-                sort={{ field: 'description', order: 'DESC' }}
-                filter={{ deleted: false }}
-            >
-                <Datagrid rowClick="show">
-                    <TextField source="description" />
-                    <ReferenceField source="sectorTypeId"  link={false}  reference="sectortypes">
-                        <TextField source="description" />
-                    </ReferenceField>
-                    <EditButton />
-                </Datagrid>
-            </ReferenceManyField>
+            <TextField source="alias"/>
+            <EditButton disabled={!UserIsInstitutionalAdmin()}/>
+        </Datagrid>
+    </ReferenceManyField>
+    );
+};
 
-            <SectionTitle label="resources.institutions.fields.hierarchicalUnits"/>
-            <CreateHierarchicalUnit/>
-            <ReferenceManyField
-                id='hierarchicalunits'
-                addLabel={false}
-                reference="hierarchicalunits"
-                target="institutionId"
-                sort={{ field: 'alias', order: 'DESC' }}
-            >
-                <Datagrid rowClick="show"
-                          empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin unidades jerárquicas definidas</p>}>
-                    <TextField source="id" />
-                    <TextField source="alias"/>
-                    <EditButton disabled={!UserIsInstitutionalAdmin()}/>
-                </Datagrid>
-            </ReferenceManyField>
-        </SimpleShowLayout>
-    </Show>
-);
+const InstitutionShow = props => {
+    const { permissions } = usePermissions();
+    return (
+        <Show actions={<InstitutionShowActions />} {...props}>
+            <SimpleShowLayout>
+                <TextField source="id" />
+                <TextField source="name" />
+                <TextField source="website" />
+                <TextField source="phone" />
+                <TextField source="email" />
+                <TextField source="cuit" />
+                <TextField source="sisaCode" />
+                <ReferenceField source="dependencyId" reference="dependencies" link={false}>
+                    <TextField source="description" />
+                </ReferenceField>
+                <TextField source="provinceCode" />
+                <ReferenceField source="addressId" reference="addresses" link={'show'}>
+                    <TextField source="cityId"/>
+                </ReferenceField>
+                <ReferenceField label="Latitud" source="addressId" reference="addresses" link={false}>
+                    <TextField  source="latitude" />
+                </ReferenceField>
+                <ReferenceField label="Longitud" source="addressId" reference="addresses" link={false}>
+                    <TextField  source="longitude" />
+                </ReferenceField>
+                <SectionTitle label="resources.institutions.fields.sectors"/>
+                <CreateRelatedButton
+                    reference="sectors"
+                    refFieldName="institutionId"
+                    label="resources.sectors.createRelated"
+                />
+                {/*TODO: Aislar esto en un componente. También se usa en edit.js*/}
+                <ReferenceManyField
+                    addLabel={false}
+                    reference="rootsectors"
+                    target="institutionId"
+                    sort={{ field: 'description', order: 'DESC' }}
+                    filter={{ deleted: false }}
+                >
+                    <Datagrid rowClick="show">
+                        <TextField source="description" />
+                        <ReferenceField source="sectorTypeId"  link={false}  reference="sectortypes">
+                            <TextField source="description" />
+                        </ReferenceField>
+                        <EditButton />
+                    </Datagrid>
+                </ReferenceManyField>
+                { permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <SectionTitle label="resources.institutions.fields.hierarchicalUnits"/>}
+                { permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <CreateHierarchicalUnit/>}
+                { permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <ShowHierarchicalUnits/>}
+            </SimpleShowLayout>
+        </Show>
+    );
+}
 
 export default InstitutionShow;
-export { CreateHierarchicalUnit, UserIsInstitutionalAdmin };
+export { CreateHierarchicalUnit, UserIsInstitutionalAdmin, ShowHierarchicalUnits, UNIDADES_JEARQUICAS_FF };
