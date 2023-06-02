@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -36,6 +37,13 @@ public class StudyAccessExceptionHandler {
 	protected ApiErrorMessageDto handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
 		log.debug("MissingServletRequestParameterException message -> {}", ex.getMessage(), ex);
 		return new ApiErrorMessageDto(HttpStatus.BAD_REQUEST.toString(), "Faltan parámetros en la URL para completar la solicitud");
+	}
+
+	@ResponseStatus(HttpStatus.PAYLOAD_TOO_LARGE)
+	@ExceptionHandler(MaxUploadSizeExceededException.class)
+	protected ApiErrorMessageDto handleMaxSizeException(MaxUploadSizeExceededException ex) {
+		log.debug("MaxUploadSizeExceededException message -> {}", ex.getMessage(), ex);
+		return new ApiErrorMessageDto(HttpStatus.PAYLOAD_TOO_LARGE.toString(), String.format("Se supera el tamaño máximo de subida de archivos definido %.0fMB", (double) (ex.getMaxUploadSize()/1048576L)));
 	}
 
 }
