@@ -687,9 +687,9 @@ export class EditPatientComponent implements OnInit {
 		}
 
 		if (data.personData.cuil) {
-			this.form.controls.birthDate.setValue(data.personData.cuil);
+			this.form.controls.cuil.setValue(data.personData.cuil);
 		} else {
-			this.form.controls.birthDate.setValue(null);
+			this.form.controls.cuil.setValue(null);
 		}
 	}
 
