@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface HierarchicalUnitRepository extends SGXAuditableEntityJPARepository<HierarchicalUnit, Integer> {
@@ -19,5 +20,12 @@ public interface HierarchicalUnitRepository extends SGXAuditableEntityJPAReposit
 			"WHERE hu.institutionId IN :institutionsIds " +
 			"AND hu.deleteable.deleted IS FALSE ")
 	List<Integer> getAllIdsByInstitutionsId(@Param("institutionsIds") List<Integer> institutionsIds);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT hu " +
+			"FROM HierarchicalUnit  hu " +
+			"WHERE hu.alias = :alias " +
+			"AND hu.deleteable.deleted IS FALSE")
+	Optional<HierarchicalUnit> findByAlias(@Param("alias") String alias);
 
 }

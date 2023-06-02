@@ -7,6 +7,7 @@ import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;
 
+import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.user.controller.BackofficeAuthoritiesValidator;
 
 import org.springframework.data.domain.Example;
@@ -46,13 +47,18 @@ public class BackofficeHierarchicalUnitValidator implements BackofficePermission
 	@Override
 	@PreAuthorize("hasAnyAuthority('ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertCreate(HierarchicalUnit entity) {
-
+		if (repository.findByAlias(entity.getAlias()).isPresent())
+			throw new BackofficeValidationException("hierarchical-unit.alias.exists");
 	}
 
 	@Override
 	@PreAuthorize("hasAnyAuthority('ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertUpdate(Integer id, HierarchicalUnit entity) {
-
+		repository.findById(id).ifPresentOrElse(hu -> {
+			if (!hu.getAlias().equals(entity.getAlias()))
+				throw new BackofficeValidationException("hierarchical-unit.alias.exists");
+			}, () -> new BackofficeValidationException("hierarchical-unit.invalid-id")
+		);
 	}
 
 	@Override
