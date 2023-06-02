@@ -1,23 +1,23 @@
 package ar.lamansys.base.application.reverseproxyrest;
 
-import static ar.lamansys.base.application.reverseproxyrest.configuration.RestUtils.removeContext;
-
-import java.io.IOException;
-import java.net.URI;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-
 import ar.lamansys.base.ReverseProxyAutoConfiguration;
 import ar.lamansys.base.domain.ReverseProxyBo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+import org.springframework.http.*;
+import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.net.URI;
+import java.util.Objects;
+
+import static ar.lamansys.base.application.reverseproxyrest.configuration.RestUtils.removeContext;
 
 @Service
 @Slf4j
@@ -31,6 +31,14 @@ public class RestReverseProxy {
 		this.baseUrl = reverseProxyAutoConfiguration.getServer();
 		this.restTemplate = restTemplate;
 		this.defaultHeaders = defaultHeaders;
+		MediaType mtdicom = MediaType.valueOf("multipart/related;type=\"application/dicom\"");
+		this.restTemplate.getMessageConverters().add(new FormHttpMessageConverter());
+		var converter = restTemplate.getMessageConverters().stream()
+				.filter(FormHttpMessageConverter.class::isInstance)
+				.map(FormHttpMessageConverter.class::cast)
+				.findFirst()
+				.orElseThrow(() -> new IllegalStateException("Failed to find FormHttpMessageConverter"));
+		converter.addSupportedMediaTypes(mtdicom);
 		log.info("Reverse Proxy server enabled to forward URL '{}'", baseUrl);
 	}
 
@@ -49,14 +57,30 @@ public class RestReverseProxy {
 
 	public ResponseEntity<?> post(HttpServletRequest request) throws IOException {
 		URI uri = configURI(request);
-
-		byte[] requestBody = request.getInputStream().readAllBytes();
-		HttpEntity<byte[]> entity = new HttpEntity<>(requestBody, copyPostHeaders(request));
+		HttpEntity<?> entity = ServletFileUpload.isMultipartContent(request) ? buildMultipartEntity((StandardMultipartHttpServletRequest) request) : buildNoMultipartEntity(request);
 		log.trace("Headers to send {}", entity);
 
 		ResponseEntity<?> response = new ReverseProxyBo(restTemplate.exchange(uri, HttpMethod.POST, entity, byte[].class)).getResponse();
 		log.debug("Response from server -> {}", response);
 		return response;
+	}
+
+	private HttpEntity<?> buildMultipartEntity(StandardMultipartHttpServletRequest request) {
+		LinkedMultiValueMap<String, Object> form = new LinkedMultiValueMap<>();
+		request.getMultiFileMap().forEach((s, multipartFiles) ->
+				multipartFiles.stream()
+						.filter(multipartFile -> !multipartFile.getName().equals("inputStream"))
+						.forEach(multipartFile -> {
+					HttpHeaders fileHeaders = new HttpHeaders();
+					fileHeaders.setContentType(MediaType.parseMediaType(Objects.requireNonNull(multipartFile.getContentType())));
+					form.add(s, new HttpEntity<>(multipartFile.getResource(), fileHeaders));
+				}));
+		return new HttpEntity<>(form, copyPostHeaders(request));
+	}
+
+	private HttpEntity<?> buildNoMultipartEntity(HttpServletRequest request) throws IOException {
+		byte[] requestBody = request.getInputStream().readAllBytes();
+		return new HttpEntity<>(requestBody, copyPostHeaders(request));
 	}
 
 	private URI configURI(HttpServletRequest request) {
