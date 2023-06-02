@@ -76,14 +76,22 @@ public abstract class AbstractAuthInterceptor implements AuthInterceptor {
         switch (dicomProtocol) {
             case "dicom-web": {
                 // /dicom-web/<resources>/<studyInstanceUID>
+                var idFromURL = request.getHeader("studyInstanceUID");
+                if (idFromURL != null)
+                    return idFromURL;
                 return context.split("/")[3];
             }
             case "wado": {
                 // /wado?studyUID=<id>
                 return request.getParameter("studyUID");
             }
+            case "studies":
+            case "instances": {
+                // /instances --> get from Header
+                return request.getHeader("studyInstanceUID");
+            }
             default:
-                throw new UnsupportedOperationException();
+                throw new UnsupportedOperationException("Mal definida la solicitud al enviar studyInstanceUID");
         }
     }
 
