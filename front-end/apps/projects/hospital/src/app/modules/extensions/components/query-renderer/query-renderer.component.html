@@ -1,4 +1,4 @@
-<div *ngIf="isQueryPresent && !loading && !noData" style="height: 100%">
+<div *ngIf="isQueryPresent && !loading && !noData" style="height: 100%; overflow-x: scroll">
 	<ng-container *ngIf="chartType === 'pie' || chartType === 'doughnut'">
 		<div fxLayout="row" fxLayoutAlign="space-between center" class="toggle">
 			<mat-label>Ver porcentajes</mat-label>
