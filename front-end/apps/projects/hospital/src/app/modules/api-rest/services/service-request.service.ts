@@ -74,6 +74,13 @@ export class ServiceRequestService {
 		return this.http.get<TranscribedDiagnosticReportInfoDto[]>(url)
 	}
 
+	saveAttachedFiles(patientId: number, serviceRequestId: number, selectedFiles: File[]): Observable<void> {
+		const filesFormdata = new FormData();
+		Array.from(selectedFiles).forEach(file => filesFormdata.append('files', file));
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${serviceRequestId}/uploadFiles`;
+		return this.http.post<void>(url, filesFormdata)
+	} 
+
 	complete(patientId: number, diagnosticReportId: number, completeRequestDto: CompleteRequestDto, files: File[]): Observable<void> {
 		const commonUrl = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${diagnosticReportId}`;
 		const uploadFileUrl = commonUrl + '/uploadFile';

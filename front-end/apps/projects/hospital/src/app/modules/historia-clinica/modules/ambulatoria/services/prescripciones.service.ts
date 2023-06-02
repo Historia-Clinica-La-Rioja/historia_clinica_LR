@@ -54,6 +54,10 @@ export class PrescripcionesService {
 		return this.serviceRequestService.getTranscribedOrders(patientId);
 	}
 
+	saveAttachedFiles(patientId: number,serviceRequestId: number, selectedFiles: File[]): Observable<void> {
+		return this.serviceRequestService.saveAttachedFiles(patientId, serviceRequestId, selectedFiles);
+	}
+
 	getPrescription(prescriptionType: PrescriptionTypes, patientId: number, statusId: string, medicationStatement: string, healthCondition: string, study?: string, categoryId?: string): Observable<any> {
 		switch (prescriptionType) {
 			case PrescriptionTypes.MEDICATION:

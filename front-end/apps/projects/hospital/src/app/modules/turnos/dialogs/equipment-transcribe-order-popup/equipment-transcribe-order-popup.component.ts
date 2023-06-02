@@ -78,9 +78,10 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
             professional: this.transcribeOrderForm.controls.professional.value,
             institution: this.transcribeOrderForm.controls.institution?.value
         }
-        // Falta mandarle los archivos adjuntos
+
         this.prescriptionService.createTranscribedOrder(this.data.patientId, this.selectedStudy, this.selectedProblem, transcribedOrder.professional, transcribedOrder.institution)
             .subscribe(serviceRequestId => {
+                this.prescriptionService.saveAttachedFiles(this.data.patientId, serviceRequestId, this.selectedFiles).subscribe();
                 let text = 'image-network.appointments.medical-order.TRANSCRIBED_ORDER';
                 this.translateService.get(text).subscribe(translatedText => {
                     this.dialogRef.close({
