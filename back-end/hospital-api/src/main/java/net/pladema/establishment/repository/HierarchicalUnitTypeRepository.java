@@ -20,4 +20,11 @@ public interface HierarchicalUnitTypeRepository extends SGXAuditableEntityJPARep
 			"AND hut.deleteable.deleted IS FALSE")
 	Optional<HierarchicalUnitType> findByDescription(@Param("description") String description);
 
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT exists (SELECT 1 " +
+			"FROM hierarchical_unit hu " +
+			"JOIN hierarchical_unit_type hut ON (hu.type_id = hut.id) " +
+			"WHERE hut.id = :typeId " +
+			"AND hu.deleted = false)", nativeQuery = true)
+	boolean typeInUse(@Param("typeId") Integer typeId);
 }
