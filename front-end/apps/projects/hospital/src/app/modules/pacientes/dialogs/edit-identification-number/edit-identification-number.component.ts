@@ -44,6 +44,9 @@ export class EditIdentificationNumberComponent implements OnInit {
 		this.formSubmitted = true;
 		if (this.form.valid) {
 			this.formSubmitted = true;
+			this.isLoading=true;
+			this.form.controls.identificationNumber.disable();
+			this.form.controls.genderId.disable();
 			this.callRenaperService();
 		}
 	}
@@ -56,6 +59,8 @@ export class EditIdentificationNumberComponent implements OnInit {
 			.pipe(finalize(() => this.isLoading = false))
 			.subscribe(
 				personData => {
+					this.form.controls.identificationNumber.enable()
+					this.form.controls.genderId.enable()
 					if (personData) {
 						const dialogRef = this.dialog.open(WarningEditIdentificationNumberComponent, {
 							data: {

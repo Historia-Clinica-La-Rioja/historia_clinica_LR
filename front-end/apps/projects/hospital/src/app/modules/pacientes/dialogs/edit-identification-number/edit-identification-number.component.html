@@ -21,7 +21,7 @@
 					<span [translate]="'pacientes.form.IDENTIFICATION_NUMBER'"></span>*
 				</div>
 				<mat-form-field appearance="outline" class="matInput ">
-					<input id="identificationNumber" name="identificationNumber" formControlName="identificationNumber"
+					<input [disabled]="isLoading" id="identificationNumber" name="identificationNumber" formControlName="identificationNumber"
 						placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}" matInput>
 					<mat-error *ngIf="hasError(form, 'required', 'identificationNumber')"
 						[translate]="'pacientes.form.REQUIRED'"></mat-error>
@@ -45,9 +45,9 @@
 			</div>
 		</div>
 		<mat-dialog-actions align="end">
-			<button mat-stroked-button color="primary" mat-dialog-close><span [translate]="'buttons.CANCEL'"></span>
+			<button [disabled]="isLoading" mat-stroked-button color="primary" mat-dialog-close><span [translate]="'buttons.CANCEL'"></span>
 			</button>
-			<button mat-raised-button color="primary" type="submit">
+			<button [disabled]="isLoading" mat-raised-button color="primary" type="submit">
 				<span [translate]="'buttons.SEARCH'"></span>
 			</button>
 		</mat-dialog-actions>
