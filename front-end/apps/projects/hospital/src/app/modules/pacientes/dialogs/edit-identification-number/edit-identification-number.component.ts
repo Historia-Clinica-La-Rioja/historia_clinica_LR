@@ -69,6 +69,7 @@ export class EditIdentificationNumberComponent implements OnInit {
 						const personDataCustom: PersonBasicDataResponseCustom = {
 							personData: personData,
 							identificationNumber: this.form.controls.identificationNumber.value,
+							genderId: this.form.controls.genderId.value,
 						}
 						dialogRef.afterClosed().subscribe(confirmed => {
 							if (confirmed) {
@@ -99,4 +100,5 @@ export class EditIdentificationNumberComponent implements OnInit {
 export interface PersonBasicDataResponseCustom {
 	personData: PersonBasicDataResponseDto,
 	identificationNumber: number,
+	genderId:number,
 }
