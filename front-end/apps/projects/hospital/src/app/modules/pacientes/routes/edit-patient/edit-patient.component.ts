@@ -47,7 +47,7 @@ import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/d
 import { PatientMasterDataService } from '@api-rest/services/patient-master-data.service';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { EditIdentificationNumberComponent, PersonBasicDataResponseCustom } from '@pacientes/dialogs/edit-identification-number/edit-identification-number.component';
-import { DateFormat, momentFormat, momentParseDate, momentParseDateTime } from '@core/utils/moment.utils';
+import { momentParseDate } from '@core/utils/moment.utils';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';

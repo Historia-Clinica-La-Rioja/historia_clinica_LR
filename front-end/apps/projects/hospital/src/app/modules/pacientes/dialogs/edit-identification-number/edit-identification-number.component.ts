@@ -4,7 +4,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { GenderDto, PersonBasicDataResponseDto } from '@api-rest/api-model';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { PersonService } from '@api-rest/services/person.service';
-import { hasError } from '@core/utils/form.utils';
+import { VALIDATIONS, hasError } from '@core/utils/form.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { finalize } from 'rxjs';
 import { WarningEditIdentificationNumberComponent } from '../warning-edit-identification-number/warning-edit-identification-number.component';
@@ -16,6 +16,7 @@ import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/d
 	styleUrls: ['./edit-identification-number.component.scss']
 })
 export class EditIdentificationNumberComponent implements OnInit {
+	maxLengthIdentifNumber= VALIDATIONS.MAX_LENGTH.identif_number;
 	hasError = hasError;
 	form: FormGroup;
 	genders: GenderDto[];
@@ -35,7 +36,7 @@ export class EditIdentificationNumberComponent implements OnInit {
 				this.genders = genders;
 			});
 		this.form = this.formBuilder.group({
-			identificationNumber: [null, [Validators.required]],
+			identificationNumber: [null, Validators.maxLength(this.maxLengthIdentifNumber)],
 			genderId: [null, [Validators.required]]
 		})
 	}

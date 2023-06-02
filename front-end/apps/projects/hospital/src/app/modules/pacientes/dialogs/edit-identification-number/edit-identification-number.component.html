@@ -25,9 +25,9 @@
 						placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}" matInput>
 					<mat-error *ngIf="hasError(form, 'required', 'identificationNumber')"
 						[translate]="'pacientes.form.REQUIRED'"></mat-error>
-					<mat-error *ngIf="hasError(form, 'maxlength', 'identificationNumber')">
-						Introduzca como máximo 11 caracteres
-					</mat-error>
+						<mat-error *ngIf="hasError(form, 'maxlength', 'identificationNumber')"
+						[translate]="'forms.MAX_LENGTH_ERROR'"
+						[translateParams]=" { max: maxLengthIdentifNumber}"> </mat-error>
 				</mat-form-field>
 			</div>
 		</div>
