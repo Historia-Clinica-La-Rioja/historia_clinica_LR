@@ -610,7 +610,11 @@ export class EditPatientComponent implements OnInit {
 	}
 
 	private isLockablePatientType(): boolean {
+		if(!this.hasAuditorRole){
 		return (this.patientType === PATIENT_TYPE.PERMANENT_INVALID || this.patientType === PATIENT_TYPE.VALID || this.patientType === PATIENT_TYPE.PERMANENT);
+		}else{
+			return false;
+		}
 	}
 
 	private restrictFormEdit(): void {
