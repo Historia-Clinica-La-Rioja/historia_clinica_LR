@@ -649,8 +649,18 @@ export class EditPatientComponent implements OnInit {
 
 	setValuesAndDisabled(data: PersonBasicDataResponseCustom) {
 		this.dniWasEdited = true;
+
 		this.form.controls.genderId.setValue(data.genderId);
 		this.form.controls.genderId.disable();
+
+		this.form.controls.stateId.setValue(PATIENT_TYPE.VALID);
+		this.form.controls.stateId.disable();
+
+		this.form.controls.identificationNumber.setValue(data.identificationNumber);
+		this.form.controls.identificationNumber.disable();
+
+		this.form.controls.identificationTypeId.disable();
+
 		if (data.personData.firstName && data.personData.lastName) {
 			const splitedFirstName = this.splitStringByFirstSpaceCharacter(data.personData.firstName);
 			const splitedLastName = this.splitStringByFirstSpaceCharacter(data.personData.lastName);
