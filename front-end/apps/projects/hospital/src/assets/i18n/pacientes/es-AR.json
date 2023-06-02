@@ -335,7 +335,7 @@
 		"QUESTION_MARK_AUDIT_RESOLVED":"¿Marcar como resuelto el pedido de auditoría?",
 		"BUTTON_SAVE_RESOLVED":"Guardar y resolver",
 		"BUTTON_SAVE_NOT_RESOLVED":"Guardar y no resolver",
-		"SAVE_OK_EDIT_AUDIT":"Indicación para auditar resuelta con éxito",
+		"SAVE_OK_EDIT_AUDIT":"La indicación se marcó como resuelta y el paciente fue editado con éxito.",
 		"TITLE_NO_DATA_RENAPER":"La información ingresada no se encuentra en Renaper",
 		"SUBTITLE_NO_DATA_RENAPER":"Por favor, revise los datos ingresados y vuelva a intentar"
 	}

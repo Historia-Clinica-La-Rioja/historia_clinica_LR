@@ -498,9 +498,13 @@ export class EditPatientComponent implements OnInit {
 	}
 
 	private getMessagesSuccess(): string {
-		return this.hasInstitutionalAdministratorRole ? 'pacientes.edit.messages.SUCCESS_PERSON' : 'pacientes.edit.messages.SUCCESS_PATIENT';
-	}
+		if (this.auditTypeId === EAuditType.AUDITED) {
+			return 'pacientes.audit.SAVE_OK_EDIT_AUDIT';
+		} else {
+			return this.hasInstitutionalAdministratorRole ? 'pacientes.edit.messages.SUCCESS_PERSON' : 'pacientes.edit.messages.SUCCESS_PATIENT';
+		}
 
+	}
 	private getMessagesError(): string {
 		return this.hasInstitutionalAdministratorRole ? 'pacientes.edit.messages.ERROR_PERSON' : 'pacientes.edit.messages.ERROR_PATIENT';
 	}
@@ -518,16 +522,12 @@ export class EditPatientComponent implements OnInit {
 							this.patientMedicalCoverageService.addPatientMedicalCoverages(this.patientId, patientMedicalCoveragesDto)
 								.subscribe();
 						}
-						debugger
 						if (this.hasAuditorRole) {
 							this.router.navigate([this.routePrefix + ROUTE_EMPRADONAMIENTO]);
 						} else {
 							this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
 						}
 						this.snackBarService.showSuccess(this.getMessagesSuccess());
-						if (this.auditTypeId === EAuditType.AUDITED) {
-							this.snackBarService.showSuccess('pacientes.audit.SAVE_OK_EDIT_AUDIT');
-						}
 					}, _ => this.snackBarService.showError(this.getMessagesError()));
 			})
 		}
@@ -610,9 +610,9 @@ export class EditPatientComponent implements OnInit {
 	}
 
 	private isLockablePatientType(): boolean {
-		if(!this.hasAuditorRole){
-		return (this.patientType === PATIENT_TYPE.PERMANENT_INVALID || this.patientType === PATIENT_TYPE.VALID || this.patientType === PATIENT_TYPE.PERMANENT);
-		}else{
+		if (!this.hasAuditorRole) {
+			return (this.patientType === PATIENT_TYPE.PERMANENT_INVALID || this.patientType === PATIENT_TYPE.VALID || this.patientType === PATIENT_TYPE.PERMANENT);
+		} else {
 			return false;
 		}
 	}
