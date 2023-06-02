@@ -31,12 +31,11 @@ public class PersonFileController {
 
 	private final PersonFileService personFileService;
 	private final DeletePersonFileService deletePersonFileService;
-
 	public static final String OUTPUT = "Output -> {}";
 
 	@PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ResponseStatus(code = HttpStatus.OK)
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, AUDITOR_MPI')")
 	public List<Integer> uploadFile(@PathVariable(name = "institutionId") Integer institutionId,
 									@PathVariable(name = "personId") Integer personId,
 									@RequestPart("files") MultipartFile[] files) throws CreatePersonFileException {
