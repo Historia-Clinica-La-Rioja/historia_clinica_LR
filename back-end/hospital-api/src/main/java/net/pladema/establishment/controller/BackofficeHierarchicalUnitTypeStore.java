@@ -84,7 +84,7 @@ public class BackofficeHierarchicalUnitTypeStore implements BackofficeStore<Hier
 		if (hierarchicalUnitDefaultTypes.contains(id.shortValue()))
 			throw new BackofficeValidationException("hierarchical-unit-type.restriction");
 		if (repository.typeInUse(id))
-			throw new BackofficeValidationException("hierarchical-unit-type.in-use");
+			throw new BackofficeValidationException("hierarchical-unit-type.affected");
 	}
 
 	@Override
