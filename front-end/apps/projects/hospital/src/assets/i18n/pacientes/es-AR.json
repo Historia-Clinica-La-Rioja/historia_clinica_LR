@@ -103,6 +103,7 @@
       "SUBTITLE": "Ingresá los siguientes datos.",
       "TITLE_TEMPORARY_PATIENT": "Nuevo Paciente Temporal",
       "TITLE_TEMPORARY_PERSON": "Nueva Persona Temporal",
+	  "CREATE_BY":"Creado por ",
       "messages": {
         "ERROR_PATIENT": "Error al crear un paciente",
         "ERROR_PERSON": "Error al crear una persona",
