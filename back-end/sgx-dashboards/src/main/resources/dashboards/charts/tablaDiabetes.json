@@ -1,0 +1,50 @@
+{
+  "cubeQuery" : {
+    "measures": [],
+    "timeDimensions": [],
+    "order": [],
+    "dimensions": [
+      "TablaDiabetes.primer_nombre",
+      "TablaDiabetes.apellido",
+      "TablaDiabetes.numero_identificacion",
+      "TablaDiabetes.diagnostico",
+      "TablaDiabetes.fecha_deteccion_diagnostico",
+      "TablaDiabetes.ultima_fecha_atencion",
+      "TablaDiabetes.severidad",
+      "TablaDiabetes.direccion",
+      "TablaDiabetes.nombre_ciudad",
+      "TablaDiabetes.valor_hemoglobina_glicosada",
+      "TablaDiabetes.valor_glucemia",
+      "TablaDiabetes.fecha_fondo_de_ojo"
+    ],
+    "filters": [
+      {
+        "dimension": "TablaDiabetes.institucion",
+        "operator": "equals",
+        "values": [
+          "[(${institutionId})]"
+        ]
+      }
+    ]
+  },
+  "chartType": "table",
+  "pivotConfig": {
+    "x": [
+      "TablaDiabetes.primer_nombre",
+      "TablaDiabetes.apellido",
+      "TablaDiabetes.numero_identificacion",
+      "TablaDiabetes.diagnostico",
+      "TablaDiabetes.fecha_deteccion_diagnostico",
+      "TablaDiabetes.ultima_fecha_atencion",
+      "TablaDiabetes.severidad",
+      "TablaDiabetes.direccion",
+      "TablaDiabetes.nombre_ciudad",
+      "TablaDiabetes.valor_hemoglobina_glicosada",
+      "TablaDiabetes.valor_glucemia",
+      "TablaDiabetes.fecha_fondo_de_ojo"
+    ],
+    "y": [
+      "measures"
+    ]
+  }
+}
