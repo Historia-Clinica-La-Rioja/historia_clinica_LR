@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import { DownloadService } from '@core/services/download.service';
 import { DateFormat, momentFormat } from '@core/utils/moment.utils';
+import { UIComponentDto } from '@extensions/extensions-model';
 
 @Injectable({
 	providedIn: 'root'
@@ -14,6 +15,7 @@ export class ReportsService {
 	constructor(
 		private contextService: ContextService,
 		private downloadService: DownloadService,
+		private http: HttpClient
 	) { }
 
 	private getReport(params: any, fileName: string, url: any): Observable<any> {
@@ -39,5 +41,10 @@ export class ReportsService {
 		return this.getReport(params, fileName, url);
 	}
 
+
+	getDiabetesReport(): Observable<UIComponentDto> {
+		const url = `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/diabetes`;
+		return this.http.get<UIComponentDto>(url);
+	}
 
 }

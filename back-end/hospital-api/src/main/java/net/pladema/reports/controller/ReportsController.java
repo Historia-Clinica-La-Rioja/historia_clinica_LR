@@ -9,6 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import net.pladema.hsi.extensions.infrastructure.controller.dto.UIComponentDto;
+import net.pladema.hsi.extensions.utils.JsonResourceUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -258,4 +263,16 @@ public class ReportsController {
         List<ConsultationsDto> result = reportsMapper.fromListConsultationsBo(consultations);
         return ResponseEntity.ok(result);
     }
+
+	@GetMapping("/institution/{institutionId}/diabetes")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_ESTADISTICA, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+	public ResponseEntity<UIComponentDto> getDiabetesReport2(@PathVariable(name = "institutionId") Integer institutionId){
+ 		LOG.debug("Input parameter -> institutionId {}", institutionId);
+		UIComponentDto result = JsonResourceUtils.readJson("extension/reports/diabetesReport.json",
+				new TypeReference<>() {},
+				null
+		);
+		return ResponseEntity.ok(result);
+	}
+
 }
