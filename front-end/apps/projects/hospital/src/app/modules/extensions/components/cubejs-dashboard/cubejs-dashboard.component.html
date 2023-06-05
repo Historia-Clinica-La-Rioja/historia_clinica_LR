@@ -22,6 +22,9 @@
 					(appointmentStateChange)="changeValue(filterInput.key, $event)">
 				</app-appointment-state-input>
 			</div>
+			<div *ngSwitchCase="'freeText'" class="filter" style="margin-top: 4px">
+				<app-free-text-form-input [label]="filterInput.value.label" (textChange)="changeValue(filterInput.key, $event)"></app-free-text-form-input>
+			</div>
 		</ng-container>
 	</ng-container>
 </div>

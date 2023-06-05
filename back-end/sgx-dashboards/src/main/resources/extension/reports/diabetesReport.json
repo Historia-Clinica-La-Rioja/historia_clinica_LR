@@ -1,0 +1,52 @@
+{
+  "type": "cubejs-dashboard",
+  "args": {
+    "filters": {
+      "name": {
+        "filter": {
+          "member": "TablaDiabetes.primer_nombre",
+          "operator": "contains"
+        },
+        "type": "freeText",
+        "label": "Nombre"
+      },
+      "lastName": {
+        "filter": {
+          "member": "TablaDiabetes.apellido",
+          "operator": "contains"
+        },
+        "type": "freeText",
+        "label": "Apellido"
+      },
+      "identificationNumber": {
+        "filter": {
+          "member": "TablaDiabetes.numero_identificacion",
+          "operator": "contains"
+        },
+        "type": "freeText",
+        "label": "Nro. Identificación"
+      },
+      "diagnosis": {
+        "filter": {
+          "member": "TablaDiabetes.diagnostico",
+          "operator": "contains"
+        },
+        "type": "freeText",
+        "label": "Diagnóstico"
+      }
+    },
+    "content": [
+      {
+        "type" : "cubejs-chart",
+        "args" : {
+          "query" : "tablaDiabetes",
+          "chartOptions" : {
+            "responsive" : true,
+            "maintainAspectRatio" : false
+          }
+        }
+      }
+    ]
+  }
+}
+
