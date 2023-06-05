@@ -129,7 +129,7 @@ export class HomeComponent implements OnInit {
 	}
 
 	getFullNameLicence(professional: ProfessionalDto): string {
-		return `${this.getFullName(professional)} - ${professional.licenceNumber}`;
+		return professional.licenceNumber ? `${this.getFullName(professional)} - ${professional.licenceNumber}` : `${this.getFullName(professional)}`;
 	}
 
 	getFullName(professional: ProfessionalDto): string {
