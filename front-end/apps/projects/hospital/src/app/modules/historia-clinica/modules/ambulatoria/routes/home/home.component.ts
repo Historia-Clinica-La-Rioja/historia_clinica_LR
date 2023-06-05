@@ -64,10 +64,10 @@ export class HomeComponent implements OnInit {
 
 	private initPersonalInformationForm() {
 		this.personalInformationForm = this.formBuilder.group({
-			firstName: [null, [Validators.maxLength(PERSON.MAX_LENGTH.firstName), Validators.pattern(/^\S*$/)]],
-			middleNames: [null, [Validators.maxLength(PERSON.MAX_LENGTH.middleNames), Validators.pattern(/^\S*$/)]],
-			lastName: [null, [Validators.maxLength(PERSON.MAX_LENGTH.lastName), Validators.pattern(/^\S*$/)]],
-			otherLastNames: [null, [Validators.maxLength(PERSON.MAX_LENGTH.otherLastNames), Validators.pattern(/^\S*$/)]],
+			firstName: [null, [Validators.maxLength(PERSON.MAX_LENGTH.firstName), Validators.pattern(/^(?!\s).*\S$/)]],
+			middleNames: [null, [Validators.maxLength(PERSON.MAX_LENGTH.middleNames), Validators.pattern(/^(?!\s).*\S$/)]],
+			lastName: [null, [Validators.maxLength(PERSON.MAX_LENGTH.lastName), Validators.pattern(/^(?!\s).*\S$/)]],
+			otherLastNames: [null, [Validators.maxLength(PERSON.MAX_LENGTH.otherLastNames), Validators.pattern(/^(?!\s).*\S$/)]],
 			genderId: [],
 			identificationNumber: [null, [Validators.maxLength(PERSON.MAX_LENGTH.identificationNumber), Validators.pattern(/^\S*$/)]],
 			identificationTypeId: [IDENTIFICATION_TYPE_IDS.DNI],
