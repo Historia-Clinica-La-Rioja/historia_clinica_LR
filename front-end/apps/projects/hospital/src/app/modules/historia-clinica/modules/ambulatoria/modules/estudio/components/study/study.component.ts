@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DiagnosticReportInfoDto } from '@api-rest/api-model';
+import { DiagnosticReportInfoDto, DoctorInfoDto } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { STUDY_STATUS } from '@historia-clinica/modules/ambulatoria/constants/prescripciones-masterdata';
 import { CompletarEstudioComponent } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
@@ -14,6 +15,7 @@ import { anyMatch } from "@core/utils/array.utils";
 import { PermissionsService } from "@core/services/permissions.service";
 import { ActionsButtonService } from '../../../indicacion/services/actions-button.service';
 import { CreatedDuring } from '../study-list-element/study-list-element.component';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 const IMAGE_DIAGNOSIS = 'Diagnóstico por imágenes';
 
@@ -45,6 +47,7 @@ export class StudyComponent implements OnInit {
 	hasLaboratoryStaffRole = false;
 	hasPharmacyStaffRole = false;
 	_studies: StudyInformation[] = [];
+	selfDeterminationName = false;
 
 	constructor(
 		private readonly prescripcionesService: PrescripcionesService,
@@ -52,10 +55,14 @@ export class StudyComponent implements OnInit {
 		private snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,
 		private readonly permissionsService: PermissionsService,
+		private featureFlagService: FeatureFlagService
 	) { }
 
 	ngOnInit(): void {
 		this.setActionsLayout();
+		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn =>{
+			this.selfDeterminationName = isOn;
+		})
 		this.sameOrderStudies = new Map();
 		this._studies = this.classifyStudiesWithTheSameOrder(this._studies);
 		this._studies.sort((studyA, studyB) => studyB.diagnosticInformation.creationDate.getTime() - studyA.diagnosticInformation.creationDate.getTime())
@@ -81,9 +88,16 @@ export class StudyComponent implements OnInit {
 				title: diagnosticReport.source === this.translateService.instant('app.menu.INTERNACION') ? 'Diagnóstico:' : 'Problema:',
 				content: diagnosticReport.healthCondition.snomed.pt
 			}],
-			createdBy: diagnosticReport.doctor.firstName + " " + diagnosticReport.doctor.lastName,
+			createdBy: this.getProfessionalName(diagnosticReport.doctor),
 			timeElapsed: updateDate.toLocaleDateString('es-AR') + ' - ' + updateDate.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
 		}
+	}
+	
+	private getProfessionalName(doctor: DoctorInfoDto): string {
+		if (this.selfDeterminationName) {
+			return doctor.nameSelfDetermination + " " + doctor.lastName
+		}
+		return doctor.firstName + " " + doctor.lastName
 	}
 
 	setActionsLayout(): void {
