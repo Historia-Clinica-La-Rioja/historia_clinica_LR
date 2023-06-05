@@ -27,6 +27,7 @@ import { ProfessionalFormInputComponent } from './components/professional-form-i
 import { MultiselectCubejsDashboardComponent } from './components/multiselect-cubejs-dashboard/multiselect-cubejs-dashboard.component';
 import { CubejsCardComponent } from './components/cubejs-card/cubejs-card.component';
 import { AppointmentStateInputComponent } from './components/appointment-state-input/appointment-state-input.component';
+import { FreeTextFormInputComponent } from './components/free-text-form-input/free-text-form-input.component';
 
 @NgModule({
 	imports: [
@@ -59,6 +60,7 @@ import { AppointmentStateInputComponent } from './components/appointment-state-i
   MultiselectCubejsDashboardComponent,
   CubejsCardComponent,
   AppointmentStateInputComponent,
+  FreeTextFormInputComponent,
 	],
 	exports: [
 		// components
