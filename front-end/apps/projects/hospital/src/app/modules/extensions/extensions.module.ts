@@ -66,6 +66,7 @@ import { FreeTextFormInputComponent } from './components/free-text-form-input/fr
 		// components
 		PageLayoutComponent,
 		UiExternalComponentComponent,
+		UiComponentComponent
 	]
 })
 export class ExtensionsModule { }

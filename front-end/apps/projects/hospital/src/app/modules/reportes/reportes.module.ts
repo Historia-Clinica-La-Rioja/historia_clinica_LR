@@ -5,6 +5,7 @@ import { PresentationModule } from '@presentation/presentation.module';
 // routing
 import { ReportesRoutingModule } from './reportes-routing.module';
 import { HomeComponent } from './routes/home/home.component';
+import { ExtensionsModule } from '@extensions/extensions.module';
 
 @NgModule({
 	declarations: [
@@ -17,6 +18,7 @@ import { HomeComponent } from './routes/home/home.component';
 		ReportesRoutingModule,
 		// deps
 		PresentationModule,
+		ExtensionsModule
 	]
 })
 export class ReportesModule { }

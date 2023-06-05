@@ -16,6 +16,7 @@ import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.
 import { ReportsService } from '@api-rest/services/reports.service';
 
 import { REPORT_TYPES } from '../../constants/report-types';
+import { UIComponentDto } from '@extensions/extensions-model';
 
 @Component({
 	selector: 'app-home',
@@ -42,6 +43,8 @@ export class HomeComponent implements OnInit {
 	REPORT_TYPES = REPORT_TYPES;
 
 	minDate = MIN_DATE;
+
+	cubeReportData: UIComponentDto;
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -178,9 +181,16 @@ export class HomeComponent implements OnInit {
 				case 2:
 					this.reportsService.getOutpatientSummaryReport(params, `${this.REPORT_TYPES[1].description}.xls`).subscribe();
 					break;
+				case 3:
+					this.reportsService.getDiabetesReport().subscribe(result => this.cubeReportData = result);
+					break;
 				default:
 			}
 		}
+	}
+
+	resetCubeReport() {
+		this.cubeReportData = null;
 	}
 
 }

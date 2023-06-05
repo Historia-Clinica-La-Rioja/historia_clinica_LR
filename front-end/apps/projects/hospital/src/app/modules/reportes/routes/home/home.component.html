@@ -1,4 +1,4 @@
-<app-content width="narrow">
+<app-content>
 
 	<section id="title">
 		<h2 class="page-title" [translate]="'reportes.TITLE'"> </h2>
@@ -16,7 +16,8 @@
 				<mat-select id="report-type-select-group"
 							name="reportTypeSelectGroup"
 							formControlName="reportType"
-							placeholder="{{'pacientes.form.SELECT' | translate}}">
+							placeholder="{{'pacientes.form.SELECT' | translate}}"
+							(selectionChange)="resetCubeReport()">
 					<mat-option *ngFor="let reportType of REPORT_TYPES"
 								[value]="reportType.id">
 						{{reportType.description}}
@@ -28,6 +29,7 @@
 			</mat-form-field>
 		</div>
 	</div>
+		<div *ngIf="form.controls['reportType'].value == 1 || form.controls['reportType'].value == 2 ">
 			<div fxLayout="row" fxLayoutGap="30px" style="padding-top: 10px">
 				<div id="start-date" fxFlex="50%" fxLayout="column" fxLayoutGap="5px">
 					<div>
@@ -97,6 +99,7 @@
 
 			</div>
 
+		</div>
 			<div fxLayout="row" fxLayoutAlign="end" style="margin-top: 20px">
 				<button class="uppercase" mat-raised-button color="primary" (click)="generateReport()">
 					<span [translate]="'reportes.form.SUBMIT'"></span>
@@ -106,5 +109,7 @@
 		</form>
 
 	</mat-card>
-
+	<div *ngIf="cubeReportData">
+		<app-ui-component [uiComponent]="cubeReportData"></app-ui-component>
+	</div>
 </app-content>
