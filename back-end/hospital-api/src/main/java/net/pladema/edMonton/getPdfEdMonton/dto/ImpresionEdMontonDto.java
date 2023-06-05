@@ -18,4 +18,8 @@ public class ImpresionEdMontonDto {
 	private Short answerId;
 
 
+	public ImpresionEdMontonDto(ImpresionEdMontonDto impresionEdMontonDto) {
+		this.questionId = impresionEdMontonDto.getQuestionId();
+		this.answerId = impresionEdMontonDto.getAnswerId();
+	}
 }

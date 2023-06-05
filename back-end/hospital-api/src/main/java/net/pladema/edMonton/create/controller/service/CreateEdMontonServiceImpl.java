@@ -3,6 +3,8 @@ package net.pladema.edMonton.create.controller.service;
 import net.pladema.edMonton.create.controller.service.domain.EdMontonAnswerBo;
 import net.pladema.edMonton.create.controller.service.domain.EdMontonBo;
 
+import net.pladema.edMonton.get.service.GetEdMontonService;
+import net.pladema.edMonton.getPdfEdMonton.dto.QuestionnaireDto;
 import net.pladema.edMonton.repository.EdMontonRepository;
 
 import net.pladema.edMonton.repository.domain.Answer;
@@ -13,9 +15,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 @Service
 public class CreateEdMontonServiceImpl implements CreateEdMontonService{
@@ -26,19 +29,36 @@ public class CreateEdMontonServiceImpl implements CreateEdMontonService{
 
  	private final EdMontonRepository edMontonRespository;
 
+	 private final GetEdMontonService getEdMontonService;
 
-	 public CreateEdMontonServiceImpl(EdMontonRepository edMontonRepository){
+
+	 public CreateEdMontonServiceImpl(EdMontonRepository edMontonRepository, GetEdMontonService getEdMontonService){
 		 this.edMontonRespository = edMontonRepository;
+		 this.getEdMontonService = getEdMontonService;
 	 }
 
 
 	@Override
 	public EdMontonBo execute(EdMontonBo edMontonBo) {
 
-		QuestionnaireResponse entity = createEdMontonTest(edMontonBo);
+		QuestionnaireDto questionnaireDto = new QuestionnaireDto();
 
-		edMontonRespository.save(entity);
+		 Integer idPatient = edMontonBo.getPatientId();
 
+		 List<Answer> lst = getEdMontonService.findPatientEdMonton(idPatient);
+
+		 if(lst != null){
+			 for(Answer answer : lst){
+				 Integer id;
+				 id = answer.getQuestionnaireResponseId();
+				 QuestionnaireResponse questionnaireResponse = new QuestionnaireResponse(edMontonRespository.findById(id));
+				 edMontonRespository.updateStatusById(questionnaireResponse.getId(), 3);
+			 }
+
+			 QuestionnaireResponse entity = createEdMontonTest(edMontonBo);
+
+			 edMontonRespository.save(entity);
+		 }
 		return edMontonBo;
 	}
 
