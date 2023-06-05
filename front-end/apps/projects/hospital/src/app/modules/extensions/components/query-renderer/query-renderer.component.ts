@@ -212,7 +212,7 @@ export class QueryRendererComponent {
 					data: item.series.map(({ value }) => value * (this.reverse ? -1 : 1))
 				};
 			}
-			
+
 
 			return {
 				label: item.title,
@@ -338,12 +338,14 @@ export class QueryRendererComponent {
 
 	deleteColumn(column) {
 		const i = this.displayedColumns.indexOf(column);
-		this.displayedColumns.splice(i, 1);
-		this.columnTitles.splice(i, 1);
+		if (i !== -1) {
+			this.displayedColumns.splice(i, 1);
+			this.columnTitles.splice(i, 1);
 
-		this.tableData.forEach(row => {
-			delete row[column];
-		})
+			this.tableData.forEach(row => {
+				delete row[column];
+			});
+		}
 	}
 
 	deleteRepetedRows() {
@@ -352,54 +354,56 @@ export class QueryRendererComponent {
 		let data = [];
 		const today: moment.Moment = newMoment();
 
-		this.tableData.forEach(row => {
-			const id = row['Referencias.id'];
-			if (!ids.includes(id)) {
-				ids.push(id);
-			}
-			this.formatRow(row);
-		})
-
-		ids.forEach(id => {
-			table.push(this.tableData.filter(row => {
-				return id === row['Referencias.id'];
-			}))
-		})
-
-		table.forEach(arr => {
-			let fut = arr.filter(row => {
-				const rowDate = buildFullDate(row['Referencias.hora_turno'], momentParse(row['Referencias.fecha_turno'], DateFormat.VIEW_DATE));
-				return today.isBefore(rowDate);
+		if (this.displayedColumns.includes("Referencias.id")) {
+			this.tableData.forEach(row => {
+				const id = row['Referencias.id'];
+				if (!ids.includes(id)) {
+					ids.push(id);
+				}
+				this.formatRow(row);
 			})
-			let aux;
-			if (fut.length) {
-				fut.forEach(row => {
-					if (!aux)
-						aux = row;
-					else {
-						const rowDate = buildFullDate(row['Referencias.hora_turno'], momentParse(row['Referencias.fecha_turno'], DateFormat.VIEW_DATE));
-						const auxDate = buildFullDate(aux['Referencias.hora_turno'], momentParse(aux['Referencias.fecha_turno'], DateFormat.VIEW_DATE));
-						if (rowDate.isBefore(auxDate))
-							aux = row;
-					}
-				})
-			}
-			else {
-				arr.forEach(row => {
-					if (!aux)
-						aux = row;
-					else {
-						const rowDate = buildFullDate(row['Referencias.hora_turno'], momentParse(row['Referencias.fecha_turno'], DateFormat.VIEW_DATE));
-						const auxDate = buildFullDate(aux['Referencias.hora_turno'], momentParse(aux['Referencias.fecha_turno'], DateFormat.VIEW_DATE));
-						if (auxDate.isBefore(rowDate))
-							aux = row;
-					}
-				})
-			}
-			data.push(aux);
-		})
 
-		this.tableData = data;
+			ids.forEach(id => {
+				table.push(this.tableData.filter(row => {
+					return id === row['Referencias.id'];
+				}))
+			})
+
+			table.forEach(arr => {
+				let fut = arr.filter(row => {
+					const rowDate = buildFullDate(row['Referencias.hora_turno'], momentParse(row['Referencias.fecha_turno'], DateFormat.VIEW_DATE));
+					return today.isBefore(rowDate);
+				})
+				let aux;
+				if (fut.length) {
+					fut.forEach(row => {
+						if (!aux)
+							aux = row;
+						else {
+							const rowDate = buildFullDate(row['Referencias.hora_turno'], momentParse(row['Referencias.fecha_turno'], DateFormat.VIEW_DATE));
+							const auxDate = buildFullDate(aux['Referencias.hora_turno'], momentParse(aux['Referencias.fecha_turno'], DateFormat.VIEW_DATE));
+							if (rowDate.isBefore(auxDate))
+								aux = row;
+						}
+					})
+				}
+				else {
+					arr.forEach(row => {
+						if (!aux)
+							aux = row;
+						else {
+							const rowDate = buildFullDate(row['Referencias.hora_turno'], momentParse(row['Referencias.fecha_turno'], DateFormat.VIEW_DATE));
+							const auxDate = buildFullDate(aux['Referencias.hora_turno'], momentParse(aux['Referencias.fecha_turno'], DateFormat.VIEW_DATE));
+							if (auxDate.isBefore(rowDate))
+								aux = row;
+						}
+					})
+				}
+				data.push(aux);
+			})
+
+			this.tableData = data;
+		}
 	}
 
 	formatRow(row) {

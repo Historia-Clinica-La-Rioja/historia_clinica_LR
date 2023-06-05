@@ -23,16 +23,12 @@
 		</canvas>
 
 	</div>
-	<div *ngIf="chartType === 'table'" style="height: 100%; overflow-x: scroll">
-		<table
-			mat-table
-			[dataSource]="tableData"
-			style="width: 200%"
-		>
+
+	<div style="overflow-x: auto; max-width: 100%;">
+		<table *ngIf="chartType === 'table'" mat-table [dataSource]="tableData">
 			<ng-container
 				*ngFor="let column of displayedColumns; let index = index"
-				[matColumnDef]="column"
-			>
+				[matColumnDef]="column">
 				<th mat-header-cell *matHeaderCellDef>
 					{{ columnTitles[index] }}
 				</th>
@@ -43,8 +39,6 @@
 			<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 		</table>
 	</div>
-
-
 	<div class="numeric-container" *ngIf="chartType === 'number'">
 		<ng-container *ngFor="let value of numericValues">
 			<mat-card class="card colored">
