@@ -3,20 +3,27 @@ package net.pladema.patient.controller.constraints.validator;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.patient.controller.constraints.PatientUpdateValid;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.PatientService;
+import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.person.controller.service.PersonExternalService;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import net.pladema.user.application.getrolesbyuser.GetRolesByUser;
+import net.pladema.user.infrastructure.input.rest.dto.UserRoleDto;
+import net.pladema.user.infrastructure.input.rest.mapper.HospitalUserRoleMapper;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.constraintvalidation.SupportedValidationTarget;
 import javax.validation.constraintvalidation.ValidationTarget;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @SupportedValidationTarget(ValidationTarget.PARAMETERS)
 public class PatientUpdateValidator implements ConstraintValidator<PatientUpdateValid, Object[]> {
@@ -27,13 +34,19 @@ public class PatientUpdateValidator implements ConstraintValidator<PatientUpdate
 
     private final FeatureFlagsService featureFlagsService;
 
+	private final GetRolesByUser getRolesByUser;
+
+	private final HospitalUserRoleMapper hospitalUserRoleMapper;
+
     public PatientUpdateValidator(PatientService patientService,
-                                  PersonExternalService personExternalService,
-                                  FeatureFlagsService featureFlagsService){
+								  PersonExternalService personExternalService,
+								  FeatureFlagsService featureFlagsService, GetRolesByUser getRolesByUser, HospitalUserRoleMapper hospitalUserRoleMapper){
         this.patientService = patientService;
         this.personExternalService = personExternalService;
         this.featureFlagsService = featureFlagsService;
-    }
+		this.getRolesByUser = getRolesByUser;
+		this.hospitalUserRoleMapper = hospitalUserRoleMapper;
+	}
 
     @Override
     public void initialize(PatientUpdateValid constraintAnnotation) {
@@ -44,6 +57,7 @@ public class PatientUpdateValidator implements ConstraintValidator<PatientUpdate
     public boolean isValid(Object[] parameters, ConstraintValidatorContext context) {
 
         Integer patientId = (Integer) parameters[0];
+		Integer institutionId = (Integer) parameters[1];
         APatientDto newPatientData = (APatientDto) parameters[2];
 
         Optional<Patient> optPatient = patientService.getPatient(patientId);
@@ -54,12 +68,12 @@ public class PatientUpdateValidator implements ConstraintValidator<PatientUpdate
         }
         else{
             Patient patient = optPatient.get();
-            return patientUpdateIsAllowed(patient, newPatientData) && auditablePatientDataIsComplete(context, newPatientData);
+            return patientUpdateIsAllowed(patient, institutionId, newPatientData) && auditablePatientDataIsComplete(context, newPatientData);
         }
     }
 
-    private boolean patientUpdateIsAllowed(Patient patient, APatientDto newPatientData){
-        if (allPatientDataCanBeUpdated(patient))
+    private boolean patientUpdateIsAllowed(Patient patient, Integer institutionId,APatientDto newPatientData){
+        if (allPatientDataCanBeUpdated(patient, institutionId))
             return true;
         else {
             BasicDataPersonDto actualPatientData = personExternalService.getBasicDataPerson(patient.getPersonId());
@@ -67,11 +81,15 @@ public class PatientUpdateValidator implements ConstraintValidator<PatientUpdate
         }
     }
 
-    private boolean allPatientDataCanBeUpdated(Patient patient){
+    private boolean allPatientDataCanBeUpdated(Patient patient, Integer institutionId){
+		List<UserRoleDto> auditorRole = hospitalUserRoleMapper.toListUserRoleDto(getRolesByUser.execute(UserInfo.getCurrentAuditor(), institutionId))
+				.stream().filter(a -> a.getRoleId() == ERole.AUDITOR_MPI.getId()).collect(Collectors.toList());
+
         Short patientType = patient.getTypeId();
         return (!patientType.equals(PatientType.VALIDATED) &&
                 !patientType.equals(PatientType.PERMANENT) &&
-                !patientType.equals(PatientType.PERMANENT_NOT_VALIDATED)) || this.featureFlagsService.isOn(AppFeature.HABILITAR_EDITAR_PACIENTE_COMPLETO);
+                !patientType.equals(PatientType.PERMANENT_NOT_VALIDATED)) || this.featureFlagsService.isOn(AppFeature.HABILITAR_EDITAR_PACIENTE_COMPLETO)
+				|| !auditorRole.isEmpty();
     }
 
     private boolean restrictedFieldsAreNotUpdated(BasicDataPersonDto actualPatientData, APatientDto newPatientData){
