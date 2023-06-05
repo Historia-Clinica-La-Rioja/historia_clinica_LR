@@ -94,7 +94,7 @@ export class StudyComponent implements OnInit {
 	}
 	
 	private getProfessionalName(doctor: DoctorInfoDto): string {
-		if (this.selfDeterminationName) {
+		if (this.selfDeterminationName && doctor.nameSelfDetermination) {
 			return doctor.nameSelfDetermination + " " + doctor.lastName
 		}
 		return doctor.firstName + " " + doctor.lastName
