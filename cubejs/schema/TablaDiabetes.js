@@ -40,9 +40,9 @@ cube(`TablaDiabetes`, {
                         and hc2.snomed_id = hc.snomed_id
                         order by hc2.created_on desc
                         limit 1))  
-        select distinct p2.first_name, p2.last_name, it.description || ' ' || p2.identification_number as identification_number, s.pt as diagnosis, cast(hc.start_date as text) as problem_start_date, hcs.display as severity, 
-        a.street || ' ' || a."number" as address, c.description as city_name, gh.value || '% (' || gh.creation_date || ')' as glycosilated_hemoglobin_value,
-        g.value || ' mg/dl (' || g.creation_date || ')' as glycemia_value, lof.performed_date as last_ocular_fondus_date, cast(date(la.created_on) as text) as last_attention_date, d.institution_id
+        select distinct p2.first_name, p2.last_name, it.description || ' ' || p2.identification_number as identification_number, s.pt as diagnosis, to_char(hc.start_date, 'DD/MM/YYYY') as problem_start_date, hcs.display as severity, 
+        a.street || ' ' || a."number" as address, c.description as city_name, gh.value || '% (' || to_char(gh.creation_date, 'DD/MM/YYYY') || ')' as glycosilated_hemoglobin_value,
+        g.value || ' mg/dl (' || to_char(g.creation_date, 'DD/MM/YYYY') || ')' as glycemia_value, to_char(lof.performed_date, 'DD/MM/YYYY') as last_ocular_fondus_date, to_char(la.created_on, 'DD/MM/YYYY') as last_attention_date, d.institution_id
         from document d 
         join document_health_condition dhc on (dhc.document_id = d.id)
         join health_condition hc on (hc.id = dhc.health_condition_id)
