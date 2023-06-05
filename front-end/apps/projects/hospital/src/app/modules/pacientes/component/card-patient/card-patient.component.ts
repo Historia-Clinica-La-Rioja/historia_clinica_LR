@@ -7,6 +7,7 @@ import { ContextService } from '@core/services/context.service';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
+import { DateFormat } from '@core/utils/date.utils';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { CardModel, ValueAction } from '@presentation/components/card/card.component';
 import { ViewPatientDetailComponent } from '../view-patient-detail/view-patient-detail.component';
@@ -100,7 +101,7 @@ export class CardPatientComponent {
 				identificationTypeId: patient.person.identificationTypeId,
 				dni: patient.person.identificationNumber || "-",
 				gender: this.genderTableView[patient.person.genderId]?.description,
-				date: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DatePipeFormat.SHORT_DATE) : '',
+				date: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DateFormat.VIEW_DATE) : '',
 				ranking: patient?.ranking,
 				patientTypeId: patient?.patientTypeId,
 				toAudit: patient?.toAudit !== undefined ? patient?.toAudit : null,
@@ -148,7 +149,7 @@ export class CardPatientComponent {
 					lastName: '',
 					age: calculateAge(String(patient.person.birthDate)),
 					gender: this.genderTableView.find(p => p.id === patient.person.genderId)?.description,
-					birthDate: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DatePipeFormat.SHORT_DATE) : '',
+					birthDate: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DateFormat.VIEW_DATE) : '',
 					identificationNumber: patient.person.identificationNumber,
 					identificationTypeId: this.identificationTypes.find(i => i.id === patient.person.identificationTypeId)?.description,
 				}
