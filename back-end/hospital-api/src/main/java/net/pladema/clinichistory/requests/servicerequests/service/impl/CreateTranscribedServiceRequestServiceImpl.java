@@ -7,7 +7,6 @@ import org.springframework.util.Assert;
 
 import ar.lamansys.sgh.clinichistory.application.calculatecie10.CalculateCie10Facade;
 import ar.lamansys.sgh.clinichistory.application.calculatecie10.Cie10FacadeRuleFeature;
-import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
@@ -18,6 +17,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.files.images.ImageFileService;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.SnomedValidator;
 import net.pladema.clinichistory.requests.controller.dto.TranscribedPrescriptionDto;
 import net.pladema.clinichistory.requests.servicerequests.repository.TranscribedServiceRequestRepository;
@@ -41,16 +41,19 @@ public class CreateTranscribedServiceRequestServiceImpl implements CreateTranscr
 
 	private final HealthConditionRepository healthConditionRepository;
 
+	private final ImageFileService imageFileService;
+
 	private final DateTimeProvider dateTimeProvider;
 
 	private final CalculateCie10Facade calculateCie10Facade;
 
 	private final SnomedService snomedService;
 
-    public CreateTranscribedServiceRequestServiceImpl(TranscribedServiceRequestRepository transcribedServiceRequestRepository, DiagnosticReportRepository diagnosticReportRepository, HealthConditionRepository healthConditionRepository, DateTimeProvider dateTimeProvider, CalculateCie10Facade calculateCie10Facade, SnomedService snomedService){
+    public CreateTranscribedServiceRequestServiceImpl(TranscribedServiceRequestRepository transcribedServiceRequestRepository, DiagnosticReportRepository diagnosticReportRepository, HealthConditionRepository healthConditionRepository, ImageFileService imageFileService, DateTimeProvider dateTimeProvider, CalculateCie10Facade calculateCie10Facade, SnomedService snomedService){
         this.transcribedServiceRequestRepository = transcribedServiceRequestRepository;
 		this.diagnosticReportRepository = diagnosticReportRepository;
 		this.healthConditionRepository = healthConditionRepository;
+		this.imageFileService = imageFileService;
 		this.dateTimeProvider = dateTimeProvider;
 		this.calculateCie10Facade = calculateCie10Facade;
 		this.snomedService = snomedService;
@@ -63,6 +66,7 @@ public class CreateTranscribedServiceRequestServiceImpl implements CreateTranscr
         assertRequiredFields(transcribedServiceRequestBo);
 		PatientInfoBo patientInfoBo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
 		Integer studyId = diagnosticReportRepository.save(getNewDiagnosticReport(patientInfoBo, transcribedServiceRequestBo)).getId();
+
         TranscribedServiceRequest newServiceRequest = createServiceRequest(transcribedServiceRequestBo, studyId);
 		transcribedServiceRequestBo.setId(newServiceRequest.getId());
 		LOG.debug(OUTPUT, transcribedServiceRequestBo);

@@ -71,6 +71,7 @@ import net.pladema.clinichistory.requests.servicerequests.service.ListDiagnostic
 import net.pladema.clinichistory.requests.servicerequests.service.ListTranscribedDiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.UpdateDiagnosticReportFileService;
 import net.pladema.clinichistory.requests.servicerequests.service.UploadDiagnosticReportCompletedFileService;
+import net.pladema.clinichistory.requests.servicerequests.service.UploadTranscribedOrderFileService;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 import net.pladema.events.EHospitalApiTopicDto;
@@ -101,6 +102,7 @@ public class ServiceRequestController {
 	private final ListTranscribedDiagnosticReportInfoService listTranscribedDiagnosticReportInfoService;
     private final DiagnosticReportInfoMapper diagnosticReportInfoMapper;
 
+	private final UploadTranscribedOrderFileService uploadTranscribedOrderFileService;
 	private final TranscribedDiagnosticReportInfoMapper transcribedDiagnosticReportInfoMapper;
     private final DeleteDiagnosticReportService deleteDiagnosticReportService;
     private final CompleteDiagnosticReportService completeDiagnosticReportService;
@@ -125,7 +127,7 @@ public class ServiceRequestController {
 									PatientExternalService patientExternalService,
 									StudyMapper studyMapper,
 									DiagnosticReportInfoMapper diagnosticReportInfoMapper,
-									ListDiagnosticReportInfoService listDiagnosticReportInfoService, ListTranscribedDiagnosticReportInfoService listTranscribedDiagnosticReportInfoService, TranscribedDiagnosticReportInfoMapper transcribedDiagnosticReportInfoMapper, DeleteDiagnosticReportService deleteDiagnosticReportService,
+									ListDiagnosticReportInfoService listDiagnosticReportInfoService, ListTranscribedDiagnosticReportInfoService listTranscribedDiagnosticReportInfoService, UploadTranscribedOrderFileService uploadTranscribedOrderFileService, TranscribedDiagnosticReportInfoMapper transcribedDiagnosticReportInfoMapper, DeleteDiagnosticReportService deleteDiagnosticReportService,
 									CompleteDiagnosticReportService completeDiagnosticReportService,
 									CompleteDiagnosticReportMapper completeDiagnosticReportMapper,
 									UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService,
@@ -146,6 +148,7 @@ public class ServiceRequestController {
 		this.diagnosticReportInfoMapper = diagnosticReportInfoMapper;
 		this.studyMapper = studyMapper;
 		this.listTranscribedDiagnosticReportInfoService = listTranscribedDiagnosticReportInfoService;
+		this.uploadTranscribedOrderFileService = uploadTranscribedOrderFileService;
 		this.transcribedDiagnosticReportInfoMapper = transcribedDiagnosticReportInfoMapper;
 		this.deleteDiagnosticReportService = deleteDiagnosticReportService;
 		this.completeDiagnosticReportService = completeDiagnosticReportService;
@@ -204,14 +207,26 @@ public class ServiceRequestController {
 	@Transactional
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public Integer createTranscribed(@PathVariable(name = "institutionId") Integer institutionId,
-										   @PathVariable(name = "patientId") Integer patientId,
-										   @RequestBody @Valid TranscribedPrescriptionDto prescription
-	) {
+										@PathVariable(name = "patientId") Integer patientId,
+									 	@RequestBody @Valid TranscribedPrescriptionDto prescription) {
 		LOG.debug("Input parameters -> institutionId {}, patientId {}, TranscriptPrescriptionDto {}", institutionId, patientId, prescription);
 		BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
 		Integer srId = createTranscribedServiceRequestService.execute(prescription, patientDto);
 		LOG.debug(OUTPUT, srId);
 		return srId;
+	}
+
+	@PostMapping(value = "/{orderId}/uploadFiles" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@ResponseStatus(code = HttpStatus.CREATED)
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
+	public List<Integer>  uploadFiles(@PathVariable(name = "institutionId") Integer institutionId,
+									 @PathVariable(name = "patientId") Integer patientId,
+									 @PathVariable(name = "orderId") Integer orderId,
+									 @RequestPart("files") MultipartFile[] files) {
+		LOG.debug("Input parameters -> institutionId {}, patientId {}, orderId {}", institutionId, patientId, orderId);
+		var result = uploadTranscribedOrderFileService.execute(files, orderId, patientId);
+		LOG.debug(OUTPUT, result);
+		return result;
 	}
 
     @PutMapping("/{diagnosticReportId}/complete")
@@ -316,8 +331,9 @@ public class ServiceRequestController {
 
 	@GetMapping("/transcribedOrders")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES')")
-	public List<TranscribedDiagnosticReportInfoDto> getList(@PathVariable(name = "patientId") Integer patientId,
-												 @RequestParam(value = "orderId", required = false) String orderId) {
+	public List<TranscribedDiagnosticReportInfoDto> getList(@PathVariable(name = "institutionId") Integer institutionId,
+															@PathVariable(name = "patientId") Integer patientId,
+															 @RequestParam(value = "orderId", required = false) String orderId) {
 		LOG.debug("Input parameters -> patientId {}, orderId) {}",
 				patientId,
 				orderId);
