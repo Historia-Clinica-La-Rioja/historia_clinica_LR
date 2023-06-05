@@ -20,6 +20,7 @@ export class PendingChangesGuard implements CanDeactivate<ComponentCanDeactivate
 		if (component.canDeactivate()) {
 			const dialog = this.dialog.open(DiscardWarningComponent,
 				{
+					disableClose: true,
 					data: {
 						content: 'ambulatoria.screen_change_warning_dialog.CONTENT',
 						contentBold: `ambulatoria.screen_change_warning_dialog.ANSWER_CONTENT`,
