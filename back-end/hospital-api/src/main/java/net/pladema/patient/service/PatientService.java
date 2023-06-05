@@ -6,6 +6,7 @@ import net.pladema.patient.controller.dto.PatientRegistrationSearchFilter;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.repository.domain.PatientPersonVo;
 import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.domain.LimitedPatientSearchBo;
 import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.patient.service.domain.PatientSearch;
@@ -41,5 +42,7 @@ public interface PatientService {
 	List<PatientRegistrationSearch> getPatientsRegistrationByFilter(PatientRegistrationSearchFilter searchFilter);
 
 	List<PatientRegistrationSearch> getPatientRegistrationById(Integer patientId);
+
+	List<PatientType> getPatientTypesForAuditor();
 
 }

@@ -1,5 +1,6 @@
 package net.pladema.patient.service.impl;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatientType;
 import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
@@ -15,6 +16,7 @@ import net.pladema.patient.repository.AuditablePatientRepository;
 import net.pladema.patient.repository.PatientAuditRepository;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
 import net.pladema.patient.repository.PatientRepository;
+import net.pladema.patient.repository.PatientTypeRepository;
 import net.pladema.patient.repository.PrivateHealthInsuranceDetailsRepository;
 import net.pladema.patient.repository.domain.PatientPersonVo;
 import net.pladema.patient.repository.entity.AuditablePatient;
@@ -60,6 +62,7 @@ public class PatientServiceImpl implements PatientService {
 	private final AuditablePatientRepository auditablePatientRepository;
 	private final FeatureFlagsService featureFlagsService;
 	private final LocalDateMapper localDateMapper;
+	private final PatientTypeRepository patientTypeRepository;
 
 	public PatientServiceImpl(PatientRepository patientRepository,
 							  PatientMedicalCoverageRepository patientMedicalCoverageRepository,
@@ -70,13 +73,14 @@ public class PatientServiceImpl implements PatientService {
 							  PatientAuditRepository patientAuditRepository,
 							  FeatureFlagsService featureFlagsService,
 							  AuditablePatientRepository auditablePatientRepository,
-							  LocalDateMapper localDateMapper) {
+							  LocalDateMapper localDateMapper, PatientTypeRepository patientTypeRepository) {
 		this.patientRepository = patientRepository;
 		this.hospitalAuditRepository = hospitalAuditRepository;
 		this.patientAuditRepository = patientAuditRepository;
 		this.featureFlagsService = featureFlagsService;
 		this.auditablePatientRepository = auditablePatientRepository;
 		this.localDateMapper = localDateMapper;
+		this.patientTypeRepository = patientTypeRepository;
 	}
 
 	@Override
@@ -217,7 +221,7 @@ public class PatientServiceImpl implements PatientService {
 	@Override
 	public List<PatientRegistrationSearch> getPatientRegistrationById(Integer patientId) {
 		LOG.debug("Input parameter -> patientId {}", patientId);
-		Optional<PatientRegistrationSearch> patientRegistration = patientRepository.getPatientRegistrationSearchById(patientId);
+		Optional<PatientRegistrationSearch> patientRegistration = patientRepository.getPatientRegistrationSearchById(patientId, EPatientType.getAllTypeIdsForAudit());
 		if (patientRegistration.isPresent()) {
 			PatientRegistrationSearch result = patientRegistration.get();
 			result.setRanking(100.0f);
@@ -226,6 +230,15 @@ public class PatientServiceImpl implements PatientService {
 		}
 		LOG.debug("Output -> No existe paciente con el id {} ", patientId);
 		return Collections.emptyList();
+	}
+
+	@Override
+	public List<PatientType> getPatientTypesForAuditor() {
+		List<Short> patientTypesId = EPatientType.getAllTypeIdsForAudit();
+		List<PatientType> result = patientTypeRepository.findAll()
+				.stream().filter(i -> patientTypesId.contains(i.getId())).collect(Collectors.toList());
+		LOG.debug(OUTPUT, result);
+		return result;
 	}
 
 	private AuditablePatientInfoDto mapToAuditablePatientInfoDto(AuditablePatientInfoBo auditablePatientInfo) {

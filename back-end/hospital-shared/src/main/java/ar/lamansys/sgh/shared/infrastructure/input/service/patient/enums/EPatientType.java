@@ -1,5 +1,8 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum EPatientType {
 
 	PERMANENT(1),
@@ -19,6 +22,15 @@ public enum EPatientType {
 
 	public Short getId() {
 		return id;
+	}
+
+	public static List<Short> getAllTypeIdsForAudit() {
+		return Arrays.asList(
+				PERMANENT.id,
+				VALIDATED.id,
+				TEMPORARY.id,
+				NOT_VALIDATED_PERMANENT.id
+		);
 	}
 
 }

@@ -40,8 +40,7 @@ public enum EAuditType {
 		}
 		throw new NotFoundException("auditor-type-not-exists", String.format("El tipo de auditoria '%s' no existe", value));
 	}
-
-	@JsonCreator
+	
 	public static EAuditType getById(Short id) {
 		if (id == null)
 			return null;

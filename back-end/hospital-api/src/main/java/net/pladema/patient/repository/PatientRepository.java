@@ -56,7 +56,7 @@ public interface PatientRepository extends SGXAuditableEntityJPARepository<Patie
 			"FROM Patient p " +
 			"JOIN Person pe ON p.personId = pe.id " +
 			"LEFT JOIN PersonExtended pee ON pee.id = pe.id " +
-			"WHERE p.id = :patientId")
-	Optional<PatientRegistrationSearch> getPatientRegistrationSearchById(@Param("patientId") Integer patientId);
+			"WHERE p.id = :patientId AND p.typeId IN :typeIds")
+	Optional<PatientRegistrationSearch> getPatientRegistrationSearchById(@Param("patientId") Integer patientId, @Param("typeIds") List<Short> typeIds);
 
 }

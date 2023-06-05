@@ -11,6 +11,7 @@ import net.pladema.patient.repository.AuditablePatientRepository;
 import net.pladema.patient.repository.PatientAuditRepository;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
 import net.pladema.patient.repository.PatientRepository;
+import net.pladema.patient.repository.PatientTypeRepository;
 import net.pladema.patient.repository.PrivateHealthInsuranceDetailsRepository;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.repository.entity.PatientType;
@@ -62,6 +63,9 @@ class PatientServiceImplIntegrationTest extends UnitRepository {
 	@Mock
 	private LocalDateMapper localDateMapper;
 
+	@Mock
+	private PatientTypeRepository patientTypeRepository;
+
 	@BeforeEach
     void setUp(){
         patientService = new PatientServiceImpl(
@@ -74,7 +78,7 @@ class PatientServiceImplIntegrationTest extends UnitRepository {
                 patientAuditRepository,
                 featureFlagsService,
 				auditablePatientRepository,
-				localDateMapper);
+				localDateMapper, patientTypeRepository);
     }
 
     @Test

@@ -14,6 +14,7 @@ import net.pladema.patient.controller.dto.PatientRegistrationSearchFilter;
 import net.pladema.patient.controller.mapper.PatientMapper;
 import net.pladema.patient.controller.service.exception.AuditPatientException;
 import net.pladema.patient.controller.service.exception.AuditPatientExceptionEnum;
+import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.person.controller.service.PersonExternalService;
@@ -77,6 +78,14 @@ public class AuditPatientController {
 		}
 		List<PatientPersonalInfoDto> result = personExternalService.getPatientsPersonalInfo(duplicatePatientDto);
 		return ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping(value = "/patient-types")
+	@PreAuthorize("hasPermission(#institutionId, 'AUDITOR_MPI')")
+	public ResponseEntity<List<PatientType>> getPatientTypes(@PathVariable(name = "institutionId") Integer institutionId) {
+		List<PatientType> result = patientService.getPatientTypesForAuditor();
+		log.debug("Get all patient types for auditor -> {} ", result);
+		return ResponseEntity.ok(result);
 	}
 
 	@GetMapping("/search-registration-patients")
