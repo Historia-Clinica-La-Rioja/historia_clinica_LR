@@ -783,6 +783,7 @@ const messages = {
         hierarchicalunits: {
             name: 'Unidad jerárquica |||| Unidades jerárquicas',
             fields: {
+                id: 'id',
                 institutionId: 'Institución',
                 classificationId: 'Clasificación',
                 typeId: 'Tipo',
@@ -790,7 +791,18 @@ const messages = {
                 clinicalSpecialtyId: 'Servicio'
             },
             createRelated: 'Crear Unidad jérarquica'
-        }
+        },
+        hierarchicalunitrelationships: {
+            name: 'Relación entre unidades jerárquicas',
+            fields : {
+                hierarchicalUnitChildId: 'Unidad jerárquica hija',
+                hierarchicalUnitParentId: 'Unidad jerárquica padre',
+            },
+            parents : {
+                name: 'Unidades jerárquicas padres',
+                addRelated: 'Asociar unidad jerárquica'
+            }
+        },
     }
 };
 

@@ -9,6 +9,7 @@ import {
     TextInput,
 } from 'react-admin';
 import CustomToolbar from '../components/CustomToolbar';
+import {HierarchicalUnitParents} from "./HierarchicalUnitShow";
 
 const SERVICE = 8;
 
@@ -38,6 +39,7 @@ const HierarchicalUnitEdit = props => (
             <FormDataConsumer>
                 {formDataProps => ( <ServiceField {...formDataProps} reference="clinicalservices" source="clinicalSpecialtyId"/>)}
             </FormDataConsumer>
+            <HierarchicalUnitParents/>
         </SimpleForm>
     </Edit>
 );
