@@ -19,6 +19,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static net.pladema.establishment.repository.entity.HierarchicalUnitType.SERVICIO;
+
 @Component
 @RequiredArgsConstructor
 public class BackofficeHierarchicalUnitValidator implements BackofficePermissionValidator<HierarchicalUnit, Integer> {
@@ -49,6 +51,8 @@ public class BackofficeHierarchicalUnitValidator implements BackofficePermission
 	public void assertCreate(HierarchicalUnit entity) {
 		if (repository.findByAlias(entity.getAlias()).isPresent())
 			throw new BackofficeValidationException("hierarchical-unit.alias.exists");
+		if (entity.getClinicalSpecialtyId() != null && !entity.getTypeId().equals((int)SERVICIO))
+			entity.setClinicalSpecialtyId(null);
 	}
 
 	@Override
