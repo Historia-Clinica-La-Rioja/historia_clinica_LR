@@ -41,13 +41,13 @@ public class BackofficeHierarchicalUnitRelationshipValidator implements Backoffi
 	@Override
 	@PreAuthorize("hasAnyAuthority('ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertCreate(HierarchicalUnitRelationship entity) {
-
+		validateRelationship(entity);
 	}
 
 	@Override
 	@PreAuthorize("hasAnyAuthority('ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertUpdate(Integer id, HierarchicalUnitRelationship entity) {
-
+		validateRelationship(entity);
 	}
 
 	@Override
@@ -66,5 +66,13 @@ public class BackofficeHierarchicalUnitRelationshipValidator implements Backoffi
 	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public ItemsAllowed itemsAllowedToList() {
 		return new ItemsAllowed<>();
+	}
+
+	private void validateRelationship(HierarchicalUnitRelationship entity) {
+		if (entity.getHierarchicalUnitChildId() == entity.getHierarchicalUnitParentId())
+			throw new BackofficeValidationException("hierarchical-unit-relationship.parentOfItself");
+		if (entity.getHierarchicalUnitChildId() != null &&
+				repository.existsRelationship(entity.getHierarchicalUnitChildId(), entity.getHierarchicalUnitParentId()))
+			throw new BackofficeValidationException("hierarchical-unit-relationship.exists");
 	}
 }

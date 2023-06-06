@@ -29,4 +29,22 @@ public interface HierarchicalUnitRelationshipRepository extends SGXAuditableEnti
 			"FROM HierarchicalUnitRelationship hur " +
 			"WHERE hur.hierarchicalUnitParentId = :hierarchicalUnitId")
 	boolean existsParentRelationship(@Param("hierarchicalUnitId") Integer hierarchicalUnitId);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT hu " +
+			"FROM HierarchicalUnitRelationship hur " +
+			"JOIN HierarchicalUnit hu " +
+			"ON hur.hierarchicalUnitChildId = hu.id " +
+			"WHERE hur.hierarchicalUnitParentId IN (:ids)")
+	List<HierarchicalUnit> findAllParents(@Param("ids") List<Integer> ids);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT hur.hierarchicalUnitParentId " +
+			"FROM HierarchicalUnitRelationship hur " +
+			"JOIN HierarchicalUnit hu " +
+			"ON hur.hierarchicalUnitChildId = hu.id " +
+			"WHERE hur.hierarchicalUnitChildId = :hierarchicalUnitId ")
+	List<Integer> findParentsIdsByHierarchicalUnitChildId(@Param("hierarchicalUnitId") Integer hierarchicalUnitId);
+
+
 }
