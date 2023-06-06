@@ -31,5 +31,5 @@ public interface OrderImageFileRepository extends JpaRepository<OrderImageFile, 
     @Query("SELECT NEW net.pladema.clinichistory.requests.servicerequests.repository.domain.FileVo(oif.id, oif.name) " +
             "FROM OrderImageFile oif " +
             "WHERE oif.orderId = :oiId ")
-    List<FileVo> getFilesByDiagnosticReport(@Param("oiId") Integer orderImageId);
+    List<FileVo> getFilesByOrderId(@Param("oiId") Integer orderImageId);
 }

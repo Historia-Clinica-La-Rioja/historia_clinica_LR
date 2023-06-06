@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import net.pladema.clinichistory.requests.servicerequests.service.DeleteTranscribedOrderService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -110,6 +112,8 @@ public class ServiceRequestController {
     private final UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService;
     private final UpdateDiagnosticReportFileService updateDiagnosticReportFileService;
     private final DiagnosticReportInfoService diagnosticReportInfoService;
+
+	private final DeleteTranscribedOrderService deleteTranscribedOrderService;
     private final FileMapper fileMapper;
     private final PatientExternalMedicalCoverageService patientExternalMedicalCoverageService;
     private final PdfService pdfService;
@@ -132,8 +136,7 @@ public class ServiceRequestController {
 									CompleteDiagnosticReportMapper completeDiagnosticReportMapper,
 									UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService,
 									UpdateDiagnosticReportFileService updateDiagnosticReportFileService,
-									DiagnosticReportInfoService diagnosticReportInfoService,
-									FileMapper fileMapper,
+									DiagnosticReportInfoService diagnosticReportInfoService, DeleteTranscribedOrderService deleteTranscribedOrderService, FileMapper fileMapper,
 									PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
 									PdfService pdfService, GetServiceRequestInfoService getServiceRequestInfoService,
 									HospitalApiPublisher hospitalApiPublisher, FeatureFlagsService featureFlagsService,
@@ -156,6 +159,7 @@ public class ServiceRequestController {
 		this.uploadDiagnosticReportCompletedFileService = uploadDiagnosticReportCompletedFileService;
 		this.updateDiagnosticReportFileService = updateDiagnosticReportFileService;
 		this.diagnosticReportInfoService = diagnosticReportInfoService;
+		this.deleteTranscribedOrderService = deleteTranscribedOrderService;
 		this.fileMapper = fileMapper;
 		this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
 		this.pdfService = pdfService;
@@ -205,7 +209,7 @@ public class ServiceRequestController {
 	@PostMapping("/transcribed")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	@Transactional
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ADMINISTRATIVO_RED_DE_IMAGENES')")
 	public Integer createTranscribed(@PathVariable(name = "institutionId") Integer institutionId,
 										@PathVariable(name = "patientId") Integer patientId,
 									 	@RequestBody @Valid TranscribedPrescriptionDto prescription) {
@@ -216,9 +220,19 @@ public class ServiceRequestController {
 		return srId;
 	}
 
+	@DeleteMapping("/{orderId}/delete-transcribed")
+	@ResponseStatus(code = HttpStatus.OK)
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	public void deleteTranscribedOrder(@PathVariable(name = "institutionId") Integer institutionId,
+					   	@PathVariable(name = "patientId") Integer patientId,
+					   	@PathVariable(name = "orderId") Integer orderId) {
+		LOG.debug("Input parameters -> institutionId {}, patientId {}, orderId {}", institutionId, patientId, orderId);
+		deleteTranscribedOrderService.execute(orderId);
+	}
+
 	@PostMapping(value = "/{orderId}/uploadFiles" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ResponseStatus(code = HttpStatus.CREATED)
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ADMINISTRATIVO_RED_DE_IMAGENES')")
 	public List<Integer>  uploadFiles(@PathVariable(name = "institutionId") Integer institutionId,
 									 @PathVariable(name = "patientId") Integer patientId,
 									 @PathVariable(name = "orderId") Integer orderId,

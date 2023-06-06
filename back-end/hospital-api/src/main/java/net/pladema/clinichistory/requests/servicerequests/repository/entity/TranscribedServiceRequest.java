@@ -1,25 +1,27 @@
 	package net.pladema.clinichistory.requests.servicerequests.repository.entity;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
-import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import net.pladema.clinichistory.requests.repository.entity.RequestIntentStatus;
+	import java.time.LocalDateTime;
 
-import javax.annotation.Nullable;
-import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
+	import javax.persistence.Column;
+	import javax.persistence.Entity;
+	import javax.persistence.GeneratedValue;
+	import javax.persistence.GenerationType;
+	import javax.persistence.Id;
+	import javax.persistence.Table;
 
-import java.time.LocalDateTime;
+	import lombok.AllArgsConstructor;
+	import lombok.Getter;
+	import lombok.NoArgsConstructor;
+	import lombok.Setter;
+	import lombok.ToString;
 
 @Entity
 @Table(name = "transcribed_service_request")
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class TranscribedServiceRequest {
 
 	@Id
@@ -42,7 +44,6 @@ public class TranscribedServiceRequest {
 	private LocalDateTime creationDate = LocalDateTime.now();
 
 	public TranscribedServiceRequest(Integer studyId, String healthcareProfessionalName, String institutionName, Integer patientId){
-		super();
 		this.studyId = studyId;
 		this.healthcareProfessionalName = healthcareProfessionalName;
 		this.institutionName = institutionName;
