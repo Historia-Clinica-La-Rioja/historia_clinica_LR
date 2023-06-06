@@ -50,6 +50,10 @@ export class PrescripcionesService {
 		return this.serviceRequestService.createTranscribedOrder(patientId, studySCTID, problemSCTID, professional, institution);
 	}
 
+	deleteTranscribedOrder(patientId: number, serviceRequestId: number): Observable<void> {
+		return this.serviceRequestService.deleteTranscribedOrder(patientId, serviceRequestId);
+	}
+
 	getTranscribedOrders(patientId: number): Observable<TranscribedDiagnosticReportInfoDto[]> {
 		return this.serviceRequestService.getTranscribedOrders(patientId);
 	}

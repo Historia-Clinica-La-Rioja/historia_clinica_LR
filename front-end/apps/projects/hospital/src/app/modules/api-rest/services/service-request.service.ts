@@ -69,6 +69,11 @@ export class ServiceRequestService {
 		return this.http.post<number>(url, data)
 	}
 
+	deleteTranscribedOrder(patientId: number, orderId: number): Observable<void>{
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${orderId}/delete-transcribed`;
+		return this.http.delete<void>(url)
+	}
+
 	getTranscribedOrders(patientId: number): Observable<TranscribedDiagnosticReportInfoDto[]>{
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/transcribedOrders`;
 		return this.http.get<TranscribedDiagnosticReportInfoDto[]>(url)

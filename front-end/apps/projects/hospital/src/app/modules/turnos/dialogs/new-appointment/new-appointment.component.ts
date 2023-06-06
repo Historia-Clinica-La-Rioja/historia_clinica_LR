@@ -400,6 +400,11 @@ export class NewAppointmentComponent implements OnInit {
 		this.formSearch.controls.completed.reset();
 		this.appointmentInfoForm.reset();
 		this.patientMedicalOrders = [];
+		if (this.transcribedOrder){
+			this.prescripcionesService.deleteTranscribedOrder(this.patientId, this.transcribedOrder.serviceRequestId).subscribe(() => {
+				this.transcribedOrder = null;
+				this.patientMedicalOrderTooltipDescription = '' });
+		}
 	}
 
 	openMedicalCoverageDialog(): void {
@@ -445,6 +450,13 @@ export class NewAppointmentComponent implements OnInit {
 
 	clearQueryParams() {
 		this.router.navigate([]);
+	}
+
+	cancelBtnActions() {
+		if (this.transcribedOrder){
+			this.prescripcionesService.deleteTranscribedOrder(this.patientId, this.transcribedOrder.serviceRequestId).subscribe();
+		}
+		this.clearQueryParams();
 	}
 
 	getPatientMedicalOrders() {
