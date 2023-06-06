@@ -11,5 +11,9 @@ export const REPORT_TYPES = [
 	{
 		description: 'Pacientes diábeticos sin atención hace 120 días',
 		id: 3
+	},
+	{
+		description: 'Pacientes hipertensos sin atención hace 120 días',
+		id: 4
 	}
 ];
