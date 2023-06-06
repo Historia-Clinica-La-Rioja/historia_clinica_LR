@@ -48,6 +48,7 @@ import { PatientMasterDataService } from '@api-rest/services/patient-master-data
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { EditIdentificationNumberComponent, PersonBasicDataResponseCustom } from '@pacientes/dialogs/edit-identification-number/edit-identification-number.component';
 import { momentParseDate } from '@core/utils/moment.utils';
+import { AuditPatientService } from '@api-rest/services/audit-patient.service';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -117,6 +118,7 @@ export class EditPatientComponent implements OnInit {
 		private permissionsService: PermissionsService,
 		private readonly datePipe: DatePipe,
 		private patientMasterDataService: PatientMasterDataService,
+		private auditPatientService: AuditPatientService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
@@ -260,9 +262,16 @@ export class EditPatientComponent implements OnInit {
 										);
 									}
 								);
-								this.patientMasterDataService.getTypesPatient().subscribe(res => {
-									this.typesPatient = res;
-								})
+
+								if (this.hasAuditorRole) {
+									this.auditPatientService.getTypesPatient().subscribe(res => {
+										this.typesPatient = res;
+									})
+								} else {
+									this.patientMasterDataService.getTypesPatient().subscribe(res => {
+										this.typesPatient = res;
+									})
+								}
 								//Tooltips
 								this.currentOccupationDescription = this.occupations.find(occupation => occupation.id === personInformationData.occupationId)?.description;
 								this.currentEducationLevelDescription = this.educationLevels.find(educationLevel => educationLevel.id === personInformationData.educationLevelId)?.description;

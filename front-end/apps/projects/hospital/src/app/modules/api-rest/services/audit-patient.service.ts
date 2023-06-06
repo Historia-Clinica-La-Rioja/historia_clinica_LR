@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DuplicatePatientDto, PatientPersonalInfoDto, PatientRegistrationSearchDto } from '@api-rest/api-model';
+import { DuplicatePatientDto, PatientPersonalInfoDto, PatientRegistrationSearchDto, PatientType } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -30,4 +30,10 @@ export class AuditPatientService {
 		const url = `${environment.apiBase}/audit/institution/${this.contextService.institutionId}/search-registration-patients`;
 		return this.http.get<PatientRegistrationSearchDto[]>(url, { params: { searchFilterStr: JSON.stringify(searchPatientInfo) } });
 	}
+
+	getTypesPatient() :Observable<PatientType[]> {
+		const url = `${environment.apiBase}/audit/institution/${this.contextService.institutionId}/patient-types`;
+		return this.http.get<PatientType[]>(url);
+	}
+
 }
