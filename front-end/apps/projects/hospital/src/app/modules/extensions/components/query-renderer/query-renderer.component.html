@@ -24,8 +24,9 @@
 
 	</div>
 
-	<div style="overflow-x: auto; max-width: 100%;">
-		<table *ngIf="chartType === 'table'" mat-table [dataSource]="tableData">
+	<div *ngIf="chartType === 'table'" style="overflow-x: auto; max-width: 100%;">
+		<app-download-csv-button align="end" style="margin: 15px;" [data]="tableData"></app-download-csv-button>
+		<table mat-table [dataSource]="tableData">
 			<ng-container
 				*ngFor="let column of displayedColumns; let index = index"
 				[matColumnDef]="column">

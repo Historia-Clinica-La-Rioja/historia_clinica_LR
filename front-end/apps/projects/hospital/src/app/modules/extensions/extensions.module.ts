@@ -28,6 +28,7 @@ import { MultiselectCubejsDashboardComponent } from './components/multiselect-cu
 import { CubejsCardComponent } from './components/cubejs-card/cubejs-card.component';
 import { AppointmentStateInputComponent } from './components/appointment-state-input/appointment-state-input.component';
 import { FreeTextFormInputComponent } from './components/free-text-form-input/free-text-form-input.component';
+import { DownloadCsvButtonComponent } from './components/download-csv-button/download-csv-button.component';
 
 @NgModule({
 	imports: [
@@ -61,6 +62,7 @@ import { FreeTextFormInputComponent } from './components/free-text-form-input/fr
   CubejsCardComponent,
   AppointmentStateInputComponent,
   FreeTextFormInputComponent,
+  DownloadCsvButtonComponent,
 	],
 	exports: [
 		// components
