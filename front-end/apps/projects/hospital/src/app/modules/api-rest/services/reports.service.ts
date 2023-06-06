@@ -47,4 +47,9 @@ export class ReportsService {
 		return this.http.get<UIComponentDto>(url);
 	}
 
+	getHypertensionReport(): Observable<UIComponentDto> {
+		const url = `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/hypertension`;
+		return this.http.get<UIComponentDto>(url);
+	}
+
 }

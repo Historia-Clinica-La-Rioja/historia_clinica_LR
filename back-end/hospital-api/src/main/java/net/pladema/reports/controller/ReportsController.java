@@ -266,9 +266,20 @@ public class ReportsController {
 
 	@GetMapping("/institution/{institutionId}/diabetes")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_ESTADISTICA, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
-	public ResponseEntity<UIComponentDto> getDiabetesReport2(@PathVariable(name = "institutionId") Integer institutionId){
+	public ResponseEntity<UIComponentDto> getDiabetesReport(@PathVariable(name = "institutionId") Integer institutionId){
  		LOG.debug("Input parameter -> institutionId {}", institutionId);
 		UIComponentDto result = JsonResourceUtils.readJson("extension/reports/diabetesReport.json",
+				new TypeReference<>() {},
+				null
+		);
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/institution/{institutionId}/hypertension")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_ESTADISTICA, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+	public ResponseEntity<UIComponentDto> getHypertensionReport(@PathVariable(name = "institutionId") Integer institutionId){
+		LOG.debug("Input parameter -> institutionId {}", institutionId);
+		UIComponentDto result = JsonResourceUtils.readJson("extension/reports/hypertensionReport.json",
 				new TypeReference<>() {},
 				null
 		);
