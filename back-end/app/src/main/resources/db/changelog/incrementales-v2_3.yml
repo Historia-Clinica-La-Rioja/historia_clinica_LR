@@ -48,3 +48,83 @@ databaseChangeLog:
                 constraintName:  user_key_unique
                 tableName:  user_key
                 validate:  true
+
+    - changeSet:
+        id: hierarchical_unit_relationship-createTable
+        comment: Create table hierarchical_unit_relationship
+        author: bchacon
+        changes:
+          - createTable:
+              tableName: hierarchical_unit_relationship
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_hierarchical_unit_relationship
+                    name: id
+                    type: int
+                - column:
+                    name: hierarchical_unit_parent_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: hierarchical_unit_child_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: hierarchical_unit_parent_id
+              baseTableName: hierarchical_unit_relationship
+              constraintName: FK_hierarchical_unit_relationship_hierarchical_unit_parent_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: hierarchical_unit
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: hierarchical_unit_child_id
+              baseTableName: hierarchical_unit_relationship
+              constraintName: FK_hierarchical_unit_relationship_hierarchical_unit_child_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: hierarchical_unit
+              validate: true
