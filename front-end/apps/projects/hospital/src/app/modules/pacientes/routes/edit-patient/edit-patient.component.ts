@@ -136,7 +136,7 @@ export class EditPatientComponent implements OnInit {
 						this.completeDataPatient = completeData;
 						if (completeData?.auditablePatientInfo) {
 							this.wasMarked = true;
-							this.auditTypeId = EAuditType.UNAUDITED;
+							this.auditTypeId = EAuditType.TO_AUDIT;
 							this.auditableFullDate = dateTimeDtotoLocalDate(
 								{
 									date: this.completeDataPatient.auditablePatientInfo.createdOn.date,
@@ -392,7 +392,7 @@ export class EditPatientComponent implements OnInit {
 	save(): void {
 		this.formSubmitted = true;
 		if (this.form.valid) {
-			if (this.wasMarked) {
+			if (this.wasMarked && this.hasAuditorRole) {
 				const dialogRef = this.dialog.open(DiscardWarningComponent, {
 					data: {
 						title: 'pacientes.audit.QUESTION_MARK_AUDIT_RESOLVED',
