@@ -72,7 +72,7 @@ button.medical-coverage {
 #updateDNI button{
 	text-decoration-line: underline ;
 }
- :host ::ng-deep .inputDni .mat-form-field-wrapper{
+ :host ::ng-deep .inputCustom .mat-form-field-wrapper{
 	padding-bottom: 0px!important;
 }
 #cardMessageAudit{
@@ -80,4 +80,7 @@ button.medical-coverage {
 }
 p.grey{
 	margin-right: 3px;;
+}
+.font-size{
+	font-size: 75%
 }
