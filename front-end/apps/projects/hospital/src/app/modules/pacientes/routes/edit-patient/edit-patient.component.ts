@@ -579,7 +579,7 @@ export class EditPatientComponent implements OnInit {
 			departmentId: this.form.controls.addressDepartmentId.value,
 			provinceId: this.form.controls.addressProvinceId.value,
 			// Patient
-			typeId: this.patientType,
+			typeId: this.form.controls.stateId.value,
 			comments: null,
 			identityVerificationStatusId: null,
 			// Doctors
