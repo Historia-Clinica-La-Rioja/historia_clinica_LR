@@ -13,10 +13,13 @@
         <mat-expansion-panel class="dark-panel" [expanded]="panelOpenState === element.Orden">
           <mat-expansion-panel-header (click)="panelOpenState = element.Orden">
             <mat-panel-title>
-              <div class="contenedor-gral">
-                {{ element.Orden }}. {{ element.Nombre }}
+              <div class="container-orden">
+                {{ element.Orden }}. 
               </div>
-              <div class="contenedor-sexo">
+              <div class="container-name">
+                {{ element.Nombre }}
+              </div>
+              <div class="container-sexo">
                 {{ element.Sexo }}
               </div>
               <!--<div class="contenedor-nina-nino">
@@ -35,3 +38,4 @@
     </mat-accordion>
   </div>
 </section>
+

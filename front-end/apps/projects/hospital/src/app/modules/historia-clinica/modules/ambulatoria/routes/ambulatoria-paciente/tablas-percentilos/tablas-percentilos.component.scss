@@ -1,39 +1,40 @@
 .container{
-    //padding-top: 15px;
-    //padding: 20px;
-    //max-width: 70%;
-    ///margin: auto;
-    border: 1px solid #e0eef7;
-    box-shadow: 0px 3px 3px 0px rgba(179,177,179,1);
-    margin-top: 3%;
+  //padding-top: 15px;
+  //padding: 20px;
+  //max-width: 70%;
+  ///margin: auto;
+  border: 1px solid #e0eef7;
+  box-shadow: 0px 3px 3px 0px rgba(179,177,179,1);
+  margin-top: 3%;
+ }
   
-  }
-     
-   .contenedor-title{
-      display: flex;
-      width: 100%;
-      //justify-content: space-between;
-    }
-  
-  
-  .column-title { 
-    margin-left: 16.8%; //SE ALINEA EL TITLE SEXO HACIA LA IZQUIERDA
-  }
-    
-  .contenedor-title>span{
-    padding: 0 15% 0;
-  
-   }
-  
-   .contenedor-sexo {
+ .contenedor-title{
     display: flex;
-    margin-left: 62.7%; 
-    position: absolute;
+    width: 100%;
+    //justify-content: space-between;
   }
-  
-  
-  .grafic {  //IMAGENES DENTRO DE FILAS
-    height: 700px;
-    width: 900px;
-    margin-left: 10%;
+
+.column-title {
+  margin-left: 16.8%; //SE ALINEA EL TITLE SEXO HACIA LA IZQUIERDA
+}
+ 
+.contenedor-title>span{
+  padding: 0 15% 0;
   }
+  .container-sexo {
+  display: flex;
+  margin-left: 62.7%;
+  position: absolute;
+}
+
+.grafic {  //IMAGENES DENTRO DE FILAS
+  height: 700px;
+  width: 900px;
+  margin-left: 10%;
+}
+
+
+.container-name {
+  position: absolute;
+  margin-left: 5%;
+}

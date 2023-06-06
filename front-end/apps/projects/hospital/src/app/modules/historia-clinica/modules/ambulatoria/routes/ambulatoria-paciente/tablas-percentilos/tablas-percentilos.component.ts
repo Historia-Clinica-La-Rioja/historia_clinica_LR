@@ -23,7 +23,14 @@ const ELEMENT_DATA: PeriodicElement[] = [
   { Grafic: IMAGE_ITEM + '35.jpeg', Orden: 10, Nombre: 'Estatura nacimiento - 19 años', Sexo: 'NIÑOS' },
   { Grafic: IMAGE_ITEM + '13.jpeg', Orden: 11, Nombre: 'Perimetro cefálico nacimiento - 5 años', Sexo: 'NIÑAS' },
   { Grafic: IMAGE_ITEM + '37.jpeg', Orden: 12, Nombre: 'Perimetro cefálico nacimiento - 5 años', Sexo: 'NIÑOS' },
-
+  { Grafic: IMAGE_ITEM + '19.jpeg', Orden: 13, Nombre: 'IMC Nacimiento - 5 años', Sexo: 'NIÑAS' },
+  { Grafic: IMAGE_ITEM + '43.jpeg', Orden: 14, Nombre: 'IMC Nacimiento - 5 años', Sexo: 'NIÑOS' },
+  { Grafic: IMAGE_ITEM + '20.jpeg', Orden: 15, Nombre: 'IMC 5 - 19 años', Sexo: 'NIÑAS' },
+  { Grafic: IMAGE_ITEM + '44.jpeg', Orden: 16, Nombre: 'IMC 5 - 19 años', Sexo: 'NIÑOS' },
+  { Grafic: IMAGE_ITEM + '49a.jpeg', Orden: 17, Nombre: 'SIND de DOWN - Peso y longitud 0-36 meses', Sexo: 'NIÑAS' },
+  { Grafic: IMAGE_ITEM + '49b.jpeg', Orden: 18, Nombre: 'SIND de DOWN - Peso y longitud 2-18 meses', Sexo: 'NIÑAS' },
+  { Grafic: IMAGE_ITEM + '49c.jpeg', Orden: 19, Nombre: 'SIND de DOWN - Peso y longitud 0-36 meses', Sexo: 'NIÑOS' },
+  { Grafic: IMAGE_ITEM + '49d.jpeg', Orden: 20, Nombre: 'SIND de DOWN - Peso y longitud 2-18 meses', Sexo: 'NIÑOS' },
 ];
 
 @Component({
