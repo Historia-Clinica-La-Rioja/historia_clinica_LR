@@ -14,4 +14,19 @@ import java.util.List;
 @Repository
 public interface HierarchicalUnitRelationshipRepository extends SGXAuditableEntityJPARepository<HierarchicalUnitRelationship, Integer> {
 
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT CASE WHEN COUNT(hur) > 0 THEN true ELSE false END " +
+			"FROM HierarchicalUnitRelationship hur " +
+			"WHERE (hur.hierarchicalUnitParentId = :hierarchicalUnitParentId " +
+			"AND hur.hierarchicalUnitChildId = :hierarchicalUnitChildId) " +
+			"OR (hur.hierarchicalUnitParentId = :hierarchicalUnitChildId " +
+			"AND hur.hierarchicalUnitChildId = :hierarchicalUnitParentId)")
+	boolean existsRelationship(@Param("hierarchicalUnitChildId") Integer hierarchicalUnitChildId,
+							   @Param("hierarchicalUnitParentId") Integer hierarchicalUnitParentId);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT CASE WHEN COUNT(hur) > 0 THEN true ELSE false END " +
+			"FROM HierarchicalUnitRelationship hur " +
+			"WHERE hur.hierarchicalUnitParentId = :hierarchicalUnitId")
+	boolean existsParentRelationship(@Param("hierarchicalUnitId") Integer hierarchicalUnitId);
 }

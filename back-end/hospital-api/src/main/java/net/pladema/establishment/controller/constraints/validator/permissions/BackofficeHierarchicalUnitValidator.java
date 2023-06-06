@@ -1,6 +1,7 @@
 package net.pladema.establishment.controller.constraints.validator.permissions;
 
 import lombok.RequiredArgsConstructor;
+import net.pladema.establishment.repository.HierarchicalUnitRelationshipRepository;
 import net.pladema.establishment.repository.HierarchicalUnitRepository;
 import net.pladema.establishment.repository.entity.HierarchicalUnit;
 import net.pladema.permissions.repository.enums.ERole;
@@ -26,6 +27,8 @@ import static net.pladema.establishment.repository.entity.HierarchicalUnitType.S
 public class BackofficeHierarchicalUnitValidator implements BackofficePermissionValidator<HierarchicalUnit, Integer> {
 
 	private final HierarchicalUnitRepository repository;
+
+	private final HierarchicalUnitRelationshipRepository hierarchicalUnitRelationshipRepository;
 
 	private final BackofficeAuthoritiesValidator authoritiesValidator;
 
@@ -68,7 +71,8 @@ public class BackofficeHierarchicalUnitValidator implements BackofficePermission
 	@Override
 	@PreAuthorize("hasAnyAuthority('ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertDelete(Integer id) {
-
+		if (hierarchicalUnitRelationshipRepository.existsParentRelationship(id))
+			throw new BackofficeValidationException("hierarchical-unit.affected");
 	}
 
 	@Override
