@@ -51,8 +51,7 @@ public class BackofficeHierarchicalUnitValidator implements BackofficePermission
 	public void assertCreate(HierarchicalUnit entity) {
 		if (repository.findByAlias(entity.getAlias()).isPresent())
 			throw new BackofficeValidationException("hierarchical-unit.alias.exists");
-		if (entity.getClinicalSpecialtyId() != null && !entity.getTypeId().equals((int)SERVICIO))
-			entity.setClinicalSpecialtyId(null);
+		validateClinicalSpecialtyIdData(entity);
 	}
 
 	@Override
@@ -63,6 +62,7 @@ public class BackofficeHierarchicalUnitValidator implements BackofficePermission
 				throw new BackofficeValidationException("hierarchical-unit.alias.exists");
 			}, () -> new BackofficeValidationException("hierarchical-unit.invalid-id")
 		);
+		validateClinicalSpecialtyIdData(entity);
 	}
 
 	@Override
@@ -88,6 +88,11 @@ public class BackofficeHierarchicalUnitValidator implements BackofficePermission
 	@Override
 	public ItemsAllowed<Integer> itemsAllowedToList() {
 		return new ItemsAllowed<>();
+	}
+
+	private void validateClinicalSpecialtyIdData(HierarchicalUnit entity) {
+		if (entity.getClinicalSpecialtyId() != null && !entity.getTypeId().equals((int)SERVICIO))
+			entity.setClinicalSpecialtyId(null);
 	}
 
 }
