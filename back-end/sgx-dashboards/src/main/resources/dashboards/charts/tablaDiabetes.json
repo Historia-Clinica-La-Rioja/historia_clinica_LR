@@ -30,17 +30,17 @@
   "chartType": "table",
   "pivotConfig": {
     "x": [
+      "TablaDiabetes.numero_identificacion",
       "TablaDiabetes.primer_nombre",
       "TablaDiabetes.apellido",
-      "TablaDiabetes.numero_identificacion",
-      "TablaDiabetes.problema",
-      "TablaDiabetes.fecha_deteccion_diagnostico",
-      "TablaDiabetes.ultima_fecha_atencion",
-      "TablaDiabetes.severidad",
       "TablaDiabetes.direccion",
       "TablaDiabetes.nombre_ciudad",
+      "TablaDiabetes.problema",
+      "TablaDiabetes.fecha_deteccion_diagnostico",
+      "TablaDiabetes.severidad",
       "TablaDiabetes.valor_hemoglobina_glicosada",
       "TablaDiabetes.valor_glucemia",
+      "TablaDiabetes.ultima_fecha_atencion",
       "TablaDiabetes.fecha_fondo_de_ojo"
     ],
     "y": [
