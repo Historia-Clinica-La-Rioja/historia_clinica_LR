@@ -55,6 +55,8 @@ export class WorklistByTechnicalComponent implements OnInit {
     pageSlice = [];
 	selectedAppointment: EquipmentAppointmentListDto;
 
+    readonly appointmentStatesId = APPOINTMENT_STATES_ID;
+
     constructor(private readonly equipmentService: EquipmentService,
 		private readonly featureFlagService: FeatureFlagService,
         private readonly appointmentsService: AppointmentsService,

@@ -60,11 +60,23 @@
                                     <span class="grey">{{appointment.time}} hs.
                                     </span>
                                 </div>
-								<div fxFlex.gt-sm="15" fxFlex.gt-md="13">
-									<button mat-flat-button color="primary" fxFlex="100" *ngIf="appointment.canBeFinished" (click)="finishStudy(appointment.data)">
+								<div fxFlex.gt-sm="20" fxFlex.gt-md="17" fxLayoutAlign="center center">
+									<button mat-flat-button color="primary" fxFlex="90" *ngIf="appointment.canBeFinished" (click)="finishStudy(appointment.data)">
 										<span class="uppercase" [translate]="'image-network.appointments.FINISH'"></span>
 									</button>
 								</div>
+                            </div>
+                            <div fxFlex="5%">
+                                <button *ngIf="appointment.data.appointmentStateId === appointmentStatesId.SERVED"
+                                    mat-icon-button [matMenuTriggerFor]="menu">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu">
+                                    <button *ngIf="true" mat-menu-item>
+                                        <span
+                                            [translate]="'image-network.worklist.DERIVE_REPORT'"></span>
+                                    </button>
+                                </mat-menu>
                             </div>
                         </mat-list-item>
                         <mat-divider></mat-divider>

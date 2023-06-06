@@ -75,7 +75,8 @@
             "WORKLIST_BY_INFORMER": "Lista de informes",
             "MODALITIES": "Seleccione modalidades",
             "FINISH": "finalizar",
-            "VIEW_DETAILS": "ver detalle"
+            "VIEW_DETAILS": "ver detalle",
+			"DERIVE_REPORT": "Derivar informe"
         }
     }
 }
