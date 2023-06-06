@@ -467,7 +467,7 @@
                         "type" : "cubejs-card",
                         "args" : {
                           "header" : {
-                            "title" : "Evolución de turnos por fecha"
+                            "title" : "Evolución de turnos por fecha de creación"
                           },
                           "content" : {
                             "type" : "cubejs-dashboard",
@@ -481,9 +481,6 @@
                                   "type" : "dateRangeISO",
                                   "label" : "Fecha"
                                 }
-                              },
-                              "title" : {
-                                "text" : "Evolución de turnos por fecha de creación"
                               },
                               "label" : "Evolución - línea",
                               "content" : [
@@ -543,9 +540,6 @@
                                   "label" : "Estado de turno"
                                 }
                               },
-                              "title" : {
-                                "text" : "Turnos por especialidad"
-                              },
                               "label" : "Especialidad",
                               "content" : [
                                 {
@@ -595,9 +589,6 @@
                                   "label" : "Estado de turno"
                                 }
                               },
-                              "title" : {
-                                "text" : "Turnos por profesional"
-                              },
                               "label" : "Profesional",
                               "content" : [
                                 {
@@ -626,39 +617,13 @@
                           "header" : {
                             "title" : "Turnos por estado"
                           },
-                          "filters" : {
-                            "specialty" : {
-                              "filter" : {
-                                "member" : "CantidadTurnos.especialidad",
-                                "operator" : "equals"
-                              },
-                              "type" : "specialty",
-                              "label" : "Especialidad"
-                            },
-                            "professional" : {
-                              "filter" : {
-                                "member" : "CantidadTurnos.profesional",
-                                "operator" : "equals"
-                              },
-                              "type" : "professional",
-                              "label" : "Profesional"
-                            },
-                            "date" : {
-                              "filter" : {
-                                "member" : "CantidadTurnos.fecha_consulta",
-                                "operator" : "inDateRange"
-                              },
-                              "type" : "dateRangeISO",
-                              "label" : "Fecha"
-                            }
-                          },
                           "content" : {
                             "type" : "cubejs-dashboard",
                             "args" : {
                               "filters" : {
                                 "specialty" : {
                                   "filter" : {
-                                    "member" : "CantidadTurnosTotal.especialidad",
+                                    "member" : "CantidadTurnos.especialidad",
                                     "operator" : "equals"
                                   },
                                   "type" : "specialty",
@@ -666,7 +631,7 @@
                                 },
                                 "professional" : {
                                   "filter" : {
-                                    "member" : "CantidadTurnosTotal.profesional",
+                                    "member" : "CantidadTurnos.profesional",
                                     "operator" : "equals"
                                   },
                                   "type" : "professional",
@@ -674,7 +639,7 @@
                                 },
                                 "date" : {
                                   "filter" : {
-                                    "member" : "CantidadTurnosTotal.fecha_consulta",
+                                    "member" : "CantidadTurnos.fecha_consulta",
                                     "operator" : "inDateRange"
                                   },
                                   "type" : "dateRangeISO",
@@ -805,9 +770,6 @@
                                   "label" : "Fecha"
                                 }
                               },
-                              "title" : {
-                                "text" : "Turnos según estado"
-                              },
                               "label" : "Estado - anillo",
                               "content" : [
                                 {
@@ -834,7 +796,7 @@
                         "type" : "cubejs-card",
                         "args" : {
                           "header" : {
-                            "title" : "Sobreturno - anillo"
+                            "title" : "Sobreturno"
                           },
                           "content" : {
                             "type" : "cubejs-dashboard",
@@ -848,9 +810,6 @@
                                   "type" : "dateRangeISO",
                                   "label" : "Fecha"
                                 }
-                              },
-                              "title" : {
-                                "text" : "Sobreturno"
                               },
                               "label" : "Sobreturno - anillo",
                               "content" : [
@@ -892,9 +851,6 @@
                                   "type" : "dateRangeISO",
                                   "label" : "Fecha"
                                 }
-                              },
-                              "title" : {
-                                "text" : "Turnos por rango etario"
                               },
                               "label" : "Rango etario",
                               "content" : [
