@@ -18,6 +18,7 @@ import {
 } from '@turnos/constants/appointment';
 import { Observable } from 'rxjs';
 import { FinishStudyComponent } from "../../dialogs/finish-study/finish-study.component";
+import { DeriveReportComponent } from '../../dialogs/derive-report/derive-report.component';
 
 const PAGE_SIZE_OPTIONS = [10];
 const PAGE_MIN_SIZE = 10;
@@ -191,6 +192,15 @@ export class WorklistByTechnicalComponent implements OnInit {
 			this.selectedAppointment = null;
 		});
 	}
+
+    deriveReport() {
+        const dialogRef = this.dialog.open(DeriveReportComponent, {
+			width: '35%',
+			autoFocus: false
+		});
+
+		dialogRef.afterClosed().subscribe();
+    }
 
 }
 

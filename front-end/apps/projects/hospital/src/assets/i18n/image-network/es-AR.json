@@ -76,7 +76,8 @@
             "MODALITIES": "Seleccione modalidades",
             "FINISH": "finalizar",
             "VIEW_DETAILS": "ver detalle",
-			"DERIVE_REPORT": "Derivar informe"
+			"DERIVE_REPORT": "Derivar informe",
+			"REQUEST_REPORT": "Solicitar informe a "
         }
     }
 }

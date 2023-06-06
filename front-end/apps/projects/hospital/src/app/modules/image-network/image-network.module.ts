@@ -12,6 +12,7 @@ import { StudyDetailsComponent } from './routes/study-details/study-details.comp
 import { HistoriaClinicaModule } from "../historia-clinica/historia-clinica.module";
 import { ReportStudyComponent } from './components/report-study/report-study.component';
 import { ViewStudyComponent } from './components/view-study/view-study.component';
+import { DeriveReportComponent } from './dialogs/derive-report/derive-report.component';
 
 @NgModule({
     declarations: [
@@ -23,7 +24,8 @@ import { ViewStudyComponent } from './components/view-study/view-study.component
         WorklistByInformerComponent,
         StudyDetailsComponent,
         ReportStudyComponent,
-        ViewStudyComponent
+        ViewStudyComponent,
+        DeriveReportComponent
     ],
     imports: [
         CommonModule,
