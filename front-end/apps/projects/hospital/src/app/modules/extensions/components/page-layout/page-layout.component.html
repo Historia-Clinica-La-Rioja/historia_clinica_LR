@@ -2,12 +2,6 @@
 	<ng-container *ngSwitchCase="'loading'">
 		<mat-progress-bar mode="indeterminate"></mat-progress-bar>
 	</ng-container>
-	<div *ngIf="fileDownloadService.enabledDownload" fxLayoutAlign="end">
-		<button mat-flat-button type="button" id="csv-download" color="primary"
-			(click)="fileDownloadService.donwload()">
-			{{ 'buttons.CSV_DOWNLOAD' | translate }}
-		</button>
-	</div>
 	<app-ui-component-list *ngSwitchCase="'components'" [list]="page.content"></app-ui-component-list>
 	<div *ngSwitchDefault>
 		<div class="mat-title">

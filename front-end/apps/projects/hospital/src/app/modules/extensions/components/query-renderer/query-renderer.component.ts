@@ -6,7 +6,6 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { ChartOptions } from 'chart.js';
 import { getDisplayedColumns, flattenColumns } from './utils';
 import * as moment from "moment";
-import { CSVFileDownloadService } from '@extensions/services/csvfile-download.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AppFeature } from '@api-rest/api-model';
 import { buildFullDate, DateFormat, momentParse, newMoment, MONTHS_OF_YEAR } from '@core/utils/moment.utils';
@@ -115,7 +114,6 @@ export class QueryRendererComponent {
 	constructor(
 		private readonly featureFlagService: FeatureFlagService,
 		private cubejsClient: CubejsClient,
-		private fileDownloadService: CSVFileDownloadService
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
 			this.nameSelfDeterminationFF = isOn
@@ -330,10 +328,6 @@ export class QueryRendererComponent {
 		}
 
 		this.deleteRepetedRows();
-
-		if (this.listOnTab) {
-			this.fileDownloadService.addTableData(this.listOnTab, this.columnTitles, this.tableData);
-		}
 	}
 
 	deleteColumn(column) {

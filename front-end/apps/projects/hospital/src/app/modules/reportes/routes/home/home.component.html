@@ -110,6 +110,6 @@
 
 	</mat-card>
 	<div *ngIf="cubeReportData">
-		<app-ui-component [uiComponent]="cubeReportData"></app-ui-component>
+		<app-ui-component [uiComponent]="cubeReportData" (close)="resetCubeReport()"></app-ui-component>
 	</div>
 </app-content>
