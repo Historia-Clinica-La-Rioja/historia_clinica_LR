@@ -801,7 +801,12 @@ const messages = {
             parents : {
                 name: 'Unidades jerárquicas padres',
                 addRelated: 'Asociar unidad jerárquica'
-            }
+            },
+            childs: {
+                name: 'Unidades jerárquicas hijas',
+                createRelated: 'Crear unidad jerárquica'
+            },
+            createRelated: 'Asociar Unidad jeárquica'
         },
     }
 };

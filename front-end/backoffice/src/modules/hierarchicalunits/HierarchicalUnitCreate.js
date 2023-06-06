@@ -24,27 +24,32 @@ const ServiceField = ({formData, ...rest}) => {
     )
 }
 
-const HierarchicalUnitCreate = props => (
+const HierarchicalUnitCreate = props => {
+    const redirect = props?.location?.state?.record?.hierarchicalUnitIdToReport != null ?
+        `/hierarchicalunits/${props?.location?.state?.record?.hierarchicalUnitIdToReport}/show` : "show";
+    return (
     <Create {...props}>
-        <SimpleForm redirect="show" toolbar={<CustomToolbar />}>
+            <SimpleForm redirect={redirect} toolbar={<CustomToolbar/>}>
             <ReferenceInput
                 source="institutionId"
                 reference="institutions"
-                sort={{ field: 'name', order: 'ASC' }}
+                    sort={{field: 'name', order: 'ASC'}}
             >
-                <AutocompleteInput optionText="name" optionValue="id" options={{ disabled: true }}/>
+                    <AutocompleteInput optionText="name" optionValue="id" options={{disabled: true}}/>
             </ReferenceInput>
-            <TextInput source="alias" validate={[required()]} />
+                <TextInput source="alias" validate={[required()]}/>
             <ReferenceInput
                 reference="hierarchicalunittypes"
                 source="typeId">
                 <SelectInput optionText="description" optionValue="id" validate={[required()]}/>
             </ReferenceInput>
             <FormDataConsumer>
-                {formDataProps => ( <ServiceField {...formDataProps} reference="clinicalservices" source="clinicalSpecialtyId"/>)}
+                    {formDataProps => (
+                        <ServiceField {...formDataProps} reference="clinicalservices" source="clinicalSpecialtyId"/>)}
             </FormDataConsumer>
         </SimpleForm>
     </Create>
-);
+    )
+};
 
 export default HierarchicalUnitCreate;

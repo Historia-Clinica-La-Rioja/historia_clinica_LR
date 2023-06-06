@@ -29,6 +29,34 @@ const ServiceField = (props) => {
     )
 }
 
+const HierarchicalUnitChilds = (props) => {
+    const record = useRecordContext(props);
+    const show = (basePath, id, data) => `/hierarchicalunits/${data.hierarchicalUnitChildId}/show`;
+    return record ?
+        (
+            <Fragment>
+                <SectionTitle label="resources.hierarchicalunitrelationships.childs.name"/>
+                <CreateRelatedButton
+                    customRecord={{institutionId: record.institutionId, hierarchicalUnitIdToReport: record.id}}
+                    reference="hierarchicalunits"
+                    label="resources.hierarchicalunits.createRelated"
+                />
+                <ReferenceManyField
+                    addLabel={false}
+                    reference="hierarchicalunitrelationships"
+                    target="hierarchicalUnitParentId"
+                >
+                    <Datagrid rowClick={show}
+                              empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin unidades jerárquicas hijas definidas</p>}>
+                        <ReferenceField source="hierarchicalUnitChildId" label="resources.hierarchicalunits.fields.alias" reference="hierarchicalunits" link={false}>
+                            <TextField source="alias"/>
+                        </ReferenceField>
+                        <DeleteButton redirect={false} disabled={!UserIsInstitutionalAdmin()}/>
+                    </Datagrid>
+                </ReferenceManyField>
+            </Fragment> ) : null;
+}
+
 const HierarchicalUnitParents = (props) => {
     const record = useRecordContext(props);
     const show = (basePath, id, data) => `/hierarchicalunits/${data.hierarchicalUnitParentId}/show`;
@@ -90,4 +118,4 @@ const HierarchicalUnitShow = props => (
 
 export default HierarchicalUnitShow;
 
-export { HierarchicalUnitParents }
+export { HierarchicalUnitChilds,  HierarchicalUnitParents }
