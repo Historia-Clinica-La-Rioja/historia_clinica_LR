@@ -2,10 +2,11 @@ package net.pladema.establishment.repository.entity;
 
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +21,7 @@ import java.io.Serializable;
 
 @Table(name = "hierarchical_unit")
 @EntityListeners(SGXAuditListener.class)
+@Where(clause = "deleted=false")
 @Getter
 @Setter
 @ToString
