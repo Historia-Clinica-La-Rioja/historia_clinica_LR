@@ -99,6 +99,9 @@ export class EditIdentificationNumberComponent implements OnInit {
 
 				}, () => {
 					this.snackBarService.showError('pacientes.search.RENAPER_TIMEOUT');
+					this.isLoading = false;
+					this.form.controls.identificationNumber.enable();
+					this.form.controls.genderId.enable();
 				});
 	}
 
