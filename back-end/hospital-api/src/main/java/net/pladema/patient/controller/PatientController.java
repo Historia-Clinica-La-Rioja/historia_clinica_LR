@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -87,8 +87,6 @@ public class PatientController {
 	public static final String PATIENT_INVALID = "patient.invalid";
 	public static final String INPUT_PARAMETERS_PATIENT_ID = "Input parameters -> patientId {}";
 
-	public static final Integer NOT_EDITED = -1;
-
 	private final PatientService patientService;
 
 	private final PatientTypeRepository patientTypeRepository;
@@ -113,6 +111,8 @@ public class PatientController {
 	private final HospitalUserRoleMapper hospitalUserRoleMapper;
 
 	private final HospitalUserStorage hospitalUserStorage;
+
+	private static final long errorRangeTime = 100;
 
 	public PatientController(PatientService patientService, PersonExternalService personExternalService,
 							 AddressExternalService addressExternalService, PatientMapper patientMapper, PersonMapper personMapper,
@@ -310,7 +310,7 @@ public class PatientController {
 			var lastEdit = lastEditOpt.get();
 			String name = lastEdit.getFullName();
 			if (!(name == null || name.isBlank())) {
-				if (patient.getUpdatedOn().equals(patient.getCreatedOn()))
+				if (patient.getUpdatedOn().isBefore(patient.getCreatedOn().plus(errorRangeTime,ChronoUnit.MILLIS)))
 					result.setPatientLastEditInfoDto(new PatientLastEditInfoDto(patient.getUpdatedOn(), lastEdit.getFullName(), false));
 				else
 					result.setPatientLastEditInfoDto(new PatientLastEditInfoDto(patient.getUpdatedOn(), lastEdit.getFullName(), true));
@@ -378,7 +378,7 @@ public class PatientController {
 		patientToAdd.setCreatedBy(patientHistory.getCreatedBy());
 		patientToAdd.setCreatedOn(patientHistory.getCreatedOn());
 		patientToAdd.setUpdatedBy(UserInfo.getCurrentAuditor());
-		patientToAdd.setUpdatedOn(LocalDateTime.now().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")).toLocalDateTime());
+		patientToAdd.setUpdatedOn(LocalDateTime.now());
 		patientToAdd.setDeletedBy(patientHistory.getDeletedBy());
 		patientToAdd.setDeletedOn(patientHistory.getDeletedOn());
 		patientToAdd.setDeleted(patientHistory.getDeleteable().getDeleted());
