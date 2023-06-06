@@ -313,7 +313,7 @@ public class MedicationRequestController {
 
 	@GetMapping(value = "/most-frequent-pharmacos")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
-	public ResponseEntity<List<SharedSnomedDto>> getDigitalRecipeMostFrequentPharmacos(@PathVariable(name = "institutionId") Integer institutionId,
+	public ResponseEntity<List<SharedSnomedDto>> mostFrequentPharmacosPreinscription(@PathVariable(name = "institutionId") Integer institutionId,
 																					   @PathVariable(name = "patientId") Integer patientId)
 	{
 		LOG.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);

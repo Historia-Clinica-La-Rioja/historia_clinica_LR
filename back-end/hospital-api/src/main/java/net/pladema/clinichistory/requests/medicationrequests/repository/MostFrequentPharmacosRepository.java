@@ -22,7 +22,6 @@ public interface MostFrequentPharmacosRepository extends JpaRepository<Medicatio
 			"JOIN Snomed s ON (s.id = ms.snomedId) " +
 			"WHERE ms.creationable.createdBy = :professionalId " +
 			"AND mr.institutionId = :institutionId " +
-			"AND ms.isDigital = true " +
 			"AND ms.dueDate IS NOT NULL " +
 			"GROUP BY s.pt, s.sctid " +
 			"ORDER BY COUNT(s.id) DESC")
