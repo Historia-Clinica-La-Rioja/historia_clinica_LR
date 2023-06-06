@@ -1,0 +1,52 @@
+{
+  "cubeQuery" : {
+    "measures": [],
+    "timeDimensions": [],
+    "order": [],
+    "dimensions": [
+      "TablaHipertension.primer_nombre",
+      "TablaHipertension.apellido",
+      "TablaHipertension.numero_identificacion",
+      "TablaHipertension.problema",
+      "TablaHipertension.fecha_deteccion_diagnostico",
+      "TablaHipertension.ultima_fecha_atencion",
+      "TablaHipertension.severidad",
+      "TablaHipertension.direccion",
+      "TablaHipertension.nombre_ciudad",
+      "TablaHipertension.valor_presion_diastolica",
+      "TablaHipertension.valor_presion_sistolica",
+      "TablaHipertension.valor_riesgo_cardiovascular",
+      "TablaHipertension.ultimo_procedimiento"
+    ],
+    "filters": [
+      {
+        "dimension": "TablaHipertension.institucion",
+        "operator": "equals",
+        "values": [
+          "[(${institutionId})]"
+        ]
+      }
+    ]
+  },
+  "chartType": "table",
+  "pivotConfig": {
+    "x": [
+      "TablaHipertension.numero_identificacion",
+      "TablaHipertension.primer_nombre",
+      "TablaHipertension.apellido",
+      "TablaHipertension.direccion",
+      "TablaHipertension.nombre_ciudad",
+      "TablaHipertension.problema",
+      "TablaHipertension.fecha_deteccion_diagnostico",
+      "TablaHipertension.severidad",
+      "TablaHipertension.valor_presion_diastolica",
+      "TablaHipertension.valor_presion_sistolica",
+      "TablaHipertension.valor_riesgo_cardiovascular",
+      "TablaHipertension.ultima_fecha_atencion",
+      "TablaHipertension.ultimo_procedimiento"
+    ],
+    "y": [
+      "measures"
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "type": "cubejs-card",
+  "args": {
+    "header": {
+      "title": "Reportes de pacientes hipretensos con mas de 120 días sin atención"
+    },
+    "content":
+    {
+      "type": "cubejs-dashboard",
+      "args": {
+        "filters": {
+          "name": {
+            "filter": {
+              "member": "TablaHipertension.primer_nombre",
+              "operator": "contains"
+            },
+            "type": "freeText",
+            "label": "Nombre"
+          },
+          "lastName": {
+            "filter": {
+              "member": "TablaHipertension.apellido",
+              "operator": "contains"
+            },
+            "type": "freeText",
+            "label": "Apellido"
+          },
+          "identificationNumber": {
+            "filter": {
+              "member": "TablaHipertension.numero_identificacion",
+              "operator": "contains"
+            },
+            "type": "freeText",
+            "label": "Nro. Identificación"
+          },
+          "diagnosis": {
+            "filter": {
+              "member": "TablaHipertension.problema",
+              "operator": "contains"
+            },
+            "type": "freeText",
+            "label": "Problema"
+          }
+        },
+        "content": [
+          {
+            "type" : "cubejs-chart",
+            "args" : {
+              "query" : "tablaHipertension",
+              "chartOptions" : {
+                "responsive" : true,
+                "maintainAspectRatio" : false
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
