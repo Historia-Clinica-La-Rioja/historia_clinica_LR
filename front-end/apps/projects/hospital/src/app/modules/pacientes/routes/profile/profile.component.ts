@@ -199,10 +199,11 @@ export class ProfileComponent implements OnInit {
 						this.personId = completeData.person.id;
 						this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
 							.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
-						this.personService.getPersonalInformation<PersonalInformationDto>(completeData.person.id)
-							.subscribe(personInformationData => {
-								this.personalInformation = this.mapperService.toPersonalInformationData(completeData, personInformationData);
-							});
+						if (this.personId)
+							this.personService.getPersonalInformation<PersonalInformationDto>(this.personId)
+								.subscribe(personInformationData => {
+									this.personalInformation = this.mapperService.toPersonalInformationData(completeData, personInformationData);
+								});
 						this.permissionService.hasContextAssignments$(ROLES_TO_VIEW_USER_DATA).subscribe(hasRoleToViewUserData => {
 							if (hasRoleToViewUserData) {
 								this.checkIfProfessional();
