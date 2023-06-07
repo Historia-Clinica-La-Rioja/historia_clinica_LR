@@ -5,7 +5,7 @@ import {
 	AllergyConditionDto,
 	ImmunizationDto,
 	EvolutionNoteDto,
-	HealthConditionDto, ResponseEvolutionNoteDto
+	HealthConditionDto, ResponseEvolutionNoteDto, HospitalizationProcedureDto
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
@@ -17,7 +17,6 @@ import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { DockPopupRef } from "@presentation/services/dock-popup-ref";
 import { OVERLAY_DATA } from "@presentation/presentation-model";
-import { Procedimiento, ProcedimientosService } from "@historia-clinica/services/procedimientos.service";
 import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { PermissionsService } from "@core/services/permissions.service";
@@ -51,7 +50,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 	diagnosticos: DiagnosisDto[] = [];
 	allergies: AllergyConditionDto[] = [];
 	immunizations: ImmunizationDto[] = [];
-	procedimientosService: ProcedimientosService;
+	procedures: HospitalizationProcedureDto[] = [];
 	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
 	isNursingEvolutionNote: boolean;
 
@@ -75,7 +74,6 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 	) {
 		this.diagnosticos = data.diagnosticos;
 		this.mainDiagnosis = data.mainDiagnosis;
-		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			this.isNursingEvolutionNote = !anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PROFESIONAL_DE_SALUD]) && anyMatch<ERole>(userRoles, [ERole.ENFERMERO]);
@@ -211,7 +209,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 				glycosylatedHemoglobin: getEffectiveValue(formValues.riskFactors.glycosylatedHemoglobin),
 				cardiovascularRisk: getEffectiveValue(formValues.riskFactors.cardiovascularRisk)
 			},
-			procedures: isNull(this.procedimientosService.getProcedimientos()) ? undefined : this.procedimientosService.getProcedimientos(),
+			procedures: this.procedures,
 			isNursingEvolutionNote: (this.data.documentType) ? this.data.documentType === "Nota de evolución de enfermería" : this.isNursingEvolutionNote
 		};
 
@@ -229,6 +227,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 	}
 
 	loadEvolutionNoteInfo() {
+		this.componentEvaluationManagerService.evolutionNote = this.evolutionNote;
 		this.allergies = this.evolutionNote.allergies;
 
 		let evolutionNoteDiagnosis = this.evolutionNote.diagnosis;
@@ -237,10 +236,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		this.diagnosticos = this.diagnosticos?.concat(evolutionNoteDiagnosis)
 
 		this.immunizations = this.evolutionNote.immunizations;
-		const procedure: Procedimiento[] = this.evolutionNote.procedures.map(p => {
-			return { snomed: p.snomed, performedDate: p.performedDate }
-		});
-		procedure.forEach(p => this.procedimientosService.add(p));
+		this.procedures = this.evolutionNote.procedures;
 		this.mainDiagnosis = this.evolutionNote.mainDiagnosis;
 		if (this.mainDiagnosis)
 			this.mainDiagnosis.isAdded = true;
