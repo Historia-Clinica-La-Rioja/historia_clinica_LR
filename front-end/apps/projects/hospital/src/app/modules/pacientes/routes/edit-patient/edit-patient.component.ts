@@ -255,6 +255,11 @@ export class EditPatientComponent implements OnInit {
 									if(!canEditUserData)
 										this.form.controls.email.disable();
 								});
+								this.permissionsService.hasContextAssignments$([ERole.AUDITOR_MPI]).subscribe(canEditPatientStatus => {
+									this.form.controls.patientId.disable();
+									if (!canEditPatientStatus)
+										this.form.controls.stateId.disable();
+								});
 							});
 					});
 			});
