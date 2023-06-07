@@ -1,8 +1,9 @@
 cube(`TablaDiabetes`, {
     sql: `WITH rc AS (
         SELECT srg.snomed_id  
-        FROM snomed_related_group srg 
-        WHERE srg.group_id = 36),
+        FROM snomed_group sg
+        JOIN snomed_related_group srg ON (srg.group_id = sg.id)
+        WHERE sg.description = 'DIABETES'),
         gh AS (
         SELECT ovs.patient_id, ovs.value, date(ovs.effective_time) AS creation_date
         FROM observation_vital_sign ovs 
@@ -74,7 +75,7 @@ cube(`TablaDiabetes`, {
                     AND hc2.start_date IS NOT NULL
                     AND hc2.patient_id = hc.patient_id
                     AND hc2.snomed_id = hc.snomed_id
-                    ${SECURITY_CONTEXT.roles.unsafeValue()?.filter(role => role.id === 16 || role.id === 8).length === 0 ? '' +  `
+                    ${(SECURITY_CONTEXT.roles.unsafeValue() || []).filter(role => role.id === 16 || role.id === 8).length === 0 ? '' +  `
                     AND d.created_by = ${SECURITY_CONTEXT.userId.unsafeValue()}` : ''}
                     ORDER BY hc2.start_date
                     LIMIT 1)`,
