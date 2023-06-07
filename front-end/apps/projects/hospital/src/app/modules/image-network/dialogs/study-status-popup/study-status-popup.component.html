@@ -3,18 +3,23 @@
 		<mat-icon>close</mat-icon>
 	</button>
 </div>
-<div class="study-status" *ngIf="data.status; else errorStatus">
-	<div class="icon">
-		<mat-icon [inline]="true" class="material-icons-outlined" style="color:limegreen">check_circle</mat-icon>
+<div class="main-container">
+	<div class="icon-container">
+		<div *ngIf="data.iconCircle; else plainIcon" class="{{data.iconColor}} {{ data.iconCircle ? 'icon-border' : '' }}">	
+			<mat-icon [inline]="true" class="material-icons-outlined smaller-icon {{data.iconColor}}" >{{data.icon}}</mat-icon>
+		</div>
+		<ng-template #plainIcon>
+			<mat-icon [inline]="true" class="material-icons-outlined icon {{data.iconColor}}" >{{data.icon}}</mat-icon>
+		</ng-template>
 	</div>
-	<h2 translate="image-network.appointments.STUDY_COMPLETED"></h2>
+	<h2>
+		<span> {{data.popUpMessageTranslate | translate}}</span>
+		<span *ngIf="data.popUpMessage">{{data.popUpMessage}}</span>
+	</h2>
 </div>
 
-<ng-template #errorStatus>
-	<div class="study-status">
-		<div class="icon">
-			<mat-icon [inline]="true" class="material-icons-outlined" style="color:red">cancel</mat-icon>
-		</div>
-		<h2 translate="image-network.appointments.STUDY_ERROR"></h2>
-	</div>
-</ng-template>
+<div *ngIf="data.acceptBtn" fxLayout="row" fxLayoutAlign="center center">
+	<button mat-flat-button color="primary">
+		<span class="uppercase" [translate]="'buttons.ACCEPT'"></span>
+	</button>
+</div>

@@ -1,17 +1,49 @@
 @import '../../../../../assets/styles/mixins';
 
-.icon {
-	font-size: 5em;
-	margin: 0 0 2rem 0;
-	line-height: 4rem
-}
-
-.study-status {
+.main-container {
 	text-align: center;
 	padding: 0 3em;
 	margin-top: 2rem;
 }
 
+.icon-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 0 1rem 0;
+}
+
+.icon {
+	font-size: 5em;
+	line-height: 4rem;
+}
+
+.icon-border {
+	border: 5px solid;
+	border-radius: 50%;
+	display: flex;
+	padding-left: 0.1em;
+}
+
+.smaller-icon {
+	font-size: 4em;
+	line-height: 4rem;
+	height: 65px;
+	width: 65px;
+}
+
 .align-end {
 	text-align: end;
+}
+
+.green {
+	color: limegreen;
+}
+
+.red {
+	color: red;
+}
+
+.lightgrey {
+	color: lightgrey
 }

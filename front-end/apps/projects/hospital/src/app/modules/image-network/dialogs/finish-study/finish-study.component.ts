@@ -43,7 +43,7 @@ export class FinishStudyComponent implements OnInit {
 
 		this.appointmentsService.addStudyObservations(appointmentId, detailsOrderImage)
 			.pipe(
-				tap(() => this.openStatusDialog(true)),
+				tap(() => this.openStatusDialog('check_circle', 'green', 'image-network.appointments.STUDY_COMPLETED')),
 				switchMap(() =>
 					this.appointmentsService.changeStateAppointmentEquipment(appointmentId, served)
 						.pipe(
@@ -55,7 +55,7 @@ export class FinishStudyComponent implements OnInit {
 				),
 				catchError((error: ApiErrorMessageDto) => {
 					processErrors(error, (msg) => this.snackBarService.showError(msg));
-					this.openStatusDialog(false);
+					this.openStatusDialog('cancel', 'red', 'image-network.appointments.STUDY_ERROR');
 					return EMPTY;
 				})
 			)
@@ -65,12 +65,14 @@ export class FinishStudyComponent implements OnInit {
 	}
 
 
-	openStatusDialog(status) {
+	openStatusDialog(icon: string, iconColor: string, popUpMessageTranslate: string) {
 		const dialogRef = this.dialog.open(StudyStatusPopupComponent, {
 			width: '30%',
 			autoFocus: false,
 			data: {
-				status: status
+				icon,
+				iconColor,
+				popUpMessageTranslate
 			}
 		});
 		dialogRef.afterClosed().subscribe();
