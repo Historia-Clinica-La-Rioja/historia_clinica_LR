@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AllergyConditionDto, DiagnosisDto, HealthHistoryConditionDto, ImmunizationDto, MedicationDto, ResponseAnamnesisDto } from '@api-rest/api-model';
+import { AllergyConditionDto, DiagnosisDto, HealthHistoryConditionDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, ResponseAnamnesisDto, ResponseEvolutionNoteDto } from '@api-rest/api-model';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable()
@@ -11,10 +11,12 @@ export class ComponentEvaluationManagerService {
 	private medicationsSubject = new BehaviorSubject<boolean>(true);
 	private diagnosticosSubject = new BehaviorSubject<boolean>(true);
 	private mainDiagnosticosSubject = new BehaviorSubject<boolean>(true);
+	private hospitalizationProcedureSubject = new BehaviorSubject<boolean>(true);
 	set anamnesis(anamnesis: ResponseAnamnesisDto) {
 
 		this.mainDiagnosis = anamnesis?.mainDiagnosis;
 		this.diagnosis = anamnesis.diagnosis;
+		this.hospitalizationProcedures = anamnesis?.procedures;
 		this.allergies = anamnesis.allergies;
 		this.familyHistories = anamnesis.familyHistories;
 		this.personalHistories = anamnesis.personalHistories;
@@ -22,6 +24,13 @@ export class ComponentEvaluationManagerService {
 		this.medications = anamnesis.medications;
 	}
 
+	set evolutionNote(anamnesis: ResponseEvolutionNoteDto) {
+		this.mainDiagnosis = anamnesis?.mainDiagnosis;
+		this.diagnosis = anamnesis.diagnosis;
+		this.hospitalizationProcedures = anamnesis?.procedures;
+		this.allergies = anamnesis.allergies;
+		this.vaccines = anamnesis.immunizations;
+	}
 
 	set mainDiagnosis(mainDiagnosis: DiagnosisDto) {
 		this.mainDiagnosticosSubject.next(!mainDiagnosis);
@@ -29,6 +38,10 @@ export class ComponentEvaluationManagerService {
 
 	set diagnosis(diagnosis: DiagnosisDto[]) {
 		this.diagnosticosSubject.next(!(diagnosis?.length > 0));
+	}
+
+	set hospitalizationProcedures(hospitalizationProcedures: HospitalizationProcedureDto[]) {
+		this.hospitalizationProcedureSubject.next(!(hospitalizationProcedures?.length > 0));
 	}
 
 	set allergies(allergies: AllergyConditionDto[]) {
@@ -56,6 +69,10 @@ export class ComponentEvaluationManagerService {
 
 	isEmptyAllergies(): Observable<boolean> {
 		return this.allergiesSubject.asObservable();
+	}
+
+	isEmptyProcedure(): Observable<boolean> {
+		return this.hospitalizationProcedureSubject.asObservable();
 	}
 
 	isEmptyFamilyHistories(): Observable<boolean> {
