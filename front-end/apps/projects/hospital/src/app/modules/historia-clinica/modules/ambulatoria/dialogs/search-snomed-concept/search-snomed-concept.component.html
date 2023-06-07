@@ -1,0 +1,19 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<span mat-dialog-title [translate]="data?.title"></span>
+	<button mat-icon-button (click)="close()">
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+
+<div mat-dialog-content>
+	<app-concepts-search *ngIf="searchConceptsLocallyFF else typeaheadSearch"
+		[label]="data.label" (search)="setConcept($event)">
+	</app-concepts-search>
+
+	<ng-template #typeaheadSearch>
+		<app-concept-typeahead-search [ecl]="data?.eclFilter"
+			[placeholder]="data.label"
+			(conceptSelected)="setConceptTypeahead($event)">
+		</app-concept-typeahead-search>
+	</ng-template>
+</div>
