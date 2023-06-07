@@ -1,105 +1,75 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AllergyConditionDto, SnomedDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
-import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/snomed.service';
 import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
+import { SearchSnomedConceptComponent } from '@historia-clinica/modules/ambulatoria/dialogs/search-snomed-concept/search-snomed-concept.component';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
 @Component({
 	selector: 'app-alergias',
 	templateUrl: './alergias.component.html',
 	styleUrls: ['./alergias.component.scss']
 })
-export class AlergiasComponent implements OnInit {
+export class AlergiasComponent {
 
-	private allergiesValue: AllergyConditionDto[];
 
 	@Output() allergiesChange = new EventEmitter();
-	@Input() showTitle = false;
-	@Input()
-	set allergies(allergies: AllergyConditionDto[]) {
-		this.allergiesValue = allergies;
-		this.allergiesChange.emit(this.allergiesValue);
-	}
+	@Input() allergies: AllergyConditionDto[] = [];
 
-	get allergies(): AllergyConditionDto[] {
-		return this.allergiesValue;
-	}
 
-	snomedConcept: SnomedDto;
-	form: UntypedFormGroup;
-
-	// Mat table
-	columns = [
-		{
-			def: 'problemType',
-			header: 'internaciones.anamnesis.alergias.table.columns.ALLERGY',
-			text: a => a.snomed.pt
-		}
-	];
-	displayedColumns: string[] = [];
 
 	constructor(
-		private formBuilder: UntypedFormBuilder,
-		private snomedService: SnomedService,
 		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
-	) {
-		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
-	}
+		private readonly dialog: MatDialog,
 
-	ngOnInit(): void {
-		this.form = this.formBuilder.group({
-			snomed: [null, Validators.required]
-		});
-	}
+	) {	}
 
-	addToList() {
-		if (this.form.valid && this.snomedConcept) {
+	addSnomedConcept(snomedConcept: SnomedDto) {
+		if (snomedConcept) {
 			const alergia: AllergyConditionDto = {
 				categoryId: null,
 				date: null,
 				verificationId: null,
 				id: null,
-				snomed: this.snomedConcept,
+				snomed: snomedConcept,
 				criticalityId: null,
 				statusId: null
 			};
 			this.add(alergia);
-			this.resetForm();
 		}
 	}
 
-	setConcept(selectedConcept: SnomedDto): void {
-		this.snomedConcept = selectedConcept;
-		const pt = selectedConcept ? selectedConcept.pt : '';
-		this.form.controls.snomed.setValue(pt);
-	}
 
-	resetForm(): void {
-		delete this.snomedConcept;
-		this.form.reset();
-	}
 
-	add(a: AllergyConditionDto): void {
+	add(a: AllergyConditionDto) {
 		this.allergies = pushTo<AllergyConditionDto>(this.allergies, a);
 		this.componentEvaluationManagerService.allergies = this.allergies;
+		this.allergiesChange.emit(this.allergies);
 	}
 
-	remove(index: number): void {
+	remove(index: number) {
 		this.allergies = removeFrom<AllergyConditionDto>(this.allergies, index);
 		this.componentEvaluationManagerService.allergies = this.allergies;
+		this.allergiesChange.emit(this.allergies);
 	}
 
-	openSearchDialog(searchValue: string): void {
-		if (searchValue) {
-			const search: SnomedSemanticSearch = {
-				searchValue,
-				eclFilter: SnomedECL.ALLERGY
-			};
-			this.snomedService.openConceptsSearchDialog(search)
-				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));
-		}
+	addAlergies() {
+		const dialogConfig = new MatDialogConfig();
+		dialogConfig.width = '35%';
+		dialogConfig.disableClose = false;
+		dialogConfig.data = {
+			label: 'internaciones.anamnesis.alergias.ALLERGY',
+			title: 'internaciones.anamnesis.alergias.ADD',
+			eclFilter: SnomedECL.ALLERGY
+		};
+
+		const dialogRef = this.dialog.open(SearchSnomedConceptComponent, dialogConfig);
+
+		dialogRef.afterClosed().subscribe(snomedConcept => {
+			if (snomedConcept)
+				this.addSnomedConcept(snomedConcept)
+		});
 	}
 
 }
