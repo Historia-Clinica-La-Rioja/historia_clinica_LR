@@ -27,12 +27,15 @@ import { TypeOfPregnancyComponent } from './components/type-of-pregnancy/type-of
 import { PregnancyFormComponent } from './components/pregnancy-form/pregnancy-form.component';
 import { ObstetricComponent } from './components/obstetric/obstetric.component';
 import { FormDynamicNewBornComponent } from './components/form-dynamic-new-born/form-dynamic-new-born.component';
+import { ProcedureComponent } from './components/procedure/procedure.component';
 // dialogs
 import { AnamnesisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/anamnesis-dock-popup/anamnesis-dock-popup.component";
+import { ConceptDateFormComponent } from './dialogs/concept-date-form/concept-date-form.component';
 import { ChangeMainDiagnosisDockPopupComponent } from './dialogs/change-main-diagnosis-dock-popup/change-main-diagnosis-dock-popup.component';
 import { DiagnosisClinicalEvaluationDockPopupComponent } from './dialogs/diagnosis-clinical-evaluation-dock-popup/diagnosis-clinical-evaluation-dock-popup.component';
 import { EpicrisisDockPopupComponent } from './dialogs/epicrisis-dock-popup/epicrisis-dock-popup.component';
 import { EvolutionNoteDockPopupComponent } from './dialogs/evolution-note-dock-popup/evolution-note-dock-popup.component';
+import { FormMedicationComponent } from './dialogs/form-medication/form-medication.component';
 import { MedicalDischargeComponent } from './dialogs/medical-discharge/medical-discharge.component';
 import { DiagnosisCreationEditionComponent } from './dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
 import { SelectMainDiagnosisComponent } from './dialogs/select-main-diagnosis/select-main-diagnosis.component';
@@ -65,19 +68,22 @@ import { DeleteDocumentPopupComponent } from './dialogs/delete-document-popup/de
 		VacunasComponent,
 		TableEventComponent,
 		TypeOfPregnancyComponent,
+		ProcedureComponent,
 		// dialogs
 		AnamnesisDockPopupComponent,
+		ConceptDateFormComponent,
 		ChangeMainDiagnosisDockPopupComponent,
 		DiagnosisClinicalEvaluationDockPopupComponent,
 		EpicrisisDockPopupComponent,
 		EvolutionNoteDockPopupComponent,
+		FormMedicationComponent,
 		MedicalDischargeComponent,
 		DiagnosisCreationEditionComponent,
 		SelectMainDiagnosisComponent,
 		DocumentActionReasonComponent,
   		IntermentDocumentEpisodeComponent,
-    AttachDocumentPopupComponent,
-    DeleteDocumentPopupComponent
+		AttachDocumentPopupComponent,
+		DeleteDocumentPopupComponent,
 	],
     exports: [
         InternmentEpisodeSummaryComponent,
