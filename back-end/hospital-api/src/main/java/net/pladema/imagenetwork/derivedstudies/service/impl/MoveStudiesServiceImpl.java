@@ -22,6 +22,8 @@ import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryServ
 
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.CompleteEquipmentDiaryBo;
 
+import net.pladema.scheduledjobs.jobs.MoveStudiesJob;
+
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -65,7 +67,7 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 		MoveStudiesBO moveStudyBO = new MoveStudiesBO();
 		if ( !pacServers.isEmpty() && !imageId.equals("none")){
 			moveStudyBO.setAppointmentId(appointmentId);
-			moveStudyBO.setStatus("PENDING");
+			moveStudyBO.setStatus(MoveStudiesJob.PENDING);
 			moveStudyBO.setPriorityMax(0);
 			moveStudyBO.setAttempsNumber(0);
 			Integer pacServerId = pacServers.get(0).getId();

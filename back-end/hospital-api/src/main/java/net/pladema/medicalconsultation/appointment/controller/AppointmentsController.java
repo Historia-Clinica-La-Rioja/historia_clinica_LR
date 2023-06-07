@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
+import net.pladema.imagenetwork.derivedstudies.service.MoveStudiesService;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidDetailsOrderImage;
 
 import net.pladema.permissions.repository.enums.ERole;
@@ -108,6 +109,8 @@ public class AppointmentsController {
 
 	private final AppointmentOrderImageService appointmentOrderImageService;
 
+	private final MoveStudiesService moveStudiesService;
+
 	private final EquipmentService equipmentService;
 
 	private final EquipmentDiaryService equipmentDiaryService;
@@ -164,7 +167,8 @@ public class AppointmentsController {
 			OrchestratorService orchestratorService,
 			MqttClientService mqttClientService,
 			ModalityService modalityService,
-			AppointmentOrderImageService appointmentOrderImageService) {
+			AppointmentOrderImageService appointmentOrderImageService,
+			MoveStudiesService moveStudiesService) {
         this.appointmentDailyAmountService = appointmentDailyAmountService;
         this.appointmentService = appointmentService;
 		this.equipmentAppointmentService = equipmentAppointmentService;
@@ -185,6 +189,7 @@ public class AppointmentsController {
 		this.mqttClientService = mqttClientService;
 		this.modalityService = modalityService;
 		this.appointmentOrderImageService = appointmentOrderImageService;
+		this.moveStudiesService = moveStudiesService;
 	}
 
 
@@ -638,6 +643,8 @@ public class AppointmentsController {
 		Short roleId = ERole.TECNICO.getId();
 		DetailsOrderImageBo detailsOrderImageBo = new DetailsOrderImageBo(appointmentId, detailsOrderImageDto.getObservations(), LocalDateTime.now(), technicianId, roleId);
 		boolean result = appointmentOrderImageService.updateCompleted(detailsOrderImageBo, true);
+		Integer idMove = moveStudiesService.create(appointmentId);
+		moveStudiesService.getSizeFromOrchestrator(idMove);
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
