@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { HealthHistoryConditionDto, SnomedDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
-import { SnomedService, SnomedSemanticSearch } from '@historia-clinica/services/snomed.service';
+import { SearchSnomedConceptComponent } from '@historia-clinica/modules/ambulatoria/dialogs/search-snomed-concept/search-snomed-concept.component';
 import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
 
 @Component({
@@ -11,95 +11,64 @@ import { ComponentEvaluationManagerService } from '../../../../services/componen
 	templateUrl: './antecedentes-personales.component.html',
 	styleUrls: ['./antecedentes-personales.component.scss']
 })
-export class AntecedentesPersonalesComponent implements OnInit {
+export class AntecedentesPersonalesComponent {
 
-	private personalHistoriesValue: HealthHistoryConditionDto[];
 
 	@Output() personalHistoriesChange = new EventEmitter();
-	@Input() showTitle = false;
 
-	@Input()
-	set personalHistories(personalHistories: HealthHistoryConditionDto[]) {
-		this.personalHistoriesValue = personalHistories;
-		this.personalHistoriesChange.emit(this.personalHistoriesValue);
-	}
+	@Input() personalHistories: HealthHistoryConditionDto[] = [];
 
-	get personalHistories(): HealthHistoryConditionDto[] {
-		return this.personalHistoriesValue;
-	}
 
-	snomedConcept: SnomedDto;
 
-	form: UntypedFormGroup;
 
-	// Mat table
-	columns = [
-		{
-			def: 'problemType',
-			header: 'internaciones.anamnesis.antecedentes-personales.table.columns.PERSONAL_HISTORY',
-			text: ap => ap.snomed.pt
-		}
-	];
-	displayedColumns: string[] = [];
 
 	constructor(
-		private formBuilder: UntypedFormBuilder,
-		private snomedService: SnomedService,
 		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
+		private readonly dialog: MatDialog,
+
 
 	) {
-		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
 	}
 
-	ngOnInit(): void {
-		this.form = this.formBuilder.group({
-			snomed: [null, Validators.required]
-		});
-	}
 
-	addToList() {
-		if (this.form.valid && this.snomedConcept) {
+	addSnomedConcept(snomedConcept: SnomedDto) {
+		if (snomedConcept) {
 			const antecedentePersonal: HealthHistoryConditionDto = {
 				startDate: null,
 				note: null,
-				snomed: this.snomedConcept
+				snomed: snomedConcept
 			};
 			this.add(antecedentePersonal);
-			this.resetForm();
 		}
 	}
 
-	setConcept(selectedConcept: SnomedDto): void {
-		this.snomedConcept = selectedConcept;
-		const pt = selectedConcept ? selectedConcept.pt : '';
-		this.form.controls.snomed.setValue(pt);
-	}
-
-	resetForm(): void {
-		delete this.snomedConcept;
-		this.form.reset();
-	}
 
 	add(ap: HealthHistoryConditionDto): void {
 		this.personalHistories = pushTo<HealthHistoryConditionDto>(this.personalHistories, ap);
 		this.componentEvaluationManagerService.personalHistories = this.personalHistories;
+		this.personalHistoriesChange.next(this.personalHistories);
 	}
 
 	remove(index: number): void {
 		this.personalHistories = removeFrom<HealthHistoryConditionDto>(this.personalHistories, index);
 		this.componentEvaluationManagerService.personalHistories = this.personalHistories;
+		this.personalHistoriesChange.next(this.personalHistories);
 	}
 
-	openSearchDialog(searchValue: string): void {
-		if (searchValue) {
-			const search: SnomedSemanticSearch = {
-				searchValue,
-				eclFilter: SnomedECL.PERSONAL_RECORD
-			};
-			this.snomedService.openConceptsSearchDialog(search)
-				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));
-		}
-	}
+	addPersonalHistory(): void {
+		const dialogConfig = new MatDialogConfig();
+		dialogConfig.width = '35%';
+		dialogConfig.disableClose = false;
+		dialogConfig.data = {
+			label: 'internaciones.anamnesis.antecedentes-personales.PERSONAL_HISTORY',
+			title: 'internaciones.anamnesis.antecedentes-personales.ADD',
+			eclFilter: SnomedECL.FAMILY_RECORD
+		};
 
+		const dialogRef = this.dialog.open(SearchSnomedConceptComponent, dialogConfig);
+
+		dialogRef.afterClosed().subscribe(snomedConcept =>
+			this.addSnomedConcept(snomedConcept));
+	}
 
 }
