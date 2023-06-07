@@ -19,7 +19,8 @@ export class AsignPatientButtonComponent {
 		const dialogRef = this.dialog.open(SearchPatientComponent);
 		dialogRef.afterClosed()
 			.subscribe((foundPatient: Patient) => {
-				this.onSelectedPatient.next(foundPatient);
+				if (foundPatient)
+					this.onSelectedPatient.next(foundPatient);
 			});
 	}
 }
