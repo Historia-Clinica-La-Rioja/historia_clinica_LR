@@ -44,6 +44,7 @@ import { TurnosModule } from '@turnos/turnos.module';
 import { IntermentDocumentEpisodeComponent } from './components/interment-document-episode/interment-document-episode.component';
 import { AttachDocumentPopupComponent } from './dialogs/attach-document-popup/attach-document-popup.component';
 import { DeleteDocumentPopupComponent } from './dialogs/delete-document-popup/delete-document-popup.component';
+import { MedicationComponent } from './components/medication/medication.component';
 
 @NgModule({
 	declarations: [
@@ -84,6 +85,7 @@ import { DeleteDocumentPopupComponent } from './dialogs/delete-document-popup/de
   		IntermentDocumentEpisodeComponent,
 		AttachDocumentPopupComponent,
 		DeleteDocumentPopupComponent,
+  MedicationComponent,
 	],
     exports: [
         InternmentEpisodeSummaryComponent,
