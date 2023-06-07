@@ -1,138 +1,86 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ImmunizationDto, SnomedDto } from '@api-rest/api-model';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ImmunizationDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { Moment } from 'moment';
-import { DatePipe } from '@angular/common';
-import { DateFormat, newMoment } from '@core/utils/moment.utils';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
-import { MIN_DATE } from "@core/utils/date.utils";
-import { SnomedService, SnomedSemanticSearch } from '@historia-clinica/services/snomed.service';
 import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { SearchSnomedConceptComponent } from '@historia-clinica/modules/ambulatoria/dialogs/search-snomed-concept/search-snomed-concept.component';
+import { Concept, ConceptDateFormComponent } from '../../dialogs/concept-date-form/concept-date-form.component';
 
 @Component({
 	selector: 'app-vacunas',
 	templateUrl: './vacunas.component.html',
 	styleUrls: ['./vacunas.component.scss']
 })
-export class VacunasComponent implements OnInit {
-
-	private immunizationsValue: ImmunizationDto[];
-
+export class VacunasComponent {
 	@Output() immunizationsChange = new EventEmitter();
-	@Input() showTitle = false;
 
-	@Input()
-	set immunizations(immunizations: ImmunizationDto[]) {
-		this.immunizationsValue = immunizations;
-		this.immunizationsChange.emit(this.immunizationsValue);
-	}
-
-	get immunizations(): ImmunizationDto[] {
-		return this.immunizationsValue;
-	}
-
-	snomedConcept: SnomedDto;
-
-	form: UntypedFormGroup;
-	today: Moment = newMoment();
-
-	// Mat table
-	columns = [
-		{
-			def: 'problemType',
-			header: 'internaciones.anamnesis.vacunas.table.columns.INMUNIZATION',
-			text: v => v.snomed.pt
-		},
-		{
-			def: 'date',
-			header: 'internaciones.anamnesis.vacunas.table.columns.REGISTRY_DATE',
-			text: v => this.datePipe.transform(v.administrationDate, 'dd/MM/yyyy')
-		},
-	];
-	displayedColumns: string[] = [];
-
-	minDate = MIN_DATE;
+	@Input() immunizations: ImmunizationDto[] = [];
 
 	constructor(
-		private formBuilder: UntypedFormBuilder,
-		private datePipe: DatePipe,
-		private snomedService: SnomedService,
 		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
+		private readonly dialog: MatDialog,
 
-	) {
-		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
-	}
+	) { }
 
-	ngOnInit(): void {
-		this.form = this.formBuilder.group({
-			date: [null],
-			snomed: [null, Validators.required]
-		});
-	}
-
-	chosenYearHandler(newDate: Moment) {
-		if (this.form.controls.date.value !== null) {
-			const ctrlDate: Moment = this.form.controls.date.value;
-			ctrlDate.year(newDate.year());
-			this.form.controls.date.setValue(ctrlDate);
-		} else {
-			this.form.controls.date.setValue(newDate);
-		}
-	}
-
-	chosenMonthHandler(newDate: Moment) {
-		if (this.form.controls.date.value !== null) {
-			const ctrlDate: Moment = this.form.controls.date.value;
-			ctrlDate.month(newDate.month());
-			this.form.controls.date.setValue(ctrlDate);
-		} else {
-			this.form.controls.date.setValue(newDate);
-		}
-	}
-
-	addToList() {
-		if (this.form.valid && this.snomedConcept) {
-			const vacuna: ImmunizationDto = {
-				administrationDate: this.form.value.date ? this.form.value.date.format(DateFormat.API_DATE) : null,
-				note: null,
-				snomed: this.snomedConcept
-			};
-			this.add(vacuna);
-			this.resetForm();
-		}
-	}
-
-	setConcept(selectedConcept: SnomedDto): void {
-		this.snomedConcept = selectedConcept;
-		const pt = selectedConcept ? selectedConcept.pt : '';
-		this.form.controls.snomed.setValue(pt);
-	}
-
-	resetForm(): void {
-		delete this.snomedConcept;
-		this.form.reset();
-	}
 
 	add(vacuna: ImmunizationDto): void {
 		this.immunizations = pushTo<ImmunizationDto>(this.immunizations, vacuna);
 		this.componentEvaluationManagerService.vaccines = this.immunizations;
+		this.immunizationsChange.next(this.immunizations);
 	}
 
 	remove(index: number): void {
 		this.immunizations = removeFrom<ImmunizationDto>(this.immunizations, index);
 		this.componentEvaluationManagerService.vaccines = this.immunizations;
+		this.immunizationsChange.next(this.immunizations);
 	}
 
-	openSearchDialog(searchValue: string): void {
-		if (searchValue) {
-			const search: SnomedSemanticSearch = {
-				searchValue,
-				eclFilter: SnomedECL.VACCINE
+
+	addSnomedConcept(vaccine: Concept) {
+		if (vaccine) {
+			const vacuna: ImmunizationDto = {
+				administrationDate: vaccine.data,
+				note: null,
+				snomed: vaccine.snomedConcept
 			};
-			this.snomedService.openConceptsSearchDialog(search)
-				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));
+			this.add(vacuna);
 		}
+	}
+
+	addVaccine(): void {
+		const dialogConfig = new MatDialogConfig();
+		dialogConfig.width = '35%';
+		dialogConfig.disableClose = false;
+		dialogConfig.data = {
+			label: 'internaciones.anamnesis.vacunas.INMUNIZATION',
+			title: 'internaciones.anamnesis.vacunas.ADD',
+			eclFilter: SnomedECL.VACCINE
+		};
+
+		const dialogRef = this.dialog.open(SearchSnomedConceptComponent, dialogConfig);
+
+		dialogRef.afterClosed().subscribe(snomedConcept => {
+			if (snomedConcept) {
+				const dialog = new MatDialogConfig();
+				dialog.width = '35%';
+				dialogConfig.disableClose = false;
+				dialog.data = {
+					add: 'internaciones.anamnesis.vacunas.ADD',
+					label: 'internaciones.anamnesis.vacunas.INMUNIZATION',
+					title: 'internaciones.anamnesis.vacunas.INMUNIZATION',
+					snomedConcept: snomedConcept
+				};
+
+				const dialogRef = this.dialog.open(ConceptDateFormComponent, dialog);
+
+				dialogRef.afterClosed().subscribe((concept: Concept) => {
+					if (concept)
+						this.addSnomedConcept(concept);
+				});
+			}
+		});
+
 	}
 
 }
