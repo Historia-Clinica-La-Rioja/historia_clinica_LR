@@ -116,6 +116,9 @@
 					}
 				}
 			},
+			"procedure": {
+				"ADD_PROCEDURE": "Agregar procedimiento"
+			},
 			"messages": {
 				"ERROR": "Error al guardar documento de evaluación de ingreso",
 				"SUCCESS": "El documento de evaluación de ingreso se guardó exitosamente"
@@ -612,6 +615,9 @@
 				"SUBTITLE": "Para confirmar los cambios por favor especifique el motivo por el cuál edita este documento.",
 				"REASON": "Motivo"
 			}
+		},
+		"concept-data-form": {
+			"REGISTRY_DATE": "Fecha registro"
 		}
 	}
 }
