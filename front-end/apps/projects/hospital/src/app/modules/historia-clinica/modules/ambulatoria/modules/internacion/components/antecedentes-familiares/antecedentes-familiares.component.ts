@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { HealthHistoryConditionDto, SnomedDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
-import { SnomedService, SnomedSemanticSearch } from '@historia-clinica/services/snomed.service';
+import { SearchSnomedConceptComponent } from '@historia-clinica/modules/ambulatoria/dialogs/search-snomed-concept/search-snomed-concept.component';
 import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
 
 @Component({
@@ -11,94 +11,63 @@ import { ComponentEvaluationManagerService } from '../../../../services/componen
 	templateUrl: './antecedentes-familiares.component.html',
 	styleUrls: ['./antecedentes-familiares.component.scss']
 })
-export class AntecedentesFamiliaresComponent implements OnInit {
 
-	private familyHistoriesValue: HealthHistoryConditionDto[];
+export class AntecedentesFamiliaresComponent{
 
 	@Output() familyHistoriesChange = new EventEmitter();
 
-	@Input()
-	set familyHistories(familyHistories: HealthHistoryConditionDto[]) {
-		this.familyHistoriesValue = familyHistories;
-		this.familyHistoriesChange.emit(this.familyHistoriesValue);
-	}
-	@Input() showTitle = false;
+	@Input() familyHistories: HealthHistoryConditionDto[] = [];
 
-	get familyHistories(): HealthHistoryConditionDto[] {
-		return this.familyHistoriesValue;
-	}
 
-	snomedConcept: SnomedDto;
-
-	form: UntypedFormGroup;
-
-	// Mat table
-	columns = [
-		{
-			def: 'problemType',
-			header: 'internaciones.anamnesis.antecedentes-familiares.table.columns.FAMILY_HISTORY',
-			text: af => af.snomed.pt
-		}
-	];
-	displayedColumns: string[] = [];
 
 	constructor(
-		private formBuilder: UntypedFormBuilder,
-		private snomedService: SnomedService,
 		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
+		private readonly dialog: MatDialog,
+
 
 	) {
-		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
 	}
 
-	ngOnInit(): void {
-		this.form = this.formBuilder.group({
-			snomed: [null, Validators.required]
-		});
-	}
-
-	addToList() {
-		if (this.form.valid && this.snomedConcept) {
+	addSnomedConcept(snomedConcept: SnomedDto) {
+		if (snomedConcept) {
 			const antecedenteFamiliar: HealthHistoryConditionDto = {
 				startDate: null,
 				note: null,
-				snomed: this.snomedConcept
+				snomed: snomedConcept
 			};
 			this.add(antecedenteFamiliar);
-			this.resetForm();
 		}
 	}
 
-	setConcept(selectedConcept: SnomedDto): void {
-		this.snomedConcept = selectedConcept;
-		const pt = selectedConcept ? selectedConcept.pt : '';
-		this.form.controls.snomed.setValue(pt);
-	}
-
-	resetForm(): void {
-		delete this.snomedConcept;
-		this.form.reset();
-	}
 
 	add(af: HealthHistoryConditionDto): void {
 		this.familyHistories = pushTo<HealthHistoryConditionDto>(this.familyHistories, af);
 		this.componentEvaluationManagerService.familyHistories = this.familyHistories;
+		this.familyHistoriesChange.next(this.familyHistories);
 	}
 
 	remove(index: number): void {
 		this.familyHistories = removeFrom<HealthHistoryConditionDto>(this.familyHistories, index);
 		this.componentEvaluationManagerService.familyHistories = this.familyHistories;
+		this.familyHistoriesChange.next(this.familyHistories);
 	}
 
-	openSearchDialog(searchValue: string): void {
-		if (searchValue) {
-			const search: SnomedSemanticSearch = {
-				searchValue,
-				eclFilter: SnomedECL.FAMILY_RECORD
-			};
-			this.snomedService.openConceptsSearchDialog(search)
-				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));
-		}
+	addFamilyHistories(): void {
+		const dialogConfig = new MatDialogConfig();
+		dialogConfig.width = '35%';
+		dialogConfig.disableClose = false;
+		dialogConfig.data = {
+			label: 'internaciones.anamnesis.antecedentes-familiares.FAMILY_HISTORY',
+			title: 'internaciones.anamnesis.antecedentes-familiares.ADD',
+			eclFilter: SnomedECL.PERSONAL_RECORD
+		};
+
+		const dialogRef = this.dialog.open(SearchSnomedConceptComponent, dialogConfig);
+
+		dialogRef.afterClosed().subscribe(snomedConcept => {
+			if (snomedConcept)
+				this.addSnomedConcept(snomedConcept)
+		});
 	}
 
 }
