@@ -9,7 +9,8 @@ import {
 	MasterDataInterface,
 	MedicationDto,
 	ResponseAnamnesisDto,
-	HealthConditionDto
+	HealthConditionDto,
+	HospitalizationProcedureDto
 } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { AnamnesisService } from '@api-rest/services/anamnesis.service';
@@ -18,7 +19,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { getError, hasError } from '@core/utils/form.utils';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { MIN_DATE } from "@core/utils/date.utils";
-import { Procedimiento, ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
+import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { DockPopupRef } from "@presentation/services/dock-popup-ref";
 import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { OVERLAY_DATA } from "@presentation/presentation-model";
@@ -55,6 +56,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 	mainDiagnosis: HealthConditionDto;
 	personalHistories: HealthHistoryConditionDto[] = [];
 	familyHistories: HealthHistoryConditionDto[] = [];
+	procedures: HospitalizationProcedureDto[] = [];
 	allergies: AllergyConditionDto[] = [];
 	immunizations: ImmunizationDto[] = [];
 	medications: MedicationDto[] = [];
@@ -83,7 +85,6 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		this.diagnosticos = data.diagnosticos;
 		this.componentEvaluationManagerService.mainDiagnosis = this.mainDiagnosis;
 		this.componentEvaluationManagerService.diagnosis = this.diagnosticos;
-		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
 	}
 
@@ -219,7 +220,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 				glycosylatedHemoglobin: this.getEffectiveValue(formValues.riskFactors.glycosylatedHemoglobin),
 				cardiovascularRisk: this.getEffectiveValue(formValues.riskFactors.cardiovascularRisk)
 			},
-			procedures: isNull(this.procedimientosService.getProcedimientos()) ? undefined : this.procedimientosService.getProcedimientos()
+			procedures: this.procedures
 		};
 
 		function isNull(formGroupValues: any): boolean {
@@ -256,10 +257,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		this.immunizations = this.anamnesis.immunizations;
 		this.medications = this.anamnesis.medications;
 		this.personalHistories = this.anamnesis.personalHistories;
-		const procedure: Procedimiento[] = this.anamnesis.procedures.map(p => {
-			return { snomed: p.snomed, performedDate: p.performedDate }
-		});
-		procedure.forEach(p => this.procedimientosService.add(p));
+		this.procedures = this.anamnesis?.procedures || null;
 		this.mainDiagnosis = this.anamnesis.mainDiagnosis;
 		this.mainDiagnosis.isAdded = true;
 		if (this.anamnesis.anthropometricData) {

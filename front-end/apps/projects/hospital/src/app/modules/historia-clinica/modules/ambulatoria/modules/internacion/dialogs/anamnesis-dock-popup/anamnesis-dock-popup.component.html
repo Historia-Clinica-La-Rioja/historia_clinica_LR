@@ -80,53 +80,13 @@
 		<app-new-consultation-expansion-section id="procedimientos"
 			*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 			[title]="'internaciones.anamnesis.procedimientos.TITLE' | translate" icon="library_add"
-			[isEmpty]="procedimientosService.isEmpty()" [collapsed]="true" [hideBorder]="false">
+			[isEmpty]="componentEvaluationManagerService.isEmptyProcedure() | async" [collapsed]="true"
+			[hideBorder]="false">
 
-			<app-document-section [tableTitle]="'internaciones.anamnesis.procedimientos.TABLE_TITLE'"
-				[columns]="procedimientosService.getColumns()" [data]="procedimientosService.getProcedimientos()"
-				[addRemoveColumn]="true" (removeColumn)="procedimientosService.remove($event)">
-				<ng-container concept-form>
-					<app-concepts-search *ngIf="!procedimientosService.getSnomedConcept() else procedimientoForm"
-						[label]="'internaciones.anamnesis.procedimientos.PROCEDIMIENTO'"
-						(search)="procedimientosService.openSearchDialog($event)">
-					</app-concepts-search>
 
-					<ng-template #procedimientoForm>
-						<form [formGroup]="procedimientosService.getForm()"
-							(ngSubmit)="procedimientosService.addToList()">
-							<mat-form-field appearance="outline">
-								<mat-label [translate]="'internaciones.anamnesis.procedimientos.TIPO'">
-								</mat-label>
-								<input id="procedimiento-input" matInput type="text" formControlName="snomed"
-									name="snomed" readonly
-									matTooltip="{{procedimientosService.getSnomedConcept().pt }}">
-								<button id="clear-procedimiento" mat-button matSuffix color="warn" mat-icon-button
-									(click)="procedimientosService.resetForm()">
-									<mat-icon>close</mat-icon>
-								</button>
-							</mat-form-field>
+			<app-procedure [(procedures)]="procedures">
+			</app-procedure>
 
-							<mat-form-field appearance="outline">
-								<mat-label [translate]="'internaciones.anamnesis.procedimientos.FECHA'">
-								</mat-label>
-								<input matInput id="fecha_procedimiento" [matDatepicker]="datePicker"
-									formControlName="performedDate" [min]="minDate"
-									[max]="procedimientosService.getFechaMax()">
-								<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-								<mat-datepicker #datePicker></mat-datepicker>
-							</mat-form-field>
-
-							<div align="end">
-								<button id="submit_procedimiento" class="uppercase" mat-raised-button color="primary"
-									type="submit">
-									<span [translate]="'internaciones.anamnesis.procedimientos.buttons.ADD'"></span>
-								</button>
-							</div>
-
-						</form>
-					</ng-template>
-				</ng-container>
-			</app-document-section>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="datos-antropometricos"
@@ -201,8 +161,7 @@
 		<app-new-consultation-expansion-section id="factores-de-riesgo"
 			[title]="'historia-clinica.factores-de-riesgo-form.TITLE' | translate" icon="favorite_outlined"
 			[isEmpty]="!factoresDeRiesgoFormService.hasAtLeastOneValueLoaded()" [collapsed]="true" [hideBorder]="false">
-			<app-factores-de-riesgo-form [showTitle]="true"
-				[factoresDeRiesgoFormService]="factoresDeRiesgoFormService">
+			<app-factores-de-riesgo-form [factoresDeRiesgoFormService]="factoresDeRiesgoFormService">
 			</app-factores-de-riesgo-form>
 		</app-new-consultation-expansion-section>
 
@@ -210,27 +169,29 @@
 			[title]="'internaciones.anamnesis.alergias.TITLE' | translate" icon="cancel"
 			[isEmpty]="componentEvaluationManagerService.isEmptyAllergies() | async" [collapsed]="true"
 			[hideBorder]="false">
-			<app-alergias [showTitle]="true"  [(allergies)]="allergies"></app-alergias>
+
+			<app-alergias [(allergies)]="allergies"></app-alergias>
 		</app-new-consultation-expansion-section>
 
-		<app-new-consultation-expansion-section id="vacunas" [title]="'ambulatoria.paciente.vacunas.VACCINE' | translate"
-			icon="vaccines" [isEmpty]="componentEvaluationManagerService.isEmptyVaccines() | async" [collapsed]="true"
+		<app-new-consultation-expansion-section id="vacunas"
+			[title]="'ambulatoria.paciente.vacunas.VACCINE' | translate" icon="vaccines"
+			[isEmpty]="componentEvaluationManagerService.isEmptyVaccines() | async" [collapsed]="true"
 			[hideBorder]="false">
-			<app-vacunas [showTitle]="true"  [(immunizations)]="immunizations"></app-vacunas>
+			<app-vacunas [(immunizations)]="immunizations"></app-vacunas>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="antecedentes-personales"
 			[title]="'internaciones.anamnesis.antecedentes-personales.TITLE' | translate" icon="report_outlined"
 			[isEmpty]="componentEvaluationManagerService.isEmptyPersonalHistories() | async" [collapsed]="true"
 			[hideBorder]="false">
-			<app-antecedentes-personales [showTitle]="true"  [(personalHistories)]="personalHistories"></app-antecedentes-personales>
+			<app-antecedentes-personales [(personalHistories)]="personalHistories"></app-antecedentes-personales>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="antecedentes-familiares"
 			[title]="'internaciones.anamnesis.antecedentes-familiares.TITLE' | translate" icon="report_outlined"
 			[isEmpty]="componentEvaluationManagerService.isEmptyFamilyHistories() | async" [collapsed]="true"
 			[hideBorder]="false">
-			<app-antecedentes-familiares [showTitle]="true"  [(familyHistories)]="familyHistories">
+			<app-antecedentes-familiares [(familyHistories)]="familyHistories">
 			</app-antecedentes-familiares>
 		</app-new-consultation-expansion-section>
 
@@ -238,7 +199,7 @@
 			[title]="'internaciones.anamnesis.medicacion.TITLE' | translate" icon="event_available"
 			[isEmpty]="componentEvaluationManagerService.isEmptyMedications() | async" [collapsed]="true"
 			[hideBorder]="false">
-			<app-medicacion [showTitle]="true"  [(medications)]="medications"></app-medicacion>
+			<app-medication [(medications)]="medications"></app-medication>
 		</app-new-consultation-expansion-section>
 
 	</form>
