@@ -12,7 +12,7 @@ export class FactoresDeRiesgoFormComponent {
   @Input() factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
   @Input() showPreloadData: boolean = false;
   @Input() showRecomendation: boolean = false;
-  @Input() showTitle: boolean = true;
+  @Input() showTitle: boolean = false;
 
   readonly isNumberOrDot = isNumberOrDot;
 
