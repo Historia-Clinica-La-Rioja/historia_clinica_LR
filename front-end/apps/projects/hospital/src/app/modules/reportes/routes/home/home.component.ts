@@ -70,10 +70,9 @@ export class HomeComponent implements OnInit {
 			this.professionalsTypeahead = professionals.map(d => this.toProfessionalTypeahead(d));
 		});
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
-				if (!anyMatch<ERole>(userRoles, [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, ERole.PERSONAL_DE_ESTADISTICA]))
-					this.REPORT_TYPES = this.REPORT_TYPES.filter(report => report.id != 1 && report.id != 2);
-			}
-		);
+			if (!anyMatch<ERole>(userRoles, [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, ERole.PERSONAL_DE_ESTADISTICA]))
+				this.REPORT_TYPES = this.REPORT_TYPES.filter(report => report.id != 1 && report.id != 2);
+		});
 	}
 
 	private firstDayOfThisMonth(): Moment {
