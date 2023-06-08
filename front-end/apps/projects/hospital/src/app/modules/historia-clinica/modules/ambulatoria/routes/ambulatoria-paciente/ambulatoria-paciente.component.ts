@@ -571,8 +571,6 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 					  
 
 				for (let medication of this.medicationList) {
-					// console.log("Dentro del for", medication.snomed.sctId);
-					// console.log(this.medicationList.map(medication => medication.snomed.sctid));
 					if (idList.includes(medication.snomed.sctid)) {
 						this._anticonceptivos = true;
 						break;
@@ -582,14 +580,11 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 				if (this._anticonceptivos === undefined) {
           			this._anticonceptivos = false;
         		}
-
-				console.log("Dentro del subscribe", this._anticonceptivos);
 			});
 		}
 		else{
 			this._anticonceptivos = false;
 		}
-		console.log(this._anticonceptivos);
 		}
 		return this._anticonceptivos;
 	}
