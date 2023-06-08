@@ -3,6 +3,8 @@ package ar.lamansys.sgh.publicapi.infrastructure.input.rest.appointment;
 
 import java.util.List;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingInstitutionExtendedDto;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +33,11 @@ public class BookingPublicController {
 	@GetMapping("/institution")
 	public List<BookingInstitutionDto> getAllBookingInstitutions() {
 		return bookAppointmentPort.fetchAllBookingInstitutions();
+	}
+
+	@GetMapping("/institutionExtended")
+	public List<BookingInstitutionExtendedDto> getAllBookingInstitutionsExtended() {
+		return bookAppointmentPort.fetchAllBookingInstitutionsExtended();
 	}
 
 	@GetMapping("/medicalCoverages")

@@ -3,6 +3,10 @@ package ar.lamansys.online.infraestructure.input.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import ar.lamansys.online.application.integration.FetchBookingInstitutionsExtended;
+import ar.lamansys.online.domain.integration.BookingInstitutionBo;
+import ar.lamansys.online.domain.integration.BookingInstitutionExtendedBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingInstitutionExtendedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
 
 import org.springframework.stereotype.Service;
@@ -51,6 +55,8 @@ public class BookingExternalService implements SharedBookingPort {
 	private final BookAppointment bookAppointment;
 	private final CancelBooking cancelBooking;
 	private final FetchBookingInstitutions fetchBookingInstitutions;
+
+	private final FetchBookingInstitutionsExtended fetchBookingInstitutionsExtended;
 	private final FetchHealthcareInsurances fetchHealthcareInsurances;
 	private final FetchPracticesBySpecialtyAndHealthInsurance fetchPracticesBySpecialtyAndHealthInsurance;
 	private final FetchPracticesByProfessionalAndHealthInsurance fetchPracticesByProfessionalAndHealthInsurance;
@@ -79,6 +85,22 @@ public class BookingExternalService implements SharedBookingPort {
 		return fetchBookingInstitutions.run().stream()
 				.map(institution -> new BookingInstitutionDto(institution.getId(), institution.getDescription()))
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<BookingInstitutionExtendedDto> fetchAllBookingInstitutionsExtended() {
+		return fetchBookingInstitutionsExtended.run().stream()
+				.map(this::buildExtendedDto)
+				.collect(Collectors.toList());
+	}
+
+	private BookingInstitutionExtendedDto buildExtendedDto(BookingInstitutionExtendedBo institution) {
+		return new BookingInstitutionExtendedDto(institution.getId(),
+				institution.getDescription(),
+				institution.getSisaCode(),
+				institution.getDependency(),
+				institution.getAddress(),
+				institution.getClinicalSpecialtiesNames());
 	}
 
 	@Override
