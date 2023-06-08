@@ -441,7 +441,7 @@ export class EditPatientComponent implements OnInit {
 	goBack(): void {
 		this.formSubmitted = false;
 		if (this.hasAuditorRole) {
-			this.router.navigate([this.routePrefix + ROUTE_EMPRADONAMIENTO]);
+			window.history.back();
 		} else {
 			this.router.navigate([this.routePrefix + ROUTE_PROFILE + `${this.patientId}`]);
 		}
@@ -532,7 +532,7 @@ export class EditPatientComponent implements OnInit {
 								.subscribe();
 						}
 						if (this.hasAuditorRole) {
-							this.router.navigate([this.routePrefix + ROUTE_EMPRADONAMIENTO]);
+							window.history.back();
 						} else {
 							this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
 						}
