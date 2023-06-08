@@ -522,7 +522,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private void validateAppointmentDate(Integer institutionId, LocalDate date, LocalTime hour) {
 		ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
-		LocalDate todayDate = dateTimeProvider.nowDate();
+		LocalDate todayDate = LocalDateTime.now().minusHours(3).toLocalDate();
 		LocalTime todayTime = dateTimeProvider.nowDateTimeWithZone(institutionZoneId).toLocalTime();
 
 		if (date.isBefore(todayDate))
