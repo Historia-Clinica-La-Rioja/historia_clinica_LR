@@ -1,8 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DiagnosisDto, HealthConditionDto, SnomedDto } from '@api-rest/api-model';
+import { AppFeature, DiagnosisDto, HealthConditionDto, SnomedDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model'
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/snomed.service';
 import { HEALTH_CLINICAL_STATUS, HEALTH_VERIFICATIONS } from '../../constants/ids';
 
@@ -14,7 +15,6 @@ import { HEALTH_CLINICAL_STATUS, HEALTH_VERIFICATIONS } from '../../constants/id
 export class DiagnosisCreationEditionComponent implements OnInit {
 
 	snomedError = false;
-
 	form: UntypedFormGroup;
 	type: string;
 	selection = false;
@@ -23,14 +23,19 @@ export class DiagnosisCreationEditionComponent implements OnInit {
 	ACTIVE = HEALTH_CLINICAL_STATUS.ACTIVO;
 	CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
 	PRESUMPTIVE = HEALTH_VERIFICATIONS.PRESUNTIVO;
+	searchConceptsLocallyFF = false;
+	eclFilter = SnomedECL.DIAGNOSIS;
 
 	constructor(@Inject(MAT_DIALOG_DATA) public data: any,
 		public dialogRef: MatDialogRef<DiagnosisCreationEditionComponent>,
 		private formBuilder: UntypedFormBuilder,
+		private readonly featureFlagService: FeatureFlagService,
 		private snomedService: SnomedService) {
 		this.type = data.type;
 		this.diagnosis = data.diagnosis;
-		this.hasPresumptiveOption = ! data?.isMainDiagnosis;
+		this.hasPresumptiveOption = !data?.isMainDiagnosis;
+		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => this.searchConceptsLocallyFF = isOn);
+
 	}
 
 	ngOnInit(): void {
@@ -80,6 +85,12 @@ export class DiagnosisCreationEditionComponent implements OnInit {
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));
+		}
+	}
+
+	openSearchDialogSnomed(snomed: SnomedDto) {
+		if (snomed) {
+			this.setConcept(snomed);
 		}
 	}
 

@@ -2,9 +2,19 @@
 <ng-template #editDiagnosisTitle>
 	<h2 mat-dialog-title [translate]="'internaciones.anamnesis.diagnosticos.EDIT'"></h2>
 </ng-template>
-<app-concepts-search *ngIf="!diagnosis else completedDiagnosis"
-	[label]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'" (search)="openSearchDialog($event)">
-</app-concepts-search>
+
+<div *ngIf="searchConceptsLocallyFF else typeaheadSearch">
+	<app-concepts-search *ngIf="!diagnosis else completedDiagnosis"
+		[label]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'" (search)="openSearchDialog($event)">
+	</app-concepts-search>
+</div>
+
+<ng-template #typeaheadSearch>
+	<app-concept-typeahead-search [ecl]="eclFilter" [placeholder]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'"
+		(conceptSelected)="openSearchDialogSnomed($event)">
+	</app-concept-typeahead-search>
+</ng-template>
+
 <form [formGroup]="form">
 	<ng-template #completedDiagnosis>
 		<mat-form-field appearance="outline">

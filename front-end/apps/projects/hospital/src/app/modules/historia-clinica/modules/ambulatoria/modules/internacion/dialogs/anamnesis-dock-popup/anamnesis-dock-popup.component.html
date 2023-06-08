@@ -5,7 +5,7 @@
 		<app-new-consultation-expansion-section id="diagnosticos"
 			[title]="'internaciones.epicrisis.diagnosticos.TITLE' | translate" icon="error_outlined" [collapsed]="false"
 			[isEmpty]="componentEvaluationManagerService.isEmptyDiagnosis()| async" [hideBorder]="true">
-			<app-diagnosticos [showTitle]="true" [(mainDiagnosis)]="mainDiagnosis" [(diagnosticos)]="diagnosticos"
+			<app-diagnosticos [showTitle]="false" [(mainDiagnosis)]="mainDiagnosis" [(diagnosticos)]="diagnosticos"
 				[type]="'ANAMNESIS'">
 			</app-diagnosticos>
 		</app-new-consultation-expansion-section>
