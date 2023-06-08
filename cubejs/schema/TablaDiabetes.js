@@ -75,8 +75,6 @@ cube(`TablaDiabetes`, {
                     AND hc2.start_date IS NOT NULL
                     AND hc2.patient_id = hc.patient_id
                     AND hc2.snomed_id = hc.snomed_id
-                    ${(SECURITY_CONTEXT.roles.unsafeValue() || []).filter(role => role.id === 16 || role.id === 8).length === 0 ? '' +  `
-                    AND d.created_by = ${SECURITY_CONTEXT.userId.unsafeValue()}` : ''}
                     ORDER BY hc2.start_date
                     LIMIT 1)`,
     measures: {

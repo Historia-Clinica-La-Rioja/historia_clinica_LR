@@ -11,12 +11,14 @@ import { MIN_DATE } from '@core/utils/date.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 
 import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
-import { ProfessionalDto, ProfessionalsByClinicalSpecialtyDto } from '@api-rest/api-model';
+import { ERole, ProfessionalDto, ProfessionalsByClinicalSpecialtyDto } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { ReportsService } from '@api-rest/services/reports.service';
 
 import { REPORT_TYPES } from '../../constants/report-types';
 import { UIComponentDto } from '@extensions/extensions-model';
+import { anyMatch } from '@core/utils/array.utils';
+import { PermissionsService } from '@core/services/permissions.service';
 
 @Component({
 	selector: 'app-home',
@@ -51,6 +53,7 @@ export class HomeComponent implements OnInit {
 		private readonly healthcareProfessionalService: HealthcareProfessionalByInstitutionService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly reportsService: ReportsService,
+		private readonly permissionsService: PermissionsService,
 	) { }
 
 	ngOnInit(): void {
@@ -66,6 +69,11 @@ export class HomeComponent implements OnInit {
 			this.specialtiesTypeaheadOptions$ = this.getSpecialtiesTypeaheadOptions$(professionals);
 			this.professionalsTypeahead = professionals.map(d => this.toProfessionalTypeahead(d));
 		});
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+				if (!anyMatch<ERole>(userRoles, [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, ERole.PERSONAL_DE_ESTADISTICA]))
+					this.REPORT_TYPES = this.REPORT_TYPES.filter(report => report.id != 1 && report.id != 2);
+			}
+		);
 	}
 
 	private firstDayOfThisMonth(): Moment {
