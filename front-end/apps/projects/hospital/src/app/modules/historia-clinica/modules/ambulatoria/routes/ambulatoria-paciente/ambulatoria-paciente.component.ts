@@ -457,23 +457,140 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 		this.dialog.open(DialogoAclaracionComponent);
 	}
 
-	// birth_control_pills(){
-	// 	if (this._anticonceptivos === undefined)
-	// 	{
-	// 		if (this.patient.age < 15){
-	// 			this.medicationRequestService.medicationRequestList(this.patient.id, null, null, null).subscribe((data:MedicationInfoDto[]) => {
-	// 				this.medicationList = data;
-	// 			});
-	// 			for (let i = 0; i < this.medicationList.length; i++){
-	// 				if (this.medicationList[i] == 275811000 || this.medicationList[i] == 425890004 || this.medicationList[i] == 169554008 || this.medicationList[i] == 169553002){
-	// 					this._anticonceptivos = true;
-	// 				}
-	// 			}
-	// 		}
-	// 		else{
-	// 			this._anticonceptivos = false;
-	// 		}
-	// 	}
-	// 	return this._anticonceptivos;
-	// }
+	birth_control_pills(){
+		if (this._anticonceptivos === undefined)
+		{
+			if (this.patient.age < 15){
+				this.medicationRequestService.medicationRequestList(this.patient.id, null, null, null).subscribe((data: MedicationInfoDto[]) => {
+					this.medicationList = data;
+					console.log(this.medicationList);
+				
+				const idList = [
+					"275811000",
+					"425890004",
+					"169554008",
+					"169553002",
+					"706507009",
+					"326324002",
+					"326425002",
+					"333751000221106",
+					"333891000221106",
+					"414606006",
+					"714594000",
+					"268460000",
+					"333651000221104",
+					"326361006",
+					"400419002",
+					"356296007",
+					"327311006",
+					"375191001",
+					"325533008",
+					"318058009",
+					"352501000221106",
+					"326146004",
+					"317288008",
+					"1204114003",
+					"785088001",
+					"418556001",
+					"156931000221100",
+					"150841000221103",
+					"150851000221101",
+					"128191000221104",
+					"128201000221101",
+					"98671000221106",
+					"98681000221109",
+					"143341000221102",
+					"143351000221100",
+					"343101000221107",
+					"345331000221104",
+					"343111000221105",
+					"343121000221100",
+					"324311000221109",
+					"348851000221108",
+					"180221000221101",
+					"180231000221103",
+					"192961000221103",
+					"192971000221107",
+					"200041000221104",
+					"200051000221102",
+					"97241000221100",
+					"97251000221103",
+					"321801000221100",
+					"145861000221105",
+					"145871000221101",
+					"144191000221108",
+					"144201000221106",
+					"100601000221105",
+					"100611000221108",
+					"190191000221106",
+					"100601000221105",
+					"100611000221108",
+					"190191000221106",
+					"146861000221103",
+					"146871000221107",
+					"193441000221103",
+					"193451000221101",
+					"193441000221103",
+					"193451000221101",
+					"435321000221107",
+					"140151000221107",
+					"118101000221100",
+					"140161000221109",
+					"118111000221102",
+					"150121000221104",
+					"150131000221101",
+					"366681000221108",
+					"253281000221103",
+					"294151000221107",
+					"260171000221109",
+					"191021000221103",
+					"191031000221100",
+					"174321000221109",
+					"174331000221107",
+					"98221000221108",
+					"99721000221105",
+					"98231000221106",
+					"95121000221107",
+					"95131000221105",
+					"142311000221105",
+					"142321000221100",
+					"427731000221104",
+					"107351000221104",
+					"343221000221107",
+					"348941000221104",
+					"399411000221105",
+					"399401000221107",
+					"341841000221100",
+					"399391000221105",
+					"399361000221100",
+					"405041000221109",
+					"428291000221106",
+					"211861000221100",
+					"211851000221102"
+					];
+					  
+
+				for (let medication of this.medicationList) {
+					// console.log("Dentro del for", medication.snomed.sctId);
+					// console.log(this.medicationList.map(medication => medication.snomed.sctid));
+					if (idList.includes(medication.snomed.sctid)) {
+						this._anticonceptivos = true;
+						break;
+					}
+				}
+
+				if (this._anticonceptivos === undefined) {
+          			this._anticonceptivos = false;
+        		}
+
+				console.log("Dentro del subscribe", this._anticonceptivos);
+			});
+		}
+		else{
+			this._anticonceptivos = false;
+		}
+		console.log(this._anticonceptivos);
+		}
+		return this._anticonceptivos;
+	}
 }
