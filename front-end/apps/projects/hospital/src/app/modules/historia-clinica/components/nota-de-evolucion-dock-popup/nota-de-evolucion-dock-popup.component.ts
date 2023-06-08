@@ -1,9 +1,10 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { DiagnosisDto, EmergencyCareEvolutionNoteDto, HealthConditionDto, OutpatientAnthropometricDataDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientRiskFactorDto } from '@api-rest/api-model';
 import { EmergencyCareEvolutionNoteService } from '@api-rest/services/emergency-care-evolution-note.service';
 import { EmergencyCareStateService } from '@api-rest/services/emergency-care-state.service';
 import { DateFormat, momentFormat } from '@core/utils/moment.utils';
+import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
 import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/guardia/services/new-emergency-care-evolution-note.service';
 import { DockPopUpHeader } from '@presentation/components/dock-popup/dock-popup.component';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
@@ -13,7 +14,10 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 @Component({
 	selector: 'app-nota-de-evolucion-dock-popup',
 	templateUrl: './nota-de-evolucion-dock-popup.component.html',
-	styleUrls: ['./nota-de-evolucion-dock-popup.component.scss']
+	styleUrls: ['./nota-de-evolucion-dock-popup.component.scss'],
+	providers: [
+		ComponentEvaluationManagerService,
+	]
 })
 
 export class NotaDeEvolucionDockPopupComponent {
@@ -44,7 +48,9 @@ export class NotaDeEvolucionDockPopupComponent {
 		private readonly emergencyCareStateService: EmergencyCareStateService,
 		private readonly emergencyCareEvolutionNoteService: EmergencyCareEvolutionNoteService,
 		private readonly snackBarService: SnackBarService,
-		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService
+		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService,
+		readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
+		private changeDetectorRef: ChangeDetectorRef
 	) {
 		this.emergencyCareStateService.getEmergencyCareEpisodeDiagnoses(this.data.episodeId).subscribe(
 			diagnoses => {
@@ -53,9 +59,14 @@ export class NotaDeEvolucionDockPopupComponent {
 						mainDiagnosis: diagnoses.find(d => d.main),
 						diagnosticos: diagnoses.filter(d => !d.main) || [],
 					}
+					this.componentEvaluationManagerService.mainDiagnosis = this.diagnosis.mainDiagnosis;
+					this.componentEvaluationManagerService.diagnosis = this.diagnosis.diagnosticos;
 				}
-			}
-		)
+			})
+	}
+
+	ngAfterViewInit() {
+		this.changeDetectorRef.detectChanges();
 	}
 
 	save() {
