@@ -456,24 +456,4 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 	openDialogAclaracion() {
 		this.dialog.open(DialogoAclaracionComponent);
 	}
-
-	// birth_control_pills(){
-	// 	if (this._anticonceptivos === undefined)
-	// 	{
-	// 		if (this.patient.age < 15){
-	// 			this.medicationRequestService.medicationRequestList(this.patient.id, null, null, null).subscribe((data:MedicationInfoDto[]) => {
-	// 				this.medicationList = data;
-	// 			});
-	// 			for (let i = 0; i < this.medicationList.length; i++){
-	// 				if (this.medicationList[i] == 275811000 || this.medicationList[i] == 425890004 || this.medicationList[i] == 169554008 || this.medicationList[i] == 169553002){
-	// 					this._anticonceptivos = true;
-	// 				}
-	// 			}
-	// 		}
-	// 		else{
-	// 			this._anticonceptivos = false;
-	// 		}
-	// 	}
-	// 	return this._anticonceptivos;
-	// }
 }
