@@ -306,3 +306,11 @@ Se crearon las siguientes propiedades para configurar los tableros de la aplicac
 |app.files.folder.multipart.location   | MULTIPART_ABSOLUTE_LOCATION, MULTIPART_RELATIVE_LOCATION | /temp/tmp/multipartfiles | Obligatorio | Define donde se van a almancenar los archivos temporales cuando se suben archivos. Con la variable de ambiente MULTIPART_ABSOLUTE_LOCATION se puede definir una ubicación absoluta, mientras que con MULTIPART_RELATIVE_LOCATION se puede definir una ubicación relativa a la ubicación definida en la propiedad internment.document.directory | v1.45.0 |
 |app.files.folder.freespace.minimum   | MULTIPART_ABSOLUTE_LOCATION, MULTIPART_RELATIVE_LOCATION | /temp/tmp/multipartfiles | Obligatorio | Define donde se van a almancenar los archivos temporales cuando se suben archivos. Con la variable de ambiente MULTIPART_ABSOLUTE_LOCATION se puede definir una ubicación absoluta, mientras que con MULTIPART_RELATIVE_LOCATION se puede definir una ubicación relativa a la ubicación definida en la propiedad internment.document.directory | v1.45.0 |
 
+## Red de imágenes
+
+Se crearon las siguientes propiedades para configurar la funcionalidad de red de imágenes de la aplicación
+
+| Propiedad                              | Variable de ambiente | Valor por defecto     | Necesidad | Descripcion                                                                                           | Desde   |
+|----------------------------------------|----------------------|-----------------------|-----------|-------------------------------------------------------------------------------------------------------|---------|
+| app.imagenetwork.permission.expiration | -                    | 60m                   | Opcional  | Define cuanto tiempo de validez posee un token desde que se genera, para acceder a un estudio médico. | v2.1.0  |
+| app.imagenetwork.viewer.web.url        | VIEWER_WEB_URL       | http://localhost:3000 | Opcional  | Establece la URL donde se encuentra el visualizador web definido para ver estudios médicos.           | v2.1.0  |
