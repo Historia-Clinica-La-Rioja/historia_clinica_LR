@@ -222,7 +222,9 @@ export class EditPatientComponent implements OnInit {
 								this.restrictFormEdit();
 								if (this.hasAuditorRole) {
 									this.form.controls.patientId.disable();
-									this.form.controls.identificationNumber.disable();
+									if(this.form.controls.identificationTypeId.value === this.idTypeDni){
+										this.form.controls.identificationNumber.disable();
+									}
 								}
 
 								this.form.get("addressCountryId").valueChanges.subscribe(
