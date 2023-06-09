@@ -1,27 +1,39 @@
 <section class="section">
     <mat-card class="main-card" fxLayout="column" fxLayoutGap="10px">
+
         <button mat-icon-button color="primary" (click)="goBack()" fxLayoutGap="5px">
             <mat-icon>arrow_back</mat-icon>
             <span>{{'image-network.worklist.details_study.BACK_TO_WORKLIST' | translate}}</span>
         </button>
+
         <div fxLayout="column" fxFlex="100">
-            <h2 fxFlex="10" translate="image-network.worklist.details_study.DETAILS_STUDY"></h2>
-            <div>
-                <div fxLayout="column" *ngIf="study" fxFlex="50" fxLayoutGap="30px">
+            <h3 fxFlex="10" class="bold" translate="image-network.worklist.details_study.DETAILS_STUDY"></h3>
+
+            <div *ngIf="(study$ | async) as study" fxLayout="row" fxLayout.lt-sm="column" fxFlex="100"
+                fxLayoutGap="40px">
+
+                <div fxLayout="column" fxLayoutGap="30px" fxFlex="35">
+
                     <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="30px">
-                        <span>{{study.patientFullName}}</span>
+                        <span>{{ study.info.patientFullName }}</span>
+
                         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
                             <app-colored-label [description]="study.state.description | translate | uppercase"
                                 [color]="study.state.color">
                             </app-colored-label>
-                            <span class="smaller-font grey"> {{ datePipe.transform(study.actionTime, datePipeFormat.SHORT)}}hs</span>
+                            <span class="smaller-font grey"> {{ study.info.actionTime | viewDateDto: 'localdatetime' | date : 'short' }} hs</span>
                         </div>
                     </div>
+
                     <a id="go_to_HC" mat-stroked-button color="primary" target="_blank" class="buttons"
-                        *appHasRole="['ESPECIALISTA_MEDICO']" [href]="url + study.patientId">
+                        *appHasRole="['ESPECIALISTA_MEDICO']" [href]="url + study.info.patientId">
                         <span>{{'image-network.worklist.details_study.GO_TO_HC' | translate | uppercase }}</span>
                     </a>
                 </div>
+
+                <mat-divider fxFlex="5" [vertical]="true"></mat-divider>
+
+                <app-report-study fxFlex="50" (update)="study$ = $event"></app-report-study>
             </div>
         </div>
     </mat-card>

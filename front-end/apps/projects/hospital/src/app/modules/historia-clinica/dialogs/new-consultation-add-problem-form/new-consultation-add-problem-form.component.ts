@@ -45,8 +45,8 @@ interface ProblemData {
   editing?: boolean,
   editIndex?: number,
   ambulatoryConsultationProblemsService: AmbulatoryConsultationProblemsService,
-  severityTypes: any[],
-  epidemiologicalReportFF: boolean,
+  severityTypes?: any[],
+  epidemiologicalReportFF?: boolean,
   searchConceptsLocallyFF: boolean,
   isFromRecetaDigital?: boolean
 }

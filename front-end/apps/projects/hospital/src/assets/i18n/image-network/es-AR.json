@@ -46,7 +46,16 @@
             "details_study": {
                 "DETAILS_STUDY": "Detalle de estudio",
                 "BACK_TO_WORKLIST": "Volver al listado de informes",
-                "GO_TO_HC": "ver historia clínica"
+                "GO_TO_HC": "ver historia clinica",
+                "SAVE_DRAFT": "guardar como borrador",
+                "FINISH_REPORT": "finalizar informe",
+                "SNACKBAR_SUCCESS": "El informe se ha completado exitosamente",
+                "SNACKBAR_ERROR": "El informe no se ha podido completar",
+                "REPORT": "INFORME:" ,
+                "DRAFT_REPORT": "Borrador editado - ",
+                "CONTINUE_EDITING": "Seguir editando",
+                "PROBLEMS": "Problemas:",
+                "OBSERVATIONS": "Observaciones:"               
             },
             "WORKLIST_BY_INFORMER": "Lista de informes",
             "MODALITIES": "Seleccione modalidades",

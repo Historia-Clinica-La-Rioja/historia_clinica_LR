@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SnvsMasterDataService } from "@api-rest/services/snvs-masterdata.service";
 import { EpidemiologicalManualClassificationResult, EpidemiologicalReport, EpidemiologicalReportComponent } from '@historia-clinica/modules/ambulatoria/dialogs/epidemiological-report/epidemiological-report.component';
 import { NewConsultationAddProblemFormComponent } from '@historia-clinica/dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 export interface AmbulatoryConsultationProblem {
 	snomed: SnomedDto;
@@ -38,6 +39,8 @@ export class AmbulatoryConsultationProblemsService {
 	private readonly ECL = SnomedECL.DIAGNOSIS;
 	searchConceptsLocallyFF = false;
 	reportFF = false;
+	private problems = new BehaviorSubject<AmbulatoryConsultationProblem[]>([]);
+	readonly problems$ = this.problems.asObservable();
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -101,6 +104,7 @@ export class AmbulatoryConsultationProblemsService {
 	add(problema: AmbulatoryConsultationProblem): boolean {
 		const currentItems = this.data.length;
 		this.data = pushIfNotExists<AmbulatoryConsultationProblem>(this.data, problema, this.compareSpeciality);
+		this.problems.next(this.data);
 		return currentItems === this.data.length;
 	}
 

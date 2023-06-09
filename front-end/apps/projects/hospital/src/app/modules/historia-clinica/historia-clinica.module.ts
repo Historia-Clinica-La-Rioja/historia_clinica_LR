@@ -157,7 +157,8 @@ import { EpisodeDataComponent } from './components/episode-data/episode-data.com
 		ConceptsTypeaheadSearchDialogComponent,
 		NewConsultationAddProblemFormComponent,
 		DiagnosticosComponent,
-		DatosAntropometricosNuevaConsultaComponent
+		DatosAntropometricosNuevaConsultaComponent,
+		ProblemListComponent
 	],
 	providers: [
 		InternmentSummaryFacadeService,

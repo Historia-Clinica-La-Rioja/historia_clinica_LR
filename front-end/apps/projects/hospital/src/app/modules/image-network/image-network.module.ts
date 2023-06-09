@@ -9,22 +9,26 @@ import { StudyStatusPopupComponent } from './dialogs/study-status-popup/study-st
 import { WorklistComponent } from './components/worklist/worklist.component';
 import { WorklistByInformerComponent } from './components/worklist-by-informer/worklist-by-informer.component';
 import { StudyDetailsComponent } from './routes/study-details/study-details.component';
+import { HistoriaClinicaModule } from "../historia-clinica/historia-clinica.module";
+import { ReportStudyComponent } from './components/report-study/report-study.component';
 
 @NgModule({
-	declarations: [
-		WorklistByTechnicalComponent,
-		HomeComponent,
-		FinishStudyComponent,
-		StudyStatusPopupComponent,
-		WorklistComponent,
-		WorklistByInformerComponent,
-		StudyDetailsComponent
-	],
-	imports: [
-		CommonModule,
-		PresentationModule,
-		ImageNetworkRoutingModule
-	]
+    declarations: [
+        WorklistByTechnicalComponent,
+        HomeComponent,
+        FinishStudyComponent,
+        StudyStatusPopupComponent,
+        WorklistComponent,
+        WorklistByInformerComponent,
+        StudyDetailsComponent,
+        ReportStudyComponent
+    ],
+    imports: [
+        CommonModule,
+        PresentationModule,
+        ImageNetworkRoutingModule,
+        HistoriaClinicaModule
+    ]
 })
 
 export class ImageNetworkModule { }
