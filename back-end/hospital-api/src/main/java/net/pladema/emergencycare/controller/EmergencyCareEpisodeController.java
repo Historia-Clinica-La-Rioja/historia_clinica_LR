@@ -7,6 +7,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.service.ReasonExternal
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.service.RiskFactorExternalService;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.emergencycare.controller.dto.ECAdministrativeDto;
 import net.pladema.emergencycare.controller.dto.ECAdultGynecologicalDto;
@@ -243,7 +244,7 @@ public class EmergencyCareEpisodeController {
 
 	private PatientECEBo createEmergencyCareEpisodePatient() {
 		PatientECEBo result = new PatientECEBo();
-		Integer patientId = patientService.addPatient(new Patient(EPatientType.EMERGENCY_CARE_TEMPORARY.getId())).getId();
+		Integer patientId = patientService.addPatient(new Patient(EPatientType.EMERGENCY_CARE_TEMPORARY.getId(), EAuditType.UNAUDITED.getId())).getId();
 		result.setId(patientId);
 		return result;
 	}
