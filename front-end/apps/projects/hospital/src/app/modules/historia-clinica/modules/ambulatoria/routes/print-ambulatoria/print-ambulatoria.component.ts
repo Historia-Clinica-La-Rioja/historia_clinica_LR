@@ -246,6 +246,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 				this.dataSource.data = response.map(data => this.mapToDocumentSummary(data));
 				this.dataSource.paginator = this.paginator;
 				document.getElementById("encounter-list").style.display = "block";
+				this.selection.clear();
 				this.toggleAllRows();
 				this.loadingTable = false;
 			});
