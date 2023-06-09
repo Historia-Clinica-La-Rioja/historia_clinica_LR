@@ -24,7 +24,6 @@ export class AppointmentStateInputComponent implements OnInit {
 	ngOnInit(): void {
 		this.medicalConsultationMasterdataService.getAppointmentState().subscribe(states => {
 			this.appointmentStateList = states.map(state => {
-				console.log(state)
 				return {
 					compareValue: state.description,
 					value: state.description
