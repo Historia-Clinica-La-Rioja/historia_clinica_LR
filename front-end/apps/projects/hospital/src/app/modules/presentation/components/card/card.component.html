@@ -5,9 +5,18 @@
 				<img mat-card-avatar [src]="cardContent?.avatar"
 					onerror="this.src='../../../../../assets/images/empty-profile.png'" alt>
 			</div>
-			<div *ngFor="let header of cardContent.header" fxFlex="55%">
-				<strong> {{header.title | translate}} {{header.value | translate}}</strong>
-			</div>
+
+			<ng-container *ngIf="viewCardToAudit; else noviewCardToAudit">
+				<div *ngFor="let header of cardContent.header" fxLayout="column" fxLayoutAlign="start center" fxFlex="55%">
+					<strong> {{header.title | translate}} </strong>
+					<span>{{header.value | translate}}</span>
+				</div>
+			</ng-container>
+			<ng-template #noviewCardToAudit>
+				<div *ngFor="let header of cardContent.header" fxLayoutAlign="start center" fxFlex="55%">
+					<strong> {{header.title | translate}} {{header.value | translate}}</strong>
+				</div>
+			</ng-template>
 
 			<div *ngFor="let headerSimple of cardContent.headerSimple" fxFlex="25%">
 				<span> {{headerSimple?.title | translate}} {{headerSimple.value | translate}}</span>

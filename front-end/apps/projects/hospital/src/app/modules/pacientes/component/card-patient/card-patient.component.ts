@@ -8,7 +8,6 @@ import { PatientNameService } from "@core/services/patient-name.service";
 import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
 import { DateFormat } from '@core/utils/date.utils';
-import { DatePipeFormat } from '@core/utils/date.utils';
 import { CardModel, ValueAction } from '@presentation/components/card/card.component';
 import { ViewPatientDetailComponent } from '../view-patient-detail/view-patient-detail.component';
 import { MatDialog } from "@angular/material/dialog";
@@ -18,6 +17,7 @@ import { PatientProfilePopupComponent } from '../../../auditoria/dialogs/patient
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
+import { ROUTE_EMPADRONAMIENTO } from '../../../auditoria/routes/home/home.component';
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 const PAGE_MIN_SIZE = 5;
@@ -39,6 +39,7 @@ export class CardPatientComponent {
 	UNAUDITED = EAuditType.UNAUDITED;
 	TO_AUDIT = EAuditType.TO_AUDIT;
 	AUDITED = EAuditType.AUDITED;
+	nameSelfDeterminationFF: boolean;
 	@Input() viewCardToAudit?: boolean;
 	@Input() patientData: any[] = [];
 	@Input() identificationTypes: MasterDataDto[] = [];
@@ -67,6 +68,9 @@ export class CardPatientComponent {
 
 		this.personMasterDataService.getIdentificationTypes().subscribe(identificationTypes => {
 			this.identificationTypeList = identificationTypes;
+		});
+		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
+			this.nameSelfDeterminationFF = isOn
 		});
 
 	}
@@ -98,8 +102,15 @@ export class CardPatientComponent {
 		});
 
 		return this.patientData?.map((patient: any) => {
+			let header: any = " ";
+			if (this.router.url.includes(ROUTE_EMPADRONAMIENTO) && this.nameSelfDeterminationFF && patient.nameSelfDetermination) {
+				header = [{ title: this.patientNameService.getFullName(patient.person.firstName, null, patient.person?.middleNames) + ' ' + this.getLastNames(patient), value: patient.nameSelfDetermination +" (autopercibido)" }];
+			} else {
+				header = [{ title: " ", value: this.patientNameService.getFullName(patient.person.firstName, patient.person.nameSelfDetermination, patient.person?.middleNames) + ' ' + this.getLastNames(patient) }];
+			}
+
 			return {
-				header: [{ title: " ", value: this.patientNameService.getFullName(patient.person.firstName, patient.person.nameSelfDetermination, patient.person?.middleNames) + ' ' + this.getLastNames(patient) }],
+				header: header,
 				id: patient.idPatient,
 				identificationTypeId: patient.person.identificationTypeId,
 				dni: patient.person.identificationNumber || "-",
