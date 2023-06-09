@@ -24,11 +24,14 @@
                             <span class="smaller-font grey"> {{ study.info.actionTime | viewDateDto: 'localdatetime' | date : 'short' }} hs</span>
                         </div>
                     </div>
-
-                    <a id="go_to_HC" mat-stroked-button color="primary" target="_blank" class="buttons"
-                        *appHasRole="['ESPECIALISTA_MEDICO']" [href]="url + study.info.patientId">
-                        <span>{{'image-network.worklist.details_study.GO_TO_HC' | translate | uppercase }}</span>
-                    </a>
+                    
+                    <div fxLayout="row" fxLayoutGap="10px">
+                        <app-view-study [appointmentId]="appointmentId"></app-view-study>
+                        <a id="go_to_HC" mat-stroked-button color="primary" target="_blank" class="buttons"
+                            *appHasRole="['ESPECIALISTA_MEDICO']" [href]="url + study.info.patientId">
+                            <span>{{'image-network.worklist.details_study.GO_TO_HC' | translate | uppercase }}</span>
+                        </a>
+                    </div>
                 </div>
 
                 <mat-divider fxFlex="5" [vertical]="true"></mat-divider>

@@ -23,4 +23,9 @@ export class StudyPermissionService {
 		const url = `${this.BASE_URL}/${studyInstanceUID}/permission/generate/jwt`;
 		return this.http.get<TokenDto>(url);
 	}
+
+	getPermissionsUUID(studyInstanceUID: string): Observable<TokenDto> {
+		const url = `${this.BASE_URL}/${studyInstanceUID}/permission/generate/uuid`;
+		return this.http.get<TokenDto>(url);
+	}
 }

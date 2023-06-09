@@ -17,6 +17,7 @@ import javax.validation.constraints.Size;
 import net.pladema.imagenetwork.derivedstudies.service.MoveStudiesService;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidDetailsOrderImage;
 
+import net.pladema.medicalconsultation.appointment.controller.dto.StudyIntanceUIDDto;
 import net.pladema.permissions.repository.enums.ERole;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -620,14 +621,14 @@ public class AppointmentsController {
 	}
 
 	@GetMapping("/get-study-instance-UID/{appointmentId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES')")
-	public ResponseEntity<String> getStudyInstanceUID(
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES, INFORMADOR')")
+	public ResponseEntity<StudyIntanceUIDDto> getStudyInstanceUID(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "appointmentId") Integer appointmentId
 	) {
 		String imageId = appointmentOrderImageService.getImageId(appointmentId).orElse("none");
-
-		return ResponseEntity.ok().body(imageId);
+		StudyIntanceUIDDto uid = new StudyIntanceUIDDto(imageId);
+		return ResponseEntity.ok().body(uid);
 	}
 
 	@PostMapping("/study-observations/{appointmentId}")

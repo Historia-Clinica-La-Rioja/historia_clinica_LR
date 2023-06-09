@@ -3311,6 +3311,10 @@ export interface StudyDto extends Serializable {
     snomed: SnomedDto;
 }
 
+export interface StudyIntanceUIDDto {
+    uid: string;
+}
+
 export interface StudyPacAssociationDto {
     pacGlobalURL: string;
     studyInstanceUID: string;
@@ -3599,6 +3603,10 @@ export interface ValidatedLicenseNumberDto {
 
 export interface VerificationCodeDto {
     code: string;
+}
+
+export interface ViewerUrlDto {
+    url: string;
 }
 
 export interface WorklistDto {

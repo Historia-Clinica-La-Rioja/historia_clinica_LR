@@ -11,6 +11,7 @@ import { WorklistByInformerComponent } from './components/worklist-by-informer/w
 import { StudyDetailsComponent } from './routes/study-details/study-details.component';
 import { HistoriaClinicaModule } from "../historia-clinica/historia-clinica.module";
 import { ReportStudyComponent } from './components/report-study/report-study.component';
+import { ViewStudyComponent } from './components/view-study/view-study.component';
 
 @NgModule({
     declarations: [
@@ -21,7 +22,8 @@ import { ReportStudyComponent } from './components/report-study/report-study.com
         WorklistComponent,
         WorklistByInformerComponent,
         StudyDetailsComponent,
-        ReportStudyComponent
+        ReportStudyComponent,
+        ViewStudyComponent
     ],
     imports: [
         CommonModule,
