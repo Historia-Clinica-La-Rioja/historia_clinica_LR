@@ -9,6 +9,7 @@ import {
 	DetailsOrderImageDto,
 	EquipmentAppointmentListDto,
 	ExternalPatientCoverageDto,
+	StudyIntanceUIDDto,
 	UpdateAppointmentDateDto,
 	UpdateAppointmentDto,
 } from '@api-rest/api-model';
@@ -247,5 +248,10 @@ export class AppointmentsService {
 		let queryParam: HttpParams = new HttpParams();
 		queryParam = queryParam.append('date', date);
 		return this.http.get<AppointmentShortSummaryDto>(url, { params: queryParam });
+	}
+
+	getStudyInstanceUID(appointmentId: number): Observable<StudyIntanceUIDDto> {
+		const url = `${this.BASE_URL}/get-study-instance-UID/${appointmentId}`;
+		return this.http.get<StudyIntanceUIDDto>(url);
 	}
 }
