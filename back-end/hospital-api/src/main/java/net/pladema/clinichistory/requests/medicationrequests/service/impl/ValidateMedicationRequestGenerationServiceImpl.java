@@ -5,6 +5,7 @@ import ar.lamansys.sgx.auth.user.infrastructure.output.user.User;
 import ar.lamansys.sgx.auth.user.infrastructure.output.user.UserRepository;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import io.jsonwebtoken.lang.Assert;
 import lombok.AllArgsConstructor;
 import net.pladema.clinichistory.requests.medicationrequests.service.ValidateMedicationRequestGenerationService;
 
@@ -62,6 +63,7 @@ public class ValidateMedicationRequestGenerationServiceImpl implements ValidateM
 
 	private void validateTwoFactorAuthentication(Integer userId, ProfessionalLicenseNumberValidationResponseDto response) {
 		LOG.debug("Input parameters -> userId {}", userId);
+		Assert.isTrue(featureFlagsService.isOn(AppFeature.HABILITAR_2FA), "No cuenta con la funcionalidad de doble factor de autenticación, por lo que no puede recetar");
 		Optional<User> user = userRepository.findById(userId);
 		user.ifPresent(userData -> {
 			if (!userData.getTwoFactorAuthenticationEnabled())
