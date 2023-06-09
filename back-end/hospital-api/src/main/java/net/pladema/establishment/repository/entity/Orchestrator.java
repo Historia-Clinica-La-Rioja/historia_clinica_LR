@@ -45,19 +45,19 @@ public class Orchestrator {
 	private Integer attempsNumber = 3;
 
 	@Column(name = "execution_start_time",  columnDefinition = "time default '22:00:00'", nullable = false)
-	private Time executionStartTime = setTimeDefault("22:00:00");
+	private Time executionStartTime = setTimeDefault("08:00:00");
 
 	@Column(name = "execution_end_time",  columnDefinition = "time default '06:00:00'", nullable = false)
 	private Time executionEndTime = setTimeDefault("06:00:00");
 
 	@Column(name = "weight_days", columnDefinition = "float default 0.3", nullable = false)
-	private float weightDays = 0.3f;
+	private Double weightDays = 0.3;
 
 	@Column(name = "weight_size", columnDefinition = "float default 0.01",nullable = false)
-	private float weightSize = 0.01f;
+	private Double weightSize = 0.01;
 
 	@Column(name = "weight_priority", columnDefinition = "float default 0.2",nullable = false)
-	private float weightPriority = 0.02f;
+	private Double weightPriority = 0.2;
 
 	@Column(name = "number_to_move",  columnDefinition = "int default 10", nullable = false)
 	private Integer numberToMove = 10;

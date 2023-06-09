@@ -107,7 +107,7 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 	public void updateStatusAndResult(Integer idMove, String status, String result) {
 		moveStudiesRepository.updateStatusandResult(idMove, status, result);
 
-		if ("200".equals(status)) {
+		if ("200".equals(result)) {
 			Optional<MoveStudies> moveStudy = moveStudiesRepository.findById(idMove);
 			if (moveStudy.isPresent()) {
 				MoveStudies ms = moveStudy.get();
