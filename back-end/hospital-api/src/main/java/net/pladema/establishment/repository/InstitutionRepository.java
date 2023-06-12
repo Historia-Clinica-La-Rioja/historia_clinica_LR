@@ -3,8 +3,6 @@ package net.pladema.establishment.repository;
 import java.util.List;
 import java.util.Optional;
 
-import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +10,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.pladema.establishment.repository.entity.Institution;
+import net.pladema.establishment.repository.entity.SectorType;
+import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
 
 @Repository
 public interface InstitutionRepository extends JpaRepository<Institution, Integer> {
@@ -45,4 +45,12 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"WHERE a.provinceId = :provinceId " +
 			"ORDER BY i.name ")
 	List<InstitutionBasicInfoBo> findByProvinceId(@Param("provinceId") Short provinceId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) "+
+			"FROM Institution i " +
+			"JOIN Sector s on s.institutionId = i.id " +
+			"WHERE s.sectorTypeId = '4' "+
+			"AND deleted IS FALSE ")
+	List<InstitutionBasicInfoBo> getByDiagnosisImagesSectors();
 }

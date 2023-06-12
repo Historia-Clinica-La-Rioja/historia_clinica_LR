@@ -1,15 +1,17 @@
 package net.pladema.establishment.service.impl;
 
-import net.pladema.address.controller.service.domain.AddressBo;
+import java.util.List;
 
-import net.pladema.address.service.AddressService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import net.pladema.address.controller.service.domain.AddressBo;
+import net.pladema.address.service.AddressService;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.establishment.service.InstitutionBoMapper;
 import net.pladema.establishment.service.InstitutionService;
+import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
 import net.pladema.establishment.service.domain.InstitutionBo;
 
 @Service
@@ -30,6 +32,11 @@ public class InstitutionServiceImpl implements InstitutionService {
         this.institutionBoMapper = institutionBoMapper;
 		this.addressService = addressService;
     }
+
+	@Override
+	public List<InstitutionBasicInfoBo> getInstitutionsByImageSectors(){
+		return institutionRepository.getByDiagnosisImagesSectors();
+	}
 
     @Override
     public InstitutionBo get(Integer id) {

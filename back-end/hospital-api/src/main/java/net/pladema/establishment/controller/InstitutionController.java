@@ -15,6 +15,7 @@ import net.pladema.establishment.service.InstitutionService;
 import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
 import net.pladema.establishment.service.domain.InstitutionBo;
 import net.pladema.establishment.service.fetchInstitutions.FetchAllInstitutions;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,16 +43,19 @@ public class InstitutionController {
 	private final Logger logger;
 	private final InstitutionService institutionService;
 
+	private final InstitutionMapper institutionMapper;
+
 	public InstitutionController(InstitutionRepository repository,
 								 InstitutionMapper mapper,
 								 AddressExternalService addressExternalService,
 								 FetchAllInstitutions fetchAllInstitutions,
 								 InstitutionService institutionService,
-								 AddressMapper addressMapper) {
+								 AddressMapper addressMapper, InstitutionMapper institutionMapper) {
 		this.repository = repository;
 		this.mapper = mapper;
 		this.addressExternalService = addressExternalService;
 		this.fetchAllInstitutions = fetchAllInstitutions;
+		this.institutionMapper = institutionMapper;
 		this.logger = LoggerFactory.getLogger(this.getClass());
 		this.institutionService = institutionService;
 		this.addressMapper = addressMapper;
@@ -119,4 +123,11 @@ public class InstitutionController {
 		return result;
 	}
 
+	@GetMapping("/imageSector")
+	public @ResponseBody
+	List<InstitutionBasicInfoDto> findByImageSectors() {
+		List<InstitutionBasicInfoDto> result = institutionMapper.fromListInstitutionBasicInfoBo(institutionService.getInstitutionsByImageSectors());
+		logger.trace("result -> {}", result);
+		return result;
+	}
 }
