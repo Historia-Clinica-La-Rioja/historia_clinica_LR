@@ -21,6 +21,7 @@ import { ContextService } from '@core/services/context.service';
 import { DateFormat, momentFormat } from "@core/utils/moment.utils";
 import { DownloadService } from "@core/services/download.service";
 import { tap } from "rxjs/operators";
+import * as moment from 'moment';
 
 @Injectable({
 	providedIn: 'root'
@@ -132,7 +133,7 @@ export class AppointmentsService {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/list-appoiments-by-equipment/${equipmentId}`;
 		return this.http.get<EquipmentAppointmentListDto[]>(url)
 	}
-	
+
 	hasNewConsultationEnabled(patientId: number): Observable<boolean> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = queryParams.append('patientId', JSON.stringify(patientId));
@@ -229,7 +230,7 @@ export class AppointmentsService {
 	getAppointmentReport(url: string, appointmentData: any, pdfName: string): Observable<any> {
 		const appointmentId: number = appointmentData.appointmentId;
 		const fullNamePatient: string = appointmentData.patient.fullName.replace(' ', '');
-		const appointmentDate: string = momentFormat(appointmentData.date, DateFormat.FILE_DATE);
+		const appointmentDate: string = momentFormat(moment(appointmentData.date), DateFormat.FILE_DATE);
 		const fileName = `${pdfName}_${fullNamePatient}_${appointmentDate}.pdf`;
 
 		return this.downloadService.downloadPdfWithRequestParams(url, fileName, { appointmentId });

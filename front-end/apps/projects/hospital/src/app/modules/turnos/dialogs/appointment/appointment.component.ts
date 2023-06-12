@@ -401,7 +401,7 @@ export class AppointmentComponent implements OnInit {
 					this.data.appointmentData.date = newDate;
 
 					const appointmentUpdate = appointments.find(a => a.id = this.data.appointmentData.appointmentId);
-					this.appointment.protected = appointmentUpdate.protected;
+					this.appointment.protected = appointmentUpdate?.protected;
 				});
 		}, error => {
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
