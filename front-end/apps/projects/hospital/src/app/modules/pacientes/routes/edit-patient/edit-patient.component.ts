@@ -639,13 +639,14 @@ export class EditPatientComponent implements OnInit {
 
 	setIdentificationType(value: any) {
 		const button = document.getElementById('updateDNI');
-
-		if (value !== this.idTypeDni) {
-			this.form.controls.identificationNumber.enable();
-			button.style.display = "none";
-		} else {
-			this.form.controls.identificationNumber.disable();
-			button.style.display = "block";
+		if(this.hasAuditorRole){
+			if (value !== this.idTypeDni) {
+				this.form.controls.identificationNumber.enable();
+				button.style.display = "none";
+			} else {
+				this.form.controls.identificationNumber.disable();
+				button.style.display = "block";
+			}
 		}
 	}
 
