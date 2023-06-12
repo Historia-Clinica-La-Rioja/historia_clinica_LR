@@ -139,6 +139,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 			start: momentFormat(range.start, DateFormat.API_DATE),
 			end: momentFormat(range.end, DateFormat.API_DATE),
 		}
+		this.hideEncounterListSection();
 	}
 
 	private atLeastOneChecked(formGroup: FormGroup) {
@@ -152,6 +153,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		this.documentTypes.forEach(documentType => {
 			this.documentTypeForm.get(documentType.value).setValue(allChecked);
 		});
+		this.hideEncounterListSection();
 	}
 
 	onDocumentTypeCheckedChange(): void {
@@ -159,6 +161,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 			return this.documentTypeForm.get(documentType.value).value;
 		});
 		this.documentTypeForm.get('all').setValue(allChecked);
+		this.hideEncounterListSection();
 	}
 
 	encounterCheckedChange(): void {
@@ -169,6 +172,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		}
 		else
 			this.showDocuments = false;
+		this.hideEncounterListSection();
 	}
 
 	isAllTableSelected(): boolean {
@@ -188,6 +192,14 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	goBack(): void {
 		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/${ROUTE_HISTORY_CLINIC}`;
 		this.router.navigate([url]);
+	}
+
+	private hideEncounterListSection() {
+		document.getElementById("encounterList").style.display = "none";
+	}
+
+	private showEncounterListSection() {
+		document.getElementById("encounterList").style.display = "block";
 	}
 
 	search(): void {
@@ -214,7 +226,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 				this.noInfo = response.length > 0 ? false : true;
 				this.dataSource.data = response.map(data => this.mapToDocumentSummary(data));
 				this.dataSource.paginator = this.paginator;
-				document.getElementById("encounterList").style.display = "block";
+				this.showEncounterListSection();
 				this.selection.clear();
 				this.toggleAllRows();
 				this.loadingTable = false;

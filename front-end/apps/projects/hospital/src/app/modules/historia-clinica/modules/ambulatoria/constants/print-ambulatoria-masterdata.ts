@@ -68,7 +68,7 @@ export const TableColumns = [
 	},
 	{
 		columnDef: 'institution',
-		header: 'Institucion',
+		header: 'Institución',
 		cell: (element: CHDocumentSummaryDto) => `${element.institution}`,
 	},
 	{
