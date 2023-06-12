@@ -9,21 +9,18 @@ import net.pladema.establishment.service.PacServerService;
 import net.pladema.establishment.service.domain.EquipmentBO;
 import net.pladema.establishment.service.domain.OrchestratorBO;
 import net.pladema.establishment.service.domain.PacServerBO;
+import net.pladema.imagenetwork.application.savepacsherestudyishosted.SavePacWhereStudyIsHosted;
 import net.pladema.imagenetwork.derivedstudies.repository.MoveStudiesRepository;
 import net.pladema.imagenetwork.derivedstudies.repository.entity.MoveStudies;
 import net.pladema.imagenetwork.derivedstudies.service.MoveStudiesService;
 import net.pladema.imagenetwork.derivedstudies.service.domain.MoveStudiesBO;
-
+import net.pladema.imagenetwork.domain.StudyPacBo;
 import net.pladema.medicalconsultation.appointment.service.AppointmentOrderImageService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
-
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryService;
-
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.CompleteEquipmentDiaryBo;
-
 import net.pladema.scheduledjobs.jobs.MoveStudiesJob;
-
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -46,6 +43,7 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 	private final PacServerService pacServerService;
 
 	private final MqttClientService mqttClientService;
+	private final SavePacWhereStudyIsHosted savePacWhereStudyIsHosted;
 	@Override
 	public Integer save(MoveStudiesBO moveStudyBO) {
 		MoveStudies moveStudy = new MoveStudies( moveStudyBO.getAppointmentId(),
@@ -108,6 +106,15 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 	@Override
 	public void updateStatusAndResult(Integer idMove, String status, String result) {
 		moveStudiesRepository.updateStatusandResult(idMove, status, result);
+
+		if ("200".equals(status)) {
+			Optional<MoveStudies> moveStudy = moveStudiesRepository.findById(idMove);
+			if (moveStudy.isPresent()) {
+				MoveStudies ms = moveStudy.get();
+				savePacWhereStudyIsHosted.run(new StudyPacBo(ms.getImageId(), ms.getPacServerId()));
+			}
+		}
+
 	}
 
 	@Override

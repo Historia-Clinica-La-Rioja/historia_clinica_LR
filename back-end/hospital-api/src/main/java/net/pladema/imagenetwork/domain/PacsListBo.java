@@ -19,7 +19,7 @@ public class PacsListBo {
 	private Set<URI> pacs;
 
 	private static final String SCHEMA = "https";
-
+	private static final String context = "imagenetwork";
 	public PacsListBo(List<PacServer> pacServers) {
 		this.pacs = getURIs(pacServers);
 	}
@@ -29,6 +29,7 @@ public class PacsListBo {
 				.map(pacServer -> UriComponentsBuilder.newInstance()
 						.scheme(SCHEMA)
 						.host(pacServer.getDomain())
+						.path(context)
 						.build()
 						.toUri())
 				.collect(Collectors.toSet());

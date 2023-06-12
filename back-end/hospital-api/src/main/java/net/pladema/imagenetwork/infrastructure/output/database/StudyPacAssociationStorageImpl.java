@@ -33,7 +33,7 @@ public class StudyPacAssociationStorageImpl implements StudyPacAssociationStorag
 	@Override
 	public Optional<String> saveStudyPacAssociation(StudyPacBo studyPacBo) {
 		PacServer pacServerToSearch = new PacServer();
-		pacServerToSearch.setDomain(studyPacBo.getDomain());
+		pacServerToSearch.setId(studyPacBo.getPacServerId());
 		return pacServerRepository.findOne(Example.of(pacServerToSearch))
 				.map(pac -> studyPacRepository.save(new StudyPacAssociation(studyPacBo.getStudyInstanceUID(), pac.getId())))
 				.map(studyPacSaved -> studyPacBo.getStudyInstanceUID());
