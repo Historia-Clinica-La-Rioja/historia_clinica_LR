@@ -36,7 +36,7 @@ export class EditIdentificationNumberComponent implements OnInit {
 				this.genders = genders;
 			});
 		this.form = this.formBuilder.group({
-			identificationNumber: [null, Validators.maxLength(this.maxLengthIdentifNumber)],
+			identificationNumber: [null, [Validators.required,Validators.maxLength(this.maxLengthIdentifNumber)]],
 			genderId: [null, [Validators.required]]
 		})
 	}
