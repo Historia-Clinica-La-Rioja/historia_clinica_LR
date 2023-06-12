@@ -123,11 +123,10 @@ export class CardPatientComponent {
 
 	private setActionsByRole(medicalSpecialist: boolean, legalPerson: boolean, idPatient: number): ValueAction[] {
 		const valueActions: ValueAction[] = [];
-		if (legalPerson)
+		if (legalPerson && this.printClinicalHistoryFFIsOn)
 			valueActions.push({
 				display: 'ambulatoria.card-patient.PRINT_HC_BUTTON',
 				do: `${this.routePrefix}ambulatoria/paciente/${idPatient}/print`
-
 			});
 		if (medicalSpecialist)
 			valueActions.push({
