@@ -14,7 +14,9 @@
 	align-items: center;
 	max-width: 50%;
 }
-
+#state{
+	max-width: 90px;
+}
 ::ng-deep .mat-dialog-container-fusion{
 	mat-dialog-container.mat-dialog-container{
 		padding: 0px!important;

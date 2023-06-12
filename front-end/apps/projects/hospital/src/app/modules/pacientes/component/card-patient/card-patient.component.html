@@ -2,46 +2,44 @@
 	<div id="content-card" *ngFor="let patient of pageSlice;last as isLast">
 		<app-card id="patient" [cardContent]="patient" [viewCardToAudit]="viewCardToAudit">
 			<div fxLayout="row" fxLayout.lt-sm="column">
-				<div id="content-patient" fxLayoutAlign="space-around start" fxFlex="90%">
+				<div id="content-patient" fxLayoutAlign="space-around start" fxFlex="100%">
 
-					<div id="id">
+					<div id="id" fxFlex="10%">
 						<span>{{'ambulatoria.card-patient.ID' | translate}} {{ patient.id}}</span>
 					</div>
 
-					<div id="dni">
+					<div id="dni" fxFlex="15%">
 						<span> {{getIdentificationType(patient?.identificationTypeId)}} {{patient.dni}}</span>
 					</div>
 
-					<div id="gender">
+					<div id="gender" fxFlex="10%">
 						<span> {{patient.gender}}</span>
 					</div>
 
-					<div id="date" fxLayout="column">
+					<div id="date" fxLayout="column" fxFlex="15%">
 						<span>{{'ambulatoria.card-patient.BIRTHDAY_DATE' | translate}} </span>
 						<span>{{patient.date}}</span>
 					</div>
 
-					<div id="ranking" *ngIf="patient?.ranking" fxLayout="column" fxLayoutAlign="center center"
+					<div id="ranking" *ngIf="patient?.ranking" fxLayout="column" fxFlex="15%" fxLayoutAlign="center center"
 						class="color-green">
 						<span class="percentage">{{patient.ranking}}% </span>
 						<span class="ranking"> {{ 'ambulatoria.card-patient.COINCIDENCE' | translate}}</span>
 					</div>
 
-					<div id="state" *ngIf="patient?.patientTypeId" fxLayout="column">
+					<div id="state" *ngIf="patient?.patientTypeId" fxLayout="column" fxFlex="15%" fxLayoutAlign="center center">
 						<app-colored-div-patient-state [patientTypeId]="patient?.patientTypeId"></app-colored-div-patient-state>
 					</div>
-					<div id="toAudit" *ngIf="patient?.auditType !== null" fxLayout="column" fxFlex="10%">
+					<div id="toAudit" fxFlex="10%" *ngIf="patient?.auditType !== null" fxLayout="column" fxLayoutAlign="center center" fxFlex="10%">
 						<mat-icon matTooltip="{{'pacientes.audit.PENDING_TO_AUDIT' | translate}}" *ngIf="patient?.auditType === TO_AUDIT"  class="color-orange">error</mat-icon>
 						<span *ngIf="patient?.auditType === UNAUDITED">-</span>
 						<mat-icon matTooltip="{{'pacientes.audit.AUDITED' | translate}}" *ngIf="patient?.auditType === AUDITED"  class="color-green">check_circle_outline</mat-icon>
 					</div>
 
-
-				</div>
-				<button id="view-button" *ngIf="patient?.ranking"  mat-stroked-button color="primary" fxFlex="10%" class="button"
+					<button id="view-button" *ngIf="patient?.ranking"  mat-stroked-button color="primary" fxFlex="10%" class="button"
 					(click)="openDialog(patient.id)">
-					<span>{{ 'ambulatoria.card-patient.VIEW_BUTTON' | translate | uppercase}}</span>
-				</button>
+						<span>{{ 'ambulatoria.card-patient.VIEW_BUTTON' | translate | uppercase}}</span>
+					</button>
 			</div>
 
 		</app-card>
