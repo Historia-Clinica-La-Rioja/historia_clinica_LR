@@ -13,20 +13,25 @@
 
     <h2 translate="image-network.worklist.REQUEST_REPORT" style="font-size: 16px"></h2>
 
-    <div fxLayout="column">
-        <mat-form-field appearance="outline" fxFlex="100">
-            <mat-select id="informer">
-                <mat-option></mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
+    <form [formGroup]="form">
+        <div fxLayout="column">
+            <mat-form-field appearance="outline" fxFlex="100">
+                <mat-select id="informer" formControlName="informerInstitution">
+                    <mat-option *ngFor="let informerInstitution of informerInstitutions"
+                    [value]="informerInstitution">
+                    {{informerInstitution.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-error *ngIf="!form.valid && isSubmited">{{'forms.REQUIRED' | translate}}</mat-error>
+        </div>
 
-    <div class="mat-dialog-actions" fxLayout="row" fxLayoutAlign="end center">
-        <button mat-stroked-button color="primary" (click)="closeDialog()">
-            <span class="uppercase" [translate]="'buttons.CANCEL'"></span>
-        </button>
-        <button mat-flat-button color="primary" (click)="openDeriveStatusPopUp()">
-            <span class="uppercase" [translate]="'image-network.appointments.CONFIRM'"></span>
-        </button>
-    </div>
+        <div class="mat-dialog-actions" fxLayout="row" fxLayoutAlign="end center">
+            <button mat-stroked-button color="primary" (click)="closeDialog()">
+                <span class="uppercase" [translate]="'buttons.CANCEL'"></span>
+            </button>
+            <button mat-flat-button color="primary" (click)="deriveReport()">
+                <span class="uppercase" [translate]="'image-network.appointments.CONFIRM'"></span>
+            </button>
+        </div>
+    </form>
 </div>

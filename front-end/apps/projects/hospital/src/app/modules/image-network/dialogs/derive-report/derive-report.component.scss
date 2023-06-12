@@ -1,3 +1,7 @@
 .mat-dialog-actions {
     margin: 2rem 0 0.1rem;
 }
+
+:host ::ng-deep .mat-form-field-wrapper {
+    padding: 0;
+}
