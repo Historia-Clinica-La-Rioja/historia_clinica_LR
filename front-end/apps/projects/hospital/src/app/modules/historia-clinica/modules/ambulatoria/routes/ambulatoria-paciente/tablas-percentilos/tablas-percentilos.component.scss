@@ -1,14 +1,21 @@
-.container{
-  //padding-top: 15px;
-  //padding: 20px;
-  max-width: 80%; //ANCHO TABLA
+section{
+  max-width: 85%; //ANCHO TABLA
   margin: auto;
   //border: 1px solid #e0eef7;
-  box-shadow: 0px 3px 3px 0px rgba(179,177,179,1);
-  background-color: aliceblue;
+  box-shadow: 0px 3px 3px 0px rgba(179,177,179,1);  
+ }
 
-  }
+.title2 {
   
+  display: block;
+  font: 500 20px / 32px Roboto, "Helvetica Neue", sans-serif;
+  margin-top: 2.5%;
+  color: rgba(0, 0, 0, 0.87);
+  letter-spacing: normal;
+  font-size: x-large;
+  
+ }
+
  .contenedor-title{
     display: flex;
     width: 100%;
@@ -17,39 +24,46 @@
     //border: none !important;
     font-size: 16px;
     color: #2687c5;
-    background-color: aliceblue;
+    background-color: #e0eef7;
     //justify-content: space-between;
   }
 
 .column-title {
-  margin-left: 15.4%; //SE ALINEA EL TITLE SEXO HACIA LA IZQUIERDA
-
+  margin-left: 37%; //SE ALINEA EL TITLE SEXO HACIA LA IZQUIERDA.
+  font-weight: normal;
+  font-size: medium;
+}
+.column-name-title{
+  margin-left: 17%;
+  font-weight: normal;
+  font-size: medium;
 }
  
 .contenedor-title>span{
-  padding: 0 15% 0;
-
-
+    padding: 10px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    background-color: #e0eef7;
+    color: #2687c5;
   }
   .container-sexo {
   display: flex;
-  margin-left: 62%;
+  margin-left: 59%;
   position: absolute;
   font-size: 14px;
 
 }
 
 .grafic {  //IMAGENES DENTRO DE FILAS
-  height: 600px;
-  width: 500px;
-  margin-left: 25%;
+ height: 800px;
+ width: 780px;
+ margin-left: 7%;
 }
-
 
 .container-name {
   position: absolute;
   margin-left: 5%;
-  font-size: 14px;
+  font-size: 15px;
 
 }
 
