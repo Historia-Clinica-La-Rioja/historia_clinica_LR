@@ -737,3 +737,24 @@ databaseChangeLog:
                 join institution i on (i.id=d.institution_id)
                 left outer join clinical_specialty cs on (d.clinical_specialty_id=cs.id)
                 where d.deleted=false and d.status_id = '445665009';
+                
+    - changeSet:
+        id: appointment_order_image-alterTable-add_column
+        comment: Alter table appointment_order_image add column
+        author: lbergottini
+        changes:
+          - addColumn:
+              tableName: appointment_order_image
+              columns:
+                - column:
+                    name: dest_institution_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: dest_institution_id
+              baseTableName: appointment_order_image
+              constraintName: FK_appointment_order_image_dest_institution_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: institution
+              validate: true
