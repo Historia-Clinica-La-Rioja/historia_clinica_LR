@@ -49,7 +49,7 @@ export class PatientFusionComponent implements OnInit {
 		identification: null,
 		lastNames: null,
 		birthDate: null,
-		nameSelfDetermination:null
+		nameSelfDetermination: null
 	}
 	patientToMerge: PatientToMergeDto = {
 		activePatientId: null,
@@ -188,8 +188,8 @@ export class PatientFusionComponent implements OnInit {
 				this.patientToMergeAuxKeyId.identification = id;
 				break;
 			case this.keyAttributes.NAMESELFDETERMINATION:
-				this.patientToMerge.registrationDataPerson.nameSelfDetermination=value1;
-				this.patientToMergeAuxKeyId.nameSelfDetermination= id;
+				this.patientToMerge.registrationDataPerson.nameSelfDetermination = value1;
+				this.patientToMergeAuxKeyId.nameSelfDetermination = id;
 		}
 	}
 
@@ -212,8 +212,8 @@ export class PatientFusionComponent implements OnInit {
 		if (this.patientToMerge.activePatientId === id) {
 			this.patientToMerge.activePatientId = null;
 		}
-		if(this.patientToMergeAuxKeyId.nameSelfDetermination === id){
-			this.patientToMerge.registrationDataPerson.nameSelfDetermination= null;
+		if (this.patientToMergeAuxKeyId.nameSelfDetermination === id) {
+			this.patientToMerge.registrationDataPerson.nameSelfDetermination = null;
 		}
 	}
 
@@ -280,9 +280,10 @@ export class PatientFusionComponent implements OnInit {
 		this.patientToMerge.registrationDataPerson.genderId = auxiliaryPatientList.find(patient => patient.patientId === this.patientToMerge.activePatientId).genderId;
 		this.patientToMerge.registrationDataPerson.phonePrefix = auxiliaryPatientList.find(patient => patient.patientId === this.patientToMerge.activePatientId).phonePrefix;
 		this.patientToMerge.registrationDataPerson.phoneNumber = auxiliaryPatientList.find(patient => patient.patientId === this.patientToMerge.activePatientId).phoneNumber;
-		this.patientToMerge.registrationDataPerson.nameSelfDetermination = auxiliaryPatientList.find(patient => patient.patientId === this.patientToMerge.activePatientId).nameSelfDetermination;
 		this.patientToMerge.oldPatientsIds = this.oldPatientsIds;
-
+		if (!this.nameSelfDeterminationFF) {
+			this.patientToMerge.registrationDataPerson.nameSelfDetermination = auxiliaryPatientList.find(patient => patient.patientId === this.patientToMerge.activePatientId).nameSelfDetermination;
+		}
 		let index = this.oldPatientsIds?.indexOf(this.patientToMerge.activePatientId);
 		if (index !== -1) {
 			this.oldPatientsIds.splice(index, 1);
@@ -296,13 +297,13 @@ export class PatientFusionComponent implements OnInit {
 		this.pageSlice = this.listPatientData.slice(startPage, $event.pageSize + startPage);
 	}
 
-	viewPatient(patient:any) {
-		 this.dialog.open(PatientProfilePopupComponent, {
-			data:{
-				patientId : patient.patientId,
+	viewPatient(patient: any) {
+		this.dialog.open(PatientProfilePopupComponent, {
+			data: {
+				patientId: patient.patientId,
 			},
-			height:"600px",
-			width:'30%',
+			height: "600px",
+			width: '30%',
 			disableClose: true,
 			autoFocus: false,
 			panelClass: 'mat-dialog-container-fusion'
