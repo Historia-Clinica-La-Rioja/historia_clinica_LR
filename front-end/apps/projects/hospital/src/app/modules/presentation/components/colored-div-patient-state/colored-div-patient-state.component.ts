@@ -11,11 +11,13 @@ export class ColoredDivPatientStateComponent implements OnChanges {
 	@Input() patientTypeId: number;
 	background: string;
 	color: string;
+	description:string;
 	patientsTypes: PatientType[];
 
 	constructor(private readonly patientMasterDataService: PatientMasterDataService,) {
 		this.patientMasterDataService.getTypesPatient().subscribe((patientsTypes: PatientType[]) => {
 			this.patientsTypes = patientsTypes;
+			this.description=this.getPatientType(this.patientTypeId);
 		})
 	}
 
