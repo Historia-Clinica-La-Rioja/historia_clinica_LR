@@ -103,8 +103,8 @@ export class CardPatientComponent {
 
 		return this.patientData?.map((patient: any) => {
 			let header: any = " ";
-			if (this.router.url.includes(ROUTE_EMPADRONAMIENTO) && this.nameSelfDeterminationFF && patient.nameSelfDetermination) {
-				header = [{ title: this.patientNameService.getFullName(patient.person.firstName, null, patient.person?.middleNames) + ' ' + this.getLastNames(patient), value: patient.nameSelfDetermination +" (autopercibido)" }];
+			if (this.router.url.includes(ROUTE_EMPADRONAMIENTO) && this.nameSelfDeterminationFF) {
+				header = [{ title: this.patientNameService.getFullName(patient.person.firstName, null, patient.person?.middleNames) + ' ' + this.getLastNames(patient), value: patient.nameSelfDetermination? patient.nameSelfDetermination +" (autopercibido)" : " "}];
 			} else {
 				header = [{ title: " ", value: this.patientNameService.getFullName(patient.person.firstName, patient.person.nameSelfDetermination, patient.person?.middleNames) + ' ' + this.getLastNames(patient) }];
 			}
