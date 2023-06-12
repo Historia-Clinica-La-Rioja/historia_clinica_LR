@@ -6,9 +6,9 @@
 		</div>
 	</section>
 
-	<section id="patient-info">
-		<app-patient-card class="patient-card" fxFlex="40%" *ngIf="personPhoto" [patient]="patient"
-			[personalAdditionalInformation]="personInformation" [personPhoto]="personPhoto"
+	<section id="patientInfo">
+		<app-patient-card class="patient-card" fxFlex="40%" *ngIf="personPhoto$" [patient]="patient"
+			[personalAdditionalInformation]="personInformation" [personPhoto]="personPhoto$ | async"
 			[showAdditionalInformation]="true">
 		</app-patient-card>
 	</section>
@@ -18,8 +18,8 @@
 		<mat-form-field appearance="fill">
 			<mat-label>{{'ambulatoria.print.date-picker.LABEL' | translate}}</mat-label>
 			<mat-date-range-input [formGroup]="dateRangeForm" [rangePicker]="dateRangePicker" [max]="maxDate">
-				<input matStartDate placeholder="Inicio" formControlName="start">
-				<input matEndDate placeholder="Fin" formControlName="end">
+				<input matStartDate placeholder="{{'ambulatoria.print.date-picker.START' | translate}}" formControlName="start">
+				<input matEndDate placeholder="{{'ambulatoria.print.date-picker.END' | translate}}"  formControlName="end">
 			</mat-date-range-input>
 			<mat-hint>{{'ambulatoria.print.date-picker.HINT' | translate}}</mat-hint>
 			<mat-datepicker-toggle matSuffix [for]="dateRangePicker"></mat-datepicker-toggle>
@@ -30,7 +30,7 @@
 
 	<mat-divider></mat-divider>
 
-	<section id="encounter-type">
+	<section id="encounterType">
 		<h3 class="subtitle">{{'ambulatoria.print.encounter-type.TITLE' | translate}}</h3>
 		<div fxLayout="row" fxLayoutGap="18px" [formGroup]="encounterTypeForm">
 			<ng-container *ngFor="let encounterType of encounterTypes">
@@ -49,7 +49,7 @@
 
 	<mat-divider></mat-divider>
 
-	<section id="document-type" *ngIf="showDocuments">
+	<section id="documentType" *ngIf="showDocuments">
 		<h3 class="subtitle">{{'ambulatoria.print.document-type.TITLE' | translate}}</h3>
 		<div [formGroup]="documentTypeForm">
 			<mat-checkbox formControlName="all" [color]="'primary'" class="all-checkbox"
@@ -85,7 +85,7 @@
 
 	<mat-divider></mat-divider>
 
-	<section id="encounter-list" *ngIf="showTable">
+	<section id="encounterList" *ngIf="showTable">
 		<h3 class="subtitle">{{'ambulatoria.print.encounter-list.TITLE' | translate}}</h3>
 		<div *ngIf="!noInfo else noData">
 			<h4>{{'ambulatoria.print.encounter-list.SUBTITLE' | translate}}</h4>

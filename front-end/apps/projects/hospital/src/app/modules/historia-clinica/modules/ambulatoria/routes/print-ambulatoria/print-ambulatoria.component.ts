@@ -12,7 +12,7 @@ import { MapperService } from '@presentation/services/mapper.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DateFormat, momentFormat} from '@core/utils/moment.utils';
 import * as moment from 'moment';
-import { EncounterTypes, DocumentTypes, ROUTE_HISTORY_CLINIC, EncounterType } from '../../constants/print-ambulatoria-masterdata';
+import { EncounterTypes, DocumentTypes, ROUTE_HISTORY_CLINIC, EncounterType, TableColumns } from '../../constants/print-ambulatoria-masterdata';
 import { ECHEncounterType } from "@api-rest/api-model";
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { ContextService } from '@core/services/context.service';
@@ -26,6 +26,7 @@ import { mapToFullName} from '@api-presentation/mappers/user-person-dto.mapper';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PrintAmbulatoryService } from '@api-rest/services/print-ambulatory.service';
 import { mapDateWithHypenToDateWithSlash } from '@api-rest/mapper/date-dto.mapper';
+import { Observable, take } from 'rxjs';
 
 @Component({
 	selector: 'app-print-ambulatoria',
@@ -42,7 +43,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	patient: PatientBasicData;
 	patientId: number;
 	personInformation: AdditionalInfo[] = [];
-	personPhoto: PersonPhotoDto;
+	personPhoto$: Observable<PersonPhotoDto>
 
 	dateRange: {
 		start: string,
@@ -70,38 +71,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	noInfo = false;
 	loadingTable = false;
 
-	columns = [
-		{
-			columnDef: 'start',
-			header: 'Inicio',
-			cell: (element: CHDocumentSummaryDto) => `${element.startDate}`,
-		},
-		{
-			columnDef: 'end',
-			header: 'Fin',
-			cell: (element: CHDocumentSummaryDto) => `${element.endDate}`,
-		},
-		{
-			columnDef: 'encounterType',
-			header: 'Tipo de encuentro',
-			cell: (element: CHDocumentSummaryDto) => `${element.encounterType}`,
-		},
-		{
-			columnDef: 'problem',
-			header: 'Problema',
-			cell: (element: CHDocumentSummaryDto) => `${element.problems}`,
-		},
-		{
-			columnDef: 'institution',
-			header: 'Institucion',
-			cell: (element: CHDocumentSummaryDto) => `${element.institution}`,
-		},
-		{
-			columnDef: 'professional',
-			header: 'Profesional',
-			cell: (element: CHDocumentSummaryDto) => `${element.professional}`,
-		}
-	];
+	columns = TableColumns;
 
 	displayedColumns = ['select'].concat(this.columns.map(c => c.columnDef).concat('download'));
 	dataSource = new MatTableDataSource<CHDocumentSummaryDto>();
@@ -119,7 +89,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		private readonly accountService: AccountService,
 		private readonly printAmbulatoryService: PrintAmbulatoryService,
 	) {
-		this.route.paramMap.subscribe(
+		this.route.paramMap.pipe(take(1)).subscribe(
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
 				this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).subscribe(
@@ -128,8 +98,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 						this.patient = this.mapperService.toPatientBasicData(patient);
 					}
 				);
-				this.patientService.getPatientPhoto(this.patientId)
-					.subscribe((personPhotoDto: PersonPhotoDto) => { this.personPhoto = personPhotoDto; });
+				this.personPhoto$ = this.patientService.getPatientPhoto(this.patientId);
 			}
 		);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
@@ -178,21 +147,21 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		return isChecked ? null : { atLeastOneChecked: true };
 	}
 
-	onAllCheckedChange() {
+	onAllCheckedChange(): void {
 		const allChecked = this.documentTypeForm.get('all').value;
 		this.documentTypes.forEach(documentType => {
 			this.documentTypeForm.get(documentType.value).setValue(allChecked);
 		});
 	}
 
-	onDocumentTypeCheckedChange() {
+	onDocumentTypeCheckedChange(): void {
 		const allChecked = this.documentTypes.every(documentType => {
 			return this.documentTypeForm.get(documentType.value).value;
 		});
 		this.documentTypeForm.get('all').setValue(allChecked);
 	}
 
-	encounterCheckedChange() {
+	encounterCheckedChange(): void {
 		this.documentTypes = [];
 		if (!this.atLeastOneChecked(this.encounterTypeForm)) {
 			this.documentTypes = DocumentTypes;
@@ -202,13 +171,13 @@ export class PrintAmbulatoriaComponent implements OnInit {
 			this.showDocuments = false;
 	}
 
-	isAllTableSelected() {
+	isAllTableSelected(): boolean {
 		const numSelected = this.selection.selected.length;
 		const numRows = this.dataSource.data.length;
 		return numSelected === numRows;
 	}
 
-	toggleAllRows() {
+	toggleAllRows(): void {
 		if (this.isAllTableSelected()) {
 			this.selection.clear();
 			return;
@@ -216,12 +185,12 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		this.selection.select(...this.dataSource.data);
 	}
 
-	goBack() {
+	goBack(): void {
 		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/${ROUTE_HISTORY_CLINIC}`;
 		this.router.navigate([url]);
 	}
 
-	search() {
+	search(): void {
 		const selectedEncounterTypes: ECHEncounterType[] = [];
 		this.encounterTypes.forEach(elem => {
 			if (this.encounterTypeForm.get(elem.value).value)
@@ -245,7 +214,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 				this.noInfo = response.length > 0 ? false : true;
 				this.dataSource.data = response.map(data => this.mapToDocumentSummary(data));
 				this.dataSource.paginator = this.paginator;
-				document.getElementById("encounter-list").style.display = "block";
+				document.getElementById("encounterList").style.display = "block";
 				this.selection.clear();
 				this.toggleAllRows();
 				this.loadingTable = false;
@@ -267,7 +236,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		return null;
 	}
 
-	download() {
+	download(): void {
 		this.nowDate = this.datePipe.transform(Date.now(), DatePipeFormat.SHORT);
 		this.showLastPrinted = true;
 	}

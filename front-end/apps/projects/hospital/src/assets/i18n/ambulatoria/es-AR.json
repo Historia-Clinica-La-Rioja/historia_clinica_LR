@@ -692,7 +692,9 @@
 				"TITLE": "Fechas",
 				"LABEL": "Rango de fechas",
 				"HINT": "DD/MM/AAAA - DD/MM/AAAA",
-				"REQUIRED": "El rango de fechas es un campo requerido"
+				"REQUIRED": "El rango de fechas es un campo requerido",
+				"START": "Inicio",
+				"END": "Fin"
 			},
 			"encounter-type": {
 				"TITLE": "Tipo de episodio/encuentro",

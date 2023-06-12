@@ -44,3 +44,36 @@ export const DocumentTypes = [
 		label: DocumentType.REPORTS
 	},
 ]
+
+export const TableColumns = [
+	{
+		columnDef: 'start',
+		header: 'Inicio',
+		cell: (element: CHDocumentSummaryDto) => `${element.startDate}`,
+	},
+	{
+		columnDef: 'end',
+		header: 'Fin',
+		cell: (element: CHDocumentSummaryDto) => `${element.endDate}`,
+	},
+	{
+		columnDef: 'encounterType',
+		header: 'Tipo de encuentro',
+		cell: (element: CHDocumentSummaryDto) => `${element.encounterType}`,
+	},
+	{
+		columnDef: 'problem',
+		header: 'Problema',
+		cell: (element: CHDocumentSummaryDto) => `${element.problems}`,
+	},
+	{
+		columnDef: 'institution',
+		header: 'Institucion',
+		cell: (element: CHDocumentSummaryDto) => `${element.institution}`,
+	},
+	{
+		columnDef: 'professional',
+		header: 'Profesional',
+		cell: (element: CHDocumentSummaryDto) => `${element.professional}`,
+	}
+];
