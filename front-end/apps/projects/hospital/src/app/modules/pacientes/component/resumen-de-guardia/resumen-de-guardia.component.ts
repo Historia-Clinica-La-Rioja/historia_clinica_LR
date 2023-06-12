@@ -237,7 +237,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 
 				const noTieneUnaNotaDeEvolucion = true;
 
-				if (this.hasRoleAdministrative && (this.episodeState === this.STATES.CON_ALTA_MEDICA || (this.episodeState === this.STATES.EN_ESPERA && !hasEvolutionNote))) {
+				if (this.hasRoleAdministrative && (this.episodeState === this.STATES.CON_ALTA_MEDICA || (this.episodeState === this.STATES.EN_ESPERA && !hasEvolutionNote)) && this.responseEmergencyCare.patient.typeId !== 8) {
 					let action: ActionInfo = {
 						label: 'ambulatoria.paciente.guardia.ADMINISTRATIVE_DISCHARGE_BUTTON',
 						id: 'administrative_discharge',
