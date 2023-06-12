@@ -15,6 +15,7 @@ export class WarningFusionComponent implements OnInit {
 		identification:string,
 		birthDate:string,
 		idPatient:string,
+		nameSelfDetermination:string,
 	}) {
 	 }
 

@@ -9,6 +9,7 @@
 	<div mat-dialog-content class="content" fxLayout="column" fxLayoutAlign="space-around center" >
 		<span class="bold text-center margin-bottom" >{{'pacientes.audit.SUBTITLE_WARNING' | translate}}</span>
 		<strong innerHTML="{{ data.fullName | translate}}"></strong>
+		<strong innerHTML="{{ data?.nameSelfDetermination | translate}}"></strong>
 		<strong innerHTML="{{ data.identification | translate}}"></strong>
 		<strong innerHTML="{{ data.birthDate | translate}}"></strong>
 	</div>
