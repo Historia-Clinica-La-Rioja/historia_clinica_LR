@@ -264,7 +264,7 @@ export class PatientFusionComponent implements OnInit {
 			this.validationTwoSelectedPatients = true;
 		}
 		if (this.patientToMerge.activePatientId === null || this.patientToMerge.registrationDataPerson.birthDate === null || this.patientToMerge.registrationDataPerson.firstName === null
-			|| this.patientToMerge.registrationDataPerson.identificationNumber === null || this.patientToMerge.registrationDataPerson.lastName === null) {
+			|| this.patientToMerge.registrationDataPerson.identificationNumber === null || this.patientToMerge.registrationDataPerson.lastName === null || (this.nameSelfDeterminationFF && this.patientToMerge.registrationDataPerson.nameSelfDetermination === null)) {
 			this.validationColumns = true;
 		} else {
 			this.validationColumns = false;
