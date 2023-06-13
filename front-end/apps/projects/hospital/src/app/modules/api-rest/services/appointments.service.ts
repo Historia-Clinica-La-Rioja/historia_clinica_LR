@@ -134,6 +134,14 @@ export class AppointmentsService {
 		return this.http.get<EquipmentAppointmentListDto[]>(url)
 	}
 
+	deriveReport(appointmentId: number, destInstitutionId: number): Observable<boolean> {
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = queryParams.append('destInstitutionId', JSON.stringify(destInstitutionId));
+
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/derive-report`;
+		return this.http.put<boolean>(url, queryParams)
+	}
+
 	hasNewConsultationEnabled(patientId: number): Observable<boolean> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = queryParams.append('patientId', JSON.stringify(patientId));

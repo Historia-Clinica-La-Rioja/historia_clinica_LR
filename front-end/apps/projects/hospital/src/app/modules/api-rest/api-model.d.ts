@@ -542,6 +542,15 @@ export interface BookingInstitutionDto {
     id: number;
 }
 
+export interface BookingInstitutionExtendedDto {
+    address: string;
+    clinicalSpecialtyName: string[];
+    dependency: string;
+    description: string;
+    id: number;
+    sisaCode: string;
+}
+
 export interface BookingPersonDto {
     birthDate: string;
     email: string;

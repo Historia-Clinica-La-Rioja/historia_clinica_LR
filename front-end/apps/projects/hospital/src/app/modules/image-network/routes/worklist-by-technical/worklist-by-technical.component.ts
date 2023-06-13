@@ -193,10 +193,13 @@ export class WorklistByTechnicalComponent implements OnInit {
 		});
 	}
 
-    deriveReport() {
+    deriveReport(appointmentId: number) {
         const dialogRef = this.dialog.open(DeriveReportComponent, {
 			width: '35%',
-			autoFocus: false
+			autoFocus: false,
+            data: {
+                appointmentId
+            }
 		});
 
 		dialogRef.afterClosed().subscribe();

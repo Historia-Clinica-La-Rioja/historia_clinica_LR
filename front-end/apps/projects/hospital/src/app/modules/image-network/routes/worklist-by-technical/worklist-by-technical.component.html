@@ -72,7 +72,7 @@
                                     <mat-icon>more_vert</mat-icon>
                                 </button>
                                 <mat-menu #menu="matMenu">
-                                    <button *ngIf="true" mat-menu-item (click)="deriveReport()">
+                                    <button *ngIf="true" mat-menu-item (click)="deriveReport(appointment.data.id)">
                                         <span [translate]="'image-network.worklist.DERIVE_REPORT'"></span>
                                     </button>
                                 </mat-menu>

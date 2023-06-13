@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { StudyStatusPopupComponent } from '../study-status-popup/study-status-popup.component';
 import { WorklistService } from '@api-rest/services/worklist.service';
 import { InstitutionBasicInfoDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AppointmentsService } from '@api-rest/services/appointments.service';
 
 @Component({
     selector: 'app-derive-report',
@@ -17,10 +18,15 @@ export class DeriveReportComponent implements OnInit {
     informerInstitutions: InstitutionBasicInfoDto[] = [];
     isSubmited = false;
 
-    constructor(public dialogRef: MatDialogRef<DeriveReportComponent>,
+    constructor(
+        @Inject(MAT_DIALOG_DATA) public readonly data: {
+            appointmentId: number
+        },
+        public dialogRef: MatDialogRef<DeriveReportComponent>,
         public dialog: MatDialog,
         private readonly worklistService: WorklistService,
         private readonly contextService: ContextService,
+        private readonly appointmentsService: AppointmentsService,
         private formBuilder: UntypedFormBuilder) { }
 
     ngOnInit(): void {
@@ -39,7 +45,10 @@ export class DeriveReportComponent implements OnInit {
     deriveReport() {
         this.isSubmited = true;
         if (this.form.valid) {
-            this.openDeriveStatusPopUp();
+            let destinationInstitution = this.form.controls.informerInstitution.value.id;
+            this.appointmentsService.deriveReport(this.data.appointmentId, destinationInstitution).subscribe(() => 
+                this.openDeriveStatusPopUp()
+            );
         }
     }
 
