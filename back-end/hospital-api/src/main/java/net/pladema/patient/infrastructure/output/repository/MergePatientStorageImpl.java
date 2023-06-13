@@ -93,7 +93,7 @@ public class MergePatientStorageImpl implements MergePatientStorage {
 		person.setBirthDate(basicPersonData.getBirthDate());
 		personService.addPerson(person);
 
-		if (featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && basicPersonData.getNameSelfDetermination() != null) {
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)) {
 			PersonExtended personExtended = personService.getPersonExtended(person.getId());
 			personExtended.setNameSelfDetermination(basicPersonData.getNameSelfDetermination());
 			personService.addPersonExtended(personExtended);
