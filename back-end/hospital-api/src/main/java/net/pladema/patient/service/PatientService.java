@@ -45,4 +45,6 @@ public interface PatientService {
 
 	List<PatientType> getPatientTypesForAuditor();
 
+	void assertHasActiveEncountersByPatientId(Integer patientId);
+
 }

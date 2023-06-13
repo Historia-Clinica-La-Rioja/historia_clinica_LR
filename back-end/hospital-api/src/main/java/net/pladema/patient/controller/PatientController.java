@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatientType;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.patient.controller.dto.PatientLastEditInfoDto;
 import net.pladema.permissions.repository.enums.ERole;
@@ -205,6 +206,8 @@ public class PatientController {
 												 @RequestBody APatientDto patientDto) throws URISyntaxException {
 		LOG.debug("Input data -> APatientDto {} ", patientDto);
 		Patient patient = patientService.getPatient(patientId).orElseThrow(() -> new NotFoundException("patient-not-found", "Patient not found"));
+		if(!patient.getTypeId().equals(EPatientType.REJECTED.getId()) && patientDto.getTypeId().equals(EPatientType.REJECTED.getId()))
+			patientService.assertHasActiveEncountersByPatientId(patientId);
 		BMPersonDto createdPerson = personExternalService.updatePerson(patientDto, patient.getPersonId());
 		PersonExtended personExtendedUpdated = personExternalService.updatePersonExtended(patientDto,
 				createdPerson.getId());

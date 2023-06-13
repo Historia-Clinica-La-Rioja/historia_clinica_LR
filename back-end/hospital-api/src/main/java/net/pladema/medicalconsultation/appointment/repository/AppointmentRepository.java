@@ -466,4 +466,11 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" )
 	List<WorklistBo> getCompletedWorklistByInstitution(@Param("institutionId") Integer institutionId);
 
+
+	@Query("SELECT  (CASE WHEN COUNT(a.id) > 0 THEN TRUE ELSE FALSE END) " +
+			"FROM Appointment a " +
+			"WHERE a.patientId = :patientId " +
+			"AND a.dateTypeId >= CURRENT_DATE " +
+			"AND a.appointmentStateId NOT IN (" + AppointmentState.CANCELLED_STR + "," + AppointmentState.SERVED + ")")
+	Boolean existsFutureAppointmentByPatientId(@Param("patientId") Integer patientId);
 }

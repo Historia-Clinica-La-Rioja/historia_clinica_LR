@@ -8,10 +8,15 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.audit.repository.HospitalAuditRepository;
 import net.pladema.audit.repository.entity.HospitalAudit;
 import net.pladema.audit.service.domain.enums.EActionType;
+import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
+import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.federar.services.FederarService;
+import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.patient.controller.dto.AuditablePatientInfoDto;
 import net.pladema.patient.controller.dto.PatientRegistrationSearchFilter;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
+import net.pladema.patient.controller.service.exception.RejectedPatientException;
+import net.pladema.patient.controller.service.exception.RejectedPatientExceptionEnum;
 import net.pladema.patient.repository.AuditablePatientRepository;
 import net.pladema.patient.repository.PatientAuditRepository;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
@@ -64,6 +69,12 @@ public class PatientServiceImpl implements PatientService {
 	private final LocalDateMapper localDateMapper;
 	private final PatientTypeRepository patientTypeRepository;
 
+	private final InternmentEpisodeRepository internmentEpisodeRepository;
+
+	private final EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;
+
+	private final AppointmentRepository appointmentRepository;
+
 	public PatientServiceImpl(PatientRepository patientRepository,
 							  PatientMedicalCoverageRepository patientMedicalCoverageRepository,
 							  MedicalCoverageRepository medicalCoverageRepository,
@@ -73,7 +84,10 @@ public class PatientServiceImpl implements PatientService {
 							  PatientAuditRepository patientAuditRepository,
 							  FeatureFlagsService featureFlagsService,
 							  AuditablePatientRepository auditablePatientRepository,
-							  LocalDateMapper localDateMapper, PatientTypeRepository patientTypeRepository) {
+							  LocalDateMapper localDateMapper, PatientTypeRepository patientTypeRepository,
+							  InternmentEpisodeRepository internmentEpisodeRepository,
+							  EmergencyCareEpisodeRepository emergencyCareEpisodeRepository,
+							  AppointmentRepository appointmentRepository) {
 		this.patientRepository = patientRepository;
 		this.hospitalAuditRepository = hospitalAuditRepository;
 		this.patientAuditRepository = patientAuditRepository;
@@ -81,6 +95,9 @@ public class PatientServiceImpl implements PatientService {
 		this.auditablePatientRepository = auditablePatientRepository;
 		this.localDateMapper = localDateMapper;
 		this.patientTypeRepository = patientTypeRepository;
+		this.internmentEpisodeRepository = internmentEpisodeRepository;
+		this.emergencyCareEpisodeRepository = emergencyCareEpisodeRepository;
+		this.appointmentRepository = appointmentRepository;
 	}
 
 	@Override
@@ -239,6 +256,12 @@ public class PatientServiceImpl implements PatientService {
 				.stream().filter(i -> patientTypesId.contains(i.getId())).collect(Collectors.toList());
 		LOG.debug(OUTPUT, result);
 		return result;
+	}
+
+	@Override
+	public void assertHasActiveEncountersByPatientId(Integer patientId) {
+		if(internmentEpisodeRepository.isPatientHospitalized(patientId) || emergencyCareEpisodeRepository.existsActiveEpisodeByPatientId(patientId) || appointmentRepository.existsFutureAppointmentByPatientId(patientId))
+			throw new RejectedPatientException(RejectedPatientExceptionEnum.ENCOUNTER_ACTIVE_EXISTS, "El paciente posee un encuentro activo");
 	}
 
 	private AuditablePatientInfoDto mapToAuditablePatientInfoDto(AuditablePatientInfoBo auditablePatientInfo) {
