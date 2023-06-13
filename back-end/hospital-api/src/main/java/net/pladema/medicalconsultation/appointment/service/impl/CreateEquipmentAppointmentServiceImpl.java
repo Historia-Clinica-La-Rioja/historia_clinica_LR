@@ -33,7 +33,7 @@ public class CreateEquipmentAppointmentServiceImpl implements CreateEquipmentApp
 
 	@Override
 	@Transactional
-	public AppointmentBo execute(AppointmentBo appointmentBo, Integer orderId, Integer studyId) {
+	public AppointmentBo execute(AppointmentBo appointmentBo, Integer orderId, Integer studyId, Integer institutionId) {
 		log.debug("Input parameters -> appointmentBo {}", appointmentBo);
 		Appointment appointment = Appointment.newFromAppointmentBo(appointmentBo);
 		appointment = appointmentRepository.save(appointment);
@@ -54,7 +54,7 @@ public class CreateEquipmentAppointmentServiceImpl implements CreateEquipmentApp
 				appointmentBo.getDiaryId()
 			));
 
-		AppointmentOrderImageBo appointmentOrderImageBO = new AppointmentOrderImageBo(appointment.getId(), orderId, studyId, false, null);
+		AppointmentOrderImageBo appointmentOrderImageBO = new AppointmentOrderImageBo(appointment.getId(), orderId, studyId, false, null, institutionId);
 		appointmentOrderImageService.save(appointmentOrderImageBO);
 
 		log.debug("Output -> {}", result);

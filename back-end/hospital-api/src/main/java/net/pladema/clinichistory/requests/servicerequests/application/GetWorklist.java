@@ -17,4 +17,8 @@ public class GetWorklist {
 	public List<WorklistBo> run(Integer modalityId, Integer institutionId) {
 		return worklistStorage.getWorklistByModalityAndInstitution(modalityId, institutionId);
 	}
+
+	public List<WorklistBo> run(Integer institutionId) {
+		return worklistStorage.getWorklistByInstitution(institutionId);
+	}
 }

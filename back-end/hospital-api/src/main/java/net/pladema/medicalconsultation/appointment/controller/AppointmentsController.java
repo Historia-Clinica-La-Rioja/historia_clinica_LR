@@ -14,6 +14,13 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
+import net.pladema.imagenetwork.derivedstudies.service.MoveStudiesService;
+import net.pladema.medicalconsultation.appointment.controller.constraints.ValidDetailsOrderImage;
+
+import net.pladema.medicalconsultation.appointment.controller.dto.StudyIntanceUIDDto;
+import net.pladema.medicalconsultation.appointment.service.DeriveReportService;
+import net.pladema.permissions.repository.enums.ERole;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -140,6 +147,8 @@ public class AppointmentsController {
 
     private final BookingPersonService bookingPersonService;
 
+	private final DeriveReportService deriveReportService;
+
 	private final LocalDateMapper dateMapper;
 
     @Value("${test.stress.disable.validation:false}")
@@ -172,7 +181,7 @@ public class AppointmentsController {
 			MqttClientService mqttClientService,
 			ModalityService modalityService,
 			AppointmentOrderImageService appointmentOrderImageService,
-			MoveStudiesService moveStudiesService) {
+			MoveStudiesService moveStudiesService, DeriveReportService deriveReportService) {
         this.appointmentDailyAmountService = appointmentDailyAmountService;
         this.appointmentService = appointmentService;
 		this.equipmentAppointmentService = equipmentAppointmentService;
@@ -195,6 +204,7 @@ public class AppointmentsController {
 		this.modalityService = modalityService;
 		this.appointmentOrderImageService = appointmentOrderImageService;
 		this.moveStudiesService = moveStudiesService;
+		this.deriveReportService = deriveReportService;
 	}
 
 
@@ -224,7 +234,7 @@ public class AppointmentsController {
 	) {
 		log.debug("Input parameters -> institutionId {}, appointmentDto {}, orderId {}, studyId {}", institutionId, createAppointmentDto, orderId, studyId);
 		AppointmentBo newAppointmentBo = appointmentMapper.toAppointmentBo(createAppointmentDto);
-		newAppointmentBo = createEquipmentAppointmentService.execute(newAppointmentBo, orderId, studyId);
+		newAppointmentBo = createEquipmentAppointmentService.execute(newAppointmentBo, orderId, studyId, institutionId);
 		Integer result = newAppointmentBo.getId();
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
@@ -240,7 +250,7 @@ public class AppointmentsController {
 	) {
 		log.debug("Input parameters -> institutionId {}, appointmentDto {}, transcribedOrderId {}", institutionId, createAppointmentDto, transcribedOrderId);
 		AppointmentBo newAppointmentBo = appointmentMapper.toAppointmentBo(createAppointmentDto);
-		newAppointmentBo = createTranscribedEquipmentAppointmentService.execute(newAppointmentBo, transcribedOrderId);
+		newAppointmentBo = createTranscribedEquipmentAppointmentService.execute(newAppointmentBo, transcribedOrderId, institutionId);
 		Integer result = newAppointmentBo.getId();
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
@@ -504,6 +514,18 @@ public class AppointmentsController {
         log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
     }
+
+	@PutMapping(value = "/{appointmentId}/derive-report")
+	@PreAuthorize("hasPermission(#institutionId, 'TECNICO, INFORMADOR')")
+	public ResponseEntity<Boolean> deriveReport(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "appointmentId") Integer appointmentId,
+			@RequestParam(name = "destInstitutionId") Integer destInstitutionId) {
+		log.debug("Input parameters -> institutionId {}, appointmentId {}, destInstitutionId {}", institutionId, appointmentId, destInstitutionId);
+		boolean result = deriveReportService.execute(destInstitutionId, appointmentId);
+		log.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
 
 	@PutMapping(value = "/{appointmentId}/equipment-change-state")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES, TECNICO')")

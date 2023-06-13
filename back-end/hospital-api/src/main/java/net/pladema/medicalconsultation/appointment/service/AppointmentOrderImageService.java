@@ -20,5 +20,5 @@ public interface AppointmentOrderImageService {
 
 	void setImageId(Integer appointmentId, String imageId);
 
-
+	void setDestInstitutionId(Integer institutionId, Integer appointmentId);
 }

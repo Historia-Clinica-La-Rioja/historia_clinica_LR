@@ -48,4 +48,24 @@ public class WorklistStorageImpl implements WorklistStorage {
 		return result;
 	}
 
+	public List<WorklistBo> getWorklistByInstitution(Integer institutionId) {
+		log.debug("Get worklist by institutionId {}", institutionId);
+
+		List<WorklistBo> result = appointmentRepository.getPendingWorklistByInstitution(institutionId, ERole.TECNICO.getId()).stream().map(w -> {
+			w.setPatientFullName(w.getFullName(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)));
+			w.setStatusId(EInformerWorklistStatus.PENDING.getId());
+			return w;
+		}).collect(Collectors.toList());
+
+		result.addAll(appointmentRepository.getCompletedWorklistByInstitution(institutionId).stream().map( w-> {
+			w.setPatientFullName(w.getFullName(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)));
+			w.setStatusId(EInformerWorklistStatus.COMPLETED.getId());
+			return w;
+		}).collect(Collectors.toList()));
+
+		result.sort(Comparator.comparing(WorklistBo::getActionTime));
+
+		return result;
+	}
+
 }

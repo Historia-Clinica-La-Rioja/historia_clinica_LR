@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.appointment.service.domain;
 
 import lombok.*;
+import net.pladema.establishment.repository.entity.Institution;
 
 @Getter
 @Setter
@@ -22,20 +23,24 @@ public class AppointmentOrderImageBo {
 
     private String imageId;
 
+	private Integer destInstitutionId;
+
 	//Asocia orden estandar al turno
-	public AppointmentOrderImageBo(Integer appointmentId, Integer orderId, Integer studyId, Boolean completed, String imageId){
+	public AppointmentOrderImageBo(Integer appointmentId, Integer orderId, Integer studyId, Boolean completed, String imageId, Integer institutionId){
 		this.appointmentId = appointmentId;
 		this.orderId = orderId;
 		this.studyId = studyId;
 		this.completed = completed;
 		this.imageId = imageId;
+		this.destInstitutionId = institutionId;
 	}
 
 	//Asocia orden transcripta al turno
-	public AppointmentOrderImageBo(Integer appointmentId, Boolean completed, String imageId, Integer transcribedOrderId){
+	public AppointmentOrderImageBo(Integer appointmentId, Boolean completed, String imageId, Integer transcribedOrderId, Integer institutionId){
 		this.appointmentId = appointmentId;
 		this.completed = completed;
 		this.imageId = imageId;
 		this.transcribedOrderId = transcribedOrderId;
+		this.destInstitutionId = institutionId;
 	}
 }

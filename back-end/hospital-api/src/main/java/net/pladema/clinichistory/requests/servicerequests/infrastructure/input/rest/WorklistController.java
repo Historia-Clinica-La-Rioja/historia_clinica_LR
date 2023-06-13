@@ -47,6 +47,18 @@ public class WorklistController {
 		return ResponseEntity.ok().body(result);
 	}
 
+	@GetMapping(value = "/by-institution")
+	@PreAuthorize("hasPermission(#institutionId, 'INFORMADOR')")
+	public ResponseEntity<List<WorklistDto>> getWorklistByModalityAndInstitution(
+			@PathVariable(name = "institutionId") Integer institutionId
+	) {
+		log.debug("Input parameters -> institutionId {}, modalityId {}", institutionId);
+		List<WorklistBo> worklistBo = getWorklist.run(institutionId);
+		List<WorklistDto> result = worklistBo.stream().map(this::mapToWorklistDto).collect(Collectors.toList());
+		log.debug("Get worklist by modality and institution ", result);
+		return ResponseEntity.ok().body(result);
+	}
+
 	@GetMapping(value = "/informer-status")
 	public ResponseEntity<Collection<MasterDataDto>> getStatus() {
 		log.debug("{}", "All informer status");

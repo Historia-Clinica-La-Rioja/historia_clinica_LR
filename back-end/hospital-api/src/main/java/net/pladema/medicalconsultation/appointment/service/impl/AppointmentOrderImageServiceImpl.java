@@ -54,7 +54,7 @@ public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageSe
 	public void save(AppointmentOrderImageBo appointmentOrderImageBo) {
 		LOG.debug("Input parameters -> appointmentOrderImageBo {}", appointmentOrderImageBo);
 		AppointmentOrderImage entity =new AppointmentOrderImage(appointmentOrderImageBo.getAppointmentId(),appointmentOrderImageBo.getOrderId(),
-				appointmentOrderImageBo.getStudyId(),appointmentOrderImageBo.getImageId(),appointmentOrderImageBo.isCompleted(), appointmentOrderImageBo.getTranscribedOrderId());
+				appointmentOrderImageBo.getStudyId(),appointmentOrderImageBo.getImageId(),appointmentOrderImageBo.isCompleted(), appointmentOrderImageBo.getTranscribedOrderId(), appointmentOrderImageBo.getDestInstitutionId());
 		appointmentOrderImageRepository.save(entity);
 		LOG.debug("Output -> AppointmentOrderImage {}", entity);
 	}
@@ -63,5 +63,11 @@ public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageSe
 	public void setImageId(Integer appointmentId, String imageId) {
 		LOG.debug("Input parameters -> appointmentId {}, imageId {} ", appointmentId, imageId);
 		appointmentOrderImageRepository.updateImageId(appointmentId, imageId);
+	}
+
+	@Override
+	public void setDestInstitutionId(Integer destInstitutionId, Integer appointmentId) {
+		LOG.debug("Input parameters ->  destInstitutionId {}, appointmentId {}",  destInstitutionId , appointmentId);
+		appointmentOrderImageRepository.updateDestInstitution(destInstitutionId, appointmentId);
 	}
 }
