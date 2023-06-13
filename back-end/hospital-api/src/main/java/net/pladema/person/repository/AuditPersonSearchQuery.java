@@ -49,7 +49,7 @@ public class AuditPersonSearchQuery {
 
 	public QueryPart from() {
 		String from = " {h-schema}person as person \n" +
-		"	join {h-schema}patient as patient on (patient.person_id = person.id) and (patient.deleted != true) and (patient.type_id != 6) \n";
+		"	join {h-schema}patient as patient on (patient.person_id = person.id) and (patient.deleted = false) \n";
 		return new QueryPart(from);
 	}
 
