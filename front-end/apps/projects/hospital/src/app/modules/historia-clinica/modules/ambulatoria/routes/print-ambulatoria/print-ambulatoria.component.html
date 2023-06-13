@@ -18,8 +18,8 @@
 		<mat-form-field appearance="fill">
 			<mat-label>{{'ambulatoria.print.date-picker.LABEL' | translate}}</mat-label>
 			<mat-date-range-input [formGroup]="dateRangeForm" [rangePicker]="dateRangePicker" [max]="maxDate">
-				<input matStartDate placeholder="{{'ambulatoria.print.date-picker.START' | translate}}" formControlName="start">
-				<input matEndDate placeholder="{{'ambulatoria.print.date-picker.END' | translate}}"  formControlName="end">
+				<input matStartDate placeholder="{{'ambulatoria.print.date-picker.START' | translate}}" formControlName="start" readonly>
+				<input matEndDate placeholder="{{'ambulatoria.print.date-picker.END' | translate}}"  formControlName="end" readonly>
 			</mat-date-range-input>
 			<mat-hint>{{'ambulatoria.print.date-picker.HINT' | translate}}</mat-hint>
 			<mat-datepicker-toggle matSuffix [for]="dateRangePicker"></mat-datepicker-toggle>
