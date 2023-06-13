@@ -227,7 +227,7 @@ export class PatientFusionComponent implements OnInit {
 					identification: '-' + this.getIdentificationType(this.patientToMerge.registrationDataPerson.identificationTypeId) + ' ' + this.patientToMerge.registrationDataPerson.identificationNumber,
 					birthDate: '- Fecha Nac. ' + this.patientToMerge.registrationDataPerson.birthDate,
 					idPatient: '- ID ' + this.patientToMerge.activePatientId,
-					nameSelfDetermination: this.nameSelfDeterminationFF ?'- '+ this.patientToMerge.registrationDataPerson.nameSelfDetermination : null,
+					nameSelfDetermination: this.nameSelfDeterminationFF ? this.patientToMerge.registrationDataPerson.nameSelfDetermination? '- '+ this.patientToMerge.registrationDataPerson.nameSelfDetermination : "-" :null,
 				},
 				disableClose: true,
 				width: '35%',
