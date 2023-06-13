@@ -16,6 +16,10 @@ export const EncounterTypes = [
 	{
 		value: ECHEncounterType.HOSPITALIZATION,
 		label: EncounterType.HOSPITALIZATION
+	},
+	{
+		value: ECHEncounterType.EMERGENCY_CARE,
+		label: EncounterType.EMERGENCY_CARE
 	}
 ]
 
