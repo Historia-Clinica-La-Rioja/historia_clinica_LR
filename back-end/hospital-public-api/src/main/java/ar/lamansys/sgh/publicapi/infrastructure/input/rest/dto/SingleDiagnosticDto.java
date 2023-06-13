@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 public class SingleDiagnosticDto {
-	private SnomedDto diagnosis;
+	private SnomedCIE10Dto diagnosis;
 	private Boolean isMain;
 	private String diagnosisType;
 	private String diagnosisVerificationStatus;

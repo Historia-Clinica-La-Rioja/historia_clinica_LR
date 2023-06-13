@@ -11,21 +11,11 @@ import java.util.List;
 @Setter
 @Getter
 public class DiagnosesDto {
-	private SnomedDto main;
-	private List<SnomedDto> others;
+	private SnomedCIE10Dto main;
+	private List<SnomedCIE10Dto> others;
 
 	public DiagnosesDto() {
 		this.others = new ArrayList<>();
 	}
 
-	public void addOther(SnomedDto snomed) {
-		if(others == null) {
-			others = new ArrayList<>();
-		}
-		others.add(snomed);
-	}
-
-	public void remove(SnomedDto snomed) {
-		others.remove(snomed);
-	}
 }

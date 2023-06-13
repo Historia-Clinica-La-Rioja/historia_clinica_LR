@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import ar.lamansys.sgh.publicapi.domain.SnomedCIE10Bo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -73,7 +75,8 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"hc.problem_id, " +
 					"hc.verification_status_id, " +
 					"hc.updated_on, " +
-					"mcp.plan " +
+					"mcp.plan, " +
+					"hc.cie10_codes " +
 					"FROM {h-schema}v_attention va " +
 					"LEFT JOIN {h-schema}attention_reads ar ON (ar.attention_id = va.id) " +
 					"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
@@ -111,7 +114,8 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"hc.problem_id, " +
 					"hc.verification_status_id, " +
 					"hc.updated_on, " +
-					"mcp.plan " +
+					"mcp.plan, " +
+					"hc.cie10_codes " +
 					"FROM {h-schema} v_attention va " +
 					"LEFT JOIN {h-schema} attention_reads ar ON (ar.attention_id = va.id) " +
 					"JOIN {h-schema} institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
@@ -269,7 +273,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 
 	private SingleDiagnosticBo buildDiagnoses(Object[] rawAttention) {
 		return new SingleDiagnosticBo(
-				new SnomedBo((String) rawAttention[19], (String) rawAttention[20]),
+				new SnomedCIE10Bo((String) rawAttention[19], (String) rawAttention[20], (String) rawAttention[26]),
 				(Boolean) rawAttention[21],
 				(String) rawAttention[22],
 				(String) rawAttention[23],

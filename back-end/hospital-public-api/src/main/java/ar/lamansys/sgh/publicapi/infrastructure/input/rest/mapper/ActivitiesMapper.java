@@ -7,12 +7,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.publicapi.domain.DocumentInfoBo;
+import ar.lamansys.sgh.publicapi.domain.SnomedCIE10Bo;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.AttentionInfoDto;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.DiagnosesDto;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.DocumentInfoDto;
 import ar.lamansys.sgh.publicapi.domain.SingleDiagnosticBo;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SingleAttentionInfoDto;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SingleDiagnosticDto;
+
+import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SnomedCIE10Dto;
 
 import org.springframework.stereotype.Component;
 
@@ -84,11 +87,19 @@ public class ActivitiesMapper {
 	}
 
 	private SingleDiagnosticDto mapToSingleDiagnosticBo(SingleDiagnosticBo singleDiagnosticBo) {
-		return new SingleDiagnosticDto(mapToSnomed(singleDiagnosticBo.getDiagnostic()),
+		return new SingleDiagnosticDto(mapToSnomedCIE10(singleDiagnosticBo.getDiagnostic()),
 				singleDiagnosticBo.getIsMain(),
 				singleDiagnosticBo.getDiagnosisType(),
 				singleDiagnosticBo.getDiagnosisVerificationStatus(),
 				singleDiagnosticBo.getUpdatedOn());
+	}
+
+	private SnomedCIE10Dto mapToSnomedCIE10(SnomedCIE10Bo snomedCIE10Bo) {
+		return SnomedCIE10Dto.builder()
+				.sctId(snomedCIE10Bo.getSctId())
+				.pt(snomedCIE10Bo.getPt())
+				.CIE10Id(snomedCIE10Bo.getCie10Id())
+				.build();
 	}
 
 	private SnomedDto mapToSnomed(SnomedBo snomedBo) {

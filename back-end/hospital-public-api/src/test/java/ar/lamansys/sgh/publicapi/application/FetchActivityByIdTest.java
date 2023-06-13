@@ -8,6 +8,8 @@ import java.util.Optional;
 
 import ar.lamansys.sgh.publicapi.domain.SingleDiagnosticBo;
 
+import ar.lamansys.sgh.publicapi.domain.SnomedCIE10Bo;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,7 +53,7 @@ public class FetchActivityByIdTest {
 						new CoverageActivityInfoBo(), ScopeEnum.AMBULATORIA,
 						new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
 						new ProfessionalBo(1, "Juan", "Perez", "DOC-30000000", "30000000"),
-						new SingleDiagnosticBo(new SnomedBo("1", "1"), true, "1234345", "2345435", LocalDateTime.now())
+						new SingleDiagnosticBo(new SnomedCIE10Bo("1", "1", "1"), true, "1234345", "2345435", LocalDateTime.now())
 				)));
 
 		AttentionInfoBo result = fetchActivityById.run(refsetCode, activityId);
