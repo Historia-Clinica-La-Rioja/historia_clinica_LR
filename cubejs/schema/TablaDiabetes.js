@@ -170,7 +170,7 @@ cube(`TablaDiabetes`, {
         pacientes_diabeticos_sin_atencion: {
             sql: `*`,
             type: `count`,
-            title: `Pacientes Diabeticos sin atención por mas de 120 dias`
+            title: `Pacientes Diabeticos`
         }
     },
     dimensions: {
@@ -189,6 +189,11 @@ cube(`TablaDiabetes`, {
             type: `string`,
             title: `Número de identificación`
         },
+        fecha_nacimiento: {
+            sql: `birth_date`,
+            type: `string`,
+            title: `Fecha de Nacimiento`
+        },
         problema: {
             sql: `problem`,
             type: `string`,
@@ -203,11 +208,6 @@ cube(`TablaDiabetes`, {
             sql: `last_attention_date`,
             type: `string`,
             title: `Última fecha atención`
-        },
-        severidad: {
-            sql: `severity`,
-            type: `string`,
-            title: `Severidad`
         },
         direccion: {
             sql: `address`,
@@ -224,15 +224,55 @@ cube(`TablaDiabetes`, {
             type: `string`,
             title: `Última Hemoglobina Glicosada`
         },
-        valor_glucemia: {
-            sql: `glycemia_value`,
+        ultimo_valor_presion_diastolica: {
+            sql: `last_diastolic_pressure_value`,
             type: `string`,
-            title: `Última Glucemia`
+            title: `Última Tensión Diastólica`
+        },
+        anteultimo_valor_presion_diastolica: {
+            sql: `penultimate_diastolic_pressure_value`,
+            type: `string`,
+            title: `Anteúltima Tensión Diastólica`
+        },
+        ultimo_valor_presion_sistolica: {
+            sql: `last_systolic_pressure_value`,
+            type: `string`,
+            title: `Última Tensión Sistólica`
+        },
+        anteultimo_valor_presion_sistolica: {
+            sql: `penultimate_systolic_pressure_value`,
+            type: `string`,
+            title: `Anteúltima Tensión Sistólica`
+        },
+        valor_riesgo_cardiovascular: {
+            sql: `cardiovascular_risk_value`,
+            type: `string`,
+            title: `Último Riesgo Cardiovascular`
         },
         fecha_fondo_de_ojo: {
             sql: `last_ocular_fondus_date`,
             type: `string`,
             title: `Fecha fondo de ojo`
+        },
+        fecha_examen_pie_diabetico: {
+            sql: `last_diabetic_foot_examination_date`,
+            type: `string`,
+            title: `Fecha examen de pié diabético `
+        },
+        fecha_educacion_automanejo_diabetes: {
+            sql: `last_education_about_self_management_of_diabetes_date`,
+            type: `string`,
+            title: `Fecha educación sobre automanejo de diabetes`
+        },
+        fecha_filtracion_glomerular: {
+            sql: `last_filtration_date`,
+            type: `string`,
+            title: `Fecha índice de filtración glomerular estimada`
+        },
+        fecha_albumina_creatinina: {
+            sql: `last_albumin_creatinine_date`,
+            type: `string`,
+            title: `Fecha índice albúmina/creatinina`
         },
         institucion: {
             sql: `institution_id`,

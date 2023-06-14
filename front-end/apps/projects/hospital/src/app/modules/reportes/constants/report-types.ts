@@ -9,7 +9,7 @@ export const REPORT_TYPES = [
 		id: 2,
 	},
 	{
-		description: 'Pacientes diábeticos sin atención hace 120 días',
+		description: 'Pacientes diabéticos',
 		id: 3
 	},
 	{
