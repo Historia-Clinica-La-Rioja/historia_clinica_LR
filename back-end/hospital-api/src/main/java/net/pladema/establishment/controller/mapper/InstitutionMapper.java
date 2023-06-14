@@ -31,6 +31,9 @@ public interface InstitutionMapper {
 	@IterableMapping(qualifiedByName = "toInstitutionBasicInfoDto")
 	List<InstitutionBasicInfoDto> toListInstitutionBasicInfoDto(List<InstitutionBo> roomList);
 
+	@Named("fromInstitutionBasicInfoBo")
+	InstitutionBasicInfoDto  fromInstitutionBasicInfoBo(InstitutionBasicInfoBo institutionBasicInfoBo);
+
 	@Named("fromListInstitutionBasicInfoBo")
 	List<InstitutionBasicInfoDto>  fromListInstitutionBasicInfoBo(List<InstitutionBasicInfoBo> institutionBasicInfoBoList);
 }

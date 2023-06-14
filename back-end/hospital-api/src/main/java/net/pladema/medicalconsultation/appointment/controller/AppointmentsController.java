@@ -14,13 +14,6 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
-import net.pladema.imagenetwork.derivedstudies.service.MoveStudiesService;
-import net.pladema.medicalconsultation.appointment.controller.constraints.ValidDetailsOrderImage;
-
-import net.pladema.medicalconsultation.appointment.controller.dto.StudyIntanceUIDDto;
-import net.pladema.medicalconsultation.appointment.service.DeriveReportService;
-import net.pladema.permissions.repository.enums.ERole;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +40,7 @@ import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.establishment.controller.mapper.InstitutionMapper;
 import net.pladema.establishment.service.EquipmentService;
 import net.pladema.establishment.service.OrchestratorService;
 import net.pladema.establishment.service.domain.EquipmentBO;
@@ -83,6 +77,7 @@ import net.pladema.medicalconsultation.appointment.service.AppointmentValidatorS
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.CreateEquipmentAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.CreateTranscribedEquipmentAppointmentService;
+import net.pladema.medicalconsultation.appointment.service.DeriveReportService;
 import net.pladema.medicalconsultation.appointment.service.EquipmentAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.booking.BookingPersonService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
@@ -137,6 +132,8 @@ public class AppointmentsController {
 
     private final AppointmentMapper appointmentMapper;
 
+	private final InstitutionMapper institutionMapper;
+
     private final PatientExternalService patientExternalService;
 
     private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
@@ -167,9 +164,7 @@ public class AppointmentsController {
 			CreateAppointmentService createAppointmentService,
 			CreateEquipmentAppointmentService createEquipmentAppointmentService,
 			CreateTranscribedEquipmentAppointmentService createTranscribedEquipmentAppointmentService,
-			AppointmentMapper appointmentMapper,
-			PatientExternalService patientExternalService,
-			HealthcareProfessionalExternalService healthcareProfessionalExternalService,
+			AppointmentMapper appointmentMapper, InstitutionMapper institutionMapper, PatientExternalService patientExternalService, HealthcareProfessionalExternalService healthcareProfessionalExternalService,
 			DateTimeProvider dateTimeProvider,
 			NotifyPatient notifyPatient,
 			BookingPersonService bookingPersonService,
@@ -190,8 +185,9 @@ public class AppointmentsController {
 		this.createTranscribedEquipmentAppointmentService = createTranscribedEquipmentAppointmentService;
 		this.createEquipmentAppointmentService = createEquipmentAppointmentService;
         this.appointmentMapper = appointmentMapper;
-        this.patientExternalService = patientExternalService;
-        this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
+		this.institutionMapper = institutionMapper;
+		this.patientExternalService = patientExternalService;
+		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.dateTimeProvider = dateTimeProvider;
         this.notifyPatient = notifyPatient;
         this.bookingPersonService = bookingPersonService;
@@ -444,7 +440,8 @@ public class AppointmentsController {
 				null,
 				null,
 				equipmentAppointmentBo.getAppointmentStateId(),
-				false
+				false,
+				institutionMapper.fromInstitutionBasicInfoBo(equipmentAppointmentBo.getDerivedTo())
 		);
 	}
 

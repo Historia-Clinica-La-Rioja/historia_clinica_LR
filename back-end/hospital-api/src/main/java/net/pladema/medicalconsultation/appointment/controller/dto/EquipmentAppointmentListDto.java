@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;
+import net.pladema.establishment.controller.dto.InstitutionBasicInfoDto;
 
 @Value
 @Builder
@@ -30,5 +31,7 @@ public class EquipmentAppointmentListDto {
 	private final Short appointmentStateId;
 
 	private final boolean isProtected;
+
+	private final InstitutionBasicInfoDto derivedTo;
 
 }
