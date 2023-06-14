@@ -6,7 +6,7 @@
 </div>
 
 <div mat-dialog-content>
-	<app-concepts-search *ngIf="searchConceptsLocallyFF else typeaheadSearch"
+	<app-concepts-search *ngIf="!searchConceptsLocallyFF else typeaheadSearch"
 		[label]="data.label" (search)="setConcept($event)">
 	</app-concepts-search>
 

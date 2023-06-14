@@ -3,7 +3,7 @@
 	<h2 mat-dialog-title [translate]="'internaciones.anamnesis.diagnosticos.EDIT'"></h2>
 </ng-template>
 
-<div *ngIf="searchConceptsLocallyFF else typeaheadSearch">
+<div *ngIf="!searchConceptsLocallyFF else typeaheadSearch">
 	<app-concepts-search *ngIf="!diagnosis else completedDiagnosis"
 		[label]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'" (search)="openSearchDialog($event)">
 	</app-concepts-search>
