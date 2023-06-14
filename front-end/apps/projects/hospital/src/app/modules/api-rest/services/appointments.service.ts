@@ -9,6 +9,7 @@ import {
 	DetailsOrderImageDto,
 	EquipmentAppointmentListDto,
 	ExternalPatientCoverageDto,
+	InstitutionBasicInfoDto,
 	StudyIntanceUIDDto,
 	UpdateAppointmentDateDto,
 	UpdateAppointmentDto,
@@ -140,6 +141,11 @@ export class AppointmentsService {
 
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/derive-report`;
 		return this.http.put<boolean>(url, queryParams)
+	}
+
+	appointmentCanBeDerived(appointmentId: number): Observable<InstitutionBasicInfoDto>{
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/check-derived-status/${appointmentId}`;
+		return this.http.get<InstitutionBasicInfoDto>(url)
 	}
 
 	hasNewConsultationEnabled(patientId: number): Observable<boolean> {

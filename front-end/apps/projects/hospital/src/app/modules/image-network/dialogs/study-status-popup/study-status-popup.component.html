@@ -19,7 +19,7 @@
 </div>
 
 <div *ngIf="data.acceptBtn" fxLayout="row" fxLayoutAlign="center center">
-	<button mat-flat-button color="primary">
+	<button mat-flat-button color="primary" (click)="closeDialog()">
 		<span class="uppercase" [translate]="'buttons.ACCEPT'"></span>
 	</button>
 </div>

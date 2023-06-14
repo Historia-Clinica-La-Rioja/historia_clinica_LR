@@ -38,8 +38,8 @@ export class DeriveReportComponent implements OnInit {
         });
     }
 
-    closeDialog() {
-        this.dialogRef.close()
+    closeDialog(destinationInstitution?: InstitutionBasicInfoDto) {
+        this.dialogRef.close(destinationInstitution ? destinationInstitution : null)
     }
 
     deriveReport() {
@@ -53,7 +53,7 @@ export class DeriveReportComponent implements OnInit {
     }
 
     openDeriveStatusPopUp() {
-        this.closeDialog()
+        this.closeDialog(this.form.controls.informerInstitution.value)
         const dialogRef = this.dialog.open(StudyStatusPopupComponent, {
             width: '30%',
             autoFocus: false,

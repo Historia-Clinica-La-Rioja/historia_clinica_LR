@@ -4,7 +4,7 @@ import { MatOption } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
-import { EquipmentAppointmentListDto, EquipmentDto } from '@api-rest/api-model';
+import { EquipmentAppointmentListDto, EquipmentDto, InstitutionBasicInfoDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { mapDateWithHypenToDateWithSlash, timeToString } from '@api-rest/mapper/date-dto.mapper';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
@@ -140,18 +140,19 @@ export class WorklistByTechnicalComponent implements OnInit {
         return WORKLIST_APPOINTMENT_STATES.find(a => a.id == appointmentStateId).description
     }
 
-    private mapAppointmentsToDetailedAppointments(appointments): detailedAppointment[]{
-        return appointments.map(a => {
+    private mapAppointmentsToDetailedAppointments(appointments){
+        return appointments.map(appointment => {
             return {
-                data: a,
-                color: this.getAppointmentStateColor(a.appointmentStateId),
-                description: this.getAppointmentDescription(a.appointmentStateId),
-                date: mapDateWithHypenToDateWithSlash(a.date),
-                time: timeToString(a.hour),
-                firstName: this.capitalizeWords(a.patient.person.firstName),
-                lastName: this.capitalizeWords(a.patient.person.lastName),
-                nameSelfDetermination: this.capitalizeWords(a.patient.person.nameSelfDetermination),
-				canBeFinished: a.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED
+                data: appointment,
+                color: this.getAppointmentStateColor(appointment.appointmentStateId),
+                description: this.getAppointmentDescription(appointment.appointmentStateId),
+                date: mapDateWithHypenToDateWithSlash(appointment.date),
+                time: timeToString(appointment.hour),
+                firstName: this.capitalizeWords(appointment.patient.person.firstName),
+                lastName: this.capitalizeWords(appointment.patient.person.lastName),
+                nameSelfDetermination: this.capitalizeWords(appointment.patient.person.nameSelfDetermination),
+                canBeFinished: appointment.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED,
+                derive: appointment.derivedTo.id ? appointment.derivedTo : null
             }
         })
     }
@@ -202,7 +203,10 @@ export class WorklistByTechnicalComponent implements OnInit {
             }
 		});
 
-		dialogRef.afterClosed().subscribe();
+		dialogRef.afterClosed().subscribe(destinationInstitution => {
+            let derivedReportAppointment = this.detailedAppointments.find(appointment => appointment.data.id === appointmentId);
+            derivedReportAppointment.derive = destinationInstitution;
+        });
     }
 
 }
@@ -216,5 +220,6 @@ export interface detailedAppointment {
     firstName: string,
     lastName: string,
     nameSelfDetermination: string,
-	canBeFinished: boolean
+	canBeFinished: boolean,
+    derive: InstitutionBasicInfoDto
 }

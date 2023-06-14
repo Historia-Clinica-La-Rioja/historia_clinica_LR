@@ -78,7 +78,9 @@
             "VIEW_DETAILS": "ver detalle",
 			"DERIVE_REPORT": "Derivar informe",
 			"REQUEST_REPORT": "Solicitar informe a ",
-			"REPORT_REFERRED": "El informe se ha derivado a "
+			"REPORT_REFERRED": "El informe se ha derivado a ",
+            "PENDING_REPORT": "Informe pendiente",
+            "DERIVED_REPORT": "Informe derivado a "
 		}
 
 	}
