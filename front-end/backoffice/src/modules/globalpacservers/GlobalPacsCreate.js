@@ -19,9 +19,11 @@ import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 const CENTRO_DE_DIAGNOSTICO = 2;
 const InstitutionField = ({formData, ...res}) => {
     return formData.pacServerType === CENTRO_DE_DIAGNOSTICO ? (
-            <ReferenceInput {...res} >
-            <SelectInput optionText="name" optionValue="id" required={true}/>
-         </ReferenceInput>
+        <ReferenceInput {...res}
+            perPage={1000}
+            sort={{ field: 'name', order: 'ASC' }}>
+                <SelectInput optionText="name" optionValue="id" required={true}/>
+        </ReferenceInput>
     ): null
 }
 
