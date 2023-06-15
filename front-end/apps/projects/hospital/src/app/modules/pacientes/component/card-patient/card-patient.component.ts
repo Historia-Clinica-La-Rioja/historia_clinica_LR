@@ -17,6 +17,8 @@ import { Observable, of } from 'rxjs';
 import { PatientProfilePopupComponent } from '../../../auditoria/dialogs/patient-profile-popup/patient-profile-popup.component';
 import { ROUTE_EMPADRONAMIENTO } from '../../../auditoria/routes/home/home.component';
 import { ViewPatientDetailComponent } from '../view-patient-detail/view-patient-detail.component';
+import { momentParseDateTime, newMoment } from '@core/utils/moment.utils';
+import { Moment } from 'moment';
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 const PAGE_MIN_SIZE = 5;
@@ -170,9 +172,9 @@ export class CardPatientComponent {
 			})
 
 		function calculateAge(birthDate: string): number {
-				const todayDate: Date = new Date();
-				const birthDateDate: Date = new Date(birthDate);
-				return todayDate.getFullYear() - birthDateDate.getFullYear();
+				const todayDate: Moment = newMoment();
+				const birthDateDate: Moment = momentParseDateTime(birthDate);
+				return todayDate.diff(birthDateDate, 'years');
 			}
 
 		} else {
