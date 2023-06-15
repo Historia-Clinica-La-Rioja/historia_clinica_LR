@@ -8,15 +8,15 @@
 						<span>{{'ambulatoria.card-patient.ID' | translate}} {{ patient.id}}</span>
 					</div>
 
-					<div id="dni" fxFlex="15%">
+					<div id="dni" fxFlex="17%">
 						<span> {{getIdentificationType(patient?.identificationTypeId)}} {{patient.dni}}</span>
 					</div>
 
-					<div id="gender" fxFlex="10%">
+					<div *ngIf="router.url.includes('pacientes/search')" id="gender" fxFlex="15%">
 						<span> {{patient.gender}}</span>
 					</div>
 
-					<div id="date" fxLayout="column" fxFlex="15%">
+					<div id="date" fxLayout="column" fxFlex="17%">
 						<span>{{'ambulatoria.card-patient.BIRTHDAY_DATE' | translate}} </span>
 						<span>{{patient.date}}</span>
 					</div>

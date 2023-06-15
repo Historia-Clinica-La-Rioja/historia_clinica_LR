@@ -58,10 +58,10 @@
 
 	<div *ngFor="let patient of pageSlice;last as isLast">
 
-		<app-card [cardContent]="patient">
+		<app-card [cardContent]="patient" [viewCardToAudit]="false">
 
 			<div *ngIf="patient.hasPhysicalDischarge else physicalDischarge" fxLayoutGap.gt-xs="16px">
-				<div fxLayout="row" fxLayoutGap="70px">
+				<div fxLayout="row"  fxLayoutAlign="space-around" fxLayoutGap="70px">
 
 					<div fxLayoutAlign="none center" fxLayoutGap="10px" class="content">
 						<mat-icon class="green">check_circle_outline</mat-icon>
@@ -79,7 +79,7 @@
 			</div>
 
 			<ng-template #physicalDischarge>
-				<div fxLayout="row" fxLayoutAlign="space-between">
+				<div fxLayout="row" fxLayoutAlign="space-around">
 
 					<div fxLayoutAlign="none center" class="content">
 						<mat-icon class="icon" fontSet="material-icons-outlined">meeting_room</mat-icon>

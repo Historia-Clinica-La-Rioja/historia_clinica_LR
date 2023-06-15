@@ -4,10 +4,7 @@
 
 .mat-card-content {
 	align-self: auto;
-	margin: 17px 0 0 0;
-	@media screen and (min-width: 600px) {
-		margin: 17px 0 0 12px;
-	}
+	margin: 30px 0 0 0;
 }
 
 .button {
@@ -20,4 +17,15 @@
 	}
 }
 
-
+.headerCardToAudit{
+	width: 20%;
+}
+.headerCard{
+	width: 40%;
+}
+.contentCardToAudit{
+	width: 80%;
+}
+.contentCard{
+	width: 55%;
+}

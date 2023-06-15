@@ -55,7 +55,7 @@ export class CardPatientComponent {
 		private readonly permissionsService: PermissionsService,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly patientMasterDataService: PatientMasterDataService,
-		private readonly router: Router,
+		public readonly router: Router,
 		private personMasterDataService: PersonMasterDataService
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
