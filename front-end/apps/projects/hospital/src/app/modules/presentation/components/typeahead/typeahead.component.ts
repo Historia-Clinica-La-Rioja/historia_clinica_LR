@@ -24,20 +24,11 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 
 	constructor(private readonly formBuilder: UntypedFormBuilder,
 	) {
-		this.form = this.formBuilder.group({
-			searchValue: [null]
-		});
+		this.setFormAndSubscribe();
 	}
 
 	ngOnInit(): void {
-		this.form.controls.searchValue.valueChanges
-			.pipe(
-				startWith(''),
-				map(value => this.filter(value)))
-			.subscribe(filtered => {
-				this.optionsFiltered = filtered;
-			});
-			this.isRequired();
+		this.isRequired();
 	}
 
 	ngOnChanges(): void {
@@ -104,6 +95,19 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	private optionsNotIncludesSelected(): boolean {
 		return this.optionsFiltered && !this.optionsFiltered
 			.find(o => o.compareValue === this.optionSelected.compareValue);
+	}
+
+	private setFormAndSubscribe() {
+		this.form = this.formBuilder.group({
+			searchValue: [null]
+		});
+
+		this.form.controls.searchValue.valueChanges
+			.pipe(
+				startWith(''),
+				map(value => this.filter(value)))
+			.subscribe(filtered => this.optionsFiltered = filtered
+			);
 	}
 
 }
