@@ -745,9 +745,20 @@ const messages = {
             fields: {
                 name: 'Nombre',
                 baseTopic: 'Tópico Base',
-                sectorId: 'Sector'
+                sectorId: 'Sector',
+                attempsNumber:'Intentos para mover un estudio',
+                numberToMove:'Cantidad de estudios a mover',
+                executionStartTime:'Hora de inicio de ejecución',
+                executionEndTime:'Hora de fin de ejecución',
+                weightDays:'Peso asignado a la cantidad dias',
+                weightSize:'Peso asignado al tamaño',
+                weightPriority:'Peso asignado a la prioridad'
+
             },
-            createRelated: 'Crear Orquestador'
+            parameter:'Parámetros de configuración ',
+            createRelated: 'Crear Orquestador',
+            errorTime:'Debe cumplir con formato hh:mm:ss',
+            errorDecimal:'El formato decimal no es válido. Debe estar en el formato correcto (por ejemplo, 0.00 a 1.00)'
         },
         equipment: {
             name: 'Equipos',

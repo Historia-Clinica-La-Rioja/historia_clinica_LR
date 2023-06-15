@@ -41,34 +41,25 @@ public class Orchestrator {
 	@Column(name = "sector_id", nullable = false)
 	private Integer sectorId;
 
-	@Column(name = "attemps_number",  columnDefinition = "int default 3", nullable = false)
-	private Integer attempsNumber = 3;
+	@Column(name = "attemps_number", nullable = false)
+	private Integer attempsNumber ;
 
-	@Column(name = "execution_start_time",  columnDefinition = "time default '22:00:00'", nullable = false)
-	private Time executionStartTime = setTimeDefault("08:00:00");
+	@Column(name = "execution_start_time", nullable = false)
+	private Time executionStartTime ;
 
-	@Column(name = "execution_end_time",  columnDefinition = "time default '06:00:00'", nullable = false)
-	private Time executionEndTime = setTimeDefault("06:00:00");
+	@Column(name = "execution_end_time", nullable = false)
+	private Time executionEndTime;
 
-	@Column(name = "weight_days", columnDefinition = "float default 0.3", nullable = false)
-	private Double weightDays = 0.3;
+	@Column(name = "weight_days", nullable = false)
+	private Double weightDays;
 
-	@Column(name = "weight_size", columnDefinition = "float default 0.01",nullable = false)
-	private Double weightSize = 0.01;
+	@Column(name = "weight_size", nullable = false)
+	private Double weightSize ;
 
-	@Column(name = "weight_priority", columnDefinition = "float default 0.2",nullable = false)
-	private Double weightPriority = 0.2;
+	@Column(name = "weight_priority", nullable = false)
+	private Double weightPriority ;
 
-	@Column(name = "number_to_move",  columnDefinition = "int default 10", nullable = false)
-	private Integer numberToMove = 10;
+	@Column(name = "number_to_move", nullable = false)
+	private Integer numberToMove ;
 
-
-	@SneakyThrows
-	private Time setTimeDefault(String timeString){
-		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-		Time time;
-		java.util.Date date = format.parse(timeString);
-		time = new Time(date.getTime());
-		return time;
-	}
 }
