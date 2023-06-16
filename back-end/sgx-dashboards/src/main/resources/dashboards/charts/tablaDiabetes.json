@@ -23,7 +23,8 @@
       "TablaDiabetes.fecha_examen_pie_diabetico",
       "TablaDiabetes.fecha_educacion_automanejo_diabetes",
       "TablaDiabetes.fecha_filtracion_glomerular",
-      "TablaDiabetes.fecha_albumina_creatinina"
+      "TablaDiabetes.fecha_albumina_creatinina",
+      "TablaDiabetes.antecedente_enfermedad_cardiovascular"
     ],
     "filters": [
       {
@@ -57,7 +58,8 @@
       "TablaDiabetes.fecha_examen_pie_diabetico",
       "TablaDiabetes.fecha_educacion_automanejo_diabetes",
       "TablaDiabetes.fecha_filtracion_glomerular",
-      "TablaDiabetes.fecha_albumina_creatinina"
+      "TablaDiabetes.fecha_albumina_creatinina",
+      "TablaDiabetes.antecedente_enfermedad_cardiovascular"
     ],
     "y": [
       "measures"

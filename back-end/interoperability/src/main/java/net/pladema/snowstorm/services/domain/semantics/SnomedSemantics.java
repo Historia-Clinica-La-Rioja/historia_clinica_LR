@@ -163,6 +163,10 @@ public class SnomedSemantics {
 	@ToString.Include
 	private String hypertensionGroupEcl;
 
+	@Value("${snomed-semantics.cardiovascularDisorderGroup.ecl}")
+	@ToString.Include
+	private String cardiovascularDisorderGroupEcl;
+
     private Map<SnomedECL, String> snomedECLStringMap;
 
     @PostConstruct
@@ -182,6 +186,7 @@ public class SnomedSemantics {
 		snomedECLStringMap.put(SnomedECL.MEDICINE_WITH_UNIT_OF_PRESENTATION, medicineWithUnitOfPresentationEcl);
 		snomedECLStringMap.put(SnomedECL.DIABETES, diabetesGroupEcl);
 		snomedECLStringMap.put(SnomedECL.HYPERTENSION, hypertensionGroupEcl);
+		snomedECLStringMap.put(SnomedECL.CARDIOVASCULAR_DISORDER, cardiovascularDisorderGroupEcl);
     }
 
     public String getEcl(SnomedECL key) {

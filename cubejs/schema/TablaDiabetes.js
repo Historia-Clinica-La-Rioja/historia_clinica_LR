@@ -4,6 +4,13 @@ cube(`TablaDiabetes`, {
         FROM snomed_group sg
         JOIN snomed_related_group srg ON (srg.group_id = sg.id)
         WHERE sg.description = 'DIABETES'),
+        cd AS (
+        SELECT DISTINCT hc.patient_id, 1 AS result
+        FROM health_condition hc
+        JOIN snomed s ON (s.id = hc.snomed_id)
+        JOIN snomed_related_group srg ON (srg.snomed_id = s.id)
+        JOIN snomed_group sg ON (sg.id = srg.group_id)
+        WHERE sg.description = 'CARDIOVASCULAR_DISORDER'),
         gh AS (
         SELECT ovs.patient_id, ovs.value, date(ovs.effective_time) AS creation_date
         FROM observation_vital_sign ovs 
@@ -127,7 +134,8 @@ cube(`TablaDiabetes`, {
         dp1.value || ' (' || to_char(dp1.creation_date, 'DD/MM/YYYY') || ')' AS last_diastolic_pressure_value, sp1.value || ' (' || to_char(sp1.creation_date, 'DD/MM/YYYY') || ')' AS last_systolic_pressure_value,
         dp2.value || ' (' || to_char(dp2.creation_date, 'DD/MM/YYYY') || ')' AS penultimate_diastolic_pressure_value, sp2.value || ' (' || to_char(sp2.creation_date, 'DD/MM/YYYY') || ')' AS penultimate_systolic_pressure_value,
         TO_CHAR(ldfe.performed_date, 'DD/MM/YYYY') AS last_diabetic_foot_examination_date, TO_CHAR(leasmod.performed_date, 'DD/MM/YYYY') AS last_education_about_self_management_of_diabetes_date,
-        TO_CHAR(lf.result_date, 'DD/MM/YYYY') AS last_filtration_date, TO_CHAR(lac.result_date, 'DD/MM/YYYY') AS last_albumin_creatinine_date
+        TO_CHAR(lf.result_date, 'DD/MM/YYYY') AS last_filtration_date, TO_CHAR(lac.result_date, 'DD/MM/YYYY') AS last_albumin_creatinine_date,
+        CASE WHEN cd.result IS NULL THEN 'No' WHEN cd.result IS NOT NULL THEN 'Si' END AS cardiovascular_disorder_antecedent
         FROM document d 
         JOIN document_health_condition dhc ON (dhc.document_id = d.id)
         JOIN health_condition hc ON (hc.id = dhc.health_condition_id)
@@ -150,6 +158,7 @@ cube(`TablaDiabetes`, {
         LEFT JOIN leasmod ON (leasmod.patient_id = p.id)
         LEFT JOIN lf ON (lf.patient_id = p.id)
         LEFT JOIN lac ON (lac.patient_id = p.id)
+        LEFT JOIN cd ON (cd.patient_id = p.id)
         JOIN la ON (la.patient_id = hc.patient_id AND la.snomed_id = hc.snomed_id)
         WHERE hc.id = (SELECT hc2.id  
                     FROM document d2
@@ -273,6 +282,11 @@ cube(`TablaDiabetes`, {
             sql: `last_albumin_creatinine_date`,
             type: `string`,
             title: `Fecha índice albúmina/creatinina`
+        },
+        antecedente_enfermedad_cardiovascular: {
+            sql: `cardiovascular_disorder_antecedent`,
+            type: `string`,
+            title: `Antecedente enfermedad cardiovascular`
         },
         institucion: {
             sql: `institution_id`,
