@@ -1,15 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.service.domain;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

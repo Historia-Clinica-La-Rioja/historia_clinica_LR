@@ -1,7 +1,6 @@
 package ar.lamansys.sgx.shared.emails.domain;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;

@@ -3,7 +3,6 @@ package net.pladema.clinichistory.documents.application.getPatientClinicHistory;
 import net.pladema.clinichistory.documents.application.ClinicHistoryStorage;
 import net.pladema.clinichistory.documents.domain.CHDocumentSummaryBo;
 import net.pladema.clinichistory.documents.domain.CHSearchFilterBo;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;

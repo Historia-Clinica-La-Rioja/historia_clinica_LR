@@ -12,7 +12,6 @@ import net.pladema.clinichistory.documents.domain.ECHEncounterType;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ESourceType;
-import lombok.AllArgsConstructor;
 
 import net.pladema.clinichistory.documents.infrastructure.output.repository.entity.VClinicHistory;
 

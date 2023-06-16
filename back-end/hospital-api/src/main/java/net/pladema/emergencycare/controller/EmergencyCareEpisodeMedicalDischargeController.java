@@ -19,7 +19,6 @@ import net.pladema.emergencycare.service.domain.EpisodeDischargeBo;
 import net.pladema.emergencycare.service.domain.MedicalDischargeBo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.patient.controller.service.PatientExternalService;
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatientType;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;

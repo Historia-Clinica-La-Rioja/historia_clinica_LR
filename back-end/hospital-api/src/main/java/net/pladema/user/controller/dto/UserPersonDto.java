@@ -1,6 +1,5 @@
 package net.pladema.user.controller.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

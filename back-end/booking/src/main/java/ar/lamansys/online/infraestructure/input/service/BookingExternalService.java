@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ar.lamansys.online.application.integration.FetchBookingInstitutionsExtended;
-import ar.lamansys.online.domain.integration.BookingInstitutionBo;
 import ar.lamansys.online.domain.integration.BookingInstitutionExtendedBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingInstitutionExtendedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;

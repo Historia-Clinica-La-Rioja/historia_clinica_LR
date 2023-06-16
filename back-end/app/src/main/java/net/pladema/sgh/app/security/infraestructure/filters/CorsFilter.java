@@ -1,8 +1,6 @@
 package net.pladema.sgh.app.security.infraestructure.filters;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.time.Instant;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

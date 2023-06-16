@@ -1,6 +1,5 @@
 package net.pladema.medicalconsultation.appointment.controller.constraints;
 
-import net.pladema.medicalconsultation.appointment.controller.constraints.validator.EquipmentAppointmentValidator;
 import net.pladema.medicalconsultation.appointment.controller.constraints.validator.TranscribedEquipmentAppointmentValidator;
 
 import javax.validation.Constraint;

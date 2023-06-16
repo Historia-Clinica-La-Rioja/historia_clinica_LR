@@ -1259,6 +1259,7 @@ export interface EpisodeDocumentResponseDto {
 export interface EquipmentAppointmentListDto {
     appointmentStateId: number;
     date: string;
+    derivedTo: InstitutionBasicInfoDto;
     healthInsuranceId: number;
     hour: string;
     id: number;

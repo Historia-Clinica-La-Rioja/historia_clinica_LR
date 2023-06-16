@@ -1,8 +1,5 @@
 package net.pladema.terminology.cache.infrastructure.output.repository;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,6 @@
 package net.pladema.medicalconsultation.appointment.service.domain;
 
 import lombok.*;
-import net.pladema.establishment.repository.entity.Institution;
 
 @Getter
 @Setter

@@ -1,11 +1,7 @@
 package ar.lamansys.sgx.shared.templating;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-
-import org.springframework.core.io.ByteArrayResource;
 
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;

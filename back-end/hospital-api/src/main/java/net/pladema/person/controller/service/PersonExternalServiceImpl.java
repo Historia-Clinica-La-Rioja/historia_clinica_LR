@@ -2,7 +2,6 @@ package net.pladema.person.controller.service;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.PersonFileDto;
-import ar.lamansys.sgx.auth.user.infrastructure.output.user.User;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.address.repository.CityRepository;

@@ -1,6 +1,5 @@
 package net.pladema.medicalconsultation.appointment.repository.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.ToString;
 import lombok.Value;
 import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;

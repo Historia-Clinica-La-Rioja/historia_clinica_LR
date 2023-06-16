@@ -7,7 +7,6 @@ import java.util.Optional;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadExternalCause;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadObstetricEvent;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

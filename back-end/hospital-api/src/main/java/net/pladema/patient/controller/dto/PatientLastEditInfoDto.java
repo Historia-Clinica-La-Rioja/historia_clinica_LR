@@ -1,6 +1,5 @@
 package net.pladema.patient.controller.dto;
 
-import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

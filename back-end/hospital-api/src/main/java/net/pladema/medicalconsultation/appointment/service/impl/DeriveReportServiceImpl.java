@@ -3,10 +3,8 @@ package net.pladema.medicalconsultation.appointment.service.impl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.medicalconsultation.appointment.service.AppointmentOrderImageService;
-import net.pladema.medicalconsultation.appointment.service.CreateEquipmentAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.DeriveReportService;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentOrderImageBo;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

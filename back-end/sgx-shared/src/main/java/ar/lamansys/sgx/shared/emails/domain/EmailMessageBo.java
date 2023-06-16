@@ -3,10 +3,8 @@ package ar.lamansys.sgx.shared.emails.domain;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import org.springframework.core.io.ByteArrayResource;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 @AllArgsConstructor

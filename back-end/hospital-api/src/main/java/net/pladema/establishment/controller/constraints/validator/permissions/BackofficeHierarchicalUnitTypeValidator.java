@@ -1,7 +1,6 @@
 package net.pladema.establishment.controller.constraints.validator.permissions;
 
 import lombok.RequiredArgsConstructor;
-import net.pladema.establishment.repository.HierarchicalUnitTypeRepository;
 import net.pladema.establishment.repository.entity.HierarchicalUnitType;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 
@@ -10,7 +9,6 @@ import net.pladema.sgx.backoffice.rest.ItemsAllowed;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Component

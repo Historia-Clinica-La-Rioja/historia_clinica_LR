@@ -22,7 +22,6 @@ import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import lombok.RequiredArgsConstructor;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
-import net.pladema.medicalconsultation.appointment.controller.constraints.ValidEquipmentAppointment;
 import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryOpeningHoursValidatorService;

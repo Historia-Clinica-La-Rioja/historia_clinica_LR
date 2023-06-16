@@ -2,8 +2,6 @@ package net.pladema.clinichistory.documents.infrastructure.output.repository;
 
 import net.pladema.clinichistory.documents.infrastructure.output.repository.entity.VClinicHistory;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

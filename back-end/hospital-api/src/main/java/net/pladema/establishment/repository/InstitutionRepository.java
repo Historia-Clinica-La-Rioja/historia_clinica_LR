@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.pladema.establishment.repository.entity.Institution;
-import net.pladema.establishment.repository.entity.SectorType;
 import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
 
 @Repository

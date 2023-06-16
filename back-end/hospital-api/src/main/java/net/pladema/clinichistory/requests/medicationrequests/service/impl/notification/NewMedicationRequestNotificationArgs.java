@@ -1,9 +1,6 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl.notification;
 
-import java.util.HashMap;
 import java.util.List;
-
-import org.springframework.core.io.ByteArrayResource;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;

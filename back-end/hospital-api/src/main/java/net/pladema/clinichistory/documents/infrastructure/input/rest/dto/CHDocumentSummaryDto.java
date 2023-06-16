@@ -1,6 +1,5 @@
 package net.pladema.clinichistory.documents.infrastructure.input.rest.dto;
 
-import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

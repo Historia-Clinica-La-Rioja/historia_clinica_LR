@@ -1,12 +1,9 @@
 package net.pladema.documentpublicaccess.service.impl;
 
 import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.FetchDocumentFileById;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import ar.lamansys.sgx.shared.token.JWTUtils;
 import net.pladema.documentpublicaccess.service.PrescriptionFileService;
-
-import net.pladema.documentpublicaccess.service.domain.PrescriptionFileBo;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

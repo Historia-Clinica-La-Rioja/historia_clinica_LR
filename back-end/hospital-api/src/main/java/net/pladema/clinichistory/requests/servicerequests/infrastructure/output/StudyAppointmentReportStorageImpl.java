@@ -8,12 +8,9 @@ import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
-import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ESourceType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +29,6 @@ import net.pladema.medicalconsultation.appointment.repository.AppointmentReposit
 
 import net.pladema.medicalconsultation.appointment.repository.DetailsOrderImageRepository;
 
-import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentOrderImage;
 import net.pladema.medicalconsultation.appointment.repository.entity.DetailsOrderImage;
 import net.pladema.medicalconsultation.appointment.repository.entity.DetailsOrderImagePK;
 import net.pladema.patient.controller.service.PatientExternalService;
@@ -47,8 +43,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 

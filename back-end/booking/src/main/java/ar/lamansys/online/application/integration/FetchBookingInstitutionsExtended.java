@@ -1,6 +1,5 @@
 package ar.lamansys.online.application.integration;
 
-import ar.lamansys.online.domain.integration.BookingInstitutionBo;
 import ar.lamansys.online.domain.integration.BookingInstitutionExtendedBo;
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,7 +1,5 @@
 package net.pladema.clinichistory.requests.servicerequests.repository;
 
-import net.pladema.clinichistory.requests.servicerequests.repository.domain.FileVo;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,8 +8,6 @@ import org.springframework.stereotype.Repository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.TranscribedServiceRequest;
 
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Repository
 public interface TranscribedServiceRequestRepository extends JpaRepository<TranscribedServiceRequest, Integer> {
