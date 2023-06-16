@@ -348,13 +348,13 @@
 
 		</form>
 
-		<div actions id="buttons" fxLayoutAlign="end end">
-			<button mat-raised-button color="primary" id="confirm_button" (click)="save()">
-				<span [translate]="'buttons.CONFIRM'"></span>
-			</button>
-		</div>
-
 	</mat-dialog-content>
+
+	<div actions class="button" fxLayoutAlign="end end">
+		<button mat-raised-button color="primary" id="confirm_button" (click)="save()">
+			<span [translate]="'buttons.CONFIRM'"></span>
+		</button>
+	</div>
 
 </ng-container>
 

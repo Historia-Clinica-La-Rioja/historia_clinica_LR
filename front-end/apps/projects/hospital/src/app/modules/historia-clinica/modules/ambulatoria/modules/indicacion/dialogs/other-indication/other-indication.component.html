@@ -1,15 +1,11 @@
-<mat-dialog-content class="dialog">
+<div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between">
+	<div class="title" class="capitalize-first-letter" [translate]="'indicacion.internment-card.dialogs.other-indication.TITLE'"></div>
+	<button matSuffix mat-icon-button [mat-dialog-close]>
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
 
-	<div fxLayout="row" fxLayoutAlign="end end">
-		<button matSuffix mat-icon-button [mat-dialog-close]>
-			<mat-icon>close</mat-icon>
-		</button>
-	</div>
-
-	<div mat-dialog-title fxLayout="row">
-		<div class="title" class="capitalize-first-letter" [translate]="'indicacion.internment-card.dialogs.other-indication.TITLE'"></div>
-	</div>
-
+<mat-dialog-content>
 	<form [formGroup]="form" (ngSubmit)="submit()" fxLayout="column">
 
 		<mat-form-field appearance="outline">
@@ -46,12 +42,11 @@
 			<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 		</mat-form-field>
 
-		<div mat-dialog-title>
-			<div class="title" class="capitalize-first-letter" [translate]="'indicacion.internment-card.dialogs.other-indication.FREQUENCY'">
-				{{'indicacion.internment-card.dialogs.other-indication.FREQUENCY' | translate | titlecase}}
-			</div>
+		
+		<div class="title" [translate]="'indicacion.internment-card.dialogs.other-indication.FREQUENCY'">
+			{{'indicacion.internment-card.dialogs.other-indication.FREQUENCY' | translate | titlecase}}
 		</div>
-
+		
 		<div fxLayout="column" fxLayoutGap="15px">
 			<mat-radio-group formControlName="frequencyOption" fxLayoutGap="10px" aria-label="Select an frequencyOption" fxLayout="column"
 				class="radio-group">
@@ -187,10 +182,11 @@
 		</div>
 		<app-datepicker fxLayout="50%" [title]="'indicacion.internment-card.INDICATION_DATE'" [minDate]="this.data.entryDate"
 		[dateToSetInDatepicker]="this.data.actualDate" (selectDate)="setIndicationDate($event)"></app-datepicker>
-		<div actions id="button-confirm" fxLayoutAlign="end end">
-			<button mat-raised-button color="primary" id="confirm_button">
-				<span [translate]="'buttons.CONFIRM'"></span>
-			</button>
-		</div>
 	</form>
 </mat-dialog-content>
+
+<div actions fxLayoutAlign="end end">
+	<button mat-raised-button color="primary" id="confirm_button">
+		<span [translate]="'buttons.CONFIRM'"></span>
+	</button>
+</div>
