@@ -13,7 +13,7 @@ export const REPORT_TYPES = [
 		id: 3
 	},
 	{
-		description: 'Pacientes hipertensos sin atención hace 120 días',
+		description: 'Pacientes hipertensos',
 		id: 4
 	}
 ];

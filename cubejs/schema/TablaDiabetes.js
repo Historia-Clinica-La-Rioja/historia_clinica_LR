@@ -276,7 +276,7 @@ cube(`TablaDiabetes`, {
         fecha_filtracion_glomerular: {
             sql: `last_filtration_date`,
             type: `string`,
-            title: `Fecha índice de filtración glomerular estimada`
+            title: `Fecha medición IFGe - índice de filtración glomerular estimada`
         },
         fecha_albumina_creatinina: {
             sql: `last_albumin_creatinine_date`,

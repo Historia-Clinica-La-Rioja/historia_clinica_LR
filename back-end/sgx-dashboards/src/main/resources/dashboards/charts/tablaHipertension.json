@@ -7,16 +7,20 @@
       "TablaHipertension.primer_nombre",
       "TablaHipertension.apellido",
       "TablaHipertension.numero_identificacion",
+      "TablaHipertension.fecha_nacimiento",
       "TablaHipertension.problema",
       "TablaHipertension.fecha_deteccion_diagnostico",
       "TablaHipertension.ultima_fecha_atencion",
-      "TablaHipertension.severidad",
       "TablaHipertension.direccion",
       "TablaHipertension.nombre_ciudad",
-      "TablaHipertension.valor_presion_diastolica",
-      "TablaHipertension.valor_presion_sistolica",
+      "TablaHipertension.ultimo_valor_presion_diastolica",
+      "TablaHipertension.anteultimo_valor_presion_diastolica",
+      "TablaHipertension.ultimo_valor_presion_sistolica",
+      "TablaHipertension.anteultimo_valor_presion_sistolica",
       "TablaHipertension.valor_riesgo_cardiovascular",
-      "TablaHipertension.ultimo_procedimiento"
+      "TablaHipertension.fecha_filtracion_glomerular",
+      "TablaHipertension.fecha_albumina_creatinina",
+      "TablaHipertension.fecha_creatinina"
     ],
     "filters": [
       {
@@ -31,19 +35,23 @@
   "chartType": "table",
   "pivotConfig": {
     "x": [
-      "TablaHipertension.numero_identificacion",
       "TablaHipertension.primer_nombre",
       "TablaHipertension.apellido",
-      "TablaHipertension.direccion",
-      "TablaHipertension.nombre_ciudad",
+      "TablaHipertension.numero_identificacion",
+      "TablaHipertension.fecha_nacimiento",
       "TablaHipertension.problema",
       "TablaHipertension.fecha_deteccion_diagnostico",
-      "TablaHipertension.severidad",
-      "TablaHipertension.valor_presion_diastolica",
-      "TablaHipertension.valor_presion_sistolica",
-      "TablaHipertension.valor_riesgo_cardiovascular",
       "TablaHipertension.ultima_fecha_atencion",
-      "TablaHipertension.ultimo_procedimiento"
+      "TablaHipertension.direccion",
+      "TablaHipertension.nombre_ciudad",
+      "TablaHipertension.ultimo_valor_presion_diastolica",
+      "TablaHipertension.anteultimo_valor_presion_diastolica",
+      "TablaHipertension.ultimo_valor_presion_sistolica",
+      "TablaHipertension.anteultimo_valor_presion_sistolica",
+      "TablaHipertension.valor_riesgo_cardiovascular",
+      "TablaHipertension.fecha_filtracion_glomerular",
+      "TablaHipertension.fecha_albumina_creatinina",
+      "TablaHipertension.fecha_creatinina"
     ],
     "y": [
       "measures"

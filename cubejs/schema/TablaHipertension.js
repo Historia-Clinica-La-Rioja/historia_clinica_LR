@@ -141,7 +141,7 @@ cube(`TablaHipertension`, {
         pacientes_hipertensos_sin_atencion: {
             sql: `*`,
             type: `count`,
-            title: `Pacientes Hipertensos sin atención por mas de 120 dias`
+            title: `Pacientes Hipertensos`
         }
     },
     dimensions: {
@@ -159,6 +159,11 @@ cube(`TablaHipertension`, {
             sql: `identification_number`,
             type: `string`,
             title: `Número de identificación`
+        },
+        fecha_nacimiento: {
+            sql: `birth_date`,
+            type: `string`,
+            title: `Fecha de Nacimiento`
         },
         problema: {
             sql: `problem`,
@@ -190,25 +195,45 @@ cube(`TablaHipertension`, {
             type: `string`,
             title: `Ciudad`
         },
-        valor_presion_diastolica: {
-            sql: `diastolic_pressure_value`,
+        ultimo_valor_presion_diastolica: {
+            sql: `last_diastolic_pressure_value`,
             type: `string`,
-            title: `Última Presión Diastólica`
+            title: `Última Tensión Diastólica`
         },
-        valor_presion_sistolica: {
-            sql: `systolic_pressure_value`,
+        anteultimo_valor_presion_diastolica: {
+            sql: `penultimate_diastolic_pressure_value`,
             type: `string`,
-            title: `Última Presión Sistólica`
+            title: `Anteúltima Tensión Diastólica`
+        },
+        ultimo_valor_presion_sistolica: {
+            sql: `last_systolic_pressure_value`,
+            type: `string`,
+            title: `Última Tensión Sistólica`
+        },
+        anteultimo_valor_presion_sistolica: {
+            sql: `penultimate_systolic_pressure_value`,
+            type: `string`,
+            title: `Anteúltima Tensión Sistólica`
         },
         valor_riesgo_cardiovascular: {
             sql: `cardiovascular_risk_value`,
             type: `string`,
             title: `Último Riesgo Cardiovascular`
         },
-        ultimo_procedimiento: {
-            sql: `last_procedure`,
+        fecha_filtracion_glomerular: {
+            sql: `last_filtration_date`,
             type: `string`,
-            title: `Último Procedimiento`
+            title: `Fecha medición IFGe - índice de filtración glomerular estimada`
+        },
+        fecha_albumina_creatinina: {
+            sql: `last_albumin_creatinine_date`,
+            type: `string`,
+            title: `Fecha índice albúmina/creatinina`
+        },
+        fecha_creatinina: {
+            sql: `last_creatinine_date`,
+            type: `string`,
+            title: `Fecha medición de creatinina`
         },
         institucion: {
             sql: `institution_id`,

@@ -2,7 +2,7 @@
   "type": "cubejs-card",
   "args": {
     "header": {
-      "title": "Reportes de pacientes hipretensos con mas de 120 días sin atención"
+      "title": "Reportes de pacientes hipertensos"
     },
     "content":
     {
