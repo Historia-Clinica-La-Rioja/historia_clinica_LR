@@ -306,6 +306,18 @@ Se crearon las siguientes propiedades para configurar los tableros de la aplicac
 |app.files.folder.multipart.location   | MULTIPART_ABSOLUTE_LOCATION, MULTIPART_RELATIVE_LOCATION | /temp/tmp/multipartfiles | Obligatorio | Define donde se van a almancenar los archivos temporales cuando se suben archivos. Con la variable de ambiente MULTIPART_ABSOLUTE_LOCATION se puede definir una ubicación absoluta, mientras que con MULTIPART_RELATIVE_LOCATION se puede definir una ubicación relativa a la ubicación definida en la propiedad internment.document.directory | v1.45.0 |
 |app.files.folder.freespace.minimum   | MULTIPART_ABSOLUTE_LOCATION, MULTIPART_RELATIVE_LOCATION | /temp/tmp/multipartfiles | Obligatorio | Define donde se van a almancenar los archivos temporales cuando se suben archivos. Con la variable de ambiente MULTIPART_ABSOLUTE_LOCATION se puede definir una ubicación absoluta, mientras que con MULTIPART_RELATIVE_LOCATION se puede definir una ubicación relativa a la ubicación definida en la propiedad internment.document.directory | v1.45.0 |
 
+## Broker MQTT
+
+Se crearon las siguientes propiedades para configurar la [funcionalidad de mqtt](back-end/sgx-mqtt/src/main/resources/sgx-mqtt.properties) de la aplicación:
+
+| Propiedad                              | Variable de ambiente | Valor por defecto     | Necesidad | Descripcion                                                                                           | Desde   |
+|----------------------------------------|----------------------|-----------------------|-----------|-------------------------------------------------------------------------------------------------------|---------|
+| mqtt.client_connection | MQTT_CLIENT_CONNECTION | false                | Opcional | Activa el uso del Broker MQTT. | v2.1.0  |
+| mqtt.server_address    | MQTT_SERVER_ADDRESS    | tcp://127.0.0.1:1883 | Opcional | Define la dirección del Broker MQTT. | v2.1.0  |
+| mqtt.client_username   | MQTT_CLIENT_USERNAME   | -                    | Opcional | Usuario para la conexión | v2.1.0  |
+| mqtt.client_password   | MQTT_CLIENT_PASSWORD   | -                    | Opcional | Clave para la conexión | v2.1.0  |
+
+
 ## Red de imágenes
 
 Se crearon las siguientes propiedades para configurar la funcionalidad de red de imágenes de la aplicación
