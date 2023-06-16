@@ -8,7 +8,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingA
 public interface BookingAppointmentStorage {
     SavedBookingAppointmentDto save(BookingBo bookingBo);
     boolean existsEmail(String email);
-    void cancelBooking(String email);
+    void cancelBooking(String uuid);
     Optional<String> getPatientName(String uuid);
     Optional<String> getProfessionalName(Integer diaryId);
 }

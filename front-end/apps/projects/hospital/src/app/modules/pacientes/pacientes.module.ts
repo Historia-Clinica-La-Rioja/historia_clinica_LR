@@ -7,7 +7,9 @@ import { PresentationModule } from '@presentation/presentation.module';
 import { InternacionesModule } from "@historia-clinica/modules/ambulatoria/modules/internacion/internaciones.module";
 // routing
 import { PacientesRoutingModule } from './pacientes-routing.module';
+
 import { EditPatientComponent } from './routes/edit-patient/edit-patient.component';
+import { EmergencyCareTemporaryPatientProfile } from './routes/emergency-care-temporary-patient-profile/emergency-care-temporary-patient-profile';
 import { HomeComponent } from './routes/home/home.component';
 import { NewPatientComponent } from './routes/new-patient/new-patient.component';
 import { NewTemporaryPatientComponent } from './routes/new-temporary-patient/new-temporary-patient.component';
@@ -26,7 +28,7 @@ import { SearchCreateComponent } from './component/search-create/search-create.c
 import { ViewPatientDetailComponent } from './component/view-patient-detail/view-patient-detail.component';
 import { ResumenDeGuardiaComponent } from './component/resumen-de-guardia/resumen-de-guardia.component';
 import { EditIdentificationNumberComponent } from './dialogs/edit-identification-number/edit-identification-number.component';
-
+import { FilesUploaderComponent } from './component/files-uploader/files-uploader.component';
 // dialogs
 import { ArtComponent } from './dialogs/art/art.component';
 import { EditLicenseComponent } from './dialogs/edit-license/edit-license.component';
@@ -42,14 +44,15 @@ import { WarningEditIdentificationNumberComponent } from './dialogs/warning-edit
 
 // pipes
 import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-and-specialty.pipe';
-import { FilesUploaderComponent } from './component/files-uploader/files-uploader.component';
-import { EmergencyCareTemporaryPatientProfile } from './routes/emergency-care-temporary-patient-profile/emergency-care-temporary-patient-profile';
+
+
 
 @NgModule({
 	declarations: [
 		// routing
 		EditPatientComponent,
 		EditPatientComponent,
+		EmergencyCareTemporaryPatientProfile,
 		HomeComponent,
 		NewPatientComponent,
 		NewTemporaryPatientComponent,
@@ -59,13 +62,16 @@ import { EmergencyCareTemporaryPatientProfile } from './routes/emergency-care-te
 		AssignedAppointmentComponent,
 		AssignedAppointmentsComponent,
 		CardLicenseComponent,
-		CardProfessionsComponent,
 		CardPatientComponent,
+		CardProfessionsComponent,
 		CardRolesComponent,
+		FilesUploaderComponent,
 		LicenseFormComponent,
 		ProfessionSpecialtiesFormComponent,
+		ResumenDeGuardiaComponent,
 		SearchCreateComponent,
 		ViewPatientDetailComponent,
+  		EditIdentificationNumberComponent,
 		// dialogs
 		ArtComponent,
 		EditLicenseComponent,
@@ -73,18 +79,14 @@ import { EmergencyCareTemporaryPatientProfile } from './routes/emergency-care-te
 		EditRolesComponent,
 		HealthInsuranceComponent,
 		MedicalCoverageComponent,
+		MessageForAuditComponent,
 		PrivateHealthInsuranceComponent,
 		ReportsComponent,
 		ScanPatientComponent,
 		ScanPatientComponent,
-		MessageForAuditComponent,
+    	WarningEditIdentificationNumberComponent,
 		// pipes
 		ViewNameProfessionAndSpecialtyPipe,
-		FilesUploaderComponent,
-		ResumenDeGuardiaComponent,
-		EmergencyCareTemporaryPatientProfile,
-  		EditIdentificationNumberComponent,
-    	WarningEditIdentificationNumberComponent,
 	],
 	exports: [
 		CardPatientComponent,

@@ -30,6 +30,7 @@ public class ActivityInfoStorageImpl implements ActivityInfoStorage {
 	private static final short PARENTERAL = 0;
 	private static final short PHARMACO = 1;
 	private static final short VACCINE = 2;
+	private static final short OTHER = 3;
 
 	private final EntityManager entityManager;
 	private final AttentionReadsRepository attentionReadsRepository;

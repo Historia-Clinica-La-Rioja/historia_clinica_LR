@@ -2,7 +2,14 @@ import { Injectable } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
 import { ReplaySubject, Observable, forkJoin, BehaviorSubject } from 'rxjs';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
-import { AppointmentShortSummaryDto, BasicPersonalDataDto, CreateAppointmentDto, ProfessionalDto, UpdateAppointmentDateDto, UpdateAppointmentDto } from '@api-rest/api-model';
+import {
+	AppointmentShortSummaryDto,
+	BasicPersonalDataDto,
+	CreateAppointmentDto,
+	ProfessionalDto,
+	UpdateAppointmentDateDto,
+	UpdateAppointmentDto
+} from '@api-rest/api-model';
 import {
 	momentParseTime,
 	DateFormat,

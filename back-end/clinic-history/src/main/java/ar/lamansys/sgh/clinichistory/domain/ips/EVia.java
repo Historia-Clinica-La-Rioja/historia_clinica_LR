@@ -16,7 +16,8 @@ public enum EVia {
 	SUBCUTANEA(2, "Subcutánea"),
 	CENTRAL(3, "Central"),
 	ORAL(4,"Oral"),
-	INHALATION(5,"Inhalatoria");
+	INHALATION(5,"Inhalatoria"),
+	;
 
 
 	private final Short id;

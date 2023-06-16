@@ -208,12 +208,10 @@ databaseChangeLog:
     file: incrementales-v1_42.yml
     relativeToChangelogFile: true
 
-
 - include:
     file: incrementales-v1_43.yml
     relativeToChangelogFile: true
 
-# Los forks deberían agregar sus incrementales debajo de esta línea para evitar conflictos
 - include:
     file: incrementales-v1_44.yml
     relativeToChangelogFile: true
@@ -285,3 +283,5 @@ databaseChangeLog:
 - include:
     file: incrementales-v2_2.yml
     relativeToChangelogFile: true
+
+# Los forks deberían agregar sus incrementales debajo de esta línea para evitar conflictos

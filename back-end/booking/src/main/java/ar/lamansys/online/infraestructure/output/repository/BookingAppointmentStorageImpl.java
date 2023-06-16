@@ -36,8 +36,8 @@ public class BookingAppointmentStorageImpl implements BookingAppointmentStorage 
     }
 
     @Override
-    public void cancelBooking(String email) {
-		sharedAppointmentPort.cancelBooking(email);
+    public void cancelBooking(String uuid) {
+		sharedAppointmentPort.cancelBooking(uuid);
     }
 
     @Override

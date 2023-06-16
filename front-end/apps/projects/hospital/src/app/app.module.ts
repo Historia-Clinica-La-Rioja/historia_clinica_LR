@@ -67,27 +67,28 @@ export class AppModule {
 }
 
 export function createTranslateLoader(http: HttpClient): TranslateLoader {
+	const suffix = `.json?ts=${Date.now()}`;
 	return new MultiTranslateHttpLoader(
 		http,
 		[
-			{ prefix: './assets/i18n/', suffix: '.json' },
-			{ prefix: './assets/i18n/auth/', suffix: '.json' },
-			{ prefix: './assets/i18n/institucion/', suffix: '.json' },
-			{ prefix: './assets/i18n/internacion/', suffix: '.json' },
-			{ prefix: './assets/i18n/pacientes/', suffix: '.json' },
-			{ prefix: './assets/i18n/ambulatoria/', suffix: '.json' },
-			{ prefix: './assets/i18n/historia-clinica/', suffix: '.json' },
-			{ prefix: './assets/i18n/turnos/', suffix: '.json' },
-			{ prefix: './assets/i18n/camas/', suffix: '.json' },
-			{ prefix: './assets/i18n/guardia/', suffix: '.json' },
-			{ prefix: './assets/i18n/portal-paciente/', suffix: '.json' },
-			{ prefix: './assets/i18n/reportes/', suffix: '.json' },
-			{ prefix: './assets/i18n/configuracion/', suffix: '.json' },
-			{ prefix: './assets/i18n/presentation/', suffix: '.json' },
-			{ prefix: './assets/i18n/odontologia/', suffix: '.json' },
-			{ prefix: './assets/i18n/indicacion/', suffix: '.json' },
-			{ prefix: './assets/i18n/home/', suffix: '.json' },
-			{ prefix: './assets/i18n/image-network/', suffix: '.json' }
+			{ prefix: './assets/i18n/', suffix },
+			{ prefix: './assets/i18n/auth/', suffix },
+			{ prefix: './assets/i18n/institucion/', suffix },
+			{ prefix: './assets/i18n/internacion/', suffix },
+			{ prefix: './assets/i18n/pacientes/', suffix },
+			{ prefix: './assets/i18n/ambulatoria/', suffix },
+			{ prefix: './assets/i18n/historia-clinica/', suffix },
+			{ prefix: './assets/i18n/turnos/', suffix },
+			{ prefix: './assets/i18n/camas/', suffix },
+			{ prefix: './assets/i18n/guardia/', suffix },
+			{ prefix: './assets/i18n/portal-paciente/', suffix },
+			{ prefix: './assets/i18n/reportes/', suffix },
+			{ prefix: './assets/i18n/configuracion/', suffix },
+			{ prefix: './assets/i18n/presentation/', suffix },
+			{ prefix: './assets/i18n/odontologia/', suffix },
+			{ prefix: './assets/i18n/indicacion/', suffix },
+			{ prefix: './assets/i18n/home/', suffix },
+			{ prefix: './assets/i18n/image-network/', suffix },
 		]
 	);
 }

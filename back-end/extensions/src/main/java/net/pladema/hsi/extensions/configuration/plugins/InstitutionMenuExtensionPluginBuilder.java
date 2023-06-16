@@ -18,6 +18,10 @@ public class InstitutionMenuExtensionPluginBuilder {
 				new TypeReference<>() {},
 				null
 		);
+		if(menu == null){
+			LOGGER.warn("Menu item with id {} not exists", menuId);
+			return null;
+		}
 		LOGGER.info("Loaded SystemMenu fromResources {} => {}", menuId, menu);
 		UIPageDto page = JsonResourceUtils.readJson(
 				String.format("extension/%s/page.json", menuId),

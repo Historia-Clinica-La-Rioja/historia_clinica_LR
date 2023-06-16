@@ -151,7 +151,7 @@ public enum AppFeature implements Feature {
 	HABILITAR_CARGA_CACHE_EN_DESARROLLO,
 
 	@Label("Indica si está habilitada en backoffice la funcionalidad asociada a unidades jerárquicas")
-	HABILITAR_UNIDADES_JERARQUICAS_EN_DESARROLLO
+	HABILITAR_UNIDADES_JERARQUICAS_EN_DESARROLLO,
 	;
 
     public boolean isActive() {
