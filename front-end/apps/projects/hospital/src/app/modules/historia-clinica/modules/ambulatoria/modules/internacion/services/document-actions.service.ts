@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { DateTimeDto, DocumentSearchDto, LoggedUserDto, PatientDischargeDto } from "@api-rest/api-model";
 import { differenceInHours } from "date-fns";
 import { AccountService } from "@api-rest/services/account.service";
-import { dateTimeDtoToDate, dateTimeDtoToStringDate } from "@api-rest/mapper/date-dto.mapper";
+import { dateTimeDtoToDate, dateTimeDtoToStringDate, dateTimeDtotoLocalDate } from "@api-rest/mapper/date-dto.mapper";
 import { DeleteDocumentActionService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/delete-document-action.service";
 import { EditDocumentActionService } from './edit-document-action.service';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
@@ -52,7 +52,7 @@ export class DocumentActionsService {
 	canEditDocument(document: DocumentSearchDto): boolean {
 		if (!this.isCreatorDocumnt(document))
 			return false;
-		const createdOn = dateTimeDtoToDate(document.createdOn);
+		const createdOn = dateTimeDtotoLocalDate(document.createdOn);
 		if (differenceInHours(new Date(), (new Date(createdOn))) > 24)
 			return false;
 		if (this.hasMedicalDischarge)
