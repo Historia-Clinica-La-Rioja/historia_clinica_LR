@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/public-api/institution/{institutionId}/appointment/booking")
-@Tag(name = "Public Api", description = "Booking by institution")
+@Tag(name = "PublicApi Turnos", description = "Booking by institution")
 public class BookingByInstitutionPublicController {
 	private final SharedBookingPort bookAppointmentPort;
 	private final SharedAppointmentPort appointmentPort;

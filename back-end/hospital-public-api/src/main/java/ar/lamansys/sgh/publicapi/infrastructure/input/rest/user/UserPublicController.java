@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping("/public-api/user")
-@Tag(name = "Public Api", description = "User")
+@Tag(name = "PublicApi Usuarios", description = "User and Roles")
 public class UserPublicController {
 
 	private final FetchUserInfoFromToken fetchUserInfoFromToken;

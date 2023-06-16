@@ -11,4 +11,5 @@ import java.lang.annotation.*;
 @Import(HospitalPublicApiAutoConfiguration.class)
 @Configuration
 public @interface EnableHospitalPublicApi {
+	
 }

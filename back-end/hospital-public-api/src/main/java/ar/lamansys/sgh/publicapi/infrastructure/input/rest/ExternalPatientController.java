@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/public-api/patient")
-@Tag(name = "Public Api", description = "External patient Api")
+@Tag(name = "PublicApi Pacientes", description = "External patient Api")
 public class ExternalPatientController {
 
     private static final String OUTPUT = "Output -> {}";

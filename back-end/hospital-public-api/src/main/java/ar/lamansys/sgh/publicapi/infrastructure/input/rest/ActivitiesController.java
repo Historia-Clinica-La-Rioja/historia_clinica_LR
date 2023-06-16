@@ -20,7 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/public-api")
-@Tag(name = "Public Api", description = "Public Api Activities")
+@Tag(name = "PublicApi Facturacion", description = "Public Api Activities")
 public class ActivitiesController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ActivitiesController.class);

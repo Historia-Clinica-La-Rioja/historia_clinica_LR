@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@Tag(name = "Public Api", description = "Sip Plus")
+@Tag(name = "PublicApi Sip", description = "Sip Plus")
 public class SipPlusPublicController {
 
 	private final GetAuthenticationData getAuthenticationData;
@@ -31,7 +31,7 @@ public class SipPlusPublicController {
 	public EmbeddedAuthenticationDataDto getAuthenticationData(@PathVariable String accessData) {
 		log.debug("Input parameter -> accessData {} ", accessData);
 		EmbeddedAuthenticationDataDto result = mapToEmbeddedAuthenticationDataDto(getAuthenticationData.run(accessData));
-		log.debug("Get embedded authentication data", result);
+		log.debug("Get embedded authentication data {}", result);
 		return result;
 	}
 

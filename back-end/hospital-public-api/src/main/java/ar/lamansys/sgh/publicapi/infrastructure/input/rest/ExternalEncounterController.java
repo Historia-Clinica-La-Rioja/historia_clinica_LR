@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/public-api/patient/{externalId}/institution/{institutionId}/external-encounters")
-@Tag(name = "Public Api", description = "External Encounter")
+@Tag(name = "PublicApi Pacientes", description = "External Encounter")
 public class ExternalEncounterController {
 
     private final SaveExternalEncounter saveExternalEncounter;

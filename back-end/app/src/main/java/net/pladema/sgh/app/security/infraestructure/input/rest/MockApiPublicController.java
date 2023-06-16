@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/public-api/mock")
-@Tag(name = "Mock api public", description = "Mock api public")
+@Tag(name = "PublicApi Info", description = "Mock api public")
 public class MockApiPublicController {
 
 	@GetMapping(value = "/info")

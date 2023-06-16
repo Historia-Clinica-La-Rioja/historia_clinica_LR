@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/public-api/external-clinical-history")
-@Tag(name = "Public Api", description = "External Clinical History Api")
+@Tag(name = "PublicApi Pacientes", description = "External Clinical History Api")
 public class ExternalClinicHistoryController {
 
 	private final SaveExternalClinicalHistory saveExternalClinicalHistory;

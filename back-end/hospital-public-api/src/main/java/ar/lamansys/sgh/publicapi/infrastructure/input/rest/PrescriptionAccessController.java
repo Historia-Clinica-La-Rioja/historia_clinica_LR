@@ -29,7 +29,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/public-api/prescriptions")
-@Tag(name = "Public Api", description = "Public Api Digital Prescription Access")
+@Tag(name = "PublicApi Recetas", description = "Public Api Digital Prescription Access")
 @Validated
 public class PrescriptionAccessController {
 

@@ -32,7 +32,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/public-api/institution/refset/{refsetCode}/activities/{activityId}")
-@Tag(name = "Public Api", description = "Public Api activity info")
+@Tag(name = "PublicApi Facturacion", description = "Public Api activity info")
 public class ActivityInfoController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ActivityInfoController.class);
