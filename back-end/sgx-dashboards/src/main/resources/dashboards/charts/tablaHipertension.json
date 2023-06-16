@@ -20,7 +20,8 @@
       "TablaHipertension.valor_riesgo_cardiovascular",
       "TablaHipertension.fecha_filtracion_glomerular",
       "TablaHipertension.fecha_albumina_creatinina",
-      "TablaHipertension.fecha_creatinina"
+      "TablaHipertension.fecha_creatinina",
+      "TablaHipertension.fecha_electrocardiograma"
     ],
     "filters": [
       {
@@ -51,7 +52,8 @@
       "TablaHipertension.valor_riesgo_cardiovascular",
       "TablaHipertension.fecha_filtracion_glomerular",
       "TablaHipertension.fecha_albumina_creatinina",
-      "TablaHipertension.fecha_creatinina"
+      "TablaHipertension.fecha_creatinina",
+      "TablaHipertension.fecha_electrocardiograma"
     ],
     "y": [
       "measures"

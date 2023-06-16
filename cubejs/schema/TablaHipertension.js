@@ -93,7 +93,20 @@ cube(`TablaHipertension`, {
                             and s.sctid = '70901006'
                             and dr2.status_id = '261782000'
                             ORDER BY dr2.updated_on DESC
-                            LIMIT 1))  
+                            LIMIT 1)),
+        lep as (
+        SELECT dr.patient_id, date(dr.created_on) AS result_date
+        FROM diagnostic_report dr 
+        WHERE dr.id IN (SELECT dr2.id 
+                            FROM diagnostic_report dr2
+                            JOIN snomed s ON (s.id = dr2.snomed_id)
+                            JOIN snomed_related_group srg ON (srg.snomed_id = s.id)
+                            JOIN snomed_group sg ON (sg.id = srg.group_id)
+                            WHERE dr2.patient_id = dr.patient_id 
+                            AND sg.description = 'ELECTROCARDIOGRAPHIC_PROCEDURE'
+                            AND dr2.status_id = '261782000'
+                            ORDER BY dr2.updated_on DESC
+                            LIMIT 1))
         SELECT DISTINCT CASE WHEN p3.name_self_determination IS NULL THEN CONCAT(p2.first_name, ' ', p2.middle_names) WHEN p3.name_self_determination IS NOT NULL THEN p3.name_self_determination END AS name, 
         CONCAT(p2.last_name, ' ', p2.other_last_names) AS last_name, it.description || ' ' || p2.identification_number AS identification_number, s.pt AS problem, TO_CHAR(hc.start_date, 'DD/MM/YYYY') AS problem_start_date, 
         a.street || ' ' || a."number" AS address, c.description AS city_name, cr.value || '% (' || TO_CHAR(cr.creation_date, 'DD/MM/YYYY') || ')' AS cardiovascular_risk_value,
@@ -101,7 +114,7 @@ cube(`TablaHipertension`, {
         dp2.value || ' (' || to_char(dp2.creation_date, 'DD/MM/YYYY') || ')' AS penultimate_diastolic_pressure_value, sp2.value || ' (' || to_char(sp2.creation_date, 'DD/MM/YYYY') || ')' AS penultimate_systolic_pressure_value,
         TO_CHAR(la.created_on, 'DD/MM/YYYY') AS last_attention_date, d.institution_id, TO_CHAR(p2.birth_date, 'DD/MM/YYYY') AS birth_date,
         TO_CHAR(lf.result_date, 'DD/MM/YYYY') AS last_filtration_date, TO_CHAR(lac.result_date, 'DD/MM/YYYY') AS last_albumin_creatinine_date,
-        TO_CHAR(lc.result_date, 'DD/MM/YYYY') AS last_creatinine_date
+        TO_CHAR(lc.result_date, 'DD/MM/YYYY') AS last_creatinine_date, TO_CHAR(lep.result_date, 'DD/MM/YYYY') AS last_electrocardiographic_procedure_date
         FROM document d 
         JOIN document_health_condition dhc ON (dhc.document_id = d.id)
         JOIN health_condition hc ON (hc.id = dhc.health_condition_id)
@@ -121,6 +134,7 @@ cube(`TablaHipertension`, {
         LEFT JOIN lf ON (lf.patient_id = p.id)
         LEFT JOIN lac ON (lac.patient_id = p.id)
         LEFT JOIN lc ON (lc.patient_id = p.id)
+        LEFT JOIN lep ON (lep.patient_id = p.id)
         JOIN la ON (la.patient_id = hc.patient_id AND la.snomed_id = hc.snomed_id)
         WHERE hc.id = (SELECT hc2.id  
                     FROM document d2
@@ -234,6 +248,11 @@ cube(`TablaHipertension`, {
             sql: `last_creatinine_date`,
             type: `string`,
             title: `Fecha medición de creatinina`
+        },
+        fecha_electrocardiograma: {
+            sql: `last_electrocardiographic_procedure_date`,
+            type: `string`,
+            title: `Fecha electrocardiograma`
         },
         institucion: {
             sql: `institution_id`,
