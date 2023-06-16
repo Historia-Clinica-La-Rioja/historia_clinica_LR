@@ -179,7 +179,8 @@ export class NewAppointmentComponent implements OnInit {
 			if (formSearchValue.patientId) {
 				this.patientSearch(formSearchValue.patientId);
 				this.patientId = formSearchValue.patientId;
-				this.getPatientMedicalOrders();
+				if (this.data.isEquipmentAppointment)
+					this.getPatientMedicalOrders();
 				return;
 			}
 
@@ -194,7 +195,8 @@ export class NewAppointmentComponent implements OnInit {
 					if (data.length) {
 						this.patientId = data[0];
 						this.patientSearch(this.patientId);
-						this.getPatientMedicalOrders();
+						if (this.data.isEquipmentAppointment)
+							this.getPatientMedicalOrders();
 					} else {
 						this.patientNotFound();
 					}
