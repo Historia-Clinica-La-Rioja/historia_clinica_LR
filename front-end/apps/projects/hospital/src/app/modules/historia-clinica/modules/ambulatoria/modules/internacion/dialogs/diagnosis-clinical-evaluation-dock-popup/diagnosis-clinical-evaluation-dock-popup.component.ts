@@ -1,35 +1,34 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { SelectionModel } from '@angular/cdk/collections';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ContextService } from '@core/services/context.service';
-import { TableService } from '@core/services/table.service';
 import { PermissionsService } from '@core/services/permissions.service';
+import { TableService } from '@core/services/table.service';
 
-import { MapperService } from '@presentation/services/mapper.service';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
+import { MapperService } from '@presentation/services/mapper.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 import {
 	DiagnosesGeneralStateDto,
 	EvolutionDiagnosisDto,
 	InternmentSummaryDto,
-	MasterDataInterface,
+	MasterDataInterface
 } from '@api-rest/api-model';
-import { InternacionService } from '@api-rest/services/internacion.service';
-import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
+import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
+import { InternacionService } from '@api-rest/services/internacion.service';
+import { InternmentStateService } from '@api-rest/services/internment-state.service';
+import { InternmentEpisodeSummary } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
+import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { TableCheckbox } from '@material/model/table.model';
-import { HEALTH_CLINICAL_STATUS } from '../../constants/ids';
-import { ROLES_FOR_ACCESS_MAIN } from '../../constants/permissions';
 import { OVERLAY_DATA } from "@presentation/presentation-model";
 import { DockPopupRef } from "@presentation/services/dock-popup-ref";
-import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
-import { InternmentEpisodeSummary } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
+import { HEALTH_CLINICAL_STATUS } from '../../constants/ids';
+import { ROLES_FOR_ACCESS_MAIN } from '../../constants/permissions';
 
 @Component({
 	selector: 'app-diagnosis-clinical-evaluation-dock-popup',
@@ -81,7 +80,6 @@ export class DiagnosisClinicalEvaluationDockPopupComponent implements OnInit {
 		private readonly internmentStateService: InternmentStateService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly evolutionNoteService: EvolutionNoteService,
-		private readonly contextService: ContextService,
 		private readonly mapperService: MapperService,
 		private readonly tableService: TableService,
 		private readonly formBuilder: UntypedFormBuilder,

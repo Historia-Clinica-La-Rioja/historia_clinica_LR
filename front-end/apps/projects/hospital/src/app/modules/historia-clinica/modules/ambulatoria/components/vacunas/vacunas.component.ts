@@ -1,13 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 import { HCEImmunizationDto, ProfessionalInfoDto } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
-import { ActivatedRoute } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
 import { VACUNAS } from '@historia-clinica/constants/summaries';
-import { AgregarVacunasComponent } from '../../dialogs/agregar-vacunas/agregar-vacunas.component';
-import { DetalleVacunaComponent } from '../../dialogs/detalle-vacuna/detalle-vacuna.component';
 import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
 import { Color } from '@presentation/colored-label/colored-label.component';
+import { AgregarVacunasComponent } from '../../dialogs/agregar-vacunas/agregar-vacunas.component';
+import { DetalleVacunaComponent } from '../../dialogs/detalle-vacuna/detalle-vacuna.component';
 
 @Component({
 	selector: 'app-vacunas',
@@ -62,7 +62,7 @@ export class VacunasComponent implements OnInit {
 	}
 
 	goToDetailsVaccine(vaccine: HCEImmunizationDto) {
-		const dialogRef = this.dialog.open(DetalleVacunaComponent, {
+		this.dialog.open(DetalleVacunaComponent, {
 			disableClose: false,
 			width: '30%',
 			data: {

@@ -1,30 +1,28 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { ERole } from '@api-rest/api-model.d';
 import { ResponseEmergencyCareDto, TriageListDto } from '@api-rest/api-model.d';
+import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-care-episode-state.service';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { TriageService } from '@api-rest/services/triage.service';
-import { PatientNameService } from '@core/services/patient-name.service';
-import { TriageCategory } from '@historia-clinica/modules/guardia/components/triage-chip/triage-chip.component';
-import { GuardiaMapperService } from '@historia-clinica/modules/guardia/services/guardia-mapper.service';
-import { GUARDIA } from '@historia-clinica/constants/summaries';
-import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
-import { RiskFactorFull, Triage } from '@historia-clinica/modules/guardia/components/triage-details/triage-details.component';
-import { EmergencyCareTypes, EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
-import { MatDialog } from '@angular/material/dialog';
-import { EpisodeStateService } from '@historia-clinica/modules/guardia/services/episode-state.service';
-import { SelectConsultorioComponent } from '@historia-clinica/modules/guardia/dialogs/select-consultorio/select-consultorio.component';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
-import { Router } from '@angular/router';
-import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-care-episode-state.service';
-import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
-import { EmergencyCareEpisodeAdministrativeDischargeService } from '@api-rest/services/emergency-care-episode-administrative-service.service';
+import { PatientNameService } from '@core/services/patient-name.service';
 import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
-import { NewTriageService } from '@historia-clinica/services/new-triage.service';
-import { EmergencyCareStateChangedService } from '@historia-clinica/modules/ambulatoria/services/emergency-care-state-changed.service';
-import { EmergencyCareEpisodeAttendService } from '@historia-clinica/services/emergency-care-episode-attend.service';
+import { GUARDIA } from '@historia-clinica/constants/summaries';
+import { TriageCategory } from '@historia-clinica/modules/guardia/components/triage-chip/triage-chip.component';
+import { RiskFactorFull, Triage } from '@historia-clinica/modules/guardia/components/triage-details/triage-details.component';
+import { EmergencyCareTypes, EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
+import { SelectConsultorioComponent } from '@historia-clinica/modules/guardia/dialogs/select-consultorio/select-consultorio.component';
+import { EpisodeStateService } from '@historia-clinica/modules/guardia/services/episode-state.service';
+import { GuardiaMapperService } from '@historia-clinica/modules/guardia/services/guardia-mapper.service';
 import { TriageDefinitionsService } from '@historia-clinica/modules/guardia/services/triage-definitions.service';
+import { EmergencyCareEpisodeAttendService } from '@historia-clinica/services/emergency-care-episode-attend.service';
+import { NewTriageService } from '@historia-clinica/services/new-triage.service';
+import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -71,10 +69,8 @@ export class ResumenDeGuardiaComponent implements OnInit {
 		private readonly contextService: ContextService,
 		private readonly router: Router,
 		private readonly emergencyCareEpisodeStateService: EmergencyCareEpisodeStateService,
-		private readonly emergencyCareEpisodeAdministrativeDischargeService: EmergencyCareEpisodeAdministrativeDischargeService,
 		private readonly permissionsService: PermissionsService,
 		private readonly newTriageService: NewTriageService,
-		private readonly emergencyCareStateChangedService: EmergencyCareStateChangedService,
 		private readonly emergencyCareEpisodeAttend: EmergencyCareEpisodeAttendService,
 		private readonly triageDefinitionsService: TriageDefinitionsService
 	) {
@@ -235,8 +231,6 @@ export class ResumenDeGuardiaComponent implements OnInit {
 					this.availableActions.push(action);
 				}
 
-				const noTieneUnaNotaDeEvolucion = true;
-
 				if (this.hasRoleAdministrative && (this.episodeState === this.STATES.CON_ALTA_MEDICA || (this.episodeState === this.STATES.EN_ESPERA && !hasEvolutionNote)) && this.responseEmergencyCare.patient.typeId !== 8) {
 					let action: ActionInfo = {
 						label: 'ambulatoria.paciente.guardia.ADMINISTRATIVE_DISCHARGE_BUTTON',
@@ -303,9 +297,6 @@ export class ResumenDeGuardiaComponent implements OnInit {
 			return triages?.length > 1;
 		}
 	}
-
-
-
 
 
 }

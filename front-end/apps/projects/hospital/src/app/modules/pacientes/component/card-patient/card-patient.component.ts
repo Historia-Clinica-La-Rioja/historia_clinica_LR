@@ -1,23 +1,22 @@
 import { DatePipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { EAuditType, IdentificationTypeDto, MasterDataDto, PatientSearchDto, PatientType } from '@api-rest/api-model';
-import { AppFeature } from '@api-rest/api-model';
-import { ERole } from '@api-rest/api-model';
+import { MatDialog } from "@angular/material/dialog";
+import { Router } from '@angular/router';
+import { AppFeature, EAuditType, ERole } from '@api-rest/api-model';
+import { IdentificationTypeDto, MasterDataDto, PatientSearchDto, PatientType } from '@api-rest/api-model';
+import { PatientMasterDataService } from '@api-rest/services/patient-master-data.service';
+import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { ContextService } from '@core/services/context.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
 import { DateFormat } from '@core/utils/date.utils';
 import { CardModel, ValueAction } from '@presentation/components/card/card.component';
-import { ViewPatientDetailComponent } from '../view-patient-detail/view-patient-detail.component';
-import { MatDialog } from "@angular/material/dialog";
-import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { PatientMasterDataService } from '@api-rest/services/patient-master-data.service';
-import { PatientProfilePopupComponent } from '../../../auditoria/dialogs/patient-profile-popup/patient-profile-popup.component';
-import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
+import { PatientProfilePopupComponent } from '../../../auditoria/dialogs/patient-profile-popup/patient-profile-popup.component';
 import { ROUTE_EMPADRONAMIENTO } from '../../../auditoria/routes/home/home.component';
+import { ViewPatientDetailComponent } from '../view-patient-detail/view-patient-detail.component';
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 const PAGE_MIN_SIZE = 5;
@@ -102,7 +101,7 @@ export class CardPatientComponent {
 		});
 
 		return this.patientData?.map((patient: any) => {
-			let header: any = " ";
+			let header;
 			if (this.router.url.includes(ROUTE_EMPADRONAMIENTO) && this.nameSelfDeterminationFF) {
 				header = [{ title: this.patientNameService.getFullName(patient.person.firstName, null, patient.person?.middleNames) + ' ' + this.getLastNames(patient), value: patient.nameSelfDetermination? patient.nameSelfDetermination +" (autopercibido)" : " "}];
 			} else {

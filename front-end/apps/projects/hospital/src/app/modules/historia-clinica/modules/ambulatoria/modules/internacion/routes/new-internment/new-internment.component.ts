@@ -1,57 +1,52 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
-import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { ContextService } from '@core/services/context.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { futureTimeValidation, hasError, scrollIntoError, TIME_PATTERN } from '@core/utils/form.utils';
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 
-import { PersonService } from '@api-rest/services/person.service';
+import {
+	BasicPatientDto, BedInfoDto, CompletePatientDto,
+	HealthcareProfessionalDto, PatientMedicalCoverageDto, PersonalInformationDto,
+	PersonPhotoDto
+} from '@api-rest/api-model';
+import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
 import { PatientService } from '@api-rest/services/patient.service';
-import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
-import {
-	CompletePatientDto,
-	HealthcareProfessionalDto,
-	PersonalInformationDto,
-	PersonPhotoDto,
-	BedInfoDto, PatientMedicalCoverageDto, BasicPatientDto,
-} from '@api-rest/api-model';
+import { PersonService } from '@api-rest/services/person.service';
 
 import {
-	AppFeature,
+	AppFeature
 } from '@api-rest/api-model';
 
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
-import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
-import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
-import { MapperService } from '@presentation/services/mapper.service';
-import { MapperService as CoreMapperService } from '@core/services/mapper.service';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
+import { MapperService as CoreMapperService } from '@core/services/mapper.service';
+import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
+import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
+import { MapperService } from '@presentation/services/mapper.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
-import { MedicalCoverageComponent, PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { DatePipe } from '@angular/common';
+import { PatientNameService } from "@core/services/patient-name.service";
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { newMoment } from '@core/utils/moment.utils';
-import { Moment } from 'moment';
-import * as moment from 'moment';
-import { map } from 'rxjs/operators';
 import { BedAssignmentComponent } from '@historia-clinica/dialogs/bed-assignment/bed-assignment.component';
-import { PatientNameService } from "@core/services/patient-name.service";
+import { MedicalCoverageComponent, PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
+import * as moment from 'moment';
+import { Moment } from 'moment';
+import { map } from 'rxjs/operators';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 
 const MIN_YEAR = 1900;
 const MIN_MONTH = 0;
 const MIN_DAY = 1;
-
-const MIDDLE_DASH_SYMBOL = '-';
-const SLASH_SYMBOL = '/	';
 
 export const MIN_DATE = new Date(MIN_YEAR, MIN_MONTH, MIN_DAY);
 

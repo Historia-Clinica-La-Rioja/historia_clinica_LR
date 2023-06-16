@@ -1,18 +1,17 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { AnamnesisSummaryDto, EpicrisisSummaryDto, EpisodeDocumentResponseDto, EvaluationNoteSummaryDto } from '@api-rest/api-model';
-import { ContextService } from "@core/services/context.service";
-import { FeatureFlagService } from "@core/services/feature-flag.service";
-import { SnackBarService } from "@presentation/services/snack-bar.service";
-import { MatDialog } from "@angular/material/dialog";
-import { ConfirmDialogComponent } from "@presentation/dialogs/confirm-dialog/confirm-dialog.component";
-import { PermissionsService } from "@core/services/permissions.service";
-import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
-import { anyMatch } from "@core/utils/array.utils";
-import { ERole } from "@api-rest/api-model";
-import { InternmentSummaryFacadeService } from '../../services/internment-summary-facade.service';
+import { ERole } from '@api-rest/api-model';
 import { InternmentEpisodeDocumentService } from '@api-rest/services/internment-episode-document.service';
+import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
+import { ContextService } from "@core/services/context.service";
+import { PermissionsService } from "@core/services/permissions.service";
+import { anyMatch } from "@core/utils/array.utils";
+import { ConfirmDialogComponent } from "@presentation/dialogs/confirm-dialog/confirm-dialog.component";
+import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { ROLES_FOR_ACCESS_EPISODE_DOCUMENTS } from '../../constants/permissions';
+import { InternmentSummaryFacadeService } from '../../services/internment-summary-facade.service';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_RELOCATE_PATIENT_BED_PREFIX = '/pase-cama';
@@ -39,7 +38,6 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 	@Output() openInNew = new EventEmitter();
 
 	private readonly routePrefix;
-	private readonly ff: FeatureFlagService;
 	anamnesisDoc: AnamnesisSummaryDto;
 	epicrisisDoc: EpicrisisSummaryDto;
 	lastEvolutionNoteDoc: EvaluationNoteSummaryDto;

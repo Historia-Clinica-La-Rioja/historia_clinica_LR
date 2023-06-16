@@ -6,12 +6,10 @@ import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-c
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { EstadosEpisodio } from '../../constants/masterdata';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
-import { AdministrativeAdmission } from '../../services/new-episode.service';
 import { GuardiaRouterService } from '../../services/guardia-router.service';
+import { AdministrativeAdmission } from '../../services/new-episode.service';
 
 @Component({
 	selector: 'app-edit-emergency-care-episode',

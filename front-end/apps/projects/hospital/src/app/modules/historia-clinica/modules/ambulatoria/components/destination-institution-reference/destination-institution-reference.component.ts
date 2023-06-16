@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, Inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { AddressDto, DepartmentDto, InstitutionBasicInfoDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { InstitutionService } from '@api-rest/services/institution.service';

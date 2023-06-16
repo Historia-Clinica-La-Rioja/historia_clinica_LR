@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
 import {
 	AppointmentDailyAmountDto,
 	AppointmentDto,
@@ -12,16 +11,16 @@ import {
 	InstitutionBasicInfoDto,
 	StudyIntanceUIDDto,
 	UpdateAppointmentDateDto,
-	UpdateAppointmentDto,
+	UpdateAppointmentDto
 } from '@api-rest/api-model';
+import { Observable, of } from 'rxjs';
 
 import { HttpClient, HttpParams } from '@angular/common/http';
 
-import { environment } from '@environments/environment';
 import { ContextService } from '@core/services/context.service';
-import { DateFormat, momentFormat } from "@core/utils/moment.utils";
 import { DownloadService } from "@core/services/download.service";
-import { tap } from "rxjs/operators";
+import { DateFormat, momentFormat } from "@core/utils/moment.utils";
+import { environment } from '@environments/environment';
 import * as moment from 'moment';
 
 @Injectable({
@@ -233,12 +232,7 @@ export class AppointmentsService {
 	getAppointmentTicketPdf(appointmentId: number): Observable<any> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointment-ticket-report/${appointmentId}`;
 		const responseType = 'arraybuffer' as 'json';
-		return this.http.get<any>(url, { responseType }).pipe(
-			tap((data: any) => {
-				const blobType = { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' };
-				const file = new Blob([data], blobType);
-			})
-		);
+		return this.http.get<any>(url, { responseType });
 	}
 
 	getAppointmentReport(url: string, appointmentData: any, pdfName: string): Observable<any> {

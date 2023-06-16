@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 import { TerminologyCSVDto, TerminologyQueueItemDto } from '@api-rest/api-model';
 import { TerminologyCacheService } from '@api-rest/services/terminology-cache.service';

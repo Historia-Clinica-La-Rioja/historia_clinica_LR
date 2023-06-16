@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { SnomedECL } from '@api-rest/api-model';
 import { SnomedDto } from '@api-rest/api-model';
-import { SnowstormService } from '@api-rest/services/snowstorm.service';
-import { SnomedService } from '@historia-clinica/services/snomed.service';
-import { SnomedSemanticSearch } from '@historia-clinica/services/snomed.service';
+import { SnomedECL } from '@api-rest/api-model';
+import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/snomed.service';
 import { TableModel } from '@presentation/components/table/table.component';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -26,10 +23,7 @@ export class SearchSnomedConceptsPharmacoService {
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
-		private readonly snowstormService: SnowstormService,
 		private readonly snomedService: SnomedService,
-		private readonly snackBarService: SnackBarService
-
 	) {
 		this.pharmacoForm = this.formBuilder.group({
 			pharmaco: [null, [Validators.required]]

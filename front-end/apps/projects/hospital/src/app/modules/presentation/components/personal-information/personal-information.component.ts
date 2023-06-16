@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { AddressDto, HealthInsuranceDto, IdentificationTypeDto, PatientMedicalCoverageDto, PersonFileDto } from '@api-rest/api-model';
-import { ContextService } from '@core/services/context.service';
-import { Address } from '@presentation/pipes/fullHouseAddress.pipe';
-import { EMedicalCoverageType } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
 import { PersonFileService } from '@api-rest/services/person-file.service';
+import { EMedicalCoverageType } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
+import { Address } from '@presentation/pipes/fullHouseAddress.pipe';
 @Component({
 	selector: 'app-personal-information',
 	templateUrl: './personal-information.component.html',
@@ -19,16 +18,11 @@ export class PersonalInformationComponent implements OnChanges {
 	typeObraSocial = EMedicalCoverageType.OBRASOCIAL;
 	public addressPresent = false;
 	public address: Address;
-	private readonly routePrefix;
 	files= [];
 
 	constructor(
-		private readonly contextService: ContextService,
 		private personFileService: PersonFileService
-
 	) {
-
-		this.routePrefix = `institucion/${this.contextService.institutionId}`;
 	}
 
 	ngOnChanges() {

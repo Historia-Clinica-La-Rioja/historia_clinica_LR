@@ -1,19 +1,18 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 
-import { MasterDataInterface, HealthConditionDto, DiagnosisDto } from '@api-rest/api-model';
-import { InternmentStateService } from '@api-rest/services/internment-state.service';
+import { DiagnosisDto, HealthConditionDto, MasterDataInterface } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { TableModel, ActionDisplays } from '@presentation/components/table/table.component';
+import { InternmentStateService } from '@api-rest/services/internment-state.service';
+import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 
 import { DIAGNOSTICOS } from '../../../../constants/summaries';
 import { RemoveDiagnosisComponent } from '../../../../dialogs/remove-diagnosis/remove-diagnosis.component';
-import { ContextService } from '@core/services/context.service';
 
 import { HEALTH_CLINICAL_STATUS } from "@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids";
-import { InternmentFields, InternmentSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
 import { DiagnosisClinicalEvaluationDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/diagnosis-clinical-evaluation-dock-popup/diagnosis-clinical-evaluation-dock-popup.component";
+import { InternmentFields, InternmentSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
 import { DockPopupRef } from "@presentation/services/dock-popup-ref";
 import { DockPopupService } from "@presentation/services/dock-popup.service";
 
@@ -42,7 +41,6 @@ export class DiagnosisSummaryComponent implements OnInit, OnChanges {
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		public dialog: MatDialog,
 		private readonly route: ActivatedRoute,
-		private readonly contextService: ContextService,
 		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 		private readonly dockPopupService: DockPopupService,
 	) { }

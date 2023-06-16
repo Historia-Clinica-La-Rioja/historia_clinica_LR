@@ -1,49 +1,43 @@
-import { AppFeature } from '@api-rest/api-model';
+import { SelectionModel } from '@angular/cdk/collections';
+import { DatePipe } from '@angular/common';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import {
-	AllergyConditionDto,
-	DiagnosisDto,
+	AllergyConditionDto, AppFeature, DiagnosisDto,
 	EpicrisisDto,
 	EpicrisisGeneralStateDto,
-	EpicrisisObservationsDto,
-	HealthConditionDto,
+	EpicrisisObservationsDto, ExternalCauseDto, HealthConditionDto,
 	HealthHistoryConditionDto,
 	ImmunizationDto,
 	MasterDataInterface,
 	MedicationDto,
 	ResponseAnamnesisDto,
 	ResponseEpicrisisDto,
-	SnomedDto,
-	ExternalCauseDto
+	SnomedDto, SnomedECL
 } from '@api-rest/api-model';
-import { Inject, OnInit, ViewChild } from '@angular/core';
-import { Component } from '@angular/core';
-import { SnomedECL } from '@api-rest/api-model';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { EpicrisisService } from '@api-rest/services/epicrisis.service';
-import { DatePipe } from '@angular/common';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { SelectionModel } from '@angular/cdk/collections';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { TableCheckbox } from '@material/model/table.model';
-import { TableService } from '@core/services/table.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
-import { DiagnosisEpicrisisService } from '../../services/diagnosis-epicrisis.service';
-import { hasError } from '@core/utils/form.utils';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
-import { SnomedService, SnomedSemanticSearch } from '@historia-clinica/services/snomed.service';
-import { DockPopupRef } from "@presentation/services/dock-popup-ref";
-import { OVERLAY_DATA } from "@presentation/presentation-model";
-import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
-import { Observable, Subscription } from 'rxjs';
-import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
-import { MatDialog } from '@angular/material/dialog';
-import { ProblemEpicrisisService } from '../../services/problem-epicrisis.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { ExternalCauseService } from '../../services/external-cause.service';
-import { ControlDynamicFormService } from '../../services/control-dynamic-form.service';
-import { ObstetricComponent } from '../../components/obstetric/obstetric.component';
-import { ObstetricFormService } from '../../services/obstetric-form.service';
+import { TableService } from '@core/services/table.service';
+import { hasError } from '@core/utils/form.utils';
+import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
+import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/snomed.service';
+import { TableCheckbox } from '@material/model/table.model';
+import { OVERLAY_DATA } from "@presentation/presentation-model";
+import { DockPopupRef } from "@presentation/services/dock-popup-ref";
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { Observable, Subscription } from 'rxjs';
 import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
+import { ObstetricComponent } from '../../components/obstetric/obstetric.component';
+import { ControlDynamicFormService } from '../../services/control-dynamic-form.service';
+import { DiagnosisEpicrisisService } from '../../services/diagnosis-epicrisis.service';
+import { ExternalCauseService } from '../../services/external-cause.service';
+import { ObstetricFormService } from '../../services/obstetric-form.service';
+import { ProblemEpicrisisService } from '../../services/problem-epicrisis.service';
+import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
 
 @Component({
 	selector: 'app-epicrisis-dock-popup',
@@ -220,10 +214,6 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		});
 		this.epicrisisService.existUpdatesAfterEpicrisis(this.data.patientInfo.internmentEpisodeId).subscribe((showWarning: boolean) => this.showWarning = showWarning);
 
-		function isEqualsThenSelect(sctid1: string, sctid2: string, tableConcept: TableCheckbox<any>, concept: any) {
-			if (sctid1 === sctid2)
-				tableConcept.selection.select(concept)
-		}
 		this.externalCause$ = this.externalCauseServise.getValue().subscribe();
 	}
 

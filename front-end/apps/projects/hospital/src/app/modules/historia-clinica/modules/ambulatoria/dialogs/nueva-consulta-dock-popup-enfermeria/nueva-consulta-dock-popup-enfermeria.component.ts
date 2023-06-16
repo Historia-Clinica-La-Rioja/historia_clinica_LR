@@ -1,32 +1,31 @@
-import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ClinicalTermDto, ClinicalSpecialtyDto, NursingConsultationDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
-import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
+import { ClinicalSpecialtyDto, ClinicalTermDto, HCEPersonalHistoryDto, NursingConsultationDto } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { NursingPatientConsultationService } from '@api-rest/services/nursing-patient-consultation.service';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
+import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { hasError, scrollIntoError } from '@core/utils/form.utils';
 import { newMoment } from '@core/utils/moment.utils';
+import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { ProblemasService } from '@historia-clinica/services/problemas.service';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { TranslateService } from '@ngx-translate/core';
+import { PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { SuggestedFieldsPopupComponent } from '@presentation/components/suggested-fields-popup/suggested-fields-popup.component';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { FactoresDeRiesgoFormService } from '../../../../services/factores-de-riesgo-form.service';
 import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
 import { MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';
 import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta.service';
 import { NewNurseConsultationSuggestedFieldsService } from '../../services/new-nurse-consultation-suggested-fields.service';
-import { FactoresDeRiesgoFormService } from '../../../../services/factores-de-riesgo-form.service';
 import { NuevaConsultaData } from '../nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
-import { FeatureFlagService } from "@core/services/feature-flag.service";
-import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
-import { PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 
 export interface FieldsToUpdate {
 	riskFactors: boolean;
@@ -86,7 +85,6 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		private readonly nursingPatientConsultationService: NursingPatientConsultationService,
 		private readonly snackBarService: SnackBarService,
 		private readonly hceGeneralStateService: HceGeneralStateService,
-		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly dialog: MatDialog,
 		private readonly translateService: TranslateService,
 		private readonly featureFlagService: FeatureFlagService,

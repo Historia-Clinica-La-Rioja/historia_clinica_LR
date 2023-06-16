@@ -3,13 +3,13 @@ import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } fro
 import { MasterDataDto, NewEffectiveClinicalObservationDto, TriagePediatricDto } from '@api-rest/api-model';
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { getError, hasError } from '@core/utils/form.utils';
-import { Observable } from 'rxjs';
-import { Moment } from 'moment';
 import { newMoment } from '@core/utils/moment.utils';
-import { GuardiaMapperService } from '../../services/guardia-mapper.service';
-import { EffectiveObservation, FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
+import { EffectiveObservation, FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { TranslateService } from '@ngx-translate/core';
+import { Moment } from 'moment';
+import { Observable } from 'rxjs';
+import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 
 @Component({
 	selector: 'app-pediatric-triage',
@@ -48,7 +48,7 @@ export class PediatricTriageComponent implements OnInit {
 		private readonly triageMasterDataService: TriageMasterDataService,
 		private readonly translateService: TranslateService,
 	) {
-		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
+		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(this.formBuilder, this.translateService);
 	}
 
 	ngOnInit(): void {

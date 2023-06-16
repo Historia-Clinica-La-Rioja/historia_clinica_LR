@@ -1,22 +1,20 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { ApiErrorDto, BasicPatientDto, PatientMedicalCoverageDto, PrescriptionDto } from "@api-rest/api-model";
-import { SnomedECL } from "@api-rest/api-model";
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
-import { TemplateOrConceptOption, TemplateOrConceptType } from "@historia-clinica/components/template-concept-typeahead-search/template-concept-typeahead-search.component";
-import { OrderStudiesService, Study } from "@historia-clinica/services/order-studies.service";
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
-import { RequestMasterDataService } from "@api-rest/services/request-masterdata.service";
-import { SnackBarService } from "@presentation/services/snack-bar.service";
-import { ConceptsTypeaheadSearchDialogComponent } from "@historia-clinica/dialogs/concepts-typeahead-search-dialog/concepts-typeahead-search-dialog.component";
-import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
-import { hasError } from '@core/utils/form.utils';
-import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { ApiErrorDto, BasicPatientDto, PatientMedicalCoverageDto, PrescriptionDto, SnomedECL } from "@api-rest/api-model";
 import { OutpatientOrderService } from "@api-rest/services/outpatient-order.service";
-import { MedicalCoverageComponent, PatientMedicalCoverage } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
-import { map } from "rxjs/operators";
 import { PatientMedicalCoverageService } from "@api-rest/services/patient-medical-coverage.service";
-import { MapperService } from "@core/services/mapper.service";
 import { PatientService } from "@api-rest/services/patient.service";
+import { RequestMasterDataService } from "@api-rest/services/request-masterdata.service";
+import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
+import { MapperService } from "@core/services/mapper.service";
+import { hasError } from '@core/utils/form.utils';
+import { TemplateOrConceptOption, TemplateOrConceptType } from "@historia-clinica/components/template-concept-typeahead-search/template-concept-typeahead-search.component";
+import { ConceptsTypeaheadSearchDialogComponent } from "@historia-clinica/dialogs/concepts-typeahead-search-dialog/concepts-typeahead-search-dialog.component";
+import { OrderStudiesService, Study } from "@historia-clinica/services/order-studies.service";
+import { MedicalCoverageComponent, PatientMedicalCoverage } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
+import { SnackBarService } from "@presentation/services/snack-bar.service";
+import { map } from "rxjs/operators";
 
 @Component({
   selector: 'app-create-outpatient-order',
@@ -46,7 +44,6 @@ export class CreateOutpatientOrderComponent implements OnInit {
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly mapperService: MapperService,
 		private readonly requestMasterDataService: RequestMasterDataService,
-		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly outpatientOrderService: OutpatientOrderService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly patientService: PatientService,

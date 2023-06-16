@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { UIComponentDto } from '@extensions/extensions-model';
 
 @Component({
 	selector: 'app-json',

@@ -1,9 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { InternmentEpisodeProcessDto } from "@api-rest/api-model";
-import { AppRoutes } from "../../../../../../../../app-routing.module";
 import { ContextService } from "@core/services/context.service";
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
+import { AppRoutes } from "../../../../../../../../app-routing.module";
 
 const ROUTE_HISTORY_CLINIC = 'ambulatoria/paciente/';
 

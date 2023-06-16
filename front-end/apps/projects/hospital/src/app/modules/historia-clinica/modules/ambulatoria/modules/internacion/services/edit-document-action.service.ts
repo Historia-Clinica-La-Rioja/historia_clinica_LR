@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { DocumentSearchDto } from '@api-rest/api-model';
-import { InternmentActionsService } from './internment-actions.service';
-import { MatDialog } from "@angular/material/dialog";
-import { InternmentFields, InternmentSummaryFacadeService } from './internment-summary-facade.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
+import { InternmentActionsService } from './internment-actions.service';
+import { InternmentFields, InternmentSummaryFacadeService } from './internment-summary-facade.service';
 
 @Injectable()
 export class EditDocumentActionService {
@@ -13,9 +12,7 @@ export class EditDocumentActionService {
 	constructor(
 		private readonly internmentActions: InternmentActionsService,
 		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
-		private readonly dialog: MatDialog,
 		private readonly internmentStateService: InternmentStateService,
-
 	) { }
 
 	setInformation(patientId: number, internmentEpisodeId: number) {

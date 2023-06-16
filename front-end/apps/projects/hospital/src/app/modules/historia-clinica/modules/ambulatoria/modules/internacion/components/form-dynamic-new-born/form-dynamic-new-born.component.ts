@@ -1,12 +1,9 @@
 import { AfterViewInit, Component } from '@angular/core';
-import { NewbornDto, ObstetricEventDto } from '@api-rest/api-model';
-import { EBirthCondition } from '@api-rest/api-model';
-import { EGender } from '@api-rest/api-model';
-import { Subject } from 'rxjs/internal/Subject';
-import { ControlDynamicFormService } from '../../services/control-dynamic-form.service';
-import { TypeOfPregnancy } from '../type-of-pregnancy/type-of-pregnancy.component';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { EBirthCondition, EGender, NewbornDto, ObstetricEventDto } from '@api-rest/api-model';
+import { ControlDynamicFormService } from '../../services/control-dynamic-form.service';
 import { ObstetricFormService } from '../../services/obstetric-form.service';
+import { TypeOfPregnancy } from '../type-of-pregnancy/type-of-pregnancy.component';
 
 @Component({
 	selector: 'app-form-dynamic-new-born',

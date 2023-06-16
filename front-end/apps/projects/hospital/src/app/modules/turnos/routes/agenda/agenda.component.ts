@@ -1,8 +1,8 @@
-import { CalendarProfessionalInformation } from '../../services/calendar-professional-information';
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { AppointmentDailyAmountDto, CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto, ProfessionalDto, ProfessionalPersonDto } from '@api-rest/api-model';
-import { ERole } from '@api-rest/api-model';
-import { CalendarMonthViewBeforeRenderEvent, CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { AppointmentDailyAmountDto, CompleteDiaryDto, DiaryOpeningHoursDto, ERole, MedicalCoverageDto, ProfessionalDto, ProfessionalPersonDto } from '@api-rest/api-model';
+import { DiaryService } from '@api-rest/services/diary.service';
 import {
 	buildFullDate,
 	DateFormat,
@@ -12,36 +12,35 @@ import {
 	momentParseDate,
 	momentParseTime
 } from '@core/utils/moment.utils';
-import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { DiaryService } from '@api-rest/services/diary.service';
-import { Moment } from 'moment';
-import { NewAppointmentComponent } from '../../dialogs/new-appointment/new-appointment.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { CalendarMonthViewBeforeRenderEvent, CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import { CalendarEvent, MonthViewDay, WeekViewHourSegment } from 'calendar-utils';
+import { Moment } from 'moment';
 import { MEDICAL_ATTENTION } from '../../constants/descriptions';
 import { AppointmentComponent } from '../../dialogs/appointment/appointment.component';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { NewAppointmentComponent } from '../../dialogs/new-appointment/new-appointment.component';
+import { CalendarProfessionalInformation } from '../../services/calendar-professional-information';
 
 import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
 
-import { APPOINTMENT_STATES_ID, MINUTES_IN_HOUR } from '../../constants/appointment';
-import { map, take } from 'rxjs/operators';
-import { forkJoin, Observable, of, Subject } from 'rxjs';
-import { PermissionsService } from '@core/services/permissions.service';
-import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
-import { AppointmentsService } from '@api-rest/services/appointments.service';
-import { AgendaSearchService } from '../../services/agenda-search.service';
-import { ContextService } from '@core/services/context.service';
-import { ConfirmBookingComponent } from '@turnos/dialogs/confirm-booking/confirm-booking.component';
-import { DatePipeFormat } from '@core/utils/date.utils';
-import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
-import { LoggedUserService } from '../../../auth/services/logged-user.service';
-import * as moment from 'moment';
-import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
 import { DatePipe } from "@angular/common";
-import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
+import { AppointmentsService } from '@api-rest/services/appointments.service';
+import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
+import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
+import { ContextService } from '@core/services/context.service';
+import { PermissionsService } from '@core/services/permissions.service';
+import { DatePipeFormat } from '@core/utils/date.utils';
 import { TranslateService } from '@ngx-translate/core';
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
+import { ConfirmBookingComponent } from '@turnos/dialogs/confirm-booking/confirm-booking.component';
+import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
+import * as moment from 'moment';
+import { forkJoin, Observable, of, Subject } from 'rxjs';
+import { map, take } from 'rxjs/operators';
+import { LoggedUserService } from '../../../auth/services/logged-user.service';
 import { PatientNameService } from '../../../core/services/patient-name.service';
+import { APPOINTMENT_STATES_ID, MINUTES_IN_HOUR } from '../../constants/appointment';
+import { AgendaSearchService } from '../../services/agenda-search.service';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -448,13 +447,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		return selectedOpeningHour?.openingHours.id;
 	}
 
-	private existsAppointmentAt(date: Date): Observable<boolean> {
-		return this.appointmentFacade.getAppointments().pipe(
-			map(array => {
-				return array.filter(appointment => appointment.start.getTime() === date.getTime()).length > 0;
-			})
-		);
-	}
 	private getAppointmentAt(date: Date): Observable<CalendarEvent> {
 		return this.appointmentFacade.getAppointments().pipe(
 			map(array => {

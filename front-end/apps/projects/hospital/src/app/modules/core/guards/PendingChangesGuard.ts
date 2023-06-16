@@ -1,8 +1,8 @@
-import { CanDeactivate } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { MatDialog } from '@angular/material/dialog';
+import { CanDeactivate } from '@angular/router';
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
+import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 
 export interface ComponentCanDeactivate {

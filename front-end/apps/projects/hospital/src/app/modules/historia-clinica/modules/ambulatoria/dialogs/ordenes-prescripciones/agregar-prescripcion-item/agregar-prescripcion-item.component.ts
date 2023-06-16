@@ -1,25 +1,25 @@
-import { Component, Inject, OnInit, ViewChild, ElementRef, AfterViewInit, AfterContentChecked, ChangeDetectorRef } from '@angular/core';
+import { AfterContentChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AbstractControl, UntypedFormBuilder, FormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { AppFeature, CreateOutpatientDto, ERole, HCEPersonalHistoryDto, OutpatientProblemDto, QuantityDto, SnomedDto, SnomedECL } from '@api-rest/api-model.d';
-import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
-import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
-import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
-import { hasError, NUMBER_PATTERN } from '@core/utils/form.utils';
-import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { intervalValidation} from "@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/utils/ordenesyprescrip.utils";
-import { NewConsultationAddProblemFormComponent } from '@historia-clinica/dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
-import { AmbulatoryConsultationProblem, AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { SnomedService } from '@historia-clinica/services/snomed.service';
-import { SnvsMasterDataService } from '@api-rest/services/snvs-masterdata.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
-import { DateFormat, momentFormat } from '@core/utils/moment.utils';
+import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
+import { SnowstormService } from '@api-rest/services/snowstorm.service';
+import { SnvsMasterDataService } from '@api-rest/services/snvs-masterdata.service';
+import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
+import { hasError, NUMBER_PATTERN } from '@core/utils/form.utils';
+import { DateFormat, momentFormat } from '@core/utils/moment.utils';
+import { NewConsultationAddProblemFormComponent } from '@historia-clinica/dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
+import { intervalValidation } from "@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/utils/ordenesyprescrip.utils";
+import { AmbulatoryConsultationProblem, AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
+import { SnomedService } from '@historia-clinica/services/snomed.service';
+import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
   selector: 'app-agregar-prescripcion-item',

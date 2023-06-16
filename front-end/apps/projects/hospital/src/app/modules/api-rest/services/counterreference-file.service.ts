@@ -1,10 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ContextService } from '@core/services/context.service';
+import { DownloadService } from "@core/services/download.service";
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
-import { ViewPdfService } from '@presentation/dialogs/view-pdf/view-pdf.service';
-import {DownloadService} from "@core/services/download.service";
 
 
 

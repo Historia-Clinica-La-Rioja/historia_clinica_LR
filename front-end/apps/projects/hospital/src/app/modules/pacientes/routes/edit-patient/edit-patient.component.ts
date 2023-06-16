@@ -1,58 +1,44 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
-import { UntypedFormBuilder, Validators, UntypedFormGroup, UntypedFormControl } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Moment } from 'moment';
-import * as moment from 'moment';
-import {
-	EAuditType,
-	ERole
-} from '@api-rest/api-model';
+import { Component, ElementRef, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
 	APatientDto,
-	BMPatientDto,
-	GenderDto,
-	IdentificationTypeDto,
-	CompletePatientDto,
-	BMPersonDto,
-	PatientMedicalCoverageDto,
-	EthnicityDto,
-	PersonOccupationDto,
-	EducationLevelDto,
-	SelfPerceivedGenderDto,
-	PatientType
+	BMPatientDto, BMPersonDto, CompletePatientDto, EAuditType, EducationLevelDto, ERole, EthnicityDto, GenderDto,
+	IdentificationTypeDto, PatientMedicalCoverageDto, PatientType, PersonOccupationDto, SelfPerceivedGenderDto
 } from '@api-rest/api-model';
+import * as moment from 'moment';
+import { Moment } from 'moment';
 
-import { AppFeature, } from '@api-rest/api-model';
-import { PatientService } from '@api-rest/services/patient.service';
-import { scrollIntoError, hasError, VALIDATIONS, updateControlValidator } from '@core/utils/form.utils';
-import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { ContextService } from '@core/services/context.service';
-import { PersonService } from '@api-rest/services/person.service';
-import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { PATIENT_TYPE } from '@core/utils/patient.utils';
-import { MatDialog } from '@angular/material/dialog';
-import { MedicalCoverageComponent, PatientMedicalCoverage, } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
-import { MapperService } from '@core/services/mapper.service';
-import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
-import { PERSON } from '@core/constants/validation-constants';
-import { PermissionsService } from '@core/services/permissions.service';
-import { MessageForAuditComponent } from '@pacientes/dialogs/message-for-audit/message-for-audit.component';
-import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
-import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
-import { Observable } from 'rxjs';
-import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
+import { MatDialog } from '@angular/material/dialog';
+import { AppFeature } from '@api-rest/api-model';
+import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
+import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
+import { AuditPatientService } from '@api-rest/services/audit-patient.service';
 import { PatientMasterDataService } from '@api-rest/services/patient-master-data.service';
+import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
+import { PatientService } from '@api-rest/services/patient.service';
+import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
+import { PersonService } from '@api-rest/services/person.service';
+import { PERSON } from '@core/constants/validation-constants';
+import { ContextService } from '@core/services/context.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { MapperService } from '@core/services/mapper.service';
+import { PermissionsService } from '@core/services/permissions.service';
+import { DatePipeFormat } from '@core/utils/date.utils';
+import { hasError, scrollIntoError, updateControlValidator, VALIDATIONS } from '@core/utils/form.utils';
+import { momentParseDate } from '@core/utils/moment.utils';
+import { PATIENT_TYPE } from '@core/utils/patient.utils';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { EditIdentificationNumberComponent, PersonBasicDataResponseCustom } from '@pacientes/dialogs/edit-identification-number/edit-identification-number.component';
-import { momentParseDate } from '@core/utils/moment.utils';
-import { AuditPatientService } from '@api-rest/services/audit-patient.service';
+import { MedicalCoverageComponent, PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
+import { MessageForAuditComponent } from '@pacientes/dialogs/message-for-audit/message-for-audit.component';
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { Observable } from 'rxjs';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
-const ROUTE_EMPRADONAMIENTO = 'auditoria/empadronamiento';
 
 @Component({
 	selector: 'app-edit-patient',

@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { InternmentEpisodeDocumentService } from '@api-rest/services/internment-episode-document.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';

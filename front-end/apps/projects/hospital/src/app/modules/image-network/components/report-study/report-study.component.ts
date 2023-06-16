@@ -1,19 +1,19 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 import { AppFeature, InformerObservationDto, ProblemDto } from '@api-rest/api-model';
+import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { SnvsMasterDataService } from '@api-rest/services/snvs-masterdata.service';
 import { StudyAppointmentReportService } from '@api-rest/services/study-appointment-report.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { NewConsultationAddProblemFormComponent } from '@historia-clinica/dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
+import { AmbulatoryConsultationProblem, AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { map, Observable, of, Subscription, take } from 'rxjs';
-import { toStudyAppointment } from '../../utils/mapper.utils';
+import { map, Observable, of, take } from 'rxjs';
 import { StudyAppointment } from '../../models/models';
-import { AmbulatoryConsultationProblemsService, AmbulatoryConsultationProblem } from '@historia-clinica/services/ambulatory-consultation-problems.service';
-import { ActivatedRoute } from '@angular/router';
-import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
+import { toStudyAppointment } from '../../utils/mapper.utils';
 
 @Component({
 	selector: 'app-report-study',

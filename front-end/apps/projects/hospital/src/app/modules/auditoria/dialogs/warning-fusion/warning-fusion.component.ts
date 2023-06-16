@@ -1,5 +1,4 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { ThemePalette } from '@angular/material/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({

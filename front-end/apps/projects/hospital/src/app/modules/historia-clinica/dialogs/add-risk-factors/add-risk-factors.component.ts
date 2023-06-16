@@ -1,15 +1,14 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { Moment } from 'moment';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { EvolutionNoteDto } from '@api-rest/api-model';
-import { ERole } from '@api-rest/api-model';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ERole, EvolutionNoteDto } from '@api-rest/api-model';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { PermissionsService } from "@core/services/permissions.service";
+import { anyMatch } from "@core/utils/array.utils";
 import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { TranslateService } from '@ngx-translate/core';
-import { anyMatch } from "@core/utils/array.utils";
-import { PermissionsService } from "@core/services/permissions.service";
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { Moment } from 'moment';
 
 @Component({
 	selector: 'app-add-risk-factors',
@@ -32,7 +31,7 @@ export class AddRiskFactorsComponent implements OnInit {
 		private readonly translateService: TranslateService,
 		private readonly permissionsService: PermissionsService
 	) {
-		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
+		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(this.formBuilder, this.translateService);
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			this.isNursingEvolutionNote = !anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PROFESIONAL_DE_SALUD]) && anyMatch<ERole>(userRoles, [ERole.ENFERMERO]);
 		})

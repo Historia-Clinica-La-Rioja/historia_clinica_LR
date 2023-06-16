@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, forwardRef, Input, OnDestroy, Output } from '@angular/core';
-import { ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnDestroy } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { ClinicalSpecialtyDto, ValidatedLicenseNumberDto } from '@api-rest/api-model';
 import { hasError } from '@core/utils/form.utils';
 import { ProfessionalSpecialties } from '@pacientes/routes/profile/profile.component';

@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
 	AllergyIntoleranceDto,
 	ConditionDto,
@@ -10,15 +11,13 @@ import {
 	MedicationInteroperabilityDto,
 	PatientSummaryDto
 } from '@api-rest/api-model';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { ANTECEDENTES_FAMILIARES, MEDICACION_HABITUAL, PROBLEMAS_ANTECEDENTES } from '../../../../constants/summaries';
-import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
+import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
 import { TableModel } from '@presentation/components/table/table.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
+import { ANTECEDENTES_FAMILIARES, MEDICACION_HABITUAL, PROBLEMAS_ANTECEDENTES } from '../../../../constants/summaries';
+import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 
 @Component({
 	selector: 'app-resumen',
@@ -46,7 +45,6 @@ export class ResumenComponent implements OnInit, OnChanges {
 
 	constructor(
 		private route: ActivatedRoute,
-		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
 		private readonly snackBarService: SnackBarService
 	) {

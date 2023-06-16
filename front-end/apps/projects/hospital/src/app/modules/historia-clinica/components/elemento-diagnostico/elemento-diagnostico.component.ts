@@ -1,7 +1,7 @@
-import { HEALTH_CLINICAL_STATUS, HEALTH_VERIFICATIONS } from '../../modules/ambulatoria/modules/internacion/constants/ids';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DiagnosisDto } from '@api-rest/api-model';
+import { HEALTH_CLINICAL_STATUS, HEALTH_VERIFICATIONS } from '../../modules/ambulatoria/modules/internacion/constants/ids';
 import { DiagnosisCreationEditionComponent } from '../../modules/ambulatoria/modules/internacion/dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
 
 @Component({
@@ -28,7 +28,7 @@ export class ElementoDiagnosticoComponent {
 	constructor(public dialog: MatDialog) { }
 
 	openDiagnosisEditionDialog() {
-		const dialogRef = this.dialog.open(DiagnosisCreationEditionComponent, {
+		this.dialog.open(DiagnosisCreationEditionComponent, {
 			width: '450px',
 			data: {
 				type: 'EDITION',

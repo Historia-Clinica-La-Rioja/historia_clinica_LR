@@ -1,9 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
-import { UntypedFormBuilder, UntypedFormGroup, Validators, AbstractControl, UntypedFormArray } from "@angular/forms";
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import {
-	DateTimeDto,
-	MasterDataInterface,
+	DateTimeDto, MasterDataInterface,
 	NewDosageDto,
 	OtherPharmacoDto,
 	ParenteralPlanDto,
@@ -12,19 +11,17 @@ import {
 	SnomedDto,
 	TimeDto
 } from "@api-rest/api-model";
-import {
-	EIndicationStatus, EIndicationType,
-} from "@api-rest/api-model";
-import { SnowstormService } from "@api-rest/services/snowstorm.service";
-import { SnackBarService } from "@presentation/services/snack-bar.service";
-import { hasError, getError } from '@core/utils/form.utils';
-import { SnomedService } from "@historia-clinica/services/snomed.service";
-import { SearchSnomedConceptsParenteralPlanService } from "@historia-clinica/modules/ambulatoria/modules/indicacion/services/search-snomed-concepts-parenteral-plan.service";
-import { InternacionMasterDataService } from "@api-rest/services/internacion-master-data.service";
+import { EIndicationStatus, EIndicationType } from "@api-rest/api-model";
 import { dateDtoToDate, dateToDateDto, dateToDateTimeDtoUTC } from "@api-rest/mapper/date-dto.mapper";
-import { getMonth, getYear, isSameDay, isToday } from "date-fns";
-import { HOURS_LIST, openConfirmDialog } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
+import { InternacionMasterDataService } from "@api-rest/services/internacion-master-data.service";
+import { SnowstormService } from "@api-rest/services/snowstorm.service";
+import { getError, hasError } from '@core/utils/form.utils';
 import { isNumberOrDot } from '@core/utils/pattern.utils';
+import { HOURS_LIST, openConfirmDialog } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
+import { SearchSnomedConceptsParenteralPlanService } from "@historia-clinica/modules/ambulatoria/modules/indicacion/services/search-snomed-concepts-parenteral-plan.service";
+import { SnomedService } from "@historia-clinica/services/snomed.service";
+import { SnackBarService } from "@presentation/services/snack-bar.service";
+import { getMonth, getYear, isSameDay, isToday } from "date-fns";
 
 @Component({
 	selector: 'app-parenteral-plan',
@@ -53,7 +50,7 @@ export class ParenteralPlanComponent implements OnInit {
 		private readonly internacionMasterdataService: InternacionMasterDataService,
 		private readonly dialog: MatDialog,
 	) {
-		this.searchSnomedConcept = new SearchSnomedConceptsParenteralPlanService(formBuilder, snowstormService, snomedService, snackBarService);
+		this.searchSnomedConcept = new SearchSnomedConceptsParenteralPlanService(this.formBuilder, this.snowstormService, this.snomedService, this.snackBarService);
 	}
 
 	ngOnInit(): void {

@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ApiErrorMessageDto, AppFeature, LicenseDataDto, ProfessionalLicenseNumberDto, ValidatedLicenseDataDto, ValidatedLicenseNumberDto } from '@api-rest/api-model.d';
+import { ApiErrorMessageDto, AppFeature, LicenseDataDto, ProfessionalLicenseNumberDto, ValidatedLicenseDataDto } from '@api-rest/api-model.d';
 import { ProfessionalLicenseService } from '@api-rest/services/professional-license.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { processErrors } from '@core/utils/form.utils';

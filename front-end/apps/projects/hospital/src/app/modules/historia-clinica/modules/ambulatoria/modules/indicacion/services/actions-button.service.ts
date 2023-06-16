@@ -1,21 +1,19 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DateDto, MasterDataInterface, ParenteralPlanDto, PharmacoSummaryDto } from '@api-rest/api-model';
+import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
-import { IndicationByProfessionalService } from '@api-rest/services/indication-by-professional.service';
+import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { InternmentIndicationService, OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
-import { InternmentStateService } from '@api-rest/services/internment-state.service';
+import { Item } from '@presentation/pipes/paginate.pipe';
 import { BehaviorSubject } from 'rxjs';
 import { INDICATION_TYPE } from '../constants/internment-indications';
+import { DietComponent } from '../dialogs/diet/diet.component';
 import { MostFrequentComponent } from '../dialogs/most-frequent/most-frequent.component';
 import { OtherIndicationComponent } from '../dialogs/other-indication/other-indication.component';
-import { IndicationsFacadeService } from './indications-facade.service';
-import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { PharmacoComponent } from '../dialogs/pharmaco/pharmaco.component';
-import { DietComponent } from '../dialogs/diet/diet.component';
-import { Item } from '@presentation/pipes/paginate.pipe';
-import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { ParenteralPlanComponent } from '../dialogs/parenteral-plan/parenteral-plan.component';
+import { PharmacoComponent } from '../dialogs/pharmaco/pharmaco.component';
+import { IndicationsFacadeService } from './indications-facade.service';
 
 const DIALOG_SIZE = '45%';
 
@@ -206,10 +204,4 @@ export class ActionsButtonService {
 			|| (value.toDateString() === dayBeforeYesterday.toDateString());
 	}
 
-}
-
-
-interface ResultDialogPharmaco<T> {
-	openDialogPharmacosFrequent: boolean;
-	pharmaco?: T;
 }

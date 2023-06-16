@@ -1,18 +1,16 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { EPatientMedicalCoverageCondition } from "@api-rest/api-model";
-import { MedicalCoverageDto } from "@api-rest/api-model";
-import { MedicalCoveragePlanDto } from "@api-rest/api-model";
-import { MIN_DATE } from "@core/utils/date.utils";
+import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
+import { MatOptionSelectionChange } from "@angular/material/core";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { EPatientMedicalCoverageCondition, MedicalCoverageDto, MedicalCoveragePlanDto } from "@api-rest/api-model";
+import { HealthInsuranceService } from "@api-rest/services/health-insurance.service";
+import { MIN_DATE } from "@core/utils/date.utils";
+import { newMoment } from "@core/utils/moment.utils";
 import {
 	EMedicalCoverageType,
 	HealthInsurance,
 	PatientMedicalCoverage
 } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
-import { newMoment } from "@core/utils/moment.utils";
-import { MatOptionSelectionChange } from "@angular/material/core";
-import { HealthInsuranceService } from "@api-rest/services/health-insurance.service";
 
 @Component({
 	selector: 'app-health-insurance',

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BasicPatientDto, EmergencyCareEpisodeInProgressDto, PersonPhotoDto, ResponseEmergencyCareDto } from '@api-rest/api-model';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';

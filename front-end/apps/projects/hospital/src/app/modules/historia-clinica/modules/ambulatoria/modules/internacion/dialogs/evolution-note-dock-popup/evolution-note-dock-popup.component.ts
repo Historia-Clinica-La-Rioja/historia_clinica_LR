@@ -1,32 +1,27 @@
 import { Component, Inject, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import {
-	MasterDataInterface,
-	DiagnosisDto,
-	AllergyConditionDto,
-	ImmunizationDto,
-	EvolutionNoteDto,
-	HealthConditionDto, ResponseEvolutionNoteDto, HospitalizationProcedureDto
+	AllergyConditionDto, DiagnosisDto, EvolutionNoteDto,
+	HealthConditionDto, HospitalizationProcedureDto, ImmunizationDto, MasterDataInterface, ResponseEvolutionNoteDto
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
-import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
-import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { getError, hasError } from '@core/utils/form.utils';
-import { SnomedService } from '@historia-clinica/services/snomed.service';
-import { MIN_DATE } from "@core/utils/date.utils";
-import { DockPopupRef } from "@presentation/services/dock-popup-ref";
-import { OVERLAY_DATA } from "@presentation/presentation-model";
-import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
-import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
+import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { PermissionsService } from "@core/services/permissions.service";
 import { anyMatch } from "@core/utils/array.utils";
+import { MIN_DATE } from "@core/utils/date.utils";
+import { getError, hasError } from '@core/utils/form.utils';
 import { dateToMoment } from "@core/utils/moment.utils";
+import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
+import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { TranslateService } from '@ngx-translate/core';
-import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
-import { MatDialog } from '@angular/material/dialog';
-import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
+import { OVERLAY_DATA } from "@presentation/presentation-model";
+import { DockPopupRef } from "@presentation/services/dock-popup-ref";
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { BehaviorSubject, map, Observable } from 'rxjs';
+import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
+import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
 
 @Component({
 	selector: 'app-evolution-note-dock-popup',
@@ -67,14 +62,13 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly evolutionNoteService: EvolutionNoteService,
 		private readonly snackBarService: SnackBarService,
-		private readonly snomedService: SnomedService,
 		private readonly permissionsService: PermissionsService,
 		private readonly translateService: TranslateService,
 		private readonly dialog: MatDialog,
 	) {
 		this.diagnosticos = data.diagnosticos;
 		this.mainDiagnosis = data.mainDiagnosis;
-		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
+		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(this.formBuilder, this.translateService);
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			this.isNursingEvolutionNote = !anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PROFESIONAL_DE_SALUD]) && anyMatch<ERole>(userRoles, [ERole.ENFERMERO]);
 		})

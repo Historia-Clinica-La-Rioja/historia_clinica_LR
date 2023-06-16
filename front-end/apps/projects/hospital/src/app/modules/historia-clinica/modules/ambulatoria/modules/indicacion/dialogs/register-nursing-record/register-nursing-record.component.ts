@@ -1,13 +1,13 @@
-import { ENursingRecordStatus } from '@api-rest/api-model';
-import { DateTimeDto } from '@api-rest/api-model';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { dateTimeDtotoLocalDate, dateToDateTimeDtoUTC } from '@api-rest/mapper/date-dto.mapper';
-import { differenceInDays, setHours } from 'date-fns';
 import { DatePipe } from '@angular/common';
+import { Component, Inject, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DateTimeDto } from '@api-rest/api-model';
+import { ENursingRecordStatus } from '@api-rest/api-model';
+import { dateTimeDtotoLocalDate, dateToDateTimeDtoUTC } from '@api-rest/mapper/date-dto.mapper';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { beforeTimeDateValidation, futureTimeValidation, TIME_PATTERN } from '@core/utils/form.utils';
+import { differenceInDays, setHours } from 'date-fns';
 import { DocumentActionReasonComponent } from '../../../internacion/dialogs/document-action-reason/document-action-reason.component';
 
 @Component({
@@ -81,7 +81,6 @@ export class RegisterNursingRecordComponent implements OnInit {
 	}
 
 	setValidators() {
-		const date = new Date(this.form.value.date);
 		const scheduledTimeString: string = this.datePipe.transform(this.scheduledAdministrationTimeLocalDate, DatePipeFormat.SHORT_TIME);
 		if (differenceInDays(this.data.indicationDate, this.today) >= 0)
 			this.form.controls.time.setValidators([Validators.required, beforeTimeDateValidation(scheduledTimeString), futureTimeValidation]);

@@ -1,26 +1,26 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 import { isAfter, parseISO, startOfToday } from 'date-fns';
+import { Subscription } from 'rxjs';
 
 import { ContextService } from '@core/services/context.service';
-import { processErrors } from '@core/utils/form.utils';
 import { DatePipeFormat } from '@core/utils/date.utils';
+import { processErrors } from '@core/utils/form.utils';
 
+import { DiaryListDto } from '@api-rest/api-model';
 import { DailyAppointmentService } from '@api-rest/services/daily-appointment.service';
 import { DiaryService } from '@api-rest/services/diary.service';
-import { DiaryListDto } from '@api-rest/api-model';
 
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { DatePickerComponent } from '@presentation/dialogs/date-picker/date-picker.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
-import { AgendaSearchService, AgendaFilters, AgendaOptionsData } from '../../services/agenda-search.service';
-import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
 import { BlockAgendaRangeComponent } from '@turnos/dialogs/block-agenda-range/block-agenda-range.component';
+import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
+import { AgendaFilters, AgendaOptionsData, AgendaSearchService } from '../../services/agenda-search.service';
 
 @Component({
 	selector: 'app-select-agenda',

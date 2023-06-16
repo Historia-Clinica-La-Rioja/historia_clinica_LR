@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { MedicationDto, SnomedECL } from '@api-rest/api-model';
+import { MedicationDto } from '@api-rest/api-model';
+import { SnomedECL } from '@api-rest/api-model'
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { SearchSnomedConceptComponent } from '@historia-clinica/modules/ambulatoria/dialogs/search-snomed-concept/search-snomed-concept.component';
 import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
@@ -64,7 +65,6 @@ export class MedicationComponent  {
 					}
 				});
 				dialog.afterClosed().subscribe(medicacion => {
-					if (snomedConcept)
 						this.addToList(medicacion)
 				});
 			}

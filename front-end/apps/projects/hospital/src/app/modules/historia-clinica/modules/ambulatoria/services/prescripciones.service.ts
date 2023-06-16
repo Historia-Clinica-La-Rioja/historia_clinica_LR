@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import {
 	CompleteRequestDto,
 	DiagnosticReportInfoDto,
@@ -11,14 +10,14 @@ import {
 	SnomedDto,
 	TranscribedDiagnosticReportInfoDto
 } from '@api-rest/api-model';
+import { DocumentService } from '@api-rest/services/document.service';
 import { MedicationRequestService } from '@api-rest/services/medication-request.service';
 import { ServiceRequestService } from '@api-rest/services/service-request.service';
-import { MEDICATION_STATUS, MedicationStatusChange, PRESCRIPTION_STATES, STUDY_STATUS } from '../constants/prescripciones-masterdata';
-import { NewPrescriptionItem } from '../dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { DocumentService } from '@api-rest/services/document.service';
-import { PrescriptionLineState } from '../modules/indicacion/components/item-prescripciones/item-prescripciones.component';
 import { Color } from '@presentation/colored-label/colored-label.component';
+import { Observable } from 'rxjs';
+import { MedicationStatusChange, MEDICATION_STATUS, PRESCRIPTION_STATES, STUDY_STATUS } from '../constants/prescripciones-masterdata';
+import { NewPrescriptionItem } from '../dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
+import { PrescriptionLineState } from '../modules/indicacion/components/item-prescripciones/item-prescripciones.component';
 
 @Injectable({
   providedIn: 'root'
@@ -28,12 +27,10 @@ export class PrescripcionesService {
 
 	public readonly STUDY_STATUS = STUDY_STATUS;
 	public readonly MEDICATION_STATUS = MEDICATION_STATUS;
-	private transcribedOrders = [];
 
 	constructor(
 		private medicationRequestService: MedicationRequestService,
 		private serviceRequestService: ServiceRequestService,
-		private snackBarService: SnackBarService,
 		private readonly documentService: DocumentService
 	) { }
 

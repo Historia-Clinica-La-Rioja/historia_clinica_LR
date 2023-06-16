@@ -1,18 +1,17 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
-import { RequestMasterDataService } from "@api-rest/services/request-masterdata.service";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { ApiErrorDto, PrescriptionDto } from "@api-rest/api-model";
 import { SnomedECL } from "@api-rest/api-model";
-import { TemplateOrConceptOption, TemplateOrConceptType } from "@historia-clinica/components/template-concept-typeahead-search/template-concept-typeahead-search.component";
-import { InternmentStateService } from "@api-rest/services/internment-state.service";
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
+import { EmergencyCareServiceRequestService } from '@api-rest/services/emergency-care-serive-request.service';
+import { InternmentOrderService } from "@api-rest/services/internment-order.service";
+import { RequestMasterDataService } from "@api-rest/services/request-masterdata.service";
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
-import { OrderStudiesService, Study } from "@historia-clinica/services/order-studies.service";
-import { InternmentOrderService } from "@api-rest/services/internment-order.service";
-import { SnackBarService } from "@presentation/services/snack-bar.service";
+import { TemplateOrConceptOption, TemplateOrConceptType } from "@historia-clinica/components/template-concept-typeahead-search/template-concept-typeahead-search.component";
 import { ConceptsTypeaheadSearchDialogComponent } from "@historia-clinica/dialogs/concepts-typeahead-search-dialog/concepts-typeahead-search-dialog.component";
-import { EmergencyCareServiceRequestService } from '@api-rest/services/emergency-care-serive-request.service';
+import { OrderStudiesService, Study } from "@historia-clinica/services/order-studies.service";
+import { SnackBarService } from "@presentation/services/snack-bar.service";
 
 @Component({
 	selector: 'app-create-order',
@@ -39,7 +38,6 @@ export class CreateInternmentOrderComponent implements OnInit {
 		public dialogRef: MatDialogRef<CreateInternmentOrderComponent>,
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly requestMasterDataService: RequestMasterDataService,
-		private readonly internmentStateService: InternmentStateService,
 		private readonly internmentOrderService: InternmentOrderService,
 		private readonly snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,

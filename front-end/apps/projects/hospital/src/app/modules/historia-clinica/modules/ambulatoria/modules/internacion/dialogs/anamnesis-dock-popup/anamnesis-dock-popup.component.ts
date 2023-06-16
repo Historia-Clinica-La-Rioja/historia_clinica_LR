@@ -1,36 +1,30 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import {
 	AllergyConditionDto,
 	AnamnesisDto,
-	DiagnosisDto,
-	HealthHistoryConditionDto,
-	ImmunizationDto,
+	DiagnosisDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationProcedureDto, ImmunizationDto,
 	MasterDataInterface,
 	MedicationDto,
-	ResponseAnamnesisDto,
-	HealthConditionDto,
-	HospitalizationProcedureDto
+	ResponseAnamnesisDto
 } from '@api-rest/api-model';
-import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { AnamnesisService } from '@api-rest/services/anamnesis.service';
-import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { getError, hasError } from '@core/utils/form.utils';
-import { SnomedService } from '@historia-clinica/services/snomed.service';
+import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { MIN_DATE } from "@core/utils/date.utils";
-import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
-import { DockPopupRef } from "@presentation/services/dock-popup-ref";
-import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
-import { OVERLAY_DATA } from "@presentation/presentation-model";
-import { ViewChild, ElementRef } from "@angular/core";
-import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
+import { getError, hasError } from '@core/utils/form.utils';
 import { dateToMoment } from "@core/utils/moment.utils";
+import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
+import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
+import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { TranslateService } from '@ngx-translate/core';
-import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
-import { MatDialog } from '@angular/material/dialog';
+import { OVERLAY_DATA } from "@presentation/presentation-model";
+import { DockPopupRef } from "@presentation/services/dock-popup-ref";
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/internal/operators/map';
 import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
+import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
 
 @Component({
 	selector: 'app-anamnesis-dock-popup',
@@ -77,7 +71,6 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly anamnesisService: AnamnesisService,
 		private readonly snackBarService: SnackBarService,
-		private readonly snomedService: SnomedService,
 		private readonly translateService: TranslateService,
 		private readonly dialog: MatDialog,
 	) {
@@ -85,7 +78,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		this.diagnosticos = data.diagnosticos;
 		this.componentEvaluationManagerService.mainDiagnosis = this.mainDiagnosis;
 		this.componentEvaluationManagerService.diagnosis = this.diagnosticos;
-		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
+		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(this.formBuilder, this.translateService);
 	}
 
 	ngOnInit(): void {

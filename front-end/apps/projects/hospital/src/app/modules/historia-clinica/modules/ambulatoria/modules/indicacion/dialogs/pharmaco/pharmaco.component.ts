@@ -1,21 +1,16 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DiagnosesGeneralStateDto, MasterDataInterface, NewDosageDto, PharmacoDto, PharmacoSummaryDto, QuantityDto } from '@api-rest/api-model';
-import { SharedSnomedDto } from '@api-rest/api-model';
-import { SnomedDto } from '@api-rest/api-model';
-import { EIndicationType } from '@api-rest/api-model';
-import { EIndicationStatus } from '@api-rest/api-model';
+import { DiagnosesGeneralStateDto, MasterDataInterface, NewDosageDto, PharmacoDto, PharmacoSummaryDto, QuantityDto, SharedSnomedDto, SnomedDto } from '@api-rest/api-model';
+import { EIndicationStatus, EIndicationType } from '@api-rest/api-model';
 import { dateDtoToDate, dateToDateDto, dateToDateTimeDtoUTC } from '@api-rest/mapper/date-dto.mapper';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { SnowstormService } from '@api-rest/services/snowstorm.service';
-import { getError, hasError } from '@core/utils/form.utils';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { getMonth, getYear, isSameDay, isToday } from 'date-fns';
-import { SearchSnomedConceptsPharmacoService } from '../../services/search-snomed-concepts-pharmaco.service';
+import { getError, hasError } from '@core/utils/form.utils';
 import { isNumberOrDot } from '@core/utils/pattern.utils';
+import { getMonth, getYear, isSameDay, isToday } from 'date-fns';
 import { HOURS_LIST, INTERVALS_TIME, openConfirmDialog, OTHER_FREQUENCY, OTHER_INDICATION_ID } from '../../constants/internment-indications';
+import { SearchSnomedConceptsPharmacoService } from '../../services/search-snomed-concepts-pharmaco.service';
 
 @Component({
 	selector: 'app-pharmaco',
@@ -57,16 +52,14 @@ export class PharmacoComponent implements OnInit {
 		},
 		private readonly dialogRef: MatDialogRef<PharmacoComponent>,
 		public formBuilder: UntypedFormBuilder,
-		private readonly snowstormService: SnowstormService,
 		private readonly snomedService: SnomedService,
-		private readonly snackBarService: SnackBarService,
 		private readonly internacionMasterdataService: InternacionMasterDataService,
 		private readonly dialog: MatDialog,
 
 	) {
 		this.internacionMasterdataService.getViasPharmaco().subscribe(v => this.vias = v);
 		this.internacionMasterdataService.getUnits().subscribe(u => this.units = u);
-		this.searchSnomedConcept = new SearchSnomedConceptsPharmacoService(formBuilder, snowstormService, snomedService, snackBarService);
+		this.searchSnomedConcept = new SearchSnomedConceptsPharmacoService(this.formBuilder, this.snomedService);
 	}
 
 	ngOnInit(): void {

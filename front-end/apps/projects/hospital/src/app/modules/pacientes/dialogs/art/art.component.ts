@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, FormGroupDirective, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
+import { MatOptionSelectionChange } from "@angular/material/core";
+import { MatDialogRef } from "@angular/material/dialog";
 import { ARTCoverageDto, CoverageDto } from "@api-rest/api-model";
 import { ArtCoverageService } from "@api-rest/services/art-coverage.service";
 import {
@@ -7,8 +9,6 @@ import {
 	MedicalCoverage,
 	PatientMedicalCoverage
 } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
-import { MatOptionSelectionChange } from "@angular/material/core";
-import { MatDialogRef } from "@angular/material/dialog";
 
 @Component({
 	selector: 'app-art',

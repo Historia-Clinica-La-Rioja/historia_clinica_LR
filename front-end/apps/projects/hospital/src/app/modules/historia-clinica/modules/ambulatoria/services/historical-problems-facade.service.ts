@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
-import { ReplaySubject, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { HistoricalProblemsFilter } from '../components/historical-problems-filters/historical-problems-filters.component';
-import { pushIfNotExists } from '@core/utils/array.utils';
-import { momentParseDate } from '@core/utils/moment.utils';
 import {
 	ClinicalSpecialtyDto,
 	HCEEvolutionSummaryDto,
 	OutpatientSummaryReferenceDto
 } from '@api-rest/api-model';
-import { MapperService } from './../../../../presentation/services/mapper.service';
+import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
+import { pushIfNotExists } from '@core/utils/array.utils';
+import { momentParseDate } from '@core/utils/moment.utils';
+import { Observable, ReplaySubject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { HistoricalProblemsFilter } from '../components/historical-problems-filters/historical-problems-filters.component';
 import { REFERENCE_STATES } from '../constants/reference-masterdata';
-import {HceGeneralStateService} from "@api-rest/services/hce-general-state.service";
-import {PatientNameService} from "@core/services/patient-name.service";
+import { MapperService } from './../../../../presentation/services/mapper.service';
 
 @Injectable({providedIn: 'root'})
 export class HistoricalProblemsFacadeService {
@@ -31,7 +30,6 @@ export class HistoricalProblemsFacadeService {
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly mapperService: MapperService,
-		private readonly patientNameService: PatientNameService,
 	) {
 		this.historicalProblems$ = this.historicalProblemsSubject.asObservable();
 		this.historicalProblemsFilter$ = this.historicalProblemsFilterSubject.asObservable();

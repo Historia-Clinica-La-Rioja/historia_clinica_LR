@@ -31,7 +31,7 @@ import { PatientNameService } from "@core/services/patient-name.service";
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 import { dateDtoToDate, timeDtoToDate } from "@api-rest/mapper/date-dto.mapper";
 import { DatePipeFormat } from "@core/utils/date.utils";
-import { DatePipe, TitleCasePipe } from "@angular/common";
+import { DatePipe } from "@angular/common";
 import { DiscardWarningComponent } from "@presentation/dialogs/discard-warning/discard-warning.component";
 import { ReferenceService } from '@api-rest/services/reference.service';
 import { ReferenceAppointmentService } from '@turnos/services/reference-appointment.service';
@@ -107,7 +107,6 @@ export class NewAppointmentComponent implements OnInit {
 		private readonly referenceService: ReferenceService,
 		private readonly referenceAppointmentService: ReferenceAppointmentService,
 		private readonly datePipe: DatePipe,
-		private readonly titleCasePipe: TitleCasePipe,
 		private readonly equipmentAppointmentFacade: EquipmentAppointmentsFacadeService,
 		private prescripcionesService: PrescripcionesService,
 		private readonly translateService: TranslateService

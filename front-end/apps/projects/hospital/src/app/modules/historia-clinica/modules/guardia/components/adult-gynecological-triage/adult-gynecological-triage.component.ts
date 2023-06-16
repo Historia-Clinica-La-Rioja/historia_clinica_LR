@@ -31,7 +31,7 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 		private guardiaMapperService: GuardiaMapperService,
 		private readonly translateService: TranslateService,
 	) {
-		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
+		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(this.formBuilder, this.translateService);
 	}
 
 	ngOnInit(): void {
