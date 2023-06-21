@@ -12,6 +12,7 @@ import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { InformerStatus, mapToState } from '../../utils/study.utils';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 @Component({
 	selector: 'app-worklist-by-informer',
@@ -20,6 +21,7 @@ import { ContextService } from '@core/services/context.service';
 })
 export class WorklistByInformerComponent implements OnInit {
 
+	public modalitiesForm: UntypedFormGroup;
 	worklists: Worklist[] = [];
 	modalityId: number;
 	nameSelfDeterminationFF = false;
@@ -38,6 +40,7 @@ export class WorklistByInformerComponent implements OnInit {
 		private readonly personMasterData: PersonMasterDataService,
 		private readonly router: Router,
 		private readonly contextService: ContextService,
+		private readonly formBuilder: UntypedFormBuilder
 	) { }
 
 	ngOnInit(): void {
@@ -48,9 +51,16 @@ export class WorklistByInformerComponent implements OnInit {
 			this.nameSelfDeterminationFF = isOn
 		});
 		this.worklistService.getWorklistStatus().subscribe(status => this.worklistStatus = status);
+		this.modalitiesForm = this.formBuilder.group({
+			modalities: []
+		});
+		this.worklistService.getByModalityAndInstitution().subscribe((worklist: WorklistDto[]) => {
+			this.worklists = this.mapToWorklist(worklist);
+		});
 	}
 
 	setWorklist(modalitySelected: MatSelectChange) {
+		this.worklists = [];
 		this.modalityId = modalitySelected.value;
 		this.worklistService.getByModalityAndInstitution(this.modalityId).subscribe((worklist: WorklistDto[]) => {
 			this.worklists = this.mapToWorklist(worklist);
@@ -59,6 +69,15 @@ export class WorklistByInformerComponent implements OnInit {
 
 	goToDetails(appointmentId: number) {
 		this.router.navigate([`${this.routePrefix}/detalle-estudio/${appointmentId}`], );
+	}
+
+	cleanInput(){
+		this.worklists = [];
+		this.modalitiesForm.controls.modalities.setValue(null);
+		this.modalityId = null;
+		this.worklistService.getByModalityAndInstitution().subscribe((worklist: WorklistDto[]) => {
+			this.worklists = this.mapToWorklist(worklist);
+		});
 	}
 
 	private mapToWorklist(worklist: WorklistDto[]): Worklist[] {

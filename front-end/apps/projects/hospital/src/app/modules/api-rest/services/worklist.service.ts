@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { InstitutionBasicInfoDto, MasterDataDto, WorklistDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
@@ -21,9 +21,13 @@ export class WorklistService {
     return this.http.get<MasterDataDto[]>(url);
   }
 
-  getByModalityAndInstitution(modalityId: number): Observable<WorklistDto[]> {
-    const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/worklist/by-modality/${modalityId}`;
-    return this.http.get<WorklistDto[]>(url);
+  getByModalityAndInstitution(modalityId?: number): Observable<WorklistDto[]> {
+    let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/worklist/by-modality`;
+
+    let queryParams: HttpParams = new HttpParams();
+    if (modalityId) queryParams = queryParams.append('modalityId', JSON.stringify(modalityId));
+
+    return this.http.get<WorklistDto[]>(url, { params: queryParams });
   }
 
   getInformerInstitutions(): Observable<InstitutionBasicInfoDto[]> {
