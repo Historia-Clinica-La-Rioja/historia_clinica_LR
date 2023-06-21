@@ -61,7 +61,7 @@ export class ExtensionsService {
 	}
 
 	getDefinition(url: string): Observable<WCInfo[]> {
-		return this.http.get<WCInfo[]>(url);
+		return this.http.get<WCInfo[]>(url + `?ts=${Date.now()}`);
 	}
 
 }

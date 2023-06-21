@@ -18,7 +18,6 @@ export class WCExtensionsService {
 	private emitters: { slot: Slot, emitter: BehaviorSubject<SlotedInfo[]> }[] = [];
 	private slotedComponents: { slot: Slot, components$: Observable<SlotedInfo[]> }[] = [];
 
-
 	constructor(
 		private readonly extensionService: ExtensionsService
 	) {
@@ -115,10 +114,20 @@ export interface SlotedInfo {
 }
 
 export enum Slot {
-	INSTITUTION_HOME_PAGE = 'INSTITUTION_HOME_PAGE',
-	CLINIC_HISTORY_TAB = 'CLINIC_HISTORY_TAB',
+	// Un componente mas de la pantalla inicial del sistema
 	SYSTEM_HOME_PAGE = 'SYSTEM_HOME_PAGE',
+
+	// Un menú mas a nivel sistema
 	HOME_MENU = 'HOME_MENU',
+
+	// Un componente mas de la pantalla inicial de la institucion
+	INSTITUTION_HOME_PAGE = 'INSTITUTION_HOME_PAGE',
+
+	// Un menú mas a nivel institución
+	INSTITUTION_MENU = 'INSTITUTION_MENU',
+
+	// Una solapa mas en la historia clinica
+	CLINIC_HISTORY_TAB = 'CLINIC_HISTORY_TAB',
 }
 
 

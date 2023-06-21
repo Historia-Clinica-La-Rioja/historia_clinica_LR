@@ -3,6 +3,7 @@ import {
     Show,
     SimpleShowLayout,
     TextField,
+    UrlField,
 } from 'react-admin';
 
 const WcDefinitionPathShow = (props) => {
@@ -10,7 +11,7 @@ const WcDefinitionPathShow = (props) => {
         <Show {...props}>
             <SimpleShowLayout>
                 <TextField source="name" />
-                <TextField source="path" />
+                <UrlField source="path" target="_blank"/>
             </SimpleShowLayout>
         </Show>
     )

@@ -3,7 +3,7 @@ import { Episode } from '../routes/home/home.component';
 
 describe('EpisodeFilterService', () => {
 
-	const episode: Episode = {
+	const episode = {
 		waitingTime: null,
 		waitingHours: null,
 		creationDate: null,
@@ -25,7 +25,7 @@ describe('EpisodeFilterService', () => {
 			id: 2,
 			description: 'Pediatria'
 		},
-	};
+	} as Episode;
 
 	const filters = {
 		triage: 1,

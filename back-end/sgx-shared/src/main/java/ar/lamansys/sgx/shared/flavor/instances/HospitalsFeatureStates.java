@@ -8,7 +8,7 @@ import ar.lamansys.sgx.shared.featureflags.states.InitialFeatureStates;
 
 public class HospitalsFeatureStates implements InitialFeatureStates {
 
-	private final EnumMap<AppFeature, Boolean> map;
+	private final EnumMap<AppFeature, Boolean> map; //
 
 	public HospitalsFeatureStates() {
 		map = new EnumMap<>(AppFeature.class);
@@ -51,11 +51,11 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_REPORTES_ESTADISTICOS, false);
 		map.put(AppFeature.HABILITAR_VISUALIZACION_DE_CARDS, true);
 		map.put(AppFeature.HABILITAR_RECUPERAR_PASSWORD, true);
-		map.put(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES, true);
+		map.put(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES, false);
 		map.put(AppFeature.HABILITAR_SIP_PLUS, false);
 		map.put(AppFeature.HABILITAR_VALIDACION_MATRICULAS_SISA, false);
-		map.put(AppFeature.HABILITAR_RECETA_DIGITAL, true);
-		map.put(AppFeature.HABILITAR_PRESCRIPCION_RECETA, true);
+		map.put(AppFeature.HABILITAR_RECETA_DIGITAL, false);
+		map.put(AppFeature.HABILITAR_PRESCRIPCION_RECETA, false);
 		map.put(AppFeature.HABILITAR_MODULO_AUDITORIA, false);		
 		map.put(AppFeature.HABILITAR_CAMPOS_CIPRES_EPICRISIS, false);
 		map.put(AppFeature.HABILITAR_IMPRESION_HISTORIA_CLINICA_EN_DESARROLLO, false);

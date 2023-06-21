@@ -4,15 +4,17 @@ import {
     Create,
     SimpleForm,
     TextInput,
-    required
+    required,
 } from 'react-admin'
+
+import { validateUrl } from '../../libs/sgx/shared/form-validate';
 
 const WcDefinitionPathCreate = props => {
     return (
     <Create {...props}>
-        <SimpleForm>
-            <TextInput source="path" validate={[required()]}/>
+        <SimpleForm redirect="show">
             <TextInput source="name" validate={[required()]}/>
+            <TextInput source="path" validate={[required(), validateUrl]}/>
         </SimpleForm>
     </Create>
 )};
