@@ -31,6 +31,7 @@ export class ReportStudyComponent implements OnInit {
 	study: StudyAppointment;
 	appointmentId: number;
 	disableContinueEditing = false;
+	severityTypes: any[];
 	@Output() update = new EventEmitter<Observable<StudyAppointment>>;
 
 	constructor(
@@ -62,9 +63,10 @@ export class ReportStudyComponent implements OnInit {
 			this.ambulatoryConsultationProblemsService.setSearchConceptsLocallyFF(isOn);
 		});
 
-		this.ambulatoryConsultationProblemsService.problems$.subscribe( p => this.problems = p);
+		this.ambulatoryConsultationProblemsService.problems$.subscribe(p => this.problems = p);
 
 		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
+			this.severityTypes = healthConditionSeverities;
 			this.ambulatoryConsultationProblemsService.setSeverityTypes(healthConditionSeverities);
 		});
 	}
@@ -73,6 +75,7 @@ export class ReportStudyComponent implements OnInit {
 		this.dialog.open(NewConsultationAddProblemFormComponent, {
 			data: {
 				ambulatoryConsultationProblemsService: this.ambulatoryConsultationProblemsService,
+				severityTypes: this.severityTypes,
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
 			autoFocus: false,
