@@ -11,6 +11,7 @@ import { PatientNameService } from '@core/services/patient-name.service';
 import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
 import { GUARDIA } from '@historia-clinica/constants/summaries';
+import { EmergencyCareStateChangedService } from '@historia-clinica/modules/ambulatoria/services/emergency-care-state-changed.service';
 import { TriageCategory } from '@historia-clinica/modules/guardia/components/triage-chip/triage-chip.component';
 import { RiskFactorFull, Triage } from '@historia-clinica/modules/guardia/components/triage-details/triage-details.component';
 import { EmergencyCareTypes, EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
@@ -72,7 +73,8 @@ export class ResumenDeGuardiaComponent implements OnInit {
 		private readonly permissionsService: PermissionsService,
 		private readonly newTriageService: NewTriageService,
 		private readonly emergencyCareEpisodeAttend: EmergencyCareEpisodeAttendService,
-		private readonly triageDefinitionsService: TriageDefinitionsService
+		private readonly triageDefinitionsService: TriageDefinitionsService,
+		private readonly emergencyCareStateChangedService: EmergencyCareStateChangedService
 	) {
 
 	}
