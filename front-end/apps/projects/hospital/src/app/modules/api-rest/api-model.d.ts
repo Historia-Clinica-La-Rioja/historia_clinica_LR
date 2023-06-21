@@ -8,6 +8,18 @@ export interface AAdditionalDoctorDto {
     phoneNumber: string;
 }
 
+export interface EdMontonAnswers{
+    id: number;
+    idQuestion: number;
+    idAnswer: number;   
+}
+
+export interface EdMontonSummary{
+    institutionId: number;
+    patientId : number;
+    edMontonId: number;
+}
+
 export interface AEmergencyCareDto extends Serializable {
     ambulanceCompanyId?: string;
     emergencyCareTypeId?: number;

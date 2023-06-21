@@ -261,6 +261,15 @@
 						</ng-template>
 					</mat-tab>
 
+					<mat-tab id="tab_percentiles">
+						<ng-template mat-tab-label>
+							<span>AULTO MAYOR</span>
+						</ng-template>
+						<ng-template matTabContent>
+							<app-adulto-mayor></app-adulto-mayor>
+						</ng-template>
+					</mat-tab>
+
 					<section *appFeatureFlag="'HABILITAR_SIP_PLUS_EN_DESARROLLO'">
 						<mat-tab id="tab_clap" *ngIf="patient.gender === femenino && hasHealthRelatedRole">
 							<ng-template mat-tab-label>

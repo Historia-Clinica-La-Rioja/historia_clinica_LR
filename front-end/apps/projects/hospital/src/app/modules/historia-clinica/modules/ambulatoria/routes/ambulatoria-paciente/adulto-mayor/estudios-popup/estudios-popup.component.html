@@ -1,0 +1,16 @@
+<div class="popup-container">
+    
+        
+    <h2>Estudios del adulto mayor</h2>
+        <mat-label>Seleccione estudio</mat-label>
+        <mat-select [(ngModel)]="selectedOption">
+          <mat-option value="option1">Edmonton</mat-option>
+        </mat-select>
+      
+  
+      <div *ngIf="selectedOption === 'option1'">
+        <app-edmonton></app-edmonton>
+      </div>
+  
+  </div>
+  
