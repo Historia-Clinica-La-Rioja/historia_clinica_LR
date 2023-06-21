@@ -128,6 +128,14 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
+	public Optional<Patient> getActivePatient(Integer patientId) {
+		LOG.debug(INPUT_DATA, patientId);
+		Optional<Patient> result = patientRepository.findActivePatientById(patientId);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
 	public Optional<Patient> getPatient(Integer patientId) {
 		LOG.debug(INPUT_DATA, patientId);
 		Optional<Patient> result = patientRepository.findById(patientId);

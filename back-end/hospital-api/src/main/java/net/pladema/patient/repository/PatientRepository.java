@@ -59,4 +59,9 @@ public interface PatientRepository extends SGXAuditableEntityJPARepository<Patie
 			"WHERE p.id = :patientId AND p.typeId IN :typeIds")
 	Optional<PatientRegistrationSearch> getPatientRegistrationSearchById(@Param("patientId") Integer patientId, @Param("typeIds") List<Short> typeIds);
 
+	@Query(value = " SELECT pa " +
+			"FROM Patient pa " +
+			"WHERE pa.id = :patientId " +
+			"AND pa.typeId != 6")
+	Optional<Patient> findActivePatientById(@Param("patientId") Integer patientId);
 }

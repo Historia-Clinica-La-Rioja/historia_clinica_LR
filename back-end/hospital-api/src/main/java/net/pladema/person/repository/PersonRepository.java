@@ -25,7 +25,8 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, AuditP
             "WHERE pe.identificationTypeId = :identificationTypeId " +
             "AND pe.identificationNumber = :identificationNumber " +
             "AND pe.genderId = :genderId " +
-			"AND pa.deleteable.deleted = false")
+			"AND pa.deleteable.deleted = false " +
+			"AND pa.typeId != 6")
     List<Integer> findByDniAndGender(
             @Param("identificationTypeId") Short identificationTypeId,
             @Param("identificationNumber") String identificationNumber,

@@ -21,9 +21,11 @@ public interface PatientService {
 
     LimitedPatientSearchBo searchPatientOptionalFilters(PatientSearchFilter searchFilter);
 
-    Optional<Patient> getPatient(Integer patientId);
+    Optional<Patient> getActivePatient(Integer patientId);
 
-    List<Patient> getPatients(Set<Integer> patients);
+	Optional<Patient> getPatient(Integer patientId);
+
+	List<Patient> getPatients(Set<Integer> patients);
     
     Patient addPatient(Patient patientToSave);
 

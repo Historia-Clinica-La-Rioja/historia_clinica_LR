@@ -239,7 +239,7 @@ public class PatientController {
 	public ResponseEntity<BasicPatientDto> getBasicDataPatient(@PathVariable(name = "patientId") Integer patientId) {
 		LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
 
-		Patient patient = patientService.getPatient(patientId)
+		Patient patient = patientService.getActivePatient(patientId)
 				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
 		BasicPatientDto result = new BasicPatientDto(patient.getId(), patient.getTypeId());
 		if (patient.getPersonId() != null) {
@@ -287,7 +287,7 @@ public class PatientController {
 	public ResponseEntity<Boolean> addPatientPhoto(@PathVariable(name = "patientId") Integer patientId,
 												   @RequestBody PersonPhotoDto personPhotoDto) {
 		LOG.debug("Input parameters -> patientId {}, PersonPhotoDto {}", patientId, personPhotoDto);
-		Patient patient = patientService.getPatient(patientId)
+		Patient patient = patientService.getActivePatient(patientId)
 				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
 		boolean result = personExternalService.savePersonPhoto(patient.getPersonId(), personPhotoDto.getImageData());
 		LOG.debug(OUTPUT, result);
@@ -329,7 +329,7 @@ public class PatientController {
 	@GetMapping("/{patientId}/appointment-patient-data")
 	public ResponseEntity<ReducedPatientDto> getBasicPersonalData(@PathVariable(name = "patientId") Integer patientId) {
 		LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
-		Patient patient = patientService.getPatient(patientId)
+		Patient patient = patientService.getActivePatient(patientId)
 				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
 		BasicPersonalDataDto personData = personExternalService.getBasicPersonalDataDto(patient.getPersonId());
 		ReducedPatientDto result = new ReducedPatientDto(personData, patient.getTypeId());
