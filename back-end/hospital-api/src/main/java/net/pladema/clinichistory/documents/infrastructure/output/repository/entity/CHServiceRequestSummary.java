@@ -12,14 +12,10 @@ import javax.persistence.Embeddable;
 @Setter
 @ToString
 @NoArgsConstructor
-public class CHDocumentNotesSummary {
+public class CHServiceRequestSummary {
 
-	private String currentIllness;
-	private String physicalExam;
-	private String evolution;
-	private String clinicalImpression;
-	private String otherNote;
-	private String indicationNote;
-	private String observations;
+	private String serviceRequestDetails;
+	private String serviceRequestStudies;
+	private String serviceRequestResult;
 
 }

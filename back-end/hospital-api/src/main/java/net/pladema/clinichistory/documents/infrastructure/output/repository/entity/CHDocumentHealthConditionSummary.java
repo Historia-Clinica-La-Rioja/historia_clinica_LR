@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
@@ -15,16 +17,15 @@ import javax.persistence.Embeddable;
 public class CHDocumentHealthConditionSummary {
 
 	private String problems;
-	private String observations;
+	private String familyRecord;
+	private String personalRecord;
 	private String procedures;
 	private String medicines;
 	private String allergies;
+	private String vaccines;
 	private String riskFactors;
-	private String observationLab;
-	private String diagnosticReport;
 	private String outpatientConsultationReasons;
 	private String odontologyProcedure;
-	private String serviceRequest;
 	private String odontologyDiagnostic;
 
 }

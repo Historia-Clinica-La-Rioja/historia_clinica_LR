@@ -73,8 +73,8 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 
 	private String mapProblems(String problems){
 		if(problems.isBlank()) return problems;
-		int startIndex = problems.contains("Principal:") ? problems.indexOf("Principal:") + 11 : problems.indexOf("Otro:") + 6;
-		int endIndex = problems.contains(", Otro:") ? problems.indexOf(", Otro:") : problems.length();
+		int startIndex = problems.contains("Principal:") ? problems.indexOf("Principal:") + 11 : (problems.contains("Otro:") ? problems.indexOf("Otro:") + 6 : problems.indexOf("Problemas:") + 11);
+		int endIndex = problems.contains("|") ? problems.indexOf("|") : problems.length();
 		return problems.substring(startIndex, endIndex);
 	}
 

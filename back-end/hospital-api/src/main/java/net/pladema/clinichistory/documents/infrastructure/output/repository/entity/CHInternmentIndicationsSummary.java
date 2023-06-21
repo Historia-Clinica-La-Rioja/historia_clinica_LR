@@ -18,7 +18,5 @@ public class CHInternmentIndicationsSummary {
 	private String otherIndication;
 	private String pharmaco;
 	private String parenteralPlan;
-	private String nursingRecords;
-
 
 }

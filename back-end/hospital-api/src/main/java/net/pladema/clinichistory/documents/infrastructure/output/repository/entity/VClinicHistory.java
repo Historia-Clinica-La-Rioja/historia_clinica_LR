@@ -75,26 +75,33 @@ public class VClinicHistory {
 	@Embedded
 	@AttributeOverrides({
 			@AttributeOverride( name = "problems", column = @Column(name = "problems")),
-			@AttributeOverride( name = "observations", column = @Column(name = "observations")),
+			@AttributeOverride( name = "familyRecord", column = @Column(name = "family_record")),
+			@AttributeOverride( name = "personalRecord", column = @Column(name = "personal_record")),
 			@AttributeOverride( name = "procedures", column = @Column(name = "procedures")),
-			@AttributeOverride( name = "riskFactors", column = @Column(name = "risk_factors")),
-			@AttributeOverride( name = "observationLab", column = @Column(name = "observation_lab")),
-			@AttributeOverride( name = "diagnosticReport", column = @Column(name = "diagnostic_report")),
+			@AttributeOverride( name = "medicines", column = @Column(name = "medicines")),
+			@AttributeOverride( name = "allergies", column = @Column(name = "allergies")),
+			@AttributeOverride( name = "vaccines", column = @Column(name = "vaccines")),
+			@AttributeOverride( name = "risk_factors", column = @Column(name = "risk_factors")),
 			@AttributeOverride( name = "outpatientConsultationReasons", column = @Column(name = "outpatient_consultation_reasons")),
 			@AttributeOverride( name = "odontologyProcedure", column = @Column(name = "odontology_procedure")),
-			@AttributeOverride( name = "serviceRequest", column = @Column(name = "service_request")),
 			@AttributeOverride( name = "odontologyDiagnostic", column = @Column(name = "odontology_diagnostic"))
 	})
 	private CHDocumentHealthConditionSummary healthConditionSummary;
 
+	@Embedded
+	@AttributeOverrides({
+			@AttributeOverride(name = "service_request_details", column = @Column(name = "service_request_details")),
+			@AttributeOverride(name = "service_request_studies", column = @Column(name = "service_request_studies")),
+			@AttributeOverride(name = "service_request_result", column = @Column(name = "service_request_result"))
+	})
+	private CHServiceRequestSummary serviceRequestSummary;
 
 	@Embedded
 	@AttributeOverrides({
 			@AttributeOverride( name = "diet", column = @Column(name = "diet")),
 			@AttributeOverride( name = "otherIndication", column = @Column(name = "other_indication")),
 			@AttributeOverride( name = "pharmaco", column = @Column(name = "pharmaco")),
-			@AttributeOverride( name = "parenteralPlan", column = @Column(name = "parenteral_plan")),
-			@AttributeOverride( name = "nursingRecords", column = @Column(name = "nursing_records"))
+			@AttributeOverride( name = "parenteralPlan", column = @Column(name = "parenteral_plan"))
 	})
 	private CHInternmentIndicationsSummary internmentIndications;
 
@@ -104,7 +111,9 @@ public class VClinicHistory {
 			@AttributeOverride( name = "physicalExam", column = @Column(name = "physical_exam_note")),
 			@AttributeOverride( name = "evolution", column = @Column(name = "evolution_note")),
 			@AttributeOverride( name = "clinicalImpression", column = @Column(name = "clinical_impression_note")),
-			@AttributeOverride( name = "otherNote", column = @Column(name = "other_note"))
+			@AttributeOverride( name = "otherNote", column = @Column(name = "other_note")),
+			@AttributeOverride( name = "indicationNote", column = @Column(name = "indications_note")),
+			@AttributeOverride( name = "observations", column = @Column(name = "observations"))
 	})
 	private CHDocumentNotesSummary notes;
 
