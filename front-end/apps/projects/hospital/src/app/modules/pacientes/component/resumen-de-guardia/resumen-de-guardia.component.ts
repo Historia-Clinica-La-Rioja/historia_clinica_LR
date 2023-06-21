@@ -134,6 +134,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 								this.doctorsOfficeDescription = null;
 								this.shockroomDescription = null;
 								this.bedDescription = null;
+								this.emergencyCareStateChangedService.emergencyCareStateChanged(EstadosEpisodio.EN_ESPERA)
 								this.calculateAvailableActions();
 							}
 							else {
