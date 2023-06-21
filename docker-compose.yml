@@ -14,6 +14,45 @@ services:
       - "5432:5432"
     restart: always
 
+  hsi-backend:
+    build: ./back-end
+    container_name: hsi-backend
+    environment:
+      # Modo produccion
+      SPRING_PROFILES_ACTIVE: prod
+      DATABASE_IP_PORT: hsi-db:5432
+      DATABASE_SCHEMA: hospitalDB
+      DATABASE_USER: postgres
+      DATABASE_PASS: Local123
+      DOCUMENT_ROOT_DIRECTORY: /var/hsi/documents
+      TOKEN_SECRET: shhhhh
+      ADMIN_PASS: admin123
+      SNOWSTORM_SERVICE: https://snowstorm-test.msal.gob.ar
+      # Opcional Tableros
+      CUBEJS_API_URL: http://hsi-cubejs:4000/cubejs-api/v1
+      # Opcional Broker MQTT
+      MQTT_CLIENT_CONNECTION: true
+      MQTT_SERVER_ADDRESS: tcp://hsi-mosquitto:1883
+      MQTT_CLIENT_USERNAME: HSI
+      MQTT_CLIENT_PASSWORD: hsiPassword
+      # Opcional Mails con mailhog (no tiene SSL ni auth)
+      SMTP_HOST: hsi-mails
+      SMTP_PORT: 1025
+      SMTP_AUTH: false
+      SMTP_SSL: false
+    volumes:
+      - ./.docker-data/documents/:/var/hsi/documents
+    ports:
+      - "8080:80"
+
+  hsi-frontend:
+    build: ./front-end
+    container_name: hsi-frontend
+    environment:
+      API_IP_PORT: hsi-backend:80
+    ports:
+      - "4200:80"
+
   hsi-cubejs:
     build: ./cubejs
     container_name: hsi-cubejs
@@ -25,31 +64,6 @@ services:
       DATABASE_NAME: hospitalDB
       CUBEJS_DB_USER: postgres
       CUBEJS_DB_PASS: Local123
-
-  hsi-backend:
-    build: ./back-end
-    container_name: hsi-backend
-    environment:
-      SPRING_PROFILES_ACTIVE: dev
-      DATABASE_IP_PORT: hsi-db:5432
-      CUBEJS_API_URL: http://hsi-cubejs:4000/cubejs-api/v1
-      DOCUMENT_ROOT_DIRECTORY: /var/hsi/documents
-      MULTIPART_ABSOLUTE_LOCATION: /var/hsi/multipartfiles
-      # AUTH_DOMAIN: test1-os.dev-env.lamansys.ar
-      # AUTH_SECURE: "false"
-    volumes:
-      - ./.docker-data/documents/:/var/hsi/documents
-      - tmpdata:/var/hsi/multipartfiles
-    ports:
-      - "8080:80"
-
-  hsi-frontend:
-    build: ./front-end
-    container_name: hsi-frontend
-    environment:
-      API_IP_PORT: hsi-backend:80
-    ports:
-      - "4200:80"
 
   hsi-mails:
     image: mailhog/mailhog:latest
@@ -83,8 +97,8 @@ services:
       CEDALO_MC_BROKER_ID: mosquitto-2.0
       CEDALO_MC_BROKER_NAME: Mosquitto 2.0
       CEDALO_MC_BROKER_URL: mqtt://hsi-mosquitto:1883
-      CEDALO_MC_BROKER_USERNAME: CEDALO_BROKER_USER
-      CEDALO_MC_BROKER_PASSWORD: cedaloBrokerPassword
+      CEDALO_MC_BROKER_USERNAME: HSI
+      CEDALO_MC_BROKER_PASSWORD: hsiPassword
       CEDALO_MC_USERNAME: cedaloadmin
       CEDALO_MC_PASSWORD: cedaloadminPassword
 
