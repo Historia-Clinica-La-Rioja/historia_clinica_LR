@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.edMonton.repository.domain.Answer;
 
 @Getter
 @Setter
@@ -13,13 +14,16 @@ import lombok.ToString;
 @NoArgsConstructor
 public class ImpresionEdMontonDto {
 
-	private Short questionId;
+	private Integer questionId;
 
-	private Short answerId;
+	private Integer answerId;
+
+	private Integer value;
 
 
-	public ImpresionEdMontonDto(ImpresionEdMontonDto impresionEdMontonDto) {
-		this.questionId = impresionEdMontonDto.getQuestionId();
-		this.answerId = impresionEdMontonDto.getAnswerId();
+	public ImpresionEdMontonDto(Answer answer){
+		this.questionId = answer.getItemId();
+		this.answerId = answer.getAnswerId();
+		//this.value = Integer.valueOf(answer.getValue());
 	}
 }

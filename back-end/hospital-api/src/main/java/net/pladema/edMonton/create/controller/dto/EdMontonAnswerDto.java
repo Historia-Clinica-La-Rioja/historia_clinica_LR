@@ -14,4 +14,6 @@ public class EdMontonAnswerDto {
 	private Short questionId;
 
 	private Short answerId;
+
+	private String value;
 }

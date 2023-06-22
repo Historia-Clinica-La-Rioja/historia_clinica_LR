@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -61,8 +62,9 @@ public class GetPdfEdMontoController implements GetPdfEdMontonAPI{
 
 		ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
 		List<ImpresionEdMontonDto> impresionEdMontonDto = impresionEdMontonService.getImpresionEdMonton(edMontonId);
+		Object resultFinal = impresionEdMontonService.getScore(edMontonId);
 
-		Map<String, Object> context = impresionEdMontonService.createEdMontonContext(impresionEdMontonDto);
+		Map<String, Object> context = impresionEdMontonService.createEdMontonContext(impresionEdMontonDto, resultFinal);
 
 		String outputFileName = impresionEdMontonService.createEdMontonFileName(edMontonId, now);
 		ResponseEntity<InputStreamResource> response = generatedPdfResponse(context, outputFileName, "edMonton_reports");

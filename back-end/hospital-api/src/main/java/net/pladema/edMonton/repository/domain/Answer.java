@@ -36,4 +36,13 @@ public class Answer {
 	@Column(name = "option_id")
 	private Integer answerId;
 
+	@Column(name = "value")
+	private String value;
+
+	public Answer(Integer id, Integer itemId, Integer questionnaireResponseId, Integer answerId){
+		this.id = id;
+		this.itemId = itemId;
+		this.questionnaireResponseId = questionnaireResponseId;
+		this.answerId = answerId;
+	}
 }

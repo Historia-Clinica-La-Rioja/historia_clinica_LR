@@ -1,6 +1,8 @@
 package net.pladema.edMonton.getPdfEdMonton.service;
 
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import net.pladema.edMonton.create.controller.service.domain.EdMontonAnswerBo;
+import net.pladema.edMonton.create.service.domain.EedMontonTestAnswer;
 import net.pladema.edMonton.getPdfEdMonton.dto.ImpresionEdMontonDto;
 
 import net.pladema.edMonton.getPdfEdMonton.repository.ImpresionEdMontonRepository;
@@ -49,21 +51,22 @@ public class ImpresionEdMontonServiceImpl implements ImpresionEdMontonService{
 	}
 
 	@Override
-	public Map<String, Object> createEdMontonContext(List<ImpresionEdMontonDto> lst) {
+	public Map<String, Object> createEdMontonContext(List<ImpresionEdMontonDto> lst, Object result) {
 		Map<String, Object> ctx = new HashMap<>();
-
-		for(Integer i=0; i < lst.size(); i++){
-			ImpresionEdMontonDto value = new ImpresionEdMontonDto(lst.get(i));
-		}
+		Integer convertedResult = Integer.valueOf(result.toString());
 
 		ctx.put("answers", lst);
+		ctx.put("result", convertedResult);
 
 		return ctx;
 	}
 
 	@Override
-	public String getScore(Short score) {
-		return null;
+	public Object getScore(Long edMontonId) {
+		LOG.debug("input parameters -> edMontonId {}", edMontonId);
+		Object resultFinal = impresionEdMontonRepository.getResulFinalReport(edMontonId);
+
+		return resultFinal;
 	}
 
 	@Override
@@ -78,7 +81,7 @@ public class ImpresionEdMontonServiceImpl implements ImpresionEdMontonService{
 	private List<ImpresionEdMontonDto> cast(List<Answer> lst){
 		List<ImpresionEdMontonDto> lstCast = new ArrayList<ImpresionEdMontonDto>();
 		for(Answer reg : lst){
-			lstCast.add( new ImpresionEdMontonDto());
+			lstCast.add( new ImpresionEdMontonDto(reg));
 		}
 		return lstCast;
 	}
