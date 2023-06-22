@@ -46,6 +46,8 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
         if (this.data.transcribedOrder){
             this.selectedStudy = this.data.transcribedOrder.study;
             this.selectedProblem = this.data.transcribedOrder.problem;
+            this.selectedFiles = this.data.transcribedOrder.selectedFiles;
+            this.selectedFilesShow = this.data.transcribedOrder.selectedFilesShow;
             this.setFormValues(this.data.transcribedOrder);
         }
 
@@ -88,7 +90,9 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
                         serviceRequestId: serviceRequestId,
                         problem: this.selectedProblem,
                         professional: orderProfessional,
-                        institution: orderInstitution
+                        institution: orderInstitution,
+                        selectedFiles: this.selectedFiles,
+                        selectedFilesShow: this.selectedFilesShow
                     }
                     this.dialogRef.close({
                         transcribedOrder,
