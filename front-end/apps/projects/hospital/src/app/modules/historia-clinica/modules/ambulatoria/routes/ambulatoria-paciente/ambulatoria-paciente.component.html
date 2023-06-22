@@ -46,11 +46,7 @@
 									</div>
 								</div>
 							</div>
-							<div>
-								<span class="allergy-item capitalize-first-letter" *ngIf="embarazoAdolescente()">
-									<button mat-button (click)="openDialogAclaracion()">Embarazo adolescente</button>
-								</span>
-							</div>
+							
 							<div *ngIf="patientAllergies.criticalAllergies?.length > patientAllergies.limitAllergies">
 								<button class="allergies-button" (click)="patientAllergies.openAllergies()" mat-button
 									type="button" color="primary">
@@ -75,8 +71,15 @@
 									</div>
 								</div>
 							</div>
+							<div>
+								<span class="allergy-item capitalize-first-letter" *ngIf="embarazoAdolescente()">
+									<button mat-button (click)="openDialogAclaracion()">Embarazo adolescente</button>
+								</span>
+							</div>
 						</div>
+						
 					</div>
+					
 					<mat-divider class="header-divider" [vertical]="true"></mat-divider>
 
 					<ng-container *ngIf="thereIsAppointmentCovarageInformation() else internmentCovarage">

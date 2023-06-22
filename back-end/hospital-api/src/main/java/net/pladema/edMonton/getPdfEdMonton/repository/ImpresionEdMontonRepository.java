@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface ImpresionEdMontonRepository {
 
 	Optional<List<Answer>> getEdMontonReportInfo(Long edMontonTestId);
+
+	Object getResulFinalReport(Long edMontonTestId);
 }

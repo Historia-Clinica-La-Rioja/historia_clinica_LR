@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="es">
+
+<head th:fragment="headerfiles">
+    <title>Test EdMonton</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"></link>
+    <style>
+        h3 {
+            margin: 7.5px 0px;
+        }
+        h4 {
+            margin: 7.5px 0px;
+        }
+        body {
+            font-size: 12px;
+        }
+        .contenedor {
+            width: 695px;
+            padding: 15px;
+            border: 1px solid black;
+        }
+        .contenedor > p {
+            max-width: 750px;
+        }
+        .contenedor > h5 {
+            color: #2687c5;
+            background-color: #f0f8ff;
+            border-top: 1px solid black;
+            padding: 2px;
+            font-weight: 100;
+            margin: 10px 0px 10px;
+            font-size: 14px;
+            width: 100%;
+        }
+        p {
+            text-indent: 15px;
+            font-weight: bold;
+            font-size:
+            margin: 20px 0px -20px;
+        }
+        h3, h4 {
+        font-size: 16px;
+        }
+
+        .form-check-label{
+        padding-left: 15px;
+        }
+    </style>
+
+
+</head>
+
+
+
+<body th:fragment="edMonton">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <h3>Informe de resultados de test EdMonton</h3>
+    <h4>Escala de EdMonton</h4>
+    <div class="contenedor">
+    <h5>Cognitivo</h5>
+        <p>Por favor imagina que este círculo pre-dibujado es un reloj. Me gustaría que pusiera los números en las posiciones correctas y luego poner las manillas o manecillas para indicar la hora "las once con diez minutos"</p>
+        <div class="form-check" th:each="respuesta : ${answers[0]}">
+            <div>
+            <input type="checkbox" value="0" th:checked="${respuesta.answerId == 1}" ></input><span>Sin errores</span>
+            </div>
+            <div>
+            <input type="checkbox" value="1" th:checked="${respuesta.answerId == 2}" ></input> <span>Errores mínimos de espaciado</span>
+            </div>
+            <div>
+            <input type="checkbox"  value="2" th:checked="${respuesta.answerId == 3}" ></input> <span>Otros errores</span>
+            </div>
+        </div>
+
+    <h5>Estado de salud general</h5>
+        <p>En el ultimo año, ¿cuántas veces ha estado hospitalizado?</p>
+        <div  class="form-check" th:each="respuesta : ${answers[1]}">
+        <div>
+            <input type="checkbox" value="0" th:checked="${respuesta.answerId == 4}"></input> <span>0</span>
+        </div>
+        <div >
+            <input type="checkbox" value="1" th:checked="${respuesta.answerId == 5}"></input> <span>1 o 2</span>
+        </div>
+        <div>
+            <input type="checkbox" value="2" th:checked="${respuesta.answerId == 6}"></input> <span>3 o más</span>
+        </div>
+        </div>
+        <p>En general, ¿Cómo describiría su salud?</p>
+        <div class="form-check" th:each="respuesta : ${answers[2]}">
+            <div>
+                <input type="checkbox" value="0" th:checked="${respuesta.answerId == 7}"></input> <span>Excelente</span>
+            </div>
+            <div>
+                <input type="checkbox" value="1" th:checked="${respuesta.answerId == 8}"></input> <span>Razonable</span>
+            </div>
+            <div>
+                <input type="checkbox" value="2" th:checked="${respuesta.answerId == 9}"></input> <span>Mala</span>
+            </div>
+        </div>
+
+        <h5>Rendimiento funcional</h5>
+        <p>Me gustaría que se sentara en esta silla con su espalda y brazos relajados. Luego, cuando diga "YA", por favor párese y camine a un ritmo cómodo y seguro a la marca del suelo(aproximadamente a 3 metros de distancia), regrese a su silla y se sienta.</p>
+        <div class="form-check" th:each="respuesta : ${answers[3]}">
+            <div >
+                <input type="checkbox" value="0" th:checked="${respuesta.answerId == 10}"></input> <span>0 a 10 segundos</span>
+            </div>
+            <div >
+                <input type="checkbox" value="1" th:checked="${respuesta.answerId == 11}"></input> <span>11 a 20 segundos</span>
+            </div>
+            <div >
+                <input type="checkbox" value="2" th:checked="${respuesta.answerId == 12}"></input> <span>21 o más segundos</span>
+            </div>
+        </div>
+
+    <h5>Independencia funcional</h5>
+        <p>¿Con cuántas de las siguientes actividades necesita ayuda? (Preparar la comida, compras, transporte, comunicación telefónica, cuidado del hogar, lavado de ropa, manejo de dinero, tomar medicamentos)</p>
+        <div class="form-check" th:each="respuesta : ${answers[4]}">
+        <div >
+            <input type="checkbox" value="0"  th:checked="${respuesta.answerId == 13}"></input> <span>0 o 1</span>
+        </div>
+        <div >
+            <input type="checkbox" value="1" th:checked="${respuesta.answerId == 14}"></input> <span>2 a 4</span>
+        </div>
+        <div >
+            <input type="checkbox" value="2" th:checked="${respuesta.answerId == 15}"></input> <span>4 o más</span>
+        </div>
+        </div>
+
+    <h5>Soporte social</h5>
+        <p>Cuando ud. necesita ayuda, ¿puede contar con alguien que esté dispuesto y disponible para atender sus necesidades o problemas?</p>
+        <div class="form-check" th:each="respuesta : ${answers[5]}">
+        <div>
+            <input type="checkbox" value="0" th:checked="${respuesta.answerId == 16}"></input> <span>Siempre</span>
+        </div>
+        <div>
+            <input type="checkbox" value="1" th:checked="${respuesta.answerId == 17}"></input> <span>A veces</span>
+        </div>
+        <div>
+            <input type="checkbox" value="2" th:checked="${respuesta.answerId == 18}"></input> <span>Nunca</span>
+        </div>
+        </div>
+
+    <h5>Uso de medicamentos</h5>
+        <p>Usa 5 o más medicamentos en el día a día</p>
+        <div class="form-check" th:each="respuesta : ${answers[6]}">
+        <div >
+            <input type="checkbox" value="1" th:checked="${respuesta.answerId == 20}"></input> <span>No</span>
+        </div>
+        <div>
+            <input type="checkbox" value="0" th:checked="${respuesta.answerId == 19}"></input> <span>Sí</span>
+        </div>
+        </div>
+
+        <p>En ocasiones, ¿se le olvida tomarse los medicamentos?</p>
+        <div class="form-check" th:each="respuesta : ${answers[7]}">
+        <div>
+            <input type="checkbox" value="1" th:checked="${respuesta.answerId == 20}"></input> <span>No</span>
+        </div>
+        <div>
+            <input type="checkbox" value="0" th:checked="${respuesta.answerId == 19}"></input> <span>Sí</span>
+        </div>
+        </div>
+    <h5>Nutrición</h5>
+        <p>Recientemente, ¿ha perdido peso como para que su ropa le quede suelta?</p>
+        <div class="form-check" th:each="respuesta : ${answers[8]}">
+        <div >
+            <input type="checkbox" value="1" th:checked="${respuesta.answerId == 20}"></input> <span>No</span>
+        </div>
+        <div>
+            <input type="checkbox" value="0" th:checked="${respuesta.answerId == 19}"></input> <span>Sí</span>
+        </div>
+        </div>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+
+    <h5>Ánimo</h5>
+        <p>¿Se siente con frecuencia triste o deprimido?</p>
+        <div  class="form-check" th:each="respuesta : ${answers[9]}">
+        <div>
+            <input type="checkbox" value="1" th:checked="${respuesta.answerId == 20}"></input> <span>No</span>
+        </div>
+        <div>
+            <input type="checkbox" value="0" th:checked="${respuesta.answerId == 19}"></input> <span>Sí</span>
+        </div>
+        </div>
+
+    <h5>Contingencia</h5>
+        <p>¿Tiene algún problema con el control para orinar, es decir, puede contener la orina si así lo desea?</p>
+        <div  class="form-check" th:each="respuesta : ${answers[10]}">
+        <div>
+            <input type="checkbox" value="1" th:checked="${respuesta.answerId == 20}"></input> <span>No</span>
+        </div>
+        <div>
+            <input type="checkbox" value="0" th:checked="${respuesta.answerId == 19}"></input> <span>Sí</span>
+        </div>
+        </div>
+        <br></br>
+
+
+
+    <h5>Total</h5>
+        <p>La puntuación de la EFS se interpreta:</p>
+        <div class="form-check" th:each="result : ${result}">
+        <div >
+            <input type="checkbox" th:checked="${result == 0 || result <= 4}"></input> <span>0 a 4: individuo sano</span>
+        </div>
+        <div>
+            <input type="checkbox" th:checked="${result == 5 || result == 6}"></input> <span>5 o 6: vulnerable</span>
+        </div>
+        <div>
+            <input type="checkbox" th:checked="${result == 7 || result == 8}"></input> <span>7 u 8: fragilidad leve</span>
+        </div>
+        <div>
+            <input type="checkbox" th:checked="${result == 9 || result == 10}"></input> <span>9 o 10: fragilidad moderada</span>
+        </div>
+        <div>
+            <input type="checkbox" th:checked="${result >= 11}"></input> <span>11 o más: fragilidad severa</span>
+        </div>
+
+        </div>
+
+
+    </div>
+
+
+
+</body>
+</html>
