@@ -39,6 +39,8 @@ import { Observable } from 'rxjs';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
+const ERROR_ENCOUNTER_ACTIVE_EXISTS = 'ENCOUNTER_ACTIVE_EXISTS';
+const REJECTTED = 'Rechazado';
 
 @Component({
 	selector: 'app-edit-patient',
@@ -46,6 +48,16 @@ const ROUTE_PROFILE = 'pacientes/profile/';
 	styleUrls: ['./edit-patient.component.scss']
 })
 export class EditPatientComponent implements OnInit {
+
+	currentEducationLevelDescription: string;
+	currentOccupationDescription: string;
+	hasInstitutionalAdministratorRole = false;
+	hasToSaveFiles: boolean = false;
+	typesPatient: PatientType[];
+	hasAuditorRole: boolean = false;
+	idTypeDni: number;
+	dniWasEdited: boolean = false;
+	rejectedId:number;
 
 	readonly PERSON_MAX_LENGTH = PERSON.MAX_LENGTH;
 	readonly GENDER_MAX_LENGTH = VALIDATIONS.MAX_LENGTH.gender;
@@ -77,14 +89,6 @@ export class EditPatientComponent implements OnInit {
 	public ethnicities: EthnicityDto[];
 	public occupations: PersonOccupationDto[];
 	public educationLevels: EducationLevelDto[];
-	currentEducationLevelDescription: string;
-	currentOccupationDescription: string;
-	hasInstitutionalAdministratorRole = false;
-	hasToSaveFiles: boolean = false;
-	typesPatient: PatientType[];
-	hasAuditorRole: boolean = false;
-	idTypeDni: number;
-	dniWasEdited: boolean = false;
 
 	constructor(
 		private formBuilder: UntypedFormBuilder,
@@ -254,6 +258,10 @@ export class EditPatientComponent implements OnInit {
 								if (this.hasAuditorRole) {
 									this.auditPatientService.getTypesPatient().subscribe(res => {
 										this.typesPatient = res;
+										this.rejectedId = this.typesPatient.find(type => type.description === REJECTTED ).id;
+										if(this.form.controls.stateId.value === this.rejectedId){
+											this.form.controls.stateId.disable();
+										}
 									})
 								} else {
 									this.patientMasterDataService.getTypesPatient().subscribe(res => {

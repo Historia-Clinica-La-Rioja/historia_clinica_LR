@@ -125,6 +125,11 @@
 					</div>
 				</div>
 
+				<div *ngIf="form.controls.stateId.value === rejectedId" class="mb-2" fxLayout="row" fxLayoutAlign="start center">
+					<mat-icon class="color-orange" id="icon-error">error_outlined</mat-icon>
+					<span class="color-orange">{{'pacientes.audit.LABEL_PATIENT_REJECTED' | translate }}</span>
+				</div>
+
 				<div>
 					<div>
 						<span [translate]="'pacientes.form.GENDER'"></span>*

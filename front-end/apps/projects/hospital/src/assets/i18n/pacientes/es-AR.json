@@ -338,7 +338,8 @@
 		"BUTTON_SAVE_NOT_RESOLVED":"Guardar y no resolver",
 		"SAVE_OK_EDIT_AUDIT":"La indicación se marcó como resuelta y el paciente fue editado con éxito.",
 		"TITLE_NO_DATA_RENAPER":"La información ingresada no se encuentra en Renaper",
-		"SUBTITLE_NO_DATA_RENAPER":"Por favor, revise los datos ingresados y vuelva a intentar"
+		"SUBTITLE_NO_DATA_RENAPER":"Por favor, revise los datos ingresados y vuelva a intentar",
+		"LABEL_PATIENT_REJECTED":"El paciente “Rechazado” no se vera en el resto del los módulos del sistema."
 	}
   }
 }
