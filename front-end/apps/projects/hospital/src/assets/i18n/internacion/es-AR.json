@@ -485,7 +485,8 @@
 						},
 						"actions": {
 							"CANCEL": "CANCELAR",
-							"ATTACH": "ADJUNTAR"
+							"ATTACH": "ADJUNTAR",
+							"ADD_DOCUMENT": "+ Agregar documento"
 						}
 					},
 					"delete": {

@@ -1,9 +1,8 @@
-<section class="episode-document-container"> 
+<section class="episode-document-container">
     <div>
         <span class="mat-body-2" [translate]="'internaciones.internacion-paciente.documents.TITLE'"></span>
         <button mat-button color="primary" (click)="fileInput.click()">
-            <mat-icon> attach_file</mat-icon>
-            <span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.ATTACH'"></span>
+            <span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.ADD_DOCUMENT'"></span>
         </button>
         <input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file" (click)="$event.target.value=null">
     </div>
