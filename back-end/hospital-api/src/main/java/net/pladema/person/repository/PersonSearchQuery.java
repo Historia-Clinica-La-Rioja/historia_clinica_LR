@@ -48,7 +48,7 @@ public class PersonSearchQuery {
 
 	public QueryPart from() {
 		String from = " {h-schema}person as person \n" +
-				"	join {h-schema}patient as patient on (patient.person_id = person.id) and (patient.deleted != true) and (patient.type_id != 6) \n" +
+				"	join {h-schema}patient as patient on (patient.person_id = person.id) and (patient.deleted != true) \n" +
 				"	join {h-schema}person_extended as person_extended on (person_extended.person_id = person.id) \n";
 		return new QueryPart(from);
 	}

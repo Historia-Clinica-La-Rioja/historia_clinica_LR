@@ -88,6 +88,8 @@ public class PatientRepositorySearchImpl implements PatientRepositorySearch {
 			return true;
 		if (searchFilter.getPermanent() != null && searchFilter.getPermanent())
 			return true;
+		if (searchFilter.getRejected() != null && searchFilter.getRejected())
+			return true;
 		return false;
 	}
 }

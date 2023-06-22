@@ -28,6 +28,8 @@ public class BackofficePersonStore implements BackofficeStore<Person, Integer> {
 
 	@Override
 	public Page<Person> findAll(Person entity, Pageable pageable) {
+		if ((entity.getIdentificationNumber() != null))
+			entity.setIdentificationNumber(entity.getIdentificationNumber().replace(".", ""));
 		List<Integer> activePersonIds = personRepository.findAllActive();
 		List<Person> result =  personRepository.findAll(buildExample(entity), PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.unsorted()))
 				.filter(p -> activePersonIds.contains(p.getId())).toList();
@@ -68,6 +70,7 @@ public class BackofficePersonStore implements BackofficeStore<Person, Integer> {
 	public Example<Person> buildExample(Person entity) {
 		ExampleMatcher customExampleMatcher = ExampleMatcher.matching().withMatcher("identificationNumber",
 				ExampleMatcher.GenericPropertyMatcher::startsWith)
+				.withMatcher("identificationNumber", ExampleMatcher.GenericPropertyMatcher::startsWith)
 				.withMatcher("firstName", x -> x.ignoreCase().contains())
 				.withMatcher("lastName", x -> x.ignoreCase().contains());
 		return Example.of(entity, customExampleMatcher);

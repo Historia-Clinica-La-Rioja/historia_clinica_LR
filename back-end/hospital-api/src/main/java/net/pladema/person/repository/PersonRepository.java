@@ -106,7 +106,8 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, AuditP
 	@Query("SELECT p.id " +
 			"FROM Person p " +
 			"JOIN Patient pa ON pa.personId = p.id " +
-			"WHERE pa.deleteable.deleted = false ")
+			"WHERE pa.deleteable.deleted = false " +
+			"AND pa.typeId != 6")
 	List<Integer> findAllActive();
 
 }
