@@ -20,6 +20,7 @@ export class DiscardWarningComponent implements OnInit {
 			cancelButtonLabel: string,
 			okBottonColor?: ThemePalette,
 			buttonClose?:boolean,
+			errorMode?:boolean,
 		}
 	) {
 	}

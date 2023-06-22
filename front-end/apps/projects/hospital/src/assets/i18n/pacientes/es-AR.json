@@ -339,7 +339,9 @@
 		"SAVE_OK_EDIT_AUDIT":"La indicación se marcó como resuelta y el paciente fue editado con éxito.",
 		"TITLE_NO_DATA_RENAPER":"La información ingresada no se encuentra en Renaper",
 		"SUBTITLE_NO_DATA_RENAPER":"Por favor, revise los datos ingresados y vuelva a intentar",
-		"LABEL_PATIENT_REJECTED":"El paciente “Rechazado” no se vera en el resto del los módulos del sistema."
+		"LABEL_PATIENT_REJECTED":"El paciente “Rechazado” no se vera en el resto del los módulos del sistema.",
+		"TITLE_ERROR_REJECTED":"El paciente tiene un encuentro activo",
+		"LABEL_ERROR_REJECTED": "El paciente no puede rechazarse porque tiene al menos un encuentro activo. Para rechazar el paciente no debe estar en un episodio abierto de guardia o internación y no debe tener turnos asignados"
 	}
   }
 }

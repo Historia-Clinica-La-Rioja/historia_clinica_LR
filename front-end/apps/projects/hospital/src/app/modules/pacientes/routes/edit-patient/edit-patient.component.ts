@@ -553,7 +553,6 @@ export class EditPatientComponent implements OnInit {
 					})
 			})
 		}
-
 	}
 
 	private mapToPersonRequest(): APatientDto {
