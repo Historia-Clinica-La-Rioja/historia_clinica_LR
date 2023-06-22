@@ -57,7 +57,7 @@ export class EditPatientComponent implements OnInit {
 	hasAuditorRole: boolean = false;
 	idTypeDni: number;
 	dniWasEdited: boolean = false;
-	rejectedId:number;
+	rejectedId: number;
 
 	readonly PERSON_MAX_LENGTH = PERSON.MAX_LENGTH;
 	readonly GENDER_MAX_LENGTH = VALIDATIONS.MAX_LENGTH.gender;
@@ -212,7 +212,7 @@ export class EditPatientComponent implements OnInit {
 								this.restrictFormEdit();
 								if (this.hasAuditorRole) {
 									this.form.controls.patientId.disable();
-									if(this.form.controls.identificationTypeId.value === this.idTypeDni){
+									if (this.form.controls.identificationTypeId.value === this.idTypeDni) {
 										this.form.controls.identificationNumber.disable();
 									}
 								}
@@ -258,8 +258,8 @@ export class EditPatientComponent implements OnInit {
 								if (this.hasAuditorRole) {
 									this.auditPatientService.getTypesPatient().subscribe(res => {
 										this.typesPatient = res;
-										this.rejectedId = this.typesPatient.find(type => type.description === REJECTTED ).id;
-										if(this.form.controls.stateId.value === this.rejectedId){
+										this.rejectedId = this.typesPatient.find(type => type.description === REJECTTED).id;
+										if (this.form.controls.stateId.value === this.rejectedId) {
 											this.form.controls.stateId.disable();
 										}
 									})
@@ -533,7 +533,24 @@ export class EditPatientComponent implements OnInit {
 							this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
 						}
 						this.snackBarService.showSuccess(this.getMessagesSuccess());
-					}, _ => this.snackBarService.showError(this.getMessagesError()));
+					}, error => {
+						if (error.code === ERROR_ENCOUNTER_ACTIVE_EXISTS) {
+							this.dialog.open(DiscardWarningComponent, {
+								data: {
+									title: 'pacientes.audit.TITLE_ERROR_REJECTED',
+									content: 'pacientes.audit.LABEL_ERROR_REJECTED',
+									okButtonLabel: 'buttons.CLOSE',
+									buttonClose: true,
+									errorMode: true,
+								},
+								disableClose: true,
+								width: '35%',
+								autoFocus: false
+							});
+						} else {
+							this.snackBarService.showError(this.getMessagesError());
+						}
+					})
 			})
 		}
 
@@ -633,7 +650,7 @@ export class EditPatientComponent implements OnInit {
 
 	setIdentificationType(value: any) {
 		const button = document.getElementById('updateDNI');
-		if(this.hasAuditorRole){
+		if (this.hasAuditorRole) {
 			if (value !== this.idTypeDni) {
 				this.form.controls.identificationNumber.enable();
 				button.style.display = "none";
