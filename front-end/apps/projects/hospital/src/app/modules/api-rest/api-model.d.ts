@@ -3616,6 +3616,10 @@ export interface SelfPerceivedGenderDto extends AbstractMasterdataDto<number> {
     id: number;
 }
 
+export interface SendUsageReportDto {
+    code: string;
+}
+
 export interface Serializable {
 }
 
@@ -3991,6 +3995,11 @@ export interface UpdateConceptsSynonymsResultDto {
     erroneousConcepts: number;
     errorMessages: string[];
     missingMainConcepts: number;
+}
+
+export interface UsageReportStatusDto {
+    domainId: string;
+    isAllowedToSend: boolean;
 }
 
 export interface UserApiKeyDto {
