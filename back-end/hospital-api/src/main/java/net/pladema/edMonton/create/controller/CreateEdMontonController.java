@@ -63,6 +63,7 @@ public class CreateEdMontonController implements CreateEdMontonAPI{
 			reg.setPatientId(patientId);
 			reg.setResult(0);
 			Integer count = 0;
+			Integer total = 0;
 			if (createEdMontonDto.getEdMonton() != null && createEdMontonDto.getEdMonton().size()>0) {
 				reg.setAnswers(new ArrayList <EdMontonAnswerBo>() );
 				for(EdMontonAnswerDto dto : createEdMontonDto.getEdMonton()) {
@@ -70,6 +71,7 @@ public class CreateEdMontonController implements CreateEdMontonAPI{
 					EedMontonTestAnswer eReg = EedMontonTestAnswer.getById(dto.getAnswerId());
 					lstReg.setAnswerId(eReg.getAnswerId());
 					lstReg.setValue(eReg.getValue());
+					total = lstReg.getValue() + total;
 					if (eReg.getQuestionId() == 13) {
 						switch (count) {
 							case 0:
@@ -95,7 +97,7 @@ public class CreateEdMontonController implements CreateEdMontonAPI{
 						lstReg.setQuestionId(eReg.getQuestionId());
 					}
 					reg.getAnswers().add(lstReg);
-					reg.setResult((reg.getResult() + eReg.getValue()));
+					reg.setResult(total);
 				}
 			}
 			return reg;

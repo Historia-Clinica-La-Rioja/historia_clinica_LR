@@ -22,7 +22,7 @@ public class ImpresionEdMontonRepositoryImpl implements ImpresionEdMontonReposit
 	@Override
 	public Optional<List<Answer>> getEdMontonReportInfo(Long edMontonTestId) {
 
-		String query = "SELECT ans.item_id, ans.option_id " +
+		String query = "SELECT ans.item_id, ans.option_id, ans.value " +
 				"FROM {h-schema}minsal_lr_questionnaire_response as qr " +
 				"INNER JOIN {h-schema}minsal_lr_answer ans ON ans.questionnaire_response_id = qr.id " +
 				"WHERE qr.id = :edMontonTestId";
@@ -35,8 +35,22 @@ public class ImpresionEdMontonRepositoryImpl implements ImpresionEdMontonReposit
 			Answer answer = new Answer();
 			answer.setItemId((Integer)row[0]);
 			answer.setAnswerId((Integer) row[1]);
+			answer.setValue((String) row[2]);
 			answers.add(answer);
 		}
 		return Optional.of(answers);
 	}
+
+	@Override
+	public Object getResulFinalReport(Long edMontonTestId) {
+		String query = "SELECT ans.value " +
+				"FROM {h-schema}minsal_lr_questionnaire_response as qr " +
+				"INNER JOIN {h-schema}minsal_lr_answer ans ON ans.questionnaire_response_id = qr.id " +
+				"WHERE qr.id = :edMontonTestId " +
+				"AND ans.item_id = 21";
+		Object queryResult =  entityManager.createNativeQuery(query).setParameter("edMontonTestId", edMontonTestId).getSingleResult();
+
+		return queryResult;
+	}
+
 }

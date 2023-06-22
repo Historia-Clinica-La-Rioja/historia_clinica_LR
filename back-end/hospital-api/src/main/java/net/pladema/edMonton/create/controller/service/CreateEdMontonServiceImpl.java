@@ -68,6 +68,9 @@ public class CreateEdMontonServiceImpl implements CreateEdMontonService{
 		Answer answer;
 		Integer idCuestionario = 1;
 		Integer idStatus= 2;
+		Integer resultFinal = edMontonBo.getResult();
+		Answer answerOne = new Answer();
+
 
 		questionnaireResponse.setPatientId(Math.toIntExact(edMontonBo.getPatientId()));
 		if( edMontonBo.getAnswers() != null && edMontonBo.getAnswers().size()>0){
@@ -81,9 +84,16 @@ public class CreateEdMontonServiceImpl implements CreateEdMontonService{
 				answer = new Answer();
 				answer.setAnswerId(Math.toIntExact(answerBo.getAnswerId()));
 				answer.setItemId(Math.toIntExact(answerBo.getQuestionId()));
-
+				answer.setValue(String.valueOf(answerBo.getValue()));
 				questionnaireResponse.getAnswers().add(answer);
+
 			}
+				answerOne.setItemId(21);
+				answerOne.setValue(String.valueOf(resultFinal));
+				questionnaireResponse.getAnswers().add(answerOne);
+
+
+
 				questionnaireResponse.setQuestionnaireId(idCuestionario);
 				questionnaireResponse.setStatusId(idStatus);
 

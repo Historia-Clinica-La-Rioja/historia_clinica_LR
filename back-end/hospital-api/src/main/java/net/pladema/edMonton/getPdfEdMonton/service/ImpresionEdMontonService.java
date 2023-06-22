@@ -10,9 +10,9 @@ public interface ImpresionEdMontonService {
 
 	List<ImpresionEdMontonDto> getImpresionEdMonton(Long edMontonId);
 
-	Map<String, Object> createEdMontonContext(List <ImpresionEdMontonDto> lst);
+	Map<String, Object> createEdMontonContext(List <ImpresionEdMontonDto> lst, Object result);
 
-	String getScore(Short score);
+	Object getScore(Long edMontonId);
 
 	String createEdMontonFileName(Long edMontonId, ZonedDateTime edMontonDate);
 
