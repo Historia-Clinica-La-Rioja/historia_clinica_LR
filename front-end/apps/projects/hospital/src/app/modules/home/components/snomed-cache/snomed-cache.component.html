@@ -8,7 +8,7 @@
 <div *ngFor="let terminologyQueueItem of queue$ | async" class="card-list">
 	<mat-card>
 		<mat-card-subtitle>
-			<span>{{terminologyQueueItem.createdOn | viewDateDto : 'datetime' | date: 'dd/MM/yyyy - HH:mm'}}</span>
+			<span>{{terminologyQueueItem.createdOn | viewDateDto: 'localdatetime' | date: 'dd/MM/yyyy - HH:mm'}}</span>
 		</mat-card-subtitle>
 		<mat-card-title>
 			<span class="item-id">#{{terminologyQueueItem.id}} </span>
@@ -22,7 +22,7 @@
 				<span>{{terminologyQueueItem.downloadedError}}</span>
 			</div>
 			<div *ngIf="terminologyQueueItem.downloadedOn">
-				<span>{{terminologyQueueItem.downloadedOn | viewDateDto : 'datetime' | date: 'dd/MM/yyyy - HH:mm'}}</span>
+				<span>{{terminologyQueueItem.downloadedOn | viewDateDto: 'localdatetime' | date: 'dd/MM/yyyy - HH:mm'}}</span>
 				<span *ngIf="terminologyQueueItem.downloadedFile">
 					{{'configuracion.snomed-cache.DOWNLOADED_FILE' | translate}}
 				</span>
@@ -31,7 +31,7 @@
 				</span>
 			</div>
 			<div *ngIf="terminologyQueueItem.ingestedError">
-				<span *ngIf="terminologyQueueItem.ingestedOn">{{terminologyQueueItem.ingestedOn | viewDateDto : 'datetime' |
+				<span *ngIf="terminologyQueueItem.ingestedOn">{{terminologyQueueItem.ingestedOn | viewDateDto: 'localdatetime' |
 					date: 'dd/MM/yyyy - HH:mm'}}</span>
 				<span *ngIf="!terminologyQueueItem.ingestedOn"> ... </span>
 				<span>{{terminologyQueueItem.ingestedError}}</span>

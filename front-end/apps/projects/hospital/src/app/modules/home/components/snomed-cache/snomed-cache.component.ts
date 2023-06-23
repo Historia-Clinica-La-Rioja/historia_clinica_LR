@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SnomedCacheService } from './snomed-cache.service';
 import { TerminologyCSVDto, TerminologyQueueItemDto } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
+import { DatePipeFormat } from '@core/utils/date.utils';
 
 
 @Component({
@@ -11,6 +12,7 @@ import { Observable } from 'rxjs';
 })
 export class SnomedCacheComponent implements OnInit {
 	queue$: Observable<TerminologyQueueItemDto[]>;
+	readonly dateFormats = DatePipeFormat;
 
 	constructor(
 		private snomedCacheService: SnomedCacheService,
