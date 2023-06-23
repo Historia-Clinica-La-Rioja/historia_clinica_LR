@@ -24,6 +24,8 @@ export class SnomedCacheFormComponent implements OnInit {
 		SnomedECL.PERSONAL_RECORD,
 		SnomedECL.PROCEDURE,
 		SnomedECL.VACCINE,
+		SnomedECL.DIABETES,
+		SnomedECL.HYPERTENSION
 	];
 
 	form: FormGroup;
