@@ -32,9 +32,9 @@ public class AuditPersonSearchQuery {
 		String select = "";
 		if (name) {
 			select = " person.first_name, \n" +
-					" person.middle_names, \n" +
+					" COALESCE(person.middle_names, '') AS middle_names, \n" +
 					" person.last_name, \n" +
-					" person.other_last_names, \n";
+					" COALESCE(person.other_last_names, '') AS other_last_names, \n";
 		}
 		if (identify) {
 			select += " person.identification_type_id, \n" +
@@ -77,9 +77,9 @@ public class AuditPersonSearchQuery {
 		String groupBy = "";
 		if (name) {
 			groupBy = " person.first_name, \n" +
-					" person.middle_names, \n" +
+					" COALESCE(person.middle_names, ''), \n" +
 					" person.last_name, \n" +
-					" person.other_last_names, \n";
+					" COALESCE(person.other_last_names, ''), \n";
 		}
 		if (identify) {
 			groupBy += " person.identification_type_id, \n" +
