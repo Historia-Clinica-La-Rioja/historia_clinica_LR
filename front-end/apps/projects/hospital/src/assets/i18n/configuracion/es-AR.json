@@ -41,8 +41,12 @@
 					"LABEL": "URL",
 					"REQUIRED": "La URL del CSV es requerida"
 				},
-				"SUBMIT": "Agregar"
-			}
+				"SUBMIT": "Agregar",
+				"TITLE": "Agregar terminología a importar"
+			},
+			"TERMINOLOGIES_LIST": "Lista de terminología en CSV pendiente a agregar",
+			"DOWNLOADED_FILE": "Archivo descargado",
+			"NO_FILE": "Archivo no existe"
 		}
 	},
 	"app": {

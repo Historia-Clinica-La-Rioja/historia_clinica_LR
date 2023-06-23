@@ -1,12 +1,12 @@
 <mat-toolbar-row>
-	<span>Lista de terminología en CSV pendiente a agregar</span>
+	<span>{{'configuracion.snomed-cache.TERMINOLOGIES_LIST' | translate}}</span>
 	<span class="toolbar-spacer"></span>
 	<button mat-icon-button (click)="list()">
 		<mat-icon>sync</mat-icon>
 	</button>
 </mat-toolbar-row>
 <div *ngFor="let terminologyQueueItem of queue$ | async" class="card-list">
-	<mat-card class="example-card">
+	<mat-card>
 		<mat-card-subtitle>
 			<span>{{terminologyQueueItem.createdOn | viewDateDto : 'datetime' | date: 'dd/MM/yyyy - HH:mm'}}</span>
 		</mat-card-subtitle>
@@ -24,10 +24,10 @@
 			<div *ngIf="terminologyQueueItem.downloadedOn">
 				<span>{{terminologyQueueItem.downloadedOn | viewDateDto : 'datetime' | date: 'dd/MM/yyyy - HH:mm'}}</span>
 				<span *ngIf="terminologyQueueItem.downloadedFile">
-					Archivo descargado
+					{{'configuracion.snomed-cache.DOWNLOADED_FILE' | translate}}
 				</span>
 				<span *ngIf="!terminologyQueueItem.downloadedFile">
-					Archivo no existe
+					{{'configuracion.snomed-cache.NO_FILE' | translate}}
 				</span>
 			</div>
 			<div *ngIf="terminologyQueueItem.ingestedError">
