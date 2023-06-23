@@ -106,9 +106,28 @@ cube(`TablaHipertension`, {
                             AND sg.description = 'ELECTROCARDIOGRAPHIC_PROCEDURE'
                             AND dr2.status_id = '261782000'
                             ORDER BY dr2.updated_on DESC
-                            LIMIT 1))
+                            LIMIT 1)),
+        lp AS (
+        SELECT hc.patient_id, date(hc.start_date) AS result_date
+        FROM health_condition hc 
+        WHERE hc.id IN (
+            SELECT hc2.id  
+                    FROM document d2
+                    JOIN document_health_condition dhc2 ON (dhc2.document_id = d2.id)
+                    JOIN health_condition hc2 ON (hc2.id = dhc2.health_condition_id) 
+                    WHERE hc.snomed_id IN (
+                        SELECT rc.snomed_id  
+                        FROM rc)
+                    AND hc2.problem_id IN ('55607006', '-55607006')
+                    AND d2.status_id IN ('445665009', '445667001') 
+                    AND d2.type_id IN (4, 9) 
+                    AND hc2.start_date IS NOT NULL
+                    AND hc2.patient_id = hc.patient_id
+                    AND hc2.snomed_id = hc.snomed_id
+                    ORDER BY hc2.start_date
+                    LIMIT 1))
         SELECT DISTINCT CASE WHEN p3.name_self_determination IS NULL THEN CONCAT(p2.first_name, ' ', p2.middle_names) WHEN p3.name_self_determination IS NOT NULL THEN p3.name_self_determination END AS name, 
-        CONCAT(p2.last_name, ' ', p2.other_last_names) AS last_name, it.description || ' ' || p2.identification_number AS identification_number, s.pt AS problem, TO_CHAR(hc.start_date, 'DD/MM/YYYY') AS problem_start_date, 
+        CONCAT(p2.last_name, ' ', p2.other_last_names) AS last_name, it.description || ' ' || p2.identification_number AS identification_number, s.pt AS problem, TO_CHAR(lp.result_date, 'DD/MM/YYYY') AS problem_start_date, 
         a.street || ' ' || a."number" AS address, c.description AS city_name, cr.value || '% (' || TO_CHAR(cr.creation_date, 'DD/MM/YYYY') || ')' AS cardiovascular_risk_value,
         dp1.value || ' (' || to_char(dp1.creation_date, 'DD/MM/YYYY') || ')' AS last_diastolic_pressure_value, sp1.value || ' (' || to_char(sp1.creation_date, 'DD/MM/YYYY') || ')' AS last_systolic_pressure_value,
         dp2.value || ' (' || to_char(dp2.creation_date, 'DD/MM/YYYY') || ')' AS penultimate_diastolic_pressure_value, sp2.value || ' (' || to_char(sp2.creation_date, 'DD/MM/YYYY') || ')' AS penultimate_systolic_pressure_value,
@@ -136,21 +155,7 @@ cube(`TablaHipertension`, {
         LEFT JOIN lc ON (lc.patient_id = p.id)
         LEFT JOIN lep ON (lep.patient_id = p.id)
         JOIN la ON (la.patient_id = hc.patient_id AND la.snomed_id = hc.snomed_id)
-        WHERE hc.id = (SELECT hc2.id  
-                    FROM document d2
-                    JOIN document_health_condition dhc2 ON (dhc2.document_id = d2.id)
-                    JOIN health_condition hc2 ON (hc2.id = dhc2.health_condition_id) 
-                    WHERE hc.snomed_id IN (
-                        SELECT rc.snomed_id  
-                        FROM rc)
-                    AND hc2.problem_id IN ('55607006', '-55607006')
-                    AND d2.status_id IN ('445665009', '445667001') 
-                    AND d2.type_id IN (4, 9) 
-                    AND hc2.start_date IS NOT NULL
-                    AND hc2.patient_id = hc.patient_id
-                    AND hc2.snomed_id = hc.snomed_id
-                    ORDER BY hc2.start_date
-                    LIMIT 1)`,
+        JOIN lp ON (lp.patient_id = p.id)`,
     measures: {
         pacientes_hipertensos_sin_atencion: {
             sql: `*`,

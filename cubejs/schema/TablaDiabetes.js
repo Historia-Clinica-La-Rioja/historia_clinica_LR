@@ -125,9 +125,27 @@ cube(`TablaDiabetes`, {
                             and s.sctid = '250745003'
                             and dr2.status_id = '261782000'
                             ORDER BY dr2.updated_on DESC
-                            LIMIT 1))             
+                            LIMIT 1)),
+        lp as(
+        SELECT hc.patient_id, date(hc.start_date) AS result_date
+        FROM health_condition hc 
+        WHERE hc.id IN (SELECT hc2.id  
+            FROM document d2
+            JOIN document_health_condition dhc2 ON (dhc2.document_id = d2.id)
+            JOIN health_condition hc2 ON (hc2.id = dhc2.health_condition_id) 
+            WHERE hc.snomed_id IN (
+                SELECT rc.snomed_id  
+                FROM rc)
+            AND hc2.problem_id IN ('55607006', '-55607006')
+            AND d2.status_id IN ('445665009', '445667001') 
+            AND d2.type_id IN (4, 9) 
+            AND hc2.start_date IS NOT NULL
+            AND hc2.patient_id = hc.patient_id
+            AND hc2.snomed_id = hc.snomed_id
+            ORDER BY hc2.start_date
+            LIMIT 1))             
         SELECT DISTINCT CASE WHEN p3.name_self_determination IS NULL THEN CONCAT(p2.first_name, ' ', p2.middle_names) WHEN p3.name_self_determination IS NOT NULL THEN p3.name_self_determination END AS name, 
-        CONCAT(p2.last_name, ' ', p2.other_last_names) AS last_name, it.description || ' ' || p2.identification_number AS identification_number, s.pt AS problem, TO_CHAR(hc.start_date, 'DD/MM/YYYY') AS problem_start_date, 
+        CONCAT(p2.last_name, ' ', p2.other_last_names) AS last_name, it.description || ' ' || p2.identification_number AS identification_number, s.pt AS problem, TO_CHAR(lp.result_date, 'DD/MM/YYYY') AS problem_start_date, 
         a.street || ' ' || a."number" AS address, c.description AS city_name, gh.value || '% (' || TO_CHAR(gh.creation_date, 'DD/MM/YYYY') || ')' AS glycosilated_hemoglobin_value,
         TO_CHAR(lof.performed_date, 'DD/MM/YYYY') AS last_ocular_fondus_date, TO_CHAR(la.created_on, 'DD/MM/YYYY') AS last_attention_date, d.institution_id,
         TO_CHAR(p2.birth_date, 'DD/MM/YYYY') AS birth_date, cr.value || '% (' || TO_CHAR(cr.creation_date, 'DD/MM/YYYY') || ')' AS cardiovascular_risk_value,
@@ -160,21 +178,7 @@ cube(`TablaDiabetes`, {
         LEFT JOIN lac ON (lac.patient_id = p.id)
         LEFT JOIN cd ON (cd.patient_id = p.id)
         JOIN la ON (la.patient_id = hc.patient_id AND la.snomed_id = hc.snomed_id)
-        WHERE hc.id = (SELECT hc2.id  
-                    FROM document d2
-                    JOIN document_health_condition dhc2 ON (dhc2.document_id = d2.id)
-                    JOIN health_condition hc2 ON (hc2.id = dhc2.health_condition_id) 
-                    WHERE hc.snomed_id IN (
-                        SELECT rc.snomed_id  
-                        FROM rc)
-                    AND hc2.problem_id IN ('55607006', '-55607006')
-                    AND d2.status_id IN ('445665009', '445667001') 
-                    AND d2.type_id IN (4, 9) 
-                    AND hc2.start_date IS NOT NULL
-                    AND hc2.patient_id = hc.patient_id
-                    AND hc2.snomed_id = hc.snomed_id
-                    ORDER BY hc2.start_date
-                    LIMIT 1)`,
+        JOIN lp ON (lp.patient_id = p.id)`,
     measures: {
         pacientes_diabeticos_sin_atencion: {
             sql: `*`,
