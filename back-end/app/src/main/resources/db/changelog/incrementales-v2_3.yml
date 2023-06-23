@@ -128,3 +128,86 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: hierarchical_unit
               validate: true
+
+    - changeSet:
+        id: hierarchical_unit_staff-createTable
+        comment: Create table hierarchical_unit_staff
+        author: bchacon
+        changes:
+          - createTable:
+              tableName: hierarchical_unit_staff
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_hierarchical_unit_staff
+                    name: id
+                    type: int
+                - column:
+                    name: hierarchical_unit_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: user_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: responsible
+                    type: boolean
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: hierarchical_unit_id
+              baseTableName: hierarchical_unit_staff
+              constraintName: FK_hierarchical_unit_staff_hierarchical_unit_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: hierarchical_unit
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: user_id
+              baseTableName: hierarchical_unit_staff
+              constraintName: FK_hierarchical_unit_staff_user_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true
