@@ -1825,6 +1825,15 @@ export interface InstitutionInfoDto extends Serializable {
     sisaCode: string;
 }
 
+export interface InstitutionUserPersonDto {
+    completeLastName: string;
+    completeName: string;
+    id: number;
+    identificationNumber: string;
+    institutionId: number;
+    personId: number;
+}
+
 export interface InternmentEpisodeADto {
     bedId: number;
     dischargeDate: Date;
