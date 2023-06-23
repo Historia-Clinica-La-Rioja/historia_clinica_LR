@@ -9,7 +9,7 @@ import {
     TextInput
 } from 'react-admin';
 import CustomToolbar from '../components/CustomToolbar';
-import { HierarchicalUnitChilds, HierarchicalUnitParents } from "./HierarchicalUnitShow";
+import {HierarchicalUnitChilds, HierarchicalUnitParents, HierarchicalUnitStaff} from "./HierarchicalUnitShow";
 
 const SERVICE = 8;
 
@@ -57,7 +57,8 @@ const HierarchicalUnitEdit = props => (
             <HierarchicalUnitParentsToReport/>
             <HierarchicalUnitChilds/>
             <HierarchicalUnitParents/>
-            </SimpleForm>
+            <HierarchicalUnitStaff/>
+        </SimpleForm>
     </Edit>
 );
 

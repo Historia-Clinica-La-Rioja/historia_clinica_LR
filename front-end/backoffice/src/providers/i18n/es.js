@@ -809,6 +809,15 @@ const messages = {
             },
             createRelated: 'Asociar Unidad jeárquica'
         },
+        hierarchicalunitstaff: {
+            name: 'Usuarios',
+            fields: {
+                hierarchicalUnitId: 'Unidad jerárquica',
+                userId: 'Usuario',
+                responsible: 'Responsable'
+            },
+            addRelated: 'Asociar usuario',
+        }
     }
 };
 

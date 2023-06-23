@@ -9,7 +9,10 @@ import {
     usePermissions,
     ReferenceManyField,
     Datagrid,
-    DeleteButton
+    DeleteButton,
+    FunctionField,
+    BooleanField, 
+    EditButton
 } from 'react-admin';
 
 import {ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE} from "../roles";
@@ -17,6 +20,8 @@ import SectionTitle from "../components/SectionTitle";
 import CreateRelatedButton from '../components/CreateRelatedButton';
 
 const SERVICE = 8;
+
+const renderPersonData = (institutionUserPerson) => `${institutionUserPerson.completeName ?institutionUserPerson.completeName : "" } ${institutionUserPerson.completeLastName ?institutionUserPerson.completeLastName : "" } `;
 
 const ServiceField = (props) => {
     const record = useRecordContext(props);
@@ -99,6 +104,46 @@ const AsociateHierarchicalUnitParent = ({ record }) => {
     ) : null;
 };
 
+const AssociatePersonToHierarchicalUnit = ({ record }) => {
+    const customRecord = {institutionId: record.institutionId, hierarchicalUnitId: record.id};
+    return UserIsInstitutionalAdmin() ?( <CreateRelatedButton
+            customRecord={customRecord}
+            reference="hierarchicalunitstaff"
+            refFieldName="hierarchicalUnitId"
+            label="resources.hierarchicalunitstaff.addRelated"
+        />
+    ) : null;
+};
+
+const HierarchicalUnitStaff = (props) => {
+    const record = useRecordContext(props);
+    return record ?
+        (
+            <Fragment>
+                <SectionTitle label="resources.hierarchicalunitstaff.name"/>
+                <AssociatePersonToHierarchicalUnit {...props}/>
+                <ReferenceManyField
+                    addLabel={false}
+                    reference="hierarchicalunitstaff"
+                    target="hierarchicalUnitId"
+                >
+                    <Datagrid empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin usuarios definidos</p>}>
+                        <ReferenceField source="userId" reference="institutionuserpersons" label="resources.person.fields.firstName" link={false}>
+                            <FunctionField render={renderPersonData}/>
+                        </ReferenceField>
+                        <ReferenceField source="userId" reference="institutionuserpersons" label="resources.person.fields.identificationNumber" link={false}>
+                            <ReferenceField source="personId" reference="person" link={false}>
+                                <TextField source="identificationNumber"/>
+                            </ReferenceField>
+                        </ReferenceField>
+                        <BooleanField source="responsible"/>
+                        <EditButton disabled={!UserIsInstitutionalAdmin()}/>
+                    </Datagrid>
+                </ReferenceManyField>
+            </Fragment>
+        ) : null;
+}
+
 const HierarchicalUnitShow = props => (
     <Show {...props} hasEdit={UserIsInstitutionalAdmin()}>
         <SimpleShowLayout>
@@ -112,10 +157,11 @@ const HierarchicalUnitShow = props => (
             <ServiceField {...props} />
             <HierarchicalUnitChilds/>
             <HierarchicalUnitParents/>
+            <HierarchicalUnitStaff/>
         </SimpleShowLayout>
     </Show>
 );
 
 export default HierarchicalUnitShow;
 
-export { HierarchicalUnitChilds,  HierarchicalUnitParents }
+export { HierarchicalUnitChilds,  HierarchicalUnitParents, HierarchicalUnitStaff, renderPersonData }

@@ -67,6 +67,8 @@ import equipment from "./equipment";
 import modality from "./modality";
 import shockroom from './shockroom';
 import hierarchicalunitrelationships from "./hierarchicalunitrelationships";
+import hierarchicalunitstaff from "./hierarchicalunitstaff";
+import institutionuserpersons from "./institutionuserpersons";
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
     permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
@@ -125,6 +127,8 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="snowstormproblems" />,
     <Resource name="hierarchicalunits" {...hierarchicalunits(permissions)} />,
     <Resource name="hierarchicalunitrelationships" {...hierarchicalunitrelationships} />,
+    <Resource name="hierarchicalunitstaff" {...hierarchicalunitstaff} />,
+    <Resource name="institutionuserpersons" {...institutionuserpersons} />,
     // debug
     <Resource name="snvs"  {...snvs} />,
     <Resource name="documentfiles" {...documentFiles(permissions)} />,
