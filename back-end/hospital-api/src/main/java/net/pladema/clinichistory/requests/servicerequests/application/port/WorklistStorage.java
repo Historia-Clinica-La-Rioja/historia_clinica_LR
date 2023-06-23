@@ -7,6 +7,4 @@ import java.util.List;
 public interface WorklistStorage {
 
 	List<WorklistBo> getWorklistByModalityAndInstitution(Integer modalityId, Integer institutionId);
-
-	List<WorklistBo> getWorklistByInstitution(Integer institutionId);
 }

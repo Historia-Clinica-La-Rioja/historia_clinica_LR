@@ -18,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
@@ -34,26 +35,14 @@ public class WorklistController {
 	private final GetWorklist getWorklist;
 	private final LocalDateMapper localDateMapper;
 
-	@GetMapping(value = "/by-modality/{modalityId}")
+	@GetMapping(value = "/by-modality")
 	@PreAuthorize("hasPermission(#institutionId, 'INFORMADOR')")
 	public ResponseEntity<List<WorklistDto>> getWorklistByModalityAndInstitution(
 			@PathVariable(name = "institutionId") Integer institutionId,
-			@PathVariable(name = "modalityId") Integer modalityId
+			@RequestParam(name = "modalityId", required = false) Integer modalityId
 	) {
 		log.debug("Input parameters -> institutionId {}, modalityId {}", institutionId, modalityId);
 		List<WorklistBo> worklistBo = getWorklist.run(modalityId, institutionId);
-		List<WorklistDto> result = worklistBo.stream().map(this::mapToWorklistDto).collect(Collectors.toList());
-		log.debug("Get worklist by modality and institution ", result);
-		return ResponseEntity.ok().body(result);
-	}
-
-	@GetMapping(value = "/by-institution")
-	@PreAuthorize("hasPermission(#institutionId, 'INFORMADOR')")
-	public ResponseEntity<List<WorklistDto>> getWorklistByModalityAndInstitution(
-			@PathVariable(name = "institutionId") Integer institutionId
-	) {
-		log.debug("Input parameters -> institutionId {}, modalityId {}", institutionId);
-		List<WorklistBo> worklistBo = getWorklist.run(institutionId);
 		List<WorklistDto> result = worklistBo.stream().map(this::mapToWorklistDto).collect(Collectors.toList());
 		log.debug("Get worklist by modality and institution ", result);
 		return ResponseEntity.ok().body(result);

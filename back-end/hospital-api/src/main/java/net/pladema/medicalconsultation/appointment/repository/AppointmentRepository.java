@@ -370,7 +370,6 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"FROM EquipmentAppointmentAssn eaa " +
 			"JOIN EquipmentDiary ed ON eaa.pk.equipmentDiaryId = ed.id " +
 			"JOIN Equipment e ON ed.equipmentId = e.id " +
-			"JOIN Sector s ON e.sectorId = s.id " +
 			"JOIN AppointmentOrderImage aoi ON eaa.pk.appointmentId = aoi.pk.appointmentId " +
 			"JOIN DetailsOrderImage doi ON eaa.pk.appointmentId = doi.pk.appointmentId " +
 			"JOIN Appointment a ON eaa.pk.appointmentId = a.id " +
@@ -378,7 +377,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN Person pe ON p.personId = pe.id " +
 			"JOIN PersonExtended pex ON pe.id = pex.id " +
 			"WHERE e.modalityId = :modalityId " +
-			"AND s.institutionId = :institutionId " +
+			"AND aoi.destInstitutionId = :institutionId " +
 			"AND aoi.completed = true " +
 			"AND doi.pk.roleId = :technicalRoleId " +
 			"AND a.id NOT IN ( SELECT aoi2.pk.appointmentId " +
@@ -393,9 +392,12 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 
 	@Transactional(readOnly = true)
 	@Query( "SELECT new net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo(p.id, pe.identificationTypeId, pe.identificationNumber, pe.firstName, pe.middleNames, pe.lastName, pe.otherLastNames, pex.nameSelfDetermination, a.id, doi.completedOn) " +
-			"FROM AppointmentOrderImage aoi " +
-			"JOIN DetailsOrderImage doi ON aoi.pk.appointmentId = doi.pk.appointmentId " +
-			"JOIN Appointment a ON aoi.pk.appointmentId = a.id " +
+			"FROM EquipmentAppointmentAssn eaa " +
+			"JOIN EquipmentDiary ed ON eaa.pk.equipmentDiaryId = ed.id " +
+			"JOIN Equipment e ON ed.equipmentId = e.id " +
+			"JOIN AppointmentOrderImage aoi ON eaa.pk.appointmentId = aoi.pk.appointmentId " +
+			"JOIN DetailsOrderImage doi ON eaa.pk.appointmentId = doi.pk.appointmentId " +
+			"JOIN Appointment a ON eaa.pk.appointmentId = a.id " +
 			"JOIN Patient p ON a.patientId = p.id " +
 			"JOIN Person pe ON p.personId = pe.id " +
 			"JOIN PersonExtended pex ON pe.id = pex.id " +
@@ -435,7 +437,6 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"FROM EquipmentAppointmentAssn eaa " +
 			"JOIN EquipmentDiary ed ON ed.id = eaa.pk.equipmentDiaryId " +
 			"JOIN Equipment e ON ed.equipmentId = e.id " +
-			"JOIN Sector s ON e.sectorId = s.id " +
 			"JOIN Appointment a ON eaa.pk.appointmentId = a.id " +
 			"JOIN Patient p ON a.patientId = p.id " +
 			"JOIN Person pe ON p.personId = pe.id " +
@@ -443,7 +444,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN AppointmentOrderImage aoi ON a.id = aoi.pk.appointmentId " +
 			"JOIN Document d ON aoi.documentId = d.id " +
 			"WHERE e.modalityId = :modalityId " +
-			"AND s.institutionId = :institutionId " +
+			"AND aoi.destInstitutionId = :institutionId " +
 			"AND d.statusId = '" + DocumentStatus.FINAL + "'"	+ "  " +
 			"AND d.sourceTypeId =" + SourceType.MEDICAL_IMAGE + "  " +
 			"AND d.typeId =" + DocumentType.MEDICAL_IMAGE_REPORT + " " +
