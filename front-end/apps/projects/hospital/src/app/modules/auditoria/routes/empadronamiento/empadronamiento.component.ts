@@ -25,7 +25,7 @@ export class EmpadronamientoComponent implements OnInit {
 	identificationTypeList: IdentificationTypeDto[];
 	today: Moment = newMoment();
 	minDate = MIN_DATE;
-	patientStates = ["Temporario", "Permanente no validado", "Validado", "Permanente"];
+	patientStates: string[] = [];
 	formSubmitted: boolean = false;
 	optionsValidations = OptionsValidations;
 	tabActiveIndex = 0;
@@ -39,34 +39,39 @@ export class EmpadronamientoComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
-		this.setMasterData();
 		this.initForms();
+		this.setMasterData();
+
+	}
+
+	private setMasterData(): void {
+		this.auditPatientService.getTypesPatient().subscribe(res => {
+			this.patientStates = res.map(r =>
+				r.description
+			);
+			this.personalInformationForm.controls.filterState.setValue(this.patientStates)
+		})
+		this.personMasterDataService.getGenders()
+			.subscribe(genders => {
+				this.genders = genders;
+			});
+		this.personMasterDataService.getIdentificationTypes()
+			.subscribe(identificationTypes => {
+				this.identificationTypeList = identificationTypes;
+			});
 		this.personMasterDataService.getGenders().subscribe(
 			genders => {
 				genders.forEach(gender => {
 					this.genderTableView[gender.id] = gender.description;
 				});
 			});
-	}
 
-	private setMasterData(): void {
-
-		this.personMasterDataService.getGenders()
-			.subscribe(genders => {
-				this.genders = genders;
-			});
-
-		this.personMasterDataService.getIdentificationTypes()
-			.subscribe(identificationTypes => {
-				this.identificationTypeList = identificationTypes;
-			});
 	}
 
 	private initForms() {
 		this.patientIdForm = this.formBuilder.group({
 			patientId: [null, [Validators.pattern(PATTERN_INTEGER_NUMBER)]]
 		})
-
 		this.personalInformationForm = this.formBuilder.group({
 			firstName: [null, [Validators.maxLength(PERSON.MAX_LENGTH.firstName), Validators.pattern(/^(?!\s)/)]],
 			middleNames: [null, [Validators.maxLength(PERSON.MAX_LENGTH.middleNames), Validators.pattern(/^(?!\s)/)]],
@@ -99,7 +104,7 @@ export class EmpadronamientoComponent implements OnInit {
 
 	prepareSearchDto() {
 		let filterDto: any;
-		if (this.tabActiveIndex === 0) {
+		if (this.tabActiveIndex === 0)
 			filterDto = {
 				patientId: null,
 				lastName: this.personalInformationForm.controls.lastName.value,
@@ -111,12 +116,12 @@ export class EmpadronamientoComponent implements OnInit {
 				identificationNumber: this.personalInformationForm.controls.identificationNumber.value,
 				birthDate: this.personalInformationForm.controls.birthDate.value !== null ? momentFormat(this.personalInformationForm.controls.birthDate.value, DateFormat.API_DATE) : null,
 				toAudit: this.personalInformationForm.controls.filterAudit.value ? this.personalInformationForm.controls.filterAudit.value === 'true' : true,
-				temporary: this.personalInformationForm.controls.filterState.value.includes("Temporario") ? true : false,
-				permanentNotValidated: this.personalInformationForm.controls.filterState.value.includes("Permanente no validado") ? true : false,
-				validated: this.personalInformationForm.controls.filterState.value.includes("Validado") ? true : false,
-				permanent: this.personalInformationForm.controls.filterState.value.includes("Permanente") ? true : false,
-			}
-		} else {
+				temporary: !!this.personalInformationForm.controls.filterState.value.includes("Temporario"),
+				permanentNotValidated: !!this.personalInformationForm.controls.filterState.value.includes("Permanente no validado"),
+				validated: !!this.personalInformationForm.controls.filterState.value.includes("Validado"),
+				permanent: !!this.personalInformationForm.controls.filterState.value.includes("Permanente"),
+				rejected: !!this.personalInformationForm.controls.filterState.value.includes("Rechazado"),
+			}; else {
 			filterDto = {
 				patientId: this.patientIdForm.controls.patientId.value,
 				lastName: null,

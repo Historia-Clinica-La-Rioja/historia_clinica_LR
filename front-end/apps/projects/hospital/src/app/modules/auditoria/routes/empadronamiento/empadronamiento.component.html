@@ -27,7 +27,7 @@
 										</mat-option>
 									</mat-select>
 									<button id="clear_identification_type" type="button" mat-button
-										*ngIf="personalInformationForm.value.identificationTypeId" matSuffix
+										*ngIf="personalInformationForm?.value.identificationTypeId" matSuffix
 										color="warn" mat-icon-button
 										(click)="clear(personalInformationForm.controls.identificationTypeId); $event.stopPropagation()">
 										<mat-icon>close</mat-icon>
