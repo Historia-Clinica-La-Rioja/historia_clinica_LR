@@ -18,7 +18,7 @@
 				</mat-form-field>
 				<mat-form-field appearance="outline">
 					<mat-label translate="configuracion.snomed-cache.form.url.LABEL"></mat-label>
-					<input formControlName="url" type="text" matInput>
+					<input formControlName="url" type="text" matInput placeholder="https://lamansys.nyc3.digitaloceanspaces.com/snomed/ALLERGY.csv">
 					<mat-error *ngIf="hasError('required', 'url')">
 						<span translate="configuracion.snomed-cache.form.url.REQUIRED"></span>
 					</mat-error>

@@ -38,7 +38,7 @@ export class SnomedCacheFormComponent implements OnInit {
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
 			ecl: [null, Validators.required],
-			url: ['https://lamansys.nyc3.digitaloceanspaces.com/snomed/ALLERGY.csv', Validators.required],
+			url: [null, Validators.required],
 		});
 	}
 
