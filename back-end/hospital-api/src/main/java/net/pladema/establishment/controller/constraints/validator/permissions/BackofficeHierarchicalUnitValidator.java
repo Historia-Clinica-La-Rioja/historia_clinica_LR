@@ -77,10 +77,14 @@ public class BackofficeHierarchicalUnitValidator implements BackofficePermission
 
 	@Override
 	public ItemsAllowed itemsAllowedToList(HierarchicalUnit entity) {
-		List<HierarchicalUnit> entitiesByExample = repository.findAll(Example.of(entity));
+		List<HierarchicalUnit> entitiesByExample = null;
+		if(entity.getId() != null){
+			entitiesByExample = getHierarchicalUnitParents(entity.getId());
+		} else {
+			entitiesByExample = repository.findAll(Example.of(entity));
+		}
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return new ItemsAllowed(true, entitiesByExample);
-
 		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
 		if (allowedInstitutions.isEmpty())
 			return new ItemsAllowed<>(false, Collections.emptyList());
@@ -97,6 +101,10 @@ public class BackofficeHierarchicalUnitValidator implements BackofficePermission
 	private void validateClinicalSpecialtyIdData(HierarchicalUnit entity) {
 		if (entity.getClinicalSpecialtyId() != null && !entity.getTypeId().equals((int)SERVICIO))
 			entity.setClinicalSpecialtyId(null);
+	}
+
+	private List<HierarchicalUnit> getHierarchicalUnitParents(Integer hierarchicalUnitId){
+		return hierarchicalUnitRelationshipRepository.findParentsIdsByHierarchicalUnitChildId(hierarchicalUnitId);
 	}
 
 }

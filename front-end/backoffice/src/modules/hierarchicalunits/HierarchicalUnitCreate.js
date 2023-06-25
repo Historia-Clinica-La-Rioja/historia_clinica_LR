@@ -28,27 +28,33 @@ const HierarchicalUnitCreate = props => {
     const redirect = props?.location?.state?.record?.hierarchicalUnitIdToReport != null ?
         `/hierarchicalunits/${props?.location?.state?.record?.hierarchicalUnitIdToReport}/show` : "show";
     return (
-    <Create {...props}>
+        <Create {...props}>
             <SimpleForm redirect={redirect} toolbar={<CustomToolbar/>}>
-            <ReferenceInput
-                source="institutionId"
-                reference="institutions"
+                <ReferenceInput
+                    source="institutionId"
+                    reference="institutions"
                     sort={{field: 'name', order: 'ASC'}}
-            >
+                >
                     <AutocompleteInput optionText="name" optionValue="id" options={{disabled: true}}/>
-            </ReferenceInput>
+                </ReferenceInput>
                 <TextInput source="alias" validate={[required()]}/>
-            <ReferenceInput
-                reference="hierarchicalunittypes"
-                source="typeId">
-                <SelectInput optionText="description" optionValue="id" validate={[required()]}/>
-            </ReferenceInput>
-            <FormDataConsumer>
+                <ReferenceInput
+                    reference="hierarchicalunittypes"
+                    source="typeId">
+                    <SelectInput optionText="description" optionValue="id" validate={[required()]}/>
+                </ReferenceInput>
+                <FormDataConsumer>
                     {formDataProps => (
                         <ServiceField {...formDataProps} reference="clinicalservices" source="clinicalSpecialtyId"/>)}
-            </FormDataConsumer>
-        </SimpleForm>
-    </Create>
+                </FormDataConsumer>
+                <ReferenceInput
+                    source="hierarchicalUnitIdToReport"
+                    reference="hierarchicalunits"
+                >
+                    <AutocompleteInput optionText="alias" optionValue="id" options={{disabled: true}}/>
+                </ReferenceInput>
+            </SimpleForm>
+        </Create>
     )
 };
 

@@ -788,7 +788,8 @@ const messages = {
                 classificationId: 'Clasificación',
                 typeId: 'Tipo',
                 alias: 'Alias',
-                clinicalSpecialtyId: 'Servicio'
+                clinicalSpecialtyId: 'Servicio',
+                hierarchicalUnitIdToReport: 'Reporte de productividad'
             },
             createRelated: 'Crear Unidad jérarquica'
         },

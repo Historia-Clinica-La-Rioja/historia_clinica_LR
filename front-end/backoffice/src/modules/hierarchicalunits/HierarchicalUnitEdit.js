@@ -6,7 +6,7 @@ import {
     ReferenceInput,
     required, SelectInput,
     SimpleForm,
-    TextInput,
+    TextInput
 } from 'react-admin';
 import CustomToolbar from '../components/CustomToolbar';
 import { HierarchicalUnitChilds, HierarchicalUnitParents } from "./HierarchicalUnitShow";
@@ -20,6 +20,21 @@ const ServiceField = ({formData, ...rest}) => {
         </ReferenceInput>
     )
 }
+
+const HierarchicalUnitParentsToReport = ({ record }) => {
+    return (
+        <ReferenceInput
+            label='resources.hierarchicalunits.fields.hierarchicalUnitIdToReport'
+            source="hierarchicalUnitIdToReport"
+            reference="hierarchicalunits"
+            sort={{ field: 'alias', order: 'ASC' }}
+            filter={{institutionId: record.institutionId, id: record.id}}
+        >
+            <AutocompleteInput optionText="alias" optionValue="id" />
+        </ReferenceInput>
+    );
+} 
+
 const HierarchicalUnitEdit = props => (
     <Edit {...props}>
         <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true}/>}>
@@ -39,9 +54,10 @@ const HierarchicalUnitEdit = props => (
             <FormDataConsumer>
                 {formDataProps => ( <ServiceField {...formDataProps} reference="clinicalservices" source="clinicalSpecialtyId"/>)}
             </FormDataConsumer>
+            <HierarchicalUnitParentsToReport/>
             <HierarchicalUnitChilds/>
             <HierarchicalUnitParents/>
-        </SimpleForm>
+            </SimpleForm>
     </Edit>
 );
 
