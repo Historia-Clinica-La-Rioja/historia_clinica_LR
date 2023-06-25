@@ -117,7 +117,8 @@ public class PatientController {
 	public PatientController(PatientService patientService, PersonExternalService personExternalService,
 							 AddressExternalService addressExternalService, PatientMapper patientMapper, PersonMapper personMapper,
 							 ObjectMapper jackson, PatientTypeRepository patientTypeRepository, AdditionalDoctorService additionalDoctorService,
-							 FederarExternalService federarExternalService, GetRolesByUser getRolesByUser, HospitalUserRoleMapper hospitalUserRoleMapper, HospitalUserStorage hospitalUserStorage) {
+							 FederarExternalService federarExternalService, GetRolesByUser getRolesByUser,
+							 HospitalUserRoleMapper hospitalUserRoleMapper, HospitalUserStorage hospitalUserStorage) {
 		this.patientService = patientService;
 		this.personExternalService = personExternalService;
 		this.addressExternalService = addressExternalService;

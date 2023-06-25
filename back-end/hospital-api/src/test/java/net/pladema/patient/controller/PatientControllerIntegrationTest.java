@@ -9,6 +9,10 @@ import net.pladema.patient.service.AdditionalDoctorService;
 import net.pladema.patient.service.PatientService;
 import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.controller.service.PersonExternalService;
+import net.pladema.user.application.getrolesbyuser.GetRolesByUser;
+import net.pladema.user.application.port.HospitalUserStorage;
+import net.pladema.user.infrastructure.input.rest.mapper.HospitalUserRoleMapper;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -48,6 +52,15 @@ class PatientControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private AdditionalDoctorService additionalDoctorService;
+
+	@MockBean
+	private GetRolesByUser getRolesByUser;
+
+	@MockBean
+	private HospitalUserRoleMapper hospitalUserRoleMapper;
+
+	@MockBean
+	private HospitalUserStorage hospitalUserStorage;
 
 	@BeforeEach
 	void setup() {
