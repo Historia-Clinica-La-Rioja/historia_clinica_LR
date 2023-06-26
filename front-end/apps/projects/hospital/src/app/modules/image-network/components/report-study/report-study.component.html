@@ -1,19 +1,18 @@
 <h2 class="subtitle" translate="image-network.worklist.details_study.REPORT"></h2>
 
 <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-    <mat-icon fontSet="material-icons-outlined">error_outline</mat-icon>
-    <span class="bold">{{ 'image-network.worklist.details_study.PROBLEMS' | translate }}</span>
+    <span class="bold">{{ 'image-network.worklist.details_study.CONCLUTIONS' | translate }}</span>
 </div>
 
 <form [formGroup]="form" *ngIf="enabledEditing else showInformerObservations" fxLayout="column" fxLayoutGap="2vh">
 
     <app-titled-content-card *ngIf="!ambulatoryConsultationProblemsService.isEmpty()"
-        title="{{ 'ambulatoria.paciente.nueva-consulta.problemas.PROBLEMA' }}" class="content">
-        <app-problem-list [problemsService]="ambulatoryConsultationProblemsService"></app-problem-list>
+        title="{{ 'image-network.worklist.details_study.conclutions.REGISTERED_CONCLUTIONS' }}" class="card">
+        <app-problem-list [problemsService]="ambulatoryConsultationProblemsService" [canEdit]="false"></app-problem-list>
     </app-titled-content-card>
 
-    <button mat-button id="add-problem-button" color="primary" (click)="addProblem()">
-        + {{ 'ambulatoria.paciente.nueva-consulta.problemas.buttons.ADD' | translate }}
+    <button mat-button class="add-btn" id="add-problem-button" color="primary" (click)="addProblem()">
+        + {{ 'image-network.worklist.details_study.conclutions.ADD_CONCLUTION' | translate }}
     </button>
 
     <mat-error *ngIf="submitted && !problems.length" [translate]="'forms.REQUIRED'"></mat-error>
@@ -47,7 +46,6 @@
         </div>
 
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-            <mat-icon fontSet="material-icons-outlined">chat</mat-icon>
             <span class="bold">{{ 'image-network.worklist.details_study.OBSERVATIONS' | translate }}</span>
         </div>
 

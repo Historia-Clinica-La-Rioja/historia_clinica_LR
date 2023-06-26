@@ -67,10 +67,14 @@
                 "REPORT": "INFORME:" ,
                 "DRAFT_REPORT": "Borrador editado - ",
                 "CONTINUE_EDITING": "Seguir editando",
-                "PROBLEMS": "Problemas:",
-                "OBSERVATIONS": "Observaciones:",
+                "CONCLUTIONS": "Conclusiones:",
+                "OBSERVATIONS": "Detalle de informe:",
                 "VIEW_STUDY": "ver estudio",
-                "SNACKBAR_ERROR_STUDY": "No es posible abrir el estudio"               
+                "SNACKBAR_ERROR_STUDY": "No es posible abrir el estudio",
+                "conclutions": {
+                    "ADD_CONCLUTION": "Agregar conclusión",
+                    "REGISTERED_CONCLUTIONS": "Conclusiones registradas"
+                }          
             },
             "WORKLIST_BY_INFORMER": "Lista de informes",
             "MODALITIES": "Seleccione modalidades",
