@@ -28,6 +28,8 @@ import { PregnancyFormComponent } from './components/pregnancy-form/pregnancy-fo
 import { ObstetricComponent } from './components/obstetric/obstetric.component';
 import { FormDynamicNewBornComponent } from './components/form-dynamic-new-born/form-dynamic-new-born.component';
 import { ProcedureComponent } from './components/procedure/procedure.component';
+import { ListConceptComponent } from './components/list-concept/list-concept.component';
+import { ComponentEvaluationManagerService } from '../../services/component-evaluation-manager.service';
 // dialogs
 import { AnamnesisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/anamnesis-dock-popup/anamnesis-dock-popup.component";
 import { ConceptDateFormComponent } from './dialogs/concept-date-form/concept-date-form.component';
@@ -64,11 +66,13 @@ import { MedicationComponent } from './components/medication/medication.componen
 		InternmentPatientCardComponent,
 		InternmentEpisodeSummaryComponent,
 		MedicacionComponent,
+		MedicationComponent,
 		ObstetricComponent,
 		PregnancyFormComponent,
 		VacunasComponent,
 		TableEventComponent,
 		TypeOfPregnancyComponent,
+		ListConceptComponent,
 		ProcedureComponent,
 		// dialogs
 		AnamnesisDockPopupComponent,
@@ -82,16 +86,15 @@ import { MedicationComponent } from './components/medication/medication.componen
 		DiagnosisCreationEditionComponent,
 		SelectMainDiagnosisComponent,
 		DocumentActionReasonComponent,
-  		IntermentDocumentEpisodeComponent,
+		IntermentDocumentEpisodeComponent,
 		AttachDocumentPopupComponent,
 		DeleteDocumentPopupComponent,
-  MedicationComponent,
 	],
-    exports: [
-        InternmentEpisodeSummaryComponent,
-        InternmentPatientTableComponent,
+	exports: [
+		InternmentEpisodeSummaryComponent,
+		InternmentPatientTableComponent,
 		InternmentPatientCardComponent,
-    ],
+	],
 	imports: [
 		CommonModule,
 		FormsModule,
@@ -102,6 +105,9 @@ import { MedicationComponent } from './components/medication/medication.componen
 		PresentationModule,
 		LazyMaterialModule,
 		TurnosModule
+	],
+	providers: [
+		ComponentEvaluationManagerService,
 	]
 })
 export class InternacionesModule { }

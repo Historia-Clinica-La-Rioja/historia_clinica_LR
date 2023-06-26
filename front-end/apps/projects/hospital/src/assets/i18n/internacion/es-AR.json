@@ -307,6 +307,10 @@
 			"warning-dialog": {
 				"FIRST_TEXT": "Se han realizado evoluciones sobre el episodio de internación posteriores a la última versión del borrador.",
 				"SECOND_TEXT": "Por favor, revise los últimos datos cargados."
+			},
+			"list-concept": {
+				"INCLUDE_ALL": "Incluir todos",
+				"NO_DATA": "No se registraron datos en el episodio"
 			}
 		},
 		"clinical-assessment-diagnosis": {
