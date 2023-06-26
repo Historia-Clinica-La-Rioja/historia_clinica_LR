@@ -1,19 +1,19 @@
 <div fxLayoutGap="2vh">
 	<app-titled-content-card *ngIf="medications?.length"
 		title="{{ 'ambulatoria.paciente.nueva-consulta.medicaciones.LIST_CARD_TITLE' }}">
-		<div fxLayout="column" fxLayoutGap="10px" *ngFor="let medicacion of medications; index as i; last as isLast">
+		<div fxLayout="column" *ngFor="let medicacion of medications; index as i; last as isLast">
 			<div fxLayout="row" fxLayoutAlign="space-between center">
 				<div fxLayout="column" fxLayoutGap="6px">
-					<span>{{ medicacion.snomed.pt }}</span>
+					<span>{{ medicacion.snomed.pt | titlecase}}</span>
 				</div>
-				<button type="button" mat-icon-button color="warn" (click)="remove(i)">
+				<em *ngIf="medicacion?.note" class="mat-caption gray-caption">
+					{{ medicacion.note | titlecase}}
+				</em>
+				<button type="button" mat-icon-button color="warn" (click)="remove(i); $event.stopPropagation()">
 					<mat-icon>delete_outline</mat-icon>
 				</button>
+				<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
 			</div>
-			<em *ngIf="medicacion?.note" class="mat-caption gray-caption">
-				{{ medicacion.note }}
-			</em>
-			<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
 		</div>
 	</app-titled-content-card>
 

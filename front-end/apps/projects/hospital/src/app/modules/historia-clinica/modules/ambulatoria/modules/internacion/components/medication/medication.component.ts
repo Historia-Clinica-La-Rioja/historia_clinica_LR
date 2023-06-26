@@ -2,27 +2,27 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MedicationDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model'
-import { pushTo, removeFrom } from '@core/utils/array.utils';
+import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { SearchSnomedConceptComponent } from '@historia-clinica/modules/ambulatoria/dialogs/search-snomed-concept/search-snomed-concept.component';
 import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
 import { FormMedicationComponent } from '../../dialogs/form-medication/form-medication.component';
 
 @Component({
-  selector: 'app-medication',
-  templateUrl: './medication.component.html',
-  styleUrls: ['./medication.component.scss']
+	selector: 'app-medication',
+	templateUrl: './medication.component.html',
+	styleUrls: ['./medication.component.scss']
 })
-export class MedicationComponent  {
+export class MedicationComponent {
 	@Output() medicationsChange = new EventEmitter();
 	@Input() medications: MedicationDto[] = [];
-	@Input() hideSuspended: boolean;
+	@Input() hideSuspended = false;
 
 
 	constructor(
 		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
 		private readonly dialog: MatDialog,
 
-	) {	}
+	) { }
 
 	addToList(medicacion: MedicationDto) {
 		if (medicacion) {
@@ -30,11 +30,17 @@ export class MedicationComponent  {
 		}
 	}
 
-
 	add(medicacion: MedicationDto) {
-		this.medications = pushTo<MedicationDto>(this.medications, medicacion);
-		this.componentEvaluationManagerService.medications = this.medications;
-		this.medicationsChange.next(this.medications);
+		const lenght = this.medications?.length;
+		this.medications = pushIfNotExists<MedicationDto>(this.medications, medicacion, this.compare);
+		if (this.medications.length > lenght) {
+			this.componentEvaluationManagerService.medications = this.medications;
+			this.medicationsChange.next(this.medications);
+		}
+	}
+
+	compare(concept1: MedicationDto, concept2: MedicationDto): boolean {
+		return concept1.snomed.sctid === concept2.snomed.sctid
 	}
 
 	remove(index: number) {
@@ -48,7 +54,7 @@ export class MedicationComponent  {
 		dialogConfig.width = '35%';
 		dialogConfig.disableClose = false;
 		dialogConfig.data = {
-			label:'historia-clinica.new-consultation-medication-form.CONCEPT_LABEL',
+			label: 'historia-clinica.new-consultation-medication-form.CONCEPT_LABEL',
 			title: 'ambulatoria.paciente.nueva-consulta.medicaciones.ADD',
 			eclFilter: SnomedECL.MEDICINE
 		};
@@ -65,7 +71,7 @@ export class MedicationComponent  {
 					}
 				});
 				dialog.afterClosed().subscribe(medicacion => {
-						this.addToList(medicacion)
+					this.addToList(medicacion)
 				});
 			}
 		});

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { HospitalizationProcedureDto, SnomedECL } from '@api-rest/api-model';
-import { pushTo, removeFrom } from '@core/utils/array.utils';
+import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { SearchSnomedConceptComponent } from '@historia-clinica/modules/ambulatoria/dialogs/search-snomed-concept/search-snomed-concept.component';
 import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
 import { Concept, ConceptDateFormComponent } from '../../dialogs/concept-date-form/concept-date-form.component';
@@ -34,9 +34,16 @@ export class ProcedureComponent {
 	}
 
 	add(hospitalizationProcedure: HospitalizationProcedureDto) {
-		this.procedures = pushTo<HospitalizationProcedureDto>(this.procedures, hospitalizationProcedure);
-		this.componentEvaluationManagerService.hospitalizationProcedures = this.procedures;
-		this.proceduresChange.emit(this.procedures);
+		const lenght = this.procedures?.length;
+		this.procedures = pushIfNotExists<HospitalizationProcedureDto>(this.procedures, hospitalizationProcedure, this.compare);
+		if (this.procedures.length > lenght) {
+			this.componentEvaluationManagerService.hospitalizationProcedures = this.procedures;
+			this.proceduresChange.emit(this.procedures);
+		}
+	}
+
+	compare(concept1: HospitalizationProcedureDto, concept2: HospitalizationProcedureDto): boolean {
+		return concept1.snomed.sctid === concept2.snomed.sctid
 	}
 
 	remove(index: number) {
@@ -50,7 +57,7 @@ export class ProcedureComponent {
 		dialogConfig.width = '35%';
 		dialogConfig.disableClose = false;
 		dialogConfig.data = {
-			label:  'internaciones.anamnesis.procedimientos.PROCEDIMIENTO',
+			label: 'internaciones.anamnesis.procedimientos.PROCEDIMIENTO',
 			title: 'internaciones.anamnesis.procedure.ADD_PROCEDURE',
 			eclFilter: SnomedECL.PROCEDURE
 		};
@@ -63,7 +70,7 @@ export class ProcedureComponent {
 				dialog.width = '35%';
 				dialogConfig.disableClose = false;
 				dialog.data = {
-					label:  'internaciones.anamnesis.procedimientos.PROCEDIMIENTO',
+					label: 'internaciones.anamnesis.procedimientos.PROCEDIMIENTO',
 					add: 'internaciones.anamnesis.procedure.ADD_PROCEDURE',
 					title: 'internaciones.anamnesis.procedimientos.PROCEDIMIENTO',
 					snomedConcept: snomedConcept
