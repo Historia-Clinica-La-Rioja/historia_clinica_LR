@@ -211,6 +211,7 @@
 		"epicrisis": {
 			"TITLE": "Epicrisis",
 			"SUBTITLE": "Completa los siguientes datos.",
+			"MESSAGE-REMEMBER": "Seleccione los datos que desea incluir en la Epicrisis",
 			"alergias": {
 				"TITLE": "Alergias",
 				"table": {
@@ -251,6 +252,7 @@
 				"TITLE_PRINCIPAL": "Diagnóstico principal",
 				"DIAGNOSIS": "Diagnóstico",
 				"PRESUMPTIVE": "Presuntivo",
+				"INCLUDE_ALL": "incluir todos",
 				"table": {
 					"TITLE": "Diagnósticos registrados",
 					"columns": {
