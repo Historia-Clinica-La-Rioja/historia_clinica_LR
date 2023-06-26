@@ -18,6 +18,7 @@ export class ElementoDiagnosticoComponent {
 	isMain: boolean;
 
 	@Output() removeDiagnosis = new EventEmitter();
+	@Input() type = ' ';
 
 	ACTIVE = HEALTH_CLINICAL_STATUS.ACTIVO;
 	REMISSION = HEALTH_CLINICAL_STATUS.REMISION;

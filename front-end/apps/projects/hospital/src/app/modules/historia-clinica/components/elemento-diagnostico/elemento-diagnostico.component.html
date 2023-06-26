@@ -1,19 +1,27 @@
-<div fxLayout="row" fxLayoutAlign="space-around center">
+<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px">
 	<div class="diagnosis-text" fxLayout="row" fxLayoutGap="10px">
-		<mat-checkbox id="{{ diagnosis.snomed.pt }}" [checked]="diagnosis.isAdded" [disabled]="isMain" (change)="diagnosis.isAdded = $event.checked"></mat-checkbox>
-		<strong class="capitalize">{{ diagnosis.snomed.pt }}</strong>
+		<mat-checkbox id="{{ diagnosis.snomed.pt }}" [checked]="isMain || diagnosis.isAdded" [disabled]="isMain"
+			(change)="diagnosis.isAdded = $event.checked"></mat-checkbox>
+		<strong [ngClass]="{'capitalize title': type === 'EPICRISIS', 'capitalize': type !== 'EPICRISIS'}">{{ diagnosis.snomed.pt }}</strong>
 	</div>
-	<span *ngIf="diagnosis.statusId == ACTIVE else remissionDiagnosis" [translate]="'internaciones.anamnesis.diagnosticos.ACTIVE'"></span>
-	<span *ngIf="diagnosis.presumptive else confirmedDiagnosis" [translate]="'internaciones.anamnesis.diagnosticos.PRESUMPTIVE'"></span>
+	<span *ngIf="diagnosis.statusId == ACTIVE else remissionDiagnosis"
+		[translate]="'internaciones.anamnesis.diagnosticos.ACTIVE'"></span>
+	<span *ngIf="diagnosis.presumptive else confirmedDiagnosis"
+		[translate]="'internaciones.anamnesis.diagnosticos.PRESUMPTIVE'"></span>
 	<ng-template #confirmedDiagnosis>
-		<span *ngIf="diagnosis.verificationId == CONFIRMED else discardedDiagnosis" [translate]="'internaciones.anamnesis.diagnosticos.CONFIRMED'"></span>
+		<span *ngIf="diagnosis.verificationId == CONFIRMED else discardedDiagnosis"
+			[translate]="'internaciones.anamnesis.diagnosticos.CONFIRMED'"></span>
 	</ng-template>
-	<button mat-icon-button color="primary" (click)="openDiagnosisEditionDialog()" [disabled]="isMain">
-        <mat-icon>edit</mat-icon>
-    </button>
-	<button mat-icon-button color="warn" (click)="remove()">
-        <mat-icon>delete</mat-icon>
-    </button>
+
+	<ng-container *ngIf="type === 'ANAMNESIS' || !isMain">
+		<button mat-icon-button color="primary" (click)="openDiagnosisEditionDialog()" [disabled]="isMain">
+			<mat-icon>edit</mat-icon>
+		</button>
+		<button mat-icon-button color="warn" (click)="remove()">
+			<mat-icon>delete</mat-icon>
+		</button>
+	</ng-container>
+
 </div>
 
 <ng-template #discardedDiagnosis>
