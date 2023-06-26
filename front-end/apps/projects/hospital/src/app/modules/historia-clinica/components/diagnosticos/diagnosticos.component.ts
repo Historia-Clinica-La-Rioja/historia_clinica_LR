@@ -16,20 +16,11 @@ import { SelectMainDiagnosisComponent } from '../../modules/ambulatoria/modules/
 })
 export class DiagnosticosComponent {
 	@Input() showTitle = false;
+	@Input() diagnosticos: DiagnosisDto[] = [];
+	@Input() mainDiagnosis: HealthConditionDto;
+	@Input() type: string;
 	@Output() diagnosisChange = new EventEmitter();
 	@Output() mainDiagnosisChange = new EventEmitter();
-
-	@Input()
-	diagnosticos: DiagnosisDto[] = [];
-	_mainDiagnosis: HealthConditionDto;
-
-	@Input()
-	set mainDiagnosis(newMainDiagnosis: HealthConditionDto) {
-		this._mainDiagnosis = newMainDiagnosis;
-		this.mainDiagnosisChange.emit(this._mainDiagnosis)
-	}
-	@Input()
-	type: string;
 
 	CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
 	ACTIVE = HEALTH_CLINICAL_STATUS.ACTIVO;
@@ -41,6 +32,9 @@ export class DiagnosticosComponent {
 
 	) { }
 
+	private isMainDiagnosis(diagnosis: DiagnosisDto): boolean {
+		return !this.diagnosticos.find(currentDiagnosis => currentDiagnosis.snomed.pt === diagnosis.snomed.pt) && diagnosis.snomed.pt != this.mainDiagnosis?.snomed.pt
+	}
 	openCreationDialog(isMainDiagnosis: boolean) {
 		const dialogRef = this.dialog.open(DiagnosisCreationEditionComponent, {
 			width: '450px',
@@ -52,7 +46,7 @@ export class DiagnosticosComponent {
 
 		dialogRef.afterClosed().subscribe(diagnosis => {
 			if (diagnosis) {
-				if (!this.diagnosticos.find(currentDiagnosis => currentDiagnosis.snomed.pt === diagnosis.snomed.pt) && diagnosis.snomed.pt != this._mainDiagnosis?.snomed.pt) {
+				if (this.isMainDiagnosis(diagnosis)) {
 
 					if (isMainDiagnosis) {
 						this.componentEvaluationManagerService.mainDiagnosis = diagnosis;
@@ -60,6 +54,7 @@ export class DiagnosticosComponent {
 						diagnosis.verificationId = this.CONFIRMED;
 						diagnosis.statusId = this.ACTIVE;
 						this.mainDiagnosis = diagnosis;
+						this.mainDiagnosisChange.emit(this.mainDiagnosis);
 					}
 					else {
 						this.diagnosticos.push(diagnosis);
@@ -77,23 +72,25 @@ export class DiagnosticosComponent {
 		const dialogRef = this.dialog.open(SelectMainDiagnosisComponent, {
 			width: '450px',
 			data: {
-				currentMainDiagnosis: this._mainDiagnosis,
+				currentMainDiagnosis: this.mainDiagnosis,
 				otherDiagnoses: this.diagnosticos.filter(d => d.statusId === this.ACTIVE)
 			}
 		});
 
 		dialogRef.afterClosed().subscribe(potentialNewMainDiagnosis => {
 			if (potentialNewMainDiagnosis) {
-				if (potentialNewMainDiagnosis != this._mainDiagnosis) {
+				if (potentialNewMainDiagnosis != this.mainDiagnosis) {
 					this.componentEvaluationManagerService.mainDiagnosis = potentialNewMainDiagnosis;
-					let oldMainDiagnosis = this._mainDiagnosis;
+					let oldMainDiagnosis = this.mainDiagnosis;
 					this.diagnosticos.push(oldMainDiagnosis);
 					this.diagnosticos.splice(this.diagnosticos.indexOf(potentialNewMainDiagnosis), 1);
 					this.mainDiagnosis = potentialNewMainDiagnosis;
-					this._mainDiagnosis.isAdded = true;
-					this._mainDiagnosis.verificationId = this.CONFIRMED;
-					this._mainDiagnosis.statusId = this.ACTIVE;
-					(<DiagnosisDto>this._mainDiagnosis).presumptive = false;
+					this.mainDiagnosis.isAdded = true;
+					this.mainDiagnosis.verificationId = this.CONFIRMED;
+					this.mainDiagnosis.statusId = this.ACTIVE;
+					(<DiagnosisDto>this.mainDiagnosis).presumptive = false;
+					this.mainDiagnosisChange.emit(this.mainDiagnosis);
+
 				}
 			}
 		});
@@ -106,4 +103,15 @@ export class DiagnosticosComponent {
 			this.componentEvaluationManagerService.diagnosis = this.diagnosticos;
 		}
 	}
+
+	removeMainDiagnosis() {
+		this.mainDiagnosisChange.emit(null);
+	}
+
+	toggleAllSelection() {
+		const allSelected = this.diagnosticos.every(item => item.isAdded);
+		this.diagnosticos.forEach(item => (item.isAdded = !allSelected));
+		this.diagnosisChange.emit(this.diagnosticos);
+	}
+
 }
