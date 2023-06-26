@@ -1,6 +1,6 @@
 <app-dock-popup [dockPopupRef]="dockPopupRef" [header]="{ title:'internaciones.anamnesis.TITLE' }">
 
-	<form body id="anamnesis-form" (keydown.enter)="false" [formGroup]="form" fxLayoutGap="20px">
+	<form body id="anamnesis-form" [formGroup]="form" fxLayoutGap="20px">
 
 		<app-new-consultation-expansion-section id="diagnosticos"
 			[title]="'internaciones.epicrisis.diagnosticos.TITLE' | translate" icon="error_outlined" [collapsed]="false"

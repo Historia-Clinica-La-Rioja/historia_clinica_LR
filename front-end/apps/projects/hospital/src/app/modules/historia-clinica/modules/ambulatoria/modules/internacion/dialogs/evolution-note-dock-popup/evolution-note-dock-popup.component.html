@@ -1,6 +1,6 @@
 <app-dock-popup [dockPopupRef]="dockPopupRef" [header]="{ title:'internaciones.nota-evolucion.TITLE' }">
 	<div body fxLayout="column" fxLayoutGap="20px">
-		<form id="nota-evolucion-form" (keydown.enter)="false" [formGroup]="form" fxLayoutGap="20px">
+		<form id="nota-evolucion-form" [formGroup]="form" fxLayoutGap="20px">
 
 			<app-new-consultation-expansion-section id="diagnosticos"
 				*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
