@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AllergyConditionDto, DiagnosisDto, HealthHistoryConditionDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, ResponseAnamnesisDto, ResponseEvolutionNoteDto } from '@api-rest/api-model';
+import { AllergyConditionDto, DiagnosisDto, EpicrisisDto, EpicrisisGeneralStateDto, ExternalCauseDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, ObstetricEventDto, ResponseAnamnesisDto, ResponseEvolutionNoteDto } from '@api-rest/api-model';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable()
@@ -12,6 +12,10 @@ export class ComponentEvaluationManagerService {
 	private diagnosticosSubject = new BehaviorSubject<boolean>(true);
 	private mainDiagnosticosSubject = new BehaviorSubject<boolean>(true);
 	private hospitalizationProcedureSubject = new BehaviorSubject<boolean>(true);
+	private otherProblemsSubject = new BehaviorSubject<boolean>(true);
+	private externalCauseSubject = new BehaviorSubject<boolean>(true);
+	private obstetricSubject = new BehaviorSubject<boolean>(true);
+
 	set anamnesis(anamnesis: ResponseAnamnesisDto) {
 
 		this.mainDiagnosis = anamnesis?.mainDiagnosis;
@@ -30,6 +34,30 @@ export class ComponentEvaluationManagerService {
 		this.hospitalizationProcedures = anamnesis?.procedures;
 		this.allergies = anamnesis.allergies;
 		this.vaccines = anamnesis.immunizations;
+	}
+
+	set epicrisis(epicrisis: EpicrisisGeneralStateDto) {
+		this.allergies = epicrisis.allergies;
+		this.diagnosis = epicrisis.diagnosis;
+		this.familyHistories = epicrisis.familyHistories;
+		this.vaccines = epicrisis.immunizations;
+		this.mainDiagnosis = epicrisis.mainDiagnosis;
+		this.medications = epicrisis.medications;
+		this.otherProblems = epicrisis.otherProblems;
+		this.personalHistories = epicrisis.personalHistories;
+	}
+
+	set epicrisisDraft(epicrisis: EpicrisisDto) {
+		this.allergies = epicrisis.allergies;
+		this.diagnosis = epicrisis.diagnosis;
+		this.familyHistories = epicrisis.familyHistories;
+		this.vaccines = epicrisis.immunizations;
+		this.mainDiagnosis = epicrisis.mainDiagnosis;
+		this.medications = epicrisis.medications;
+		this.otherProblems = epicrisis.otherProblems;
+		this.personalHistories = epicrisis.personalHistories;
+		this.externalCause = epicrisis?.externalCause;
+		this.obstetric = epicrisis?.obstetricEvent;
 	}
 
 	set mainDiagnosis(mainDiagnosis: DiagnosisDto) {
@@ -58,9 +86,24 @@ export class ComponentEvaluationManagerService {
 		this.vaccinesSubject.next(!vaccines || vaccines.length === 0);
 	}
 
-	set medications(medications: MedicationDto[]) {
+	set otherProblems(otherProblems: HealthConditionDto[]) {
+		this.otherProblemsSubject.next(!otherProblems || otherProblems.length === 0);
+	}
 
+	set medications(medications: MedicationDto[]) {
 		this.medicationsSubject.next(!medications || medications.length === 0);
+	}
+
+	set externalCause(externalCause: ExternalCauseDto) {
+		const { eventLocation, externalCauseType, snomed } = externalCause;
+		const isExternalCauseEmpty = !(eventLocation || externalCauseType || snomed);
+		this.externalCauseSubject.next(isExternalCauseEmpty);
+	}
+
+	set obstetric(obstetric: ObstetricEventDto) {
+		const { currentPregnancyEndDate, gestationalAge, newborns, pregnancyTerminationType, previousPregnancies } = obstetric;
+		const isObstetricEmpty = !(currentPregnancyEndDate || gestationalAge || newborns?.length > 0 || pregnancyTerminationType || previousPregnancies);
+		this.obstetricSubject.next(isObstetricEmpty);
 	}
 
 	isEmptyDiagnosis(): Observable<boolean> {
@@ -91,4 +134,15 @@ export class ComponentEvaluationManagerService {
 		return this.medicationsSubject.asObservable();
 	}
 
+	isOtherProblems(): Observable<boolean> {
+		return this.otherProblemsSubject.asObservable();
+	}
+
+	isEmptyExternalCause(): Observable<boolean> {
+		return this.externalCauseSubject.asObservable();
+	}
+
+	isEmptyObstetric(): Observable<boolean> {
+		return this.obstetricSubject.asObservable();
+	}
 }
