@@ -27,7 +27,7 @@ export class ReportStudyComponent implements OnInit {
 	enabledEditing = true;
 	ambulatoryConsultationProblemsService: AmbulatoryConsultationProblemsService;
 	searchConceptsLocallyFFIsOn = false;
-	problems: AmbulatoryConsultationProblem[];
+	problems: AmbulatoryConsultationProblem[] = [];
 	study: StudyAppointment;
 	appointmentId: number;
 	disableContinueEditing = false;
@@ -86,7 +86,7 @@ export class ReportStudyComponent implements OnInit {
 
 	saveDraft() {
 		this.submitted = true;
-		if (this.form.valid && this.problems.length) {
+		if (this.form.valid) {
 			this.disableContinueEditing = true;
 			this.enabledEditing = false;
 			if (this.study.info.informerObservations?.id) {
@@ -106,7 +106,7 @@ export class ReportStudyComponent implements OnInit {
 
 	save() {
 		this.submitted = true;
-		if (this.form.valid && this.problems.length) {
+		if (this.form.valid) {
 			this.disableContinueEditing = true;
 			this.enabledEditing = false;
 			if (this.study.info.informerObservations?.id) {

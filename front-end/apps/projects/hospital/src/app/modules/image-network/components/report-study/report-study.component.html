@@ -15,8 +15,6 @@
         + {{ 'image-network.worklist.details_study.conclutions.ADD_CONCLUTION' | translate }}
     </button>
 
-    <mat-error *ngIf="submitted && !problems.length" [translate]="'forms.REQUIRED'"></mat-error>
-
     <div fxLayout="column" fxLayoutGap="30px">
         <app-rich-text-editor [formParent]="form" [controlParent]="form.controls.observations"></app-rich-text-editor>
         <mat-error *ngIf="submitted && form.hasError('required','observations')"
