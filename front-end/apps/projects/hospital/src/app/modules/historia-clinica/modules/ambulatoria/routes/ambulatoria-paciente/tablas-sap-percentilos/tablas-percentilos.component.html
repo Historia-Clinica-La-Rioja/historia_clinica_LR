@@ -1,0 +1,35 @@
+<h1 class="title2">Tabla antropométrica</h1>
+
+<section>
+
+  <mat-accordion>
+       <div class="contenedor-title">
+        <span class="column-name-title">Nombre</span>
+        <span class="column-title">Sexo</span>
+      </div>
+     <!--<mat-divider role="separator" class="mat-divider mat-divider-horizontal"></mat-divider>-->
+
+    <ng-container *ngFor="let element of data">
+      <mat-expansion-panel class="dark-panel" [expanded]="panelOpenState === element.Orden">
+        <mat-expansion-panel-header (click)="panelOpenState = element.Orden">
+          <mat-panel-title>
+            <div class="container-orden">
+              {{ element.Orden }}.
+            </div>
+            <div class="container-name">
+              {{ element.Nombre }}
+            </div>
+            <div class="container-sexo">
+              {{ element.Sexo }}
+            </div>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="panel-content">
+          <img class="grafic" [src]="getImagePath(element.Grafic)" alt="Image">
+        </div>
+      </mat-expansion-panel>
+    </ng-container>
+
+  </mat-accordion>
+</section>
