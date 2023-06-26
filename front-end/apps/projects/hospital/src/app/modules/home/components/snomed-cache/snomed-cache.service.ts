@@ -25,4 +25,10 @@ export class SnomedCacheService {
 		);;
 	}
 
+	delete(terminologyId: number) {
+		this.terminologyCacheService.delete(terminologyId).subscribe(
+			_ => this.list()
+		)
+	}
+
 }

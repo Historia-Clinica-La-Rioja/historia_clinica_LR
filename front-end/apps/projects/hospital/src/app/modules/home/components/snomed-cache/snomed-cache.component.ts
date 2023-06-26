@@ -31,4 +31,8 @@ export class SnomedCacheComponent implements OnInit {
 		this.snomedCacheService.list();
 	}
 
+	delete(terminologyId: number) {
+		this.snomedCacheService.delete(terminologyId);
+	}
+
 }

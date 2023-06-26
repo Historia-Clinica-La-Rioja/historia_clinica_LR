@@ -21,4 +21,8 @@ export class TerminologyCacheService {
 		return this.http.post<TerminologyQueueItemDto>(`${environment.apiBase}/terminology/cache`, newCsv);
 	}
 
+	public delete(terminologyId: number): Observable<void> {
+		return this.http.delete<void>(`${environment.apiBase}/terminology/cache/${terminologyId}`);
+	}
+
 }

@@ -34,7 +34,8 @@
 				<span *ngIf="terminologyQueueItem.ingestedOn">{{terminologyQueueItem.ingestedOn | viewDateDto: 'localdatetime' |
 					date: 'dd/MM/yyyy - HH:mm'}}</span>
 				<span *ngIf="!terminologyQueueItem.ingestedOn"> ... </span>
-				<span>{{terminologyQueueItem.ingestedError}}</span>
+				<span class="white-space">{{terminologyQueueItem.ingestedError}}</span>
+				<button class="delete-btn" mat-raised-button color="warn" (click)="delete(terminologyQueueItem.id)">{{'buttons.DELETE' | translate}}</button>
 			</div>
 		</mat-card-content>
 	</mat-card>
