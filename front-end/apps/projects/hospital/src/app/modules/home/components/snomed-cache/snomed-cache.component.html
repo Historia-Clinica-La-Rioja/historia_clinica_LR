@@ -1,7 +1,7 @@
 <mat-toolbar-row>
 	<span>{{'configuracion.snomed-cache.TERMINOLOGIES_LIST' | translate}}</span>
 	<span class="toolbar-spacer"></span>
-	<button mat-icon-button (click)="list()">
+	<button mat-icon-button (click)="refresh()" matTooltip="{{'configuracion.snomed-cache.UPDATE' | translate}}">
 		<mat-icon>sync</mat-icon>
 	</button>
 </mat-toolbar-row>

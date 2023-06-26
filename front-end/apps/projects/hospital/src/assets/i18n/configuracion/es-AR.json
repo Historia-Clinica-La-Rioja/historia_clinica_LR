@@ -46,7 +46,9 @@
 			},
 			"TERMINOLOGIES_LIST": "Lista de terminología en CSV pendiente a agregar",
 			"DOWNLOADED_FILE": "Archivo descargado",
-			"NO_FILE": "Archivo no existe"
+			"NO_FILE": "Archivo no existe",
+			"UPDATE": "Actualizar",
+			"DATA_UPDATED": "Datos actualizados"
 		}
 	},
 	"app": {
