@@ -177,8 +177,8 @@
                     </button>
                 </div>
             </div>
-            <section class="prescription-list gray">
-                <div *ngIf="prescriptionItem.administrationTimeDays">
+            <section fxLayout="row" fxLayoutAlign="space-between start" class="gray">
+                <div *ngIf="prescriptionItem.administrationTimeDays && isHabilitarRecetaDigitalEnabled" fxLayout="column" fxLayoutGap="5px">
                     <span *ngIf="prescriptionItem.unitDose"
                         [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UNIT_DOSE'"
                         [translateParams]="{unitDose: prescriptionItem.unitDose}">
@@ -196,7 +196,7 @@
                         [translateParams]="{quantity: prescriptionItem.quantity.value}">
                     </span>
                 </div>
-                <div>
+                <div fxLayout="column" fxLayoutGap="5px">
                     <span *ngIf="prescriptionItem.healthProblem"
                         [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.DIAGNOSIS'"
                         [translateParams]="{healthProblem: prescriptionItem.healthProblem.description}">

@@ -22,16 +22,6 @@ h3#prescriptionItemName {
     color: gray;
 }
 
-.prescription-list {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-
-    div {
-        display: flex;
-        flex-direction: column;
-    }
-}
-
 .mb-1 {
     margin-bottom: 1rem;
 }
