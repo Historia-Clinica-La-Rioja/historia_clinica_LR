@@ -7,17 +7,6 @@
 <form [formGroup]="form" (ngSubmit)="save()">
     <h1 [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.TITLE'"></h1>
 
-    <section class="selected-file">
-        <mat-form-field class="example-full-width" appearance="outline">
-            <mat-label [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.NAME'"></mat-label>
-            <input matInput formControlName="fileName">
-        </mat-form-field>
-
-        <mat-error class="typeahead-required" *ngIf="hasError(form, 'requiredFileType', 'file')"
-            [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.FILE'">
-        </mat-error>
-    </section>
-
     <app-typeahead
         *ngIf="documentTypes?.length > 0; else noDocumentsType"
         [options]="documentTypes"
