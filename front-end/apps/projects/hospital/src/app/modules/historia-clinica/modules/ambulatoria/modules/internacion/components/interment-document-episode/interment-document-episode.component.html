@@ -1,10 +1,9 @@
 <section class="episode-document-container">
     <div>
         <span class="mat-body-2" [translate]="'internaciones.internacion-paciente.documents.TITLE'"></span>
-        <button mat-button color="primary" (click)="fileInput.click()">
+        <button mat-button color="primary" (click)="openAttachDialog()">
             <span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.ADD_DOCUMENT'"></span>
         </button>
-        <input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file" (click)="$event.target.value=null">
     </div>
     <article>
         <ng-container *ngIf="documents?.length > 0; else noDocuments">

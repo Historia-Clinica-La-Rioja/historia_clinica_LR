@@ -26,8 +26,8 @@ export class AttachDocumentPopupComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      fileName: new UntypedFormControl({value: this.data.file.name, disabled: true}),
-      file: new UntypedFormControl(this.data.file, requiredFileType(ExtesionFile.PDF)),
+      fileName: new UntypedFormControl({value: null, disabled: true}),
+      file: new UntypedFormControl(null, requiredFileType(ExtesionFile.PDF)),
       type: new UntypedFormControl(null, Validators.required)
     });
     this.setDocumentTypesFilter();
