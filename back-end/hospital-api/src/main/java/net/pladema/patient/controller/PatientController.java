@@ -182,6 +182,7 @@ public class PatientController {
 						nationalId -> {
 							createdPatient.setNationalId(nationalId);
 							createdPatient.setTypeId(PatientType.PERMANENT);
+							patientService.addPatient(createdPatient);
 							LOG.debug("Successful federated patient with nationalId => {}", nationalId);
 						}
 				);
@@ -189,7 +190,6 @@ public class PatientController {
 			catch (Exception ex){
 				LOG.error("Fallo en la comunicación => {}", ex.getMessage());
 			}
-			patientService.addPatient(createdPatient);
 		}
 
 		patientService.auditActionPatient(institutionId, createdPatient.getId(), EActionType.CREATE);

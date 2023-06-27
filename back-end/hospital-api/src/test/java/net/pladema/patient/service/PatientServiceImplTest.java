@@ -12,6 +12,7 @@ import net.pladema.medicalconsultation.appointment.repository.AppointmentReposit
 import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.repository.AuditablePatientRepository;
 import net.pladema.patient.repository.PatientAuditRepository;
+import net.pladema.patient.repository.PatientHistoryRepository;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
 import net.pladema.patient.repository.PatientRepository;
 import net.pladema.patient.repository.PatientTypeRepository;
@@ -77,6 +78,8 @@ class PatientServiceImplIntegrationTest extends UnitRepository {
 
 	@Mock
 	private AppointmentRepository appointmentRepository;
+	@Mock
+    private PatientHistoryRepository patientHistoryRepository;
 
 	@BeforeEach
     void setUp(){
@@ -93,7 +96,8 @@ class PatientServiceImplIntegrationTest extends UnitRepository {
 				localDateMapper, patientTypeRepository,
 				internmentEpisodeRepository,
 				emergencyCareEpisodeRepository,
-				appointmentRepository);
+				appointmentRepository,
+				patientHistoryRepository);
     }
 
     @Test
