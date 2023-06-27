@@ -45,3 +45,12 @@ databaseChangeLog:
                     name: created_on
                     type: datetime
                     defaultValueDate: ${date.now}
+
+    - changeSet:
+        id: patient_history-update-data
+        author: mvenere
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO patient_history (patient_id, type_id, audit_type_id, national_id, created_by, created_on)
+                SELECT id, type_id, audit_type_id, national_id, updated_by, updated_on FROM patient;
