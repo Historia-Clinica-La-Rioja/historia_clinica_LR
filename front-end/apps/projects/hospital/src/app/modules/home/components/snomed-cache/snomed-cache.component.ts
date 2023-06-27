@@ -22,7 +22,6 @@ export class SnomedCacheComponent implements OnInit {
 	}
 
 	addCsv(newCsv: TerminologyCSVDto) {
-		// console.log('add csv', newCsv);
 		this.snomedCacheService.add(newCsv);
 	}
 

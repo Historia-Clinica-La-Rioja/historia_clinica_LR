@@ -12,8 +12,9 @@ import { InstitutionService } from '@api-rest/services/institution.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AccountService } from '@api-rest/services/account.service';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
-import { Slot, SlotedInfo, WCExtensionsService } from '@extensions/services/wc-extensions.service';
+import { WCExtensionsService } from '@extensions/services/wc-extensions.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { WCParams } from '@extensions/components/ui-external-component/ui-external-component.component';
 
 @Component({
 	selector: 'app-instituciones',
@@ -28,7 +29,7 @@ export class InstitucionesComponent {
 	patientPortalAccess: boolean;
 	previousLogin: Date;
 	enabledPreviousLogin = false;
-	extensions$: Observable<SlotedInfo[]>;
+	extensions$: Observable<WCParams[]>;
 	userRoles: RoleAssignmentDto[];
 
 	constructor(
@@ -66,7 +67,7 @@ export class InstitucionesComponent {
 		});
 
 		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE).subscribe(isOn => this.patientPortalEnabled = isOn);
-		this.extensions$ = this.wcExtensionsService.getComponentsFromSlot(Slot.SYSTEM_HOME_PAGE);
+		this.extensions$ = this.wcExtensionsService.getSystemHomeComponents();
 	}
 
 	ngOnInit(): void {

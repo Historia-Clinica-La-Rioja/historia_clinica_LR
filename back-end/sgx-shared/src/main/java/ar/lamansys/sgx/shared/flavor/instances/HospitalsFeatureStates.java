@@ -45,7 +45,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.OCULTAR_LISTADO_PROFESIONES_WEBAPP, true);
 		map.put(AppFeature.HABILITAR_MODULO_ENF_EN_DESARROLLO, false);
 		map.put(AppFeature.HABILITAR_2FA, false);
-		map.put(AppFeature.HABILITAR_EXTENSIONES_WEB_COMPONENTS, false);
+		map.put(AppFeature.HABILITAR_EXTENSIONES_WEB_COMPONENTS, true);
 		map.put(AppFeature.HABILITAR_NOTIFICACIONES_TURNOS, false);
 		map.put(AppFeature.HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA, true);
 		map.put(AppFeature.HABILITAR_REPORTES_ESTADISTICOS, false);
