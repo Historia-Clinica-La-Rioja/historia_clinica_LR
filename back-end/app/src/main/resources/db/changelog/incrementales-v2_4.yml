@@ -1,2 +1,47 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v2_4
+
+    - changeSet:
+        id: patient_history-createTable
+        comment: Create table patient_history
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: patient_history
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_patient_history
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: patient_id
+                    type: int
+                - column:
+                    constraints:
+                      references: patient_type(id)
+                      foreignKeyName: FK_patient_history_type_id
+                    name: type_id
+                    type: smallint
+                - column:
+                    name: audit_type_id
+                    type: smallint
+                - column:
+                    name: national_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
