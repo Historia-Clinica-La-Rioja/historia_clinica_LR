@@ -652,9 +652,19 @@
         </div>
     </div>
 
+    <!-- Conclusions image report -->
+    <div th:fragment="conclusions">
+        <h3>Conclusiones</h3>
+        <div th:if="${not #lists.isEmpty(problems)}">
+            <dl th:each="problem,iter: ${problems}">
+                <dd><p  th:text="${'- ' + problem.snomed.pt}"></p></dd>
+            </dl>
+        </div>
+    </div>
+
      <!-- Report  -->
      <div th:fragment="report">
-        <h3>Reporte</h3>
+        <h3>Detalle del informe</h3>
         <div class="center-padding wide_wrapped_text">
             [(${notes.evolutionNote})]
         </div>
