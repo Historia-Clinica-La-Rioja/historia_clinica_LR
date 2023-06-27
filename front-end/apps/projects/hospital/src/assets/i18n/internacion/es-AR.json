@@ -486,7 +486,7 @@
 						"actions": {
 							"ATTACH_FILE": "ADJUNTAR ARCHIVO",
 							"CANCEL": "CANCELAR",
-							"ATTACH": "ADJUNTAR",
+							"CONTINUE": "CONTINUAR",
 							"ADD_DOCUMENT": "+ Agregar documento"
 						}
 					},
