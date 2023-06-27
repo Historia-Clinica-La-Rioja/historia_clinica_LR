@@ -4,18 +4,30 @@
     <span class="bold">{{ 'image-network.worklist.details_study.CONCLUTIONS' | translate }}</span>
 </div>
 
-<form [formGroup]="form" *ngIf="enabledEditing else showInformerObservations" fxLayout="column" fxLayoutGap="2vh">
+<form [formGroup]="form" *ngIf="enabledEditing else showInformerObservations" fxLayout="column">
+
+    <div *ngIf="searchConceptsLocallyFFIsOn">
+        <app-concept-typeahead-search id="typeaheadSearch" [ecl]="ambulatoryConsultationProblemsService.getECL()"
+            [placeholder]="'image-network.worklist.details_study.conclutions.SEARCH_CONCLUTION'"
+            appearanceOutline="true" (conceptSelected)="addTypeaheadConclusion($event)">
+    </app-concept-typeahead-search>
+    </div>
 
     <app-titled-content-card *ngIf="!ambulatoryConsultationProblemsService.isEmpty()"
         title="{{ 'image-network.worklist.details_study.conclutions.REGISTERED_CONCLUTIONS' }}" class="card">
         <app-problem-list [problemsService]="ambulatoryConsultationProblemsService" [canEdit]="false"></app-problem-list>
     </app-titled-content-card>
 
-    <button mat-button class="add-btn" id="add-problem-button" color="primary" (click)="addProblem()">
-        + {{ 'image-network.worklist.details_study.conclutions.ADD_CONCLUTION' | translate }}
-    </button>
+    <div *ngIf="!searchConceptsLocallyFFIsOn">
+        <button mat-button class="add-btn" id="add-problem-button" color="primary" (click)="addProblem()">
+            + {{ 'image-network.worklist.details_study.conclutions.ADD_CONCLUTION' | translate }}
+        </button>
+    </div>
 
-    <div fxLayout="column" fxLayoutGap="30px">
+    <div fxLayout="row" fxLayoutAlign="start center" style="margin-top: 2rem;">
+        <span class="bold">{{ 'image-network.worklist.details_study.OBSERVATIONS' | translate }}</span>
+    </div>
+    <div fxLayout="column" fxLayoutGap="30px" style="margin-top: 0.7rem;">
         <app-rich-text-editor [formParent]="form" [controlParent]="form.controls.observations"></app-rich-text-editor>
         <mat-error *ngIf="submitted && form.hasError('required','observations')"
             [translate]="'forms.REQUIRED'"></mat-error>
@@ -39,8 +51,10 @@
 
 <ng-template #showInformerObservations>
     <div fxLayout="column" *ngIf="study.info.informerObservations">
-        <div class="content" *ngFor="let problem of study.info.informerObservations.problems">
-            <span>{{problem.snomed.pt}}</span>
+        <div class="content">
+            <div *ngFor="let problem of study.info.informerObservations.problems">
+                <span>{{problem.snomed.pt}}</span>
+            </div>
         </div>
 
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">

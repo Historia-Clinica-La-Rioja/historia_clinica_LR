@@ -13,6 +13,7 @@ import { HistoriaClinicaModule } from "../historia-clinica/historia-clinica.modu
 import { ReportStudyComponent } from './components/report-study/report-study.component';
 import { ViewStudyComponent } from './components/view-study/view-study.component';
 import { DeriveReportComponent } from './dialogs/derive-report/derive-report.component';
+import { AddConclusionFormComponent } from './dialogs/add-conclusion-form/add-conclusion-form.component';
 
 @NgModule({
     declarations: [
@@ -25,7 +26,8 @@ import { DeriveReportComponent } from './dialogs/derive-report/derive-report.com
         StudyDetailsComponent,
         ReportStudyComponent,
         ViewStudyComponent,
-        DeriveReportComponent
+        DeriveReportComponent,
+        AddConclusionFormComponent
     ],
     imports: [
         CommonModule,

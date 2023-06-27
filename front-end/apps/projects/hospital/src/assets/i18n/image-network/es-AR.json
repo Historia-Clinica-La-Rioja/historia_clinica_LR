@@ -73,7 +73,9 @@
                 "SNACKBAR_ERROR_STUDY": "No es posible abrir el estudio",
                 "conclutions": {
                     "ADD_CONCLUTION": "Agregar conclusión",
-                    "REGISTERED_CONCLUTIONS": "Conclusiones registradas"
+                    "REGISTERED_CONCLUTIONS": "Conclusiones registradas",
+                    "SEARCH_CONCLUTION": "Buscar conclusión",
+                    "CONCEPT_LABEL": "Conclusión"
                 }          
             },
             "WORKLIST_BY_INFORMER": "Lista de informes",

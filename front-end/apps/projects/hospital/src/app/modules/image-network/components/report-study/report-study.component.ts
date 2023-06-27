@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
@@ -7,13 +7,14 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 import { SnvsMasterDataService } from '@api-rest/services/snvs-masterdata.service';
 import { StudyAppointmentReportService } from '@api-rest/services/study-appointment-report.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { NewConsultationAddProblemFormComponent } from '@historia-clinica/dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
 import { AmbulatoryConsultationProblem, AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { map, Observable, of, take } from 'rxjs';
 import { StudyAppointment } from '../../models/models';
 import { toStudyAppointment } from '../../utils/mapper.utils';
+import { AddConclusionFormComponent } from '../../dialogs/add-conclusion-form/add-conclusion-form.component';
+import { ConceptTypeaheadSearchComponent } from '@historia-clinica/components/concept-typeahead-search/concept-typeahead-search.component';
 
 @Component({
 	selector: 'app-report-study',
@@ -21,7 +22,8 @@ import { toStudyAppointment } from '../../utils/mapper.utils';
 	styleUrls: ['./report-study.component.scss']
 })
 export class ReportStudyComponent implements OnInit {
-
+	
+	@ViewChild(ConceptTypeaheadSearchComponent) child:ConceptTypeaheadSearchComponent;
 	form: FormGroup;
 	submitted = false;
 	enabledEditing = true;
@@ -72,17 +74,26 @@ export class ReportStudyComponent implements OnInit {
 	}
 
 	addProblem() {
-		this.dialog.open(NewConsultationAddProblemFormComponent, {
+		this.dialog.open(AddConclusionFormComponent, {
 			data: {
 				ambulatoryConsultationProblemsService: this.ambulatoryConsultationProblemsService,
-				severityTypes: this.severityTypes,
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
 			autoFocus: false,
 			width: '35%',
 			disableClose: true,
+			restoreFocus: false
 		});
 	}
+
+	addTypeaheadConclusion(event): void {
+		if (event) {
+			this.ambulatoryConsultationProblemsService.setConcept(event)
+			this.ambulatoryConsultationProblemsService.addToList(null);
+			this.ambulatoryConsultationProblemsService.getProblemas();
+			this.child.clear();
+		}
+	  }
 
 	saveDraft() {
 		this.submitted = true;
@@ -130,12 +141,16 @@ export class ReportStudyComponent implements OnInit {
 			evolutionNote: this.replaceTagBr(this.form.value.observations),
 			problems: this.ambulatoryConsultationProblemsService.getProblemas().map(
 				(p: ProblemDto) => {
-					return { severity: p.severity, chronic: p.chronic, endDate: p.endDate, snomed: p.snomed, startDate: p.startDate };
+					return { snomed: { pt: this.uppercaseFirstLetter(p.snomed.pt), sctid: p.snomed.sctid }  };
 				}),
 			createdBy: null,
 			actionTime: null,
 			confirmed,
 		}
+	}
+
+	private uppercaseFirstLetter(word: string) {
+		return word.charAt(0).toUpperCase() + word.slice(1);
 	}
 
 	private replaceTagBr(observations: string): string {

@@ -41,6 +41,7 @@ export class AmbulatoryConsultationProblemsService {
 	reportFF = false;
 	private problems = new BehaviorSubject<AmbulatoryConsultationProblem[]>([]);
 	readonly problems$ = this.problems.asObservable();
+	conclusions$ = new BehaviorSubject<SnomedDto>(null);
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -186,6 +187,24 @@ export class AmbulatoryConsultationProblemsService {
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));
 		}
+	}
+
+	openConclusionSearchDialog(searchValue: string): void {
+		if (searchValue) {
+			const search: SnomedSemanticSearch = {
+				searchValue,
+				eclFilter: this.ECL,
+			};
+			this.snomedService.openConceptsSearchDialog(search)
+				.subscribe((selectedConcept: SnomedDto) => {
+					this.setConcept(selectedConcept);
+					this.conclusions$.next(selectedConcept)}
+				);
+		}
+	}
+
+	resetConclusion() {
+		this.conclusions$.next(null)
 	}
 
 	getFechaInicioMax(): Moment {
