@@ -18,12 +18,20 @@
         [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.TYPE_REQUIRED'">
     </mat-error>
 
-	<section class="file-actions">
+	<section class="file-actions" *ngIf="(!file && !hasError(form, 'required', 'type'))">
 		<button mat-stroked-button color="primary" fxFlex="100%" (click)="fileInput.click()">
 			<mat-icon>attachment</mat-icon>
             <span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.ATTACH_FILE'"></span>
         </button>
-        <input hidden #fileInput type="file" id="file" (click)="$event.target.value=null">
+        <input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file" accept=".jpg, .jpeg, .png, .pdf" (click)="$event.target.value=null">
+	</section>
+
+	<section class="file" *ngIf="file">
+		<a (click)="openFile(file)">{{file.name}}</a>
+		<button mat-button mat-icon-button color="warn"
+			(click)="deleteFile()">
+			<mat-icon>delete_outline</mat-icon>
+		</button>
 	</section>
 
     <section class="dialog-actions">

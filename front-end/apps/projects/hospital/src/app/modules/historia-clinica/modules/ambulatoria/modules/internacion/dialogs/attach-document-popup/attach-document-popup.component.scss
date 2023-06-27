@@ -25,6 +25,15 @@ div {
 	}
 }
 
+.file {
+	margin-left: 0.5em;
+
+	a {
+		color: #2687c5;
+		cursor: pointer;
+	}
+}
+
 .dialog-actions {
     display: flex;
     justify-content: flex-end;

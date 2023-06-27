@@ -6,28 +6,33 @@ import { InternmentEpisodeDocumentService } from '@api-rest/services/internment-
 import { ExtesionFile } from '@core/utils/extensionFile';
 import { hasError, requiredFileType } from '@core/utils/form.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
+const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.pdf'];
 @Component({
   selector: 'app-attach-document-popup',
   templateUrl: './attach-document-popup.component.html',
   styleUrls: ['./attach-document-popup.component.scss']
 })
+
 export class AttachDocumentPopupComponent implements OnInit {
 
   hasError = hasError;
   form: UntypedFormGroup;
   documentTypes: TypeaheadOption<any>[];
   required: boolean = true;
+  file: File = null;
 
   constructor(private fb: UntypedFormBuilder,
               private internmentEpisodeDocument: InternmentEpisodeDocumentService,
               public dialogRef: MatDialogRef<AttachDocumentPopupComponent>,
+			  private readonly snackBarService: SnackBarService,
               @Inject(MAT_DIALOG_DATA) public data) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
       fileName: new UntypedFormControl({value: null, disabled: true}),
-      file: new UntypedFormControl(null, requiredFileType(ExtesionFile.PDF)),
+      file: new UntypedFormControl(null, requiredFileType(ExtesionFile.PDF) && Validators.required),
       type: new UntypedFormControl(null, Validators.required)
     });
     this.setDocumentTypesFilter();
@@ -58,7 +63,7 @@ export class AttachDocumentPopupComponent implements OnInit {
     if ( ! this.form.valid) return;
 
     const formDataFile: FormData = new FormData();
-    formDataFile.append('file', this.data.file);
+    formDataFile.append('file', this.file);
     this.internmentEpisodeDocument.saveInternmentEpisodeDocument(formDataFile, this.data.internmentEpisodeId, this.form.get('type').value)
       .subscribe(resp => {
         if (resp)
@@ -68,6 +73,33 @@ export class AttachDocumentPopupComponent implements OnInit {
 
   setDocumentType(type: DocumentTypeDto) {
     this.form.get('type').setValue(type);
+  }
+
+  onFileSelected(event) {
+	const file: File = event.target.files[0];
+
+	if (file) {
+	  const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+
+	  if (ALLOWED_EXTENSIONS.includes(fileExtension)) {
+		this.file = file;
+		this.form.get('file').setValue(file);
+	  } else {
+			this.snackBarService.showError('Solo se permiten archivos de imagen y PDF.');
+			event.target.value = null;
+	  }
+	}
+  }
+
+
+  deleteFile() {
+	this.file = null;
+	this.form.get('file').setValue(null);
+  }
+
+  openFile(file) {
+	const fileUrl = URL.createObjectURL(file);
+    window.open(fileUrl, '_blank');
   }
 
 }
