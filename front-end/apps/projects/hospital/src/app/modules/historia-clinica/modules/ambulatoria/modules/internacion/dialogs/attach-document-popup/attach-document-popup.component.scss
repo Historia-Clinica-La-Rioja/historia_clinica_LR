@@ -19,7 +19,13 @@ div {
     }
 }
 
-.actions {
+.file-actions {
+	mat-icon {
+		margin-right: 0.2em;
+	}
+}
+
+.dialog-actions {
     display: flex;
     justify-content: flex-end;
 

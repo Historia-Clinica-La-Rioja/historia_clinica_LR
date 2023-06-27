@@ -18,7 +18,15 @@
         [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.TYPE_REQUIRED'">
     </mat-error>
 
-    <section class="actions">
+	<section class="file-actions">
+		<button mat-stroked-button color="primary" fxFlex="100%" (click)="fileInput.click()">
+			<mat-icon>attachment</mat-icon>
+            <span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.ATTACH_FILE'"></span>
+        </button>
+        <input hidden #fileInput type="file" id="file" (click)="$event.target.value=null">
+	</section>
+
+    <section class="dialog-actions">
         <button mat-stroked-button color="primary" [mat-dialog-close]=true>
             <span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.CANCEL'"></span>
         </button>

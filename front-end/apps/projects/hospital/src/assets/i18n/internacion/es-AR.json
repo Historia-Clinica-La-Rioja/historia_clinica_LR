@@ -484,6 +484,7 @@
 							"FILE": "El tipo de archivo debe estar en formato PDF"
 						},
 						"actions": {
+							"ATTACH_FILE": "ADJUNTAR ARCHIVO",
 							"CANCEL": "CANCELAR",
 							"ATTACH": "ADJUNTAR",
 							"ADD_DOCUMENT": "+ Agregar documento"

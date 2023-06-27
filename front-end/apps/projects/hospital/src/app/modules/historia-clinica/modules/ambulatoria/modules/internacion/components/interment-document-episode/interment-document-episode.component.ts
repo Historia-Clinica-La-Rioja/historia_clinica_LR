@@ -24,7 +24,7 @@ export class IntermentDocumentEpisodeComponent {
   openAttachDialog() {
     const dialogRef = this.dialog.open(AttachDocumentPopupComponent, {
       disableClose: true,
-      width: '35%',
+      width: '30%',
       data: {
         internmentEpisodeId: this.internmentEpisodeId
       }
