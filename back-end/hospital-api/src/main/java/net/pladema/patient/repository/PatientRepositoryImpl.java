@@ -108,8 +108,7 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
 				"AND ece.patientId = p.id ) " +
 				"AND NOT EXISTS (SELECT 1 " +
 				"FROM Appointment a " +
-				"WHERE a.dateTypeId >= CURRENT_DATE " +
-				"AND a.appointmentStateId NOT IN (:appointmentStatsIds) " +
+				"WHERE a.appointmentStateId NOT IN (:appointmentStatsIds) " +
 				"AND a.patientId = p.id )";
 		List<Patient> result = entityManager.createQuery(sqlQuery)
 				.setParameter("typeId", PatientType.TEMPORARY)
