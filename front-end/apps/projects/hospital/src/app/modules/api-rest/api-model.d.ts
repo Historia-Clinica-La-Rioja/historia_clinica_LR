@@ -671,6 +671,9 @@ export interface CompleteRequestDto {
     observations?: string;
 }
 
+export interface ConclusionDto extends HealthConditionDto {
+}
+
 export interface ConditionDto {
     clinicalStatus: FhirCodeDto;
     createdOn: Date;
@@ -1787,11 +1790,11 @@ export interface IndicationDto {
 
 export interface InformerObservationDto {
     actionTime: DateTimeDto;
+    conclusions: ConclusionDto[];
     confirmed: boolean;
     createdBy: string;
     evolutionNote: string;
     id: number;
-    problems: ProblemDto[];
 }
 
 export interface InputStreamSource {

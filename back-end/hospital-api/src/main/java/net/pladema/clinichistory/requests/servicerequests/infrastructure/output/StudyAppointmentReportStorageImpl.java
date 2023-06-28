@@ -111,7 +111,6 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		log.debug("Input parameters -> appointmentId {}, informerObservations {}", appointmentId, informerObservations);
 
 		assertEvolutionNoteIsNotNull(informerObservations.getEvolutionNote());
-		assertConclusionsIsNotEmptyAndNull(informerObservations.getConclusions());
 
 		Long result = setRequiredFieldsAndSaveDocument(appointmentId, informerObservations, false);
 
@@ -125,7 +124,6 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		log.debug("Input parameters -> appointmentId {}, informerObservations {}", appointmentId, informerObservations);
 
 		assertEvolutionNoteIsNotNull(informerObservations.getEvolutionNote());
-		assertConclusionsIsNotEmptyAndNull(informerObservations.getConclusions());
 
 		Optional<Long> reportDocumentId = appointmentOrderImageRepository.getReportDocumentIdByAppointmentId(appointmentId);
 
@@ -146,7 +144,6 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		log.debug("Input parameters -> appointmentId {}, informerObservations {}", appointmentId, informerObservations);
 
 		assertEvolutionNoteIsNotNull(informerObservations.getEvolutionNote());
-		assertConclusionsIsNotEmptyAndNull(informerObservations.getConclusions());
 
 		Optional<Long> reportDocumentId = appointmentOrderImageRepository.getReportDocumentIdByAppointmentId(appointmentId);
 
@@ -165,7 +162,6 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		log.debug("Input parameters -> appointmentId {}, informerObservations {}", appointmentId, informerObservations);
 
 		assertEvolutionNoteIsNotNull(informerObservations.getEvolutionNote());
-		assertConclusionsIsNotEmptyAndNull(informerObservations.getConclusions());
 
 		Long result = setRequiredFieldsAndSaveDocument(appointmentId, informerObservations, true);
 		log.debug("Output -> {}", result);
@@ -182,13 +178,14 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 	}
 
 	private void saveSnomedConceptReport(Long id, List<ConclusionBo> conclusions) {
-		conclusions.forEach(conclusion -> {
-			DocumentReportSnomedConcept rsc = new DocumentReportSnomedConcept(
-					id,
-					snomedService.getSnomedId(conclusion.getSnomed())
-							.orElseGet(() -> snomedService.createSnomedTerm(conclusion.getSnomed())));
-			documentReportSnomedConceptRepository.save(rsc);
-		});
+		if (conclusions != null)
+			conclusions.forEach(conclusion -> {
+				DocumentReportSnomedConcept rsc = new DocumentReportSnomedConcept(
+						id,
+						snomedService.getSnomedId(conclusion.getSnomed())
+								.orElseGet(() -> snomedService.createSnomedTerm(conclusion.getSnomed())));
+				documentReportSnomedConceptRepository.save(rsc);
+			});
 	}
 
 	private Long setRequiredFieldsAndSaveDocument(Integer appointmentId, InformerObservationBo obs, boolean createFile) {
