@@ -5,6 +5,8 @@ import net.pladema.establishment.repository.entity.HierarchicalUnitStaff;
 
 import net.pladema.establishment.service.domain.HierarchicalUnitStaffBo;
 
+import net.pladema.permissions.repository.entity.UserRole;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -32,7 +34,7 @@ public interface HierarchicalUnitStaffRepository extends SGXAuditableEntityJPARe
 			"AND hus.userId = :userId " +
 			"AND hus.deleteable.deleted IS FALSE")
 	Optional<HierarchicalUnitStaff> findByHierarchicalUnitIdAndUserId(@Param("hierarchicalUnitId") Integer hierarchicalUnitId,
-																		@Param("userId") Integer userId);
+																	  @Param("userId") Integer userId);
 
 	@Transactional
 	@Query(value = "SELECT hus " +
@@ -60,5 +62,32 @@ public interface HierarchicalUnitStaffRepository extends SGXAuditableEntityJPARe
 			+ ", hus.deleteable.deletedBy = ?#{ principal.userId } "
 			+ "WHERE hus.userId = :userId" )
 	void deleteHierarchicalUnitStaffByUserId(@Param("userId") Integer userId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT hus " +
+			"FROM HierarchicalUnitStaff AS hus " +
+			"JOIN HierarchicalUnit AS hu ON hus.hierarchicalUnitId = hu.id " +
+			"WHERE hus.userId = :userId " +
+			"AND hus.deleteable.deleted = TRUE " +
+			"AND hu.institutionId = :institutionId ")
+	List<HierarchicalUnitStaff> findDeletedByInstitutionIdAndPersonId(@Param("institutionId") Integer institutionId,
+																	  @Param("userId") Integer userId);
+
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE HierarchicalUnitStaff hus " +
+			"SET hus.deleteable.deleted = false " +
+			"WHERE hus.userId = :userId AND hus.hierarchicalUnitId = :hierarchicalUnitId")
+	void setDeletedFalse(@Param("userId") Integer userId,
+						 @Param("hierarchicalUnitId") Integer hierarchicalUnitId);
+
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE HierarchicalUnitStaff hus " +
+			"SET hus.responsible = :responsible " +
+			"WHERE hus.userId = :userId AND hus.hierarchicalUnitId = :hierarchicalUnitId")
+	void updateResponsible(@Param("userId") Integer personId,
+						   @Param("hierarchicalUnitId") Integer hierarchicalUnitId,
+						   @Param("responsible") boolean responsible);
 
 }

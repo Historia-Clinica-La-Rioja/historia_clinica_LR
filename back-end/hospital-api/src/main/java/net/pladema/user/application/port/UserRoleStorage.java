@@ -9,4 +9,6 @@ public interface UserRoleStorage {
     List<UserRoleBo> getRolesByUser(Integer userId);
 
     void updateUserRole(List<UserRoleBo> userRolesBo, Integer userId, Integer institutionId);
+
+	boolean hasRoleInInstitution(Integer userId, Integer institutionId);
 }

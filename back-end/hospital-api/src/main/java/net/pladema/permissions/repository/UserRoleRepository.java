@@ -97,5 +97,13 @@ public interface UserRoleRepository extends SGXAuditableEntityJPARepository<User
 			"WHERE ur.userId = :userId AND ur.roleId = :roleId AND ur.institutionId = :institutionId")
 	void setDeletedFalse(@Param("userId") Integer userId, @Param("roleId") Short roleId, @Param("institutionId") Integer institutionId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT (case when count(ur.id)> 0 then true else false end) " +
+			"FROM UserRole AS ur " +
+			"WHERE ur.userId = :userId " +
+			"AND ur.institutionId = :institutionId " +
+			"AND ur.deleteable.deleted = FALSE")
+	boolean hasRoleInInstitution(@Param("userId") Integer userId,
+												  @Param("institutionId") Integer institutionId);
 	// @formatter:on
 }

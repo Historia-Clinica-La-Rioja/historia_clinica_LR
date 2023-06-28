@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface HierarchicalUnitStaffService {
 	List<HierarchicalUnitStaffBo> getByUserId(Integer userId, Integer institutionId);
+
+	Boolean updateHierarchicalUnits(Integer institutionId, Integer userId, List<HierarchicalUnitStaffBo> CreateHierarchicalUnitStaffBos);
 }

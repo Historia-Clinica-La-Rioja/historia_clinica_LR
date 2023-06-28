@@ -7,10 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.establishment.controller.dto.HierarchicalUnitStaffDto;
 import net.pladema.establishment.service.HierarchicalUnitStaffService;
 
+import net.pladema.establishment.service.domain.HierarchicalUnitStaffBo;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,5 +43,21 @@ public class HierarchicalUnitStaffController {
 				.collect(Collectors.toList());
 		log.debug("Output {}", hierarchicalUnitsStaffDto);
 		return ResponseEntity.ok(hierarchicalUnitsStaffDto);
+	}
+
+	@PutMapping()
+	public ResponseEntity<Boolean> updateHierarchicalUnits(@PathVariable(name = "institutionId") Integer institutionId,
+														   @PathVariable (name = "userId") Integer userId,
+														   @RequestBody List<HierarchicalUnitStaffDto> staff) {
+		log.debug("Input parameters institutionId {}, userId {}, hierarchicalUnitStaffDtos {}", institutionId, userId ,staff);
+		List<HierarchicalUnitStaffBo> bos = staff.stream()
+				.map(dto -> new HierarchicalUnitStaffBo(dto.getId(),
+						dto.isResponsible(),
+						dto.getHierarchicalUnitId(),
+						dto.getHierarchicalUnitAlias()))
+				.collect(Collectors.toList());
+		Boolean result = hierarchicalUnitStaffService.updateHierarchicalUnits(institutionId, userId, bos);
+		log.debug("Output {}", result);
+		return ResponseEntity.ok(result);
 	}
 }

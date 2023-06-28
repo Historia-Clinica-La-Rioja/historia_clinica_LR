@@ -129,4 +129,10 @@ public class UserExternalServiceImpl implements UserExternalService {
     public Boolean fetchUserHasTwoFactorAuthenticationEnabled(Integer userId) {
         return fetchUserHasTwoFactorAuthenticationEnabled.run(userId);
     }
+
+	@Override
+	public Boolean userIsEnabled(Integer userId) { return userStorage.userIsEnabled(userId); }
+
+	@Override
+	public Boolean findById(Integer userId) { return userStorage.findById(userId); }
 }
