@@ -42,6 +42,7 @@ export class AmbulatoryConsultationProblemsService {
 	private problems = new BehaviorSubject<AmbulatoryConsultationProblem[]>([]);
 	readonly problems$ = this.problems.asObservable();
 	conclusions$ = new BehaviorSubject<SnomedDto>(null);
+	showInitialDate = true;
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -60,6 +61,10 @@ export class AmbulatoryConsultationProblemsService {
 		});
 
 		this.data = [];
+	}
+
+	setShowInitialDate(value: boolean){
+		this.showInitialDate = value;
 	}
 
 	setReportFF(value: boolean): void {
@@ -124,7 +129,7 @@ export class AmbulatoryConsultationProblemsService {
 				snomed: this.snomedConcept,
 				codigoSeveridad: this.form.value.severidad,
 				cronico: this.form.value.cronico,
-				fechaInicio: this.form.value.fechaInicio,
+				fechaInicio: this.showInitialDate ? this.form.value.fechaInicio : null,
 				fechaFin: this.form.value.fechaFin
 			};
 			if (reportProblemIsOn) {

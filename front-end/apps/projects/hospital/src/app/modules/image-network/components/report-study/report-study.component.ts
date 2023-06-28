@@ -65,6 +65,7 @@ export class ReportStudyComponent implements OnInit {
 			this.ambulatoryConsultationProblemsService.setSearchConceptsLocallyFF(isOn);
 		});
 
+		this.ambulatoryConsultationProblemsService.setShowInitialDate(false);
 		this.ambulatoryConsultationProblemsService.problems$.subscribe(p => this.problems = p);
 
 		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
