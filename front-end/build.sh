@@ -12,7 +12,7 @@ npm -v
 start_apps=$(date +%s)
 echo "Building Webapp: start"
 cd apps
-[ -d "node_modules" ] || npm install
+[ -d "node_modules" ] || npm ci
 npm run build:prod
 cd -
 

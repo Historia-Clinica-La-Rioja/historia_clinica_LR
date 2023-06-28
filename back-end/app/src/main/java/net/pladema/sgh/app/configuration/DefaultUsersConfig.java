@@ -50,7 +50,8 @@ public class DefaultUsersConfig {
 		defaultUsers.put(AdminConfiguration.ADMIN_USERNAME_DEFAULT, new DefaultUserInfoBo(
 				adminPassword,
 				List.of(
-						new DefaultUserRolBo(ERole.ROOT, UserRolePK.UNDEFINED_ID.intValue())
+						new DefaultUserRolBo(ERole.ROOT, UserRolePK.UNDEFINED_ID.intValue()),
+						new DefaultUserRolBo(ERole.API_CONSUMER, UserRolePK.UNDEFINED_ID.intValue())
 				)
 		));
 

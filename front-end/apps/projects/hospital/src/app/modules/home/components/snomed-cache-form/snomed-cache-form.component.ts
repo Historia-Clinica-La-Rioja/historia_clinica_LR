@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { TerminologyCSVDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model';
 import { delay, of } from 'rxjs';
@@ -28,17 +28,17 @@ export class SnomedCacheFormComponent implements OnInit {
 		SnomedECL.HYPERTENSION
 	];
 
-	form: FormGroup;
+	form: UntypedFormGroup;
 	loading = false;
 
 	constructor(
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 	) { }
 
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
 			ecl: [null, Validators.required],
-			url: [null, Validators.required],
+			url: ['', Validators.required],
 		});
 	}
 

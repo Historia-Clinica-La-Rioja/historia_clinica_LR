@@ -110,7 +110,8 @@
 		"ART": "ART"
 	},
 	"messages": {
-		"NO_DATA": "No hay información para mostrar"
+		"NO_DATA": "No hay información para mostrar",
+		"COPIED": "¡Copiado!"
 	},
 	"profile": {
 		"PICTURE": "Foto de perfil"

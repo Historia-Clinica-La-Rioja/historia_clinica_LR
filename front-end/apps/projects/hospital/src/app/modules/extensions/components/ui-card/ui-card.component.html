@@ -1,4 +1,10 @@
-<mat-card [ngClass]="mode" class="flat">
+<mat-card [ngClass]="cardClass">
+	<mat-card-header *ngIf="title">
+		<mat-card-title>
+			<span [translate]="title.key"></span>
+		</mat-card-title>
+	</mat-card-header>
+
 	<mat-card-content>
 		<app-ui-component-list [list]="content"></app-ui-component-list>
 	</mat-card-content>

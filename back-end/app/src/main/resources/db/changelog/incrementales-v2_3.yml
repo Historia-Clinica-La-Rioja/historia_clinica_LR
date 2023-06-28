@@ -1,2 +1,50 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v2_3
+
+    - changeSet:
+        id: dropPrimaryKey-user_key
+        author: sperruolo
+        changes:
+          - dropPrimaryKey:
+              constraintName: pk_user_key
+              dropIndex: true
+              tableName: user_key
+          - addPrimaryKey:
+              columnNames: key
+              constraintName: pk_user_key
+              tableName: user_key
+              validate: true
+
+    -  changeSet:
+         id: reformat-user_key
+         author: sperruolo
+         changes:
+           -  dropPrimaryKey:
+                constraintName: pk_user_key
+                dropIndex: true
+                tableName: user_key
+           -  addPrimaryKey:
+                columnNames:  key
+                constraintName:  pk_user_key
+                tableName:  user_key
+                validate:  true
+           - addColumn:
+               tableName: user_key
+               columns:
+                 - column:
+                     name: name
+                     type: varchar(255)
+           - sql:
+               sql: |-
+                 UPDATE user_key SET name = LOWER(SUBSTRING(MD5(''||NOW()::TEXT||RANDOM()::TEXT) FOR 8));
+           - addNotNullConstraint:
+               columnDataType: varchar(255)
+               columnName: name
+               constraintName: name_not_null
+               tableName: user_key
+               validate: true
+           -  addUniqueConstraint:
+                columnNames:  user_id, name
+                constraintName:  user_key_unique
+                tableName:  user_key
+                validate:  true

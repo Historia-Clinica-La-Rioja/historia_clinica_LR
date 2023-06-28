@@ -794,6 +794,10 @@ export interface DateTimeDto extends Comparable<DateTimeDto> {
     time: TimeDto;
 }
 
+export interface DeleteApiKeyDto {
+    name: string;
+}
+
 export interface DentalActionDto extends ClinicalTermDto {
     diagnostic: boolean;
     surface: SnomedDto;
@@ -1442,6 +1446,15 @@ export interface FullySpecifiedNamesDto {
 
 export interface GenderDto extends AbstractMasterdataDto<number> {
     id: number;
+}
+
+export interface GenerateApiKeyDto {
+    name: string;
+}
+
+export interface GeneratedApiKeyDto {
+	name: string;
+    apiKey: string;
 }
 
 export interface HCEAllergyDto extends ClinicalTermDto {
@@ -3522,6 +3535,10 @@ export interface UpdateConceptsSynonymsResultDto {
     erroneousConcepts: number;
     errorMessages: string[];
     missingMainConcepts: number;
+}
+
+export interface UserApiKeyDto {
+    name: string;
 }
 
 export interface UserDataDto {

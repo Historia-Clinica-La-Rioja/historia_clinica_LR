@@ -8,8 +8,12 @@ import { UIComponentDto } from '@extensions/extensions-model';
 })
 export class UiCardComponent {
 	@Input() mode = '';
+	@Input() title;
 	@Input() content: UIComponentDto[];
 
 	constructor() { }
 
+	get cardClass(): string {
+		return this.mode || 'flat';
+	}
 }

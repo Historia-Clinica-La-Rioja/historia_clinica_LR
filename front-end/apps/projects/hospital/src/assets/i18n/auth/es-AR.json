@@ -89,6 +89,7 @@
 			"names": {
 				"ROOT": "Soporte",
 				"ADMINISTRADOR": "Administrador",
+				"API_CONSUMER": "API Pública",
 				"ESPECIALISTA_MEDICO": "Especialista Médico",
 				"PROFESIONAL_DE_SALUD": "Profesional de la salud",
 				"ADMINISTRATIVO": "Administrativo",

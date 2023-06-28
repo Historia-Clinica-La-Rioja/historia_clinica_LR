@@ -1,24 +1,35 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
-import { InstitutionDto, RoleAssignmentDto } from '@api-rest/api-model';
-import { AppFeature } from '@api-rest/api-model';
-
-import { LoggedUserService } from '../../../auth/services/logged-user.service';
-import { map, mergeMap } from 'rxjs/operators';
-import { InstitutionService } from '@api-rest/services/institution.service';
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
-import { ActivateTwoFactorAuthenticationComponent } from "../../dialogs/activate-two-factor-authentication/activate-two-factor-authentication.component";
-import { SnackBarService } from "@presentation/services/snack-bar.service";
-import { TwoFactorAuthenticationService } from "@api-rest/services/two-factor-authentication.service";
+import { Observable } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
+import { PermissionsService } from '@core/services/permissions.service';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 
+import { ERole, InstitutionDto, RoleAssignmentDto } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
+import { TwoFactorAuthenticationService } from "@api-rest/services/two-factor-authentication.service";
+import { InstitutionService } from '@api-rest/services/institution.service';
+import { SnackBarService } from "@presentation/services/snack-bar.service";
+
+import { LoggedUserService } from '../../../auth/services/logged-user.service';
+import { ActivateTwoFactorAuthenticationComponent } from "../../dialogs/activate-two-factor-authentication/activate-two-factor-authentication.component";
+import { HomeRoutes } from '../../home-routing.module';
+
+const hasAccessToManageKeys = (allRoles: RoleAssignmentDto[]) => {
+	return allRoles
+		.filter((ra) =>
+			// ra.role === ERole.API_CONSUMER ||
+			ra.role === ERole.API_CONSUMER
+		).length > 0;
+};
 @Component({
 	selector: 'app-profile',
 	templateUrl: './profile.component.html',
 	styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent {
+	userKeysRoute;
 	roleAssignments$: Observable<{ label: string, institution?: {name: string} }[]>;
 
 	twoFactorAuthenticationFFEnabled = false;
@@ -27,6 +38,7 @@ export class ProfileComponent {
 	constructor(
 		institutionService: InstitutionService,
 		loggedUserService: LoggedUserService,
+		permissionService: PermissionsService,
 		private router: Router,
 		private readonly dialog: MatDialog,
 		private readonly snackBarService: SnackBarService,
@@ -48,6 +60,9 @@ export class ProfileComponent {
 			.subscribe(isOn => this.twoFactorAuthenticationFFEnabled = isOn);
 		this.twoFactorAuthenticationService.loggedUserHasTwoFactorAuthenticationEnabled()
 			.subscribe((enabled) => this.twoFactorAuthenticationEnabledForUser = enabled);
+		loggedUserService.assignments$.subscribe((allRoles: RoleAssignmentDto[]) => {
+			this.userKeysRoute = hasAccessToManageKeys(allRoles) ? [HomeRoutes.UserKeys] : undefined;
+		});
 	}
 
 	updatePassword(): void {
