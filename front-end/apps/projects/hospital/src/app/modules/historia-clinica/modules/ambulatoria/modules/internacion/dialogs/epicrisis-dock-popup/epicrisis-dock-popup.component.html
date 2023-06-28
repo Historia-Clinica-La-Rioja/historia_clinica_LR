@@ -96,7 +96,7 @@
 				[isEmpty]="componentEvaluationManagerService.isEmptyPersonalHistories() | async" [collapsed]="true"
 				[hideBorder]="false">
 				<app-list-concept [(listConcept)]="personalHistories"
-					[title]="'internaciones.epicrisis.antecedentes-personales.TITLE'">
+					[title]="'internaciones.epicrisis.antecedentes-personales.table.TITLE'">
 				</app-list-concept>
 			</app-new-consultation-expansion-section>
 
@@ -105,7 +105,7 @@
 				[isEmpty]="componentEvaluationManagerService.isEmptyFamilyHistories() | async" [collapsed]="true"
 				[hideBorder]="false">
 				<app-list-concept [(listConcept)]="familyHistories"
-					[title]="'internaciones.epicrisis.antecedentes-familiares.TITLE'">
+					[title]="'internaciones.epicrisis.antecedentes-familiares.table.TITLE'">
 				</app-list-concept>
 			</app-new-consultation-expansion-section>
 
@@ -113,7 +113,7 @@
 				[title]="'internaciones.epicrisis.alergias.TITLE' | translate" icon="cancel"
 				[isEmpty]="componentEvaluationManagerService.isEmptyAllergies() | async" [collapsed]="true"
 				[hideBorder]="false">
-				<app-list-concept [(listConcept)]="allergies" [title]="'internaciones.epicrisis.alergias.TITLE'">
+				<app-list-concept [(listConcept)]="allergies" [title]="'internaciones.epicrisis.alergias.table.TITLE'">
 				</app-list-concept>
 			</app-new-consultation-expansion-section>
 
@@ -126,11 +126,11 @@
 			</app-new-consultation-expansion-section>
 
 			<app-new-consultation-expansion-section id="immunizations"
-				[title]="'internaciones.anamnesis.vacunas.TITLE' | translate" icon="vaccines"
+				[title]="'internaciones.epicrisis.vacunas.TITLE' | translate" icon="vaccines"
 				[isEmpty]="componentEvaluationManagerService.isEmptyVaccines() | async" [collapsed]="true"
 				[hideBorder]="false">
 				<app-list-concept [(listConcept)]="immunizations"
-					[title]="'internaciones.anamnesis.vacunas.table.TITLE'">
+					[title]="'internaciones.epicrisis.vacunas.table.TITLE'">
 
 				</app-list-concept>
 
