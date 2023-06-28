@@ -211,3 +211,18 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: users
               validate: true
+
+
+    - changeSet:
+        id: addColumn-create_id-to-sector
+        author: amurrie
+        changes:
+          - addColumn:
+              tableName: equipment
+              columns:
+                - column:
+                   name: create_id
+                   type: BOOLEAN
+                   defaultValue: ${boolean.false}
+                   constraints:
+                     nullable: false
