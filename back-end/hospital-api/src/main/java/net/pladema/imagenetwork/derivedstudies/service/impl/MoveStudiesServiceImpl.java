@@ -94,8 +94,15 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 	}
 
 	@Override
-	public void updateSize(Integer idMove, Integer size) {
+	public void updateSize(Integer idMove, Integer size, String imageId) {
 		moveStudiesRepository.updateSize(idMove, size);
+		MoveStudies moveStudy = moveStudiesRepository.findById(idMove).orElse(null);
+		if (moveStudy!= null &&
+				!moveStudy.getImageId().equals(imageId) &&
+				!"none".equals(imageId) ){
+			appointmentOrderImageService.setImageId(moveStudy.getAppointmentId(), imageId);
+			moveStudiesRepository.updateImageId(idMove,imageId);
+		}
 	}
 
 	@Override

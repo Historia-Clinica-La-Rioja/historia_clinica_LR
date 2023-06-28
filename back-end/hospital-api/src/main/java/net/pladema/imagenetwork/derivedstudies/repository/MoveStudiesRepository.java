@@ -38,6 +38,14 @@ public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Intege
 	@Transactional
 	@Modifying
 	@Query("UPDATE MoveStudies AS mo " +
+			"SET mo.imageId = :imageId " +
+			"WHERE mo.id = :idMove")
+	void updateImageId(@Param("idMove") Integer idMove,
+					@Param("imageId") String imageId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE MoveStudies AS mo " +
 			"SET mo.status = :status, mo.result= :result " +
 			"WHERE mo.id = :idMove")
 	void updateStatusandResult(@Param("idMove") Integer idMove,

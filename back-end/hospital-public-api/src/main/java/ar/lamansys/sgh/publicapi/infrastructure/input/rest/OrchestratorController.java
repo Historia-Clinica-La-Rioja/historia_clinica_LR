@@ -35,7 +35,7 @@ public class OrchestratorController {
 
 	@PostMapping("/set-size-study")
 	public ResponseEntity<Boolean> setSizeStudy(@RequestBody SizeResultDto sizeResultDto){
-		moveStudiesService.updateSize(sizeResultDto.getIdMove(), sizeResultDto.getSize());
+		moveStudiesService.updateSize(sizeResultDto.getIdMove(), sizeResultDto.getSize(),  sizeResultDto.getImageId());
 		return ResponseEntity.ok().body(true);
 	}
 

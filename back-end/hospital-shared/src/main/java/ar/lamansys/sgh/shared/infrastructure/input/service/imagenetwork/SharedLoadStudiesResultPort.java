@@ -4,5 +4,5 @@ public interface SharedLoadStudiesResultPort {
 	void updateStatusAndResult(Integer idMove, String status, String result);
 
 
-	void updateSize(Integer idMove, Integer size);
+	void updateSize(Integer idMove, Integer size, String imageId);
 }

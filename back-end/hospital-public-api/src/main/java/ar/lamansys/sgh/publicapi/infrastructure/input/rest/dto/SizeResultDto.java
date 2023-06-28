@@ -17,13 +17,16 @@ import java.io.Serializable;
 public class SizeResultDto implements Serializable {
 	private Integer idMove;
 	private Integer size;
+	private String imageId;
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
 	public SizeResultDto(@JsonProperty("idMove") Integer idMove,
-						 @JsonProperty("size") Integer size
+						 @JsonProperty("size") Integer size,
+						 @JsonProperty("imageId") String imageId
 	) {
 		this.idMove = idMove;
 		this.size = size;
+		this.imageId = imageId;
 
 	}
 }
