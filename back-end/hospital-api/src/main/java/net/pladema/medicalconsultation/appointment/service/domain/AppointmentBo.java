@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.appointment.service.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
 
@@ -13,6 +14,7 @@ import lombok.ToString;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
+import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 
 @Getter
 @Setter
@@ -58,6 +60,10 @@ public class AppointmentBo {
 
 	private boolean isProtected;
 
+	private LocalDateTime createdOn;
+
+	private ProfessionalPersonBo professionalPersonBo;
+
 	public static AppointmentBo fromAppointmentDiaryVo(AppointmentDiaryVo appointmentDiaryVo) {
 		return AppointmentBo.builder()
 				.id(appointmentDiaryVo.getId())
@@ -72,6 +78,8 @@ public class AppointmentBo {
 				.phonePrefix(appointmentDiaryVo.getPhonePrefix())
 				.phoneNumber(appointmentDiaryVo.getPhoneNumber())
 				.appointmentBlockMotiveId(appointmentDiaryVo.getAppointmentBlockMotiveId())
+				.createdOn(appointmentDiaryVo.getCreatedOn())
+				.professionalPersonBo(new ProfessionalPersonBo(appointmentDiaryVo.getProfessionalPersonVo()))
 				.build();
 	}
 

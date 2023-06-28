@@ -43,6 +43,8 @@ public interface AppointmentMapper {
     @Mapping(target = "patient", source = "patient")
     @Mapping(target = "phoneNumber", source = "appointmentBo.phoneNumber")
 	@Mapping(target = "isProtected", source = "appointmentBo.protected")
+	@Mapping(target = "createdOn", source = "appointmentBo.createdOn")
+	@Mapping(target = "professionalPersonDto", source = "appointmentBo.professionalPersonBo")
     AppointmentListDto toAppointmentListDto(AppointmentBo appointmentBo, AppointmentBasicPatientDto patient);
 
 	@Named("toEquipmentAppointmentListDto")

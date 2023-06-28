@@ -34,6 +34,7 @@ public class ProfessionalPersonBo {
 	}
 
 	public ProfessionalPersonBo(ProfessionalPersonVo professionalPerson) {
+		this.id = professionalPerson.getId();
 		this.firstName = professionalPerson.getFirstName();
 		this.lastName = professionalPerson.getLastName();
 		this.nameSelfDetermination = professionalPerson.getNameSelfDetermination();

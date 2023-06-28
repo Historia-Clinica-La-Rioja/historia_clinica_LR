@@ -4,9 +4,9 @@ package net.pladema.medicalconsultation.appointment.repository.domain;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-
 import lombok.ToString;
 import lombok.Value;
+import net.pladema.emergencycare.repository.domain.ProfessionalPersonVo;
 
 @Value
 @ToString
@@ -37,6 +37,10 @@ public class AppointmentDiaryVo {
 	private final Short appointmentBlockMotiveId;
 
 	private final LocalDateTime updatedOn;
+
+	private final LocalDateTime createdOn;
+
+	private final ProfessionalPersonVo professionalPersonVo;
 	
 	public AppointmentDiaryVo(
 			Integer diaryId,
@@ -51,7 +55,12 @@ public class AppointmentDiaryVo {
 			String phoneNumber,
 			Short medicalAttentionTypeId,
 			Short appointmentBlockMotiveId,
-			LocalDateTime updatedOn
+			LocalDateTime updatedOn,
+			LocalDateTime createdOn,
+			Integer personId,
+			String firstName,
+			String lastName,
+			String otherLastName
 	) {
 		this.diaryId = diaryId;
 		this.id = id;
@@ -66,7 +75,8 @@ public class AppointmentDiaryVo {
 		this.medicalAttentionTypeId = medicalAttentionTypeId;
 		this.appointmentBlockMotiveId = appointmentBlockMotiveId;
 		this.updatedOn = updatedOn;
+		this.createdOn = createdOn;
+		this.professionalPersonVo = new ProfessionalPersonVo(personId, firstName, lastName, otherLastName);
 	}
-
 
 }

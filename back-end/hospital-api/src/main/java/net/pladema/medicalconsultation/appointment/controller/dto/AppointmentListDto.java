@@ -1,9 +1,12 @@
 package net.pladema.medicalconsultation.appointment.controller.dto;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalPersonDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;
+
+import java.time.LocalDateTime;
 
 @Value
 @Builder
@@ -38,5 +41,9 @@ public class AppointmentListDto {
 	private final Short appointmentBlockMotiveId;
 
 	private final boolean isProtected;
+
+	private final LocalDateTime createdOn;
+
+	private final ProfessionalPersonDto professionalPersonDto;
 
 }

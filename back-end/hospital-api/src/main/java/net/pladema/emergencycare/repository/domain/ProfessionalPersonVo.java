@@ -28,4 +28,11 @@ public class ProfessionalPersonVo {
 		this.middleNames = middleNames;
 		this.otherLastNames = otherLastNames;
 	}
+
+	public ProfessionalPersonVo(Integer personId, String firstName, String lastName, String otherLastNames) {
+		this.id = personId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.otherLastNames = otherLastNames;
+	}
 }
