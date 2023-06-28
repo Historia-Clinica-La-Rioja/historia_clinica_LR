@@ -13,6 +13,7 @@ import { ConfirmedFusionComponent } from './dialogs/confirmed-fusion/confirmed-f
 import { PatientProfilePopupComponent } from './dialogs/patient-profile-popup/patient-profile-popup.component';
 import { EmpadronamientoComponent } from './routes/empadronamiento/empadronamiento.component';
 import { PacientesModule } from '@pacientes/pacientes.module';
+import { UnlinkPatientComponent } from './routes/unlink-patient/unlink-patient.component';
 
 
 
@@ -25,7 +26,8 @@ import { PacientesModule } from '@pacientes/pacientes.module';
     WarningFusionComponent,
     ConfirmedFusionComponent,
     PatientProfilePopupComponent,
-    EmpadronamientoComponent
+    EmpadronamientoComponent,
+    UnlinkPatientComponent
   ],
   imports: [
     CommonModule,

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { GenderDto, IdentificationTypeDto, PatientRegistrationSearchDto } from '@api-rest/api-model';
@@ -18,6 +18,7 @@ import { Moment } from 'moment';
 	styleUrls: ['./empadronamiento.component.scss']
 })
 export class EmpadronamientoComponent implements OnInit {
+	@Input() isUnlinkPatient:boolean;
 	hasError = hasError;
 	personalInformationForm: FormGroup;
 	patientIdForm: FormGroup;
@@ -32,6 +33,7 @@ export class EmpadronamientoComponent implements OnInit {
 	patientRegistrationSearch: PatientRegistrationSearchDto[];
 	genderTableView: string[] = [];
 	viewCardToAudit = true;
+
 
 	readonly validations = PERSON;
 	constructor(private readonly formBuilder: FormBuilder, private readonly personMasterDataService: PersonMasterDataService,

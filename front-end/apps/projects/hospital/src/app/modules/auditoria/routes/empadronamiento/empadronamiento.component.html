@@ -1,6 +1,11 @@
 <app-content width="full">
 	<section id="titles">
-		<h2 class="page-title">{{'pacientes.audit.TITLE_EMPADRONAMIENTO' | translate}}</h2>
+		<ng-container *ngIf="isUnlinkPatient ; else noUnlinkPatient">
+			<h2 class="page-title">{{'pacientes.audit.TITLE_UNLINK_PATIENT' | translate}}</h2>
+		</ng-container>
+		<ng-template #noUnlinkPatient>
+			<h2 class="page-title">{{'pacientes.audit.TITLE_EMPADRONAMIENTO' | translate}}</h2>
+		</ng-template>
 		<h3>{{'pacientes.audit.SUBTITLE_PATIENT_SEARCH' | translate}}</h3>
 		<p>{{'pacientes.audit.LABEL_PATIENT_SEARCH' | translate}}</p>
 	</section>

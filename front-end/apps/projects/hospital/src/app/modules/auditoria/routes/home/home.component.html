@@ -33,7 +33,7 @@
 			</mat-card-header>
 			<mat-card-content>
 				<mat-action-list>
-					<mat-list-item>
+					<mat-list-item (click)="goToUnlinkPatient()">
 						<span class="primary">{{'pacientes.audit.SUBTITLE_UNLINK_PATIENT' | translate}}</span>
 					</mat-list-item>
 				</mat-action-list>

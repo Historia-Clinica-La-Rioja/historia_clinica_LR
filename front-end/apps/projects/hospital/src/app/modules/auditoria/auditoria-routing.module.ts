@@ -7,6 +7,7 @@ import { ControlPatientDuplicateComponent } from './routes/control-patient-dupli
 import { HomeComponent } from './routes/home/home.component';
 import { PatientFusionComponent } from './routes/patient-fusion/patient-fusion.component';
 import { EmpadronamientoComponent } from './routes/empadronamiento/empadronamiento.component';
+import { UnlinkPatientComponent } from './routes/unlink-patient/unlink-patient.component';
 
 
 const routes: Routes = [{
@@ -27,6 +28,10 @@ const routes: Routes = [{
 		{
 			path:"empadronamiento",
 			component: EmpadronamientoComponent
+		},
+		{
+			path: "desvincular-pacientes",
+			component: UnlinkPatientComponent
 		}
 	],
 	canActivate: [RoleGuard,FeatureFlagGuard],
