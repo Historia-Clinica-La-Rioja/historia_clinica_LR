@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/cor
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { AppFeature, InformerObservationDto, ProblemDto } from '@api-rest/api-model';
+import { AppFeature, ConclusionDto, InformerObservationDto } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { SnvsMasterDataService } from '@api-rest/services/snvs-masterdata.service';
 import { StudyAppointmentReportService } from '@api-rest/services/study-appointment-report.service';
@@ -139,9 +139,9 @@ export class ReportStudyComponent implements OnInit {
 		return {
 			id: this.study.info.informerObservations?.id,
 			evolutionNote: this.replaceTagBr(this.form.value.observations),
-			problems: this.ambulatoryConsultationProblemsService.getProblemas().map(
-				(p: ProblemDto) => {
-					return { snomed: { pt: this.uppercaseFirstLetter(p.snomed.pt), sctid: p.snomed.sctid }  };
+			conclusions: this.ambulatoryConsultationProblemsService.getProblemas().map(
+				(p: ConclusionDto) => {
+					return { snomed: { pt: this.uppercaseFirstLetter(p.snomed.pt), sctid: p.snomed.sctid } };
 				}),
 			createdBy: null,
 			actionTime: null,
@@ -172,10 +172,10 @@ export class ReportStudyComponent implements OnInit {
 	private setPreviousInformation(obs: InformerObservationDto) {
 		this.enabledEditing = false;
 		this.form.controls.observations.setValue(obs.evolutionNote);
-		this.setConcepts(obs.problems);
+		this.setConcepts(obs.conclusions);
 	}
 
-	private setConcepts(problems: ProblemDto[]) {
+	private setConcepts(problems: ConclusionDto[]) {
 		problems.forEach(p => this.ambulatoryConsultationProblemsService.addProblemToList({ snomed: p.snomed }))
 	}
 

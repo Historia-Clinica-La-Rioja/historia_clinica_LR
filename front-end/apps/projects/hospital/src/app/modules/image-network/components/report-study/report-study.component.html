@@ -1,8 +1,9 @@
 <h2 class="subtitle" translate="image-network.worklist.details_study.REPORT"></h2>
 
-<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" *ngIf="study?.info.informerObservations?.conclusions?.length">
     <span class="bold">{{ 'image-network.worklist.details_study.CONCLUTIONS' | translate }}</span>
 </div>
+
 
 <form [formGroup]="form" *ngIf="enabledEditing else showInformerObservations" fxLayout="column">
 
@@ -52,7 +53,7 @@
 <ng-template #showInformerObservations>
     <div fxLayout="column" *ngIf="study.info.informerObservations">
         <div class="content">
-            <div *ngFor="let problem of study.info.informerObservations.problems">
+            <div *ngFor="let problem of study.info.informerObservations.conclusions">
                 <span>{{problem.snomed.pt}}</span>
             </div>
         </div>
