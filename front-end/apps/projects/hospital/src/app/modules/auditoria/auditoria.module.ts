@@ -27,7 +27,7 @@ import { UnlinkPatientComponent } from './routes/unlink-patient/unlink-patient.c
     ConfirmedFusionComponent,
     PatientProfilePopupComponent,
     EmpadronamientoComponent,
-    UnlinkPatientComponent
+    UnlinkPatientComponent,
   ],
   imports: [
     CommonModule,
