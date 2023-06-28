@@ -246,6 +246,7 @@ export interface AppointmentEquipmentShortSummaryDto {
 export interface AppointmentListDto {
     appointmentBlockMotiveId: number;
     appointmentStateId: number;
+    createdOn: Date;
     date: string;
     healthInsuranceId: number;
     hour: string;
@@ -257,6 +258,7 @@ export interface AppointmentListDto {
     patient: AppointmentBasicPatientDto;
     phoneNumber: string;
     phonePrefix: string;
+    professionalPersonDto: ProfessionalPersonDto;
     protected: boolean;
 }
 

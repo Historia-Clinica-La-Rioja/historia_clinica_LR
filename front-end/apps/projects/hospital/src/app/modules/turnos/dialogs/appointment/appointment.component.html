@@ -181,6 +181,10 @@
 					<div fxLayout="column" fxLayoutGap="10px" *ngIf="appointment?.protected">
 						<span class="purple">{{'turnos.appointment.PROTECTED' | translate}}</span>
 					</div>
+					<div fxLayout="column" class="assigned-by">
+						<span>{{'turnos.appointment.ASSIGNED' | translate}}</span>
+						<span>{{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn | date:"dd/mm/yyyy H:mm"}}hs.</span>
+					</div>
 				</div>
 				<button type="button" mat-icon-button color="primary"
 					*ngIf="(selectedState === appointmentStatesIds.ASSIGNED) && ( hasRoleToEdit$ | async )" (click)="openDateForm()">
