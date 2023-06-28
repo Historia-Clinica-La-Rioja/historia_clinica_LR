@@ -48,6 +48,7 @@ public  class EquipmentServiceImpl implements EquipmentService {
 		result.setModalityId(equipment.getModalityId());
 		result.setOrchestratorId(equipment.getOrchestratorId());
 		result.setPacServerId(equipment.getPacServerId());
+		result.setCreateId(equipment.getCreateId());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
