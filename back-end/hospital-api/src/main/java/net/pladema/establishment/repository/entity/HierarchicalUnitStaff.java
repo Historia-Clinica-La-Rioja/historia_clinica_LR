@@ -3,6 +3,7 @@ package net.pladema.establishment.repository.entity;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -25,6 +26,7 @@ import java.io.Serializable;
 @Setter
 @ToString
 @Entity
+@NoArgsConstructor
 public class HierarchicalUnitStaff extends SGXAuditableEntity<Integer> implements Serializable {
 
 	private static final long serialVersionUID = 5836795131051662964L;

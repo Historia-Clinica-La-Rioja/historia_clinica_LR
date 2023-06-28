@@ -1704,6 +1704,13 @@ export interface HierarchicalUnitDto {
     name: string;
 }
 
+export interface HierarchicalUnitStaffDto {
+    hierarchicalUnitAlias: string;
+    hierarchicalUnitId: number;
+    id: number;
+    responsible: boolean;
+}
+
 export interface HolidayDto {
     date: DateDto;
     description: string;
