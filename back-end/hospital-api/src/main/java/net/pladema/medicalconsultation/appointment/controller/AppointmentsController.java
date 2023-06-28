@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -41,10 +40,6 @@ import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.establishment.controller.mapper.InstitutionMapper;
-import net.pladema.establishment.service.EquipmentService;
-import net.pladema.establishment.service.OrchestratorService;
-import net.pladema.establishment.service.domain.EquipmentBO;
-import net.pladema.establishment.service.domain.OrchestratorBO;
 import net.pladema.imagenetwork.derivedstudies.service.MoveStudiesService;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentDiary;
@@ -86,10 +81,6 @@ import net.pladema.medicalconsultation.appointment.service.domain.DetailsOrderIm
 import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.notifypatient.NotifyPatient;
-import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryService;
-import net.pladema.medicalconsultation.equipmentdiary.service.domain.CompleteEquipmentDiaryBo;
-import net.pladema.modality.service.ModalityService;
-import net.pladema.modality.service.domain.ModalityBO;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
@@ -114,13 +105,6 @@ public class AppointmentsController {
 
 	private final MoveStudiesService moveStudiesService;
 
-	private final EquipmentService equipmentService;
-
-	private final EquipmentDiaryService equipmentDiaryService;
-
-	private final OrchestratorService orchestratorService;
-
-	private final ModalityService modalityService;
 
     private final AppointmentValidatorService appointmentValidatorService;
 
@@ -170,11 +154,7 @@ public class AppointmentsController {
 			BookingPersonService bookingPersonService,
 			LocalDateMapper dateMapper,
 			LocalDateMapper localDateMapper,
-			EquipmentService equipmentService,
-			EquipmentDiaryService equipmentDiaryService,
-			OrchestratorService orchestratorService,
 			MqttClientService mqttClientService,
-			ModalityService modalityService,
 			AppointmentOrderImageService appointmentOrderImageService,
 			MoveStudiesService moveStudiesService, DeriveReportService deriveReportService) {
         this.appointmentDailyAmountService = appointmentDailyAmountService;
@@ -193,11 +173,7 @@ public class AppointmentsController {
         this.bookingPersonService = bookingPersonService;
 		this.dateMapper = dateMapper;
 		this.localDateMapper = localDateMapper;
-		this.equipmentService = equipmentService;
-		this.equipmentDiaryService = equipmentDiaryService;
-		this.orchestratorService = orchestratorService;
 		this.mqttClientService = mqttClientService;
-		this.modalityService = modalityService;
 		this.appointmentOrderImageService = appointmentOrderImageService;
 		this.moveStudiesService = moveStudiesService;
 		this.deriveReportService = deriveReportService;
@@ -571,91 +547,10 @@ public class AppointmentsController {
 			@PathVariable(name = "appointmentId") Integer appointmentId
 	) {
 		log.debug("Input parameters -> institutionId {},appointmentId {}", institutionId, appointmentId);
-		AppointmentBo appointment = appointmentService.getEquipmentAppointment(appointmentId).orElse(null);
-		if (appointment == null){
-			return ResponseEntity.ok().body(false);
+		MqttMetadataBo data = equipmentAppointmentService.publishWorkList(institutionId, appointmentId);
+		if (data != null){
+			mqttClientService.publish(data);
 		}
-
-		Integer diaryId = appointment.getDiaryId();
-		CompleteEquipmentDiaryBo equipmentDiary = equipmentDiaryService.getEquipmentDiary(diaryId).orElse(null);
-		if (equipmentDiary == null){
-			return ResponseEntity.ok().body(false);
-		}
-
-		Integer equipmentId = equipmentDiary.getEquipmentId();
-		EquipmentBO equipmentBO =equipmentService.getEquipment(equipmentId);
-		if (equipmentBO == null){
-			return ResponseEntity.ok().body(false);
-		}
-
-		Integer orchestratorId = equipmentBO.getOrchestratorId();
-		OrchestratorBO orchestrator = orchestratorService.getOrchestrator(orchestratorId);
-		if (orchestrator == null){
-			return ResponseEntity.ok().body(false);
-		}
-
-		ModalityBO modalityBO = modalityService.getModality(equipmentBO.getModalityId());
-		if (modalityBO == null){
-			return ResponseEntity.ok().body(false);
-		}
-
-		Integer patientId =appointment.getPatientId();
-		BasicPatientDto basicDataPatient = patientExternalService.getBasicDataFromPatient(patientId);
-		if (basicDataPatient == null){
-			return ResponseEntity.ok().body(false);
-		}
-
-
-		String UID= "1." + ThreadLocalRandom.current().nextInt(1,10) + "." +
-					ThreadLocalRandom.current().nextInt(1,10) + "." +
-					ThreadLocalRandom.current().nextInt(1,100) + "." +
-					ThreadLocalRandom.current().nextInt(1,100) + "." +
-					ThreadLocalRandom.current().nextInt(1,1000) + "." +
-					ThreadLocalRandom.current().nextInt(1,1000) + "." +
-					basicDataPatient.getIdentificationNumber();
-		String date = appointment.getDate().toString().replace("-","");
-		String time = appointment.getHour().toString().replace(":","") + "00";
-		String birthDate = null;
-		char gender = 0;
-		BasicDataPersonDto person = basicDataPatient.getPerson();
-		if (person != null) {
-			birthDate = person.getBirthDate() != null ? person.getBirthDate().toString().replace("-", "") : null;
-
-			gender = person.getGender() != null 
-					&& person.getGender().getDescription() != null 
-					&& basicDataPatient.getPerson().getGender().getDescription().toCharArray().length > 0 ? basicDataPatient.getPerson().getGender().getDescription().toCharArray()[0] : ' ';
-		}
-		String accessionNumber =   "   \"AccessionNumber\": \"" + institutionId +"-" + appointmentId + "\", \n";
-		String studyInstanceUID =   "   \"StudyInstanceUID\": \"" + UID+ "\", \n";
-		String aeTitle =   "    \"ScheduledStationAETitle\": \"" + equipmentBO.getAeTitle() + "\",\n";
-		String startDate = "    \"ScheduledProcedureStepStartDate\": \"" + date + "\",\n";
-		String startTime = "    \"ScheduledProcedureStepStartTime\": \"" + time + "\",\n";
-		String patientIdStr = "    \"PatientID\": \"" + basicDataPatient.getIdentificationNumber() + "\",\n";
-		String patientName = "    \"PatientName\": \"" + basicDataPatient.getFirstName() + " " + basicDataPatient.getLastName() + "\",\n";
-		String patientBirthDate = "    \"PatientBirthDate\": \"" + birthDate + "\",\n";
-		String patientSex = "    \"PatientSex\": \"" + gender + "\",\n";
-		String studyDescription = "    \"StudyDescription\": \"" + "description order" + "\",\n";
-		String modality = "    \"Modality\": \"" + modalityBO.getAcronym() + "\"\n";
-		String json =  "{\n"
-				+ accessionNumber
-				+ studyInstanceUID
-				+ aeTitle
-				+ startDate
-				+ startTime
-				+ patientIdStr
-				+ patientName
-				+ patientSex
-				+ studyDescription
-				+ patientBirthDate
-				+ modality
-				+ "}";
-
-		String topic = orchestrator.getBaseTopic() + "/LISTATRABAJO";
-
-
-		MqttMetadataBo data = new MqttMetadataBo(topic, json,false,2);
-		mqttClientService.publish(data);
-		appointmentOrderImageService.setImageId(appointmentId,	UID);
 		return ResponseEntity.ok().body(true);
 	}
 
