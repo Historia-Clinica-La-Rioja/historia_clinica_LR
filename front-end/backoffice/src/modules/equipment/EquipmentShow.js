@@ -7,6 +7,8 @@ import {
     Button,
     ReferenceField,
     SimpleForm,
+    Labeled,
+    BooleanField,
     useRedirect
 } from 'react-admin';
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
@@ -74,6 +76,9 @@ const EquipmentShow = (props) => (
             <ReferenceField link={false}source="modalityId" reference="modality">
                 <RenderModality/>
             </ReferenceField>
+            <Labeled label="resources.equipment.fields.createId">
+                <BooleanField source="createId" />
+            </Labeled>
         </SimpleForm>
     </Show>
 );

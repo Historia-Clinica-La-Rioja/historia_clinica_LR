@@ -768,7 +768,8 @@ const messages = {
                 orchestratorId: 'Orquestador asociado',
                 sectorId: 'Sector',
                 pacServerId: 'Nombre del servidor PAC',
-                modalityId: 'Modalidad'
+                modalityId: 'Modalidad',
+                createId:'El equipo genera el ID del estudio'
             },
             createRelated: 'Crear Equipo',
             detailLabel: 'Detalle de Equipo'
