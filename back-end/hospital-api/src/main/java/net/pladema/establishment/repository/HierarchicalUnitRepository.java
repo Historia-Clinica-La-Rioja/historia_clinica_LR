@@ -23,6 +23,13 @@ public interface HierarchicalUnitRepository extends SGXAuditableEntityJPAReposit
 	List<Integer> getAllIdsByInstitutionsId(@Param("institutionsIds") List<Integer> institutionsIds);
 
 	@Transactional(readOnly = true)
+	@Query("SELECT hu "+
+			"FROM HierarchicalUnit AS hu " +
+			"WHERE hu.institutionId = :institutionId " +
+			"AND hu.deleteable.deleted IS FALSE ")
+	List<HierarchicalUnit> getAllByInstitutionId(@Param("institutionId") Integer institutionId);
+
+	@Transactional(readOnly = true)
 	@Query(value = "SELECT hu " +
 			"FROM HierarchicalUnit  hu " +
 			"WHERE hu.alias = :alias " +

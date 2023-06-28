@@ -1699,6 +1699,11 @@ export interface HealthcareProfessionalSpecialtyDto {
     professionalProfessionId?: number;
 }
 
+export interface HierarchicalUnitDto {
+    id: number;
+    name: string;
+}
+
 export interface HolidayDto {
     date: DateDto;
     description: string;
