@@ -17,6 +17,7 @@ import net.pladema.patient.repository.PatientAuditRepository;
 import net.pladema.patient.repository.PatientHistoryRepository;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
 import net.pladema.patient.repository.PatientRepository;
+import net.pladema.patient.repository.PatientRepositoryImpl;
 import net.pladema.patient.repository.PatientTypeRepository;
 import net.pladema.patient.repository.PrivateHealthInsuranceDetailsRepository;
 import net.pladema.patient.repository.entity.Patient;
@@ -89,6 +90,9 @@ class PatientServiceImplIntegrationTest extends UnitRepository {
 	@Mock
 	private MergedInactivePatientRepository mergedInactivePatientRepository;
 
+	@Mock
+	private PatientRepositoryImpl patientRepositoryCustom;
+
 	@BeforeEach
     void setUp(){
         patientService = new PatientServiceImpl(
@@ -107,7 +111,8 @@ class PatientServiceImplIntegrationTest extends UnitRepository {
 				appointmentRepository,
 				patientHistoryRepository,
                 mergedPatientRepository,
-				mergedInactivePatientRepository);
+				mergedInactivePatientRepository,
+				patientRepositoryCustom);
     }
 
     @Test

@@ -45,6 +45,7 @@ import net.pladema.patient.repository.PatientAuditRepository;
 import net.pladema.patient.repository.PatientHistoryRepository;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
 import net.pladema.patient.repository.PatientRepository;
+import net.pladema.patient.repository.PatientRepositoryImpl;
 import net.pladema.patient.repository.PatientTypeRepository;
 import net.pladema.patient.repository.PrivateHealthInsuranceDetailsRepository;
 import net.pladema.patient.repository.domain.PatientPersonVo;
@@ -86,8 +87,9 @@ public class PatientServiceImpl implements PatientService {
 	private final EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;
 	private final AppointmentRepository appointmentRepository;
 	private final PatientHistoryRepository patientHistoryRepository;
-
 	private final MergedInactivePatientRepository mergedInactivePatientRepository;
+	private final PatientRepositoryImpl patientRepositoryCustom;
+
 	public PatientServiceImpl(PatientRepository patientRepository,
 							  PatientMedicalCoverageRepository patientMedicalCoverageRepository,
 							  MedicalCoverageRepository medicalCoverageRepository,
@@ -103,7 +105,8 @@ public class PatientServiceImpl implements PatientService {
 							  AppointmentRepository appointmentRepository,
 							  PatientHistoryRepository patientHistoryRepository,
 							  MergedPatientRepository mergedPatientRepository,
-							  MergedInactivePatientRepository mergedInactivePatientRepository) {
+							  MergedInactivePatientRepository mergedInactivePatientRepository,
+							  PatientRepositoryImpl patientRepositoryCustom) {
 		this.patientRepository = patientRepository;
 		this.hospitalAuditRepository = hospitalAuditRepository;
 		this.patientAuditRepository = patientAuditRepository;
@@ -117,6 +120,7 @@ public class PatientServiceImpl implements PatientService {
 		this.patientHistoryRepository = patientHistoryRepository;
 		this.mergedPatientRepository = mergedPatientRepository;
 		this.mergedInactivePatientRepository = mergedInactivePatientRepository;
+		this.patientRepositoryCustom = patientRepositoryCustom;
 	}
 
 	@Override
@@ -315,6 +319,14 @@ public class PatientServiceImpl implements PatientService {
 			patientRepository.findById(id).map(old -> !(old.getTypeId().equals(newData.getTypeId()) && old.getAuditTypeId().equals(newData.getAuditTypeId()) && Objects.equals(old.getNationalId(),newData.getNationalId())))
 					.orElse(true)
 		).orElse(true);
+	}
+	
+	@Override
+	public List<Patient> getLongTermTemporaryPatientIds(LocalDateTime maxDate, Short limit) {
+		LOG.debug("Input parameters -> maxDate {}, limit {}", maxDate, limit);
+		List<Patient> result = patientRepositoryCustom.getLongTermTemporaryPatientIds(maxDate, limit);
+		LOG.debug("Output result -> {}", result);
+		return result;
 	}
 
 	private AuditablePatientInfoDto mapToAuditablePatientInfoDto(AuditablePatientInfoBo auditablePatientInfo) {

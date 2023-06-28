@@ -14,6 +14,7 @@ import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.repository.domain.PersonSearchResultVo;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -55,5 +56,7 @@ public interface PatientService {
 	List<PersonSearchResultVo> getMergedPersonsByPatientId(Integer activePatientId);
 
 	void assertHasActiveEncountersByPatientId(Integer patientId);
+
+	List<Patient> getLongTermTemporaryPatientIds(LocalDateTime maxDate, Short limit);
 
 }
