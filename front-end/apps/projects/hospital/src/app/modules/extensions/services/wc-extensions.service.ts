@@ -10,6 +10,7 @@ import {
 	toInstitutionWCParamsList,
 	toSystemHomeWCParamsList,
 	toMenuItemList,
+	toInstitutionHomeWCParams,
 } from './wc-extensions.mappers';
 import { SlotsStorageService } from './storages/slots-storage.service';
 import { MenuItem } from '@presentation/components/menu/menu.component';
@@ -65,6 +66,20 @@ export class WCExtensionsService {
 			);
 	}
 
+	getInstitutionMenu(): Observable<any> {
+		return this.listComponentsFromSlot(Slot.INSTITUTION_MENU)
+			.pipe(
+				map(toMenuItemList),
+			)
+	}
+
+	getInstitutionMenuPage(wcId: string, institutionId: number): Observable<WCParams> {
+		return this.listComponentsFromSlot(Slot.INSTITUTION_MENU)
+			.pipe(
+				map(findSlotedInfoById(wcId)),
+				map(data => toInstitutionHomeWCParams(data, institutionId))
+			);
+	}
 
 	private listComponentsFromSlot(slot: Slot): Observable<SlotedInfo[]> {
 		return this.slotedComponents.find(a => a.slot === slot).components$;

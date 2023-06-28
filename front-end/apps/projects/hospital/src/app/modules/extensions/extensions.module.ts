@@ -29,6 +29,7 @@ import { CubejsCardComponent } from './components/cubejs-card/cubejs-card.compon
 import { AppointmentStateInputComponent } from './components/appointment-state-input/appointment-state-input.component';
 import { FreeTextFormInputComponent } from './components/free-text-form-input/free-text-form-input.component';
 import { DownloadCsvButtonComponent } from './components/download-csv-button/download-csv-button.component';
+import { InstitutionRoutedExternalComponent } from './institution-routed-external/institution-routed-external.component';
 
 @NgModule({
 	imports: [
@@ -58,11 +59,12 @@ import { DownloadCsvButtonComponent } from './components/download-csv-button/dow
 		RoutedExternalComponent,
 		SpecialtyFormInputComponent,
 		ProfessionalFormInputComponent,
-  MultiselectCubejsDashboardComponent,
-  CubejsCardComponent,
-  AppointmentStateInputComponent,
-  FreeTextFormInputComponent,
-  DownloadCsvButtonComponent,
+		MultiselectCubejsDashboardComponent,
+		CubejsCardComponent,
+		AppointmentStateInputComponent,
+		FreeTextFormInputComponent,
+		DownloadCsvButtonComponent,
+		InstitutionRoutedExternalComponent,
 	],
 	exports: [
 		// components

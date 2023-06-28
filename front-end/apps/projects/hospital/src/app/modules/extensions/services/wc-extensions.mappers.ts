@@ -7,10 +7,10 @@ export const findSlotedInfoById = (wcId: string) =>
 		slotedInfoList.find(e => wcId === e.componentName);
 
 export const toInstitutionWCParams = (institutionId: number) =>
-	(element: SlotedInfo): WCParams  =>
+	(element: SlotedInfo): WCParams =>
 		slotedInfoToWCParamsMapper(element, { institutionId });
 
-export const slotedInfoToWCParamsMapper = (element: SlotedInfo, params): WCParams  => element ? {
+export const slotedInfoToWCParamsMapper = (element: SlotedInfo, params): WCParams => element ? {
 	title: element.title,
 	componentName: element.componentName,
 	url: element.url,
@@ -18,14 +18,17 @@ export const slotedInfoToWCParamsMapper = (element: SlotedInfo, params): WCParam
 } : undefined;
 
 export const toClinicHistoryWCParams = (patientId: number) =>
-	(element: SlotedInfo): WCParams  =>
+	(element: SlotedInfo): WCParams =>
 		slotedInfoToWCParamsMapper(element, { patientId });
 
-export const toSystemHomeWCParams = (element: SlotedInfo): WCParams  =>
+export const toSystemHomeWCParams = (element: SlotedInfo): WCParams =>
 	slotedInfoToWCParamsMapper(element, {});
 
-const listMap = (mapper : (from: SlotedInfo) => WCParams) =>
-	(elements: SlotedInfo[]): WCParams[]  => elements.map(mapper);
+export const toInstitutionHomeWCParams = (element: SlotedInfo, institutionId: number): WCParams =>
+	slotedInfoToWCParamsMapper(element, { institutionId });
+
+const listMap = (mapper: (from: SlotedInfo) => WCParams) =>
+	(elements: SlotedInfo[]): WCParams[] => elements.map(mapper);
 
 export const toInstitutionWCParamsList = (institutionId: number) =>
 	listMap(toInstitutionWCParams(institutionId));
@@ -41,4 +44,4 @@ const toMenuItem = (slotedInfo: SlotedInfo): MenuItem => ({
 	url: `web-components/${slotedInfo.componentName}`,
 });
 
-export const toMenuItemList = (elements: SlotedInfo[]): MenuItem[]  => elements.map(toMenuItem);
+export const toMenuItemList = (elements: SlotedInfo[]): MenuItem[] => elements.map(toMenuItem);

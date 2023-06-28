@@ -21,7 +21,8 @@ import { MenuService } from '@extensions/services/menu.service';
 import { HomeRoutes } from '../home/home-routing.module';
 import { AppRoutes } from '../../app-routing.module';
 import { SIDEBAR_MENU } from './constants/menu';
-import {AppFeature} from "@api-rest/api-model";
+import { AppFeature } from "@api-rest/api-model";
+import { WCExtensionsService } from '@extensions/services/wc-extensions.service';
 
 @Component({
 	selector: 'app-institucion',
@@ -45,6 +46,7 @@ export class InstitucionComponent implements OnInit {
 		private institutionService: InstitutionService,
 		private accountService: AccountService,
 		private featureFlagService: FeatureFlagService,
+		private readonly wcExtensionsService: WCExtensionsService,
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn =>{
 			this.nameSelfDeterminationFF = isOn});
@@ -64,6 +66,7 @@ export class InstitucionComponent implements OnInit {
 					switchMap(items => this.extensionMenuService.getInstitutionMenu(institutionId).pipe(
 						map(extesionItems => [...items, ...extesionItems]),
 					)),
+					switchMap(items => this.wcExtensionsService.getInstitutionMenu().pipe(map(extensiones => [...items, ...extensiones])))
 				);
 
 			this.institutionService.getInstitutions(Array.of(institutionId))
