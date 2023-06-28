@@ -1,5 +1,5 @@
-<app-titled-content-card *ngIf="listConcept.length else noData" [title]="title">
-	<div fxLayout="column">
+<app-titled-content-card [title]="title">
+	<div *ngIf="listConcept.length else noData" fxLayout="column">
 		<ng-container *ngFor="let item of listConcept; index as i; last as isLast">
 			<div fxLayout="row" fxLayoutGap="15px">
 				<mat-checkbox [checked]="item.isAdded" (change)="toggleItemSelection(item)"></mat-checkbox>
@@ -18,8 +18,11 @@
 				{{'internaciones.epicrisis.list-concept.INCLUDE_ALL' | translate}}</mat-checkbox>
 		</div>
 	</div>
+
+	<ng-template #noData>
+		<div class="no-data mat-typography gray-caption">
+			<span>{{'internaciones.epicrisis.list-concept.NO_DATA' | translate}}</span>
+		</div>
+	</ng-template>
 </app-titled-content-card>
 
-<ng-template #noData>
-	<app-no-data *ngIf="listConcept.length === 0"></app-no-data>
-</ng-template>
