@@ -40,6 +40,7 @@ import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { toCalendarEvent } from '@turnos/utils/appointment.utils';
 
 const TEMPORARY_PATIENT = 3;
+const REJECTED_PATIENT = 6;
 const BELL_LABEL = 'Llamar paciente'
 const ROLES_TO_CHANGE_STATE: ERole[] = [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 const ROLES_TO_EDIT: ERole[]
@@ -106,6 +107,7 @@ export class AppointmentComponent implements OnInit {
 	hideObservationTitle = true;
 	observation: string;
 	firstCoverage: number;
+	isRejectedPatient:boolean=false;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			appointmentData: PatientAppointmentInformation,
@@ -135,6 +137,9 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		if(this.data.appointmentData.patient.typeId=== REJECTED_PATIENT){
+			this.isRejectedPatient=true;
+		}
 		this.formMotive = this.formBuilder.group({
 			motive: ['', [Validators.required, Validators.maxLength(MAX_LENGTH_MOTIVE)]]
 		});
