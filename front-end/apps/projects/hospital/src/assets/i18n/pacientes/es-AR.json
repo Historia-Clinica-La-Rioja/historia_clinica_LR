@@ -341,7 +341,10 @@
 		"SUBTITLE_NO_DATA_RENAPER":"Por favor, revise los datos ingresados y vuelva a intentar",
 		"LABEL_PATIENT_REJECTED":"El paciente “Rechazado” no se vera en el resto del los módulos del sistema.",
 		"TITLE_ERROR_REJECTED":"El paciente tiene un encuentro activo",
-		"LABEL_ERROR_REJECTED": "El paciente no puede rechazarse porque tiene al menos un encuentro activo. Para rechazar el paciente no debe estar en un episodio abierto de guardia o internación y no debe tener turnos asignados"
+		"LABEL_ERROR_REJECTED": "El paciente no puede rechazarse porque tiene al menos un encuentro activo. Para rechazar el paciente no debe estar en un episodio abierto de guardia o internación y no debe tener turnos asignados",
+		"TITLE_ERROR_REJECTED_PATIENT_HAS_USER":"Rechazar persona",
+		"SUBTITLE_ERROR_REJECTED_PATIENT_HAS_USER":"Si cambia el estado a 'Rechazado' la persona no será más visible en el resto de los módulos del sistema y en caso de contar con un usuario, el mismo quedará deshabilitado. Una vez rechazado el paciente no podrá volver a validarse.",
+		"QUESTION_ERROR_REJECTED_PATIENT_HAS_USER":"¿Está seguro que desea cambiar el estado a 'Rechazado'?"
 	}
   }
 }

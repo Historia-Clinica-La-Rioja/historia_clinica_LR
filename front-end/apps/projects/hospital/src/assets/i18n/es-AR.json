@@ -46,7 +46,9 @@
 		"CSV_DOWNLOAD": "DESCARGAR .CSV",
 		"ELECTRONIC_FIRM": "Firmar electrónicamente",
 		"ALL": "Todos",
-		"RETRY":"Reintentar"
+		"RETRY":"Reintentar",
+		"YES_CONTINUE":"Si, continuar",
+		"NO_CANCEL":"No, cancelar"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",

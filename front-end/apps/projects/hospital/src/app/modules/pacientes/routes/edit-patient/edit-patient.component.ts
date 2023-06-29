@@ -36,6 +36,7 @@ import { MessageForAuditComponent } from '@pacientes/dialogs/message-for-audit/m
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Observable } from 'rxjs';
+import { UserService } from '@api-rest/services/user.service';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -109,6 +110,7 @@ export class EditPatientComponent implements OnInit {
 		private readonly datePipe: DatePipe,
 		private patientMasterDataService: PatientMasterDataService,
 		private auditPatientService: AuditPatientService,
+		private readonly userService: UserService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
@@ -409,6 +411,32 @@ export class EditPatientComponent implements OnInit {
 						this.hasToSaveFiles = true;
 					}
 				})
+			} else if (this.form.controls.stateId.value === this.rejectedId) {
+				this.userService.getUserData(this.completeDataPatient.person.id)
+					.subscribe(userDataDto => {
+						if (userDataDto) {
+							const dialogRef = this.dialog.open(DiscardWarningComponent, {
+								data: {
+									title: 'pacientes.audit.TITLE_ERROR_REJECTED_PATIENT_HAS_USER',
+									content: 'pacientes.audit.SUBTITLE_ERROR_REJECTED_PATIENT_HAS_USER',
+									contentBold: 'pacientes.audit.QUESTION_ERROR_REJECTED_PATIENT_HAS_USER',
+									okButtonLabel: 'buttons.YES_CONTINUE',
+									cancelButtonLabel: 'buttons.NO_CANCEL',
+									buttonClose: true,
+									color:'warn',
+									okBottonColor:'warn'
+								},
+								disableClose: true,
+								width: '35%',
+								autoFocus: false,
+							})
+							dialogRef.afterClosed().subscribe(isContinue => {
+								if (isContinue) {
+									this.hasToSaveFiles = true;
+								}
+							})
+						}
+					});
 			} else {
 				this.hasToSaveFiles = true;
 			}

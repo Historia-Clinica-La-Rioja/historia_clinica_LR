@@ -19,14 +19,16 @@ export class DiscardWarningComponent implements OnInit {
 			okButtonLabel: string,
 			cancelButtonLabel: string,
 			okBottonColor?: ThemePalette,
-			buttonClose?:boolean,
-			errorMode?:boolean,
+			buttonClose?: boolean,
+			errorMode?: boolean,
+			color?: string,
 		}
 	) {
 	}
 
 	ngOnInit(): void {
 		this.okBottonColor = this.data.okBottonColor ? this.data.okBottonColor : 'primary';
+		this.data.color = this.data.color ? this.data.color : 'primary';
 	}
 }
 
