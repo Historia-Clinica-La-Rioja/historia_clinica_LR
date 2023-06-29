@@ -181,8 +181,8 @@
 					<div fxLayout="column" fxLayoutGap="10px" *ngIf="appointment?.protected">
 						<span class="purple">{{'turnos.appointment.PROTECTED' | translate}}</span>
 					</div>
-					<div fxLayout="column" class="assigned-by">
-						<span>{{'turnos.appointment.ASSIGNED' | translate}}</span>
+					<div fxLayout="column" class="assigned-by" *ngIf="data.appointmentData.professionalPersonDto else bookingAppointment">
+						<span>{{'turnos.appointment.ASSIGNED_BY' | translate}}</span>
 						<span>{{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn | date:"dd/mm/yyyy H:mm"}}hs.</span>
 					</div>
 				</div>
@@ -385,4 +385,11 @@
 	<span class="mat-body patient-no-info coverage-text subtitle-size">
 		{{'turnos.appointment.NO-INFO' | translate}}
 	</span>
+</ng-template>
+
+<ng-template #bookingAppointment>
+	<div class="assigned-by" fxLayout="column">
+		<span>{{'turnos.appointment.ASSIGNED_BY' | translate}}</span>
+		<span>{{'turnos.appointment.BOOKING' | translate}} - {{data.appointmentData.createdOn | date:"dd/mm/yyyy H:mm"}}hs.</span>
+	</div>
 </ng-template>

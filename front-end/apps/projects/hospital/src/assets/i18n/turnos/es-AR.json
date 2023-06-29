@@ -159,7 +159,8 @@
 			"CANCEL": "Cancelar",
 			"NO-INFO": "Sin información",
 			"PROTECTED": "*solicitado como turno protegido",
-			"ASSIGNED": "Asignado por",
+			"ASSIGNED_BY": "Asignado por",
+			"BOOKING": "Turno online",
 			"date": {
 				"EDIT_DATE_TIME": "Editar fecha y hora del turno",
 				"UPDATE_SUCCESS": "La fecha y hora del turno se actualizaron exitosamente"

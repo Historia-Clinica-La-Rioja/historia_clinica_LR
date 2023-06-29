@@ -72,8 +72,8 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 						"JOIN Diary d ON (d.id = aa.pk.diaryId )" +
 						"JOIN DiaryOpeningHours AS doh ON (doh.pk.diaryId = d.id) " +
 						"JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
-						"JOIN UserPerson us ON (a.creationable.createdBy = us.pk.userId) " +
-						"JOIN Person p ON (us.pk.personId = p.id) " +
+						"LEFT JOIN UserPerson us ON (a.creationable.createdBy = us.pk.userId) " +
+						"LEFT JOIN Person p ON (us.pk.personId = p.id) " +
 						"WHERE d.healthcareProfessionalId = :healthcareProfessionalId " +
 						"AND do.institutionId = :institutionId " +
 						"AND d.active = true " +
@@ -106,8 +106,8 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 						"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
 						"JOIN Diary d ON (d.id = aa.pk.diaryId ) " +
 						"JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = d.id) " +
-						"JOIN UserPerson us ON (a.creationable.createdBy = us.pk.userId) " +
-						"JOIN Person p ON (us.pk.personId = p.id) " +
+						"LEFT JOIN UserPerson us ON (a.creationable.createdBy = us.pk.userId) " +
+						"LEFT JOIN Person p ON (us.pk.personId = p.id) " +
 						"WHERE aa.pk.diaryId IN (:diaryIds) AND (d.deleteable.deleted = false OR d.deleteable.deleted is null ) " +
 						(from!=null ? "AND a.dateTypeId >= :from " : "") +
 						(to!=null ? "AND a.dateTypeId <= :to " : "") +

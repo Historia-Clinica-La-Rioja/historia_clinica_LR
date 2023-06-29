@@ -76,7 +76,7 @@ public class AppointmentDiaryVo {
 		this.appointmentBlockMotiveId = appointmentBlockMotiveId;
 		this.updatedOn = updatedOn;
 		this.createdOn = createdOn;
-		this.professionalPersonVo = new ProfessionalPersonVo(personId, firstName, lastName, otherLastName);
+		this.professionalPersonVo = personId != null ? new ProfessionalPersonVo(personId, firstName, lastName, otherLastName) : null;
 	}
 
 }

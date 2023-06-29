@@ -79,7 +79,7 @@ public class AppointmentBo {
 				.phoneNumber(appointmentDiaryVo.getPhoneNumber())
 				.appointmentBlockMotiveId(appointmentDiaryVo.getAppointmentBlockMotiveId())
 				.createdOn(appointmentDiaryVo.getCreatedOn())
-				.professionalPersonBo(new ProfessionalPersonBo(appointmentDiaryVo.getProfessionalPersonVo()))
+				.professionalPersonBo(appointmentDiaryVo.getProfessionalPersonVo() != null ? new ProfessionalPersonBo(appointmentDiaryVo.getProfessionalPersonVo()) : null)
 				.build();
 	}
 

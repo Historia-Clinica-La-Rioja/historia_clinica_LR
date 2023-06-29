@@ -404,9 +404,11 @@ public class AppointmentsController {
 				appointmentBo.getAppointmentBlockMotiveId(),
 				appointmentBo.isProtected(),
 				appointmentBo.getCreatedOn(),
-				new ProfessionalPersonDto(
+				appointmentBo.getProfessionalPersonBo() != null
+						? new ProfessionalPersonDto(
 						appointmentBo.getProfessionalPersonBo().getId(),
 						appointmentBo.getProfessionalPersonBo().getFirstName() + " " + appointmentBo.getProfessionalPersonBo().getLastName() + " " + appointmentBo.getProfessionalPersonBo().getOtherLastNames())
+						: null
         );
     }
 
@@ -452,9 +454,11 @@ public class AppointmentsController {
     private AppointmentListDto mapData(AppointmentBo appointmentBo, Map<Integer, BasicPatientDto> patientData) {
         AppointmentBasicPatientDto appointmentBasicPatientDto = toAppointmentBasicPatientDto(patientData.get(appointmentBo.getPatientId()), appointmentBo.getPhoneNumber(), appointmentBo.getPhonePrefix());
         AppointmentListDto result = appointmentMapper.toAppointmentListDto(appointmentBo, appointmentBasicPatientDto);
-		result.getProfessionalPersonDto().setFullName(appointmentBo.getProfessionalPersonBo().getFirstName().concat(" " + appointmentBo.getProfessionalPersonBo().getLastName()));
-		if (appointmentBo.getProfessionalPersonBo().getOtherLastNames() != null)
-			result.getProfessionalPersonDto().getFullName().concat(" " + appointmentBo.getProfessionalPersonBo().getOtherLastNames());
+		if (appointmentBo.getProfessionalPersonBo() != null) {
+			result.getProfessionalPersonDto().setFullName(appointmentBo.getProfessionalPersonBo().getFirstName().concat(" " + appointmentBo.getProfessionalPersonBo().getLastName()));
+			if (appointmentBo.getProfessionalPersonBo().getOtherLastNames() != null)
+				result.getProfessionalPersonDto().getFullName().concat(" " + appointmentBo.getProfessionalPersonBo().getOtherLastNames());
+		}
         log.debug("AppointmentListDto id result {}", result.getId());
         log.trace(OUTPUT, result);
         return result;
