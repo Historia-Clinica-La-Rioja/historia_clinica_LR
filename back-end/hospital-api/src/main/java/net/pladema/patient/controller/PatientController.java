@@ -206,8 +206,11 @@ public class PatientController {
 												 @RequestBody APatientDto patientDto) throws URISyntaxException {
 		LOG.debug("Input data -> APatientDto {} ", patientDto);
 		Patient patient = patientService.getPatient(patientId).orElseThrow(() -> new NotFoundException("patient-not-found", "Patient not found"));
-		if(!patient.getTypeId().equals(EPatientType.REJECTED.getId()) && patientDto.getTypeId().equals(EPatientType.REJECTED.getId()))
+		if(!patient.getTypeId().equals(EPatientType.REJECTED.getId()) && patientDto.getTypeId().equals(EPatientType.REJECTED.getId())){
 			patientService.assertHasActiveEncountersByPatientId(patientId);
+			hospitalUserStorage.getUserDataByPersonId(patient.getPersonId())
+					.ifPresent(u-> hospitalUserStorage.disableUser(u.getId()));
+		}
 		BMPersonDto createdPerson = personExternalService.updatePerson(patientDto, patient.getPersonId());
 		PersonExtended personExtendedUpdated = personExternalService.updatePersonExtended(patientDto,
 				createdPerson.getId());
