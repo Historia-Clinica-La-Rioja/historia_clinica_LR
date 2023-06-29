@@ -62,7 +62,7 @@
 					</div>
 
 					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
-						<mat-radio-button color="primary" *ngIf="patient.selected"
+						<mat-radio-button color="primary" *ngIf="patient.selected" [disabled]="patient.typeId === rejectedId"
 							(change)="setValuesPatientFusion(keyAttributes.PATIENT_ID,patient.patientId)"></mat-radio-button>
 						<span>{{patient?.patientId}}
 						</span>

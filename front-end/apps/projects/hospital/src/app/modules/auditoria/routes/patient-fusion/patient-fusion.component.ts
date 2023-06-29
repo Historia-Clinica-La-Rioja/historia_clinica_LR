@@ -18,7 +18,7 @@ import { PatientProfilePopupComponent } from '../../dialogs/patient-profile-popu
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 const ROUTE_CONTROL_PATIENT_DUPLICATE = "auditoria/control-pacientes-duplicados"
-
+const REJECTTED = "Rechazado";
 @Component({
 	selector: 'app-patient-fusion',
 	templateUrl: './patient-fusion.component.html',
@@ -44,6 +44,7 @@ export class PatientFusionComponent implements OnInit {
 	validationTwoSelectedPatients: boolean = false;
 	validationColumns: boolean = false;
 	nameSelfDeterminationFF: boolean;
+	rejectedId:number;
 	patientToMergeAuxKeyId: any = {
 		names: null,
 		identification: null,
@@ -90,6 +91,7 @@ export class PatientFusionComponent implements OnInit {
 
 		this.patientMasterDataService.getTypesPatient().subscribe((patientsTypes: PatientType[]) => {
 			this.patientsTypes = patientsTypes;
+			this.rejectedId = this.patientsTypes.find(type => type.description === REJECTTED).id;
 		})
 
 		this.auditPatientService.getPatientPersonalInfo(this.patientToAudit).subscribe((patientPersonalData: PatientPersonalInfoDto[]) => {
