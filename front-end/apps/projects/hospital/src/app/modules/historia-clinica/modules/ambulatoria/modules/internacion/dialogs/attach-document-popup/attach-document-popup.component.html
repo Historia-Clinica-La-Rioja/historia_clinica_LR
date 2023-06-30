@@ -1,11 +1,11 @@
 <div>
-    <button mat-button mat-icon-button [mat-dialog-close]=true>
-        <mat-icon>close</mat-icon>
-    </button>
+	<button mat-button mat-icon-button [mat-dialog-close]=true>
+		<mat-icon>close</mat-icon>
+	</button>
 </div>
 
 <form [formGroup]="form" (ngSubmit)="save()">
-    <h1 [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.TITLE'"></h1>
+	<h1 [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.TITLE'"></h1>
 
     <app-typeahead
         *ngIf="documentTypes?.length > 0; else noDocumentsType"
@@ -25,38 +25,40 @@
 		<div *ngIf="showGenerateDocument">
 			<button mat-stroked-button color="primary" fxFlex="100%" (click)="generateDocument()" [disabled]="!isAdministrative">
 				<mat-icon class="material-icons-outlined">add_circle_outline</mat-icon>
-				<span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.GENERATE_DOCUMENT'"></span>
+				<span
+					[translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.GENERATE_DOCUMENT'"></span>
 			</button>
 		</div>
 		<div>
 			<button mat-stroked-button color="primary" fxFlex="100%" (click)="fileInput.click()">
 				<mat-icon>attachment</mat-icon>
-				<span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.ATTACH_FILE'"></span>
+				<span
+					[translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.ATTACH_FILE'"></span>
 			</button>
-			<input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file" accept=".jpg, .jpeg, .png, .pdf" (click)="$event.target.value=null">
+			<input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file"
+				accept=".jpg, .jpeg, .png, .pdf" (click)="$event.target.value=null">
 		</div>
 	</section>
 
 	<section class="file" *ngIf="file">
 		<a (click)="openFile(file)">{{file.name}}</a>
-		<button mat-button mat-icon-button color="warn"
-			(click)="deleteFile()">
+		<button mat-button mat-icon-button color="warn" (click)="deleteFile()">
 			<mat-icon>delete_outline</mat-icon>
 		</button>
 	</section>
 
-    <section class="dialog-actions">
-        <button mat-stroked-button color="primary" [mat-dialog-close]=true>
-            <span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.CANCEL'"></span>
-        </button>
+	<section class="dialog-actions">
+		<button mat-stroked-button color="primary" [mat-dialog-close]=true>
+			<span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.CANCEL'"></span>
+		</button>
 
-        <button mat-raised-button color="primary" [disabled]=" ! this.form.valid">
-            <span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.CONTINUE'"></span>
-        </button>
-    </section>
+		<button mat-raised-button color="primary" [disabled]=" ! this.form.valid">
+			<span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.CONTINUE'"></span>
+		</button>
+	</section>
 
-    <ng-template #noDocumentsType>
-        <p [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.NO-DOCUMENTS-TYPE'">
-        </p>
-    </ng-template>
+	<ng-template #noDocumentsType>
+		<p [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.NO-DOCUMENTS-TYPE'">
+		</p>
+	</ng-template>
 </form>
