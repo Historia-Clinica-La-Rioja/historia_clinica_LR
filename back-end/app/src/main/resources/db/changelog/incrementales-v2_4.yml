@@ -825,3 +825,44 @@ databaseChangeLog:
           - sql:
               sql: |-
                 CREATE INDEX IF NOT EXISTS "IDX_patient_history_created_on" ON patient_history (created_on);
+
+
+    - changeSet:
+        id: historic_derive_report-createTable
+        comment: Create table historic_derive_report
+        author: mromero
+        changes:
+          - createTable:
+              tableName: historic_derive_report
+              columns:
+                - column:
+                    name: appointment_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: derived_on
+                    type: datetime
+                    constraints:
+                      nullable: false
+                    defaultValueDate: ${date.now}
+                - column:
+                    name: dest_institution_id
+                    type: int
+                    constraints:
+                      nullable: false
+          - addPrimaryKey:
+              clustered: true
+              columnNames: appointment_id, derived_on
+              constraintName: PK_historic_derive_report
+              tableName: historic_derive_report
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: appointment_id
+              baseTableName: historic_derive_report
+              constraintName: FK_historic_derive_report_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: appointment
+              validate: true
