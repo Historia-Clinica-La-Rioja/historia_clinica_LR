@@ -4,6 +4,7 @@ import { DuplicatePatientDto, IdentificationTypeDto } from '@api-rest/api-model'
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { ContextService } from '@core/services/context.service';
 import { Observable, of } from 'rxjs';
+import {capitalize} from "@core/utils/core.utils";
 
 
 const ROUTE_PATIENTS_FUSION = "auditoria/fusionar-pacientes"
@@ -54,6 +55,18 @@ export class ListCardPatientDuplicateComponent implements OnInit {
 	goToPatientFusion(patientToAudit:DuplicatePatientDto){
 		localStorage.setItem("patientToAudit",JSON.stringify(patientToAudit));
 		this.router.navigate([this.routePrefix + ROUTE_PATIENTS_FUSION]);
+	}
+
+	getFullName(patient: DuplicatePatientDto): string {
+		const names = [
+			patient?.firstName,
+			patient?.middleNames,
+			patient?.lastName,
+			patient?.otherLastNames
+		].filter(name => name !== undefined && name.trim() !== '');
+
+		const capitalizedNames = names.map(name => capitalize(name));
+		return capitalizedNames.join(' ');
 	}
 
 }

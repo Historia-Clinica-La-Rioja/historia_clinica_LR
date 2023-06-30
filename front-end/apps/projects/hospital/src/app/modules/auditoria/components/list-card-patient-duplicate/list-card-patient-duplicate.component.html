@@ -21,8 +21,7 @@
 
 		<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="50px" class="content">
 			<div fxLayoutAlign="none center" class="content bold" fxFlex="20%">
-				<span *ngIf="patient.firstName else noData">{{patient?.firstName}} {{patient?.middleNames}} {{patient?.lastName}}
-				 {{patient?.otherLastNames}}</span>
+				<span *ngIf="patient.firstName else noData">{{getFullName(patient)}}</span>
 			</div>
 
 			<div fxLayoutAlign="none center" class="content" fxFlex="30%">

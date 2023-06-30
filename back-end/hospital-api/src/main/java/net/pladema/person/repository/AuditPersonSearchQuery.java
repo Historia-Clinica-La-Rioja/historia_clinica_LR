@@ -31,10 +31,10 @@ public class AuditPersonSearchQuery {
 	public QueryPart select() {
 		String select = "";
 		if (name) {
-			select = " person.first_name, \n" +
-					" COALESCE(person.middle_names, '') AS middle_names, \n" +
-					" person.last_name, \n" +
-					" COALESCE(person.other_last_names, '') AS other_last_names, \n";
+			select = " LOWER(person.first_name) as first_name, \n" +
+					" LOWER(COALESCE(person.middle_names, '')) AS middle_names, \n" +
+					" LOWER(person.last_name) as last_name, \n" +
+					" LOWER(COALESCE(person.other_last_names, '')) AS other_last_names, \n";
 		}
 		if (identify) {
 			select += " person.identification_type_id, \n" +
@@ -76,10 +76,10 @@ public class AuditPersonSearchQuery {
 	public QueryPart groupBy() {
 		String groupBy = "";
 		if (name) {
-			groupBy = " person.first_name, \n" +
-					" COALESCE(person.middle_names, ''), \n" +
-					" person.last_name, \n" +
-					" COALESCE(person.other_last_names, ''), \n";
+			groupBy = " LOWER(person.first_name), \n" +
+					" LOWER(COALESCE(person.middle_names, '')), \n" +
+					" LOWER(person.last_name), \n" +
+					" LOWER(COALESCE(person.other_last_names, '')), \n";
 		}
 		if (identify) {
 			groupBy += " person.identification_type_id, \n" +

@@ -56,13 +56,13 @@ public class PersonSearchQuery {
 	public QueryPart where() {
 		String where = "";
 		if (firstName != null && !firstName.isEmpty())
-			where += " person.first_name = '" + firstName + "' AND \n";
+			where += " LOWER(person.first_name) = '" + firstName.toLowerCase() + "' AND \n";
 		if (middleNames != null && !middleNames.isEmpty())
-			where += " person.middle_names = '" + middleNames + "' AND \n";
+			where += " LOWER(person.middle_names) = '" + middleNames.toLowerCase() + "' AND \n";
 		if (lastName != null && !lastName.isEmpty())
-			where += " person.last_name = '" + lastName + "' AND \n";
+			where += " LOWER(person.last_name) = '" + lastName.toLowerCase() + "' AND \n";
 		if (otherLastNames != null && !otherLastNames.isEmpty())
-			where += " person.other_last_names = '" + otherLastNames + "' AND \n";
+			where += " LOWER(person.other_last_names) = '" + otherLastNames.toLowerCase() + "' AND \n";
 		if (identificationTypeId != null)
 			where += " person.identification_type_id = " + identificationTypeId + " AND \n";
 		if (identificationNumber != null && !identificationNumber.isEmpty())
