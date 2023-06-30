@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import { GenderDto, IdentificationTypeDto, PatientRegistrationSearchDto } from '@api-rest/api-model';
+import { GenderDto, IdentificationTypeDto, MergedPatientSearchDto, PatientRegistrationSearchDto } from '@api-rest/api-model';
 import { AuditPatientService } from '@api-rest/services/audit-patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { PERSON } from '@core/constants/validation-constants';
@@ -18,7 +18,7 @@ import { Moment } from 'moment';
 	styleUrls: ['./empadronamiento.component.scss']
 })
 export class EmpadronamientoComponent implements OnInit {
-	@Input() isUnlinkPatient:boolean;
+	@Input() isUnlinkPatient: boolean;
 	hasError = hasError;
 	personalInformationForm: FormGroup;
 	patientIdForm: FormGroup;
@@ -30,7 +30,7 @@ export class EmpadronamientoComponent implements OnInit {
 	formSubmitted: boolean = false;
 	optionsValidations = OptionsValidations;
 	tabActiveIndex = 0;
-	patientRegistrationSearch: PatientRegistrationSearchDto[];
+	resultSearchPatient: PatientRegistrationSearchDto[] | MergedPatientSearchDto[];
 	genderTableView: string[] = [];
 	viewCardToAudit = true;
 
@@ -92,15 +92,21 @@ export class EmpadronamientoComponent implements OnInit {
 		let patientSearchFilter = this.prepareSearchDto();
 		this.formSubmitted = true;
 		if ((this.tabActiveIndex === 0 && this.personalInformationForm.valid) || (this.tabActiveIndex === 1 && this.patientIdForm.valid)) {
-			this.auditPatientService.getSearchRegistrationPatient(patientSearchFilter).subscribe((patientRegistrationSearchDto: PatientRegistrationSearchDto[]) => {
-				this.patientRegistrationSearch = patientRegistrationSearchDto;
-			})
+			if (this.isUnlinkPatient) {
+				this.auditPatientService.getSearchMergedPatient(patientSearchFilter).subscribe((patientMergedSearchDto: MergedPatientSearchDto[]) => {
+					this.resultSearchPatient = patientMergedSearchDto;
+				})
+			} else {
+				this.auditPatientService.getSearchRegistrationPatient(patientSearchFilter).subscribe((patientRegistrationSearchDto: PatientRegistrationSearchDto[]) => {
+					this.resultSearchPatient = patientRegistrationSearchDto;
+				})
+			}
 		}
 	}
 
 	tabChanged(tabChangeEvent: MatTabChangeEvent): void {
 		this.tabActiveIndex = tabChangeEvent.index;
-		this.patientRegistrationSearch = [];
+		this.resultSearchPatient = [];
 		this.initForms();
 	}
 
