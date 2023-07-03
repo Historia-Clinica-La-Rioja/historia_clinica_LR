@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 
 const ROUTE_CONTROL_PATIENT_DUPLICATE = "auditoria/control-pacientes-duplicados"
-const ROUTE_UNLINK_PATIENT ="auditoria/desvincular-pacientes"
+export const ROUTE_UNLINK_PATIENT ="auditoria/desvincular-pacientes"
 export const ROUTE_EMPADRONAMIENTO = "auditoria/empadronamiento"
 @Component({
 	selector: 'app-home',
