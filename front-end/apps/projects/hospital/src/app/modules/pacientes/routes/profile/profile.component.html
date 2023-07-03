@@ -168,6 +168,13 @@
 										</button>
 									</div>
 								</div>
+
+								<ng-container *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']">
+									<mat-divider inset></mat-divider>
+									<div fxLayout="column" fxLayoutGap="10px">
+										<app-hierarchical-units [userData]="userData" [hasRoles]="!!rolesByUser.length"></app-hierarchical-units>
+									</div>
+								</ng-container>							
 							</div>
 						</mat-card-content>
 					</mat-card>
