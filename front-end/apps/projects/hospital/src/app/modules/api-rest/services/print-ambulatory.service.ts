@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CHDocumentSummaryDto, CHSearchFilterDto, Resource } from '@api-rest/api-model';
+import { CHDocumentSummaryDto, CHSearchFilterDto, HistoricClinicHistoryDownloadDto} from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { DownloadService } from '@core/services/download.service';
 import { environment } from '@environments/environment';
@@ -34,5 +34,10 @@ export class PrintAmbulatoryService {
 		const url = `${this.BASE_URL}/download`;
 		const fileName = `HCE_${patientDni}.pdf`;
 		return this.downloadService.downloadPdfWithRequestParams(url, fileName, { ids: `${ids.join(',')}` });
+	}
+
+	getPatientClinicHistoryLastDownload(patientId: number): Observable<HistoricClinicHistoryDownloadDto> {
+		const url = `${this.BASE_URL}/${patientId}/lastDownload`;
+		return this.http.get<HistoricClinicHistoryDownloadDto>(url);
 	}
 }

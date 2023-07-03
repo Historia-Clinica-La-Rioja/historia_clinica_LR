@@ -21,11 +21,9 @@ import { DatePipe } from '@angular/common';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
-import { AccountService } from '@api-rest/services/account.service';
-import { mapToFullName } from '@api-presentation/mappers/user-person-dto.mapper';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PrintAmbulatoryService } from '@api-rest/services/print-ambulatory.service';
-import { mapDateWithHypenToDateWithSlash } from '@api-rest/mapper/date-dto.mapper';
+import { dateTimeDtoToStringDate, mapDateWithHypenToDateWithSlash } from '@api-rest/mapper/date-dto.mapper';
 import { Observable, take } from 'rxjs';
 
 @Component({
@@ -37,7 +35,8 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 	datePipeFormat = DatePipeFormat;
 	nowDate: string;
-	userFullName: string;
+	userLastDownload: string;
+	dateLastDownload: string;
 	nameSelfDeterminationFF: boolean;
 
 	patient: PatientBasicData;
@@ -87,7 +86,6 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		private readonly router: Router,
 		readonly datePipe: DatePipe,
 		private featureFlagService: FeatureFlagService,
-		private readonly accountService: AccountService,
 		private readonly printAmbulatoryService: PrintAmbulatoryService,
 	) {
 		this.route.paramMap.pipe(take(1)).subscribe(
@@ -130,10 +128,14 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		});
 
 		this.documentTypeForm = this.formBuilder.group(documentTypeControls, { validators: this.atLeastOneChecked });
-		this.accountService.getInfo()
-			.subscribe(userInfo =>
-				this.userFullName = mapToFullName(userInfo.personDto, this.nameSelfDeterminationFF)
-			);
+
+		this.printAmbulatoryService.getPatientClinicHistoryLastDownload(this.patientId).subscribe(response => {
+			if (response.user && response.downloadDate) {
+				this.showLastPrinted = true;
+				this.userLastDownload = response.user;
+				this.dateLastDownload = dateTimeDtoToStringDate(response.downloadDate);
+			}
+		});
 	}
 
 	dateRangeChange(range): void {
@@ -251,9 +253,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		return null;
 	}
 
-	download(): void {
-		this.nowDate = this.datePipe.transform(Date.now(), DatePipeFormat.SHORT);
-		this.showLastPrinted = true;
+	download() {
 		let selectedIds = []
 		this.selection.selected.forEach(e => selectedIds.push(e.id));
 		this.printAmbulatoryService.downloadClinicHistory(this.patientDni, selectedIds).subscribe();
