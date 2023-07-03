@@ -70,6 +70,7 @@ import hierarchicalunitrelationships from "./hierarchicalunitrelationships";
 import hierarchicalunitstaff from "./hierarchicalunitstaff";
 import institutionuserpersons from "./institutionuserpersons";
 import movestudies from './movestudies';
+import hierarchicalunitsectors from './hierarchicalunitsectors';
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
     permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
@@ -130,6 +131,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="hierarchicalunitrelationships" {...hierarchicalunitrelationships} />,
     <Resource name="hierarchicalunitstaff" {...hierarchicalunitstaff} />,
     <Resource name="institutionuserpersons" {...institutionuserpersons} />,
+    <Resource name="hierarchicalunitsectors" {...hierarchicalunitsectors} />,
     // debug
     <Resource name="snvs"  {...snvs} />,
     <Resource name="documentfiles" {...documentFiles(permissions)} />,

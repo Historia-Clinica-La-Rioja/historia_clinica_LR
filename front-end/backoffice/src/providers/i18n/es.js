@@ -835,7 +835,18 @@ const messages = {
                 userId: 'Usuario',
                 responsible: 'Responsable'
             },
-            addRelated: 'Asociar usuario',
+            addRelated: 'Asociar usuario'
+        },
+        hierarchicalunitsectors: {
+            name: 'Sectores asociados a Unidad Jerárquica',
+            fields: {
+                hierarchicalUnitId: 'Unidad jerárquica',
+                sectorId: 'Sector'
+            },
+            sectors: {
+                name: 'Sectores'
+            },
+            addRelated: "Asociar sector"
         }
     }
 };

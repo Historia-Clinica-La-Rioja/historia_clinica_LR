@@ -99,6 +99,43 @@ const AssociateHierarchicalUnitParent = ({ record }) => {
             />
     ) : null;
 };
+        
+const HierarchicalUnitSectors = (props) => {
+    const record = useRecordContext(props);
+    const show = (basePath, id, data) => `/sectors/${data.sectorId}/show`;
+    return record ?
+        (
+            <Fragment>
+                <SectionTitle label="resources.hierarchicalunitsectors.sectors.name"/>
+                <AsociateHierarchicalUnitSector {...props}/>
+                <ReferenceManyField
+                    addLabel={false}
+                    reference="hierarchicalunitsectors"
+                    target="hierarchicalUnitId"
+                >
+                    <Datagrid rowClick={show}
+                              empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin sectores asociados</p>}>
+                        <ReferenceField source="sectorId" label="" reference="sectors" link={false}>
+                            <TextField source="description"/>
+                        </ReferenceField>
+                        <DeleteButton redirect={false} disabled={!UserIsInstitutionalAdmin()}/>
+                    </Datagrid>
+                </ReferenceManyField>
+            </Fragment>
+        ) : null;
+}
+
+const AsociateHierarchicalUnitSector = ({ record }) => {
+    const customRecord = {hierarchicalUnitId: record.id, institutionId: record.institutionId };
+    return UserIsInstitutionalAdmin() ? ( <CreateRelatedButton
+            customRecord={customRecord}
+            reference="hierarchicalunitsectors"
+            refFieldName="hierarchicalUnitId"
+            label="resources.hierarchicalunitsectors.addRelated"
+            />
+    ) : null;
+};
+
 
 const AssociateHierarchicalUnitChild = ({ record }) => {
     const customRecord = {institutionId: record.institutionId, hierarchicalUnitIdToReport: record.id};
@@ -170,6 +207,7 @@ const HierarchicalUnitShow = props => {
                 <HierarchicalUnitChilds/>
                 <HierarchicalUnitParents/>
                 <HierarchicalUnitStaff/>
+                <HierarchicalUnitSectors/>
             </SimpleShowLayout>
         </Show>
     );
@@ -177,4 +215,4 @@ const HierarchicalUnitShow = props => {
 
 export default HierarchicalUnitShow;
 
-export { HierarchicalUnitChilds,  HierarchicalUnitParents, HierarchicalUnitStaff, renderPersonData }
+export { HierarchicalUnitChilds,  HierarchicalUnitParents, HierarchicalUnitStaff, renderPersonData, HierarchicalUnitSectors }
