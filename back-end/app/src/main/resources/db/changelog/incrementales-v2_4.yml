@@ -54,3 +54,83 @@ databaseChangeLog:
               sql: |-
                 INSERT INTO patient_history (patient_id, type_id, audit_type_id, national_id, created_by, created_on)
                 SELECT id, type_id, audit_type_id, national_id, updated_by, updated_on FROM patient;
+
+    - changeSet:
+        id: createTable-hierarchical_unit_sector
+        comment: Create table hierarchical_unit_sector
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: hierarchical_unit_sector
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_hierarchical_unit_sector
+                    name: id
+                    type: int
+                - column:
+                    name: hierarchical_unit_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: sector_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: hierarchical_unit_id
+              baseTableName: hierarchical_unit_sector
+              constraintName: FK_hierarchical_unit_sector_hierarchical_unit_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: hierarchical_unit
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: sector_id
+              baseTableName: hierarchical_unit_sector
+              constraintName: FK_hierarchical_unit_sector_sector_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: sector
+              validate: true
