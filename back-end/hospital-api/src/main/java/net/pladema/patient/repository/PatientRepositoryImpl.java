@@ -1,5 +1,6 @@
 package net.pladema.patient.repository;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatientType;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.service.domain.PatientSearch;
 import ar.lamansys.sgx.shared.repositories.QueryPart;
@@ -37,7 +38,7 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
                 .concatPart(patientSearchQuery.from())
                 .concat("WHERE ")
                 .concatPart(patientSearchQuery.whereWithAllAttributes(AND_JOINING_OPERATOR, LIKE_COMPARATOR))
-				.concat(" AND patient.deleted = false ");
+				.concat(" AND patient.deleted = false AND patient.type_id != " + EPatientType.REJECTED.getId() + " ");
 
         if (searchFilter.getFilterByNameSelfDetermination()) {
 			queryPart.concat("UNION ");
