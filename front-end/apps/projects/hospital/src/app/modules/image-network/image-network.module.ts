@@ -34,6 +34,9 @@ import { AddConclusionFormComponent } from './dialogs/add-conclusion-form/add-co
         PresentationModule,
         ImageNetworkRoutingModule,
         HistoriaClinicaModule
+    ],
+    exports: [
+        ViewStudyComponent
     ]
 })
 

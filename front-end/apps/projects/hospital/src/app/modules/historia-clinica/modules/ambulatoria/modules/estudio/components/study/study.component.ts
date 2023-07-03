@@ -34,7 +34,7 @@ export class StudyComponent implements OnInit {
 					this._studies.push(this.mapToStudyInformation(study, !hasActiveAppointment));
 				})
 			} else {
-				this._studies.push(this.mapToStudyInformation(study,true));
+				this._studies.push(this.mapToStudyInformation(study, true));
 			}
 		})
 	};
@@ -42,6 +42,7 @@ export class StudyComponent implements OnInit {
 	@Input() patientId: number;
 	@Output() updateCurrentReportsEventEmitter = new EventEmitter<void>();
 	STUDY_STATUS = STUDY_STATUS;
+	IMAGE_DIAGNOSIS = IMAGE_DIAGNOSIS;
 	private sameOrderStudies: Map<Number, StudyInformation[]>;
 	hasPicturesStaffRole = false;
 	hasLaboratoryStaffRole = false;
@@ -68,10 +69,11 @@ export class StudyComponent implements OnInit {
 		this._studies.sort((studyA, studyB) => studyB.diagnosticInformation.creationDate.getTime() - studyA.diagnosticInformation.creationDate.getTime())
 	}
 
-	private mapToStudyInformation(report: DiagnosticReportInfoDto, canBeDeleted: boolean): StudyInformation {
+	private mapToStudyInformation(report: DiagnosticReportInfoDto, canBeDeleted: boolean, appointmentId?: number): StudyInformation {
         return {
             'diagnosticInformation': report,
             canBeDeleted,
+			appointmentId
         }
     }
 
@@ -193,4 +195,5 @@ export class StudyComponent implements OnInit {
 export interface StudyInformation {
     diagnosticInformation: DiagnosticReportInfoDto;
     canBeDeleted: boolean;
+	appointmentId?: number
 }

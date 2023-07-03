@@ -11,6 +11,7 @@ import { StudyEducationCardComponent } from './components/study-education-card/s
 import { PresentationModule } from '@presentation/presentation.module';
 import { StudyListElementComponent } from './components/study-list-element/study-list-element.component';
 import { StudyComponent } from './components/study/study.component';
+import { ImageNetworkModule } from 'projects/hospital/src/app/modules/image-network/image-network.module';
 
 @NgModule({
 	declarations: [
@@ -27,7 +28,8 @@ import { StudyComponent } from './components/study/study.component';
 	],
 	imports: [
 		CommonModule,
-		PresentationModule
+		PresentationModule,
+		ImageNetworkModule
 	],
 	exports: [
 		StudyImagesCardComponent,

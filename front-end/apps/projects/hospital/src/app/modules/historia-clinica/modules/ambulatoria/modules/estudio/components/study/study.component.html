@@ -5,6 +5,9 @@
 		<div fxLayout="row" *ngFor="let study of _studies">
 			<app-study-list-element fxFlex="100" [content]="contentBuilder(study.diagnosticInformation)"
 				[createdDuring]="wasCreatedDuringSource(study.diagnosticInformation.source)"></app-study-list-element>
+			<div class="btn-container" *ngIf="study.diagnosticInformation.category === IMAGE_DIAGNOSIS && study.diagnosticInformation.statusId === STUDY_STATUS.FINAL_RDI.id">
+				<app-view-study [appointmentId]="study.appointmentId"></app-view-study>
+			</div>
 			<div actions *ngIf="study.diagnosticInformation.statusId !== STUDY_STATUS.ERROR.id">
 				<button mat-icon-button [matMenuTriggerFor]="menu" >
 					<mat-icon>more_vert</mat-icon>
