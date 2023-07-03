@@ -330,3 +330,67 @@ databaseChangeLog:
               constraintName: PK_details_order_image
               tableName: details_order_image
               validate: true
+
+    - changeSet:
+        id: createTable-historic_clinic_history_download
+        comment: Create table historic_clinic_history_download
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: historic_clinic_history_download
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_historic_clinic_history_download
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: user_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: true
+                    name: patient_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: download_date
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: institution_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: user_id
+              baseTableName: historic_clinic_history_download
+              constraintName: FK_historic_clinic_history_download_user_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: patient_id
+              baseTableName: historic_clinic_history_download
+              constraintName: FK_historic_clinic_history_download_patient_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: patient
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: institution_id
+              baseTableName: historic_clinic_history_download
+              constraintName: FK_historic_clinic_history_download_institution_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: institution
+              validate: true
