@@ -1453,8 +1453,8 @@ export interface GenerateApiKeyDto {
 }
 
 export interface GeneratedApiKeyDto {
-	name: string;
     apiKey: string;
+    name: string;
 }
 
 export interface HCEAllergyDto extends ClinicalTermDto {

@@ -94,7 +94,7 @@ export class NotaDeEvolucionDockPopupComponent {
 	persist(dto) {
 		this.emergencyCareEvolutionNoteService.saveEmergencyCareEvolutionNote(this.data.episodeId, dto).subscribe(
 			saved => {
-				this.snackBarService.showSuccess('Nota de evolucion guardada correctamente');
+				this.snackBarService.showSuccess('Nota de evolución guardada correctamente');
 				this.newEmergencyCareEvolutionNoteService.newEvolutionNote();
 				this.dockPopupRef.close(true)
 			},
