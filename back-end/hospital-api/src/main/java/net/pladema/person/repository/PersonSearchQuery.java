@@ -55,14 +55,15 @@ public class PersonSearchQuery {
 
 	public QueryPart where() {
 		String where = "";
+		boolean hasNameCriteria = (firstName != null || middleNames != null || lastName != null || otherLastNames != null);
+		if (hasNameCriteria) {
 		if (firstName != null && !firstName.isEmpty())
 			where += " LOWER(person.first_name) = '" + firstName.toLowerCase() + "' AND \n";
-		if (middleNames != null && !middleNames.isEmpty())
-			where += " LOWER(person.middle_names) = '" + middleNames.toLowerCase() + "' AND \n";
+			where += (middleNames != null && !middleNames.isEmpty()) ? " LOWER(person.middle_names) = '" + middleNames.toLowerCase() + "' AND \n" : " person.middle_names IS NULL AND \n";
 		if (lastName != null && !lastName.isEmpty())
 			where += " LOWER(person.last_name) = '" + lastName.toLowerCase() + "' AND \n";
-		if (otherLastNames != null && !otherLastNames.isEmpty())
-			where += " LOWER(person.other_last_names) = '" + otherLastNames.toLowerCase() + "' AND \n";
+			where += (otherLastNames != null && !otherLastNames.isEmpty()) ? " LOWER(person.other_last_names) = '" + otherLastNames.toLowerCase() + "' AND \n" : " person.other_last_names IS NULL AND \n";
+		}
 		if (identificationTypeId != null)
 			where += " person.identification_type_id = " + identificationTypeId + " AND \n";
 		if (identificationNumber != null && !identificationNumber.isEmpty())
