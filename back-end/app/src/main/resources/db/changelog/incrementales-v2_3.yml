@@ -238,3 +238,13 @@ databaseChangeLog:
                     type: int
                     constraints:
                       nullable: true
+                
+    - changeSet:
+        id: diagnostic_report_status-metadata
+        comment: Set new data of diagnostic_report_status
+        author: lbergottini
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO diagnostic_report_status (id,description) VALUES (2,'Completado desde RDI');
