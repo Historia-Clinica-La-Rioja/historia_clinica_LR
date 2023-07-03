@@ -32,6 +32,7 @@ import { EditIdentificationNumberComponent } from './dialogs/edit-identification
 import { FilesUploaderComponent } from './component/files-uploader/files-uploader.component';
 // dialogs
 import { ArtComponent } from './dialogs/art/art.component';
+import { EditHierarchicalUnitsComponent } from './dialogs/edit-hierarchical-units/edit-hierarchical-units.component';
 import { EditLicenseComponent } from './dialogs/edit-license/edit-license.component';
 import { EditPrefessionsSpecialtiesComponent } from './dialogs/edit-prefessions-specialties/edit-prefessions-specialties.component';
 import { EditRolesComponent } from './dialogs/edit-roles/edit-roles.component';
@@ -76,6 +77,7 @@ import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-
 		EditIdentificationNumberComponent,
 		// dialogs
 		ArtComponent,
+		EditHierarchicalUnitsComponent,
 		EditLicenseComponent,
 		EditPrefessionsSpecialtiesComponent,
 		EditRolesComponent,

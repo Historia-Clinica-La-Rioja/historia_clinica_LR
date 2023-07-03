@@ -272,6 +272,15 @@
         "ERROR": "Error al guardaron los cambios de roles"
       }
     },
+    "edit_hierarchical_units": {
+      "TITLE": "editar unidades jerárquicas",
+      "LABEL": "Seleccionar unidad jerárquica",
+      "ADD_HIERARCHICAL_UNITS": "Asociar otra unidad jerárquica",
+      "RESPONSIBLE": "responsable",
+      "message": {
+        "ERROR": "Error al guardaron los cambios en unidades jerárquicas"
+      }
+    },
     "card_roles": {
       "ROL_COLUMN": "Rol",
       "INSTITUTION_COLUMN": "Institución",

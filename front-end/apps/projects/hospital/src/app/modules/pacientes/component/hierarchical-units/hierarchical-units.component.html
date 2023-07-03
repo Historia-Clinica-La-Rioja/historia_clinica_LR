@@ -1,5 +1,5 @@
 <div class="card" fxLayout="column" fxLayoutGap="15px">
-    <ng-container *ngIf="userData?.enable else userDisable">
+    <ng-container *ngIf="enable else userDisable">
         <div class="container" fxLayout="column" fxLayoutGap="10px" *ngIf="personHU.length else hierarchicalUnitsPending">
             <ng-container>
                 <strong class="capitalize-first-letter" fxFlex="60%">{{'pacientes.user_data.HIERARCHICAL_UNITS_ASSOCIATED' | translate }}</strong>
@@ -36,4 +36,10 @@
     <ng-template #userDisable>
         <span class="disable capitalize-first-letter"> {{'pacientes.user_data.USER_DISABLE' | translate }}</span>
     </ng-template>
+    <div>
+        <button id="edit-hierarchical-units" mat-stroked-button color="primary" [disabled]="!enable">
+            <span class="uppercase" [translate]="'pacientes.user_data.buttons.EDIT_HIERARCHICAL_UNITS'"
+                (click)="editHierarchicalUnits()"></span>
+        </button>
+    </div>
 </div>
