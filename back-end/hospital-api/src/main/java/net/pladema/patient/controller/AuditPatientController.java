@@ -1,9 +1,23 @@
 package net.pladema.patient.controller;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.patient.controller.dto.AuditPatientSearch;
@@ -21,19 +35,6 @@ import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.MergedPatientSearch;
 import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.person.controller.service.PersonExternalService;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -136,5 +137,40 @@ public class AuditPatientController {
 			throw new AuditPatientException(AuditPatientExceptionEnum.INVALID_FILTER_FOR_SEARCH,String.format("No se esta filtrando por ningún dato personal."));
 		}
 	}
+
+	@GetMapping("/patient/{activePatientId}/merged-patients-personal-info")
+	@PreAuthorize("hasPermission(#institutionId, 'AUDITOR_MPI')")
+	public ResponseEntity<List<PatientPersonalInfoDto>> getMergedPatientPersonalInfo(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "activePatientId") Integer activePatientId) {
+		log.debug("institutionId {}, activePatientId {}", institutionId, activePatientId);
+		List<PatientPersonalInfoDto> result = patientService.getMergedPersonsByPatientId(activePatientId)
+				.stream().map(PatientPersonalInfoDto::new).collect(Collectors.toList());
+		result.add(getPatientPersonalInfoByActivePatient(activePatientId));
+		return ResponseEntity.ok().body(result);
+	}
+
+	private PatientPersonalInfoDto getPatientPersonalInfoByActivePatient(Integer patientId){
+		return patientService.getActivePatient(patientId)
+				.map(patient -> {
+					BasicDataPersonDto person = personExternalService.getBasicDataPerson(patient.getPersonId());
+					return new PatientPersonalInfoDto(patient.getId(),
+							person.getFirstName(),
+							person.getMiddleNames(),
+							person.getLastName(),
+							person.getOtherLastNames(),
+							person.getIdentificationTypeId(),
+							person.getIdentificationNumber(),
+							person.getBirthDate(),
+							person.getGender().getId(),
+							null,
+							null,
+							person.getNameSelfDetermination(),
+							patient.getTypeId());
+				})
+				.orElseThrow(()-> new NotFoundException("patient-not-exists", String.format("El paciente con id %s no existe", patientId)));
+	}
+
+
 
 }

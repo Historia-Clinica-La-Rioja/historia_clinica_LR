@@ -12,6 +12,7 @@ import net.pladema.patient.service.domain.LimitedPatientSearchBo;
 import net.pladema.patient.service.domain.MergedPatientSearch;
 import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.patient.service.domain.PatientSearch;
+import net.pladema.person.repository.domain.PersonSearchResultVo;
 
 import java.util.List;
 import java.util.Optional;
@@ -50,6 +51,8 @@ public interface PatientService {
 	List<PatientType> getPatientTypesForAuditor();
 	
 	List<MergedPatientSearch> getMergedPatientsByFilter(MergedPatientSearchFilter searchFilter);
+
+	List<PersonSearchResultVo> getMergedPersonsByPatientId(Integer activePatientId);
 
 	void assertHasActiveEncountersByPatientId(Integer patientId);
 

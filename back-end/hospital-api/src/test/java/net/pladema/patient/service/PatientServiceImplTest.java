@@ -11,6 +11,7 @@ import net.pladema.federar.services.FederarService;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.repository.AuditablePatientRepository;
+import net.pladema.patient.repository.MergedInactivePatientRepository;
 import net.pladema.patient.repository.MergedPatientRepository;
 import net.pladema.patient.repository.PatientAuditRepository;
 import net.pladema.patient.repository.PatientHistoryRepository;
@@ -85,6 +86,9 @@ class PatientServiceImplIntegrationTest extends UnitRepository {
     @Mock
     private MergedPatientRepository mergedPatientRepository;
 
+	@Mock
+	private MergedInactivePatientRepository mergedInactivePatientRepository;
+
 	@BeforeEach
     void setUp(){
         patientService = new PatientServiceImpl(
@@ -102,7 +106,8 @@ class PatientServiceImplIntegrationTest extends UnitRepository {
 				emergencyCareEpisodeRepository,
 				appointmentRepository,
 				patientHistoryRepository,
-                mergedPatientRepository);
+                mergedPatientRepository,
+				mergedInactivePatientRepository);
     }
 
     @Test

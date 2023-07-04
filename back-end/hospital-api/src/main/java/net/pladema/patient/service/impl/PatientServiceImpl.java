@@ -39,6 +39,7 @@ import net.pladema.patient.controller.service.exception.RejectedPatientException
 import net.pladema.patient.controller.service.exception.RejectedPatientExceptionEnum;
 import net.pladema.patient.repository.AuditablePatientRepository;
 import net.pladema.patient.repository.MedicalCoverageRepository;
+import net.pladema.patient.repository.MergedInactivePatientRepository;
 import net.pladema.patient.repository.MergedPatientRepository;
 import net.pladema.patient.repository.PatientAuditRepository;
 import net.pladema.patient.repository.PatientHistoryRepository;
@@ -57,6 +58,8 @@ import net.pladema.patient.service.domain.LimitedPatientSearchBo;
 import net.pladema.patient.service.domain.MergedPatientSearch;
 import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.patient.service.domain.PatientSearch;
+import net.pladema.person.repository.domain.PersonSearchResultVo;
+
 
 @Service
 public class PatientServiceImpl implements PatientService {
@@ -84,6 +87,7 @@ public class PatientServiceImpl implements PatientService {
 	private final AppointmentRepository appointmentRepository;
 	private final PatientHistoryRepository patientHistoryRepository;
 
+	private final MergedInactivePatientRepository mergedInactivePatientRepository;
 	public PatientServiceImpl(PatientRepository patientRepository,
 							  PatientMedicalCoverageRepository patientMedicalCoverageRepository,
 							  MedicalCoverageRepository medicalCoverageRepository,
@@ -98,7 +102,8 @@ public class PatientServiceImpl implements PatientService {
 							  EmergencyCareEpisodeRepository emergencyCareEpisodeRepository,
 							  AppointmentRepository appointmentRepository,
 							  PatientHistoryRepository patientHistoryRepository,
-							  MergedPatientRepository mergedPatientRepository) {
+							  MergedPatientRepository mergedPatientRepository,
+							  MergedInactivePatientRepository mergedInactivePatientRepository) {
 		this.patientRepository = patientRepository;
 		this.hospitalAuditRepository = hospitalAuditRepository;
 		this.patientAuditRepository = patientAuditRepository;
@@ -111,6 +116,7 @@ public class PatientServiceImpl implements PatientService {
 		this.appointmentRepository = appointmentRepository;
 		this.patientHistoryRepository = patientHistoryRepository;
 		this.mergedPatientRepository = mergedPatientRepository;
+		this.mergedInactivePatientRepository = mergedInactivePatientRepository;
 	}
 
 	@Override
@@ -286,6 +292,14 @@ public class PatientServiceImpl implements PatientService {
 	public List<MergedPatientSearch> getMergedPatientsByFilter(MergedPatientSearchFilter searchFilter) {
 		LOG.debug("Input parameter -> searchFilter {}", searchFilter);
 		List<MergedPatientSearch> result = mergedPatientRepository.getAllByFilter(searchFilter);
+		LOG.debug(OUTPUT,  result);
+		return  result;
+	}
+
+	@Override
+	public List<PersonSearchResultVo> getMergedPersonsByPatientId(Integer activePatientId) {
+		LOG.debug("Input parameter -> activePatientId {}", activePatientId);
+		List<PersonSearchResultVo> result = mergedInactivePatientRepository.findMergedPersonInfoByActivePatientId(activePatientId);
 		LOG.debug(OUTPUT,  result);
 		return  result;
 	}
