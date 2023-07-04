@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { InformerObservationDto, StudyAppointmentDto } from '@api-rest/api-model';
+import { InformerObservationDto, HCEDocumentDataDto, StudyAppointmentDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -42,5 +42,10 @@ export class StudyAppointmentReportService {
 	saveReport(appointmentId: number, informerObservations: InformerObservationDto): Observable<number> {
 		const url = `${this.URL_BASE}/saveReport/${appointmentId}`;
 		return this.http.post<number>(url, informerObservations);
+	}
+
+	getFileInfo(appointmentId: number): Observable<HCEDocumentDataDto> {
+		const url = `${this.URL_BASE}/by-appointment/${appointmentId}`;
+		return this.http.get<HCEDocumentDataDto>(url);
 	}
 }

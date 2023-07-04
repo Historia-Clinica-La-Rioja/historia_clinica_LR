@@ -76,7 +76,8 @@
                     "REGISTERED_CONCLUTIONS": "Conclusiones registradas",
                     "SEARCH_CONCLUTION": "Buscar conclusión",
                     "CONCEPT_LABEL": "Conclusión"
-                }          
+                },
+                "DETAILED_REPORT": "Informe detallado: "         
             },
             "WORKLIST_BY_INFORMER": "Lista de informes",
             "MODALITIES": "Seleccione modalidades",

@@ -35,7 +35,7 @@ export class StudyComponent implements OnInit {
 					this._studies.push(this.mapToStudyInformation(study, hasActiveAppointment));
 				})
 			} else {
-				this._studies.push(this.mapToStudyInformation(study, true));
+				this._studies.push(this.mapToStudyInformation(study, false));
 			}
 		})
 	};
