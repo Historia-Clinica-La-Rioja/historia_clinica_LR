@@ -57,7 +57,8 @@ public class MergedPatientRepositorySearchImpl implements MergedPatientRepositor
 				mergedPatientSearchFilter.getOtherLastNames() != null ||
 				mergedPatientSearchFilter.getGenderId() != null ||
 				(mergedPatientSearchFilter.getIdentificationTypeId()!= null && mergedPatientSearchFilter.getIdentificationNumber() != null) ||
-				mergedPatientSearchFilter.getBirthDate() != null);
+				mergedPatientSearchFilter.getBirthDate() != null) ||
+				mergedPatientSearchFilter.getPatientId() != null;
 	}
 
 	private boolean hasPatientTypeFilters(MergedPatientSearchFilter mergedPatientSearchFilter) {

@@ -27,6 +27,7 @@ public class MergedPatientSearchQuery {
 	private static final String LIKE_FORMAT_INDEX = " (UPPER(%s) LIKE '%s%%') \n"; //double '%' to escape the character
 	private static final String EQUAL_FORMAT = " (UPPER(%s) = '%s') \n";
 
+	Integer patientId;
 	String firstName;
 	String middleNames;
 	String lastName;
@@ -45,6 +46,7 @@ public class MergedPatientSearchQuery {
 	Boolean manualValidation;
 
 	public MergedPatientSearchQuery(MergedPatientSearchFilter mergedPatientSearchFilter) {
+		this.patientId = mergedPatientSearchFilter.getPatientId();
 		this.firstName = mergedPatientSearchFilter.getFirstName();
 		this.middleNames = mergedPatientSearchFilter.getMiddleNames();
 		this.lastName = mergedPatientSearchFilter.getLastName();
@@ -132,7 +134,9 @@ public class MergedPatientSearchQuery {
 			//String genderString = (QueryStringHelper.escapeSql(genderId.toString())).toUpperCase();
 			whereString.add(" (person.gender_id = "+genderId+") \n");
 		}
-
+		if(patientId != null){
+			whereString.add(" patient.id = " + patientId +" \n");
+		}
 		QueryPart result = new QueryPart(" AND ( ")
 				.concatPart(new QueryPart(String.join(" AND ", whereString)))
 				.concat(" )");
