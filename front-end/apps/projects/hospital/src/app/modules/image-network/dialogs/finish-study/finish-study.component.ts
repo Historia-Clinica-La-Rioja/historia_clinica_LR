@@ -6,10 +6,11 @@ import { AppointmentsService } from "@api-rest/services/appointments.service";
 import { ApiErrorMessageDto, DetailsOrderImageDto } from "@api-rest/api-model";
 import { APPOINTMENT_STATES_ID } from "@turnos/constants/appointment";
 
-import {catchError, switchMap, tap} from 'rxjs/operators';
+import {catchError, concatMap, tap} from 'rxjs/operators';
 import { EMPTY } from "rxjs";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { processErrors } from "@core/utils/form.utils";
+import { PrescripcionesService } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 
 @Component({
 	selector: 'app-finish-study',
@@ -22,12 +23,14 @@ export class FinishStudyComponent implements OnInit {
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
-			appointmentId: number
+			appointmentId: number,
+			patientId: number
 		},
 		public dialogRef: MatDialogRef<FinishStudyComponent>,
 		public translateService: TranslateService,
 		private readonly appointmentsService: AppointmentsService,
 		private readonly snackBarService: SnackBarService,
+		private readonly prescriptionService: PrescripcionesService,
 		public dialog: MatDialog) {
 	}
 
@@ -35,34 +38,37 @@ export class FinishStudyComponent implements OnInit {
 	}
 
 	confirm() {
-		const detailsOrderImage: DetailsOrderImageDto = {
-			observations: this.observations
-		};
-		const appointmentId = this.data.appointmentId;
-		const served = APPOINTMENT_STATES_ID.SERVED;
+        const detailsOrderImage: DetailsOrderImageDto = {
+            observations: this.observations
+        };
+        const appointmentId = this.data.appointmentId;
+        const served = APPOINTMENT_STATES_ID.SERVED;
 
-		this.appointmentsService.addStudyObservations(appointmentId, detailsOrderImage)
-			.pipe(
-				tap(() => this.openStatusDialog('check_circle', 'green', 'image-network.appointments.STUDY_COMPLETED')),
-				switchMap(() =>
-					this.appointmentsService.changeStateAppointmentEquipment(appointmentId, served)
-						.pipe(
-							catchError((error: ApiErrorMessageDto) => {
-								processErrors(error, (msg) => this.snackBarService.showError(msg));
-								return EMPTY;
-							})
-						)
-				),
-				catchError((error: ApiErrorMessageDto) => {
-					processErrors(error, (msg) => this.snackBarService.showError(msg));
-					this.openStatusDialog('cancel', 'red', 'image-network.appointments.STUDY_ERROR');
-					return EMPTY;
-				})
-			)
-			.subscribe((_) => {
-				this.dialogRef.close({ updateState: served });
-			});
-	}
+        this.appointmentsService.addStudyObservations(appointmentId, detailsOrderImage)
+            .pipe(
+                tap(() => this.openStatusDialog('check_circle', 'green', 'image-network.appointments.STUDY_COMPLETED')),
+                concatMap(
+                    () => this.appointmentsService.changeStateAppointmentEquipment(appointmentId, served)
+                            .pipe(
+                                catchError((error: ApiErrorMessageDto) => {
+                                    processErrors(error, (msg) => this.snackBarService.showError(msg));
+                                    return EMPTY;
+                                })
+                            ),
+					result => { 
+						if(result) this.prescriptionService.completeStudyByRdi(this.data.patientId, this.data.appointmentId).subscribe()
+					}
+                ),
+                catchError((error: ApiErrorMessageDto) => {
+                    processErrors(error, (msg) => this.snackBarService.showError(msg));
+                    this.openStatusDialog('cancel', 'red', 'image-network.appointments.STUDY_ERROR');
+                    return EMPTY;
+                })
+            )
+            .subscribe((_) => {
+                this.dialogRef.close({ updateState: served });
+            });
+    }
 
 
 	openStatusDialog(icon: string, iconColor: string, popUpMessageTranslate: string) {

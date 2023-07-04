@@ -181,7 +181,8 @@ export class WorklistByTechnicalComponent implements OnInit {
 			width: '35%',
 			autoFocus: false,
 			data: {
-				appointmentId: this.selectedAppointment.id
+				appointmentId: this.selectedAppointment.id,
+                patientId: this.selectedAppointment.patient.id
 			}
 		});
 

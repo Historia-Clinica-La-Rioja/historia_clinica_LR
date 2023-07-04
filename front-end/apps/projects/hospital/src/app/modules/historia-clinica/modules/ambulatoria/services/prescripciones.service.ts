@@ -112,6 +112,10 @@ export class PrescripcionesService {
 		return this.serviceRequestService.complete(patientId, diagnosticReportId, completeRequestDto, files);
 	}
 
+	completeStudyByRdi(patientId: number, appointmentId: number): Observable<void> {
+		return this.serviceRequestService.completeByRdi(patientId, appointmentId);
+	}
+
 	showStudyResults(patientId: number, diagnosticReportId: number): Observable<DiagnosticReportInfoWithFilesDto> {
 		return this.serviceRequestService.get(patientId, diagnosticReportId);
 	}
@@ -204,6 +208,8 @@ export class PrescripcionesService {
 				return this.STUDY_STATUS.REGISTERED.description;
 			case this.STUDY_STATUS.FINAL.id:
 				return this.STUDY_STATUS.FINAL.description;
+			case this.STUDY_STATUS.FINAL_RDI.id:
+				return this.STUDY_STATUS.FINAL_RDI.description;
 			case this.STUDY_STATUS.ERROR.id:
 				return this.STUDY_STATUS.ERROR.description;
 		}

@@ -103,6 +103,11 @@ export class ServiceRequestService {
 			return this.http.put<void>(completeUrl, completeRequestDto);
 	}
 
+	completeByRdi(patientId: number, appointmentId: number): Observable<void> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${appointmentId}/completeByRDI`
+		return this.http.put<void>(url, {})
+	}
+
 	delete(patientId: number, serviceRequestId: number): Observable<string> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${serviceRequestId}`;
 		return this.http.delete<string>(url);
