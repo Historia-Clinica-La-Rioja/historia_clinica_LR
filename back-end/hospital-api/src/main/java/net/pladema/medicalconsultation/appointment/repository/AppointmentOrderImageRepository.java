@@ -49,6 +49,12 @@ public interface AppointmentOrderImageRepository extends JpaRepository<Appointme
 	Optional<String>  getIdImage(@Param("appointmentId") Integer appointmentId);
 
 	@Transactional(readOnly = true)
+	@Query("SELECT aoi.studyId " +
+			"FROM AppointmentOrderImage AS aoi " +
+			"WHERE aoi.pk.appointmentId = :appointmentId ")
+	Optional<Integer> getStudyId(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
 	@Query("SELECT 1 " +
 			"FROM AppointmentOrderImage AS aoi " +
 			"WHERE aoi.orderId = :orderId")

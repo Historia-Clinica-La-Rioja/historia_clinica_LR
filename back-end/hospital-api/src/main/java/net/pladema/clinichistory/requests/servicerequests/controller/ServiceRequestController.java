@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportRDIService;
 import net.pladema.clinichistory.requests.servicerequests.service.DeleteTranscribedOrderService;
 
 import org.slf4j.Logger;
@@ -108,6 +109,8 @@ public class ServiceRequestController {
 	private final TranscribedDiagnosticReportInfoMapper transcribedDiagnosticReportInfoMapper;
     private final DeleteDiagnosticReportService deleteDiagnosticReportService;
     private final CompleteDiagnosticReportService completeDiagnosticReportService;
+
+	private final CompleteDiagnosticReportRDIService completeDiagnosticReportRDIService;
     private final CompleteDiagnosticReportMapper completeDiagnosticReportMapper;
     private final UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService;
     private final UpdateDiagnosticReportFileService updateDiagnosticReportFileService;
@@ -132,8 +135,7 @@ public class ServiceRequestController {
 									StudyMapper studyMapper,
 									DiagnosticReportInfoMapper diagnosticReportInfoMapper,
 									ListDiagnosticReportInfoService listDiagnosticReportInfoService, ListTranscribedDiagnosticReportInfoService listTranscribedDiagnosticReportInfoService, UploadTranscribedOrderFileService uploadTranscribedOrderFileService, TranscribedDiagnosticReportInfoMapper transcribedDiagnosticReportInfoMapper, DeleteDiagnosticReportService deleteDiagnosticReportService,
-									CompleteDiagnosticReportService completeDiagnosticReportService,
-									CompleteDiagnosticReportMapper completeDiagnosticReportMapper,
+									CompleteDiagnosticReportService completeDiagnosticReportService, CompleteDiagnosticReportRDIService completeDiagnosticReportRDIService, CompleteDiagnosticReportMapper completeDiagnosticReportMapper,
 									UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService,
 									UpdateDiagnosticReportFileService updateDiagnosticReportFileService,
 									DiagnosticReportInfoService diagnosticReportInfoService, DeleteTranscribedOrderService deleteTranscribedOrderService, FileMapper fileMapper,
@@ -155,6 +157,7 @@ public class ServiceRequestController {
 		this.transcribedDiagnosticReportInfoMapper = transcribedDiagnosticReportInfoMapper;
 		this.deleteDiagnosticReportService = deleteDiagnosticReportService;
 		this.completeDiagnosticReportService = completeDiagnosticReportService;
+		this.completeDiagnosticReportRDIService = completeDiagnosticReportRDIService;
 		this.completeDiagnosticReportMapper = completeDiagnosticReportMapper;
 		this.uploadDiagnosticReportCompletedFileService = uploadDiagnosticReportCompletedFileService;
 		this.updateDiagnosticReportFileService = updateDiagnosticReportFileService;
@@ -260,6 +263,20 @@ public class ServiceRequestController {
         updateDiagnosticReportFileService.run(result, completeRequestDto.getFileIds());
         LOG.debug(OUTPUT, result);
     }
+
+	@PutMapping("/{appointmentId}/completeByRDI")
+	@Transactional
+	@ResponseStatus(code = HttpStatus.OK)
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, TECNICO')")
+	public void completeByRDI(@PathVariable(name = "institutionId") Integer institutionId,
+						 @PathVariable(name = "patientId") Integer patientId,
+						 @PathVariable(name = "appointmentId") Integer appointmentId,
+						 @RequestBody() CompleteRequestDto completeRequestDto) {
+		LOG.debug("Input parameters ->  {} institutionIdpatientId {}, appointmentId {}", institutionId, patientId, appointmentId);
+		Integer result = completeDiagnosticReportRDIService.run(patientId, appointmentId);
+		//updateDiagnosticReportFileService.run(result, completeRequestDto.getFileIds());
+		LOG.debug(OUTPUT, result);
+	}
 
     @PostMapping(value = "/{diagnosticReportId}/uploadFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
