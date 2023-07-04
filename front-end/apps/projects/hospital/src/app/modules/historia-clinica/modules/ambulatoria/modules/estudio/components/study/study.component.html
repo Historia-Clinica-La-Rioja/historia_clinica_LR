@@ -2,13 +2,17 @@
 	<app-category-header-divider [header]="studyHeader"></app-category-header-divider>
 
 	<div id="content" fxLayout="column" fxLayoutGap="50px">
-		<div fxLayout="row" *ngFor="let study of _studies">
-			<app-study-list-element fxFlex="100" [content]="contentBuilder(study.diagnosticInformation)"
+		<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center center" *ngFor="let study of _studies">
+			<app-study-list-element fxFlex [content]="contentBuilder(study.diagnosticInformation)"
 				[createdDuring]="wasCreatedDuringSource(study.diagnosticInformation.source)"></app-study-list-element>
-			<div class="btn-container" *ngIf="study.diagnosticInformation.category === IMAGE_DIAGNOSIS && study.diagnosticInformation.statusId === STUDY_STATUS.FINAL_RDI.id">
-				<app-view-study [appointmentId]="study.appointmentId"></app-view-study>
+			<div fxFlex="35" fxFlex.gt-md="28" fxFlex.gt-xl="15" fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="10px" *ngIf="study.diagnosticInformation.category === IMAGE_DIAGNOSIS && study.diagnosticInformation.statusId === STUDY_STATUS.FINAL.id">
+				<app-view-study class="view-study-btn" [appointmentId]="study.appointmentId"></app-view-study>
+				<div class="report-status">
+					<span *ngIf="false; else pendingReport" class="smaller-font orange">{{'image-network.worklist.PENDING_REPORT' | translate}}</span>
+					<ng-template #pendingReport><app-view-report></app-view-report></ng-template>
+				</div>
 			</div>
-			<div actions *ngIf="study.diagnosticInformation.statusId !== STUDY_STATUS.ERROR.id">
+			<div actions fxFlex="3" *ngIf="study.diagnosticInformation.statusId !== STUDY_STATUS.ERROR.id">
 				<button mat-icon-button [matMenuTriggerFor]="menu" >
 					<mat-icon>more_vert</mat-icon>
 				</button>

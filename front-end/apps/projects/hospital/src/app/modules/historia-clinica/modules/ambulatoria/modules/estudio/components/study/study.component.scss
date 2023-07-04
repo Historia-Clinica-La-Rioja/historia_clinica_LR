@@ -1,4 +1,22 @@
-.btn-container {
-    margin: 0 10px;
-    gap: 10px;
+.smaller-font {
+    font-size: 0.8rem;
+}
+
+.report-status {
+    display: flex;
+    text-align: center;
+    align-items: center;
+}
+
+.orange {
+    color: orange;
+}
+
+@media (max-width: 1280px) {
+    .view-study-btn {
+        align-self: center;
+    }
+	.report-status {
+		display: block;
+	}
 }

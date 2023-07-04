@@ -14,6 +14,7 @@ import { ReportStudyComponent } from './components/report-study/report-study.com
 import { ViewStudyComponent } from './components/view-study/view-study.component';
 import { DeriveReportComponent } from './dialogs/derive-report/derive-report.component';
 import { AddConclusionFormComponent } from './dialogs/add-conclusion-form/add-conclusion-form.component';
+import { ViewReportComponent } from './components/view-report/view-report.component';
 
 @NgModule({
     declarations: [
@@ -27,7 +28,8 @@ import { AddConclusionFormComponent } from './dialogs/add-conclusion-form/add-co
         ReportStudyComponent,
         ViewStudyComponent,
         DeriveReportComponent,
-        AddConclusionFormComponent
+        AddConclusionFormComponent,
+        ViewReportComponent
     ],
     imports: [
         CommonModule,
@@ -36,7 +38,8 @@ import { AddConclusionFormComponent } from './dialogs/add-conclusion-form/add-co
         HistoriaClinicaModule
     ],
     exports: [
-        ViewStudyComponent
+        ViewStudyComponent,
+        ViewReportComponent
     ]
 })
 

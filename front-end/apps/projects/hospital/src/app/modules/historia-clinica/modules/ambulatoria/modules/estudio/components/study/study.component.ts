@@ -16,6 +16,7 @@ import { PermissionsService } from "@core/services/permissions.service";
 import { ActionsButtonService } from '../../../indicacion/services/actions-button.service';
 import { CreatedDuring } from '../study-list-element/study-list-element.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { capitalize } from '@core/utils/core.utils';
 
 const IMAGE_DIAGNOSIS = 'Diagnóstico por imágenes';
 
@@ -85,7 +86,7 @@ export class StudyComponent implements OnInit {
 				description: prescriptionStatus,
 				cssClass: prescriptionStatus === this.translateService.instant('ambulatoria.paciente.studies.study_state.PENDING') ? 'red' : 'blue'
 			},
-			description: diagnosticReport.snomed.pt,
+			description: capitalize(diagnosticReport.snomed.pt),
 			extra_info: [{
 				title: diagnosticReport.source === this.translateService.instant('app.menu.INTERNACION') ? 'Diagnóstico:' : 'Problema:',
 				content: diagnosticReport.healthCondition.snomed.pt
