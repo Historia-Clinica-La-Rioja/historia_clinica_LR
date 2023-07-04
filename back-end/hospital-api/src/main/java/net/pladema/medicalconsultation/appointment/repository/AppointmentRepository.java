@@ -470,7 +470,6 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	@Query("SELECT  (CASE WHEN COUNT(a.id) > 0 THEN TRUE ELSE FALSE END) " +
 			"FROM Appointment a " +
 			"WHERE a.patientId = :patientId " +
-			"AND a.dateTypeId >= CURRENT_DATE " +
-			"AND a.appointmentStateId NOT IN (" + AppointmentState.CANCELLED_STR + "," + AppointmentState.SERVED + ")")
-	Boolean existsFutureAppointmentByPatientId(@Param("patientId") Integer patientId);
+			"AND a.appointmentStateId IN (:states)")
+	Boolean existsAppointmentByStatesAndPatientId(@Param("states") List<Short> states, @Param("patientId") Integer patientId);
 }

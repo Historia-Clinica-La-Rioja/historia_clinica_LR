@@ -12,6 +12,7 @@ import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRep
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.federar.services.FederarService;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.patient.controller.dto.AuditablePatientInfoDto;
 import net.pladema.patient.controller.dto.PatientRegistrationSearchFilter;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
@@ -268,7 +269,7 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	public void assertHasActiveEncountersByPatientId(Integer patientId) {
-		if(internmentEpisodeRepository.isPatientHospitalized(patientId) || emergencyCareEpisodeRepository.existsActiveEpisodeByPatientId(patientId) || appointmentRepository.existsFutureAppointmentByPatientId(patientId))
+		if(internmentEpisodeRepository.isPatientHospitalized(patientId) || emergencyCareEpisodeRepository.existsActiveEpisodeByPatientId(patientId) || appointmentRepository.existsAppointmentByStatesAndPatientId(List.of(AppointmentState.ASSIGNED, AppointmentState.CONFIRMED), patientId))
 			throw new RejectedPatientException(RejectedPatientExceptionEnum.ENCOUNTER_ACTIVE_EXISTS, "El paciente posee un encuentro activo");
 	}
 
