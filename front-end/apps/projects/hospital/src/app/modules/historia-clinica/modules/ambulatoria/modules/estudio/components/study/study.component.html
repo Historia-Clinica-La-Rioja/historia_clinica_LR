@@ -23,13 +23,14 @@
 						</button>
 					</ng-container>
 					<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_IMAGENES', 'PERSONAL_DE_LABORATORIO']">
-						<button mat-menu-item (click)="completeStudy(study.diagnosticInformation)" *ngIf="study.diagnosticInformation.statusId === STUDY_STATUS.REGISTERED.id">
+						<button mat-menu-item (click)="completeStudy(study.diagnosticInformation)" *ngIf="study.diagnosticInformation.statusId === STUDY_STATUS.REGISTERED.id"
+						[disabled]="study.hasActiveAppointment">
 							<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.COMPLETE'"></span>
 						</button>
 					</ng-container>
 					<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 						<button mat-menu-item (click)="deleteStudy(study.diagnosticInformation)" *ngIf="study.diagnosticInformation.statusId === STUDY_STATUS.REGISTERED.id"
-						[disabled]="!study.canBeDeleted">
+						[disabled]="study.hasActiveAppointment">
 							<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DELETE'"></span>
 						</button>
 					</ng-container>

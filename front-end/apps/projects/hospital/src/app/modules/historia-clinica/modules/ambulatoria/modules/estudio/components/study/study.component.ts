@@ -32,7 +32,7 @@ export class StudyComponent implements OnInit {
 		studies.forEach(study => {
 			if (study.category === IMAGE_DIAGNOSIS) {
 				this.prescripcionesService.getPrescriptionStatus(this.patientId, study.serviceRequestId).subscribe( hasActiveAppointment => {
-					this._studies.push(this.mapToStudyInformation(study, !hasActiveAppointment));
+					this._studies.push(this.mapToStudyInformation(study, hasActiveAppointment));
 				})
 			} else {
 				this._studies.push(this.mapToStudyInformation(study, true));
@@ -70,10 +70,10 @@ export class StudyComponent implements OnInit {
 		this._studies.sort((studyA, studyB) => studyB.diagnosticInformation.creationDate.getTime() - studyA.diagnosticInformation.creationDate.getTime())
 	}
 
-	private mapToStudyInformation(report: DiagnosticReportInfoDto, canBeDeleted: boolean, appointmentId?: number): StudyInformation {
+	private mapToStudyInformation(report: DiagnosticReportInfoDto, hasActiveAppointment: boolean, appointmentId?: number): StudyInformation {
         return {
             'diagnosticInformation': report,
-            canBeDeleted,
+            hasActiveAppointment,
 			appointmentId
         }
     }
@@ -195,6 +195,6 @@ export class StudyComponent implements OnInit {
 
 export interface StudyInformation {
     diagnosticInformation: DiagnosticReportInfoDto;
-    canBeDeleted: boolean;
+    hasActiveAppointment: boolean;
 	appointmentId?: number
 }
