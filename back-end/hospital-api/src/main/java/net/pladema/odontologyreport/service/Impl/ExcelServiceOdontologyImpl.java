@@ -52,13 +52,17 @@ public class ExcelServiceOdontologyImpl implements ExcelServiceOdontology {
 	}
 
 	@Override
-	public IWorkbook buildExcelOdontologyProcedures(String tittle, String[] headers, List<OdontologyProceduresReports> result) {
+	public IWorkbook buildExcelOdontologyProcedures(String tittle, String[] headers, List<OdontologyProceduresReports> result, String startDate, String endDate) {
 		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
 		createCellStyle(wb);
 
 		ISheet sheet = wb.createSheet(tittle);
 
-		fillRow(sheet, getHeaderData(headers, tittle));
+		for (OdontologyProceduresReports institution : result){
+			String institutionName = institution.getInstitution();
+			fillRow(sheet, getHeaderDataDates(headers, tittle, startDate, endDate, institutionName));
+			break;
+		}
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
 
@@ -68,6 +72,7 @@ public class ExcelServiceOdontologyImpl implements ExcelServiceOdontology {
 				resultData -> {
 					IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
 					fillRowContentOdontologyProcedures(newDataRow, resultData, styleDataRow);
+					String institution = resultData.getInstitution();
 				}
 		);
 
@@ -151,6 +156,48 @@ public class ExcelServiceOdontologyImpl implements ExcelServiceOdontology {
 		return data;
 	}
 
+	private List<CellContent> getHeaderDataDates(String[] subtitles, String title, String startDate, String endDate, String institution){
+		List<CellContent> data = new ArrayList<>();
+
+		int nRow = 0;
+
+		data.add(new CellContent(nRow, 0, 1, 2, "", basicStyle));
+		data.add(new CellContent(nRow, 2, 2, 1, "1", titleStyle));
+		data.add(new CellContent(nRow, 3, 2, 16, title, titleStyle));
+		data.add(new CellContent(nRow, 19, 1, 3, "1. Hoja N°", fieldStyle));
+		data.add(new CellContent(nRow, 22, 1, 1, "", basicStyle));
+		data.add(new CellContent(nRow, 23, 1, 1, "", basicStyle));
+
+		nRow++;
+		data.add(new CellContent(nRow, 0, 1, 2, "Periodo: desde " + startDate + " hasta "  + endDate, basicStyle));
+		data.add(new CellContent(nRow, 19, 1, 5, "", basicStyle));
+
+		nRow++;
+		data.add(new CellContent(nRow, 0, 1, 2, "2. ESTABLECIMIENTO: " + institution, fieldStyle));
+		data.add(new CellContent(nRow, 2, 1, 14, "", basicStyle));
+		data.add(new CellContent(nRow, 16, 1, 1, "3. MES", fieldStyle));
+		data.add(new CellContent(nRow, 17, 1, 1, "", basicStyle));
+		data.add(new CellContent(nRow, 18, 1, 1, "4. AÑO", fieldStyle));
+		data.add(new CellContent(nRow, 19, 1, 5, "", basicStyle));
+
+		nRow++;
+		data.add(new CellContent(nRow, 0, 1, 2, "5. Especialidad: Odontologia", fieldStyle));
+		data.add(new CellContent(nRow, 2, 1, 8, "", basicStyle));
+		data.add(new CellContent(nRow, 10, 1, 1, "6. REGIÓN SANITARIA", fieldStyle));
+		data.add(new CellContent(nRow, 11, 1, 5, "", basicStyle));
+		data.add(new CellContent(nRow, 16, 1, 3, "7. SERVICIO", fieldStyle));
+		data.add(new CellContent(nRow, 19, 1, 3, "", basicStyle));
+		data.add(new CellContent(nRow, 22, 1, 1, "", basicStyle));
+		data.add(new CellContent(nRow, 23, 1, 1, "", basicStyle));
+
+		nRow++;
+		int column = 0;
+		for (String subtitle : subtitles)
+			data.add(new CellContent(nRow, column++, 1, 1, subtitle, subTitleStyle));
+
+		return data;
+	}
+
 	private void setDimensions(ISheet sheet){
 		sheet.autoSizeColumns();
 		int nRow = 0;
@@ -214,10 +261,6 @@ public class ExcelServiceOdontologyImpl implements ExcelServiceOdontology {
 
 	private void fillRowContentOdontologyProcedures(IRow row, OdontologyProceduresReports content, ICellStyle style){
 		AtomicInteger rowNumber = new AtomicInteger(0);
-
-		ICell cell = row.createCell(rowNumber.getAndIncrement());
-		cell.setCellValue(content.getInstitution());
-		cell.setCellStyle(style);
 
 		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
 		cell2.setCellValue(content.getProfessionalName());

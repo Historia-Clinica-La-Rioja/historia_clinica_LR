@@ -10,6 +10,6 @@ public interface ExcelServiceOdontology {
 
 	IWorkbook buildExcelOdontology(String tittle, String[] headers, List<ConsultationDetailOdontology> query);
 
-	IWorkbook buildExcelOdontologyProcedures(String tittle, String[] headers, List<OdontologyProceduresReports> query);
+	IWorkbook buildExcelOdontologyProcedures(String tittle, String[] headers, List<OdontologyProceduresReports> query, String startDate, String endDate);
 
 }

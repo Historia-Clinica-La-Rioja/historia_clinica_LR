@@ -198,8 +198,11 @@ public class OdontologyReportsController {
 		LOG.debug("Se creará el excel {}", institutionId);
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId);
 
+		String fechaInicio = fromDate;
+		String fechaFin = toDate;
+
 		String tittle = "Reportes de procedimientos odontológicos";
-		String[] headers = {"Institución","Nombre del profesional", "DNI", "Matrícula", "Fecha de atención", "Hora",
+		String[] headers = {"Nombre del profesional", "DNI", "Matrícula", "Fecha de atención", "Hora",
 							"Nombre del paciente", "DNI", "Sexo", "Género", "Nombre con el que se identifica",
 							"Fecha de nacimiento", "Edad a fecha del turno", "Edad actual", "Obra social", "Domicilio", "Localidad",
 							"CPO permanentes", "CEO temporales", "Motivos", "Otros diagnósticos", "Otros procedimientos", "Alergias/intolerancias",
@@ -208,7 +211,7 @@ public class OdontologyReportsController {
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
-		IWorkbook wb = this.excelService.buildExcelOdontologyProcedures(tittle, headers, this.queryFactoryOdontology.queryReporteProcedimientos(institutionId, startDate, endDate));
+		IWorkbook wb = this.excelService.buildExcelOdontologyProcedures(tittle, headers, this.queryFactoryOdontology.queryReporteProcedimientos(institutionId, startDate, endDate), fechaInicio, fechaFin);
 
 
 		String filename = tittle + "." + wb.getExtension();
