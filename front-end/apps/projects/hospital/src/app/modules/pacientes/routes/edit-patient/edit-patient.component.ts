@@ -575,6 +575,7 @@ export class EditPatientComponent implements OnInit {
 								width: '35%',
 								autoFocus: false
 							});
+							this.hasToSaveFiles=null;
 						} else {
 							this.snackBarService.showError(this.getMessagesError());
 						}
