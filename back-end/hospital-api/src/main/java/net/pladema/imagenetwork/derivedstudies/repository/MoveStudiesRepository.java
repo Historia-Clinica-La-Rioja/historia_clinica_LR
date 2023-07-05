@@ -60,5 +60,13 @@ public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Intege
 	void updateAttemps(@Param("idMove") Integer idMove,
 					@Param("attempsNumbers") Integer attempsNumbers);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT mo " +
+			"FROM MoveStudies AS mo " +
+			"WHERE mo.result != '200' " +
+			"ORDER BY mo.orchestratorId ")
+
+	List<MoveStudies> listFailed();
+
 
 }
