@@ -25,8 +25,18 @@ public interface HierarchicalUnitStaffRepository extends SGXAuditableEntityJPARe
 			"WHERE hus.hierarchicalUnitId = :hierarchicalUnitId " +
 			"AND hus.deleteable.deleted IS FALSE " +
 			"ORDER BY hus.responsible DESC")
-	List<HierarchicalUnitStaff> findByHierarchicalUnitId(@Param("hierarchicalUnitId") Integer hierarchicalUnitId);
-	
+	List<HierarchicalUnitStaff> findAllByHierarchicalUnitId(@Param("hierarchicalUnitId") Integer hierarchicalUnitId);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT hus " +
+			"FROM HierarchicalUnitStaff hus " +
+			"JOIN HierarchicalUnit hu ON (hus.hierarchicalUnitId = hu.id) " +
+			"JOIN Institution i ON (hu.institutionId = i.id) " +
+			"WHERE hus.userId IN (:userId) " +
+			"AND hus.deleteable.deleted IS FALSE " +
+			"ORDER BY hus.responsible DESC, i.name ASC")
+	List<HierarchicalUnitStaff> findAllByUserId(@Param("userId") Integer userId);
+
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT hus " +
 			"FROM HierarchicalUnitStaff hus " +

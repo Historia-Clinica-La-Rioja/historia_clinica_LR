@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +26,11 @@ public class BackofficeHierarchicalUnitStaffStore implements BackofficeStore<Hie
 
 	@Override
 	public Page<HierarchicalUnitStaff> findAll(HierarchicalUnitStaff entity, Pageable pageable) {
-		List<HierarchicalUnitStaff> content = repository.findByHierarchicalUnitId(entity.getHierarchicalUnitId());
+		List<HierarchicalUnitStaff> content = new ArrayList<>();
+		if (entity.getHierarchicalUnitId() != null)
+			content = repository.findAllByHierarchicalUnitId(entity.getHierarchicalUnitId());
+		if (entity.getUserId() != null)
+			content = repository.findAllByUserId(entity.getUserId());
 		return new PageImpl<>(content, pageable, content.size());
 	}
 
