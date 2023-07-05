@@ -35,28 +35,40 @@ const ELEMENT_DATA: PeriodicElement[] = [
   { Grafic: IMAGE_ITEM + '51a.jpeg', Orden: 22, Nombre: 'ACONDROPLASIA - Peso (nacimiento - 17 años)', Sexo: 'NIÑAS' },
   { Grafic: IMAGE_ITEM + '51b.jpeg', Orden: 23, Nombre: 'ACONDROPLASIA - Longitud corporal y estatura (nacimiento - 18 años)', Sexo: 'NIÑAS' },
   { Grafic: IMAGE_ITEM + '51c.jpeg', Orden: 24, Nombre: 'ACONDROPLASIA - Perímetro cefálico (nacimiento - 6 años)', Sexo: 'NIÑAS' },
-  { Grafic: IMAGE_ITEM + '51d.jpeg', Orden: 25, Nombre: 'ACONDROPLASIA - (nacimiento 0 - 17 años)', Sexo: 'NIÑOS' },
+  { Grafic: IMAGE_ITEM + '51d.jpeg', Orden: 25, Nombre: 'ACONDROPLASIA - Peso (nacimiento - 17 años)', Sexo: 'NIÑOS' },
   { Grafic: IMAGE_ITEM + '51e.jpeg', Orden: 26, Nombre: 'ACONDROPLASIA - Longitud corporal y estatura (nacimiento - 18 años)', Sexo: 'NIÑOS' },
   { Grafic: IMAGE_ITEM + '51f.jpeg', Orden: 27, Nombre: 'ACONDROPLASIA - Perímetro cefálico (nacimiento - 6 años)', Sexo: 'NIÑOS' },
+  { Grafic: IMAGE_ITEM + 'varones.jpeg', Orden: 28, Nombre: 'Niveles de presion arterial (1 - 9 años)', Sexo: 'NIÑOS' },
+  { Grafic: IMAGE_ITEM + 'varonespt2.jpeg', Orden: 29, Nombre: 'Niveles de presion arterial (10 - 17 años)', Sexo: 'NIÑOS' },
+  { Grafic: IMAGE_ITEM + 'mujeres.jpeg', Orden: 28, Nombre: 'Niveles de presion arterial (1 - 9 años)', Sexo: 'NIÑAS' },
+  { Grafic: IMAGE_ITEM + 'mujerespt2.jpeg', Orden: 29, Nombre: 'Niveles de presion arterial (10 - 17 años)', Sexo: 'NIÑAS' },
+
 ];
+
 
 @Component({
   selector: 'app-tablas-percentilos',
   templateUrl: './tablas-percentilos.component.html',
-  styleUrls: ['./tablas-percentilos.component.scss']
+  styleUrls: ['./tablas-percentilos.component.scss'],
 })
 export class TablasPercentilosComponent implements OnInit {
+  data: PeriodicElement[] = ELEMENT_DATA;
 
   displayedColumns: string[] = ['Grafic', 'Orden', 'Nombre', 'Sexo'];
-  
-  getImagePath(fileName: string): string {
-    return IMAGE_ITEM + fileName;
-  }
-  
   columnsToDisplay: string[] = this.displayedColumns.slice();
-  data: PeriodicElement[] = ELEMENT_DATA;
   panelOpenState: number | null = null;
 
   ngOnInit() {}
 
+  togglePanel(orden: number): void {
+    if (this.panelOpenState === orden) {
+      this.panelOpenState = null; // Cierra el panel
+    } else {
+      this.panelOpenState = orden; // Abre el panel
+    }
+  }
+
+  getImagePath(fileName: string): string {
+    return IMAGE_ITEM + fileName;
+  }
 }

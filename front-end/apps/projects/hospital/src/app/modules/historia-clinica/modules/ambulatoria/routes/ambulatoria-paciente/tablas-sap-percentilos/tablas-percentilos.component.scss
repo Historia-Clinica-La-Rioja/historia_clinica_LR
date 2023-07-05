@@ -29,7 +29,7 @@ section{
 }
 
 .column-title {
-  margin-left: 37%; //SE ALINEA EL TITLE SEXO HACIA LA IZQUIERDA.
+  margin-left: 45%; //SE ALINEA EL TITLE SEXO HACIA LA IZQUIERDA.
   font-weight: normal;
   font-size: medium;
 }
@@ -50,7 +50,7 @@ section{
 
 .container-sexo {
   display: flex;
-  margin-left: 59.7%;
+  margin-left: 67.8%;
   position: absolute;
   font-size: 15px;
  }
@@ -67,4 +67,6 @@ section{
   font-size: 15px;
 }
 
- 
+.nombre-style {
+font-weight:lighter;
+}
