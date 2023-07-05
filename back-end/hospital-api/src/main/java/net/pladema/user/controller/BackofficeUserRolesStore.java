@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import ar.lamansys.sgx.auth.user.infrastructure.output.user.User;
 import ar.lamansys.sgx.auth.user.infrastructure.output.user.UserRepository;
 import ar.lamansys.sgx.shared.admin.AdminConfiguration;
+import lombok.AllArgsConstructor;
 import net.pladema.permissions.repository.UserRoleRepository;
 import net.pladema.permissions.repository.entity.UserRole;
 import net.pladema.permissions.repository.enums.ERole;
@@ -23,7 +24,9 @@ import net.pladema.staff.repository.HealthcareProfessionalRepository;
 import net.pladema.staff.repository.ProfessionalProfessionRepository;
 import net.pladema.user.controller.exceptions.BackofficeUserException;
 import net.pladema.user.controller.exceptions.BackofficeUserExceptionEnum;
+import net.pladema.user.controller.filters.BackofficeRolesFilter;
 
+@AllArgsConstructor
 @Service
 public class BackofficeUserRolesStore implements BackofficeStore<UserRole, Long> {
 
@@ -31,23 +34,15 @@ public class BackofficeUserRolesStore implements BackofficeStore<UserRole, Long>
 	private final UserRoleRepository userRoleRepository;
 	private final HealthcareProfessionalRepository healthcareProfessionalRepository;
 	private final ProfessionalProfessionRepository professionalProfessionRepository;
+	private final BackofficeRolesFilter backofficeRolesFilter;
 
-	public BackofficeUserRolesStore(UserRepository userRepository,
-									UserRoleRepository userRoleRepository,
-									HealthcareProfessionalRepository healthcareProfessionalRepository,
-									ProfessionalProfessionRepository professionalProfessionRepository) {
-		this.userRepository = userRepository;
-		this.userRoleRepository = userRoleRepository;
-		this.healthcareProfessionalRepository = healthcareProfessionalRepository;
-		this.professionalProfessionRepository = professionalProfessionRepository;
-	}
 
 	@Override
 	public Page<UserRole> findAll(UserRole entity, Pageable pageable) {
 		List<UserRole> content = toList(userRoleRepository.findAll())
 				.stream()
 				.filter(userRole -> this.filterByExample(userRole, entity))
-				.filter(this::filterRoles)
+				.filter(backofficeRolesFilter::filterRoles)
 				.collect(Collectors.toList());
 		return new PageImpl<>(content, pageable, content.size());
 	}
@@ -58,12 +53,6 @@ public class BackofficeUserRolesStore implements BackofficeStore<UserRole, Long>
 		if (entity.getRoleId() != null && !entity.getRoleId().equals(userRole.getRoleId()))
 			return false;
 		return !userRole.isDeleted();
-	}
-
-	private boolean filterRoles(UserRole userRole) {
-		return !ERole.ROOT.getId().equals(userRole.getRoleId()) &&
-				!ERole.API_CONSUMER.getId().equals(userRole.getRoleId()) &&
-				!ERole.PARTIALLY_AUTHENTICATED.getId().equals(userRole.getRoleId());
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 
+import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 import ar.lamansys.sgx.shared.files.exception.FileServiceEnumException;
 import ar.lamansys.sgx.shared.files.exception.FileServiceException;
 
@@ -147,8 +148,8 @@ public class RestExceptionHandler {
 	@ResponseStatus(HttpStatus.FORBIDDEN)
 	@ExceptionHandler(PermissionDeniedException.class)
 	public ApiErrorMessageDto permissionDenied(PermissionDeniedException ex) {
-		LOG.warn(ex.getMessage());
-		LOG.info(ex.getMessage(), ex);
+		SecurityContextUtils.warn(ex.getMessage());
+		LOG.debug(ex.getMessage(), ex);
 		return new ApiErrorMessageDto("forbidden", ex.getMessage());
 	}
 	

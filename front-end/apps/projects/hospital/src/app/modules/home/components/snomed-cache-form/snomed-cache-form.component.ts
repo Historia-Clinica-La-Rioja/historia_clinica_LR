@@ -15,18 +15,22 @@ export class SnomedCacheFormComponent implements OnInit {
 	ECL_LIST = [
 		SnomedECL.ALLERGY,
 		SnomedECL.BLOOD_TYPE,
+		SnomedECL.CARDIOVASCULAR_DISORDER,
 		SnomedECL.CONSULTATION_REASON,
+		SnomedECL.DIABETES,
 		SnomedECL.DIAGNOSIS,
+		SnomedECL.ELECTROCARDIOGRAPHIC_PROCEDURE,
 		SnomedECL.EVENT,
 		SnomedECL.FAMILY_RECORD,
 		SnomedECL.HOSPITAL_REASON,
+		SnomedECL.HYPERTENSION,
+		SnomedECL.MEDICINE_WITH_UNIT_OF_PRESENTATION,
 		SnomedECL.MEDICINE,
 		SnomedECL.PERSONAL_RECORD,
 		SnomedECL.PROCEDURE,
 		SnomedECL.VACCINE,
-		SnomedECL.DIABETES,
-		SnomedECL.HYPERTENSION
 	];
+
 
 	form: UntypedFormGroup;
 	loading = false;

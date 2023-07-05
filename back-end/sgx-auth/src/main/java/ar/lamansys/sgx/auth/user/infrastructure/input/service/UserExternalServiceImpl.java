@@ -62,9 +62,9 @@ public class UserExternalServiceImpl implements UserExternalService {
     }
 
     @Override
-    public Optional<UserInfoDto> getUser(String key) {
+    public Optional<UserInfoDto> getUser(String username) {
         try {
-            UserBo userBo = userStorage.getUser(key);
+            UserBo userBo = userStorage.getUser(username);
             return Optional.of(mapUserDto(userBo));
         } catch (Exception e) {
             return Optional.empty();

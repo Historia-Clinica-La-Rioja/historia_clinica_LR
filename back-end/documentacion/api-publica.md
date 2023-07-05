@@ -22,6 +22,8 @@ En swagger los endpoints están agrupados como **PublicApi Facturacion** y tiene
 
 `/api/public-api/institution/refset/{refsetCode}`
 
+Rol `API_FACTURACION` asignado en la [institución](../hospital-api/src/main/java/net/pladema/establishment/repository/entity/Institution.java) con el código sisa dado (`refsetCode`).
+
 ## Turnos
 
 Permite obtener datos maestros para el pedido de la reserva, realizar reservas de turnos a usuarios temporales y obtener los turnos en una institución para un paciente dado su dni.
@@ -33,6 +35,7 @@ En swagger los endpoints están agrupados como **PublicApi Turnos** y tienen los
 `/api/public-api/institution/{institutionId}/appointment/booking/professional`
 `/api/public-api/appointment/booking`
 
+Rol `API_TURNOS` asignado en la [institución](../hospital-api/src/main/java/net/pladema/establishment/repository/entity/Institution.java). En los endpoints donde no se requiere el `institutionId`, solo se chequea que el usuario tenga asignado el rol `API_TURNOS` en cualquier institución.
 
 ## Pacientes
 
@@ -44,6 +47,7 @@ En swagger los endpoints están agrupados como **PublicApi Pacientes** y tienen 
 `/api/public-api/external-clinical-history`
 `/api/public-api/patient/{externalId}/institution/{institutionId}/external-encounters`
 
+Rol `API_PACIENTES` asignado a nivel global.
 
 ## Recetas
 
@@ -53,6 +57,7 @@ En swagger los endpoints están agrupados como **PublicApi Recetas** y tienen el
 
 `/api/public-api/prescriptions/prescription`
 
+Rol `API_RECETAS` asignado a nivel global.
 
 ## Sip+
 
@@ -62,6 +67,8 @@ En swagger los endpoints están agrupados como **PublicApi Sip** y tienen el pre
 
 `/api/public-api/sip-plus`
 
+Rol `API_SIPPLUS` asignado a nivel global.
+
 ## Usuarios
 
 Permite obtener, mediante un token de sesión enviado como header, la información del usuario y sus roles. Útil para compartir la autentificación con otros sistemas, especialmente [Extensiones](./extensiones.md).
@@ -70,4 +77,6 @@ En swagger los endpoints están agrupados como **PublicApi Usuarios** y tienen e
 
 `/api/public-api/user`
 
+
+Rol `API_USERS` asignado a nivel global.
 

@@ -6,7 +6,7 @@ import { map, mergeMap } from 'rxjs/operators';
 import { PermissionsService } from '@core/services/permissions.service';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 
-import { ERole, InstitutionDto, RoleAssignmentDto } from '@api-rest/api-model';
+import { InstitutionDto, RoleAssignmentDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { TwoFactorAuthenticationService } from "@api-rest/services/two-factor-authentication.service";
 import { InstitutionService } from '@api-rest/services/institution.service';
@@ -14,14 +14,10 @@ import { SnackBarService } from "@presentation/services/snack-bar.service";
 
 import { LoggedUserService } from '../../../auth/services/logged-user.service';
 import { ActivateTwoFactorAuthenticationComponent } from "../../dialogs/activate-two-factor-authentication/activate-two-factor-authentication.component";
-import { HomeRoutes } from '../../home-routing.module';
+import { HomeRoutes, PUBLIC_API_ROLES } from '../../home-routing.module';
 
 const hasAccessToManageKeys = (allRoles: RoleAssignmentDto[]) => {
-	return allRoles
-		.filter((ra) =>
-			// ra.role === ERole.API_CONSUMER ||
-			ra.role === ERole.API_CONSUMER
-		).length > 0;
+	return allRoles.filter((ra) => PUBLIC_API_ROLES.find(r => ra.role === r)).length > 0;
 };
 @Component({
 	selector: 'app-profile',

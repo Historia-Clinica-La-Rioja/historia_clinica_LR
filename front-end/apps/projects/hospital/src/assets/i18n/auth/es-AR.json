@@ -108,7 +108,13 @@
 				"AUDITOR_MPI": "Auditor MPI",
 				"TECNICO": "Tecnico",
 				"PERSONAL_DE_LEGALES": "Personal de Legales",
-				"INFORMADOR": "Informador"
+				"INFORMADOR": "Informador",
+				"API_FACTURACION": "API Facturación",
+				"API_TURNOS": "API Turnos",
+				"API_PACIENTES": "API Pacientes",
+				"API_RECETAS": "API Recetas",
+				"API_SIPPLUS": "API Sip+",
+				"API_USERS": "API Usuarios"
 			}
 		}
 	}

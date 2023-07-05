@@ -16,6 +16,14 @@ import {
 } from "../auth/components/update-password-success/update-password-success.component";
 import { RoutedExternalComponent } from '@extensions/components/routed-external/routed-external.component';
 
+export const PUBLIC_API_ROLES = [
+	ERole.API_FACTURACION,
+	ERole.API_TURNOS,
+	ERole.API_PACIENTES,
+	ERole.API_RECETAS,
+	ERole.API_SIPPLUS,
+	ERole.API_USERS,
+];
 
 export enum HomeRoutes {
 	Home = '',						// pantalla inicial
@@ -37,7 +45,7 @@ const routes: Routes = [
 				component: ManageKeysComponent,
 				canActivate: [RoleGuard],
 				data: {
-					allowedRoles: [ERole.API_CONSUMER],
+					allowedRoles: PUBLIC_API_ROLES,
 					needsRoot: true
 				},
 			},
@@ -58,6 +66,8 @@ const routes: Routes = [
 		]
 	}
 ];
+
+
 
 @NgModule({
 	imports: [RouterModule.forChild(routes)],
