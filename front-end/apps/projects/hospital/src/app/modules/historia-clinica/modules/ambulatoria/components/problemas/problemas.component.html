@@ -210,7 +210,7 @@
 											{{ problem.mainDiagnose.snomed.pt }}
 										</span>
 										<span mat-line>
-											{{ problem.entryDate | viewDateDto : 'datetime' | date: 'dd/MM/yyyy' }} - {{ problem.dischargeDate ? (problem.dischargeDate | viewDateDto : 'date' | date: 'dd/MM/yyyy') :
+											{{ problem.entryDate | viewDateDto : 'datetime' | date: 'dd/MM/yyyy' }} - {{ problem.dischargeDate ? (problem.dischargeDate | viewDateDto : 'datetime' | date: 'dd/MM/yyyy') :
 											"actualmente internado" }}
 										</span>
 									</div>
