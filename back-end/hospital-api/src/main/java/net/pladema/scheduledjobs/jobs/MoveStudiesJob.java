@@ -129,23 +129,27 @@ public class MoveStudiesJob {
 
 		String status = moveStudyBO.getStatus();
 		if (MOVING.equals(status)){
-			moveStudyBO.setCalculatedPriority(Double.MAX_VALUE);
+			moveStudyBO.setCalculatedPriority(Double.MAX_VALUE -1);
 		} else {
-			Double weightSize = orchestrator.getWeightSize();
-			Double weightDays = orchestrator.getWeightDays();
-			Double weightPriority = orchestrator.getWeightPriority();
+			if(moveStudyBO.getPriorityMax() > 0){
+				moveStudyBO.setCalculatedPriority(Double.MAX_VALUE);
+			} else{
+				Double weightSize = orchestrator.getWeightSize();
+				Double weightDays = orchestrator.getWeightDays();
+				Double weightPriority = orchestrator.getWeightPriority();
 
-			Double priority = moveStudyBO.getPriority() * weightPriority;
+				Double priority = moveStudyBO.getPriority() * weightPriority;
 
-			Double megabytes = (moveStudyBO.getSizeImage() != null ? moveStudyBO.getSizeImage() : 1) / MEGA;
-			Double size = megabytes * weightSize;
+				Double megabytes = (moveStudyBO.getSizeImage() != null ? moveStudyBO.getSizeImage() : 1) / MEGA;
+				Double size = megabytes * weightSize;
 
-			LocalDate dateMove = moveStudyBO.getDerivedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-			LocalDate currentDate = LocalDate.now();
-			long differenceDays = ChronoUnit.DAYS.between(dateMove, currentDate);
-			Double old = differenceDays * weightDays ;
+				LocalDate dateMove = moveStudyBO.getDerivedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				LocalDate currentDate = LocalDate.now();
+				long differenceDays = ChronoUnit.DAYS.between(dateMove, currentDate);
+				Double old = differenceDays * weightDays ;
 
-			moveStudyBO.setCalculatedPriority(priority + size + old);
+				moveStudyBO.setCalculatedPriority(priority + size + old);
+			}
 		}
 
 	}

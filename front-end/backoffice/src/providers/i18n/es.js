@@ -774,6 +774,24 @@ const messages = {
             createRelated: 'Crear Equipo',
             detailLabel: 'Detalle de Equipo'
         },
+        movestudies: {
+            name: 'Monitoreo de Estudios',
+            pending:'Pendiente',
+            moving:'Moviendo',
+            finished:'Finalizado',
+            errorPriority:'La prioridad puede ser 0 o 1',
+            fields: {
+                institutionId: 'Intitución',
+                imageId: 'Id del estudio',
+                sizeImage: 'Tamaño en bytes del estudio',
+                orchestratorId: 'Orquestador asociado',
+                attempsNumber: 'Número de fallos',
+                pacServerId: 'PAC Destino',
+                result: 'Resultado',
+                status:'Estado',
+                priorityMax:'Prioridad Máxima'
+            }
+        },
         hierarchicalunittypes: {
             name: 'Tipo de unidad jerárquica |||| Tipos de unidades jerárquicas',
             fields: {

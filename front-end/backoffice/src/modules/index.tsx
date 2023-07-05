@@ -69,6 +69,7 @@ import shockroom from './shockroom';
 import hierarchicalunitrelationships from "./hierarchicalunitrelationships";
 import hierarchicalunitstaff from "./hierarchicalunitstaff";
 import institutionuserpersons from "./institutionuserpersons";
+import movestudies from './movestudies';
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
     permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
@@ -176,6 +177,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="orchestrator" {...orchestrator} />,
     <Resource name="equipment" {...equipment} />,
     <Resource name="modality" {...modality} />,
+    <Resource name="movestudies" {...movestudies(permissions)} />,
 
     <Resource name="snomedgroupconcepts" />,
     <Resource name="snomedrelatedgroups"  {...snomedrelatedgroups} />,
