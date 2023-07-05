@@ -54,12 +54,13 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 				new Date(),
 				moveStudyBO.getPriorityMax(),
 				moveStudyBO.getAttempsNumber(),
-				moveStudyBO.getStatus());
+				moveStudyBO.getStatus(),
+				moveStudyBO.getInstitutionId());
 		return moveStudiesRepository.save(moveStudy).getId();
 	}
 
 	@Override
-	public Integer create(Integer appointmentId) {
+	public Integer create(Integer appointmentId, Integer institutionId) {
 		List<PacServerBO> pacServers = pacServerService.getAllPacServer();
 		String imageId = appointmentOrderImageService.getImageId(appointmentId).orElse("none");
 		MoveStudiesBO moveStudyBO = new MoveStudiesBO();
@@ -80,6 +81,7 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 			moveStudyBO.setOrchestratorId(orchestratorId);
 			moveStudyBO.setImageId(imageId);
 			moveStudyBO.setPriority(5);
+			moveStudyBO.setInstitutionId(institutionId);
 			return save(moveStudyBO);
 		}
 		return -1;

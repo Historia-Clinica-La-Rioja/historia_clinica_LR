@@ -578,7 +578,7 @@ public class AppointmentsController {
 		Short roleId = ERole.TECNICO.getId();
 		DetailsOrderImageBo detailsOrderImageBo = new DetailsOrderImageBo(appointmentId, detailsOrderImageDto.getObservations(), LocalDateTime.now(), technicianId, roleId);
 		boolean result = appointmentOrderImageService.updateCompleted(detailsOrderImageBo, true);
-		Integer idMove = moveStudiesService.create(appointmentId);
+		Integer idMove = moveStudiesService.create(appointmentId, institutionId);
 		moveStudiesService.getSizeFromOrchestrator(idMove);
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);

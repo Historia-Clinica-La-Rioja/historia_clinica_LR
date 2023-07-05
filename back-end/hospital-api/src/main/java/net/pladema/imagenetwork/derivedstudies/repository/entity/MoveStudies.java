@@ -61,7 +61,10 @@ public class MoveStudies implements Serializable {
 	@Column(name = "status")
 	private String status;
 
-	public MoveStudies(Integer appointmentId, Integer orchestratorId, String imageId, Integer pacServerId, Integer priority, Date moveDate, Integer priorityMax, Integer attempsNumber, String status){
+	@Column(name = "institution_id", nullable = true)
+	private Integer institutionId;
+
+	public MoveStudies(Integer appointmentId, Integer orchestratorId, String imageId, Integer pacServerId, Integer priority, Date moveDate, Integer priorityMax, Integer attempsNumber, String status, Integer institutionId){
 		this.appointmentId = appointmentId;
 		this.orchestratorId = orchestratorId;
 		this.imageId = imageId;
@@ -71,17 +74,8 @@ public class MoveStudies implements Serializable {
 		this.priorityMax = priorityMax;
 		this.attempsNumber = attempsNumber;
 		this.status = status;
+		this.institutionId =institutionId;
+		this.result ="";
 	}
 
-	public MoveStudies(Integer id, Integer appointmentId, Integer orchestratorId, String imageId, Integer pacServerId, Integer priority, Date moveDate, Integer priorityMax, Integer attempsNumber, String status){
-		this.appointmentId = appointmentId;
-		this.orchestratorId = orchestratorId;
-		this.imageId = imageId;
-		this.pacServerId = pacServerId;
-		this.priority = priority;
-		this.moveDate = moveDate;
-		this.priorityMax = priorityMax;
-		this.attempsNumber = attempsNumber;
-		this.status = status;
-	}
 }
