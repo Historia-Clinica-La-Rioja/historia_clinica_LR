@@ -1,23 +1,26 @@
-<app-titled-content-card *ngIf="allergies?.length" title="{{ 'internaciones.anamnesis.alergias.TITLE' | translate}}">
-	<div fxLayout="column" fxLayoutGap="10px" *ngFor="let allergy of allergies; index as i; last as isLast">
-		<div fxLayout="row" fxLayoutAlign="space-between center">
-			<div fxLayout="column" fxLayoutGap="6px">
-				<span>{{ allergy.snomed.pt }}</span>
+<div fxLayoutGap="2vh">
+	<app-titled-content-card *ngIf="allergies?.length"
+		title="{{ 'internaciones.anamnesis.alergias.TITLE' | translate}}">
+		<div fxLayout="column" fxLayoutGap="10px" *ngFor="let allergy of allergies; index as i; last as isLast">
+			<div fxLayout="row" fxLayoutAlign="space-between center">
+				<div fxLayout="column" fxLayoutGap="6px">
+					<span>{{ allergy.snomed.pt }}</span>
+				</div>
+				<button type="button" mat-icon-button color="warn" (click)="remove(i)">
+					<mat-icon>delete_outline</mat-icon>
+				</button>
 			</div>
-			<button type="button" mat-icon-button color="warn" (click)="remove(i)">
-				<mat-icon>delete_outline</mat-icon>
-			</button>
+			<em *ngIf="allergy?.observaciones" class="mat-caption gray-caption">
+				{{ allergy.observaciones }}
+			</em>
+			<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
 		</div>
-		<em *ngIf="allergy?.observaciones" class="mat-caption gray-caption">
-			{{ allergy.observaciones }}
-		</em>
-		<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
-	</div>
-</app-titled-content-card>
+	</app-titled-content-card>
 
-<div>
-	<button mat-button type="button" id="add-alergias-button" color="primary" class="add-button"
-		(click)="addAlergies()">
-		+ {{ 'internaciones.anamnesis.alergias.ADD' | translate }}
-	</button>
+	<div>
+		<button mat-button type="button" id="add-alergias-button" color="primary" class="add-button"
+			(click)="addAlergies()">
+			+ {{ 'internaciones.anamnesis.alergias.ADD' | translate }}
+		</button>
+	</div>
 </div>
