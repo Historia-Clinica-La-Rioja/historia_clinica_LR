@@ -226,3 +226,15 @@ databaseChangeLog:
                    defaultValue: ${boolean.false}
                    constraints:
                      nullable: false
+    - changeSet:
+        id: addColumn-institution_id-to-move_studies
+        author: amurrie
+        changes:
+          - addColumn:
+              tableName: move_studies
+              columns:
+                - column:
+                    name: institution_id
+                    type: int
+                    constraints:
+                      nullable: true
