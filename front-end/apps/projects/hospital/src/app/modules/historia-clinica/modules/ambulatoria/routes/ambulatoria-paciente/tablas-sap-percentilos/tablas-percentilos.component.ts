@@ -38,10 +38,10 @@ const ELEMENT_DATA: PeriodicElement[] = [
   { Grafic: IMAGE_ITEM + '51d.jpeg', Orden: 25, Nombre: 'ACONDROPLASIA - Peso (nacimiento - 17 años)', Sexo: 'NIÑOS' },
   { Grafic: IMAGE_ITEM + '51e.jpeg', Orden: 26, Nombre: 'ACONDROPLASIA - Longitud corporal y estatura (nacimiento - 18 años)', Sexo: 'NIÑOS' },
   { Grafic: IMAGE_ITEM + '51f.jpeg', Orden: 27, Nombre: 'ACONDROPLASIA - Perímetro cefálico (nacimiento - 6 años)', Sexo: 'NIÑOS' },
-  { Grafic: IMAGE_ITEM + 'varones.jpeg', Orden: 28, Nombre: 'Niveles de presion arterial (1 - 9 años)', Sexo: 'NIÑOS' },
-  { Grafic: IMAGE_ITEM + 'varonespt2.jpeg', Orden: 29, Nombre: 'Niveles de presion arterial (10 - 17 años)', Sexo: 'NIÑOS' },
-  { Grafic: IMAGE_ITEM + 'mujeres.jpeg', Orden: 28, Nombre: 'Niveles de presion arterial (1 - 9 años)', Sexo: 'NIÑAS' },
-  { Grafic: IMAGE_ITEM + 'mujerespt2.jpeg', Orden: 29, Nombre: 'Niveles de presion arterial (10 - 17 años)', Sexo: 'NIÑAS' },
+  { Grafic: IMAGE_ITEM + 'varones.jpeg', Orden: 28, Nombre: 'Niveles de presión arterial (1 - 9 años)', Sexo: 'NIÑOS' },
+  { Grafic: IMAGE_ITEM + 'varonespt2.jpeg', Orden: 29, Nombre: 'Niveles de presión arterial (10 - 17 años)', Sexo: 'NIÑOS' },
+  { Grafic: IMAGE_ITEM + 'mujeres.jpeg', Orden: 30, Nombre: 'Niveles de presión arterial (1 - 9 años)', Sexo: 'NIÑAS' },
+  { Grafic: IMAGE_ITEM + 'mujerespt2.jpeg', Orden: 31, Nombre: 'Niveles de presión arterial (10 - 17 años)', Sexo: 'NIÑAS' },
 
 ];
 
