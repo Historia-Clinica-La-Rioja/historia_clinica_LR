@@ -423,8 +423,8 @@ export class EditPatientComponent implements OnInit {
 									okButtonLabel: 'buttons.YES_CONTINUE',
 									cancelButtonLabel: 'buttons.NO_CANCEL',
 									buttonClose: true,
-									color:'warn',
-									okBottonColor:'warn'
+									color: 'warn',
+									okBottonColor: 'warn'
 								},
 								disableClose: true,
 								width: '35%',
@@ -575,7 +575,7 @@ export class EditPatientComponent implements OnInit {
 								width: '35%',
 								autoFocus: false
 							});
-							this.hasToSaveFiles=null;
+							this.hasToSaveFiles = null;
 						} else {
 							this.snackBarService.showError(this.getMessagesError());
 						}
@@ -701,7 +701,18 @@ export class EditPatientComponent implements OnInit {
 		})
 
 	}
+	setStateAndDisabledInputs(value: any) {
+		if (value === this.rejectedId) {
+			this.form.controls.identificationNumber.disable();
+			this.form.controls.identificationTypeId.disable();
 
+		} else if (!(this.form.controls.identificationTypeId.value === this.idTypeDni)) {
+			this.form.controls.identificationNumber.enable();
+			this.form.controls.identificationTypeId.enable();
+		} else {
+			this.form.controls.identificationTypeId.enable();
+		}
+	}
 	setValuesAndDisabled(data: PersonBasicDataResponseCustom) {
 		this.dniWasEdited = true;
 

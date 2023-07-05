@@ -115,7 +115,7 @@
 						</div>
 						<mat-form-field appearance="outline" class="matInput">
 							<mat-select id="stateId" name="stateId" formControlName="stateId"
-								placeholder="{{'pacientes.form.SELECT' | translate}}">
+								placeholder="{{'pacientes.form.SELECT' | translate}}" (ngModelChange)="setStateAndDisabledInputs($event)">
 								<mat-option *ngFor="let state of typesPatient" [value]="state.id">
 									{{state.description}}
 								</mat-option>
