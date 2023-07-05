@@ -17,6 +17,7 @@ import SgxDateField from "../../dateComponents/sgxDateField";
 import SectionTitle from "../components/SectionTitle";
 import CreateRelatedButton from "../components/CreateRelatedButton";
 import UserRoleSection from "./UserRoleSection";
+import HierarchicalUnitSection from "./HierarchicalUnitSection";
 
 const redirect = (basePath, id, data) => `/users/${data.id}/show`;
 
@@ -43,6 +44,7 @@ const UserEdit = props => {
                     label="resources.users.buttons.linkRole"
                 />
                 <UserRoleSection/>
+                <HierarchicalUnitSection {...props}/>
             </SimpleForm>
         </Edit>
     );

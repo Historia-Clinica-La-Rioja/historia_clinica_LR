@@ -366,7 +366,8 @@ const messages = {
                 institutionId: 'Institución',
                 roleId: 'Rol',
                 email: "E-mail",
-                roles: 'Roles'
+                roles: 'Roles',
+                hierarchicalUnits: 'Unidades jerárquicas'
             },
             fieldGroups: {
                 passwordResets: 'Establecer clave de acceso',
@@ -380,7 +381,8 @@ const messages = {
             createRelated: 'Crear Usuario',
             noEmail: "Sin información",
             buttons: {
-                linkRole: 'Asociar rol'
+                linkRole: 'Asociar rol',
+                addHierarchicalUnit: 'Asociar unidad jerárquica'
             }
         },
         admin: {

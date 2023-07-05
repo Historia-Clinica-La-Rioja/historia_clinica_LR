@@ -4,7 +4,7 @@ import {
     SimpleShowLayout,
     ReferenceField,
     EmailField,
-    useTranslate
+    useTranslate, usePermissions
 } from 'react-admin';
 
 import PersonReferenceField from '../person/PersonReferenceField';
@@ -14,11 +14,13 @@ import CreateRelatedButton from "../components/CreateRelatedButton";
 import UserRoleSection from "./UserRoleSection";
 import {TextField} from "react-admin";
 import {BooleanField} from "react-admin";
-
+import HierarchicalUnitSection from "./HierarchicalUnitSection";
+import {UNIDADES_JEARQUICAS_FF} from "../institutions/InstitutionShow";
 
 
 const UserShow = props => {
     const translate = useTranslate();
+    const { permissions } = usePermissions();
     return (
         <Show {...props}>
             <SimpleShowLayout>
@@ -38,6 +40,7 @@ const UserShow = props => {
                     label="resources.users.buttons.linkRole"
                 />
                 <UserRoleSection/>
+                { permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <HierarchicalUnitSection {...props}/>}
             </SimpleShowLayout>
         </Show>
     );

@@ -11,7 +11,8 @@ import {
     FunctionField,
     TextField,
     BooleanField,
-    required
+    required,
+    FormDataConsumer
 } from 'react-admin';
 import CustomToolbar from '../components/CustomToolbar';
 import { renderPersonData } from "../hierarchicalunits/HierarchicalUnitShow";
@@ -20,7 +21,58 @@ const personInputData = (person) => {
     return person ? `${person.completeName ? person.completeName : "" } ${person.completeLastName ? person.completeLastName : "" } ${person.identificationNumber ? "- " + person.identificationNumber : "" }` : null;
 };
 
-const HierarchicalUnitStaffCreate = props => {
+const HierarchicalUnitStaffCreate = (props) => {
+
+    return props.location?.state?.record?.userId !== undefined ? (
+        <FormFromUser {...props}/>
+    ) : (
+        <FormFromHierarchicalUnit {...props}/>
+    );
+}
+
+const HierarchicalUnitsByInstitutionId = ({formData, ...rest}) => {
+    return (
+        <ReferenceInput
+            source="hierarchicalUnitId"
+            reference="hierarchicalunits"
+            label="resources.hierarchicalunitstaff.fields.hierarchicalUnitId"
+            filter={{institutionId: formData.institutionId}}
+        >
+            <AutocompleteInput optionText="alias" optionValue="id"/>
+        </ReferenceInput>
+    )
+}
+
+const FormFromUser = (props) => {
+    const userRedirect = `/users/${props.location?.state?.record?.userId}/show`
+    return (
+        <Create {...props}>
+            <SimpleForm redirect={userRedirect} toolbar={<CustomToolbar />}>
+                <ReferenceField
+                    label="resources.userroles.fields.userId"
+                    source="userId" reference="users" link={false}>
+                    <TextField source="username" />
+                </ReferenceField>
+                <ReferenceInput
+                    source="institutionId"
+                    reference="institutions"
+                    label="resources.hierarchicalunits.fields.institutionId"
+                    sort={{ field: 'name', order: 'ASC' }}
+                    filterToQuery={searchText => ({name: searchText})}
+                >
+                    <AutocompleteInput optionText="name" optionValue="id"/>
+                </ReferenceInput>
+                <FormDataConsumer>
+                    {formDataProps => (
+                        <HierarchicalUnitsByInstitutionId {...formDataProps}/>)}
+                </FormDataConsumer>
+                <BooleanInput source="responsible" disabled={false} initialValue={false}/>
+            </SimpleForm>
+        </Create>
+    )
+}
+
+const FormFromHierarchicalUnit = (props) => {
     const redirect = `/hierarchicalunits/${props.location?.state?.record?.hierarchicalUnitId}/show`;
     return (
         <Create {...props}>
@@ -60,7 +112,7 @@ const HierarchicalUnitStaffCreate = props => {
                 </ReferenceManyField>
             </SimpleForm>
         </Create>
-    );
+    )
 }
 
 export default HierarchicalUnitStaffCreate;
