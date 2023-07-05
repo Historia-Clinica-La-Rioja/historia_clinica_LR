@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import net.pladema.establishment.repository.HierarchicalUnitStaffRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -47,6 +48,8 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 
 	private final UserRoleDtoMapper userRoleDtoMapper;
 
+	private final HierarchicalUnitStaffRepository hierarchicalUnitStaffRepository;
+
 	@Value("${test.stress.disable.validation:false}")
 	private boolean disableValidation;
 
@@ -56,7 +59,8 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 								UserDtoMapper userDtoMapper,
 								UserPersonRepository userPersonRepository,
 								UserExternalService userExternalService,
-								UserRoleDtoMapper userRoleDtoMapper) {
+								UserRoleDtoMapper userRoleDtoMapper,
+								HierarchicalUnitStaffRepository hierarchicalUnitStaffRepository) {
 		this.vHospitalUserRepository = vHospitalUserRepository;
 		this.userDtoMapper = userDtoMapper;
 		this.userRepository = userRepository;
@@ -65,6 +69,7 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 		this.userExternalService = userExternalService;
 		this.userRoleRepository = userRoleRepository;
 		this.userRoleDtoMapper = userRoleDtoMapper;
+		this.hierarchicalUnitStaffRepository = hierarchicalUnitStaffRepository;
 	}
 
 	@Override
@@ -144,7 +149,12 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 				.map(inDb -> userDtoMapper.toModel(dto, inDb))
 				.map(userRepository::save)
 				.flatMap(u -> vHospitalUserRepository.findById(u.getId()))
-				.map(userDtoMapper::fromVHospitalUserToDto)
+				.map( hu -> {
+					BackofficeUserDto buDto = userDtoMapper.fromVHospitalUserToDto(hu);
+					if (!dto.getEnable() && hu.getEnable())
+						deleteStaffFromHierarchicalUnit(buDto.getId());
+					return buDto;
+				})
 				.orElseThrow(() -> new BackofficeUserException(BackofficeUserExceptionEnum.UNEXISTED_USER,
 						String.format("El usuario %s no existe", dto.getId())));
 	}
@@ -183,5 +193,10 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 		if(userRepository.findByUsername(userDto.getUsername()).isPresent()) {
 			throw new BackofficeUserException(BackofficeUserExceptionEnum.USER_ALREADY_EXISTS, "El username ya existe en el sistema");
 		}
+	}
+
+	private void deleteStaffFromHierarchicalUnit(Integer userId) {
+		if (!hierarchicalUnitStaffRepository.findByUserId(userId).isEmpty())
+			hierarchicalUnitStaffRepository.deleteHierarchicalUnitStaffByUserId(userId);
 	}
 }

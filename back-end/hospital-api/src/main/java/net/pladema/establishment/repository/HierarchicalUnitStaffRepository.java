@@ -3,6 +3,7 @@ package net.pladema.establishment.repository;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.establishment.repository.entity.HierarchicalUnitStaff;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -31,5 +32,20 @@ public interface HierarchicalUnitStaffRepository extends SGXAuditableEntityJPARe
 	Optional<HierarchicalUnitStaff> findByHierarchicalUnitIdAndUserId(@Param("hierarchicalUnitId") Integer hierarchicalUnitId,
 																		@Param("userId") Integer userId);
 
+	@Transactional
+	@Query(value = "SELECT hus " +
+			"FROM HierarchicalUnitStaff hus " +
+			"WHERE hus.userId = :userId " +
+			"AND hus.deleteable.deleted IS FALSE")
+	List<HierarchicalUnitStaff> findByUserId(@Param("userId") Integer userId);
+
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE HierarchicalUnitStaff hus "
+			+ "SET hus.deleteable.deleted = true "
+			+ ", hus.deleteable.deletedOn = CURRENT_TIMESTAMP "
+			+ ", hus.deleteable.deletedBy = ?#{ principal.userId } "
+			+ "WHERE hus.userId = :userId" )
+	void deleteHierarchicalUnitStaffByUserId(@Param("userId") Integer userId);
 
 }
