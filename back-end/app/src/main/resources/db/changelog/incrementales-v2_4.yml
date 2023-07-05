@@ -134,3 +134,56 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: sector
               validate: true
+       
+    - changeSet:
+        id: epidemiological_week-createTable
+        comment: Create table epidemiological_week
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: epidemiological_week
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_epidemiological_week
+                    name: id
+                    type: int
+                - column:
+                    name: start_date
+                    type: date
+                - column:
+                    name: end_date
+                    type: date
+                - column:
+                    name: epidemiological_week_number
+                    type: smallint
+
+    - changeSet:
+        id: epidemiological_week-table-add-data
+        author: mmalyvarni
+        context: "!schema-only"
+        changes:
+          - sql:
+              endDelimiter: ;;
+              sql: |-
+                DO $$
+                DECLARE
+                  startDate DATE;
+                  endDate DATE;
+                  epidemiologicalWeekNumber SMALLINT;
+                BEGIN
+                  startDate := '2020-01-01';
+                  endDate := '2020-01-04';
+                  epidemiologicalWeekNumber := 1;
+                  FOR iteration IN 0..209 LOOP
+                      INSERT INTO epidemiological_week(start_date, end_date, epidemiological_week_number) VALUES(startDate, endDate, epidemiologicalWeekNumber);
+                      startDate := endDate + INTERVAL '1 days';
+                      endDate := startDate + INTERVAL '6 days';
+                      epidemiologicalWeekNumber := epidemiologicalWeekNumber + 1;
+                      IF (epidemiologicalWeekNumber > 52 AND EXTRACT(YEAR FROM startDate) != 2020) OR (epidemiologicalWeekNumber > 53 AND EXTRACT(YEAR FROM startDate) = 2020) THEN
+                        epidemiologicalWeekNumber := 1;
+                      END IF;
+                  END LOOP;
+                END $$;
