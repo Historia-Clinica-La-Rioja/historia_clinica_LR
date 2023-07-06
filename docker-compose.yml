@@ -31,15 +31,15 @@ services:
       # Opcional Tableros
       CUBEJS_API_URL: http://hsi-cubejs:4000/cubejs-api/v1
       # Opcional Broker MQTT
-      MQTT_CLIENT_CONNECTION: true
+      MQTT_CLIENT_CONNECTION: "true"
       MQTT_SERVER_ADDRESS: tcp://hsi-mosquitto:1883
       MQTT_CLIENT_USERNAME: HSI
       MQTT_CLIENT_PASSWORD: hsiPassword
       # Opcional Mails con mailhog (no tiene SSL ni auth)
       SMTP_HOST: hsi-mails
       SMTP_PORT: 1025
-      SMTP_AUTH: false
-      SMTP_SSL: false
+      SMTP_AUTH: "false"
+      SMTP_SSL: "false"
     volumes:
       - ./.docker-data/documents/:/var/hsi/documents
     ports:
