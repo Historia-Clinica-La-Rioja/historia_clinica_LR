@@ -44,7 +44,7 @@
 					<input matInput id="date" [matDatepicker]="myDatepicker" formControlName="date"
 						   [min]="minDate" [max]="this.today">
 					<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
-					<mat-datepicker #myDatepicker startView="multi-year" (yearSelected)="chosenYearHandler($event)"
+					<mat-datepicker #myDatepicker (yearSelected)="chosenYearHandler($event)"
 									(monthSelected)="chosenMonthHandler($event)">
 					</mat-datepicker>
 					<mat-error *ngIf="!selectedDateIsTodayOrBefore()" translate="internaciones.internacion-paciente.vacunas-summary.INVALID_DATE"></mat-error>
