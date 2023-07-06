@@ -32,8 +32,8 @@ import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -63,6 +63,7 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 	public List<CHDocumentSummaryBo> getPatientClinicHistory(Integer patientId, LocalDate from, LocalDate to) {
 
 		List<VClinicHistory> resultList = repository.getPatientClinicHistory(patientId, LocalDateTime.of(from, LocalTime.MIN), LocalDateTime.of(to, LocalTime.MAX));
+		filterCancelledOrders(resultList);
 
 		return  resultList
 				.stream()
@@ -72,7 +73,10 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 
 	@Override
 	public List<CHDocumentBo> getClinicHistoryDocuments(List<Long> ids) {
-		return repository.findAllById(ids)
+		List<VClinicHistory> resultList = repository.findAllById(ids);
+		filterCancelledOrders(resultList);
+
+		return resultList
 				.stream()
 				.map(this::mapToBo)
 				.collect(Collectors.toList());
@@ -88,6 +92,11 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 	public Optional<HistoricClinicHistoryDownloadBo> getPatientClinicHistoryLastDownload(Integer patientId, Integer institutionId){
 		var lastDownload = historicClinicHistoryDownloadRepository.getPatientClinicHistoryHistoricDownloads(patientId, institutionId).stream().findFirst();
 		return lastDownload.map(HistoricClinicHistoryDownloadBo::new);
+	}
+
+	private List<VClinicHistory> filterCancelledOrders(List<VClinicHistory> documents){
+		documents.removeIf(document -> document.getDocumentTypeId().equals(EDocumentType.ORDER.getId()) && (document.getHealthConditionSummary().getServiceRequestStudies() == null || document.getHealthConditionSummary().getServiceRequestStudies().isBlank()));
+		return documents;
 	}
 
 	private CHDocumentBo mapToBo(VClinicHistory row){
@@ -109,8 +118,8 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 		result.setId(row.getId());
 		result.setInstitution(row.getInstitution());
 		result.setProfessional(professionalCompleteName);
-		result.setStartDate(row.getStartDate() != null ? row.getStartDate() : row.getCreatedOn());
-		result.setEndDate(row.getEndDate() != null ? row.getEndDate() : row.getCreatedOn());
+		result.setStartDate(row.getStartDate().atZone(ZoneId.of("UTC-3")).toLocalDateTime());
+		result.setEndDate(row.getEndDate() != null ? row.getEndDate().atZone(ZoneId.of("UTC-3")).toLocalDateTime() : row.getCreatedOn().atZone(ZoneId.of("UTC-3")).toLocalDateTime());
 		result.setEncounterType(getEncounterType(row));
 		result.setDocumentType(getDocumentType(row));
 		result.setProblems(mapProblems(row.getHealthConditionSummary().getProblems()));
@@ -119,8 +128,8 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 
 	private String mapProblems(String problems){
 		if(problems.isBlank()) return problems;
-		int startIndex = problems.contains("Principal:") ? problems.indexOf("Principal:") + 11 : (problems.contains("Otro:") ? problems.indexOf("Otro:") + 6 : problems.indexOf("Problemas:") + 11);
-		int endIndex = problems.contains("|") ? problems.indexOf("|") : problems.length();
+		int startIndex = problems.contains("Principal:") ? problems.indexOf("Principal:") + 11 : (problems.contains("Otro:") ? problems.indexOf("Otro:") + 6 : problems.indexOf(":") + 1);
+		int endIndex = problems.contains("|(") ? problems.indexOf("|(") : (problems.contains("|") ? problems.indexOf("|") : problems.length());
 		return problems.substring(startIndex, endIndex);
 	}
 
@@ -128,7 +137,8 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 		if(row.getSourceTypeId().equals(ESourceType.HOSPITALIZATION.getId())
 			|| (row.getSourceTypeId().equals(ESourceType.ORDER.getId()) && (row.getRequestSourceTypeId().equals(ESourceType.HOSPITALIZATION.getId()))))
 			return ECHEncounterType.HOSPITALIZATION;
-		if(row.getSourceTypeId().equals(ESourceType.EMERGENCY_CARE.getId()))
+		if(row.getSourceTypeId().equals(ESourceType.EMERGENCY_CARE.getId())
+			|| (row.getSourceTypeId().equals(ESourceType.ORDER.getId()) && (row.getRequestSourceTypeId().equals(ESourceType.EMERGENCY_CARE.getId()))))
 			return ECHEncounterType.EMERGENCY_CARE;
 		return ECHEncounterType.OUTPATIENT;
 	}
@@ -136,8 +146,10 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 	private ECHDocumentType getDocumentType(VClinicHistory row){
 		if (row.getDocumentTypeId().equals(EDocumentType.EPICRISIS.getId()))
 			return ECHDocumentType.EPICRISIS;
-		if (row.getDocumentTypeId().equals(EDocumentType.RECIPE.getId()) || row.getDocumentTypeId().equals(EDocumentType.ORDER.getId()) || row.getDocumentTypeId().equals(EDocumentType.INDICATION.getId()))
+		if (row.getDocumentTypeId().equals(EDocumentType.RECIPE.getId()) || row.getDocumentTypeId().equals(EDocumentType.INDICATION.getId()))
 			return ECHDocumentType.MEDICAL_PRESCRIPTIONS;
+		if (row.getDocumentTypeId().equals(EDocumentType.ORDER.getId()))
+			return ECHDocumentType.REPORTS;
 		if (row.getDocumentTypeId().equals(EDocumentType.EMERGENCY_CARE.getId()) || row.getDocumentTypeId().equals(EDocumentType.IMMUNIZATION.getId()))
 			return ECHDocumentType.OTHER;
 		return ECHDocumentType.CLINICAL_NOTES;

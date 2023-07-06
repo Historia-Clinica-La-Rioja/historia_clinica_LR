@@ -88,14 +88,14 @@
             <tr>
                 <td th:text="${encounterId}"></td>
                 <td th:text="${encounterType}"></td>
-                <td th:text="${#temporals.format(startDate, 'dd-MM-yyyy HH:mm') + ' hs'}"></td>
-                <td th:text="${#temporals.format(endDate, 'dd-MM-yyyy HH:mm') + ' hs'}"></td>
+                <td th:if="${startDate != null}" th:text="${#temporals.format(startDate, 'dd-MM-yyyy HH:mm') + ' hs'}"></td>
+                <td th:if="${endDate != null}" th:text="${#temporals.format(endDate, 'dd-MM-yyyy HH:mm') + ' hs'}"></td>
             </tr>
         </table>
         <br/>
         <table>
             <tr>
-                <th>Institucion:</th>
+                <th>Institución:</th>
                 <th>Sector/Servicio:</th>
                 <th>Lugar: </th>
             </tr>
@@ -128,13 +128,13 @@
                 <th>Nombre y apellido</th>
                 <th>Profesión</th>
                 <th>Especialidad</th>
-                <th>Matricula</th>
+                <th>Matrícula</th>
             </tr>
             <tr>
                 <td th:text="${professionalCompleteName}"></td>
-                <td th:text="${professionalProfession}"></td>
+                <td th:text="${professionalProfessions}"></td>
                 <td th:text="${clinicalSpecialty}"></td>
-                <td th:text="${(nationalLicense != null ? nationalLicense : '') + '|' + stateLicense != null ? stateLicense : ''}"></td>
+                <td th:text="${licenses}"></td>
             </tr>
         </table>
         <hr/>
@@ -143,7 +143,7 @@
     <footer th:fragment="footer">
         <hr/>
         <div>
-            <span th:text="'Historia Clinica impresa el ' + ${printDate} + ' a las ' + ${printTime} + ' por ' + ${user} + ' en ' + ${currentInstitution}"></span>
+            <span th:text="'Historia Clinica impresa el ' + ${#temporals.format(printDate, 'dd-MM-yyyy HH:mm')} + ' por ' + ${user} + ' en ' + ${currentInstitution}"></span>
             <span style="float:right;" th:text="'Página ' + ${actualPage} + ' de ' + ${totalPages}"></span>
         </div>
     </footer>

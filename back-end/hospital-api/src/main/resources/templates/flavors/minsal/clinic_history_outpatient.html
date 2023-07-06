@@ -18,13 +18,13 @@
     <div th:include="fragments/clinic_history_general.html :: encounterData"></div>
     <div th:include="fragments/clinic_history_general.html :: professionalData"></div>
     <div>
-        <h2>Registro Clinico</h2>
+        <h2>Registro Clínico</h2>
         <br/>
         <table class="ch_table">
             <tbody>
             <tr class="ch_tr" th:each="record, iter: ${clinicalRecords}">
                 <th style="text-align: center" th:text="${record.prefix}"></th>
-                <td th:text="${record.description}"></td>
+                <td th:utext="${record.description}" ></td>
             </tr>
             </tbody>
         </table>

@@ -115,7 +115,7 @@ public class ClinicHistoryController {
 		if (result!=null){
 			return StoredFileResponse.sendFile(result);
 		}
-		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 	}
 
 	@GetMapping(value = "/{patientId}/lastDownload")

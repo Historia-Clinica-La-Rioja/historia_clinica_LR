@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service.odontology;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SharedOdontologyConsultationPort {
 
@@ -9,4 +10,5 @@ public interface SharedOdontologyConsultationPort {
 	void deleteLastOdontogramDrawingFromPatient(Integer patientId);
 	void deleteToothIndicesFromPatient(Integer patientId);
 	void modifyLastOdontogramDrawing(List<OdontologyDiagnosticProcedureInfoDto> odp, Integer newPatientId);
+	Optional<Integer> getPatientMedicalCoverageId(Integer id);
 }

@@ -8,6 +8,7 @@ import lombok.ToString;
 import net.pladema.clinichistory.documents.infrastructure.output.repository.entity.VClinicHistory;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,8 +52,8 @@ public class CHDocumentBo {
 		this.institutionId = vClinicHistory.getInstitutionId();
 		this.institution = vClinicHistory.getInstitution();
 		this.requestSourceTypeId = vClinicHistory.getRequestSourceTypeId();
-		this.startDate = vClinicHistory.getStartDate() != null ? vClinicHistory.getStartDate() : vClinicHistory.getCreatedOn();
-		this.endDate = vClinicHistory.getEndDate() != null ? vClinicHistory.getEndDate() : vClinicHistory.getCreatedOn();
+		this.startDate = vClinicHistory.getStartDate();
+		this.endDate = vClinicHistory.getEndDate();
 		this.patientAgePeriod = vClinicHistory.getPatientAgePeriod();
 		this.encounterType = encounterType;
 		this.documentType = documentType;

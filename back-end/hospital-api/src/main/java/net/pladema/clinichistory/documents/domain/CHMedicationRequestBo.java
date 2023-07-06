@@ -21,7 +21,7 @@ public class CHMedicationRequestBo extends CHDocumentBo{
 	@Override
 	public List<ClinicalRecordBo> getClinicalRecords() {
 		List<ClinicalRecordBo> result = new ArrayList<>();
-		if(medicines!=null && !medicines.isBlank()) result.add(new ClinicalRecordBo("Medicación", medicines.substring(medicines.indexOf(SPECIAL_CHARACTER)+1)));
+		if(medicines!=null && !medicines.isBlank()) result.add(new ClinicalRecordBo("Medicación", medicines.replace("\\n", ".<br />")));
 		return result;
 	}
 

@@ -3,6 +3,8 @@ package net.pladema.clinichistory.documents.infrastructure.output.repository;
 import ar.lamansys.refcounterref.infraestructure.output.repository.counterreference.CounterReferenceRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.nursing.SharedNursingConsultationPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.odontology.SharedOdontologyConsultationPort;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
@@ -18,9 +20,11 @@ import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.patient.service.PatientMedicalCoverageService;
 import net.pladema.staff.application.ports.HealthcareProfessionalStorage;
-import net.pladema.staff.domain.ProfessionBo;
-import net.pladema.staff.service.domain.ELicenseNumberTypeBo;
+import net.pladema.staff.domain.LicenseNumberBo;
 
+import net.pladema.staff.domain.ProfessionBo;
+import net.pladema.staff.domain.ProfessionSpecialtyBo;
+import net.pladema.staff.service.domain.ELicenseNumberTypeBo;
 import net.pladema.user.service.HospitalUserService;
 
 import org.springframework.stereotype.Service;
@@ -33,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ClinicHistoryContextBuilder {
@@ -50,6 +55,8 @@ public class ClinicHistoryContextBuilder {
 	private final DocumentAppointmentService documentAppointmentService;
 	private final DiaryService diaryService;
 	private final FeatureFlagsService featureFlagsService;
+	private final SharedOdontologyConsultationPort sharedOdontologyConsultationPort;
+	private final SharedNursingConsultationPort sharedNursingConsultationPort;
 
 	public ClinicHistoryContextBuilder(PatientExternalService patientExternalService,
 									   SharedInstitutionPort sharedInstitutionPort,
@@ -63,7 +70,9 @@ public class ClinicHistoryContextBuilder {
 									   PatientMedicalCoverageService patientMedicalCoverageService,
 									   DocumentAppointmentService documentAppointmentService,
 									   DiaryService diaryService,
-									   FeatureFlagsService featureFlagsService) {
+									   FeatureFlagsService featureFlagsService,
+									   SharedOdontologyConsultationPort sharedOdontologyConsultationPort,
+									   SharedNursingConsultationPort sharedNursingConsultationPort) {
 		this.patientExternalService = patientExternalService;
 		this.sharedInstitutionPort = sharedInstitutionPort;
 		this.healthcareProfessionalStorage = healthcareProfessionalStorage;
@@ -77,6 +86,8 @@ public class ClinicHistoryContextBuilder {
 		this.documentAppointmentService = documentAppointmentService;
 		this.diaryService = diaryService;
 		this.featureFlagsService = featureFlagsService;
+		this.sharedOdontologyConsultationPort = sharedOdontologyConsultationPort;
+		this.sharedNursingConsultationPort = sharedNursingConsultationPort;
 	}
 
 
@@ -89,8 +100,8 @@ public class ClinicHistoryContextBuilder {
 		//Encounter Info
 		ctx.put("encounterId", document.getSourceId());
 		ctx.put("encounterType", document.getEncounterType().getValue());
-		ctx.put("startDate", document.getStartDate());
-		ctx.put("endDate", document.getEndDate());
+		if (document.getStartDate() != null) ctx.put("startDate", document.getStartDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
+		if (document.getEndDate() != null) ctx.put("endDate", document.getEndDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
 
 		ctx.put("institution", document.getInstitution());
 		//Find the appointment related, if exists
@@ -108,18 +119,25 @@ public class ClinicHistoryContextBuilder {
 		});
 		//Professional Info
 		var professionalInformation = healthcareProfessionalStorage.fetchProfessionalByUserId(document.getCreatedBy());
-		ctx.put("professionalCompleteName", (selfPerceived && professionalInformation.getNameSelfDetermination() != null && !professionalInformation.getNameSelfDetermination().isBlank() ? professionalInformation.getNameSelfDetermination() : professionalInformation.getFirstName()) + ' ' + professionalInformation.getLastName());
-		var professionalRelatedProfession = professionalInformation.getProfessions().stream().filter(profession -> profession.getSpecialties().stream().anyMatch(specialty -> specialty.getSpecialty().getName().equals(document.getClinicalSpecialty()))).findFirst();
-		ctx.put("professionalProfession", professionalRelatedProfession.<Object>map(ProfessionBo::getDescription).orElse(null));
-		professionalRelatedProfession.ifPresent(profession -> {
-			ctx.put("clinicalSpecialty", document.getClinicalSpecialty());
-
-			var nationalLicenseData = profession.getLicenses().stream().filter(license -> license.getType().equals(ELicenseNumberTypeBo.NATIONAL)).findFirst();
-			nationalLicenseData.ifPresent(licenseNumberBo -> ctx.put("nationalLicense", licenseNumberBo.getNumber()));
-
-			var stateProvinceData = profession.getLicenses().stream().filter(license -> license.getType().equals(ELicenseNumberTypeBo.PROVINCE)).findFirst();
-			stateProvinceData.ifPresent(licenseNumberBo -> ctx.put("stateLicense", licenseNumberBo.getNumber()));
-		});
+		ctx.put("professionalCompleteName", (selfPerceived ? professionalInformation.getNameSelfDetermination() : professionalInformation.getFirstName()) + ' ' + professionalInformation.getLastName());
+		ctx.put("clinicalSpecialty", document.getClinicalSpecialty());
+		var professionalRelatedProfessions = professionalInformation.getProfessions().stream()
+				.filter(profession -> profession.getSpecialties().stream().anyMatch(specialty -> specialty.getSpecialty().getName().equals(document.getClinicalSpecialty()))).collect(Collectors.toList());
+		if (!professionalRelatedProfessions.isEmpty()){
+			var professions = professionalRelatedProfessions.stream().map(ProfessionBo::getDescription).collect(Collectors.toList());
+			ctx.put("professionalProfessions", professions.toString().substring(1, professions.toString().length() - 1));
+			var specialties = new ArrayList<ProfessionSpecialtyBo>();
+			professionalRelatedProfessions.forEach(profession -> {
+				specialties.addAll(profession.getSpecialties().stream().filter(specialty -> specialty.getSpecialty().getName().equals(document.getClinicalSpecialty())).collect(Collectors.toList()));
+			});
+			var licenses = new ArrayList<LicenseNumberBo>();
+			specialties.forEach(specialty -> {
+				licenses.addAll(specialty.getLicenses());
+			});
+			var licensesWithType = new ArrayList<String>();
+			licenses.forEach(license -> licensesWithType.add(license.getType().getAcronym() + ": " + license.getNumber()));
+			if(!licensesWithType.isEmpty()) ctx.put("licenses", licensesWithType.toString().substring(1, licensesWithType.toString().length() - 1));
+		}
 		//Clinical Records
 		List<ClinicalRecordBo> clinicalRecords = document.getClinicalRecords();
 		ctx.put("clinicalRecords", clinicalRecords);
@@ -127,32 +145,26 @@ public class ClinicHistoryContextBuilder {
 		var printDateTime = LocalDateTime.now().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3"));
 		var userInfo = hospitalUserService.getUserPersonInfo(UserInfo.getCurrentAuditor());
 		ctx.put("user", (selfPerceived && userInfo.getNameSelfDetermination() != null && userInfo.getNameSelfDetermination().isBlank() ? userInfo.getNameSelfDetermination() : userInfo.getFirstName()) + ' ' + userInfo.getLastName());
-		ctx.put("printDate", LocalDate.from(printDateTime));
-		ctx.put("printTime", String.valueOf(printDateTime.getHour()) + ':' + String.valueOf(printDateTime.getMinute()));
+		ctx.put("printDate", printDateTime);
 		ctx.put("currentInstitution", sharedInstitutionPort.fetchInstitutionById(currentInstitutionId).getName());
 
 		return ctx;
-	}
-
-	private List<ClinicalRecordBo> toClinicalRecords(List<String> list){
-		List<ClinicalRecordBo> result = new ArrayList<>();
-		for (String item: list){
-			int index = item.indexOf(":");
-			result.add(new ClinicalRecordBo(item.substring(0, index), item.substring(index + 1)));
-		}
-		return result;
 	}
 
 	private Optional<Integer> getMedicalCoverageId(CHDocumentBo documentBo){
 		switch (documentBo.getDocumentTypeId()){
 			case (DocumentType.OUTPATIENT):
 				return outpatientConsultationRepository.getPatientMedicalCoverageId(documentBo.getSourceId());
-			case (DocumentType.RECIPE):
+			case (DocumentType.ORDER):
 				return serviceRequestRepository.getMedicalCoverageId(documentBo.getSourceId());
 			case (DocumentType.COUNTER_REFERENCE):
 				return counterReferenceRepository.getPatientMedicalCoverageId(documentBo.getSourceId());
-			case (DocumentType.ORDER):
+			case (DocumentType.RECIPE):
 				return medicationRequestRepository.getMedicalCoverageId(documentBo.getSourceId());
+			case (DocumentType.ODONTOLOGY):
+				return sharedOdontologyConsultationPort.getPatientMedicalCoverageId(documentBo.getSourceId());
+			case (DocumentType.NURSING):
+				return sharedNursingConsultationPort.getPatientMedicalCoverageId(documentBo.getSourceId());
 			default:
 				return Optional.empty();
 		}

@@ -588,6 +588,7 @@ export interface BreathingDto extends Serializable {
 }
 
 export interface CHDocumentSummaryDto {
+    documentType: string;
     encounterType: string;
     endDate: string;
     id: number;

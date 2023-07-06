@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class NursingConsultationStorageImpl implements NursingConsultationStorage {
@@ -47,6 +48,17 @@ public class NursingConsultationStorageImpl implements NursingConsultationStorag
 		LOG.debug("Input parameters -> NursingConsultationIds{}", ids);
 
 		List<NursingConsultation> result = nursingConsultationRepository.findAllById(ids);
+
+		LOG.debug("Output -> {}", result);
+
+		return result;
+	}
+
+	@Override
+	public Optional<Integer> getPatientMedicalCoverageId(Integer id){
+		LOG.debug("Input parameters -> id{}", id);
+
+		Optional<Integer> result = nursingConsultationRepository.getPatientMedicalCoverageId(id);
 
 		LOG.debug("Output -> {}", result);
 

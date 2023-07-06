@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Setter
 @ToString
 @NoArgsConstructor
-public class CHDocumentHealthConditionSummary {
+public class CHDocumentSummary {
 
 	private String problems;
 	private String familyRecord;
@@ -25,16 +25,23 @@ public class CHDocumentHealthConditionSummary {
 	private String medicines;
 	private String allergies;
 	private String vaccines;
+	private String bloodType;
+	private String anthropometricData;
+	private String epicrisisOtherCircumstances;
+	private String epicrisisExternalCause;
+	private String epicrisisObstetricEvent;
 	private String riskFactors;
-	private String outpatientConsultationReasons;
+	private String pediatricRiskFactors;
+	private String outpatientReferences;
+	private String serviceRequestCategory;
+	private String serviceRequestStudies;
+	private String consultationReasons;
 	private String odontologyProcedure;
 	private String odontologyDiagnostic;
-
-	public List<String> getList(){
-		List<String> result = Arrays.asList(problems, familyRecord, personalRecord, medicines, allergies, riskFactors, outpatientConsultationReasons, outpatientConsultationReasons, odontologyProcedure, odontologyDiagnostic, odontologyProcedure);
-		return result.stream()
-				.filter(healthCondition -> (healthCondition != null && !healthCondition.isBlank()))
-				.collect(Collectors.toList());
-	}
+	private String odontologyPieces;
+	private String indication;
+	private String referenceCounterReference;
+	private String counterReferenceClosure;
+	private String notes;
 
 }

@@ -47,7 +47,7 @@ public class DownloadClinicHistoryDocuments {
 		log.debug("Input parameters -> ids {}", ids);
 		List<CHDocumentBo> documents = clinicHistoryStorage.getClinicHistoryDocuments(ids)
 				.stream()
-				.filter(doc -> doc.getEncounterType().equals(ECHEncounterType.OUTPATIENT))
+				.filter(doc -> doc!= null && doc.getEncounterType().equals(ECHEncounterType.OUTPATIENT))
 				.collect(Collectors.toList());
 		if(!documents.isEmpty()){
 			Integer patientId = documents.stream().findFirst().get().getPatientId();

@@ -242,7 +242,8 @@ export class PrintAmbulatoriaComponent implements OnInit {
 				encounterType: EncounterType[data.encounterType],
 				institution: data.institution,
 				problems: data.problems,
-				professional: data.professional
+				professional: data.professional,
+				documentType: undefined
 			}
 		}
 		return null;
