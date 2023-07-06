@@ -4,6 +4,7 @@ import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import {
+	AppointmentOrderImageExistCheckDto,
 	CompleteRequestDto,
 	DiagnosticReportInfoDto, DiagnosticReportInfoWithFilesDto,
 	PrescriptionDto,
@@ -48,9 +49,9 @@ export class ServiceRequestService {
 		return this.http.get<DiagnosticReportInfoDto[]>(url, { params: queryParams });
 	}
 
-	getStudyStatus(patientId: number, serviceRequestId: number): Observable<boolean>{
+	getStudyStatus(patientId: number, serviceRequestId: number): Observable<AppointmentOrderImageExistCheckDto>{
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${serviceRequestId}/existCheck`;
-		return this.http.get<boolean>(url);
+		return this.http.get<AppointmentOrderImageExistCheckDto>(url);
 	}
 
 	create(patientId: number, prescriptionDto: PrescriptionDto): Observable<number[]> {

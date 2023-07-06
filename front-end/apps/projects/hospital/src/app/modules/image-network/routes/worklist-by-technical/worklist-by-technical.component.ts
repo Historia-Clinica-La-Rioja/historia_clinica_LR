@@ -17,7 +17,7 @@ import {
 	AppointmentState,
 } from '@turnos/constants/appointment';
 import { Observable } from 'rxjs';
-import { FinishStudyComponent } from "../../dialogs/finish-study/finish-study.component";
+import { FinishStudyComponent, StudyInfo } from "../../dialogs/finish-study/finish-study.component";
 import { DeriveReportComponent } from '../../dialogs/derive-report/derive-report.component';
 
 const PAGE_SIZE_OPTIONS = [10];
@@ -177,13 +177,14 @@ export class WorklistByTechnicalComponent implements OnInit {
 	}
 
 	private openFinishStudyDialog() {
+        const data: StudyInfo = {
+            appointmentId: this.selectedAppointment.id,
+            patientId: this.selectedAppointment.patient.id,
+        }
 		const dialogRef = this.dialog.open(FinishStudyComponent, {
 			width: '35%',
 			autoFocus: false,
-			data: {
-				appointmentId: this.selectedAppointment.id,
-                patientId: this.selectedAppointment.patient.id
-			}
+			data
 		});
 
 		dialogRef.afterClosed().subscribe(result => {

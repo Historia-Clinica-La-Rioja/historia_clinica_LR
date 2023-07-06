@@ -27,15 +27,15 @@ const IMAGE_DIAGNOSIS = 'Diagnóstico por imágenes';
 	providers: [ActionsButtonService]
 })
 export class StudyComponent implements OnInit {
-
+	
 	@Input() set studies(studies: DiagnosticReportInfoDto[]){
 		studies.forEach(study => {
 			if (study.category === IMAGE_DIAGNOSIS) {
-				this.prescripcionesService.getPrescriptionStatus(this.patientId, study.serviceRequestId).subscribe( hasActiveAppointment => {
-					this._studies.push(this.mapToStudyInformation(study, hasActiveAppointment));
+				this.prescripcionesService.getPrescriptionStatus(this.patientId, study.serviceRequestId).subscribe( documentInfo => {
+					this._studies.push(this.mapToStudyInformation(study, documentInfo.hasActiveAppointment, documentInfo.appointmentId, documentInfo.documentStatus));
 				})
 			} else {
-				this._studies.push(this.mapToStudyInformation(study, false));
+				this._studies.push(this.mapToStudyInformation(study));
 			}
 		})
 	};
@@ -70,11 +70,12 @@ export class StudyComponent implements OnInit {
 		this._studies.sort((studyA, studyB) => studyB.diagnosticInformation.creationDate.getTime() - studyA.diagnosticInformation.creationDate.getTime())
 	}
 
-	private mapToStudyInformation(report: DiagnosticReportInfoDto, hasActiveAppointment: boolean, appointmentId?: number): StudyInformation {
+	private mapToStudyInformation(report: DiagnosticReportInfoDto, hasActiveAppointment?: boolean, appointmentId?: number, reportStatus?: boolean): StudyInformation {
         return {
-            'diagnosticInformation': report,
+            diagnosticInformation: report,
             hasActiveAppointment,
-			appointmentId
+			appointmentId,
+			reportStatus
         }
     }
 
@@ -196,5 +197,6 @@ export class StudyComponent implements OnInit {
 export interface StudyInformation {
     diagnosticInformation: DiagnosticReportInfoDto;
     hasActiveAppointment: boolean;
-	appointmentId?: number
+	appointmentId?: number,
+	reportStatus?: boolean
 }

@@ -1,15 +1,13 @@
-.smaller-font {
+.report-label {
     font-size: 0.8rem;
+    color: orange;
+    margin-left: 10px;
 }
 
 .report-status {
     display: flex;
     text-align: center;
     align-items: center;
-}
-
-.orange {
-    color: orange;
 }
 
 @media (max-width: 1280px) {
@@ -19,4 +17,7 @@
 	.report-status {
 		display: block;
 	}
+    .report-label {
+        margin-left: 0;
+    }
 }

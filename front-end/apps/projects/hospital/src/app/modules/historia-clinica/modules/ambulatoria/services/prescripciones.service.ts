@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+	AppointmentOrderImageExistCheckDto,
 	CompleteRequestDto,
 	DiagnosticReportInfoDto,
 	DiagnosticReportInfoWithFilesDto,
@@ -72,7 +73,7 @@ export class PrescripcionesService {
 			return this.medicationRequestService.medicationRequestListByRoles(patientId, statusId, medicationStatement, healthCondition);
 	}
 
-	getPrescriptionStatus(patientId: number, serviceRequestId: number): Observable<boolean>{
+	getPrescriptionStatus(patientId: number, serviceRequestId: number): Observable<AppointmentOrderImageExistCheckDto>{
 		return this.serviceRequestService.getStudyStatus(patientId, serviceRequestId);
 	}
 

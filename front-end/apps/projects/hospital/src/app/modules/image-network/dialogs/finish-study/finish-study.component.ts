@@ -22,10 +22,7 @@ export class FinishStudyComponent implements OnInit {
 	observations: string;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: {
-			appointmentId: number,
-			patientId: number
-		},
+		@Inject(MAT_DIALOG_DATA) public data: StudyInfo,
 		public dialogRef: MatDialogRef<FinishStudyComponent>,
 		public translateService: TranslateService,
 		private readonly appointmentsService: AppointmentsService,
@@ -87,4 +84,9 @@ export class FinishStudyComponent implements OnInit {
 	closeDialog() {
 		this.dialogRef.close()
 	}
+}
+
+export interface StudyInfo {
+	appointmentId: number,
+	patientId: number,
 }
