@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import {
     Show,
     SimpleShowLayout,
@@ -9,11 +9,14 @@ import {
     ReferenceManyField,
     Datagrid,
     ListButton,
-    usePermissions
+    usePermissions,
+    Tab,
+    TabbedShowLayout,
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
-import {ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE} from "../roles";
+import { ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE } from "../roles";
+import UnidadesJerarquicas from './UnidadesJerarquicas';
 
 const UNIDADES_JEARQUICAS_FF = 'HABILITAR_UNIDADES_JERARQUICAS_EN_DESARROLLO';
 
@@ -110,13 +113,27 @@ const InstitutionShow = props => {
                         <EditButton />
                     </Datagrid>
                 </ReferenceManyField>
-                { permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <SectionTitle label="resources.institutions.fields.hierarchicalUnits"/>}
-                { permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <CreateHierarchicalUnit/>}
-                { permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <ShowHierarchicalUnits/>}
+                {permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <SectionTitle label="resources.institutions.fields.hierarchicalUnits" />}
+                {permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <CreateHierarchicalUnit />}
+                {permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <HierarchicalUnitShow {...props} />}
+
             </SimpleShowLayout>
         </Show>
     );
 }
+
+const HierarchicalUnitShow = (props) => (
+    <Fragment>
+        <TabbedShowLayout>
+            <Tab label="Lista" id="lista">
+                <ShowHierarchicalUnits />
+            </Tab>
+            <Tab label="Grafico" id="grafico">
+                <UnidadesJerarquicas institutionId={props.id} />
+            </Tab>
+        </TabbedShowLayout>
+    </Fragment>
+)
 
 export default InstitutionShow;
 export { CreateHierarchicalUnit, UserIsInstitutionalAdmin, ShowHierarchicalUnits, UNIDADES_JEARQUICAS_FF };
