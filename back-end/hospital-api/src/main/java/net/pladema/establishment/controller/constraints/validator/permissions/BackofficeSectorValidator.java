@@ -1,7 +1,11 @@
 package net.pladema.establishment.controller.constraints.validator.permissions;
 
+import io.jsonwebtoken.lang.Assert;
+import net.pladema.establishment.repository.HierarchicalUnitSectorRepository;
 import net.pladema.establishment.repository.SectorRepository;
 import net.pladema.establishment.repository.entity.Sector;
+import net.pladema.medicalconsultation.doctorsoffice.repository.DoctorsOfficeRepository;
+import net.pladema.medicalconsultation.doctorsoffice.repository.domain.DoctorsOfficeVo;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;
@@ -27,14 +31,22 @@ public class BackofficeSectorValidator implements BackofficePermissionValidator<
 	public static final String NO_CUENTA_CON_SUFICIENTES_PRIVILEGIOS = "No cuenta con suficientes privilegios";
 	private final SectorRepository repository;
 
+	private final DoctorsOfficeRepository doctorsOfficeRepository;
+
+	private final HierarchicalUnitSectorRepository hierarchicalUnitSectorRepository;
+
 	private final BackofficeAuthoritiesValidator authoritiesValidator;
 
 	private final PermissionEvaluator permissionEvaluator;
 
 	public BackofficeSectorValidator(SectorRepository repository,
+									 DoctorsOfficeRepository doctorsOfficeRepository,
+									 HierarchicalUnitSectorRepository hierarchicalUnitSectorRepository,
 									 BackofficeAuthoritiesValidator backofficeAuthoritiesValidator,
 									 PermissionEvaluator permissionEvaluator) {
 		this.repository = repository;
+		this.doctorsOfficeRepository = doctorsOfficeRepository;
+		this.hierarchicalUnitSectorRepository = hierarchicalUnitSectorRepository;
 		this.authoritiesValidator = backofficeAuthoritiesValidator;
 		this.permissionEvaluator = permissionEvaluator;
 	}
@@ -111,6 +123,9 @@ public class BackofficeSectorValidator implements BackofficePermissionValidator<
 			return;
 		Integer institutionId = repository.getInstitutionId(id);
 		hasPermissionByInstitution(institutionId);
+		assertSectorNoDoctorsOffice(id);
+		assertSectorNoChilds(id);
+		assertSectorNoHierarchicalUnits(id);
 	}
 
 	@Override
@@ -148,4 +163,24 @@ public class BackofficeSectorValidator implements BackofficePermissionValidator<
 		if (!permissionEvaluator.hasPermission(authentication, institutionId, "ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE"))
 			throw new PermissionDeniedException(NO_CUENTA_CON_SUFICIENTES_PRIVILEGIOS);
 	}
+
+	private void assertSectorNoDoctorsOffice(Integer id) {
+		Integer institutionId = repository.getInstitutionId(id);
+		List<DoctorsOfficeVo> doctorsOffices = doctorsOfficeRepository.findAllBy(institutionId, id);
+		if (!doctorsOffices.isEmpty())
+			throw new BackofficeValidationException("sector.have.doctors-office");
+	}
+
+	private void assertSectorNoChilds(Integer sectorId){
+		List<Sector> childSectors = repository.getChildSectorsBySectorId(sectorId);
+		if(!childSectors.isEmpty())
+			throw new BackofficeValidationException("sector.have.sector");
+	}
+
+	private void assertSectorNoHierarchicalUnits(Integer sectorId){
+		List<Integer> hierarchicalUnits = hierarchicalUnitSectorRepository.getHierarchicalUnitsBySectorId(sectorId);
+		if(!hierarchicalUnits.isEmpty())
+			throw new BackofficeValidationException("sector.have.hierarchical-unit");
+	}
+
 }

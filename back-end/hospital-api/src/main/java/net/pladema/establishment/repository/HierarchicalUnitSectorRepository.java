@@ -5,8 +5,11 @@ import net.pladema.establishment.repository.entity.HierarchicalUnitSector;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Repository
 public interface HierarchicalUnitSectorRepository extends SGXAuditableEntityJPARepository<HierarchicalUnitSector, Integer> {
@@ -16,5 +19,13 @@ public interface HierarchicalUnitSectorRepository extends SGXAuditableEntityJPAR
 			"FROM HierarchicalUnitSector hus " +
 			"WHERE hus.hierarchicalUnitId = :hierarchicalUnitId AND hus.sectorId = :sectorId " +
 			"AND hus.deleteable.deleted = false")
-	public boolean existsByHierarchicalUnitAndSector(@Param("hierarchicalUnitId") Integer hierarchicalUnitId, @Param("sectorId")Integer sectorId);
+	boolean existsByHierarchicalUnitAndSector(@Param("hierarchicalUnitId") Integer hierarchicalUnitId, @Param("sectorId")Integer sectorId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT hus.hierarchicalUnitId " +
+			"FROM HierarchicalUnitSector hus " +
+			"WHERE hus.sectorId = :sectorId " +
+			"AND hus.deleteable.deleted = false")
+	List<Integer> getHierarchicalUnitsBySectorId(@Param("sectorId") Integer sectorId);
+
 }

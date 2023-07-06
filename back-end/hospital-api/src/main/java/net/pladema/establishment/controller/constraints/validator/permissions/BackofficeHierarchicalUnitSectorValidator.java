@@ -69,7 +69,7 @@ public class BackofficeHierarchicalUnitSectorValidator implements BackofficePerm
 
 	private void assertNotExists(HierarchicalUnitSector entity){
 		if(repository.existsByHierarchicalUnitAndSector(entity.getHierarchicalUnitId(), entity.getSectorId()))
-			throw new BackofficeValidationException("hierarchical_unit.sector.exists");
+			throw new BackofficeValidationException("hierarchical-unit.sector.exists");
 	}
 
 }

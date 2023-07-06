@@ -4,8 +4,11 @@ import net.pladema.establishment.controller.constraints.validator.permissions.Ba
 import net.pladema.establishment.repository.SectorRepository;
 import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.medicalconsultation.doctorsoffice.repository.DoctorsOfficeRepository;
+import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
+import net.pladema.sgx.backoffice.rest.SingleAttributeBackofficeQueryAdapter;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.http.HttpHeaders;
@@ -37,10 +40,10 @@ public class BackofficeSectorController extends AbstractBackofficeController<Sec
 		return new ResponseEntity<>(apiErrors, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 	}
 	
-	public BackofficeSectorController(SectorRepository repository,
-									  DoctorsOfficeRepository doctorsOfficeRepository,
+	public BackofficeSectorController(SectorRepository sectorRepository,
 									  BackofficeSectorValidator sectorValidator) {
-		super(new SectorStore(repository, doctorsOfficeRepository), sectorValidator);
+		super(new BackofficeRepository<>(sectorRepository,
+				new SingleAttributeBackofficeQueryAdapter<Sector>("description")), sectorValidator);
 	}
 
 }
