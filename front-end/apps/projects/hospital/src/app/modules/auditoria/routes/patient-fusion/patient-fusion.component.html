@@ -1,6 +1,12 @@
 <app-content width="full">
 	<section>
-		<h2 class="page-title">{{'pacientes.audit.TITLE_CONTROL_DUPLICATE_PATIENTS' | translate}}</h2>
+		<ng-container *ngIf="isUnlinkPatient ; else noUnlinkPatient">
+			<h2 class="page-title">{{'pacientes.audit.TITLE_UNLINK_PATIENT' | translate}}</h2>
+		</ng-container>
+		<ng-template #noUnlinkPatient>
+			<h2 class="page-title">{{'pacientes.audit.TITLE_CONTROL_DUPLICATE_PATIENTS' | translate}}</h2>
+		</ng-template>
+
 		<section>
 			<button mat-icon-button color="primary" (click)="goToBack()">
 				<mat-icon>arrow_back</mat-icon>
@@ -8,18 +14,22 @@
 			</button>
 		</section>
 		<h3>{{infoPatientToAudit}}</h3>
-		<p>{{'pacientes.audit.LABEL_FILTER' | translate}} {{filterBy | translate}}</p>
+		<p *ngIf="!isUnlinkPatient">{{'pacientes.audit.LABEL_FILTER' | translate}} {{filterBy | translate}}</p>
 	</section>
 
 	<section>
 		<mat-card class="primary background-primary"  fxLayout="row" >
 			<mat-icon>error_outline</mat-icon>
 			<div class="clarifications">
-				<p>{{'pacientes.audit.CLARIFICATION_ONE' | translate}}</p>
-				<p>{{'pacientes.audit.CLARIFICATION_TWO' | translate}}</p>
-				<p>{{'pacientes.audit.CLARIFICATION_THREE' | translate}}</p>
+				<ng-container *ngIf="isUnlinkPatient ; else noUnlinkPatient">
+					<p>{{'pacientes.audit.CLARIFICATION_UNLINK_PATIENT' | translate}}</p>
+				</ng-container>
+				<ng-template #noUnlinkPatient>
+					<p>{{'pacientes.audit.CLARIFICATION_ONE' | translate}}</p>
+					<p>{{'pacientes.audit.CLARIFICATION_TWO' | translate}}</p>
+					<p>{{'pacientes.audit.CLARIFICATION_THREE' | translate}}</p>
+				</ng-template>
 			</div>
-
 		</mat-card>
 	</section>
 	<section>
@@ -122,8 +132,13 @@
 				<p class="warn" *ngIf="validationColumns">{{'pacientes.audit.MESSAGE_VALIDATION_COLUMNS' | translate}}</p>
 			</div>
 
-			<button mat-raised-button color="primary" (click)="merge()">{{'pacientes.audit.LABEL_BUTTON_MERGE' |
+
+			<button *ngIf="!isUnlinkPatient" mat-raised-button color="primary" (click)="merge()">{{'pacientes.audit.LABEL_BUTTON_MERGE' |
 				translate | uppercase}}</button>
+
+			<button *ngIf="isUnlinkPatient" mat-raised-button color="primary" (click)="merge()">{{'pacientes.audit.BUTTON_UNLINK' |
+			translate | uppercase}}</button>
+
 		</div>
 
 		<ng-template #noInfo>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppFeature, DuplicatePatientDto, IdentificationTypeDto, PatientPersonalInfoDto, PatientToMergeDto, PatientType } from '@api-rest/api-model';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { ContextService } from '@core/services/context.service';
@@ -44,7 +44,9 @@ export class PatientFusionComponent implements OnInit {
 	validationTwoSelectedPatients: boolean = false;
 	validationColumns: boolean = false;
 	nameSelfDeterminationFF: boolean;
-	rejectedId:number;
+	rejectedId: number;
+	isUnlinkPatient: boolean = false;
+	patientId: number;
 	patientToMergeAuxKeyId: any = {
 		names: null,
 		identification: null,
@@ -74,7 +76,8 @@ export class PatientFusionComponent implements OnInit {
 		private auditPatientService: AuditPatientService,
 		private patientMasterDataService: PatientMasterDataService, private patientMergeService: PatientMergeService, private dialog: MatDialog,
 		private readonly snackBarService: SnackBarService,
-		private readonly featureFlagService: FeatureFlagService) {
+		private readonly featureFlagService: FeatureFlagService,
+		private route: ActivatedRoute) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 
 	}
@@ -83,10 +86,17 @@ export class PatientFusionComponent implements OnInit {
 		this.patientToAudit = JSON.parse(localStorage.getItem('patientToAudit'));
 		this.filterBy = JSON.parse(localStorage.getItem('filter'));
 
+		this.route.paramMap.subscribe(
+			(params) => {
+				console.log(params)
+				this.patientId = Number(params.get('id'));
+				this.isUnlinkPatient = true;
+			})
+
 		this.personMasterDataService.getIdentificationTypes()
 			.subscribe(identificationTypes => {
 				this.identificationTypeList = identificationTypes;
-				this.setInfo();
+
 			});
 
 		this.patientMasterDataService.getTypesPatient().subscribe((patientsTypes: PatientType[]) => {
@@ -94,17 +104,37 @@ export class PatientFusionComponent implements OnInit {
 			this.rejectedId = this.patientsTypes.find(type => type.description === REJECTTED).id;
 		})
 
-		this.auditPatientService.getPatientPersonalInfo(this.patientToAudit).subscribe((patientPersonalData: PatientPersonalInfoDto[]) => {
-			this.listPatientData = this.setListPatientData(patientPersonalData);
-			this.listPatientData$ = of(this.listPatientData);
+		this.getListPatientData();
 
-			this.pageSlice = this.listPatientData.slice(0, PAGE_MIN_SIZE);
-			this.numberOfPatients = this.listPatientData.length || 0;
-			this.initialSize = of(PAGE_MIN_SIZE);
-		})
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
 			this.nameSelfDeterminationFF = isOn
 		});
+	}
+
+	getListPatientData() {
+		if (this.isUnlinkPatient) {
+			this.auditPatientService.getMergedPatientPersonalInfo(this.patientId).subscribe((patientPersonalData: PatientPersonalInfoDto[]) => {
+				this.listPatientData = this.setListPatientData(patientPersonalData);
+				this.listPatientData$ = of(this.listPatientData);
+
+				this.setInitPage();
+				this.setInfo();
+			})
+		} else {
+			this.auditPatientService.getPatientPersonalInfo(this.patientToAudit).subscribe((patientPersonalData: PatientPersonalInfoDto[]) => {
+				this.listPatientData = this.setListPatientData(patientPersonalData);
+				this.listPatientData$ = of(this.listPatientData);
+
+				this.setInitPage();
+				this.setInfo();
+			})
+		}
+	}
+
+	setInitPage(){
+		this.pageSlice = this.listPatientData.slice(0, PAGE_MIN_SIZE);
+		this.numberOfPatients = this.listPatientData.length || 0;
+		this.initialSize = of(PAGE_MIN_SIZE);
 	}
 
 	setInfo() {
@@ -229,7 +259,7 @@ export class PatientFusionComponent implements OnInit {
 					identification: '-' + this.getIdentificationType(this.patientToMerge.registrationDataPerson.identificationTypeId) + ' ' + this.patientToMerge.registrationDataPerson.identificationNumber,
 					birthDate: '- Fecha Nac. ' + this.patientToMerge.registrationDataPerson.birthDate,
 					idPatient: '- ID ' + this.patientToMerge.activePatientId,
-					nameSelfDetermination: this.nameSelfDeterminationFF ? this.patientToMerge.registrationDataPerson.nameSelfDetermination? '- '+ this.patientToMerge.registrationDataPerson.nameSelfDetermination : "-" :null,
+					nameSelfDetermination: this.nameSelfDeterminationFF ? this.patientToMerge.registrationDataPerson.nameSelfDetermination ? '- ' + this.patientToMerge.registrationDataPerson.nameSelfDetermination : "-" : null,
 				},
 				disableClose: true,
 				width: '35%',

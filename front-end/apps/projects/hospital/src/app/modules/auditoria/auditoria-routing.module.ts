@@ -32,6 +32,10 @@ const routes: Routes = [{
 		{
 			path: "desvincular-pacientes",
 			component: UnlinkPatientComponent
+		},
+		{
+			path:"desvincular-pacientes/:id",
+			component: PatientFusionComponent
 		}
 	],
 	canActivate: [RoleGuard,FeatureFlagGuard],

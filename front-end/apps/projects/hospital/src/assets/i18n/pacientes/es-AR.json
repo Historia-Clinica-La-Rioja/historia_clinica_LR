@@ -362,7 +362,10 @@
 		"QUESTION_ERROR_REJECTED_PATIENT_HAS_USER":"¿Está seguro que desea cambiar el estado a 'Rechazado'?",
 		"TITLE_UNLINK_PATIENT":"Desvincular pacientes",
 		"SUBTITLE_UNLINK_PATIENT":"Separar datos de pacientes fusionados",
-		"MERGERS":"Fusiones"
+		"MERGERS":"Fusiones",
+		"CLARIFICATION_UNLINK_PATIENT":"Por favor, seleccione en la columna izquierda el paciente que desea desvincular del paciente principal.",
+		"BUTTON_UNLINK":"Desvincular"
+
 	}
   }
 }

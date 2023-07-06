@@ -41,4 +41,9 @@ export class AuditPatientService {
 		return this.http.get<MergedPatientSearchDto[]>(url, { params: { searchFilterStr: JSON.stringify(searchPatientInfo) } });
 	}
 
+	getMergedPatientPersonalInfo(patientId:number): Observable<PatientPersonalInfoDto[]>{
+		const url = `${environment.apiBase}/audit/institution/${this.contextService.institutionId}/patient/${patientId}/merged-patients-personal-info`;
+		return this.http.get<PatientPersonalInfoDto[]>(url);
+	}
+
 }
