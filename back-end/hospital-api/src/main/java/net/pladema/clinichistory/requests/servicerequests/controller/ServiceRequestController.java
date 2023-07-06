@@ -10,9 +10,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportRDIService;
-import net.pladema.clinichistory.requests.servicerequests.service.DeleteTranscribedOrderService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -53,6 +50,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import net.pladema.clinichistory.requests.controller.dto.TranscribedPrescriptionDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.AppointmentOrderImageExistCheckDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.CompleteRequestDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoWithFilesDto;
@@ -63,10 +61,12 @@ import net.pladema.clinichistory.requests.servicerequests.controller.mapper.Diag
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.FileMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.TranscribedDiagnosticReportInfoMapper;
+import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportRDIService;
 import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportService;
 import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
 import net.pladema.clinichistory.requests.servicerequests.service.CreateTranscribedServiceRequestService;
 import net.pladema.clinichistory.requests.servicerequests.service.DeleteDiagnosticReportService;
+import net.pladema.clinichistory.requests.servicerequests.service.DeleteTranscribedOrderService;
 import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.ExistCheckDiagnosticReportService;
 import net.pladema.clinichistory.requests.servicerequests.service.GetServiceRequestInfoService;
@@ -384,11 +384,11 @@ public class ServiceRequestController {
 	@ResponseStatus(code = HttpStatus.OK)
 	@GetMapping(value = "/{serviceRequestId}/existCheck")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO')")
-	public boolean serviceRequestExistCheck(
+	public AppointmentOrderImageExistCheckDto serviceRequestExistCheck(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "serviceRequestId") Integer serviceRequestId) {
 		LOG.debug("Input parameters -> orderId {}", serviceRequestId);
-		return existCheckDiagnosticReportService.execute(serviceRequestId);
+		return new AppointmentOrderImageExistCheckDto(existCheckDiagnosticReportService.execute(serviceRequestId));
 	}
 
     @GetMapping(value = "/{serviceRequestId}/download-pdf")
