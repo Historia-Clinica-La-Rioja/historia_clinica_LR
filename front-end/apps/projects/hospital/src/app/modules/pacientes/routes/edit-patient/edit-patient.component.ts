@@ -263,6 +263,8 @@ export class EditPatientComponent implements OnInit {
 										this.rejectedId = this.typesPatient.find(type => type.description === REJECTTED).id;
 										if (this.form.controls.stateId.value === this.rejectedId) {
 											this.form.controls.stateId.disable();
+											this.form.controls.identificationNumber.disable();
+											this.form.controls.identificationTypeId.disable();
 										}
 									})
 								} else {
