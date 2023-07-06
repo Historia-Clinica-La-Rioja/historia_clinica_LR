@@ -1631,6 +1631,14 @@ export interface ExternalPatientCoverageDto {
     vigencyDate?: Date;
 }
 
+export interface ExternalTemporaryHealthcareProfessionalDto {
+    firstName: string;
+    identificationNumber: string;
+    identificationTypeId: number;
+    lastName: string;
+    licenseNumber: string;
+}
+
 export interface FhirAddressDto {
     address: string;
     city: string;

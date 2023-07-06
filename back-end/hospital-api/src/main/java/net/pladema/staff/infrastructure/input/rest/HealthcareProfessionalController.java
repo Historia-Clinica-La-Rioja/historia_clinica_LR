@@ -5,10 +5,13 @@ import net.pladema.staff.application.gethealthcareprofessional.GetHealthcareProf
 import net.pladema.staff.application.gethealthcareprofessionalbyuserid.GetHealthcareProfessionalByUserId;
 import net.pladema.staff.application.getUserIdByHealthcareProfessionalId.GetUserIdByHealthcareProfessionalId;
 
+import net.pladema.staff.application.saveexternaltemporaryprofessional.SaveExternalTemporaryProfessional;
 import net.pladema.staff.application.saveprofessional.SaveHealthcareProfessional;
+import net.pladema.staff.controller.dto.ExternalTemporaryHealthcareProfessionalDto;
 import net.pladema.staff.controller.dto.HealthcareProfessionalCompleteDto;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.mapper.HealthcareProfessionalMapper;
+import net.pladema.staff.domain.ExternalTemporaryHealthcareProfessionalBo;
 import net.pladema.staff.service.HealthcareProfessionalService;
 import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 import org.slf4j.Logger;
@@ -45,19 +48,22 @@ public class HealthcareProfessionalController {
 
 	private final GetUserIdByHealthcareProfessionalId getUserIdByHealthcareProfessionalId;	
 	
+	private final SaveExternalTemporaryProfessional saveExternalTemporaryProfessional;
 
 	public HealthcareProfessionalController(HealthcareProfessionalService healthcareProfessionalService,
 											HealthcareProfessionalMapper healthcareProfessionalMapper,
 											GetHealthcareProfessional getHealthcareProfessional,
 											SaveHealthcareProfessional saveHealthcareProfessional,
 											GetHealthcareProfessionalByUserId getHealthcareProfessionalByUserId,
-											GetUserIdByHealthcareProfessionalId getUserIdByHealthcareProfessionalId) {
+											GetUserIdByHealthcareProfessionalId getUserIdByHealthcareProfessionalId,
+											SaveExternalTemporaryProfessional saveExternalTemporaryProfessional) {
 		this.healthcareProfessionalService = healthcareProfessionalService;
 		this.healthcareProfessionalMapper = healthcareProfessionalMapper;
 		this.getHealthcareProfessional = getHealthcareProfessional;
 		this.saveHealthcareProfessional = saveHealthcareProfessional;
 		this.getHealthcareProfessionalByUserId = getHealthcareProfessionalByUserId;		
 		this.getUserIdByHealthcareProfessionalId = getUserIdByHealthcareProfessionalId;
+		this.saveExternalTemporaryProfessional = saveExternalTemporaryProfessional;
 	}
 
 	@GetMapping
@@ -102,6 +108,17 @@ public class HealthcareProfessionalController {
 										  @RequestBody HealthcareProfessionalCompleteDto professionalDto) {
 		LOG.debug("Input parameters -> {}", professionalDto);
 		Integer result = saveHealthcareProfessional.run(healthcareProfessionalMapper.fromHealthcareProfessionalCompleteDto(professionalDto));
+		LOG.debug(OUTPUT,result);
+		return ResponseEntity.ok().body(result);
+	}
+
+
+	@PostMapping(value = "/institution/{institutionId}/external-temporary")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR')")
+	public ResponseEntity<Integer> createTemporal(@PathVariable(name = "institutionId") Integer institutionId,
+										@RequestBody ExternalTemporaryHealthcareProfessionalDto temporaryProfessionalDto) {
+		LOG.debug("Input parameters -> temporaryProfessionalDto {}", temporaryProfessionalDto);
+		Integer result = saveExternalTemporaryProfessional.run(healthcareProfessionalMapper.fromExternalTemporaryHealthcareProfessionalDto(temporaryProfessionalDto));
 		LOG.debug(OUTPUT,result);
 		return ResponseEntity.ok().body(result);
 	}

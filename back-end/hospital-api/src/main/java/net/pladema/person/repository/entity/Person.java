@@ -74,6 +74,13 @@ public class Person implements Serializable {
         this.birthDate = patientPersonVo.getBirthDate();
     }
 
+	public Person(String firstName, String lastName, Short identificationTypeId, String identificationNumber){
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.identificationTypeId = identificationTypeId;
+		this.identificationNumber = identificationNumber;
+	}
+
     @JsonIgnore
     public Short getAge(){
         if (birthDate == null)
