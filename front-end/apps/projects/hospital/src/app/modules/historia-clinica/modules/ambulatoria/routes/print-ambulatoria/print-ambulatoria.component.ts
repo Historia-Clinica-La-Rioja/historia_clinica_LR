@@ -253,7 +253,11 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		return null;
 	}
 
-	download() {
+	download(document) {
+		this.printAmbulatoryService.downloadClinicHistory(this.patientDni, [document.id]).subscribe();
+	}
+
+	downloadSelected() {
 		let selectedIds = []
 		this.selection.selected.forEach(e => selectedIds.push(e.id));
 		this.printAmbulatoryService.downloadClinicHistory(this.patientDni, selectedIds).subscribe();
