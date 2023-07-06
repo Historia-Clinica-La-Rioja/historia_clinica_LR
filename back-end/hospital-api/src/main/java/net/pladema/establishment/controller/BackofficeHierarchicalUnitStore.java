@@ -28,8 +28,7 @@ public class BackofficeHierarchicalUnitStore implements BackofficeStore<Hierarch
 
 	@Override
 	public Page<HierarchicalUnit> findAll(HierarchicalUnit example, Pageable pageable) {
-		List<HierarchicalUnit> list = repository.findAll(buildExample(example));
-		return new PageImpl<>(list, pageable, list.size());
+		return repository.findAll(buildExample(example), pageable);
 	}
 
 	@Override
