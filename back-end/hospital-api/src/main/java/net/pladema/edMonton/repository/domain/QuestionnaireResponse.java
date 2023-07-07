@@ -15,11 +15,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "minsal_lr_questionnaire_response")
@@ -49,4 +50,10 @@ public class QuestionnaireResponse extends SGXAuditableEntity<Integer> {
 
 	@Column(name = "status_id")
 	private Integer statusId;
+
+	public QuestionnaireResponse(Optional<QuestionnaireResponse> byId) {
+		this.id = byId.get().id;
+		this.questionnaireId = byId.get().questionnaireId;
+		this.patientId = byId.get().patientId;
+	}
 }

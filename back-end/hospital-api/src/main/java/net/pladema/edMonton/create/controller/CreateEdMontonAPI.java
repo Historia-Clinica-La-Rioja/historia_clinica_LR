@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.IOException;
 
-@Tag(name = "Patient - EdMonton", description = "Patient - EdMonton")
+@Tag(name = "Patient Consultation - EdMonton", description = "Patient Consultation - EdMonton")
 public interface CreateEdMontonAPI {
 
 	@PostMapping("/edmonton")

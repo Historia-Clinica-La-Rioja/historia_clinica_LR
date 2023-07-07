@@ -46,6 +46,7 @@
 									</div>
 								</div>
 							</div>
+							
 							<div *ngIf="patientAllergies.criticalAllergies?.length > patientAllergies.limitAllergies">
 								<button class="allergies-button" (click)="patientAllergies.openAllergies()" mat-button
 									type="button" color="primary">
@@ -258,16 +259,14 @@
 							</app-ui-external-component>
 						</ng-template>
 					</mat-tab>
-
-					<mat-tab id="tab_percentiles">
+					<mat-tab id="tab_sap">
 						<ng-template mat-tab-label>
-							<span>PERCENTILES</span>
+							<span>CRECIMIENTO FISICO (SAP)</span>
 						</ng-template>
 						<ng-template matTabContent>
 							<app-tablas-percentilos></app-tablas-percentilos>
 						</ng-template>
 					</mat-tab>
-
 					<section *appFeatureFlag="'HABILITAR_SIP_PLUS_EN_DESARROLLO'">
 						<mat-tab id="tab_clap" *ngIf="patient.gender === femenino && hasHealthRelatedRole">
 							<ng-template mat-tab-label>

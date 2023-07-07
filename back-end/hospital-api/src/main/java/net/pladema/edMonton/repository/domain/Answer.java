@@ -1,5 +1,6 @@
 package net.pladema.edMonton.repository.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +19,7 @@ import javax.persistence.Table;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class Answer {
 
 	@Id
@@ -34,4 +36,13 @@ public class Answer {
 	@Column(name = "option_id")
 	private Integer answerId;
 
+	@Column(name = "value")
+	private String value;
+
+	public Answer(Integer id, Integer itemId, Integer questionnaireResponseId, Integer answerId){
+		this.id = id;
+		this.itemId = itemId;
+		this.questionnaireResponseId = questionnaireResponseId;
+		this.answerId = answerId;
+	}
 }

@@ -645,9 +645,11 @@
 			concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
 			ELSE concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
 			end AS ageToday,
-			(SELECT string_agg(concat(mc.name, '(RNOS: ', hi.rnos, ')'), ', ') FROM patient_medical_coverage pmc LEFT JOIN medical_coverage mc on pmc.medical_coverage_id=mc.id LEFT JOIN health_insurance hi ON hi.id=mc.id WHERE pmc.patient_id=pa.id) AS medicalCoverage,
+			(SELECT string_agg(concat(mc.name, '(RNOS: ', hi.rnos, ')'), ', ') FROM patient_medical_coverage pmc LEFT JOIN medical_coverage mc on pmc.medical_coverage_id=mc.id LEFT JOIN 					 		health_insurance hi ON hi.id=mc.id WHERE pmc.patient_id=pa.id) AS medicalCoverage,
 			concat(a.street, ' N° ', a.number, CASE WHEN a.floor is not null THEN concat(' Piso: ', a.floor, 'Departamento: ', a.apartment) end) AS address,
 			c.description AS location,
+			cs.id as clinicalSpecialtyId, cs.name as clinicalSpecialty,
+			hp.id as professionalId,
 			(SELECT ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs ON dvs.observation_vital_sign_id=ovs.id INNER JOIN snomed s_vs ON ovs.snomed_id=s_vs.id WHERE dvs.document_id=d.id and s_vs.id=10) AS bmi,
 			(SELECT string_agg(r.description, ', ') FROM outpatient_consultation_reasons ocr INNER JOIN reasons r on ocr.reason_id=r.id WHERE ocr.outpatient_consultation_id=oc.id) as reasons,
 			(SELECT string_agg(concat(s_proc.pt, '(', ps.description, ' | SNOMED: ', s_proc.sctid, ' | CIE10: ', proc.cie10_codes, ')'), ', ') FROM document_procedure dp INNER JOIN procedures proc on dp.procedure_id=proc.id INNER JOIN procedures_status ps ON proc.status_id=ps.id INNER JOIN snomed s_proc ON proc.snomed_id=s_proc.id WHERE dp.document_id=d.id) AS procedures,
@@ -833,6 +835,58 @@
 			order by oc.created_on;
 		</query>
 	</named-native-query>
+
+	<named-native-query name="ProgramReports.ConsultationDetailOdontologiaRecupero" result-set-mapping="ProgramReports.ConsultationDetailOdontologiaRecuperoResult">
+		<query>
+			SELECT concat(ins.name, '(SISA: ', ins.sisa_code, ' | CUIT: ', ins.cuit, ')') AS institution, cs.name AS operativeUnit,
+			concat(p.first_name, ' ', p.middle_names, ' ', p.last_name, ' ', p.other_last_names) AS lender, p.identification_number AS identificationNumber,
+			oc.performed_date AS attentionDate,
+			CASE
+			WHEN (EXTRACT(HOUR FROM oc.created_on)) &lt; 3 THEN
+			concat(24-3, ':', EXTRACT(MINUTE FROM oc.created_on))
+			ELSE concat(EXTRACT(HOUR FROM oc.created_on)-3, ':', EXTRACT(MINUTE FROM oc.created_on))
+			END AS hour,
+			pp.identification_number AS patientIdentificationNumber, concat(pp.first_name , ' ', pp.last_name) AS patientName, g.description AS gender, pp.birth_date birthDate,
+			case
+			when (EXTRACT(MONTH FROM oc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)) &lt; 0 then
+			concat((EXTRACT(YEAR FROM oc.performed_date) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM oc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			else concat((EXTRACT(YEAR FROM oc.performed_date) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM oc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			END AS ageTurn,
+			concat(mc.name, '(RNOS: ', hi.rnos, ')') AS medicalCoverage,
+			concat(a.street, ' N° ', a.number, CASE WHEN a.floor IS NOT NULL THEN concat(' Piso: ', a.floor, 'Departamento: ', a.apartment) END) AS address,
+			c.description AS location,
+			concat(oci.permanent_c, '|', oci.permanent_p, '|', oci.permanent_o) AS cpo, concat(oci.temporary_c, '|', oci.temporary_e, '|', oci.temporary_o) AS ceo,
+			(SELECT string_agg(r.description, ', ') FROM odontology_consultation_reason ocr INNER JOIN odontology_reason r ON ocr.reason_id=r.id WHERE ocr.odontology_consultation_id=oc.id) AS reasons,
+			(SELECT string_agg(concat(s_proc.pt, '(', ps.description, ' | SNOMED: ', s_proc.sctid, ' | CIE10: ', proc.cie10_codes, ')'), ', ') from document_procedure dp INNER JOIN procedures PROC ON dp.procedure_id=proc.id INNER JOIN procedures_status ps ON proc.status_id=ps.id INNER JOIN snomed s_proc ON proc.snomed_id=s_proc.id WHERE dp.document_id=d.id) AS procedures,
+			(SELECT string_agg(concat(s_p.pt, '(SNOMED: ', s_p.sctid, ' | CIE10: ', op.cie10_codes, ')[diente: ', stp.pt, ' | sctid: ', stp.sctid, '][superficie: ', sfp.pt, ' | sctid', sfp.sctid, ']'), ', ') FROM document_odontology_procedure dop INNER JOIN odontology_procedure op ON dop.odontology_procedure_id=op.id INNER JOIN snomed s_p ON op.snomed_id=s_p.id
+			LEFT JOIN snomed stp ON op.tooth_id=stp.id LEFT JOIN snomed sfp ON op.surface_id=sfp.id WHERE dop.document_id=d.id) AS odontologyProcedures,
+			(SELECT string_agg(concat(s_prob.pt,' (',ccs.description,' &amp; ',cvs.description,' - Fecha: ',hc.start_date ,')', '[SNOMED: ', s_prob.sctid, ' | CIE10: ', hc.cie10_codes, ']'), ', ')
+			from document_health_condition dhc INNER JOIN health_condition hc ON dhc.health_condition_id=hc.id INNER JOIN problem_type pt ON hc.problem_id=pt.id INNER JOIN snomed s_prob ON hc.snomed_id=s_prob.id INNER JOIN condition_clinical_status ccs ON hc.status_id=ccs.id INNER JOIN condition_verification_status cvs ON hc.verification_status_id=cvs.id WHERE dhc.document_id=d.id) AS problems,
+			(SELECT string_agg(concat(s_d.pt, '(SNOMED: ', s_d.sctid, ' | CIE10: ', od.cie10_codes, ')[diente: ', std.pt, ' | sctid: ', std.sctid, '][superficie: ', sfd.pt, ' | sctid', sfd.sctid, ']'), ', ')
+			FROM document_odontology_diagnostic dod INNER JOIN odontology_diagnostic od ON dod.odontology_diagnostic_id=od.id INNER JOIN snomed s_d ON od.snomed_id=s_d.id LEFT JOIN snomed std ON od.tooth_id=std.id LEFT JOIN snomed sfd ON od.surface_id=sfd.id WHERE dod.document_id=d.id) AS odontologyDiagnosis
+			FROM odontology_consultation oc
+			LEFT JOIN odontology_consultation_indices oci ON oci.odontology_consultation_id=oc.id
+			LEFT JOIN institution ins ON oc.institution_id=ins.id
+			LEFT JOIN clinical_specialty cs ON oc.clinical_specialty_id=cs.id
+			LEFT JOIN healthcare_professional hp ON oc.doctor_id=hp.id
+			INNER JOIN person p ON hp.person_id=p.id
+			LEFT JOIN patient pa ON oc.patient_id=pa.id
+			INNER JOIN person pp ON pa.person_id=pp.id
+			LEFT JOIN person_extended pe ON pe.person_id=pp.id
+			INNER JOIN gender g ON pp.gender_id=g.id
+			LEFT JOIN gender gg ON pe.gender_self_determination=gg.id
+			LEFT JOIN patient_medical_coverage pmc ON pmc.patient_id=oc.patient_medical_coverage_id
+			LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id
+			LEFT JOIN health_insurance hi ON hi.id=mc.id
+			LEFT JOIN address a ON pe.address_id=a.id
+			LEFT JOIN city c ON a.city_id=c.id
+			LEFT JOIN document d ON d.source_id=oc.id AND d.source_type_id=6
+			WHERE oc.created_on BETWEEN :startDate AND :endDate
+			AND (pmc.id is not null AND NOT (lower(mc.name) like '%sumar%'))
+			AND ins.id= :institutionId
+			ORDER BY oc.created_on;
+		</query>
+	</named-native-query>
 	
 	<!-- ========================================== -->
 	<!-- ============== General Reports =============== -->
@@ -840,36 +894,24 @@
 
 	<named-native-query name="GeneralReports.ConsultationDetailEmergencias" result-set-mapping="GeneralReports.ConsultationDetailEmergenciasResult">
 		<query>
-			SELECT ece.created_on as createdOn,
-			ins.id as institutionId,
+			SELECT --ece.created_on, ins.id AS institution_id,
 			concat(ins.name, ' ', ins.sisa_code) AS institution,
-			ece.ambulance_company_id as ambulance,
-			d_of.description as office,
-			css.description as sector,
+			ece.ambulance_company_id AS ambulance, d_of.description AS office, css.description AS sector,
 			CASE
 			WHEN ece.has_police_intervention=true THEN
 			concat('Sí')
 			ELSE concat('No')
 			END AS policeIntervention,
-			concat(EXTRACT(DAY FROM ece.updated_on), '/', EXTRACT(MONTH FROM ece.updated_on), '/', EXTRACT(YEAR FROM ece.updated_on)) as attentionDate,
-			case
-			when (EXTRACT(HOUR FROM ece.updated_on)) &lt; 3 then
-			concat(24-3, ':', EXTRACT(MINUTE FROM ece.updated_on))
-			else concat(EXTRACT(HOUR FROM ece.updated_on)-3, ':', EXTRACT(MINUTE FROM ece.updated_on))
-			end as attentionHour,
-			concat(it.description, ' ', pe.identification_number) as identification,
-			concat(pe.last_name, ' ', pe.other_last_names) as lastName,
-			concat(pe.first_name, ' ', pe.middle_names) as names,
-			concat(mc.name, '(', hi.rnos, ')', pmc.affiliate_number) as medicalCoverage,
-			ec_in_t.description AS emergencyCareEntrance,
-			ec_st.description AS situation,
-			ec_t.description AS emergencyCareType,
-			(SELECT string_agg(tr.notes, ', ') FROM triage tr WHERE tr.emergency_care_episode_id=ece.id) AS triageNote,
-			concat(tr_cat.name, ' Codigo: ', tr_cat.color_name) as triageLevel,
-			ec_dis.administrative_discharge_on as dateDischarge,
-			ec_dis.ambulance_company_id AS ambulanceDischarge,
-			dis.description as typeDischarge,
-			dis_out.description as patientExit
+			concat(EXTRACT(DAY FROM ece.updated_on), '/', EXTRACT(MONTH FROM ece.updated_on), '/', EXTRACT(YEAR FROM ece.updated_on)) AS attentionDate,
+			CASE
+			WHEN (EXTRACT(HOUR FROM ece.updated_on)) &lt; 3 then
+			concat(21+EXTRACT(HOUR FROM ece.updated_on), ':', EXTRACT(MINUTE FROM ece.updated_on))
+			ELSE concat(EXTRACT(HOUR FROM ece.updated_on)-3, ':', EXTRACT(MINUTE FROM ece.updated_on))
+			END AS attentionHour,
+			concat(it.description, ' ', pe.identification_number) AS identification, concat(pe.last_name, ' ', pe.other_last_names) AS lastName, concat(pe.first_name, ' ', pe.middle_names) AS names,
+			concat(mc.name, '(', hi.rnos, ')', pmc.affiliate_number) AS medicalCoverage,
+			ec_in_t.description AS emergencyCareEntrance, ec_st.description AS situation, ec_t.description AS emergencyCareType, (SELECT string_agg(tr.notes, ', ') FROM triage tr WHERE tr.emergency_care_episode_id=ece.id) AS triageNote, concat(tr_cat.name, ' Codigo: ', tr_cat.color_name) AS triageLevel,
+			ec_dis.administrative_discharge_on dateDischarge, ec_dis.ambulance_company_id AS ambulanceDischarge, dis.description AS typeDischarge, dis_out.description AS patientExit
 			FROM emergency_care_episode ece
 			INNER JOIN institution ins ON ece.institution_id = ins.id
 			INNER JOIN emergency_care_state ec_st ON ece.emergency_care_state_id = ec_st.id
@@ -887,8 +929,7 @@
 			LEFT JOIN doctors_office d_of ON ece.doctors_office_id=d_of.id
 			LEFT JOIN clinical_specialty_sector css ON d_of.sector_id=css.id
 			LEFT JOIN triage_category tr_cat  ON ece.triage_category_id=tr_cat.id
-			WHERE (ece.created_on >= date_trunc('hour', (now() + (INTERVAL '-24 hour')))
-			AND ece.created_on &lt; date_trunc('hour', now()))
+			WHERE ece.created_on BETWEEN :startDate AND :endDate
 			AND ins.id = :institutionId
 		</query>
 	</named-native-query>
@@ -986,8 +1027,263 @@
 		</query>
 	</named-native-query>
 
-	<named-native-query name="GeneralReports.PatientEmergencies" result-set-mapping="GeneralReports.PatientEmergenciesResult">
-		<query>SELECT --ece.created_on, ins.id as institution_id,
+	<named-native-query name="GeneralReports.ComplementaryStudies" result-set-mapping="GeneralReports.ComplementaryStudiesResult">
+		<query>
+			SELECT concat(i.name, '(SISA: ', i.sisa_code, ' | CUIT: ', i.cuit, ')') AS institution,
+			sr.request_date as date, sr_cat.description AS category,
+			CASE
+			WHEN dr_st.id='1' THEN 'Pendiente'
+			WHEN dr_st.id='261782000' THEN 'Completado'
+			WHEN dr_st.id='89925002' THEN 'Eliminado'
+			ELSE 'Otro'
+			END AS order,
+			ri.description AS typeOfRequest,
+			src.description AS origin,
+			concat(pe_pat.last_name, ' ', pe_pat.other_last_names, ', ', pe_pat.first_name, ' ', pe_pat.middle_names) AS patientName, id_t.description AS documentTypePatient, pe_pat.identification_number AS documentNumberPatient,
+			mc.name AS socialWork, pmc.affiliate_number AS affiliateNumber,
+			concat(pe_hp.last_name, ' ', pe_hp.other_last_names, ', ', pe_hp.first_name, ' ', pe_hp.middle_names) AS professionalName, id_tt.description AS documentTypeProfessional, pe_hp.identification_number AS documentNumberProfessional,
+			hp.license_number AS license, n.description AS note,
+			d_r.effective_time AS dateOfIssue, concat(s_dr.pt, ' (SNOMED: ', s_dr.sctid, ' | CIE10: ', d_r.cie10_codes, ')') AS studyName, n_dr.description AS additionalNotes,
+			concat(s_hc.pt, ' [Estado: ', hc_st.description, ', Verificación: ', hc_ver.description, ', Severidad:', hc_sev.display, ', Tipo: ', hc_t.description, '] (SNOMED: ', s_hc.sctid, ' | CIE10: ', hc.cie10_codes, ') Fecha: ', hc.start_date) AS associatedProblems
+			FROM document d
+			INNER JOIN service_request sr ON d.source_id=sr.id AND d.source_type_id=3 AND d.type_id=6
+			INNER JOIN service_request_category sr_cat ON sr.category_id=sr_cat.id
+			INNER JOIN service_request_status sr_st ON sr.status_id=sr_st.id
+			INNER JOIN request_intent ri ON sr.intent_id=ri.id
+			INNER JOIN source_type src ON sr.source_type_id=src.id
+			INNER JOIN patient pa ON sr.patient_id=pa.id
+			INNER JOIN person pe_pat ON pa.person_id=pe_pat.id
+			INNER JOIN identification_type id_t ON pe_pat.identification_type_id=id_t.id
+			LEFT JOIN patient_medical_coverage pmc ON sr.medical_coverage_id=pmc.id
+			LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id
+			LEFT JOIN health_insurance hi ON hi.id=mc.id
+			INNER JOIN healthcare_professional hp ON sr.doctor_id=hp.id
+			INNER JOIN person pe_hp ON pe_hp.id=hp.person_id
+			INNER JOIN identification_type id_tt ON pe_hp.identification_type_id=id_tt.id
+			INNER JOIN institution i ON sr.institution_id=i.id
+			LEFT JOIN note n ON sr.note_id=n.id
+			INNER JOIN (select * from document_diagnostic_report ddr_ WHERE ddr_.diagnostic_report_id IN (SELECT MAX(ddrr.diagnostic_report_id) FROM document_diagnostic_report ddrr GROUP BY ddrr.document_id)) ddr ON ddr.document_id=d.id
+			INNER JOIN diagnostic_report d_r ON ddr.diagnostic_report_id=d_r.id
+			INNER JOIN diagnostic_report_status dr_st ON d_r.status_id=dr_st.id
+			INNER JOIN snomed s_dr ON d_r.snomed_id=s_dr.id
+			LEFT JOIN note n_dr ON d_r.note_id=n_dr.id
+			INNER JOIN health_condition hc ON d_r.health_condition_id=hc.id
+			INNER JOIN condition_clinical_status hc_st ON hc.status_id=hc_st.id
+			INNER JOIN condition_verification_status hc_ver ON hc.verification_status_id=hc_ver.id
+			INNER JOIN problem_type hc_t ON hc.problem_id=hc_t.id
+			INNER JOIN health_condition_severity hc_sev ON hc.severity=hc_sev.code
+			INNER JOIN snomed s_hc ON hc.snomed_id=s_hc.id
+			WHERE d.created_on BETWEEN :startDate AND :endDate
+			AND i.id= :institutionId
+			order by d.created_on;
+		</query>
+	</named-native-query>
+
+	<named-native-query name="GeneralReports.OutPatientOlderAdults" result-set-mapping="GeneralReports.OutPatientOlderAdultsResult">
+		<query>
+			SELECT concat(ins.name, '(SISA: ', ins.sisa_code, ' | CUIT: ', ins.cuit, ')') AS institution, concat('2022-10-01 00:00:00.000Z') AS "Fecha de Inicio", concat('2022-11-01 00:00:00.000Z') AS "Fecha de Fin",
+			concat(p.first_name, ' ', p.middle_names, ' ', p.last_name, ' ', p.other_last_names) AS lender, p.identification_number AS lenderDni,
+			oc.start_date AS attentionDate,
+			CASE
+			WHEN (EXTRACT(HOUR FROM oc.created_on)) &lt; 3 THEN
+			concat(21+EXTRACT(HOUR FROM oc.created_on), ':', EXTRACT(MINUTE FROM oc.created_on))
+			ELSE concat(EXTRACT(HOUR FROM oc.created_on)-3, ':', EXTRACT(MINUTE FROM oc.created_on))
+			END AS hour,
+			(row_number() OVER(partition BY oc.doctor_id ORDER BY oc.start_date)) AS consultationNumber,
+			pp.identification_number AS patientDni, concat(pp.first_name , ' ', pp.last_name) AS patientName, g.description AS gender, pp.birth_date birthDate,
+			CASE
+			WHEN (EXTRACT(MONTH FROM oc.start_date) - EXTRACT(MONTH FROM pp.birth_date)) &lt; 0 THEN
+			concat((EXTRACT(YEAR FROM oc.start_date) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM oc.start_date) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			ELSE concat((EXTRACT(YEAR FROM oc.start_date) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM oc.start_date) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			END AS ageTurn,
+			CASE
+			WHEN (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)) &lt; 0 THEN
+			concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			ELSE concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			END AS ageToday,
+			(SELECT string_agg(concat(mc.name, '(RNOS: ', hi.rnos, ')'), ', ') FROM patient_medical_coverage pmc LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id LEFT JOIN health_insurance hi ON hi.id=mc.id where pmc.patient_id=pa.id) AS medicalCoverage,
+			concat(a.street, ' N° ', a.number, CASE WHEN a.floor IS NOT NULL THEN concat(' Piso: ', a.floor, 'Departamento: ', a.apartment) END) AS address,
+			c.description AS locationPatient,
+			pe.phone_number AS phoneNumber,
+			(SELECT string_agg(concat(s_prob.pt,' (',ccs.description,' &amp; ',cvs.description,' - Fecha: ',hc.start_date ,')', '[SNOMED: ', s_prob.sctid, ' | CIE10: ', hc.cie10_codes, ']'), ', ')
+			FROM document_health_condition dhc INNER JOIN health_condition hc ON dhc.health_condition_id=hc.id INNER JOIN problem_type pt ON hc.problem_id=pt.id INNER JOIN snomed s_prob ON hc.snomed_id=s_prob.id INNER JOIN condition_clinical_status ccs ON hc.status_id=ccs.id INNER JOIN condition_verification_status cvs ON hc.verification_status_id=cvs.id where dhc.document_id=d.id) AS problems
+			FROM outpatient_consultation oc
+			LEFT JOIN institution ins ON oc.institution_id=ins.id
+			LEFT JOIN clinical_specialty cs ON oc.clinical_specialty_id=cs.id
+			LEFT JOIN healthcare_professional hp ON oc.doctor_id=hp.id
+			INNER JOIN person p ON hp.person_id=p.id
+			LEFT JOIN patient pa ON oc.patient_id=pa.id
+			INNER JOIN person pp ON pa.person_id=pp.id
+			LEFT JOIN person_extended pe ON pe.person_id=pp.id
+			INNER JOIN gender g ON pp.gender_id=g.id
+			LEFT JOIN gender gg ON pe.gender_self_determination=gg.id
+			LEFT JOIN patient_medical_coverage pmc ON pmc.patient_id=pa.id
+			LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id
+			LEFT JOIN address a ON pe.address_id=a.id
+			LEFT JOIN city c ON a.city_id=c.id
+			LEFT JOIN document d ON oc.document_id=d.id
+			WHERE d.created_on BETWEEN :startDate AND :endDate
+			AND EXTRACT(year FROM age(oc.start_date, pp.birth_date)) >= 60
+			AND ins.id= :institutionId
+			ORDER BY oc.created_on;
+		</query>
+	</named-native-query>
+
+	<named-native-query name="GeneralReports.HospitalizationOlderAdults" result-set-mapping="GeneralReports.HospitalizationOlderAdultsResult">
+		<query>
+			SELECT ins.name AS institution,
+			concat(pe.last_name, ' ', pe.other_last_names) AS lastName, concat(pe.first_name, ' ', pe.middle_names) AS name, g.description AS gender,
+			concat(i_t.description, ' ', pe.identification_number) AS identification, pe.birth_date birthDate,
+			CASE
+			WHEN (EXTRACT(MONTH FROM ie.entry_date) - EXTRACT(MONTH FROM pe.birth_date)) &lt; 0 THEN
+			concat((EXTRACT(YEAR FROM ie.entry_date) - EXTRACT(YEAR FROM pe.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM ie.entry_date) - EXTRACT(MONTH FROM pe.birth_date)), ' Meses')
+			ELSE concat((EXTRACT(YEAR FROM ie.entry_date) - EXTRACT(YEAR FROM pe.birth_date)), ' Años, ', (EXTRACT(MONTH FROM ie.entry_date) - EXTRACT(MONTH FROM pe.birth_date)), ' Meses')
+			END AS ageTurn,
+			CASE
+			WHEN (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pe.birth_date)) &lt; 0 then
+			concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pe.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pe.birth_date)), ' Meses')
+			ELSE concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pe.birth_date)), ' Años, ', (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pe.birth_date)), ' Meses')
+			END AS ageToday, pex.phone_number AS phone,
+			ie.entry_date AS entrance, ie.probable_discharge_date AS probableEnablement,
+			bed.bed_number AS bed, b_cat.description AS category, room.description AS room, sector.description AS sector, pd.administrative_discharge_date AS medicalClearance,
+			(SELECT string_agg(concat(s_prob.pt,' (',ccs.description,' &amp; ',cvs.description,' - Fecha: ',hc.start_date ,')', '[SNOMED: ', s_prob.sctid, ' | CIE10: ', hc.cie10_codes, ']'), ', ')
+			FROM document_health_condition dhc INNER JOIN health_condition hc ON dhc.health_condition_id=hc.id INNER JOIN problem_type pt ON hc.problem_id=pt.id INNER JOIN snomed s_prob ON hc.snomed_id=s_prob.id INNER JOIN condition_clinical_status ccs ON hc.status_id=ccs.id INNER JOIN condition_verification_status cvs ON hc.verification_status_id=cvs.id WHERE dhc.document_id=d.id) AS problem
+			FROM internment_episode ie
+			INNER JOIN institution ins ON ie.institution_id=ins.id
+			LEFT JOIN patient_discharge pd ON ie.id = pd.internment_episode_id
+			LEFT JOIN discharge_type dt ON pd.discharge_type_id = dt.id
+			INNER JOIN patient pa ON ie.patient_id = pa.id
+			INNER JOIN person pe ON pa.person_id = pe.id
+			INNER JOIN identification_type i_t ON pe.identification_type_id=i_t.id
+			INNER JOIN gender g ON pe.gender_id=g.id
+			LEFT JOIN person_extended pex ON pex.person_id=pe.id
+			LEFT JOIN bed ON ie.bed_id=bed.id
+			LEFT JOIN room ON bed.room_id=room.id
+			LEFT JOIN sector ON room.sector_id=sector.id
+			LEFT JOIN bed_category b_cat ON bed.bed_category_id=b_cat.id
+			LEFT JOIN document d ON ie.anamnesis_doc_id=d.id
+			LEFT JOIN document dd ON ie.epicrisis_doc_id=dd.id
+			WHERE (ie.status_id = 1 OR pd.internment_episode_id is null)
+			AND d.created_on BETWEEN :startDate AND :endDate
+			AND ins.id= :institutionId
+			AND EXTRACT(year FROM age(ie.entry_date, pe.birth_date)) >= 60
+		</query>
+	</named-native-query>
+
+	<!-- ========================================== -->
+	<!-- ============== Nursing Reports =============== -->
+	<!-- ========================================== -->
+
+	<named-native-query name="NursingReports.HospitalizationNursing" result-set-mapping="NursingReports.HospitalizationNursingResult">
+		<query>
+			WITH signos_vitales AS(
+			SELECT d.id AS id_doc, s.id, s.pt AS name, ovs.value AS value
+			FROM document d INNER JOIN document_vital_sign dvs ON dvs.document_id=d.id INNER JOIN observation_vital_sign ovs ON dvs.observation_vital_sign_id=ovs.id
+			INNER JOIN snomed s ON ovs.snomed_id=s.id
+			), procedimientos AS(
+			SELECT dp.document_id AS document_id, s.pt AS pt, ps.description AS description, s.sctid AS sctid, proc.cie10_codes FROM document_procedure dp
+			INNER JOIN procedures proc on dp.procedure_id=proc.id
+			INNER JOIN procedures_status ps on proc.status_id=ps.id
+			INNER JOIN snomed s on proc.snomed_id=s.id
+			WHERE ps.description&lt;>'Ingresado por error' AND ps.description&lt;>'Desconocido'
+			)
+			SELECT ins.name AS institution, concat(pe.last_name, ' ', pe.other_last_names) AS lastName, concat(pe.first_name, ' ', pe.middle_names) AS completeName, g.description AS gender, concat(i_t.description, ' ', pe.identification_number) AS identification,
+			concat(pe_pr.last_name, ' ', pe_pr.other_last_names, ', ', pe_pr.first_name, ' ', pe_pr.middle_names) AS professional, pr_s.license_number AS licenseNumber,
+			ie.entry_date AS entryDate, ie.probable_discharge_date AS probableDischargeDate,
+			bed.bed_number AS bed, b_cat.description AS categoryBed, room.description AS roomName, sector.description AS sector, pd.administrative_discharge_date AS dischargeDate,
+			(SELECT string_agg(concat(pr.pt, ' (', pr.sctid, ')'), ' | ') FROM procedimientos pr WHERE pr.document_id=d.id) AS procedures,
+			(SELECT string_agg(concat(sv.name, ': ', sv.value), ' | ') FROM signos_vitales sv WHERE sv.id_doc=d.id) AS vitalSign
+			FROM internment_episode ie
+			INNER JOIN institution ins ON ie.institution_id=ins.id
+			LEFT JOIN patient_discharge pd ON ie.id = pd.internment_episode_id
+			LEFT JOIN discharge_type dt ON pd.discharge_type_id = dt.id
+			INNER JOIN patient pa ON ie.patient_id = pa.id
+			INNER JOIN person pe ON pa.person_id = pe.id
+			INNER JOIN identification_type i_t ON pe.identification_type_id=i_t.id
+			INNER join gender g ON pe.gender_id=g.id
+			LEFT JOIN bed ON ie.bed_id=bed.id
+			LEFT JOIN room ON bed.room_id=room.id
+			LEFT JOIN sector ON room.sector_id=sector.id
+			LEFT JOIN bed_category b_cat ON bed.bed_category_id=b_cat.id
+			LEFT JOIN document d ON ie.anamnesis_doc_id=d.id
+			LEFT JOIN document dd ON ie.epicrisis_doc_id=dd.id
+			INNER JOIN healthcare_professional_group hpg ON hpg.internment_episode_id=ie.id
+			INNER JOIN healthcare_professional pr_s ON hpg.healthcare_professional_id=pr_s.id
+			INNER JOIN person pe_pr ON pr_s.person_id=pe_pr.id
+			INNER JOIN professional_professions pr_r ON pr_r.healthcare_professional_id=pr_s.id
+			INNER JOIN professional_specialty spc ON pr_r.professional_specialty_id=spc.id
+			WHERE (ie.status_id = 1 OR pd.internment_episode_id IS NULL) AND (spc.sctid_code='5275007' OR spc.sctid_code='308211001' OR spc.sctid_code='1951000221103')
+			AND d.created_on BETWEEN :startDate AND :endDate
+			AND ins.id= :institutionId
+		</query>
+	</named-native-query>
+
+	<named-native-query name="NursingReports.OutpatientNursing" result-set-mapping="NursingReports.OutpatientNursingResult">
+		<query>
+			SELECT concat(ins.name, '(SISA: ', ins.sisa_code, ' | CUIT: ', ins.cuit, ')') AS institution, cs.name AS operativeUnit,
+			concat(p.first_name, ' ', p.middle_names, ' ', p.last_name, ' ', p.other_last_names) AS patientProvider, p.identification_number AS providerDni,
+			oc.performed_date AS attentionDate,
+			CASE
+			WHEN (EXTRACT(HOUR FROM oc.created_on)) &lt; 3 THEN
+			concat(21+EXTRACT(HOUR FROM oc.created_on), ':', EXTRACT(MINUTE FROM oc.created_on))
+			ELSE concat(EXTRACT(HOUR FROM oc.created_on)-3, ':', EXTRACT(MINUTE FROM oc.created_on))
+			END AS hour,
+			(row_number() OVER(partition BY oc.doctor_id ORDER BY oc.performed_date)) AS consultationNumber,
+			pp.identification_number AS patientDni, concat(pp.first_name , ' ', pp.last_name) AS patientName, g.description AS gender, gg.description AS selfPerceivedGender, pe.name_self_determination selfPerceivedName, pp.birth_date birthDate,
+			CASE
+			WHEN (EXTRACT(MONTH FROM oc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)) &lt; 0 THEN
+			concat((EXTRACT(YEAR FROM oc.performed_date) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM oc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			ELSE concat((EXTRACT(YEAR FROM oc.performed_date) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM oc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			END AS ageTurn,
+			CASE
+			WHEN (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)) &lt; 0 THEN
+			concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			ELSE concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			END AS ageToday,
+			et.pt ethnicity,
+			(SELECT string_agg(concat(mc.name, '(RNOS: ', hi.rnos, ')'), ', ') FROM patient_medical_coverage pmc LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id LEFT JOIN health_insurance hi ON hi.id=mc.id WHERE pmc.patient_id=pa.id) AS medicalCoverage,
+			concat(a.street, ' N° ', a.number, CASE WHEN a.floor IS NOT null THEN concat(' Piso: ', a.floor, 'Departamento: ', a.apartment) END) AS patientAddress,
+			c.description AS patientLocation,
+			ed.description AS educationLevel,
+			lab.description AS occupation,
+			(SELECT ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs ON dvs.observation_vital_sign_id=ovs.id INNER JOIN snomed s_vs ON ovs.snomed_id=s_vs.id WHERE dvs.document_id=d.id AND s_vs.id=1) AS systolicPressure,
+			(SELECT ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs ON dvs.observation_vital_sign_id=ovs.id INNER JOIN snomed s_vs ON ovs.snomed_id=s_vs.id WHERE dvs.document_id=d.id AND s_vs.id=2) AS diastolicPressure,
+			(SELECT ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs ON dvs.observation_vital_sign_id=ovs.id INNER JOIN snomed s_vs ON ovs.snomed_id=s_vs.id WHERE dvs.document_id=d.id AND s_vs.id=3) AS meanArterialPressure,
+			(SELECT ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs ON dvs.observation_vital_sign_id=ovs.id INNER JOIN snomed s_vs ON ovs.snomed_id=s_vs.id WHERE dvs.document_id=d.id AND s_vs.id=4) AS temperature,
+			(SELECT ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs ON dvs.observation_vital_sign_id=ovs.id INNER JOIN snomed s_vs ON ovs.snomed_id=s_vs.id WHERE dvs.document_id=d.id AND s_vs.id=5) AS heartRate,
+			(SELECT ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs ON dvs.observation_vital_sign_id=ovs.id INNER JOIN snomed s_vs ON ovs.snomed_id=s_vs.id WHERE dvs.document_id=d.id AND s_vs.id=6) AS respiratoryRate,
+			(SELECT ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs ON dvs.observation_vital_sign_id=ovs.id INNER JOIN snomed s_vs ON ovs.snomed_id=s_vs.id WHERE dvs.document_id=d.id AND s_vs.id=7) AS arterialOxygenSaturation,
+			(SELECT ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs ON dvs.observation_vital_sign_id=ovs.id INNER JOIN snomed s_vs ON ovs.snomed_id=s_vs.id WHERE dvs.document_id=d.id AND s_vs.id=8) AS height,
+			(SELECT ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs ON dvs.observation_vital_sign_id=ovs.id INNER JOIN snomed s_vs ON ovs.snomed_id=s_vs.id WHERE dvs.document_id=d.id AND s_vs.id=9) AS weight,
+			(SELECT ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs ON dvs.observation_vital_sign_id=ovs.id INNER JOIN snomed s_vs ON ovs.snomed_id=s_vs.id WHERE dvs.document_id=d.id AND s_vs.id=10) AS bmi,
+			(SELECT string_agg(concat(s_proc.pt, '(', ps.description, ' | SNOMED: ', s_proc.sctid, ' | CIE10: ', proc.cie10_codes, ')'), ', ') FROM document_procedure dp INNER JOIN procedures proc ON dp.procedure_id=proc.id INNER JOIN procedures_status ps ON proc.status_id=ps.id INNER JOIN snomed s_proc ON proc.snomed_id=s_proc.id WHERE dp.document_id=d.id) AS procedures,
+			(SELECT string_agg(ev.description, ', ') FROM note ev WHERE d.other_note_id=ev.id) AS evolution
+			FROM nursing_consultation oc
+			LEFT JOIN institution ins ON oc.institution_id=ins.id
+			LEFT JOIN clinical_specialty cs ON oc.clinical_specialty_id=cs.id
+			LEFT JOIN healthcare_professional hp ON oc.doctor_id=hp.id
+			INNER JOIN person p ON hp.person_id=p.id
+			LEFT JOIN patient pa ON oc.patient_id=pa.id
+			INNER JOIN person pp ON pa.person_id=pp.id
+			LEFT JOIN person_extended pe ON pe.person_id=pp.id
+			LEFT JOIN ethnicity et ON pe.ethnicity_id=et.id
+			LEFT JOIN education_level ed ON pe.education_level_id=ed.id
+			LEFT JOIN occupation lab ON pe.occupation_id=lab.id
+			INNER JOIN gender g ON pp.gender_id=g.id
+			LEFT JOIN gender gg ON pe.gender_self_determination=gg.id
+			LEFT JOIN patient_medical_coverage pmc ON pmc.patient_id=pa.id
+			LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id
+			LEFT JOIN address a ON pe.address_id=a.id
+			LEFT JOIN city c ON a.city_id=c.id
+			LEFT JOIN document d ON oc.id=d.source_id AND d.source_type_id=7
+			WHERE oc.created_on BETWEEN :startDate AND :endDate
+			AND ins.id = :institutionId
+		</query>
+	</named-native-query>
+
+	<named-native-query name="NursingReports.NursingEmergencies" result-set-mapping="NursingReports.NursingEmergenciesResult">
+		<query>
+			SELECT --ece.created_on, ins.id as institution_id,
 			concat(ins.name, ' ', ins.sisa_code) AS institution,
 			ece.ambulance_company_id AS ambulance,
 			d_of.description AS office,
@@ -1074,173 +1370,11 @@
 			AND
 			(ece.created_on >= date_trunc('hour', (NOW() + (INTERVAL '-24 hour')))
 			AND ece.created_on &lt; date_trunc('hour', NOW()))
-			AND ins.id = :institutionId</query>
-	</named-native-query>
-
-	<named-native-query name="GeneralReports.OutpatientNursing" result-set-mapping="GeneralReports.OutpatientNursingResult">
-		<query>WITH signos_vitales AS(
-			SELECT d.id AS id_doc, s.id, s.pt AS name, ovs.value AS value
-			FROM document d INNER JOIN document_vital_sign dvs ON dvs.document_id=d.id INNER JOIN observation_vital_sign ovs ON dvs.observation_vital_sign_id=ovs.id
-			INNER JOIN snomed s ON ovs.snomed_id=s.id
-			), procedimientos AS(
-			SELECT dp.document_id AS document_id, s.pt AS pt, ps.description AS description, s.sctid AS sctid, proc.cie10_codes FROM document_procedure dp
-			INNER JOIN procedures proc on dp.procedure_id=proc.id
-			INNER JOIN procedures_status ps on proc.status_id=ps.id
-			INNER JOIN snomed s on proc.snomed_id=s.id
-			WHERE ps.description&lt;>'Ingresado por error' AND ps.description&lt;>'Desconocido'
-			)
-			SELECT concat(ins.name, '(SISA: ', ins.sisa_code, ' | CUIT: ', ins.cuit, ')') AS institution, cs.name AS operativeUnit,
-			concat(p.first_name, ' ', p.middle_names, ' ', p.last_name, ' ', p.other_last_names) AS patientProvider, p.identification_number AS providerDni,
-			oc.performed_date AS attentionDate,
-			CASE
-			WHEN (EXTRACT(HOUR FROM oc.created_on)) &lt; 3 THEN
-			concat(24-3, ':', EXTRACT(MINUTE FROM oc.created_on))
-			ELSE concat(EXTRACT(HOUR FROM oc.created_on)-3, ':', EXTRACT(MINUTE FROM oc.created_on))
-			END AS hour,
-			(row_number() over(partition by oc.doctor_id ORDER BY oc.performed_date)) AS consultationNumber,
-			pp.identification_number AS patientDni, concat(pp.first_name , ' ', pp.last_name) AS patientName, g.description AS gender, gg.description AS selfPerceivedGender, pe.name_self_determination selfPerceivedName, pp.birth_date birthDate,
-			CASE
-			WHEN (EXTRACT(MONTH FROM oc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)) &lt; 0 THEN
-			concat((EXTRACT(YEAR FROM oc.performed_date) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM oc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
-			ELSE concat((EXTRACT(YEAR FROM oc.performed_date) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM oc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
-			END AS ageTurn,
-			CASE
-			WHEN (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)) &lt; 0 THEN
-			concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
-			ELSE concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
-			END AS ageToday,
-			et.pt ethnicity,
-			(SELECT string_agg(concat(mc.name, '(RNOS: ', hi.rnos, ')'), ', ') FROM patient_medical_coverage pmc LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id LEFT JOIN health_insurance hi ON hi.id=mc.id WHERE pmc.patient_id=pa.id) AS medicalCoverage,
-			concat(a.street, ' N° ', a.number, CASE WHEN a.floor IS NOT NULL THEN concat(' Piso: ', a.floor, 'Departamento: ', a.apartment) END) AS patientAddress,
-			c.description AS patientLocation,
-			ed.description AS educationLevel,
-			lab.description AS occupation,
-			(SELECT string_agg(concat(s_v.name, ':', s_v.value), ' | ') FROM signos_vitales s_v WHERE s_v.id_doc=d.id) AS vitalSign,
-			(SELECT string_agg(concat(proc.pt, '(', proc.description, ' | SNOMED: ', proc.sctid, ' | CIE10: ', proc.cie10_codes, ')'), ', ') FROM procedimientos proc WHERE proc.document_id=d.id) AS procedures,
-			(SELECT string_agg(ev.description, ', ') FROM note ev WHERE d.other_note_id=ev.id) AS evolution
-			FROM nursing_consultation oc
-			LEFT JOIN institution ins ON oc.institution_id=ins.id
-			LEFT JOIN clinical_specialty cs ON oc.clinical_specialty_id=cs.id
-			LEFT JOIN healthcare_professional hp ON oc.doctor_id=hp.id
-			INNER JOIN person p ON hp.person_id=p.id
-			LEFT JOIN patient pa ON oc.patient_id=pa.id
-			INNER JOIN person pp ON pa.person_id=pp.id
-			LEFT JOIN person_extended pe ON pe.person_id=pp.id
-			LEFT JOIN ethnicity et ON pe.ethnicity_id=et.id
-			LEFT JOIN education_level ed ON pe.education_level_id=ed.id
-			LEFT JOIN occupation lab ON pe.occupation_id=lab.id
-			INNER JOIN gender g ON pp.gender_id=g.id
-			LEFT JOIN gender gg ON pe.gender_self_determination=gg.id
-			LEFT JOIN patient_medical_coverage pmc ON pmc.patient_id=pa.id
-			LEFT JOIN medical_coverage mc on pmc.medical_coverage_id=mc.id
-			LEFT JOIN address a ON pe.address_id=a.id
-			LEFT JOIN city c ON a.city_id=c.id
-			LEFT JOIN document d ON (oc.created_by = d.created_by AND date_trunc('minute', oc.updated_on) = date_trunc('minute', d.created_on)) AND d.source_id=oc.id
-			WHERE <!--((EXTRACT(MONTH FROM oc.created_on)=(EXTRACT(MONTH FROM CURRENT_TIMESTAMP)-1) AND EXTRACT(YEAR FROM oc.created_on)=EXTRACT(YEAR FROM CURRENT_TIMESTAMP)) OR (EXTRACT(MONTH FROM oc.created_on)=1 AND EXTRACT(YEAR FROM oc.created_on)=(EXTRACT(YEAR FROM CURRENT_TIMESTAMP)-1)))
-			-->
-			oc.created_on BETWEEN :startDate AND :endDate
-			AND (pmc.id IS NOT NULL AND NOT (lower(mc.name) LIKE '%sumar%'))
-			AND ins.id= :institutionId
-
+			AND ins.id = :institutionId
 		</query>
 	</named-native-query>
 
-	<named-native-query name="GeneralReports.NursingInternment" result-set-mapping="GeneralReports.NursingInternmentResult">
-		<query>WITH signos_vitales AS(
-			SELECT d.id AS id_doc, s.id, s.pt AS name, ovs.value AS value
-			FROM document d INNER JOIN document_vital_sign dvs ON dvs.document_id=d.id INNER JOIN observation_vital_sign ovs ON dvs.observation_vital_sign_id=ovs.id
-			INNER JOIN snomed s ON ovs.snomed_id=s.id
-			), procedimientos AS(
-			SELECT dp.document_id AS document_id, s.pt AS pt, ps.description AS description, s.sctid AS sctid, proc.cie10_codes FROM document_procedure dp
-			INNER JOIN procedures proc on dp.procedure_id=proc.id
-			INNER JOIN procedures_status ps on proc.status_id=ps.id
-			INNER JOIN snomed s on proc.snomed_id=s.id
-			WHERE ps.description&lt;>'Ingresado por error' AND ps.description&lt;>'Desconocido'
-			)
-			SELECT ins.name AS institution, concat(pe.last_name, ' ', pe.other_last_names) AS lastName, concat(pe.first_name, ' ', pe.middle_names) AS completeName, g.description AS gender, concat(i_t.description, ' ', pe.identification_number) AS identification,
-			concat(pe_pr.last_name, ' ', pe_pr.other_last_names, ', ', pe_pr.first_name, ' ', pe_pr.middle_names) AS professional, pr_s.license_number AS licenseNumber,
-			ie.entry_date AS entryDate, ie.probable_discharge_date AS probableDischargeDate,
-			bed.bed_number AS bed, b_cat.description AS categoryBed, room.description AS roomName, sector.description AS sector, pd.administrative_discharge_date AS dischargeDate,
-			(SELECT string_agg(concat(pr.pt, ' (', pr.sctid, ')'), ' | ') FROM procedimientos pr WHERE pr.document_id=d.id) AS procedures,
-			(SELECT string_agg(concat(sv.name, ': ', sv.value), ' | ') FROM signos_vitales sv WHERE sv.id_doc=d.id) AS vitalSign
-			FROM internment_episode ie
-			INNER JOIN institution ins ON ie.institution_id=ins.id
-			LEFT JOIN patient_discharge pd ON ie.id = pd.internment_episode_id
-			LEFT JOIN discharge_type dt ON pd.discharge_type_id = dt.id
-			INNER JOIN patient pa ON ie.patient_id = pa.id
-			INNER JOIN person pe ON pa.person_id = pe.id
-			INNER JOIN identification_type i_t ON pe.identification_type_id=i_t.id
-			INNER join gender g ON pe.gender_id=g.id
-			LEFT JOIN bed ON ie.bed_id=bed.id
-			LEFT JOIN room ON bed.room_id=room.id
-			LEFT JOIN sector ON room.sector_id=sector.id
-			LEFT JOIN bed_category b_cat ON bed.bed_category_id=b_cat.id
-			LEFT JOIN document d ON ie.anamnesis_doc_id=d.id
-			LEFT JOIN document dd ON ie.epicrisis_doc_id=dd.id
-			INNER JOIN healthcare_professional_group hpg ON hpg.internment_episode_id=ie.id
-			INNER JOIN healthcare_professional pr_s ON hpg.healthcare_professional_id=pr_s.id
-			INNER JOIN person pe_pr ON pr_s.person_id=pe_pr.id
-			INNER JOIN professional_professions pr_r ON pr_r.healthcare_professional_id=pr_s.id
-			INNER JOIN professional_specialty spc ON pr_r.professional_specialty_id=spc.id
-			WHERE (ie.status_id = 1 OR pd.internment_episode_id IS NULL) AND (spc.sctid_code='5275007' OR spc.sctid_code='308211001' OR spc.sctid_code='1951000221103')
-			AND d.created_on BETWEEN :startDate AND :endDate
-			AND ins.id= :institutionId
-		</query>
-	</named-native-query>
-
-	<named-native-query name="GeneralReports.ComplementaryStudies" result-set-mapping="GeneralReports.ComplementaryStudiesResult">
-		<query>
-			SELECT concat(i.name, '(SISA: ', i.sisa_code, ' | CUIT: ', i.cuit, ')') AS institution,
-			sr.request_date as date, sr_cat.description AS category,
-			CASE
-			WHEN dr_st.id='1' THEN 'Pendiente'
-			WHEN dr_st.id='261782000' THEN 'Completado'
-			WHEN dr_st.id='89925002' THEN 'Eliminado'
-			ELSE 'Otro'
-			END AS order,
-			ri.description AS typeOfRequest,
-			src.description AS origin,
-			concat(pe_pat.last_name, ' ', pe_pat.other_last_names, ', ', pe_pat.first_name, ' ', pe_pat.middle_names) AS patientName, id_t.description AS documentTypePatient, pe_pat.identification_number AS documentNumberPatient,
-			mc.name AS socialWork, pmc.affiliate_number AS affiliateNumber,
-			concat(pe_hp.last_name, ' ', pe_hp.other_last_names, ', ', pe_hp.first_name, ' ', pe_hp.middle_names) AS professionalName, id_tt.description AS documentTypeProfessional, pe_hp.identification_number AS documentNumberProfessional,
-			hp.license_number AS license, n.description AS note,
-			d_r.effective_time AS dateOfIssue, concat(s_dr.pt, ' (SNOMED: ', s_dr.sctid, ' | CIE10: ', d_r.cie10_codes, ')') AS studyName, n_dr.description AS additionalNotes,
-			concat(s_hc.pt, ' [Estado: ', hc_st.description, ', Verificación: ', hc_ver.description, ', Severidad:', hc_sev.display, ', Tipo: ', hc_t.description, '] (SNOMED: ', s_hc.sctid, ' | CIE10: ', hc.cie10_codes, ') Fecha: ', hc.start_date) AS associatedProblems
-			FROM document d
-			INNER JOIN service_request sr ON d.source_id=sr.id AND d.source_type_id=3 AND d.type_id=6
-			INNER JOIN service_request_category sr_cat ON sr.category_id=sr_cat.id
-			INNER JOIN service_request_status sr_st ON sr.status_id=sr_st.id
-			INNER JOIN request_intent ri ON sr.intent_id=ri.id
-			INNER JOIN source_type src ON sr.source_type_id=src.id
-			INNER JOIN patient pa ON sr.patient_id=pa.id
-			INNER JOIN person pe_pat ON pa.person_id=pe_pat.id
-			INNER JOIN identification_type id_t ON pe_pat.identification_type_id=id_t.id
-			LEFT JOIN patient_medical_coverage pmc ON sr.medical_coverage_id=pmc.id
-			LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id
-			LEFT JOIN health_insurance hi ON hi.id=mc.id
-			INNER JOIN healthcare_professional hp ON sr.doctor_id=hp.id
-			INNER JOIN person pe_hp ON pe_hp.id=hp.person_id
-			INNER JOIN identification_type id_tt ON pe_hp.identification_type_id=id_tt.id
-			INNER JOIN institution i ON sr.institution_id=i.id
-			LEFT JOIN note n ON sr.note_id=n.id
-			INNER JOIN (select * from document_diagnostic_report ddr_ WHERE ddr_.diagnostic_report_id IN (SELECT MAX(ddrr.diagnostic_report_id) FROM document_diagnostic_report ddrr GROUP BY ddrr.document_id)) ddr ON ddr.document_id=d.id
-			INNER JOIN diagnostic_report d_r ON ddr.diagnostic_report_id=d_r.id
-			INNER JOIN diagnostic_report_status dr_st ON d_r.status_id=dr_st.id
-			INNER JOIN snomed s_dr ON d_r.snomed_id=s_dr.id
-			LEFT JOIN note n_dr ON d_r.note_id=n_dr.id
-			INNER JOIN health_condition hc ON d_r.health_condition_id=hc.id
-			INNER JOIN condition_clinical_status hc_st ON hc.status_id=hc_st.id
-			INNER JOIN condition_verification_status hc_ver ON hc.verification_status_id=hc_ver.id
-			INNER JOIN problem_type hc_t ON hc.problem_id=hc_t.id
-			INNER JOIN health_condition_severity hc_sev ON hc.severity=hc_sev.code
-			INNER JOIN snomed s_hc ON hc.snomed_id=s_hc.id
-			WHERE d.created_on BETWEEN :startDate AND :endDate
-			AND i.id= :institutionId
-			order by d.created_on;
-		</query>
-	</named-native-query>
-	
-	<named-native-query name="GeneralReports.TotalNursingRecovery" result-set-mapping="GeneralReports.TotalNursingRecoveryResult">
+	<named-native-query name="NursingReports.TotalNursingRecovery" result-set-mapping="NursingReports.TotalNursingRecoveryResult">
 		<query>
 			WITH source AS (
 			SELECT oc.id, oc.created_by, oc.created_on, oc.institution_id, oc.patient_id, 'Consulta Ambulatoria' AS origin, oc.document_id FROM outpatient_consultation oc
@@ -1260,6 +1394,7 @@
 			INNER JOIN healthcare_professional_specialty hps ON hps.professional_profession_id=hpp.id
 			INNER JOIN clinical_specialty cs ON cs.id=hps.clinical_specialty_id
 			WHERE prs.sctid_code IN ('1951000221103', '308211001', '5275007')
+
 			)
 
 			SELECT DISTINCT concat(ins.name, '(SISA: ', ins.sisa_code, ' | CUIT: ', ins.cuit, ')') AS institution, oc.origin AS source,
@@ -1267,7 +1402,7 @@
 			oc.created_on AS attentionDate,
 			CASE
 			WHEN (EXTRACT(HOUR FROM oc.created_on)) &lt; 3 THEN
-			concat(24-3, ':', EXTRACT(MINUTE FROM oc.created_on))
+			concat(21+EXTRACT(HOUR FROM oc.created_on), ':', EXTRACT(MINUTE FROM oc.created_on))
 			ELSE concat(EXTRACT(HOUR FROM oc.created_on)-3, ':', EXTRACT(MINUTE FROM oc.created_on))
 			END AS hour,
 			pp.identification_number AS patientDni, concat(pp.first_name , ' ', pp.last_name) AS patientName, g.description AS gender, gg.description AS selfPerceivedGener, pe.name_self_determination selfPerceiverName, pp.birth_date birthday,
@@ -1282,8 +1417,8 @@
 			ELSE concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
 			END AS ageToday,
 			et.pt ethnicity,
-			(SELECT string_agg(concat(mc.name, '(RNOS: ', hi.rnos, ')'), ', ') from patient_medical_coverage pmc LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id LEFT JOIN health_insurance hi on hi.id=mc.id WHERE pmc.patient_id=pa.id) as medicalCoverage,
-			concat(a.street, ' N° ', a.number, CASE WHEN a.floor IS NOT NULL THEN concat(' Piso: ', a.floor, 'Departamento: ', a.apartment) END) AS address,
+			(SELECT string_agg(concat(mc.name, '(RNOS: ', hi.rnos, ')'), ', ') from patient_medical_coverage pmc LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id LEFT JOIN health_insurance hi ON hi.id=mc.id WHERE pmc.patient_id=pa.id) AS medicalCoverage,
+			concat(a.street, ' N° ', a.number, CASE WHEN a.floor is not null THEN concat(' Piso: ', a.floor, 'Departamento: ', a.apartment) END) AS address,
 			c.description AS location,
 			ed.description AS educationLevel,
 			lab.description AS occupation,
@@ -1297,12 +1432,12 @@
 			(SELECT ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs ON dvs.observation_vital_sign_id=ovs.id INNER JOIN snomed s_vs ON ovs.snomed_id=s_vs.id WHERE dvs.document_id=d.id AND s_vs.id=8) AS height,
 			(SELECT ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs ON dvs.observation_vital_sign_id=ovs.id INNER JOIN snomed s_vs ON ovs.snomed_id=s_vs.id WHERE dvs.document_id=d.id AND s_vs.id=9) AS weight,
 			(SELECT ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs ON dvs.observation_vital_sign_id=ovs.id INNER JOIN snomed s_vs ON ovs.snomed_id=s_vs.id WHERE dvs.document_id=d.id AND s_vs.id=10) AS bmi,
-			(SELECT string_agg(concat(s_proc.pt, '(', ps.description, ' | SNOMED: ', s_proc.sctid, ' | CIE10: ', proc.cie10_codes, ')'), ', ') FROM document_procedure dp INNER JOIN procedures PROC ON dp.procedure_id=proc.id INNER JOIN procedures_status ps ON proc.status_id=ps.id INNER JOIN snomed s_proc ON proc.snomed_id=s_proc.id WHERE dp.document_id=d.id) AS procedures,
+			(SELECT string_agg(concat(s_proc.pt, '(', ps.description, ' | SNOMED: ', s_proc.sctid, ' | CIE10: ', proc.cie10_codes, ')'), ', ') from document_procedure dp INNER JOIN procedures proc ON dp.procedure_id=proc.id INNER JOIN procedures_status ps ON proc.status_id=ps.id INNER JOIN snomed s_proc ON proc.snomed_id=s_proc.id WHERE dp.document_id=d.id) AS procedures,
 			(SELECT string_agg(concat(s_prob.pt,' (',ccs.description,' &amp; ',cvs.description,' - Fecha: ',hc.start_date ,')', '[SNOMED: ', s_prob.sctid, ' | CIE10: ', hc.cie10_codes, ']'), ', ')
-			FROM document_health_condition dhc INNER JOIN health_condition hc ON dhc.health_condition_id=hc.id INNER JOIN problem_type pt ON hc.problem_id=pt.id INNER JOIN snomed s_prob ON hc.snomed_id=s_prob.id INNER JOIN condition_clinical_status ccs ON hc.status_id=ccs.id INNER JOIN condition_verification_status cvs ON hc.verification_status_id=cvs.id WHERE dhc.document_id=d.id) AS problems,
+			from document_health_condition dhc INNER JOIN health_condition hc ON dhc.health_condition_id=hc.id INNER JOIN problem_type pt ON hc.problem_id=pt.id INNER JOIN snomed s_prob ON hc.snomed_id=s_prob.id INNER JOIN condition_clinical_status ccs ON hc.status_id=ccs.id INNER JOIN condition_verification_status cvs ON hc.verification_status_id=cvs.id WHERE dhc.document_id=d.id) AS problems,
 			(SELECT string_agg(concat(s_med.pt, '[SNOMED: ', s_med.sctid, ' | CIE10: ', ms.cie10_codes, '] (status: ', mss.description, ')'), ', ') FROM document_medicamention_statement dms INNER JOIN medication_statement ms ON dms.medication_statement_id=ms.id INNER JOIN medication_statement_status mss ON ms.status_id=mss.id INNER JOIN snomed s_med ON ms.snomed_id=s_med.id WHERE dms.document_id=d.id) AS medication,
-			(SELECT string_agg(ev.description, ', ') FROM note ev WHERE d.other_note_id=ev.id) AS evolution
-			FROM source_details oc
+			(SELECT string_agg(ev.description, ', ') from note ev WHERE d.other_note_id=ev.id) AS evolution
+			from source_details oc
 			LEFT JOIN institution ins ON oc.institution_id=ins.id
 			INNER JOIN person p ON oc.person_id=p.id
 			LEFT JOIN patient pa ON oc.patient_id=pa.id
@@ -1319,105 +1454,120 @@
 			LEFT JOIN city c ON a.city_id=c.id
 			LEFT JOIN document d ON oc.document_id=d.id
 			WHERE oc.created_on BETWEEN :startDate AND :endDate
-			AND (pmc.id IS NOT NULL AND NOT (lower(mc.name) LIKE '%sumar%')) AND ins.id=:institutionId
+			AND (pmc.id is not null AND NOT (lower(mc.name) LIKE '%sumar%')) AND ins.id= :institutionId
 			ORDER BY oc.created_on;
+
 		</query>
 	</named-native-query>
-
-	<named-native-query name="GeneralReports.OutPatientOlderAdults" result-set-mapping="GeneralReports.OutPatientOlderAdultsResult">
+	
+	<named-native-query name="NursingReports.VaccinesNursing" result-set-mapping="NursingReports.VaccinesNursingResult">
 		<query>
 			SELECT concat(ins.name, '(SISA: ', ins.sisa_code, ' | CUIT: ', ins.cuit, ')') AS institution,
-			concat(p.first_name, ' ', p.middle_names, ' ', p.last_name, ' ', p.other_last_names) AS lender, p.identification_number AS lenderDni,
-			oc.start_date AS attentionDate,
-			CASE
-			WHEN (EXTRACT(HOUR FROM oc.created_on)) &lt; 3 THEN
-			concat(24-3, ':', EXTRACT(MINUTE FROM oc.created_on))
-			ELSE concat(EXTRACT(HOUR FROM oc.created_on)-3, ':', EXTRACT(MINUTE FROM oc.created_on))
-			END AS hour,
-			(row_number() over(partition by oc.doctor_id order by oc.start_date)) AS consultationNumber,
-			pp.identification_number as patientDni, concat(pp.first_name , ' ', pp.last_name) AS patientName, g.description AS gender, pp.birth_date birthDate,
-			CASE
-			WHEN (EXTRACT(MONTH FROM oc.start_date) - EXTRACT(MONTH FROM pp.birth_date)) &lt; 0 THEN
-			concat((EXTRACT(YEAR FROM oc.start_date) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM oc.start_date) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
-			ELSE concat((EXTRACT(YEAR FROM oc.start_date) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM oc.start_date) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
-			END AS ageTurn,
-			CASE
-			WHEN (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)) &lt; 0 THEN
-			concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
-			ELSE concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
-			END AS ageToday,
-			(SELECT string_agg(concat(mc.name, '(RNOS: ', hi.rnos, ')'), ', ') FROM patient_medical_coverage pmc LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id LEFT JOIN health_insurance hi ON hi.id=mc.id WHERE pmc.patient_id=pa.id) AS medicalCoverage,
-			concat(a.street, ' N° ', a.number, case WHEN a.floor is not null THEN concat(' Piso: ', a.floor, 'Departamento: ', a.apartment) end) AS address,
-			c.description AS locationPatient,
-			pe.phone_number AS phoneNumber,
-			(SELECT string_agg(concat(s_prob.pt,' (',ccs.description,' &amp; ',cvs.description,' - Fecha: ',hc.start_date ,')', '[SNOMED: ', s_prob.sctid, ' | CIE10: ', hc.cie10_codes, ']'), ', ')
-			from document_health_condition dhc INNER JOIN health_condition hc ON dhc.health_condition_id=hc.id INNER JOIN problem_type pt ON hc.problem_id=pt.id INNER JOIN snomed s_prob on hc.snomed_id=s_prob.id INNER JOIN condition_clinical_status ccs ON hc.status_id=ccs.id INNER JOIN condition_verification_status cvs ON hc.verification_status_id=cvs.id where dhc.document_id=d.id) AS problems
-			from outpatient_consultation oc
-			LEFT JOIN institution ins ON oc.institution_id=ins.id
-			LEFT JOIN clinical_specialty cs ON oc.clinical_specialty_id=cs.id
-			LEFT JOIN healthcare_professional hp ON oc.doctor_id=hp.id
-			INNER JOIN person p ON hp.person_id=p.id
-			LEFT JOIN patient pa ON oc.patient_id=pa.id
+			cs.name as operativeUnit,
+			concat(p.first_name, ' ', p.middle_names, ' ', p.last_name, ' ', p.other_last_names) as provider,
+			p.identification_number as providerIdentificationNumber,
+			vc.performed_date as attentionDate,
+			pp.identification_number as patientIdentificationNumber,
+			concat(pp.first_name , ' ', pp.last_name) as patientName,
+			g.description as patientGender,
+			pp.birth_date patientBirthDate,
+			case
+			when (EXTRACT(MONTH FROM vc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)) &lt; 0 then
+			concat((EXTRACT(YEAR FROM vc.performed_date) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM vc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			else concat((EXTRACT(YEAR FROM vc.performed_date) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM vc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			end as ageOnAppointmentDate,
+			sim.pt as vaccine,
+			sim.sctid as sctid,
+			im.cie10_codes as cie10Code,
+			ims.description as status,
+			vd.condition_description as condition,
+			vd.scheme_description as vaccinationSchedule,
+			vd.dose as vaccinationDosage,
+			vd.lot_number as vaccinationLot
+			FROM vaccine_consultation vc
+			INNER JOIN patient pa ON vc.patient_id=pa.id
 			INNER JOIN person pp ON pa.person_id=pp.id
-			LEFT JOIN person_extended pe ON pe.person_id=pp.id
 			INNER JOIN gender g ON pp.gender_id=g.id
-			LEFT JOIN gender gg ON pe.gender_self_determination=gg.id
-			LEFT JOIN patient_medical_coverage pmc ON pmc.patient_id=pa.id
-			LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id
-			LEFT JOIN address a ON pe.address_id=a.id
-			LEFT JOIN city c ON a.city_id=c.id
-			LEFT JOIN document d ON oc.document_id=d.id
-			WHERE d.created_on BETWEEN :startDate AND :endDate
-			AND EXTRACT(year FROM age(oc.start_date, pp.birth_date)) >= 60
+			INNER JOIN institution ins ON vc.institution_id=ins.id
+			INNER JOIN healthcare_professional hcp ON vc.doctor_id=hcp.id
+			INNER JOIN person p ON hcp.person_id=p.id
+			INNER JOIN clinical_specialty cs ON vc.clinical_specialty_id=cs.id
+			INNER JOIN document d ON d.source_id=vc.id AND d.source_type_id=5
+			INNER JOIN document_inmunization di ON di.document_id=d.id
+			INNER JOIN inmunization im ON di.inmunization_id=im.id AND im.patient_id=pa.id
+			INNER JOIN inmunization_status ims ON im.status_id=ims.id INNER JOIN snomed sim ON im.snomed_id=sim.id
+			INNER JOIN v_nomivac_immunization_data vd ON vd.vaccine_sctid=sim.sctid AND im.patient_id=vd.patient_id AND im.administration_date=vd.administration_date and im.institution_id=vd.institution_id
+			WHERE cs.name LIKE 'Enfermería%'
+			AND vc.created_on BETWEEN :startDate AND :endDate
 			AND ins.id= :institutionId
-			order by oc.created_on
-		</query>
-	</named-native-query>
-
-	<named-native-query name="GeneralReports.HospitalizationOlderAdults" result-set-mapping="GeneralReports.HospitalizationOlderAdultsResult">
-		<query>
-			SELECT ins.name AS institution,
-			concat(pe.last_name, ' ', pe.other_last_names) AS lastName, concat(pe.first_name, ' ', pe.middle_names) AS name, g.description AS gender,
-			concat(i_t.description, ' ', pe.identification_number) AS identification, pe.birth_date birthDate,
-			CASE
-			WHEN (EXTRACT(MONTH FROM ie.entry_date) - EXTRACT(MONTH FROM pe.birth_date)) &lt; 0 THEN
-			concat((EXTRACT(YEAR FROM ie.entry_date) - EXTRACT(YEAR FROM pe.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM ie.entry_date) - EXTRACT(MONTH FROM pe.birth_date)), ' Meses')
-			ELSE concat((EXTRACT(YEAR FROM ie.entry_date) - EXTRACT(YEAR FROM pe.birth_date)), ' Años, ', (EXTRACT(MONTH FROM ie.entry_date) - EXTRACT(MONTH FROM pe.birth_date)), ' Meses')
-			END AS ageTurn,
-			CASE
-			WHEN (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pe.birth_date)) &lt; 0 then
-			concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pe.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pe.birth_date)), ' Meses')
-			ELSE concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pe.birth_date)), ' Años, ', (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pe.birth_date)), ' Meses')
-			END AS ageToday, pex.phone_number AS phone,
-			ie.entry_date AS entrance, ie.probable_discharge_date AS probableEnablement,
-			bed.bed_number AS bed, b_cat.description AS category, room.description AS room, sector.description AS sector, pd.administrative_discharge_date AS medicalClearance,
-			(SELECT string_agg(concat(s_prob.pt,' (',ccs.description,' &amp; ',cvs.description,' - Fecha: ',hc.start_date ,')', '[SNOMED: ', s_prob.sctid, ' | CIE10: ', hc.cie10_codes, ']'), ', ')
-			FROM document_health_condition dhc INNER JOIN health_condition hc ON dhc.health_condition_id=hc.id INNER JOIN problem_type pt ON hc.problem_id=pt.id INNER JOIN snomed s_prob ON hc.snomed_id=s_prob.id INNER JOIN condition_clinical_status ccs ON hc.status_id=ccs.id INNER JOIN condition_verification_status cvs ON hc.verification_status_id=cvs.id WHERE dhc.document_id=d.id) AS problem
-			FROM internment_episode ie
-			INNER JOIN institution ins ON ie.institution_id=ins.id
-			LEFT JOIN patient_discharge pd ON ie.id = pd.internment_episode_id
-			LEFT JOIN discharge_type dt ON pd.discharge_type_id = dt.id
-			INNER JOIN patient pa ON ie.patient_id = pa.id
-			INNER JOIN person pe ON pa.person_id = pe.id
-			INNER JOIN identification_type i_t ON pe.identification_type_id=i_t.id
-			INNER JOIN gender g ON pe.gender_id=g.id
-			LEFT JOIN person_extended pex ON pex.person_id=pe.id
-			LEFT JOIN bed ON ie.bed_id=bed.id
-			LEFT JOIN room ON bed.room_id=room.id
-			LEFT JOIN sector ON room.sector_id=sector.id
-			LEFT JOIN bed_category b_cat ON bed.bed_category_id=b_cat.id
-			LEFT JOIN document d ON ie.anamnesis_doc_id=d.id
-			LEFT JOIN document dd ON ie.epicrisis_doc_id=dd.id
-			WHERE (ie.status_id = 1 OR pd.internment_episode_id is null)
-			AND d.created_on BETWEEN :startDate AND :endDate
-			AND ins.id= :institutionId
-			AND EXTRACT(year FROM age(ie.entry_date, pe.birth_date)) >= 60
+			<!-- AND (vc.created_on >= date_trunc('month', (now() + (INTERVAL '-1 month'))) AND vc.created_on < date_trunc('month', now())) -->
 		</query>
 	</named-native-query>
 
 	<!-- ========================================== -->
 	<!-- ============== Odontology Reports =============== -->
 	<!-- ========================================== -->
+
+	<named-native-query name="OdontologyReports.OdontologyProceduresReports" result-set-mapping="OdontologyReports.OdontologyProceduresReportsResult">
+		<query>
+			SELECT CONCAT(ins.name, '(SISA: ', ins.sisa_code, ' | CUIT: ', ins.cuit, ')') AS institution,
+			CONCAT(p.first_name, ' ', p.middle_names, ' ', p.last_name, ' ', p.other_last_names) AS professionalName, p.identification_number AS professionalId,
+			hp.license_number AS professionalRegistrationNumber,
+			oc.performed_date AS attentionDate,
+			CASE
+			WHEN (EXTRACT(HOUR FROM oc.created_on)) &lt; 3 THEN
+			CONCAT(21+EXTRACT(HOUR FROM oc.created_on), ':', EXTRACT(MINUTE FROM oc.created_on))
+			ELSE CONCAT(EXTRACT(HOUR FROM oc.created_on)-3, ':', EXTRACT(MINUTE FROM oc.created_on))
+			END AS attentionHour,
+			CONCAT(pp.first_name , ' ', pp.last_name) AS patientName, pp.identification_number AS patientId, g.description AS patientSex, gg.description AS patientGender,
+			pe.name_self_determination AS patientSelfPerceivedName, pp.birth_date patientBirthDate,
+			CASE
+			WHEN (EXTRACT(MONTH FROM oc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)) &lt; 0 THEN
+			CONCAT((EXTRACT(YEAR FROM oc.performed_date) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM oc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			ELSE CONCAT((EXTRACT(YEAR FROM oc.performed_date) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM oc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			END AS patientAgeWhenAttended,
+			CASE
+			WHEN (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)) &lt; 0 THEN
+			CONCAT((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			ELSE CONCAT((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			END AS patientAge,
+			CONCAT(mc.name, '(RNOS: ', hi.rnos, ')') AS patientSocialCoverage,
+			CONCAT(a.street, ' N° ', a.number, CASE WHEN a.floor IS NOT NULL THEN CONCAT(' Piso: ', a.floor, 'Departamento: ', a.apartment) END) AS patientAddress,
+			c.description AS patientLocation,
+			CONCAT(oci.permanent_c, '|', oci.permanent_p, '|', oci.permanent_o) AS patientPermanentCPO, CONCAT(oci.temporary_c, '|', oci.temporary_e, '|', oci.temporary_o) AS patientTemporaryCEO,
+			(SELECT STRING_AGG(r.description, ', ') FROM odontology_consultation_reason ocr INNER JOIN odontology_reason r ON ocr.reason_id=r.id WHERE ocr.odontology_consultation_id=oc.id) AS reasons,
+			(SELECT STRING_AGG(CONCAT(s_prob.pt,' (',ccs.description,' &amp; ',cvs.description,' - Fecha: ',hc.start_date ,')', '[SNOMED: ', s_prob.sctid, ' | CIE10: ', hc.cie10_codes, ']'), ', ')
+			FROM document_health_condition dhc INNER JOIN health_condition hc ON dhc.health_condition_id=hc.id INNER JOIN problem_type pt ON hc.problem_id=pt.id INNER JOIN snomed s_prob ON hc.snomed_id=s_prob.id INNER JOIN condition_clinical_status ccs ON hc.status_id=ccs.id INNER JOIN condition_verification_status cvs ON hc.verification_status_id=cvs.id WHERE dhc.document_id=d.id) AS otherDiagnoses,
+			(SELECT STRING_AGG(CONCAT(s_proc.pt, '(', ps.description, ' | SNOMED: ', s_proc.sctid, ' | CIE10: ', proc.cie10_codes, ')'), ', ') FROM document_procedure dp INNER JOIN procedures proc ON dp.procedure_id=proc.id INNER JOIN procedures_status ps ON proc.status_id=ps.id INNER JOIN snomed s_proc ON proc.snomed_id=s_proc.id WHERE dp.document_id=d.id) AS otherProcedures,
+			(SELECT STRING_AGG(CONCAT(sai.pt, '(', aics.description, ' | SNOMED: ' , sai.sctid, ' | CIE10: ', ai.cie10_codes, ' | Categoria: ', aic.display, ' | Criticidad: ', aicr.display, ' | Tipo: ', ait.display, ' | Verificación: ', aivs.description, ')'), ', ') FROM document_allergy_intolerance dai INNER JOIN allergy_intolerance ai ON dai.allergy_intolerance_id=ai.id
+			INNER JOIN snomed sai ON ai.snomed_id=sai.id INNER JOIN allergy_intolerance_clinical_status aics ON ai.status_id=aics.id INNER JOIN allergy_intolerance_category aic ON ai.category_id = aic.id INNER JOIN allergy_intolerance_criticality aicr ON ai.criticality=aicr.id INNER JOIN allergy_intolerance_type ait ON ai.type=ait.id INNER JOIN allergy_intolerance_verification_status aivs ON ai.verification_status_id=aivs.id WHERE dai.document_id=d.id) AS allergies,
+			(SELECT STRING_AGG(CONCAT(s_med.pt, '[SNOMED: ', s_med.sctid, ' | CIE10: ', ms.cie10_codes, '] (status: ', mss.description, ')'), ', ') FROM document_medicamention_statement dms INNER JOIN medication_statement ms ON dms.medication_statement_id=ms.id INNER JOIN medication_statement_status mss ON ms.status_id=mss.id INNER JOIN snomed s_med ON ms.snomed_id=s_med.id WHERE dms.document_id=d.id) AS commonMedication,
+			(SELECT STRING_AGG(CONCAT(s_d.pt, '(SNOMED: ', s_d.sctid, ' | CIE10: ', od.cie10_codes, ')[diente: ', std.pt, ' | sctid: ', std.sctid, '][superficie: ', sfd.pt, ' | sctid', sfd.sctid, ']'), ', ')
+			FROM document_odontology_diagnostic dod INNER JOIN odontology_diagnostic od ON dod.odontology_diagnostic_id=od.id INNER JOIN snomed s_d ON od.snomed_id=s_d.id LEFT JOIN snomed std ON od.tooth_id=std.id LEFT JOIN snomed sfd ON od.surface_id=sfd.id WHERE dod.document_id=d.id) AS dentalDiagnoses,
+			(SELECT STRING_AGG(CONCAT(s_p.pt, '(SNOMED: ', s_p.sctid, ' | CIE10: ', op.cie10_codes, ')[diente: ', stp.pt, ' | sctid: ', stp.sctid, '][superficie: ', sfp.pt, ' | sctid', sfp.sctid, ']'), ', ') FROM document_odontology_procedure dop INNER JOIN odontology_procedure op ON dop.odontology_procedure_id=op.id INNER JOIN snomed s_p ON op.snomed_id=s_p.id
+			LEFT JOIN snomed stp ON op.tooth_id=stp.id LEFT JOIN snomed sfp ON op.surface_id=sfp.id WHERE dop.document_id=d.id) AS dentalProcedures,
+			(SELECT STRING_AGG(ev.description, ', ') FROM note ev WHERE d.other_note_id=ev.id) AS evolution
+			FROM odontology_consultation oc
+			LEFT JOIN odontology_consultation_indices oci ON oci.odontology_consultation_id=oc.id
+			LEFT JOIN institution ins ON oc.institution_id=ins.id
+			LEFT JOIN healthcare_professional hp ON oc.doctor_id=hp.id
+			INNER JOIN person p ON hp.person_id=p.id
+			LEFT JOIN patient pa ON oc.patient_id=pa.id
+			INNER JOIN person pp ON pa.person_id=pp.id
+			LEFT JOIN PERSON_EXTended pe ON pe.person_id=pp.id
+			INNER JOIN Gender g ON pp.Gender_id=g.id
+			LEFT JOIN Gender gg ON pe.Gender_self_determination=gg.id
+			LEFT JOIN patient_medical_coverage pmc ON pmc.patient_id=oc.patient_medical_coverage_id
+			LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id
+			LEFT JOIN health_insurance hi ON hi.id=mc.id
+			LEFT JOIN address a ON pe.address_id=a.id
+			LEFT JOIN city c ON a.city_id=c.id
+			LEFT JOIN document d ON d.source_id=oc.id AND d.source_type_id=6
+			WHERE oc.created_on BETWEEN :startDate AND :endDate
+			AND ins.id=:institutionId
+			ORDER BY oc.created_on;
+		</query>
+	</named-native-query>
 
 	<named-native-query name="OdontologyReports.ConsultationDetailReporteIPromocion" result-set-mapping="OdontologyReports.ConsultationDetailOdontologyResult">
 		<query>
@@ -1772,7 +1922,6 @@
 			<column name="medicalCoverage" class="java.lang.String"/>
 			<column name="address" class="java.lang.String"/>
 			<column name="location" class="java.lang.String"/>
-			<column name="bmi" class="java.lang.String"/>
 			<column name="reasons" class="java.lang.String"/>
 			<column name="procedures" class="java.lang.String"/>
 			<column name="problems" class="java.lang.String"/>
@@ -1781,7 +1930,7 @@
 		</constructor-result>
 	</sql-result-set-mapping>
 	<sql-result-set-mapping name="ProgramReports.ConsultationDetailSumarResult">
-		<constructor-result target-class="net.pladema.programreports.repository.ConsultationDetailRecupero">
+		<constructor-result target-class="net.pladema.programreports.repository.ConsultationDetailRecuperoSumar">
 			<column name="institution" class="java.lang.String"/>
 			<column name="clinicalSpecialtyId" class="java.lang.Integer"/>
 			<column name="clinicalSpecialty" class="java.lang.String"/>
@@ -1814,7 +1963,6 @@
 			<column name="oxygenSaturationHemoglobin" class="java.lang.String"/>
 			<column name="height" class="java.lang.String"/>
 			<column name="weight" class="java.lang.String"/>
-			<column name="bmi" class="java.lang.String"/>
 			<column name="headCircunference" class="java.lang.String"/>
 			<column name="reasons" class="java.lang.String"/>
 			<column name="procedures" class="java.lang.String"/>
@@ -1858,8 +2006,6 @@
 	</sql-result-set-mapping>
 	<sql-result-set-mapping name="GeneralReports.ConsultationDetailEmergenciasResult">
 		<constructor-result target-class="net.pladema.generalreports.repository.ConsultationDetailEmergencias">
-			<column name="createdOn" class="java.lang.String"/>
-			<column name="institutionId" class="java.lang.String"/>
 			<column name="institution" class="java.lang.String"/>
 			<column name="ambulance" class="java.lang.String"/>
 			<column name="office" class="java.lang.String"/>
@@ -1920,88 +2066,37 @@
 			<column name="contador" class="java.lang.String"/>
 		</constructor-result>
 	</sql-result-set-mapping>
-	<sql-result-set-mapping name="GeneralReports.PatientEmergenciesResult">
-		<constructor-result target-class="net.pladema.generalreports.repository.PatientEmergencies">
+	<sql-result-set-mapping name="OdontologyReports.OdontologyProceduresReportsResult">
+		<constructor-result target-class="net.pladema.odontologyreport.repository.OdontologyProceduresReports">
 			<column name="institution" class="java.lang.String"/>
-			<column name="ambulance" class="java.lang.String"/>
-			<column name="office" class="java.lang.String"/>
-			<column name="sector" class="java.lang.String"/>
-			<column name="policeIntervention" class="java.lang.String"/>
+			<column name="professionalName" class="java.lang.String"/>
+			<column name="professionalId" class="java.lang.String"/>
+			<column name="professionalRegistrationNumber" class="java.lang.String"/>
 			<column name="attentionDate" class="java.lang.String"/>
 			<column name="attentionHour" class="java.lang.String"/>
-			<column name="professionalRegistering" class="java.lang.String"/>
-			<column name="professionalAttention" class="java.lang.String"/>
-			<column name="identification" class="java.lang.String"/>
-			<column name="lastName" class="java.lang.String"/>
-			<column name="names" class="java.lang.String"/>
-			<column name="gender" class="java.lang.String"/>
-			<column name="selfPerceivedGender" class="java.lang.String"/>
-			<column name="selfPerceivedName" class="java.lang.String"/>
-			<column name="birthDate" class="java.lang.String"/>
-			<column name="ageTurn" class="java.lang.String"/>
-			<column name="ageToday" class="java.lang.String"/>
-			<column name="ethnicity" class="java.lang.String"/>
-			<column name="addressPatient" class="java.lang.String"/>
-			<column name="locationPatient" class="java.lang.String"/>
-			<column name="medicalCoverage" class="java.lang.String"/>
-			<column name="emergencyCareEntrance" class="java.lang.String"/>
-			<column name="statePatient" class="java.lang.String"/>
-			<column name="attentionType" class="java.lang.String"/>
-			<column name="triageNote" class="java.lang.String"/>
-			<column name="triageLevel" class="java.lang.String"/>
-			<column name="dateDischarge" class="java.lang.String"/>
-			<column name="ambulanceDischarge" class="java.lang.String"/>
-			<column name="typeDischarge" class="java.lang.String"/>
-			<column name="patientExit" class="java.lang.String"/>
-		</constructor-result>
-	</sql-result-set-mapping>
-
-	<sql-result-set-mapping name="GeneralReports.OutpatientNursingResult">
-		<constructor-result target-class="net.pladema.generalreports.repository.OutpatientNursing">
-			<column name="institution" class="java.lang.String"/>
-			<column name="operativeUnit" class="java.lang.String"/>
-			<column name="patientProvider" class="java.lang.String"/>
-			<column name="providerDni" class="java.lang.String"/>
-			<column name="attentionDate" class="java.lang.String"/>
-			<column name="hour" class="java.lang.String"/>
-			<column name="consultationNumber" class="java.lang.String"/>
-			<column name="patientDni" class="java.lang.String"/>
 			<column name="patientName" class="java.lang.String"/>
-			<column name="gender" class="java.lang.String"/>
-			<column name="selfPerceivedGender" class="java.lang.String"/>
-			<column name="selfPerceivedName" class="java.lang.String"/>
-			<column name="birthDate" class="java.lang.String"/>
-			<column name="ageTurn" class="java.lang.String"/>
-			<column name="ageToday" class="java.lang.String"/>
-			<column name="ethnicity" class="java.lang.String"/>
-			<column name="medicalCoverage" class="java.lang.String"/>
+			<column name="patientId" class="java.lang.String"/>
+			<column name="patientSex" class="java.lang.String"/>
+			<column name="patientGender" class="java.lang.String"/>
+			<column name="patientSelfPerceivedName" class="java.lang.String"/>
+			<column name="patientBirthDate" class="java.lang.String"/>
+			<column name="patientAgeWhenAttended" class="java.lang.String"/>
+			<column name="patientAge" class="java.lang.String"/>
+			<column name="patientSocialCoverage" class="java.lang.String"/>
 			<column name="patientAddress" class="java.lang.String"/>
 			<column name="patientLocation" class="java.lang.String"/>
-			<column name="educationLevel" class="java.lang.String"/>
-			<column name="occupation" class="java.lang.String"/>
-			<column name="vitalSign" class="java.lang.String"/>
-			<column name="procedures" class="java.lang.String"/>
+			<column name="patientPermanentCPO" class="java.lang.String"/>
+			<column name="patientTemporaryCEO" class="java.lang.String"/>
+			<column name="reasons" class="java.lang.String"/>
+			<column name="otherDiagnoses" class="java.lang.String"/>
+			<column name="otherProcedures" class="java.lang.String"/>
+			<column name="allergies" class="java.lang.String"/>
+			<column name="commonMedication" class="java.lang.String"/>
+			<column name="dentalDiagnoses" class="java.lang.String"/>
+			<column name="dentalProcedures" class="java.lang.String"/>
 			<column name="evolution" class="java.lang.String"/>
 		</constructor-result>
 	</sql-result-set-mapping>
-
-	<sql-result-set-mapping name="GeneralReports.NursingInternmentResult">
-		<constructor-result target-class="net.pladema.generalreports.repository.NursingInternment">
-			<column name="institution" class="java.lang.String"/>
-			<column name="lastName" class="java.lang.String"/>
-			<column name="completeName" class="java.lang.String"/>
-			<column name="gender" class="java.lang.String"/>
-			<column name="identification" class="java.lang.String"/>
-			<column name="professional" class="java.lang.String"/>
-			<column name="licenseNumber" class="java.lang.String"/>
-			<column name="bed" class="java.lang.String"/>
-			<column name="categoryBed" class="java.lang.String"/>
-			<column name="roomName" class="java.lang.String"/>
-			<column name="sector" class="java.lang.String"/>
-			<column name="dischargeDate" class="java.lang.String"/>
-		</constructor-result>
-	</sql-result-set-mapping>
-
 	<sql-result-set-mapping name="GeneralReports.ComplementaryStudiesResult">
 		<constructor-result target-class="net.pladema.generalreports.repository.ComplementaryStudies">
 			<column name="institution" class="java.lang.String"/>
@@ -2026,46 +2121,6 @@
 			<column name="associatedProblems" class="java.lang.String"/>
 		</constructor-result>
 	</sql-result-set-mapping>
-
-	<sql-result-set-mapping name="GeneralReports.TotalNursingRecoveryResult">
-		<constructor-result target-class="net.pladema.generalreports.repository.TotalNursingRecovery">
-			<column name="institution" class="java.lang.String"/>
-			<column name="source" class="java.lang.String"/>
-			<column name="lender" class="java.lang.String"/>
-			<column name="lenderDni" class="java.lang.String"/>
-			<column name="attentionDate" class="java.lang.String"/>
-			<column name="hour" class="java.lang.String"/>
-			<column name="patientDni" class="java.lang.String"/>
-			<column name="patientName" class="java.lang.String"/>
-			<column name="gender" class="java.lang.String"/>
-			<column name="selfPerceivedGener" class="java.lang.String"/>
-			<column name="selfPerceiverName" class="java.lang.String"/>
-			<column name="birthday" class="java.lang.String"/>
-			<column name="ageTurn" class="java.lang.String"/>
-			<column name="ageToday" class="java.lang.String"/>
-			<column name="ethnicity" class="java.lang.String"/>
-			<column name="medicalCoverage" class="java.lang.String"/>
-			<column name="address" class="java.lang.String"/>
-			<column name="location" class="java.lang.String"/>
-			<column name="educationLevel" class="java.lang.String"/>
-			<column name="occupation" class="java.lang.String"/>
-			<column name="systolicBloodPressure" class="java.lang.String"/>
-			<column name="diastolicBloodPressure" class="java.lang.String"/>
-			<column name="meanArterialPressure" class="java.lang.String"/>
-			<column name="temperature" class="java.lang.String"/>
-			<column name="heartRate" class="java.lang.String"/>
-			<column name="respirationRate" class="java.lang.String"/>
-			<column name="oxygenSaturationHemoglobin" class="java.lang.String"/>
-			<column name="height" class="java.lang.String"/>
-			<column name="weight" class="java.lang.String"/>
-			<column name="bmi" class="java.lang.String"/>
-			<column name="procedures" class="java.lang.String"/>
-			<column name="problems" class="java.lang.String"/>
-			<column name="medication" class="java.lang.String"/>
-			<column name="evolution" class="java.lang.String"/>
-		</constructor-result>
-	</sql-result-set-mapping>
-
 	<sql-result-set-mapping name="GeneralReports.OutPatientOlderAdultsResult">
 		<constructor-result target-class="net.pladema.generalreports.repository.OutPatientOlderAdults">
 			<column name="institution" class="java.lang.String"/>
@@ -2107,6 +2162,179 @@
 			<column name="sector" class="java.lang.String"/>
 			<column name="medicalClearance" class="java.lang.String"/>
 			<column name="problem" class="java.lang.String"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="NursingReports.HospitalizationNursingResult">
+		<constructor-result target-class="net.pladema.nursingreports.repository.HospitalizationNursing">
+			<column name="institution" class="java.lang.String"/>
+			<column name="lastName" class="java.lang.String"/>
+			<column name="completeName" class="java.lang.String"/>
+			<column name="gender" class="java.lang.String"/>
+			<column name="identification" class="java.lang.String"/>
+			<column name="professional" class="java.lang.String"/>
+			<column name="licenseNumber" class="java.lang.String"/>
+			<column name="bed" class="java.lang.String"/>
+			<column name="categoryBed" class="java.lang.String"/>
+			<column name="roomName" class="java.lang.String"/>
+			<column name="sector" class="java.lang.String"/>
+			<column name="dischargeDate" class="java.lang.String"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="NursingReports.OutpatientNursingResult">
+		<constructor-result target-class="net.pladema.nursingreports.repository.OutpatientNursing">
+			<column name="institution" class="java.lang.String"/>
+			<column name="operativeUnit" class="java.lang.String"/>
+			<column name="patientProvider" class="java.lang.String"/>
+			<column name="providerDni" class="java.lang.String"/>
+			<column name="attentionDate" class="java.lang.String"/>
+			<column name="hour" class="java.lang.String"/>
+			<column name="consultationNumber" class="java.lang.String"/>
+			<column name="patientDni" class="java.lang.String"/>
+			<column name="patientName" class="java.lang.String"/>
+			<column name="gender" class="java.lang.String"/>
+			<column name="selfPerceivedGender" class="java.lang.String"/>
+			<column name="selfPerceivedName" class="java.lang.String"/>
+			<column name="birthDate" class="java.lang.String"/>
+			<column name="ageTurn" class="java.lang.String"/>
+			<column name="ageToday" class="java.lang.String"/>
+			<column name="ethnicity" class="java.lang.String"/>
+			<column name="medicalCoverage" class="java.lang.String"/>
+			<column name="patientAddress" class="java.lang.String"/>
+			<column name="patientLocation" class="java.lang.String"/>
+			<column name="educationLevel" class="java.lang.String"/>
+			<column name="occupation" class="java.lang.String"/>
+			<column name="systolicPressure" class="java.lang.String"/>
+			<column name="diastolicPressure" class="java.lang.String"/>
+			<column name="meanArterialPressure" class="java.lang.String"/>
+			<column name="temperature" class="java.lang.String"/>
+			<column name="heartRate" class="java.lang.String"/>
+			<column name="respiratoryRate" class="java.lang.String"/>
+			<column name="arterialOxygenSaturation" class="java.lang.String"/>
+			<column name="height" class="java.lang.String"/>
+			<column name="weight" class="java.lang.String"/>
+			<column name="bmi" class="java.lang.String"/>
+			<column name="procedures" class="java.lang.String"/>
+			<column name="evolution" class="java.lang.String"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="NursingReports.NursingEmergenciesResult">
+		<constructor-result target-class="net.pladema.nursingreports.repository.NursingEmergencies">
+			<column name="institution" class="java.lang.String"/>
+			<column name="ambulance" class="java.lang.String"/>
+			<column name="office" class="java.lang.String"/>
+			<column name="sector" class="java.lang.String"/>
+			<column name="policeIntervention" class="java.lang.String"/>
+			<column name="attentionDate" class="java.lang.String"/>
+			<column name="attentionHour" class="java.lang.String"/>
+			<column name="professionalRegistering" class="java.lang.String"/>
+			<column name="professionalAttention" class="java.lang.String"/>
+			<column name="identification" class="java.lang.String"/>
+			<column name="lastName" class="java.lang.String"/>
+			<column name="names" class="java.lang.String"/>
+			<column name="gender" class="java.lang.String"/>
+			<column name="selfPerceivedGender" class="java.lang.String"/>
+			<column name="selfPerceivedName" class="java.lang.String"/>
+			<column name="birthDate" class="java.lang.String"/>
+			<column name="ageTurn" class="java.lang.String"/>
+			<column name="ageToday" class="java.lang.String"/>
+			<column name="ethnicity" class="java.lang.String"/>
+			<column name="addressPatient" class="java.lang.String"/>
+			<column name="locationPatient" class="java.lang.String"/>
+			<column name="medicalCoverage" class="java.lang.String"/>
+			<column name="emergencyCareEntrance" class="java.lang.String"/>
+			<column name="statePatient" class="java.lang.String"/>
+			<column name="attentionType" class="java.lang.String"/>
+			<column name="triageNote" class="java.lang.String"/>
+			<column name="triageLevel" class="java.lang.String"/>
+			<column name="dateDischarge" class="java.lang.String"/>
+			<column name="ambulanceDischarge" class="java.lang.String"/>
+			<column name="typeDischarge" class="java.lang.String"/>
+			<column name="patientExit" class="java.lang.String"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="NursingReports.TotalNursingRecoveryResult">
+		<constructor-result target-class="net.pladema.nursingreports.repository.TotalNursingRecovery">
+			<column name="institution" class="java.lang.String"/>
+			<column name="source" class="java.lang.String"/>
+			<column name="lender" class="java.lang.String"/>
+			<column name="lenderDni" class="java.lang.String"/>
+			<column name="attentionDate" class="java.lang.String"/>
+			<column name="hour" class="java.lang.String"/>
+			<column name="patientDni" class="java.lang.String"/>
+			<column name="patientName" class="java.lang.String"/>
+			<column name="gender" class="java.lang.String"/>
+			<column name="selfPerceivedGener" class="java.lang.String"/>
+			<column name="selfPerceiverName" class="java.lang.String"/>
+			<column name="birthday" class="java.lang.String"/>
+			<column name="ageTurn" class="java.lang.String"/>
+			<column name="ageToday" class="java.lang.String"/>
+			<column name="ethnicity" class="java.lang.String"/>
+			<column name="medicalCoverage" class="java.lang.String"/>
+			<column name="address" class="java.lang.String"/>
+			<column name="location" class="java.lang.String"/>
+			<column name="educationLevel" class="java.lang.String"/>
+			<column name="occupation" class="java.lang.String"/>
+			<column name="systolicBloodPressure" class="java.lang.String"/>
+			<column name="diastolicBloodPressure" class="java.lang.String"/>
+			<column name="meanArterialPressure" class="java.lang.String"/>
+			<column name="temperature" class="java.lang.String"/>
+			<column name="heartRate" class="java.lang.String"/>
+			<column name="respirationRate" class="java.lang.String"/>
+			<column name="oxygenSaturationHemoglobin" class="java.lang.String"/>
+			<column name="height" class="java.lang.String"/>
+			<column name="weight" class="java.lang.String"/>
+			<column name="bmi" class="java.lang.String"/>
+			<column name="procedures" class="java.lang.String"/>
+			<column name="problems" class="java.lang.String"/>
+			<column name="medication" class="java.lang.String"/>
+			<column name="evolution" class="java.lang.String"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="NursingReports.VaccinesNursingResult">
+		<constructor-result target-class="net.pladema.nursingreports.repository.VaccinesNursing">
+			<column name="institution" class="java.lang.String"/>
+			<column name="operativeUnit" class="java.lang.String"/>
+			<column name="provider" class="java.lang.String"/>
+			<column name="providerIdentificationNumber" class="java.lang.String"/>
+			<column name="attentionDate" class="java.lang.String"/>
+			<column name="patientIdentificationNumber" class="java.lang.String"/>
+			<column name="patientName" class="java.lang.String"/>
+			<column name="patientGender" class="java.lang.String"/>
+			<column name="patientBirthDate" class="java.lang.String"/>
+			<column name="ageOnAppointmentDate" class="java.lang.String"/>
+			<column name="vaccine" class="java.lang.String"/>
+			<column name="sctid" class="java.lang.String"/>
+			<column name="cie10Code" class="java.lang.String"/>
+			<column name="status" class="java.lang.String"/>
+			<column name="condition" class="java.lang.String"/>
+			<column name="vaccinationSchedule" class="java.lang.String"/>
+			<column name="vaccinationDosage" class="java.lang.String"/>
+			<column name="vaccinationLot" class="java.lang.String"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="ProgramReports.ConsultationDetailOdontologiaRecuperoResult">
+		<constructor-result target-class="net.pladema.programreports.repository.ConsultationDetailRecuperoOdontologia">
+			<column name="institution" class="java.lang.String"/>
+			<column name="operativeUnit" class="java.lang.String"/>
+			<column name="lender" class="java.lang.String"/>
+			<column name="identificationNumber" class="java.lang.String"/>
+			<column name="attentionDate" class="java.lang.String"/>
+			<column name="hour" class="java.lang.String"/>
+			<column name="patientIdentificationNumber" class="java.lang.String"/>
+			<column name="patientName" class="java.lang.String"/>
+			<column name="gender" class="java.lang.String"/>
+			<column name="birthDate" class="java.lang.String"/>
+			<column name="ageTurn" class="java.lang.String"/>
+			<column name="medicalCoverage" class="java.lang.String"/>
+			<column name="address" class="java.lang.String"/>
+			<column name="location" class="java.lang.String"/>
+			<column name="cpo" class="java.lang.String"/>
+			<column name="ceo" class="java.lang.String"/>
+			<column name="reasons" class="java.lang.String"/>
+			<column name="procedures" class="java.lang.String"/>
+			<column name="odontologyProcedures" class="java.lang.String"/>
+			<column name="problems" class="java.lang.String"/>
+			<column name="odontologyDiagnosis" class="java.lang.String"/>
 		</constructor-result>
 	</sql-result-set-mapping>
 </entity-mappings>

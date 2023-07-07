@@ -47,7 +47,6 @@ export class OdontoReportService {
 		const url = `${environment.apiBase}/odontologyreports/${this.contextService.institutionId}/monthlyEndodonciaSegundoNivel`;
 		return this.getOdontoReport(params, fileName, url);
 	}
-
     
 }
 

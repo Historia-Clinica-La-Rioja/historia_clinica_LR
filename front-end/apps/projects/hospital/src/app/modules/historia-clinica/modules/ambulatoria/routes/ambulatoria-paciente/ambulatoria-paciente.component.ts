@@ -547,7 +547,6 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 				this.medicationRequestService.medicationRequestList(this.patient.id, null, null, null).subscribe((data: MedicationInfoDto[]) => {
 					this.medicationList = data;
 					console.log(this.medicationList);
-
 				const idList = [
 					"275811000",
 					"425890004",
@@ -651,7 +650,6 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 					"211861000221100",
 					"211851000221102"
 					];
-
 
 				for (let medication of this.medicationList) {
 					if (idList.includes(medication.snomed.sctid)) {

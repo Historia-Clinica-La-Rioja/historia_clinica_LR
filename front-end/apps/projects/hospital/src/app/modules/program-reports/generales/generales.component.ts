@@ -93,9 +93,6 @@ export class GeneralesComponent implements OnInit {
 				endDate: this.form.controls.endDate.value,
 
       }
-      const params2={
-
-      }
       const programReportId = this.form.controls.programReportType.value;
       switch (programReportId) {
         case 1:
@@ -108,25 +105,13 @@ export class GeneralesComponent implements OnInit {
           this.generalService.getHypertensiveReport(params, `${this.GENERAL_REPORT_TYPES[2].description}.xls`).subscribe();
         break;
         case 4:
-          this.generalService.getPatientEmergenciesReport(params, `${this.GENERAL_REPORT_TYPES[3].description}.xls`).subscribe();
+          this.generalService.getComplementaryStudiesReport(params, `${this.GENERAL_REPORT_TYPES[3].description}.xls`).subscribe();
         break;
         case 5:
-          this.generalService.getOutpatientNursingReport(params, `${this.GENERAL_REPORT_TYPES[4].description}.xls`).subscribe();
+          this.generalService.getOutPatientOlderAdults(params, `${this.GENERAL_REPORT_TYPES[4].description}.xls`).subscribe();
         break;
         case 6:
-          this.generalService.getNursingInternmentReport(params, `${this.GENERAL_REPORT_TYPES[5].description}.xls`).subscribe();
-        break;
-        case 7:
-          this.generalService.getComplementaryStudiesReport(params, `${this.GENERAL_REPORT_TYPES[6].description}.xls`).subscribe();
-        break;
-        case 8:
-          this.generalService.getTotalNursingRecoveryReport(params, `${this.GENERAL_REPORT_TYPES[7].description}.xls`).subscribe();
-        break;
-        case 9:
-          this.generalService.getOutPatientOlderAdults(params, `${this.GENERAL_REPORT_TYPES[8].description}.xls`).subscribe();
-        break;
-        case 10:
-          this.generalService.getHospitalizationOlderAdults(params, `${this.GENERAL_REPORT_TYPES[9].description}.xls`).subscribe();
+          this.generalService.getHospitalizationOlderAdults(params, `${this.GENERAL_REPORT_TYPES[5].description}.xls`).subscribe();
         break;
         default:
       }

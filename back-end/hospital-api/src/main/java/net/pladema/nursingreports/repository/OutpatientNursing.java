@@ -1,4 +1,4 @@
-package net.pladema.generalreports.repository;
+package net.pladema.nursingreports.repository;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,19 +9,21 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
-public class TotalNursingRecovery {
+public class OutpatientNursing {
 
 	private String institution;
 
-	private String source;
+	private String operativeUnit;
 
-	private String lender;
+	private String patientProvider;
 
-	private String lenderDni;
+	private String providerDni;
 
 	private String attentionDate;
 
 	private String hour;
+
+	private String consultationNumber;
 
 	private String patientDni;
 
@@ -29,11 +31,11 @@ public class TotalNursingRecovery {
 
 	private String gender;
 
-	private String selfPerceivedGener;
+	private String selfPerceivedGender;
 
-	private String selfPerceiverName;
+	private String selfPerceivedName;
 
-	private String birthday;
+	private String birthDate;
 
 	private String ageTurn;
 
@@ -43,17 +45,17 @@ public class TotalNursingRecovery {
 
 	private String medicalCoverage;
 
-	private String address;
+	private String patientAddress;
 
-	private String location;
+	private String patientLocation;
 
 	private String educationLevel;
 
 	private String occupation;
 
-	private String systolicBloodPressure;
+	private String systolicPressure;
 
-	private String diastolicBloodPressure;
+	private String diastolicPressure;
 
 	private String meanArterialPressure;
 
@@ -61,9 +63,9 @@ public class TotalNursingRecovery {
 
 	private String heartRate;
 
-	private String 	respirationRate;
+	private String respiratoryRate;
 
-	private String oxygenSaturationHemoglobin;
+	private String arterialOxygenSaturation;
 
 	private String height;
 
@@ -73,11 +75,6 @@ public class TotalNursingRecovery {
 
 	private String procedures;
 
-	private String problems;
-
-	private String medication;
-
 	private String evolution;
-
 
 }

@@ -18,7 +18,11 @@ export const PROGRAM_REPORT_TYPES = [
     {
         description: 'Reporte Odontología - SUMAR',
         id: 5,
-    }
+    },
+    {
+        description: 'Recupero Odontológico',
+        id: 6,
+    },
 ];
 
 export const ODONTO_REPORT_TYPES = [
@@ -42,6 +46,7 @@ export const ODONTO_REPORT_TYPES = [
         description: 'Consultas de Odontología - Endodoncia Segundo Nivel',
         id: 5,
     },
+    
 ];
 
 export const GENERAL_REPORT_TYPES = [
@@ -59,33 +64,43 @@ export const GENERAL_REPORT_TYPES = [
         id: 3,
     },
     {
-        description: 'Enfermería - Emergencias',
+        description: 'Estudios Complementarios.',
         id: 4,
     },
     {
-        description: 'Enfermería Ambulatorio',
+        description: 'Consultas ambulatorias del Adulto Mayor',
         id: 5,
     },
     {
-        description: 'Enfermería Internación',
+        description: 'Internaciones del Adulto Mayor',
         id: 6,
     },
+   
+];
+
+export const ENFERMERIA_REPORT_TYPES = [
     {
-        description: 'Estudios Complementarios',
-        id: 7,
+        description: 'Enfermería - Emergencias',
+        id: 1,
+    },
+    {
+        description: 'Enfermería Ambulatorio',
+        id: 2,
+    },
+    {
+        description: 'Enfermería Internación',
+        id: 3,
     },
     {
         description: 'Reporte de procedimientos realizados por Enfermería',
-        id: 8,
+        id: 4,
     },
     {
-        description: 'Consultas ambulatorias del Adulto Mayor',
-        id: 9,
+        description: 'Reporte de vacunas realizados por Enfermería',
+        id: 5,
     },
-    {
-        description: 'Internaciones del Adulto Mayor',
-        id: 10,
-    },
-   
 ]
+
+
+
 

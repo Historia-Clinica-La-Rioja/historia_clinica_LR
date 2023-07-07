@@ -1,4 +1,4 @@
-package net.pladema.generalreports.repository;
+package net.pladema.nursingreports.repository;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
-public class PatientEmergencies {
+public class NursingEmergencies {
 
 	private String institution;
 

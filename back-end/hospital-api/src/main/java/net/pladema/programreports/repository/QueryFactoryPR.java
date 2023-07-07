@@ -1,7 +1,5 @@
 package net.pladema.programreports.repository;
 
-import net.pladema.generalreports.repository.PatientEmergencies;
-
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -67,7 +65,7 @@ public class QueryFactoryPR {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ConsultationDetailRecupero> querySumar(Integer institutionId, LocalDate start, LocalDate end,
+	public List<ConsultationDetailRecuperoSumar> querySumar(Integer institutionId, LocalDate start, LocalDate end,
 													   Integer clinicalSpecialtyId, Integer doctorId){
 
 		var startDate = LocalDateTime.of(start.getYear(), start.getMonth(), start.getDayOfMonth(), 0, 0);
@@ -77,7 +75,7 @@ public class QueryFactoryPR {
 		query.setParameter("institutionId", institutionId);
 		query.setParameter("startDate", startDate);
 		query.setParameter("endDate", endDate);
-		List<ConsultationDetailRecupero> data = query.getResultList();
+		List<ConsultationDetailRecuperoSumar> data = query.getResultList();
 
 		return data.stream()
 				.filter(doctorId != null ? oc -> oc.getProfessionalId().equals(doctorId) : c -> true)
@@ -96,6 +94,18 @@ public class QueryFactoryPR {
 		query.setParameter("startDate", startDate);
 		query.setParameter("endDate", endDate);
 		List<ConsultationDetailOdontologia> data = query.getResultList();
+		return data;
+	}
+
+	public List<ConsultationDetailRecuperoOdontologia> queryOdontologiaRecupero(Integer institutionId, LocalDate start, LocalDate end){
+		var startDate = LocalDateTime.of(start.getYear(), start.getMonth(), start.getDayOfMonth(), 0, 0);
+		var endDate = LocalDateTime.of(end.getYear(), end.getMonth(), end.getDayOfMonth(), 23, 59, 59, LocalTime.MAX.getNano());
+
+		Query query = entityManager.createNamedQuery("ProgramReports.ConsultationDetailOdontologiaRecupero");
+		query.setParameter("institutionId", institutionId);
+		query.setParameter("startDate", startDate);
+		query.setParameter("endDate", endDate);
+		List<ConsultationDetailRecuperoOdontologia> data = query.getResultList();
 		return data;
 	}
 
