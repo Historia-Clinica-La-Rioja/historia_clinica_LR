@@ -1234,6 +1234,7 @@ export interface EpicrisisDto extends Serializable {
     obstetricEvent?: ObstetricEventDto;
     otherProblems: HealthConditionDto[];
     personalHistories: HealthHistoryConditionDto[];
+    procedures: HospitalizationProcedureDto[];
 }
 
 export interface EpicrisisGeneralStateDto extends Serializable {
@@ -1245,6 +1246,7 @@ export interface EpicrisisGeneralStateDto extends Serializable {
     medications: MedicationDto[];
     otherProblems: HealthConditionDto[];
     personalHistories: HealthHistoryConditionDto[];
+    procedures: HospitalizationProcedureDto[];
 }
 
 export interface EpicrisisObservationsDto extends Serializable {

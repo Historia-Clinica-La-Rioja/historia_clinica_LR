@@ -21,6 +21,8 @@ public class FetchHospitalizationGeneralState {
 
     private final FetchHospitalizationImmunizationState fetchHospitalizationImmunizationState;
 
+    private final FetchHospitalizationProceduresState fetchHospitalizationProceduresState;
+
     private final FetchHospitalizationMedicationState fetchHospitalizationMedicationState;
 
     private final FetchHospitalizationClinicalObservationState fetchHospitalizationClinicalObservationState;
@@ -31,9 +33,11 @@ public class FetchHospitalizationGeneralState {
                                             FetchHospitalizationImmunizationState fetchHospitalizationImmunizationState,
                                             FetchHospitalizationMedicationState fetchHospitalizationMedicationState,
                                             FetchHospitalizationClinicalObservationState fetchHospitalizationClinicalObservationState,
+											FetchHospitalizationProceduresState fetchHospitalizationProceduresState,
                                             FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState) {
         this.fetchHospitalizationAllergyState = fetchHospitalizationAllergyState;
         this.fetchHospitalizationImmunizationState = fetchHospitalizationImmunizationState;
+        this.fetchHospitalizationProceduresState = fetchHospitalizationProceduresState;
         this.fetchHospitalizationMedicationState = fetchHospitalizationMedicationState;
         this.fetchHospitalizationHealthConditionState = fetchHospitalizationHealthConditionState;
         this.fetchHospitalizationClinicalObservationState = fetchHospitalizationClinicalObservationState;
@@ -48,6 +52,7 @@ public class FetchHospitalizationGeneralState {
         hospitalizationGeneralState.setRiskFactors(getRiskFactorsState(internmentEpisodeId));
         hospitalizationGeneralState.setAnthropometricData(getAnthropometricDataState(internmentEpisodeId));
         hospitalizationGeneralState.setImmunizations(getImmunizationsState(internmentEpisodeId));
+		hospitalizationGeneralState.setProcedures(getProceduresState(internmentEpisodeId));
         LOG.debug(OUTPUT, hospitalizationGeneralState);
         return hospitalizationGeneralState;
     }
@@ -60,6 +65,7 @@ public class FetchHospitalizationGeneralState {
         hospitalizationGeneralState.setPersonalHistories(generalHealthCondition.getPersonalHistories());
         hospitalizationGeneralState.setFamilyHistories(generalHealthCondition.getFamilyHistories());
 		hospitalizationGeneralState.setOtherProblems(generalHealthCondition.getOtherProblems());
+		hospitalizationGeneralState.setProcedures(getProceduresState(internmentEpisodeId));
     }
 
     private List<MedicationBo> getMedicationsState(Integer internmentEpisodeId){
@@ -70,6 +76,11 @@ public class FetchHospitalizationGeneralState {
     private List<ImmunizationBo> getImmunizationsState(Integer internmentEpisodeId){
         LOG.debug(LOGGING_INTERNMENT_EPISODE_ID, internmentEpisodeId);
         return fetchHospitalizationImmunizationState.run(internmentEpisodeId);
+    }
+
+	private List<ProcedureBo> getProceduresState(Integer internmentEpisodeId){
+        LOG.debug(LOGGING_INTERNMENT_EPISODE_ID, internmentEpisodeId);
+        return fetchHospitalizationProceduresState.run(internmentEpisodeId);
     }
 
     private List<AllergyConditionBo> getAllergiesState(Integer internmentEpisodeId){
