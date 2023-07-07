@@ -142,7 +142,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
 			.subscribe((result: boolean) => this.isHabilitarRecetaDigitalEnabled = result)
-			
+
 		const toEmergencyCareTab = this.router.getCurrentNavigation()?.extras?.state?.toEmergencyCareTab;
 		this.setPermissions();
 		this.route.paramMap.subscribe(
@@ -154,7 +154,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 							this.isNoValidatedOrTemporary = true
 							this.snackBarService.showError('indicacion.INDICACIONES_DISABLED');
 						}
-						
+
 						this.personInformation.push({ description: patient.person.identificationType, data: patient.person.identificationNumber });
 						this.patient = this.mapperService.toPatientBasicData(patient);
 						this.personId = patient.person.id;
@@ -431,20 +431,103 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 
 	embarazoAdolescente(){
 		if (this._embarazoAdolescente === undefined) {
-			this.hceGeneralStateService.getActiveProblems(this.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
-			 	this.activeProblemsList = activeProblems.map(problem => ({id: problem.id, description: problem.snomed.pt, sctId: problem.snomed.sctid}));
-			},
-				(error) => {
-					console.error(error);
-				}
-			);
-
 			if (this.patient.age < 15){
-				for (let i = 0; i < this.activeProblemsList.length; i++){
-					if (this.activeProblemsList[i]['id'] == 79 || this.activeProblemsList[i]['id'] == 152 || this.activeProblemsList[i]['id'] == 309 || this.activeProblemsList[i]['id'] == 738 || this.activeProblemsList[i]['id'] == 1215 || this.activeProblemsList[i]['id'] == 1250 || this.activeProblemsList[i]['id'] == 1880 || this.activeProblemsList[i]['id'] == 2232 || this.activeProblemsList[i]['id'] == 2379 || this.activeProblemsList[i]['id'] == 2424 || this.activeProblemsList[i]['id'] == 2527 || this.activeProblemsList[i]['id'] == 2558 || this.activeProblemsList[i]['id'] == 2697 || this.activeProblemsList[i]['id'] == 3295 || this.activeProblemsList[i]['id'] == 3328 || this.activeProblemsList[i]['id'] == 3403 || this.activeProblemsList[i]['id'] == 3665 || this.activeProblemsList[i]['id'] == 3874 || this.activeProblemsList[i]['id'] == 3914 || this.activeProblemsList[i]['id'] == 3956 || this.activeProblemsList[i]['id'] == 4004 || this.activeProblemsList[i]['id'] == 4047 || this.activeProblemsList[i]['id'] == 4069 || this.activeProblemsList[i]['id'] == 4134 || this.activeProblemsList[i]['id'] == 4175 || this.activeProblemsList[i]['id'] == 4176 || this.activeProblemsList[i]['id'] == 4211 || this.activeProblemsList[i]['id'] == 4391 || this.activeProblemsList[i]['id'] == 3107 ||this.activeProblemsList[i]['id'] == 4410 || this.activeProblemsList[i]['id'] == 4479 || this.activeProblemsList[i]['id'] == 4488 || this.activeProblemsList[i]['id'] == 4648 || this.activeProblemsList[i]['id'] == 4665 || this.activeProblemsList[i]['id'] == 4826 || this.activeProblemsList[i]['id'] == 4932 || this.activeProblemsList[i]['id'] == 4989 || this.activeProblemsList[i]['id'] == 5010 || this.activeProblemsList[i]['id'] == 5011 || this.activeProblemsList[i]['id'] == 5066 || this.activeProblemsList[i]['id'] == 5127 || this.activeProblemsList[i]['id'] == 5245 || this.activeProblemsList[i]['id'] == 5246 || this.activeProblemsList[i]['id'] == 5313 || this.activeProblemsList[i]['id'] == 5316 || this.activeProblemsList[i]['id'] == 5362 || this.activeProblemsList[i]['id'] == 5369 || this.activeProblemsList[i]['id'] == 5378 || this.activeProblemsList[i]['id'] == 5480 || this.activeProblemsList[i]['id'] == 5522 || this.activeProblemsList[i]['id'] == 5596 || this.activeProblemsList[i]['id'] == 5974 || this.activeProblemsList[i]['id'] == 6050 || this.activeProblemsList[i]['id'] == 6322 || this.activeProblemsList[i]['id'] == 6445 || this.activeProblemsList[i]['id'] == 6484 || this.activeProblemsList[i]['id'] == 6529 || this.activeProblemsList[i]['id'] == 6659 || this.activeProblemsList[i]['id'] == 6700 || this.activeProblemsList[i]['id'] == 6790 || this.activeProblemsList[i]['id'] == 6804 || this.activeProblemsList[i]['id'] == 6861 || this.activeProblemsList[i]['id'] == 6895 || this.activeProblemsList[i]['id'] == 6909 || this.activeProblemsList[i]['id'] == 6979 || this.activeProblemsList[i]['id'] == 7382 || this.activeProblemsList[i]['id'] == 7462 || this.activeProblemsList[i]['id'] == 7559 || this.activeProblemsList[i]['id'] == 7638 || this.activeProblemsList[i]['id'] == 7780){
+				this.hceGeneralStateService.getActiveProblems(this.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
+					this.activeProblemsList = activeProblems.map(problem => ({id: problem.id, description: problem.snomed.pt, sctId: problem.snomed.sctid}));
+					console.log(this.activeProblemsList);
+				},
+					(error) => {
+						console.error(error);
+					}
+				);
+
+				const sctIds = [
+					"72892002",
+					"237244005",
+					"77386006",
+					"95212006",
+					"127368005",
+					"127369002",
+					"47200007",
+					"166434005",
+					"252160004",
+					"252161000",
+					"271903000",
+					"146799005",
+					"127366009",
+					"135881001",
+					"127370001",
+					"127367000",
+					"182947002",
+					"169567006",
+					"58532003",
+					"307534009",
+					"199158007",
+					"151901000119101",
+					"184005004",
+					"250423000",
+					"169565003",
+					"428252001",
+					"237233002",
+					"691000221104",
+					"74036000",
+					"39406005",
+					"110081000119109",
+					"171000119107",
+					"349971000221103",
+					"169574001",
+					"10761591000119105",
+					"152231000119106",
+					"305875008",
+					"57797005",
+					"710973002",
+					"309737007",
+					"15750121000119108",
+					"386322007",
+					"386456000",
+					"702738006",
+					"237627000",
+					"10750111000119108",
+					"386639001",
+					"386394001",
+					"237240001",
+					"134781000119106",
+					"199154009",
+					"160401003",
+					"14418008",
+					"127373004",
+					"702758007",
+					"94641000119109",
+					"169587007",
+					"225327004",
+					"83074005",
+					"250426008",
+					"235888006",
+					"276367008",
+					"169566002",
+					"55543007",
+					"82771000119102",
+					"46101000119101",
+					"191733007",
+					"274116002",
+					"65147003"
+				]
+
+				for (let activeProblem of this.activeProblemsList) {
+					if (sctIds.includes(activeProblem.sctId)) {
 						this._embarazoAdolescente = true;
+						break;
 					}
 				}
+
+				if (this._embarazoAdolescente === undefined) {
+					this._embarazoAdolescente = false;
+			  	}
+				// for (let i = 0; i < this.activeProblemsList.length; i++){
+				// 	if (this.activeProblemsList[i]['id'] == 79 || this.activeProblemsList[i]['id'] == 3369 || this.activeProblemsList[i]['id'] == 3368 || this.activeProblemsList[i]['id'] == 3367 || this.activeProblemsList[i]['id'] == 3279 || this.activeProblemsList[i]['id'] == 152 || this.activeProblemsList[i]['id'] == 309 || this.activeProblemsList[i]['id'] == 738 || this.activeProblemsList[i]['id'] == 1215 || this.activeProblemsList[i]['id'] == 1250 || this.activeProblemsList[i]['id'] == 1880 || this.activeProblemsList[i]['id'] == 2232 || this.activeProblemsList[i]['id'] == 2379 || this.activeProblemsList[i]['id'] == 2424 || this.activeProblemsList[i]['id'] == 2527 || this.activeProblemsList[i]['id'] == 2558 || this.activeProblemsList[i]['id'] == 2697 || this.activeProblemsList[i]['id'] == 3295 || this.activeProblemsList[i]['id'] == 3328 || this.activeProblemsList[i]['id'] == 3403 || this.activeProblemsList[i]['id'] == 3665 || this.activeProblemsList[i]['id'] == 3874 || this.activeProblemsList[i]['id'] == 3914 || this.activeProblemsList[i]['id'] == 3956 || this.activeProblemsList[i]['id'] == 4004 || this.activeProblemsList[i]['id'] == 4047 || this.activeProblemsList[i]['id'] == 4069 || this.activeProblemsList[i]['id'] == 4134 || this.activeProblemsList[i]['id'] == 4175 || this.activeProblemsList[i]['id'] == 4176 || this.activeProblemsList[i]['id'] == 4211 || this.activeProblemsList[i]['id'] == 4391 || this.activeProblemsList[i]['id'] == 3107 ||this.activeProblemsList[i]['id'] == 4410 || this.activeProblemsList[i]['id'] == 4479 || this.activeProblemsList[i]['id'] == 4488 || this.activeProblemsList[i]['id'] == 4648 || this.activeProblemsList[i]['id'] == 4665 || this.activeProblemsList[i]['id'] == 4826 || this.activeProblemsList[i]['id'] == 4932 || this.activeProblemsList[i]['id'] == 4989 || this.activeProblemsList[i]['id'] == 5010 || this.activeProblemsList[i]['id'] == 5011 || this.activeProblemsList[i]['id'] == 5066 || this.activeProblemsList[i]['id'] == 5127 || this.activeProblemsList[i]['id'] == 5245 || this.activeProblemsList[i]['id'] == 5246 || this.activeProblemsList[i]['id'] == 5313 || this.activeProblemsList[i]['id'] == 5316 || this.activeProblemsList[i]['id'] == 5362 || this.activeProblemsList[i]['id'] == 5369 || this.activeProblemsList[i]['id'] == 5378 || this.activeProblemsList[i]['id'] == 5480 || this.activeProblemsList[i]['id'] == 5522 || this.activeProblemsList[i]['id'] == 5596 || this.activeProblemsList[i]['id'] == 5974 || this.activeProblemsList[i]['id'] == 6050 || this.activeProblemsList[i]['id'] == 6322 || this.activeProblemsList[i]['id'] == 6445 || this.activeProblemsList[i]['id'] == 6484 || this.activeProblemsList[i]['id'] == 6529 || this.activeProblemsList[i]['id'] == 6659 || this.activeProblemsList[i]['id'] == 6700 || this.activeProblemsList[i]['id'] == 6790 || this.activeProblemsList[i]['id'] == 6804 || this.activeProblemsList[i]['id'] == 6861 || this.activeProblemsList[i]['id'] == 6895 || this.activeProblemsList[i]['id'] == 6909 || this.activeProblemsList[i]['id'] == 6979 || this.activeProblemsList[i]['id'] == 7382 || this.activeProblemsList[i]['id'] == 7462 || this.activeProblemsList[i]['id'] == 7559 || this.activeProblemsList[i]['id'] == 7638 || this.activeProblemsList[i]['id'] == 7780){
+				// 		this._embarazoAdolescente = true;
+				// 	}
+				// }
 			}
 			else{
 			   	this._embarazoAdolescente = false;
@@ -464,7 +547,6 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 				this.medicationRequestService.medicationRequestList(this.patient.id, null, null, null).subscribe((data: MedicationInfoDto[]) => {
 					this.medicationList = data;
 					console.log(this.medicationList);
-				
 				const idList = [
 					"275811000",
 					"425890004",
@@ -568,7 +650,6 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 					"211861000221100",
 					"211851000221102"
 					];
-					  
 
 				for (let medication of this.medicationList) {
 					if (idList.includes(medication.snomed.sctid)) {
