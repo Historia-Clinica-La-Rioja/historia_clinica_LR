@@ -90,4 +90,18 @@ public class QueryFactoryOdontology {
 		List<ConsultationDetailOdontology> data = query.getResultList();
 		return data;
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<OdontologyProceduresReports> queryReporteProcedimientos(Integer institutionId, LocalDate start, LocalDate end){
+
+		var startDate = LocalDateTime.of(start.getYear(), start.getMonth(), start.getDayOfMonth(), 0,0);
+		var endDate = LocalDateTime.of(end.getYear(), end.getMonth(), end.getDayOfMonth(), 23,59,59, LocalTime.MAX.getNano());
+
+		Query query = entityManager.createNamedQuery("OdontologyReports.OdontologyProceduresReports");
+		query.setParameter("institutionId", institutionId);
+		query.setParameter("startDate", startDate);
+		query.setParameter("endDate", endDate);
+		List<OdontologyProceduresReports> data = query.getResultList();
+		return data;
+	}
 }
