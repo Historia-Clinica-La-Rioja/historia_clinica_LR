@@ -124,7 +124,7 @@ public class HealthConditionService {
     private HealthCondition buildDiagnoses(PatientInfoBo patientInfo, DiagnosisBo info) {
         log.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
         HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
-        healthCondition.setProblemId(ProblemType.DIAGNOSIS);
+        healthCondition.setProblemId(info.getProblemTypeId());
         if (info.isPresumptive())
             healthCondition.setVerificationStatusId(ConditionVerificationStatus.PRESUMPTIVE);
 		else

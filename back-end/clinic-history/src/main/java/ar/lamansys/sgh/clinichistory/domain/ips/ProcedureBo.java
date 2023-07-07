@@ -2,10 +2,13 @@ package ar.lamansys.sgh.clinichistory.domain.ips;
 
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.ProcedureSummaryBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ProcedureVo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProcedureTypeEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import javax.annotation.Nullable;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -17,6 +20,9 @@ import java.util.Optional;
 public class ProcedureBo extends ClinicalTerm {
 
     private LocalDate performedDate;
+
+	@Nullable
+	private ProcedureTypeEnum type = ProcedureTypeEnum.PROCEDURE;
 
     public ProcedureBo(ProcedureSummaryBo procedureSummaryBo){
         this.setSnomed(procedureSummaryBo.getSnomed());

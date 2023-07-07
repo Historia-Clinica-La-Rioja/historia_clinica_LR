@@ -6,6 +6,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.ProceduresStatusRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProceduresStatus;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProcedureTypeEnum;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -59,7 +61,8 @@ public class LoadProcedures {
         Procedure result = new Procedure(
                 patientId,
                 snomedId,
-                procedureBo.getStatusId(), procedureBo.getPerformedDate());
+                procedureBo.getStatusId(), procedureBo.getPerformedDate(),
+				procedureBo.getType());
 
         result = proceduresRepository.save(result);
         LOG.debug("Procedure saved -> {}", result.getId());

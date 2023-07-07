@@ -2035,6 +2035,7 @@ export interface HospitalizationProcedureDto {
     id?: number;
     performedDate?: string;
     snomed: SnomedDto;
+    type?: ProcedureTypeEnum;
 }
 
 export interface IBasicPersonalData {
@@ -4726,6 +4727,15 @@ export const enum EVirtualConsultationStatus {
     IN_PROGRESS = "IN_PROGRESS",
     FINISHED = "FINISHED",
     CANCELED = "CANCELED",
+}
+
+export const enum ProcedureTypeEnum {
+    PROCEDURE = "PROCEDURE",
+    SURGICAL_PROCEDURE = "SURGICAL_PROCEDURE",
+    ANESTHESIA_PROCEDURE = "ANESTHESIA_PROCEDURE",
+    CULTURE = "CULTURE",
+    FROZEN_SECTION_BIOPSY = "FROZEN_SECTION_BIOPSY",
+    DRAINAGE = "DRAINAGE",
 }
 
 export const enum SnomedECL {

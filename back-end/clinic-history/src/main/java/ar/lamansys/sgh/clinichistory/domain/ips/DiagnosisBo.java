@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,8 @@ import lombok.ToString;
 public class DiagnosisBo extends HealthConditionBo {
 
     private boolean presumptive = false;
+
+	private String problemTypeId = ProblemType.DIAGNOSIS;
 
     public DiagnosisBo(SnomedBo snomed) {
         super(snomed);

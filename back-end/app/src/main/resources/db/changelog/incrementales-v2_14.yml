@@ -1770,3 +1770,61 @@ databaseChangeLog:
                     type: datetime
                     constraints:
                       nullable: true
+
+    - changeSet:
+        id: createTable-procedure_type
+        comment: Create table procedure_type
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: procedure_type
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_procedure_type
+                    name: id
+                    type: smallint
+                - column:
+                    name: sctid_code
+                    type: varchar(20)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(100)
+
+    - changeSet:
+        id: procedure_type-masterdata
+        comment: Carga de datos procedure_type
+        author: mvenere
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO procedure_type VALUES (1, '71388002', 'Procedimiento');
+                INSERT INTO procedure_type VALUES (2, '387713003', 'Procedimiento quirúrgico');
+                INSERT INTO procedure_type VALUES (3, '1263452006', 'Procedimiento de anestesia y/o sedación');
+                INSERT INTO procedure_type VALUES (4, null, 'Cultivo');
+                INSERT INTO procedure_type VALUES (5, null, 'Biopsia por congelación');
+                INSERT INTO procedure_type VALUES (6, null, 'Drenaje');
+
+    - changeSet:
+        id: addColumn-procedure_type_id_procedure
+        author: mvenere
+        changes:
+          - addColumn:
+              tableName: procedures
+              columns:
+                - column:
+                    name: procedure_type_id
+                    type: smallint
+                    defaultValueDate: 1
+          - addForeignKeyConstraint:
+              baseColumnNames: procedure_type_id
+              baseTableName: procedures
+              constraintName: FK_procedure_type_procedures
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: procedure_type
+              validate: true
