@@ -1828,3 +1828,44 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: procedure_type
               validate: true
+
+    - changeSet:
+        id: createTable-document_healthcare_professional
+        comment: Create table document_healthcare_professional
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: document_healthcare_professional
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_document_healthcare_professional
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: document(id)
+                      foreignKeyName: FK_document_id_document_healthcare_professional
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                      references: healthcare_professional(id)
+                      foreignKeyName: FK_healthcare_professional_id_document_healthcare_professional
+                    name: healthcare_professional_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: professional_specialty_type_id
+                    type: smallint
+                - column:
+                    name: professional_license_number_id
+                    type: int
+                - column:
+                    name: comments
+                    type: text
