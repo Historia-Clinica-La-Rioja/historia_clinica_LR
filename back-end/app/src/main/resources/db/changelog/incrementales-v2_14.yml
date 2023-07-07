@@ -1659,3 +1659,114 @@ databaseChangeLog:
               constraintName: PK_procedure_template_snomed
               tableName: procedure_template_snomed
               validate: true
+
+    - changeSet:
+        id: createTable-surgical_report
+        comment: Create table surgical_report
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: surgical_report
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_surgical_report
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: patient(id)
+                      foreignKeyName: FK_patient_id_surgical_report
+                    name: patient_id
+                    type: int
+                - column:
+                    constraints:
+                      references: clinical_specialty(id)
+                      foreignKeyName: FK_clinical_specialty_id_surgical_report
+                    name: clinical_specialty_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: institution(id)
+                      foreignKeyName: FK_institution_id_surgical_report
+                    name: institution_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: document(id)
+                      foreignKeyName: FK_document_id_surgical_report
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      references: healthcare_professional(id)
+                      foreignKeyName: FK_doctor_id_surgical_report
+                    name: doctor_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: billable
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      references: patient_medical_coverage(id)
+                      foreignKeyName: FK_patient_medical_coverage_id_surgical_report
+                    name: patient_medical_coverage_id
+                    type: int
+                - column:
+                    name: start_date_time
+                    type: datetime
+                - column:
+                    name: end_date_time
+                    type: datetime
+                - column:
+                    constraints:
+                      references: note(id)
+                      foreignKeyName: FK_note_id_surgical_report
+                    name: note_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+                    constraints:
+                      nullable: true
