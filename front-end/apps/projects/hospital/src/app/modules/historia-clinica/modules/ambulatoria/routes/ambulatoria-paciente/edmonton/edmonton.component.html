@@ -1,0 +1,141 @@
+
+<app-card-indicaciones [patientId]="patientId" *ngIf="false"></app-card-indicaciones>
+
+<form>
+    <div class="container">
+      <h2 class="title1">Escala de Edmonton</h2>
+      
+  
+      <!--CONSULTA NRO 1-->
+      <h3 class="tipos"><mat-list-item>Cognitivo</mat-list-item></h3>
+      <div class="text">
+        <p>Por favor imagina que este círculo pre-dibujado es un reloj. Me gustaría que pusiera los
+          números en las posiciones correctas y luego poner las manilas o manecillas para indicar la
+          hora “Las once con diez minutos”</p>
+  
+          <mat-radio-group id=1 name="cognitiveOptions" [(ngModel)]="selectedCognitiveOption">
+            <mat-radio-button color="primary" [value]="selectedOptions[0].value" [attr.data-sum]="selectedOptions[0].sum">Sin errores</mat-radio-button>
+            <mat-radio-button color="primary" [value]="selectedOptions[1].value" [attr.data-sum]="selectedOptions[1].sum">Errores mínimos de espaciado</mat-radio-button>
+            <mat-radio-button color="primary" [value]="selectedOptions[2].value" [attr.data-sum]="selectedOptions[2].sum">Otros errores</mat-radio-button>
+          </mat-radio-group>
+          
+      </div>
+  
+      <!--CONSULTA NRO 2-->
+      <h3 class="tipos"><mat-list-item>Estado de salud general</mat-list-item></h3>
+      <div class="text">
+        <p>En el último año, ¿Cuántas veces ha estado hospitalizado?</p>
+        <mat-radio-group  id=2 name="healthStatusOptions" [(ngModel)]="selectedHealthStatusOption">
+          <mat-radio-button color="primary" [value]="selectedOptions[3].value" [attr.data-sum]="selectedOptions[3].sum">0</mat-radio-button>
+          <mat-radio-button color="primary" [value]="selectedOptions[4].value" [attr.data-sum]="selectedOptions[4].sum">1 o 2</mat-radio-button>
+          <mat-radio-button color="primary" [value]="selectedOptions[5].value" [attr.data-sum]="selectedOptions[5].sum">Mayor o igual a 3</mat-radio-button>
+
+
+        </mat-radio-group>
+  
+        <!--CONSULTA NRO 2.5-->
+        <div>
+          <p>En general, ¿cómo describiría su salud?</p>
+          <mat-radio-group id=3 name="healthStatusOptions-dos" [(ngModel)]="selectedHealthStatusOptionDos">
+            
+            <mat-radio-button color="primary" [value]="selectedOptions[6].value" [attr.data-sum]="selectedOptions[6].sum">Excelente</mat-radio-button>
+            <mat-radio-button color="primary" [value]="selectedOptions[7].value" [attr.data-sum]="selectedOptions[7].sum">Razonable</mat-radio-button>
+            <mat-radio-button color="primary" [value]="selectedOptions[8].value" [attr.data-sum]="selectedOptions[8].sum">Mala</mat-radio-button>
+
+          </mat-radio-group>
+      </div>
+      <!--CONSULTA NRO 3-->
+  
+      <h3 class="tipos"><mat-list-item>Independencia funcional</mat-list-item></h3>
+      <div class="text">
+          <p>¿Con cuántas de las siguientes actividades necesita ayuda?
+          (preparar la comida, comparas, transporte, comunicación telefónica, 
+          cuidado del hogar, lavado de ropa, manejo de dinero, tomar medicamentos).</p>
+  
+          <mat-radio-group id=4  name="functionInd" [(ngModel)]="selectedFunctionIndOption">
+            <mat-radio-button color="primary" [value]="selectedOptions[9].value" [attr.data-sum]="selectedOptions[9].sum">0 a 1</mat-radio-button>
+            <mat-radio-button color="primary" [value]="selectedOptions[10].value" [attr.data-sum]="selectedOptions[10].sum">2 a 4</mat-radio-button>
+            <mat-radio-button color="primary" [value]="selectedOptions[11].value" [attr.data-sum]="selectedOptions[11].sum">Mayor o igual a 4</mat-radio-button>
+          </mat-radio-group>
+      </div>
+       <!--CONSULTA NRO 4-->
+       <h3 class="tipos"><mat-list-item>Soporte Social</mat-list-item></h3>
+       <div class="text">
+           <p>Cuando Ud. necesita ayuda, 
+            ¿puede contar con alguien que esté dispuesto y disponible para atender sus necesidades o problemas?</p>
+  
+            <mat-radio-group id=5 name="support" [(ngModel)]="selectedSupportSocOption">
+              <mat-radio-button color="primary" [value]="selectedOptions[12].value" [attr.data-sum]="selectedOptions[12].sum">Siempre</mat-radio-button>
+              <mat-radio-button color="primary" [value]="selectedOptions[13].value" [attr.data-sum]="selectedOptions[13].sum">A veces</mat-radio-button>
+              <mat-radio-button color="primary" [value]="selectedOptions[14].value" [attr.data-sum]="selectedOptions[14].sum">Nunca</mat-radio-button>        
+           </mat-radio-group>
+       </div> 
+  
+        <!--CONSULTA NRO 5-->
+        <h3 class="tipos"><mat-list-item>Uso de medicamentos</mat-list-item></h3>
+        <div class="text">
+            <p>¿Usa 5 o más medicamentos en el día a día?</p>
+  
+            <mat-radio-group id=6 name="medication" [(ngModel)]="selectedMedicationOption">
+              <mat-radio-button color="primary" [value]="selectedOptions[15].value" [attr.data-sum]="selectedOptions[15].sum">Si</mat-radio-button>
+              <mat-radio-button color="primary" [value]="selectedOptions[16].value" [attr.data-sum]="selectedOptions[16].sum">No</mat-radio-button>
+              
+            </mat-radio-group>
+        </div>
+         <!--CONSULTA NRO 5.2-->
+         <div class="text">
+          <p>En ocasiones, ¿se le olvida tomarse los medicamentos?</p>
+  
+          <mat-radio-group id=7 name="aspirine" [(ngModel)]="selectedMedicationOptionDos">
+            <mat-radio-button color="primary" [value]="selectedOptions[15].value" [attr.data-sum]="selectedOptions[15].sum">Si</mat-radio-button>
+            <mat-radio-button color="primary" [value]="selectedOptions[16].value" [attr.data-sum]="selectedOptions[16].sum">No</mat-radio-button>
+              
+          </mat-radio-group>
+      </div>
+    <!--CONSULTA NRO 6-->
+    <h3 class="tipos"><mat-list-item>Nutrición</mat-list-item></h3>
+    <div class="text">
+        <p>Recientemente, ¿ha perdido peso como para que su ropa le quede suelta? </p>
+  
+            <mat-radio-group id=8 name="alimento" [(ngModel)]="selectedNutritionOption">
+              <mat-radio-button color="primary" [value]="selectedOptions[15].value" [attr.data-sum]="selectedOptions[15].sum">Si</mat-radio-button>
+              <mat-radio-button color="primary" [value]="selectedOptions[16].value" [attr.data-sum]="selectedOptions[16].sum">No</mat-radio-button>
+            </mat-radio-group>
+    </div>
+    <!--CONSULTA NRO 7-->
+    <h3 class="tipos"><mat-list-item>Animo</mat-list-item></h3>
+    <div class="text">
+        <p>¿Se siente con frecuencia triste o deprimido? </p>
+  
+            <mat-radio-group id=9 name="emociones" [(ngModel)]="selectedAnimoOption">
+              <mat-radio-button color="primary" [value]="selectedOptions[15].value" [attr.data-sum]="selectedOptions[15].sum">Si</mat-radio-button>
+              <mat-radio-button color="primary" [value]="selectedOptions[16].value" [attr.data-sum]="selectedOptions[16].sum">No</mat-radio-button>
+              
+            </mat-radio-group>
+    </div>
+     <!--CONSULTA NRO 8-->
+     <h3 class="tipos"><mat-list-item>Contingencia</mat-list-item></h3>
+     <div class="text">
+         <p>¿Tiene algún problema con el control para orinar, es decir puede contener la orina si así lo desea?</p>
+  
+            <mat-radio-group id=10 name="contingenciaPersonal" [(ngModel)]="selectedContingenciaOption">
+              <mat-radio-button color="primary" [value]="selectedOptions[15].value" [attr.data-sum]="selectedOptions[15].sum">Si</mat-radio-button>
+              <mat-radio-button color="primary" [value]="selectedOptions[16].value" [attr.data-sum]="selectedOptions[16].sum">No</mat-radio-button>
+              
+         </mat-radio-group>
+     </div>
+                
+      </div>
+  
+    </div>
+    <div class="btn2">
+      <button mat-raised-button color="primary" (click)="updateSum()">ver resultado</button>
+
+    </div>
+    <div class="btn">
+      <button id="submit-btn" mat-raised-button color="primary" type="submit" (click)="onSubmit">Enviar formulario</button>
+    </div>
+
+    <div></div>
+  </form>
+  

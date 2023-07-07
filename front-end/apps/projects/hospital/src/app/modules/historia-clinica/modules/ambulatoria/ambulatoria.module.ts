@@ -68,7 +68,11 @@ import { GuardiaComponent } from './components/guardia/guardia.component';
 import { GuardiaModule } from '../guardia/guardia.module';
 import { EnviarRecetaDigitalPorEmailComponent } from './dialogs/enviar-receta-digital-por-email/enviar-receta-digital-por-email.component';
 import { DialogoAclaracionComponent } from './routes/ambulatoria-paciente/dialogo-aclaracion/dialogo-aclaracion.component';
-
+import { AdultoMayorComponent } from './routes/ambulatoria-paciente/adulto-mayor/adulto-mayor.component';
+import { EstudiosPopupComponent } from './routes/ambulatoria-paciente/adulto-mayor/estudios-popup/estudios-popup.component';
+import { TestEdmontonPopupComponent } from './routes/ambulatoria-paciente/adulto-mayor/test-edmonton-popup/test-edmonton-popup.component';
+import { EdmontonComponent } from './routes/ambulatoria-paciente/edmonton/edmonton.component';
+import { GetTestComponent } from './routes/ambulatoria-paciente/adulto-mayor/get-test/get-test.component';
 @NgModule({
 	declarations: [
 		HomeComponent,
@@ -114,10 +118,15 @@ import { DialogoAclaracionComponent } from './routes/ambulatoria-paciente/dialog
 		NewConsultationFamilyHistoryFormComponent,
 		VaccineSearchComponent,
 		TablasPercentilosComponent,
+		AdultoMayorComponent,
+		EstudiosPopupComponent,
+		TestEdmontonPopupComponent,
+		EdmontonComponent,
 		ClinicalHistoryActionsComponent,
 		GuardiaComponent,
     	EnviarRecetaDigitalPorEmailComponent,
      DialogoAclaracionComponent,
+     GetTestComponent,
 	],
 	imports: [
 		CommonModule,

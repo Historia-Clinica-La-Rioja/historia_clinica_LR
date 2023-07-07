@@ -1,0 +1,32 @@
+.popup-container {
+  width: 700px;
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 20px;
+  background-color: #f5f5f5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.popup-container h2 {
+  margin-top: 0;
+}
+
+.popup-container mat-label {
+  display: block;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(63, 201, 255, 0.1);
+
+}
+
+.popup-container mat-select {
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(150, 201, 255, 0.1);
+  border-color:aqua;
+
+}
+
+.popup-container app-edmonton {
+  margin-top: 20px;
+}
