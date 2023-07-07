@@ -91,6 +91,14 @@
 				</mat-card>
 			</app-new-consultation-expansion-section>
 
+			<app-new-consultation-expansion-section id="procedimientos"
+				[title]="'internaciones.epicrisis.procedimientos.TITLE' | translate" icon="library_add"
+				[isEmpty]="componentEvaluationManagerService.isEmptyProcedure() | async" [collapsed]="true"
+				[hideBorder]="false">
+				<app-list-concept [(listConcept)]="procedures" [title]="'internaciones.epicrisis.procedimientos.table.TITLE'">
+				</app-list-concept>
+			</app-new-consultation-expansion-section>
+
 			<app-new-consultation-expansion-section id="personalHistories"
 				[title]="'internaciones.epicrisis.antecedentes-personales.TITLE' | translate" icon="report_outlined"
 				[isEmpty]="componentEvaluationManagerService.isEmptyPersonalHistories() | async" [collapsed]="true"

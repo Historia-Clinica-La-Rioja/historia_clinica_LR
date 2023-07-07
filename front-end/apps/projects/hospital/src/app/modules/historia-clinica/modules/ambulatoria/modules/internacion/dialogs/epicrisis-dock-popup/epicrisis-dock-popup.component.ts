@@ -7,6 +7,7 @@ import {
 	EpicrisisGeneralStateDto,
 	EpicrisisObservationsDto, ExternalCauseDto, HealthConditionDto,
 	HealthHistoryConditionDto,
+	HospitalizationProcedureDto,
 	ImmunizationDto,
 	MasterDataInterface,
 	MedicationDto,
@@ -81,6 +82,8 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	externalCauseDtoSubject = new BehaviorSubject<boolean>(true);
 	diagnosis: DiagnosisDto[] = [];
 	waitToResponse = false;
+	procedures: SnomedConcept<HospitalizationProcedureDto>[] = [];
+
 	@ViewChild(ObstetricComponent) formulario!: ObstetricComponent;
 
 	constructor(
@@ -143,6 +146,11 @@ export class EpicrisisDockPopupComponent implements OnInit {
 			this.problemEpicrisisService.initTable(response.otherProblems);
 			this.diagnosticsEpicrisisService.initTable(response.diagnosis);
 			this.mainDiagnosis = response.mainDiagnosis;
+
+			this.procedures = response.procedures.map((objeto: HospitalizationProcedureDto) => ({
+				concept: { ...objeto },
+				isAdded: false
+			}));
 
 			let epicrisis$;
 
@@ -346,7 +354,8 @@ export class EpicrisisDockPopupComponent implements OnInit {
 			immunizations: this.immunizations.filter(i => i.isAdded).map(i => i.concept),
 			allergies: this.allergies.filter(i => i.isAdded).map(i => i.concept),
 			obstetricEvent: this.formulario?.getForm(),
-			otherProblems: this.problemEpicrisisService.getProblems()
+			otherProblems: this.problemEpicrisisService.getProblems(),
+			procedures: this.procedures.filter(i => i.isAdded).map(i => i.concept),
 		}
 	}
 

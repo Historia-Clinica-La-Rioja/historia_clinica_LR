@@ -44,6 +44,7 @@ export class ComponentEvaluationManagerService {
 		this.medications = epicrisis.medications;
 		this.otherProblems = epicrisis.otherProblems;
 		this.personalHistories = epicrisis.personalHistories;
+		this.hospitalizationProcedures = epicrisis?.procedures;
 	}
 
 	set epicrisisDraft(epicrisis: EpicrisisDto) {
@@ -82,6 +83,10 @@ export class ComponentEvaluationManagerService {
 	}
 	set vaccines(vaccines: ImmunizationDto[]) {
 		this.vaccinesSubject.next(!vaccines || vaccines.length === 0);
+	}
+
+	set procedures(mainDiagnosis: DiagnosisDto) {
+		this.mainDiagnosticosSubject.next(!mainDiagnosis);
 	}
 
 	set otherProblems(otherProblems: HealthConditionDto[]) {

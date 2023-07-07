@@ -264,6 +264,12 @@
 					}
 				}
 			},
+			"procedimientos": {
+				"TITLE": "Procedimientos",
+				"table": {
+					"TITLE": "Procedimientos registrados"
+				}
+			},
 			"vacunas": {
 				"TITLE": "Vacunas",
 				"table": {
