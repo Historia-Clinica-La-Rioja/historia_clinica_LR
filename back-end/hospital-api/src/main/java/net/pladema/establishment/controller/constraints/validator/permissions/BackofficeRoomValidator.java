@@ -6,6 +6,7 @@ import net.pladema.establishment.repository.entity.Room;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;
+import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.user.controller.BackofficeAuthoritiesValidator;
 import org.springframework.data.domain.Example;
@@ -75,6 +76,7 @@ public class BackofficeRoomValidator implements BackofficePermissionValidator<Ro
 
 	@Override
 	public void assertCreate(Room entity) {
+		assertNotExists(entity);
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return;
 		hasPermissionByInstitution(sectorRepository.getInstitutionId(entity.getSectorId()));
@@ -82,6 +84,7 @@ public class BackofficeRoomValidator implements BackofficePermissionValidator<Ro
 
 	@Override
 	public void assertUpdate(Integer id, Room entity) {
+		assertNotExists(entity);
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return;
 		Integer institutionId = repository.getInstitutionId(id);
@@ -128,6 +131,13 @@ public class BackofficeRoomValidator implements BackofficePermissionValidator<Ro
 			throw new PermissionDeniedException(NO_CUENTA_CON_SUFICIENTES_PRIVILEGIOS);
 		if (!permissionEvaluator.hasPermission(authentication, institutionId, "ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE"))
 			throw new PermissionDeniedException(NO_CUENTA_CON_SUFICIENTES_PRIVILEGIOS);
+	}
+
+	private void assertNotExists(Room room) {
+		var entity = repository.findBySectorIdAndRoomNumberAndDescription(room.getSectorId(), room.getDescription(), room.getRoomNumber());
+		if (entity.isPresent() && !entity.get().getId().equals(room.getId())) {
+			throw new BackofficeValidationException("room.sector.exists");
+		}
 	}
 
 }

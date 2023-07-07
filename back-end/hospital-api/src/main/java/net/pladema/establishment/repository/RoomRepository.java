@@ -1,6 +1,8 @@
 package net.pladema.establishment.repository;
 
 import net.pladema.establishment.repository.entity.Room;
+import net.pladema.establishment.repository.entity.Sector;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Integer> {
@@ -49,5 +52,13 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
 			"WHERE s.institutionId IN :institutionsIds ")
 	List<Integer> getAllIdsByInstitutionsId(@Param("institutionsIds") List<Integer> institutionsIds);
 
-
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT r " +
+			"FROM Room as r " +
+			"WHERE r.roomNumber = :roomNumber " +
+			"AND r.description = :description " +
+			"AND r.sectorId = :sectorId ")
+	Optional<Room> findBySectorIdAndRoomNumberAndDescription(@Param("sectorId") Integer sectorId,
+															 @Param("description") String description,
+															 @Param("roomNumber") String roomNumber);
 }
