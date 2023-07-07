@@ -1,17 +1,19 @@
 <div class="masEstudios">
+  <br><br>
     <h2>Estudios del adulto mayor</h2>
     <button mat-icon-button color="primary" (click)="mostrarPopup()">
       <mat-icon>add</mat-icon>
       Agregar estudio
     </button>
+    <br><br>
+    
+    
+    <div class="botones">
+      <button mat-icon-button color="primary" (click)="mostrarPopupTest()">
+        <mat-icon>bar_chart</mat-icon>
+        Ver ultimo estudio
+      </button>
+      
+    </div>
     
 </div>
-
-<div class="title-section">
-  	<h1>Test Edmonton</h1>
-		<div *ngFor="let answer of edmontonAnswers" class="edmonton-answer">
-		<p>{{ diccionarioPreguntas[answer.idQuestion] }}</p>
-		<p>Respuesta: {{ diccionarioRespuestas[answer.idAnswer] }}</p>
-</div>
-
-  

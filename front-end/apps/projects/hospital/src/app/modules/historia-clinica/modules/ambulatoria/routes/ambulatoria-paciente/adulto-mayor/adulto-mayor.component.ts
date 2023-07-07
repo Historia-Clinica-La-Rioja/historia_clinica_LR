@@ -5,6 +5,8 @@ import { EdmontonService } from '@api-rest/services/edmonton.service';
 import { EdMontonAnswers } from '@api-rest/api-model';
 import { EdMontonSummary } from '@api-rest/api-model';
 import { ActivatedRoute } from '@angular/router';
+import { TestEdmontonPopupComponent } from './test-edmonton-popup/test-edmonton-popup.component';
+import { GetTestComponent } from './get-test/get-test.component';
 
 @Component({
   selector: 'app-adulto-mayor',
@@ -67,18 +69,55 @@ export class AdultoMayorComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEdmontonAnswers();
-		//this.getEdmontonSummary();
+		this.getEdmontonSummary();
   }
 
   showPopupFlag = false;
 
   mostrarPopup(): void {
     const dialogRef = this.dialog.open(EstudiosPopupComponent, {
-      width: '550px', 
+      width: '800px', 
     });
 
     dialogRef.afterClosed().subscribe(result => {
     });
+}
+
+mostrarPopupTest(): void {
+  this.route.paramMap.subscribe(params => {
+    this.patientId = Number(params.get('idPaciente'));  
+    console.log("data", this.patientId)
+
+  });
+  const dialogRef = this.dialog.open(TestEdmontonPopupComponent, {
+    width: '600px', 
+    data: {
+      patientId: this.patientId
+    }
+  });
+
+
+
+  dialogRef.afterClosed().subscribe(result => {
+  });
+}
+
+getEdmontonSummary(): void {
+  const edmontonId = 63
+  const institutionId = 2
+  const patientId = 32
+  console.log("estoy en getProfessional")
+  this.getEdMontonService.getEdMontonSummary(institutionId,patientId,edmontonId)
+    .subscribe(
+      (response: EdMontonSummary) => {
+        this.edmontonSummary = response;
+        console.log(this.edmontonSummary);
+      },
+      (error: any) => {
+        console.error(error);
+      }
+    )
+
 }
 
 getEdmontonAnswers(): void {
@@ -90,6 +129,7 @@ getEdmontonAnswers(): void {
   //api que trae el id de las respuestas y preguntas
   console.log("Paciente", this.patientId)
   console.log("institucion: ", institutionId)
+  console.log("Estoy en getEdmontonAnswer")
   this.getEdMontonService.getEdMonton(institutionId, this.patientId)
     .subscribe(
     (response: EdMontonAnswers[]) => {

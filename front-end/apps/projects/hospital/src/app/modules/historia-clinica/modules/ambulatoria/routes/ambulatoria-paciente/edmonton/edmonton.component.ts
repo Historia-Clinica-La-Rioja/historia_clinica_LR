@@ -178,6 +178,10 @@ export class EdmontonComponent {
           questionId: 20, 
           answerId: this.selectedRendimientoFuncOption
         },
+        {
+          questionId: 21,
+          answerId: this.totalSum
+        },
       ]
     };
     console.log(datos)
