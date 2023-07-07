@@ -4,6 +4,7 @@ import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPAReposito
 import net.pladema.establishment.repository.entity.HierarchicalUnit;
 import net.pladema.establishment.repository.entity.HierarchicalUnitRelationship;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -38,4 +39,12 @@ public interface HierarchicalUnitRelationshipRepository extends SGXAuditableEnti
 			"AND hur.deleteable.deleted = false")
 	List<HierarchicalUnit> findParentsIdsByHierarchicalUnitChildId(@Param("hierarchicalUnitId") Integer hierarchicalUnitId);
 
+	@Modifying
+	@Transactional(readOnly = true)
+	@Query(value = "UPDATE HierarchicalUnitRelationship hur "
+			+ "SET hur.deleteable.deleted = true "
+			+ ", hur.deleteable.deletedOn = CURRENT_TIMESTAMP "
+			+ ", hur.deleteable.deletedBy = ?#{ principal.userId } "
+			+ "WHERE hur.hierarchicalUnitChildId = :hierarchicalUnitId")
+	void deleteByHierarchicalUnitId(@Param("hierarchicalUnitId") Integer hierarchicalUnitId);
 }

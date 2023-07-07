@@ -71,6 +71,7 @@ public class BackofficeHierarchicalUnitStore implements BackofficeStore<Hierarch
 	@Override
 	public void deleteById(Integer id) {
 		repository.deleteById(id);
+		hierarchicalUnitRelationshipRepository.deleteByHierarchicalUnitId(id);
 	}
 
 	@Override
