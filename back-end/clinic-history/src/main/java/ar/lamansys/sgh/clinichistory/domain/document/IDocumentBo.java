@@ -7,6 +7,7 @@ import java.util.List;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
@@ -137,5 +138,9 @@ public interface IDocumentBo {
 	default OtherRiskFactorBo getOtherRiskFactors() { return null; }
 
 	default Boolean getIsArchived() { return null; }
+
+    default List<ConclusionBo> getConclusions() {
+        return Collections.emptyList();
+    }
 
 }

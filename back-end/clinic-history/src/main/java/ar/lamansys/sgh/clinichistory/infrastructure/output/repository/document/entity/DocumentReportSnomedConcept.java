@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.requests.servicerequests.infrastructure.output.ReportSnomedConcept;
+package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,12 +17,12 @@ import javax.persistence.Table;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReportSnomedConcept {
+public class DocumentReportSnomedConcept {
 
 	@EmbeddedId
 	private DocumentReportSnomedConceptPK pk;
 
-	public ReportSnomedConcept(Long documentId, Integer snomedId){
+	public DocumentReportSnomedConcept(Long documentId, Integer snomedId){
 		pk = new DocumentReportSnomedConceptPK(documentId, snomedId);
 	}
 }

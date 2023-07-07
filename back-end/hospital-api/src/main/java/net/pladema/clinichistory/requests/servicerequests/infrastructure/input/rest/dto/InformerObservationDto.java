@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.infrastructure.input.rest.dto;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ProblemDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ConclusionDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +17,7 @@ public class InformerObservationDto {
 
 	private Short id;
 	private String evolutionNote;
-	private List<ProblemDto> problems;
+	private List<ConclusionDto> conclusions;
 	private String createdBy;
 	private DateTimeDto actionTime;
 	private boolean confirmed;

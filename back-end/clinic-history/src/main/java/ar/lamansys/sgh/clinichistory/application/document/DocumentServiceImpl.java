@@ -5,13 +5,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.clinichistory.domain.document.DocumentDownloadDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.NewbornBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentExternalCauseRepository;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentObstetricEventRepository;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentReportSnomedConceptRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentObstetricEvent;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentTriageRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentDownloadDataVo;
@@ -112,6 +115,10 @@ public class  DocumentServiceImpl implements DocumentService {
 	
 	private final DocumentTriageRepository documentTriageRepository;
 
+    private final DocumentReportSnomedConceptRepository documentReportSnomedConceptRepository;
+
+    private final SnomedService snomedService;
+
 	public DocumentServiceImpl(DocumentRepository documentRepository,
                                DocumentHealthConditionRepository documentHealthConditionRepository,
                                DocumentImmunizationRepository documentImmunizationRepository,
@@ -122,10 +129,12 @@ public class  DocumentServiceImpl implements DocumentService {
                                DocumentMedicamentionStatementRepository documentMedicamentionStatementRepository,
                                DocumentDiagnosticReportRepository documentDiagnosticReportRepository,
                                DocumentOdontologyProcedureRepository documentOdontologyProcedureRepository,
-							   DocumentOdontologyDiagnosticRepository documentOdontologyDiagnosticRepository,
-							   DocumentExternalCauseRepository documentExternalCauseRepository,
-							   DocumentObstetricEventRepository documentObstetricEventRepository,
-							   DocumentTriageRepository documentTriageRepository) {
+                               DocumentOdontologyDiagnosticRepository documentOdontologyDiagnosticRepository,
+                               DocumentExternalCauseRepository documentExternalCauseRepository,
+                               DocumentObstetricEventRepository documentObstetricEventRepository,
+                               DocumentTriageRepository documentTriageRepository,
+                               DocumentReportSnomedConceptRepository documentReportSnomedConceptRepository,
+                               SnomedService snomedService) {
         this.documentRepository = documentRepository;
         this.documentHealthConditionRepository = documentHealthConditionRepository;
         this.documentImmunizationRepository = documentImmunizationRepository;
@@ -140,6 +149,8 @@ public class  DocumentServiceImpl implements DocumentService {
 		this.documentExternalCauseRepository = documentExternalCauseRepository;
 		this.documentObstetricEventRepository = documentObstetricEventRepository;
 		this.documentTriageRepository = documentTriageRepository;
+        this.documentReportSnomedConceptRepository = documentReportSnomedConceptRepository;
+        this.snomedService = snomedService;
     }
 
     @Override
@@ -514,7 +525,19 @@ public class  DocumentServiceImpl implements DocumentService {
 		return result;
 	}
 
-	private DentalActionBo mapToOdontologyProcedure(Object[] row) {
+    @Override
+    public List<ConclusionBo> getConclusionsFromDocument(Long documentId) {
+        LOG.debug("Input parameters -> documentId {}", documentId);
+        List<ConclusionBo> result = documentReportSnomedConceptRepository.getSnomedConceptsByReportDocumentId(documentId)
+                .stream()
+                .map(snomedService::getSnomed)
+                .map(ConclusionBo::new)
+                .collect(Collectors.toList());
+        LOG.debug("Output -> {}", result);
+        return result;
+    }
+
+    private DentalActionBo mapToOdontologyProcedure(Object[] row) {
 		var result = new DentalActionBo();
 		result.setDiagnostic(false);
 		result.setSnomed(new SnomedBo((Snomed)row[1]));

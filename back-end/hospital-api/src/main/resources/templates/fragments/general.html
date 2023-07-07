@@ -655,9 +655,14 @@
     <!-- Conclusions image report -->
     <div th:fragment="conclusions">
         <h3>Conclusiones</h3>
-        <div th:if="${not #lists.isEmpty(problems)}">
-            <dl th:each="problem,iter: ${problems}">
-                <dd><p  th:text="${'- ' + problem.snomed.pt}"></p></dd>
+        <div th:if="${#lists.isEmpty(conclusions)}">
+            <dl>
+                <dd><p>Sin conclusiones registradas</p></dd>
+            </dl>
+        </div>
+        <div th:if="${not #lists.isEmpty(conclusions)}">
+            <dl th:each="conclusion,iter: ${conclusions}">
+                <dd><p  th:text="${'- ' + conclusion.snomed.pt}"></p></dd>
             </dl>
         </div>
     </div>

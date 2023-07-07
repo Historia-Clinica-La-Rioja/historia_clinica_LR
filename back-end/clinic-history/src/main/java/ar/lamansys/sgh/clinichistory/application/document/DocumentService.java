@@ -6,6 +6,7 @@ import java.util.Optional;
 import ar.lamansys.sgh.clinichistory.domain.document.DocumentDownloadDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
@@ -116,6 +117,8 @@ public interface DocumentService {
 	DocumentDownloadDataBo getDocumentDownloadDataByTriage(Integer triageId);
 
 	DocumentTriage createDocumentTriage(Long documentId, Integer triageId);
+
+    List<ConclusionBo> getConclusionsFromDocument(Long documentId);
 
 }
 

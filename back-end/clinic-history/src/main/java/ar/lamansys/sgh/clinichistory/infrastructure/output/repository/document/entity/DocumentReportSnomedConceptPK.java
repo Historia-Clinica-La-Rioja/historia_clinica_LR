@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.requests.servicerequests.infrastructure.output.ReportSnomedConcept;
+package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
