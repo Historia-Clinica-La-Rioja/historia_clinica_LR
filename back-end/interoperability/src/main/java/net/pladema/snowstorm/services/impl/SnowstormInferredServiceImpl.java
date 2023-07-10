@@ -27,8 +27,9 @@ public class SnowstormInferredServiceImpl implements SnowstormInferredService {
             List<SnowstormItemResponse> ancestors = snowstormService.getConceptAncestors(conceptId);
             if(!ancestors.isEmpty())
                 return InferredAllergyRules.inferred(ancestors);
-        } catch (SnowstormApiException e) {
-            log.error("Error snowstorm service");
+        } catch (Exception e) {
+			e.printStackTrace();
+            return new InferredAllergyAttributes(InferredAllergyAttributes.TYPE.NULL, InferredAllergyAttributes.CATEGORY.NULL);
         }
         return null;
     }
