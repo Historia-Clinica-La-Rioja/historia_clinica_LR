@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AppFeature, DuplicatePatientDto, IdentificationTypeDto, PatientPersonalInfoDto, PatientToMergeDto, PatientType } from '@api-rest/api-model';
+import { AppFeature, IdentificationTypeDto, PatientPersonalInfoDto, PatientToMergeDto, PatientType } from '@api-rest/api-model';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { ContextService } from '@core/services/context.service';
 import { AuditPatientService } from '@api-rest/services/audit-patient.service';
@@ -30,7 +30,7 @@ export class PatientFusionComponent implements OnInit {
 	listPatientData$: Observable<PatientPersonalInfoDto[]>;
 	listPatientData: PatientPersonalInfoDto[];
 	identificationTypeList: IdentificationTypeDto[];
-	patientToAudit: DuplicatePatientDto;
+	patientToAudit:any;
 	patientsTypes: PatientType[];
 	keyAttributes = KeyAttributes;
 	oldPatientsIds: number[] = [];
@@ -88,7 +88,6 @@ export class PatientFusionComponent implements OnInit {
 
 		this.route.paramMap.subscribe(
 			(params) => {
-				console.log(params)
 				this.patientId = Number(params.get('id'));
 				this.isUnlinkPatient = true;
 			})
@@ -114,9 +113,9 @@ export class PatientFusionComponent implements OnInit {
 	getListPatientData() {
 		if (this.isUnlinkPatient) {
 			this.auditPatientService.getMergedPatientPersonalInfo(this.patientId).subscribe((patientPersonalData: PatientPersonalInfoDto[]) => {
-				this.listPatientData = this.setListPatientData(patientPersonalData);
+				this.listPatientData = patientPersonalData.reverse();
 				this.listPatientData$ = of(this.listPatientData);
-
+				this.patientToAudit = this.listPatientData[0];
 				this.setInitPage();
 				this.setInfo();
 			})
@@ -138,7 +137,7 @@ export class PatientFusionComponent implements OnInit {
 	}
 
 	setInfo() {
-		this.infoPatientToAudit = 'Auditoría de ' + this.patientToAudit.firstName + " ";
+		this.infoPatientToAudit = 'Auditoría de ' + this.patientToAudit?.firstName + " ";
 		if (this.patientToAudit?.middleNames) {
 			this.infoPatientToAudit += this.patientToAudit.middleNames + " ";
 		}

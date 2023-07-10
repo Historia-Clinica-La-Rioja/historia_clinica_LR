@@ -1,0 +1,5 @@
+@import "./routes/patient-fusion/patient-fusion.scss-theme.scss";
+
+@mixin auditoria-mixins($theme) {
+	@include app-patient-fusion($theme);
+}
