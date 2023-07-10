@@ -2033,6 +2033,7 @@ export interface HospitalUserPersonInfoDto {
 
 export interface HospitalizationProcedureDto {
     id?: number;
+    isPrimary?: boolean;
     performedDate?: string;
     snomed: SnomedDto;
     type?: ProcedureTypeEnum;

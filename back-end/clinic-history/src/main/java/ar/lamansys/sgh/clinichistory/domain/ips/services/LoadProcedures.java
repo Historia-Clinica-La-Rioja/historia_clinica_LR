@@ -62,7 +62,8 @@ public class LoadProcedures {
                 patientId,
                 snomedId,
                 procedureBo.getStatusId(), procedureBo.getPerformedDate(),
-				procedureBo.getType());
+				procedureBo.getType(),
+                procedureBo.getIsPrimary());
 
         result = proceduresRepository.save(result);
         LOG.debug("Procedure saved -> {}", result.getId());

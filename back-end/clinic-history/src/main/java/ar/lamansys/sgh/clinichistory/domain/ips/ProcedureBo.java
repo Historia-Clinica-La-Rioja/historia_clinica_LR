@@ -23,6 +23,8 @@ public class ProcedureBo extends ClinicalTerm {
 
 	@Nullable
 	private ProcedureTypeEnum type = ProcedureTypeEnum.PROCEDURE;
+	
+	private Boolean isPrimary = Boolean.TRUE;
 
     public ProcedureBo(ProcedureSummaryBo procedureSummaryBo){
         this.setSnomed(procedureSummaryBo.getSnomed());

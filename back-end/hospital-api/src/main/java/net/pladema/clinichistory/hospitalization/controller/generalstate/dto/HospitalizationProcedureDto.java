@@ -35,4 +35,7 @@ public class HospitalizationProcedureDto {
     
 	@Nullable
 	private ProcedureTypeEnum type = ProcedureTypeEnum.PROCEDURE;
+
+	@Nullable
+	private Boolean isPrimary = Boolean.TRUE;
 }

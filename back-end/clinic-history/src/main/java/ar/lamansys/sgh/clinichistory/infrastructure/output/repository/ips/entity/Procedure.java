@@ -51,7 +51,10 @@ public class Procedure extends SGXAuditableEntity<Integer> implements SGXDocumen
 	@Column(name = "procedure_type_id")
 	private Short procedureTypeId;
 
-	public Procedure(Integer patientId, Integer snomedId, String statusId, LocalDate performedDate, ProcedureTypeEnum procedureType) {
+	@Column(name = "is_primary")
+	private boolean isPrimary = Boolean.TRUE;
+
+	public Procedure(Integer patientId, Integer snomedId, String statusId, LocalDate performedDate, ProcedureTypeEnum procedureType, Boolean isPrimary) {
 		super();
 		this.patientId = patientId;
 		this.snomedId = snomedId;
@@ -59,5 +62,6 @@ public class Procedure extends SGXAuditableEntity<Integer> implements SGXDocumen
 			this.statusId = statusId;
 		this.performedDate = performedDate;
 		this.procedureTypeId = procedureType.getId();
+		this.isPrimary = isPrimary;
 	}
 }
