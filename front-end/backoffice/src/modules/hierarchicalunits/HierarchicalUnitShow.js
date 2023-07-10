@@ -41,11 +41,7 @@ const HierarchicalUnitChilds = (props) => {
         (
             <Fragment>
                 <SectionTitle label="resources.hierarchicalunitrelationships.childs.name"/>
-                <CreateRelatedButton
-                    customRecord={{institutionId: record.institutionId, hierarchicalUnitIdToReport: record.id}}
-                    reference="hierarchicalunits"
-                    label="resources.hierarchicalunits.createRelated"
-                />
+                <AssociateHierarchicalUnitChild {...props}/>
                 <ReferenceManyField
                     addLabel={false}
                     reference="hierarchicalunitrelationships"
@@ -69,7 +65,7 @@ const HierarchicalUnitParents = (props) => {
         (
             <Fragment>
                 <SectionTitle label="resources.hierarchicalunitrelationships.parents.name"/>
-                <AsociateHierarchicalUnitParent {...props}/>
+                <AssociateHierarchicalUnitParent {...props}/>
                 <ReferenceManyField
                     addLabel={false}
                     reference="hierarchicalunitrelationships"
@@ -93,7 +89,7 @@ const UserIsInstitutionalAdmin = function () {
     return userAdmin;
 }
 
-const AsociateHierarchicalUnitParent = ({ record }) => {
+const AssociateHierarchicalUnitParent = ({ record }) => {
     const customRecord = {hierarchicalUnitChildId: record.id};
     return UserIsInstitutionalAdmin() ?( <CreateRelatedButton
             customRecord={customRecord}
@@ -101,6 +97,17 @@ const AsociateHierarchicalUnitParent = ({ record }) => {
             refFieldName="hierarchicalUnitChildId"
             label="resources.hierarchicalunitrelationships.parents.addRelated"
             />
+    ) : null;
+};
+
+const AssociateHierarchicalUnitChild = ({ record }) => {
+    const customRecord = {institutionId: record.institutionId, hierarchicalUnitIdToReport: record.id};
+    return UserIsInstitutionalAdmin() ?(
+        <CreateRelatedButton
+            customRecord={customRecord}
+            reference="hierarchicalunits"
+            label="resources.hierarchicalunits.createRelated"
+        />
     ) : null;
 };
 
