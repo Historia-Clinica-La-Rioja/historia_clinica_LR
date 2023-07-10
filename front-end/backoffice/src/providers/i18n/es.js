@@ -802,13 +802,13 @@ const messages = {
         hierarchicalunits: {
             name: 'Unidad jerárquica |||| Unidades jerárquicas',
             fields: {
-                id: 'id',
+                id: 'Id',
                 institutionId: 'Institución',
                 classificationId: 'Clasificación',
                 typeId: 'Tipo',
                 alias: 'Alias',
                 clinicalSpecialtyId: 'Servicio',
-                hierarchicalUnitIdToReport: 'Reporte de productividad'
+                hierarchicalUnitIdToReport: 'Productividad asociada a'
             },
             createRelated: 'Crear Unidad jérarquica'
         },
@@ -820,11 +820,11 @@ const messages = {
             },
             parents : {
                 name: 'Unidades jerárquicas padres',
-                addRelated: 'Asociar unidad jerárquica'
+                addRelated: 'Asociar unidad padre'
             },
             childs: {
                 name: 'Unidades jerárquicas hijas',
-                createRelated: 'Crear unidad jerárquica'
+                createRelated: 'Crear unidad hija'
             },
             createRelated: 'Asociar Unidad jeárquica'
         },

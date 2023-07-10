@@ -106,12 +106,12 @@ const AssociateHierarchicalUnitChild = ({ record }) => {
         <CreateRelatedButton
             customRecord={customRecord}
             reference="hierarchicalunits"
-            label="resources.hierarchicalunits.createRelated"
+            label="resources.hierarchicalunitrelationships.childs.createRelated"
         />
     ) : null;
 };
 
-const AssociatePersonToHierarchicalUnit = ({ record }) => {
+const AssociateUserToHierarchicalUnit = ({ record }) => {
     const customRecord = {institutionId: record.institutionId, hierarchicalUnitId: record.id};
     return UserIsInstitutionalAdmin() ?( <CreateRelatedButton
             customRecord={customRecord}
@@ -128,7 +128,7 @@ const HierarchicalUnitStaff = (props) => {
         (
             <Fragment>
                 <SectionTitle label="resources.hierarchicalunitstaff.name"/>
-                <AssociatePersonToHierarchicalUnit {...props}/>
+                <AssociateUserToHierarchicalUnit {...props}/>
                 <ReferenceManyField
                     addLabel={false}
                     reference="hierarchicalunitstaff"
@@ -151,23 +151,29 @@ const HierarchicalUnitStaff = (props) => {
         ) : null;
 }
 
-const HierarchicalUnitShow = props => (
-    <Show {...props} hasEdit={UserIsInstitutionalAdmin()}>
-        <SimpleShowLayout>
-            <ReferenceField source="institutionId" reference="institutions">
-                <TextField source="name"/>
-            </ReferenceField>
-            <TextField source="alias"/>
-            <ReferenceField source="typeId" reference="hierarchicalunittypes" link={ false }>
-                <TextField source="description" />
-            </ReferenceField>
-            <ServiceField {...props} />
-            <HierarchicalUnitChilds/>
-            <HierarchicalUnitParents/>
-            <HierarchicalUnitStaff/>
-        </SimpleShowLayout>
-    </Show>
-);
+const HierarchicalUnitShow = props => {
+    const userIsInstitutionalAdmin = UserIsInstitutionalAdmin();
+    return (
+        <Show {...props} hasEdit={userIsInstitutionalAdmin}>
+            <SimpleShowLayout>
+                <TextField source="alias"/>
+                <ReferenceField source="institutionId" reference="institutions">
+                    <TextField source="name"/>
+                </ReferenceField>
+                <ReferenceField source="typeId" reference="hierarchicalunittypes" link={ false }>
+                    <TextField source="description" />
+                </ReferenceField>
+                <ServiceField {...props} />
+                <ReferenceField source="hierarchicalUnitIdToReport" link={userIsInstitutionalAdmin} reference="hierarchicalunits">
+                    <TextField source="alias"/>
+                </ReferenceField>
+                <HierarchicalUnitChilds/>
+                <HierarchicalUnitParents/>
+                <HierarchicalUnitStaff/>
+            </SimpleShowLayout>
+        </Show>
+    );
+}
 
 export default HierarchicalUnitShow;
 

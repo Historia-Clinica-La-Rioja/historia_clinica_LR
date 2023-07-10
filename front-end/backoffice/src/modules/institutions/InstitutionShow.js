@@ -60,6 +60,9 @@ const ShowHierarchicalUnits = () => {
                   empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin unidades jerárquicas definidas</p>}>
             <TextField source="id" />
             <TextField source="alias"/>
+            <ReferenceField source="typeId" reference="hierarchicalunittypes" link={false}>
+                <TextField source="description" />
+            </ReferenceField>
             <EditButton disabled={!UserIsInstitutionalAdmin()}/>
         </Datagrid>
     </ReferenceManyField>
