@@ -34,6 +34,7 @@ export class ReportStudyComponent implements OnInit {
 	appointmentId: number;
 	disableContinueEditing = false;
 	severityTypes: any[];
+	textEditorLength = 0;
 	@Output() update = new EventEmitter<Observable<StudyAppointment>>;
 
 	constructor(
@@ -118,7 +119,8 @@ export class ReportStudyComponent implements OnInit {
 
 	save() {
 		this.submitted = true;
-		if (this.form.valid) {
+		this.setTextEditorLength(this.form.controls.observations.value)
+		if (this.form.valid && this.textEditorLength) {
 			this.disableContinueEditing = true;
 			this.enabledEditing = false;
 			if (this.study.info.informerObservations?.id) {
@@ -134,6 +136,10 @@ export class ReportStudyComponent implements OnInit {
 				});
 			}
 		}
+	}
+
+	private setTextEditorLength(text: string) {
+		this.textEditorLength = text.replace(/<[^>]*>/g, "").replace(/\s/g, "").length;
 	}
 
 	private getInformerObservationsDto(confirmed: boolean): InformerObservationDto {
