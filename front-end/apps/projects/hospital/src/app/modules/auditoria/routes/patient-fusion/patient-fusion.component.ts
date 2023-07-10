@@ -71,6 +71,7 @@ export class PatientFusionComponent implements OnInit {
 			phoneNumber: null,
 		},
 	}
+	patientToUnlink:any =this.patientToMerge;
 
 	constructor(private router: Router, private contextService: ContextService, private personMasterDataService: PersonMasterDataService,
 		private auditPatientService: AuditPatientService,
@@ -137,7 +138,7 @@ export class PatientFusionComponent implements OnInit {
 	}
 
 	setInfo() {
-		this.infoPatientToAudit = 'Auditoría de ' + this.patientToAudit?.firstName + " ";
+		this.infoPatientToAudit = this.patientToAudit?.firstName + " ";
 		if (this.patientToAudit?.middleNames) {
 			this.infoPatientToAudit += this.patientToAudit.middleNames + " ";
 		}
@@ -253,12 +254,14 @@ export class PatientFusionComponent implements OnInit {
 		if (!this.validationColumns && !this.validationTwoSelectedPatients) {
 			const dialogRef = this.dialog.open(WarningFusionComponent, {
 				data: {
+					title:'pacientes.audit.TITLE_WARNING',
 					cant: this.oldPatientsIds.length,
 					fullName: '-' + (this.patientToMerge.registrationDataPerson.firstName) + " " + (this.patientToMerge.registrationDataPerson.middleNames ? this.patientToMerge.registrationDataPerson.middleNames : '') + ' ' + (this.patientToMerge.registrationDataPerson.lastName) + " " + (this.patientToMerge.registrationDataPerson.otherLastNames ? this.patientToMerge.registrationDataPerson.otherLastNames : ''),
 					identification: '-' + this.getIdentificationType(this.patientToMerge.registrationDataPerson.identificationTypeId) + ' ' + this.patientToMerge.registrationDataPerson.identificationNumber,
 					birthDate: '- Fecha Nac. ' + this.patientToMerge.registrationDataPerson.birthDate,
 					idPatient: '- ID ' + this.patientToMerge.activePatientId,
 					nameSelfDetermination: this.nameSelfDeterminationFF ? this.patientToMerge.registrationDataPerson.nameSelfDetermination ? '- ' + this.patientToMerge.registrationDataPerson.nameSelfDetermination : "-" : null,
+					labelButtonConfirm:'pacientes.audit.BUTTON_CONFIRM'
 				},
 				disableClose: true,
 				width: '35%',
@@ -288,6 +291,46 @@ export class PatientFusionComponent implements OnInit {
 		}
 	}
 
+	unlink(){
+		const dialogRef = this.dialog.open(WarningFusionComponent, {
+			data: {
+				title:'Se desvinculara de '+ this.infoPatientToAudit +' ID '+this.patientToAudit.patientId + ' ' + this.getIdentificationType(this.patientToAudit.identificationTypeId)+ ' '+ this.patientToAudit.identificationNumber +' (estado '+ this.getPatientType(this.patientToAudit.typeId)+ ') la siguiente información:' ,
+				cant: this.oldPatientsIds.length,
+				fullName: '-' + (this.patientToUnlink.registrationDataPerson.firstName) + " " + (this.patientToUnlink.registrationDataPerson.middleNames ? this.patientToUnlink.registrationDataPerson.middleNames : '') + ' ' + (this.patientToUnlink.registrationDataPerson.lastName) + " " + (this.patientToUnlink.registrationDataPerson.otherLastNames ? this.patientToUnlink.registrationDataPerson.otherLastNames : ''),
+				identification: '-' + this.getIdentificationType(this.patientToUnlink.registrationDataPerson.identificationTypeId) + ' ' + this.patientToUnlink.registrationDataPerson.identificationNumber,
+				birthDate: '- Fecha Nac. ' + this.patientToUnlink.registrationDataPerson.birthDate,
+				idPatient: '- ID ' + this.patientToUnlink.activePatientId,
+				nameSelfDetermination: this.nameSelfDeterminationFF ? this.patientToUnlink.registrationDataPerson.nameSelfDetermination ? '- ' + this.patientToUnlink.registrationDataPerson.nameSelfDetermination : "-" : null,
+				labelButtonConfirm:'pacientes.audit.BUTTON_YES_UNLINK'
+
+			},
+			disableClose: true,
+			width: '35%',
+			autoFocus: false
+		})
+		dialogRef.afterClosed().subscribe(confirmed => {
+			if (confirmed) {
+				/*this.completePatientDataToMerge();
+				this.patientMergeService.merge(this.patientToMerge).subscribe(res => {
+					const dialogRef2 = this.dialog.open(ConfirmedFusionComponent, {
+						data: {
+							idPatient: this.patientToMerge.activePatientId
+						},
+						disableClose: true,
+						width: '35%',
+						autoFocus: false
+					})
+					dialogRef2.afterClosed().subscribe(close => {
+						this.goToBack();
+					})
+				}, error => {
+					this.snackBarService.showError(error.text);
+					this.oldPatientsIds.push(this.patientToMerge.activePatientId);
+				})*/
+			}
+		});
+	}
+
 	validateForm() {
 		if (this.oldPatientsIds.length >= 2) {
 			this.validationTwoSelectedPatients = false;
@@ -300,7 +343,6 @@ export class PatientFusionComponent implements OnInit {
 		} else {
 			this.validationColumns = false;
 		}
-
 	}
 
 	completePatientDataToMerge() {

@@ -364,7 +364,10 @@
 		"SUBTITLE_UNLINK_PATIENT":"Separar datos de pacientes fusionados",
 		"MERGERS":"Fusiones",
 		"CLARIFICATION_UNLINK_PATIENT":"Por favor, seleccione en la columna izquierda el paciente que desea desvincular del paciente principal.",
-		"BUTTON_UNLINK":"Desvincular"
+		"BUTTON_UNLINK":"Desvincular",
+		"BUTTON_YES_UNLINK":"Si, desvincular",
+		"AUDIT_OF":"Auditoría de ",
+		"QUESTION_WARNING_UNLINK":"¿Está seguro que desea realizar la desvinculación? "
 
 	}
   }

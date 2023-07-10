@@ -9,12 +9,14 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class WarningFusionComponent implements OnInit {
 
 	constructor(@Inject(MAT_DIALOG_DATA) public data: {
+		title?:string;
 		cant: number,
 		fullName:string,
 		identification:string,
 		birthDate:string,
 		idPatient:string,
 		nameSelfDetermination:string,
+		labelButtonConfirm:string,
 	}) {
 	 }
 

@@ -13,7 +13,7 @@
 				<span>{{'buttons.BACK' | translate}}</span>
 			</button>
 		</section>
-		<h3>{{infoPatientToAudit}}</h3>
+		<h3>{{'pacientes.audit.AUDIT_OF' | translate }} {{infoPatientToAudit}}</h3>
 		<p *ngIf="!isUnlinkPatient">{{'pacientes.audit.LABEL_FILTER' | translate}} {{filterBy | translate}}</p>
 	</section>
 
@@ -81,31 +81,33 @@
 						</span>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="15%">
-						<mat-radio-button color="primary" name="names" *ngIf="patient.selected"
+						<mat-radio-button color="primary" name="names" *ngIf="patient.selected && !isUnlinkPatient"
 							(change)="setValuesPatientFusion(keyAttributes.NAMES,patient.firstName,patient.middleNames,patient.patientId)"></mat-radio-button>
 						<span *ngIf="patient.firstName else noData">{{patient?.firstName}}
 							{{patient?.middleNames}}</span>
 					</div>
 					<div *ngIf="nameSelfDeterminationFF" fxLayoutAlign="start center" class="content" fxFlex="15%">
-						<mat-radio-button color="primary" name="nameSelfDetermination" *ngIf="patient.selected"
+						<mat-radio-button color="primary" name="nameSelfDetermination"
+							*ngIf="patient.selected && !isUnlinkPatient"
 							(change)="setValuesPatientFusion(keyAttributes.NAMESELFDETERMINATION,patient.nameSelfDetermination,null,patient.patientId)"></mat-radio-button>
 						<span
 							*ngIf="patient.nameSelfDetermination else noData">{{patient?.nameSelfDetermination}}</span>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="15%">
-						<mat-radio-button color="primary" name="lastName" *ngIf="patient.selected"
+						<mat-radio-button color="primary" name="lastName" *ngIf="patient.selected && !isUnlinkPatient"
 							(change)="setValuesPatientFusion(keyAttributes.LASTNAMES,patient.lastName,patient.otherLastNames,patient.patientId)"></mat-radio-button>
 						<span *ngIf="patient.lastName else noData">{{patient?.lastName}}
 							{{patient?.otherLastNames}}</span>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="12%">
-						<mat-radio-button color="primary" name="birthdate" *ngIf="patient.selected"
+						<mat-radio-button color="primary" name="birthdate" *ngIf="patient.selected && !isUnlinkPatient"
 							(change)="setValuesPatientFusion(keyAttributes.BIRTHDATE,patient.birthdate,null,patient.patientId)"></mat-radio-button>
 						<span *ngIf="patient.lastName else noData">{{patient?.birthdate | date: 'dd/MM/yyyy'
 							}}</span>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="15%">
-						<mat-radio-button color="primary" name="identificationType" *ngIf="patient.selected"
+						<mat-radio-button color="primary" name="identificationType"
+							*ngIf="patient.selected && !isUnlinkPatient"
 							(change)="setValuesPatientFusion(keyAttributes.IDENTIFICATION,patient.identificationTypeId,patient.identificationNumber,patient.patientId)"></mat-radio-button>
 						<span
 							*ngIf="patient.identificationTypeId else noData">{{getIdentificationType(patient?.identificationTypeId)}}
@@ -138,13 +140,12 @@
 				</p>
 			</div>
 
-
 			<button *ngIf="!isUnlinkPatient" mat-raised-button color="primary"
 				(click)="merge()">{{'pacientes.audit.LABEL_BUTTON_MERGE' |
 				translate | uppercase}}</button>
 
 			<button *ngIf="isUnlinkPatient" mat-raised-button color="primary"
-				(click)="merge()">{{'pacientes.audit.BUTTON_UNLINK' |
+				(click)="unlink()">{{'pacientes.audit.BUTTON_UNLINK' |
 				translate | uppercase}}</button>
 
 		</div>
