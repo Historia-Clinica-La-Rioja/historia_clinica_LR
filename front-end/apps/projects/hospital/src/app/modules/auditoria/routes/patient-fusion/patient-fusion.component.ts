@@ -92,7 +92,9 @@ export class PatientFusionComponent implements OnInit {
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('id'));
-				this.isUnlinkPatient = true;
+				if(this.patientId){
+					this.isUnlinkPatient = true;
+				}
 			})
 
 		this.personMasterDataService.getIdentificationTypes()
@@ -264,7 +266,6 @@ export class PatientFusionComponent implements OnInit {
 		if (!this.validationColumns && !this.validationTwoSelectedPatients) {
 			const dialogRef = this.dialog.open(WarningFusionComponent, {
 				data: {
-					title: 'pacientes.audit.TITLE_WARNING',
 					cant: this.oldPatientsIds.length,
 					fullName: '-' + (this.patientToMerge.registrationDataPerson.firstName) + " " + (this.patientToMerge.registrationDataPerson.middleNames ? this.patientToMerge.registrationDataPerson.middleNames : '') + ' ' + (this.patientToMerge.registrationDataPerson.lastName) + " " + (this.patientToMerge.registrationDataPerson.otherLastNames ? this.patientToMerge.registrationDataPerson.otherLastNames : ''),
 					identification: '-' + this.getIdentificationType(this.patientToMerge.registrationDataPerson.identificationTypeId) + ' ' + this.patientToMerge.registrationDataPerson.identificationNumber,

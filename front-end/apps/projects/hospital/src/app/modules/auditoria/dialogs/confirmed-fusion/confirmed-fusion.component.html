@@ -12,7 +12,7 @@
 	</ng-template>
 
 	<ng-container *ngIf="isFusion ; else noFusion">
-		<span translate="pacientes.audit.SUBTITLE_CONFIRMED_FUSION" [translateParams]="{id: data.idPatients[0]}" ></span>
+		<span translate="pacientes.audit.SUBTITLE_CONFIRMED_FUSION" [translateParams]="{id: data.idPatients}" ></span>
 	</ng-container>
 	<ng-template #noFusion>
 		<span translate="pacientes.audit.SUBTITLE_CONFIRMED_UNMERGE" [translateParams]="{idUnmerge: data.idPatients[0], idFusion:data.idPatients[1]}" ></span>

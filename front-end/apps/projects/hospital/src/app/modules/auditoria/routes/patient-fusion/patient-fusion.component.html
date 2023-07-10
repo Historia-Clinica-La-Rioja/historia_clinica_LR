@@ -1,9 +1,9 @@
 <app-content width="full">
 	<section>
-		<ng-container *ngIf="isUnlinkPatient ; else noUnlinkPatient">
+		<ng-container *ngIf="isUnlinkPatient ; else titleFusion">
 			<h2 class="page-title">{{'pacientes.audit.TITLE_UNLINK_PATIENT' | translate}}</h2>
 		</ng-container>
-		<ng-template #noUnlinkPatient>
+		<ng-template #titleFusion>
 			<h2 class="page-title">{{'pacientes.audit.TITLE_CONTROL_DUPLICATE_PATIENTS' | translate}}</h2>
 		</ng-template>
 
@@ -21,10 +21,10 @@
 		<mat-card class="primary background-primary" fxLayout="row">
 			<mat-icon>error_outline</mat-icon>
 			<div class="clarifications">
-				<ng-container *ngIf="isUnlinkPatient ; else noUnlinkPatient">
+				<ng-container *ngIf="isUnlinkPatient ; else clarificationsFusion">
 					<p>{{'pacientes.audit.CLARIFICATION_UNLINK_PATIENT' | translate}}</p>
 				</ng-container>
-				<ng-template #noUnlinkPatient>
+				<ng-template #clarificationsFusion>
 					<p>{{'pacientes.audit.CLARIFICATION_ONE' | translate}}</p>
 					<p>{{'pacientes.audit.CLARIFICATION_TWO' | translate}}</p>
 					<p>{{'pacientes.audit.CLARIFICATION_THREE' | translate}}</p>
@@ -65,7 +65,7 @@
 			</div>
 			<mat-divider></mat-divider>
 			<div *ngFor="let patient of pageSlice;last as isLast; first as isFirst"
-				[ngClass]="isFirst ? 'background-first' : '' ">
+				[ngClass]="isUnlinkPatient && isFirst ? 'background-first' : '' ">
 				<div fxLayout="row" fxLayoutAlign="space-between" class="content">
 					<div fxLayoutAlign="start center" class="content" fxFlex="5%">
 						<mat-checkbox *ngIf="!isUnlinkPatient" (change)="setSelectedPatient(patient)"

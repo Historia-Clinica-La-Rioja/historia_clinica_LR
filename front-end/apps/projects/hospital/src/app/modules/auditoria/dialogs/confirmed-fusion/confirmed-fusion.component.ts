@@ -13,7 +13,7 @@ export class ConfirmedFusionComponent implements OnInit {
 	}) { }
 
 	ngOnInit(): void {
-		if(this.data.idPatients.length === 1){
+		if(!this.data.idPatients.length){
 			this.isFusion=true;
 		}else{
 			this.isFusion=false;
