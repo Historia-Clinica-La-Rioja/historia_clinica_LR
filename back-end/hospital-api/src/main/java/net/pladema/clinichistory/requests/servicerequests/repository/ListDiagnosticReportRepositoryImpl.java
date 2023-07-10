@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Repository
 public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportRepository {
@@ -58,11 +59,19 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
                 "WHERE rw = 1 " +
 				"AND drs.id != :cancelled " +
                 "AND NOT t.status_id = :invalidStatus "+
-                (filter.getStatus() != null ? "AND UPPER(t.status_id) = :statusId " : "") +
-                (filter.getStudy() != null ? "AND ( UPPER(s.pt) LIKE :study OR t.id IN (SELECT t2.id FROM temporal t1 JOIN {h-schema}snomed s1 ON (t1.snomed_id = s1.id), temporal t2 WHERE t2.source_id = t1.source_id AND UPPER(s1.pt) LIKE :study) ) " : "") +
-                (filter.getHealthCondition() != null ? "AND UPPER(h.pt) LIKE :healthCondition " : "") +
-                (filter.getCategory() != null ? "AND UPPER(t.sr_categoryId) = :category " : "") +
-                "ORDER BY t.updated_on";
+                (filter.getStudy() != null ? "AND ( UPPER(s.pt) LIKE :study OR t.id IN (SELECT t2.id FROM temporal t1 JOIN {h-schema}snomed s1 ON (t1.snomed_id = s1.id), temporal t2 WHERE t2.source_id = t1.source_id AND UPPER(s1.pt) LIKE :study) ) " : " ") +
+                (filter.getHealthCondition() != null ? "AND UPPER(h.pt) LIKE :healthCondition " : " ") +
+                (filter.getCategory() != null ? "AND UPPER(t.sr_categoryId) = :category " : " ");
+
+		if (filter.getStatus() != null){
+			if (Stream.of(DiagnosticReportStatus.FINAL_RDI, DiagnosticReportStatus.FINAL).anyMatch(e -> e.equals(filter.getStatus()))){
+				sqlString = sqlString.concat("AND UPPER(t.status_id) IN (:completed, :completedByRDI) ");
+			}
+			else{
+				sqlString = sqlString.concat("AND UPPER(t.status_id) = :statusId ");
+			}
+		}
+		sqlString = sqlString.concat("ORDER BY t.updated_on");
 
         Query query = entityManager.createNativeQuery(sqlString);
         query.setParameter("documentStatusId", DocumentStatus.FINAL)
@@ -71,8 +80,13 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
                 .setParameter("invalidStatus", DiagnosticReportStatus.ERROR)
 				.setParameter("cancelled", DiagnosticReportStatus.CANCELLED);
 
-        if (filter.getStatus() != null)
-            query.setParameter("statusId", filter.getStatus().toUpperCase());
+		if (filter.getStatus() != null){
+			if (Stream.of(DiagnosticReportStatus.FINAL_RDI, DiagnosticReportStatus.FINAL).anyMatch(e -> e.equals(filter.getStatus()))){
+				query.setParameter("completed", DiagnosticReportStatus.FINAL);
+				query.setParameter("completedByRDI", DiagnosticReportStatus.FINAL_RDI);
+			}
+			else query.setParameter("statusId", filter.getStatus().toUpperCase());
+		}
 
         if (filter.getStudy() != null)
             query.setParameter("study", "%"+filter.getStudy().toUpperCase()+"%");
