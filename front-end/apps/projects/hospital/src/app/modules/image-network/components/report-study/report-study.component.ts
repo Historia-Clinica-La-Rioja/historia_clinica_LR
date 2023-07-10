@@ -90,7 +90,7 @@ export class ReportStudyComponent implements OnInit {
 	addTypeaheadConclusion(event): void {
 		if (event) {
 			this.ambulatoryConsultationProblemsService.setConcept(event)
-			this.ambulatoryConsultationProblemsService.addToList(null);
+			this.ambulatoryConsultationProblemsService.addToList(null, true);
 			this.ambulatoryConsultationProblemsService.getProblemas();
 			this.child.clear();
 		}

@@ -114,16 +114,16 @@ export class AmbulatoryConsultationProblemsService {
 		return currentItems === this.data.length;
 	}
 
-	addControl(problema: AmbulatoryConsultationProblem): void {
+	addControl(problema: AmbulatoryConsultationProblem, isConclusion?: boolean): void {
 		if (this.add(problema))
-			this.snackBarService.showError("Problema duplicado");
+			isConclusion ? this.snackBarService.showError("Conclusion duplicada") : this.snackBarService.showError("Problema duplicado");
 	}
 
 	compareSpeciality(data: AmbulatoryConsultationProblem, data1: AmbulatoryConsultationProblem): boolean {
 		return data.snomed.sctid === data1.snomed.sctid;
 	}
 
-	addToList(reportProblemIsOn: boolean) {
+	addToList(reportProblemIsOn: boolean, isConclusion?: boolean) {
 		if (this.form.valid && this.snomedConcept) {
 			const nuevoProblema: AmbulatoryConsultationProblem = {
 				snomed: this.snomedConcept,
@@ -161,7 +161,7 @@ export class AmbulatoryConsultationProblemsService {
 					}
 				);
 			}
-			return this.addControlAndResetForm(nuevoProblema);
+			return this.addControlAndResetForm(nuevoProblema, isConclusion);
 		}
 	}
 
@@ -275,8 +275,8 @@ export class AmbulatoryConsultationProblemsService {
 		return this.ECL;
 	}
 
-	private addControlAndResetForm(nuevoProblema: AmbulatoryConsultationProblem) {
-		this.addControl(nuevoProblema);
+	private addControlAndResetForm(nuevoProblema: AmbulatoryConsultationProblem, isConclusion?: boolean) {
+		this.addControl(nuevoProblema, isConclusion);
 		this.resetForm();
 	}
 

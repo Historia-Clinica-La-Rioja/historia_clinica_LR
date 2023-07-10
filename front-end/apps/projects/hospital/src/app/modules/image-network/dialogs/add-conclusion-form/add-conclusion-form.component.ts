@@ -21,7 +21,7 @@ export class AddConclusionFormComponent implements OnInit {
       this.data.ambulatoryConsultationProblemsService.conclusions$.subscribe((snomedConcept) => {
         if (snomedConcept) {
           this.dialogRef.close()
-          this.data.ambulatoryConsultationProblemsService.addToList(this.data.epidemiologicalReportFF);
+          this.data.ambulatoryConsultationProblemsService.addToList(this.data.epidemiologicalReportFF, true);
           this.data.ambulatoryConsultationProblemsService.resetConclusion()
         }
       })
