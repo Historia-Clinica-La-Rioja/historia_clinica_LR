@@ -368,8 +368,10 @@
 		"BUTTON_YES_UNLINK":"Si, desvincular",
 		"AUDIT_OF":"Auditoría de ",
 		"QUESTION_WARNING_UNLINK":"¿Está seguro que desea realizar la desvinculación? ",
-		"ERROR_UNLINK":"Seleccione un paciente para desvincularlo del paciente principal"
-
+		"ERROR_UNLINK":"Seleccione un paciente para desvincularlo del paciente principal",
+		"TITLE_CONFIRMED_UNMERGE":"Paciente desvinculado con éxito",
+		"SUBTITLE_CONFIRMED_UNMERGE":"El paciente ID {{idUnmerge}} y la información clínica asociada al mismo fue desvinculada del paciente ID {{idFusion}}. Ahora aparecerán en el sistema como pacientes independientes.",
+		"TEXT_CONFIRMED_UNMERGE":" En caso de querer deshacer la desvinculación deberá dirigirse a la pantalla de 'Fusión de pacientes'."
 	}
   }
 }

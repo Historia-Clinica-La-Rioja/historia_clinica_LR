@@ -283,7 +283,7 @@ export class PatientFusionComponent implements OnInit {
 					this.patientMergeService.merge(this.patientToMerge).subscribe(res => {
 						const dialogRef2 = this.dialog.open(ConfirmedFusionComponent, {
 							data: {
-								idPatient: this.patientToMerge.activePatientId
+								idPatients: this.patientToMerge.activePatientId
 							},
 							disableClose: true,
 							width: '35%',
@@ -324,7 +324,17 @@ export class PatientFusionComponent implements OnInit {
 				if (confirmed) {
 					this.patientToUnlink = this.preparePatientToUnlink(this.patientToUnlink);
 					this.patientMergeService.unmerge(this.patientToUnlink).subscribe(res => {
-						this.getListPatientData();
+						const dialogRef2 = this.dialog.open(ConfirmedFusionComponent, {
+							data: {
+								idPatients: [this.patientToUnlink.oldPatientsIds[0],this.patientToUnlink.activePatientId]
+							},
+							disableClose: true,
+							width: '35%',
+							autoFocus: false
+						})
+						dialogRef2.afterClosed().subscribe(close => {
+							this.getListPatientData();
+						})
 					})
 				} else {
 					this.patientToUnlink = this.patientToMerge;
