@@ -44,9 +44,9 @@ public class PatientMergeController {
 	@PostMapping("/unmerge")
 	@Transactional
 	@PreAuthorize("hasPermission(#institutionId, 'AUDITOR_MPI')")
-	public ResponseEntity<List<Integer>> unmerge(@PathVariable(name = "institutionId") Integer institutionId,  @RequestBody PatientToMergeDto patientToUnmerge) {
+	public ResponseEntity<Boolean> unmerge(@PathVariable(name = "institutionId") Integer institutionId,  @RequestBody PatientToMergeDto patientToUnmerge) {
 		log.debug("Input parameters -> institutionId {}, patientToUnmerge {}, ", institutionId, patientToUnmerge);
-		List<Integer> result = unmergePatient.run(institutionId, patientToUnmerge);
+		Boolean result = unmergePatient.run(institutionId, patientToUnmerge);
 		log.debug("Output result -> listado de pacientes reactivados {}", result);
 		return ResponseEntity.ok().body(result);
 	}

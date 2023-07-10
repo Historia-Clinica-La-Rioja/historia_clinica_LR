@@ -69,6 +69,7 @@ public class MergedPatientSearchQuery {
 		String with = " with t as ( select mp.active_patient_id, count(mp.active_patient_id)+1 as mergedCount \n" +
 				"	from {h-schema}merged_inactive_patient as mip \n" +
 				"	join {h-schema}merged_patient as mp on (mip.merged_patient_id = mp.id) \n" +
+				"	where mp.deleted = false \n" +
 				"	group by mp.active_patient_id ) \n";
 		return new QueryPart(with);
 	}

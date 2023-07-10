@@ -49,7 +49,8 @@ public interface MergedInactivePatientRepository extends SGXAuditableEntityJPARe
 			"JOIN Patient pa ON mip.inactivePatientId = pa.id " +
 			"JOIN Person p ON pa.personId = p.id " +
 			"JOIN PersonExtended pex ON pex.id = p.id " +
-			"WHERE mp.activePatientId = :activePatientId")
+			"WHERE mp.activePatientId = :activePatientId " +
+			"AND mip.deleteable.deleted = false ")
 	List<PersonSearchResultVo> findMergedPersonInfoByActivePatientId(@Param("activePatientId") Integer activePatientId);
 
 
