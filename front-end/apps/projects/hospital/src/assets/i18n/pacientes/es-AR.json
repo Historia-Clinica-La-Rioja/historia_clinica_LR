@@ -367,7 +367,8 @@
 		"BUTTON_UNLINK":"Desvincular",
 		"BUTTON_YES_UNLINK":"Si, desvincular",
 		"AUDIT_OF":"Auditoría de ",
-		"QUESTION_WARNING_UNLINK":"¿Está seguro que desea realizar la desvinculación? "
+		"QUESTION_WARNING_UNLINK":"¿Está seguro que desea realizar la desvinculación? ",
+		"ERROR_UNLINK":"Seleccione un paciente para desvincularlo del paciente principal"
 
 	}
   }

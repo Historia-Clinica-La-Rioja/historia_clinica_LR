@@ -16,6 +16,7 @@ import { PAGE_SIZE_OPTIONS } from '@historia-clinica/modules/ambulatoria/modules
 import { Filters } from '../control-patient-duplicate/control-patient-duplicate.component';
 import { PatientProfilePopupComponent } from '../../dialogs/patient-profile-popup/patient-profile-popup.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { ROUTE_UNLINK_PATIENT } from '../home/home.component';
 
 const ROUTE_CONTROL_PATIENT_DUPLICATE = "auditoria/control-pacientes-duplicados"
 const REJECTTED = "Rechazado";
@@ -30,7 +31,7 @@ export class PatientFusionComponent implements OnInit {
 	listPatientData$: Observable<PatientPersonalInfoDto[]>;
 	listPatientData: PatientPersonalInfoDto[];
 	identificationTypeList: IdentificationTypeDto[];
-	patientToAudit:any;
+	patientToAudit: any;
 	patientsTypes: PatientType[];
 	keyAttributes = KeyAttributes;
 	oldPatientsIds: number[] = [];
@@ -71,7 +72,8 @@ export class PatientFusionComponent implements OnInit {
 			phoneNumber: null,
 		},
 	}
-	patientToUnlink:any =this.patientToMerge;
+	patientToUnlink: any = this.patientToMerge;
+	validationPatientToUnlink: boolean = false;
 
 	constructor(private router: Router, private contextService: ContextService, private personMasterDataService: PersonMasterDataService,
 		private auditPatientService: AuditPatientService,
@@ -119,6 +121,9 @@ export class PatientFusionComponent implements OnInit {
 				this.patientToAudit = this.listPatientData[0];
 				this.setInitPage();
 				this.setInfo();
+				if(this.listPatientData.length === 1){
+					this.goToBack();
+				}
 			})
 		} else {
 			this.auditPatientService.getPatientPersonalInfo(this.patientToAudit).subscribe((patientPersonalData: PatientPersonalInfoDto[]) => {
@@ -131,7 +136,7 @@ export class PatientFusionComponent implements OnInit {
 		}
 	}
 
-	setInitPage(){
+	setInitPage() {
 		this.pageSlice = this.listPatientData.slice(0, PAGE_MIN_SIZE);
 		this.numberOfPatients = this.listPatientData.length || 0;
 		this.initialSize = of(PAGE_MIN_SIZE);
@@ -171,7 +176,12 @@ export class PatientFusionComponent implements OnInit {
 	}
 
 	goToBack() {
-		this.router.navigate([this.routePrefix + ROUTE_CONTROL_PATIENT_DUPLICATE])
+		if(this.isUnlinkPatient){
+			this.router.navigate([this.routePrefix + ROUTE_UNLINK_PATIENT])
+		}else{
+			this.router.navigate([this.routePrefix + ROUTE_CONTROL_PATIENT_DUPLICATE])
+		}
+
 	}
 
 	getIdentificationType(value: number) {
@@ -254,14 +264,14 @@ export class PatientFusionComponent implements OnInit {
 		if (!this.validationColumns && !this.validationTwoSelectedPatients) {
 			const dialogRef = this.dialog.open(WarningFusionComponent, {
 				data: {
-					title:'pacientes.audit.TITLE_WARNING',
+					title: 'pacientes.audit.TITLE_WARNING',
 					cant: this.oldPatientsIds.length,
 					fullName: '-' + (this.patientToMerge.registrationDataPerson.firstName) + " " + (this.patientToMerge.registrationDataPerson.middleNames ? this.patientToMerge.registrationDataPerson.middleNames : '') + ' ' + (this.patientToMerge.registrationDataPerson.lastName) + " " + (this.patientToMerge.registrationDataPerson.otherLastNames ? this.patientToMerge.registrationDataPerson.otherLastNames : ''),
 					identification: '-' + this.getIdentificationType(this.patientToMerge.registrationDataPerson.identificationTypeId) + ' ' + this.patientToMerge.registrationDataPerson.identificationNumber,
 					birthDate: '- Fecha Nac. ' + this.patientToMerge.registrationDataPerson.birthDate,
 					idPatient: '- ID ' + this.patientToMerge.activePatientId,
 					nameSelfDetermination: this.nameSelfDeterminationFF ? this.patientToMerge.registrationDataPerson.nameSelfDetermination ? '- ' + this.patientToMerge.registrationDataPerson.nameSelfDetermination : "-" : null,
-					labelButtonConfirm:'pacientes.audit.BUTTON_CONFIRM'
+					labelButtonConfirm: 'pacientes.audit.BUTTON_CONFIRM'
 				},
 				disableClose: true,
 				width: '35%',
@@ -291,44 +301,55 @@ export class PatientFusionComponent implements OnInit {
 		}
 	}
 
-	unlink(){
-		const dialogRef = this.dialog.open(WarningFusionComponent, {
-			data: {
-				title:'Se desvinculara de '+ this.infoPatientToAudit +' ID '+this.patientToAudit.patientId + ' ' + this.getIdentificationType(this.patientToAudit.identificationTypeId)+ ' '+ this.patientToAudit.identificationNumber +' (estado '+ this.getPatientType(this.patientToAudit.typeId)+ ') la siguiente información:' ,
-				cant: this.oldPatientsIds.length,
-				fullName: '-' + (this.patientToUnlink.registrationDataPerson.firstName) + " " + (this.patientToUnlink.registrationDataPerson.middleNames ? this.patientToUnlink.registrationDataPerson.middleNames : '') + ' ' + (this.patientToUnlink.registrationDataPerson.lastName) + " " + (this.patientToUnlink.registrationDataPerson.otherLastNames ? this.patientToUnlink.registrationDataPerson.otherLastNames : ''),
-				identification: '-' + this.getIdentificationType(this.patientToUnlink.registrationDataPerson.identificationTypeId) + ' ' + this.patientToUnlink.registrationDataPerson.identificationNumber,
-				birthDate: '- Fecha Nac. ' + this.patientToUnlink.registrationDataPerson.birthDate,
-				idPatient: '- ID ' + this.patientToUnlink.activePatientId,
-				nameSelfDetermination: this.nameSelfDeterminationFF ? this.patientToUnlink.registrationDataPerson.nameSelfDetermination ? '- ' + this.patientToUnlink.registrationDataPerson.nameSelfDetermination : "-" : null,
-				labelButtonConfirm:'pacientes.audit.BUTTON_YES_UNLINK'
+	unlink() {
+		if (this.patientToUnlink.patientId) {
+			this.validationPatientToUnlink = false;
+			const dialogRef = this.dialog.open(WarningFusionComponent, {
+				data: {
+					title: 'Se desvinculara de ' + this.infoPatientToAudit + ' ID ' + this.patientToAudit.patientId + ' ' + this.getIdentificationType(this.patientToAudit.identificationTypeId) + ' ' + this.patientToAudit.identificationNumber + ' (estado ' + this.getPatientType(this.patientToAudit.typeId) + ') la siguiente información:',
+					cant: this.oldPatientsIds.length,
+					fullName: '-' + (this.patientToUnlink.firstName) + " " + (this.patientToUnlink.middleNames ? this.patientToUnlink.middleNames : '') + ' ' + (this.patientToUnlink.lastName) + " " + (this.patientToUnlink.otherLastNames ? this.patientToUnlink.otherLastNames : ''),
+					identification: '-' + this.getIdentificationType(this.patientToUnlink.identificationTypeId) + ' ' + this.patientToUnlink.identificationNumber,
+					birthDate: '- Fecha Nac. ' + this.patientToUnlink.birthdate,
+					idPatient: '- ID ' + this.patientToUnlink.activePatientId,
+					nameSelfDetermination: this.nameSelfDeterminationFF ? this.patientToUnlink.nameSelfDetermination ? '- ' + this.patientToUnlink.nameSelfDetermination : "-" : null,
+					labelButtonConfirm: 'pacientes.audit.BUTTON_YES_UNLINK'
 
-			},
-			disableClose: true,
-			width: '35%',
-			autoFocus: false
-		})
-		dialogRef.afterClosed().subscribe(confirmed => {
-			if (confirmed) {
-				/*this.completePatientDataToMerge();
-				this.patientMergeService.merge(this.patientToMerge).subscribe(res => {
-					const dialogRef2 = this.dialog.open(ConfirmedFusionComponent, {
-						data: {
-							idPatient: this.patientToMerge.activePatientId
-						},
-						disableClose: true,
-						width: '35%',
-						autoFocus: false
+				},
+				disableClose: true,
+				width: '35%',
+				autoFocus: false
+			})
+			dialogRef.afterClosed().subscribe(confirmed => {
+				if (confirmed) {
+					this.patientToUnlink = this.preparePatientToUnlink(this.patientToUnlink);
+					this.patientMergeService.unmerge(this.patientToUnlink).subscribe(res => {
+						this.getListPatientData();
 					})
-					dialogRef2.afterClosed().subscribe(close => {
-						this.goToBack();
-					})
-				}, error => {
-					this.snackBarService.showError(error.text);
-					this.oldPatientsIds.push(this.patientToMerge.activePatientId);
-				})*/
-			}
-		});
+				} else {
+					this.patientToUnlink = this.patientToMerge;
+				}
+			});
+		} else {
+			this.validationPatientToUnlink = true;
+		}
+
+	}
+
+	preparePatientToUnlink(infoPatient: any):PatientToMergeDto  {
+		let patientToUnlink: PatientToMergeDto = this.patientToMerge;
+		patientToUnlink.activePatientId = this.patientToAudit.patientId;
+		patientToUnlink.oldPatientsIds = [infoPatient.patientId]
+		patientToUnlink.registrationDataPerson.genderId = infoPatient.genderId;
+		patientToUnlink.registrationDataPerson.nameSelfDetermination = infoPatient.nameSelfDetermination;
+		patientToUnlink.registrationDataPerson.birthDate = infoPatient.birthdate;
+		patientToUnlink.registrationDataPerson.firstName = infoPatient.firstName;
+		patientToUnlink.registrationDataPerson.lastName = infoPatient.lastName;
+		patientToUnlink.registrationDataPerson.middleNames = infoPatient.middleNames;
+		patientToUnlink.registrationDataPerson.otherLastNames = infoPatient.otherLastNames;
+		patientToUnlink.registrationDataPerson.identificationNumber = infoPatient.identificationNumber;
+		patientToUnlink.registrationDataPerson.identificationTypeId = infoPatient.identificationTypeId;
+		return patientToUnlink;
 	}
 
 	validateForm() {

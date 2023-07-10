@@ -63,7 +63,6 @@
 
 				</div>
 			</div>
-
 			<mat-divider></mat-divider>
 			<div *ngFor="let patient of pageSlice;last as isLast; first as isFirst"
 				[ngClass]="isFirst ? 'background-first' : '' ">
@@ -71,6 +70,11 @@
 					<div fxLayoutAlign="start center" class="content" fxFlex="5%">
 						<mat-checkbox *ngIf="!isUnlinkPatient" (change)="setSelectedPatient(patient)"
 							color="primary"></mat-checkbox>
+						<mat-radio-group [(ngModel)]="patientToUnlink">
+							<mat-radio-button *ngIf="isUnlinkPatient && !isFirst" color="primary"
+								[value]="patient"></mat-radio-button>
+						</mat-radio-group>
+
 					</div>
 
 					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
@@ -119,7 +123,7 @@
 							uppercase}}</span>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
-						<button mat-stroked-button color="primary"
+						<button mat-stroked-button color="primary" *ngIf="!isUnlinkPatient"
 							(click)="viewPatient(patient)">{{'pacientes.audit.LABEL_BUTTON_VIEW' |
 							translate}}</button>
 					</div>
@@ -137,6 +141,9 @@
 				<p class="warn" *ngIf="validationTwoSelectedPatients">{{'pacientes.audit.MESSAGE_VALIDATION_FUSION' |
 					translate}}</p>
 				<p class="warn" *ngIf="validationColumns">{{'pacientes.audit.MESSAGE_VALIDATION_COLUMNS' | translate}}
+				</p>
+				<p class="warn" *ngIf="validationPatientToUnlink">
+					{{'pacientes.audit.ERROR_UNLINK' | translate }}
 				</p>
 			</div>
 
