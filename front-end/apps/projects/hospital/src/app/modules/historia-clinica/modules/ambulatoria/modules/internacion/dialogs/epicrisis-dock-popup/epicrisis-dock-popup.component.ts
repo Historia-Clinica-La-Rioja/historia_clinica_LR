@@ -96,7 +96,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		private readonly snomedService: SnomedService,
 		private readonly dialog: MatDialog,
 		private readonly externalCauseServise: ExternalCauseService,
-		private readonly obtetricForm: ObstetricFormService,
+		readonly obtetricForm: ObstetricFormService,
 		readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
 		readonly problemEpicrisisService: ProblemEpicrisisService,
 	) {

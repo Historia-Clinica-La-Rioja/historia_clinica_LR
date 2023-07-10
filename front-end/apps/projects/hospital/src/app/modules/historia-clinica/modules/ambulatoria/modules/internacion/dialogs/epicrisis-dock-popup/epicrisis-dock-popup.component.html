@@ -224,7 +224,7 @@
 			</app-new-consultation-expansion-section>
 			<app-new-consultation-expansion-section id="obstetric"
 				[title]="'internaciones.anamnesis.obstetric.TITLE' | translate" icon="pregnant_woman"
-				[isEmpty]="componentEvaluationManagerService.isEmptyObstetric() | async" [collapsed]="true"
+				[isEmpty]="obtetricForm.isEmptyObstetric() | async" [collapsed]="true"
 				[hideBorder]="false">
 				<app-obstetric></app-obstetric>
 			</app-new-consultation-expansion-section>
