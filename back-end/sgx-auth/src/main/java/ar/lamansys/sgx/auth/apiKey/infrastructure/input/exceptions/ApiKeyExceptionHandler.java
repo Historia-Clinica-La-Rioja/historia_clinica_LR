@@ -2,6 +2,7 @@ package ar.lamansys.sgx.auth.apiKey.infrastructure.input.exceptions;
 
 import java.util.Locale;
 
+import ar.lamansys.sgx.auth.apiKey.domain.exceptions.KeyNameCharacterLimitExceededException;
 import org.springframework.context.MessageSource;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -47,6 +48,13 @@ public class ApiKeyExceptionHandler {
 	protected ApiErrorMessageDto handleDuplicateKeyNameException(DuplicateKeyNameException ex, Locale locale) {
 		log.debug("DuplicateKeyNameException exception -> {}", ex.getMessage());
 		return buildErrorMessage("duplicated-name", locale);
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ KeyNameCharacterLimitExceededException.class })
+	protected ApiErrorMessageDto handleKeyNameCharacterLimitExceededException(KeyNameCharacterLimitExceededException ex, Locale locale) {
+		log.debug("KeyNameCharacterLimitExceededException exception -> {}", ex.getMessage());
+		return buildErrorMessage("name-characte-limit-exceeded", locale);
 	}
 }
 
