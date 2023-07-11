@@ -1869,3 +1869,26 @@ databaseChangeLog:
                 - column:
                     name: comments
                     type: text
+
+    - changeSet:
+        id: addColumn-is_primary_procedure
+        author: mvenere
+        changes:
+          - addColumn:
+              tableName: procedures
+              columns:
+                - column:
+                    name: is_primary
+                    type: boolean
+                    defaultValueDate: ${boolean.true}
+
+    - changeSet:
+        id: document_type-surgical-data
+        comment: Actualizar datos document_type
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO document_type VALUES (18, 'Parte quirúrgico de internación');
+                INSERT INTO document_type VALUES (19, 'Parte quirúrgico de guardia');
