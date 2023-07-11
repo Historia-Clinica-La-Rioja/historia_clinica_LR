@@ -94,12 +94,17 @@ public class BookingExternalService implements SharedBookingPort {
 	}
 
 	private BookingInstitutionExtendedDto buildExtendedDto(BookingInstitutionExtendedBo institution) {
-		return new BookingInstitutionExtendedDto(institution.getId(),
-				institution.getDescription(),
-				institution.getSisaCode(),
-				institution.getDependency(),
-				institution.getAddress(),
-				institution.getClinicalSpecialtiesNames());
+		return BookingInstitutionExtendedDto.builder()
+				.id(institution.getId())
+				.aliases(institution.getAliases())
+				.city(institution.getCity())
+				.department(institution.getDepartment())
+				.address(institution.getAddress())
+				.clinicalSpecialtiesNames(institution.getClinicalSpecialtiesNames())
+				.sisaCode(institution.getSisaCode())
+				.description(institution.getDescription())
+				.dependency(institution.getDependency())
+				.build();
 	}
 
 	@Override

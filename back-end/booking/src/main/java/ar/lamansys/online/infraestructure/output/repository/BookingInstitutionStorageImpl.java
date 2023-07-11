@@ -46,8 +46,11 @@ public class BookingInstitutionStorageImpl implements BookingInstitutionStorage 
 				"i.name AS description, " +
 				"i.sisa_code AS refset, " +
 				"CASE WHEN d.description IS NOT NULL THEN d.description ELSE "+ " 'No informada' " + " END AS dependency, " +
-				"CONCAT(ad.street, ' ', ad.number, ', ', c.description, ', ', d2.description) as address, " +
-				"cs.name " +
+				"CONCAT(ad.street, ' ', ad.number) AS address, " +
+				"c.description AS city, " +
+				"d2.description AS department, " +
+				"cs.name, " +
+				"di.alias " +
 				"FROM booking_institution bi " +
 				"JOIN institution i ON (i.id = bi.institution_id) " +
 				"LEFT JOIN dependency d ON (d.id = i.dependency_id) " +
@@ -85,7 +88,10 @@ public class BookingInstitutionStorageImpl implements BookingInstitutionStorage 
 					.sisaCode((String) row[2])
 					.dependency((String) row[3])
 					.address((String) row[4])
-					.clinicalSpecialtiesNames(new ArrayList<>(List.of((String) row[5])))
+					.city((String) row[5])
+					.department((String) row[6])
+					.clinicalSpecialtiesNames(new ArrayList<>(List.of((String) row[7])))
+					.aliases(row[8] == null ? null : new ArrayList<>(List.of((String) row[8])))
 					.build();
 
 			var index = result.indexOf(toInsert);
@@ -93,7 +99,15 @@ public class BookingInstitutionStorageImpl implements BookingInstitutionStorage 
 			if (index == -1) {
 				result.add(toInsert);
 			} else {
-				result.get(index).getClinicalSpecialtiesNames().add((String) row[5]);
+				var names = result.get(index).getClinicalSpecialtiesNames();
+				if(!names.contains((String) row[7])) {
+					names.add((String) row[7]);
+				}
+
+				var aliases = result.get(index).getAliases();
+				if (row[8] != null && !aliases.contains((String) row[8])) {
+					aliases.add((String) row[8]);
+				}
 			}
 		}
 
