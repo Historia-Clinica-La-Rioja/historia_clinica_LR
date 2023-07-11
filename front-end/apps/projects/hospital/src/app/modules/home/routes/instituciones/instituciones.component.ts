@@ -22,7 +22,7 @@ import { WCParams } from '@extensions/components/ui-external-component/ui-extern
 	styleUrls: ['./instituciones.component.scss']
 })
 export class InstitucionesComponent {
-	institutions: { id: number, name: string }[] = null;
+	institutions: { id: number, name: string }[] = [];
 	patientPortalEnabled: boolean;
 	webappInstitutionsAccess: boolean;
 	backofficeAccess: boolean;
