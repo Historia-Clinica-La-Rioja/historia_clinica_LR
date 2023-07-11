@@ -171,7 +171,8 @@ public class PatientController {
 		BMPersonDto createdPerson = personExternalService.addPerson(patientDto);
 		AddressDto addressToAdd = persistPatientAddress(patientDto, Optional.empty());
 		personExternalService.addPersonExtended(patientDto, createdPerson.getId(), addressToAdd.getId());
-		Patient createdPatient = persistPatientData(patientDto, createdPerson, null, institutionId);
+		Patient patient = persistPatientData(patientDto, createdPerson, null, institutionId);
+		Patient createdPatient = clonePatient(patient);
 		if (createdPatient.isValidated()) {
 			Person person = personMapper.fromPersonDto(createdPerson);
 
@@ -195,6 +196,28 @@ public class PatientController {
 		patientService.auditActionPatient(institutionId, createdPatient.getId(), EActionType.CREATE);
 
 		return ResponseEntity.created(new URI("")).body(createdPatient.getId());
+	}
+
+	private Patient clonePatient(Patient p){
+		Patient result =  new Patient();
+		result.setId(p.getId());
+		result.setPersonId(p.getPersonId());
+		result.setTypeId(p.getTypeId());
+		result.setPossibleDuplicate(p.getPossibleDuplicate());
+		result.setNationalId(p.getNationalId());
+		result.setComments(p.getComments());
+		result.setIdentityVerificationStatusId(p.getIdentityVerificationStatusId());
+		result.setAuditTypeId(p.getAuditTypeId());
+		result.setCreatedOn(p.getCreatedOn());
+		result.setCreatedBy(p.getCreatedBy());
+		result.setUpdatedOn(p.getUpdatedOn());
+		result.setUpdatedBy(p.getUpdatedBy());
+		result.setDeleted(p.isDeleted());
+		if(p.getDeleteable()!=null){
+			result.setDeletedOn(p.getDeletedOn());
+			result.setDeletedBy(p.getDeletedBy());
+		}
+		return result;
 	}
 
 
