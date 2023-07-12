@@ -135,17 +135,18 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 
 	setInternmentInformation(internmentId: number) {
 		this.internmentSummaryFacadeService.setInternmentEpisodeInformation(internmentId, false, true);
+		this.internmentSummaryFacadeService.clearInternment();
 		const anamnesis$ = this.internmentSummaryFacadeService.anamnesis$;
 		const evolutionNote$ = this.internmentSummaryFacadeService.evolutionNote$;
 		const epicrisis$ = this.internmentSummaryFacadeService.epicrisis$;
 		const hasMedicalDischarge$ = this.internmentSummaryFacadeService.hasMedicalDischarge$;
 
 		combineLatest([anamnesis$, evolutionNote$, epicrisis$, hasMedicalDischarge$]).subscribe(
-			documentInformation => {
-				this.anamnesisDoc = documentInformation[0];
-				this.lastEvolutionNoteDoc = documentInformation[1];
-				this.epicrisisDoc = documentInformation[2];
-				this.hasMedicalDischarge = documentInformation[3];
+			([anamnesis, evolutionNote, epicrisis, medicalDischarge]) => {
+				this.anamnesisDoc = anamnesis;
+				this.lastEvolutionNoteDoc = evolutionNote;
+				this.epicrisisDoc = epicrisis;
+				this.hasMedicalDischarge = medicalDischarge;
 				this.hasToDoInternmentAction();
 				if (this.epicrisisDoc?.confirmed === false)
 					this.getEpicrisisDraft();
