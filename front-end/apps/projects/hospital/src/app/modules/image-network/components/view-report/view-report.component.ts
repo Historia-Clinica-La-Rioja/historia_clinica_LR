@@ -12,6 +12,8 @@ import { StudyAppointmentReportService } from '@api-rest/services/study-appointm
 export class ViewReportComponent implements OnInit {
 
     @Input() appointmentId: number;
+    @Input() buttonText: string;
+    @Input() buttonIcon?: string;
     private docFile: HCEDocumentDataDto;
 
     constructor(

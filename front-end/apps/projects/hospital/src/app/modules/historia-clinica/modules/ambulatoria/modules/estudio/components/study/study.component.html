@@ -10,7 +10,7 @@
 				<app-view-study class="view-study-btn" [appointmentId]="study.appointmentId"></app-view-study>
 				<div class="report-status">
 					<span *ngIf="!study.reportStatus; else pendingReport" class="report-label">{{'image-network.worklist.PENDING_REPORT' | translate}}</span>
-					<ng-template #pendingReport><app-view-report [appointmentId]="study.appointmentId"></app-view-report></ng-template>
+					<ng-template #pendingReport><app-view-report [appointmentId]="study.appointmentId" [buttonText]="'image-network.worklist.VIEW_REPORT'"></app-view-report></ng-template>
 				</div>
 			</div>
 			<div actions fxFlex="3" *ngIf="study.diagnosticInformation.statusId !== STUDY_STATUS.ERROR.id">
