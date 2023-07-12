@@ -508,6 +508,14 @@ public class  DocumentServiceImpl implements DocumentService {
 		return result;
 	}
 
+	@Override
+	public DocumentDownloadDataBo getDocumentDownloadDataByAppointmentId(Integer appointmentId) {
+		LOG.debug("Input parameters -> appointmentId {}", appointmentId);
+		DocumentDownloadDataBo result = mapToDocumentDownloadDataBo(documentRepository.getDocumentIdByAppointmentId(appointmentId));
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
 	private DocumentDownloadDataBo mapToDocumentDownloadDataBo(DocumentDownloadDataVo documentDownloadData) {
 		DocumentDownloadDataBo result = new DocumentDownloadDataBo();
 		if (documentDownloadData != null) {

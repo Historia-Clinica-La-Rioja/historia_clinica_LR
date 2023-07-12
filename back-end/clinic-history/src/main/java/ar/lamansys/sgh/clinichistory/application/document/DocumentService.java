@@ -116,6 +116,8 @@ public interface DocumentService {
 
 	DocumentDownloadDataBo getDocumentDownloadDataByTriage(Integer triageId);
 
+	DocumentDownloadDataBo getDocumentDownloadDataByAppointmentId(Integer appointmentId);
+
 	DocumentTriage createDocumentTriage(Long documentId, Integer triageId);
 
     List<ConclusionBo> getConclusionsFromDocument(Long documentId);
