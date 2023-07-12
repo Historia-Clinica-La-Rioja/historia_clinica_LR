@@ -1892,3 +1892,14 @@ databaseChangeLog:
               sql: |-
                 INSERT INTO document_type VALUES (18, 'Parte quirúrgico de internación');
                 INSERT INTO document_type VALUES (19, 'Parte quirúrgico de guardia');
+
+    - changeSet:
+        id: problem_type-surgical-data
+        comment: Actualizar datos problem_type
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO problem_type VALUES ('406520001', 'Diagnóstico pre-operatorio');
+                INSERT INTO problem_type VALUES ('406521002', 'Diagnóstico post-operatorio');
