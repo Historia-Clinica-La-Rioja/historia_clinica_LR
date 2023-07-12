@@ -1,5 +1,6 @@
 package net.pladema.establishment.controller;
 
+import net.pladema.establishment.controller.constraints.validator.permissions.BackofficeHierarchicalUnitStaffValidator;
 import net.pladema.establishment.repository.entity.HierarchicalUnitStaff;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 
@@ -10,8 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("backoffice/hierarchicalunitstaff")
 public class BackofficeHierarchicalUnitStaffController extends AbstractBackofficeController<HierarchicalUnitStaff, Integer> {
 
-	public BackofficeHierarchicalUnitStaffController(BackofficeHierarchicalUnitStaffStore store) {
-		super(store);
+	public BackofficeHierarchicalUnitStaffController(BackofficeHierarchicalUnitStaffStore store,
+													 BackofficeHierarchicalUnitStaffValidator validator) {
+		super(store, validator);
 	}
 
 }

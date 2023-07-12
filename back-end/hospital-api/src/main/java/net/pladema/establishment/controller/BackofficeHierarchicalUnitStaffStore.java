@@ -51,7 +51,6 @@ public class BackofficeHierarchicalUnitStaffStore implements BackofficeStore<Hie
 
 	@Override
 	public HierarchicalUnitStaff save(HierarchicalUnitStaff entity) {
-		assertHierarchicalUnitStaff(entity);
 		return repository.save(entity);
 	}
 
@@ -65,10 +64,5 @@ public class BackofficeHierarchicalUnitStaffStore implements BackofficeStore<Hie
 		return Example.of(entity);
 	}
 
-	private void assertHierarchicalUnitStaff(HierarchicalUnitStaff entity){
-		HierarchicalUnitStaff hus = repository.findByHierarchicalUnitIdAndUserId(entity.getHierarchicalUnitId(), entity.getUserId()).orElse(null);
-		if (hus != null && !hus.getId().equals(entity.getId()))
-			throw new BackofficeValidationException("hierarchical-unit-staff.exists");
-	}
 
 }

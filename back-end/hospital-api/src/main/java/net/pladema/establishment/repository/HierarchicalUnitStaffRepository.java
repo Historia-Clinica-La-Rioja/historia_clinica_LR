@@ -100,4 +100,11 @@ public interface HierarchicalUnitStaffRepository extends SGXAuditableEntityJPARe
 						   @Param("hierarchicalUnitId") Integer hierarchicalUnitId,
 						   @Param("responsible") boolean responsible);
 
+	@Transactional
+	@Query(value = "SELECT hus.id " +
+			"FROM HierarchicalUnitStaff hus " +
+			"JOIN HierarchicalUnit hu ON (hus.hierarchicalUnitId = hu.id) " +
+			"WHERE hu.institutionId IN (:institutionIds) " +
+			"AND hus.deleteable.deleted IS FALSE")
+	List<Integer> getAllIdsByInstitutionsId(@Param("institutionIds") List<Integer> institutionIds);
 }
