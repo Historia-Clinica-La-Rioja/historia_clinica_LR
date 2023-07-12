@@ -88,7 +88,8 @@
 			"REPORT_REFERRED": "El informe se ha derivado a ",
             "PENDING_REPORT": "Informe pendiente",
             "DERIVED_REPORT": "Informe derivado a ",
-            "VIEW_REPORT": "Ver informe"
+            "VIEW_REPORT": "Ver informe",
+            "DOWNLOAD_REPORT": "Descargar informe"
 		}
 
 	}
