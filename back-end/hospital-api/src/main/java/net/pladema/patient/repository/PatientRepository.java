@@ -43,7 +43,8 @@ public interface PatientRepository extends SGXAuditableEntityJPARepository<Patie
 	@Query(value = "SELECT new net.pladema.patient.repository.domain.PatientPersonVo(patient, person) " +
 			"FROM Patient patient " +
 			"JOIN Person person ON patient.personId = person.id " +
-			"WHERE patient.typeId = :patientTypeId ")
+			"WHERE patient.typeId = :patientTypeId " +
+			"AND patient.deleteable.deleted = false ")
 	List<PatientPersonVo> getAllByPatientType(@Param("patientTypeId") Short patientTypeId);
 
 	@Query(value = " SELECT p.identificationNumber " +
