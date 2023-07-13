@@ -14,6 +14,7 @@ import { PatientProfilePopupComponent } from './dialogs/patient-profile-popup/pa
 import { EmpadronamientoComponent } from './routes/empadronamiento/empadronamiento.component';
 import { PacientesModule } from '@pacientes/pacientes.module';
 import { UnlinkPatientComponent } from './routes/unlink-patient/unlink-patient.component';
+import { UnmergePatientComponent } from './routes/unmerge-patient/unmerge-patient.component';
 
 
 
@@ -28,6 +29,7 @@ import { UnlinkPatientComponent } from './routes/unlink-patient/unlink-patient.c
     PatientProfilePopupComponent,
     EmpadronamientoComponent,
     UnlinkPatientComponent,
+    UnmergePatientComponent,
   ],
   imports: [
     CommonModule,

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AppFeature, IdentificationTypeDto, PatientPersonalInfoDto, PatientToMergeDto, PatientType } from '@api-rest/api-model';
+import { Router } from '@angular/router';
+import { AppFeature, DuplicatePatientDto, IdentificationTypeDto, PatientPersonalInfoDto, PatientToMergeDto, PatientType } from '@api-rest/api-model';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { ContextService } from '@core/services/context.service';
 import { AuditPatientService } from '@api-rest/services/audit-patient.service';
@@ -16,7 +16,6 @@ import { PAGE_SIZE_OPTIONS } from '@historia-clinica/modules/ambulatoria/modules
 import { Filters } from '../control-patient-duplicate/control-patient-duplicate.component';
 import { PatientProfilePopupComponent } from '../../dialogs/patient-profile-popup/patient-profile-popup.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { ROUTE_UNLINK_PATIENT } from '../home/home.component';
 
 const ROUTE_CONTROL_PATIENT_DUPLICATE = "auditoria/control-pacientes-duplicados"
 const REJECTTED = "Rechazado";
@@ -31,7 +30,7 @@ export class PatientFusionComponent implements OnInit {
 	listPatientData$: Observable<PatientPersonalInfoDto[]>;
 	listPatientData: PatientPersonalInfoDto[];
 	identificationTypeList: IdentificationTypeDto[];
-	patientToAudit: any;
+	patientToAudit: DuplicatePatientDto;
 	patientsTypes: PatientType[];
 	keyAttributes = KeyAttributes;
 	oldPatientsIds: number[] = [];
@@ -46,7 +45,6 @@ export class PatientFusionComponent implements OnInit {
 	validationColumns: boolean = false;
 	nameSelfDeterminationFF: boolean;
 	rejectedId: number;
-	isUnlinkPatient: boolean = false;
 	patientId: number;
 	patientToMergeAuxKeyId: any = {
 		names: null,
@@ -72,30 +70,18 @@ export class PatientFusionComponent implements OnInit {
 			phoneNumber: null,
 		},
 	}
-	patientToUnlink: any = this.patientToMerge;
-	validationPatientToUnlink: boolean = false;
 
 	constructor(private router: Router, private contextService: ContextService, private personMasterDataService: PersonMasterDataService,
 		private auditPatientService: AuditPatientService,
 		private patientMasterDataService: PatientMasterDataService, private patientMergeService: PatientMergeService, private dialog: MatDialog,
 		private readonly snackBarService: SnackBarService,
-		private readonly featureFlagService: FeatureFlagService,
-		private route: ActivatedRoute) {
+		private readonly featureFlagService: FeatureFlagService) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
-
 	}
 
 	ngOnInit(): void {
 		this.patientToAudit = JSON.parse(localStorage.getItem('patientToAudit'));
 		this.filterBy = JSON.parse(localStorage.getItem('filter'));
-
-		this.route.paramMap.subscribe(
-			(params) => {
-				this.patientId = Number(params.get('id'));
-				if(this.patientId){
-					this.isUnlinkPatient = true;
-				}
-			})
 
 		this.personMasterDataService.getIdentificationTypes()
 			.subscribe(identificationTypes => {
@@ -116,18 +102,6 @@ export class PatientFusionComponent implements OnInit {
 	}
 
 	getListPatientData() {
-		if (this.isUnlinkPatient) {
-			this.auditPatientService.getMergedPatientPersonalInfo(this.patientId).subscribe((patientPersonalData: PatientPersonalInfoDto[]) => {
-				this.listPatientData = patientPersonalData.reverse();
-				this.listPatientData$ = of(this.listPatientData);
-				this.patientToAudit = this.listPatientData[0];
-				this.setInitPage();
-				this.setInfo();
-				if(this.listPatientData.length === 1){
-					this.goToBack();
-				}
-			})
-		} else {
 			this.auditPatientService.getPatientPersonalInfo(this.patientToAudit).subscribe((patientPersonalData: PatientPersonalInfoDto[]) => {
 				this.listPatientData = this.setListPatientData(patientPersonalData);
 				this.listPatientData$ = of(this.listPatientData);
@@ -135,7 +109,6 @@ export class PatientFusionComponent implements OnInit {
 				this.setInitPage();
 				this.setInfo();
 			})
-		}
 	}
 
 	setInitPage() {
@@ -178,12 +151,7 @@ export class PatientFusionComponent implements OnInit {
 	}
 
 	goToBack() {
-		if(this.isUnlinkPatient){
-			this.router.navigate([this.routePrefix + ROUTE_UNLINK_PATIENT])
-		}else{
 			this.router.navigate([this.routePrefix + ROUTE_CONTROL_PATIENT_DUPLICATE])
-		}
-
 	}
 
 	getIdentificationType(value: number) {
@@ -300,67 +268,6 @@ export class PatientFusionComponent implements OnInit {
 				}
 			});
 		}
-	}
-
-	unlink() {
-		if (this.patientToUnlink.patientId) {
-			this.validationPatientToUnlink = false;
-			const dialogRef = this.dialog.open(WarningFusionComponent, {
-				data: {
-					title: 'Se desvinculara de ' + this.infoPatientToAudit + ' ID ' + this.patientToAudit.patientId + ' ' + this.getIdentificationType(this.patientToAudit.identificationTypeId) + ' ' + this.patientToAudit.identificationNumber + ' (estado ' + this.getPatientType(this.patientToAudit.typeId) + ') la siguiente información:',
-					cant: this.oldPatientsIds.length,
-					fullName: '-' + (this.patientToUnlink.firstName) + " " + (this.patientToUnlink.middleNames ? this.patientToUnlink.middleNames : '') + ' ' + (this.patientToUnlink.lastName) + " " + (this.patientToUnlink.otherLastNames ? this.patientToUnlink.otherLastNames : ''),
-					identification: '-' + this.getIdentificationType(this.patientToUnlink.identificationTypeId) + ' ' + this.patientToUnlink.identificationNumber,
-					birthDate: '- Fecha Nac. ' + this.patientToUnlink.birthdate,
-					idPatient: '- ID ' + this.patientToUnlink.activePatientId,
-					nameSelfDetermination: this.nameSelfDeterminationFF ? this.patientToUnlink.nameSelfDetermination ? '- ' + this.patientToUnlink.nameSelfDetermination : "-" : null,
-					labelButtonConfirm: 'pacientes.audit.BUTTON_YES_UNLINK'
-
-				},
-				disableClose: true,
-				width: '35%',
-				autoFocus: false
-			})
-			dialogRef.afterClosed().subscribe(confirmed => {
-				if (confirmed) {
-					this.patientToUnlink = this.preparePatientToUnlink(this.patientToUnlink);
-					this.patientMergeService.unmerge(this.patientToUnlink).subscribe(res => {
-						const dialogRef2 = this.dialog.open(ConfirmedFusionComponent, {
-							data: {
-								idPatients: [this.patientToUnlink.oldPatientsIds[0],this.patientToUnlink.activePatientId]
-							},
-							disableClose: true,
-							width: '35%',
-							autoFocus: false
-						})
-						dialogRef2.afterClosed().subscribe(close => {
-							this.getListPatientData();
-						})
-					})
-				} else {
-					this.patientToUnlink = this.patientToMerge;
-				}
-			});
-		} else {
-			this.validationPatientToUnlink = true;
-		}
-
-	}
-
-	preparePatientToUnlink(infoPatient: any):PatientToMergeDto  {
-		let patientToUnlink: PatientToMergeDto = this.patientToMerge;
-		patientToUnlink.activePatientId = this.patientToAudit.patientId;
-		patientToUnlink.oldPatientsIds = [infoPatient.patientId]
-		patientToUnlink.registrationDataPerson.genderId = infoPatient.genderId;
-		patientToUnlink.registrationDataPerson.nameSelfDetermination = infoPatient.nameSelfDetermination;
-		patientToUnlink.registrationDataPerson.birthDate = infoPatient.birthdate;
-		patientToUnlink.registrationDataPerson.firstName = infoPatient.firstName;
-		patientToUnlink.registrationDataPerson.lastName = infoPatient.lastName;
-		patientToUnlink.registrationDataPerson.middleNames = infoPatient.middleNames;
-		patientToUnlink.registrationDataPerson.otherLastNames = infoPatient.otherLastNames;
-		patientToUnlink.registrationDataPerson.identificationNumber = infoPatient.identificationNumber;
-		patientToUnlink.registrationDataPerson.identificationTypeId = infoPatient.identificationTypeId;
-		return patientToUnlink;
 	}
 
 	validateForm() {

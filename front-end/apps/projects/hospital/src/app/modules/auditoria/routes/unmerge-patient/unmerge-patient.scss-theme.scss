@@ -1,10 +1,10 @@
 
 @import "@angular/material/theming";
 
-@mixin app-patient-fusion($theme) {
+@mixin app-unmerge-patient($theme) {
     $palette-primary: map-get($theme, primary);
 
-	app-patient-fusion{
+	app-unmerge-patient{
 		.background-first{
 			background-color: mat-color($palette-primary, 50);
 		}

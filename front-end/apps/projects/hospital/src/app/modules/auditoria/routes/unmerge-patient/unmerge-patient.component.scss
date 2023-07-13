@@ -1,0 +1,36 @@
+mat-icon{
+	margin-right: 10px;
+}
+h3{
+	font-weight: 500;
+	margin: 0 0 0 0;
+}
+.content {
+	padding: 6px 0 6px 0;
+}
+#div-button{
+	margin-top: 20px;
+}
+.warn{
+	font-weight: 500;
+}
+.clarifications{
+	p{
+		margin: 0 0 0 0 !important;
+	}
+	font-weight: 500;
+}
+@mixin background-primary($theme) {
+    $palette-primary: map-get($theme, primary);
+
+    .background-primary {
+        background-color: mat-color($palette-primary, 50);
+    }
+}
+
+::ng-deep .mat-dialog-container-fusion{
+	mat-dialog-container.mat-dialog-container{
+		padding: 0px!important;
+		overflow-y: hidden;
+	}
+}
