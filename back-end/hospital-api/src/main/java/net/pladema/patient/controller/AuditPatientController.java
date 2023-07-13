@@ -132,6 +132,15 @@ public class AuditPatientController {
 		return ResponseEntity.ok(result.stream().map(patientMapper::toMergedPatientSearchDto).collect(Collectors.toList()));
 	}
 
+	@GetMapping("/patients-to-audit")
+	@PreAuthorize("hasPermission(#institutionId, 'AUDITOR_MPI')")
+	public ResponseEntity<List<PatientRegistrationSearchDto>> fetchPatientsToAudit(
+			@PathVariable(name = "institutionId") Integer institutionId) {
+		List<PatientRegistrationSearch> result = patientService.getPatientsToAudit();
+		log.debug("Get all patients to audit -> {} ", result.size());
+		return ResponseEntity.ok(result.stream().map(patientMapper::toPatientRegistrationSearchDto).collect(Collectors.toList()));
+	}
+
 	private void validateFilter(AuditPatientSearch auditPatientSearch) {
 		if ((auditPatientSearch == null) || (!auditPatientSearch.getName() && !auditPatientSearch.getIdentify() && !auditPatientSearch.getBirthdate())) {
 			throw new AuditPatientException(AuditPatientExceptionEnum.INVALID_FILTER_FOR_SEARCH,String.format("No se esta filtrando por ningún dato personal."));

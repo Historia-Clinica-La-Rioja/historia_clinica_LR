@@ -55,6 +55,8 @@ public interface PatientService {
 
 	List<PersonSearchResultVo> getMergedPersonsByPatientId(Integer activePatientId);
 
+	List<PatientRegistrationSearch> getPatientsToAudit();
+
 	void assertHasActiveEncountersByPatientId(Integer patientId);
 
 	List<Patient> getLongTermTemporaryPatientIds(LocalDateTime maxDate, Short limit);

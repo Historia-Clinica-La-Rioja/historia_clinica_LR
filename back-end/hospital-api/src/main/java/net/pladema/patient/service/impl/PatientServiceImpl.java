@@ -309,6 +309,15 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
+	public List<PatientRegistrationSearch> getPatientsToAudit() {
+		PatientRegistrationSearchFilter filter = new PatientRegistrationSearchFilter();
+		filter.setToAudit(true);
+		List<PatientRegistrationSearch> allPatientsToAudit = patientRepository.getAllRegistrationByFilter(filter);
+		LOG.debug(OUTPUT, allPatientsToAudit);
+		return allPatientsToAudit;
+	}
+
+	@Override
 	public void assertHasActiveEncountersByPatientId(Integer patientId) {
 		if(internmentEpisodeRepository.isPatientHospitalized(patientId) || emergencyCareEpisodeRepository.existsActiveEpisodeByPatientId(patientId) || appointmentRepository.existsAppointmentByStatesAndPatientId(List.of(AppointmentState.ASSIGNED, AppointmentState.CONFIRMED), patientId))
 			throw new RejectedPatientException(RejectedPatientExceptionEnum.ENCOUNTER_ACTIVE_EXISTS, "El paciente posee un encuentro activo");
