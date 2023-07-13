@@ -224,3 +224,89 @@ databaseChangeLog:
                 - column:
                     name: individual_notification
                     type: boolean
+
+    - changeSet:
+        id: diagnostic_image_report_status-createTable
+        author: mromero
+        changes:
+          - createTable:
+              tableName: diagnostic_image_report_status
+              columns:
+                  - column:
+                      constraints:
+                        primaryKey: true
+                        primaryKeyName: PK_diagnostic_image_report_status
+                      name: id
+                      type: smallint
+                  - column:
+                      constraints:
+                        nullable: false
+                      name: description
+                      type: varchar(30)
+
+    - changeSet:
+        id: diagnostic_image_report_status-metadata
+        author: mromero
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO diagnostic_image_report_status VALUES 
+                  (1, 'Completado'), 
+                  (2, 'Derivado'),
+                  (3, 'Pendiente'),
+                  (4, 'No requerido');
+
+    - changeSet:
+        id: addColumn-report_status_id-to-appointment_order_image
+        author: mromero
+        changes:
+          - addColumn:
+              tableName: appointment_order_image
+              columns:
+                - column:
+                    name: report_status_id
+                    type: smallint
+                    defaultValue: "3"
+                    constraints:
+                      nullable: false
+          - addForeignKeyConstraint:
+              baseColumnNames: report_status_id
+              baseTableName: appointment_order_image
+              constraintName: FK_appointment_order_image_report_status_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: diagnostic_image_report_status
+              validate: true
+
+    - changeSet:
+        id: update_report_status_id-appointment_order_image
+        author: mromero
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE appointment_order_image AS aoi
+                  SET report_status_id = CASE
+                  WHEN aoi.dest_institution_id <> (SELECT s.institution_id
+                    FROM equipment_appointment_assn eaa
+                    JOIN equipment_diary ed ON (eaa.equipment_diary_id = ed.id AND aoi.appointment_id = eaa.appointment_id)
+                    JOIN equipment e ON (ed.equipment_id = e.id)
+                    JOIN sector s on (e.sector_id = s.id)) THEN 2
+                  ELSE 3
+                  END;
+
+    - changeSet:
+        id: addColumn-report_required-to-details_order_image
+        author: mromero
+        changes:
+          - addColumn:
+              tableName: details_order_image
+              columns:
+                - column:
+                    name: report_required
+                    type: boolean
+                    defaultValue: ${boolean.true}
+                    constraints:
+                      nullable: false

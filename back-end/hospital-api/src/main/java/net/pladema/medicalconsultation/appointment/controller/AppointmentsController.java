@@ -591,7 +591,7 @@ public class AppointmentsController {
 		Integer technicianId = UserInfo.getCurrentAuditor();
 		log.debug("Input parameters -> institutionId {}, appointmentId {}, technicianId {}, {}", institutionId, appointmentId, technicianId, detailsOrderImageDto);
 		Short roleId = ERole.TECNICO.getId();
-		DetailsOrderImageBo detailsOrderImageBo = new DetailsOrderImageBo(appointmentId, detailsOrderImageDto.getObservations(), LocalDateTime.now(), technicianId, roleId);
+		DetailsOrderImageBo detailsOrderImageBo = new DetailsOrderImageBo(appointmentId, detailsOrderImageDto.getObservations(), LocalDateTime.now(), technicianId, roleId, detailsOrderImageDto.getIsReportRequired());
 		boolean result = appointmentOrderImageService.updateCompleted(detailsOrderImageBo, true);
 		Integer idMove = moveStudiesService.create(appointmentId, institutionId);
 		moveStudiesService.getSizeFromOrchestrator(idMove);

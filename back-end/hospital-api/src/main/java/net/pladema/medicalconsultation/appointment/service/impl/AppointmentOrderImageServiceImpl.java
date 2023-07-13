@@ -36,7 +36,7 @@ public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageSe
 		LOG.debug("Input parameters -> details {} to finish with '{}'", detailsOrderImageBo, completed);
 		DetailsOrderImage doi = detailsOrderImageRepository.save(new DetailsOrderImage(detailsOrderImageBo.getAppointmentId(),
 				detailsOrderImageBo.getObservations(), detailsOrderImageBo.getCompletedOn(),
-				detailsOrderImageBo.getProfessionalId(), detailsOrderImageBo.getRoleId()));
+				detailsOrderImageBo.getProfessionalId(), detailsOrderImageBo.getRoleId(), detailsOrderImageBo.getIsReportRequired()));
 		appointmentOrderImageRepository.updateCompleted(detailsOrderImageBo.getAppointmentId(), completed);
 		LOG.debug("Output -> appointmentId {} study finished", doi.getAppointmentId());
 		return true;
@@ -53,8 +53,10 @@ public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageSe
 	@Override
 	public void save(AppointmentOrderImageBo appointmentOrderImageBo) {
 		LOG.debug("Input parameters -> appointmentOrderImageBo {}", appointmentOrderImageBo);
-		AppointmentOrderImage entity =new AppointmentOrderImage(appointmentOrderImageBo.getAppointmentId(),appointmentOrderImageBo.getOrderId(),
-				appointmentOrderImageBo.getStudyId(),appointmentOrderImageBo.getImageId(),appointmentOrderImageBo.isCompleted(), appointmentOrderImageBo.getTranscribedOrderId(), appointmentOrderImageBo.getDestInstitutionId());
+		AppointmentOrderImage entity = new AppointmentOrderImage(appointmentOrderImageBo.getAppointmentId(),appointmentOrderImageBo.getOrderId(),
+				appointmentOrderImageBo.getStudyId(),appointmentOrderImageBo.getImageId(),appointmentOrderImageBo.isCompleted(),
+				appointmentOrderImageBo.getTranscribedOrderId(), appointmentOrderImageBo.getDestInstitutionId(),
+				appointmentOrderImageBo.getReportStatusId());
 		appointmentOrderImageRepository.save(entity);
 		LOG.debug("Output -> AppointmentOrderImage {}", entity);
 	}

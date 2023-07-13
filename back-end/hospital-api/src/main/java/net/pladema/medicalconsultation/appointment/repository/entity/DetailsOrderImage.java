@@ -32,11 +32,15 @@ public class DetailsOrderImage {
 	@Column(name = "completed_by", nullable = false)
 	private Integer userId;
 
-	public DetailsOrderImage(Integer appointmentId, String observations, LocalDateTime completedOn, Integer userId, Short roleId) {
+	@Column(name = "report_required", nullable = false)
+	private Boolean isReportRequired;
+
+	public DetailsOrderImage(Integer appointmentId, String observations, LocalDateTime completedOn, Integer userId, Short roleId, Boolean isReportRequired) {
 		this.pk = new DetailsOrderImagePK(appointmentId, roleId);
 		this.observations = observations;
 		this.completedOn = completedOn;
 		this.userId = userId;
+		this.isReportRequired = isReportRequired;
 	}
 
 	public Integer getAppointmentId() {
