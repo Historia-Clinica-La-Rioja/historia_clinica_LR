@@ -4,10 +4,28 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { NewAttentionComponent } from '../new-attention/new-attention.component';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVE } from '../../constants/appointment';
-import { ContextService } from '@core/services/context.service';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { AppFeature, AppointmentDto, CompleteDiaryDto, DateTimeDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto, UpdateAppointmentDto, AppointmentListDto, UpdateAppointmentDateDto, ProfessionalPersonDto } from '@api-rest/api-model.d';
+import { ContextService } from '@core/services/context.service';
+import {
+	APPOINTMENT_STATES_ID,
+	getAppointmentState,
+	MAX_LENGTH_MOTIVE,
+} from '../../constants/appointment';
+import {
+	AppFeature,
+	AppointmentDto,
+	AppointmentListDto,
+	CompleteDiaryDto,
+	DateTimeDto,
+	ERole,
+	IdentificationTypeDto,
+	PatientMedicalCoverageDto,
+	PersonPhotoDto,
+	ProfessionalPersonDto,
+	UpdateAppointmentDateDto,
+	UpdateAppointmentDto,
+} from '@api-rest/api-model.d';
+
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { VALIDATIONS, getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';

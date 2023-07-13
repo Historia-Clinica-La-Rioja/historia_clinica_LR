@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
-import ar.lamansys.mqtt.application.ports.MqttClientService;
 import lombok.AllArgsConstructor;
 import net.pladema.establishment.service.EquipmentService;
 import net.pladema.establishment.service.OrchestratorService;
@@ -19,7 +18,6 @@ import net.pladema.modality.service.ModalityService;
 
 import net.pladema.patient.controller.service.PatientExternalService;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.mqtt.domain.MqttMetadataBo;

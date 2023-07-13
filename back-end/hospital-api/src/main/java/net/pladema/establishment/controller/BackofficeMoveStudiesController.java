@@ -1,6 +1,5 @@
 package net.pladema.establishment.controller;
 
-import net.pladema.establishment.repository.entity.Orchestrator;
 import net.pladema.imagenetwork.derivedstudies.repository.MoveStudiesRepository;
 import net.pladema.imagenetwork.derivedstudies.repository.entity.MoveStudies;
 import net.pladema.scheduledjobs.jobs.MoveStudiesJob;

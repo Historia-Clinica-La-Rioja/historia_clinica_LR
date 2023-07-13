@@ -3,7 +3,6 @@ package net.pladema.person.controller;
 import ar.lamansys.sgx.auth.user.infrastructure.output.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import net.pladema.person.controller.dto.InstitutionUserPersonDto;
-import net.pladema.person.repository.PersonRepository;
 import net.pladema.person.repository.domain.InstitutionUserPersonBo;
 
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
