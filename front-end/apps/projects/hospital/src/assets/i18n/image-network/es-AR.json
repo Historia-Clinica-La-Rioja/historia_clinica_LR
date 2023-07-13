@@ -89,7 +89,8 @@
             "PENDING_REPORT": "Informe pendiente",
             "DERIVED_REPORT": "Informe derivado a ",
             "VIEW_REPORT": "Ver informe",
-            "DOWNLOAD_REPORT": "Descargar informe"
+            "DOWNLOAD_REPORT": "Descargar informe",
+            "REPORT_NOT_REQUIRED": "No requiere informe"
 		}
 
 	}

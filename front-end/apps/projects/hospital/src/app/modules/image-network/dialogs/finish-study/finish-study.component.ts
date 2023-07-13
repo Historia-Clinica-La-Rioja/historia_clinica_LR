@@ -11,6 +11,7 @@ import { EMPTY } from "rxjs";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { processErrors } from "@core/utils/form.utils";
 import { PrescripcionesService } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
 	selector: 'app-finish-study',
@@ -20,6 +21,7 @@ import { PrescripcionesService } from '@historia-clinica/modules/ambulatoria/ser
 export class FinishStudyComponent implements OnInit {
 
 	observations: string;
+	isReportRequired = false;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: StudyInfo,
@@ -68,6 +70,9 @@ export class FinishStudyComponent implements OnInit {
             });
     }
 
+	changeReportRequirementStatus(event: MatCheckboxChange){
+		this.isReportRequired = event.checked;
+	}
 
 	openStatusDialog(icon: string, iconColor: string, popUpMessageTranslate: string) {
 		const dialogRef = this.dialog.open(StudyStatusPopupComponent, {

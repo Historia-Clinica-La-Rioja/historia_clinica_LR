@@ -6,3 +6,7 @@
 .complete-btn {
 	align-self: flex-end;
 }
+
+:host ::ng-deep .mat-checkbox-label {
+	margin-top: 2px;
+}
