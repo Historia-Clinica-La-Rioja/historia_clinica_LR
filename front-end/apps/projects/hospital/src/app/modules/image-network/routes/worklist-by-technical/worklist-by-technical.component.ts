@@ -16,6 +16,7 @@ import {
 	APPOINTMENT_STATES_ID,
 	AppointmentState,
 } from '@turnos/constants/appointment';
+import { REPORT_STATES, ReportState, REPORT_STATES_ID } from '../../constants/report';
 import { Observable } from 'rxjs';
 import { FinishStudyComponent, StudyInfo } from "../../dialogs/finish-study/finish-study.component";
 import { DeriveReportComponent } from '../../dialogs/derive-report/derive-report.component';
@@ -48,6 +49,7 @@ export class WorklistByTechnicalComponent implements OnInit {
     readonly mssg = 'image-network.home.NO_PERMISSION';
 
     appointmentsStates = WORKLIST_APPOINTMENT_STATES;
+    reportStates = REPORT_STATES_ID;
     states = new UntypedFormControl('');
     selectedStates: string = '';
     allSelected = false;
@@ -152,9 +154,14 @@ export class WorklistByTechnicalComponent implements OnInit {
                 lastName: this.capitalizeWords(appointment.patient.person.lastName),
                 nameSelfDetermination: this.capitalizeWords(appointment.patient.person.nameSelfDetermination),
                 canBeFinished: appointment.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED,
-                derive: appointment.derivedTo.id ? appointment.derivedTo : null
+                derive: appointment.derivedTo.id ? appointment.derivedTo : null,
+                reportStatus: this.getReportStatus(3)
             }
         })
+    }
+
+    private getReportStatus(reportStatusId): ReportState{
+        return REPORT_STATES.find(state => state.id == reportStatusId)
     }
 
     private capitalizeWords(sentence: string) {

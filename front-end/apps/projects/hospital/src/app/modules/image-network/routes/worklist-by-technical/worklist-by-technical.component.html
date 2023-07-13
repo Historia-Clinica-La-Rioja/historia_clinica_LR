@@ -67,9 +67,10 @@
 									<button mat-flat-button color="primary" fxFlex="90" *ngIf="appointment.canBeFinished" (click)="finishStudy(appointment.data)">
 										<span class="uppercase" [translate]="'image-network.appointments.FINISH'"></span>
 									</button>
-                                    <div *ngIf="appointment.data.appointmentStateId === appointmentStatesId.SERVED" >
-                                        <span *ngIf="!appointment.derive; else institutionDerived" class="derive-information smaller-font orange">{{'image-network.worklist.PENDING_REPORT' | translate}}</span>
-                                        <ng-template #institutionDerived><span class="derive-information smaller-font grey">{{'image-network.worklist.DERIVED_REPORT' | translate}}{{appointment.derive?.name}}</span></ng-template>
+                                    <div *ngIf="appointment.data.appointmentStateId === appointmentStatesId.SERVED" fxFlexLayout="row">
+                                        <span class="derive-information smaller-font {{appointment.reportStatus.color}}">
+                                            {{appointment.reportStatus.description}}{{appointment.reportStatus.id == reportStates.DERIVED ? appointment.derive?.name : null}}
+                                        </span>
                                     </div>
 								</div>
                             </div>
