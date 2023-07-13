@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.application.port.StudyAppointmentReportStorage;
 import net.pladema.clinichistory.requests.servicerequests.domain.InformerObservationBo;
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmentBo;
-import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EInformerWorklistStatus;
+import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.medicalconsultation.appointment.repository.DetailsOrderImageRepository;
@@ -85,17 +85,17 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 			result.setInformerObservations(obs);
 
 			if(obs.isConfirmed()) {
-				result.setStatusId(EInformerWorklistStatus.COMPLETED.getId());
+				result.setStatusId(EDiagnosticImageReportStatus.COMPLETED.getId());
 				result.setActionTime(obs.getActionTime());
 			}
 			else {
-				result.setStatusId(EInformerWorklistStatus.PENDING.getId());
+				result.setStatusId(EDiagnosticImageReportStatus.PENDING.getId());
 				Optional<DetailsOrderImage> doi = detailsOrderImageRepository.findById(new DetailsOrderImagePK(appointmentId, ERole.TECNICO.getId()));
 				doi.ifPresent(detailsOrderImage -> result.setActionTime(detailsOrderImage.getCompletedOn()));
 			}
 		}
 		else {
-			result.setStatusId(EInformerWorklistStatus.PENDING.getId());
+			result.setStatusId(EDiagnosticImageReportStatus.PENDING.getId());
 			Optional<DetailsOrderImage> doi = detailsOrderImageRepository.findById(new DetailsOrderImagePK(appointmentId, ERole.TECNICO.getId()));
 			doi.ifPresent(detailsOrderImage -> result.setActionTime(detailsOrderImage.getCompletedOn()));
 		}

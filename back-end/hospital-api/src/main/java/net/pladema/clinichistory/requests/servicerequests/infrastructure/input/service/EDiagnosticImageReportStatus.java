@@ -9,16 +9,17 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum EInformerWorklistStatus {
+public enum EDiagnosticImageReportStatus {
 	
 	COMPLETED(1, "Completed"),
 	DERIVED(2, "Derived"),
-	PENDING(3, "Pending");
+	PENDING(3, "Pending"),
+	NOT_REQUIRED(4, "Not required");
 
-	private Short id;
-	private String description;
+	private final Short id;
+	private final String description;
 
-	EInformerWorklistStatus(Number id, String description) {
+	EDiagnosticImageReportStatus(Number id, String description) {
 		this.id = id.shortValue();
 		this.description = description;
 	}
@@ -32,7 +33,7 @@ public enum EInformerWorklistStatus {
 	}
 
 	@JsonCreator
-	public static List<EInformerWorklistStatus> getAll(){
-		return Stream.of(EInformerWorklistStatus.values()).collect(Collectors.toList());
+	public static List<EDiagnosticImageReportStatus> getAll(){
+		return Stream.of(EDiagnosticImageReportStatus.values()).collect(Collectors.toList());
 	}
 }

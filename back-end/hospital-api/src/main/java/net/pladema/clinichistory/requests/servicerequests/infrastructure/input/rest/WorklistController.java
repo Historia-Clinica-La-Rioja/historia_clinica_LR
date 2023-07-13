@@ -11,7 +11,7 @@ import net.pladema.clinichistory.requests.servicerequests.application.GetWorklis
 import net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo;
 import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.rest.dto.WorklistDto;
 
-import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EInformerWorklistStatus;
+import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,14 +44,14 @@ public class WorklistController {
 		log.debug("Input parameters -> institutionId {}, modalityId {}", institutionId, modalityId);
 		List<WorklistBo> worklistBo = getWorklist.run(modalityId, institutionId);
 		List<WorklistDto> result = worklistBo.stream().map(this::mapToWorklistDto).collect(Collectors.toList());
-		log.debug("Get worklist by modality and institution ", result);
+		log.debug("Get worklist by modality and institution {}", result);
 		return ResponseEntity.ok().body(result);
 	}
 
 	@GetMapping(value = "/informer-status")
 	public ResponseEntity<Collection<MasterDataDto>> getStatus() {
-		log.debug("{}", "All informer status");
-		return ResponseEntity.ok().body(EnumWriter.writeList(EInformerWorklistStatus.getAll()));
+		log.debug("All diagnostic image report status in informer worklist");
+		return ResponseEntity.ok().body(EnumWriter.writeList(EDiagnosticImageReportStatus.getAll()));
 	}
 
 	private WorklistDto mapToWorklistDto(WorklistBo bo) {
