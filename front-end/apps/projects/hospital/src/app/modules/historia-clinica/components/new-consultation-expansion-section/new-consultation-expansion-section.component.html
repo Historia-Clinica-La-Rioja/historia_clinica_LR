@@ -1,23 +1,43 @@
 <div fxLayout="column" fxLayoutGap="20px">
-    <div fxLayout="column" fxLayoutGap="20px" (click)="toggle()" [ngClass]="{'pointer' : !fixedExpanded}">
-        <mat-divider *ngIf="!hideBorder"></mat-divider>
-        <div fxLayout="row" fxLayoutAlign="space-between center"
-            [ngClass]="{'closed-panel' : isEmpty && collapsed && !fixedExpanded}">
-            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-                <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-                    <mat-icon fontSet="material-icons-outlined">{{ icon }}</mat-icon>
-                    <span class="title">{{ title }}</span>
-                </div>
-                <span *ngIf="recommend" class="recommend">
-                    *{{ 'historia-clinica.new-consultation-expansion-section.RECOMMEND' | translate }}
-                </span>
-            </div>
-            <mat-icon *ngIf="isEmpty && collapsed && !fixedExpanded">add</mat-icon>
-            <mat-icon *ngIf="!isEmpty && collapsed && !fixedExpanded">expand_more</mat-icon>
-            <mat-icon *ngIf="!collapsed || fixedExpanded">expand_less</mat-icon>
-        </div>
-    </div>
-    <ng-container *ngIf="!collapsed || fixedExpanded">
-        <ng-content></ng-content>
-    </ng-container>
+	<div fxLayout="column" fxLayoutGap="20px" (click)="isToAddSnomedConcepts ? toggleToAddSnomedConcepts() : toggle()"
+		[ngClass]="{'pointer' : !fixedExpanded}">
+		<mat-divider *ngIf="!hideBorder"></mat-divider>
+
+		<div fxLayout="row" fxLayoutAlign="space-between center"
+			[ngClass]="isToAddSnomedConcepts ? (isEmpty && !fixedExpanded ? 'closed-panel' : '') : (isEmpty && !fixedExpanded && collapsed ? 'closed-panel' : '')">
+
+			<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+				<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+					<mat-icon fontSet="material-icons-outlined">{{ icon }}</mat-icon>
+					<span class="title">{{ title }}</span>
+				</div>
+				<span *ngIf="recommend" class="recommend">
+					*{{ 'historia-clinica.new-consultation-expansion-section.RECOMMEND' | translate }}
+				</span>
+			</div>
+
+			<ng-container *ngIf="isToAddSnomedConcepts else content">
+
+				<ng-container *ngIf="isEmpty else empty">
+					<mat-icon *ngIf="!fixedExpanded">add</mat-icon>
+				</ng-container>
+
+				<ng-template #empty>
+					<mat-icon *ngIf="collapsed && !fixedExpanded">expand_more</mat-icon>
+					<mat-icon *ngIf="!collapsed || fixedExpanded">expand_less</mat-icon>
+				</ng-template>
+			</ng-container>
+
+			<ng-template #content>
+				<mat-icon *ngIf="isEmpty && collapsed && !fixedExpanded">add</mat-icon>
+				<mat-icon *ngIf="!isEmpty && collapsed && !fixedExpanded">expand_more</mat-icon>
+				<mat-icon *ngIf="!collapsed || fixedExpanded">expand_less</mat-icon>
+			</ng-template>
+
+
+		</div>
+	</div>
+	<ng-container *ngIf="!collapsed || fixedExpanded">
+		<ng-content></ng-content>
+	</ng-container>
 </div>

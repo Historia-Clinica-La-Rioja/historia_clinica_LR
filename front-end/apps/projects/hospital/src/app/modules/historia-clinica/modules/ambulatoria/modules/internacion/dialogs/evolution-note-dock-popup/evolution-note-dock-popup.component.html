@@ -81,14 +81,9 @@
 				</mat-card>
 			</app-new-consultation-expansion-section>
 
-			<app-new-consultation-expansion-section id="procedimientos"
-				*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
-				[title]="'internaciones.anamnesis.procedimientos.TITLE' | translate" icon="library_add"
-				[isEmpty]="componentEvaluationManagerService.isEmptyProcedure() | async" [collapsed]="true" [hideBorder]="false">
 
-				<app-procedure [(procedures)]="procedures">
-				</app-procedure>
-			</app-new-consultation-expansion-section>
+			<app-procedure [(procedures)]="procedures">
+			</app-procedure>
 
 			<app-new-consultation-expansion-section id="factores-de-riesgo"
 				[title]="'historia-clinica.factores-de-riesgo-form.TITLE' | translate" icon="favorite_outlined"
@@ -177,22 +172,11 @@
 				</div>
 			</app-new-consultation-expansion-section>
 
-			<app-new-consultation-expansion-section id="alergias"
-				*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR']"
-				[title]="'internaciones.anamnesis.alergias.TITLE' | translate" icon="cancel"
-				[isEmpty]="componentEvaluationManagerService.isEmptyAllergies() | async" [collapsed]="true"
-				[hideBorder]="false">
 
-				<app-alergias [(allergies)]="allergies"></app-alergias>
-			</app-new-consultation-expansion-section>
+			<app-alergias [(allergies)]="allergies"></app-alergias>
 
-			<app-new-consultation-expansion-section id="vacunas"
-				*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']"
-				[title]="'ambulatoria.paciente.vacunas.VACCINE' | translate" icon="vaccines"
-				[isEmpty]="componentEvaluationManagerService.isEmptyVaccines() | async" [collapsed]="true"
-				[hideBorder]="false">
-				<app-vacunas [(immunizations)]="immunizations"></app-vacunas>
-			</app-new-consultation-expansion-section>
+
+			<app-vacunas [(immunizations)]="immunizations"></app-vacunas>
 
 			<div id="validations" *ngIf="apiErrors.length > 0">
 				<mat-card>

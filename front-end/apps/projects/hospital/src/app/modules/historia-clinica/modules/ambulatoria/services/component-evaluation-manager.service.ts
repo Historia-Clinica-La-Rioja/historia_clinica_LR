@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AllergyConditionDto, DiagnosisDto, EpicrisisDto, EpicrisisGeneralStateDto, ExternalCauseDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, ObstetricEventDto, ResponseAnamnesisDto, ResponseEvolutionNoteDto } from '@api-rest/api-model';
+import { AllergyConditionDto, DiagnosisDto, EpicrisisDto, EpicrisisGeneralStateDto, ExternalCauseDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, ResponseAnamnesisDto, ResponseEvolutionNoteDto } from '@api-rest/api-model';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable()
@@ -14,7 +14,6 @@ export class ComponentEvaluationManagerService {
 	private hospitalizationProcedureSubject = new BehaviorSubject<boolean>(true);
 	private otherProblemsSubject = new BehaviorSubject<boolean>(true);
 	private externalCauseSubject = new BehaviorSubject<boolean>(true);
-	private obstetricSubject = new BehaviorSubject<boolean>(true);
 
 	set anamnesis(anamnesis: ResponseAnamnesisDto) {
 
@@ -57,7 +56,6 @@ export class ComponentEvaluationManagerService {
 		this.otherProblems = epicrisis.otherProblems;
 		this.personalHistories = epicrisis.personalHistories;
 		this.externalCause = epicrisis?.externalCause;
-		this.obstetric = epicrisis?.obstetricEvent;
 	}
 
 	set mainDiagnosis(mainDiagnosis: DiagnosisDto) {
@@ -100,14 +98,6 @@ export class ComponentEvaluationManagerService {
 		this.externalCauseSubject.next(isExternalCauseEmpty);
 	}
 
-	set obstetric(obstetric: ObstetricEventDto) {
-		if (obstetric) {
-			const { currentPregnancyEndDate, gestationalAge, newborns, pregnancyTerminationType, previousPregnancies } = obstetric;
-			const isObstetricEmpty = !(currentPregnancyEndDate || gestationalAge || newborns?.length > 0 || pregnancyTerminationType || previousPregnancies);
-			this.obstetricSubject.next(isObstetricEmpty);
-		}
-	}
-
 	isEmptyDiagnosis(): Observable<boolean> {
 		return (this.mainDiagnosticosSubject.asObservable() || this.diagnosticosSubject.asObservable());
 	}
@@ -144,7 +134,4 @@ export class ComponentEvaluationManagerService {
 		return this.externalCauseSubject.asObservable();
 	}
 
-	isEmptyObstetric(): Observable<boolean> {
-		return this.obstetricSubject.asObservable();
-	}
 }

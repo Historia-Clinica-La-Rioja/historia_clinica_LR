@@ -1,26 +1,33 @@
 <div fxLayoutGap="2vh">
-	<app-titled-content-card *ngIf="medications?.length"
-		title="{{ 'ambulatoria.paciente.nueva-consulta.medicaciones.LIST_CARD_TITLE' }}">
-		<div fxLayout="column" *ngFor="let medicacion of medications; index as i; last as isLast">
-			<div fxLayout="row" fxLayoutAlign="space-between center">
-				<div fxLayout="column" fxLayoutGap="6px">
-					<span>{{ medicacion.snomed.pt | titlecase}}</span>
-				</div>
-				<em *ngIf="medicacion?.note" class="mat-caption gray-caption">
-					{{ medicacion.note | titlecase}}
-				</em>
-				<button type="button" mat-icon-button color="warn" (click)="remove(i); $event.stopPropagation()">
-					<mat-icon>delete_outline</mat-icon>
-				</button>
-				<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
-			</div>
-		</div>
-	</app-titled-content-card>
+	<app-new-consultation-expansion-section id="medicacion" [title]="title" icon="library_add"
+		[isEmpty]="medications?.length === 0" [collapsed]="!medications?.length" [hideBorder]="false" [isToAddSnomedConcepts]="true"
+		(click)="medications?.length === 0 ? addMedication():''">
 
-	<div>
-		<button mat-button type="button" id="add-medication-button" color="primary" class="add-button"
-			(click)="addMedication()">
-			+ {{ 'ambulatoria.paciente.nueva-consulta.medicaciones.ADD' | translate }}
-		</button>
-	</div>
+		<app-titled-content-card *ngIf="medications?.length"
+			title="{{ 'ambulatoria.paciente.nueva-consulta.medicaciones.LIST_CARD_TITLE' }}">
+			<div fxLayout="column" *ngFor="let medicacion of medications; index as i; last as isLast">
+				<div fxLayout="row" fxLayoutAlign="space-between center">
+					<div fxLayout="column" fxLayoutGap="6px">
+						<span>{{ medicacion.snomed.pt | titlecase}}</span>
+						<em *ngIf="medicacion?.note" class="mat-caption gray-caption">
+							{{ medicacion.note | titlecase}}
+						</em>
+					</div>
+
+					<button type="button" mat-icon-button color="warn" (click)="remove(i); $event.stopPropagation()">
+						<mat-icon>delete_outline</mat-icon>
+					</button>
+				</div>
+				<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+
+			</div>
+		</app-titled-content-card>
+
+		<div *ngIf="medications?.length > 0">
+			<button mat-button type="button" id="add-medication-button" color="primary" class="add-button"
+				(click)="addMedication()">
+				+ {{ 'ambulatoria.paciente.nueva-consulta.medicaciones.ADD' | translate }}
+			</button>
+		</div>
+	</app-new-consultation-expansion-section>
 </div>

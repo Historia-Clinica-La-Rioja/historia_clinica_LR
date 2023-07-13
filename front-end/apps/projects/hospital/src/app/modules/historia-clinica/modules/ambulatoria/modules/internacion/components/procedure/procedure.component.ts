@@ -2,9 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { HospitalizationProcedureDto, SnomedECL } from '@api-rest/api-model';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
-import { SearchSnomedConceptComponent } from '@historia-clinica/modules/ambulatoria/dialogs/search-snomed-concept/search-snomed-concept.component';
-import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
-import { Concept, ConceptDateFormComponent } from '../../dialogs/concept-date-form/concept-date-form.component';
+import { SearchSnomedConceptComponent } from '@historia-clinica/modules/ambulatoria/dialogs/search-snomed-concept/search-snomed-concept.component';import { Concept, ConceptDateFormComponent } from '../../dialogs/concept-date-form/concept-date-form.component';
 
 @Component({
 	selector: 'app-procedure',
@@ -19,7 +17,6 @@ export class ProcedureComponent {
 	displayedColumns: string[] = [];
 
 	constructor(
-		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
 		private readonly dialog: MatDialog,
 	) { }
 
@@ -37,7 +34,6 @@ export class ProcedureComponent {
 		const lenght = this.procedures?.length;
 		this.procedures = pushIfNotExists<HospitalizationProcedureDto>(this.procedures, hospitalizationProcedure, this.compare);
 		if (this.procedures.length > lenght) {
-			this.componentEvaluationManagerService.hospitalizationProcedures = this.procedures;
 			this.proceduresChange.emit(this.procedures);
 		}
 	}
@@ -48,7 +44,6 @@ export class ProcedureComponent {
 
 	remove(index: number) {
 		this.procedures = removeFrom<HospitalizationProcedureDto>(this.procedures, index);
-		this.componentEvaluationManagerService.hospitalizationProcedures = this.procedures;
 		this.proceduresChange.emit(this.procedures);
 	}
 

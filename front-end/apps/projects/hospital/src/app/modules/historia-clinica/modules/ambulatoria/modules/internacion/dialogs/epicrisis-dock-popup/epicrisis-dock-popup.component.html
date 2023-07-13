@@ -117,13 +117,10 @@
 				</app-list-concept>
 			</app-new-consultation-expansion-section>
 
-			<app-new-consultation-expansion-section id="medication"
-				[title]="'internaciones.epicrisis.medicacion.TITLE' | translate" icon="vaccines"
-				[isEmpty]="componentEvaluationManagerService.isEmptyMedications() | async" [collapsed]="true"
-				[hideBorder]="false">
-				<app-medication [(medications)]="medications" [hideSuspended]="true">
-				</app-medication>
-			</app-new-consultation-expansion-section>
+
+			<app-medication [(medications)]="medications" [hideSuspended]="true"
+				[title]="'internaciones.epicrisis.medicacion.TITLE' | translate">
+			</app-medication>
 
 			<app-new-consultation-expansion-section id="immunizations"
 				[title]="'internaciones.epicrisis.vacunas.TITLE' | translate" icon="vaccines"

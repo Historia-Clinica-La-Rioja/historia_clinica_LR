@@ -4,7 +4,6 @@ import { MedicationDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model'
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { SearchSnomedConceptComponent } from '@historia-clinica/modules/ambulatoria/dialogs/search-snomed-concept/search-snomed-concept.component';
-import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
 import { FormMedicationComponent } from '../../dialogs/form-medication/form-medication.component';
 
 @Component({
@@ -16,10 +15,10 @@ export class MedicationComponent {
 	@Output() medicationsChange = new EventEmitter();
 	@Input() medications: MedicationDto[] = [];
 	@Input() hideSuspended = false;
+	@Input() title = '';
 
 
 	constructor(
-		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
 		private readonly dialog: MatDialog,
 
 	) { }
@@ -34,7 +33,6 @@ export class MedicationComponent {
 		const lenght = this.medications?.length;
 		this.medications = pushIfNotExists<MedicationDto>(this.medications, medicacion, this.compare);
 		if (this.medications.length > lenght) {
-			this.componentEvaluationManagerService.medications = this.medications;
 			this.medicationsChange.next(this.medications);
 		}
 	}
@@ -45,7 +43,6 @@ export class MedicationComponent {
 
 	remove(index: number) {
 		this.medications = removeFrom<MedicationDto>(this.medications, index);
-		this.componentEvaluationManagerService.medications = this.medications;
 		this.medicationsChange.next(this.medications);
 	}
 
