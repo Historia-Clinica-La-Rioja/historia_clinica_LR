@@ -3,6 +3,7 @@ package net.pladema.medicalconsultation.appointment.service.impl;
 
 import java.util.Optional;
 
+import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -71,5 +72,12 @@ public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageSe
 	public void setDestInstitutionId(Integer destInstitutionId, Integer appointmentId) {
 		LOG.debug("Input parameters ->  destInstitutionId {}, appointmentId {}",  destInstitutionId , appointmentId);
 		appointmentOrderImageRepository.updateDestInstitution(destInstitutionId, appointmentId);
+	}
+
+	@Override
+	public void updateReportStatusId(Integer appointmentId, boolean isReportRequired) {
+		LOG.debug("Input parameters -> appointmentId {}, isReportRequired {} ", appointmentId, isReportRequired);
+		if (!isReportRequired)
+			appointmentOrderImageRepository.updateReportStatusId(appointmentId, EDiagnosticImageReportStatus.NOT_REQUIRED.getId());
 	}
 }

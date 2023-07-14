@@ -828,6 +828,7 @@ export interface DependencyDto extends Serializable {
 }
 
 export interface DetailsOrderImageDto {
+    isReportRequired: boolean;
     observations: string;
 }
 

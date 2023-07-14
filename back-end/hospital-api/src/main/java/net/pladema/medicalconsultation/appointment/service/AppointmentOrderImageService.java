@@ -21,4 +21,6 @@ public interface AppointmentOrderImageService {
 	void setImageId(Integer appointmentId, String imageId);
 
 	void setDestInstitutionId(Integer institutionId, Integer appointmentId);
+
+	void updateReportStatusId(Integer appointmentId, boolean isReportRequired);
 }

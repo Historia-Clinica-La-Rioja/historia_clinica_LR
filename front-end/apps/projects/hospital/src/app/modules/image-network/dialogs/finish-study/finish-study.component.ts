@@ -35,11 +35,12 @@ export class FinishStudyComponent implements OnInit {
 	}
 
 	confirm() {
-        const detailsOrderImage: DetailsOrderImageDto = {
-            observations: this.observations
-        };
-        const appointmentId = this.data.appointmentId;
-        const served = APPOINTMENT_STATES_ID.SERVED;
+		const detailsOrderImage: DetailsOrderImageDto = {
+			observations: this.observations,
+			isReportRequired: false
+		};
+		const appointmentId = this.data.appointmentId;
+		const served = APPOINTMENT_STATES_ID.SERVED;
 
         this.appointmentsService.addStudyObservations(appointmentId, detailsOrderImage)
             .pipe(
@@ -52,7 +53,7 @@ export class FinishStudyComponent implements OnInit {
                                     return EMPTY;
                                 })
                             ),
-					result => { 
+					result => {
 						if(result) this.prescriptionService.completeStudyByRdi(this.data.patientId, this.data.appointmentId).subscribe()
 					}
                 ),
