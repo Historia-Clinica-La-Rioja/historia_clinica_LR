@@ -3074,6 +3074,7 @@ export interface ReferenceDto extends Serializable {
     note?: string;
     phoneNumber?: string;
     phonePrefix?: string;
+    priority: number;
     problems: ReferenceProblemDto[];
     procedure?: boolean;
 }

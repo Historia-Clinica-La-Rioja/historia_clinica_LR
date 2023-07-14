@@ -51,4 +51,8 @@ public class ReferenceDto implements Serializable {
 	@Nullable
 	private String phonePrefix;
 
+	@Valid
+	@NotNull(message = "{value.mandatory}")
+	private Integer priority;
+
 }

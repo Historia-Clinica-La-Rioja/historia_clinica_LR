@@ -44,4 +44,8 @@ public class ReferenceBo {
 
 	private String phonePrefix;
 
+	@Valid
+	@NotNull(message = "{value.mandatory}")
+	private Integer priority;
+
 }
