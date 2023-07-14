@@ -63,7 +63,7 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 	},
 	{
 		text: 'app.menu.CAMAS',
-		icon: 'single_bed',
+		icon: 'hotel',
 		id: 'camas',
 		url: './camas',
 		permissions: [
