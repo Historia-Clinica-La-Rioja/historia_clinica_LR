@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.appointment.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
 import net.pladema.medicalconsultation.appointment.service.AppointmentOrderImageService;
 import net.pladema.medicalconsultation.appointment.service.DeriveReportService;
 
@@ -19,6 +20,7 @@ public class DeriveReportServiceImpl implements DeriveReportService {
 	public boolean execute(Integer destInstitutionId, Integer appointmentId) {
 		log.debug("Input parameters -> destInstitutionId {}, appointmentId {}", destInstitutionId, appointmentId);
 		appointmentOrderImageService.setDestInstitutionId(destInstitutionId, appointmentId);
+		appointmentOrderImageService.setReportStatusId(appointmentId, EDiagnosticImageReportStatus.DERIVED.getId());
 		return Boolean.TRUE;
 	}
 }

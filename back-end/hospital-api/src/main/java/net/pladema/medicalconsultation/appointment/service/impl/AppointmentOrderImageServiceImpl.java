@@ -35,11 +35,15 @@ public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageSe
 	@Override
 	public boolean updateCompleted(DetailsOrderImageBo detailsOrderImageBo, boolean completed) {
 		LOG.debug("Input parameters -> details {} to finish with '{}'", detailsOrderImageBo, completed);
-		DetailsOrderImage doi = detailsOrderImageRepository.save(new DetailsOrderImage(detailsOrderImageBo.getAppointmentId(),
+		Integer appointmentId = detailsOrderImageBo.getAppointmentId();
+		Boolean isReportRequired = detailsOrderImageBo.getIsReportRequired();
+		DetailsOrderImage doi = detailsOrderImageRepository.save(new DetailsOrderImage(appointmentId,
 				detailsOrderImageBo.getObservations(), detailsOrderImageBo.getCompletedOn(),
-				detailsOrderImageBo.getProfessionalId(), detailsOrderImageBo.getRoleId(), detailsOrderImageBo.getIsReportRequired()));
+				detailsOrderImageBo.getProfessionalId(), detailsOrderImageBo.getRoleId(), isReportRequired));
 		appointmentOrderImageRepository.updateCompleted(detailsOrderImageBo.getAppointmentId(), completed);
-		LOG.debug("Output -> appointmentId {} study finished", doi.getAppointmentId());
+		if (!isReportRequired)
+			this.setReportStatusId(doi.getAppointmentId(), EDiagnosticImageReportStatus.NOT_REQUIRED.getId());
+		LOG.debug("Output -> appointmentId {} study finished", appointmentId);
 		return true;
 	}
 
@@ -75,9 +79,8 @@ public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageSe
 	}
 
 	@Override
-	public void updateReportStatusId(Integer appointmentId, boolean isReportRequired) {
-		LOG.debug("Input parameters -> appointmentId {}, isReportRequired {} ", appointmentId, isReportRequired);
-		if (!isReportRequired)
-			appointmentOrderImageRepository.updateReportStatusId(appointmentId, EDiagnosticImageReportStatus.NOT_REQUIRED.getId());
+	public void setReportStatusId(Integer appointmentId, Short reportStatusId) {
+		LOG.debug("Input parameters -> appointmentId {}, reportStatusId {} ", appointmentId, reportStatusId);
+		appointmentOrderImageRepository.updateReportStatusId(appointmentId, reportStatusId);
 	}
 }
