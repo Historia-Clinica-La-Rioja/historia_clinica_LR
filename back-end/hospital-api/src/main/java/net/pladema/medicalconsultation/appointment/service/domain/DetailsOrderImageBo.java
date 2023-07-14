@@ -20,6 +20,5 @@ public class DetailsOrderImageBo {
 	private String observations;
 	private LocalDateTime completedOn;
 	private Integer professionalId;
-	private Short roleId;
 	private Boolean isReportRequired;
 }

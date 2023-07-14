@@ -599,13 +599,12 @@ public class AppointmentsController {
 			) {
 		Integer technicianId = UserInfo.getCurrentAuditor();
 		log.debug("Input parameters -> institutionId {}, appointmentId {}, technicianId {}, {}", institutionId, appointmentId, technicianId, detailsOrderImageDto);
-		Short roleId = ERole.TECNICO.getId();
-		DetailsOrderImageBo detailsOrderImageBo = new DetailsOrderImageBo(appointmentId, detailsOrderImageDto.getObservations(), LocalDateTime.now(), technicianId, roleId, detailsOrderImageDto.getIsReportRequired());
-		boolean result = appointmentOrderImageService.updateCompleted(detailsOrderImageBo, true);
+		DetailsOrderImageBo detailsOrderImageBo = new DetailsOrderImageBo(appointmentId, detailsOrderImageDto.getObservations(), LocalDateTime.now(), technicianId, detailsOrderImageDto.getIsReportRequired());
+		appointmentOrderImageService.updateCompleted(detailsOrderImageBo);
 		Integer idMove = moveStudiesService.create(appointmentId, institutionId);
 		moveStudiesService.getSizeFromOrchestrator(idMove);
-		log.debug(OUTPUT, result);
-		return ResponseEntity.ok().body(result);
+		log.debug(OUTPUT, Boolean.TRUE);
+		return ResponseEntity.ok().body(Boolean.TRUE);
 	}
 
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRATIVO_RED_DE_IMAGENES')")

@@ -1,16 +1,15 @@
 package net.pladema.medicalconsultation.appointment.repository.entity;
 
-import java.time.LocalDateTime;
-
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "details_order_image")
@@ -20,8 +19,9 @@ import lombok.ToString;
 @NoArgsConstructor
 public class DetailsOrderImage {
 
-	@EmbeddedId
-	private DetailsOrderImagePK pk;
+	@Id
+	@Column(name = "appointment_id")
+	private Integer appointmentId;
 
 	@Column(name = "observations")
 	private String observations;
@@ -35,16 +35,12 @@ public class DetailsOrderImage {
 	@Column(name = "report_required", nullable = false)
 	private Boolean isReportRequired;
 
-	public DetailsOrderImage(Integer appointmentId, String observations, LocalDateTime completedOn, Integer userId, Short roleId, Boolean isReportRequired) {
-		this.pk = new DetailsOrderImagePK(appointmentId, roleId);
+	public DetailsOrderImage(Integer appointmentId, String observations, LocalDateTime completedOn, Integer userId, Boolean isReportRequired) {
+		this.appointmentId = appointmentId;
 		this.observations = observations;
 		this.completedOn = completedOn;
 		this.userId = userId;
 		this.isReportRequired = isReportRequired;
-	}
-
-	public Integer getAppointmentId() {
-		return this.pk.getAppointmentId();
 	}
 
 }

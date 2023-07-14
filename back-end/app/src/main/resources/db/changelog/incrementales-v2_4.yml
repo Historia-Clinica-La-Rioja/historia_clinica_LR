@@ -310,3 +310,23 @@ databaseChangeLog:
                     defaultValue: ${boolean.true}
                     constraints:
                       nullable: false
+
+    - changeSet:
+        id: changePrimaryKey-details_order_image
+        author: mromero
+        changes:
+          - dropPrimaryKey:
+              constraintName: PK_details_order_image
+              dropIndex: true
+              tableName: details_order_image
+          - dropForeignKeyConstraint:
+              constraintName: FK_details_order_image_role
+              baseTableName: details_order_image
+          - dropColumn:
+              columnName: role_id
+              tableName: details_order_image
+          - addPrimaryKey:
+              columnNames: appointment_id
+              constraintName: PK_details_order_image
+              tableName: details_order_image
+              validate: true

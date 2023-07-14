@@ -25,9 +25,7 @@ import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderIm
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.medicalconsultation.appointment.repository.DetailsOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.entity.DetailsOrderImage;
-import net.pladema.medicalconsultation.appointment.repository.entity.DetailsOrderImagePK;
 import net.pladema.patient.controller.service.PatientExternalService;
-import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.person.controller.service.PersonExternalService;
 import net.pladema.user.controller.dto.UserPersonDto;
 import net.pladema.user.repository.UserPersonRepository;
@@ -90,13 +88,13 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 			}
 			else {
 				result.setStatusId(EDiagnosticImageReportStatus.PENDING.getId());
-				Optional<DetailsOrderImage> doi = detailsOrderImageRepository.findById(new DetailsOrderImagePK(appointmentId, ERole.TECNICO.getId()));
+				Optional<DetailsOrderImage> doi = detailsOrderImageRepository.findById(appointmentId);
 				doi.ifPresent(detailsOrderImage -> result.setActionTime(detailsOrderImage.getCompletedOn()));
 			}
 		}
 		else {
 			result.setStatusId(EDiagnosticImageReportStatus.PENDING.getId());
-			Optional<DetailsOrderImage> doi = detailsOrderImageRepository.findById(new DetailsOrderImagePK(appointmentId, ERole.TECNICO.getId()));
+			Optional<DetailsOrderImage> doi = detailsOrderImageRepository.findById(appointmentId);
 			doi.ifPresent(detailsOrderImage -> result.setActionTime(detailsOrderImage.getCompletedOn()));
 		}
 

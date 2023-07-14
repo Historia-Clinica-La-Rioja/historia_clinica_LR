@@ -12,7 +12,7 @@ public interface AppointmentOrderImageService {
 
 	boolean isAlreadyCompleted(Integer appointmentId);
 
-	boolean updateCompleted(DetailsOrderImageBo detailsOrderImageBo, boolean finished);
+	void updateCompleted(DetailsOrderImageBo detailsOrderImageBo);
 
 	Optional<String> getImageId(Integer appointmentId);
 
