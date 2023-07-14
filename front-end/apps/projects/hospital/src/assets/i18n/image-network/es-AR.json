@@ -84,13 +84,15 @@
             "FINISH": "finalizar",
             "VIEW_DETAILS": "ver detalle",
 			"DERIVE_REPORT": "Derivar informe",
-			"REQUEST_REPORT": "Solicitar informe a ",
+			"REQUEST_REPORT": "Solicitar informe",
+			"REQUEST_REPORT_TO": "Solicitar informe a ",
 			"REPORT_REFERRED": "El informe se ha derivado a ",
             "PENDING_REPORT": "Informe pendiente",
             "DERIVED_REPORT": "Informe derivado a ",
             "VIEW_REPORT": "Ver informe",
             "DOWNLOAD_REPORT": "Descargar informe",
-            "REPORT_NOT_REQUIRED": "No requiere informe"
+            "REPORT_NOT_REQUIRED": "No requiere informe",
+            "REPORT_REQUIRED": "Informe solicitado"
 		}
 
 	}

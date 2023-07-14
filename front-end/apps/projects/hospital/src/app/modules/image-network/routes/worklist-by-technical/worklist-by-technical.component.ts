@@ -20,6 +20,8 @@ import { REPORT_STATES, ReportState, REPORT_STATES_ID } from '../../constants/re
 import { Observable } from 'rxjs';
 import { FinishStudyComponent, StudyInfo } from "../../dialogs/finish-study/finish-study.component";
 import { DeriveReportComponent } from '../../dialogs/derive-report/derive-report.component';
+import { TranslateService } from '@ngx-translate/core';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 const PAGE_SIZE_OPTIONS = [10];
 const PAGE_MIN_SIZE = 10;
@@ -63,7 +65,9 @@ export class WorklistByTechnicalComponent implements OnInit {
     constructor(private readonly equipmentService: EquipmentService,
 		private readonly featureFlagService: FeatureFlagService,
         private readonly appointmentsService: AppointmentsService,
-				public dialog: MatDialog
+        private readonly translateService: TranslateService,
+        private readonly snackBarService: SnackBarService,
+	    public dialog: MatDialog
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
 			this.nameSelfDeterminationFF = isOn
@@ -155,7 +159,7 @@ export class WorklistByTechnicalComponent implements OnInit {
                 nameSelfDetermination: this.capitalizeWords(appointment.patient.person.nameSelfDetermination),
                 canBeFinished: appointment.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED,
                 derive: appointment.derivedTo.id ? appointment.derivedTo : null,
-                reportStatus: this.getReportStatus(3)
+                reportStatus: this.getReportStatus(4)
             }
         })
     }
@@ -202,6 +206,12 @@ export class WorklistByTechnicalComponent implements OnInit {
 			this.selectedAppointment = null;
 		});
 	}
+
+    requestReport(appointmentId: number) {
+        this.translateService.get("image-network.worklist.REPORT_REQUIRED").subscribe(
+			translatedText => this.snackBarService.showSuccess(translatedText)
+		);
+    }
 
     deriveReport(appointmentId: number) {
         const dialogRef = this.dialog.open(DeriveReportComponent, {
