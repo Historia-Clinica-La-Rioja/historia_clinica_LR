@@ -183,7 +183,7 @@
 					</div>
 					<div fxLayout="column" class="assigned-by" *ngIf="data.appointmentData.professionalPersonDto else bookingAppointment">
 						<span>{{'turnos.appointment.ASSIGNED_BY' | translate}}</span>
-						<span>{{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn | date:"dd/mm/yyyy H:mm"}}hs.</span>
+						<span>{{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn | date:"dd/MM/yyyy H:mm"}}hs.</span>
 					</div>
 				</div>
 				<button type="button" mat-icon-button color="primary"
