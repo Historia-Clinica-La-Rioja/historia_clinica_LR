@@ -1287,6 +1287,7 @@ export interface EquipmentAppointmentListDto {
     overturn: boolean;
     patient: AppointmentBasicPatientDto;
     protected: boolean;
+    reportStatusId: number;
 }
 
 export interface EquipmentDiaryADto {

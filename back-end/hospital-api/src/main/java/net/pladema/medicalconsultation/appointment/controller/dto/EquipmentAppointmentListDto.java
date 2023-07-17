@@ -2,13 +2,13 @@ package net.pladema.medicalconsultation.appointment.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.ToString;
-import lombok.Value;
 import net.pladema.establishment.controller.dto.InstitutionBasicInfoDto;
 
-@Value
 @Builder
 @ToString
+@Getter
 @AllArgsConstructor
 public class EquipmentAppointmentListDto {
 
@@ -33,5 +33,7 @@ public class EquipmentAppointmentListDto {
 	private final boolean isProtected;
 
 	private final InstitutionBasicInfoDto derivedTo;
+
+	private final Short reportStatusId;
 
 }

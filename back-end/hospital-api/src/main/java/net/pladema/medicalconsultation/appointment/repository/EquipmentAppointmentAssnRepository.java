@@ -44,7 +44,7 @@ public interface EquipmentAppointmentAssnRepository extends JpaRepository<Equipm
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.EquipmentAppointmentVo(a, pe.identificationTypeId, pe.identificationNumber, " +
-			"(CASE WHEN aoi.destInstitutionId != :institutionId THEN i.id ELSE NULL END) AS idInstitution, i.name) " +
+			"(CASE WHEN aoi.destInstitutionId != :institutionId THEN i.id ELSE NULL END) AS idInstitution, i.name, aoi.reportStatusId) " +
 			"FROM Appointment AS a " +
 			"JOIN EquipmentAppointmentAssn AS eaa ON (a.id = eaa.pk.appointmentId) " +
 			"LEFT JOIN AppointmentObservation AS ao ON (a.id = ao.appointmentId) " +

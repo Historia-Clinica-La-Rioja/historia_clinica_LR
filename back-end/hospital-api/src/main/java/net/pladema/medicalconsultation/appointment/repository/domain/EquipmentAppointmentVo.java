@@ -1,36 +1,40 @@
 package net.pladema.medicalconsultation.appointment.repository.domain;
 
+import lombok.Getter;
 import lombok.ToString;
-import lombok.Value;
 import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Value
+@Getter
 @ToString
 public class EquipmentAppointmentVo {
 
-	private Appointment appointment;
+	private final Appointment appointment;
 
-	private Short identificationType;
+	private final Short identificationType;
 
-	private String identificationnumber;
+	private final String identificationnumber;
 
-	private InstitutionBasicInfoBo institutionBasicInfoBo;
+	private final InstitutionBasicInfoBo institutionBasicInfoBo;
 
-	public EquipmentAppointmentVo(Appointment appointment, Short identificationType, String identificationnumber){
+	private final Short reportStatusId;
+
+	public EquipmentAppointmentVo(Appointment appointment, Short identificationType, String identificationnumber, Short reportStatusId){
 		this.appointment = appointment;
 		this.identificationType = identificationType;
 		this.identificationnumber = identificationnumber;
+		this.reportStatusId = reportStatusId;
 		this.institutionBasicInfoBo = null;
 	}
 
-	public EquipmentAppointmentVo(Appointment appointment, Short identificationType, String identificationnumber, Integer institutionId, String institutionName){
+	public EquipmentAppointmentVo(Appointment appointment, Short identificationType, String identificationnumber, Integer institutionId, String institutionName, Short reportStatusId){
 		this.appointment = appointment;
 		this.identificationType = identificationType;
 		this.identificationnumber = identificationnumber;
+		this.reportStatusId = reportStatusId;
 		this.institutionBasicInfoBo = new InstitutionBasicInfoBo(institutionId, institutionName);
 	}
 

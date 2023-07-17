@@ -165,8 +165,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Override
 	public Collection<EquipmentAppointmentBo> getAppointmentsByEquipmentId(Integer equipmentId, Integer institutionId) {
 		log.debug("Input parameters -> equipmentDiaryId {}", equipmentId);
-		Collection<EquipmentAppointmentBo> result = new ArrayList<>();
-		result = equipmentAppointmentAssnRepository.getAppointmentsByEquipmentId(equipmentId, institutionId).stream().distinct().map(EquipmentAppointmentBo::fromEquipmentAppointmentVo)
+		Collection<EquipmentAppointmentBo> result = equipmentAppointmentAssnRepository.getAppointmentsByEquipmentId(equipmentId, institutionId).stream().distinct().map(EquipmentAppointmentBo::fromEquipmentAppointmentVo)
 				.sorted(Comparator.comparing(EquipmentAppointmentBo::getDate, Comparator.nullsFirst(Comparator.naturalOrder())).thenComparing(EquipmentAppointmentBo::getHour))
 				.collect(Collectors.toList());
 

@@ -424,7 +424,8 @@ public class AppointmentsController {
 				null,
 				equipmentAppointmentBo.getAppointmentStateId(),
 				false,
-				institutionMapper.fromInstitutionBasicInfoBo(equipmentAppointmentBo.getDerivedTo())
+				institutionMapper.fromInstitutionBasicInfoBo(equipmentAppointmentBo.getDerivedTo()),
+				equipmentAppointmentBo.getReportStatusId()
 		);
 	}
 
