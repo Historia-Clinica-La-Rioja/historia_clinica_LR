@@ -30,7 +30,7 @@ public class BackofficeEpisodeDocumentTypeStore implements BackofficeStore<Episo
 				PageRequest.of(
 						pageable.getPageNumber(),
 						pageable.getPageSize(),
-						Sort.by(Sort.Direction.ASC, "description")
+						pageable.getSort()
 				)
 		);
 	}
