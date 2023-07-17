@@ -101,9 +101,11 @@ export class ComponentEvaluationManagerService {
 	}
 
 	set obstetric(obstetric: ObstetricEventDto) {
-		const { currentPregnancyEndDate, gestationalAge, newborns, pregnancyTerminationType, previousPregnancies } = obstetric;
-		const isObstetricEmpty = !(currentPregnancyEndDate || gestationalAge || newborns?.length > 0 || pregnancyTerminationType || previousPregnancies);
-		this.obstetricSubject.next(isObstetricEmpty);
+		if (obstetric) {
+			const { currentPregnancyEndDate, gestationalAge, newborns, pregnancyTerminationType, previousPregnancies } = obstetric;
+			const isObstetricEmpty = !(currentPregnancyEndDate || gestationalAge || newborns?.length > 0 || pregnancyTerminationType || previousPregnancies);
+			this.obstetricSubject.next(isObstetricEmpty);
+		}
 	}
 
 	isEmptyDiagnosis(): Observable<boolean> {

@@ -18,6 +18,7 @@ export class ElementoDiagnosticoComponent {
 	isMain: boolean;
 
 	@Output() removeDiagnosis = new EventEmitter();
+	@Output() checkDiagnosis = new EventEmitter();
 	@Input() type = ' ';
 
 	ACTIVE = HEALTH_CLINICAL_STATUS.ACTIVO;
@@ -40,6 +41,10 @@ export class ElementoDiagnosticoComponent {
 
 	remove(){
 		this.removeDiagnosis.emit(this.diagnosis)
+	}
+
+	updateChecked() {
+		this.checkDiagnosis.emit()
 	}
 
 }

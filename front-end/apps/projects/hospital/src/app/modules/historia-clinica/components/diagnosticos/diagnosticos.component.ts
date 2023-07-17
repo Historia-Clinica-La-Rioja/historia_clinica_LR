@@ -11,12 +11,19 @@ import { SelectMainDiagnosisComponent } from '../../modules/ambulatoria/modules/
 @Component({
 	selector: 'app-diagnosticos',
 	templateUrl: './diagnosticos.component.html',
-	styleUrls: ['./diagnosticos.component.scss'],
-	providers: []
+	styleUrls: ['./diagnosticos.component.scss']
 })
 export class DiagnosticosComponent {
+
+	allChecked = false;
+	diagnosticos: DiagnosisDto[];
 	@Input() showTitle = false;
-	@Input() diagnosticos: DiagnosisDto[] = [];
+
+
+	@Input() set listDiagnosis(diagnosticos: DiagnosisDto[]) {
+		this.diagnosticos = diagnosticos;
+		this.allChecked = diagnosticos?.every(t => t.isAdded);
+	};
 	@Input() mainDiagnosis: HealthConditionDto;
 	@Input() type: string;
 	@Output() diagnosisChange = new EventEmitter();
@@ -108,10 +115,22 @@ export class DiagnosticosComponent {
 		this.mainDiagnosisChange.emit(null);
 	}
 
-	toggleAllSelection() {
-		const allSelected = this.diagnosticos.every(item => item.isAdded);
-		this.diagnosticos.forEach(item => (item.isAdded = !allSelected));
-		this.diagnosisChange.emit(this.diagnosticos);
+	updateAll() {
+		this.allChecked = this.diagnosticos?.every(t => t.isAdded);
 	}
 
+	someComplete(): boolean {
+		if (this.diagnosticos == null) {
+			return false;
+		}
+		return this.diagnosticos.filter(t => t.isAdded).length > 0 && !this.allChecked;
+	}
+
+	setAll(completed: boolean) {
+		this.allChecked = completed;
+		if (this.diagnosticos == null) {
+			return;
+		}
+		this.diagnosticos.forEach(t => (t.isAdded = completed));
+	}
 }

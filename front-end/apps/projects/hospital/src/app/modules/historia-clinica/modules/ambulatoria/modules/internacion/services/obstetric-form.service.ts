@@ -10,9 +10,11 @@ export class ObstetricFormService {
 	obstetricEvent = new BehaviorSubject<ObstetricEventDto>(null);
 	private obstetricSubject = new BehaviorSubject<boolean>(true);
 	set obstetric(obstetric: ObstetricEventDto) {
-		const { currentPregnancyEndDate, gestationalAge, newborns, pregnancyTerminationType, previousPregnancies } = obstetric;
-		const isObstetricEmpty = !(currentPregnancyEndDate || gestationalAge || newborns?.length > 0 || pregnancyTerminationType || previousPregnancies);
-		this.obstetricSubject.next(isObstetricEmpty);
+		if (obstetric) {
+			const { currentPregnancyEndDate, gestationalAge, newborns, pregnancyTerminationType, previousPregnancies } = obstetric;
+			const isObstetricEmpty = !(currentPregnancyEndDate || gestationalAge || newborns?.length > 0 || pregnancyTerminationType || previousPregnancies);
+			this.obstetricSubject.next(isObstetricEmpty);
+		}
 	}
 
 	setValue(obstetricEvent: ObstetricEventDto) {

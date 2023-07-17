@@ -143,36 +143,42 @@ export class EpicrisisDockPopupComponent implements OnInit {
 			this.problemEpicrisisService.initTable(response.otherProblems);
 			this.diagnosticsEpicrisisService.initTable(response.diagnosis);
 			this.mainDiagnosis = response.mainDiagnosis;
-			this.diagnosis = response.diagnosis;
-
-			this.personalHistories = response.personalHistories.map((objeto: HealthHistoryConditionDto) => ({
-				concept: { ...objeto },
-				isAdded: false
-			}));
-
-			this.familyHistories = response.familyHistories.map((objeto: HealthHistoryConditionDto) => ({
-				concept: { ...objeto },
-				isAdded: false
-			}));
-
-			this.allergies = response.allergies.map((objeto: AllergyConditionDto) => ({
-				concept: { ...objeto },
-				isAdded: false
-			}));
-
-			this.immunizations = response.immunizations.map((objeto: ImmunizationDto) => ({
-				concept: { ...objeto },
-				isAdded: false
-			}));
 
 			let epicrisis$;
+
 			if (this.data.patientInfo.isDraft) {
 				epicrisis$ = this.epicrisisService.getDraft(this.data.patientInfo.epicrisisId, this.data.patientInfo.internmentEpisodeId);
-			} else
+			} else {
 				if (this.data.patientInfo.epicrisisId) {
 					epicrisis$ = this.epicrisisService.getEpicrisis(this.data.patientInfo.epicrisisId, this.data.patientInfo.internmentEpisodeId);
 				}
-			epicrisis$?.subscribe((epicrisis: ResponseEpicrisisDto) => this.setValues(epicrisis))
+			}
+			if (epicrisis$)
+				epicrisis$.subscribe((epicrisis: ResponseEpicrisisDto) => this.setValues(epicrisis, response));
+			else {
+				this.diagnosis = response.diagnosis;
+
+				this.personalHistories = response.personalHistories.map((objeto: HealthHistoryConditionDto) => ({
+					concept: { ...objeto },
+					isAdded: false
+				}));
+
+				this.familyHistories = response.familyHistories.map((objeto: HealthHistoryConditionDto) => ({
+					concept: { ...objeto },
+					isAdded: false
+				}));
+
+				this.allergies = response.allergies.map((objeto: AllergyConditionDto) => ({
+					concept: { ...objeto },
+					isAdded: false
+				}));
+
+				this.immunizations = response.immunizations.map((objeto: ImmunizationDto) => ({
+					concept: { ...objeto },
+					isAdded: false
+				}));
+			}
+
 		});
 		this.epicrisisService.existUpdatesAfterEpicrisis(this.data.patientInfo.internmentEpisodeId).subscribe((showWarning: boolean) => this.showWarning = showWarning);
 
@@ -186,7 +192,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		});
 	}
 
-	private setValues(e: ResponseEpicrisisDto): void {
+	private setValues(e: ResponseEpicrisisDto, response: EpicrisisGeneralStateDto): void {
 		this.componentEvaluationManagerService.epicrisisDraft = e;
 		if (e?.obstetricEvent) {
 			this.obtetricForm.setValue(e.obstetricEvent);
@@ -195,26 +201,29 @@ export class EpicrisisDockPopupComponent implements OnInit {
 			this.externalCauseDto = e?.externalCause;
 			this.externalCauseServise.setValue(e.externalCause);
 		}
-		this.personalHistories.forEach(imm => {
-			if (e.personalHistories.some(i => i.snomed.sctid === imm.concept.snomed.sctid))
-				imm.isAdded = true;
-		});
-		this.familyHistories.forEach(imm => {
-			if (e.familyHistories.some(i => i.snomed.sctid === imm.concept.snomed.sctid))
-				imm.isAdded = true;
-		});
-		this.allergies.forEach(imm => {
-			if (e.allergies.some(i => i.snomed.sctid === imm.concept.snomed.sctid))
-				imm.isAdded = true;
-		});
-		this.immunizations.forEach(imm => {
-			if (e.immunizations.some(i => i.snomed.sctid === imm.concept.snomed.sctid))
-				imm.isAdded = true;
-		});
-		this.diagnosis.forEach(diag => {
-			if (e.diagnosis.some(d => d.snomed.sctid === diag.snomed.sctid))
-				diag.isAdded = true;
-		})
+		this.personalHistories = response.personalHistories.map((objeto: HealthHistoryConditionDto) => ({
+			concept: { ...objeto },
+			isAdded: e.personalHistories.some(i => i.snomed.sctid === objeto.snomed.sctid)
+		}));
+
+		this.familyHistories = response.familyHistories.map((objeto: HealthHistoryConditionDto) => ({
+			concept: { ...objeto },
+			isAdded: e.familyHistories.some(i => i.snomed.sctid === objeto.snomed.sctid)
+		}));
+
+		this.allergies = response.allergies.map((objeto: AllergyConditionDto) => ({
+			concept: { ...objeto },
+			isAdded: e.allergies.some(i => i.snomed.sctid === objeto.snomed.sctid)
+		}));
+
+		this.immunizations = response.immunizations.map((objeto: ImmunizationDto) => ({
+			concept: { ...objeto },
+			isAdded: e.immunizations.some(i => i.snomed.sctid === objeto.snomed.sctid)
+		}));
+
+		response.diagnosis.forEach(diag => diag.isAdded = e.diagnosis.some(d => d.snomed.sctid === diag.snomed.sctid));
+		this.diagnosis = response.diagnosis;
+
 		Object.keys(e.notes).forEach((key: string) => {
 			if (e.notes[key]) {
 				this.form.controls.observations.patchValue({ [key]: e.notes[key] });
