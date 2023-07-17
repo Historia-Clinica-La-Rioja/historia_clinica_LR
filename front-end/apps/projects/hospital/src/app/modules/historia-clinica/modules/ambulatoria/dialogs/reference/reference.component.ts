@@ -1,9 +1,12 @@
 import { Component, Inject, OnInit, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, ReferenceProblemDto } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, MasterDataDto, ReferenceProblemDto } from '@api-rest/api-model';
 import { ReferenceOriginInstitutionService } from '../../services/reference-origin-institution.service';
 import { ReferenceProblemsService } from '../../services/reference-problems.service';
+import { Observable, tap } from 'rxjs';
+import { ReferenceMasterDataService } from '@api-rest/services/reference-master-data.service';
+import { PRIORITY } from '../../constants/reference-masterdata';
 
 @Component({
 	selector: 'app-reference',
@@ -20,19 +23,29 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 	submitForm = false;
 	updateSpecialtiesAndCarelineFields = false;
 	clearCarelinesAndSpecialties = false;
+	priorities$: Observable<MasterDataDto[]>;
+
+	PRIORITY = PRIORITY;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: any,
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly dialogRef: MatDialogRef<ReferenceComponent>,
 		private changeDetector: ChangeDetectorRef,
-		private readonly referenceProblemsService: ReferenceProblemsService
+		private readonly referenceProblemsService: ReferenceProblemsService,
+		private readonly referenceMasterData: ReferenceMasterDataService,
 	) { }
 
 	ngOnInit(): void {
 		this.createReferenceForm();
 
 		this.disableInputs();
+
+		this.priorities$ = this.referenceMasterData.getPriorities().pipe(
+			tap((priorities) => {
+				const lowPriority = priorities.find(priority => priority.id === PRIORITY.LOW);
+				this.formReference.controls.priority.setValue(lowPriority);
+			}));
 	}
 
 	ngAfterContentChecked(): void {
@@ -65,7 +78,8 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 			fileIds: [],
 			destinationInstitutionId: this.formReference.value.institutionDestinationId,
 			phonePrefix: this.formReference.value.phonePrefix,
-			phoneNumber: this.formReference.value.phoneNumber
+			phoneNumber: this.formReference.value.phoneNumber,
+			priority: this.formReference.value.priority.id,
 		}
 	}
 
@@ -124,7 +138,8 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 			departmentOrigin: [null],
 			institutionOrigin: [null],
 			phoneNumber: [null, [Validators.required, Validators.maxLength(20)]],
-			phonePrefix: [null, [Validators.required, Validators.maxLength(10)]]
+			phonePrefix: [null, [Validators.required, Validators.maxLength(10)]],
+			priority: [null]
 		});
 	}
 
@@ -152,4 +167,5 @@ export interface Reference {
 	procedure?: boolean;
 	phoneNumber: string;
 	phonePrefix: string;
+	priority: number;
 }

@@ -239,7 +239,8 @@
                     "DESTINATION": "Destino",
                     "PATIENT_PHONE": "Teléfono del paciente",
                     "PHONE_NUMBER": "Número",
-                    "PHONE_PREFIX": "Prefijo"
+                    "PHONE_PREFIX": "Prefijo",
+                    "PRIORITY_CRITERIA": "Criterio de priorización"
                 }
             },
             "reference-notification": {

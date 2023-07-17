@@ -18,7 +18,32 @@
                         (updateSpecialtiesAndCarelineFields)="activateSpecialtiesAndCarelineFields()">
                     </app-origin-institution-reference>
 
-                    <span class="phone-title"
+                    <section fxLayout="column">
+
+                        <span class="subtitle"
+                            [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PRIORITY_CRITERIA'">
+                        </span>
+
+                        <mat-form-field appearance="outline">
+                            <mat-select id="priority" formControlName="priority">
+                                <mat-select-trigger *ngIf="formReference.value.priority">
+                                    <div fxLayoutGap="10px" fxLayoutAlign="start center">
+                                        <div class="circle" [ngClass]="{'red': formReference.value.priority.id == PRIORITY.HIGH, 'orange': formReference.value.priority.id == PRIORITY.MEDIUM, 'green': formReference.value.priority.id == PRIORITY.LOW }"></div>
+                                        <span>{{formReference.value.priority.description}}</span>
+                                    </div>
+                                </mat-select-trigger>
+                                <mat-option *ngFor="let priority of priorities$ | async" [value]="priority">
+                                    <div fxLayoutGap="10px" fxLayoutAlign="start center">
+                                        <div class="circle" [ngClass]="{'red': priority.id == PRIORITY.HIGH, 'orange': priority.id == PRIORITY.MEDIUM, 'green': priority.id == PRIORITY.LOW }"></div>
+                                        <span>{{priority.description}}</span>
+                                    </div>
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    
+                    </section>
+
+                    <span class="subtitle"
                         [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PATIENT_PHONE'"></span>
                     <div fxLayout="row" fxLayoutGap="10px">
                         <mat-form-field fxFlex="30%" appearance="outline">

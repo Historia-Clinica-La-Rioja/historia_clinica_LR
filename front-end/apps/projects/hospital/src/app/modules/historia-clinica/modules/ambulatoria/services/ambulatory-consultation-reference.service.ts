@@ -108,7 +108,8 @@ export class AmbulatoryConsultationReferenceService {
 			fileIds: reference.fileIds,
 			destinationInstitutionId: reference.destinationInstitutionId,
 			phoneNumber: reference.phoneNumber,
-			phonePrefix: reference.phonePrefix
+			phonePrefix: reference.phonePrefix,
+			priority: reference.priority,
 		}
 	}
 }
