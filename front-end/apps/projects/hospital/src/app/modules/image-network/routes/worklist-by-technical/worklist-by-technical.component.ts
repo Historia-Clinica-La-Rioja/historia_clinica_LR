@@ -159,7 +159,7 @@ export class WorklistByTechnicalComponent implements OnInit {
                 nameSelfDetermination: this.capitalizeWords(appointment.patient.person.nameSelfDetermination),
                 canBeFinished: appointment.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED,
                 derive: appointment.derivedTo.id ? appointment.derivedTo : null,
-                reportStatus: this.getReportStatus(4)
+                reportStatus: this.getReportStatus(appointment.reportStatusId)
             }
         })
     }
@@ -199,18 +199,24 @@ export class WorklistByTechnicalComponent implements OnInit {
 		});
 
 		dialogRef.afterClosed().subscribe(result => {
-			if (result?.updateState) {
+            if (result?.updateState) {
 				this.selectedAppointment.appointmentStateId = result.updateState;
+                if (result?.reportNotRequired) { this.updateSelectedAppointmentReportState(); }
 				this.filterAppointments(this.states.value);
 			}
 			this.selectedAppointment = null;
 		});
 	}
 
-    requestReport(appointmentId: number) {
-        this.translateService.get("image-network.worklist.REPORT_REQUIRED").subscribe(
-			translatedText => this.snackBarService.showSuccess(translatedText)
-		);
+    private updateSelectedAppointmentReportState() {
+        this.appointments = this.appointments.map(app => (app.id === this.selectedAppointment.id ? { ...app, reportStatusId: REPORT_STATES_ID.NOT_REQUIRED } : app));
+    }
+
+    requestReport(appointment: detailedAppointment) {
+        this.appointmentsService.requireReport(appointment.data.id).subscribe(() => {
+            this.snackBarService.showSuccess(this.translateService.instant("image-network.worklist.REPORT_REQUIRED"))
+            appointment.reportStatus = REPORT_STATES.find(state => state.id == REPORT_STATES_ID.PENDING)
+        })
     }
 
     deriveReport(appointmentId: number) {
@@ -225,6 +231,7 @@ export class WorklistByTechnicalComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(destinationInstitution => {
             let derivedReportAppointment = this.detailedAppointments.find(appointment => appointment.data.id === appointmentId);
             derivedReportAppointment.derive = destinationInstitution;
+            derivedReportAppointment.reportStatus = REPORT_STATES.find(state => state.id == REPORT_STATES_ID.DERIVED);
         });
     }
 
@@ -240,5 +247,6 @@ export interface detailedAppointment {
     lastName: string,
     nameSelfDetermination: string,
 	canBeFinished: boolean,
-    derive: InstitutionBasicInfoDto
+    derive: InstitutionBasicInfoDto,
+    reportStatus: ReportState,
 }

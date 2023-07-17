@@ -84,7 +84,7 @@
                                         mat-menu-item (click)="deriveReport(appointment.data.id)" [disabled]="appointment.derive">
                                         <span [translate]="'image-network.worklist.DERIVE_REPORT'"></span>
                                     </button>
-                                    <button *ngIf="appointment.reportStatus.id == reportStates.NOT_REQUIRED" mat-menu-item (click)="requestReport(appointment.data.id)">
+                                    <button *ngIf="appointment.reportStatus.id == reportStates.NOT_REQUIRED" mat-menu-item (click)="requestReport(appointment)">
                                         <span [translate]="'image-network.worklist.REQUEST_REPORT'"></span>
                                     </button>
                                 </mat-menu>

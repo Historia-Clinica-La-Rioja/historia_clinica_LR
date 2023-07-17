@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { StudyStatusPopupComponent } from '../study-status-popup/study-status-popup.component';
@@ -18,10 +18,10 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 	templateUrl: './finish-study.component.html',
 	styleUrls: ['./finish-study.component.scss']
 })
-export class FinishStudyComponent implements OnInit {
+export class FinishStudyComponent {
 
 	observations: string;
-	isReportRequired = false;
+	reportNotRequired = false;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: StudyInfo,
@@ -33,13 +33,10 @@ export class FinishStudyComponent implements OnInit {
 		public dialog: MatDialog) {
 	}
 
-	ngOnInit(): void {
-	}
-
 	confirm() {
 		const detailsOrderImage: DetailsOrderImageDto = {
 			observations: this.observations,
-			isReportRequired: false
+			isReportRequired: !this.reportNotRequired,
 		};
 		const appointmentId = this.data.appointmentId;
 		const served = APPOINTMENT_STATES_ID.SERVED;
@@ -71,7 +68,7 @@ export class FinishStudyComponent implements OnInit {
     }
 
 	changeReportRequirementStatus(event: MatCheckboxChange){
-		this.isReportRequired = event.checked;
+		this.reportNotRequired = event.checked;
 	}
 
 	openStatusDialog(icon: string, iconColor: string, popUpMessageTranslate: string) {

@@ -142,6 +142,11 @@ export class AppointmentsService {
 		return this.http.put<boolean>(url, queryParams)
 	}
 
+	requireReport(appointmentId: number): Observable<boolean> {
+		const url = `${this.BASE_URL}/${appointmentId}/require-report`;
+		return this.http.post<boolean>(url, {})
+	}
+
 	appointmentCanBeDerived(appointmentId: number): Observable<InstitutionBasicInfoDto>{
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/check-derived-status/${appointmentId}`;
 		return this.http.get<InstitutionBasicInfoDto>(url)
