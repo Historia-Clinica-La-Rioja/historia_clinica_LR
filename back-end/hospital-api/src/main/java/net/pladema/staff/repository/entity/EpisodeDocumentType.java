@@ -34,4 +34,7 @@ public class EpisodeDocumentType implements Serializable {
 
 	@Column(name = "description", nullable = false, length = 100)
 	private String description;
+
+	@Column(name = "rich_text_body", columnDefinition = "TEXT")
+	private String richTextBody;
 }

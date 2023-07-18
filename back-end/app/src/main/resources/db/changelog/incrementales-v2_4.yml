@@ -826,7 +826,6 @@ databaseChangeLog:
               sql: |-
                 CREATE INDEX IF NOT EXISTS "IDX_patient_history_created_on" ON patient_history (created_on);
 
-
     - changeSet:
         id: historic_derive_report-createTable
         comment: Create table historic_derive_report
@@ -866,3 +865,14 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: appointment
               validate: true
+              
+    - changeSet:
+        id: addColumn-rich_text_body-episode_document_types
+        author: fdemuguruza
+        changes:
+          - addColumn:
+              tableName: episode_document_types
+              columns:
+                - column:
+                    name: rich_text_body
+                    type: text
