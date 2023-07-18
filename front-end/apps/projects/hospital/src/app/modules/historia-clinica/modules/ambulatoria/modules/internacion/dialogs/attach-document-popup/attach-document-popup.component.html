@@ -29,7 +29,7 @@
 					[translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.GENERATE_DOCUMENT'"></span>
 			</button>
 		</div>
-		<div>
+		<div *ngIf="showAttachFile">
 			<button mat-stroked-button color="primary" fxFlex="100%" (click)="fileInput.click()">
 				<mat-icon>attachment</mat-icon>
 				<span
@@ -40,6 +40,18 @@
 		</div>
 	</section>
 
+	<section class="surgical-info" *ngIf="showSurgicalInfo">
+		<form [formGroup]="surgicalForm">
+			<app-typeahead *ngIf="professionals?.length > 0; else noProfessional" [options]="professionals"
+				[titleInput]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.PROFESSIONAL' | translate"
+				[required]="required" (selectionChange)="setProfessional($event)">
+			</app-typeahead>
+			<mat-error class="typeahead-required" *ngIf="hasError(surgicalForm, 'required', 'professional') && professionals?.length > 0"
+				[translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.PROFESSIONAL_REQUIRED'">
+			</mat-error>
+		</form>
+	</section>
+
 	<section class="file" *ngIf="file">
 		<a (click)="openFile(file)">{{file.name}}</a>
 		<button mat-button mat-icon-button color="warn" (click)="deleteFile()">
@@ -47,7 +59,7 @@
 		</button>
 	</section>
 
-	<section class="dialog-actions">
+	<section class="dialog-actions" *ngIf="!showSurgicalInfo">
 		<button mat-stroked-button color="primary" [mat-dialog-close]=true>
 			<span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.CANCEL'"></span>
 		</button>
@@ -59,6 +71,10 @@
 
 	<ng-template #noDocumentsType>
 		<p [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.NO-DOCUMENTS-TYPE'">
+		</p>
+	</ng-template>
+	<ng-template #noProfessional>
+		<p [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.NO-PROFESSIONAL'">
 		</p>
 	</ng-template>
 </form>

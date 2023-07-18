@@ -1,9 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ApiErrorMessageDto, ERole, EpisodeDocumentTypeDto } from '@api-rest/api-model';
+import { ApiErrorMessageDto, ERole, AppFeature, EpisodeDocumentTypeDto, ProfessionalDto } from '@api-rest/api-model';
+import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import { InternmentEpisodeDocumentService } from '@api-rest/services/internment-episode-document.service';
 import { PermissionsService } from '@core/services/permissions.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { ExtesionFile } from '@core/utils/extensionFile';
 import { hasError, requiredFileType } from '@core/utils/form.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
@@ -22,21 +24,33 @@ export class AttachDocumentPopupComponent implements OnInit {
 
 	hasError = hasError;
 	form: UntypedFormGroup;
+	surgicalForm: UntypedFormGroup;
 	documentTypes: TypeaheadOption<any>[];
 	consentDocumentTypes: EpisodeDocumentTypeDto[];
+	professionals: TypeaheadOption<any>[];
+	nameSelfDeterminationFF: boolean;
 	required: boolean = true;
 	file: File = null;
 	showGenerateDocument = false;
 	consentSelectedType: EpisodeDocumentTypeDto;
+	showAttachFile = false;
+	showSurgicalInfo = false;
 	isAdministrative: boolean = false;
 	hasConsentDocumentError: string;
 
 	constructor(private fb: UntypedFormBuilder,
 		private internmentEpisodeDocument: InternmentEpisodeDocumentService,
+		private readonly healthcareProfessionalByInstitutionService: HealthcareProfessionalByInstitutionService,
 		public dialogRef: MatDialogRef<AttachDocumentPopupComponent>,
 		private readonly snackBarService: SnackBarService,
+		private readonly featureFlagService: FeatureFlagService,
 		private readonly permissionService: PermissionsService,
-		@Inject(MAT_DIALOG_DATA) public data) { }
+		@Inject(MAT_DIALOG_DATA) public data
+	) {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
+			this.nameSelfDeterminationFF = isOn
+		});
+	}
 
 	ngOnInit(): void {
 		this.form = this.fb.group({
@@ -44,8 +58,33 @@ export class AttachDocumentPopupComponent implements OnInit {
 			file: new UntypedFormControl(null, requiredFileType(ExtesionFile.PDF) && Validators.required),
 			type: new UntypedFormControl(null, Validators.required)
 		});
+
+		this.surgicalForm = this.fb.group({
+			professional: new UntypedFormControl(null, Validators.required)
+		});
+
 		this.setDocumentTypesFilter();
+		this.setProfessionalsFilter();
 		this.setIsAdministrative();
+	}
+
+	setProfessionalsFilter() {
+		this.healthcareProfessionalByInstitutionService.getAll().subscribe(professionals => {
+			this.professionals = professionals.map( professional => {
+					const professionalName = this.getFullNameByFF(professional);
+					return {
+						compareValue: professionalName,
+						value: professionalName
+					}
+				})
+		});
+	}
+
+	getFullNameByFF(professional: ProfessionalDto): string {
+		const firstName = (professional.middleNames) ? professional.firstName + " " + professional.middleNames : professional.firstName;
+		const nameSelfDetermination = (professional.nameSelfDetermination) ? professional.nameSelfDetermination : firstName;
+		const lastName = (professional.otherLastNames) ? professional.lastName + " " + professional.otherLastNames : professional.lastName;
+		return (this.nameSelfDeterminationFF) ? lastName + ", " + nameSelfDetermination : lastName + ", " + firstName;
 	}
 
 	setDocumentTypesFilter() {
@@ -94,7 +133,12 @@ export class AttachDocumentPopupComponent implements OnInit {
 	setDocumentType(type) {
 		this.consentSelectedType = this.consentDocumentTypes.find(elem => elem.id === type);
 		this.showGenerateDocument = this.consentSelectedType ? true : false;
+		this.showAttachFile = true;
 		this.form.get('type').setValue(type);
+	}
+
+	setProfessional(professional: any) {
+		this.surgicalForm.get('professional').setValue(professional);
 	}
 
 	onFileSelected(event) {
@@ -112,7 +156,6 @@ export class AttachDocumentPopupComponent implements OnInit {
 			}
 		}
 	}
-
 
 	deleteFile() {
 		this.file = null;
