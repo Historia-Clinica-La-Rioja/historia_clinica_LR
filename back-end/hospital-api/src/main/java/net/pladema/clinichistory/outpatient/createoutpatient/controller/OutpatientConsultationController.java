@@ -132,7 +132,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         outpatient.setReasons(reasons);
         outpatientReasonService.addReasons(newOutPatient.getId(), reasons);
 
-        Long documentId = createOutpatientDocumentService.execute(outpatient).getId();
+        Long documentId = createOutpatientDocumentService.execute(outpatient, true).getId();
 		Integer appointmentId = null;
         if (!disableValidation && (appointmentExternalService.hasCurrentAppointment(patientId,doctorId,dateTimeProvider.nowDate())
 				|| appointmentExternalService.hasOldAppointment(patientId,doctorId))) {
@@ -174,7 +174,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
         outpatient.setClinicalSpecialtyId(clinicalSpecialtyId);
 
-        createOutpatientDocumentService.execute(outpatient);
+        createOutpatientDocumentService.execute(outpatient, true);
 
 
         if (!disableValidation && appointmentExternalService.hasCurrentAppointment(patientId,doctorId,dateTimeProvider.nowDate()))
@@ -230,7 +230,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         immunizationBo.setInstitutionId(institutionId);
         outpatient.setImmunizations(Collections.singletonList(immunizationBo));
 
-        createOutpatientDocumentService.execute(outpatient);
+        createOutpatientDocumentService.execute(outpatient, true);
 
         LOG.debug(OUTPUT, true);
         return  ResponseEntity.ok().body(true);
@@ -256,7 +256,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
         outpatient.setProblems(Collections.singletonList(outpatientConsultationMapper.fromHealthConditionNewConsultationDto(solvedProblemDto)));
         outpatient.getProblems().forEach(p->p.setId(null));
-		createOutpatientDocumentService.execute(outpatient);
+		createOutpatientDocumentService.execute(outpatient, false);
 
         return ResponseEntity.ok().body(true);
     }
