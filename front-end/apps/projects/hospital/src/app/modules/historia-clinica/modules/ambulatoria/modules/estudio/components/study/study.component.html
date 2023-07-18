@@ -5,7 +5,7 @@
 		<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center center" *ngFor="let study of _studies">
 			<app-study-list-element fxFlex [content]="contentBuilder(study.diagnosticInformation)"
 				[createdDuring]="wasCreatedDuringSource(study.diagnosticInformation.source)"></app-study-list-element>
-			<div fxFlex="35" fxFlex.gt-md="28" fxFlex.gt-lg="15" fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="10px" 
+			<div fxFlex="35" fxFlex.gt-md="28" fxFlex.gt-lg="23" fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="10px" 
 				*ngIf="study.diagnosticInformation.category === IMAGE_DIAGNOSIS && study.diagnosticInformation.statusId === STUDY_STATUS.FINAL_RDI.id">
 				<app-view-study class="view-study-btn" [appointmentId]="study.appointmentId"></app-view-study>
 				<div class="report-status">
