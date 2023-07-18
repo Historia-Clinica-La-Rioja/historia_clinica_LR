@@ -70,6 +70,7 @@ public class MergedPatientSearchQuery {
 				"	from {h-schema}merged_inactive_patient as mip \n" +
 				"	join {h-schema}merged_patient as mp on (mip.merged_patient_id = mp.id) \n" +
 				"	where mp.deleted = false \n" +
+				"	and mip.deleted = false \n" +
 				"	group by mp.active_patient_id ) \n";
 		return new QueryPart(with);
 	}
