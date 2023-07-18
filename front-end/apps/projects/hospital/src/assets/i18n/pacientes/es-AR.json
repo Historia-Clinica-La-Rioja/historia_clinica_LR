@@ -326,7 +326,7 @@
 		"BUTTON_CANCEL":"No, cancelar",
 		"BUTTON_CONFIRM":"Si, fusionar",
 		"TITLE_CONFIRMED_FUSION":"Pacientes fusionados con éxito",
-		"SUBTITLE_CONFIRMED_FUSION":"Ahora el paciente con ID {{id}} contiene la información clínica de los pacientes fusionados.",
+		"SUBTITLE_CONFIRMED_FUSION":"Ahora el paciente con ID {{id}} contiene la información clínica de los pacientes fusionados. En caso de querer deshacer la fusión deberá dirigirse a la pantalla 'Desvincular pacientes'.",
 		"LABEL_FILTER":"Filtrado por ",
 		"MESSAGE_VALIDATION_FUSION": "Es necesario seleccionar al menos dos pacientes para realizar la fusión",
 		"MESSAGE_VALIDATION_COLUMNS": "Es necesario seleccionar al menos un dato de cada columna para realizar la fusión",
