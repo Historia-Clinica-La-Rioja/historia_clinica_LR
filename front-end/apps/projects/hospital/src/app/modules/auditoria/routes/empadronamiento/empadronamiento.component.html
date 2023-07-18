@@ -206,6 +206,14 @@
 					</form>
 				</ng-template>
 			</mat-tab>
+			<mat-tab *ngIf="!isUnlinkPatient" id="tab_marcados_auditoria">
+				<ng-template mat-tab-label>
+					<span>{{ 'pacientes.audit.TITLE_MARKED_FOR_AUDIT' | translate | uppercase }}</span>
+				</ng-template>
+				<ng-template matTabContent>
+
+				</ng-template>
+			</mat-tab>
 		</mat-tab-group>
 	</section>
 	<section>

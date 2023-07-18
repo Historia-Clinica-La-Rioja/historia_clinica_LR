@@ -46,4 +46,8 @@ export class AuditPatientService {
 		return this.http.get<PatientPersonalInfoDto[]>(url);
 	}
 
+	getFetchPatientsToAudit(): Observable <PatientRegistrationSearchDto[]>{
+		const url = `${environment.apiBase}/audit/institution/${this.contextService.institutionId}/patients-to-audit`;
+		return this.http.get<PatientRegistrationSearchDto[]>(url);
+	}
 }

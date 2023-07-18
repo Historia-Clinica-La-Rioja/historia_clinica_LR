@@ -88,6 +88,7 @@ export class EmpadronamientoComponent implements OnInit {
 			filterStateValidation: [this.optionsValidations.BothValidations]
 		});
 	}
+
 	search() {
 		let patientSearchFilter = this.prepareSearchDto();
 		this.formSubmitted = true;
@@ -108,6 +109,15 @@ export class EmpadronamientoComponent implements OnInit {
 		this.tabActiveIndex = tabChangeEvent.index;
 		this.resultSearchPatient = [];
 		this.initForms();
+		if(this.tabActiveIndex === 2){
+			this.getMarkedForAudit();
+		}
+	}
+
+	getMarkedForAudit(){
+		this.auditPatientService.getFetchPatientsToAudit().subscribe((patientRegistrationSearchDto: PatientRegistrationSearchDto[])=>{
+			this.resultSearchPatient = patientRegistrationSearchDto;
+		})
 	}
 
 	prepareSearchDto() {
