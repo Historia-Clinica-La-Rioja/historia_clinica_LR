@@ -475,7 +475,7 @@
 				"NO_DOCUMENTS": "Aún no hay archivos adjuntos cargados",
 				"dialogs": {
 					"attach": {
-						"TITLE": "Adjuntar documento",
+						"TITLE": "Agregar documento al episodio",
 						"NO-DOCUMENTS-TYPE": "Aún no se han definido tipos de documentos",
 						"fields": {
 							"NAME": "Nombre del archivo",
@@ -484,6 +484,7 @@
 							"FILE": "El tipo de archivo debe estar en formato PDF"
 						},
 						"actions": {
+							"GENERATE_DOCUMENT": "GENERAR DOCUMENTO",
 							"ATTACH_FILE": "ADJUNTAR ARCHIVO",
 							"CANCEL": "CANCELAR",
 							"CONTINUE": "CONTINUAR",

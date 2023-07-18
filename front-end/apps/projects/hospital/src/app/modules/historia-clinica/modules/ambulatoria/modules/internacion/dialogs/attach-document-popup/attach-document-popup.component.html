@@ -19,11 +19,19 @@
     </mat-error>
 
 	<section class="file-actions" *ngIf="(!file && !hasError(form, 'required', 'type'))">
-		<button mat-stroked-button color="primary" fxFlex="100%" (click)="fileInput.click()">
-			<mat-icon>attachment</mat-icon>
-            <span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.ATTACH_FILE'"></span>
-        </button>
-        <input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file" accept=".jpg, .jpeg, .png, .pdf" (click)="$event.target.value=null">
+		<div *ngIf="showGenerateDocument">
+			<button mat-stroked-button color="primary" fxFlex="100%" (click)="generateDocument()">
+				<mat-icon class="material-icons-outlined">add_circle_outline</mat-icon>
+				<span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.GENERATE_DOCUMENT'"></span>
+			</button>
+		</div>
+		<div>
+			<button mat-stroked-button color="primary" fxFlex="100%" (click)="fileInput.click()">
+				<mat-icon>attachment</mat-icon>
+				<span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.ATTACH_FILE'"></span>
+			</button>
+			<input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file" accept=".jpg, .jpeg, .png, .pdf" (click)="$event.target.value=null">
+		</div>
 	</section>
 
 	<section class="file" *ngIf="file">

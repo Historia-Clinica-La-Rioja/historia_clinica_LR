@@ -9,6 +9,8 @@ import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.co
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.pdf'];
+const INFORMED_CONSENT = "Consentimiento informado de ingreso";
+
 @Component({
   selector: 'app-attach-document-popup',
   templateUrl: './attach-document-popup.component.html',
@@ -22,6 +24,7 @@ export class AttachDocumentPopupComponent implements OnInit {
   documentTypes: TypeaheadOption<any>[];
   required: boolean = true;
   file: File = null;
+  showGenerateDocument = false;
 
   constructor(private fb: UntypedFormBuilder,
               private internmentEpisodeDocument: InternmentEpisodeDocumentService,
@@ -72,7 +75,8 @@ export class AttachDocumentPopupComponent implements OnInit {
   }
 
   setDocumentType(type: DocumentTypeDto) {
-    this.form.get('type').setValue(type);
+	this.showGenerateDocument = !!(this.documentTypes.find( elem => elem.value === type)?.viewValue === INFORMED_CONSENT);
+	this.form.get('type').setValue(type);
   }
 
   onFileSelected(event) {
@@ -101,5 +105,7 @@ export class AttachDocumentPopupComponent implements OnInit {
 	const fileUrl = URL.createObjectURL(file);
     window.open(fileUrl, '_blank');
   }
+
+  generateDocument() { }
 
 }
