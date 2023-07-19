@@ -66,7 +66,12 @@ public class BackofficeEpisodeDocumentTypeStore implements BackofficeStore<Episo
 
 	@Override
 	public void deleteById(Integer id) {
-		repository.deleteById(id);
+		repository.findById(id).ifPresent(episodeDocumentType -> {
+			if (episodeDocumentType.getConsentId().equals(1))
+				repository.deleteById(id);
+			else
+				throw new BackofficeValidationException("El documento es de consentimiento y no se puede eliminar");
+		});
 	}
 
 	@Override
