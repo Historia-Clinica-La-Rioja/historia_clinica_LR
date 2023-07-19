@@ -190,15 +190,15 @@ export class UnmergePatientComponent implements OnInit {
 		let patientToUnlink: PatientToMergeDto = this.patientToMerge;
 		patientToUnlink.activePatientId = this.patientToAudit.patientId;
 		patientToUnlink.oldPatientsIds = [infoPatient.patientId]
-		patientToUnlink.registrationDataPerson.genderId = infoPatient.genderId;
-		patientToUnlink.registrationDataPerson.nameSelfDetermination = infoPatient.nameSelfDetermination;
-		patientToUnlink.registrationDataPerson.birthDate = infoPatient.birthdate;
-		patientToUnlink.registrationDataPerson.firstName = infoPatient.firstName;
-		patientToUnlink.registrationDataPerson.lastName = infoPatient.lastName;
-		patientToUnlink.registrationDataPerson.middleNames = infoPatient.middleNames;
-		patientToUnlink.registrationDataPerson.otherLastNames = infoPatient.otherLastNames;
-		patientToUnlink.registrationDataPerson.identificationNumber = infoPatient.identificationNumber;
-		patientToUnlink.registrationDataPerson.identificationTypeId = infoPatient.identificationTypeId;
+		patientToUnlink.registrationDataPerson.genderId = this.patientToAudit.genderId;
+		patientToUnlink.registrationDataPerson.nameSelfDetermination = this.patientToAudit.nameSelfDetermination;
+		patientToUnlink.registrationDataPerson.birthDate = this.patientToAudit.birthdate;
+		patientToUnlink.registrationDataPerson.firstName = this.patientToAudit.firstName;
+		patientToUnlink.registrationDataPerson.lastName = this.patientToAudit.lastName;
+		patientToUnlink.registrationDataPerson.middleNames = this.patientToAudit.middleNames;
+		patientToUnlink.registrationDataPerson.otherLastNames = this.patientToAudit.otherLastNames;
+		patientToUnlink.registrationDataPerson.identificationNumber = this.patientToAudit.identificationNumber;
+		patientToUnlink.registrationDataPerson.identificationTypeId = this.patientToAudit.identificationTypeId;
 		return patientToUnlink;
 	}
 
