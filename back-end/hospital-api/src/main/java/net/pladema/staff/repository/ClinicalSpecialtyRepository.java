@@ -80,4 +80,32 @@ public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpeci
 	List<ClinicalSpecialty> getAllByCareLineIdAndDestinationInstitutionId(@Param("careLineId") Integer careLineId,
 																		  @Param("destinationInstitutionId") Integer destinationInstitutionId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT NEW net.pladema.staff.service.domain.ClinicalSpecialtyBo(cs.id, cs.name) " +
+			"FROM ClinicalSpecialty cs " +
+			"JOIN HealthcareProfessionalSpecialty hps ON (hps.clinicalSpecialtyId = cs.id) " +
+			"JOIN ProfessionalProfessions pp on (pp.id = hps.professionalProfessionId) " +
+			"JOIN HealthcareProfessional hcp ON (hcp.id = pp.healthcareProfessionalId) " +
+			"JOIN DiaryAssociatedProfessional dap on (dap.healthcareProfessionalId = hcp.id) " +
+			"JOIN Diary d ON (d.id = dap.diaryId) " +
+			"JOIN DoctorsOffice do ON (do.id = d.doctorsOfficeId) " +
+			"JOIN Institution i ON (i.id = do.institutionId) " +
+			"JOIN Address a ON (a.id = i.addressId) " +
+			"WHERE a.provinceId = :provinceId AND hps.deleteable.deleted = FALSE " +
+			"ORDER BY cs.name ASC")
+	List<ClinicalSpecialtyBo> getClinicalSpecialtiesByProvinceId(@Param("provinceId") Short provinceId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT NEW net.pladema.staff.service.domain.ClinicalSpecialtyBo(cs.id, cs.name) " +
+			"FROM ClinicalSpecialty cs " +
+			"JOIN CareLineInstitutionSpecialty clis ON (clis.clinicalSpecialtyId = cs.id) " +
+			"JOIN CareLineInstitution cli ON (cli.id = clis.careLineInstitutionId) " +
+			"JOIN Institution i ON (i.id = cli.institutionId) " +
+			"JOIN Address a ON (a.id = i.addressId) " +
+			"WHERE a.provinceId = :provinceId " +
+			"AND cli.careLineId = :careLineId " +
+			"AND cli.deleted = FALSE " +
+			"ORDER BY cs.name ASC")
+	List<ClinicalSpecialtyBo> getClinicalSpecialtiesInProvinceByCareLineId(@Param("provinceId") Short provinceId, @Param("careLineId") Integer careLineId);
+
 }

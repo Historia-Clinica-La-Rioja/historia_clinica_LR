@@ -72,6 +72,14 @@ public class ClinicalSpecialtyServiceImpl implements ClinicalSpecialtyService{
 		return clinicalSpecialties;
 	}
 
+	@Override
+	public List<ClinicalSpecialtyBo> getClinicalSpecialtiesByProvinceId(Short provinceId) {
+		LOG.debug("Input parameters => provinceId {}", provinceId);
+		List<ClinicalSpecialtyBo> clinicalSpecialties = clinicalSpecialtyRepository.getClinicalSpecialtiesByProvinceId(provinceId);
+		LOG.trace(OUTPUT, clinicalSpecialties);
+		return clinicalSpecialties;
+	}
+
 	private ClinicalSpecialtyBo mapToBo(ClinicalSpecialty entiy){
         return new ClinicalSpecialtyBo(entiy.getId(), entiy.getName());
     }
