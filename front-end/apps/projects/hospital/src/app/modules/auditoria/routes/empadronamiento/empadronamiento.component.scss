@@ -22,3 +22,15 @@ form {
 #titles{
 	max-width: 350px;
 }
+
+.serch {
+	height: 100%;
+	min-height: 100%;
+	min-width: 80%;
+	width: 80%;
+	margin-top: 3%;
+	@media screen and (min-width: 960px) {
+		min-width: 40%;
+		width: 40%;
+	}
+}

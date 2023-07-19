@@ -1,10 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import { GenderDto, IdentificationTypeDto, MergedPatientSearchDto, PatientRegistrationSearchDto } from '@api-rest/api-model';
+import { BMPersonDto, GenderDto, IdentificationTypeDto, MergedPatientSearchDto, PatientRegistrationSearchDto } from '@api-rest/api-model';
 import { AuditPatientService } from '@api-rest/services/audit-patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { PERSON } from '@core/constants/validation-constants';
+import { PERSON, REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
+import { capitalize } from '@core/utils/core.utils';
 import { MIN_DATE } from '@core/utils/date.utils';
 import { hasError } from '@core/utils/form.utils';
 import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
@@ -31,11 +32,12 @@ export class EmpadronamientoComponent implements OnInit {
 	optionsValidations = OptionsValidations;
 	tabActiveIndex = 0;
 	resultSearchPatient: PatientRegistrationSearchDto[] | MergedPatientSearchDto[];
+	resultPatientsToAudit: PatientRegistrationSearchDto[] = [];
 	genderTableView: string[] = [];
 	viewCardToAudit = true;
-
-
 	readonly validations = PERSON;
+	private applySearchFilter = '';
+
 	constructor(private readonly formBuilder: FormBuilder, private readonly personMasterDataService: PersonMasterDataService,
 		private auditPatientService: AuditPatientService,
 	) { }
@@ -109,14 +111,15 @@ export class EmpadronamientoComponent implements OnInit {
 		this.tabActiveIndex = tabChangeEvent.index;
 		this.resultSearchPatient = [];
 		this.initForms();
-		if(this.tabActiveIndex === 2){
+		if (this.tabActiveIndex === 2) {
 			this.getMarkedForAudit();
 		}
 	}
 
-	getMarkedForAudit(){
-		this.auditPatientService.getFetchPatientsToAudit().subscribe((patientRegistrationSearchDto: PatientRegistrationSearchDto[])=>{
-			this.resultSearchPatient = patientRegistrationSearchDto;
+	getMarkedForAudit() {
+		this.auditPatientService.getFetchPatientsToAudit().subscribe((patientRegistrationSearchDto: PatientRegistrationSearchDto[]) => {
+			this.resultPatientsToAudit = patientRegistrationSearchDto;
+			this.resultSearchPatient = this.resultPatientsToAudit;
 		})
 	}
 
@@ -177,6 +180,37 @@ export class EmpadronamientoComponent implements OnInit {
 		control.reset();
 	}
 
+	applyFilter($event: any): void {
+		this.applySearchFilter = ($event.target as HTMLInputElement).value?.replace(REMOVE_SUBSTRING_DNI, '');
+		this.applyFiltes();
+	}
+
+	private applyFiltes(): void {
+		this.resultSearchPatient = this.filter();
+	}
+
+	private filter(): PatientRegistrationSearchDto[] | MergedPatientSearchDto[] {
+		let listFilter = this.resultSearchPatient;
+		if (this.applySearchFilter) {
+			listFilter = (listFilter as PatientRegistrationSearchDto[]).filter((e: PatientRegistrationSearchDto) => this.getFullName(e.person).toLowerCase().includes(this.applySearchFilter.toLowerCase())
+				|| e?.person.identificationNumber.toString().includes(this.applySearchFilter))
+		} else {
+			listFilter = this.resultPatientsToAudit;
+		}
+		return listFilter;
+	}
+
+	getFullName(patient: BMPersonDto): string {
+		const names = [
+			patient?.firstName,
+			patient?.middleNames,
+			patient?.lastName,
+			patient?.otherLastNames
+		].filter(name => name !== undefined && name.trim() !== '');
+
+		const capitalizedNames = names.map(name => capitalize(name));
+		return capitalizedNames.join(' ');
+	}
 }
 export enum OptionsValidations {
 	AutomaticValidation,
