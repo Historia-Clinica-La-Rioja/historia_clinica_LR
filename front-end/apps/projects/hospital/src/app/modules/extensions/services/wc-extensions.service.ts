@@ -105,7 +105,7 @@ export class WCExtensionsService {
 				allPlugins.forEach(plugin => {
 					this.extensionService.getDefinition(plugin.path).subscribe(
 						(defPluginArr: WCInfo[]) => {
-							console.log('getdef ', defPluginArr);
+							// console.log('getdef ', defPluginArr);
 							const slotsStorageService = new SlotsStorageService(plugin.path);
 							defPluginArr.forEach(d => {
 								slotsStorageService.put(d);

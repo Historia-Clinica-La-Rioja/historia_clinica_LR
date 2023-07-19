@@ -1,7 +1,6 @@
 package net.pladema.establishment.repository;
 
 import net.pladema.establishment.repository.entity.Room;
-import net.pladema.establishment.repository.entity.Sector;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

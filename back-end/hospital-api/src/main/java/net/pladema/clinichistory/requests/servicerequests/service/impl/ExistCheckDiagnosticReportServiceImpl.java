@@ -2,8 +2,6 @@ package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentOrderImageExistCheckBo;
 
-import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentOrderImageExistCheckVo;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

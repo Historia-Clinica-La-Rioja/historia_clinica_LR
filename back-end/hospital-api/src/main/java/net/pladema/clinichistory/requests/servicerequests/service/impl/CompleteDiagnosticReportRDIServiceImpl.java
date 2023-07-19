@@ -2,7 +2,6 @@ package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
 import java.util.List;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.HealthCondition;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 
