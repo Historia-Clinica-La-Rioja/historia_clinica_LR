@@ -187,3 +187,40 @@ databaseChangeLog:
                       END IF;
                   END LOOP;
                 END $$;
+
+    - changeSet:
+        id: snvs_diagnose-createTable
+        comment: Create table snvs_diagnose
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: snvs_diagnose
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_snvs_diagnose
+                    name: id
+                    type: int
+                - column:
+                    name: group
+                    type: varchar
+                - column:
+                    name: cie10_event
+                    type: varchar
+                - column:
+                    name: sctid
+                    type: varchar
+                - column:
+                    name: pt
+                    type: varchar
+                - column:
+                    name: cie10_codes
+                    type: varchar
+                - column:
+                    name: numeric_notification
+                    type: boolean
+                - column:
+                    name: individual_notification
+                    type: boolean
