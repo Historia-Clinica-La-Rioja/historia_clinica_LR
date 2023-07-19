@@ -147,11 +147,6 @@ export class EpicrisisDockPopupComponent implements OnInit {
 			this.diagnosticsEpicrisisService.initTable(response.diagnosis);
 			this.mainDiagnosis = response.mainDiagnosis;
 
-			this.procedures = response.procedures.map((objeto: HospitalizationProcedureDto) => ({
-				concept: { ...objeto },
-				isAdded: false
-			}));
-
 			let epicrisis$;
 
 			if (this.data.patientInfo.isDraft) {
