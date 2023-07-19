@@ -37,4 +37,7 @@ public class EpisodeDocumentType implements Serializable {
 
 	@Column(name = "rich_text_body", columnDefinition = "TEXT")
 	private String richTextBody;
+
+	@Column(name = "consent_id")
+	private Integer consentId;
 }

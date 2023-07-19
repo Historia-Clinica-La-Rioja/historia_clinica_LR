@@ -876,3 +876,15 @@ databaseChangeLog:
                 - column:
                     name: rich_text_body
                     type: text
+
+    - changeSet:
+        id: addColumn-consent_id-episode_document_types
+        author: fdemuguruza
+        changes:
+          - addColumn:
+              tableName: episode_document_types
+              columns:
+                - column:
+                    name: consent_id
+                    type: int
+                    defaultValue: 1

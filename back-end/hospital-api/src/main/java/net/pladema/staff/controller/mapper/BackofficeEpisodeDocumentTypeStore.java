@@ -3,6 +3,7 @@ package net.pladema.staff.controller.mapper;
 import net.pladema.establishment.repository.EpisodeDocumentTypeRepository;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 
+import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.staff.repository.entity.EpisodeDocumentType;
 
 import org.springframework.data.domain.Example;
@@ -51,6 +52,10 @@ public class BackofficeEpisodeDocumentTypeStore implements BackofficeStore<Episo
 
 	@Override
 	public EpisodeDocumentType save(EpisodeDocumentType entity) {
+		if (entity.getConsentId() != 1
+			&& entity.getId() == null
+			&& repository.existsConsentDocumentById(entity.getConsentId()))
+			throw new BackofficeValidationException("Ya existe ese documento de consentimiento");
 		return repository.save(entity);
 	}
 

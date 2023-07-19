@@ -3,7 +3,8 @@ import {
     required,
     SimpleForm,
     TextInput,
-    usePermissions
+    usePermissions,
+    SelectInput
 } from 'react-admin';
 import CustomToolbar from "../components/CustomToolbar";
 import {ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE} from "../roles";
@@ -14,9 +15,23 @@ const EpisodeDocumentTypeCreate = (props) => {
     return (<Create {...props} hasCreate={userIsAdminInstitutional}>
         <SimpleForm toolbar={<CustomToolbar />} redirect="list">
             <TextInput source="description" label="Tipo de documento" validate={[required()]} />
+            <SelectInput source="consentId" label="Tipo de consentimiento" defaultValue={ConsentTypes()[0].id} choices={ConsentTypes()} />
         </SimpleForm>
     </Create>)
 };
 
+export const ConsentTypes = () => {
+    return [
+        {
+            id: 1, name: 'Documento regular'
+        },
+        {
+            id: 2, name: 'Consentimiento informado de ingreso',
+        },
+        {
+            id: 3, name: 'Consentimiento informado quirúrgico'
+        }
+    ]
+}
 
 export default EpisodeDocumentTypeCreate;
