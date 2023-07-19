@@ -147,11 +147,6 @@ export class EpicrisisDockPopupComponent implements OnInit {
 			this.diagnosticsEpicrisisService.initTable(response.diagnosis);
 			this.mainDiagnosis = response.mainDiagnosis;
 
-			this.procedures = response.procedures.map((objeto: HospitalizationProcedureDto) => ({
-				concept: { ...objeto },
-				isAdded: false
-			}));
-
 			let epicrisis$;
 
 			if (this.data.patientInfo.isDraft) {
@@ -182,6 +177,11 @@ export class EpicrisisDockPopupComponent implements OnInit {
 				}));
 
 				this.immunizations = response.immunizations.map((objeto: ImmunizationDto) => ({
+					concept: { ...objeto },
+					isAdded: false
+				}))
+
+				this.procedures = response.procedures.map((objeto: HospitalizationProcedureDto) => ({
 					concept: { ...objeto },
 					isAdded: false
 				}));
@@ -227,6 +227,11 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		this.immunizations = response.immunizations.map((objeto: ImmunizationDto) => ({
 			concept: { ...objeto },
 			isAdded: e.immunizations.some(i => i.snomed.sctid === objeto.snomed.sctid)
+		}));
+
+		this.procedures = response.procedures.map((objeto: HospitalizationProcedureDto) => ({
+			concept: { ...objeto },
+			isAdded: e.procedures.some(i => i.snomed.sctid === objeto.snomed.sctid)
 		}));
 
 		response.diagnosis.forEach(diag => diag.isAdded = e.diagnosis.some(d => d.snomed.sctid === diag.snomed.sctid));
