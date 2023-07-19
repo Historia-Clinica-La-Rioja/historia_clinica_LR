@@ -6,9 +6,11 @@ import {
     usePermissions,
     SelectInput,
     FormDataConsumer,
+    useTranslate
 } from 'react-admin';
 import CustomToolbar from "../components/CustomToolbar";
 import {ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE} from "../roles";
+import RichTextInput from 'ra-input-rich-text';
 
 const EpisodeDocumentTypeCreate = (props) => {
     const {permissions} = usePermissions();
@@ -42,7 +44,8 @@ export const ConsentTypes = () => {
 }
 
 const RichTextBody = ({formData}) => {
-    return (formData.consentId !== ConsentTypes()[0].id) ? <TextInput source="richTextBody" label="Detalles del documento" validate={[required()]} fullWidth multiline/> : null
+    const translate = useTranslate();
+    return (formData.consentId !== ConsentTypes()[0].id) ? <RichTextInput source="richTextBody" label="Detalles del documento" defaultValue={translate('resources.episodedocumenttypes.fields.body')} validate={[required()]} fullWidth multiline/> : null
 }
 
 export default EpisodeDocumentTypeCreate;

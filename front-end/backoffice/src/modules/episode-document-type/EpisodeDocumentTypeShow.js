@@ -4,14 +4,15 @@ import {
     Show,
     SimpleShowLayout,
     TextField,
+    RichTextField
 } from 'react-admin';
 
 const EpisodeDocumentTypeShow = props => {
     return (<Show {...props}>
         <SimpleShowLayout>
             <NumberField source="id" />
-            <TextField source="description" />
-            <TextField source="richTextBody" label=""/>
+            <TextField source="description"/>
+            <RichTextField  source="richTextBody" label=""/>
         </SimpleShowLayout>
     </Show>)
 };

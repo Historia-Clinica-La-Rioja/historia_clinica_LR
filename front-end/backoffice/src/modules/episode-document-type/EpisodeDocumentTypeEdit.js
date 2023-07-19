@@ -6,11 +6,11 @@ import {
     usePermissions,
     FormDataConsumer,
     RichTextField,
-    RichTextInput
 } from 'react-admin';
 import CustomToolbar from "../components/CustomToolbar";
 import {ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE} from "../roles";
 import { ConsentTypes } from './EpisodeDocumentTypeCreate';
+import RichTextInput from 'ra-input-rich-text';
 
 const EpisodeDocumentTypeEdit = props => {
     const {permissions} = usePermissions();
