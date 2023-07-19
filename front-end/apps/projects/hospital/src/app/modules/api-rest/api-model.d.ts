@@ -159,7 +159,6 @@ export interface AnamnesisSummaryDto extends DocumentSummaryDto {
 }
 
 export interface AnnexIIDto {
-    affiliateNumber: string;
     appointmentState: string;
     attentionDate: Date;
     completePatientName: string;
@@ -173,7 +172,6 @@ export interface AnnexIIDto {
     patientAge: number;
     patientGender: string;
     problems: string;
-    reportDate: Date;
     rnos: number;
     sisaCode: string;
     specialty: string;
@@ -552,7 +550,10 @@ export interface BookingInstitutionDto {
 
 export interface BookingInstitutionExtendedDto {
     address: string;
-    clinicalSpecialtyName: string[];
+    aliases: string[];
+    city: string;
+    clinicalSpecialtiesNames: string[];
+    department: string;
     dependency: string;
     description: string;
     id: number;
