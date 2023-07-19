@@ -44,5 +44,16 @@ public interface CareLineInstitutionSpecialtyRepository extends JpaRepository<Ca
 			"AND cli.deleted = false")
 	List<ClinicalSpecialtyBo> getClinicalSpecialtiesByCareLineId(@Param("careLineId") Integer careLineId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT new net.pladema.establishment.service.domain.ClinicalSpecialtyBo(cs.id, cs.name)" +
+			"FROM CareLineInstitutionSpecialty clis " +
+			"JOIN CareLineInstitution cli ON (clis.careLineInstitutionId = cli.id) " +
+			"JOIN ClinicalSpecialty cs ON (clis.clinicalSpecialtyId = cs.id) " +
+			"JOIN Institution i on (i.id = cli.institutionId) " +
+			"JOIN Address a ON (a.id = i.addressId) " +
+			"WHERE cli.careLineId = :careLineId " +
+			"AND a.provinceId = :provinceId " +
+			"AND cli.deleted = false")
+	List<ClinicalSpecialtyBo> getClinicalSpecialtiesByCareLineIdInProvince(@Param("careLineId") Integer careLineId, @Param("provinceId") Short provinceId);
 
 }

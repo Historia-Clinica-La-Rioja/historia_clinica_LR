@@ -54,4 +54,14 @@ public class CareLineController {
 		return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLinesBo));
 	}
 
+	@GetMapping("/by-province/{provinceId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<List<CareLineDto>> getCareLinesByProvinceId(@PathVariable(name = "institutionId") Integer institutionId,
+																	  @PathVariable(name = "provinceId") Short provinceId){
+		log.debug("Input parameters -> provinceId {}", provinceId);
+		List<CareLineBo> careLines = careLineService.getCareLinesByProvinceId(provinceId);
+		log.debug("Get care lines by provinceId => {}", provinceId);
+		return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLines));
+	}
+
 }

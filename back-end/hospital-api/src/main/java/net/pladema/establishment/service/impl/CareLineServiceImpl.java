@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,6 +56,15 @@ public class CareLineServiceImpl implements CareLineService {
 	public List<CareLineBo> getCareLinesAttachedToInstitution() {
 		List<CareLineBo> result = careLineRepository.getCareLinesAttachedToInstitution();
 		result.stream().forEach(careLine -> careLine.setClinicalSpecialties(careLineInstitutionSpecialtyRepository.getClinicalSpecialtiesByCareLineId(careLine.getId())));
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<CareLineBo> getCareLinesByProvinceId(Short provinceId){
+		LOG.debug("Input parameters -> provinceId {}", provinceId);
+		List<CareLineBo> result = careLineRepository.getCareLinesByProvinceId(provinceId);
+		result.stream().forEach(careLine -> careLine.setClinicalSpecialties(careLineInstitutionSpecialtyRepository.getClinicalSpecialtiesByCareLineIdInProvince(careLine.getId(), provinceId)));
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

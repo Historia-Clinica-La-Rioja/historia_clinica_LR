@@ -14,4 +14,6 @@ public interface CareLineService {
 
 	List<CareLineBo> getCareLinesAttachedToInstitution();
 
+	List<CareLineBo> getCareLinesByProvinceId(Short provinceId);
+
 }
