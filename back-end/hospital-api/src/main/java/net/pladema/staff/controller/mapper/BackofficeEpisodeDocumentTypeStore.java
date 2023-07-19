@@ -52,6 +52,11 @@ public class BackofficeEpisodeDocumentTypeStore implements BackofficeStore<Episo
 
 	@Override
 	public EpisodeDocumentType save(EpisodeDocumentType entity) {
+		if (entity.getConsentId() == null || entity.getConsentId() == 1) {
+			entity.setConsentId(1);
+			entity.setRichTextBody(null);
+		}
+
 		if (entity.getConsentId() != 1
 			&& entity.getId() == null
 			&& repository.existsConsentDocumentById(entity.getConsentId()))

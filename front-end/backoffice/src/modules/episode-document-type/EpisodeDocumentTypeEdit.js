@@ -4,7 +4,9 @@ import {
     SimpleForm,
     required,
     usePermissions,
-    FormDataConsumer
+    FormDataConsumer,
+    RichTextField,
+    RichTextInput
 } from 'react-admin';
 import CustomToolbar from "../components/CustomToolbar";
 import {ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE} from "../roles";
@@ -16,16 +18,15 @@ const EpisodeDocumentTypeEdit = props => {
     return (<Edit {...props} hasEdit={userIsAdminInstitutional}>
         <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true}/>}>
             <TextInput source="description" validate={[required()]} />
+            {userIsAdminInstitutional && <FormDataConsumer>
+                {formDataProps => ((formDataProps.formData.consentId !== ConsentTypes()[0].id) ? <RichTextInput source="richTextBody" label="Detalles del documento" validate={[required()]} fullWidth multiline/> : null)}
+            </FormDataConsumer>}
 
-            <FormDataConsumer>
-                {formDataProps => (<ShowBody {...formDataProps}/>)}
-            </FormDataConsumer>
+            {!userIsAdminInstitutional && <FormDataConsumer>
+                {formDataProps => ((formDataProps.formData.consentId !== ConsentTypes()[0].id) ? <RichTextField source="richTextBody" label="Detalles del documento" validate={[required()]} fullWidth multiline/> : null)}
+            </FormDataConsumer>}
         </SimpleForm>
     </Edit>)
 };
-
-const ShowBody = ({formData}) => {
-    return (formData.consentId !== ConsentTypes()[0].id) ? <TextInput source="richTextBody" label="Detalles del documento" validate={[required()]} fullWidth multiline/> : null
-}
 
 export default EpisodeDocumentTypeEdit;

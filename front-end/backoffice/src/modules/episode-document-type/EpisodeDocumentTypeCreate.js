@@ -16,11 +16,13 @@ const EpisodeDocumentTypeCreate = (props) => {
     return (<Create {...props} hasCreate={userIsAdminInstitutional}>
         <SimpleForm toolbar={<CustomToolbar />} redirect="list">
             <TextInput source="description" label="Tipo de documento" validate={[required()]} />
-            <SelectInput source="consentId" label="Tipo de consentimiento" defaultValue={ConsentTypes()[0].id} choices={ConsentTypes()} />
+            {userIsAdminInstitutional && <SelectInput source="consentId" label="Tipo de consentimiento" defaultValue={ConsentTypes()[0].id} choices={ConsentTypes()} />}
 
-            <FormDataConsumer>
-                {formDataProps => (<RichTextBody {...formDataProps}/>)}
-            </FormDataConsumer>
+            {userIsAdminInstitutional && (
+                <FormDataConsumer>
+                    {formDataProps => (<RichTextBody {...formDataProps}/>)}
+                </FormDataConsumer>)
+            }
         </SimpleForm>
     </Create>)
 };
