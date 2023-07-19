@@ -1,0 +1,92 @@
+{
+  "cubeQuery" : {
+    "measures": [],
+    "timeDimensions": [],
+    "order": [],
+    "dimensions": [
+      "TablaEpidemiologia.id_paciente",
+      "TablaEpidemiologia.tipo_identificacion",
+      "TablaEpidemiologia.identificacion",
+      "TablaEpidemiologia.nombre",
+      "TablaEpidemiologia.apellido",
+      "TablaEpidemiologia.sexo",
+      "TablaEpidemiologia.genero",
+      "TablaEpidemiologia.fecha_nacimiento",
+      "TablaEpidemiologia.provincia_paciente",
+      "TablaEpidemiologia.departamento_paciente",
+      "TablaEpidemiologia.ciudad_paciente",
+      "TablaEpidemiologia.domicilio",
+      "TablaEpidemiologia.edad_paciente_consulta",
+      "TablaEpidemiologia.rango_etario",
+      "TablaEpidemiologia.provincia_institucion",
+      "TablaEpidemiologia.departamento_institucion",
+      "TablaEpidemiologia.ciudad_institucion",
+      "TablaEpidemiologia.nombre_institucion",
+      "TablaEpidemiologia.codigo_sisa",
+      "TablaEpidemiologia.fecha_consulta",
+      "TablaEpidemiologia.semana_epidemiologica_consulta",
+      "TablaEpidemiologia.fecha_comienzo_sintomas",
+      "TablaEpidemiologia.en_embarazo",
+      "TablaEpidemiologia.en_internacion",
+      "TablaEpidemiologia.fecha_internacion",
+      "TablaEpidemiologia.en_uti",
+      "TablaEpidemiologia.fallecido",
+      "TablaEpidemiologia.fecha_alta",
+      "TablaEpidemiologia.concepto_snomed",
+      "TablaEpidemiologia.codigo_cie10",
+      "TablaEpidemiologia.evento_cie10",
+      "TablaEpidemiologia.notificacion_numerica",
+      "TablaEpidemiologia.notificacion_individual"
+    ],
+    "filters": [
+      {
+        "dimension": "TablaEpidemiologia.institucion",
+        "operator": "equals",
+        "values": [
+          "[(${institutionId})]"
+        ]
+      }
+    ]
+  },
+  "chartType": "table",
+  "pivotConfig": {
+    "x": [
+      "TablaEpidemiologia.id_paciente",
+      "TablaEpidemiologia.tipo_identificacion",
+      "TablaEpidemiologia.identificacion",
+      "TablaEpidemiologia.nombre",
+      "TablaEpidemiologia.apellido",
+      "TablaEpidemiologia.sexo",
+      "TablaEpidemiologia.genero",
+      "TablaEpidemiologia.fecha_nacimiento",
+      "TablaEpidemiologia.provincia_paciente",
+      "TablaEpidemiologia.departamento_paciente",
+      "TablaEpidemiologia.ciudad_paciente",
+      "TablaEpidemiologia.domicilio",
+      "TablaEpidemiologia.edad_paciente_consulta",
+      "TablaEpidemiologia.rango_etario",
+      "TablaEpidemiologia.provincia_institucion",
+      "TablaEpidemiologia.departamento_institucion",
+      "TablaEpidemiologia.ciudad_institucion",
+      "TablaEpidemiologia.nombre_institucion",
+      "TablaEpidemiologia.codigo_sisa",
+      "TablaEpidemiologia.fecha_consulta",
+      "TablaEpidemiologia.semana_epidemiologica_consulta",
+      "TablaEpidemiologia.fecha_comienzo_sintomas",
+      "TablaEpidemiologia.en_embarazo",
+      "TablaEpidemiologia.en_internacion",
+      "TablaEpidemiologia.fecha_internacion",
+      "TablaEpidemiologia.en_uti",
+      "TablaEpidemiologia.fallecido",
+      "TablaEpidemiologia.fecha_alta",
+      "TablaEpidemiologia.concepto_snomed",
+      "TablaEpidemiologia.codigo_cie10",
+      "TablaEpidemiologia.evento_cie10",
+      "TablaEpidemiologia.notificacion_numerica",
+      "TablaEpidemiologia.notificacion_individual"
+    ],
+    "y": [
+      "measures"
+    ]
+  }
+}

@@ -52,4 +52,9 @@ export class ReportsService {
 		return this.http.get<UIComponentDto>(url);
 	}
 
+	getEpidemiologicalWeekReport(): Observable<UIComponentDto> {
+		const url = `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/epidemiological_week`;
+		return this.http.get<UIComponentDto>(url);
+	}
+
 }

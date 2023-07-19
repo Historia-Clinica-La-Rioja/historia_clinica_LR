@@ -286,4 +286,15 @@ public class ReportsController {
 		return ResponseEntity.ok(result);
 	}
 
+	@GetMapping("/institution/{institutionId}/epidemiological_week")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_ESTADISTICA, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+	public ResponseEntity<UIComponentDto> getEpidemiologicalWeekReport(@PathVariable(name = "institutionId") Integer institutionId){
+		LOG.debug("Input parameter -> institutionId {}", institutionId);
+		UIComponentDto result = JsonResourceUtils.readJson("extension/reports/epidemiologicalWeekReport.json",
+				new TypeReference<>() {},
+				null
+		);
+		return ResponseEntity.ok(result);
+	}
+
 }

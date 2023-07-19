@@ -194,6 +194,9 @@ export class HomeComponent implements OnInit {
 				case 4:
 					this.reportsService.getHypertensionReport().subscribe(result => this.cubeReportData = result);
 					break;
+				case 5:
+					this.reportsService.getEpidemiologicalWeekReport().subscribe(result => this.cubeReportData = result);
+					break;
 				default:
 			}
 		}
