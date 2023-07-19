@@ -126,6 +126,7 @@ export class UnmergePatientComponent implements OnInit {
 		if (this.patientToAudit?.otherLastNames) {
 			this.infoPatientToAudit += this.patientToAudit.otherLastNames;
 		}
+		this.infoPatientToAudit += " | " + this.getIdentificationType(this.patientToAudit?.identificationTypeId) + " " + this.patientToAudit.identificationNumber;
 	}
 
 	goToBack() {
@@ -145,7 +146,7 @@ export class UnmergePatientComponent implements OnInit {
 			this.validationPatientToUnlink = false;
 			const dialogRef = this.dialog.open(WarningFusionComponent, {
 				data: {
-					title: 'Se desvinculara de ' + this.infoPatientToAudit + ' ID ' + this.patientToAudit.patientId + ' ' + this.getIdentificationType(this.patientToAudit.identificationTypeId) + ' ' + this.patientToAudit.identificationNumber + ' (estado ' + this.getPatientType(this.patientToAudit.typeId) + ') la siguiente información:',
+					title: 'Se desvinculará de ' + this.infoPatientToAudit + ' ID ' + this.patientToAudit.patientId + ' ' + this.getIdentificationType(this.patientToAudit.identificationTypeId) + ' ' + this.patientToAudit.identificationNumber + ' (estado ' + this.getPatientType(this.patientToAudit.typeId) + ') la siguiente información:',
 					cant: this.oldPatientsIds.length,
 					fullName: '-' + (this.patientToUnlink.firstName) + " " + (this.patientToUnlink.middleNames ? this.patientToUnlink.middleNames : '') + ' ' + (this.patientToUnlink.lastName) + " " + (this.patientToUnlink.otherLastNames ? this.patientToUnlink.otherLastNames : ''),
 					identification: '-' + this.getIdentificationType(this.patientToUnlink.identificationTypeId) + ' ' + this.patientToUnlink.identificationNumber,
