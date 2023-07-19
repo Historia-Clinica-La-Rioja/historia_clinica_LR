@@ -713,7 +713,7 @@ const messages = {
         episodedocumenttypes: {
             name: 'Tipos de documentos de episodios',
             fields: {
-                description: 'Descripción'
+                description: 'Descripción',
             }
         },
         pacservers: {
