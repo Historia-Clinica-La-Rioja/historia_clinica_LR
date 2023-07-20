@@ -6,7 +6,7 @@
 </div>
 
 <mat-dialog-content>
-	<form [formGroup]="form" (ngSubmit)="submit()" fxLayout="column">
+	<form [formGroup]="form" fxLayout="column">
 
 		<mat-form-field appearance="outline">
 
@@ -186,7 +186,7 @@
 </mat-dialog-content>
 
 <div actions fxLayoutAlign="end end">
-	<button mat-raised-button color="primary" id="confirm_button">
+	<button mat-raised-button color="primary" id="confirm_button" (click)="submit()">
 		<span [translate]="'buttons.CONFIRM'"></span>
 	</button>
 </div>
