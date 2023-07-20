@@ -62,6 +62,11 @@ export const TableColumns = [
 		cell: (element: CHDocumentSummaryDto) => `${element.encounterType}`,
 	},
 	{
+		columnDef: 'documentType',
+		header: 'Tipo de documento',
+		cell: (element: CHDocumentSummaryDto) => `${element.documentType}`,
+	},
+	{
 		columnDef: 'problem',
 		header: 'Problema',
 		cell: (element: CHDocumentSummaryDto) => `${element.problems}`,

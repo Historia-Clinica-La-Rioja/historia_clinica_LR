@@ -12,7 +12,7 @@ import { MapperService } from '@presentation/services/mapper.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import * as moment from 'moment';
-import { EncounterTypes, DocumentTypes, ROUTE_HISTORY_CLINIC, EncounterType, TableColumns } from '../../constants/print-ambulatoria-masterdata';
+import { EncounterTypes, DocumentTypes, ROUTE_HISTORY_CLINIC, EncounterType, DocumentType, TableColumns } from '../../constants/print-ambulatoria-masterdata';
 import { ECHEncounterType } from "@api-rest/api-model";
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { ContextService } from '@core/services/context.service';
@@ -247,7 +247,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 				institution: data.institution,
 				problems: data.problems,
 				professional: data.professional,
-				documentType: data.documentType
+				documentType: DocumentType[data.documentType]
 			}
 		}
 		return null;
