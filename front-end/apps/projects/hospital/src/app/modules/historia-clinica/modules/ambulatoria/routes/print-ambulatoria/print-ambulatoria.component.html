@@ -150,7 +150,7 @@
 			<p class="last-printed" *ngIf="showLastPrinted">
 				<span>{{'ambulatoria.print.encounter-list.LAST_PRINTED' | translate}}</span>
 				<span>{{userLastDownload}} | </span>
-				<span>{{dateLastDownload}} hs</span>
+				<span>{{dateLastDownload | date: 'dd/MM/yyyy - HH:mm'}} hs</span>
 			</p>
 
 		</div>

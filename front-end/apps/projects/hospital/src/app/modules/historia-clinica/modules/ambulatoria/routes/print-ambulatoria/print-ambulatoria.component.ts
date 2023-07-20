@@ -23,7 +23,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PrintAmbulatoryService } from '@api-rest/services/print-ambulatory.service';
-import { dateTimeDtoToStringDate, mapDateWithHypenToDateWithSlash } from '@api-rest/mapper/date-dto.mapper';
+import { dateTimeDtotoLocalDate, mapDateWithHypenToDateWithSlash } from '@api-rest/mapper/date-dto.mapper';
 import { Observable, take } from 'rxjs';
 
 @Component({
@@ -36,7 +36,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	datePipeFormat = DatePipeFormat;
 	nowDate: string;
 	userLastDownload: string;
-	dateLastDownload: string;
+	dateLastDownload: Date;
 	nameSelfDeterminationFF: boolean;
 
 	patient: PatientBasicData;
@@ -133,7 +133,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 			if (response.user && response.downloadDate) {
 				this.showLastPrinted = true;
 				this.userLastDownload = response.user;
-				this.dateLastDownload = dateTimeDtoToStringDate(response.downloadDate);
+				this.dateLastDownload = dateTimeDtotoLocalDate(response.downloadDate);
 			}
 		});
 	}
