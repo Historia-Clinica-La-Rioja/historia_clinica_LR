@@ -18,8 +18,10 @@
 		<mat-form-field appearance="fill">
 			<mat-label>{{'ambulatoria.print.date-picker.LABEL' | translate}}</mat-label>
 			<mat-date-range-input [formGroup]="dateRangeForm" [rangePicker]="dateRangePicker" [max]="maxDate">
-				<input matStartDate placeholder="{{'ambulatoria.print.date-picker.START' | translate}}" formControlName="start" readonly>
-				<input matEndDate placeholder="{{'ambulatoria.print.date-picker.END' | translate}}"  formControlName="end" readonly>
+				<input matStartDate placeholder="{{'ambulatoria.print.date-picker.START' | translate}}"
+					formControlName="start" readonly>
+				<input matEndDate placeholder="{{'ambulatoria.print.date-picker.END' | translate}}"
+					formControlName="end" readonly>
 			</mat-date-range-input>
 			<mat-hint>{{'ambulatoria.print.date-picker.HINT' | translate}}</mat-hint>
 			<mat-datepicker-toggle matSuffix [for]="dateRangePicker"></mat-datepicker-toggle>
@@ -85,7 +87,12 @@
 
 	<mat-divider></mat-divider>
 
-	<section id="encounterList" *ngIf="showTable">
+	<div class="spinner" *ngIf="loadingTable" fxLayout="column" fxLayoutGap="25px">
+		<mat-spinner color="primary"></mat-spinner>
+		<span class="color-primary">{{ 'ambulatoria.print.SPINNER_DESCRIPTION' | translate }}</span>
+	</div>
+
+	<section id="encounterList">
 		<h3 class="subtitle">{{'ambulatoria.print.encounter-list.TITLE' | translate}}</h3>
 		<div *ngIf="!noInfo else noData">
 			<h4>{{'ambulatoria.print.encounter-list.SUBTITLE' | translate}}</h4>

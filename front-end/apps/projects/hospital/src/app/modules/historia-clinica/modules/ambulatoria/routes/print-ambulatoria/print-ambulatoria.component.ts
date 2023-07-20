@@ -65,7 +65,6 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	allChecked = true;
 	showDocuments = true;
 
-	showTable = true;
 	showLastPrinted = false;
 
 	noInfo = false;
@@ -207,6 +206,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	}
 
 	search(): void {
+		this.hideEncounterListSection();
 		const selectedEncounterTypes: ECHEncounterType[] = [];
 		this.encounterTypes.forEach(elem => {
 			if (this.encounterTypeForm.get(elem.value).value)
@@ -247,7 +247,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 				institution: data.institution,
 				problems: data.problems,
 				professional: data.professional,
-				documentType: undefined
+				documentType: data.documentType
 			}
 		}
 		return null;
