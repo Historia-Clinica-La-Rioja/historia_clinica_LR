@@ -10,7 +10,8 @@ import {
     ReferenceField,
     FunctionField,
     TextField,
-    BooleanField
+    BooleanField,
+    required
 } from 'react-admin';
 import CustomToolbar from '../components/CustomToolbar';
 import { renderPersonData } from "../hierarchicalunits/HierarchicalUnitShow";
@@ -36,7 +37,7 @@ const HierarchicalUnitStaffCreate = props => {
                     filter={{institutionId: props?.location?.state?.record.institutionId}}
                     label="resources.hierarchicalunitstaff.fields.userId"
                 >
-                    <AutocompleteInput optionText={personInputData} optionValue="id" />
+                    <AutocompleteInput optionText={personInputData} optionValue="id" validate={[required()]} />
                 </ReferenceInput>
                 <BooleanInput source="responsible" disabled={false} initialValue={false}/>
                 <ReferenceManyField
