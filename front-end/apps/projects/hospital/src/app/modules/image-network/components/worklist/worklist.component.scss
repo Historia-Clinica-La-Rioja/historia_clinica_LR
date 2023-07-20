@@ -2,8 +2,21 @@
     font-size: 0.9rem;
 }
 
+.grey {
+    color: grey;
+}
+
+.appointment-container {
+    display: flex;
+	align-items: center;
+}
+
+span {
+    text-align: start;
+}
+
 @media (max-width: 960px) {
-    .container {
-        flex-direction: column !important;
+    span {
+        text-align: center;
     }
 }

@@ -14,6 +14,9 @@ import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
+const PAGE_SIZE_OPTIONS = [10];
+const PAGE_MIN_SIZE = 10;
+
 @Component({
 	selector: 'app-worklist-by-informer',
 	templateUrl: './worklist-by-informer.component.html',
@@ -29,6 +32,9 @@ export class WorklistByInformerComponent implements OnInit {
 	identificationTypes: IdentificationTypeDto[] = [];
 	worklistStatus: MasterDataDto[] = [];
 	routePrefix: string;
+
+	pageSlice = [];
+	pageSizeOptions = PAGE_SIZE_OPTIONS;
 
 	readonly COMPLETED = InformerStatus.COMPLETED;
 	readonly PENDING = InformerStatus.PENDING;
@@ -56,6 +62,7 @@ export class WorklistByInformerComponent implements OnInit {
 		});
 		this.worklistService.getByModalityAndInstitution().subscribe((worklist: WorklistDto[]) => {
 			this.worklists = this.mapToWorklist(worklist);
+			this.pageSlice = this.worklists.slice(0, PAGE_MIN_SIZE);
 		});
 	}
 
@@ -64,6 +71,7 @@ export class WorklistByInformerComponent implements OnInit {
 		this.modalityId = modalitySelected.value;
 		this.worklistService.getByModalityAndInstitution(this.modalityId).subscribe((worklist: WorklistDto[]) => {
 			this.worklists = this.mapToWorklist(worklist);
+			this.pageSlice = this.worklists.slice(0, PAGE_MIN_SIZE);
 		});
 	}
 
@@ -77,6 +85,7 @@ export class WorklistByInformerComponent implements OnInit {
 		this.modalityId = null;
 		this.worklistService.getByModalityAndInstitution().subscribe((worklist: WorklistDto[]) => {
 			this.worklists = this.mapToWorklist(worklist);
+			this.pageSlice = this.worklists.slice(0, PAGE_MIN_SIZE);
 		});
 	}
 
@@ -84,8 +93,8 @@ export class WorklistByInformerComponent implements OnInit {
 		return worklist.map(w => {
 			return {
 				patientInformation: {
-					fullName: w.patientFullName,
-					identification: `${this.getIdentificationType(w.patientIdentificationTypeId)} ${w.patientIdentificationNumber} ID - ${w.patientId}`,
+					fullName: this.capitalizeName(w.patientFullName),
+					identification: `${this.getIdentificationType(w.patientIdentificationTypeId)} ${w.patientIdentificationNumber} - ID ${w.patientId}`,
 				},
 				state: mapToState(w.statusId),
 				date: dateTimeDtotoLocalDate(w.actionTime),
@@ -94,7 +103,27 @@ export class WorklistByInformerComponent implements OnInit {
 		})
 	}
 
+	private capitalizeName(name: string): string {
+		let capitalizedName = '';
+		name.split(" ").map(name => capitalizedName += this.capitalizeWords(name) + " ")
+		return capitalizedName;
+	}
+
+	private capitalizeWords(sentence: string) {
+        return sentence ? sentence
+          .toLowerCase()
+          .split(' ')
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ') : "";
+    }
+
 	private getIdentificationType(id: number): string {
 		return this.identificationTypes.find(identificationType => identificationType.id === id).description
+	}
+
+	onPageChange($event: any) {
+		const page = $event;
+		const startPage = page.pageIndex * page.pageSize;
+		this.pageSlice = this.worklists.slice(startPage, $event.pageSize + startPage);
 	}
 }

@@ -1,45 +1,52 @@
 <section class="worklist-section">
     <mat-card class="main-card">
         <h2 class="page-title">{{'image-network.worklist.WORKLIST_BY_INFORMER' | translate }}</h2>
-        <form [formGroup]="modalitiesForm">
+        <form [formGroup]="modalitiesForm" name="modalities-form">
             <mat-form-field class="dropdown-container" appearance="outline">
                 <mat-label [translate]="'image-network.worklist.MODALITIES'"></mat-label>
-                <mat-select id="modalities" (selectionChange)="setWorklist($event)" fxFlex="98%" formControlName="modalities">
+                <mat-select id="modalities" (selectionChange)="setWorklist($event)" fxFlex="98%"
+                    formControlName="modalities">
                     <mat-option *ngFor="let modality of modalities$ | async" [value]="modality.id">
                         {{modality.description}}
                     </mat-option>
                 </mat-select>
-                <button *ngIf="modalitiesForm.value.modalities" mat-button matSuffix color="warn" mat-icon-button (click)="cleanInput(); $event.stopPropagation()">
+                <button *ngIf="modalitiesForm.value.modalities" mat-button matSuffix color="warn" mat-icon-button
+                    (click)="cleanInput(); $event.stopPropagation()">
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
         </form>
         <mat-card class="worklist-card">
             <mat-list class="mat-form-field-wrapper" *ngIf="worklists.length else noInfo">
-                <div fxLayout="row" *ngFor="let worklist of worklists" fxLayout.xs="column">
-                    <mat-list-item class="detail" fxFlex="100%">
-                        <app-worklist fxLayout="row" fxLayoutAlign="space-between end" fxFlex="90%" fxLayoutGap="10px"
-                            fxLayout.xs="column" fxLayoutGap.xs="10px" [worklist]="worklist">
-                        </app-worklist>
+                <div *ngFor="let worklist of pageSlice" fxLayout="column">
+                    <mat-list-item class="appointment-detail">
+                        <div data-id="study-card" fxFlex="100" fxLayout.lt-md="column" fxLayoutAlign="space-between center" style="gap: 10px;">
+                            <app-worklist fxLayout="row" fxLayoutAlign="space-between end" fxFlex fxLayoutGap="10px" [worklist]="worklist">
+                            </app-worklist>
 
-                        <button id="complete_study" *ngIf="worklist.state.id == PENDING else studyCompleted"
-                            mat-flat-button color="primary" mat-button fxFlex="13%"
-                            (click)="goToDetails(worklist.appointmentId)">
-                            {{ 'image-network.worklist.FINISH' | translate | uppercase }}
-                        </button>
-                        <ng-template #studyCompleted>
-                            <button id="view_details" *ngIf="worklist.state.id == COMPLETED" mat-stroked-button
-                                color="primary" mat-button fxFlex="13%" (click)="goToDetails(worklist.appointmentId)">
-                                {{ 'image-network.worklist.VIEW_DETAILS' | translate | uppercase }}
+                            <button id="complete_study" class="btn"
+                                *ngIf="worklist.state.id == PENDING else studyCompleted" mat-flat-button color="primary"
+                                mat-button (click)="goToDetails(worklist.appointmentId)">
+                                {{ 'image-network.worklist.FINISH' | translate | uppercase }}
                             </button>
-                        </ng-template>
-
+                            <ng-template #studyCompleted>
+                                <button id="view_details" class="btn" *ngIf="worklist.state.id == COMPLETED"
+                                    mat-stroked-button color="primary" mat-button
+                                    (click)="goToDetails(worklist.appointmentId)">
+                                    {{ 'image-network.worklist.VIEW_DETAILS' | translate | uppercase }}
+                                </button>
+                            </ng-template>
+                        </div>
                     </mat-list-item>
+                    <mat-divider></mat-divider>
                 </div>
             </mat-list>
             <ng-template #noInfo>
                 <app-no-data></app-no-data>
             </ng-template>
+            <mat-paginator #paginator *ngIf="(worklists.length !== 0)" [length]="worklists.length"
+                        [pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)">
+            </mat-paginator>
         </mat-card>
     </mat-card>
 </section>

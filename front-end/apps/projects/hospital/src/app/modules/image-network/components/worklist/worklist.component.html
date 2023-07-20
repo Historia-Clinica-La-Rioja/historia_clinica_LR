@@ -1,8 +1,7 @@
-<div fxLayout="row" fxLayoutAlign="space-between center" fxFlex="100" fxLayout.xs="column" fxLayoutGap.xs="10px"
-    class="container">
+<div class="appointment-container" fxLayout="row" fxLayoutAlign="space-between center" fxFlex="100" fxLayout.lt-md="column" fxLayoutGap.lt-md="10px">
     <div fxLayout="column" fxLayoutAlign="start" fxFlex.gt-sm="55">
-        <span class="patient-name naming">{{worklist.patientInformation.fullName}}</span>
-        <span class="patient-identification grey smaller-font">
+        <span data-id="patient-name">{{worklist.patientInformation.fullName}}</span>
+        <span data-id="patient-identification" class="patient-identification grey smaller-font">
             {{worklist.patientInformation.identification}}
         </span>
     </div>
@@ -10,8 +9,7 @@
         [color]="worklist.state.color">
     </app-colored-label>
     <div class="smaller-font grey" fxLayout="column" fxLayoutAlign="start" fxFlex.gt-sm="15">
-        <span>{{ datePipe.transform(worklist.date, datePipeFormat.SHORT_DATE)}}</span>
-        <span>{{ datePipe.transform(worklist.date, datePipeFormat.SHORT_TIME)}}hs</span>
+        <span data-id="date">{{ datePipe.transform(worklist.date, datePipeFormat.SHORT_DATE)}}</span>
+        <span data-id="time">{{ datePipe.transform(worklist.date, datePipeFormat.SHORT_TIME)}}hs</span>
     </div>
-    <mat-divider></mat-divider>
 </div>
