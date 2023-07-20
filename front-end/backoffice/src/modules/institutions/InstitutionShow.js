@@ -118,14 +118,14 @@ const InstitutionShow = props => {
                 </ReferenceManyField>
                 {permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <SectionTitle label="resources.institutions.fields.hierarchicalUnits" />}
                 {permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <CreateHierarchicalUnit />}
-                {permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <HierarchicalUnitShow {...props} />}
+                {permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <HierarchicalUnitTabs {...props} />}
 
             </SimpleShowLayout>
         </Show>
     );
 }
 
-const HierarchicalUnitShow = (props) => (
+const HierarchicalUnitTabs = (props) => (
     <Fragment>
         <TabbedShowLayout>
             <Tab label="Lista" id="lista">
@@ -139,4 +139,4 @@ const HierarchicalUnitShow = (props) => (
 )
 
 export default InstitutionShow;
-export { CreateHierarchicalUnit, UserIsInstitutionalAdmin, ShowHierarchicalUnits, UNIDADES_JEARQUICAS_FF };
+export { CreateHierarchicalUnit, UserIsInstitutionalAdmin, HierarchicalUnitTabs, UNIDADES_JEARQUICAS_FF };
