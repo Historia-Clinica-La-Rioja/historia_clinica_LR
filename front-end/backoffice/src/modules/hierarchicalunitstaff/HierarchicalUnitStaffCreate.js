@@ -38,7 +38,7 @@ const HierarchicalUnitsByInstitutionId = ({formData, ...rest}) => {
             label="resources.hierarchicalunitstaff.fields.hierarchicalUnitId"
             filter={{institutionId: formData.institutionId}}
         >
-            <AutocompleteInput optionText="alias" optionValue="id"/>
+            <AutocompleteInput optionText="alias" optionValue="id" validate={required()}/>
         </ReferenceInput>
     )
 }
@@ -60,7 +60,7 @@ const FormFromUser = (props) => {
                     sort={{ field: 'name', order: 'ASC' }}
                     filterToQuery={searchText => ({name: searchText})}
                 >
-                    <AutocompleteInput optionText="name" optionValue="id"/>
+                    <AutocompleteInput optionText="name" optionValue="id" validate={required()}/>
                 </ReferenceInput>
                 <FormDataConsumer>
                     {formDataProps => (
