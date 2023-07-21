@@ -106,6 +106,7 @@ export class ProfileComponent implements OnInit {
 	institutionName: string;
 	license: string = '';
 	hasPhysicalDischarge = false;
+	huFF = false;
 	private healthcareProfessionalId: number;
 	private institution: number[] = [];
 	private rolesAdmin = false;
@@ -170,6 +171,7 @@ export class ProfileComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_CREACION_USUARIOS).subscribe(isOn => this.createUsersIsEnable = isOn);
 		this.featureFlagService.isActive(AppFeature.OCULTAR_LISTADO_PROFESIONES_WEBAPP).subscribe(isOn => this.hideProfessions = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_UNIDADES_JERARQUICAS_EN_DESARROLLO).subscribe(isOn => this.huFF = isOn);
 	}
 
 	ngOnInit(): void {

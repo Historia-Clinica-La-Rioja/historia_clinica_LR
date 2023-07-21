@@ -75,7 +75,7 @@ export class EditHierarchicalUnitsComponent implements OnInit {
 						this.dialog.close(success);
 					}
 				},
-				error: () => this.snackBarService.showError('pacientes.edit_hierarchical_units.messages.ERROR')
+				error: () => this.snackBarService.showError('pacientes.edit_hierarchical_units.message.ERROR')
 			});
 		}
 		else {

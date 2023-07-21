@@ -169,12 +169,14 @@
 									</div>
 								</div>
 
-								<ng-container *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']">
-									<mat-divider inset></mat-divider>
-									<div fxLayout="column" fxLayoutGap="10px">
-										<app-hierarchical-units [enable]="userData?.enable" [userId]="userData?.id" [hasRoles]="!!rolesByUser.length"></app-hierarchical-units>
-									</div>
-								</ng-container>							
+								<div *ngIf="huFF">
+									<ng-container *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']">
+										<mat-divider inset></mat-divider>
+										<div fxLayout="column" fxLayoutGap="10px">
+											<app-hierarchical-units [enable]="userData?.enable" [userId]="userData?.id" [hasRoles]="!!rolesByUser.length"></app-hierarchical-units>
+										</div>
+									</ng-container>							
+								</div>						
 							</div>
 						</mat-card-content>
 					</mat-card>

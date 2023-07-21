@@ -22,7 +22,7 @@ export class HierarchicalUnitsComponent implements OnChanges {
 	) { }
 
 	ngOnChanges(changes: SimpleChanges) {
-		if (changes.userId?.currentValue)
+		if (changes.userId?.currentValue || this.enable)
 			this.hierarchicalUnitStaffService.getByUserId(this.userId).subscribe(hu => this.personHU = hu);
 	}
 
