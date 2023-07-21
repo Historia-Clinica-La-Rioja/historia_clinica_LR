@@ -38,4 +38,24 @@ public class ListTranscribedDiagnosticReportRepositoryImpl implements ListTransc
         List<Object[]> result = query.getResultList();
         return result;
     }
+	@Transactional(readOnly = true)
+	public List<Object[]> getListTranscribedOrder(Integer patientId) {
+		LOG.debug("Input parameters -> patientId {}", patientId);
+
+		String sqlString = "SELECT aoi.completed, tsr.healthcare_professional_name, tsr.creation_date, aoi.image_id, aoi.document_id, s.pt AS Spt, s2.pt, df.file_name, d.status_id  \n" +
+				"FROM {h-schema}appointment_order_image aoi\n" +
+				"JOIN  {h-schema}transcribed_service_request tsr on tsr .id = aoi.transcribed_order_id\n" +
+				"JOIN {h-schema}diagnostic_report dr ON dr.id = tsr.study_id\n" +
+				"JOIN {h-schema}health_condition hc on hc.id =dr.health_condition_id \n" +
+				"JOIN {h-schema}snomed s2 on s2.id =hc.snomed_id \n" +
+				"JOIN {h-schema}snomed s ON s.id = dr.snomed_id\n" +
+				"LEFT JOIN {h-schema}document_file df  ON df.id = aoi.document_id\n" +
+				"LEFT JOIN {h-schema}document d  ON d.id = aoi.document_id\n" +
+				"WHERE aoi.order_id is null\n" +
+				"and tsr.patient_id = :patientId";
+		Query query = entityManager.createNativeQuery(sqlString);
+		query.setParameter("patientId", patientId);
+		List<Object[]> result = query.getResultList();
+		return result;
+	}
 }
