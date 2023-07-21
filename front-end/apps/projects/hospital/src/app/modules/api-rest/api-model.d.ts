@@ -3413,6 +3413,15 @@ export interface StudyPacAssociationDto {
     studyInstanceUID: string;
 }
 
+export interface StudyWithoutOrderReportInfoDto {
+    hceDocumentDataDto: HCEDocumentDataDto;
+    imageId: string;
+    seeStudy: boolean;
+    snomed: string;
+    status: boolean;
+    viewReport: boolean;
+}
+
 export interface TerminologyCSVDto {
     ecl: SnomedECL;
     url: string;
