@@ -10,10 +10,15 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.StudyWithoutOrderReportInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedOrderReportInfoBo;
 
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyWithoutOrderReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.TranscribedOrderReportInfoDto;
 
+
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyWithoutOrderReportInfoMapper;
+import net.pladema.clinichistory.requests.servicerequests.service.ListStudyWithoutOrderReportInfoService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,10 +113,14 @@ public class ServiceRequestController {
     private final ListDiagnosticReportInfoService listDiagnosticReportInfoService;
 
 	private final ListTranscribedDiagnosticReportInfoService listTranscribedDiagnosticReportInfoService;
+
+	private final ListStudyWithoutOrderReportInfoService listStudyWithoutOrderReportInfoService;
     private final DiagnosticReportInfoMapper diagnosticReportInfoMapper;
 
 	private final UploadTranscribedOrderFileService uploadTranscribedOrderFileService;
 	private final TranscribedDiagnosticReportInfoMapper transcribedDiagnosticReportInfoMapper;
+
+	private final StudyWithoutOrderReportInfoMapper studyWithoutOrderReportInfoMapper;
     private final DeleteDiagnosticReportService deleteDiagnosticReportService;
     private final CompleteDiagnosticReportService completeDiagnosticReportService;
 
@@ -148,7 +157,8 @@ public class ServiceRequestController {
 									PdfService pdfService, GetServiceRequestInfoService getServiceRequestInfoService,
 									HospitalApiPublisher hospitalApiPublisher, FeatureFlagsService featureFlagsService,
 									DocumentAuthorFinder documentAuthorFinder,
-									SharedInstitutionPort sharedInstitutionPort, ExistCheckDiagnosticReportService existCheckDiagnosticReportService) {
+									SharedInstitutionPort sharedInstitutionPort, ExistCheckDiagnosticReportService existCheckDiagnosticReportService,
+									ListStudyWithoutOrderReportInfoService listStudyWithoutOrderReportInfoService, StudyWithoutOrderReportInfoMapper studyWithoutOrderReportInfoMapper) {
 		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
 		this.createServiceRequestService = createServiceRequestService;
 		this.createTranscribedServiceRequestService = createTranscribedServiceRequestService;
@@ -177,6 +187,8 @@ public class ServiceRequestController {
 		this.authorFromDocumentFunction = (Long documentId) -> documentAuthorFinder.getAuthor(documentId);
         this.sharedInstitutionPort = sharedInstitutionPort;
 		this.existCheckDiagnosticReportService = existCheckDiagnosticReportService;
+		this.listStudyWithoutOrderReportInfoService = listStudyWithoutOrderReportInfoService;
+		this.studyWithoutOrderReportInfoMapper = studyWithoutOrderReportInfoMapper;
 	}
 
     @PostMapping
@@ -377,6 +389,25 @@ public class ServiceRequestController {
 		List<TranscribedOrderReportInfoDto> result = resultService.stream()
 				.map(transcribedOrderReportInfoBo -> {
 					return transcribedDiagnosticReportInfoMapper.parseToDto(transcribedOrderReportInfoBo);
+				})
+				.collect(Collectors.toList());
+
+		LOG.trace(OUTPUT, result);
+		return result;
+	}
+
+	@GetMapping("/studyWithoutOrder")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	public List<StudyWithoutOrderReportInfoDto> getListStudyWithoutOrder(@PathVariable(name = "institutionId") Integer institutionId,
+																		 @PathVariable(name = "patientId") Integer patientId) {
+		LOG.debug("Input parameters -> patientId {}) {}",
+				patientId);
+
+		List<StudyWithoutOrderReportInfoBo> resultService = listStudyWithoutOrderReportInfoService.execute(patientId);
+
+		List<StudyWithoutOrderReportInfoDto> result = resultService.stream()
+				.map(studyWithoutOrderReportInfoBo -> {
+					return studyWithoutOrderReportInfoMapper.parseTo(studyWithoutOrderReportInfoBo);
 				})
 				.collect(Collectors.toList());
 
