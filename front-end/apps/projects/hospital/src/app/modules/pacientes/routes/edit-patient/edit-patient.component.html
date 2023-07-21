@@ -347,6 +347,9 @@
 					<mat-form-field appearance="outline">
 						<input id="addressNumber" name="addressNumber" formControlName="addressNumber" maxlength="5"
 							placeholder="{{'pacientes.form.ADDRESS_NUMBER' | translate}}" matInput>
+						<mat-error *ngIf="hasError(form, 'pattern', 'addressNumber')"
+							[translate]="'forms.FORMAT_NUMERIC'">
+						</mat-error>
 					</mat-form-field>
 
 					<mat-form-field appearance="outline">

@@ -201,7 +201,7 @@ export class EditPatientComponent implements OnInit {
 								}
 								this.form.setControl('addressCityId', new UntypedFormControl(personInformationData.cityId));
 								this.form.setControl('addressStreet', new UntypedFormControl(personInformationData.street));
-								this.form.setControl('addressNumber', new UntypedFormControl(personInformationData.number));
+								this.form.setControl('addressNumber', new UntypedFormControl(personInformationData.number, [Validators.pattern(PATTERN_INTEGER_NUMBER)]));
 								this.form.setControl('addressFloor', new UntypedFormControl(personInformationData.floor));
 								this.form.setControl('addressApartment', new UntypedFormControl(personInformationData.apartment));
 								this.form.setControl('addressQuarter', new UntypedFormControl(personInformationData.quarter));
