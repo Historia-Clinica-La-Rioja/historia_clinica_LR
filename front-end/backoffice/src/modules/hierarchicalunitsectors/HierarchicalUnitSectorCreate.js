@@ -19,7 +19,7 @@ const HierarchicalUnitSectorCreate = props => {
                     reference="sectors"
                     sort={{ field: 'description', order: 'ASC' }}
                     label="resources.hierarchicalunitsectors.fields.sectorId"
-                    filter={{ institutionId: props.insitutionId, hierarchicalUnitId: props.hierarchicalUnitId}}
+                    filter={{ institutionId: props?.location?.state?.record.institutionId }}
                 >
                     <SelectInput optionText="description" optionValue="id"/>
                 </ReferenceInput>

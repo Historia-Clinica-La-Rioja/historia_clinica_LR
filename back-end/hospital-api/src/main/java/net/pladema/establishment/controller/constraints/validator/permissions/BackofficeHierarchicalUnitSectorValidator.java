@@ -42,12 +42,14 @@ public class BackofficeHierarchicalUnitSectorValidator implements BackofficePerm
 	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertCreate(HierarchicalUnitSector entity) {
 		assertNotExists(entity);
+		assertBelongToSameInstitution(entity);
 	}
 
 	@Override
 	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertUpdate(Integer id, HierarchicalUnitSector entity) {
 		assertNotExists(entity);
+		assertBelongToSameInstitution(entity);
 	}
 
 	@Override
@@ -70,6 +72,11 @@ public class BackofficeHierarchicalUnitSectorValidator implements BackofficePerm
 	private void assertNotExists(HierarchicalUnitSector entity){
 		if(repository.existsByHierarchicalUnitAndSector(entity.getHierarchicalUnitId(), entity.getSectorId()))
 			throw new BackofficeValidationException("hierarchical-unit.sector.exists");
+	}
+
+	private void assertBelongToSameInstitution(HierarchicalUnitSector entity){
+		if(!repository.belongToSameInstitution(entity.getHierarchicalUnitId(), entity.getSectorId()))
+			throw new BackofficeValidationException("hierarchical-unit.sector.different.institution");
 	}
 
 }

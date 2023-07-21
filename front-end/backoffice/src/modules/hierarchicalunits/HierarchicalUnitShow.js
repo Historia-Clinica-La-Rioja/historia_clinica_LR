@@ -115,7 +115,7 @@ const HierarchicalUnitSectors = (props) => {
                 >
                     <Datagrid rowClick={show}
                               empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin sectores asociados</p>}>
-                        <ReferenceField source="sectorId" label="" reference="sectors" link={false}>
+                        <ReferenceField source="sectorId" label="resources.sectors.fields.description" reference="sectors" link={false}>
                             <TextField source="description"/>
                         </ReferenceField>
                         <DeleteButton redirect={false} disabled={!UserIsInstitutionalAdmin()}/>

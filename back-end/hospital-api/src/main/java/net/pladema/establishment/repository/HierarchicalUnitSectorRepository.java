@@ -28,4 +28,10 @@ public interface HierarchicalUnitSectorRepository extends SGXAuditableEntityJPAR
 			"AND hus.deleteable.deleted = false")
 	List<Integer> getHierarchicalUnitsBySectorId(@Param("sectorId") Integer sectorId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT case when (hc.institutionId = s.institutionId) then TRUE else FALSE end " +
+			"FROM HierarchicalUnit hc, Sector s " +
+			"WHERE hc.id = :hierarchicalUnitId AND s.id = :sectorId")
+	boolean belongToSameInstitution (@Param("hierarchicalUnitId") Integer hierarchicalUnitId, @Param("sectorId") Integer sectorId);
+
 }
