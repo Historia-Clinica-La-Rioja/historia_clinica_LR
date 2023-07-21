@@ -1,7 +1,11 @@
 package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
+import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedOrderReportInfoBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +36,13 @@ public class ListTranscribedDiagnosticReportInfoServiceImpl implements ListTrans
         return result;
     }
 
+	public List<TranscribedOrderReportInfoBo> getListTranscribedOrder(Integer patientId) {
+		List<TranscribedOrderReportInfoBo> result = listTranscribedDiagnosticReportRepository.getListTranscribedOrder(patientId).stream()
+				.map(this::createTranscribedDiagnosticReportInfoBo)
+				.collect(Collectors.toList());
+		LOG.trace("OUTPUT List -> {}", result);
+		return result;
+	}
     private TranscribedDiagnosticReportBo createDiagnosticReportBo(Object[] row) {
         LOG.debug("Input parameters -> row {}", row);
         TranscribedDiagnosticReportBo result = new TranscribedDiagnosticReportBo();
@@ -41,4 +52,18 @@ public class ListTranscribedDiagnosticReportInfoServiceImpl implements ListTrans
         LOG.trace(OUTPUT, result);
         return result;
     }
+	private TranscribedOrderReportInfoBo createTranscribedDiagnosticReportInfoBo(Object [] row){
+		LOG.debug("Input parameters -> row {}", row);
+		TranscribedOrderReportInfoBo result = new TranscribedOrderReportInfoBo();
+		result.setStatus((Boolean) row[0]);
+		result.setProfessionalName((String)row[1]);
+		result.setCreationDate(((Timestamp)row[2]).toLocalDateTime());
+		result.setImageId((String)row[3]);
+		result.setDocumentId((BigInteger)row[4]);
+		result.setSnomed((String)row[5]);
+		result.setHealthCondition((String)row[6]);
+		result.setFileName((String)row[7]);
+		result.setDocumentStatus((String)row[8]);
+		return result;
+	}
 }

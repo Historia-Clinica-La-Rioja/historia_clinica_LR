@@ -3469,6 +3469,18 @@ export interface TranscribedDiagnosticReportInfoDto {
     studyName: string;
 }
 
+export interface TranscribedOrderReportInfoDto {
+    creationDate: Date;
+    hceDocumentDataDto: HCEDocumentDataDto;
+    healthCondition: string;
+    imageId: string;
+    professionalName: string;
+    seeStudy: boolean;
+    snomed: string;
+    status: boolean;
+    viewReport: boolean;
+}
+
 export interface TranscribedPrescriptionDto extends Serializable {
     healthCondition: SnomedDto;
     healthcareProfessionalName: string;
