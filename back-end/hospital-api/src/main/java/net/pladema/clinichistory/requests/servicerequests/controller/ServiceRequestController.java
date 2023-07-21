@@ -10,6 +10,11 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedOrderReportInfoBo;
+
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.TranscribedOrderReportInfoDto;
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -359,6 +364,25 @@ public class ServiceRequestController {
         LOG.trace(OUTPUT, result);
         return result;
     }
+
+	@GetMapping("/studyTranscribedOrder")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	public List<TranscribedOrderReportInfoDto> getListStudy(@PathVariable(name = "institutionId") Integer institutionId,
+													  @PathVariable(name = "patientId") Integer patientId) {
+		LOG.debug("Input parameters -> patientId {}) {}",
+				patientId);
+
+		List<TranscribedOrderReportInfoBo> resultService = listTranscribedDiagnosticReportInfoService.getListTranscribedOrder(patientId);
+
+		List<TranscribedOrderReportInfoDto> result = resultService.stream()
+				.map(transcribedOrderReportInfoBo -> {
+					return transcribedDiagnosticReportInfoMapper.parseToDto(transcribedOrderReportInfoBo);
+				})
+				.collect(Collectors.toList());
+
+		LOG.trace(OUTPUT, result);
+		return result;
+	}
 
 	@GetMapping("/transcribedOrders")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES')")
