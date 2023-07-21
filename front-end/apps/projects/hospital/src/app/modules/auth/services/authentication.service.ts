@@ -17,15 +17,10 @@ export class AuthenticationService {
 		private readonly dialogRef: MatDialog,
 	) { }
 
-	logout() {
-		this.authService.logout();
+	logout(): Observable<any> {
 		this.loggedUserService.reset();
 		this.closeModals();
-		this.router.navigate(['/auth/login'], {
-			queryParams: {
-				returnUrl: this.router.routerState.snapshot.url
-			}
-		});
+		return this.authService.logout();
 	}
 
 	closeModals() {
