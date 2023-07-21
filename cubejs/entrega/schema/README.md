@@ -1,1 +1,0 @@
-Colocar en esta carpeta los archivos js de cube
