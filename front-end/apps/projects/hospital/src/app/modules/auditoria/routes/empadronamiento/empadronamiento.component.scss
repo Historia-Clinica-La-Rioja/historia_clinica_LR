@@ -34,3 +34,7 @@ form {
 		width: 40%;
 	}
 }
+
+.content-patient-filter{
+	@include mat-form-field-background-white;
+}

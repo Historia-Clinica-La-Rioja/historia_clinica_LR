@@ -154,7 +154,7 @@ export class CardPatientComponent {
 				display: 'ambulatoria.card-patient.VIEW_BUTTON',
 				do: `${this.routePrefix}paciente/profile/${idPatient}`
 			});
-		if (auditor)
+		if (auditor && !this.router.url.includes(ROUTE_EMPADRONAMIENTO) )
 			valueActions.push({
 				display: 'pacientes.audit.LABEL_BUTTON_AUDIT',
 				do: `${this.routePrefix}auditoria/desvincular-pacientes/${idPatient}`

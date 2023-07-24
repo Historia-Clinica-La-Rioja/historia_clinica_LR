@@ -211,11 +211,11 @@
 					<span>{{ 'pacientes.audit.TITLE_MARKED_FOR_AUDIT' | translate | uppercase }}</span>
 				</ng-template>
 				<ng-template matTabContent>
-					<div fxLayout="row">
-						<mat-form-field appearance="outline" class="serch">
+					<div fxLayout="row" class="content-patient-filter">
+						<mat-form-field appearance="outline" class="serch" >
 							<mat-label>{{'internaciones.internment-patient-card.SEARCH' |
 								translate}}</mat-label>
-							<input matInput (keyup)="applyFilter($event)">
+							<input matInput id="patient-filter" (keyup)="applyFilter($event)">
 							<mat-icon matSuffix>search</mat-icon>
 						</mat-form-field>
 					</div>

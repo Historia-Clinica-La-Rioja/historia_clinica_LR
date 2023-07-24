@@ -1,10 +1,10 @@
-<div fxLayout="row">
-	<mat-form-field appearance="outline" class="serch">
-		<mat-label>{{'internaciones.internment-patient-card.SEARCH' |
-			translate}}</mat-label>
-		<input matInput (keyup)="applyFilter($event)">
-		<mat-icon matSuffix>search</mat-icon>
-	</mat-form-field>
+<div fxLayout="row" class="content-patient-filter">
+		<mat-form-field appearance="outline" class="serch" >
+			<mat-label>{{'internaciones.internment-patient-card.SEARCH' |
+				translate}}</mat-label>
+			<input matInput id="patient-filter" (keyup)="applyFilter($event)">
+			<mat-icon matSuffix>search</mat-icon>
+		</mat-form-field>
 </div>
 
 <mat-card *ngIf="pageSlice?.length else noInfo">

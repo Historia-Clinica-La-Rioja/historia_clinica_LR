@@ -45,7 +45,7 @@
 						<span>{{patient.numberOfMergedPatients}} {{'pacientes.audit.MERGERS' | translate}}</span>
 					</div>
 
-					<button id="view-button" *ngIf="patient?.cardModel.ranking"
+					<button id="view-button" *ngIf="patient?.cardModel.ranking || patient?.cardModel.auditType && !patient?.numberOfMergedPatients"
 						mat-stroked-button color="primary" fxFlex="10%" class="button" (click)="openDialog(patient.cardModel.id)">
 						<span>{{ 'ambulatoria.card-patient.VIEW_BUTTON' | translate | uppercase}}</span>
 					</button>
