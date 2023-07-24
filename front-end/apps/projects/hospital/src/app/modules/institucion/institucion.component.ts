@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 
 import { ContextService } from '@core/services/context.service';
 import { PermissionsService } from '@core/services/permissions.service';
@@ -54,7 +54,7 @@ export class InstitucionComponent implements OnInit {
 
 	ngOnInit(): void {
 
-		this.activatedRoute.paramMap.subscribe(params => {
+		this.activatedRoute.paramMap.pipe(take(1)).subscribe(params => {
 			const institutionId = Number(params.get('id'));
 			this.contextService.setInstitutionId(institutionId);
 			this.institutionHomeLink = ['/', AppRoutes.Institucion, this.contextService.institutionId];
