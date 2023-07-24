@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadExternalCause;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadHealthcareProfessionals;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadObstetricEvent;
 
 import org.slf4j.Logger;
@@ -68,6 +69,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
 	private final LoadObstetricEvent loadObstetricEvent;
 
+	private final LoadHealthcareProfessionals loadHealthcareProfessionals;
+
     public DocumentFactoryImpl(DocumentService documentService,
                                CreateDocumentFile createDocumentFile,
                                NoteService noteService,
@@ -82,7 +85,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
 							   FeatureFlagsService featureFlagsService,
 							   PatientStorage patientStorage,
 							   LoadExternalCause loadExternalCause,
-							   LoadObstetricEvent loadObstetricEvent) {
+							   LoadObstetricEvent loadObstetricEvent,
+							   LoadHealthcareProfessionals loadHealthcareProfessionals) {
         this.documentService = documentService;
         this.createDocumentFile = createDocumentFile;
         this.noteService = noteService;
@@ -98,6 +102,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
 		this.patientStorage = patientStorage;
 		this.loadExternalCause = loadExternalCause;
 		this.loadObstetricEvent = loadObstetricEvent;
+		this.loadHealthcareProfessionals = loadHealthcareProfessionals;
     }
 
     @Override
@@ -145,7 +150,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
 		loadExternalCause.run(doc.getId(), Optional.ofNullable(documentBo.getExternalCause()));
 		loadObstetricEvent.run(doc.getId(), Optional.ofNullable(documentBo.getObstetricEvent()));
-
+		loadHealthcareProfessionals.run(doc.getId(), documentBo.getHealthcareProfessionals());
         if (createFile)
             generateDocument(documentBo);
         return doc.getId();

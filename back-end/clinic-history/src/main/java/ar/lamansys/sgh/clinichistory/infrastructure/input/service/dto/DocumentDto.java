@@ -5,6 +5,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.Anthropom
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DentalActionDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosisDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosticReportDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DocumentHealthcareProfessionalDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DocumentObservationsDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthHistoryConditionDto;
@@ -73,5 +74,7 @@ public class DocumentDto {
     private List<DentalActionDto> dentalActions  = new ArrayList<>();
 
     private DateDto performedDate;
+
+	private List<DocumentHealthcareProfessionalDto> healthcareProfessionals = new ArrayList<>();
 
 }

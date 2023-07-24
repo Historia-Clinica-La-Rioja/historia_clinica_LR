@@ -11,6 +11,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DocumentHealthcareProfessionalBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
@@ -155,5 +156,7 @@ public interface IDocumentBo {
     default List<ConclusionBo> getConclusions() {
         return Collections.emptyList();
     }
+
+	default List<DocumentHealthcareProfessionalBo> getHealthcareProfessionals() { return Collections.emptyList(); }
 
 }

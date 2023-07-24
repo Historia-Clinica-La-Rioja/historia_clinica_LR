@@ -1,6 +1,38 @@
 package ar.lamansys.sgh.clinichistory.application.document;
 
 import ar.lamansys.sgh.clinichistory.domain.document.DocumentDownloadDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DocumentHealthcareProfessionalBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.NewbornBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentExternalCauseRepository;
+
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentHealthcareProfessionalRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentObstetricEventRepository;
+
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentReportSnomedConceptRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentHealthcareProfessional;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentObstetricEvent;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentTriageRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentDownloadDataVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentExternalCause;
+
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentTriage;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ExternalCauseVo;
+import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;
+
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.OtherRiskFactorVo;
+
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.ObstetricEvent;
+
+import lombok.RequiredArgsConstructor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
@@ -68,6 +100,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class  DocumentServiceImpl implements DocumentService {
 
     public static final String OUTPUT = "Output -> {}";
@@ -112,39 +145,8 @@ public class  DocumentServiceImpl implements DocumentService {
 
     private final SnomedService snomedService;
 
-	public DocumentServiceImpl(DocumentRepository documentRepository,
-                               DocumentHealthConditionRepository documentHealthConditionRepository,
-                               DocumentImmunizationRepository documentImmunizationRepository,
-                               DocumentProcedureRepository documentProcedureRepository,
-                               DocumentRiskFactorRepository documentRiskFactorRepository,
-                               DocumentLabRepository documentLabRepository,
-                               DocumentAllergyIntoleranceRepository documentAllergyIntoleranceRepository,
-                               DocumentMedicamentionStatementRepository documentMedicamentionStatementRepository,
-                               DocumentDiagnosticReportRepository documentDiagnosticReportRepository,
-                               DocumentOdontologyProcedureRepository documentOdontologyProcedureRepository,
-                               DocumentOdontologyDiagnosticRepository documentOdontologyDiagnosticRepository,
-                               DocumentExternalCauseRepository documentExternalCauseRepository,
-                               DocumentObstetricEventRepository documentObstetricEventRepository,
-                               DocumentTriageRepository documentTriageRepository,
-                               DocumentReportSnomedConceptRepository documentReportSnomedConceptRepository,
-                               SnomedService snomedService) {
-        this.documentRepository = documentRepository;
-        this.documentHealthConditionRepository = documentHealthConditionRepository;
-        this.documentImmunizationRepository = documentImmunizationRepository;
-        this.documentProcedureRepository = documentProcedureRepository;
-        this.documentRiskFactorRepository = documentRiskFactorRepository;
-        this.documentLabRepository = documentLabRepository;
-        this.documentAllergyIntoleranceRepository = documentAllergyIntoleranceRepository;
-        this.documentMedicamentionStatementRepository = documentMedicamentionStatementRepository;
-        this.documentDiagnosticReportRepository = documentDiagnosticReportRepository;
-        this.documentOdontologyProcedureRepository = documentOdontologyProcedureRepository;
-        this.documentOdontologyDiagnosticRepository = documentOdontologyDiagnosticRepository;
-		this.documentExternalCauseRepository = documentExternalCauseRepository;
-		this.documentObstetricEventRepository = documentObstetricEventRepository;
-		this.documentTriageRepository = documentTriageRepository;
-        this.documentReportSnomedConceptRepository = documentReportSnomedConceptRepository;
-        this.snomedService = snomedService;
-    }
+	private final DocumentHealthcareProfessionalRepository documentHealthcareProfessionalRepository;
+
 
     @Override
     public Optional<Document> findById(Long documentId) {
@@ -543,7 +545,14 @@ public class  DocumentServiceImpl implements DocumentService {
         return result;
     }
 
-    private DentalActionBo mapToOdontologyProcedure(Object[] row) {
+	@Override
+	public DocumentHealthcareProfessional createDocumentHealthcareProfessional(Long documentId, DocumentHealthcareProfessionalBo professional) {
+		LOG.debug("Input parameters -> documentId {}, professional {}", documentId, professional);
+		DocumentHealthcareProfessional result = documentHealthcareProfessionalRepository.save(new DocumentHealthcareProfessional(professional.getId(), documentId, professional.getHealthcareProfessionalId(), professional.getType().getId(), professional.getComments(), professional.getProfessionalLicenseNumberId()));
+		LOG.debug("Output -> {}", result);
+		return result;	}
+
+	private DentalActionBo mapToOdontologyProcedure(Object[] row) {
 		var result = new DentalActionBo();
 		result.setDiagnostic(false);
 		result.setSnomed(new SnomedBo((Snomed)row[1]));
