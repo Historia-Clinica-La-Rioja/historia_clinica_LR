@@ -42,7 +42,7 @@ public class BackofficeSectorController extends AbstractBackofficeController<Sec
 	
 	public BackofficeSectorController(SectorRepository sectorRepository,
 									  BackofficeSectorValidator sectorValidator) {
-		super(new BackofficeRepository<>(sectorRepository,
+		super(new BackofficeRepository<Sector, Integer>(sectorRepository,
 				new SingleAttributeBackofficeQueryAdapter<Sector>("description")), sectorValidator);
 	}
 
