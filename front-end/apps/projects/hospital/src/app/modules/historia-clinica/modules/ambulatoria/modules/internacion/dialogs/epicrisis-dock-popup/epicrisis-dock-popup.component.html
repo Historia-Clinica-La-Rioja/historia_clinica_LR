@@ -20,10 +20,10 @@
 		<mat-divider></mat-divider>
 
 		<form id="epicrisis-form" [formGroup]="form" fxLayoutGap="20px">
-			<app-new-consultation-expansion-section id="diagnosticos"
+			<app-new-consultation-expansion-section id="diagnosticos-expansion-section"
 				[title]="'internaciones.epicrisis.diagnosticos.TITLE' | translate" icon="error_outlined"
 				[collapsed]="false" [isEmpty]="false" [hideBorder]="true">
-				<app-diagnosticos [showTitle]="false" [(mainDiagnosis)]="mainDiagnosis" [(listDiagnosis)]="diagnosis"
+				<app-diagnosticos id="diagnosticos" [showTitle]="false" [(mainDiagnosis)]="mainDiagnosis" [(listDiagnosis)]="diagnosis"
 					[type]="'EPICRISIS'"></app-diagnosticos>
 			</app-new-consultation-expansion-section>
 
@@ -91,42 +91,42 @@
 				</mat-card>
 			</app-new-consultation-expansion-section>
 
-			<app-new-consultation-expansion-section id="procedimientos"
+			<app-new-consultation-expansion-section id="procedimientos-expansion-section"
 				[title]="'internaciones.epicrisis.procedimientos.TITLE' | translate" icon="library_add"
 				[isEmpty]="componentEvaluationManagerService.isEmptyProcedure() | async" [collapsed]="true"
 				[hideBorder]="false">
-				<app-list-concept [(listConcept)]="procedures" [title]="'internaciones.epicrisis.procedimientos.table.TITLE'">
+				<app-list-concept  id="procedimientos" [(listConcept)]="procedures" [title]="'internaciones.epicrisis.procedimientos.table.TITLE'">
 				</app-list-concept>
 			</app-new-consultation-expansion-section>
 
-			<app-new-consultation-expansion-section id="personalHistories"
+			<app-new-consultation-expansion-section id="personalHistories-expansion-section"
 				[title]="'internaciones.epicrisis.antecedentes-personales.TITLE' | translate" icon="report_outlined"
 				[isEmpty]="componentEvaluationManagerService.isEmptyPersonalHistories() | async" [collapsed]="true"
 				[hideBorder]="false">
-				<app-list-concept [(listConcept)]="personalHistories"
+				<app-list-concept id="personalHistories" [(listConcept)]="personalHistories"
 					[title]="'internaciones.epicrisis.antecedentes-personales.table.TITLE'">
 				</app-list-concept>
 			</app-new-consultation-expansion-section>
 
-			<app-new-consultation-expansion-section id="familyHistories"
+			<app-new-consultation-expansion-section id="familyHistories-expansion-section"
 				[title]="'internaciones.epicrisis.antecedentes-familiares.TITLE' | translate" icon="report_outlined"
 				[isEmpty]="componentEvaluationManagerService.isEmptyFamilyHistories() | async" [collapsed]="true"
 				[hideBorder]="false">
-				<app-list-concept [(listConcept)]="familyHistories"
+				<app-list-concept  id="familyHistories" [(listConcept)]="familyHistories"
 					[title]="'internaciones.epicrisis.antecedentes-familiares.table.TITLE'">
 				</app-list-concept>
 			</app-new-consultation-expansion-section>
 
-			<app-new-consultation-expansion-section id="allergies"
+			<app-new-consultation-expansion-section id="allergies-expansion-section"
 				[title]="'internaciones.epicrisis.alergias.TITLE' | translate" icon="cancel"
 				[isEmpty]="componentEvaluationManagerService.isEmptyAllergies() | async" [collapsed]="true"
 				[hideBorder]="false">
-				<app-list-concept [(listConcept)]="allergies" [title]="'internaciones.epicrisis.alergias.table.TITLE'">
+				<app-list-concept  id="allergies" [(listConcept)]="allergies" [title]="'internaciones.epicrisis.alergias.table.TITLE'">
 				</app-list-concept>
 			</app-new-consultation-expansion-section>
 
 
-			<app-medication [(medications)]="medications" [hideSuspended]="true"
+			<app-medication  id="medication" [(medications)]="medications" [hideSuspended]="true"
 				[title]="'internaciones.epicrisis.medicacion.TITLE' | translate">
 			</app-medication>
 

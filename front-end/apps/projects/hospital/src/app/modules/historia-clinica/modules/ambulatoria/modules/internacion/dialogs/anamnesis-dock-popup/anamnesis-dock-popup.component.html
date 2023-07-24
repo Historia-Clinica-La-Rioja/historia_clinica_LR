@@ -77,7 +77,7 @@
 			</div>
 		</app-new-consultation-expansion-section>
 
-		<app-procedure [(procedures)]="procedures">
+		<app-procedure id="procedure" [(procedures)]="procedures">
 		</app-procedure>
 
 		<app-new-consultation-expansion-section id="datos-antropometricos"
@@ -156,15 +156,15 @@
 			</app-factores-de-riesgo-form>
 		</app-new-consultation-expansion-section>
 
-		<app-alergias [(allergies)]="allergies"></app-alergias>
+		<app-alergias id="allergies" [(allergies)]="allergies"></app-alergias>
 
-		<app-vacunas [(immunizations)]="immunizations"></app-vacunas>
+		<app-vacunas id="immunizations" [(immunizations)]="immunizations"></app-vacunas>
 
-		<app-antecedentes-personales [(personalHistories)]="personalHistories"></app-antecedentes-personales>
+		<app-antecedentes-personales id="personal-histories" [(personalHistories)]="personalHistories"></app-antecedentes-personales>
 
-		<app-antecedentes-familiares [(familyHistories)]="familyHistories"></app-antecedentes-familiares>
+		<app-antecedentes-familiares id="family-histories" [(familyHistories)]="familyHistories"></app-antecedentes-familiares>
 
-		<app-medication [(medications)]="medications" [title]="'internaciones.anamnesis.medicacion.TITLE' | translate"></app-medication>
+		<app-medication id="medications" [(medications)]="medications" [title]="'internaciones.anamnesis.medicacion.TITLE' | translate"></app-medication>
 
 	</form>
 	<div actions id="buttons" align="end">

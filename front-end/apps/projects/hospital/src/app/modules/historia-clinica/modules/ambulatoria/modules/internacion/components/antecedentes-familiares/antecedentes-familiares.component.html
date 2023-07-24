@@ -11,7 +11,7 @@
 					<div fxLayout="column" fxLayoutGap="6px">
 						<span>{{ familyHistorie.snomed.pt | titlecase}}</span>
 					</div>
-					<button type="button" mat-icon-button color="warn" (click)="remove(i); $event.stopPropagation()">
+					<button id="delete" type="button" mat-icon-button color="warn" (click)="remove(i); $event.stopPropagation()">
 						<mat-icon>delete_outline</mat-icon>
 					</button>
 				</div>

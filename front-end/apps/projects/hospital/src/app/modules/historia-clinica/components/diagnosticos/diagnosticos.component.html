@@ -5,7 +5,7 @@
 			[type]="type"></app-elemento-diagnostico>
 		<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
 			<br>
-			<button id="modify_main_diagnosis" class="change-main-diagnosis" *ngIf="mainDiagnosis"
+			<button id="modify-main-diagnosis" class="change-main-diagnosis" *ngIf="mainDiagnosis"
 				class="diagnoses-action-button" mat-button color="primary" [disabled]="!diagnosticos?.length"
 				(click)="openModifyMainDiagnosisDialog(); $event.preventDefault()">
 				{{ 'internaciones.anamnesis.diagnosticos.CHANGE_MAIN_DIAGNOSIS' | translate }}
@@ -17,7 +17,7 @@
 
 <div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" fxLayout="column" fxLayoutAlign="start start">
 	<br>
-	<button id="add_main_diagnosis" *ngIf="!mainDiagnosis && type === 'ANAMNESIS'" class="diagnoses-action-button"
+	<button id="add-main-diagnosis" *ngIf="!mainDiagnosis && type === 'ANAMNESIS'" class="diagnoses-action-button"
 		mat-button color="primary" (click)="openCreationDialog(true); $event.preventDefault()">
 		{{ 'internaciones.anamnesis.diagnosticos.ADD_MAIN_DIAGNOSIS' | translate }}
 	</button>
@@ -34,7 +34,7 @@
 		<br>
 		<div *ngIf="mainDiagnosis && diagnosticos?.length> 1">
 			<br>
-			<mat-checkbox [checked]="allChecked"
+			<mat-checkbox id="all-selected" [checked]="allChecked"
 				(change)="setAll($event.checked)">{{'internaciones.epicrisis.diagnosticos.INCLUDE_ALL' |
 				translate}} </mat-checkbox>
 		</div>
@@ -42,7 +42,7 @@
 </ng-container>
 <div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" fxLayout="column" fxLayoutAlign="start start">
 	<br>
-	<button id="add_diagnosis" class="diagnoses-action-button" mat-button color="primary"
+	<button id="add-diagnosis" class="diagnoses-action-button" mat-button color="primary"
 		(click)="openCreationDialog(false); $event.preventDefault()">
 		{{ 'internaciones.anamnesis.diagnosticos.ADD_OTHER_DIAGNOSIS' | translate }}
 	</button>

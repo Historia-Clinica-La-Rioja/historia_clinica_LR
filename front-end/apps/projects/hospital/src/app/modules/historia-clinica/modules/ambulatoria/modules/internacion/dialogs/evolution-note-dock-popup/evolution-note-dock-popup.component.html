@@ -173,10 +173,10 @@
 			</app-new-consultation-expansion-section>
 
 
-			<app-alergias [(allergies)]="allergies"></app-alergias>
+			<app-alergias id="allergies" [(allergies)]="allergies"></app-alergias>
 
 
-			<app-vacunas [(immunizations)]="immunizations"></app-vacunas>
+			<app-vacunas id="immunizations" [(immunizations)]="immunizations"></app-vacunas>
 
 			<div id="validations" *ngIf="apiErrors.length > 0">
 				<mat-card>
