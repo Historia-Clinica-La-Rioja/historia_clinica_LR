@@ -397,7 +397,7 @@ export class NewAppointmentComponent implements OnInit {
 		return this.appointmentInfoForm.valid;
 	}
 
-	toFirstStep() {
+	toFirstStep(stepper: MatStepper) {
 		this.formSearch.controls.completed.reset();
 		this.appointmentInfoForm.reset();
 		this.patientMedicalOrders = [];
@@ -406,6 +406,7 @@ export class NewAppointmentComponent implements OnInit {
 				this.transcribedOrder = null;
 				this.patientMedicalOrderTooltipDescription = '' });
 		}
+		this.goBack(stepper);
 	}
 
 	openMedicalCoverageDialog(): void {
@@ -532,6 +533,11 @@ export class NewAppointmentComponent implements OnInit {
 		this.patientMedicalOrderTooltipDescription = '';
 	}
 
+	goBack(stepper: MatStepper){
+		stepper.previous();
+		this.showAddPatient = false;
+	}
+	
 	private setPhonePrefix(itComesFromStep3: boolean): string {
 		if (!this.appointmentInfoForm.controls.phonePrefix.value && !itComesFromStep3)
 			return "";
