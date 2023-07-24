@@ -34,7 +34,7 @@ import { EmergencyCareStateChangedService } from '../../services/emergency-care-
 	selector: 'app-clinical-history-actions',
 	templateUrl: './clinical-history-actions.component.html',
 	styleUrls: ['./clinical-history-actions.component.scss'],
-	providers: [DocumentActionsService, DeleteDocumentActionService, EditDocumentActionService]
+	providers: [DocumentActionsService, DeleteDocumentActionService, EditDocumentActionService, TriageDefinitionsService]
 })
 export class ClinicalHistoryActionsComponent implements OnInit {
 
