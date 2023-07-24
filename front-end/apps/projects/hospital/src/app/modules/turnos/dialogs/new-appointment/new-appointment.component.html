@@ -12,12 +12,12 @@
 
 	<mat-stepper [selectedIndex]="initialIndex" #stepper labelPosition="bottom">
 		<mat-step [stepControl]="formSearch" label="{{'turnos.new-appointment.STEP_1' | translate}}">
-			<mat-card class="mat-typography">
+			<mat-card class="mat-typography mat-elevation-z0">
 				<form [formGroup]="formSearch" (ngSubmit)="search()">
 					<mat-card-content>
 						<div fxLayout="column">
 							<mat-form-field appearance="outline">
-								<mat-label>Tipo</mat-label>
+								<mat-label translate="turnos.new-appointment.fields.DOCUMENT_TYPE"></mat-label>
 								<mat-select formControlName="identifType">
 									<mat-option id="identifType" name="identifType"
 										*ngFor="let type of identifyTypeArray" [value]="type.id">
@@ -29,7 +29,7 @@
 								</mat-error>
 							</mat-form-field>
 							<mat-form-field appearance="outline">
-								<mat-label>Nro de documento</mat-label>
+								<mat-label translate="turnos.new-appointment.fields.DOCUMENT_NUMBER"></mat-label>
 								<input matInput type="text" id="identifNumber" name="identifNumber"
 									formControlName="identifNumber" placeholder="Nro de documento">
 								<mat-error *ngIf="hasError(formSearch, 'required', 'identifNumber')">
@@ -78,7 +78,7 @@
 		</mat-step>
 
 		<mat-step [stepControl]="appointmentInfoForm" label="{{'turnos.new-appointment.STEP_2' | translate}}">
-			<mat-card class="mat-typography">
+			<mat-card class="mat-typography mat-elevation-z0">
 				<mat-list class="mat-form-field-wrapper">
 					<mat-list-item id="patient" class="patient-data-list">
 						<mat-icon color="primary" mat-list-icon [inline]="true">person</mat-icon>

@@ -1,8 +1,6 @@
 @import '../../../../../assets/styles/mixins';
 
 .mat-card {
-	margin-top: 15px;
-
 	mat-card-content {
 		@include card-content;
 	}
