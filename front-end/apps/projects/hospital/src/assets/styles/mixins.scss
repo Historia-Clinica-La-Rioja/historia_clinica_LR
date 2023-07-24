@@ -3,7 +3,6 @@
 @import "./../../app/modules/presentation/presentation-mixins.scss";
 @import "./../../app/modules/turnos/turnos-mixins.scss";
 @import "./../../app/modules/historia-clinica/historia-clinica-mixins.scss";
-@import "./../../app/modules/auditoria/auditoria-mixins.scss";
 
 @mixin form-row {
 	display: flex;
@@ -83,7 +82,6 @@
 	@include presentation-mixins($theme);
 	@include turnos-mixins($theme);
 	@include historia-clinica-mixins($theme);
-	@include auditoria-mixins($theme);
 
 	$palette-primary: map-get($theme, primary);
 	$palette-warn: map-get($theme, warn);
