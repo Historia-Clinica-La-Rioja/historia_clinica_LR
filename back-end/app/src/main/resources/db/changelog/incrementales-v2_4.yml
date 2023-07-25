@@ -888,3 +888,27 @@ databaseChangeLog:
                     name: consent_id
                     type: int
                     defaultValue: 1
+    
+    - changeSet:
+        id: fix-wrong-characters_city-2.4
+        author: fdemuguruza
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                UPDATE city SET description = REGEXP_REPLACE(description, 'Ã‘', 'Ñ');
+                UPDATE city SET description = REGEXP_REPLACE(description, 'Â¥', 'Ñ');
+                UPDATE city SET description = REGEXP_REPLACE(description, 'Âµ', 'Á');
+                UPDATE city SET description = REGEXP_REPLACE(description, 'Â¢', 'Ó');
+                UPDATE city SET description = REGEXP_REPLACE(description, 'Ãœ', 'Ü');
+                UPDATE city SET description = REGEXP_REPLACE(description, 'Â§', 'º');
+
+    - changeSet:
+        id: fix-wrong-characters_departments-2.4
+        author: fdemuguruza
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                UPDATE department SET description = REGEXP_REPLACE(description, 'Ã‘', 'Ñ');
+                UPDATE department SET description = REGEXP_REPLACE(description, 'Â§', 'º');
