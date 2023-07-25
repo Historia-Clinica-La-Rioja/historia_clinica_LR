@@ -22,8 +22,7 @@ import CustomToolbar from "../components/CustomToolbar";
 import {ADMINISTRADOR, ROOT} from "../roles";
 import {
     CreateHierarchicalUnit,
-    HierarchicalUnitTabs,
-    UNIDADES_JEARQUICAS_FF
+    HierarchicalUnitTabs
 } from './InstitutionShow';
 
 const Dependency = (sourceId) => {
@@ -83,9 +82,9 @@ const InstitutionEdit = props => {
                         <EditButton/>
                     </Datagrid>
                 </ReferenceManyField>
-                { permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <SectionTitle label="resources.institutions.fields.hierarchicalUnits"/>}
-                { permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <CreateHierarchicalUnit/>}
-                { permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <HierarchicalUnitTabs {...props}/>}
+                <SectionTitle label="resources.institutions.fields.hierarchicalUnits"/>
+                <CreateHierarchicalUnit/>
+                <HierarchicalUnitTabs {...props}/>
             </SimpleForm>
         </Edit>
     );

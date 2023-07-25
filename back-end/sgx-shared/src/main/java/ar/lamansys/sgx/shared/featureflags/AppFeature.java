@@ -147,9 +147,6 @@ public enum AppFeature implements Feature {
 	@Label("Indica si está habilitada la acción de imprimir HC de pacientes")
 	HABILITAR_IMPRESION_HISTORIA_CLINICA_EN_DESARROLLO,
 
-	@Label("Indica si está habilitada en backoffice la funcionalidad asociada a unidades jerárquicas")
-	HABILITAR_UNIDADES_JERARQUICAS_EN_DESARROLLO,
-
 	@Label("Indica si está habilitada la gestión de Roles de API Pública")
 	ROLES_API_PUBLICA_EN_DESARROLLO,
 	;

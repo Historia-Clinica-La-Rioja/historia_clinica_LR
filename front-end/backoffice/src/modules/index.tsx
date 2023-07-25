@@ -127,7 +127,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="practicesinstitution" />,
     <Resource name="carelinespecialtyinstitution" />,
     <Resource name="snowstormproblems" />,
-    <Resource name="hierarchicalunits" {...hierarchicalunits(permissions)} />,
+    <Resource name="hierarchicalunits" {...hierarchicalunits} />,
     <Resource name="hierarchicalunitrelationships" {...hierarchicalunitrelationships} />,
     <Resource name="hierarchicalunitstaff" {...hierarchicalunitstaff} />,
     <Resource name="institutionuserpersons" {...institutionuserpersons} />,
