@@ -201,15 +201,16 @@ export class WorklistByTechnicalComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(result => {
             if (result?.updateState) {
 				this.selectedAppointment.appointmentStateId = result.updateState;
-                if (result?.reportNotRequired) { this.updateSelectedAppointmentReportState(); }
+                this.updateSelectedAppointmentReportState(result?.reportRequired);
 				this.filterAppointments(this.states.value);
 			}
 			this.selectedAppointment = null;
 		});
 	}
 
-    private updateSelectedAppointmentReportState() {
-        this.appointments = this.appointments.map(app => (app.id === this.selectedAppointment.id ? { ...app, reportStatusId: REPORT_STATES_ID.NOT_REQUIRED } : app));
+    private updateSelectedAppointmentReportState(reportRequired: boolean) {
+        let statusToSet = reportRequired ? REPORT_STATES_ID.PENDING : REPORT_STATES_ID.NOT_REQUIRED ;
+        this.appointments = this.appointments.map(app => (app.id === this.selectedAppointment.id ? { ...app, reportStatusId: statusToSet } : app));
     }
 
     requestReport(appointment: detailedAppointment) {

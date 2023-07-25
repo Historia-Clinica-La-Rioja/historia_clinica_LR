@@ -63,7 +63,7 @@ export class FinishStudyComponent {
                 })
             )
             .subscribe((_) => {
-                this.dialogRef.close({ updateState: served });
+                this.dialogRef.close({ updateState: served, reportRequired: !this.reportNotRequired });
             });
     }
 
