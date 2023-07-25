@@ -85,15 +85,17 @@ public class MergePatientStorageImpl implements MergePatientStorage {
 			throw new MergePatientException(MergePatientExceptionEnum.PATIENT_NOT_EXISTS, String.format("El paciente con id %s no existe", patientId));
 		Person person = personService.findByPatientId(patientId).orElseThrow(() -> new MergePatientException(MergePatientExceptionEnum.ASSOCIATED_PERSON_NOT_FOUND, String.format("No se encuentra persona asociada al paciente con id %s", patientId)));
 		person.setFirstName(basicPersonData.getFirstName());
-		person.setMiddleNames(basicPersonData.getMiddleNames());
+		if(basicPersonData.getMiddleNames() != null)
+			person.setMiddleNames(basicPersonData.getMiddleNames());
 		person.setLastName(basicPersonData.getLastName());
-		person.setOtherLastNames(basicPersonData.getOtherLastNames());
+		if(basicPersonData.getOtherLastNames() != null)
+			person.setOtherLastNames(basicPersonData.getOtherLastNames());
 		person.setIdentificationTypeId(basicPersonData.getIdentificationTypeId());
 		person.setIdentificationNumber(basicPersonData.getIdentificationNumber());
 		person.setBirthDate(basicPersonData.getBirthDate());
 		personService.addPerson(person);
 
-		if (featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)) {
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && basicPersonData.getNameSelfDetermination() != null) {
 			PersonExtended personExtended = personService.getPersonExtended(person.getId());
 			personExtended.setNameSelfDetermination(basicPersonData.getNameSelfDetermination());
 			personService.addPersonExtended(personExtended);
