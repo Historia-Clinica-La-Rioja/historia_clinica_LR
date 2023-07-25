@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.appointment.repository;
 
 
+import java.util.List;
 import java.util.Optional;
 
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentOrderImageExistCheckVo;
@@ -64,7 +65,7 @@ public interface AppointmentOrderImageRepository extends JpaRepository<Appointme
 			"LEFT JOIN Document as d ON (aoi.documentId = d.id) "+
 			"WHERE aoi.orderId = :orderId "+
 			"AND app.appointmentStateId = "+ AppointmentState.SERVED )
-	AppointmentOrderImageExistCheckVo findAppointmentIdAndReportByOrderId(@Param("orderId") Integer orderId);
+	List<AppointmentOrderImageExistCheckVo> findAppointmentIdAndReportByOrderId(@Param("orderId") Integer orderId);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT aoi.orderId " +
