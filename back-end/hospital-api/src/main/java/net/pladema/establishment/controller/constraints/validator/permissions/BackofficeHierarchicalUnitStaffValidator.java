@@ -87,10 +87,10 @@ public class BackofficeHierarchicalUnitStaffValidator implements BackofficePermi
 		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
 		if (allowedInstitutions.isEmpty())
 			return new ItemsAllowed<>(false, Collections.emptyList());
-		List<HierarchicalUnitStaff> entitiesByExample = repository.findAll(Example.of(entity));
+		List<HierarchicalUnitStaff> entitiesByExample = repository.findAllByHierarchicalUnitId(entity.getHierarchicalUnitId());
 		List<Integer> idsAllowed = repository.getAllIdsByInstitutionsId(allowedInstitutions);
 		List<Integer> resultIds = entitiesByExample.stream()
-				.filter(css -> idsAllowed.contains(css.getId()))
+				.filter(hus -> idsAllowed.contains(hus.getId()))
 				.map(HierarchicalUnitStaff::getId)
 				.collect(Collectors.toList());
 		return new ItemsAllowed<>(false, resultIds);
