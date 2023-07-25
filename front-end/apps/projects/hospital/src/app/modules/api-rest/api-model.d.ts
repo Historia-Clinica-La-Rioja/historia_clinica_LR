@@ -3810,6 +3810,7 @@ export const enum EDocumentSearch {
     DIAGNOSIS = "DIAGNOSIS",
     DOCTOR = "DOCTOR",
     CREATED_ON = "CREATED_ON",
+    DOCUMENT_TYPE = "DOCUMENT_TYPE",
 }
 
 export const enum EEventLocation {
