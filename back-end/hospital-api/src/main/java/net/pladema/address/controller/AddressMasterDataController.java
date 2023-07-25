@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
@@ -39,6 +40,14 @@ public class AddressMasterDataController {
 		LOG.debug("{}", "All departments");
 		return ResponseEntity.ok().body(addressMasterDataService.findDepartmentByProvince(provinceId, AddressProjection.class));
 	}
+	@GetMapping(value = "/province/{provinceId}/departments/with-specialty/{clinicalSpecialtyId}")
+	public ResponseEntity<Collection<AddressProjection>> getDepartmentsByProvinceHavingClinicalSpecialty(@PathVariable("provinceId") Short provinceId,
+																										 @PathVariable("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																										 @RequestParam(name = "careLineId", required = false) Integer careLineId) {
+		LOG.debug("{}", "All departments in province having clinical specialty");
+		return ResponseEntity.ok().body(addressMasterDataService.findDepartmentsByProvinceIdHavingClinicalSpecialty(provinceId, careLineId, clinicalSpecialtyId, AddressProjection.class));
+	}
+
 
 	@GetMapping(value = "/country/{countryId}/provinces")
 	public ResponseEntity<Collection<AddressProjection>> getByCountry(@PathVariable("countryId") Short countryId) {

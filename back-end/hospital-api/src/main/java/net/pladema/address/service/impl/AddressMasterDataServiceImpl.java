@@ -90,4 +90,11 @@ public class AddressMasterDataServiceImpl implements AddressMasterDataService {
 		return departmentMapper.fromDepartmentToDepartmentBo(result);
 	}
 
+	@Override
+	public <T> Collection<T> findDepartmentsByProvinceIdHavingClinicalSpecialty(Short provinceId, Integer careLineId, Integer clinicalSpecialtyId, Class<T> clazz) {
+		if(careLineId == null)
+			return departmentRepository.findDepartmentsByProvinceIdHavingActiveDiaryWithClinicalSpecialty(provinceId, clinicalSpecialtyId, clazz);
+		return departmentRepository.findDepartmentsByProvinceIdHavingActiveDiaryWithCareLineClinicalSpecialty(provinceId, careLineId, clinicalSpecialtyId, clazz);
+	}
+
 }

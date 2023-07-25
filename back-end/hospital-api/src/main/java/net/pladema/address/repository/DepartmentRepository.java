@@ -31,4 +31,29 @@ public interface DepartmentRepository extends JpaRepository<Department, Short> {
 	@Transactional(readOnly = true)
 	@Query("SELECT d FROM Department as d WHERE d.id = :departmentId")
 	Department findDepartmentById(@Param("departmentId") Short departmentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT d From Department d " +
+			"JOIN Province p ON (p.id = d.provinceId) " +
+			"JOIN Address a ON (a.provinceId = p.id) " +
+			"JOIN Institution i ON (i.addressId = a.id) " +
+			"JOIN DoctorsOffice do ON (do.institutionId = i.id) " +
+			"JOIN Diary di ON (di.doctorsOfficeId = do.id) " +
+			"JOIN DiaryCareLine dcl ON (dcl.pk.diaryId = d.id) " +
+			"WHERE p.id = :provinceId " +
+			"AND di.active = true AND di.clinicalSpecialtyId = :clinicalSpecialtyId AND di.deleteable.deleted = FALSE " +
+			"AND dcl.pk.careLineId = :careLineId ")
+	<T> Collection<T> findDepartmentsByProvinceIdHavingActiveDiaryWithCareLineClinicalSpecialty(@Param("provinceId") Short provinceId, @Param("careLineId") Integer careLineId, @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId, Class<T> clazz);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT d FROM Department d " +
+			"JOIN Province p ON (p.id = d.provinceId) " +
+			"JOIN Address a ON (a.provinceId = p.id) " +
+			"JOIN Institution i ON (i.addressId = a.id) " +
+			"JOIN DoctorsOffice do ON (do.institutionId = i.id) " +
+			"JOIN Diary di ON (di.doctorsOfficeId = do.id) " +
+			"WHERE p.id = :provinceId " +
+			"AND di.active = TRUE AND di.clinicalSpecialtyId = :clinicalSpecialtyId AND di.deleteable.deleted = FALSE")
+	<T> Collection<T> findDepartmentsByProvinceIdHavingActiveDiaryWithClinicalSpecialty(@Param("provinceId") Short provinceId, @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId, Class<T> clazz);
+
 }

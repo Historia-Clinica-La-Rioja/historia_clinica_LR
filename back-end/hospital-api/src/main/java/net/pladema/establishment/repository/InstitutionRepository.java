@@ -52,4 +52,31 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"WHERE s.sectorTypeId = '4' "+
 			"AND deleted IS FALSE ")
 	List<InstitutionBasicInfoBo> getByDiagnosisImagesSectors();
+
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) " +
+			"FROM Institution i " +
+			"JOIN Address a ON (a.id = i.addressId) " +
+			"JOIN Province p ON (p.id = a.provinceId) " +
+			"JOIN Department d ON (d.provinceId = p.id) " +
+			"JOIN DoctorsOffice do ON (do.institutionId = i.id) " +
+			"JOIN Diary di ON (di.doctorsOfficeId = do.id) " +
+			"WHERE d.id = :departmentId " +
+			"AND di.active = TRUE AND di.clinicalSpecialtyId = :clinicalSpecialtyId AND di.deleteable.deleted = FALSE")
+	List<InstitutionBasicInfoBo> getByDepartmentIdHavingActiveDiaryWithClinicalSpecialty(@Param("departmentId") Integer departmentId, @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) " +
+			"FROM Institution i " +
+			"JOIN Address a ON (a.id = i.addressId) " +
+			"JOIN Province p ON (p.id = a.provinceId) " +
+			"JOIN Department d ON (d.provinceId = p.id)" +
+			"JOIN DoctorsOffice do ON (do.institutionId = i.id) " +
+			"JOIN Diary di ON (di.doctorsOfficeId = do.id) " +
+			"JOIN DiaryCareLine dcl ON (dcl.pk.diaryId = di.id) " +
+			"WHERE d.id = :departmentId " +
+			"AND di.active = TRUE AND di.clinicalSpecialtyId = :clinicalSpecialtyId AND di.deleteable.deleted = FALSE " +
+			"AND dcl.pk.careLineId = :careLineId")
+	List<InstitutionBasicInfoBo> getByDepartmentIdHavingActiveDiaryWithCareLineClinicalSpecialty(@Param("departmentId") Integer departmentId, @Param("careLineId") Integer careLineId, @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
+
 }
