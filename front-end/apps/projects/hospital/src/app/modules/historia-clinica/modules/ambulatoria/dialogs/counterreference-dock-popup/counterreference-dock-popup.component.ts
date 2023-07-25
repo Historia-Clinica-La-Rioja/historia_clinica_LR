@@ -44,6 +44,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	closureTypes: any[] = [];
 	collapsedCounterReference = false;
 	searchConceptsLocallyFFIsOn = false;
+	disableConfirmButton = false;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
@@ -88,6 +89,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 
 	save(): void {
 		if (this.formReferenceClosure.valid) {
+			this.disableConfirmButton= true;
 			let fileIds: number[] = [];
 			let longFiles = 0;
 			if (!this.selectedFiles.length) {
@@ -111,6 +113,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 					}
 				)
 			}
+			this.disableConfirmButton=false;
 		}
 
 		else {
