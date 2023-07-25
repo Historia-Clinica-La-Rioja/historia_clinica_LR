@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 })
 export class HierarchicalUnitsService {
 
-	private readonly URL_BASE = `${environment.apiBase}/institutions/${this.contextService.institutionId}/hierarchicalunit`;
+	private readonly URL_BASE = `${environment.apiBase}/institutions`;
 
 	constructor(
 		private http: HttpClient,
@@ -18,7 +18,8 @@ export class HierarchicalUnitsService {
 	) { }
 
 	getByInstitution(): Observable<HierarchicalUnitDto[]> {
-		return this.http.get<HierarchicalUnitDto[]>(this.URL_BASE);
+		const url = `${this.URL_BASE}/${this.contextService.institutionId}/hierarchicalunit`;
+		return this.http.get<HierarchicalUnitDto[]>(url);
 	}
 
 }

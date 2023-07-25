@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 })
 export class HierarchicalUnitStaffService {
 
-	private readonly URL_BASE = `${environment.apiBase}/institutions/${this.contextService.institutionId}/hierarchicalunitstaff/user`;
+	private readonly URL_BASE = `${environment.apiBase}/institutions`;
 
 	constructor(
 		private http: HttpClient,
@@ -18,12 +18,12 @@ export class HierarchicalUnitStaffService {
 	) { }
 
 	getByUserId(userId: number): Observable<HierarchicalUnitStaffDto[]> {
-		const url = `${this.URL_BASE}/${userId}`;
+		const url = `${this.URL_BASE}/${this.contextService.institutionId}/hierarchicalunitstaff/user/${userId}`;
 		return this.http.get<HierarchicalUnitStaffDto[]>(url);
 	}
 
 	update(userId: number, staff: HierarchicalUnitStaffDto[]): Observable<boolean> {
-		const url = `${this.URL_BASE}/${userId}`;
+		const url = `${this.URL_BASE}/${this.contextService.institutionId}/hierarchicalunitstaff/user/${userId}`;
 		return this.http.put<boolean>(url, staff);
 	}
 }

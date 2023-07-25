@@ -30,7 +30,7 @@ public class HierarchicalUnitController {
 
 	@GetMapping()
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
-	public ResponseEntity<List<HierarchicalUnitDto>> getAllByInstitutions(@PathVariable(name = "institutionId") Integer institutionId) {
+	public ResponseEntity<List<HierarchicalUnitDto>> getAllByInstitution(@PathVariable(name = "institutionId") Integer institutionId) {
 		log.debug("Input institutionId {} ", institutionId);
 		List<HierarchicalUnitDto> hierarchicalUnitsDto = hierarchicalUnitService.getByInstitution(institutionId).stream()
 				.map(bo -> new HierarchicalUnitDto(bo.getId(), bo.getName()))
