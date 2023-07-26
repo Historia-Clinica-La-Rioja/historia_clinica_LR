@@ -62,7 +62,8 @@ public class WorklistController {
 				bo.getPatientFullName(),
 				bo.getStatusId(),
 				bo.getAppointmentId(),
-				localDateMapper.toDateTimeDto(bo.getActionTime())
+				localDateMapper.toDateTimeDto(bo.getActionTime()),
+				bo.getCompletionInstitution()
 		);
 	}
 }

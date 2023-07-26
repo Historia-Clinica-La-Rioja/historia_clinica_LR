@@ -3743,6 +3743,7 @@ export interface ViewerUrlDto {
 export interface WorklistDto {
     actionTime: DateTimeDto;
     appointmentId: number;
+    completionInstitution: InstitutionBasicInfoDto;
     patientFullName: string;
     patientId: number;
     patientIdentificationNumber: string;

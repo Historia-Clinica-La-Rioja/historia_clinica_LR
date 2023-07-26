@@ -371,10 +371,14 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	List<Appointment> getAppointmentsFromPatients(@Param("patients") List<Integer> patients);
 
 	@Transactional(readOnly = true)
-	@Query( "SELECT new net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo(p.id, pe.identificationTypeId, pe.identificationNumber, pe.firstName, pe.middleNames, pe.lastName, pe.otherLastNames, pex.nameSelfDetermination, a.id, doi.completedOn) " +
+	@Query( "SELECT new net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo(p.id, pe.identificationTypeId, " +
+			"pe.identificationNumber, pe.firstName, pe.middleNames, pe.lastName, pe.otherLastNames, pex.nameSelfDetermination," +
+			" a.id, doi.completedOn, i.id, i.name) " +
 			"FROM EquipmentAppointmentAssn eaa " +
 			"JOIN EquipmentDiary ed ON eaa.pk.equipmentDiaryId = ed.id " +
 			"JOIN Equipment e ON ed.equipmentId = e.id " +
+			"JOIN Sector s ON s.id = e.sectorId " +
+			"JOIN Institution i ON i.id = s.institutionId " +
 			"JOIN AppointmentOrderImage aoi ON eaa.pk.appointmentId = aoi.pk.appointmentId " +
 			"JOIN DetailsOrderImage doi ON eaa.pk.appointmentId = doi.appointmentId " +
 			"JOIN Appointment a ON eaa.pk.appointmentId = a.id " +
@@ -395,10 +399,14 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	List<WorklistBo> getPendingWorklistByModalityAndInstitution(@Param("modalityId") Integer modalityId, @Param("institutionId") Integer institutionId);
 
 	@Transactional(readOnly = true)
-	@Query( "SELECT new net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo(p.id, pe.identificationTypeId, pe.identificationNumber, pe.firstName, pe.middleNames, pe.lastName, pe.otherLastNames, pex.nameSelfDetermination, a.id, doi.completedOn) " +
+	@Query( "SELECT new net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo(p.id, pe.identificationTypeId," +
+			" pe.identificationNumber, pe.firstName, pe.middleNames, pe.lastName, pe.otherLastNames, pex.nameSelfDetermination," +
+			" a.id, doi.completedOn, i.id, i.name) " +
 			"FROM EquipmentAppointmentAssn eaa " +
 			"JOIN EquipmentDiary ed ON eaa.pk.equipmentDiaryId = ed.id " +
 			"JOIN Equipment e ON ed.equipmentId = e.id " +
+			"JOIN Sector s ON s.id = e.sectorId " +
+			"JOIN Institution i ON i.id = s.institutionId " +
 			"JOIN AppointmentOrderImage aoi ON eaa.pk.appointmentId = aoi.pk.appointmentId " +
 			"JOIN DetailsOrderImage doi ON eaa.pk.appointmentId = doi.appointmentId " +
 			"JOIN Appointment a ON eaa.pk.appointmentId = a.id " +
@@ -436,10 +444,14 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 
 
 	@Transactional(readOnly = true)
-	@Query( "SELECT new net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo(p.id, pe.identificationTypeId, pe.identificationNumber, pe.firstName, pe.middleNames, pe.lastName, pe.otherLastNames, pex.nameSelfDetermination, a.id, d.updateable.updatedOn) " +
+	@Query( "SELECT new net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo(p.id, pe.identificationTypeId, " +
+			"pe.identificationNumber, pe.firstName, pe.middleNames, pe.lastName, pe.otherLastNames, pex.nameSelfDetermination," +
+			" a.id, d.updateable.updatedOn, i.id, i.name) " +
 			"FROM EquipmentAppointmentAssn eaa " +
 			"JOIN EquipmentDiary ed ON ed.id = eaa.pk.equipmentDiaryId " +
 			"JOIN Equipment e ON ed.equipmentId = e.id " +
+			"JOIN Sector s ON s.id = e.sectorId " +
+			"JOIN Institution i ON i.id = s.institutionId " +
 			"JOIN Appointment a ON eaa.pk.appointmentId = a.id " +
 			"JOIN Patient p ON a.patientId = p.id " +
 			"JOIN Person pe ON p.personId = pe.id " +
@@ -455,13 +467,16 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	List<WorklistBo> getCompletedWorklistByModalityAndInstitution(@Param("modalityId") Integer modalityId, @Param("institutionId") Integer institutionId);
 
 	@Transactional(readOnly = true)
-	@Query( "SELECT new net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo(p.id, pe.identificationTypeId, pe.identificationNumber, pe.firstName, pe.middleNames, pe.lastName, pe.otherLastNames, pex.nameSelfDetermination, a.id, d.updateable.updatedOn) " +
+	@Query( "SELECT new net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo(p.id, pe.identificationTypeId, " +
+			"pe.identificationNumber, pe.firstName, pe.middleNames, pe.lastName, pe.otherLastNames, pex.nameSelfDetermination," +
+			" a.id, d.updateable.updatedOn, i.id, i.name) " +
 			"FROM Appointment a " +
 			"JOIN Patient p ON a.patientId = p.id " +
 			"JOIN Person pe ON p.personId = pe.id " +
 			"JOIN PersonExtended pex ON pe.id = pex.id " +
 			"JOIN AppointmentOrderImage aoi ON a.id = aoi.pk.appointmentId " +
 			"JOIN Document d ON aoi.documentId = d.id " +
+			"JOIN Institution i ON d.institutionId = i.id " +
 			"WHERE aoi.destInstitutionId = :institutionId " +
 			"AND d.statusId = '" + DocumentStatus.FINAL + "'"	+ "  " +
 			"AND d.sourceTypeId =" + SourceType.MEDICAL_IMAGE + "  " +
