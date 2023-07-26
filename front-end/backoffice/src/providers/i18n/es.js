@@ -812,7 +812,7 @@ const messages = {
                 clinicalSpecialtyId: 'Servicio',
                 hierarchicalUnitIdToReport: 'Productividad asociada a'
             },
-            createRelated: 'Crear Unidad jérarquica'
+            createRelated: 'Crear Unidad jerárquica'
         },
         hierarchicalunitrelationships: {
             name: 'Relación entre unidades jerárquicas',
