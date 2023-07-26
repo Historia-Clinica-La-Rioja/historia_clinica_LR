@@ -1,2 +1,28 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v2_5
+
+    - changeSet:
+        id: addColumn-priority-reference
+        author: jvaldez
+        comment: Add priority column to reference table
+        changes:
+          - addColumn:
+              tableName: reference
+              columns:
+                - column:
+                    name: priority
+                    type: int
+                    constraints:
+                      nullable: false
+                    defaultValue: -1
+
+    - changeSet:
+        id: update-priority-reference
+        author: jvaldez
+        comment: update references already created
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE reference SET priority = 3;
+    
