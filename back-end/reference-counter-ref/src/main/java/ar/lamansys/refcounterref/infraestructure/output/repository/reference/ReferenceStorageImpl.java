@@ -103,9 +103,9 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 
 	public List<ReferenceHealthCondition> saveProblems(Integer referenceId, ReferenceBo referenceBo) {
         return referenceBo.getProblems().stream().map(problem -> {
-            Integer healthConditionId = healthConditionStorage.getHealthConditionIdByEncounterAndSnomedConcept(
+            List<Integer> healthConditionIds = healthConditionStorage.getHealthConditionIdByEncounterAndSnomedConcept(
                     referenceBo.getEncounterId(), referenceBo.getSourceTypeId(), problem.getSnomed().getSctid(), problem.getSnomed().getPt());
-            ReferenceHealthConditionPk refPk = new ReferenceHealthConditionPk(referenceId, healthConditionId);
+            ReferenceHealthConditionPk refPk = new ReferenceHealthConditionPk(referenceId, healthConditionIds.get(0));
             return referenceHealthConditionRepository.save(new ReferenceHealthCondition(refPk));
         }).collect(Collectors.toList());
     }
