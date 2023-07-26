@@ -22,20 +22,24 @@ public class EquipmentAppointmentVo {
 
 	private final Short reportStatusId;
 
-	public EquipmentAppointmentVo(Appointment appointment, Short identificationType, String identificationnumber, Short reportStatusId){
+	private final String studyName;
+
+	public EquipmentAppointmentVo(Appointment appointment, Short identificationType, String identificationnumber, Short reportStatusId, String studyName) {
 		this.appointment = appointment;
 		this.identificationType = identificationType;
 		this.identificationnumber = identificationnumber;
 		this.reportStatusId = reportStatusId;
 		this.institutionBasicInfoBo = null;
+		this.studyName = studyName;
 	}
 
-	public EquipmentAppointmentVo(Appointment appointment, Short identificationType, String identificationnumber, Integer institutionId, String institutionName, Short reportStatusId){
+	public EquipmentAppointmentVo(Appointment appointment, Short identificationType, String identificationnumber, Integer institutionId, String institutionName, Short reportStatusId, String studyName) {
 		this.appointment = appointment;
 		this.identificationType = identificationType;
 		this.identificationnumber = identificationnumber;
 		this.reportStatusId = reportStatusId;
 		this.institutionBasicInfoBo = new InstitutionBasicInfoBo(institutionId, institutionName);
+		this.studyName = studyName;
 	}
 
 	public Integer getId() {

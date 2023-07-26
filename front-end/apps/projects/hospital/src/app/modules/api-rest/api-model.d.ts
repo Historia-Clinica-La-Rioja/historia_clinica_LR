@@ -1289,6 +1289,7 @@ export interface EquipmentAppointmentListDto {
     patient: AppointmentBasicPatientDto;
     protected: boolean;
     reportStatusId: number;
+    studyName: string;
 }
 
 export interface EquipmentDiaryADto {

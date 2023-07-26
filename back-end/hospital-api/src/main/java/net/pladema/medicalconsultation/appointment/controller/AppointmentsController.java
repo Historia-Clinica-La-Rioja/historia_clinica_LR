@@ -81,6 +81,7 @@ import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -353,12 +354,14 @@ public class AppointmentsController {
 
 	private Collection<EquipmentAppointmentListDto> equipmentDataProcess(Collection<EquipmentAppointmentBo> resultService){
 		log.debug("Input parameters -> AppointmentsBo {}", resultService);
-		Set<Integer> patientsIds = resultService.stream().
-				filter(equipmentAppointmentBo -> equipmentAppointmentBo.getPatientId() != null).
-				map(EquipmentAppointmentBo::getPatientId).collect(Collectors.toSet());
-		Set<Integer> bookingAppointmentsIds = resultService.stream().
-				filter(appointmentBo -> appointmentBo.getPatientId() == null && !appointmentBo.getAppointmentStateId().equals(AppointmentState.BLOCKED)).
-				map(EquipmentAppointmentBo::getId).collect(Collectors.toSet());
+		Set<Integer> patientsIds = resultService.stream()
+				.map(EquipmentAppointmentBo::getPatientId)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toSet());
+		Set<Integer> bookingAppointmentsIds = resultService.stream()
+				.filter(appointmentBo -> appointmentBo.getPatientId() == null && !appointmentBo.getAppointmentStateId().equals(AppointmentState.BLOCKED))
+				.map(EquipmentAppointmentBo::getId)
+				.collect(Collectors.toSet());
 
 		var bookingPeople = bookingPersonService.getBookingPeople(bookingAppointmentsIds);
 		var basicPatientDtoMap = patientExternalService.getBasicDataFromPatientsId(patientsIds);
@@ -425,7 +428,8 @@ public class AppointmentsController {
 				equipmentAppointmentBo.getAppointmentStateId(),
 				false,
 				institutionMapper.fromInstitutionBasicInfoBo(equipmentAppointmentBo.getDerivedTo()),
-				equipmentAppointmentBo.getReportStatusId()
+				equipmentAppointmentBo.getReportStatusId(),
+				equipmentAppointmentBo.getStudyName()
 		);
 	}
 

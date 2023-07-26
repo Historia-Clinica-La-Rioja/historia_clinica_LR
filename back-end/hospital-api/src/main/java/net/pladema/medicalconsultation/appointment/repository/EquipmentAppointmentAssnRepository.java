@@ -44,7 +44,7 @@ public interface EquipmentAppointmentAssnRepository extends JpaRepository<Equipm
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.EquipmentAppointmentVo(a, pe.identificationTypeId, pe.identificationNumber, " +
-			"(CASE WHEN aoi.destInstitutionId != :institutionId THEN i.id ELSE NULL END) AS idInstitution, i.name, aoi.reportStatusId) " +
+			"(CASE WHEN aoi.destInstitutionId != :institutionId THEN i.id ELSE NULL END) AS idInstitution, i.name, aoi.reportStatusId, s.pt) " +
 			"FROM Appointment AS a " +
 			"JOIN EquipmentAppointmentAssn AS eaa ON (a.id = eaa.pk.appointmentId) " +
 			"LEFT JOIN AppointmentObservation AS ao ON (a.id = ao.appointmentId) " +
@@ -55,6 +55,8 @@ public interface EquipmentAppointmentAssnRepository extends JpaRepository<Equipm
 			"JOIN PersonExtended AS pex ON (pe.id = pex.id) "+
 			"LEFT JOIN AppointmentOrderImage AS aoi ON (a.id = aoi.pk.appointmentId) "+
 			"LEFT JOIN Institution AS i ON (aoi.destInstitutionId = i.id) "+
+			"LEFT JOIN DiagnosticReport AS dr ON (aoi.studyId = dr.id) " +
+			"LEFT JOIN Snomed AS s ON (dr.snomedId = s.id) " +
 			"WHERE e.id = :equipmentId " +
 			"AND a.appointmentStateId IN (1,2,3,5)")
 	List<EquipmentAppointmentVo> getAppointmentsByEquipmentId(@Param("equipmentId") Integer equipmentId, @Param("institutionId") Integer institutionId);

@@ -36,4 +36,6 @@ public class EquipmentAppointmentListDto {
 
 	private final Short reportStatusId;
 
+	private final String studyName;
+
 }
