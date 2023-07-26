@@ -303,6 +303,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 			disableClose: true
 		});
 		dialogRef.afterClosed().subscribe(reason => {
+			this.isDisableConfirmButton = false;
 			if (reason) {
 				anamnesis.modificationReason = reason;
 				this.anamnesisService.editAnamnesis(anamnesis, this.data.patientInfo.anamnesisId, this.data.patientInfo.internmentEpisodeId).subscribe(success => {

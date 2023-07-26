@@ -285,12 +285,12 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 			disableClose: true
 		});
 		dialogRef.afterClosed().subscribe(reason => {
+			this.isDisableConfirmButton = false;
 			if (reason) {
 				evolutionNote.modificationReason = reason;
 				this.evolutionNoteService.editEvolutionDiagnosis(evolutionNote, this.data.evolutionNoteId, this.data.internmentEpisodeId).subscribe(
 					success => this.showSuccesAndClosePopup(evolutionNote),
 					error => {
-						this.isDisableConfirmButton = false;
 						this.showError(error);
 					});
 			}

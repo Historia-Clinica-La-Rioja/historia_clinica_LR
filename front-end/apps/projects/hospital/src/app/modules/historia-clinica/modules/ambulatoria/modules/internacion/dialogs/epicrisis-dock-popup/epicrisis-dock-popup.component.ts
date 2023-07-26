@@ -266,11 +266,10 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	private saveEpicrisis() {
 		const epicrisis: EpicrisisDto = this.getEpicrisis(true);
 		this.ngOnDestroy();
-
+		this.isDisableConfirmButton = true;
 		if (this.data.patientInfo.epicrisisId) {
 			this.openEditReason(epicrisis);
 		} else {
-			this.isDisableConfirmButton = true;
 			this.epicrisisService.createDocument(epicrisis, this.data.patientInfo.internmentEpisodeId)
 				.subscribe(
 					(epicrisisResponse: ResponseEpicrisisDto) => {
@@ -485,13 +484,12 @@ export class EpicrisisDockPopupComponent implements OnInit {
 			disableClose: true
 		});
 		dialogRef.afterClosed().subscribe(reason => {
-			this.isDisableConfirmButton = true;
+			this.isDisableConfirmButton = false;
 			if (reason) {
 				epicrisis.modificationReason = reason;
 				this.epicrisisService.editEpicrsis(epicrisis, this.data.patientInfo.epicrisisId, this.data.patientInfo.internmentEpisodeId).subscribe(
 					success => this.showSuccesAndClosePopup(epicrisis),
 					_ => {
-						this.isDisableConfirmButton = false;
 						this.snackBarService.showError('internaciones.epicrisis.messages.ERROR')
 					});
 			}
