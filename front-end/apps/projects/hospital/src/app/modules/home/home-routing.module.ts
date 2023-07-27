@@ -41,13 +41,8 @@ const routes: Routes = [
 			{ path: '', pathMatch: 'full', component: InstitucionesComponent },
 			{ path: HomeRoutes.Profile, component: ProfileComponent },
 			{
-				path: HomeRoutes.Profile + '/'+ HomeRoutes.UserKeys,
+				path: HomeRoutes.Profile + '/' + HomeRoutes.UserKeys,
 				component: ManageKeysComponent,
-				canActivate: [RoleGuard],
-				data: {
-					allowedRoles: PUBLIC_API_ROLES,
-					needsRoot: true
-				},
 			},
 			{ path: `${HomeRoutes.Extension}/:menuItemId`, component: SystemExtensionComponent },
 			{

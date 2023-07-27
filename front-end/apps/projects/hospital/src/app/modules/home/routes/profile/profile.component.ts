@@ -3,7 +3,6 @@ import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { Observable } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { PermissionsService } from '@core/services/permissions.service';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 
 import { InstitutionDto, RoleAssignmentDto } from '@api-rest/api-model';
@@ -14,11 +13,9 @@ import { SnackBarService } from "@presentation/services/snack-bar.service";
 
 import { LoggedUserService } from '../../../auth/services/logged-user.service';
 import { ActivateTwoFactorAuthenticationComponent } from "../../dialogs/activate-two-factor-authentication/activate-two-factor-authentication.component";
-import { HomeRoutes, PUBLIC_API_ROLES } from '../../home-routing.module';
+import { HomeRoutes } from '../../home-routing.module';
+import { hasAccessToManageKeys } from '../manage-keys/manage-keys.component';
 
-const hasAccessToManageKeys = (allRoles: RoleAssignmentDto[]) => {
-	return allRoles.filter((ra) => PUBLIC_API_ROLES.find(r => ra.role === r)).length > 0;
-};
 @Component({
 	selector: 'app-profile',
 	templateUrl: './profile.component.html',
@@ -34,7 +31,6 @@ export class ProfileComponent {
 	constructor(
 		institutionService: InstitutionService,
 		loggedUserService: LoggedUserService,
-		permissionService: PermissionsService,
 		private router: Router,
 		private readonly dialog: MatDialog,
 		private readonly snackBarService: SnackBarService,
