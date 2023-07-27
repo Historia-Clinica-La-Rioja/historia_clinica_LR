@@ -77,7 +77,8 @@
                     "SEARCH_CONCLUTION": "Buscar conclusión",
                     "CONCEPT_LABEL": "Conclusión"
                 },
-                "DETAILED_REPORT": "Informe detallado: "         
+                "DETAILED_REPORT": "Informe detallado: ",
+                "PENDING_ORDER": "Orden pendiente"   
             },
             "WORKLIST_BY_INFORMER": "Lista de informes",
             "MODALITIES": "Seleccione modalidades",
