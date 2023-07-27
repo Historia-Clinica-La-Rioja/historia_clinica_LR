@@ -4,7 +4,7 @@
         <form [formGroup]="modalitiesForm" name="modalities-form">
             <mat-form-field class="dropdown-container" appearance="outline">
                 <mat-label [translate]="'image-network.worklist.MODALITIES'"></mat-label>
-                <mat-select id="modalities" (selectionChange)="setWorklist($event)" fxFlex="98%"
+                <mat-select id="modalities" (selectionChange)="selectModality($event)" fxFlex="98%"
                     formControlName="modalities">
                     <mat-option *ngFor="let modality of modalities$ | async" [value]="modality.id">
                         {{modality.description}}
@@ -14,6 +14,20 @@
                     (click)="cleanInput(); $event.stopPropagation()">
                     <mat-icon>close</mat-icon>
                 </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="date-range">
+                <mat-label [translate]="'image-network.worklist.DATE_RANGE'"></mat-label>
+                <mat-date-range-input
+                    [min]="dateRangeMin"
+                    [max]="dateRangeMax"
+                    [formGroup]="dateRangeForm"
+                    [rangePicker]="picker">
+                    <input matStartDate placeholder="{{ 'image-network.worklist.START_DATE' | translate }}" formControlName="start" (dateChange)="setWorkList()">
+                    <input matEndDate placeholder="{{ 'image-network.worklist.END_DATE' | translate }}" formControlName="end" (dateChange)="setWorkList()">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
             </mat-form-field>
         </form>
         <mat-card class="worklist-card">

@@ -11,6 +11,7 @@ export const MIN_DATE = new Date(MIN_YEAR, MIN_MONTH, MIN_DAY)
 
 export enum DateFormat {
 	VIEW_DATE = 'dd/MM/yyyy',
+	API_DATE = 'yyyy-MM-dd'
 }
 
 export enum DatePipeFormat {

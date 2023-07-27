@@ -12,10 +12,13 @@ import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { InformerStatus, mapToState } from '../../utils/study.utils';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { format } from 'date-fns';
+import { DateFormat } from '@core/utils/date.utils';
 
 const PAGE_SIZE_OPTIONS = [10];
 const PAGE_MIN_SIZE = 10;
+const DATE_RANGE = 60;
 
 @Component({
 	selector: 'app-worklist-by-informer',
@@ -39,6 +42,13 @@ export class WorklistByInformerComponent implements OnInit {
 	readonly COMPLETED = InformerStatus.COMPLETED;
 	readonly PENDING = InformerStatus.PENDING;
 
+	dateRangeForm = new UntypedFormGroup({
+		start: new FormControl<Date>(new Date(), Validators.required),
+		end: new FormControl<Date>(new Date(), Validators.required),
+	});
+	dateRangeMax: Date = new Date();
+	dateRangeMin: Date = new Date();
+
 	constructor(
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly modalityService: ModalityService,
@@ -60,19 +70,14 @@ export class WorklistByInformerComponent implements OnInit {
 		this.modalitiesForm = this.formBuilder.group({
 			modalities: []
 		});
-		this.worklistService.getByModalityAndInstitution().subscribe((worklist: WorklistDto[]) => {
-			this.worklists = this.mapToWorklist(worklist);
-			this.pageSlice = this.worklists.slice(0, PAGE_MIN_SIZE);
-		});
+		this.setWorkList();
+		this.setDateRanges();
 	}
 
-	setWorklist(modalitySelected: MatSelectChange) {
+	selectModality(modalitySelected: MatSelectChange) {
 		this.worklists = [];
 		this.modalityId = modalitySelected.value;
-		this.worklistService.getByModalityAndInstitution(this.modalityId).subscribe((worklist: WorklistDto[]) => {
-			this.worklists = this.mapToWorklist(worklist);
-			this.pageSlice = this.worklists.slice(0, PAGE_MIN_SIZE);
-		});
+		this.setWorkList();
 	}
 
 	goToDetails(appointmentId: number) {
@@ -83,10 +88,19 @@ export class WorklistByInformerComponent implements OnInit {
 		this.worklists = [];
 		this.modalitiesForm.controls.modalities.setValue(null);
 		this.modalityId = null;
-		this.worklistService.getByModalityAndInstitution().subscribe((worklist: WorklistDto[]) => {
+		this.setWorkList();
+	}
+
+	setWorkList() {
+		this.worklistService.getByModalityAndInstitution(this.modalityId, format(new Date(this.dateRangeForm.value.start), DateFormat.API_DATE), format(new Date(this.dateRangeForm.value.end), DateFormat.API_DATE)).subscribe((worklist: WorklistDto[]) => {
 			this.worklists = this.mapToWorklist(worklist);
 			this.pageSlice = this.worklists.slice(0, PAGE_MIN_SIZE);
 		});
+	}
+
+	private setDateRanges() {
+		this.dateRangeMax.setDate(this.dateRangeMax.getDate() + DATE_RANGE);
+		this.dateRangeMin.setDate(this.dateRangeMin.getDate() - DATE_RANGE);
 	}
 
 	private mapToWorklist(worklist: WorklistDto[]): Worklist[] {
