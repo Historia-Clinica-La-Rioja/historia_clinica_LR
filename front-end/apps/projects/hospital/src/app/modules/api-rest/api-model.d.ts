@@ -654,6 +654,7 @@ export interface CompleteDiaryDto extends DiaryDto {
     associatedProfessionalsInfo: ProfessionalPersonDto[];
     careLinesInfo: CareLineDto[];
     doctorsOfficeDescription: string;
+    hierarchicalUnitAlias: string;
     sectorDescription: string;
     sectorId: number;
     sectorName: string;
@@ -883,7 +884,9 @@ export interface DiaryADto {
     doctorsOfficeId: number;
     endDate: string;
     healthcareProfessionalId: number;
+    hierarchicalUnitId?: number;
     includeHoliday?: boolean;
+    predecessorProfessionalId?: number;
     professionalAssignShift?: boolean;
     protectedAppointmentsPercentage: number;
     startDate: string;

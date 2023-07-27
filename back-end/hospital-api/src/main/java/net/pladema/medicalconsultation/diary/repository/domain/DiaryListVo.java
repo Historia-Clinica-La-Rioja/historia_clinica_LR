@@ -43,6 +43,10 @@ public class DiaryListVo {
 
 	private Short protectedAppointmentsPercentage;
 
+	private Integer predecessorProfessionalId;
+
+	private Integer hierarchicalUnitId;
+
     public DiaryListVo(Diary diary, String doctorsOfficeDescription, String clinicalSpecialtyName) {
         this.id = diary.getId();
         this.doctorsOfficeId = diary.getDoctorsOfficeId();
@@ -57,6 +61,8 @@ public class DiaryListVo {
 		this.alias = diary.getAlias();
 		this.clinicalSpecialtyName = clinicalSpecialtyName;
 		this.protectedAppointmentsPercentage = diary.getProtectedAppointmentsPercentage();
+		this.predecessorProfessionalId = diary.getPredecessorProfessionalId();
+		this.hierarchicalUnitId = diary.getHierarchicalUnitId();
     }
 
 }

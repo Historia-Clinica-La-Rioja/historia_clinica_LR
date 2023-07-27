@@ -49,5 +49,9 @@ public class DiaryBo {
 	protected List<Integer> careLines;
 
 	protected Integer protectedAppointmentsPercentage;
+
+	protected Integer predecessorProfessionalId;
+
+	protected Integer hierarchicalUnitId;
     
 }

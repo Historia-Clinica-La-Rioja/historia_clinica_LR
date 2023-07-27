@@ -26,4 +26,6 @@ public class CompleteDiaryDto extends DiaryDto {
 	private List<CareLineDto> careLinesInfo;
 
 	private List<ProfessionalPersonDto> associatedProfessionalsInfo;
+
+	private String hierarchicalUnitAlias;
 }

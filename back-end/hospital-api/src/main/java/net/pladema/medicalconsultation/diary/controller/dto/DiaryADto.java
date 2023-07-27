@@ -60,4 +60,10 @@ public class DiaryADto {
 
 	@NotNull
 	private Integer protectedAppointmentsPercentage;
+
+	@Nullable
+	private Integer predecessorProfessionalId;
+
+	@Nullable
+	private Integer hierarchicalUnitId;
 }

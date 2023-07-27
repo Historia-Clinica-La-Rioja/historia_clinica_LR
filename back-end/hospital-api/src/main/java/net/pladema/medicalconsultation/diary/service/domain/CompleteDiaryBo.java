@@ -32,6 +32,8 @@ public class CompleteDiaryBo extends DiaryBo {
 
 	private List<ProfessionalPersonBo> associatedProfessionalsInfo;
 
+	private String hierarchicalUnitAlias;
+
 	public CompleteDiaryBo(DiaryBo diaryBo) {
 		appointmentDuration = diaryBo.getAppointmentDuration();
 		id = diaryBo.getId();
@@ -45,6 +47,8 @@ public class CompleteDiaryBo extends DiaryBo {
 		includeHoliday = diaryBo.isIncludeHoliday();
 		alias = diaryBo.getAlias();
 		protectedAppointmentsPercentage = diaryBo.getProtectedAppointmentsPercentage();
+		predecessorProfessionalId = diaryBo.getPredecessorProfessionalId();
+		hierarchicalUnitId = diaryBo.getHierarchicalUnitId();
 	}
 
 }

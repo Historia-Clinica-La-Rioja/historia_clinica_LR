@@ -87,9 +87,7 @@ public class DiaryServiceImpl implements DiaryService {
 	public Integer addDiary(DiaryBo diaryToSave) throws DiaryException {
 		LOG.debug("Input parameters -> diaryToSave {}", diaryToSave);
 
-		if(diaryToSave.getProtectedAppointmentsPercentage() > 0 && diaryToSave.getCareLines().isEmpty()) {
-			throw new DiaryException(DiaryEnumException.PROTECTED_APPOINTMENTS_PERCENTAGE_WITHOUT_CARELINES, "No se puede ingresar un porcentaje de turnos protegidos mayor a cero sin asociar lineas de cuidado a la agenda");
-		}
+		validateDiary(diaryToSave);
 
 		Diary diary = createDiaryInstance(diaryToSave);
 		Integer diaryId = persistDiary(diaryToSave, diary);
@@ -128,6 +126,8 @@ public class DiaryServiceImpl implements DiaryService {
 		diary.setClinicalSpecialtyId(diaryBo.getClinicalSpecialtyId());
 		diary.setAlias(diaryBo.getAlias());
 		diary.setProtectedAppointmentsPercentage(diaryBo.getProtectedAppointmentsPercentage().shortValue());
+		diary.setPredecessorProfessionalId(diaryBo.getPredecessorProfessionalId());
+		diary.setHierarchicalUnitId(diaryBo.getHierarchicalUnitId());
 		return diary;
 	}
 
@@ -149,9 +149,7 @@ public class DiaryServiceImpl implements DiaryService {
 	public Integer updateDiary(DiaryBo diaryToUpdate) throws DiaryException {
 		LOG.debug("Input parameters -> diaryToUpdate {}", diaryToUpdate);
 
-		if(diaryToUpdate.getProtectedAppointmentsPercentage() > 0 && diaryToUpdate.getCareLines().isEmpty()) {
-			throw new DiaryException(DiaryEnumException.PROTECTED_APPOINTMENTS_PERCENTAGE_WITHOUT_CARELINES, "No se puede ingresar un porcentaje de turnos protegidos mayor a cero sin asociar lineas de cuidado a la agenda");
-		}
+		validateDiary(diaryToUpdate);
 
 		return diaryRepository.findById(diaryToUpdate.getId()).map(savedDiary -> {
 			HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH = new HashMap<>();
@@ -279,6 +277,8 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setIncludeHoliday(diaryListVo.isIncludeHoliday());
 		result.setAlias(diaryListVo.getAlias());
 		result.setClinicalSpecialtyName(diaryListVo.getClinicalSpecialtyName());
+		result.setPredecessorProfessionalId(diaryListVo.getPredecessorProfessionalId());
+		result.setHierarchicalUnitId(diaryListVo.getHierarchicalUnitId());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
@@ -297,6 +297,8 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setDoctorOtherLastNames(completeDiaryListVo.getDoctorOtherLastNames());
 		result.setDoctorNameSelfDetermination(completeDiaryListVo.getDoctorNameSelfDetermination());
 		result.setProtectedAppointmentsPercentage(completeDiaryListVo.getProtectedAppointmentsPercentage() != null ? completeDiaryListVo.getProtectedAppointmentsPercentage().intValue() : 0);
+		result.setHierarchicalUnitId(completeDiaryListVo.getHierarchicalUnitId());
+		result.setHierarchicalUnitAlias(completeDiaryListVo.getHierarchicalUnitAlias());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
@@ -501,6 +503,15 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setClinicalSpecialtyName(diary.getClinicalSpecialtyName());
 		result.setAlias(diary.getAlias());
 		return result;
+	}
+
+	private void validateDiary(DiaryBo diaryBo) {
+		if (diaryBo.getPredecessorProfessionalId() != null && diaryBo.getHierarchicalUnitId() == null)
+			throw new DiaryException(DiaryEnumException.PREDECESSOR_PROFESSIONAL_WITHOUT_HIERARCHICAL_UNIT,
+					"No se puede ingresar un profesional a reemplazar sin seleccionar la unidad jerárquica a la que pertenece");
+
+		if (diaryBo.getProtectedAppointmentsPercentage() > 0 && diaryBo.getCareLines().isEmpty())
+			throw new DiaryException(DiaryEnumException.PROTECTED_APPOINTMENTS_PERCENTAGE_WITHOUT_CARELINES, "No se puede ingresar un porcentaje de turnos protegidos mayor a cero sin asociar lineas de cuidado a la agenda");
 	}
 
 }
