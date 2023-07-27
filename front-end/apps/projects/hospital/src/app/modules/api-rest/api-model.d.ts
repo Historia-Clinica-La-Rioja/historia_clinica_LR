@@ -778,6 +778,7 @@ export interface CreateOutpatientDto {
     clinicalSpecialtyId?: number;
     evolutionNote?: string;
     familyHistories: OutpatientFamilyHistoryDto[];
+    hierarchicalUnitId?: number;
     medications: OutpatientMedicationDto[];
     patientMedicalCoverageId?: number;
     problems: OutpatientProblemDto[];

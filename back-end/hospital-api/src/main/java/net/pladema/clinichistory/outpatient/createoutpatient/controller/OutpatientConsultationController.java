@@ -118,7 +118,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 			patientMedicalCoverageId= appointmentExternalService.getMedicalCoverage(patientId, doctorId);
 
         OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, true,
-                createOutpatientDto.getClinicalSpecialtyId(), patientMedicalCoverageId);
+                createOutpatientDto.getClinicalSpecialtyId(), patientMedicalCoverageId, createOutpatientDto.getHierarchicalUnitId());
 
         OutpatientDocumentBo outpatient = outpatientConsultationMapper.fromCreateOutpatientDto(createOutpatientDto);
         outpatient.setEncounterId(newOutPatient.getId());
@@ -160,7 +160,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
         Integer clinicalSpecialtyId = getClinicalSpecialtyId(vaccineDto);
 
-        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, true, clinicalSpecialtyId, null);
+        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, true, clinicalSpecialtyId, null, null);
         OutpatientDocumentBo outpatient = new OutpatientDocumentBo();
         outpatient.setEncounterId(newOutPatient.getId());
         outpatient.setInstitutionId(institutionId);
@@ -216,7 +216,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
             OutpatientUpdateImmunizationDto outpatientUpdateImmunization) {
         LOG.debug("Input parameters -> institutionId {}, patientId {}, OutpatientImmunizationDto {}", institutionId, patientId, outpatientUpdateImmunization);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, false, null, null);
+        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, false, null, null, null);
 
         OutpatientDocumentBo outpatient = new OutpatientDocumentBo();
         outpatient.setEncounterId(newOutPatient.getId());
@@ -245,7 +245,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
             @Valid HealthConditionNewConsultationDto solvedProblemDto) {
         LOG.debug("Input parameters -> institutionId {}, patientId {}, HealthConditionNewConsultationDto {}", institutionId, patientId, solvedProblemDto);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, false, null, null);
+        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, false, null, null, null);
         OutpatientDocumentBo outpatient = new OutpatientDocumentBo();
         outpatient.setEncounterId(newOutPatient.getId());
         outpatient.setInstitutionId(institutionId);
