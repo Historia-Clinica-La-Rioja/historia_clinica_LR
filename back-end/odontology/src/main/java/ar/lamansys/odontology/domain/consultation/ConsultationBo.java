@@ -45,4 +45,6 @@ public class ConsultationBo {
     private Integer temporaryTeethPresent;
 
 	private Integer patientMedicalCoverageId;
+
+	private Integer hierarchicalUnitId;
 }

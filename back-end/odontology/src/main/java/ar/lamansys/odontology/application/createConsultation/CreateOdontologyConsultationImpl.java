@@ -126,7 +126,8 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
                         medicalCoverageId,
                         doctorInfoBo.getId(),
                         now,
-                        true));
+                        true,
+						consultationBo.getHierarchicalUnitId()));
 
 
         consultationBo.setConsultationId(encounterId);
