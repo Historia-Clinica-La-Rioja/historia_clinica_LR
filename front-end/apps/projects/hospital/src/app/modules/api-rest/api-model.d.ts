@@ -719,7 +719,9 @@ export interface CounterReferenceDto extends Serializable {
     closureTypeId: number;
     counterReferenceNote: string;
     fileIds: number[];
+    hierarchicalUnitId?: number;
     medications: CounterReferenceMedicationDto[];
+    patientMedicalCoverageId?: number;
     procedures: CounterReferenceProcedureDto[];
     referenceId: number;
 }
