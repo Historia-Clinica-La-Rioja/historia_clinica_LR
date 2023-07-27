@@ -42,3 +42,87 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: hierarchical_unit
               validate: true
+
+    - changeSet:
+        id: addColumn-hierarchical_unit_id-outpatient_consultation
+        author: jvaldez
+        comment: Add hierarchical_unit_id column to outpatient_consultation table
+        changes:
+          - addColumn:
+              tableName: outpatient_consultation
+              columns:
+                - column:
+                    name: hierarchical_unit_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: hierarchical_unit_id
+              baseTableName: outpatient_consultation
+              constraintName: FK_outpatient_consultation_hierarchical_unit_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: hierarchical_unit
+              validate: true
+
+    - changeSet:
+        id: addColumn-hierarchical_unit_id-odontology_consultation
+        author: jvaldez
+        comment: Add hierarchical_unit_id column to odontology_consultation table
+        changes:
+          - addColumn:
+              tableName: odontology_consultation
+              columns:
+                - column:
+                    name: hierarchical_unit_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: hierarchical_unit_id
+              baseTableName: odontology_consultation
+              constraintName: FK_odontology_consultation_hierarchical_unit_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: hierarchical_unit
+              validate: true
+
+    - changeSet:
+        id: addColumn-hierarchical_unit_id-nursing_consultation
+        author: jvaldez
+        comment: Add hierarchical_unit_id column to nursing_consultation table
+        changes:
+          - addColumn:
+              tableName: nursing_consultation
+              columns:
+                - column:
+                    name: hierarchical_unit_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: hierarchical_unit_id
+              baseTableName: nursing_consultation
+              constraintName: FK_nursing_consultation_hierarchical_unit_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: hierarchical_unit
+              validate: true
+
+    - changeSet:
+        id: addColumn-hierarchical_unit_id-counter_reference
+        author: jvaldez
+        comment: Add hierarchical_unit_id column to counter_reference table
+        changes:
+          - addColumn:
+              tableName: counter_reference
+              columns:
+                - column:
+                    name: hierarchical_unit_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: hierarchical_unit_id
+              baseTableName: counter_reference
+              constraintName: FK_counter_reference_hierarchical_unit_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: hierarchical_unit
+              validate: true
