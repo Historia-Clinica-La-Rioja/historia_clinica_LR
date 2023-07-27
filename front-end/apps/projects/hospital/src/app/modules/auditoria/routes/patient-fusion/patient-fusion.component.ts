@@ -102,13 +102,13 @@ export class PatientFusionComponent implements OnInit {
 	}
 
 	getListPatientData() {
-			this.auditPatientService.getPatientPersonalInfo(this.patientToAudit).subscribe((patientPersonalData: PatientPersonalInfoDto[]) => {
-				this.listPatientData = this.setListPatientData(patientPersonalData);
-				this.listPatientData$ = of(this.listPatientData);
+		this.auditPatientService.getPatientPersonalInfo(this.patientToAudit).subscribe((patientPersonalData: PatientPersonalInfoDto[]) => {
+			this.listPatientData = this.setListPatientData(patientPersonalData);
+			this.listPatientData$ = of(this.listPatientData);
 
-				this.setInitPage();
-				this.setInfo();
-			})
+			this.setInitPage();
+			this.setInfo();
+		})
 	}
 
 	setInitPage() {
@@ -118,11 +118,11 @@ export class PatientFusionComponent implements OnInit {
 	}
 
 	setInfo() {
-		this.infoPatientToAudit = this.patientToAudit?.firstName + " ";
+		this.infoPatientToAudit = this.patientToAudit?.firstName ? this.patientToAudit.firstName + " " : '';
 		if (this.patientToAudit?.middleNames) {
 			this.infoPatientToAudit += this.patientToAudit.middleNames + " ";
 		}
-		this.infoPatientToAudit += this.patientToAudit.lastName + " ";
+		this.infoPatientToAudit += this.patientToAudit?.lastName ? this.patientToAudit.lastName + " " : '';
 		if (this.patientToAudit?.otherLastNames) {
 			this.infoPatientToAudit += this.patientToAudit.otherLastNames;
 		}
@@ -137,7 +137,6 @@ export class PatientFusionComponent implements OnInit {
 				this.infoPatientToAudit += " | " + this.getIdentificationType(this.patientToAudit?.identificationTypeId) + " " + this.patientToAudit.identificationNumber + " | Fecha Nac. " + this.patientToAudit?.birthdate;
 				break;
 			case this.filters.FILTER_DNI:
-				this.infoPatientToAudit = "Auditoría de "
 				this.infoPatientToAudit += this.getIdentificationType(this.patientToAudit?.identificationTypeId) + " " + this.patientToAudit.identificationNumber;
 				break;
 		}
@@ -151,7 +150,7 @@ export class PatientFusionComponent implements OnInit {
 	}
 
 	goToBack() {
-			this.router.navigate([this.routePrefix + ROUTE_CONTROL_PATIENT_DUPLICATE])
+		this.router.navigate([this.routePrefix + ROUTE_CONTROL_PATIENT_DUPLICATE])
 	}
 
 	getIdentificationType(value: number) {

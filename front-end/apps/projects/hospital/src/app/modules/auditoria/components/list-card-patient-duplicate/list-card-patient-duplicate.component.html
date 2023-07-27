@@ -2,7 +2,7 @@
 		<mat-form-field appearance="outline" class="serch" >
 			<mat-label>{{'internaciones.internment-patient-card.SEARCH' |
 				translate}}</mat-label>
-			<input matInput id="patient-filter" (keyup)="applyFilter($event)">
+			<input matInput id="patient-filter" [(ngModel)]="patientFilter" (keyup)="applyFilter($event)">
 			<mat-icon matSuffix>search</mat-icon>
 		</mat-form-field>
 </div>
