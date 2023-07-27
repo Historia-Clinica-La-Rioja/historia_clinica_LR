@@ -28,7 +28,9 @@ public class NursingConsultationInfoBo {
 
     private boolean billable;
 
-    public NursingConsultationInfoBo(Integer id, NursingConsultationBo nursingConsultation, Integer patientMedicalCoverageId, Integer doctorId, LocalDate performedDate, boolean billable) {
+	private Integer hierarchicalUnitId;
+
+    public NursingConsultationInfoBo(Integer id, NursingConsultationBo nursingConsultation, Integer patientMedicalCoverageId, Integer doctorId, LocalDate performedDate, boolean billable, Integer hierarchicalUnitId) {
         this.id = id;
         this.patientId = nursingConsultation.getPatientId();
         this.institutionId = nursingConsultation.getInstitutionId();
@@ -37,6 +39,7 @@ public class NursingConsultationInfoBo {
         this.doctorId = doctorId;
         this.performedDate = performedDate;
         this.billable = billable;
+		this.hierarchicalUnitId = hierarchicalUnitId;
     }
 
 }

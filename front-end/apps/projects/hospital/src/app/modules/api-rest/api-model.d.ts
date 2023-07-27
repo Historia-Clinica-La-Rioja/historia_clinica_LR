@@ -2205,6 +2205,7 @@ export interface NursingConsultationDto extends Serializable {
     anthropometricData?: NursingAnthropometricDataDto;
     clinicalSpecialtyId: number;
     evolutionNote?: string;
+    hierarchicalUnitId?: number;
     patientMedicalCoverageId?: number;
     problem: NursingProblemDto;
     procedures?: NursingProcedureDto[];
