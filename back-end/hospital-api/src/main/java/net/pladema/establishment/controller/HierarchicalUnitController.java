@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.pladema.establishment.application.hierarchicalunits.FetchHierarchicalUnitsByUserIdAndInstitutionId;
 import net.pladema.establishment.controller.dto.HierarchicalUnitDto;
 
 import net.pladema.establishment.service.HierarchicalUnitService;
@@ -28,6 +29,8 @@ public class HierarchicalUnitController {
 
 	private final HierarchicalUnitService hierarchicalUnitService;
 
+	private final FetchHierarchicalUnitsByUserIdAndInstitutionId fetchHierarchicalUnitsByUserIdAndInstitutionId;
+
 	@GetMapping()
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public ResponseEntity<List<HierarchicalUnitDto>> getAllByInstitution(@PathVariable(name = "institutionId") Integer institutionId) {
@@ -38,4 +41,19 @@ public class HierarchicalUnitController {
 		log.debug("Output {} ", hierarchicalUnitsDto);
 		return ResponseEntity.ok(hierarchicalUnitsDto);
 	}
+
+	@GetMapping("/user/{userId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA')")
+	public ResponseEntity<List<HierarchicalUnitDto>> fetchAllByUserIdAndInstitutionId(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "userId") Integer userId) {
+		log.debug("Input institutionId {}, userId {} ", institutionId, userId);
+		List<HierarchicalUnitDto> result = fetchHierarchicalUnitsByUserIdAndInstitutionId.run(userId, institutionId)
+				.stream()
+				.map(bo -> new HierarchicalUnitDto(bo.getId(), bo.getName()))
+				.collect(Collectors.toList());
+		log.debug("Output {} ", result);
+		return ResponseEntity.ok(result);
+	}
+	
 }

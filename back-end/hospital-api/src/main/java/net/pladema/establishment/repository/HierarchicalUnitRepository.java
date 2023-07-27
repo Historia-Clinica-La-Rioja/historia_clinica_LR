@@ -3,6 +3,8 @@ package net.pladema.establishment.repository;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.establishment.repository.entity.HierarchicalUnit;
 
+import net.pladema.establishment.service.domain.HierarchicalUnitBo;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -53,5 +55,16 @@ public interface HierarchicalUnitRepository extends SGXAuditableEntityJPAReposit
 			"hu.updateable.updatedBy = ?#{ principal.userId } " +
 			"WHERE hu.id =:id")
 	void setHierarchicalUnitIdToReport (@Param("id") Integer id, @Param("hierarchicalUnitIdToReport") Integer hierarchicalUnitIdToReport);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT new net.pladema.establishment.service.domain.HierarchicalUnitBo(hu.id, hu.alias) "+
+			"FROM HierarchicalUnit AS hu " +
+			"JOIN HierarchicalUnitStaff hus ON (hu.id = hus.hierarchicalUnitId) " +
+			"WHERE hu.institutionId = :institutionId " +
+			"AND hus.userId = :userId " +
+			"AND hus.deleteable.deleted IS FALSE " +
+			"ORDER BY hu.alias")
+	List<HierarchicalUnitBo> getAllByUserIdAndInstitutionId(@Param("userId") Integer userId,
+															@Param("institutionId") Integer institutionId);
 
 }
