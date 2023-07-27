@@ -42,8 +42,9 @@ const stateColor = {
 export class WorklistByTechnicalComponent implements OnInit {
     @ViewChild('select') select: MatSelect;
     @ViewChild('paginator') paginator: MatPaginator;
-    equipments$: Observable<EquipmentDto[]>;
+    equipments: EquipmentDto[] = [];
     modalities$: Observable<ModalityDto[]>;
+    allEquipments: EquipmentDto[] = [];
 
     detailedAppointments: detailedAppointment[] = [];
     appointments: EquipmentAppointmentListDto[] = [];
@@ -91,17 +92,44 @@ export class WorklistByTechnicalComponent implements OnInit {
 			equipment: [null],
 		});
 
-        this.equipments$ = this.equipmentService.getAll();
         this.modalities$ = this.modalityService.getAll();
+        this.equipmentService.getAll().subscribe(equipments => {
+            this.equipments = equipments;
+            this.allEquipments = equipments;
+        });
+    }
+
+    onModalityChange() {
+        let modalityId = this.filtersForm.controls.modality.value?.id
+        this.filtersForm.controls.equipment.setValue(null)
+        this.manageStatusCheckboxes();
+        this.resetAppointmentsData();
+        if (modalityId) {
+            this.equipmentService.getEquipmentByModality(modalityId).subscribe(equipments => {
+                this.equipments = equipments
+            });
+        } else {
+            this.equipments = this.allEquipments;
+        }
     }
 
     onEquipmentChange(equipment: MatSelectChange){
         let equipmentId = equipment.value.id;
         this.appointmentsService.getAppointmentsByEquipment(equipmentId).subscribe(appointments => {
             this.appointments = appointments;
-            this.setDefaultSelection();
-            this.checkSelection();
-         })
+            this.manageStatusCheckboxes();
+        })
+    }
+
+    private manageStatusCheckboxes() {
+        this.setDefaultSelection();
+        this.checkSelection();
+    }
+
+    private resetAppointmentsData() {
+        this.appointments = [];
+        this.detailedAppointments = [];
+        this.pageSlice = [];
     }
 
     private filterAppointments(stateFilters?: AppointmentState[]){
@@ -142,8 +170,9 @@ export class WorklistByTechnicalComponent implements OnInit {
         this.allSelected = newStatus;
     }
 
-    cleanInput() {
+    cleanModalityInput() {
         this.filtersForm.controls.modality.setValue(null);
+        this.onModalityChange();
     }
 
     private setDefaultSelection(){

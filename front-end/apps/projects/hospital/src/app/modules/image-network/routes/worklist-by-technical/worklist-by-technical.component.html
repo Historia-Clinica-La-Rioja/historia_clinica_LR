@@ -5,25 +5,29 @@
         <div *ngIf="permission; else noPermission">
             <form [formGroup]="filtersForm">
                 <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="10px">
-                    <mat-form-field appearance="outline">
-                        <mat-label [translate]="'image-network.worklist.filters.MODALITY'"></mat-label>
-                        <mat-select formControlName="modality" id="modality" fxFlex="98%">
-                            <mat-option *ngFor="let modality of (modalities$ | async)" id="modality.description" [value]="modality.id">
-                                {{modality.description}}
-                            </mat-option>
-                        </mat-select>
-                        <button *ngIf="filtersForm.controls.modality.value" mat-button matSuffix color="warn" mat-icon-button (click)="cleanInput(); $event.stopPropagation()">
-                            <mat-icon>close</mat-icon>
-                        </button>
-                    </mat-form-field>
-                    <mat-form-field appearance="outline">
-                        <mat-label [translate]="'image-network.equipment-diary-setup.EQUIPMENT_SELECT'"></mat-label>
-                        <mat-select formControlName="equipment" id="equipment" (selectionChange)="onEquipmentChange($event)" fxFlex="98%">
-                            <mat-option *ngFor="let equipment of (equipments$ | async)" id="equipment.name" [value]="equipment">
-                                {{equipment.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                    <div data-id="modality-filter">
+                        <mat-form-field appearance="outline">
+                            <mat-label [translate]="'image-network.worklist.filters.MODALITY'"></mat-label>
+                            <mat-select formControlName="modality" id="modality" fxFlex="98%" (selectionChange)="onModalityChange()">
+                                <mat-option *ngFor="let modality of (modalities$ | async)" id="modality.description" [value]="modality">
+                                    {{modality.description}}
+                                </mat-option>
+                            </mat-select>
+                            <button *ngIf="filtersForm.controls.modality.value" mat-button matSuffix color="warn" mat-icon-button (click)="cleanModalityInput(); $event.stopPropagation()">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                    <div data-id="equipment-filter">
+                        <mat-form-field appearance="outline">
+                            <mat-label [translate]="'image-network.equipment-diary-setup.EQUIPMENT_SELECT'"></mat-label>
+                            <mat-select formControlName="equipment" id="equipment" (selectionChange)="onEquipmentChange($event)" fxFlex="98%">
+                                <mat-option *ngFor="let equipment of equipments" id="equipment.name" [value]="equipment">
+                                    {{equipment.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
                 </div>
             </form>
 
