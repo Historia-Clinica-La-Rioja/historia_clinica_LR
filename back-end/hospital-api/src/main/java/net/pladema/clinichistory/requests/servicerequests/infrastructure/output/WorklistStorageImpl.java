@@ -10,6 +10,7 @@ import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.s
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,30 +24,30 @@ public class WorklistStorageImpl implements WorklistStorage {
 	private final AppointmentRepository appointmentRepository;
 
 	@Override
-	public List<WorklistBo> getWorklistByModalityAndInstitution(Integer modalityId, Integer institutionId) {
-		log.debug("Get worklist by modalityId {}, institutionId {}", modalityId, institutionId);
+	public List<WorklistBo> getWorklistByModalityAndInstitution(Integer modalityId, Integer institutionId, LocalDateTime start, LocalDateTime end) {
+		log.debug("Get worklist by modalityId {}, institutionId {}, startDate {}, endDate {}", modalityId, institutionId, start, end);
 		List<WorklistBo> result;
 		if (modalityId != null) {
-			result = appointmentRepository.getPendingWorklistByModalityAndInstitution(modalityId, institutionId).stream().map(w -> {
+			result = appointmentRepository.getPendingWorklistByModalityAndInstitution(modalityId, institutionId, start, end).stream().map(w -> {
 				w.setPatientFullName(w.getFullName(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)));
 				w.setStatusId(EDiagnosticImageReportStatus.PENDING.getId());
 				return w;
 			}).collect(Collectors.toList());
 
-			result.addAll(appointmentRepository.getCompletedWorklistByModalityAndInstitution(modalityId, institutionId).stream().map(w -> {
+			result.addAll(appointmentRepository.getCompletedWorklistByModalityAndInstitution(modalityId, institutionId, start, end).stream().map(w -> {
 				w.setPatientFullName(w.getFullName(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)));
 				w.setStatusId(EDiagnosticImageReportStatus.COMPLETED.getId());
 				return w;
 			}).collect(Collectors.toList()));
 		}
 		else {
-			result = appointmentRepository.getPendingWorklistByInstitution(institutionId).stream().map(w -> {
+			result = appointmentRepository.getPendingWorklistByInstitution(institutionId, start, end).stream().map(w -> {
 				w.setPatientFullName(w.getFullName(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)));
 				w.setStatusId(EDiagnosticImageReportStatus.PENDING.getId());
 				return w;
 			}).collect(Collectors.toList());
 
-			result.addAll(appointmentRepository.getCompletedWorklistByInstitution(institutionId).stream().map(w -> {
+			result.addAll(appointmentRepository.getCompletedWorklistByInstitution(institutionId, start, end).stream().map(w -> {
 				w.setPatientFullName(w.getFullName(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)));
 				w.setStatusId(EDiagnosticImageReportStatus.COMPLETED.getId());
 				return w;

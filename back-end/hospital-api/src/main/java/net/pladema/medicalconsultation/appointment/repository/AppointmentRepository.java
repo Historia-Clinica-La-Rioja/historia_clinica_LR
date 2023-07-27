@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.appointment.repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -390,6 +391,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN PersonExtended pex ON pe.id = pex.id " +
 			"WHERE e.modalityId = :modalityId " +
 			"AND aoi.destInstitutionId = :institutionId " +
+			"AND doi.completedOn BETWEEN :startDate AND :endDate " +
 			"AND aoi.completed = true " +
 			"AND a.id NOT IN ( SELECT aoi2.pk.appointmentId " +
 			"					FROM AppointmentOrderImage aoi2 " +
@@ -399,7 +401,10 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"					AND d.typeId =" + DocumentType.MEDICAL_IMAGE_REPORT + " " +
 			"					AND (d.deleteable.deleted = false OR d.deleteable.deleted is null) " +
 			"					AND aoi2.pk.appointmentId = a.id) ")
-	List<WorklistBo> getPendingWorklistByModalityAndInstitution(@Param("modalityId") Integer modalityId, @Param("institutionId") Integer institutionId);
+	List<WorklistBo> getPendingWorklistByModalityAndInstitution(@Param("modalityId") Integer modalityId,
+																@Param("institutionId") Integer institutionId,
+																@Param("startDate") LocalDateTime startDate,
+																@Param("endDate") LocalDateTime endDate);
 
 	@Transactional(readOnly = true)
 	@Query( "SELECT new net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo(p.id, pe.identificationTypeId," +
@@ -418,6 +423,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN PersonExtended pex ON pe.id = pex.id " +
 			"WHERE aoi.destInstitutionId = :institutionId " +
 			"AND aoi.completed = true " +
+			"AND doi.completedOn BETWEEN :startDate AND :endDate " +
 			"AND a.id NOT IN ( SELECT aoi2.pk.appointmentId " +
 			"					FROM AppointmentOrderImage aoi2 " +
 			"					JOIN Document d ON aoi2.documentId = d.id " +
@@ -426,7 +432,9 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"					AND d.typeId =" + DocumentType.MEDICAL_IMAGE_REPORT + " " +
 			"					AND (d.deleteable.deleted = false OR d.deleteable.deleted is null) " +
 			"					AND aoi2.pk.appointmentId = a.id) ")
-	List<WorklistBo> getPendingWorklistByInstitution(@Param("institutionId") Integer institutionId);
+	List<WorklistBo> getPendingWorklistByInstitution(@Param("institutionId") Integer institutionId,
+													 @Param("startDate") LocalDateTime startDate,
+													 @Param("endDate") LocalDateTime endDate);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmentBo(p.id, pe.firstName, pe.middleNames, pe.lastName, pe.otherLastNames, pex.nameSelfDetermination)" +
@@ -462,12 +470,16 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN AppointmentOrderImage aoi ON a.id = aoi.pk.appointmentId " +
 			"JOIN Document d ON aoi.documentId = d.id " +
 			"WHERE e.modalityId = :modalityId " +
+			"AND d.updateable.updatedOn BETWEEN :startDate AND :endDate " +
 			"AND aoi.destInstitutionId = :institutionId " +
 			"AND d.statusId = '" + DocumentStatus.FINAL + "'"	+ "  " +
 			"AND d.sourceTypeId =" + SourceType.MEDICAL_IMAGE + "  " +
 			"AND d.typeId =" + DocumentType.MEDICAL_IMAGE_REPORT + " " +
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" )
-	List<WorklistBo> getCompletedWorklistByModalityAndInstitution(@Param("modalityId") Integer modalityId, @Param("institutionId") Integer institutionId);
+	List<WorklistBo> getCompletedWorklistByModalityAndInstitution(@Param("modalityId") Integer modalityId,
+																  @Param("institutionId") Integer institutionId,
+																  @Param("startDate") LocalDateTime startDate,
+																  @Param("endDate") LocalDateTime endDate);
 
 	@Transactional(readOnly = true)
 	@Query( "SELECT new net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo(p.id, pe.identificationTypeId, " +
@@ -481,11 +493,14 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN Document d ON aoi.documentId = d.id " +
 			"JOIN Institution i ON d.institutionId = i.id " +
 			"WHERE aoi.destInstitutionId = :institutionId " +
+			"AND d.updateable.updatedOn BETWEEN :startDate AND :endDate " +
 			"AND d.statusId = '" + DocumentStatus.FINAL + "'"	+ "  " +
 			"AND d.sourceTypeId =" + SourceType.MEDICAL_IMAGE + "  " +
 			"AND d.typeId =" + DocumentType.MEDICAL_IMAGE_REPORT + " " +
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" )
-	List<WorklistBo> getCompletedWorklistByInstitution(@Param("institutionId") Integer institutionId);
+	List<WorklistBo> getCompletedWorklistByInstitution(@Param("institutionId") Integer institutionId,
+													   @Param("startDate") LocalDateTime startDate,
+													   @Param("endDate") LocalDateTime endDate);
 
 
 	@Query("SELECT  (CASE WHEN COUNT(a.id) > 0 THEN TRUE ELSE FALSE END) " +
