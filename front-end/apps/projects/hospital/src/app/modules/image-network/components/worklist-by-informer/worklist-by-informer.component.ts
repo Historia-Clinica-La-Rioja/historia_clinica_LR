@@ -98,7 +98,8 @@ export class WorklistByInformerComponent implements OnInit {
 				},
 				state: mapToState(w.statusId),
 				date: dateTimeDtotoLocalDate(w.actionTime),
-				appointmentId: w.appointmentId
+				appointmentId: w.appointmentId,
+				institutionName: w.completionInstitution.name
 			}
 		})
 	}

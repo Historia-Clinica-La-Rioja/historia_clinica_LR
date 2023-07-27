@@ -15,6 +15,13 @@ span {
     text-align: start;
 }
 
+.institution {
+    mat-icon {
+        color: grey;
+        margin-right: .5rem;
+    }
+}
+
 @media (max-width: 960px) {
     span {
         text-align: center;
