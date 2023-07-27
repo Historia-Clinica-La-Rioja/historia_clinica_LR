@@ -1,2 +1,44 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v2_6
+
+    - changeSet:
+        id: addColumn-predecessor_professional-diary
+        comment: Add column predecessor_professional to diary table
+        author: bchacon
+        changes:
+          - addColumn:
+              tableName: diary
+              columns:
+                - column:
+                    name: predecessor_professional_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: predecessor_professional_id
+              baseTableName: diary
+              constraintName: FK_diary_predecessor_professional_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: healthcare_professional
+              validate: true
+
+    - changeSet:
+        id: addColumn-hierarchical_unit_id-diary
+        comment: Add column hierarchical_unit_id to diary table
+        author: bchacon
+        changes:
+          - addColumn:
+              tableName: diary
+              columns:
+                - column:
+                    name: hierarchical_unit_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: hierarchical_unit_id
+              baseTableName: diary
+              constraintName: FK_diary_hierarchical_unit_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: hierarchical_unit
+              validate: true
