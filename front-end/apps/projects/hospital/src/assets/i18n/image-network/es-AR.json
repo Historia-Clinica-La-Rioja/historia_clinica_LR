@@ -80,6 +80,9 @@
                 "DETAILED_REPORT": "Informe detallado: ",
                 "PENDING_ORDER": "Orden pendiente"   
             },
+            "filters": {
+                "MODALITY": "Seleccione modalidad"
+            },
             "WORKLIST_BY_INFORMER": "Lista de informes",
             "MODALITIES": "Seleccione modalidad",
             "DATE_RANGE": "Rango de fechas",

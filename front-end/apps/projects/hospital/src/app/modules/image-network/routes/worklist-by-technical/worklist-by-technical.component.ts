@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
-import { EquipmentAppointmentListDto, EquipmentDto, InstitutionBasicInfoDto } from '@api-rest/api-model';
+import { EquipmentAppointmentListDto, EquipmentDto, InstitutionBasicInfoDto, ModalityDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { mapDateWithHypenToDateWithSlash, timeToString } from '@api-rest/mapper/date-dto.mapper';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
@@ -22,6 +22,7 @@ import { FinishStudyComponent, StudyInfo } from "../../dialogs/finish-study/fini
 import { DeriveReportComponent } from '../../dialogs/derive-report/derive-report.component';
 import { TranslateService } from '@ngx-translate/core';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { ModalityService } from '@api-rest/services/modality.service';
 
 const PAGE_SIZE_OPTIONS = [10];
 const PAGE_MIN_SIZE = 10;
@@ -42,8 +43,12 @@ export class WorklistByTechnicalComponent implements OnInit {
     @ViewChild('select') select: MatSelect;
     @ViewChild('paginator') paginator: MatPaginator;
     equipments$: Observable<EquipmentDto[]>;
+    modalities$: Observable<ModalityDto[]>;
+
     detailedAppointments: detailedAppointment[] = [];
     appointments: EquipmentAppointmentListDto[] = [];
+
+    filtersForm: UntypedFormGroup;
 
     nameSelfDeterminationFF = false;
 	permission = false;
@@ -67,7 +72,9 @@ export class WorklistByTechnicalComponent implements OnInit {
         private readonly appointmentsService: AppointmentsService,
         private readonly translateService: TranslateService,
         private readonly snackBarService: SnackBarService,
-	    public dialog: MatDialog
+        private readonly modalityService: ModalityService,
+	    public dialog: MatDialog,
+		private readonly formBuilder: UntypedFormBuilder,
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
 			this.nameSelfDeterminationFF = isOn
@@ -79,7 +86,13 @@ export class WorklistByTechnicalComponent implements OnInit {
 	}
 
     ngOnInit(): void {
+        this.filtersForm = this.formBuilder.group({
+			modality: [null],
+			equipment: [null],
+		});
+
         this.equipments$ = this.equipmentService.getAll();
+        this.modalities$ = this.modalityService.getAll();
     }
 
     onEquipmentChange(equipment: MatSelectChange){
@@ -127,6 +140,10 @@ export class WorklistByTechnicalComponent implements OnInit {
           }
         });
         this.allSelected = newStatus;
+    }
+
+    cleanInput() {
+        this.filtersForm.controls.modality.setValue(null);
     }
 
     private setDefaultSelection(){
