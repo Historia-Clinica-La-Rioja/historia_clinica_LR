@@ -1,141 +1,111 @@
-import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { UntypedFormGroup, Validators } from '@angular/forms';
-import { CareLineDto, ClinicalSpecialtyDto, ReferenceProblemDto } from '@api-rest/api-model';
+import { AddressDto, CareLineDto, ClinicalSpecialtyDto } from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
-import { Observable } from 'rxjs';
-import { ReferenceProblemsService } from '../../services/reference-problems.service';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Component({
-    selector: 'app-carelines-and-specialties-reference',
-    templateUrl: './carelines-and-specialties-reference.component.html',
-    styleUrls: ['./carelines-and-specialties-reference.component.scss']
+	selector: 'app-carelines-and-specialties-reference',
+	templateUrl: './carelines-and-specialties-reference.component.html',
+	styleUrls: ['./carelines-and-specialties-reference.component.scss']
 })
-export class CarelinesAndSpecialtiesReferenceComponent implements OnInit, OnChanges {
 
-    @Input() formReference: UntypedFormGroup;
-    @Input() set updateFormFields(updateSpecialtiesAndCarelineFields: boolean) {
-        if (updateSpecialtiesAndCarelineFields) {
-            this.setInformation();
-        }
-    }
-    @Input() set clearCarelinesAndSpecialties(clearCarelinesAndSpecialtiesFields: boolean) {
-        if (clearCarelinesAndSpecialtiesFields) {
-            this.clearFormFields();
-        }
-    }
+export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 
-    @Output() resetControls = new EventEmitter();
+	@Input() formReference: UntypedFormGroup;
+	@Input() set setProvinceId(provinceId: number) {
+		if (provinceId) {
+			this.careLineService.getCareLinesByProvinceId(provinceId).subscribe((careLine: CareLineDto[]) =>
+				this.careLines = careLine
+			);
+			this.clinicalSpecialty.getClinicalSpecialtiesByProvinceId(provinceId).subscribe((clinicalSpecialties: ClinicalSpecialtyDto[]) => {
+				this.allClinicalSpecialties = clinicalSpecialties;
+				this.specialtiesSubject.next(clinicalSpecialties);
+			});
+		}
+	};
 
-    specialties$: Observable<ClinicalSpecialtyDto[]>;
-    DEFAULT_RADIO_OPTION = '0';
-    careLines: CareLineDto[];
+	@Output() updateDepartamentsAndInstitution = new EventEmitter();
+	careLines: CareLineDto[] = [];
+	allClinicalSpecialties: ClinicalSpecialtyDto[] = [];
+	specialtiesSubject = new BehaviorSubject<ClinicalSpecialtyDto[]>([]);
+	allSpecialtiesSubject = new BehaviorSubject<ClinicalSpecialtyDto[]>([]);
+	specialties$: Observable<ClinicalSpecialtyDto[]>;
+	DEFAULT_RADIO_OPTION = true;
 
-    constructor(
-        private readonly careLineService: CareLineService,
-        private readonly clinicalSpecialty: ClinicalSpecialtyService,
-        private readonly referenceProblemsService: ReferenceProblemsService) { }
+	originInstitutionInfo: AddressDto;
+	constructor(
+		private readonly careLineService: CareLineService,
+		private readonly clinicalSpecialty: ClinicalSpecialtyService,
+	) { }
 
-    ngOnInit(): void {
-        this.subscribesToChangesInForm();
-    }
+	ngOnInit(): void {
+		this.subscribesToChangesInForm();
+	}
 
-    ngOnChanges(): void {
-        this.resetControls.emit();
-    }
 
-    setSpecialtyCareLine(): void {
-        const careLine = this.formReference.value.careLine;
-        if (careLine) {
-            this.formReference.controls.clinicalSpecialtyId.enable();
-            this.formReference.controls.clinicalSpecialtyId.setValidators([Validators.required]);
-            this.formReference.updateValueAndValidity();
-            this.specialties$ = this.clinicalSpecialty.getAllByDestinationInstitution(careLine.id, this.formReference.value.institutionDestinationId);
-        }
-    }
+	setSpecialtyCareLine(): void {
+		const careLine = this.formReference.value.careLine;
+		if (careLine) {
+			this.formReference.controls.clinicalSpecialtyId.enable();
+			this.formReference.controls.clinicalSpecialtyId.setValidators([Validators.required]);
+			this.formReference.updateValueAndValidity();
+			this.specialtiesSubject.next(this.formReference.value.careLine.clinicalSpecialties);
+		}
+	}
 
-    setInformation() {
-        if (!this.formReference.value.institutionDestinationId) {
-            this.clearFormFields();
-            return;
-        }
-        if (this.formReference.value.searchByCareLine === this.DEFAULT_RADIO_OPTION)
-            this.setCareLines();
-        else
-            this.setSpecialties();
-    }
+	setInformation() {
+		if (!this.formReference.value.institutionDestinationId) {
+			this.clearFormFields();
+			return;
+		}
+		if (this.formReference.value.searchByCareLine != this.DEFAULT_RADIO_OPTION)
+			this.setSpecialties();
 
-    private setCareLines() {
-        const problemSnomedIds: string[] = this.referenceProblemsService.mapProblems().map(problem => problem.snomed.sctid);
-        const institutionId = this.formReference.value.institutionDestinationId;
-        if (!problemSnomedIds.length || !institutionId) {
-            this.formReference.controls.careLine.disable();
-        }
-        if (problemSnomedIds.length && institutionId) {
-            this.formReference.controls.careLine.enable();
-            this.formReference.controls.careLine.updateValueAndValidity();
-            this.careLineService.getByProblemSnomedIdsAndInstitutionId(institutionId, problemSnomedIds).subscribe(careLines => this.careLines = careLines);
-        }
-        this.formReference.controls.clinicalSpecialtyId.disable();
-    }
+	}
 
-    private setSpecialties() {
-        const institutionId = this.formReference.value.institutionDestinationId;
-        if (institutionId) {
-            this.formReference.controls.clinicalSpecialtyId.enable();
-            this.specialties$ = this.clinicalSpecialty.getClinicalSpecialtyByInstitution(institutionId);
-            this.formReference.controls.clinicalSpecialtyId.updateValueAndValidity();
-        }
-    }
+	setSpecialtiesByProvince() {
+		this.specialtiesSubject.next(this.allClinicalSpecialties);
+	}
 
-    private subscribesToChangesInForm() {
-        this.formReference.controls.searchByCareLine.valueChanges.subscribe(option => {
-            if (option === this.DEFAULT_RADIO_OPTION) {
-                this.updateClinicalSpecialtyFormField();
-                this.setCareLines();
-            } else {
-                this.updateCareLineFormField();
-                this.setSpecialties();
-            }
-        });
-    }
+	private setSpecialties() {
+		const institutionId = this.formReference.value.institutionDestinationId;
+		if (institutionId) {
+			this.formReference.controls.clinicalSpecialtyId.enable();
+			this.specialties$ = this.clinicalSpecialty.getClinicalSpecialtyByInstitution(institutionId);
+			this.formReference.controls.clinicalSpecialtyId.updateValueAndValidity();
+		}
+	}
 
-    private updateClinicalSpecialtyFormField() {
-        this.formReference.controls.careLine.setValidators([Validators.required]);
-        this.formReference.controls.clinicalSpecialtyId.setValue(null);
-        this.formReference.controls.clinicalSpecialtyId.disable();
-        this.formReference.controls.clinicalSpecialtyId.updateValueAndValidity();
-    }
+	private subscribesToChangesInForm() {
+		this.formReference.controls.searchByCareLine.valueChanges.subscribe(option => {
+			if (option === this.DEFAULT_RADIO_OPTION) {
+				this.updateClinicalSpecialtyFormField();
+			} else {
+				this.updateCareLineFormField();
+				this.setSpecialties();
+			}
+		});
+	}
 
-    private updateCareLineFormField() {
-        this.formReference.controls.careLine.removeValidators([Validators.required]);
-        this.formReference.controls.careLine.setValue(null);
-        this.formReference.controls.careLine.disable();
-        this.formReference.controls.careLine.updateValueAndValidity();
-    }
+	private updateClinicalSpecialtyFormField() {
+		this.formReference.controls.careLine.setValidators([Validators.required]);
+		this.formReference.controls.clinicalSpecialtyId.updateValueAndValidity();
+	}
 
-    private clearFormFields() {
-        if (this.careLines?.length) {
-            this.careLines = [];
-            this.formReference.controls.careLine.setValue(null);
-            this.formReference.controls.careLine.updateValueAndValidity();
-        }
-        this.specialties$?.subscribe(specialties => {
-            if (specialties.length) {
-                this.formReference.controls.clinicalSpecialtyId.setValue(null);
-                this.formReference.controls.clinicalSpecialtyId.updateValueAndValidity();
-            }
-        });
+	private updateCareLineFormField() {
+		this.formReference.controls.careLine.removeValidators([Validators.required]);
+		this.formReference.controls.careLine.setValue(null);
+		this.formReference.controls.careLine.updateValueAndValidity();
+	}
 
-        disableInputs(this.formReference, this.referenceProblemsService.mapProblems());
+	clearFormFields() {
 
-        function disableInputs(formReference: UntypedFormGroup, referenceProblemDto: ReferenceProblemDto[]) {
-            if (!formReference.value.institutionDestinationId) {
-                formReference.controls.clinicalSpecialtyId.disable();
-            }
-            if (!referenceProblemDto.length || !formReference.value.institutionDestinationId) {
-                formReference.controls.careLine.disable();
-            }
-        }
-    }
+		this.specialtiesSubject.next(null);
+
+	}
+
+
+
 }
