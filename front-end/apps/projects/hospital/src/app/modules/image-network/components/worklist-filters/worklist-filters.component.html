@@ -1,0 +1,18 @@
+<form [formGroup]="filtersForm" [hidden]="!panelOpenState">
+    <div class="filters-container">
+        <mat-form-field class="state-dropdown-container" appearance="outline">
+            <mat-label>{{'image-network.appointments.FILTER_BY_STATE' | translate }}</mat-label>
+            <mat-select #select [formControl]="states" (selectionChange)="onStatusChange($event)" multiple>
+                <mat-select-trigger>{{selectedStates}}</mat-select-trigger>
+                <mat-option *ngFor="let appointmentState of appointmentsStates" (click)="checkSelection()"
+                    [value]="appointmentState">{{appointmentState.description}}</mat-option>
+                <mat-divider class="dropdown-divider"></mat-divider>
+                <div class="select-all">
+                    <mat-checkbox [(ngModel)]="allSelected" [ngModelOptions]="{standalone: true}"
+                        (change)="toggleAllSelection()" color="primary">{{'buttons.ALL' | translate
+                        }}</mat-checkbox>
+                </div>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</form>

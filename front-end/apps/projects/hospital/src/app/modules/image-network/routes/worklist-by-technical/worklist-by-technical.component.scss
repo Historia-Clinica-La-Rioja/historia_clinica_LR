@@ -10,15 +10,6 @@
     padding: 1% 3% 3% 3%;
 }
 
-.state-dropdown-container {
-    width: 25%;
-    height: fit-content;
-}
-
-.filters-container {
-    margin: 2% 0 !important;
-}
-
 :host ::ng-deep .mat-form-field-type-mat-date-range-input .mat-form-field-infix {
     width: 220px;
     padding: 0;
@@ -26,15 +17,9 @@
     padding-bottom: 2px;
 }
 
-.dropdown-divider {
-    margin: 0 5%;
-}
-
-.select-all{
-    margin: 0 16px;
-    height: 3em;
-    display: flex;
-    align-items: center;
+.button-filter-effect {
+	transform: rotate(180deg);
+	transition: transform 256ms;
 }
 
 #equipment{
@@ -124,9 +109,6 @@
 //------------------------//
 
 @media (max-width: 960px) {
-    .state-dropdown-container {
-        width: 30%;
-    }
 	.appointment-container {
 		align-items: start;
 	}

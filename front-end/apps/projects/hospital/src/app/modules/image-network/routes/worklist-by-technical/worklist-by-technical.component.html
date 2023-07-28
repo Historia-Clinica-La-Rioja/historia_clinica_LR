@@ -48,30 +48,24 @@
                                 [translate]="'forms.REQUIRED'"></mat-error>
                         </mat-form-field>
                     </div>
+                    <div style="height: 55px;">
+                        <button id="button-filter" mat-button color="primary" fxLayoutAlign="center start" (click)="setPanelState()">
+                            <mat-icon color="primary">filter_list</mat-icon>
+                            {{'internaciones.internment-patient-card.filters.FILTER'| translate | uppercase }} <mat-icon color="primary" 
+                            [ngClass]="{'button-filter-effect':panelOpenState }">
+                                keyboard_arrow_down</mat-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="10px" [hidden]="!panelOpenState">
+                    <app-worklist-filters [appointmentsStates]="appointmentsStates" [defaultStates]="defaultStates" [panelOpenState]="panelOpenState" (search)="search($event)"></app-worklist-filters>
                 </div>
             </form>
 
             <mat-card class="worklist-card">
 
-                <div class="filters-container">
-                    <mat-form-field class="state-dropdown-container" appearance="outline">
-                        <mat-label>{{'image-network.appointments.FILTER_BY_STATE' | translate }}</mat-label>
-                        <mat-select #select [formControl]="states" (selectionChange)="onStatusChange($event)" multiple>
-                            <mat-select-trigger>{{selectedStates}}</mat-select-trigger>
-                            <mat-option *ngFor="let appointmentState of appointmentsStates" (click)="checkSelection()"
-                                [value]="appointmentState">{{appointmentState.description}}</mat-option>
-                            <mat-divider class="dropdown-divider"></mat-divider>
-                            <div class="select-all">
-                                <mat-checkbox [(ngModel)]="allSelected" [ngModelOptions]="{standalone: true}"
-                                    (change)="toggleAllSelection()" color="primary">{{'buttons.ALL' | translate
-                                    }}</mat-checkbox>
-                            </div>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-
                 <mat-list class="mat-form-field-wrapper" *ngIf="detailedAppointments.length">
-                    <mat-divider></mat-divider>
                     <div *ngFor="let appointment of pageSlice">
                         <mat-list-item class="appointment-detail">
                             <div class="appointment-container" fxFlex="100">

@@ -131,11 +131,11 @@ export class AppointmentsService {
 
 	getAppointmentsByEquipment(equipmentId: number, from?: string, to?: string): Observable<EquipmentAppointmentListDto[]> {
 		let queryParams: HttpParams = new HttpParams();
-		queryParams = from ? queryParams.append('from', JSON.stringify(from)) : queryParams;
-		queryParams = to ? queryParams.append('to', JSON.stringify(to)) : queryParams;
+		queryParams = from ? queryParams.append('from', from) : queryParams;
+		queryParams = to ? queryParams.append('to', to) : queryParams;
 
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/list-appoiments-by-equipment/${equipmentId}`;
-		return this.http.get<EquipmentAppointmentListDto[]>(url)
+		return this.http.get<EquipmentAppointmentListDto[]>(url, { params: queryParams })
 	}
 
 	deriveReport(appointmentId: number, destInstitutionId: number): Observable<boolean> {

@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatOption } from '@angular/material/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSelect, MatSelectChange } from '@angular/material/select';
+import { MatSelectChange } from '@angular/material/select';
 import { EquipmentAppointmentListDto, EquipmentDto, InstitutionBasicInfoDto, ModalityDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { mapDateWithHypenToDateWithSlash, timeToString } from '@api-rest/mapper/date-dto.mapper';
@@ -27,6 +26,7 @@ import { subDays } from 'date-fns';
 import { Moment } from 'moment';
 import { hasError } from '@core/utils/form.utils';
 import * as moment from 'moment';
+import { SearchFilters, WorklistFiltersComponent } from '../../components/worklist-filters/worklist-filters.component';
 
 const PAGE_SIZE_OPTIONS = [10];
 const PAGE_MIN_SIZE = 10;
@@ -36,7 +36,7 @@ const stateColor = {
     [APPOINTMENT_STATES_ID.SERVED]: Color.GREEN,
     [APPOINTMENT_STATES_ID.CANCELLED]: Color.RED,
     [APPOINTMENT_STATES_ID.ASSIGNED]: Color.BLUE
-  }
+}
 
 @Component({
     selector: 'app-worklist-by-technical',
@@ -44,8 +44,8 @@ const stateColor = {
     styleUrls: ['./worklist-by-technical.component.scss']
 })
 export class WorklistByTechnicalComponent implements OnInit {
-    @ViewChild('select') select: MatSelect;
     @ViewChild('paginator') paginator: MatPaginator;
+    @ViewChild(WorklistFiltersComponent) worklistFilters: WorklistFiltersComponent;
     equipments: EquipmentDto[] = [];
     modalities$: Observable<ModalityDto[]>;
     allEquipments: EquipmentDto[] = [];
@@ -68,13 +68,14 @@ export class WorklistByTechnicalComponent implements OnInit {
 
     appointmentsStates = WORKLIST_APPOINTMENT_STATES;
     reportStates = REPORT_STATES_ID;
-    states = new UntypedFormControl('');
-    selectedStates: string = '';
-    allSelected = false;
+    defaultStates = [];
+    searchFilters: SearchFilters;
 
     pageSizeOptions = PAGE_SIZE_OPTIONS;
     pageSlice = [];
 	selectedAppointment: EquipmentAppointmentListDto;
+
+    panelOpenState = true;
 
     readonly appointmentStatesId = APPOINTMENT_STATES_ID;
 
@@ -106,6 +107,8 @@ export class WorklistByTechnicalComponent implements OnInit {
             })
 		});
 
+        this.setDefaultStates();
+
         this.modalities$ = this.modalityService.getAll();
         this.equipmentService.getAll().subscribe(equipments => {
             this.equipments = equipments;
@@ -113,7 +116,22 @@ export class WorklistByTechnicalComponent implements OnInit {
         });
     }
 
+    private setDefaultStates() {
+        this.defaultStates = [];
+        this.defaultStates.push(this.appointmentsStates.find(appointment => appointment.id === APPOINTMENT_STATES_ID.ASSIGNED))
+        this.defaultStates.push(this.appointmentsStates.find(appointment => appointment.id === APPOINTMENT_STATES_ID.CONFIRMED))
+    }
+
+    private setPreviousStates() {
+        this.defaultStates = this.searchFilters.appointmentStates;
+    }
+
+    private manageStatusCheckboxes() {
+        this.worklistFilters.manageStatusCheckboxes();
+    }
+
     onModalityChange() {
+        this.equipments = [];
         let modalityId = this.filtersForm.controls.modality.value?.id
         this.filtersForm.controls.equipment.setValue(null)
         this.manageStatusCheckboxes();
@@ -130,6 +148,8 @@ export class WorklistByTechnicalComponent implements OnInit {
 
     onEquipmentChange(equipment: MatSelectChange){
         this.equipmentId = equipment.value.id;
+        this.setDefaultStates();
+        this.resetAppointmentsData();
         this.getAppointments(this.equipmentId, this.startDate, this.endDate);
     }
 
@@ -137,8 +157,21 @@ export class WorklistByTechnicalComponent implements OnInit {
         this.startDate = this.filtersForm.get('datePicker').get('start').value?.format('YYYY-MM-DD');
         this.endDate = this.filtersForm.get('datePicker').get('end').value?.format('YYYY-MM-DD');
         if (this.startDate && this.endDate && this.equipmentId) {
+            this.setPreviousStates();
             this.getAppointments(this.equipmentId, this.startDate, this.endDate);
         }
+    }
+
+    setPanelState(): void {
+		this.panelOpenState = !this.panelOpenState;
+        this.setDefaultStates()
+	}
+
+    search(searchFilters: SearchFilters) {
+        this.searchFilters = searchFilters;
+        this.setPreviousStates();
+        this.filterAppointments(searchFilters.appointmentStates);
+        this.paginator?.firstPage();
     }
 
     private getAppointments(equipmentId: number, from?: string, to?: string){
@@ -146,11 +179,6 @@ export class WorklistByTechnicalComponent implements OnInit {
             this.appointments = appointments;
             this.manageStatusCheckboxes();
         })
-    }
-
-    private manageStatusCheckboxes() {
-        this.setDefaultSelection();
-        this.checkSelection();
     }
 
     private resetAppointmentsData() {
@@ -165,50 +193,9 @@ export class WorklistByTechnicalComponent implements OnInit {
         this.pageSlice = this.detailedAppointments.slice(0, PAGE_MIN_SIZE);
     }
 
-    onStatusChange(states: MatSelectChange){
-        this.setSelectionText(states);
-        this.filterAppointments(states.value);
-        this.paginator?.firstPage();
-    }
-
-    private setSelectionText(states: MatSelectChange){
-        this.selectedStates = '';
-        states.value.map(state => {
-            this.selectedStates = this.selectedStates.concat(state.description.toString(), ", ")
-        })
-        this.selectedStates = this.selectedStates.trim().slice(0, -1);
-    }
-
-    toggleAllSelection() {
-        if (this.allSelected) {
-          this.select.options.forEach((item: MatOption) => item.select());
-        } else {
-          this.select.options.forEach((item: MatOption) => item.deselect());
-        }
-      }
-
-    checkSelection() {
-        let newStatus = true;
-        this.select.options.forEach((item: MatOption) => {
-          if (!item.selected) {
-            newStatus = false;
-          }
-        });
-        this.allSelected = newStatus;
-    }
-
     cleanModalityInput() {
         this.filtersForm.controls.modality.setValue(null);
         this.onModalityChange();
-    }
-
-    private setDefaultSelection(){
-        this.select?.options.forEach((item: MatOption) => {
-            item.deselect();
-            if ((item.value.id === APPOINTMENT_STATES_ID.ASSIGNED || item.value.id === APPOINTMENT_STATES_ID.CONFIRMED) && !item.selected) {
-                item._selectViaInteraction();
-            }
-        });
     }
 
     private getAppointmentStateColor(appointmentStateId: number): string {
@@ -275,7 +262,7 @@ export class WorklistByTechnicalComponent implements OnInit {
             if (result?.updateState) {
 				this.selectedAppointment.appointmentStateId = result.updateState;
                 this.updateSelectedAppointmentReportState(result?.reportRequired);
-				this.filterAppointments(this.states.value);
+				this.filterAppointments(this.searchFilters.appointmentStates);
 			}
 			this.selectedAppointment = null;
 		});

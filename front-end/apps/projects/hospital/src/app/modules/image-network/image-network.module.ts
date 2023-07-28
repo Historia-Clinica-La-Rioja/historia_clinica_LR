@@ -15,6 +15,7 @@ import { ViewStudyComponent } from './components/view-study/view-study.component
 import { DeriveReportComponent } from './dialogs/derive-report/derive-report.component';
 import { AddConclusionFormComponent } from './dialogs/add-conclusion-form/add-conclusion-form.component';
 import { ViewReportComponent } from './components/view-report/view-report.component';
+import { WorklistFiltersComponent } from './components/worklist-filters/worklist-filters.component';
 
 @NgModule({
     declarations: [
@@ -29,7 +30,8 @@ import { ViewReportComponent } from './components/view-report/view-report.compon
         ViewStudyComponent,
         DeriveReportComponent,
         AddConclusionFormComponent,
-        ViewReportComponent
+        ViewReportComponent,
+        WorklistFiltersComponent
     ],
     imports: [
         CommonModule,
