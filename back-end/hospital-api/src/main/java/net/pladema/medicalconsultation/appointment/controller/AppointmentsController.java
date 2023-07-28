@@ -13,8 +13,11 @@ import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
+import net.pladema.establishment.controller.dto.HierarchicalUnitDto;
 import net.pladema.establishment.controller.mapper.InstitutionMapper;
+import net.pladema.establishment.service.domain.HierarchicalUnitBo;
 import net.pladema.imagenetwork.derivedstudies.service.MoveStudiesService;
+import net.pladema.medicalconsultation.appointment.application.GetCurrentAppointmentHierarchicalUnit.GetCurrentAppointmentHierarchicalUnit;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentDiary;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentState;
@@ -146,6 +149,8 @@ public class AppointmentsController {
 	private Long PAST_DAYS;
 
 	private Long MAX_DAYS = 30L;
+	private final GetCurrentAppointmentHierarchicalUnit getCurrentAppointmentHierarchicalUnit;
+
 	public AppointmentsController(
 			AppointmentDailyAmountService appointmentDailyAmountService,
 			AppointmentService appointmentService, EquipmentAppointmentService equipmentAppointmentService, AppointmentValidatorService appointmentValidatorService,
@@ -161,7 +166,8 @@ public class AppointmentsController {
 			MqttClientService mqttClientService,
 			AppointmentOrderImageService appointmentOrderImageService,
 			MoveStudiesService moveStudiesService,
-			DeriveReportService deriveReportService
+			DeriveReportService deriveReportService,
+			GetCurrentAppointmentHierarchicalUnit getCurrentAppointmentHierarchicalUnit
 	) {
 		this.appointmentDailyAmountService = appointmentDailyAmountService;
 		this.appointmentService = appointmentService;
@@ -183,6 +189,7 @@ public class AppointmentsController {
 		this.appointmentOrderImageService = appointmentOrderImageService;
 		this.moveStudiesService = moveStudiesService;
 		this.deriveReportService = deriveReportService;
+		this.getCurrentAppointmentHierarchicalUnit = getCurrentAppointmentHierarchicalUnit;
 	}
 
 
@@ -771,6 +778,21 @@ public class AppointmentsController {
 		var appointmentShortSummaryBo = appointmentService.getAppointmentEquipmentFromDeterminatedDate(patientId, localDateMapper.fromStringToLocalDate(date));
 		var result = appointmentMapper.toAppointmentEquipmentShortSummaryDto(appointmentShortSummaryBo);
 		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/patient/{patientId}/get-hierarchical-unit")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<HierarchicalUnitDto> getCurrentAppointmentHierarchicalUnit(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "patientId") Integer patientId) {
+		log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
+		HierarchicalUnitBo hierarchicalUnitBo= getCurrentAppointmentHierarchicalUnit.run(institutionId, patientId);
+		if (hierarchicalUnitBo != null) {
+			var result = new HierarchicalUnitDto(hierarchicalUnitBo.getId(), hierarchicalUnitBo.getName());
+			log.trace(OUTPUT, result);
+			return ResponseEntity.ok(result);
+		}
+		return null;
 	}
 
 }

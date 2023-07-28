@@ -85,4 +85,5 @@ public interface AppointmentService {
 	List<AppointmentBo> unblockAppointments(BlockBo unblockDto, DiaryBo diaryBo, LocalDate startingBlockingDate, LocalDate endingBlockingDate);
 
 	boolean setAppointmentPatientMedicalCoverageId(Integer patientId, List<Integer> patientMedicalCoverages, Integer newPatientMedicalCoverageId);
+
 }

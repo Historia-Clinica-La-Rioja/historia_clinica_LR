@@ -11,6 +11,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo;
+import net.pladema.establishment.repository.entity.HierarchicalUnit;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import ar.lamansys.sgx.shared.migratable.SGXDocumentEntityRepository;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
@@ -508,4 +509,14 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"WHERE a.patientId = :patientId " +
 			"AND a.appointmentStateId IN (:states)")
 	Boolean existsAppointmentByStatesAndPatientId(@Param("states") List<Short> states, @Param("patientId") Integer patientId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT hu " +
+			"FROM Appointment AS a " +
+			"JOIN AppointmentAssn AS aa ON a.id = aa.pk.appointmentId " +
+			"JOIN Diary AS d ON aa.pk.diaryId = d.id " +
+			"LEFT JOIN HierarchicalUnit AS hu ON hu.id = d.hierarchicalUnitId " +
+			"WHERE a.id = :appointmentId " +
+			"AND d.deleteable.deleted = false OR d.deleteable.deleted is null")
+	Optional<HierarchicalUnit> findDiaryHierarchicalUnitIdByAppointment(@Param("appointmentId") Integer appointmentId);
 }
