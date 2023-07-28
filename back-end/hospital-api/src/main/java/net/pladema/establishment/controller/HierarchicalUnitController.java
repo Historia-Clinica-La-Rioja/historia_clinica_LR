@@ -32,7 +32,7 @@ public class HierarchicalUnitController {
 	private final FetchHierarchicalUnitsByUserIdAndInstitutionId fetchHierarchicalUnitsByUserIdAndInstitutionId;
 
 	@GetMapping()
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
 	public ResponseEntity<List<HierarchicalUnitDto>> getAllByInstitution(@PathVariable(name = "institutionId") Integer institutionId) {
 		log.debug("Input institutionId {} ", institutionId);
 		List<HierarchicalUnitDto> hierarchicalUnitsDto = hierarchicalUnitService.getByInstitution(institutionId).stream()
@@ -43,7 +43,7 @@ public class HierarchicalUnitController {
 	}
 
 	@GetMapping("/user/{userId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
 	public ResponseEntity<List<HierarchicalUnitDto>> fetchAllByUserIdAndInstitutionId(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "userId") Integer userId) {
