@@ -10,8 +10,11 @@
     padding: 1% 3% 3% 3%;
 }
 
+:host ::ng-deep .mat-form-field {
+    width: 240px;
+}
+
 :host ::ng-deep .mat-form-field-type-mat-date-range-input .mat-form-field-infix {
-    width: 220px;
     padding: 0;
     padding-top: 2px;
     padding-bottom: 2px;

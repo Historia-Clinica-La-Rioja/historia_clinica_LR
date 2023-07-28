@@ -1,18 +1,34 @@
-<form [formGroup]="filtersForm" [hidden]="!panelOpenState">
-    <div class="filters-container">
-        <mat-form-field class="state-dropdown-container" appearance="outline">
-            <mat-label>{{'image-network.appointments.FILTER_BY_STATE' | translate }}</mat-label>
-            <mat-select #select [formControl]="states" (selectionChange)="onStatusChange($event)" multiple>
-                <mat-select-trigger>{{selectedStates}}</mat-select-trigger>
-                <mat-option *ngFor="let appointmentState of appointmentsStates" (click)="checkSelection()"
-                    [value]="appointmentState">{{appointmentState.description}}</mat-option>
-                <mat-divider class="dropdown-divider"></mat-divider>
-                <div class="select-all">
-                    <mat-checkbox [(ngModel)]="allSelected" [ngModelOptions]="{standalone: true}"
-                        (change)="toggleAllSelection()" color="primary">{{'buttons.ALL' | translate
-                        }}</mat-checkbox>
-                </div>
-            </mat-select>
-        </mat-form-field>
+<form [formGroup]="filtersForm" [hidden]="!panelState">
+    <div class="filters-container" fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="10px">
+        <div data-id="patient-name-filter">
+            <mat-form-field appearance="outline">
+                <mat-label>{{'image-network.worklist.filters.FILTER_BY_NAME' | translate }}</mat-label>
+                <input matInput data-id="name-filter" formControlName="patientName" (keyup)="applyNameFilter($event)">
+            </mat-form-field>
+        </div>
+        <div data-id="patient-identification-filter">
+            <mat-form-field appearance="outline">
+                <mat-label>{{'image-network.worklist.filters.FILTER_BY_IDENTIFICATION' | translate }}</mat-label>
+                <input matInput data-id="identification-filter" formControlName="patientIdentification"
+                    (keyup)="applyIdentificationFilter($event)">
+            </mat-form-field>
+        </div>
+        <div data-id="states-filter">
+            <mat-form-field appearance="outline" id="select">
+                <mat-label>{{'image-network.worklist.filters.FILTER_BY_STATE' | translate }}</mat-label>
+                <mat-select #select formControlName="appointmentStates" (selectionChange)="onStatusChange($event)"
+                    multiple>
+                    <mat-select-trigger>{{selectedStates}}</mat-select-trigger>
+                    <mat-option *ngFor="let appointmentState of appointmentStatesList" (click)="checkSelection()"
+                        [value]="appointmentState">{{appointmentState.description}}</mat-option>
+                    <mat-divider class="dropdown-divider"></mat-divider>
+                    <div class="select-all">
+                        <mat-checkbox [(ngModel)]="allSelected" [ngModelOptions]="{standalone: true}"
+                            (change)="toggleAllSelection()" color="primary">{{'buttons.ALL' | translate
+                            }}</mat-checkbox>
+                    </div>
+                </mat-select>
+            </mat-form-field>
+        </div>
     </div>
 </form>

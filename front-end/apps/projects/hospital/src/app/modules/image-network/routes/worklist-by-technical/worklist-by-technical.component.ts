@@ -123,7 +123,7 @@ export class WorklistByTechnicalComponent implements OnInit {
     }
 
     private setPreviousStates() {
-        this.defaultStates = this.searchFilters.appointmentStates;
+        this.defaultStates = this.searchFilters?.appointmentStates;
     }
 
     private manageStatusCheckboxes() {
@@ -170,7 +170,7 @@ export class WorklistByTechnicalComponent implements OnInit {
     search(searchFilters: SearchFilters) {
         this.searchFilters = searchFilters;
         this.setPreviousStates();
-        this.filterAppointments(searchFilters.appointmentStates);
+        this.filterAppointments(searchFilters.appointmentStates, searchFilters.patientName, searchFilters.patientIdentification);
         this.paginator?.firstPage();
     }
 
@@ -187,10 +187,38 @@ export class WorklistByTechnicalComponent implements OnInit {
         this.pageSlice = [];
     }
 
-    private filterAppointments(stateFilters?: AppointmentState[]){
-        let filteredAppointments = this.appointments.filter(appointment => stateFilters.find(a => a.id === appointment.appointmentStateId));
+    private filterAppointments(stateFilters?: AppointmentState[], patientName?: string, patientIdentification?: string){
+        let filteredAppointments = this.appointments.filter(appointment => 
+            stateFilters.find(a => a.id === appointment.appointmentStateId) && 
+            this.checkPatientNameFilter(patientName, appointment) && 
+            this.checkPatientIdentificationFilter(patientIdentification, appointment)
+        );
         this.detailedAppointments = this.mapAppointmentsToDetailedAppointments(filteredAppointments);
         this.pageSlice = this.detailedAppointments.slice(0, PAGE_MIN_SIZE);
+    }
+
+    private checkPatientNameFilter(searchName: string, appointment: EquipmentAppointmentListDto) {
+        let patientName = searchName?.toLowerCase();
+        let nameSelfDetermination = appointment.patient.person.nameSelfDetermination?.toLowerCase();
+        let name = appointment.patient.person.firstName.toLowerCase();
+        let lastName = appointment.patient.person.lastName.toLowerCase();
+
+        if (patientName) {
+            if (this.nameSelfDeterminationFF) {
+                if (nameSelfDetermination){
+                    return (nameSelfDetermination.includes(patientName) || lastName.includes(patientName))
+                }
+            }
+            return (name.includes(patientName) || lastName.includes(patientName))
+        }
+        return true
+    }
+
+    private checkPatientIdentificationFilter(patientIdentification: string, appointment: EquipmentAppointmentListDto) {
+        if (patientIdentification) {
+            return appointment.patient.person.identificationNumber.includes(patientIdentification);
+        }
+        return true
     }
 
     cleanModalityInput() {
