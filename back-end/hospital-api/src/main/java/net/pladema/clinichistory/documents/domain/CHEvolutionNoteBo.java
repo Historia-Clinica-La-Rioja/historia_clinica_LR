@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 
 public class CHEvolutionNoteBo extends CHDocumentBo{
 
+	private String reasons;
 	private String problems;
 	private String notes;
 	private String bloodType;
@@ -22,6 +23,7 @@ public class CHEvolutionNoteBo extends CHDocumentBo{
 
 	public CHEvolutionNoteBo (VClinicHistory entity, ECHEncounterType encounterType, ECHDocumentType documentType){
 		super(entity, encounterType, documentType);
+		this.reasons = entity.getHealthConditionSummary().getConsultationReasons();
 		this.problems = entity.getHealthConditionSummary().getProblems();
 		this.notes = entity.getHealthConditionSummary().getNotes();
 		this.bloodType = entity.getHealthConditionSummary().getBloodType();
@@ -34,7 +36,7 @@ public class CHEvolutionNoteBo extends CHDocumentBo{
 
 	@Override
 	public List<ClinicalRecordBo> getClinicalRecords() {
-		List<String> terms = Stream.of(problems, notes, bloodType, anthropometricData, riskFactors, allergies, vaccines).filter(term -> term!=null && !term.isBlank()).collect(Collectors.toList());
+		List<String> terms = Stream.of(reasons, problems, notes, bloodType, anthropometricData, riskFactors, allergies, vaccines).filter(term -> term!=null && !term.isBlank()).collect(Collectors.toList());
 		List<ClinicalRecordBo> result = new ArrayList<>();
 		if(!terms.isEmpty()) {
 			String evolution = Joiner.on(". <br />").join(terms);

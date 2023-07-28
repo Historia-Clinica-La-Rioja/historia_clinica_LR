@@ -18,6 +18,7 @@ import net.pladema.clinichistory.documents.domain.CHNursingConsultationBo;
 import net.pladema.clinichistory.documents.domain.CHOdontologyBo;
 import net.pladema.clinichistory.documents.domain.CHOutpatientBo;
 import net.pladema.clinichistory.documents.domain.CHServiceRequestBo;
+import net.pladema.clinichistory.documents.domain.CHTriageBo;
 import net.pladema.clinichistory.documents.domain.ECHDocumentType;
 import net.pladema.clinichistory.documents.domain.ECHEncounterType;
 
@@ -38,6 +39,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -83,6 +85,7 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 		return resultList
 				.stream()
 				.map(this::mapToBo)
+				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
 	}
 
@@ -113,9 +116,12 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 		if (row.getDocumentTypeId().equals(EDocumentType.RECIPE.getId())) return new CHMedicationRequestBo(row, encounterType, documentType);
 		if (row.getDocumentTypeId().equals(EDocumentType.NURSING.getId())) return new CHNursingConsultationBo(row, encounterType, documentType);
 		if (row.getDocumentTypeId().equals(EDocumentType.ANAMNESIS.getId())) return new CHAnamnesisBo(row, encounterType, documentType);
-		if (row.getDocumentTypeId().equals(EDocumentType.EVALUATION_NOTE.getId()) || row.getDocumentTypeId().equals(EDocumentType.NURSING_EVOLUTION_NOTE.getId())) return new CHEvolutionNoteBo(row, encounterType, documentType);
+		if (row.getDocumentTypeId().equals(EDocumentType.EVALUATION_NOTE.getId()) ||
+				row.getDocumentTypeId().equals(EDocumentType.NURSING_EVOLUTION_NOTE.getId()) ||
+				row.getDocumentTypeId().equals(EDocumentType.EMERGENCY_CARE_EVOLUTION.getId())) return new CHEvolutionNoteBo(row, encounterType, documentType);
 		if (row.getDocumentTypeId().equals(EDocumentType.EPICRISIS.getId())) return new CHEpicrisisBo(row, encounterType, documentType);
 		if (row.getDocumentTypeId().equals(EDocumentType.INDICATION.getId())) return new CHIndicationBo(row, encounterType, documentType);
+		if (row.getDocumentTypeId().equals(EDocumentType.TRIAGE.getId())) return new CHTriageBo(row, encounterType, documentType);
 		return null;
 	}
 	private CHDocumentSummaryBo mapToSummaryBo(VClinicHistory row){

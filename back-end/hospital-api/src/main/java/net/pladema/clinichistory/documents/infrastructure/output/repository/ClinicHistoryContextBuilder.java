@@ -17,7 +17,8 @@ import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeServic
 import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationRepository;
 import net.pladema.clinichistory.requests.medicationrequests.repository.MedicationRequestRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
-import net.pladema.establishment.repository.entity.Bed;
+import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
+import net.pladema.establishment.service.SectorService;
 import net.pladema.medicalconsultation.appointment.service.DocumentAppointmentService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.establishment.service.BedService;
@@ -33,7 +34,6 @@ import net.pladema.user.service.HospitalUserService;
 
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -66,6 +66,8 @@ public class ClinicHistoryContextBuilder {
 	private final SharedNursingConsultationPort sharedNursingConsultationPort;
 	private final InternmentEpisodeService internmentEpisodeService;
 	private final BedService bedService;
+	private final EmergencyCareEpisodeService emergencyCareEpisodeService;
+	private final SectorService sectorService;
 
 	public ClinicHistoryContextBuilder(PatientExternalService patientExternalService,
 									   SharedInstitutionPort sharedInstitutionPort,
@@ -83,7 +85,9 @@ public class ClinicHistoryContextBuilder {
 									   SharedOdontologyConsultationPort sharedOdontologyConsultationPort,
 									   SharedNursingConsultationPort sharedNursingConsultationPort,
 									   InternmentEpisodeService internmentEpisodeService,
-									   BedService bedService) {
+									   BedService bedService,
+									   EmergencyCareEpisodeService emergencyCareEpisodeService,
+									   SectorService sectorService) {
 		this.patientExternalService = patientExternalService;
 		this.sharedInstitutionPort = sharedInstitutionPort;
 		this.healthcareProfessionalStorage = healthcareProfessionalStorage;
@@ -101,6 +105,8 @@ public class ClinicHistoryContextBuilder {
 		this.sharedNursingConsultationPort = sharedNursingConsultationPort;
 		this.internmentEpisodeService = internmentEpisodeService;
 		this.bedService = bedService;
+		this.emergencyCareEpisodeService = emergencyCareEpisodeService;
+		this.sectorService = sectorService;
 	}
 
 
@@ -110,7 +116,7 @@ public class ClinicHistoryContextBuilder {
 		/* Patient Info */
 		addPatientInfo(ctx, document);
 		/* Encounter Info */
-		addEncounterInfo(ctx, document);
+		addEncounterInfo(ctx, document, document.getSourceId(), ECHEncounterType.OUTPATIENT);
 		/* Find the related appointment, if exists */
 		var appointment = documentAppointmentService.getDocumentAppointmentForDocument(document.getId());
 		appointment.ifPresent(documentAppointment -> {
@@ -134,7 +140,7 @@ public class ClinicHistoryContextBuilder {
 		return ctx;
 	}
 
-	public Map<String, Object> buildEpisodeContext(List<CHDocumentBo> documents, Integer currentInstitutionId) {
+	public Map<String, Object> buildEpisodeContext(Integer episodeId, List<CHDocumentBo> documents, Integer currentInstitutionId, ECHEncounterType encounterType) {
 		if (!documents.isEmpty()) {
 			Map<String, Object> ctx = new HashMap<>();
 			boolean selfPerceived = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS);
@@ -142,16 +148,7 @@ public class ClinicHistoryContextBuilder {
 			/* PatientInfo */
 			addPatientInfo(ctx, referentialDocument);
 			/* Episode info */
-			Integer internmentEpisodeId = referentialDocument.getRequestSourceId() != null ? referentialDocument.getRequestSourceId() : referentialDocument.getSourceId();
-			addEncounterInfo(ctx, referentialDocument);
-			var bedInfo = bedService.getBedInfo(internmentEpisodeService.getInternmentEpisode(internmentEpisodeId, referentialDocument.getInstitutionId()).getBedId());
-			bedInfo.ifPresent(bedInfoVo -> {
-				ctx.put("sector", bedInfoVo.getSector().getDescription());
-				ctx.put("place", bedInfoVo.getRoom().getDescription() + " | " + bedInfoVo.getBed().getBedNumber());
-			});
-			var medicalCoverageId = internmentEpisodeService.getInternmentEpisode(internmentEpisodeId, referentialDocument.getInstitutionId()).getPatientMedicalCoverageId();
-			var patientMedicalCoverage = patientMedicalCoverageService.getCoverage(medicalCoverageId);
-			patientMedicalCoverage.ifPresent(patientMedicalCoverageBo -> ctx.put("medicalCoverage", patientMedicalCoverageBo));
+			addEncounterInfo(ctx, referentialDocument, episodeId, encounterType);
 			/* Clinical records */
 			ctx.put("clinicalRecords", getEpisodeRecords(documents, selfPerceived));
 			/* Footer Info */
@@ -166,12 +163,53 @@ public class ClinicHistoryContextBuilder {
 		context.put("patientAge", document.getPatientAgePeriod().substring(1, document.getPatientAgePeriod().indexOf("Y")));
 	}
 
-	private void addEncounterInfo(Map<String, Object> context, CHDocumentBo document){
-		context.put("encounterId", document.getRequestSourceId() != null ? document.getRequestSourceId() : document.getSourceId());
+	private void addEncounterInfo(Map<String, Object> context, CHDocumentBo document, Integer episodeId, ECHEncounterType encounterType){
+		context.put("encounterId", episodeId);
 		context.put("encounterType", document.getEncounterType().getValue());
 		if (document.getStartDate() != null) context.put("startDate", document.getStartDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
 		if (document.getEndDate() != null) context.put("endDate", document.getEndDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
 		context.put("institution", document.getInstitution());
+		if (encounterType.equals(ECHEncounterType.HOSPITALIZATION)){
+			var bedInfo = bedService.getBedInfo(internmentEpisodeService.getInternmentEpisode(episodeId, document.getInstitutionId()).getBedId());
+			bedInfo.ifPresent(bedInfoVo -> {
+				context.put("sector", bedInfoVo.getSector().getDescription());
+				context.put("place", bedInfoVo.getRoom().getDescription() + " | " + bedInfoVo.getBed().getBedNumber());
+			});
+			var patientMedicalCoverage = internmentEpisodeService.getMedicalCoverage(episodeId);
+			patientMedicalCoverage.ifPresent(patientMedicalCoverageBo -> context.put("medicalCoverage", patientMedicalCoverageBo));
+		}
+		if(encounterType.equals(ECHEncounterType.OUTPATIENT)){
+			/* Find the related appointment, if exists */
+			var appointment = documentAppointmentService.getDocumentAppointmentForDocument(document.getId());
+			appointment.ifPresent(documentAppointment -> {
+				var diary = diaryService.getCompleteDiaryByAppointment(documentAppointment.getAppointmentId());
+				diary.ifPresent(completeDiaryBo ->{
+					context.put("sector", completeDiaryBo.getSectorDescription());
+					context.put("place", completeDiaryBo.getDoctorsOfficeDescription());
+				});
+			});
+			/* Medical Coverage */
+			getOutpatientMedicalCoverageId(document).ifPresent(id -> {
+				var patientMedicalCoverage = patientMedicalCoverageService.getCoverage(id);
+				context.put("medicalCoverage", patientMedicalCoverage.orElse(null));
+			});
+		}
+		if (encounterType.equals(ECHEncounterType.EMERGENCY_CARE)){
+			var emergencyCareEpisode = emergencyCareEpisodeService.get(episodeId, document.getInstitutionId());
+			if (emergencyCareEpisode.getDoctorsOffice() != null) {
+				context.put("place", emergencyCareEpisode.getDoctorsOffice().getDescription());
+			} else if (emergencyCareEpisode.getShockroom() != null) {
+				context.put("place", emergencyCareEpisode.getShockroom().getDescription());
+			} else if (emergencyCareEpisode.getBed() != null) {
+				var bedInfo = bedService.getBedInfo(internmentEpisodeService.getInternmentEpisode(episodeId, document.getInstitutionId()).getBedId());
+				bedInfo.ifPresent(bedInfoVo -> {
+					context.put("sector", bedInfoVo.getSector().getDescription());
+					context.put("place", bedInfoVo.getRoom().getDescription() + " | " + bedInfoVo.getBed().getBedNumber());
+				});
+			};
+			var patientMedicalCoverage = patientMedicalCoverageService.getCoverage(emergencyCareEpisodeService.getPatientMedicalCoverageIdByEpisode(episodeId));
+			patientMedicalCoverage.ifPresent(patientMedicalCoverageBo -> context.put("medicalCoverage", patientMedicalCoverageBo));
+		}
 	}
 
 	private List<ClinicalRecordBo> getEpisodeRecords (List<CHDocumentBo> documents, boolean selfPerceived){
