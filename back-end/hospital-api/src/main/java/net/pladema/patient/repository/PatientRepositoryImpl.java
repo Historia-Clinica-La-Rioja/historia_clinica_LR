@@ -94,7 +94,9 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
 	public List<Patient> getLongTermTemporaryPatientIds(LocalDateTime maxDate, Short limit) {
 		String sqlQuery = "SELECT p " +
 				"FROM Patient p " +
-				"WHERE p.typeId = :typeId AND p.id IN (" +
+				"WHERE p.typeId = :typeId " +
+				"AND p.deleteable.deleted = false " +
+				"AND p.id IN (" +
 				"SELECT DISTINCT ph.patientId " +
 				"FROM PatientHistory ph " +
 				"WHERE ph.typeId = 3 AND ph.createdOn <= :maxDate) " +
