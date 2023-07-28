@@ -240,7 +240,10 @@
                     "PATIENT_PHONE": "Teléfono del paciente",
                     "PHONE_NUMBER": "Número",
                     "PHONE_PREFIX": "Prefijo",
-                    "PRIORITY_CRITERIA": "Criterio de priorización"
+                    "PRIORITY_CRITERIA": "Criterio de priorización",
+					"RECEIVER": "Receptor",
+					"AVAILABLE_APPOINTMENT": "<b>{{ day }}</b> turnos disponibles en los próximos 60 dias.",
+					"NOT_AVAILABLE_APPOINTMENT": "Sin turnos disponibles en los proximos 60 días."
                 }
             },
             "reference-notification": {

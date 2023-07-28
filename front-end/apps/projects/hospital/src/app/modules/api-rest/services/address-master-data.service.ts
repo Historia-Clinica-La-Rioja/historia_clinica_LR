@@ -3,8 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import { DepartmentDto } from '@api-rest/api-model';
-
-
 @Injectable({
 	providedIn: 'root'
 })
@@ -29,6 +27,11 @@ export class AddressMasterDataService {
 		return this.http.get<any[]>(url);
 	}
 
+	getDepartmentsBySpecialy(provinceId: number, clinicalSpecialtyId: number): Observable<any[]> {
+		const url = `${environment.apiBase}/address/masterdata/province/${provinceId}/departments/with-specialty/${clinicalSpecialtyId}`;
+		return this.http.get<any[]>(url);
+	}
+
 	getCitiesByDepartment(departmentId: number): Observable<any[]> {
 		const url = `${environment.apiBase}/address/masterdata/department/${departmentId}/cities`;
 		return this.http.get<any[]>(url);
@@ -39,4 +42,14 @@ export class AddressMasterDataService {
 		return this.http.get<DepartmentDto>(url);
 	}
 
+	getActiveDiariesInInstitutionByClinicalSpecialty(provinceId: number, careLineId: number, clinicalSpecialtyId: number) {
+		const url = `${environment.apiBase}/address/masterdata/province/${provinceId}/departments/with-specialty/${clinicalSpecialtyId}`;
+		const queryParams = { careLineId: careLineId.toString() };
+		return this.http.get<any[]>(url, { params: queryParams });
+	};
+
+	getDepartmentsByProvinceHavingClinicalSpecialty(provinceId: number, clinicalSpecialtyId: number) {
+		const url = `${environment.apiBase}/address/masterdata/province/${provinceId}/departments/with-specialty/${clinicalSpecialtyId}`;
+		return this.http.get<any[]>(url);
+	}
 }

@@ -4,47 +4,91 @@ import { AddressMasterDataService } from '@api-rest/services/address-master-data
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { ReferenceOriginInstitutionService } from '../../services/reference-origin-institution.service';
+import { DiaryAvailableAppointmentsSearchService } from '@turnos/services/diary-available-appointments-search.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
-    selector: 'app-destination-institution-reference',
-    templateUrl: './destination-institution-reference.component.html',
-    styleUrls: ['./destination-institution-reference.component.scss']
+	selector: 'app-destination-institution-reference',
+	templateUrl: './destination-institution-reference.component.html',
+	styleUrls: ['./destination-institution-reference.component.scss']
 })
 export class DestinationInstitutionReferenceComponent implements OnInit {
 
-    @Input() submitForm: boolean;
-    @Output() provinceSelected = new EventEmitter<number>();
-    @Output() departmentSelected = new EventEmitter<number>();
-    @Output() institutionSelected = new EventEmitter<number>();
+	@Input() submitForm: boolean;
+	@Input() provinceId: number;
+	@Input() set careLine(careLineId: number) {
 
-    provinceValue: number;
-    departments: TypeaheadOption<any>[];
-    institutions: TypeaheadOption<any>[];
-    defaultProvince: TypeaheadOption<any>;
-    defaultDepartment: TypeaheadOption<any>;
-    defaultInstitution: TypeaheadOption<any>;
-    departmentDisable = false;
-    originalDestinationDepartment: TypeaheadOption<any>;
-    institutionDestinationId: number;
+		if (careLineId && this.specialtyId) {
+			this.adressMasterData.getActiveDiariesInInstitutionByClinicalSpecialty(this.provinceId, careLineId, this.specialtyId).subscribe(e => {
+				this.careLineId = careLineId;
+				this.departments = this.toTypeaheadOptions(e, 'description');
+			});
+		}
+		this.onSpecialtySelectionChange();
+
+	};
+
+	@Input() set clinicalSpecialty(specialty: number) {
+		this.specialtyId = specialty;
+		if (specialty) {
+			this.adressMasterData.getDepartmentsBySpecialy(this.provinceId, specialty).subscribe(e => {
+				this.departmentDisable = false;
+				this.departments = this.toTypeaheadOptions(e, 'description');
+			});
+			this.adressMasterData.getDepartmentsByProvinceHavingClinicalSpecialty(this.provinceId, specialty).subscribe(e =>
+				this.institutions = this.toTypeaheadOptions(e, 'description')
+			)
+
+		}
+	};
+
+	@Input() set updateFormFields(updateDepartamentsAndInstitution: boolean) {
+		if (updateDepartamentsAndInstitution) {
+			this.onSpecialtySelectionChange();
+
+		}
+	}
+
+	@Output() departmentSelected = new EventEmitter<number>();
+	@Output() institutionSelected = new EventEmitter<number>();
+	@Output() resetControls = new EventEmitter();
+
+	provinceValue: number;
+	departments: TypeaheadOption<any>[];
+	institutions: TypeaheadOption<any>[];
+	defaultProvince: TypeaheadOption<any>;
+	defaultDepartment: TypeaheadOption<any>;
+	defaultInstitution: TypeaheadOption<any>;
+	departmentDisable = false;
+	originalDestinationDepartment: TypeaheadOption<any>;
+	institutionDestinationId: number;
 	originDepartment: DepartmentDto;
 	originInstitutionInfo: AddressDto;
 	provinces: TypeaheadOption<any>[];
+	specialtyId: number;
 
-    constructor(
-        private readonly institutionService: InstitutionService,
+	day = new BehaviorSubject<number>(0);
+	isDayGreaterThanZero = false;
+	institutionSelection = false;
+	careLineId: number;
+	dis = true;
+	constructor(
+		private readonly institutionService: InstitutionService,
 		private readonly adressMasterData: AddressMasterDataService,
-        private readonly referenceOriginInstitutionService: ReferenceOriginInstitutionService) { }
+		private readonly referenceOriginInstitutionService: ReferenceOriginInstitutionService,
+		private readonly diaryAvailableAppointmentsSearchService: DiaryAvailableAppointmentsSearchService,
+	) { }
 
 	ngOnInit(): void {
+		this.institutionSelection = false;
+
 		this.referenceOriginInstitutionService.originInstitutionInfo$.subscribe(info => this.originInstitutionInfo = info);
-		this.referenceOriginInstitutionService.provinces$.subscribe(info => this.provinces = info);
-		this.referenceOriginInstitutionService.originDepartment$.subscribe(department => {
-			this.originDepartment = department;
-			this.loadDestinationInstitutionInformation();
-		})
+		this.day.subscribe((value) => {
+			this.isDayGreaterThanZero = value > 0;
+		});
 	}
 
-    private getAllInstitutions() {
+	private getAllInstitutions() {
 		this.institutionService.getAllInstitutions().subscribe((institutions: InstitutionBasicInfoDto[]) => {
 			this.institutions = this.toTypeaheadOptions(institutions, 'name');
 		});
@@ -59,79 +103,29 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 			}
 		})
 	}
-    
-	private loadDestinationInstitutionInformation() {
-		if (this.originInstitutionInfo?.provinceId) {
-			this.setDestinationProvince(this.originInstitutionInfo.provinceId);
-			this.setDefaultDestinationDepartment(this.originDepartment);
-		}
-		else {
-			if (this.originInstitutionInfo?.departmentId) {
-				if (this.originDepartment.provinceId) {
-					this.setDestinationProvince(this.originDepartment.provinceId);
-				}
-				this.setDefaultDestinationDepartment(this.originDepartment);
-			}
-		}
-	}
 
-    private setDestinationProvince(provinceId: number) {
-		this.referenceOriginInstitutionService.getProvinceById(provinceId).subscribe(province => {
-			this.defaultProvince = { value: province.value, compareValue: province.compareValue, viewValue: province.viewValue }
-		})
-	}
-
-    private setDefaultDestinationDepartment(department: DepartmentDto) {
-		if (department) {
-			this.originalDestinationDepartment = { value: department.id, viewValue: department.description, compareValue: department.description };
-			this.departmentSelected.emit(department.id)
-		}
-	}
-
-    private clearTypeahead() {
+	private clearTypeahead() {
 		return { value: null, viewValue: null, compareValue: null }
 	}
 
-	onProvinceSelectionChange(provinceId: number) {
-        this.provinceValue = provinceId;
+
+	onSpecialtySelectionChange() {
 		this.defaultDepartment = this.clearTypeahead();
-		this.setDepartmentsByProvince(provinceId);
-        this.provinceSelected.emit(provinceId);
+		this.defaultInstitution = this.clearTypeahead();
+		this.departmentSelected.emit(null);
+		this.institutionSelected.emit(null);
+		;
 	}
-
-    private setDepartmentsByProvince(provinceId: number) {
-		if (provinceId) {
-			this.adressMasterData.getDepartmentsByProvince(provinceId).subscribe(departments => {
-				if (departments) {
-					this.departmentDisable = false;
-					this.departments = this.toTypeaheadOptions(departments, 'description');
-					this.updateDepartmentValue();
-				};
-			})
-		} else {
-			this.departmentDisable = true;
-		}
-	}
-
-	private updateDepartmentValue() {
-		if (this.originalDestinationDepartment) {
-			this.defaultDepartment = this.originalDestinationDepartment;
-			this.originalDestinationDepartment = null;
-		} else {
-			this.defaultDepartment = this.clearTypeahead();
-		}
-	}
-
 	onDepartmentSelectionChange(departmentId: number) {
-        this.defaultInstitution = this.clearTypeahead();
+		this.defaultInstitution = this.clearTypeahead();
 		if (departmentId) {
-            this.institutionService.findByDepartmentId(departmentId).subscribe((institutions: InstitutionBasicInfoDto[]) => {
-                this.institutions = this.toTypeaheadOptions(institutions, 'name');
+			this.institutionService.findByDepartmentId(departmentId).subscribe((institutions: InstitutionBasicInfoDto[]) => {
+				this.institutions = this.toTypeaheadOptions(institutions, 'name');
 			});
 		} else {
-            this.setInstitutions();
+			this.setInstitutions();
 		}
-        this.departmentSelected.emit(departmentId);
+		this.departmentSelected.emit(departmentId);
 	}
 
 	private setInstitutionsByProvince(province: number) {
@@ -148,8 +142,21 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 		}
 	}
 
-    onInstitutionSelectionChange(institutionId: number){
-        this.institutionDestinationId = institutionId;
-        this.institutionSelected.emit(institutionId);
-    }
+	onInstitutionSelectionChange(institutionId: number) {
+		if (institutionId) {
+			this.institutionSelection = true;
+			this.diaryAvailableAppointments(institutionId);
+		} else {
+			this.institutionSelection = false;
+		}
+		this.institutionDestinationId = institutionId;
+		this.institutionSelected.emit(institutionId);
+	}
+
+	diaryAvailableAppointments(institutionId: number) {
+		this.diaryAvailableAppointmentsSearchService.getActiveDiariesInInstitutionByClinicalSpecialty(institutionId, this.specialtyId, this.careLineId).subscribe(e =>
+			this.day.next(e)
+		);
+	}
+
 }

@@ -29,6 +29,11 @@ export class CareLineService {
 		return this.http.get<CareLineDto[]>(url);
 	}
 
+	getCareLinesByProvinceId(provinceId: number): Observable<CareLineDto[]> {
+		const url = `${this.BASE_URL}/carelines/by-province/${provinceId} `;
+		return this.http.get<CareLineDto[]>(url);
+	}
+
 	getByProblemSnomedIdsAndInstitutionId(institutionId: number, problemSnomedIds: string[]) {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/carelines/problems`;
 		let params = new HttpParams();
