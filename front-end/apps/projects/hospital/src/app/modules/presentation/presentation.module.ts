@@ -67,6 +67,7 @@ import { TimeDtoToLocalTimePipe } from './pipes/time-dto-to-local-time.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
+import { FilterButtonComponent } from './components/filter-button/filter-button.component';
 
 
 @NgModule({
@@ -114,6 +115,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TitledContentComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
+		FilterButtonComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
@@ -191,6 +193,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TitledContentComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
+		FilterButtonComponent,
 		// dialogs
 		// directives
 		CtrlTemplateDirective,

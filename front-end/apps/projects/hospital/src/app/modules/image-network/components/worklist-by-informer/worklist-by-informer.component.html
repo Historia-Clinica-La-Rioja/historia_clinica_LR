@@ -29,6 +29,8 @@
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-date-range-picker #picker></mat-date-range-picker>
             </mat-form-field>
+
+            <app-filter-button></app-filter-button>
         </form>
         <mat-card class="worklist-card">
             <mat-list class="mat-form-field-wrapper" *ngIf="worklists.length else noInfo">
