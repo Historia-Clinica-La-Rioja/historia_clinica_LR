@@ -309,14 +309,18 @@ public class AppointmentsController {
 
 	@GetMapping(value="/list-appoiments-by-equipment/{equipmentId}")
 	@PreAuthorize("hasPermission(#institutionId, 'TECNICO')")
-	public ResponseEntity<Collection<EquipmentAppointmentListDto>> getListAppoitmentsEquipment(
+	public ResponseEntity<Collection<EquipmentAppointmentListDto>> getListAppoitmentsByEquipment(
 			@PathVariable(name = "institutionId") Integer institutionId,
-			@PathVariable(name = "equipmentId") Integer equipmentId
+			@PathVariable(name = "equipmentId") Integer equipmentId,
+			@RequestParam(name = "from", required = false) String from,
+			@RequestParam(name = "to", required = false) String to
 	) {
 		log.debug("Input parameters -> institutionId {}, equipmentDiaryId {}", institutionId, equipmentId);
-		Collection<EquipmentAppointmentBo> resultService = appointmentService.getAppointmentsByEquipmentId(equipmentId, institutionId);
+		LocalDate startDate = (from!=null) ? localDateMapper.fromStringToLocalDate(from) : null;
+		LocalDate endDate = (to!=null) ? localDateMapper.fromStringToLocalDate(to) : null;
+		Collection<EquipmentAppointmentBo> resultService = appointmentService.getAppointmentsByEquipmentId(equipmentId, institutionId, startDate, endDate);
 
-		Collection<EquipmentAppointmentListDto> result= equipmentDataProcess(resultService);
+		Collection<EquipmentAppointmentListDto> result = equipmentDataProcess(resultService);
 
 		log.trace(OUTPUT, result);
 		return ResponseEntity.ok(result);

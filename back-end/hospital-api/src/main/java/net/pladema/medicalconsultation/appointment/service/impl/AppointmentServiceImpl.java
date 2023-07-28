@@ -19,35 +19,23 @@ import java.util.stream.Stream;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
-import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
-import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
-import net.pladema.medicalconsultation.appointment.repository.AppointmentUpdateRepository;
-import net.pladema.medicalconsultation.appointment.repository.EquipmentAppointmentAssnRepository;
-import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
-import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
-import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateException;
-import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateExceptionEnum;
-import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
-import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
-import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
-import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
+import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentObservationRepository;
+import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
+import net.pladema.medicalconsultation.appointment.repository.AppointmentUpdateRepository;
 import net.pladema.medicalconsultation.appointment.repository.HistoricAppointmentStateRepository;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketBo;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentObservation;
@@ -56,16 +44,25 @@ import net.pladema.medicalconsultation.appointment.repository.entity.HistoricApp
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentEnumException;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentException;
+import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateException;
+import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateExceptionEnum;
 import net.pladema.medicalconsultation.appointment.service.ports.AppointmentStorage;
+import net.pladema.medicalconsultation.appointment.service.ports.EquipmentAppointmentStorage;
+import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.service.domain.PatientCoverageInsuranceDetailsBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
 import javax.validation.ConstraintViolationException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -99,13 +96,11 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final AppointmentOrderImageRepository appointmentOrderImageRepository;
 
-	private final DiaryOpeningHoursService diaryOpeningHoursService;
-
 	private final SharedReferenceCounterReference sharedReferenceCounterReference;
 
 	private final LocalDateMapper localDateMapper;
 
-	private final EquipmentAppointmentAssnRepository equipmentAppointmentAssnRepository;
+	private final EquipmentAppointmentStorage equipmentAppointmentStorage;
 
 	public AppointmentServiceImpl(AppointmentRepository appointmentRepository,
 								  AppointmentObservationRepository appointmentObservationRepository,
@@ -118,8 +113,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 								  FeatureFlagsService featureFlagsService,
 								  AppointmentStorage appointmentStorage,
 								  AppointmentUpdateRepository appointmentUpdateRepository,
-								  AppointmentAssnRepository appointmentAssnRepository, AppointmentOrderImageRepository appointmentOrderImageRepository, DiaryOpeningHoursService diaryOpeningHoursService,
-								  SharedReferenceCounterReference sharedReferenceCounterReference, LocalDateMapper localDateMapper, EquipmentAppointmentAssnRepository equipmentAppointmentAssnRepository) {
+								  AppointmentAssnRepository appointmentAssnRepository, AppointmentOrderImageRepository appointmentOrderImageRepository,
+								  SharedReferenceCounterReference sharedReferenceCounterReference, LocalDateMapper localDateMapper,
+								  EquipmentAppointmentStorage equipmentAppointmentStorage) {
 		this.appointmentRepository = appointmentRepository;
 		this.appointmentObservationRepository = appointmentObservationRepository;
 		this.historicAppointmentStateRepository = historicAppointmentStateRepository;
@@ -133,10 +129,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 		this.appointmentUpdateRepository = appointmentUpdateRepository;
 		this.appointmentAssnRepository = appointmentAssnRepository;
 		this.appointmentOrderImageRepository = appointmentOrderImageRepository;
-		this.diaryOpeningHoursService = diaryOpeningHoursService;
 		this.sharedReferenceCounterReference = sharedReferenceCounterReference;
 		this.localDateMapper = localDateMapper;
-		this.equipmentAppointmentAssnRepository = equipmentAppointmentAssnRepository;
+		this.equipmentAppointmentStorage = equipmentAppointmentStorage;
 	}
 
 	@Override
@@ -166,9 +161,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public Collection<EquipmentAppointmentBo> getAppointmentsByEquipmentId(Integer equipmentId, Integer institutionId) {
-		log.debug("Input parameters -> equipmentDiaryId {}", equipmentId);
-		Collection<EquipmentAppointmentBo> result = equipmentAppointmentAssnRepository.getAppointmentsByEquipmentId(equipmentId, institutionId).stream().distinct().map(EquipmentAppointmentBo::fromEquipmentAppointmentVo)
+	public Collection<EquipmentAppointmentBo> getAppointmentsByEquipmentId(Integer equipmentId, Integer institutionId, LocalDate from, LocalDate to) {
+		log.debug("Input parameters -> equipmentDiaryId {} institutionId {}, from {} to {}", equipmentId, institutionId, from, to);
+		Collection<EquipmentAppointmentBo> result = equipmentAppointmentStorage.getAppointmentsByEquipmentId(equipmentId, institutionId, from, to).stream()
+				.distinct()
 				.sorted(Comparator.comparing(EquipmentAppointmentBo::getDate, Comparator.nullsFirst(Comparator.naturalOrder())).thenComparing(EquipmentAppointmentBo::getHour))
 				.collect(Collectors.toList());
 
