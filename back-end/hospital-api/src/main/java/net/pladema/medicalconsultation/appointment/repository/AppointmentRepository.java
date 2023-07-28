@@ -169,7 +169,8 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"AND (d.healthcareProfessionalId = :healthProfessionalId " +
 			"OR dap.healthcareProfessionalId = :healthProfessionalId) " +
 			"AND a.appointmentStateId = " + AppointmentState.CONFIRMED + " " +
-			"ORDER BY a.hour ASC")
+			"AND a.dateTypeId < CURRENT_DATE " +
+			"ORDER BY a.hour DESC")
 	List<Integer> getOldAppointmentsId(@Param("patientId") Integer patientId,
 									@Param("healthProfessionalId")  Integer healthProfessionalId);
 
