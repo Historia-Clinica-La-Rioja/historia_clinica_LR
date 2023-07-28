@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -23,6 +23,10 @@ import { DeriveReportComponent } from '../../dialogs/derive-report/derive-report
 import { TranslateService } from '@ngx-translate/core';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ModalityService } from '@api-rest/services/modality.service';
+import { subDays } from 'date-fns';
+import { Moment } from 'moment';
+import { hasError } from '@core/utils/form.utils';
+import * as moment from 'moment';
 
 const PAGE_SIZE_OPTIONS = [10];
 const PAGE_MIN_SIZE = 10;
@@ -45,11 +49,17 @@ export class WorklistByTechnicalComponent implements OnInit {
     equipments: EquipmentDto[] = [];
     modalities$: Observable<ModalityDto[]>;
     allEquipments: EquipmentDto[] = [];
+    equipmentId: number;
 
     detailedAppointments: detailedAppointment[] = [];
     appointments: EquipmentAppointmentListDto[] = [];
 
+    hasError = hasError;
     filtersForm: UntypedFormGroup;
+    today: Moment = moment();
+    minDate: Date = subDays(new Date(), 60)
+    startDate: string = this.today.format('YYYY-MM-DD');
+    endDate: string = this.today.format('YYYY-MM-DD');
 
     nameSelfDeterminationFF = false;
 	permission = false;
@@ -90,6 +100,10 @@ export class WorklistByTechnicalComponent implements OnInit {
         this.filtersForm = this.formBuilder.group({
 			modality: [null],
 			equipment: [null],
+            datePicker: this.formBuilder.group({
+                start: [this.today, Validators.required],
+                end: [this.today, Validators.required],
+            })
 		});
 
         this.modalities$ = this.modalityService.getAll();
@@ -111,11 +125,24 @@ export class WorklistByTechnicalComponent implements OnInit {
         } else {
             this.equipments = this.allEquipments;
         }
+        this.equipmentId = null;
     }
 
     onEquipmentChange(equipment: MatSelectChange){
-        let equipmentId = equipment.value.id;
-        this.appointmentsService.getAppointmentsByEquipment(equipmentId).subscribe(appointments => {
+        this.equipmentId = equipment.value.id;
+        this.getAppointments(this.equipmentId, this.startDate, this.endDate);
+    }
+
+    setSelectedDate(){
+        this.startDate = this.filtersForm.get('datePicker').get('start').value?.format('YYYY-MM-DD');
+        this.endDate = this.filtersForm.get('datePicker').get('end').value?.format('YYYY-MM-DD');
+        if (this.startDate && this.endDate && this.equipmentId) {
+            this.getAppointments(this.equipmentId, this.startDate, this.endDate);
+        }
+    }
+
+    private getAppointments(equipmentId: number, from?: string, to?: string){
+        this.appointmentsService.getAppointmentsByEquipment(equipmentId, from, to).subscribe(appointments => {
             this.appointments = appointments;
             this.manageStatusCheckboxes();
         })

@@ -19,6 +19,13 @@
     margin: 2% 0 !important;
 }
 
+:host ::ng-deep .mat-form-field-type-mat-date-range-input .mat-form-field-infix {
+    width: 220px;
+    padding: 0;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
 .dropdown-divider {
     margin: 0 5%;
 }

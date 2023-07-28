@@ -129,7 +129,11 @@ export class AppointmentsService {
 		return this.http.get<AppointmentDto>(url);
 	}
 
-	getAppointmentsByEquipment(equipmentId: number): Observable<EquipmentAppointmentListDto[]> {
+	getAppointmentsByEquipment(equipmentId: number, from?: string, to?: string): Observable<EquipmentAppointmentListDto[]> {
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = from ? queryParams.append('from', JSON.stringify(from)) : queryParams;
+		queryParams = to ? queryParams.append('to', JSON.stringify(to)) : queryParams;
+
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/list-appoiments-by-equipment/${equipmentId}`;
 		return this.http.get<EquipmentAppointmentListDto[]>(url)
 	}

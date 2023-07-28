@@ -8,12 +8,15 @@
                     <div data-id="modality-filter">
                         <mat-form-field appearance="outline">
                             <mat-label [translate]="'image-network.worklist.filters.MODALITY'"></mat-label>
-                            <mat-select formControlName="modality" id="modality" fxFlex="98%" (selectionChange)="onModalityChange()">
-                                <mat-option *ngFor="let modality of (modalities$ | async)" id="modality.description" [value]="modality">
+                            <mat-select formControlName="modality" id="modality" fxFlex="98%"
+                                (selectionChange)="onModalityChange()">
+                                <mat-option *ngFor="let modality of (modalities$ | async)" id="modality.description"
+                                    [value]="modality">
                                     {{modality.description}}
                                 </mat-option>
                             </mat-select>
-                            <button *ngIf="filtersForm.controls.modality.value" mat-button matSuffix color="warn" mat-icon-button (click)="cleanModalityInput(); $event.stopPropagation()">
+                            <button *ngIf="filtersForm.controls.modality.value" mat-button matSuffix color="warn"
+                                mat-icon-button (click)="cleanModalityInput(); $event.stopPropagation()">
                                 <mat-icon>close</mat-icon>
                             </button>
                         </mat-form-field>
@@ -21,11 +24,28 @@
                     <div data-id="equipment-filter">
                         <mat-form-field appearance="outline">
                             <mat-label [translate]="'image-network.equipment-diary-setup.EQUIPMENT_SELECT'"></mat-label>
-                            <mat-select formControlName="equipment" id="equipment" (selectionChange)="onEquipmentChange($event)" fxFlex="98%">
-                                <mat-option *ngFor="let equipment of equipments" id="equipment.name" [value]="equipment">
+                            <mat-select formControlName="equipment" id="equipment"
+                                (selectionChange)="onEquipmentChange($event)" fxFlex="98%">
+                                <mat-option *ngFor="let equipment of equipments" id="equipment.name"
+                                    [value]="equipment">
                                     {{equipment.name}}
                                 </mat-option>
                             </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div data-id="date-filter">
+                        <mat-form-field appearance="outline">
+                            <div fxFlex fxLayout="row">
+                                <mat-date-range-input [formGroup]="filtersForm.get('datePicker')" [rangePicker]="picker"
+                                    [max]="today" [min]="minDate" fxLayoutAlign="center center">
+                                    <input matStartDate formControlName="start" readonly>
+                                    <input matEndDate formControlName="end" readonly (dateChange)="setSelectedDate()">
+                                </mat-date-range-input>
+                                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-date-range-picker #picker></mat-date-range-picker>
+                            </div>
+                            <mat-error *ngIf="hasError(filtersForm.get('datePicker'), 'required', 'end')"
+                                [translate]="'forms.REQUIRED'"></mat-error>
                         </mat-form-field>
                     </div>
                 </div>
@@ -43,7 +63,8 @@
                             <mat-divider class="dropdown-divider"></mat-divider>
                             <div class="select-all">
                                 <mat-checkbox [(ngModel)]="allSelected" [ngModelOptions]="{standalone: true}"
-                                    (change)="toggleAllSelection()" color="primary">{{'buttons.ALL' | translate }}</mat-checkbox>
+                                    (change)="toggleAllSelection()" color="primary">{{'buttons.ALL' | translate
+                                    }}</mat-checkbox>
                             </div>
                         </mat-select>
                     </mat-form-field>
@@ -66,10 +87,10 @@
                                         </span>
                                         <span class="naming"
                                             *ngIf="!nameSelfDeterminationFF || !appointment.nameSelfDetermination.length">
-                                            {{appointment.firstName}} 
+                                            {{appointment.firstName}}
                                         </span>
-                                        <span class="naming white-space">                                        
-                                            {{appointment.lastName}} 
+                                        <span class="naming white-space">
+                                            {{appointment.lastName}}
                                         </span>
                                     </span>
                                     <span class="patient-identification grey smaller-font">DNI
@@ -101,7 +122,7 @@
                                             </span>
                                         </ng-template>
                                     </div>
-								</div>
+                                </div>
                             </div>
                             <div fxFlex="5%">
                                 <button *ngIf="appointment.data.appointmentStateId === appointmentStatesId.SERVED"
@@ -110,10 +131,12 @@
                                 </button>
                                 <mat-menu #menu="matMenu">
                                     <button *ngIf="appointment.reportStatus?.id != reportStates.NOT_REQUIRED"
-                                        mat-menu-item (click)="deriveReport(appointment.data.id)" [disabled]="appointment.derive">
+                                        mat-menu-item (click)="deriveReport(appointment.data.id)"
+                                        [disabled]="appointment.derive">
                                         <span [translate]="'image-network.worklist.DERIVE_REPORT'"></span>
                                     </button>
-                                    <button *ngIf="appointment.reportStatus?.id == reportStates.NOT_REQUIRED" mat-menu-item (click)="requestReport(appointment)">
+                                    <button *ngIf="appointment.reportStatus?.id == reportStates.NOT_REQUIRED"
+                                        mat-menu-item (click)="requestReport(appointment)">
                                         <span [translate]="'image-network.worklist.REQUEST_REPORT'"></span>
                                     </button>
                                 </mat-menu>
@@ -121,8 +144,9 @@
                         </mat-list-item>
                         <mat-divider></mat-divider>
                     </div>
-                    <mat-paginator #paginator *ngIf="(detailedAppointments.length !== 0)" [length]="detailedAppointments.length"
-                        [pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)">
+                    <mat-paginator #paginator *ngIf="(detailedAppointments.length !== 0)"
+                        [length]="detailedAppointments.length" [pageSizeOptions]="pageSizeOptions"
+                        (page)="onPageChange($event)">
                     </mat-paginator>
                 </mat-list>
             </mat-card>
