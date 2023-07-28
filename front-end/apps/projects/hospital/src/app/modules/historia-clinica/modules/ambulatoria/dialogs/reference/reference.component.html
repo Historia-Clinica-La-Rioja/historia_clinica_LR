@@ -1,22 +1,21 @@
 <div class="reference-dialog" fxLayout="column" fxLayoutGap="7px">
 
-    <h2 [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.TITLE'"></h2>
+	<h2 [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.TITLE'"></h2>
 
-    <div fxLayout="row" fxLayoutAlign="end">
-        <button class="close" type="button" mat-dialog-close mat-icon-button matSuffix>
-            <mat-icon>close</mat-icon>
-        </button>
-    </div>
+	<div fxLayout="row" fxLayoutAlign="end">
+		<button class="close" type="button" mat-dialog-close mat-icon-button matSuffix>
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
 
-    <form [formGroup]="formReference" fxLayout="column" (ngSubmit)="save()">
-        <mat-dialog-content fxLayout="column" fxLayoutGap="10px">
+	<form [formGroup]="formReference" fxLayout="column" (ngSubmit)="save()">
+		<mat-dialog-content fxLayout="column" fxLayoutGap="10px">
 
-            <div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="20px">
-                <div>
-                    <app-origin-institution-reference [formReference]="formReference"
-                        [data]="data"
-                        (updateSpecialtiesAndCarelineFields)="activateSpecialtiesAndCarelineFields()">
-                    </app-origin-institution-reference>
+			<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="20px">
+				<div>
+					<app-origin-institution-reference [formReference]="formReference" [data]="data"
+						(updateSpecialtiesAndCarelineFields)="activateSpecialtiesAndCarelineFields()">
+					</app-origin-institution-reference>
 
                     <section fxLayout="column">
 
@@ -40,7 +39,7 @@
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
-                    
+
                     </section>
 
                     <span class="subtitle"
@@ -60,90 +59,93 @@
                             </mat-error>
                         </mat-form-field>
 
-                        <mat-form-field fxFlex="70%" appearance="outline">
-                            <mat-label
-                                [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PHONE_NUMBER'"></mat-label>
-                            <input matInput type="text" id="phoneNumber" name="phoneNumber"
-                                formControlName="phoneNumber"
-                                placeholder="{{'ambulatoria.paciente.nueva-consulta.reference-dialog.PHONE_NUMBER' | translate }}">
-                            <mat-error *ngIf="formReference.hasError('required', 'phoneNumber')">
-                                <span translate="forms.REQUIRED"></span>
-                            </mat-error>
-                            <mat-error *ngIf="formReference.hasError('maxlength', 'phoneNumber')"
-                                translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 20}">
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                </div>
+						<mat-form-field fxFlex="70%" appearance="outline">
+							<mat-label
+								[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PHONE_NUMBER'"></mat-label>
+							<input matInput type="text" id="phoneNumber" name="phoneNumber"
+								formControlName="phoneNumber"
+								placeholder="{{'ambulatoria.paciente.nueva-consulta.reference-dialog.PHONE_NUMBER' | translate }}">
+							<mat-error *ngIf="formReference.hasError('required', 'phoneNumber')">
+								<span translate="forms.REQUIRED"></span>
+							</mat-error>
+							<mat-error *ngIf="formReference.hasError('maxlength', 'phoneNumber')"
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 20}">
+							</mat-error>
+						</mat-form-field>
+					</div>
+				</div>
 
-                <div>
-                    <app-destination-institution-reference [submitForm]="submitForm"
-                        (provinceSelected)="onProvinceSelectionChange($event)"
-                        (departmentSelected)="onDepartmentSelectionChange($event)"
-                        (institutionSelected)="onInstitutionSelectionChange($event)">
-                    </app-destination-institution-reference>
+				<div>
+					<app-carelines-and-specialties-reference [formReference]="formReference"
+						[setProvinceId]="provinceId" (resetControls)="resetControls()"
+						(updateDepartamentsAndInstitution)="activateSpecialtiesAndCarelineFields()">
+					</app-carelines-and-specialties-reference>
 
-                    <app-carelines-and-specialties-reference
-                        [formReference]="formReference" [updateFormFields]="updateSpecialtiesAndCarelineFields"
-                        [clearCarelinesAndSpecialties]="clearCarelinesAndSpecialties" (resetControls)="resetControls()">
-                    </app-carelines-and-specialties-reference>
+					<div class="reference-type">
+						<mat-label fxLayout="column"
+							[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.REFERENCE_TYPE'"></mat-label>
+						<mat-radio-group name="consultation" formControlName="consultation">
+							<mat-radio-button color="primary" value="true" [checked]="true">
+								<span class="consultation"
+									[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.CONSULTATION_OPTION'"></span>
+							</mat-radio-button>
+						</mat-radio-group>
+						<mat-radio-group name="procedure" formControlName="procedure">
+							<mat-radio-button color="primary" value="false" [disabled]="true">
+								<span
+									[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PROCEDURE_OPTION'"></span>
+							</mat-radio-button>
+						</mat-radio-group>
+					</div>
 
-                    <div class="reference-type">
-                        <mat-label fxLayout="column"
-                            [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.REFERENCE_TYPE'"></mat-label>
-                        <mat-radio-group name="consultation" formControlName="consultation">
-                            <mat-radio-button color="primary" value="true" [checked]="true">
-                                <span class="consultation"
-                                    [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.CONSULTATION_OPTION'"></span>
-                            </mat-radio-button>
-                        </mat-radio-group>
-                        <mat-radio-group name="procedure" formControlName="procedure">
-                            <mat-radio-button color="primary" value="false">
-                                <span
-                                    [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PROCEDURE_OPTION'"></span>
-                            </mat-radio-button>
-                        </mat-radio-group>
-                    </div>
-                </div>
-            </div>
+					<app-destination-institution-reference [submitForm]="submitForm"
+						[updateFormFields]="updateDepartamentsAndInstitution"
+						[careLine]="formReference.value.careLine?.id"
+						[clinicalSpecialty]="formReference.value.clinicalSpecialtyId?.id" [provinceId]="provinceId"
+						(provinceSelected)="onProvinceSelectionChange($event)"
+						(departmentSelected)="onDepartmentSelectionChange($event)"
+						(institutionSelected)="onInstitutionSelectionChange($event)">
+					</app-destination-institution-reference>
+				</div>
+			</div>
 
-            <div id="summary">
-                <mat-form-field appearance="outline" fxFlex="100%">
-                    <mat-label
-                        [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SUMMARY'"></mat-label>
-                    <textarea matInput type="text" name="summary" formControlName="summary"></textarea>
-                </mat-form-field>
-            </div>
+			<div id="summary">
+				<mat-form-field appearance="outline" fxFlex="100%">
+					<mat-label
+						[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SUMMARY'"></mat-label>
+					<textarea matInput type="text" name="summary" formControlName="summary"></textarea>
+				</mat-form-field>
+			</div>
 
-            <div id="attach_files" fxLayout="column">
-                <div class="span-clickable primary" fxLayout="row">
-                    <mat-icon>attachment_icon</mat-icon>
-                    <span [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.UPLOAD_FILES'"
-                        (click)="fileInput.click()">
-                    </span>
-                    <span [hidden]="true">
-                        <input type="file" #fileInput multiple (change)="onSelectFileFormData($event)" />
-                    </span>
-                </div>
+			<div id="attach_files" fxLayout="column">
+				<div class="span-clickable primary" fxLayout="row">
+					<mat-icon>attachment_icon</mat-icon>
+					<span [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.UPLOAD_FILES'"
+						(click)="fileInput.click()">
+					</span>
+					<span [hidden]="true">
+						<input type="file" #fileInput multiple (change)="onSelectFileFormData($event)" />
+					</span>
+				</div>
 
-                <div *ngIf="selectedFilesShow" class="selected-files">
-                    <div *ngFor="let fileName of selectedFilesShow; let index = index">
-                        <span class="mat-body element-light-color">
-                            {{fileName}}
-                        </span>
-                        <button mat-button color="warn"
-                            (click)="removeSelectedFile(index)"><mat-icon>delete</mat-icon></button>
-                    </div>
-                </div>
-            </div>
-        </mat-dialog-content>
+				<div *ngIf="selectedFilesShow" class="selected-files">
+					<div *ngFor="let fileName of selectedFilesShow; let index = index">
+						<span class="mat-body element-light-color">
+							{{fileName}}
+						</span>
+						<button mat-button color="warn"
+							(click)="removeSelectedFile(index)"><mat-icon>delete</mat-icon></button>
+					</div>
+				</div>
+			</div>
+		</mat-dialog-content>
 
-        <div fxLayoutAlign="end center" class="add_reference">
-            <button type="submit" mat-raised-button color="primary">
-                <span [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.ADD_REFERENCE'"></span>
-            </button>
-        </div>
+		<div fxLayoutAlign="end center" class="add_reference">
+			<button type="submit" mat-raised-button color="primary">
+				<span [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.ADD_REFERENCE'"></span>
+			</button>
+		</div>
 
-    </form>
+	</form>
 
 </div>
