@@ -259,9 +259,6 @@ export class WorklistByTechnicalComponent implements OnInit {
                 description: this.getAppointmentDescription(appointment.appointmentStateId),
                 date: mapDateWithHypenToDateWithSlash(appointment.date),
                 time: timeToString(appointment.hour),
-                firstName: this.capitalizeWords(appointment.patient.person.firstName),
-                lastName: this.capitalizeWords(appointment.patient.person.lastName),
-                nameSelfDetermination: this.capitalizeWords(appointment.patient.person.nameSelfDetermination),
                 canBeFinished: appointment.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED,
                 derive: appointment.derivedTo.id ? appointment.derivedTo : null,
                 reportStatus: this.getReportStatus(appointment.reportStatusId)
@@ -271,14 +268,6 @@ export class WorklistByTechnicalComponent implements OnInit {
 
     private getReportStatus(reportStatusId): ReportState{
         return REPORT_STATES.find(state => state.id == reportStatusId)
-    }
-
-    private capitalizeWords(sentence: string) {
-        return sentence ? sentence
-          .toLowerCase()
-          .split(' ')
-          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(' ') : "";
     }
 
     onPageChange($event: any) {
@@ -357,9 +346,6 @@ export interface detailedAppointment {
     description: string,
     date: string,
     time: string,
-    firstName: string,
-    lastName: string,
-    nameSelfDetermination: string,
 	canBeFinished: boolean,
     derive: InstitutionBasicInfoDto,
     reportStatus: ReportState,
