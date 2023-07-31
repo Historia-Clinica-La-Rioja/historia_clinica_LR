@@ -23,7 +23,6 @@ import { toDentalAction, toOdontologyAllergyConditionDto, toOdontologyDiagnostic
 import { ProblemasService } from '@historia-clinica/services/problemas.service';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
-import { PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { SuggestedFieldsPopupComponent } from '@presentation/components/suggested-fields-popup/suggested-fields-popup.component';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
@@ -40,6 +39,7 @@ import { ConsultationSuggestedFieldsService } from '../../services/consultation-
 import { ActionedTooth, OdontogramService } from '../../services/odontogram.service';
 import { OdontologyReferenceService } from '../../services/odontology-reference.service';
 import { SurfacesNamesFacadeService } from '../../services/surfaces-names-facade.service';
+import { EpisodeData } from '@historia-clinica/components/episode-data/episode-data.component';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -66,8 +66,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	odontologyReferenceService: OdontologyReferenceService;
 
 	searchConceptsLocallyFFIsOn = false;
-	patientMedicalCoverage: PatientMedicalCoverage;
-	clinicalSpecialty: ClinicalSpecialtyDto;
+	episodeData: EpisodeData;
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	public hasError = hasError;
 	public today = newMoment();
@@ -290,13 +289,13 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			diagnostics: this.otherDiagnosticsNewConsultationService.getProblemas().map(toOdontologyDiagnosticDto),
 			procedures: this.otherProceduresService.getProcedimientos().map(toOdontologyProcedureDto),
 			reasons: this.reasonNewConsultationService.getMotivosConsulta(),
-			clinicalSpecialtyId: this.clinicalSpecialty.id,
+			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
 			dentalActions,
 			personalHistories: this.personalHistoriesNewConsultationService.getAntecedentes().map(toOdontologyPersonalHistoryDto),
 			permanentTeethPresent: this.form.value.permanentTeethPresent,
 			temporaryTeethPresent: this.form.value.temporaryTeethPresent,
 			references: this.odontologyReferenceService.getOdontologyReferences(),
-			patientMedicalCoverageId: this.patientMedicalCoverage?.id
+			patientMedicalCoverageId: this.episodeData.medicalCoverageId
 		};
 	}
 
@@ -393,13 +392,6 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		return null;
 	}
 
-	setPatientMedicalCoverage(patientMedicalCoverage: PatientMedicalCoverage) {
-		this.patientMedicalCoverage = patientMedicalCoverage;
-	}
-
-	setClinicalSpecialty(clinicalSpecialty: ClinicalSpecialtyDto) {
-		this.clinicalSpecialty = clinicalSpecialty;
-	}
 }
 
 export interface FieldsToUpdate {

@@ -17,20 +17,23 @@ import { map } from 'rxjs';
 	styleUrls: ['./episode-data.component.scss']
 })
 export class EpisodeDataComponent implements OnInit {
-	UPDATE_CONVERGE_CORRECTLY = 'ambulatoria.paciente.nueva-consulta.episode-data.UPDATE_CONVERGE_CORRECTLY';
-	ERROR_CONVERGE_CORRECTLY = 'ambulatoria.paciente.nueva-consulta.episode-data.ERROR_CONVERGE_CORRECTLY';
-	fixedSpecialty = true;
+
 	form: FormGroup;
-	defaultSpecialty: ClinicalSpecialtyDto;
 	specialties: ClinicalSpecialtyDto[] = [];
 	patientMedicalCoverages: PatientMedicalCoverage[] = [];
-	patient: ReducedPatientDto;
-	patientId: number;
-	disabledCoverage = false;
-	appointmentConfirmedCoverageInfo: ExternalCoverageDto;
-	@Input() idPatient: number;
-	@Output() medicalCoverage = new EventEmitter<PatientMedicalCoverage>();
-	@Output() clinicalSpecialty = new EventEmitter<ClinicalSpecialtyDto>();
+
+	private patient: ReducedPatientDto;
+	private appointmentConfirmedCoverageInfo: ExternalCoverageDto;
+	private _patientId: number
+
+	@Input()
+	set patientId(id: number) {
+		if (id) {
+			this.setPatientInfo(id);
+			this.setMedicalCoverages();
+		}
+	}
+	@Output() episodeData = new EventEmitter<EpisodeData>();
 
 	constructor(
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
@@ -41,34 +44,20 @@ export class EpisodeDataComponent implements OnInit {
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly patientService: PatientService,
 		private readonly medicalCoverageInfoService: MedicalCoverageInfoService,
+	) { }
 
-	) {
+	ngOnInit() {
+
 		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe(specialties => {
-			this.setSpecialtyFields(specialties, false);
+			this.setSpecialtyFields(specialties);
 		});
 
-	}
-
-	ngOnInit(): void {
-		this.patientId = this.idPatient;
-		this.patientService.getBasicPersonalData(this.idPatient)
-			.subscribe((reducedPatientDto: ReducedPatientDto) => {
-				this.patient = reducedPatientDto;
-			})
 		this.form = this.formBuilder.group({
 			clinicalSpecialty: [null, [Validators.required]],
 			patientMedicalCoverage: [null],
 		});
-		this.appointmentConfirmedCoverageInfo = this.medicalCoverageInfoService?.appointmentConfirmedCoverageInfo?.medicalCoverage;
-		this.setMedicalCoverages();
-	}
 
-	setDefaultSpecialty() {
-		this.clinicalSpecialty.emit(this.form.controls.clinicalSpecialty.value);
-	}
-
-	setMedicalCoverage() {
-		this.medicalCoverage.emit(this.form.controls.patientMedicalCoverage.value);
+		this.appointmentConfirmedCoverageInfo = this.medicalCoverageInfoService.appointmentConfirmedCoverageInfo?.medicalCoverage;
 	}
 
 	openMedicalCoverageDialog() {
@@ -78,7 +67,7 @@ export class EpisodeDataComponent implements OnInit {
 				identificationNumber: this.patient.personalDataDto.identificationNumber,
 				identificationTypeId: this.patient.personalDataDto.identificationTypeId,
 				initValues: this.patientMedicalCoverages,
-				patientId: this.idPatient
+				patientId: this._patientId
 			}
 		});
 
@@ -88,37 +77,39 @@ export class EpisodeDataComponent implements OnInit {
 				if (values) {
 					const patientCoverages: PatientMedicalCoverageDto[] =
 						values.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
-					this.patientMedicalCoverageService.addPatientMedicalCoverages(this.idPatient, patientCoverages).subscribe(
+					this.patientMedicalCoverageService.addPatientMedicalCoverages(this._patientId, patientCoverages).subscribe(
 						_ => {
 							this.setMedicalCoverages();
-							this.snackBarService.showSuccess(this.UPDATE_CONVERGE_CORRECTLY);
+							this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.episode-data.UPDATE_CONVERGE_CORRECTLY');
 						},
-						_ => this.snackBarService.showError(this.ERROR_CONVERGE_CORRECTLY)
+						_ => this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.episode-data.ERROR_CONVERGE_CORRECTLY')
 					);
 				}
 			}
 		);
 	}
 
-	private setSpecialtyFields(specialtyArray, fixedSpecialty) {
-		this.specialties = specialtyArray;
-		this.fixedSpecialty = fixedSpecialty;
-		this.defaultSpecialty = specialtyArray[0];
-		this.form.get('clinicalSpecialty').patchValue(this.defaultSpecialty);
-		this.form.get('clinicalSpecialty').markAsTouched();
-		this.setDefaultSpecialty();
+	setEpisodeData() {
+		this.episodeData.emit(this.getEpisodeData());
+	}
 
+	private setSpecialtyFields(specialties: ClinicalSpecialtyDto[]) {
+		this.specialties = specialties;
+		const defaultSpecialty = specialties[0];
+		this.form.get('clinicalSpecialty').patchValue(defaultSpecialty);
+		this.form.get('clinicalSpecialty').markAsTouched();
+		this.setEpisodeData();
 	}
 
 	private setCoverage(p: PatientMedicalCoverage) {
 		this.form.get('patientMedicalCoverage').patchValue(p);
+		this.form.get('patientMedicalCoverage').disable();
 		this.form.get('patientMedicalCoverage').markAsTouched();
-		//this.disabledCoverage = true;
-		this.setMedicalCoverage();
+		this.setEpisodeData();
 	}
 
-	private setMedicalCoverages(): void {
-		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.idPatient)
+	private setMedicalCoverages() {
+		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this._patientId)
 			.pipe(
 				map(
 					patientMedicalCoveragesDto =>
@@ -127,13 +118,26 @@ export class EpisodeDataComponent implements OnInit {
 			)
 			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) => {
 				this.patientMedicalCoverages = patientMedicalCoverages;
-				this.patientMedicalCoverages.find(p => {
-					if (p?.medicalCoverage?.id === this.appointmentConfirmedCoverageInfo?.id) {
-						this.disabledCoverage = true;
-						this.setCoverage(p);
-					}
-				})
-
+				const appointmentMedicalCoverage = this.patientMedicalCoverages.find(p => p.medicalCoverage.id === this.appointmentConfirmedCoverageInfo?.id);
+				if (appointmentMedicalCoverage) 
+					this.setCoverage(appointmentMedicalCoverage);
 			});
 	}
+
+	private setPatientInfo(id: number) {
+		this._patientId = id;
+		this.patientService.getBasicPersonalData(id).subscribe((reducedPatientDto: ReducedPatientDto) => this.patient = reducedPatientDto);
+	}
+
+	private getEpisodeData(): EpisodeData {
+		return {
+			medicalCoverageId: this.form.value.patientMedicalCoverage?.id,
+			clinicalSpecialtyId: this.form.value.clinicalSpecialty?.id,
+		}
+	}
+}
+
+export interface EpisodeData {
+	medicalCoverageId: number;
+	clinicalSpecialtyId: number;
 }
