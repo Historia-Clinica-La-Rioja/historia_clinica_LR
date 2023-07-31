@@ -5,7 +5,7 @@ import { StudyPACAssociationService } from '@api-rest/services/study-PAC-associa
 import { StudyPermissionService } from '@api-rest/services/study-permission.service';
 import { ViewerService } from '@api-rest/services/viewer.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { switchMap, reduce } from 'rxjs';
+import { switchMap, reduce, Observable, of } from 'rxjs';
 
 @Component({
 	selector: 'app-view-study',
@@ -15,6 +15,8 @@ import { switchMap, reduce } from 'rxjs';
 export class ViewStudyComponent {
 
 	@Input() appointmentId: number;
+	@Input() isImageId: boolean = false;
+
 
 	constructor(
 		private readonly appointmentService: AppointmentsService,
@@ -25,7 +27,8 @@ export class ViewStudyComponent {
 	) { }
 
 	viewStudy() {
-		this.appointmentService.getStudyInstanceUID(this.appointmentId).pipe(
+			const sourceView$: Observable<StudyIntanceUIDDto> = this.isImageId ? of( {uid:this.appointmentId.toString()}) : this.appointmentService.getStudyInstanceUID(this.appointmentId)
+			sourceView$.pipe(
 			switchMap((studyInstanceUID: StudyIntanceUIDDto) =>
 				this.studyPACAssociationService.getPacGlobalURL(studyInstanceUID.uid).pipe(
 					switchMap((pacs: PacsUrlDto) =>
@@ -33,7 +36,7 @@ export class ViewStudyComponent {
 							switchMap((token: TokenDto) =>
 								this.viewerService.getUrl().pipe(
 									switchMap((url: ViewerUrlDto) =>
-										this.buildUrl(url.url, studyInstanceUID.uid, token.token, pacs.pacs[0])
+										this.buildUrl(url.url, studyInstanceUID.uid, token.token, pacs.pacs[0]) // se queda el primero no dominio
 									),
 									reduce((result, value) => result + value)
 								)
@@ -52,3 +55,10 @@ export class ViewStudyComponent {
 	}
 
 }
+
+export interface ViewStudyModel {
+	idReference: number;
+	isImageId: boolean;
+}
+
+

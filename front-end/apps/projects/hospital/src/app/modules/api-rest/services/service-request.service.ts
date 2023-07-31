@@ -9,7 +9,9 @@ import {
 	DiagnosticReportInfoDto, DiagnosticReportInfoWithFilesDto,
 	PrescriptionDto,
 	SnomedDto,
+	StudyWithoutOrderReportInfoDto,
 	TranscribedDiagnosticReportInfoDto,
+	TranscribedOrderReportInfoDto,
 	TranscribedPrescriptionDto,
 } from '@api-rest/api-model';
 
@@ -130,6 +132,18 @@ export class ServiceRequestService {
 	downloadPdf(patientId: number, serviceRequestId: number) {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${serviceRequestId}/download-pdf`;
 		this.viewPdfService.showDialog(url, 'Orden ' + serviceRequestId);
+	}
+
+	getStudyTranscribedOrder(patientId: number): Observable<TranscribedOrderReportInfoDto[]>
+	{
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/studyTranscribedOrder`;
+		return this.http.get<TranscribedOrderReportInfoDto[]>(url)
+	}
+
+	getStudyWithoutOrder(patientId: number): Observable<StudyWithoutOrderReportInfoDto[]>
+	{
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/studyWithoutOrder`;
+		return this.http.get<StudyWithoutOrderReportInfoDto[]>(url)
 	}
 
 }

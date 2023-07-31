@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { HCEDocumentDataDto } from '@api-rest/api-model';
 import { DocumentService } from '@api-rest/services/document.service';
 import { StudyAppointmentReportService } from '@api-rest/services/study-appointment-report.service';
+import { Observable, of } from 'rxjs';
 
 @Component({
     selector: 'app-view-report',
@@ -14,7 +15,7 @@ export class ViewReportComponent implements OnInit {
     @Input() appointmentId: number;
     @Input() buttonText: string;
     @Input() buttonIcon?: string;
-    private docFile: HCEDocumentDataDto;
+    @Input() fileInfo: HCEDocumentDataDto = null;
 
     constructor(
         public dialog: MatDialog,
@@ -23,10 +24,13 @@ export class ViewReportComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.studyAppointmentReportService.getFileInfo(this.appointmentId).subscribe(studyDocInfo => this.docFile = studyDocInfo);
     }
 
     viewReport() {
-        this.documentService.downloadFile(this.docFile);
+        const sourceDocFile$: Observable<HCEDocumentDataDto> = !this.fileInfo ? this.studyAppointmentReportService.getFileInfo(this.appointmentId) : of(this.fileInfo)
+        sourceDocFile$
+            .subscribe(studyDocInfo => {
+                this.documentService.downloadFile(studyDocInfo);
+            });
     }
 }

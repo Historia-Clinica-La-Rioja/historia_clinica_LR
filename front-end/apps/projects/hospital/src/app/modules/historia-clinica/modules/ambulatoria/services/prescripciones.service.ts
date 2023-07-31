@@ -216,6 +216,10 @@ export class PrescripcionesService {
 		}
 	}
 
+	renderStatusDescriptionStudyImage(stateComplete: boolean): string {
+		return stateComplete ? this.STUDY_STATUS.FINAL.description : this.STUDY_STATUS.REGISTERED.description
+	}
+
 	renderPrescriptionLineState(prescriptionLineState: number): PrescriptionLineState {
 		let state: PrescriptionLineState = {
 			description: PRESCRIPTION_STATES.INDICADA.description,

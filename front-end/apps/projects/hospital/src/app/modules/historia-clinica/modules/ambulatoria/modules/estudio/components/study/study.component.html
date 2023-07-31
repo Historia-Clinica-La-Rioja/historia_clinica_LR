@@ -2,46 +2,49 @@
 	<app-category-header-divider [header]="studyHeader"></app-category-header-divider>
 
 	<div id="content" fxLayout="column" fxLayoutGap="50px">
+
 		<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center center" *ngFor="let study of _studies">
 			<app-study-list-element fxFlex [content]="contentBuilder(study.diagnosticInformation)"
 				[createdDuring]="wasCreatedDuringSource(study.diagnosticInformation.source)"></app-study-list-element>
-			<div fxFlex="35" fxFlex.gt-md="28" fxFlex.gt-lg="23" fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="10px" 
-				*ngIf="study.diagnosticInformation.category === IMAGE_DIAGNOSIS && study.diagnosticInformation.statusId === STUDY_STATUS.FINAL_RDI.id">
-				<app-view-study class="view-study-btn" [appointmentId]="study.appointmentId"></app-view-study>
-				<div class="report-status">
-					<span *ngIf="!study.reportStatus; else pendingReport" class="report-label">{{'image-network.worklist.PENDING_REPORT' | translate}}</span>
-					<ng-template #pendingReport><app-view-report [appointmentId]="study.appointmentId" [buttonText]="'image-network.worklist.VIEW_REPORT'"></app-view-report></ng-template>
+
+			<ng-container *ngIf="study.diagnosticInformation.category === IMAGE_DIAGNOSIS">
+					<app-study-images-reports
+						[appointmentId]="study.appointmentId"
+						[reportStatus]="study.reportStatus"
+						[studyInfo]="study.diagnosticInformation">
+				</app-study-images-reports>
+			</ng-container>
+			<ng-container *ngIf="!IMAGE_TYPE_ORDER.includes(study.diagnosticInformation.typeOrder)">
+				<div actions fxFlex="3" *ngIf="study.diagnosticInformation.statusId !== STUDY_STATUS.ERROR.id">
+					<button mat-icon-button [matMenuTriggerFor]="menu" >
+						<mat-icon>more_vert</mat-icon>
+					</button>
+					<mat-menu #menu="matMenu">
+						<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+							<button mat-menu-item (click)="downloadOrder(study.diagnosticInformation.serviceRequestId)">
+								<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DOWNLOAD_STUDY'"></span>
+							</button>
+						</ng-container>
+						<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_IMAGENES', 'PERSONAL_DE_LABORATORIO']">
+							<button mat-menu-item (click)="completeStudy(study.diagnosticInformation)" *ngIf="study.diagnosticInformation.statusId === STUDY_STATUS.REGISTERED.id"
+							[disabled]="study.hasActiveAppointment">
+								<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.COMPLETE'"></span>
+							</button>
+						</ng-container>
+						<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+							<button mat-menu-item (click)="deleteStudy(study.diagnosticInformation)" *ngIf="study.diagnosticInformation.statusId === STUDY_STATUS.REGISTERED.id"
+							[disabled]="study.hasActiveAppointment">
+								<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DELETE'"></span>
+							</button>
+						</ng-container>
+						<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_IMAGENES', 'PERSONAL_DE_LABORATORIO']">
+							<button mat-menu-item (click)="showStudyResults(study.diagnosticInformation)" *ngIf="study.diagnosticInformation.statusId === STUDY_STATUS.FINAL.id">
+								<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.SHOW_RESULTS'"></span>
+							</button>
+						</ng-container>
+					</mat-menu>
 				</div>
-			</div>
-			<div actions fxFlex="3" *ngIf="study.diagnosticInformation.statusId !== STUDY_STATUS.ERROR.id">
-				<button mat-icon-button [matMenuTriggerFor]="menu" >
-					<mat-icon>more_vert</mat-icon>
-				</button>
-				<mat-menu #menu="matMenu">
-					<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-						<button mat-menu-item (click)="downloadOrder(study.diagnosticInformation.serviceRequestId)">
-							<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DOWNLOAD_STUDY'"></span>
-						</button>
-					</ng-container>
-					<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_IMAGENES', 'PERSONAL_DE_LABORATORIO']">
-						<button mat-menu-item (click)="completeStudy(study.diagnosticInformation)" *ngIf="study.diagnosticInformation.statusId === STUDY_STATUS.REGISTERED.id"
-						[disabled]="study.hasActiveAppointment">
-							<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.COMPLETE'"></span>
-						</button>
-					</ng-container>
-					<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-						<button mat-menu-item (click)="deleteStudy(study.diagnosticInformation)" *ngIf="study.diagnosticInformation.statusId === STUDY_STATUS.REGISTERED.id"
-						[disabled]="study.hasActiveAppointment">
-							<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DELETE'"></span>
-						</button>
-					</ng-container>
-					<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_IMAGENES', 'PERSONAL_DE_LABORATORIO']">
-						<button mat-menu-item (click)="showStudyResults(study.diagnosticInformation)" *ngIf="study.diagnosticInformation.statusId === STUDY_STATUS.FINAL.id">
-							<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.SHOW_RESULTS'"></span>
-						</button>
-					</ng-container>
-				</mat-menu>
-			</div>
+			</ng-container>
 		</div>
 	</div>
 </div>
