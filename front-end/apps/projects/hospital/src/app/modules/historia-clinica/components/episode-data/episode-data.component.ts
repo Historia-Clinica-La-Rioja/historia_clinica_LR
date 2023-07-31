@@ -33,6 +33,7 @@ export class EpisodeDataComponent implements OnInit {
 			this.setMedicalCoverages();
 		}
 	}
+	@Input() showSpecialty = true;
 	@Output() episodeData = new EventEmitter<EpisodeData>();
 
 	constructor(
@@ -48,14 +49,15 @@ export class EpisodeDataComponent implements OnInit {
 
 	ngOnInit() {
 
-		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe(specialties => {
-			this.setSpecialtyFields(specialties);
-		});
-
 		this.form = this.formBuilder.group({
 			clinicalSpecialty: [null, [Validators.required]],
 			patientMedicalCoverage: [null],
 		});
+
+		if (this.showSpecialty)
+			this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe(specialties => {
+				this.setSpecialtyFields(specialties);
+			});
 
 		this.appointmentConfirmedCoverageInfo = this.medicalCoverageInfoService.appointmentConfirmedCoverageInfo?.medicalCoverage;
 	}

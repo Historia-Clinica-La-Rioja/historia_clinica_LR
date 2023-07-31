@@ -1,7 +1,7 @@
 <mat-card>
 	<mat-card-content [formGroup]="form">
 
-		<div id="specialty" fxLayoutGap="10px">
+		<div id="specialty" fxLayoutGap="10px" *ngIf="showSpecialty">
 			<div fxLayoutAlign="start center" fxLayoutGap="10px">
 				<mat-icon color="gray" fontSet="material-icons-outlined">medical_services</mat-icon>
 				<span class="title">

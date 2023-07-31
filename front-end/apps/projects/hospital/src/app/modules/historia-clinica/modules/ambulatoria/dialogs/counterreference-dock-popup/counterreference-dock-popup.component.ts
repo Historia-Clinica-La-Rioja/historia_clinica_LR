@@ -23,6 +23,7 @@ import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/n
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
 import { ReferenceMasterDataService } from '@api-rest/services/reference-master-data.service';
+import { EpisodeData } from '@historia-clinica/components/episode-data/episode-data.component';
 @Component({
 	selector: 'app-counterreference-dock-popup',
 	templateUrl: './counterreference-dock-popup.component.html',
@@ -45,6 +46,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	collapsedCounterReference = false;
 	searchConceptsLocallyFFIsOn = false;
 	disableConfirmButton = false;
+	episodeData: EpisodeData;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
@@ -194,6 +196,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 			}),
 			fileIds: fileIds,
 			closureTypeId: this.formReferenceClosure.value.closureType.id,
+			patientMedicalCoverageId: this.episodeData.medicalCoverageId
 		};
 	}
 
