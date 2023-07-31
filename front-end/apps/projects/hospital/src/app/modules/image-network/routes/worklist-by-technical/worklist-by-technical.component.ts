@@ -65,7 +65,8 @@ export class WorklistByTechnicalComponent implements OnInit {
 	permission = false;
 
     readonly mssg = 'image-network.home.NO_PERMISSION';
-
+    readonly nothingToShowMssg = 'messages.NO_DATA';
+    
     appointmentsStates = WORKLIST_APPOINTMENT_STATES;
     reportStates = REPORT_STATES_ID;
     defaultStates = [];

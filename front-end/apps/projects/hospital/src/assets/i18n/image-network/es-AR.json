@@ -35,6 +35,7 @@
 			"ORDER": "Orden",
 			"STUDY_COMPLETED": "El estudio se ha marcado como completado",
 			"STUDY_ERROR": "El estudio no pudo marcarse como completado porque no se encontraron resultados",
+            "NO_APPOINTMENTS": "No se han encontrado resultados para la búsqueda realizada",
 			"medical-order": {
                 "NEW_MEDICAL_ORDER": "Nueva Orden Médica",
                 "ORDER": "Orden",

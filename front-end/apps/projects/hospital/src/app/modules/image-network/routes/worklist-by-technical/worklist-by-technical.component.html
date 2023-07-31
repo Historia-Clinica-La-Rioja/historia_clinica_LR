@@ -48,7 +48,7 @@
                                 [translate]="'forms.REQUIRED'"></mat-error>
                         </mat-form-field>
                     </div>
-                    <div style="height: 55px;">
+                    <div style="height: 40px;">
                         <button id="button-filter" mat-button color="primary" fxLayoutAlign="center start" (click)="setPanelState()">
                             <mat-icon color="primary">filter_list</mat-icon>
                             {{'internaciones.internment-patient-card.filters.FILTER'| translate | uppercase }} <mat-icon color="primary" 
@@ -65,7 +65,7 @@
 
             <mat-card class="worklist-card">
 
-                <mat-list class="mat-form-field-wrapper" *ngIf="detailedAppointments.length">
+                <mat-list class="mat-form-field-wrapper" *ngIf="detailedAppointments.length; else nothingToShow">
                     <div *ngFor="let appointment of pageSlice">
                         <mat-list-item class="appointment-detail">
                             <div class="appointment-container" fxFlex="100">
@@ -143,6 +143,10 @@
                         (page)="onPageChange($event)">
                     </mat-paginator>
                 </mat-list>
+
+                <ng-template #nothingToShow>
+                    <app-no-data *appHasRole="['TECNICO']" [message]="nothingToShowMssg"></app-no-data>
+                </ng-template>
             </mat-card>
         </div>
     </mat-card>
