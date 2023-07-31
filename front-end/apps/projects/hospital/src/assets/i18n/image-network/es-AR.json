@@ -84,7 +84,8 @@
                 "MODALITY": "Seleccione modalidad",
                 "FILTER_BY_STATE": "Filtrar por estado",
 			    "FILTER_BY_NAME": "Nombre del paciente",
-                "FILTER_BY_IDENTIFICATION": "Documento del paciente"
+                "FILTER_BY_IDENTIFICATION": "Documento del paciente",
+                "DATE_SELECT": "Filtrar por periodo"
             },
             "WORKLIST_BY_INFORMER": "Lista de informes",
             "MODALITIES": "Seleccione modalidad",

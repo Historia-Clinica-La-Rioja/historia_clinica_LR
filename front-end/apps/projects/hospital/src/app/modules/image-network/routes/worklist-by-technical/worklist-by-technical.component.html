@@ -35,6 +35,7 @@
                     </div>
                     <div data-id="date-filter">
                         <mat-form-field appearance="outline">
+                            <mat-label [translate]="'image-network.worklist.filters.DATE_SELECT'"></mat-label>
                             <div fxFlex fxLayout="row">
                                 <mat-date-range-input [formGroup]="filtersForm.get('datePicker')" [rangePicker]="picker"
                                     [max]="today" [min]="minDate" fxLayoutAlign="center center">
@@ -48,7 +49,7 @@
                                 [translate]="'forms.REQUIRED'"></mat-error>
                         </mat-form-field>
                     </div>
-                    <div style="height: 40px;">
+                    <div style="height: 50px;">
                         <button id="button-filter" mat-button color="primary" fxLayoutAlign="center start" (click)="setPanelState()">
                             <mat-icon color="primary">filter_list</mat-icon>
                             {{'internaciones.internment-patient-card.filters.FILTER'| translate | uppercase }} <mat-icon color="primary" 

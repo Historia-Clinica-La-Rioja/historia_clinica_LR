@@ -77,6 +77,7 @@ export class WorklistByTechnicalComponent implements OnInit {
 	selectedAppointment: EquipmentAppointmentListDto;
 
     panelOpenState = true;
+    fetchingData = false;
 
     readonly appointmentStatesId = APPOINTMENT_STATES_ID;
 
@@ -131,6 +132,18 @@ export class WorklistByTechnicalComponent implements OnInit {
         this.worklistFilters.manageStatusCheckboxes();
     }
 
+    private disableInputs() {
+        this.filtersForm.get('equipment').disable();
+        this.filtersForm.get('datePicker').get('start').disable();
+        this.filtersForm.get('datePicker').get('end').disable();
+    }
+
+    private enableInputs() {
+        this.filtersForm.get('equipment').enable();
+        this.filtersForm.get('datePicker').get('start').enable();
+        this.filtersForm.get('datePicker').get('end').enable();
+    }
+
     onModalityChange() {
         this.equipments = [];
         let modalityId = this.filtersForm.controls.modality.value?.id
@@ -148,6 +161,7 @@ export class WorklistByTechnicalComponent implements OnInit {
     }
 
     onEquipmentChange(equipment: MatSelectChange){
+        this.disableInputs();
         this.equipmentId = equipment.value.id;
         this.setDefaultStates();
         this.resetAppointmentsData();
@@ -158,6 +172,7 @@ export class WorklistByTechnicalComponent implements OnInit {
         this.startDate = this.filtersForm.get('datePicker').get('start').value?.format('YYYY-MM-DD');
         this.endDate = this.filtersForm.get('datePicker').get('end').value?.format('YYYY-MM-DD');
         if (this.startDate && this.endDate && this.equipmentId) {
+            this.disableInputs();
             this.setPreviousStates();
             this.getAppointments(this.equipmentId, this.startDate, this.endDate);
         }
@@ -179,6 +194,7 @@ export class WorklistByTechnicalComponent implements OnInit {
         this.appointmentsService.getAppointmentsByEquipment(equipmentId, from, to).subscribe(appointments => {
             this.appointments = appointments;
             this.manageStatusCheckboxes();
+            this.enableInputs();
         })
     }
 
