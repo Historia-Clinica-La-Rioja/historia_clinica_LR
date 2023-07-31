@@ -1,5 +1,12 @@
-<div style="margin-bottom: 20px;margin-top: 10px;">
-	<app-diagnosticos (mainDiagnosisChange)="mainDiagnosisChange($event)" (diagnosisChange)="diagnosisChange($event)"
-		[type]="'ANAMNESIS'" [mainDiagnosis]="diagnosis?.mainDiagnosis" [listDiagnosis]="diagnosis?.diagnosticos || []">
-	</app-diagnosticos>
+<div style="margin-bottom: 20px;margin-top: 20px;">
+	<app-new-consultation-expansion-section id="diagnosticos"
+		*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+		[title]="'internaciones.epicrisis.diagnosticos.TITLE' | translate" icon="error_outlined" [collapsed]="false"
+		[isEmpty]="componentEvaluationManagerService.isEmptyDiagnosis()  | async" [hideBorder]="true">
+
+		<app-diagnosticos (mainDiagnosisChange)="mainDiagnosisChange($event)"
+			(diagnosisChange)="diagnosisChange($event)" [type]="'ANAMNESIS'" [mainDiagnosis]="diagnosis?.mainDiagnosis"
+			[listDiagnosis]="diagnosis?.diagnosticos || []">
+		</app-diagnosticos>
+	</app-new-consultation-expansion-section>
 </div>

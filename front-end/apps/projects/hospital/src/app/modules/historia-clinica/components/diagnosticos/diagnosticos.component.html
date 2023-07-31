@@ -16,7 +16,6 @@
 </ng-container>
 
 <div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" fxLayout="column" fxLayoutAlign="start start">
-	<br>
 	<button id="add-main-diagnosis" *ngIf="!mainDiagnosis && type === 'ANAMNESIS'" class="diagnoses-action-button"
 		mat-button color="primary" (click)="openCreationDialog(true); $event.preventDefault()">
 		{{ 'internaciones.anamnesis.diagnosticos.ADD_MAIN_DIAGNOSIS' | translate }}
