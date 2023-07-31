@@ -40,7 +40,7 @@ public class DocumentFile extends SGXAuditableEntity<Long> {
 	@Column(name = "file_path", length = 200, nullable = false)
 	private String filepath;
 
-	@Column(name = "file_name", length = 40, nullable = false)
+	@Column(name = "file_name", length = 60, nullable = false)
 	private String filename;
 
 	@Column(name = "uuid_file", length = 36, nullable = false)

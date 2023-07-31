@@ -102,6 +102,43 @@
         </div>
     </div>
 
+    <!-- Diagnósticos pre-quirurgicos -->
+    <div th:fragment="preoperativeDiagnosis (message)">
+        <h3 th:text="${message}"></h3>
+        <div th:if="${#lists.isEmpty(preoperativeDiagnosis)}">
+            <dl class="lista" >
+                <dd><p >Sin cambios registrados</p></dd>
+            </dl>
+        </div>
+        <div th:if="${not #lists.isEmpty(preoperativeDiagnosis)}">
+            <dl th:each="diagnose,iter: ${preoperativeDiagnosis}">
+                <dd><p  th:text="${'- ' + diagnose.snomed.pt}"></p></dd>
+                <dl>
+                    <dd><strong>Estado: </strong><label  th:text="${diagnose.status}"></label></dd>
+                    <dd><strong>Verificación: </strong><label  th:text="${diagnose.verification}"></label></dd>
+                </dl>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Diagnósticos post-quirurgicos -->
+    <div th:fragment="postoperativeDiagnosis (message)">
+        <h3 th:text="${message}"></h3>
+        <div th:if="${#lists.isEmpty(postoperativeDiagnosis)}">
+            <dl class="lista" >
+                <dd><p >Sin cambios registrados</p></dd>
+            </dl>
+        </div>
+        <div th:if="${not #lists.isEmpty(postoperativeDiagnosis)}">
+            <dl th:each="diagnose,iter: ${postoperativeDiagnosis}">
+                <dd><p  th:text="${'- ' + diagnose.snomed.pt}"></p></dd>
+                <dl>
+                    <dd><strong>Estado: </strong><label  th:text="${diagnose.status}"></label></dd>
+                    <dd><strong>Verificación: </strong><label  th:text="${diagnose.verification}"></label></dd>
+                </dl>
+            </dl>
+        </div>
+    </div>
 
     <!-- Motivos -->
     <div th:fragment="reasons (message)">
@@ -135,6 +172,145 @@
                     <dd th:if="${procedure.performedDate  != null}"><strong>Fecha de realización: </strong><label th:text="${#temporals.format(procedure.performedDate, 'dd/MM/yyyy')}"></label></dd>
                 </dl>
             </dl>
+        </div>
+    </div>
+
+    <!-- Procedimientos quirúrgicos -->
+    <div th:fragment="surgeryProcedures (message)">
+        <h3 th:text="${message}"></h3>
+        <div th:if="${#lists.isEmpty(surgeryProcedures)}">
+            <dl class="lista" >
+                <dd><p >Sin cambios registrados</p></dd>
+            </dl>
+        </div>
+        <div th:if="${not #lists.isEmpty(surgeryProcedures)}">
+            <dl th:each="procedure,iter: ${surgeryProcedures}">
+                <dd><p  th:text="${'- ' + procedure.snomed.pt}"></p></dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Anestesias -->
+    <div th:fragment="anesthesia (message)">
+        <h3 th:text="${message}"></h3>
+        <div th:if="${#lists.isEmpty(anesthesia)}">
+            <dl class="lista" >
+                <dd><p >Sin cambios registrados</p></dd>
+            </dl>
+        </div>
+        <div th:if="${not #lists.isEmpty(anesthesia)}">
+            <dl th:each="procedure,iter: ${anesthesia}">
+                <dd><p  th:text="${'- ' + procedure.snomed.pt}"></p></dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Cultivo -->
+    <div th:fragment="culture (message)">
+        <h3 th:text="${message}"></h3>
+        <div th:if="${culture == null}">
+            <dl class="lista" >
+                <dd><p >Sin cambios registrados</p></dd>
+            </dl>
+        </div>
+        <div th:if="${culture != null}">
+                <dd><p  th:text="${'- ' + culture.snomed.pt}"></p></dd>
+            <dl>
+                <dd><strong>Descripción: </strong><label  th:text="${culture.note}"></label></dd>
+            </dl>
+                <dl>
+                    <dd><strong>Estado: </strong><label  th:text="${culture.status}"></label></dd>
+                </dl>
+        </div>
+    </div>
+
+    <!-- Biopsia por congelacion -->
+    <div th:fragment="frozenSectionBiopsy (message)">
+        <h3 th:text="${message}"></h3>
+        <div th:if="${frozenSectionBiopsy == null}">
+            <dl class="lista" >
+                <dd><p >Sin cambios registrados</p></dd>
+            </dl>
+        </div>
+        <div th:if="${frozenSectionBiopsy != null}">
+            <dd><p  th:text="${'- ' + frozenSectionBiopsy.snomed.pt}"></p></dd>
+            <dl>
+                <dd><strong>Descripción: </strong><label  th:text="${frozenSectionBiopsy.note}"></label></dd>
+            </dl>
+            <dl>
+                <dd><strong>Estado: </strong><label  th:text="${frozenSectionBiopsy.status}"></label></dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Drenaje -->
+    <div th:fragment="drainage (message)">
+        <h3 th:text="${message}"></h3>
+        <div th:if="${drainage == null}">
+            <dl class="lista" >
+                <dd><p >Sin cambios registrados</p></dd>
+            </dl>
+        </div>
+        <div th:if="${drainage != null}">
+            <dd><p  th:text="${'- ' + drainage.snomed.pt}"></p></dd>
+            <dl>
+                <dd><strong>Descripción: </strong><label  th:text="${drainage.note}"></label></dd>
+            </dl>
+            <dl>
+                <dd><strong>Estado: </strong><label  th:text="${drainage.status}"></label></dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Protesis -->
+    <div th:fragment="prosthesis (message)">
+        <h3 th:text="${message}"></h3>
+        <div th:if="${prosthesis == null}">
+            <dl class="lista" >
+                <dd><p >Sin cambios registrados</p></dd>
+            </dl>
+        </div>
+        <div th:if="${prosthesis != null}">
+            <dl>
+                <dd><strong>Descripción: </strong><label  th:text="${prosthesis}"></label></dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Equipo quirófano -->
+    <div th:fragment="healthcareProfessionals (message)">
+        <h3 th:text="${message}"></h3>
+        <div th:if="${#lists.isEmpty(healthcareProfessionals)}">
+            <dl class="lista" >
+                <dd><p >Sin cambios registrados</p></dd>
+            </dl>
+        </div>
+        <div th:if="${not #lists.isEmpty(healthcareProfessionals)}">
+            <dl th:each="professional,iter: ${healthcareProfessionals}">
+                <dl>
+                    <dd><strong>Rol: </strong><label  th:text="${professional.type.description}"></label></dd>
+                </dl>
+                <dd><strong>Profesional: </strong> <p  th:text="${professional.healthcareProfessional.person.fullName}"></p></dd>
+                <div th:if="${professional.comments != null}">
+                    <dl>
+                        <dd><strong>Comentarios: </strong><label  th:text="${professional.comments}"></label></dd>
+                    </dl>
+                </div>
+            </dl>
+        </div>
+    </div>
+
+
+    <!-- Descripcion cirugia realizada -->
+    <div th:fragment="surgicalDescription (message)">
+        <h3 th:text="${message}"></h3>
+        <div th:if="${description == null}">
+            <dl class="lista" >
+                <dd><p >Sin comentarios</p></dd>
+            </dl>
+        </div>
+        <div th:if="${description != null}">
+            <dd><p  th:text="${description}"></p></dd>
         </div>
     </div>
 

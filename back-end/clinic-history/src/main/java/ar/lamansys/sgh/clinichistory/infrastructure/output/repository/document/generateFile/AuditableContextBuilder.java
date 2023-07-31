@@ -152,6 +152,16 @@ public class AuditableContextBuilder {
 		contextMap.put("externalCause", document.getExternalCause());
 		contextMap.put("obstetricEvent", document.getObstetricEvent());
 		contextMap.put("conclusions", document.getConclusions());
+		contextMap.put("healthcareProfessionals", document.getHealthcareProfessionals());
+		contextMap.put("preoperativeDiagnosis", document.getPreoperativeDiagnosis());
+		contextMap.put("postoperativeDiagnosis", document.getPostoperativeDiagnosis());
+		contextMap.put("surgeryProcedures", document.getSurgeryProcedures());
+		contextMap.put("anesthesia", document.getAnesthesia());
+		contextMap.put("culture", document.getCulture());
+		contextMap.put("frozenSectionBiopsy", document.getFrozenSectionBiopsy());
+		contextMap.put("drainage", document.getDrainage());
+		contextMap.put("prosthesis", document.getProsthesisDescription());
+		contextMap.put("description", document.getDescription());
 
 		var immunizations =  mapImmunizations(document.getImmunizations());
 		contextMap.put("billableImmunizations", immunizations.stream().filter(ImmunizationInfoDto::isBillable).collect(Collectors.toList()));

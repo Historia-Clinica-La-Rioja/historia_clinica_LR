@@ -173,4 +173,7 @@ public interface IDocumentBo {
 
 	default ProcedureBo getDrainage() { return null; }
 
+	default String getProsthesisDescription() { return null; }
+
+	default String getDescription() { return null; }
 }

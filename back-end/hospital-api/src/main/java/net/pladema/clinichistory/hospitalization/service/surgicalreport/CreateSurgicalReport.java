@@ -37,7 +37,7 @@ public class CreateSurgicalReport {
 		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
 		Integer patientMedicalCoverageId = internmentEpisodeService.getMedicalCoverage(surgicalReport.getEncounterId())
 				.map(PatientMedicalCoverageBo::getId).orElse(null);
-		Long documentId = documentFactory.run(surgicalReport, true);
+		Long documentId = documentFactory.run(surgicalReport, surgicalReport.isConfirmed());
 		Long noteId = Optional.ofNullable(surgicalReport.getDescription()).map(noteService::createNote).orElse(null);
 		SurgicalReport entity = new SurgicalReport(
 				null,

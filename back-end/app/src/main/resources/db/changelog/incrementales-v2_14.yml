@@ -1903,3 +1903,21 @@ databaseChangeLog:
               sql: |-
                 INSERT INTO problem_type VALUES ('406520001', 'Diagnóstico pre-operatorio');
                 INSERT INTO problem_type VALUES ('406521002', 'Diagnóstico post-operatorio');
+
+    - changeSet:
+        id: modifyDataType-document_file-file_name
+        author: mvenere
+        changes:
+          - modifyDataType:
+              columnName: file_name
+              newDataType: varchar(60)
+              tableName: document_file
+
+    - changeSet:
+        id: modifyDataType-document_file_history-file_name
+        author: mvenere
+        changes:
+          - modifyDataType:
+              columnName: file_name
+              newDataType: varchar(60)
+              tableName: document_file_history
