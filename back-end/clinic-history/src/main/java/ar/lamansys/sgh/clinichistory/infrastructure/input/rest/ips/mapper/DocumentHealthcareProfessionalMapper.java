@@ -20,5 +20,11 @@ public interface DocumentHealthcareProfessionalMapper {
 	@IterableMapping(qualifiedByName = "toDocumentHealthcareProfessionalDocumentBo")
 	List<DocumentHealthcareProfessionalBo> toDocumentHealthcareProfessionalBoList(List<DocumentHealthcareProfessionalDto> professionalDocumentDtos);
 
+	@Named("toDocumentHealthcareProfessionalDocumentDto")
+	DocumentHealthcareProfessionalDto toDocumentHealthcareProfessionalDocumentDto(DocumentHealthcareProfessionalBo professionalBo);
+
+	@Named("toDocumentHealthcareProfessionalDtoList")
+	@IterableMapping(qualifiedByName = "toDocumentHealthcareProfessionalDocumentDto")
+	List<DocumentHealthcareProfessionalDto> toDocumentHealthcareProfessionalDtoList(List<DocumentHealthcareProfessionalBo> professionalBos);
 
 }

@@ -24,4 +24,8 @@ public class HealthcareProfessionalBo {
         this.id = id;
         this.licenceNumber = licenceNumber;
     }
+
+	public HealthcareProfessionalBo(Integer id){
+		this.id = id;
+	}
 }

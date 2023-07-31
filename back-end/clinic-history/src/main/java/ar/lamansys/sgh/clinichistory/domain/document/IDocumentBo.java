@@ -159,4 +159,18 @@ public interface IDocumentBo {
 
 	default List<DocumentHealthcareProfessionalBo> getHealthcareProfessionals() { return Collections.emptyList(); }
 
+	default List<DiagnosisBo> getPreoperativeDiagnosis() { return Collections.emptyList(); }
+
+	default List<DiagnosisBo> getPostoperativeDiagnosis() { return Collections.emptyList(); }
+
+	default List<ProcedureBo> getSurgeryProcedures() { return Collections.emptyList(); }
+
+	default List<ProcedureBo> getAnesthesia() { return Collections.emptyList(); }
+
+	default ProcedureBo getCulture() { return null; }
+
+	default ProcedureBo getFrozenSectionBiopsy() { return null; }
+
+	default ProcedureBo getDrainage() { return null; }
+
 }

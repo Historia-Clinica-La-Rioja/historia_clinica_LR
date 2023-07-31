@@ -2,7 +2,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 
 import javax.annotation.Nullable;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProblemTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,5 +16,5 @@ public class DiagnosisDto extends HealthConditionDto {
     private boolean presumptive = false;
 
 	@Nullable
-	private String problemTypeId = ProblemType.DIAGNOSIS;
+	private ProblemTypeEnum type = ProblemTypeEnum.DIAGNOSIS;
 }

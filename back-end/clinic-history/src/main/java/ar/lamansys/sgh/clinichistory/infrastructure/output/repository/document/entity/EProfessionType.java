@@ -6,20 +6,23 @@ import lombok.Getter;
 @Getter
 public enum EProfessionType {
 
-	SURGEON((short)1),
-	SURGEON_ASSISTANT((short)2),
-	ANESTHESIOLOGIST((short)3),
-	CARDIOLOGIST((short)4),
-	SURGICAL_INSTRUMENT_TECHNICIAN((short)5),
-	OBSTETRICIAN((short)6),
-	PEDIATRICIAN((short)7),
-	PATHOLOGIST((short)8),
-	TRANSFUSIONIST((short)9);
+	SURGEON((short)1, "Cirujano"),
+	SURGEON_ASSISTANT((short)2, "Ayudante"),
+	ANESTHESIOLOGIST((short)3, "Anestesiólogo"),
+	CARDIOLOGIST((short)4, "Cardiologo"),
+	SURGICAL_INSTRUMENT_TECHNICIAN((short)5, "Instrumentadora"),
+	OBSTETRICIAN((short)6, "Obstetra"),
+	PEDIATRICIAN((short)7, "Pediatra"),
+	PATHOLOGIST((short)8, "Patologo"),
+	TRANSFUSIONIST((short)9, "Transfusionista");
 
 	private Short id;
 
-	EProfessionType(Short id){
+	private String description;
+
+	EProfessionType(Short id, String description){
 		this.id = id;
+		this.description = description;
 	}
 
 	public static EProfessionType map(Short id) {

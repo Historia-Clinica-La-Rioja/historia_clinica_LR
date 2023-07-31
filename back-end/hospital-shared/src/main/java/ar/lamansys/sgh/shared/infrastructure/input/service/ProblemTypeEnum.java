@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.publicapi.infrastructure.input.rest.mapper;
+package ar.lamansys.sgh.shared.infrastructure.input.service;
 
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.Getter;
@@ -9,7 +9,9 @@ public enum ProblemTypeEnum {
 	PROBLEM("55607006"),
 	PRIOR("57177007"),
 	CHRONIC("-55607006"),
-	OTHER("00000001");
+	OTHER("00000001"),
+	POSTOPERATIVE_DIAGNOSIS("406521002"),
+	PREOPERATIVE_DIAGNOSIS("406520001");
 
 	private final String id;
 

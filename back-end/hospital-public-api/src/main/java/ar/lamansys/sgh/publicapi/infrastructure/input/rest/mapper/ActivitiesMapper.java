@@ -18,6 +18,8 @@ import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SingleDiagnosticD
 
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SnomedCIE10Dto;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProblemTypeEnum;
+
 import org.springframework.stereotype.Component;
 
 import ar.lamansys.sgh.publicapi.domain.AttentionInfoBo;

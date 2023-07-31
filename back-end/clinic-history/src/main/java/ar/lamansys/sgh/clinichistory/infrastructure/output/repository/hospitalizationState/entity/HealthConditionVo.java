@@ -6,6 +6,7 @@ import java.util.Objects;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProblemTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -73,20 +74,18 @@ public class HealthConditionVo extends ClinicalTermVo {
     public boolean isFamilyHistory() {
         return problemId.equals(ProblemType.FAMILY_HISTORY);
     }
+	public boolean isOfType(ProblemTypeEnum type) {
+		return problemId.equals(type.getId());
+	}
 
 	public boolean isProblem() {
-		return ProblemType.PROBLEM.equals(problemId) || ProblemType.CHRONIC.equals(problemId);
-	}
-	public boolean isChronic() {
-		return ProblemType.CHRONIC.equals(problemId);
+		return isOfType(ProblemTypeEnum.PROBLEM) || isOfType(ProblemTypeEnum.CHRONIC);
 	}
 
     public boolean isPresumptive() {
         return (verificationId != null && verificationId.equalsIgnoreCase(ConditionVerificationStatus.PRESUMPTIVE));
     }
 
-	public boolean isOtherProblem() { return ProblemType.OTHER.equals(problemId); };
-    
 	@Override
 	public int hashCode() {
 		return Objects.hash(getId());

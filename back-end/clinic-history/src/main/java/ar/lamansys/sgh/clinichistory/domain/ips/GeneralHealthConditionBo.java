@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProblemTypeEnum;
 
 import static java.util.Objects.nonNull;
 
@@ -39,7 +40,11 @@ public class GeneralHealthConditionBo implements Serializable {
 
 	private List<HealthConditionBo> otherProblems = new ArrayList<>();
 
-    public GeneralHealthConditionBo(List<HealthConditionVo> healthConditionVos) {
+	private List<DiagnosisBo> preoperativeDiagnosis = new ArrayList<>();
+
+	private List<DiagnosisBo> postoperativeDiagnosis = new ArrayList<>();
+
+	public GeneralHealthConditionBo(List<HealthConditionVo> healthConditionVos) {
         setMainDiagnosis(buildMainDiagnosis(healthConditionVos.stream().filter(HealthConditionVo::isMain).findAny()));
         setDiagnosis(buildGeneralState(
                 healthConditionVos,
@@ -61,8 +66,18 @@ public class GeneralHealthConditionBo implements Serializable {
 				this::buildProblem));
 		setOtherProblems(buildGeneralState(
 				healthConditionVos,
-				HealthConditionVo::isOtherProblem,
+				healthConditionVo -> healthConditionVo.isOfType(ProblemTypeEnum.OTHER),
 				this::mapToHealthConditionBo
+		));
+		setPreoperativeDiagnosis(buildGeneralState(
+				healthConditionVos,
+				healthConditionVo -> healthConditionVo.isOfType(ProblemTypeEnum.PREOPERATIVE_DIAGNOSIS),
+				this::mapDiagnosis
+		));
+		setPreoperativeDiagnosis(buildGeneralState(
+				healthConditionVos,
+				healthConditionVo -> healthConditionVo.isOfType(ProblemTypeEnum.POSTOPERATIVE_DIAGNOSIS),
+				this::mapDiagnosis
 		));
     }
 	private <T extends HealthConditionBo> List<T> buildGeneralState(List<HealthConditionVo> data,
@@ -154,7 +169,7 @@ public class GeneralHealthConditionBo implements Serializable {
 		result.setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
 		result.setMain(healthConditionVo.isMain());
 		result.setStartDate(healthConditionVo.getStartDate());
-		result.setChronic(healthConditionVo.isChronic());
+		result.setChronic(healthConditionVo.isOfType(ProblemTypeEnum.CHRONIC));
         result.setEndDate(healthConditionVo.getEndDate());
         result.setErrorReason(nonNull(healthConditionVo.getErrorReasonId()) ? EProblemErrorReason.map(healthConditionVo.getErrorReasonId()).getDescription() : null);
         result.setErrorObservations(healthConditionVo.getNote());

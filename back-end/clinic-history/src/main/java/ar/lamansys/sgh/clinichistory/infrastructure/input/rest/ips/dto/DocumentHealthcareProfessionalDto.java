@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEHealthcareProfessionalDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.EProfessionType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ public class DocumentHealthcareProfessionalDto {
 	private Integer id;
 
 	@NotNull
-	private Integer healthcareProfessionalId;
+	private HCEHealthcareProfessionalDto healthcareProfessional;
 
 	@NotNull
 	private EProfessionType type;

@@ -963,6 +963,7 @@ export interface DiagnosesGeneralStateDto extends DiagnosisDto {
 
 export interface DiagnosisDto extends HealthConditionDto {
     presumptive?: boolean;
+    type?: ProblemTypeEnum;
 }
 
 export interface DiagnosticReportDto extends ClinicalTermDto {
@@ -1152,6 +1153,7 @@ export interface DocumentDto {
     documentType: number;
     encounterId: number;
     familyHistories: HealthHistoryConditionDto[];
+    healthcareProfessionals: DocumentHealthcareProfessionalDto[];
     id: number;
     immunizations: ImmunizationDto[];
     institutionId: number;
@@ -1191,6 +1193,13 @@ export interface DocumentFileSummaryDto extends Serializable {
     sourceId: number;
     sourceType: SourceTypeDto;
     startDate: DateTimeDto;
+}
+
+export interface DocumentHealthcareProfessionalDto {
+    comments?: string;
+    healthcareProfessional: HCEHealthcareProfessionalDto;
+    id?: number;
+    type: EProfessionType;
 }
 
 export interface DocumentHistoricDto {
@@ -4049,6 +4058,22 @@ export interface TemplateNamesDto {
     name: string;
 }
 
+export interface SurgicalReportDto extends Serializable {
+    anesthesia?: HospitalizationProcedureDto[];
+    confirmed: boolean;
+    culture?: HospitalizationProcedureDto;
+    description?: string;
+    drainage?: HospitalizationProcedureDto;
+    endDateTime?: DateTimeDto;
+    frozenSectionBiopsy?: HospitalizationProcedureDto;
+    healthcareProfessionals?: DocumentHealthcareProfessionalDto[];
+    postoperativeDiagnosis?: DiagnosisDto[];
+    preoperativeDiagnosis?: DiagnosisDto[];
+    procedures?: HospitalizationProcedureDto[];
+    startDateTime?: DateTimeDto;
+    surgeryProcedures?: HospitalizationProcedureDto[];
+}
+
 export interface TerminologyCSVDto {
     ecl: SnomedECL;
     url: string;
@@ -4637,6 +4662,18 @@ export const enum EPregnancyTermination {
     UNDEFINED = "UNDEFINED",
 }
 
+export const enum EProfessionType {
+    SURGEON = "SURGEON",
+    SURGEON_ASSISTANT = "SURGEON_ASSISTANT",
+    ANESTHESIOLOGIST = "ANESTHESIOLOGIST",
+    CARDIOLOGIST = "CARDIOLOGIST",
+    SURGICAL_INSTRUMENT_TECHNICIAN = "SURGICAL_INSTRUMENT_TECHNICIAN",
+    OBSTETRICIAN = "OBSTETRICIAN",
+    PEDIATRICIAN = "PEDIATRICIAN",
+    PATHOLOGIST = "PATHOLOGIST",
+    TRANSFUSIONIST = "TRANSFUSIONIST",
+}
+
 export const enum EReferenceAttentionState {
     PENDING = "PENDING",
     ASSIGNED = "ASSIGNED",
@@ -4728,6 +4765,16 @@ export const enum EVirtualConsultationStatus {
     IN_PROGRESS = "IN_PROGRESS",
     FINISHED = "FINISHED",
     CANCELED = "CANCELED",
+}
+
+export const enum ProblemTypeEnum {
+    DIAGNOSIS = "DIAGNOSIS",
+    PROBLEM = "PROBLEM",
+    PRIOR = "PRIOR",
+    CHRONIC = "CHRONIC",
+    OTHER = "OTHER",
+    POSTOPERATIVE_DIAGNOSIS = "POSTOPERATIVE_DIAGNOSIS",
+    PREOPERATIVE_DIAGNOSIS = "PREOPERATIVE_DIAGNOSIS",
 }
 
 export const enum ProcedureTypeEnum {
