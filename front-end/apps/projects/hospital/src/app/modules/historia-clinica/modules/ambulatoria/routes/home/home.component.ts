@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { GenderDto, IdentificationTypeDto, LimitedPatientSearchDto, PatientSearchDto } from '@api-rest/api-model';
@@ -15,13 +15,18 @@ import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 import { TableModel, ActionDisplays } from '@presentation/components/table/table.component';
 import { PatientNameService } from '@core/services/patient-name.service';
+import { JitsiCallService } from 'projects/hospital/src/app/modules/jitsi/jitsi-call.service';
+import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
+import { EntryCallStompService } from 'projects/hospital/src/app/modules/api-web-socket/entry-call-stomp.service';
+import { ShowEntryCallService } from '@presentation/services/show-entry-call.service';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
 	styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 	patientData: PatientSearchDto[] = [];
 	genderTableView: string[] = [];
 	public personalInformationForm: UntypedFormGroup;
@@ -41,6 +46,7 @@ export class HomeComponent implements OnInit {
 	public tableModel: TableModel<PatientSearchDto>;
 
 	private readonly routePrefix;
+	private entryCallSubs: Subscription;
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -50,6 +56,10 @@ export class HomeComponent implements OnInit {
 		private readonly contextService: ContextService,
 		private readonly patientNameService: PatientNameService,
 		private readonly featureFlagService: FeatureFlagService,
+		private jitsiCallService: JitsiCallService,
+		private virtualConsultationService: VirtualConstultationService,
+		private entryCallStompService: EntryCallStompService,
+		private showEntryCallService: ShowEntryCallService,
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isEnabled => {
@@ -60,6 +70,21 @@ export class HomeComponent implements OnInit {
 	ngOnInit(): void {
 		this.initPersonalInformationForm();
 		this.setMasterData();
+
+		this.entryCallSubs = this.entryCallStompService.callId$.subscribe(
+			(callId: any) => {
+				callId ? this.showEntryCallService.show(callId) : this.showEntryCallService.close();
+			}
+		)
+	}
+
+	show() {
+		let roomId = (Math.floor(Math.random() * 100000) + 1).toString();
+		for (let index = 0; index < 4; index++) {
+			roomId += `-${Math.floor(Math.random() * 100000) + 1}`;
+		}
+		this.jitsiCallService.open(roomId);
+		this.virtualConsultationService.notifyVirtualConsultationCall(roomId).subscribe(console.log)
 	}
 
 	private initPersonalInformationForm() {
@@ -116,7 +141,7 @@ export class HomeComponent implements OnInit {
 			this.formSubmitted = true;
 			this.requiringValues = false;
 			this.requiringAtLeastOneMoreValue = false;
-			this.personalInformationForm.value.identificationNumber = this.personalInformationForm.value.identificationNumber?.replace(REMOVE_SUBSTRING_DNI,'');
+			this.personalInformationForm.value.identificationNumber = this.personalInformationForm.value.identificationNumber?.replace(REMOVE_SUBSTRING_DNI, '');
 			const personalInformationReq: PersonInformationRequest = this.personalInformationForm.value;
 			this.patientService.searchPatientOptionalFilters(personalInformationReq)
 				.subscribe((data: LimitedPatientSearchDto) => {
@@ -255,6 +280,10 @@ export class HomeComponent implements OnInit {
 		if (formValues.birthDate !== null)
 			return true
 		return false;
+	}
+
+	ngOnDestroy(): void {
+		this.entryCallSubs.unsubscribe();
 	}
 
 }

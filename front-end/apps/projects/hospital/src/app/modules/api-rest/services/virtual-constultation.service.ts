@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { VirtualConsultationDto, VirtualConsultationNotificationDataDto } from '@api-rest/api-model';
-import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
+import { environment } from '@environments/environment';
 
 @Injectable({
 	providedIn: 'root'
@@ -37,3 +37,4 @@ export class VirtualConstultationService {
 		return this.http.post(`${url}`, attentionValue)
 	}
 }
+

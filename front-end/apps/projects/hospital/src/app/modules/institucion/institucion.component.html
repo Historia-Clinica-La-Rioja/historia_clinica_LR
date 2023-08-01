@@ -1,32 +1,18 @@
 <ng-container *ngIf="(menuItems$ | async) as menuItems; else loading">
 
 	<app-main-layout [menuItems]="menuItems">
-		<app-location-badge
-			location-info-min
-			[hideName]="true"
-			[location]="institution"
-			[routerLink]="institutionHomeLink"
-			routerLinkActive="headers-card-background"
-			[routerLinkActiveOptions]="{exact: true}"
-		></app-location-badge>
-		<app-location-badge
-			location-info
-			[location]="institution"
-			[routerLink]="institutionHomeLink"
-			routerLinkActive="headers-card-background"
-			[routerLinkActiveOptions]="{exact: true}"
-		></app-location-badge>
-		<app-user-badge
-			account-info
-			[userInfo]="userInfo"
-			[routerLink]="userProfileLink"
-		></app-user-badge>
-		<app-user-badge
-			account-info-min
-			[hideName]="true"
-			[userInfo]="userInfo"
-			[routerLink]="userProfileLink"
-		></app-user-badge>
+		<div forRender>
+			<app-jitsi-call></app-jitsi-call>
+			<app-entry-call-renderer></app-entry-call-renderer>
+		</div>
+		<app-location-badge location-info-min [hideName]="true" [location]="institution"
+			[routerLink]="institutionHomeLink" routerLinkActive="headers-card-background"
+			[routerLinkActiveOptions]="{exact: true}"></app-location-badge>
+		<app-location-badge location-info [location]="institution" [routerLink]="institutionHomeLink"
+			routerLinkActive="headers-card-background" [routerLinkActiveOptions]="{exact: true}"></app-location-badge>
+		<app-user-badge account-info [userInfo]="userInfo" [routerLink]="userProfileLink"></app-user-badge>
+		<app-user-badge account-info-min [hideName]="true" [userInfo]="userInfo"
+			[routerLink]="userProfileLink"></app-user-badge>
 	</app-main-layout>
 </ng-container>
 <ng-template #loading>
