@@ -11,10 +11,10 @@ import java.util.stream.Stream;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum EDiagnosticImageReportStatus {
 	
-	COMPLETED(1, "Completed"),
-	DERIVED(2, "Derived"),
-	PENDING(3, "Pending"),
-	NOT_REQUIRED(4, "Not required");
+	COMPLETED(1, "Completado"),
+	DERIVED(2, "Derivado"),
+	PENDING(3, "Pendiente"),
+	NOT_REQUIRED(4, "No requerido");
 
 	private final Short id;
 	private final String description;
