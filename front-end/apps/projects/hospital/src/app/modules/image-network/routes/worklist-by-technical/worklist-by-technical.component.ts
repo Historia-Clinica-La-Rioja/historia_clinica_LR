@@ -161,6 +161,7 @@ export class WorklistByTechnicalComponent implements OnInit {
     }
 
     onEquipmentChange(equipment: MatSelectChange){
+        this.resetDate();
         this.disableInputs();
         this.equipmentId = equipment.value.id;
         this.setDefaultStates();
@@ -188,6 +189,13 @@ export class WorklistByTechnicalComponent implements OnInit {
         this.setPreviousStates();
         this.filterAppointments(searchFilters.appointmentStates, searchFilters.patientName, searchFilters.patientIdentification);
         this.paginator?.firstPage();
+    }
+
+    private resetDate() {
+        this.startDate = this.today.format('YYYY-MM-DD');
+        this.endDate = this.today.format('YYYY-MM-DD');
+        this.filtersForm.get('datePicker').get('start').setValue(this.startDate);
+        this.filtersForm.get('datePicker').get('end').setValue(this.endDate);
     }
 
     private getAppointments(equipmentId: number, from?: string, to?: string){
