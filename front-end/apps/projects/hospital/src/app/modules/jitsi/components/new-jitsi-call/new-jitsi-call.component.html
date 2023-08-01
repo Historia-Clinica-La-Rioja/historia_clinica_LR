@@ -1,0 +1,5 @@
+<app-floating-div (afterClosed)="close()">
+	<div content style="width: 100%;height: 100%;"> <!-- Sin esto no se agranda cuando expando -->
+		<app-jitsi-meet-external-api [roomId]="roomId" [userName]="userName"></app-jitsi-meet-external-api>
+	</div>
+</app-floating-div>
