@@ -53,9 +53,10 @@ public interface EquipmentAppointmentAssnRepository extends JpaRepository<Equipm
 			"JOIN Patient AS p ON (a.patientId = p.id) " +
 			"JOIN Person AS pe ON (pe.id = p.personId) " +
 			"JOIN PersonExtended AS pex ON (pe.id = pex.id) "+
-			"LEFT JOIN AppointmentOrderImage AS aoi ON (a.id = aoi.pk.appointmentId) "+
-			"LEFT JOIN Institution AS i ON (aoi.destInstitutionId = i.id) "+
-			"LEFT JOIN DiagnosticReport AS dr ON (aoi.studyId = dr.id) " +
+			"LEFT JOIN AppointmentOrderImage AS aoi ON (a.id = aoi.pk.appointmentId) " +
+			"LEFT JOIN Institution AS i ON (aoi.destInstitutionId = i.id) " +
+			"LEFT JOIN TranscribedServiceRequest AS tsr ON (aoi.transcribedOrderId = tsr.id) " +
+			"LEFT JOIN DiagnosticReport AS dr ON (aoi.studyId = dr.id OR tsr.studyId = dr.id) " +
 			"LEFT JOIN Snomed AS s ON (dr.snomedId = s.id) " +
 			"WHERE e.id = :equipmentId " +
 			"AND a.appointmentStateId IN (1,2,3,5)")
