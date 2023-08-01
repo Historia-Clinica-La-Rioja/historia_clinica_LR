@@ -7,6 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import ar.lamansys.virtualConsultation.EnableVirtualConsultation;
 import ar.lamansys.immunization.EnableImmunization;
 import ar.lamansys.mqtt.EnableMqttCall;
 import ar.lamansys.nursing.EnableNursing;
@@ -35,6 +36,7 @@ import net.pladema.EnableHospitalLib;
 @ComponentScan(basePackages = {"net.pladema.sgh.app"})
 @EnableJpaRepositories(basePackages = {"net.pladema.sgh.app"})
 @EntityScan(basePackages = {"net.pladema.sgh.app"})
+@EnableVirtualConsultation
 public class HospitalApiConfiguration {
 
 }

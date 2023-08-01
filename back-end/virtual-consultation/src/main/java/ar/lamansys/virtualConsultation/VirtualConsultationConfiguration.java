@@ -1,0 +1,13 @@
+package ar.lamansys.virtualConsultation;
+
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
+@Configuration
+@ComponentScan(basePackages = "ar.lamansys.virtualConsultation")
+@EnableJpaRepositories(basePackages = {"ar.lamansys.virtualConsultation"})
+@EntityScan(basePackages = {"ar.lamansys.virtualConsultation"})
+public class VirtualConsultationConfiguration {
+}
