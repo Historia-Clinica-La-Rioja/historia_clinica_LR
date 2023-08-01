@@ -49,6 +49,7 @@ import { TitledContentCardComponent } from './components/titled-content-card/tit
 import { TitledContentComponent } from './components/titled-content/titled-content.component';
 import { TypeaheadComponent } from './components/typeahead/typeahead.component';
 import { UserBadgeComponent } from './components/user-badge/user-badge.component';
+import { FilterButtonComponent } from './components/filter-button/filter-button.component';
 // dialogs
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
@@ -67,7 +68,6 @@ import { TimeDtoToLocalTimePipe } from './pipes/time-dto-to-local-time.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
-import { FilterButtonComponent } from './components/filter-button/filter-button.component';
 
 
 @NgModule({
@@ -134,7 +134,6 @@ import { FilterButtonComponent } from './components/filter-button/filter-button.
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
-
 	],
 	imports: [
 		CommonModule,

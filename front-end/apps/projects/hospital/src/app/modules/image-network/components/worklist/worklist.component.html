@@ -5,16 +5,16 @@
             {{worklist.patientInformation.identification}}
         </span>
     </div>
-    <div fxLayout="row" class="institution" fxFlex.gt-sm="20">
+    <div fxLayout="row" class="institution" fxFlex.gt-sm="20" fxLayoutAlign="center">
         <mat-icon>domain</mat-icon>
         <span>{{worklist.institutionName}}</span>
     </div>
-    <div fxFlex.gt-sm="20">
+    <div fxFlex.gt-sm="20" fxLayoutAlign="center">
         <app-colored-label [description]="worklist.state.description | translate | uppercase"
             [color]="worklist.state.color">
         </app-colored-label>
     </div>
-    <div class="smaller-font grey" fxLayout="column" fxLayoutAlign="start" fxFlex.gt-sm="10">
+    <div class="smaller-font grey" fxLayout="column" fxFlex.gt-sm="10">
         <span data-id="date">{{ datePipe.transform(worklist.date, datePipeFormat.SHORT_DATE)}}</span>
         <span data-id="time">{{ datePipe.transform(worklist.date, datePipeFormat.SHORT_TIME)}}hs</span>
     </div>
