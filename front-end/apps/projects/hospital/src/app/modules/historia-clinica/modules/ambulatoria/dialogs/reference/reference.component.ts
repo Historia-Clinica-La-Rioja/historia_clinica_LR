@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, MasterDataDto, ReferenceProblemDto } from '@api-rest/api-model';
+import { AddressDto, CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, ReferenceProblemDto, MasterDataDto } from '@api-rest/api-model';
 import { ReferenceOriginInstitutionService } from '../../services/reference-origin-institution.service';
 import { ReferenceProblemsService } from '../../services/reference-problems.service';
 import { Observable, tap } from 'rxjs';
@@ -15,17 +15,17 @@ import { PRIORITY } from '../../constants/reference-masterdata';
 	providers: [ReferenceOriginInstitutionService, ReferenceProblemsService]
 })
 export class ReferenceComponent implements OnInit, AfterContentChecked {
-
 	formReference: UntypedFormGroup;
 	selectedFiles: File[] = [];
 	selectedFilesShow: any[] = [];
-	DEFAULT_RADIO_OPTION = '0';
+	DEFAULT_RADIO_OPTION = true;
 	submitForm = false;
-	updateSpecialtiesAndCarelineFields = false;
+	updateDepartamentsAndInstitution = false;
 	clearCarelinesAndSpecialties = false;
 	priorities$: Observable<MasterDataDto[]>;
 
 	PRIORITY = PRIORITY;
+	provinceId: number;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: any,
@@ -34,9 +34,14 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 		private changeDetector: ChangeDetectorRef,
 		private readonly referenceProblemsService: ReferenceProblemsService,
 		private readonly referenceMasterData: ReferenceMasterDataService,
+		private readonly referenceOriginInstitutionService: ReferenceOriginInstitutionService,
 	) { }
 
 	ngOnInit(): void {
+		this.referenceOriginInstitutionService.originInstitutionInfo$.subscribe((info: AddressDto) => {
+			this.provinceId = info?.provinceId
+		});
+
 		this.createReferenceForm();
 
 		this.disableInputs();
@@ -102,9 +107,6 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 
 	onDepartmentSelectionChange(department: number) {
 		this.formReference.controls.departmentId.setValue(department);
-		if (department) {
-			this.clearCarelinesAndSpecialties = true;
-		}
 	}
 
 	onInstitutionSelectionChange(institutionId: number) {
@@ -113,11 +115,10 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 	}
 
 	activateSpecialtiesAndCarelineFields() {
-		this.updateSpecialtiesAndCarelineFields = true;
+		this.updateDepartamentsAndInstitution = true;
 	}
 
 	resetControls() {
-		this.updateSpecialtiesAndCarelineFields = false;
 		this.clearCarelinesAndSpecialties = false;
 		this.changeDetector.detectChanges();
 	}
@@ -145,8 +146,6 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 
 	private disableInputs() {
 		this.formReference.controls.clinicalSpecialtyId.disable();
-		this.formReference.controls.procedure.disable();
-		this.formReference.controls.careLine.disable();
 	}
 
 }
