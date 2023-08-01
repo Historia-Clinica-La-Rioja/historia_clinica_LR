@@ -3,6 +3,7 @@ package ar.lamansys.sgh.publicapi.infrastructure.output;
 import java.sql.Date;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +14,8 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
+
+import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionsDataBo;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;
@@ -57,16 +60,20 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 
 	private final Duration tokenExpiration;
 
+	private final Integer domainNumber;
+
 	private final MedicationStatementCommercialRepository medicationStatementCommercialRepository;
 
 	public PrescriptionStorageImpl(EntityManager entityManager, @Value("${token.secret}") String secret,
 								   @Value("${prescription.token.duration}") Duration tokenExpiration,
+								   @Value("${prescription.domain.number}") Integer domainNumber,
 								   MedicationStatementCommercialRepository medicationStatementCommercialRepository) {
 		this.entityManager = entityManager;
 
 		this.secret = secret;
 		this.tokenExpiration = tokenExpiration;
 		this.medicationStatementCommercialRepository = medicationStatementCommercialRepository;
+		this.domainNumber = domainNumber;
 	}
 
 	@Override
@@ -169,6 +176,61 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		medicationStatementCommercialRepository.deleteAllInBatch(entities);
 		medicationStatementCommercialRepository.saveAll(entities);
 		medicationStatementCommercialRepository.flush();
+	}
+
+	@Override
+	public Optional<List<PrescriptionsDataBo>> getPrescriptionsDataByDni(String identificationNumber) {
+
+		String stringQuery =
+				"select distinct mr.id as mrid, ms.prescription_date, ms.due_date, " +
+				"p3.first_name as p3fn, p3.last_name, it2.description as it2d, p3.identification_number as p3d, pe2.phone_number, pe2.email as EMAIL, " +
+				"ps.description as psd, ps.sctid_code, pln.license_number, case when pln.type_license_number = 1 then 'NACIONAL' else 'PROVINCIAL' end, doc.id " +
+				"from medication_statement ms " +
+				"join document_medicamention_statement dms on ms.id = dms.medication_statement_id " +
+				"join document doc on doc.id = dms.document_id " +
+				"join medication_request mr on mr.id = doc.source_id join patient p on p.id = ms.patient_id " +
+				"join person p2 on p2.id = p.person_id " +
+				"join healthcare_professional hp on hp.id = mr.doctor_id " +
+				"join person p3 on p3.id = hp.person_id " +
+				"join identification_type it2 on it2.id = p3.identification_type_id " +
+				"left join person_extended pe2 on pe2.person_id = p3.id " +
+				"join professional_professions pp on pp.healthcare_professional_id = hp.id " +
+				"join healthcare_professional_specialty hps on hps.professional_profession_id = pp.id " +
+				"join professional_specialty ps on ps.id = pp.professional_specialty_id " +
+				"join professional_license_numbers pln on (pln.professional_profession_id = pp.id or pln.healthcare_professional_specialty_id = hps.id) " +
+				"where p2.identification_number LIKE :identificationNumber " +
+						"and hps.deleted <> true " +
+						"and (doc.type_id = 5 or doc.type_id = 14) " +
+						"and ms.prescription_line_state = 1 " +
+						"and current_date - ms.due_date <= 30 " +
+				"order by mr.id desc";
+
+		Query query = entityManager.createNativeQuery(stringQuery)
+				.setParameter("identificationNumber", identificationNumber);
+		List<Object[]> queryResult = query.getResultList();
+
+		if(queryResult.isEmpty()) {
+			return Optional.empty();
+		}
+
+		var lastId = (Integer)queryResult.get(0)[0];
+		int firstIndex = 0;
+		List<PrescriptionsDataBo> listResult = new ArrayList<>();
+
+		for(int i = 0; i < queryResult.size(); i++) {
+			var thisId = (Integer) queryResult.get(i)[0];
+
+			if(!thisId.equals(lastId) ){
+				listResult.add(processPrescriptionsDataQuery(queryResult.subList(firstIndex, i)));
+				firstIndex = i;
+				lastId = thisId;
+			} else if (i == queryResult.size() - 1) {
+				listResult.add(processPrescriptionsDataQuery(queryResult.subList(firstIndex, i + 1)));
+			}
+		}
+
+		return Optional.of(listResult);
+
 	}
 
 	private boolean isInNewStatus(Integer prescriptionLineNumber, List<LineStatusBo> newStatus) {
@@ -389,6 +451,41 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		return result;
 	}
 
+	private PrescriptionsDataBo processPrescriptionsDataQuery(List<Object[]> queryResult) {
+
+		if(queryResult.isEmpty()) {
+			return new PrescriptionsDataBo();
+		}
+
+		List<PrescriptionProfessionBo> prescriptionProfessionBos = new ArrayList<>();
+		List<PrescriptionProfessionalRegistrationBo> prescriptionProfessionalRegistrationBos = new ArrayList<>();
+
+		queryResult.forEach(row -> {
+			prescriptionProfessionBos.add(new PrescriptionProfessionBo((String)row[9], (String)row[10]));
+			prescriptionProfessionalRegistrationBos.add(new PrescriptionProfessionalRegistrationBo((String)row[11], (String)row[12]));
+		});
+
+		return new PrescriptionsDataBo(domainNumber.toString(),
+				((Integer)queryResult.get(0)[0]).toString(),
+				((Date)queryResult.get(0)[1]).toLocalDate().atStartOfDay(),
+				queryResult.get(0)[2] != null ?
+						((Date)queryResult.get(0)[2]).toLocalDate().atStartOfDay() :
+						((Date)queryResult.get(0)[1]).toLocalDate().plusDays(30).atStartOfDay(),
+				"api/external-document-access/download-prescription/" +
+						JWTUtils.generate256(Map.of("accessId", queryResult.get(0)[13].toString()), "prescription", secret, tokenExpiration),
+				new ProfessionalPrescriptionBo(
+						(String)queryResult.get(0)[3],
+						(String)queryResult.get(0)[4],
+						(String)queryResult.get(0)[5],
+						(String)queryResult.get(0)[6],
+						(String)queryResult.get(0)[7],
+						(String)queryResult.get(0)[8],
+						prescriptionProfessionBos,
+						prescriptionProfessionalRegistrationBos
+				)
+		);
+	}
+
 	private PrescriptionBo processPrescriptionQuery(Object[] queryResult) {
 
 		var dueDate = queryResult[2] != null ?
@@ -397,7 +494,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		var accessId = JWTUtils.generate256(Map.of("accessId", queryResult[41].toString()), "prescription", secret, tokenExpiration);
 
 		return new PrescriptionBo(
-				"1",
+				domainNumber.toString(),
 				((Integer)queryResult[0]).toString(),
 				((Date)queryResult[1]).toLocalDate().atStartOfDay(),
 				dueDate.atStartOfDay(),
