@@ -97,8 +97,8 @@ services:
       CEDALO_MC_BROKER_ID: mosquitto-2.0
       CEDALO_MC_BROKER_NAME: Mosquitto 2.0
       CEDALO_MC_BROKER_URL: mqtt://hsi-mosquitto:1883
-      CEDALO_MC_BROKER_USERNAME: HSI
-      CEDALO_MC_BROKER_PASSWORD: hsiPassword
+      CEDALO_MC_BROKER_USERNAME: CEDALO_BROKER_USER
+      CEDALO_MC_BROKER_PASSWORD: cedaloBrokerPassword
       CEDALO_MC_USERNAME: cedaloadmin
       CEDALO_MC_PASSWORD: cedaloadminPassword
 
