@@ -1,17 +1,22 @@
 package net.pladema.establishment.service.impl;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import lombok.RequiredArgsConstructor;
+import net.pladema.address.controller.service.domain.AddressBo;
+import net.pladema.establishment.application.port.carelineproblem.CareLineProblemStorage;
 import net.pladema.establishment.repository.CareLineInstitutionSpecialtyRepository;
 import net.pladema.establishment.repository.CareLineRepository;
 import net.pladema.establishment.service.CareLineService;
+import net.pladema.establishment.service.InstitutionService;
 import net.pladema.establishment.service.domain.CareLineBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,7 +28,12 @@ public class CareLineServiceImpl implements CareLineService {
     private static final String OUTPUT = "Output -> {}";
 
     private final CareLineRepository careLineRepository;
+
 	private final CareLineInstitutionSpecialtyRepository careLineInstitutionSpecialtyRepository;
+
+	private final CareLineProblemStorage careLineProblemStorage;
+
+	private final InstitutionService institutionService;
 
     @Override
     public List<CareLineBo> getCareLines() {
@@ -45,11 +55,17 @@ public class CareLineServiceImpl implements CareLineService {
     }
 
     @Override
-	public List<CareLineBo> getCareLinesByProblemsSctidsAndDestinationInstitutionIdWithActiveDiaries(List<String> problemSnomedIds, Integer destinationInstitutionId) {
-		LOG.debug("Input parameters -> problemSnomedIds {}", problemSnomedIds);
-		List<CareLineBo> careLines = careLineRepository.getCareLinesByProblemsSctidsAndDestinationInstitutionIdWithActiveDiaries(problemSnomedIds, destinationInstitutionId);
-		LOG.trace(OUTPUT, careLines);
-		return careLines;
+	public List<CareLineBo> getAllByProblemsAndProvinceId(List<String> snomedSctids, Integer institutionId) {
+		LOG.debug("Input parameters -> snomedSctids {}, institutionId {}", snomedSctids, institutionId);
+		AddressBo institutionAddress = institutionService.getAddress(institutionId);
+		List<CareLineBo> result = new ArrayList<>();
+		if (institutionAddress.getProvinceId() != null) {
+			List<CareLineBo> careLinesByProvince = careLineRepository.getAllByProvinceId(institutionAddress.getProvinceId());
+			result = this.getCareLinesWithAllProblems(careLinesByProvince, snomedSctids);
+			result.forEach(careLine -> careLine.setClinicalSpecialties(careLineInstitutionSpecialtyRepository.getClinicalSpecialtiesByCareLineIdAndProvinceId(careLine.getId(), institutionAddress.getProvinceId())));
+		}
+		LOG.trace(OUTPUT, result);
+		return result;
 	}
 
 	@Override
@@ -60,13 +76,15 @@ public class CareLineServiceImpl implements CareLineService {
 		return result;
 	}
 
-	@Override
-	public List<CareLineBo> getCareLinesByProvinceId(Short provinceId){
-		LOG.debug("Input parameters -> provinceId {}", provinceId);
-		List<CareLineBo> result = careLineRepository.getCareLinesByProvinceId(provinceId);
-		result.stream().forEach(careLine -> careLine.setClinicalSpecialties(careLineInstitutionSpecialtyRepository.getClinicalSpecialtiesByCareLineIdInProvince(careLine.getId(), provinceId)));
-		LOG.debug(OUTPUT, result);
-		return result;
+	public List<CareLineBo> getCareLinesWithAllProblems(List<CareLineBo> careLines, List<String> snomedSctids) {
+		List<Integer> careLineIds = careLines.stream().map(CareLineBo::getId).collect(Collectors.toList());
+		Map<Integer, List<SnomedBo>> problems = careLineProblemStorage.fetchAllByCareLineIds(careLineIds);
+		return careLines.stream()
+				.filter(cl -> problems.get(cl.getId())
+						.stream()
+						.map(SnomedBo::getSctid)
+						.collect(Collectors.toSet())
+						.containsAll(snomedSctids))
+				.collect(Collectors.toList());
 	}
-
 }

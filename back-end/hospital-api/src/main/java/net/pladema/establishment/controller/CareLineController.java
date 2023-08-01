@@ -35,14 +35,13 @@ public class CareLineController {
         return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLinesBo));
     }
 
-	@GetMapping(value = "/problems")
+	@GetMapping(value = "/by-problems")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
-	public ResponseEntity<List<CareLineDto>> getByProblemSnomedIdsAndDestinationInstitutionIdWithActiveDiaries(@PathVariable(name = "institutionId") Integer institutionId,
-																				   @RequestParam(name = "problemSnomedIds") List<String> problemSnomedIds,
-                                                                                   @RequestParam Integer destinationInstitutionId) {
-		log.debug("Input parameters -> institutionId {}, problemSnomedIds {}", institutionId, problemSnomedIds);
-		List<CareLineBo> careLinesBo = careLineService.getCareLinesByProblemsSctidsAndDestinationInstitutionIdWithActiveDiaries(problemSnomedIds, destinationInstitutionId);
-		log.debug("Get care lines by snomedId and institutionId  => {}", careLinesBo);
+	public ResponseEntity<List<CareLineDto>> getAllByProblemsAndProvince(@PathVariable(name = "institutionId") Integer institutionId,
+																		 @RequestParam(name = "snomedSctids") List<String> snomedSctids) {
+		log.debug("Input parameters -> institutionId {}, snomedSctids {}", institutionId, snomedSctids);
+		List<CareLineBo> careLinesBo = careLineService.getAllByProblemsAndProvinceId(snomedSctids, institutionId);
+		log.debug("Get care lines by problems (snomed sctids) and institutionId  => {}", careLinesBo);
 		return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLinesBo));
 	}
 
@@ -52,16 +51,6 @@ public class CareLineController {
     	List<CareLineBo> careLinesBo = careLineService.getCareLinesAttachedToInstitution();
 		log.debug("Get all care lines with clinical specialties => {}", careLinesBo);
 		return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLinesBo));
-	}
-
-	@GetMapping("/by-province/{provinceId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
-	public ResponseEntity<List<CareLineDto>> getCareLinesByProvinceId(@PathVariable(name = "institutionId") Integer institutionId,
-																	  @PathVariable(name = "provinceId") Short provinceId){
-		log.debug("Input parameters -> provinceId {}", provinceId);
-		List<CareLineBo> careLines = careLineService.getCareLinesByProvinceId(provinceId);
-		log.debug("Get care lines by provinceId => {}", provinceId);
-		return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLines));
 	}
 
 }

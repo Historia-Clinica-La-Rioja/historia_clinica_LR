@@ -54,6 +54,6 @@ public interface CareLineInstitutionSpecialtyRepository extends JpaRepository<Ca
 			"WHERE cli.careLineId = :careLineId " +
 			"AND a.provinceId = :provinceId " +
 			"AND cli.deleted = false")
-	List<ClinicalSpecialtyBo> getClinicalSpecialtiesByCareLineIdInProvince(@Param("careLineId") Integer careLineId, @Param("provinceId") Short provinceId);
+	List<ClinicalSpecialtyBo> getClinicalSpecialtiesByCareLineIdAndProvinceId(@Param("careLineId") Integer careLineId, @Param("provinceId") Short provinceId);
 
 }

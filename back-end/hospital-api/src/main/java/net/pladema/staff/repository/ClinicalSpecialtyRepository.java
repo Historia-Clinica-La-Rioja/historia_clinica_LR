@@ -106,6 +106,7 @@ public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpeci
 			"AND cli.careLineId = :careLineId " +
 			"AND cli.deleted = FALSE " +
 			"ORDER BY cs.name ASC")
-	List<ClinicalSpecialtyBo> getClinicalSpecialtiesInProvinceByCareLineId(@Param("provinceId") Short provinceId, @Param("careLineId") Integer careLineId);
+	List<ClinicalSpecialtyBo> getClinicalSpecialtiesInProvinceByCareLineId(@Param("provinceId") Short provinceId,
+																		   @Param("careLineId") Integer careLineId);
 
 }

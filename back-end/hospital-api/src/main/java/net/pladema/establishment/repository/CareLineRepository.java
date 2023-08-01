@@ -37,22 +37,13 @@ public interface CareLineRepository extends SGXAuditableEntityJPARepository<Care
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.CareLineBo(cl.id, cl.description) " +
 			"FROM CareLine as cl " +
-			"JOIN CareLineProblem clp ON (cl.id = clp.careLineId) " +
-			"JOIN Snomed s ON (clp.snomedId = s.id) " +
 			"JOIN CareLineInstitution cli ON (cl.id = cli.careLineId) " +
-			"JOIN DoctorsOffice do ON (do.institutionId = cli.institutionId) " +
-			"JOIN Diary d ON (do.id = d.doctorsOfficeId) " +
-			"JOIN DiaryCareLine dcl ON (d.id = dcl.pk.diaryId) " +
-			"WHERE s.sctid IN :problemSnomedIds " +
-			"AND cli.institutionId = :destinationInstitutionId " +
-			"AND dcl.pk.careLineId = cl.id " +
-			"AND cli.deleted = false " +
-			"AND d.active = true " +
-			"AND d.endDate >= current_date() " +
-			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null) " +
-			"ORDER BY cl.description" )
-	List<CareLineBo> getCareLinesByProblemsSctidsAndDestinationInstitutionIdWithActiveDiaries(@Param("problemSnomedIds") List<String> problemSnomedIds,
-																							  @Param("destinationInstitutionId") Integer destinationInstitutionId);
+			"JOIN Institution i ON (cli.institutionId = i.id) " +
+			"JOIN Address a ON (i.addressId = a.id) " +
+			"WHERE a.provinceId = :provinceId " +
+			"AND cl.deleteable.deleted IS FALSE " +
+			"AND cli.deleted IS FALSE ")
+	List<CareLineBo> getAllByProvinceId(@Param("provinceId") Short provinceId);
 
 
 	@Transactional(readOnly = true)
@@ -61,15 +52,5 @@ public interface CareLineRepository extends SGXAuditableEntityJPARepository<Care
 			"JOIN CareLineInstitution cli ON (cl.id = cli.careLineId) " +
 			"WHERE cli.deleted = false")
 	List<CareLineBo> getCareLinesAttachedToInstitution();
-
-	@Transactional(readOnly = true)
-	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.CareLineBo(cl.id, cl.description) " +
-			"FROM CareLine cl " +
-			"JOIN CareLineInstitution cli ON (cl.id = cli.careLineId) " +
-			"JOIN Institution i ON (i.id = cli.institutionId) " +
-			"JOIN Address a ON (a.id = i.addressId) " +
-			"WHERE a.provinceId = :provinceId AND cli.deleted = false " +
-			"ORDER BY cl.description ASC")
-	List<CareLineBo> getCareLinesByProvinceId(@Param("provinceId") Short provinceId);
 
 }
