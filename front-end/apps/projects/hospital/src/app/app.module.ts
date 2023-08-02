@@ -92,6 +92,7 @@ export function createTranslateLoader(http: HttpClient): TranslateLoader {
 			{ prefix: './assets/i18n/indicacion/', suffix },
 			{ prefix: './assets/i18n/home/', suffix },
 			{ prefix: './assets/i18n/image-network/', suffix },
+			{ prefix: './assets/i18n/telemedicina/', suffix },
 		]
 	);
 }
