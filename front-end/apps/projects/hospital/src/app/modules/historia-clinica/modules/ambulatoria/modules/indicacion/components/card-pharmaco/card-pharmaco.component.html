@@ -12,7 +12,7 @@
 					<span fxFlex="30%" color="grey"> {{pharmaco.dosage.quantity.value}}
 						{{pharmaco.dosage.quantity.unit}}</span>
 
-					<span fxFlex="70%">{{pharmaco.via | translate | showVia : vias }}</span>
+					<span fxFlex="70%">{{pharmaco.viaId | translate | showVia : vias }}</span>
 
 					<div fxFlex="60%" *ngIf="pharmaco?.patientId" fxLayoutAlign="start center">
 						<mat-icon fxFlex="30%" color="primary">schedule</mat-icon>
