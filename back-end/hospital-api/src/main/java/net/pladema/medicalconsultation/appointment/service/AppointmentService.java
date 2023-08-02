@@ -66,7 +66,7 @@ public interface AppointmentService {
 
 	PatientMedicalCoverageBo getCurrentAppointmentMedicalCoverage(Integer patientId, Integer institutionId);
 
-	Collection<AppointmentAssignedBo> getCompleteAssignedAppointmentInfo(Integer patientId);
+	Collection<AppointmentAssignedBo> getCompleteAssignedAppointmentInfo(Integer patientId, LocalDate minDate, LocalDate maxDate);
 
 	AppointmentBo updateAppointment(UpdateAppointmentBo appointmentDto);
 

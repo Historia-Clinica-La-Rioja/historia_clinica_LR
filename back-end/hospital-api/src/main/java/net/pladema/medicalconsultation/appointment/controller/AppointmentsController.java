@@ -142,6 +142,10 @@ public class AppointmentsController {
 
 	private final MqttClientService mqttClientService;
 
+	@Value("${scheduledjobs.updateappointmentsstate.pastdays:1}")
+	private Long PAST_DAYS;
+
+	private Long MAX_DAYS = 30L;
 	public AppointmentsController(
 			AppointmentDailyAmountService appointmentDailyAmountService,
 			AppointmentService appointmentService, EquipmentAppointmentService equipmentAppointmentService, AppointmentValidatorService appointmentValidatorService,
@@ -717,7 +721,9 @@ public class AppointmentsController {
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
 	public ResponseEntity<Collection<AssignedAppointmentDto>> getAssignedAppointmentsList(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "patientId") Integer patientId) {
 		log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
-		var result = appointmentService.getCompleteAssignedAppointmentInfo(patientId).stream().map(appointmentAssigned -> (appointmentMapper.toAssignedAppointmentDto(appointmentAssigned))).collect(Collectors.toList());
+		LocalDate minDate = LocalDate.now().minusDays(PAST_DAYS);
+		LocalDate maxDate = LocalDate.now().plusDays(MAX_DAYS);
+		var result = appointmentService.getCompleteAssignedAppointmentInfo(patientId, minDate, maxDate).stream().map(appointmentAssigned -> (appointmentMapper.toAssignedAppointmentDto(appointmentAssigned))).collect(Collectors.toList());
 		log.debug("Result size {}", result.size());
 		log.trace(OUTPUT, result);
 		return ResponseEntity.ok(result);

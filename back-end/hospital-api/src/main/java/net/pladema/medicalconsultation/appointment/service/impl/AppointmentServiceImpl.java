@@ -12,10 +12,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
@@ -446,10 +449,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 		return result;
 	}
 
-	private Collection<AppointmentAssignedBo> getAssignedAppointmentsByPatient(Integer patientId) {
+	private Collection<AppointmentAssignedBo> getAssignedAppointmentsByPatient(Integer patientId, LocalDate minDate, LocalDate maxDate) {
 		log.debug("Input parameters -> patientId {}", patientId);
 		Collection<AppointmentAssignedBo> result;
-		result = appointmentRepository.getAssignedAppointmentsByPatient(patientId).stream().map(AppointmentAssignedBo::new)
+		result = appointmentRepository.getAssignedAppointmentsByPatient(patientId, minDate, maxDate).stream().map(AppointmentAssignedBo::new)
 				.collect(Collectors.toList());
 		log.debug("Result size {}", result.size());
 		log.trace(OUTPUT, result);
@@ -457,21 +460,24 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public Collection<AppointmentAssignedBo> getCompleteAssignedAppointmentInfo(Integer patientId){
-		log.debug("Input parameters -> patientId {}", patientId);
-		Collection<AppointmentAssignedBo> resultService = this.getAssignedAppointmentsByPatient(patientId);
-		Collection<AppointmentAssignedBo> result = resultService.stream()
-				.parallel()
-				.map(appointmentAssigned ->{
-					var basicHealtcareDtoMap = sharedStaffPort.getProfessionalCompleteInfo(appointmentAssigned.getProfessionalId());
-					appointmentAssigned.setSpecialties(basicHealtcareDtoMap.getClinicalSpecialties().stream()
-							.map(specialty -> {return specialty.getName();})
-							.collect(Collectors.toList()));
-					appointmentAssigned.setRespectiveProfessionalName(basicHealtcareDtoMap.getFirstName(), basicHealtcareDtoMap.getMiddleNames(),
-							basicHealtcareDtoMap.getLastName(), basicHealtcareDtoMap.getOtherLastNames(), basicHealtcareDtoMap.getNameSelfDetermination(),
-							featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
-					return appointmentAssigned;
-				}).collect(Collectors.toList());
+	public Collection<AppointmentAssignedBo> getCompleteAssignedAppointmentInfo(Integer patientId, LocalDate minDate, LocalDate maxDate){
+		log.debug("Input parameters -> patientId {}, minDate {}, maxDate {}", patientId, minDate, maxDate);
+		Collection<AppointmentAssignedBo> result = this.getAssignedAppointmentsByPatient(patientId, minDate, maxDate);
+
+		List<Integer> userIds = result.stream().map(AppointmentAssignedBo::getProfessionalId)
+				.distinct().collect(Collectors.toList());
+		Map<Integer, ProfessionalInfoDto> professionals = userIds.stream()
+				.collect(Collectors.toMap(id -> id, sharedStaffPort::getProfessionalCompleteInfo));
+		result.forEach(appointment -> {
+			ProfessionalInfoDto professional = professionals.get(appointment.getProfessionalId());
+			List<String> specialties = professional.getClinicalSpecialties().stream()
+					.map(ClinicalSpecialtyDto::getName)
+					.collect(Collectors.toList());
+			appointment.setSpecialties(specialties);
+			appointment.setRespectiveProfessionalName(professional.getFirstName(),professional.getMiddleNames(),
+					professional.getLastName(), professional.getOtherLastNames(), professional.getNameSelfDetermination(),
+					featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
+		});
 		log.debug("Result size {}", result.size());
 		log.trace(OUTPUT, result);
 		return result;

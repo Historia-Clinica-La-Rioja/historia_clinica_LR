@@ -261,9 +261,12 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN HealthcareProfessional  AS hp ON (hp.id = d.healthcareProfessionalId) " +
 			"JOIN UserPerson AS up ON (up.pk.personId = hp.personId )" +
 			"JOIN DoctorsOffice do ON (do.id = d.doctorsOfficeId )" +
-			"WHERE a.patientId = :patientId AND (d.deleteable.deleted = false OR d.deleteable.deleted is null )" +
+			"WHERE a.patientId = :patientId AND d.deleteable.deleted = false " +
+			"AND a.dateTypeId BETWEEN :minDate AND :maxDate " +
 			"AND a.appointmentStateId = " + AppointmentState.ASSIGNED)
-	List<AppointmentAssignedForPatientVo> getAssignedAppointmentsByPatient(@Param("patientId") Integer patientId);
+	List<AppointmentAssignedForPatientVo> getAssignedAppointmentsByPatient(@Param("patientId") Integer patientId,
+																		   @Param("minDate") LocalDate minDate,
+																		   @Param("maxDate") LocalDate maxDate);
 
 	@Transactional(readOnly = true)
 	@Query( "SELECT a.id " +
