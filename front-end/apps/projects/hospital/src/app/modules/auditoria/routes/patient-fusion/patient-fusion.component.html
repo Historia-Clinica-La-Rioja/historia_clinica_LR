@@ -123,8 +123,10 @@
 				<p class="warn" *ngIf="validationColumns">{{'pacientes.audit.MESSAGE_VALIDATION_COLUMNS' | translate}}
 				</p>
 			</div>
-
-			<button mat-raised-button color="primary" (click)="merge()">{{'pacientes.audit.LABEL_BUTTON_MERGE' |
+			<div *ngIf="isLoadingRequestMerge" fxFlex="80%">
+				<mat-progress-bar class="progress-bar" mode="indeterminate"></mat-progress-bar>
+			</div>
+			<button mat-raised-button color="primary" (click)="merge()" [disabled]="isLoadingRequestMerge">{{'pacientes.audit.LABEL_BUTTON_MERGE' |
 				translate | uppercase}}</button>
 		</div>
 
@@ -133,5 +135,6 @@
 		</ng-template>
 
 		<ng-template #noData><span>-</span></ng-template>
+
 	</section>
 </app-content>

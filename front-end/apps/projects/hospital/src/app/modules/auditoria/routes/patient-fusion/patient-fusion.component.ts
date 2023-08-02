@@ -34,7 +34,6 @@ export class PatientFusionComponent implements OnInit {
 	patientsTypes: PatientType[];
 	keyAttributes = KeyAttributes;
 	oldPatientsIds: number[] = [];
-	pageSliceObs$: Observable<PatientPersonalInfoDto[]>;
 	numberOfPatients = 0;
 	pageSlice: PatientPersonalInfoDto[];
 	initialSize: Observable<any>;
@@ -70,6 +69,7 @@ export class PatientFusionComponent implements OnInit {
 			phoneNumber: null,
 		},
 	}
+	isLoadingRequestMerge: boolean = false;
 
 	constructor(private router: Router, private contextService: ContextService, private personMasterDataService: PersonMasterDataService,
 		private auditPatientService: AuditPatientService,
@@ -247,8 +247,10 @@ export class PatientFusionComponent implements OnInit {
 			})
 			dialogRef.afterClosed().subscribe(confirmed => {
 				if (confirmed) {
+					this.isLoadingRequestMerge = true;
 					this.completePatientDataToMerge();
 					this.patientMergeService.merge(this.patientToMerge).subscribe(res => {
+						this.isLoadingRequestMerge = false;
 						const dialogRef2 = this.dialog.open(ConfirmedFusionComponent, {
 							data: {
 								idPatients: this.patientToMerge.activePatientId
@@ -263,6 +265,7 @@ export class PatientFusionComponent implements OnInit {
 					}, error => {
 						this.snackBarService.showError(error.text);
 						this.oldPatientsIds.push(this.patientToMerge.activePatientId);
+						this.isLoadingRequestMerge = false;
 					})
 				}
 			});

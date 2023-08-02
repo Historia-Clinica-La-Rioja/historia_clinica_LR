@@ -9,6 +9,7 @@ import { PersonMasterDataService } from '@api-rest/services/person-master-data.s
 import { ContextService } from '@core/services/context.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PAGE_SIZE_OPTIONS, PAGE_MIN_SIZE } from '@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications';
+import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { Observable, of } from 'rxjs';
 import { ConfirmedFusionComponent } from '../../dialogs/confirmed-fusion/confirmed-fusion.component';
 import { WarningFusionComponent } from '../../dialogs/warning-fusion/warning-fusion.component';
@@ -30,7 +31,6 @@ export class UnmergePatientComponent implements OnInit {
 	patientToAudit: PatientPersonalInfoDto;
 	patientsTypes: PatientType[];
 	oldPatientsIds: number[] = [];
-	pageSliceObs$: Observable<PatientPersonalInfoDto[]>;
 	numberOfPatients = 0;
 	pageSlice: PatientPersonalInfoDto[];
 	initialSize: Observable<any>;
@@ -38,13 +38,6 @@ export class UnmergePatientComponent implements OnInit {
 	nameSelfDeterminationFF: boolean;
 	rejectedId: number;
 	patientId: number;
-	patientToMergeAuxKeyId: any = {
-		names: null,
-		identification: null,
-		lastNames: null,
-		birthDate: null,
-		nameSelfDetermination: null
-	}
 	patientToMerge: PatientToMergeDto = {
 		activePatientId: null,
 		oldPatientsIds: null,
@@ -64,10 +57,12 @@ export class UnmergePatientComponent implements OnInit {
 	}
 	patientToUnlink: any = this.patientToMerge;
 	validationPatientToUnlink: boolean = false;
+	isLoadingRequestUnmerge: boolean = false;
 
 	constructor(private router: Router, private contextService: ContextService, private personMasterDataService: PersonMasterDataService,
 		private auditPatientService: AuditPatientService,
 		private patientMasterDataService: PatientMasterDataService, private patientMergeService: PatientMergeService, private dialog: MatDialog,
+		private readonly snackBarService: SnackBarService,
 		private readonly featureFlagService: FeatureFlagService,
 		private route: ActivatedRoute) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
@@ -162,8 +157,10 @@ export class UnmergePatientComponent implements OnInit {
 			})
 			dialogRef.afterClosed().subscribe(confirmed => {
 				if (confirmed) {
+					this.isLoadingRequestUnmerge = true;
 					this.patientToUnlink = this.preparePatientToUnlink(this.patientToUnlink);
 					this.patientMergeService.unmerge(this.patientToUnlink).subscribe(res => {
+						this.isLoadingRequestUnmerge = false;
 						const dialogRef2 = this.dialog.open(ConfirmedFusionComponent, {
 							data: {
 								idPatients: [this.patientToUnlink.oldPatientsIds[0],this.patientToUnlink.activePatientId]
@@ -175,6 +172,9 @@ export class UnmergePatientComponent implements OnInit {
 						dialogRef2.afterClosed().subscribe(close => {
 							this.getListPatientData();
 						})
+					}, error => {
+						this.snackBarService.showError(error.text);
+						this.isLoadingRequestUnmerge = false;
 					})
 				} else {
 					this.patientToUnlink = this.patientToMerge;
