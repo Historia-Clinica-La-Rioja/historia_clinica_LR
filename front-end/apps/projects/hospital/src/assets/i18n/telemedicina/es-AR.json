@@ -1,5 +1,9 @@
 {
 	"telemedicina": {
-		"TITLE":"Telemedicina"
+		"TITLE":"Telemedicina",
+		"requests": {
+			"TITLE":"Solicitudes",
+			"SUBTITLE":"Listado de solicitudes para atención online"
+		}
 	}
 }

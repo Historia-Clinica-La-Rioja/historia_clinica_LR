@@ -4,12 +4,14 @@ import { HomeComponent } from './routes/home/home.component';
 import { TelemedicinaRoutingModule } from './telemedicina-routing.module.';
 import { PresentationModule } from '@presentation/presentation.module';
 import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
+import { RequestsComponent } from './components/requests/requests.component';
 
 
 
 @NgModule({
 	declarations: [
-		HomeComponent
+		HomeComponent,
+		RequestsComponent
 	],
 	imports: [
 		CommonModule,
