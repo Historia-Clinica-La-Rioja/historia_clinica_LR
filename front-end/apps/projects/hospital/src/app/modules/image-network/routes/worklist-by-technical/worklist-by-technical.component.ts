@@ -269,9 +269,23 @@ export class WorklistByTechnicalComponent implements OnInit {
                 time: timeToString(appointment.hour),
                 canBeFinished: appointment.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED,
                 derive: appointment.derivedTo.id ? appointment.derivedTo : null,
-                reportStatus: this.getReportStatus(appointment.reportStatusId)
+                reportStatus: this.getReportStatus(appointment.reportStatusId),
+                patientFullName: this.getPatientName(appointment)
             }
         })
+    }
+
+    private getPatientName(appointment: EquipmentAppointmentListDto) {
+        let patientName = '';
+        if (this.nameSelfDeterminationFF) {
+            patientName += appointment.patient.person.nameSelfDetermination?.length ? 
+                        appointment.patient.person.nameSelfDetermination + ' ' :
+                        appointment.patient.person.firstName + ' ';
+        } else {
+            patientName += (appointment.patient.person.firstName || '') + ' ';
+        }
+        patientName += appointment.patient.person.lastName || '';
+        return patientName;
     }
 
     private getReportStatus(reportStatusId): ReportState{
@@ -357,4 +371,5 @@ export interface detailedAppointment {
 	canBeFinished: boolean,
     derive: InstitutionBasicInfoDto,
     reportStatus: ReportState,
+    patientFullName: string;
 }

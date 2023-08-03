@@ -56,10 +56,7 @@
 .naming {
     justify-content: start;
     min-width: auto;
-}
-
-.white-space {
-    white-space: pre;
+    margin-right: 4px;
 }
 
 .patient-identification {
@@ -78,6 +75,13 @@
 .study-name {
     justify-content: start;
     font-size: 14px;
+}
+
+.options-btn {
+    align-self: center;
+    @media (max-width: 960px){
+        align-self: start;
+    }
 }
 
 .mid-grey {
