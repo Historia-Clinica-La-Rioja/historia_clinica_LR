@@ -56,7 +56,11 @@ const routes: Routes = [
 				canActivate: [FeatureFlagGuard],
 				data: { featureFlag: AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES }
 			},
-			{ path: 'web-components/:wcId', component: InstitutionRoutedExternalComponent}
+			{ path: 'web-components/:wcId', component: InstitutionRoutedExternalComponent },
+			{
+				path: 'telemedicina',
+				loadChildren: () => import('../telemedicina/telemedicina.module').then(m => m.TelemedicinaModule)
+			}
 		],
 		canActivate: [RoleGuard],
 		data: {

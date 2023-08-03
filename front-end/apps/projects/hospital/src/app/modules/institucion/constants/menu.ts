@@ -121,4 +121,10 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		permissions: [ERole.TECNICO, ERole.INFORMADOR],
 		featureFlag: AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES
 	},
+	{
+		text: 'app.menu.TELEMEDICINE',
+		icon: 'calendar_today',
+		id: 'telemedicina',
+		url: './telemedicina',
+	},
 ];

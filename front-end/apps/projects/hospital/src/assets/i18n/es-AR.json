@@ -17,7 +17,8 @@
 			"LISTADO_DE_TRABAJO": "Listado de trabajo",
 			"REPORTES": "Reportes",
 			"LOGOUT": "Cerrar sesión",
-			"AUDIT": "Auditoria"
+			"AUDIT": "Auditoria",
+			"TELEMEDICINE":"Telemedicina"
 		}
 	},
 	"buttons": {
