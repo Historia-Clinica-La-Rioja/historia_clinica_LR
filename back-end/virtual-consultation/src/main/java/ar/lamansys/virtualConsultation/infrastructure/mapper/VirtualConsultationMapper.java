@@ -9,9 +9,11 @@ import org.mapstruct.Named;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationBo;
+import ar.lamansys.virtualConsultation.domain.VirtualConsultationNotificationDataBo;
 import ar.lamansys.virtualConsultation.domain.enums.EVirtualConsultationPriority;
 import ar.lamansys.virtualConsultation.domain.enums.EVirtualConsultationStatus;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationDto;
+import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationNotificationDataDto;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationPatientDataDto;
 
 @Mapper(uses = {EVirtualConsultationPriority.class, EVirtualConsultationStatus.class, VirtualConsultationPatientDataDto.class, LocalDateMapper.class})
@@ -35,5 +37,9 @@ public interface VirtualConsultationMapper {
 	@Named("fromVirtualConsultationBoList")
 	@IterableMapping(qualifiedByName = "fromVirtualConsultationBo")
 	List<VirtualConsultationDto> fromVirtualConsultationBoList(List<VirtualConsultationBo> virtualConsultationBo);
+
+	@Named("fromVirtualConsultationNotificationDataBo")
+	@Mapping(target = "priority", source = "priorityId")
+	VirtualConsultationNotificationDataDto fromVirtualConsultationNotificationDataBo(VirtualConsultationNotificationDataBo virtualConsultationNotificationDataBo);
 
 }

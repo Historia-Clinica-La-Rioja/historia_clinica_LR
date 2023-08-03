@@ -3,11 +3,13 @@ package ar.lamansys.virtualConsultation.infrastructure.output.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationBo;
+import ar.lamansys.virtualConsultation.domain.VirtualConsultationNotificationDataBo;
 import ar.lamansys.virtualConsultation.infrastructure.output.repository.entity.VirtualConsultation;
 
 @Repository
@@ -30,5 +32,20 @@ public interface VirtualConsultationRepository extends SGXAuditableEntityJPARepo
 			"JOIN HealthcareProfessional hp ON (hp.id = vc.responsibleHealthcareProfessionalId) " +
 			"JOIN Person p3 ON (p3.id = hp.personId)")
 	List<VirtualConsultationBo> getDomainVirtualConsultations();
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT NEW ar.lamansys.virtualConsultation.domain.VirtualConsultationNotificationDataBo(p2.firstName, pe.nameSelfDetermination, p2.lastName, vc.priorityId, " +
+			"vc.creationable.createdOn, p3.firstName, p3.lastName, up.pk.userId, cs.name, i.name, vc.callId) " +
+			"FROM VirtualConsultation vc " +
+			"JOIN Patient p ON (p.id = vc.patientId) " +
+			"JOIN Person p2 ON (p2.id = p.personId) " +
+			"JOIN PersonExtended pe ON (pe.id = p2.id) " +
+			"JOIN HealthcareProfessional hp ON (hp.id = vc.responsibleHealthcareProfessionalId)" +
+			"JOIN Person p3 ON (p3.id = hp.personId)" +
+			"JOIN UserPerson up ON (up.pk.personId = p3.id) " +
+			"JOIN ClinicalSpecialty cs ON (cs.id = vc.clinicalSpecialtyId) " +
+			"JOIN Institution i ON (i.id = vc.institutionId) " +
+			"WHERE vc.id = :virtualConsultationId")
+	VirtualConsultationNotificationDataBo getVirtualConsultationNotificationData(@Param("virtualConsultationId") Integer virtualConsultationId);
 
 }

@@ -1,20 +1,32 @@
 package ar.lamansys.virtualConsultation.infrastructure.input.rest;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import ar.lamansys.mqtt.infraestructure.input.rest.dto.MqttMetadataDto;
 import ar.lamansys.mqtt.infraestructure.input.service.MqttCallExternalService;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import ar.lamansys.virtualConsultation.application.getDomainVirtualConsultations.GetDomainVirtualConsultationsService;
+import ar.lamansys.virtualConsultation.application.getVirtualConsultationNotificationData.GetVirtualConsultationNotificationDataService;
 import ar.lamansys.virtualConsultation.application.saveVirtualConsultation.SaveVirtualConsultationRequestService;
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationRequestBo;
 import ar.lamansys.virtualConsultation.domain.enums.EVirtualConsultationStatus;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationDto;
+import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationNotificationDataDto;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationRequestDto;
 import ar.lamansys.virtualConsultation.infrastructure.mapper.VirtualConsultationMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @Slf4j
@@ -31,6 +43,8 @@ public class VirtualConsultationController {
 	private final GetDomainVirtualConsultationsService getDomainVirtualConsultationsService;
 
 	private final VirtualConsultationMapper virtualConsultationMapper;
+
+	private final GetVirtualConsultationNotificationDataService getVirtualConsultationNotificationDataService;
 
 	@PostMapping(value = "/{institutionId}")
 	public Integer saveVirtualConsultationRequest(@PathVariable(name = "institutionId") Integer institutionId,
@@ -51,6 +65,14 @@ public class VirtualConsultationController {
 		List<VirtualConsultationDto> result = virtualConsultationMapper.fromVirtualConsultationBoList(getDomainVirtualConsultationsService.run());
 		log.debug("Output -> {}", result);
 		return result;
+	}
+
+	@PostMapping(value = "/notify/{virtualConsultationId}")
+	public void notifyVirtualConsultationCall(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId) throws JsonProcessingException {
+		log.debug("Input parameters -> virtualConsultationId {}", virtualConsultationId);
+		VirtualConsultationNotificationDataDto notification = virtualConsultationMapper.fromVirtualConsultationNotificationDataBo(getVirtualConsultationNotificationDataService.run(virtualConsultationId));
+		ObjectMapper jsonMapper = new ObjectMapper();
+		mqttCallExternalService.publish(new MqttMetadataDto("HSI/VIRTUAL-CONSULTATION/NOTIFY", jsonMapper.writeValueAsString(notification), false, 2));
 	}
 
 }

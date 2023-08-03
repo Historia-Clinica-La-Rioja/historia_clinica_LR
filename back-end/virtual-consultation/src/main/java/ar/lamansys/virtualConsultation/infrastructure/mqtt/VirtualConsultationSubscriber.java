@@ -55,9 +55,9 @@ public class VirtualConsultationSubscriber {
 	private String getDestinationSessionId(String message) throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonNode jsonNode = objectMapper.readTree(message);
-		if (!jsonNode.has("targetId"))
-			throw new IllegalStateException("TargetId is needed");
-		Integer userId = jsonNode.get("targetId").asInt();
+		if (!jsonNode.has("responsibleUserId"))
+			throw new IllegalStateException("responsibleUserId is needed");
+		Integer userId = jsonNode.get("responsibleUserId").asInt();
 		for (Map.Entry<String, Integer> entry: queueListener.getActiveUserSessions().entrySet())
 			if (userId.equals(entry.getValue()))
 				return entry.getKey();

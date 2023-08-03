@@ -3775,6 +3775,19 @@ export interface VirtualConsultationInstitutionDataDto {
     name: string;
 }
 
+export interface VirtualConsultationNotificationDataDto {
+    callId: string;
+    clinicalSpecialty: string;
+    creationDateTime: DateTimeDto;
+    institutionName: string;
+    patientLastName: string;
+    patientName: string;
+    priority: EVirtualConsultationPriority;
+    responsibleFirstName: string;
+    responsibleLastName: string;
+    responsibleUserId: number;
+}
+
 export interface VirtualConsultationPatientDataDto {
     age: number;
     gender: string;

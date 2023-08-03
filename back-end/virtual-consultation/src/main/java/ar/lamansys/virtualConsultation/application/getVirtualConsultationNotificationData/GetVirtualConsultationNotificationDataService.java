@@ -1,0 +1,9 @@
+package ar.lamansys.virtualConsultation.application.getVirtualConsultationNotificationData;
+
+import ar.lamansys.virtualConsultation.domain.VirtualConsultationNotificationDataBo;
+
+public interface GetVirtualConsultationNotificationDataService {
+
+	VirtualConsultationNotificationDataBo run(Integer virtualConsultationId);
+
+}
