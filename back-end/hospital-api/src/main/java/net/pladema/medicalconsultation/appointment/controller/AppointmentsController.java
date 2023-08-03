@@ -780,6 +780,17 @@ public class AppointmentsController {
 		return ResponseEntity.ok(result);
 	}
 
+	@GetMapping("/patient/{patientId}/has-current-appointment")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<Integer> hasCurrentAppointment(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "patientId") Integer patientId) {
+		log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
+		Integer result = appointmentService.patientHasCurrentAppointment(institutionId, patientId);
+		log.trace(OUTPUT, result);
+		return ResponseEntity.ok(result);
+	}
+
 	@GetMapping("/patient/{patientId}/get-hierarchical-unit")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
 	public ResponseEntity<HierarchicalUnitDto> getCurrentAppointmentHierarchicalUnit(

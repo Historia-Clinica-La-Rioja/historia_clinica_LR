@@ -86,4 +86,6 @@ public interface AppointmentService {
 
 	boolean setAppointmentPatientMedicalCoverageId(Integer patientId, List<Integer> patientMedicalCoverages, Integer newPatientMedicalCoverageId);
 
+	Integer patientHasCurrentAppointment(Integer institutionId, Integer patientId);
+
 }

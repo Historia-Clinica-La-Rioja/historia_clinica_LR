@@ -584,6 +584,14 @@ public class AppointmentServiceImpl implements AppointmentService {
 		return listAppointments;
 	}
 
+	@Override
+	public Integer patientHasCurrentAppointment(Integer institutionId, Integer patientId) {
+		log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
+		Integer result = this.getCurrentAppointmentId(patientId, institutionId);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
 	private boolean dayIsIncludedInOpeningHours(LocalDate date, DiaryOpeningHoursBo diaryOpeningHours) {
 		final int SUNDAY_DB_VALUE = 0;
 		if (date.getDayOfWeek().getValue() == DayOfWeek.SUNDAY.getValue())
