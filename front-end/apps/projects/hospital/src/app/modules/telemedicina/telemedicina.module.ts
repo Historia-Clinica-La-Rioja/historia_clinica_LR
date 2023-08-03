@@ -5,13 +5,15 @@ import { TelemedicinaRoutingModule } from './telemedicina-routing.module.';
 import { PresentationModule } from '@presentation/presentation.module';
 import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 import { RequestsComponent } from './components/requests/requests.component';
+import { NewTelemedicineRequestComponent } from './dialogs/new-telemedicine-request/new-telemedicine-request.component';
 
 
 
 @NgModule({
 	declarations: [
 		HomeComponent,
-		RequestsComponent
+		RequestsComponent,
+		NewTelemedicineRequestComponent,
 	],
 	imports: [
 		CommonModule,

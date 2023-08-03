@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { NewTelemedicineRequestComponent } from '../../dialogs/new-telemedicine-request/new-telemedicine-request.component';
 
 @Component({
 	selector: 'app-requests',
@@ -7,9 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RequestsComponent implements OnInit {
 
-	constructor() { }
+	constructor(private dialog: MatDialog) { }
 
 	ngOnInit(): void {
+	}
+
+	openAddRequest() {
+		this.dialog.open(NewTelemedicineRequestComponent, {
+			disableClose: true,
+			width:'600px',
+		})
 	}
 
 }

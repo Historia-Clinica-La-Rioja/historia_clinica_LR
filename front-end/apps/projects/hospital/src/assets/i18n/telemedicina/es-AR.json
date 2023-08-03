@@ -3,7 +3,9 @@
 		"TITLE":"Telemedicina",
 		"requests": {
 			"TITLE":"Solicitudes",
-			"SUBTITLE":"Listado de solicitudes para atención online"
+			"SUBTITLE":"Listado de solicitudes para atención online",
+			"BUTTON_ADD":"+ Agregar nuevo paciente",
+			"TITLE_ADD_REQUEST":"Solicitud de consulta online"
 		}
 	}
 }
