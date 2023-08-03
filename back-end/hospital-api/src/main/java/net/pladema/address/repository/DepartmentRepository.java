@@ -33,27 +33,49 @@ public interface DepartmentRepository extends JpaRepository<Department, Short> {
 	Department findDepartmentById(@Param("departmentId") Short departmentId);
 
 	@Transactional(readOnly = true)
-	@Query("SELECT DISTINCT d From Department d " +
-			"JOIN Province p ON (p.id = d.provinceId) " +
-			"JOIN Address a ON (a.provinceId = p.id) " +
+	@Query("SELECT DISTINCT d " +
+			"FROM Department d " +
+			"JOIN Address a ON (d.id = a.departmentId) " +
+			"JOIN Province p ON (a.provinceId = p.id) " +
 			"JOIN Institution i ON (i.addressId = a.id) " +
-			"JOIN DoctorsOffice do ON (do.institutionId = i.id) " +
-			"JOIN Diary di ON (di.doctorsOfficeId = do.id) " +
-			"JOIN DiaryCareLine dcl ON (dcl.pk.diaryId = d.id) " +
+			"JOIN CareLineInstitution cli ON (i.id = cli.institutionId) " +
+			"JOIN CareLineInstitutionSpecialty clis ON (cli.id = clis.careLineInstitutionId) " +
+			"JOIN UserRole ur ON (i.id = ur.institutionId )" +
+			"JOIN UserPerson up ON (ur.userId = up.pk.userId) " +
+			"JOIN HealthcareProfessional hp ON (up.pk.personId = hp.personId) " +
+			"JOIN ProfessionalProfessions pp ON (hp.id = pp.healthcareProfessionalId) " +
+			"JOIN HealthcareProfessionalSpecialty hps ON (pp.id = hps.professionalProfessionId) " +
 			"WHERE p.id = :provinceId " +
-			"AND di.active = true AND di.clinicalSpecialtyId = :clinicalSpecialtyId AND di.deleteable.deleted = FALSE " +
-			"AND dcl.pk.careLineId = :careLineId ")
-	<T> Collection<T> findDepartmentsByProvinceIdHavingActiveDiaryWithCareLineClinicalSpecialty(@Param("provinceId") Short provinceId, @Param("careLineId") Integer careLineId, @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId, Class<T> clazz);
+			"AND hps.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND clis.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND cli.careLineId = :careLineId " +
+			"AND cli.deleted IS FALSE " +
+			"AND ur.deleteable.deleted IS FALSE " +
+			"AND hp.deleteable.deleted IS FALSE " +
+			"AND pp.deleteable.deleted IS FALSE " +
+			"AND hps.deleteable.deleted IS FALSE")
+	<T> Collection<T> findAllByProvinceIdAndCareLineIdAndClinicalSpecialtyId(@Param("provinceId") Short provinceId,
+																			 @Param("careLineId") Integer careLineId,
+																			 @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId, Class<T> clazz);
 
 	@Transactional(readOnly = true)
-	@Query("SELECT DISTINCT d FROM Department d " +
-			"JOIN Province p ON (p.id = d.provinceId) " +
-			"JOIN Address a ON (a.provinceId = p.id) " +
+	@Query("SELECT DISTINCT d " +
+			"FROM Department d " +
+			"JOIN Address a ON (d.id = a.departmentId) " +
+			"JOIN Province p ON (a.provinceId = p.id) " +
 			"JOIN Institution i ON (i.addressId = a.id) " +
-			"JOIN DoctorsOffice do ON (do.institutionId = i.id) " +
-			"JOIN Diary di ON (di.doctorsOfficeId = do.id) " +
+			"JOIN UserRole ur ON (i.id = ur.institutionId )" +
+			"JOIN UserPerson up ON (ur.userId = up.pk.userId) " +
+			"JOIN HealthcareProfessional hp ON (up.pk.personId = hp.personId) " +
+			"JOIN ProfessionalProfessions pp ON (hp.id = pp.healthcareProfessionalId) " +
+			"JOIN HealthcareProfessionalSpecialty hps ON (pp.id = hps.professionalProfessionId) " +
 			"WHERE p.id = :provinceId " +
-			"AND di.active = TRUE AND di.clinicalSpecialtyId = :clinicalSpecialtyId AND di.deleteable.deleted = FALSE")
-	<T> Collection<T> findDepartmentsByProvinceIdHavingActiveDiaryWithClinicalSpecialty(@Param("provinceId") Short provinceId, @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId, Class<T> clazz);
+			"AND hps.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND ur.deleteable.deleted IS FALSE " +
+			"AND hp.deleteable.deleted IS FALSE " +
+			"AND pp.deleteable.deleted IS FALSE " +
+			"AND hps.deleteable.deleted IS FALSE ")
+	<T> Collection<T> findAllByProvinceIdAndClinicalSpecialtyId(@Param("provinceId") Short provinceId,
+																@Param("clinicalSpecialtyId") Integer clinicalSpecialtyId, Class<T> clazz);
 
 }

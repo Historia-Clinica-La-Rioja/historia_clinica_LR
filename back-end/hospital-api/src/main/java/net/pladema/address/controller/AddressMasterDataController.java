@@ -10,6 +10,7 @@ import net.pladema.address.service.AddressMasterDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,14 +41,6 @@ public class AddressMasterDataController {
 		LOG.debug("{}", "All departments");
 		return ResponseEntity.ok().body(addressMasterDataService.findDepartmentByProvince(provinceId, AddressProjection.class));
 	}
-	@GetMapping(value = "/province/{provinceId}/departments/with-specialty/{clinicalSpecialtyId}")
-	public ResponseEntity<Collection<AddressProjection>> getDepartmentsByProvinceHavingClinicalSpecialty(@PathVariable("provinceId") Short provinceId,
-																										 @PathVariable("clinicalSpecialtyId") Integer clinicalSpecialtyId,
-																										 @RequestParam(name = "careLineId", required = false) Integer careLineId) {
-		LOG.debug("{}", "All departments in province having clinical specialty");
-		return ResponseEntity.ok().body(addressMasterDataService.findDepartmentsByProvinceIdHavingClinicalSpecialty(provinceId, careLineId, clinicalSpecialtyId, AddressProjection.class));
-	}
-
 
 	@GetMapping(value = "/country/{countryId}/provinces")
 	public ResponseEntity<Collection<AddressProjection>> getByCountry(@PathVariable("countryId") Short countryId) {
@@ -75,4 +68,12 @@ public class AddressMasterDataController {
 		return ResponseEntity.ok().body(resultDto);
 	}
 
+	@GetMapping(value = "/institution/{institutionId}/departments/with-specialty/{clinicalSpecialtyId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<Collection<AddressProjection>> getDepartmentsForReference(@PathVariable("institutionId") Integer institutionId,
+																					@PathVariable("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																					@RequestParam(name = "careLineId", required = false) Integer careLineId) {
+		LOG.debug("{}", "All departments in province having clinical specialty");
+		return ResponseEntity.ok().body(addressMasterDataService.getDepartmentsForReference(institutionId, careLineId, clinicalSpecialtyId, AddressProjection.class));
+	}
 }

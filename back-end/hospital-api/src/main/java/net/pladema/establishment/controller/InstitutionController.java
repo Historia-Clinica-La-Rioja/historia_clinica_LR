@@ -135,16 +135,12 @@ public class InstitutionController {
 
 	@GetMapping("/by-department/{departmentId}/with-specialty/{clinicalSpecialtyId}")
 	public @ResponseBody
-	List<InstitutionBasicInfoDto> getInstitutionsByDepartmentHavingClinicalSpecialty(@PathVariable("departmentId") Integer departmentId,
+	List<InstitutionBasicInfoDto> getInstitutionsByDepartmentHavingClinicalSpecialty(@PathVariable("departmentId") Short departmentId,
 																					 @PathVariable("clinicalSpecialtyId") Integer clinicalSpecialtyId,
-																					 @RequestParam("careLineId") Integer careLineId)
+																					 @RequestParam(name="careLineId", required = false) Integer careLineId)
 	{
 		logger.debug("Input parameter -> departmentId {}, clinicalSpecialtyId {}, careLineId {}", departmentId, clinicalSpecialtyId, careLineId);
-		List<InstitutionBasicInfoBo> institutions;
-		if (careLineId == null )
-			institutions = repository.getByDepartmentIdHavingActiveDiaryWithClinicalSpecialty(departmentId, clinicalSpecialtyId);
-		else
-			institutions = repository.getByDepartmentIdHavingActiveDiaryWithCareLineClinicalSpecialty(departmentId, careLineId, clinicalSpecialtyId);
+		List<InstitutionBasicInfoBo> institutions = institutionService.getFromInstitutionDestinationReference(departmentId, clinicalSpecialtyId, careLineId);
 		var result = institutionMapper.fromListInstitutionBasicInfoBo(institutions);
 		logger.trace("result -> {}", result);
 		return result;

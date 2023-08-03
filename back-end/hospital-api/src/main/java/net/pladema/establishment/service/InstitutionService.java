@@ -11,6 +11,10 @@ public interface InstitutionService {
 	List<InstitutionBasicInfoBo> getInstitutionsByImageSectors();
 
 	InstitutionBo get(Integer id);
+	
 	InstitutionBo get(String sisaCode);
+
 	AddressBo getAddress(Integer institutionId);
+
+	List<InstitutionBasicInfoBo> getFromInstitutionDestinationReference(Short departmentId, Integer clinicalSpecialtyId, Integer careLineId);
 }

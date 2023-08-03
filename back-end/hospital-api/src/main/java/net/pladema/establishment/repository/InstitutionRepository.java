@@ -56,27 +56,59 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) " +
 			"FROM Institution i " +
+			"JOIN UserRole ur ON (i.id = ur.institutionId )" +
+			"JOIN UserPerson up ON (ur.userId = up.pk.userId) " +
+			"JOIN HealthcareProfessional hp ON (up.pk.personId = hp.personId) " +
+			"JOIN ProfessionalProfessions pp ON (hp.id = pp.healthcareProfessionalId) " +
+			"JOIN HealthcareProfessionalSpecialty hps ON (pp.id = hps.professionalProfessionId) " +
 			"JOIN Address a ON (a.id = i.addressId) " +
-			"JOIN Province p ON (p.id = a.provinceId) " +
-			"JOIN Department d ON (d.provinceId = p.id) " +
+			"JOIN Department d ON (a.departmentId = d.id) " +
+			"JOIN Province p ON (d.provinceId = p.id) " +
 			"JOIN DoctorsOffice do ON (do.institutionId = i.id) " +
 			"JOIN Diary di ON (di.doctorsOfficeId = do.id) " +
 			"WHERE d.id = :departmentId " +
-			"AND di.active = TRUE AND di.clinicalSpecialtyId = :clinicalSpecialtyId AND di.deleteable.deleted = FALSE")
-	List<InstitutionBasicInfoBo> getByDepartmentIdHavingActiveDiaryWithClinicalSpecialty(@Param("departmentId") Integer departmentId, @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
+			"AND di.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND di.active = TRUE " +
+			"AND di.endDate >= CURRENT_DATE " +
+			"AND di.deleteable.deleted IS FALSE " +
+			"AND ur.deleteable.deleted IS FALSE " +
+			"AND hp.deleteable.deleted IS FALSE " +
+			"AND pp.deleteable.deleted IS FALSE " +
+			"AND hps.deleteable.deleted IS FALSE")
+	List<InstitutionBasicInfoBo> getByDepartmentIdHavingActiveDiaryWithClinicalSpecialty(@Param("departmentId") Short departmentId,
+																						 @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) " +
 			"FROM Institution i " +
+			"JOIN CareLineInstitution cli ON (i.id = cli.institutionId ) " +
+			"JOIN CareLineInstitutionSpecialty clis ON (cli.id = clis.careLineInstitutionId) " +
+			"JOIN UserRole ur ON (i.id = ur.institutionId )" +
+			"JOIN UserPerson up ON (ur.userId = up.pk.userId) " +
+			"JOIN HealthcareProfessional hp ON (up.pk.personId = hp.personId) " +
+			"JOIN ProfessionalProfessions pp ON (hp.id = pp.healthcareProfessionalId) " +
+			"JOIN HealthcareProfessionalSpecialty hps ON (pp.id = hps.professionalProfessionId) " +
 			"JOIN Address a ON (a.id = i.addressId) " +
-			"JOIN Province p ON (p.id = a.provinceId) " +
-			"JOIN Department d ON (d.provinceId = p.id)" +
+			"JOIN Department d ON (a.departmentId = d.id) " +
+			"JOIN Province p ON (d.provinceId = p.id) " +
 			"JOIN DoctorsOffice do ON (do.institutionId = i.id) " +
 			"JOIN Diary di ON (di.doctorsOfficeId = do.id) " +
 			"JOIN DiaryCareLine dcl ON (dcl.pk.diaryId = di.id) " +
 			"WHERE d.id = :departmentId " +
-			"AND di.active = TRUE AND di.clinicalSpecialtyId = :clinicalSpecialtyId AND di.deleteable.deleted = FALSE " +
-			"AND dcl.pk.careLineId = :careLineId")
-	List<InstitutionBasicInfoBo> getByDepartmentIdHavingActiveDiaryWithCareLineClinicalSpecialty(@Param("departmentId") Integer departmentId, @Param("careLineId") Integer careLineId, @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
+			"AND di.active = TRUE " +
+			"AND di.endDate >= CURRENT_DATE " +
+			"AND di.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND dcl.pk.careLineId = :careLineId " +
+			"AND clis.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND cli.careLineId = :careLineId " +
+			"AND cli.deleted = FALSE " +
+			"AND di.deleteable.deleted IS FALSE " +
+			"AND ur.deleteable.deleted IS FALSE " +
+			"AND hp.deleteable.deleted IS FALSE " +
+			"AND pp.deleteable.deleted IS FALSE " +
+			"AND hps.deleteable.deleted IS FALSE")
+	List<InstitutionBasicInfoBo> getByDepartmentIdHavingActiveDiaryWithCareLineClinicalSpecialty(@Param("departmentId") Short departmentId,
+																								 @Param("careLineId") Integer careLineId,
+																								 @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
 
 }
