@@ -1,0 +1,19 @@
+<div fxLayout="column" fxLayoutGap="10px">
+    <span class="title">{{ 'historia-clinica.hierarhical-unit-section.TITLE' | translate }}</span>
+    <form [formGroup]="form" fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px">
+        <div fxLayoutAlign="center start" fxLayoutGap="10px">
+            <mat-slide-toggle id="replacement" formControlName="isAReplacement" color="primary"
+                (change)="changeHUToShow()"></mat-slide-toggle>
+            <span> {{ 'historia-clinica.hierarhical-unit-section.IS_A_REPLACEMENT' | translate }}</span>
+        </div>
+        <mat-form-field appearance="outline">
+            <mat-select [placeholder]="'historia-clinica.hierarhical-unit-section.PLACEHOLDER' | translate"
+                id="hierarchical-units" formControlName="hierarchicalUnitId"
+                (selectionChange)="setHierarchicalUnitId()">
+                <mat-option *ngFor="let hu of huToShow" [value]="hu?.id">
+                    {{ hu?.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+</div>

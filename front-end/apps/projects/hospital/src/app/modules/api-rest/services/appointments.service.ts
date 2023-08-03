@@ -8,6 +8,7 @@ import {
 	DetailsOrderImageDto,
 	EquipmentAppointmentListDto,
 	ExternalPatientCoverageDto,
+	HierarchicalUnitDto,
 	InstitutionBasicInfoDto,
 	StudyIntanceUIDDto,
 	UpdateAppointmentDateDto,
@@ -280,5 +281,15 @@ export class AppointmentsService {
 	getStudyInstanceUID(appointmentId: number): Observable<StudyIntanceUIDDto> {
 		const url = `${this.BASE_URL}/get-study-instance-UID/${appointmentId}`;
 		return this.http.get<StudyIntanceUIDDto>(url);
+	}
+	
+	getCurrentAppointmentHierarchicalUnit(patientId: number): Observable<HierarchicalUnitDto> {
+		const url = `${this.BASE_URL}/patient/${patientId}/get-hierarchical-unit`;
+		return this.http.get<HierarchicalUnitDto>(url);
+	}
+
+	hasCurrentAppointment(patientId: number): Observable<number> {
+		const url = `${this.BASE_URL}/patient/${patientId}/has-current-appointment`;
+		return this.http.get<number>(url);
 	}
 }
