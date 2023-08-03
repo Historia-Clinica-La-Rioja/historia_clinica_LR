@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
 import { BasicPatientDto, GenderDto, IdentificationTypeDto, PersonPhotoDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
@@ -12,14 +11,15 @@ import { MapperService } from '@presentation/services/mapper.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { forkJoin, Observable } from 'rxjs';
 
+
 @Component({
 	selector: 'app-search-patient',
 	templateUrl: './search-patient.component.html',
-	styleUrls: ['./search-patient.component.scss']
+	styleUrls: ['./search-patient.component.scss'],
 })
 export class SearchPatientComponent implements OnInit {
 
-
+	@Output() onSelectedPatient = new EventEmitter<Patient>();
 	formSearch: UntypedFormGroup;
 	formSearchById: UntypedFormGroup;
 	identificationTypes$: Observable<IdentificationTypeDto[]>;
@@ -34,7 +34,6 @@ export class SearchPatientComponent implements OnInit {
 	getError = getError;
 	isFormSubmitted = false;
 	constructor(
-		private dialogRef: MatDialogRef<SearchPatientComponent>,
 		private readonly personMasterDataService: PersonMasterDataService,
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly patientService: PatientService,
@@ -93,7 +92,7 @@ export class SearchPatientComponent implements OnInit {
 	}
 
 	selectPatient() {
-		this.dialogRef.close(this.foundPatient);
+		this.onSelectedPatient.emit(this.foundPatient);
 	}
 
 	private patientSearch(patientId: number) {

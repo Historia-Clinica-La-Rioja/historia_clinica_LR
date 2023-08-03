@@ -12,7 +12,6 @@ import { BedDetailComponent } from './components/bed-detail/bed-detail.component
 import { BedFiltersComponent } from './components/bed-filters/bed-filters.component';
 import { BedMappingComponent } from './components/bed-mapping/bed-mapping.component';
 import { InstitucionComponent } from './institucion.component';
-import { SearchPatientComponent } from '../pacientes/component/search-patient/search-patient.component';
 
 
 @NgModule({
@@ -24,7 +23,6 @@ import { SearchPatientComponent } from '../pacientes/component/search-patient/se
 		BedFiltersComponent,
 		BedMappingComponent,
 		InstitucionComponent,
-		SearchPatientComponent
 	],
 	imports: [
 		CommonModule,
@@ -39,7 +37,6 @@ import { SearchPatientComponent } from '../pacientes/component/search-patient/se
 		BedDetailComponent,
 		BedFiltersComponent,
 		BedMappingComponent,
-		SearchPatientComponent
 	]
 })
 export class InstitucionModule { }

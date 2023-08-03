@@ -43,9 +43,11 @@ import { ReportsComponent } from './dialogs/reports/reports.component';
 import { ScanPatientComponent } from './dialogs/scan-patient/scan-patient.component';
 import { MessageForAuditComponent } from './dialogs/message-for-audit/message-for-audit.component';
 import { WarningEditIdentificationNumberComponent } from './dialogs/warning-edit-identification-number/warning-edit-identification-number.component';
+import { SearchPatientDialogComponent } from './dialogs/search-patient-dialog/search-patient-dialog.component';
 
 // pipes
 import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-and-specialty.pipe';
+import { SearchPatientComponent } from './component/search-patient/search-patient.component';
 
 
 
@@ -73,6 +75,7 @@ import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-
 		ProfessionSpecialtiesFormComponent,
 		ResumenDeGuardiaComponent,
 		SearchCreateComponent,
+		SearchPatientComponent,
 		ViewPatientDetailComponent,
 		EditIdentificationNumberComponent,
 		// dialogs
@@ -88,6 +91,7 @@ import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-
 		ReportsComponent,
 		ScanPatientComponent,
 		ScanPatientComponent,
+		SearchPatientDialogComponent,
 		WarningEditIdentificationNumberComponent,
 		// pipes
 		ViewNameProfessionAndSpecialtyPipe,
