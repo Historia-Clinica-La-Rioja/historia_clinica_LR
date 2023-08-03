@@ -11,7 +11,7 @@ import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-car
 import { AMBULANCE } from '@core/constants/validation-constants';
 import { ContextService } from '@core/services/context.service';
 import { futureTimeValidation, hasError, beforeTimeValidation, TIME_PATTERN } from '@core/utils/form.utils';
-import { DateFormat, dateToMoment, momentFormat, newMoment } from '@core/utils/moment.utils';
+import { DateFormat, dateToMomentTimeZone, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import * as moment from 'moment';
 import { Moment } from 'moment';
@@ -78,9 +78,11 @@ export class AdministrativeDischargeComponent implements OnInit {
 			this.emergencyCareEspisodeMedicalDischargeService.hasMedicalDischarge(this.episodeId).subscribe((hasMedicalDischarge) => {
 				if (hasMedicalDischarge) {
 					this.administrativeDischarge$ = this.emergencyCareEspisodeMedicalDischargeService.getMedicalDischarge(this.episodeId);
-					const medicalDischargeOn$ = this.administrativeDischarge$.pipe(map(s => dateTimeDtoToDate(s.medicalDischargeOn)), map(dateToMoment));
+					const medicalDischargeOn$ = this.administrativeDischarge$.pipe(map(s => dateTimeDtoToDate(s.medicalDischargeOn)), map(dateToMomentTimeZone));
 					medicalDischargeOn$.subscribe(medicalDischargeOn => {
 						this.medicalDischargeOn = medicalDischargeOn;
+						console.log(this.medicalDischargeOn);
+
 						this.setDateTimeValidation(medicalDischargeOn);
 					});
 				}
