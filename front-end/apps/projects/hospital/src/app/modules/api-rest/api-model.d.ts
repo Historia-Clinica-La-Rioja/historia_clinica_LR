@@ -3755,6 +3755,34 @@ export interface ViewerUrlDto {
     url: string;
 }
 
+export interface VirtualConsultationDto {
+    callId: string;
+    careLine: string;
+    clinicalSpecialty: string;
+    creationDateTime: DateTimeDto;
+    id: number;
+    institutionData: VirtualConsultationInstitutionDataDto;
+    motive: string;
+    patientData: VirtualConsultationPatientDataDto;
+    priority: EVirtualConsultationPriority;
+    problem: string;
+    responsibleData: VirtualConsultationResponsibleDataDto;
+    status: EVirtualConsultationStatus;
+}
+
+export interface VirtualConsultationInstitutionDataDto {
+    id: number;
+    name: string;
+}
+
+export interface VirtualConsultationPatientDataDto {
+    age: number;
+    gender: string;
+    id: number;
+    lastName: string;
+    name: string;
+}
+
 export interface VirtualConsultationRequestDto {
     careLineId: number;
     clinicalSpecialtyId: number;
@@ -3762,6 +3790,12 @@ export interface VirtualConsultationRequestDto {
     patientId: number;
     priority: EVirtualConsultationPriority;
     problemId: number;
+}
+
+export interface VirtualConsultationResponsibleDataDto {
+    firstName: string;
+    healthcareProfessionalId: number;
+    lastName: string;
 }
 
 export interface WorklistDto {
@@ -3967,6 +4001,12 @@ export const enum EVirtualConsultationPriority {
     LOW = "LOW",
     MEDIUM = "MEDIUM",
     HIGH = "HIGH",
+}
+
+export const enum EVirtualConsultationStatus {
+    PENDING = "PENDING",
+    IN_PROGRESS = "IN_PROGRESS",
+    FINISHED = "FINISHED",
 }
 
 export const enum SnomedECL {
