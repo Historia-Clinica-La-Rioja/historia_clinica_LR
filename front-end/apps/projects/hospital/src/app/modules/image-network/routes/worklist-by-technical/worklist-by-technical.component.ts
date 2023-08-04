@@ -232,13 +232,15 @@ export class WorklistByTechnicalComponent implements OnInit {
 		});
 
 		dialogRef.afterClosed().subscribe(destinationInstitution => {
-            let appointmentFromDetailedAppointments = this.detailedAppointments.find(appointment => appointment.data.id === appointmentId);
-            appointmentFromDetailedAppointments.derive  = destinationInstitution;
-            appointmentFromDetailedAppointments.reportStatus = REPORT_STATES.find(state => state.id == REPORT_STATES_ID.DERIVED);
-
-            let appointmentFromAppointments = this.appointments.find(appointment => appointment.id === appointmentId);
-            appointmentFromAppointments.derivedTo = destinationInstitution;
-            appointmentFromAppointments.reportStatusId = REPORT_STATES_ID.DERIVED;
+            if (destinationInstitution){
+                let appointmentFromDetailedAppointments = this.detailedAppointments.find(appointment => appointment.data.id === appointmentId);
+                appointmentFromDetailedAppointments.derive  = destinationInstitution;
+                appointmentFromDetailedAppointments.reportStatus = REPORT_STATES.find(state => state.id == REPORT_STATES_ID.DERIVED);
+                
+                let appointmentFromAppointments = this.appointments.find(appointment => appointment.id === appointmentId);
+                appointmentFromAppointments.derivedTo = destinationInstitution;
+                appointmentFromAppointments.reportStatusId = REPORT_STATES_ID.DERIVED;
+            }
         });
     }
 
