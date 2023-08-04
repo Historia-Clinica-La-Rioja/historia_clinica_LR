@@ -95,6 +95,7 @@ import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-
 	exports: [
 		CardPatientComponent,
 		ResumenDeGuardiaComponent,
+		SearchPatientComponent,
 	],
 	imports: [
 		FormsModule,

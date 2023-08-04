@@ -7,6 +7,7 @@ import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 import { RequestsComponent } from './components/requests/requests.component';
 import { NewTelemedicineRequestComponent } from './dialogs/new-telemedicine-request/new-telemedicine-request.component';
 import { InformationRequestFormComponent } from './components/information-request-form/information-request-form.component';
+import { PacientesModule } from '@pacientes/pacientes.module';
 
 
 
@@ -22,6 +23,7 @@ import { InformationRequestFormComponent } from './components/information-reques
 		TelemedicinaRoutingModule,
 		LazyMaterialModule,
 		PresentationModule,
+		PacientesModule,
 	]
 })
 export class TelemedicinaModule { }
