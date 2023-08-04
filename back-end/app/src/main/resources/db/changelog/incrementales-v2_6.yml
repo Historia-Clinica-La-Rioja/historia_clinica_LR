@@ -762,3 +762,16 @@ databaseChangeLog:
                     WHERE vccpa.available IS TRUE
                 ) AS a ON (a.care_line_id = vc.care_line_id AND a.clinical_specialty_id = vc.clinical_specialty_id)
                 GROUP BY vc.id
+       
+    - changeSet:
+        id: createView-v_booking_diary_opening_hours
+        comment: Create view v_booking_diary_opening_hours
+        author: mvenere
+        changes:
+          - createView:
+              viewName: v_booking_diary_opening_hours
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT diary_id, opening_hours_id, medical_attention_type_id, overturn_count, external_appointments_allowed
+                FROM diary_opening_hours
