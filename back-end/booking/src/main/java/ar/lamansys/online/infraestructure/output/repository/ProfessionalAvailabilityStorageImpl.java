@@ -45,14 +45,12 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 		log.debug("Find availability");
 
 		var diaries = getActiveDiaries(professionalId, institutionId);
-		var days = getDays(professionalId, clinicalSpecialtyId, practiceId);
-		diaries = diaries.stream().filter(diaryListBo -> isForTheseDays(days, diaryListBo)).collect(Collectors.toList());
 		var activeAppointments = getAppointmentsByDiaries(diaries);
 
 
 		var slots = diaries.stream()
 				.filter(this::isScheduled)
-				.map(diary -> assembleListOfSlots(diary, days, activeAppointments))
+				.map(diary -> assembleListOfSlots(diary, activeAppointments))
 				.flatMap(List::stream)
 				.filter(diaryAvailabilityBo -> !diaryAvailabilityBo.getSlots().getSlots().isEmpty())
 				.collect(Collectors.toList());
@@ -113,20 +111,19 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 				.getSingleResult();
 	}
 
-	private List<DiaryAvailabilityBo> assembleListOfSlots(DiaryListBo diary, List<Short> days, List<AppointmentDiaryBo> activeAppointments) {
-		return createListOfSlots(diary, days, activeAppointments).stream()
+	private List<DiaryAvailabilityBo> assembleListOfSlots(DiaryListBo diary, List<AppointmentDiaryBo> activeAppointments) {
+		return createListOfSlots(diary, activeAppointments).stream()
 				.map(slot -> new DiaryAvailabilityBo(diary, slot))
 				.collect(Collectors.toList());
 	}
 
-	private List<AvailabilityBo> createListOfSlots(DiaryListBo diary, List<Short> days, List<AppointmentDiaryBo> activeAppointments) {
-		var localDays = days.stream().map(Short::intValue).collect(Collectors.toList());
+	private List<AvailabilityBo> createListOfSlots(DiaryListBo diary, List<AppointmentDiaryBo> activeAppointments) {
 
 		var validDates = diary.getStartDate().isBefore(LocalDate.now())  ?
-				getWorkingDays(LocalDate.now(), diary.getEndDate(), localDays) :
-				getWorkingDays(diary.getStartDate(), diary.getEndDate(), localDays);
+				LocalDate.now().datesUntil(diary.getEndDate()) :
+				diary.getStartDate().datesUntil(diary.getEndDate());
 
-		return validDates.stream()
+		return validDates
 				.map(day -> constructAvailabilityBo(diary, day, activeAppointments))
 				.collect(Collectors.toList());
 	}
@@ -266,10 +263,10 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 
 	private List<BookingProfessionalBo> findProfessionals(Integer institutionId, Integer clinicalSpecialtyId, Integer practiceId, Integer medicalCoverageId) {
 		String query = "SELECT DISTINCT CONCAT(p.last_name,', ',p.first_name) AS professional, " +
-				"mppfd.healthcare_professional_id " +
-				"FROM mandatory_professional_practice_free_days mppfd " +
-				"JOIN clinical_specialty_mandatory_medical_practice csmmp ON csmmp.id = mppfd.clinical_specialty_mandatory_medical_practice_id " +
-				"JOIN v_booking_healthcare_professional hp ON mppfd.healthcare_professional_id = hp.id " +
+				"hp.id " +
+				"FROM clinical_specialty_mandatory_medical_practice csmmp " +
+				"JOIN v_booking_healthcare_professional_specialty hps ON (csmmp.clinical_specialty_id = hps.clinical_specialty_id) " +
+				"JOIN v_booking_healthcare_professional hp ON hps.healthcare_professional_id = hp.id " +
 				"JOIN v_booking_person p ON p.id = hp.person_id " +
 				"INNER JOIN v_booking_user_person up ON up.person_id = p.id " +
 				"INNER JOIN v_booking_user_role ur ON up.user_id = ur.user_id " +
