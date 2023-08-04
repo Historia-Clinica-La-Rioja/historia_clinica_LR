@@ -67,4 +67,12 @@ public interface HierarchicalUnitRepository extends SGXAuditableEntityJPAReposit
 	List<HierarchicalUnitBo> getAllByUserIdAndInstitutionId(@Param("userId") Integer userId,
 															@Param("institutionId") Integer institutionId);
 
+
+	@Transactional(readOnly = true)
+	@Query("SELECT hu2.id "+
+			"FROM HierarchicalUnit hu " +
+			"JOIN HierarchicalUnit hu2 ON (hu.id = hu2.hierarchicalUnitIdToReport) " +
+			"WHERE hu.id = :hierarchicalUnitId")
+	List<Integer> getAllDescendantIdsByHierarchicalUnitId(@Param("hierarchicalUnitId") Integer hierarchicalUnitId);
+	
 }

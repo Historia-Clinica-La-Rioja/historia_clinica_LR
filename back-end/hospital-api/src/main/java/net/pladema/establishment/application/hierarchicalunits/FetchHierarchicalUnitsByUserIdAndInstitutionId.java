@@ -20,7 +20,7 @@ public class FetchHierarchicalUnitsByUserIdAndInstitutionId {
 
 	public List<HierarchicalUnitBo> run(Integer userId, Integer institutionId) {
 		log.debug("Input parameters -> userId {}, institutionId {}", userId, institutionId);
-		return hierarchicalUnitStorage.fetchsHierarchicalUnistByUserIdAndInstitutionId(userId, institutionId);
+		return hierarchicalUnitStorage.fetchHierarchicalUnitsByUserIdAndInstitutionId(userId, institutionId);
 	}
 
 }

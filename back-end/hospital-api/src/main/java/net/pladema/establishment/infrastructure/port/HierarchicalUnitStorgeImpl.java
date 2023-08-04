@@ -12,10 +12,12 @@ import net.pladema.establishment.service.domain.HierarchicalUnitBo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Service
 @Slf4j
 @RequiredArgsConstructor
+@Service
+
 public class HierarchicalUnitStorgeImpl implements HierarchicalUnitStorage {
 
 	private final HierarchicalUnitRepository hierarchicalUnitRepository;
@@ -28,8 +30,14 @@ public class HierarchicalUnitStorgeImpl implements HierarchicalUnitStorage {
 	}
 
 	@Override
-	public List<HierarchicalUnitBo> fetchsHierarchicalUnistByUserIdAndInstitutionId(Integer userId, Integer institutionId) {
+	public List<HierarchicalUnitBo> fetchHierarchicalUnitsByUserIdAndInstitutionId(Integer userId, Integer institutionId) {
 		log.debug("Fetch all hierarchical units by userId and institutionId");
 		return hierarchicalUnitRepository.getAllByUserIdAndInstitutionId(userId, institutionId);
+	}
+
+	@Override
+	public List<Integer> fetchAllDescendantIdsByHierarchicalUnitId(Integer hierarchicalUnitId) {
+		log.debug("Fetch all hierarchical units descendants by hierarchical unit id {} ", hierarchicalUnitId);
+		return hierarchicalUnitRepository.getAllDescendantIdsByHierarchicalUnitId(hierarchicalUnitId);
 	}
 }

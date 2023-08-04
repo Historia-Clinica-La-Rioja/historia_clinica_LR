@@ -8,6 +8,8 @@ public interface HierarchicalUnitStorage {
 
 	void deleteHierarchicalUnitStaff(Integer userId);
 
-	List<HierarchicalUnitBo> fetchsHierarchicalUnistByUserIdAndInstitutionId(Integer userId, Integer institutionId);
+	List<HierarchicalUnitBo> fetchHierarchicalUnitsByUserIdAndInstitutionId(Integer userId, Integer institutionId);
 
+
+	List<Integer> fetchAllDescendantIdsByHierarchicalUnitId(Integer hierarchicalUnitId);
 }
