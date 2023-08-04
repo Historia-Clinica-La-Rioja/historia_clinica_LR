@@ -1722,6 +1722,11 @@ export interface HierarchicalUnitStaffDto {
     responsible: boolean;
 }
 
+export interface HierarchicalUnitTypeDto {
+    description: string;
+    id: number;
+}
+
 export interface HistoricClinicHistoryDownloadDto {
     downloadDate: DateTimeDto;
     id: number;
