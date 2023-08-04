@@ -97,13 +97,17 @@ public class ReportsController {
             @RequestParam(value="fromDate", required = true) String fromDate,
             @RequestParam(value="toDate", required = true) String toDate,
             @RequestParam(value="clinicalSpecialtyId", required = false) Integer clinicalSpecialtyId,
-            @RequestParam(value="doctorId", required = false) Integer doctorId
+            @RequestParam(value="doctorId", required = false) Integer doctorId,
+			@RequestParam(value="hierarchicalUnitTypeId", required = false) Integer hierarchicalUnitTypeId,
+			@RequestParam(value="hierarchicalUnitId", required = false) Integer hierarchicalUnitId,
+			@RequestParam(value="includeHierarchicalUnitDescendants", required = false) boolean includeHierarchicalUnitDescendants
     ) throws Exception {
         LOG.debug("Se creará el excel {}", institutionId);
-        LOG.debug("Input parameters -> institutionId {}, fromDate {}, toDate {}", institutionId, fromDate, toDate);
+        LOG.debug("Input parameters -> institutionId {}, fromDate {}, toDate {}, hierarchicalUnitTypeId {}, hierarchicalUnitId {}, includeHierarchicalUnitDescendants {}" ,
+				institutionId, fromDate, toDate, hierarchicalUnitTypeId, hierarchicalUnitId, includeHierarchicalUnitDescendants);
 
         String title = "DNCE-Hoja 2";
-        String[] headers = new String[]{"Provincia", "Municipio", "Cod_Estable", "Establecimiento", "Apellidos paciente", "Nombres paciente", "Nombre autopercibido", "Tipo documento",
+        String[] headers = new String[]{"Provincia", "Municipio", "Cod_Estable", "Establecimiento", "Tipo de unidad jerárquica", "Unidad jerárquica", "Apellidos paciente", "Nombres paciente", "Nombre autopercibido", "Tipo documento",
                 "Nro documento", "Fecha de nacimiento", "Género autopercibido", "Domicilio", "Teléfono", "Mail", "Obra social/Prepaga", "Nro de afiliado",
                 "Fecha de atención", "Especialidad", "Profesional", "Motivo de consulta", "Problemas de Salud / Diagnóstico", "Procedimientos", "Peso", "Talla", "Tensión sistólica",
 				"Tensión diastólica", "Riesgo cardiovascular", "Hemoglobina glicosilada", "Glucemia", "Perímetro cefálico", "C-P-O", "c-e-o"};
@@ -112,7 +116,8 @@ public class ReportsController {
         LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
         // obtengo el workbook en base a la query pasada como parametro
-        IWorkbook wb = this.excelService.buildExcelFromQuery(title, headers, this.queryFactory.query(institutionId, startDate, endDate, clinicalSpecialtyId, doctorId));
+        IWorkbook wb = this.excelService.buildExcelFromQuery(title, headers, this.queryFactory.query(institutionId, startDate, endDate,
+				clinicalSpecialtyId, doctorId, hierarchicalUnitTypeId, hierarchicalUnitId, includeHierarchicalUnitDescendants));
 
         // armo la respuesta con el workbook obtenido
         String filename = title + "." + wb.getExtension();

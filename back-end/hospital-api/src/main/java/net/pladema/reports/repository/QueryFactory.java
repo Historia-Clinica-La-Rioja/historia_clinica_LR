@@ -16,6 +16,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import net.pladema.establishment.application.hierarchicalunits.FetchDescendantsByHierarchicalUnitId;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,13 +28,18 @@ public class QueryFactory {
     @PersistenceContext
     private final EntityManager entityManager;
 
-    public QueryFactory(EntityManager entityManager){
+	private final FetchDescendantsByHierarchicalUnitId fetchDescendantsByHierarchicalUnitId;
+
+    public QueryFactory(EntityManager entityManager, FetchDescendantsByHierarchicalUnitId fetchDescendantsByHierarchicalUnitId){
         this.entityManager = entityManager;
-    }
+    	this.fetchDescendantsByHierarchicalUnitId = fetchDescendantsByHierarchicalUnitId;
+	}
 
     @SuppressWarnings("unchecked")
     public List<ConsultationDetail> query(Integer institutionId, LocalDate start, LocalDate end,
-                                          Integer clinicalSpecialtyId, Integer doctorId) {
+                                          Integer clinicalSpecialtyId, Integer doctorId,
+										  Integer hierarchicalUnitTypeId, Integer hierarchicalUnitId,
+										  boolean includeHierarchicalUnitDescendants) {
 
 		var startDate = LocalDateTime.of(start.getYear(), start.getMonth(), start.getDayOfMonth(), 0,0);
 		var endDate = LocalDateTime.of(end.getYear(), end.getMonth(), end.getDayOfMonth(), 23,59,59, LocalTime.MAX.getNano());
@@ -60,12 +67,23 @@ public class QueryFactory {
 
 
 		List<ConsultationDetail> result = mapToConsultationDetail(data, institutionId);
-        //Optional filter: by specialty or professional if specified
-        return result.stream()
-                .filter(cd -> doctorId == null || Objects.equals(doctorId, cd.getProfessionalId()))
+
+		result = result.stream()
+       			.filter(cd -> doctorId == null || Objects.equals(doctorId, cd.getProfessionalId()))
 				.filter(cd -> clinicalSpecialtyId == null || Objects.equals(clinicalSpecialtyId, cd.getClinicalSpecialtyId()))
-                .collect(Collectors.toList());
-    }
+				.filter(cd -> hierarchicalUnitTypeId == null || Objects.equals(hierarchicalUnitTypeId, cd.getHierarchicalUnitTypeId()))
+				.collect(Collectors.toList());
+
+		if (!result.isEmpty() && hierarchicalUnitId != null) {
+			List<Integer> hierarchicalUnitIds = new ArrayList<>();
+			hierarchicalUnitIds.add(hierarchicalUnitId);
+			if (includeHierarchicalUnitDescendants)
+				hierarchicalUnitIds.addAll(fetchDescendantsByHierarchicalUnitId.run(hierarchicalUnitId));
+			result = result.stream().filter(c -> hierarchicalUnitIds.contains(c.getHierarchicalUnitId())).collect(Collectors.toList());
+		}
+
+		return result;
+	}
 
 	private List<ConsultationDetail> mapToConsultationDetail(List<ConsultationDetailWithoutInstitution> data, Integer institutionId){
 		InstitutionInfo institutionInfo = getInstitutionInfo(institutionId);

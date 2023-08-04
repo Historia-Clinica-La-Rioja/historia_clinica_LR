@@ -75,4 +75,12 @@ public class ConsultationDetailWithoutInstitution {
 
 	private String ceo;
 
+	private Integer hierarchicalUnitId;
+
+	private String hierarchicalUnitAlias;
+
+	private Integer hierarchicalUnitTypeId;
+
+	private String hierarchicalUnitTypeDescription;
+
 }

@@ -98,13 +98,12 @@ public class ExcelServiceImpl implements ExcelService {
 		data.add(new CellContent(nRow, 3, 2, 16,
 				"Detalle nominal de consultorios externos", titleStyle));
 		data.add(new CellContent(nRow, 19, 1, 3, "1. Hoja N°", fieldStyle));
-		data.add(new CellContent(nRow, 22, 1, 10, "", basicStyle));
+		data.add(new CellContent(nRow, 22, 1, 12, "", basicStyle));
 
 		nRow++;
 		data.add(new CellContent(nRow, 0, 1, 2, "", basicStyle));
 		data.add(new CellContent(nRow, 19, 1, 3, "", basicStyle));
-		data.add(new CellContent(nRow, 22, 1, 10, "", basicStyle));
-
+		data.add(new CellContent(nRow, 22, 1, 12, "", basicStyle));
 		nRow++;
 		data.add(new CellContent(nRow, 0, 1, 2, "2. ESTABLECIMIENTO", fieldStyle));
 		data.add(new CellContent(nRow, 2, 1, 14, "", basicStyle));
@@ -112,8 +111,7 @@ public class ExcelServiceImpl implements ExcelService {
 		data.add(new CellContent(nRow, 17, 1, 1, "", basicStyle));
 		data.add(new CellContent(nRow, 18, 1, 1, "4. AÑO", fieldStyle));
 		data.add(new CellContent(nRow, 19, 1, 3, "", basicStyle));
-		data.add(new CellContent(nRow, 22, 1, 10, "", basicStyle));
-
+		data.add(new CellContent(nRow, 22, 1, 12, "", basicStyle));
 		nRow++;
 		data.add(new CellContent(nRow, 0, 1, 2, "5. PARTIDO", fieldStyle));
 		data.add(new CellContent(nRow, 2, 1, 8, "", basicStyle));
@@ -131,6 +129,8 @@ public class ExcelServiceImpl implements ExcelService {
 		data.add(new CellContent(nRow, 29, 1, 1, "", basicStyle));
 		data.add(new CellContent(nRow, 30, 1, 1, "", basicStyle));
 		data.add(new CellContent(nRow, 31, 1, 1, "", basicStyle));
+		data.add(new CellContent(nRow, 32, 1, 1, "", basicStyle));
+		data.add(new CellContent(nRow, 33, 1, 1, "", basicStyle));
 
 		nRow++;
 		int column = 0;
@@ -197,6 +197,12 @@ public class ExcelServiceImpl implements ExcelService {
 			ICell cell4 = row.createCell(rowNumber.getAndIncrement());
 			cell4.setCellValue(content.getInstitution());
 			cell4.setCellStyle(style);
+			ICell cell33 = row.createCell(rowNumber.getAndIncrement());
+			cell33.setCellValue(content.getHierarchicalUnitTypeDescription());
+			cell33.setCellStyle(style);
+			ICell cell34 = row.createCell(rowNumber.getAndIncrement());
+			cell34.setCellValue(content.getHierarchicalUnitAlias());
+			cell34.setCellStyle(style);
 			ICell cell5 = row.createCell(rowNumber.getAndIncrement());
 			cell5.setCellValue(content.getPatientSurname());
 			cell5.setCellStyle(style);
