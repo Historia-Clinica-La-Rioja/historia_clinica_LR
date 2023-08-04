@@ -56,6 +56,7 @@ export class WorklistFiltersComponent implements OnInit {
         this.filtersForm?.get('patientIdentification').setValue(null);
         this.searchFilters.patientName = '';
         this.searchFilters.patientIdentification = '';
+        this.search.emit(this.searchFilters);
     }
 
     private initializeFilters() {
