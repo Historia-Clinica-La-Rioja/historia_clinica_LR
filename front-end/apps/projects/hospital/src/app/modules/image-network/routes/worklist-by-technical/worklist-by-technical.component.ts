@@ -225,23 +225,23 @@ export class WorklistByTechnicalComponent implements OnInit {
     private checkPatientNameFilter(searchName: string, appointment: EquipmentAppointmentListDto) {
         let patientName = searchName?.toLowerCase();
         let nameSelfDetermination = appointment.patient.person.nameSelfDetermination?.toLowerCase();
-        let name = appointment.patient.person.firstName.toLowerCase();
-        let lastName = appointment.patient.person.lastName.toLowerCase();
+        let name = appointment.patient.person.firstName?.toLowerCase();
+        let lastName = appointment.patient.person.lastName?.toLowerCase();
 
         if (patientName) {
             if (this.nameSelfDeterminationFF) {
                 if (nameSelfDetermination){
-                    return (nameSelfDetermination.includes(patientName) || lastName.includes(patientName))
+                    return (nameSelfDetermination.includes(patientName) || lastName?.includes(patientName))
                 }
             }
-            return (name.includes(patientName) || lastName.includes(patientName))
+            return (name?.includes(patientName) || lastName?.includes(patientName))
         }
         return true
     }
 
     private checkPatientIdentificationFilter(patientIdentification: string, appointment: EquipmentAppointmentListDto) {
         if (patientIdentification) {
-            return appointment.patient.person.identificationNumber.includes(patientIdentification);
+            return appointment.patient.person.identificationNumber?.includes(patientIdentification);
         }
         return true
     }
