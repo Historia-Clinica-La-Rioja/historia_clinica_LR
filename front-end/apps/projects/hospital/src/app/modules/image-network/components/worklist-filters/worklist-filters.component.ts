@@ -45,9 +45,17 @@ export class WorklistFiltersComponent implements OnInit {
 		});
     }
 
+    ngOnChanges() {
+        if (this.defaultStates){
+            this.clearInputs();
+        }
+    }
+
     private clearInputs() {
         this.filtersForm?.get('patientName').setValue(null);
         this.filtersForm?.get('patientIdentification').setValue(null);
+        this.searchFilters.patientName = '';
+        this.searchFilters.patientIdentification = '';
     }
 
     private initializeFilters() {
