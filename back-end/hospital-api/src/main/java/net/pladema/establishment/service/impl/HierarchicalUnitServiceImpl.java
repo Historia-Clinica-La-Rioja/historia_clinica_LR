@@ -22,10 +22,7 @@ public class HierarchicalUnitServiceImpl implements HierarchicalUnitService {
 	@Override
 	public List<HierarchicalUnitBo> getByInstitution(Integer institutionId) {
 		log.debug("Input institutionId {}", institutionId);
-		List<HierarchicalUnitBo> result = hierarchicalUnitRepository.getAllByInstitutionId(institutionId).stream()
-				.map(hu -> new HierarchicalUnitBo(hu.getId(), hu.getAlias()))
-				.collect(Collectors.toList());
-
+		List<HierarchicalUnitBo> result = hierarchicalUnitRepository.getAllByInstitutionId(institutionId);
 		log.debug("Output {}", result);
 		return result;
 	}

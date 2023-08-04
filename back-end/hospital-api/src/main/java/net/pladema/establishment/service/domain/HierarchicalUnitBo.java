@@ -12,5 +12,13 @@ import lombok.ToString;
 public class HierarchicalUnitBo {
 
 	private Integer id;
+
 	private String name;
+
+	private Integer typeId;
+
+	public HierarchicalUnitBo (Integer id, String alias) {
+		this.id = id;
+		this.name = alias;
+	}
 }

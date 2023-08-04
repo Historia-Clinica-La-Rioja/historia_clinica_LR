@@ -36,7 +36,7 @@ public class HierarchicalUnitController {
 	public ResponseEntity<List<HierarchicalUnitDto>> getAllByInstitution(@PathVariable(name = "institutionId") Integer institutionId) {
 		log.debug("Input institutionId {} ", institutionId);
 		List<HierarchicalUnitDto> hierarchicalUnitsDto = hierarchicalUnitService.getByInstitution(institutionId).stream()
-				.map(bo -> new HierarchicalUnitDto(bo.getId(), bo.getName()))
+				.map(bo -> new HierarchicalUnitDto(bo.getId(), bo.getName(), bo.getTypeId()))
 				.collect(Collectors.toList());
 		log.debug("Output {} ", hierarchicalUnitsDto);
 		return ResponseEntity.ok(hierarchicalUnitsDto);

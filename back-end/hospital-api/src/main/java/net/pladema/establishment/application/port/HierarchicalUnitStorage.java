@@ -10,6 +10,5 @@ public interface HierarchicalUnitStorage {
 
 	List<HierarchicalUnitBo> fetchHierarchicalUnitsByUserIdAndInstitutionId(Integer userId, Integer institutionId);
 
-
 	List<Integer> fetchAllDescendantIdsByHierarchicalUnitId(Integer hierarchicalUnitId);
 }

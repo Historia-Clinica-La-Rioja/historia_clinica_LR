@@ -10,5 +10,14 @@ import lombok.Setter;
 public class HierarchicalUnitDto {
 
 	private Integer id;
+
 	private String name;
+
+	private Integer typeId;
+
+	public HierarchicalUnitDto(Integer id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+
 }

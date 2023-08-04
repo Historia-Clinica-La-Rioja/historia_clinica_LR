@@ -1713,6 +1713,7 @@ export interface HealthcareProfessionalSpecialtyDto {
 export interface HierarchicalUnitDto {
     id: number;
     name: string;
+    typeId: number;
 }
 
 export interface HierarchicalUnitStaffDto {

@@ -25,11 +25,12 @@ public interface HierarchicalUnitRepository extends SGXAuditableEntityJPAReposit
 	List<Integer> getAllIdsByInstitutionsId(@Param("institutionsIds") List<Integer> institutionsIds);
 
 	@Transactional(readOnly = true)
-	@Query("SELECT hu "+
+	@Query("SELECT new net.pladema.establishment.service.domain.HierarchicalUnitBo(hu.id, hu.alias, hut.id) "+
 			"FROM HierarchicalUnit AS hu " +
+			"JOIN HierarchicalUnitType hut ON (hu.typeId = hut.id)" +
 			"WHERE hu.institutionId = :institutionId " +
 			"AND hu.deleteable.deleted IS FALSE ")
-	List<HierarchicalUnit> getAllByInstitutionId(@Param("institutionId") Integer institutionId);
+	List<HierarchicalUnitBo> getAllByInstitutionId(@Param("institutionId") Integer institutionId);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT hu " +
