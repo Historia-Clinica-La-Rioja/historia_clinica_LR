@@ -136,15 +136,21 @@ public class ReportsController {
             @RequestParam(value="fromDate") String fromDate,
             @RequestParam(value="toDate") String toDate,
             @RequestParam(value="clinicalSpecialtyId", required = false) Integer clinicalSpecialtyId,
-            @RequestParam(value="doctorId", required = false) Integer doctorId
+            @RequestParam(value="doctorId", required = false) Integer doctorId,
+			@RequestParam(value="hierarchicalUnitTypeId", required = false) Integer hierarchicalUnitTypeId,
+			@RequestParam(value="hierarchicalUnitId", required = false) Integer hierarchicalUnitId,
+			@RequestParam(value="includeHierarchicalUnitDescendants", required = false) boolean includeHierarchicalUnitDescendants
 		) {
         LOG.debug("Outpatient summary Report");
-        LOG.debug("Input parameters -> institutionId {}, fromDate {}, toDate {}", institutionId, fromDate, toDate);
+        LOG.debug("Input parameters -> institutionId {}, fromDate {}, toDate {}, clinicalSpecialtyId {}, " +
+				"doctorId {}, hierarchicalUnitTypeId {}, hierarchicalUnitId {}, includeHierarchicalUnitDescendants {}",
+				institutionId, fromDate, toDate, clinicalSpecialtyId, doctorId, hierarchicalUnitTypeId, hierarchicalUnitId, includeHierarchicalUnitDescendants);
 
         LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
         LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
-		IWorkbook workbook = consultationSummaryReport.build(institutionId, startDate, endDate, doctorId, clinicalSpecialtyId);
+		IWorkbook workbook = consultationSummaryReport.build(institutionId, startDate, endDate, doctorId, clinicalSpecialtyId,
+				hierarchicalUnitTypeId, hierarchicalUnitId, includeHierarchicalUnitDescendants);
 		String title = "Resumen Mensual de Consultorios Externos - Hoja 2.1";
         String filename = title + "." + workbook.getExtension();
 
