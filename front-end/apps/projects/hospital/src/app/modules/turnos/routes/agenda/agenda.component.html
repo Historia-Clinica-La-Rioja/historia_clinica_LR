@@ -3,7 +3,7 @@
 		<div id="sector" fxLayoutAlign="start center" fxLayoutGap="5px">
 			<mat-icon class="icon-color" mat-list-icon fontSet="material-icons-outlined" [inline]="true"
 				matTooltip="{{'turnos.home.SECTOR_CONSULTORY_TOOLTIP' | translate}}">meeting_room</mat-icon>
-			<span>{{agenda?.doctorsOfficeDescription}} | {{agenda?.sectorDescription}}</span>
+			<span>{{agenda?.doctorsOfficeDescription}} | {{agenda?.sectorDescription}} |  {{agenda?.sectorDescription}}</span>
 		</div>
 		<div id="protected_appointments_percentage" fxLayoutAlign="start center" fxLayoutGap="5px" *ngIf="agenda?.protectedAppointmentsPercentage">
 			<mat-icon class="icon-color" mat-list-icon fontSet="material-icons-outlined" [inline]="true"

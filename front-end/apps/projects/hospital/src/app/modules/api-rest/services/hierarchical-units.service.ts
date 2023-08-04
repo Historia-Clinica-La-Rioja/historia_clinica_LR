@@ -22,4 +22,8 @@ export class HierarchicalUnitsService {
 		return this.http.get<HierarchicalUnitDto[]>(url);
 	}
 
+	fetchAllByUserIdAndInstitutionId(userId: number): Observable<HierarchicalUnitDto[]> {
+		const url = `${this.URL_BASE}/${this.contextService.institutionId}/hierarchicalunit/user/${userId}`;
+		return this.http.get<HierarchicalUnitDto[]>(url);
+	}
 }

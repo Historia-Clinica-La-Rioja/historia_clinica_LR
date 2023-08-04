@@ -1,58 +1,114 @@
 <app-content width="full">
 	<section class="page">
-		<h2 class="page-title" [translate]="editMode ? 'turnos.agenda-setup.EDIT_AGENDA' : 'turnos.agenda-setup.NEW_AGENDA' "></h2>
+		<h2 class="page-title"
+			[translate]="editMode ? 'turnos.agenda-setup.EDIT_AGENDA' : 'turnos.agenda-setup.NEW_AGENDA' "></h2>
 		<br>
 		<form [formGroup]="form" (ngSubmit)="save()">
 			<section>
-				<div fxLayout="row" fxLayoutAlign="start start">
+				<div style="padding-top: 20px" fxLayout="row">
 					<div class="professional-form-sector" fxLayout="column">
 						<span [translate]="'turnos.agenda-setup.RESPONSIBLE_PROFESSIONAL'"></span>
+
 						<mat-form-field class="mat-form-field-on-div" appearance="outline">
 							<mat-select id="healthcareProfessionalId" name="healthcareProfessionalId"
-										formControlName="healthcareProfessionalId"
-										placeholder="{{'pacientes.form.SELECT' | translate}}"
-										(selectionChange)="getProfessionalSpecialties()">
+								formControlName="healthcareProfessionalId"
+								placeholder="{{'pacientes.form.SELECT' | translate}}"
+								(selectionChange)="getProfessionalSpecialties();getHierarchicalUnits()">
 								<mat-option *ngFor="let professional of professionals" [value]="professional.id">
 									<span class="mat-body">{{getFullName(professional)}}</span>
 								</mat-option>
 							</mat-select>
 							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 						</mat-form-field>
+
 						<section class="checkbox">
-							<mat-slide-toggle formControlName="conjointDiary" (change)="updateAssociatedProfessionalsForm()">{{ 'turnos.agenda-setup.CONJOINT_DIARY' | translate }}</mat-slide-toggle>
+							<mat-slide-toggle [disabled]="!form.value.healthcareProfessionalId"
+								formControlName="temporaryReplacement" (change)="updateTemporaryReplacementForm()">{{
+								'turnos.agenda-setup.TEMPORARY_REMPLACEMENT' | translate }}</mat-slide-toggle>
 						</section>
-						<div fxLayout="column" *ngIf="form.value.conjointDiary">
-							<span [translate]="'turnos.agenda-setup.OTHER_PROFESSIONALS'"></span>
-							<div formArrayName="otherProfessionals">
-								<div *ngFor="let otherProfessional of getControl('otherProfessionals')?.controls;index as currentProfessional">
-									<div [formGroupName]="currentProfessional">
-										<mat-form-field class="mat-form-field-on-div" appearance="outline">
-											<button type="button" mat-button matSuffix color="warn" mat-icon-button
-											(click)="clear(currentProfessional); $event.stopPropagation()">
-												<mat-icon>close</mat-icon>
-											</button>
-											<mat-select name="healthcareProfessionalId"
-													formControlName="healthcareProfessionalId"
-													placeholder="{{'turnos.agenda-setup.CHOOSE_PROFESSIONAL' | translate}}">
-												<mat-option *ngFor="let professional of getNonResponsibleProfessional()" [value]="professional.id"
-												[disabled]="isProfessionalNonSelectable(professional.id)">
-													<span class="mat-body">{{getFullName(professional)}}</span>
-												</mat-option>
-											</mat-select>
-											<mat-error [translate]="'turnos.agenda-setup.CHOOSE_PROFESSIONAL_ERROR'"></mat-error>
-										</mat-form-field>
-									</div>
-								</div>
-							</div>
-							<button class="add-prefessional-button" mat-button type="button" color="primary" id="add-button"
-							(click)="addAssociatedProfessional()" [disabled]="!validExtraProfessionalsList()">
-								+ {{ 'turnos.agenda-setup.ADD_ANOTHER_PROFESSIONAL' | translate }}
-							</button>
-						</div>
 					</div>
 
+					<div *ngIf="form.value.healthcareProfessionalId && !form.value.temporaryReplacement" class="professional-form-sector" fxLayout="column">
+						<span>{{ 'turnos.agenda-setup.HIERARCHICAL_UNIT' | translate }}</span>
+						<mat-form-field class="mat-form-field-on-div" appearance="outline" >
+							<mat-select id="hierarchicalUnit" name="hierarchicalUnit" formControlName="hierarchicalUnit"
+								placeholder="{{'pacientes.form.SELECT' | translate}}"
+								(selectionChange)="getHierarchicalUnits()">
+								<mat-option *ngFor="let hu of hierarchicalUnits" [value]="hu.id" >
+									<span class="mat-body">{{hu.name}}</span>
+								</mat-option>
+							</mat-select>
+						</mat-form-field>
+					</div>
+				</div>
+				<div *ngIf="form.value.temporaryReplacement" style="padding-top: 20px" fxLayout="row">
+
+					<div class="professional-form-sector" fxLayout="column">
+						<span [translate]="'turnos.agenda-setup.PROFESSIONAL_REMPLACEMENT'"></span>
+						<mat-form-field class="mat-form-field-on-div" appearance="outline" >
+							<mat-select id="professionalReplacedId" name="professionalReplacedId"
+								formControlName="professionalReplacedId"
+								placeholder="{{'pacientes.form.SELECT' | translate}}"
+								(selectionChange)="getProfessionalSpecialties()">
+								<mat-option *ngFor="let professional of professionals" [value]="professional.id">
+									<span class="mat-body">{{getFullName(professional)}}</span>
+								</mat-option>
+							</mat-select>
+							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+						</mat-form-field>
+					</div>
+
+					<div class="professional-form-sector" fxLayout="column">
+						<span>{{ 'turnos.agenda-setup.HIERARCHICAL_UNIT' | translate }}</span>
+						<mat-form-field class="mat-form-field-on-div" appearance="outline">
+							<mat-select id="hierarchicalUnitTemporary" name="hierarchicalUnitTemporary" formControlName="hierarchicalUnitTemporary"
+								placeholder="{{'pacientes.form.SELECT' | translate}}"
+								(selectionChange)="getHierarchicalUnits()">
+								<mat-option *ngFor="let hu of hierarchicalUnits" [value]="hu.id">
+									<span class="mat-body">{{hu.name}}</span>
+								</mat-option>
+							</mat-select>
+							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+						</mat-form-field>
+					</div>
 				</div>
 
+				<section class="checkbox">
+					<mat-slide-toggle formControlName="conjointDiary" (change)="updateAssociatedProfessionalsForm()">{{
+						'turnos.agenda-setup.CONJOINT_DIARY' | translate }}</mat-slide-toggle>
+				</section>
+
+				<div *ngIf="form.value.conjointDiary" class="professional-form-sector" fxLayout="column">
+					<span [translate]="'turnos.agenda-setup.OTHER_PROFESSIONALS'"></span>
+					<div formArrayName="otherProfessionals">
+						<div
+							*ngFor="let otherProfessional of getControl('otherProfessionals')?.controls;index as currentProfessional">
+							<div [formGroupName]="currentProfessional">
+								<mat-form-field class="mat-form-field-on-div" appearance="outline">
+									<button type="button" mat-button matSuffix color="warn" mat-icon-button
+										(click)="clear(currentProfessional); $event.stopPropagation()">
+										<mat-icon>close</mat-icon>
+									</button>
+									<mat-select id="healthcareProfessionalId" name="healthcareProfessionalId"
+										formControlName="healthcareProfessionalId"
+										placeholder="{{'turnos.agenda-setup.CHOOSE_PROFESSIONAL' | translate}}">
+										<mat-option *ngFor="let professional of getNonResponsibleProfessional()"
+											[value]="professional.id"
+											[disabled]="isProfessionalNonSelectable(professional.id)">
+											<span class="mat-body">{{getFullName(professional)}}</span>
+										</mat-option>
+									</mat-select>
+									<mat-error
+										[translate]="'turnos.agenda-setup.CHOOSE_PROFESSIONAL_ERROR'"></mat-error>
+								</mat-form-field>
+							</div>
+						</div>
+					</div>
+					<button class="add-prefessional-button" mat-button type="button" color="primary" id="add-button"
+						(click)="addAssociatedProfessional()" [disabled]="!validExtraProfessionalsList()">
+						+ {{ 'turnos.agenda-setup.ADD_ANOTHER_PROFESSIONAL' | translate }}
+					</button>
+				</div>
 				<div style="padding-top: 20px" fxLayout="row">
 					<div class="professional-form-sector" fxLayout="column">
 						<span [translate]="'turnos.home.SPECIALTY_SEARCH'"></span>

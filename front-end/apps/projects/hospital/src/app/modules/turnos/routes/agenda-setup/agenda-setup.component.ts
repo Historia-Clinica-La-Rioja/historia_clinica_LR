@@ -20,6 +20,7 @@ import {
 	DiaryADto,
 	DiaryDto,
 	DoctorsOfficeDto,
+	HierarchicalUnitDto,
 	OccupationDto,
 	ProfessionalDto,
 } from '@api-rest/api-model';
@@ -30,6 +31,7 @@ import { AgendaHorarioService } from '../../services/agenda-horario.service';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { SpecialtyService } from '@api-rest/services/specialty.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
+import { HierarchicalUnitsService } from '@api-rest/services/hierarchical-units.service';
 
 const ROUTE_APPOINTMENT = 'turnos';
 const ROUTE_AGENDAS = "agenda";
@@ -71,6 +73,7 @@ export class AgendaSetupComponent implements OnInit {
 	getError = getError;
 	careLines: CareLineDto[] = [];
 	careLinesSelected: CareLineDto[] = [];
+	hierarchicalUnits: HierarchicalUnitDto[] = [];
 	private editingDiaryId = null;
 	private readonly routePrefix;
 	private mappedCurrentWeek = {};
@@ -92,7 +95,8 @@ export class AgendaSetupComponent implements OnInit {
 		private readonly route: ActivatedRoute,
 		private readonly patientNameService: PatientNameService,
 		private readonly specialtyService: SpecialtyService,
-		private readonly carelineService: CareLineService
+		private readonly carelineService: CareLineService,
+		private readonly hierarchicalUnitsService: HierarchicalUnitsService,
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY, snackBarService);
@@ -108,11 +112,16 @@ export class AgendaSetupComponent implements OnInit {
 			sectorId: new UntypedFormControl(null, [Validators.required]),
 			doctorOffice: new UntypedFormControl(null, [Validators.required]),
 			healthcareProfessionalId: new UntypedFormControl(null, [Validators.required]),
+			healthcareProfessionalTemporaryId: new UntypedFormControl(null),
 			startDate: new UntypedFormControl(null, [Validators.required]),
 			endDate: new UntypedFormControl(null, [Validators.required]),
+			hierarchicalUnit: new UntypedFormControl(null),
+			hierarchicalUnitTemporary: new UntypedFormControl(null),
 			appointmentDuration: new UntypedFormControl(null, [Validators.required]),
 			healthcareProfessionalSpecialtyId: new UntypedFormControl(null, [Validators.required]),
 			conjointDiary: new UntypedFormControl(false, [Validators.nullValidator]),
+			temporaryReplacement: new UntypedFormControl(false),
+			professionalReplacedId: new UntypedFormControl(null, [Validators.nullValidator]),
 			alias: new UntypedFormControl(null, [Validators.nullValidator]),
 			otherProfessionals: new UntypedFormArray([], [this.otherPossibleProfessionals()]),
 			protectedAppointmentsPercentage: new UntypedFormControl({ value: 0, disabled: true }, [Validators.pattern(PATTERN), Validators.max(MAX_INPUT)]),
@@ -121,6 +130,18 @@ export class AgendaSetupComponent implements OnInit {
 
 		this.form.controls.appointmentDuration.valueChanges
 			.subscribe(newDuration => this.hourSegments = MINUTES_IN_HOUR / newDuration);
+
+		this.form.controls.temporaryReplacement.valueChanges.subscribe((temporaryReplacement: boolean) => {
+			if (temporaryReplacement) {
+				this.form.controls.professionalReplacedId.setValidators([Validators.required]);
+				this.form.controls.hierarchicalUnitTemporary.setValidators([Validators.required]);
+
+			} else {
+				this.form.controls.professionalReplacedId.clearValidators();
+				this.form.controls.hierarchicalUnitTemporary.clearValidators();
+			}
+			this.form.controls.healthcareProfessionalTemporaryId.updateValueAndValidity();
+		});
 
 		this.route.data.subscribe(data => {
 			if (data["editMode"]) {
@@ -343,6 +364,9 @@ export class AgendaSetupComponent implements OnInit {
 			healthcareProfessionalId: this.form.getRawValue().healthcareProfessionalId,
 			doctorsOfficeId: this.form.getRawValue().doctorOffice.id,
 
+			predecessorProfessionalId: this.form.value.temporaryReplacement ? this.form.value.healthcareProfessionalId : null,
+			hierarchicalUnitId: this.form.value.temporaryReplacement ? this.form.value?.hierarchicalUnitTemporary : this.form.value?.hierarchicalUnitId,
+
 			startDate: momentFormat(this.form.value.startDate, DateFormat.API_DATE),
 			endDate: momentFormat(this.form.value.endDate, DateFormat.API_DATE),
 
@@ -366,8 +390,18 @@ export class AgendaSetupComponent implements OnInit {
 		scrollbar?.scrollTo(0, this.PIXEL_SIZE_HEIGHT * this.TURN_STARTING_HOUR * this.hourSegments);
 	}
 
+	getHierarchicalUnits() {
+		this.hierarchicalUnitsService.fetchAllByUserIdAndInstitutionId(this.form.value.healthcareProfessionalId)
+			.subscribe(response => this.hierarchicalUnits = response)
+	}
+
 	getProfessionalSpecialties() {
 		this.resetValues();
+		this.specialtyService.getAllSpecialtyByProfessional(this.contextService.institutionId, this.form.get("healthcareProfessionalId").value)
+			.subscribe(response => this.professionalSpecialties = response)
+	}
+
+	getProfessionalReplacement() {
 		this.specialtyService.getAllSpecialtyByProfessional(this.contextService.institutionId, this.form.get("healthcareProfessionalId").value)
 			.subscribe(response => this.professionalSpecialties = response)
 	}
@@ -405,6 +439,13 @@ export class AgendaSetupComponent implements OnInit {
 		else {
 			professionalsReference.clear();
 			this.form.controls.conjointDiary.setValue(false);
+		}
+	}
+
+	updateTemporaryReplacementForm() {
+		if (!this.form.value.temporaryReplacement) {
+			this.form.controls.professionalReplacedId.setValue(null);
+			this.form.controls.temporaryReplacement.setValue(false);
 		}
 	}
 
