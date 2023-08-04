@@ -28,6 +28,15 @@ export class ReportsService {
 		if (params.professionalId) {
 			requestParams = requestParams.append('doctorId', params.professionalId);
 		}
+		if (params.hierarchicalUnitTypeId) {
+			requestParams = requestParams.append('hierarchicalUnitTypeId', params.hierarchicalUnitTypeId);
+		}
+		if (params.hierarchicalUnitId) {
+			requestParams = requestParams.append('hierarchicalUnitId', params.hierarchicalUnitId);
+		}
+		if (params.includeHierarchicalUnitDescendants) {
+			requestParams = requestParams.append('includeHierarchicalUnitDescendants', params.includeHierarchicalUnitDescendants);
+		}
 		return this.downloadService.downloadXlsWithRequestParams(url, fileName, requestParams);
 	}
 

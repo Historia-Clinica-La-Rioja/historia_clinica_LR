@@ -11,7 +11,13 @@ import { MIN_DATE } from '@core/utils/date.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 
 import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
-import { ERole, ProfessionalDto, ProfessionalsByClinicalSpecialtyDto } from '@api-rest/api-model';
+import {
+	ERole,
+	HierarchicalUnitDto,
+	HierarchicalUnitTypeDto,
+	ProfessionalDto,
+	ProfessionalsByClinicalSpecialtyDto
+} from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { ReportsService } from '@api-rest/services/reports.service';
 
@@ -19,6 +25,8 @@ import { REPORT_TYPES } from '../../constants/report-types';
 import { UIComponentDto } from '@extensions/extensions-model';
 import { anyMatch } from '@core/utils/array.utils';
 import { PermissionsService } from '@core/services/permissions.service';
+import { HierarchicalUnitsService } from "@api-rest/services/hierarchical-units.service";
+import { HierarchicalUnitTypeService } from "@api-rest/services/hierarchical-unit-type.service";
 
 @Component({
 	selector: 'app-home',
@@ -35,6 +43,9 @@ export class HomeComponent implements OnInit {
 	professionalsTypeahead: TypeaheadOption<ProfessionalDto>[];
 	professionalInitValue: TypeaheadOption<ProfessionalDto>;
 	professionals: ProfessionalDto[] = [];
+	hierarchicalUnitTypesTypeahead: TypeaheadOption<HierarchicalUnitTypeDto>[];
+	hierarchicalUnitsTypeahead: TypeaheadOption<HierarchicalUnitDto>[];
+	hierarchicalUnits: HierarchicalUnitDto[];
 
 	specialtiesTypeahead: TypeaheadOption<ProfessionalsByClinicalSpecialtyDto>[];
 	specialtiesTypeaheadOptions$: Observable<TypeaheadOption<ProfessionalsByClinicalSpecialtyDto>[]>;
@@ -54,6 +65,8 @@ export class HomeComponent implements OnInit {
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly reportsService: ReportsService,
 		private readonly permissionsService: PermissionsService,
+		private readonly hierarchicalUnitsService: HierarchicalUnitsService,
+		private readonly hierarchicalUnitTypeService: HierarchicalUnitTypeService
 	) { }
 
 	ngOnInit(): void {
@@ -63,6 +76,9 @@ export class HomeComponent implements OnInit {
 			endDate: [this.lastDayOfThisMonth(), Validators.required],
 			specialtyId: [null],
 			professionalId: [null],
+			hierarchicalUnitTypeId: [null],
+			hierarchicalUnitId: [null],
+			includeHierarchicalUnitDescendants: [null]
 		});
 		this.healthcareProfessionalService.getAll().subscribe(professionals => {
 			this.professionals = professionals;
@@ -73,6 +89,11 @@ export class HomeComponent implements OnInit {
 			if (!anyMatch<ERole>(userRoles, [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, ERole.PERSONAL_DE_ESTADISTICA]))
 				this.REPORT_TYPES = this.REPORT_TYPES.filter(report => report.id != 1 && report.id != 2);
 		});
+		this.hierarchicalUnitsService.getByInstitution().subscribe(hierarchicalUnits => {
+			this.hierarchicalUnits = hierarchicalUnits;
+			this.hierarchicalUnitsTypeahead = hierarchicalUnits.map(hu => this.toHierarchicalUnitTypeahead(hu));
+		});
+		this.hierarchicalUnitTypeService.getByInstitution().subscribe( hierarchicalUnitTypes => this.hierarchicalUnitTypesTypeahead = hierarchicalUnitTypes.map(hut => this.toHierarchicalUnitTypeTypeahead(hut)));
 	}
 
 	private firstDayOfThisMonth(): Moment {
@@ -119,6 +140,25 @@ export class HomeComponent implements OnInit {
 		this.professionalsTypeahead = professionalsFilteredBy.map(d => this.toProfessionalTypeahead(d));
 	}
 
+	public setHierarchicalUnitType(hierarchicalUnitTypeDto: HierarchicalUnitTypeDto) {
+		this.form.controls.hierarchicalUnitTypeId.setValue(hierarchicalUnitTypeDto?.id);
+		const hierarchicalUnitsFilteredBy = this.getHierarchicalUnitsFilteredBy(hierarchicalUnitTypeDto);
+		this.hierarchicalUnitsTypeahead = hierarchicalUnitsFilteredBy.map(hu => this.toHierarchicalUnitTypeahead(hu));
+
+		if (!hierarchicalUnitTypeDto) {
+			this.form.controls.includeHierarchicalUnitDescendants.setValue(false);
+			this.form.controls.hierarchicalUnitId.setValue(null);		}
+	}
+
+	public setHierarchicalUnit(hierarchicalUnitDto: HierarchicalUnitDto) {
+		if (hierarchicalUnitDto)
+			this.form.controls.hierarchicalUnitId.setValue(hierarchicalUnitDto?.id);
+		else {
+			this.form.controls.includeHierarchicalUnitDescendants.setValue(false);
+			this.form.controls.hierarchicalUnitId.setValue(null);
+		}
+	}
+
 	setProfessional(professional: ProfessionalDto) {
 		this.idProfessional = professional?.id;
 		this.form.controls.professionalId.setValue(professional?.id);
@@ -131,10 +171,31 @@ export class HomeComponent implements OnInit {
 		return this.professionals;
 	}
 
+	private getHierarchicalUnitsFilteredBy(hierarchicalUnitTypeDto: HierarchicalUnitTypeDto): HierarchicalUnitDto[] {
+		if (hierarchicalUnitTypeDto?.id) {
+			return this.hierarchicalUnits.filter(hu => hu.typeId === hierarchicalUnitTypeDto.id);
+		}
+		return this.hierarchicalUnits;
+	}
+
 	private toProfessionalTypeahead(professionalDto: ProfessionalDto): TypeaheadOption<ProfessionalDto> {
 		return {
 			compareValue: this.getFullNameLicence(professionalDto),
 			value: professionalDto
+		};
+	}
+
+	private toHierarchicalUnitTypeTypeahead(hierarchicalUnitTypeDto: HierarchicalUnitTypeDto): TypeaheadOption<HierarchicalUnitTypeDto> {
+		return {
+			compareValue: hierarchicalUnitTypeDto.description,
+			value: hierarchicalUnitTypeDto
+		};
+	}
+
+	private toHierarchicalUnitTypeahead(hierarchicalUnitDto: HierarchicalUnitDto): TypeaheadOption<HierarchicalUnitDto> {
+		return {
+			compareValue: hierarchicalUnitDto.name,
+			value: hierarchicalUnitDto
 		};
 	}
 
@@ -178,7 +239,10 @@ export class HomeComponent implements OnInit {
 				startDate: this.form.controls.startDate.value,
 				endDate: this.form.controls.endDate.value,
 				specialtyId: this.form.controls.specialtyId.value,
-				professionalId: this.form.controls.professionalId.value
+				professionalId: this.form.controls.professionalId.value,
+				hierarchicalUnitTypeId: this.form.controls.hierarchicalUnitTypeId.value,
+				hierarchicalUnitId: this.form.controls.hierarchicalUnitId.value,
+				includeHierarchicalUnitDescendants: this.form.controls.includeHierarchicalUnitDescendants.value
 			}
 			const reportId = this.form.controls.reportType.value;
 			switch (reportId) {
