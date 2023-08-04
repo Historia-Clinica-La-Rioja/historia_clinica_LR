@@ -21,10 +21,11 @@ export class EpisodeDataComponent implements OnInit {
 	form: FormGroup;
 	specialties: ClinicalSpecialtyDto[] = [];
 	patientMedicalCoverages: PatientMedicalCoverage[] = [];
+	hierarchicalUnitId: number;
+	_patientId: number;
 
 	private patient: ReducedPatientDto;
 	private appointmentConfirmedCoverageInfo: ExternalCoverageDto;
-	private _patientId: number
 
 	@Input()
 	set patientId(id: number) {
@@ -95,6 +96,11 @@ export class EpisodeDataComponent implements OnInit {
 		this.episodeData.emit(this.getEpisodeData());
 	}
 
+	setHUId(id:number){
+		this.hierarchicalUnitId = id;
+		this.setEpisodeData();
+	}
+
 	private setSpecialtyFields(specialties: ClinicalSpecialtyDto[]) {
 		this.specialties = specialties;
 		const defaultSpecialty = specialties[0];
@@ -135,6 +141,7 @@ export class EpisodeDataComponent implements OnInit {
 		return {
 			medicalCoverageId: this.form.value.patientMedicalCoverage?.id,
 			clinicalSpecialtyId: this.form.value.clinicalSpecialty?.id,
+			hierarchicalUnitId: this.hierarchicalUnitId
 		}
 	}
 }
@@ -142,4 +149,5 @@ export class EpisodeDataComponent implements OnInit {
 export interface EpisodeData {
 	medicalCoverageId: number;
 	clinicalSpecialtyId: number;
+	hierarchicalUnitId: number;
 }

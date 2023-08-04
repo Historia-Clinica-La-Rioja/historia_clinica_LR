@@ -419,6 +419,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			riskFactors: this.factoresDeRiesgoFormService.getFactoresDeRiesgo(),
 			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
 			references: this.ambulatoryConsultationReferenceService.getOutpatientReferences(),
+			hierarchicalUnitId: this.episodeData.hierarchicalUnitId,
 		};
 	}
 

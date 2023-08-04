@@ -295,7 +295,8 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			permanentTeethPresent: this.form.value.permanentTeethPresent,
 			temporaryTeethPresent: this.form.value.temporaryTeethPresent,
 			references: this.odontologyReferenceService.getOdontologyReferences(),
-			patientMedicalCoverageId: this.episodeData.medicalCoverageId
+			patientMedicalCoverageId: this.episodeData.medicalCoverageId,
+			hierarchicalUnitId: this.episodeData.hierarchicalUnitId
 		};
 	}
 

@@ -46,5 +46,9 @@
 			</mat-form-field>
 		</div>
 
+		<div id="hierarchical-units-consultation">
+			<app-hierarchical-unit-consultation [patientId]="_patientId" (response)="setHUId($event)"></app-hierarchical-unit-consultation>
+		</div>
+
 	</mat-card-content>
 </mat-card>
