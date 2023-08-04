@@ -291,7 +291,6 @@ public class ServiceRequestController {
 						 @RequestBody() CompleteRequestDto completeRequestDto) {
 		LOG.debug("Input parameters ->  {} institutionIdpatientId {}, appointmentId {}", institutionId, patientId, appointmentId);
 		Integer result = completeDiagnosticReportRDIService.run(patientId, appointmentId);
-		//updateDiagnosticReportFileService.run(result, completeRequestDto.getFileIds());
 		LOG.debug(OUTPUT, result);
 	}
 

@@ -1,9 +1,7 @@
 package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
 import java.util.List;
-
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
-import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +16,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Diagno
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.DiagnosticReport;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.DiagnosticReportStatus;
 import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportRDIService;
+import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 
 @Service
 public class CompleteDiagnosticReportRDIServiceImpl implements CompleteDiagnosticReportRDIService {
@@ -41,21 +40,25 @@ public class CompleteDiagnosticReportRDIServiceImpl implements CompleteDiagnosti
 	}
 
     @Override
-    public Integer run(Integer patientId, Integer appointmentId) {
-        LOG.debug("input -> patientId {}, diagnosticReportId {}, completeDiagnosticReportBo {}", patientId, appointmentId);
-		Integer studyId = appointmentOrderImageRepository.getStudyId(appointmentId)
-				.orElseThrow(()->new NotFoundException("study-not-found", "Study not found"));
-        Integer result = diagnosticReportRepository.findById(studyId).stream().mapToInt(dr -> {
-			Assert.notNull(patientId, "El código identificador del paciente es obligatorio");
-			assertCompleteDiagnosticReport(dr);
+	public Integer run(Integer patientId, Integer appointmentId) {
+		LOG.debug("input -> patientId {}, diagnosticReportId {}, completeDiagnosticReportBo {}", patientId, appointmentId);
+		Optional<Integer> study = appointmentOrderImageRepository.getStudyId(appointmentId);
 
-            DiagnosticReportBo diagnosticReportBo = getCompletedDiagnosticReport(dr);
-            var documentDiagnosticReport = documentService.getDocumentFromDiagnosticReport(studyId);
-            return loadDiagnosticReports.run(documentDiagnosticReport.getDocumentId(), patientId, List.of(diagnosticReportBo)).get(0);
-        }).findFirst().orElse(-1);
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
+		if (study.isPresent()){
+			Integer studyId= study.get();
+			Integer result = diagnosticReportRepository.findById(studyId).stream().mapToInt(dr -> {
+				Assert.notNull(patientId, "El código identificador del paciente es obligatorio");
+				assertCompleteDiagnosticReport(dr);
+
+				DiagnosticReportBo diagnosticReportBo = getCompletedDiagnosticReport(dr);
+				var documentDiagnosticReport = documentService.getDocumentFromDiagnosticReport(studyId);
+				return loadDiagnosticReports.run(documentDiagnosticReport.getDocumentId(), patientId, List.of(diagnosticReportBo)).get(0);
+			}).findFirst().orElse(-1);
+			LOG.debug(OUTPUT, result);
+			return result;
+		}
+		return -1;
+	}
 
     private DiagnosticReportBo getCompletedDiagnosticReport(DiagnosticReport diagnosticReport) {
         LOG.debug("Input parameters -> diagnosticReport {} ", diagnosticReport);
