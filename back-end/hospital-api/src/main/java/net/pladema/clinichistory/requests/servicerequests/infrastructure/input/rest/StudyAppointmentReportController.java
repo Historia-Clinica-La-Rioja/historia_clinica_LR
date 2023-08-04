@@ -114,7 +114,7 @@ public class StudyAppointmentReportController {
 	}
 
 	@GetMapping(value = "/by-appointment/{appointmentId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, TECNICO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, TECNICO, INFORMADOR')")
 	public ResponseEntity<HCEDocumentDataDto> getStudyAppointmentReportDocument(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "appointmentId") Integer appointmentId){
