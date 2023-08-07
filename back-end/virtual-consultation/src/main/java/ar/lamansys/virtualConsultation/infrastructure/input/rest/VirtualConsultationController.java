@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ar.lamansys.mqtt.infraestructure.input.rest.dto.MqttMetadataDto;
-import ar.lamansys.mqtt.infraestructure.input.service.MqttCallExternalService;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import ar.lamansys.virtualConsultation.application.changeResponsibleProfessionalAvailability.ChangeResponsibleProfessionalAvailabilityService;
 import ar.lamansys.virtualConsultation.application.getDomainVirtualConsultations.GetDomainVirtualConsultationsService;
@@ -27,6 +25,7 @@ import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualCons
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationNotificationDataDto;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationRequestDto;
 import ar.lamansys.virtualConsultation.infrastructure.mapper.VirtualConsultationMapper;
+import ar.lamansys.virtualConsultation.infrastructure.mqtt.VirtualConsultationPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
@@ -37,7 +36,7 @@ import net.pladema.staff.controller.service.HealthcareProfessionalExternalServic
 @RequiredArgsConstructor
 public class VirtualConsultationController {
 
-	private final MqttCallExternalService mqttCallExternalService;
+	private final VirtualConsultationPublisher virtualConsultationPublisher;
 
 	private final SaveVirtualConsultationRequestService saveVirtualConsultationService;
 
@@ -79,7 +78,7 @@ public class VirtualConsultationController {
 		log.debug("Input parameters -> virtualConsultationId {}", virtualConsultationId);
 		VirtualConsultationNotificationDataDto notification = virtualConsultationMapper.fromVirtualConsultationNotificationDataBo(getVirtualConsultationNotificationDataService.run(virtualConsultationId));
 		ObjectMapper jsonMapper = new ObjectMapper();
-		mqttCallExternalService.publish(new MqttMetadataDto("HSI/VIRTUAL-CONSULTATION/NOTIFY", jsonMapper.writeValueAsString(notification), false, 2));
+		virtualConsultationPublisher.publish("NOTIFY", jsonMapper.writeValueAsString(notification));
 	}
 
 	@PostMapping(value = "/{institutionId}/change-responsible-state")

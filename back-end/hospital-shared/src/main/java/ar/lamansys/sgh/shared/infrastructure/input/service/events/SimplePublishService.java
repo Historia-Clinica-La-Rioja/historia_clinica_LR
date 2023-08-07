@@ -22,6 +22,12 @@ public class SimplePublishService {
 		mqttCallExternalService.publish(mqttMetadataDto);
 	}
 
+	public void genericPublish(String topic, String message) {
+		String fullTopic = "HSI/" + namePrefix + "/" +  topic;
+		MqttMetadataDto mqttMetadataDto = MqttDtoUtils.getMqtMetadataDto(fullTopic, message);
+		mqttCallExternalService.publish(mqttMetadataDto);
+	}
+
 	public void appointmentCallerPublish(String topic, NotifyPatientDto notifyPatientDto) {
 		String fullTopic = "HSI/" + namePrefix + "/" + topic + "/" + notifyPatientDto.getTopic();
 		notifyPatientDto.setTopic(fullTopic);
