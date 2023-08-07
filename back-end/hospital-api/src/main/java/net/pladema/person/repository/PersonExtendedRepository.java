@@ -3,14 +3,14 @@ package net.pladema.person.repository;
 import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
 import net.pladema.person.repository.domain.PersonPhotoVo;
 import net.pladema.person.repository.entity.PersonExtended;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface PersonExtendedRepository extends JpaRepository<PersonExtended, Integer> {
@@ -42,5 +42,12 @@ public interface PersonExtendedRepository extends JpaRepository<PersonExtended, 
 			"LEFT JOIN Province p ON (p.id = a.provinceId) " +
 			"WHERE pe.id = :personId")
 	ContactInfoBo getContactInfoById(@Param("personId") Integer personId);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE PersonExtended pex " +
+			"SET pex.email = :email " +
+			"WHERE pex.id = :id ")
+	void setEmail(@Param("email") String email, @Param("id") Integer id);
 
 }

@@ -70,6 +70,7 @@ const PersonShow = props =>{
                     <TextField source="description" />
                 </ReferenceField>
                 <SgxDateField source="birthDate" />
+                <TextField source="email" />
             </Tab>
 
             <Tab label="resources.person.tabs.users" id="users">
