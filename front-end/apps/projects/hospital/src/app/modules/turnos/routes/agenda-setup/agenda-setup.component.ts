@@ -79,7 +79,7 @@ export class AgendaSetupComponent implements OnInit {
 	private readonly routePrefix;
 	private mappedCurrentWeek = {};
 	lineOfCareAndPercentageOfProtectedAppointmentsValid = true;
-
+	loadSavedData = false;
 	constructor(
 		private readonly el: ElementRef,
 		private readonly sectorService: SectorService,
@@ -208,6 +208,9 @@ export class AgendaSetupComponent implements OnInit {
 			this.professionals = healthcareProfessionals;
 			const healthcareProfessionalId = healthcareProfessionals.find(professional => professional.id === diary.healthcareProfessionalId);
 			this.form.controls.healthcareProfessionalId.setValue(healthcareProfessionalId.id);
+
+			this.setHierarchicalUnitsByName(diary?.hierarchicalUnitAlias);
+
 			this.specialtyService.getAllSpecialtyByProfessional(this.contextService.institutionId, healthcareProfessionalId.id)
 				.subscribe(response => {
 					this.professionalSpecialties = response;
@@ -216,6 +219,7 @@ export class AgendaSetupComponent implements OnInit {
 						this.form.controls.healthcareProfessionalSpecialtyId.setValue(diary.clinicalSpecialtyId);
 						this.getCareLines();
 					}
+
 				})
 		});
 
@@ -255,6 +259,13 @@ export class AgendaSetupComponent implements OnInit {
 		this.setAlias(diary.alias);
 	}
 
+	private setHierarchicalUnitsByName(name: string) {
+		this.loadSavedData = true;
+		this.form.controls.hierarchicalUnit.setValue(this.hierarchicalUnits.filter(e => e.name === name));
+		this.form.controls.healthcareProfessionalTemporaryId.updateValueAndValidity();
+
+	}
+
 	private setSpecialityId(healthcareProfesionalId) {
 		this.specialityId = healthcareProfesionalId;
 	}
@@ -266,6 +277,8 @@ export class AgendaSetupComponent implements OnInit {
 	private disableNotEditableControls(): void {
 		this.form.get('healthcareProfessionalId').disable();
 		this.form.get('appointmentDuration').disable();
+		this.form.get('hierarchicalUnit').disable();
+
 	}
 
 	setDoctorOfficesAndResetFollowingControls(sectorId: number): void {
@@ -383,8 +396,8 @@ export class AgendaSetupComponent implements OnInit {
 			healthcareProfessionalId: this.form.getRawValue().healthcareProfessionalId,
 			doctorsOfficeId: this.form.getRawValue().doctorOffice.id,
 
-			predecessorProfessionalId: this.form.value.temporaryReplacement ? this.form.value.healthcareProfessionalId : null,
-			hierarchicalUnitId: this.form.value.temporaryReplacement ? this.form.value?.hierarchicalUnitTemporary : this.form.value?.hierarchicalUnitId,
+			predecessorProfessionalId: this.form.value.temporaryReplacement ? this.form.value.healthcareProfessionalTemporaryId : null,
+			hierarchicalUnitId: this.form.value.temporaryReplacement ? this.form.value?.hierarchicalUnitTemporary : this.form.value?.hierarchicalUnit,
 
 			startDate: momentFormat(this.form.value.startDate, DateFormat.API_DATE),
 			endDate: momentFormat(this.form.value.endDate, DateFormat.API_DATE),
