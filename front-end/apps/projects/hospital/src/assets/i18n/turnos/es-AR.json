@@ -66,6 +66,8 @@
 			"SELECT_DAYS_TYPE_SUBTITLE": "Seleccione tipos de consulta para cada día",
 			"RESPONSIBLE_PROFESSIONAL": "Profesional responsable",
 			"CONJOINT_DIARY": "Agenda conjunta",
+			"TEMPORARY_REMPLACEMENT":"Es un reemplazo temporal",
+			"PROFESSIONAL_REMPLACEMENT":"Profesional reemplazado",
 			"OTHER_PROFESSIONALS": "Otros profesionales",
 			"ADD_ANOTHER_PROFESSIONAL": "Añadir otro profesional",
 			"CHOOSE_PROFESSIONAL": "Seleccione profesional",
@@ -81,6 +83,7 @@
 			"MORE": "más",
 			"DURATION_OF_THE_CONSULTATION":"Duración de la consulta",
 			"SECTOR": "Sector",
+			"HIERARCHICAL_UNIT": "Unidad Jerárquica",
 			"dialog": {
 				"TITLE": "Nueva atención",
 				"EDIT": "Editar atención",
