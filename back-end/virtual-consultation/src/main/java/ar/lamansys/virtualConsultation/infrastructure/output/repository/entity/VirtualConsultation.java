@@ -10,6 +10,7 @@ import javax.persistence.Table;
 
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
+import ar.lamansys.virtualConsultation.domain.VirtualConsultationRequestBo;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -57,5 +58,17 @@ public class VirtualConsultation extends SGXAuditableEntity<Integer> {
 
 	@Column(name = "call_id", nullable = false, length = 36)
 	private String callId;
+	
+	public VirtualConsultation(VirtualConsultationRequestBo virtualConsultation) {
+		this.patientId = virtualConsultation.getPatientId();
+		this.clinicalSpecialtyId = virtualConsultation.getClinicalSpecialtyId();
+		this.careLineId = virtualConsultation.getCareLineId();
+		this.problemId = virtualConsultation.getProblemId();
+		this.priorityId = virtualConsultation.getPriorityId();
+		this.motiveId = virtualConsultation.getMotiveId();
+		this.responsibleHealthcareProfessionalId = virtualConsultation.getResponsibleHealthcareProfessionalId();
+		this.statusId = virtualConsultation.getStatusId();
+		this.institutionId = virtualConsultation.getInstitutionId();
+	}
 
 }
