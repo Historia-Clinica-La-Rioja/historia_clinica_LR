@@ -41,3 +41,124 @@ databaseChangeLog:
                 AND d.source_Type_Id = 9
                 AND d.type_Id = 17
                 AND (d.deleted = false OR d.deleted is null);
+    
+    - changeSet:    
+        id: virtual_consultation-createTable
+        comment: Create table virtual_consultation
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: virtual_consultation
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_virtual_consultation
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      references: healthcare_professional(id)
+                      foreignKeyName: FK_responsible_virtual_consultation
+                      nullable: false
+                    name: responsible_healthcare_professional_id
+                    type: int
+                - column:
+                    constraints:
+                      references: patient(id)
+                      foreignKeyName: FK_patient_virtual_consultation
+                      nullable: false
+                    name: patient_id
+                    type: int
+                - column:
+                    constraints:
+                      references: healthcare_professional(id)
+                      foreignKeyName: FK_healthcare_professional_virtual_consultation
+                    name: attendant_healthcare_professional_id
+                    type: int
+                - column:
+                    constraints:
+                      references: clinical_specialty(id)
+                      foreignKeyName: FK_clinical_specialty_virtual_consultation
+                      nullable: false
+                    name: clinical_specialty_id
+                    type: int
+                - column:
+                    constraints:
+                      references: care_line(id)
+                      foreignKeyName: FK_care_line_virtual_consultation
+                      nullable: false
+                    name: care_line_id
+                    type: int
+                - column:
+                    constraints:
+                      references: snomed(id)
+                      foreignKeyName: FK_motive_virtual_consultation
+                      nullable: false
+                    name: motive_id
+                    type: int
+                - column:
+                    constraints:
+                      references: snomed(id)
+                      foreignKeyName: FK_problem_virtual_consultation
+                    name: problem_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: priority_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: status_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: call_id
+                    type: varchar(36)
+                - column:
+                    constraints:
+                      references: institution(id)
+                      foreignKeyName: FK_institution_virtual_consultation
+                      nullable: false
+                    name: institution_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
