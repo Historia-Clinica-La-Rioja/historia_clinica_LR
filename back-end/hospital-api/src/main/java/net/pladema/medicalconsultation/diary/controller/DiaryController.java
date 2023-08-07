@@ -15,6 +15,8 @@ import javax.validation.Valid;
 
 import net.pladema.medicalconsultation.appointment.controller.dto.EmptyAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.AppointmentMapper;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryLabelDto;
+import net.pladema.medicalconsultation.diary.service.FetchDiaryLabel;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSearchBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
 import net.pladema.medicalconsultation.diary.controller.constraints.DiaryEmptyAppointmentsValid;
@@ -88,6 +90,8 @@ public class DiaryController {
 
 	private final AppointmentMapper appointmentMapper;
 
+	private final FetchDiaryLabel fetchDiaryLabel;
+
     public DiaryController(
             DiaryMapper diaryMapper,
             DiaryService diaryService,
@@ -95,7 +99,8 @@ public class DiaryController {
             AppointmentService appointmentService,
 			HealthcareProfessionalService healthcareProfessionalService,
             LocalDateMapper localDateMapper,
-			AppointmentMapper appointmentMapper
+			AppointmentMapper appointmentMapper,
+			FetchDiaryLabel fetchDiaryLabel
     ) {
         this.diaryMapper = diaryMapper;
         this.diaryService = diaryService;
@@ -104,6 +109,7 @@ public class DiaryController {
 		this.healthcareProfessionalService = healthcareProfessionalService;
         this.localDateMapper = localDateMapper;
 		this.appointmentMapper = appointmentMapper;
+		this.fetchDiaryLabel = fetchDiaryLabel;
     }
 
     @GetMapping("/{diaryId}")
@@ -293,6 +299,20 @@ public class DiaryController {
 		AppointmentSearchBo searchCriteriaBo = appointmentMapper.toAppointmentSearchBo(searchCriteria);
 		List<EmptyAppointmentBo> emptyAppointments = diaryService.getEmptyAppointmentsBySearchCriteria(institutionId, searchCriteriaBo, true);
 		List<EmptyAppointmentDto> result = emptyAppointments.stream().map(appointmentMapper::toEmptyAppointmentDto).collect(Collectors.toList());
+		log.debug(OUTPUT, result);
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/{diaryId}/labels")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA, ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+	public ResponseEntity<List<DiaryLabelDto>> getDiaryLabels(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "diaryId") Integer diaryId) {
+		log.debug("Input parameters -> institutionId {}, diaryId {}", institutionId, diaryId);
+		List<DiaryLabelDto> result = fetchDiaryLabel.run(diaryId)
+				.stream()
+				.map(diaryLabelBo -> new DiaryLabelDto(diaryLabelBo))
+				.collect(Collectors.toList());
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}

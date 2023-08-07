@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryLabelDto;
 
 @Getter
 @Setter
@@ -33,4 +34,6 @@ public class AppointmentDto extends CreateAppointmentDto {
 
 	private String callLink;
 
+	@Nullable
+	private DiaryLabelDto diaryLabelDto;
 }

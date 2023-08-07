@@ -88,3 +88,16 @@ input[type="number"]::-webkit-inner-spin-button {
 .padding {
 	padding-top: 20px;
 }
+
+.color-label-description {
+	margin: .5rem 0 .5rem 0;
+}
+
+.color-label {
+	display: flex;
+	align-items: center;
+
+	button {
+		margin-top: -1.34375em;
+	}
+}

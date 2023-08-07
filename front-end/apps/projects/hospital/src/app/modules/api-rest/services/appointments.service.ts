@@ -320,4 +320,9 @@ export class AppointmentsService {
 		const url = `${this.BASE_URL}/patient/${patientId}/has-current-appointment`;
 		return this.http.get<number>(url);
 	}
+
+	setAppointmentLabel(labelId: number, appointmentId: number) {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/label`;
+		return this.http.post<boolean>(url, labelId);
+	}
 }

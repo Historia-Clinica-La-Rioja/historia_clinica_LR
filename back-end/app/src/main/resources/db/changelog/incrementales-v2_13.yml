@@ -1,3 +1,50 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v2_13 
 
+    - changeSet:
+        id: diary_label-createTable
+        comment: Create table diary_label
+        author: fdemuguruza
+        changes:
+          - createTable:
+              tableName: diary_label
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_diary_label
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: diary(id)
+                      foreignKeyName: FK_diary_label
+                    name: diary_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: color_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(100)
+
+    - changeSet:
+        id: add-label_id
+        author: fdemuguruza
+        changes:
+          - addColumn:
+              tableName: appointment
+              columns:
+                - column:
+                    constraints:
+                      nullable: true
+                      references: diary_label(id)
+                      foreignKeyName: FK_diary_label_appointment
+                    name: diary_label_id
+                    type: int

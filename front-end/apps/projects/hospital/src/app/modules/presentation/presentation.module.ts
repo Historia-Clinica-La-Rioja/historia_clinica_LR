@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule, FlexModule } from '@angular/flex-layout';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 // deps
 import { CoreModule } from '@core/core.module';
 import { AppMaterialModule } from '@material/app.material.module';
@@ -72,6 +73,8 @@ import { TitledSingleContentComponent } from './components/titled-single-content
 import { TypeaheadComponent } from './components/typeahead/typeahead.component';
 import { TypeaheadFilterOptionsComponent } from './components/typeahead-filter-options/typeahead-filter-options.component';
 import { UserBadgeComponent } from './components/user-badge/user-badge.component';
+import { ButtonComponent } from './components/button/button.component';
+import { ColorSelectorComponent } from './components/color-selector/color-selector.component';
 
 // dialogs
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
@@ -92,8 +95,8 @@ import { TimeDtoToLocalTimePipe } from './pipes/time-dto-to-local-time.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { ButtonComponent } from './components/button/button.component';
+
+
 
 @NgModule({
 	declarations: [
@@ -169,6 +172,7 @@ import { ButtonComponent } from './components/button/button.component';
 		DiscardWarningComponent,
 		ViewPdfComponent,
 		ViewPdfComponent,
+		ColorSelectorComponent,
 		// directives
 		CtrlTemplateDirective,
 		// pipes
@@ -264,6 +268,7 @@ import { ButtonComponent } from './components/button/button.component';
 		TitledSingleContentComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
+		ColorSelectorComponent,
 		// dialogs
 		// directives
 		CtrlTemplateDirective,

@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import lombok.ToString;
 import lombok.Value;
 import net.pladema.emergencycare.repository.domain.ProfessionalPersonVo;
+import net.pladema.medicalconsultation.diary.repository.entity.DiaryLabel;
 
 @Value
 @ToString
@@ -43,6 +44,8 @@ public class AppointmentDiaryVo {
 	private final ProfessionalPersonVo professionalPersonVo;
 
 	private final String email;
+
+	private final DiaryLabel diaryLabel;
 	
 	public AppointmentDiaryVo(
 			Integer diaryId,
@@ -65,7 +68,8 @@ public class AppointmentDiaryVo {
 			String nameSelfDetermination,
 			String middleNames,
 			String otherLastName,
-			String email) {
+			String email,
+			DiaryLabel diaryLabel) {
 		this.diaryId = diaryId;
 		this.id = id;
 		this.patientId = patientId;
@@ -82,6 +86,7 @@ public class AppointmentDiaryVo {
 		this.createdOn = createdOn;
 		this.email = email;
 		this.professionalPersonVo = personId != null ? new ProfessionalPersonVo(personId, firstName, lastName, nameSelfDetermination, middleNames, otherLastName) : null;
+		this.diaryLabel = diaryLabel;
 	}
 
 }

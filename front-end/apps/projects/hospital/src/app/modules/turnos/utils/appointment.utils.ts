@@ -2,7 +2,7 @@ import { CalendarEvent } from 'angular-calendar';
 import { Moment } from 'moment';
 
 import {
-	AppointmentListDto,
+	AppointmentListDto, DiaryLabelDto,
 } from '@api-rest/api-model';
 import {
     DateFormat,
@@ -13,16 +13,40 @@ import {
 import {
 	APPOINTMENT_STATES_ID,
 	BLUE_TEXT,
+	COLOR,
 	COLORES,
 	GREY_TEXT,
 	PURPLE_TEXT,
 	TEMPORARY_PATIENT,
 	WHITE_TEXT,
+    getDiaryLabel,
 } from '@turnos/constants/appointment';
 import {
 	AppointmentBlockMotivesFacadeService,
 } from '@turnos/services/appointment-block-motives-facade.service';
 
+function setDiaryLabelColor(diaryLabelDto: DiaryLabelDto): string {
+    if (!diaryLabelDto) return '';
+
+    const color: COLOR = getDiaryLabel(diaryLabelDto.colorId);
+    return `<hr class="appointment-label" color=${color.color}>`
+}
+
+function setDiaryLabelDescription(diaryLabelDto: DiaryLabelDto): string {
+    if (!diaryLabelDto) return '';
+
+    return diaryLabelDto.description;
+}
+
+function defaultHtml(from: string, appointment: AppointmentListDto, viewName?: string): string {
+    return `<div class="appointment-description">
+                ${setDiaryLabelColor(appointment?.diaryLabelDto)}
+                <article>
+                    ${momentParseTime(from).format(DateFormat.HOUR_MINUTE)} ${viewName}.
+                    ${setDiaryLabelDescription(appointment?.diaryLabelDto)}
+                </article>
+            </div>`
+}
 
 export function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto, viewName?: string, appointmentBlockMotivesFacadeService?: AppointmentBlockMotivesFacadeService): CalendarEvent {
     const fullName = [appointment.patient?.person.lastName, appointment.patient?.person.firstName].
@@ -76,7 +100,7 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
             return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE)} ${viewName ? viewName : ''} (Temporal)`;
         }
 
-        return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE)}	 ${viewName}`;
+        return defaultHtml(from, appointment, viewName);
     }
 }
 

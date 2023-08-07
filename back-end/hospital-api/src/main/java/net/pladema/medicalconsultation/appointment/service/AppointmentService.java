@@ -95,4 +95,6 @@ public interface AppointmentService {
 	List<AppointmentSummaryBo> getAppointmentDataByAppointmentIds(List<Integer> appointmentIds);
 
 	Boolean openingHourAllowedProtectedAppointment(Integer appointmentId);
+
+	void deleteLabelFromAppointment(Integer diaryId, List<Integer> ids);
 }

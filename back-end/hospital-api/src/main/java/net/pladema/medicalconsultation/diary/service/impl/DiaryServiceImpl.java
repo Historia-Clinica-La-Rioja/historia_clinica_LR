@@ -11,10 +11,12 @@ import net.pladema.medicalconsultation.appointment.service.UpdateAppointmentOpen
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSearchBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
+import net.pladema.medicalconsultation.diary.repository.DiaryLabelRepository;
 import net.pladema.medicalconsultation.diary.repository.DiaryRepository;
 import net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo;
 import net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo;
 import net.pladema.medicalconsultation.diary.repository.entity.Diary;
+import net.pladema.medicalconsultation.diary.repository.entity.DiaryLabel;
 import net.pladema.medicalconsultation.diary.service.DiaryAssociatedProfessionalService;
 import net.pladema.medicalconsultation.diary.service.DiaryCareLineService;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
@@ -22,6 +24,7 @@ import net.pladema.medicalconsultation.diary.service.DiaryPracticeService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryLabelBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
@@ -89,6 +92,8 @@ public class DiaryServiceImpl implements DiaryService {
 
 	private final DiaryPracticeService diaryPracticeService;
 
+	private final DiaryLabelRepository diaryLabelRepository;
+
 	@Override
 	@Transactional
 	public Integer addDiary(DiaryBo diaryToSave) throws DiaryException {
@@ -98,8 +103,8 @@ public class DiaryServiceImpl implements DiaryService {
 
 		Diary diary = createDiaryInstance(diaryToSave);
 		Integer diaryId = persistDiary(diaryToSave, diary);
-
 		diaryToSave.setId(diaryId);
+		setDiaryLabels(diaryToSave);
 		LOG.debug("Diary saved -> {}", diaryToSave);
 		return diaryId;
 	}
@@ -169,10 +174,38 @@ public class DiaryServiceImpl implements DiaryService {
 			adjustExistingAppointmentsOpeningHours(apmtsByNewDOH, apmts);
 			persistDiary(diaryToUpdate, mapDiaryBo(diaryToUpdate, savedDiary));
 			updatedExistingAppointments(diaryToUpdate, apmtsByNewDOH);
+			setDiaryLabels(diaryToUpdate);
+			deleteDiaryLabels(diaryToUpdate);
 			LOG.debug("Diary updated -> {}", diaryToUpdate);
 			return diaryToUpdate.getId();
 		}).get();
 
+	}
+
+	private void setDiaryLabels(DiaryBo diaryToUpdate) {
+		diaryToUpdate.getDiaryLabelBo().forEach(diaryLabelBo -> {
+			if (diaryLabelBo.getId() == null) {
+				diaryLabelBo.setDiaryId(diaryToUpdate.getId());
+				Integer id = diaryLabelRepository.save(new DiaryLabel(diaryLabelBo)).getId();
+				diaryLabelBo.setId(id);
+			} else {
+				diaryLabelRepository.findById(diaryLabelBo.getId()).ifPresent(diaryLabel -> {
+					diaryLabel.setDescription(diaryLabelBo.getDescription());
+					diaryLabel.setColorId(diaryLabelBo.getColorId());
+					diaryLabelRepository.save(diaryLabel);
+				});
+			}
+		});
+	}
+
+	private void deleteDiaryLabels(DiaryBo diaryToUpdate) {
+		List<Integer> ids = diaryToUpdate.getDiaryLabelBo()
+				.stream()
+				.map(diaryLabelBo -> diaryLabelBo.getId())
+				.collect(Collectors.toList());
+		ids.add(-1);
+		appointmentService.deleteLabelFromAppointment(diaryToUpdate.getId(), ids);
+		diaryLabelRepository.deleteDiaryLabels(diaryToUpdate.getId(), ids);
 	}
 
 	private void adjustExistingAppointmentsOpeningHours(HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH,

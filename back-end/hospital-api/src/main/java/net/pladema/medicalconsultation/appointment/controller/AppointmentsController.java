@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
+import net.pladema.medicalconsultation.appointment.service.CreateAppointmentLabel;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryLabelDto;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -166,6 +169,8 @@ public class AppointmentsController {
 
 	private Long MAX_DAYS = 30L;
 	private final GetCurrentAppointmentHierarchicalUnit getCurrentAppointmentHierarchicalUnit;
+
+	private final CreateAppointmentLabel createAppointmentLabel;
 
 	@PostMapping
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
@@ -403,6 +408,7 @@ public class AppointmentsController {
 						appointmentBo.getProfessionalPersonBo().getId(),
 						appointmentBo.getProfessionalPersonBo().getFullName(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)))
 						:  null,
+				appointmentBo.getDiaryLabelBo() != null ? new DiaryLabelDto(appointmentBo.getDiaryLabelBo()): null,
 				appointmentBo.getPatientEmail()
 		);
 	}
@@ -798,5 +804,17 @@ public class AppointmentsController {
 			return ResponseEntity.ok(result);
 		}
 		return null;
+	}
+
+	@PostMapping(value = "/{appointmentId}/label")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<Boolean> updateLabel(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "appointmentId") Integer appointmentId,
+			@RequestBody(required = false) Integer diaryLabelId) {
+		log.debug("Input parameters -> institutionId {}, diaryLabelId {}, appointmentId {}", institutionId, diaryLabelId, appointmentId);
+		Boolean result = createAppointmentLabel.execute(diaryLabelId, appointmentId);
+		log.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
 	}
 }

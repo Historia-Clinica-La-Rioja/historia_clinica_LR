@@ -45,13 +45,14 @@ import net.pladema.medicalconsultation.appointment.repository.entity.Appointment
 public interface AppointmentRepository extends SGXAuditableEntityJPARepository<Appointment, Integer>, SGXDocumentEntityRepository<Appointment> {
 
     @Transactional(readOnly = true)
-    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo(aa.pk.diaryId, a, doh.medicalAttentionTypeId, has.reason, ao.observation, ao.createdBy)" +
+    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo(aa.pk.diaryId, a, doh.medicalAttentionTypeId, has.reason, ao.observation, ao.createdBy, dl)" +
             "FROM Appointment AS a " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
 			"LEFT JOIN AppointmentObservation AS ao ON (a.id = ao.appointmentId) " +
             "LEFT JOIN HistoricAppointmentState AS has ON (a.id = has.pk.appointmentId) " +
             "JOIN Diary d ON (d.id = aa.pk.diaryId )" +
 			"JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = d.id) " +
+			"LEFT JOIN DiaryLabel dl ON (a.diaryLabelId = dl.id) " +
             "WHERE a.id = :appointmentId " +
 			"AND doh.pk.openingHoursId = aa.pk.openingHoursId " +
 			"AND a.deleteable.deleted = FALSE " +
@@ -90,7 +91,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
     @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
             "aa.pk.diaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
             "a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, doh.medicalAttentionTypeId, " +
-			"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email) " +
+			"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl) " +
             "FROM Appointment AS a " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
             "JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = aa.pk.diaryId) " +
@@ -99,6 +100,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN PersonExtended pex ON (p.id = pex.id) " +
 			"LEFT JOIN BookingAppointment ba ON a.id = ba.pk.appointmentId " +
 			"LEFT JOIN BookingPerson bp ON ba.pk.bookingPersonId = bp.id " +
+			"LEFT JOIN DiaryLabel dl ON (a.diaryLabelId = dl.id) " +
             "WHERE aa.pk.diaryId = :diaryId AND a.appointmentStateId <> " + AppointmentState.CANCELLED_STR +
 			"AND aa.pk.openingHoursId = doh.pk.openingHoursId " +
 			"AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL ) " +
@@ -109,7 +111,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	@Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
 			"eaa.pk.equipmentDiaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
 			"a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, edoh.medicalAttentionTypeId, " +
-			"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email) " +
+			"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl) " +
 			"FROM Appointment AS a " +
 			"JOIN EquipmentAppointmentAssn AS eaa ON (a.id = eaa.pk.appointmentId) " +
 			"JOIN EquipmentDiaryOpeningHours AS edoh ON (edoh.pk.equipmentDiaryId = eaa.pk.equipmentDiaryId) " +
@@ -118,6 +120,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN PersonExtended pex ON (p.id = pex.id) " +
 			"LEFT JOIN BookingAppointment ba ON a.id = ba.pk.appointmentId " +
 			"LEFT JOIN BookingPerson bp ON ba.pk.bookingPersonId = bp.id " +
+			"LEFT JOIN DiaryLabel dl ON (a.diaryLabelId = dl.id) " +
 			"WHERE eaa.pk.equipmentDiaryId = :diaryId AND a.appointmentStateId <> " + AppointmentState.CANCELLED_STR +
 			"AND eaa.pk.openingHoursId = edoh.pk.openingHoursId " +
 			"AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL ) " +
@@ -667,4 +670,14 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN DiaryOpeningHours doh ON (asn.pk.openingHoursId = doh.pk.openingHoursId) " +
 			"WHERE asn.pk.appointmentId = :appointmentId ")
 	Boolean openingHourAllowedProtectedAppointment(@Param("appointmentId") Integer appointmentId);
+	
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE appointment " +
+			"SET diary_label_id = null, " +
+			"updated_on = current_timestamp " +
+			"WHERE id IN (SELECT assn.appointment_id FROM appointment_assn assn WHERE assn.diary_id = :diaryId) " +
+			"AND diary_label_id NOT IN :ids", nativeQuery = true)
+	void deleteLabelFromAppointment(@Param("diaryId") Integer diaryId,
+									@Param("ids") List<Integer> ids);
 }

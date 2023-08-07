@@ -241,6 +241,7 @@ export interface AppointmentDataDto {
 export interface AppointmentDto extends CreateAppointmentDto {
     appointmentStateId: number;
     callLink: string;
+    diaryLabelDto?: DiaryLabelDto;
     observation?: string;
     observationBy?: string;
     protected: boolean;
@@ -259,6 +260,7 @@ export interface AppointmentListDto {
     appointmentStateId: number;
     createdOn: Date;
     date: string;
+    diaryLabelDto: DiaryLabelDto;
     healthInsuranceId: number;
     hour: string;
     id: number;
@@ -987,6 +989,7 @@ export interface DiaryADto {
     careLines?: number[];
     clinicalSpecialtyId?: number;
     diaryAssociatedProfessionalsId: number[];
+    diaryLabelDto: DiaryLabelDto[];
     diaryOpeningHours: DiaryOpeningHoursDto[];
     doctorsOfficeId: number;
     endDate: string;
@@ -1021,6 +1024,13 @@ export interface DiaryAvailableProtectedAppointmentsDto {
 }
 
 export interface DiaryDto extends DiaryADto {
+    id: number;
+}
+
+export interface DiaryLabelDto {
+    colorId: number;
+    description: string;
+    diaryId: number;
     id: number;
 }
 

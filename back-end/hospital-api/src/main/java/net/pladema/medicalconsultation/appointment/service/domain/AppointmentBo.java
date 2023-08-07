@@ -17,6 +17,7 @@ import net.pladema.medicalconsultation.appointment.repository.domain.Appointment
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
 import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryLabelBo;
 
 @Getter
 @Setter
@@ -78,6 +79,8 @@ public class AppointmentBo {
 
 	private String applicantHealthcareProfessionalEmail;
 
+	private DiaryLabelBo diaryLabelBo;
+
 	public static AppointmentBo fromAppointmentDiaryVo(AppointmentDiaryVo appointmentDiaryVo) {
 		return AppointmentBo.builder()
 				.id(appointmentDiaryVo.getId())
@@ -95,6 +98,7 @@ public class AppointmentBo {
 				.createdOn(appointmentDiaryVo.getCreatedOn())
 				.professionalPersonBo(appointmentDiaryVo.getProfessionalPersonVo() != null ? new ProfessionalPersonBo(appointmentDiaryVo.getProfessionalPersonVo()) : null)
 				.patientEmail(appointmentDiaryVo.getEmail())
+				.diaryLabelBo(appointmentDiaryVo.getDiaryLabel() != null ? new DiaryLabelBo(appointmentDiaryVo.getDiaryLabel()): null)
 				.build();
 	}
 
@@ -114,6 +118,7 @@ public class AppointmentBo {
 				.observationBy(appointmentVo.getObservationBy())
 				.callId(appointmentVo.getCallId())
 				.modalityId(appointmentVo.getModalityId())
+				.diaryLabelBo(appointmentVo.getDiaryLabel() != null ? new DiaryLabelBo(appointmentVo.getDiaryLabel()): null)
 				.build();
 	}
 

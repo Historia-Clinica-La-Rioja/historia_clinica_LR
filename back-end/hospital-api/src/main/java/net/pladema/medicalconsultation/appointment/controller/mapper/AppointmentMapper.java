@@ -49,6 +49,7 @@ public interface AppointmentMapper {
 	@Mapping(target = "isProtected", source = "appointmentBo.protected")
 	@Mapping(target = "createdOn", source = "appointmentBo.createdOn")
 	@Mapping(target = "professionalPersonDto", source = "appointmentBo.professionalPersonBo")
+	@Mapping(target = "diaryLabelDto", source = "appointmentBo.diaryLabelBo")
     AppointmentListDto toAppointmentListDto(AppointmentBo appointmentBo, AppointmentBasicPatientDto patient);
 
 	@Named("toEquipmentAppointmentListDto")
@@ -69,6 +70,7 @@ public interface AppointmentMapper {
 	@Mapping(target = "transcribedOrderData", source = "appointmentBo.transcribedData")
 	@Mapping(target = "modality", source = "modalityId")
 	@Mapping(target = "callLink", source = "callId", qualifiedByName = "generateCallLink")
+	@Mapping(target = "diaryLabelDto", source = "appointmentBo.diaryLabelBo")
 	AppointmentDto toAppointmentDto(AppointmentBo appointmentBo);
 
 	@Named("generateCallLink")

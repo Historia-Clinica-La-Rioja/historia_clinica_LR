@@ -637,6 +637,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 		return result;
 	}
 
+	@Override
+	public void deleteLabelFromAppointment(Integer diaryId, List<Integer> ids) {
+		log.debug("Input parameters -> diaryId {}", ids);
+		appointmentRepository.deleteLabelFromAppointment(diaryId, ids);
+	}
+
 	private boolean dayIsIncludedInOpeningHours(LocalDate date, DiaryOpeningHoursBo diaryOpeningHours) {
 		final int SUNDAY_DB_VALUE = 0;
 		if (date.getDayOfWeek().getValue() == DayOfWeek.SUNDAY.getValue())

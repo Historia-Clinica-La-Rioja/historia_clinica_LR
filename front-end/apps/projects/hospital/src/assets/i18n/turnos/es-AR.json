@@ -93,10 +93,18 @@
 			"VALIDATION_PROTECTED_APPOINTMENT_PERCENTAGE_AND_CARELINE": "Ingrese 0 como porcentaje de turnos protegidos o agregue al menos una linea de cuidado.",
 			"MORE": "más",
 			"DURATION_OF_THE_CONSULTATION":"Duración de la consulta",
+			"CREATE_COLOR_LABEL": "Crear etiqueta de colores",
+			"COLOR_LABEL_DESCRIPTION": "Creá etiquetas de colores, para asignárselas a los turnos que tengan alguna característica especifica que quieras destacar. Esto no afectará a los colores de los estados de los turnos.",
+			"ADD_LABEL": "Agregar etiqueta",
 			"SECTOR": "Sector",
 			"HIERARCHICAL_UNIT": "Unidad Jerárquica",
 			"DIARY_TYPE": "Tipo de agenda",
 			"PRACTICE_PLACEHOLDER": "Seleccionar prácticas",
+			"DELETE_LABEL": "Eliminar etiqueta",
+			"DELETE_SUBTITLE": "Al confirmar, se eliminará la etiqueta de todos los turnos donde fue utilizada",
+			"DELETE_CONFIRMATION": "¿Eliminar etiqueta de todos modos?",
+			"OK_BUTTON_DELETE": "Sí, eliminar",
+			"CANCEL_BUTTON_DELETE": "No, cancelar",
 			"dialog": {
 				"TITLE": "Nueva franja horaria",
 				"EDIT": "Editar franja horaria",
@@ -113,7 +121,8 @@
 			},
 			"messages": {
 				"SUCCESS": "La agenda se guardó exitosamente",
-				"TURN_ERROR": "Error: Superposición de rango horario en consultorio"
+				"TURN_ERROR": "Error: Superposición de rango horario en consultorio",
+				"DIARY_LABEL_REQUIRED": "Debes completar la etiqueta"
 			}
 		},
 		"delete-agenda": {
@@ -216,6 +225,14 @@
 				"UPDATE_SUCCESS": "Las observaciones se han modificado correctamente",
 				"ADD_OBSERVATION": "+ Agregar observaciones",
 				"ADD_OBSERVATION_SUBTITLE": "Ingrese observaciones..."
+			},
+			"labels": {
+				"ADD_LABEL": "Agregar etiqueta",
+				"TITLE": "Etiqueta",
+				"SUBTITLE": "Para crear, editar o eliminar etiquetas dirigirse a Editar Agenda",
+				"ASSOCIATE_LABEL": "Asociar una Etiqueta",
+				"UPDATED_LABEL": "Se ha actualizado la etiqueta",
+				"ERROR_UPDATE_LABEL": "No se ha podido actualizar la etiqueta"
 			},
 			"reports": {
 				"DOWNLOAD_REPORT": "Descargar informe",

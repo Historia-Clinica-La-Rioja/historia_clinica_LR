@@ -71,4 +71,6 @@ public class DiaryADto {
 	private List<Integer> practicesId;
 
 	private Integer institutionId;
+    
+	private List<DiaryLabelDto> diaryLabelDto;
 }

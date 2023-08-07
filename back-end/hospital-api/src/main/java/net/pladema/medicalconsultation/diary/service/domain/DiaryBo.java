@@ -59,4 +59,9 @@ public class DiaryBo {
 	protected List<String> practices;
 
 	protected Integer institutionId;
+
+	protected Integer protectedAppointmentsPercentage;
+
+	protected List<DiaryLabelBo> diaryLabelBo;
+    
 }

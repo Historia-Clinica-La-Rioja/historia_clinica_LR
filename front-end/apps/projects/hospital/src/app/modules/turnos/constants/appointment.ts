@@ -166,3 +166,55 @@ export const MODALITYS_TYPES = [
 		description: MODALITYS[EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION]
 	}
 ]
+
+export const DIARY_LABEL_COLORS: COLOR[] = [
+	{
+		id: 1,
+		color: '#89ADFF'
+	},
+	{
+		id: 2,
+		color: '#D50000'
+	},
+	{
+		id: 3,
+		color: '#FFA29A'
+	},
+	{
+		id: 4,
+		color: '#F46B1E'
+	},
+	{
+		id: 5,
+		color: '#FFD55F'
+	},
+	{
+		id: 6,
+		color: '#009F4C'
+	},
+	{
+		id: 7,
+		color: '#A35AFF'
+	},
+	{
+		id: 8,
+		color: '#616161'
+	},
+	{
+		id: 9,
+		color: '#27BEFF'
+	},
+	{
+		id: 10,
+		color: '#08DDC3'
+	}
+];
+
+export function getDiaryLabel(id: number): COLOR {
+	return DIARY_LABEL_COLORS.find((diaryLabel: COLOR) => diaryLabel.id === id);
+}
+
+export interface COLOR {
+	id: number,
+	color: string,
+}

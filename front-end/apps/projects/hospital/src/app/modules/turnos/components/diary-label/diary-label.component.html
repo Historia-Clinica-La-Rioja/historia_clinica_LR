@@ -1,0 +1,8 @@
+<form [formGroup]="form">
+    <app-color-selector [colorList]="colorList" [currentColor]="currentColor" (newColor)="updateLabel(currentColor, $event)"></app-color-selector>
+    <mat-form-field appearance="fill">
+        <mat-label>{{'turnos.agenda-setup.ADD_LABEL' | translate}}</mat-label>
+        <input matInput formControlName="description">
+        <mat-error *ngIf="form.get('description').hasError('required')"> {{'turnos.agenda-setup.messages.DIARY_LABEL_REQUIRED' | translate}} </mat-error>
+    </mat-form-field>
+</form>
