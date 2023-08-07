@@ -12,16 +12,15 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import ar.lamansys.mqtt.domain.MqttMetadataBo;
 import ar.lamansys.mqtt.infraestructure.configuration.webSocket.QueueListener;
 import ar.lamansys.mqtt.infraestructure.input.service.MqttCallExternalService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-@Configuration
 @AllArgsConstructor
+@Slf4j
+@Configuration
 public class VirtualConsultationSubscriber {
 
 	private final MqttCallExternalService mqttCallExternalService;
@@ -38,26 +37,22 @@ public class VirtualConsultationSubscriber {
 	private List<Consumer<MqttMetadataBo>> getQueueListeners() {
 		return new ArrayList<>(List.of(m -> {
 			try {
-				String destinationSessionId = getDestinationSessionId(m.getMessage());
+				String[] communicationData = m.getMessage().split("-");
+				String destinationSessionId = getDestinationSessionId(Integer.valueOf(communicationData[1]));
 				if (destinationSessionId != null) {
 					SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
 					headerAccessor.setSessionId(destinationSessionId);
 					headerAccessor.setLeaveMutable(true);
-					template.convertAndSendToUser(destinationSessionId, "/queue/virtual-consultation-notification", m.getMessage(), headerAccessor.getMessageHeaders());
+					template.convertAndSendToUser(destinationSessionId, "/queue/virtual-consultation-notification", communicationData[0], headerAccessor.getMessageHeaders());
 				}
 			}
 			catch (Throwable e) {
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 		}));
 	}
 
-	private String getDestinationSessionId(String message) throws Exception {
-		ObjectMapper objectMapper = new ObjectMapper();
-		JsonNode jsonNode = objectMapper.readTree(message);
-		if (!jsonNode.has("responsibleUserId"))
-			throw new IllegalStateException("responsibleUserId is needed");
-		Integer userId = jsonNode.get("responsibleUserId").asInt();
+	private String getDestinationSessionId(Integer userId) {
 		for (Map.Entry<String, Integer> entry: queueListener.getActiveUserSessions().entrySet())
 			if (userId.equals(entry.getValue()))
 				return entry.getKey();

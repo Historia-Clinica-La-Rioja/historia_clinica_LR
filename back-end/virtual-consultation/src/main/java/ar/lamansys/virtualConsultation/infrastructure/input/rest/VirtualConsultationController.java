@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import ar.lamansys.virtualConsultation.application.changeResponsibleProfessionalAvailability.ChangeResponsibleProfessionalAvailabilityService;
 import ar.lamansys.virtualConsultation.application.getDomainVirtualConsultations.GetDomainVirtualConsultationsService;
+import ar.lamansys.virtualConsultation.application.getResponsibleUserIdByVirtualConsultationId.GetResponsibleUserIdByVirtualConsultationIdService;
 import ar.lamansys.virtualConsultation.application.getVirtualConsultationNotificationData.GetVirtualConsultationNotificationDataService;
 import ar.lamansys.virtualConsultation.application.getVirtualConsultationResponsibleProfessionalAvailability.GetVirtualConsultationResponsibleProfessionalAvailabilityService;
 import ar.lamansys.virtualConsultation.application.saveVirtualConsultation.SaveVirtualConsultationRequestService;
@@ -52,6 +53,8 @@ public class VirtualConsultationController {
 
 	private final ChangeResponsibleProfessionalAvailabilityService changeResponsibleProfessionalAvailabilityService;
 
+	private final GetResponsibleUserIdByVirtualConsultationIdService getResponsibleUserIdByVirtualConsultationIdService;
+
 	@PostMapping(value = "/{institutionId}")
 	public Integer saveVirtualConsultationRequest(@PathVariable(name = "institutionId") Integer institutionId,
 												  @RequestBody VirtualConsultationRequestDto virtualConsultation) {
@@ -74,11 +77,18 @@ public class VirtualConsultationController {
 	}
 
 	@PostMapping(value = "/notify/{virtualConsultationId}")
-	public void notifyVirtualConsultationCall(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId) throws JsonProcessingException {
+	public void notifyVirtualConsultationCall(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId) {
 		log.debug("Input parameters -> virtualConsultationId {}", virtualConsultationId);
-		VirtualConsultationNotificationDataDto notification = virtualConsultationMapper.fromVirtualConsultationNotificationDataBo(getVirtualConsultationNotificationDataService.run(virtualConsultationId));
-		ObjectMapper jsonMapper = new ObjectMapper();
-		virtualConsultationPublisher.publish("NOTIFY", jsonMapper.writeValueAsString(notification));
+		Integer responsibleUserId = getResponsibleUserIdByVirtualConsultationIdService.run(virtualConsultationId);
+		virtualConsultationPublisher.publish("NOTIFY", virtualConsultationId + "-" + responsibleUserId);
+	}
+
+	@GetMapping("/notification/{virtualConsultationId}")
+	public VirtualConsultationNotificationDataDto getVirtualConsultationCall(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId) {
+		log.debug("Input parameters -> virtualConsultationId {}", virtualConsultationId);
+		VirtualConsultationNotificationDataDto result = virtualConsultationMapper.fromVirtualConsultationNotificationDataBo(getVirtualConsultationNotificationDataService.run(virtualConsultationId));
+		log.debug("Output -> {}", result);
+		return result;
 	}
 
 	@PostMapping(value = "/{institutionId}/change-responsible-state")
