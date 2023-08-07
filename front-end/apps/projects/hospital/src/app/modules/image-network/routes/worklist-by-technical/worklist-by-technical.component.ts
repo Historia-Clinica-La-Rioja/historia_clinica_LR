@@ -173,8 +173,8 @@ export class WorklistByTechnicalComponent implements OnInit {
         this.startDate = this.filtersForm.get('datePicker').get('start').value?.format('YYYY-MM-DD');
         this.endDate = this.filtersForm.get('datePicker').get('end').value?.format('YYYY-MM-DD');
         if (this.startDate && this.endDate && this.equipmentId) {
+            this.worklistFilters.clearInputs();
             this.disableInputs();
-            this.setPreviousStates();
             this.getAppointments(this.equipmentId, this.startDate, this.endDate);
         }
     }

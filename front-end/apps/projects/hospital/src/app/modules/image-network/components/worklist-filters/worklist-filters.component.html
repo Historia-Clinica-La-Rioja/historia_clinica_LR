@@ -18,7 +18,6 @@
                 <mat-label>{{'image-network.worklist.filters.FILTER_BY_STATE' | translate }}</mat-label>
                 <mat-select #select formControlName="appointmentStates" (selectionChange)="onStatusChange($event)"
                     multiple>
-                    <mat-select-trigger>{{selectedStates}}</mat-select-trigger>
                     <mat-option *ngFor="let appointmentState of appointmentStatesList" (click)="checkSelection()"
                         [value]="appointmentState">{{appointmentState.description}}</mat-option>
                     <mat-divider class="dropdown-divider"></mat-divider>

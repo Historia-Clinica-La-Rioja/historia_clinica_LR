@@ -28,7 +28,6 @@ export class WorklistFiltersComponent implements OnInit {
     panelState: boolean;
     filtersForm: UntypedFormGroup;
     states = new UntypedFormControl('');
-    selectedStates: string = '';
     allSelected = false;
     searchFilters: SearchFilters;
     
@@ -51,12 +50,12 @@ export class WorklistFiltersComponent implements OnInit {
         }
     }
 
-    private clearInputs() {
+    clearInputs() {
         this.filtersForm?.get('patientName').setValue(null);
         this.filtersForm?.get('patientIdentification').setValue(null);
         this.searchFilters.patientName = '';
         this.searchFilters.patientIdentification = '';
-        this.search.emit(this.searchFilters);
+        this.searchFilters.appointmentStates = this.defaultStates;
     }
 
     private initializeFilters() {
@@ -75,7 +74,6 @@ export class WorklistFiltersComponent implements OnInit {
     }
 
     onStatusChange(states: MatSelectChange){
-        this.setSelectionText(states);
         this.searchFilters.appointmentStates = states.value;
         this.search.emit(this.searchFilters);
     }
@@ -124,16 +122,7 @@ export class WorklistFiltersComponent implements OnInit {
                 })
             });
         }
-    }
-
-    private setSelectionText(states: MatSelectChange){
-        this.selectedStates = '';
-        states.value.map(state => {
-            this.selectedStates = this.selectedStates.concat(state.description.toString(), ", ")
-        })
-        this.selectedStates = this.selectedStates.trim().slice(0, -1);
-    }
-    
+    }    
 }
 
 export interface SearchFilters {
