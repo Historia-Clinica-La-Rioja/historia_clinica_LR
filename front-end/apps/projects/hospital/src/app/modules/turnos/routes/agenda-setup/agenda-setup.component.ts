@@ -80,6 +80,7 @@ export class AgendaSetupComponent implements OnInit {
 	private mappedCurrentWeek = {};
 	lineOfCareAndPercentageOfProtectedAppointmentsValid = true;
 	loadSavedData = false;
+	temporary = false;
 	constructor(
 		private readonly el: ElementRef,
 		private readonly sectorService: SectorService,
@@ -114,7 +115,7 @@ export class AgendaSetupComponent implements OnInit {
 			sectorId: new UntypedFormControl(null, [Validators.required]),
 			doctorOffice: new UntypedFormControl(null, [Validators.required]),
 			healthcareProfessionalId: new UntypedFormControl(null, [Validators.required]),
-			healthcareProfessionalTemporaryId: new UntypedFormControl(null),
+			professionalReplacedId: new UntypedFormControl(null),
 			startDate: new UntypedFormControl(null, [Validators.required]),
 			endDate: new UntypedFormControl(null, [Validators.required]),
 			hierarchicalUnit: new UntypedFormControl(null),
@@ -123,7 +124,6 @@ export class AgendaSetupComponent implements OnInit {
 			healthcareProfessionalSpecialtyId: new UntypedFormControl(null, [Validators.required]),
 			conjointDiary: new UntypedFormControl(false, [Validators.nullValidator]),
 			temporaryReplacement: new UntypedFormControl(false),
-			professionalReplacedId: new UntypedFormControl(null, [Validators.nullValidator]),
 			alias: new UntypedFormControl(null, [Validators.nullValidator]),
 			otherProfessionals: new UntypedFormArray([], [this.otherPossibleProfessionals()]),
 			protectedAppointmentsPercentage: new UntypedFormControl({ value: 0, disabled: true }, [Validators.pattern(PATTERN), Validators.max(MAX_INPUT)]),
@@ -144,7 +144,7 @@ export class AgendaSetupComponent implements OnInit {
 				this.form.controls.hierarchicalUnitTemporary.clearValidators();
 				this.setHierarchicalUnits(this.form.value.healthcareProfessionalId);
 			}
-			this.form.controls.healthcareProfessionalTemporaryId.updateValueAndValidity();
+			this.form.controls.professionalReplacedId.updateValueAndValidity();
 		});
 
 
@@ -194,6 +194,15 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	private setValuesFromExistingAgenda(diary: CompleteDiaryDto): void {
+
+		if (diary.predecessorProfessionalId) {
+			this.temporary = true;
+			this.form.controls.professionalReplacedId.setValue(diary.predecessorProfessionalId);
+			this.form.controls.hierarchicalUnitTemporary.setValue(this.hierarchicalUnits.filter(e => e.name === diary.hierarchicalUnitAlias));
+			this.form.controls.temporaryReplacement.setValue(true);
+			this.form.get('professionalReplacedId').disable();
+			this.form.get('hierarchicalUnit').disable();
+		}
 		this.form.controls.sectorId.setValue(diary.sectorId);
 		this.doctorsOfficeService.getAll(diary.sectorId)
 			.subscribe((doctorsOffice: DoctorsOfficeDto[]) => {
@@ -262,8 +271,7 @@ export class AgendaSetupComponent implements OnInit {
 	private setHierarchicalUnitsByName(name: string) {
 		this.loadSavedData = true;
 		this.form.controls.hierarchicalUnit.setValue(this.hierarchicalUnits.filter(e => e.name === name));
-		this.form.controls.healthcareProfessionalTemporaryId.updateValueAndValidity();
-
+		this.form.controls.professionalReplacedId.updateValueAndValidity();
 	}
 
 	private setSpecialityId(healthcareProfesionalId) {
@@ -396,7 +404,7 @@ export class AgendaSetupComponent implements OnInit {
 			healthcareProfessionalId: this.form.getRawValue().healthcareProfessionalId,
 			doctorsOfficeId: this.form.getRawValue().doctorOffice.id,
 
-			predecessorProfessionalId: this.form.value.temporaryReplacement ? this.form.value.healthcareProfessionalTemporaryId : null,
+			predecessorProfessionalId: this.form.value?.professionalReplacedId ,
 			hierarchicalUnitId: this.form.value.temporaryReplacement ? this.form.value?.hierarchicalUnitTemporary : this.form.value?.hierarchicalUnit,
 
 			startDate: momentFormat(this.form.value.startDate, DateFormat.API_DATE),

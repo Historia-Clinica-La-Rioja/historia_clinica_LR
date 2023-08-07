@@ -40,7 +40,7 @@
 						</mat-form-field>
 					</div>
 				</div>
-				<div *ngIf="form.value.temporaryReplacement" style="padding-top: 20px" fxLayout="row">
+				<div *ngIf="form.value.temporaryReplacement || temporary" style="padding-top: 20px" fxLayout="row">
 
 					<div class="professional-form-sector" fxLayout="column">
 						<span [translate]="'turnos.agenda-setup.PROFESSIONAL_REMPLACEMENT'"></span>
