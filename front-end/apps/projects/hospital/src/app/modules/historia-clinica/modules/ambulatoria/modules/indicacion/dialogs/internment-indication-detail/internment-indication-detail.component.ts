@@ -16,7 +16,8 @@ export class InternmentIndicationDetailComponent implements OnInit {
 
 	title: string;
 	information: ExtraInfo[] = [];
-	vias: any[] = [];
+	viasParenteralPlan: any[] = [];
+	viasPharmaco: any[] = [];
 	othersIndicatiosType: OtherIndicationTypeDto[] = [];
 	patientProvided = false;
 	foodRelationId = 0;
@@ -36,7 +37,12 @@ export class InternmentIndicationDetailComponent implements OnInit {
 	ngOnInit(): void {
 		this.internacionMasterdataService.getVias().subscribe(
 			v => {
-				this.vias = v;
+				this.viasParenteralPlan = v;
+				this.loadInformation();
+			});
+		this.internacionMasterdataService.getViasPharmaco().subscribe(
+			v => {
+				this.viasPharmaco = v;
 				this.loadInformation();
 			});
 
@@ -81,7 +87,7 @@ export class InternmentIndicationDetailComponent implements OnInit {
 
 	loadPharmacoInformation(pharmaco: PharmacoDto): ExtraInfo[] {
 		let information: ExtraInfo[] = [];
-		information = loadExtraInfoPharmaco(pharmaco, true, this.vias);
+		information = loadExtraInfoPharmaco(pharmaco, true, this.viasPharmaco);
 		if (pharmaco.solvent) {
 			information = information.concat([{
 				title: 'indicacion.internment-card.sections.indication-extra-description.SOLVENT',
@@ -96,7 +102,7 @@ export class InternmentIndicationDetailComponent implements OnInit {
 
 	loadParenteralPlanInformation(parenteralPlan: ParenteralPlanDto): ExtraInfo[] {
 		let information: ExtraInfo[] = [];
-		information = loadExtraInfoParenteralPlan(parenteralPlan, this.vias);
+		information = loadExtraInfoParenteralPlan(parenteralPlan, this.viasParenteralPlan);
 
 		if (parenteralPlan.frequency) {
 			information = information.concat(showFrequency(parenteralPlan.dosage));
