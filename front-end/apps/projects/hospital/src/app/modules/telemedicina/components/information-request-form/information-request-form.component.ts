@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { CareLineDto } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto } from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ContextService } from '@core/services/context.service';
 import { Patient } from '@pacientes/component/search-patient/search-patient.component';
@@ -17,6 +17,10 @@ export class InformationRequestFormComponent implements OnInit {
 	careLines: CareLineDto[];
 	careLinesTypeahead: TypeaheadOption<CareLineDto>[] = [];
 	showCareLineError = false;
+	specialties: ClinicalSpecialtyDto[];
+	specialtyTypeaheadOptions: TypeaheadOption<ClinicalSpecialtyDto>[] = [];
+	showSpecialtyError = false;
+
 	constructor(private carelineService: CareLineService, private contextService: ContextService,
 		private readonly formBuilder: UntypedFormBuilder) { }
 
@@ -31,12 +35,25 @@ export class InformationRequestFormComponent implements OnInit {
 	private initForm(): void {
 		this.informationForm = this.formBuilder.group({
 			careLine: [null, Validators.required],
+			specialty: [null, Validators.required],
 		});
 	}
 
 	setCareLine(careLine: CareLineDto) {
 		this.informationForm.controls.careLine.setValue(careLine);
 		this.showCareLineError = false;
+		if (careLine) {
+			this.specialties = careLine.clinicalSpecialties;
+			this.specialtyTypeaheadOptions = this.specialties.map(s => this.specialtyToTypeaheadOption(s));
+		} else {
+			this.specialties = [];
+			this.specialtyTypeaheadOptions = [];
+		}
+	}
+
+	setClinicalSpecialty(clinicalSpecialty: ClinicalSpecialtyDto) {
+		this.informationForm.controls.specialty.setValue(clinicalSpecialty);
+		this.showSpecialtyError = false;
 	}
 
 	private toCareLinesDtoTypeahead(careLine: CareLineDto): TypeaheadOption<CareLineDto> {
@@ -44,6 +61,14 @@ export class InformationRequestFormComponent implements OnInit {
 			compareValue: careLine.description,
 			value: careLine,
 			viewValue: careLine.description
+		};
+	}
+
+	private specialtyToTypeaheadOption(specialty: ClinicalSpecialtyDto): TypeaheadOption<ClinicalSpecialtyDto> {
+		return {
+			compareValue: specialty.name,
+			value: specialty,
+			viewValue: specialty.name
 		};
 	}
 

@@ -9,4 +9,12 @@
 			<mat-error *ngIf="showCareLineError">{{ 'forms.REQUIRED' | translate }}</mat-error>
 		</div>
 	</section>
+
+	<section>
+		<p>{{'telemedicina.requests.form.SPECIALTY' | translate}}</p>
+		<app-typeahead data-id="specialty-typeahead" [options]="specialtyTypeaheadOptions" (selectionChange)="setClinicalSpecialty($event)"></app-typeahead>
+		<div class="error-space">
+			<mat-error *ngIf="showSpecialtyError">{{ 'forms.REQUIRED' | translate }}</mat-error>
+		</div>
+	</section>
 </div>

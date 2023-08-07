@@ -8,7 +8,8 @@
 			"TITLE_ADD_REQUEST":"Solicitud de consulta online",
 			"form": {
 				"PATIENT":"Paciente",
-				"CARELINE": "Línea de cuidado"
+				"CARELINE": "Línea de cuidado",
+				"SPECIALTY": "Especialidad"
 			}
 		}
 	}
