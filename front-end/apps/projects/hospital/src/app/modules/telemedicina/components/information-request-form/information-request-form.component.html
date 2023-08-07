@@ -1,4 +1,12 @@
-<section>
-	<p class="title">{{'telemedicina.requests.form.PATIENT' | translate}}</p>
-	<app-patient-card></app-patient-card>
-</section>
+<div>
+	<p>{{'telemedicina.requests.form.PATIENT' | translate}}</p>
+	<app-patient-card (patient)="patient"></app-patient-card>
+
+	<section>
+		<p>{{'telemedicina.requests.form.CARELINE' | translate}}</p>
+		<app-typeahead data-id="careline-typeahead" [options]="careLinesTypeahead" (selectionChange)="setCareLine($event)"></app-typeahead>
+		<div class="error-space">
+			<mat-error *ngIf="showCareLineError">{{ 'forms.REQUIRED' | translate }}</mat-error>
+		</div>
+	</section>
+</div>

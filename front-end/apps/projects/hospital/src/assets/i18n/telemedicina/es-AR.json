@@ -7,7 +7,8 @@
 			"BUTTON_ADD":"+ Agregar nuevo paciente",
 			"TITLE_ADD_REQUEST":"Solicitud de consulta online",
 			"form": {
-				"PATIENT":"Paciente"
+				"PATIENT":"Paciente",
+				"CARELINE": "Línea de cuidado"
 			}
 		}
 	}
