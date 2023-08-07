@@ -93,6 +93,14 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
     }
 
     @Override
+    public Integer getUserIdHealthcareProfessionalId(Integer healthcareProfessionalId) {
+        LOG.debug("Input parameters -> healthcareProfessionalId {}", healthcareProfessionalId);
+        Integer result = healthcareProfessionalRepository.getUserIdByHealthcareProfessionalId(healthcareProfessionalId);
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+	 @Override
     public Integer getProfessionalId(Integer userId) {
         LOG.debug("Input parameters -> userId {}", userId);
         Integer result = healthcareProfessionalRepository.getProfessionalId(userId);
