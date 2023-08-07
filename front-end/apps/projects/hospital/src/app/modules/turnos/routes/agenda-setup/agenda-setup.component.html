@@ -13,7 +13,7 @@
 							<mat-select id="healthcareProfessionalId" name="healthcareProfessionalId"
 								formControlName="healthcareProfessionalId"
 								placeholder="{{'pacientes.form.SELECT' | translate}}"
-								(selectionChange)="getProfessionalSpecialties();getHierarchicalUnits()">
+								(selectionChange)="getProfessionalSpecialties()">
 								<mat-option *ngFor="let professional of professionals" [value]="professional.id">
 									<span class="mat-body">{{getFullName(professional)}}</span>
 								</mat-option>
@@ -32,8 +32,7 @@
 						<span>{{ 'turnos.agenda-setup.HIERARCHICAL_UNIT' | translate }}</span>
 						<mat-form-field class="mat-form-field-on-div" appearance="outline" >
 							<mat-select id="hierarchicalUnit" name="hierarchicalUnit" formControlName="hierarchicalUnit"
-								placeholder="{{'pacientes.form.SELECT' | translate}}"
-								(selectionChange)="getHierarchicalUnits()">
+								placeholder="{{'pacientes.form.SELECT' | translate}}">
 								<mat-option *ngFor="let hu of hierarchicalUnits" [value]="hu.id" >
 									<span class="mat-body">{{hu.name}}</span>
 								</mat-option>
@@ -62,8 +61,7 @@
 						<span>{{ 'turnos.agenda-setup.HIERARCHICAL_UNIT' | translate }}</span>
 						<mat-form-field class="mat-form-field-on-div" appearance="outline">
 							<mat-select id="hierarchicalUnitTemporary" name="hierarchicalUnitTemporary" formControlName="hierarchicalUnitTemporary"
-								placeholder="{{'pacientes.form.SELECT' | translate}}"
-								(selectionChange)="getHierarchicalUnits()">
+								placeholder="{{'pacientes.form.SELECT' | translate}}">
 								<mat-option *ngFor="let hu of hierarchicalUnits" [value]="hu.id">
 									<span class="mat-body">{{hu.name}}</span>
 								</mat-option>

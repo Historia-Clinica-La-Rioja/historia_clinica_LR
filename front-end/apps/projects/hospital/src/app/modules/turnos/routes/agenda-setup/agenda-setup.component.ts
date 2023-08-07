@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { DAYS_OF_WEEK } from 'angular-calendar';
-import { Observable } from 'rxjs';
+import { Observable, filter, switchMap } from 'rxjs';
 
 import { getError, hasError, processErrors, scrollIntoError } from '@core/utils/form.utils';
 import { ContextService } from '@core/services/context.service';
@@ -32,6 +32,7 @@ import { PatientNameService } from "@core/services/patient-name.service";
 import { SpecialtyService } from '@api-rest/services/specialty.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { HierarchicalUnitsService } from '@api-rest/services/hierarchical-units.service';
+import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 
 const ROUTE_APPOINTMENT = 'turnos';
 const ROUTE_AGENDAS = "agenda";
@@ -97,6 +98,7 @@ export class AgendaSetupComponent implements OnInit {
 		private readonly specialtyService: SpecialtyService,
 		private readonly carelineService: CareLineService,
 		private readonly hierarchicalUnitsService: HierarchicalUnitsService,
+		private readonly professionalService: HealthcareProfessionalService
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY, snackBarService);
@@ -133,15 +135,33 @@ export class AgendaSetupComponent implements OnInit {
 
 		this.form.controls.temporaryReplacement.valueChanges.subscribe((temporaryReplacement: boolean) => {
 			if (temporaryReplacement) {
+				this.form.controls.hierarchicalUnitTemporary.setValue(null);
 				this.form.controls.professionalReplacedId.setValidators([Validators.required]);
 				this.form.controls.hierarchicalUnitTemporary.setValidators([Validators.required]);
-
 			} else {
+				this.form.controls.hierarchicalUnit.setValue(null);
 				this.form.controls.professionalReplacedId.clearValidators();
 				this.form.controls.hierarchicalUnitTemporary.clearValidators();
+				this.setHierarchicalUnits(this.form.value.healthcareProfessionalId);
 			}
 			this.form.controls.healthcareProfessionalTemporaryId.updateValueAndValidity();
 		});
+
+
+		this.form.controls.healthcareProfessionalId.valueChanges.pipe(filter(healthcareProfessionalId => !!healthcareProfessionalId)).subscribe((healthcareProfessionalId: number) => {
+			this.form.controls.hierarchicalUnitTemporary.setValue(null);
+			if (!this.form.value.temporaryReplacement) {
+				this.setHierarchicalUnits(healthcareProfessionalId);
+			}
+		});
+
+		this.form.controls.professionalReplacedId.valueChanges.pipe(filter(healthcareProfessionalId => !!healthcareProfessionalId)).subscribe((healthcareProfessionalId: number) => {
+			this.form.controls.hierarchicalUnit.setValue(null);
+			if (this.form.value.temporaryReplacement) {
+				this.setHierarchicalUnits(healthcareProfessionalId);
+			}
+		});
+
 
 		this.route.data.subscribe(data => {
 			if (data["editMode"]) {
@@ -175,7 +195,6 @@ export class AgendaSetupComponent implements OnInit {
 
 	private setValuesFromExistingAgenda(diary: CompleteDiaryDto): void {
 		this.form.controls.sectorId.setValue(diary.sectorId);
-
 		this.doctorsOfficeService.getAll(diary.sectorId)
 			.subscribe((doctorsOffice: DoctorsOfficeDto[]) => {
 				this.doctorOffices = doctorsOffice;
@@ -390,9 +409,24 @@ export class AgendaSetupComponent implements OnInit {
 		scrollbar?.scrollTo(0, this.PIXEL_SIZE_HEIGHT * this.TURN_STARTING_HOUR * this.hourSegments);
 	}
 
-	getHierarchicalUnits() {
-		this.hierarchicalUnitsService.fetchAllByUserIdAndInstitutionId(this.form.value.healthcareProfessionalId)
-			.subscribe(response => this.hierarchicalUnits = response)
+	setHierarchicalUnits(healthcareProfessionalId: number) {
+		return this.professionalService.geUserIdByHealthcareProfessional(healthcareProfessionalId).pipe(
+			switchMap((userId: number) =>
+				this.hierarchicalUnitsService.fetchAllByUserIdAndInstitutionId(userId)
+			)
+		).subscribe(response => {
+			this.hierarchicalUnits = response;
+			if (this.hierarchicalUnits.length) {
+				if (!this.form.value.temporaryReplacement) {
+					this.form.controls.hierarchicalUnit.setValue(this.hierarchicalUnits[0].id);
+					this.form.controls.hierarchicalUnit.updateValueAndValidity();
+				}
+				if (this.form.value.temporaryReplacement) {
+					this.form.controls.hierarchicalUnitTemporary.setValue(this.hierarchicalUnits[0].id);
+					this.form.controls.hierarchicalUnitTemporary.updateValueAndValidity();
+				}
+			}
+		});
 	}
 
 	getProfessionalSpecialties() {
