@@ -3755,6 +3755,15 @@ export interface ViewerUrlDto {
     url: string;
 }
 
+export interface VirtualConsultationRequestDto {
+    careLineId: number;
+    clinicalSpecialtyId: number;
+    motiveId: number;
+    patientId: number;
+    priority: EVirtualConsultationPriority;
+    problemId: number;
+}
+
 export interface WorklistDto {
     actionTime: DateTimeDto;
     appointmentId: number;
@@ -3952,6 +3961,12 @@ export const enum ESurfacePositionDto {
     LEFT = "LEFT",
     RIGHT = "RIGHT",
     CENTRAL = "CENTRAL",
+}
+
+export const enum EVirtualConsultationPriority {
+    LOW = "LOW",
+    MEDIUM = "MEDIUM",
+    HIGH = "HIGH",
 }
 
 export const enum SnomedECL {
