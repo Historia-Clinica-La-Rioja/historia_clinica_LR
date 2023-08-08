@@ -2,15 +2,16 @@ import { Injectable } from "@angular/core";
 import { HCEPersonalHistoryDto, ReferenceProblemDto } from "@api-rest/api-model";
 import { mapToString } from "@api-rest/mapper/date-dto.mapper";
 import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
-import { forkJoin } from "rxjs";
+import { BehaviorSubject, forkJoin, Observable } from "rxjs";
 import { HCEPersonalHistory } from "../dialogs/reference/reference.component";
 
 @Injectable()
 
 export class ReferenceProblemsService {
 
-    problemsList: any[] = [];
+	problemsList: any[] = [];
     referenceProblems: ReferenceProblemDto[] = [];
+	private problemSubject = new BehaviorSubject<ReferenceProblemDto[]>([]);
 
     constructor(private readonly hceGeneralStateService: HceGeneralStateService) { }
 
@@ -41,7 +42,12 @@ export class ReferenceProblemsService {
         else {
             this.referenceProblems = [];
         }
+		this.problemSubject.next(this.referenceProblems);
     }
+
+	getProblems(): Observable<ReferenceProblemDto[]> {
+		return this.problemSubject.asObservable();
+	}
 
     setProblems(data: any): HCEPersonalHistory[] {
 

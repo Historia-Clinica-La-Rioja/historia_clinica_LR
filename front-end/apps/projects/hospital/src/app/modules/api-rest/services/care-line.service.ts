@@ -42,8 +42,22 @@ export class CareLineService {
 		return this.http.get<CareLineDto[]>(url, { params });
 	}
 
+	getByProblemSnomedSctids(problemSnomedSctids: string[]) {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/carelines/by-problems`;
+		let params = new HttpParams();
+		params = params.append('snomedSctids', problemSnomedSctids.join(', '));
+		return this.http.get<CareLineDto[]>(url, { params });
+	 }
+
 	getCareLinesAttachedToInstitution(institutionId: number): Observable<CareLineDto[]> {
 		const url = `${environment.apiBase}/institution/${institutionId}/carelines/attached`;
 		return this.http.get<CareLineDto[]>(url);
 	}
+
+	getAllByProblemsAndProvince(problemSnomedIds: string[]) {
+        const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/carelines/problems`;
+        let params = new HttpParams();
+        params = params.append('snomedSctids', problemSnomedIds.join(', '));
+        return this.http.get<CareLineDto[]>(url, { params });
+    }
 }

@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 export class DiaryAvailableAppointmentsSearchService {
 
   constructor(
-    private http: HttpClient,
+    private http: HttpClient
   ) { }
 
   getAvailableProtectedAppointments(institutionId: number, filters: ProtectedAppointmentsFilter): Observable<DiaryAvailableProtectedAppointmentsDto[]> {
@@ -20,19 +20,6 @@ export class DiaryAvailableAppointmentsSearchService {
     const url = `${environment.apiBase}/institutions/${institutionId}/medicalConsultations/available-appointments/protected`;
     return this.http.get<DiaryAvailableProtectedAppointmentsDto[]>(url, { params: queryParams });
   }
-
-  getActiveDiariesInInstitutionByClinicalSpecialty(institutionId: number, clinicalSpecialtyId: number, careLineId?: number,): Observable<number>{
-
-	const url = `${environment.apiBase}/institutions/${institutionId}/medicalConsultations/available-appointments/by-specialty/${clinicalSpecialtyId}`
-
-	if(careLineId) {
-		const queryParams = { careLineId: careLineId.toString() };
-		return this.http.get<number>(url, { params: queryParams });
-	}
-	else
-		return this.http.get<number>(url);
-
-  };
 
 }
 

@@ -2,28 +2,20 @@
 	{{'ambulatoria.paciente.nueva-consulta.reference-dialog.RECEIVER' | translate}}
 </h2>
 <div class="typeahead-field">
-	<app-typeahead id="departmentDestination" [options]="departments" [externalSetValue]="defaultDepartment"
+	<app-typeahead id="departmentDestination" [disabled]="departmentDisable" [options]="departments"
+		[externalSetValue]="defaultDepartment"
 		[titleInput]="'ambulatoria.paciente.nueva-consulta.reference-dialog.DEPARTMENT' | translate"
-		[disabled]="departmentDisable" (selectionChange)="onDepartmentSelectionChange($event)">
+		(selectionChange)="onDepartmentSelectionChange($event)">
 	</app-typeahead>
+	<mat-error class="error-message" *ngIf="!departmentId && submitForm" [translate]="'forms.REQUIRED'"></mat-error>
 </div>
 
 <div class="typeahead-field">
-	<app-typeahead id="institutionDestination" [options]="institutions" [externalSetValue]="defaultInstitution"
+	<app-typeahead id="institutionDestination" [disabled]="institutionsDisable" [options]="institutions"
+		[externalSetValue]="defaultInstitution"
 		[titleInput]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_INSTITUTION' | translate"
 		(selectionChange)="onInstitutionSelectionChange($event)" [required]=true spellcheck="false">
 	</app-typeahead>
 	<mat-error class="error-message" *ngIf="!institutionDestinationId && submitForm"
 		[translate]="'forms.REQUIRED'"></mat-error>
 </div>
-
-<ng-container *ngIf="institutionSelection">
-	<ng-container *ngIf="isDayGreaterThanZero; else notAvailableAppointment">
-		<span class="green">{{ day | async }} turnos disponibles en los próximos 60 días</span>
-	</ng-container>
-
-	<ng-template #notAvailableAppointment>
-		<span class="warn">
-			{{'ambulatoria.paciente.nueva-consulta.reference-dialog.NOT_AVAILABLE_APPOINTMENT'|translate}}</span>
-	</ng-template>
-</ng-container>

@@ -77,7 +77,8 @@
 
 				<div>
 					<app-carelines-and-specialties-reference [formReference]="formReference"
-						[setProvinceId]="provinceId" (resetControls)="resetControls()"
+						[updateFormFields]="referenceProblemsService.getProblems()|async" [setProvinceId]="provinceId"
+						(resetControls)="resetControls()"
 						(updateDepartamentsAndInstitution)="activateSpecialtiesAndCarelineFields()">
 					</app-carelines-and-specialties-reference>
 
@@ -98,10 +99,10 @@
 						</mat-radio-group>
 					</div>
 
-					<app-destination-institution-reference [submitForm]="submitForm"
+					<app-destination-institution-reference [formReference]="formReference" [submitForm]="submitForm"
 						[updateFormFields]="updateDepartamentsAndInstitution"
 						[careLine]="formReference.value.careLine?.id"
-						[clinicalSpecialty]="formReference.value.clinicalSpecialtyId?.id" [provinceId]="provinceId"
+						[clinicalSpecialty]="formReference.value.clinicalSpecialtyId?.id"
 						(provinceSelected)="onProvinceSelectionChange($event)"
 						(departmentSelected)="onDepartmentSelectionChange($event)"
 						(institutionSelected)="onInstitutionSelectionChange($event)">

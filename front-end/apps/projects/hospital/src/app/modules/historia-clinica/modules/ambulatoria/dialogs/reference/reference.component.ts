@@ -21,6 +21,7 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 	DEFAULT_RADIO_OPTION = true;
 	submitForm = false;
 	updateDepartamentsAndInstitution = false;
+	updateSpecialtiesAndCarelineFields = false;
 	clearCarelinesAndSpecialties = false;
 	priorities$: Observable<MasterDataDto[]>;
 
@@ -29,10 +30,10 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: any,
+		readonly referenceProblemsService: ReferenceProblemsService,
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly dialogRef: MatDialogRef<ReferenceComponent>,
 		private changeDetector: ChangeDetectorRef,
-		private readonly referenceProblemsService: ReferenceProblemsService,
 		private readonly referenceMasterData: ReferenceMasterDataService,
 		private readonly referenceOriginInstitutionService: ReferenceOriginInstitutionService,
 	) { }
@@ -111,17 +112,23 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 
 	onInstitutionSelectionChange(institutionId: number) {
 		this.formReference.controls.institutionDestinationId.setValue(institutionId);
-		this.activateSpecialtiesAndCarelineFields()
+		this.activateSpecialtiesAndCarelineFields();
+		this.activateDepartamentsAndInstitution();
 	}
 
-	activateSpecialtiesAndCarelineFields() {
+	activateDepartamentsAndInstitution() {
 		this.updateDepartamentsAndInstitution = true;
 	}
 
 	resetControls() {
+		this.updateSpecialtiesAndCarelineFields = false;
 		this.clearCarelinesAndSpecialties = false;
 		this.changeDetector.detectChanges();
 	}
+
+	activateSpecialtiesAndCarelineFields() {
+        this.updateSpecialtiesAndCarelineFields = true;
+    }
 
 	private createReferenceForm() {
 		this.formReference = this.formBuilder.group({

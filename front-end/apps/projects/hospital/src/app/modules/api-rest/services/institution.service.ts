@@ -49,7 +49,17 @@ export class InstitutionService {
 		return this.http.get<InstitutionBasicInfoDto[]>(`${environment.apiBase}/institution/department/${departmentId}`);
 	}
 
-	public findByProvinceId (provinceId: number): Observable<InstitutionBasicInfoDto[]> {
+	public findByProvinceId(provinceId: number): Observable<InstitutionBasicInfoDto[]> {
 		return this.http.get<InstitutionBasicInfoDto[]>(`${environment.apiBase}/institution/province/${provinceId}`);
+	}
+
+	getInstitutionsByDepartmentHavingClinicalSpecialty( departmentId: number,clinicalSpecialtyId: number, careLine: number): Observable<InstitutionBasicInfoDto[]> {
+		const url = `${environment.apiBase}/institution/by-department/${departmentId}/with-specialty/${clinicalSpecialtyId}`;
+		if (careLine) {
+			const queryParams = { careLine: careLine.toString() };
+			return this.http.get<any[]>(url, { params: queryParams });
+		}
+		else
+			return this.http.get<any[]>(url);
 	}
 }

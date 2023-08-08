@@ -3,13 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import { DepartmentDto } from '@api-rest/api-model';
+import { ContextService } from '@core/services/context.service';
 @Injectable({
 	providedIn: 'root'
 })
 export class AddressMasterDataService {
 
 	constructor(
-		private http: HttpClient
+		private http: HttpClient,
+		private readonly contextService: ContextService,
 	) { }
 
 	getAllCountries(): Observable<any[]> {
@@ -48,8 +50,15 @@ export class AddressMasterDataService {
 		return this.http.get<any[]>(url, { params: queryParams });
 	};
 
-	getDepartmentsByProvinceHavingClinicalSpecialty(provinceId: number, clinicalSpecialtyId: number) {
-		const url = `${environment.apiBase}/address/masterdata/province/${provinceId}/departments/with-specialty/${clinicalSpecialtyId}`;
-		return this.http.get<any[]>(url);
+
+	getDepartmentsForReference(clinicalSpecialtyId: number, careLineId?: number) {
+		const url = `${environment.apiBase}/address/masterdata/institution/${this.contextService.institutionId}/departments/with-specialty/${clinicalSpecialtyId}`;
+		if (careLineId) {
+			const queryParams = { careLineId: careLineId.toString() };
+			return this.http.get<any[]>(url, { params: queryParams });
+		}
+		else
+			return this.http.get<any[]>(url);
+
 	}
 }
