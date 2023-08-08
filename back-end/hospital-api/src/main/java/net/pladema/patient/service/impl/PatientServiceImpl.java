@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatientType;
 import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
@@ -179,6 +180,10 @@ public class PatientServiceImpl implements PatientService {
 	@Override
 	public Patient addPatient(Patient patientToSave) {
 		LOG.debug("Going to save -> {}", patientToSave);
+		Short auditTypeId = patientToSave.getAuditTypeId();
+		if (auditTypeId == null){
+			patientToSave.setAuditTypeId(EAuditType.UNAUDITED.getId());
+		}
 		boolean shouldPersistPatientHistory = hasDifferentPatientData(patientToSave);
 		Patient patientSaved = patientRepository.save(patientToSave);
 		if(shouldPersistPatientHistory)
