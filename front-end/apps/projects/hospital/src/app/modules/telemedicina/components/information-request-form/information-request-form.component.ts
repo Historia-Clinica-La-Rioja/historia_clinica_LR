@@ -3,8 +3,11 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { CareLineDto, ClinicalSpecialtyDto, EVirtualConsultationPriority } from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ContextService } from '@core/services/context.service';
+import { MotivoConsulta } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
 import { Patient } from '@pacientes/component/search-patient/search-patient.component';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
+
+const REASON_LIMIT = 1;
 
 @Component({
 	selector: 'app-information-request-form',
@@ -20,8 +23,9 @@ export class InformationRequestFormComponent implements OnInit {
 	specialties: ClinicalSpecialtyDto[];
 	specialtyTypeaheadOptions: TypeaheadOption<ClinicalSpecialtyDto>[] = [];
 	showSpecialtyError = false;
-
+	showReasonsConsultationError = false;
 	showPriorityError = false;
+	reasonLimit = REASON_LIMIT;
 
 	constructor(private carelineService: CareLineService, private contextService: ContextService,
 		private readonly formBuilder: UntypedFormBuilder) { }
@@ -39,6 +43,7 @@ export class InformationRequestFormComponent implements OnInit {
 			careLine: [null, Validators.required],
 			specialty: [null, Validators.required],
 			priority: [null, Validators.required],
+			motive: [null, Validators.required],
 		});
 	}
 
@@ -62,6 +67,11 @@ export class InformationRequestFormComponent implements OnInit {
 	setPriority(priorization: EVirtualConsultationPriority) {
 		this.informationForm.controls.priority.setValue(priorization);
 		this.showPriorityError = false;
+	}
+
+	setMotive(motive: MotivoConsulta) {
+		this.informationForm.controls.motive.setValue(motive);
+		this.showReasonsConsultationError = false;
 	}
 
 	private toCareLinesDtoTypeahead(careLine: CareLineDto): TypeaheadOption<CareLineDto> {

@@ -8,6 +8,9 @@ import { RequestsComponent } from './components/requests/requests.component';
 import { NewTelemedicineRequestComponent } from './dialogs/new-telemedicine-request/new-telemedicine-request.component';
 import { InformationRequestFormComponent } from './components/information-request-form/information-request-form.component';
 import { PacientesModule } from '@pacientes/pacientes.module';
+import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
+import { CoreModule } from '@core/core.module';
+import { ButtonAndMotiveListComponent } from './components/button-and-motive-list/button-and-motive-list.component';
 
 
 
@@ -17,6 +20,7 @@ import { PacientesModule } from '@pacientes/pacientes.module';
 		RequestsComponent,
 		NewTelemedicineRequestComponent,
 		InformationRequestFormComponent,
+		ButtonAndMotiveListComponent
 	],
 	imports: [
 		CommonModule,
@@ -24,6 +28,8 @@ import { PacientesModule } from '@pacientes/pacientes.module';
 		LazyMaterialModule,
 		PresentationModule,
 		PacientesModule,
+		HistoriaClinicaModule,
+		CoreModule,
 	]
 })
 export class TelemedicinaModule { }

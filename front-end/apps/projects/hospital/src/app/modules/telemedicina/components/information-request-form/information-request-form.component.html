@@ -4,7 +4,8 @@
 
 	<section>
 		<p>{{'telemedicina.requests.form.CARELINE' | translate}}</p>
-		<app-typeahead data-id="careline-typeahead" [options]="careLinesTypeahead" (selectionChange)="setCareLine($event)"></app-typeahead>
+		<app-typeahead data-id="careline-typeahead" [options]="careLinesTypeahead"
+			(selectionChange)="setCareLine($event)"></app-typeahead>
 		<div class="error-space">
 			<mat-error *ngIf="showCareLineError">{{ 'forms.REQUIRED' | translate }}</mat-error>
 		</div>
@@ -12,12 +13,19 @@
 
 	<section>
 		<p>{{'telemedicina.requests.form.SPECIALTY' | translate}}</p>
-		<app-typeahead data-id="specialty-typeahead" [options]="specialtyTypeaheadOptions" (selectionChange)="setClinicalSpecialty($event)"></app-typeahead>
+		<app-typeahead data-id="specialty-typeahead" [options]="specialtyTypeaheadOptions"
+			(selectionChange)="setClinicalSpecialty($event)"></app-typeahead>
 		<div class="error-space">
 			<mat-error *ngIf="showSpecialtyError">{{ 'forms.REQUIRED' | translate }}</mat-error>
 		</div>
 	</section>
-
+	<section>
+		<p>{{'telemedicina.requests.form.REASONS_CONSULTATION' | translate}}</p>
+		<app-button-and-motive-list [limit]="reasonLimit" (selectionChange)="setMotive($event)"></app-button-and-motive-list>
+		<div class="error-space">
+			<mat-error *ngIf="showReasonsConsultationError">{{ 'forms.REQUIRED' | translate }}</mat-error>
+		</div>
+	</section>
 	<section>
 		<p>{{'telemedicina.requests.form.PRIORIZATION' | translate}}</p>
 		<app-priority-select data-id="priority-select" (selectionChange)="setPriority($event)"></app-priority-select>

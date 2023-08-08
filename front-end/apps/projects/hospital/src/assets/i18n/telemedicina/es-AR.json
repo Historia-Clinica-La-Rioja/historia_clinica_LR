@@ -10,7 +10,8 @@
 				"PATIENT":"Paciente",
 				"CARELINE": "Línea de cuidado",
 				"SPECIALTY": "Especialidad",
-				"PRIORIZATION": "Criterio de priorización"
+				"PRIORIZATION": "Criterio de priorización",
+				"REASONS_CONSULTATION": "Motivos de consulta"
 			}
 		}
 	}
