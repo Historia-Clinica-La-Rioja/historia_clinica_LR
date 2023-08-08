@@ -344,7 +344,21 @@ public class  DocumentServiceImpl implements DocumentService {
         return result;
     }
 
-    @Override
+	@Override
+	public List<DocumentHealthcareProfessionalBo> getHealthcareProfessionalsFromDocument(Long documentId) {
+		LOG.debug(LOGGING_DOCUMENT_ID, documentId);
+		List<DocumentHealthcareProfessionalBo> result = documentHealthcareProfessionalRepository.getFromDocument(documentId);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public Optional<String> getProsthesisDescriptionFromDocument(Long documentId) {
+		LOG.debug(LOGGING_DOCUMENT_ID, documentId);
+		return documentProsthesisRepository.findById(documentId).map(DocumentProsthesis::getDescription);
+	}
+
+	@Override
     public List<Long> getDocumentId(Integer sourceId, Short sourceTypeId) {
         return documentRepository.findBySourceIdAndSourceTypeId(sourceId,sourceTypeId);
     }

@@ -81,6 +81,10 @@ public interface DocumentService {
 
     DocumentDiagnosticReport getDocumentFromDiagnosticReport(Integer drid);
 
+	List<DocumentHealthcareProfessionalBo> getHealthcareProfessionalsFromDocument(Long documentId);
+
+	Optional<String> getProsthesisDescriptionFromDocument(Long documentId);
+    
     List<Long> getDocumentId(Integer sourceId, Short sourceTypeId);
 
     List<Long> getDocumentIdBySourceAndType(Integer sourceId, Short typeId);

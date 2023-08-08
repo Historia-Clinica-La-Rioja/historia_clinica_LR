@@ -29,7 +29,7 @@ public class DocumentProsthesis implements Serializable {
 
 	@Id
 	@Column(name = "document_id")
-	private Long document_id;
+	private Long documentId;
 
 	@Column(name = "description", nullable = false, columnDefinition = "TEXT")
 	private String description;

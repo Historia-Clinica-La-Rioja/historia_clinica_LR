@@ -40,4 +40,15 @@ public class DocumentHealthcareProfessionalBo {
 		this.professionalLicenseNumberId = professionalLicenseNumberId;
 	}
 
+	public DocumentHealthcareProfessionalBo(Integer id, Integer healthcareProfessionalId, String licenceNumber,
+											Integer personId, String firstName, String lastName, String identificationNumber,
+											String nameSelfDetermination,String middleNames,String otherLastNames, Short type,
+											String comments, Integer professionalLicenseNumberId){
+		this.id = id;
+		this.healthcareProfessional = new HealthcareProfessionalBo(healthcareProfessionalId, licenceNumber, personId, firstName, lastName, identificationNumber, nameSelfDetermination, middleNames, otherLastNames);
+		this.type = EProfessionType.map(type);
+		this.comments = comments;
+		this.professionalLicenseNumberId = professionalLicenseNumberId;
+	}
+
 }

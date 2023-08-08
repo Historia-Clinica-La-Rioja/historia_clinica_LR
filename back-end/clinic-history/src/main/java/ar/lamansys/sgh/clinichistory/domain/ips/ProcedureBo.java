@@ -44,6 +44,8 @@ public class ProcedureBo extends ClinicalTerm {
 		setSnomed(new SnomedBo(procedureVo.getSnomed()));
 		setStatus(procedureVo.getStatusId());
 		setPerformedDate(procedureVo.getPerformedDate());
+		setIsPrimary(procedureVo.getIsPrimary());
+		setNote(procedureVo.getNote());
 	}
 
 	public boolean equals (ClinicalTerm bo){

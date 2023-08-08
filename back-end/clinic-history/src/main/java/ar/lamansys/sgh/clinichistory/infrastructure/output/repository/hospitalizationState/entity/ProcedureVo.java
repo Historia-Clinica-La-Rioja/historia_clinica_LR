@@ -18,9 +18,17 @@ public class ProcedureVo extends ClinicalTermVo {
 
 	private LocalDate performedDate;
 
+	private Boolean isPrimary = Boolean.TRUE;
+
+	private String note;
 	public ProcedureVo(Integer id, Snomed snomed, String statusId, LocalDate performedDate) {
 		super(id, snomed, statusId);
 		this.performedDate = performedDate;
 	}
 
+	public ProcedureVo(Integer id, Snomed snomed, String statusId, LocalDate performedDate, Boolean isPrimary, String note) {
+		this(id, snomed, statusId, performedDate);
+		this.isPrimary = isPrimary;
+		this.note = note;
+	}
 }
