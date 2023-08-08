@@ -11,12 +11,13 @@ import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationBo;
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationNotificationDataBo;
 import ar.lamansys.virtualConsultation.domain.enums.EVirtualConsultationPriority;
+import ar.lamansys.virtualConsultation.domain.enums.EVirtualConsultationResponsibleProfessionalAvailability;
 import ar.lamansys.virtualConsultation.domain.enums.EVirtualConsultationStatus;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationDto;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationNotificationDataDto;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationPatientDataDto;
 
-@Mapper(uses = {EVirtualConsultationPriority.class, EVirtualConsultationStatus.class, VirtualConsultationPatientDataDto.class, LocalDateMapper.class})
+@Mapper(uses = {EVirtualConsultationPriority.class, EVirtualConsultationStatus.class, EVirtualConsultationResponsibleProfessionalAvailability.class, VirtualConsultationPatientDataDto.class, LocalDateMapper.class})
 public interface VirtualConsultationMapper {
 
 	@Named("fromVirtualConsultationBo")
@@ -28,6 +29,7 @@ public interface VirtualConsultationMapper {
 	@Mapping(target = "responsibleData.firstName", source = "responsibleFirstName")
 	@Mapping(target = "responsibleData.lastName", source = "responsibleLastName")
 	@Mapping(target = "responsibleData.healthcareProfessionalId", source = "responsibleHealthcareProfessionalId")
+	@Mapping(target = "responsibleData.availability", source = "responsibleAvailabilityId")
 	@Mapping(target = "institutionData.id", source = "institutionId")
 	@Mapping(target = "institutionData.name", source = "institutionName")
 	@Mapping(target = "status", source = "statusId")

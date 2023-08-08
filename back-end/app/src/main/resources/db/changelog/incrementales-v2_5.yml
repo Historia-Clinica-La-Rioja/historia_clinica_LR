@@ -162,3 +162,36 @@ databaseChangeLog:
                 - column:
                     name: deleted_on
                     type: datetime
+
+    - changeSet:
+        id: virtual_consultation_responsible_professional_availability-createTable
+        comment: Create table virtual_consultation_responsible_professional_availability
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: virtual_consultation_responsible_professional_availability
+              columns:
+                - column:
+                    constraints:
+                      references: healthcare_professional(id)
+                      foreignKeyName: FK_healthcare_professional_virtual_consultation_responsible_professional_availability
+                    name: healthcare_professional_id
+                    type: int
+                - column:
+                    constraints:
+                      references: institution(id)
+                      foreignKeyName: FK_institution_virtual_consultation_responsible_professional_availability
+                    name: institution_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: available
+                    type: boolean
+                    defaultValue: ${boolean.false}
+          - addPrimaryKey:
+              clustered: true
+              columnNames: healthcare_professional_id, institution_id
+              constraintName: PK_virtual_consultation_responsible_professional_availability
+              tableName: virtual_consultation_responsible_professional_availability
+              validate: true

@@ -1,0 +1,9 @@
+package ar.lamansys.virtualConsultation.application.changeResponsibleProfessionalAvailability;
+
+import ar.lamansys.virtualConsultation.domain.VirtualConsultationResponsibleProfessionalAvailabilityBo;
+
+public interface ChangeResponsibleProfessionalAvailabilityService {
+
+	boolean run(VirtualConsultationResponsibleProfessionalAvailabilityBo responsibleAvailability);
+
+}

@@ -3806,6 +3806,7 @@ export interface VirtualConsultationRequestDto {
 }
 
 export interface VirtualConsultationResponsibleDataDto {
+    availability: EVirtualConsultationResponsibleProfessionalAvailability;
     firstName: string;
     healthcareProfessionalId: number;
     lastName: string;
@@ -4014,6 +4015,11 @@ export const enum EVirtualConsultationPriority {
     LOW = "LOW",
     MEDIUM = "MEDIUM",
     HIGH = "HIGH",
+}
+
+export const enum EVirtualConsultationResponsibleProfessionalAvailability {
+    AVAILABLE = "AVAILABLE",
+    NOT_AVAILABLE = "NOT_AVAILABLE",
 }
 
 export const enum EVirtualConsultationStatus {

@@ -16,9 +16,10 @@ import ar.lamansys.virtualConsultation.infrastructure.output.repository.entity.V
 public interface VirtualConsultationRepository extends SGXAuditableEntityJPARepository<VirtualConsultation, Integer> {
 
 	@Transactional(readOnly = true)
-	@Query(" SELECT NEW ar.lamansys.virtualConsultation.domain.VirtualConsultationBo(vc.id, p.id, p2.firstName, pe.nameSelfDetermination, p2.lastName, " +
+	@Query(" SELECT DISTINCT NEW ar.lamansys.virtualConsultation.domain.VirtualConsultationBo(vc.id, p.id, p2.firstName, pe.nameSelfDetermination, p2.lastName, " +
 			"EXTRACT(YEAR FROM (AGE(p2.birthDate))), spg.description, s2.pt, s.pt, cs.name, cl.description, vc.institutionId, i.name, vc.statusId, p3.firstName, p3.lastName, hp.id, " +
-			"vc.priorityId, vc.creationable.createdOn, vc.callId) " +
+			"CASE WHEN (vcpa.available IS TRUE AND vcpa.id.institutionId = vc.institutionId) THEN 0 ELSE 1 END, vc.priorityId, vc.creationable.createdOn, " +
+			"vc.callId) " +
 			"FROM VirtualConsultation vc " +
 			"JOIN Patient p ON (p.id = vc.patientId) " +
 			"JOIN Person p2 ON (p2.id = p.personId) " +
@@ -30,7 +31,8 @@ public interface VirtualConsultationRepository extends SGXAuditableEntityJPARepo
 			"JOIN CareLine cl ON (cl.id = vc.careLineId) " +
 			"JOIN Institution i ON (i.id = vc.institutionId) " +
 			"JOIN HealthcareProfessional hp ON (hp.id = vc.responsibleHealthcareProfessionalId) " +
-			"JOIN Person p3 ON (p3.id = hp.personId)")
+			"JOIN Person p3 ON (p3.id = hp.personId) " +
+			"LEFT JOIN VirtualConsultationResponsibleProfessionalAvailability vcpa ON (vcpa.id.healthcareProfessionalId = hp.id)")
 	List<VirtualConsultationBo> getDomainVirtualConsultations();
 
 	@Transactional(readOnly = true)

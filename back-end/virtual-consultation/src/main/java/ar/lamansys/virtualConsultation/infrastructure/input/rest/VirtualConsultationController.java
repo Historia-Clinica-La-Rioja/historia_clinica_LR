@@ -15,9 +15,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ar.lamansys.mqtt.infraestructure.input.rest.dto.MqttMetadataDto;
 import ar.lamansys.mqtt.infraestructure.input.service.MqttCallExternalService;
 import ar.lamansys.sgx.shared.security.UserInfo;
+import ar.lamansys.virtualConsultation.application.changeResponsibleProfessionalAvailability.ChangeResponsibleProfessionalAvailabilityService;
 import ar.lamansys.virtualConsultation.application.getDomainVirtualConsultations.GetDomainVirtualConsultationsService;
 import ar.lamansys.virtualConsultation.application.getVirtualConsultationNotificationData.GetVirtualConsultationNotificationDataService;
+import ar.lamansys.virtualConsultation.application.getVirtualConsultationResponsibleProfessionalAvailability.GetVirtualConsultationResponsibleProfessionalAvailabilityService;
 import ar.lamansys.virtualConsultation.application.saveVirtualConsultation.SaveVirtualConsultationRequestService;
+import ar.lamansys.virtualConsultation.domain.VirtualConsultationResponsibleProfessionalAvailabilityBo;
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationRequestBo;
 import ar.lamansys.virtualConsultation.domain.enums.EVirtualConsultationStatus;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationDto;
@@ -46,6 +49,10 @@ public class VirtualConsultationController {
 
 	private final GetVirtualConsultationNotificationDataService getVirtualConsultationNotificationDataService;
 
+	private final GetVirtualConsultationResponsibleProfessionalAvailabilityService getVirtualConsultationResponsibleProfessionalAvailabilityService;
+
+	private final ChangeResponsibleProfessionalAvailabilityService changeResponsibleProfessionalAvailabilityService;
+
 	@PostMapping(value = "/{institutionId}")
 	public Integer saveVirtualConsultationRequest(@PathVariable(name = "institutionId") Integer institutionId,
 												  @RequestBody VirtualConsultationRequestDto virtualConsultation) {
@@ -73,6 +80,18 @@ public class VirtualConsultationController {
 		VirtualConsultationNotificationDataDto notification = virtualConsultationMapper.fromVirtualConsultationNotificationDataBo(getVirtualConsultationNotificationDataService.run(virtualConsultationId));
 		ObjectMapper jsonMapper = new ObjectMapper();
 		mqttCallExternalService.publish(new MqttMetadataDto("HSI/VIRTUAL-CONSULTATION/NOTIFY", jsonMapper.writeValueAsString(notification), false, 2));
+	}
+
+	@PostMapping(value = "/{institutionId}/change-responsible-state")
+	public Boolean changeResponsibleAttentionState(@PathVariable(name = "institutionId") Integer institutionId, @RequestBody Boolean attentionValue) {
+		log.debug("Input parameters -> institutionId {}, attentionValue {}", institutionId, attentionValue);
+		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
+		VirtualConsultationResponsibleProfessionalAvailabilityBo virtualConsultationProfessionalAvailability = getVirtualConsultationResponsibleProfessionalAvailabilityService.run(doctorId, institutionId);
+		if (virtualConsultationProfessionalAvailability == null) {
+			virtualConsultationProfessionalAvailability = new VirtualConsultationResponsibleProfessionalAvailabilityBo(doctorId, institutionId);
+		}
+		virtualConsultationProfessionalAvailability.setAvailable(attentionValue);
+		return changeResponsibleProfessionalAvailabilityService.run(virtualConsultationProfessionalAvailability);
 	}
 
 }

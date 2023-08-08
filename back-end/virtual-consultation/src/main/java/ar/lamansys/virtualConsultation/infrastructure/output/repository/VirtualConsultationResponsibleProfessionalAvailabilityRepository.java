@@ -1,0 +1,11 @@
+package ar.lamansys.virtualConsultation.infrastructure.output.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import ar.lamansys.virtualConsultation.infrastructure.output.repository.entity.VirtualConsultationResponsibleProfessionalAvailability;
+import ar.lamansys.virtualConsultation.infrastructure.output.repository.entity.VirtualConsultationResponsibleProfessionalAvailabilityPK;
+
+@Repository
+public interface VirtualConsultationResponsibleProfessionalAvailabilityRepository extends JpaRepository<VirtualConsultationResponsibleProfessionalAvailability, VirtualConsultationResponsibleProfessionalAvailabilityPK> {
+}

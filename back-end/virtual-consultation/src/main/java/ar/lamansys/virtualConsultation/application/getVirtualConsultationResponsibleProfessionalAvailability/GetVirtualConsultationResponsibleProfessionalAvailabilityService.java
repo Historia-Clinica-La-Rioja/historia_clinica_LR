@@ -1,0 +1,9 @@
+package ar.lamansys.virtualConsultation.application.getVirtualConsultationResponsibleProfessionalAvailability;
+
+import ar.lamansys.virtualConsultation.domain.VirtualConsultationResponsibleProfessionalAvailabilityBo;
+
+public interface GetVirtualConsultationResponsibleProfessionalAvailabilityService {
+
+	VirtualConsultationResponsibleProfessionalAvailabilityBo run(Integer healthcareProfessionalId, Integer institutionId);
+
+}
