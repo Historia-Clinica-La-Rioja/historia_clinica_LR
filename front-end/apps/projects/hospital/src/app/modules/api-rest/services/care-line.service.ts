@@ -16,16 +16,16 @@ export class CareLineService {
 		private readonly http: HttpClient,
 		private readonly contextService: ContextService,
 	) {
-		this.BASE_URL = `${environment.apiBase}/institution/${this.contextService.institutionId}`
+		this.BASE_URL = `${environment.apiBase}/institution`;
 	}
 
 	getCareLines(): Observable<CareLineDto[]> {
-		const url = `${this.BASE_URL}/carelines`;
+		const url = `${this.BASE_URL}/${this.contextService.institutionId}/carelines`;
 		return this.http.get<CareLineDto[]>(url);
 	}
 
 	getCareLinesBySpecialty(specialtyId: number): Observable<CareLineDto[]> {
-		const url = `${this.BASE_URL}/diary-care-lines/${specialtyId} `;
+		const url = `${this.BASE_URL}/${this.contextService.institutionId}/diary-care-lines/${specialtyId} `;
 		return this.http.get<CareLineDto[]>(url);
 	}
 
