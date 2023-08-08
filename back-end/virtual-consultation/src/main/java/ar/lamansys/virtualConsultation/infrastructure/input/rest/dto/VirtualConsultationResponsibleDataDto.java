@@ -1,6 +1,5 @@
 package ar.lamansys.virtualConsultation.infrastructure.input.rest.dto;
 
-import ar.lamansys.virtualConsultation.domain.enums.EVirtualConsultationResponsibleProfessionalAvailability;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +17,6 @@ public class VirtualConsultationResponsibleDataDto {
 
 	private Integer healthcareProfessionalId;
 
-	private EVirtualConsultationResponsibleProfessionalAvailability availability;
+	private Boolean available;
 
 }

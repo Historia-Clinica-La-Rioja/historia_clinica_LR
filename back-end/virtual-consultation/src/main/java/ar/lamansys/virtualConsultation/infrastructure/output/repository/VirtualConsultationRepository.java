@@ -19,7 +19,7 @@ public interface VirtualConsultationRepository extends SGXAuditableEntityJPARepo
 	@Transactional(readOnly = true)
 	@Query(" SELECT DISTINCT NEW ar.lamansys.virtualConsultation.domain.VirtualConsultationBo(vc.id, p.id, p2.firstName, pe.nameSelfDetermination, p2.lastName, " +
 			"EXTRACT(YEAR FROM (AGE(p2.birthDate))), spg.description, s2.pt, s.pt, cs.name, cl.description, vc.institutionId, i.name, vc.statusId, p3.firstName, p3.lastName, hp.id, " +
-			"CASE WHEN (vcpa.available IS TRUE AND vcpa.id.institutionId = vc.institutionId) THEN 0 ELSE 1 END, vc.priorityId, vc.creationable.createdOn, " +
+			"CASE WHEN (vcpa.available IS TRUE AND vcpa.id.institutionId = vc.institutionId) THEN TRUE ELSE FALSE END, vc.priorityId, vc.creationable.createdOn, " +
 			"vc.callId) " +
 			"FROM VirtualConsultation vc " +
 			"JOIN Patient p ON (p.id = vc.patientId) " +
