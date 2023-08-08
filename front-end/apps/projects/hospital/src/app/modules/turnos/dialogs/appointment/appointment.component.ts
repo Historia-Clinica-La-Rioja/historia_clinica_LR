@@ -162,7 +162,8 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		if (this.data.appointmentData.patient.typeId === REJECTED_PATIENT) {
+		this.medicalCoverageInfo.clearAll();
+		if (this.data.appointmentData.patient.typeId === REJECTED_PATIENT){
 			this.isRejectedPatient = true;
 		}
 		this.formMotive = this.formBuilder.group({
