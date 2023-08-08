@@ -57,6 +57,9 @@
                             <mat-error *ngIf="formReference.hasError('maxlength', 'phonePrefix')"
                                 translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
                             </mat-error>
+                            <mat-error *ngIf="formReference.hasError('pattern', 'phonePrefix')"
+                                translate="forms.FORMAT_NUMERIC">
+                            </mat-error>
                         </mat-form-field>
 
 						<mat-form-field fxFlex="70%" appearance="outline">
@@ -71,6 +74,9 @@
 							<mat-error *ngIf="formReference.hasError('maxlength', 'phoneNumber')"
 								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 20}">
 							</mat-error>
+                            <mat-error *ngIf="formReference.hasError('pattern', 'phoneNumber')"
+                                translate="forms.FORMAT_NUMERIC">
+                            </mat-error>
 						</mat-form-field>
 					</div>
 				</div>
