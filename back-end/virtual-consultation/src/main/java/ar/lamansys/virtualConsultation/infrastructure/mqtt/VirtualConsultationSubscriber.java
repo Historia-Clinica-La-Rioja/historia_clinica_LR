@@ -32,6 +32,20 @@ public class VirtualConsultationSubscriber {
 	@Bean
 	public void subscribe() throws MqttException {
 		mqttCallExternalService.subscribe(null, "HSI/VIRTUAL-CONSULTATION/NOTIFY", getQueueListeners());
+		mqttCallExternalService.subscribe(null, "HSI/VIRTUAL-CONSULTATION/CHANGE-RESPONSIBLE-STATE", handleTopicState("virtual-consultation-responsible-state-change"));
+		mqttCallExternalService.subscribe(null, "HSI/VIRTUAL-CONSULTATION/CHANGE-VIRTUAL-CONSULTATION-STATE", handleTopicState("virtual-consultation-state-change"));
+	}
+
+	private List<Consumer<MqttMetadataBo>> handleTopicState(String webSocketPathDestination) {
+		return new ArrayList<>(List.of(m -> {
+			try {
+				SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
+				headerAccessor.setLeaveMutable(true);
+				template.convertAndSend("/topic/" + webSocketPathDestination, m.getMessage(), headerAccessor.getMessageHeaders());
+			} catch (Throwable e) {
+				log.error(e.getMessage(), e);
+			}
+		}));
 	}
 
 	private List<Consumer<MqttMetadataBo>> getQueueListeners() {

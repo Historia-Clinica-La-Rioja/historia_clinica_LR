@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,17 +15,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ar.lamansys.sgx.shared.security.UserInfo;
 import ar.lamansys.virtualConsultation.application.changeResponsibleProfessionalAvailability.ChangeResponsibleProfessionalAvailabilityService;
+import ar.lamansys.virtualConsultation.application.changeVirtualConsultationStatus.ChangeVirtualConsultationStatusService;
 import ar.lamansys.virtualConsultation.application.getDomainVirtualConsultations.GetDomainVirtualConsultationsService;
 import ar.lamansys.virtualConsultation.application.getResponsibleUserIdByVirtualConsultationId.GetResponsibleUserIdByVirtualConsultationIdService;
 import ar.lamansys.virtualConsultation.application.getVirtualConsultationNotificationData.GetVirtualConsultationNotificationDataService;
-import ar.lamansys.virtualConsultation.application.getVirtualConsultationResponsibleProfessionalAvailability.GetVirtualConsultationResponsibleProfessionalAvailabilityService;
+import ar.lamansys.virtualConsultation.application.getResponsibleProfessionalAvailability.GetResponsibleProfessionalAvailabilityService;
 import ar.lamansys.virtualConsultation.application.saveVirtualConsultation.SaveVirtualConsultationRequestService;
-import ar.lamansys.virtualConsultation.domain.VirtualConsultationResponsibleProfessionalAvailabilityBo;
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationRequestBo;
+import ar.lamansys.virtualConsultation.domain.VirtualConsultationResponsibleProfessionalAvailabilityBo;
 import ar.lamansys.virtualConsultation.domain.enums.EVirtualConsultationStatus;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationDto;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationNotificationDataDto;
+import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationResponsibleProfessionalAvailabilityDto;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationRequestDto;
+import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationStatusDataDto;
 import ar.lamansys.virtualConsultation.infrastructure.mapper.VirtualConsultationMapper;
 import ar.lamansys.virtualConsultation.infrastructure.mqtt.VirtualConsultationPublisher;
 import lombok.RequiredArgsConstructor;
@@ -49,11 +53,15 @@ public class VirtualConsultationController {
 
 	private final GetVirtualConsultationNotificationDataService getVirtualConsultationNotificationDataService;
 
-	private final GetVirtualConsultationResponsibleProfessionalAvailabilityService getVirtualConsultationResponsibleProfessionalAvailabilityService;
+	private final GetResponsibleProfessionalAvailabilityService getResponsibleProfessionalAvailabilityService;
 
 	private final ChangeResponsibleProfessionalAvailabilityService changeResponsibleProfessionalAvailabilityService;
 
 	private final GetResponsibleUserIdByVirtualConsultationIdService getResponsibleUserIdByVirtualConsultationIdService;
+
+	private final ChangeVirtualConsultationStatusService changeVirtualConsultationStatusService;
+
+	private final ObjectMapper objectMapper;
 
 	@PostMapping(value = "/{institutionId}")
 	public Integer saveVirtualConsultationRequest(@PathVariable(name = "institutionId") Integer institutionId,
@@ -92,15 +100,29 @@ public class VirtualConsultationController {
 	}
 
 	@PostMapping(value = "/{institutionId}/change-responsible-state")
-	public Boolean changeResponsibleAttentionState(@PathVariable(name = "institutionId") Integer institutionId, @RequestBody Boolean attentionValue) {
+	public Boolean changeResponsibleAttentionState(@PathVariable(name = "institutionId") Integer institutionId,
+												   @RequestBody Boolean attentionValue) throws JsonProcessingException {
 		log.debug("Input parameters -> institutionId {}, attentionValue {}", institutionId, attentionValue);
 		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-		VirtualConsultationResponsibleProfessionalAvailabilityBo virtualConsultationProfessionalAvailability = getVirtualConsultationResponsibleProfessionalAvailabilityService.run(doctorId, institutionId);
+		VirtualConsultationResponsibleProfessionalAvailabilityBo virtualConsultationProfessionalAvailability = getResponsibleProfessionalAvailabilityService.run(doctorId, institutionId);
 		if (virtualConsultationProfessionalAvailability == null) {
 			virtualConsultationProfessionalAvailability = new VirtualConsultationResponsibleProfessionalAvailabilityBo(doctorId, institutionId);
 		}
 		virtualConsultationProfessionalAvailability.setAvailable(attentionValue);
-		return changeResponsibleProfessionalAvailabilityService.run(virtualConsultationProfessionalAvailability);
+		Boolean result = changeResponsibleProfessionalAvailabilityService.run(virtualConsultationProfessionalAvailability);
+		VirtualConsultationResponsibleProfessionalAvailabilityDto message = virtualConsultationMapper.fromVirtualConsultationResponsibleProfessionalAvailabilityBo(virtualConsultationProfessionalAvailability);
+		virtualConsultationPublisher.publish("CHANGE-RESPONSIBLE-STATE", objectMapper.writeValueAsString(message));
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@PutMapping(value = "/{virtualConsultationId}/state")
+	public void changeVirtualConsultationState(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId,
+											   @RequestBody EVirtualConsultationStatus virtualConsultationStatus) throws JsonProcessingException {
+		log.debug("Input parameters -> virtualConsultationId {}, virtualConsultationStatus {}", virtualConsultationId, virtualConsultationStatus);
+		changeVirtualConsultationStatusService.run(virtualConsultationId, virtualConsultationStatus);
+		VirtualConsultationStatusDataDto statusData = new VirtualConsultationStatusDataDto(virtualConsultationId, virtualConsultationStatus);
+		virtualConsultationPublisher.publish("CHANGE-VIRTUAL-CONSULTATION-STATE", objectMapper.writeValueAsString(statusData));
 	}
 
 }

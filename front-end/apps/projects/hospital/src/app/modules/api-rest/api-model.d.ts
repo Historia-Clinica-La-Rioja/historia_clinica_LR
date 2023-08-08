@@ -3812,6 +3812,17 @@ export interface VirtualConsultationResponsibleDataDto {
     lastName: string;
 }
 
+export interface VirtualConsultationResponsibleProfessionalAvailabilityDto {
+    available: EVirtualConsultationResponsibleProfessionalAvailability;
+    healthcareProfessionalId: number;
+    institutionId: number;
+}
+
+export interface VirtualConsultationStatusDataDto {
+    status: EVirtualConsultationStatus;
+    virtualConsultationId: number;
+}
+
 export interface WorklistDto {
     actionTime: DateTimeDto;
     appointmentId: number;

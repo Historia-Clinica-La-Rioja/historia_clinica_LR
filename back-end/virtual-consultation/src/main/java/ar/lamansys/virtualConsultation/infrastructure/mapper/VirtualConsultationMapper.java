@@ -10,12 +10,14 @@ import org.mapstruct.Named;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationBo;
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationNotificationDataBo;
+import ar.lamansys.virtualConsultation.domain.VirtualConsultationResponsibleProfessionalAvailabilityBo;
 import ar.lamansys.virtualConsultation.domain.enums.EVirtualConsultationPriority;
 import ar.lamansys.virtualConsultation.domain.enums.EVirtualConsultationResponsibleProfessionalAvailability;
 import ar.lamansys.virtualConsultation.domain.enums.EVirtualConsultationStatus;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationDto;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationNotificationDataDto;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationPatientDataDto;
+import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationResponsibleProfessionalAvailabilityDto;
 
 @Mapper(uses = {EVirtualConsultationPriority.class, EVirtualConsultationStatus.class, EVirtualConsultationResponsibleProfessionalAvailability.class, VirtualConsultationPatientDataDto.class, LocalDateMapper.class})
 public interface VirtualConsultationMapper {
@@ -43,5 +45,8 @@ public interface VirtualConsultationMapper {
 	@Named("fromVirtualConsultationNotificationDataBo")
 	@Mapping(target = "priority", source = "priorityId")
 	VirtualConsultationNotificationDataDto fromVirtualConsultationNotificationDataBo(VirtualConsultationNotificationDataBo virtualConsultationNotificationDataBo);
+
+	@Named("fromVirtualConsultationResponsibleProfessionalAvailabilityBo")
+	VirtualConsultationResponsibleProfessionalAvailabilityDto fromVirtualConsultationResponsibleProfessionalAvailabilityBo(VirtualConsultationResponsibleProfessionalAvailabilityBo professionalAvailability);
 
 }

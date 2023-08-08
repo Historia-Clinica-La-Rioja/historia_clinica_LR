@@ -32,4 +32,10 @@ public enum EVirtualConsultationResponsibleProfessionalAvailability {
 		throw new NotFoundException("virtual-consultation-professional-status-not-exists", String.format("El estado %s no existe", id));
 	}
 
+	public static EVirtualConsultationResponsibleProfessionalAvailability map(Boolean value) {
+		if (value)
+			return EVirtualConsultationResponsibleProfessionalAvailability.AVAILABLE;
+		return EVirtualConsultationResponsibleProfessionalAvailability.NOT_AVAILABLE;
+	}
+
 }

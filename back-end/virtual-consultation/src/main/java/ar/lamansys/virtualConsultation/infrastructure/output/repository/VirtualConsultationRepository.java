@@ -2,6 +2,7 @@ package ar.lamansys.virtualConsultation.infrastructure.output.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -57,5 +58,10 @@ public interface VirtualConsultationRepository extends SGXAuditableEntityJPARepo
 			"JOIN UserPerson up ON (up.pk.personId = hp.personId) " +
 			"WHERE vc.id = :virtualConsultationId")
 	Integer getResponsibleUserId(@Param("virtualConsultationId") Integer virtualConsultationId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE VirtualConsultation vc SET vc.statusId = :virtualConsultationStatusId WHERE vc.id = :virtualConsultationId")
+	void updateVirtualConsultationStatus(@Param("virtualConsultationId") Integer virtualConsultationId, @Param("virtualConsultationStatusId") Short virtualConsultationStatusId);
 
 }

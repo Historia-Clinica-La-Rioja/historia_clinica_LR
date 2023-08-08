@@ -1,4 +1,4 @@
-package ar.lamansys.virtualConsultation.application.getVirtualConsultationResponsibleProfessionalAvailability;
+package ar.lamansys.virtualConsultation.application.getResponsibleProfessionalAvailability;
 
 import java.util.Optional;
 
@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class GetVirtualConsultationResponsibleProfessionalAvailabilityServiceImpl implements GetVirtualConsultationResponsibleProfessionalAvailabilityService {
+public class GetResponsibleProfessionalAvailabilityServiceImpl implements GetResponsibleProfessionalAvailabilityService {
 
 	private final VirtualConsultationResponsibleProfessionalAvailabilityRepository virtualConsultationResponsibleProfessionalAvailabilityRepository;
 
