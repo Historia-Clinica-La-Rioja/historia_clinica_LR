@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { CareLineDto, ClinicalSpecialtyDto } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, EVirtualConsultationPriority } from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ContextService } from '@core/services/context.service';
 import { Patient } from '@pacientes/component/search-patient/search-patient.component';
@@ -21,6 +21,8 @@ export class InformationRequestFormComponent implements OnInit {
 	specialtyTypeaheadOptions: TypeaheadOption<ClinicalSpecialtyDto>[] = [];
 	showSpecialtyError = false;
 
+	showPriorityError = false;
+
 	constructor(private carelineService: CareLineService, private contextService: ContextService,
 		private readonly formBuilder: UntypedFormBuilder) { }
 
@@ -36,6 +38,7 @@ export class InformationRequestFormComponent implements OnInit {
 		this.informationForm = this.formBuilder.group({
 			careLine: [null, Validators.required],
 			specialty: [null, Validators.required],
+			priority: [null, Validators.required],
 		});
 	}
 
@@ -54,6 +57,11 @@ export class InformationRequestFormComponent implements OnInit {
 	setClinicalSpecialty(clinicalSpecialty: ClinicalSpecialtyDto) {
 		this.informationForm.controls.specialty.setValue(clinicalSpecialty);
 		this.showSpecialtyError = false;
+	}
+
+	setPriority(priorization: EVirtualConsultationPriority) {
+		this.informationForm.controls.priority.setValue(priorization);
+		this.showPriorityError = false;
 	}
 
 	private toCareLinesDtoTypeahead(careLine: CareLineDto): TypeaheadOption<CareLineDto> {

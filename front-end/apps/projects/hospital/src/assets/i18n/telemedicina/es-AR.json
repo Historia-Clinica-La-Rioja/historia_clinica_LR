@@ -9,7 +9,8 @@
 			"form": {
 				"PATIENT":"Paciente",
 				"CARELINE": "Línea de cuidado",
-				"SPECIALTY": "Especialidad"
+				"SPECIALTY": "Especialidad",
+				"PRIORIZATION": "Criterio de priorización"
 			}
 		}
 	}

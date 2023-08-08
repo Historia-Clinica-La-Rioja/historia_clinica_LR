@@ -70,6 +70,8 @@ import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FloatingDivComponent } from './components/floating-div/floating-div.component';
+import { PrioritySelectComponent } from './components/priority-select/priority-select.component';
+
 
 @NgModule({
 	declarations: [
@@ -118,6 +120,7 @@ import { FloatingDivComponent } from './components/floating-div/floating-div.com
 		TypeaheadComponent,
 		UserBadgeComponent,
 		FilterButtonComponent,
+		PrioritySelectComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
@@ -197,6 +200,7 @@ import { FloatingDivComponent } from './components/floating-div/floating-div.com
 		TypeaheadComponent,
 		UserBadgeComponent,
 		FilterButtonComponent,
+		PrioritySelectComponent,
 		// dialogs
 		// directives
 		CtrlTemplateDirective,

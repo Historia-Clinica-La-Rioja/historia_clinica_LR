@@ -17,4 +17,12 @@
 			<mat-error *ngIf="showSpecialtyError">{{ 'forms.REQUIRED' | translate }}</mat-error>
 		</div>
 	</section>
+
+	<section>
+		<p>{{'telemedicina.requests.form.PRIORIZATION' | translate}}</p>
+		<app-priority-select data-id="priority-select" (selectionChange)="setPriority($event)"></app-priority-select>
+		<div class="error-space">
+			<mat-error *ngIf="showPriorityError">{{ 'forms.REQUIRED' | translate }}</mat-error>
+		</div>
+	</section>
 </div>
