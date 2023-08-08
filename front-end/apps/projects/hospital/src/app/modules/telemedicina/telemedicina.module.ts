@@ -11,6 +11,7 @@ import { PacientesModule } from '@pacientes/pacientes.module';
 import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
 import { CoreModule } from '@core/core.module';
 import { ButtonAndMotiveListComponent } from './components/button-and-motive-list/button-and-motive-list.component';
+import { ButtonAndProblemListComponent } from './components/button-and-problem-list/button-and-problem-list.component';
 
 
 
@@ -20,7 +21,8 @@ import { ButtonAndMotiveListComponent } from './components/button-and-motive-lis
 		RequestsComponent,
 		NewTelemedicineRequestComponent,
 		InformationRequestFormComponent,
-		ButtonAndMotiveListComponent
+		ButtonAndMotiveListComponent,
+  		ButtonAndProblemListComponent
 	],
 	imports: [
 		CommonModule,

@@ -4,6 +4,7 @@ import { CareLineDto, ClinicalSpecialtyDto, EVirtualConsultationPriority } from 
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ContextService } from '@core/services/context.service';
 import { MotivoConsulta } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
+import { AmbulatoryConsultationProblem } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { Patient } from '@pacientes/component/search-patient/search-patient.component';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 
@@ -25,6 +26,7 @@ export class InformationRequestFormComponent implements OnInit {
 	showSpecialtyError = false;
 	showReasonsConsultationError = false;
 	showPriorityError = false;
+	showProblemError = false;
 	reasonLimit = REASON_LIMIT;
 
 	constructor(private carelineService: CareLineService, private contextService: ContextService,
@@ -44,6 +46,7 @@ export class InformationRequestFormComponent implements OnInit {
 			specialty: [null, Validators.required],
 			priority: [null, Validators.required],
 			motive: [null, Validators.required],
+			problem: [null],
 		});
 	}
 
@@ -72,6 +75,10 @@ export class InformationRequestFormComponent implements OnInit {
 	setMotive(motive: MotivoConsulta) {
 		this.informationForm.controls.motive.setValue(motive);
 		this.showReasonsConsultationError = false;
+	}
+	setProblem(problem: AmbulatoryConsultationProblem) {
+		this.informationForm.controls.problem.setValue(problem);
+		this.showProblemError = false
 	}
 
 	private toCareLinesDtoTypeahead(careLine: CareLineDto): TypeaheadOption<CareLineDto> {

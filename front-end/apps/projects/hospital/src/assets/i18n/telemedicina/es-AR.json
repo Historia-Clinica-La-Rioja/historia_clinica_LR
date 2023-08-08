@@ -11,7 +11,8 @@
 				"CARELINE": "Línea de cuidado",
 				"SPECIALTY": "Especialidad",
 				"PRIORIZATION": "Criterio de priorización",
-				"REASONS_CONSULTATION": "Motivos de consulta"
+				"REASONS_CONSULTATION": "Motivos de consulta",
+				"PROBLEM": "Problema (Opcional)"
 			}
 		}
 	}

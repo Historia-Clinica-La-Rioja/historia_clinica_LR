@@ -27,6 +27,13 @@
 		</div>
 	</section>
 	<section>
+		<p>{{'telemedicina.requests.form.PROBLEM' | translate}}</p>
+		<app-button-and-problem-list (selectionChange)="setProblem($event)" [problemLimit]="reasonLimit" (selectionChange)="setMotive($event)"></app-button-and-problem-list>
+		<div class="error-space">
+			<mat-error *ngIf="showReasonsConsultationError">{{ 'forms.REQUIRED' | translate }}</mat-error>
+		</div>
+	</section>
+	<section>
 		<p>{{'telemedicina.requests.form.PRIORIZATION' | translate}}</p>
 		<app-priority-select data-id="priority-select" (selectionChange)="setPriority($event)"></app-priority-select>
 		<div class="error-space">

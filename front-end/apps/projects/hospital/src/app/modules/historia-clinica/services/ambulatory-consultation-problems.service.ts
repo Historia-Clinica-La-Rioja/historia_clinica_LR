@@ -230,6 +230,7 @@ export class AmbulatoryConsultationProblemsService {
 
 	remove(index: number): void {
 		this.data = removeFrom<AmbulatoryConsultationProblem>(this.data, index);
+		this.problems.next(this.data);
 	}
 
 	// custom validation was required because the [max] input of MatDatepicker
