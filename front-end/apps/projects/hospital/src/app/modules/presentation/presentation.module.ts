@@ -75,6 +75,7 @@ import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
+
 @NgModule({
 	declarations: [
 		// components
@@ -144,6 +145,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 		PersonShortDescriptionComponent,
 		IconedTextComponent,
 		PriorityComponent,
+
+
 	],
 	imports: [
 		CommonModule,
