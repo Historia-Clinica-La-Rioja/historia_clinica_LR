@@ -14,6 +14,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentOdontologyDiagnosticRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentOdontologyProcedureRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentProcedureRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentProsthesisRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentReportSnomedConceptRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
@@ -85,6 +86,9 @@ class DocumentServiceImplTest {
 	@MockBean
 	private DocumentHealthcareProfessionalRepository documentHealthcareProfessionalRepository;
 
+	@MockBean
+	private DocumentProsthesisRepository documentProsthesisRepository;
+
 	@BeforeEach
 	void setUp() {
 		documentServiceImpl = new DocumentServiceImpl(documentRepository, documentHealthConditionRepository,
@@ -92,7 +96,7 @@ class DocumentServiceImplTest {
 				documentAllergyIntoleranceRepository, documentMedicamentionStatementRepository, documentDiagnosticReportRepository,
 				documentOdontologyProcedureRepository, documentOdontologyDiagnosticRepository, documentExternalCauseRepository,
 				documentObstetricEventRepository, documentTriageRepository, documentReportSnomedConceptRepository, snomedService,
-				documentHealthcareProfessionalRepository);
+				documentHealthcareProfessionalRepository, documentProsthesisRepository);
 	}
 
 	@Test

@@ -27,6 +27,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentOdontologyDiagnostic;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentOdontologyProcedure;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentProcedure;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentProsthesis;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentRiskFactor;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentTriage;
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
@@ -127,5 +128,7 @@ public interface DocumentService {
     List<ConclusionBo> getConclusionsFromDocument(Long documentId);
 
 	DocumentHealthcareProfessional createDocumentHealthcareProfessional(Long documentId, DocumentHealthcareProfessionalBo professional);
+
+	DocumentProsthesis createDocumentProsthesis(Long documentId, String description);
 }
 

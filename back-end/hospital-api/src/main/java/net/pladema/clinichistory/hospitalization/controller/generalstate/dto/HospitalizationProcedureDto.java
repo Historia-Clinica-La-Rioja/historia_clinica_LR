@@ -38,4 +38,7 @@ public class HospitalizationProcedureDto {
 
 	@Nullable
 	private Boolean isPrimary = Boolean.TRUE;
+
+	@Nullable
+	private String note;
 }

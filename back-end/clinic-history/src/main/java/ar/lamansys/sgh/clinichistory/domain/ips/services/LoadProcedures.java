@@ -1,12 +1,13 @@
 package ar.lamansys.sgh.clinichistory.domain.ips.services;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.NoteRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Note;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.ProceduresRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Procedure;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.ProceduresStatusRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProceduresStatus;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
-import ar.lamansys.sgh.shared.infrastructure.input.service.ProcedureTypeEnum;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,14 +30,18 @@ public class LoadProcedures {
 
     private final SnomedService snomedService;
 
+	private final NoteRepository noteRepository;
+
     public LoadProcedures(ProceduresRepository proceduresRepository,
                           ProceduresStatusRepository proceduresStatusRepository,
                           DocumentService documentService,
-                          SnomedService snomedService){
+                          SnomedService snomedService,
+						  NoteRepository noteRepository){
         this.proceduresRepository = proceduresRepository;
         this.proceduresStatusRepository = proceduresStatusRepository;
         this.documentService = documentService;
         this.snomedService = snomedService;
+		this.noteRepository = noteRepository;
     }
 
     public List<ProcedureBo> run(Integer patientId, Long documentId, List<ProcedureBo> procedures) {
@@ -64,7 +69,10 @@ public class LoadProcedures {
                 procedureBo.getStatusId(), procedureBo.getPerformedDate(),
 				procedureBo.getType(),
                 procedureBo.getIsPrimary());
-
+		if(procedureBo.getNote() != null){
+			Long noteId = noteRepository.save(new Note(procedureBo.getNote())).getId();
+			result.setNoteId(noteId);
+		}
         result = proceduresRepository.save(result);
         LOG.debug("Procedure saved -> {}", result.getId());
         LOG.debug(OUTPUT, result);

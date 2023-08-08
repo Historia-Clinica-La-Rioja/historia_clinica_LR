@@ -10,6 +10,8 @@ import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadExternalCause;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadHealthcareProfessionals;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadObstetricEvent;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadProsthesis;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -72,6 +74,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
 	private final LoadHealthcareProfessionals loadHealthcareProfessionals;
 
+	private final LoadProsthesis loadProsthesis;
     public DocumentFactoryImpl(DocumentService documentService,
                                CreateDocumentFile createDocumentFile,
                                NoteService noteService,
@@ -87,7 +90,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
 							   PatientStorage patientStorage,
 							   LoadExternalCause loadExternalCause,
 							   LoadObstetricEvent loadObstetricEvent,
-							   LoadHealthcareProfessionals loadHealthcareProfessionals) {
+							   LoadHealthcareProfessionals loadHealthcareProfessionals,
+							   LoadProsthesis loadProsthesis) {
         this.documentService = documentService;
         this.createDocumentFile = createDocumentFile;
         this.noteService = noteService;
@@ -104,6 +108,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
 		this.loadExternalCause = loadExternalCause;
 		this.loadObstetricEvent = loadObstetricEvent;
 		this.loadHealthcareProfessionals = loadHealthcareProfessionals;
+		this.loadProsthesis = loadProsthesis;
     }
 
     @Override
@@ -155,6 +160,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
 		loadExternalCause.run(doc.getId(), Optional.ofNullable(documentBo.getExternalCause()));
 		loadObstetricEvent.run(doc.getId(), Optional.ofNullable(documentBo.getObstetricEvent()));
 		loadHealthcareProfessionals.run(doc.getId(), documentBo.getHealthcareProfessionals());
+		loadProsthesis.run(doc.getId(), documentBo.getProsthesisDescription());
         if (createFile)
             generateDocument(documentBo);
         return doc.getId();
@@ -177,11 +183,12 @@ public class DocumentFactoryImpl implements DocumentFactory {
 	private void loadSurgicalProcedures(Integer patientId, Long documentId, IDocumentBo documentBo){
 		loadProcedures.run(patientId,documentId, documentBo.getSurgeryProcedures());
 		loadProcedures.run(patientId,documentId, documentBo.getAnesthesia());
-		loadProcedures.run(patientId,documentId, documentBo.getAnesthesia());
-		loadProcedures.run(patientId,documentId, documentBo.getAnesthesia());
-		loadProcedures.run(patientId,documentId, List.of(documentBo.getCulture()));
-		loadProcedures.run(patientId,documentId, List.of(documentBo.getFrozenSectionBiopsy()));
-		loadProcedures.run(patientId,documentId, List.of(documentBo.getDrainage()));
+		if(documentBo.getCulture() != null)
+			loadProcedures.run(patientId,documentId, List.of(documentBo.getCulture()));
+		if(documentBo.getFrozenSectionBiopsy() != null)
+			loadProcedures.run(patientId,documentId, List.of(documentBo.getFrozenSectionBiopsy()));
+		if(documentBo.getDrainage() != null)
+			loadProcedures.run(patientId,documentId, List.of(documentBo.getDrainage()));
 	}
 
     private void generateDocument(IDocumentBo documentBo) {

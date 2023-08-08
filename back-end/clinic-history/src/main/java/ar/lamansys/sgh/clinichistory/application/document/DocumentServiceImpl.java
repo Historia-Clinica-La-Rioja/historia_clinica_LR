@@ -12,6 +12,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentHealthcareProfessionalRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentObstetricEventRepository;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentProsthesisRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentReportSnomedConceptRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentHealthcareProfessional;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentObstetricEvent;
@@ -19,6 +20,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentDownloadDataVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentExternalCause;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentProsthesis;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentTriage;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ExternalCauseVo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;
@@ -147,6 +149,7 @@ public class  DocumentServiceImpl implements DocumentService {
 
 	private final DocumentHealthcareProfessionalRepository documentHealthcareProfessionalRepository;
 
+	private final DocumentProsthesisRepository documentProsthesisRepository;
 
     @Override
     public Optional<Document> findById(Long documentId) {
@@ -551,6 +554,14 @@ public class  DocumentServiceImpl implements DocumentService {
 		DocumentHealthcareProfessional result = documentHealthcareProfessionalRepository.save(new DocumentHealthcareProfessional(professional.getId(), documentId, professional.getHealthcareProfessional().getId(), professional.getType().getId(), professional.getComments(), professional.getProfessionalLicenseNumberId()));
 		LOG.debug("Output -> {}", result);
 		return result;	}
+
+	@Override
+	public DocumentProsthesis createDocumentProsthesis(Long documentId, String description) {
+		LOG.debug("Input parameters -> documentId {}, prosthesisDescription {}", documentId, description);
+		DocumentProsthesis result = documentProsthesisRepository.save(new DocumentProsthesis(documentId, description));
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
 
 	private DentalActionBo mapToOdontologyProcedure(Object[] row) {
 		var result = new DentalActionBo();

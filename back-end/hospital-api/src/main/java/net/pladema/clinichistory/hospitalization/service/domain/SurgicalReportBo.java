@@ -76,6 +76,9 @@ public class SurgicalReportBo extends SelfValidating<SurgicalReportBo> implement
 
 	private LocalDateTime performedDate;
 
+	@Nullable
+	private String prosthesisDescription;
+
 	@Override
 	public Integer getPatientId() {
 		if (patientInfo != null) return patientInfo.getId();

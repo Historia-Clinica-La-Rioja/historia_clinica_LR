@@ -58,6 +58,9 @@ public class SurgicalReportDto implements Serializable {
 	private @Valid HospitalizationProcedureDto drainage;
 
 	@Nullable
+	private String prosthesisDescription;
+
+	@Nullable
 	private String description;
 
 	@Nullable

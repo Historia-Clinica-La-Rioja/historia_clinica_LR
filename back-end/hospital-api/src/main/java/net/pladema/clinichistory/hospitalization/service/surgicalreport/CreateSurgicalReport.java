@@ -28,7 +28,7 @@ public class CreateSurgicalReport {
 	private final NoteService noteService;
 	private final SurgicalReportRepository surgicalReportRepository;
 
-	public void run(SurgicalReportBo surgicalReport){
+	public void run(SurgicalReportBo surgicalReport) {
 		log.debug("Input parameter -> surgicalReport {}", surgicalReport);
 		surgicalReport.setPatientInternmentAge(internmentEpisodeService.getEntryDate(surgicalReport.getEncounterId()).toLocalDate());
 		surgicalReportValidator.assertContextValid(surgicalReport);
@@ -39,18 +39,8 @@ public class CreateSurgicalReport {
 				.map(PatientMedicalCoverageBo::getId).orElse(null);
 		Long documentId = documentFactory.run(surgicalReport, surgicalReport.isConfirmed());
 		Long noteId = Optional.ofNullable(surgicalReport.getDescription()).map(noteService::createNote).orElse(null);
-		SurgicalReport entity = new SurgicalReport(
-				null,
-				surgicalReport.getPatientId(),
-				surgicalReport.getClinicalSpecialtyId(),
-				surgicalReport.getInstitutionId(),
-				documentId,
-				doctorId,
-				false,
-				patientMedicalCoverageId,
-				surgicalReport.getStartDateTime(),
-				surgicalReport.getEndDateTime(),
-				noteId);
+		SurgicalReport entity = new SurgicalReport(null, surgicalReport.getPatientId(), surgicalReport.getClinicalSpecialtyId(), surgicalReport.getInstitutionId(), documentId, doctorId, false, patientMedicalCoverageId, surgicalReport.getStartDateTime(), surgicalReport.getEndDateTime(), noteId);
 		surgicalReportRepository.save(entity);
 	}
+
 }

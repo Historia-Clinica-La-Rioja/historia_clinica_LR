@@ -1921,3 +1921,29 @@ databaseChangeLog:
               columnName: file_name
               newDataType: varchar(60)
               tableName: document_file_history
+
+    - changeSet:
+        id: createTable-document_prosthesis
+        comment: Create table document_prosthesis
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: document_prosthesis
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_document_prosthesis
+                      references: document(id)
+                      foreignKeyName: FK_document_id_document_prosthesis
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: text
+          - addUniqueConstraint:
+              tableName: document_prosthesis
+              columnNames: document_id
+              constraintName: UQ_document_id_document_prosthesis

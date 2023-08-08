@@ -26,6 +26,9 @@ public class ProcedureBo extends ClinicalTerm {
 	
 	private Boolean isPrimary = Boolean.TRUE;
 
+	@Nullable
+	private String note;
+	
     public ProcedureBo(ProcedureSummaryBo procedureSummaryBo){
         this.setSnomed(procedureSummaryBo.getSnomed());
         this.performedDate = procedureSummaryBo.getPerformedDate();

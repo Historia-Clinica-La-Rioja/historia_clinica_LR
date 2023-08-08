@@ -2043,6 +2043,7 @@ export interface HospitalUserPersonInfoDto {
 export interface HospitalizationProcedureDto {
     id?: number;
     isPrimary?: boolean;
+    note?: string;
     performedDate?: string;
     snomed: SnomedDto;
     type?: ProcedureTypeEnum;
@@ -4070,6 +4071,7 @@ export interface SurgicalReportDto extends Serializable {
     postoperativeDiagnosis?: DiagnosisDto[];
     preoperativeDiagnosis?: DiagnosisDto[];
     procedures?: HospitalizationProcedureDto[];
+    prosthesisDescription?: string;
     startDateTime?: DateTimeDto;
     surgeryProcedures?: HospitalizationProcedureDto[];
 }
