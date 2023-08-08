@@ -25,6 +25,7 @@ import { UserKeysFormComponent } from './components/user-keys-form/user-keys-for
 // dialogs
 import { ActivateTwoFactorAuthenticationComponent } from "./dialogs/activate-two-factor-authentication/activate-two-factor-authentication.component";
 import { GenerateApiKeyFormComponent } from './dialogs/generate-api-key-form/generate-api-key-form.component';
+import { SnomedTerminologyCardComponent } from './components/snomed-terminology-card/snomed-terminology-card.component';
 
 @NgModule({
 	declarations: [
@@ -44,6 +45,7 @@ import { GenerateApiKeyFormComponent } from './dialogs/generate-api-key-form/gen
 		// dialogs
 		ActivateTwoFactorAuthenticationComponent,
 		GenerateApiKeyFormComponent,
+  SnomedTerminologyCardComponent,
 	],
 	imports: [
 		CommonModule,

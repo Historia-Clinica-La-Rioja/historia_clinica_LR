@@ -1,0 +1,37 @@
+<mat-card>
+    <mat-card-subtitle style="display: flex;">
+        <div fxLayoutAlign="center center" style="width: 100px;">
+            <app-colored-label [description]="uploadedTerminologyData.loadStatus.description"
+                [color]="uploadedTerminologyData.loadStatus.color"></app-colored-label>
+        </div>
+        <span>{{uploadedTerminologyData.data.createdOn | viewDateDto: 'localdatetime' | date: 'dd/MM/yyyy - HH:mm'}}</span>
+    </mat-card-subtitle>
+    <mat-card-subtitle>
+        <span> {{uploadedTerminologyData.data.url}}</span>
+    </mat-card-subtitle>
+    <mat-card-content fxFlexLayout="column" fxLayout="row wrap" fxLayoutAlign="space-between" style="gap: 10px;">
+        <div style="max-width: 80%;">
+            <div>
+                <span>{{uploadedTerminologyData.data.downloadedError}}</span>
+            </div>
+            <div *ngIf="uploadedTerminologyData.data.downloadedOn">
+                <span>{{uploadedTerminologyData.data.downloadedOn | viewDateDto: 'localdatetime' | date: 'dd/MM/yyyy - HH:mm'}}</span>
+                <span *ngIf="uploadedTerminologyData.data.downloadedFile">
+                    {{'configuracion.snomed-cache.DOWNLOADED_FILE' | translate}}
+                </span>
+                <span *ngIf="!uploadedTerminologyData.data.downloadedFile">
+                    {{'configuracion.snomed-cache.NO_FILE' | translate}}
+                </span>
+            </div>
+            <div *ngIf="uploadedTerminologyData.data.ingestedError">
+                <span *ngIf="uploadedTerminologyData.data.ingestedOn">{{uploadedTerminologyData.data.ingestedOn | viewDateDto: 'localdatetime' |
+                    date: 'dd/MM/yyyy - HH:mm'}}</span>
+                <span *ngIf="!uploadedTerminologyData.data.ingestedOn"> ... </span>
+                <span class="white-space">{{uploadedTerminologyData.data.ingestedError}}</span>
+            </div>
+        </div>
+        <div class="delete-btn" *ngIf="uploadedTerminologyData.loadStatus == terminologyLoadStatus.NOT_LOADED" style="width: 85px;">
+            <button mat-raised-button color="warn" (click)="delete(uploadedTerminologyData.data.id)">{{'buttons.DELETE' | translate}}</button>
+        </div>
+    </mat-card-content>
+</mat-card>

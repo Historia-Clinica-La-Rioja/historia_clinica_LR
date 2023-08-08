@@ -44,11 +44,13 @@
 				"SUBMIT": "Agregar",
 				"TITLE": "Agregar terminología a importar"
 			},
-			"TERMINOLOGIES_LIST": "Lista de terminología en CSV pendiente a agregar",
+			"TERMINOLOGIES_LIST": "Lista de terminologías",
 			"DOWNLOADED_FILE": "Archivo descargado",
 			"NO_FILE": "Archivo no existe",
 			"UPDATE": "Actualizar",
-			"DATA_UPDATED": "Datos actualizados"
+			"DATA_UPDATED": "Datos actualizados",
+			"CSV_ADDED": "Archivo CSV agregado",
+			"WAIT_FOR_CSV": "El formulario de carga se volverá a habilitar cuando se termine de procesar la última solicitud para la terminología seleccionada"
 		}
 	},
 	"app": {

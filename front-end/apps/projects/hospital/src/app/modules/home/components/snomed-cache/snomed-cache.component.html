@@ -1,46 +1,59 @@
 <mat-toolbar-row>
-	<span>{{'configuracion.snomed-cache.TERMINOLOGIES_LIST' | translate}}</span>
+	<h1 class="page-title">{{'configuracion.snomed-cache.TERMINOLOGIES_LIST' | translate}}</h1>
 	<span class="toolbar-spacer"></span>
 	<button mat-icon-button (click)="refresh()" matTooltip="{{'configuracion.snomed-cache.UPDATE' | translate}}">
 		<mat-icon>sync</mat-icon>
 	</button>
 </mat-toolbar-row>
-<div *ngFor="let terminologyQueueItem of queue$ | async" class="card-list">
-	<mat-card>
-		<mat-card-subtitle>
-			<span>{{terminologyQueueItem.createdOn | viewDateDto: 'localdatetime' | date: 'dd/MM/yyyy - HH:mm'}}</span>
-		</mat-card-subtitle>
-		<mat-card-title>
-			<span class="item-id">#{{terminologyQueueItem.id}} </span>
-			<span> {{terminologyQueueItem.ecl}} </span>
-		</mat-card-title>
-		<mat-card-subtitle>
-			<span> {{terminologyQueueItem.url}}</span>
-		</mat-card-subtitle>
-		<mat-card-content>
-			<div>
-				<span>{{terminologyQueueItem.downloadedError}}</span>
-			</div>
-			<div *ngIf="terminologyQueueItem.downloadedOn">
-				<span>{{terminologyQueueItem.downloadedOn | viewDateDto: 'localdatetime' | date: 'dd/MM/yyyy - HH:mm'}}</span>
-				<span *ngIf="terminologyQueueItem.downloadedFile">
-					{{'configuracion.snomed-cache.DOWNLOADED_FILE' | translate}}
-				</span>
-				<span *ngIf="!terminologyQueueItem.downloadedFile">
-					{{'configuracion.snomed-cache.NO_FILE' | translate}}
-				</span>
-			</div>
-			<div *ngIf="terminologyQueueItem.ingestedError">
-				<span *ngIf="terminologyQueueItem.ingestedOn">{{terminologyQueueItem.ingestedOn | viewDateDto: 'localdatetime' |
-					date: 'dd/MM/yyyy - HH:mm'}}</span>
-				<span *ngIf="!terminologyQueueItem.ingestedOn"> ... </span>
-				<span class="white-space">{{terminologyQueueItem.ingestedError}}</span>
-				<button class="delete-btn" mat-raised-button color="warn" (click)="delete(terminologyQueueItem.id)">{{'buttons.DELETE' | translate}}</button>
-			</div>
-		</mat-card-content>
-	</mat-card>
 
-</div>
+<mat-card class="main-card">
+	<mat-accordion>
+		<mat-expansion-panel class="terminology-panel" *ngFor="let terminology of terminologies" (opened)="updatePanelStatus(terminology, true)" (closed)="updatePanelStatus(terminology, false)">
+			<mat-expansion-panel-header [collapsedHeight]="'70px'">
+				<div fxFlex="100%" fxLayout="row" fxLayoutAlign="space-between">
+					<mat-panel-title fxFlex="70">
+						<span>{{terminology.ecl}}</span>
+					</mat-panel-title>
+					<div *ngIf="!terminology.isPanelOpened" fxFlex="30" fxLayoutAlign="center center">
+						<mat-panel-description fxLayoutAlign="end">
+							<div fxLayout="row wrap" fxLayoutAlign="end" style="gap: 10px;">
+								<div fxLayoutAlign="center center" style="width: 100px;" *ngIf="terminology.updating">
+									<app-colored-label [description]="terminologyLoadStatus.PENDING.description"
+										[color]="terminologyLoadStatus.PENDING.color"></app-colored-label>
+								</div>
+								<div fxLayoutAlign="center center" style="width: 100px;">
+									<app-colored-label [description]="terminology.loadStatus.description"
+										[color]="terminology.loadStatus.color"></app-colored-label>
+								</div>
+							</div>
+						</mat-panel-description>
+					</div>
+				</div>
+			</mat-expansion-panel-header>
 
-<app-snomed-cache-form (add)="addCsv($event)"></app-snomed-cache-form>
+			<div class="terminologies-container" *ngIf="terminology.successful">
+				<app-snomed-terminology-card
+					[uploadedTerminology]="terminology.successful" [successful]="true"></app-snomed-terminology-card>
+			</div>
+			<div *ngIf="terminology.queue">
+				<div class="terminologies-container" *ngFor="let uploadedTerminology of terminology.queue">
+					<app-snomed-terminology-card
+						[uploadedTerminology]="uploadedTerminology"></app-snomed-terminology-card>
+				</div>
+			</div>
 
+			<mat-divider style="margin-bottom: 1rem;"></mat-divider>
+
+			<app-snomed-cache-form *ngIf="!terminology.updating else noForm" terminologyName={{terminology.ecl}}
+				(add)="addCsv($event)"></app-snomed-cache-form>
+
+			<ng-template #noForm>
+				<div class="message-label" fxLayout="row" fxLayoutAlign="none center" fxLayoutGap="10px">
+					<mat-icon class="icon">error_outline</mat-icon>
+					<span class="color-black" translate="configuracion.snomed-cache.WAIT_FOR_CSV"></span>
+				</div>
+			</ng-template>
+
+		</mat-expansion-panel>
+	</mat-accordion>
+</mat-card>

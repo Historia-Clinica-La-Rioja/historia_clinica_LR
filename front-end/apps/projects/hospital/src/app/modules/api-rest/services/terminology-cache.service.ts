@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TerminologyQueueItemDto, TerminologyCSVDto } from '@api-rest/api-model';
+import { TerminologyQueueItemDto, TerminologyCSVDto, TerminologyECLStatusDto } from '@api-rest/api-model';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '@environments/environment';
@@ -15,6 +15,10 @@ export class TerminologyCacheService {
 
 	public getQueue(): Observable<TerminologyQueueItemDto[]> {
 		return this.http.get<TerminologyQueueItemDto[]>(`${environment.apiBase}/terminology/cache`);
+	}
+
+	public getStatus(): Observable<TerminologyECLStatusDto[]> {
+		return this.http.get<TerminologyECLStatusDto[]>(`${environment.apiBase}/terminology/cache/status`);
 	}
 
 	public addCsv(newCsv: TerminologyCSVDto): Observable<TerminologyQueueItemDto> {

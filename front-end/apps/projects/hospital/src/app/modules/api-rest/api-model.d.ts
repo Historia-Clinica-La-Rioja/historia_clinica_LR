@@ -3429,6 +3429,11 @@ export interface TerminologyCSVDto {
     url: string;
 }
 
+export interface TerminologyECLStatusDto {
+    ecl: SnomedECL;
+    successful?: TerminologyQueueItemDto;
+}
+
 export interface TerminologyQueueItemDto {
     createdOn: DateTimeDto;
     downloadedError: string;
