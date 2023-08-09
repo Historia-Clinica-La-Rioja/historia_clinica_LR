@@ -14,14 +14,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ar.lamansys.sgx.shared.security.UserInfo;
+import ar.lamansys.virtualConsultation.application.changeClinicalProfessionalAvailability.ChangeClinicalProfessionalAvailabilityService;
 import ar.lamansys.virtualConsultation.application.changeResponsibleProfessionalAvailability.ChangeResponsibleProfessionalAvailabilityService;
 import ar.lamansys.virtualConsultation.application.changeVirtualConsultationStatus.ChangeVirtualConsultationStatusService;
 import ar.lamansys.virtualConsultation.application.getDomainVirtualConsultations.GetDomainVirtualConsultationsService;
-import ar.lamansys.virtualConsultation.application.getResponsibleProfessionalAvailability.GetResponsibleProfessionalAvailabilityService;
 import ar.lamansys.virtualConsultation.application.getResponsibleUserIdByVirtualConsultationId.GetResponsibleUserIdByVirtualConsultationIdService;
 import ar.lamansys.virtualConsultation.application.getVirtualConsultationById.GetVirtualConsultationByIdService;
 import ar.lamansys.virtualConsultation.application.getVirtualConsultationNotificationData.GetVirtualConsultationNotificationDataService;
 import ar.lamansys.virtualConsultation.application.saveVirtualConsultation.SaveVirtualConsultationRequestService;
+import ar.lamansys.virtualConsultation.domain.ClinicalProfessionalAvailabilityBo;
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationRequestBo;
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationResponsibleProfessionalAvailabilityBo;
 import ar.lamansys.virtualConsultation.domain.enums.EVirtualConsultationStatus;
@@ -54,7 +55,7 @@ public class VirtualConsultationController {
 
 	private final GetVirtualConsultationNotificationDataService getVirtualConsultationNotificationDataService;
 
-	private final GetResponsibleProfessionalAvailabilityService getResponsibleProfessionalAvailabilityService;
+	private final ChangeClinicalProfessionalAvailabilityService changeClinicalProfessionalAvailabilityService;
 
 	private final ChangeResponsibleProfessionalAvailabilityService changeResponsibleProfessionalAvailabilityService;
 
@@ -117,14 +118,20 @@ public class VirtualConsultationController {
 												   @RequestBody Boolean attentionValue) throws JsonProcessingException {
 		log.debug("Input parameters -> institutionId {}, attentionValue {}", institutionId, attentionValue);
 		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-		VirtualConsultationResponsibleProfessionalAvailabilityBo virtualConsultationProfessionalAvailability = getResponsibleProfessionalAvailabilityService.run(doctorId, institutionId);
-		if (virtualConsultationProfessionalAvailability == null) {
-			virtualConsultationProfessionalAvailability = new VirtualConsultationResponsibleProfessionalAvailabilityBo(doctorId, institutionId);
-		}
-		virtualConsultationProfessionalAvailability.setAvailable(attentionValue);
+		VirtualConsultationResponsibleProfessionalAvailabilityBo virtualConsultationProfessionalAvailability = new VirtualConsultationResponsibleProfessionalAvailabilityBo(doctorId, institutionId, attentionValue);
 		Boolean result = changeResponsibleProfessionalAvailabilityService.run(virtualConsultationProfessionalAvailability);
 		VirtualConsultationResponsibleProfessionalAvailabilityDto message = virtualConsultationMapper.fromVirtualConsultationResponsibleProfessionalAvailabilityBo(virtualConsultationProfessionalAvailability);
 		virtualConsultationPublisher.publish("CHANGE-RESPONSIBLE-STATE", objectMapper.writeValueAsString(message));
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@PostMapping("/change-clinical-professional-state")
+	public Boolean changeClinicalProfessionalAvailability(@RequestBody Boolean availability) {
+		log.debug("Input parameters -> availability {}", availability);
+		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
+		ClinicalProfessionalAvailabilityBo professionalAvailability = new ClinicalProfessionalAvailabilityBo(doctorId, availability);
+		Boolean result = changeClinicalProfessionalAvailabilityService.run(professionalAvailability);
 		log.debug("Output -> {}", result);
 		return result;
 	}
