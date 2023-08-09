@@ -195,3 +195,26 @@ databaseChangeLog:
               constraintName: PK_virtual_consultation_responsible_professional_availability
               tableName: virtual_consultation_responsible_professional_availability
               validate: true
+
+    - changeSet:
+        id: virtual_consultation_clinical_professional_availability-createTable
+        comment: Create table virtual_consultation_clinical_professional_availability
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: virtual_consultation_clinical_professional_availability
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_virtual_consultation_clinical_professional_availability
+                      references: healthcare_professional(id)
+                      foreignKeyName: FK_healthcare_professional_virtual_consultation_clinical_professional_availability
+                    name: healthcare_professional_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: available
+                    type: boolean
+                    defaultValue: ${boolean.false}
