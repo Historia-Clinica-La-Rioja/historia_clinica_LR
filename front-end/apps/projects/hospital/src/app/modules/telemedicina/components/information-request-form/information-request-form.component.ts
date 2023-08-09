@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { CareLineDto, ClinicalSpecialtyDto, EVirtualConsultationPriority } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, EVirtualConsultationPriority, PersonPhotoDto } from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ContextService } from '@core/services/context.service';
 import { MotivoConsulta } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
 import { AmbulatoryConsultationProblem } from '@historia-clinica/services/ambulatory-consultation-problems.service';
-import { Patient } from '@pacientes/component/search-patient/search-patient.component';
+import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 
 const REASON_LIMIT = 1;
@@ -16,7 +16,9 @@ const REASON_LIMIT = 1;
 	styleUrls: ['./information-request-form.component.scss']
 })
 export class InformationRequestFormComponent implements OnInit {
-	patient: Patient;
+	@Input() patient: PatientBasicData;
+	@Input() patientPhoto: PersonPhotoDto;
+	@Output() requestInformationData = new EventEmitter<any>();
 	informationForm: UntypedFormGroup;
 	careLines: CareLineDto[];
 	careLinesTypeahead: TypeaheadOption<CareLineDto>[] = [];

@@ -17,7 +17,8 @@ export class RequestsComponent implements OnInit {
 	openAddRequest() {
 		this.dialog.open(NewTelemedicineRequestComponent, {
 			disableClose: true,
-			width:'800px',
+			width:'700px',
+			height:'700px',
 		})
 	}
 

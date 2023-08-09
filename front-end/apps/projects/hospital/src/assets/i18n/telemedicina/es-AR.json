@@ -1,6 +1,8 @@
 {
 	"telemedicina": {
 		"TITLE":"Telemedicina",
+		"PATIENTS_SEARCH":"Búsqueda de pacientes",
+		"REQUEST_INFORMATION": "Información solicitud",
 		"requests": {
 			"TITLE":"Solicitudes",
 			"SUBTITLE":"Listado de solicitudes para atención online",

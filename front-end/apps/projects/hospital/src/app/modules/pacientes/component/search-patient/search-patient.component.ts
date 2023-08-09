@@ -89,6 +89,7 @@ export class SearchPatientComponent implements OnInit {
 	clearResults(): void {
 		this.cardPatient = null;
 		this.isFormSubmitted = false;
+		this.onSelectedPatient.emit(null);
 	}
 
 	selectPatient() {
