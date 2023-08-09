@@ -128,6 +128,18 @@ databaseChangeLog:
               validate: true
 
     - changeSet:
+        id: addColumn-protected_appointments_allowed-diary_opening_hours
+        author: bchacon
+        comment: add column protected_appointments_allowed to diary_opening_hours table
+        changes:
+          - addColumn:
+              tableName: diary_opening_hours
+              columns:
+                - column:
+                    name: protected_appointments_allowed
+                    type: boolean
+
+    - changeSet:
         id: virtual_consultation-createTable
         comment: Create table virtual_consultation
         author: mmalyvarni
