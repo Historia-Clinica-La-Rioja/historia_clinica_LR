@@ -37,26 +37,36 @@
 
 		<section gdArea="coverage">
 			<ng-container *ngIf="!hideFilterPanel else editAppointment">
-				<div fxLayout="column" fxLayoutGap="5px">
+				<div class="info-card" fxLayout="column" fxLayoutGap="5px">
+					<span class="mat-caption normal-size">{{'image-network.appointments.MEDICAL_ORDER' |
+						translate}}</span>
+					<div fxLayout="row" fxLayoutGap="5px" fxLayout.xs="column">
+						<span class="mat-body subtitle-size medical-order-description"
+							*ngIf="medicalOrder else noInfo" matTooltip="{{medicalOrder.displayText | titlecase}}">
+							{{medicalOrder.displayText | titlecase}}</span>
+					</div>
+				</div>
+				<div class="info-card" fxLayout="column" fxLayoutGap="5px">
 					<span class="mat-caption normal-size">{{'turnos.appointment.coverageData.COVERAGE_DATA' |
 						translate}}</span>
 					<div fxLayout="row" fxLayoutGap="5px" fxLayout.xs="column">
-						<span class="mat-body patient-info coverage-text subtitle-size" *ngIf="coverageData else noInfo"
+						<span class="mat-body patient-info description-text subtitle-size"
+							*ngIf="coverageData else noInfo"
 							matTooltip="{{coverageData.medicalCoverage.name}}">{{coverageText}}</span>
-						<span class="mat-body patient-info coverage-text subtitle-size" *ngIf="coverageNumber">/
+						<span class="mat-body patient-info description-text subtitle-size" *ngIf="coverageNumber">/
 							{{coverageNumber}}
 						</span>
-						<span class="mat-body patient-info coverage-text lowercase subtitle-size"
+						<span class="mat-body patient-info description-text lowercase subtitle-size"
 							*ngIf="coverageCondition">/
 							{{coverageCondition}}
 						</span>
 					</div>
 				</div>
-				<div fxLayout="column" fxLayoutGap="5px">
+				<div class="info-card" fxLayout="column" fxLayoutGap="5px">
 					<span class="mat-caption normal-size">{{'turnos.appointment.phoneNumber.PHONE_NUMBER' |
 						translate}}</span>
 					<span *ngIf="phoneNumber else noInfo"
-						class="mat-body patient-info coverage-text subtitle-size">{{phoneNumber}}</span>
+						class="mat-body patient-info description-text subtitle-size">{{phoneNumber}}</span>
 				</div>
 				<button type="button" mat-icon-button color="primary" *ngIf="( hasRoleToEdit$ | async )"
 					(click)="hideFilters()">
@@ -69,7 +79,8 @@
 
 			<ng-template #editAppointment>
 				<form [formGroup]="formEdit" fxLayout="column" fxLayoutGap="5px" (ngSubmit)="edit()">
-					<app-medical-order-input [patientMedicalOrders]="[]" [patientId]="data.appointmentData.patient.id"></app-medical-order-input>
+					<app-medical-order-input [patientMedicalOrders]="patientMedicalOrders"
+						[patientId]="data.appointmentData.patient.id"></app-medical-order-input>
 
 					<mat-form-field appearance="outline" *ngIf="isAssigned()">
 						<button type="button" mat-button matSuffix color="warn" mat-icon-button
@@ -243,7 +254,7 @@
 </div>
 
 <ng-template #noInfo>
-	<span class="mat-body patient-no-info coverage-text subtitle-size">
+	<span class="mat-body patient-no-info description-text subtitle-size">
 		{{'turnos.appointment.NO-INFO' | translate}}
 	</span>
 </ng-template>

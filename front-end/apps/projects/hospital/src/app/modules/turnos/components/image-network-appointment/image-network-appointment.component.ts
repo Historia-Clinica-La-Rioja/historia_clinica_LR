@@ -4,7 +4,7 @@ import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { AppFeature, AppointmentDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto, CompleteEquipmentDiaryDto, UpdateAppointmentDto, AppointmentListDto } from '@api-rest/api-model.d';
+import { AppFeature, AppointmentDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto, CompleteEquipmentDiaryDto, UpdateAppointmentDto, AppointmentListDto, DiagnosticReportInfoDto, TranscribedDiagnosticReportInfoDto } from '@api-rest/api-model.d';
 import { VALIDATIONS, getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
 import { MapperService } from '@core/services/mapper.service';
 import {
@@ -17,7 +17,7 @@ import {
 import { map, take } from 'rxjs/operators';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PermissionsService } from '@core/services/permissions.service';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { PersonMasterDataService } from "@api-rest/services/person-master-data.service";
 import { SummaryCoverageInformation } from '@historia-clinica/modules/ambulatoria/components/medical-coverage-summary-view/medical-coverage-summary-view.component';
@@ -37,10 +37,17 @@ import { EquipmentAppointmentsFacadeService } from '../../services/equipment-app
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { CancelAppointmentComponent } from '@turnos/dialogs/cancel-appointment/cancel-appointment.component';
 import { toCalendarEvent } from '../../utils/appointment.utils';
+import { medicalOrderInfo } from '@turnos/dialogs/new-appointment/new-appointment.component';
+import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
+import { differenceInDays } from 'date-fns';
+import { TranslateService } from '@ngx-translate/core';
 
 const BELL_LABEL = 'Llamar paciente'
 const ROLES_TO_CHANGE_STATE: ERole[] = [ERole.ADMINISTRATIVO_RED_DE_IMAGENES];
 const ROLES_TO_EDIT: ERole[] = [ERole.ADMINISTRATIVO_RED_DE_IMAGENES];
+const MEDICAL_ORDER_PENDING_STATUS = '1';
+const MEDICAL_ORDER_CATEGORY_ID = '363679005'
+const ORDER_EXPIRED_DAYS = 30;
 
 @Component({
   selector: 'app-image-network-appointment',
@@ -69,6 +76,8 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 	coverageNumber: any;
 	coverageCondition: string;
 	coverageData: PatientMedicalCoverage;
+	medicalOrder: medicalOrderInfo;
+	patientMedicalOrders: medicalOrderInfo[] = [];
 	phoneNumber: string;
 	summaryCoverageData: SummaryCoverageInformation = {};
 	hasRoleToChangeState$: Observable<boolean>;
@@ -113,7 +122,9 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		private readonly personMasterDataService: PersonMasterDataService,
 		private readonly patientService: PatientService,
 		private readonly imageDecoderService: ImageDecoderService,
-		private readonly medicalCoverageInfo: MedicalCoverageInfoService
+		private readonly medicalCoverageInfo: MedicalCoverageInfoService,
+		private prescripcionesService: PrescripcionesService,
+		private readonly translateService: TranslateService,
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_LLAMADO).subscribe(isEnabled => this.isMqttCallEnabled = isEnabled);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => this.nameSelfDeterminationFF = isOn);
@@ -134,6 +145,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 			phoneNumber: null
 		});
 
+		this.getPatientMedicalOrders();
 		this.setMedicalCoverages();
 		this.formEdit.controls.phoneNumber.setValue(this.data.appointmentData.phoneNumber);
 		this.formEdit.controls.phonePrefix.setValue(this.data.appointmentData.phonePrefix);
@@ -209,6 +221,47 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 	isInvalidFormEdit(): boolean {
 		this.formEdit.markAllAsTouched();
 		return this.formEdit.invalid;
+	}
+
+	private getPatientMedicalOrders() {
+		const prescriptions$ = this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.data.appointmentData.patient.id, MEDICAL_ORDER_PENDING_STATUS, null, null, null, MEDICAL_ORDER_CATEGORY_ID);
+		const transcribedOrders$ = this.prescripcionesService.getTranscribedOrders(this.data.appointmentData.patient.id);
+		forkJoin([prescriptions$, transcribedOrders$]).subscribe(masterdataInfo => {
+			this.mapDiagnosticReportInfoDtoToMedicalOrderInfo(masterdataInfo[0]);
+			this.mapTranscribeOrderToMedicalOrderInfo(masterdataInfo[1]);
+		});
+	}
+
+	private mapDiagnosticReportInfoDtoToMedicalOrderInfo(patientMedicalOrders: DiagnosticReportInfoDto[]){
+		let text = 'image-network.appointments.medical-order.ORDER';
+
+		this.translateService.get(text).subscribe(translatedText => {
+			patientMedicalOrders.map(diagnosticReportInfo => {
+				if (differenceInDays(new Date(), new Date(diagnosticReportInfo.creationDate)) <= ORDER_EXPIRED_DAYS){
+					this.patientMedicalOrders.push({
+						serviceRequestId: diagnosticReportInfo.serviceRequestId,
+						studyName: diagnosticReportInfo.snomed.pt,
+						studyId: diagnosticReportInfo.id,
+						displayText: `${translatedText} # ${diagnosticReportInfo.serviceRequestId} - ${diagnosticReportInfo.snomed.pt}`,
+						isTranscribed: false
+					})}
+			}).filter(value => value !== null && value !== undefined);
+		});
+	}
+	
+	private mapTranscribeOrderToMedicalOrderInfo(transcribedOrders: TranscribedDiagnosticReportInfoDto[]){
+		let text = 'image-network.appointments.medical-order.TRANSCRIBED_ORDER';
+
+		this.translateService.get(text).subscribe(translatedText => {
+			transcribedOrders.map(medicalOrder => {
+				this.patientMedicalOrders.push({
+					serviceRequestId: medicalOrder.serviceRequestId,
+					studyName: medicalOrder.studyName,
+					displayText: `${translatedText} - ${medicalOrder.studyName}`,
+					isTranscribed: true
+				})
+			}).filter(value => value !== null && value !== undefined);
+		});
 	}
 
 	private setMedicalCoverages(): void {
@@ -340,6 +393,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 				this.updatePhoneNumber(this.formEdit.controls.phonePrefix.value, this.formEdit.controls.phoneNumber.value);
 				this.phoneNumber = this.formatPhonePrefixAndNumber(this.formEdit.controls.phonePrefix.value, this.formEdit.controls.phoneNumber.value);
 			}
+			this.medicalOrder = this.formEdit.get('medicalOrder').get('appointmentMedicalOrder').value;
 			this.hideFilters();
 		}
 	}
