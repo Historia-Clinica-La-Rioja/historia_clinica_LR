@@ -1,0 +1,39 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { VirtualConsultationDto, VirtualConsultationNotificationDataDto } from '@api-rest/api-model';
+import { environment } from '@environments/environment';
+import { Observable } from 'rxjs';
+
+@Injectable({
+	providedIn: 'root'
+})
+export class VirtualConstultationService {
+
+
+	private BASE_URL = `${environment.apiBase}/virtual-consultation`;
+
+	constructor(
+		private http: HttpClient,
+	) {
+
+	}
+
+	notifyVirtualConsultationCall(virtualConsultationId: number): Observable<void> {
+		return this.http.post<void>(`${this.BASE_URL}/notify/${virtualConsultationId}`, {});
+	}
+
+	getVirtualConsultationCall(virtualConsultationId: number): Observable<VirtualConsultationNotificationDataDto> {
+		const url = `${this.BASE_URL}/notification/${virtualConsultationId}`
+		return this.http.get<VirtualConsultationNotificationDataDto>(`${url}`)
+	}
+
+	getDomainVirtualConsultation(): Observable<VirtualConsultationDto[]> {
+		const url = `${this.BASE_URL}/domain`;
+		return this.http.get<VirtualConsultationDto[]>(`${url}`)
+	}
+
+	changeResponsibleAttentionState(institutionId: number, attentionValue: boolean): Observable<any> {
+		const url = `${this.BASE_URL}/${institutionId}/change-responsible-state`;
+		return this.http.post(`${url}`, attentionValue)
+	}
+}
