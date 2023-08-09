@@ -140,6 +140,22 @@ databaseChangeLog:
                     type: boolean
 
     - changeSet:
+        id: update-protected_appointments_allowed-diary_opening_hours
+        author: bchacon
+        comment: Actualiza dato protected_appointments_allowed en franjas que correspondan a agendas que acepten turnos protegidos
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE diary_opening_hours as doh
+                SET protected_appointments_allowed = true
+                FROM Diary as d
+                WHERE doh.diary_id = d.id
+                AND doh.medical_attention_type_id = 1
+                AND d.protected_appointments_percentage > 0
+                AND (d.deleted = false OR d.deleted is null);
+
+    - changeSet:
         id: virtual_consultation-createTable
         comment: Create table virtual_consultation
         author: mmalyvarni
