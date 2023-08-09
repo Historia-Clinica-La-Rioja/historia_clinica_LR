@@ -152,38 +152,6 @@ export class AgendaSetupComponent implements OnInit {
 			hierarchicalUnitTemporaryCtrl.updateValueAndValidity();
 		});
 
-		this.form.controls.healthcareProfessionalId.valueChanges.pipe(filter(healthcareProfessionalId => !!healthcareProfessionalId)).subscribe((healthcareProfessionalId: number) => {
-			if (!this.form.value.temporaryReplacement) {
-				this.form.controls.hierarchicalUnitTemporary.setValue(null);
-				this.setHierarchicalUnits(healthcareProfessionalId);
-			}
-		});
-
-		this.form.controls.professionalReplacedId.valueChanges.pipe(filter(healthcareProfessionalId => !!healthcareProfessionalId)).subscribe((professionalReplacedId: number) => {
-			this.form.controls.hierarchicalUnit.setValue(null);
-			if (this.form.value.temporaryReplacement) {
-				this.form.controls.hierarchicalUnitTemporary.setValue(null);
-				this.setHierarchicalUnits(professionalReplacedId);
-			}
-		});
-
-
-		combineLatest([
-			this.form.controls.healthcareProfessionalId.valueChanges.pipe(filter(id => !!id)),
-			this.form.controls.professionalReplacedId.valueChanges.pipe(filter(id => !!id))
-		]).subscribe(([healthcareProfessionalId, professionalReplacedId]) => {
-			const temporaryReplacement = this.form.value.temporaryReplacement;
-
-			if (!temporaryReplacement) {
-				this.updateHierarchicalUnitTemporary(null, healthcareProfessionalId);
-			} else {
-				this.updateHierarchicalUnitTemporary(null, professionalReplacedId);
-			}
-
-			if (!temporaryReplacement) {
-				this.updateHierarchicalUnit(null, healthcareProfessionalId);
-			}
-		});
 
 
 		this.route.data.subscribe(data => {
@@ -192,6 +160,7 @@ export class AgendaSetupComponent implements OnInit {
 				this.route.paramMap.subscribe((params) => {
 					this.editingDiaryId = Number(params.get('agendaId'));
 					this.diaryService.get(this.editingDiaryId).subscribe((diary: CompleteDiaryDto) => {
+
 						this.minDate = momentParseDate(diary.startDate).toDate();
 						this.setValuesFromExistingAgenda(diary);
 						this.disableNotEditableControls();
@@ -199,11 +168,49 @@ export class AgendaSetupComponent implements OnInit {
 						if (this.lineOfCareAndPercentageOfProtectedAppointmentsValid) {
 							this.form.controls.protectedAppointmentsPercentage.enable();
 						}
+
 					});
 
 				});
 			}
+			else {
+				this.form.controls.healthcareProfessionalId.valueChanges.pipe(filter(healthcareProfessionalId => !!healthcareProfessionalId)).subscribe((healthcareProfessionalId: number) => {
+					if (!this.form.value.temporaryReplacement) {
+						this.form.controls.hierarchicalUnitTemporary.setValue(null);
+						this.setHierarchicalUnits(healthcareProfessionalId);
+					}
+				});
+
+				this.form.controls.professionalReplacedId.valueChanges.pipe(filter(healthcareProfessionalId => !!healthcareProfessionalId)).subscribe((professionalReplacedId: number) => {
+					this.form.controls.hierarchicalUnit.setValue(null);
+					if (this.form.value.temporaryReplacement) {
+						this.form.controls.hierarchicalUnitTemporary.setValue(null);
+						this.setHierarchicalUnits(professionalReplacedId);
+					}
+				});
+
+
+				combineLatest([
+					this.form.controls.healthcareProfessionalId.valueChanges.pipe(filter(id => !!id)),
+					this.form.controls.professionalReplacedId.valueChanges.pipe(filter(id => !!id))
+				]).subscribe(([healthcareProfessionalId, professionalReplacedId]) => {
+					const temporaryReplacement = this.form.value.temporaryReplacement;
+
+					if (!temporaryReplacement) {
+						this.updateHierarchicalUnitTemporary(healthcareProfessionalId);
+					} else {
+						this.updateHierarchicalUnitTemporary(professionalReplacedId);
+					}
+
+					if (!temporaryReplacement) {
+						this.updateHierarchicalUnit(healthcareProfessionalId);
+					}
+				});
+
+			}
 		});
+
+
 		this.sectorService.getAll().subscribe(data => {
 			this.sectors = data;
 		});
@@ -212,13 +219,13 @@ export class AgendaSetupComponent implements OnInit {
 
 	}
 
-	private updateHierarchicalUnitTemporary(value: any, id: number): void {
-		this.form.controls.hierarchicalUnitTemporary.setValue(value);
+	private updateHierarchicalUnitTemporary(id: number): void {
+		this.form.controls.hierarchicalUnitTemporary.setValue(null);
 		this.setHierarchicalUnits(id);
 	}
 
-	private updateHierarchicalUnit(value: any, id: number): void {
-		this.form.controls.hierarchicalUnit.setValue(value);
+	private updateHierarchicalUnit(id: number): void {
+		this.form.controls.hierarchicalUnit.setValue(null);
 		this.setHierarchicalUnits(id);
 	}
 	get careLinesAssociated(): UntypedFormControl {
@@ -229,12 +236,14 @@ export class AgendaSetupComponent implements OnInit {
 
 		if (diary.predecessorProfessionalId) {
 			this.temporary = true;
-			this.form.controls.professionalReplacedId.setValue(diary.predecessorProfessionalId);
-			this.form.controls.hierarchicalUnitTemporary.setValue(this.hierarchicalUnits.filter(e => e.name === diary.hierarchicalUnitAlias));
 			this.form.controls.temporaryReplacement.setValue(true);
+			this.form.controls.professionalReplacedId.setValue(diary.predecessorProfessionalId);
 			this.form.get('professionalReplacedId').disable();
-			this.form.get('hierarchicalUnit').disable();
+		} else {
+			this.form.controls.healthcareProfessionalId.setValue(diary.healthcareProfessionalId);
+			this.form.get('healthcareProfessionalId').disable();
 		}
+
 		this.form.controls.sectorId.setValue(diary.sectorId);
 		this.doctorsOfficeService.getAll(diary.sectorId)
 			.subscribe((doctorsOffice: DoctorsOfficeDto[]) => {
@@ -298,6 +307,7 @@ export class AgendaSetupComponent implements OnInit {
 
 		this.setSpecialityId(diary.clinicalSpecialtyId);
 		this.setAlias(diary.alias);
+		diary.predecessorProfessionalId ? this.setHierarchicalUnits(diary.predecessorProfessionalId, diary) : this.setHierarchicalUnits(diary.healthcareProfessionalId, diary);
 	}
 
 	private setHierarchicalUnitsByName(name: string) {
@@ -462,23 +472,37 @@ export class AgendaSetupComponent implements OnInit {
 		scrollbar?.scrollTo(0, this.PIXEL_SIZE_HEIGHT * this.TURN_STARTING_HOUR * this.hourSegments);
 	}
 
-	setHierarchicalUnits(healthcareProfessionalId: number) {
+	setHierarchicalUnits(healthcareProfessionalId: number, diary?: CompleteDiaryDto) {
+
 		return this.professionalService.geUserIdByHealthcareProfessional(healthcareProfessionalId).pipe(
 			switchMap((userId: number) =>
 				this.hierarchicalUnitsService.fetchAllByUserIdAndInstitutionId(userId)
 			)
 		).subscribe(response => {
 			this.hierarchicalUnits = response;
-			if (this.hierarchicalUnits.length) {
-				if (!this.form.value.temporaryReplacement) {
-					this.form.controls.hierarchicalUnit.setValue(this.hierarchicalUnits[0].id);
-					this.form.controls.hierarchicalUnit.updateValueAndValidity();
-				}
-				if (this.form.value.temporaryReplacement) {
-					this.form.controls.hierarchicalUnitTemporary.setValue(this.hierarchicalUnits[0].id);
+			if (diary) {
+				if (diary.predecessorProfessionalId) {
+					this.form.controls.hierarchicalUnitTemporary.setValue(this.hierarchicalUnits.find(h => h.id === diary.hierarchicalUnitId).id);
+					this.form.get('hierarchicalUnitTemporary').disable();
 					this.form.controls.hierarchicalUnitTemporary.updateValueAndValidity();
 				}
+				else {
+					this.form.controls.hierarchicalUnit.setValue(this.hierarchicalUnits.find(h => h.id === diary.hierarchicalUnitId).id);
+					this.form.controls.hierarchicalUnit.updateValueAndValidity();
+					this.form.get('hierarchicalUnit').disable();
+				}
 			}
+			else
+				if (this.hierarchicalUnits.length) {
+					if (!this.form.value.temporaryReplacement) {
+						this.form.controls.hierarchicalUnit.setValue(this.hierarchicalUnits[0].id);
+						this.form.controls.hierarchicalUnit.updateValueAndValidity();
+					}
+					if (this.form.value.temporaryReplacement) {
+						this.form.controls.hierarchicalUnitTemporary.setValue(this.hierarchicalUnits[0].id);
+						this.form.controls.hierarchicalUnitTemporary.updateValueAndValidity();
+					}
+				}
 		});
 	}
 

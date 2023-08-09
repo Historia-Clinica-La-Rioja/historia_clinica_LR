@@ -28,7 +28,7 @@
 						</section>
 					</div>
 
-					<div *ngIf="form.value.healthcareProfessionalId && !form.value.temporaryReplacement || loadSavedData" class="professional-form-sector" fxLayout="column">
+					<div *ngIf="(form.value.healthcareProfessionalId && !form.value.temporaryReplacement || loadSavedData) && !temporary" class="professional-form-sector" fxLayout="column">
 						<span>{{ 'turnos.agenda-setup.HIERARCHICAL_UNIT' | translate }}</span>
 						<mat-form-field class="mat-form-field-on-div" appearance="outline" >
 							<mat-select id="hierarchicalUnit" name="hierarchicalUnit" formControlName="hierarchicalUnit"
