@@ -125,6 +125,9 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		});
 
 		this.formEdit = this.formBuilder.group({
+			medicalOrder: this.formBuilder.group({
+				appointmentMedicalOrder: [null]
+			}),
 			//Medical Coverage selected in Edit Mode
 			newCoverageData: null,
 			phonePrefix: null,

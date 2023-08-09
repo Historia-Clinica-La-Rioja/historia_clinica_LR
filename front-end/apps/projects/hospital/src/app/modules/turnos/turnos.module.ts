@@ -42,6 +42,7 @@ import { NewAttentionComponent } from './dialogs/new-attention/new-attention.com
 // services
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { EquipmentAppointmentsFacadeService } from './services/equipment-appointments-facade.service';
+import { MedicalOrderInputComponent } from './components/medical-order-input/medical-order-input.component';
 
 
 @NgModule({
@@ -78,6 +79,7 @@ import { EquipmentAppointmentsFacadeService } from './services/equipment-appoint
 		ConfirmPrintAppointmentComponent,
 		NewAppointmentComponent,
 		NewAttentionComponent,
+  MedicalOrderInputComponent,
 	],
 	imports: [
 		CommonModule,
