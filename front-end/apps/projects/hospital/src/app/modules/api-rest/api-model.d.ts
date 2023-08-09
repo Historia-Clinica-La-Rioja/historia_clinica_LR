@@ -937,6 +937,7 @@ export interface DiaryOpeningHoursDto extends Overlapping<DiaryOpeningHoursDto> 
     medicalAttentionTypeId: number;
     openingHours: OpeningHoursDto;
     overturnCount?: number;
+    protectedAppointmentsAllowed: boolean;
 }
 
 export interface DietDto extends IndicationDto {
@@ -1319,6 +1320,7 @@ export interface EquipmentDiaryOpeningHoursDto extends Overlapping<EquipmentDiar
     medicalAttentionTypeId: number;
     openingHours: EquipmentOpeningHoursDto;
     overturnCount?: number;
+	protectedAppointmentsAllowed: boolean;
 }
 
 export interface EquipmentDto extends Serializable {

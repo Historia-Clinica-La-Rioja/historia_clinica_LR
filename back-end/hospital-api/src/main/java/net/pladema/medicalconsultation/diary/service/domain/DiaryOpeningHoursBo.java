@@ -21,8 +21,10 @@ public class DiaryOpeningHoursBo {
 
     private Boolean externalAppointmentsAllowed;
 
-    public boolean overlap(DiaryOpeningHoursBo other) {
-        return openingHours.overlap(other.getOpeningHours());
+	private Boolean protectedAppointmentsAllowed;
 
+	public boolean overlap(DiaryOpeningHoursBo other) {
+        return openingHours.overlap(other.getOpeningHours());
     }
+
 }

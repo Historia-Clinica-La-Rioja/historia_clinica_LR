@@ -106,6 +106,7 @@ export class AgendaHorarioService {
 					medicalAttentionTypeId: event.meta.medicalAttentionType?.id,
 					possibleScheduleHours,
 					availableForBooking: event.meta.availableForBooking,
+					protectedAppointmentsAllowed: event.meta.protectedAppointmentsAllowed
 				}
 			});
 		dialogRef.afterClosed().subscribe(dialogInfo => {
@@ -228,7 +229,8 @@ export class AgendaHorarioService {
 				},
 				medicalAttentionTypeId: event.meta.medicalAttentionType.id,
 				overturnCount: event.meta.overturnCount,
-				externalAppointmentsAllowed: event.meta.availableForBooking
+				externalAppointmentsAllowed: event.meta.availableForBooking,
+				protectedAppointmentsAllowed: event.meta.protectedAppointmentsAllowed
 			};
 		}
 	}
@@ -268,6 +270,7 @@ export class AgendaHorarioService {
 				medicalAttentionType: { id: diaryOpeningHour.medicalAttentionTypeId },
 				overturnCount: diaryOpeningHour.overturnCount,
 				availableForBooking: diaryOpeningHour.externalAppointmentsAllowed,
+				protectedAppointmentsAllowed: diaryOpeningHour.protectedAppointmentsAllowed
 			}
 		};
 	}
