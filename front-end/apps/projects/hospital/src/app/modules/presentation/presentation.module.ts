@@ -68,7 +68,8 @@ import { TimeDtoToLocalTimePipe } from './pipes/time-dto-to-local-time.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
-
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { FloatingDivComponent } from './components/floating-div/floating-div.component';
 
 @NgModule({
 	declarations: [
@@ -91,6 +92,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		FactorDeRiesgoComponent,
 		FactorDeRiesgoCurrentPreviousComponent,
 		FiltersCardComponent,
+		FloatingDivComponent,
 		FooterComponent,
 		ImgUploaderComponent,
 		IndicationComponent,
@@ -143,7 +145,8 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		CoreModule,
 		AppMaterialModule,
 		PdfViewerModule,
-		QuillModule.forRoot()
+		QuillModule.forRoot(),
+		DragDropModule
 	],
 	exports: [
 		FlexModule,
@@ -170,6 +173,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		FactorDeRiesgoComponent,
 		FactorDeRiesgoCurrentPreviousComponent,
 		FiltersCardComponent,
+		FloatingDivComponent,
 		ImgUploaderComponent,
 		IndicationComponent,
 		LabelComponent,
