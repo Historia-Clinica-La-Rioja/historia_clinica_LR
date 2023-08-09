@@ -54,7 +54,14 @@ public class EditDiaryOpeningHoursValidator implements ConstraintValidator<EditD
         List<DiaryOpeningHoursBo> openingHours = diaryBo.getDiaryOpeningHours();
         openingHours.sort(weekDayOrder.thenComparing(timeOrder));
 
-        if (diaryBo.getDiaryOpeningHours().isEmpty()) {
+		if (validateProtectedAppointmentsForSpontaneousOpeningHours(openingHours)) {
+			context.disableDefaultConstraintViolation();
+			context.buildConstraintViolationWithTemplate("{diary.period.invalid.protected-appointments-not-allowed-in-spontaneous-attention}")
+					.addConstraintViolation();
+			return false;
+		}
+
+		if (diaryBo.getDiaryOpeningHours().isEmpty()) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("{diary.attention.no-opening-hours}")
                     .addConstraintViolation();
@@ -102,6 +109,11 @@ public class EditDiaryOpeningHoursValidator implements ConstraintValidator<EditD
 		}
 
 		return true;
+	}
+
+	private boolean validateProtectedAppointmentsForSpontaneousOpeningHours(List<DiaryOpeningHoursBo> openingHours) {
+		return openingHours.stream()
+				.anyMatch(oh -> oh.getMedicalAttentionTypeId().equals(MedicalAttentionType.SPONTANEOUS) && oh.getProtectedAppointmentsAllowed());
 	}
 
 }

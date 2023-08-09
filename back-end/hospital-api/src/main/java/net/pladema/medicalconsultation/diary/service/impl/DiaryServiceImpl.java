@@ -158,6 +158,8 @@ public class DiaryServiceImpl implements DiaryService {
 		return diaryRepository.findById(diaryToUpdate.getId()).map(savedDiary -> {
 			HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH = new HashMap<>();
 			diaryToUpdate.getDiaryOpeningHours().forEach( doh -> {
+				if (doh.getProtectedAppointmentsAllowed() != null && doh.getProtectedAppointmentsAllowed() && diaryToUpdate.getCareLines().isEmpty())
+					doh.setProtectedAppointmentsAllowed(false);
 				doh.setDiaryId(savedDiary.getId());
 				apmtsByNewDOH.put(doh, new ArrayList<>());
 			});

@@ -3,6 +3,8 @@ package net.pladema.medicalconsultation.diary.controller.constraints.validator;
 import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -11,6 +13,8 @@ import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursValidatorService;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
+import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.pladema.medicalconsultation.diary.controller.constraints.DiaryOpeningHoursValid;
@@ -45,6 +49,20 @@ public class DiaryOpeningHoursValidator implements ConstraintValidator<DiaryOpen
         List<DiaryOpeningHoursBo> openingHours = diaryBo.getDiaryOpeningHours();
         openingHours.sort(weekDayOrder.thenComparing(timeOrder));
 
+		if (diaryBo.getCareLines().isEmpty() && openingHoursAllowedProtectedAppointments(openingHours)) {
+			context.disableDefaultConstraintViolation();
+			context.buildConstraintViolationWithTemplate("{diary.period.invalid.protected-appointments-not-allowed}")
+					.addConstraintViolation();
+			return false;
+		}
+
+		if (validateProtectedAppointmentsForSpontaneousOpeningHours(openingHours)) {
+			context.disableDefaultConstraintViolation();
+			context.buildConstraintViolationWithTemplate("{diary.period.invalid.protected-appointments-not-allowed-in-spontaneous-attention}")
+					.addConstraintViolation();
+			return false;
+		}
+
         if (diaryBo.getDiaryOpeningHours().isEmpty()) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("{diary.attention.no-opening-hours}")
@@ -66,5 +84,13 @@ public class DiaryOpeningHoursValidator implements ConstraintValidator<DiaryOpen
         return Boolean.TRUE;
     }
 
+	private boolean openingHoursAllowedProtectedAppointments(List<DiaryOpeningHoursBo> openingHours) {
+		return openingHours.stream()
+				.anyMatch(oh -> oh.getProtectedAppointmentsAllowed());
+	}
 
+	private boolean validateProtectedAppointmentsForSpontaneousOpeningHours(List<DiaryOpeningHoursBo> openingHours) {
+		return openingHours.stream()
+				.anyMatch(oh -> oh.getMedicalAttentionTypeId().equals(MedicalAttentionType.SPONTANEOUS) && oh.getProtectedAppointmentsAllowed());
+	}
 }
