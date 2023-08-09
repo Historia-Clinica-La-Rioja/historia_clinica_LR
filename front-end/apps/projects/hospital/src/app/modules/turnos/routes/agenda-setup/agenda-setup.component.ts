@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { DAYS_OF_WEEK } from 'angular-calendar';
-import { Observable, filter, switchMap } from 'rxjs';
+import { Observable, combineLatest, filter, switchMap } from 'rxjs';
 
 import { getError, hasError, processErrors, scrollIntoError } from '@core/utils/form.utils';
 import { ContextService } from '@core/services/context.service';
@@ -134,31 +134,54 @@ export class AgendaSetupComponent implements OnInit {
 			.subscribe(newDuration => this.hourSegments = MINUTES_IN_HOUR / newDuration);
 
 		this.form.controls.temporaryReplacement.valueChanges.subscribe((temporaryReplacement: boolean) => {
+			const hierarchicalUnitCtrl = this.form.controls.hierarchicalUnit;
+			const hierarchicalUnitTemporaryCtrl = this.form.controls.hierarchicalUnitTemporary;
+			const professionalReplacedIdCtrl = this.form.controls.professionalReplacedId;
 			if (temporaryReplacement) {
-				this.form.controls.hierarchicalUnitTemporary.setValue(null);
-				this.form.controls.professionalReplacedId.setValidators([Validators.required]);
-				this.form.controls.hierarchicalUnitTemporary.setValidators([Validators.required]);
-			} else {
-				this.form.controls.hierarchicalUnit.setValue(null);
-				this.form.controls.professionalReplacedId.clearValidators();
-				this.form.controls.hierarchicalUnitTemporary.clearValidators();
+				hierarchicalUnitTemporaryCtrl.setValue(null);
+				professionalReplacedIdCtrl.setValidators([Validators.required]);
+				hierarchicalUnitTemporaryCtrl.setValidators([Validators.required]);
+				hierarchicalUnitCtrl.setValue(null);
+			}
+			else {
+				professionalReplacedIdCtrl.clearValidators();
+				hierarchicalUnitTemporaryCtrl.clearValidators();
 				this.setHierarchicalUnits(this.form.value.healthcareProfessionalId);
 			}
-			this.form.controls.professionalReplacedId.updateValueAndValidity();
+			professionalReplacedIdCtrl.updateValueAndValidity();
+			hierarchicalUnitTemporaryCtrl.updateValueAndValidity();
 		});
 
-
 		this.form.controls.healthcareProfessionalId.valueChanges.pipe(filter(healthcareProfessionalId => !!healthcareProfessionalId)).subscribe((healthcareProfessionalId: number) => {
-			this.form.controls.hierarchicalUnitTemporary.setValue(null);
 			if (!this.form.value.temporaryReplacement) {
+				this.form.controls.hierarchicalUnitTemporary.setValue(null);
 				this.setHierarchicalUnits(healthcareProfessionalId);
 			}
 		});
 
-		this.form.controls.professionalReplacedId.valueChanges.pipe(filter(healthcareProfessionalId => !!healthcareProfessionalId)).subscribe((healthcareProfessionalId: number) => {
+		this.form.controls.professionalReplacedId.valueChanges.pipe(filter(healthcareProfessionalId => !!healthcareProfessionalId)).subscribe((professionalReplacedId: number) => {
 			this.form.controls.hierarchicalUnit.setValue(null);
 			if (this.form.value.temporaryReplacement) {
-				this.setHierarchicalUnits(healthcareProfessionalId);
+				this.form.controls.hierarchicalUnitTemporary.setValue(null);
+				this.setHierarchicalUnits(professionalReplacedId);
+			}
+		});
+
+
+		combineLatest([
+			this.form.controls.healthcareProfessionalId.valueChanges.pipe(filter(id => !!id)),
+			this.form.controls.professionalReplacedId.valueChanges.pipe(filter(id => !!id))
+		]).subscribe(([healthcareProfessionalId, professionalReplacedId]) => {
+			const temporaryReplacement = this.form.value.temporaryReplacement;
+
+			if (!temporaryReplacement) {
+				this.updateHierarchicalUnitTemporary(null, healthcareProfessionalId);
+			} else {
+				this.updateHierarchicalUnitTemporary(null, professionalReplacedId);
+			}
+
+			if (!temporaryReplacement) {
+				this.updateHierarchicalUnit(null, healthcareProfessionalId);
 			}
 		});
 
@@ -189,6 +212,15 @@ export class AgendaSetupComponent implements OnInit {
 
 	}
 
+	private updateHierarchicalUnitTemporary(value: any, id: number): void {
+		this.form.controls.hierarchicalUnitTemporary.setValue(value);
+		this.setHierarchicalUnits(id);
+	}
+
+	private updateHierarchicalUnit(value: any, id: number): void {
+		this.form.controls.hierarchicalUnit.setValue(value);
+		this.setHierarchicalUnits(id);
+	}
 	get careLinesAssociated(): UntypedFormControl {
 		return this.form.get('careLines') as UntypedFormControl;
 	}
@@ -404,7 +436,7 @@ export class AgendaSetupComponent implements OnInit {
 			healthcareProfessionalId: this.form.getRawValue().healthcareProfessionalId,
 			doctorsOfficeId: this.form.getRawValue().doctorOffice.id,
 
-			predecessorProfessionalId: this.form.value?.professionalReplacedId ,
+			predecessorProfessionalId: this.form.value?.professionalReplacedId,
 			hierarchicalUnitId: this.form.value.temporaryReplacement ? this.form.value?.hierarchicalUnitTemporary : this.form.value?.hierarchicalUnit,
 
 			startDate: momentFormat(this.form.value.startDate, DateFormat.API_DATE),
