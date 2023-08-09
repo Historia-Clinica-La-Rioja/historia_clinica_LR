@@ -17,17 +17,18 @@ import ar.lamansys.sgx.shared.security.UserInfo;
 import ar.lamansys.virtualConsultation.application.changeResponsibleProfessionalAvailability.ChangeResponsibleProfessionalAvailabilityService;
 import ar.lamansys.virtualConsultation.application.changeVirtualConsultationStatus.ChangeVirtualConsultationStatusService;
 import ar.lamansys.virtualConsultation.application.getDomainVirtualConsultations.GetDomainVirtualConsultationsService;
-import ar.lamansys.virtualConsultation.application.getResponsibleUserIdByVirtualConsultationId.GetResponsibleUserIdByVirtualConsultationIdService;
-import ar.lamansys.virtualConsultation.application.getVirtualConsultationNotificationData.GetVirtualConsultationNotificationDataService;
 import ar.lamansys.virtualConsultation.application.getResponsibleProfessionalAvailability.GetResponsibleProfessionalAvailabilityService;
+import ar.lamansys.virtualConsultation.application.getResponsibleUserIdByVirtualConsultationId.GetResponsibleUserIdByVirtualConsultationIdService;
+import ar.lamansys.virtualConsultation.application.getVirtualConsultationById.GetVirtualConsultationByIdService;
+import ar.lamansys.virtualConsultation.application.getVirtualConsultationNotificationData.GetVirtualConsultationNotificationDataService;
 import ar.lamansys.virtualConsultation.application.saveVirtualConsultation.SaveVirtualConsultationRequestService;
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationRequestBo;
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationResponsibleProfessionalAvailabilityBo;
 import ar.lamansys.virtualConsultation.domain.enums.EVirtualConsultationStatus;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationDto;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationNotificationDataDto;
-import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationResponsibleProfessionalAvailabilityDto;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationRequestDto;
+import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationResponsibleProfessionalAvailabilityDto;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationStatusDataDto;
 import ar.lamansys.virtualConsultation.infrastructure.mapper.VirtualConsultationMapper;
 import ar.lamansys.virtualConsultation.infrastructure.mqtt.VirtualConsultationPublisher;
@@ -63,6 +64,8 @@ public class VirtualConsultationController {
 
 	private final ObjectMapper objectMapper;
 
+	private final GetVirtualConsultationByIdService getVirtualConsultationByIdService;
+
 	@PostMapping(value = "/{institutionId}")
 	public Integer saveVirtualConsultationRequest(@PathVariable(name = "institutionId") Integer institutionId,
 												  @RequestBody VirtualConsultationRequestDto virtualConsultation) {
@@ -73,6 +76,16 @@ public class VirtualConsultationController {
 		virtualConsultationBo.setStatusId(EVirtualConsultationStatus.PENDING.getId());
 		virtualConsultationBo.setInstitutionId(institutionId);
 		Integer result = saveVirtualConsultationService.run(virtualConsultationBo);
+		virtualConsultationPublisher.publish("NEW-VIRTUAL-CONSULTATION", result.toString());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+
+	@GetMapping(value = "/{virtualConsultationId}")
+	public VirtualConsultationDto getVirtualConsultation(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId) {
+		log.debug("Input parameters -> virtualConsultationId {}", virtualConsultationId);
+		VirtualConsultationDto result = virtualConsultationMapper.fromVirtualConsultationBo(getVirtualConsultationByIdService.run(virtualConsultationId));
 		log.debug("Output -> {}", result);
 		return result;
 	}

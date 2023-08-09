@@ -34,6 +34,7 @@ public class VirtualConsultationSubscriber {
 		mqttCallExternalService.subscribe(null, "HSI/VIRTUAL-CONSULTATION/NOTIFY", getQueueListeners());
 		mqttCallExternalService.subscribe(null, "HSI/VIRTUAL-CONSULTATION/CHANGE-RESPONSIBLE-STATE", handleTopicState("virtual-consultation-responsible-state-change"));
 		mqttCallExternalService.subscribe(null, "HSI/VIRTUAL-CONSULTATION/CHANGE-VIRTUAL-CONSULTATION-STATE", handleTopicState("virtual-consultation-state-change"));
+		mqttCallExternalService.subscribe(null, "HSI/VIRTUAL-CONSULTATION/NEW-VIRTUAL-CONSULTATION", handleTopicState("new-virtual-consultation"));
 	}
 
 	private List<Consumer<MqttMetadataBo>> handleTopicState(String webSocketPathDestination) {
