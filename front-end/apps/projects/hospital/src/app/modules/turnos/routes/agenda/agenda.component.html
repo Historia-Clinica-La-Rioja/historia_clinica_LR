@@ -10,11 +10,6 @@
 				<span>{{agenda?.doctorsOfficeDescription}} | {{agenda?.sectorDescription}} | {{agenda?.hierarchicalUnitAlias}}</span>
 			</ng-template>
 		</div>
-		<div id="protected_appointments_percentage" fxLayoutAlign="start center" fxLayoutGap="5px" *ngIf="agenda?.protectedAppointmentsPercentage">
-			<mat-icon class="icon-color" mat-list-icon fontSet="material-icons-outlined" [inline]="true"
-				matTooltip="{{'turnos.home.PROTECTED_APPOINTMENT_TOOLTIP' | translate}}">health_and_safety</mat-icon>
-			<span>{{agenda.protectedAppointmentsPercentage}} {{'turnos.home.PERCENTAGE_PROTECTED_APPOINTMENT' | translate}}</span>
-		</div>
 	</div>
 
 	<div id="care_lines" *ngIf="agenda?.careLinesInfo.length" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
