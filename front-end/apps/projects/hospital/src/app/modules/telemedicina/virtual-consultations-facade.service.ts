@@ -21,6 +21,10 @@ export class VirtualConsultationsFacadeService {
 		this.stompService.watch('/topic/virtual-consultation-responsible-state-change')
 			.pipe(map(m => JSON.parse(m.body)))
 
+	private readonly newRequest$: Observable<number> =
+		this.stompService.watch('/topic/new-virtual-consultation')
+			.pipe(map(m => JSON.parse(m.body)))
+
 	constructor(
 		private virtualConsultationService: VirtualConstultationService,
 		private readonly stompService: StompService
@@ -34,8 +38,6 @@ export class VirtualConsultationsFacadeService {
 
 		this.solicitanteAvailableChanged$.subscribe(
 			(availabilityChanged: VirtualConsultationResponsibleProfessionalAvailabilityDto) => {
-				console.log(availabilityChanged);
-
 				this.virtualConsultations
 					.forEach(vc => {
 						if (this.responsibleChangedFilter(vc, availabilityChanged)) {
@@ -51,6 +53,17 @@ export class VirtualConsultationsFacadeService {
 			(newState: VirtualConsultationStatusDataDto) => {
 				this.virtualConsultations.find(vc => vc.id === newState.virtualConsultationId).status = newState.status;
 				this.virtualConsultationsEmitter.next(this.virtualConsultations)
+			}
+		)
+
+		this.newRequest$.subscribe(
+			(newVirtualConsultationId: number) => {
+				this.virtualConsultationService.getVirtualConsultation(newVirtualConsultationId).subscribe(
+					vc => {
+						this.virtualConsultations = this.virtualConsultations.concat(vc);
+						this.virtualConsultationsEmitter.next(this.virtualConsultations)
+					}
+				)
 			}
 		)
 
