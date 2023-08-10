@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { GenderDto, IdentificationTypeDto, LimitedPatientSearchDto, PatientSearchDto } from '@api-rest/api-model';
@@ -15,18 +15,13 @@ import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 import { TableModel, ActionDisplays } from '@presentation/components/table/table.component';
 import { PatientNameService } from '@core/services/patient-name.service';
-import { JitsiCallService } from 'projects/hospital/src/app/modules/jitsi/jitsi-call.service';
-import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
-import { EntryCallStompService } from 'projects/hospital/src/app/modules/api-web-socket/entry-call-stomp.service';
-import { ShowEntryCallService } from '@presentation/services/show-entry-call.service';
-import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
 	styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit {
 	patientData: PatientSearchDto[] = [];
 	genderTableView: string[] = [];
 	public personalInformationForm: UntypedFormGroup;
@@ -46,7 +41,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 	public tableModel: TableModel<PatientSearchDto>;
 
 	private readonly routePrefix;
-	private entryCallSubs: Subscription;
+
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -56,10 +51,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 		private readonly contextService: ContextService,
 		private readonly patientNameService: PatientNameService,
 		private readonly featureFlagService: FeatureFlagService,
-		private jitsiCallService: JitsiCallService,
-		private virtualConsultationService: VirtualConstultationService,
-		private entryCallStompService: EntryCallStompService,
-		private showEntryCallService: ShowEntryCallService,
+
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isEnabled => {
@@ -71,21 +63,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 		this.initPersonalInformationForm();
 		this.setMasterData();
 
-		this.entryCallSubs = this.entryCallStompService.callId$.subscribe(
-			(callId: any) => {
-				callId ? this.showEntryCallService.show(callId) : this.showEntryCallService.close();
-			}
-		)
 	}
 
-	show() {
-		let roomId = (Math.floor(Math.random() * 100000) + 1).toString();
-		for (let index = 0; index < 4; index++) {
-			roomId += `-${Math.floor(Math.random() * 100000) + 1}`;
-		}
-		this.jitsiCallService.open(roomId);
-		this.virtualConsultationService.notifyVirtualConsultationCall(roomId).subscribe(console.log)
-	}
 
 	private initPersonalInformationForm() {
 		this.personalInformationForm = this.formBuilder.group({
@@ -282,8 +261,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 		return false;
 	}
 
-	ngOnDestroy(): void {
-		this.entryCallSubs.unsubscribe();
-	}
+
 
 }

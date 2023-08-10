@@ -1,16 +1,25 @@
 import { Injectable } from '@angular/core';
+import { Observable, switchMap } from 'rxjs';
 import { StompService } from '../../stomp.service';
-import { Observable, map } from 'rxjs';
+import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
+import { Message } from '@stomp/stompjs';
+import { VirtualConsultationNotificationDataDto } from '@api-rest/api-model';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class EntryCallStompService {
 
-	callId$: Observable<string> = this.stompService.watch('/USER/QUEUE/VIRTUAL-CONSULTATION').pipe(map(m => m ? JSON.parse(m.body).callId : null ))
+	entryCall$: Observable<VirtualConsultationNotificationDataDto>
+		= this.stompService.watch('/user/queue/virtual-consultation-notification').
+			pipe(
+				switchMap((virtualConsultationId: Message) => this.virtualConstultationService.getVirtualConsultationCall(Number(virtualConsultationId.body)))
+			)
 
 	constructor(
 		private stompService: StompService,
+		private virtualConstultationService: VirtualConstultationService
 	) { }
 
 }
+

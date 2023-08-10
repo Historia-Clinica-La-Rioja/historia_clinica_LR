@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ShowEntryCallService } from '@presentation/services/show-entry-call.service';
-import { EntryCallComponent } from '../entry-call/entry-call.component';
+import { ShowEntryCallService } from 'projects/hospital/src/app/modules/telemedicina/show-entry-call.service';
+import { EntryCall, EntryCallComponent } from '../entry-call/entry-call.component';
+import { EVirtualConsultationPriority, VirtualConsultationNotificationDataDto } from '@api-rest/api-model';
+import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { Priority } from '@presentation/components/priority/priority.component';
 
 @Component({
 	selector: 'app-entry-call-renderer',
@@ -24,12 +27,12 @@ export class EntryCallRendererComponent implements OnInit {
 
 
 	ngOnInit(): void {
-		this.showEntryCallService.$newCall.subscribe(
-			roomId => {
-				if (roomId) {
-					this.dialogRef = this.dialog.open(EntryCallComponent, {
-						data: roomId
-					});
+		this.showEntryCallService.$entryCall.subscribe(
+			(entryCall: VirtualConsultationNotificationDataDto) => {
+				if (entryCall) {
+					const data = toEntryCall(entryCall)
+					this.dialogRef = this.dialog.open(EntryCallComponent,
+						{ data });
 				} else {
 					this.dialogRef.close()
 				}
@@ -37,4 +40,28 @@ export class EntryCallRendererComponent implements OnInit {
 		)
 	}
 
+}
+
+const toEntryCall = (entryCall: VirtualConsultationNotificationDataDto): EntryCall => {
+	return {
+		callId: entryCall.callId,
+		clinicalSpecialty: entryCall.clinicalSpecialty,
+		createdOn: dateTimeDtoToDate(entryCall.creationDateTime),
+		institutionName: entryCall.institutionName,
+		patient: {
+			firstName: entryCall.patientName,
+			id: null,
+			lastName: entryCall.patientLastName,
+			gender: null
+		},
+		priority: mappedPriorities[entryCall.priority],
+		professionalFullName: `${entryCall.responsibleLastName} ${entryCall.responsibleFirstName}`,
+	}
+}
+
+
+const mappedPriorities = {
+	[EVirtualConsultationPriority.HIGH]: Priority.HIGH,
+	[EVirtualConsultationPriority.MEDIUM]: Priority.MEDIUM,
+	[EVirtualConsultationPriority.LOW]: Priority.LOW
 }

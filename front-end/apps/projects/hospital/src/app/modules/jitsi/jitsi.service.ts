@@ -8,7 +8,7 @@ declare var JitsiMeetExternalAPI: any;
 export class JitsiService {
 	api: any;
 	options: any;
-	domain: string = "localhost:8443";
+	domain: string = "meet.jit.si";
 
 	// For Custom Controls
 	isAudioMuted = true;
@@ -51,7 +51,6 @@ export class JitsiService {
 		});
 	}
 	handleClose = () => {
-		console.log('handleClose');
 		this.jitsiCallService.close();
 	};
 
@@ -71,7 +70,7 @@ export class JitsiService {
 	};
 
 	handleVideoConferenceJoined = async (participant: any) => {
-		console.log('handleVideoConferenceJoined', participant); // { roomName: "bwb-bfqi-vmh", id: "8c35a951", displayName: "Akash Verma", formattedDisplayName: "Akash Verma (me)"}
+
 	};
 
 	handleVideoConferenceLeft = () => {
@@ -79,11 +78,11 @@ export class JitsiService {
 	};
 
 	handleMuteStatus = (audio: any) => {
-		console.log('handleMuteStatus', audio); // { muted: true }
+
 	};
 
 	handleVideoStatus = (video: any) => {
-		console.log('handleVideoStatus', video); // { muted: true }
+
 	};
 
 	getParticipants() {
