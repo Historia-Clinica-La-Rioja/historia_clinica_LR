@@ -2,6 +2,8 @@ package ar.lamansys.virtualConsultation.infrastructure.input.rest;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import ar.lamansys.virtualConsultation.application.changeClinicalProfessionalAvailability.ChangeClinicalProfessionalAvailabilityService;
 import ar.lamansys.virtualConsultation.application.changeResponsibleProfessionalAvailability.ChangeResponsibleProfessionalAvailabilityService;
@@ -67,15 +71,20 @@ public class VirtualConsultationController {
 
 	private final GetVirtualConsultationByIdService getVirtualConsultationByIdService;
 
+	private final SnomedService snomedService;
+
 	@PostMapping(value = "/{institutionId}")
 	public Integer saveVirtualConsultationRequest(@PathVariable(name = "institutionId") Integer institutionId,
-												  @RequestBody VirtualConsultationRequestDto virtualConsultation) {
+												  @RequestBody @Valid VirtualConsultationRequestDto virtualConsultation) {
 		log.debug("Input parameters -> institutionId {}, virtualConsultation {}", institutionId, virtualConsultation);
 		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
 		VirtualConsultationRequestBo virtualConsultationBo = new VirtualConsultationRequestBo(virtualConsultation);
 		virtualConsultationBo.setResponsibleHealthcareProfessionalId(doctorId);
 		virtualConsultationBo.setStatusId(EVirtualConsultationStatus.PENDING.getId());
 		virtualConsultationBo.setInstitutionId(institutionId);
+		virtualConsultationBo.setMotiveSnomedId(snomedService.getSnomedId(new SnomedBo(virtualConsultation.getMotive().getSctid(), virtualConsultation.getMotive().getPt())).get());
+		if (virtualConsultation.getProblem() != null)
+			virtualConsultationBo.setProblemSnomedId(snomedService.getSnomedId(new SnomedBo(virtualConsultation.getProblem().getSctid(), virtualConsultation.getProblem().getPt())).orElse(null));
 		Integer result = saveVirtualConsultationService.run(virtualConsultationBo);
 		virtualConsultationPublisher.publish("NEW-VIRTUAL-CONSULTATION", result.toString());
 		log.debug("Output -> {}", result);

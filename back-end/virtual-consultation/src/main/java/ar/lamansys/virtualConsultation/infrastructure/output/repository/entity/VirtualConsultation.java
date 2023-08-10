@@ -63,9 +63,9 @@ public class VirtualConsultation extends SGXAuditableEntity<Integer> {
 		this.patientId = virtualConsultation.getPatientId();
 		this.clinicalSpecialtyId = virtualConsultation.getClinicalSpecialtyId();
 		this.careLineId = virtualConsultation.getCareLineId();
-		this.problemId = virtualConsultation.getProblemId();
+		this.problemId = virtualConsultation.getProblemSnomedId();
 		this.priorityId = virtualConsultation.getPriorityId();
-		this.motiveId = virtualConsultation.getMotiveId();
+		this.motiveId = virtualConsultation.getMotiveSnomedId();
 		this.responsibleHealthcareProfessionalId = virtualConsultation.getResponsibleHealthcareProfessionalId();
 		this.statusId = virtualConsultation.getStatusId();
 		this.institutionId = virtualConsultation.getInstitutionId();

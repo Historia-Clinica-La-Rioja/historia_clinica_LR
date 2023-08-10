@@ -16,11 +16,11 @@ public class VirtualConsultationRequestBo {
 
 	private Integer careLineId;
 
-	private Integer problemId;
+	private Integer problemSnomedId;
 
 	private Short priorityId;
 
-	private Integer motiveId;
+	private Integer motiveSnomedId;
 
 	private Integer responsibleHealthcareProfessionalId;
 
@@ -32,9 +32,7 @@ public class VirtualConsultationRequestBo {
 		this.patientId = virtualConsultation.getPatientId();
 		this.clinicalSpecialtyId = virtualConsultation.getClinicalSpecialtyId();
 		this.careLineId = virtualConsultation.getCareLineId();
-		this.problemId = virtualConsultation.getProblemId();
 		this.priorityId = virtualConsultation.getPriority().getId();
-		this.motiveId = virtualConsultation.getMotiveId();
 	}
 
 }

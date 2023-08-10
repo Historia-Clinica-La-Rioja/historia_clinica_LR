@@ -3439,7 +3439,7 @@ export interface TerminologyCSVDto {
 
 export interface TerminologyECLStatusDto {
     ecl: SnomedECL;
-    successful?: TerminologyQueueItemDto;
+    successful: TerminologyQueueItemDto;
 }
 
 export interface TerminologyQueueItemDto {
@@ -3799,10 +3799,10 @@ export interface VirtualConsultationPatientDataDto {
 export interface VirtualConsultationRequestDto {
     careLineId: number;
     clinicalSpecialtyId: number;
-    motiveId: number;
+    motive: SnomedDto;
     patientId: number;
     priority: EVirtualConsultationPriority;
-    problemId: number;
+    problem?: SnomedDto;
 }
 
 export interface VirtualConsultationResponsibleDataDto {
