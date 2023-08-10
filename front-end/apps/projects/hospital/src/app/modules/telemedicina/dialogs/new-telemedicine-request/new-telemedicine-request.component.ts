@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
-import { PersonPhotoDto } from '@api-rest/api-model';
+import { PersonPhotoDto, VirtualConsultationRequestDto } from '@api-rest/api-model';
+import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
+import { ContextService } from '@core/services/context.service';
 import { Patient } from '@pacientes/component/search-patient/search-patient.component';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { MapperService } from '@presentation/services/mapper.service';
 
 @Component({
@@ -13,20 +15,21 @@ import { MapperService } from '@presentation/services/mapper.service';
 })
 export class NewTelemedicineRequestComponent implements OnInit {
 	@ViewChild('stepper', { static: false }) stepper: MatStepper;
-	requestInformationData: any;
-	selectedPatient: PatientBasicData;
+	virtualConsultationRequest: VirtualConsultationRequestDto;
 	photoSelectedPatient: PersonPhotoDto;
 	firstStepForm: UntypedFormGroup;
 	secondStepForm: UntypedFormGroup;
+	confirmAndValidateForm = false;
 
-	constructor(private mapperService: MapperService, private readonly formBuilder: UntypedFormBuilder) { }
+	constructor(public dialogRef: MatDialogRef<NewTelemedicineRequestComponent>, private mapperService: MapperService, private readonly formBuilder: UntypedFormBuilder, private virtualConstultationService: VirtualConstultationService,
+		private contextService: ContextService) { }
 
 	ngOnInit(): void {
 		this.firstStepForm = this.formBuilder.group({
 			selectedPatient: ['', Validators.required],
 		});
 		this.secondStepForm = this.formBuilder.group({
-			secondCtrl: ['', Validators.required],
+			requestInformationData: [null, Validators.required],
 		});
 	}
 
@@ -38,6 +41,38 @@ export class NewTelemedicineRequestComponent implements OnInit {
 		} else {
 			this.firstStepForm.controls.selectedPatient.setValue(null);
 			this.photoSelectedPatient = null;
+		}
+	}
+
+	validateForm() {
+		if (this.secondStepForm.valid) {
+			this.saveVirtualConsultationRequest();
+		} else {
+			this.confirmAndValidateForm = true;
+		}
+	}
+
+	prepareVirtualConsultationRequest(informationConsultation: any) {
+		if (informationConsultation) {
+			this.secondStepForm.controls.requestInformationData.setValue(informationConsultation);
+			this.virtualConsultationRequest = this.mapToVirtualConsultationRequestDto(informationConsultation);
+
+		}
+	}
+	saveVirtualConsultationRequest() {
+		this.virtualConstultationService.saveVirtualConsultationRequest(this.contextService.institutionId, this.virtualConsultationRequest).subscribe(res => {
+			this.dialogRef.close();
+		})
+	}
+
+	mapToVirtualConsultationRequestDto(informationConsultation: any): VirtualConsultationRequestDto {
+		return {
+			careLineId: informationConsultation.careLine.id,
+			clinicalSpecialtyId: informationConsultation.specialty.id,
+			motive: informationConsultation.motive[0].snomed,
+			patientId: this.firstStepForm.controls.selectedPatient.value.id,
+			priority: informationConsultation.priority,
+			problem: informationConsultation.problem[0] ? informationConsultation.problem[0].snomed : null,
 		}
 
 	}

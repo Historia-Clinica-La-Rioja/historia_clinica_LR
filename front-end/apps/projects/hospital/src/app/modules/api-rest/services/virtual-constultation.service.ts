@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { VirtualConsultationDto, VirtualConsultationNotificationDataDto } from '@api-rest/api-model';
+import { VirtualConsultationDto, VirtualConsultationNotificationDataDto, VirtualConsultationRequestDto } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 
@@ -40,6 +40,11 @@ export class VirtualConstultationService {
 	getVirtualConsultation(id:number): Observable<VirtualConsultationDto> {
 		const url = `${this.BASE_URL}/${id}`;
 		return this.http.get<VirtualConsultationDto>(`${url}`)
+	}
+
+	saveVirtualConsultationRequest(institutionId: number, virtualConsultation: VirtualConsultationRequestDto) {
+		const url = `${this.BASE_URL}/${institutionId}`;
+		return this.http.post(`${url}`, virtualConsultation)
 	}
 }
 

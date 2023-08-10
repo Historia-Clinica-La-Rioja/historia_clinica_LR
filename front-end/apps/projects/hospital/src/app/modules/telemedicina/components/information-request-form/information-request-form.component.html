@@ -26,16 +26,12 @@
 		<app-button-and-motive-list [limit]="reasonLimit"
 			(selectionChange)="setMotive($event)"></app-button-and-motive-list>
 		<div class="error-space">
-			<mat-error *ngIf="showReasonsConsultationError">{{ 'forms.REQUIRED' | translate }}</mat-error>
+			<mat-error *ngIf="showMotiveError">{{ 'forms.REQUIRED' | translate }}</mat-error>
 		</div>
 	</div>
 	<div>
 		<p>{{'telemedicina.requests.form.PROBLEM' | translate}}</p>
-		<app-button-and-problem-list (selectionChange)="setProblem($event)" [problemLimit]="reasonLimit"
-			(selectionChange)="setMotive($event)"></app-button-and-problem-list>
-		<div class="error-space">
-			<mat-error *ngIf="showReasonsConsultationError">{{ 'forms.REQUIRED' | translate }}</mat-error>
-		</div>
+		<app-button-and-problem-list (selectionChange)="setProblem($event)" [problemLimit]="reasonLimit"></app-button-and-problem-list>
 	</div>
 	<div>
 		<p>{{'telemedicina.requests.form.PRIORIZATION' | translate}}</p>

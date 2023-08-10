@@ -13,11 +13,11 @@
 		</mat-step>
 		<mat-step [stepControl]="secondStepForm" label="{{'telemedicina.REQUEST_INFORMATION' | translate}}">
 			<div fxLayout="row" fxLayoutAlign="center center">
-				<app-information-request-form [patient]="this.firstStepForm.controls.selectedPatient.value" [patientPhoto]="photoSelectedPatient" class="information-request-content"></app-information-request-form>
+				<app-information-request-form (requestInformationData)="prepareVirtualConsultationRequest($event)" [confirmAndValidateForm]="confirmAndValidateForm" [patient]="this.firstStepForm.controls.selectedPatient.value" [patientPhoto]="photoSelectedPatient" class="information-request-content"></app-information-request-form>
 			</div>
 			<div fxLayout="row" fxLayoutAlign="end center" class="buttons">
 				<button mat-stroked-button matStepperPrevious color="primary">{{'buttons.BACK' | translate}}</button>
-				<button mat-raised-button color="primary">{{'buttons.CONFIRM' | translate}}</button>
+				<button mat-raised-button color="primary" (click)="validateForm()">{{'buttons.CONFIRM' | translate}}</button>
 			</div>
 		</mat-step>
 	</mat-stepper>

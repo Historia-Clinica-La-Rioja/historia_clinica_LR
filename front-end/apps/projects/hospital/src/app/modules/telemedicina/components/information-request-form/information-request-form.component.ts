@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControlStatus, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { CareLineDto, ClinicalSpecialtyDto, EVirtualConsultationPriority, PersonPhotoDto } from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ContextService } from '@core/services/context.service';
@@ -9,6 +9,7 @@ import { PatientBasicData } from '@presentation/components/patient-card/patient-
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 
 const REASON_LIMIT = 1;
+const VALID = "VALID";
 
 @Component({
 	selector: 'app-information-request-form',
@@ -16,19 +17,25 @@ const REASON_LIMIT = 1;
 	styleUrls: ['./information-request-form.component.scss']
 })
 export class InformationRequestFormComponent implements OnInit {
+	informationForm: UntypedFormGroup;
 	@Input() patient: PatientBasicData;
 	@Input() patientPhoto: PersonPhotoDto;
+	@Input() set confirmAndValidateForm(isConfirmAndValidateForm: boolean) {
+		if (isConfirmAndValidateForm) {
+				this.validateAndDisplayErrors();
+		}
+
+	}
 	@Output() requestInformationData = new EventEmitter<any>();
-	informationForm: UntypedFormGroup;
+
 	careLines: CareLineDto[];
 	careLinesTypeahead: TypeaheadOption<CareLineDto>[] = [];
 	showCareLineError = false;
 	specialties: ClinicalSpecialtyDto[];
 	specialtyTypeaheadOptions: TypeaheadOption<ClinicalSpecialtyDto>[] = [];
 	showSpecialtyError = false;
-	showReasonsConsultationError = false;
+	showMotiveError = false;
 	showPriorityError = false;
-	showProblemError = false;
 	reasonLimit = REASON_LIMIT;
 
 	constructor(private carelineService: CareLineService, private contextService: ContextService,
@@ -39,6 +46,11 @@ export class InformationRequestFormComponent implements OnInit {
 		this.carelineService.getCareLinesAttachedToInstitution(this.contextService.institutionId).subscribe(data => {
 			this.careLines = data;
 			this.careLinesTypeahead = this.careLines.map(c => this.toCareLinesDtoTypeahead(c));
+		})
+		this.informationForm.statusChanges.subscribe((isValid: FormControlStatus) => {
+			if(isValid === VALID){
+				this.requestInformationData.emit(this.informationForm.value)
+			}
 		})
 	}
 
@@ -76,11 +88,18 @@ export class InformationRequestFormComponent implements OnInit {
 
 	setMotive(motive: MotivoConsulta) {
 		this.informationForm.controls.motive.setValue(motive);
-		this.showReasonsConsultationError = false;
+		this.showMotiveError = false;
 	}
+
 	setProblem(problem: AmbulatoryConsultationProblem) {
 		this.informationForm.controls.problem.setValue(problem);
-		this.showProblemError = false
+	}
+
+	validateAndDisplayErrors() {
+		this.showCareLineError = !this.informationForm.controls.careLine.valid;
+		this.showPriorityError = !this.informationForm.controls.priority.valid
+		this.showMotiveError = !this.informationForm.controls.motive.valid
+		this.showSpecialtyError = !this.informationForm.controls.specialty.valid
 	}
 
 	private toCareLinesDtoTypeahead(careLine: CareLineDto): TypeaheadOption<CareLineDto> {
