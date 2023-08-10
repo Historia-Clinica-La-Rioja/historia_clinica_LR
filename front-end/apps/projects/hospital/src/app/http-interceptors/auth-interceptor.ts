@@ -48,11 +48,7 @@ export class AuthInterceptor implements HttpInterceptor {
 				catchError(_ => {
 					this.refreshTokenSubject = undefined;
 					this.authenticationService.logout().subscribe(finished => {
-						this.router.navigate(['/auth/login'], {
-							queryParams: {
-								returnUrl: this.router.routerState.snapshot.url
-							}
-						});
+						this.router.navigate(['/auth/login']);
 					});
 					return EMPTY;
 				}),
@@ -60,11 +56,7 @@ export class AuthInterceptor implements HttpInterceptor {
 				if (!token) {
 					this.refreshTokenSubject = undefined;
 					this.authenticationService.logout().subscribe(finished => {
-						this.router.navigate(['/auth/login'], {
-							queryParams: {
-								returnUrl: this.router.routerState.snapshot.url
-							}
-						});
+						this.router.navigate(['/auth/login']);
 					});
 					return;
 				}

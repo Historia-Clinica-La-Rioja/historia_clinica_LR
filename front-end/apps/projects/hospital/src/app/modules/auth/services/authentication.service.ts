@@ -27,8 +27,8 @@ export class AuthenticationService {
 		this.dialogRef.closeAll();
 	}
 
-	public go(url?: string) {
-		url ? this.router.navigateByUrl(url) : this.router.navigate(['/home']);
+	public go() {
+		this.router.navigate(['/home']);
 	}
 
 	login(username: string, password: string, recaptchaResponse: string): Observable<any> {
