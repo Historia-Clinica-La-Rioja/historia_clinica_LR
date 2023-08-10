@@ -12,6 +12,7 @@ import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module
 import { CoreModule } from '@core/core.module';
 import { ButtonAndMotiveListComponent } from './components/button-and-motive-list/button-and-motive-list.component';
 import { ButtonAndProblemListComponent } from './components/button-and-problem-list/button-and-problem-list.component';
+import { ToggleAvaiabilityComponent } from './components/toggle-avaiability/toggle-avaiability.component';
 
 
 
@@ -22,7 +23,8 @@ import { ButtonAndProblemListComponent } from './components/button-and-problem-l
 		NewTelemedicineRequestComponent,
 		InformationRequestFormComponent,
 		ButtonAndMotiveListComponent,
-  		ButtonAndProblemListComponent
+  		ButtonAndProblemListComponent,
+		ToggleAvaiabilityComponent,
 	],
 	imports: [
 		CommonModule,

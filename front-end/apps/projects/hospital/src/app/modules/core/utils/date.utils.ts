@@ -1,5 +1,7 @@
 import {
 	addMinutes,
+	differenceInHours,
+	differenceInMinutes,
 	formatISO,
 } from 'date-fns'
 
@@ -74,4 +76,12 @@ export function datePlusDays(date: Date, days: number): Date {
 	newDate.setFullYear(date.getFullYear())
 	newDate.setDate(date.getDate() + days);
 	return newDate;
+}
+
+export function timeDifference(createdOn: Date) {
+	const mins = differenceInMinutes(new Date(), createdOn);
+	if (mins < 60) {
+		return `${mins} mins en espera`
+	}
+	return `${differenceInHours(new Date(), createdOn)}.${mins % 60} hs en espera`
 }

@@ -50,6 +50,11 @@ import { TitledContentComponent } from './components/titled-content/titled-conte
 import { TypeaheadComponent } from './components/typeahead/typeahead.component';
 import { UserBadgeComponent } from './components/user-badge/user-badge.component';
 import { FilterButtonComponent } from './components/filter-button/filter-button.component';
+import { FloatingDivComponent } from './components/floating-div/floating-div.component';
+import { PrioritySelectComponent } from './components/priority-select/priority-select.component';
+import { PersonShortDescriptionComponent } from './components/person-short-description/person-short-description.component';
+import { IconedTextComponent } from './components/iconed-text/iconed-text.component';
+import { PriorityComponent } from './components/priority/priority.component';
 // dialogs
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
@@ -69,9 +74,6 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { FloatingDivComponent } from './components/floating-div/floating-div.component';
-import { PrioritySelectComponent } from './components/priority-select/priority-select.component';
-
 
 @NgModule({
 	declarations: [
@@ -139,6 +141,9 @@ import { PrioritySelectComponent } from './components/priority-select/priority-s
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
+		PersonShortDescriptionComponent,
+		IconedTextComponent,
+		PriorityComponent,
 	],
 	imports: [
 		CommonModule,
@@ -177,6 +182,7 @@ import { PrioritySelectComponent } from './components/priority-select/priority-s
 		FactorDeRiesgoCurrentPreviousComponent,
 		FiltersCardComponent,
 		FloatingDivComponent,
+		IconedTextComponent,
 		ImgUploaderComponent,
 		IndicationComponent,
 		LabelComponent,
@@ -192,6 +198,8 @@ import { PrioritySelectComponent } from './components/priority-select/priority-s
 		PatientCardHeaderComponent,
 		PatientTypeLogoComponent,
 		PersonalInformationComponent,
+		PersonShortDescriptionComponent,
+		PriorityComponent,
 		RichTextEditorComponent,
 		SummaryCardComponent,
 		TableComponent,
