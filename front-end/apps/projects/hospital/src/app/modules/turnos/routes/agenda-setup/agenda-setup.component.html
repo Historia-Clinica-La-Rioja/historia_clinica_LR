@@ -242,28 +242,6 @@
 					</div>
 				</div>
 
-				<section class="protected-appointments-percentage-container" fxLayout="column">
-					<span translate="turnos.agenda-setup.PROTECTED_APPOINTMENT_PERCENTAGE"></span>
-					<div fxLayout="column">
-						<mat-form-field appearance="outline">
-							<input id="protected_appointments_percentage" type="number" matInput
-								[placeholder]="'0%'"
-								formControlName="protectedAppointmentsPercentage" (change)="validateLineOfCareAndPercentageOfProtectedAppointments()">
-						</mat-form-field>
-						<mat-error *ngIf="!lineOfCareAndPercentageOfProtectedAppointmentsValid" class="required">{{'turnos.agenda-setup.VALIDATION_PROTECTED_APPOINTMENT_PERCENTAGE_AND_CARELINE' | translate}}</mat-error>
-						<mat-error *ngIf="form.hasError('required', 'protectedAppointmentsPercentage')" [translate]="'forms.REQUIRED'" ></mat-error>
-						<mat-error *ngIf="hasError(form, 'pattern', 'protectedAppointmentsPercentage')">
-							{{ 'forms.FORMAT_NUMERIC_INTEGER' | translate }}
-						</mat-error>
-						<mat-error *ngIf="hasError(this.form, 'max', 'protectedAppointmentsPercentage')"
-							[translate]="'forms.MAX_ERROR'"
-							[translateParams]="{max: getError(this.form, 'max', 'protectedAppointmentsPercentage').max}">
-						</mat-error>
-						<span class="color-grey">{{'turnos.agenda-setup.PROTECTED_APPOINTMENT_PERCENTAGE_RANGE' | translate}}</span>
-						<span class="color-grey">{{'turnos.agenda-setup.PROTECTED_APPOINTMENT_PERCENTAGE_RANGE_EXAMPLE' | translate}}</span>
-					</div>
-				</section>
-
 				<div fxLayout="row">
 					<span [translate]="'Duración de la consulta'"></span>
 				</div>

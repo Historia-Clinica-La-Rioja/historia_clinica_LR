@@ -39,8 +39,6 @@ import { ChipsOption } from '@turnos/components/chips-autocomplete/chips-autocom
 
 const ROUTE_APPOINTMENT = 'turnos';
 const ROUTE_AGENDAS = "agenda";
-const MAX_INPUT = 100;
-const PATTERN = /^[0-9]\d*$/;
 
 @Component({
 	selector: 'app-agenda-setup',
@@ -139,7 +137,6 @@ export class AgendaSetupComponent implements OnInit {
 			temporaryReplacement: new UntypedFormControl(false),
 			alias: new UntypedFormControl(null, [Validators.nullValidator]),
 			otherProfessionals: new UntypedFormArray([], [this.otherPossibleProfessionals()]),
-			protectedAppointmentsPercentage: new UntypedFormControl({ value: 0, disabled: true }, [Validators.pattern(PATTERN), Validators.max(MAX_INPUT)]),
 			careLines: new UntypedFormControl([null]),
 			diaryType: new UntypedFormControl(this.CONSULTATION),
 			practices: new UntypedFormControl([])
@@ -179,9 +176,8 @@ export class AgendaSetupComponent implements OnInit {
 						this.minDate = momentParseDate(diary.startDate).toDate();
 						this.setValuesFromExistingAgenda(diary);
 						this.disableNotEditableControls();
-						this.validateLineOfCareAndPercentageOfProtectedAppointments();
+						this.validateLineOfCare();
 						if (this.lineOfCareAndPercentageOfProtectedAppointmentsValid) {
-							this.form.controls.protectedAppointmentsPercentage.enable();
 						}
 
 					});
@@ -323,9 +319,6 @@ export class AgendaSetupComponent implements OnInit {
 		if (diary.alias) {
 			this.form.controls.alias.setValue(diary.alias);
 		}
-
-		if (diary.protectedAppointmentsPercentage)
-			this.form.controls.protectedAppointmentsPercentage.setValue(diary.protectedAppointmentsPercentage);
 
 		if (diary.careLinesInfo.length)
 			this.careLinesSelected = diary.careLinesInfo;
@@ -476,7 +469,6 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	private buildDiaryADto(): DiaryADto {
-		const percentage = this.form.value.protectedAppointmentsPercentage;
 		return {
 
 			appointmentDuration: this.form.getRawValue().appointmentDuration,
@@ -498,7 +490,6 @@ export class AgendaSetupComponent implements OnInit {
 			alias: this.form.value.alias === "" ? null : this.form.value.alias,
 			diaryAssociatedProfessionalsId: this.form.value.otherProfessionals.map(professional => professional.healthcareProfessionalId),
 			careLines: this.careLinesSelected.map(careLine => { return careLine.id }),
-			protectedAppointmentsPercentage: percentage ? percentage : 0,
 			practicesId: this.form.controls.practices.value
 		};
 	}
@@ -635,10 +626,9 @@ export class AgendaSetupComponent implements OnInit {
 		}
 	}
 
-	validateLineOfCareAndPercentageOfProtectedAppointments() {
-		if (this.form.controls.protectedAppointmentsPercentage.value !== 0 && !this.careLinesSelected.length) {
+	validateLineOfCare() {
+		if (!this.careLinesSelected.length) {
 			this.lineOfCareAndPercentageOfProtectedAppointmentsValid = false;
-			this.form.controls.protectedAppointmentsPercentage.enable();
 		} else {
 			this.lineOfCareAndPercentageOfProtectedAppointmentsValid = true;
 		}
@@ -646,10 +636,6 @@ export class AgendaSetupComponent implements OnInit {
 
 	setCareLines(careLines: string[]) {
 		if (careLines.length) {
-			if (!this.form.controls.protectedAppointmentsPercentage.hasValidator(Validators.required)) {
-				this.addValidators();
-			}
-			this.form.controls.protectedAppointmentsPercentage.enable();
 			this.careLinesSelected = careLines.map(careLine => ({
 				id: this.careLines.find(c => c.description === careLine).id,
 				description: careLine,
@@ -657,13 +643,9 @@ export class AgendaSetupComponent implements OnInit {
 			}));
 		}
 		else {
-			this.form.controls.protectedAppointmentsPercentage.removeValidators([Validators.required]);
-			this.form.controls.protectedAppointmentsPercentage.disable();
-			this.form.controls.protectedAppointmentsPercentage.setValue(0);
 			this.careLinesSelected = [];
 		}
-		this.form.controls.protectedAppointmentsPercentage.updateValueAndValidity();
-		this.validateLineOfCareAndPercentageOfProtectedAppointments();
+		this.validateLineOfCare();
 	}
 
 	setPractices() {
@@ -704,16 +686,9 @@ export class AgendaSetupComponent implements OnInit {
 		this.form.controls.careLines.patchValue(careLinesDescription);
 	}
 
-	private addValidators() {
-		this.form.controls.protectedAppointmentsPercentage.addValidators([Validators.required]);
-		this.form.controls.protectedAppointmentsPercentage.markAsTouched();
-	}
-
 	private resetValues() {
 		this.form.controls.healthcareProfessionalSpecialtyId.reset();
 		this.form.controls.careLines.reset();
-		this.form.controls.protectedAppointmentsPercentage.removeValidators([Validators.required]);
-		this.form.controls.protectedAppointmentsPercentage.updateValueAndValidity();
 	}
 
 	private toChipsOptions(p: SnomedDto): ChipsOption<SnomedDto> {
