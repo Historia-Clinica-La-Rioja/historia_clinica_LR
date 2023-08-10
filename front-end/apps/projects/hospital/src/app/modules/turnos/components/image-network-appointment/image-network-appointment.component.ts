@@ -296,10 +296,10 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		const dialogRefConfirmation = this.dialog.open(DiscardWarningComponent,
 			{
 				data: {
-					content: `turnos.appointment.confirm-dialog.CONTENT`,
-					okButtonLabel: `turnos.appointment.confirm-dialog.CONFIRM`,
-					cancelButtonLabel: `turnos.appointment.confirm-dialog.CANCEL`,
-					contentBold: `turnos.appointment.confirm-dialog.QUESTION`,
+					content: `image-network.appointments.confirm-dialog.CONTENT`,
+					okButtonLabel: `image-network.appointments.confirm-dialog.CONFIRM`,
+					cancelButtonLabel: `image-network.appointments.confirm-dialog.CANCEL`,
+					contentBold: `image-network.appointments.confirm-dialog.QUESTION`,
 					showMatIconError: true,
 				}
 			});

@@ -48,7 +48,13 @@
                 "INSTITUTION": "Institución",
                 "ATTACH_EXTERNAL_ORDER": "Adjuntar orden externa",
                 "FILES_EXTENSION": "El tipo de archivo debe estar en formato JPG, JPEG, PNG o PDF"
-            }
+            },
+            "confirm-dialog": {
+				"CONTENT": "Si confirma el turno no podrá actualizar la cobertura ni la orden médica luego.",
+				"CANCEL": "Si, actualizar datos",
+				"CONFIRM": "No, confirmar turno",
+				"QUESTION": "¿Desea actualizarla ahora?"
+			}
 		},
         "worklist": {
             "status": {
