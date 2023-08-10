@@ -78,6 +78,8 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 	coverageData: PatientMedicalCoverage;
 	medicalOrder: medicalOrderInfo;
 	patientMedicalOrders: medicalOrderInfo[] = [];
+	canCoverageBeEdited = false;
+	canOrderBeEdited = false;
 	phoneNumber: string;
 	summaryCoverageData: SummaryCoverageInformation = {};
 	hasRoleToChangeState$: Observable<boolean>;
@@ -181,6 +183,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 						});
 				}
 				this.phoneNumber = this.formatPhonePrefixAndNumber(this.data.appointmentData.phonePrefix, this.data.appointmentData.phoneNumber);
+				this.checkInputUpdatePermissions();
 			});
 
 		this.hasRoleToChangeState$ = this.permissionsService.hasContextAssignments$(ROLES_TO_CHANGE_STATE).pipe(take(1));
@@ -199,6 +202,30 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 					this.decodedPhoto$ = this.imageDecoderService.decode(personPhotoDto.imageData);
 				}
 			});
+	}
+
+	private checkInputUpdatePermissions() {
+		this.setEditionPermission();
+		this.changeInputUpdatePermissions();
+	}
+
+	private changeInputUpdatePermissions(){
+		this.canCoverageBeEdited ? this.formEdit.get('newCoverageData').enable()
+							: this.formEdit.get('newCoverageData').disable();
+	}
+
+	private setEditionPermission() {
+		this.canCoverageBeEdited = false;
+		this.canOrderBeEdited = false;
+		//Si no tiene orden, puede editar siempre
+		//let hasMedicalOrder = this.appointment.medicalOrder;
+		let hasMedicalOrder = this.medicalOrder;
+		this.canCoverageBeEdited = this.isAssigned();
+		if (hasMedicalOrder) {
+			this.canOrderBeEdited = this.isAssigned();
+		} else {
+			this.canOrderBeEdited = true;
+		}
 	}
 
 	formatPhonePrefixAndNumber(phonePrefix: string, phoneNumber: string): string {
@@ -394,6 +421,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 				this.phoneNumber = this.formatPhonePrefixAndNumber(this.formEdit.controls.phonePrefix.value, this.formEdit.controls.phoneNumber.value);
 			}
 			this.medicalOrder = this.formEdit.get('medicalOrder').get('appointmentMedicalOrder').value;
+			this.checkInputUpdatePermissions();
 			this.hideFilters();
 		}
 	}

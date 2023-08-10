@@ -12,6 +12,7 @@ import { medicalOrderInfo } from '@turnos/dialogs/new-appointment/new-appointmen
 export class MedicalOrderInputComponent implements OnInit {
     @Input() patientMedicalOrders: medicalOrderInfo[] = [];
     @Input() patientId: number;
+    @Input() disabled?: boolean;
     form: FormGroup;
 
     
@@ -24,6 +25,8 @@ export class MedicalOrderInputComponent implements OnInit {
 
     ngOnInit(): void {
         this.form = this.rootFormGroup.control;
+		this.disabled ? this.form?.get('medicalOrder')?.get('appointmentMedicalOrder').disable()
+							: this.form?.get('medicalOrder')?.get('appointmentMedicalOrder').enable();
     }
 
     newTranscribedOrder() {

@@ -80,9 +80,9 @@
 			<ng-template #editAppointment>
 				<form [formGroup]="formEdit" fxLayout="column" fxLayoutGap="5px" (ngSubmit)="edit()">
 					<app-medical-order-input [patientMedicalOrders]="patientMedicalOrders"
-						[patientId]="data.appointmentData.patient.id"></app-medical-order-input>
+						[patientId]="data.appointmentData.patient.id" [disabled]="!canOrderBeEdited"></app-medical-order-input>
 
-					<mat-form-field appearance="outline" *ngIf="isAssigned()">
+					<mat-form-field appearance="outline">
 						<button type="button" mat-button matSuffix color="warn" mat-icon-button
 							*ngIf="formEdit.value.newCoverageData" (click)="clear(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>

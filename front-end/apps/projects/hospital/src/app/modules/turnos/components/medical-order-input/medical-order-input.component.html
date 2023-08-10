@@ -14,7 +14,7 @@
             </mat-option>
         </mat-select>
         <button *ngIf="form.get('medicalOrder').get('appointmentMedicalOrder').value" mat-button matSuffix color="warn" mat-icon-button
-            (click)="cleanInput(); $event.stopPropagation()">
+            (click)="cleanInput(); $event.stopPropagation()" [disabled]="disabled">
             <mat-icon>close</mat-icon>
         </button>
     </mat-form-field>
