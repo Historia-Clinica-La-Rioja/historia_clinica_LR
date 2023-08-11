@@ -66,4 +66,7 @@ public class DiaryADto {
 
 	@Nullable
 	private Integer hierarchicalUnitId;
+
+	@Nullable
+	private List<Integer> practicesId;
 }

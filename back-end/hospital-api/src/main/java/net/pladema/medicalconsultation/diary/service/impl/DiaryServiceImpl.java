@@ -16,6 +16,7 @@ import net.pladema.medicalconsultation.diary.repository.entity.Diary;
 import net.pladema.medicalconsultation.diary.service.DiaryAssociatedProfessionalService;
 import net.pladema.medicalconsultation.diary.service.DiaryCareLineService;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
+import net.pladema.medicalconsultation.diary.service.DiaryPracticeService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
@@ -83,6 +84,8 @@ public class DiaryServiceImpl implements DiaryService {
 
 	private final DateTimeProvider dateTimeProvider;
 
+	private final DiaryPracticeService diaryPracticeService;
+
 	@Override
 	public Integer addDiary(DiaryBo diaryToSave) throws DiaryException {
 		LOG.debug("Input parameters -> diaryToSave {}", diaryToSave);
@@ -104,6 +107,7 @@ public class DiaryServiceImpl implements DiaryService {
 		diaryOpeningHoursService.update(diaryId, diaryToSave.getDiaryOpeningHours());
 		diaryCareLineService.updateCareLinesAssociatedToDiary(diaryId, diaryToSave.getCareLines());
 		diaryAssociatedProfessionalService.updateDiaryAssociatedProfessionals(diaryToSave.getDiaryAssociatedProfessionalsId(), diaryId);
+		diaryPracticeService.updateDiaryPractices(diaryToSave.getPracticesId(), diaryId);
 		return diaryId;
 	}
 

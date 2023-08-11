@@ -889,6 +889,7 @@ export interface DiaryADto {
     healthcareProfessionalId: number;
     hierarchicalUnitId?: number;
     includeHoliday?: boolean;
+    practicesId?: number[];
     predecessorProfessionalId?: number;
     professionalAssignShift?: boolean;
     protectedAppointmentsPercentage: number;
