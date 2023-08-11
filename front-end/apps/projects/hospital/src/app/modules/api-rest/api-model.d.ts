@@ -893,7 +893,7 @@ export interface DiaryADto {
     practicesId?: number[];
     predecessorProfessionalId?: number;
     professionalAssignShift?: boolean;
-    protectedAppointmentsPercentage: number;
+    protectedAppointmentsPercentage?: number;
     startDate: string;
 }
 
@@ -1320,7 +1320,7 @@ export interface EquipmentDiaryOpeningHoursDto extends Overlapping<EquipmentDiar
     medicalAttentionTypeId: number;
     openingHours: EquipmentOpeningHoursDto;
     overturnCount?: number;
-	protectedAppointmentsAllowed: boolean;
+    protectedAppointmentsAllowed: boolean;
 }
 
 export interface EquipmentDto extends Serializable {

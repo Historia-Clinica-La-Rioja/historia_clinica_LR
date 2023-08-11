@@ -58,7 +58,7 @@ public class DiaryADto {
 	@Nullable
 	private List<Integer> careLines;
 
-	@NotNull
+	@Nullable
 	private Integer protectedAppointmentsPercentage;
 
 	@Nullable

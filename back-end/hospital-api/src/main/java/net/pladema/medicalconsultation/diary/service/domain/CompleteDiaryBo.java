@@ -49,7 +49,6 @@ public class CompleteDiaryBo extends DiaryBo {
 		professionalAssignShift = diaryBo.isProfessionalAssignShift();
 		includeHoliday = diaryBo.isIncludeHoliday();
 		alias = diaryBo.getAlias();
-		protectedAppointmentsPercentage = diaryBo.getProtectedAppointmentsPercentage();
 		predecessorProfessionalId = diaryBo.getPredecessorProfessionalId();
 		hierarchicalUnitId = diaryBo.getHierarchicalUnitId();
 	}

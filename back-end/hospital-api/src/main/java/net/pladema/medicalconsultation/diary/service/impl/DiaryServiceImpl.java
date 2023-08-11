@@ -129,7 +129,6 @@ public class DiaryServiceImpl implements DiaryService {
 		diary.setActive(true);
 		diary.setClinicalSpecialtyId(diaryBo.getClinicalSpecialtyId());
 		diary.setAlias(diaryBo.getAlias());
-		diary.setProtectedAppointmentsPercentage(diaryBo.getProtectedAppointmentsPercentage().shortValue());
 		diary.setPredecessorProfessionalId(diaryBo.getPredecessorProfessionalId());
 		diary.setHierarchicalUnitId(diaryBo.getHierarchicalUnitId());
 		return diary;
@@ -302,7 +301,6 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setDoctorMiddleNames(completeDiaryListVo.getDoctorMiddleNames());
 		result.setDoctorOtherLastNames(completeDiaryListVo.getDoctorOtherLastNames());
 		result.setDoctorNameSelfDetermination(completeDiaryListVo.getDoctorNameSelfDetermination());
-		result.setProtectedAppointmentsPercentage(completeDiaryListVo.getProtectedAppointmentsPercentage() != null ? completeDiaryListVo.getProtectedAppointmentsPercentage().intValue() : 0);
 		result.setHierarchicalUnitId(completeDiaryListVo.getHierarchicalUnitId());
 		result.setHierarchicalUnitAlias(completeDiaryListVo.getHierarchicalUnitAlias());
 		LOG.debug(OUTPUT, result);
@@ -516,9 +514,6 @@ public class DiaryServiceImpl implements DiaryService {
 		if (diaryBo.getPredecessorProfessionalId() != null && diaryBo.getHierarchicalUnitId() == null)
 			throw new DiaryException(DiaryEnumException.PREDECESSOR_PROFESSIONAL_WITHOUT_HIERARCHICAL_UNIT,
 					"No se puede ingresar un profesional a reemplazar sin seleccionar la unidad jerárquica a la que pertenece");
-
-		if (diaryBo.getProtectedAppointmentsPercentage() > 0 && diaryBo.getCareLines().isEmpty())
-			throw new DiaryException(DiaryEnumException.PROTECTED_APPOINTMENTS_PERCENTAGE_WITHOUT_CARELINES, "No se puede ingresar un porcentaje de turnos protegidos mayor a cero sin asociar lineas de cuidado a la agenda");
 	}
 
 }
