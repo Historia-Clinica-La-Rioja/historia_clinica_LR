@@ -147,10 +147,11 @@ public class VirtualConsultationController {
 
 	@PutMapping(value = "/{virtualConsultationId}/state")
 	public void changeVirtualConsultationState(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId,
-											   @RequestBody EVirtualConsultationStatus virtualConsultationStatus) throws JsonProcessingException {
+											   @RequestBody @Valid VirtualConsultationStatusDto virtualConsultationStatus) throws JsonProcessingException {
 		log.debug("Input parameters -> virtualConsultationId {}, virtualConsultationStatus {}", virtualConsultationId, virtualConsultationStatus);
-		changeVirtualConsultationStatusService.run(virtualConsultationId, virtualConsultationStatus);
-		VirtualConsultationStatusDataDto statusData = new VirtualConsultationStatusDataDto(virtualConsultationId, virtualConsultationStatus);
+		EVirtualConsultationStatus eVirtualConsultationStatus = virtualConsultationStatus.getStatus();
+		changeVirtualConsultationStatusService.run(virtualConsultationId, eVirtualConsultationStatus);
+		VirtualConsultationStatusDataDto statusData = new VirtualConsultationStatusDataDto(virtualConsultationId, eVirtualConsultationStatus);
 		virtualConsultationPublisher.publish("CHANGE-VIRTUAL-CONSULTATION-STATE", objectMapper.writeValueAsString(statusData));
 	}
 

@@ -3823,6 +3823,10 @@ export interface VirtualConsultationStatusDataDto {
     virtualConsultationId: number;
 }
 
+export interface VirtualConsultationStatusDto {
+    status: EVirtualConsultationStatus;
+}
+
 export interface WorklistDto {
     actionTime: DateTimeDto;
     appointmentId: number;
