@@ -47,8 +47,7 @@
 						<mat-form-field class="mat-form-field-on-div" appearance="outline" >
 							<mat-select id="professionalReplacedId" name="professionalReplacedId"
 								formControlName="professionalReplacedId"
-								placeholder="{{'pacientes.form.SELECT' | translate}}"
-								(selectionChange)="getProfessionalSpecialties()">
+								placeholder="{{'pacientes.form.SELECT' | translate}}">
 								<mat-option *ngFor="let professional of professionalsWithoutResponsibility" [value]="professional.id">
 									<span class="mat-body">{{getFullName(professional)}}</span>
 								</mat-option>
