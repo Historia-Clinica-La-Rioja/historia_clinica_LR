@@ -101,29 +101,10 @@
 								</mat-option>
 							</mat-select>
 						</mat-form-field>
-						<mat-form-field *ngIf="data.isEquipmentAppointment" appearance="outline">
-							<mat-label
-								translate="image-network.appointments.medical-order.NEW_MEDICAL_ORDER"></mat-label>
-							<mat-select formControlName="appointmentMedicalOrder"
-								(selectionChange)="generateTooltipOnMedicalOrderChange()"
-								matTooltip="{{patientMedicalOrderTooltipDescription | titlecase}}">
-								<mat-option id="medicalOrder" name="medicalOrder"
-									*ngFor="let patientMedicalOrder of patientMedicalOrders"
-									[value]="patientMedicalOrder"
-									matTooltip="{{patientMedicalOrder.displayText | titlecase}}">
-									{{patientMedicalOrder.displayText | titlecase}}
-								</mat-option>
-								<mat-divider></mat-divider>
-								<mat-option (click)="newTranscribedOrder()">
-									<span class="color-primary"
-										[translate]="'image-network.appointments.medical-order.TRANSCRIBE_ORDER'"></span>
-								</mat-option>
-							</mat-select>
-							<button *ngIf="appointmentInfoForm.controls.appointmentMedicalOrder.value" mat-button
-								matSuffix color="warn" mat-icon-button (click)="cleanInput(); $event.stopPropagation()">
-								<mat-icon>close</mat-icon>
-							</button>
-						</mat-form-field>
+
+						<app-medical-order-input [patientMedicalOrders]="patientMedicalOrders"
+							[patientId]="patientId"></app-medical-order-input>
+
 						<div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column">
 							<mat-form-field fxFlex="30%" appearance="outline">
 								<mat-label [translate]="'turnos.new-appointment.PHONE_PREFIX'"></mat-label>

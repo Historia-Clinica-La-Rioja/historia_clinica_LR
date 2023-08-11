@@ -42,7 +42,6 @@ import { EquipmentAppointmentsFacadeService } from '@turnos/services/equipment-a
 import { Observable, forkJoin } from 'rxjs';
 import { PrescripcionesService } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { TranslateService } from '@ngx-translate/core';
-import { EquipmentTranscribeOrderPopupComponent } from '../equipment-transcribe-order-popup/equipment-transcribe-order-popup.component';
 import { differenceInDays } from 'date-fns';
 
 const ROUTE_SEARCH = 'pacientes/search';
@@ -131,7 +130,9 @@ export class NewAppointmentComponent implements OnInit {
 			patientMedicalCoverage: [null],
 			phonePrefix: [null, [Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]],
 			phoneNumber: [null, [Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]],
-			appointmentMedicalOrder: [null],
+			medicalOrder: this.formBuilder.group({
+				appointmentMedicalOrder: [null]
+			}),
 			patientEmail:[null]
 		});
 		if(this.data.modalityAttention === this.MODALITY_PATIENT_VIRTUAL_ATTENTION){
@@ -217,12 +218,6 @@ export class NewAppointmentComponent implements OnInit {
 		} else {
 			updateControlValidator(this.appointmentInfoForm, 'phoneNumber', []);
 			updateControlValidator(this.appointmentInfoForm, 'phonePrefix', []);
-		}
-	}
-
-	generateTooltipOnMedicalOrderChange() {
-		if (this.appointmentInfoForm.controls.appointmentMedicalOrder?.value){
-			this.patientMedicalOrderTooltipDescription = this.appointmentInfoForm.controls.appointmentMedicalOrder.value.displayText;
 		}
 	}
 
@@ -511,37 +506,6 @@ export class NewAppointmentComponent implements OnInit {
 		});
 	}
 
-	newTranscribedOrder() {
-		const dialogRef = this.dialog.open(EquipmentTranscribeOrderPopupComponent, {
-			width: '35%',
-			autoFocus: false,
-			data: {
-				patientId: this.patientId,
-				transcribedOrder: this.transcribedOrder
-			}
-		});
-
-		dialogRef.afterClosed().subscribe(response =>{
-			this.patientMedicalOrderTooltipDescription = '';
-			if (response?.order){
-				if (this.isOrderTranscribed) {
-					this.patientMedicalOrders[this.patientMedicalOrders.length - 1] = response.order;
-				} else {
-					this.patientMedicalOrders.push(response.order);
-				}
-				this.transcribedOrder = response.transcribedOrder;
-				this.appointmentInfoForm.controls.appointmentMedicalOrder.setValue(response.order);
-				this.generateTooltipOnMedicalOrderChange();
-				this.isOrderTranscribed = true;
-			}
-		})
-	}
-
-	cleanInput(){
-		this.appointmentInfoForm.controls.appointmentMedicalOrder.setValue(null);
-		this.patientMedicalOrderTooltipDescription = '';
-	}
-
 	goBack(stepper: MatStepper){
 		stepper.previous();
 		this.showAddPatient = false;
@@ -576,7 +540,7 @@ export class NewAppointmentComponent implements OnInit {
 
 	private addAppointment(newAppointment: CreateAppointmentDto): Observable<number> {
 		if (this.data.isEquipmentAppointment) {
-			let medicalOrder = this.appointmentInfoForm.controls.appointmentMedicalOrder?.value;
+			let medicalOrder = this.appointmentInfoForm.get('medicalOrder').get('appointmentMedicalOrder').value;
 			let orderId = medicalOrder?.serviceRequestId;
 			let studyId = medicalOrder?.studyId;
 			if (medicalOrder?.isTranscribed) {
