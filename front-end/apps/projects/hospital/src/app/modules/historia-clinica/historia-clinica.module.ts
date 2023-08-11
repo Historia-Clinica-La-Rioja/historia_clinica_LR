@@ -61,6 +61,7 @@ import { FactoresDeRiesgoFormV2Component } from './components/factores-de-riesgo
 import { AlergiasFormComponent } from './components/alergias-form/alergias-form.component';
 import { EmergencyCareEpisodeAttendService } from './services/emergency-care-episode-attend.service';
 import { EpisodeDataComponent } from './components/episode-data/episode-data.component';
+import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-search-dialog/problem-concept-search-dialog.component';
 
 @NgModule({
 	declarations: [
@@ -118,7 +119,8 @@ import { EpisodeDataComponent } from './components/episode-data/episode-data.com
 		MedicacionesFormComponent,
 		ProcedimientosFormComponent,
 		FactoresDeRiesgoFormV2Component,
-		AlergiasFormComponent
+		AlergiasFormComponent,
+		ProblemConceptSearchDialogComponent,
 	],
 	imports: [
 		CommonModule,
