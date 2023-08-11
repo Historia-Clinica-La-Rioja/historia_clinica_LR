@@ -460,38 +460,40 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	setHierarchicalUnits(healthcareProfessionalId: number, diary?: CompleteDiaryDto) {
-
-		return this.professionalService.geUserIdByHealthcareProfessional(healthcareProfessionalId).pipe(
-			switchMap((userId: number) =>
-				this.hierarchicalUnitsService.fetchAllByUserIdAndInstitutionId(userId)
+		this.professionalService.geUserIdByHealthcareProfessional(healthcareProfessionalId)
+			.pipe(
+				switchMap((userId: number) => this.hierarchicalUnitsService.fetchAllByUserIdAndInstitutionId(userId))
 			)
-		).subscribe(response => {
-			this.hierarchicalUnits = response;
-			if (diary) {
-				if (diary.predecessorProfessionalId) {
-					this.form.controls.hierarchicalUnitTemporary.setValue(this.hierarchicalUnits.find(h => h.id === diary.hierarchicalUnitId).id);
-					this.form.get('hierarchicalUnitTemporary').disable();
-					this.form.controls.hierarchicalUnitTemporary.updateValueAndValidity();
+			.subscribe(response => {
+				this.hierarchicalUnits = response;
+				if (diary) {
+					this.updateFormWithDiary(diary);
+				} else {
+					this.updateFormWithoutDiary();
 				}
-				else {
-					this.form.controls.hierarchicalUnit.setValue(this.hierarchicalUnits.find(h => h.id === diary.hierarchicalUnitId).id);
-					this.form.controls.hierarchicalUnit.updateValueAndValidity();
-					this.form.get('hierarchicalUnit').disable();
-				}
-			}
-			else
-				if (this.hierarchicalUnits.length) {
-					if (!this.form.value.temporaryReplacement) {
-						this.form.controls.hierarchicalUnit.setValue(this.hierarchicalUnits[0].id);
-						this.form.controls.hierarchicalUnit.updateValueAndValidity();
-					}
-					if (this.form.value.temporaryReplacement) {
-						this.form.controls.hierarchicalUnitTemporary.setValue(this.hierarchicalUnits[0].id);
-						this.form.controls.hierarchicalUnitTemporary.updateValueAndValidity();
-					}
-				}
-		});
+			});
 	}
+
+	private updateFormWithDiary(diary: CompleteDiaryDto) {
+		const hierarchicalUnitId = this.hierarchicalUnits.find(h => h.id === diary.hierarchicalUnitId)?.id;
+		const controlName = diary.predecessorProfessionalId ? 'hierarchicalUnitTemporary' : 'hierarchicalUnit';
+		const control = this.form.controls[controlName];
+
+		control.setValue(hierarchicalUnitId);
+		control.disable();
+		control.updateValueAndValidity();
+	}
+
+	private updateFormWithoutDiary() {
+		if (this.hierarchicalUnits.length) {
+			const targetControl = this.form.value.temporaryReplacement ? 'hierarchicalUnitTemporary' : 'hierarchicalUnit';
+			const control = this.form.controls[targetControl];
+
+			control.setValue(this.hierarchicalUnits[0].id);
+			control.updateValueAndValidity();
+		  }
+	}
+
 
 	getProfessionalSpecialties() {
 		this.resetValues();
