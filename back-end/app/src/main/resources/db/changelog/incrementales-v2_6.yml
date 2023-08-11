@@ -785,4 +785,80 @@ databaseChangeLog:
           - sql:
               sql: |-
                 UPDATE care_line SET consultation = true;
-    
+
+    - changeSet:
+        id: diary_practice-createTable
+        comment: Create table diary_practice
+        author: jvaldez
+        changes:
+          - createTable:
+              tableName: diary_practice
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_diary_practice
+                    name: id
+                    type: int
+                - column:
+                    name: diary_id
+                    type: int
+                - column:
+                    name: snomed_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: diary_id
+              baseTableName: diary_practice
+              constraintName: FK_diary_practice_diary_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: diary
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: snomed_id
+              baseTableName: diary_practice
+              constraintName: FK_diary_practice_snomed_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: snomed
+              validate: true
+
