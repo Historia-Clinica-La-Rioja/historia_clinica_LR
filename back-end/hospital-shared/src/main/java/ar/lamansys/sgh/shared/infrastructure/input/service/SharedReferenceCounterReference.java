@@ -18,8 +18,6 @@ public interface SharedReferenceCounterReference {
 
     List<ReferenceProblemDto> getReferencesProblemsByPatient(Integer patientId);
 
-	Integer getAssignedProtectedAppointmentsQuantity(Integer diaryId, LocalDate day, Short appointmentStateId);
-
 	List<Integer> getProtectedAppointmentsIds(List<Integer> diaryIds);
 
 	boolean isProtectedAppointment(Integer appointmentId);

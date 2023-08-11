@@ -23,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,12 +68,6 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
         log.debug("Input parameters -> patientId {} ", patientId);
         return referenceProblemMapper.fromReferenceProblemBoList(getReferenceProblem.run(patientId));
     }
-
-	@Override
-	public Integer getAssignedProtectedAppointmentsQuantity(Integer diaryId, LocalDate day, Short appointmentStateId) {
-		log.debug("Input parameters -> diaryId {}, day {}, appointmentStateId {}", diaryId, day, appointmentStateId);
-        return referenceAppointmentRepository.getAssignedProtectedAppointmentsQuantity(diaryId, day, appointmentStateId);
-	}
 
 	@Override
 	public List<Integer> getProtectedAppointmentsIds(List<Integer> diaryIds) {

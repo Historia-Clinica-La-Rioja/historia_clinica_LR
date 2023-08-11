@@ -1,6 +1,5 @@
 package net.pladema.medicalconsultation.diary.service.impl;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
@@ -9,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryProtectedAppointmentsSearch;
-import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.diary.repository.DiaryAvailableProtectedAppointmentsSearchRepository;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
@@ -34,12 +32,11 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-@Service
 @RequiredArgsConstructor
 @Slf4j
+@Service
 public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppointmentsService {
 
 	private static final String OUTPUT = "Output -> {}";
@@ -47,12 +44,16 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 	public final int WEEK_DAY_NUMBER = 7;
 
 	private final DiaryAvailableProtectedAppointmentsSearchRepository diaryAvailableProtectedAppointmentsSearchRepository;
+
 	private final FeatureFlagsService featureFlagsService;
+
 	private final DiaryOpeningHoursService diaryOpeningHoursService;
+
 	private final InstitutionExternalService institutionExternalService;
+
 	private final AppointmentService appointmentService;
+
 	private final DateTimeProvider dateTimeProvider;
-	private final SharedReferenceCounterReference sharedReferenceCounterReference;
 
 	@Override
 	public List<DiaryAvailableProtectedAppointmentsBo> getAvailableProtectedAppointmentsBySearchCriteria(DiaryProtectedAppointmentsSearch searchCriteria,
@@ -69,7 +70,11 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 		List<DiaryAvailableProtectedAppointmentsBo> result = new ArrayList<>();
 
 		for (DiaryAvailableProtectedAppointmentsInfoBo diaryInfo : diariesInfo) {
-			diaryInfo.setOpeningHours(new ArrayList<>(diaryOpeningHoursService.getDiaryOpeningHours(diaryInfo.getDiaryId())));
+			diaryInfo.setOpeningHours(diaryOpeningHoursService.getDiaryOpeningHours(
+					diaryInfo.getDiaryId())
+					.stream()
+					.filter(doh -> doh.getProtectedAppointmentsAllowed() != null && doh.getProtectedAppointmentsAllowed())
+					.collect(Collectors.toList()));
 			result.addAll(getDiaryAvailableAppointments(diaryInfo, assignedAppointments, searchCriteria, institutionId));
 		}
 		result.sort(Comparator.comparing(DiaryAvailableProtectedAppointmentsBo::getDate).thenComparing(DiaryAvailableProtectedAppointmentsBo::getHour));
@@ -122,7 +127,7 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 
 		List<DiaryAvailableProtectedAppointmentsBo> result = new ArrayList<>();
 		Map<Integer, List<LocalTime>> availableAppointmentTimes = potentialAppointmentTimesByDay.get((short) currentDayOfWeek);
-		if (availableAppointmentTimes != null && hasAvailableProtectedAppointments(availableAppointmentTimes, diaryInfo, day)) {
+		if (availableAppointmentTimes != null) {
 			availableAppointmentTimes.forEach((openingHoursId, openingHoursTimeList) -> {
 				openingHoursTimeList
 						.stream()
@@ -136,20 +141,6 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 		return result;
 	}
 
-	private boolean hasAvailableProtectedAppointments(Map<Integer, List<LocalTime>> availableAppointmentTimes,
-													  DiaryAvailableProtectedAppointmentsInfoBo diaryInfo,
-													  LocalDate day) {
-		AtomicReference<Integer> times = new AtomicReference<>(0);
-		availableAppointmentTimes.forEach((openingHours, openingHoursTimeList) -> {
-			times.updateAndGet(t -> t + openingHoursTimeList.size());
-		});
-
-		Integer quantityAssigned = sharedReferenceCounterReference.getAssignedProtectedAppointmentsQuantity(diaryInfo.getDiaryId(), day, AppointmentState.CANCELLED);
-		double quantityAvailable = Math.round((times.get() * diaryInfo.getProtectedAppointmentsPercentage().doubleValue()) / 100);
-
-		return quantityAssigned < quantityAvailable;
-	}
-	
 	private boolean includeHour(LocalDateTime currentDateTime, LocalDate day, LocalTime time) {
 		if (day.compareTo(currentDateTime.toLocalDate()) > 0)
 			return true;
@@ -161,9 +152,9 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 												Integer diaryId,
 												LocalTime time,
 												LocalDate date) {
-		return assignedAppointments.stream().filter(appointment ->
-				appointment.getDiaryId().equals(diaryId) && appointment.getDate().equals(date) && appointment.getHour().equals(time)
-		).findAny().isEmpty();
+		return !assignedAppointments.stream()
+				.anyMatch(appointment -> appointment.getDiaryId().equals(diaryId) &&
+						appointment.getDate().equals(date) && appointment.getHour().equals(time));
 	}
 
 	private DiaryAvailableProtectedAppointmentsBo createAvailableProtectedAppointment(LocalTime availableAppointmentTime, LocalDate availableAppointmentDate,
