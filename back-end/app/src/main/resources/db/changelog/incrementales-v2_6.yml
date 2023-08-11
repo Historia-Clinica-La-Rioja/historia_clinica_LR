@@ -775,3 +775,14 @@ databaseChangeLog:
               selectQuery: |-
                 SELECT diary_id, opening_hours_id, medical_attention_type_id, overturn_count, external_appointments_allowed
                 FROM diary_opening_hours
+
+    - changeSet:            
+        id: update-consultation-care_line
+        author: jvaldez
+        comment: update careline already created
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE care_line SET consultation = true;
+    
