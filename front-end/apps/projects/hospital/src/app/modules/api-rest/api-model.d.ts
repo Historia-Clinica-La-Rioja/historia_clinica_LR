@@ -655,6 +655,7 @@ export interface CompleteDiaryDto extends DiaryDto {
     careLinesInfo: CareLineDto[];
     doctorsOfficeDescription: string;
     hierarchicalUnitAlias: string;
+    practicesInfo: SnomedDto[];
     sectorDescription: string;
     sectorId: number;
     sectorName: string;

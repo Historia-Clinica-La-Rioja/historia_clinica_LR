@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.diary.service.impl;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.medicalconsultation.diary.repository.DiaryPracticeRepository;
@@ -41,6 +42,14 @@ public class DiaryPracticeServiceImpl implements DiaryPracticeService {
 					}
 				}, () -> addDiaryPractice(pId, diaryId)
 		));
+	}
+
+	@Override
+	public List<SnomedBo> getAllByDiaryId(Integer diaryId) {
+		log.debug("Input parameter -> diaryId {}", diaryId);
+		List<SnomedBo> practices = diaryPracticeRepository.getByDiaryId(diaryId);
+		log.trace("Output -> {}", practices);
+		return practices;
 	}
 
 	private void addDiaryPractice(Integer practiceId, Integer diaryId) {

@@ -80,7 +80,7 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
             "d, do.description, cs.name) " +
             "FROM Diary d " +
             "JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
-			"JOIN ClinicalSpecialty cs ON (cs.id = d.clinicalSpecialtyId) " +
+			"LEFT JOIN ClinicalSpecialty cs ON (cs.id = d.clinicalSpecialtyId) " +
             "WHERE d.healthcareProfessionalId = :hcpId " +
             "AND do.institutionId = :instId " +
             "AND d.active = true "+
@@ -93,7 +93,7 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 			"FROM Diary d " +
 			"JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
 			"JOIN DiaryAssociatedProfessional AS dap ON (dap.diaryId = d.id)  " +
-			"JOIN ClinicalSpecialty cs ON (cs.id = d.clinicalSpecialtyId) " +
+			"LEFT JOIN ClinicalSpecialty cs ON (cs.id = d.clinicalSpecialtyId) " +
 			"WHERE d.healthcareProfessionalId = :healthcareProfessionalId " +
 			"AND dap.healthcareProfessionalId = :associatedHealthcareProfessionalId " +
 			"AND do.institutionId = :institutionId " +
@@ -144,7 +144,7 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
             "FROM Diary d " +
             "JOIN DoctorsOffice do ON do.id = d.doctorsOfficeId " +
 			"JOIN Sector s ON s.id = do.sectorId " +
-			"JOIN ClinicalSpecialty cs ON cs.id = d.clinicalSpecialtyId " +
+			"LEFT JOIN ClinicalSpecialty cs ON cs.id = d.clinicalSpecialtyId " +
 			"LEFT JOIN HierarchicalUnit hu ON (d.hierarchicalUnitId = hu.id) " +
             "WHERE d.id = :diaryId ")
     Optional<CompleteDiaryListVo> getDiary(@Param("diaryId") Integer diaryId);

@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.diary.controller.dto;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.CareLineDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalPersonDto;
 import lombok.Getter;
@@ -28,4 +29,6 @@ public class CompleteDiaryDto extends DiaryDto {
 	private List<ProfessionalPersonDto> associatedProfessionalsInfo;
 
 	private String hierarchicalUnitAlias;
+	
+	private List<SnomedDto> practicesInfo;
 }

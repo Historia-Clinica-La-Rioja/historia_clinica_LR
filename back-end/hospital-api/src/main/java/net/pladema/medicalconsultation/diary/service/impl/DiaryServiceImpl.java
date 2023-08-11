@@ -315,6 +315,7 @@ public class DiaryServiceImpl implements DiaryService {
 		result.ifPresent(completeDiaryBo -> {
 			completeDiaryBo.setAssociatedProfessionalsInfo(diaryAssociatedProfessionalService.getAllDiaryAssociatedProfessionalsInfo(diaryId));
 			completeDiaryBo.setCareLinesInfo(diaryCareLineService.getAllCareLinesByDiaryId(diaryId, completeDiaryBo.getHealthcareProfessionalId()));
+			completeDiaryBo.setPracticesInfo(diaryPracticeService.getAllByDiaryId(diaryId));
 		});
 		LOG.debug(OUTPUT, result);
 		return result;

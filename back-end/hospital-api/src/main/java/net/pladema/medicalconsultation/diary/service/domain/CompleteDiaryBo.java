@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.diary.service.domain;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,6 +35,8 @@ public class CompleteDiaryBo extends DiaryBo {
 
 	private String hierarchicalUnitAlias;
 	
+	private List<SnomedBo> practicesInfo;
+
 	public CompleteDiaryBo(DiaryBo diaryBo) {
 		appointmentDuration = diaryBo.getAppointmentDuration();
 		id = diaryBo.getId();

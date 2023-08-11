@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.diary.repository;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 
 
@@ -19,4 +20,12 @@ public interface DiaryPracticeRepository extends SGXAuditableEntityJPARepository
 			"WHERE dp.diaryId = :diaryId " +
 			"AND dp.deleteable.deleted = false OR dp.deleteable.deleted IS NULL ")
 	List<DiaryPractice> findAllByDiaryId(@Param("diaryId") Integer diaryId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo(s.id, s.sctid, s.pt) " +
+			"FROM DiaryPractice dp " +
+			"JOIN Snomed s ON (dp.snomedId = s.id) " +
+			"WHERE dp.diaryId = :diaryId " +
+			"AND dp.deleteable.deleted = false")
+	List<SnomedBo> getByDiaryId(@Param("diaryId") Integer diaryId);
 }
