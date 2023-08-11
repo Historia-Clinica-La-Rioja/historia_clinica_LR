@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { DAYS_OF_WEEK } from 'angular-calendar';
-import { Observable, combineLatest, filter, switchMap } from 'rxjs';
+import { Observable, filter, switchMap } from 'rxjs';
 
 import { getError, hasError, processErrors, scrollIntoError } from '@core/utils/form.utils';
 import { ContextService } from '@core/services/context.service';
@@ -75,6 +75,7 @@ export class AgendaSetupComponent implements OnInit {
 	careLines: CareLineDto[] = [];
 	careLinesSelected: CareLineDto[] = [];
 	hierarchicalUnits: HierarchicalUnitDto[] = [];
+	professionalsWithoutResponsibility = [];
 	private editingDiaryId = null;
 	private readonly routePrefix;
 	private mappedCurrentWeek = {};
@@ -174,12 +175,23 @@ export class AgendaSetupComponent implements OnInit {
 				});
 			}
 			else {
-				this.form.controls.healthcareProfessionalId.valueChanges.pipe(filter(healthcareProfessionalId => !!healthcareProfessionalId)).subscribe((healthcareProfessionalId: number) => {
-					if (!this.form.value.temporaryReplacement) {
-						this.form.controls.hierarchicalUnitTemporary.setValue(null);
-						this.setHierarchicalUnits(healthcareProfessionalId);
-					}
-				});
+				this.form.controls.healthcareProfessionalId.valueChanges
+					.pipe(filter(id => !!id))
+					.subscribe((healthcareProfessionalId: number) => {
+						const professionalsWithoutSelected = this.professionals.filter((p: ProfessionalDto) => p.id !== healthcareProfessionalId);
+						const { professionalReplacedId, temporaryReplacement } = this.form.value;
+
+						this.professionalsWithoutResponsibility = professionalsWithoutSelected;
+
+						if (temporaryReplacement) {
+							if (professionalReplacedId === healthcareProfessionalId) {
+								this.form.controls.hierarchicalUnitTemporary.setValue(null);
+								this.form.controls.professionalReplacedId.setValue(null);
+							}
+						} else {
+							this.setHierarchicalUnits(healthcareProfessionalId);
+						}
+					});
 
 				this.form.controls.professionalReplacedId.valueChanges.pipe(filter(healthcareProfessionalId => !!healthcareProfessionalId)).subscribe((professionalReplacedId: number) => {
 					this.form.controls.hierarchicalUnit.setValue(null);
@@ -188,25 +200,6 @@ export class AgendaSetupComponent implements OnInit {
 						this.setHierarchicalUnits(professionalReplacedId);
 					}
 				});
-
-
-				combineLatest([
-					this.form.controls.healthcareProfessionalId.valueChanges.pipe(filter(id => !!id)),
-					this.form.controls.professionalReplacedId.valueChanges.pipe(filter(id => !!id))
-				]).subscribe(([healthcareProfessionalId, professionalReplacedId]) => {
-					const temporaryReplacement = this.form.value.temporaryReplacement;
-
-					if (!temporaryReplacement) {
-						this.updateHierarchicalUnitTemporary(healthcareProfessionalId);
-					} else {
-						this.updateHierarchicalUnitTemporary(professionalReplacedId);
-					}
-
-					if (!temporaryReplacement) {
-						this.updateHierarchicalUnit(healthcareProfessionalId);
-					}
-				});
-
 			}
 		});
 
@@ -215,19 +208,13 @@ export class AgendaSetupComponent implements OnInit {
 			this.sectors = data;
 		});
 
-		this.healthcareProfessionalService.getAll().subscribe(data => this.professionals = data);
+		this.healthcareProfessionalService.getAll().subscribe(data => {
+			this.professionals = data;
+			this.professionalsWithoutResponsibility = data
+		});
 
 	}
 
-	private updateHierarchicalUnitTemporary(id: number): void {
-		this.form.controls.hierarchicalUnitTemporary.setValue(null);
-		this.setHierarchicalUnits(id);
-	}
-
-	private updateHierarchicalUnit(id: number): void {
-		this.form.controls.hierarchicalUnit.setValue(null);
-		this.setHierarchicalUnits(id);
-	}
 	get careLinesAssociated(): UntypedFormControl {
 		return this.form.get('careLines') as UntypedFormControl;
 	}

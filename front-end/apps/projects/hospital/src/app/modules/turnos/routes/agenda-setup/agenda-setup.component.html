@@ -49,14 +49,13 @@
 								formControlName="professionalReplacedId"
 								placeholder="{{'pacientes.form.SELECT' | translate}}"
 								(selectionChange)="getProfessionalSpecialties()">
-								<mat-option *ngFor="let professional of professionals" [value]="professional.id">
+								<mat-option *ngFor="let professional of professionalsWithoutResponsibility" [value]="professional.id">
 									<span class="mat-body">{{getFullName(professional)}}</span>
 								</mat-option>
 							</mat-select>
 							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 						</mat-form-field>
 					</div>
-
 					<div class="professional-form-sector" fxLayout="column">
 						<span>{{ 'turnos.agenda-setup.HIERARCHICAL_UNIT' | translate }}</span>
 						<mat-form-field class="mat-form-field-on-div" appearance="outline">
