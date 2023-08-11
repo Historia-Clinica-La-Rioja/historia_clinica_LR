@@ -1,4 +1,4 @@
-package ar.lamansys.virtualConsultation.infrastructure.input.rest;
+package ar.lamansys.virtualConsultation.infrastructure.input.rest.dto;
 
 import javax.validation.constraints.NotNull;
 

@@ -35,6 +35,7 @@ import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualCons
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationRequestDto;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationResponsibleProfessionalAvailabilityDto;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationStatusDataDto;
+import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationStatusDto;
 import ar.lamansys.virtualConsultation.infrastructure.mapper.VirtualConsultationMapper;
 import ar.lamansys.virtualConsultation.infrastructure.mqtt.VirtualConsultationPublisher;
 import lombok.RequiredArgsConstructor;
