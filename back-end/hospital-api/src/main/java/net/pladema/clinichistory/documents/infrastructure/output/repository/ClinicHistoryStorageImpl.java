@@ -70,6 +70,7 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 
 		List<VClinicHistory> resultList = repository.getPatientClinicHistory(patientId, LocalDateTime.of(from, LocalTime.MIN), LocalDateTime.of(to, LocalTime.MAX));
 		filterCancelledOrders(resultList);
+		filterEmptyTriages(resultList);
 
 		return  resultList
 				.stream()
@@ -81,6 +82,7 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 	public List<CHDocumentBo> getClinicHistoryDocuments(List<Long> ids) {
 		List<VClinicHistory> resultList = repository.findAllById(ids);
 		filterCancelledOrders(resultList);
+		filterEmptyTriages(resultList);
 
 		return resultList
 				.stream()
@@ -103,6 +105,14 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 
 	private List<VClinicHistory> filterCancelledOrders(List<VClinicHistory> documents){
 		documents.removeIf(document -> document.getDocumentTypeId().equals(EDocumentType.ORDER.getId()) && (document.getHealthConditionSummary().getServiceRequestStudies() == null || document.getHealthConditionSummary().getServiceRequestStudies().isBlank()));
+		return documents;
+	}
+
+	private List<VClinicHistory> filterEmptyTriages(List<VClinicHistory> documents){
+		documents.removeIf(document -> document.getDocumentTypeId().equals(EDocumentType.TRIAGE.getId())
+				&& document.getHealthConditionSummary().getRiskFactors().isBlank()
+				&& document.getHealthConditionSummary().getPediatricRiskFactors().isBlank()
+				&& document.getHealthConditionSummary().getNotes().isBlank());
 		return documents;
 	}
 

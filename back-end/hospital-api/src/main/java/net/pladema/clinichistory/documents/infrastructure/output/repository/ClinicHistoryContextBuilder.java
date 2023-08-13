@@ -201,7 +201,7 @@ public class ClinicHistoryContextBuilder {
 			} else if (emergencyCareEpisode.getShockroom() != null) {
 				context.put("place", emergencyCareEpisode.getShockroom().getDescription());
 			} else if (emergencyCareEpisode.getBed() != null) {
-				var bedInfo = bedService.getBedInfo(internmentEpisodeService.getInternmentEpisode(episodeId, document.getInstitutionId()).getBedId());
+				var bedInfo = bedService.getBedInfo(emergencyCareEpisode.getBed().getId());
 				bedInfo.ifPresent(bedInfoVo -> {
 					context.put("sector", bedInfoVo.getSector().getDescription());
 					context.put("place", bedInfoVo.getRoom().getDescription() + " | " + bedInfoVo.getBed().getBedNumber());
