@@ -13,8 +13,11 @@ public class CHEpicrisisBo extends CHDocumentBo{
 
 	private String problems;
 	private String notes;
+	private String procedures;
 	private String personalRecord;
 	private String familyRecord;
+
+	private String allergies;
 	private String medicines;
 	private String vaccines;
 	private String otherCircumstances;
@@ -25,8 +28,10 @@ public class CHEpicrisisBo extends CHDocumentBo{
 		super(entity, encounterType, documentType);
 		this.problems = entity.getHealthConditionSummary().getProblems();
 		this.notes = entity.getHealthConditionSummary().getNotes();
+		this.procedures = entity.getHealthConditionSummary().getProcedures();
 		this.personalRecord = entity.getHealthConditionSummary().getPersonalRecord();
 		this.familyRecord = entity.getHealthConditionSummary().getFamilyRecord();
+		this.allergies = entity.getHealthConditionSummary().getAllergies();
 		this.medicines = entity.getHealthConditionSummary().getMedicines();
 		this.vaccines = entity.getHealthConditionSummary().getVaccines();
 		this.otherCircumstances = entity.getHealthConditionSummary().getEpicrisisOtherCircumstances();
@@ -36,12 +41,14 @@ public class CHEpicrisisBo extends CHDocumentBo{
 
 	@Override
 	public List<ClinicalRecordBo> getClinicalRecords() {
-		List<String> terms = Stream.of(problems, notes, personalRecord, familyRecord, medicines, vaccines, otherCircumstances, externalCause, obstetricEvent).filter(term -> term!=null && !term.isBlank()).collect(Collectors.toList());
+		List<String> terms = Stream.of(problems, notes, personalRecord, familyRecord, allergies, medicines, vaccines, otherCircumstances, externalCause, obstetricEvent).filter(term -> term!=null && !term.isBlank()).collect(Collectors.toList());
 		List<ClinicalRecordBo> result = new ArrayList<>();
 		if(!terms.isEmpty()) {
 			String evolution = Joiner.on(". <br />").join(terms);
-			result.add(new ClinicalRecordBo("Epicrisis", evolution.replace("|(", " (").replace('|', ',').replace("\\n", "<br />")));
+			result.add(new ClinicalRecordBo("Epicrisis", evolution.replace("|(", " (").replace('|', ',').replace("\\n", ".<br />")));
 		}
+		if(procedures!=null && !procedures.isBlank())
+			result.add(new ClinicalRecordBo("Procedimiento", procedures.substring(procedures.indexOf(SPECIAL_CHARACTER)+1)));
 		return result;
 	}
 
