@@ -7,10 +7,12 @@ import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSearchBo;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryProtectedAppointmentsSearch;
 import net.pladema.medicalconsultation.diary.repository.DiaryAvailableProtectedAppointmentsSearchRepository;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryAvailableProtectedAppointmentsBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryAvailableProtectedAppointmentsInfoBo;
 import net.pladema.medicalconsultation.diary.service.DiaryAvailableAppointmentsService;
@@ -18,6 +20,9 @@ import net.pladema.medicalconsultation.diary.service.DiaryAvailableAppointmentsS
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 
 import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
+
+import net.pladema.staff.service.ClinicalSpecialtyService;
+import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
 
 import org.springframework.stereotype.Service;
 
@@ -55,6 +60,10 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 
 	private final DateTimeProvider dateTimeProvider;
 
+	private final DiaryService diaryService;
+
+	private final ClinicalSpecialtyService clinicalSpecialtyService;
+
 	@Override
 	public List<DiaryAvailableProtectedAppointmentsBo> getAvailableProtectedAppointmentsBySearchCriteria(DiaryProtectedAppointmentsSearch searchCriteria,
 																										 Integer institutionId) {
@@ -82,6 +91,14 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 		return result;
 	}
 
+	@Override
+	public Integer geAvailableAppointmentsBySearchCriteriaQuantity(Integer institutionId, Integer clinicalSpecialtyId, AppointmentSearchBo searchCriteria) {
+		log.debug("Input parameters -> institutionId {}, clinicalSpecialtyId {}, searchCriteria {}", institutionId, clinicalSpecialtyId, searchCriteria);
+		ClinicalSpecialtyBo clinicalSpecialty = clinicalSpecialtyService.getClinicalSpecialty(clinicalSpecialtyId).get();
+		searchCriteria.setAliasOrSpecialtyName(clinicalSpecialty.getName());
+		return diaryService.getEmptyAppointmentsBySearchCriteria(institutionId, searchCriteria).size();
+	}
+
 	private List<DiaryAvailableProtectedAppointmentsBo> getDiaryAvailableAppointments(DiaryAvailableProtectedAppointmentsInfoBo diaryInfo,
 																					  Collection<AppointmentBo> assignedAppointments,
 																					  DiaryProtectedAppointmentsSearch searchCriteria,
@@ -91,7 +108,7 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 
 		diaryInfo.getOpeningHours().forEach(openingHours -> {
 			potentialAppointmentTimesByDay.computeIfAbsent(openingHours.getOpeningHours().getDayWeekId(), k -> new HashMap<>());
-			potentialAppointmentTimesByDay.get(openingHours.getOpeningHours().getDayWeekId()).put(openingHours.getOpeningHours().getId(), getAvaiableAppointmentsHoursFromOpeningHours(openingHours.getOpeningHours(), diaryInfo));
+			potentialAppointmentTimesByDay.get(openingHours.getOpeningHours().getDayWeekId()).put(openingHours.getOpeningHours().getId(), getAvailableAppointmentsHoursFromOpeningHours(openingHours.getOpeningHours(), diaryInfo));
 		});
 
 		LocalDate searchInitialDate = searchCriteria.getInitialSearchDate();
@@ -105,7 +122,7 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 		return result;
 	}
 
-	private List<LocalTime> getAvaiableAppointmentsHoursFromOpeningHours(OpeningHoursBo openingHours,
+	private List<LocalTime> getAvailableAppointmentsHoursFromOpeningHours(OpeningHoursBo openingHours,
 																		 DiaryAvailableProtectedAppointmentsInfoBo diary) {
 		Long slots = ChronoUnit.MINUTES.between(openingHours.getFrom(), openingHours.getTo()) / diary.getAppointmentDuration();
 		List<LocalTime> generatedHours = new ArrayList<>();
