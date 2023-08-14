@@ -149,6 +149,9 @@ public enum AppFeature implements Feature {
 
 	@Label("Indica si está habilitada la gestión de Roles de API Pública")
 	ROLES_API_PUBLICA_EN_DESARROLLO,
+
+	@Label("Indica si el módulo de telemedicina está activo")
+	HABILITAR_TELEMEDICINA,
 	;
 
     public boolean isActive() {

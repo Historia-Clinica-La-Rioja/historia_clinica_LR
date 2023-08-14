@@ -56,6 +56,8 @@ public class RoleNameMapperImpl implements RoleNameMapper {
 			case API_RECETAS: return "API Recetas";
 			case API_SIPPLUS: return "API Sip+";
 			case API_USERS: return "API Usuarios";
+			case VIRTUAL_CONSULTATION_PROFESSIONAL: return "Profesional de teleconsulta";
+			case VIRTUAL_CONSULTATION_RESPONSIBLE: return "Responsable de teleconsulta";
 		}
 		throw new NotFoundException("role-not-exists", String.format("El rol %s no existe", eRole));
 	}
