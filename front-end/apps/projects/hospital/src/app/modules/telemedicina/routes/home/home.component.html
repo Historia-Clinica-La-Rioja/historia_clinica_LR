@@ -1,7 +1,15 @@
-
 <app-content width="full">
 	<section>
 		<h2 class="page-title">{{'telemedicina.TITLE' | translate}}</h2>
 	</section>
-<app-requests></app-requests>
+
+	<mat-tab-group>
+		<mat-tab label="SOLICITUDES">
+			<app-requests></app-requests>
+
+		</mat-tab>
+		<mat-tab label="ATENCIÓN ONLINE">
+			<app-request-attention></app-request-attention>
+		</mat-tab>
+	</mat-tab-group>
 </app-content>

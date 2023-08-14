@@ -13,6 +13,7 @@ import { CoreModule } from '@core/core.module';
 import { ButtonAndMotiveListComponent } from './components/button-and-motive-list/button-and-motive-list.component';
 import { ButtonAndProblemListComponent } from './components/button-and-problem-list/button-and-problem-list.component';
 import { ToggleAvaiabilityComponent } from './components/toggle-avaiability/toggle-avaiability.component';
+import { RequestAttentionComponent } from './components/request-attention/request-attention.component';
 
 
 
@@ -23,7 +24,8 @@ import { ToggleAvaiabilityComponent } from './components/toggle-avaiability/togg
 		NewTelemedicineRequestComponent,
 		InformationRequestFormComponent,
 		ButtonAndMotiveListComponent,
-  		ButtonAndProblemListComponent,
+		ButtonAndProblemListComponent,
+		RequestAttentionComponent,
 		ToggleAvaiabilityComponent,
 	],
 	imports: [

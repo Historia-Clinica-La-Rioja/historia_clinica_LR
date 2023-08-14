@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { VirtualConsultationDto, VirtualConsultationNotificationDataDto, VirtualConsultationRequestDto } from '@api-rest/api-model';
+import { VirtualConsultationDto, VirtualConsultationNotificationDataDto, VirtualConsultationRequestDto, VirtualConsultationStatusDto } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 
@@ -24,22 +24,27 @@ export class VirtualConstultationService {
 
 	getVirtualConsultationCall(virtualConsultationId: number): Observable<VirtualConsultationNotificationDataDto> {
 		const url = `${this.BASE_URL}/notification/${virtualConsultationId}`
-		return this.http.get<VirtualConsultationNotificationDataDto>(`${url}`)
+		return this.http.get<VirtualConsultationNotificationDataDto>(url)
 	}
 
 	getDomainVirtualConsultation(): Observable<VirtualConsultationDto[]> {
 		const url = `${this.BASE_URL}/domain`;
-		return this.http.get<VirtualConsultationDto[]>(`${url}`)
+		return this.http.get<VirtualConsultationDto[]>(url)
 	}
 
 	changeResponsibleAttentionState(institutionId: number, attentionValue: boolean): Observable<any> {
 		const url = `${this.BASE_URL}/${institutionId}/change-responsible-state`;
-		return this.http.post(`${url}`, attentionValue)
+		return this.http.post(url, attentionValue)
 	}
 
-	getVirtualConsultation(id:number): Observable<VirtualConsultationDto> {
+	getVirtualConsultation(id: number): Observable<VirtualConsultationDto> {
 		const url = `${this.BASE_URL}/${id}`;
-		return this.http.get<VirtualConsultationDto>(`${url}`)
+		return this.http.get<VirtualConsultationDto>(url)
+	}
+
+	changeVirtualConsultationState(id: number, status: VirtualConsultationStatusDto ) {
+		const url = `${this.BASE_URL}/${id}/state`;
+		return this.http.put(url, status)
 	}
 
 	saveVirtualConsultationRequest(institutionId: number, virtualConsultation: VirtualConsultationRequestDto) {

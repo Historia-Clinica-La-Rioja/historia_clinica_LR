@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { EVirtualConsultationStatus, VirtualConsultationDto, VirtualConsultationResponsibleProfessionalAvailabilityDto, VirtualConsultationStatusDataDto } from '@api-rest/api-model';
+import { VirtualConsultationDto, VirtualConsultationResponsibleProfessionalAvailabilityDto, VirtualConsultationStatusDataDto } from '@api-rest/api-model';
 import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
-import { Observable, Subject, map } from 'rxjs';
+import { Observable, ReplaySubject, map } from 'rxjs';
 import { StompService } from '../../stomp.service';
 
 @Injectable({
@@ -9,13 +9,14 @@ import { StompService } from '../../stomp.service';
 })
 export class VirtualConsultationsFacadeService {
 
-	virtualConsultationsEmitter = new Subject<VirtualConsultationDto[]>();
+	virtualConsultationsEmitter = new ReplaySubject<VirtualConsultationDto[]>();
 	virtualConsultations$: Observable<VirtualConsultationDto[]> = this.virtualConsultationsEmitter.asObservable();
 
 	virtualConsultations: VirtualConsultationDto[];
 
-	mockedCambioEstadoSolicitud = new Subject<VirtualConsultationStatusDataDto>();
-	mockedCambioEstadoSolicitud$: Observable<VirtualConsultationStatusDataDto> = this.mockedCambioEstadoSolicitud.asObservable();
+	private readonly virtualConsultationStatusChanged$: Observable<VirtualConsultationStatusDataDto> =
+		this.stompService.watch('/topic/virtual-consultation-state-change')
+			.pipe(map(m => JSON.parse(m.body)))
 
 	private readonly solicitanteAvailableChanged$: Observable<any> =
 		this.stompService.watch('/topic/virtual-consultation-responsible-state-change')
@@ -49,7 +50,7 @@ export class VirtualConsultationsFacadeService {
 		)
 
 
-		this.mockedCambioEstadoSolicitud$.subscribe(
+		this.virtualConsultationStatusChanged$.subscribe(
 			(newState: VirtualConsultationStatusDataDto) => {
 				this.virtualConsultations.find(vc => vc.id === newState.virtualConsultationId).status = newState.status;
 				this.virtualConsultationsEmitter.next(this.virtualConsultations)
@@ -67,15 +68,6 @@ export class VirtualConsultationsFacadeService {
 			}
 		)
 
-	}
-
-	cambioEstadoDeLaSolicitud() {
-		this.mockedCambioEstadoSolicitud.next(
-			{
-				virtualConsultationId: 1,
-				status: EVirtualConsultationStatus.FINISHED
-			}
-		)
 	}
 
 	private responsibleChangedFilter(virtualConsultationDto: VirtualConsultationDto, solicitanteChanged: VirtualConsultationResponsibleProfessionalAvailabilityDto): boolean {
