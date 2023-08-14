@@ -7,6 +7,8 @@ import { Subscription } from 'rxjs';
 import { VirtualConsultationsFacadeService } from '../../virtual-consultations-facade.service';
 import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
 import { JitsiCallService } from '../../../jitsi/jitsi-call.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 
 @Component({
 	selector: 'app-request-attention',
@@ -23,6 +25,7 @@ export class RequestAttentionComponent implements OnInit {
 		private readonly virtualConsultationsFacadeService: VirtualConsultationsFacadeService,
 		private virtualConsultationService: VirtualConstultationService,
 		private jitsiCallService: JitsiCallService,
+		private readonly dialog: MatDialog,
 	) { }
 
 
@@ -34,7 +37,24 @@ export class RequestAttentionComponent implements OnInit {
 	}
 
 	confirm(virtualConsultationId: number) {
-		this.virtualConsultationService.changeVirtualConsultationState(virtualConsultationId, { status: EVirtualConsultationStatus.FINISHED }).subscribe()
+		const ref = this.dialog.open(ConfirmDialogComponent, {
+			data: {
+				showMatIconError: true,
+				title: `Confirmar atención`,
+				cancelButtonLabel:'NO, REGRESAR',
+				okButtonLabel:'SI, CONFIRMAR ATENCIÓN',
+				content: `Si confirma la atención se asume que se efectuó una teleconsulta satisfactoriamente y la solicitud se quitará de la lista de espera. ¿Está seguro que desea confirmarla?`,
+			},
+			width: '33%'
+		});
+
+		ref.afterClosed().subscribe(
+			closed => {
+				if (closed) {
+					this.virtualConsultationService.changeVirtualConsultationState(virtualConsultationId, { status: EVirtualConsultationStatus.FINISHED }).subscribe()
+				}
+			}
+		)
 	}
 
 
