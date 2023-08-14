@@ -30,7 +30,8 @@ public interface CareLineRepository extends SGXAuditableEntityJPARepository<Care
 			"JOIN CareLineInstitutionSpecialty clis ON (cli.id = clis.careLineInstitutionId)"+
 			"WHERE clis.clinicalSpecialtyId = :clinicalSpecialtyId " +
 			"AND cli.institutionId = :institutionId " +
-			"AND cli.deleted = false")
+			"AND cli.deleted = false " +
+			"AND cl.consultation = true ")
 	List<CareLineBo> getCareLinesByClinicalSpecialtyAndInstitutionId(@Param("institutionId") Integer institutionId,
 																	 @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
 
