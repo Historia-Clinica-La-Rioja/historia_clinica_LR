@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
 	selector: 'app-toggle-avaiability',
@@ -7,6 +7,8 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class ToggleAvaiabilityComponent {
 
+
+	@Input() label: string;
 	@Output() availabilityChanged = new EventEmitter<boolean>;
 	isChecked = false;
 	constructor() { }

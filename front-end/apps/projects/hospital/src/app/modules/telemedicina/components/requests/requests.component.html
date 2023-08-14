@@ -1,7 +1,7 @@
 <section>
 	<h3 class="page-title">{{'telemedicina.requests.SUBTITLE' | translate}}</h3>
 	<div fxLayout="column" fxLayoutAlign="end end" fxLayoutGap="1em">
-		<app-toggle-avaiability (availabilityChanged)="availabilityChanged($event)"></app-toggle-avaiability>
+		<app-toggle-avaiability (availabilityChanged)="availabilityChanged($event)" label="Disponible para llamadas"></app-toggle-avaiability>
 		<button mat-raised-button color="primary" (click)="openAddRequest()">{{'telemedicina.requests.BUTTON_ADD' |
 			translate}}</button>
 	</div>

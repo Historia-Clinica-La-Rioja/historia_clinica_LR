@@ -51,5 +51,10 @@ export class VirtualConstultationService {
 		const url = `${this.BASE_URL}/${institutionId}`;
 		return this.http.post(`${url}`, virtualConsultation)
 	}
+
+	changeClinicalProfessionalAvailability(availability: boolean) {
+		const url = `${this.BASE_URL}/change-clinical-professional-state`;
+		return this.http.post(url, availability)
+	}
 }
 

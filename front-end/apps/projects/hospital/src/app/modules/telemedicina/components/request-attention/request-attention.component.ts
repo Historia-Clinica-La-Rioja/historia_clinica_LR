@@ -17,7 +17,7 @@ export class RequestAttentionComponent implements OnInit {
 
 	virtualConsultationsSubscription: Subscription;
 	virtualConsultations: any[] = [];
-
+	toggleEnabled = false;
 
 	constructor(
 		private readonly virtualConsultationsFacadeService: VirtualConsultationsFacadeService,
@@ -34,7 +34,7 @@ export class RequestAttentionComponent implements OnInit {
 	}
 
 	confirm(virtualConsultationId: number) {
-		this.virtualConsultationService.changeVirtualConsultationState(virtualConsultationId, {status: EVirtualConsultationStatus.FINISHED}).subscribe()
+		this.virtualConsultationService.changeVirtualConsultationState(virtualConsultationId, { status: EVirtualConsultationStatus.FINISHED }).subscribe()
 	}
 
 
@@ -44,6 +44,11 @@ export class RequestAttentionComponent implements OnInit {
 				this.jitsiCallService.open(virtualConsultation.callId);
 			}
 		)
+	}
+
+	availabilityChanged(availability: boolean) {
+		this.virtualConsultationService.changeClinicalProfessionalAvailability(availability).subscribe();
+		this.toggleEnabled = availability;
 	}
 
 	private toVCToBeShown(vc: VirtualConsultationDto) {

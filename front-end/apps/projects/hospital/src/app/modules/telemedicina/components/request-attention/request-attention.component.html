@@ -1,5 +1,10 @@
-<div fxLayout="column" fxLayoutGap="0.1125em">
-		<div *ngFor="let virtualConsultation of virtualConsultations" >
+<div fxLayout="column" fxLayoutGap="1em" fxLayoutAlign="end end" >
+
+	<app-toggle-avaiability (availabilityChanged)="availabilityChanged($event)"
+		label="Atención online activada"></app-toggle-avaiability>
+
+	<div fxLayout="column" fxLayoutGap="0.1125em" style="width: 100%;">
+		<div *ngFor="let virtualConsultation of virtualConsultations">
 			<mat-card fxLayout="row" fxLayoutAlign="space-between space-between">
 
 				<div id="datos-paciente">
@@ -32,7 +37,8 @@
 					[color]="virtualConsultation.statusLabel.color"></app-colored-label>
 
 				<span>{{virtualConsultation.responsibleData.available ? 'Disponible' : 'No Disponible'}}</span>
-				<button mat-raised-button [disabled]="!virtualConsultation.responsibleData.available" color="primary" (click)="joinMeet(virtualConsultation)">Tomar Turno</button>
+				<button mat-raised-button [disabled]="!virtualConsultation.responsibleData.available || !toggleEnabled" color="primary"
+					(click)="joinMeet(virtualConsultation)">Tomar Turno</button>
 				<button mat-icon-button [matMenuTriggerFor]="menu">
 					<mat-icon>more_vert</mat-icon>
 				</button>
@@ -45,3 +51,5 @@
 
 		</div>
 	</div>
+
+</div>
