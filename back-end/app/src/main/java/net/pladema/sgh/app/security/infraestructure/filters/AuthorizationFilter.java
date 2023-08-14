@@ -18,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 import ar.lamansys.sgx.shared.auth.user.SgxUserDetails;
+import ar.lamansys.sgx.shared.stats.TimeProfilingUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.permissions.service.UserAssignmentService;
 import net.pladema.sgh.app.security.infraestructure.authorization.InstitutionGrantedAuthority;
@@ -35,13 +36,14 @@ public class AuthorizationFilter extends OncePerRequestFilter implements Filter 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws ServletException, IOException {
-
+		var authStat = TimeProfilingUtil.start("Auth");
 		Optional.ofNullable(SecurityContextUtils.getAuthentication())
 				.map(auth -> new UsernamePasswordAuthenticationToken(
 						auth.getPrincipal(),
 						auth.getCredentials(),
 						getAuthorities(((SgxUserDetails)auth.getPrincipal()).getUserId())))
 				.ifPresent(SecurityContextUtils::setAuthentication);
+		authStat.done(request.getRequestURI());
 
 		log.debug("Request {}", request);
 		chain.doFilter(request, response);
