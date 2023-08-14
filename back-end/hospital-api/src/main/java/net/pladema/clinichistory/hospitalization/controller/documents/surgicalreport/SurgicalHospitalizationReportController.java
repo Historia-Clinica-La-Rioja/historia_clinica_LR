@@ -5,11 +5,13 @@ import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 
+import net.pladema.clinichistory.hospitalization.service.surgicalreport.DeleteSurgicalReport;
 import net.pladema.clinichistory.hospitalization.service.surgicalreport.GetSurgicalReport;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,9 +53,12 @@ public class SurgicalHospitalizationReportController {
 	private final GetSurgicalReport getSurgicalReport;
 
 	private final DateTimeProvider dateTimeProvider;
+
+	private final DeleteSurgicalReport deleteSurgicalReport;
+
 	@PostMapping
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PROFESIONAL_DE_SALUD')")
-	public ResponseEntity<Boolean> createDocument(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId, @RequestBody SurgicalReportDto surgicalReportDto) {
+	public ResponseEntity<Boolean> create(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId, @RequestBody SurgicalReportDto surgicalReportDto) {
 		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, surgicalReport {}", institutionId, internmentEpisodeId, surgicalReportDto);
 		SurgicalReportBo surgicalReport = surgicalReportMapper.fromSurgicalReportDto(surgicalReportDto);
 		setEncounterInformation(internmentEpisodeId, institutionId, surgicalReport);
@@ -66,7 +71,7 @@ public class SurgicalHospitalizationReportController {
 	@InternmentValid
 	@DocumentValid(isConfirmed = true, documentType = DocumentType.SURGICAL_HOSPITALIZATION_REPORT)
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PROFESIONAL_DE_SALUD')")
-	public ResponseEntity<SurgicalReportDto> getReport(
+	public ResponseEntity<SurgicalReportDto> getById(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
 			@PathVariable(name = "surgicalReportId") Long surgicalReportId){
@@ -77,6 +82,20 @@ public class SurgicalHospitalizationReportController {
 		log.debug(OUTPUT, result);
 		return  ResponseEntity.ok().body(result);
 	}
+
+	@DeleteMapping("/{reportId}")
+	public ResponseEntity<Boolean> delete(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+			@PathVariable(name = "surgicalReportId") Long surgicalReportId,
+			@RequestBody String reason) {
+		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, surgicalReportId {}, reason {}",
+				institutionId, internmentEpisodeId, surgicalReportId, reason);
+		deleteSurgicalReport.run(internmentEpisodeId, surgicalReportId, reason);
+		log.debug(OUTPUT, Boolean.TRUE);
+		return  ResponseEntity.ok().body(Boolean.TRUE);
+	}
+
 	private void setEncounterInformation(Integer encounterId, Integer institutionId, SurgicalReportBo surgicalReport) {
 		internmentEpisodeService.getPatient(encounterId).map(patientExternalService::getBasicDataFromPatient).map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge())).ifPresentOrElse(patientInfo -> {
 			surgicalReport.setPatientInfo(patientInfo);
