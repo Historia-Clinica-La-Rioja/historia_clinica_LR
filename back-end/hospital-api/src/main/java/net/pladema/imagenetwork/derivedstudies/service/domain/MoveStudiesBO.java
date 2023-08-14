@@ -44,4 +44,6 @@ public class MoveStudiesBO {
 	private Double calculatedPriority;
 
 	private Integer institutionId;
+
+	private String domainPac;
 }
