@@ -43,7 +43,7 @@ public class CHNursingConsultationBo extends CHDocumentBo {
 			result.add(new ClinicalRecordBo("Evolución", evolution.replace('|', ',')));
 		}
 		if (procedures != null && !procedures.isBlank())
-			result.add(new ClinicalRecordBo("Procedimientos", procedures));
+			result.add(new ClinicalRecordBo("Procedimientos", procedures.substring(procedures.indexOf(SPECIAL_CHARACTER)+1)));
 		return result;
 	}
 

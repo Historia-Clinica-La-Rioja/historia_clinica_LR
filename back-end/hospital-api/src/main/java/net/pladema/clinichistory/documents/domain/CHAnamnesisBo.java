@@ -48,7 +48,7 @@ public class CHAnamnesisBo extends CHDocumentBo {
 			result.add(new ClinicalRecordBo("Evolución", evolution.replace("|(", " (").replace('|', ',').replace("\\n", "<br />")));
 		}
 		if(procedures!=null && !procedures.isBlank())
-			result.add(new ClinicalRecordBo("Procedimiento", procedures.substring(procedures.indexOf(SPECIAL_CHARACTER)+1)));
+			result.add(new ClinicalRecordBo("Procedimientos", procedures.substring(procedures.indexOf(SPECIAL_CHARACTER)+1)));
 		return result;
 	}
 
