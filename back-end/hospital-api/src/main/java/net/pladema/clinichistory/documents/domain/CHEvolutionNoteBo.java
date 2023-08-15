@@ -16,6 +16,8 @@ public class CHEvolutionNoteBo extends CHDocumentBo{
 	private String notes;
 	private String bloodType;
 	private String anthropometricData;
+	private String familyRecord;
+	private String medicines;
 	private String riskFactors;
 	private String allergies;
 	private String vaccines;
@@ -28,6 +30,8 @@ public class CHEvolutionNoteBo extends CHDocumentBo{
 		this.notes = entity.getHealthConditionSummary().getNotes();
 		this.bloodType = entity.getHealthConditionSummary().getBloodType();
 		this.anthropometricData = entity.getHealthConditionSummary().getAnthropometricData();
+		this.familyRecord = entity.getHealthConditionSummary().getFamilyRecord();
+		this.medicines = entity.getHealthConditionSummary().getMedicines();
 		this.riskFactors = entity.getHealthConditionSummary().getRiskFactors();
 		this.allergies = entity.getHealthConditionSummary().getAllergies();
 		this.vaccines = entity.getHealthConditionSummary().getVaccines();
@@ -36,7 +40,7 @@ public class CHEvolutionNoteBo extends CHDocumentBo{
 
 	@Override
 	public List<ClinicalRecordBo> getClinicalRecords() {
-		List<String> terms = Stream.of(reasons, problems, notes, bloodType, anthropometricData, riskFactors, allergies, vaccines).filter(term -> term!=null && !term.isBlank()).collect(Collectors.toList());
+		List<String> terms = Stream.of(reasons, problems, notes, bloodType, anthropometricData, familyRecord, medicines, riskFactors, allergies, vaccines).filter(term -> term!=null && !term.isBlank()).collect(Collectors.toList());
 		List<ClinicalRecordBo> result = new ArrayList<>();
 		if(!terms.isEmpty()) {
 			String evolution = Joiner.on(". <br />").join(terms);
