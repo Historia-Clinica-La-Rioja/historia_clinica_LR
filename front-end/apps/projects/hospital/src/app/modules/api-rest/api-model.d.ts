@@ -3349,6 +3349,13 @@ export interface SnomedEclDto {
     value: string;
 }
 
+export interface SnomedRelatedGroupDto {
+    id: number;
+    snomedId: number;
+    snomedPt: string;
+    snomedSctid: string;
+}
+
 export interface SnomedResponseDto extends Serializable {
     items: SnomedDto[];
     total: number;
