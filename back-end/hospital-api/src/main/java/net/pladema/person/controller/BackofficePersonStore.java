@@ -27,14 +27,8 @@ public class BackofficePersonStore implements BackofficeStore<Person, Integer> {
 	public Page<Person> findAll(Person entity, Pageable pageable) {
 		if ((entity.getIdentificationNumber() != null))
 			entity.setIdentificationNumber(entity.getIdentificationNumber().replace(".", ""));
-		List<Integer> activePersonIds = personRepository.findAllActive();
-		List<Person> result =  personRepository.findAll(buildExample(entity), pageable.getSort())
-				.stream()
-				.filter(p -> activePersonIds.contains(p.getId()))
-				.collect(Collectors.toList());
-		int minIndex = pageable.getPageNumber() * pageable.getPageSize();
-		int maxIndex = minIndex + pageable.getPageSize();
-		return new PageImpl<>(result.subList(minIndex, Math.min(maxIndex, result.size())), pageable, result.size());
+
+		return personRepository.findAll(buildExample(entity), pageable);
 	}
 
 	@Override
