@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -6,14 +6,10 @@ import { Subscription } from 'rxjs';
 	templateUrl: './request-info-card.component.html',
 	styleUrls: ['./request-info-card.component.scss']
 })
-export class RequestInfoCardComponent implements OnInit {
+export class RequestInfoCardComponent {
 
 	virtualConsultationsSubscription: Subscription;
 	@Input() virtualConsultation: any;
 
 	constructor() { }
-
-
-	ngOnInit(): void {
-	}
 }

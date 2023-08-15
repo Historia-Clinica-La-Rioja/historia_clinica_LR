@@ -27,7 +27,7 @@
 			<app-available-label [available]="virtualConsultation.responsibleData.available"></app-available-label>
 		</div>
 
-		<div id="datos-espera-de-atencion" fxLayout="column" fxLayoutAlign="start start" fxFlex="15%">
+		<div id="datos-espera-de-atencion" fxFlex="15%">
 			<app-iconed-text class="grey" icon="schedule" [text]="virtualConsultation.waitingTime"></app-iconed-text>
 			<span class="grey">{{virtualConsultation.availableProfessionalsAmount}} {{'telemedicina.requests.PROFESSIONAL_ATTENDING' | translate}}</span>
 		</div>
