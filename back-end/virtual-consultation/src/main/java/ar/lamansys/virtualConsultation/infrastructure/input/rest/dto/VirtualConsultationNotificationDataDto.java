@@ -11,6 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VirtualConsultationNotificationDataDto {
 
+	private Integer virtualConsultationId;
+
 	private String patientName;
 
 	private String patientLastName;

@@ -119,6 +119,7 @@ public class VirtualConsultationController {
 	public VirtualConsultationNotificationDataDto getVirtualConsultationCall(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId) {
 		log.debug("Input parameters -> virtualConsultationId {}", virtualConsultationId);
 		VirtualConsultationNotificationDataDto result = virtualConsultationMapper.fromVirtualConsultationNotificationDataBo(getVirtualConsultationNotificationDataService.run(virtualConsultationId));
+		result.setVirtualConsultationId(virtualConsultationId);
 		log.debug("Output -> {}", result);
 		return result;
 	}

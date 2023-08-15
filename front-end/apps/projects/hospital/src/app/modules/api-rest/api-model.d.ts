@@ -3786,6 +3786,7 @@ export interface VirtualConsultationNotificationDataDto {
     responsibleFirstName: string;
     responsibleLastName: string;
     responsibleUserId: number;
+    virtualConsultationId: number;
 }
 
 export interface VirtualConsultationPatientDataDto {
