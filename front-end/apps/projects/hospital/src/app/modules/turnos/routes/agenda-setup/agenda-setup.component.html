@@ -105,6 +105,21 @@
 						+ {{ 'turnos.agenda-setup.ADD_ANOTHER_PROFESSIONAL' | translate }}
 					</button>
 				</div>
+
+				<div fxLayout="column" fxLayoutGap="10px">
+					<mat-label fxLayout="column" [translate]="'turnos.agenda-setup.DIARY_TYPE'"></mat-label>
+				
+					<mat-radio-group id="diaryType" fxLayout="row" fxLayoutGap="40px" [value]="CONSULTATION">
+						<mat-radio-button color="primary" [value]="CONSULTATION">
+							{{'turnos.agenda-setup.CONSULTATION' | translate}}
+						</mat-radio-button>
+						<mat-radio-button color="primary" [value]="PRACTICE">
+							{{'turnos.agenda-setup.PRACTICE' | translate}}
+						</mat-radio-button>
+					</mat-radio-group>
+
+				</div>
+
 				<div style="padding-top: 20px" fxLayout="row">
 					<div class="professional-form-sector" fxLayout="column">
 						<span [translate]="'turnos.home.SPECIALTY_SEARCH'"></span>

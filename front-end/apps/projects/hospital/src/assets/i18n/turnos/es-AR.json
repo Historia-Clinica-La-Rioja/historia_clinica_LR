@@ -84,6 +84,9 @@
 			"DURATION_OF_THE_CONSULTATION":"Duración de la consulta",
 			"SECTOR": "Sector",
 			"HIERARCHICAL_UNIT": "Unidad Jerárquica",
+			"DIARY_TYPE": "Tipo de agenda",
+			"CONSULTATION": "Consulta",
+			"PRACTICE": "Práctica/Procedimiento",
 			"dialog": {
 				"TITLE": "Nueva atención",
 				"EDIT": "Editar atención",

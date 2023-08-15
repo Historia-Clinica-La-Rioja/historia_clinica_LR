@@ -51,6 +51,9 @@ export class AgendaSetupComponent implements OnInit {
 	readonly PIXEL_SIZE_HEIGHT = 30;
 	readonly TURN_STARTING_HOUR = 6;
 
+	CONSULTATION = true;
+	PRACTICE = false;
+
 	appointmentDurations = APPOINTMENT_DURATIONS;
 	appointmentManagement = false;
 	autoRenew = false;
