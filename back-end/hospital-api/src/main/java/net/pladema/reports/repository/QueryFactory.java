@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -61,8 +62,8 @@ public class QueryFactory {
 		List<ConsultationDetail> result = mapToConsultationDetail(data, institutionId);
         //Optional filter: by specialty or professional if specified
         return result.stream()
-                .filter(doctorId != null ? oc -> oc.getProfessionalId().equals(doctorId) : c -> true)
-                .filter(clinicalSpecialtyId != null ? oc -> oc.getClinicalSpecialtyId().equals(clinicalSpecialtyId) : c -> true)
+                .filter(cd -> doctorId == null || Objects.equals(doctorId, cd.getProfessionalId()))
+				.filter(cd -> clinicalSpecialtyId == null || Objects.equals(clinicalSpecialtyId, cd.getClinicalSpecialtyId()))
                 .collect(Collectors.toList());
     }
 
