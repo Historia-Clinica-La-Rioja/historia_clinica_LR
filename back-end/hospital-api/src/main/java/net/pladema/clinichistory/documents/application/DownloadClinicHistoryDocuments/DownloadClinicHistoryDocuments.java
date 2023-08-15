@@ -94,8 +94,8 @@ public class DownloadClinicHistoryDocuments {
 		List<Integer> sourceIds = new ArrayList<>();
 		Map<Integer, List<CHDocumentBo>> episodes = new HashMap<>();
 		documents.forEach(doc -> {
-			if ((doc.getRequestSourceId() != null && !sourceIds.contains(doc.getRequestSourceId())) || (doc.getRequestSourceId() == null && !sourceIds.contains(doc.getSourceId()) ))
-				sourceIds.add(doc.getSourceId());
+			if (doc.getRequestSourceId() != null && !sourceIds.contains(doc.getRequestSourceId())) sourceIds.add(doc.getRequestSourceId());
+			if (doc.getRequestSourceId() == null && !sourceIds.contains(doc.getSourceId())) sourceIds.add(doc.getSourceId());
 		});
 		sourceIds.forEach(sourceId -> {
 			episodes.put(sourceId, documents.stream().filter(doc -> ((doc.getRequestSourceId() != null && doc.getRequestSourceId().equals(sourceId)) || (doc.getRequestSourceId() == null && doc.getSourceId().equals(sourceId)))).sorted(Comparator.comparing(CHDocumentBo::getCreatedOn)).collect(Collectors.toList()));
