@@ -8,7 +8,8 @@ public enum EVirtualConsultationStatus {
 
 	PENDING(1, "PENDIENTE"),
 	IN_PROGRESS(2, "EN CURSO"),
-	FINISHED(3, "FINALIZADA");
+	FINISHED(3, "FINALIZADA"),
+	CANCELED(4, "CANCELADA");
 
 	private Short id;
 	private String value;

@@ -4039,6 +4039,7 @@ export const enum EVirtualConsultationStatus {
     PENDING = "PENDING",
     IN_PROGRESS = "IN_PROGRESS",
     FINISHED = "FINISHED",
+    CANCELED = "CANCELED",
 }
 
 export const enum SnomedECL {
