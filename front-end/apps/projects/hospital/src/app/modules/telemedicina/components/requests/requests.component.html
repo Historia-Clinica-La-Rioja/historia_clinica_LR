@@ -7,3 +7,22 @@
 			translate}}</button>
 	</div>
 </section>
+<section>
+	<div *ngFor="let virtualConsultation of virtualConsultations">
+		<app-request-info-card [virtualConsultation]="virtualConsultation">
+			<div actions>
+				<button mat-icon-button [matMenuTriggerFor]="menu">
+					<mat-icon>more_vert</mat-icon>
+				</button>
+				<mat-menu #menu="matMenu">
+					<button mat-menu-item *ngIf="virtualConsultation.status === virtualConsultatiosStatus.IN_PROGRESS" (click)="confirm(virtualConsultation.id)">
+						<span>Confirmar atención</span>
+					</button>
+					<button mat-menu-item *ngIf="virtualConsultation.status === virtualConsultatiosStatus.IN_PROGRESS || virtualConsultation.status === virtualConsultatiosStatus.PENDING" (click)="cancel(virtualConsultation.id)">
+						<span>Cancelar</span>
+					</button>
+				</mat-menu>
+			</div>
+		</app-request-info-card>
+	</div>
+</section>

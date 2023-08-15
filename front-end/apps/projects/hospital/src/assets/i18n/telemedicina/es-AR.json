@@ -3,6 +3,8 @@
 		"TITLE":"Telemedicina",
 		"PATIENTS_SEARCH":"Búsqueda de pacientes",
 		"REQUEST_INFORMATION": "Información solicitud",
+		"AVAILABLE": "Disponible",
+		"NOT_AVAILABLE": "No disponible para llamada",
 		"requests": {
 			"TITLE":"Solicitudes",
 			"SUBTITLE":"Listado de solicitudes para atención online",

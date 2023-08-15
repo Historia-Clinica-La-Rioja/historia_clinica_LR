@@ -14,6 +14,8 @@ import { ButtonAndMotiveListComponent } from './components/button-and-motive-lis
 import { ButtonAndProblemListComponent } from './components/button-and-problem-list/button-and-problem-list.component';
 import { ToggleAvaiabilityComponent } from './components/toggle-avaiability/toggle-avaiability.component';
 import { RequestAttentionComponent } from './components/request-attention/request-attention.component';
+import { RequestInfoCardComponent } from './components/request-info-card/request-info-card.component';
+import { AvailableLabelComponent } from './components/available-label/available-label.component';
 
 
 
@@ -27,6 +29,8 @@ import { RequestAttentionComponent } from './components/request-attention/reques
 		ButtonAndProblemListComponent,
 		RequestAttentionComponent,
 		ToggleAvaiabilityComponent,
+  RequestInfoCardComponent,
+  AvailableLabelComponent,
 	],
 	imports: [
 		CommonModule,

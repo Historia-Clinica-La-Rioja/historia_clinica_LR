@@ -1,0 +1,44 @@
+<div fxLayout="column" fxLayoutGap="0.1125em">
+	<mat-card fxLayout="row" fxLayoutAlign="space-between space-between">
+
+		<div id="datos-paciente" fxFlex="15%">
+			<span>{{virtualConsultation.patientData.lastName}} {{virtualConsultation.patientData.name}}</span>
+			<div>
+				<span>{{virtualConsultation.patientData.gender}} </span>
+				<span>{{virtualConsultation.patientData.age}} años</span>
+			</div>
+		</div>
+
+		<div id="datos-motivo" fxLayout="column" fxLayoutAlign="center start" fxFlex="20%">
+			<app-iconed-text icon="feedback" [text]="virtualConsultation.problem"></app-iconed-text>
+			<app-iconed-text icon="error_outline" [text]="virtualConsultation.motive"></app-iconed-text>
+			<app-priority [priority]="virtualConsultation.priorityLabel"></app-priority>
+		</div>
+
+		<div id="datos-clinicos" fxLayout="column" fxLayoutAlign="center start" fxFlex="20%">
+			<app-iconed-text icon="medical_services" [text]="virtualConsultation.clinicalSpecialty"></app-iconed-text>
+			<app-iconed-text icon="home" [text]="virtualConsultation.careLine"></app-iconed-text>
+			<app-iconed-text icon="domain" [text]="virtualConsultation.institutionData.name"></app-iconed-text>
+		</div>
+
+		<div id="data-solicitante" fxLayout="column" fxLayoutAlign="start start" fxFlex="15%">
+			<span class="grey">{{virtualConsultation.responsibleData.firstName}}
+				{{virtualConsultation.responsibleData.lastName}} </span>
+			<app-available-label [available]="virtualConsultation.responsibleData.available"></app-available-label>
+		</div>
+
+		<div id="datos-tiempo" fxFlex="15%">
+			<app-iconed-text class="grey" icon="schedule" [text]="virtualConsultation.waitingTime"></app-iconed-text>
+		</div>
+
+		<div fxFlex="5%">
+			<app-colored-label [description]="virtualConsultation.statusLabel.description"
+				[color]="virtualConsultation.statusLabel.color"></app-colored-label>
+		</div>
+
+		<div fxFlex="5%" fxLayout="column" fxLayoutAlign="start end">
+			<ng-content select="[actions]"></ng-content>
+		</div>
+	</mat-card>
+
+</div>
