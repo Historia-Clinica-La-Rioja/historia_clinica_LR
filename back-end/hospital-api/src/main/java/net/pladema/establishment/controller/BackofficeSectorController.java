@@ -28,16 +28,23 @@ public class BackofficeSectorController extends AbstractBackofficeController<Sec
 
     private static final Map<String, String> constraintTocode;
     static {
-		constraintTocode = Map.of("uq_sector_description_institution_id", "sector-description-inst-unique");
+		constraintTocode = Map.of(
+				"uq_sector_description_institution_id", "sector-description-inst-unique"
+				);
+
     }
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ ConstraintViolationException.class })
-	public ResponseEntity<Object> handleValidationExceptions(ConstraintViolationException ex, WebRequest request) {
+	public ApiErrorMessageDto handleValidationExceptions(ConstraintViolationException ex) {
 		String sqlError = NestedExceptionUtils.getMostSpecificCause(ex).getLocalizedMessage();
-		String constraintCode = constraintTocode.getOrDefault(ex.getConstraintName(), "constraint-default");
-		ApiErrorMessageDto apiErrors = new ApiErrorMessageDto(constraintCode, sqlError);
-		return new ResponseEntity<>(apiErrors, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		String constraintCode = constraintCode(ex);
+		return new ApiErrorMessageDto(constraintCode, sqlError);
+	}
+
+	private String constraintCode(ConstraintViolationException ex) {
+		String constraintName = ex.getConstraintName() != null ? ex.getConstraintName() : "constraint-default";
+		return constraintTocode.getOrDefault(constraintName, "constraint-default");
 	}
 	
 	public BackofficeSectorController(SectorRepository sectorRepository,
