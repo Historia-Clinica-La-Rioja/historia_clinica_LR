@@ -24,11 +24,6 @@ export class CareLineService {
 		return this.http.get<CareLineDto[]>(url);
 	}
 
-	getCareLinesBySpecialty(specialtyId: number): Observable<CareLineDto[]> {
-		const url = `${this.BASE_URL}/${this.contextService.institutionId}/diary-care-lines/${specialtyId} `;
-		return this.http.get<CareLineDto[]>(url);
-	}
-
 	getCareLinesByProvinceId(provinceId: number): Observable<CareLineDto[]> {
 		const url = `${this.BASE_URL}/carelines/by-province/${provinceId} `;
 		return this.http.get<CareLineDto[]>(url);

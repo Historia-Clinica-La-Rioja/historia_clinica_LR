@@ -30,9 +30,9 @@ import { APPOINTMENT_DURATIONS, MINUTES_IN_HOUR } from '../../constants/appointm
 import { AgendaHorarioService } from '../../services/agenda-horario.service';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { SpecialtyService } from '@api-rest/services/specialty.service';
-import { CareLineService } from '@api-rest/services/care-line.service';
 import { HierarchicalUnitsService } from '@api-rest/services/hierarchical-units.service';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
+import { DiaryCareLineService } from '@api-rest/services/diary-care-line.service';
 
 const ROUTE_APPOINTMENT = 'turnos';
 const ROUTE_AGENDAS = "agenda";
@@ -98,9 +98,9 @@ export class AgendaSetupComponent implements OnInit {
 		private readonly route: ActivatedRoute,
 		private readonly patientNameService: PatientNameService,
 		private readonly specialtyService: SpecialtyService,
-		private readonly carelineService: CareLineService,
 		private readonly hierarchicalUnitsService: HierarchicalUnitsService,
-		private readonly professionalService: HealthcareProfessionalService
+		private readonly professionalService: HealthcareProfessionalService,
+		private readonly diaryCareLine: DiaryCareLineService,
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY, snackBarService);
@@ -571,7 +571,7 @@ export class AgendaSetupComponent implements OnInit {
 
 	getCareLines() {
 		const specialtyId = this.form.get("healthcareProfessionalSpecialtyId").value;
-		this.carelineService.getCareLinesBySpecialty(specialtyId).subscribe(careLines => {
+		this.diaryCareLine.getPossibleCareLinesForDiary(specialtyId).subscribe(careLines => {
 			this.careLines = careLines;
 			this.checkCareLinesSelected();
 		});
