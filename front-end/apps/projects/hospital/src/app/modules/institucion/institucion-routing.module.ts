@@ -59,7 +59,9 @@ const routes: Routes = [
 			{ path: 'web-components/:wcId', component: InstitutionRoutedExternalComponent },
 			{
 				path: 'telemedicina',
-				loadChildren: () => import('../telemedicina/telemedicina.module').then(m => m.TelemedicinaModule)
+				loadChildren: () => import('../telemedicina/telemedicina.module').then(m => m.TelemedicinaModule),
+				canActivate: [FeatureFlagGuard],
+				data: { featureFlag: AppFeature.HABILITAR_TELEMEDICINA }
 			}
 		],
 		canActivate: [RoleGuard],
