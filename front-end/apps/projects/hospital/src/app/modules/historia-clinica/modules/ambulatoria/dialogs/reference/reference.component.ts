@@ -7,7 +7,8 @@ import { ReferenceProblemsService } from '../../services/reference-problems.serv
 import { Observable, tap } from 'rxjs';
 import { ReferenceMasterDataService } from '@api-rest/services/reference-master-data.service';
 import { PRIORITY } from '../../constants/reference-masterdata';
-import { NUMBER_PATTERN } from '@core/utils/form.utils';
+import { VALIDATIONS } from '@core/utils/form.utils';
+import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 
 @Component({
 	selector: 'app-reference',
@@ -147,8 +148,8 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 			provinceOrigin: [null],
 			departmentOrigin: [null],
 			institutionOrigin: [null],
-			phoneNumber: [null, [Validators.required, Validators.maxLength(20), Validators.pattern(NUMBER_PATTERN)]],
-			phonePrefix: [null, [Validators.required, Validators.maxLength(10), Validators.pattern(NUMBER_PATTERN)]],
+			phoneNumber: [null, [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]],
+			phonePrefix: [null, [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]],
 			priority: [null],
 			studyCategory: [null],
 			practiceOrProcedure: [null],
