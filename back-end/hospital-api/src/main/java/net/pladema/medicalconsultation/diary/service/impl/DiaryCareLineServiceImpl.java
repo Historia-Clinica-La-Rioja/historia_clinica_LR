@@ -73,4 +73,12 @@ public class DiaryCareLineServiceImpl implements DiaryCareLineService, SharedDia
 		log.trace("Output -> {}", result);
 		return result;
 	}
+
+	@Override
+	public List<CareLineBo> getPossibleCareLinesForDiaryByPractices(Integer institutionId, List<Integer> practicesId) {
+		log.debug("Input parameters -> institutionId {}, practicesId {}", institutionId, practicesId);
+		List<CareLineBo> careLines = careLineService.getByInstitutionIdAndPracticesId(institutionId, practicesId);
+		log.trace("Output -> {}", careLines);
+		return careLines;
+	}
 }

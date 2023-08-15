@@ -33,7 +33,7 @@ public class CompleteDiaryBo extends DiaryBo {
 	private List<ProfessionalPersonBo> associatedProfessionalsInfo;
 
 	private String hierarchicalUnitAlias;
-
+	
 	public CompleteDiaryBo(DiaryBo diaryBo) {
 		appointmentDuration = diaryBo.getAppointmentDuration();
 		id = diaryBo.getId();

@@ -14,4 +14,6 @@ public interface CareLineService {
 
 	List<CareLineBo> getCareLinesAttachedToInstitution();
 
+	List<CareLineBo> getByInstitutionIdAndPracticesId(Integer institutionId, List<Integer> practicesId);
+
 }

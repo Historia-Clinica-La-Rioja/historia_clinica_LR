@@ -881,7 +881,7 @@ export interface DiaryADto {
     appointmentDuration: number;
     automaticRenewal?: boolean;
     careLines?: number[];
-    clinicalSpecialtyId: number;
+    clinicalSpecialtyId?: number;
     diaryAssociatedProfessionalsId: number[];
     diaryOpeningHours: DiaryOpeningHoursDto[];
     doctorsOfficeId: number;

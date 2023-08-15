@@ -2,7 +2,9 @@ package net.pladema.establishment.service.impl;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.address.controller.service.domain.AddressBo;
+import net.pladema.establishment.application.port.PracticeCareLineStorage;
 import net.pladema.establishment.application.port.carelineproblem.CareLineProblemStorage;
 import net.pladema.establishment.repository.CareLineInstitutionSpecialtyRepository;
 import net.pladema.establishment.repository.CareLineRepository;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CareLineServiceImpl implements CareLineService {
@@ -34,6 +37,8 @@ public class CareLineServiceImpl implements CareLineService {
 	private final CareLineProblemStorage careLineProblemStorage;
 
 	private final InstitutionService institutionService;
+
+	private final PracticeCareLineStorage practiceCareLineStorage;
 
     @Override
     public List<CareLineBo> getCareLines() {
@@ -76,6 +81,15 @@ public class CareLineServiceImpl implements CareLineService {
 		return result;
 	}
 
+	@Override
+	public List<CareLineBo> getByInstitutionIdAndPracticesId(Integer institutionId, List<Integer> practicesId) {
+		log.debug("Input parameters -> practicesId {}, institutionId {}", practicesId, institutionId);
+		List<CareLineBo> careLinesByInstitution = careLineRepository.getAllByInstitutionId(institutionId);
+		List<CareLineBo> result = this.getCareLinesWithAllPractices(careLinesByInstitution, practicesId);
+		log.trace(OUTPUT, result);
+		return result;
+	}
+
 	public List<CareLineBo> getCareLinesWithAllProblems(List<CareLineBo> careLines, List<String> snomedSctids) {
 		List<Integer> careLineIds = careLines.stream().map(CareLineBo::getId).collect(Collectors.toList());
 		Map<Integer, List<SnomedBo>> problems = careLineProblemStorage.fetchAllByCareLineIds(careLineIds);
@@ -85,6 +99,18 @@ public class CareLineServiceImpl implements CareLineService {
 						.map(SnomedBo::getSctid)
 						.collect(Collectors.toSet())
 						.containsAll(snomedSctids))
+				.collect(Collectors.toList());
+	}
+
+	public List<CareLineBo> getCareLinesWithAllPractices(List<CareLineBo> careLines, List<Integer> practicesId) {
+		List<Integer> careLineIds = careLines.stream().map(CareLineBo::getId).collect(Collectors.toList());
+		Map<Integer, List<SnomedBo>> practices = practiceCareLineStorage.fetchAllByCareLineIds(careLineIds);
+		return careLines.stream()
+				.filter(cl -> practices.get(cl.getId())
+						.stream()
+						.map(SnomedBo::getId)
+						.collect(Collectors.toSet())
+						.containsAll(practicesId))
 				.collect(Collectors.toList());
 	}
 }
