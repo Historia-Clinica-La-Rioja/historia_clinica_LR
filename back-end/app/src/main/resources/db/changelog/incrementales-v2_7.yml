@@ -105,3 +105,18 @@ databaseChangeLog:
                     name: modality_id
                     type: smallint
                     defaultValue: 1
+
+    - changeSet:          
+        id: addColumn-active-appointment_order_image
+        author: lbergottini
+        comment: Add active column to appointment_order_image table
+        changes:
+          - addColumn:
+              tableName: appointment_order_image
+              columns:
+                - column:
+                    name: active
+                    type: boolean
+                    constraints:
+                      nullable: false
+                    defaultValue: ${boolean.true}
