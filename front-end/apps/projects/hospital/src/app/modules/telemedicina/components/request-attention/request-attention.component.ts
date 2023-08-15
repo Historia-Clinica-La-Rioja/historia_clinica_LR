@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EVirtualConsultationStatus, VirtualConsultationDto } from '@api-rest/api-model';
-import { mapPriority, statusLabel } from '../../virtualConsultations.utils';
+import { mapPriority, statusLabel, status } from '../../virtualConsultations.utils';
 import { timeDifference } from '@core/utils/date.utils';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { Subscription } from 'rxjs';
@@ -20,6 +20,7 @@ export class RequestAttentionComponent implements OnInit {
 	virtualConsultationsSubscription: Subscription;
 	virtualConsultations: any[] = [];
 	toggleEnabled = false;
+	virtualConsultatiosStatus = status;
 
 	constructor(
 		private readonly virtualConsultationsFacadeService: VirtualConsultationsFacadeService,
@@ -41,8 +42,8 @@ export class RequestAttentionComponent implements OnInit {
 			data: {
 				showMatIconError: true,
 				title: `Confirmar atención`,
-				cancelButtonLabel:'NO, REGRESAR',
-				okButtonLabel:'SI, CONFIRMAR ATENCIÓN',
+				cancelButtonLabel: 'NO, REGRESAR',
+				okButtonLabel: 'SI, CONFIRMAR ATENCIÓN',
 				content: `Si confirma la atención se asume que se efectuó una teleconsulta satisfactoriamente y la solicitud se quitará de la lista de espera. ¿Está seguro que desea confirmarla?`,
 			},
 			width: '33%'
@@ -52,6 +53,28 @@ export class RequestAttentionComponent implements OnInit {
 			closed => {
 				if (closed) {
 					this.virtualConsultationService.changeVirtualConsultationState(virtualConsultationId, { status: EVirtualConsultationStatus.FINISHED }).subscribe()
+				}
+			}
+		)
+	}
+
+	cancel(virtualConsultationId: number) {
+		const ref = this.dialog.open(ConfirmDialogComponent, {
+			data: {
+				showMatIconError: true,
+				title: `Cancelar solicitud`,
+				cancelButtonLabel: 'NO, REGRESAR',
+				okButtonLabel: 'SI, CANCELAR ATENCIÓN',
+				content: `Si cancela la solicitud la misma ya no se verá en el listado de espera de los profesionales para ser atendida. <strong>¿Está seguro que desea cancelarla?</strong>`,
+				okBottonColor: 'warn'
+			},
+			width: '33%'
+		});
+
+		ref.afterClosed().subscribe(
+			closed => {
+				if (closed) {
+					this.virtualConsultationService.changeVirtualConsultationState(virtualConsultationId, { status: EVirtualConsultationStatus.CANCELED }).subscribe()
 				}
 			}
 		)

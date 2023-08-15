@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ShowEntryCallService } from 'projects/hospital/src/app/modules/telemedicina/show-entry-call.service';
 import { EntryCall, EntryCallComponent } from '../entry-call/entry-call.component';
-import { EVirtualConsultationPriority, VirtualConsultationNotificationDataDto } from '@api-rest/api-model';
+import { EVirtualConsultationPriority, EVirtualConsultationStatus, VirtualConsultationNotificationDataDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { Priority } from '@presentation/components/priority/priority.component';
-
+import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
+import { JitsiCallService } from '../../../jitsi/jitsi-call.service';
 @Component({
 	selector: 'app-entry-call-renderer',
 	templateUrl: './entry-call-renderer.component.html',
@@ -23,6 +24,8 @@ export class EntryCallRendererComponent implements OnInit {
 	constructor(
 		private readonly showEntryCallService: ShowEntryCallService,
 		private readonly dialog: MatDialog,
+		private readonly virtualConsultationService: VirtualConstultationService,
+		private readonly jitsiCallService: JitsiCallService
 	) { }
 
 
@@ -33,6 +36,16 @@ export class EntryCallRendererComponent implements OnInit {
 					const data = toEntryCall(entryCall)
 					this.dialogRef = this.dialog.open(EntryCallComponent,
 						{ data });
+
+					this.dialogRef.afterClosed().subscribe(
+						accepted => {
+							if (accepted) {
+								this.virtualConsultationService.changeVirtualConsultationState(entryCall.virtualConsultationId, { status: EVirtualConsultationStatus.IN_PROGRESS}).subscribe();
+								this.jitsiCallService.open(data.callId);
+							}
+						}
+					)
+
 				} else {
 					this.dialogRef.close()
 				}

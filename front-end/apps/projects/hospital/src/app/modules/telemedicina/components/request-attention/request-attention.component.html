@@ -39,12 +39,16 @@
 				<span>{{virtualConsultation.responsibleData.available ? 'Disponible' : 'No Disponible'}}</span>
 				<button mat-raised-button [disabled]="!virtualConsultation.responsibleData.available || !toggleEnabled" color="primary"
 					(click)="joinMeet(virtualConsultation)">Tomar Turno</button>
-				<button mat-icon-button [matMenuTriggerFor]="menu">
+
+				<button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="virtualConsultation.status !== virtualConsultatiosStatus.FINISHED && virtualConsultation.status !== virtualConsultatiosStatus.CANCELED " >
 					<mat-icon>more_vert</mat-icon>
 				</button>
 				<mat-menu #menu="matMenu">
-					<button mat-menu-item (click)="confirm(virtualConsultation.id)">
+					<button mat-menu-item *ngIf="virtualConsultation.status === virtualConsultatiosStatus.IN_PROGRESS" (click)="confirm(virtualConsultation.id)">
 						<span>Confirmar atención</span>
+					</button>
+					<button mat-menu-item *ngIf="virtualConsultation.status === virtualConsultatiosStatus.IN_PROGRESS || virtualConsultation.status === virtualConsultatiosStatus.PENDING" (click)="cancel(virtualConsultation.id)">
+						<span>Cancelar</span>
 					</button>
 				</mat-menu>
 			</mat-card>

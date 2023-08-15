@@ -14,7 +14,11 @@ export const statusLabel = {
 	[EVirtualConsultationStatus.PENDING]: {
 		description: 'Pendiente',
 		color: Color.YELLOW
-	}
+	},
+	[EVirtualConsultationStatus.CANCELED]: {
+		description: 'Cancelada',
+		color: Color.RED
+	},
 }
 
 export const mapPriority = {
@@ -23,3 +27,10 @@ export const mapPriority = {
 	[EVirtualConsultationPriority.LOW]: Priority.LOW,
 
 }
+
+export const status = {
+	[EVirtualConsultationStatus.CANCELED]: EVirtualConsultationStatus.CANCELED,
+	[EVirtualConsultationStatus.FINISHED]: EVirtualConsultationStatus.FINISHED,
+	[EVirtualConsultationStatus.IN_PROGRESS]: EVirtualConsultationStatus.IN_PROGRESS,
+	[EVirtualConsultationStatus.PENDING]: EVirtualConsultationStatus.PENDING
+};

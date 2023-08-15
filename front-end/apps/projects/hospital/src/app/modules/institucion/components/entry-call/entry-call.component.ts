@@ -2,7 +2,6 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { timeDifference } from '@core/utils/date.utils';
 import { Priority } from '@presentation/components/priority/priority.component';
-import { JitsiCallService } from 'projects/hospital/src/app/modules/jitsi/jitsi-call.service';
 
 @Component({
 	selector: 'app-entry-call',
@@ -15,12 +14,10 @@ export class EntryCallComponent {
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public entryCall: EntryCall,
 		private dialogRef: MatDialogRef<EntryCallComponent>,
-		private readonly jitsiCallService: JitsiCallService,
 	) { }
 
 	joinMeet() {
-		this.jitsiCallService.open(this.entryCall.callId);
-		this.dialogRef.close();
+		this.dialogRef.close(true);
 	}
 
 }
