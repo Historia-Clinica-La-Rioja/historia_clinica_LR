@@ -737,3 +737,28 @@ databaseChangeLog:
                 join institution i on (i.id=d.institution_id)
                 left outer join clinical_specialty cs on (d.clinical_specialty_id=cs.id)
                 where d.deleted=false and d.status_id = '445665009';
+    
+    - changeSet:    
+        id: createView-v_virtual_consultation_professional_amount
+        comment: Create view v_virtual_consultation_professional_amount
+        author: mmalyvarni
+        changes:
+          - createView:
+              viewName: v_virtual_consultation_professional_amount
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT vc.id AS virtual_consultation_id, COUNT(DISTINCT a.healthcare_professional_id)::int as available_professional_amount
+                FROM virtual_consultation vc 
+                LEFT JOIN (
+                    SELECT DISTINCT vccpa.healthcare_professional_id, cli.care_line_id, hps.clinical_specialty_id  
+                    FROM virtual_consultation_clinical_professional_availability vccpa 
+                    JOIN healthcare_professional hp ON (hp.id = vccpa.healthcare_professional_id)
+                    JOIN user_person up ON (up.person_id = hp.person_id)
+                    JOIN user_role ur ON (ur.user_id = up.user_id)
+                    JOIN care_line_institution cli ON (cli.institution_id = ur.institution_id)
+                    JOIN professional_professions pp ON (pp.healthcare_professional_id = vccpa.healthcare_professional_id)
+                    JOIN healthcare_professional_specialty hps ON (hps.professional_profession_id = pp.id)
+                    WHERE vccpa.available IS TRUE
+                ) AS a ON (a.care_line_id = vc.care_line_id AND a.clinical_specialty_id = vc.clinical_specialty_id)
+                GROUP BY vc.id
