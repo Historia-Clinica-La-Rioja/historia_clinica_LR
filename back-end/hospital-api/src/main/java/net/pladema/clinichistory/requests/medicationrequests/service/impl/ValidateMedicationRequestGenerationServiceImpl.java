@@ -1,5 +1,13 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgx.auth.user.infrastructure.output.user.User;
 import ar.lamansys.sgx.auth.user.infrastructure.output.user.UserRepository;
@@ -8,29 +16,17 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import io.jsonwebtoken.lang.Assert;
 import lombok.AllArgsConstructor;
 import net.pladema.clinichistory.requests.medicationrequests.service.ValidateMedicationRequestGenerationService;
-
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.service.PersonService;
-
 import net.pladema.sisa.refeps.controller.RefepsExternalService;
 import net.pladema.sisa.refeps.services.domain.ValidatedLicenseNumberBo;
 import net.pladema.sisa.refeps.services.exceptions.RefepsApiException;
 import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNumberByProfessional;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.dto.ProfessionalLicenseNumberValidationResponseDto;
-
 import net.pladema.staff.domain.ProfessionalLicenseNumberBo;
 import net.pladema.staff.service.HealthcareProfessionalService;
-
 import net.pladema.staff.service.domain.HealthcareProfessionalBo;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -86,7 +82,8 @@ public class ValidateMedicationRequestGenerationServiceImpl implements ValidateM
 		if (!healthcareProfessionalLicenses.isEmpty()) {
 			if (featureFlagsService.isOn(AppFeature.HABILITAR_VALIDACION_MATRICULAS_SISA)) {
 				try {
-					boolean result = refepsExternalService.validateLicenseNumber(healthcareProfessionalData.getIdentificationNumber(), healthcareProfessionalLicenses).stream().filter(ValidatedLicenseNumberBo::getIsValid).findFirst().isEmpty();
+					boolean result = refepsExternalService.validateLicenseNumber(healthcareProfessionalData.getId(), healthcareProfessionalData.getIdentificationNumber(), healthcareProfessionalLicenses)
+							.stream().filter(ValidatedLicenseNumberBo::getIsValid).findFirst().isEmpty();
 					response.setHealthcareProfessionalLicenseNumberValid(!result);
 				} catch (RefepsApiException e) {
 					throw new RuntimeException(e);

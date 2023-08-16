@@ -1,21 +1,8 @@
 package net.pladema.staff.infrastructure.input.rest;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-import net.pladema.sisa.refeps.controller.RefepsExternalService;
-import net.pladema.sisa.refeps.controller.dto.LicenseDataDto;
-import net.pladema.sisa.refeps.controller.dto.ValidatedLicenseDataDto;
-import net.pladema.staff.application.deleteprofessionallicensenumber.DeleteProfessionalLicenseNumber;
-import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNumberByProfessional;
-import net.pladema.staff.application.saveprofessionallicensesnumber.SaveProfessionalLicensesNumber;
-import net.pladema.staff.controller.dto.ProfessionalLicenseNumberDto;
-import net.pladema.staff.domain.ProfessionalLicenseNumberBo;
-
-import net.pladema.staff.service.HealthcareProfessionalService;
-import net.pladema.staff.service.domain.ELicenseNumberTypeBo;
-
-import net.pladema.staff.service.domain.HealthcareProfessionalBo;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,9 +13,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.pladema.sisa.refeps.controller.RefepsExternalService;
+import net.pladema.sisa.refeps.controller.dto.LicenseDataDto;
+import net.pladema.sisa.refeps.controller.dto.ValidatedLicenseDataDto;
+import net.pladema.staff.application.deleteprofessionallicensenumber.DeleteProfessionalLicenseNumber;
+import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNumberByProfessional;
+import net.pladema.staff.application.saveprofessionallicensesnumber.SaveProfessionalLicensesNumber;
+import net.pladema.staff.controller.dto.ProfessionalLicenseNumberDto;
+import net.pladema.staff.domain.ProfessionalLicenseNumberBo;
+import net.pladema.staff.service.HealthcareProfessionalService;
+import net.pladema.staff.service.domain.ELicenseNumberTypeBo;
+import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 
 @RestController
 @RequestMapping("/institution/{institutionId}/professional-license-number/healthcareprofessional/{healthcareprofessionalId}")
@@ -74,7 +71,7 @@ public class ProfessionalLicenseNumberController {
 		HealthcareProfessionalBo currentProfessional = healthcareProfessionalService.findActiveProfessionalById(healthcareProfessionalId);
 		List<ValidatedLicenseDataDto> validatedLicenceNumbers = new ArrayList<>();
 		try {
-			validatedLicenceNumbers = refepsExternalService.validateLicenseNumberAndType(currentProfessional.getIdentificationNumber(), licenseData);
+			validatedLicenceNumbers = refepsExternalService.validateLicenseNumberAndType(healthcareProfessionalId, currentProfessional.getIdentificationNumber(), licenseData);
 		} catch (Exception e) {
 			log.error("Fallo en la comunicación => {}", e.getMessage());
 			throw new RuntimeException(e);
