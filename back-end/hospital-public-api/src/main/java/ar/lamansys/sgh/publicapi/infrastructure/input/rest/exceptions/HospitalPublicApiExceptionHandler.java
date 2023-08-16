@@ -63,21 +63,21 @@ public class HospitalPublicApiExceptionHandler {
     @ExceptionHandler({ SaveExternalEncounterException.class })
     @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
     protected ApiErrorMessageDto handleSaveExternalEncounterException(SaveExternalEncounterException ex) {
-        logger.error("ExternalEncounterBoException exception -> {}", ex.getMessage());
+        logger.error("SaveExternalEncounterException exception -> {}", ex.getMessage());
         return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
     }
 
     @ExceptionHandler({ExternalEncounterStorageException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ApiErrorMessageDto handleExternalEncounterStorageException(ExternalEncounterStorageException ex) {
-        logger.error("ExternalEncounterBoException exception -> {}", ex.getMessage());
+        logger.error("ExternalEncounterStorageException exception -> {}", ex.getMessage());
         return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
     }
 
     @ExceptionHandler({ DeleteExternalEncounterException.class })
     @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
     protected ApiErrorMessageDto handleDeleteExternalEncounterException(DeleteExternalEncounterException ex) {
-        logger.error("ExternalEncounterBoException exception -> {}", ex.getMessage());
+        logger.error("DeleteExternalEncounterException exception -> {}", ex.getMessage());
         return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
     }
 

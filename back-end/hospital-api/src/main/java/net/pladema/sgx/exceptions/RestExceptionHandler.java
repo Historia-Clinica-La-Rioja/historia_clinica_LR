@@ -14,12 +14,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 
-import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
-import ar.lamansys.sgx.shared.files.exception.FileServiceEnumException;
-import ar.lamansys.sgx.shared.files.exception.FileServiceException;
-
-import net.pladema.user.infrastructure.output.notification.exceptions.RestorePasswordNotificationException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.MethodNotSupportedException;
 import org.apache.tomcat.util.http.fileupload.impl.IOFileUploadException;
@@ -40,12 +34,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
+import ar.lamansys.sgx.shared.dates.exceptions.DateParseException;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
+import ar.lamansys.sgx.shared.files.exception.FileServiceEnumException;
+import ar.lamansys.sgx.shared.files.exception.FileServiceException;
 import ar.lamansys.sgx.shared.strings.StringValidatorException;
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
 import net.pladema.sgx.healthinsurance.service.exceptions.PrivateHealthInsuranceServiceException;
+import net.pladema.user.infrastructure.output.notification.exceptions.RestorePasswordNotificationException;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
@@ -100,11 +99,16 @@ public class RestExceptionHandler {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(DataIntegrityViolationException.class)
-	public Map<String, String> handleDataIntegrityExceptions(DataIntegrityViolationException ex) {
-		Map<String, String> errors = new HashMap<>();
+	public ApiErrorMessageDto handleDataIntegrityExceptions(DataIntegrityViolationException ex) {
+		LOG.debug("DataIntegrityViolationException thrown: {}", ex.getMessage(), ex);
+		Map<String, Object> errors = new HashMap<>();
 		errors.put("ERROR", ex.getCause().getCause().toString());
-		LOG.error(ex.getMessage(), ex);
-		return errors;
+
+		return new ApiErrorMessageDto(
+				"data-integrity",
+				ex.getMessage(),
+				errors
+		);
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -117,7 +121,7 @@ public class RestExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(EntityNotFoundException.class)
 	public ResponseEntity<String> invalidUsername(Exception ex, Locale locale) {
-		String errorMessage = messageSource.getMessage(ex.getMessage(), null, locale);
+		String errorMessage = messageSource.getMessage(ex.getMessage(), null, ex.getMessage(), locale);
 		LOG.info(ex.getMessage());
 		LOG.debug(ex.getMessage(), ex);
 		return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
@@ -126,8 +130,8 @@ public class RestExceptionHandler {
 	@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
 	@ExceptionHandler(MessagingException.class)
 	public String invalidEntity(MessagingException ex, Locale locale) {
-		String errorMessage = messageSource.getMessage(ex.getMessage(), null, locale);
-		LOG.error(errorMessage, ex);
+		String errorMessage = messageSource.getMessage(ex.getMessage(), null, ex.getMessage(), locale);
+		LOG.error("MessagingException thrown: {}", errorMessage, ex);
 		return errorMessage;
 	}
 
@@ -141,8 +145,8 @@ public class RestExceptionHandler {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(IllegalArgumentException.class)
-	public ApiErrorMessageDto handleIllegalArgumentExceptions(IllegalArgumentException ex, Locale locale) {
-		return handleRuntimeException(ex, locale);
+	public ApiErrorMessageDto handleIllegalArgumentExceptions(IllegalArgumentException ex) {
+		return buildErrorMessage(ex);
 	}
 	
 	@ResponseStatus(HttpStatus.FORBIDDEN)
@@ -156,21 +160,20 @@ public class RestExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({BackofficeValidationException.class})
 	public ApiErrorMessageDto handleBackofficeValidationException(BackofficeValidationException ex, Locale locale) {
-		return handleRuntimeException(ex, locale);
+		return buildErrorMessage("bo-validation", ex.getMessage(), locale);
 	}
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ValidationException.class})
-	public ResponseEntity<ApiErrorMessageDto> handleValidationException(ValidationException ex, Locale locale) {
+	public ApiErrorMessageDto handleValidationException(ValidationException ex) {
 		LOG.warn(ex.getMessage(), ex);
-		String errorMessage = messageSource.getMessage(ex.getMessage(), null, locale);
-		return new ResponseEntity<>(new ApiErrorMessageDto(ex.getMessage(), errorMessage), HttpStatus.BAD_REQUEST);
+		return new ApiErrorMessageDto("validation", ex.getMessage());
 	}
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({OverturnsLimitException.class})
 	public ApiErrorMessageDto handleOverturnsLimitException(OverturnsLimitException ex, Locale locale) {
-		return handleRuntimeException(ex, locale);
+		return buildErrorMessage("overturns-limit", ex.getMessage(), locale);
 	}
 
 	@ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
@@ -179,20 +182,6 @@ public class RestExceptionHandler {
 		LOG.info(ex.getMessage());
 		LOG.debug(ex.getMessage(), ex);
 		return new ResponseEntity<>(new ApiErrorMessageDto(HttpStatus.NOT_IMPLEMENTED.hashCode() + "", ex.getMessage()), HttpStatus.NOT_IMPLEMENTED);
-	}
-
-	private ApiErrorMessageDto handleRuntimeException(RuntimeException ex, Locale locale) {
-		String errorMessage = null;
-		try {
-			errorMessage = messageSource.getMessage(ex.getMessage(), null, locale);
-			LOG.error(errorMessage);
-		}
-		catch (Exception e){
-			LOG.error(ex.getMessage());
-		}
-		return new ApiErrorMessageDto("RUNTIME_EXCEPTION",
-				errorMessage != null ? errorMessage : ex.getMessage()
-		);
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -239,10 +228,17 @@ public class RestExceptionHandler {
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ DateParseException.class })
+	protected ApiErrorMessageDto handleDateTimeParseException(DateParseException ex, Locale locale) {
+		LOG.debug("DateTimeParseException -> originalDateValue {}", ex.originalDateValue, ex);
+		return new ApiErrorMessageDto("invalid-date", ex.originalDateValue);
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(BindException.class)
 	protected ApiErrorMessageDto handleBindException(BindException ex) {
-		LOG.debug(ex.getMessage());
-		LOG.error("BindException -> Error binding request values");
+		LOG.error("BindException -> {}", ex.getMessage());
+		LOG.debug(ex.getMessage(), ex);
 		String[] fieldsAndValues = ex.getBindingResult()
 				.getAllErrors()
 				.stream()
@@ -251,4 +247,22 @@ public class RestExceptionHandler {
 		return new ApiErrorMessageDto("BindException", String.format("Error al leer el valor de %s", Arrays.toString(fieldsAndValues)));
 	}
 
+
+	private ApiErrorMessageDto buildErrorMessage(RuntimeException ex) {
+		return new ApiErrorMessageDto(
+				"RUNTIME_EXCEPTION",
+				ex.getMessage()
+		);
+	}
+
+	private ApiErrorMessageDto buildErrorMessage(String code, String message, Locale locale) {
+		String errorMessage = message;
+		try {
+			errorMessage = messageSource.getMessage(message, null, locale);
+		} catch (Exception ignored) {
+			LOG.warn("Intentando usar message '{}'", message);
+		}
+
+		return new ApiErrorMessageDto(code, errorMessage);
+	}
 }

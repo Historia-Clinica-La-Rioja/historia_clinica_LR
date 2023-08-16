@@ -8,10 +8,12 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
+import org.mapstruct.Mapper;
+
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
-import org.mapstruct.Mapper;
+import ar.lamansys.sgx.shared.dates.utils.DateUtils;
 
 @Mapper
 public interface LocalDateMapper {
@@ -19,15 +21,13 @@ public interface LocalDateMapper {
 	default LocalDate fromLocalDateTime(LocalDateTime localDateTime) {
 		return localDateTime != null ? localDateTime.toLocalDate() : null;
 	}
-	
-	default LocalDateTime fromLocalDate(LocalDate localDate) {
+
+default LocalDateTime fromLocalDate(LocalDate localDate) {
 		return localDate!= null ? LocalDateTime.of(localDate, LocalTime.now()) : null; 	
     }
 
 	default LocalDate fromStringToLocalDate(String date) {
-		if (date == null)
-			return null;
-		return LocalDate.parse(date, DateTimeFormatter.ofPattern( JacksonDateFormatConfig.DATE_FORMAT ));
+		return DateUtils.fromStringToLocalDate(date);
 	}
 
 	default LocalDateTime fromStringToLocalDateTime(String date) {
