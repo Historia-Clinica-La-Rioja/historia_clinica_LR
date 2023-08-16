@@ -32,7 +32,7 @@ public class ModalityController {
 	private final ModalityBOMapper modalityBOMapper;
 	
 	@GetMapping(value = "/modality")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA, TECNICO')")
 	public ResponseEntity<List<ModalityDto>> getAllModality(
 			@PathVariable(name = "institutionId") Integer institutionId) {
 		log.debug("{}", "All modalities");
