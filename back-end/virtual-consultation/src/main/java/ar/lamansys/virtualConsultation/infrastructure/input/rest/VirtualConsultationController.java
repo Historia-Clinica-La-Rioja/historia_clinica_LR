@@ -22,6 +22,7 @@ import ar.lamansys.virtualConsultation.application.changeClinicalProfessionalAva
 import ar.lamansys.virtualConsultation.application.changeResponsibleProfessionalAvailability.ChangeResponsibleProfessionalAvailabilityService;
 import ar.lamansys.virtualConsultation.application.changeVirtualConsultationStatus.ChangeVirtualConsultationStatusService;
 import ar.lamansys.virtualConsultation.application.getDomainVirtualConsultations.GetDomainVirtualConsultationsService;
+import ar.lamansys.virtualConsultation.application.getProfessionalAvailabilityService.GetProfessionalAvailabilityService;
 import ar.lamansys.virtualConsultation.application.getResponsibleUserIdByVirtualConsultationId.GetResponsibleUserIdByVirtualConsultationIdService;
 import ar.lamansys.virtualConsultation.application.getVirtualConsultationById.GetVirtualConsultationByIdService;
 import ar.lamansys.virtualConsultation.application.getVirtualConsultationNotificationData.GetVirtualConsultationNotificationDataService;
@@ -73,6 +74,8 @@ public class VirtualConsultationController {
 	private final GetVirtualConsultationByIdService getVirtualConsultationByIdService;
 
 	private final SnomedService snomedService;
+
+	private final GetProfessionalAvailabilityService getProfessionalAvailabilityService;
 
 	@PostMapping(value = "/{institutionId}")
 	public Integer saveVirtualConsultationRequest(@PathVariable(name = "institutionId") Integer institutionId,
@@ -155,6 +158,14 @@ public class VirtualConsultationController {
 		changeVirtualConsultationStatusService.run(virtualConsultationId, eVirtualConsultationStatus);
 		VirtualConsultationStatusDataDto statusData = new VirtualConsultationStatusDataDto(virtualConsultationId, eVirtualConsultationStatus);
 		virtualConsultationPublisher.publish("CHANGE-VIRTUAL-CONSULTATION-STATE", objectMapper.writeValueAsString(statusData));
+	}
+
+	@GetMapping(value = "/professional-availability")
+	public Boolean getProfessionalAvailability() {
+		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
+		Boolean result = getProfessionalAvailabilityService.run(doctorId);
+		log.debug("Output -> {}", result);
+		return result;
 	}
 
 }
