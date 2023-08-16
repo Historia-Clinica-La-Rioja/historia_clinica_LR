@@ -4062,12 +4062,13 @@ export interface TemplateNamesDto {
 export interface SurgicalReportDto extends Serializable {
     anesthesia?: HospitalizationProcedureDto[];
     confirmed: boolean;
-    culture?: HospitalizationProcedureDto;
+    cultures?: HospitalizationProcedureDto[];
     description?: string;
-    drainage?: HospitalizationProcedureDto;
+    drainages?: HospitalizationProcedureDto[];
     endDateTime?: DateTimeDto;
-    frozenSectionBiopsy?: HospitalizationProcedureDto;
+    frozenSectionBiopsies?: HospitalizationProcedureDto[];
     healthcareProfessionals?: DocumentHealthcareProfessionalDto[];
+    modificationReason?: string;
     postoperativeDiagnosis?: DiagnosisDto[];
     preoperativeDiagnosis?: DiagnosisDto[];
     procedures?: HospitalizationProcedureDto[];

@@ -157,9 +157,9 @@ public class AuditableContextBuilder {
 		contextMap.put("postoperativeDiagnosis", document.getPostoperativeDiagnosis());
 		contextMap.put("surgeryProcedures", document.getSurgeryProcedures());
 		contextMap.put("anesthesia", document.getAnesthesia());
-		contextMap.put("culture", document.getCulture());
-		contextMap.put("frozenSectionBiopsy", document.getFrozenSectionBiopsy());
-		contextMap.put("drainage", document.getDrainage());
+		contextMap.put("cultures", document.getCultures());
+		contextMap.put("frozenSectionBiopsies", document.getFrozenSectionBiopsies());
+		contextMap.put("drainages", document.getDrainages());
 		contextMap.put("prosthesis", document.getProsthesisDescription());
 		contextMap.put("description", document.getDescription());
 

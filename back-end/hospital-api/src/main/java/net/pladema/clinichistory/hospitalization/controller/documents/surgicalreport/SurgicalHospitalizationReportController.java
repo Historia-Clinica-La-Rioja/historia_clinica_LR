@@ -1,13 +1,6 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.surgicalreport;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
-import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
-import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
-
-import net.pladema.clinichistory.hospitalization.service.surgicalreport.DeleteSurgicalReport;
-import net.pladema.clinichistory.hospitalization.service.surgicalreport.GetSurgicalReport;
-
+import java.time.LocalDateTime;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -15,22 +8,28 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
+import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.documents.surgicalreport.dto.SurgicalReportDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.surgicalreport.mapper.SurgicalReportMapper;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.domain.SurgicalReportBo;
 import net.pladema.clinichistory.hospitalization.service.surgicalreport.CreateSurgicalReport;
+import net.pladema.clinichistory.hospitalization.service.surgicalreport.DeleteSurgicalReport;
+import net.pladema.clinichistory.hospitalization.service.surgicalreport.GetSurgicalReport;
+import net.pladema.clinichistory.hospitalization.service.surgicalreport.UpdateSurgicalReport;
 import net.pladema.patient.controller.service.PatientExternalService;
-
-import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @RestController
@@ -56,8 +55,9 @@ public class SurgicalHospitalizationReportController {
 
 	private final DeleteSurgicalReport deleteSurgicalReport;
 
+	private final UpdateSurgicalReport updateSurgicalReport;
+
 	@PostMapping
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PROFESIONAL_DE_SALUD')")
 	public ResponseEntity<Boolean> create(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId, @RequestBody SurgicalReportDto surgicalReportDto) {
 		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, surgicalReport {}", institutionId, internmentEpisodeId, surgicalReportDto);
 		SurgicalReportBo surgicalReport = surgicalReportMapper.fromSurgicalReportDto(surgicalReportDto);
@@ -70,7 +70,6 @@ public class SurgicalHospitalizationReportController {
 	@GetMapping("/{surgicalReportId}")
 	@InternmentValid
 	@DocumentValid(isConfirmed = true, documentType = DocumentType.SURGICAL_HOSPITALIZATION_REPORT)
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PROFESIONAL_DE_SALUD')")
 	public ResponseEntity<SurgicalReportDto> getById(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
@@ -94,6 +93,27 @@ public class SurgicalHospitalizationReportController {
 		deleteSurgicalReport.run(internmentEpisodeId, surgicalReportId, reason);
 		log.debug(OUTPUT, Boolean.TRUE);
 		return  ResponseEntity.ok().body(Boolean.TRUE);
+	}
+
+	@PutMapping("/{reportId}")
+	public ResponseEntity<Long> update(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+			@PathVariable(name = "reportId") Long reportId,
+			@RequestBody SurgicalReportDto surgicalReportDto) {
+		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, reportId {}, surgicalReportDto {}",
+				institutionId, internmentEpisodeId, reportId, surgicalReportDto);
+		SurgicalReportBo newReport = surgicalReportMapper.fromSurgicalReportDto(surgicalReportDto);
+		internmentEpisodeService.getPatient(internmentEpisodeId)
+				.map(patientExternalService::getBasicDataFromPatient)
+				.map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
+				.ifPresentOrElse(newReport::setPatientInfo, () -> new NotFoundException("El paciente no existe", "El paciente no existe"));
+		newReport.setPatientId(newReport.getPatientInfo().getId());
+		newReport.setInstitutionId(institutionId);
+		newReport.setEncounterId(internmentEpisodeId);
+		Long result = updateSurgicalReport.execute(internmentEpisodeId, reportId, newReport);
+		log.debug(OUTPUT, result);
+		return  ResponseEntity.ok().body(result);
 	}
 
 	private void setEncounterInformation(Integer encounterId, Integer institutionId, SurgicalReportBo surgicalReport) {

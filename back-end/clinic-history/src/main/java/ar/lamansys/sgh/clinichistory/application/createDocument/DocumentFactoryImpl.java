@@ -183,12 +183,9 @@ public class DocumentFactoryImpl implements DocumentFactory {
 	private void loadSurgicalProcedures(Integer patientId, Long documentId, IDocumentBo documentBo){
 		loadProcedures.run(patientId,documentId, documentBo.getSurgeryProcedures());
 		loadProcedures.run(patientId,documentId, documentBo.getAnesthesia());
-		if(documentBo.getCulture() != null)
-			loadProcedures.run(patientId,documentId, List.of(documentBo.getCulture()));
-		if(documentBo.getFrozenSectionBiopsy() != null)
-			loadProcedures.run(patientId,documentId, List.of(documentBo.getFrozenSectionBiopsy()));
-		if(documentBo.getDrainage() != null)
-			loadProcedures.run(patientId,documentId, List.of(documentBo.getDrainage()));
+		loadProcedures.run(patientId, documentId, documentBo.getCultures());
+		loadProcedures.run(patientId, documentId, documentBo.getFrozenSectionBiopsies());
+		loadProcedures.run(patientId, documentId, documentBo.getDrainages());
 	}
 
     private void generateDocument(IDocumentBo documentBo) {

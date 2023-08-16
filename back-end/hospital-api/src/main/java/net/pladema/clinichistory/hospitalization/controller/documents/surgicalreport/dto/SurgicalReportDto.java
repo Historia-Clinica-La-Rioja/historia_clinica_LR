@@ -43,19 +43,19 @@ public class SurgicalReportDto implements Serializable {
 	private DateTimeDto endDateTime;
 
 	@Nullable
-	private @Valid List<HospitalizationProcedureDto> procedures;
+	private @Valid List<HospitalizationProcedureDto> procedures = new ArrayList<>();
 
 	@Nullable
-	private @Valid List<HospitalizationProcedureDto> anesthesia;
+	private @Valid List<HospitalizationProcedureDto> anesthesia = new ArrayList<>();
 
 	@Nullable
-	private @Valid HospitalizationProcedureDto culture;
+	private @Valid List<HospitalizationProcedureDto> cultures = new ArrayList<>();
 
 	@Nullable
-	private @Valid HospitalizationProcedureDto frozenSectionBiopsy;
+	private @Valid List<HospitalizationProcedureDto> frozenSectionBiopsies = new ArrayList<>();
 
 	@Nullable
-	private @Valid HospitalizationProcedureDto drainage;
+	private @Valid List<HospitalizationProcedureDto> drainages = new ArrayList<>();
 
 	@Nullable
 	private String prosthesisDescription;
@@ -65,4 +65,7 @@ public class SurgicalReportDto implements Serializable {
 
 	@Nullable
 	private @Valid List<DocumentHealthcareProfessionalDto> healthcareProfessionals = new ArrayList<>();
+
+	@Nullable
+	private String modificationReason;
 }

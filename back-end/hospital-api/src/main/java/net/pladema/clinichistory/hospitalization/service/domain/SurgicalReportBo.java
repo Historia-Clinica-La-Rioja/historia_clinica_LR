@@ -60,6 +60,15 @@ public class SurgicalReportBo extends SelfValidating<SurgicalReportBo> implement
 	private @Valid List<ProcedureBo> anesthesia;
 
 	@Nullable
+	private @Valid List<ProcedureBo> cultures;
+
+	@Nullable
+	private @Valid List<ProcedureBo> frozenSectionBiopsies;
+
+	@Nullable
+	private @Valid List<ProcedureBo> drainages;
+
+	@Nullable
 	private @Valid ProcedureBo culture;
 
 	@Nullable
@@ -79,6 +88,12 @@ public class SurgicalReportBo extends SelfValidating<SurgicalReportBo> implement
 	@Nullable
 	private String prosthesisDescription;
 
+	@Nullable
+	private Long initialDocumentId;
+
+	@Nullable
+	private String modificationReason;
+
 	@Override
 	public Integer getPatientId() {
 		if (patientInfo != null) return patientInfo.getId();
@@ -94,4 +109,5 @@ public class SurgicalReportBo extends SelfValidating<SurgicalReportBo> implement
 	public Short getDocumentSource() {
 		return SourceType.HOSPITALIZATION;
 	}
+
 }

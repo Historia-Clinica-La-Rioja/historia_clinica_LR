@@ -54,7 +54,13 @@ public class ProcedureBo extends ClinicalTerm {
 						.map(p2-> p2.equals(p1))
 						.orElse(false))
 				.orElseGet(()-> getPerformedDate()==null);
+		boolean notesAreEquals = Optional.ofNullable(((ProcedureBo)bo).getNote())
+				.map(p1 -> Optional.ofNullable(getNote())
+						.map(p2-> p2.equals(p1))
+						.orElse(false))
+				.orElseGet(()-> getNote()==null);
 		return super.equals(bo)
-				&& datesAreEquals;
+				&& datesAreEquals
+				&& notesAreEquals;
 	}
 }

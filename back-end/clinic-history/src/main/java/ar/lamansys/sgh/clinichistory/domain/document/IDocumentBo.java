@@ -167,11 +167,11 @@ public interface IDocumentBo {
 
 	default List<ProcedureBo> getAnesthesia() { return Collections.emptyList(); }
 
-	default ProcedureBo getCulture() { return null; }
+	default List<ProcedureBo> getCultures() { return Collections.emptyList(); }
 
-	default ProcedureBo getFrozenSectionBiopsy() { return null; }
+	default List<ProcedureBo> getFrozenSectionBiopsies() { return Collections.emptyList(); }
 
-	default ProcedureBo getDrainage() { return null; }
+	default List<ProcedureBo> getDrainages() { return Collections.emptyList(); }
 
 	default String getProsthesisDescription() { return null; }
 
