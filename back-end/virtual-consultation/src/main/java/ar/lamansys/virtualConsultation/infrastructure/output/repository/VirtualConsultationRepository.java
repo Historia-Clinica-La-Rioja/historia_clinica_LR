@@ -85,4 +85,17 @@ public interface VirtualConsultationRepository extends SGXAuditableEntityJPARepo
 	@Query("UPDATE VirtualConsultation vc SET vc.statusId = :virtualConsultationStatusId WHERE vc.id = :virtualConsultationId")
 	void updateVirtualConsultationStatus(@Param("virtualConsultationId") Integer virtualConsultationId, @Param("virtualConsultationStatusId") Short virtualConsultationStatusId);
 
+	@Transactional(readOnly = true)
+	@Query(" SELECT DISTINCT vc.id " +
+			"FROM VirtualConsultationClinicalProfessionalAvailability vccpa " +
+			"JOIN HealthcareProfessional hp ON (hp.id = vccpa.healthcareProfessionalId) " +
+			"JOIN UserPerson up ON (up.pk.personId = hp.personId) " +
+			"JOIN UserRole ur ON (ur.userId = up.pk.userId) " +
+			"JOIN CareLineInstitution cli ON (cli.institutionId = ur.institutionId) " +
+			"JOIN ProfessionalProfessions pp ON (pp.healthcareProfessionalId = vccpa.healthcareProfessionalId) " +
+			"JOIN HealthcareProfessionalSpecialty hps ON (hps.professionalProfessionId = pp.id) " +
+			"JOIN VirtualConsultation vc ON (vc.careLineId = cli.careLineId and vc.clinicalSpecialtyId = hps.clinicalSpecialtyId) " +
+			"WHERE vccpa.healthcareProfessionalId = :healthcareProfessionalId")
+	List<Integer> getVirtualConsultationIdsByPotentialHealthcareProfessionalId(@Param("healthcareProfessionalId") Integer healthcareProfessionalId);
+
 }

@@ -21,9 +21,11 @@ import ar.lamansys.sgx.shared.security.UserInfo;
 import ar.lamansys.virtualConsultation.application.changeClinicalProfessionalAvailability.ChangeClinicalProfessionalAvailabilityService;
 import ar.lamansys.virtualConsultation.application.changeResponsibleProfessionalAvailability.ChangeResponsibleProfessionalAvailabilityService;
 import ar.lamansys.virtualConsultation.application.changeVirtualConsultationStatus.ChangeVirtualConsultationStatusService;
+import ar.lamansys.virtualConsultation.application.getAvailableProfessionalAmountByVirtualConsultationIds.GetAvailableProfessionalAmountByVirtualConsultationIdsService;
 import ar.lamansys.virtualConsultation.application.getDomainVirtualConsultations.GetDomainVirtualConsultationsService;
 import ar.lamansys.virtualConsultation.application.getProfessionalAvailabilityService.GetProfessionalAvailabilityService;
 import ar.lamansys.virtualConsultation.application.getResponsibleProfesionalAvailability.GetResponsibleProfessionalAvailabilityService;
+import ar.lamansys.virtualConsultation.application.getIdsByPosibleHealthcareProfessionalId.GetVirtualConsultationIdsByPotentialHealthcareProfessionalIdService;
 import ar.lamansys.virtualConsultation.application.getResponsibleUserIdByVirtualConsultationId.GetResponsibleUserIdByVirtualConsultationIdService;
 import ar.lamansys.virtualConsultation.application.getVirtualConsultationById.GetVirtualConsultationByIdService;
 import ar.lamansys.virtualConsultation.application.getVirtualConsultationNotificationData.GetVirtualConsultationNotificationDataService;
@@ -32,6 +34,7 @@ import ar.lamansys.virtualConsultation.domain.ClinicalProfessionalAvailabilityBo
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationRequestBo;
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationResponsibleProfessionalAvailabilityBo;
 import ar.lamansys.virtualConsultation.domain.enums.EVirtualConsultationStatus;
+import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationAvailableProfessionalAmountDto;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationDto;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationNotificationDataDto;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationRequestDto;
@@ -79,6 +82,10 @@ public class VirtualConsultationController {
 	private final GetProfessionalAvailabilityService getProfessionalAvailabilityService;
 
 	private final GetResponsibleProfessionalAvailabilityService getResponsibleProfessionalAvailabilityService;
+	
+	private final GetVirtualConsultationIdsByPotentialHealthcareProfessionalIdService getVirtualConsultationIdsByPotentialHealthcareProfessionalIdService;
+
+	private final GetAvailableProfessionalAmountByVirtualConsultationIdsService getAvailableProfessionalAmountByVirtualConsultationIdsService;
 
 	@PostMapping(value = "/{institutionId}")
 	public Integer saveVirtualConsultationRequest(@PathVariable(name = "institutionId") Integer institutionId,
@@ -144,11 +151,14 @@ public class VirtualConsultationController {
 	}
 
 	@PostMapping("/change-clinical-professional-state")
-	public Boolean changeClinicalProfessionalAvailability(@RequestBody Boolean availability) {
+	public Boolean changeClinicalProfessionalAvailability(@RequestBody Boolean availability) throws JsonProcessingException {
 		log.debug("Input parameters -> availability {}", availability);
 		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
+		List<Integer> affectedTuples = getVirtualConsultationIdsByPotentialHealthcareProfessionalIdService.run(doctorId);
 		ClinicalProfessionalAvailabilityBo professionalAvailability = new ClinicalProfessionalAvailabilityBo(doctorId, availability);
 		Boolean result = changeClinicalProfessionalAvailabilityService.run(professionalAvailability);
+		List<VirtualConsultationAvailableProfessionalAmountDto> message = virtualConsultationMapper.fromVirtualConsultationAvailableProfessionalAmountBoList(getAvailableProfessionalAmountByVirtualConsultationIdsService.run(affectedTuples));
+		virtualConsultationPublisher.publish("CHANGE-PROFESSIONAL-STATE", objectMapper.writeValueAsString(message));
 		log.debug("Output -> {}", result);
 		return result;
 	}

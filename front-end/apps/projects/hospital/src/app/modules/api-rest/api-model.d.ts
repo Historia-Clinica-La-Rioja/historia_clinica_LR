@@ -3761,6 +3761,11 @@ export interface ViewerUrlDto {
     url: string;
 }
 
+export interface VirtualConsultationAvailableProfessionalAmountDto {
+    professionalAmount: number;
+    virtualConsultationId: number;
+}
+
 export interface VirtualConsultationDto {
     callId: string;
     careLine: string;

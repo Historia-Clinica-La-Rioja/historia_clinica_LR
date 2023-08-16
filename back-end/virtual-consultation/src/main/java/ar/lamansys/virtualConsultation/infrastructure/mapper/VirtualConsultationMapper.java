@@ -8,11 +8,13 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.virtualConsultation.domain.VirtualConsultationAvailableProfessionalAmountBo;
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationBo;
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationNotificationDataBo;
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationResponsibleProfessionalAvailabilityBo;
 import ar.lamansys.virtualConsultation.domain.enums.EVirtualConsultationPriority;
 import ar.lamansys.virtualConsultation.domain.enums.EVirtualConsultationStatus;
+import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationAvailableProfessionalAmountDto;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationDto;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationNotificationDataDto;
 import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationPatientDataDto;
@@ -47,5 +49,12 @@ public interface VirtualConsultationMapper {
 
 	@Named("fromVirtualConsultationResponsibleProfessionalAvailabilityBo")
 	VirtualConsultationResponsibleProfessionalAvailabilityDto fromVirtualConsultationResponsibleProfessionalAvailabilityBo(VirtualConsultationResponsibleProfessionalAvailabilityBo professionalAvailability);
+
+	@Named("fromVirtualConsultationAvailableProfessionalAmountBo")
+	VirtualConsultationAvailableProfessionalAmountDto fromVirtualConsultationAvailableProfessionalAmountBo(VirtualConsultationAvailableProfessionalAmountBo virtualConsultationAvailableProfessionalAmountBo);
+
+	@Named("fromVirtualConsultationAvailableProfessionalAmountBoList")
+	@IterableMapping(qualifiedByName = "fromVirtualConsultationAvailableProfessionalAmountBo")
+	List<VirtualConsultationAvailableProfessionalAmountDto> fromVirtualConsultationAvailableProfessionalAmountBoList(List<VirtualConsultationAvailableProfessionalAmountBo> virtualConsultationAvailableProfessionalAmountBo);
 
 }
