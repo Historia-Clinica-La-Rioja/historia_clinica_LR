@@ -16,6 +16,7 @@ import { EquipmentDiarySetupComponent } from './routes/equipment-diary-setup/equ
 import { AppointmentDetailsComponent } from './components/appointment-details/appointment-details.component';
 import { AppointmentResultViewComponent } from './components/appointment-result-view/appointment-result-view.component';
 import { CalendarProfessionalViewComponent } from '@turnos/components/calendar-professional-view/calendar-professional-view.component';
+import { ChipsAutocompleteComponent } from './components/chips-autocomplete/chips-autocomplete.component';
 import { DateRangeTimeFormComponent } from './components/date-range-time-form/date-range-time-form.component';
 import { EquipmentDiaryComponent } from './components/equipment-diary/equipment-diary.component';
 import { EquipmentTranscribeOrderPopupComponent } from './dialogs/equipment-transcribe-order-popup/equipment-transcribe-order-popup.component';
@@ -51,6 +52,7 @@ import { EquipmentAppointmentsFacadeService } from './services/equipment-appoint
 		AppointmentDetailsComponent,
 		AppointmentResultViewComponent,
 		CalendarProfessionalViewComponent,
+		ChipsAutocompleteComponent,
 		DateRangeTimeFormComponent,
 		EquipmentDiaryComponent,
 		EquipmentTranscribeOrderPopupComponent,

@@ -1,0 +1,19 @@
+<form>
+	<mat-form-field class="chip-list">
+		<mat-chip-list #chipGrid>
+			<mat-chip *ngFor="let option of optionsSelected" (removed)="remove(option)">
+				{{option.compareValue}}
+				<button matChipRemove>
+					<mat-icon>cancel</mat-icon>
+				</button>
+			</mat-chip>
+		</mat-chip-list>
+		<input placeholder="{{ placeholder | translate}}" [formControl]="searchValue"
+			[matChipInputFor]="chipGrid" [matAutocomplete]="auto" #input />
+		<mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+			<mat-option *ngFor="let option of optionsFiltered | async" [value]="option">
+				{{option.compareValue}}
+			</mat-option>
+		</mat-autocomplete>
+	</mat-form-field>
+</form>
