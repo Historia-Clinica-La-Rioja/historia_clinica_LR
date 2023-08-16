@@ -359,7 +359,7 @@
 			<ng-container
 				*appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 				<ng-container
-					*ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || data.hasPermissionToAssignShift)">
+					*ngIf="canDownloadReport">
 					<section class="report" fxLayout="column">
 						<span class="mat-body-strong strong-size">{{'turnos.report.TITLE' | translate}}</span>
 						<section fxLayout="row" fxLayoutGap="30px">

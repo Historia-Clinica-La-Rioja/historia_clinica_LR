@@ -138,6 +138,8 @@ export class AppointmentComponent implements OnInit {
 	isRejectedPatient: boolean = false;
 	selectedModality: string;
 	isVirtualConsultationModality: boolean = true;
+	canDownloadReport = false;
+
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			appointmentData: PatientAppointmentInformation,
@@ -247,6 +249,7 @@ export class AppointmentComponent implements OnInit {
 						this.selectedModality = this.modalitys.PATIENT_VIRTUAL_ATTENTION;
 					}
 				}
+				this.checkDownloadReportAvailability();
 			});
 
 		this.hasRoleToChangeState$ = this.permissionsService.hasContextAssignments$(ROLES_TO_CHANGE_STATE).pipe(take(1));
@@ -292,6 +295,12 @@ export class AppointmentComponent implements OnInit {
 		this.jitsiCallService.open(this.appointment.callLink);
 		this.closeDialog();
 		this.router.navigate([`${AppRoutes.Institucion}/${this.contextService.institutionId}/ambulatoria/paciente/${this.appointment.patientId}`]);
+	}
+	
+	private checkDownloadReportAvailability() {
+		this.hasRoleToDownloadReports$.subscribe(hasRole => {
+			this.canDownloadReport = this.downloadReportIsEnabled && !this.isAbsent() && (hasRole === true || this.data.hasPermissionToAssignShift)
+		})
 	}
 
 	dateFormToggle(): void {
