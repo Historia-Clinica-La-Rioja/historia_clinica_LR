@@ -29,6 +29,7 @@ import ar.lamansys.virtualConsultation.application.getIdsByPosibleHealthcareProf
 import ar.lamansys.virtualConsultation.application.getResponsibleUserIdByVirtualConsultationId.GetResponsibleUserIdByVirtualConsultationIdService;
 import ar.lamansys.virtualConsultation.application.getVirtualConsultationById.GetVirtualConsultationByIdService;
 import ar.lamansys.virtualConsultation.application.getVirtualConsultationNotificationData.GetVirtualConsultationNotificationDataService;
+import ar.lamansys.virtualConsultation.application.getVirtualConsultationsByInstitution.GetVirtualConsultationsByInstitutionService;
 import ar.lamansys.virtualConsultation.application.saveVirtualConsultation.SaveVirtualConsultationRequestService;
 import ar.lamansys.virtualConsultation.domain.ClinicalProfessionalAvailabilityBo;
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationRequestBo;
@@ -87,6 +88,8 @@ public class VirtualConsultationController {
 
 	private final GetAvailableProfessionalAmountByVirtualConsultationIdsService getAvailableProfessionalAmountByVirtualConsultationIdsService;
 
+	private final GetVirtualConsultationsByInstitutionService getVirtualConsultationsByInstitutionService;
+
 	@PostMapping(value = "/{institutionId}")
 	public Integer saveVirtualConsultationRequest(@PathVariable(name = "institutionId") Integer institutionId,
 												  @RequestBody @Valid VirtualConsultationRequestDto virtualConsultation) {
@@ -117,6 +120,14 @@ public class VirtualConsultationController {
 	@GetMapping(value = "/domain")
 	public List<VirtualConsultationDto> getDomainVirtualConsultation() {
 		List<VirtualConsultationDto> result = virtualConsultationMapper.fromVirtualConsultationBoList(getDomainVirtualConsultationsService.run());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@GetMapping(value = "/institution/{institutionId}")
+	public List<VirtualConsultationDto> getVirtualConsultationsByInstitution(@PathVariable(name = "institutionId") Integer institutionId) {
+		log.debug("Input parameters -> institutionId {}", institutionId);
+		List<VirtualConsultationDto> result = virtualConsultationMapper.fromVirtualConsultationBoList(getVirtualConsultationsByInstitutionService.run(institutionId));
 		log.debug("Output -> {}", result);
 		return result;
 	}

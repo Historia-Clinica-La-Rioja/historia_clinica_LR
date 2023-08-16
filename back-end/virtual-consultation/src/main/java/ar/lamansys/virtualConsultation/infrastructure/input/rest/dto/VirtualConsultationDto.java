@@ -1,5 +1,7 @@
 package ar.lamansys.virtualConsultation.infrastructure.input.rest.dto;
 
+import javax.annotation.Nullable;
+
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.virtualConsultation.domain.enums.EVirtualConsultationPriority;
 import ar.lamansys.virtualConsultation.domain.enums.EVirtualConsultationStatus;
@@ -36,6 +38,10 @@ public class VirtualConsultationDto {
 
 	private DateTimeDto creationDateTime;
 
+	@Nullable
 	private String callId;
+
+	@Nullable
+	private Integer availableProfessionalsAmount;
 
 }

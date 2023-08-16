@@ -3767,7 +3767,8 @@ export interface VirtualConsultationAvailableProfessionalAmountDto {
 }
 
 export interface VirtualConsultationDto {
-    callId: string;
+    availableProfessionalsAmount?: number;
+    callId?: string;
     careLine: string;
     clinicalSpecialty: string;
     creationDateTime: DateTimeDto;
@@ -3819,9 +3820,9 @@ export interface VirtualConsultationRequestDto {
 
 export interface VirtualConsultationResponsibleDataDto {
     available: boolean;
-    firstName: string;
+    firstName?: string;
     healthcareProfessionalId: number;
-    lastName: string;
+    lastName?: string;
 }
 
 export interface VirtualConsultationResponsibleProfessionalAvailabilityDto {

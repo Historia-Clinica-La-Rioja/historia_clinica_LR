@@ -1,5 +1,7 @@
 package ar.lamansys.virtualConsultation.infrastructure.input.rest.dto;
 
+import javax.annotation.Nullable;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,8 +13,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VirtualConsultationResponsibleDataDto {
 
+	@Nullable
 	private String firstName;
 
+	@Nullable
 	private String lastName;
 
 	private Integer healthcareProfessionalId;
