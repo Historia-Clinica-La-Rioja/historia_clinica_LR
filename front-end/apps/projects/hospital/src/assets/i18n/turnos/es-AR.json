@@ -87,9 +87,17 @@
 			"PRACTICE": "Práctica/Procedimiento",
 			"PRACTICE_PLACEHOLDER": "Seleccionar prácticas",
 			"dialog": {
-				"TITLE": "Nueva atención",
-				"EDIT": "Editar atención",
-				"BOOKING": "Disponible para turnos online"
+				"TITLE": "Nueva franja horaria",
+				"EDIT": "Editar franja horaria",
+				"BOOKING": "Disponible para turnos online",
+				"MODALITY": "Modalidad",
+				"TAKE_SHIFTS_TITLE": "Atención de turnos",
+				"ATTENDS_FACE_TO_FACE": "Atiende presencial",
+				"TAKE_PROTECTED_ONLINE": "Atiende turnos protegidos por linea de cuidado",
+				"ATTEND_ONLINE": "Atiende turnos online",
+				"ATTEND_SHIFTS_PROTECTED_BY_LINES_OF_CARE": "Atiende turnos protegidos por líneas de cuidado",
+				"ERROR": "No se puede destildar esta opción porque hay turno asignados de este tipo"
+
 			},
 			"messages": {
 				"SUCCESS": "La agenda se guardó exitosamente",
