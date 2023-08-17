@@ -62,8 +62,6 @@ export class InstitucionComponent implements OnInit, OnDestroy {
 
 		this.entryCallSubs = this.entryCallStompService.entryCall$.subscribe(
 			(entryCall: VirtualConsultationNotificationDataDto) => {
-				console.warn(entryCall);
-
 				entryCall ? this.showEntryCallService.show(entryCall) : this.showEntryCallService.close();
 			}
 		)
