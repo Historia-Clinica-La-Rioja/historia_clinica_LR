@@ -2,37 +2,43 @@
     <mat-card class="main-card">
         <h2 class="page-title">{{'image-network.worklist.WORKLIST_BY_INFORMER' | translate }}</h2>
         <form [formGroup]="filterForm" name="modalities-form" fxLayout="column">
-            <div>
-                <mat-form-field appearance="outline">
-                    <mat-label [translate]="'image-network.worklist.MODALITIES'"></mat-label>
-                    <mat-select id="modalities" (selectionChange)="selectModality($event)" fxFlex="98%"
-                        formControlName="modalities">
-                        <mat-option *ngFor="let modality of modalities$ | async" [value]="modality.id">
-                            {{modality.description}}
-                        </mat-option>
-                    </mat-select>
-                    <button *ngIf="filterForm.value.modalities" mat-button matSuffix color="warn" mat-icon-button
-                        (click)="cleanModalities(); $event.stopPropagation()">
-                        <mat-icon>close</mat-icon>
-                    </button>
-                </mat-form-field>
-                <mat-form-field appearance="outline">
-                    <mat-label [translate]="'image-network.worklist.DATE_RANGE'"></mat-label>
-                    <mat-date-range-input
-                        [min]="dateRangeMin"
-                        [max]="dateRangeMax"
-                        [formGroup]="dateRangeForm"
-                        [rangePicker]="picker">
-                        <input matStartDate placeholder="{{ 'image-network.worklist.START_DATE' | translate }}" formControlName="start" (dateChange)="setWorkList()">
-                        <input matEndDate placeholder="{{ 'image-network.worklist.END_DATE' | translate }}" formControlName="end" (dateChange)="setWorkList()">
-                    </mat-date-range-input>
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-date-range-picker #picker></mat-date-range-picker>
-                </mat-form-field>
+            <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="10px">
+                <div data-id="modality-filter">
+                    <mat-form-field appearance="outline">
+                        <mat-label [translate]="'image-network.worklist.MODALITIES'"></mat-label>
+                        <mat-select id="modalities" (selectionChange)="selectModality($event)" fxFlex="98%"
+                            formControlName="modalities">
+                            <mat-option *ngFor="let modality of modalities$ | async" [value]="modality.id">
+                                {{modality.description}}
+                            </mat-option>
+                        </mat-select>
+                        <button *ngIf="filterForm.value.modalities" mat-button matSuffix color="warn" mat-icon-button
+                            (click)="cleanModalities(); $event.stopPropagation()">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+                <div data-id="date-filter">
+                    <mat-form-field appearance="outline">
+                        <mat-label [translate]="'image-network.worklist.DATE_RANGE'"></mat-label>
+                        <mat-date-range-input
+                            [min]="dateRangeMin"
+                            [max]="dateRangeMax"
+                            [formGroup]="dateRangeForm"
+                            [rangePicker]="picker">
+                            <input matStartDate placeholder="{{ 'image-network.worklist.START_DATE' | translate }}" formControlName="start" (dateChange)="setWorkList()">
+                            <input matEndDate placeholder="{{ 'image-network.worklist.END_DATE' | translate }}" formControlName="end" (dateChange)="setWorkList()">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
+                    </mat-form-field>
+                </div>
 
-                <app-filter-button (isExpandedEmitter)="toggleFilter($event)"></app-filter-button>
+                <div style="height: 50px;">
+                    <app-filter-button (isExpandedEmitter)="toggleFilter($event)"></app-filter-button>
+                </div>
             </div>
-            <div *ngIf="isFilterExpanded">
+            <div *ngIf="isFilterExpanded" fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="10px">
                 <mat-form-field appearance="outline">
                     <mat-label [translate]="'image-network.worklist.PATIENT_NAME'"></mat-label>
                     <input matInput formControlName="patientName">

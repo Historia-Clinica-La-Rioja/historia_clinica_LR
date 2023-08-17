@@ -28,9 +28,8 @@
     width: 120px;
 }
 
-mat-form-field {
-    width: 20%;
-    margin-left: 1rem;
+:host ::ng-deep .mat-form-field {
+    width: 240px;
 }
 
 @media (max-width: 1280px) {
