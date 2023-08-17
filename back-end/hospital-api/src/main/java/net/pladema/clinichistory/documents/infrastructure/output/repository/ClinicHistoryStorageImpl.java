@@ -142,8 +142,8 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 		result.setId(row.getId());
 		result.setInstitution(row.getInstitution());
 		result.setProfessional(professionalCompleteName);
-		result.setStartDate(row.getStartDate().atZone(ZoneId.of("UTC-3")).toLocalDateTime());
-		result.setEndDate(row.getEndDate() != null ? row.getEndDate().atZone(ZoneId.of("UTC-3")).toLocalDateTime() : row.getCreatedOn().atZone(ZoneId.of("UTC-3")).toLocalDateTime());
+		result.setStartDate(row.getStartDate());
+		result.setEndDate(row.getEndDate() != null ? row.getEndDate() : row.getCreatedOn().atZone(ZoneId.of("UTC-3")).toLocalDateTime());
 		result.setEncounterType(getEncounterType(row));
 		result.setDocumentType(getDocumentType(row));
 		result.setProblems(mapProblems(row.getHealthConditionSummary().getProblems()));

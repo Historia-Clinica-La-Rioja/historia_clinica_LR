@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Entity
 @Table(name = "v_clinic_history")
@@ -117,22 +118,22 @@ public class VClinicHistory {
 
 	public LocalDateTime getStartDate(){
 		if (sourceTypeId.equals(ESourceType.HOSPITALIZATION.getId()) || (sourceTypeId.equals(ESourceType.ORDER.getId()) && requestSourceTypeId.equals(ESourceType.HOSPITALIZATION.getId())))
-			return internmentStartDate;
+			return internmentStartDate.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")).toLocalDateTime();
 		if (sourceTypeId.equals(ESourceType.EMERGENCY_CARE.getId()) || (sourceTypeId.equals(ESourceType.ORDER.getId()) && requestSourceTypeId.equals(ESourceType.EMERGENCY_CARE.getId())))
-			return emergencyCareStartDate;
-		return createdOn;
+			return emergencyCareStartDate.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")).toLocalDateTime();
+		return createdOn.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")).toLocalDateTime();
 	}
 
 	public LocalDateTime getEndDate(){
 		if (sourceTypeId.equals(ESourceType.HOSPITALIZATION.getId()) || (sourceTypeId.equals(ESourceType.ORDER.getId()) && requestSourceTypeId.equals(ESourceType.HOSPITALIZATION.getId())))
-			return internmentEndDate;
+			return internmentEndDate != null ? internmentEndDate.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")).toLocalDateTime() : null;
 		if (sourceTypeId.equals(ESourceType.EMERGENCY_CARE.getId()) || (sourceTypeId.equals(ESourceType.ORDER.getId()) && requestSourceTypeId.equals(ESourceType.EMERGENCY_CARE.getId())))
-			return emergencyCareEndDate;
+			return emergencyCareEndDate != null ? emergencyCareEndDate : null;
 		if (sourceTypeId.equals(ESourceType.ORDER.getId()))
-			return serviceRequestEndDate;
+			return serviceRequestEndDate != null ? serviceRequestEndDate.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")).toLocalDateTime() : null;
 		if (sourceTypeId.equals(ESourceType.RECIPE.getId()))
-			return medicationEndDate;
-		return createdOn;
+			return medicationEndDate != null ? medicationEndDate.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")).toLocalDateTime() : null;
+		return createdOn.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")).toLocalDateTime();
 	}
 
 }

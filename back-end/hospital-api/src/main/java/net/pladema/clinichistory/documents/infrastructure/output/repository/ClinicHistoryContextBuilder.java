@@ -166,8 +166,8 @@ public class ClinicHistoryContextBuilder {
 	private void addEncounterInfo(Map<String, Object> context, CHDocumentBo document, Integer episodeId, ECHEncounterType encounterType){
 		context.put("encounterId", episodeId);
 		context.put("encounterType", document.getEncounterType().getValue());
-		if (document.getStartDate() != null) context.put("startDate", document.getStartDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
-		if (document.getEndDate() != null) context.put("endDate", document.getEndDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
+		if (document.getStartDate() != null) context.put("startDate", document.getStartDate());
+		if (document.getEndDate() != null) context.put("endDate", document.getEndDate());
 		context.put("institution", document.getInstitution());
 		if (encounterType.equals(ECHEncounterType.HOSPITALIZATION)){
 			var bedInfo = bedService.getBedInfo(internmentEpisodeService.getInternmentEpisode(episodeId, document.getInstitutionId()).getBedId());
