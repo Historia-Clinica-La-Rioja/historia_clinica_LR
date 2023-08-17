@@ -101,7 +101,7 @@ public interface VirtualConsultationRepository extends SGXAuditableEntityJPARepo
 
 	@Transactional(readOnly = true)
 	@Query(" SELECT DISTINCT NEW ar.lamansys.virtualConsultation.domain.VirtualConsultationBo(vc.id, p.id, p2.firstName, pe.nameSelfDetermination, p2.lastName, " +
-			"EXTRACT(YEAR FROM (AGE(p2.birthDate))), spg.description, s2.pt, s.pt, cs.name, cl.description, vc.statusId, p3.firstName, p3.lastName, hp.id, " +
+			"EXTRACT(YEAR FROM (AGE(p2.birthDate))), spg.description, s2.pt, s.pt, cs.name, cl.description, vc.institutionId, vc.statusId, p3.firstName, p3.lastName, hp.id, " +
 			"CASE WHEN (vcpa.available IS TRUE AND vcpa.id.institutionId = vc.institutionId) THEN TRUE ELSE FALSE END, vc.priorityId, vc.creationable.createdOn, " +
 			"vvcpa.availableProfessionalAmount) " +
 			"FROM VirtualConsultation vc " +
@@ -113,7 +113,6 @@ public interface VirtualConsultationRepository extends SGXAuditableEntityJPARepo
 			"LEFT JOIN Snomed s2 ON (s2.id = vc.problemId) " +
 			"JOIN ClinicalSpecialty cs ON (cs.id = vc.clinicalSpecialtyId) " +
 			"JOIN CareLine cl ON (cl.id = vc.careLineId) " +
-			"JOIN Institution i ON (i.id = vc.institutionId) " +
 			"JOIN HealthcareProfessional hp ON (hp.id = vc.responsibleHealthcareProfessionalId) " +
 			"JOIN Person p3 ON (p3.id = hp.personId) " +
 			"LEFT JOIN VirtualConsultationResponsibleProfessionalAvailability vcpa ON (vcpa.id.healthcareProfessionalId = hp.id) " +

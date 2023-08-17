@@ -22,7 +22,7 @@ public class GetVirtualConsultationByIdServiceImpl implements GetVirtualConsulta
 	public VirtualConsultationBo run(Integer virtualConsultationId) {
 		log.debug("Input parameters -> virtualConsultationId {}", virtualConsultationId);
 		VirtualConsultationBo result = virtualConsultationRepository.getVirtualConsultationById(virtualConsultationId);
-		if (featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS))
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && result.getPatientSelfPerceivedName() != null)
 			result.setPatientName(result.getPatientSelfPerceivedName());
 		log.debug("Output -> {}", result);
 		return result;

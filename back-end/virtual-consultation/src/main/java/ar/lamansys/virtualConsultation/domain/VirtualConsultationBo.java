@@ -79,9 +79,9 @@ public class VirtualConsultationBo {
 	}
 
 	public VirtualConsultationBo(Integer id, Integer patientId, String patientName, String patientSelfPerceivedName, String patientLastName, Integer patientAge,
-								 String patientGender, String problem, String motive, String clinicalSpecialty, String careLine, Short statusId, String responsibleFirstName,
-								 String responsibleLastName, Integer responsibleHealthcareProfessionalId, Boolean responsibleAvailability, Short priorityId,
-								 LocalDateTime creationDateTime, Integer availableProfessionalsAmount) {
+								 String patientGender, String problem, String motive, String clinicalSpecialty, String careLine, Integer institutionId, Short statusId,
+								 String responsibleFirstName, String responsibleLastName, Integer responsibleHealthcareProfessionalId, Boolean responsibleAvailability,
+								 Short priorityId, LocalDateTime creationDateTime, Integer availableProfessionalsAmount) {
 		this.id = id;
 		this.patientId = patientId;
 		this.patientName = patientName;
@@ -93,6 +93,7 @@ public class VirtualConsultationBo {
 		this.motive = motive;
 		this.clinicalSpecialty = clinicalSpecialty;
 		this.careLine = careLine;
+		this.institutionId = institutionId;
 		this.statusId = statusId;
 		this.responsibleFirstName = responsibleFirstName;
 		this.responsibleLastName = responsibleLastName;
