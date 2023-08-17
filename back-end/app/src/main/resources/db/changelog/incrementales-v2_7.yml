@@ -1,2 +1,36 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v2_7
+
+    - changeSet:
+        id: delete-repeted-clinical_specialty_mandatory_medical_practice-data
+        comment: Eliminar registros repetidos en la tabla clinical_specialty_mandatory_medical_practice
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              endDelimiter: ;;
+              sql: |-
+                CREATE TEMP TABLE id_mapping (old_id INT, new_id INT);
+                WITH duplicate_rows AS (
+                    SELECT
+                        array_agg(id) AS ids,
+                        clinical_specialty_id,
+                        mandatory_medical_practice_id
+                    FROM clinical_specialty_mandatory_medical_practice
+                    GROUP BY clinical_specialty_id, mandatory_medical_practice_id
+                    HAVING COUNT(*) > 1
+                )
+                INSERT INTO id_mapping (old_id, new_id)
+                SELECT unnest(array_remove(d.ids, d.ids[1])), d.ids[1]
+                FROM duplicate_rows d;
+                UPDATE mandatory_professional_practice_free_days mppfd
+                SET clinical_specialty_mandatory_medical_practice_id = m.new_id
+                FROM id_mapping m
+                WHERE mppfd.clinical_specialty_mandatory_medical_practice_id = m.old_id;
+                UPDATE health_insurance_practice hip
+                SET clinical_specialty_mandatory_medical_practice_id = m.new_id
+                FROM id_mapping m
+                WHERE hip.clinical_specialty_mandatory_medical_practice_id = m.old_id;
+                DELETE FROM clinical_specialty_mandatory_medical_practice c
+                WHERE id IN (SELECT old_id FROM id_mapping);
+                DROP TABLE id_mapping;
