@@ -7,6 +7,7 @@ import { MEDICAL_ATTENTION } from '../../constants/descriptions';
 import { REMOVEATTENTION } from '@core/constants/validation-constants';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { AppFeature } from "@api-rest/api-model";
+import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
 
 @Component({
 	selector: 'app-new-attention',
@@ -23,21 +24,31 @@ export class NewAttentionComponent implements OnInit {
 
 	availableForBooking: boolean;
 	isEnableOnlineAppointments: boolean = false;
+	existsBookeddAppointment = false;
+	existsProtectedAppointments = false;
+	availableForAppoitmentOnline = false;
+	availbleForCareLine = false;
 
 	constructor(
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly medicalConsultationMasterdataService: MedicalConsultationMasterdataService,
 		@Inject(MAT_DIALOG_DATA) public data: NewAttentionElements,
-		private readonly featureFlagService: FeatureFlagService
+		private readonly featureFlagService: FeatureFlagService,
+		private readonly diaryOpeningHoursService: DiaryOpeningHoursService,
 	) {
 
 		this.featureFlagService.isActive(AppFeature.BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS).subscribe(isEnabled => this.isEnableOnlineAppointments = isEnabled);
+		if (this.data.isEdit && this.data?.openingHoursId) {
+			this.diaryOpeningHoursService.existsBookeddAppointmentInOpeningHours(this.data?.openingHoursId).subscribe(e => this.existsBookeddAppointment = e);
+			this.diaryOpeningHoursService.existsProtectedAppointmentsInOpeningHours(this.data?.openingHoursId).subscribe(e => this.existsProtectedAppointments = e);
+		}
 	}
 
 
 	ngOnInit(): void {
-
+		this.availbleForCareLine = this.data?.protectedAppointmentsAllowed;
+		this.availableForBooking = this.data?.availableForBooking;
 		this.medicalConsultationMasterdataService.getMedicalAttention()
 			.subscribe(medicalAttentionTypes => {
 				this.medicalAttentionTypes = medicalAttentionTypes;
@@ -50,7 +61,8 @@ export class NewAttentionComponent implements OnInit {
 			endingHour: [this.data.end, Validators.required],
 			overturnCount: [this.data.overturnCount, Validators.min(0)],
 			medicalAttentionType: [null, Validators.required],
-			availableForBooking: [this.data.availableForBooking],
+			availableForBooking: [this.data?.availableForBooking],
+			availbleForCareLine: [this.data?.protectedAppointmentsAllowed],
 		});
 
 		this.availableForBooking = this.data.availableForBooking;
@@ -75,6 +87,7 @@ export class NewAttentionComponent implements OnInit {
 	submit() {
 		if (this.form.valid) {
 			this.form.value.availableForBooking = this.availableForBooking;
+			this.form.value.availbleForCareLine = this.availbleForCareLine;
 			this.dialogRef.close(this.form.value);
 		}
 	}
@@ -87,7 +100,7 @@ export class NewAttentionComponent implements OnInit {
 		this.dialogRef.close(REMOVEATTENTION);
 	}
 
-	filterAppointmentEndingHours(){
+	filterAppointmentEndingHours() {
 		this.possibleEndingScheduleHours = this.data.possibleScheduleHours.filter(appointmentDate => appointmentDate > this.form.value.startingHour);
 
 		if (this.form.value.endingHour <= this.form.value.startingHour)
@@ -97,9 +110,13 @@ export class NewAttentionComponent implements OnInit {
 	changeAvailableForBooking(): void {
 		this.availableForBooking = !this.availableForBooking;
 	}
+
+	changeAvailbleForCareLine() {
+		this.availbleForCareLine = !this.availbleForCareLine;
+	}
 }
 
-export interface NewAttentionElements{
+export interface NewAttentionElements {
 	start: Date,
 	end: Date,
 	overturnCount?: number,
@@ -107,4 +124,9 @@ export interface NewAttentionElements{
 	isEdit?: boolean,
 	possibleScheduleHours: Date[],
 	availableForBooking: boolean,
+	hasSelectedLinesOfCare: boolean,
+	protectedAppointmentsAllowed: boolean,
+	diaryId?: number,
+	openingHoursId?: number
+
 }

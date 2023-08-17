@@ -172,7 +172,6 @@ export class AgendaSetupComponent implements OnInit {
 				this.route.paramMap.subscribe((params) => {
 					this.editingDiaryId = Number(params.get('agendaId'));
 					this.diaryService.get(this.editingDiaryId).subscribe((diary: CompleteDiaryDto) => {
-
 						this.minDate = momentParseDate(diary.startDate).toDate();
 						this.setValuesFromExistingAgenda(diary);
 						this.disableNotEditableControls();
@@ -397,7 +396,7 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	save(): void {
-		if (this.form.valid && this.lineOfCareAndPercentageOfProtectedAppointmentsValid) {
+		if (this.form.valid) {
 			this.openDialog();
 		} else {
 			scrollIntoError(this.form, this.el);
@@ -490,7 +489,8 @@ export class AgendaSetupComponent implements OnInit {
 			alias: this.form.value.alias === "" ? null : this.form.value.alias,
 			diaryAssociatedProfessionalsId: this.form.value.otherProfessionals.map(professional => professional.healthcareProfessionalId),
 			careLines: this.careLinesSelected.map(careLine => { return careLine.id }),
-			practicesId: this.form.controls.practices.value
+			practicesId: this.form.controls.practices.value,
+			protectedAppointmentsPercentage: null,
 		};
 	}
 

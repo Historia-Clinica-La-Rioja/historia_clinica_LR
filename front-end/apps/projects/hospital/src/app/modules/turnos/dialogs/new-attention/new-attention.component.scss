@@ -1,6 +1,3 @@
-div {
-	font-family: Roboto, "Helvetica Neue", sans-serif;
-}
 
 mat-form-field {
     width:100%;
@@ -26,4 +23,23 @@ mat-form-field {
 
 .mat-dialog-title {
 	margin: 0;
+}
+
+.mat-checkbox{
+	margin: 5px;
+}
+
+.error-menssage{
+	width: 60%;
+	margin-left: 30px;
+	white-space: normal;
+	color: red;
+
+}
+
+.right-menssage{
+	width: 60%;
+	margin-left: 30px;
+	white-space: normal;
+	color: #A8A8A8;
 }

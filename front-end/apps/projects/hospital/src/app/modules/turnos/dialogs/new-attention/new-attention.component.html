@@ -1,6 +1,6 @@
 <div>
 
-	<div class="header-container" fxLayout="row" fxLayoutAlign="space-between center">	
+	<div class="header-container" fxLayout="row" fxLayoutAlign="space-between center">
 		<div mat-dialog-title *ngIf="!data.isEdit else edit">
 			<div translate="turnos.agenda-setup.dialog.TITLE"></div>
 		</div>
@@ -76,11 +76,50 @@
 		</div>
 
 
-		<div fxLayout="column" *ngIf="isEnableOnlineAppointments">
-			<mat-checkbox (change)="changeAvailableForBooking()" [checked]="form.value.availableForBooking"
-						  *ngIf="isEnableOnlineAppointments && form?.value?.medicalAttentionType?.description != SPONTANEOUS">
-				<span [translate]="'turnos.agenda-setup.dialog.BOOKING'"></span>
-			</mat-checkbox>
+		<div *ngIf="form?.value?.medicalAttentionType?.description != SPONTANEOUS">
+			<div fxLayout="column">
+				<div mat-dialog-title>
+					{{'turnos.agenda-setup.dialog.MODALITY' | translate}}
+				</div>
+				<mat-checkbox color="primary" [checked]="true" [disabled]="true">
+					<span>
+						{{'turnos.agenda-setup.dialog.ATTENDS_FACE_TO_FACE' | translate}}
+					</span>
+				</mat-checkbox>
+			</div>
+
+			<div *ngIf="data.hasSelectedLinesOfCare || isEnableOnlineAppointments" fxLayout="column" ga>
+				<div mat-dialog-title>
+					{{'turnos.agenda-setup.dialog.TAKE_SHIFTS_TITLE' | translate}}
+				</div>
+				<ng-container *ngIf="data.hasSelectedLinesOfCare">
+					<mat-checkbox (change)="changeAvailbleForCareLine()" [checked]="form.value.availbleForCareLine"
+						[disabled]="data.isEdit && existsProtectedAppointments">
+						<span>
+							{{'turnos.agenda-setup.dialog.TAKE_PROTECTED_ONLINE' | translate}}
+						</span>
+					</mat-checkbox>
+					<mat-error *ngIf="data.isEdit && existsProtectedAppointments"
+						[ngClass]="data?.protectedAppointmentsAllowed ? 'right-menssage' : 'error-menssages'">
+						{{'turnos.agenda-setup.dialog.ERROR' | translate}}
+					</mat-error>
+				</ng-container>
+
+				<div>
+					<div fxLayout="column" *ngIf="isEnableOnlineAppointments">
+						<mat-checkbox (change)="changeAvailableForBooking()" [checked]="form.value.availableForBooking"
+						 [disabled]="data.isEdit && existsBookeddAppointment"
+							*ngIf="isEnableOnlineAppointments">
+							<span [translate]="'turnos.agenda-setup.dialog.ATTEND_ONLINE'"></span>
+						</mat-checkbox>
+					</div>
+					<mat-error *ngIf="data.isEdit && existsBookeddAppointment"
+						[ngClass]="data?.availableForBooking ? 'right-menssage' : 'error-menssages'"
+						class="error-menssage">
+						{{'turnos.agenda-setup.dialog.ERROR' | translate}}
+					</mat-error>
+				</div>
+			</div>
 		</div>
 
 		<mat-dialog-actions align="end">

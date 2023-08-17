@@ -260,8 +260,8 @@
 				</div>
 
 			</section>
-
-			<section *ngIf="form.valid && lineOfCareAndPercentageOfProtectedAppointmentsValid" fxLayout="column" fxLayoutAlign="space-around" fxLayoutGap="15px">
+			<section *ngIf="form.valid" fxLayout="column"
+				fxLayoutAlign="space-around" fxLayoutGap="15px">
 				<h3 [translate]="'turnos.agenda-setup.SELECT_DAYS_TYPE'"></h3>
 				<div fxLayout="row">
 					<span [translate]="'turnos.agenda-setup.SELECT_DAYS_TYPE_SUBTITLE'"></span>
@@ -272,7 +272,8 @@
 					<div #segmentElement class="cal-hour-segment" [style.height.px]="segmentHeight"
 						[class.cal-hour-start]="segment.isStart" [class.cal-after-hour-start]="!segment.isStart"
 						[ngClass]="segment.cssClass"
-						(mousedown)="agendaHorarioService.startDragToCreate(segment, segmentElement)">
+						(mousedown)="agendaHorarioService.startDragToCreate(segment, segmentElement,
+						form.value.careLines?.length > 0, editMode )">
 						<div class="cal-time" *ngIf="isTimeLabel">
 							{{ segment.date | calendarDate:'weekViewHour':locale }}
 						</div>
@@ -290,11 +291,13 @@
 				</ng-template>
 
 				<mwl-calendar-week-view [viewDate]="TODAY"
-										[events]="agendaHorarioService.getEvents()" [hourSegmentTemplate]="weekViewHourSegmentTemplate"
-										[headerTemplate]="headerTemplate" [dayStartHour]="openingTime" [dayEndHour]="closingTime"
-										[hourSegments]="hourSegments"
-										[weekStartsOn]="MONDAY"
-										(eventClicked)="agendaHorarioService.eventClicked($event)">
+					[events]="agendaHorarioService.getEvents()"
+					[hourSegmentTemplate]="weekViewHourSegmentTemplate"
+					[headerTemplate]="headerTemplate"
+					[dayStartHour]="openingTime" [dayEndHour]="closingTime"
+					[hourSegments]="hourSegments"
+					[weekStartsOn]="MONDAY"
+					(eventClicked)="agendaHorarioService.eventClicked($event, form.value.careLines?.length > 0)">
 				</mwl-calendar-week-view>
 
 				<mat-card *ngIf="errors.length">
@@ -303,10 +306,10 @@
 			</section>
 
 
-			<div *ngIf="form.valid && lineOfCareAndPercentageOfProtectedAppointmentsValid" align="end">
-					<button mat-flat-button color="primary" name="confirmAgenda" id="confirmAgenda">
-						<span [translate]="'buttons.CONFIRM'"></span>
-					</button>
+			<div *ngIf="form.valid" align="end">
+				<button mat-flat-button color="primary" name="confirmAgenda" id="confirmAgenda">
+					<span [translate]="'buttons.CONFIRM'"></span>
+				</button>
 			</div>
 		</form>
 	</section>
