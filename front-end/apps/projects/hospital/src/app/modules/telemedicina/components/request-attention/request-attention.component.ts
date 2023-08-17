@@ -32,8 +32,7 @@ export class RequestAttentionComponent implements OnInit {
 
 
 	ngOnInit(): void {
-
-		this.virtualConsultationsSubscription = this.virtualConsultationsFacadeService.virtualConsultations$
+		this.virtualConsultationsSubscription = this.virtualConsultationsFacadeService.virtualConsultationsAttention$
 			.subscribe(virtualConsultations =>
 				this.virtualConsultations = virtualConsultations.map(this.toVCToBeShown));
 

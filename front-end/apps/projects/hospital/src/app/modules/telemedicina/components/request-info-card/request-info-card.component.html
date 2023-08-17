@@ -18,7 +18,7 @@
 		<div id="datos-clinicos" fxLayout="column" fxLayoutAlign="center start" fxFlex="20%">
 			<app-iconed-text icon="medical_services" [text]="virtualConsultation.clinicalSpecialty"></app-iconed-text>
 			<app-iconed-text icon="home" [text]="virtualConsultation.careLine"></app-iconed-text>
-			<app-iconed-text icon="domain" [text]="virtualConsultation.institutionData.name"></app-iconed-text>
+			<app-iconed-text *ngIf="virtualConsultation.institutionData.name" icon="domain" [text]="virtualConsultation.institutionData.name"></app-iconed-text>
 		</div>
 
 		<div id="data-solicitante" fxLayout="column" fxLayoutAlign="start start" fxFlex="15%">
@@ -27,8 +27,9 @@
 			<app-available-label [available]="virtualConsultation.responsibleData.available"></app-available-label>
 		</div>
 
-		<div id="datos-tiempo" fxFlex="15%">
+		<div id="datos-espera-de-atencion" fxLayout="column" fxLayoutAlign="start start" fxFlex="15%">
 			<app-iconed-text class="grey" icon="schedule" [text]="virtualConsultation.waitingTime"></app-iconed-text>
+			<span class="grey">{{virtualConsultation.availableProfessionalsAmount}} {{'telemedicina.requests.PROFESSIONAL_ATTENDING' | translate}}</span>
 		</div>
 
 		<div fxFlex="5%">

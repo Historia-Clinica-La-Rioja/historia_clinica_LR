@@ -66,5 +66,10 @@ export class VirtualConstultationService {
 		const url = `${this.BASE_URL}/institution/${institutionId}/responsible-professional-availability`;
 		return this.http.get<boolean>(url)
 	}
+
+	getVirtualConsultationsByInstitution(institutionId: number): Observable<VirtualConsultationDto[]>{
+		const url = `${this.BASE_URL}/institution/${institutionId}`;
+		return this.http.get<VirtualConsultationDto[]>(url)
+	}
 }
 

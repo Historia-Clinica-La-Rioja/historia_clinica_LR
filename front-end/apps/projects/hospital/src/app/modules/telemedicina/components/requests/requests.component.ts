@@ -34,7 +34,7 @@ export class RequestsComponent implements OnInit {
 	 }
 
 	ngOnInit(): void {
-		this.virtualConsultationsSubscription = this.virtualConsultationsFacadeService.virtualConsultations$
+		this.virtualConsultationsSubscription = this.virtualConsultationsFacadeService.virtualConsultationsRequest$
 			.subscribe(virtualConsultations =>
 				this.virtualConsultations = virtualConsultations.map(this.toVCToBeShown))
 	}

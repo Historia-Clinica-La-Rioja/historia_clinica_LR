@@ -10,6 +10,7 @@
 			"SUBTITLE":"Listado de solicitudes para atención online",
 			"BUTTON_ADD":"+ Agregar nuevo paciente",
 			"TITLE_ADD_REQUEST":"Solicitud de consulta online",
+			"PROFESSIONAL_ATTENDING": "Profesionales atendiendo",
 			"form": {
 				"PATIENT":"Paciente",
 				"CARELINE": "Línea de cuidado",
