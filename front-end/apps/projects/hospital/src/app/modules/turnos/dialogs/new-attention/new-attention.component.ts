@@ -74,6 +74,8 @@ export class NewAttentionComponent implements OnInit {
 		const medicalAttentionType = this.form.controls.medicalAttentionType.value;
 
 		if (medicalAttentionType.description === MEDICAL_ATTENTION.SPONTANEOUS) {
+			this.form.controls.availableForBooking.setValue(false);
+			this.form.controls.protectedAppointmentsAllowed.setValue(false);
 			this.form.controls.overturnCount.disable();
 			this.form.controls.availableForBooking.disable();
 		} else {
