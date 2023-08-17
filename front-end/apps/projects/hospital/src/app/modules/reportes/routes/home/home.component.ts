@@ -59,6 +59,8 @@ export class HomeComponent implements OnInit {
 
 	cubeReportData: UIComponentDto;
 
+	isLoadingRequestReport = false;
+
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly healthcareProfessionalService: HealthcareProfessionalByInstitutionService,
@@ -235,6 +237,7 @@ export class HomeComponent implements OnInit {
 	generateReport() {
 		this.submitted = true;
 		if (this.form.valid) {
+			this.isLoadingRequestReport = true;
 			const params = {
 				startDate: this.form.controls.startDate.value,
 				endDate: this.form.controls.endDate.value,
@@ -247,19 +250,28 @@ export class HomeComponent implements OnInit {
 			const reportId = this.form.controls.reportType.value;
 			switch (reportId) {
 				case 1:
-					this.reportsService.getMonthlyReport(params, `${this.REPORT_TYPES[0].description}.xls`).subscribe();
+					this.reportsService.getMonthlyReport(params, `${this.REPORT_TYPES[0].description}.xls`).subscribe(() => this.isLoadingRequestReport = false);
 					break;
 				case 2:
-					this.reportsService.getOutpatientSummaryReport(params, `${this.REPORT_TYPES[1].description}.xls`).subscribe();
+					this.reportsService.getOutpatientSummaryReport(params, `${this.REPORT_TYPES[1].description}.xls`).subscribe(() => this.isLoadingRequestReport = false);
 					break;
 				case 3:
-					this.reportsService.getDiabetesReport().subscribe(result => this.cubeReportData = result);
+					this.reportsService.getDiabetesReport().subscribe(result => {
+						this.cubeReportData = result
+						this.isLoadingRequestReport = false
+					});
 					break;
 				case 4:
-					this.reportsService.getHypertensionReport().subscribe(result => this.cubeReportData = result);
+					this.reportsService.getHypertensionReport().subscribe(result => {
+						this.cubeReportData = result
+						this.isLoadingRequestReport = false
+					});
 					break;
 				case 5:
-					this.reportsService.getEpidemiologicalWeekReport().subscribe(result => this.cubeReportData = result);
+					this.reportsService.getEpidemiologicalWeekReport().subscribe(result => {
+						this.cubeReportData = result
+						this.isLoadingRequestReport = false
+					});
 					break;
 				default:
 			}

@@ -133,8 +133,11 @@
 			</div>
 
 		</div>
-			<div fxLayout="row" fxLayoutAlign="end" style="margin-top: 20px">
-				<button class="uppercase" mat-raised-button color="primary" (click)="generateReport()">
+			<div *ngIf="isLoadingRequestReport" class="padding-top">
+				<mat-progress-bar class="progress-bar" mode="indeterminate"></mat-progress-bar>
+			</div>
+			<div id="generate-report" fxLayout="row" fxLayoutAlign="end" class="padding-top">
+				<button class="uppercase" mat-raised-button color="primary" (click)="generateReport()" [disabled]="isLoadingRequestReport">
 					<span [translate]="'reportes.form.SUBMIT'"></span>
 				</button>
 			</div>
