@@ -149,7 +149,7 @@
 				<div fxLayout="column" *ngIf="showPractices" class="practices-section">
 					<mat-label [translate]="'turnos.agenda-setup.PRACTICE'"></mat-label>
 					<app-chips-autocomplete [placeholder]="'turnos.agenda-setup.PRACTICE_PLACEHOLDER' | translate"
-						[options]="practicesOptions" (selectionChange)="setDiaryPracticesAndGetCarelines($event)">
+						[options]="practicesOptions" [externalSetValues]="practicesSelected" (selectionChange)="setDiaryPracticesAndGetCarelines($event)">
 					</app-chips-autocomplete>
 
 					<mat-error *ngIf="hasError(form, 'required', 'practices')" [translate]="'forms.REQUIRED'">

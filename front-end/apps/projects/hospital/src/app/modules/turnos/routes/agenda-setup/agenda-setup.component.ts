@@ -142,7 +142,7 @@ export class AgendaSetupComponent implements OnInit {
 			protectedAppointmentsPercentage: new UntypedFormControl({ value: 0, disabled: true }, [Validators.pattern(PATTERN), Validators.max(MAX_INPUT)]),
 			careLines: new UntypedFormControl([null]),
 			diaryType: new UntypedFormControl(this.CONSULTATION),
-			practices: new UntypedFormControl([null])
+			practices: new UntypedFormControl([])
 		});
 
 		this.form.controls.appointmentDuration.valueChanges
@@ -292,8 +292,10 @@ export class AgendaSetupComponent implements OnInit {
 					this.form.controls.healthcareProfessionalSpecialtyId.markAsTouched();
 					if (this.professionalSpecialties.find(specialty => specialty.id === diary.clinicalSpecialtyId)) {
 						this.form.controls.healthcareProfessionalSpecialtyId.setValue(diary.clinicalSpecialtyId);
+						if (!diary.practicesInfo.length)
+							this.setCarelinesBySpecialty();
 					}
-				})
+				});
 		});
 
 		this.form.controls.healthcareProfessionalId.setValue(diary.healthcareProfessionalId);
@@ -331,6 +333,15 @@ export class AgendaSetupComponent implements OnInit {
 		this.setSpecialityId(diary.clinicalSpecialtyId);
 		this.setAlias(diary.alias);
 		diary.predecessorProfessionalId ? this.setHierarchicalUnits(diary.predecessorProfessionalId, diary) : this.setHierarchicalUnits(diary.healthcareProfessionalId, diary);
+
+		this.form.controls.diaryType.disable();
+
+		if (diary.practicesInfo.length > 0) {
+			this.form.controls.diaryType.setValue(this.PRACTICE);
+			this.practicesSelected = diary.practicesInfo.map(p => { return this.toChipsOptions(p) });
+			this.getCarelinesByPractices(diary.practicesInfo.map(p => { return p.id }));
+		}
+
 	}
 
 	private setHierarchicalUnitsByName(name: string) {
@@ -485,7 +496,7 @@ export class AgendaSetupComponent implements OnInit {
 			diaryAssociatedProfessionalsId: this.form.value.otherProfessionals.map(professional => professional.healthcareProfessionalId),
 			careLines: this.careLinesSelected.map(careLine => { return careLine.id }),
 			protectedAppointmentsPercentage: percentage ? percentage : 0,
-			practicesId: this.form.value.practices
+			practicesId: this.form.controls.practices.value
 		};
 	}
 
@@ -654,7 +665,7 @@ export class AgendaSetupComponent implements OnInit {
 
 	setPractices() {
 		this.snomedRelatedGroupService.getPractices().subscribe(s => {
-			this.practices = s.map(p => { return { id: p.snomedId, sctid: p.snomedSctid, pt: p.snomedPt} });
+			this.practices = s.map(p => { return { id: p.snomedId, sctid: p.snomedSctid, pt: p.snomedPt } });
 			this.practicesOptions = this.practices.map(p => {
 				return this.toChipsOptions(p)
 			});
@@ -667,7 +678,7 @@ export class AgendaSetupComponent implements OnInit {
 		this.getCarelinesByPractices(result);
 	}
 
-	getCarelinesByPractices(practicesId: number[]){
+	getCarelinesByPractices(practicesId: number[]) {
 		if (practicesId.length) {
 			this.diaryCareLine.getPossibleCareLinesForDiaryByPractices(practicesId).subscribe(carelines => {
 				this.careLines = carelines;
@@ -713,6 +724,7 @@ export class AgendaSetupComponent implements OnInit {
 		this.practices = [];
 		this.practicesOptions = [];
 		this.practicesSelected = [];
+		this.form.controls.practices.setValue([]);
 	}
 
 	private validationsConsultation() {
