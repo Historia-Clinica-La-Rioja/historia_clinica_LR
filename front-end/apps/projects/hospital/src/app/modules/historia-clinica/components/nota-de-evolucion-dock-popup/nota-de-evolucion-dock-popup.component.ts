@@ -70,6 +70,7 @@ export class NotaDeEvolucionDockPopupComponent {
 	}
 
 	save() {
+		this.disableConfirmButton = true;
 		const value = this.form.value;
 		const allDiagnosis = this.getDiagnosis(value.diagnosis);
 		const medications = this.mapMedications(value.medications?.data);
@@ -100,6 +101,7 @@ export class NotaDeEvolucionDockPopupComponent {
 			},
 			error => {
 				this.snackBarService.showError(error.text)
+				this.disableConfirmButton = false;
 			}
 		);
 	}
