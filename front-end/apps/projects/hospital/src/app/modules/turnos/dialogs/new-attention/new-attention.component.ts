@@ -37,7 +37,6 @@ export class NewAttentionComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly diaryOpeningHoursService: DiaryOpeningHoursService,
 	) {
-
 		this.featureFlagService.isActive(AppFeature.BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS).subscribe(isEnabled => this.isEnableOnlineAppointments = isEnabled);
 		if (this.data.isEdit && this.data?.openingHoursId) {
 			this.diaryOpeningHoursService.existsBookeddAppointmentInOpeningHours(this.data?.openingHoursId).subscribe(e => this.existsBookeddAppointment = e);
@@ -47,8 +46,6 @@ export class NewAttentionComponent implements OnInit {
 
 
 	ngOnInit(): void {
-		this.availbleForCareLine = this.data?.protectedAppointmentsAllowed;
-		this.availableForBooking = this.data?.availableForBooking;
 		this.medicalConsultationMasterdataService.getMedicalAttention()
 			.subscribe(medicalAttentionTypes => {
 				this.medicalAttentionTypes = medicalAttentionTypes;
@@ -62,10 +59,11 @@ export class NewAttentionComponent implements OnInit {
 			overturnCount: [this.data.overturnCount, Validators.min(0)],
 			medicalAttentionType: [null, Validators.required],
 			availableForBooking: [this.data?.availableForBooking],
-			availbleForCareLine: [this.data?.protectedAppointmentsAllowed],
+			protectedAppointmentsAllowed: [this.data?.protectedAppointmentsAllowed],
 		});
 
 		this.availableForBooking = this.data.availableForBooking;
+		this.availbleForCareLine = this.data?.hasSelectedLinesOfCare ? this.data.protectedAppointmentsAllowed : false;
 
 		this.possibleStartingScheduleHours = this.data.possibleScheduleHours.slice(0, this.data.possibleScheduleHours.length - 1);
 		this.filterAppointmentEndingHours();
@@ -87,7 +85,7 @@ export class NewAttentionComponent implements OnInit {
 	submit() {
 		if (this.form.valid) {
 			this.form.value.availableForBooking = this.availableForBooking;
-			this.form.value.availbleForCareLine = this.availbleForCareLine;
+			this.form.value.protectedAppointmentsAllowed = this.availbleForCareLine;
 			this.dialogRef.close(this.form.value);
 		}
 	}
