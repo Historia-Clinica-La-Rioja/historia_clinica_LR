@@ -193,7 +193,7 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 	}
 
 	getAliasAndSpecialtyText(alias: string, clinicalSpecialtyName: string): string {
-		return `${alias} (${clinicalSpecialtyName})`;
+		return clinicalSpecialtyName ? `${alias} (${clinicalSpecialtyName})` : `${alias}`;
 	}
 
 }

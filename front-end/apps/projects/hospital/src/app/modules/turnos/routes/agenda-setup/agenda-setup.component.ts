@@ -23,6 +23,7 @@ import {
 	HierarchicalUnitDto,
 	OccupationDto,
 	ProfessionalDto,
+	SnomedDto
 } from '@api-rest/api-model';
 import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
 import { DiaryService } from '@api-rest/services/diary.service';
@@ -33,6 +34,8 @@ import { SpecialtyService } from '@api-rest/services/specialty.service';
 import { HierarchicalUnitsService } from '@api-rest/services/hierarchical-units.service';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { DiaryCareLineService } from '@api-rest/services/diary-care-line.service';
+import { SnomedRelatedGroupService } from '@api-rest/services/snomed-related-group.service';
+import { ChipsOption } from '@turnos/components/chips-autocomplete/chips-autocomplete.component';
 
 const ROUTE_APPOINTMENT = 'turnos';
 const ROUTE_AGENDAS = "agenda";
@@ -85,6 +88,11 @@ export class AgendaSetupComponent implements OnInit {
 	lineOfCareAndPercentageOfProtectedAppointmentsValid = true;
 	loadSavedData = false;
 	temporary = false;
+	practices: SnomedDto[];
+	practicesOptions: ChipsOption<SnomedDto>[];
+	practicesSelected: ChipsOption<SnomedDto>[] = [];
+	showPractices = false;
+
 	constructor(
 		private readonly el: ElementRef,
 		private readonly sectorService: SectorService,
@@ -104,6 +112,7 @@ export class AgendaSetupComponent implements OnInit {
 		private readonly hierarchicalUnitsService: HierarchicalUnitsService,
 		private readonly professionalService: HealthcareProfessionalService,
 		private readonly diaryCareLine: DiaryCareLineService,
+		private readonly snomedRelatedGroupService: SnomedRelatedGroupService,
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY, snackBarService);
@@ -131,7 +140,9 @@ export class AgendaSetupComponent implements OnInit {
 			alias: new UntypedFormControl(null, [Validators.nullValidator]),
 			otherProfessionals: new UntypedFormArray([], [this.otherPossibleProfessionals()]),
 			protectedAppointmentsPercentage: new UntypedFormControl({ value: 0, disabled: true }, [Validators.pattern(PATTERN), Validators.max(MAX_INPUT)]),
-			careLines: new UntypedFormControl([null])
+			careLines: new UntypedFormControl([null]),
+			diaryType: new UntypedFormControl(this.CONSULTATION),
+			practices: new UntypedFormControl([null])
 		});
 
 		this.form.controls.appointmentDuration.valueChanges
@@ -216,6 +227,30 @@ export class AgendaSetupComponent implements OnInit {
 			this.professionalsWithoutResponsibility = data
 		});
 
+		if (!this.editMode) {
+
+			this.form.controls.diaryType.valueChanges.subscribe(diaryType => {
+				switch (diaryType) {
+					case this.CONSULTATION: {
+						this.validationsConsultation();
+						if (this.form.value.healthcareProfessionalSpecialtyId)
+							this.setCarelinesBySpecialty();
+						this.showPractices = false;
+						this.clearPractices();
+						this.clearCareLines();
+						break;
+					}
+					case this.PRACTICE: {
+						this.setPractices();
+						this.validationsPractices();
+						this.clearCareLines();
+						this.showPractices = true;
+						break;
+					}
+				}
+			});
+		}
+
 	}
 
 	get careLinesAssociated(): UntypedFormControl {
@@ -257,9 +292,7 @@ export class AgendaSetupComponent implements OnInit {
 					this.form.controls.healthcareProfessionalSpecialtyId.markAsTouched();
 					if (this.professionalSpecialties.find(specialty => specialty.id === diary.clinicalSpecialtyId)) {
 						this.form.controls.healthcareProfessionalSpecialtyId.setValue(diary.clinicalSpecialtyId);
-						this.getCareLines();
 					}
-
 				})
 		});
 
@@ -451,7 +484,8 @@ export class AgendaSetupComponent implements OnInit {
 			alias: this.form.value.alias === "" ? null : this.form.value.alias,
 			diaryAssociatedProfessionalsId: this.form.value.otherProfessionals.map(professional => professional.healthcareProfessionalId),
 			careLines: this.careLinesSelected.map(careLine => { return careLine.id }),
-			protectedAppointmentsPercentage: percentage ? percentage : 0
+			protectedAppointmentsPercentage: percentage ? percentage : 0,
+			practicesId: this.form.value.practices
 		};
 	}
 
@@ -494,7 +528,7 @@ export class AgendaSetupComponent implements OnInit {
 
 			control.setValue(this.hierarchicalUnits[0].id);
 			control.updateValueAndValidity();
-		  }
+		}
 	}
 
 
@@ -572,16 +606,18 @@ export class AgendaSetupComponent implements OnInit {
 		return this.professionals?.filter(professional => professional.id !== this.form.controls.healthcareProfessionalId.value);
 	}
 
-	getCareLines() {
-		const specialtyId = this.form.get("healthcareProfessionalSpecialtyId").value;
-		this.diaryCareLine.getPossibleCareLinesForDiary(specialtyId).subscribe(careLines => {
-			this.careLines = careLines;
-			this.checkCareLinesSelected();
-		});
-		if (specialtyId && specialtyId !== this.specialityId) {
-			this.form.controls.alias.setValue('');
-		} else {
-			this.form.controls.alias.setValue(this.alias);
+	setCarelinesBySpecialty() {
+		if (this.form.controls.diaryType.value === this.CONSULTATION) {
+			const specialtyId = this.form.get("healthcareProfessionalSpecialtyId").value;
+			this.diaryCareLine.getPossibleCareLinesForDiary(specialtyId).subscribe(careLines => {
+				this.careLines = careLines;
+				this.checkCareLinesSelected();
+			});
+			if (specialtyId && specialtyId !== this.specialityId) {
+				this.form.controls.alias.setValue('');
+			} else {
+				this.form.controls.alias.setValue(this.alias);
+			}
 		}
 	}
 
@@ -616,6 +652,30 @@ export class AgendaSetupComponent implements OnInit {
 		this.validateLineOfCareAndPercentageOfProtectedAppointments();
 	}
 
+	setPractices() {
+		this.snomedRelatedGroupService.getPractices().subscribe(s => {
+			this.practices = s.map(p => { return { id: p.snomedId, sctid: p.snomedSctid, pt: p.snomedPt} });
+			this.practicesOptions = this.practices.map(p => {
+				return this.toChipsOptions(p)
+			});
+		});
+	}
+
+	setDiaryPracticesAndGetCarelines(selected: ChipsOption<SnomedDto>[]) {
+		const result: number[] = selected.map(s => s.value.id);
+		this.form.controls.practices.setValue(result);
+		this.getCarelinesByPractices(result);
+	}
+
+	getCarelinesByPractices(practicesId: number[]){
+		if (practicesId.length) {
+			this.diaryCareLine.getPossibleCareLinesForDiaryByPractices(practicesId).subscribe(carelines => {
+				this.careLines = carelines;
+				this.checkCareLinesSelected();
+			});
+		}
+	}
+
 	private checkCareLinesSelected() {
 		const careLinesToSelect: CareLineDto[] = [];
 		this.careLinesSelected.forEach(careLineSelected => {
@@ -638,5 +698,35 @@ export class AgendaSetupComponent implements OnInit {
 		this.form.controls.careLines.reset();
 		this.form.controls.protectedAppointmentsPercentage.removeValidators([Validators.required]);
 		this.form.controls.protectedAppointmentsPercentage.updateValueAndValidity();
+	}
+
+	private toChipsOptions(p: SnomedDto): ChipsOption<SnomedDto> {
+		return { value: p, compareValue: p.pt, identifier: p.id }
+	}
+
+	private clearCareLines() {
+		this.careLines = [];
+		this.careLinesSelected = [];
+	}
+
+	private clearPractices() {
+		this.practices = [];
+		this.practicesOptions = [];
+		this.practicesSelected = [];
+	}
+
+	private validationsConsultation() {
+		this.form.controls.practices.removeValidators([Validators.required]);
+		this.form.controls.practices.updateValueAndValidity();
+		this.form.controls.practices.reset();
+		this.form.controls.healthcareProfessionalSpecialtyId.addValidators([Validators.required]);
+		this.form.controls.healthcareProfessionalSpecialtyId.updateValueAndValidity();
+	}
+
+	private validationsPractices() {
+		this.form.controls.practices.addValidators([Validators.required]);
+		this.form.controls.practices.updateValueAndValidity();
+		this.form.controls.healthcareProfessionalSpecialtyId.removeValidators([Validators.required]);
+		this.form.controls.healthcareProfessionalSpecialtyId.updateValueAndValidity();
 	}
 }

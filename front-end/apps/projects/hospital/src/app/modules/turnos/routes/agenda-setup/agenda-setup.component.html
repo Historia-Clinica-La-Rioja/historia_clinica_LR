@@ -109,7 +109,7 @@
 				<div fxLayout="column" fxLayoutGap="10px">
 					<mat-label fxLayout="column" [translate]="'turnos.agenda-setup.DIARY_TYPE'"></mat-label>
 				
-					<mat-radio-group id="diaryType" fxLayout="row" fxLayoutGap="40px" [value]="CONSULTATION">
+					<mat-radio-group id="diaryType" fxLayout="row" fxLayoutGap="40px" formControlName="diaryType">
 						<mat-radio-button color="primary" [value]="CONSULTATION">
 							{{'turnos.agenda-setup.CONSULTATION' | translate}}
 						</mat-radio-button>
@@ -122,12 +122,15 @@
 
 				<div style="padding-top: 20px" fxLayout="row">
 					<div class="professional-form-sector" fxLayout="column">
-						<span [translate]="'turnos.home.SPECIALTY_SEARCH'"></span>
+						<div fxLayout="row" fxLayoutGap="3px">
+							<span [translate]="'turnos.home.SPECIALTY_SEARCH'"></span>
+							<span *ngIf="showPractices">{{ 'turnos.search-appointments-in-care-network.OPTIONAL' | translate}}</span>
+						</div>
 						<mat-form-field class="mat-form-field-on-div" appearance="outline">
 							<mat-select id="healthcareProfessionalSpecialtyId" name="healthcareProfessionalSpecialtyId"
 										formControlName="healthcareProfessionalSpecialtyId"
 										placeholder="{{'pacientes.form.SELECT' | translate}}"
-										(selectionChange)="getCareLines()">
+										(selectionChange)="setCarelinesBySpecialty()">
 								<mat-option *ngFor="let specialty of professionalSpecialties" [value]="specialty.id">
 									<span class="mat-body">{{ specialty.name }}</span>
 								</mat-option>
@@ -141,6 +144,16 @@
 							<input matInput formControlName="alias" type="text" [placeholder]="'turnos.agenda-setup.ALIAS_HINT_TEXT' | translate">
 						</mat-form-field>
 					</div>
+				</div>
+
+				<div fxLayout="column" *ngIf="showPractices" class="practices-section">
+					<mat-label [translate]="'turnos.agenda-setup.PRACTICE'"></mat-label>
+					<app-chips-autocomplete [placeholder]="'turnos.agenda-setup.PRACTICE_PLACEHOLDER' | translate"
+						[options]="practicesOptions" (selectionChange)="setDiaryPracticesAndGetCarelines($event)">
+					</app-chips-autocomplete>
+
+					<mat-error *ngIf="hasError(form, 'required', 'practices')" [translate]="'forms.REQUIRED'">
+					</mat-error>
 				</div>
 
 				<div fxLayout="column">

@@ -87,6 +87,7 @@
 			"DIARY_TYPE": "Tipo de agenda",
 			"CONSULTATION": "Consulta",
 			"PRACTICE": "Práctica/Procedimiento",
+			"PRACTICE_PLACEHOLDER": "Seleccionar prácticas",
 			"dialog": {
 				"TITLE": "Nueva atención",
 				"EDIT": "Editar atención",
