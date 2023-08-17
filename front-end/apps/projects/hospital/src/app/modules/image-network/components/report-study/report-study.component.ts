@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/cor
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { AppFeature, ConclusionDto, InformerObservationDto } from '@api-rest/api-model';
+import { AppFeature, ConclusionDto, InformerObservationDto, LoggedUserDto } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { SnvsMasterDataService } from '@api-rest/services/snvs-masterdata.service';
 import { StudyAppointmentReportService } from '@api-rest/services/study-appointment-report.service';
@@ -15,6 +15,11 @@ import { StudyAppointment } from '../../models/models';
 import { toStudyAppointment } from '../../utils/mapper.utils';
 import { AddConclusionFormComponent } from '../../dialogs/add-conclusion-form/add-conclusion-form.component';
 import { ConceptTypeaheadSearchComponent } from '@historia-clinica/components/concept-typeahead-search/concept-typeahead-search.component';
+import { SaveTemplateComponent, TemplateData } from '../../dialogs/save-template/save-template.component';
+import { AccountService } from '@api-rest/services/account.service';
+import { getParam } from '@historia-clinica/modules/ambulatoria/modules/estudio/utils/utils';
+import { ContextService } from '@core/services/context.service';
+// import { UserInfo } from '@presentation/components/user-badge/user-badge.component';
 
 @Component({
 	selector: 'app-report-study',
@@ -36,6 +41,8 @@ export class ReportStudyComponent implements OnInit {
 	severityTypes: any[];
 	textEditorLength = 0;
 	@Output() update = new EventEmitter<Observable<StudyAppointment>>;
+	userInfo: LoggedUserDto
+	institutionId = Number(getParam(this.route.snapshot,'id'))
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -47,6 +54,8 @@ export class ReportStudyComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
+		private readonly accountService: AccountService,
+		private readonly contextService: ContextService,
 	) {
 		this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snvsMasterDataService, this.dialog);
 	}
@@ -67,12 +76,15 @@ export class ReportStudyComponent implements OnInit {
 		});
 
 		this.ambulatoryConsultationProblemsService.setShowInitialDate(false);
-		this.ambulatoryConsultationProblemsService.problems$.subscribe(p => this.problems = p);
-
+		/* this.ambulatoryConsultationProblemsService.problems$.subscribe(p => this.problems = p);
+ */
 		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
 			this.severityTypes = healthConditionSeverities;
 			this.ambulatoryConsultationProblemsService.setSeverityTypes(healthConditionSeverities);
 		});
+
+		this.accountService.getInfo().pipe(take(1)).subscribe(user => this.userInfo = user);
+
 	}
 
 	addProblem() {
@@ -195,6 +207,21 @@ export class ReportStudyComponent implements OnInit {
 	private error() {
 		this.snackBarService.showError('image-network.worklist.details_study.SNACKBAR_ERROR');
 		this.disableContinueEditing = false;
+	}
+
+	openSaveTemplate() {
+		const data: TemplateData = {
+			text: this.form.value,
+			userId: this.userInfo.id,
+			institutionId: this.contextService.institutionId,
+		}
+		this.dialog.open(SaveTemplateComponent, {
+			data,
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+			restoreFocus: false
+		});
 	}
 
 }

@@ -25,9 +25,25 @@
         </button>
     </div>
 
-    <div fxLayout="row" fxLayoutAlign="start center" style="margin-top: 2rem;">
+    <div fxLayout="row" fxLayoutAlign="space-between center" class="margin">
         <span class="bold">{{ 'image-network.worklist.details_study.OBSERVATIONS' | translate }}</span>
+        <div fxLayout="row" fxLayoutAlign="center center">
+            <span mat-button class="bold template-label"  color="primary">
+                {{ 'image-network.worklist.details_study.TEMPLATE' | translate }}
+            </span>
+            <button  id="actions-template-button" [disabled]="!form.valid" color="primary" mat-icon-button [matMenuTriggerFor]="menu" >
+                <mat-icon>arrow_drop_down</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <ng-container >
+                    <button mat-menu-item (click)="openSaveTemplate()">
+                        <span [translate]="'image-network.worklist.details_study.SAVE_TEMPLATE_TITLE'"></span>
+                    </button>
+                </ng-container>
+            </mat-menu>
+        </div>
     </div>
+
     <div fxLayout="column" fxLayoutGap="30px" style="margin-top: 0.7rem;">
         <app-rich-text-editor [formParent]="form" [controlParent]="form.controls.observations"></app-rich-text-editor>
         <mat-error *ngIf="submitted && (form.hasError('required','observations') || !textEditorLength)"
@@ -51,33 +67,6 @@
 
 
 <ng-template #showInformerObservations>
-    <div fxLayout="column" *ngIf="study.info.informerObservations">
-        <div class="content">
-            <div *ngFor="let problem of study.info.informerObservations.conclusions">
-                <span>{{problem.snomed.pt}}</span>
-            </div>
-        </div>
-
-        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-            <span class="bold">{{ 'image-network.worklist.details_study.OBSERVATIONS' | translate }}</span>
-        </div>
-
-
-        <div class="observations" [innerHtml]="study.info.informerObservations.evolutionNote"></div>
-        <div class="grey" fxLayout="row" fxLayoutAlign="space-between">
-            <span>{{study.info.informerObservations.createdBy}}</span>
-            <div fxLayout="row" fxLayoutGap="10px">
-                <span class="grey" *ngIf="!study.info.informerObservations.confirmed">
-                    {{ 'image-network.worklist.details_study.DRAFT_REPORT' | translate }}
-                </span>
-                <span>{{ study.info.informerObservations.actionTime | viewDateDto: 'localdatetime' | date : 'short'}} hs</span>
-            </div>
-        </div>
-        <div fxLayout="row" fxLayoutGap="30px" *ngIf="!study.info.informerObservations.confirmed">
-            <button id="still_editing" mat-stroked-button class="button" color="primary"
-                (click)="enabledEditing = true" [disabled]="disableContinueEditing">
-                <span>{{ 'image-network.worklist.details_study.CONTINUE_EDITING' | translate | uppercase }}</span>
-            </button>
-        </div>
-    </div>
+    <app-view-informer-observations [informerObservations]="study.info.informerObservations" [disableEditing]="disableContinueEditing" (updateEditing)="enabledEditing = true">
+    </app-view-informer-observations>
 </ng-template>

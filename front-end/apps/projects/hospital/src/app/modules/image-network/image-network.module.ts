@@ -16,6 +16,8 @@ import { DeriveReportComponent } from './dialogs/derive-report/derive-report.com
 import { AddConclusionFormComponent } from './dialogs/add-conclusion-form/add-conclusion-form.component';
 import { ViewReportComponent } from './components/view-report/view-report.component';
 import { WorklistFiltersComponent } from './components/worklist-filters/worklist-filters.component';
+import { SaveTemplateComponent } from './dialogs/save-template/save-template.component';
+import { ViewInformerObservationsComponent } from './components/view-informer-observations/view-informer-observations.component';
 
 @NgModule({
     declarations: [
@@ -31,7 +33,9 @@ import { WorklistFiltersComponent } from './components/worklist-filters/worklist
         DeriveReportComponent,
         AddConclusionFormComponent,
         ViewReportComponent,
-        WorklistFiltersComponent
+        WorklistFiltersComponent,
+        SaveTemplateComponent,
+        ViewInformerObservationsComponent
     ],
     imports: [
         CommonModule,

@@ -3,11 +3,6 @@
     color:  #525659;
 }
 
-.observations {
-    padding: 15px 30px;
-	word-wrap: break-word;
-}
-
 .bold {
     font-weight: bold;
 }
@@ -16,12 +11,15 @@
     margin-top: 1rem;
 }
 
-.content {
-    padding: 15px 30px;
-    word-wrap: break-word;
-}
-
 .add-btn {
     align-self: flex-start;
     padding: 0 !important;
+}
+
+.template-label {
+    color: #2687c5
+}
+
+.margin {
+    margin-top: 2rem;
 }
