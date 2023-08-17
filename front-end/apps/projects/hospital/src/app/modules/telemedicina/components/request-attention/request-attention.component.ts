@@ -13,7 +13,8 @@ import { InProgressCallComponent } from '../in-progress-call/in-progress-call.co
 import { EntryCallStompService } from '../../../api-web-socket/entry-call-stomp.service';
 import { RejectedCallComponent } from '@institucion/components/rejected-call/rejected-call.component';
 import { toCallDetails } from '@institucion/components/entry-call-renderer/entry-call-renderer.component';
-
+import { ContextService } from '@core/services/context.service';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-request-attention',
@@ -33,7 +34,8 @@ export class RequestAttentionComponent implements OnInit {
 		private virtualConsultationService: VirtualConstultationService,
 		private jitsiCallService: JitsiCallService,
 		private readonly dialog: MatDialog,
-		private readonly callStatesService: EntryCallStompService
+		private readonly callStatesService: EntryCallStompService,
+		private contextService: ContextService, private router: Router
 	) { }
 
 
@@ -133,7 +135,12 @@ export class RequestAttentionComponent implements OnInit {
 		this.toggleEnabled = availability;
 	}
 
-	private toVCToBeShown(vc: VirtualConsultationDto): VirtualConsultation {
+	goToClinicalHistory(patientId:number){
+		const route = 'institucion/' + this.contextService.institutionId + '/ambulatoria/paciente/' + patientId;
+		this.router.navigate([route]);
+	}
+
+	private toVCToBeShown(vc: VirtualConsultationDto) {
 		return {
 			...vc,
 			statusLabel: statusLabel[vc.status],

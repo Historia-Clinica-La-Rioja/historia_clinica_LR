@@ -1,63 +1,20 @@
-<div fxLayout="column" fxLayoutGap="1em" fxLayoutAlign="end end">
-
-	<app-toggle-avaiability (availabilityChanged)="availabilityChanged($event)" label="Atención online activada"
-		[initialValue]="initialProfessionalStatus"></app-toggle-avaiability>
-
-	<div fxLayout="column" fxLayoutGap="0.1125em" style="width: 100%;">
-		<div *ngFor="let virtualConsultation of virtualConsultations">
-			<mat-card fxLayout="row" fxLayoutAlign="space-between space-between">
-
-				<div id="datos-paciente">
-					<span>{{virtualConsultation.patientData.lastName}} {{virtualConsultation.patientData.name}}</span>
-					<div>
-						<span>{{virtualConsultation.patientData.gender}} </span>
-						<span>{{virtualConsultation.patientData.age}} años</span>
-					</div>
-					<span>Ver Historia Clinica</span>
-				</div>
-
-				<div id="datos-paciente">
-
-					<app-iconed-text icon="home" [text]="virtualConsultation.problem"></app-iconed-text>
-					<app-iconed-text icon="home" [text]="virtualConsultation.motive"></app-iconed-text>
-
-				</div>
-				<div id="datos-paciente">
-					<app-iconed-text icon="medical_services"
-						[text]="virtualConsultation.clinicalSpecialty"></app-iconed-text>
-					<app-iconed-text icon="home" [text]="virtualConsultation.careLine"></app-iconed-text>
-					<app-iconed-text icon="domain" [text]="virtualConsultation.institutionData.name"></app-iconed-text>
-				</div>
-				<div id="datos-paciente">
-					<app-priority [priority]="virtualConsultation.priorityLabel"></app-priority>
-					<app-iconed-text icon="schedule" [text]="virtualConsultation.waitingTime"></app-iconed-text>
-				</div>
-
-				<app-colored-label [description]="virtualConsultation.statusLabel.description"
-					[color]="virtualConsultation.statusLabel.color"></app-colored-label>
-
-				<span>{{virtualConsultation.responsibleData.available ? 'Disponible' : 'No Disponible'}}</span>
-				<button mat-raised-button [disabled]="!virtualConsultation.responsibleData.available || !toggleEnabled"
-					color="primary" (click)="call(virtualConsultation)">Tomar Turno</button>
-
-				<button mat-icon-button [matMenuTriggerFor]="menu"
-					*ngIf="virtualConsultation.status !== virtualConsultatiosStatus.FINISHED && virtualConsultation.status !== virtualConsultatiosStatus.CANCELED ">
-					<mat-icon>more_vert</mat-icon>
-				</button>
-				<mat-menu #menu="matMenu">
-					<button mat-menu-item *ngIf="virtualConsultation.status === virtualConsultatiosStatus.IN_PROGRESS"
-						(click)="confirm(virtualConsultation.id)">
-						<span>Confirmar atención</span>
-					</button>
-					<button mat-menu-item
-						*ngIf="virtualConsultation.status === virtualConsultatiosStatus.IN_PROGRESS || virtualConsultation.status === virtualConsultatiosStatus.PENDING"
-						(click)="cancel(virtualConsultation.id)">
-						<span>Cancelar</span>
-					</button>
-				</mat-menu>
-			</mat-card>
-
-		</div>
+<section>
+	<h3 class="page-title">{{'telemedicina.attention.SUBTITLE' | translate}}</h3>
+	<div fxLayout="column" fxLayoutGap="1em" fxLayoutAlign="end end">
+		<app-toggle-avaiability (availabilityChanged)="availabilityChanged($event)"
+			label="Atención online activada"></app-toggle-avaiability>
 	</div>
-
-</div>
+</section>
+<section>
+	<div *ngFor="let virtualConsultation of virtualConsultations">
+		<app-request-info-card [virtualConsultation]="virtualConsultation">
+			<div view-clinical-history>
+				<a (click)="goToClinicalHistory(virtualConsultation.patientData.id)" class="primary">{{'pacientes.profile.SEE_CLINICAL_HISTORY' | translate}}</a>
+			</div>
+			<div actions>
+				<button mat-raised-button [disabled]="!virtualConsultation.responsibleData.available || !toggleEnabled" color="primary"
+					(click)="joinMeet(virtualConsultation)">{{'telemedicina.attention.BUTTON_TAKE_TURN' | translate}}</button>
+			</div>
+		</app-request-info-card>
+	</div>
+</section>

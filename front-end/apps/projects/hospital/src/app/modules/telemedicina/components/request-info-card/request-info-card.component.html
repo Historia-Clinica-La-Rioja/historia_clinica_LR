@@ -7,6 +7,7 @@
 				<span>{{virtualConsultation.patientData.gender}} </span>
 				<span>{{virtualConsultation.patientData.age}} años</span>
 			</div>
+			<ng-content select="[view-clinical-history]"></ng-content>
 		</div>
 
 		<div id="datos-motivo" fxLayout="column" fxLayoutAlign="center start" fxFlex="20%">

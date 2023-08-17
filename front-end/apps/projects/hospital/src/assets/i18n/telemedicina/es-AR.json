@@ -19,6 +19,9 @@
 				"REASONS_CONSULTATION": "Motivos de consulta",
 				"PROBLEM": "Problema (Opcional)"
 			}
+		},
+		"attention": {
+			"SUBTITLE":"Listado de espera para atención online"
 		}
 	}
 }
