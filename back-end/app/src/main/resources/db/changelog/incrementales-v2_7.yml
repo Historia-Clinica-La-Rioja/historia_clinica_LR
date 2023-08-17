@@ -34,3 +34,12 @@ databaseChangeLog:
                 DELETE FROM clinical_specialty_mandatory_medical_practice c
                 WHERE id IN (SELECT old_id FROM id_mapping);
                 DROP TABLE id_mapping;
+
+    - changeSet:
+        id: clinical_specialty_mandatory_medical_practice-unique_constraint
+        author: mvenere
+        changes:
+          - addUniqueConstraint:
+              tableName: clinical_specialty_mandatory_medical_practice
+              columnNames: clinical_specialty_id, mandatory_medical_practice_id
+              constraintName: UQ_clinical_specialty_id_mandatory_medical_practice_id
