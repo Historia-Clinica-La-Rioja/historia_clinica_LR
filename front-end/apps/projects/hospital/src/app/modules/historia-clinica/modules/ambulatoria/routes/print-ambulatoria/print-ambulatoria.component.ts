@@ -16,7 +16,7 @@ import { EncounterTypes, DocumentTypes, ROUTE_HISTORY_CLINIC, EncounterType, Doc
 import { ECHEncounterType } from "@api-rest/api-model";
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { ContextService } from '@core/services/context.service';
-import { DatePipeFormat } from '@core/utils/date.utils';
+import { DatePipeFormat, fromStringToDate } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -25,6 +25,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PrintAmbulatoryService } from '@api-rest/services/print-ambulatory.service';
 import { dateTimeDtotoLocalDate, mapDateWithHypenToDateWithSlash } from '@api-rest/mapper/date-dto.mapper';
 import { Observable, take } from 'rxjs';
+import { MatSort, MatSortable } from '@angular/material/sort';
 
 @Component({
 	selector: 'app-print-ambulatoria',
@@ -70,10 +71,9 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	noInfo = false;
 	loadingTable = false;
 
-	columns = TableColumns;
+	displayedColumns: string[] = TableColumns;
+	dataSource: MatTableDataSource<CHDocumentSummaryDto>;
 
-	displayedColumns = ['select'].concat(this.columns.map(c => c.columnDef).concat('download'));
-	dataSource = new MatTableDataSource<CHDocumentSummaryDto>();
 	selection = new SelectionModel<CHDocumentSummaryDto>(true, []);
 
 	constructor(
@@ -106,6 +106,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	}
 
 	@ViewChild(MatPaginator) paginator: MatPaginator;
+	@ViewChild(MatSort) sort: MatSort;
 
 	ngOnInit(): void {
 		this.dateRangeForm.valueChanges.subscribe(range => {
@@ -228,8 +229,20 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		this.printAmbulatoryService.getPatientClinicHistory(this.patientId, this.dateRange.start, this.dateRange.end, searchFilterStr)
 			.subscribe(response => {
 				this.noInfo = response.length > 0 ? false : true;
-				this.dataSource.data = response.map(data => this.mapToDocumentSummary(data));
+				const tableData = response.map(data => this.mapToDocumentSummary(data));
+				this.dataSource = new MatTableDataSource(tableData);
 				this.dataSource.paginator = this.paginator;
+				this.dataSource.sortingDataAccessor = (item, property) => {
+					switch (property) {
+						case 'startDate':
+							return new Date(fromStringToDate(item.startDate));
+						case 'endDate':
+							return new Date(fromStringToDate(item.endDate));
+						default: return item[property];
+					}
+				};
+				this.sort.sort(({ id: 'startDate', start: 'desc'}) as MatSortable);
+				this.dataSource.sort = this.sort;
 				this.showEncounterListSection();
 				this.selection.clear();
 				this.toggleAllRows();

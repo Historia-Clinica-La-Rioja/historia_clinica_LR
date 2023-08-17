@@ -718,6 +718,15 @@
 				"REPORTS": "Informes de los resultados de los estudios complementarios"
 			},
 			"encounter-list": {
+				"header": {
+					"START_DATE": "Inicio",
+					"END_DATE": "Fin",
+					"ENCOUNTER_TYPE": "Tipo de encuentro",
+					"DOCUMENT_TYPE": "Tipo de documento",
+					"PROBLEM": "Problema",
+					"INSTITUTION": "Institución",
+					"PROFESSIONAL": "Profesional"
+				},
 				"TITLE": "Listado de encuentros",
 				"SUBTITLE": "Seleccione los episodios que desea incluir en la impresión de la historia clínica",
 				"ALL": "Todos",

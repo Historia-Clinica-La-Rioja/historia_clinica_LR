@@ -14,6 +14,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
@@ -52,6 +53,7 @@ import { DEFAULT_LANG } from '../../app.component';
 		MatNativeDateModule,
 		MatOptionModule,
 		MatPaginatorModule,
+		MatSortModule,
 		MatProgressBarModule,
 		MatProgressSpinnerModule,
 		MatRadioModule,
@@ -83,6 +85,7 @@ import { DEFAULT_LANG } from '../../app.component';
 		MatNativeDateModule,
 		MatOptionModule,
 		MatPaginatorModule,
+		MatSortModule,
 		MatProgressBarModule,
 		MatProgressSpinnerModule,
 		MatRadioModule,

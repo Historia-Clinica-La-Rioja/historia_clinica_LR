@@ -1,4 +1,4 @@
-import { ECHDocumentType, ECHEncounterType, CHDocumentSummaryDto } from "@api-rest/api-model";
+import { ECHDocumentType, ECHEncounterType} from "@api-rest/api-model";
 
 export const ROUTE_HISTORY_CLINIC = 'ambulatoria/';
 
@@ -49,40 +49,5 @@ export const DocumentTypes = [
 	},
 ]
 
-export const TableColumns = [
-	{
-		columnDef: 'start',
-		header: 'Inicio',
-		cell: (element: CHDocumentSummaryDto) => `${element.startDate}`,
-	},
-	{
-		columnDef: 'end',
-		header: 'Fin',
-		cell: (element: CHDocumentSummaryDto) => `${element.endDate}`,
-	},
-	{
-		columnDef: 'encounterType',
-		header: 'Tipo de encuentro',
-		cell: (element: CHDocumentSummaryDto) => `${element.encounterType}`,
-	},
-	{
-		columnDef: 'documentType',
-		header: 'Tipo de documento',
-		cell: (element: CHDocumentSummaryDto) => `${element.documentType}`,
-	},
-	{
-		columnDef: 'problem',
-		header: 'Problema',
-		cell: (element: CHDocumentSummaryDto) => `${element.problems}`,
-	},
-	{
-		columnDef: 'institution',
-		header: 'Institución',
-		cell: (element: CHDocumentSummaryDto) => `${element.institution}`,
-	},
-	{
-		columnDef: 'professional',
-		header: 'Profesional',
-		cell: (element: CHDocumentSummaryDto) => `${element.professional}`,
-	}
-];
+export const TableColumns = ['select', 'startDate', 'endDate', 'encounterType', 'documentType', 'problem', 'institution', 'professional', 'download'];
+
