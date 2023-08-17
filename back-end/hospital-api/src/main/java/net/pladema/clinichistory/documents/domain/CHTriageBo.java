@@ -29,7 +29,7 @@ public class CHTriageBo extends CHDocumentBo {
 		List<ClinicalRecordBo> result = new ArrayList<>();
 		if(!terms.isEmpty()) {
 			String evolution = Joiner.on(". <br />").join(terms);
-			result.add(new ClinicalRecordBo("Evolución", evolution.replace("|(", " (").replace('|', ',').replace("\\n", "<br />")));
+			result.add(new ClinicalRecordBo("Triage", evolution.replace("|(", " (").replace('|', ',').replace("\\n", "<br />")));
 		}
 		return result;
 	}
