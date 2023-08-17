@@ -42,7 +42,7 @@ export class VirtualConstultationService {
 		return this.http.get<VirtualConsultationDto>(url)
 	}
 
-	changeVirtualConsultationState(id: number, status: VirtualConsultationStatusDto ) {
+	changeVirtualConsultationState(id: number, status: VirtualConsultationStatusDto) {
 		const url = `${this.BASE_URL}/${id}/state`;
 		return this.http.put(url, status)
 	}
@@ -55,6 +55,16 @@ export class VirtualConstultationService {
 	changeClinicalProfessionalAvailability(availability: boolean) {
 		const url = `${this.BASE_URL}/change-clinical-professional-state`;
 		return this.http.post(url, availability)
+	}
+
+	getProfessionalAvailability(): Observable<boolean> {
+		const url = `${this.BASE_URL}/professional-availability`;
+		return this.http.get<boolean>(url)
+	}
+
+	getResponsibleStatus(institutionId: number): Observable<boolean> {
+		const url = `${this.BASE_URL}/institution/${institutionId}/responsible-professional-availability`;
+		return this.http.get<boolean>(url)
 	}
 }
 

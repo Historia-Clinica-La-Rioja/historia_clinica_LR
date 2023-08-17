@@ -7,6 +7,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class ToggleAvaiabilityComponent {
 
+	@Input() set initialValue(value: boolean) {
+		this.isChecked = value;
+	}
 
 	@Input() label: string;
 	@Output() availabilityChanged = new EventEmitter<boolean>;

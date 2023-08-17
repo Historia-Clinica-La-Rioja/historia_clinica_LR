@@ -21,6 +21,7 @@ export class RequestAttentionComponent implements OnInit {
 	virtualConsultations: any[] = [];
 	toggleEnabled = false;
 	virtualConsultatiosStatus = status;
+	initialProfessionalStatus = false;
 
 	constructor(
 		private readonly virtualConsultationsFacadeService: VirtualConsultationsFacadeService,
@@ -34,7 +35,11 @@ export class RequestAttentionComponent implements OnInit {
 
 		this.virtualConsultationsSubscription = this.virtualConsultationsFacadeService.virtualConsultations$
 			.subscribe(virtualConsultations =>
-				this.virtualConsultations = virtualConsultations.map(this.toVCToBeShown))
+				this.virtualConsultations = virtualConsultations.map(this.toVCToBeShown));
+
+		this.virtualConsultationService.getProfessionalAvailability().subscribe(
+			status => this.initialProfessionalStatus = status
+		)
 	}
 
 	confirm(virtualConsultationId: number) {

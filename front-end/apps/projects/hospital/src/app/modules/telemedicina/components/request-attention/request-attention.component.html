@@ -1,7 +1,7 @@
-<div fxLayout="column" fxLayoutGap="1em" fxLayoutAlign="end end" >
+<div fxLayout="column" fxLayoutGap="1em" fxLayoutAlign="end end">
 
-	<app-toggle-avaiability (availabilityChanged)="availabilityChanged($event)"
-		label="Atención online activada"></app-toggle-avaiability>
+	<app-toggle-avaiability (availabilityChanged)="availabilityChanged($event)" label="Atención online activada"
+		[initialValue]="initialProfessionalStatus"></app-toggle-avaiability>
 
 	<div fxLayout="column" fxLayoutGap="0.1125em" style="width: 100%;">
 		<div *ngFor="let virtualConsultation of virtualConsultations">
@@ -37,17 +37,21 @@
 					[color]="virtualConsultation.statusLabel.color"></app-colored-label>
 
 				<span>{{virtualConsultation.responsibleData.available ? 'Disponible' : 'No Disponible'}}</span>
-				<button mat-raised-button [disabled]="!virtualConsultation.responsibleData.available || !toggleEnabled" color="primary"
-					(click)="joinMeet(virtualConsultation)">Tomar Turno</button>
+				<button mat-raised-button [disabled]="!virtualConsultation.responsibleData.available || !toggleEnabled"
+					color="primary" (click)="joinMeet(virtualConsultation)">Tomar Turno</button>
 
-				<button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="virtualConsultation.status !== virtualConsultatiosStatus.FINISHED && virtualConsultation.status !== virtualConsultatiosStatus.CANCELED " >
+				<button mat-icon-button [matMenuTriggerFor]="menu"
+					*ngIf="virtualConsultation.status !== virtualConsultatiosStatus.FINISHED && virtualConsultation.status !== virtualConsultatiosStatus.CANCELED ">
 					<mat-icon>more_vert</mat-icon>
 				</button>
 				<mat-menu #menu="matMenu">
-					<button mat-menu-item *ngIf="virtualConsultation.status === virtualConsultatiosStatus.IN_PROGRESS" (click)="confirm(virtualConsultation.id)">
+					<button mat-menu-item *ngIf="virtualConsultation.status === virtualConsultatiosStatus.IN_PROGRESS"
+						(click)="confirm(virtualConsultation.id)">
 						<span>Confirmar atención</span>
 					</button>
-					<button mat-menu-item *ngIf="virtualConsultation.status === virtualConsultatiosStatus.IN_PROGRESS || virtualConsultation.status === virtualConsultatiosStatus.PENDING" (click)="cancel(virtualConsultation.id)">
+					<button mat-menu-item
+						*ngIf="virtualConsultation.status === virtualConsultatiosStatus.IN_PROGRESS || virtualConsultation.status === virtualConsultatiosStatus.PENDING"
+						(click)="cancel(virtualConsultation.id)">
 						<span>Cancelar</span>
 					</button>
 				</mat-menu>

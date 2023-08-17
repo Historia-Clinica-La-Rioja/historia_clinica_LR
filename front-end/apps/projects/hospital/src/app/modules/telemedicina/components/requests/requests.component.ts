@@ -12,12 +12,17 @@ import { ContextService } from '@core/services/context.service';
 export class RequestsComponent {
 
 	virtualConsultations: any[] = [];
+	initialResponsableStatus = false;
 
 	constructor(
 		private dialog: MatDialog,
 		private virtualConsultationService: VirtualConstultationService,
 		private contextService: ContextService
-	) { }
+	) {
+		this.virtualConsultationService.getResponsibleStatus(this.contextService.institutionId).subscribe(
+			status => this.initialResponsableStatus = status
+		)
+	 }
 
 
 	openAddRequest() {
