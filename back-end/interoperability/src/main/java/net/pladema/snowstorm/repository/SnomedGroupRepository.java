@@ -72,9 +72,9 @@ public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Intege
 			"WHERE sg.institutionId = :institutionId " +
 			"AND sg.groupId = :groupId " +
 			"AND sg.groupType = :groupType ")
-	Optional<SnomedGroup> findByInstitutionIdAndGroupIdAndGroupType(@Param("institutionId") Integer institutionId,
-																	@Param("groupId") Integer groupId,
-																	@Param("groupType") Short groupType);
+	Optional<List<SnomedGroup>> findByInstitutionIdAndGroupIdAndGroupType(@Param("institutionId") Integer institutionId,
+																		  @Param("groupId") Integer groupId,
+																		  @Param("groupType") Short groupType);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT sg " +
@@ -83,7 +83,7 @@ public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Intege
 			"WHERE sg.institutionId = :institutionId " +
 			"AND sg.groupId = :groupId " +
 			"AND sg.groupType = :groupType ")
-	Optional<SnomedGroup> findPracticeGroupAndCheckConceptAssociated(@Param("institutionId") Integer institutionId,
+	Optional<List<SnomedGroup>> findPracticeGroupAndCheckConceptAssociated(@Param("institutionId") Integer institutionId,
 																	@Param("groupId") Integer groupId,
 																	@Param("groupType") Short groupType);
 
