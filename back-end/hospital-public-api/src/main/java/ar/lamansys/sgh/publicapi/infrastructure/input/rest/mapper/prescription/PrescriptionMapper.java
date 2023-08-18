@@ -117,7 +117,7 @@ public class PrescriptionMapper {
 				.name(professionalPrescriptionBo.getName())
 				.lastName(professionalPrescriptionBo.getLastName())
 				.identificationNumber(professionalPrescriptionBo.getIdentificationNumber())
-				.specialties(mapTo(professionalPrescriptionBo.getSpecialties()))
+				.professions(mapTo(professionalPrescriptionBo.getProfessions()))
 				.registrations(mapToListPrescriptionProfessionalRegistrationDto(professionalPrescriptionBo.getRegistrations()))
 				.build();
 	}

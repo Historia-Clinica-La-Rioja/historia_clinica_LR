@@ -1,12 +1,11 @@
 package ar.lamansys.sgh.publicapi.domain.prescription;
 
+import java.time.LocalDateTime;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @NoArgsConstructor
 @ToString
@@ -20,19 +19,23 @@ public class PrescriptionsDataBo {
 
 	private String link;
 
-	private ProfessionalPrescriptionBo professionalPrescriptionBo;
+	private ProfessionalPrescriptionBo professionalData;
+
+	private PrescriptionSpecialtyBo prescriptionSpecialty;
 
 	public PrescriptionsDataBo(String domain,
                                String prescriptionId,
                                LocalDateTime prescriptionDate,
                                LocalDateTime dueDate,
                                String link,
-                               ProfessionalPrescriptionBo professionalPrescriptionBo) {
+                               ProfessionalPrescriptionBo professionalPrescriptionBo,
+							   PrescriptionSpecialtyBo prescriptionSpecialtyBo) {
 		this.domain = domain;
 		this.prescriptionDate = prescriptionDate;
 		this.prescriptionId = prescriptionId;
 		this.dueDate = dueDate;
 		this.link = link;
-		this.professionalPrescriptionBo = professionalPrescriptionBo;
+		this.professionalData = professionalPrescriptionBo;
+		this.prescriptionSpecialty = prescriptionSpecialtyBo;
 	}
 }

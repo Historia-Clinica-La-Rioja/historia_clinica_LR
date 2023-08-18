@@ -1,12 +1,12 @@
 package ar.lamansys.sgh.publicapi.domain.prescription;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -19,6 +19,6 @@ public class ProfessionalPrescriptionBo {
 	String identificationNumber;
 	String phoneNumber;
 	String email;
-	List<PrescriptionProfessionBo> specialties;
+	List<PrescriptionProfessionBo> professions;
 	List<PrescriptionProfessionalRegistrationBo> registrations;
 }

@@ -22,6 +22,6 @@ public class ProfessionalPrescriptionDto {
 	String identificationNumber;
 	String phoneNumber;
 	String email;
-	List<PrescriptionProfessionDto> specialties;
+	List<PrescriptionProfessionDto> professions;
 	List<PrescriptionProfessionalRegistrationDto> registrations;
 }

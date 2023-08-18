@@ -3,7 +3,6 @@ package ar.lamansys.sgh.publicapi.infrastructure.output;
 import java.sql.Date;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,8 +13,6 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
-
-import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionsDataBo;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;
@@ -35,7 +32,9 @@ import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionLineBo;
 import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionProblemBo;
 import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionProfessionBo;
 import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionProfessionalRegistrationBo;
+import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionSpecialtyBo;
 import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionValidStatesEnum;
+import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionsDataBo;
 import ar.lamansys.sgh.publicapi.domain.prescription.ProfessionalPrescriptionBo;
 import ar.lamansys.sgx.shared.token.JWTUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -85,7 +84,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		"mc.name as mcn, mc.cuit, mcp.plan, pmc.affiliate_number, i.name, i.sisa_code, i.province_code, " +
 		"CONCAT(a.street, ' ', a.number, ' ', case WHEN a.floor is not null THEN CONCAT('Piso ', a.floor) else '' END)," +
 		"p3.first_name as p3fn, p3.last_name, it2.description as it2d, p3.identification_number as p3d, pe2.phone_number, pe2.email as EMAIL, ps.description as psd, " +
-		"ps.sctid_code, " +
+		"ps.sctid_code as psc, " +
 		"pln.license_number, case when pln.type_license_number = 1 then 'NACIONAL' else 'PROVINCIAL' end, ms.prescription_line_number as msid, msls.description as mssd, s.pt as spt, s.sctid as sid, " +
 		"pt.description as ptd, s2.pt as s2pt, s2.sctid as s2id, " +
 		"d2.doses_by_unit as unit_dose, d2.doses_by_day, d2.duration, '' as presentation, 0 as presentation_quantity, d.id, mr.is_archived, " +
@@ -182,28 +181,31 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 	public Optional<List<PrescriptionsDataBo>> getPrescriptionsDataByDni(String identificationNumber) {
 
 		String stringQuery =
-				"select distinct mr.id as mrid, ms.prescription_date, ms.due_date, " +
-				"p3.first_name as p3fn, p3.last_name, it2.description as it2d, p3.identification_number as p3d, pe2.phone_number, pe2.email as EMAIL, " +
-				"ps.description as psd, ps.sctid_code, pln.license_number, case when pln.type_license_number = 1 then 'NACIONAL' else 'PROVINCIAL' end, doc.id " +
-				"from medication_statement ms " +
-				"join document_medicamention_statement dms on ms.id = dms.medication_statement_id " +
-				"join document doc on doc.id = dms.document_id " +
-				"join medication_request mr on mr.id = doc.source_id join patient p on p.id = ms.patient_id " +
-				"join person p2 on p2.id = p.person_id " +
-				"join healthcare_professional hp on hp.id = mr.doctor_id " +
-				"join person p3 on p3.id = hp.person_id " +
-				"join identification_type it2 on it2.id = p3.identification_type_id " +
-				"left join person_extended pe2 on pe2.person_id = p3.id " +
-				"join professional_professions pp on pp.healthcare_professional_id = hp.id " +
-				"join healthcare_professional_specialty hps on hps.professional_profession_id = pp.id " +
-				"join professional_specialty ps on ps.id = pp.professional_specialty_id " +
-				"join professional_license_numbers pln on (pln.professional_profession_id = pp.id or pln.healthcare_professional_specialty_id = hps.id) " +
-				"where p2.identification_number LIKE :identificationNumber " +
-						"and hps.deleted <> true " +
-						"and (doc.type_id = 5 or doc.type_id = 14) " +
-						"and ms.prescription_line_state = 1 " +
-						"and current_date - ms.due_date <= 30 " +
-				"order by mr.id desc";
+				"SELECT DISTINCT mr.id AS mrid, ms.prescription_date, ms.due_date, " +
+				"p3.first_name AS p3fn, p3.last_name, it2.description AS it2d, p3.identification_number AS p3d, pe2.phone_number, pe2.email AS email, " +
+				"ps.description AS psd, ps.sctid_code AS professional_specialty_snomed_code, pln.license_number, CASE WHEN pln.type_license_number = 1 THEN 'NACIONAL' ELSE 'PROVINCIAL' END, " +
+				"doc.id, cs.name, cs.sctid_code AS specialty_snomed_code " +
+				"FROM medication_statement ms " +
+				"JOIN document_medicamention_statement dms ON ms.id = dms.medication_statement_id " +
+				"JOIN document doc ON doc.id = dms.document_id " +
+				"JOIN medication_request mr ON mr.id = doc.source_id " +
+				"JOIN patient p ON p.id = ms.patient_id " +
+				"JOIN person p2 ON p2.id = p.person_id " +
+				"JOIN healthcare_professional hp ON hp.id = mr.doctor_id " +
+				"JOIN person p3 ON p3.id = hp.person_id " +
+				"JOIN identification_type it2 ON it2.id = p3.identification_type_id " +
+				"LEFT JOIN person_extended pe2 ON pe2.person_id = p3.id " +
+				"JOIN professional_professions pp ON pp.healthcare_professional_id = hp.id " +
+				"JOIN healthcare_professional_specialty hps ON hps.professional_profession_id = pp.id " +
+				"JOIN professional_specialty ps ON ps.id = pp.professional_specialty_id " +
+				"JOIN professional_license_numbers pln ON (pln.professional_profession_id = pp.id OR pln.healthcare_professional_specialty_id = hps.id) " +
+				"LEFT JOIN clinical_specialty cs ON (cs.id = mr.clinical_specialty_id) "+
+				"WHERE p2.identification_number LIKE :identificationNumber " +
+						"AND hps.deleted <> TRUE " +
+						"AND (doc.type_id = 5 OR doc.type_id = 14) " +
+						"AND ms.prescription_line_state = 1 " +
+						"AND current_date - ms.due_date <= 30 " +
+				"ORDER BY mr.id DESC";
 
 		Query query = entityManager.createNativeQuery(stringQuery)
 				.setParameter("identificationNumber", identificationNumber);
@@ -427,12 +429,12 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		result.setInstitutionPrescriptionBo(unmergedResults.get(0).getInstitutionPrescriptionBo());
 		result.setPrescriptionsLineBo(unmergedResults.get(0).getPrescriptionsLineBo());
 		ProfessionalPrescriptionBo professionalPrescriptionBo = unmergedResults.get(0).getProfessionalPrescriptionBo();
-		List<PrescriptionProfessionBo> prescriptionProfessionBos = new ArrayList<>(professionalPrescriptionBo.getSpecialties());
+		List<PrescriptionProfessionBo> prescriptionProfessionBos = new ArrayList<>(professionalPrescriptionBo.getProfessions());
 		List<PrescriptionProfessionalRegistrationBo> prescriptionProfessionalRegistrationBos = new ArrayList<>(professionalPrescriptionBo.getRegistrations());
 		List<PrescriptionLineBo> prescriptionLineBoList = new ArrayList<>(result.getPrescriptionsLineBo());
 
 		for(int i = 1; i < unmergedResults.size(); i++) {
-			var specialty = unmergedResults.get(i).getProfessionalPrescriptionBo().getSpecialties().get(0);
+			var specialty = unmergedResults.get(i).getProfessionalPrescriptionBo().getProfessions().get(0);
 			var prescriptionRegistration = unmergedResults.get(i).getProfessionalPrescriptionBo().getRegistrations().get(0);
 			if(!prescriptionProfessionalRegistrationBos.contains(prescriptionRegistration)) {
 				prescriptionProfessionalRegistrationBos.add(prescriptionRegistration);
@@ -444,7 +446,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				prescriptionLineBoList.add(unmergedResults.get(i).getPrescriptionsLineBo().get(0));
 			}
 		}
-		professionalPrescriptionBo.setSpecialties(prescriptionProfessionBos);
+		professionalPrescriptionBo.setProfessions(prescriptionProfessionBos);
 		professionalPrescriptionBo.setRegistrations(prescriptionProfessionalRegistrationBos);
 		result.setProfessionalPrescriptionBo(professionalPrescriptionBo);
 		result.setPrescriptionsLineBo(prescriptionLineBoList);
@@ -465,7 +467,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 			prescriptionProfessionalRegistrationBos.add(new PrescriptionProfessionalRegistrationBo((String)row[11], (String)row[12]));
 		});
 
-		return new PrescriptionsDataBo(domainNumber.toString(),
+		return new PrescriptionsDataBo(
+				domainNumber.toString(),
 				((Integer)queryResult.get(0)[0]).toString(),
 				((Date)queryResult.get(0)[1]).toLocalDate().atStartOfDay(),
 				queryResult.get(0)[2] != null ?
@@ -482,7 +485,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 						(String)queryResult.get(0)[8],
 						prescriptionProfessionBos,
 						prescriptionProfessionalRegistrationBos
-				)
+				),
+				new PrescriptionSpecialtyBo((String)queryResult.get(0)[14], (String)queryResult.get(0)[15])
 		);
 	}
 
