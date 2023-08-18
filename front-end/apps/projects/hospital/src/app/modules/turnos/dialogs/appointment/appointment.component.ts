@@ -126,6 +126,9 @@ export class AppointmentComponent implements OnInit {
 	observation: string;
 	firstCoverage: number;
 	isRejectedPatient:boolean=false;
+
+	canCoverageBeEdited = false;
+
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			appointmentData: PatientAppointmentInformation,
@@ -217,6 +220,7 @@ export class AppointmentComponent implements OnInit {
 						});
 				}
 				this.phoneNumber = this.formatPhonePrefixAndNumber(this.data.appointmentData.phonePrefix, this.data.appointmentData.phoneNumber);
+				this.checkInputUpdatePermissions();
 			});
 
 		this.hasRoleToChangeState$ = this.permissionsService.hasContextAssignments$(ROLES_TO_CHANGE_STATE).pipe(take(1));
@@ -237,6 +241,16 @@ export class AppointmentComponent implements OnInit {
 					this.decodedPhoto$ = this.imageDecoderService.decode(personPhotoDto.imageData);
 				}
 			});
+	}
+
+	private checkInputUpdatePermissions() {
+		this.canCoverageBeEdited = this.isAssigned();
+		this.changeInputUpdatePermissions();
+	}
+
+	private changeInputUpdatePermissions(){
+		this.canCoverageBeEdited ? this.formEdit.get('newCoverageData').enable()
+							: this.formEdit.get('newCoverageData').disable();
 	}
 
 	dateFormToggle(): void {
@@ -567,6 +581,7 @@ export class AppointmentComponent implements OnInit {
 				this.updatePhoneNumber(this.formEdit.controls.phonePrefix.value, this.formEdit.controls.phoneNumber.value);
 				this.phoneNumber = this.formatPhonePrefixAndNumber(this.formEdit.controls.phonePrefix.value, this.formEdit.controls.phoneNumber.value);
 			}
+			this.checkInputUpdatePermissions();
 			this.hideFilters();
 		}
 	}
