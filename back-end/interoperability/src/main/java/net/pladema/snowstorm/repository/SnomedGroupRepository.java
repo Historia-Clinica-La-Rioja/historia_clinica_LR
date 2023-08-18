@@ -76,4 +76,15 @@ public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Intege
 																	@Param("groupId") Integer groupId,
 																	@Param("groupType") Short groupType);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT sg " +
+			"FROM SnomedGroup sg " +
+			"JOIN SnomedRelatedGroup srg ON sg.id = srg.snomedId " +
+			"WHERE sg.institutionId = :institutionId " +
+			"AND sg.groupId = :groupId " +
+			"AND sg.groupType = :groupType ")
+	Optional<SnomedGroup> findPracticeGroupAndCheckConceptAssociated(@Param("institutionId") Integer institutionId,
+																	@Param("groupId") Integer groupId,
+																	@Param("groupType") Short groupType);
+
 }

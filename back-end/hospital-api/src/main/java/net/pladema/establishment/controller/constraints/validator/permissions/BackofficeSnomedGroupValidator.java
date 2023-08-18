@@ -1,8 +1,10 @@
 package net.pladema.establishment.controller.constraints.validator.permissions;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;
+import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.snowstorm.repository.SnomedGroupRepository;
 import net.pladema.snowstorm.repository.entity.SnomedGroup;
@@ -57,6 +59,7 @@ public class BackofficeSnomedGroupValidator implements BackofficePermissionValid
 		if (authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return;
 		hasPermissionByInstitution(entity.getInstitutionId());
+		checkPracticeGroup(entity);
 	}
 
 	@Override
@@ -66,10 +69,13 @@ public class BackofficeSnomedGroupValidator implements BackofficePermissionValid
 			return;
 		SnomedGroup snomedGroup = snomedGroupRepository.findById(id).orElse(null);
 		// has permission in the current institution of the group
-		if (snomedGroup != null)
+		if (snomedGroup != null) {
 			hasPermissionByInstitution(snomedGroup.getInstitutionId());
+			checkPracticeGroup(entity);
+		}
 		// has permission in the new institution of the group
 		hasPermissionByInstitution(entity.getInstitutionId());
+		checkPracticeGroup(entity);
 	}
 
 	@Override
@@ -79,8 +85,10 @@ public class BackofficeSnomedGroupValidator implements BackofficePermissionValid
 			return;
 		SnomedGroup snomedGroup = snomedGroupRepository.findById(id).orElse(null);
 		// has permission in the institution of the group
-		if (snomedGroup != null)
+		if (snomedGroup != null) {
 			hasPermissionByInstitution(snomedGroup.getInstitutionId());
+			hasSnomedConceptsAssociate(snomedGroup);
+		}
 	}
 
 	@Override
@@ -103,5 +111,19 @@ public class BackofficeSnomedGroupValidator implements BackofficePermissionValid
 			throw new PermissionDeniedException(NO_CUENTA_CON_SUFICIENTES_PRIVILEGIOS);
 	}
 
+	private void checkPracticeGroup(SnomedGroup entity) {
+		boolean hasPersisted = snomedGroupRepository.findByInstitutionIdAndGroupIdAndGroupType(
+				entity.getInstitutionId(), entity.getGroupId(), entity.getGroupType()).isPresent();
+		if (hasPersisted)
+			throw new BackofficeValidationException("Esta institución ya posee un grupo de prácticas");
+	}
+
+	private void hasSnomedConceptsAssociate(SnomedGroup entity) {
+		boolean isPracticeGroupWithSnomedConcepts = snomedGroupRepository.findPracticeGroupAndCheckConceptAssociated(
+				entity.getInstitutionId(), entity.getGroupId(), entity.getGroupType()).isPresent();
+
+		if (isPracticeGroupWithSnomedConcepts)
+			throw new BackofficeValidationException("El grupo tiene prácticas asociadas, por favor elimine las prácticas");
+	}
 
 }

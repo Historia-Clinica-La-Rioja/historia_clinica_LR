@@ -65,7 +65,7 @@ public class BackofficeInstitutionPracticesController extends BackofficeSnomedGr
 	public SnomedGroup create(@Valid @RequestBody SnomedGroup entity) {
 		boolean hasPersisted = snomedGroupRepository.findByInstitutionIdAndGroupIdAndGroupType(
 				entity.getInstitutionId(), entity.getGroupId(), entity.getGroupType()).isPresent();
-		if(hasPersisted)
+		if (hasPersisted)
 			throw new BackofficeValidationException("Esta institución ya posee un grupo de prácticas");
 		return super.create(entity);
 	}
