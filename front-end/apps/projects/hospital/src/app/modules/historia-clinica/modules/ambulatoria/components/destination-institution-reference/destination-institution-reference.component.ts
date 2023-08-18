@@ -5,6 +5,8 @@ import { InstitutionService } from '@api-rest/services/institution.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { ReferenceOriginInstitutionService } from '../../services/reference-origin-institution.service';
 import { UntypedFormGroup } from '@angular/forms';
+import { DiaryAvailableAppointmentsSearchService } from '@turnos/services/diary-available-appointments-search.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
 	selector: 'app-destination-institution-reference',
@@ -55,11 +57,14 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 	isDayGreaterThanZero = false;
 	institutionSelection = false;
 	careLineId: number;
+	appointment$ = new BehaviorSubject<number>(undefined);
+
 
 	constructor(
 		private readonly institutionService: InstitutionService,
 		private readonly adressMasterData: AddressMasterDataService,
 		private readonly referenceOriginInstitutionService: ReferenceOriginInstitutionService,
+		private readonly diaryAvailableAppointmentsSearchService: DiaryAvailableAppointmentsSearchService,
 	) { }
 
 	ngOnInit(): void {
@@ -102,14 +107,25 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 		this.departmentSelected.emit(departmentId);
 	}
 
-	onInstitutionSelectionChange(institutionId: number) {
-		if (institutionId) {
+	onInstitutionSelectionChange(institutionDestinationId: number) {
+		if (institutionDestinationId) {
+			this.setAppointments(institutionDestinationId);
 			this.institutionSelection = true;
 		} else {
 			this.institutionSelection = false;
 		}
-		this.institutionDestinationId = institutionId;
-		this.institutionSelected.emit(institutionId);
+		this.institutionDestinationId = institutionDestinationId;
+		this.institutionSelected.emit(institutionDestinationId);
+	}
+
+	setAppointments(institutionDestinationId: number) {
+		if (this.careLineId)
+			this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointmentsQuantity(institutionDestinationId, this.specialtyId, this.departmentId, this.careLineId).subscribe(rs =>
+				this.appointment$.next(rs));
+		else
+			this.diaryAvailableAppointmentsSearchService.getAvailableAppointmentsQuantity(institutionDestinationId, this.specialtyId).subscribe(rs =>
+				this.appointment$.next(rs));
+
 	}
 
 	private setDepartaments() {

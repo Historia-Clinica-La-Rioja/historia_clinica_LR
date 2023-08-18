@@ -19,3 +19,16 @@
 	<mat-error class="error-message" *ngIf="!institutionDestinationId && submitForm"
 		[translate]="'forms.REQUIRED'"></mat-error>
 </div>
+
+<ng-container *ngIf="institutionSelection">
+	<ng-container *ngIf="(appointment$ | async) > 0; else NOT_AVAILABLE_APPOINTMENT">
+		<span class="message" [innerHTML]="
+		'ambulatoria.paciente.nueva-consulta.reference-dialog.AVAILABLE_APPOINTMENT' |
+		translate: { appointment: appointment$ | async }"></span>
+	</ng-container>
+
+	<ng-template #NOT_AVAILABLE_APPOINTMENT>
+		<span class="message-warning"
+			[innerHTML]="'ambulatoria.paciente.nueva-consulta.reference-dialog.NOT_AVAILABLE_APPOINTMENT' | translate"></span>
+	</ng-template>
+</ng-container>
