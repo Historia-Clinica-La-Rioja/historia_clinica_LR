@@ -13,7 +13,7 @@
 			</div>
 			<div actions>
 				<button mat-raised-button [disabled]="!virtualConsultation.responsibleData.available || !toggleEnabled" color="primary"
-					(click)="joinMeet(virtualConsultation)">{{'telemedicina.attention.BUTTON_TAKE_TURN' | translate}}</button>
+					(click)="call(virtualConsultation)">{{'telemedicina.attention.BUTTON_TAKE_TURN' | translate}}</button>
 			</div>
 		</app-request-info-card>
 	</div>

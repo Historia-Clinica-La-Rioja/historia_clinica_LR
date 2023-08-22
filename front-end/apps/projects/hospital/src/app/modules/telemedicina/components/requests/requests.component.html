@@ -1,8 +1,8 @@
 <section>
 	<h3 class="page-title">{{'telemedicina.requests.SUBTITLE' | translate}}</h3>
 	<div fxLayout="column" fxLayoutAlign="end end" fxLayoutGap="1em">
-		<app-toggle-avaiability (availabilityChanged)="availabilityChanged($event)"
-			label="Disponible para llamadas" [initialValue]="initialResponsableStatus"></app-toggle-avaiability>
+		<app-toggle-avaiability (availabilityChanged)="availabilityChanged($event)" label="Disponible para llamadas"
+			[initialValue]="initialResponsableStatus"></app-toggle-avaiability>
 		<button mat-raised-button color="primary" (click)="openAddRequest()">{{'telemedicina.requests.BUTTON_ADD' |
 			translate}}</button>
 	</div>
@@ -10,15 +10,20 @@
 <section>
 	<div *ngFor="let virtualConsultation of virtualConsultations">
 		<app-request-info-card [virtualConsultation]="virtualConsultation">
+			<div professionals-attending><span class="grey">{{virtualConsultation.availableProfessionalsAmount}}
+					{{'telemedicina.requests.PROFESSIONAL_ATTENDING' | translate}}</span></div>
 			<div actions>
 				<button mat-icon-button [matMenuTriggerFor]="menu">
 					<mat-icon>more_vert</mat-icon>
 				</button>
 				<mat-menu #menu="matMenu">
-					<button mat-menu-item *ngIf="virtualConsultation.status === virtualConsultatiosStatus.IN_PROGRESS" (click)="confirm(virtualConsultation.id)">
+					<button mat-menu-item *ngIf="virtualConsultation.status === virtualConsultatiosStatus.IN_PROGRESS"
+						(click)="confirm(virtualConsultation.id)">
 						<span>Confirmar atención</span>
 					</button>
-					<button mat-menu-item *ngIf="virtualConsultation.status === virtualConsultatiosStatus.IN_PROGRESS || virtualConsultation.status === virtualConsultatiosStatus.PENDING" (click)="cancel(virtualConsultation.id)">
+					<button mat-menu-item
+						*ngIf="virtualConsultation.status === virtualConsultatiosStatus.IN_PROGRESS || virtualConsultation.status === virtualConsultatiosStatus.PENDING"
+						(click)="cancel(virtualConsultation.id)">
 						<span>Cancelar</span>
 					</button>
 				</mat-menu>

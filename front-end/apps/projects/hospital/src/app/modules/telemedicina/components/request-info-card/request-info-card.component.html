@@ -2,9 +2,9 @@
 	<mat-card fxLayout="row" fxLayoutAlign="space-between space-between">
 
 		<div id="datos-paciente" fxFlex="15%">
-			<span>{{virtualConsultation.patientData.lastName}} {{virtualConsultation.patientData.name}}</span>
+			<span class="font-bold">{{virtualConsultation.patientData.lastName}} {{virtualConsultation.patientData.name}}</span>
 			<div>
-				<span>{{virtualConsultation.patientData.gender}} </span>
+				<span>{{virtualConsultation.patientData.gender}} | </span>
 				<span>{{virtualConsultation.patientData.age}} años</span>
 			</div>
 			<ng-content select="[view-clinical-history]"></ng-content>
@@ -16,13 +16,13 @@
 			<app-priority [priority]="virtualConsultation.priorityLabel"></app-priority>
 		</div>
 
-		<div id="datos-clinicos" fxLayout="column" fxLayoutAlign="center start" fxFlex="20%">
+		<div id="datos-clinicos" fxLayout="column" fxLayoutAlign="start start" fxFlex="20%">
 			<app-iconed-text icon="medical_services" [text]="virtualConsultation.clinicalSpecialty"></app-iconed-text>
-			<app-iconed-text icon="home" [text]="virtualConsultation.careLine"></app-iconed-text>
+			<app-iconed-text icon="library_add" [text]="virtualConsultation.careLine"></app-iconed-text>
 			<app-iconed-text *ngIf="virtualConsultation.institutionData.name" icon="domain" [text]="virtualConsultation.institutionData.name"></app-iconed-text>
 		</div>
 
-		<div id="data-solicitante" fxLayout="column" fxLayoutAlign="start start" fxFlex="15%">
+		<div id="datos-solicitante" fxLayout="column" fxLayoutAlign="start center" fxFlex="15%">
 			<span class="grey">{{virtualConsultation.responsibleData.firstName}}
 				{{virtualConsultation.responsibleData.lastName}} </span>
 			<app-available-label [available]="virtualConsultation.responsibleData.available"></app-available-label>
@@ -30,15 +30,15 @@
 
 		<div id="datos-espera-de-atencion" fxFlex="15%">
 			<app-iconed-text class="grey" icon="schedule" [text]="virtualConsultation.waitingTime"></app-iconed-text>
-			<span class="grey">{{virtualConsultation.availableProfessionalsAmount}} {{'telemedicina.requests.PROFESSIONAL_ATTENDING' | translate}}</span>
+			<ng-content select="[professionals-attending]"></ng-content>
 		</div>
 
-		<div fxFlex="5%">
+		<div id="dato-estado-solicitud" fxFlex="10%" fxLayout="column" fxLayoutAlign="start center">
 			<app-colored-label [description]="virtualConsultation.statusLabel.description"
 				[color]="virtualConsultation.statusLabel.color"></app-colored-label>
 		</div>
 
-		<div fxFlex="5%" fxLayout="column" fxLayoutAlign="start end">
+		<div id="acciones" fxLayout="column" fxLayoutAlign="start end">
 			<ng-content select="[actions]"></ng-content>
 		</div>
 	</mat-card>

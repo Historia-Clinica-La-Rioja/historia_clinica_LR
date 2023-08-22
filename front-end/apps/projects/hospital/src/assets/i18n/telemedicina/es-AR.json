@@ -21,7 +21,8 @@
 			}
 		},
 		"attention": {
-			"SUBTITLE":"Listado de espera para atención online"
+			"SUBTITLE":"Listado de espera para atención online",
+			"BUTTON_TAKE_TURN":"Tomar turno"
 		}
 	}
 }
