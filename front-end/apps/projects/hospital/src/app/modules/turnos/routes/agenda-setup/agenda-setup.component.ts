@@ -340,6 +340,7 @@ export class AgendaSetupComponent implements OnInit {
 			this.form.controls.diaryType.setValue(this.PRACTICE);
 			this.showPractices = true;
 			this.practicesSelected = diary.practicesInfo.map(p => { return this.toChipsOptions(p) });
+			this.setPractices();
 			this.getCarelinesByPractices(diary.practicesInfo.map(p => { return p.id }));
 			this.validationsPractices();
 		}
@@ -687,6 +688,8 @@ export class AgendaSetupComponent implements OnInit {
 				this.checkCareLinesSelected();
 			});
 		}
+		else
+			this.careLines = [];
 	}
 
 	private checkCareLinesSelected() {
