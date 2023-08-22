@@ -201,7 +201,7 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		Long documentId = documentFactory.run(obs, createFile);
 
 		appointmentOrderImageRepository.setReportDocumentId(appointmentId, documentId);
-		appointmentOrderImageRepository.setReportStatus(appointmentId, EDiagnosticImageReportStatus.COMPLETED.getId());
+		appointmentOrderImageRepository.updateReportStatusId(appointmentId, EDiagnosticImageReportStatus.COMPLETED.getId());
 
 		saveSnomedConceptReport(documentId, obs.getConclusions());
 

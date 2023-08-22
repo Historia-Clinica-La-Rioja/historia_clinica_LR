@@ -52,7 +52,8 @@ public class ListTranscribedDiagnosticReportRepositoryImpl implements ListTransc
 				"LEFT JOIN {h-schema}document_file df  ON df.id = aoi.document_id\n" +
 				"LEFT JOIN {h-schema}document d  ON d.id = aoi.document_id\n" +
 				"WHERE aoi.order_id is null\n" +
-				"and tsr.patient_id = :patientId";
+				"AND tsr.patient_id = :patientId " +
+				"AND aoi.active = true";
 		Query query = entityManager.createNativeQuery(sqlString);
 		query.setParameter("patientId", patientId);
 		List<Object[]> result = query.getResultList();

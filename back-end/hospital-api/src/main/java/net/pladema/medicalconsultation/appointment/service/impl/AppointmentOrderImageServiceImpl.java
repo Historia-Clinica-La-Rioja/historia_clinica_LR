@@ -60,7 +60,7 @@ public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageSe
 		AppointmentOrderImage entity = new AppointmentOrderImage(appointmentOrderImageBo.getAppointmentId(),appointmentOrderImageBo.getOrderId(),
 				appointmentOrderImageBo.getStudyId(),appointmentOrderImageBo.getImageId(),appointmentOrderImageBo.isCompleted(),
 				appointmentOrderImageBo.getTranscribedOrderId(), appointmentOrderImageBo.getDestInstitutionId(),
-				appointmentOrderImageBo.getReportStatusId());
+				appointmentOrderImageBo.getReportStatusId(), true);
 		appointmentOrderImageRepository.save(entity);
 		LOG.debug("Output -> AppointmentOrderImage {}", entity);
 	}

@@ -51,7 +51,10 @@ public class AppointmentOrderImage implements Serializable {
 	@Column(name = "report_status_id", nullable = false)
 	private Short reportStatusId;
 
-    public AppointmentOrderImage( Integer appointmentId, Integer orderId, Integer studyId, String imageId, Boolean completed, Integer transcribedOrderId, Integer institutionId, Short reportStatusId){
+	@Column(name = "active", nullable = false)
+	private Boolean active;
+
+    public AppointmentOrderImage( Integer appointmentId, Integer orderId, Integer studyId, String imageId, Boolean completed, Integer transcribedOrderId, Integer institutionId, Short reportStatusId, boolean active){
         this.pk = new AppointmentOrderImagePK(appointmentId);
 		this.imageId = imageId;
 		this.completed = completed;
@@ -60,5 +63,6 @@ public class AppointmentOrderImage implements Serializable {
 		this.transcribedOrderId = transcribedOrderId;
 		this.destInstitutionId = institutionId;
 		this.reportStatusId = reportStatusId;
+		this.active = active;
     }
 }

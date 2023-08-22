@@ -82,8 +82,8 @@ public interface AppointmentOrderImageRepository extends JpaRepository<Appointme
 
 	@Transactional
 	@Modifying
-	@Query("DELETE " +
-			"FROM AppointmentOrderImage AS aoi " +
+	@Query("UPDATE AppointmentOrderImage aoi " +
+			"SET aoi.active = false " +
 			"WHERE aoi.pk.appointmentId = :appointmentId")
 	void deleteByAppointment(@Param("appointmentId") Integer appointmentId);
 
@@ -108,11 +108,4 @@ public interface AppointmentOrderImageRepository extends JpaRepository<Appointme
 			"WHERE aoi.pk.appointmentId = :appointmentId")
 	void updateReportStatusId(@Param("appointmentId") Integer appointmentId,
 							   @Param("reportStatusId") Short reportStatusId);
-
-	@Transactional
-	@Modifying
-	@Query("UPDATE AppointmentOrderImage AS aoi " +
-			"SET aoi.reportStatusId = :statusId " +
-			"WHERE aoi.pk.appointmentId = :appointmentId")
-	void setReportStatus(@Param("appointmentId") Integer appointmentId, @Param("statusId") Short statusId);
 }

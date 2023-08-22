@@ -30,7 +30,8 @@ public class ListStudyWithoutOrderReportRepositoryImpl implements ListStudyWitho
 				"LEFT JOIN {h-schema}document d  ON d.id = aoi.document_id\n" +
 				"WHERE aoi.order_id is NULL\n" +
 				"AND aoi.transcribed_order_id is null\n" +
-				"AND a.patient_id = :patientId";
+				"AND a.patient_id = :patientId " +
+				"AND aoi.active = true";
 
         Query query = entityManager.createNativeQuery(sqlString);
         query.setParameter("patientId", patientId);
