@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto;
+package ar.lamansys.sgh.publicapi.imagecenter.infrastructure.input.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

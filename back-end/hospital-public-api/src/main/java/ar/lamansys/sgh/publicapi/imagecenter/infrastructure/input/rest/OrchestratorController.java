@@ -1,8 +1,7 @@
-package ar.lamansys.sgh.publicapi.infrastructure.input.rest;
+package ar.lamansys.sgh.publicapi.imagecenter.infrastructure.input.rest;
 
-
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.MoveResultDto;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SizeResultDto;
+import ar.lamansys.sgh.publicapi.imagecenter.infrastructure.input.rest.dto.MoveResultDto;
+import ar.lamansys.sgh.publicapi.imagecenter.infrastructure.input.rest.dto.SizeResultDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.imagenetwork.SharedLoadStudiesResultPort;
 import lombok.RequiredArgsConstructor;
 
@@ -20,9 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "PublicApi ImageCenter", description = "Orchestrator external Api")
 @RequestMapping("/public-api/orchestrator")
-@Tag(name = "Orchestrator", description = "Orchestrator external Api")
-
 public class OrchestratorController {
 
 	private final SharedLoadStudiesResultPort moveStudiesService;

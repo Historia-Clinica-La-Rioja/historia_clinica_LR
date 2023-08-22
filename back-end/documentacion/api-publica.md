@@ -1,4 +1,4 @@
-# ### ![logo](../../front-end/apps/projects/hospital/src/assets/custom/icons/icon-72x72.png) Back-end | API Pública
+# ![logo](../../front-end/apps/projects/hospital/src/assets/custom/icons/icon-72x72.png) Back-end | API Pública
 
 La API Pública es el conjunto de todos los endpoints que están expuestos en:
 
@@ -79,4 +79,39 @@ En swagger los endpoints están agrupados como **PublicApi Usuarios** y tienen e
 
 
 Rol `API_USERS` asignado a nivel global.
+
+## Red de Imágenes
+
+> En swagger los endpoints están agrupados como **PublicApi ImageNetwork** 
+
+> Paquete Java [imagenetwork en hospital-public-api](../hospital-public-api/src/main/java/ar/lamansys/sgh/publicapi/imagenetwork).
+
+Usado principalmente desde servidores PACS. Personas responsables de servidores PACS deberán tener el rol "API Red de Imágenes".
+
+### [CheckStudyToken](../hospital-public-api/src/main/java/ar/lamansys/sgh/publicapi/imagenetwork/infrastructure/input/rest/CheckStudyTokenController.java)
+
+Permite verificar los accesos de profesionales a los estudios:
+
+`GET /api/public-api/imagenetwork/{studyInstanceUID}/permission/check`
+
+## Centro de Imágenes
+
+> En swagger los endpoints están agrupados como **PublicApi ImageCenter** 
+
+> Paquete Java [imagecenter en hospital-public-api](../hospital-public-api/src/main/java/ar/lamansys/sgh/publicapi/imagecenter).
+
+Usado principalmente desde servidores PACS. Personas responsables de servidores PACS deberán tener el rol "API Centro de Imágenes".
+
+### [UpdateResult](../hospital-public-api/src/main/java/ar/lamansys/sgh/publicapi/imagecenter/infrastructure/input/rest/OrchestratorController.java)
+
+Permite verificar los accesos de profesionales a los estudios:
+
+`POST /api/public-api/orchestrator/update-result`
+
+### [UpdateSize](../hospital-public-api/src/main/java/ar/lamansys/sgh/publicapi/imagecenter/infrastructure/input/rest/OrchestratorController.java)
+
+Permite verificar los accesos de profesionales a los estudios:
+
+`POST /api/public-api/orchestrator/set-size-study`
+
 

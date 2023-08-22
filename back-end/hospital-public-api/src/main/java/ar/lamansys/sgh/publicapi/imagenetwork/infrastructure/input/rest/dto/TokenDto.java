@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.imagenetwork;
+package ar.lamansys.sgh.publicapi.imagenetwork.infrastructure.input.rest.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

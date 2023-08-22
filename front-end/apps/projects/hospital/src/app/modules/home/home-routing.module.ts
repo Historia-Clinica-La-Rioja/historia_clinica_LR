@@ -23,6 +23,8 @@ export const PUBLIC_API_ROLES = [
 	ERole.API_RECETAS,
 	ERole.API_SIPPLUS,
 	ERole.API_USERS,
+	ERole.API_IMAGENES,
+	ERole.API_ORQUESTADOR,
 ];
 
 export enum HomeRoutes {
