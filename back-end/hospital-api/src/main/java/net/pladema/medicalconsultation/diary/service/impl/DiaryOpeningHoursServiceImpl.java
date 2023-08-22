@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -51,6 +53,8 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
     private final OpeningHoursRepository openingHoursRepository;
 
     private final DiaryBoMapper diaryBoMapper;
+
+	private final SharedReferenceCounterReference sharedReferenceCounterReference;
 
     @Override
     public void load(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours) {
@@ -163,7 +167,13 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
 		return result;
 	}
 
-    private DiaryOpeningHoursBo createDiaryOpeningHoursBo(DiaryOpeningHoursVo diaryOpeningHoursVo) {
+	@Override
+	public boolean hasProtectedAppointments(Integer openingHourId) {
+		LOG.debug("Input parameters -> openingHourId {} ", openingHourId);
+		return sharedReferenceCounterReference.existsProtectedAppointmentInOpeningHour(openingHourId);
+	}
+
+	private DiaryOpeningHoursBo createDiaryOpeningHoursBo(DiaryOpeningHoursVo diaryOpeningHoursVo) {
         LOG.debug("Input parameters -> diaryOpeningHoursVo {} ", diaryOpeningHoursVo);
         DiaryOpeningHoursBo result = new DiaryOpeningHoursBo();
         result.setDiaryId(diaryOpeningHoursVo.getDiaryId());

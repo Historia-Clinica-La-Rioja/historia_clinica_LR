@@ -37,4 +37,15 @@ public interface ReferenceAppointmentRepository extends SGXAuditableEntityJPARep
 			+ "WHERE ra.pk.appointmentId = :appointmentId" )
 	void deleteByAppointmentId(@Param("appointmentId") Integer appointmentId);
 
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT (CASE WHEN COUNT(ra.pk.appointmentId) > 0 THEN TRUE ELSE FALSE END) " +
+			"FROM ReferenceAppointment ra " +
+			"JOIN AppointmentAssn asn ON (ra.pk.appointmentId = asn.pk.appointmentId) " +
+			"JOIN Appointment a ON (asn.pk.appointmentId = a.id) " +
+			"WHERE asn.pk.openingHoursId = :openingHourId " +
+			"AND a.appointmentStateId IN (:appointmentStates) " +
+			"AND ra.deleteable.deleted = false")
+	boolean existsInOpeningHour(@Param("openingHourId") Integer openingHourId,
+								@Param("appointmentStates") List<Short> appointmentStates);
+
 }

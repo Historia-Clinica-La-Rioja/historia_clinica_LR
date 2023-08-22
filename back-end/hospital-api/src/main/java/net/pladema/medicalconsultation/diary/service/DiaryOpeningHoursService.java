@@ -22,4 +22,7 @@ public interface DiaryOpeningHoursService {
 
     List<Short> overlappingDays(@NotNull LocalDate rangeStart1, @NotNull LocalDate rangeEnd1,
                                 @NotNull LocalDate rangeStart2, @NotNull LocalDate rangeEnd2);
+
+	boolean hasProtectedAppointments(Integer openingHourId);
+
 }

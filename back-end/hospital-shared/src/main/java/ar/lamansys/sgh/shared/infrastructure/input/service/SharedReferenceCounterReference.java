@@ -23,4 +23,6 @@ public interface SharedReferenceCounterReference {
 	boolean isProtectedAppointment(Integer appointmentId);
 
 	void updateProtectedAppointment(Integer appointment);
+
+	boolean existsProtectedAppointmentInOpeningHour(Integer openingHourId);
 }

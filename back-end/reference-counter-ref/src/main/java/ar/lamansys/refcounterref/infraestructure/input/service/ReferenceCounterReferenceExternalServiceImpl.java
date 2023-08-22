@@ -24,12 +24,16 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
 @Service
 public class ReferenceCounterReferenceExternalServiceImpl implements SharedReferenceCounterReference {
+
+	private final static Short ASSIGNED = 1;
+	private final static Short CONFIRMED = 2;
 
     private final CreateReference createReference;
     private final GetReferenceFile getReferenceFile;
@@ -84,6 +88,11 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
 	public void updateProtectedAppointment(Integer appointmentId) {
     	log.debug("Delete reference appointment {}, ", appointmentId);
     	referenceAppointmentRepository.deleteByAppointmentId(appointmentId);
+	}
+
+	public boolean existsProtectedAppointmentInOpeningHour(Integer openingHourId) {
+		log.debug("There are protected appointment in a opening hour with id {}", openingHourId);
+		return referenceAppointmentRepository.existsInOpeningHour(openingHourId, Arrays.asList(ASSIGNED, CONFIRMED));
 	}
 
 	private List<ReferenceCounterReferenceFileDto> mapToReferenceCounterReferenceFileDto(List<ReferenceCounterReferenceFileBo> referenceCounterReferenceFileBos) {
