@@ -338,8 +338,10 @@ export class AgendaSetupComponent implements OnInit {
 
 		if (diary.practicesInfo.length > 0) {
 			this.form.controls.diaryType.setValue(this.PRACTICE);
+			this.showPractices = true;
 			this.practicesSelected = diary.practicesInfo.map(p => { return this.toChipsOptions(p) });
 			this.getCarelinesByPractices(diary.practicesInfo.map(p => { return p.id }));
+			this.validationsPractices();
 		}
 
 	}
