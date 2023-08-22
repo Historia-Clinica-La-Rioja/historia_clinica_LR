@@ -9,6 +9,8 @@ import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.snowstorm.repository.SnomedGroupRepository;
 import net.pladema.snowstorm.repository.entity.SnomedGroup;
 
+import net.pladema.snowstorm.repository.entity.SnomedGroupType;
+import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 import net.pladema.user.controller.BackofficeAuthoritiesValidator;
 
 import org.springframework.security.access.PermissionEvaluator;
@@ -112,10 +114,15 @@ public class BackofficeSnomedGroupValidator implements BackofficePermissionValid
 	}
 
 	private void checkPracticeGroup(SnomedGroup entity) {
+		String procedure = SnomedECL.PROCEDURE.toString();
+		String description = snomedGroupRepository.getDescriptionByEcl(entity.getEcl()).get(0);
+		if (!entity.getGroupType().equals(SnomedGroupType.SEARCH_GROUP) || !description.equals(procedure))
+			return;
 		boolean hasPersisted = snomedGroupRepository.findByInstitutionIdAndGroupIdAndGroupType(
 				entity.getInstitutionId(), entity.getGroupId(), entity.getGroupType()).isPresent();
 		if (hasPersisted)
 			throw new BackofficeValidationException("Esta institución ya posee un grupo de prácticas");
+
 	}
 
 	private void hasSnomedConceptsAssociate(SnomedGroup entity) {

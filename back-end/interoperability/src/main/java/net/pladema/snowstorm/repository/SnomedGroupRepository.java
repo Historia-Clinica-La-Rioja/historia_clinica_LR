@@ -87,4 +87,10 @@ public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Intege
 																	@Param("groupId") Integer groupId,
 																	@Param("groupType") Short groupType);
 
+	@Query( " SELECT baseGroup.description " +
+			" FROM SnomedGroup sg " +
+			" JOIN SnomedGroup baseGroup ON sg.groupId = baseGroup.id " +
+			" WHERE sg.ecl = :ecl " )
+	List<String> getDescriptionByEcl(@Param("ecl") String ecl);
+
 }
