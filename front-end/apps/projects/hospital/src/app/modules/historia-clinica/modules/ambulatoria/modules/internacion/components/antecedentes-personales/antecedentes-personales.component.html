@@ -3,7 +3,7 @@
 		icon="library_add" [isEmpty]="personalHistories?.length === 0" [collapsed]="!personalHistories?.length" [hideBorder]="false"
 		[isToAddSnomedConcepts]="true" (click)="personalHistories?.length === 0 ? addPersonalHistory():''">
 		<app-titled-content-card *ngIf="personalHistories?.length"
-			title="{{ 'ambulatoria.paciente.nueva-consulta.medicaciones.LIST_CARD_TITLE' }}">
+			title="{{ 'internaciones.anamnesis.antecedentes-personales.LIST_CARD_TITLE' }}">
 			<div fxLayout="column" fxLayoutGap="10px"
 				*ngFor="let personalHistory of personalHistories; index as i; last as isLast">
 				<div fxLayout="row" fxLayoutAlign="space-between center">
