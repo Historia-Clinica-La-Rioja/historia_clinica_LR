@@ -1,6 +1,6 @@
 <div style="margin-bottom: 20px;margin-top: 20px;">
 	<app-new-consultation-expansion-section id="diagnosticos"
-		*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+		*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 		[title]="'internaciones.epicrisis.diagnosticos.TITLE' | translate" icon="error_outlined" [collapsed]="false"
 		[isEmpty]="componentEvaluationManagerService.isEmptyDiagnosis()  | async" [hideBorder]="true">
 
