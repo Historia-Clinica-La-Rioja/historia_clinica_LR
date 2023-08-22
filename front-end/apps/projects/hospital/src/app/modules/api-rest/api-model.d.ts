@@ -3807,6 +3807,11 @@ export interface VirtualConsultationDto {
     status: EVirtualConsultationStatus;
 }
 
+export interface VirtualConsultationEventDto {
+    event: EVirtualConsultationEvent;
+    virtualConsultationId: number;
+}
+
 export interface VirtualConsultationInstitutionDataDto {
     id: number;
     name: string;
@@ -4073,6 +4078,13 @@ export const enum ESurfacePositionDto {
     LEFT = "LEFT",
     RIGHT = "RIGHT",
     CENTRAL = "CENTRAL",
+}
+
+export const enum EVirtualConsultationEvent {
+    INCOMING_CALL = "INCOMING_CALL",
+    CALL_CANCELED = "CALL_CANCELED",
+    CALL_REJECTED = "CALL_REJECTED",
+    CALL_ACCEPTED = "CALL_ACCEPTED",
 }
 
 export const enum EVirtualConsultationPriority {

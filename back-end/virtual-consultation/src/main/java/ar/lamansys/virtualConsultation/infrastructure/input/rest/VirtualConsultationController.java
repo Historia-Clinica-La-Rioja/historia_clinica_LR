@@ -4,6 +4,12 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import ar.lamansys.virtualConsultation.application.notifyVirtualConsultationAcceptedCall.NotifyVirtualConsultationAcceptedCallService;
+import ar.lamansys.virtualConsultation.application.notifyVirtualConsultationCancelledCall.NotifyVirtualConsultationCancelledCallService;
+import ar.lamansys.virtualConsultation.application.notifyVirtualConsultationIncomingCall.NotifyVirtualConsultationIncomingCallService;
+
+import ar.lamansys.virtualConsultation.application.notifyVirtualConsultationRejectedCall.NotifyVirtualConsultationRejectedCallService;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -87,6 +93,14 @@ public class VirtualConsultationController {
 
 	private final GetVirtualConsultationsByInstitutionService getVirtualConsultationsByInstitutionService;
 
+	private final NotifyVirtualConsultationIncomingCallService notifyVirtualConsultationIncomingCallService;
+
+	private final NotifyVirtualConsultationCancelledCallService  notifyVirtualConsultationCancelledCallService;
+
+	private final NotifyVirtualConsultationRejectedCallService notifyVirtualConsultationRejectedCallService;
+
+	private final NotifyVirtualConsultationAcceptedCallService notifyVirtualConsultationAcceptedCallService;
+
 	@PostMapping(value = "/{institutionId}")
 	public Integer saveVirtualConsultationRequest(@PathVariable(name = "institutionId") Integer institutionId,
 												  @RequestBody @Valid VirtualConsultationRequestDto virtualConsultation) {
@@ -134,6 +148,31 @@ public class VirtualConsultationController {
 		log.debug("Input parameters -> virtualConsultationId {}", virtualConsultationId);
 		Integer responsibleUserId = getResponsibleUserIdByVirtualConsultationIdService.run(virtualConsultationId);
 		virtualConsultationPublisher.publish("NOTIFY", virtualConsultationId + "-" + responsibleUserId);
+	}
+
+	@PostMapping(value = "/notify-incoming-call/{virtualConsultationId}")
+	public void notifyVirtualConsultationIncomingCall(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId) {
+		log.debug("Input parameters -> virtualConsultationId {}", virtualConsultationId);
+		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
+		notifyVirtualConsultationIncomingCallService.run(virtualConsultationId, doctorId);
+	}
+
+	@PostMapping(value = "/notify-cancelled-call/{virtualConsultationId}")
+	public void notifyVirtualConsultationCancelledCall(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId) {
+		log.debug("Input parameters -> virtualConsultationId {}", virtualConsultationId);
+		notifyVirtualConsultationCancelledCallService.run(virtualConsultationId);
+	}
+
+	@PostMapping(value = "/notify-rejected-call/{virtualConsultationId}")
+	public void notifyVirtualConsultationRejectedCall(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId) {
+		log.debug("Input parameters -> virtualConsultationId {}", virtualConsultationId);
+		notifyVirtualConsultationRejectedCallService.run(virtualConsultationId);
+	}
+
+	@PostMapping(value = "/notify-accepted-call/{virtualConsultationId}")
+	public void notifyVirtualConsultationAcceptedCall(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId) {
+		log.debug("Input parameters -> virtualConsultationId {}", virtualConsultationId);
+		notifyVirtualConsultationAcceptedCallService.run(virtualConsultationId);
 	}
 
 	@GetMapping("/notification/{virtualConsultationId}")

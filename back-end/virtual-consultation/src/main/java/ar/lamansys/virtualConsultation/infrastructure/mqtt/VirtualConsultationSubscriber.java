@@ -5,6 +5,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import ar.lamansys.virtualConsultation.domain.VirtualConsultationEventBo;
+
+import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationEventDto;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +34,8 @@ public class VirtualConsultationSubscriber {
 	private final SimpMessagingTemplate template;
 
 	private final QueueListener queueListener;
+
+	private final ObjectMapper objectMapper;
 
 	@Bean
 	public void subscribe() throws MqttException {
@@ -53,13 +61,14 @@ public class VirtualConsultationSubscriber {
 	private List<Consumer<MqttMetadataBo>> getQueueListeners() {
 		return new ArrayList<>(List.of(m -> {
 			try {
-				String[] communicationData = m.getMessage().split("-");
-				String destinationSessionId = getDestinationSessionId(Integer.valueOf(communicationData[1]));
+				VirtualConsultationEventBo data = objectMapper.readValue(m.getMessage(), VirtualConsultationEventBo.class);
+				String destinationSessionId = getDestinationSessionId(data.getDestinationUserId());
 				if (destinationSessionId != null) {
 					SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
 					headerAccessor.setSessionId(destinationSessionId);
 					headerAccessor.setLeaveMutable(true);
-					template.convertAndSendToUser(destinationSessionId, "/queue/virtual-consultation-notification", communicationData[0], headerAccessor.getMessageHeaders());
+					VirtualConsultationEventDto message = new VirtualConsultationEventDto(data);
+					template.convertAndSendToUser(destinationSessionId, "/queue/" + data.getEvent().getWsPath(), objectMapper.writeValueAsString(message), headerAccessor.getMessageHeaders());
 				}
 			}
 			catch (Throwable e) {
