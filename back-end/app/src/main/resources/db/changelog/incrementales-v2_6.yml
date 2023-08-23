@@ -1324,3 +1324,13 @@ databaseChangeLog:
                 join institution i on (i.id=d.institution_id)
                 left outer join clinical_specialty cs on (d.clinical_specialty_id=cs.id)
                 where d.deleted=false and d.status_id = '445665009';
+
+    - changeSet:
+        id: update-institution-id-auditor-mpi-user_role
+        author: fdemuguruza
+        comment: update institution id to auditor mpi to -1
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                DELETE FROM user_role WHERE role_id = 23
