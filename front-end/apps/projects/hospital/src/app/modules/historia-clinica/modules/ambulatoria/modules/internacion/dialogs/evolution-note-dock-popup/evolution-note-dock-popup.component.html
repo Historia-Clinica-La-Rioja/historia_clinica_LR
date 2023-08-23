@@ -82,8 +82,10 @@
 			</app-new-consultation-expansion-section>
 
 
-			<app-procedure [(procedures)]="procedures">
-			</app-procedure>
+			<ng-container  *appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+				<app-procedure [(procedures)]="procedures">
+				</app-procedure>
+			</ng-container >
 
 			<app-new-consultation-expansion-section id="factores-de-riesgo"
 				[title]="'historia-clinica.factores-de-riesgo-form.TITLE' | translate" icon="favorite_outlined"
