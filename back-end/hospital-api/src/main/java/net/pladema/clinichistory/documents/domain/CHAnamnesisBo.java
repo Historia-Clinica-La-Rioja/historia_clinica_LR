@@ -41,7 +41,7 @@ public class CHAnamnesisBo extends CHDocumentBo {
 
 	@Override
 	public List<ClinicalRecordBo> getClinicalRecords() {
-		List<String> terms = Stream.of(problems, notes, bloodType, anthropometricData, riskFactors, familyRecord, medicines, allergies, vaccines, personalRecord, familyRecord).filter(term -> term != null && !term.isBlank()).collect(Collectors.toList());
+		List<String> terms = Stream.of(problems, notes, bloodType.replace("−", "&ndash;"), anthropometricData, riskFactors, familyRecord, medicines, allergies, vaccines, personalRecord, familyRecord).filter(term -> term != null && !term.isBlank()).collect(Collectors.toList());
 		List<ClinicalRecordBo> result = new ArrayList<>();
 		if (!terms.isEmpty()) {
 			String evolution = Joiner.on(". <br />").join(terms);

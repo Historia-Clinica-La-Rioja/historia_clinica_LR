@@ -47,7 +47,7 @@ public class CHOutpatientBo extends CHDocumentBo{
 
 	@Override
 	public List<ClinicalRecordBo> getClinicalRecords() {
-		List<String> terms = Stream.of(outpatientConsultationReasons, problems.replace("|(", " (").replace('|', ','), bloodType, anthropometricData, riskFactors, familyRecord, medicines, allergies, note, outpatientReferences).filter(term -> term!=null && !term.isBlank()).collect(Collectors.toList());
+		List<String> terms = Stream.of(outpatientConsultationReasons, problems, bloodType.replace("−", "&ndash;"), anthropometricData, riskFactors, familyRecord, medicines, allergies, note, outpatientReferences).filter(term -> term!=null && !term.isBlank()).collect(Collectors.toList());
 		List<ClinicalRecordBo> result = new ArrayList<>();
 		if(!terms.isEmpty()) {
 			String evolution = Joiner.on(". <br />").join(terms);
