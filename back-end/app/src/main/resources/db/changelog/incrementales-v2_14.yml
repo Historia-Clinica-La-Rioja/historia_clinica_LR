@@ -1861,7 +1861,7 @@ databaseChangeLog:
                 - column:
                     constraints:
                       nullable: false
-                    name: professional_specialty_type_id
+                    name: profession_type_id
                     type: smallint
                 - column:
                     name: professional_license_number_id

@@ -1199,6 +1199,7 @@ export interface DocumentHealthcareProfessionalDto {
     comments?: string;
     healthcareProfessional: HCEHealthcareProfessionalDto;
     id?: number;
+    professionalLicenseNumberId?: number;
     type: EProfessionType;
 }
 
