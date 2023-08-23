@@ -33,6 +33,7 @@ export enum HomeRoutes {
 	Settings = 'settings',			// Configuración
 	Extension = 'extension', 		// Extensión
 	UserKeys = 'user-keys', 		// API Keys del usuario
+	Auditoria = 'auditoria'
 }
 
 const routes: Routes = [
@@ -59,7 +60,11 @@ const routes: Routes = [
 			},
 			{ path: 'update-password', component: UpdatePasswordComponent },
 			{ path: 'update-password-success', component: UpdatePasswordSuccessComponent },
-			{ path: 'web-components/:wcId', component: RoutedExternalComponent }
+			{ path: 'web-components/:wcId', component: RoutedExternalComponent },
+			{
+				path: HomeRoutes.Auditoria,
+				loadChildren: () => import('../../modules/auditoria/auditoria.module').then(m => m.AuditoriaModule),
+			},
 		]
 	}
 ];

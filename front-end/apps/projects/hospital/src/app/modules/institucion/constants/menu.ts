@@ -104,16 +104,6 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		featureFlag: AppFeature.HABILITAR_REPORTES
 	},
 	{
-		text: 'app.menu.AUDIT',
-		icon: 'groups',
-		id: 'auditoria',
-		url: './auditoria',
-		permissions: [
-		ERole.AUDITOR_MPI
-		],
-		featureFlag: AppFeature.HABILITAR_MODULO_AUDITORIA
-	},
-	{
 		text: 'app.menu.LISTADO_DE_TRABAJO',
 		icon: 'assignment_ind',
 		id: 'listadoTrabajo',

@@ -19,7 +19,16 @@ export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 		],
 		featureFlag: AppFeature.HABILITAR_CONFIGURACION
 	},
-
+	{
+		text: 'app.menu.AUDIT',
+		icon: 'groups',
+		id: 'auditoria',
+		url: '/home/auditoria',
+		permissions: [
+			ERole.AUDITOR_MPI
+		],
+		featureFlag: AppFeature.HABILITAR_MODULO_AUDITORIA
+	},
 ];
 
 export const NO_ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [

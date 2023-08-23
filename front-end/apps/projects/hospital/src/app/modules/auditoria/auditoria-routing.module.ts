@@ -40,7 +40,7 @@ const routes: Routes = [{
 		}
 	],
 	canActivate: [RoleGuard,FeatureFlagGuard],
-		data: { allowedRoles: [ERole.AUDITOR_MPI] , featureFlag: AppFeature.HABILITAR_MODULO_AUDITORIA }
+		data: { needsRoot: true, allowedRoles: [ERole.AUDITOR_MPI] , featureFlag: AppFeature.HABILITAR_MODULO_AUDITORIA }
 }
 ];
 
