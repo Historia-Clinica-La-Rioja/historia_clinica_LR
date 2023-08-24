@@ -108,6 +108,11 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 	}
 
 	@Override
+	public Optional<Integer> findInstitutionId(Integer idMove) {
+		return moveStudiesRepository.findInstitutionId(idMove);
+	}
+
+	@Override
 	public void updateStatus(Integer idMove, String status) {
 		moveStudiesRepository.updateStatus(idMove, status);
 	}

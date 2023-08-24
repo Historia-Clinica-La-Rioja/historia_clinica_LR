@@ -20,6 +20,10 @@ import ar.lamansys.sgh.publicapi.application.saveexternalencounter.exceptions.Sa
 import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalEncounterBoException;
 import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalPatientBoException;
 import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalPatientExtendedBoException;
+import ar.lamansys.sgh.publicapi.imagecenter.application.updateresult.exceptions.UpdateResultException;
+import ar.lamansys.sgh.publicapi.imagecenter.application.updatesize.exceptions.UpdateSizeException;
+import ar.lamansys.sgh.publicapi.imagenetwork.application.check.exceptions.BadStudyTokenException;
+import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -94,4 +98,47 @@ public class HospitalPublicApiExceptionHandler {
 		logger.debug("MissingServletRequestParameterException message -> {}", ex.getMessage(), ex);
 		return new ApiErrorMessageDto(HttpStatus.BAD_REQUEST.toString(), "Faltan parámetros en la URL para completar la solicitud");
 	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ BadStudyTokenException.class })
+	protected ApiErrorMessageDto handleBadStudyTokenException(BadStudyTokenException ex) {
+		logger.debug("BadStudyTokenException message -> {}", ex.getMessage(), ex.getCause());
+		return new ApiErrorMessageDto(
+				"bad-token",
+				ex.getMessage()
+		);
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ UpdateSizeException.class })
+	protected ApiErrorMessageDto handleUpdateSizeException(UpdateSizeException ex) {
+		logger.debug("UpdateSizeException message -> {}", ex.getMessage(), ex.getCause());
+		return new ApiErrorMessageDto(
+				"update-size-failed",
+				ex.getMessage()
+		);
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ UpdateResultException.class })
+	protected ApiErrorMessageDto handleUpdateResultException(UpdateResultException ex) {
+		logger.debug("UpdateResultException message -> {}", ex.getMessage(), ex.getCause());
+		return new ApiErrorMessageDto(
+				"update-result-failed",
+				ex.getMessage()
+		);
+	}
+
+	@ResponseStatus(HttpStatus.FORBIDDEN)
+	@ExceptionHandler({ PublicApiAccessDeniedException.class })
+	protected ApiErrorMessageDto handlePublicApiForbiddenException(PublicApiAccessDeniedException ex) {
+		var text = String.format("Access Denied to %s %s", ex.group, ex.endpoint);
+		SecurityContextUtils.warn(text);
+		logger.debug("PublicApiForbiddenException  -> {}", ex.getMessage(), ex);
+		return new ApiErrorMessageDto(
+				"access-denied",
+				text
+		);
+	}
+
 }

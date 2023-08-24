@@ -88,11 +88,16 @@ Rol `API_USERS` asignado a nivel global.
 
 Usado principalmente desde servidores PACS. Personas responsables de servidores PACS deberán tener el rol "API Red de Imágenes".
 
+🪪 Roles autorizados en [AppImageNetworkPublicApiPermissions](../app/src/main/java/ar/lamansys/sgh/publicapi/imagenetwork/infrastructure/input/service/AppImageNetworkPublicApiPermissions.java).
+
 ### [CheckStudyToken](../hospital-public-api/src/main/java/ar/lamansys/sgh/publicapi/imagenetwork/infrastructure/input/rest/CheckStudyTokenController.java)
 
 Permite verificar los accesos de profesionales a los estudios:
 
 `GET /api/public-api/imagenetwork/{studyInstanceUID}/permission/check`
+
+Posibles errores:
+1. BadStudyTokenException `BAD_REQUEST`: `code` "bad-token", `text` "{{explicación}}"
 
 ## Centro de Imágenes
 
@@ -102,11 +107,16 @@ Permite verificar los accesos de profesionales a los estudios:
 
 Usado principalmente desde servidores PACS. Personas responsables de servidores PACS deberán tener el rol "API Centro de Imágenes".
 
+🪪 Roles autorizados en [AppImageCenterPublicApiPermissions](../app/src/main/java/ar/lamansys/sgh/publicapi/imagecenter/infrastructure/input/service/AppImageCenterPublicApiPermissions.java).
+
 ### [UpdateResult](../hospital-public-api/src/main/java/ar/lamansys/sgh/publicapi/imagecenter/infrastructure/input/rest/OrchestratorController.java)
 
 Permite modificar el resultado y el estado de un estudio.
 
 `POST /api/public-api/orchestrator/update-result`
+
+Posibles errores:
+1. UpdateResultException `BAD_REQUEST`: `code` "update-result-failed", `text` "{{explicación}}"
 
 ### [UpdateSize](../hospital-public-api/src/main/java/ar/lamansys/sgh/publicapi/imagecenter/infrastructure/input/rest/OrchestratorController.java)
 
@@ -114,4 +124,6 @@ Permite modificar el tamaño y el `imageId`.
 
 `POST /api/public-api/orchestrator/set-size-study`
 
+Posibles errores:
+1. UpdateSizeException `BAD_REQUEST`: `code` "update-size-failed", `text` "{{explicación}}"
 

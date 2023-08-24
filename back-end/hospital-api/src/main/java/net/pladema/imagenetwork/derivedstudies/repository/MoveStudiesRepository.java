@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Integer> {
 
@@ -69,4 +70,9 @@ public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Intege
 	List<MoveStudies> listFailed();
 
 
+	@Transactional(readOnly = true)
+	@Query("SELECT mo.institutionId " +
+			"FROM MoveStudies AS mo " +
+			"WHERE mo.id = :idMove")
+	Optional<Integer> findInstitutionId(@Param("idMove") Integer idMove);
 }
