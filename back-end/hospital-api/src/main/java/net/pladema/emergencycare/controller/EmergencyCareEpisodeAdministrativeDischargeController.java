@@ -40,8 +40,7 @@ public class EmergencyCareEpisodeAdministrativeDischargeController {
         LOG.debug("New administrative discharge -> episodeId {}, institutionId {}, administrativeDischargeDto {}", episodeId, institutionId, administrativeDischargeDto);
         Integer userId = UserInfo.getCurrentAuditor();
         AdministrativeDischargeBo administrativeDischargeBo = emergencyCareDischargeMapper.toAdministrativeDischargeBo(administrativeDischargeDto, episodeId, userId);
-        ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
-        boolean saved = emergencyCareEpisodeAdministrativeDischargeService.newAdministrativeDischarge(administrativeDischargeBo, institutionId, institutionZoneId);
+        boolean saved = emergencyCareEpisodeAdministrativeDischargeService.newAdministrativeDischarge(administrativeDischargeBo, institutionId);
         LOG.debug("Output -> {}", saved);
         return ResponseEntity.ok().body(saved);
     }

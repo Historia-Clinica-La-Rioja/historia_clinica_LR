@@ -41,7 +41,7 @@ public class EmergencyCareEpisodeAdministrativeDischargeServiceImpl implements E
 
     @Override
 	@Transactional
-    public boolean newAdministrativeDischarge(AdministrativeDischargeBo administrativeDischargeBo, Integer institutionId, ZoneId institutionZoneId){
+    public boolean newAdministrativeDischarge(AdministrativeDischargeBo administrativeDischargeBo, Integer institutionId){
         LOG.debug("New administrative discharge  -> administrativeDischargeBo {}, institutionId{}", administrativeDischargeBo, institutionId);
         EmergencyCareDischarge emergencyCareDischarge = emergencyCareEpisodeDischargeRepository.findById(administrativeDischargeBo.getEpisodeId()).orElse(new EmergencyCareDischarge((short) 6));
 		if (emergencyCareDischarge.getEmergencyCareEpisodeId() == null)
@@ -52,7 +52,7 @@ public class EmergencyCareEpisodeAdministrativeDischargeServiceImpl implements E
         emergencyCareDischarge.setHospitalTransportId(administrativeDischargeBo.getHospitalTransportId());
         emergencyCareDischarge.setAmbulanceCompanyId(administrativeDischargeBo.getAmbulanceCompanyId());
 		if (emergencyCareDischarge.getMedicalDischargeOn() != null)
-        	assertValidDischarge(administrativeDischargeBo, emergencyCareDischarge.getMedicalDischargeOn(), institutionZoneId);
+        	assertValidDischarge(administrativeDischargeBo, emergencyCareDischarge.getMedicalDischargeOn());
         emergencyCareDischarge = emergencyCareEpisodeDischargeRepository.save(emergencyCareDischarge);
         emergencyCareEpisodeStateService.changeState(emergencyCareDischarge.getEmergencyCareEpisodeId(), institutionId, EmergencyCareState.CON_ALTA_ADMINISTRATIVA, null, null, null);
         return true;
@@ -62,11 +62,11 @@ public class EmergencyCareEpisodeAdministrativeDischargeServiceImpl implements E
 		Assert.isTrue(!emergencyCareEpisodeRepository.episodeHasEvolutionNote(episodeId), "El episodio requiere alta médica debido a que tiene notas de evolución asociadas");
 	}
 
-    private void assertValidDischarge(AdministrativeDischargeBo administrativeDischargeBo, LocalDateTime medicalDischargeDate, ZoneId institutionZoneId) {
+    private void assertValidDischarge(AdministrativeDischargeBo administrativeDischargeBo, LocalDateTime medicalDischargeDate) {
         LocalDateTime administrativeDischargeOn = administrativeDischargeBo.getAdministrativeDischargeOn();
         Assert.isTrue( !administrativeDischargeOn.isBefore(medicalDischargeDate), "care-episode.administrative-discharge.exceeds-min-date");
 
-        LocalDateTime today = dateTimeProvider.nowDateTimeWithZone(institutionZoneId);
+        LocalDateTime today = dateTimeProvider.nowDateTime();
         Assert.isTrue( !administrativeDischargeOn.isAfter(today), "care-episode.administrative-discharge.exceeds-max-date");
 
     }

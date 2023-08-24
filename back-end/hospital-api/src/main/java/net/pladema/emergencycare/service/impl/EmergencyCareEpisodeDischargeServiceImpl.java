@@ -55,9 +55,9 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
     }
 
     @Override
-    public boolean newMedicalDischarge(MedicalDischargeBo medicalDischarge, ZoneId institutionZoneId, Integer institutionId) {
+    public boolean newMedicalDischarge(MedicalDischargeBo medicalDischarge,Integer institutionId) {
         LOG.debug("Medical discharge service -> medicalDischargeBo {}", medicalDischarge);
-        validateMedicalDischarge(medicalDischarge, institutionZoneId, institutionId);
+        validateMedicalDischarge(medicalDischarge, institutionId);
         EmergencyCareDischarge newDischarge = toEmergencyCareDischarge(medicalDischarge);
         emergencyCareEpisodeDischargeRepository.save(newDischarge);
         documentFactory.run(medicalDischarge, false);
@@ -91,12 +91,12 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
         return new EmergencyCareDischarge(medicalDischarge.getSourceId(),medicalDischarge.getMedicalDischargeOn(),medicalDischarge.getMedicalDischargeBy(),medicalDischarge.getAutopsy(), medicalDischarge.getDischargeTypeId());
     }
 
-    private void validateMedicalDischarge(MedicalDischargeBo medicalDischarge, ZoneId institutionZoneId, Integer institutionId) {
+    private void validateMedicalDischarge(MedicalDischargeBo medicalDischarge, Integer institutionId) {
         EmergencyCareVo emergencyCareVo = assertExistEmergencyCareEpisode(medicalDischarge.getSourceId(),institutionId);
         //TODO validar que el episodio este en atencion
         LocalDateTime medicalDischargeOn = medicalDischarge.getMedicalDischargeOn();
-        assertMedicalDischargeIsAfterEpisodeCreationDate(medicalDischargeOn, emergencyCareVo.getCreatedOn(), institutionZoneId);
-        assertMedicalDischargeIsBeforeToday(institutionZoneId, medicalDischargeOn);
+        assertMedicalDischargeIsAfterEpisodeCreationDate(medicalDischargeOn, emergencyCareVo.getCreatedOn());
+        assertMedicalDischargeIsBeforeToday(medicalDischargeOn);
     }
 
     private EmergencyCareVo assertExistEmergencyCareEpisode(Integer episodeId, Integer institutionId) {
@@ -104,17 +104,12 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
                 .orElseThrow(() -> new NotFoundException("El episodio de guardia no existe", "El episodio de guardia no existe"));
     }
 
-    private void assertMedicalDischargeIsAfterEpisodeCreationDate(LocalDateTime medicalDischargeOn, LocalDateTime emergencyCareCreatedOn, ZoneId institutionZoneId) {
-        LocalDateTime zonedEmergencyCareCreatedOn = emergencyCareCreatedOn
-                .atZone(ZoneId.of(JacksonDateFormatConfig.UTC_ZONE_ID))
-                .withZoneSameInstant(institutionZoneId)
-                .toLocalDateTime()
-                .truncatedTo(ChronoUnit.MINUTES);
-        Assert.isTrue( !medicalDischargeOn.isBefore(zonedEmergencyCareCreatedOn), "care-episode.medical-discharge.exceeds-min-date");
+    private void assertMedicalDischargeIsAfterEpisodeCreationDate(LocalDateTime medicalDischargeOn, LocalDateTime emergencyCareCreatedOn) {
+       Assert.isTrue( !medicalDischargeOn.isBefore(emergencyCareCreatedOn), "care-episode.medical-discharge.exceeds-min-date");
     }
 
-    private void assertMedicalDischargeIsBeforeToday(ZoneId institutionZoneId, LocalDateTime medicalDischargeOn) {
-        LocalDateTime today = dateTimeProvider.nowDateTimeWithZone(institutionZoneId);
+    private void assertMedicalDischargeIsBeforeToday(LocalDateTime medicalDischargeOn) {
+        LocalDateTime today = dateTimeProvider.nowDateTime();
         Assert.isTrue( !medicalDischargeOn.isAfter(today), "care-episode.medical-discharge.exceeds-max-date");
     }
 }

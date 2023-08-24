@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdministrativeDischargeDto, MasterDataInterface, ResponseEmergencyCareDto, VMedicalDischargeDto } from '@api-rest/api-model';
-import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { EmergencyCareEntranceType } from '@api-rest/masterdata';
 import { EmergencyCareEpisodeAdministrativeDischargeService } from '@api-rest/services/emergency-care-episode-administrative-service.service';
 import { EmergencyCareEpisodeMedicalDischargeService } from '@api-rest/services/emergency-care-episode-medical-discharge.service';
@@ -78,11 +78,9 @@ export class AdministrativeDischargeComponent implements OnInit {
 			this.emergencyCareEspisodeMedicalDischargeService.hasMedicalDischarge(this.episodeId).subscribe((hasMedicalDischarge) => {
 				if (hasMedicalDischarge) {
 					this.administrativeDischarge$ = this.emergencyCareEspisodeMedicalDischargeService.getMedicalDischarge(this.episodeId);
-					const medicalDischargeOn$ = this.administrativeDischarge$.pipe(map(s => dateTimeDtoToDate(s.medicalDischargeOn)), map(dateToMomentTimeZone));
+					const medicalDischargeOn$ = this.administrativeDischarge$.pipe(map(s => dateTimeDtotoLocalDate(s.medicalDischargeOn)), map(dateToMomentTimeZone));
 					medicalDischargeOn$.subscribe(medicalDischargeOn => {
 						this.medicalDischargeOn = medicalDischargeOn;
-						console.log(this.medicalDischargeOn);
-
 						this.setDateTimeValidation(medicalDischargeOn);
 					});
 				}
