@@ -139,7 +139,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 
 		this.formEdit = this.formBuilder.group({
 			medicalOrder: this.formBuilder.group({
-				appointmentMedicalOrder: [null]
+				appointmentMedicalOrder: null
 			}),
 			//Medical Coverage selected in Edit Mode
 			newCoverageData: null,
@@ -166,6 +166,12 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 			.subscribe(appointment => {
 
 				this.appointment = appointment;
+
+				if (this.hasMedicalOrder(appointment)) {
+					appointment.orderData ? this.mapOrderToMedicalOrderInfo(appointment.orderData) : this.mapTranscribedOrderToMedicalOrderInfo(appointment.transcribedOrderData)
+					this.patientMedicalOrders.unshift(this.medicalOrder)
+				}
+
 				this.selectedState = this.appointment?.appointmentStateId;
 				if (this.appointment.stateChangeReason) {
 					this.formMotive.controls.motive.setValue(this.appointment.stateChangeReason);
@@ -204,6 +210,11 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 			});
 	}
 
+	private hasMedicalOrder(appointment: AppointmentDto): boolean {
+		let hasOrder = (appointment.orderData || appointment.transcribedOrderData) ? true : false;
+		return hasOrder;
+	}
+
 	private checkInputUpdatePermissions() {
 		this.setEditionPermission();
 		this.changeInputUpdatePermissions();
@@ -217,9 +228,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 	private setEditionPermission() {
 		this.canCoverageBeEdited = false;
 		this.canOrderBeEdited = false;
-		//Si no tiene orden, puede editar siempre
-		//let hasMedicalOrder = this.appointment.medicalOrder;
-		let hasMedicalOrder = this.medicalOrder;
+		let hasMedicalOrder = this.hasMedicalOrder(this.appointment);
 		this.canCoverageBeEdited = this.isAssigned();
 		if (hasMedicalOrder) {
 			this.canOrderBeEdited = this.isAssigned();
@@ -257,6 +266,33 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 			this.mapDiagnosticReportInfoDtoToMedicalOrderInfo(masterdataInfo[0]);
 			this.mapTranscribeOrderToMedicalOrderInfo(masterdataInfo[1]);
 		});
+	}
+
+	private mapOrderToMedicalOrderInfo(order: DiagnosticReportInfoDto){
+		let text = 'image-network.appointments.medical-order.ORDER';
+
+		this.translateService.get(text).subscribe(translatedText => {
+			this.medicalOrder = {
+						serviceRequestId: order.serviceRequestId,
+						studyName: order.snomed.pt,
+						studyId: order.id,
+						displayText: `${translatedText} # ${order.serviceRequestId} - ${order.snomed.pt}`,
+						isTranscribed: false
+					}
+			})
+	}
+
+	private mapTranscribedOrderToMedicalOrderInfo(order: TranscribedDiagnosticReportInfoDto){
+		let text = 'image-network.appointments.medical-order.TRANSCRIBED_ORDER';
+
+		this.translateService.get(text).subscribe(translatedText => {
+			this.medicalOrder = {
+					serviceRequestId: order.serviceRequestId,
+					studyName: order.studyName,
+					displayText: `${translatedText} - ${order.studyName}`,
+					isTranscribed: true
+			}
+		})
 	}
 
 	private mapDiagnosticReportInfoDtoToMedicalOrderInfo(patientMedicalOrders: DiagnosticReportInfoDto[]){
@@ -528,6 +564,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 	hideFilters(): void {
 		this.hideFilterPanel = !this.hideFilterPanel;
 		this.formEdit.controls.newCoverageData.setValue(this.coverageData?.id);
+		this.formEdit.controls.medicalOrder.get('appointmentMedicalOrder').setValue(this.medicalOrder)
 		this.formEdit.controls.phonePrefix.setValue(this.data.appointmentData.phonePrefix);
 		this.formEdit.controls.phoneNumber.setValue(this.data.appointmentData.phoneNumber);
 	}

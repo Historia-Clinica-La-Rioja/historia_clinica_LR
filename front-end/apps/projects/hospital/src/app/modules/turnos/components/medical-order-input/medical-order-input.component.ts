@@ -27,6 +27,7 @@ export class MedicalOrderInputComponent implements OnInit {
         this.form = this.rootFormGroup.control;
 		this.disabled ? this.form?.get('medicalOrder')?.get('appointmentMedicalOrder').disable()
 							: this.form?.get('medicalOrder')?.get('appointmentMedicalOrder').enable();
+		this.generateTooltipOnMedicalOrderChange();
     }
 
     newTranscribedOrder() {
