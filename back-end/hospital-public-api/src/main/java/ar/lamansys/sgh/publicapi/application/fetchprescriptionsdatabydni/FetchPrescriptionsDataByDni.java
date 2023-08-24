@@ -1,10 +1,9 @@
 package ar.lamansys.sgh.publicapi.application.fetchprescriptionsdatabydni;
 
-import ar.lamansys.sgh.publicapi.application.fetchprescriptionsbyidanddni.FetchPrescriptionsByIdAndDni;
-import ar.lamansys.sgh.publicapi.application.port.out.PrescriptionStorage;
+import ar.lamansys.sgh.publicapi.prescription.application.fetchprescriptionsbyidanddni.FetchPrescriptionsByIdAndDni;
+import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionStorage;
 
-import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionBo;
-import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionsDataBo;
+import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionsDataBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

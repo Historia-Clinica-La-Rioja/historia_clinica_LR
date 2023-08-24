@@ -49,16 +49,6 @@ En swagger los endpoints están agrupados como **PublicApi Pacientes** y tienen 
 
 Rol `API_PACIENTES` asignado a nivel global.
 
-## Recetas
-
-Permite validar y dispensar recetas.
-
-En swagger los endpoints están agrupados como **PublicApi Recetas** y tienen el prefijo:
-
-`/api/public-api/prescriptions/prescription`
-
-Rol `API_RECETAS` asignado a nivel global.
-
 ## Sip+
 
 Integración con el SISTEMA INFORMÁTICO PERINATAL.
@@ -79,6 +69,36 @@ En swagger los endpoints están agrupados como **PublicApi Usuarios** y tienen e
 
 
 Rol `API_USERS` asignado a nivel global.
+
+## Recetas
+
+> En swagger los endpoints están agrupados como **PublicApi Recetas**
+
+> Paquete Java [prescription en hospital-public-api](../hospital-public-api/src/main/java/ar/lamansys/sgh/publicapi/prescription).
+
+Usado principalmente desde los sistemas de las farmacias para validar y dispensar Receta Digital. Personas responsables de esos sitemas deberán tener el rol "API Recetas".
+
+### [PrescriptionRequest](../hospital-public-api/src/main/java/ar/lamansys/sgh/publicapi/prescription/infrastructure/input/rest/PrescriptionAccessController.java)
+
+Permite obtener la Receta Digital a partir de su ID y el DNI.
+
+`GET /api/public-api/prescriptions/prescription/{prescriptionId}/identification/{identificationNumber}`
+
+Posibles errores:
+1. BadPrescriptionIdFormatException `BAD_REQUEST`: `code` "bad-id", `text` "El id de receta no tiene el formato correcto."
+2. PrescriptionNotFoundException `NOT_FOUND`: `code` "not-found", `text` "No se encontró información sobre ese dni o id de receta"
+3. PrescriptionRequestException `BAD_REQUEST`: `code` "request-error", `text` "No se encontró la receta."
+
+### [PrescriptionDispense](../hospital-public-api/src/main/java/ar/lamansys/sgh/publicapi/prescription/infrastructure/input/rest/PrescriptionAccessController.java)
+
+Permite marcar un renglón de la Receta Digital como dispensado.
+
+`POST /api/public-api/prescriptions/prescription/{prescriptionId}/identification/{identificationNumber}`
+
+Posibles errores:
+1. BadPrescriptionIdFormatException `BAD_REQUEST`: `code` "bad-id", `text` "El id de receta no tiene el formato correcto."
+2. PrescriptionIdMatchException `BAD_REQUEST`: `code` "prescription-id-match", `text` "El identificador de receta no coincide con los de los renglones."
+3. PrescriptionDispenseException `BAD_REQUEST`: `code` "dispense-error", `text` "Error dispensando"
 
 ## Red de Imágenes
 
