@@ -104,13 +104,13 @@ Usado principalmente desde servidores PACS. Personas responsables de servidores 
 
 ### [UpdateResult](../hospital-public-api/src/main/java/ar/lamansys/sgh/publicapi/imagecenter/infrastructure/input/rest/OrchestratorController.java)
 
-Permite verificar los accesos de profesionales a los estudios:
+Permite modificar el resultado y el estado de un estudio.
 
 `POST /api/public-api/orchestrator/update-result`
 
 ### [UpdateSize](../hospital-public-api/src/main/java/ar/lamansys/sgh/publicapi/imagecenter/infrastructure/input/rest/OrchestratorController.java)
 
-Permite verificar los accesos de profesionales a los estudios:
+Permite modificar el tamaño y el `imageId`.
 
 `POST /api/public-api/orchestrator/set-size-study`
 

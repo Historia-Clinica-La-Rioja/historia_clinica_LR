@@ -147,8 +147,8 @@ public enum AppFeature implements Feature {
 	@Label("Indica si está habilitada la acción de imprimir HC de pacientes")
 	HABILITAR_IMPRESION_HISTORIA_CLINICA_EN_DESARROLLO,
 
-	@Label("Indica si está habilitada la gestión de Roles de API Pública")
-	ROLES_API_PUBLICA_EN_DESARROLLO,
+	@Label("Indica si está habilitado el uso de API Pública con el Rol genérico")
+	HABILITAR_API_CONSUMER,
 
 	@Label("Indica si el módulo de telemedicina está activo")
 	HABILITAR_TELEMEDICINA,

@@ -7,8 +7,6 @@ import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
-import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.permissions.repository.entity.Role;
 import net.pladema.permissions.repository.entity.UserRole;
 import net.pladema.permissions.repository.enums.ERole;
@@ -18,7 +16,7 @@ public class BackofficeRolesFilter {
 	private static final List<ERole> ALWAYS_HIDE = List.of(
 			ERole.ROOT,
 			ERole.PARTIALLY_AUTHENTICATED,
-			ERole.API_CONSUMER
+			ERole.API_CONSUMER // no se debería asignar mas
 	);
 
 	public static final List<ERole> PUBLIC_API_ROLES = List.of(
@@ -27,15 +25,16 @@ public class BackofficeRolesFilter {
 			ERole.API_PACIENTES,
 			ERole.API_RECETAS,
 			ERole.API_SIPPLUS,
-			ERole.API_USERS
+			ERole.API_USERS,
+			ERole.API_IMAGENES,
+			ERole.API_ORQUESTADOR
 	);
 
 	private final List<ERole> rolesToHide;
 
-	public BackofficeRolesFilter(FeatureFlagsService featureFlagsService) {
+	public BackofficeRolesFilter() {
 
-		List<ERole> optApiPublicRoles = featureFlagsService.isOn(AppFeature.ROLES_API_PUBLICA_EN_DESARROLLO) ?
-				Collections.emptyList() : PUBLIC_API_ROLES;
+		List<ERole> optApiPublicRoles = Collections.emptyList();
 
 		this.rolesToHide = Stream.concat(
 				ALWAYS_HIDE.stream(),
