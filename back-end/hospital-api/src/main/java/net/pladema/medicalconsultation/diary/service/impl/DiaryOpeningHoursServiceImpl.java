@@ -93,6 +93,9 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
         diaryOpeningHours.setOverturnCount((doh.getOverturnCount() != null) ? doh.getOverturnCount() : 0);
         diaryOpeningHours.setExternalAppointmentsAllowed(doh.getExternalAppointmentsAllowed());
 		diaryOpeningHours.setProtectedAppointmentsAllowed(doh.getProtectedAppointmentsAllowed());
+		diaryOpeningHours.setOnSiteAttentionAllowed(doh.getOnSiteAttentionAllowed());
+		diaryOpeningHours.setPatientVirtualAttentionAllowed(doh.getPatientVirtualAttentionAllowed());
+		diaryOpeningHours.setSecondOpinionVirtualAttentionAllowed(doh.getSecondOpinionVirtualAttentionAllowed());
         return diaryOpeningHours;
     }
 

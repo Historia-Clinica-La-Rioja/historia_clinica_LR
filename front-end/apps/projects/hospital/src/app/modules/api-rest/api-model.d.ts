@@ -935,9 +935,12 @@ export interface DiaryListDto {
 export interface DiaryOpeningHoursDto extends Overlapping<DiaryOpeningHoursDto> {
     externalAppointmentsAllowed: boolean;
     medicalAttentionTypeId: number;
+    onSiteAttentionAllowed?: boolean;
     openingHours: OpeningHoursDto;
     overturnCount?: number;
+    patientVirtualAttentionAllowed?: boolean;
     protectedAppointmentsAllowed: boolean;
+    secondOpinionVirtualAttentionAllowed?: boolean;
 }
 
 export interface DietDto extends IndicationDto {
