@@ -239,7 +239,6 @@ public class AppointmentsController {
 		return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
 	}
 
-
 	@GetMapping(value="/list/{healthcareProfessionalId}")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO, ADMINISTRATIVO_RED_DE_IMAGENES')")
 	public ResponseEntity<Collection<AppointmentListDto>> getList(
@@ -623,6 +622,19 @@ public class AppointmentsController {
 			@RequestParam(name = "patientMedicalCoverageId", required = false) Integer patientMedicalCoverageId) {
 		log.debug("Input parameters -> institutionId {},appointmentId {}, patientMedicalCoverageId {}", institutionId, appointmentId, patientMedicalCoverageId);
 		boolean result = appointmentService.updateMedicalCoverage(appointmentId, patientMedicalCoverageId);
+		log.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
+
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	@PutMapping(value = "/{appointmentId}/update-orderId")
+	public ResponseEntity<Boolean> updateOrderId(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "appointmentId") Integer appointmentId,
+			@RequestParam(name = "orderId", required = false) Integer orderId,
+			@RequestParam(name = "transcribed") boolean isTranscribed){
+		log.debug("Input parameters -> institutionId {}, appointmentId {}, orderId {}", institutionId, appointmentId, orderId);
+		boolean result = appointmentOrderImageService.updateOrderId(appointmentId, orderId, isTranscribed);
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}

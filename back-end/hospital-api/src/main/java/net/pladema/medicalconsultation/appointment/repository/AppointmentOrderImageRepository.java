@@ -64,6 +64,7 @@ public interface AppointmentOrderImageRepository extends JpaRepository<Appointme
 			"JOIN Appointment AS app ON (aoi.pk.appointmentId = app.id) "+
 			"LEFT JOIN Document as d ON (aoi.documentId = d.id) "+
 			"WHERE aoi.orderId = :orderId "+
+			"AND aoi.active = true " +
 			"AND app.appointmentStateId = "+ AppointmentState.SERVED )
 	List<AppointmentOrderImageExistCheckVo> findAppointmentIdAndReportByOrderId(@Param("orderId") Integer orderId);
 
@@ -108,4 +109,20 @@ public interface AppointmentOrderImageRepository extends JpaRepository<Appointme
 			"WHERE aoi.pk.appointmentId = :appointmentId")
 	void updateReportStatusId(@Param("appointmentId") Integer appointmentId,
 							   @Param("reportStatusId") Short reportStatusId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE AppointmentOrderImage AS aoi " +
+			"SET aoi.orderId = :orderId, aoi.transcribedOrderId = null" +
+			"WHERE aoi.pk.appointmentId = :appointmentId")
+	void updateOrderId(@Param("appointmentId") Integer appointmentId,
+					   @Param("orderId") Integer orderId );
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE AppointmentOrderImage AS aoi " +
+			"SET aoi.transcribedOrderId = :orderId, aoi.orderId = null " +
+			"WHERE aoi.pk.appointmentId = :appointmentId")
+	void updateTranscribedOrderId(@Param("appointmentId") Integer appointmentId,
+					   @Param("orderId") Integer orderId );
 }

@@ -82,4 +82,15 @@ public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageSe
 		LOG.debug("Input parameters -> appointmentId {}, reportStatusId {} ", appointmentId, reportStatusId);
 		appointmentOrderImageRepository.updateReportStatusId(appointmentId, reportStatusId);
 	}
+
+	@Override
+	public boolean updateOrderId(Integer appointmentId, Integer orderId, Boolean transcribed) {
+		LOG.debug("Input parameters -> appointmentId '{}', orderId '{}', transcribed '{}'", appointmentId, orderId, transcribed);
+		if (transcribed) {
+			appointmentOrderImageRepository.updateTranscribedOrderId(appointmentId, orderId);
+			return Boolean.TRUE;
+		}
+		appointmentOrderImageRepository.updateOrderId(appointmentId, orderId);
+		return Boolean.TRUE;
+	}
 }
