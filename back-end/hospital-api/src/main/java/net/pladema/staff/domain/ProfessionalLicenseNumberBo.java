@@ -3,12 +3,14 @@ package net.pladema.staff.domain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import net.pladema.staff.service.domain.ELicenseNumberTypeBo;
 
 import java.util.Objects;
 
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 public class ProfessionalLicenseNumberBo {
 

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { ProfessionalLicenseService } from "@api-rest/services/professional-license.service";
+import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Moment } from 'moment';
@@ -10,12 +12,12 @@ import { MIN_DATE } from '@core/utils/date.utils';
 
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 
-import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import {
+	AppFeature,
 	ERole,
 	HierarchicalUnitDto,
-	HierarchicalUnitTypeDto,
-	ProfessionalDto,
+	HierarchicalUnitTypeDto, LicenseNumberTypeDto, ProfessionalDto,
+	ProfessionalLicenseNumberDto, ProfessionalRegistrationNumbersDto,
 	ProfessionalsByClinicalSpecialtyDto
 } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
@@ -40,14 +42,13 @@ export class HomeComponent implements OnInit {
 
 	public hasError = hasError;
 
-	professionalsTypeahead: TypeaheadOption<ProfessionalDto>[];
+	professionalsTypeahead: TypeaheadOption<ProfessionalRegistrationNumbersDto>[];
 	professionalInitValue: TypeaheadOption<ProfessionalDto>;
-	professionals: ProfessionalDto[] = [];
+	professionals: ProfessionalRegistrationNumbersDto[] = [];
 	hierarchicalUnitTypesTypeahead: TypeaheadOption<HierarchicalUnitTypeDto>[];
 	hierarchicalUnitsTypeahead: TypeaheadOption<HierarchicalUnitDto>[];
 	hierarchicalUnits: HierarchicalUnitDto[];
 
-	specialtiesTypeahead: TypeaheadOption<ProfessionalsByClinicalSpecialtyDto>[];
 	specialtiesTypeaheadOptions$: Observable<TypeaheadOption<ProfessionalsByClinicalSpecialtyDto>[]>;
 
 	idProfessional: number;
@@ -60,16 +61,21 @@ export class HomeComponent implements OnInit {
 	cubeReportData: UIComponentDto;
 
 	isLoadingRequestReport = false;
+	private nameSelfDeterminationFF = false;
+	private licensesTypeMasterData: LicenseNumberTypeDto[];
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
-		private readonly healthcareProfessionalService: HealthcareProfessionalByInstitutionService,
+		private readonly professionalLicenseService: ProfessionalLicenseService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly reportsService: ReportsService,
 		private readonly permissionsService: PermissionsService,
 		private readonly hierarchicalUnitsService: HierarchicalUnitsService,
-		private readonly hierarchicalUnitTypeService: HierarchicalUnitTypeService
-	) { }
+		private readonly hierarchicalUnitTypeService: HierarchicalUnitTypeService,
+		private readonly featureFlagService: FeatureFlagService,
+	) {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn =>{this.nameSelfDeterminationFF = isOn});
+	}
 
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
@@ -82,7 +88,7 @@ export class HomeComponent implements OnInit {
 			hierarchicalUnitId: [null],
 			includeHierarchicalUnitDescendants: [null]
 		});
-		this.healthcareProfessionalService.getAll().subscribe(professionals => {
+		this.professionalLicenseService.getAllProfessionalRegistrationNumbers().subscribe(professionals => {
 			this.professionals = professionals;
 			this.specialtiesTypeaheadOptions$ = this.getSpecialtiesTypeaheadOptions$(professionals);
 			this.professionalsTypeahead = professionals.map(d => this.toProfessionalTypeahead(d));
@@ -96,6 +102,10 @@ export class HomeComponent implements OnInit {
 			this.hierarchicalUnitsTypeahead = hierarchicalUnits.map(hu => this.toHierarchicalUnitTypeahead(hu));
 		});
 		this.hierarchicalUnitTypeService.getByInstitution().subscribe( hierarchicalUnitTypes => this.hierarchicalUnitTypesTypeahead = hierarchicalUnitTypes.map(hut => this.toHierarchicalUnitTypeTypeahead(hut)));
+
+		this.professionalLicenseService.getLicensesType().subscribe(licensesTypeMasterData => {
+			this.licensesTypeMasterData = licensesTypeMasterData;
+		});
 	}
 
 	private firstDayOfThisMonth(): Moment {
@@ -116,8 +126,8 @@ export class HomeComponent implements OnInit {
 		return today;
 	}
 
-	private getSpecialtiesTypeaheadOptions$(doctors: ProfessionalDto[]) {
-		return this.clinicalSpecialtyService.getClinicalSpecialties(doctors.map(d => d.id))
+	private getSpecialtiesTypeaheadOptions$(doctors: ProfessionalRegistrationNumbersDto[]) {
+		return this.clinicalSpecialtyService.getClinicalSpecialties(doctors.map(d => d.healthcareProfessionalId))
 			.pipe(map(toTypeaheadOptionList));
 
 		function toTypeaheadOptionList(prosBySpecialtyList: ProfessionalsByClinicalSpecialtyDto[]):
@@ -161,14 +171,14 @@ export class HomeComponent implements OnInit {
 		}
 	}
 
-	setProfessional(professional: ProfessionalDto) {
+	setProfessional(professional: ProfessionalLicenseNumberDto) {
 		this.idProfessional = professional?.id;
 		this.form.controls.professionalId.setValue(professional?.id);
 	}
 
-	private getProfessionalsFilteredBy(specialty: ProfessionalsByClinicalSpecialtyDto): ProfessionalDto[] {
+	private getProfessionalsFilteredBy(specialty: ProfessionalsByClinicalSpecialtyDto): ProfessionalRegistrationNumbersDto[] {
 		if (specialty?.professionalsIds) {
-			return this.professionals.filter(p => specialty.professionalsIds.find(e => e === p.id));
+			return this.professionals.filter(p => specialty.professionalsIds.find(e => e === p.healthcareProfessionalId));
 		}
 		return this.professionals;
 	}
@@ -180,10 +190,10 @@ export class HomeComponent implements OnInit {
 		return this.hierarchicalUnits;
 	}
 
-	private toProfessionalTypeahead(professionalDto: ProfessionalDto): TypeaheadOption<ProfessionalDto> {
+	private toProfessionalTypeahead(professionalRegistrationNumbersDto: ProfessionalRegistrationNumbersDto): TypeaheadOption<ProfessionalRegistrationNumbersDto> {
 		return {
-			compareValue: this.getFullNameLicence(professionalDto),
-			value: professionalDto
+			compareValue: this.getFullNameLicense(professionalRegistrationNumbersDto),
+			value: professionalRegistrationNumbersDto
 		};
 	}
 
@@ -201,12 +211,23 @@ export class HomeComponent implements OnInit {
 		};
 	}
 
-	getFullNameLicence(professional: ProfessionalDto): string {
-		return professional.licenceNumber ? `${this.getFullName(professional)} - ${professional.licenceNumber}` : `${this.getFullName(professional)}`;
+	getFullNameLicense(professional: ProfessionalRegistrationNumbersDto): string {
+		return `${this.getFullName(professional)} ${professional.license.length ? '-' : ''} ${this.getFullLicense(professional.license)}`;
 	}
 
-	getFullName(professional: ProfessionalDto): string {
-		return `${professional.lastName}, ${professional.firstName}`;
+	getFullName(professional: ProfessionalRegistrationNumbersDto): string {
+		const nameSelfDetermination = professional.nameSelfDetermination;
+		return `${professional.lastName}, ${this.nameSelfDeterminationFF && nameSelfDetermination ? nameSelfDetermination : professional.firstName}`;
+	}
+
+	getFullLicense(license: ProfessionalLicenseNumberDto[]): string {
+		const licenseUnique = license.filter((item, index, arr) => {
+			return !arr.slice(0, index).some(other => (other.typeId === item.typeId && other.licenseNumber === item.licenseNumber));
+		});
+
+		return `${licenseUnique.map((l) => 
+			this.licensesTypeMasterData.find(item => item.id === l.typeId).description + ' ' + l.licenseNumber)
+			.join(' - ')}`;
 	}
 
 	checkValidDates() {

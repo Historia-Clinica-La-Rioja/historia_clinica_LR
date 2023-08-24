@@ -2990,6 +2990,14 @@ export interface ProfessionalProfessionsDto {
     specialties: HealthcareProfessionalSpecialtyDto[];
 }
 
+export interface ProfessionalRegistrationNumbersDto {
+    healthcareProfessionalId: number;
+    firstName: string;
+    lastName: string;
+    license: ProfessionalLicenseNumberDto[];
+    nameSelfDetermination?: string;
+}
+
 export interface ProfessionalSpecialtyDto {
     description: string;
     id: number;
