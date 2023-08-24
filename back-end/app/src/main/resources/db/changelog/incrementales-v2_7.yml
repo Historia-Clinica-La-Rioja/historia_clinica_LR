@@ -43,3 +43,24 @@ databaseChangeLog:
               tableName: clinical_specialty_mandatory_medical_practice
               columnNames: clinical_specialty_id, mandatory_medical_practice_id
               constraintName: UQ_clinical_specialty_id_mandatory_medical_practice_id
+        
+    - changeSet:    
+        id: add-virtual-consultation-columns-diary_opening_hours
+        author: mmalyvarni
+        comment: add virtual consultation columns to diary_opening_hours table
+        changes:
+          - addColumn:
+              tableName: diary_opening_hours
+              columns:
+                - column:
+                    name: on_site_attention_allowed
+                    type: boolean
+                    defaultValue: ${boolean.true}
+                - column:
+                    name: patient_virtual_attention_allowed
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: second_opinion_virtual_attention_allowed
+                    type: boolean
+                    defaultValue: ${boolean.false}
