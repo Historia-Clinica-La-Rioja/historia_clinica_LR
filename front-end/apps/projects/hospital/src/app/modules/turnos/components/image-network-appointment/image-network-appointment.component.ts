@@ -456,7 +456,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 				this.updatePhoneNumber(this.formEdit.controls.phonePrefix.value, this.formEdit.controls.phoneNumber.value);
 				this.phoneNumber = this.formatPhonePrefixAndNumber(this.formEdit.controls.phonePrefix.value, this.formEdit.controls.phoneNumber.value);
 			}
-			this.medicalOrder = this.formEdit.get('medicalOrder').get('appointmentMedicalOrder').value;
+			this.setMedicalOrder();
 			this.checkInputUpdatePermissions();
 			this.hideFilters();
 		}
@@ -476,6 +476,18 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 			(this.selectedState === APPOINTMENT_STATES_ID.CONFIRMED &&
 				this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED) ||
 			this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.OUT_OF_DIARY;
+	}
+
+	private setMedicalOrder(){
+		this.medicalOrder = this.formEdit.get('medicalOrder').get('appointmentMedicalOrder').value;
+		let parameters = {
+			appointmentId: this.data.appointmentData.appointmentId,
+			serviceRequestId: this.medicalOrder ? this.medicalOrder.serviceRequestId : null,
+			isTranscribed: this.medicalOrder ? this.medicalOrder.isTranscribed : null,
+			studyId: this.medicalOrder ? 
+						(!this.medicalOrder.isTranscribed ? this.medicalOrder.studyId : null) : null
+		}
+		this.appointmentService.updateAppointmentMedicalOrder(parameters.appointmentId, parameters.serviceRequestId, parameters.studyId, parameters.isTranscribed).subscribe();
 	}
 
 	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motive?: string): void {

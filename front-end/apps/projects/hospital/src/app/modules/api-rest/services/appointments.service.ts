@@ -120,6 +120,15 @@ export class AppointmentsService {
 		return this.http.post<number>(url, appointment);
 	}
 
+	updateAppointmentMedicalOrder(appointmentId: number, orderId: number, studyId: number, transcribed: boolean): Observable<boolean> {
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = orderId ? queryParams.append('orderId', JSON.stringify(orderId)) : queryParams;
+		queryParams = studyId ? queryParams.append('studyId', JSON.stringify(studyId)) : queryParams;
+		queryParams = transcribed != undefined ? queryParams.append('transcribed', transcribed) : queryParams.append('transcribed', false);
+		const url = `${this.BASE_URL}/${appointmentId}/update-orderId`;
+		return this.http.put<boolean>(url, {}, { params: queryParams });
+	}
+
 	get(appoinmentId: number): Observable<AppointmentDto> {
 		const url = `${this.BASE_URL}/${appoinmentId}`;
 		return this.http.get<AppointmentDto>(url);
