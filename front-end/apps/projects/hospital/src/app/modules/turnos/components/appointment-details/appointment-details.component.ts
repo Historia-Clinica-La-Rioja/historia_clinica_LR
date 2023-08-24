@@ -66,6 +66,8 @@ export class AppointmentDetailsComponent implements OnInit {
 					this.assignAppointment();
 				}
 			}
+			else
+				this.assignAppointment();
 		})
 	}
 
