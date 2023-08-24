@@ -22,6 +22,7 @@ import { EquipmentDiaryComponent } from './components/equipment-diary/equipment-
 import { EquipmentTranscribeOrderPopupComponent } from './dialogs/equipment-transcribe-order-popup/equipment-transcribe-order-popup.component';
 import { ImageNetworkAppointmentComponent } from './components/image-network-appointment/image-network-appointment.component';
 import { ProfessionalSelectComponent } from './components/professional-select/professional-select.component';
+import { ReferenceReportComponent } from './components/reference-report/reference-report.component';
 import { SeachAppointmentsByProfessionalComponent } from './components/seach-appointments-by-professional/seach-appointments-by-professional.component';
 import { SearchAppointmentsByEquipmentComponent } from './components/search-appointments-by-equipment/search-appointments-by-equipment.component';
 import { SearchAppointmentsBySpecialtyComponent } from './components/search-appointments-by-specialty/search-appointments-by-specialty.component';
@@ -58,6 +59,7 @@ import { EquipmentAppointmentsFacadeService } from './services/equipment-appoint
 		EquipmentTranscribeOrderPopupComponent,
 		ImageNetworkAppointmentComponent,
 		ProfessionalSelectComponent,
+		ReferenceReportComponent,
 		SeachAppointmentsByProfessionalComponent,
 		SearchAppointmentsByEquipmentComponent,
 		SearchAppointmentsBySpecialtyComponent,

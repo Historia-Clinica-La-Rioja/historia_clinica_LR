@@ -33,6 +33,7 @@
 			"SECTOR_CONSULTORY_TOOLTIP": "Consultorio y sector",
 			"PROFESSIONALS_TOOLTIP": "Profesionales",
 			"PERCENTAGE_PROTECTED_APPOINTMENT": "% de turnos protegidos por día",
+			"REFERENCES": "referencias",
 			"messages": {
 				"NO_SPECIFIED_DATE": "Por favor ingrese una fecha para realizar la búsqueda"
 			}

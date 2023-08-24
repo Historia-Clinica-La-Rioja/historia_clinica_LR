@@ -43,6 +43,10 @@
 			<app-search-appointments-by-equipment [selectedEquipment]="selectedEquipment" [editedDiary]="selectedDiary">
 			</app-search-appointments-by-equipment>
 		</mat-tab>
+
+		<mat-tab label="{{ 'turnos.home.REFERENCES' | translate | uppercase }}" *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
+			<app-reference-report></app-reference-report>
+		</mat-tab>
 	</mat-tab-group>
 
 	<div *ngIf="noPermission">
