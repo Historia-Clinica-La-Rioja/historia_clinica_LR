@@ -18,8 +18,11 @@ import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.PrescriptionDisp
 import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.PrescriptionIdMatchException;
 import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.PrescriptionNotFoundException;
 import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.PrescriptionRequestException;
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.PrescriptionPublicApiPermissions;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.ChangePrescriptionStateDto;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionDto;
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.exceptions.PrescriptionDispenseAccessDeniedException;
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.exceptions.PrescriptionRequestAccessDeniedException;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.exceptions.validators.ValidPrescriptionStatus;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.mapper.PrescriptionMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,16 +41,20 @@ public class PrescriptionAccessController {
 
 	private final ChangePrescriptionState changePrescriptionState;
 
+	private final PrescriptionPublicApiPermissions prescriptionPublicApiPermissions;
+
 	private final PrescriptionMapper prescriptionMapper;
 
 	@Value("${prescription.domain.number}")
 	private int domainNumber;
 
 	public PrescriptionAccessController(
+			PrescriptionPublicApiPermissions prescriptionPublicApiPermissions,
 			FetchPrescriptionsByIdAndDni fetchPrescriptionsByIdAndDni,
 			ChangePrescriptionState changePrescriptionState,
 			PrescriptionMapper prescriptionMapper
 	) {
+		this.prescriptionPublicApiPermissions = prescriptionPublicApiPermissions;
 		this.fetchPrescriptionsByIdAndDni = fetchPrescriptionsByIdAndDni;
 		this.changePrescriptionState = changePrescriptionState;
 		this.prescriptionMapper = prescriptionMapper;
@@ -59,6 +66,9 @@ public class PrescriptionAccessController {
 			@PathVariable("identificationNumber") String identificationNumber
 	) throws BadPrescriptionIdFormatException, PrescriptionNotFoundException {
 
+		if (!prescriptionPublicApiPermissions.canAccess()) {
+			throw new PrescriptionRequestAccessDeniedException();
+		}
 		log.debug(INPUT + "prescriptionId {}, identificationNumber {}", prescriptionId, identificationNumber);
 
 		var prescriptionIdentifier = PrescriptionIdentifier.parse(prescriptionId);
@@ -82,6 +92,10 @@ public class PrescriptionAccessController {
 			@PathVariable("identificationNumber") String identificationNumber,
 			@RequestBody @ValidPrescriptionStatus ChangePrescriptionStateDto changePrescriptionLineDto
 	) throws BadPrescriptionIdFormatException, PrescriptionIdMatchException, PrescriptionNotFoundException {
+
+		if (!prescriptionPublicApiPermissions.canAccess()) {
+			throw new PrescriptionDispenseAccessDeniedException();
+		}
 
 		log.debug(INPUT + "prescriptionId {}, identificationNumber {}", prescriptionId, identificationNumber);
 
