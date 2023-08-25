@@ -83,9 +83,19 @@
 				<div mat-dialog-title>
 					{{'turnos.agenda-setup.dialog.MODALITY' | translate}}
 				</div>
-				<mat-checkbox color="primary" [checked]="true" [disabled]="true">
+				<mat-checkbox color="primary" [disabled]="!isEnableTelemedicina" formControlName="onSiteAttentionAllowed">
 					<span>
 						{{'turnos.agenda-setup.dialog.ATTENDS_FACE_TO_FACE' | translate}}
+					</span>
+				</mat-checkbox>
+				<mat-checkbox color="primary" [disabled]="!isEnableTelemedicina" formControlName="patientVirtualAttentionAllowed">
+					<span>
+						{{'turnos.agenda-setup.dialog.ATTENDS_BY_TELECONSULTATION_OF_PATIENT' | translate}}
+					</span>
+				</mat-checkbox>
+				<mat-checkbox color="primary" [disabled]="!data.hasSelectedLinesOfCare || !isEnableTelemedicina" formControlName="secondOpinionVirtualAttentionAllowed">
+					<span>
+						{{'turnos.agenda-setup.dialog.ATTENDS_BY_TELECONSULTATION_OF_SECOND_OPINION' | translate}}
 					</span>
 				</mat-checkbox>
 			</div>
@@ -93,20 +103,19 @@
 				<div mat-dialog-title>
 					{{'turnos.agenda-setup.dialog.TAKE_SHIFTS_TITLE' | translate}}
 				</div>
-				<ng-container *ngIf="data.hasSelectedLinesOfCare">
-					<mat-checkbox (change)="changeAvailbleForCareLine()" [checked]="form.value.protectedAppointmentsAllowed">
+				<div>
+					<mat-checkbox (change)="changeAvailbleForCareLine()" [disabled]="!data.hasSelectedLinesOfCare"
+						[checked]="form.value.protectedAppointmentsAllowed">
 						<span>
 							{{'turnos.agenda-setup.dialog.TAKE_PROTECTED_ONLINE' | translate}}
 						</span>
 					</mat-checkbox>
-				</ng-container>
-
+				</div>
 				<div>
-					<div fxLayout="column" *ngIf="isEnableOnlineAppointments">
-						<mat-checkbox (change)="changeAvailableForBooking()" [checked]="form.value.availableForBooking">
-							<span [translate]="'turnos.agenda-setup.dialog.ATTEND_ONLINE'"></span>
-						</mat-checkbox>
-					</div>
+					<mat-checkbox (change)="changeAvailableForBooking()" [disabled]="!isEnableOnlineAppointments"
+						[checked]="form.value.availableForBooking">
+						<span [translate]="'turnos.agenda-setup.dialog.ATTEND_ONLINE'"></span>
+					</mat-checkbox>
 				</div>
 			</div>
 		</div>

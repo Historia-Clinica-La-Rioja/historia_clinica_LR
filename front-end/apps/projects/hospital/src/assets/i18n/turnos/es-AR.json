@@ -96,8 +96,9 @@
 				"TAKE_PROTECTED_ONLINE": "Atiende turnos protegidos por linea de cuidado",
 				"ATTEND_ONLINE": "Atiende turnos online",
 				"ATTEND_SHIFTS_PROTECTED_BY_LINES_OF_CARE": "Atiende turnos protegidos por líneas de cuidado",
-				"ERROR": "No se puede destildar esta opción porque hay turno asignados de este tipo"
-
+				"ERROR": "No se puede destildar esta opción porque hay turno asignados de este tipo",
+				"ATTENDS_BY_TELECONSULTATION_OF_PATIENT": "Atiende teleconsultas a pacientes",
+				"ATTENDS_BY_TELECONSULTATION_OF_SECOND_OPINION":"Atiende teleconsultas de segunda opinion"
 			},
 			"messages": {
 				"SUCCESS": "La agenda se guardó exitosamente",
@@ -133,7 +134,7 @@
 			"ASSIGNED_APPOINTMENT": "Turno asignado",
 			"fields": {
 				"DOCUMENT_TYPE": "Tipo de documento",
-				"DOCUMENT_NUMBER": "Nº de documento"	
+				"DOCUMENT_NUMBER": "Nº de documento"
 			},
 			"messages": {
 				"ERROR": "Paciente no encontrado",

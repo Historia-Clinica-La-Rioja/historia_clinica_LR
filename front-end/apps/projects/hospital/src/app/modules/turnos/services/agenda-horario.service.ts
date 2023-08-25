@@ -111,7 +111,10 @@ export class AgendaHorarioService {
 					availableForBooking: !!event.meta.availableForBooking,
 					protectedAppointmentsAllowed: !!event.meta.protectedAppointmentsAllowed,
 					hasSelectedLinesOfCare: this.hasSelectedLinesOfCare,
-					editMode: this.editMode
+					editMode: this.editMode,
+					patientVirtualAttentionAllowed:event.meta.patientVirtualAttentionAllowed,
+					secondOpinionVirtualAttentionAllowed:event.meta.secondOpinionVirtualAttentionAllowed,
+					onSiteAttentionAllowed:true,
 				}
 			});
 		dialogRef.afterClosed().subscribe(dialogInfo => {
@@ -165,6 +168,9 @@ export class AgendaHorarioService {
 						hasSelectedLinesOfCare: hasSelectedLinesOfCare,
 						openingHoursId: event.meta.diaryOpeningHourId,
 						protectedAppointmentsAllowed: !!event.meta.protectedAppointmentsAllowed,
+						patientVirtualAttentionAllowed:event.meta.patientVirtualAttentionAllowed,
+						secondOpinionVirtualAttentionAllowed:event.meta.secondOpinionVirtualAttentionAllowed,
+						onSiteAttentionAllowed:event.meta.onSiteAttentionAllowed,
 					}
 				});
 			dialogRef.afterClosed().subscribe(dialogInfo => {
@@ -241,6 +247,9 @@ export class AgendaHorarioService {
 				medicalAttentionTypeId: event.meta.medicalAttentionType.id,
 				overturnCount: event.meta.overturnCount,
 				protectedAppointmentsAllowed: event.meta.protectedAppointmentsAllowed,
+				patientVirtualAttentionAllowed: event.meta.patientVirtualAttentionAllowed,
+				secondOpinionVirtualAttentionAllowed: event.meta.secondOpinionVirtualAttentionAllowed,
+				onSiteAttentionAllowed:event.meta.onSiteAttentionAllowed,
 			};
 		}
 	}
@@ -282,6 +291,9 @@ export class AgendaHorarioService {
 				overturnCount: diaryOpeningHour.overturnCount,
 				availableForBooking: diaryOpeningHour?.externalAppointmentsAllowed,
 				protectedAppointmentsAllowed: diaryOpeningHour.protectedAppointmentsAllowed,
+				patientVirtualAttentionAllowed: diaryOpeningHour.patientVirtualAttentionAllowed,
+				secondOpinionVirtualAttentionAllowed: diaryOpeningHour.secondOpinionVirtualAttentionAllowed,
+				onSiteAttentionAllowed: diaryOpeningHour.onSiteAttentionAllowed,
 			}
 
 		};
