@@ -38,7 +38,7 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo( " +
             "d.id, oh, doh.medicalAttentionTypeId, doh.overturnCount, doh.externalAppointmentsAllowed, " +
-			"doh.protectedAppointmentsAllowed) " +
+			"doh.protectedAppointmentsAllowed, doh.onSiteAttentionAllowed, doh.patientVirtualAttentionAllowed, doh.secondOpinionVirtualAttentionAllowed) " +
             "FROM DiaryOpeningHours AS doh " +
             "JOIN Diary AS d ON ( doh.pk.diaryId = d.id ) " +
             "JOIN OpeningHours AS oh ON ( doh.pk.openingHoursId = oh.id ) " +
@@ -50,7 +50,7 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo( " +
 			"d.id, oh, doh.medicalAttentionTypeId, doh.overturnCount, doh.externalAppointmentsAllowed, " +
-			"doh.protectedAppointmentsAllowed) " +
+			"doh.protectedAppointmentsAllowed, doh.onSiteAttentionAllowed, doh.patientVirtualAttentionAllowed, doh.secondOpinionVirtualAttentionAllowed) " +
 			"FROM DiaryOpeningHours AS doh " +
 			"JOIN Diary AS d ON ( doh.pk.diaryId = d.id ) " +
 			"JOIN OpeningHours AS oh ON ( doh.pk.openingHoursId = oh.id ) " +

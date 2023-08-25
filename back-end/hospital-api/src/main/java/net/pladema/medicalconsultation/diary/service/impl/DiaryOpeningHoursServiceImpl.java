@@ -185,6 +185,9 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
         result.setOpeningHours(new OpeningHoursBo(diaryOpeningHoursVo.getOpeningHours()));
         result.setExternalAppointmentsAllowed(diaryOpeningHoursVo.getExternalAppointmentsAllowed());
 		result.setProtectedAppointmentsAllowed(diaryOpeningHoursVo.getProtectedAppointmentsAllowed());
+		result.setOnSiteAttentionAllowed(diaryOpeningHoursVo.getOnSiteAttentionAllowed());
+		result.setPatientVirtualAttentionAllowed(diaryOpeningHoursVo.getPatientVirtualAttentionAllowed());
+		result.setSecondOpinionVirtualAttentionAllowed(diaryOpeningHoursVo.getSecondOpinionVirtualAttentionAllowed());
         LOG.debug(OUTPUT, result);
         return result;
     }
