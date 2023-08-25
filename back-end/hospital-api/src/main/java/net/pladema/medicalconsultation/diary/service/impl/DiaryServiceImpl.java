@@ -514,6 +514,10 @@ public class DiaryServiceImpl implements DiaryService {
 		if (diaryBo.getPredecessorProfessionalId() != null && diaryBo.getHierarchicalUnitId() == null)
 			throw new DiaryException(DiaryEnumException.PREDECESSOR_PROFESSIONAL_WITHOUT_HIERARCHICAL_UNIT,
 					"No se puede ingresar un profesional a reemplazar sin seleccionar la unidad jerárquica a la que pertenece");
+		diaryBo.getDiaryOpeningHours().forEach(openingHour -> {
+			if (openingHour.getOnSiteAttentionAllowed() == null && openingHour.getPatientVirtualAttentionAllowed() == null && openingHour.getSecondOpinionVirtualAttentionAllowed() == null)
+				throw new DiaryException(DiaryEnumException.MODALITY_NOT_FOUND,	"Una de las franjas horarias no cuenta con una modalidad definida");
+		});
 	}
 
 }
