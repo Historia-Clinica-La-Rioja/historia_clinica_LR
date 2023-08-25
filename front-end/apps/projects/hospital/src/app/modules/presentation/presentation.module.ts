@@ -16,6 +16,7 @@ import { ColoredDivPatientStateComponent } from './components/colored-div-patien
 import { ColoredLabelComponent } from './colored-label/colored-label.component';
 import { ContentTitleComponent } from './components/content-title/content-title.component';
 import { DatepickerComponent } from './components/datepicker/datepicker.component';
+import { DateRangePickerComponent } from './components/date-range-picker/date-range-picker.component';
 import { DetailBoxComponent } from './components/detail-box/detail-box.component';
 import { DockPopupComponent } from './components/dock-popup/dock-popup.component';
 import { DocumentSectionComponent } from './components/document-section/document-section.component';
@@ -89,6 +90,7 @@ import { CallDetailsComponent } from './components/call-details/call-details.com
 		ColoredLabelComponent,
 		ContentTitleComponent,
 		DatepickerComponent,
+		DateRangePickerComponent,
 		DetailBoxComponent,
 		DockPopupComponent,
 		DocumentSectionComponent,
@@ -146,8 +148,6 @@ import { CallDetailsComponent } from './components/call-details/call-details.com
 		PersonShortDescriptionComponent,
 		IconedTextComponent,
 		PriorityComponent,
-
-
 	],
 	imports: [
 		CommonModule,
@@ -177,6 +177,7 @@ import { CallDetailsComponent } from './components/call-details/call-details.com
 		ColoredLabelComponent,
 		ContentTitleComponent,
 		DatepickerComponent,
+		DateRangePickerComponent,
 		DetailBoxComponent,
 		DockPopupComponent,
 		DocumentSectionComponent,
