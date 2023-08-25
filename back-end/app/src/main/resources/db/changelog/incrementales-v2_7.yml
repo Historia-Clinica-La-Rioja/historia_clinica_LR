@@ -84,3 +84,24 @@ databaseChangeLog:
               columnName: second_opinion_virtual_attention_allowed
               tableName: diary_opening_hours
               validate: true
+        
+    - changeSet:    
+        id: add-virtual-consultation-columns-column-appointment
+        author: mmalyvarni
+        comment: add virtual consultation columns to appointment table
+        changes:
+          - addColumn:
+              tableName: appointment
+              columns:
+                - column:
+                    name: patient_email
+                    type: varchar
+                - column:
+                    name: call_id
+                    type: varchar(36)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: modality_id
+                    type: smallint
+                    defaultValue: 1
