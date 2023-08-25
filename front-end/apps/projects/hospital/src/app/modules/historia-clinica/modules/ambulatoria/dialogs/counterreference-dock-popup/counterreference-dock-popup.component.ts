@@ -196,8 +196,8 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 			}),
 			fileIds: fileIds,
 			closureTypeId: this.formReferenceClosure.value.closureType.id,
-			patientMedicalCoverageId: this.episodeData.medicalCoverageId,
-			hierarchicalUnitId: this.episodeData.hierarchicalUnitId,
+			patientMedicalCoverageId: this.episodeData?.medicalCoverageId,
+			hierarchicalUnitId: this.episodeData?.hierarchicalUnitId,
 		};
 	}
 
