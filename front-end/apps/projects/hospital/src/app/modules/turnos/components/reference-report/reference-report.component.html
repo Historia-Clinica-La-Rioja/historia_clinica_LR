@@ -1,1 +1,23 @@
-<p>search-references works!</p>
+<app-content>
+    <div fxLayout="column" fxLayoutGap="40px">
+        <h2 class="capitalize-first-letter">{{'turnos.search_references.REQUEST_LIST' | translate}}</h2>
+
+        <div fxLayout="row" fxLayoutGap="30px">
+
+            <mat-button-toggle-group value="{{view}}" [disabled]="true">
+                <mat-button-toggle value="{{referenceView.received}}">
+                    {{'turnos.search_references.RECEIVED' | translate}}
+                </mat-button-toggle>
+                <mat-button-toggle value="{{referenceView.request}}">
+                    {{'turnos.search_references.REQUEST' | translate}}
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+            <div fxLayout="column">
+                <app-date-range-picker [label]="'turnos.search_references.FILTER_BY_PERIOD'" [dateRange]="dateRange"
+                    (dateRangeChange)="checkDays($event)"></app-date-range-picker>
+                <mat-error *ngIf="showValidation">{{'turnos.search_references.PERIOD_VALIDATIONS' | translate}}</mat-error>
+            </div>
+        </div>
+    </div>
+
+</app-content>

@@ -78,6 +78,14 @@ export function datePlusDays(date: Date, days: number): Date {
 	return newDate;
 }
 
+export function dateMinusDays(date: Date, days: number): Date {
+	let newDate = new Date();
+	newDate.setMonth(date.getMonth());
+	newDate.setFullYear(date.getFullYear())
+	newDate.setDate(date.getDate() - days);
+	return newDate;
+}
+
 export function timeDifference(createdOn: Date) {
 	const mins = differenceInMinutes(new Date(), createdOn);
 	if (mins < 60) {

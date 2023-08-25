@@ -1,0 +1,11 @@
+@mixin app-reference-report($theme) {
+    $palette-primary: map-get($theme, primary);
+
+    app-reference-report {
+
+        .mat-button-toggle-checked {
+            color: mat-contrast($palette-primary, 400) !important;     
+        }
+
+    }
+}
