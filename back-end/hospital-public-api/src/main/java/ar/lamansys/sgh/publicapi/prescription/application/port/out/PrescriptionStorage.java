@@ -6,11 +6,12 @@ import java.util.Optional;
 import ar.lamansys.sgh.publicapi.prescription.domain.ChangePrescriptionStateBo;
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionBo;
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionsDataBo;
+import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.PrescriptionNotFoundException;
 
 public interface PrescriptionStorage {
-	Optional<PrescriptionBo> getPrescriptionByIdAndDni(String prescriptionId, String identificationNumber);
+	Optional<PrescriptionBo> getPrescriptionByIdAndDni(PrescriptionIdentifier prescriptionIdentifier, String identificationNumber);
 
-	void changePrescriptionState(ChangePrescriptionStateBo changePrescriptionLineStateBo, String prescriptionId, String identificationNumber);
+	void changePrescriptionState(ChangePrescriptionStateBo changePrescriptionLineStateBo, PrescriptionIdentifier prescriptionIdentifier, String identificationNumber) throws PrescriptionNotFoundException;
 
 	Optional<List<PrescriptionsDataBo>> getPrescriptionsDataByDni(String identificationNumber);
 }

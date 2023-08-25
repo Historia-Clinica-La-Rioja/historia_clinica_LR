@@ -1,23 +1,20 @@
 package ar.lamansys.sgh.publicapi.prescription.application.changeprescriptionstate;
 
-import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionStorage;
-
-import ar.lamansys.sgh.publicapi.prescription.domain.ChangePrescriptionStateBo;
-
-import ar.lamansys.sgh.publicapi.prescription.domain.ChangePrescriptionStateMedicationBo;
-
-import ar.lamansys.sgh.publicapi.prescription.domain.DispensedMedicationBo;
-import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.ChangePrescriptionStateMedicationDto;
-
-import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.DispensedMedicationDto;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionIdentifier;
+import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionStorage;
+import ar.lamansys.sgh.publicapi.prescription.domain.ChangePrescriptionStateBo;
+import ar.lamansys.sgh.publicapi.prescription.domain.ChangePrescriptionStateMedicationBo;
+import ar.lamansys.sgh.publicapi.prescription.domain.DispensedMedicationBo;
+import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.PrescriptionNotFoundException;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.ChangePrescriptionStateDto;
-
-import java.util.stream.Collectors;
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.ChangePrescriptionStateMedicationDto;
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.DispensedMedicationDto;
 
 @Service
 public class ChangePrescriptionState {
@@ -29,9 +26,9 @@ public class ChangePrescriptionState {
 		this.logger = LoggerFactory.getLogger(ChangePrescriptionState.class);
 	}
 
-	public void run(ChangePrescriptionStateDto changePrescriptionLineStateDto, String prescriptionId, String identificationNumber) {
+	public void run(ChangePrescriptionStateDto changePrescriptionLineStateDto, PrescriptionIdentifier prescriptionIdentifier, String identificationNumber) throws PrescriptionNotFoundException {
 		logger.debug("Input parameters -> changePrescriptionLineStateDto {}", changePrescriptionLineStateDto);
-		prescriptionStorage.changePrescriptionState(mapTo(changePrescriptionLineStateDto), prescriptionId, identificationNumber);
+		prescriptionStorage.changePrescriptionState(mapTo(changePrescriptionLineStateDto), prescriptionIdentifier, identificationNumber);
 		logger.debug("Output -> success");
 	}
 

@@ -1,9 +1,12 @@
 package ar.lamansys.sgh.publicapi.prescription.application.fetchprescriptionsbyidanddni;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionIdentifier;
 import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionStorage;
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionBo;
 
@@ -19,14 +22,12 @@ public class FetchPrescriptionsByIdAndDni {
 		this.logger = LoggerFactory.getLogger(FetchPrescriptionsByIdAndDni.class);
 	}
 
-	public PrescriptionBo run(String prescriptionId, String identificationNumber) {
-		logger.debug("Input parameters -> prescriptionId {}, identificationNumber {}", prescriptionId, identificationNumber);
-		PrescriptionBo result = getFromStorage(prescriptionId, identificationNumber);
+	public Optional<PrescriptionBo> run(PrescriptionIdentifier prescriptionIdentifier, String identificationNumber) {
+		logger.debug("Input parameters -> prescriptionId {}, identificationNumber {}", prescriptionIdentifier, identificationNumber);
+		Optional<PrescriptionBo> result = prescriptionStorage.getPrescriptionByIdAndDni(prescriptionIdentifier, identificationNumber);
 		logger.debug("Output -> {}", result);
 		return result;
 	}
 
-	private PrescriptionBo getFromStorage(String prescriptionId, String identificationNumber) {
-		return prescriptionStorage.getPrescriptionByIdAndDni(prescriptionId, identificationNumber).orElse(new PrescriptionBo());
-	}
+
 }

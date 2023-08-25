@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.publicapi.infrastructure.output;
+package ar.lamansys.sgh.publicapi.prescription.infrastructure.output;
 
 import java.sql.Date;
 import java.time.Duration;
@@ -19,6 +19,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ar.lamansys.sgh.publicapi.infrastructure.output.MedicationStatementCommercial;
+import ar.lamansys.sgh.publicapi.infrastructure.output.MedicationStatementCommercialRepository;
+import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionIdentifier;
 import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionStorage;
 import ar.lamansys.sgh.publicapi.prescription.domain.ChangePrescriptionStateBo;
 import ar.lamansys.sgh.publicapi.prescription.domain.ChangePrescriptionStateMedicationBo;
@@ -36,6 +39,7 @@ import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionSpecialtyBo;
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionValidStatesEnum;
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionsDataBo;
 import ar.lamansys.sgh.publicapi.prescription.domain.ProfessionalPrescriptionBo;
+import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.PrescriptionNotFoundException;
 import ar.lamansys.sgx.shared.token.JWTUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -76,9 +80,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 	}
 
 	@Override
-	public Optional<PrescriptionBo> getPrescriptionByIdAndDni(String prescriptionId, String identificationNumber) {
-		String domainNumber = prescriptionId.split(ID_DIVIDER)[0];
-		Integer numericPrescriptionId = Integer.valueOf(prescriptionId.split(ID_DIVIDER)[1]);
+	public Optional<PrescriptionBo> getPrescriptionByIdAndDni(PrescriptionIdentifier prescriptionIdentifier, String identificationNumber) {
+
 		String stringQuery = "select mr.id as mrid, ms.prescription_date, ms.due_date, " +
 		"p2.first_name as p2fn, p2.last_name as p2ln, pe.name_self_determination, g.description as gd, spg.description as spgd, p2.birth_date, it.description as itd, p2.identification_number, " +
 		"mc.name as mcn, mc.cuit, mcp.plan, pmc.affiliate_number, i.name, i.sisa_code, i.province_code, " +
@@ -126,7 +129,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 
 		Query query = entityManager.createNativeQuery(stringQuery)
 				.setParameter("identificationNumber", identificationNumber)
-				.setParameter("numericPrescriptionId", numericPrescriptionId);
+				.setParameter("numericPrescriptionId", prescriptionIdentifier.prescriptionId);
 
 		List<Object[]> queryResult = query.getResultList();
 		var result = queryResult.stream()
@@ -136,16 +139,15 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		if(mergedResult.getPrescriptionId() != null) {
 			mergedResult.setPrescriptionId(domainNumber + ID_DIVIDER + mergedResult.getPrescriptionId());
 		}
-		mergedResult.setDomain(domainNumber);
+		mergedResult.setDomain(prescriptionIdentifier.domain);
 		return Optional.of(mergedResult);
 	}
 
 	@Override
 	@Transactional
 	@Modifying
-	public void changePrescriptionState(ChangePrescriptionStateBo changePrescriptionLineStateBo, String prescriptionId, String identificationNumber) {
+	public void changePrescriptionState(ChangePrescriptionStateBo changePrescriptionLineStateBo, PrescriptionIdentifier prescriptionIdentifier, String identificationNumber) throws PrescriptionNotFoundException {
 
-		Integer prescriptionIdInt = Integer.valueOf(changePrescriptionLineStateBo.getPrescriptionId().split(ID_DIVIDER)[1]);
 		List<Integer> prescriptionLineNumbers = changePrescriptionLineStateBo.getChangePrescriptionStateLineMedicationList()
 				.stream()
 				.map(ChangePrescriptionStateMedicationBo::getPrescriptionLine)
@@ -156,7 +158,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				.map(cpb -> new LineStatusBo(null, cpb.getPrescriptionLine(), cpb.getPrescriptionStateId(), cpb.getDispensedMedicationBo().getPharmacyName()))
 				.collect(Collectors.toList());
 
-		List<LineStatusBo> linesStatus = getLineStatus(prescriptionIdInt, identificationNumber);
+		List<LineStatusBo> linesStatus = getLineStatus(prescriptionIdentifier.prescriptionId, identificationNumber);
 
 		assertAllLinesExists(linesStatus, newStatus);
 
@@ -171,7 +173,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				.map(medicationBo -> mapTo(medicationBo, actualLinesStatus))
 				.collect(Collectors.toList());
 
-		changeMedicationsStatement(prescriptionLineNumbers, newStatus, prescriptionIdInt);
+		changeMedicationsStatement(prescriptionLineNumbers, newStatus, prescriptionIdentifier.prescriptionId);
 		medicationStatementCommercialRepository.deleteAllInBatch(entities);
 		medicationStatementCommercialRepository.saveAll(entities);
 		medicationStatementCommercialRepository.flush();
@@ -351,7 +353,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		}
 	}
 
-	private List<LineStatusBo> getLineStatus(Integer prescriptionId, String idNumber) {
+	private List<LineStatusBo> getLineStatus(Integer prescriptionId, String idNumber) throws PrescriptionNotFoundException {
 		String getQuery = "select ms.id, ms.prescription_line_number, ms.prescription_line_state, pp.identification_number, msc.pharmacy_name " +
 				"from medication_statement ms " +
 				"join document_medicamention_statement dms on ms.id = dms.medication_statement_id " +
@@ -374,9 +376,9 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 
 	}
 
-	private void assertExistsPrescriptionAndDni(List<Object[]> queryResult, String idNumber) {
+	private void assertExistsPrescriptionAndDni(List<Object[]> queryResult, String idNumber) throws PrescriptionNotFoundException {
 		if(queryResult.isEmpty() || !queryResult.get(0)[3].toString().equals(idNumber)) {
-			throw new ConstraintViolationException("La receta y/o el dni suministrados no existen", Collections.emptySet());
+			throw new PrescriptionNotFoundException();
 		}
 	}
 

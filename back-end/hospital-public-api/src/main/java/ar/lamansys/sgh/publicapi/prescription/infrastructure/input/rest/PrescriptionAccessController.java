@@ -1,12 +1,6 @@
 package ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest;
 
-import java.util.regex.Pattern;
-
-import javax.validation.ConstraintViolationException;
-
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgh.publicapi.prescription.application.changeprescriptionstate.ChangePrescriptionState;
 import ar.lamansys.sgh.publicapi.prescription.application.fetchprescriptionsbyidanddni.FetchPrescriptionsByIdAndDni;
+import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionIdentifier;
 import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.BadPrescriptionIdFormatException;
 import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.PrescriptionDispenseException;
 import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.PrescriptionIdMatchException;
@@ -39,8 +34,6 @@ public class PrescriptionAccessController {
 	private static final String OUTPUT = "Output -> {}";
 	private static final String INPUT = "Input data -> ";
 
-	private static final String ID_DIVIDER = "-";
-
 	private final FetchPrescriptionsByIdAndDni fetchPrescriptionsByIdAndDni;
 
 	private final ChangePrescriptionState changePrescriptionState;
@@ -50,7 +43,11 @@ public class PrescriptionAccessController {
 	@Value("${prescription.domain.number}")
 	private int domainNumber;
 
-	public PrescriptionAccessController(FetchPrescriptionsByIdAndDni fetchPrescriptionsByIdAndDni, ChangePrescriptionState changePrescriptionState, PrescriptionMapper prescriptionMapper) {
+	public PrescriptionAccessController(
+			FetchPrescriptionsByIdAndDni fetchPrescriptionsByIdAndDni,
+			ChangePrescriptionState changePrescriptionState,
+			PrescriptionMapper prescriptionMapper
+	) {
 		this.fetchPrescriptionsByIdAndDni = fetchPrescriptionsByIdAndDni;
 		this.changePrescriptionState = changePrescriptionState;
 		this.prescriptionMapper = prescriptionMapper;
@@ -61,12 +58,17 @@ public class PrescriptionAccessController {
 			@PathVariable("prescriptionId") String prescriptionId,
 			@PathVariable("identificationNumber") String identificationNumber
 	) throws BadPrescriptionIdFormatException, PrescriptionNotFoundException {
+
 		log.debug(INPUT + "prescriptionId {}, identificationNumber {}", prescriptionId, identificationNumber);
-		var parts = prescriptionId.split(ID_DIVIDER);
-		assertFormatPrescriptionId(parts);
-		assertDomainNumber(parts[0]);
+
+		var prescriptionIdentifier = PrescriptionIdentifier.parse(prescriptionId);
+		assertDomainNumber(prescriptionIdentifier.domain);
+
 		try {
-			var result = prescriptionMapper.mapTo(fetchPrescriptionsByIdAndDni.run(prescriptionId, identificationNumber));
+			var result = prescriptionMapper.mapTo(
+					fetchPrescriptionsByIdAndDni.run(prescriptionIdentifier, identificationNumber)
+							.orElseThrow(PrescriptionNotFoundException::new)
+			);
 			log.debug(OUTPUT, result);
 			return result;
 		} catch (RuntimeException e) {
@@ -79,33 +81,29 @@ public class PrescriptionAccessController {
 			@PathVariable("prescriptionId") String prescriptionId,
 			@PathVariable("identificationNumber") String identificationNumber,
 			@RequestBody @ValidPrescriptionStatus ChangePrescriptionStateDto changePrescriptionLineDto
-	) throws BadPrescriptionIdFormatException, PrescriptionIdMatchException {
+	) throws BadPrescriptionIdFormatException, PrescriptionIdMatchException, PrescriptionNotFoundException {
 
 		log.debug(INPUT + "prescriptionId {}, identificationNumber {}", prescriptionId, identificationNumber);
-		var parts = prescriptionId.split(ID_DIVIDER);
+
+		var prescriptionIdentifier = PrescriptionIdentifier.parse(prescriptionId);
+		assertDomainNumber(prescriptionIdentifier.domain);
 		assertSamePrescriptionId(prescriptionId, changePrescriptionLineDto);
-		assertFormatPrescriptionId(parts);
-		assertDomainNumber(parts[0]);
+
 		try {
-			changePrescriptionState.run(changePrescriptionLineDto, prescriptionId, identificationNumber);
+			changePrescriptionState.run(changePrescriptionLineDto, prescriptionIdentifier, identificationNumber);
 		} catch (RuntimeException e) {
 			throw new PrescriptionDispenseException(e.getMessage(), e);
 		}
 		return changePrescriptionLineDto;
 	}
 
-	private void assertDomainNumber(String part) throws BadPrescriptionIdFormatException {
+	private void assertDomainNumber(String part) throws PrescriptionNotFoundException {
 		if(Integer.parseInt(part) != domainNumber) {
-			throw new BadPrescriptionIdFormatException();
+			throw new PrescriptionNotFoundException();
 		}
 	}
 
-	private static void assertFormatPrescriptionId(String[] parts) throws BadPrescriptionIdFormatException {
-		Pattern pattern = Pattern.compile("\\d+");
-		if(parts.length != 2 || !pattern.matcher(parts[0]).matches() || !pattern.matcher(parts[1]).matches()) {
-			throw new BadPrescriptionIdFormatException();
-		}
-	}
+
 
 	private static void assertSamePrescriptionId(String prescriptionId, ChangePrescriptionStateDto changePrescriptionLineDto) throws PrescriptionIdMatchException {
 		if(!prescriptionId.equals(changePrescriptionLineDto.getPrescriptionId())) {
