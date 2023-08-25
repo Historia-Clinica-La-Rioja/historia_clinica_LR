@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 
 import java.util.List;
 
@@ -21,5 +22,6 @@ public class AppointmentSearchDto {
 	private TimeDto endSearchTime;
 	private DateDto initialSearchDate;
 	private DateDto endingSearchDate;
+	private EAppointmentModality modality;
 
 }

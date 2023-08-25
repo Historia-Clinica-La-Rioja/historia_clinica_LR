@@ -273,6 +273,7 @@ export interface AppointmentSearchDto {
     endingSearchDate: DateDto;
     initialSearchDate: DateDto;
     initialSearchTime: TimeDto;
+    modality: EAppointmentModality;
 }
 
 export interface AppointmentShortSummaryDto {
@@ -3923,6 +3924,12 @@ export const enum AppFeature {
     HABILITAR_IMPRESION_HISTORIA_CLINICA_EN_DESARROLLO = "HABILITAR_IMPRESION_HISTORIA_CLINICA_EN_DESARROLLO",
     HABILITAR_API_CONSUMER = "HABILITAR_API_CONSUMER",
     HABILITAR_TELEMEDICINA = "HABILITAR_TELEMEDICINA",
+}
+
+export const enum EAppointmentModality {
+    ON_SITE_ATTENTION = "ON_SITE_ATTENTION",
+    PATIENT_VIRTUAL_ATTENTION = "PATIENT_VIRTUAL_ATTENTION",
+    SECOND_OPINION_VIRTUAL_ATTENTION = "SECOND_OPINION_VIRTUAL_ATTENTION",
 }
 
 export const enum EAuditType {

@@ -4,6 +4,7 @@ import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
+import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.UpdateAppointmentOpeningHoursService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
@@ -405,12 +406,18 @@ public class DiaryServiceImpl implements DiaryService {
 		LOG.debug("Input parameters -> institutionId {}, searchCriteria {}", institutionId, searchCriteria);
 		List<EmptyAppointmentBo> emptyAppointments = new ArrayList<>();
 		List<CompleteDiaryBo> diariesBySpecialty = getActiveDiariesByAliasOrClinicalSpecialtyName(institutionId, searchCriteria.getAliasOrSpecialtyName());
+		filterOpeningHoursByModality(searchCriteria, diariesBySpecialty);
 		LocalDateTime currentDateTime = dateTimeProvider.nowDateTimeWithZone(institutionExternalService.getTimezone(institutionId));
 		for (CompleteDiaryBo diary: diariesBySpecialty)
 			emptyAppointments = getEmptyAppointmentBos(searchCriteria, emptyAppointments, diary, currentDateTime);
 		emptyAppointments.sort(Comparator.comparing(EmptyAppointmentBo::getDate).thenComparing(EmptyAppointmentBo::getHour));
 		LOG.debug(OUTPUT, emptyAppointments);
 		return emptyAppointments;
+	}
+
+	private void filterOpeningHoursByModality(AppointmentSearchBo searchCriteria, List<CompleteDiaryBo> diariesBySpecialty) {
+		diariesBySpecialty.forEach(diary -> diary.setDiaryOpeningHours(diary.getDiaryOpeningHours().stream().filter(openingHours -> (searchCriteria.getModality().equals(EAppointmentModality.ON_SITE_ATTENTION) && openingHours.getOnSiteAttentionAllowed()) ||
+				(searchCriteria.getModality().equals(EAppointmentModality.PATIENT_VIRTUAL_ATTENTION) && openingHours.getPatientVirtualAttentionAllowed())).collect(toList())));
 	}
 
 	private List<EmptyAppointmentBo> getEmptyAppointmentBos(AppointmentSearchBo searchCriteria,
