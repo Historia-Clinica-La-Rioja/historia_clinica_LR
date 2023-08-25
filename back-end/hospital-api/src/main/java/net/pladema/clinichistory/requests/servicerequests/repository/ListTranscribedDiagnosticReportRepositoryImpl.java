@@ -27,8 +27,10 @@ public class ListTranscribedDiagnosticReportRepositoryImpl implements ListTransc
 				"FROM {h-schema}transcribed_service_request tsr " +
 				"JOIN {h-schema}diagnostic_report dr ON (tsr.study_id = dr.id) " +
 				"JOIN {h-schema}snomed s ON (dr.snomed_id = s.id) " +
+				"LEFT JOIN {h-schema}appointment_order_image aoi ON (aoi.transcribed_order_id = tsr.id) " +
 				"WHERE tsr.patient_id = :patientId " +
 				"AND creation_date >= CURRENT_DATE - INTERVAL '1 month' " +
+				"AND aoi.active = false " +
 				"AND tsr.id NOT IN ( " +
 					"SELECT transcribed_order_id " +
 					"FROM appointment_order_image) ";
@@ -38,6 +40,25 @@ public class ListTranscribedDiagnosticReportRepositoryImpl implements ListTransc
         List<Object[]> result = query.getResultList();
         return result;
     }
+
+	@Transactional(readOnly = true)
+	public List<Object[]> getByAppointmentId(Integer appointmentId) {
+		LOG.debug("Input parameters -> appointmentId {}", appointmentId);
+
+		String sqlString = "SELECT tsr.id, dr.id as study_id, s.pt as study_name " +
+				"FROM {h-schema}transcribed_service_request tsr " +
+				"JOIN {h-schema}diagnostic_report dr ON (tsr.study_id = dr.id) " +
+				"JOIN {h-schema}snomed s ON (dr.snomed_id = s.id) " +
+				"JOIN {h-schema}appointment_order_image aoi ON (aoi.transcribed_order_id = tsr.id) " +
+				"WHERE aoi.appointment_id = :appointmentId " +
+				"AND creation_date >= CURRENT_DATE - INTERVAL '1 month' ";
+
+		Query query = entityManager.createNativeQuery(sqlString);
+		query.setParameter("appointmentId", appointmentId);
+		List<Object[]> result = query.getResultList();
+		return result;
+	}
+
 	@Transactional(readOnly = true)
 	public List<Object[]> getListTranscribedOrder(Integer patientId) {
 		LOG.debug("Input parameters -> patientId {}", patientId);

@@ -84,13 +84,13 @@ public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageSe
 	}
 
 	@Override
-	public boolean updateOrderId(Integer appointmentId, Integer orderId, Boolean transcribed) {
+	public boolean updateOrderId(Integer appointmentId, Integer orderId, Boolean transcribed, Integer studyId) {
 		LOG.debug("Input parameters -> appointmentId '{}', orderId '{}', transcribed '{}'", appointmentId, orderId, transcribed);
 		if (transcribed) {
 			appointmentOrderImageRepository.updateTranscribedOrderId(appointmentId, orderId);
 			return Boolean.TRUE;
 		}
-		appointmentOrderImageRepository.updateOrderId(appointmentId, orderId);
+		appointmentOrderImageRepository.updateOrderId(appointmentId, studyId, orderId);
 		return Boolean.TRUE;
 	}
 }

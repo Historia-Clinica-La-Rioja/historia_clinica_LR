@@ -113,15 +113,16 @@ public interface AppointmentOrderImageRepository extends JpaRepository<Appointme
 	@Transactional
 	@Modifying
 	@Query("UPDATE AppointmentOrderImage AS aoi " +
-			"SET aoi.orderId = :orderId, aoi.transcribedOrderId = null" +
+			"SET aoi.orderId = :orderId, aoi.transcribedOrderId = NULL, aoi.studyId = :studyId " +
 			"WHERE aoi.pk.appointmentId = :appointmentId")
 	void updateOrderId(@Param("appointmentId") Integer appointmentId,
+					   @Param("studyId") Integer studyId,
 					   @Param("orderId") Integer orderId );
 
 	@Transactional
 	@Modifying
 	@Query("UPDATE AppointmentOrderImage AS aoi " +
-			"SET aoi.transcribedOrderId = :orderId, aoi.orderId = null " +
+			"SET aoi.transcribedOrderId = :orderId, aoi.orderId = NULL, aoi.studyId = NULL " +
 			"WHERE aoi.pk.appointmentId = :appointmentId")
 	void updateTranscribedOrderId(@Param("appointmentId") Integer appointmentId,
 					   @Param("orderId") Integer orderId );

@@ -7,6 +7,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
+import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
+import net.pladema.clinichistory.requests.servicerequests.service.ListTranscribedDiagnosticReportInfoService;
 import net.pladema.establishment.service.EquipmentService;
 import net.pladema.establishment.service.OrchestratorService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentOrderImageService;
@@ -59,6 +61,9 @@ public class EquipmentAppointmentServiceImpl implements EquipmentAppointmentServ
 
 	private final AppointmentOrderImageService appointmentOrderImageService;
 
+	private final DiagnosticReportInfoService diagnosticReportInfoService;
+
+	private final ListTranscribedDiagnosticReportInfoService listTranscribedDiagnosticReportInfoService;
 
 	@Override
 	public Optional<AppointmentBo> getEquipmentAppointment(Integer appointmentId) {
@@ -68,6 +73,8 @@ public class EquipmentAppointmentServiceImpl implements EquipmentAppointmentServ
 			List<Integer> diaryIds = result.stream().map(AppointmentBo::getDiaryId).collect(Collectors.toList());
 			result = setIsAppointmentProtected(result.stream().collect(Collectors.toList()), diaryIds)
 					.stream().findFirst();
+			result.get().setOrderData(diagnosticReportInfoService.getByAppointmentId(appointmentId));
+			result.get().setTranscribedData(listTranscribedDiagnosticReportInfoService.getByAppointmentId(appointmentId));
 		}
 		log.debug(OUTPUT, result);
 		return result;

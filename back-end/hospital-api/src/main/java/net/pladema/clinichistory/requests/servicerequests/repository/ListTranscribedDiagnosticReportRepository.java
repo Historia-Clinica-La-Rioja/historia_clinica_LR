@@ -6,4 +6,5 @@ import java.util.List;
 public interface ListTranscribedDiagnosticReportRepository {
     List<Object[]> execute(Integer patientId);
 	List<Object[]> getListTranscribedOrder(Integer patientId);
+	List<Object[]> getByAppointmentId(Integer appointmentId);
 }

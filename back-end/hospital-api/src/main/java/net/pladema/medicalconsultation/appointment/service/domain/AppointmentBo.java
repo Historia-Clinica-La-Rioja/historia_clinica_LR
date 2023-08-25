@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -70,6 +72,10 @@ public class AppointmentBo {
 	private String callId;
 
 	private Short modalityId;
+	
+	private DiagnosticReportBo orderData;
+
+	private TranscribedDiagnosticReportBo transcribedData;
 
 	public static AppointmentBo fromAppointmentDiaryVo(AppointmentDiaryVo appointmentDiaryVo) {
 		return AppointmentBo.builder()

@@ -36,6 +36,18 @@ public class ListTranscribedDiagnosticReportInfoServiceImpl implements ListTrans
         return result;
     }
 
+	@Override
+	public TranscribedDiagnosticReportBo getByAppointmentId(Integer patientId) {
+		List<Object[]> queryResult = listTranscribedDiagnosticReportRepository.getByAppointmentId(patientId);
+		List<TranscribedDiagnosticReportBo> result;
+		if (queryResult.size() != 0) {
+			result = queryResult.stream().map(this::createDiagnosticReportBo).collect(Collectors.toList());
+			LOG.trace("OUTPUT List -> {}", result);
+			return result.get(0);
+		}
+		return null;
+	}
+
 	public List<TranscribedOrderReportInfoBo> getListTranscribedOrder(Integer patientId) {
 		List<TranscribedOrderReportInfoBo> result = listTranscribedDiagnosticReportRepository.getListTranscribedOrder(patientId).stream()
 				.map(this::createTranscribedDiagnosticReportInfoBo)

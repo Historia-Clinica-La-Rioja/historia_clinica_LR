@@ -4,4 +4,6 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 
 public interface DiagnosticReportInfoService {
     DiagnosticReportBo run(Integer diagnosticReportId);
+
+	DiagnosticReportBo getByAppointmentId(Integer appointmentId);
 }

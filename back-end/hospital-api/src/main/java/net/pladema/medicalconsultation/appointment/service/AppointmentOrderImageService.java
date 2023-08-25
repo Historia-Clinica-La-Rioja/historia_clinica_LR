@@ -24,5 +24,5 @@ public interface AppointmentOrderImageService {
 
 	void setReportStatusId(Integer appointmentId, Short reportStatusId);
 
-    boolean updateOrderId(Integer appointmentId, Integer orderId, Boolean transcribed);
+    boolean updateOrderId(Integer appointmentId, Integer orderId, Boolean transcribed, Integer studyId);
 }

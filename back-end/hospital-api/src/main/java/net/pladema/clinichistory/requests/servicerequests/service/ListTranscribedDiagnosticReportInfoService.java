@@ -12,5 +12,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
 public interface ListTranscribedDiagnosticReportInfoService {
     List<TranscribedDiagnosticReportBo> execute(Integer patientId);
 
+	TranscribedDiagnosticReportBo getByAppointmentId(Integer patientId);
+
 	List<TranscribedOrderReportInfoBo> getListTranscribedOrder(Integer patientId) ;
 }

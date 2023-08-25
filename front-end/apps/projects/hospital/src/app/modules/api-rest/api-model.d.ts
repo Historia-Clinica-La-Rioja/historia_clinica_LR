@@ -770,12 +770,14 @@ export interface CreateAppointmentDto {
     hour: string;
     modality: EAppointmentModality;
     openingHoursId: number;
+    orderData?: DiagnosticReportInfoDto;
     overturn: boolean;
     patientEmail: string;
     patientId: number;
     patientMedicalCoverageId?: number;
     phoneNumber?: string;
     phonePrefix?: string;
+    transcribedOrderData?: TranscribedDiagnosticReportInfoDto;
 }
 
 export interface CreateOutpatientDto {

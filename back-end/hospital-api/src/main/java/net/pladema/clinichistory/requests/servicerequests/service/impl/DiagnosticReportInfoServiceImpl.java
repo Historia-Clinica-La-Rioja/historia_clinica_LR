@@ -43,6 +43,15 @@ public class DiagnosticReportInfoServiceImpl implements DiagnosticReportInfoServ
         return result;
     }
 
+	@Override
+	public DiagnosticReportBo getByAppointmentId(Integer appointmentId) {
+		LOG.debug("input -> appointmentId {}", appointmentId);
+		Object[] queryResult = getDiagnosticReportInfoRepository.getDiagnosticReportByAppointmentId(appointmentId);
+		var result = queryResult != null ? createDiagnosticReportBo(queryResult, null) : null;
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
 
     private DiagnosticReportBo createDiagnosticReportBo(Object[] row, List<FileBo> filesBo) {
         LOG.debug("Input parameters -> row {}", row);
@@ -66,7 +75,8 @@ public class DiagnosticReportInfoServiceImpl implements DiagnosticReportInfoServ
 
         result.setUserId((Integer) row[12]);
 
-        result.setFiles(filesBo);
+		if (filesBo != null)
+        	result.setFiles(filesBo);
 
         LOG.trace(OUTPUT, result);
 

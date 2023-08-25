@@ -632,9 +632,10 @@ public class AppointmentsController {
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "appointmentId") Integer appointmentId,
 			@RequestParam(name = "orderId", required = false) Integer orderId,
+			@RequestParam(name = "studyId", required = false) Integer studyId,
 			@RequestParam(name = "transcribed") boolean isTranscribed){
 		log.debug("Input parameters -> institutionId {}, appointmentId {}, orderId {}", institutionId, appointmentId, orderId);
-		boolean result = appointmentOrderImageService.updateOrderId(appointmentId, orderId, isTranscribed);
+		boolean result = appointmentOrderImageService.updateOrderId(appointmentId, orderId, isTranscribed, studyId);
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
