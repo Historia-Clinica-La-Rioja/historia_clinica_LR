@@ -768,8 +768,10 @@ export interface CreateAppointmentDto {
     date: string;
     diaryId: number;
     hour: string;
+    modality: EAppointmentModality;
     openingHoursId: number;
     overturn: boolean;
+    patientEmail: string;
     patientId: number;
     patientMedicalCoverageId?: number;
     phoneNumber?: string;

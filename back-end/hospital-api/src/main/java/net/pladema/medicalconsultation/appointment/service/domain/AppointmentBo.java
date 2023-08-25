@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
@@ -63,6 +64,12 @@ public class AppointmentBo {
 	private LocalDateTime createdOn;
 
 	private ProfessionalPersonBo professionalPersonBo;
+
+	private String patientEmail;
+
+	private String callId;
+
+	private Short modalityId;
 
 	public static AppointmentBo fromAppointmentDiaryVo(AppointmentDiaryVo appointmentDiaryVo) {
 		return AppointmentBo.builder()

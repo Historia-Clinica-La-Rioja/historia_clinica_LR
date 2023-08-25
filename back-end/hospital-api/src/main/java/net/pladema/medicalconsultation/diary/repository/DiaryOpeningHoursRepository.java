@@ -97,4 +97,10 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
                                                    @NotNull @Param("doctorsOfficeId") Integer doctorsOfficeId,
                                                    @NotNull @Param("dayWeekId") Short dayWeekId,
                                                    @NotNull @Param("from") LocalTime from, @Param("to") LocalTime to);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT doh.patientVirtualAttentionAllowed " +
+			"FROM DiaryOpeningHours doh " +
+			"WHERE doh.pk.diaryId = :diaryId AND doh.pk.openingHoursId = :openingHoursId")
+	Boolean isPatientVirtualConsultationAllowed(@Param("diaryId") Integer diaryId, @Param("openingHoursId") Integer openingHoursId);
 }

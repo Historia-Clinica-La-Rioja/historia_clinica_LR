@@ -72,6 +72,15 @@ public class Appointment extends SGXAuditableEntity<Integer> implements SGXDocum
 	@Column(name = "appointment_block_motive_id")
 	private Short appointmentBlockMotiveId;
 
+	@Column(name = "patient_email")
+	private String patientEmail;
+
+	@Column(name = "call_id", length = 36)
+	private String callId;
+
+	@Column(name = "modality_id")
+	private Short modalityId;
+
 	public static Appointment newFromAppointmentBo(AppointmentBo appointmentBo) {
 		return Appointment.builder()
 				.dateTypeId(appointmentBo.getDate())
@@ -84,6 +93,9 @@ public class Appointment extends SGXAuditableEntity<Integer> implements SGXDocum
 				.phoneNumber(appointmentBo.getPhoneNumber())
 				.snomedId(appointmentBo.getSnomedId())
 				.appointmentBlockMotiveId(appointmentBo.getAppointmentBlockMotiveId())
+				.patientEmail(appointmentBo.getPatientEmail())
+				.callId(appointmentBo.getCallId())
+				.modalityId(appointmentBo.getModalityId())
 				.build();
 	}
 

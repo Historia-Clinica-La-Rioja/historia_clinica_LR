@@ -2,6 +2,12 @@ package net.pladema.medicalconsultation.appointment.service.impl;
 
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 
+import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
+import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentEnumException;
+import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentException;
+
+import net.pladema.medicalconsultation.diary.repository.DiaryOpeningHoursRepository;
+
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -17,6 +23,9 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+import java.util.regex.Pattern;
+
 @Slf4j
 @AllArgsConstructor
 @Service
@@ -28,10 +37,16 @@ public class CreateAppointmentServiceImpl implements CreateAppointmentService {
 
 	private final NewAppointmentNotification newAppointmentNotification;
 
+	private final DiaryOpeningHoursRepository diaryOpeningHoursRepository;
+
+	public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
+
 	@Override
 	@Transactional
 	public AppointmentBo execute(AppointmentBo appointmentBo) {
 		log.debug("Input parameters -> appointmentBo {}", appointmentBo);
+		validateAppointment(appointmentBo);
 		Appointment appointment = Appointment.newFromAppointmentBo(appointmentBo);
 		appointment = appointmentRepository.save(appointment);
 		AppointmentBo result = AppointmentBo.newFromAppointment(appointment);
@@ -53,5 +68,16 @@ public class CreateAppointmentServiceImpl implements CreateAppointmentService {
 
 		log.debug("Output -> {}", result);
 		return result;
+	}
+
+	private void validateAppointment(AppointmentBo appointment) {
+		Boolean isPatientVirtualConsultationAllowed = diaryOpeningHoursRepository.isPatientVirtualConsultationAllowed(appointment.getDiaryId(), appointment.getOpeningHoursId());
+		if (isPatientVirtualConsultationAllowed && appointment.getModalityId().equals(EAppointmentModality.PATIENT_VIRTUAL_ATTENTION.getId())) {
+			if (appointment.getPatientEmail() == null)
+				throw new AppointmentException(AppointmentEnumException.MISSING_DATA, "Se requiere el correo del paciente para la modalidad seleccionada");
+			if (!VALID_EMAIL_ADDRESS_REGEX.matcher(appointment.getPatientEmail()).matches())
+				throw new AppointmentException(AppointmentEnumException.WRONG_EMAIL_FORMAT, "El formato del correo electrónico del paciente ingresado no es válido");
+			appointment.setCallId(UUID.randomUUID().toString());
+		}
 	}
 }

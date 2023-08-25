@@ -5,6 +5,7 @@ import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentSho
 import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.EmptyAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.EquipmentAppointmentListDto;
+import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
@@ -31,7 +32,7 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDailyAmountBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
 
-@Mapper(uses = {LocalDateMapper.class})
+@Mapper(uses = {LocalDateMapper.class, EAppointmentModality.class})
 public interface AppointmentMapper {
 
     @Named("toAppointmentListDto")
@@ -64,6 +65,7 @@ public interface AppointmentMapper {
 	AppointmentDto toAppointmentDto(AppointmentBo appointmentBo);
 
     @Named("toAppointmentBo")
+	@Mapping(target = "modalityId", source = "modality.id")
     AppointmentBo toAppointmentBo(CreateAppointmentDto createAppointmentDto);
 
     @Named("toAppointmentDailyAmountDto")

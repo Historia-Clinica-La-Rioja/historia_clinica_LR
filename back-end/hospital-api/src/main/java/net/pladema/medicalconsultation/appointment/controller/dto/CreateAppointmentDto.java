@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
+import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
+
 import org.hibernate.validator.constraints.Length;
 
 import javax.annotation.Nullable;
@@ -51,4 +53,10 @@ public class CreateAppointmentDto {
     @Nullable
     @Length(max = 20, message = "{appointment.new.phoneNumber.invalid}")
     private String phoneNumber;
+
+	private String patientEmail;
+
+	@NotNull(message = "{value.mandatory}")
+	private EAppointmentModality modality;
+
 }
