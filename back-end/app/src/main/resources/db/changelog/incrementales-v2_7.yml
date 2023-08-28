@@ -64,3 +64,23 @@ databaseChangeLog:
                     name: second_opinion_virtual_attention_allowed
                     type: boolean
                     defaultValue: ${boolean.false}
+
+    - changeSet:
+        id: addNotNullConstraint-modalities-diary_opening_hours
+        author: mmalyvarni
+        changes:
+          - addNotNullConstraint:
+              columnDataType: boolean
+              columnName: on_site_attention_allowed
+              tableName: diary_opening_hours
+              validate: true
+          - addNotNullConstraint:
+              columnDataType: boolean
+              columnName: patient_virtual_attention_allowed
+              tableName: diary_opening_hours
+              validate: true
+          - addNotNullConstraint:
+              columnDataType: boolean
+              columnName: second_opinion_virtual_attention_allowed
+              tableName: diary_opening_hours
+              validate: true
