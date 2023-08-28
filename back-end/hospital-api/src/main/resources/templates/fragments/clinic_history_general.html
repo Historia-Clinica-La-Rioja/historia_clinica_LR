@@ -1,152 +1,206 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
-<head th:fragment="headerfiles">
-    <title>Report</title>
+<head th:fragment="headerfiles" >
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Report</title>
+    <th:block th:include="fragments/bootstrap-css.html :: style-inline"></th:block>
     <style>
-        .header-div {
-            width: 50%;
-            float: left;
-        }
-        img {
-            float: right;
-            width: 180px;
-        }
-        h2 {
-            margin: 0;
-        }
-        hr {
-            height: 0.5px;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            border-spacing: 0;
-        }
-        th, td {
-            text-align: left;
-            padding: 1px;
-            background-color: white;
-            font-size : 12px;
-        }
-        footer {
-          position: fixed;
-          font-size: 10px;
-          bottom: 0;
-          margin-bottom: 10px;
-          width: 100%;
-        }
-        body {
-          font-family: 'Roboto', sans-serif;
-          background-color: white;
-        }
+    .page-header {
+        top: 0;
+        width: 100%;
+    }
+    .page-footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        font-size: 10px;
+    }
+    table{
+        width: 76%;
+        -fs-table-paginate: paginate;
+        border-collapse: collapse;
+    }
+    .wide_wrapped_text {
+        word-wrap: break-word;
+        text-align: justify;
+        text-justify: inter-word;
+        white-space: pre-wrap;
+        font-size: 13.21px;
+    }
+    @page {
+        margin: 5mm;
+    }
+    hr {
+        border: 0;
+        height: 1px;
+        background: #333;
+    }
+    .row-content {
+        float: left;
+        margin-right: 30px;
+    }
+    .data-text {
+        font-weight: 400;
+        font-size: 13.21px;
+    }
+    .section-title {
+        font-weight: 700;
+        font-size: 13.21px;
+        padding-bottom: 5px;
+    }
+    .data-title {
+        font-weight: 700;
+        font-size: 10.57px;
+    }
+    @media print {
+       thead {display: table-header-group;}
+       tfoot {display: table-footer-group;}
+       body, html {margin: 0; padding: 0; }
+    }
+    .section-title {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        flex-direction: row;
+        padding-bottom: 5px;
+    }
+    body {
+        font-family: 'Roboto', sans-serif;
+    }
     </style>
 </head>
-
 <body>
 
-    <header style="margin-top: 0;" th:fragment="header">
-        <div class="header-div">
-            <h2>Historia Clínica</h2>
+<div th:fragment="header">
+    <div>
+        <div class="section-title">
+            <h2 style="width: 50%; float:left;">Historia Clínica</h2>
+            <img style="height: 40px; float: right;" th:src="@{classpath:static/images/logo_nacion.png}" alt="Logo"></img>
         </div>
-        <div class="header-div">
-            <img th:src="@{classpath:static/images/logo_nacion.png}" alt="Logo"></img>
+        <div style="clear: both;">
+            <hr/>
         </div>
-        <hr style="clear: both;"/>
-    </header>
-
-    <div th:fragment="patientData">
-        <h4>Datos del paciente</h4>
-        <table>
-            <tr>
-                <th>Nombre y apellido</th>
-                <th>Documento</th>
-                <th>ID</th>
-                <th>Edad</th>
-                <th>Fecha de nacimiento</th>
-            </tr>
-            <tr>
-                <td th:text="${patient.person.completeName()}"></td>
-                <td th:text="${patient.person.identificationNumber}"></td>
-                <td th:text="${patient.id}"></td>
-                <td th:text="${patientAge}"></td>
-                <td th:text="${#temporals.format(patient.person.birthDate, 'dd/MM/yyyy')}"></td>
-            </tr>
-        </table>
-        <hr/>
-    </div>
-
-    <div th:fragment="encounterData">
-        <h4>Episodio/Encuentro</h4>
-        <table>
-            <tr>
-                <th>Id del encuentro</th>
-                <th>Tipo</th>
-                <th>Fecha inicio</th>
-                <th>Fecha fin</th>
-            </tr>
-            <tr>
-                <td th:text="${encounterId}"></td>
-                <td th:text="${encounterType}"></td>
-                <td th:if="${startDate != null}" th:text="${#temporals.format(startDate, 'dd-MM-yyyy HH:mm') + ' hs'}"></td>
-                <td th:if="${endDate != null}" th:text="${#temporals.format(endDate, 'dd-MM-yyyy HH:mm') + ' hs'}"></td>
-            </tr>
-        </table>
-        <br/>
-        <table>
-            <tr>
-                <th>Institución</th>
-                <th>Sector/Servicio</th>
-                <th>Lugar</th>
-            </tr>
-            <tr>
-                <td th:text="${institution}"></td>
-                <td th:text="${sector != null ? sector : ''}"></td>
-                <td th:text="${place != null ? place : ''}"></td>
-            </tr>
-        </table>
-        <br/>
-        <table>
-            <tr>
-                <th>Cobertura</th>
-                <th>Nro. de credencial</th>
-                <th>Plan</th>
-            </tr>
-            <tr th:if="${medicalCoverage != null}">
-                <td th:text="${medicalCoverage.medicalCoverage.name}"></td>
-                <td th:text="${medicalCoverage?.affiliateNumber}"></td>
-                <td th:text="${medicalCoverage?.planName}"></td>
-            </tr>
-        </table>
-        <hr/>
-    </div>
-
-    <div th:fragment="professionalData">
-        <h4>Profesional atendiente</h4>
-        <table>
-            <tr>
-                <th>Nombre y apellido</th>
-                <th>Profesión</th>
-                <th>Especialidad</th>
-                <th>Matrícula</th>
-            </tr>
-            <tr>
-                <td th:text="${professionalCompleteName}"></td>
-                <td th:text="${professionalProfessions}"></td>
-                <td th:text="${clinicalSpecialty}"></td>
-                <td th:text="${licenses}"></td>
-            </tr>
-        </table>
-        <hr/>
-    </div>
-
-    <footer th:fragment="footer">
-        <hr/>
         <div>
-            <span th:text="'Historia Clinica impresa el ' + ${#temporals.format(printDate, 'dd-MM-yyyy HH:mm')} + ' por ' + ${user} + ' en ' + ${currentInstitution}"></span>
-            <span style="float:right;" th:text="'Página ' + ${actualPage} + ' de ' + ${totalPages}"></span>
+            <div class="section-title">Datos del paciente</div>
+            <div>
+                <div class="row-content">
+                    <div class="data-title">Nombre y apellido</div>
+                    <div class="data-text" th:text="${patient.person.completeName()}"></div>
+                </div>
+                <div class="row-content">
+                    <div class="data-title">Documento</div>
+                    <div class="data-text" th:text="${patient.person.identificationNumber}"></div>
+                </div>
+                <div class="row-content">
+                    <div class="data-title">ID</div>
+                    <div class="data-text" th:text="${patient.id}"></div>
+                </div>
+                <div class="row-content">
+                    <div class="data-title">Edad</div>
+                    <div class="data-text" th:text="${patientAge}"></div>
+                </div>
+                <div class="row-content">
+                    <div class="data-title">Fecha nac.</div>
+                    <div class="data-text" th:text="${#temporals.format(patient.person.birthDate, 'dd/MM/yyyy')}"></div>
+                </div>
+            </div>
         </div>
-    </footer>
+        <div style="clear: both;">
+            <hr/>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="encounterData">
+    <div>
+        <div class="section-title" >Episodio/Encuentro</div>
+        <div>
+            <div class="row-content">
+                <div class="data-title">ID encuentro</div>
+                <div class="data-text" th:text="${encounterId}"></div>
+            </div>
+            <div class="row-content">
+                <div class="data-title">Tipo</div>
+                <div class="data-text" th:text="${encounterType}"></div>
+            </div>
+            <div class="row-content">
+                <div class="data-title">Fecha inicio</div>
+                <div class="data-text" th:if="${startDate != null}" th:text="${#temporals.format(startDate, 'dd-MM-yyyy HH:mm') + ' hs'}"></div>
+            </div>
+            <div class="row-content">
+                <div class="data-title">Fecha fin</div>
+                <div class="data-text" th:if="${endDate != null}" th:text="${#temporals.format(endDate, 'dd-MM-yyyy HH:mm') + ' hs'}"></div>
+            </div>
+        </div>
+        <div>
+            <br/>
+        </div>
+        <div style="padding-top: 5px; clear: both;">
+            <div class="row-content">
+                <div class="data-title">Institución</div>
+                <div class="data-text" th:text="${institution}"></div>
+            </div>
+            <div class="row-content">
+                <div class="data-title">Sector/Servicio</div>
+                <div class="data-text" th:text="${sector != null ? sector : ''}"></div>
+            </div>
+            <div class="row-content">
+                <div class="data-title">Lugar</div>
+                <div class="data-text" th:text="${place != null ? place : ''}"></div>
+            </div>
+        </div>
+            <div style="padding-top: 5px; clear: both;">
+            <div class="row-content">
+                <div class="data-title">Cobertura</div>
+                <div class="data-text" th:if="${medicalCoverage != null}" th:text="${medicalCoverage?.medicalCoverage.name}"></div>
+            </div>
+            <div class="row-content">
+                <div class="data-title">N° de credencial</div>
+                <div class="data-text" th:if="${medicalCoverage != null}" th:text="${medicalCoverage?.affiliateNumber}"></div>
+            </div>
+            <div class="row-content">
+                <div class="data-title">Plan</div>
+                <div class="data-text" th:if="${medicalCoverage != null}" th:text="${medicalCoverage?.planName}"></div>
+            </div>
+        </div>
+        <div style="clear: both;">
+            <hr/>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="professionalData">
+    <div>
+        <div class="section-title"> Profesional atendiente </div>
+        <div>
+            <div class="row-content">
+                <div class="data-title">Nombre y apellido</div>
+                <div class="data-text" th:text="${professionalCompleteName}"></div>
+            </div>
+            <div class="row-content">
+                <div class="data-title">Profesión</div>
+                <div class="data-text" th:text="${professionalProfessions}"></div>
+            </div>
+            <div class="row-content">
+                <div class="data-title">Especialidad</div>
+                <div class="data-text" th:text="${clinicalSpecialty}"></div>
+            </div>
+            <div class="row-content">
+                <div class="data-title">Matrícula</div>
+                <div class="data-text" th:text="${licenses}"></div>
+            </div>
+        </div>
+        <div style="clear: both;">
+            <hr/>
+        </div>
+    </div>
+</div>
+
+<div class="page-footer" th:fragment="footer">
+    <hr/>
+    <div th:text="'Historia Clinica impresa el ' + ${#temporals.format(printDate, 'dd-MM-yyyy HH:mm')} + ' por ' + ${user} + ' en ' + ${currentInstitution}"></div>
+</div>
 
 </body>
+
 </html>

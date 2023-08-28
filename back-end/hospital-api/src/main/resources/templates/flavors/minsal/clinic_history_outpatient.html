@@ -3,36 +3,54 @@
 <head>
     <th:block th:include="fragments/clinic_history_general.html :: headerfiles"></th:block>
     <style>
-        .ch_table, .ch_tr th, .ch_tr td{
-              border: 1px solid black;
-              border-collapse: collapse;
-              font-size: 12px;
-              padding: 10px;
+        .bordered {
+            padding: 8px;
+            border: 1px solid black;
         }
     </style>
 </head>
 
 <body>
-    <div th:include="fragments/clinic_history_general.html :: header"></div>
-    <div th:include="fragments/clinic_history_general.html :: patientData"></div>
-    <div th:include="fragments/clinic_history_general.html :: encounterData"></div>
-    <div th:include="fragments/clinic_history_general.html :: professionalData"></div>
-    <div>
-        <h2>Registro Clínico</h2>
-        <br/>
-        <table class="ch_table">
-            <tbody>
-            <tr class="ch_tr" th:each="record, iter: ${clinicalRecords}">
-                <th style="text-align: center" th:text="${record.prefix}"></th>
-                <td th:utext="${record.description}" ></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
 
-    <footer>
-        <div th:include="fragments/clinic_history_general :: footer"></div>
-    </footer>
+    <div th:replace="fragments/clinic_history_general.html :: footer"></div>
+
+    <table>
+        <thead>
+            <tr>
+                <td colspan="2">
+                    <div th:replace="fragments/clinic_history_general.html :: header"></div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div th:replace="fragments/clinic_history_general.html :: encounterData"></div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div th:replace="fragments/clinic_history_general.html :: professionalData"></div>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding-top: 10px;" colspan="2">
+                    <h3>Registro Clínico</h3>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="bordered" th:each="record, iter: ${clinicalRecords}">
+                <td class="bordered wide_wrapped_text" style="width: 12%; text-align: center;" th:text="${record.prefix}"></td>
+                <td class="bordered wide_wrapped_text" style="width: 64%;" th:utext="${record.description}"></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2">
+                    <div style="height: 25px;"></div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
 
 </body>
 </html>

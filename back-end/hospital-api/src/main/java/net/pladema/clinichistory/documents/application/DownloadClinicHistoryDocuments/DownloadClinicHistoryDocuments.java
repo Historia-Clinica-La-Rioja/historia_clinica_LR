@@ -54,32 +54,21 @@ public class DownloadClinicHistoryDocuments {
 		Map<Integer, List<CHDocumentBo>> hospitalizationDocuments = mapDocumentsByEpisode(documents.stream().filter(doc -> doc.getEncounterType().equals(ECHEncounterType.HOSPITALIZATION)).collect(Collectors.toList()));
 		Map<Integer, List<CHDocumentBo>> emergencyCareDocuments = mapDocumentsByEpisode(documents.stream().filter(doc -> doc.getEncounterType().equals(ECHEncounterType.EMERGENCY_CARE)).collect(Collectors.toList()));
 		List<InputStream> inputStreams = new ArrayList<>();
-		int totalPages = outpatientDocuments.size() + hospitalizationDocuments.size() + emergencyCareDocuments.size();
-		AtomicInteger actualPage = new AtomicInteger();
 		if(!outpatientDocuments.isEmpty()) {
 			for (CHDocumentBo document : outpatientDocuments) {
-				actualPage.getAndIncrement();
 				Map<String, Object> context = clinicHistoryContextBuilder.buildOutpatientContext(document, institutionId);
-				context.put("totalPages", totalPages);
-				context.put("actualPage", actualPage);
 				inputStreams.add(pdfService.generate("clinic_history_outpatient", context).stream);
 			}
 		}
 		if(!hospitalizationDocuments.isEmpty()){
 			hospitalizationDocuments.forEach((k,v) -> {
-				actualPage.getAndIncrement();
 				Map<String, Object> context = clinicHistoryContextBuilder.buildEpisodeContext(k, v, institutionId, ECHEncounterType.HOSPITALIZATION);
-				context.put("totalPages", totalPages);
-				context.put("actualPage", actualPage);
 				inputStreams.add(pdfService.generate("clinic_history_episode", context).stream);
 			});
 		}
 		if(!emergencyCareDocuments.isEmpty()){
 			emergencyCareDocuments.forEach((k,v) -> {
-				actualPage.getAndIncrement();
 				Map<String, Object> context = clinicHistoryContextBuilder.buildEpisodeContext(k, v, institutionId, ECHEncounterType.EMERGENCY_CARE);
-				context.put("totalPages", totalPages);
-				context.put("actualPage", actualPage);
 				inputStreams.add(pdfService.generate("clinic_history_episode", context).stream);
 			});
 		}
