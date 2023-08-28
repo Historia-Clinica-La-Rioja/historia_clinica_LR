@@ -165,9 +165,8 @@ public class RestExceptionHandler {
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ValidationException.class})
-	public ApiErrorMessageDto handleValidationException(ValidationException ex) {
-		LOG.warn(ex.getMessage(), ex);
-		return new ApiErrorMessageDto("validation", ex.getMessage());
+	public ApiErrorMessageDto handleValidationException(ValidationException ex, Locale locale) {
+		return buildErrorMessage("validation", ex.getMessage(), locale);
 	}
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
