@@ -259,7 +259,12 @@
 			"RECEIVED": "Recibidas",
 			"REQUEST": "Solicitadas",
 			"FILTER_BY_PERIOD": "Filtrar por período",
-			"PERIOD_VALIDATIONS": "El rango de fechas no debe superar los 90 días"
+			"PERIOD_VALIDATIONS": "El rango de fechas no debe superar los 90 días",
+			"ORIGIN": "origen",
+			"DESTINATION": "destino",
+			"REQUESTED_REFERENCE": "Referencia solicitada",
+			"ONE_MORE_PROBLEM": "problema más",
+			"MORE_PROBLEMS": "problemas más"
 		}
 	}
 }

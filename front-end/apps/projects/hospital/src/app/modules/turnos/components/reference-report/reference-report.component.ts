@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { ReferenceReportDto } from '@api-rest/api-model';
+import { ReferenceReportService } from '@api-rest/services/reference-report.service';
 import { dateMinusDays } from '@core/utils/date.utils';
 import { DateRange } from '@presentation/components/date-range-picker/date-range-picker.component';
 import differenceInDays from 'date-fns/differenceInDays';
+import { Observable } from 'rxjs';
 
 const MAX_DAYS = 90;
 
@@ -17,8 +20,11 @@ export class ReferenceReportComponent implements OnInit {
 	dateRange: DateRange;
 	showValidation = false;
 	readonly today = new Date();
+	received$: Observable<ReferenceReportDto[]>;
 
-	constructor() { }
+	constructor(
+		private readonly referenceReportService: ReferenceReportService
+	) { }
 
 	ngOnInit() {
 		this.dateRange = {
@@ -32,8 +38,15 @@ export class ReferenceReportComponent implements OnInit {
 		this.showValidation = false;
 		if (differenceInDays(dateRange.end, dateRange.start) > MAX_DAYS) {
 			this.showValidation = true;
+			delete this.received$;
 			return;
 		}
+
+		this.getReceived();
+	}
+
+	private getReceived() {
+		this.received$ = this.referenceReportService.getAllReceivedReferences(this.dateRange.start, this.dateRange.end);
 	}
 
 }

@@ -18,6 +18,8 @@
                 <mat-error *ngIf="showValidation">{{'turnos.search_references.PERIOD_VALIDATIONS' | translate}}</mat-error>
             </div>
         </div>
+
+        <app-received [received]="received$ | async"></app-received>
     </div>
 
 </app-content>
