@@ -155,6 +155,9 @@ public enum AppFeature implements Feature {
 
 	@Label("Indica si está disponible la solapa referencias del módulo Gestión de turnos")
 	HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO,
+	
+	@Label("Habilita la obligatoriedad del campo de unidades jerárquicas como requerido")
+	HABILITAR_OBLIGATORIEDAD_UNIDADES_JERARQUICAS,
 	;
 
     public boolean isActive() {
