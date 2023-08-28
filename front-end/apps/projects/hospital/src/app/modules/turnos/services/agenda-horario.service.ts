@@ -112,9 +112,9 @@ export class AgendaHorarioService {
 					protectedAppointmentsAllowed: !!event.meta.protectedAppointmentsAllowed,
 					hasSelectedLinesOfCare: this.hasSelectedLinesOfCare,
 					editMode: this.editMode,
-					patientVirtualAttentionAllowed:event.meta.patientVirtualAttentionAllowed,
-					secondOpinionVirtualAttentionAllowed:event.meta.secondOpinionVirtualAttentionAllowed,
-					onSiteAttentionAllowed:true,
+					patientVirtualAttentionAllowed: event.meta.patientVirtualAttentionAllowed ? true : false,
+					secondOpinionVirtualAttentionAllowed: event.meta.secondOpinionVirtualAttentionAllowed ? true : false,
+					onSiteAttentionAllowed: true,
 				}
 			});
 		dialogRef.afterClosed().subscribe(dialogInfo => {
@@ -168,9 +168,9 @@ export class AgendaHorarioService {
 						hasSelectedLinesOfCare: hasSelectedLinesOfCare,
 						openingHoursId: event.meta.diaryOpeningHourId,
 						protectedAppointmentsAllowed: !!event.meta.protectedAppointmentsAllowed,
-						patientVirtualAttentionAllowed:event.meta.patientVirtualAttentionAllowed,
-						secondOpinionVirtualAttentionAllowed:event.meta.secondOpinionVirtualAttentionAllowed,
-						onSiteAttentionAllowed:event.meta.onSiteAttentionAllowed,
+						patientVirtualAttentionAllowed: event.meta.patientVirtualAttentionAllowed ? true : false,
+						secondOpinionVirtualAttentionAllowed: event.meta.secondOpinionVirtualAttentionAllowed ? true : false,
+						onSiteAttentionAllowed: event.meta.onSiteAttentionAllowed ? true : false,
 					}
 				});
 			dialogRef.afterClosed().subscribe(dialogInfo => {
@@ -249,7 +249,7 @@ export class AgendaHorarioService {
 				protectedAppointmentsAllowed: event.meta.protectedAppointmentsAllowed,
 				patientVirtualAttentionAllowed: event.meta.patientVirtualAttentionAllowed,
 				secondOpinionVirtualAttentionAllowed: event.meta.secondOpinionVirtualAttentionAllowed,
-				onSiteAttentionAllowed:event.meta.onSiteAttentionAllowed,
+				onSiteAttentionAllowed: event.meta.onSiteAttentionAllowed,
 			};
 		}
 	}
