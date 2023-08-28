@@ -14,6 +14,7 @@ export class SearchPatientDialogComponent {
 	) { }
 
 	onSelectedPatient(selectedPatient: Patient) {
-		this.dialogRef.close(selectedPatient);
+		if (selectedPatient)
+			this.dialogRef.close(selectedPatient);
 	}
 }
