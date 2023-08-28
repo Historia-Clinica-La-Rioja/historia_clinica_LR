@@ -187,6 +187,7 @@ export class AgendaSetupComponent implements OnInit {
 				this.form.controls.healthcareProfessionalId.valueChanges
 					.pipe(filter(id => !!id))
 					.subscribe((healthcareProfessionalId: number) => {
+						this.form.controls.hierarchicalUnit.setValue(null);
 						const professionalsWithoutSelected = this.professionals.filter((p: ProfessionalDto) => p.id !== healthcareProfessionalId);
 						const { professionalReplacedId, temporaryReplacement } = this.form.value;
 
