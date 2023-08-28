@@ -13,6 +13,7 @@ import { CardComponent } from './components/card/card.component';
 import { CategoryHeaderDividerComponent } from './components/category-header-divider/category-header-divider.component';
 import { CellTemplatesComponent } from './components/cell-templates/cell-templates.component';
 import { ColoredDivPatientStateComponent } from './components/colored-div-patient-state/colored-div-patient-state.component';
+import { ColoredIconTextComponent } from './components/colored-icon-text/colored-icon-text.component';
 import { ColoredLabelComponent } from './colored-label/colored-label.component';
 import { ContentTitleComponent } from './components/content-title/content-title.component';
 import { DatepickerComponent } from './components/datepicker/datepicker.component';
@@ -87,6 +88,7 @@ import { CallDetailsComponent } from './components/call-details/call-details.com
 		CategoryHeaderDividerComponent,
 		CellTemplatesComponent,
 		ColoredDivPatientStateComponent,
+		ColoredIconTextComponent,
 		ColoredLabelComponent,
 		ContentTitleComponent,
 		DatepickerComponent,
@@ -174,6 +176,7 @@ import { CallDetailsComponent } from './components/call-details/call-details.com
 		CategoryHeaderDividerComponent,
 		CellTemplatesComponent,
 		ColoredDivPatientStateComponent,
+		ColoredIconTextComponent,
 		ColoredLabelComponent,
 		ContentTitleComponent,
 		DatepickerComponent,
