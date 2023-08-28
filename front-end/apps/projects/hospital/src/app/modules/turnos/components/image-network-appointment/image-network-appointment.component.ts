@@ -89,6 +89,9 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 
 	isMqttCallEnabled = false;
 	firstCoverage: number;
+
+    nameSelfDeterminationFF = false;
+
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			appointmentData: PatientAppointmentInformation,
@@ -113,6 +116,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		private readonly medicalCoverageInfo: MedicalCoverageInfoService
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_LLAMADO).subscribe(isEnabled => this.isMqttCallEnabled = isEnabled);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => this.nameSelfDeterminationFF = isOn);
 	}
 
 	ngOnInit(): void {

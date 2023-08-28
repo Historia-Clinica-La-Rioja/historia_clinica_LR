@@ -133,6 +133,27 @@
 			</ng-template>
 		</section>
 
+		<section gdArea="appointment" id="appointment" class="appointment-details section" fxLayout="column">
+			<span class="mat-body-strong subtitle-size appointment-title">{{'turnos.appointment.TITLE' |
+				translate}}</span>
+			<div>
+				<div fxLayout="column" fxLayoutGap="10px">
+					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start" data-id="appointment-date">
+						<app-iconed-text icon="calendar_today" text="{{selectedDate | date:'EEEE, d ' | titlecase }} de {{selectedDate | date:'MMMM ' | titlecase}} de {{selectedDate | date:'y ' | titlecase}}"></app-iconed-text>
+					</div>
+					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start" data-id="appointment-time">
+						<app-iconed-text icon="access_time" text="{{selectedDate | date:'H:mm'}} hs"></app-iconed-text>
+					</div>
+					<div fxLayout="column" fxLayoutGap="10px" *ngIf="appointment?.protected">
+						<span class="purple">{{'turnos.appointment.PROTECTED' | translate}}</span>
+					</div>
+					<div fxLayout="column" class="assigned-by normal-size" *ngIf="data.appointmentData.professionalPersonDto else bookingAppointment" data-id="assignment-professional">
+						<span>{{'turnos.appointment.ASSIGNED_BY' | translate}} {{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn | date:"dd/MM/yyyy H:mm"}}hs.</span>
+					</div>
+				</div>
+			</div>
+		</section>
+
 		<section gdArea="state-observations">
 
 			<section id="state">
@@ -223,4 +244,11 @@
 	<span class="mat-body patient-no-info coverage-text subtitle-size">
 		{{'turnos.appointment.NO-INFO' | translate}}
 	</span>
+</ng-template>
+
+<ng-template #bookingAppointment>
+	<div class="assigned-by" fxLayout="column">
+		<span>{{'turnos.appointment.ASSIGNED_BY' | translate}}</span>
+		<span>{{'turnos.appointment.BOOKING' | translate}} - {{data.appointmentData.createdOn | date:"dd/mm/yyyy H:mm"}}hs.</span>
+	</div>
 </ng-template>
