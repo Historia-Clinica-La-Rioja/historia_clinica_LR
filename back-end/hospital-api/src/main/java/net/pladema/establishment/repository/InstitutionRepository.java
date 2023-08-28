@@ -103,6 +103,7 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"AND cli.careLineId = :careLineId " +
 			"AND cli.deleted = FALSE " +
 			"AND di.deleteable.deleted IS FALSE " +
+	        "AND dcl.deleteable.deleted IS FALSE " +
 			"AND ur.deleteable.deleted IS FALSE " +
 			"AND hp.deleteable.deleted IS FALSE " +
 			"AND pp.deleteable.deleted IS FALSE " +

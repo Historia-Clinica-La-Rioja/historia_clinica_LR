@@ -56,7 +56,7 @@ export class InstitutionService {
 	getInstitutionsByDepartmentHavingClinicalSpecialty( departmentId: number,clinicalSpecialtyId: number, careLine: number): Observable<InstitutionBasicInfoDto[]> {
 		const url = `${environment.apiBase}/institution/by-department/${departmentId}/with-specialty/${clinicalSpecialtyId}`;
 		if (careLine) {
-			const queryParams = { careLine: careLine.toString() };
+			const queryParams = { careLineId: careLine.toString() };
 			return this.http.get<any[]>(url, { params: queryParams });
 		}
 		else
