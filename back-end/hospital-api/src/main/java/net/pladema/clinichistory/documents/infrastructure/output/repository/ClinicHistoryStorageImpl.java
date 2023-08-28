@@ -153,8 +153,9 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 	private String mapProblems(String problems){
 		if(problems.isBlank()) return problems;
 		int startIndex = problems.contains("Principal:") ? problems.indexOf("Principal:") + 11 : (problems.contains("Otro:") ? problems.indexOf("Otro:") + 6 : problems.indexOf(":") + 1);
-		int endIndex = problems.contains("|(") ? problems.indexOf("|(") : (problems.contains("|") ? problems.indexOf("|") : problems.length());
-		return problems.substring(startIndex, endIndex);
+		String problem = problems.substring(startIndex);
+		int endIndex = problem.contains("|(") ? problem.indexOf("|(") : (problem.contains("|") ? problem.indexOf("|") : problem.length());
+		return problem.substring(0, endIndex);
 	}
 
 	private ECHEncounterType getEncounterType (VClinicHistory row){
