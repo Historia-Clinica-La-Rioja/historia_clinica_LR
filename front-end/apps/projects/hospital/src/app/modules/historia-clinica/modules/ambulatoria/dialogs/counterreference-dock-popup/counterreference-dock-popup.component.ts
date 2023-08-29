@@ -24,6 +24,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
 import { ReferenceMasterDataService } from '@api-rest/services/reference-master-data.service';
 import { EpisodeData } from '@historia-clinica/components/episode-data/episode-data.component';
+import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
 @Component({
 	selector: 'app-counterreference-dock-popup',
 	templateUrl: './counterreference-dock-popup.component.html',
@@ -62,6 +63,8 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		private readonly counterreferenceFileService: CounterreferenceFileService,
 		private readonly referenceMasterDataService: ReferenceMasterDataService,
 		private readonly el: ElementRef,
+		private readonly hierarchicalUnitFormService: HierarchicalUnitService,
+
 	) {
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
@@ -90,41 +93,49 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	}
 
 	save(): void {
-		if (this.formReferenceClosure.valid) {
-			this.disableConfirmButton= true;
-			let fileIds: number[] = [];
-			let longFiles = 0;
-			if (!this.selectedFiles.length) {
-				const counterreference: CounterReferenceDto = this.buildCounterReferenceDto(fileIds);
-				this.createCounterreference(counterreference);
-				return;
-			}
-			for (let file of this.selectedFiles) {
-				this.counterreferenceFileService.uploadCounterreferenceFiles(this.data.patientId, file).subscribe(
-					fileId => {
-						longFiles = longFiles + 1;
-						fileIds.push(fileId);
-						if (this.selectedFiles.length === longFiles) {
-							const counterreference: CounterReferenceDto = this.buildCounterReferenceDto(fileIds);
-							this.createCounterreference(counterreference);
-						}
-					},
-					() => {
-						this.snackBarService.showError('ambulatoria.paciente.counterreference.messages.ERROR');
-						this.counterreferenceFileService.deleteCounterreferenceFiles(fileIds);
-					}
-				)
-			}
-			this.disableConfirmButton=false;
-		}
-
-		else {
-			this.formReferenceClosure.controls['closureType'].markAsTouched();
-			this.formReferenceClosure.controls['description'].markAsTouched();
-			this.collapsedCounterReference = false;
+		if (this.hierarchicalUnitFormService.isValidForm()) {
 			setTimeout(() => {
-				scrollIntoError(this.formReferenceClosure, this.el)
+				scrollIntoError(this.hierarchicalUnitFormService.getForm(), this.el)
 			}, 300);
+		} else {
+			if (this.formReferenceClosure.valid) {
+				this.disableConfirmButton = true;
+				let fileIds: number[] = [];
+				let longFiles = 0;
+				if (!this.selectedFiles.length) {
+					const counterreference: CounterReferenceDto = this.buildCounterReferenceDto(fileIds);
+					this.createCounterreference(counterreference);
+					return;
+				}
+				for (let file of this.selectedFiles) {
+					this.counterreferenceFileService.uploadCounterreferenceFiles(this.data.patientId, file).subscribe(
+						fileId => {
+							longFiles = longFiles + 1;
+							fileIds.push(fileId);
+							if (this.selectedFiles.length === longFiles) {
+								const counterreference: CounterReferenceDto = this.buildCounterReferenceDto(fileIds);
+								this.createCounterreference(counterreference);
+							}
+						},
+						() => {
+							this.snackBarService.showError('ambulatoria.paciente.counterreference.messages.ERROR');
+							this.counterreferenceFileService.deleteCounterreferenceFiles(fileIds);
+						}
+					)
+				}
+				this.disableConfirmButton = false;
+			}
+
+
+			else {
+
+				this.formReferenceClosure.controls['closureType'].markAsTouched();
+				this.formReferenceClosure.controls['description'].markAsTouched();
+				this.collapsedCounterReference = false;
+				setTimeout(() => {
+					scrollIntoError(this.formReferenceClosure, this.el)
+				}, 300);
+			}
 		}
 	}
 
