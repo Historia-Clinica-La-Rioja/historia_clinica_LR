@@ -1,9 +1,10 @@
 <div fxLayout="column" fxLayoutGap="0.1125em">
 	<mat-card>
         <div *ngIf="reports.length else noInfo" fxLayout="column" fxLayout.lt-md="row" fxLayoutGap="10px">
-            <ng-container *ngFor="let report of reports">
+            <ng-container *ngFor="let report of filteredReports">
                 <app-report-information [report]="report"></app-report-information>
             </ng-container>
+            <app-paginator [list]="reports" (result)="changeView($event)"></app-paginator>
         </div>
         <ng-template #noInfo>
             <app-no-data></app-no-data>

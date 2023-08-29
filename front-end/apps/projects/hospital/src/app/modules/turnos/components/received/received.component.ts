@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { ReferenceReportDto } from '@api-rest/api-model';
 import { Report } from '../report-information/report-information.component';
 import { getColoredIconText, getPriority } from '@turnos/utils/reference.utils';
@@ -10,6 +10,7 @@ import { getColoredIconText, getPriority } from '@turnos/utils/reference.utils';
 })
 export class ReceivedComponent {
 
+	filteredReports: Report[] = [];
 	reports: Report[] = [];
 
 	@Input()
@@ -26,6 +27,13 @@ export class ReceivedComponent {
 			this.reports = [];
 	};
 
-	constructor() { }
+	constructor(
+		private readonly changeDetectorRef: ChangeDetectorRef
+	) { }
+
+	changeView(result: Report[]) {
+		this.filteredReports = result;
+		this.changeDetectorRef.detectChanges();
+	}
 
 }
