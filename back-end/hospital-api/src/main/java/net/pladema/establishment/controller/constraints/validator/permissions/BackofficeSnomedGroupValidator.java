@@ -20,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class BackofficeSnomedGroupValidator implements BackofficePermissionValidator<SnomedGroup, Integer> {
@@ -118,11 +119,13 @@ public class BackofficeSnomedGroupValidator implements BackofficePermissionValid
 		String description = snomedGroupRepository.getDescriptionByEcl(entity.getEcl()).get(0);
 		if (!entity.getGroupType().equals(SnomedGroupType.SEARCH_GROUP) || !description.equals(procedure))
 			return;
-		boolean hasPersisted = snomedGroupRepository.findByInstitutionIdAndGroupIdAndGroupType(
-				entity.getInstitutionId(), entity.getGroupId(), entity.getGroupType()).isPresent();
-		if (hasPersisted)
-			throw new BackofficeValidationException("Esta institución ya posee un grupo de prácticas");
 
+		Optional<List<SnomedGroup>> result = snomedGroupRepository.findByInstitutionIdAndGroupIdAndGroupType(
+				entity.getInstitutionId(), entity.getGroupId(), entity.getGroupType());
+		result.ifPresent( snomedGroups -> {
+			if (!snomedGroups.isEmpty())
+				throw new BackofficeValidationException("Esta institución ya posee un grupo de prácticas");
+		});
 	}
 
 	private void hasSnomedConceptsAssociate(SnomedGroup entity) {
