@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ClinicalSpecialtyDto, EmptyAppointmentDto, TimeDto } from '@api-rest/api-model';
+import { ClinicalSpecialtyDto, EAppointmentModality, EmptyAppointmentDto, TimeDto } from '@api-rest/api-model';
 import { DiaryService } from '@api-rest/services/diary.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import * as moment from 'moment';
@@ -27,6 +27,8 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	patientId: number;
 	showClinicalSpecialtyError = false;
 	private today: Date;
+	MODALITY_ON_SITE_ATTENTION = EAppointmentModality.ON_SITE_ATTENTION;
+	MODALITY_PATIENT_VIRTUAL_ATTENTION = EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
 
 	dateSearchFilter = (d: Moment): boolean => {
 		const parsedDate = d?.toDate();
@@ -61,7 +63,8 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 			saturdayControl: [false, Validators.nullValidator],
 			sundayControl: [false, Validators.nullValidator],
 			searchInitialDate: [moment(), Validators.required],
-			searchEndingDate: [{ value: moment().add(21, "days"), disabled: true }, Validators.required]
+			searchEndingDate: [{ value: moment().add(21, "days"), disabled: true }, Validators.required],
+			modality: [null, Validators.required]
 		});
 
 		this.aliasTypeaheadOptions$ = this.getClinicalSpecialtiesTypeaheadOptions$();
@@ -169,7 +172,8 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 						year: this.searchBySpecialtyForm.controls.searchEndingDate.value.year(),
 						month: this.searchBySpecialtyForm.controls.searchEndingDate.value.month() + 1,
 						day: this.searchBySpecialtyForm.controls.searchEndingDate.value.date()
-					}
+					},
+					modality: this.searchBySpecialtyForm.controls.modality.value,
 				}
 			).subscribe(emptyAppointments => {
 				this.emptyAppointments = emptyAppointments;

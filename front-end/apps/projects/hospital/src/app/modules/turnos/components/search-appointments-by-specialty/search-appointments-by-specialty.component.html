@@ -14,6 +14,13 @@
             </div>
 		</div>
 		<div class="form-category" fxLayout="column" fxLayoutGap="5px">
+			<span class="category-title" [translate]="'turnos.MODALITY_ATTENTION'"></span>
+			<mat-radio-group formControlName="modality">
+				<mat-radio-button color="primary" [value]="MODALITY_ON_SITE_ATTENTION">{{'turnos.ON_SITE_ATTENTION' | translate}}</mat-radio-button>
+				<mat-radio-button color="primary" [value]="MODALITY_PATIENT_VIRTUAL_ATTENTION">{{'turnos.PATIENT_VIRTUAL_ATTENTION' | translate}}</mat-radio-button>
+			</mat-radio-group>
+		</div>
+		<div class="form-category" fxLayout="column" fxLayoutGap="5px">
 			<span class="category-title" [translate]="'turnos.home.AVAILABLE_DAYS'"></span>
 			<div fxLayout="row" fxLayoutGap="18px">
 				<mat-checkbox formControlName="mondayControl">{{ 'turnos.day-of-week.MONDAY' | translate | slice:0:3 }}</mat-checkbox>
@@ -79,7 +86,7 @@
 			<mat-card>
 				<div style="padding-top: 15px; padding-bottom: 15px;" *ngFor="let emptyAppointment of emptyAppointmentsFiltered; let last = last">
 					<app-appointment-details (resetAppointmentList)="resetEmptyAppointmentList($event)" [emptyAppointment]="emptyAppointment" [patientId]="patientId"
-					[searchInitialDate]="searchBySpecialtyForm.controls.searchInitialDate.value" 
+					[searchInitialDate]="searchBySpecialtyForm.controls.searchInitialDate.value"
 					[searchEndingDate]="searchBySpecialtyForm.controls.searchEndingDate.value"></app-appointment-details>
 					<mat-divider style="margin-top: 15px;" *ngIf="!last"></mat-divider>
 				</div>

@@ -331,7 +331,9 @@ export class NewAppointmentComponent implements OnInit {
 			patientId: this.patientId,
 			patientMedicalCoverageId: this.appointmentInfoForm.value.patientMedicalCoverage?.id,
 			phonePrefix,
-			phoneNumber
+			phoneNumber,
+			modality:null,
+			patientEmail:null,
 		};
 		this.addAppointment(newAppointment).subscribe((appointmentId: number) => {
 			this.lastAppointmentId = appointmentId;
@@ -486,7 +488,7 @@ export class NewAppointmentComponent implements OnInit {
 			}).filter(value => value !== null && value !== undefined);
 		});
 	}
-	
+
 	mapTranscribeOrderToMedicalOrderInfo(transcribedOrders: TranscribedDiagnosticReportInfoDto[]){
 		let text = 'image-network.appointments.medical-order.TRANSCRIBED_ORDER';
 
@@ -537,7 +539,7 @@ export class NewAppointmentComponent implements OnInit {
 		stepper.previous();
 		this.showAddPatient = false;
 	}
-	
+
 	private setPhonePrefix(itComesFromStep3: boolean): string {
 		if (!this.appointmentInfoForm.controls.phonePrefix.value && !itComesFromStep3)
 			return "";

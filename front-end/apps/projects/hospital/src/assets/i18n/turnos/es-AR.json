@@ -37,6 +37,9 @@
 				"NO_SPECIFIED_DATE": "Por favor ingrese una fecha para realizar la búsqueda"
 			}
 		},
+		"MODALITY_ATTENTION":"Modalidad de atención",
+		"ON_SITE_ATTENTION": "Presencial",
+		"PATIENT_VIRTUAL_ATTENTION": "teleconsulta de paciente",
 		"search-appointments-in-care-network": {
 			"SEARCH_IN_CARE_NETWORK_CRITERIA": "Seleccione los criterios para la búsqueda de turnos disponibles en la red de atención:",
 			"OPTIONAL": "(Opcional)",
