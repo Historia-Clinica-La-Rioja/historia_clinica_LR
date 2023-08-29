@@ -40,6 +40,7 @@ import { ActionedTooth, OdontogramService } from '../../services/odontogram.serv
 import { OdontologyReferenceService } from '../../services/odontology-reference.service';
 import { SurfacesNamesFacadeService } from '../../services/surfaces-names-facade.service';
 import { EpisodeData } from '@historia-clinica/components/episode-data/episode-data.component';
+import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -89,6 +90,8 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		private readonly referenceFileService: ReferenceFileService,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly el: ElementRef,
+		private readonly hierarchicalUnitFormService: HierarchicalUnitService,
+
 	) {
 		this.reasonNewConsultationService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.allergiesNewConsultationService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService, internmentMasterDataService);
@@ -131,25 +134,31 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	}
 
 	save() {
-		if (this.form.valid) {
-			combineLatest([this.conceptsFacadeService.getProcedures$(), this.conceptsFacadeService.getDiagnostics$()]).pipe(take(1))
-				.subscribe(([procedures, diagnostics]) => {
-					const allConcepts = diagnostics.concat(procedures);
-					const odontologyDto: OdontologyConsultationDto = this.buildConsultationDto(allConcepts);
-					const suggestedFieldsService = new ConsultationSuggestedFieldsService(odontologyDto);
+		if (this.hierarchicalUnitFormService.isValidForm()) {
+			setTimeout(() => {
+				scrollIntoError(this.hierarchicalUnitFormService.getForm(), this.el)
+			}, 300);
+		} else {
+			if (this.form.valid) {
+				combineLatest([this.conceptsFacadeService.getProcedures$(), this.conceptsFacadeService.getDiagnostics$()]).pipe(take(1))
+					.subscribe(([procedures, diagnostics]) => {
+						const allConcepts = diagnostics.concat(procedures);
+						const odontologyDto: OdontologyConsultationDto = this.buildConsultationDto(allConcepts);
+						const suggestedFieldsService = new ConsultationSuggestedFieldsService(odontologyDto);
 
-					if (!suggestedFieldsService.nonCompletedFields.length) {
-						this.uploadRefFilesAndCreateConsultation(odontologyDto);
-					}
-					else {
-						this.openDialog(suggestedFieldsService.nonCompletedFields, suggestedFieldsService.presentFields, odontologyDto);
-					}
-				})
-		}
-		else {
-			this.disableConfirmButton = false;
-			this.snackBarService.showError('Error al guardar documento de nueva consulta odontológica');
-			scrollIntoError(this.form, this.el);
+						if (!suggestedFieldsService.nonCompletedFields.length) {
+							this.uploadRefFilesAndCreateConsultation(odontologyDto);
+						}
+						else {
+							this.openDialog(suggestedFieldsService.nonCompletedFields, suggestedFieldsService.presentFields, odontologyDto);
+						}
+					})
+			}
+			else {
+				this.disableConfirmButton = false;
+				this.snackBarService.showError('Error al guardar documento de nueva consulta odontológica');
+				scrollIntoError(this.form, this.el);
+			}
 		}
 	}
 
