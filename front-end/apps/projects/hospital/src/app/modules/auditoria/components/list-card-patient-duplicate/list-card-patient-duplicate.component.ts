@@ -8,7 +8,7 @@ import { capitalize } from "@core/utils/core.utils";
 import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 import { UntypedFormGroup } from '@angular/forms';
 
-const ROUTE_PATIENTS_FUSION = "auditoria/fusionar-pacientes"
+const ROUTE_PATIENTS_FUSION = "home/auditoria/fusionar-pacientes"
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 const PAGE_MIN_SIZE = 5;
 const PAGE_SIZE_MIN = [5];
@@ -61,7 +61,7 @@ export class ListCardPatientDuplicateComponent implements OnInit {
 
 	goToPatientFusion(patientToAudit: DuplicatePatientDto) {
 		localStorage.setItem("patientToAudit", JSON.stringify(patientToAudit));
-		this.router.navigate([this.routePrefix + ROUTE_PATIENTS_FUSION]);
+		this.router.navigate([ROUTE_PATIENTS_FUSION]);
 	}
 
 	getFullName(patient: DuplicatePatientDto): string {

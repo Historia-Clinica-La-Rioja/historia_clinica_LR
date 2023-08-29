@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppFeature, DuplicatePatientDto, IdentificationTypeDto, PatientPersonalInfoDto, PatientToMergeDto, PatientType } from '@api-rest/api-model';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { ContextService } from '@core/services/context.service';
 import { AuditPatientService } from '@api-rest/services/audit-patient.service';
 import { Observable, of } from 'rxjs';
 import { PatientMasterDataService } from '@api-rest/services/patient-master-data.service';
@@ -17,7 +16,7 @@ import { Filters } from '../control-patient-duplicate/control-patient-duplicate.
 import { PatientProfilePopupComponent } from '../../dialogs/patient-profile-popup/patient-profile-popup.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 
-const ROUTE_CONTROL_PATIENT_DUPLICATE = "auditoria/control-pacientes-duplicados"
+const ROUTE_CONTROL_PATIENT_DUPLICATE = "home/auditoria/control-pacientes-duplicados"
 const REJECTTED = "Rechazado";
 @Component({
 	selector: 'app-patient-fusion',
@@ -25,7 +24,6 @@ const REJECTTED = "Rechazado";
 	styleUrls: ['./patient-fusion.component.scss']
 })
 export class PatientFusionComponent implements OnInit {
-	private readonly routePrefix;
 	readonly pageSizeOptions: number[] = PAGE_SIZE_OPTIONS;
 	listPatientData$: Observable<PatientPersonalInfoDto[]>;
 	listPatientData: PatientPersonalInfoDto[];
@@ -71,12 +69,11 @@ export class PatientFusionComponent implements OnInit {
 	}
 	isLoadingRequestMerge: boolean = false;
 
-	constructor(private router: Router, private contextService: ContextService, private personMasterDataService: PersonMasterDataService,
+	constructor(private router: Router, private personMasterDataService: PersonMasterDataService,
 		private auditPatientService: AuditPatientService,
 		private patientMasterDataService: PatientMasterDataService, private patientMergeService: PatientMergeService, private dialog: MatDialog,
 		private readonly snackBarService: SnackBarService,
 		private readonly featureFlagService: FeatureFlagService) {
-		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
 
 	ngOnInit(): void {
@@ -150,7 +147,7 @@ export class PatientFusionComponent implements OnInit {
 	}
 
 	goToBack() {
-		this.router.navigate([this.routePrefix + ROUTE_CONTROL_PATIENT_DUPLICATE])
+		this.router.navigate([ROUTE_CONTROL_PATIENT_DUPLICATE])
 	}
 
 	getIdentificationType(value: number) {
@@ -315,6 +312,7 @@ export class PatientFusionComponent implements OnInit {
 		this.dialog.open(PatientProfilePopupComponent, {
 			data: {
 				patientId: patient.patientId,
+				viewCardToAudit: true
 			},
 			height: "600px",
 			width: '30%',

@@ -34,9 +34,9 @@ import { UnmergePatientComponent } from './routes/unmerge-patient/unmerge-patien
   imports: [
     CommonModule,
     AuditoriaRoutingModule,
-	LazyMaterialModule,
-	PresentationModule,
-	PacientesModule,
+	  LazyMaterialModule,
+	  PresentationModule,
+	  PacientesModule,
   ],
 })
 export class AuditoriaModule { }

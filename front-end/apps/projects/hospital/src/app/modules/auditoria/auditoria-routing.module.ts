@@ -9,6 +9,7 @@ import { PatientFusionComponent } from './routes/patient-fusion/patient-fusion.c
 import { EmpadronamientoComponent } from './routes/empadronamiento/empadronamiento.component';
 import { UnlinkPatientComponent } from './routes/unlink-patient/unlink-patient.component';
 import { UnmergePatientComponent } from './routes/unmerge-patient/unmerge-patient.component';
+import { EditPatientComponent } from '@pacientes/routes/edit-patient/edit-patient.component';
 
 
 const routes: Routes = [{
@@ -37,6 +38,10 @@ const routes: Routes = [{
 		{
 			path:"desvincular-pacientes/:id",
 			component: UnmergePatientComponent
+		},
+		{
+			path: 'pacientes/edit',
+			component: EditPatientComponent
 		}
 	],
 	canActivate: [RoleGuard,FeatureFlagGuard],

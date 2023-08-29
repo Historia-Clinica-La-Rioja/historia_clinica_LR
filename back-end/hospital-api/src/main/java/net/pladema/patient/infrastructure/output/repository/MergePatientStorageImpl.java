@@ -35,6 +35,8 @@ import net.pladema.person.service.PersonService;
 @RequiredArgsConstructor
 public class MergePatientStorageImpl implements MergePatientStorage {
 
+	private final static Integer NO_INSTITUTION = -1;
+
 	private final PatientRepository patientRepository;
 
 	private final PatientService patientService;
@@ -62,7 +64,8 @@ public class MergePatientStorageImpl implements MergePatientStorage {
 		log.debug("Input parameters -> patientIdToInactivate {}, referencePatientId {}, institutionId {} ", patientIdToInactivate, referencePatientId, institutionId);
 		patientRepository.findById(patientIdToInactivate).orElseThrow(() -> new MergePatientException(MergePatientExceptionEnum.PATIENT_NOT_EXISTS, String.format("El paciente a inactivar con id %s no se encuentra", patientIdToInactivate)));
 		patientRepository.deleteById(patientIdToInactivate);
-		auditActionPatient(institutionId, patientIdToInactivate, EActionType.DELETE);
+		if (institutionId != NO_INSTITUTION)
+			auditActionPatient(institutionId, patientIdToInactivate, EActionType.DELETE);
 		personService.findByPatientId(patientIdToInactivate)
 				.ifPresent(person -> disableUserByPersonId(person.getId()));
 	}
@@ -73,7 +76,8 @@ public class MergePatientStorageImpl implements MergePatientStorage {
 		MergedInactivePatient mip = mergedInactivePatientRepository.findByInactivePatientId(patientIdToReactivate)
 				.orElseThrow(() -> new MergePatientException(MergePatientExceptionEnum.PATIENT_INACTIVE_NOT_EXISTS, String.format("El paciente con id %s no se encuentra inactivo", patientIdToReactivate)));
 		patientRepository.reactivate(mip.getInactivePatientId());
-		auditActionPatient(institutionId, patientIdToReactivate, EActionType.UPDATE);
+		if (institutionId != NO_INSTITUTION)
+			auditActionPatient(institutionId, patientIdToReactivate, EActionType.UPDATE);
 		personService.findByPatientId(patientIdToReactivate)
 				.ifPresent(person -> enableUserByPersonId(person.getId()));
 	}
@@ -100,8 +104,8 @@ public class MergePatientStorageImpl implements MergePatientStorage {
 			personExtended.setNameSelfDetermination(basicPersonData.getNameSelfDetermination());
 			personService.addPersonExtended(personExtended);
 		}
-
-		auditActionPatient(institutionId, patientId, EActionType.UPDATE);
+		if (institutionId != NO_INSTITUTION)
+			auditActionPatient(institutionId, patientId, EActionType.UPDATE);
 	}
 
 	@Override

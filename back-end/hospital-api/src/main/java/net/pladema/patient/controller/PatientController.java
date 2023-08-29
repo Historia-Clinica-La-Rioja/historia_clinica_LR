@@ -115,6 +115,8 @@ public class PatientController {
 
 	private static final long errorRangeTime = 100;
 
+	private final static Integer NO_INSTITUTION = -1;
+
 	public PatientController(PatientService patientService, PersonExternalService personExternalService,
 							 AddressExternalService addressExternalService, PatientMapper patientMapper, PersonMapper personMapper,
 							 ObjectMapper jackson, PatientTypeRepository patientTypeRepository, AdditionalDoctorService additionalDoctorService,
@@ -240,11 +242,11 @@ public class PatientController {
 		persistPatientAddress(patientDto, Optional.of(personExtendedUpdated.getAddressId()));
 		Patient createdPatient = persistPatientData(patientDto, createdPerson, patient, institutionId);
 
-		patientService.auditActionPatient(institutionId,patientId, EActionType.UPDATE);
-
-		if (patientDto.getAuditType() != null && patientDto.getAuditType().equals(EAuditType.TO_AUDIT))
-			patientService.persistSelectionForAnAudict(patientId, institutionId, patientDto.getMessage());
-
+		if (institutionId != NO_INSTITUTION) {
+			patientService.auditActionPatient(institutionId,patientId, EActionType.UPDATE);
+			if (patientDto.getAuditType() != null && patientDto.getAuditType().equals(EAuditType.TO_AUDIT))
+				patientService.persistSelectionForAnAudict(patientId, institutionId, patientDto.getMessage());
+		}
 		return ResponseEntity.created(new URI("")).body(createdPatient.getId());
 	}
 

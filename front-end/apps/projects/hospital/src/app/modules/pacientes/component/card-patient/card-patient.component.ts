@@ -157,7 +157,7 @@ export class CardPatientComponent {
 		if (auditor && !this.router.url.includes(ROUTE_EMPADRONAMIENTO) )
 			valueActions.push({
 				display: 'pacientes.audit.LABEL_BUTTON_AUDIT',
-				do: `${this.routePrefix}auditoria/desvincular-pacientes/${idPatient}`
+				do: `home/auditoria/desvincular-pacientes/${idPatient}`
 			});
 		return valueActions;
 	}
@@ -190,6 +190,7 @@ export class CardPatientComponent {
 			this.dialog.open(PatientProfilePopupComponent, {
 				data: {
 					patientId: idPatient,
+					viewCardToAudit: this.viewCardToAudit
 				},
 				height: "600px",
 				width: '30%',

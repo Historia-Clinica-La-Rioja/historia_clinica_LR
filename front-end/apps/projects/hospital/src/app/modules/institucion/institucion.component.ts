@@ -82,7 +82,7 @@ export class InstitucionComponent implements OnInit, OnDestroy {
 				);
 
 			this.institutionService.getInstitutions(Array.of(institutionId))
-				.subscribe(institutionDto =>
+				.subscribe(institutionDto => 
 					this.institution = mapToLocation(institutionDto[0])
 				);
 			this.accountService.getInfo()

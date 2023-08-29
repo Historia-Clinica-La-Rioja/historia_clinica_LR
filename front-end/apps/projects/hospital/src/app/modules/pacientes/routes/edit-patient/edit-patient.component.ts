@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
 	APatientDto,
 	BMPatientDto, BMPersonDto, CompletePatientDto, EAuditType, EducationLevelDto, ERole, EthnicityDto, GenderDto,
-	IdentificationTypeDto, PatientMedicalCoverageDto, PatientType, PersonOccupationDto, SelfPerceivedGenderDto
+	IdentificationTypeDto, PatientMedicalCoverageDto, PatientType, PersonOccupationDto, RoleAssignmentDto, SelfPerceivedGenderDto
 } from '@api-rest/api-model';
 import * as moment from 'moment';
 import { Moment } from 'moment';
@@ -37,6 +37,9 @@ import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/d
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Observable } from 'rxjs';
 import { UserService } from '@api-rest/services/user.service';
+import { LoggedUserService } from '../../../auth/services/logged-user.service';
+import { anyMatch } from '@core/utils/array.utils';
+import { NO_INSTITUTION } from '../../../home/home.component';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -111,14 +114,13 @@ export class EditPatientComponent implements OnInit {
 		private patientMasterDataService: PatientMasterDataService,
 		private auditPatientService: AuditPatientService,
 		private readonly userService: UserService,
+		private loggedUserService: LoggedUserService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
 	ngOnInit(): void {
-		this.permissionsService.hasContextAssignments$([ERole.AUDITOR_MPI]).subscribe(isAuditor => {
-			this.hasAuditorRole = isAuditor;
-		})
+		this.loggedUserService.assignments$.subscribe((roleAssignment: RoleAssignmentDto[]) => this.hasAuditorRole = anyMatch<ERole>(roleAssignment.map(roleAssignment => roleAssignment.role), [ERole.AUDITOR_MPI]));
 		this.route.queryParams
 			.subscribe(params => {
 				this.patientId = params.id;
@@ -275,10 +277,12 @@ export class EditPatientComponent implements OnInit {
 								//Tooltips
 								this.currentOccupationDescription = this.occupations.find(occupation => occupation.id === personInformationData.occupationId)?.description;
 								this.currentEducationLevelDescription = this.educationLevels.find(educationLevel => educationLevel.id === personInformationData.educationLevelId)?.description;
-								this.personService.canEditUserData(completeData.person.id).subscribe(canEditUserData => {
-									if (!canEditUserData)
-										this.form.controls.email.disable();
-								});
+								if (this.contextService.institutionId != NO_INSTITUTION) {
+									this.personService.canEditUserData(completeData.person.id).subscribe(canEditUserData => {
+										if (!canEditUserData)
+											this.form.controls.email.disable();
+									});
+								}
 								this.permissionsService.hasContextAssignments$([ERole.AUDITOR_MPI]).subscribe(canEditPatientStatus => {
 									this.form.controls.patientId.disable();
 									if (!canEditPatientStatus)

@@ -33,7 +33,7 @@ public class PatientMergeController {
 
 	@PostMapping("/merge")
 	@Transactional
-	@PreAuthorize("hasPermission(#institutionId, 'AUDITOR_MPI, ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES') || hasAnyAuthority('AUDITOR_MPI')")
 	public ResponseEntity<Integer> merge(@PathVariable(name = "institutionId") Integer institutionId, @RequestBody PatientToMergeDto patientToMerge) {
 		log.debug("Input parameters -> institutionId {}, patientToMerge {}", institutionId, patientToMerge);
 		Integer result = mergePatient.run(institutionId,  patientToMerge);
@@ -43,7 +43,7 @@ public class PatientMergeController {
 
 	@PostMapping("/unmerge")
 	@Transactional
-	@PreAuthorize("hasPermission(#institutionId, 'AUDITOR_MPI')")
+	@PreAuthorize("hasAnyAuthority('AUDITOR_MPI')")
 	public ResponseEntity<Boolean> unmerge(@PathVariable(name = "institutionId") Integer institutionId,  @RequestBody PatientToMergeDto patientToUnmerge) {
 		log.debug("Input parameters -> institutionId {}, patientToUnmerge {}, ", institutionId, patientToUnmerge);
 		Boolean result = unmergePatient.run(institutionId, patientToUnmerge);

@@ -6,7 +6,6 @@ import { AuditPatientService } from '@api-rest/services/audit-patient.service';
 import { PatientMasterDataService } from '@api-rest/services/patient-master-data.service';
 import { PatientMergeService } from '@api-rest/services/patient-merge.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { ContextService } from '@core/services/context.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PAGE_SIZE_OPTIONS, PAGE_MIN_SIZE } from '@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications';
 import { SnackBarService } from "@presentation/services/snack-bar.service";
@@ -23,7 +22,6 @@ const REJECTTED = "Rechazado";
   styleUrls: ['./unmerge-patient.component.scss']
 })
 export class UnmergePatientComponent implements OnInit {
-	private readonly routePrefix;
 	readonly pageSizeOptions: number[] = PAGE_SIZE_OPTIONS;
 	listPatientData$: Observable<PatientPersonalInfoDto[]>;
 	listPatientData: PatientPersonalInfoDto[];
@@ -59,13 +57,12 @@ export class UnmergePatientComponent implements OnInit {
 	validationPatientToUnlink: boolean = false;
 	isLoadingRequestUnmerge: boolean = false;
 
-	constructor(private router: Router, private contextService: ContextService, private personMasterDataService: PersonMasterDataService,
+	constructor(private router: Router, private personMasterDataService: PersonMasterDataService,
 		private auditPatientService: AuditPatientService,
 		private patientMasterDataService: PatientMasterDataService, private patientMergeService: PatientMergeService, private dialog: MatDialog,
 		private readonly snackBarService: SnackBarService,
 		private readonly featureFlagService: FeatureFlagService,
 		private route: ActivatedRoute) {
-		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 
 	}
 
@@ -125,7 +122,7 @@ export class UnmergePatientComponent implements OnInit {
 	}
 
 	goToBack() {
-			this.router.navigate([this.routePrefix + ROUTE_UNLINK_PATIENT])
+			this.router.navigate([ROUTE_UNLINK_PATIENT])
 	}
 
 	getIdentificationType(value: number) {

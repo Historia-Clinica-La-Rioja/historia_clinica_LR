@@ -39,7 +39,7 @@ import net.pladema.person.controller.service.PersonExternalService;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("audit/institution/{institutionId}")
+@RequestMapping("audit")
 @Tag(name = "Audit patient", description = "Audit patient")
 public class AuditPatientController {
 
@@ -52,11 +52,10 @@ public class AuditPatientController {
 	private final ObjectMapper jackson;
 
 	@GetMapping("/duplicate-patients-by-filter")
-	@PreAuthorize("hasPermission(#institutionId, 'AUDITOR_MPI')")
+	@PreAuthorize("hasAnyAuthority('AUDITOR_MPI')")
 	public ResponseEntity<List<DuplicatePatientDto>> getDuplicatePatientSearchFilter(
-			@PathVariable(name = "institutionId") Integer institutionId,
 			@RequestParam String searchFilterStr) {
-		log.debug("institutionId {}, searchFilterStr {}", institutionId, searchFilterStr);
+		log.debug("searchFilterStr {}", searchFilterStr);
 		AuditPatientSearch searchFilter = null;
 		try {
 			searchFilter = jackson.readValue(searchFilterStr, AuditPatientSearch.class);
@@ -69,11 +68,10 @@ public class AuditPatientController {
 	}
 
 	@GetMapping("/patients-personal-info")
-	@PreAuthorize("hasPermission(#institutionId, 'AUDITOR_MPI')")
+	@PreAuthorize("hasAnyAuthority('AUDITOR_MPI')")
 	public ResponseEntity<List<PatientPersonalInfoDto>> getPatientPersonalInfo(
-			@PathVariable(name = "institutionId") Integer institutionId,
 			@RequestParam String searchPatientInfoStr) {
-		log.debug("institutionId {}, searchPatientInfoStr {}", institutionId, searchPatientInfoStr);
+		log.debug("searchPatientInfoStr {}", searchPatientInfoStr);
 		DuplicatePatientDto duplicatePatientDto = null;
 		try {
 			duplicatePatientDto = jackson.readValue(searchPatientInfoStr, DuplicatePatientDto.class);
@@ -85,19 +83,18 @@ public class AuditPatientController {
 	}
 
 	@GetMapping(value = "/patient-types")
-	@PreAuthorize("hasPermission(#institutionId, 'AUDITOR_MPI')")
-	public ResponseEntity<List<PatientType>> getPatientTypes(@PathVariable(name = "institutionId") Integer institutionId) {
+	@PreAuthorize("hasAnyAuthority('AUDITOR_MPI')")
+	public ResponseEntity<List<PatientType>> getPatientTypes() {
 		List<PatientType> result = patientService.getPatientTypesForAuditor();
 		log.debug("Get all patient types for auditor -> {} ", result);
 		return ResponseEntity.ok(result);
 	}
 
 	@GetMapping("/search-registration-patients")
-	@PreAuthorize("hasPermission(#institutionId, 'AUDITOR_MPI')")
+	@PreAuthorize("hasAnyAuthority('AUDITOR_MPI')")
 	public  ResponseEntity<List<PatientRegistrationSearchDto>> searchRegistrationPatient(
-			@PathVariable(name = "institutionId") Integer institutionId,
 			@RequestParam String searchFilterStr) {
-		log.debug("Input data -> institutionId {}, searchFilterStr {}", institutionId, searchFilterStr);
+		log.debug("Input data -> searchFilterStr {}", searchFilterStr);
 		PatientRegistrationSearchFilter searchFilter = null;
 		try {
 			searchFilter = jackson.readValue(searchFilterStr, PatientRegistrationSearchFilter.class);
@@ -116,11 +113,10 @@ public class AuditPatientController {
 	}
 
 	@GetMapping("/search-merged-patients")
-	@PreAuthorize("hasPermission(#institutionId, 'AUDITOR_MPI')")
+	@PreAuthorize("hasAnyAuthority('AUDITOR_MPI')")
 	public  ResponseEntity<List<MergedPatientSearchDto>> searchMergedPatient(
-			@PathVariable(name = "institutionId") Integer institutionId,
 			@RequestParam String searchFilterStr) {
-		log.debug("Input data -> institutionId {}, searchFilterStr {}", institutionId, searchFilterStr);
+		log.debug("Input data -> searchFilterStr {}", searchFilterStr);
 		MergedPatientSearchFilter searchFilter = null;
 		try {
 			searchFilter = jackson.readValue(searchFilterStr, MergedPatientSearchFilter.class);
@@ -133,9 +129,8 @@ public class AuditPatientController {
 	}
 
 	@GetMapping("/patients-to-audit")
-	@PreAuthorize("hasPermission(#institutionId, 'AUDITOR_MPI')")
-	public ResponseEntity<List<PatientRegistrationSearchDto>> fetchPatientsToAudit(
-			@PathVariable(name = "institutionId") Integer institutionId) {
+	@PreAuthorize("hasAnyAuthority('AUDITOR_MPI')")
+	public ResponseEntity<List<PatientRegistrationSearchDto>> fetchPatientsToAudit() {
 		List<PatientRegistrationSearch> result = patientService.getPatientsToAudit();
 		log.debug("Get all patients to audit -> {} ", result.size());
 		return ResponseEntity.ok(result.stream().map(patientMapper::toPatientRegistrationSearchDto).collect(Collectors.toList()));
@@ -148,11 +143,10 @@ public class AuditPatientController {
 	}
 
 	@GetMapping("/patient/{activePatientId}/merged-patients-personal-info")
-	@PreAuthorize("hasPermission(#institutionId, 'AUDITOR_MPI')")
+	@PreAuthorize("hasAnyAuthority('AUDITOR_MPI')")
 	public ResponseEntity<List<PatientPersonalInfoDto>> getMergedPatientPersonalInfo(
-			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "activePatientId") Integer activePatientId) {
-		log.debug("institutionId {}, activePatientId {}", institutionId, activePatientId);
+		log.debug("activePatientId {}", activePatientId);
 		List<PatientPersonalInfoDto> result = patientService.getMergedPersonsByPatientId(activePatientId)
 				.stream().map(PatientPersonalInfoDto::new).collect(Collectors.toList());
 		result.add(getPatientPersonalInfoByActivePatient(activePatientId));

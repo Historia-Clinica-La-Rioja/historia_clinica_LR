@@ -21,6 +21,9 @@ import { HomeRoutes } from '../home/home-routing.module';
 import { AppRoutes } from '../../app-routing.module';
 import { WCExtensionsService } from '@extensions/services/wc-extensions.service';
 import { MenuItemDef } from '@core/core-model';
+import { ContextService } from '@core/services/context.service';
+
+export const NO_INSTITUTION: number = -1;
 
 @Component({
 	selector: 'app-home',
@@ -40,11 +43,13 @@ export class HomeComponent implements OnInit {
 		private featureFlagService: FeatureFlagService,
 		private loggedUserService: LoggedUserService,
 		private readonly wcExtensionsService: WCExtensionsService,
+		private contextService: ContextService
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
 			this.nameSelfDeterminationFF = isOn
 		});
 		this.homeExtensions$ = this.wcExtensionsService.getSystemHomeMenu();
+		this.contextService.setInstitutionId(NO_INSTITUTION);
 	}
 
 	ngOnInit(): void {
