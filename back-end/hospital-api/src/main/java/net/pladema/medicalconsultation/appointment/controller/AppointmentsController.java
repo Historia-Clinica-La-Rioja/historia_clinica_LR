@@ -9,8 +9,11 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalPersonDto
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
 import net.pladema.establishment.controller.dto.HierarchicalUnitDto;
@@ -94,6 +97,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/institutions/{institutionId}/medicalConsultations/appointments")
 @Tag(name = "Appointments", description = "Appointments")
 @Validated
+@RequiredArgsConstructor
 public class AppointmentsController {
 
 	public static final String OUTPUT = "Output -> {}";
@@ -151,46 +155,7 @@ public class AppointmentsController {
 	private Long MAX_DAYS = 30L;
 	private final GetCurrentAppointmentHierarchicalUnit getCurrentAppointmentHierarchicalUnit;
 
-	public AppointmentsController(
-			AppointmentDailyAmountService appointmentDailyAmountService,
-			AppointmentService appointmentService, EquipmentAppointmentService equipmentAppointmentService, AppointmentValidatorService appointmentValidatorService,
-			CreateAppointmentService createAppointmentService,
-			CreateEquipmentAppointmentService createEquipmentAppointmentService,
-			CreateTranscribedEquipmentAppointmentService createTranscribedEquipmentAppointmentService,
-			AppointmentMapper appointmentMapper, InstitutionMapper institutionMapper, PatientExternalService patientExternalService, HealthcareProfessionalExternalService healthcareProfessionalExternalService,
-			DateTimeProvider dateTimeProvider,
-			NotifyPatient notifyPatient,
-			BookingPersonService bookingPersonService,
-			LocalDateMapper dateMapper,
-			LocalDateMapper localDateMapper,
-			MqttClientService mqttClientService,
-			AppointmentOrderImageService appointmentOrderImageService,
-			MoveStudiesService moveStudiesService,
-			DeriveReportService deriveReportService,
-			GetCurrentAppointmentHierarchicalUnit getCurrentAppointmentHierarchicalUnit
-	) {
-		this.appointmentDailyAmountService = appointmentDailyAmountService;
-		this.appointmentService = appointmentService;
-		this.equipmentAppointmentService = equipmentAppointmentService;
-		this.appointmentValidatorService = appointmentValidatorService;
-		this.createAppointmentService = createAppointmentService;
-		this.createTranscribedEquipmentAppointmentService = createTranscribedEquipmentAppointmentService;
-		this.createEquipmentAppointmentService = createEquipmentAppointmentService;
-		this.appointmentMapper = appointmentMapper;
-		this.institutionMapper = institutionMapper;
-		this.patientExternalService = patientExternalService;
-		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
-		this.dateTimeProvider = dateTimeProvider;
-		this.notifyPatient = notifyPatient;
-		this.bookingPersonService = bookingPersonService;
-		this.dateMapper = dateMapper;
-		this.localDateMapper = localDateMapper;
-		this.mqttClientService = mqttClientService;
-		this.appointmentOrderImageService = appointmentOrderImageService;
-		this.moveStudiesService = moveStudiesService;
-		this.deriveReportService = deriveReportService;
-		this.getCurrentAppointmentHierarchicalUnit = getCurrentAppointmentHierarchicalUnit;
-	}
+	private final FeatureFlagsService featureFlagsService;
 
 
 	@PostMapping
@@ -424,8 +389,8 @@ public class AppointmentsController {
 				appointmentBo.getProfessionalPersonBo() != null
 						? new ProfessionalPersonDto(
 						appointmentBo.getProfessionalPersonBo().getId(),
-						appointmentBo.getProfessionalPersonBo().getFirstName() + " " + appointmentBo.getProfessionalPersonBo().getLastName() + " " + appointmentBo.getProfessionalPersonBo().getOtherLastNames())
-						: null
+						appointmentBo.getProfessionalPersonBo().getFullName(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)))
+						:  null
 		);
 	}
 
@@ -473,11 +438,9 @@ public class AppointmentsController {
 	private AppointmentListDto mapData(AppointmentBo appointmentBo, Map<Integer, BasicPatientDto> patientData) {
 		AppointmentBasicPatientDto appointmentBasicPatientDto = toAppointmentBasicPatientDto(patientData.get(appointmentBo.getPatientId()), appointmentBo.getPhoneNumber(), appointmentBo.getPhonePrefix());
 		AppointmentListDto result = appointmentMapper.toAppointmentListDto(appointmentBo, appointmentBasicPatientDto);
-		if (appointmentBo.getProfessionalPersonBo() != null) {
-			result.getProfessionalPersonDto().setFullName(appointmentBo.getProfessionalPersonBo().getFirstName().concat(" " + appointmentBo.getProfessionalPersonBo().getLastName()));
-			if (appointmentBo.getProfessionalPersonBo().getOtherLastNames() != null)
-				result.getProfessionalPersonDto().getFullName().concat(" " + appointmentBo.getProfessionalPersonBo().getOtherLastNames());
-		}
+		var professionalPersonBo = appointmentBo.getProfessionalPersonBo();
+		if (professionalPersonBo != null)
+			result.getProfessionalPersonDto().setFullName(professionalPersonBo.getFullName(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)));
 		log.debug("AppointmentListDto id result {}", result.getId());
 		log.trace(OUTPUT, result);
 		return result;
@@ -805,5 +768,4 @@ public class AppointmentsController {
 		}
 		return null;
 	}
-
 }

@@ -29,10 +29,12 @@ public class ProfessionalPersonVo {
 		this.otherLastNames = otherLastNames;
 	}
 
-	public ProfessionalPersonVo(Integer personId, String firstName, String lastName, String otherLastNames) {
+	public ProfessionalPersonVo(Integer personId, String firstName, String lastName, String nameSelfDetermination, String middleNames, String otherLastNames) {
 		this.id = personId;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.nameSelfDetermination = nameSelfDetermination;
+		this.middleNames = middleNames;
 		this.otherLastNames = otherLastNames;
 	}
 }

@@ -60,6 +60,8 @@ public class AppointmentDiaryVo {
 			Integer personId,
 			String firstName,
 			String lastName,
+			String nameSelfDetermination,
+			String middleNames,
 			String otherLastName
 	) {
 		this.diaryId = diaryId;
@@ -76,7 +78,7 @@ public class AppointmentDiaryVo {
 		this.appointmentBlockMotiveId = appointmentBlockMotiveId;
 		this.updatedOn = updatedOn;
 		this.createdOn = createdOn;
-		this.professionalPersonVo = personId != null ? new ProfessionalPersonVo(personId, firstName, lastName, otherLastName) : null;
+		this.professionalPersonVo = personId != null ? new ProfessionalPersonVo(personId, firstName, lastName, nameSelfDetermination, middleNames, otherLastName) : null;
 	}
 
 }
