@@ -80,6 +80,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 	patientMedicalOrders: medicalOrderInfo[] = [];
 	canCoverageBeEdited = false;
 	canOrderBeEdited = false;
+	hasCoverageAsociated = false;
 	phoneNumber: string;
 	summaryCoverageData: SummaryCoverageInformation = {};
 	hasRoleToChangeState$: Observable<boolean>;
@@ -215,21 +216,19 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		return hasOrder;
 	}
 
-	private checkInputUpdatePermissions() {
-		this.setEditionPermission();
+	private checkInputUpdatePermissions(orderHasCoverage?: boolean) {
+		this.setEditionPermission(orderHasCoverage);
 		this.changeInputUpdatePermissions();
 	}
 
 	private changeInputUpdatePermissions(){
 		this.canCoverageBeEdited ? this.formEdit.get('newCoverageData').enable()
-							: this.formEdit.get('newCoverageData').disable();
+									: this.formEdit.get('newCoverageData').disable();
 	}
 
-	private setEditionPermission() {
-		this.canCoverageBeEdited = false;
-		this.canOrderBeEdited = false;
+	private setEditionPermission(orderHasCoverage?: boolean) {
 		let hasMedicalOrder = this.hasMedicalOrder(this.appointment);
-		this.canCoverageBeEdited = this.isAssigned();
+		this.canCoverageBeEdited = this.isAssigned() && !orderHasCoverage;
 		if (hasMedicalOrder) {
 			this.canOrderBeEdited = this.isAssigned();
 		} else {
@@ -277,7 +276,8 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 						studyName: order.snomed.pt,
 						studyId: order.id,
 						displayText: `${translatedText} # ${order.serviceRequestId} - ${order.snomed.pt}`,
-						isTranscribed: false
+						isTranscribed: false,
+						coverageDto: order.coverageDto,
 					}
 			})
 	}
@@ -306,7 +306,8 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 						studyName: diagnosticReportInfo.snomed.pt,
 						studyId: diagnosticReportInfo.id,
 						displayText: `${translatedText} # ${diagnosticReportInfo.serviceRequestId} - ${diagnosticReportInfo.snomed.pt}`,
-						isTranscribed: false
+						isTranscribed: false,
+						coverageDto: diagnosticReportInfo.coverageDto,
 					})}
 			}).filter(value => value !== null && value !== undefined);
 		});
@@ -438,27 +439,34 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 
 	edit(): void {
 		if (this.formEdit.valid) {
-			if (this.isAssigned()) {
-				if (this.formEdit.controls.newCoverageData.value) {
-					this.coverageData = this.patientMedicalCoverages.find(mc => this.formEdit.controls.newCoverageData.value == mc.id);
-					this.updateSummaryCoverageData();
-					this.updateCoverageData(this.coverageData.id);
-					this.setCoverageText(this.coverageData);
-				} else {
-					this.coverageData = null;
-					this.coverageNumber = null;
-					this.coverageCondition = null;
-					this.updateSummaryCoverageData();
-					this.updateCoverageData(null);
-				}
-			}
+			this.setMedicalOrder();
+			this.saveCoverageData();
 			if (this.formEdit.controls.phoneNumber.dirty || this.formEdit.controls.phonePrefix.dirty) {
 				this.updatePhoneNumber(this.formEdit.controls.phonePrefix.value, this.formEdit.controls.phoneNumber.value);
 				this.phoneNumber = this.formatPhonePrefixAndNumber(this.formEdit.controls.phonePrefix.value, this.formEdit.controls.phoneNumber.value);
 			}
-			this.setMedicalOrder();
-			this.checkInputUpdatePermissions();
 			this.hideFilters();
+		}
+	}
+
+	setAsociatedCoverageData(selectedOrder: medicalOrderInfo){
+		this.hasCoverageAsociated = selectedOrder?.coverageDto ? true : false;
+		this.hasCoverageAsociated ? this.formEdit.controls.newCoverageData.setValue(selectedOrder.coverageDto.id) : null;
+		this.checkInputUpdatePermissions(this.hasCoverageAsociated);
+	}
+
+	private saveCoverageData() {
+		if (this.formEdit.controls.newCoverageData.value) {
+			this.coverageData = this.patientMedicalCoverages.find(mc => this.formEdit.controls.newCoverageData.value == mc.id);
+			this.updateSummaryCoverageData();
+			this.updateCoverageData(this.coverageData.id);
+			this.setCoverageText(this.coverageData);
+		} else {
+			this.coverageData = null;
+			this.coverageNumber = null;
+			this.coverageCondition = null;
+			this.updateSummaryCoverageData();
+			this.updateCoverageData(null);
 		}
 	}
 
@@ -575,8 +583,11 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 
 	hideFilters(): void {
 		this.hideFilterPanel = !this.hideFilterPanel;
-		this.formEdit.controls.newCoverageData.setValue(this.coverageData?.id);
 		this.formEdit.controls.medicalOrder.get('appointmentMedicalOrder').setValue(this.medicalOrder)
+		this.setAsociatedCoverageData(this.medicalOrder);
+		if (!this.hasCoverageAsociated){
+			this.formEdit.controls.newCoverageData.setValue(this.coverageData?.id);
+		}
 		this.formEdit.controls.phonePrefix.setValue(this.data.appointmentData.phonePrefix);
 		this.formEdit.controls.phoneNumber.setValue(this.data.appointmentData.phoneNumber);
 	}

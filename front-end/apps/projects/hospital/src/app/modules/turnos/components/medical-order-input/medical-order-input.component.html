@@ -1,7 +1,7 @@
 <form [formGroup]="form">
     <mat-form-field formGroupName="medicalOrder" appearance="outline" fxFlex>
         <mat-label translate="image-network.appointments.medical-order.NEW_MEDICAL_ORDER"></mat-label>
-        <mat-select formControlName="appointmentMedicalOrder" (selectionChange)="generateTooltipOnMedicalOrderChange()"
+        <mat-select formControlName="appointmentMedicalOrder" (selectionChange)="changeOrderSelection()"
             matTooltip="{{patientMedicalOrderTooltipDescription | titlecase}}">
             <mat-option id="medicalOrder" name="medicalOrder" *ngFor="let patientMedicalOrder of patientMedicalOrders"
                 [value]="patientMedicalOrder" matTooltip="{{patientMedicalOrder.displayText | titlecase}}">

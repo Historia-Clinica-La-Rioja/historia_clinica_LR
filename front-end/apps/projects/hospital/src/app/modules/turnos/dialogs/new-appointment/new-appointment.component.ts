@@ -594,5 +594,6 @@ export interface medicalOrderInfo {
 	studyName: string,
 	studyId?: number,
 	displayText: string,
-	isTranscribed: boolean
+	isTranscribed: boolean,
+	coverageDto?: PatientMedicalCoverageDto,
 }

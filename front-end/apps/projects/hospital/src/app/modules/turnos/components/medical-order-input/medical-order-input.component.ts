@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, FormGroupDirective } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { EquipmentTranscribeOrderPopupComponent } from '@turnos/dialogs/equipment-transcribe-order-popup/equipment-transcribe-order-popup.component';
@@ -13,6 +13,7 @@ export class MedicalOrderInputComponent implements OnInit {
     @Input() patientMedicalOrders: medicalOrderInfo[] = [];
     @Input() patientId: number;
     @Input() disabled?: boolean;
+	@Output() selectionChange = new EventEmitter<medicalOrderInfo>();
     form: FormGroup;
 
     
@@ -59,11 +60,17 @@ export class MedicalOrderInputComponent implements OnInit {
 	cleanInput(){
 		this.form.controls.medicalOrder.get('appointmentMedicalOrder').setValue(null);
 		this.patientMedicalOrderTooltipDescription = '';
+		this.selectionChange.emit(null);
 	}
 
     generateTooltipOnMedicalOrderChange() {
 		if (this.form.controls.medicalOrder.get('appointmentMedicalOrder')?.value){
 			this.patientMedicalOrderTooltipDescription = this.form.controls.medicalOrder.get('appointmentMedicalOrder').value.displayText;
 		}
+	}
+
+	changeOrderSelection(){
+		this.generateTooltipOnMedicalOrderChange();
+		this.selectionChange.emit(this.form.controls.medicalOrder.get('appointmentMedicalOrder')?.value);
 	}
 }
