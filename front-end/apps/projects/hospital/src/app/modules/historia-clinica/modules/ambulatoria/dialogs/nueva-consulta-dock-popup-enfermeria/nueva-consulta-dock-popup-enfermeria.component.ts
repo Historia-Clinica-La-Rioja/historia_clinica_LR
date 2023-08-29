@@ -26,6 +26,7 @@ import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta
 import { NewNurseConsultationSuggestedFieldsService } from '../../services/new-nurse-consultation-suggested-fields.service';
 import { NuevaConsultaData } from '../nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 import { EpisodeData } from '@historia-clinica/components/episode-data/episode-data.component';
+import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
 
 export interface FieldsToUpdate {
 	riskFactors: boolean;
@@ -88,6 +89,8 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		private readonly translateService: TranslateService,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly el: ElementRef,
+		private readonly hierarchicalUnitFormService: HierarchicalUnitService,
+
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
@@ -193,6 +196,11 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 						scrollIntoError(this.factoresDeRiesgoFormService.getForm(), this.el)
 					}, 300);
 				}
+				if (this.hierarchicalUnitFormService.isValidForm()) {
+					setTimeout(() => {
+						scrollIntoError(this.hierarchicalUnitFormService.getForm(), this.el)
+					}, 300);
+				}
 			}
 		}
 	}
@@ -262,6 +270,8 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		if (this.datosAntropometricosNuevaConsultaService.getForm().invalid)
 			return false;
 		if (this.factoresDeRiesgoFormService.getForm().invalid)
+			return false;
+		if (this.hierarchicalUnitFormService.isValidForm())
 			return false;
 		return true;
 	}
