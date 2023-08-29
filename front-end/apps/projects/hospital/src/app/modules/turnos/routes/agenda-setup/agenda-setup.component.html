@@ -37,6 +37,7 @@
 									<span class="mat-body">{{hu.name}}</span>
 								</mat-option>
 							</mat-select>
+							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 						</mat-form-field>
 					</div>
 				</div>
@@ -108,7 +109,6 @@
 
 				<div fxLayout="column" fxLayoutGap="10px">
 					<mat-label fxLayout="column" [translate]="'turnos.agenda-setup.DIARY_TYPE'"></mat-label>
-				
 					<mat-radio-group id="diaryType" fxLayout="row" fxLayoutGap="40px" formControlName="diaryType">
 						<mat-radio-button color="primary" [value]="CONSULTATION">
 							{{'turnos.agenda-setup.CONSULTATION' | translate}}

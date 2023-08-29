@@ -15,6 +15,7 @@ import { SectorService } from '@api-rest/services/sector.service';
 import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service';
 import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import {
+	AppFeature,
 	CareLineDto,
 	CompleteDiaryDto,
 	DiaryADto,
@@ -36,6 +37,7 @@ import { HealthcareProfessionalService } from '@api-rest/services/healthcare-pro
 import { DiaryCareLineService } from '@api-rest/services/diary-care-line.service';
 import { SnomedRelatedGroupService } from '@api-rest/services/snomed-related-group.service';
 import { ChipsOption } from '@turnos/components/chips-autocomplete/chips-autocomplete.component';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 const ROUTE_APPOINTMENT = 'turnos';
 const ROUTE_AGENDAS = "agenda";
@@ -90,7 +92,7 @@ export class AgendaSetupComponent implements OnInit {
 	practicesOptions: ChipsOption<SnomedDto>[];
 	practicesSelected: ChipsOption<SnomedDto>[] = [];
 	showPractices = false;
-
+	private fieldHierarchicalUnitRequired = false;
 	constructor(
 		private readonly el: ElementRef,
 		private readonly sectorService: SectorService,
@@ -111,9 +113,14 @@ export class AgendaSetupComponent implements OnInit {
 		private readonly professionalService: HealthcareProfessionalService,
 		private readonly diaryCareLine: DiaryCareLineService,
 		private readonly snomedRelatedGroupService: SnomedRelatedGroupService,
+		private readonly featureFlagService: FeatureFlagService,
+
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY, snackBarService);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_OBLIGATORIEDAD_UNIDADES_JERARQUICAS).subscribe(isOn =>
+			this.fieldHierarchicalUnitRequired = isOn
+		);
 	}
 
 	ngOnInit(): void {
@@ -141,6 +148,12 @@ export class AgendaSetupComponent implements OnInit {
 			diaryType: new UntypedFormControl(this.CONSULTATION),
 			practices: new UntypedFormControl([])
 		});
+
+		if (this.fieldHierarchicalUnitRequired) {
+			const hierarchicalUnitCtrl = this.form.controls.hierarchicalUnit;
+			hierarchicalUnitCtrl.setValidators(Validators.required);
+			hierarchicalUnitCtrl.updateValueAndValidity();
+		}
 
 		this.form.controls.appointmentDuration.valueChanges
 			.subscribe(newDuration => this.hourSegments = MINUTES_IN_HOUR / newDuration);
