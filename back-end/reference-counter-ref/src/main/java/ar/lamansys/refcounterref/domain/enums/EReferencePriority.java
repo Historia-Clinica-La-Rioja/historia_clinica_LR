@@ -1,5 +1,7 @@
 package ar.lamansys.refcounterref.domain.enums;
 
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -27,6 +29,13 @@ public enum EReferencePriority {
 	EReferencePriority(Number id, String description) {
 		this.id = id.shortValue();
 		this.description = description;
+	}
+
+	public static EReferencePriority map(Short id) {
+		for(EReferencePriority e : values()) {
+			if(e.id.equals(id)) return e;
+		}
+		throw new NotFoundException("reference-priority-not-exists", String.format("La prioridad de referencia con id %s no existe", id));
 	}
 
 	@JsonCreator
