@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { HierarchicalUnitDto } from '@api-rest/api-model';
 import { AccountService } from '@api-rest/services/account.service';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { HierarchicalUnitsService } from '@api-rest/services/hierarchical-units.service';
+import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
 import { forkJoin, switchMap, tap } from 'rxjs';
 
 @Component({
@@ -24,17 +25,15 @@ export class HierarchicalUnitConsultationComponent implements OnInit {
 	@Output() response: EventEmitter<number> = new EventEmitter<number>();
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
 		private readonly hierarchicalUnitService: HierarchicalUnitsService,
 		private readonly accountService: AccountService,
-		private readonly appointmentService: AppointmentsService
+		private readonly appointmentService: AppointmentsService,
+		readonly hierarchicalUnitformService: HierarchicalUnitService
 	) { }
 
 	ngOnInit(): void {
-		this.form = this.formBuilder.group({
-			hierarchicalUnitId: [null],
-			isAReplacement: [false]
-		});
+
+		this.form = this.hierarchicalUnitformService.getForm();
 
 		this.accountService.getInfo().pipe(
 			tap(userInfo => this.userId = userInfo.id),

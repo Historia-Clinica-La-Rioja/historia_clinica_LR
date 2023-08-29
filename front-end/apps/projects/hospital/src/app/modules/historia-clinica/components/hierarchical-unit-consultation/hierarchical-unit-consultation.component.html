@@ -1,6 +1,6 @@
 <div fxLayout="column" fxLayoutGap="10px">
     <span class="title">{{ 'historia-clinica.hierarhical-unit-section.TITLE' | translate }}</span>
-    <form [formGroup]="form" fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px">
+    <form [formGroup]="hierarchicalUnitformService.getForm()" fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px">
         <div fxLayoutAlign="center start" fxLayoutGap="10px">
             <mat-slide-toggle id="replacement" formControlName="isAReplacement" color="primary"
                 (change)="changeHUToShow()"></mat-slide-toggle>
@@ -14,6 +14,7 @@
                     {{ hu?.name }}
                 </mat-option>
             </mat-select>
+			<mat-error [translate]="'forms.REQUIRED'"></mat-error>
         </mat-form-field>
     </form>
 </div>
