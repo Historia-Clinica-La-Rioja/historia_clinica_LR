@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
+import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSearchBo;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryProtectedAppointmentsSearch;
 import net.pladema.medicalconsultation.diary.repository.DiaryAvailableProtectedAppointmentsSearchRepository;
@@ -19,6 +20,7 @@ import net.pladema.medicalconsultation.diary.service.DiaryAvailableAppointmentsS
 
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 
+import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
 
 import net.pladema.staff.service.ClinicalSpecialtyService;
@@ -82,13 +84,22 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 			diaryInfo.setOpeningHours(diaryOpeningHoursService.getDiaryOpeningHours(
 					diaryInfo.getDiaryId())
 					.stream()
-					.filter(doh -> doh.getProtectedAppointmentsAllowed() != null && doh.getProtectedAppointmentsAllowed())
+					.filter(doh -> filterByTypeAndModality(searchCriteria, doh))
 					.collect(Collectors.toList()));
 			result.addAll(getDiaryAvailableAppointments(diaryInfo, assignedAppointments, searchCriteria, institutionId));
 		}
 		result.sort(Comparator.comparing(DiaryAvailableProtectedAppointmentsBo::getDate).thenComparing(DiaryAvailableProtectedAppointmentsBo::getHour));
 		log.debug(OUTPUT, result);
 		return result;
+	}
+
+	private boolean filterByTypeAndModality(DiaryProtectedAppointmentsSearch searchCriteria, DiaryOpeningHoursBo doh) {
+		return doh.getProtectedAppointmentsAllowed() != null && doh.getProtectedAppointmentsAllowed() &&
+				(
+						(searchCriteria.getModality().equals(EAppointmentModality.ON_SITE_ATTENTION) && doh.getOnSiteAttentionAllowed()) ||
+						(searchCriteria.getModality().equals(EAppointmentModality.PATIENT_VIRTUAL_ATTENTION) && doh.getPatientVirtualAttentionAllowed()) ||
+						(searchCriteria.getModality().equals(EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION) && doh.getSecondOpinionVirtualAttentionAllowed())
+				);
 	}
 
 	@Override
