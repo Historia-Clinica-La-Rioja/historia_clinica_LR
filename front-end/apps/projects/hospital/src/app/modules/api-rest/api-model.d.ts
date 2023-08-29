@@ -1118,6 +1118,16 @@ export interface ECPediatricDto extends Serializable {
     triage: TriagePediatricDto;
 }
 
+export interface EReferenceClosureType {
+    description: string;
+    id: number;
+}
+
+export interface EReferencePriority {
+    description: string;
+    id: number;
+}
+
 export interface EducationLevelDto extends Serializable {
     code: number;
     description: string;
@@ -3125,6 +3135,21 @@ export interface ReferenceGetDto extends Serializable {
 export interface ReferenceProblemDto extends Serializable {
     id?: number;
     snomed: SharedSnomedDto;
+}
+
+export interface ReferenceReportDto {
+    careLine: string;
+    clinicalSpecialtyDestination: string;
+    clinicalSpecialtyOrigin: string;
+    closureType: EReferenceClosureType;
+    date: DateTimeDto;
+    identificationNumber: string;
+    identificationType: string;
+    institutionOrigin: string;
+    patientFullName: string;
+    priority: EReferencePriority;
+    problems: string[];
+    referenceId: number;
 }
 
 export interface ReferenceSummaryDto {
