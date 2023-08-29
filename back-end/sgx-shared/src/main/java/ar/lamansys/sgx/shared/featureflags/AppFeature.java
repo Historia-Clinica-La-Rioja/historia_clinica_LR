@@ -152,6 +152,9 @@ public enum AppFeature implements Feature {
 
 	@Label("Indica si el módulo de telemedicina está activo")
 	HABILITAR_TELEMEDICINA,
+
+	@Label("Indica si está disponible la solapa referencias del módulo Gestión de turnos")
+	HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO,
 	;
 
     public boolean isActive() {
