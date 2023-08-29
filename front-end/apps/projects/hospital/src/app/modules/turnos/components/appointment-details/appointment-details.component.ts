@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-appointment.component';
-import { EmptyAppointmentDto } from '@api-rest/api-model';
+import { EAppointmentModality, EmptyAppointmentDto } from '@api-rest/api-model';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
 import { ConfirmPrintAppointmentComponent } from '@turnos/dialogs/confirm-print-appointment/confirm-print-appointment.component';
@@ -17,7 +17,7 @@ import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.
 	styleUrls: ['./appointment-details.component.scss'],
 })
 export class AppointmentDetailsComponent implements OnInit {
-
+	@Input() modalityAttention?: EAppointmentModality;
 	@Input() emptyAppointment: EmptyAppointmentDto;
 	@Input() patientId: number;
 	@Input() searchInitialDate: Moment;
@@ -49,7 +49,7 @@ export class AppointmentDetailsComponent implements OnInit {
 			if (holidays.length){
 				this.selectedHolidayDay = this.appointmentsFacade.checkIfHoliday(holidays, this.emptyAppointment.date);
 				isHoliday = this.selectedHolidayDay ? true : false;
-				
+
 				if (isHoliday) {
 					const dialogRef = this.dialog.open(DiscardWarningComponent, {
 						data: this.appointmentsFacade.getHolidayData(this.selectedHolidayDay)
@@ -82,6 +82,7 @@ export class AppointmentDetailsComponent implements OnInit {
 				openingHoursId: this.emptyAppointment.openingHoursId,
 				overturnMode: false,
 				patientId: this.patientId ? this.patientId : null,
+				modalityAttention: this.modalityAttention
 			}
 		});
 		dialogReference.afterClosed().subscribe(

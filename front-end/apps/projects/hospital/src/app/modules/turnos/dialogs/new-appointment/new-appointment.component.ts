@@ -20,6 +20,7 @@ import {
 	ReferenceSummaryDto,
 	DiagnosticReportInfoDto,
 	TranscribedDiagnosticReportInfoDto,
+	EAppointmentModality,
 } from '@api-rest/api-model';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
 import { PersonIdentification } from '@presentation/pipes/person-identification.pipe';
@@ -86,11 +87,13 @@ export class NewAppointmentComponent implements OnInit {
 	patientMedicalOrderTooltipDescription = '';
 	isOrderTranscribed = false;
 	transcribedOrder = null;
+	readonly MODALITY_PATIENT_VIRTUAL_ATTENTION = EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean, patientId?: number,
 			protectedAppointment?: DiaryAvailableProtectedAppointmentsDto, careLineId?: number, isEquipmentAppointment?: boolean,
+			modalityAttention:EAppointmentModality
 		},
 		public dialogRef: MatDialogRef<NewAppointmentComponent>,
 		private readonly formBuilder: UntypedFormBuilder,
@@ -128,9 +131,13 @@ export class NewAppointmentComponent implements OnInit {
 			patientMedicalCoverage: [null],
 			phonePrefix: [null, [Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]],
 			phoneNumber: [null, [Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]],
-			appointmentMedicalOrder: [null]
+			appointmentMedicalOrder: [null],
+			patientEmail:[null]
 		});
-
+		if(this.data.modalityAttention === this.MODALITY_PATIENT_VIRTUAL_ATTENTION){
+			updateControlValidator(this.appointmentInfoForm,'patientEmail',[Validators.required]);
+			this.appointmentInfoForm.updateValueAndValidity();
+		}
 		this.associateReferenceForm = this.formBuilder.group({
 			reference: [null, Validators.required]
 		});
@@ -332,8 +339,8 @@ export class NewAppointmentComponent implements OnInit {
 			patientMedicalCoverageId: this.appointmentInfoForm.value.patientMedicalCoverage?.id,
 			phonePrefix,
 			phoneNumber,
-			modality:null,
-			patientEmail:null,
+			modality:this.data.modalityAttention,
+			patientEmail:this.appointmentInfoForm.controls.patientEmail.value,
 		};
 		this.addAppointment(newAppointment).subscribe((appointmentId: number) => {
 			this.lastAppointmentId = appointmentId;

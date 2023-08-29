@@ -87,7 +87,7 @@
 				<div style="padding-top: 15px; padding-bottom: 15px;" *ngFor="let emptyAppointment of emptyAppointmentsFiltered; let last = last">
 					<app-appointment-details (resetAppointmentList)="resetEmptyAppointmentList($event)" [emptyAppointment]="emptyAppointment" [patientId]="patientId"
 					[searchInitialDate]="searchBySpecialtyForm.controls.searchInitialDate.value"
-					[searchEndingDate]="searchBySpecialtyForm.controls.searchEndingDate.value"></app-appointment-details>
+					[searchEndingDate]="searchBySpecialtyForm.controls.searchEndingDate.value" [modalityAttention]="searchBySpecialtyForm.controls.modality.value"></app-appointment-details>
 					<mat-divider style="margin-top: 15px;" *ngIf="!last"></mat-divider>
 				</div>
 				<mat-paginator (page)="onPageChange($event)" [pageSizeOptions]="[5, 10, 25, emptyAppointments.length]"  [pageSize]="5"

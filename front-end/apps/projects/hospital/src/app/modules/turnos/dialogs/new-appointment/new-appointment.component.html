@@ -1,5 +1,6 @@
 <div mat-dialog-title fxLayout="column" fxLayoutGap="10px">
-	<div class="mat-h2" [translate]="data.overturnMode ? 'turnos.overturns.CREATE' : 'turnos.new-appointment.NEW_APPOINTMENT'"></div>
+	<div class="mat-h2"
+		[translate]="data.overturnMode ? 'turnos.overturns.CREATE' : 'turnos.new-appointment.NEW_APPOINTMENT'"></div>
 	<div class="mat-h3" fxLayoutAlign="start center">
 		<mat-icon color="primary" class="appointment-title-icon">event</mat-icon>
 		<span>{{data.date | date:dateFormats.FULL_DATE}}</span>
@@ -101,20 +102,25 @@
 							</mat-select>
 						</mat-form-field>
 						<mat-form-field *ngIf="data.isEquipmentAppointment" appearance="outline">
-							<mat-label translate="image-network.appointments.medical-order.NEW_MEDICAL_ORDER"></mat-label>
-							<mat-select formControlName="appointmentMedicalOrder" (selectionChange)="generateTooltipOnMedicalOrderChange()"
-							matTooltip="{{patientMedicalOrderTooltipDescription | titlecase}}">
+							<mat-label
+								translate="image-network.appointments.medical-order.NEW_MEDICAL_ORDER"></mat-label>
+							<mat-select formControlName="appointmentMedicalOrder"
+								(selectionChange)="generateTooltipOnMedicalOrderChange()"
+								matTooltip="{{patientMedicalOrderTooltipDescription | titlecase}}">
 								<mat-option id="medicalOrder" name="medicalOrder"
 									*ngFor="let patientMedicalOrder of patientMedicalOrders"
-									[value]="patientMedicalOrder" matTooltip="{{patientMedicalOrder.displayText | titlecase}}">
+									[value]="patientMedicalOrder"
+									matTooltip="{{patientMedicalOrder.displayText | titlecase}}">
 									{{patientMedicalOrder.displayText | titlecase}}
 								</mat-option>
 								<mat-divider></mat-divider>
 								<mat-option (click)="newTranscribedOrder()">
-									<span class="color-primary" [translate]="'image-network.appointments.medical-order.TRANSCRIBE_ORDER'"></span>
+									<span class="color-primary"
+										[translate]="'image-network.appointments.medical-order.TRANSCRIBE_ORDER'"></span>
 								</mat-option>
 							</mat-select>
-							<button *ngIf="appointmentInfoForm.controls.appointmentMedicalOrder.value" mat-button matSuffix color="warn" mat-icon-button (click)="cleanInput(); $event.stopPropagation()">
+							<button *ngIf="appointmentInfoForm.controls.appointmentMedicalOrder.value" mat-button
+								matSuffix color="warn" mat-icon-button (click)="cleanInput(); $event.stopPropagation()">
 								<mat-icon>close</mat-icon>
 							</button>
 						</mat-form-field>
@@ -131,9 +137,8 @@
 								<mat-error *ngIf="hasError(appointmentInfoForm, 'maxlength', 'phonePrefix')"
 									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
 								</mat-error>
-								<mat-error
-								*ngIf="hasError(appointmentInfoForm, 'pattern', 'phonePrefix')"
-								[translate]="'forms.FORMAT_NUMERIC'">
+								<mat-error *ngIf="hasError(appointmentInfoForm, 'pattern', 'phonePrefix')"
+									[translate]="'forms.FORMAT_NUMERIC'">
 								</mat-error>
 							</mat-form-field>
 							<mat-form-field fxFlex="70%" appearance="outline">
@@ -148,9 +153,20 @@
 								<mat-error *ngIf="hasError(appointmentInfoForm, 'maxlength', 'phoneNumber')"
 									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 15}">
 								</mat-error>
-								<mat-error
-								*ngIf="hasError(appointmentInfoForm, 'pattern', 'phoneNumber')"
-								[translate]="'forms.FORMAT_NUMERIC'">
+								<mat-error *ngIf="hasError(appointmentInfoForm, 'pattern', 'phoneNumber')"
+									[translate]="'forms.FORMAT_NUMERIC'">
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column">
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'turnos.new-appointment.EMAIL'"></mat-label>
+								<input matInput type="patientEmail" id="patientEmail" name="patientEmail"
+									formControlName="patientEmail"
+									placeholder="{{'turnos.new-appointment.EMAIL' | translate }}"
+									(keyup)="updatePhoneValidators()">
+								<mat-error *ngIf="hasError(appointmentInfoForm, 'required', 'patientEmail')">
+									<span translate="forms.REQUIRED"></span>
 								</mat-error>
 							</mat-form-field>
 						</div>
@@ -184,13 +200,14 @@
 </div>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
-	<button id="cancel" *ngIf="stepper.selectedIndex !== 1" mat-stroked-button color="primary" (click)="cancelBtnActions()" [mat-dialog-close]="-1">
+	<button id="cancel" *ngIf="stepper.selectedIndex !== 1" mat-stroked-button color="primary"
+		(click)="cancelBtnActions()" [mat-dialog-close]="-1">
 		<span [translate]="'buttons.CANCEL'"></span>
 	</button>
 	<div fxLayout="row" fxLayoutAlign="end" *ngIf="stepper.selectedIndex === 0">
 		<ng-container *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
-			<button id="add-patient" mat-flat-button [mat-dialog-close]="-1" color="primary"
-				(click)="goCreatePatient()" *ngIf="showAddPatient">
+			<button id="add-patient" mat-flat-button [mat-dialog-close]="-1" color="primary" (click)="goCreatePatient()"
+				*ngIf="showAddPatient">
 				<span [translate]="'turnos.new-appointment.BUTTON_ADD_PATIENT'"></span>
 			</button>
 		</ng-container>
@@ -198,7 +215,8 @@
 			<span [translate]="'turnos.new-appointment.BUTTON_SEARCH'"></span>
 		</button>
 	</div>
-	<button id="back" *ngIf="stepper.selectedIndex === 1" class="back-btn" mat-stroked-button color="primary" [disabled]="preselectedPatient" (click)="toFirstStep(stepper)">
+	<button id="back" *ngIf="stepper.selectedIndex === 1" class="back-btn" mat-stroked-button color="primary"
+		[disabled]="preselectedPatient" (click)="toFirstStep(stepper)">
 		<span [translate]="'buttons.BACK'"></span>
 	</button>
 	<button id="confirm" mat-raised-button color="primary" *ngIf="showConfirmButton()" (click)="submit()"

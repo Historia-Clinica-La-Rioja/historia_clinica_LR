@@ -132,6 +132,7 @@
 			"PATIENT_ID": "ID del paciente",
 			"PHONE_NUMBER": "Número Telefónico",
 			"PHONE_PREFIX": "Prefijo",
+			"EMAIL":"Email",
 			"ACCEPT": "Aceptar",
 			"PRINT_APPOINTMENT_BUTTON": "Imprimir turno",
 			"ASSIGNED_APPOINTMENT": "Turno asignado",
