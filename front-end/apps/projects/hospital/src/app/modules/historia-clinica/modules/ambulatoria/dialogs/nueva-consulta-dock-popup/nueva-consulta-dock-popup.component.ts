@@ -45,7 +45,7 @@ import { PreviousDataComponent } from '../previous-data/previous-data.component'
 import { HCEPersonalHistory } from '../reference/reference.component';
 import { SnvsReportsResultComponent } from '../snvs-reports-result/snvs-reports-result.component';
 import { EpisodeData } from '@historia-clinica/components/episode-data/episode-data.component';
-
+import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
 const TIME_OUT = 5000;
 
 @Component({
@@ -90,6 +90,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: NuevaConsultaData,
+		private readonly hierarchicalUnitFormService: HierarchicalUnitService,
 		public dockPopupRef: DockPopupRef,
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snomedService: SnomedService,
@@ -234,6 +235,11 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 								scrollIntoError(this.factoresDeRiesgoFormService.getForm(), this.el)
 							}, 300);
 						}
+						if (this.hierarchicalUnitFormService.isValidForm()) {
+							setTimeout(() => {
+								scrollIntoError(this.hierarchicalUnitFormService.getForm(), this.el)
+							}, 300);
+						}
 					}
 
 				}
@@ -360,6 +366,9 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			return false;
 		if (this.factoresDeRiesgoFormService.getForm().invalid)
 			return false;
+		if (this.hierarchicalUnitFormService.isValidForm()) {
+			return false;
+		}
 		return true;
 	}
 
