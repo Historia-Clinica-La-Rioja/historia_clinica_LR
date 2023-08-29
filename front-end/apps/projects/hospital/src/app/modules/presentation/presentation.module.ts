@@ -56,6 +56,7 @@ import { FloatingDivComponent } from './components/floating-div/floating-div.com
 import { PrioritySelectComponent } from './components/priority-select/priority-select.component';
 import { PersonShortDescriptionComponent } from './components/person-short-description/person-short-description.component';
 import { IconedTextComponent } from './components/iconed-text/iconed-text.component';
+import { PaginatorComponent } from './components/paginator/paginator.component';
 import { PriorityComponent } from './components/priority/priority.component';
 // dialogs
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
@@ -128,6 +129,7 @@ import { CallDetailsComponent } from './components/call-details/call-details.com
 		TypeaheadComponent,
 		UserBadgeComponent,
 		FilterButtonComponent,
+		PaginatorComponent,
 		PrioritySelectComponent,
 		// dialogs
 		ConfirmDialogComponent,
@@ -203,6 +205,7 @@ import { CallDetailsComponent } from './components/call-details/call-details.com
 		MessageFlaggedForAuditComponent,
 		NewDocumentSectionComponent,
 		NoDataComponent,
+		PaginatorComponent,
 		PatientCardComponent,
 		PatientCardHeaderComponent,
 		PatientTypeLogoComponent,
