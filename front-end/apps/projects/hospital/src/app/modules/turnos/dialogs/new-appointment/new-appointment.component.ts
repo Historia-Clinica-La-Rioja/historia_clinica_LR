@@ -339,7 +339,7 @@ export class NewAppointmentComponent implements OnInit {
 			patientMedicalCoverageId: this.appointmentInfoForm.value.patientMedicalCoverage?.id,
 			phonePrefix,
 			phoneNumber,
-			modality:this.data.modalityAttention,
+			modality:this.data.modalityAttention ? this.data.modalityAttention : EAppointmentModality.ON_SITE_ATTENTION,
 			patientEmail:this.appointmentInfoForm.controls.patientEmail.value,
 		};
 		this.addAppointment(newAppointment).subscribe((appointmentId: number) => {
