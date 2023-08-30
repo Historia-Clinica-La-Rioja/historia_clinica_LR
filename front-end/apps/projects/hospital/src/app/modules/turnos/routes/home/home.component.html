@@ -44,9 +44,11 @@
 			</app-search-appointments-by-equipment>
 		</mat-tab>
 
-		<mat-tab label="{{ 'turnos.home.REFERENCES' | translate | uppercase }}" *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
-			<app-reference-report></app-reference-report>
-		</mat-tab>
+		<div *ngIf="ffReferenceReportIsOn">
+			<mat-tab label="{{ 'turnos.home.REFERENCES' | translate | uppercase }}" *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
+				<app-reference-report></app-reference-report>
+			</mat-tab>
+		</div>
 	</mat-tab-group>
 
 	<div *ngIf="noPermission">

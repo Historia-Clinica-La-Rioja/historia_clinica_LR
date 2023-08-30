@@ -20,6 +20,7 @@ export class HomeComponent implements OnInit {
 	tabActiveIndex = 0;
 
 	ffIsOn = false;
+	ffReferenceReportIsOn = false;
 	noPermission = false;
 	hasRoleToViewTab = false;
 
@@ -54,6 +55,8 @@ export class HomeComponent implements OnInit {
 				this.hasRoleToViewTab = hasRole;
 			})
 		})
+
+		this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO).subscribe(isOn => this.ffReferenceReportIsOn = isOn);
 	}
 
 	goToNewProfessionalDiary(): void {
