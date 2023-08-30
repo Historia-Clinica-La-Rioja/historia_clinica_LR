@@ -43,7 +43,10 @@ export class RequestAttentionComponent implements OnInit {
 				this.virtualConsultations = virtualConsultations.map(this.toVCToBeShown));
 
 		this.virtualConsultationService.getProfessionalAvailability().subscribe(
-			status => this.initialProfessionalStatus = status
+			status => {
+				this.initialProfessionalStatus = status;
+				this.toggleEnabled = status;
+			}
 		)
 	}
 
