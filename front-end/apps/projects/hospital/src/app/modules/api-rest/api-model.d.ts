@@ -1615,9 +1615,9 @@ export interface HCEReferenceDto {
     careLine: string;
     clinicalSpecialty: string;
     counterReference: HCESummaryCounterReferenceDto;
+    destinationInstitutionName: string;
     files: ReferenceCounterReferenceFileDto[];
     id: number;
-    institution: string;
     note: string;
 }
 
@@ -2994,8 +2994,8 @@ export interface ProfessionalProfessionsDto {
 }
 
 export interface ProfessionalRegistrationNumbersDto {
-    healthcareProfessionalId: number;
     firstName: string;
+    healthcareProfessionalId: number;
     lastName: string;
     license: ProfessionalLicenseNumberDto[];
     nameSelfDetermination?: string;
