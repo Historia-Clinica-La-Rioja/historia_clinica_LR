@@ -19,7 +19,7 @@ export class ReceivedComponent {
 			this.reports = list.map(report => {
 				return {
 					dto: report,
-					priority: getPriority(report.priority.description),
+					priority: getPriority(report.priority.id),
 					coloredIconText: getColoredIconText(report.closureType)
 				}
 			});
