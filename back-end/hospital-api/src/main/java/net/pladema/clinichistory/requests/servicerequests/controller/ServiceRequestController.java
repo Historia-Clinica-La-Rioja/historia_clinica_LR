@@ -10,16 +10,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.StudyWithoutOrderReportInfoBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedOrderReportInfoBo;
-
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyWithoutOrderReportInfoDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.TranscribedOrderReportInfoDto;
-
-
-import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyWithoutOrderReportInfoMapper;
-import net.pladema.clinichistory.requests.servicerequests.service.ListStudyWithoutOrderReportInfoService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -43,7 +33,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.StudyWithoutOrderReportInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedOrderReportInfoBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
@@ -64,12 +56,15 @@ import net.pladema.clinichistory.requests.servicerequests.controller.dto.Appoint
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.CompleteRequestDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoWithFilesDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyWithoutOrderReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.TranscribedDiagnosticReportInfoDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.TranscribedOrderReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CompleteDiagnosticReportMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CreateServiceRequestMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.DiagnosticReportInfoMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.FileMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyMapper;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyWithoutOrderReportInfoMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.TranscribedDiagnosticReportInfoMapper;
 import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportRDIService;
 import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportService;
@@ -81,6 +76,7 @@ import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticRepo
 import net.pladema.clinichistory.requests.servicerequests.service.ExistCheckDiagnosticReportService;
 import net.pladema.clinichistory.requests.servicerequests.service.GetServiceRequestInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.ListDiagnosticReportInfoService;
+import net.pladema.clinichistory.requests.servicerequests.service.ListStudyWithoutOrderReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.ListTranscribedDiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.UpdateDiagnosticReportFileService;
 import net.pladema.clinichistory.requests.servicerequests.service.UploadDiagnosticReportCompletedFileService;
@@ -90,8 +86,11 @@ import net.pladema.clinichistory.requests.servicerequests.service.domain.Service
 import net.pladema.events.EHospitalApiTopicDto;
 import net.pladema.events.HospitalApiPublisher;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
+import net.pladema.patient.controller.mapper.PatientMedicalCoverageMapper;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.patient.service.PatientMedicalCoverageService;
+import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 
@@ -139,8 +138,10 @@ public class ServiceRequestController {
 	private final FeatureFlagsService featureFlagsService;
 	private final Function<Long, ProfessionalCompleteDto> authorFromDocumentFunction;
     private final SharedInstitutionPort sharedInstitutionPort;
-
 	private final ExistCheckDiagnosticReportService existCheckDiagnosticReportService;
+	private final PatientMedicalCoverageService patientMedicalCoverageService;
+
+	private final PatientMedicalCoverageMapper patientMedicalCoverageMapper;
 
 
 	public ServiceRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService,
@@ -158,7 +159,7 @@ public class ServiceRequestController {
 									HospitalApiPublisher hospitalApiPublisher, FeatureFlagsService featureFlagsService,
 									DocumentAuthorFinder documentAuthorFinder,
 									SharedInstitutionPort sharedInstitutionPort, ExistCheckDiagnosticReportService existCheckDiagnosticReportService,
-									ListStudyWithoutOrderReportInfoService listStudyWithoutOrderReportInfoService, StudyWithoutOrderReportInfoMapper studyWithoutOrderReportInfoMapper) {
+									ListStudyWithoutOrderReportInfoService listStudyWithoutOrderReportInfoService, StudyWithoutOrderReportInfoMapper studyWithoutOrderReportInfoMapper, PatientMedicalCoverageService patientMedicalCoverageService, PatientMedicalCoverageMapper patientMedicalCoverageMapper) {
 		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
 		this.createServiceRequestService = createServiceRequestService;
 		this.createTranscribedServiceRequestService = createTranscribedServiceRequestService;
@@ -189,6 +190,8 @@ public class ServiceRequestController {
 		this.existCheckDiagnosticReportService = existCheckDiagnosticReportService;
 		this.listStudyWithoutOrderReportInfoService = listStudyWithoutOrderReportInfoService;
 		this.studyWithoutOrderReportInfoMapper = studyWithoutOrderReportInfoMapper;
+		this.patientMedicalCoverageService = patientMedicalCoverageService;
+		this.patientMedicalCoverageMapper = patientMedicalCoverageMapper;
 	}
 
     @PostMapping
@@ -368,8 +371,9 @@ public class ServiceRequestController {
         List<DiagnosticReportInfoDto> result = resultService.stream()
                 .map(diagnosticReportBo -> {
                     ProfessionalDto professionalDto = healthcareProfessionalExternalService.findProfessionalByUserId(diagnosticReportBo.getUserId());
-                    return diagnosticReportInfoMapper.parseTo(diagnosticReportBo, professionalDto);
-                })
+					PatientMedicalCoverageBo coverage = patientMedicalCoverageService.getActiveCoveragesByOrderId(diagnosticReportBo.getEncounterId());
+                    return diagnosticReportInfoMapper.parseTo(diagnosticReportBo, professionalDto, patientMedicalCoverageMapper.toPatientMedicalCoverageDto(coverage));
+				})
                 .collect(Collectors.toList());
 
         LOG.trace(OUTPUT, result);

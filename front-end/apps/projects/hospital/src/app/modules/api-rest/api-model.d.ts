@@ -865,6 +865,7 @@ export interface DiagnosticReportDto extends ClinicalTermDto {
 
 export interface DiagnosticReportInfoDto {
     category: string;
+    coverageDto?: PatientMedicalCoverageDto;
     creationDate: Date;
     doctor: DoctorInfoDto;
     healthCondition: HealthConditionInfoDto;

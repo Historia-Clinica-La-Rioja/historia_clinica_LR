@@ -1,5 +1,34 @@
 package net.pladema.medicalconsultation.appointment.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
 import ar.lamansys.mqtt.application.ports.MqttClientService;
 import ar.lamansys.mqtt.domain.MqttMetadataBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
@@ -61,36 +90,12 @@ import net.pladema.medicalconsultation.appointment.service.domain.DetailsOrderIm
 import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.notifypatient.NotifyPatient;
+import net.pladema.patient.controller.mapper.PatientMedicalCoverageMapper;
 import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.patient.service.PatientMedicalCoverageService;
+import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import javax.validation.constraints.Size;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -147,16 +152,63 @@ public class AppointmentsController {
 
 	private final LocalDateMapper localDateMapper;
 
+	private final PatientMedicalCoverageMapper patientMedicalCoverageMapper;
+
 	private final MqttClientService mqttClientService;
+
+	private final PatientMedicalCoverageService patientMedicalCoverageService;
 
 	@Value("${scheduledjobs.updateappointmentsstate.pastdays:1}")
 	private Long PAST_DAYS;
 
 	private Long MAX_DAYS = 30L;
+
 	private final GetCurrentAppointmentHierarchicalUnit getCurrentAppointmentHierarchicalUnit;
 
 	private final FeatureFlagsService featureFlagsService;
 
+	public AppointmentsController(
+			AppointmentDailyAmountService appointmentDailyAmountService,
+			AppointmentService appointmentService, EquipmentAppointmentService equipmentAppointmentService, AppointmentValidatorService appointmentValidatorService,
+			CreateAppointmentService createAppointmentService,
+			CreateEquipmentAppointmentService createEquipmentAppointmentService,
+			CreateTranscribedEquipmentAppointmentService createTranscribedEquipmentAppointmentService,
+			AppointmentMapper appointmentMapper, InstitutionMapper institutionMapper, PatientExternalService patientExternalService, HealthcareProfessionalExternalService healthcareProfessionalExternalService,
+			DateTimeProvider dateTimeProvider,
+			NotifyPatient notifyPatient,
+			BookingPersonService bookingPersonService,
+			LocalDateMapper dateMapper,
+			LocalDateMapper localDateMapper,
+			MqttClientService mqttClientService,
+			AppointmentOrderImageService appointmentOrderImageService,
+			MoveStudiesService moveStudiesService,
+			DeriveReportService deriveReportService,
+			PatientMedicalCoverageService patientMedicalCoverageService,
+			PatientMedicalCoverageMapper patientMedicalCoverageMapper
+	) {
+		this.appointmentDailyAmountService = appointmentDailyAmountService;
+		this.appointmentService = appointmentService;
+		this.equipmentAppointmentService = equipmentAppointmentService;
+		this.appointmentValidatorService = appointmentValidatorService;
+		this.createAppointmentService = createAppointmentService;
+		this.createTranscribedEquipmentAppointmentService = createTranscribedEquipmentAppointmentService;
+		this.createEquipmentAppointmentService = createEquipmentAppointmentService;
+		this.appointmentMapper = appointmentMapper;
+		this.institutionMapper = institutionMapper;
+		this.patientExternalService = patientExternalService;
+		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
+		this.dateTimeProvider = dateTimeProvider;
+		this.notifyPatient = notifyPatient;
+		this.bookingPersonService = bookingPersonService;
+		this.dateMapper = dateMapper;
+		this.localDateMapper = localDateMapper;
+		this.mqttClientService = mqttClientService;
+		this.appointmentOrderImageService = appointmentOrderImageService;
+		this.moveStudiesService = moveStudiesService;
+		this.deriveReportService = deriveReportService;
+		this.patientMedicalCoverageService = patientMedicalCoverageService;
+		this.patientMedicalCoverageMapper = patientMedicalCoverageMapper;
+	}
 
 	@PostMapping
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
@@ -235,6 +287,10 @@ public class AppointmentsController {
 		log.debug("Input parameters -> institutionId {}, appointmentId {}", institutionId, appointmentId);
 		Optional<AppointmentBo> resultService = equipmentAppointmentService.getEquipmentAppointment(appointmentId);
 		Optional<AppointmentDto> result = resultService.map(appointmentMapper::toAppointmentDto);
+		if (result.isPresent() && result.get().getOrderData() != null && result.get().getOrderData().getServiceRequestId() != null){
+			PatientMedicalCoverageBo coverage = patientMedicalCoverageService.getActiveCoveragesByOrderId(result.get().getOrderData().getServiceRequestId());
+			result.get().getOrderData().setCoverageDto(patientMedicalCoverageMapper.toPatientMedicalCoverageDto(coverage));
+		}
 		log.debug(OUTPUT, result);
 		return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
 	}
