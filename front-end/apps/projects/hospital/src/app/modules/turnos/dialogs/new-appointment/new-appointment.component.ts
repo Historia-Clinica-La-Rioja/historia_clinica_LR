@@ -349,7 +349,7 @@ export class NewAppointmentComponent implements OnInit {
 			}
 			else {
 				this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
-				this.dialogRef.close(appointmentId);
+				this.dialogRef.close({id:appointmentId,email:this.appointmentInfoForm.controls.patientEmail.value});
 			}
 		}, error => {
 			this.isSubmitButtonDisabled = false;
@@ -381,7 +381,7 @@ export class NewAppointmentComponent implements OnInit {
 			successfullyAssociated => {
 				if (successfullyAssociated) {
 					this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
-					this.dialogRef.close(this.lastAppointmentId);
+					this.dialogRef.close({id:this.lastAppointmentId,email:null});
 				}
 				else {
 					this.snackBarService.showError('turnos.new-appointment.messages.COULD_NOT_ASSOCIATE')

@@ -86,7 +86,7 @@ export class AppointmentDetailsComponent implements OnInit {
 			}
 		});
 		dialogReference.afterClosed().subscribe(
-			(result: number) => {
+			(result: any) => {
 				if (result !== -1) {
 					this.resetAppointmentList.emit();
 
@@ -96,7 +96,10 @@ export class AppointmentDetailsComponent implements OnInit {
 
 					const specialtyAndAlias = this.emptyAppointment.clinicalSpecialtyName ? this.emptyAppointment.clinicalSpecialtyName :
 						`${this.emptyAppointment.alias} (${this.emptyAppointment.clinicalSpecialtyName})`;
-					this.dialog.open(ConfirmPrintAppointmentComponent, {
+					if(result.email){
+						var message = 'Se podrá acceder a la teleconsulta a través del link que se ha enviado a ' +`<strong> ${result.email}</strong>`
+					}
+						this.dialog.open(ConfirmPrintAppointmentComponent, {
 						width: '40%',
 						data: {
 							title: 'turnos.new-appointment.ASSIGNED_APPOINTMENT',
@@ -106,7 +109,8 @@ export class AppointmentDetailsComponent implements OnInit {
 								`${this.emptyAppointment.doctorFullName}
 							  (${specialtyAndAlias})` + ' en ' +
 								`${this.emptyAppointment.doctorsOfficeDescription}`,
-							appointmentId: result,
+							message:message,
+							appointmentId: result.id,
 						},
 
 					});
