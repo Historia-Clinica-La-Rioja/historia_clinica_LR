@@ -16,6 +16,7 @@ import { ToggleAvaiabilityComponent } from './components/toggle-avaiability/togg
 import { RequestAttentionComponent } from './components/request-attention/request-attention.component';
 import { RequestInfoCardComponent } from './components/request-info-card/request-info-card.component';
 import { AvailableLabelComponent } from './components/available-label/available-label.component';
+import { InProgressCallComponent } from './components/in-progress-call/in-progress-call.component';
 
 
 
@@ -29,8 +30,9 @@ import { AvailableLabelComponent } from './components/available-label/available-
 		ButtonAndProblemListComponent,
 		RequestAttentionComponent,
 		ToggleAvaiabilityComponent,
-  RequestInfoCardComponent,
-  AvailableLabelComponent,
+		RequestInfoCardComponent,
+		AvailableLabelComponent,
+		InProgressCallComponent,
 	],
 	imports: [
 		CommonModule,

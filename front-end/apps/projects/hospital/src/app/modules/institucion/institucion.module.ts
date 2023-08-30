@@ -15,6 +15,7 @@ import { BedMappingComponent } from './components/bed-mapping/bed-mapping.compon
 import { InstitucionComponent } from './institucion.component';
 import { EntryCallComponent } from './components/entry-call/entry-call.component';
 import { EntryCallRendererComponent } from './components/entry-call-renderer/entry-call-renderer.component';
+import { RejectedCallComponent } from './components/rejected-call/rejected-call.component';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import { EntryCallRendererComponent } from './components/entry-call-renderer/ent
 		EntryCallComponent,
 		EntryCallRendererComponent,
 		InstitucionComponent,
+		RejectedCallComponent,
 	],
 	imports: [
 		CommonModule,

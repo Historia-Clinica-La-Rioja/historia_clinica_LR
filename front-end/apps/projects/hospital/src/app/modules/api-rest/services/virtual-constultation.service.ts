@@ -67,9 +67,30 @@ export class VirtualConstultationService {
 		return this.http.get<boolean>(url)
 	}
 
-	getVirtualConsultationsByInstitution(institutionId: number): Observable<VirtualConsultationDto[]>{
+	getVirtualConsultationsByInstitution(institutionId: number): Observable<VirtualConsultationDto[]> {
 		const url = `${this.BASE_URL}/institution/${institutionId}`;
 		return this.http.get<VirtualConsultationDto[]>(url)
 	}
+
+	notifyVirtualConsultationIncomingCall(virtualConsultation: number) {
+		const url = `${this.BASE_URL}/notify-incoming-call/${virtualConsultation}`;
+		return this.http.post(url, {})
+	}
+
+	notifyVirtualConsultationCancelledCall(virtualConsultation: number) {
+		const url = `${this.BASE_URL}/notify-cancelled-call/${virtualConsultation}`;
+		return this.http.post(url, {})
+	}
+
+	notifyVirtualConsultationRejectedCall(virtualConsultation: number) {
+		const url = `${this.BASE_URL}/notify-rejected-call/${virtualConsultation}`;
+		return this.http.post(url, {})
+	}
+
+	notifyVirtualConsultationAcceptedCall(virtualConsultation: number) {
+		const url = `${this.BASE_URL}/notify-accepted-call/${virtualConsultation}`;
+		return this.http.post(url, {})
+	}
+
 }
 

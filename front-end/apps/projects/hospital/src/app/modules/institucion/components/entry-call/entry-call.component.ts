@@ -1,7 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { timeDifference } from '@core/utils/date.utils';
-import { Priority } from '@presentation/components/priority/priority.component';
+import { CallDetails } from '../../../presentation/components/call-details/call-details.component';
 
 @Component({
 	selector: 'app-entry-call',
@@ -10,9 +9,8 @@ import { Priority } from '@presentation/components/priority/priority.component';
 })
 export class EntryCallComponent {
 
-	timeDifference = timeDifference;
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public entryCall: EntryCall,
+		@Inject(MAT_DIALOG_DATA) public entryCall: CallDetails,
 		private dialogRef: MatDialogRef<EntryCallComponent>,
 	) { }
 
@@ -22,17 +20,3 @@ export class EntryCallComponent {
 
 }
 
-export interface EntryCall {
-	callId: string;
-	patient: {
-		id: number;
-		firstName: string;
-		lastName: string;
-		gender?: string
-	},
-	professionalFullName: string
-	priority: Priority;
-	createdOn: Date;
-	institutionName: string;
-	clinicalSpecialty: string;
-}

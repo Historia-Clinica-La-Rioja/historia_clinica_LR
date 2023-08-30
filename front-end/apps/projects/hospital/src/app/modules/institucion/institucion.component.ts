@@ -61,8 +61,8 @@ export class InstitucionComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 
 		this.entryCallSubs = this.entryCallStompService.entryCall$.subscribe(
-			(entryCall: VirtualConsultationNotificationDataDto) => {
-				entryCall ? this.showEntryCallService.show(entryCall) : this.showEntryCallService.close();
+			(call: VirtualConsultationNotificationDataDto) => {
+				this.showEntryCallService.show(call);
 			}
 		)
 

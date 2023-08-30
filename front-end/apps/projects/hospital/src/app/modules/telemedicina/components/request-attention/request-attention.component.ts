@@ -1,14 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { EVirtualConsultationStatus, VirtualConsultationDto } from '@api-rest/api-model';
+import { DateTimeDto, EVirtualConsultationPriority, EVirtualConsultationStatus, VirtualConsultationDto, VirtualConsultationInstitutionDataDto, VirtualConsultationPatientDataDto, VirtualConsultationResponsibleDataDto } from '@api-rest/api-model';
 import { mapPriority, statusLabel, status } from '../../virtualConsultations.utils';
 import { timeDifference } from '@core/utils/date.utils';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
-import { Subscription } from 'rxjs';
+import { Subscription, map, take, race, forkJoin } from 'rxjs';
 import { VirtualConsultationsFacadeService } from '../../virtual-consultations-facade.service';
 import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
 import { JitsiCallService } from '../../../jitsi/jitsi-call.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
+import { InProgressCallComponent } from '../in-progress-call/in-progress-call.component';
+import { EntryCallStompService } from '../../../api-web-socket/entry-call-stomp.service';
+import { RejectedCallComponent } from '@institucion/components/rejected-call/rejected-call.component';
+import { toCallDetails } from '@institucion/components/entry-call-renderer/entry-call-renderer.component';
+
 
 @Component({
 	selector: 'app-request-attention',
@@ -18,7 +23,7 @@ import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/con
 export class RequestAttentionComponent implements OnInit {
 
 	virtualConsultationsSubscription: Subscription;
-	virtualConsultations: any[] = [];
+	virtualConsultations: VirtualConsultation[] = [];
 	toggleEnabled = false;
 	virtualConsultatiosStatus = status;
 	initialProfessionalStatus = false;
@@ -28,6 +33,7 @@ export class RequestAttentionComponent implements OnInit {
 		private virtualConsultationService: VirtualConstultationService,
 		private jitsiCallService: JitsiCallService,
 		private readonly dialog: MatDialog,
+		private readonly callStatesService: EntryCallStompService
 	) { }
 
 
@@ -85,20 +91,46 @@ export class RequestAttentionComponent implements OnInit {
 	}
 
 
-	joinMeet(virtualConsultation) {
-		this.virtualConsultationService.notifyVirtualConsultationCall(virtualConsultation.id).subscribe(
-			_ => {
-				this.jitsiCallService.open(virtualConsultation.callId);
-			}
-		)
+	call(virtualConsultation: VirtualConsultation) {
+
+		const notify$ = this.virtualConsultationService.notifyVirtualConsultationIncomingCall(virtualConsultation.id);
+		const virtualConsultation$ = this.virtualConsultationService.getVirtualConsultationCall(virtualConsultation.id)
+		forkJoin([notify$, virtualConsultation$])
+			.subscribe(
+				([notified, info]) => {
+					const data = toCallDetails(info)
+					const ref = this.dialog.open(InProgressCallComponent, { data, disableClose: true })
+
+					ref.afterOpened().subscribe(
+						_ => {
+
+							const rejected$ = this.callStatesService.rejectedCall$.pipe(map(r => { return { ...r, origin: 'rejected' } }))
+							const accepted$ = this.callStatesService.acceptedCall$.pipe(map(r => { return { ...r, origin: 'accepted' } }))
+
+							race(rejected$, accepted$).pipe(take(1)).subscribe(
+								(vc) => {
+									ref.close();
+									if (vc.origin === 'rejected') {
+										const data = toCallDetails(vc);
+										this.dialog.open(RejectedCallComponent, { data });
+									} else {
+										this.jitsiCallService.open(virtualConsultation.callId)
+									}
+								}
+							)
+						}
+					)
+				}
+			)
 	}
+
 
 	availabilityChanged(availability: boolean) {
 		this.virtualConsultationService.changeClinicalProfessionalAvailability(availability).subscribe();
 		this.toggleEnabled = availability;
 	}
 
-	private toVCToBeShown(vc: VirtualConsultationDto) {
+	private toVCToBeShown(vc: VirtualConsultationDto): VirtualConsultation {
 		return {
 			...vc,
 			statusLabel: statusLabel[vc.status],
@@ -107,4 +139,23 @@ export class RequestAttentionComponent implements OnInit {
 		}
 	}
 
+}
+
+interface VirtualConsultation {
+	availableProfessionalsAmount?: number;
+	callId?: string;
+	careLine: string;
+	clinicalSpecialty: string;
+	creationDateTime: DateTimeDto;
+	id: number;
+	institutionData: VirtualConsultationInstitutionDataDto;
+	motive: string;
+	patientData: VirtualConsultationPatientDataDto;
+	priority: EVirtualConsultationPriority;
+	problem: string;
+	responsibleData: VirtualConsultationResponsibleDataDto;
+	status: EVirtualConsultationStatus;
+	statusLabel: any,
+	priorityLabel: string,
+	waitingTime: string
 }

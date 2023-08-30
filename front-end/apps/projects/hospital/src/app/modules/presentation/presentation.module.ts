@@ -74,12 +74,14 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { CallDetailsComponent } from './components/call-details/call-details.component';
 
 @NgModule({
 	declarations: [
 		// components
 		AsignPatientButtonComponent,
 		BarComponent,
+		CallDetailsComponent,
 		CardComponent,
 		CategoryHeaderDividerComponent,
 		CellTemplatesComponent,
@@ -167,6 +169,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 		// components
 		AsignPatientButtonComponent,
 		BarComponent,
+		CallDetailsComponent,
 		CardComponent,
 		CategoryHeaderDividerComponent,
 		CellTemplatesComponent,

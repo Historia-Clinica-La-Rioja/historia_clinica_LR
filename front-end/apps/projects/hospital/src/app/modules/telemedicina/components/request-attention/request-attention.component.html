@@ -38,7 +38,7 @@
 
 				<span>{{virtualConsultation.responsibleData.available ? 'Disponible' : 'No Disponible'}}</span>
 				<button mat-raised-button [disabled]="!virtualConsultation.responsibleData.available || !toggleEnabled"
-					color="primary" (click)="joinMeet(virtualConsultation)">Tomar Turno</button>
+					color="primary" (click)="call(virtualConsultation)">Tomar Turno</button>
 
 				<button mat-icon-button [matMenuTriggerFor]="menu"
 					*ngIf="virtualConsultation.status !== virtualConsultatiosStatus.FINISHED && virtualConsultation.status !== virtualConsultatiosStatus.CANCELED ">

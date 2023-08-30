@@ -1,16 +1,15 @@
 <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="2em">
 
 	<div mat-dialog-title fxLayout="column" fxLayoutAlign="center center">
-		<mat-icon color="primary">ring_volume</mat-icon>
-		<span>Teleconsulta entrante</span>
+		<mat-icon color="warn">phone_missed</mat-icon>
+		<span>Teleconsulta rechazada</span>
 	</div>
 
 	<mat-dialog-content fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="1.5em">
-		<app-call-details [callDetails]="entryCall"></app-call-details>
+		<app-call-details [callDetails]="rejectedCall"></app-call-details>
 	</mat-dialog-content>
 
 	<mat-dialog-actions>
-		<button mat-stroked-button color="warn" mat-dialog-close>RECHAZAR</button>
-		<button mat-raised-button color="primary" (click)="joinMeet()">ATENDER LLAMADA</button>
+		<button mat-raised-button color="primary" mat-dialog-close>CERRAR</button>
 	</mat-dialog-actions>
 </div>

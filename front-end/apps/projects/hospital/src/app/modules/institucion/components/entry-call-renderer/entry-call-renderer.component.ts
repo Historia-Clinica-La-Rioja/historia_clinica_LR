@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ShowEntryCallService } from 'projects/hospital/src/app/modules/telemedicina/show-entry-call.service';
-import { EntryCall, EntryCallComponent } from '../entry-call/entry-call.component';
-import { EVirtualConsultationPriority, EVirtualConsultationStatus, VirtualConsultationNotificationDataDto } from '@api-rest/api-model';
-import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { EntryCallComponent } from '../entry-call/entry-call.component';
+import { EVirtualConsultationPriority, VirtualConsultationNotificationDataDto } from '@api-rest/api-model';
+import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { Priority } from '@presentation/components/priority/priority.component';
 import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
 import { JitsiCallService } from '../../../jitsi/jitsi-call.service';
+import { CallDetails } from '../../../presentation/components/call-details/call-details.component';
+
 @Component({
 	selector: 'app-entry-call-renderer',
 	templateUrl: './entry-call-renderer.component.html',
@@ -33,21 +35,29 @@ export class EntryCallRendererComponent implements OnInit {
 		this.showEntryCallService.$entryCall.subscribe(
 			(entryCall: VirtualConsultationNotificationDataDto) => {
 				if (entryCall) {
-					const data = toEntryCall(entryCall)
+					const data = toCallDetails(entryCall)
 					this.dialogRef = this.dialog.open(EntryCallComponent,
-						{ data });
+						{
+							data,
+							disableClose: true,
+						});
 
 					this.dialogRef.afterClosed().subscribe(
 						accepted => {
 							if (accepted) {
-								this.virtualConsultationService.changeVirtualConsultationState(entryCall.virtualConsultationId, { status: EVirtualConsultationStatus.IN_PROGRESS}).subscribe();
-								this.jitsiCallService.open(data.callId);
+								this.virtualConsultationService.notifyVirtualConsultationAcceptedCall(entryCall.virtualConsultationId).subscribe(
+									_ => this.jitsiCallService.open(data.callId)
+								);
+							} else {
+								this.virtualConsultationService.notifyVirtualConsultationRejectedCall(entryCall.virtualConsultationId).subscribe(
+									_ => {
+										this.dialogRef.close();
+									}
+								)
 							}
 						}
 					)
 
-				} else {
-					this.dialogRef.close()
 				}
 			}
 		)
@@ -55,11 +65,11 @@ export class EntryCallRendererComponent implements OnInit {
 
 }
 
-const toEntryCall = (entryCall: VirtualConsultationNotificationDataDto): EntryCall => {
+export const toCallDetails = (entryCall: VirtualConsultationNotificationDataDto): CallDetails => {
 	return {
 		callId: entryCall.callId,
 		clinicalSpecialty: entryCall.clinicalSpecialty,
-		createdOn: dateTimeDtoToDate(entryCall.creationDateTime),
+		createdOn: dateTimeDtotoLocalDate(entryCall.creationDateTime),
 		institutionName: entryCall.institutionName,
 		patient: {
 			firstName: entryCall.patientName,
@@ -73,7 +83,7 @@ const toEntryCall = (entryCall: VirtualConsultationNotificationDataDto): EntryCa
 }
 
 
-const mappedPriorities = {
+export const mappedPriorities = {
 	[EVirtualConsultationPriority.HIGH]: Priority.HIGH,
 	[EVirtualConsultationPriority.MEDIUM]: Priority.MEDIUM,
 	[EVirtualConsultationPriority.LOW]: Priority.LOW
