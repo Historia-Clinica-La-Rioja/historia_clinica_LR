@@ -765,6 +765,7 @@ export interface CoverageDto extends Serializable {
 }
 
 export interface CreateAppointmentDto {
+    applicantHealthcareProfessionalEmail?: string;
     date: string;
     diaryId: number;
     hour: string;
@@ -772,7 +773,7 @@ export interface CreateAppointmentDto {
     openingHoursId: number;
     orderData?: DiagnosticReportInfoDto;
     overturn: boolean;
-    patientEmail: string;
+    patientEmail?: string;
     patientId: number;
     patientMedicalCoverageId?: number;
     phoneNumber?: string;

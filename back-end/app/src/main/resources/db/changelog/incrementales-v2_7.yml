@@ -570,3 +570,15 @@ databaseChangeLog:
                 join institution i on (i.id=d.institution_id)
                 left outer join clinical_specialty cs on (d.clinical_specialty_id=cs.id)
                 where d.deleted=false and d.status_id = '445665009';
+    
+    - changeSet:
+        id: add-reference_healthcare_professional_email-column-appointment
+        author: mmalyvarni
+        comment: add reference_healthcare_professional_email column to appointment table
+        changes:
+          - addColumn:
+              tableName: appointment
+              columns:
+                - column:
+                    name: applicant_healthcare_professional_email
+                    type: varchar

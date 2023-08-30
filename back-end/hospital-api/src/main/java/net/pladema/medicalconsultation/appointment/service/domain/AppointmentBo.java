@@ -77,6 +77,8 @@ public class AppointmentBo {
 
 	private TranscribedDiagnosticReportBo transcribedData;
 
+	private String applicantHealthcareProfessionalEmail;
+
 	public static AppointmentBo fromAppointmentDiaryVo(AppointmentDiaryVo appointmentDiaryVo) {
 		return AppointmentBo.builder()
 				.id(appointmentDiaryVo.getId())

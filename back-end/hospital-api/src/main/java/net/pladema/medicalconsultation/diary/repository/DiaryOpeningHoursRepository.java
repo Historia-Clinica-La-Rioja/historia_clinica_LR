@@ -103,4 +103,11 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
 			"FROM DiaryOpeningHours doh " +
 			"WHERE doh.pk.diaryId = :diaryId AND doh.pk.openingHoursId = :openingHoursId")
 	Boolean isPatientVirtualConsultationAllowed(@Param("diaryId") Integer diaryId, @Param("openingHoursId") Integer openingHoursId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT doh.secondOpinionVirtualAttentionAllowed " +
+			"FROM DiaryOpeningHours doh " +
+			"WHERE doh.pk.diaryId = :diaryId AND doh.pk.openingHoursId = :openingHoursId")
+	Boolean isSecondOpinionVirtualConsultationAllowed(@Param("diaryId") Integer diaryId, @Param("openingHoursId") Integer openingHoursId);
+
 }

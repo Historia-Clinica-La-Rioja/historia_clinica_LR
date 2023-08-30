@@ -72,11 +72,19 @@ public class CreateAppointmentServiceImpl implements CreateAppointmentService {
 
 	private void validateAppointment(AppointmentBo appointment) {
 		Boolean isPatientVirtualConsultationAllowed = diaryOpeningHoursRepository.isPatientVirtualConsultationAllowed(appointment.getDiaryId(), appointment.getOpeningHoursId());
+		Boolean isSecondOpinionVirtualConsultationAllowed = diaryOpeningHoursRepository.isSecondOpinionVirtualConsultationAllowed(appointment.getDiaryId(), appointment.getOpeningHoursId());
 		if (isPatientVirtualConsultationAllowed && appointment.getModalityId().equals(EAppointmentModality.PATIENT_VIRTUAL_ATTENTION.getId())) {
 			if (appointment.getPatientEmail() == null)
 				throw new AppointmentException(AppointmentEnumException.MISSING_DATA, "Se requiere el correo del paciente para la modalidad seleccionada");
 			if (!VALID_EMAIL_ADDRESS_REGEX.matcher(appointment.getPatientEmail()).matches())
 				throw new AppointmentException(AppointmentEnumException.WRONG_EMAIL_FORMAT, "El formato del correo electrónico del paciente ingresado no es válido");
+			appointment.setCallId(UUID.randomUUID().toString());
+		}
+		if (isSecondOpinionVirtualConsultationAllowed && appointment.getModalityId().equals(EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION.getId())) {
+			if (appointment.getApplicantHealthcareProfessionalEmail() == null)
+				throw new AppointmentException(AppointmentEnumException.MISSING_DATA, "Se requiere el correo del profesional solicitante para la modalidad seleccionada");
+			if (!VALID_EMAIL_ADDRESS_REGEX.matcher(appointment.getApplicantHealthcareProfessionalEmail()).matches())
+				throw new AppointmentException(AppointmentEnumException.WRONG_EMAIL_FORMAT, "El formato del correo electrónico del profesional ingresado no es válido");
 			appointment.setCallId(UUID.randomUUID().toString());
 		}
 	}

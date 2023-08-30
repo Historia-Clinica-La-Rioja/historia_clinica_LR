@@ -57,6 +57,7 @@ public class CreateAppointmentDto {
     @Length(max = 20, message = "{appointment.new.phoneNumber.invalid}")
     private String phoneNumber;
 
+	@Nullable
 	private String patientEmail;
 
 	@NotNull(message = "{value.mandatory}")
@@ -67,4 +68,8 @@ public class CreateAppointmentDto {
 
 	@Nullable
 	private DiagnosticReportInfoDto orderData;
+	
+	@Nullable
+	private String applicantHealthcareProfessionalEmail;
+
 }
