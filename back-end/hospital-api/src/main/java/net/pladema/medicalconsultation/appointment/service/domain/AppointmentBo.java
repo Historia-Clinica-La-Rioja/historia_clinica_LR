@@ -112,6 +112,8 @@ public class AppointmentBo {
 				.diaryId(appointmentVo.getDiaryId())
 				.observation(appointmentVo.getObservation())
 				.observationBy(appointmentVo.getObservationBy())
+				.callId(appointmentVo.getCallId())
+				.modalityId(appointmentVo.getModalityId())
 				.build();
 	}
 

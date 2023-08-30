@@ -64,6 +64,7 @@ public interface AppointmentMapper {
 	@Mapping(target = "protected", source = "appointmentBo.protected")
 	@Mapping(target = "orderData.serviceRequestId", source = "appointmentBo.orderData.encounterId")
 	@Mapping(target = "transcribedOrderData", source = "appointmentBo.transcribedData")
+	@Mapping(target = "modality", source = "modalityId")
 	AppointmentDto toAppointmentDto(AppointmentBo appointmentBo);
 
     @Named("toAppointmentBo")
