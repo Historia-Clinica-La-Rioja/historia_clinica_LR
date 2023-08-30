@@ -40,7 +40,7 @@ import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { EquipmentAppointmentsFacadeService } from '@turnos/services/equipment-appointments-facade.service';
 import { Observable, forkJoin } from 'rxjs';
-import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
+import { PrescripcionesService } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { TranslateService } from '@ngx-translate/core';
 import { EquipmentTranscribeOrderPopupComponent } from '../equipment-transcribe-order-popup/equipment-transcribe-order-popup.component';
 import { differenceInDays } from 'date-fns';
@@ -471,7 +471,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	getPatientMedicalOrders() {
-		const prescriptions$ = this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, MEDICAL_ORDER_PENDING_STATUS, null, null, null, MEDICAL_ORDER_CATEGORY_ID);
+		const prescriptions$ = this.prescripcionesService.getMedicalOrders(this.patientId, MEDICAL_ORDER_PENDING_STATUS, MEDICAL_ORDER_CATEGORY_ID);
 		const transcribedOrders$ = this.prescripcionesService.getTranscribedOrders(this.patientId);
 		forkJoin([prescriptions$, transcribedOrders$]).subscribe(masterdataInfo => {
 			this.mapDiagnosticReportInfoDtoToMedicalOrderInfo(masterdataInfo[0]);

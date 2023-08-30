@@ -77,6 +77,14 @@ export class ServiceRequestService {
 		return this.http.delete<void>(url)
 	}
 
+	getMedicalOrders(patientId: number, statusId: string, categoryId: string): Observable<DiagnosticReportInfoDto[]> {
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = statusId ? queryParams.append('statusId', statusId) : queryParams;
+		queryParams = categoryId ? queryParams.append('category', categoryId) : queryParams;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/medicalOrders`;
+		return this.http.get<DiagnosticReportInfoDto[]>(url, { params: queryParams });
+	}
+
 	getTranscribedOrders(patientId: number): Observable<TranscribedDiagnosticReportInfoDto[]>{
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/transcribedOrders`;
 		return this.http.get<TranscribedDiagnosticReportInfoDto[]>(url)

@@ -38,7 +38,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { CancelAppointmentComponent } from '@turnos/dialogs/cancel-appointment/cancel-appointment.component';
 import { toCalendarEvent } from '../../utils/appointment.utils';
 import { medicalOrderInfo } from '@turnos/dialogs/new-appointment/new-appointment.component';
-import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
+import { PrescripcionesService } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { differenceInDays } from 'date-fns';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -177,8 +177,9 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 				if (this.appointment.stateChangeReason) {
 					this.formMotive.controls.motive.setValue(this.appointment.stateChangeReason);
 				}
-				if (this.appointment.patientMedicalCoverageId && this.data.appointmentData.patient?.id) {
-					this.patientMedicalCoverageService.getPatientMedicalCoverage(this.appointment.patientMedicalCoverageId)
+				if ((this.appointment.patientMedicalCoverageId && this.data.appointmentData.patient?.id) || appointment.orderData?.coverageDto) {
+					let coverageId = appointment.orderData?.coverageDto?.id || this.appointment.patientMedicalCoverageId;
+					this.patientMedicalCoverageService.getPatientMedicalCoverage(coverageId)
 						.subscribe(coverageData => {
 							if (coverageData) {
 								this.coverageData = this.mapperService.toPatientMedicalCoverage(coverageData);
@@ -259,7 +260,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 	}
 
 	private getPatientMedicalOrders() {
-		const prescriptions$ = this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.data.appointmentData.patient.id, MEDICAL_ORDER_PENDING_STATUS, null, null, null, MEDICAL_ORDER_CATEGORY_ID);
+		const prescriptions$ = this.prescripcionesService.getMedicalOrders(this.data.appointmentData.patient.id, MEDICAL_ORDER_PENDING_STATUS, MEDICAL_ORDER_CATEGORY_ID);
 		const transcribedOrders$ = this.prescripcionesService.getTranscribedOrders(this.data.appointmentData.patient.id);
 		forkJoin([prescriptions$, transcribedOrders$]).subscribe(masterdataInfo => {
 			this.mapDiagnosticReportInfoDtoToMedicalOrderInfo(masterdataInfo[0]);

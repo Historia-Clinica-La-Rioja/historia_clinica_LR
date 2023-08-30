@@ -52,6 +52,10 @@ export class PrescripcionesService {
 		return this.serviceRequestService.deleteTranscribedOrder(patientId, serviceRequestId);
 	}
 
+	getMedicalOrders(patientId: number, statusId: string, categoryId: string): Observable<DiagnosticReportInfoDto[]> {
+		return this.serviceRequestService.getMedicalOrders(patientId, statusId, categoryId);
+	}
+
 	getTranscribedOrders(patientId: number): Observable<TranscribedDiagnosticReportInfoDto[]> {
 		return this.serviceRequestService.getTranscribedOrders(patientId);
 	}
