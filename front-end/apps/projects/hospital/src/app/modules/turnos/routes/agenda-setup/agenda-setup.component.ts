@@ -92,6 +92,7 @@ export class AgendaSetupComponent implements OnInit {
 	practicesOptions: ChipsOption<SnomedDto>[];
 	practicesSelected: ChipsOption<SnomedDto>[] = [];
 	showPractices = false;
+	hasHealthcareProfessional = false;
 	private fieldHierarchicalUnitRequired = false;
 	constructor(
 		private readonly el: ElementRef,
@@ -119,7 +120,7 @@ export class AgendaSetupComponent implements OnInit {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY, snackBarService);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_OBLIGATORIEDAD_UNIDADES_JERARQUICAS).subscribe(isOn =>
-			this.fieldHierarchicalUnitRequired = isOn
+			this.fieldHierarchicalUnitRequired = !isOn
 		);
 	}
 
@@ -167,6 +168,10 @@ export class AgendaSetupComponent implements OnInit {
 				professionalReplacedIdCtrl.setValidators([Validators.required]);
 				hierarchicalUnitTemporaryCtrl.setValidators([Validators.required]);
 				hierarchicalUnitCtrl.setValue(null);
+				if (this.fieldHierarchicalUnitRequired){
+					hierarchicalUnitCtrl.clearValidators();
+					hierarchicalUnitCtrl.updateValueAndValidity();
+				}
 			}
 			else {
 				professionalReplacedIdCtrl.clearValidators();
@@ -275,7 +280,10 @@ export class AgendaSetupComponent implements OnInit {
 			this.form.get('professionalReplacedId').disable();
 		} else {
 			this.form.controls.healthcareProfessionalId.setValue(diary.healthcareProfessionalId);
-			this.form.get('healthcareProfessionalId').disable();
+			if (!diary?.hierarchicalUnitAlias) {
+				this.form.markAllAsTouched();
+				this.hasHealthcareProfessional = true;
+			}
 		}
 
 		this.form.controls.sectorId.setValue(diary.sectorId);
@@ -292,8 +300,8 @@ export class AgendaSetupComponent implements OnInit {
 			this.professionals = healthcareProfessionals;
 			const healthcareProfessionalId = healthcareProfessionals.find(professional => professional.id === diary.healthcareProfessionalId);
 			this.form.controls.healthcareProfessionalId.setValue(healthcareProfessionalId.id);
-
-			this.setHierarchicalUnitsByName(diary?.hierarchicalUnitAlias);
+			if (!!diary?.hierarchicalUnitAlias)
+				this.setHierarchicalUnitsByName(diary?.hierarchicalUnitAlias);
 
 			this.specialtyService.getAllSpecialtyByProfessional(this.contextService.institutionId, healthcareProfessionalId.id)
 				.subscribe(response => {
@@ -354,6 +362,7 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	private setHierarchicalUnitsByName(name: string) {
+		this.form.get('hierarchicalUnit').disable();
 		this.loadSavedData = true;
 		this.form.controls.hierarchicalUnit.setValue(this.hierarchicalUnits.filter(e => e.name === name));
 		this.form.controls.professionalReplacedId.updateValueAndValidity();
@@ -370,8 +379,6 @@ export class AgendaSetupComponent implements OnInit {
 	private disableNotEditableControls(): void {
 		this.form.get('healthcareProfessionalId').disable();
 		this.form.get('appointmentDuration').disable();
-		this.form.get('hierarchicalUnit').disable();
-
 	}
 
 	setDoctorOfficesAndResetFollowingControls(sectorId: number): void {
@@ -522,7 +529,7 @@ export class AgendaSetupComponent implements OnInit {
 			)
 			.subscribe(response => {
 				this.hierarchicalUnits = response;
-				if (diary) {
+				if (diary?.hierarchicalUnitId) {
 					this.updateFormWithDiary(diary);
 				} else {
 					this.updateFormWithoutDiary();
@@ -531,12 +538,15 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	private updateFormWithDiary(diary: CompleteDiaryDto) {
-		const hierarchicalUnitId = this.hierarchicalUnits.find(h => h.id === diary.hierarchicalUnitId)?.id;
+		this.hierarchicalUnits = [{
+			id: diary.hierarchicalUnitId,
+			name: diary.hierarchicalUnitAlias,
+			typeId: 0,
+		}];
+
 		const controlName = diary.predecessorProfessionalId ? 'hierarchicalUnitTemporary' : 'hierarchicalUnit';
 		const control = this.form.controls[controlName];
-
-		control.setValue(hierarchicalUnitId);
-		control.disable();
+		control.setValue(diary.hierarchicalUnitId);
 		control.updateValueAndValidity();
 	}
 
@@ -547,6 +557,9 @@ export class AgendaSetupComponent implements OnInit {
 
 			control.setValue(this.hierarchicalUnits[0].id);
 			control.updateValueAndValidity();
+		} else {
+			if (this.fieldHierarchicalUnitRequired)
+				this.form.markAllAsTouched();
 		}
 	}
 
