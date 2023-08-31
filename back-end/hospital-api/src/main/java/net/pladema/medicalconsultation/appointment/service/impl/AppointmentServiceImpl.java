@@ -29,6 +29,7 @@ import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
+import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentObservationRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
@@ -626,6 +627,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 		appointmentBo.setOverturn(false);
 		appointmentBo.setOpeningHoursId(getOpeningHourId(openingHours, date, hour).getOpeningHours().getId());
 		appointmentBo.setAppointmentBlockMotiveId(block.getAppointmentBlockMotiveId());
+		appointmentBo.setModalityId(EAppointmentModality.NO_MODALITY.getId());
 		return appointmentBo;
 	}
 
