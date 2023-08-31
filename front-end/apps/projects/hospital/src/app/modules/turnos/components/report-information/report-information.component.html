@@ -25,7 +25,7 @@
             </div>
         </div>
         <app-priority [priority]="report.priority"></app-priority>
-        <span class="grey">{{report.dto.date | viewDateDto: 'localdatetime' | date: 'dd/MM/yyyy'}}</span>
+        <span class="grey">{{report.dto.date | viewDateDto: 'localdatetime' | date: 'dd/MM/yyyy - HH:mm'}}</span>
     </div>
 
     <div id="origin-data" fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px" fxFlex="15%">
