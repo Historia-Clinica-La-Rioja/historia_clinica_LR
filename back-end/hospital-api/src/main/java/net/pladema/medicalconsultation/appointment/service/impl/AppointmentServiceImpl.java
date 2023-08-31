@@ -23,6 +23,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounte
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.repository.entity.EDayOfWeek;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.security.UserInfo;
@@ -632,10 +633,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	private DiaryOpeningHoursBo getOpeningHourId(List<DiaryOpeningHoursBo> openingHours, LocalDate date, LocalTime hour) {
-		var dayOfWeek =
-				(short)LocalDate.of(date.getYear(),
-						date.getMonth(),
-						date.getDayOfMonth()).getDayOfWeek().getValue();
+		var dayOfWeek = date.getDayOfWeek().getValue() == 7 ? EDayOfWeek.SUNDAY.getId() : (short)date.getDayOfWeek().getValue();
 		return openingHours.stream()
 				.filter(oh -> oh.getOpeningHours().getDayWeekId().equals(dayOfWeek))
 				.filter(oh -> (oh.getOpeningHours().getFrom().isBefore(hour) || oh.getOpeningHours().getFrom().equals(hour)) &&
