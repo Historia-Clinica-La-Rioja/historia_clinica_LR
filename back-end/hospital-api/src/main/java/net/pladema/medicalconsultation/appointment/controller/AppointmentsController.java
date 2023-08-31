@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
+import net.pladema.medicalconsultation.appointment.application.GetCurrentAppointmentHierarchicalUnit.GetCurrentAppointmentHierarchicalUnit;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +51,6 @@ import net.pladema.establishment.controller.dto.HierarchicalUnitDto;
 import net.pladema.establishment.controller.mapper.InstitutionMapper;
 import net.pladema.establishment.service.domain.HierarchicalUnitBo;
 import net.pladema.imagenetwork.derivedstudies.service.MoveStudiesService;
-import net.pladema.medicalconsultation.appointment.application.GetCurrentAppointmentHierarchicalUnit.GetCurrentAppointmentHierarchicalUnit;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentDiary;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentState;
@@ -158,57 +159,13 @@ public class AppointmentsController {
 
 	private final PatientMedicalCoverageService patientMedicalCoverageService;
 
+	private final FeatureFlagsService featureFlagsService;
+
 	@Value("${scheduledjobs.updateappointmentsstate.pastdays:1}")
 	private Long PAST_DAYS;
 
 	private Long MAX_DAYS = 30L;
-
 	private final GetCurrentAppointmentHierarchicalUnit getCurrentAppointmentHierarchicalUnit;
-
-	private final FeatureFlagsService featureFlagsService;
-
-	public AppointmentsController(
-			AppointmentDailyAmountService appointmentDailyAmountService,
-			AppointmentService appointmentService, EquipmentAppointmentService equipmentAppointmentService, AppointmentValidatorService appointmentValidatorService,
-			CreateAppointmentService createAppointmentService,
-			CreateEquipmentAppointmentService createEquipmentAppointmentService,
-			CreateTranscribedEquipmentAppointmentService createTranscribedEquipmentAppointmentService,
-			AppointmentMapper appointmentMapper, InstitutionMapper institutionMapper, PatientExternalService patientExternalService, HealthcareProfessionalExternalService healthcareProfessionalExternalService,
-			DateTimeProvider dateTimeProvider,
-			NotifyPatient notifyPatient,
-			BookingPersonService bookingPersonService,
-			LocalDateMapper dateMapper,
-			LocalDateMapper localDateMapper,
-			MqttClientService mqttClientService,
-			AppointmentOrderImageService appointmentOrderImageService,
-			MoveStudiesService moveStudiesService,
-			DeriveReportService deriveReportService,
-			PatientMedicalCoverageService patientMedicalCoverageService,
-			PatientMedicalCoverageMapper patientMedicalCoverageMapper
-	) {
-		this.appointmentDailyAmountService = appointmentDailyAmountService;
-		this.appointmentService = appointmentService;
-		this.equipmentAppointmentService = equipmentAppointmentService;
-		this.appointmentValidatorService = appointmentValidatorService;
-		this.createAppointmentService = createAppointmentService;
-		this.createTranscribedEquipmentAppointmentService = createTranscribedEquipmentAppointmentService;
-		this.createEquipmentAppointmentService = createEquipmentAppointmentService;
-		this.appointmentMapper = appointmentMapper;
-		this.institutionMapper = institutionMapper;
-		this.patientExternalService = patientExternalService;
-		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
-		this.dateTimeProvider = dateTimeProvider;
-		this.notifyPatient = notifyPatient;
-		this.bookingPersonService = bookingPersonService;
-		this.dateMapper = dateMapper;
-		this.localDateMapper = localDateMapper;
-		this.mqttClientService = mqttClientService;
-		this.appointmentOrderImageService = appointmentOrderImageService;
-		this.moveStudiesService = moveStudiesService;
-		this.deriveReportService = deriveReportService;
-		this.patientMedicalCoverageService = patientMedicalCoverageService;
-		this.patientMedicalCoverageMapper = patientMedicalCoverageMapper;
-	}
 
 	@PostMapping
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")

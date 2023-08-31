@@ -353,7 +353,7 @@ public class ServiceRequestController {
                                                  @RequestParam(value = "study", required = false) String study,
                                                  @RequestParam(value = "category", required = false) String category,
                                                  @RequestParam(value = "healthCondition", required = false) String healthCondition) {
-        LOG.debug("Input parameters -> institutionId {} patientId {}, status {}, diagnosticReport {}, healthCondition {}, categpry {}",
+        LOG.debug("Input parameters -> institutionId {} patientId {}, status {}, diagnosticReport {}, healthCondition {}, category {}",
                 institutionId,
                 patientId,
                 status,
@@ -361,7 +361,7 @@ public class ServiceRequestController {
                 healthCondition,
                 category);
 
-        List<DiagnosticReportBo> resultService = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(
+        List<DiagnosticReportBo> resultService = listDiagnosticReportInfoService.getList(new DiagnosticReportFilterBo(
                 patientId,
                 status,
                 study,
@@ -379,6 +379,36 @@ public class ServiceRequestController {
         LOG.trace(OUTPUT, result);
         return result;
     }
+
+	@GetMapping("/medicalOrders")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	public List<DiagnosticReportInfoDto> getMedicalOrderList(@PathVariable(name = "institutionId") Integer institutionId,
+												 @PathVariable(name = "patientId") Integer patientId,
+												 @RequestParam(value = "statusId", required = false) String status,
+												 @RequestParam(value = "category", required = false) String category) {
+		LOG.debug("Input parameters -> institutionId {} patientId {}, status {}, diagnosticReport {}, category {}",
+				institutionId,
+				patientId,
+				status,
+				category);
+
+		List<DiagnosticReportBo> resultService = listDiagnosticReportInfoService.getMedicalOrderList(new DiagnosticReportFilterBo(
+				patientId,
+				status,
+				null, null,
+				category));
+
+		List<DiagnosticReportInfoDto> result = resultService.stream()
+				.map(diagnosticReportBo -> {
+					ProfessionalDto professionalDto = healthcareProfessionalExternalService.findProfessionalByUserId(diagnosticReportBo.getUserId());
+					PatientMedicalCoverageBo coverage = patientMedicalCoverageService.getActiveCoveragesByOrderId(diagnosticReportBo.getEncounterId());
+					return diagnosticReportInfoMapper.parseTo(diagnosticReportBo, professionalDto, patientMedicalCoverageMapper.toPatientMedicalCoverageDto(coverage));
+				})
+				.collect(Collectors.toList());
+
+		LOG.trace(OUTPUT, result);
+		return result;
+	}
 
 	@GetMapping("/studyTranscribedOrder")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES')")

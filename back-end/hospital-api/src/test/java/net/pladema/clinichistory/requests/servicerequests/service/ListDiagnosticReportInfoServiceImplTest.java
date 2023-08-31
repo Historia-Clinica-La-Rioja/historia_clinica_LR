@@ -91,7 +91,7 @@ class ListDiagnosticReportInfoServiceImplTest extends UnitRepository {
         save(DiagnosticReportTestMocks.createDocumentDiagnosticReport(order2_doc_id, diagnosticReportId));
 
         DiagnosticReportFilterBo diagnosticReportFilterBo = new DiagnosticReportFilterBo(patientId,null, null, null, null);
-        List<DiagnosticReportBo> result = listDiagnosticReportInfoService.execute(diagnosticReportFilterBo);
+        List<DiagnosticReportBo> result = listDiagnosticReportInfoService.getList(diagnosticReportFilterBo);
         Assertions.assertThat(result)
                 .hasSize(3);
     }
@@ -138,46 +138,46 @@ class ListDiagnosticReportInfoServiceImplTest extends UnitRepository {
         diagnosticReportId = save(DiagnosticReportTestMocks.createDiagnosticReport(patientId, sctId_endoscopia, DiagnosticReportStatus.ERROR,"", null, angina_id)).getId();
         save(DiagnosticReportTestMocks.createDocumentDiagnosticReport(order2_doc_id, diagnosticReportId));
 
-        List<DiagnosticReportBo> result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId,null, null, null, null));
+        List<DiagnosticReportBo> result = listDiagnosticReportInfoService.getList(new DiagnosticReportFilterBo(patientId,null, null, null, null));
         Assertions.assertThat(result)
                 .hasSize(4);
 
-        result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId,null, null, "Angi", null));
+        result = listDiagnosticReportInfoService.getList(new DiagnosticReportFilterBo(patientId,null, null, "Angi", null));
         Assertions.assertThat(result)
                 .hasSize(3);
 
-        result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId,null, null, "Sarampión", null));
+        result = listDiagnosticReportInfoService.getList(new DiagnosticReportFilterBo(patientId,null, null, "Sarampión", null));
         Assertions.assertThat(result).isEmpty();
 
-        result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId,null, "Radio", "Angi", null));
+        result = listDiagnosticReportInfoService.getList(new DiagnosticReportFilterBo(patientId,null, "Radio", "Angi", null));
         Assertions.assertThat(result)
                 .hasSize(2);
 
-        result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId,DiagnosticReportStatus.FINAL, null, null, null));
+        result = listDiagnosticReportInfoService.getList(new DiagnosticReportFilterBo(patientId,DiagnosticReportStatus.FINAL, null, null, null));
         Assertions.assertThat(result)
                 .hasSize(1);
 
-        result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId,DiagnosticReportStatus.REGISTERED, null, null, null));
+        result = listDiagnosticReportInfoService.getList(new DiagnosticReportFilterBo(patientId,DiagnosticReportStatus.REGISTERED, null, null, null));
         Assertions.assertThat(result)
                 .hasSize(3);
 
-        result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId,DiagnosticReportStatus.REGISTERED, null, "Pape", null));
+        result = listDiagnosticReportInfoService.getList(new DiagnosticReportFilterBo(patientId,DiagnosticReportStatus.REGISTERED, null, "Pape", null));
         Assertions.assertThat(result)
                 .hasSize(1);
 
-        result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId, null, null, null, ServiceRequestCategory.LABORATORY_PROCEDURE));
+        result = listDiagnosticReportInfoService.getList(new DiagnosticReportFilterBo(patientId, null, null, null, ServiceRequestCategory.LABORATORY_PROCEDURE));
         Assertions.assertThat(result)
                 .hasSize(2);
 
-        result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId, null, null, null, ServiceRequestCategory.COUNSELLING));
+        result = listDiagnosticReportInfoService.getList(new DiagnosticReportFilterBo(patientId, null, null, null, ServiceRequestCategory.COUNSELLING));
         Assertions.assertThat(result)
                 .hasSize(2);
 
-        result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId, DiagnosticReportStatus.FINAL, null, null, ServiceRequestCategory.COUNSELLING));
+        result = listDiagnosticReportInfoService.getList(new DiagnosticReportFilterBo(patientId, DiagnosticReportStatus.FINAL, null, null, ServiceRequestCategory.COUNSELLING));
         Assertions.assertThat(result)
                 .hasSize(1);
 
-        result = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(patientId,DiagnosticReportStatus.ERROR, null, null, null));
+        result = listDiagnosticReportInfoService.getList(new DiagnosticReportFilterBo(patientId,DiagnosticReportStatus.ERROR, null, null, null));
         Assertions.assertThat(result).isEmpty();
     }
 }

@@ -31,7 +31,7 @@ public class ListTranscribedDiagnosticReportRepositoryImpl implements ListTransc
 				"WHERE tsr.patient_id = :patientId " +
 				"AND creation_date >= CURRENT_DATE - INTERVAL '1 month' " +
 				"AND aoi.active = false " +
-				"AND tsr.id NOT IN ( " +
+				"OR tsr.id NOT IN ( " +
 					"SELECT transcribed_order_id " +
 					"FROM appointment_order_image) ";
 
@@ -63,18 +63,17 @@ public class ListTranscribedDiagnosticReportRepositoryImpl implements ListTransc
 	public List<Object[]> getListTranscribedOrder(Integer patientId) {
 		LOG.debug("Input parameters -> patientId {}", patientId);
 
-		String sqlString = "SELECT aoi.completed, tsr.healthcare_professional_name, tsr.creation_date, aoi.image_id, aoi.document_id, s.pt AS Spt, s2.pt, df.file_name, d.status_id  \n" +
-				"FROM {h-schema}appointment_order_image aoi\n" +
-				"JOIN  {h-schema}transcribed_service_request tsr on tsr .id = aoi.transcribed_order_id\n" +
-				"JOIN {h-schema}diagnostic_report dr ON dr.id = tsr.study_id\n" +
-				"JOIN {h-schema}health_condition hc on hc.id =dr.health_condition_id \n" +
-				"JOIN {h-schema}snomed s2 on s2.id =hc.snomed_id \n" +
-				"JOIN {h-schema}snomed s ON s.id = dr.snomed_id\n" +
-				"LEFT JOIN {h-schema}document_file df  ON df.id = aoi.document_id\n" +
-				"LEFT JOIN {h-schema}document d  ON d.id = aoi.document_id\n" +
-				"WHERE aoi.order_id is null\n" +
-				"AND tsr.patient_id = :patientId " +
-				"AND aoi.active = true";
+		String sqlString = "SELECT aoi.completed, tsr.healthcare_professional_name, tsr.creation_date, aoi.image_id, aoi.document_id, s.pt AS Spt, s2.pt, df.file_name, d.status_id " +
+				"FROM {h-schema}appointment_order_image aoi " +
+				"JOIN  {h-schema}transcribed_service_request tsr on tsr .id = aoi.transcribed_order_id " +
+				"JOIN {h-schema}diagnostic_report dr ON dr.id = tsr.study_id " +
+				"JOIN {h-schema}health_condition hc on hc.id =dr.health_condition_id " +
+				"JOIN {h-schema}snomed s2 on s2.id =hc.snomed_id " +
+				"JOIN {h-schema}snomed s ON s.id = dr.snomed_id " +
+				"LEFT JOIN {h-schema}document_file df  ON df.id = aoi.document_id " +
+				"LEFT JOIN {h-schema}document d  ON d.id = aoi.document_id " +
+				"WHERE aoi.order_id is null " +
+				"AND tsr.patient_id = :patientId";
 		Query query = entityManager.createNativeQuery(sqlString);
 		query.setParameter("patientId", patientId);
 		List<Object[]> result = query.getResultList();
