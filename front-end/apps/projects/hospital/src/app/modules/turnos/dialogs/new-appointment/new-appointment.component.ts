@@ -133,10 +133,11 @@ export class NewAppointmentComponent implements OnInit {
 			medicalOrder: this.formBuilder.group({
 				appointmentMedicalOrder: [null]
 			}),
-			patientEmail:[null]
+			patientEmail:[null,[Validators.email]]
 		});
+
 		if(this.data.modalityAttention === this.MODALITY_PATIENT_VIRTUAL_ATTENTION){
-			updateControlValidator(this.appointmentInfoForm,'patientEmail',[Validators.required]);
+			updateControlValidator(this.appointmentInfoForm,'patientEmail',[Validators.required,Validators.email]);
 			this.appointmentInfoForm.updateValueAndValidity();
 		}
 		this.associateReferenceForm = this.formBuilder.group({

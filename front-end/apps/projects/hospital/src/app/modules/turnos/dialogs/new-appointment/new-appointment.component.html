@@ -149,6 +149,8 @@
 								<mat-error *ngIf="hasError(appointmentInfoForm, 'required', 'patientEmail')">
 									<span translate="forms.REQUIRED"></span>
 								</mat-error>
+								<mat-error *ngIf="hasError(appointmentInfoForm,'email', 'patientEmail')"
+								[translate]="'pacientes.form.INVALID'"></mat-error>
 							</mat-form-field>
 						</div>
 					</div>

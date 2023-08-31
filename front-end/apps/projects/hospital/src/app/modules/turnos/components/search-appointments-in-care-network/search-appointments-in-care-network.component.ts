@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { AddressDto, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableProtectedAppointmentsDto, InstitutionBasicInfoDto, ProvinceDto } from '@api-rest/api-model';
+import { AddressDto, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableProtectedAppointmentsDto, EAppointmentModality, InstitutionBasicInfoDto, ProvinceDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
@@ -58,6 +58,10 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 	readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
 	patientId: number;
 	careLineId: number;
+	showModalityError: boolean = false;
+	MODALITY_ON_SITE_ATTENTION = EAppointmentModality.ON_SITE_ATTENTION;
+	MODALITY_PATIENT_VIRTUAL_ATTENTION = EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
+	MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -229,7 +233,8 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 				departmentId: this.searchForm.value.department.id,
 				endSearchDate: endDateString,
 				initialSearchDate: startDateString,
-				institutionId: this.searchForm.value.institution ? this.searchForm.value.institution.id : null
+				institutionId: this.searchForm.value.institution ? this.searchForm.value.institution.id : null,
+				modality: this.searchForm.controls.modality.value,
 			};
 
 			this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointments(this.contextService.institutionId, filters).subscribe(
@@ -251,6 +256,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 			this.showSpecialtyError = !this.searchForm.value.specialty;
 			this.showDepartmentError = !this.searchForm.value.department;
 			this.showProvinceError = !this.searchForm.value.state;
+			this.showModalityError = !this.searchForm.value.modality;
 		}
 
 	}
@@ -336,7 +342,8 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 			department: [null, Validators.required],
 			institution: [null],
 			startDate: [this.today, Validators.required],
-			endDate: [{ value: endDate, disabled: true }, Validators.required]
+			endDate: [{ value: endDate, disabled: true }, Validators.required],
+			modality: [null, Validators.required]
 		});
 	}
 

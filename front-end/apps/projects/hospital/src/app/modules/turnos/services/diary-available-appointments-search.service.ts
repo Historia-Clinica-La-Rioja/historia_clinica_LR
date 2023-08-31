@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DiaryAvailableProtectedAppointmentsDto } from '@api-rest/api-model';
+import { DiaryAvailableProtectedAppointmentsDto, EAppointmentModality } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -54,4 +54,5 @@ export interface ProtectedAppointmentsFilter {
   endSearchDate: string,
   initialSearchDate: string,
   institutionId?: number,
+  modality:EAppointmentModality
 }

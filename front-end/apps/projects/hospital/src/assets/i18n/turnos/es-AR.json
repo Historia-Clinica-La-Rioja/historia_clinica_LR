@@ -41,6 +41,7 @@
 		"MODALITY_ATTENTION":"Modalidad de atención",
 		"ON_SITE_ATTENTION": "Presencial",
 		"PATIENT_VIRTUAL_ATTENTION": "teleconsulta de paciente",
+		"SECOND_OPINION_VIRTUAL_ATTENTION":"Teleconsulta de 2da opinión",
 		"search-appointments-in-care-network": {
 			"SEARCH_IN_CARE_NETWORK_CRITERIA": "Seleccione los criterios para la búsqueda de turnos disponibles en la red de atención:",
 			"OPTIONAL": "(Opcional)",

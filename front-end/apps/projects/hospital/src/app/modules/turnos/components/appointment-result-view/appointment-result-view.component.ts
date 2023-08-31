@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DiaryAvailableProtectedAppointmentsDto } from '@api-rest/api-model';
+import { DiaryAvailableProtectedAppointmentsDto, EAppointmentModality } from '@api-rest/api-model';
 import { dateDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DateFormat, dateToMoment } from '@core/utils/moment.utils';
@@ -14,7 +14,7 @@ import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-app
   styleUrls: ['./appointment-result-view.component.scss']
 })
 export class AppointmentResultViewComponent implements OnInit {
-
+  @Input() modalityAttention?: EAppointmentModality;
   @Input() appointment: DiaryAvailableProtectedAppointmentsDto;
   @Input() patientId: number;
   @Input() careLineId: number;
@@ -48,7 +48,8 @@ export class AppointmentResultViewComponent implements OnInit {
         overturnMode: this.appointment.overturnMode,
         patientId: this.patientId ? this.patientId : null,
         protectedAppointment: this.appointment,
-        careLineId: this.careLineId ? this.careLineId : null
+        careLineId: this.careLineId ? this.careLineId : null,
+		modalityAttention:this.modalityAttention,
       }
     });
     dialogRef.afterClosed().subscribe(
