@@ -10,7 +10,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AmbulatoryConsultationProblem, AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { map, Observable, of, take } from 'rxjs';
+import { map, Observable, of, switchMap, take } from 'rxjs';
 import { StudyAppointment } from '../../models/models';
 import { toStudyAppointment } from '../../utils/mapper.utils';
 import { AddConclusionFormComponent } from '../../dialogs/add-conclusion-form/add-conclusion-form.component';
@@ -19,7 +19,8 @@ import { SaveTemplateComponent, TemplateData } from '../../dialogs/save-template
 import { AccountService } from '@api-rest/services/account.service';
 import { getParam } from '@historia-clinica/modules/ambulatoria/modules/estudio/utils/utils';
 import { ContextService } from '@core/services/context.service';
-// import { UserInfo } from '@presentation/components/user-badge/user-badge.component';
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
+import { ImportTemplateComponent, TemplateInfoDto, mockTemplate } from '../../dialogs/import-template/import-template.component';
 
 @Component({
 	selector: 'app-report-study',
@@ -43,6 +44,9 @@ export class ReportStudyComponent implements OnInit {
 	@Output() update = new EventEmitter<Observable<StudyAppointment>>;
 	userInfo: LoggedUserDto
 	institutionId = Number(getParam(this.route.snapshot,'id'))
+	importsFiles$: Observable<TemplateInfoDto[]> = of(mockTemplate)
+	importsFiles: TemplateInfoDto[]
+	disableImportFiles = false
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -84,6 +88,12 @@ export class ReportStudyComponent implements OnInit {
 		});
 
 		this.accountService.getInfo().pipe(take(1)).subscribe(user => this.userInfo = user);
+		this.importsFiles$.pipe(take(1)).subscribe(files => {
+			this.importsFiles= files
+			this.disableImportFiles = !(this.importsFiles.length > 0);
+		}
+			)
+
 
 	}
 
@@ -111,7 +121,8 @@ export class ReportStudyComponent implements OnInit {
 
 	saveDraft() {
 		this.submitted = true;
-		if (this.form.valid) {
+		this.setTextEditorLength(this.form.controls.observations.value)
+		if (this.form.valid && this.textEditorLength) {
 			this.disableContinueEditing = true;
 			this.enabledEditing = false;
 			if (this.study.info.informerObservations?.id) {
@@ -222,6 +233,39 @@ export class ReportStudyComponent implements OnInit {
 			disableClose: true,
 			restoreFocus: false
 		});
+	}
+
+	openImportTemplate() {
+		const dialogRefConfirmation = this.dialog.open(DiscardWarningComponent, {
+			data: {
+				title: 'image-network.worklist.details_study.TEMPLATE_CONFIRM_TITLE',
+				content: 'image-network.worklist.details_study.TEMPLATE_CONFIRM_CONTENT',
+				okButtonLabel: 'image-network.worklist.details_study.TEMPLATE_CONFIRM_BUTTON_OK',
+				cancelButtonLabel: 'image-network.worklist.details_study.TEMPLATE_CONFIRM_BUTTON_CANCEL',
+				},
+				autoFocus: false,
+				width: '35%',
+				disableClose: true,
+				restoreFocus: false
+		})
+		dialogRefConfirmation.afterClosed()
+		.pipe(switchMap(confirm => confirm ? this.openDialogTemplateImportList(): of(null))).subscribe(
+						template => {
+						if (template)
+							this.form.controls.observations.setValue(template)
+						})}
+
+	private openDialogTemplateImportList(): Observable<string> {
+		const data: TemplateInfoDto[] = this.importsFiles
+		const dialogReference: Observable<string> = this.dialog.open(ImportTemplateComponent, {
+			data,
+			autoFocus: false,
+			width: '45%',
+			disableClose: true,
+			restoreFocus: false,
+			height: '45%'
+		}).afterClosed()
+		return dialogReference
 	}
 
 }

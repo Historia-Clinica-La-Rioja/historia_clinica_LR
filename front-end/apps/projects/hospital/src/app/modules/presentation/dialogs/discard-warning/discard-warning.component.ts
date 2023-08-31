@@ -33,3 +33,14 @@ export class DiscardWarningComponent implements OnInit {
 }
 
 
+export interface DiscardWarningModel {
+	title: string,
+	content: string,
+	contentBold: string,
+	okButtonLabel: string,
+	cancelButtonLabel: string,
+	okBottonColor?: ThemePalette,
+	buttonClose?: boolean,
+	errorMode?: boolean,
+	color?: string,
+}

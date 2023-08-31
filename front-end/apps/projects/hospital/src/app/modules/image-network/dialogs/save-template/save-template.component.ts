@@ -45,7 +45,7 @@ export class SaveTemplateComponent implements OnInit {
 	}
 
 	private success() {
-		this.snackBarService.showSuccess('image-network.worklist.details_study.SNACKBAR_SUCCESS');
+		this.snackBarService.showSuccess('image-network.worklist.details_study.SNACKBAR_SUCCESS_TEMPLATE');
 	}
 
 	// private error() { TODO: Activar cuando esten los endpoints

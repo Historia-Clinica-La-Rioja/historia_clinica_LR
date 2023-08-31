@@ -18,6 +18,7 @@ import { ViewReportComponent } from './components/view-report/view-report.compon
 import { WorklistFiltersComponent } from './components/worklist-filters/worklist-filters.component';
 import { SaveTemplateComponent } from './dialogs/save-template/save-template.component';
 import { ViewInformerObservationsComponent } from './components/view-informer-observations/view-informer-observations.component';
+import { ImportTemplateComponent } from './dialogs/import-template/import-template.component';
 
 @NgModule({
     declarations: [
@@ -35,7 +36,8 @@ import { ViewInformerObservationsComponent } from './components/view-informer-ob
         ViewReportComponent,
         WorklistFiltersComponent,
         SaveTemplateComponent,
-        ViewInformerObservationsComponent
+        ViewInformerObservationsComponent,
+        ImportTemplateComponent,
     ],
     imports: [
         CommonModule,

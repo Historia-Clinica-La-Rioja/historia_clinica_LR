@@ -50,7 +50,8 @@
 		"RETRY":"Reintentar",
 		"YES_CONTINUE":"Si, continuar",
 		"NO_CANCEL":"No, cancelar",
-		"FILTER":"Filtrar"
+		"FILTER":"Filtrar",
+		"IMPORT":"Importar"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",

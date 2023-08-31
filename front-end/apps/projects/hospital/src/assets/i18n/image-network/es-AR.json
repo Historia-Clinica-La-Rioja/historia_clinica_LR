@@ -87,8 +87,15 @@
                 "PENDING_ORDER": "Orden pendiente",
                 "TEMPLATE": "Plantillas",
                 "SAVE_TEMPLATE_TITLE":"Guardar como plantilla",
+                "IMPORT_TEMPLATE":"Importar plantilla",
                 "NAME_TEMPLATE":"Nombre de la plantilla",
-                "NAME_EXISTS":"Ya existe una plantilla con ese nombre. Por favor, elija otro"
+                "NAME_EXISTS":"Ya existe una plantilla con ese nombre. Por favor, elija otro",
+                "SNACKBAR_SUCCESS_TEMPLATE": "Plantilla guardada exitosamente",
+                "TEMPLATE_CONFIRM_TITLE":"¿Reemplazar datos?",
+                "TEMPLATE_CONFIRM_CONTENT":"Si importa una plantilla la información actualmente ingresada en el campo “Detalle de informe” será reemplazada por el contenido de la plantilla que seleccione para importar.",
+                "TEMPLATE_CONFIRM_BUTTON_OK":"SI, SELECCIONAR PLANTILLA",
+                "TEMPLATE_CONFIRM_BUTTON_CANCEL":"NO, CANCELAR"
+
             },
             "filters": {
                 "MODALITY": "Seleccione modalidad",
