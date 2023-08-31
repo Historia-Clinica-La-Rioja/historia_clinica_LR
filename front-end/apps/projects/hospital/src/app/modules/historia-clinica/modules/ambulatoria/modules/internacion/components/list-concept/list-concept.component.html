@@ -13,9 +13,10 @@
 		</ng-container>
 		<div *ngIf="concepts.length>1" id="toggle-all-Selection" class="checkbox">
 			<br>
-			<mat-checkbox id="all-election" [checked]="allChecked" (change)="setAll($event.checked)">
-				{{'internaciones.epicrisis.list-concept.INCLUDE_ALL' | translate}}</mat-checkbox>
-
+			<ng-container id="all-selection">
+				<mat-checkbox  [checked]="allChecked" (change)="setAll($event.checked)">
+					{{'internaciones.epicrisis.list-concept.INCLUDE_ALL' | translate}}</mat-checkbox>
+			</ng-container>
 		</div>
 
 		<ng-template #noData>
