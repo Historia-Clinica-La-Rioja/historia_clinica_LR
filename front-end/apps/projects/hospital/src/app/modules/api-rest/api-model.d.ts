@@ -1425,6 +1425,13 @@ export interface EpisodeDocumentResponseDto {
     id: number;
 }
 
+export interface EpisodeDocumentTypeDto {
+    consentId: number;
+    description: string;
+    id: number;
+    richTextBody: string;
+}
+
 export interface EquipmentAppointmentListDto {
     appointmentStateId: number;
     date: string;
