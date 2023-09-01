@@ -14,7 +14,7 @@ import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-app
 	styleUrls: ['./appointment-result-view.component.scss']
 })
 export class AppointmentResultViewComponent implements OnInit {
-	readonly MODALITY_PATIENT_VIRTUAL_ATTENTION = EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
+	readonly MODALITY_ON_SITE_ATTENTION = EAppointmentModality.ON_SITE_ATTENTION;
 	@Input() modalityAttention?: EAppointmentModality;
 	@Input() appointment: DiaryAvailableProtectedAppointmentsDto;
 	@Input() patientId: number;
@@ -62,7 +62,7 @@ export class AppointmentResultViewComponent implements OnInit {
 					fullAppointmentDate = fullAppointmentDate[0].toUpperCase() + fullAppointmentDate.slice(1);
 					const timeData = appointmentHour.split(":");
 
-					if (result.email && this.modalityAttention === this.MODALITY_PATIENT_VIRTUAL_ATTENTION) {
+					if (result.email && !(this.modalityAttention === this.MODALITY_ON_SITE_ATTENTION)) {
 						var message = 'Se podrá acceder a la teleconsulta a través del link que se ha enviado a ' + `<strong> ${result.email}</strong>`
 					}
 					this.dialog.open(ConfirmPrintAppointmentComponent, {

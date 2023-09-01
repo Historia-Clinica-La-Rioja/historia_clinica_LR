@@ -138,6 +138,7 @@
 			"ACCEPT": "Aceptar",
 			"PRINT_APPOINTMENT_BUTTON": "Imprimir turno",
 			"ASSIGNED_APPOINTMENT": "Turno asignado",
+			"PROFESSIONAL_EMAIL":"Mail del profesional solicitante",
 			"fields": {
 				"DOCUMENT_TYPE": "Tipo de documento",
 				"DOCUMENT_NUMBER": "Nº de documento"

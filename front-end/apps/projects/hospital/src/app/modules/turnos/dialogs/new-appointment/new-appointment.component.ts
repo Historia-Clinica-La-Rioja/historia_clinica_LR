@@ -87,6 +87,7 @@ export class NewAppointmentComponent implements OnInit {
 	isOrderTranscribed = false;
 	transcribedOrder = null;
 	readonly MODALITY_PATIENT_VIRTUAL_ATTENTION = EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
+    readonly MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
@@ -138,7 +139,8 @@ export class NewAppointmentComponent implements OnInit {
 
 
 		this.associateReferenceForm = this.formBuilder.group({
-			reference: [null, Validators.required]
+			reference: [null, Validators.required],
+			professionalEmail: [null,Validators.email]
 		});
 
 
@@ -167,6 +169,9 @@ export class NewAppointmentComponent implements OnInit {
 			if(this.data.modalityAttention === this.MODALITY_PATIENT_VIRTUAL_ATTENTION){
 				this.appointmentInfoForm.setControl('patientEmail', new UntypedFormControl(null, [Validators.required,Validators.email]));
 				this.appointmentInfoForm.controls.patientEmail.updateValueAndValidity();
+			}else if(this.data.modalityAttention === this.MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION){
+				this.associateReferenceForm.setControl('professionalEmail', new UntypedFormControl(null, [Validators.required,Validators.email]));
+				this.associateReferenceForm.controls.patientEmail.updateValueAndValidity();
 			}
 			this.appointmentInfoForm.markAllAsTouched();
 
@@ -336,6 +341,7 @@ export class NewAppointmentComponent implements OnInit {
 			phoneNumber,
 			modality:this.data.modalityAttention ? this.data.modalityAttention : EAppointmentModality.ON_SITE_ATTENTION,
 			patientEmail:this.appointmentInfoForm.controls.patientEmail.value,
+			applicantHealthcareProfessionalEmail: this.associateReferenceForm.controls.professionalEmail.value ? this.associateReferenceForm.controls.professionalEmail.value : null,
 		};
 		this.addAppointment(newAppointment).subscribe((appointmentId: number) => {
 			this.lastAppointmentId = appointmentId;
@@ -372,11 +378,16 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	private assignAppointment(): void {
+		if(this.data.modalityAttention === this.MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION){
+			var valueEmail = this.associateReferenceForm.controls.professionalEmail.value;
+		}else{
+			valueEmail = this.appointmentInfoForm.controls.patientEmail.value;
+		}
 		this.referenceAppointmentService.associateReferenceAppointment(this.associateReferenceForm.controls.reference.value.referenceId, this.lastAppointmentId).subscribe(
 			successfullyAssociated => {
 				if (successfullyAssociated) {
 					this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
-					this.dialogRef.close({id:this.lastAppointmentId,email:this.appointmentInfoForm.controls.patientEmail.value});
+					this.dialogRef.close({id:this.lastAppointmentId,email:valueEmail});
 				}
 				else {
 					this.snackBarService.showError('turnos.new-appointment.messages.COULD_NOT_ASSOCIATE')

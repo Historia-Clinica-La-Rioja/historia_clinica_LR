@@ -144,8 +144,7 @@
 								<mat-label [translate]="'turnos.new-appointment.EMAIL'"></mat-label>
 								<input matInput type="patientEmail" id="patientEmail" name="patientEmail"
 									formControlName="patientEmail"
-									placeholder="usuario@example.com"
-									(keyup)="updatePhoneValidators()">
+									placeholder="usuario@example.com">
 								<mat-error *ngIf="hasError(appointmentInfoForm, 'required', 'patientEmail')">
 									<span translate="forms.REQUIRED"></span>
 								</mat-error>
@@ -171,6 +170,19 @@
 							</mat-option>
 						</mat-select>
 					</mat-form-field>
+					<div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column" *ngIf="data.modalityAttention === MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION">
+						<mat-form-field appearance="outline">
+							<mat-label [translate]="'turnos.new-appointment.PROFESSIONAL_EMAIL'"></mat-label>
+							<input matInput type="professionalEmail" id="professionalEmail" name="professionalEmail"
+								formControlName="professionalEmail"
+								placeholder="usuario@example.com">
+							<mat-error *ngIf="hasError(associateReferenceForm, 'required', 'professionalEmail')">
+								<span translate="forms.REQUIRED"></span>
+							</mat-error>
+							<mat-error *ngIf="hasError(associateReferenceForm,'email', 'professionalEmail')"
+							[translate]="'pacientes.form.INVALID'"></mat-error>
+						</mat-form-field>
+					</div>
 				</form>
 				<div fxLayout="row">
 					<button mat-stroked-button matStepperPrevious color="primary">
