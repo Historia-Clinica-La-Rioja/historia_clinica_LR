@@ -5,7 +5,7 @@
 		<app-document-section>
 			<ng-container concept-form>
 				<form [formGroup]="formEvolucion">
-					<mat-form-field appearance="outline">
+					<mat-form-field appearance="outline" fxFlex>
 						<textarea matInput type="text" id="evolucion-input" name="evolucion" formControlName="evolucion"
 							placeholder="{{'ambulatoria.paciente.nueva-consulta.evolucion.DESCRIPCION' | translate }}" required>
 						</textarea>
