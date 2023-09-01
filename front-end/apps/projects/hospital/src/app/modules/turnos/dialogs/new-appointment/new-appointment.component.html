@@ -144,7 +144,7 @@
 								<mat-label [translate]="'turnos.new-appointment.EMAIL'"></mat-label>
 								<input matInput type="patientEmail" id="patientEmail" name="patientEmail"
 									formControlName="patientEmail"
-									placeholder="{{'turnos.new-appointment.EMAIL' | translate }}"
+									placeholder="usuario@example.com"
 									(keyup)="updatePhoneValidators()">
 								<mat-error *ngIf="hasError(appointmentInfoForm, 'required', 'patientEmail')">
 									<span translate="forms.REQUIRED"></span>

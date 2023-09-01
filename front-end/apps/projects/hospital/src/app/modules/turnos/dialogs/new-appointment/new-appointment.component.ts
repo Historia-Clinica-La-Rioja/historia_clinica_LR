@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
-import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl } from '@angular/forms';
 import { VALIDATIONS, processErrors, hasError, updateControlValidator } from '@core/utils/form.utils';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -133,13 +133,10 @@ export class NewAppointmentComponent implements OnInit {
 			medicalOrder: this.formBuilder.group({
 				appointmentMedicalOrder: [null]
 			}),
-			patientEmail:[null,[Validators.email]]
+			patientEmail:[null, [Validators.email]]
 		});
 
-		if(this.data.modalityAttention === this.MODALITY_PATIENT_VIRTUAL_ATTENTION){
-			updateControlValidator(this.appointmentInfoForm,'patientEmail',[Validators.required,Validators.email]);
-			this.appointmentInfoForm.updateValueAndValidity();
-		}
+
 		this.associateReferenceForm = this.formBuilder.group({
 			reference: [null, Validators.required]
 		});
@@ -167,7 +164,11 @@ export class NewAppointmentComponent implements OnInit {
 				updateControlValidator(this.formSearch, 'identifNumber', [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]);
 				updateControlValidator(this.formSearch, 'gender', [Validators.required]);
 			});
-		this.appointmentInfoForm.markAllAsTouched();
+			if(this.data.modalityAttention === this.MODALITY_PATIENT_VIRTUAL_ATTENTION){
+				this.appointmentInfoForm.setControl('patientEmail', new UntypedFormControl(null, [Validators.required,Validators.email]));
+				this.appointmentInfoForm.controls.patientEmail.updateValueAndValidity();
+			}
+			this.appointmentInfoForm.markAllAsTouched();
 
 		this.formSearch.controls.patientId.patchValue(this.data.patientId);
 		if (this.data.patientId) {
@@ -237,9 +238,7 @@ export class NewAppointmentComponent implements OnInit {
 				this.patient = reducedPatientDto;
 				this.appointmentInfoForm.controls.phonePrefix.setValue(reducedPatientDto.personalDataDto.phonePrefix);
 				this.appointmentInfoForm.controls.phoneNumber.setValue(reducedPatientDto.personalDataDto.phoneNumber);
-				for (let control in this.appointmentInfoForm.controls) {
-					this.appointmentInfoForm.controls[control].setErrors(null);
-				}
+				this.updatePhoneValidators();
 				if (reducedPatientDto.personalDataDto.phoneNumber) {
 					updateControlValidator(this.appointmentInfoForm, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
 					updateControlValidator(this.appointmentInfoForm, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
@@ -377,7 +376,7 @@ export class NewAppointmentComponent implements OnInit {
 			successfullyAssociated => {
 				if (successfullyAssociated) {
 					this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
-					this.dialogRef.close({id:this.lastAppointmentId,email:null});
+					this.dialogRef.close({id:this.lastAppointmentId,email:this.appointmentInfoForm.controls.patientEmail.value});
 				}
 				else {
 					this.snackBarService.showError('turnos.new-appointment.messages.COULD_NOT_ASSOCIATE')
