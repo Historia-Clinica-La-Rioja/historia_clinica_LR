@@ -120,7 +120,7 @@ export class AgendaSetupComponent implements OnInit {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY, snackBarService);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_OBLIGATORIEDAD_UNIDADES_JERARQUICAS).subscribe(isOn =>
-			this.fieldHierarchicalUnitRequired = !isOn
+			this.fieldHierarchicalUnitRequired = isOn
 		);
 	}
 
