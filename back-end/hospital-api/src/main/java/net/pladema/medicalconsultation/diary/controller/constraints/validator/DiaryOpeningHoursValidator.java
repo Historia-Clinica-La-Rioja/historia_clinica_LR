@@ -3,7 +3,6 @@ package net.pladema.medicalconsultation.diary.controller.constraints.validator;
 import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

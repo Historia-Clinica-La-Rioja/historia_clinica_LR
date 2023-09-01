@@ -207,41 +207,16 @@ public class DiaryServiceImpl implements DiaryService {
 				&& isBetween(apmt.getHour(), doh.getOpeningHours().getFrom(), doh.getOpeningHours().getTo());
 	}
 
-	/**
-	 *
-	 * @param healthcareProfessionalId ID profesional de salud
-	 * @param doctorsOfficeId          ID consultorio
-	 * @param newDiaryStart            nueva fecha de comienzo para agenda
-	 * @param newDiaryEnd              nueva fecha de fin para agenda
-	 * @return lista con todos los ID de agendas definidas en rangos de fecha
-	 *         superpuestas para un mismo profesional de salud y consultorio.
-	 */
 	@Override
-	public List<Integer> getAllOverlappingDiaryByProfessional(Integer healthcareProfessionalId, Integer doctorsOfficeId,
-															  LocalDate newDiaryStart, LocalDate newDiaryEnd, Short appointmentDuration, Optional<Integer> excludeDiaryId) {
-		LOG.debug(
-				"Input parameters -> healthcareProfessionalId {}, doctorsOfficeId {}, newDiaryStart {}, newDiaryEnd {}",
-				healthcareProfessionalId, doctorsOfficeId, newDiaryStart, newDiaryEnd);
-		List<Integer> diaryIds = excludeDiaryId.isPresent()
-				? diaryRepository.findAllOverlappingDiaryByProfessionalExcludingDiary(healthcareProfessionalId, doctorsOfficeId,
-						newDiaryStart, newDiaryEnd, appointmentDuration, excludeDiaryId.get())
-				: diaryRepository.findAllOverlappingDiaryByProfessional(healthcareProfessionalId, doctorsOfficeId, newDiaryStart,
-						newDiaryEnd, appointmentDuration);
-		LOG.debug("Diary saved -> {}", diaryIds);
-		return diaryIds;
-
-	}
-
-	@Override
-	public List<DiaryBo> getAllOverlappingDiary(@NotNull Integer doctorsOfficeId,
+	public List<DiaryBo> getAllOverlappingDiary(@NotNull Integer healthcareProfessionalId, @NotNull Integer doctorsOfficeId,
 												@NotNull LocalDate newDiaryStart, @NotNull  LocalDate newDiaryEnd, Optional<Integer> excludeDiaryId) {
 		LOG.debug(
 				"Input parameters -> doctorsOfficeId {}, newDiaryStart {}, newDiaryEnd {}",
 				doctorsOfficeId, newDiaryStart, newDiaryEnd);
 		List<Diary> diaries = excludeDiaryId.isPresent()
-				? diaryRepository.findAllOverlappingDiaryExcludingDiary(doctorsOfficeId,
+				? diaryRepository.findAllOverlappingDiaryExcludingDiary(healthcareProfessionalId, doctorsOfficeId,
 				newDiaryStart, newDiaryEnd, excludeDiaryId.get())
-				: diaryRepository.findAllOverlappingDiary(doctorsOfficeId, newDiaryStart,
+				: diaryRepository.findAllOverlappingDiary(healthcareProfessionalId, doctorsOfficeId, newDiaryStart,
 				newDiaryEnd);
 		List<DiaryBo> result = diaries.stream().map(this::createDiaryBoInstance).collect(Collectors.toList());
 		LOG.debug(OUTPUT, result);

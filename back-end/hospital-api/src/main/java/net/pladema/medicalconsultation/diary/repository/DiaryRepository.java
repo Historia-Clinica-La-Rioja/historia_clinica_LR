@@ -17,64 +17,31 @@ import java.util.Optional;
 @Repository
 public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, Integer> {
 
-
-    @Transactional(readOnly = true)
-    @Query("SELECT id " +
-            "FROM Diary " +
-            "WHERE healthcareProfessionalId = :hcpId " +
-            "AND doctorsOfficeId = :doId " +
-            "AND startDate <= :endDate " +
-            "AND endDate >= :startDate " +
-	    	"AND appointmentDuration = :appointmentDuration " +
-            "AND deleteable.deleted = false")
-    List<Integer> findAllOverlappingDiaryByProfessional(@Param("hcpId") Integer healthcareProfessionalId,
-                                                        @Param("doId") Integer doctorsOfficeId,
-                                                        @Param("startDate") LocalDate newDiaryStart,
-                                                        @Param("endDate") LocalDate newDiaryEnd,
-														@Param("appointmentDuration") Short appointmentDuration);
-    
-    @Transactional(readOnly = true)
-    @Query("SELECT id " +
-            "FROM Diary " +
-            "WHERE healthcareProfessionalId = :hcpId " +
-            "AND doctorsOfficeId = :doId " +
-            "AND startDate <= :endDate " +
-            "AND endDate >= :startDate " +
-	    	"AND appointmentDuration = :appointmentDuration " +
-            "AND id <> :excludeDiaryId " +
-            "AND deleteable.deleted = false")
-    List<Integer> findAllOverlappingDiaryByProfessionalExcludingDiary(@Param("hcpId") Integer healthcareProfessionalId,
-                                                                      @Param("doId") Integer doctorsOfficeId,
-                                                                      @Param("startDate") LocalDate newDiaryStart,
-                                                                      @Param("endDate") LocalDate newDiaryEnd,
-																	  @Param("appointmentDuration") Short appointmentDuration,
-                                                                      @Param("excludeDiaryId") Integer excludeDiaryId);
-
-
     @Transactional(readOnly = true)
     @Query("SELECT d " +
             "FROM Diary AS d " +
-            "WHERE d.doctorsOfficeId = :doId " +
+			"WHERE (d.healthcareProfessionalId = :hpId OR d.doctorsOfficeId = :doId) " +
             "AND d.startDate <= :endDate " +
             "AND d.endDate >= :startDate " +
             "AND d.deleteable.deleted = false")
-    List<Diary> findAllOverlappingDiary(@Param("doId") Integer doctorsOfficeId,
-                                          @Param("startDate") LocalDate newDiaryStart,
-                                          @Param("endDate") LocalDate newDiaryEnd);
+	List<Diary> findAllOverlappingDiary(@Param("hpId") Integer healthcareProfessionalId,
+										@Param("doId") Integer doctorsOfficeId,
+										@Param("startDate") LocalDate newDiaryStart,
+                                        @Param("endDate") LocalDate newDiaryEnd);
 
-    @Transactional(readOnly = true)
-    @Query("SELECT d " +
-            "FROM Diary AS d " +
-            "WHERE d.doctorsOfficeId = :doId " +
-            "AND d.startDate <= :endDate " +
-            "AND d.endDate >= :startDate " +
-            "AND d.id <> :excludeDiaryId " +
-            "AND d.deleteable.deleted = false")
-    List<Diary> findAllOverlappingDiaryExcludingDiary(@Param("doId") Integer doctorsOfficeId,
-                                                        @Param("startDate") LocalDate newDiaryStart,
-                                                        @Param("endDate") LocalDate newDiaryEnd,
-                                                        @Param("excludeDiaryId") Integer excludeDiaryId);
-
+	@Transactional(readOnly = true)
+	@Query("SELECT d " +
+			"FROM Diary AS d " +
+			"WHERE (d.healthcareProfessionalId = :hpId OR d.doctorsOfficeId = :doId) " +
+			"AND d.startDate <= :endDate " +
+			"AND d.endDate >= :startDate " +
+			"AND d.id <> :excludeDiaryId " +
+			"AND d.deleteable.deleted = false")
+	List<Diary> findAllOverlappingDiaryExcludingDiary(@Param("hpId") Integer healthcareProfessionalId,
+													  @Param("doId") Integer doctorsOfficeId,
+													  @Param("startDate") LocalDate newDiaryStart,
+													  @Param("endDate") LocalDate newDiaryEnd,
+													  @Param("excludeDiaryId") Integer excludeDiaryId);
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo(" +
             "d, do.description, cs.name) " +
