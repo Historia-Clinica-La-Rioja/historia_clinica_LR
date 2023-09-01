@@ -38,7 +38,7 @@ public interface DiaryService {
 
 	List<String> getActiveDiariesAliases(Integer institutionId);
 
-	List<EmptyAppointmentBo> getEmptyAppointmentsBySearchCriteria(Integer institutionId, AppointmentSearchBo searchCriteria);
+	List<EmptyAppointmentBo> getEmptyAppointmentsBySearchCriteria(Integer institutionId, AppointmentSearchBo searchCriteria, Boolean mustFilterByModality);
 
 	Optional<CompleteDiaryBo> getCompleteDiaryByAppointment (Integer appointmentId);
 

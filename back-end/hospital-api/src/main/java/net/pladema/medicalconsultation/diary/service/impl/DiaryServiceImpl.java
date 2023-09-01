@@ -402,11 +402,12 @@ public class DiaryServiceImpl implements DiaryService {
 	}
 
 	@Override
-	public List<EmptyAppointmentBo> getEmptyAppointmentsBySearchCriteria(Integer institutionId, AppointmentSearchBo searchCriteria) {
-		LOG.debug("Input parameters -> institutionId {}, searchCriteria {}", institutionId, searchCriteria);
+	public List<EmptyAppointmentBo> getEmptyAppointmentsBySearchCriteria(Integer institutionId, AppointmentSearchBo searchCriteria, Boolean mustFilterByModality) {
+		LOG.debug("Input parameters -> institutionId {}, searchCriteria {}, mustFilterByModality {}", institutionId, searchCriteria, mustFilterByModality);
 		List<EmptyAppointmentBo> emptyAppointments = new ArrayList<>();
 		List<CompleteDiaryBo> diariesBySpecialty = getActiveDiariesByAliasOrClinicalSpecialtyName(institutionId, searchCriteria.getAliasOrSpecialtyName());
-		filterOpeningHoursByModality(searchCriteria, diariesBySpecialty);
+		if (mustFilterByModality)
+			filterOpeningHoursByModality(searchCriteria, diariesBySpecialty);
 		LocalDateTime currentDateTime = dateTimeProvider.nowDateTimeWithZone(institutionExternalService.getTimezone(institutionId));
 		for (CompleteDiaryBo diary: diariesBySpecialty)
 			emptyAppointments = getEmptyAppointmentBos(searchCriteria, emptyAppointments, diary, currentDateTime);

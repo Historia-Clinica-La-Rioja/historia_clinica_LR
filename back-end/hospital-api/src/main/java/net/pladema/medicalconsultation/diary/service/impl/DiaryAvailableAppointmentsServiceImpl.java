@@ -96,7 +96,7 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 		log.debug("Input parameters -> institutionId {}, clinicalSpecialtyId {}, searchCriteria {}", institutionId, clinicalSpecialtyId, searchCriteria);
 		ClinicalSpecialtyBo clinicalSpecialty = clinicalSpecialtyService.getClinicalSpecialty(clinicalSpecialtyId).get();
 		searchCriteria.setAliasOrSpecialtyName(clinicalSpecialty.getName());
-		return diaryService.getEmptyAppointmentsBySearchCriteria(institutionId, searchCriteria).size();
+		return diaryService.getEmptyAppointmentsBySearchCriteria(institutionId, searchCriteria, false).size();
 	}
 
 	private List<DiaryAvailableProtectedAppointmentsBo> getDiaryAvailableAppointments(DiaryAvailableProtectedAppointmentsInfoBo diaryInfo,
