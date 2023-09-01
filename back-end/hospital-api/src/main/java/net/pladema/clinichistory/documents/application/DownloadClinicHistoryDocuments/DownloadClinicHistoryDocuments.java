@@ -16,17 +16,16 @@ import net.pladema.clinichistory.documents.domain.CHDocumentBo;
 import net.pladema.clinichistory.documents.domain.ECHEncounterType;
 import net.pladema.clinichistory.documents.infrastructure.output.repository.ClinicHistoryContextBuilder;
 
+import org.springframework.data.util.Pair;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,28 +49,22 @@ public class DownloadClinicHistoryDocuments {
 		log.debug("Input parameters -> ids", ids);
 		List<CHDocumentBo> documents = clinicHistoryStorage.getClinicHistoryDocuments(ids);
 		Integer patientId = documents.stream().findFirst().get().getPatientId();
-		List<CHDocumentBo> outpatientDocuments = documents.stream().filter(doc -> doc.getEncounterType().equals(ECHEncounterType.OUTPATIENT)).collect(Collectors.toList());
-		Map<Integer, List<CHDocumentBo>> hospitalizationDocuments = mapDocumentsByEpisode(documents.stream().filter(doc -> doc.getEncounterType().equals(ECHEncounterType.HOSPITALIZATION)).collect(Collectors.toList()));
-		Map<Integer, List<CHDocumentBo>> emergencyCareDocuments = mapDocumentsByEpisode(documents.stream().filter(doc -> doc.getEncounterType().equals(ECHEncounterType.EMERGENCY_CARE)).collect(Collectors.toList()));
 		List<InputStream> inputStreams = new ArrayList<>();
-		if(!outpatientDocuments.isEmpty()) {
-			for (CHDocumentBo document : outpatientDocuments) {
-				Map<String, Object> context = clinicHistoryContextBuilder.buildOutpatientContext(document, institutionId);
+		LinkedHashMap<Pair<Integer, ECHEncounterType>, List<CHDocumentBo>> documentsByEpisode = mapDocumentsByEpisode(documents);
+		documentsByEpisode.forEach((k,v) -> {
+			if (k.getSecond().equals(ECHEncounterType.OUTPATIENT)){
+				Map<String, Object> context = clinicHistoryContextBuilder.buildOutpatientContext(v.get(0), institutionId);
 				inputStreams.add(pdfService.generate("clinic_history_outpatient", context).stream);
 			}
-		}
-		if(!hospitalizationDocuments.isEmpty()){
-			hospitalizationDocuments.forEach((k,v) -> {
-				Map<String, Object> context = clinicHistoryContextBuilder.buildEpisodeContext(k, v, institutionId, ECHEncounterType.HOSPITALIZATION);
+			if(k.getSecond().equals(ECHEncounterType.HOSPITALIZATION)){
+				Map<String, Object> context = clinicHistoryContextBuilder.buildEpisodeContext(k.getFirst(), v, institutionId, k.getSecond());
 				inputStreams.add(pdfService.generate("clinic_history_episode", context).stream);
-			});
-		}
-		if(!emergencyCareDocuments.isEmpty()){
-			emergencyCareDocuments.forEach((k,v) -> {
-				Map<String, Object> context = clinicHistoryContextBuilder.buildEpisodeContext(k, v, institutionId, ECHEncounterType.EMERGENCY_CARE);
+			}
+			if (k.getSecond().equals(ECHEncounterType.EMERGENCY_CARE)){
+				Map<String, Object> context = clinicHistoryContextBuilder.buildEpisodeContext(k.getFirst(), v, institutionId, k.getSecond());
 				inputStreams.add(pdfService.generate("clinic_history_episode", context).stream);
-			});
-		}
+			}
+		});
 		if(!inputStreams.isEmpty()){
 			clinicHistoryStorage.savePatientClinicHistoryLastPrint(UserInfo.getCurrentAuditor(), patientId, institutionId);
 			return new StoredFileBo(FileContentBo.fromBytes(pdfService.mergePdfFiles(inputStreams)), MediaType.APPLICATION_PDF.toString(), "HCE_" + patientId + ".pdf");
@@ -79,15 +72,15 @@ public class DownloadClinicHistoryDocuments {
 		return null;
 	}
 
-	private Map<Integer, List<CHDocumentBo>> mapDocumentsByEpisode (List<CHDocumentBo> documents){
-		List<Integer> sourceIds = new ArrayList<>();
-		Map<Integer, List<CHDocumentBo>> episodes = new HashMap<>();
+	private LinkedHashMap<Pair<Integer, ECHEncounterType>, List<CHDocumentBo>> mapDocumentsByEpisode (List<CHDocumentBo> documents){
+		List<Pair<Integer, ECHEncounterType>> sources = new ArrayList<>();
+		LinkedHashMap<Pair<Integer, ECHEncounterType>, List<CHDocumentBo>> episodes = new LinkedHashMap<>();
 		documents.forEach(doc -> {
-			if (doc.getRequestSourceId() != null && !sourceIds.contains(doc.getRequestSourceId())) sourceIds.add(doc.getRequestSourceId());
-			if (doc.getRequestSourceId() == null && !sourceIds.contains(doc.getSourceId())) sourceIds.add(doc.getSourceId());
+			if (doc.getRequestSourceId() != null && (!sources.contains(Pair.of(doc.getRequestSourceId(), doc.getEncounterType())))) sources.add(Pair.of(doc.getRequestSourceId(), doc.getEncounterType()));
+			if (doc.getRequestSourceId() == null && (!sources.contains(Pair.of(doc.getSourceId(), doc.getEncounterType())))) sources.add(Pair.of(doc.getSourceId(), doc.getEncounterType()));
 		});
-		sourceIds.forEach(sourceId -> {
-			episodes.put(sourceId, documents.stream().filter(doc -> ((doc.getRequestSourceId() != null && doc.getRequestSourceId().equals(sourceId)) || (doc.getRequestSourceId() == null && doc.getSourceId().equals(sourceId)))).sorted(Comparator.comparing(CHDocumentBo::getCreatedOn)).collect(Collectors.toList()));
+		sources.forEach(source -> {
+			episodes.put(source, documents.stream().filter(doc -> ((doc.getRequestSourceId() != null && doc.getRequestSourceId().equals(source.getFirst()) && doc.getEncounterType().equals(source.getSecond())) || (doc.getRequestSourceId() == null && doc.getSourceId().equals(source.getFirst()) && doc.getEncounterType().equals(source.getSecond())))).collect(Collectors.toList()));
 		});
 		return episodes;
 	}

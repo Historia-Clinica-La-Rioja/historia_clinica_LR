@@ -241,7 +241,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 						default: return item[property];
 					}
 				};
-				this.sort.sort(({ id: 'startDate', start: 'desc'}) as MatSortable);
+				this.sort.sort(({ id: 'startDate', start: 'desc' }) as MatSortable);
 				this.dataSource.sort = this.sort;
 				this.showEncounterListSection();
 				this.selection.clear();
@@ -271,8 +271,24 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	}
 
 	downloadSelected() {
-		let selectedIds = []
-		this.selection.selected.forEach(e => selectedIds.push(e.id));
+		const activeSortColumn = this.sort.active;
+		const activeSortDirection = this.sort.direction;
+		const selectedItems = [...this.selection.selected];
+
+		selectedItems.sort((a, b) => {
+			const isAsc = activeSortDirection === 'asc';
+			const dateA = fromStringToDate(a[activeSortColumn]);
+			const dateB = fromStringToDate(b[activeSortColumn]);
+
+			if (isAsc) {
+				return dateA.getTime() - dateB.getTime();
+			} else {
+				return dateB.getTime() - dateA.getTime();
+			}
+		});
+
+		const selectedIds = selectedItems.map(item => item.id);
 		this.printAmbulatoryService.downloadClinicHistory(this.patientDni, selectedIds).subscribe();
 	}
+
 }
