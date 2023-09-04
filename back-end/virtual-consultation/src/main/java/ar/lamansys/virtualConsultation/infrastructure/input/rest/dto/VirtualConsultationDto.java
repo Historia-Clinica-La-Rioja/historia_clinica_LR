@@ -39,7 +39,7 @@ public class VirtualConsultationDto {
 	private DateTimeDto creationDateTime;
 
 	@Nullable
-	private String callId;
+	private String callLink;
 
 	@Nullable
 	private Integer availableProfessionalsAmount;

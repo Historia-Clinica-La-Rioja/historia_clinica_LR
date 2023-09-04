@@ -31,6 +31,6 @@ public class VirtualConsultationNotificationDataDto {
 
 	private String institutionName;
 
-	private String callId;
+	private String callLink;
 
 }

@@ -3815,7 +3815,7 @@ export interface VirtualConsultationAvailableProfessionalAmountDto {
 
 export interface VirtualConsultationDto {
     availableProfessionalsAmount?: number;
-    callId?: string;
+    callLink?: string;
     careLine: string;
     clinicalSpecialty: string;
     creationDateTime: DateTimeDto;
@@ -3840,7 +3840,7 @@ export interface VirtualConsultationInstitutionDataDto {
 }
 
 export interface VirtualConsultationNotificationDataDto {
-    callId: string;
+    callLink: string;
     clinicalSpecialty: string;
     creationDateTime: DateTimeDto;
     institutionName: string;

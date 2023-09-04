@@ -2,6 +2,8 @@ package ar.lamansys.virtualConsultation.infrastructure.mapper;
 
 import java.util.List;
 
+import ar.lamansys.virtualConsultation.VirtualConsultationConfiguration;
+
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -37,7 +39,16 @@ public interface VirtualConsultationMapper {
 	@Mapping(target = "institutionData.name", source = "institutionName")
 	@Mapping(target = "status", source = "statusId")
 	@Mapping(target = "priority", source = "priorityId")
+	@Mapping(target = "callLink", source = "callId", qualifiedByName = "generateCallLink")
 	VirtualConsultationDto fromVirtualConsultationBo(VirtualConsultationBo virtualConsultationBo);
+
+	@Named("generateCallLink")
+	default String generateCallLink(String callId) {
+		if (callId != null)
+			return VirtualConsultationConfiguration.JITSI_DOMAIN_URL + "/" + callId;
+		else
+			return null;
+	}
 
 	@Named("fromVirtualConsultationBoList")
 	@IterableMapping(qualifiedByName = "fromVirtualConsultationBo")
@@ -45,6 +56,7 @@ public interface VirtualConsultationMapper {
 
 	@Named("fromVirtualConsultationNotificationDataBo")
 	@Mapping(target = "priority", source = "priorityId")
+	@Mapping(target = "callLink", source = "callId", qualifiedByName = "generateCallLink")
 	VirtualConsultationNotificationDataDto fromVirtualConsultationNotificationDataBo(VirtualConsultationNotificationDataBo virtualConsultationNotificationDataBo);
 
 	@Named("fromVirtualConsultationResponsibleProfessionalAvailabilityBo")
