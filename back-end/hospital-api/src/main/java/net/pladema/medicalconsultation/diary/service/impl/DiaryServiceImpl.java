@@ -88,6 +88,7 @@ public class DiaryServiceImpl implements DiaryService {
 	private final DiaryPracticeService diaryPracticeService;
 
 	@Override
+	@Transactional
 	public Integer addDiary(DiaryBo diaryToSave) throws DiaryException {
 		LOG.debug("Input parameters -> diaryToSave {}", diaryToSave);
 
@@ -101,7 +102,6 @@ public class DiaryServiceImpl implements DiaryService {
 		return diaryId;
 	}
 
-	@Transactional
 	private Integer persistDiary(DiaryBo diaryToSave, Diary diary) {
 		diary = diaryRepository.save(diary);
 		Integer diaryId = diary.getId();
