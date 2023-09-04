@@ -3350,6 +3350,7 @@ export interface SharedRiskFactorDto {
 }
 
 export interface SharedSnomedDto extends Serializable {
+    id?: number;
     parentFsn: string;
     parentId: string;
     pt: string;
@@ -3393,13 +3394,6 @@ export interface SnomedDto extends Serializable {
 export interface SnomedEclDto {
     key: SnomedECL;
     value: string;
-}
-
-export interface SnomedRelatedGroupDto {
-    id: number;
-    snomedId: number;
-    snomedPt: string;
-    snomedSctid: string;
 }
 
 export interface SnomedResponseDto extends Serializable {

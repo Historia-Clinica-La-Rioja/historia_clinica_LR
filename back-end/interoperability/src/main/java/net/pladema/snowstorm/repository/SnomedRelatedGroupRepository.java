@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-import net.pladema.snowstorm.services.domain.SnomedRelatedGroupBo;
+import net.pladema.cipres.domain.SnomedBo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -39,7 +39,7 @@ public interface SnomedRelatedGroupRepository extends JpaRepository<SnomedRelate
 	Optional<Integer> getSnomedIdById(@Param("id") Integer id);
 
 	@Transactional(readOnly = true)
-	@Query( "SELECT DISTINCT new net.pladema.snowstorm.services.domain.SnomedRelatedGroupBo(srg.id, s.id, s.sctid, s.pt) " +
+	@Query( "SELECT DISTINCT new net.pladema.cipres.domain.SnomedBo(s.id, s.sctid, s.pt) " +
 			"FROM SnomedGroup sg " +
 			"JOIN SnomedGroup baseGroup ON sg.groupId = baseGroup.id " +
 			"JOIN SnomedRelatedGroup srg ON sg.id = srg.groupId " +
@@ -48,8 +48,8 @@ public interface SnomedRelatedGroupRepository extends JpaRepository<SnomedRelate
 			"AND baseGroup.description = :description " +
 			"AND sg.institutionId = :institutionId " +
 			"AND sg.userId is null ")
-	List<SnomedRelatedGroupBo> getAllByInstitutionAndDescriptionAndGroupType(@Param("institutionId") Integer institutionId,
-																			 @Param("description") String description,
-																			 @Param("snomedGroupTypeId") Short snomedGroupTypeId);
+	List<SnomedBo> getAllByInstitutionAndDescriptionAndGroupType(@Param("institutionId") Integer institutionId,
+																 @Param("description") String description,
+																 @Param("snomedGroupTypeId") Short snomedGroupTypeId);
 
 }

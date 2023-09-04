@@ -1,0 +1,10 @@
+package net.pladema.snowstorm.infrastructure.input.service;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
+
+import java.util.List;
+
+public interface SnomedRelatedGroupExternalService {
+
+	List<SharedSnomedDto> getPracticesByInstitution(Integer institutionId);
+}

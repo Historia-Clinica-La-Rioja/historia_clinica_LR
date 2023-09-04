@@ -35,7 +35,7 @@ import { SpecialtyService } from '@api-rest/services/specialty.service';
 import { HierarchicalUnitsService } from '@api-rest/services/hierarchical-units.service';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { DiaryCareLineService } from '@api-rest/services/diary-care-line.service';
-import { SnomedRelatedGroupService } from '@api-rest/services/snomed-related-group.service';
+import { PracticesService } from '@api-rest/services/practices.service';
 import { ChipsOption } from '@turnos/components/chips-autocomplete/chips-autocomplete.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 
@@ -113,9 +113,8 @@ export class AgendaSetupComponent implements OnInit {
 		private readonly hierarchicalUnitsService: HierarchicalUnitsService,
 		private readonly professionalService: HealthcareProfessionalService,
 		private readonly diaryCareLine: DiaryCareLineService,
-		private readonly snomedRelatedGroupService: SnomedRelatedGroupService,
 		private readonly featureFlagService: FeatureFlagService,
-
+		private readonly practicesService: PracticesService,
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY, snackBarService);
@@ -676,8 +675,8 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	setPractices() {
-		this.snomedRelatedGroupService.getPractices().subscribe(s => {
-			this.practices = s.map(p => { return { id: p.snomedId, sctid: p.snomedSctid, pt: p.snomedPt } });
+		this.practicesService.get().subscribe(s => {
+			this.practices = s.map(p => { return { id: p.id, sctid: p.sctid, pt: p.pt } });
 			this.practicesOptions = this.practices.map(p => {
 				return this.toChipsOptions(p)
 			});
