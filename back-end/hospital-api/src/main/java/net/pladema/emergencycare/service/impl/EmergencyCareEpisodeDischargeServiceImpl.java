@@ -15,18 +15,16 @@ import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
 import net.pladema.emergencycare.repository.entity.EmergencyCareDischarge;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeDischargeService;
+import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.EpisodeDischargeBo;
 import net.pladema.emergencycare.service.domain.MedicalDischargeBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,9 +40,11 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
     private final DocumentHealthConditionRepository documentHealthConditionRepository;
     private final EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;
     private final DateTimeProvider dateTimeProvider;
+	private final EmergencyCareEpisodeService emergencyCareEpisodeService;
 
     EmergencyCareEpisodeDischargeServiceImpl(EmergencyCareEpisodeDischargeRepository emergencyCareEpisodeDischargeRepository, DocumentFactory documentFactory,
-                                             DischargeTypeRepository dischargeTypeRepository, DocumentService documentService, DocumentHealthConditionRepository documentHealthConditionRepository, EmergencyCareEpisodeRepository emergencyCareEpisodeRepository, DateTimeProvider dateTimeProvider) {
+                                             DischargeTypeRepository dischargeTypeRepository, DocumentService documentService, DocumentHealthConditionRepository documentHealthConditionRepository, EmergencyCareEpisodeRepository emergencyCareEpisodeRepository, DateTimeProvider dateTimeProvider,
+											 EmergencyCareEpisodeService emergencyCareEpisodeService) {
         this.emergencyCareEpisodeDischargeRepository = emergencyCareEpisodeDischargeRepository;
         this.documentFactory = documentFactory;
         this.dischargeTypeRepository = dischargeTypeRepository;
@@ -52,6 +52,7 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
         this.documentHealthConditionRepository = documentHealthConditionRepository;
         this.emergencyCareEpisodeRepository = emergencyCareEpisodeRepository;
         this.dateTimeProvider = dateTimeProvider;
+		this.emergencyCareEpisodeService = emergencyCareEpisodeService;
     }
 
     @Override
@@ -97,7 +98,12 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
         LocalDateTime medicalDischargeOn = medicalDischarge.getMedicalDischargeOn();
         assertMedicalDischargeIsAfterEpisodeCreationDate(medicalDischargeOn, emergencyCareVo.getCreatedOn());
         assertMedicalDischargeIsBeforeToday(medicalDischargeOn);
+		assertHasEvolutionNote(medicalDischarge.getEncounterId());
     }
+
+	private void assertHasEvolutionNote(Integer emergencyCareEpisodeId) {
+		Assert.isTrue(emergencyCareEpisodeService.hasEvolutionNote(emergencyCareEpisodeId), "El episodio debe contar con una nota de evolución para iniciar el alta médica");
+	}
 
     private EmergencyCareVo assertExistEmergencyCareEpisode(Integer episodeId, Integer institutionId) {
         return emergencyCareEpisodeRepository.getEpisode(episodeId, institutionId)
