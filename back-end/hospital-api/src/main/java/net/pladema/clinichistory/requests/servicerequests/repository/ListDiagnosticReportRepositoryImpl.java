@@ -110,7 +110,7 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
 				"dr.id, dr.snomed_id, dr.status_id, dr.health_condition_id, dr.note_id, " +
 				"dr.effective_time, d.source_id, d.created_by, dr.updated_on, sr.category_id AS sr_categoryId, " +
 				"row_number() OVER (PARTITION by sr.id, dr.snomed_id, dr.health_condition_id ORDER BY dr.updated_on desc) AS rw, " +
-				"src.description AS category, st.description AS source, sr.source_id AS procedure_source_id " +
+				"src.description AS category, st.description AS source, sr.source_id AS procedure_source_id, aoi.order_id AS orderID " +
 				"FROM {h-schema}document d " +
 				"JOIN {h-schema}document_diagnostic_report ddr ON d.id = ddr.document_id " +
 				"JOIN {h-schema}diagnostic_report dr ON ddr.diagnostic_report_id = dr.id " +
@@ -139,6 +139,7 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
 				"WHERE rw = 1 " +
 				"AND drs.id != :cancelled " +
 				"AND NOT t.status_id = :invalidStatus "+
+				"AND (t.orderID NOT IN (SELECT aoii.order_id FROM appointment_order_image aoii JOIN appointment app ON (aoii.appointment_id = app.id) where app.patient_id = :patientId AND aoii.active = true AND aoii.order_id IS NOT NULL) OR t.orderID IS NULL) "+
 				(filter.getCategory() != null ? "AND UPPER(t.sr_categoryId) = :category " : " ");
 
 		if (filter.getStatus() != null){
