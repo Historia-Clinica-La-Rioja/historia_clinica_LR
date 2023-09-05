@@ -1,6 +1,7 @@
 package ar.lamansys.refcounterref.infraestructure.input.rest;
 
 import ar.lamansys.refcounterref.application.getreceivedreferences.GetReceivedReferences;
+import ar.lamansys.refcounterref.application.getrequestedreferences.GetRequestedReferences;
 import ar.lamansys.refcounterref.domain.ReferenceReportBo;
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.ReferenceReportDto;
 import ar.lamansys.refcounterref.infraestructure.input.rest.mapper.GetReferenceMapper;
@@ -31,6 +32,8 @@ public class ReferenceReportController {
 
 	private final GetReceivedReferences getReceivedReferences;
 
+	private final GetRequestedReferences getRequestedReferences;
+
 	private final GetReferenceMapper getReferenceMapper;
 
 	private final LocalDateMapper localDateMapper;
@@ -44,6 +47,20 @@ public class ReferenceReportController {
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(from);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(to);
 		List<ReferenceReportBo> references = getReceivedReferences.run(institutionId, startDate, endDate);
+		List<ReferenceReportDto> result = getReferenceMapper.toReferenceReportDtoList(references);
+		log.debug("Output -> result {}", result.size());
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/requested")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	public ResponseEntity<List<ReferenceReportDto>> getAllRequestedReferences(@PathVariable(name = "institutionId") Integer institutionId,
+																			  @RequestParam(name = "from") String from,
+																			  @RequestParam(name = "to") String to) {
+		log.debug("Input parameters -> institutionId {}, from {}, to {}", institutionId, from, to);
+		LocalDate startDate = localDateMapper.fromStringToLocalDate(from);
+		LocalDate endDate = localDateMapper.fromStringToLocalDate(to);
+		List<ReferenceReportBo> references = getRequestedReferences.run(institutionId, startDate, endDate);
 		List<ReferenceReportDto> result = getReferenceMapper.toReferenceReportDtoList(references);
 		log.debug("Output -> result {}", result.size());
 		return ResponseEntity.ok(result);
