@@ -2,6 +2,7 @@ package ar.lamansys.virtualConsultation.infrastructure.mapper;
 
 import java.util.List;
 
+import ar.lamansys.sgh.shared.HospitalSharedAutoConfiguration;
 import ar.lamansys.virtualConsultation.VirtualConsultationConfiguration;
 
 import org.mapstruct.IterableMapping;
@@ -45,7 +46,7 @@ public interface VirtualConsultationMapper {
 	@Named("generateCallLink")
 	default String generateCallLink(String callId) {
 		if (callId != null)
-			return VirtualConsultationConfiguration.JITSI_DOMAIN_URL + "/" + callId;
+			return HospitalSharedAutoConfiguration.JITSI_DOMAIN_URL + "/" + callId;
 		else
 			return null;
 	}

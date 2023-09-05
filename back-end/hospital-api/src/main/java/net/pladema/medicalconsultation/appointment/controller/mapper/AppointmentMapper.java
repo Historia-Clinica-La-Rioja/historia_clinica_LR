@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.controller.mapper;
 
+import ar.lamansys.sgh.shared.HospitalSharedAutoConfiguration;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentEquipmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
@@ -65,7 +66,16 @@ public interface AppointmentMapper {
 	@Mapping(target = "orderData.serviceRequestId", source = "appointmentBo.orderData.encounterId")
 	@Mapping(target = "transcribedOrderData", source = "appointmentBo.transcribedData")
 	@Mapping(target = "modality", source = "modalityId")
+	@Mapping(target = "callLink", source = "callId", qualifiedByName = "generateCallLink")
 	AppointmentDto toAppointmentDto(AppointmentBo appointmentBo);
+
+	@Named("generateCallLink")
+	default String generateCallLink(String callId) {
+		if (callId != null)
+			return HospitalSharedAutoConfiguration.JITSI_DOMAIN_URL + "/" + callId;
+		else
+			return null;
+	}
 
     @Named("toAppointmentBo")
 	@Mapping(target = "modalityId", source = "modality.id")

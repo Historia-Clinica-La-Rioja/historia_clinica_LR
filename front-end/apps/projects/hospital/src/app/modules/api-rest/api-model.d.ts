@@ -228,7 +228,7 @@ export interface AppointmentDailyAmountDto {
 
 export interface AppointmentDto extends CreateAppointmentDto {
     appointmentStateId: number;
-    callId: string;
+    callLink: string;
     observation?: string;
     observationBy?: string;
     protected: boolean;

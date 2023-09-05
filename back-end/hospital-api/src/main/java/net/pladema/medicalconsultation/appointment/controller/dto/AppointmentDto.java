@@ -32,6 +32,6 @@ public class AppointmentDto extends CreateAppointmentDto {
 
 	private boolean isProtected;
 
-	private String callId;
+	private String callLink;
 
 }
