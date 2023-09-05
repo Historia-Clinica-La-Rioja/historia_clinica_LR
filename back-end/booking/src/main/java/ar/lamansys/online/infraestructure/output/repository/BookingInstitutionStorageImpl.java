@@ -63,7 +63,7 @@ public class BookingInstitutionStorageImpl implements BookingInstitutionStorage 
 				"JOIN professional_professions pp ON(pp.healthcare_professional_id = hp.id) " +
 				"JOIN healthcare_professional_specialty hps ON (hps.professional_profession_id = pp.id) " +
 				"JOIN clinical_specialty cs ON cs.id = hps.clinical_specialty_id " +
-				"WHERE cs.clinical_specialty_type_id = 1 " +
+				"WHERE cs.clinical_specialty_type_id = 2 " +
 				"ORDER BY i.name, cs.name";
 
 		List<Object[]> rows = entityManager.createNativeQuery(sqlString).getResultList();
@@ -104,9 +104,11 @@ public class BookingInstitutionStorageImpl implements BookingInstitutionStorage 
 					names.add((String) row[7]);
 				}
 
-				var aliases = result.get(index).getAliases();
-				if (row[8] != null && !aliases.contains((String) row[8])) {
-					aliases.add((String) row[8]);
+				if(result.get(index) != null && result.get(index).getAliases() != null) {
+					var aliases = result.get(index).getAliases();
+					if (row[8] != null && aliases != null && !aliases.contains((String) row[8])) {
+						aliases.add((String) row[8]);
+					}
 				}
 			}
 		}
