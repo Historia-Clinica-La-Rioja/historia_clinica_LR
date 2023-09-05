@@ -8,7 +8,6 @@ declare var JitsiMeetExternalAPI: any;
 export class JitsiService {
 	api: any;
 	options: any;
-	domain: string = "meet.jit.si";
 
 	// For Custom Controls
 	isAudioMuted = true;
@@ -19,36 +18,41 @@ export class JitsiService {
 		private readonly jitsiCallService: JitsiCallService
 	) { }
 
-	moveRoom(nameRoom: string, userName: string): void {
-		this.options = {
-			roomName: nameRoom,
-			interfaceConfigOverwrite: {
-				startAudioMuted: true,
-				startVideoMuted: true,
-				prejoinPageEnabled: false
-			},
-			parentNode: document.querySelector('#jitsi-iframe'),
-			userInfo: {
-				displayName: userName
-			},
-			configOverwrite: {
-				prejoinPageEnabled: false
-			}
-		};
+	moveRoom(meetingLink: string, userName: string): void {
 
-		this.api = new JitsiMeetExternalAPI(this.domain, this.options);
-		this.api.addEventListeners({
-			readyToClose: this.handleClose,
-			participantLeft: this.handleParticipantLeft,
-			participantJoined: this.handleParticipantJoined,
-			videoConferenceJoined: this.handleVideoConferenceJoined,
-			videoConferenceLeft: this.handleVideoConferenceLeft,
-			audioMuteStatusChanged: this.handleMuteStatus,
-			videoMuteStatusChanged: this.handleVideoStatus,
-			participantRoleChanged: this.participantRoleChanged,
-			passwordRequired: this.passwordRequired,
-			endpointTextMessageReceived: this.endpointTextMessageReceived,
-		});
+		const lastIndex = meetingLink.lastIndexOf("/");
+		if (lastIndex !== -1) {
+			const roomName = meetingLink.substring(lastIndex + 1);
+			this.options = {
+				roomName,
+				interfaceConfigOverwrite: {
+					startAudioMuted: true,
+					startVideoMuted: true,
+					prejoinPageEnabled: false
+				},
+				parentNode: document.querySelector('#jitsi-iframe'),
+				userInfo: {
+					displayName: userName
+				},
+				configOverwrite: {
+					prejoinPageEnabled: false
+				}
+			};
+
+			this.api = new JitsiMeetExternalAPI(getDomain(meetingLink), this.options);
+			this.api.addEventListeners({
+				readyToClose: this.handleClose,
+				participantLeft: this.handleParticipantLeft,
+				participantJoined: this.handleParticipantJoined,
+				videoConferenceJoined: this.handleVideoConferenceJoined,
+				videoConferenceLeft: this.handleVideoConferenceLeft,
+				audioMuteStatusChanged: this.handleMuteStatus,
+				videoMuteStatusChanged: this.handleVideoStatus,
+				participantRoleChanged: this.participantRoleChanged,
+				passwordRequired: this.passwordRequired,
+				endpointTextMessageReceived: this.endpointTextMessageReceived,
+			});
+		}
 	}
 	handleClose = () => {
 		this.jitsiCallService.close();
@@ -109,4 +113,26 @@ export class JitsiService {
 			this.isVideoMuted = !this.isVideoMuted;
 		}
 	} */
+}
+
+
+const getDomain = (meetingLink): string => {
+	let startIndex = meetingLink.indexOf("//");
+
+	if (startIndex !== -1) {
+		// Mover el índice al final de "//"
+		startIndex += 2;
+
+		// Buscar la posición de "/" a partir de startIndex
+		const endIndex = meetingLink.indexOf("/", startIndex);
+
+		if (endIndex !== -1) {
+			// Obtener el substring entre startIndex y endIndex
+			return meetingLink.substring(startIndex, endIndex);
+		} else {
+			console.log("El carácter '/' no fue encontrado después de '//'.");
+		}
+	} else {
+		console.log("La secuencia '//' no fue encontrada en la cadena.");
+	}
 }

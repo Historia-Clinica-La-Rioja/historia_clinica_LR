@@ -9,7 +9,7 @@ export class JitsiCallService {
 
 
 	private readonly emitter = new Subject<string>();
-	readonly $roomId = this.emitter.asObservable();
+	readonly $meetingLink = this.emitter.asObservable();
 	userName = '';
 
 	constructor(
@@ -22,10 +22,10 @@ export class JitsiCallService {
 		)
 	}
 
-	open(roomId: string) {
-		const url = `https://meet.jit.si/${roomId}#config.prejoinConfig.enabled=false&userInfo.displayName="${this.userName}"`
-		window.open(url);
-		this.emitter.next(roomId);
+	open(meetingLink: string) {
+/* 		const url = `https://meet.jit.si/${meetingLink}#config.prejoinConfig.enabled=false&userInfo.displayName="${this.userName}"`
+		window.open(url); */
+		this.emitter.next(meetingLink);
 	}
 
 	close() {

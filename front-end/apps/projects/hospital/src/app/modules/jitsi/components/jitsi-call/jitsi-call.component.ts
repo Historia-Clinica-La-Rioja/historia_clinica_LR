@@ -19,7 +19,7 @@ export class JitsiCallComponent implements OnInit {
 
 	ngOnInit(): void {
 
-		this.jitsiCallService.$roomId.subscribe(
+		this.jitsiCallService.$meetingLink.subscribe(
 			roomId => {
 				if (roomId) {
 					const ref = this.jitsiCall.createComponent(NewJitsiCallComponent);

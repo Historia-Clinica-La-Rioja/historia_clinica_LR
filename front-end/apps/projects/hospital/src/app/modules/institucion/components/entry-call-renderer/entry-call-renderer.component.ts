@@ -46,7 +46,7 @@ export class EntryCallRendererComponent implements OnInit {
 						accepted => {
 							if (accepted) {
 								this.virtualConsultationService.notifyVirtualConsultationAcceptedCall(entryCall.virtualConsultationId).subscribe(
-									_ => this.jitsiCallService.open(data.callId)
+									_ => this.jitsiCallService.open(data.link)
 								);
 							} else {
 								this.virtualConsultationService.notifyVirtualConsultationRejectedCall(entryCall.virtualConsultationId).subscribe(
@@ -67,7 +67,7 @@ export class EntryCallRendererComponent implements OnInit {
 
 export const toCallDetails = (entryCall: VirtualConsultationNotificationDataDto): CallDetails => {
 	return {
-		callId: entryCall.callId,
+		link: entryCall.callLink,
 		clinicalSpecialty: entryCall.clinicalSpecialty,
 		createdOn: dateTimeDtotoLocalDate(entryCall.creationDateTime),
 		institutionName: entryCall.institutionName,

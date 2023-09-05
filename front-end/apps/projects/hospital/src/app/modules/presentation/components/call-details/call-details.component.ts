@@ -17,7 +17,7 @@ export class CallDetailsComponent {
 }
 
 export interface CallDetails {
-	callId: string;
+	link: string;
 	patient: {
 		id: number;
 		firstName: string;
