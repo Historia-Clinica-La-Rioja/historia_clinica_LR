@@ -37,6 +37,8 @@ public class ReferenceReportBo {
 
 	private String institutionOrigin;
 
+	private String institutionDestination;
+
 	private String clinicalSpecialtyDestination;
 
 	private String careLine;

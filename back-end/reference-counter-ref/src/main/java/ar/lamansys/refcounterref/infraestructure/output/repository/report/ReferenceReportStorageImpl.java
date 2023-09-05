@@ -41,19 +41,28 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 	@Override
 	public List<ReferenceReportBo> fetchReceivedReferencesReport(Integer institutionId, LocalDate from, LocalDate to) {
 		log.debug("Fetch received references at the institution {} from {} to {}", institutionId, from, to);
+		String condition = "AND r.destination_institution_id = " + institutionId;
+		String sqlString = getOutpatientReferenceQueryFragment() + condition + " UNION ALL " + getOdontologyReferenceQueryFragment() + condition;
+		return executeQueryAndProcessResults(sqlString, from, to);
+	}
 
-		String condition = "AND r.destination_institution_id = :destinationInstitutionId ";
-		String outpatientReferences = getOutpatientReferenceQueryFragment() + condition;
-		String odontologyReferences = getOdontologyReferenceQueryFragment() + condition;
+	@Override
+	public List<ReferenceReportBo> fetchRequestedReferencesReport(Integer institutionId, Integer healthcareProfessionalId,
+																  LocalDate from, LocalDate to) {
+		log.debug("Fetch requested references at the institution {} from {} to {}", institutionId, from, to);
+		String condition = "AND oc.institution_id = " + institutionId;
+		if (healthcareProfessionalId != null)
+			condition += " AND oc.doctor_id = " + healthcareProfessionalId;
+		String sqlString = getOutpatientReferenceQueryFragment() + condition + " UNION ALL " + getOdontologyReferenceQueryFragment() + condition;
+		return executeQueryAndProcessResults(sqlString, from, to);
+	}
 
-		String sqlString = outpatientReferences + " UNION ALL " + odontologyReferences;
-
-		List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
+	private List<ReferenceReportBo> executeQueryAndProcessResults(String sqlString, LocalDate from, LocalDate to) {
+		var query = entityManager.createNativeQuery(sqlString)
 				.setParameter("from", from)
-				.setParameter("to", to)
-				.setParameter("destinationInstitutionId", institutionId)
-				.getResultList();
+				.setParameter("to", to);
 
+		var queryResult = query.getResultList();
 		boolean includeNameSelfDetermination = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS);
 
 		List<ReferenceReportBo> result = mapToReferenceReportBo(queryResult, includeNameSelfDetermination);
@@ -68,7 +77,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 		return "SELECT r.id, r.priority, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
 				"pex.name_self_determination, it.description, pe.identification_number, oc.created_on , cs2.name AS clinicalSpecialtyOrigin, " +
 				"i.name AS institutionOrigin, cs.name AS clinicalSpecialtyDestination, " +
-				"cl.description AS careLine, cr.closure_type_id " +
+				"cl.description AS careLine, cr.closure_type_id, i2.name AS institutionDestination " +
 				"FROM {h-schema}reference r " +
 				"JOIN {h-schema}clinical_specialty cs ON (r.clinical_specialty_id = cs.id) " +
 				"JOIN {h-schema}outpatient_consultation oc ON (r.encounter_id = oc.id) " +
@@ -77,8 +86,9 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"JOIN {h-schema}patient p ON (oc.patient_id = p.id) " +
 				"JOIN {h-schema}person pe ON (p.person_id = pe.id) " +
 				"JOIN {h-schema}person_extended pex ON (pe.id = pex.person_id) " +
+				"LEFT JOIN {h-schema}institution i2 ON (r.destination_institution_id = i2.id) " +
 				"LEFT JOIN {h-schema}identification_type it ON (pe.identification_type_id = it.id) " +
-				"LEFT JOIN {h-schema}care_line cl ON (r.care_line_id = cl.id)" +
+				"LEFT JOIN {h-schema}care_line cl ON (r.care_line_id = cl.id) " +
 				"LEFT JOIN {h-schema}counter_reference cr ON (r.id = cr.reference_id) " +
 				"WHERE (oc.start_date >= :from AND oc.start_date <= :to) ";
 	}
@@ -87,7 +97,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 		return "SELECT r.id, r.priority, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
 				"pex.name_self_determination, it.description, pe.identification_number, oc.created_on, cs2.name AS clinicalSpecialtyOrigin, " +
 				"i.name AS institutionOrigin, cs.name as clinicalSpecialtyDestination, " +
-				"cl.description AS careLine, cr.closure_type_id " +
+				"cl.description AS careLine, cr.closure_type_id, i2.name AS institutionDestination " +
 				"FROM {h-schema}reference r " +
 				"JOIN {h-schema}clinical_specialty cs ON (r.clinical_specialty_id = cs.id) " +
 				"JOIN {h-schema}odontology_consultation oc ON (r.encounter_id = oc.id) " +
@@ -96,6 +106,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"JOIN {h-schema}patient p ON (oc.patient_id = p.id) " +
 				"JOIN {h-schema}person pe ON (p.person_id = pe.id) " +
 				"JOIN {h-schema}person_extended pex ON (pe.id = pex.person_id) " +
+				"LEFT JOIN {h-schema}institution i2 ON (r.destination_institution_id = i2.id) " +
 				"LEFT JOIN {h-schema}identification_type it ON (pe.identification_type_id = it.id) " +
 				"LEFT JOIN {h-schema}care_line cl ON (r.care_line_id = cl.id) " +
 				"LEFT JOIN {h-schema}counter_reference cr ON (r.id = cr.reference_id) " +
@@ -122,6 +133,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 					.clinicalSpecialtyDestination((String) row[12])
 					.careLine((String) row[13])
 					.closureType(row[14] != null ? EReferenceClosureType.getById((Short) row[14]) : null)
+					.institutionDestination((String) row[15])
 					.build();
 			result.add(reference);
 		});

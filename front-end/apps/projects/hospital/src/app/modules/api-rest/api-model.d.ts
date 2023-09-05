@@ -3150,6 +3150,7 @@ export interface ReferenceReportDto {
     date: DateTimeDto;
     identificationNumber: string;
     identificationType: string;
+    institutionDestination: string;
     institutionOrigin: string;
     patientFullName: string;
     priority: EReferencePriority;

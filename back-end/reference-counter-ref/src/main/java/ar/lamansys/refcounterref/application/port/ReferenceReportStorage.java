@@ -9,4 +9,6 @@ public interface ReferenceReportStorage {
 
 	List<ReferenceReportBo> fetchReceivedReferencesReport(Integer institutionId, LocalDate from, LocalDate to);
 
+	List<ReferenceReportBo> fetchRequestedReferencesReport(Integer institutionId, Integer healthcareProfessionalId, LocalDate from, LocalDate to);
+
 }
