@@ -193,6 +193,15 @@
 						<span>{{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn | date:"dd/MM/yyyy H:mm"}}hs.</span>
 					</div>
 				</div>
+				<div fxLayout="column" fxLayoutGap="10px" class="motive" *ngIf="viewLinkCall">
+						<button type="button" mat-raised-button color="primary" (click)="entryCall()">
+							<mat-icon class="material-icons-outlined">video_call</mat-icon>
+							<span class="mat-body strong-size">
+								{{'turnos.appointment.JOIN_CALL' | translate}}
+							</span>
+						</button>
+						<span class="assigned-by">{{appointment?.callLink}}</span>
+				</div>
 				<button type="button" mat-icon-button color="primary"
 					*ngIf="(selectedState === appointmentStatesIds.ASSIGNED) && ( hasRoleToEdit$ | async )" (click)="openDateForm()">
 					<mat-icon class="material-icons-outlined">edit</mat-icon>

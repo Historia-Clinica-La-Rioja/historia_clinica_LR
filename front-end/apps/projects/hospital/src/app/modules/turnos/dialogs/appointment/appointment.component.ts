@@ -58,6 +58,7 @@ import { isBefore, isEqual } from 'date-fns';
 import { Color } from '@presentation/colored-label/colored-label.component';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { toCalendarEvent } from '@turnos/utils/appointment.utils';
+import { JitsiCallService } from '../../../jitsi/jitsi-call.service';
 
 const TEMPORARY_PATIENT = 3;
 const REJECTED_PATIENT = 6;
@@ -66,7 +67,6 @@ const ROLES_TO_CHANGE_STATE: ERole[] = [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA
 const ROLES_TO_EDIT: ERole[]
 	= [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 const ROLE_TO_DOWNDLOAD_REPORTS: ERole[] = [ERole.ADMINISTRATIVO];
-
 @Component({
 	selector: 'app-appointment',
 	templateUrl: './appointment.component.html',
@@ -132,6 +132,7 @@ export class AppointmentComponent implements OnInit {
 
 	isRejectedPatient: boolean = false;
 	selectedModality: string;
+	viewLinkCall:Boolean = true;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			appointmentData: PatientAppointmentInformation,
@@ -153,8 +154,8 @@ export class AppointmentComponent implements OnInit {
 		private readonly personMasterDataService: PersonMasterDataService,
 		private readonly patientService: PatientService,
 		private readonly imageDecoderService: ImageDecoderService,
-		private readonly medicalCoverageInfo: MedicalCoverageInfoService
-
+		private readonly medicalCoverageInfo: MedicalCoverageInfoService,
+		private readonly jitsiCallService: JitsiCallService,
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_LLAMADO).subscribe(isEnabled => this.isMqttCallEnabled = isEnabled);
@@ -227,6 +228,7 @@ export class AppointmentComponent implements OnInit {
 				switch (this.appointment.modality) {
 					case EAppointmentModality.ON_SITE_ATTENTION: {
 						this.selectedModality = this.modalitys.ON_SITE_ATTENTION;
+						this.viewLinkCall=false;
 						break
 					}
 					case EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION: {
@@ -267,6 +269,11 @@ export class AppointmentComponent implements OnInit {
 	private changeInputUpdatePermissions(){
 		this.canCoverageBeEdited ? this.formEdit.get('newCoverageData').enable()
 							: this.formEdit.get('newCoverageData').disable();
+	}
+
+	entryCall(){
+		this.jitsiCallService.open(this.appointment.callLink);
+		this.closeDialog();
 	}
 
 	dateFormToggle(): void {

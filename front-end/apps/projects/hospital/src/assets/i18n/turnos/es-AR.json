@@ -186,6 +186,7 @@
 			"PROTECTED": "*solicitado como turno protegido",
 			"ASSIGNED_BY": "Asignado por",
 			"BOOKING": "Turno online",
+			"JOIN_CALL":"Unirse a la teleconsulta",
 			"date": {
 				"EDIT_DATE_TIME": "Editar fecha y hora del turno",
 				"UPDATE_SUCCESS": "La fecha y hora del turno se actualizaron exitosamente"
