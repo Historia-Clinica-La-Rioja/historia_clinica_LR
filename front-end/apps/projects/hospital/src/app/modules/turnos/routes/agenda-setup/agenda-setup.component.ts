@@ -36,7 +36,7 @@ import { HierarchicalUnitsService } from '@api-rest/services/hierarchical-units.
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { DiaryCareLineService } from '@api-rest/services/diary-care-line.service';
 import { PracticesService } from '@api-rest/services/practices.service';
-import { ChipsOption } from '@turnos/components/chips-autocomplete/chips-autocomplete.component';
+import { ChipsOption } from '@presentation/components/chips-autocomplete/chips-autocomplete.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 const ROUTE_APPOINTMENT = 'turnos';

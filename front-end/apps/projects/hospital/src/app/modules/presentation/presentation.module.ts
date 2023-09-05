@@ -12,6 +12,7 @@ import { BarComponent } from './components/bar/bar.component';
 import { CardComponent } from './components/card/card.component';
 import { CategoryHeaderDividerComponent } from './components/category-header-divider/category-header-divider.component';
 import { CellTemplatesComponent } from './components/cell-templates/cell-templates.component';
+import { ChipsAutocompleteComponent } from './components/chips-autocomplete/chips-autocomplete.component';
 import { ColoredDivPatientStateComponent } from './components/colored-div-patient-state/colored-div-patient-state.component';
 import { ColoredIconTextComponent } from './components/colored-icon-text/colored-icon-text.component';
 import { ColoredLabelComponent } from './colored-label/colored-label.component';
@@ -88,6 +89,7 @@ import { CallDetailsComponent } from './components/call-details/call-details.com
 		CardComponent,
 		CategoryHeaderDividerComponent,
 		CellTemplatesComponent,
+		ChipsAutocompleteComponent,
 		ColoredDivPatientStateComponent,
 		ColoredIconTextComponent,
 		ColoredLabelComponent,
@@ -177,6 +179,7 @@ import { CallDetailsComponent } from './components/call-details/call-details.com
 		CardComponent,
 		CategoryHeaderDividerComponent,
 		CellTemplatesComponent,
+		ChipsAutocompleteComponent,
 		ColoredDivPatientStateComponent,
 		ColoredIconTextComponent,
 		ColoredLabelComponent,
