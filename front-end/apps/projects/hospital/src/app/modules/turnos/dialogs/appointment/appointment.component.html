@@ -178,6 +178,13 @@
 						</mat-icon>
 						<span class="mat-body subtitle-size"> {{selectedDate | date:"H:mm"}} hs</span>
 					</div>
+					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start" class="modality" >
+						<mat-icon fontSet="material-icons-outlined" mat-list-icon [inline]="true" id="modality"
+							class="icon-purple">
+							video_call
+						</mat-icon>
+						<span class="mat-body subtitle-size purple"> {{selectedModality | translate}}</span>
+					</div>
 					<div fxLayout="column" fxLayoutGap="10px" *ngIf="appointment?.protected">
 						<span class="purple">{{'turnos.appointment.PROTECTED' | translate}}</span>
 					</div>

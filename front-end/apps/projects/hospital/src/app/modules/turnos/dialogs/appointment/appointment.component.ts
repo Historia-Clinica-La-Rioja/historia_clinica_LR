@@ -10,6 +10,7 @@ import {
 	APPOINTMENT_STATES_ID,
 	getAppointmentState,
 	MAX_LENGTH_MOTIVE,
+	MODALITYS,
 } from '../../constants/appointment';
 import {
 	AppFeature,
@@ -17,6 +18,7 @@ import {
 	AppointmentListDto,
 	CompleteDiaryDto,
 	DateTimeDto,
+	EAppointmentModality,
 	ERole,
 	IdentificationTypeDto,
 	PatientMedicalCoverageDto,
@@ -73,6 +75,7 @@ const ROLE_TO_DOWNDLOAD_REPORTS: ERole[] = [ERole.ADMINISTRATIVO];
 export class AppointmentComponent implements OnInit {
 
 	readonly appointmentStatesIds = APPOINTMENT_STATES_ID;
+	readonly modalitys = MODALITYS;
 	readonly TEMPORARY_PATIENT = TEMPORARY_PATIENT;
 	readonly BELL_LABEL = BELL_LABEL;
 	readonly Color = Color;
@@ -125,10 +128,10 @@ export class AppointmentComponent implements OnInit {
 	hideObservationTitle = true;
 	observation: string;
 	firstCoverage: number;
-	isRejectedPatient:boolean=false;
-
 	canCoverageBeEdited = false;
 
+	isRejectedPatient: boolean = false;
+	selectedModality: string;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			appointmentData: PatientAppointmentInformation,
@@ -158,8 +161,8 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		if(this.data.appointmentData.patient.typeId=== REJECTED_PATIENT){
-			this.isRejectedPatient=true;
+		if (this.data.appointmentData.patient.typeId === REJECTED_PATIENT) {
+			this.isRejectedPatient = true;
 		}
 		this.formMotive = this.formBuilder.group({
 			motive: ['', [Validators.required, Validators.maxLength(MAX_LENGTH_MOTIVE)]]
@@ -184,8 +187,8 @@ export class AppointmentComponent implements OnInit {
 		this.formEdit.controls.phoneNumber.setValue(this.data.appointmentData.phoneNumber);
 		this.formEdit.controls.phonePrefix.setValue(this.data.appointmentData.phonePrefix);
 		if (this.data.appointmentData.phoneNumber) {
-			updateControlValidator(this.formEdit, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
-			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
+			updateControlValidator(this.formEdit, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
+			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
 		}
 
 		this.data.agenda.diaryOpeningHours.forEach(DOH => {
@@ -221,6 +224,19 @@ export class AppointmentComponent implements OnInit {
 				}
 				this.phoneNumber = this.formatPhonePrefixAndNumber(this.data.appointmentData.phonePrefix, this.data.appointmentData.phoneNumber);
 				this.checkInputUpdatePermissions();
+				switch (this.appointment.modality) {
+					case EAppointmentModality.ON_SITE_ATTENTION: {
+						this.selectedModality = this.modalitys.ON_SITE_ATTENTION;
+						break
+					}
+					case EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION: {
+						this.selectedModality = this.modalitys.SECOND_OPINION_VIRTUAL_ATTENTION;
+						break
+					}
+					case EAppointmentModality.PATIENT_VIRTUAL_ATTENTION: {
+						this.selectedModality = this.modalitys.PATIENT_VIRTUAL_ATTENTION;
+					}
+				}
 			});
 
 		this.hasRoleToChangeState$ = this.permissionsService.hasContextAssignments$(ROLES_TO_CHANGE_STATE).pipe(take(1));
@@ -372,9 +388,9 @@ export class AppointmentComponent implements OnInit {
 			});
 	}
 
-	getAppointmentOpeningHoursId(date: Date): number{
+	getAppointmentOpeningHoursId(date: Date): number {
 		const selectedOpeningHour = this.data.agenda.diaryOpeningHours.find(oh => {
-			if (oh.openingHours.dayWeekId === date.getDay()){
+			if (oh.openingHours.dayWeekId === date.getDay()) {
 				const hourFrom = momentParseTime(oh.openingHours.from).toDate();
 				hourFrom.setDate(date.getDate());
 				hourFrom.setMonth(date.getMonth());
@@ -455,8 +471,8 @@ export class AppointmentComponent implements OnInit {
 
 	updatePhoneValidators() {
 		if (this.formEdit.controls.phoneNumber.value || this.formEdit.controls.phonePrefix.value) {
-			updateControlValidator(this.formEdit, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
-			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
+			updateControlValidator(this.formEdit, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
+			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
 		} else {
 			updateControlValidator(this.formEdit, 'phoneNumber', []);
 			updateControlValidator(this.formEdit, 'phonePrefix', []);
