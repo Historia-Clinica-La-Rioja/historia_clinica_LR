@@ -14,6 +14,13 @@ export class DateRangePickerComponent implements OnInit {
 	@Input() min?: Date = null;
 	@Input() max = new Date();
 	@Input() dateRange: DateRange;
+	@Input()
+	set disabled(value: boolean) {
+		if (value)
+			this.dateRangeForm.disable();
+		else
+			this.dateRangeForm?.enable();
+	};
 	@Output() dateRangeChange = new EventEmitter<DateRange>();
 
 	constructor(
@@ -34,6 +41,9 @@ export class DateRangePickerComponent implements OnInit {
 				end: this.dateRangeForm.value.end
 			});
 		}
+
+		if (this.disabled)
+			this.dateRangeForm.disable();
 	}
 
 	emitChange() {
