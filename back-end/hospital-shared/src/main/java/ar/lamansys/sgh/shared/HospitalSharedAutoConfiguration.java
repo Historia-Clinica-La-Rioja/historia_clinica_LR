@@ -21,7 +21,7 @@ import javax.annotation.PostConstruct;
 @PropertySource(value = "classpath:hospital-shared.properties", ignoreResourceNotFound = true)
 public class HospitalSharedAutoConfiguration {
 
-	@Value("${jitsi.domain.url}")
+	@Value("${jitsi.domain.url:}")
 	private String jitsiDomainUrlValue;
 
 	public static String JITSI_DOMAIN_URL;
