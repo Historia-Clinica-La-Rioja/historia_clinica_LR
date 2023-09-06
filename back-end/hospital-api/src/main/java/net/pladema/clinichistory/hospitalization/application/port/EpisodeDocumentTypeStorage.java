@@ -7,4 +7,6 @@ import java.util.List;
 public interface EpisodeDocumentTypeStorage {
 
 	List<EpisodeDocumentTypeBo> getEpisodeDocumentType();
+
+	EpisodeDocumentTypeBo getEpisodeDocumentTypeById(Integer id);
 }

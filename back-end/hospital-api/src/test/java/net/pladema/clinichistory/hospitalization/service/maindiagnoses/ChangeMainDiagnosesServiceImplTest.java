@@ -7,6 +7,11 @@ import java.util.Collections;
 import javax.validation.ConstraintViolationException;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
+import ar.lamansys.sgx.shared.files.pdf.PdfService;
+import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
+import net.pladema.establishment.service.InstitutionService;
+import net.pladema.patient.service.PatientService;
+import net.pladema.person.service.PersonService;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -75,16 +80,37 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
 
 	@MockBean
 	private DocumentFileRepository documentFileRepository;
+	@Mock
+	private PdfService pdfService;
+
+	@Mock
+	private PatientService patientService;
+
+	@Mock
+	private PersonService personService;
+
+	@Mock
+	private InstitutionService institutionService;
+
+	@Mock
+	private FetchEpisodeDocumentTypeById fetchEpisodeDocumentTypeById;
 
     @BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
-                internmentEpisodeRepository,
-                dateTimeProvider, evolutionNoteDocumentRepository,
-                patientDischargeRepository,
-                documentService,
+				internmentEpisodeRepository,
+				dateTimeProvider,
+				evolutionNoteDocumentRepository,
+				patientDischargeRepository,
 				medicalCoveragePlanRepository,
-                internmentEpisodeStorage, featureFlagsService);
+				documentService,
+				internmentEpisodeStorage,
+				featureFlagsService,
+				pdfService,
+				patientService,
+				personService,
+				institutionService,
+				fetchEpisodeDocumentTypeById);
         changeMainDiagnosesService = new ChangeMainDiagnosesServiceImpl(
                 documentFactory,
                 internmentEpisodeService,

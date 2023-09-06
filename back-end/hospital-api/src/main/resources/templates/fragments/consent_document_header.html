@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:fragment="consent_document_header_styles">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <th:block th:include="fragments/bootstrap-css.html :: style-inline"></th:block>
+    <style>
+        .bold {
+            font-weight: 600;
+        }
+
+        .big-font {
+            font-size: 18px
+        }
+
+        h1 {
+            font-size: 26px;
+        }
+
+        img {
+            width: 200px;
+            height: 60px;
+        }
+    </style>
+</head>
+<body th:fragment="consent_document_header">
+    <header>
+        <table>
+            <tr>
+                <td>
+                    <h1 style="margin-right: 200px">Consentimiento informado</h1>
+                </td>
+                <td>
+                    <img th:src="@{classpath:static/images/logo_nacion.png}" alt="Logo"></img>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h2>Ingreso a internación</h2>
+                </td>
+            </tr>
+        </table>
+        <hr/>
+        <div class="bold big-font">Datos del episodio</div>
+        <table>
+            <tr>
+                <td>
+                    <span style="margin-right: 50px">Nombre y apellido del paciente</span>
+                </td>
+                <td>Documento</td>
+            </tr>
+            <tr>
+                <td class="big-font" th:text="${personDto.completeName()}"></td>
+                <td class="big-font" th:text="${personDto.identificationNumber}"></td>
+            </tr>
+            <tr>
+                <td>Id Encuentro</td>
+                <td>Fecha</td>
+                <td>Institución</td>
+            </tr>
+            <tr>
+                <td class="big-font" th:text="${internmentEpisodeId}"></td>
+                <td class="big-font" th:text="${#temporals.format(entryDate, 'dd/MM/yyyy HH:mm')}"></td>
+                <td class="big-font" th:text="${institutionName}"></td>
+            </tr>
+            <tr>
+                <td>Tipo</td>
+                <td>Matrícula</td>
+            </tr>
+            <tr>
+                <td class="big-font">Internación</td>
+                <td style="display: inline" th:each="license,iter: ${doctorDto.licenses}">
+                    <span class="big-font" th:text="${license}"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>Profesional responsable</td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="big-font" th:text="${doctorDto.firstName}"></span>
+                    <span class="big-font" th:text="${doctorDto.lastName}"></span>
+                </td>
+            </tr>
+        </table>
+    </header>
+</body>
+
+</html>

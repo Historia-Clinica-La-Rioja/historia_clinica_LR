@@ -52,12 +52,12 @@ public class BackofficeEpisodeDocumentTypeStore implements BackofficeStore<Episo
 
 	@Override
 	public EpisodeDocumentType save(EpisodeDocumentType entity) {
-		if (entity.getConsentId() == null || entity.getConsentId() == 1) {
-			entity.setConsentId(1);
+		if (entity.getConsentId() == null || entity.getConsentId() == EpisodeDocumentType.REGULAR) {
+			entity.setConsentId(Integer.valueOf(EpisodeDocumentType.REGULAR));
 			entity.setRichTextBody(null);
 		}
 
-		if (entity.getConsentId() != 1
+		if (entity.getConsentId() != EpisodeDocumentType.REGULAR
 			&& entity.getId() == null
 			&& repository.existsConsentDocumentById(entity.getConsentId()))
 			throw new BackofficeValidationException("Ya existe ese documento de consentimiento");

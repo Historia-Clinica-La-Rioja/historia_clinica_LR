@@ -1,17 +1,37 @@
 package net.pladema.clinichistory.hospitalization.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
+import ar.lamansys.sgx.shared.files.pdf.PdfService;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
+import lombok.AllArgsConstructor;
+import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
+
+import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentTypeBo;
+import net.pladema.clinichistory.hospitalization.service.summary.domain.ResponsibleDoctorBo;
+import net.pladema.establishment.service.InstitutionService;
+import net.pladema.establishment.service.domain.InstitutionBo;
+import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.service.PatientService;
+import net.pladema.person.repository.entity.Person;
+import net.pladema.person.service.PersonService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
@@ -70,25 +90,33 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 
 	private final FeatureFlagsService featureFlagsService;
 
-	public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository,
-										DateTimeProvider dateTimeProvider,
-										EvolutionNoteDocumentRepository evolutionNoteDocumentRepository,
-										PatientDischargeRepository patientDischargeRepository,
-										DocumentService documentService,
-										MedicalCoveragePlanRepository medicalCoveragePlanRepository,
-										InternmentEpisodeStorage internmentEpisodeStorage,
-										FeatureFlagsService featureFlagsService) {
-        this.internmentEpisodeRepository = internmentEpisodeRepository;
-        this.dateTimeProvider = dateTimeProvider;
-        this.evolutionNoteDocumentRepository = evolutionNoteDocumentRepository;
-        this.patientDischargeRepository = patientDischargeRepository;
-        this.documentService = documentService;
+	private final PdfService pdfService;
+
+	private final PatientService patientService;
+
+	private final PersonService personService;
+
+	private final InstitutionService institutionService;
+
+	private final FetchEpisodeDocumentTypeById fetchEpisodeDocumentTypeById;
+
+	public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository, DateTimeProvider dateTimeProvider, EvolutionNoteDocumentRepository evolutionNoteDocumentRepository, PatientDischargeRepository patientDischargeRepository, MedicalCoveragePlanRepository medicalCoveragePlanRepository, DocumentService documentService, InternmentEpisodeStorage internmentEpisodeStorage, FeatureFlagsService featureFlagsService, PdfService pdfService, PatientService patientService, PersonService personService, InstitutionService institutionService, FetchEpisodeDocumentTypeById fetchEpisodeDocumentTypeById) {
+		this.internmentEpisodeRepository = internmentEpisodeRepository;
+		this.dateTimeProvider = dateTimeProvider;
+		this.evolutionNoteDocumentRepository = evolutionNoteDocumentRepository;
+		this.patientDischargeRepository = patientDischargeRepository;
 		this.medicalCoveragePlanRepository = medicalCoveragePlanRepository;
+		this.documentService = documentService;
 		this.internmentEpisodeStorage = internmentEpisodeStorage;
 		this.featureFlagsService = featureFlagsService;
+		this.pdfService = pdfService;
+		this.patientService = patientService;
+		this.personService = personService;
+		this.institutionService = institutionService;
+		this.fetchEpisodeDocumentTypeById = fetchEpisodeDocumentTypeById;
 	}
 
-    @Override
+	@Override
     public void updateAnamnesisDocumentId(Integer internmentEpisodeId, Long anamnesisDocumentId) {
         LOG.debug("Input parameters -> internmentEpisodeId {}, anamnesisDocumentId {}", internmentEpisodeId, anamnesisDocumentId);
         internmentEpisodeRepository.updateAnamnesisDocumentId(internmentEpisodeId, anamnesisDocumentId, LocalDateTime.now());
@@ -422,4 +450,58 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		return result;
 	}
 
+	@Override
+	public ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId) {
+		LOG.debug("Input parameters -> institutionId {}, consentId {}, internmentEpisodeId {}", institutionId, consentId, internmentEpisodeId);
+		InternmentEpisode internmentEpisode = getInternmentEpisode(internmentEpisodeId, institutionId);
+		Optional<Patient> patient = patientService.getPatient(internmentEpisode.getPatientId());
+
+		if (patient.isEmpty())
+			return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+		var pa = patient.get();
+		Optional<Person> person = personService.findByPatientId(pa.getId());
+		if (person.isEmpty())
+			return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+		var pe = person.get();
+		Optional<InternmentSummaryBo> internmentSummaryBo = getIntermentSummary(internmentEpisodeId);
+		if (internmentSummaryBo.isEmpty())
+			return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+		var isbo = internmentSummaryBo.get();
+
+		InstitutionBo institutionBo = institutionService.get(institutionId);
+		EpisodeDocumentTypeBo episodeDocumentTypeBo = fetchEpisodeDocumentTypeById.run(consentId);
+		Map<String, Object> context = createContext(mapToBasicDataPersonDto(pe),
+				isbo.getDoctor(),
+				institutionBo.getName(),
+				internmentEpisode.getEntryDate(),
+				internmentEpisodeId,
+				episodeDocumentTypeBo.getRichTextBody());
+		String template = "consent_document";
+
+		return StoredFileResponse.sendFile(
+				pdfService.generate(template, context),
+				String.format("%s_.pdf", "Documento de consentimiento"),
+				MediaType.APPLICATION_PDF
+		);
+	}
+
+	private Map<String, Object> createContext(BasicDataPersonDto personDto, ResponsibleDoctorBo doctor, String institutionName, LocalDateTime entryDate, Integer internmentEpisodeId, String richBody){
+		Map<String, Object> ctx = new HashMap<>();
+		ctx.put("personDto", personDto);
+		ctx.put("doctorDto", doctor);
+		ctx.put("institutionName", institutionName);
+		ctx.put("entryDate", entryDate);
+		ctx.put("internmentEpisodeId", internmentEpisodeId);
+		ctx.put("richBody", richBody);
+		return ctx;
+	}
+
+	private BasicDataPersonDto mapToBasicDataPersonDto(Person person) {
+		BasicDataPersonDto dto = new BasicDataPersonDto();
+		dto.setFirstName(person.getFirstName());
+		dto.setLastName(person.getLastName());
+		dto.setMiddleNames(person.getMiddleNames());
+		dto.setIdentificationNumber(person.getIdentificationNumber());
+		return dto;
+	}
 }

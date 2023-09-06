@@ -20,4 +20,8 @@ public interface EpisodeDocumentTypeRepository extends JpaRepository<EpisodeDocu
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT edt FROM EpisodeDocumentType edt WHERE edt.consentId = " + EpisodeDocumentType.ADMISSION_CONSENT + " OR edt.consentId = " + EpisodeDocumentType.SURGICAL_CONSENT)
 	List<EpisodeDocumentType> getConsentDocuments();
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT edt FROM EpisodeDocumentType edt WHERE edt.consentId = :consentId")
+	EpisodeDocumentType getConsentDocumentTypeById(@Param("consentId") Integer consentId);
 }

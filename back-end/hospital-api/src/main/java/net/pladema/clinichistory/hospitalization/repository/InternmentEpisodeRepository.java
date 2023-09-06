@@ -8,6 +8,9 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
 import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
 
+import net.pladema.staff.repository.entity.HealthcareProfessional;
+import net.pladema.staff.service.domain.HealthcareProfessionalBo;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

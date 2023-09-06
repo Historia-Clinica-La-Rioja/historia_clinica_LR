@@ -3,11 +3,10 @@ package net.pladema.clinichistory.hospitalization.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
@@ -107,12 +105,12 @@ public class InternmentEpisodeController {
 
 	private final EpisodeDocumentDtoMapper mapper;
 
-	public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService, HealthcareProfessionalExternalService healthcareProfessionalExternalService, InternmentEpisodeMapper internmentEpisodeMapper, BedExternalService bedExternalService, PatientDischargeMapper patientDischargeMapper, ResponsibleContactService responsibleContactService, FeatureFlagsService featureFlagsService, PatientDischargeService patientDischargeService, ResponsibleContactMapper responsibleContactMapper, LocalDateMapper localDateMapper, HospitalApiPublisher hospitalApiPublisher, FetchEpisodeDocument fetchEpisodeDocument, CreateEpisodeDocument createEpisodeDocument, FetchDocumentType fetchDocumentType, DeleteEpisodeDocument deleteEpisodeDocument, EpisodeDocumentDtoMapper mapper) {
+	public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService, HealthcareProfessionalExternalService healthcareProfessionalExternalService, InternmentEpisodeMapper internmentEpisodeMapper, PatientDischargeMapper patientDischargeMapper, BedExternalService bedExternalService, ResponsibleContactService responsibleContactService, FeatureFlagsService featureFlagsService, PatientDischargeService patientDischargeService, ResponsibleContactMapper responsibleContactMapper, LocalDateMapper localDateMapper, HospitalApiPublisher hospitalApiPublisher, FetchEpisodeDocument fetchEpisodeDocument, CreateEpisodeDocument createEpisodeDocument, FetchDocumentType fetchDocumentType, DeleteEpisodeDocument deleteEpisodeDocument, EpisodeDocumentDtoMapper mapper) {
 		this.internmentEpisodeService = internmentEpisodeService;
 		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
 		this.internmentEpisodeMapper = internmentEpisodeMapper;
-		this.bedExternalService = bedExternalService;
 		this.patientDischargeMapper = patientDischargeMapper;
+		this.bedExternalService = bedExternalService;
 		this.responsibleContactService = responsibleContactService;
 		this.featureFlagsService = featureFlagsService;
 		this.patientDischargeService = patientDischargeService;
@@ -331,8 +329,16 @@ public class InternmentEpisodeController {
 		LocalDateTime result = internmentEpisodeService.updateInternmentEpisodeProbableDischargeDate(internmentEpisodeId, probableDischargeDate);
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(localDateMapper.toDateTimeDto(result));
-
-
 	}
 
+	@GetMapping("/{internmentEpisodeId}/episode-document-type/{consentId}")
+	public ResponseEntity<Resource> generateEpisodeDocumentType(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "consentId") Integer consentId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
+		LOG.debug("Input parameters -> institutionId {}, consentId {}, intermentEpisodeId {} ", institutionId, consentId, internmentEpisodeId);
+		ResponseEntity<Resource> result = internmentEpisodeService.generateEpisodeDocumentType(institutionId, consentId, internmentEpisodeId);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
 }

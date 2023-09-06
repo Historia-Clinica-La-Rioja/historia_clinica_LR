@@ -5,6 +5,10 @@ import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpi
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummaryBo;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
+import net.pladema.staff.service.domain.HealthcareProfessionalBo;
+
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -67,5 +71,7 @@ public interface InternmentEpisodeService {
 	PatientDischargeBo savePatientPhysicalDischarge(Integer internmentEpisodeId);
 
 	boolean haveMoreThanOneIntermentEpisodesFromPatients(List<Integer> patients);
+
+	ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId);
 
 }
