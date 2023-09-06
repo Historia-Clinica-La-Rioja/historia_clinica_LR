@@ -40,7 +40,7 @@
 		</mat-tab>
 
 		<mat-tab *ngIf="ffIsOn && hasRoleToViewTab"	label=" {{ 'image-network.home.SEARCH_BY_EQUIPMENT' | translate | uppercase }}">
-			<app-search-appointments-by-equipment [selectedEquipment]="selectedEquipment" [editedDiary]="selectedDiary">
+			<app-search-appointments-by-equipment [selectedEquipment]="selectedEquipment" [selectedDiary]="selectedDiary">
 			</app-search-appointments-by-equipment>
 		</mat-tab>
 

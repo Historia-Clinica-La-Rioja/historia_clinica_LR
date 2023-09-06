@@ -21,7 +21,7 @@ import { MatOptionSelectionChange } from '@angular/material/core';
 export class SearchAppointmentsByEquipmentComponent implements OnInit {
 
 	@Input() selectedEquipment: EquipmentDto;
-	@Input() editedDiary: EquipmentDiaryDto;
+	@Input() selectedDiary: EquipmentDiaryDto;
 	
 	modalities$: Observable<TypeaheadOption<ModalityDto>[]>;
 
@@ -53,8 +53,8 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 		this.setEquipments();
 		this.searchEquipmentService.getAgendas$().subscribe((data: EquipmentDiaryOptionsData) => {
 			if (data) {
-				this.loadAgendas(data.diaries, data.idAgendaSelected);
-				if (this.editedDiary) this.diarySelected = this.editedDiary;
+				let idAgendaSelected = this.selectedDiary ? this.selectedDiary.id : data.idAgendaSelected;
+				this.loadAgendas(data.diaries, idAgendaSelected);
 			}
 		});
 	}
@@ -71,7 +71,7 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 
 	clear() {
 		this.diarySelected = null;
-		this.editedDiary = null;
+		this.selectedDiary = null;
 		this.changeDetectorRef.detectChanges();
 	}
 
@@ -90,7 +90,7 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 	loadDiaryByEquipment(e: EquipmentDto) {
 		if (!e) {
 			this.selectedEquipment = null;
-			this.editedDiary = null;
+			this.selectedDiary = null;
 		}
 		this.equipmentSelected = e;
 		this.searchEquipmentService.search(e?.id);
@@ -113,6 +113,9 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 
 	private setSelectedEquipmentIfDiaryWasEdited() {
 		if (this.selectedEquipment) {
+			if (!this.selectedEquipment.name) {
+				this.selectedEquipment = this.equipments.find(e => e.id == this.selectedEquipment.id)
+			}
 			this.externalSelectedEquipment = this.toEquipmentTypeaheadOptions(this.selectedEquipment);
 			this.loadDiaryByEquipment(this.selectedEquipment);
 		}
