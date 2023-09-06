@@ -50,3 +50,69 @@ databaseChangeLog:
               columnName: clinical_specialty_id
               columnDataType: int
 
+    - changeSet:
+        id: createTable-document_template
+        author: mromero
+        changes:
+          - createTable:
+              tableName: document_template
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_document_template
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: user_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: name
+                    type: varchar(40)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: category
+                    type: varchar(20)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: institution_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: file_id
+                    type: bigint
+          - addForeignKeyConstraint:
+              baseColumnNames: user_id
+              baseTableName: document_template
+              constraintName: FK_document_template_user_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: institution_id
+              baseTableName: document_template
+              constraintName: FK_document_template_institution_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: institution
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: file_id
+              baseTableName: document_template
+              constraintName: FK_file_info_template_file_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: file_info
+              validate: true
