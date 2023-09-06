@@ -117,7 +117,7 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
 				"JOIN {h-schema}service_request sr ON d.source_id = sr.id " +
 				"JOIN {h-schema}service_request_category src ON sr.category_id = src.id " +
 				"JOIN {h-schema}source_type st ON sr.source_type_id = st.id " +
-				"LEFT JOIN appointment_order_image aoi ON sr.id = (case when (aoi.order_id = sr.id) then aoi.order_id else (aoi.transcribed_order_id) END) " +
+				"LEFT JOIN appointment_order_image aoi ON dr.id = aoi.study_id " +
 				"WHERE dr.patient_id = :patientId " +
 				"AND d.type_id = :documentType " +
 				"AND d.status_id = :documentStatusId " +
@@ -139,7 +139,8 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
 				"WHERE rw = 1 " +
 				"AND drs.id != :cancelled " +
 				"AND NOT t.status_id = :invalidStatus "+
-				"AND (t.orderID NOT IN (SELECT aoii.order_id FROM appointment_order_image aoii JOIN appointment app ON (aoii.appointment_id = app.id) where app.patient_id = :patientId AND aoii.active = true AND aoii.order_id IS NOT NULL) OR t.orderID IS NULL) "+
+				"AND (t.orderID NOT IN (SELECT aoii.order_id FROM appointment_order_image aoii JOIN appointment app ON (aoii.appointment_id = app.id) WHERE app.patient_id = :patientId AND aoii.active = true AND aoii.order_id IS NOT NULL) "+
+				"OR t.orderID IS NULL) "+
 				(filter.getCategory() != null ? "AND UPPER(t.sr_categoryId) = :category " : " ");
 
 		if (filter.getStatus() != null){
