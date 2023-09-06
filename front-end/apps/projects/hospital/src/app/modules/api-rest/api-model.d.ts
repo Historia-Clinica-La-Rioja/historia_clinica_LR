@@ -1102,6 +1102,13 @@ export interface DocumentSummaryDto extends Serializable {
     id: number;
 }
 
+export interface DocumentTemplateDto {
+    category: string;
+    conclusions: ConclusionDto[];
+    name: string;
+    templateText: string;
+}
+
 export interface DocumentTypeDto {
     description: string;
     id: number;
@@ -3449,6 +3456,9 @@ export interface SnomedDto extends Serializable {
 export interface SnomedEclDto {
     key: SnomedECL;
     value: string;
+}
+
+export interface SnomedJsonDto extends SnomedDto {
 }
 
 export interface SnomedResponseDto extends Serializable {
