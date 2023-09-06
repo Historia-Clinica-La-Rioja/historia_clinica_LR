@@ -43,6 +43,8 @@ import { DialogoAclaracionComponent } from './dialogo-aclaracion/dialogo-aclarac
 import { HCEPersonalHistoryDto } from '@api-rest/api-model';
 import { MedicationRequestService } from '@api-rest/services/medication-request.service';
 import { MedicationInfoDto } from '@api-rest/api-model';
+import { DialogoMayorDe15Component } from './dialogo-mayor-de15/dialogo-mayor-de15.component';
+import { DialogoInconsistenciaComponent } from './dialogo-inconsistencia/dialogo-inconsistencia.component';
 
 const RESUMEN_INDEX = 0;
 const VOLUNTARY_ID = 1;
@@ -431,7 +433,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 
 	embarazoAdolescente(){
 		if (this._embarazoAdolescente === undefined) {
-			if (this.patient.age < 15){
+			if (this.patient.age >= 10 && this.patient.age < 19){
 				this.hceGeneralStateService.getActiveProblems(this.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
 					this.activeProblemsList = activeProblems.map(problem => ({id: problem.id, description: problem.snomed.pt, sctId: problem.snomed.sctid}));
 					console.log(this.activeProblemsList);
@@ -539,6 +541,35 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 	openDialogAclaracion() {
 		this.dialog.open(DialogoAclaracionComponent);
 	}
+
+	openDialogAclaracionMayorDe15() {
+		this.dialog.open(DialogoMayorDe15Component);
+	}
+
+	openDialogInconsistencia() {
+		this.dialog.open(DialogoInconsistenciaComponent);
+	}
+
+	pacienteMenorDe15(){
+		const patientAge = this.patient.age;
+
+		if (patientAge < 15){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
+	openAppropriateDialog() {
+		const patientAge = this.patient.age;
+	  
+		if (patientAge < 15) {
+		  this.openDialogAclaracion();
+		} else if (patientAge >= 10 && patientAge < 19) {
+		  this.openDialogAclaracionMayorDe15();
+		}
+	}	  
 
 	birth_control_pills(){
 		if (this._anticonceptivos === undefined)
@@ -668,5 +699,11 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 		}
 		}
 		return this._anticonceptivos;
+	}
+
+	inconsistenciaDeAlertas(){
+		if (this.birth_control_pills() && this.embarazoAdolescente()){
+			return true;
+		}
 	}
 }

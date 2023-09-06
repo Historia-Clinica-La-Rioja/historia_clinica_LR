@@ -73,6 +73,8 @@ import { EstudiosPopupComponent } from './routes/ambulatoria-paciente/adulto-may
 import { TestEdmontonPopupComponent } from './routes/ambulatoria-paciente/adulto-mayor/test-edmonton-popup/test-edmonton-popup.component';
 import { EdmontonComponent } from './routes/ambulatoria-paciente/edmonton/edmonton.component';
 import { GetTestComponent } from './routes/ambulatoria-paciente/adulto-mayor/get-test/get-test.component';
+import { DialogoMayorDe15Component } from './routes/ambulatoria-paciente/dialogo-mayor-de15/dialogo-mayor-de15.component';
+import { DialogoInconsistenciaComponent } from './routes/ambulatoria-paciente/dialogo-inconsistencia/dialogo-inconsistencia.component';
 @NgModule({
 	declarations: [
 		HomeComponent,
@@ -127,6 +129,8 @@ import { GetTestComponent } from './routes/ambulatoria-paciente/adulto-mayor/get
     	EnviarRecetaDigitalPorEmailComponent,
      DialogoAclaracionComponent,
      GetTestComponent,
+     DialogoMayorDe15Component,
+     DialogoInconsistenciaComponent,
 	],
 	imports: [
 		CommonModule,
