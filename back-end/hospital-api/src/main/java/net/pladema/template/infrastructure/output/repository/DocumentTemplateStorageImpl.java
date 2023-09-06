@@ -19,6 +19,11 @@ public class DocumentTemplateStorageImpl implements DocumentTemplateStorage {
         documentTemplateRepository.save(documentTemplate);
     }
 
+    @Override
+    public boolean exists(Integer userId, String name) {
+        return documentTemplateRepository.exists(userId, name).isPresent();
+    }
+
     private DocumentTemplate mapTo(DocumentTemplateBo documentTemplateBo) {
         DocumentTemplate documentTemplate = new DocumentTemplate();
         documentTemplate.setName(documentTemplateBo.getName());
