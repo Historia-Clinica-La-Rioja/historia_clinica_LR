@@ -15,17 +15,17 @@ import lombok.ToString;
 public class DocumentTemplateDto {
 
 	private String name;
-	private String category;
+	private Short typeId;
 	private String templateText;
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
 	public DocumentTemplateDto(
 			@JsonProperty("name") String name,
-			@JsonProperty("category") String category,
+			@JsonProperty("typeId") Short typeId,
 			@JsonProperty("templateText") String templateText) {
 
 		this.name = name;
-		this.category = category;
+		this.typeId = typeId;
 		this.templateText = templateText;
 	}
 

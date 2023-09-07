@@ -6,5 +6,5 @@ public interface DocumentTemplateStorage {
 
     void save(DocumentTemplateBo documentTemplateBo, Long fileId);
 
-    boolean exists(Integer userId, String name);
+    boolean exists(Integer userId, String name, Short typeId);
 }

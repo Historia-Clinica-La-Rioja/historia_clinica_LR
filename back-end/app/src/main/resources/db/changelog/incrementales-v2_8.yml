@@ -77,8 +77,8 @@ databaseChangeLog:
                 - column:
                     constraints:
                       nullable: false
-                    name: category
-                    type: varchar(20)
+                    name: type_id
+                    type: smallint
                 - column:
                     constraints:
                       nullable: false
@@ -116,3 +116,7 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: file_info
               validate: true
+          - addUniqueConstraint:
+              tableName: document_template
+              columnNames: user_id, type_id, name
+              constraintName: UQ_document_template_user_id_type_id_name

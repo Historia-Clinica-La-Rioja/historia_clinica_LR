@@ -20,15 +20,15 @@ public class DocumentTemplateStorageImpl implements DocumentTemplateStorage {
     }
 
     @Override
-    public boolean exists(Integer userId, String name) {
-        return documentTemplateRepository.exists(userId, name).isPresent();
+    public boolean exists(Integer userId, String name, Short typeId) {
+        return documentTemplateRepository.exists(userId, name, typeId).isPresent();
     }
 
     private DocumentTemplate mapTo(DocumentTemplateBo documentTemplateBo) {
         DocumentTemplate documentTemplate = new DocumentTemplate();
         documentTemplate.setName(documentTemplateBo.getName());
         documentTemplate.setUserId(documentTemplateBo.getUserId());
-        documentTemplate.setCategory(documentTemplateBo.getCategory());
+        documentTemplate.setTypeId(documentTemplateBo.getTypeId());
         documentTemplate.setInstitutionId(documentTemplateBo.getInstitutionId());
         return documentTemplate;
     }

@@ -16,6 +16,9 @@ public interface DocumentTemplateRepository extends JpaRepository<DocumentTempla
     @Query("SELECT 1 " +
             "FROM DocumentTemplate AS dt " +
             "WHERE dt.userId = :userId " +
+            "AND dt.typeId = :typeId " +
             "AND LOWER(dt.name) LIKE LOWER(:name)")
-    Optional<Integer> exists(@Param("userId") Integer userId, @Param("name") String name);
+    Optional<Integer> exists(@Param("userId") Integer userId,
+                             @Param("name") String name,
+                             @Param("typeId") Short typeId);
 }

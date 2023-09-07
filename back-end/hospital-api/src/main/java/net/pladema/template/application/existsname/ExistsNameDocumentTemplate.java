@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 public class ExistsNameDocumentTemplate {
     private final DocumentTemplateStorage documentTemplateStorage;
 
-    public boolean run(Integer userId, String name) {
-        log.debug("Input -> userId {} checking document template with name {}", userId, name);
+    public boolean run(Integer userId, String name, Short typeId) {
+        log.debug("Input -> userId {} checking document template (typeId {}) with name {}", userId, typeId, name);
 
-        boolean result = documentTemplateStorage.exists(userId, name);
+        boolean result = documentTemplateStorage.exists(userId, name, typeId);
 
         log.debug("Output -> {}", result);
         return result;

@@ -29,13 +29,14 @@ public class DocumentTemplateValidator implements ConstraintValidator<ValidDocum
         DocumentTemplateDto templateDto = (DocumentTemplateDto) parameters[1];
         Integer userId = UserInfo.getCurrentAuditor();
         String name = templateDto.getName();
+        Short typeId = templateDto.getTypeId();
         String templateText = templateDto.getTemplateText();
-        log.debug("Input parameters -> userId {}, name {}", userId, name);
+        log.debug("Input parameters -> userId {}, name {}, typeId {}", userId, name, typeId);
 
         boolean result = true;
 
-        if (existsNameDocumentTemplate.run(userId, name)) {
-            log.debug("The user {} is trying to save a document template with name '{}'", userId, name);
+        if (existsNameDocumentTemplate.run(userId, name, typeId)) {
+            log.debug("The user {} is trying to save a duplicate template (typeId {}) with name '{}'", userId, typeId, name);
             buildResponse(context, "{document.template.error.exist.name}");
             result = false;
         }

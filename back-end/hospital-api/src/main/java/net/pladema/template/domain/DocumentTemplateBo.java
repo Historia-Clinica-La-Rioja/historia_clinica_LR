@@ -14,7 +14,7 @@ public class DocumentTemplateBo {
 
 	private Integer userId;
 	private String name;
-	private String category;
+	private Short typeId;
 	private Integer institutionId;
 	private String templateText;
 
@@ -22,7 +22,7 @@ public class DocumentTemplateBo {
 	public String toString() {
 		return "DocumentTemplateBo{" + "userId=" + userId +
 				", name='" + name + '\'' +
-				", category='" + category + '\'' +
+				", typeId='" + typeId + '\'' +
 				", institutionId=" + institutionId +
 				", templateText='" + "<OMITTED>" + '\'' +
 				'}';

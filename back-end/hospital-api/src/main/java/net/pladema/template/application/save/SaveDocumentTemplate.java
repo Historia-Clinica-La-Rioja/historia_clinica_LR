@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.template.application.port.DocumentTemplateStorage;
 import net.pladema.template.domain.DocumentTemplateBo;
+import net.pladema.template.domain.enums.EDocumentTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -29,7 +30,10 @@ public class SaveDocumentTemplate {
 
         FileContentBo templateStream = FileContentBo.fromString(json);
 
-        var path = fileService.buildCompletePath(String.format("/user/%d/templates/%s/", documentTemplateBo.getUserId(), fileService.createUuid()));
+        var path = fileService.buildCompletePath(String.format("/user/%d/templates/%s/%s/",
+                documentTemplateBo.getUserId(),
+                EDocumentTemplate.map(documentTemplateBo.getTypeId()).getDescription(),
+                fileService.createUuid()));
         FileInfo result = fileService.saveStreamInPath(path, documentTemplateBo.getName(), "PLANTILLA", false, templateStream);
 
         Long fileId = result.getId();

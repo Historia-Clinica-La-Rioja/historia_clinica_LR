@@ -1107,9 +1107,9 @@ export interface DocumentSummaryDto extends Serializable {
 }
 
 export interface DocumentTemplateDto {
-    category: string;
     name: string;
     templateText: string;
+    typeId: number;
 }
 
 export interface DocumentTypeDto {
