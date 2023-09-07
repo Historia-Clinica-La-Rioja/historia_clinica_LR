@@ -1,7 +1,9 @@
 package net.pladema.template.infrastructure.input.rest.mapper;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import net.pladema.template.domain.ConclusionTemplateBo;
 import net.pladema.template.domain.DocumentTemplateBo;
+import net.pladema.template.infrastructure.input.rest.dto.ConclusionTemplateDto;
 import net.pladema.template.infrastructure.input.rest.dto.DocumentTemplateDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
@@ -10,4 +12,7 @@ import org.mapstruct.Named;
 public interface DocumentTemplateMapper {
 	@Named("toDocumentTemplateBo")
 	DocumentTemplateBo toDocumentTemplateBo(DocumentTemplateDto documentTemplateDto);
+
+	@Named("toConclusionTemplateBo")
+	ConclusionTemplateBo toConclusionTemplateBo(ConclusionTemplateDto conclusionTemplateDto);
 }

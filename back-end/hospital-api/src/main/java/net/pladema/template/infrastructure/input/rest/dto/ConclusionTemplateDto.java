@@ -14,12 +14,12 @@ import java.util.List;
 @Setter
 @ToString
 @NoArgsConstructor
-public class InformerTemplateDto extends DocumentTemplateDto {
+public class ConclusionTemplateDto extends DocumentTemplateDto {
 
     private List<ConclusionDto> conclusions;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public InformerTemplateDto(
+    public ConclusionTemplateDto(
             @JsonProperty("name") String name,
             @JsonProperty("category") String category,
             @JsonProperty("templateText") String templateText,
