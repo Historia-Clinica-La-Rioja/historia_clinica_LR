@@ -15,9 +15,9 @@ public class AppointmentOrderImageExistCheckVo {
 	private final Integer appointmentId;
 
 
-	public AppointmentOrderImageExistCheckVo(Integer appointmentId, String documentStatus) {
+	public AppointmentOrderImageExistCheckVo(Integer appointmentId, String documentStatus, Integer orderId) {
 		this.appointmentId = appointmentId;
 		this.documentStatus = documentStatus;
-		this.orderId = null;
+		this.orderId = orderId;
 	}
 }

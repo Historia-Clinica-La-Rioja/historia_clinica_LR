@@ -25,9 +25,9 @@ public class ExistCheckDiagnosticReportServiceImpl implements ExistCheckDiagnost
         this.appointmentOrderImageRepository = appointmentOrderImageRepository;
     }
     @Override
-    public AppointmentOrderImageExistCheckBo execute(Integer diagnosticReportId) {
-        LOG.debug("Input: diagnosticReportId: {}", diagnosticReportId);
-		List<AppointmentOrderImageExistCheckVo> findAppointmentIdAndReportByOrderId = appointmentOrderImageRepository.findAppointmentIdAndReportByOrderId(diagnosticReportId);
+    public AppointmentOrderImageExistCheckBo execute(Integer orderId) {
+        LOG.debug("Input: diagnosticReportId: {}", orderId);
+		List<AppointmentOrderImageExistCheckVo> findAppointmentIdAndReportByOrderId = appointmentOrderImageRepository.findAppointmentIdAndReportByOrderId(orderId);
 		AppointmentOrderImageExistCheckBo result;
 		if (findAppointmentIdAndReportByOrderId != null && !findAppointmentIdAndReportByOrderId.isEmpty()){
 			result = new AppointmentOrderImageExistCheckBo(findAppointmentIdAndReportByOrderId.get(0));
@@ -35,7 +35,6 @@ public class ExistCheckDiagnosticReportServiceImpl implements ExistCheckDiagnost
 		else {
 			result =new AppointmentOrderImageExistCheckBo(null);
 		}
-		result.setOrderId(appointmentOrderImageRepository.existOrderId(diagnosticReportId));
 		return result;
     }
 }
