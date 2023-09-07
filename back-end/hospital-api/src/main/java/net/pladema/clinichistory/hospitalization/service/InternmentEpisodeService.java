@@ -4,8 +4,8 @@ import net.pladema.clinichistory.hospitalization.repository.domain.EvolutionNote
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummaryBo;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.GeneratePdfException;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
-import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -72,6 +72,6 @@ public interface InternmentEpisodeService {
 
 	boolean haveMoreThanOneIntermentEpisodesFromPatients(List<Integer> patients);
 
-	ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId);
+	ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId) throws GeneratePdfException;
 
 }

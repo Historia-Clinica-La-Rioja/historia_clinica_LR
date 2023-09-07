@@ -10,12 +10,14 @@ import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgx.shared.files.pdf.PdfService;
+import ar.lamansys.sgx.shared.filestorage.application.FileContentBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
 import lombok.AllArgsConstructor;
 import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
 
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentTypeBo;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.GeneratePdfException;
 import net.pladema.clinichistory.hospitalization.service.summary.domain.ResponsibleDoctorBo;
 import net.pladema.establishment.service.InstitutionService;
 import net.pladema.establishment.service.domain.InstitutionBo;
@@ -60,6 +62,8 @@ import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMed
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMedicalDischargeExceptionEnum;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
+
+import org.xhtmlrenderer.util.XRRuntimeException;
 
 @Service
 public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
@@ -451,7 +455,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	}
 
 	@Override
-	public ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId) {
+	public ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId) throws GeneratePdfException {
 		LOG.debug("Input parameters -> institutionId {}, consentId {}, internmentEpisodeId {}", institutionId, consentId, internmentEpisodeId);
 		InternmentEpisode internmentEpisode = getInternmentEpisode(internmentEpisodeId, institutionId);
 		Optional<Patient> patient = patientService.getPatient(internmentEpisode.getPatientId());
@@ -479,7 +483,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		String template = "consent_document";
 
 		return StoredFileResponse.sendFile(
-				pdfService.generate(template, context),
+				getGenerate(context, template),
 				String.format("%s_.pdf", "Documento de consentimiento"),
 				MediaType.APPLICATION_PDF
 		);
@@ -503,5 +507,17 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		dto.setMiddleNames(person.getMiddleNames());
 		dto.setIdentificationNumber(person.getIdentificationNumber());
 		return dto;
+	}
+
+	private FileContentBo getGenerate(Map<String, Object> context, String template) throws GeneratePdfException {
+		try {
+			return pdfService.generate(template, context);
+		} catch(XRRuntimeException exc) {
+			LOG.error(exc.getMessage());
+			throw new GeneratePdfException(exc.getMessage());
+		} catch(Exception exc) {
+			LOG.error(exc.getMessage(), exc);
+			throw new GeneratePdfException(exc.getMessage());
+		}
 	}
 }

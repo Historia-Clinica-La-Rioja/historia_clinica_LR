@@ -2,6 +2,7 @@ package net.pladema.clinichistory.hospitalization.controller.exceptions;
 
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateInternmentEpisodeException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.GeneratePdfException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentDocumentException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMedicalDischargeException;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
@@ -54,6 +55,13 @@ public class HospitalizationExceptionHandler {
 	protected ApiErrorMessageDto handleInternmentDocumentException(InternmentDocumentException ex) {
 		LOG.debug("InternmentDocumentException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({GeneratePdfException.class})
+	protected ApiErrorMessageDto handleGeneratePdfException(GeneratePdfException ex) {
+		LOG.debug("GeneratePdfException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto("generate-pdf-fail", ex.getMessage());
 	}
 
 }
