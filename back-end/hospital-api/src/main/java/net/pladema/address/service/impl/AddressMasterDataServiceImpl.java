@@ -11,6 +11,9 @@ import net.pladema.address.repository.entity.Department;
 import net.pladema.address.service.AddressMasterDataService;
 import net.pladema.address.service.AddressService;
 
+import net.pladema.snowstorm.repository.entity.SnomedGroupType;
+import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -103,10 +106,20 @@ public class AddressMasterDataServiceImpl implements AddressMasterDataService {
 		AddressBo institutionAddress = addressService.getAddressByInstitution(institutionId);
 		if (institutionAddress.getProvinceId() != null) {
 			if (careLineId == null)
-				return departmentRepository.findAllByProvinceIdAndClinicalSpecialtyId(institutionAddress.getProvinceId(), clinicalSpecialtyId, clazz);
-			return departmentRepository.findAllByProvinceIdAndCareLineIdAndClinicalSpecialtyId(institutionAddress.getProvinceId(), careLineId, clinicalSpecialtyId, clazz);
+				return departmentRepository.findAllByProfessionalsWithClinicalSpecialtyId(clinicalSpecialtyId, clazz);
+			return departmentRepository.findAllByCareLineIdAndClinicalSpecialtyId(careLineId, clinicalSpecialtyId, clazz);
 		}
 		return Collections.emptyList();
 	}
 
+	@Override
+	public <T> Collection<T> getDepartmentsByReferenceFilterByPractice(Integer practiceSnomedId, Integer careLineId, Integer clinicalSpecialtyId, Class<T> clazz) {
+		if (careLineId != null && clinicalSpecialtyId == null)
+			return departmentRepository.findAllByCareLineIdAndPracticeSnomedId(careLineId, practiceSnomedId, clazz);
+		if (careLineId != null)
+			return departmentRepository.findAllByCareLineIdClinicalSpecialtyIdAndPracticeSnomedId(careLineId, clinicalSpecialtyId, practiceSnomedId, clazz);
+		if (clinicalSpecialtyId != null)
+			return departmentRepository.findAllByClinicalSpecialtyIdAndPracticeSnomedId(clinicalSpecialtyId, practiceSnomedId, SnomedECL.PROCEDURE.toString(), SnomedGroupType.SEARCH_GROUP, clazz);
+		return departmentRepository.findAllByPractice(practiceSnomedId, SnomedECL.PROCEDURE.toString(), SnomedGroupType.SEARCH_GROUP, clazz);
+	}
 }

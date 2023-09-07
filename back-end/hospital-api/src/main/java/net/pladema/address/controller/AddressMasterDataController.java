@@ -70,10 +70,21 @@ public class AddressMasterDataController {
 
 	@GetMapping(value = "/institution/{institutionId}/departments/with-specialty/{clinicalSpecialtyId}")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
-	public ResponseEntity<Collection<AddressProjection>> getDepartmentsForReference(@PathVariable("institutionId") Integer institutionId,
+	public ResponseEntity<Collection<AddressProjection>> getDeparmentsByCareLineAndClinicalSpecialty(@PathVariable("institutionId") Integer institutionId,
 																					@PathVariable("clinicalSpecialtyId") Integer clinicalSpecialtyId,
 																					@RequestParam(name = "careLineId", required = false) Integer careLineId) {
 		LOG.debug("{}", "All departments in province having clinical specialty");
 		return ResponseEntity.ok().body(addressMasterDataService.getDepartmentsForReference(institutionId, careLineId, clinicalSpecialtyId, AddressProjection.class));
 	}
+
+	@GetMapping(value = "/institution/{institutionId}/departments/by-reference-practice-filter")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<Collection<AddressProjection>> getDepartmentsByCareLineAndPracticesAndClinicalSpecialty(@PathVariable("institutionId") Integer institutionId,
+																												  @RequestParam("practiceSnomedId") Integer practiceSnomedId,
+																												  @RequestParam(name = "careLineId", required = false) Integer careLineId,
+																												  @RequestParam(name = "clinicalSpecialtyId", required = false) Integer clinicalSpecialtyId) {
+		LOG.debug("{}", "All departments by reference for practice filter");
+		return ResponseEntity.ok().body(addressMasterDataService.getDepartmentsByReferenceFilterByPractice(practiceSnomedId, careLineId, clinicalSpecialtyId, AddressProjection.class));
+	}
+
 }
