@@ -6,6 +6,9 @@ import net.pladema.template.domain.DocumentTemplateBo;
 import net.pladema.template.infrastructure.output.repository.entity.DocumentTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class DocumentTemplateStorageImpl implements DocumentTemplateStorage {
@@ -24,6 +27,14 @@ public class DocumentTemplateStorageImpl implements DocumentTemplateStorage {
         return documentTemplateRepository.exists(userId, name, typeId).isPresent();
     }
 
+    @Override
+    public List<DocumentTemplateBo> get(Integer userId, Short typeId) {
+        return documentTemplateRepository.getTemplates(userId, typeId).stream()
+                .map(this::mapTo)
+                .collect(Collectors.toList());
+    }
+
+
     private DocumentTemplate mapTo(DocumentTemplateBo documentTemplateBo) {
         DocumentTemplate documentTemplate = new DocumentTemplate();
         documentTemplate.setName(documentTemplateBo.getName());
@@ -31,5 +42,14 @@ public class DocumentTemplateStorageImpl implements DocumentTemplateStorage {
         documentTemplate.setTypeId(documentTemplateBo.getTypeId());
         documentTemplate.setInstitutionId(documentTemplateBo.getInstitutionId());
         return documentTemplate;
+    }
+
+    private DocumentTemplateBo mapTo(DocumentTemplate documentTemplate) {
+        DocumentTemplateBo documentTemplateBo = new DocumentTemplateBo();
+        documentTemplateBo.setName(documentTemplate.getName());
+        documentTemplateBo.setUserId(documentTemplate.getUserId());
+        documentTemplateBo.setTypeId(documentTemplate.getTypeId());
+        documentTemplateBo.setInstitutionId(documentTemplate.getInstitutionId());
+        return documentTemplateBo;
     }
 }
