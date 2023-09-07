@@ -74,7 +74,7 @@ export class AppointmentResultViewComponent implements OnInit {
 								' para ' +
 								`${this.appointment.professionalFullName} (${this.appointment?.clinicalSpecialty?.name})` + ' en ' +
 								`${this.appointment.doctorOffice}`,
-							appointmentId: result,
+							appointmentId: result.id,
 							message: message,
 						},
 
