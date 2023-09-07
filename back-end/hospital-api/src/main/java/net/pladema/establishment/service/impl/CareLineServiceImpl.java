@@ -4,7 +4,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.address.controller.service.domain.AddressBo;
-import net.pladema.establishment.application.port.PracticeCareLineStorage;
+import net.pladema.establishment.application.port.CareLineInstitutionPracticeStorage;
 import net.pladema.establishment.application.port.carelineproblem.CareLineProblemStorage;
 import net.pladema.establishment.repository.CareLineInstitutionSpecialtyRepository;
 import net.pladema.establishment.repository.CareLineRepository;
@@ -38,7 +38,7 @@ public class CareLineServiceImpl implements CareLineService {
 
 	private final InstitutionService institutionService;
 
-	private final PracticeCareLineStorage practiceCareLineStorage;
+	private final CareLineInstitutionPracticeStorage careLineInstitutionPracticeStorage;
 
     @Override
     public List<CareLineBo> getCareLines() {
@@ -112,7 +112,7 @@ public class CareLineServiceImpl implements CareLineService {
 
 	public List<CareLineBo> getCareLinesWithAllPractices(List<CareLineBo> careLines, List<Integer> practicesId) {
 		List<Integer> careLineIds = careLines.stream().map(CareLineBo::getId).collect(Collectors.toList());
-		Map<Integer, List<SnomedBo>> practices = practiceCareLineStorage.fetchAllByCareLineIds(careLineIds);
+		Map<Integer, List<SnomedBo>> practices = careLineInstitutionPracticeStorage.fetchAllByCareLineIds(careLineIds);
 		return careLines.stream()
 				.filter(cl -> practices.get(cl.getId())
 						.stream()
