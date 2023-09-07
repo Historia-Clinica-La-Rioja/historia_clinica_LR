@@ -4,6 +4,9 @@ import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateInternmentEpisodeException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.GeneratePdfException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentDocumentException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentEpisodeNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PatientNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PersonNotFoundException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMedicalDischargeException;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.clinichistory.hospitalization.service.servicerequest.exception.CreateInternmentServiceRequestException;
@@ -62,6 +65,27 @@ public class HospitalizationExceptionHandler {
 	protected ApiErrorMessageDto handleGeneratePdfException(GeneratePdfException ex) {
 		LOG.debug("GeneratePdfException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto("generate-pdf-fail", ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ExceptionHandler({PatientNotFoundException.class})
+	protected ApiErrorMessageDto handlePatientNotFoundException(PatientNotFoundException ex) {
+		LOG.debug("PatientNotFoundException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto("patient-not-found", "Paciente no encontrado");
+	}
+
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ExceptionHandler({PersonNotFoundException.class})
+	protected ApiErrorMessageDto handlePersonNotFoundException(PersonNotFoundException ex) {
+		LOG.debug("PersonNotFoundException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto("person-not-found", "Persona no encontrado");
+	}
+
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ExceptionHandler({InternmentEpisodeNotFoundException.class})
+	protected ApiErrorMessageDto handleInternmentNotFoundException(InternmentEpisodeNotFoundException ex) {
+		LOG.debug("InternmentNotFoundException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto("internment-episode-not-found", "Episodio de internación no encontrado");
 	}
 
 }

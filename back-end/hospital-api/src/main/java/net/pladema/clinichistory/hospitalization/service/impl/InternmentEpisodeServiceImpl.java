@@ -18,6 +18,9 @@ import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpi
 
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentTypeBo;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.GeneratePdfException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentEpisodeNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PatientNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PersonNotFoundException;
 import net.pladema.clinichistory.hospitalization.service.summary.domain.ResponsibleDoctorBo;
 import net.pladema.establishment.service.InstitutionService;
 import net.pladema.establishment.service.domain.InstitutionBo;
@@ -31,7 +34,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -455,21 +457,20 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	}
 
 	@Override
-	public ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId) throws GeneratePdfException {
+	public ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId) throws GeneratePdfException, PatientNotFoundException, PersonNotFoundException, InternmentEpisodeNotFoundException {
 		LOG.debug("Input parameters -> institutionId {}, consentId {}, internmentEpisodeId {}", institutionId, consentId, internmentEpisodeId);
 		InternmentEpisode internmentEpisode = getInternmentEpisode(internmentEpisodeId, institutionId);
 		Optional<Patient> patient = patientService.getPatient(internmentEpisode.getPatientId());
-
 		if (patient.isEmpty())
-			return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+			throw new PatientNotFoundException();
 		var pa = patient.get();
 		Optional<Person> person = personService.findByPatientId(pa.getId());
 		if (person.isEmpty())
-			return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+			throw new PersonNotFoundException();
 		var pe = person.get();
 		Optional<InternmentSummaryBo> internmentSummaryBo = getIntermentSummary(internmentEpisodeId);
 		if (internmentSummaryBo.isEmpty())
-			return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+			throw new InternmentEpisodeNotFoundException();
 		var isbo = internmentSummaryBo.get();
 
 		InstitutionBo institutionBo = institutionService.get(institutionId);

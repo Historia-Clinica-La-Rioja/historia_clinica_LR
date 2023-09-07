@@ -5,6 +5,9 @@ import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpi
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummaryBo;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.GeneratePdfException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentEpisodeNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PatientNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PersonNotFoundException;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
 import org.springframework.core.io.Resource;
@@ -72,6 +75,6 @@ public interface InternmentEpisodeService {
 
 	boolean haveMoreThanOneIntermentEpisodesFromPatients(List<Integer> patients);
 
-	ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId) throws GeneratePdfException;
+	ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId) throws GeneratePdfException, PatientNotFoundException, PersonNotFoundException, InternmentEpisodeNotFoundException;
 
 }

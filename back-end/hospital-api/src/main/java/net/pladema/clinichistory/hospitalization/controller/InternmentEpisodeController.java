@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.GeneratePdfException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentEpisodeNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PatientNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PersonNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -336,7 +339,7 @@ public class InternmentEpisodeController {
 	public ResponseEntity<Resource> generateEpisodeDocumentType(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "consentId") Integer consentId,
-			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) throws GeneratePdfException {
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) throws GeneratePdfException, InternmentEpisodeNotFoundException, PersonNotFoundException, PatientNotFoundException {
 		LOG.debug("Input parameters -> institutionId {}, consentId {}, intermentEpisodeId {} ", institutionId, consentId, internmentEpisodeId);
 		ResponseEntity<Resource> result = internmentEpisodeService.generateEpisodeDocumentType(institutionId, consentId, internmentEpisodeId);
 		LOG.debug(OUTPUT, result);
