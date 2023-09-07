@@ -24,7 +24,6 @@ public class SnomedRelatedGroupExternalServiceImpl implements SnomedRelatedGroup
 
 	@Override
 	public List<SharedSnomedDto> getPracticesByInstitution(Integer institutionId) {
-
 		log.debug("Input parameter -> institutionId {}", institutionId);
 		String description = SnomedECL.PROCEDURE.toString();
 		List<SharedSnomedDto> result = snomedRelatedGroupRepository.getAllByInstitutionAndDescriptionAndGroupType(institutionId, description, SnomedGroupType.SEARCH_GROUP).stream()
@@ -33,5 +32,14 @@ public class SnomedRelatedGroupExternalServiceImpl implements SnomedRelatedGroup
 		log.debug("Output {}", result);
 		return result;
 
+	}
+
+	@Override
+	public List<SharedSnomedDto> getPracticesFromAllInstitutions() {
+		log.debug("Fetch practices for all institutions");
+		return snomedRelatedGroupRepository.getAllByDescriptionAndGroupType(SnomedECL.PROCEDURE.toString(), SnomedGroupType.SEARCH_GROUP)
+				.stream()
+				.map(bo -> 	new SharedSnomedDto(bo.getId(), bo.getSctid(), bo.getPt()))
+				.collect(Collectors.toList());
 	}
 }

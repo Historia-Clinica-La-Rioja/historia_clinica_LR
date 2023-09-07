@@ -6,7 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.establishment.application.practices.GetPracticesByActiveDiaries;
-import net.pladema.establishment.application.practices.GetPracticesByInstitution;
+import net.pladema.establishment.application.institutionpractices.GetPracticesByInstitution;
+import net.pladema.establishment.application.institutionpractices.GetPracticesFromInstitutions;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,7 +26,10 @@ import java.util.List;
 public class PracticesController {
 
 	private final GetPracticesByInstitution getPracticesByInstitution;
+
 	private final GetPracticesByActiveDiaries getPracticesByActiveDiaries;
+
+	private final GetPracticesFromInstitutions getPracticesFromInstitutions;
 
 	@GetMapping("/by-institution")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA')")
@@ -45,4 +49,12 @@ public class PracticesController {
 		return ResponseEntity.ok(activeDiariesPractices);
 	}
 
+	@GetMapping()
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	public ResponseEntity<List<SharedSnomedDto>> getPracticesFromInstitutions(@PathVariable(name = "institutionId") Integer institutionId) {
+		List<SharedSnomedDto> result = getPracticesFromInstitutions.run();
+		log.debug("Get practices from all institutions -> ", result);
+		return ResponseEntity.ok().body(result);
+	}
+	
 }

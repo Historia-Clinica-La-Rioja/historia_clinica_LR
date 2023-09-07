@@ -1,4 +1,4 @@
-package net.pladema.establishment.application.practices;
+package net.pladema.establishment.application.institutionpractices;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import lombok.AllArgsConstructor;

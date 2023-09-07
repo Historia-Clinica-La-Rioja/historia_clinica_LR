@@ -52,4 +52,16 @@ public interface SnomedRelatedGroupRepository extends JpaRepository<SnomedRelate
 																 @Param("description") String description,
 																 @Param("snomedGroupTypeId") Short snomedGroupTypeId);
 
+	@Transactional(readOnly = true)
+	@Query( "SELECT DISTINCT new net.pladema.cipres.domain.SnomedBo(s.id, s.sctid, s.pt) " +
+			"FROM SnomedGroup sg " +
+			"JOIN SnomedGroup baseGroup ON (sg.groupId = baseGroup.id) " +
+			"JOIN SnomedRelatedGroup srg ON (sg.id = srg.groupId) " +
+			"JOIN Snomed s ON (srg.snomedId = s.id) " +
+			"WHERE sg.groupType = :snomedGroupTypeId " +
+			"AND baseGroup.description = :description " +
+			"AND sg.userId is null ")
+	List<SnomedBo> getAllByDescriptionAndGroupType(@Param("description") String description,
+												   @Param("snomedGroupTypeId") Short snomedGroupTypeId);
+
 }

@@ -7,4 +7,7 @@ import java.util.List;
 public interface SnomedRelatedGroupExternalService {
 
 	List<SharedSnomedDto> getPracticesByInstitution(Integer institutionId);
+
+	List<SharedSnomedDto> getPracticesFromAllInstitutions();
+
 }
