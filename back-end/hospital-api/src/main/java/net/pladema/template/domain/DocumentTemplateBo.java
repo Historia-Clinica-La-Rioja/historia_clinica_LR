@@ -1,14 +1,14 @@
 package net.pladema.template.domain;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class DocumentTemplateBo {
 
@@ -17,7 +17,6 @@ public class DocumentTemplateBo {
 	private String category;
 	private Integer institutionId;
 	private String templateText;
-	private List<ConclusionBo> conclusions;
 
 	@Override
 	public String toString() {
@@ -26,7 +25,6 @@ public class DocumentTemplateBo {
 				", category='" + category + '\'' +
 				", institutionId=" + institutionId +
 				", templateText='" + "<OMITTED>" + '\'' +
-				", conclusions=" + conclusions +
 				'}';
 	}
 }

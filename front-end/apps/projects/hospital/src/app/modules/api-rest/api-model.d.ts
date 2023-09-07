@@ -1104,7 +1104,6 @@ export interface DocumentSummaryDto extends Serializable {
 
 export interface DocumentTemplateDto {
     category: string;
-    conclusions: ConclusionDto[];
     name: string;
     templateText: string;
 }
@@ -1914,6 +1913,10 @@ export interface InformerObservationDto {
     createdBy: string;
     evolutionNote: string;
     id: number;
+}
+
+export interface InformerTemplateDto extends DocumentTemplateDto {
+    conclusions: ConclusionDto[];
 }
 
 export interface InputStreamSource {
