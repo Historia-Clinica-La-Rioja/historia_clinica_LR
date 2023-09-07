@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,6 +53,22 @@ public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Intege
 	void updateStatusandResult(@Param("idMove") Integer idMove,
 							   @Param("status") String status,
 							   @Param("result") String result);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE MoveStudies AS mo " +
+			"SET mo.beginOfMove = :date " +
+			"WHERE mo.id = :idMove")
+	void updateBeginOfMove(@Param("idMove") Integer idMove,
+							   @Param("date") Date date);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE MoveStudies AS mo " +
+			"SET mo.endOfMove = :date " +
+			"WHERE mo.id = :idMove")
+	void updateEndOfMove(@Param("idMove") Integer idMove,
+						   @Param("date") Date date);
 
 	@Transactional
 	@Modifying

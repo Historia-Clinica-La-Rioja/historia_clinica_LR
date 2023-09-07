@@ -120,8 +120,11 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 	@Override
 	public void updateStatusAndResult(Integer idMove, String status, String result) {
 		moveStudiesRepository.updateStatusandResult(idMove, status, result);
-
+		if(MoveStudiesJob.MOVING.equals(status)){
+			moveStudiesRepository.updateBeginOfMove(idMove, new Date());
+		}
 		if ("200".equals(result)) {
+			moveStudiesRepository.updateEndOfMove(idMove, new Date());
 			Optional<MoveStudies> moveStudy = moveStudiesRepository.findById(idMove);
 			if (moveStudy.isPresent()) {
 				MoveStudies ms = moveStudy.get();

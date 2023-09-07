@@ -64,6 +64,10 @@ public class MoveStudies implements Serializable {
 	@Column(name = "institution_id", nullable = true)
 	private Integer institutionId;
 
+	@Column(name = "begin_of_move")
+	private Date beginOfMove;
+	@Column(name = "end_of_move")
+	private Date endOfMove;
 	public MoveStudies(Integer appointmentId, Integer orchestratorId, String imageId, Integer pacServerId, Integer priority, Date moveDate, Integer priorityMax, Integer attempsNumber, String status, Integer institutionId){
 		this.appointmentId = appointmentId;
 		this.orchestratorId = orchestratorId;

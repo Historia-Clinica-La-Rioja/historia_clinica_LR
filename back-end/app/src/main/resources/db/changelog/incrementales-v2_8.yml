@@ -1,2 +1,20 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v2_8
+      
+    - changeSet:
+        id: addColumns-begin_of_move-end_of_move-move_studies
+        author: amurrie
+        changes:
+          - addColumn:
+              tableName: move_studies
+              columns:
+                - column:
+                    constraints:
+                      nullable: true
+                    name: begin_of_move
+                    type: datetime
+                - column:
+                    constraints:
+                      nullable: true
+                    name: end_of_move
+                    type: datetime
