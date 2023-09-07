@@ -11,6 +11,8 @@ import net.pladema.template.application.port.DocumentTemplateStorage;
 import net.pladema.template.domain.DocumentTemplateBo;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -20,10 +22,11 @@ public class SaveDocumentTemplate {
     private final FileService fileService;
     private final ObjectMapper objectMapper;
 
-    public void run(DocumentTemplateBo documentTemplateBo) throws JsonProcessingException {
-        log.debug("Input -> template {}", documentTemplateBo);
+    public void run(DocumentTemplateBo documentTemplateBo, Optional<String> template) throws JsonProcessingException {
+        log.debug("Input -> DocumentTemplateBo {}, template {}", documentTemplateBo, template);
 
-        String json = objectMapper.writeValueAsString(documentTemplateBo);
+        String json = template.orElse(objectMapper.writeValueAsString(documentTemplateBo));
+
         FileContentBo templateStream = FileContentBo.fromString(json);
 
         var path = fileService.buildCompletePath(String.format("/user/%d/templates/%s/", documentTemplateBo.getUserId(), fileService.createUuid()));

@@ -1,6 +1,7 @@
 package net.pladema.template.domain;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,13 +11,14 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class InformerTemplateBo extends DocumentTemplateBo {
+@JsonIncludeProperties({ "templateText", "conclusions" })
+public class ConclusionTemplateBo extends DocumentTemplateBo {
 
     private List<ConclusionBo> conclusions;
 
     @Override
     public String toString() {
-        return "InformerTemplateBo{" + "conclusions=" + conclusions +
+        return "ConclusionTemplateBo{" + "conclusions=" + conclusions +
                 ", super=" + super.toString() +
                 '}';
     }

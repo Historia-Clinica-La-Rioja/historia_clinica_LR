@@ -21,4 +21,22 @@ public class ConclusionBo extends HealthConditionBo {
         return super.isActive();
     }
 
+    @Override
+    @JsonIgnore
+    public boolean isError() {
+        return super.isError();
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isDiscarded() {
+        return super.isDiscarded();
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isMain() {
+        return super.isMain();
+    }
+
 }

@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
 @Tag(name = "Document Template", description = "Document Template")
 @RequestMapping("/institutions/{institutionId}/documents/templates")
@@ -25,8 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequiredArgsConstructor
 public class DocumentTemplateController {
-    private final SaveDocumentTemplate saveDocumentTemplate;
+
     private final DocumentTemplateMapper documentTemplateMapper;
+    private final SaveDocumentTemplate saveDocumentTemplate;
 
     @PostMapping("/save")
     @ValidDocumentTemplate
@@ -37,7 +40,7 @@ public class DocumentTemplateController {
         documentTemplateBo.setUserId(UserInfo.getCurrentAuditor());
         documentTemplateBo.setInstitutionId(institutionId);
 
-        saveDocumentTemplate.run(documentTemplateBo);
+        saveDocumentTemplate.run(documentTemplateBo, Optional.empty());
 
         log.trace("Output -> {}", true);
         return ResponseEntity.ok(true);
