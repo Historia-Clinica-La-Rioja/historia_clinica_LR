@@ -3,6 +3,7 @@ package net.pladema.medicalconsultation.appointment.service.impl;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
+import net.pladema.medicalconsultation.appointment.service.SendVirtualAppointmentEmailService;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentEnumException;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentException;
 
@@ -39,6 +40,8 @@ public class CreateAppointmentServiceImpl implements CreateAppointmentService {
 
 	private final DiaryOpeningHoursRepository diaryOpeningHoursRepository;
 
+	private final SendVirtualAppointmentEmailService sendVirtualAppointmentEmailService;
+
 	public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
 
@@ -66,6 +69,8 @@ public class CreateAppointmentServiceImpl implements CreateAppointmentService {
 				appointmentBo.getDiaryId()
 			));
 
+		if (appointmentBo.getModalityId().equals(EAppointmentModality.PATIENT_VIRTUAL_ATTENTION.getId()) || appointmentBo.getModalityId().equals(EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION.getId()))
+			sendVirtualAppointmentEmailService.run(appointmentBo);
 		log.debug("Output -> {}", result);
 		return result;
 	}

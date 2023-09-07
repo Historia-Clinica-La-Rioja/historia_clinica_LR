@@ -80,6 +80,14 @@ public class ClinicalSpecialtyServiceImpl implements ClinicalSpecialtyService{
 		return clinicalSpecialties;
 	}
 
+	@Override
+	public String getClinicalSpecialtyNameByDiaryId(Integer diaryId) {
+		LOG.debug("Input parameters -> diaryId {}", diaryId);
+		String result = clinicalSpecialtyRepository.getClinicalSpecialtyByDiary(diaryId).getName();
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
 	private ClinicalSpecialtyBo mapToBo(ClinicalSpecialty entiy){
         return new ClinicalSpecialtyBo(entiy.getId(), entiy.getName());
     }

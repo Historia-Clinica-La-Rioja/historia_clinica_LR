@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Turno de teleconsulta</title>
+
+    <meta name="description" content="Source code generated using layoutit.com">
+    <meta name="author" content="LayoutIt!">
+    <style type="text/css">
+
+        .gralinfo h3{
+            text-align: center;
+            color: #9c9c9c;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            padding-bottom: 0px;
+        }
+
+        .gralinfo h4{
+            text-align: center;
+            color: black;
+            font: 180% sans-seri;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            padding-bottom: 0px;
+        }
+
+        .headercolor{
+            background-color: #F7F7F7;
+        }
+
+        h3 {
+            color: #444444;
+            font-family: Helvetica;
+            font-size: 22px;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        body {
+            background-color: #333333;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid headercolor">
+    <div class="row">
+        <div class="col-12">
+            <h2 style="text-align: center; color: #1A73E8; font-size: xx-large;">
+                Turno de teleconsulta
+            </h2>
+
+            <h3 style="text-align: center; margin-top: 10px;">
+                Su turno ha sido asignado exitosamente
+            </h3>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="gralinfo">
+            <h3>Paciente:</h3>
+            <h4 style="text-transform: uppercase;" th:text="${patientName}"></h4>
+            <br>
+            <h3>Fecha:</h3>
+            <h4 th:text="${date}"></h4>
+            <br>
+            <h3>Profesional:</h3>
+            <h4 style="text-transform: uppercase;" th:text="${professionalName}"></h4>
+            <br>
+            <h3>Especialidad:</h3>
+            <h4 th:text="${clinicalSpecialty}"></h4>
+            <br>
+            <h3>Link de la llamada:</h3>
+            <h4>
+                <a th:href="${callLink}" th:text="${callLink}"></a>
+            </h4>
+            <br>
+        </div>
+    </div>
+</div>
+</body>
+</html>
