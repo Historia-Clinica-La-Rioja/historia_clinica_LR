@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.diary.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @ToString
+@AllArgsConstructor
 public class DiaryProtectedAppointmentsSearch {
 
 	@NotNull
@@ -42,16 +44,5 @@ public class DiaryProtectedAppointmentsSearch {
 	private Boolean includeNameSelfDetermination = false;
 
 	private EAppointmentModality modality;
-
-	public DiaryProtectedAppointmentsSearch(Integer careLineId, Integer clinicalSpecialtyId, Integer departmentId, @Nullable Integer institutionId,
-											LocalDate initialSearchDate, LocalDate endSearchDate, Boolean includeNameSelfDetermination) {
-		this.careLineId = careLineId;
-		this.clinicalSpecialtyId = clinicalSpecialtyId;
-		this.departmentId = departmentId;
-		this.institutionId = institutionId;
-		this.initialSearchDate = initialSearchDate;
-		this.endSearchDate = endSearchDate;
-		this.includeNameSelfDetermination = includeNameSelfDetermination;
-	}
 
 }

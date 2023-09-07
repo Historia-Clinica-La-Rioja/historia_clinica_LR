@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSearchBo;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryProtectedAppointmentsSearch;
 import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
@@ -68,7 +69,7 @@ public class DiaryAvailableAppointmentsSearchController {
 		LocalDate from = LocalDate.now();
 		LocalDate to = from.plusDays(60);
 		Integer result = diaryAvailableAppointmentsService.getAvailableProtectedAppointmentsBySearchCriteria(new DiaryProtectedAppointmentsSearch(
-				careLineId, clinicalSpecialtyId, departmentId, institutionDestinationId, from, to, false), institutionId).size();
+				careLineId, clinicalSpecialtyId, departmentId, institutionDestinationId, from, to, false, EAppointmentModality.NO_MODALITY), institutionId).size();
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}

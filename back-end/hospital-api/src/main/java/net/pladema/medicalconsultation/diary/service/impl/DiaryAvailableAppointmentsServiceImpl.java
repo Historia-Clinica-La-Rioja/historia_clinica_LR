@@ -98,7 +98,8 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 				(
 						(searchCriteria.getModality().equals(EAppointmentModality.ON_SITE_ATTENTION) && doh.getOnSiteAttentionAllowed()) ||
 						(searchCriteria.getModality().equals(EAppointmentModality.PATIENT_VIRTUAL_ATTENTION) && doh.getPatientVirtualAttentionAllowed()) ||
-						(searchCriteria.getModality().equals(EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION) && doh.getSecondOpinionVirtualAttentionAllowed())
+						(searchCriteria.getModality().equals(EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION) && doh.getSecondOpinionVirtualAttentionAllowed()) ||
+						searchCriteria.getModality().equals(EAppointmentModality.NO_MODALITY)
 				);
 	}
 
