@@ -46,6 +46,7 @@ public class DocumentTemplateStorageImpl implements DocumentTemplateStorage {
 
     private DocumentTemplateBo mapTo(DocumentTemplate documentTemplate) {
         DocumentTemplateBo documentTemplateBo = new DocumentTemplateBo();
+        documentTemplateBo.setId(documentTemplate.getId());
         documentTemplateBo.setName(documentTemplate.getName());
         documentTemplateBo.setUserId(documentTemplate.getUserId());
         documentTemplateBo.setTypeId(documentTemplate.getTypeId());

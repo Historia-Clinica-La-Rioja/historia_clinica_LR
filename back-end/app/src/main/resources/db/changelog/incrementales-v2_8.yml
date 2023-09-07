@@ -63,7 +63,7 @@ databaseChangeLog:
                       primaryKey: true
                       primaryKeyName: PK_document_template
                     name: id
-                    type: int
+                    type: bigint
                 - column:
                     constraints:
                       nullable: false

@@ -12,6 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DocumentTemplateBo {
 
+	private Long id;
 	private Integer userId;
 	private String name;
 	private Short typeId;
@@ -20,7 +21,8 @@ public class DocumentTemplateBo {
 
 	@Override
 	public String toString() {
-		return "DocumentTemplateBo{" + "userId=" + userId +
+		return "DocumentTemplateBo{" + "id=" + id +
+				", userId='" + userId + '\'' +
 				", name='" + name + '\'' +
 				", typeId='" + typeId + '\'' +
 				", institutionId=" + institutionId +
