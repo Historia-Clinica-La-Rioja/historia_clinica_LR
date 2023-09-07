@@ -1,6 +1,6 @@
 <div id="equipment-search" class="actions" fxLayout="row" fxLayoutGap="15px">
 	<app-typeahead id="modalities" [options]="modalities$ | async"
-		[titleInput]="'turnos.home.SPECIALTY_SEARCH' | translate"
+		[titleInput]="'turnos.home.MODALITY_SEARCH' | translate"
 		(selectionChange)="filterEquipmentsByModality($event)">
 	</app-typeahead>
 	<app-typeahead id="equipments" style="width: 26%;"
