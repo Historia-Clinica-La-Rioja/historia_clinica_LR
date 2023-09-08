@@ -90,6 +90,14 @@ public class CareLineServiceImpl implements CareLineService {
 		return result;
 	}
 
+	@Override
+	public List<CareLineBo> getVirtualConsultationCareLinesByInstitutionId(Integer institutionId) {
+		log.debug("Input parameters -> institutionId {}", institutionId);
+		List<CareLineBo> result = careLineRepository.getVirtualConsultationCareLinesByInstitutionId(institutionId);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
 	public List<CareLineBo> getCareLinesWithAllProblems(List<CareLineBo> careLines, List<String> snomedSctids) {
 		List<Integer> careLineIds = careLines.stream().map(CareLineBo::getId).collect(Collectors.toList());
 		Map<Integer, List<SnomedBo>> problems = careLineProblemStorage.fetchAllByCareLineIds(careLineIds);

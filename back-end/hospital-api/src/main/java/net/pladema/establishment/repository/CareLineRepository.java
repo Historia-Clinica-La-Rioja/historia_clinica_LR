@@ -63,4 +63,11 @@ public interface CareLineRepository extends SGXAuditableEntityJPARepository<Care
 			"AND cli.deleted IS FALSE ")
 	List<CareLineBo> getAllByInstitutionId(@Param("institutionId") Integer institutionId);
 
+	@Transactional(readOnly = true)
+	@Query(" SELECT DISTINCT NEW net.pladema.establishment.service.domain.CareLineBo(cl.id, cl.description) " +
+			"FROM CareLine cl " +
+			"JOIN VirtualConsultation vc ON (vc.careLineId = cl.id) " +
+			"WHERE vc.institutionId = :institutionId")
+	List<CareLineBo> getVirtualConsultationCareLinesByInstitutionId(@Param("institutionId") Integer institutionId);
+
 }

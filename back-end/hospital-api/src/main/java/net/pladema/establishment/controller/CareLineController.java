@@ -53,4 +53,12 @@ public class CareLineController {
 		return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLinesBo));
 	}
 
+	@GetMapping("/virtual-consultation")
+	public List<CareLineDto> getVirtualConsultationCareLinesByInstitutionId(@PathVariable(name = "institutionId") Integer institutionId) {
+		log.debug("Input parameters -> institutionId {}", institutionId);
+		List<CareLineDto> result = careLineMapper.toListCareLineDto(careLineService.getVirtualConsultationCareLinesByInstitutionId(institutionId));
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
 }
