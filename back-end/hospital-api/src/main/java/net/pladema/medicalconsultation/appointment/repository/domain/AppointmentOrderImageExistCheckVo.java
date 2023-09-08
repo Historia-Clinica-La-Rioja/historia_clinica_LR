@@ -8,16 +8,16 @@ import lombok.Value;
 @ToString
 public class AppointmentOrderImageExistCheckVo {
 
-	private final Integer orderId;
+	private final Integer diagnosticReportId;
 
 	private final String documentStatus;
 
 	private final Integer appointmentId;
 
 
-	public AppointmentOrderImageExistCheckVo(Integer appointmentId, String documentStatus, Integer orderId) {
+	public AppointmentOrderImageExistCheckVo(Integer appointmentId, String documentStatus, Integer diagnosticReportId) {
 		this.appointmentId = appointmentId;
 		this.documentStatus = documentStatus;
-		this.orderId = orderId;
+		this.diagnosticReportId = diagnosticReportId;
 	}
 }

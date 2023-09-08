@@ -24,17 +24,13 @@ public class AppointmentOrderImageExistCheckBo {
 		if (appointmentOrderImageExistCheckVo != null){
 			this.isReportCompleted = appointmentOrderImageExistCheckVo.getDocumentStatus() != null ? isCompleted(appointmentOrderImageExistCheckVo.getDocumentStatus()) : false;
 			this.appointmentId = appointmentOrderImageExistCheckVo.getAppointmentId();
-			this.hasActiveAppointment = appointmentOrderImageExistCheckVo.getOrderId() != null ? true : false;
+			this.hasActiveAppointment = appointmentOrderImageExistCheckVo.getDiagnosticReportId() != null ? true : false;
 		}
 		else {
 			this.isReportCompleted = false;
 			this.hasActiveAppointment = false;
 			this.appointmentId = null;
 		}
-	}
-
-	public void setOrderId(Integer orderId){
-		this.hasActiveAppointment = orderId != null ? true : false;
 	}
 	private Boolean isCompleted(String id){
 		if (id.equals(FINAL))

@@ -51,8 +51,8 @@ export class ServiceRequestService {
 		return this.http.get<DiagnosticReportInfoDto[]>(url, { params: queryParams });
 	}
 
-	getStudyStatus(patientId: number, serviceRequestId: number): Observable<AppointmentOrderImageExistCheckDto>{
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${serviceRequestId}/existCheck`;
+	getStudyStatus(patientId: number, diagnosticReportId: number): Observable<AppointmentOrderImageExistCheckDto>{
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${diagnosticReportId}/existCheck`;
 		return this.http.get<AppointmentOrderImageExistCheckDto>(url);
 	}
 

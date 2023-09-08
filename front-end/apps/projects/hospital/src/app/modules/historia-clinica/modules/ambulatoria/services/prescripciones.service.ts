@@ -77,8 +77,8 @@ export class PrescripcionesService {
 			return this.medicationRequestService.medicationRequestListByRoles(patientId, statusId, medicationStatement, healthCondition);
 	}
 
-	getPrescriptionStatus(patientId: number, serviceRequestId: number): Observable<AppointmentOrderImageExistCheckDto>{
-		return this.serviceRequestService.getStudyStatus(patientId, serviceRequestId);
+	getPrescriptionStatus(patientId: number, diagnosticReportId: number): Observable<AppointmentOrderImageExistCheckDto>{
+		return this.serviceRequestService.getStudyStatus(patientId, diagnosticReportId);
 	}
 
 	changeMedicationStatus(statusChange: string, patientId: number, medicationsIds: number[], dayQuantity?: number, observations?: string): Observable<void> {

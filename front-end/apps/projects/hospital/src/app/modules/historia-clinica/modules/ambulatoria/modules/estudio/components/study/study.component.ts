@@ -35,7 +35,7 @@ export class StudyComponent implements OnInit {
 		studies.forEach((study: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto) => {
 			if (study.category === IMAGE_DIAGNOSIS ) {
 				if ((study as DiagnosticWithTypeReportInfoDto).typeOrder === E_TYPE_ORDER.COMPLETA)
-					this.prescripcionesService.getPrescriptionStatus(Number(getParam(this.route.snapshot,'idPaciente')), study.serviceRequestId).subscribe( documentInfo => {
+					this.prescripcionesService.getPrescriptionStatus(Number(getParam(this.route.snapshot,'idPaciente')), study.id).subscribe( documentInfo => {
 						this._studies.push(this.mapToStudyInformation(study, documentInfo));
 					})
 				else this._studies.push(this.mapToStudyInformationFromImageOrderCases(study as DiagnosticWithTypeReportInfoDto))

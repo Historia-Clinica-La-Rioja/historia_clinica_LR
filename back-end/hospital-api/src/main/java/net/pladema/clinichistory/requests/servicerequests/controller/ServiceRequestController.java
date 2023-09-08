@@ -470,13 +470,13 @@ public class ServiceRequestController {
 	}
 
 	@ResponseStatus(code = HttpStatus.OK)
-	@GetMapping(value = "/{serviceRequestId}/existCheck")
+	@GetMapping(value = "/{diagnosticReportId}/existCheck")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO')")
 	public AppointmentOrderImageExistCheckDto serviceRequestExistCheck(
 			@PathVariable(name = "institutionId") Integer institutionId,
-			@PathVariable(name = "serviceRequestId") Integer serviceRequestId) {
-		LOG.debug("Input parameters -> orderId {}", serviceRequestId);
-		return new AppointmentOrderImageExistCheckDto(existCheckDiagnosticReportService.execute(serviceRequestId));
+			@PathVariable(name = "diagnosticReportId") Integer diagnosticReportId) {
+		LOG.debug("Input parameters -> orderId {}", diagnosticReportId);
+		return new AppointmentOrderImageExistCheckDto(existCheckDiagnosticReportService.execute(diagnosticReportId));
 	}
 
     @GetMapping(value = "/{serviceRequestId}/download-pdf")

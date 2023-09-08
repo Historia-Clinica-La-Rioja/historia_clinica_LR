@@ -1,8 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
-import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentOrderImageExistCheckBo;
-
-import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentOrderImageExistCheckVo;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import net.pladema.clinichistory.requests.servicerequests.service.ExistCheckDiagnosticReportService;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
-
-import java.util.List;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentOrderImageExistCheckBo;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentOrderImageExistCheckVo;
 
 @Service
 public class ExistCheckDiagnosticReportServiceImpl implements ExistCheckDiagnosticReportService {
@@ -25,9 +23,9 @@ public class ExistCheckDiagnosticReportServiceImpl implements ExistCheckDiagnost
         this.appointmentOrderImageRepository = appointmentOrderImageRepository;
     }
     @Override
-    public AppointmentOrderImageExistCheckBo execute(Integer orderId) {
-        LOG.debug("Input: diagnosticReportId: {}", orderId);
-		List<AppointmentOrderImageExistCheckVo> findAppointmentIdAndReportByOrderId = appointmentOrderImageRepository.findAppointmentIdAndReportByOrderId(orderId);
+    public AppointmentOrderImageExistCheckBo execute(Integer diagnosticReportId) {
+        LOG.debug("Input: diagnosticReportId: {}", diagnosticReportId);
+		List<AppointmentOrderImageExistCheckVo> findAppointmentIdAndReportByOrderId = appointmentOrderImageRepository.findAppointmentIdAndReportByOrderId(diagnosticReportId);
 		AppointmentOrderImageExistCheckBo result;
 		if (findAppointmentIdAndReportByOrderId != null && !findAppointmentIdAndReportByOrderId.isEmpty()){
 			result = new AppointmentOrderImageExistCheckBo(findAppointmentIdAndReportByOrderId.get(0));

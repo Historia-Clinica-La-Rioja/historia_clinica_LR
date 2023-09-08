@@ -59,11 +59,11 @@ public interface AppointmentOrderImageRepository extends JpaRepository<Appointme
 	Optional<Integer> getStudyId(@Param("appointmentId") Integer appointmentId);
 
 	@Transactional(readOnly = true)
-	@Query("SELECT new net.pladema.medicalconsultation.appointment.repository.domain.AppointmentOrderImageExistCheckVo(aoi.pk.appointmentId, d.statusId, aoi.orderId) " +
+	@Query("SELECT new net.pladema.medicalconsultation.appointment.repository.domain.AppointmentOrderImageExistCheckVo(aoi.pk.appointmentId, d.statusId, aoi.studyId) " +
 			"FROM AppointmentOrderImage AS aoi "+
 			"JOIN Appointment AS app ON (aoi.pk.appointmentId = app.id) "+
 			"LEFT JOIN Document as d ON (aoi.documentId = d.id) "+
-			"WHERE aoi.orderId = :orderId "+
+			"WHERE aoi.studyId = :orderId "+
 			"AND (aoi.active = true " +
 			"OR app.appointmentStateId = "+ AppointmentState.SERVED +" )")
 	List<AppointmentOrderImageExistCheckVo> findAppointmentIdAndReportByOrderId(@Param("orderId") Integer orderId);
