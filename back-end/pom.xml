@@ -34,7 +34,6 @@
 		<module>nursing</module>
 		<module>reference-counter-ref</module>
 		<module>booking</module>
-		<module>virtual-consultation</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
