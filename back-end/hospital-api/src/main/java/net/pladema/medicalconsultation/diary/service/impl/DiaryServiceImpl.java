@@ -359,7 +359,6 @@ public class DiaryServiceImpl implements DiaryService {
 
 	}
 
-
 	@Override
 	public Boolean hasActiveDiariesInInstitution(Integer healthcareProfessionalId, Integer institutionId){
 		LOG.debug("Input parameters -> healthcareProfessionalId {}, institutionId {}", healthcareProfessionalId, institutionId);
@@ -502,5 +501,4 @@ public class DiaryServiceImpl implements DiaryService {
 				throw new DiaryException(DiaryEnumException.MODALITY_NOT_FOUND,	"Una de las franjas horarias no cuenta con una modalidad definida");
 		});
 	}
-
 }

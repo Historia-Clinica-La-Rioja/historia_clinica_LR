@@ -28,4 +28,17 @@ public interface DiaryPracticeRepository extends SGXAuditableEntityJPARepository
 			"WHERE dp.diaryId = :diaryId " +
 			"AND dp.deleteable.deleted = false")
 	List<SnomedBo> getByDiaryId(@Param("diaryId") Integer diaryId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT DISTINCT NEW ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo(s.id, s.sctid, s.pt)" +
+			"FROM DiaryPractice dp " +
+			"JOIN Diary d ON (dp.diaryId = d.id) " +
+			"JOIN Snomed s ON (dp.snomedId = s.id) " +
+			"JOIN DoctorsOffice dof ON (dof.id = d.doctorsOfficeId) " +
+			"WHERE d.active = TRUE " +
+			"AND dof.institutionId = :institutionId " +
+			"AND d.endDate >= CURRENT_DATE " +
+			"AND (d.deleteable.deleted = false OR d.deleteable.deleted IS NULL)" +
+			"AND (dp.deleteable.deleted = false OR dp.deleteable.deleted IS NULL) ")
+	List<SnomedBo> getActiveDiariesPractices(@Param("institutionId") Integer institutionId);
 }

@@ -167,7 +167,8 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 			"AND dof.institutionId = :institutionId " +
 			"AND (d.alias = :aliasOrClinicalSpecialtyName " +
 			"OR cs.name = :aliasOrClinicalSpecialtyName) " +
-			"AND d.endDate >= CURRENT_DATE ")
+			"AND d.endDate >= CURRENT_DATE " +
+			"AND d.deleteable.deleted IS FALSE OR d.deleteable.deleted IS NULL")
 	List<CompleteDiaryListVo> getActiveDiariesByAliasOrClinicalSpecialtyName(
 			@Param("institutionId") Integer institutionId,
 			@Param("aliasOrClinicalSpecialtyName") String aliasOrClinicalSpecialtyName
@@ -190,5 +191,4 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 			"JOIN AppointmentAssn aa ON aa.pk.diaryId = d.id " +
 			"WHERE aa.pk.appointmentId = :appointmentId ")
 	Optional<CompleteDiaryListVo> getCompleteDiaryByAppointment(@Param("appointmentId") Integer appointmentId);
-
 }

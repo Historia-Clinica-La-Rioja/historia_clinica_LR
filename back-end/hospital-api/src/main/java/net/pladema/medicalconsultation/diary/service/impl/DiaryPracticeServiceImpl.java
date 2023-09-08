@@ -52,6 +52,12 @@ public class DiaryPracticeServiceImpl implements DiaryPracticeService {
 		return practices;
 	}
 
+	@Override
+	public List<SnomedBo> getPracticesByActiveDiaries(Integer institutionId) {
+		log.debug("Input parameters -> institutionId {}", institutionId);
+		return diaryPracticeRepository.getActiveDiariesPractices(institutionId);
+	}
+
 	private void addDiaryPractice(Integer practiceId, Integer diaryId) {
 		log.debug("Save associate practice to diary, practice id: ", practiceId);
 		DiaryPractice diaryPractice = new DiaryPractice();

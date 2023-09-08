@@ -9,4 +9,6 @@ public interface DiaryPracticeService {
 	void updateDiaryPractices(List<Integer> snomedRelatedGroupIds, Integer diaryId);
 
 	List<SnomedBo> getAllByDiaryId(Integer diaryId);
+
+	List<SnomedBo> getPracticesByActiveDiaries(Integer institutionId);
 }

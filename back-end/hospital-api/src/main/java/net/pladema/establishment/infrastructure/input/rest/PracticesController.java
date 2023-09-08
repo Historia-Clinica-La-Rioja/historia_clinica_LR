@@ -5,7 +5,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.pladema.establishment.application.practices.GetPractices;
+import net.pladema.establishment.application.practices.GetPracticesByActiveDiaries;
+import net.pladema.establishment.application.practices.GetPracticesByInstitution;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,22 +17,32 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RequestMapping("/institution/{institutionId}")
+@RequestMapping("/institution/{institutionId}/practices")
 @Tag(name = "Practices", description = "Practices")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 public class PracticesController {
 
-	private final GetPractices getPractices;
+	private final GetPracticesByInstitution getPracticesByInstitution;
+	private final GetPracticesByActiveDiaries getPracticesByActiveDiaries;
 
-	@GetMapping()
+	@GetMapping("/by-institution")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA')")
 	public ResponseEntity<List<SharedSnomedDto>> getPractices(@PathVariable(name = "institutionId") Integer institutionId) {
 		log.debug("Input parameters -> institutionId {} ", institutionId);
-		List<SharedSnomedDto> result = getPractices.run(institutionId);
-		log.debug("Get practices -> ", result);
+		List<SharedSnomedDto> result = getPracticesByInstitution.run(institutionId);
+		log.debug("Get practices by institution -> ", result);
 		return ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping("/by-active-diaries")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	public ResponseEntity<List<SharedSnomedDto>> getByActiveDiaries(
+			@PathVariable(name = "institutionId") Integer institutionId) {
+		List<SharedSnomedDto> activeDiariesPractices = getPracticesByActiveDiaries.run(institutionId);
+		log.debug("Get all practices by active diaries and Institution {} ", institutionId);
+		return ResponseEntity.ok(activeDiariesPractices);
 	}
 
 }
