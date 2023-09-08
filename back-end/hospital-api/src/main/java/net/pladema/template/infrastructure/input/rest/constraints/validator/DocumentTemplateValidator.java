@@ -26,10 +26,10 @@ public class DocumentTemplateValidator implements ConstraintValidator<ValidDocum
 
     @Override
     public boolean isValid(Object[] parameters, ConstraintValidatorContext context) {
-        DocumentTemplateDto templateDto = (DocumentTemplateDto) parameters[1];
+        DocumentTemplateDto templateDto = (DocumentTemplateDto) parameters[2];
         Integer userId = UserInfo.getCurrentAuditor();
         String name = templateDto.getName();
-        Short typeId = templateDto.getTypeId();
+        Short typeId = (Short) parameters[1];
         String templateText = templateDto.getTemplateText();
         log.debug("Input parameters -> userId {}, name {}, typeId {}", userId, name, typeId);
 

@@ -21,11 +21,10 @@ public class ConclusionTemplateDto extends DocumentTemplateDto {
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public ConclusionTemplateDto(
             @JsonProperty("name") String name,
-            @JsonProperty("typeId") Short typeId,
             @JsonProperty("templateText") String templateText,
             @JsonProperty("conclusions") List<ConclusionDto> conclusions) {
 
-        super(name, typeId, templateText);
+        super(name, templateText);
         this.conclusions = conclusions;
     }
 }

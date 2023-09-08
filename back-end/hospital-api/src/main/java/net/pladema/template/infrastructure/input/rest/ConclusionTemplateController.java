@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.template.application.createconclusiontemplate.CreateConclusionTemplate;
 import net.pladema.template.application.save.SaveDocumentTemplate;
 import net.pladema.template.domain.ConclusionTemplateBo;
+import net.pladema.template.domain.enums.EDocumentTemplate;
 import net.pladema.template.infrastructure.input.rest.constraints.ValidDocumentTemplate;
 import net.pladema.template.infrastructure.input.rest.dto.ConclusionTemplateDto;
 import net.pladema.template.infrastructure.input.rest.mapper.DocumentTemplateMapper;
@@ -23,8 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 
 @RestController
-@Tag(name = "Document Template Conclusions", description = "Document Template Conclusions")
-@RequestMapping("/institutions/{institutionId}/documents/templates/conclusions")
+@Tag(name = "Document Conclusions Template", description = "Document Conclusions Template")
+@RequestMapping("/institutions/{institutionId}/documents/conclusions/templates")
 @PreAuthorize("hasPermission(#institutionId, 'INFORMADOR')")
 @Validated
 @Slf4j
@@ -42,6 +43,7 @@ public class ConclusionTemplateController {
         log.trace("Input -> institutionId {}, conclusionTemplateDto {}", institutionId, conclusionTemplateDto);
         ConclusionTemplateBo conclusionTemplateBo = documentTemplateMapper.toConclusionTemplateBo(conclusionTemplateDto);
         conclusionTemplateBo.setUserId(UserInfo.getCurrentAuditor());
+        conclusionTemplateBo.setTypeId(EDocumentTemplate.INFORMER_CONCLUSIONS.getId());
         conclusionTemplateBo.setInstitutionId(institutionId);
         String template = createConclusionTemplate.run(conclusionTemplateBo);
         saveDocumentTemplate.run(conclusionTemplateBo, Optional.ofNullable(template));

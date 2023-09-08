@@ -9,6 +9,7 @@ import net.pladema.template.application.get.GetDocumentTemplates;
 import net.pladema.template.application.save.SaveDocumentTemplate;
 import net.pladema.template.domain.DocumentTemplateBo;
 import net.pladema.template.infrastructure.input.rest.constraints.ValidDocumentTemplate;
+import net.pladema.template.infrastructure.input.rest.constraints.ValidTypeDocumentTemplate;
 import net.pladema.template.infrastructure.input.rest.dto.DocumentTemplateDto;
 import net.pladema.template.infrastructure.input.rest.dto.TemplateNamesDto;
 import net.pladema.template.infrastructure.input.rest.mapper.DocumentTemplateMapper;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @Tag(name = "Document Template", description = "Document Template")
-@RequestMapping("/institutions/{institutionId}/documents/templates")
+@RequestMapping("/institutions/{institutionId}/documents/templates/{typeId}")
 @Validated
 @Slf4j
 @RequiredArgsConstructor
@@ -39,12 +39,15 @@ public class DocumentTemplateController {
     private final GetDocumentTemplates getDocumentTemplates;
 
     @PostMapping("/save")
+    @ValidTypeDocumentTemplate
     @ValidDocumentTemplate
-    public ResponseEntity<Boolean> save(@PathVariable(name = "institutionId") Integer institutionId,
-                                        @RequestBody DocumentTemplateDto templateDto) throws JsonProcessingException {
+    public ResponseEntity<Boolean> saveBase(@PathVariable(name = "institutionId") Integer institutionId,
+                                            @PathVariable(name = "typeId") Short typeId,
+                                            @RequestBody DocumentTemplateDto templateDto) throws JsonProcessingException {
         log.trace("Input -> institutionId {}, documentTemplateDto {}", institutionId, templateDto);
         DocumentTemplateBo documentTemplateBo = documentTemplateMapper.toDocumentTemplateBo(templateDto);
         documentTemplateBo.setUserId(UserInfo.getCurrentAuditor());
+        documentTemplateBo.setTypeId(typeId);
         documentTemplateBo.setInstitutionId(institutionId);
 
         saveDocumentTemplate.run(documentTemplateBo, Optional.empty());
@@ -55,8 +58,9 @@ public class DocumentTemplateController {
     }
 
     @GetMapping("/user")
+    @ValidTypeDocumentTemplate
     public ResponseEntity<List<TemplateNamesDto>> get(@PathVariable(name = "institutionId") Integer institutionId,
-                                                      @RequestParam Short typeId) {
+                                                      @PathVariable(name = "typeId") Short typeId) {
         Integer userId = UserInfo.getCurrentAuditor();
         log.trace("Input -> institutionId {}, userId {}, typeId {}", institutionId, userId, typeId);
 
