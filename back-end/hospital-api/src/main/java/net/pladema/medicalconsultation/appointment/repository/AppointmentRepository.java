@@ -16,6 +16,8 @@ import net.pladema.medicalconsultation.appointment.repository.domain.Appointment
 import ar.lamansys.sgx.shared.migratable.SGXDocumentEntityRepository;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
 
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketImageBo;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -305,6 +307,54 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 											   @Param("date") LocalDate date, @Param("hour") LocalTime hour);
 
 	@Transactional(readOnly = true)
+	@Query(	"SELECT DISTINCT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketImageBo(" +
+			"i.name, per.identificationNumber, per.lastName, per.otherLastNames, per.firstName, per.middleNames, " +
+			"pex.nameSelfDetermination, mc.name, hi.acronym, a.dateTypeId, a.hour, s.description, sn.pt) " +
+			"FROM Appointment a " +
+			"JOIN EquipmentAppointmentAssn ea ON(a.id = ea.pk.appointmentId) " +
+			"JOIN EquipmentDiary d ON(d.id = ea.pk.equipmentDiaryId) " +
+			"JOIN Patient p ON(p.id = a.patientId) " +
+			"JOIN Person per ON(per.id = p.personId) " +
+			"JOIN PersonExtended pex ON(per.id = pex.id) " +
+			"LEFT JOIN PatientMedicalCoverageAssn pmc ON(pmc.id = a.patientMedicalCoverageId) " +
+			"LEFT JOIN MedicalCoverage mc ON(pmc.medicalCoverageId = mc.id) " +
+			"LEFT JOIN HealthInsurance hi ON(hi.id = mc.id) " +
+			"JOIN AppointmentOrderImage aoi ON(aoi.pk.appointmentId = a.id)" +
+			"LEFT JOIN DiagnosticReport dr ON(aoi.studyId = dr.id)" +
+			"LEFT JOIN Snomed sn ON(dr.snomedId = sn.id) " +
+			"JOIN Equipment e ON(d.equipmentId = e.id) " +
+			"JOIN Sector s ON(s.id = e.sectorId) " +
+			"JOIN Institution i On(s.institutionId = i.id) " +
+			"WHERE a.id = :appointmentId ")
+	Optional<AppointmentTicketImageBo> getAppointmentImageTicketData(@Param("appointmentId") Integer appointmentId);
+
+
+	@Transactional(readOnly = true)
+	@Query(	"SELECT DISTINCT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketImageBo(" +
+			"i.name, per.identificationNumber, per.lastName, per.otherLastNames, per.firstName, per.middleNames, " +
+			"pex.nameSelfDetermination, mc.name, hi.acronym, a.dateTypeId, a.hour, s.description, sn.pt) " +
+			"FROM Appointment a " +
+			"JOIN EquipmentAppointmentAssn ea ON(a.id = ea.pk.appointmentId) " +
+			"JOIN EquipmentDiary d ON(d.id = ea.pk.equipmentDiaryId) " +
+			"JOIN Patient p ON(p.id = a.patientId) " +
+			"JOIN Person per ON(per.id = p.personId) " +
+			"JOIN PersonExtended pex ON(per.id = pex.id) " +
+			"LEFT JOIN PatientMedicalCoverageAssn pmc ON(pmc.id = a.patientMedicalCoverageId) " +
+			"LEFT JOIN MedicalCoverage mc ON(pmc.medicalCoverageId = mc.id) " +
+			"LEFT JOIN HealthInsurance hi ON(hi.id = mc.id) " +
+			"JOIN AppointmentOrderImage aoi ON(aoi.pk.appointmentId = a.id)" +
+			"JOIN TranscribedServiceRequest ts ON(aoi.transcribedOrderId = ts.id)" +
+			"LEFT JOIN DiagnosticReport dr ON(ts.studyId = dr.id)" +
+			"LEFT JOIN Snomed sn ON(dr.snomedId = sn.id) " +
+			"JOIN Equipment e ON(d.equipmentId = e.id) " +
+			"JOIN Sector s ON(s.id = e.sectorId) " +
+			"JOIN Institution i On(s.institutionId = i.id) " +
+			"WHERE a.id = :appointmentId ")
+	Optional<AppointmentTicketImageBo> getAppointmentImageTranscribedTicketData(@Param("appointmentId") Integer appointmentId);
+
+
+
+	@Transactional(readOnly = true)
 	@Query(	"SELECT DISTINCT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketBo(" +
 			"i.name, per.identificationNumber, per.lastName, per.otherLastNames, per.firstName, per.middleNames, " +
 			"pex.nameSelfDetermination, mc.name, hi.acronym, a.dateTypeId, a.hour, do2.description, per2.lastName, " +
@@ -325,6 +375,9 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN PersonExtended pex2 ON(per2.id = pex2.id) " +
 			"WHERE a.id = :appointmentId ")
 	Optional<AppointmentTicketBo> getAppointmentTicketData(@Param("appointmentId") Integer appointmentId);
+
+
+
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo(" +

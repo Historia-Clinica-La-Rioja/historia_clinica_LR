@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:fragment="headerfiles">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Bootstrap core CSS -->
+
+    <style>
+        body {
+            display: flex;
+            flex-flow: row wrap;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        p {
+            font-size: 45px;
+        }
+        .container, p, separator {
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+        .separator{
+            height: 30px;
+            width: min-content;
+        }
+        .api-data{
+            font-size: 35px;
+        }
+        .data-block {
+            padding-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <p th:text="${'.........................................................'}"></p>
+    <p th:text="${'Institución:'}"></p>
+    <p class="api-data" th:text="${institution}"></p>
+    <div class="separator"></div>
+    <p class="data-block" th:text="${'Datos del paciente: '}"></p>
+    <p class="data-block" th:text="${'Nro documento: ' + dni}"></p>
+    <p th:text="${'Apellido y nombre:'}"></p>
+    <p class="api-data data-block" th:text="${patientFullName}"></p>
+    <p th:text="${'Cobertura médica:'}"></p>
+    <p class="api-data" th:text="${medicalCoverage}"></p>
+    <div class="separator"></div>
+    <p class="data-block" th:text="${'Fecha turno: ' + date}"></p>
+    <p class="data-block" th:text="${'Hora turno: ' + hour}"></p>
+    <p th:text="${'Sector:'}"></p>
+    <p class="api-data data-block" th:text="${sectorName}"></p>
+    <p th:text="${'Estudio:'}"></p>
+    <p class="api-data data-block" th:text="${studyDescription}"></p>
+    <p th:text="${'.........................................................'}"></p>
+
+</div>
+</body>
+</html>

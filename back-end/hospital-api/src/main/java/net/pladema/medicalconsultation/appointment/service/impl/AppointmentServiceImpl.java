@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -40,6 +41,7 @@ import net.pladema.medicalconsultation.appointment.repository.HistoricAppointmen
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketBo;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketImageBo;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentObservation;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.repository.entity.HistoricAppointmentState;
@@ -507,6 +509,18 @@ public class AppointmentServiceImpl implements AppointmentService {
 				()-> new AppointmentException(AppointmentEnumException.APPOINTMENT_ID_NOT_FOUND, "el id no corresponde con ningun turno asignado")
 		);
 		result.setIncludeNameSelfDetermination(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS.isActive());
+		log.trace(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public AppointmentTicketImageBo getAppointmentImageTicketData(Integer appointmentId, boolean isTranscribed) {
+		log.debug("Input parameters -> appointmentId {}, transcribed {}", appointmentId, isTranscribed);
+	   	var result = isTranscribed ? this.appointmentRepository.getAppointmentImageTranscribedTicketData(appointmentId).orElseThrow(
+				()-> new AppointmentException(AppointmentEnumException.APPOINTMENT_ID_NOT_FOUND, "el id no corresponde con ningun turno asignado")) :
+				this.appointmentRepository.getAppointmentImageTicketData(appointmentId).orElseThrow(
+						()-> new AppointmentException(AppointmentEnumException.APPOINTMENT_ID_NOT_FOUND, "el id no corresponde con ningun turno asignado"));
+		//result.setIncludeNameSelfDetermination(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS.isActive());
 		log.trace(OUTPUT, result);
 		return result;
 	}

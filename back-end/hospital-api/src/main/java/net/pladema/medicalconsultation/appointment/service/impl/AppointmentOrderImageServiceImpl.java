@@ -93,4 +93,10 @@ public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageSe
 		appointmentOrderImageRepository.updateOrderId(appointmentId, studyId, orderId);
 		return Boolean.TRUE;
 	}
+
+	@Override
+	public boolean existTranscribedOrderByAppointment(Integer appointmentId) {
+		LOG.debug("Input parameters -> appointmentId {}", appointmentId);
+		return appointmentOrderImageRepository.existTranscribedByAppointmentId(appointmentId).isPresent();
+	}
 }
