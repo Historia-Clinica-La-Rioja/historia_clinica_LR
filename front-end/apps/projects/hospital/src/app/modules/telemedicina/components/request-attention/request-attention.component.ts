@@ -119,10 +119,18 @@ export class RequestAttentionComponent implements OnInit {
 										const data = toCallDetails(vc);
 										this.dialog.open(RejectedCallComponent, { data });
 									} else {
-										this.jitsiCallService.open(virtualConsultation.callId)
+										this.jitsiCallService.open(virtualConsultation.callLink)
 									}
 								}
 							)
+						}
+					)
+
+					ref.afterClosed().subscribe(
+						r => {
+							if (!r) {
+								this.virtualConsultationService.notifyVirtualConsultationCancelledCall(virtualConsultation.id).subscribe();
+							}
 						}
 					)
 				}
@@ -135,7 +143,7 @@ export class RequestAttentionComponent implements OnInit {
 		this.toggleEnabled = availability;
 	}
 
-	goToClinicalHistory(patientId:number){
+	goToClinicalHistory(patientId: number) {
 		const route = 'institucion/' + this.contextService.institutionId + '/ambulatoria/paciente/' + patientId;
 		this.router.navigate([route]);
 	}
@@ -153,7 +161,7 @@ export class RequestAttentionComponent implements OnInit {
 
 interface VirtualConsultation {
 	availableProfessionalsAmount?: number;
-	callId?: string;
+	callLink?: string;
 	careLine: string;
 	clinicalSpecialty: string;
 	creationDateTime: DateTimeDto;

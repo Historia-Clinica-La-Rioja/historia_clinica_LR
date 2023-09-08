@@ -45,6 +45,13 @@ export class EntryCallStompService {
 				)
 			);
 
+	cancelledCall$: Observable<any>
+		= this.stompService.watch(`/user/queue/${callStates.CALL_CANCELED}`).
+			pipe(
+				map(a => JSON.parse(a.body)),
+				filter(messageDto => messageDto.event === EVirtualConsultationEvent.CALL_CANCELED),
+			);
+
 	constructor(
 		private stompService: StompService,
 		private virtualConstultationService: VirtualConstultationService
