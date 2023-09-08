@@ -151,6 +151,14 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
 		return result;
 	}
 
+	@Override
+	public List<HealthcareProfessionalBo> getVirtualConsultationProfessionalsByInstitutionId(Integer institutionId) {
+		LOG.debug("Input parameters -> institutionId {}", institutionId);
+		List<HealthcareProfessionalBo> result = healthcareProfessionalRepository.getVirtualConsultationProfessionalsByInstitutionId(institutionId).stream().map(HealthcareProfessionalBo::new).collect(Collectors.toList());
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
 	private Integer update(HealthcareProfessionalCompleteBo professionalCompleteBo){
         HealthcareProfessional result = healthcareProfessionalRepository.findById(professionalCompleteBo.getId())
                 .map(healthcareProfessionalRepository::save).orElseThrow(()->new HealthcareProfessionalException(HealthcareProfessionalEnumException.HEALTHCARE_PROFESSIONAL_NOT_FOUND,"El profesional no existe"));

@@ -31,4 +31,6 @@ public interface HealthcareProfessionalService {
     Integer saveProfessional(HealthcareProfessionalCompleteBo professionalCompleteBo);
 
 	Optional<Integer> getProfessionalIdByPersonId(Integer personId);
+
+	List<HealthcareProfessionalBo> getVirtualConsultationProfessionalsByInstitutionId(Integer institutionId);
 }
