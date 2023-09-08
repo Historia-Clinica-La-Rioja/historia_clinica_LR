@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.template.application.create.CreateConclusionTemplate;
+import net.pladema.template.application.get.GetTemplate;
 import net.pladema.template.application.save.SaveDocumentTemplate;
 import net.pladema.template.domain.ConclusionTemplateBo;
 import net.pladema.template.domain.enums.EDocumentTemplate;
@@ -13,6 +14,7 @@ import net.pladema.template.infrastructure.input.rest.dto.ConclusionTemplateDto;
 import net.pladema.template.infrastructure.input.rest.mapper.DocumentTemplateMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,6 +35,7 @@ public class ConclusionTemplateController {
     private final DocumentTemplateMapper documentTemplateMapper;
     private final SaveDocumentTemplate saveDocumentTemplate;
     private final CreateConclusionTemplate createConclusionTemplate;
+    private final GetTemplate getTemplate;
 
     @PostMapping
     public ResponseEntity<Boolean> save(@PathVariable(name = "institutionId") Integer institutionId,
@@ -46,6 +49,18 @@ public class ConclusionTemplateController {
 
         log.trace("Output -> {}", true);
         return ResponseEntity.ok(true);
-
     }
+
+    @GetMapping("/{templateId}")
+    public ResponseEntity<ConclusionTemplateDto> get(@PathVariable(name = "institutionId") Integer institutionId,
+                                                     @PathVariable(name = "templateId") Long templateId) {
+        log.trace("Input -> institutionId {}, templateId {}", institutionId, templateId);
+
+        ConclusionTemplateBo conclusionTemplateBo = getTemplate.run(templateId, ConclusionTemplateBo.class);
+        var result = documentTemplateMapper.toConclusionTemplateDto(conclusionTemplateBo);
+
+        log.trace("Output -> {}", result);
+        return ResponseEntity.ok(result);
+    }
+
 }

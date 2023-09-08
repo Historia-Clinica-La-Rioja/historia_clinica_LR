@@ -4,7 +4,7 @@ import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.template.application.get.GetDocumentTemplates;
+import net.pladema.template.application.get.GetListTemplates;
 import net.pladema.template.infrastructure.input.rest.constraints.ValidTypeDocumentTemplate;
 import net.pladema.template.infrastructure.input.rest.dto.TemplateNamesDto;
 import net.pladema.template.infrastructure.input.rest.mapper.DocumentTemplateMapper;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class DocumentTemplateController {
 
     private final DocumentTemplateMapper documentTemplateMapper;
-    private final GetDocumentTemplates getDocumentTemplates;
+    private final GetListTemplates getListTemplates;
 
     @GetMapping("/user")
     @ValidTypeDocumentTemplate
@@ -36,7 +36,7 @@ public class DocumentTemplateController {
         Integer userId = UserInfo.getCurrentAuditor();
         log.trace("Input -> institutionId {}, userId {}, typeId {}", institutionId, userId, typeId);
 
-        List<TemplateNamesDto> result = getDocumentTemplates.run(userId, typeId)
+        List<TemplateNamesDto> result = getListTemplates.run(userId, typeId)
                 .stream()
                 .map(documentTemplateMapper::toTemplateNamesDto)
                 .collect(Collectors.toList());
