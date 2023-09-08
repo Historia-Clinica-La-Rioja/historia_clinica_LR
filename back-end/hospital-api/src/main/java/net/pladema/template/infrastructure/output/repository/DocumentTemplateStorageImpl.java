@@ -7,6 +7,7 @@ import net.pladema.template.infrastructure.output.repository.entity.DocumentTemp
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +33,11 @@ public class DocumentTemplateStorageImpl implements DocumentTemplateStorage {
         return documentTemplateRepository.getTemplates(userId, typeId).stream()
                 .map(this::mapTo)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Long> getFileId(Long id) {
+        return documentTemplateRepository.getFileId(id);
     }
 
 

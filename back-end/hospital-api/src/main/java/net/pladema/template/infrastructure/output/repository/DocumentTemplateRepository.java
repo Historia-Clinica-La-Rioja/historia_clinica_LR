@@ -29,4 +29,10 @@ public interface DocumentTemplateRepository extends JpaRepository<DocumentTempla
             "WHERE dt.userId = :userId " +
             "AND dt.typeId = :typeId")
     List<DocumentTemplate> getTemplates(@Param("userId") Integer userId, @Param("typeId") Short typeId);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT dt.fileId " +
+            "FROM DocumentTemplate AS dt " +
+            "WHERE dt.id = :id")
+    Optional<Long> getFileId(@Param("id") Long id);
 }
