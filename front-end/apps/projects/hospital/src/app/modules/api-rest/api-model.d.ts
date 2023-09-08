@@ -3553,6 +3553,11 @@ export interface StudyWithoutOrderReportInfoDto {
     viewReport: boolean;
 }
 
+export interface TemplateNamesDto {
+    id: number;
+    name: string;
+}
+
 export interface TerminologyCSVDto {
     ecl: SnomedECL;
     url: string;
