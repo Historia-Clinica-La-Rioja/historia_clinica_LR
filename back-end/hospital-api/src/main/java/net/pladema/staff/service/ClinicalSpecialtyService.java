@@ -20,5 +20,7 @@ public interface ClinicalSpecialtyService {
 	List<ClinicalSpecialtyBo> getClinicalSpecialtiesByProvinceId(Short provinceId);
 
 	String getClinicalSpecialtyNameByDiaryId(Integer diaryId);
+	
+	List<ClinicalSpecialtyBo> getVirtualConsultationClinicalSpecialtiesByInstitutionId(Integer institutionId);
 
 }

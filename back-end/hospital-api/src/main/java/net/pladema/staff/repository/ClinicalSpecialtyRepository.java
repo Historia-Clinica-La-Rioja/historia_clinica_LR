@@ -98,4 +98,11 @@ public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpeci
 			"ORDER BY cs.name")
 	List<ClinicalSpecialtyBo> getClinicalSpecialtiesByProvinceId(@Param("provinceId") Short provinceId);
 
+	@Transactional(readOnly = true)
+	@Query(" SELECT DISTINCT NEW net.pladema.staff.service.domain.ClinicalSpecialtyBo(cs.id, cs.name) " +
+			"FROM ClinicalSpecialty cs " +
+			"JOIN VirtualConsultation vc ON (vc.clinicalSpecialtyId = cs.id) " +
+			"WHERE vc.institutionId = :institutionId")
+	List<ClinicalSpecialtyBo> getVirtualConsultationClinicalSpecialtiesByInstitutionId(@Param("institutionId") Integer institutionId);
+
 }

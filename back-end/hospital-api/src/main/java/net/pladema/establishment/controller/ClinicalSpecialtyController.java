@@ -170,5 +170,13 @@ public class ClinicalSpecialtyController {
 		return ResponseEntity.ok(clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(clinicalSpecialties));
 	}
 
+	@GetMapping("/institution/{institutionId}/clinical-specialty/virtual-consultation")
+	public List<ClinicalSpecialtyDto> getVirtualConsultationClinicalSpecialtiesByInstitutionId(@PathVariable(name = "institutionId") Integer institutionId) {
+		LOG.debug("Input parameters -> institutionId {}", institutionId);
+		List<ClinicalSpecialtyDto> result = clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(clinicalSpecialtyService.getVirtualConsultationClinicalSpecialtiesByInstitutionId(institutionId));
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
 }
 
