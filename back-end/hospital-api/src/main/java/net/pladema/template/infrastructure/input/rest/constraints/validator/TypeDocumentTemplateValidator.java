@@ -1,7 +1,6 @@
 package net.pladema.template.infrastructure.input.rest.constraints.validator;
 
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
-import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.template.domain.enums.EDocumentTemplate;
@@ -24,9 +23,8 @@ public class TypeDocumentTemplateValidator implements ConstraintValidator<ValidT
 
     @Override
     public boolean isValid(Object[] parameters, ConstraintValidatorContext context) {
-        Integer userId = UserInfo.getCurrentAuditor();
         Short typeId = (Short) parameters[1];
-        log.debug("Input parameters -> userId {}, typeId {}", userId, typeId);
+        log.debug("Input parameters -> typeId {}", typeId);
 
         boolean result = true;
 
