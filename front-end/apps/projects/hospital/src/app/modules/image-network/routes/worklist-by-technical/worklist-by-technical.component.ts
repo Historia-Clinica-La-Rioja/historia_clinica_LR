@@ -28,6 +28,7 @@ import { hasError } from '@core/utils/form.utils';
 import * as moment from 'moment';
 import { SearchFilters, WorklistFiltersComponent } from '../../components/worklist-filters/worklist-filters.component';
 import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
+import { WorklistFacadeService } from '../../services/worklist-facade.service';
 
 const PAGE_SIZE_OPTIONS = [10];
 const PAGE_MIN_SIZE = 10;
@@ -42,11 +43,12 @@ const stateColor = {
 @Component({
     selector: 'app-worklist-by-technical',
     templateUrl: './worklist-by-technical.component.html',
-    styleUrls: ['./worklist-by-technical.component.scss']
+    styleUrls: ['./worklist-by-technical.component.scss'],
+    providers: [WorklistFacadeService]
 })
 export class WorklistByTechnicalComponent implements OnInit {
     @ViewChild('paginator') paginator: MatPaginator;
-    @ViewChild(WorklistFiltersComponent) worklistFilters: WorklistFiltersComponent;
+    @ViewChild(WorklistFiltersComponent) worklistFiltersComponent: WorklistFiltersComponent;
     equipments: EquipmentDto[] = [];
     modalities$: Observable<ModalityDto[]>;
     allEquipments: EquipmentDto[] = [];
@@ -74,7 +76,9 @@ export class WorklistByTechnicalComponent implements OnInit {
     searchFilters: SearchFilters;
 
     pageSizeOptions = PAGE_SIZE_OPTIONS;
-    pageSlice = [];
+    pageSlice: detailedAppointment[] = [];
+    startPage: number = 0;
+    endPage: number = PAGE_MIN_SIZE;
 	selectedAppointment: EquipmentAppointmentListDto;
 
     panelOpenState = true;
@@ -91,6 +95,7 @@ export class WorklistByTechnicalComponent implements OnInit {
         private readonly prescripcionesService: PrescripcionesService,
 	    public dialog: MatDialog,
 		private readonly formBuilder: UntypedFormBuilder,
+        private readonly worklistFacadeService: WorklistFacadeService,
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
 			this.nameSelfDeterminationFF = isOn
@@ -118,6 +123,22 @@ export class WorklistByTechnicalComponent implements OnInit {
             this.equipments = equipments;
             this.allEquipments = equipments;
         });
+
+        this.worklistFacadeService.appointments$.subscribe(appointments => {
+            this.appointments = appointments;
+            if (!this.searchFilters){
+                this.detailedAppointments = this.mapAppointmentsToDetailedAppointments(this.appointments);
+                this.pageSlice = this.detailedAppointments.slice(this.startPage, this.endPage);
+            }
+            else {
+                this.pageSlice = this.filterAppointments(this.searchFilters.appointmentStates, this.searchFilters.patientName, this.searchFilters.patientIdentification);
+            }
+            if (this.fetchingData){
+                this.manageStatusCheckboxes();
+                this.fetchingData = false;
+            }
+            this.enableInputs();
+        });
     }
 
     private setDefaultStates() {
@@ -131,7 +152,7 @@ export class WorklistByTechnicalComponent implements OnInit {
     }
 
     private manageStatusCheckboxes() {
-        this.worklistFilters.manageStatusCheckboxes();
+        this.worklistFiltersComponent?.manageStatusCheckboxes();
     }
 
     private disableInputs() {
@@ -150,6 +171,7 @@ export class WorklistByTechnicalComponent implements OnInit {
         this.equipments = [];
         let modalityId = this.filtersForm.controls.modality.value?.id
         this.filtersForm.controls.equipment.setValue(null)
+        this.worklistFiltersComponent.clearInputs();
         this.manageStatusCheckboxes();
         this.resetAppointmentsData();
         if (modalityId) {
@@ -160,24 +182,22 @@ export class WorklistByTechnicalComponent implements OnInit {
             this.equipments = this.allEquipments;
         }
         this.equipmentId = null;
+        this.worklistFacadeService.clearEquipmentId();
     }
 
     onEquipmentChange(equipment: MatSelectChange){
         this.resetDate();
-        this.disableInputs();
         this.equipmentId = equipment.value.id;
         this.setDefaultStates();
         this.resetAppointmentsData();
-        this.getAppointments(this.equipmentId, this.startDate, this.endDate);
+        this.getAppointments(this.equipmentId);
     }
 
     setSelectedDate(){
         this.startDate = this.filtersForm.get('datePicker').get('start').value?.format('YYYY-MM-DD');
         this.endDate = this.filtersForm.get('datePicker').get('end').value?.format('YYYY-MM-DD');
         if (this.startDate && this.endDate && this.equipmentId) {
-            this.worklistFilters.clearInputs();
-            this.disableInputs();
-            this.getAppointments(this.equipmentId, this.startDate, this.endDate);
+            this.getAppointments(this.equipmentId);
         }
     }
 
@@ -189,7 +209,7 @@ export class WorklistByTechnicalComponent implements OnInit {
     search(searchFilters: SearchFilters) {
         this.searchFilters = searchFilters;
         this.setPreviousStates();
-        this.filterAppointments(searchFilters.appointmentStates, searchFilters.patientName, searchFilters.patientIdentification);
+        this.pageSlice = this.filterAppointments(searchFilters.appointmentStates, searchFilters.patientName, searchFilters.patientIdentification);
         this.paginator?.firstPage();
     }
 
@@ -200,12 +220,11 @@ export class WorklistByTechnicalComponent implements OnInit {
         this.filtersForm.get('datePicker').get('end').setValue(this.endDate);
     }
 
-    private getAppointments(equipmentId: number, from?: string, to?: string){
-        this.appointmentsService.getAppointmentsByEquipment(equipmentId, from, to).subscribe(appointments => {
-            this.appointments = appointments;
-            this.manageStatusCheckboxes();
-            this.enableInputs();
-        })
+    private getAppointments(equipmentId: number){
+        this.fetchingData = true;
+        this.worklistFiltersComponent.clearInputs();
+        this.disableInputs();
+        this.worklistFacadeService.changeFilters(equipmentId, this.startDate, this.endDate);
     }
 
     private resetAppointmentsData() {
@@ -214,14 +233,18 @@ export class WorklistByTechnicalComponent implements OnInit {
         this.pageSlice = [];
     }
 
-    private filterAppointments(stateFilters?: AppointmentState[], patientName?: string, patientIdentification?: string){
+    private filterAppointments(stateFilters?: AppointmentState[], patientName?: string, patientIdentification?: string): detailedAppointment[]{
+        this.detailedAppointments = this.filterData(stateFilters, patientName, patientIdentification);
+        return this.detailedAppointments.slice(this.startPage, this.endPage);
+    }
+
+    private filterData(stateFilters?: AppointmentState[], patientName?: string, patientIdentification?: string): detailedAppointment[]{
         let filteredAppointments = this.appointments.filter(appointment => 
             stateFilters.find(a => a.id === appointment.appointmentStateId) && 
             this.checkPatientNameFilter(patientName, appointment) && 
             this.checkPatientIdentificationFilter(patientIdentification, appointment)
         );
-        this.detailedAppointments = this.mapAppointmentsToDetailedAppointments(filteredAppointments);
-        this.pageSlice = this.detailedAppointments.slice(0, PAGE_MIN_SIZE);
+        return this.mapAppointmentsToDetailedAppointments(filteredAppointments);
     }
 
     private checkPatientNameFilter(searchName: string, appointment: EquipmentAppointmentListDto) {
@@ -296,8 +319,9 @@ export class WorklistByTechnicalComponent implements OnInit {
 
     onPageChange($event: any) {
 		const page = $event;
-		const startPage = page.pageIndex * page.pageSize;
-		this.pageSlice = this.detailedAppointments.slice(startPage, $event.pageSize + startPage);
+		this.startPage = page.pageIndex * page.pageSize;
+        this.endPage = $event.pageSize + this.startPage
+		this.pageSlice = this.detailedAppointments.slice(this.startPage, this.endPage);
 	}
 
 	finishStudy(appointment: EquipmentAppointmentListDto) {
@@ -320,7 +344,7 @@ export class WorklistByTechnicalComponent implements OnInit {
             if (result?.updateState) {
 				this.selectedAppointment.appointmentStateId = result.updateState;
                 this.updateSelectedAppointmentReportState(result?.reportRequired);
-				this.filterAppointments(this.searchFilters.appointmentStates);
+				this.pageSlice = this.filterAppointments(this.searchFilters.appointmentStates);
 			}
 			this.selectedAppointment = null;
 		});

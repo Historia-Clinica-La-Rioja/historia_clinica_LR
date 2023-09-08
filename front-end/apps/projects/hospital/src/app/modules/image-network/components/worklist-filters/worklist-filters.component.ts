@@ -45,7 +45,7 @@ export class WorklistFiltersComponent implements OnInit {
     }
 
     ngOnChanges() {
-        if (this.defaultStates){
+        if (this.defaultStates && !this.searchFilters){
             this.clearInputs();
         }
     }
