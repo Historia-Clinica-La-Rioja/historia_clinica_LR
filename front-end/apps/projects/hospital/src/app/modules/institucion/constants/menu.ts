@@ -115,7 +115,7 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		text: 'app.menu.TELEMEDICINE',
 		icon: 'calendar_today',
 		id: 'telemedicina',
-		url: './telemedicina',
+		url: './telesalud',
 		featureFlag: AppFeature.HABILITAR_TELEMEDICINA
 	},
 ];
