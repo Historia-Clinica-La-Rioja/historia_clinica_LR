@@ -3,7 +3,9 @@ package ar.lamansys.virtualConsultation.infrastructure.mapper;
 import java.util.List;
 
 import ar.lamansys.sgh.shared.HospitalSharedAutoConfiguration;
-import ar.lamansys.virtualConsultation.VirtualConsultationConfiguration;
+import ar.lamansys.virtualConsultation.domain.VirtualConsultationFilterBo;
+
+import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationFilterDto;
 
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -69,5 +71,8 @@ public interface VirtualConsultationMapper {
 	@Named("fromVirtualConsultationAvailableProfessionalAmountBoList")
 	@IterableMapping(qualifiedByName = "fromVirtualConsultationAvailableProfessionalAmountBo")
 	List<VirtualConsultationAvailableProfessionalAmountDto> fromVirtualConsultationAvailableProfessionalAmountBoList(List<VirtualConsultationAvailableProfessionalAmountBo> virtualConsultationAvailableProfessionalAmountBo);
+
+	@Named("toVirtualConsultationFilterBo")
+	VirtualConsultationFilterBo toVirtualConsultationFilterBo(VirtualConsultationFilterDto virtualConsultationFilterDto);
 
 }

@@ -9,6 +9,8 @@ import ar.lamansys.virtualConsultation.application.notifyVirtualConsultationCanc
 import ar.lamansys.virtualConsultation.application.notifyVirtualConsultationIncomingCall.NotifyVirtualConsultationIncomingCallService;
 
 import ar.lamansys.virtualConsultation.application.notifyVirtualConsultationRejectedCall.NotifyVirtualConsultationRejectedCallService;
+import ar.lamansys.virtualConsultation.domain.VirtualConsultationFilterBo;
+import ar.lamansys.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationFilterDto;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -129,17 +131,21 @@ public class VirtualConsultationController {
 	}
 
 	@GetMapping(value = "/institution/{institutionId}/domain")
-	public List<VirtualConsultationDto> getDomainVirtualConsultation(@PathVariable(name = "institutionId") Integer institutionId) {
-		log.debug("Input parameters -> institutionId {}", institutionId);
-		List<VirtualConsultationDto> result = virtualConsultationMapper.fromVirtualConsultationBoList(getDomainVirtualConsultationsService.run(institutionId));
+	public List<VirtualConsultationDto> getDomainVirtualConsultation(@PathVariable(name = "institutionId") Integer institutionId, @RequestBody @Valid VirtualConsultationFilterDto filter) {
+		log.debug("Input parameters -> institutionId {}, filter {}", institutionId, filter);
+		VirtualConsultationFilterBo filterBo = virtualConsultationMapper.toVirtualConsultationFilterBo(filter);
+		List<VirtualConsultationDto> result = virtualConsultationMapper.fromVirtualConsultationBoList(getDomainVirtualConsultationsService.run(institutionId, filterBo));
 		log.debug("Output -> {}", result);
 		return result;
 	}
 
 	@GetMapping(value = "/institution/{institutionId}")
-	public List<VirtualConsultationDto> getVirtualConsultationsByInstitution(@PathVariable(name = "institutionId") Integer institutionId) {
-		log.debug("Input parameters -> institutionId {}", institutionId);
-		List<VirtualConsultationDto> result = virtualConsultationMapper.fromVirtualConsultationBoList(getVirtualConsultationsByInstitutionService.run(institutionId));
+	public List<VirtualConsultationDto> getVirtualConsultationsByInstitution(@PathVariable(name = "institutionId") Integer institutionId,
+																			 @RequestBody @Valid VirtualConsultationFilterDto filter) {
+		log.debug("Input parameters -> institutionId {}, filter {}", institutionId, filter);
+		VirtualConsultationFilterBo filterBo = virtualConsultationMapper.toVirtualConsultationFilterBo(filter);
+		filterBo.setInstitutionId(institutionId);
+		List<VirtualConsultationDto> result = virtualConsultationMapper.fromVirtualConsultationBoList(getVirtualConsultationsByInstitutionService.run(filterBo));
 		log.debug("Output -> {}", result);
 		return result;
 	}

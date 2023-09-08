@@ -3856,6 +3856,16 @@ export interface VirtualConsultationEventDto {
     virtualConsultationId: number;
 }
 
+export interface VirtualConsultationFilterDto {
+    availability?: boolean;
+    careLineId?: number;
+    clinicalSpecialtyId?: number;
+    institutionId?: number;
+    priorityId?: number;
+    responsibleHealthcareProfessionalId?: number;
+    statusId?: number;
+}
+
 export interface VirtualConsultationInstitutionDataDto {
     id: number;
     name: string;

@@ -13,12 +13,14 @@ import net.pladema.staff.controller.service.HealthcareProfessionalExternalServic
 
 import net.pladema.staff.service.domain.ProfessionalProfessionsBo;
 
+import ar.lamansys.virtualConsultation.domain.VirtualConsultationFilterBo;
+import ar.lamansys.virtualConsultation.infrastructure.output.repository.ListVirtualConsultationRepository;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationBo;
-import ar.lamansys.virtualConsultation.infrastructure.output.repository.VirtualConsultationRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,7 +31,7 @@ public class GetDomainVirtualConsultationsServiceImpl implements GetDomainVirtua
 
 	private final FeatureFlagsService featureFlagsService;
 
-	private final VirtualConsultationRepository virtualConsultationRepository;
+	private final ListVirtualConsultationRepository listVirtualConsultationRepository;
 
 	private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
 
@@ -38,12 +40,12 @@ public class GetDomainVirtualConsultationsServiceImpl implements GetDomainVirtua
 	private final CareLineRepository careLineRepository;
 
 	@Override
-	public List<VirtualConsultationBo> run(Integer institutionId) {
-		log.debug("Input parameters -> institutionId {}", institutionId);
+	public List<VirtualConsultationBo> run(Integer institutionId, VirtualConsultationFilterBo filter) {
+		log.debug("Input parameters -> institutionId {}, filter {}", institutionId, filter);
 		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
 		List<Integer> healthcareProfessionalSpecialties = getHealthcareProfessionalClinicalSpecialties(doctorId);
 		List<Integer> institutionCareLineIds = careLineRepository.getAllByInstitutionId(institutionId).stream().map(CareLineBo::getId).collect(Collectors.toList());
-		List<VirtualConsultationBo> result = virtualConsultationRepository.getDomainVirtualConsultations(healthcareProfessionalSpecialties, institutionCareLineIds);
+		List<VirtualConsultationBo> result = listVirtualConsultationRepository.getDomainVirtualConsultation(healthcareProfessionalSpecialties, institutionCareLineIds, filter);
 		if (featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS))
 			result.forEach(virtualConsultation -> {
 				if (virtualConsultation.getPatientSelfPerceivedName() != null)

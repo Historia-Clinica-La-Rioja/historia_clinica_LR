@@ -3,9 +3,10 @@ package ar.lamansys.virtualConsultation.application.getVirtualConsultationsByIns
 import java.util.List;
 
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationBo;
+import ar.lamansys.virtualConsultation.domain.VirtualConsultationFilterBo;
 
 public interface GetVirtualConsultationsByInstitutionService {
 
-	List<VirtualConsultationBo> run(Integer institutionId);
+	List<VirtualConsultationBo> run(VirtualConsultationFilterBo filter);
 
 }

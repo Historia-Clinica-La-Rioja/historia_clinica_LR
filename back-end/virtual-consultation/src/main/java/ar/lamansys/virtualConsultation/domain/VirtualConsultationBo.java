@@ -2,11 +2,15 @@ package ar.lamansys.virtualConsultation.domain;
 
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class VirtualConsultationBo {
 
 	private Integer id;
@@ -54,31 +58,6 @@ public class VirtualConsultationBo {
 	private Integer availableProfessionalsAmount;
 
 	public VirtualConsultationBo(Integer id, Integer patientId, String patientName, String patientSelfPerceivedName, String patientLastName, Integer patientAge,
-								 String patientGender, String problem, String motive, String clinicalSpecialty, String careLine, Integer institutionId,
-								 String institutionName, Short statusId, Integer responsibleHealthcareProfessionalId, Boolean responsibleAvailability, Short priorityId,
-								 LocalDateTime creationDateTime, String callId) {
-		this.id = id;
-		this.patientId = patientId;
-		this.patientName = patientName;
-		this.patientSelfPerceivedName = patientSelfPerceivedName;
-		this.patientLastName = patientLastName;
-		this.patientAge = patientAge;
-		this.patientGender = patientGender;
-		this.problem = problem;
-		this.motive = motive;
-		this.clinicalSpecialty = clinicalSpecialty;
-		this.careLine = careLine;
-		this.institutionId = institutionId;
-		this.institutionName = institutionName;
-		this.statusId = statusId;
-		this.responsibleHealthcareProfessionalId = responsibleHealthcareProfessionalId;
-		this.responsibleAvailability = responsibleAvailability;
-		this.priorityId = priorityId;
-		this.creationDateTime = creationDateTime;
-		this.callId = callId;
-	}
-
-	public VirtualConsultationBo(Integer id, Integer patientId, String patientName, String patientSelfPerceivedName, String patientLastName, Integer patientAge,
 								 String patientGender, String problem, String motive, String clinicalSpecialty, String careLine, Integer institutionId, Short statusId,
 								 String responsibleFirstName, String responsibleLastName, Integer responsibleHealthcareProfessionalId, Boolean responsibleAvailability,
 								 Short priorityId, LocalDateTime creationDateTime, Integer availableProfessionalsAmount) {
@@ -101,34 +80,6 @@ public class VirtualConsultationBo {
 		this.responsibleAvailability = responsibleAvailability;
 		this.priorityId = priorityId;
 		this.creationDateTime = creationDateTime;
-		this.availableProfessionalsAmount = availableProfessionalsAmount;
-	}
-
-	public VirtualConsultationBo(Integer id, Integer patientId, String patientName, String patientSelfPerceivedName, String patientLastName, Integer patientAge,
-								 String patientGender, String problem, String motive, String clinicalSpecialty, String careLine, Integer institutionId,
-								 String institutionName, Short statusId, String responsibleFirstName, String responsibleLastName, Integer responsibleHealthcareProfessionalId,
-								 Boolean responsibleAvailability, Short priorityId, LocalDateTime creationDateTime, String callId, Integer availableProfessionalsAmount) {
-		this.id = id;
-		this.patientId = patientId;
-		this.patientName = patientName;
-		this.patientSelfPerceivedName = patientSelfPerceivedName;
-		this.patientLastName = patientLastName;
-		this.patientAge = patientAge;
-		this.patientGender = patientGender;
-		this.problem = problem;
-		this.motive = motive;
-		this.clinicalSpecialty = clinicalSpecialty;
-		this.careLine = careLine;
-		this.institutionId = institutionId;
-		this.institutionName = institutionName;
-		this.statusId = statusId;
-		this.responsibleFirstName = responsibleFirstName;
-		this.responsibleLastName = responsibleLastName;
-		this.responsibleHealthcareProfessionalId = responsibleHealthcareProfessionalId;
-		this.responsibleAvailability = responsibleAvailability;
-		this.priorityId = priorityId;
-		this.creationDateTime = creationDateTime;
-		this.callId = callId;
 		this.availableProfessionalsAmount = availableProfessionalsAmount;
 	}
 }

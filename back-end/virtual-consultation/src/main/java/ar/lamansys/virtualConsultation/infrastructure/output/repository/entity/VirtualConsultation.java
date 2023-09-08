@@ -12,6 +12,7 @@ import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import ar.lamansys.virtualConsultation.domain.VirtualConsultationRequestBo;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -19,6 +20,7 @@ import lombok.Setter;
 @EntityListeners(SGXAuditListener.class)
 @Getter
 @Setter
+@NoArgsConstructor
 public class VirtualConsultation extends SGXAuditableEntity<Integer> {
 
 	@Id
