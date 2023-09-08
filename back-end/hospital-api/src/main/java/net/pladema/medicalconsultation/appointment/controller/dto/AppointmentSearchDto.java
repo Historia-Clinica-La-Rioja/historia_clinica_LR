@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 
+import javax.annotation.Nullable;
+
 import java.util.List;
 
 @AllArgsConstructor
@@ -17,11 +19,14 @@ import java.util.List;
 public class AppointmentSearchDto {
 
 	private List<Short> daysOfWeek;
+	@Nullable
 	private String aliasOrSpecialtyName;
 	private TimeDto initialSearchTime;
 	private TimeDto endSearchTime;
 	private DateDto initialSearchDate;
 	private DateDto endingSearchDate;
 	private EAppointmentModality modality;
+	@Nullable
+	private Integer practiceId;
 
 }

@@ -158,7 +158,7 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 	@Query(" SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo( " +
 			"d, dof.description, dof.sectorId, d.healthcareProfessionalId, cs.name, p.firstName, p.lastName, p.middleNames,p.otherLastNames,pe.nameSelfDetermination)" +
 			"FROM Diary d " +
-			"INNER JOIN ClinicalSpecialty cs ON (cs.id = d.clinicalSpecialtyId) " +
+			"INNER JOIN ClinicalSpecialty cs ON (d.clinicalSpecialtyId = cs.id) " +
 			"INNER JOIN DoctorsOffice dof ON (dof.id = d.doctorsOfficeId) " +
 			"INNER JOIN HealthcareProfessional hp ON (hp.id = d.healthcareProfessionalId) " +
 			"INNER JOIN Person p ON (p.id = hp.personId) " +
@@ -166,13 +166,12 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 			"WHERE d.active = true " +
 			"AND dof.institutionId = :institutionId " +
 			"AND (d.alias = :aliasOrClinicalSpecialtyName " +
-			"OR cs.name = :aliasOrClinicalSpecialtyName) " +
+			"OR cs.name = :aliasOrClinicalSpecialtyName ) " +
 			"AND d.endDate >= CURRENT_DATE " +
 			"AND d.deleteable.deleted IS FALSE OR d.deleteable.deleted IS NULL")
 	List<CompleteDiaryListVo> getActiveDiariesByAliasOrClinicalSpecialtyName(
 			@Param("institutionId") Integer institutionId,
-			@Param("aliasOrClinicalSpecialtyName") String aliasOrClinicalSpecialtyName
-	);
+			@Param("aliasOrClinicalSpecialtyName") String aliasOrClinicalSpecialtyName);
 
 	@Transactional(readOnly = true)
 	@Query(" SELECT d " +
@@ -191,4 +190,46 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 			"JOIN AppointmentAssn aa ON aa.pk.diaryId = d.id " +
 			"WHERE aa.pk.appointmentId = :appointmentId ")
 	Optional<CompleteDiaryListVo> getCompleteDiaryByAppointment(@Param("appointmentId") Integer appointmentId);
+	
+	@Transactional(readOnly = true)
+	@Query(" SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo( " +
+			"d, dof.description, dof.sectorId, d.healthcareProfessionalId, cs.name, p.firstName, p.lastName, p.middleNames,p.otherLastNames,pe.nameSelfDetermination)" +
+			"FROM Diary d " +
+			"LEFT JOIN ClinicalSpecialty cs ON (d.clinicalSpecialtyId = cs.id) " +
+			"LEFT JOIN DiaryPractice dp ON (d.id = dp.diaryId) " +
+			"INNER JOIN DoctorsOffice dof ON (dof.id = d.doctorsOfficeId) " +
+			"INNER JOIN HealthcareProfessional hp ON (hp.id = d.healthcareProfessionalId) " +
+			"INNER JOIN Person p ON (p.id = hp.personId) " +
+			"INNER JOIN PersonExtended pe ON (p.id = pe.id) " +
+			"WHERE d.active = true " +
+			"AND dof.institutionId = :institutionId " +
+			"AND dp.snomedId = :practiceId " +
+			"AND d.endDate >= CURRENT_DATE " +
+			"AND d.deleteable.deleted IS FALSE OR d.deleteable.deleted IS NULL")
+	List<CompleteDiaryListVo> getActiveDiariesByPracticeId(
+			@Param("institutionId") Integer institutionId,
+			@Param("practiceId") Integer practiceId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo( " +
+			"d, dof.description, dof.sectorId, d.healthcareProfessionalId, cs.name, p.firstName, p.lastName, p.middleNames,p.otherLastNames,pe.nameSelfDetermination)" +
+			"FROM Diary d " +
+			"LEFT JOIN ClinicalSpecialty cs ON (d.clinicalSpecialtyId = cs.id) " +
+			"LEFT JOIN DiaryPractice dp ON (d.id = dp.diaryId) " +
+			"INNER JOIN DoctorsOffice dof ON (dof.id = d.doctorsOfficeId) " +
+			"INNER JOIN HealthcareProfessional hp ON (hp.id = d.healthcareProfessionalId) " +
+			"INNER JOIN Person p ON (p.id = hp.personId) " +
+			"INNER JOIN PersonExtended pe ON (p.id = pe.id) " +
+			"WHERE d.active = true " +
+			"AND dof.institutionId = :institutionId " +
+			"AND dp.snomedId = :practiceId " +
+			"AND (d.alias = :aliasOrClinicalSpecialtyName " +
+			"OR cs.name = :aliasOrClinicalSpecialtyName ) " +
+			"AND d.endDate >= CURRENT_DATE " +
+			"AND d.deleteable.deleted IS FALSE OR d.deleteable.deleted IS NULL")
+	List<CompleteDiaryListVo> getActiveDiariesByAliasOrClinicalSpecialtyNameAndPracticeId(
+			@Param("institutionId") Integer institutionId,
+			@Param("aliasOrClinicalSpecialtyName") String aliasOrClinicalSpecialtyName,
+			@Param("practiceId") Integer practiceId);
+
 }

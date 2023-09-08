@@ -23,6 +23,7 @@ public class AppointmentSearchBo {
 	private LocalDate initialSearchDate;
 	private LocalDate endingSearchDate;
 	private EAppointmentModality modality;
+	private Integer practiceId;
 
 	public AppointmentSearchBo(List<Short> daysOfWeek, String aliasOrSpecialtyName, LocalTime initialSearchTime, LocalTime endSearchTime, LocalDate initialSearchDate,
 							   LocalDate endingSearchDate) {

@@ -268,13 +268,14 @@ export interface AppointmentOrderImageExistCheckDto extends Serializable {
 }
 
 export interface AppointmentSearchDto {
-    aliasOrSpecialtyName: string;
+    aliasOrSpecialtyName?: string;
     daysOfWeek: number[];
     endSearchTime: TimeDto;
     endingSearchDate: DateDto;
     initialSearchDate: DateDto;
     initialSearchTime: TimeDto;
     modality: EAppointmentModality;
+    practiceId?: number;
 }
 
 export interface AppointmentShortSummaryDto {

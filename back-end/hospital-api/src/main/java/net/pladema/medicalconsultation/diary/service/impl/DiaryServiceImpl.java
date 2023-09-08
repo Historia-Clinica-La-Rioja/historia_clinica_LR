@@ -379,11 +379,13 @@ public class DiaryServiceImpl implements DiaryService {
 	public List<EmptyAppointmentBo> getEmptyAppointmentsBySearchCriteria(Integer institutionId, AppointmentSearchBo searchCriteria, Boolean mustFilterByModality) {
 		LOG.debug("Input parameters -> institutionId {}, searchCriteria {}, mustFilterByModality {}", institutionId, searchCriteria, mustFilterByModality);
 		List<EmptyAppointmentBo> emptyAppointments = new ArrayList<>();
-		List<CompleteDiaryBo> diariesBySpecialty = getActiveDiariesByAliasOrClinicalSpecialtyName(institutionId, searchCriteria.getAliasOrSpecialtyName());
+		validateSearchCriteria(searchCriteria);
+		List<CompleteDiaryBo> diaries =  getActiveDiariesByAliasOrClinicalSpecialtyNameOrPracticeId(institutionId, searchCriteria.getAliasOrSpecialtyName(), searchCriteria.getPracticeId());
+
 		if (mustFilterByModality)
-			filterOpeningHoursByModality(searchCriteria, diariesBySpecialty);
+			filterOpeningHoursByModality(searchCriteria, diaries);
 		LocalDateTime currentDateTime = dateTimeProvider.nowDateTimeWithZone(institutionExternalService.getTimezone(institutionId));
-		for (CompleteDiaryBo diary: diariesBySpecialty)
+		for (CompleteDiaryBo diary: diaries)
 			emptyAppointments = getEmptyAppointmentBos(searchCriteria, emptyAppointments, diary, currentDateTime);
 		emptyAppointments.sort(Comparator.comparing(EmptyAppointmentBo::getDate).thenComparing(EmptyAppointmentBo::getHour));
 		LOG.debug(OUTPUT, emptyAppointments);
@@ -405,12 +407,22 @@ public class DiaryServiceImpl implements DiaryService {
 		return emptyAppointments;
 	}
 
-	private List<CompleteDiaryBo> getActiveDiariesByAliasOrClinicalSpecialtyName(Integer institutionId, String aliasOrClinicalSpecialtyName) {
-		LOG.debug("Input parameters -> institutionId {}, aliasOrClinicalSpecialtyName {}", institutionId, aliasOrClinicalSpecialtyName);
-		List<CompleteDiaryBo> result = diaryRepository.getActiveDiariesByAliasOrClinicalSpecialtyName(institutionId, aliasOrClinicalSpecialtyName).stream()
-				.map(this::createCompleteDiaryBoInstance).map(completeOpeningHours()).collect(toList());
-		LOG.debug(OUTPUT, result);
-		return result;
+
+	private List<CompleteDiaryBo> getActiveDiariesByAliasOrClinicalSpecialtyNameOrPracticeId(Integer institutionId, String aliasOrClinicalSpecialtyName, Integer practiceId) {
+		LOG.debug("Input parameters -> institutionId {}, aliasOrClinicalSpecialtyName {}, practice {}", institutionId, aliasOrClinicalSpecialtyName, practiceId);
+		if (aliasOrClinicalSpecialtyName != null && practiceId != null)
+			 return diaryRepository.getActiveDiariesByAliasOrClinicalSpecialtyNameAndPracticeId(institutionId, aliasOrClinicalSpecialtyName, practiceId).stream()
+					 .map(this::createCompleteDiaryBoInstanceWithPractice)
+					 .map(completeOpeningHours()).collect(toList());
+
+		if (aliasOrClinicalSpecialtyName != null && practiceId == null)
+			return diaryRepository.getActiveDiariesByAliasOrClinicalSpecialtyName(institutionId, aliasOrClinicalSpecialtyName).stream()
+					.map(this::createCompleteDiaryBoInstance)
+					.map(completeOpeningHours()).collect(toList());
+
+		return diaryRepository.getActiveDiariesByPracticeId(institutionId, practiceId).stream()
+				.map(this::createCompleteDiaryBoInstanceWithPractice)
+				.map(completeOpeningHours()).collect(toList());
 	}
 
 	private List<EmptyAppointmentBo> getDiaryAvailableAppointments(CompleteDiaryBo diary,
@@ -500,5 +512,18 @@ public class DiaryServiceImpl implements DiaryService {
 			if (openingHour.getOnSiteAttentionAllowed() == null && openingHour.getPatientVirtualAttentionAllowed() == null && openingHour.getSecondOpinionVirtualAttentionAllowed() == null)
 				throw new DiaryException(DiaryEnumException.MODALITY_NOT_FOUND,	"Una de las franjas horarias no cuenta con una modalidad definida");
 		});
+	}
+
+	private CompleteDiaryBo createCompleteDiaryBoInstanceWithPractice(CompleteDiaryListVo vo) {
+		var bo = this.createCompleteDiaryBoInstance(vo);
+		bo.setPracticesInfo(diaryPracticeService.getAllByDiaryId(vo.getId()));
+		return bo;
+	}
+
+	private void validateSearchCriteria(AppointmentSearchBo searchCriteria) {
+		if (searchCriteria.getAliasOrSpecialtyName() == null && searchCriteria.getPracticeId() == null) {
+			throw new DiaryException(DiaryEnumException.SEARCH_CRITERIA_NOT_FOUND,
+					"No se puede realizar la búsqueda sin seleccionar el tipo de atención ");
+		}
 	}
 }
