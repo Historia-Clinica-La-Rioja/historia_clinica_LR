@@ -70,4 +70,11 @@ public class InstitutionServiceImpl implements InstitutionService {
 		else
 			return institutionRepository.getByDepartmentIdHavingActiveDiaryWithCareLineClinicalSpecialty(departmentId, careLineId, clinicalSpecialtyId);
 	}
+
+	@Override
+	public List<InstitutionBasicInfoBo> getVirtualConsultationInstitutions() {
+		List<InstitutionBasicInfoBo> result = institutionRepository.getVirtualConsultationInstitutions();
+		log.debug("Output -> {}", result);
+		return result;
+	}
 }

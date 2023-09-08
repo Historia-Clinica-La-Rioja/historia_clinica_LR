@@ -17,4 +17,6 @@ public interface InstitutionService {
 	AddressBo getAddress(Integer institutionId);
 
 	List<InstitutionBasicInfoBo> getFromInstitutionDestinationReference(Short departmentId, Integer clinicalSpecialtyId, Integer careLineId);
+
+	List<InstitutionBasicInfoBo> getVirtualConsultationInstitutions();
 }

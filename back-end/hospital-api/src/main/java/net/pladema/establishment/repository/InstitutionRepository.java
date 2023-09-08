@@ -112,4 +112,10 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 																								 @Param("careLineId") Integer careLineId,
 																								 @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
 
+	@Transactional(readOnly = true)
+	@Query(" SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) " +
+			"FROM Institution i " +
+			"JOIN VirtualConsultation vc ON (vc.institutionId = i.id) ")
+	List<InstitutionBasicInfoBo> getVirtualConsultationInstitutions();
+
 }

@@ -18,7 +18,6 @@ import net.pladema.establishment.service.fetchInstitutions.FetchAllInstitutions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -143,6 +141,13 @@ public class InstitutionController {
 		List<InstitutionBasicInfoBo> institutions = institutionService.getFromInstitutionDestinationReference(departmentId, clinicalSpecialtyId, careLineId);
 		var result = institutionMapper.fromListInstitutionBasicInfoBo(institutions);
 		logger.trace("result -> {}", result);
+		return result;
+	}
+
+	@GetMapping("/virtual-consultation")
+	public List<InstitutionBasicInfoDto> getVirtualConsultationInstitutions() {
+		List<InstitutionBasicInfoDto> result = institutionMapper.fromListInstitutionBasicInfoBo(institutionService.getVirtualConsultationInstitutions());
+		logger.debug("Output -> {}", result);
 		return result;
 	}
 
