@@ -724,6 +724,7 @@ export interface ConclusionDto extends HealthConditionDto {
 
 export interface ConclusionTemplateDto extends DocumentTemplateDto {
     conclusions: ConclusionDto[];
+    templateText: string;
 }
 
 export interface ConditionDto {
@@ -1108,7 +1109,6 @@ export interface DocumentSummaryDto extends Serializable {
 
 export interface DocumentTemplateDto {
     name: string;
-    templateText: string;
 }
 
 export interface DocumentTypeDto {

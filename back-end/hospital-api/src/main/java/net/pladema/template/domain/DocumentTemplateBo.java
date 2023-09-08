@@ -17,16 +17,14 @@ public class DocumentTemplateBo {
 	private String name;
 	private Short typeId;
 	private Integer institutionId;
-	private String templateText;
 
 	@Override
 	public String toString() {
 		return "DocumentTemplateBo{" + "id=" + id +
-				", userId='" + userId + '\'' +
-				", name='" + name + '\'' +
-				", typeId='" + typeId + '\'' +
+				", userId=" + userId +
+				", name=" + name +
+				", typeId=" + typeId +
 				", institutionId=" + institutionId +
-				", templateText='" + "<OMITTED>" + '\'' +
 				'}';
 	}
 }

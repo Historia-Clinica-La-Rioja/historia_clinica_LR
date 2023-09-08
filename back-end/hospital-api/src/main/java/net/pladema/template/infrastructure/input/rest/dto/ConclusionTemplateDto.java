@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -16,6 +18,10 @@ import java.util.List;
 @NoArgsConstructor
 public class ConclusionTemplateDto extends DocumentTemplateDto {
 
+    @NotEmpty(message = "{value.mandatory}")
+    private String templateText;
+
+    @NotNull(message = "{value.mandatory}")
     private List<ConclusionDto> conclusions;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
@@ -24,7 +30,8 @@ public class ConclusionTemplateDto extends DocumentTemplateDto {
             @JsonProperty("templateText") String templateText,
             @JsonProperty("conclusions") List<ConclusionDto> conclusions) {
 
-        super(name, templateText);
+        super(name);
+        this.templateText = templateText;
         this.conclusions = conclusions;
     }
 }

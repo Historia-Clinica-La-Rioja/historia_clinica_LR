@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.NotEmpty;
+
 
 @Getter
 @Setter
@@ -15,15 +17,12 @@ import lombok.ToString;
 public class DocumentTemplateDto {
 
 	private String name;
-	private String templateText;
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
 	public DocumentTemplateDto(
-			@JsonProperty("name") String name,
-			@JsonProperty("templateText") String templateText) {
+			@NotEmpty(message = "{value.mandatory}") @JsonProperty("name") String name) {
 
 		this.name = name;
-		this.templateText = templateText;
 	}
 
 }

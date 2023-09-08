@@ -14,11 +14,13 @@ import java.util.List;
 @JsonIncludeProperties({ "templateText", "conclusions" })
 public class ConclusionTemplateBo extends DocumentTemplateBo {
 
+    private String templateText;
     private List<ConclusionBo> conclusions;
 
     @Override
     public String toString() {
         return "ConclusionTemplateBo{" + "conclusions=" + conclusions +
+                ", templateText='" + templateText + '\'' +
                 ", super=" + super.toString() +
                 '}';
     }

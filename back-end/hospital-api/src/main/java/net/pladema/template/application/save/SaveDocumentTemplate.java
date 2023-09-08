@@ -4,15 +4,13 @@ import ar.lamansys.sgx.shared.files.FileService;
 import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileInfo;
 import ar.lamansys.sgx.shared.filestorage.application.FileContentBo;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.template.application.create.CreateTemplate;
 import net.pladema.template.application.port.DocumentTemplateStorage;
 import net.pladema.template.domain.DocumentTemplateBo;
 import net.pladema.template.domain.enums.EDocumentTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,12 +19,12 @@ public class SaveDocumentTemplate {
 
     private final DocumentTemplateStorage documentTemplateStorage;
     private final FileService fileService;
-    private final ObjectMapper objectMapper;
 
-    public void run(DocumentTemplateBo documentTemplateBo, Optional<String> template) throws JsonProcessingException {
-        log.debug("Input -> DocumentTemplateBo {}, template {}", documentTemplateBo, template);
+    public void run(CreateTemplate createTemplate, DocumentTemplateBo documentTemplateBo) throws JsonProcessingException {
 
-        String json = template.orElse(objectMapper.writeValueAsString(documentTemplateBo));
+        log.debug("Input -> DocumentTemplateBo {}", documentTemplateBo);
+
+        String json = createTemplate.run(documentTemplateBo);
 
         FileContentBo templateStream = FileContentBo.fromString(json);
 
