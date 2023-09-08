@@ -48,7 +48,8 @@ export class AgendaHorarioService {
 		private readonly cdr: ChangeDetectorRef,
 		private readonly viewDate: Date,
 		private readonly weekStartsOn: DAYS_OF_WEEK,
-		private readonly snackBarService: SnackBarService
+		private readonly snackBarService: SnackBarService,
+		private readonly diaryType: EDiaryType
 	) {
 		currentWeek().forEach(day => {
 			this.mappedCurrentWeek[day.day()] = day;
@@ -115,6 +116,7 @@ export class AgendaHorarioService {
 					patientVirtualAttentionAllowed: event.meta.patientVirtualAttentionAllowed ? true : false,
 					secondOpinionVirtualAttentionAllowed: event.meta.secondOpinionVirtualAttentionAllowed ? true : false,
 					onSiteAttentionAllowed: true,
+					diaryType: this.diaryType
 				}
 			});
 		dialogRef.afterClosed().subscribe(dialogInfo => {
@@ -171,6 +173,7 @@ export class AgendaHorarioService {
 						patientVirtualAttentionAllowed: event.meta.patientVirtualAttentionAllowed ? true : false,
 						secondOpinionVirtualAttentionAllowed: event.meta.secondOpinionVirtualAttentionAllowed ? true : false,
 						onSiteAttentionAllowed: event.meta.onSiteAttentionAllowed ? true : false,
+						diaryType: this.diaryType
 					}
 				});
 			dialogRef.afterClosed().subscribe(dialogInfo => {
@@ -357,4 +360,9 @@ export class AgendaHorarioService {
 		}
 	}
 
+}
+
+export enum EDiaryType {
+	CLASSIC,
+	EQUIPMENT
 }

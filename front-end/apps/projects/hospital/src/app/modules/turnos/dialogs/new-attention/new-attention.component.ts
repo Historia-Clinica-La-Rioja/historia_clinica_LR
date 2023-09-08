@@ -7,6 +7,7 @@ import { MEDICAL_ATTENTION } from '../../constants/descriptions';
 import { REMOVEATTENTION } from '@core/constants/validation-constants';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { AppFeature } from "@api-rest/api-model";
+import { EDiaryType } from '@turnos/services/agenda-horario.service';
 
 @Component({
 	selector: 'app-new-attention',
@@ -145,4 +146,5 @@ export interface NewAttentionElements {
 	patientVirtualAttentionAllowed: boolean,
 	secondOpinionVirtualAttentionAllowed: boolean,
 	onSiteAttentionAllowed:boolean,
+	diaryType: EDiaryType
 }

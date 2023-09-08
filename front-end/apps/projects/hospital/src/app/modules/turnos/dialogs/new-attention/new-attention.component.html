@@ -78,7 +78,7 @@
 		</div>
 
 
-		<div *ngIf="form?.value?.medicalAttentionType?.description != SPONTANEOUS">
+		<div *ngIf="form?.value?.medicalAttentionType?.description != SPONTANEOUS && data.diaryType == 0">
 			<div fxLayout="column">
 				<div mat-dialog-title>
 					{{'turnos.agenda-setup.dialog.MODALITY' | translate}}

@@ -29,7 +29,7 @@ import {
 import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
 import { DiaryService } from '@api-rest/services/diary.service';
 import { APPOINTMENT_DURATIONS, MINUTES_IN_HOUR } from '../../constants/appointment';
-import { AgendaHorarioService } from '../../services/agenda-horario.service';
+import { AgendaHorarioService, EDiaryType } from '../../services/agenda-horario.service';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { SpecialtyService } from '@api-rest/services/specialty.service';
 import { HierarchicalUnitsService } from '@api-rest/services/hierarchical-units.service';
@@ -117,7 +117,7 @@ export class AgendaSetupComponent implements OnInit {
 		private readonly practicesService: PracticesService,
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
-		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY, snackBarService);
+		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY, snackBarService, EDiaryType.CLASSIC);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_OBLIGATORIEDAD_UNIDADES_JERARQUICAS).subscribe(isOn =>
 			this.fieldHierarchicalUnitRequired = isOn
 		);

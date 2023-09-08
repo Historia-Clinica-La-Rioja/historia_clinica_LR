@@ -13,7 +13,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { SectorService } from '@api-rest/services/sector.service';
 import { EquipmentDiaryService } from '@api-rest/services/equipment-diary.service';
 import { APPOINTMENT_DURATIONS, MINUTES_IN_HOUR } from '@turnos/constants/appointment';
-import { AgendaHorarioService } from '@turnos/services/agenda-horario.service';
+import { AgendaHorarioService, EDiaryType } from '@turnos/services/agenda-horario.service';
 import { EquipmentService } from '@api-rest/services/equipment.service';
 import { EquipmentDiaryOpeningHoursService } from '@api-rest/services/equipment-diary-opening-hours.service';
 import { CompleteEquipmentDiaryDto, EquipmentDiaryADto, EquipmentDiaryDto, EquipmentDto, SectorDto } from '@api-rest/api-model';
@@ -77,7 +77,7 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		private readonly route: ActivatedRoute
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
-		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY, snackBarService);
+		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY, snackBarService, EDiaryType.EQUIPMENT);
 	}
 
 	ngOnInit(): void {
