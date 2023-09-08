@@ -1,8 +1,9 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ClinicalSpecialtyDto, EAppointmentModality, EmptyAppointmentDto, TimeDto } from '@api-rest/api-model';
+import { AppFeature, ClinicalSpecialtyDto, EAppointmentModality, EmptyAppointmentDto, TimeDto } from '@api-rest/api-model';
 import { DiaryService } from '@api-rest/services/diary.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import * as moment from 'moment';
 import { Moment } from 'moment';
@@ -29,6 +30,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	private today: Date;
 	MODALITY_ON_SITE_ATTENTION = EAppointmentModality.ON_SITE_ATTENTION;
 	MODALITY_PATIENT_VIRTUAL_ATTENTION = EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
+	isEnableTelemedicina:boolean;
 
 	dateSearchFilter = (d: Moment): boolean => {
 		const parsedDate = d?.toDate();
@@ -39,8 +41,9 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly diaryService: DiaryService,
-		private readonly route: ActivatedRoute
-	) { }
+		private readonly route: ActivatedRoute,
+		private readonly featureFlagService: FeatureFlagService,
+	) { this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.isEnableTelemedicina = isEnabled)}
 
 	ngOnInit(): void {
 		this.route.queryParams.subscribe(qp => {
@@ -64,7 +67,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 			sundayControl: [false, Validators.nullValidator],
 			searchInitialDate: [moment(), Validators.required],
 			searchEndingDate: [{ value: moment().add(21, "days"), disabled: true }, Validators.required],
-			modality: [null, Validators.required]
+			modality: [this.MODALITY_ON_SITE_ATTENTION, Validators.required]
 		});
 
 		this.aliasTypeaheadOptions$ = this.getClinicalSpecialtiesTypeaheadOptions$();
@@ -123,8 +126,13 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	}
 
 	setClinicalSpecialty(clinicalSpecialty: ClinicalSpecialtyDto) {
-		this.searchBySpecialtyForm.controls.clinicalSpecialty.setValue(clinicalSpecialty);
-		this.showClinicalSpecialtyError = false;
+		if(clinicalSpecialty){
+			this.searchBySpecialtyForm.controls.clinicalSpecialty.setValue(clinicalSpecialty);
+			this.showClinicalSpecialtyError = false;
+		}else{
+			this.emptyAppointments = [];
+			this.emptyAppointmentsFiltered = [];
+		}
 	}
 
 	updateSearchEndingDate(changedValue) {

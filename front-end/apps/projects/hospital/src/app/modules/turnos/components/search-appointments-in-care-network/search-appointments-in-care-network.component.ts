@@ -1,12 +1,13 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { AddressDto, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableProtectedAppointmentsDto, EAppointmentModality, InstitutionBasicInfoDto, ProvinceDto } from '@api-rest/api-model';
+import { AddressDto, AppFeature, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableProtectedAppointmentsDto, EAppointmentModality, InstitutionBasicInfoDto, ProvinceDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { SpecialtyService } from '@api-rest/services/specialty.service';
 import { ContextService } from '@core/services/context.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { datePlusDays } from '@core/utils/date.utils';
 import { DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
@@ -62,6 +63,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 	MODALITY_ON_SITE_ATTENTION = EAppointmentModality.ON_SITE_ATTENTION;
 	MODALITY_PATIENT_VIRTUAL_ATTENTION = EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
 	MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION
+	isEnableTelemedicina:boolean;
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -72,8 +74,9 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		private specialtyService: SpecialtyService,
 		private diaryAvailableAppointmentsSearchService: DiaryAvailableAppointmentsSearchService,
 		private changeDetectorRef: ChangeDetectorRef,
-		private readonly route: ActivatedRoute
-	) {
+		private readonly route: ActivatedRoute,
+		private readonly featureFlagService: FeatureFlagService,
+	) { this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.isEnableTelemedicina = isEnabled)
 	}
 
 	ngOnChanges(changes: SimpleChanges): void {
@@ -343,7 +346,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 			institution: [null],
 			startDate: [this.today, Validators.required],
 			endDate: [{ value: endDate, disabled: true }, Validators.required],
-			modality: [null, Validators.required]
+			modality: [this.MODALITY_ON_SITE_ATTENTION, Validators.required]
 		});
 	}
 

@@ -19,7 +19,7 @@
 			"SEARCH_BY_PROFESSIONAL": "Oferta por profesional",
 			"SEARCH_BY_INSTITUTION": "Oferta en institución",
 			"CARE_NETWORK_OFFER": "Oferta en red de atención",
-			"SEARCH_BY_SPECIALTY_CRITERIA": "Seleccione los criterios para la búsqueda de turnos disponibles por especialidad:",
+			"SEARCH_BY_INSTITUTION_CRITERIA": "Seleccione los criterios para la búsqueda de turnos disponibles por institución:",
 			"AVAILABLE_DAYS": "Días disponibles",
 			"TIME_RANGE": "Rango horario",
 			"START_DATE": "Fecha de inicio",
@@ -40,7 +40,7 @@
 		},
 		"MODALITY_ATTENTION":"Modalidad de atención",
 		"ON_SITE_ATTENTION": "Presencial",
-		"PATIENT_VIRTUAL_ATTENTION": "teleconsulta de paciente",
+		"PATIENT_VIRTUAL_ATTENTION": "Teleconsulta con paciente",
 		"SECOND_OPINION_VIRTUAL_ATTENTION":"Teleconsulta de 2da opinión",
 		"search-appointments-in-care-network": {
 			"SEARCH_IN_CARE_NETWORK_CRITERIA": "Seleccione los criterios para la búsqueda de turnos disponibles en la red de atención:",
