@@ -46,7 +46,7 @@
       "GENERAL_PRACTITIONER": "Médico de cabecera",
       "IDENTIFICATION_TYPE": "Tipo de documento",
       "IDENTIFICATION_NUMBER": "Nº de documento",
-      "INVALID": "El campo es invalido.",
+      "INVALID": "El campo es inválido.",
       "LAST_NAME": "Primer apellido",
       "LAST_NAME_TITLE": "Apellidos",
       "MAX_CHARACTER": "Introduzca como máximo 11 caracteres",
