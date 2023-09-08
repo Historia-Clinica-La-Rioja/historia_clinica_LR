@@ -77,4 +77,18 @@ public class InstitutionServiceImpl implements InstitutionService {
 		log.debug("Output -> {}", result);
 		return result;
 	}
+
+	@Override
+	public List<InstitutionBasicInfoBo> getInstitutionsByReferenceByPracticeFilter(Short departmentId, Integer practiceSnomedId,
+																				   Integer clinicalSpecialtyId, Integer careLineId) {
+		log.debug("Fetch all institutions by reference by practice filter");
+		if (careLineId != null && clinicalSpecialtyId != null)
+			return institutionRepository.getByDepartmentAndCareLineAndPracticeAndClinicalSpecialty(departmentId, clinicalSpecialtyId, careLineId, practiceSnomedId);
+		if (careLineId != null)
+			return institutionRepository.getByDepartmentAndCareLineAndPractice(departmentId, careLineId, practiceSnomedId);
+		if (clinicalSpecialtyId != null)
+			return institutionRepository.getAllByDepartmentAndClinicalSpecialtyAndPractice(departmentId, clinicalSpecialtyId, practiceSnomedId);
+		return institutionRepository.getByDepartmentAndPractice(departmentId, practiceSnomedId);
+	}
+
 }

@@ -18,6 +18,8 @@ import net.pladema.establishment.service.fetchInstitutions.FetchAllInstitutions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -151,4 +153,19 @@ public class InstitutionController {
 		return result;
 	}
 
+	@GetMapping("/{institutionId}/by-reference-practice-filter")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<List<InstitutionBasicInfoDto>> getInstitutionsByReferenceByPracticeFilter(@PathVariable("institutionId") Integer institutionId,
+																									@RequestParam("practiceSnomedId") Integer practiceSnomedId,
+																									@RequestParam("departmentId") Short departmentId,
+																								 	@RequestParam(name="careLineId", required = false) Integer careLineId,
+																								 	@RequestParam(name="clinicalSpecialtyId", required = false) Integer clinicalSpecialtyId) {
+		logger.debug("Input parameter -> institutionId {}, practiceSnomedId {}, departmentId {}, careLineId {}, clinicalSpecialtyId {}",
+				institutionId, practiceSnomedId, departmentId, careLineId, clinicalSpecialtyId);
+		var institutions = institutionService.getInstitutionsByReferenceByPracticeFilter(departmentId, practiceSnomedId, clinicalSpecialtyId, careLineId);
+		var result = institutionMapper.fromListInstitutionBasicInfoBo(institutions);
+		logger.trace("result -> {}", result);
+		return ResponseEntity.ok(result);
+	}
+	
 }
