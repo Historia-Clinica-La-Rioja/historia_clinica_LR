@@ -21,6 +21,10 @@
             width: 200px;
             height: 60px;
         }
+
+        .header-footer-font {
+            font-size: 15px;
+        }
     </style>
 </head>
 <body th:fragment="consent_document_header">
@@ -42,16 +46,18 @@
         </table>
         <hr/>
         <div class="bold big-font">Datos del episodio</div>
-        <table>
+        <table class="header-footer-font">
             <tr>
                 <td>
                     <span style="margin-right: 50px">Nombre y apellido del paciente</span>
                 </td>
                 <td>Documento</td>
+                <td>Tipo</td>
             </tr>
             <tr>
-                <td class="big-font" th:text="${personDto.completeName()}"></td>
-                <td class="big-font" th:text="${personDto.identificationNumber}"></td>
+                <td th:text="${personDto.completeName()}"></td>
+                <td th:text="${personDto.identificationNumber}"></td>
+                <td>Internación</td>
             </tr>
             <tr>
                 <td>Id Encuentro</td>
@@ -59,27 +65,21 @@
                 <td>Institución</td>
             </tr>
             <tr>
-                <td class="big-font" th:text="${internmentEpisodeId}"></td>
-                <td class="big-font" th:text="${#temporals.format(entryDate, 'dd/MM/yyyy HH:mm')}"></td>
-                <td class="big-font" th:text="${institutionName}"></td>
-            </tr>
-            <tr>
-                <td>Tipo</td>
-                <td>Matrícula</td>
-            </tr>
-            <tr>
-                <td class="big-font">Internación</td>
-                <td style="display: inline" th:each="license,iter: ${doctorDto.licenses}">
-                    <span class="big-font" th:text="${license}"></span>
-                </td>
+                <td th:text="${internmentEpisodeId}"></td>
+                <td th:text="${#temporals.format(entryDate, 'dd/MM/yyyy HH:mm')}"></td>
+                <td th:text="${institutionName}"></td>
             </tr>
             <tr>
                 <td>Profesional responsable</td>
+                <td>Matrícula</td>
             </tr>
             <tr>
                 <td>
-                    <span class="big-font" th:text="${doctorDto.firstName}"></span>
-                    <span class="big-font" th:text="${doctorDto.lastName}"></span>
+                    <span th:text="${doctorDto.firstName}"></span>
+                    <span th:text="${doctorDto.lastName}"></span>
+                </td>
+                <td style="display: inline" th:each="license,iter: ${doctorDto.licenses}">
+                    <span th:text="${license}"></span>
                 </td>
             </tr>
         </table>
