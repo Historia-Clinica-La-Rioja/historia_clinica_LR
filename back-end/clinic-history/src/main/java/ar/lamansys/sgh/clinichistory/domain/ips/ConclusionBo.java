@@ -39,4 +39,17 @@ public class ConclusionBo extends HealthConditionBo {
         return super.isMain();
     }
 
+    @Override
+    @JsonIgnore
+    public String getSnomedSctid() {
+        return super.getSnomedSctid();
+    }
+
+    @Override
+    @JsonIgnore
+    public String getSnomedPt() {
+        return super.getSnomedPt();
+    }
+
+
 }
