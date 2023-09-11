@@ -65,20 +65,20 @@ public class RefepsServiceImpl implements RefepsService {
 	public List<ValidatedLicenseNumberBo> validateLicenseNumber(Integer healthcareProfessionalId, String identificationNumber, List<String> licenses) throws RefepsApiException, RefepsLicenseException {
 		log.debug("Parameters: identificationNumber {}, licenses {}", identificationNumber, licenses);
 		List<ValidatedLicenseNumberBo> processedLicenses = new ArrayList<>();
-		String responseMessage = null;
 		String url = "&nrodoc=" + identificationNumber;
 		try {
 			RefepsLicenseSearchResponse response = restClientInterface.exchangeGet(url, RefepsLicenseSearchResponse.class).getBody();
+			assertValidLicenseResponse(response);
+			String responseMessage = response.getResultMessage();
 			if (responseMessage.equals(MULTIPLE_RESULTS)) {
 				url = url.concat("&apellido=" + sharedHealthcareProfessionalRepository.getHealthcareProfessionalLastName(healthcareProfessionalId).toUpperCase());
 				response = restClientInterface.exchangeGet(url, RefepsLicenseSearchResponse.class).getBody();
-			}
-			if (response != null) {
+				assertValidLicenseResponse(response);
 				responseMessage = response.getResultMessage();
-				if (response.getResponse() != null) {
-					processExistingLicensesNumber(licenses, processedLicenses, response);
-					return processedLicenses;
-				}
+			}
+			if (response.getResponse() != null) {
+				processExistingLicensesNumber(licenses, processedLicenses, response);
+				return processedLicenses;
 			}
 			throw generateCustomException(Objects.requireNonNull(responseMessage));
 		} catch (RestTemplateApiException e) {
@@ -86,22 +86,27 @@ public class RefepsServiceImpl implements RefepsService {
 		}
 	}
 
+	private void assertValidLicenseResponse(RefepsLicenseSearchResponse response) throws RefepsApiException {
+		if (response == null)
+			throw new RefepsApiException(RefepsExceptionsEnum.SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR, "El servicio REFEPS no se encuentra disponible en éstos momentos");
+	}
+
 	@Override
 	public List<ValidatedLicenseDataDto> validateLicenseNumberAndType(Integer healthcareProfessionalId, String identificationNumber, List<LicenseDataDto> licensesData) throws RefepsApiException, RefepsLicenseException {
 		log.debug("Parameters: identificationNumber {}, licenses {}", identificationNumber, licensesData);
-		String responseMessage = null;
 		String url = "&nrodoc=" + identificationNumber;
 		try {
 			RefepsLicenseSearchResponse response = restClientInterface.exchangeGet(url, RefepsLicenseSearchResponse.class).getBody();
+            assertValidLicenseResponse(response);
+            String responseMessage = response.getResultMessage();
 			if (responseMessage.equals(MULTIPLE_RESULTS)) {
 				url = url.concat("&apellido=" + sharedHealthcareProfessionalRepository.getHealthcareProfessionalLastName(healthcareProfessionalId).toUpperCase());
 				response = restClientInterface.exchangeGet(url, RefepsLicenseSearchResponse.class).getBody();
-			}
-			if (response != null) {
+				assertValidLicenseResponse(response);
 				responseMessage = response.getResultMessage();
-				if (response.getResponse() != null)
-					return processExistingLicensesData(licensesData, response);
 			}
+			if (response.getResponse() != null)
+				return processExistingLicensesData(licensesData, response);
 			throw generateCustomException(Objects.requireNonNull(responseMessage));
 		} catch (RestTemplateApiException e) {
 			throw processRestTemplateException(e);
