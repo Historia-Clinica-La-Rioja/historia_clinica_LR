@@ -32,6 +32,14 @@
 						</div>
 					</div>
 				</div>
+				<div fxLayoutAlign="end center" fxLayoutAlign.lt-md="start center">
+					<button id="print-appointment" mat-stroked-button color="primary" btn-block type="button"
+						(click)="getAppointmentTicketReport()">
+						<mat-icon fontSet="material-icons-outlined">print</mat-icon>
+						<span class="uppercase">{{'turnos.appointment.PRINT' | translate}}</span>
+					</button>
+					<div class="none" id="pdfPrinter"></div>
+				</div>
 			</div>
 		</section>
 
@@ -84,7 +92,7 @@
 
 					<mat-form-field appearance="outline">
 						<button type="button" mat-button matSuffix color="warn" mat-icon-button
-							*ngIf="formEdit.value.newCoverageData" (click)="clear(); $event.stopPropagation()">
+							*ngIf="formEdit.value.newCoverageData" (click)="clearCoverageData(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
 						<mat-label>{{'pacientes.form.MEDICAL_COVERAGE' | translate}}</mat-label>

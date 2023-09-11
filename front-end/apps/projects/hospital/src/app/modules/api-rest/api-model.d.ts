@@ -296,6 +296,17 @@ export interface AppointmentTicketDto {
     patientFullName: string;
 }
 
+export interface AppointmentTicketImageDto {
+    date: string;
+    documentNumber: string;
+    hour: string;
+    institution: string;
+    medicalCoverage: string;
+    patientFullName: string;
+    sectorName: string;
+    studyDescription: string;
+}
+
 export interface AssignedAppointmentDto {
     date: DateDto;
     hour: TimeDto;

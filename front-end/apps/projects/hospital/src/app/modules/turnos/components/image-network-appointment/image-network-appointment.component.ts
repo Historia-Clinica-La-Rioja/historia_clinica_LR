@@ -14,10 +14,10 @@ import {
 	PatientMedicalCoverage,
 	PrivateHealthInsurance
 } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
-import { map, take } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PermissionsService } from '@core/services/permissions.service';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { PersonMasterDataService } from "@api-rest/services/person-master-data.service";
 import { SummaryCoverageInformation } from '@historia-clinica/modules/ambulatoria/components/medical-coverage-summary-view/medical-coverage-summary-view.component';
@@ -167,13 +167,13 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 			.subscribe(appointment => {
 
 				this.appointment = appointment;
+				this.selectedState = this.appointment?.appointmentStateId;
 
 				if (this.hasMedicalOrder(appointment)) {
 					appointment.orderData ? this.mapOrderToMedicalOrderInfo(appointment.orderData) : this.mapTranscribedOrderToMedicalOrderInfo(appointment.transcribedOrderData)
 					this.patientMedicalOrders.unshift(this.medicalOrder)
 				}
 
-				this.selectedState = this.appointment?.appointmentStateId;
 				if (this.appointment.stateChangeReason) {
 					this.formMotive.controls.motive.setValue(this.appointment.stateChangeReason);
 				}
@@ -203,13 +203,8 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 				this.identificationType = identificationTypes.find(identificationType => identificationType.id == this.data.appointmentData.patient.identificationTypeId);
 			});
 
-		this.patientService.getPatientPhoto(this.data.appointmentData.patient.id)
-			.subscribe((personPhotoDto: PersonPhotoDto) => {
-				this.personPhoto = personPhotoDto;
-				if (personPhotoDto?.imageData) {
-					this.decodedPhoto$ = this.imageDecoderService.decode(personPhotoDto.imageData);
-				}
-			});
+		this.decodedPhoto$ = this.patientService.getPatientPhoto(this.data.appointmentData.patient.id).pipe(
+			switchMap((personPhotoDto: PersonPhotoDto) => personPhotoDto?.imageData ? this.imageDecoderService.decode(personPhotoDto.imageData): of('') ))
 	}
 
 	private hasMedicalOrder(appointment: AppointmentDto): boolean {
@@ -532,7 +527,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		});
 	}
 
-	private setCoverageText(coverageData) {
+	private setCoverageText(coverageData: PatientMedicalCoverage |  PatientMedicalCoverageDto ) {
 		this.coverageNumber = coverageData.affiliateNumber;
 		this.coverageCondition = coverageData.condition;
 		const isHealthInsurance = determineIfIsHealthInsurance(coverageData.medicalCoverage);
@@ -564,7 +559,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 			values => {
 				if (values) {
 					const patientCoverages: PatientMedicalCoverageDto[] =
-						values.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
+						values.patientMedicalCoverages.map(pCoverage => this.mapperService.toPatientMedicalCoverageDto(pCoverage));
 
 					this.patientMedicalCoverageService.addPatientMedicalCoverages(Number(this.data.appointmentData.patient.id), patientCoverages).subscribe(
 						_ => {
@@ -578,7 +573,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		);
 	}
 
-	callPatient() {
+	callPatient(): void {
 		this.appointmentService.mqttCall(this.data.appointmentData.appointmentId).subscribe();
 	}
 
@@ -604,30 +599,20 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		return this.patientNameService.getPatientName(appointmentInformation.patient.fullName, appointmentInformation.patient.fullNameWithNameSelfDetermination);
 	}
 
-	clear(): void {
+	clearCoverageData(): void {
 		this.formEdit.controls.newCoverageData.setValue(null);
 	}
 
 	private updateSummaryCoverageData(): void {
-		let summaryInfo: SummaryCoverageInformation = {};
+		let summaryInfo: SummaryCoverageInformation = {}
 		if (this.coverageData) {
-			if (this.coverageData.medicalCoverage.name) {
-				summaryInfo.name = this.coverageData.medicalCoverage.name;
-			}
-			if (this.coverageData.affiliateNumber) {
-				summaryInfo.affiliateNumber = this.coverageData.affiliateNumber;
-			}
-			if (this.coverageData?.planName) {
-				summaryInfo.plan = this.coverageData?.planName;
-			}
-			if (this.coverageData.condition) {
-				summaryInfo.condition = this.coverageData.condition;
-			}
-			if (this.coverageData.medicalCoverage.cuit) {
-				summaryInfo.cuit = this.coverageData.medicalCoverage.cuit;
-			}
-			if (this.coverageData.medicalCoverage.type) {
-				summaryInfo.type = this.coverageData.medicalCoverage.type;
+			summaryInfo = {
+				name : this.coverageData.medicalCoverage?.name,
+				affiliateNumber : this.coverageData.affiliateNumber,
+				plan : this.coverageData?.planName,
+				condition : this.coverageData.condition,
+				cuit : this.coverageData.medicalCoverage?.cuit,
+				type : this.coverageData.medicalCoverage?.type
 			}
 		}
 		this.summaryCoverageData = summaryInfo;
@@ -642,6 +627,19 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 			}
 			const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment);
 			return calendarEvent;
+		});
+	}
+
+	getAppointmentTicketReport(): void {
+		const isTranscribed: boolean = !!(this.medicalOrder && this.medicalOrder.isTranscribed)
+		this.appointmentService.getAppointmentImageTicketPdf(this.data.appointmentData.appointmentId, isTranscribed).subscribe((pdf) => {
+			const file = new Blob([pdf], { type: 'application/pdf' });
+			const blobUrl = URL.createObjectURL(file);
+			const div = document.querySelector("#pdfPrinter");
+			const iframe = document.createElement("iframe");
+			iframe.setAttribute("src", blobUrl);
+			div.appendChild(iframe);
+			iframe.contentWindow.print();
 		});
 	}
 }

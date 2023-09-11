@@ -254,6 +254,12 @@ export class AppointmentsService {
 		return this.http.get<any>(url, { responseType });
 	}
 
+	getAppointmentImageTicketPdf(appointmentId: number, isTranscribed: boolean): Observable<any> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointment-ticket-report/${appointmentId}/image/transcribed-order/${isTranscribed}`;
+		const responseType = 'arraybuffer' as 'json';
+		return this.http.get<any>(url, { responseType });
+	}
+
 	getAppointmentReport(url: string, appointmentData: any, pdfName: string): Observable<any> {
 		const appointmentId: number = appointmentData.appointmentId;
 		const fullNamePatient: string = appointmentData.patient.fullName.replace(' ', '');
