@@ -295,7 +295,8 @@ export class WorklistByTechnicalComponent implements OnInit {
                 canBeFinished: appointment.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED,
                 derive: appointment.derivedTo.id ? appointment.derivedTo : null,
                 reportStatus: this.getReportStatus(appointment.reportStatusId),
-                patientFullName: this.getPatientName(appointment)
+                patientFullName: this.getPatientName(appointment),
+                canBeDerived: appointment.reportStatusId === this.reportStates.PENDING,
             }
         })
     }
@@ -401,5 +402,6 @@ export interface detailedAppointment {
 	canBeFinished: boolean,
     derive: InstitutionBasicInfoDto,
     reportStatus: ReportState,
-    patientFullName: string;
+    patientFullName: string,
+    canBeDerived: boolean,
 }
