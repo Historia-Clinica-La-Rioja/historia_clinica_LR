@@ -32,7 +32,7 @@
         <span class="grey"> {{'turnos.search_references.ORIGIN' | translate | uppercase}}</span>
         <div fxLayout="column" fxLayoutAlign="start start" fxFlex="100%">
             <app-iconed-text icon="medical_services" [text]="report.dto.clinicalSpecialtyOrigin"></app-iconed-text>
-            <app-iconed-text icon="domain" [text]="report.dto.institutionOrigin"></app-iconed-text>
+            <app-iconed-text *ngIf="report.dto.institutionOrigin" icon="domain" [text]="report.dto.institutionOrigin"></app-iconed-text>
         </div>
     </div>
 
@@ -42,6 +42,7 @@
             <app-iconed-text icon="medical_services" [text]="report.dto.clinicalSpecialtyDestination"></app-iconed-text>
             <app-iconed-text *ngIf="report.dto.careLine" icon="library_add"
                 [text]="report.dto.careLine"></app-iconed-text>
+            <app-iconed-text *ngIf="report.dto.institutionDestination" icon="domain" [text]="report.dto.institutionDestination"></app-iconed-text>
         </div>
     </div>
 

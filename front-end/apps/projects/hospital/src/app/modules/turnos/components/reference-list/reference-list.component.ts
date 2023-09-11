@@ -4,19 +4,19 @@ import { Report } from '../report-information/report-information.component';
 import { getColoredIconText, getPriority } from '@turnos/utils/reference.utils';
 
 @Component({
-	selector: 'app-received',
-	templateUrl: './received.component.html',
-	styleUrls: ['./received.component.scss']
+	selector: 'app-reference-list',
+	templateUrl: './reference-list.component.html',
+	styleUrls: ['./reference-list.component.scss']
 })
-export class ReceivedComponent {
+export class ReferenceListComponent {
 
-	filteredReports: Report[] = [];
-	reports: Report[] = [];
+	filteredReferenceReports: Report[] = [];
+	referenceReports: Report[] = [];
 
 	@Input()
-	set received(list: ReferenceReportDto[]) {
+	set reports(list: ReferenceReportDto[]) {
 		if (list?.length)
-			this.reports = list.map(report => {
+			this.referenceReports = list.map(report => {
 				return {
 					dto: report,
 					priority: getPriority(report.priority.id),
@@ -24,7 +24,7 @@ export class ReceivedComponent {
 				}
 			});
 		else
-			this.reports = [];
+			this.referenceReports = [];
 	};
 
 	constructor(
@@ -32,7 +32,7 @@ export class ReceivedComponent {
 	) { }
 
 	changeView(result: Report[]) {
-		this.filteredReports = result;
+		this.filteredReferenceReports = result;
 		this.changeDetectorRef.detectChanges();
 	}
 

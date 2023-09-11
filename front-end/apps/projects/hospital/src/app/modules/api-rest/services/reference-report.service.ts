@@ -30,4 +30,13 @@ export class ReferenceReportService {
 		return this.http.get<ReferenceReportDto[]>(url, { params });
 	}
 
+	getAllRequestedReferences(from: Date, to: Date): Observable<ReferenceReportDto[]> {
+		const url = `${this.BASE_URL}/${this.contextService.institutionId}/references-report/requested`;
+		let params: HttpParams = new HttpParams();
+		
+		params = params.append('from', format(from, DateFormat.API_DATE));
+		params = params.append('to', format(to, DateFormat.API_DATE));
+		return this.http.get<ReferenceReportDto[]>(url, { params });
+	}
+
 }
