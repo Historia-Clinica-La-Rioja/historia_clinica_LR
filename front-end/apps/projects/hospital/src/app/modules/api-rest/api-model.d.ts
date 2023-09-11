@@ -722,11 +722,6 @@ export interface CompleteRequestDto {
 export interface ConclusionDto extends HealthConditionDto {
 }
 
-export interface ConclusionTemplateDto extends DocumentTemplateDto {
-    conclusions: ConclusionDto[];
-    templateText: string;
-}
-
 export interface ConditionDto {
     clinicalStatus: FhirCodeDto;
     createdOn: Date;
@@ -3460,9 +3455,6 @@ export interface SnomedEclDto {
     value: string;
 }
 
-export interface SnomedJsonDto extends SnomedDto {
-}
-
 export interface SnomedResponseDto extends Serializable {
     items: SnomedDto[];
     total: number;
@@ -3577,6 +3569,10 @@ export interface TerminologyQueueItemDto {
     ingestedError: string;
     ingestedOn: DateTimeDto;
     url: string;
+}
+
+export interface TextTemplateDto extends DocumentTemplateDto {
+    text: string;
 }
 
 export interface TimeDto {

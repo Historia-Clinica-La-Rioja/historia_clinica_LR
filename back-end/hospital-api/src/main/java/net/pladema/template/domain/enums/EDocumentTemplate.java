@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 public enum EDocumentTemplate {
 
-    INFORMER_CONCLUSIONS(1, "Detalle informe RDI");
+    REPORT_DETAILS_RDI(1, "Detalle informe RDI");
 
     private final Short id;
     private final String description;

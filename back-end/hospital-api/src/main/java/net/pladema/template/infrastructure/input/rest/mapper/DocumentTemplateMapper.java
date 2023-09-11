@@ -1,10 +1,10 @@
 package net.pladema.template.infrastructure.input.rest.mapper;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import net.pladema.template.domain.ConclusionTemplateBo;
 import net.pladema.template.domain.DocumentTemplateBo;
-import net.pladema.template.infrastructure.input.rest.dto.ConclusionTemplateDto;
+import net.pladema.template.domain.TextTemplateBo;
 import net.pladema.template.infrastructure.input.rest.dto.TemplateNamesDto;
+import net.pladema.template.infrastructure.input.rest.dto.TextTemplateDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -12,16 +12,15 @@ import org.mapstruct.Named;
 @Mapper(uses = {LocalDateMapper.class})
 public interface DocumentTemplateMapper {
 
-	@Named("toConclusionTemplateBo")
-	ConclusionTemplateBo toConclusionTemplateBo(ConclusionTemplateDto conclusionTemplateDto);
+	@Named("toTextTemplateBo")
+	TextTemplateBo toTextTemplateBo(TextTemplateDto textTemplateDto);
 
 	@Named("toTemplateNamesDto")
 	@Mapping(target = "id", source = "id")
 	@Mapping(target = "name", source = "name")
 	TemplateNamesDto toTemplateNamesDto(DocumentTemplateBo documentTemplateBo);
 
-	@Named("toConclusionTemplateDto")
-	@Mapping(target = "templateText", source = "templateText")
-	@Mapping(target = "conclusions", source = "conclusions")
-	ConclusionTemplateDto toConclusionTemplateDto(ConclusionTemplateBo conclusionTemplateBo);
+	@Named("toTextTemplateDto")
+	@Mapping(target = "text", source = "text")
+    TextTemplateDto toTextTemplateDto(TextTemplateBo textTemplateBo);
 }
