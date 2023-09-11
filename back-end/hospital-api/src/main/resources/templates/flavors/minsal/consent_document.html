@@ -6,7 +6,7 @@
 
     <style>
         .header-space {
-            height: 400px;
+            height: 350px;
         }
 
         .footer-space {
@@ -22,10 +22,26 @@
         @page {
             size: A4;
             margin: 1cm;
+
+            @bottom-right {
+                content: "Página " counter(page) " de " counter(pages);
+                font-weight: 400;
+                font-family: 'Roboto', sans-serif;
+                font-size: 12px;
+                padding-bottom: 20px;
+            }
         }
 
         table {
             -fs-table-paginate: paginate;
+        }
+
+        .richText {
+            max-width: 90%;
+            word-wrap: break-word;
+            text-align: justify;
+            text-justify: inter-word;
+            white-space: pre-wrap;
         }
     </style>
 </head>
@@ -36,9 +52,7 @@
                 <th:block th:include="fragments/consent_document_header.html :: consent_document_header"></th:block>
             </div>
         </td></tr></thead>
-        <tbody><tr><td>
-            <div class="content" th:utext="${richBody}"></div>
-        </td></tr></tbody>
+        <div class="richText">[(${richBody})]</div>
         <tfoot><tr><td>
             <div class="footer-space">&nbsp;</div>
         </td></tr></tfoot>

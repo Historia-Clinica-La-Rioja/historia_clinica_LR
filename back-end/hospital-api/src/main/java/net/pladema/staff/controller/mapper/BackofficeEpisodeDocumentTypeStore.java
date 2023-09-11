@@ -66,7 +66,7 @@ public class BackofficeEpisodeDocumentTypeStore implements BackofficeStore<Episo
 			&& repository.existsConsentDocumentById(entity.getConsentId()))
 			throw new BackofficeValidationException("Ya existe ese documento de consentimiento");
 
-		entity.setRichTextBody(XHTMLUtils.toXHTML(entity.getRichTextBody()));
+		entity.setRichTextBody(XHTMLUtils.toXHTML(entity.getRichTextBody(), true));
 		return repository.save(entity);
 	}
 
