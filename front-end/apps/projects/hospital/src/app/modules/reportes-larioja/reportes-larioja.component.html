@@ -1,0 +1,22 @@
+<app-content>
+
+    <section id="title">
+        <h2 class="page-title" [translate]="'reportes.TITLE_PROVINCIALES'"> </h2>
+    </section>
+    
+    <mat-card id="tab_container" class="mat-typography">
+        <mat-card-content>
+            <mat-tab-group>
+                <mat-tab id="tab_programas">
+                    <ng-template mat-tab-label>
+                        <span>PROGRAMAS</span>
+                    </ng-template>
+                    <ng-template matTabContent>
+                        <app-reportes-programas></app-reportes-programas>
+                    </ng-template>
+                </mat-tab>
+            </mat-tab-group>
+        </mat-card-content>
+    </mat-card>
+
+</app-content>

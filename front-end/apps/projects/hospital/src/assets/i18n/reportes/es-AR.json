@@ -1,6 +1,7 @@
 {
 	"reportes": {
 		"TITLE": "Reportes",
+		"TITLE_PROVINCIALES": "Reportes provinciales",
 		"form": {
 			"TITLE": "Generar nuevo reporte",
 			"REPORT_TYPE": "Tipo de reporte",
