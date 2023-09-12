@@ -19,4 +19,9 @@ export class PracticesService {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/practices/by-institution`;
 		return this.http.get<SharedSnomedDto[]>(url);
 	}
+
+	getByActiveDiaries(): Observable<SharedSnomedDto[]> {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/practices/by-active-diaries`;
+		return this.http.get<SharedSnomedDto[]>(url);
+	}
 }

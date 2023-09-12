@@ -34,6 +34,7 @@
 			"PROFESSIONALS_TOOLTIP": "Profesionales",
 			"PERCENTAGE_PROTECTED_APPOINTMENT": "% de turnos protegidos por día",
 			"REQUESTS": "solicitudes",
+			"PRACTICES": "Prácticas",
 			"messages": {
 				"NO_SPECIFIED_DATE": "Por favor ingrese una fecha para realizar la búsqueda"
 			}
@@ -42,9 +43,12 @@
 		"ON_SITE_ATTENTION": "Presencial",
 		"PATIENT_VIRTUAL_ATTENTION": "Teleconsulta con paciente",
 		"SECOND_OPINION_VIRTUAL_ATTENTION":"Teleconsulta de 2da opinión",
+		"TYPE_ATTENTION": "Tipo de atención",
+		"CONSULTATION": "Consulta",
+		"PRACTICE": "Práctica/Procedimiento",
+		"OPTIONAL": "(Opcional)",
 		"search-appointments-in-care-network": {
 			"SEARCH_IN_CARE_NETWORK_CRITERIA": "Seleccione los criterios para la búsqueda de turnos disponibles en la red de atención:",
-			"OPTIONAL": "(Opcional)",
 			"CARELINE": "Línea de cuidado",
 			"PROVINCE": "Provincia",
 			"DEPARTMENT": "Partido",
@@ -88,8 +92,6 @@
 			"SECTOR": "Sector",
 			"HIERARCHICAL_UNIT": "Unidad Jerárquica",
 			"DIARY_TYPE": "Tipo de agenda",
-			"CONSULTATION": "Consulta",
-			"PRACTICE": "Práctica/Procedimiento",
 			"PRACTICE_PLACEHOLDER": "Seleccionar prácticas",
 			"dialog": {
 				"TITLE": "Nueva franja horaria",

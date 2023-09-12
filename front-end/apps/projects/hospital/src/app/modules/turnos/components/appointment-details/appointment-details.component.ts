@@ -47,7 +47,7 @@ export class AppointmentDetailsComponent implements OnInit {
 
 		let isHoliday = false;
 		this.holidayService.getHolidays(initialDate, endingDate).subscribe(holidays => {
-			if (holidays.length){
+			if (holidays.length) {
 				this.selectedHolidayDay = this.appointmentsFacade.checkIfHoliday(holidays, this.emptyAppointment.date);
 				isHoliday = this.selectedHolidayDay ? true : false;
 
@@ -95,12 +95,16 @@ export class AppointmentDetailsComponent implements OnInit {
 					fullAppointmentDate = fullAppointmentDate[0].toUpperCase() + fullAppointmentDate.slice(1);
 					const timeData = this.emptyAppointment.hour.split(":");
 
-					const specialtyAndAlias = this.emptyAppointment.clinicalSpecialtyName ? this.emptyAppointment.clinicalSpecialtyName :
-						`${this.emptyAppointment.alias} (${this.emptyAppointment.clinicalSpecialtyName})`;
-						if (result.email && this.modalityAttention === this.MODALITY_PATIENT_VIRTUAL_ATTENTION){
-						var message = 'Se podrá acceder a la teleconsulta a través del link que se ha enviado a ' +`<strong> ${result.email}</strong>`
+					let specialtyAndAlias= '';
+					if (this.emptyAppointment.alias)
+						specialtyAndAlias = `${this.emptyAppointment.alias}`;
+					if (this.emptyAppointment.clinicalSpecialtyName)
+						specialtyAndAlias = `${specialtyAndAlias} (${this.emptyAppointment.clinicalSpecialtyName})`;
+					
+					if (result.email && this.modalityAttention === this.MODALITY_PATIENT_VIRTUAL_ATTENTION) {
+						var message = 'Se podrá acceder a la teleconsulta a través del link que se ha enviado a ' + `<strong> ${result.email}</strong>`
 					}
-						this.dialog.open(ConfirmPrintAppointmentComponent, {
+					this.dialog.open(ConfirmPrintAppointmentComponent, {
 						width: '40%',
 						data: {
 							title: 'turnos.new-appointment.ASSIGNED_APPOINTMENT',
@@ -108,9 +112,9 @@ export class AppointmentDetailsComponent implements OnInit {
 								`<strong>${fullAppointmentDate} ${timeData[0]}:${timeData[1]} hs </strong>` +
 								' para ' +
 								`${this.emptyAppointment.doctorFullName}
-							  (${specialtyAndAlias})` + ' en ' +
+							  ${specialtyAndAlias}` + ' en ' +
 								`${this.emptyAppointment.doctorsOfficeDescription}`,
-							message:message,
+							message: message,
 							appointmentId: result.id,
 						},
 
@@ -119,4 +123,5 @@ export class AppointmentDetailsComponent implements OnInit {
 			}
 		);
 	}
+
 }

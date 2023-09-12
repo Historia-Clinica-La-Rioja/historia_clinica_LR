@@ -30,6 +30,7 @@ import { SearchAppointmentsBySpecialtyComponent } from './components/search-appo
 import { SearchAppointmentsInCareNetworkComponent } from './components/search-appointments-in-care-network/search-appointments-in-care-network.component';
 import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
 import { SearchCriteriaComponent } from './components/search-criteria/search-criteria.component';
+import { TypeaheadPracticesComponent } from './components/typeahead-practices/typeahead-practices.component';
 // dialogs
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
 import { BlockAgendaRangeComponent } from './dialogs/block-agenda-range/block-agenda-range.component';
@@ -70,6 +71,7 @@ import { MedicalOrderInputComponent } from './components/medical-order-input/med
 		SearchAppointmentsInCareNetworkComponent,
 		SearchCriteriaComponent,
 		SelectAgendaComponent,
+		TypeaheadPracticesComponent,
 		// dialogs
 		AppointmentComponent,
 		BlockAgendaRangeComponent,
