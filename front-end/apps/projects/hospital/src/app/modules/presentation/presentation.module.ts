@@ -61,6 +61,8 @@ import { PaginatorComponent } from './components/paginator/paginator.component';
 import { PriorityComponent } from './components/priority/priority.component';
 import { CallDetailsComponent } from './components/call-details/call-details.component';
 import { TitledSingleContentComponent } from './components/titled-single-content/titled-single-content.component';
+import { FiltersSelectComponent } from './components/filters-select/filters-select.component';
+
 // dialogs
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
@@ -156,6 +158,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 		IconedTextComponent,
 		PriorityComponent,
   		TitledSingleContentComponent,
+  		FiltersSelectComponent,
 	],
 	imports: [
 		CommonModule,
@@ -226,6 +229,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 		UserBadgeComponent,
 		FilterButtonComponent,
 		PrioritySelectComponent,
+		FiltersSelectComponent,
 		// dialogs
 		// directives
 		CtrlTemplateDirective,

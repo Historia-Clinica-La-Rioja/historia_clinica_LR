@@ -1,0 +1,22 @@
+<div fxLayout="row">
+	<app-filter-button (isExpandedEmitter)="toggleFilter($event)"></app-filter-button>
+</div>
+
+<div *ngIf="isFilterExpanded" fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="10px">
+	<form [formGroup]="filterForm">
+		<ng-container *ngFor="let filter of filters">
+			<mat-form-field appearance="outline">
+				<mat-label>{{filter.name}}</mat-label>
+				<mat-select [id]="filter.key" [formControlName]="filter.key">
+					<mat-option *ngFor="let option of filter.options" [value]="option">
+						{{option}}
+					</mat-option>
+				</mat-select>
+				<!--button *ngIf="filterForm.value.status" mat-button matSuffix color="warn" mat-icon-button
+				(click)="cleanStatuses(); $event.stopPropagation()">
+				<mat-icon>close</mat-icon>
+			</button-->
+			</mat-form-field>
+		</ng-container>
+	</form>
+</div>
