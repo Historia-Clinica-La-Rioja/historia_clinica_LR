@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.virtualConsultation.infrastructure.input.rest;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -131,9 +133,9 @@ public class VirtualConsultationController {
 	}
 
 	@GetMapping(value = "/institution/{institutionId}/domain")
-	public List<VirtualConsultationDto> getDomainVirtualConsultation(@PathVariable(name = "institutionId") Integer institutionId, @RequestBody @Valid VirtualConsultationFilterDto filter) {
+	public List<VirtualConsultationDto> getDomainVirtualConsultation(@PathVariable(name = "institutionId") Integer institutionId, @RequestParam String filter) {
 		log.debug("Input parameters -> institutionId {}, filter {}", institutionId, filter);
-		VirtualConsultationFilterBo filterBo = virtualConsultationMapper.toVirtualConsultationFilterBo(filter);
+		VirtualConsultationFilterBo filterBo = virtualConsultationMapper.toVirtualConsultationFilterBo(parseFilter(filter));
 		List<VirtualConsultationDto> result = virtualConsultationMapper.fromVirtualConsultationBoList(getDomainVirtualConsultationsService.run(institutionId, filterBo));
 		log.debug("Output -> {}", result);
 		return result;
@@ -141,13 +143,23 @@ public class VirtualConsultationController {
 
 	@GetMapping(value = "/institution/{institutionId}")
 	public List<VirtualConsultationDto> getVirtualConsultationsByInstitution(@PathVariable(name = "institutionId") Integer institutionId,
-																			 @RequestBody @Valid VirtualConsultationFilterDto filter) {
+																			 @RequestParam String filter) {
 		log.debug("Input parameters -> institutionId {}, filter {}", institutionId, filter);
-		VirtualConsultationFilterBo filterBo = virtualConsultationMapper.toVirtualConsultationFilterBo(filter);
+		VirtualConsultationFilterBo filterBo = virtualConsultationMapper.toVirtualConsultationFilterBo(parseFilter(filter));
 		filterBo.setInstitutionId(institutionId);
 		List<VirtualConsultationDto> result = virtualConsultationMapper.fromVirtualConsultationBoList(getVirtualConsultationsByInstitutionService.run(filterBo));
 		log.debug("Output -> {}", result);
 		return result;
+	}
+
+	private VirtualConsultationFilterDto parseFilter(String filter) {
+		VirtualConsultationFilterDto searchFilter = null;
+		try {
+			searchFilter = objectMapper.readValue(filter, VirtualConsultationFilterDto.class);
+		} catch (IOException e) {
+			log.error(String.format("Error mapping filter: %s", filter), e);
+		}
+		return searchFilter;
 	}
 
 	@PostMapping(value = "/notify/{virtualConsultationId}")

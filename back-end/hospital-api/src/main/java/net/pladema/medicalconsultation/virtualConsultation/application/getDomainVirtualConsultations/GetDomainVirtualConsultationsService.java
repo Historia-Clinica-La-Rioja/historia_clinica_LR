@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface GetDomainVirtualConsultationsService {
 
-	List<VirtualConsultationBo> run(VirtualConsultationFilterBo filter);
+	List<VirtualConsultationBo> run(Integer institutionId, VirtualConsultationFilterBo filter);
 
 }
