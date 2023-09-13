@@ -18,3 +18,24 @@ databaseChangeLog:
                       nullable: true
                     name: end_of_move
                     type: datetime
+
+    - changeSet:
+        id: addColumn-service_request-id-reference
+        comment: Add column service_request-id to reference table
+        author: bchacon
+        changes:
+          - addColumn:
+              tableName: reference
+              columns:
+                - column:
+                    name: service_request_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: service_request_id
+              baseTableName: reference
+              constraintName: FK_reference_service_request_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: service_request
+              validate: true
