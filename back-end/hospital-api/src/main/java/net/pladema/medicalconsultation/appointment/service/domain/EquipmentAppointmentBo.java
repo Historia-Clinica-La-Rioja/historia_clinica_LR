@@ -47,6 +47,8 @@ public class EquipmentAppointmentBo {
 
 	private String studyName;
 
+	private Integer serviceRequestId;
+
 	public static EquipmentAppointmentBo fromEquipmentAppointmentVo(EquipmentAppointmentVo equipmentAppointmentVo) {
 		return EquipmentAppointmentBo.builder()
 				.id(equipmentAppointmentVo.getId())
@@ -59,6 +61,7 @@ public class EquipmentAppointmentBo {
 				.derivedTo(equipmentAppointmentVo.getInstitutionBasicInfoBo())
 				.reportStatusId(equipmentAppointmentVo.getReportStatusId())
 				.studyName(equipmentAppointmentVo.getStudyName())
+				.serviceRequestId(equipmentAppointmentVo.getServiceRequestId())
 				.build();
 	}
 

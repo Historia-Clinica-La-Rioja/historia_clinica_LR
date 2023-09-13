@@ -38,4 +38,6 @@ public class EquipmentAppointmentListDto {
 
 	private final String studyName;
 
+	private final Integer serviceRequestId;
+
 }
