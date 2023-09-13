@@ -44,6 +44,10 @@ const routes: Routes = [
 				canActivate: [FeatureFlagGuard],
 				data: { featureFlag: AppFeature.HABILITAR_REPORTES }
 			},
+			{
+				path: 'reportes-larioja',
+				loadChildren: () => import('../reportes-larioja/reportes-larioja.module').then(m => m.ReportesLariojaModule),
+			},
 			{ path: 'extension/:menuItemId', component: InstitutionExtensionComponent, data: { enableDownloadCSV: true } },
 			{
 				path: 'auditoria',
