@@ -60,6 +60,7 @@ public class RoleNameMapperImpl implements RoleNameMapper {
 			case VIRTUAL_CONSULTATION_RESPONSIBLE: return "Responsable de teleconsulta";
 			case API_IMAGENES: return "API Red de Imágenes";
 			case API_ORQUESTADOR: return "API Centro de Imágenes";
+			case ADMINISTRADOR_DE_ACCESO_DOMINIO: return "Administrador de acceso dominio";
 		}
 		throw new NotFoundException("role-not-exists", String.format("El rol %s no existe", eRole));
 	}
