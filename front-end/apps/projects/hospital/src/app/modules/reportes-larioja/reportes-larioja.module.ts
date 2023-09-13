@@ -8,12 +8,14 @@ import { ReportesProgramasComponent } from './reportes-programas/reportes-progra
 import { ReportesGeneralesComponent } from './reportes-generales/reportes-generales.component';
 import { PresentationModule } from '@presentation/presentation.module';
 import { ExtensionsModule } from '@extensions/extensions.module';
+import { ReportesEnfermeriaComponent } from './reportes-enfermeria/reportes-enfermeria.component';
 
 @NgModule({
   declarations: [
     ReportesLariojaComponent,
     ReportesProgramasComponent,
-    ReportesGeneralesComponent
+    ReportesGeneralesComponent,
+    ReportesEnfermeriaComponent
   ],
   imports: [
     CommonModule,
