@@ -293,7 +293,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 
 	private mapFieldsToUpdate(odontologyDto: OdontologyConsultationDto): FieldsToUpdate {
 
-		let problemsToUpdate = !!odontologyDto.diagnostics?.length || !!odontologyDto.dentalActions.length;
+		let problemsToUpdate = !!odontologyDto.diagnostics?.length || !!odontologyDto.dentalActions.length || !!odontologyDto.personalHistories.length;
 
 		if (odontologyDto.references.length) {
 			problemsToUpdate = !!this.problemsToUpdate(odontologyDto).length || !!odontologyDto.dentalActions.length;
