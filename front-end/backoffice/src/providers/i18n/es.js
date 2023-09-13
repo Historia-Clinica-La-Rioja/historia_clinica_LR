@@ -850,6 +850,14 @@ const messages = {
                 name: 'Sectores'
             },
             addRelated: "Asociar sector"
+        },
+        rules: {
+            name: 'Reglas',
+            tabs: {
+                general: 'Generales',
+                local: 'Locales'
+            },
+            createRelated: 'Crear regla'
         }
     }
 };

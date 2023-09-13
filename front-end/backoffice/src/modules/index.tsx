@@ -71,6 +71,7 @@ import hierarchicalunitstaff from "./hierarchicalunitstaff";
 import institutionuserpersons from "./institutionuserpersons";
 import movestudies from './movestudies';
 import hierarchicalunitsectors from './hierarchicalunitsectors';
+import rules from './rules';
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
     permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
@@ -152,6 +153,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="professionalspecialties" {...professionalSpecialties(permissions)} />,
     <Resource name="holidays" {...holidays(permissions)} />,
     <Resource name="snomedgrouptypes" />,
+    <Resource name="rules" {...rules(permissions)} />,
     // more
     <Resource name="identificationTypes" />,
     <Resource name="patient" />,
