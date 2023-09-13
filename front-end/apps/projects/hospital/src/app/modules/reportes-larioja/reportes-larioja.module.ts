@@ -9,13 +9,15 @@ import { ReportesGeneralesComponent } from './reportes-generales/reportes-genera
 import { PresentationModule } from '@presentation/presentation.module';
 import { ExtensionsModule } from '@extensions/extensions.module';
 import { ReportesEnfermeriaComponent } from './reportes-enfermeria/reportes-enfermeria.component';
+import { ReportesOdontologiaComponent } from './reportes-odontologia/reportes-odontologia.component';
 
 @NgModule({
   declarations: [
     ReportesLariojaComponent,
     ReportesProgramasComponent,
     ReportesGeneralesComponent,
-    ReportesEnfermeriaComponent
+    ReportesEnfermeriaComponent,
+    ReportesOdontologiaComponent
   ],
   imports: [
     CommonModule,
