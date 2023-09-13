@@ -14,6 +14,7 @@ import net.pladema.medicalconsultation.virtualConsultation.domain.VirtualConsult
 import net.pladema.medicalconsultation.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationFilterDto;
 
 import net.pladema.medicalconsultation.virtualConsultation.infrastructure.mapper.VirtualConsultationMapper;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +37,6 @@ import net.pladema.medicalconsultation.virtualConsultation.application.getAvaila
 import net.pladema.medicalconsultation.virtualConsultation.application.getDomainVirtualConsultations.GetDomainVirtualConsultationsService;
 import net.pladema.medicalconsultation.virtualConsultation.application.getProfessionalAvailabilityService.GetProfessionalAvailabilityService;
 import net.pladema.medicalconsultation.virtualConsultation.application.getResponsibleProfesionalAvailability.GetResponsibleProfessionalAvailabilityService;
-import net.pladema.medicalconsultation.virtualConsultation.application.getResponsibleUserIdByVirtualConsultationId.GetResponsibleUserIdByVirtualConsultationIdService;
 import net.pladema.medicalconsultation.virtualConsultation.application.getVirtualConsultationById.GetVirtualConsultationByIdService;
 import net.pladema.medicalconsultation.virtualConsultation.application.getVirtualConsultationNotificationData.GetVirtualConsultationNotificationDataService;
 import net.pladema.medicalconsultation.virtualConsultation.application.getVirtualConsultationsByInstitution.GetVirtualConsultationsByInstitutionService;
@@ -79,8 +79,6 @@ public class VirtualConsultationController {
 
 	private final ChangeResponsibleProfessionalAvailabilityService changeResponsibleProfessionalAvailabilityService;
 
-	private final GetResponsibleUserIdByVirtualConsultationIdService getResponsibleUserIdByVirtualConsultationIdService;
-
 	private final ChangeVirtualConsultationStatusService changeVirtualConsultationStatusService;
 
 	private final ObjectMapper objectMapper;
@@ -106,7 +104,7 @@ public class VirtualConsultationController {
 	private final NotifyVirtualConsultationAcceptedCallService notifyVirtualConsultationAcceptedCallService;
 
 	@PostMapping(value = "/{institutionId}")
-	public Integer saveVirtualConsultationRequest(@PathVariable(name = "institutionId") Integer institutionId,
+	@PreAuthorize("hasPermission(#institutionId, 'VIRTUAL_CONSULTATION_RESPONSIBLE, VIRTUAL_CONSULTATION_PROFESSIONAL')")	public Integer saveVirtualConsultationRequest(@PathVariable(name = "institutionId") Integer institutionId,
 												  @RequestBody @Valid VirtualConsultationRequestDto virtualConsultation) {
 		log.debug("Input parameters -> institutionId {}, virtualConsultation {}", institutionId, virtualConsultation);
 		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
@@ -125,6 +123,7 @@ public class VirtualConsultationController {
 
 
 	@GetMapping(value = "/{virtualConsultationId}")
+	@PreAuthorize("hasAnyAuthority('VIRTUAL_CONSULTATION_PROFESSIONAL', 'VIRTUAL_CONSULTATION_RESPONSIBLE')")
 	public VirtualConsultationDto getVirtualConsultation(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId) {
 		log.debug("Input parameters -> virtualConsultationId {}", virtualConsultationId);
 		VirtualConsultationDto result = virtualConsultationMapper.fromVirtualConsultationBo(getVirtualConsultationByIdService.run(virtualConsultationId));
@@ -133,6 +132,7 @@ public class VirtualConsultationController {
 	}
 
 	@GetMapping(value = "/institution/{institutionId}/domain")
+	@PreAuthorize("hasAnyAuthority('VIRTUAL_CONSULTATION_PROFESSIONAL')")
 	public List<VirtualConsultationDto> getDomainVirtualConsultation(@PathVariable(name = "institutionId") Integer institutionId, @RequestParam String filter) {
 		log.debug("Input parameters -> institutionId {}, filter {}", institutionId, filter);
 		VirtualConsultationFilterBo filterBo = virtualConsultationMapper.toVirtualConsultationFilterBo(parseFilter(filter));
@@ -142,6 +142,7 @@ public class VirtualConsultationController {
 	}
 
 	@GetMapping(value = "/institution/{institutionId}")
+	@PreAuthorize("hasPermission(#institutionId, 'VIRTUAL_CONSULTATION_RESPONSIBLE, VIRTUAL_CONSULTATION_PROFESSIONAL')")
 	public List<VirtualConsultationDto> getVirtualConsultationsByInstitution(@PathVariable(name = "institutionId") Integer institutionId,
 																			 @RequestParam String filter) {
 		log.debug("Input parameters -> institutionId {}, filter {}", institutionId, filter);
@@ -162,14 +163,8 @@ public class VirtualConsultationController {
 		return searchFilter;
 	}
 
-	@PostMapping(value = "/notify/{virtualConsultationId}")
-	public void notifyVirtualConsultationCall(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId) {
-		log.debug("Input parameters -> virtualConsultationId {}", virtualConsultationId);
-		Integer responsibleUserId = getResponsibleUserIdByVirtualConsultationIdService.run(virtualConsultationId);
-		virtualConsultationPublisher.publish("NOTIFY", virtualConsultationId + "-" + responsibleUserId);
-	}
-
 	@PostMapping(value = "/notify-incoming-call/{virtualConsultationId}")
+	@PreAuthorize("hasAnyAuthority('VIRTUAL_CONSULTATION_PROFESSIONAL')")
 	public void notifyVirtualConsultationIncomingCall(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId) {
 		log.debug("Input parameters -> virtualConsultationId {}", virtualConsultationId);
 		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
@@ -177,24 +172,28 @@ public class VirtualConsultationController {
 	}
 
 	@PostMapping(value = "/notify-cancelled-call/{virtualConsultationId}")
+	@PreAuthorize("hasAnyAuthority('VIRTUAL_CONSULTATION_PROFESSIONAL')")
 	public void notifyVirtualConsultationCancelledCall(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId) {
 		log.debug("Input parameters -> virtualConsultationId {}", virtualConsultationId);
 		notifyVirtualConsultationCancelledCallService.run(virtualConsultationId);
 	}
 
 	@PostMapping(value = "/notify-rejected-call/{virtualConsultationId}")
+	@PreAuthorize("hasAnyAuthority('VIRTUAL_CONSULTATION_RESPONSIBLE', 'VIRTUAL_CONSULTATION_PROFESSIONAL')")
 	public void notifyVirtualConsultationRejectedCall(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId) {
 		log.debug("Input parameters -> virtualConsultationId {}", virtualConsultationId);
 		notifyVirtualConsultationRejectedCallService.run(virtualConsultationId);
 	}
 
 	@PostMapping(value = "/notify-accepted-call/{virtualConsultationId}")
+	@PreAuthorize("hasAnyAuthority('VIRTUAL_CONSULTATION_RESPONSIBLE', 'VIRTUAL_CONSULTATION_PROFESSIONAL')")
 	public void notifyVirtualConsultationAcceptedCall(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId) {
 		log.debug("Input parameters -> virtualConsultationId {}", virtualConsultationId);
 		notifyVirtualConsultationAcceptedCallService.run(virtualConsultationId);
 	}
 
 	@GetMapping("/notification/{virtualConsultationId}")
+	@PreAuthorize("hasAnyAuthority('VIRTUAL_CONSULTATION_RESPONSIBLE', 'VIRTUAL_CONSULTATION_PROFESSIONAL')")
 	public VirtualConsultationNotificationDataDto getVirtualConsultationCall(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId) {
 		log.debug("Input parameters -> virtualConsultationId {}", virtualConsultationId);
 		VirtualConsultationNotificationDataDto result = virtualConsultationMapper.fromVirtualConsultationNotificationDataBo(getVirtualConsultationNotificationDataService.run(virtualConsultationId));
@@ -204,6 +203,7 @@ public class VirtualConsultationController {
 	}
 
 	@PostMapping(value = "/{institutionId}/change-responsible-state")
+	@PreAuthorize("hasPermission(#institutionId, 'VIRTUAL_CONSULTATION_RESPONSIBLE, VIRTUAL_CONSULTATION_PROFESSIONAL')")
 	public Boolean changeResponsibleAttentionState(@PathVariable(name = "institutionId") Integer institutionId,
 												   @RequestBody Boolean attentionValue) throws JsonProcessingException {
 		log.debug("Input parameters -> institutionId {}, attentionValue {}", institutionId, attentionValue);
@@ -217,6 +217,7 @@ public class VirtualConsultationController {
 	}
 
 	@PostMapping("/change-clinical-professional-state")
+	@PreAuthorize("hasAnyAuthority('VIRTUAL_CONSULTATION_PROFESSIONAL')")
 	public Boolean changeClinicalProfessionalAvailability(@RequestBody Boolean availability) throws JsonProcessingException {
 		log.debug("Input parameters -> availability {}", availability);
 		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
@@ -229,6 +230,7 @@ public class VirtualConsultationController {
 	}
 
 	@PutMapping(value = "/{virtualConsultationId}/state")
+	@PreAuthorize("hasAnyAuthority('VIRTUAL_CONSULTATION_PROFESSIONAL', 'VIRTUAL_CONSULTATION_RESPONSIBLE')")
 	public void changeVirtualConsultationState(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId,
 											   @RequestBody @Valid VirtualConsultationStatusDto virtualConsultationStatus) throws JsonProcessingException {
 		log.debug("Input parameters -> virtualConsultationId {}, virtualConsultationStatus {}", virtualConsultationId, virtualConsultationStatus);
@@ -239,6 +241,7 @@ public class VirtualConsultationController {
 	}
 
 	@GetMapping(value = "/professional-availability")
+	@PreAuthorize("hasAnyAuthority('VIRTUAL_CONSULTATION_PROFESSIONAL')")
 	public Boolean getProfessionalAvailability() {
 		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
 		Boolean result = getProfessionalAvailabilityService.run(doctorId);
@@ -247,6 +250,7 @@ public class VirtualConsultationController {
 	}
 	
 	@GetMapping(value = "/institution/{institutionId}/responsible-professional-availability")
+	@PreAuthorize("hasPermission(#institutionId, 'VIRTUAL_CONSULTATION_RESPONSIBLE, VIRTUAL_CONSULTATION_PROFESSIONAL')")
 	public Boolean getResponsibleStatus(@PathVariable(name = "institutionId") Integer institutionId) {
 		log.debug("Input parameters -> institutionId {}", institutionId);
 		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
