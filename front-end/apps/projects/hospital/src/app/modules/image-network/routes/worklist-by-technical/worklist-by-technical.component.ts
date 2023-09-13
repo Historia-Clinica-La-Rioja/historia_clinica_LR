@@ -27,6 +27,7 @@ import { Moment } from 'moment';
 import { hasError } from '@core/utils/form.utils';
 import * as moment from 'moment';
 import { SearchFilters, WorklistFiltersComponent } from '../../components/worklist-filters/worklist-filters.component';
+import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 
 const PAGE_SIZE_OPTIONS = [10];
 const PAGE_MIN_SIZE = 10;
@@ -87,6 +88,7 @@ export class WorklistByTechnicalComponent implements OnInit {
         private readonly translateService: TranslateService,
         private readonly snackBarService: SnackBarService,
         private readonly modalityService: ModalityService,
+        private readonly prescripcionesService: PrescripcionesService,
 	    public dialog: MatDialog,
 		private readonly formBuilder: UntypedFormBuilder,
 	) {
@@ -298,7 +300,7 @@ export class WorklistByTechnicalComponent implements OnInit {
 		this.pageSlice = this.detailedAppointments.slice(startPage, $event.pageSize + startPage);
 	}
 
-	finishStudy(appointment) {
+	finishStudy(appointment: EquipmentAppointmentListDto) {
 		this.selectedAppointment = appointment;
 		this.openFinishStudyDialog();
 	}
@@ -328,6 +330,10 @@ export class WorklistByTechnicalComponent implements OnInit {
         let statusToSet = reportRequired ? REPORT_STATES_ID.PENDING : REPORT_STATES_ID.NOT_REQUIRED ;
         this.appointments = this.appointments.map(app => (app.id === this.selectedAppointment.id ? { ...app, reportStatusId: statusToSet } : app));
     }
+
+    downloadOrder(appointment: EquipmentAppointmentListDto) : void {
+		this.prescripcionesService.downloadPrescriptionPdf(appointment.patient.id, [appointment.serviceRequestId], PrescriptionTypes.STUDY);
+	}
 
     requestReport(appointment: detailedAppointment) {
         this.appointmentsService.requireReport(appointment.data.id).subscribe(() => {
