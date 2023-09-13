@@ -5,13 +5,15 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ReportesLariojaRoutingModule } from './reportes-larioja-routing.module';
 import { ReportesProgramasComponent } from './reportes-programas/reportes-programas.component';
+import { ReportesGeneralesComponent } from './reportes-generales/reportes-generales.component';
 import { PresentationModule } from '@presentation/presentation.module';
 import { ExtensionsModule } from '@extensions/extensions.module';
 
 @NgModule({
   declarations: [
     ReportesLariojaComponent,
-    ReportesProgramasComponent
+    ReportesProgramasComponent,
+    ReportesGeneralesComponent
   ],
   imports: [
     CommonModule,
