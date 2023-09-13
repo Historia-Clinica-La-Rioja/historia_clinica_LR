@@ -28,7 +28,7 @@ public class BedSummaryRepositoryImpl implements BedSummaryRepository{
 
     @Override
     @Transactional(readOnly = true)
-    public List<BedSummaryVo> execute(Integer institutionId, Integer sectorType) {
+    public List<BedSummaryVo> execute(Integer institutionId, Short sectorType) {
         String sqlQuery =
                 " SELECT b, s, MAX(ie.probableDischargeDate), cs, ct.description, so.description, ag.description "
                 + " FROM Bed b "
@@ -41,14 +41,15 @@ public class BedSummaryRepositoryImpl implements BedSummaryRepository{
                 + " LEFT JOIN ClinicalSpecialty cs ON vcs.clinicalSpecialtyId = cs.id "
                 + " LEFT JOIN InternmentEpisode ie ON b.id = ie.bedId "
                 + " WHERE s.institutionId = :institutionId "
-                + " AND (s.sectorTypeId = :sectorType OR s.sectorTypeId IS NULL) "
+				+ " AND (s.sectorTypeId = "+SectorType.EMERGENCY_CARE_ID+""
+				+ " OR (s.sectorTypeId = :sectorType OR s.sectorTypeId IS NULL)) "
                 + " AND (b.free=true OR ( b.free=false AND ie.statusId = :internmentEpisodeActiveStatus OR s.sectorTypeId = "+SectorType.EMERGENCY_CARE_ID+") ) "
                 + " GROUP BY b, s, cs, so, ct, ag "
                 + " ORDER BY s.id, cs.id ";
 
         List<Object[]> result = entityManager.createQuery(sqlQuery)
                 .setParameter("institutionId", institutionId)
-                .setParameter("sectorType", sectorType == null ? SectorType.INTERNMENT_ID : SectorType.EMERGENCY_CARE_ID)
+                .setParameter("sectorType", sectorType)
                 .setParameter("internmentEpisodeActiveStatus", InternmentEpisodeStatus.ACTIVE_ID)
                 .getResultList();
 

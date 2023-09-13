@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { BedManagementFacadeService } from '@institucion/services/bed-management-facade.service';
+import { INTERNMENT_SECTOR } from '@historia-clinica/modules/guardia/constants/masterdata';
 
 @Component({
 	selector: 'app-home',
@@ -15,15 +16,15 @@ export class HomeComponent implements OnInit, OnDestroy {
 	public bedsAmount: number;
 	public existBedManagementList = false;
 	updateMappingBed = false;
-
 	private managementBed$: Subscription;
+	internmentSector: number = INTERNMENT_SECTOR;
 
 	constructor(
 		private bedManagementFacadeService: BedManagementFacadeService
   	) { }
 
 	ngOnInit(): void {
-		this.managementBed$ = this.bedManagementFacadeService.getBedManagement().pipe(
+		this.managementBed$ = this.bedManagementFacadeService.getBedManagement(this.internmentSector).pipe(
 			tap(bedsSummary => this.bedsAmount = bedsSummary ? bedsSummary.length : 0)
 		).subscribe(data => this.existBedManagementList = data ? true : false);
 	}

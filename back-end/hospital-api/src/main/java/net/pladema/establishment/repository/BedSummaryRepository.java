@@ -5,5 +5,5 @@ import net.pladema.establishment.repository.domain.BedSummaryVo;
 import java.util.List;
 
 public interface BedSummaryRepository {
-    List<BedSummaryVo> execute(Integer institutionId, Integer sectorType);
+    List<BedSummaryVo> execute(Integer institutionId, Short sectorType);
 }

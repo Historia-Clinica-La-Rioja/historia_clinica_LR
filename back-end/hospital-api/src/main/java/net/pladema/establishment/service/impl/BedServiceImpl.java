@@ -109,7 +109,7 @@ public class BedServiceImpl implements BedService {
 	}
 
 	@Override
-	public List<BedSummaryVo> getBedSummary(Integer institutionId, Integer sectorType) {
+	public List<BedSummaryVo> getBedSummary(Integer institutionId, Short sectorType) {
 		LOG.debug("input parameters -> institutionId {}, sectorType {}", institutionId, sectorType);
 		List<BedSummaryVo> result = bedSummaryRepository.execute(institutionId, sectorType);
 		LOG.trace(OUTPUT, result);

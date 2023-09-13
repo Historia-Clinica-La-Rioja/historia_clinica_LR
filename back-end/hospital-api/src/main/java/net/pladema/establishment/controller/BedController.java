@@ -62,7 +62,7 @@ public class BedController {
 	@GetMapping("/summary-list")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ADMINISTRADOR_DE_CAMAS, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
 	public ResponseEntity<List<BedSummaryDto>> getNewBedSummaryDto(@PathVariable(name = "institutionId") Integer institutionId,
-																   @RequestParam(name = "sectorType", required = false) Integer sectorType){
+																   @RequestParam(name = "sectorType", required = false) Short sectorType){
 		LOG.debug("Input parameter -> institutionId {}, sectorType {}", institutionId, sectorType);
 		List<BedSummaryVo> beds = bedService.getBedSummary(institutionId, sectorType);
 		LOG.trace("Output -> {}", beds);
