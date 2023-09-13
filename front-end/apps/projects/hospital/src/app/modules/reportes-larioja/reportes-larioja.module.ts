@@ -10,6 +10,7 @@ import { PresentationModule } from '@presentation/presentation.module';
 import { ExtensionsModule } from '@extensions/extensions.module';
 import { ReportesEnfermeriaComponent } from './reportes-enfermeria/reportes-enfermeria.component';
 import { ReportesOdontologiaComponent } from './reportes-odontologia/reportes-odontologia.component';
+import { ReportesAdultomayorComponent } from './reportes-adultomayor/reportes-adultomayor.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { ReportesOdontologiaComponent } from './reportes-odontologia/reportes-od
     ReportesProgramasComponent,
     ReportesGeneralesComponent,
     ReportesEnfermeriaComponent,
-    ReportesOdontologiaComponent
+    ReportesOdontologiaComponent,
+    ReportesAdultomayorComponent
   ],
   imports: [
     CommonModule,
