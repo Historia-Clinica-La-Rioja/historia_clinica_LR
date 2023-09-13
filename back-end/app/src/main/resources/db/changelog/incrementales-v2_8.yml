@@ -120,3 +120,74 @@ databaseChangeLog:
               tableName: document_template
               columnNames: user_id, type_id, name
               constraintName: UQ_document_template_user_id_type_id_name
+
+    - changeSet:
+        id: createTable-rule
+        comment: Create table rule
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: rule
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_rule
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      references: clinical_specialty(id)
+                      foreignKeyName: FK_clinical_specialty_rule
+                      nullable: true
+                    name: clinical_specialty_id
+                    type: int
+                - column:
+                    constraints:
+                      references: snomed(id)
+                      foreignKeyName: FK_snomed_rule
+                      nullable: true
+                    name: snomed_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: type_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
