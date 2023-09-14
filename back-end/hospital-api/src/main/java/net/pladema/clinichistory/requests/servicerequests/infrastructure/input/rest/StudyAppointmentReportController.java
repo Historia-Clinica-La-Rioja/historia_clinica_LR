@@ -1,15 +1,5 @@
 package net.pladema.clinichistory.requests.servicerequests.infrastructure.input.rest;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.domain.document.DocumentDownloadDataBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEDocumentDataDto;
@@ -26,6 +16,15 @@ import net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmen
 import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.rest.dto.InformerObservationDto;
 import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.rest.dto.StudyAppointmentDto;
 import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.rest.mapper.StudyAppointmentMapper;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -48,7 +47,7 @@ public class StudyAppointmentReportController {
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "appointmentId") Integer appointmentId
 	) {
-		log.debug("Get study by appointmentId {}, institutionId {}", institutionId, appointmentId);
+		log.trace("Get study by institutionId {}, appointmentId {}", institutionId, appointmentId);
 		StudyAppointmentBo result = getStudyAppointment.run(appointmentId);
 		return ResponseEntity.ok().body(studyAppointmentMapper.toStudyAppointmentDto(result));
 	}
@@ -60,11 +59,11 @@ public class StudyAppointmentReportController {
 			@PathVariable(name = "appointmentId") Integer appointmentId,
 			@RequestBody InformerObservationDto informerObservationDto
 	) {
-		log.debug("Input parameters to create draft report for study appointmentId {}, institutionId {}, informerObservationDto {}", institutionId, appointmentId, informerObservationDto);
+		log.trace("Input parameters to create draft report for study appointmentId {}, institutionId {}, informerObservationDto {}", institutionId, appointmentId, informerObservationDto);
 		InformerObservationBo informerObservationBo = studyAppointmentMapper.toInformerObservationBo(informerObservationDto);
 		informerObservationBo.setInstitutionId(institutionId);
 		Long result = createDraftStudyAppointmentReport.execute(appointmentId, informerObservationBo);
-		log.debug("Output", result);
+		log.trace("Output -> {}", result);
 		return ResponseEntity.ok().body(result);
 	}
 
@@ -75,11 +74,11 @@ public class StudyAppointmentReportController {
 			@PathVariable(name = "appointmentId") Integer appointmentId,
 			@RequestBody InformerObservationDto informerObservationDto
 	) {
-		log.debug("Input parameters to update draft report for study appointmentId {}, institutionId {}, informerObservationDto {}", institutionId, appointmentId, informerObservationDto);
+		log.trace("Input parameters to update draft report for study institutionId {}, appointmentId {}, informerObservationDto {}", institutionId, appointmentId, informerObservationDto);
 		InformerObservationBo informerObservationBo = studyAppointmentMapper.toInformerObservationBo(informerObservationDto);
 		informerObservationBo.setInstitutionId(institutionId);
 		Long result = updateDraftStudyAppointmentReport.execute(appointmentId, informerObservationBo);
-		log.debug("Output -> {}", result);
+		log.trace("Output -> {}", result);
 		return ResponseEntity.ok().body(result);
 	}
 
@@ -90,11 +89,11 @@ public class StudyAppointmentReportController {
 			@PathVariable(name = "appointmentId") Integer appointmentId,
 			@RequestBody InformerObservationDto informerObservationDto
 	) {
-		log.debug("Input parameters to close draft report for study appointmentId {}, institutionId {}, informerObservationDto {}", institutionId, appointmentId, informerObservationDto);
+		log.trace("Input parameters to close draft report for study institutionId {}, appointmentId {}, informerObservationDto {}", institutionId, appointmentId, informerObservationDto);
 		InformerObservationBo informerObservationBo = studyAppointmentMapper.toInformerObservationBo(informerObservationDto);
 		informerObservationBo.setInstitutionId(institutionId);
 		Long result = closeDraftStudyAppointmentReport.execute(appointmentId, informerObservationBo);
-		log.debug("Output", result);
+		log.trace("Output -> {}", result);
 		return ResponseEntity.ok().body(result);
 	}
 
@@ -105,11 +104,11 @@ public class StudyAppointmentReportController {
 			@PathVariable(name = "appointmentId") Integer appointmentId,
 			@RequestBody InformerObservationDto informerObservationDto
 	) {
-		log.debug("Input parameters to save report for study appointmentId {}, institutionId {}, informerObservationDto {}", institutionId, appointmentId, informerObservationDto);
+		log.trace("Input parameters to save report for study institutionId {}, appointmentId {}, informerObservationDto {}", institutionId, appointmentId, informerObservationDto);
 		InformerObservationBo informerObservationBo = studyAppointmentMapper.toInformerObservationBo(informerObservationDto);
 		informerObservationBo.setInstitutionId(institutionId);
 		Long result = saveStudyAppointmentReport.execute(appointmentId, informerObservationBo);
-		log.debug("Output", result);
+		log.trace("Output -> {}", result);
 		return ResponseEntity.ok().body(result);
 	}
 
@@ -118,10 +117,10 @@ public class StudyAppointmentReportController {
 	public ResponseEntity<HCEDocumentDataDto> getStudyAppointmentReportDocument(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "appointmentId") Integer appointmentId){
-		log.debug("Input parameters -> institutionId {}, appointmentId {}", institutionId, appointmentId);
+		log.trace("Input parameters -> institutionId {}, appointmentId {}", institutionId, appointmentId);
 		DocumentDownloadDataBo downloadData = documentService.getDocumentDownloadDataByAppointmentId(appointmentId);
 		HCEDocumentDataDto result = new HCEDocumentDataDto(downloadData.getId(), downloadData.getFileName());
-		log.debug("Output", result);
+		log.trace("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}
 
