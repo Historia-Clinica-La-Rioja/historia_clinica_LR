@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { DateTimeDto, EVirtualConsultationPriority, EVirtualConsultationStatus, VirtualConsultationDto, VirtualConsultationInstitutionDataDto, VirtualConsultationPatientDataDto, VirtualConsultationResponsibleDataDto } from '@api-rest/api-model';
+import { Component, Input, OnInit } from '@angular/core';
+import { CareLineDto, ClinicalSpecialtyDto, DateTimeDto, EVirtualConsultationPriority, EVirtualConsultationStatus, InstitutionBasicInfoDto, VirtualConsultationDto, VirtualConsultationInstitutionDataDto, VirtualConsultationPatientDataDto, VirtualConsultationResponsibleDataDto } from '@api-rest/api-model';
 import { mapPriority, statusLabel, status } from '../../virtualConsultations.utils';
 import { timeDifference } from '@core/utils/date.utils';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
-import { Subscription, map, take, race, forkJoin } from 'rxjs';
+import { map, take, race, forkJoin, Observable } from 'rxjs';
 import { VirtualConsultationsFacadeService } from '../../virtual-consultations-facade.service';
 import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
 import { JitsiCallService } from '../../../jitsi/jitsi-call.service';
@@ -15,6 +15,10 @@ import { RejectedCallComponent } from '@institucion/components/rejected-call/rej
 import { toCallDetails } from '@institucion/components/entry-call-renderer/entry-call-renderer.component';
 import { ContextService } from '@core/services/context.service';
 import { Router } from '@angular/router';
+import { Option, filter } from '@presentation/components/filters-select/filters-select.component';
+import { CareLineService } from '@api-rest/services/care-line.service';
+import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
+import { InstitutionService } from '@api-rest/services/institution.service';
 
 @Component({
 	selector: 'app-request-attention',
@@ -22,29 +26,37 @@ import { Router } from '@angular/router';
 	styleUrls: ['./request-attention.component.scss']
 })
 export class RequestAttentionComponent implements OnInit {
-
-	virtualConsultationsSubscription: Subscription;
-	virtualConsultations: VirtualConsultation[] = [];
+	@Input() priorityOptions: Option[];
+	@Input() availitibyOptions: Option[];
+	virtualConsultations$: Observable<VirtualConsultation[]>;
 	toggleEnabled = false;
 	virtualConsultatiosStatus = status;
 	initialProfessionalStatus = false;
 	FINISHED_STATUS = EVirtualConsultationStatus.FINISHED;
 	CANCELLED_STATUS = EVirtualConsultationStatus.CANCELED;
 
+	filters: filter[] = [];
+	careLinesOptions: CareLineDto[];
+	specialitiesOptions: ClinicalSpecialtyDto[];
+	institutionOptions: InstitutionBasicInfoDto[];
 	constructor(
 		private readonly virtualConsultationsFacadeService: VirtualConsultationsFacadeService,
 		private virtualConsultationService: VirtualConstultationService,
 		private jitsiCallService: JitsiCallService,
 		private readonly dialog: MatDialog,
 		private readonly callStatesService: EntryCallStompService,
-		private contextService: ContextService, private router: Router
+		private contextService: ContextService, private router: Router,
+		private careLineService: CareLineService,private clinicalSpecialtyService: ClinicalSpecialtyService,
+		private institucionService : InstitutionService
 	) { }
 
 
 	ngOnInit(): void {
-		this.virtualConsultationsSubscription = this.virtualConsultationsFacadeService.virtualConsultationsAttention$
-			.subscribe(virtualConsultations =>
-				this.virtualConsultations = virtualConsultations.map(this.toVCToBeShown));
+		this.getOptionsFilters();
+		this.virtualConsultations$ = this.virtualConsultationsFacadeService.virtualConsultationsAttention$.pipe(map(requests =>
+			requests.map(request => this.toVCToBeShown(request)
+			)
+		))
 
 		this.virtualConsultationService.getProfessionalAvailability().subscribe(
 			status => {
@@ -52,6 +64,59 @@ export class RequestAttentionComponent implements OnInit {
 				this.toggleEnabled = status;
 			}
 		)
+	}
+
+	getOptionsFilters() {
+		this.careLineService.getDomainVirtualConsultationCareLines().subscribe(options => {
+			this.careLinesOptions = options;
+			this.clinicalSpecialtyService.getDomainVirtualConsultationClinicalSpecialties().subscribe(options=>{
+				this.specialitiesOptions=options;
+				this.institucionService.getVirtualConsultationInstitutions().subscribe(options=>{
+					this.institutionOptions=options;
+					this.prepareFilters();
+				})
+			})
+		})
+	}
+
+	prepareFilters() {
+		let filters = [];
+		let filterCareLines: filter = {
+			key: 'careLine',
+			name: 'telemedicina.requests.form.CARELINE',
+			options: this.careLinesOptions,
+		}
+		filters.push(filterCareLines);
+
+		let filterSpecialities: filter = {
+			key: 'speciality',
+			name: 'telemedicina.requests.form.SPECIALTY',
+			options: this.specialitiesOptions,
+		}
+		filters.push(filterSpecialities);
+
+		let filterPriority: filter = {
+			key: 'priority',
+			name: 'telemedicina.requests.form.PRIORITY',
+			options: this.priorityOptions,
+		}
+		filters.push(filterPriority);
+
+		let filterInstitution: filter = {
+			key: 'institution',
+			name: 'telemedicina.requests.form.INSTITUTION',
+			options: this.institutionOptions,
+		}
+		filters.push(filterInstitution);
+
+		let filterAvailability: filter = {
+			key: 'availability',
+			name: 'telemedicina.requests.form.AVAILABILITY',
+			options: this.availitibyOptions,
+		}
+		filters.push(filterAvailability);
+
+		this.filters = filters;
 	}
 
 	confirm(virtualConsultationId: number) {

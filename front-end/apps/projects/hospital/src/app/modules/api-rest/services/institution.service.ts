@@ -62,4 +62,8 @@ export class InstitutionService {
 		else
 			return this.http.get<any[]>(url);
 	}
+
+	getVirtualConsultationInstitutions():Observable<InstitutionBasicInfoDto[]>{
+		return this.http.get<InstitutionBasicInfoDto[]>(`${environment.apiBase}/institution/virtual-consultation`);
+	}
 }

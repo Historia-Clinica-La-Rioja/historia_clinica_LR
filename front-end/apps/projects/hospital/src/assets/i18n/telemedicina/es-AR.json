@@ -21,7 +21,8 @@
 				"APPLICANT_PROFESSIONAL":"profesional solicitante",
 				"PRIORITY":"Prioridad",
 				"AVAILABILITY":"Disponibilidad",
-				"STATE": "Estado"
+				"STATE": "Estado",
+				"INSTITUTION":"Institución"
 			}
 		},
 		"attention": {

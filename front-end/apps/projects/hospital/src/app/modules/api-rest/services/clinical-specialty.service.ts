@@ -75,4 +75,9 @@ export class ClinicalSpecialtyService {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinical-specialty/virtual-consultation`;
 		return this.http.get<ClinicalSpecialtyDto[]>(url);
 	}
+
+	getDomainVirtualConsultationClinicalSpecialties(): Observable<ClinicalSpecialtyDto[]> {
+		const url = `${environment.apiBase}/clinical-specialty/virtual-consultation/domain`;
+		return this.http.get<ClinicalSpecialtyDto[]>(url);
+	}
 }

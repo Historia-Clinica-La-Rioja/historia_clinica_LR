@@ -7,7 +7,7 @@ import { CareLineDto, ClinicalSpecialtyDto, EVirtualConsultationStatus, VirtualC
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { timeDifference } from '@core/utils/date.utils';
 import { statusLabel, mapPriority, status } from '../../virtualConsultations.utils';
-import { Observable, Subscription, map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { VirtualConsultationsFacadeService } from '../../virtual-consultations-facade.service';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { CareLineService } from '@api-rest/services/care-line.service';
@@ -24,7 +24,6 @@ export class RequestsComponent implements OnInit {
 	@Input() priorityOptions: Option[];
 	@Input() availitibyOptions: Option[];
 	virtualConsultations$: Observable<VirtualConsultationDto[]>;
-	virtualConsultationsSubscription: Subscription;
 	virtualConsultatiosStatus = status;
 	initialResponsableStatus = false;
 	careLinesOptions: CareLineDto[];
