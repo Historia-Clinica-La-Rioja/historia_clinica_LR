@@ -33,8 +33,11 @@ public interface VirtualConsultationRepository extends SGXAuditableEntityJPARepo
 			"JOIN Institution i ON (i.id = vc.institutionId) " +
 			"JOIN HealthcareProfessional hp ON (hp.id = vc.responsibleHealthcareProfessionalId) " +
 			"JOIN Person p3 ON (p3.id = hp.personId) " +
-			"LEFT JOIN VirtualConsultationResponsibleProfessionalAvailability vcpa ON (vcpa.id.healthcareProfessionalId = hp.id)")
-	List<VirtualConsultationBo> getDomainVirtualConsultations();
+			"LEFT JOIN VirtualConsultationResponsibleProfessionalAvailability vcpa ON (vcpa.id.healthcareProfessionalId = hp.id AND vcpa.id.institutionId = vc.institutionId) " +
+			"WHERE vc.clinicalSpecialtyId IN :clinicalSpecialties " +
+			"AND vc.careLineId IN :careLines")
+	List<VirtualConsultationBo> getDomainVirtualConsultations(@Param("clinicalSpecialties") List<Integer> clinicalSpecialties,
+															  @Param("careLines") List<Integer> careLines);
 
 	@Transactional(readOnly = true)
 	@Query(" SELECT DISTINCT NEW ar.lamansys.virtualConsultation.domain.VirtualConsultationBo(vc.id, p.id, p2.firstName, pe.nameSelfDetermination, p2.lastName, " +
@@ -53,7 +56,7 @@ public interface VirtualConsultationRepository extends SGXAuditableEntityJPARepo
 			"JOIN Institution i ON (i.id = vc.institutionId) " +
 			"JOIN HealthcareProfessional hp ON (hp.id = vc.responsibleHealthcareProfessionalId) " +
 			"JOIN Person p3 ON (p3.id = hp.personId) " +
-			"LEFT JOIN VirtualConsultationResponsibleProfessionalAvailability vcpa ON (vcpa.id.healthcareProfessionalId = hp.id) " +
+			"LEFT JOIN VirtualConsultationResponsibleProfessionalAvailability vcpa ON (vcpa.id.healthcareProfessionalId = hp.id AND vcpa.id.institutionId = vc.institutionId) " +
 			"JOIN VVirtualConsultationProfessionalAmount vvcpa ON (vvcpa.virtualConsultationId = vc.id) " +
 			"WHERE vc.id = :virtualConsultationId")
 	VirtualConsultationBo getVirtualConsultationById(@Param("virtualConsultationId") Integer virtualConsultationId);
@@ -115,7 +118,7 @@ public interface VirtualConsultationRepository extends SGXAuditableEntityJPARepo
 			"JOIN CareLine cl ON (cl.id = vc.careLineId) " +
 			"JOIN HealthcareProfessional hp ON (hp.id = vc.responsibleHealthcareProfessionalId) " +
 			"JOIN Person p3 ON (p3.id = hp.personId) " +
-			"LEFT JOIN VirtualConsultationResponsibleProfessionalAvailability vcpa ON (vcpa.id.healthcareProfessionalId = hp.id) " +
+			"LEFT JOIN VirtualConsultationResponsibleProfessionalAvailability vcpa ON (vcpa.id.healthcareProfessionalId = hp.id AND vcpa.id.institutionId = vc.institutionId) " +
 			"JOIN VVirtualConsultationProfessionalAmount vvcpa ON (vvcpa.virtualConsultationId = vc.id) " +
 			"WHERE vc.institutionId = :institutionId")
 	List<VirtualConsultationBo> getVirtualConsultationsByInstitutionId(@Param("institutionId") Integer institutionId);

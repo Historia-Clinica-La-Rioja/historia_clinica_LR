@@ -40,7 +40,7 @@ export class VirtualConsultationsFacadeService {
 		private contextService: ContextService,
 	) {
 
-		this.virtualConsultationService.getDomainVirtualConsultation()
+		this.virtualConsultationService.getDomainVirtualConsultation(this.contextService.institutionId)
 			.subscribe(vc => {
 				this.virtualConsultationsAttention = vc;
 				this.virtualConsultationsAttentionEmitter.next(vc)

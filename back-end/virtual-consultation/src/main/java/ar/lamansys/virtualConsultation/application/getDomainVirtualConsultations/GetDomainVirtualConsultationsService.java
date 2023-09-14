@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface GetDomainVirtualConsultationsService {
 
-	public List<VirtualConsultationBo> run();
+	List<VirtualConsultationBo> run(Integer institutionId);
 
 }

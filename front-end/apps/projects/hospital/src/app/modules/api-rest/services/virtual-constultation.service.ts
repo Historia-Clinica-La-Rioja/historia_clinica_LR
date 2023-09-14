@@ -27,8 +27,8 @@ export class VirtualConstultationService {
 		return this.http.get<VirtualConsultationNotificationDataDto>(url)
 	}
 
-	getDomainVirtualConsultation(): Observable<VirtualConsultationDto[]> {
-		const url = `${this.BASE_URL}/domain`;
+	getDomainVirtualConsultation(institutionId: number): Observable<VirtualConsultationDto[]> {
+		const url = `${this.BASE_URL}/institution/${institutionId}/domain`;
 		return this.http.get<VirtualConsultationDto[]>(url)
 	}
 

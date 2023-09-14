@@ -128,9 +128,10 @@ public class VirtualConsultationController {
 		return result;
 	}
 
-	@GetMapping(value = "/domain")
-	public List<VirtualConsultationDto> getDomainVirtualConsultation() {
-		List<VirtualConsultationDto> result = virtualConsultationMapper.fromVirtualConsultationBoList(getDomainVirtualConsultationsService.run());
+	@GetMapping(value = "/institution/{institutionId}/domain")
+	public List<VirtualConsultationDto> getDomainVirtualConsultation(@PathVariable(name = "institutionId") Integer institutionId) {
+		log.debug("Input parameters -> institutionId {}", institutionId);
+		List<VirtualConsultationDto> result = virtualConsultationMapper.fromVirtualConsultationBoList(getDomainVirtualConsultationsService.run(institutionId));
 		log.debug("Output -> {}", result);
 		return result;
 	}
