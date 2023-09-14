@@ -106,7 +106,7 @@
 					[searchEndingDate]="form.controls.searchEndingDate.value" [modalityAttention]="form.controls.modality.value"></app-appointment-details>
 					<mat-divider style="margin-top: 15px;" *ngIf="!last"></mat-divider>
 				</div>
-				<mat-paginator (page)="onPageChange($event)" [pageSizeOptions]="[5, 10, 25, emptyAppointments.length]"  [pageSize]="5"
+				<mat-paginator #paginator (page)="onPageChange($event)" [pageSizeOptions]="[5, 10, 25, emptyAppointments.length]"
 				[length]="emptyAppointments.length"></mat-paginator>
 			</mat-card>
 		</div>

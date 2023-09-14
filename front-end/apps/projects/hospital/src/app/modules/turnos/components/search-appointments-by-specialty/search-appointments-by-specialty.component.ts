@@ -1,5 +1,6 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
 import { ActivatedRoute } from '@angular/router';
 import { AppFeature, AppointmentSearchDto, ClinicalSpecialtyDto, EAppointmentModality, EmptyAppointmentDto, SharedSnomedDto, TimeDto } from '@api-rest/api-model';
 import { DiaryService } from '@api-rest/services/diary.service';
@@ -13,6 +14,8 @@ import { SearchCriteria } from '../search-criteria/search-criteria.component';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { PracticesService } from '@api-rest/services/practices.service';
 
+const PAGE_MIN_SIZE = 5;
+
 @Component({
 	selector: 'app-search-appointments-by-specialty',
 	templateUrl: './search-appointments-by-specialty.component.html',
@@ -20,6 +23,7 @@ import { PracticesService } from '@api-rest/services/practices.service';
 })
 export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
+	@ViewChild('paginator') paginator: MatPaginator;
 	@Input() isVisible = false;
 	aliasTypeaheadOptions$: Observable<TypeaheadOption<string>[]>;
 	timesToFilter: TimeDto[];
@@ -172,7 +176,10 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 			const searchAppointmentDto = this.buildAppointmentSearch(selectedDaysOfWeek);
 			this.diaryService.generateEmptyAppointments(searchAppointmentDto).subscribe(emptyAppointments => {
 				this.emptyAppointments = emptyAppointments;
-				this.emptyAppointmentsFiltered = this.emptyAppointments.slice(0, 5);
+				this.emptyAppointmentsFiltered = this.emptyAppointments.slice(0, PAGE_MIN_SIZE);
+				if (this.paginator){
+					this.paginator.pageSize = PAGE_MIN_SIZE;
+				}
 			});
 		}
 		else {
