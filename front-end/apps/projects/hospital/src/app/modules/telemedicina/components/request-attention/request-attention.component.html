@@ -2,7 +2,7 @@
 	<h3 class="page-title">{{'telemedicina.attention.SUBTITLE' | translate}}</h3>
 	<div fxLayout="column" fxLayoutGap="1em" fxLayoutAlign="end end">
 		<app-toggle-avaiability (availabilityChanged)="availabilityChanged($event)"
-			label="Atención online activada"></app-toggle-avaiability>
+			label="Atención online activada" [initialValue]="toggleEnabled"></app-toggle-avaiability>
 	</div>
 </section>
 <section>
