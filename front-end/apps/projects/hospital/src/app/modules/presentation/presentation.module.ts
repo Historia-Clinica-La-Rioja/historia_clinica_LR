@@ -59,6 +59,8 @@ import { PersonShortDescriptionComponent } from './components/person-short-descr
 import { IconedTextComponent } from './components/iconed-text/iconed-text.component';
 import { PaginatorComponent } from './components/paginator/paginator.component';
 import { PriorityComponent } from './components/priority/priority.component';
+import { CallDetailsComponent } from './components/call-details/call-details.component';
+import { TitledSingleContentComponent } from './components/titled-single-content/titled-single-content.component';
 // dialogs
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
@@ -78,7 +80,6 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { CallDetailsComponent } from './components/call-details/call-details.component';
 
 @NgModule({
 	declarations: [
@@ -154,6 +155,7 @@ import { CallDetailsComponent } from './components/call-details/call-details.com
 		PersonShortDescriptionComponent,
 		IconedTextComponent,
 		PriorityComponent,
+  		TitledSingleContentComponent,
 	],
 	imports: [
 		CommonModule,
@@ -238,6 +240,7 @@ import { CallDetailsComponent } from './components/call-details/call-details.com
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
+		TitledSingleContentComponent,
 	],
 	entryComponents: [
 		DockPopupComponent,
