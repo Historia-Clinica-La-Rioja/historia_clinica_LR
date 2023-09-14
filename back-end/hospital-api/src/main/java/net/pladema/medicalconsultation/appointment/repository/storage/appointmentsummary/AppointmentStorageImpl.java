@@ -109,7 +109,7 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 						"JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = d.id) " +
 						"LEFT JOIN UserPerson us ON (a.creationable.createdBy = us.pk.userId) " +
 						"LEFT JOIN Person p ON (us.pk.personId = p.id) " +
-						"JOIN PersonExtended pex ON (p.id = pex.id) " +
+						"LEFT JOIN PersonExtended pex ON (p.id = pex.id) " +
 						"WHERE aa.pk.diaryId IN (:diaryIds) AND (d.deleteable.deleted = false OR d.deleteable.deleted is null ) " +
 						(from!=null ? "AND a.dateTypeId >= :from " : "") +
 						(to!=null ? "AND a.dateTypeId <= :to " : "") +
