@@ -28,6 +28,7 @@ export class RequestAttentionComponent implements OnInit {
 	toggleEnabled = false;
 	virtualConsultatiosStatus = status;
 	initialProfessionalStatus = false;
+	FINISHED_STATUS = EVirtualConsultationStatus.FINISHED;
 
 	constructor(
 		private readonly virtualConsultationsFacadeService: VirtualConsultationsFacadeService,
