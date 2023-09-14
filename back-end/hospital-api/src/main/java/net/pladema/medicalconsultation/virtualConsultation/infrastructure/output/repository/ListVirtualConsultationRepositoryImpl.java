@@ -51,7 +51,7 @@ public class ListVirtualConsultationRepositoryImpl implements ListVirtualConsult
 				(filter.getCareLineId() != null ? "AND vc.care_line_id = :careLineId " : "") +
 				(filter.getClinicalSpecialtyId() != null ? "AND vc.clinical_specialty_id = :clinicalSpecialtyId " : "") +
 				(filter.getPriorityId() != null ? "AND vc.priority_id = :priorityId " : "") +
-				(filter.getAvailability() != null ? "AND vc.available = :available " : "") +
+				(filter.getAvailability() != null ? "AND vcpa.available = :available " : "") +
 				(filter.getResponsibleHealthcareProfessionalId() != null ? "AND vc.responsible_healthcare_professional_id = :responsibleHealthcareProfessionalId " : "") +
 				(filter.getStatusId() != null ? "AND vc.status_id = :statusId " : "");
 
@@ -131,7 +131,7 @@ public class ListVirtualConsultationRepositoryImpl implements ListVirtualConsult
 				(filter.getCareLineId() != null ? "AND vc.care_line_id = :careLineId " : "") +
 				(filter.getClinicalSpecialtyId() != null ? "AND vc.clinical_specialty_id = :clinicalSpecialtyId " : "") +
 				(filter.getPriorityId() != null ? "AND vc.priority_id = :priorityId " : "") +
-				(filter.getAvailability() != null ? "AND vc.available = :available " : "") +
+				(filter.getAvailability() != null ? "AND vcpa.available = :available " : "") +
 				(filter.getResponsibleHealthcareProfessionalId() != null ? "AND vc.responsible_healthcare_professional_id = :responsibleHealthcareProfessionalId " : "") +
 				(filter.getStatusId() != null ? "AND vc.status_id = :statusId " : "");
 

@@ -2,6 +2,8 @@ package net.pladema.medicalconsultation.virtualConsultation.infrastructure.input
 
 import lombok.Getter;
 import lombok.Setter;
+import net.pladema.medicalconsultation.virtualConsultation.domain.enums.EVirtualConsultationPriority;
+import net.pladema.medicalconsultation.virtualConsultation.domain.enums.EVirtualConsultationStatus;
 
 import javax.annotation.Nullable;
 
@@ -16,7 +18,7 @@ public class VirtualConsultationFilterDto {
 	private Integer clinicalSpecialtyId;
 
 	@Nullable
-	private Integer priorityId;
+	private EVirtualConsultationPriority priority;
 
 	@Nullable
 	private Boolean availability;
@@ -25,7 +27,7 @@ public class VirtualConsultationFilterDto {
 	private Integer responsibleHealthcareProfessionalId;
 
 	@Nullable
-	private Integer statusId;
+	private EVirtualConsultationStatus status;
 
 	@Nullable
 	private Integer institutionId;

@@ -67,9 +67,9 @@ export class RequestAttentionComponent implements OnInit {
 	}
 
 	getOptionsFilters() {
-		this.careLineService.getDomainVirtualConsultationCareLines().subscribe(options => {
+		this.careLineService.getCareLinesAttachedToInstitution(this.contextService.institutionId).subscribe(options => {
 			this.careLinesOptions = options;
-			this.clinicalSpecialtyService.getDomainVirtualConsultationClinicalSpecialties().subscribe(options=>{
+			this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe(options=>{
 				this.specialitiesOptions=options;
 				this.institucionService.getVirtualConsultationInstitutions().subscribe(options=>{
 					this.institutionOptions=options;
@@ -128,7 +128,7 @@ export class RequestAttentionComponent implements OnInit {
 		newCriteria.availability = $event.availability.status ? null : $event.availability;
 		newCriteria.careLineId = $event.careLine.status ? null : $event.careLine;
 		newCriteria.clinicalSpecialtyId = $event.speciality.status ? null : $event.speciality;
-		newCriteria.priorityId = $event.priority.status ? null : $event.priority;
+		newCriteria.priority = $event.priority.status ? null : $event.priority;
 		newCriteria.institutionId = $event.institution.status? null : $event.instution;
 		this.searchRequest(newCriteria);
 	}

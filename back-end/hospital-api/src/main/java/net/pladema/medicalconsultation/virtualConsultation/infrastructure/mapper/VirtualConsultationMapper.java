@@ -73,6 +73,8 @@ public interface VirtualConsultationMapper {
 	List<VirtualConsultationAvailableProfessionalAmountDto> fromVirtualConsultationAvailableProfessionalAmountBoList(List<VirtualConsultationAvailableProfessionalAmountBo> virtualConsultationAvailableProfessionalAmountBo);
 
 	@Named("toVirtualConsultationFilterBo")
+	@Mapping(target = "priorityId", source = "priority.id")
+	@Mapping(target = "statusId", source = "status.id")
 	VirtualConsultationFilterBo toVirtualConsultationFilterBo(VirtualConsultationFilterDto virtualConsultationFilterDto);
 
 }

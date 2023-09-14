@@ -76,8 +76,4 @@ export class ClinicalSpecialtyService {
 		return this.http.get<ClinicalSpecialtyDto[]>(url);
 	}
 
-	getDomainVirtualConsultationClinicalSpecialties(): Observable<ClinicalSpecialtyDto[]> {
-		const url = `${environment.apiBase}/clinical-specialty/virtual-consultation/domain`;
-		return this.http.get<ClinicalSpecialtyDto[]>(url);
-	}
 }

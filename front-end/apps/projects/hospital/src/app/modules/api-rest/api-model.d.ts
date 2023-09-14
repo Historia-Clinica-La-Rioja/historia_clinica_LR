@@ -3861,9 +3861,9 @@ export interface VirtualConsultationFilterDto {
     careLineId?: number;
     clinicalSpecialtyId?: number;
     institutionId?: number;
-    priorityId?: number;
+    priority?: EVirtualConsultationPriority;
     responsibleHealthcareProfessionalId?: number;
-    statusId?: number;
+    status?: EVirtualConsultationStatus;
 }
 
 export interface VirtualConsultationInstitutionDataDto {

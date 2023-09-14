@@ -61,8 +61,4 @@ export class CareLineService {
 		return this.http.get<CareLineDto[]>(url);
 	}
 
-	getDomainVirtualConsultationCareLines(): Observable<CareLineDto[]>{
-		const url = `${this.BASE_URL}/${this.contextService.institutionId}/carelines/virtual-consultation/domain `;
-		return this.http.get<CareLineDto[]>(url);
-	}
 }

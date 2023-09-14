@@ -115,9 +115,9 @@ export class RequestsComponent implements OnInit {
 		newCriteria.availability = $event.availability.status ? null : $event.availability;
 		newCriteria.careLineId = $event.careLine.status ? null : $event.careLine;
 		newCriteria.clinicalSpecialtyId = $event.speciality.status ? null : $event.speciality;
-		newCriteria.priorityId = $event.priority.status ? null : $event.priority;
+		newCriteria.priority = $event.priority.status ? null : $event.priority;
 		newCriteria.responsibleHealthcareProfessionalId = $event.professional.status ? null : $event.professional;
-		newCriteria.statusId = $event.state.status ? null : $event.state;
+		newCriteria.status = $event.state.status ? null : $event.state;
 		this.searchRequest(newCriteria);
 	}
 

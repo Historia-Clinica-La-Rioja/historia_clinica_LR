@@ -44,9 +44,9 @@ export class VirtualConsultationsFacadeService {
 			careLineId: null,
 			clinicalSpecialtyId: null,
 			institutionId: null,
-			priorityId:null,
+			priority:null,
 			responsibleHealthcareProfessionalId: null,
-			statusId: null,
+			status: null,
 		};
 		this.getDomainVirtualConsultation(filterCriteria);
 		this.solicitanteAvailableChanged$.subscribe(
