@@ -73,7 +73,9 @@ export class VirtualConsultationsFacadeService {
 		this.professionalAvailableChanged$.subscribe(
 			(availabilityChanged: VirtualConsultationAvailableProfessionalAmountDto[]) => {
 				availabilityChanged.forEach(cv => {
-					this.virtualConsultationsRequest.find(vc => vc.id === cv.virtualConsultationId).availableProfessionalsAmount = cv.professionalAmount;
+					const virtualConsultation = this.virtualConsultationsRequest.find(vc => vc.id === cv.virtualConsultationId);
+					if (virtualConsultation)
+						virtualConsultation.availableProfessionalsAmount = cv.professionalAmount;
 				});
 				this.virtualConsultationsRequestEmitter.next(this.virtualConsultationsRequest)
 			}
