@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, UntypedFormGroup } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { filter } from 'rxjs';
 
 @Component({
 	selector: 'app-filters-select',
@@ -7,14 +8,17 @@ import { FormControl, FormGroup, UntypedFormGroup } from '@angular/forms';
 	styleUrls: ['./filters-select.component.scss']
 })
 export class FiltersSelectComponent implements OnInit {
+	filterForm: FormGroup;
+	@Input() set setFilters(filters: filter[]) {
+		this.filters = filters;
+		this.filterForm = this.toFormGroup(this.filters);
+	}
+	filters: filter[];
 	isFilterExpanded: boolean = false;
-	filters: filter[] = [{ key:'institution',name: 'Institución', options: [1, 2, 3, 4] }, {key:'speciality', name: 'Especialidad', options: [9, 8, 7] }]
-	filterForm: UntypedFormGroup;
 
 	constructor() { }
 
 	ngOnInit(): void {
-		this.filterForm = this.toFormGroup(this.filters);
 	}
 
 	toggleFilter(value: boolean) {
@@ -26,17 +30,21 @@ export class FiltersSelectComponent implements OnInit {
 
 	toFormGroup(filters: filter[]) {
 		const group: any = {};
-
-		filters.forEach(filter => {
-			group[filter.key] = new FormControl(new FormControl(filter.key || ''))
-		});
+		if (filters.length) {
+			filters.forEach(filter => {
+				group[filter.key] = new FormControl(new FormControl(filter.key || ''))
+			});
+		}
 		return new FormGroup(group);
 	}
 
 }
 export interface filter {
-	key:string,
+	key: string,
 	name: string,
 	options: any[]
-
+}
+export interface Option {
+	id: any,
+	description: string,
 }

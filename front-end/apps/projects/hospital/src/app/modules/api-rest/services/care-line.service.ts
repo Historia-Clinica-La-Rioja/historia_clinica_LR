@@ -55,4 +55,10 @@ export class CareLineService {
         params = params.append('snomedSctids', problemSnomedIds.join(', '));
         return this.http.get<CareLineDto[]>(url, { params });
     }
+
+	getVirtualConsultationCareLinesByInstitutionId(): Observable<CareLineDto[]>{
+		const url = `${this.BASE_URL}/${this.contextService.institutionId}/carelines/virtual-consultation `;
+		return this.http.get<CareLineDto[]>(url);
+	}
+
 }

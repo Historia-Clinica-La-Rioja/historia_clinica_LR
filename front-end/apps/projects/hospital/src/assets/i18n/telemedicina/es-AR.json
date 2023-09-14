@@ -17,7 +17,11 @@
 				"SPECIALTY": "Especialidad",
 				"PRIORIZATION": "Criterio de priorización",
 				"REASONS_CONSULTATION": "Motivos de consulta",
-				"PROBLEM": "Problema (Opcional)"
+				"PROBLEM": "Problema (Opcional)",
+				"APPLICANT_PROFESSIONAL":"profesional solicitante",
+				"PRIORITY":"Prioridad",
+				"AVAILABILITY":"Disponibilidad",
+				"STATE": "Estado"
 			}
 		},
 		"attention": {
