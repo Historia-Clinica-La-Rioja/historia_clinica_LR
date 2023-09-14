@@ -279,6 +279,7 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 		appointmentBo.setPhoneNumber(bookingAppointmentDto.getPhoneNumber());
 		appointmentBo.setOpeningHoursId(bookingAppointmentDto.getOpeningHoursId());
 		appointmentBo.setSnomedId(bookingAppointmentDto.getSnomedId());
+		appointmentBo.setModalityId((short)1);
 		return appointmentBo;
 	}
 }
