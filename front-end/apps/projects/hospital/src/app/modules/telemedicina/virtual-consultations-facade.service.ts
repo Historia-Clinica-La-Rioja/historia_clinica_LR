@@ -39,13 +39,16 @@ export class VirtualConsultationsFacadeService {
 		private readonly stompService: StompService,
 		private contextService: ContextService,
 	) {
-
-		this.virtualConsultationService.getDomainVirtualConsultation(this.contextService.institutionId)
-			.subscribe(vc => {
-				this.virtualConsultationsAttention = vc;
-				this.virtualConsultationsAttentionEmitter.next(vc)
-			});
-
+		const filterCriteria : VirtualConsultationFilterDto ={
+			availability:null,
+			careLineId: null,
+			clinicalSpecialtyId: null,
+			institutionId: null,
+			priorityId:null,
+			responsibleHealthcareProfessionalId: null,
+			statusId: null,
+		};
+		this.getDomainVirtualConsultation(filterCriteria);
 		this.solicitanteAvailableChanged$.subscribe(
 			(availabilityChanged: VirtualConsultationResponsibleProfessionalAvailabilityDto) => {
 				this.virtualConsultationsRequest
@@ -65,7 +68,7 @@ export class VirtualConsultationsFacadeService {
 			}
 		)
 
-		this.getVirtualConsultationByInstitution(null);
+		this.getVirtualConsultationByInstitution(filterCriteria);
 
 		this.professionalAvailableChanged$.subscribe(
 			(availabilityChanged: VirtualConsultationAvailableProfessionalAmountDto[]) => {
@@ -108,7 +111,7 @@ export class VirtualConsultationsFacadeService {
 
 	}
 
-	setSearchCriteria(searchCriteria: VirtualConsultationFilterDto){
+	setSearchCriteriaForRequest(searchCriteria: VirtualConsultationFilterDto){
 		this.getVirtualConsultationByInstitution(searchCriteria);
 	}
 
@@ -117,6 +120,17 @@ export class VirtualConsultationsFacadeService {
 			this.virtualConsultationsRequest = vc;
 			this.virtualConsultationsRequestEmitter.next(vc);
 		})
+	}
+
+	setSearchCriteriaForAttention(searchCriteria: VirtualConsultationFilterDto){
+		this.getDomainVirtualConsultation(searchCriteria);
+	}
+
+	private getDomainVirtualConsultation(searchCriteria?: VirtualConsultationFilterDto){
+		this.virtualConsultationService.getDomainVirtualConsultation(this.contextService.institutionId, searchCriteria).subscribe(vc => {
+			this.virtualConsultationsAttention = vc;
+			this.virtualConsultationsAttentionEmitter.next(vc)
+		});
 	}
 
 	private responsibleChangedFilter(virtualConsultationDto: VirtualConsultationDto, solicitanteChanged: VirtualConsultationResponsibleProfessionalAvailabilityDto): boolean {

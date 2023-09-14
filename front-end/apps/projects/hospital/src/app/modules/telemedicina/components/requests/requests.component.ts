@@ -107,7 +107,7 @@ export class RequestsComponent implements OnInit {
 	}
 
 	searchRequest(searchCriteria: VirtualConsultationFilterDto) {
-		this.virtualConsultationsFacadeService.setSearchCriteria(searchCriteria);
+		this.virtualConsultationsFacadeService.setSearchCriteriaForRequest(searchCriteria);
 	}
 
 	prepareDtoFilter($event) {

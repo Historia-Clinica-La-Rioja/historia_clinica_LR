@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CareLineDto, ClinicalSpecialtyDto, DateTimeDto, EVirtualConsultationPriority, EVirtualConsultationStatus, InstitutionBasicInfoDto, VirtualConsultationDto, VirtualConsultationInstitutionDataDto, VirtualConsultationPatientDataDto, VirtualConsultationResponsibleDataDto } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, DateTimeDto, EVirtualConsultationPriority, EVirtualConsultationStatus, InstitutionBasicInfoDto, VirtualConsultationDto, VirtualConsultationFilterDto, VirtualConsultationInstitutionDataDto, VirtualConsultationPatientDataDto, VirtualConsultationResponsibleDataDto } from '@api-rest/api-model';
 import { mapPriority, statusLabel, status } from '../../virtualConsultations.utils';
 import { timeDifference } from '@core/utils/date.utils';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
@@ -117,6 +117,20 @@ export class RequestAttentionComponent implements OnInit {
 		filters.push(filterAvailability);
 
 		this.filters = filters;
+	}
+
+	searchRequest(searchCriteria: VirtualConsultationFilterDto) {
+		this.virtualConsultationsFacadeService.setSearchCriteriaForAttention(searchCriteria);
+	}
+
+	prepareDtoFilter($event) {
+		let newCriteria: VirtualConsultationFilterDto = {};
+		newCriteria.availability = $event.availability.status ? null : $event.availability;
+		newCriteria.careLineId = $event.careLine.status ? null : $event.careLine;
+		newCriteria.clinicalSpecialtyId = $event.speciality.status ? null : $event.speciality;
+		newCriteria.priorityId = $event.priority.status ? null : $event.priority;
+		newCriteria.institutionId = $event.institution.status? null : $event.instution;
+		this.searchRequest(newCriteria);
 	}
 
 	confirm(virtualConsultationId: number) {

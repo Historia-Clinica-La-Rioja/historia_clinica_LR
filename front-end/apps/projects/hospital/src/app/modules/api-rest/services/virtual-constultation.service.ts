@@ -27,9 +27,10 @@ export class VirtualConstultationService {
 		return this.http.get<VirtualConsultationNotificationDataDto>(url)
 	}
 
-	getDomainVirtualConsultation(institutionId: number): Observable<VirtualConsultationDto[]> {
+	getDomainVirtualConsultation(institutionId: number, searchCriteria: VirtualConsultationFilterDto): Observable<VirtualConsultationDto[]> {
 		const url = `${this.BASE_URL}/institution/${institutionId}/domain`;
-		return this.http.get<VirtualConsultationDto[]>(url)
+		const params = { filter: JSON.stringify(searchCriteria) };
+		return this.http.get<VirtualConsultationDto[]>(url,{params})
 	}
 
 	changeResponsibleAttentionState(institutionId: number, attentionValue: boolean): Observable<any> {
