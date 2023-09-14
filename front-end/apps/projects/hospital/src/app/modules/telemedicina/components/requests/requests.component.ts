@@ -3,11 +3,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { NewTelemedicineRequestComponent } from '../../dialogs/new-telemedicine-request/new-telemedicine-request.component';
 import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
 import { ContextService } from '@core/services/context.service';
-import { CareLineDto, ClinicalSpecialtyDto, EVirtualConsultationStatus, VirtualConsultationDto } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, EVirtualConsultationStatus, VirtualConsultationDto, VirtualConsultationFilterDto } from '@api-rest/api-model';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { timeDifference } from '@core/utils/date.utils';
 import { statusLabel, mapPriority, status } from '../../virtualConsultations.utils';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, map } from 'rxjs';
 import { VirtualConsultationsFacadeService } from '../../virtual-consultations-facade.service';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { CareLineService } from '@api-rest/services/care-line.service';
@@ -23,7 +23,7 @@ import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/h
 export class RequestsComponent implements OnInit {
 	@Input() priorityOptions: Option[];
 	@Input() availitibyOptions: Option[];
-	virtualConsultations: VirtualConsultationDto[] = [];
+	virtualConsultations$: Observable<VirtualConsultationDto[]>;
 	virtualConsultationsSubscription: Subscription;
 	virtualConsultatiosStatus = status;
 	initialResponsableStatus = false;
@@ -49,9 +49,10 @@ export class RequestsComponent implements OnInit {
 	ngOnInit(): void {
 		this.setStateOptions();
 		this.getOptionsFilters();
-		this.virtualConsultationsSubscription = this.virtualConsultationsFacadeService.virtualConsultationsRequest$
-			.subscribe(virtualConsultations =>
-				this.virtualConsultations = virtualConsultations.map(this.toVCToBeShown));
+		this.virtualConsultations$ = this.virtualConsultationsFacadeService.virtualConsultationsRequest$.pipe(map(requests =>
+			 requests.map(request =>   this.toVCToBeShown(request)
+			)
+		))
 	}
 
 	getOptionsFilters() {
@@ -104,6 +105,21 @@ export class RequestsComponent implements OnInit {
 			priorityLabel: mapPriority[vc.priority],
 			waitingTime: timeDifference(dateTimeDtotoLocalDate(vc.creationDateTime))
 		}
+	}
+
+	searchRequest(searchCriteria: VirtualConsultationFilterDto) {
+		this.virtualConsultationsFacadeService.setSearchCriteria(searchCriteria);
+	}
+
+	prepareDtoFilter($event) {
+		let newCriteria: VirtualConsultationFilterDto = {};
+		newCriteria.availability = $event.availability.status ? null : $event.availability;
+		newCriteria.careLineId = $event.careLine.status ? null : $event.careLine;
+		newCriteria.clinicalSpecialtyId = $event.speciality.status ? null : $event.speciality;
+		newCriteria.priorityId = $event.priority.status ? null : $event.priority;
+		newCriteria.responsibleHealthcareProfessionalId = $event.professional.status ? null : $event.professional;
+		newCriteria.statusId = $event.state.status ? null : $event.state;
+		this.searchRequest(newCriteria);
 	}
 
 	openAddRequest() {
@@ -165,42 +181,42 @@ export class RequestsComponent implements OnInit {
 		let filters = [];
 		let filterCareLines: filter = {
 			key: 'careLine',
-			name: "'telemedicina.request.form.CARELINE'",
+			name: 'telemedicina.requests.form.CARELINE',
 			options: this.careLinesOptions,
 		}
 		filters.push(filterCareLines);
 
 		let filterSpecialities: filter = {
 			key: 'speciality',
-			name: "'telemedicina.request.form.SPECIALTY'",
+			name: 'telemedicina.requests.form.SPECIALTY',
 			options: this.specialitiesOptions,
 		}
 		filters.push(filterSpecialities);
 
 		let filterPriority: filter = {
 			key: 'priority',
-			name: "'telemedicina.request.form.PRIORITY'",
+			name: 'telemedicina.requests.form.PRIORITY',
 			options: this.priorityOptions,
 		}
 		filters.push(filterPriority);
 
 		let filterProfessionals: filter = {
 			key: 'professional',
-			name: "'telemedicina.request.form.APPLICANT_PROFESSIONAL'",
+			name: 'telemedicina.requests.form.APPLICANT_PROFESSIONAL',
 			options: this.professionalsOptions,
 		}
 		filters.push(filterProfessionals);
 
 		let filterAvailability: filter = {
 			key: 'availability',
-			name: "'telemedicina.request.form.AVAILABILITY'",
+			name: 'telemedicina.requests.form.AVAILABILITY',
 			options: this.availitibyOptions,
 		}
 		filters.push(filterAvailability);
 
 		let filterState: filter = {
 			key: 'state',
-			name: 'telemedicina.request.form.STATE',
+			name: 'telemedicina.requests.form.STATE',
 			options: this.stateOptions,
 		}
 		filters.push(filterState);

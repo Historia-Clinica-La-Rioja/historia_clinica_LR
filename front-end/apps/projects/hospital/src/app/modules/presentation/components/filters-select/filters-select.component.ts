@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { filter } from 'rxjs';
 
@@ -8,11 +8,12 @@ import { filter } from 'rxjs';
 	styleUrls: ['./filters-select.component.scss']
 })
 export class FiltersSelectComponent implements OnInit {
-	filterForm: FormGroup;
 	@Input() set setFilters(filters: filter[]) {
 		this.filters = filters;
 		this.filterForm = this.toFormGroup(this.filters);
 	}
+	@Output() searchCriteria = new EventEmitter();
+	filterForm: FormGroup;
 	filters: filter[];
 	isFilterExpanded: boolean = false;
 
@@ -28,11 +29,15 @@ export class FiltersSelectComponent implements OnInit {
 		//this.filterForm.controls.status.setValue(null);
 	}
 
+	emitSearchCriteria(){
+		this.searchCriteria.emit(this.filterForm.value)
+	}
+
 	toFormGroup(filters: filter[]) {
 		const group: any = {};
 		if (filters.length) {
 			filters.forEach(filter => {
-				group[filter.key] = new FormControl(new FormControl(filter.key || ''))
+				group[filter.key] = new FormControl(new FormControl(null))
 			});
 		}
 		return new FormGroup(group);

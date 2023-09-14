@@ -6,9 +6,9 @@
 	<form [formGroup]="filterForm">
 		<ng-container *ngFor="let filter of filters">
 			<mat-form-field appearance="outline">
-				<mat-label [translate]="filter.name">{{filter?.name | translate}}</mat-label>
+				<mat-label>{{filter?.name | translate}}</mat-label>
 				<mat-select [id]="filter.key" [formControlName]="filter?.key">
-					<mat-option *ngFor="let option of filter.options" [value]="option">
+					<mat-option *ngFor="let option of filter.options" [value]="option.id">
 						{{option?.description}} {{option?.name}}
 					</mat-option>
 				</mat-select>
@@ -19,4 +19,7 @@
 			</mat-form-field>
 		</ng-container>
 	</form>
+	<div >
+		<button mat-raised-button color="primary" (click)="emitSearchCriteria()">{{'buttons.FILTER' | translate}} </button>
+	</div>
 </div>

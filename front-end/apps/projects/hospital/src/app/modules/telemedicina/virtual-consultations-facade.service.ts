@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { VirtualConsultationAvailableProfessionalAmountDto, VirtualConsultationDto, VirtualConsultationResponsibleProfessionalAvailabilityDto, VirtualConsultationStatusDataDto } from '@api-rest/api-model';
+import { VirtualConsultationAvailableProfessionalAmountDto, VirtualConsultationDto, VirtualConsultationFilterDto, VirtualConsultationResponsibleProfessionalAvailabilityDto, VirtualConsultationStatusDataDto } from '@api-rest/api-model';
 import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
 import { Observable, ReplaySubject, map } from 'rxjs';
 import { StompService } from '../../stomp.service';
@@ -65,10 +65,7 @@ export class VirtualConsultationsFacadeService {
 			}
 		)
 
-		this.virtualConsultationService.getVirtualConsultationsByInstitution(this.contextService.institutionId).subscribe(vc => { //soli
-			this.virtualConsultationsRequest = vc;
-			this.virtualConsultationsRequestEmitter.next(vc);
-		})
+		this.getVirtualConsultationByInstitution(null);
 
 		this.professionalAvailableChanged$.subscribe(
 			(availabilityChanged: VirtualConsultationAvailableProfessionalAmountDto[]) => {
@@ -109,6 +106,17 @@ export class VirtualConsultationsFacadeService {
 			}
 		)
 
+	}
+
+	setSearchCriteria(searchCriteria: VirtualConsultationFilterDto){
+		this.getVirtualConsultationByInstitution(searchCriteria);
+	}
+
+	private getVirtualConsultationByInstitution(searchCriteria?: VirtualConsultationFilterDto) {
+		this.virtualConsultationService.getVirtualConsultationsByInstitution(this.contextService.institutionId, searchCriteria).subscribe(vc => { //soli
+			this.virtualConsultationsRequest = vc;
+			this.virtualConsultationsRequestEmitter.next(vc);
+		})
 	}
 
 	private responsibleChangedFilter(virtualConsultationDto: VirtualConsultationDto, solicitanteChanged: VirtualConsultationResponsibleProfessionalAvailabilityDto): boolean {

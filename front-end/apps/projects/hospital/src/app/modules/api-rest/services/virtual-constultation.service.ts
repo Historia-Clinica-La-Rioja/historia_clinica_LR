@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { VirtualConsultationDto, VirtualConsultationNotificationDataDto, VirtualConsultationRequestDto, VirtualConsultationStatusDto } from '@api-rest/api-model';
+import { VirtualConsultationDto, VirtualConsultationFilterDto, VirtualConsultationNotificationDataDto, VirtualConsultationRequestDto, VirtualConsultationStatusDto } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 
@@ -67,9 +67,10 @@ export class VirtualConstultationService {
 		return this.http.get<boolean>(url)
 	}
 
-	getVirtualConsultationsByInstitution(institutionId: number): Observable<VirtualConsultationDto[]> {
+	getVirtualConsultationsByInstitution(institutionId: number, searchCriteria: VirtualConsultationFilterDto): Observable<VirtualConsultationDto[]> {
 		const url = `${this.BASE_URL}/institution/${institutionId}`;
-		return this.http.get<VirtualConsultationDto[]>(url)
+		const params = { filter: JSON.stringify(searchCriteria) };
+		return this.http.get<VirtualConsultationDto[]>(url,{params})
 	}
 
 	notifyVirtualConsultationIncomingCall(virtualConsultation: number) {
