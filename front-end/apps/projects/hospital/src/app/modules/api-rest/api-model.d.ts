@@ -3343,6 +3343,14 @@ export interface RoomDto extends Serializable {
     type: string;
 }
 
+export interface RuleDto {
+    clinicalSpecialtyId: number;
+    id: number;
+    name: string;
+    snomedId: number;
+    typeId: number;
+}
+
 export interface SavedBookingAppointmentDto {
     appointmentId: number;
     bookingPersonId: number;

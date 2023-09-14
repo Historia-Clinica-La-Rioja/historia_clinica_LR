@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.establishment.controller.dto.RuleDto;
 
 import org.hibernate.annotations.Where;
 
@@ -42,5 +43,12 @@ public class Rule extends SGXAuditableEntity<Integer> implements Serializable {
 
 	@Column(name = "snomed_id")
 	private Integer snomedId;
+
+	public Rule (RuleDto dto){
+		this.id = dto.getId();
+		this.typeId = dto.getTypeId();
+		this.clinicalSpecialtyId = dto.getClinicalSpecialtyId();
+		this.snomedId = dto.getSnomedId();
+	}
 
 }

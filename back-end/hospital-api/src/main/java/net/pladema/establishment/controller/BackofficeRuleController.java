@@ -1,18 +1,19 @@
 package net.pladema.establishment.controller;
 
-import net.pladema.establishment.repository.RuleRepository;
-import net.pladema.establishment.repository.entity.Rule;
-import net.pladema.sgx.backoffice.repository.BackofficeRepository;
+import net.pladema.establishment.controller.constraints.validator.permissions.BackofficeRuleValidator;
+import net.pladema.establishment.controller.dto.RuleDto;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
+
+import net.pladema.sgx.backoffice.rest.BackofficePermissionValidatorAdapter;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("backoffice/rules")
-public class BackofficeRuleController extends AbstractBackofficeController<Rule, Integer> {
+public class BackofficeRuleController extends AbstractBackofficeController<RuleDto, Integer> {
 
-	public BackofficeRuleController(RuleRepository repository){
-		super(new BackofficeRepository<Rule, Integer>(repository));
+	public BackofficeRuleController(BackofficeRuleStore store, BackofficeRuleValidator validator){
+		super(store, new BackofficePermissionValidatorAdapter<>(), validator);
 	}
 }
