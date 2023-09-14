@@ -692,6 +692,27 @@ export interface CompletePatientDto extends BasicPatientDto {
     patientType: PatientType;
 }
 
+export interface CompleteReferenceDto extends ReferenceDto {
+    doctorId: number;
+    encounterId: number;
+    institutionId: number;
+    patientId: number;
+    patientMedicalCoverageId: number;
+    sourceTypeId: number;
+}
+
+export interface CompleteReferenceStudyDto {
+    categoryId: string;
+    doctorId: number;
+    encounterId: number;
+    healthConditionId: number;
+    institutionId: number;
+    patientId: number;
+    patientMedicalCoverageId?: number;
+    practice: SharedSnomedDto;
+    sourceTypeId: number;
+}
+
 export interface CompleteRequestDto {
     fileIds?: number[];
     link?: string;
@@ -710,6 +731,11 @@ export interface ConditionDto {
     severityCode: FhirCodeDto;
     startDate: Date;
     verificationStatus: FhirCodeDto;
+}
+
+export interface ConsultationResponseDto {
+    encounterId: number;
+    orderIds: number[];
 }
 
 export interface ConsultationsDto extends Serializable {
@@ -3128,7 +3154,7 @@ export interface ReferenceCounterReferenceFileDto extends Serializable {
 
 export interface ReferenceDto extends Serializable {
     careLineId?: number;
-    clinicalSpecialtyId: number;
+    clinicalSpecialtyId?: number;
     consultation?: boolean;
     destinationInstitutionId: number;
     fileIds: number[];
@@ -3138,6 +3164,7 @@ export interface ReferenceDto extends Serializable {
     priority: number;
     problems: ReferenceProblemDto[];
     procedure?: boolean;
+    study?: ReferenceStudyDto;
 }
 
 export interface ReferenceGetDto extends Serializable {
@@ -3170,6 +3197,12 @@ export interface ReferenceReportDto {
     priority: EReferencePriority;
     problems: string[];
     referenceId: number;
+}
+
+export interface ReferenceStudyDto {
+    categoryId: string;
+    practice: SharedSnomedDto;
+    problem: SharedSnomedDto;
 }
 
 export interface ReferenceSummaryDto {

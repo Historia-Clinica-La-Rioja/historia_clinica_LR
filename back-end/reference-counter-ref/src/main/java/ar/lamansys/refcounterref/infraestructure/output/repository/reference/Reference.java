@@ -65,6 +65,9 @@ public class Reference implements Serializable {
 	@Column(name = "priority", nullable = false)
 	private Integer priority;
 
+	@Column(name = "service_request_id")
+	private Integer serviceRequestId;
+
     public Reference(ReferenceBo referenceBo) {
         this.encounterId = referenceBo.getEncounterId();
         this.sourceTypeId = referenceBo.getSourceTypeId();

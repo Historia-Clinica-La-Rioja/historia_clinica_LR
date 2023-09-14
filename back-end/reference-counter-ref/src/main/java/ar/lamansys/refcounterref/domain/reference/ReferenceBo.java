@@ -48,4 +48,6 @@ public class ReferenceBo {
 	@NotNull(message = "{value.mandatory}")
 	private Integer priority;
 
+	private ReferenceStudyBo study;
+
 }

@@ -1,22 +1,22 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.reference;
 
 import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceFileStorage;
+import ar.lamansys.refcounterref.application.port.ReferenceHealthConditionStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
+import ar.lamansys.refcounterref.application.port.ReferenceStudyStorage;
 import ar.lamansys.refcounterref.domain.enums.EReferenceCounterReferenceType;
 import ar.lamansys.refcounterref.domain.file.ReferenceCounterReferenceFileBo;
+import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceGetBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
 import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
-import ar.lamansys.refcounterref.infraestructure.output.repository.reference.Reference;
-import ar.lamansys.refcounterref.infraestructure.output.repository.reference.ReferenceRepository;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencehealthcondition.ReferenceHealthCondition;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencehealthcondition.ReferenceHealthConditionPk;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencehealthcondition.ReferenceHealthConditionRepository;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencenote.ReferenceNote;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencenote.ReferenceNoteRepository;
 import ar.lamansys.sgh.clinichistory.application.healthCondition.HealthConditionStorage;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDiaryCareLinePort;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,28 +35,44 @@ import java.util.stream.Collectors;
 public class ReferenceStorageImpl implements ReferenceStorage {
 
     private final ReferenceRepository referenceRepository;
+
     private final ReferenceNoteRepository referenceNoteRepository;
+
     private final ReferenceHealthConditionRepository referenceHealthConditionRepository;
-    private final HealthConditionStorage healthConditionStorage;
+
+    private final ReferenceHealthConditionStorage referenceHealthConditionStorage;
+
     private final ReferenceCounterReferenceFileStorage referenceCounterReferenceFileStorage;
-	private final SharedDiaryCareLinePort sharedDiaryCareLinePort;
+
+	private final ReferenceStudyStorage referenceStudyStorage;
+
 	private final FeatureFlagsService featureFlagsService;
 
     @Override
 	@Transactional
-    public void save(List<ReferenceBo> referenceBoList) {
+    public List<Integer> save(List<CompleteReferenceBo> referenceBoList) {
         log.debug("Input parameters -> referenceBoList {}", referenceBoList);
-        referenceBoList.stream().forEach(referenceBo -> {
+		List<Integer> orderIds = new ArrayList<>();
+        referenceBoList.forEach(referenceBo -> {
             Reference ref = new Reference(referenceBo);
             if (referenceBo.getNote() != null) {
                 Integer referenceNoteId = referenceNoteRepository.save(new ReferenceNote(referenceBo.getNote())).getId();
                 ref.setReferenceNoteId(referenceNoteId);
             }
-            Integer referenceId = referenceRepository.save(ref).getId();
-            List<ReferenceHealthCondition> referenceHealthConditionList = saveProblems(referenceId, referenceBo);
-            log.debug("referenceHealthConditionList, referenceId -> {} {}", referenceHealthConditionList, referenceId);
+            Reference reference = referenceRepository.save(ref);
+            Integer referenceId = reference.getId();
+			List<Integer> referenceHealthConditionIds = referenceHealthConditionStorage.saveProblems(referenceId, referenceBo);
+			log.debug("referenceHealthConditionIds, referenceId -> {} {}", referenceHealthConditionIds, referenceId);
+			if (referenceBo.getStudy() != null) {
+				Integer orderId = referenceStudyStorage.run(referenceBo);
+				reference.setServiceRequestId(orderId);
+				referenceRepository.save(reference);
+				orderIds.add(orderId);
+				log.debug("orderId, referenceId -> {} {}", orderId, referenceId);
+			}
             referenceCounterReferenceFileStorage.updateReferenceCounterReferenceId(referenceId, referenceBo.getFileIds());
         });
+		return orderIds;
     }
 
     @Override
@@ -100,14 +117,5 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 		log.debug("Output -> references {} ", queryResult);
 		return queryResult;
 	}
-
-	public List<ReferenceHealthCondition> saveProblems(Integer referenceId, ReferenceBo referenceBo) {
-        return referenceBo.getProblems().stream().map(problem -> {
-            List<Integer> healthConditionIds = healthConditionStorage.getHealthConditionIdByEncounterAndSnomedConcept(
-                    referenceBo.getEncounterId(), referenceBo.getSourceTypeId(), problem.getSnomed().getSctid(), problem.getSnomed().getPt());
-            ReferenceHealthConditionPk refPk = new ReferenceHealthConditionPk(referenceId, healthConditionIds.get(0));
-            return referenceHealthConditionRepository.save(new ReferenceHealthCondition(refPk));
-        }).collect(Collectors.toList());
-    }
 
 }

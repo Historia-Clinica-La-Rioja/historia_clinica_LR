@@ -1,12 +1,27 @@
 package ar.lamansys.odontology.application.createConsultation;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
+import ar.lamansys.odontology.domain.consultation.ConsultationResponseBo;
+import ar.lamansys.odontology.domain.consultation.reference.ReferenceBo;
+import ar.lamansys.odontology.domain.consultation.reference.ReferenceProblemBo;
+import ar.lamansys.odontology.domain.consultation.reference.ReferenceStudyBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CompleteReferenceDto;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceProblemDto;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceStudyDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +87,8 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
 	private final SharedAppointmentPort sharedAppointmentPort;
 
+	private final SharedReferenceCounterReference sharedReferenceCounterReference;
+
     private final CpoCeoIndicesCalculator cpoCeoIndicesCalculator;
 
     private final GetToothSurfacesService getToothSurfacesService;
@@ -82,7 +99,13 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
     private final Publisher publisher;
 
-    public CreateOdontologyConsultationImpl(DiagnosticStorage diagnosticStorage, ProcedureStorage proceduresStorage, OdontologyConsultationStorage odontologyConsultationStorage, DateTimeProvider dateTimeProvider, OdontologyDoctorStorage odontologyDoctorStorage, OdontologyDocumentStorage odontologyDocumentStorage, DrawOdontogramService drawOdontogramService, SharedAppointmentPort sharedAppointmentPort, CpoCeoIndicesCalculator cpoCeoIndicesCalculator, GetToothSurfacesService getToothSurfacesService, OdontologyAppointmentStorage odontologyAppointmentStorage, GetToothService getToothService, Publisher publisher) {
+    public CreateOdontologyConsultationImpl(DiagnosticStorage diagnosticStorage, ProcedureStorage proceduresStorage,
+											OdontologyConsultationStorage odontologyConsultationStorage, DateTimeProvider dateTimeProvider,
+											OdontologyDoctorStorage odontologyDoctorStorage, OdontologyDocumentStorage odontologyDocumentStorage,
+											DrawOdontogramService drawOdontogramService, SharedAppointmentPort sharedAppointmentPort,
+											CpoCeoIndicesCalculator cpoCeoIndicesCalculator, GetToothSurfacesService getToothSurfacesService,
+											OdontologyAppointmentStorage odontologyAppointmentStorage, GetToothService getToothService,
+											Publisher publisher, SharedReferenceCounterReference sharedReferenceCounterReference) {
         this.diagnosticStorage = diagnosticStorage;
         this.proceduresStorage = proceduresStorage;
         this.odontologyConsultationStorage = odontologyConsultationStorage;
@@ -95,53 +118,52 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
         this.getToothSurfacesService = getToothSurfacesService;
         this.odontologyAppointmentStorage = odontologyAppointmentStorage;
         this.getToothService = getToothService;
+		this.sharedReferenceCounterReference = sharedReferenceCounterReference;
 		this.publisher = publisher;
 	}
 
     @Override
     @Transactional
-    public Integer run(ConsultationBo consultationBo) {
-        LOG.debug("Input parameter -> consultationBo {}", consultationBo);
-        if (consultationBo == null)
-            throw new CreateConsultationException(CreateConsultationExceptionEnum.NULL_CONSULTATION,
-                    "La información de la consulta es obligatoria");
+    public ConsultationResponseBo run(ConsultationBo consultationBo) {
+		LOG.debug("Input parameter -> consultationBo {}", consultationBo);
+		if (consultationBo == null)
+			throw new CreateConsultationException(CreateConsultationExceptionEnum.NULL_CONSULTATION, "La información de la consulta es obligatoria");
 
-        DoctorInfoBo doctorInfoBo = odontologyDoctorStorage.getDoctorInfo().orElseThrow(() ->
-                new CreateConsultationException(CreateConsultationExceptionEnum.INVALID_DOCTOR, "El identificador del profesional es inválido"));
+		DoctorInfoBo doctorInfoBo = odontologyDoctorStorage.getDoctorInfo().orElseThrow(() -> new CreateConsultationException(CreateConsultationExceptionEnum.INVALID_DOCTOR, "El identificador del profesional es inválido"));
 
-        assertContextValid(consultationBo, doctorInfoBo);
-        assertTeethQuantityValid(consultationBo);
+		assertContextValid(consultationBo, doctorInfoBo);
+		assertTeethQuantityValid(consultationBo);
 
-        processDentalActions(consultationBo);
-        drawOdontogramService.run(consultationBo.getPatientId(), consultationBo.getDentalActions());
+		processDentalActions(consultationBo);
+		drawOdontogramService.run(consultationBo.getPatientId(), consultationBo.getDentalActions());
 
 		Integer medicalCoverageId = consultationBo.getPatientMedicalCoverageId();
 		if (medicalCoverageId == null)
 			medicalCoverageId = odontologyAppointmentStorage.getPatientMedicalCoverageId(consultationBo.getPatientId(), doctorInfoBo.getId());
 
 		LocalDate now = dateTimeProvider.nowDate();
-        Integer encounterId = odontologyConsultationStorage.save(
-                new ConsultationInfoBo(null,
-                        consultationBo,
-                        medicalCoverageId,
-                        doctorInfoBo.getId(),
-                        now,
-                        true,
-						consultationBo.getHierarchicalUnitId()));
+		Integer encounterId = odontologyConsultationStorage.save(new ConsultationInfoBo(null, consultationBo, medicalCoverageId, doctorInfoBo.getId(), now, true, consultationBo.getHierarchicalUnitId()));
 
 
-        consultationBo.setConsultationId(encounterId);
-        cpoCeoIndicesCalculator.run(consultationBo);
+		consultationBo.setConsultationId(encounterId);
+		cpoCeoIndicesCalculator.run(consultationBo);
 
-        Long documentId = odontologyDocumentStorage.save(new OdontologyDocumentBo(null, consultationBo, encounterId, doctorInfoBo.getId(), now));
-        Integer appointmentId = odontologyAppointmentStorage.serveAppointment(consultationBo.getPatientId(), doctorInfoBo.getId(), now);
-		if(appointmentId != null)
+		Long documentId = odontologyDocumentStorage.save(new OdontologyDocumentBo(null, consultationBo, encounterId, doctorInfoBo.getId(), now));
+		Integer appointmentId = odontologyAppointmentStorage.serveAppointment(consultationBo.getPatientId(), doctorInfoBo.getId(), now);
+		if (appointmentId != null)
 			this.sharedAppointmentPort.saveDocumentAppointment(new DocumentAppointmentDto(documentId, appointmentId));
 
-		publisher.run(consultationBo.getPatientId(),consultationBo.getInstitutionId(), EOdontologyTopicDto.NUEVA_CONSULTA);
-        LOG.debug("Output -> encounterId {}", encounterId);
+		List<Integer> orderIds = new ArrayList<>();
+		if (!consultationBo.getReferences().isEmpty()) {
+			orderIds = sharedReferenceCounterReference.saveReferences(mapToCompleteReferenceDto(consultationBo.getReferences(), consultationBo.getInstitutionId(), doctorInfoBo.getId(), medicalCoverageId, consultationBo.getPatientId(), encounterId));
+		}
 
-        return encounterId;
+		publisher.run(consultationBo.getPatientId(), consultationBo.getInstitutionId(), EOdontologyTopicDto.NUEVA_CONSULTA);
+
+		ConsultationResponseBo result = new ConsultationResponseBo(encounterId, orderIds);
+
+		LOG.debug("Output -> result {}", result);
+		return result;
     }
 
     private void processDentalActions(ConsultationBo consultationBo) {
@@ -296,4 +318,43 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
         dentalProcedure.setTemporaryIndex(procedure.getTemporaryIndex());
     }
 
+	private List<CompleteReferenceDto> mapToCompleteReferenceDto(List<ReferenceBo> references, Integer institutionId,
+																 Integer doctorId, Integer patientMedicalCoverageId,
+																 Integer patientId, Integer encounterId) {
+		return references.stream().map(r -> {
+			CompleteReferenceDto result = new CompleteReferenceDto();
+			result.setNote(r.getNote());
+			result.setConsultation(r.getConsultation());
+			result.setCareLineId(r.getCareLineId());
+			result.setClinicalSpecialtyId(r.getClinicalSpecialtyId());
+			result.setProblems(mapToReferenceProblemDtoList(r.getProblems()));
+			result.setFileIds(r.getFileIds());
+			result.setDestinationInstitutionId(r.getDestinationInstitutionId());
+			result.setPhonePrefix(r.getPhoneNumber());
+			result.setPhonePrefix(r.getPhonePrefix());
+			result.setPriority(r.getPriority());
+			result.setStudy(r.getStudy() != null ? mapToReferenceStudyDto(r.getStudy()) : null);
+			result.setInstitutionId(institutionId);
+			result.setDoctorId(doctorId);
+			result.setPatientMedicalCoverageId(patientMedicalCoverageId);
+			result.setPatientId(patientId);
+			result.setEncounterId(encounterId);
+			result.setSourceTypeId((int) SourceType.ODONTOLOGY);
+			return result;
+		}).collect(Collectors.toList());
+	}
+
+	private List<ReferenceProblemDto> mapToReferenceProblemDtoList(List<ReferenceProblemBo> problems) {
+		return problems.stream()
+				.map(rp -> new ReferenceProblemDto(rp.getSnomed().getSctid(), rp.getSnomed().getPt()))
+				.collect(Collectors.toList());
+	}
+
+	private ReferenceStudyDto mapToReferenceStudyDto(ReferenceStudyBo study) {
+		return new ReferenceStudyDto(mapToSharedSnomedDto(study.getProblem()), mapToSharedSnomedDto(study.getPractice()), study.getCategoryId());
+	}
+
+	private SharedSnomedDto mapToSharedSnomedDto(OdontologySnomedBo snomedBo) {
+		return  new SharedSnomedDto(snomedBo.getSctid(), snomedBo.getPt());
+	}
 }

@@ -31,8 +31,7 @@ public class ReferenceDto implements Serializable {
 	@Nullable
     private Integer careLineId;
 
-    @Valid
-    @NotNull(message = "{value.mandatory}")
+	@Nullable
     private Integer clinicalSpecialtyId;
 
     @Valid
@@ -54,5 +53,8 @@ public class ReferenceDto implements Serializable {
 	@Valid
 	@NotNull(message = "{value.mandatory}")
 	private Integer priority;
+
+	@Nullable
+	private ReferenceStudyDto study;
 
 }

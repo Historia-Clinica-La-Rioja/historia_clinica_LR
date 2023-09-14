@@ -1,8 +1,8 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CompleteReferenceDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceCounterReferenceFileDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceProblemDto;
 
 import java.time.LocalDate;
@@ -14,7 +14,7 @@ public interface SharedReferenceCounterReference {
 
     CounterReferenceSummaryDto getCounterReference(Integer referenceId);
 
-    void saveReferences(Integer encounterId, Integer sourceTypeId, List<ReferenceDto> refrenceDto);
+	List<Integer> saveReferences(List<CompleteReferenceDto> references);
 
     List<ReferenceProblemDto> getReferencesProblemsByPatient(Integer patientId);
 

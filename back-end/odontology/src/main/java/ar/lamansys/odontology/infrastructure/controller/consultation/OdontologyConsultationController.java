@@ -8,12 +8,12 @@ import ar.lamansys.odontology.infrastructure.controller.consultation.dto.Odontol
 import ar.lamansys.odontology.infrastructure.controller.consultation.dto.OdontologyConsultationDto;
 import ar.lamansys.odontology.infrastructure.controller.consultation.mapper.CpoCeoIndicesMapper;
 import ar.lamansys.odontology.infrastructure.controller.consultation.mapper.OdontologyConsultationMapper;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ConsultationResponseDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,25 +43,21 @@ public class OdontologyConsultationController {
 
     private final CpoCeoIndicesMapper cpoCeoIndicesMapper;
 
-    private final SharedReferenceCounterReference sharedReferenceCounterReference;
-
     public OdontologyConsultationController(CreateOdontologyConsultation createOdontologyConsultation,
                                             OdontologyConsultationMapper odontologyConsultationMapper,
                                             FetchCpoCeoIndices fetchCpoCeoIndices,
-                                            CpoCeoIndicesMapper cpoCeoIndicesMapper,
-                                            SharedReferenceCounterReference sharedReferenceCounterReference) {
+                                            CpoCeoIndicesMapper cpoCeoIndicesMapper) {
         this.createOdontologyConsultation = createOdontologyConsultation;
         this.odontologyConsultationMapper = odontologyConsultationMapper;
         this.fetchCpoCeoIndices = fetchCpoCeoIndices;
         this.cpoCeoIndicesMapper = cpoCeoIndicesMapper;
-        this.sharedReferenceCounterReference = sharedReferenceCounterReference;
     }
 
 
     @ResponseStatus(code = HttpStatus.OK)
     @PostMapping
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_EN_ODONTOLOGIA')")
-    public boolean createConsultation(
+    public ResponseEntity<ConsultationResponseDto> createConsultation(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId")  Integer patientId,
             @RequestBody @Valid OdontologyConsultationDto consultationDto) {
@@ -70,11 +66,9 @@ public class OdontologyConsultationController {
         ConsultationBo consultationBo = odontologyConsultationMapper.fromOdontologyConsultationDto(consultationDto);
         consultationBo.setInstitutionId(institutionId);
         consultationBo.setPatientId(patientId);
-
-        Integer encounterId = createOdontologyConsultation.run(consultationBo);
-        sharedReferenceCounterReference.saveReferences(encounterId, (int)SourceType.ODONTOLOGY, consultationDto.getReferences());
-
-        return true;
+		var newOdontologyConsultation = createOdontologyConsultation.run(consultationBo);
+		ConsultationResponseDto result = new ConsultationResponseDto(newOdontologyConsultation.getEncounterId(), newOdontologyConsultation.getOrderIds());
+		return ResponseEntity.ok(result);
     }
 
     @ResponseStatus(code = HttpStatus.OK)

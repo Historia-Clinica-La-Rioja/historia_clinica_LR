@@ -11,6 +11,7 @@ import ar.lamansys.refcounterref.infraestructure.input.service.mapper.CounterRef
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.ReferenceMapper;
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.ReferenceProblemMapper;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referenceappointment.ReferenceAppointmentRepository;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CompleteReferenceDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryProcedureDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceCounterReferenceFileDto;
@@ -62,9 +63,9 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
     }
 
     @Override
-    public void saveReferences(Integer encounterId, Integer sourceTypeId, List<ReferenceDto> refrenceDtoList) {
-        log.debug("Input parameters -> encounterId {}, sourceTypeId {}, referenceDtoList {}", encounterId, sourceTypeId, refrenceDtoList);
-        createReference.run(encounterId, sourceTypeId, referenceMapper.fromReferenceDtoList(refrenceDtoList));
+    public List<Integer> saveReferences(List<CompleteReferenceDto> references) {
+        log.debug("Input parameters -> references {}", references);
+        return createReference.run(referenceMapper.fromCompleteReferenceDtoList(references));
     }
 
     @Override
