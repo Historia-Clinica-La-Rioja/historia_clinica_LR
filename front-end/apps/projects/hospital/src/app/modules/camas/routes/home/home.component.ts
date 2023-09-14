@@ -61,4 +61,5 @@ export class BedManagement {
 		bedNumber: string;
 		free: boolean;
 	}[];
+	sectorTypeDescription: string
 }

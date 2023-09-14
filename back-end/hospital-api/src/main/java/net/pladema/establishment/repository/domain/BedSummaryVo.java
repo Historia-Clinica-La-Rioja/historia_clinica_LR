@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.repository.entity.Sector;
+import net.pladema.establishment.repository.entity.SectorType;
 import net.pladema.staff.repository.domain.ClinicalSpecialtyVo;
 
 @Getter
@@ -23,12 +24,14 @@ public class BedSummaryVo implements Serializable {
 	private BedVo bed;
 	private SectorSummaryVo sector;
 	private LocalDateTime probableDischargeDate;
+	private SectorTypeVo sectorType;
 
 	public BedSummaryVo(Bed bed, Sector sector, LocalDateTime probableDischargeDate,
-						String careType, String sectorOrganization, String ageGroup) {
+						String careType, String sectorOrganization, String ageGroup, SectorType st) {
 		this.bed = new BedVo(bed);
 		this.sector = new SectorSummaryVo(sector, careType, sectorOrganization, ageGroup);
 		this.probableDischargeDate = Boolean.FALSE.equals(bed.getFree()) ? probableDischargeDate : null;
+		this.sectorType = new SectorTypeVo(st.getId(), st.getDescription());
 	}
 
 	public void addSpecialty(ClinicalSpecialtyVo clinicalSpecialty) {

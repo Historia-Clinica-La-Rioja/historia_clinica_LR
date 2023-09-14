@@ -30,10 +30,11 @@ public class BedSummaryRepositoryImpl implements BedSummaryRepository{
     @Transactional(readOnly = true)
     public List<BedSummaryVo> execute(Integer institutionId, Short sectorType) {
         String sqlQuery =
-                " SELECT b, s, MAX(ie.probableDischargeDate), cs, ct.description, so.description, ag.description "
+                " SELECT b, s, MAX(ie.probableDischargeDate), cs, ct.description, so.description, ag.description, st "
                 + " FROM Bed b "
                 + " JOIN Room r ON b.roomId = r.id "
                 + " JOIN Sector s ON r.sectorId = s.id "
+				+ " JOIN SectorType st ON s.sectorTypeId = st.id "
                 + " LEFT JOIN CareType ct ON s.careTypeId = ct.id "
                 + " LEFT JOIN SectorOrganization so ON s.sectorOrganizationId = so.id "
                 + " LEFT JOIN AgeGroup ag ON s.ageGroupId = ag.id "
@@ -44,7 +45,7 @@ public class BedSummaryRepositoryImpl implements BedSummaryRepository{
 				+ " AND (s.sectorTypeId = "+SectorType.EMERGENCY_CARE_ID+""
 				+ " OR (s.sectorTypeId = :sectorType OR s.sectorTypeId IS NULL)) "
                 + " AND (b.free=true OR ( b.free=false AND ie.statusId = :internmentEpisodeActiveStatus OR s.sectorTypeId = "+SectorType.EMERGENCY_CARE_ID+") ) "
-                + " GROUP BY b, s, cs, so, ct, ag "
+                + " GROUP BY b, s, cs, so, ct, ag, st "
                 + " ORDER BY s.id, cs.id ";
 
         List<Object[]> result = entityManager.createQuery(sqlQuery)
@@ -64,7 +65,7 @@ public class BedSummaryRepositoryImpl implements BedSummaryRepository{
                         String sectorOrganization = (String) r[5];
                         String ageGroup = (String) r[6];
                         BedSummaryVo bedSummary = new BedSummaryVo(bed, (Sector) r[1], (LocalDateTime) r[2],
-                                careType, sectorOrganization, ageGroup);
+                                careType, sectorOrganization, ageGroup, (SectorType) r[7]);
                         ClinicalSpecialty clinicalSpecialty =  (ClinicalSpecialty) r[3];
                         if (clinicalSpecialty != null)
                             bedSummary.addSpecialty(new ClinicalSpecialtyVo(clinicalSpecialty));

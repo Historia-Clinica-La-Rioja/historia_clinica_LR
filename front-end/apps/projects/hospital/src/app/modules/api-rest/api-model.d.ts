@@ -501,6 +501,7 @@ export interface BedSummaryDto {
     bed: BedDto;
     probableDischargeDate?: string;
     sector: SectorSummaryDto;
+    sectorType: SectorTypeDto;
 }
 
 export interface BlockDto {
@@ -3327,6 +3328,11 @@ export interface SectorSummaryDto {
     organizationTypeId: number;
     sectorType: string;
     sectorTypeId: number;
+}
+
+export interface SectorTypeDto {
+    description: string;
+    id: number;
 }
 
 export interface SelfPerceivedGenderDto extends AbstractMasterdataDto<number> {
