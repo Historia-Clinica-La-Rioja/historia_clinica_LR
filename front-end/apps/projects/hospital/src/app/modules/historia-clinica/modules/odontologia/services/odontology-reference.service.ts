@@ -112,6 +112,7 @@ export class OdontologyReferenceService {
 			phoneNumber: reference.phoneNumber,
 			phonePrefix: reference.phonePrefix,
 			priority: reference.priority,
+			study: reference.referenceStudy
 		}
 	}
 }

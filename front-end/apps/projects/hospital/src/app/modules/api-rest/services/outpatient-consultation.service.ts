@@ -20,7 +20,7 @@ export class OutpatientConsultationService {
 	) {
 	}
 
-	createOutpatientConsultation(createOutpatientDto: CreateOutpatientDto, patientId: number): Observable<boolean> {
+	createOutpatientConsultation(createOutpatientDto: CreateOutpatientDto, patientId: number): Observable<any> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/outpatient/consultations/billable`;
 		return this.http.post<boolean>(url, createOutpatientDto);
 	}

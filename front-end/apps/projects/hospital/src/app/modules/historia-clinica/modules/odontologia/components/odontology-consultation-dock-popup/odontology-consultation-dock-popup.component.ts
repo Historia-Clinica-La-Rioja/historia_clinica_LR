@@ -41,6 +41,8 @@ import { OdontologyReferenceService } from '../../services/odontology-reference.
 import { SurfacesNamesFacadeService } from '../../services/surfaces-names-facade.service';
 import { EpisodeData } from '@historia-clinica/components/episode-data/episode-data.component';
 import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
+import { ConfirmarPrescripcionComponent } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
+import { PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -252,7 +254,10 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		}
 
 		this.odontologyConsultationService.createConsultation(this.data.patientId, odontologyDto).subscribe(
-			_ => {
+			res => {
+				res.orderIds.forEach((order) => {
+					this.openNewEmergencyCareStudyConfirmationDialog([order]);
+				  });
 				this.snackBarService.showSuccess('El documento de consulta odontologica se guardó exitosamente');
 				this.dockPopupRef.close({
 					confirmed: true,
@@ -268,6 +273,22 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			}
 		);
 
+	}
+
+	private openNewEmergencyCareStudyConfirmationDialog(order: number[]) {
+		this.dialog.open(ConfirmarPrescripcionComponent,
+			{
+				disableClose: true,
+				data: {
+					titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.STUDY_TITLE',
+					downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_STUDY',
+					successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_STUDY_SUCCESS',
+					prescriptionType: PrescriptionTypes.STUDY,
+					patientId: this.data.patientId,
+					prescriptionRequest: order,
+				},
+				width: '35%',
+			});
 	}
 
 	private mapFieldsToUpdate(odontologyDto: OdontologyConsultationDto): FieldsToUpdate {

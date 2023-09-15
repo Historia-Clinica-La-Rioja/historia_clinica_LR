@@ -46,6 +46,9 @@ import { HCEPersonalHistory } from '../reference/reference.component';
 import { SnvsReportsResultComponent } from '../snvs-reports-result/snvs-reports-result.component';
 import { EpisodeData } from '@historia-clinica/components/episode-data/episode-data.component';
 import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
+import { ConfirmarPrescripcionComponent } from '../ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
+import { PrescriptionTypes } from '../../services/prescripciones.service';
+
 const TIME_OUT = 5000;
 
 @Component({
@@ -309,7 +312,10 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		}
 
 		this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, this.data.idPaciente).subscribe(
-			_ => {
+			res => {
+				res.orderIds.forEach((orderId) => {
+					this.openNewEmergencyCareStudyConfirmationDialog([orderId]);
+				  });
 				this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS', { duration: TIME_OUT });
 				this.dockPopupRef.close(mapToFieldsToUpdate(nuevaConsulta));
 				if (this.thereAreProblemsToSnvsReport()) {
@@ -359,6 +365,22 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				problems: !!problemsToUpdate.length,
 			};
 		}
+	}
+
+	private openNewEmergencyCareStudyConfirmationDialog(order: number[]) {
+		this.dialog.open(ConfirmarPrescripcionComponent,
+			{
+				disableClose: true,
+				data: {
+					titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.STUDY_TITLE',
+					downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_STUDY',
+					successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_STUDY_SUCCESS',
+					prescriptionType: PrescriptionTypes.STUDY,
+					patientId: this.data.idPaciente,
+					prescriptionRequest: order,
+				},
+				width: '35%',
+			});
 	}
 
 	public isValidConsultation(): boolean {

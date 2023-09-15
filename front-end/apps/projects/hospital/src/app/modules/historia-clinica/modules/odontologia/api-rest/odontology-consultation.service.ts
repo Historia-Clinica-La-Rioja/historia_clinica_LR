@@ -18,7 +18,7 @@ export class OdontologyConsultationService {
 		private http: HttpClient,
 	) { }
 
-	createConsultation(patientId: number, odontologyConsultationDto: OdontologyConsultationDto): Observable<boolean> {
+	createConsultation(patientId: number, odontologyConsultationDto: OdontologyConsultationDto): Observable<any> {
 		const url = `${this.BASE_URL}/patient/${patientId}/odontology/consultation`;
 		return this.http.post<boolean>(url, odontologyConsultationDto);
 	}

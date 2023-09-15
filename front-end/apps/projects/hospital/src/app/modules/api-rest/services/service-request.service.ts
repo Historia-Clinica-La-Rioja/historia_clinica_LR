@@ -31,7 +31,7 @@ export class ServiceRequestService {
 		private readonly downloadService: DownloadService,
 	) { }
 
-	getList(patientId: number, statusId: string, study: string, healthCondition: string, categoryId: string): Observable<DiagnosticReportInfoDto[]> {
+	getList(patientId: number, statusId?: string, study?: string, healthCondition?: string, categoryId?: string): Observable<DiagnosticReportInfoDto[]> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = statusId ? queryParams.append('statusId', statusId) : queryParams;
 		queryParams = study ? queryParams.append('study', study) : queryParams;
@@ -95,7 +95,7 @@ export class ServiceRequestService {
 		Array.from(selectedFiles).forEach(file => filesFormdata.append('files', file));
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${serviceRequestId}/uploadFiles`;
 		return this.http.post<void>(url, filesFormdata)
-	} 
+	}
 
 	complete(patientId: number, diagnosticReportId: number, completeRequestDto: CompleteRequestDto, files: File[]): Observable<void> {
 		const commonUrl = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${diagnosticReportId}`;
