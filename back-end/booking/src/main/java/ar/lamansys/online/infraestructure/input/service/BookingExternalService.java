@@ -188,6 +188,8 @@ public class BookingExternalService implements SharedBookingPort {
 	}
 
 	private ProfessionalAvailabilityDto buildProfessionalAvailabilityDto(ProfessionalAvailabilityBo professionalAvailabilityBo) {
+		if(professionalAvailabilityBo == null || professionalAvailabilityBo.getAvailability() == null)
+			return null;
 		return new ProfessionalAvailabilityDto(
 				professionalAvailabilityBo.getAvailability().stream()
 						.map(this::buildDiaryAvailabilityDto)

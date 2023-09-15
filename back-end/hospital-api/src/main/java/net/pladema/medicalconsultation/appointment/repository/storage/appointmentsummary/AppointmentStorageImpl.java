@@ -74,7 +74,7 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 						"JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
 						"LEFT JOIN UserPerson us ON (a.creationable.createdBy = us.pk.userId) " +
 						"LEFT JOIN Person p ON (us.pk.personId = p.id) " +
-						"JOIN PersonExtended pex ON (p.id = pex.id) " +
+						"LEFT JOIN PersonExtended pex ON (p.id = pex.id) " +
 						"WHERE d.healthcareProfessionalId = :healthcareProfessionalId " +
 						"AND do.institutionId = :institutionId " +
 						"AND d.active = true " +

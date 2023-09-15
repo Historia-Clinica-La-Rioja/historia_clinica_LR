@@ -44,7 +44,7 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 	) {
 		log.debug("Find availability");
 
-		var diaries = getActiveDiaries(professionalId, institutionId);
+		var diaries = getActiveDiaries(professionalId, institutionId, clinicalSpecialtyId);
 		var activeAppointments = getAppointmentsByDiaries(diaries);
 
 
@@ -55,7 +55,7 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 				.filter(diaryAvailabilityBo -> !diaryAvailabilityBo.getSlots().getSlots().isEmpty())
 				.collect(Collectors.toList());
 
-		ProfessionalAvailabilityBo availability = new ProfessionalAvailabilityBo(
+		ProfessionalAvailabilityBo availability = slots.isEmpty() ? null : new ProfessionalAvailabilityBo(
 				slots,
 				new BookingProfessionalBo(
 						professionalId,
@@ -66,7 +66,7 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 
 		log.debug("Find availability -> {}", availability);
 
-		return Optional.of(availability);
+		return Optional.ofNullable(availability);
 	}
 
 	private boolean isScheduled(DiaryListBo diary) {
@@ -174,7 +174,7 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 		return result.stream().map(day -> (Short)day).collect(Collectors.toList());
 	}
 
-	private List<DiaryListBo> getActiveDiaries(Integer professionalId, Integer institutionId) {
+	private List<DiaryListBo> getActiveDiaries(Integer professionalId, Integer institutionId, Integer clinicalSpecialtyId) {
 		String query = "SELECT d.id, " +
 				"d.doctors_office_id, " +
 				"dof.description, " +
@@ -184,11 +184,12 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 				"oh.from, " +
 				"oh.to, " +
 				"oh.id as opening_hours_id " +
-				"FROM v_booking_diary AS d " +
+				"FROM diary AS d " +
 				"JOIN v_booking_doctors_office AS dof ON (dof.id = d.doctors_office_id) " +
 				"JOIN v_booking_diary_opening_hours AS doh ON (doh.diary_id = d.id) " +
 				"JOIN v_booking_opening_hours AS oh ON (doh.opening_hours_id = oh.id) " +
 				"WHERE d.healthcare_professional_id = :hcpId " +
+				"AND d.clinical_specialty_id = :clinicalSpecialtyId " +
 				"AND dof.institution_id = :instId " +
 				"AND d.active = true " +
 				"AND (d.deleted IS NULL OR d.deleted = false) " +
@@ -197,6 +198,7 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 		List<Object[]> result = this.entityManager.createNativeQuery(query)
 				.setParameter("hcpId", professionalId)
 				.setParameter("instId", institutionId)
+				.setParameter("clinicalSpecialtyId", clinicalSpecialtyId)
 				.getResultList();
 		return result.stream().map(row -> new DiaryListBo(
 				(Integer) row[0],
