@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 
 import { AddressDto, InstitutionBasicInfoDto, InstitutionDto } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
+import { ContextService } from '@core/services/context.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -12,6 +13,8 @@ export class InstitutionService {
 
 	constructor(
 		private http: HttpClient,
+		private readonly contextService: ContextService,
+
 	) { }
 
 	public getInstitutions(ids: number[]): Observable<InstitutionDto[]> {
@@ -53,7 +56,7 @@ export class InstitutionService {
 		return this.http.get<InstitutionBasicInfoDto[]>(`${environment.apiBase}/institution/province/${provinceId}`);
 	}
 
-	getInstitutionsByDepartmentHavingClinicalSpecialty( departmentId: number,clinicalSpecialtyId: number, careLine: number): Observable<InstitutionBasicInfoDto[]> {
+	getInstitutionsByDepartmentHavingClinicalSpecialty(departmentId: number, clinicalSpecialtyId: number, careLine: number): Observable<InstitutionBasicInfoDto[]> {
 		const url = `${environment.apiBase}/institution/by-department/${departmentId}/with-specialty/${clinicalSpecialtyId}`;
 		if (careLine) {
 			const queryParams = { careLineId: careLine.toString() };
@@ -65,5 +68,22 @@ export class InstitutionService {
 
 	getVirtualConsultationInstitutions():Observable<InstitutionBasicInfoDto[]>{
 		return this.http.get<InstitutionBasicInfoDto[]>(`${environment.apiBase}/institution/virtual-consultation`);
+	}
+
+	getInstitutionsByReferenceByPracticeFilter(practiceSnomedId: number, departmentId: number, careLineId?: number, clinicalSpecialtyId?: number): Observable<InstitutionBasicInfoDto[]> {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/by-reference-practice-filter`;
+		let queryParams = { practiceSnomedId: practiceSnomedId.toString() };
+
+		queryParams['departmentId'] = departmentId.toString();
+
+		if (careLineId !== undefined && careLineId !== null) {
+			queryParams['careLineId'] = careLineId.toString();
+		}
+
+		if (clinicalSpecialtyId !== undefined && clinicalSpecialtyId !== null) {
+			queryParams['clinicalSpecialtyId'] = clinicalSpecialtyId.toString();
+		}
+
+		return this.http.get<any[]>(url, { params: queryParams });
 	}
 }
