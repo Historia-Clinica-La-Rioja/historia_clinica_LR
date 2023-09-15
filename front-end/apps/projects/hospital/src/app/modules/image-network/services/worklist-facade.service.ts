@@ -52,8 +52,7 @@ export class WorklistFacadeService {
     }
 
     private setInterval(){
-        //this.intervalo = setInterval(this.getAppointments,  5 * 60 * 1000);
-        this.intervalo = setInterval(this.changeFilters,  30000);
+        this.intervalo = setInterval(this.changeFilters,  5 * 60 * 1000);
     }
 
     private restartInterval(){
