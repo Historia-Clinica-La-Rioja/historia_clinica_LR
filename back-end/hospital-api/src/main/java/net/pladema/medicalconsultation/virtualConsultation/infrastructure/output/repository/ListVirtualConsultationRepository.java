@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ListVirtualConsultationRepository {
 
-	List<VirtualConsultationBo> getDomainVirtualConsultation(List<Integer> clinicalSpecialties, List<Integer> careLines, VirtualConsultationFilterBo filter);
+	List<VirtualConsultationBo> getDomainVirtualConsultation(List<Integer> clinicalSpecialties, List<Integer> careLines, Integer healthcareProfessionalId, VirtualConsultationFilterBo filter);
 
 	List<VirtualConsultationBo> getInstitutionVirtualConsultation(VirtualConsultationFilterBo filter);
 

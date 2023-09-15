@@ -24,7 +24,8 @@ public class ListVirtualConsultationRepositoryImpl implements ListVirtualConsult
 	private final EntityManager entityManager;
 
 	@Override
-	public List<VirtualConsultationBo> getDomainVirtualConsultation(List<Integer> clinicalSpecialties, List<Integer> careLines, VirtualConsultationFilterBo filter) {
+	public List<VirtualConsultationBo> getDomainVirtualConsultation(List<Integer> clinicalSpecialties, List<Integer> careLines,
+																	Integer healthcareProfessionalId, VirtualConsultationFilterBo filter) {
 		log.debug("Input parameters -> filter {}", filter);
 		String sqlQuery = "SELECT vc.id, p.id AS patient_id, p2.first_name, pe.name_self_determination, p2.last_name, EXTRACT(YEAR FROM (AGE(p2.birth_date))), spg.description, s2.pt AS problem, s.pt AS motive, " +
 				"cs.name, cl.description AS care_line, vc.institution_id, i.name as institution_name, vc.status_id, hp.id AS healthcare_professional_id, " +
@@ -45,6 +46,7 @@ public class ListVirtualConsultationRepositoryImpl implements ListVirtualConsult
 				"LEFT JOIN virtual_consultation_responsible_professional_availability vcpa ON (vcpa.healthcare_professional_id = hp.id AND vcpa.institution_id = vc.institution_id) " +
 				"WHERE vc.clinical_specialty_id IN :clinicalSpecialties " +
 				"AND vc.care_line_id IN :careLines " +
+				"AND vc.responsible_healthcare_professional_id != :healthcareProfessionalId " +
 				(filter.getInstitutionId() != null ? "AND vc.institution_id = :institutionId " : "") +
 				(filter.getCareLineId() != null ? "AND vc.care_line_id = :careLineId " : "") +
 				(filter.getClinicalSpecialtyId() != null ? "AND vc.clinical_specialty_id = :clinicalSpecialtyId " : "") +
@@ -57,6 +59,7 @@ public class ListVirtualConsultationRepositoryImpl implements ListVirtualConsult
 
 		query.setParameter("clinicalSpecialties", clinicalSpecialties);
 		query.setParameter("careLines", careLines);
+		query.setParameter("healthcareProfessionalId", healthcareProfessionalId);
 
 		if (filter.getInstitutionId() != null)
 			query.setParameter("institutionId", filter.getInstitutionId());

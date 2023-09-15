@@ -45,7 +45,7 @@ public class GetDomainVirtualConsultationsServiceImpl implements GetDomainVirtua
 		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
 		List<Integer> healthcareProfessionalSpecialties = getHealthcareProfessionalClinicalSpecialties(doctorId);
 		List<Integer> institutionCareLineIds = careLineRepository.getAllByInstitutionId(institutionId).stream().map(CareLineBo::getId).collect(Collectors.toList());
-		List<VirtualConsultationBo> result = listVirtualConsultationRepository.getDomainVirtualConsultation(healthcareProfessionalSpecialties, institutionCareLineIds, filter);
+		List<VirtualConsultationBo> result = listVirtualConsultationRepository.getDomainVirtualConsultation(healthcareProfessionalSpecialties, institutionCareLineIds, doctorId, filter);
 		if (featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS))
 			result.forEach(virtualConsultation -> {
 				if (virtualConsultation.getPatientSelfPerceivedName() != null)
