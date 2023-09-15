@@ -28,6 +28,7 @@ public class NotifyVirtualConsultationIncomingCallServiceImpl implements NotifyV
 	public void run(Integer virtualConsultationId, Integer healthcareProfessionalId) {
 		log.debug("Input parameters -> virtualConsultationId {}, healthcareProfessionalId {}", virtualConsultationId, healthcareProfessionalId);
 		try {
+			assertValidProfessional(virtualConsultationId, healthcareProfessionalId);
 			virtualConsultationRepository.updateProfessionalId(virtualConsultationId, healthcareProfessionalId);
 			Integer responsibleUserId = virtualConsultationRepository.getResponsibleUserId(virtualConsultationId);
 			VirtualConsultationEventBo message = new VirtualConsultationEventBo(virtualConsultationId, responsibleUserId, EVirtualConsultationEvent.INCOMING_CALL);
@@ -36,6 +37,12 @@ public class NotifyVirtualConsultationIncomingCallServiceImpl implements NotifyV
 		catch (JsonProcessingException e) {
 			log.debug("Exception -> {}", e.getMessage());
 		}
+	}
+
+	private void assertValidProfessional(Integer virtualConsultationId, Integer healthcareProfessionalId) {
+		Integer responsibleHealthcareProfessionalId = virtualConsultationRepository.getResponsibleHealthcareProfessionalId(virtualConsultationId);
+		if (healthcareProfessionalId.equals(responsibleHealthcareProfessionalId))
+			throw new IllegalStateException("Un profesional no puede atender sus propias solicitudes");
 	}
 
 }

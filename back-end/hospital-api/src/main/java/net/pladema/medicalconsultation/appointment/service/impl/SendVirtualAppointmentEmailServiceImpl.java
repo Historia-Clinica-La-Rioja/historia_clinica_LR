@@ -45,7 +45,7 @@ public class SendVirtualAppointmentEmailServiceImpl implements SendVirtualAppoin
 	public void run(AppointmentBo appointment) {
 		log.debug("Input parameters -> appointment {}", appointment);
 		Assert.notNull(HospitalSharedAutoConfiguration.JITSI_DOMAIN_URL, "No se encuentra configurada ninguna instancia de JITSI");
-		String template = "digital-consultation-email";
+		String template = "/mails/digital-consultation-email";
 		Person patient = personService.findByPatientId(appointment.getPatientId()).orElseThrow(() -> new IllegalStateException("No se encontró el paciente solicitado"));
 		CompletePersonNameBo healthcareProfessional = personService.findByHealthcareProfessionalPersonDataByDiaryId(appointment.getDiaryId()).orElseThrow(() -> new IllegalStateException("No se encontró el profesional solicitado"));
 
