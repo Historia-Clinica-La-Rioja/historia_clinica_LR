@@ -59,6 +59,20 @@ export class AddressMasterDataService {
 		}
 		else
 			return this.http.get<any[]>(url);
+	}
 
+	getDepartmentsByCareLineAndPracticesAndClinicalSpecialty(practiceSnomedId: number, clinicalSpecialtyId?: number, careLineId?: number,) {
+		const url = `${environment.apiBase}/address/masterdata/institution/${this.contextService.institutionId}/departments/by-reference-practice-filter`;
+
+		let queryParams = { practiceSnomedId: practiceSnomedId.toString() };
+
+		if (careLineId !== undefined && careLineId !== null) {
+			queryParams['careLineId'] = careLineId.toString();
+		}
+
+		if (clinicalSpecialtyId !== undefined && clinicalSpecialtyId !== null) {
+			queryParams['clinicalSpecialtyId'] = clinicalSpecialtyId.toString();
+		}
+		return this.http.get<any[]>(url, { params: queryParams });
 	}
 }
