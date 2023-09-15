@@ -94,7 +94,9 @@
                 "TEMPLATE_CONFIRM_TITLE":"¿Reemplazar datos?",
                 "TEMPLATE_CONFIRM_CONTENT":"Si importa una plantilla la información actualmente ingresada en el campo “Detalle de informe” será reemplazada por el contenido de la plantilla que seleccione para importar.",
                 "TEMPLATE_CONFIRM_BUTTON_OK":"SI, SELECCIONAR PLANTILLA",
-                "TEMPLATE_CONFIRM_BUTTON_CANCEL":"NO, CANCELAR"
+                "TEMPLATE_CONFIRM_BUTTON_CANCEL":"NO, CANCELAR",
+                "SELECT_TEMPLATE_IMPORT": "Seleccione plantilla a importar",
+                "SNACKBAR_SUCCESS_IMPORT": "Plantilla importada exitosamente"
 
             },
             "filters": {

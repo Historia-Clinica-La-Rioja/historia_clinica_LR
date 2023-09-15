@@ -1,6 +1,8 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Observable, of } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { TemplateNamesDto } from '@api-rest/api-model';
+import { TemplateManagementService } from '../../services/template-management.service';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-import-template',
@@ -9,18 +11,22 @@ import { Observable, of } from 'rxjs';
 })
 export class ImportTemplateComponent implements OnInit {
 
-	importsFiles$: Observable<TemplateInfoDto[]> = of(mockTemplate)
+	importTemplates$: Observable<TemplateNamesDto[]>
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: TemplateInfoDto[],
 		public dialogRef: MatDialogRef<ImportTemplateComponent>,
+		private readonly templateManagementService: TemplateManagementService,
 	) { }
 
 	ngOnInit(): void {
+		this.importTemplates$ = this.templateManagementService.getTemplatesImport()
 	}
 
-	importTemplate(event:TemplateInfoDto){
-		this.dialogRef.close(event.evolutionNote)
+	importTemplate(event:TemplateNamesDto){
+		this.templateManagementService.getOneTemplateImports(event.id)
+		.subscribe(template => {
+			this.dialogRef.close(template.text)
+		} )
 	}
 
 }
@@ -29,34 +35,3 @@ export interface TemplateInfoDto {
 	fileName: string;
 	evolutionNote: string;
 }
-
-export const mockTemplate: TemplateInfoDto[] = [
-	{
-		fileName: 'template radiografia ok',
-		evolutionNote: '<ol><li>xxx</li><li>euraca</li><li>europa</li><li>eurostar</li><li>eurotrip</li></ol>'
-	},
-	{
-		fileName: 'template contusion',
-		evolutionNote: ''
-	},
-	{
-		fileName: 'template fiebre',
-		evolutionNote: ''
-	},
-	{
-		fileName: 'template covid',
-		evolutionNote: ''
-	},
-	{
-		fileName: 'template covid',
-		evolutionNote: ''
-	},
-	{
-		fileName: 'template covid',
-		evolutionNote: ''
-	},
-	{
-		fileName: 'template covid',
-		evolutionNote: ''
-	}
-]

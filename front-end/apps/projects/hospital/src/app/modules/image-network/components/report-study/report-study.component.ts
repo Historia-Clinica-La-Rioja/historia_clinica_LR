@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
@@ -18,16 +18,16 @@ import { ConceptTypeaheadSearchComponent } from '@historia-clinica/components/co
 import { SaveTemplateComponent, TemplateData } from '../../dialogs/save-template/save-template.component';
 import { AccountService } from '@api-rest/services/account.service';
 import { getParam } from '@historia-clinica/modules/ambulatoria/modules/estudio/utils/utils';
-import { ContextService } from '@core/services/context.service';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
-import { ImportTemplateComponent, TemplateInfoDto, mockTemplate } from '../../dialogs/import-template/import-template.component';
+import { ImportTemplateComponent } from '../../dialogs/import-template/import-template.component';
+import { TemplateManagementService } from '../../services/template-management.service';
 
 @Component({
 	selector: 'app-report-study',
 	templateUrl: './report-study.component.html',
 	styleUrls: ['./report-study.component.scss']
 })
-export class ReportStudyComponent implements OnInit {
+export class ReportStudyComponent implements OnInit, OnDestroy {
 	
 	@ViewChild(ConceptTypeaheadSearchComponent) child:ConceptTypeaheadSearchComponent;
 	form: FormGroup;
@@ -44,8 +44,7 @@ export class ReportStudyComponent implements OnInit {
 	@Output() update = new EventEmitter<Observable<StudyAppointment>>;
 	userInfo: LoggedUserDto
 	institutionId = Number(getParam(this.route.snapshot,'id'))
-	importsFiles$: Observable<TemplateInfoDto[]> = of(mockTemplate)
-	importsFiles: TemplateInfoDto[]
+
 	disableImportFiles = false
 
 	constructor(
@@ -59,7 +58,7 @@ export class ReportStudyComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly accountService: AccountService,
-		private readonly contextService: ContextService,
+		private readonly templateManagementService: TemplateManagementService,
 	) {
 		this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snvsMasterDataService, this.dialog);
 	}
@@ -80,19 +79,23 @@ export class ReportStudyComponent implements OnInit {
 		});
 
 		this.ambulatoryConsultationProblemsService.setShowInitialDate(false);
-		/* this.ambulatoryConsultationProblemsService.problems$.subscribe(p => this.problems = p);
- */
+		this.ambulatoryConsultationProblemsService.problems$.subscribe(p => this.problems = p);
+
 		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
 			this.severityTypes = healthConditionSeverities;
 			this.ambulatoryConsultationProblemsService.setSeverityTypes(healthConditionSeverities);
 		});
 
 		this.accountService.getInfo().pipe(take(1)).subscribe(user => this.userInfo = user);
-		this.importsFiles$.pipe(take(1)).subscribe(files => {
-			this.importsFiles= files
-			this.disableImportFiles = !(this.importsFiles.length > 0);
-		}
-			)
+
+		this.disableImportFiles = this.templateManagementService.existsImports()
+
+		this.form.controls.observations.valueChanges.subscribe(
+			template => {
+				if (template)
+					this.setTextEditorLength(template)
+			}
+		)
 
 
 	}
@@ -222,9 +225,7 @@ export class ReportStudyComponent implements OnInit {
 
 	openSaveTemplate() {
 		const data: TemplateData = {
-			text: this.form.value,
-			userId: this.userInfo.id,
-			institutionId: this.contextService.institutionId,
+			textReportInformer: this.form.get('observations').value,
 		}
 		this.dialog.open(SaveTemplateComponent, {
 			data,
@@ -235,30 +236,38 @@ export class ReportStudyComponent implements OnInit {
 		});
 	}
 
-	openImportTemplate() {
-		const dialogRefConfirmation = this.dialog.open(DiscardWarningComponent, {
-			data: {
-				title: 'image-network.worklist.details_study.TEMPLATE_CONFIRM_TITLE',
-				content: 'image-network.worklist.details_study.TEMPLATE_CONFIRM_CONTENT',
-				okButtonLabel: 'image-network.worklist.details_study.TEMPLATE_CONFIRM_BUTTON_OK',
-				cancelButtonLabel: 'image-network.worklist.details_study.TEMPLATE_CONFIRM_BUTTON_CANCEL',
+
+	openTemplateManagementByForm() {
+		let finalDialogRef: Observable<string>
+		finalDialogRef = this.form.valid ? this.openImportTemplate() : this.openDialogTemplateImportList()
+		finalDialogRef.subscribe(
+			template => {
+				if (template) {
+					this.snackBarService.showSuccess('image-network.worklist.details_study.SNACKBAR_SUCCESS_IMPORT');
+					this.form.controls.observations.setValue(template)
+				}
+			})
+	}
+
+	private openImportTemplate(): Observable<string>  {
+			const dialogRefConfirmation = this.dialog.open(DiscardWarningComponent, {
+				data: {
+					title: 'image-network.worklist.details_study.TEMPLATE_CONFIRM_TITLE',
+					content: 'image-network.worklist.details_study.TEMPLATE_CONFIRM_CONTENT',
+					okButtonLabel: 'image-network.worklist.details_study.TEMPLATE_CONFIRM_BUTTON_OK',
+					cancelButtonLabel: 'image-network.worklist.details_study.TEMPLATE_CONFIRM_BUTTON_CANCEL',
 				},
 				autoFocus: false,
 				width: '35%',
 				disableClose: true,
 				restoreFocus: false
-		})
-		dialogRefConfirmation.afterClosed()
-		.pipe(switchMap(confirm => confirm ? this.openDialogTemplateImportList(): of(null))).subscribe(
-						template => {
-						if (template)
-							this.form.controls.observations.setValue(template)
-						})}
+			})
+			return dialogRefConfirmation.afterClosed()
+				.pipe(switchMap(confirm => confirm ? this.openDialogTemplateImportList() : of(null)))
+	}
 
 	private openDialogTemplateImportList(): Observable<string> {
-		const data: TemplateInfoDto[] = this.importsFiles
 		const dialogReference: Observable<string> = this.dialog.open(ImportTemplateComponent, {
-			data,
 			autoFocus: false,
 			width: '45%',
 			disableClose: true,
@@ -266,6 +275,10 @@ export class ReportStudyComponent implements OnInit {
 			height: '45%'
 		}).afterClosed()
 		return dialogReference
+	}
+
+	ngOnDestroy(): void {
+		this.templateManagementService.clearTemplateManagement()
 	}
 
 }

@@ -31,15 +31,15 @@
             <span mat-button class="bold template-label"  color="primary">
                 {{ 'image-network.worklist.details_study.TEMPLATE' | translate }}
             </span>
-            <button  id="actions-template-button" [disabled]="!form.valid" color="primary" mat-icon-button [matMenuTriggerFor]="menu" >
+            <button  id="actions-template-button"  color="primary" mat-icon-button [matMenuTriggerFor]="menu" >
                 <mat-icon>arrow_drop_down</mat-icon>
             </button>
             <mat-menu #menu="matMenu">
                 <ng-container >
-                    <button mat-menu-item (click)="openSaveTemplate()">
+                    <button mat-menu-item (click)="openSaveTemplate()" [disabled]="!form.valid || textEditorLength === 0" >
                         <span [translate]="'image-network.worklist.details_study.SAVE_TEMPLATE_TITLE'"></span>
                     </button>
-                    <button mat-menu-item (click)="openImportTemplate()" [disabled]="!(importsFiles.length > 0)">
+                    <button mat-menu-item (click)="openTemplateManagementByForm()" [disabled]="disableImportFiles">
                         <span [translate]="'image-network.worklist.details_study.IMPORT_TEMPLATE'"></span>
                     </button>
                 </ng-container>
