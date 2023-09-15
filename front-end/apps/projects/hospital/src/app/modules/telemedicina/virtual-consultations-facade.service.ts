@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { VirtualConsultationAvailableProfessionalAmountDto, VirtualConsultationDto, VirtualConsultationFilterDto, VirtualConsultationResponsibleProfessionalAvailabilityDto, VirtualConsultationStatusDataDto } from '@api-rest/api-model';
+import { ERole, VirtualConsultationAvailableProfessionalAmountDto, VirtualConsultationDto, VirtualConsultationFilterDto, VirtualConsultationResponsibleProfessionalAvailabilityDto, VirtualConsultationStatusDataDto } from '@api-rest/api-model';
 import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
 import { Observable, ReplaySubject, map } from 'rxjs';
 import { StompService } from '../../stomp.service';
 import { ContextService } from '@core/services/context.service';
+import { PermissionsService } from '@core/services/permissions.service';
+import { anyMatch } from '@core/utils/array.utils';
 
 @Injectable({
 	providedIn: 'root'
@@ -17,6 +19,8 @@ export class VirtualConsultationsFacadeService {
 	virtualConsultationsAttentionEmitter = new ReplaySubject<VirtualConsultationDto[]>();
 	virtualConsultationsAttention$: Observable<VirtualConsultationDto[]> = this.virtualConsultationsAttentionEmitter.asObservable();
 	virtualConsultationsAttention: VirtualConsultationDto[];
+
+	isVirtualConsultatitioResponsible: boolean = false;
 
 	private readonly virtualConsultationStatusChanged$: Observable<VirtualConsultationStatusDataDto> =
 		this.stompService.watch('/topic/virtual-consultation-state-change')
@@ -38,27 +42,37 @@ export class VirtualConsultationsFacadeService {
 		private virtualConsultationService: VirtualConstultationService,
 		private readonly stompService: StompService,
 		private contextService: ContextService,
+		private readonly permissionsService: PermissionsService,
 	) {
-		const filterCriteria : VirtualConsultationFilterDto ={
-			availability:null,
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.isVirtualConsultatitioResponsible = anyMatch<ERole>(userRoles, [ERole.VIRTUAL_CONSULTATION_RESPONSIBLE]);
+		});
+
+		const filterCriteria: VirtualConsultationFilterDto = {
+			availability: null,
 			careLineId: null,
 			clinicalSpecialtyId: null,
 			institutionId: null,
-			priority:null,
+			priority: null,
 			responsibleHealthcareProfessionalId: null,
 			status: null,
 		};
-		this.getDomainVirtualConsultation(filterCriteria);
+		if (!this.isVirtualConsultatitioResponsible) {
+			this.getDomainVirtualConsultation(filterCriteria);
+		}
+
+		this.getVirtualConsultationByInstitution(filterCriteria);
+
 		this.solicitanteAvailableChanged$.subscribe(
 			(availabilityChanged: VirtualConsultationResponsibleProfessionalAvailabilityDto) => {
 				this.virtualConsultationsRequest
-					.forEach(vc => {
+					?.forEach(vc => {
 						if (this.responsibleChangedFilter(vc, availabilityChanged)) {
 							vc.responsibleData.available = availabilityChanged.available
 						}
 					})
 				this.virtualConsultationsAttention
-					.forEach(vc => {
+					?.forEach(vc => {
 						if (this.responsibleChangedFilter(vc, availabilityChanged)) {
 							vc.responsibleData.available = availabilityChanged.available
 						}
@@ -68,7 +82,7 @@ export class VirtualConsultationsFacadeService {
 			}
 		)
 
-		this.getVirtualConsultationByInstitution(filterCriteria);
+
 
 		this.professionalAvailableChanged$.subscribe(
 			(availabilityChanged: VirtualConsultationAvailableProfessionalAmountDto[]) => {
@@ -102,7 +116,7 @@ export class VirtualConsultationsFacadeService {
 					vc => {
 						this.virtualConsultationsRequest = this.virtualConsultationsRequest.concat(vc);
 						this.virtualConsultationsRequestEmitter.next(this.virtualConsultationsRequest);
-						this.virtualConsultationsAttention = this.virtualConsultationsAttention.concat(vc);
+						this.virtualConsultationsAttention = this.virtualConsultationsAttention?.concat(vc);
 						this.virtualConsultationsAttentionEmitter.next(this.virtualConsultationsAttention);
 					}
 				)
@@ -111,7 +125,7 @@ export class VirtualConsultationsFacadeService {
 
 	}
 
-	setSearchCriteriaForRequest(searchCriteria: VirtualConsultationFilterDto){
+	setSearchCriteriaForRequest(searchCriteria: VirtualConsultationFilterDto) {
 		this.getVirtualConsultationByInstitution(searchCriteria);
 	}
 
@@ -122,11 +136,11 @@ export class VirtualConsultationsFacadeService {
 		})
 	}
 
-	setSearchCriteriaForAttention(searchCriteria: VirtualConsultationFilterDto){
+	setSearchCriteriaForAttention(searchCriteria: VirtualConsultationFilterDto) {
 		this.getDomainVirtualConsultation(searchCriteria);
 	}
 
-	private getDomainVirtualConsultation(searchCriteria?: VirtualConsultationFilterDto){
+	private getDomainVirtualConsultation(searchCriteria?: VirtualConsultationFilterDto) {
 		this.virtualConsultationService.getDomainVirtualConsultation(this.contextService.institutionId, searchCriteria).subscribe(vc => {
 			this.virtualConsultationsAttention = vc;
 			this.virtualConsultationsAttentionEmitter.next(vc)

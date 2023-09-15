@@ -116,6 +116,7 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		icon: 'calendar_today',
 		id: 'telemedicina',
 		url: './telesalud',
+		permissions: [ERole.VIRTUAL_CONSULTATION_PROFESSIONAL, ERole.VIRTUAL_CONSULTATION_RESPONSIBLE],
 		featureFlag: AppFeature.HABILITAR_TELEMEDICINA
 	},
 ];
