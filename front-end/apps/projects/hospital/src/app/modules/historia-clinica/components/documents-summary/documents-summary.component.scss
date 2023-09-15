@@ -75,3 +75,7 @@ mat-selection-list {
 	overflow-wrap: break-word;
 }
 
+:host ::ng-deep button {
+	min-width: 54px;
+	padding: 0;
+}
