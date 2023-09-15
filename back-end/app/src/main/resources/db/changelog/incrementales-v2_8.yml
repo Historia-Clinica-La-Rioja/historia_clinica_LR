@@ -39,3 +39,14 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: service_request
               validate: true
+
+    - changeSet:
+        id: dropNotNullConstraint-clinical_specialty_id-reference
+        comment: Drop not null constraint in clinical_specialty_id colum in reference table
+        author: bchacon
+        changes:
+          - dropNotNullConstraint:
+              tableName: reference
+              columnName: clinical_specialty_id
+              columnDataType: int
+
