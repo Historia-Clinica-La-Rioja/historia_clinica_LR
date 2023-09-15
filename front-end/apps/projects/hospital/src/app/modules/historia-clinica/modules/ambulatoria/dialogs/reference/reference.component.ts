@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AddressDto, CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, ReferenceProblemDto, MasterDataDto } from '@api-rest/api-model';
+import { AddressDto, CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, ReferenceProblemDto, MasterDataDto, ReferenceStudyDto } from '@api-rest/api-model';
 import { ReferenceOriginInstitutionService } from '../../services/reference-origin-institution.service';
 import { ReferenceProblemsService } from '../../services/reference-problems.service';
 import { Observable, tap } from 'rxjs';
@@ -78,7 +78,7 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 		return {
 			careLine: this.formReference.controls.careLine.value,
 			clinicalSpecialty: this.formReference.controls.clinicalSpecialtyId.value,
-			consultation: true,
+			consultation: this.formReference.controls.consultation.value,
 			note: this.formReference.value.summary,
 			problems: this.referenceProblemsService.mapProblems(),
 			procedure: false,
@@ -87,7 +87,18 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 			phonePrefix: this.formReference.value.phonePrefix,
 			phoneNumber: this.formReference.value.phoneNumber,
 			priority: this.formReference.value.priority.id,
+			referenceStudy: this.createReferenceStudy(),
 		}
+	}
+
+	private createReferenceStudy(): ReferenceStudyDto {
+		if (!this.formReference.value.consultation)
+			return {
+				problem:  this.referenceProblemsService.firstProblem(),
+				practice: this.formReference.value.practiceOrProcedure || null,
+				categoryId: this.formReference.value.studyCategory?.id.toString(),
+			}
+		return null;
 	}
 
 	onSelectFileFormData($event): void {
@@ -128,8 +139,8 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 	}
 
 	activateSpecialtiesAndCarelineFields() {
-        this.updateSpecialtiesAndCarelineFields = true;
-    }
+		this.updateSpecialtiesAndCarelineFields = true;
+	}
 
 	private createReferenceForm() {
 		this.formReference = this.formBuilder.group({
@@ -137,7 +148,7 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 			searchByCareLine: [this.DEFAULT_RADIO_OPTION],
 			provinceId: [null],
 			departmentId: [null],
-			consultation: [null],
+			consultation: [true],
 			procedure: [null],
 			careLine: [null, [Validators.required]],
 			clinicalSpecialtyId: [null, [Validators.required]],
@@ -148,7 +159,9 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 			institutionOrigin: [null],
 			phoneNumber: [null, [Validators.required, Validators.maxLength(20), Validators.pattern(NUMBER_PATTERN)]],
 			phonePrefix: [null, [Validators.required, Validators.maxLength(10), Validators.pattern(NUMBER_PATTERN)]],
-			priority: [null]
+			priority: [null],
+			studyCategory: [null],
+			practiceOrProcedure: [null],
 		});
 	}
 
@@ -175,4 +188,5 @@ export interface Reference {
 	phoneNumber: string;
 	phonePrefix: string;
 	priority: number;
+	referenceStudy: ReferenceStudyDto;
 }

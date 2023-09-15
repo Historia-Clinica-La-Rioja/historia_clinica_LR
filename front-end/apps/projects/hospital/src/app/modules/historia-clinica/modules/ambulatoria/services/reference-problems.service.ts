@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HCEPersonalHistoryDto, ReferenceProblemDto } from "@api-rest/api-model";
+import { HCEPersonalHistoryDto, ReferenceProblemDto, SharedSnomedDto } from "@api-rest/api-model";
 import { mapToString } from "@api-rest/mapper/date-dto.mapper";
 import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
 import { BehaviorSubject, forkJoin, Observable } from "rxjs";
@@ -20,6 +20,10 @@ export class ReferenceProblemsService {
             id: problem.id,
             snomed: problem.snomed,
         }));
+    }
+
+	firstProblem(): SharedSnomedDto {
+		return  this.referenceProblems[0]?.snomed;
     }
 
     getReferenceProblems(): HCEPersonalHistory[] {
