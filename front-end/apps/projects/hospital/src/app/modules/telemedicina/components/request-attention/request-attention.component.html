@@ -12,7 +12,7 @@
 				<a (click)="goToClinicalHistory(virtualConsultation.patientData.id)" class="primary">{{'pacientes.profile.SEE_CLINICAL_HISTORY' | translate}}</a>
 			</div>
 			<div actions>
-				<button mat-raised-button [disabled]="!virtualConsultation.responsibleData.available || !toggleEnabled || virtualConsultation.status === FINISHED_STATUS" color="primary"
+				<button mat-raised-button [disabled]="!virtualConsultation.responsibleData.available || !toggleEnabled || virtualConsultation.status === FINISHED_STATUS || virtualConsultation.status === CANCELLED_STATUS" color="primary"
 					(click)="call(virtualConsultation)">{{'telemedicina.attention.BUTTON_TAKE_TURN' | translate}}</button>
 			</div>
 		</app-request-info-card>

@@ -29,6 +29,7 @@ export class RequestAttentionComponent implements OnInit {
 	virtualConsultatiosStatus = status;
 	initialProfessionalStatus = false;
 	FINISHED_STATUS = EVirtualConsultationStatus.FINISHED;
+	CANCELLED_STATUS = EVirtualConsultationStatus.CANCELED;
 
 	constructor(
 		private readonly virtualConsultationsFacadeService: VirtualConsultationsFacadeService,
