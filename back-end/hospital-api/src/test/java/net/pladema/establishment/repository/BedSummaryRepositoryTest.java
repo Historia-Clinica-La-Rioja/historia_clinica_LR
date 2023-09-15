@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -87,7 +89,9 @@ class BedSummaryRepositoryTest extends UnitRepository {
         mockBed(bc, r2, "Bed 4");
         mockBed(bc, r2, "Bed 5");
 
-        List<BedSummaryVo> bedSummaries = bedSummaryRepository.execute(institutionId, SectorType.INTERNMENT_ID);
+		Short[] sectorsType = new Short[SectorType.INTERNMENT_ID];
+		sectorsType[0] = SectorType.INTERNMENT_ID;
+        List<BedSummaryVo> bedSummaries = bedSummaryRepository.execute(institutionId, sectorsType);
 
         assertThat(bedSummaries)
                 .hasSize(5);

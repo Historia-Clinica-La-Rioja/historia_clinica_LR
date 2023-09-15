@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class BedSummaryRepositoryImpl implements BedSummaryRepository{
 
     @Override
     @Transactional(readOnly = true)
-    public List<BedSummaryVo> execute(Integer institutionId, Short sectorType) {
+    public List<BedSummaryVo> execute(Integer institutionId, Short[] sectorsType) {
         String sqlQuery =
                 " SELECT b, s, MAX(ie.probableDischargeDate), cs, ct.description, so.description, ag.description, st "
                 + " FROM Bed b "
@@ -42,15 +43,14 @@ public class BedSummaryRepositoryImpl implements BedSummaryRepository{
                 + " LEFT JOIN ClinicalSpecialty cs ON vcs.clinicalSpecialtyId = cs.id "
                 + " LEFT JOIN InternmentEpisode ie ON b.id = ie.bedId "
                 + " WHERE s.institutionId = :institutionId "
-				+ " AND (s.sectorTypeId = "+SectorType.EMERGENCY_CARE_ID+""
-				+ " OR (s.sectorTypeId = :sectorType OR s.sectorTypeId IS NULL)) "
+				+ " AND s.sectorTypeId IN (:sectorsType) "
                 + " AND (b.free=true OR ( b.free=false AND ie.statusId = :internmentEpisodeActiveStatus OR s.sectorTypeId = "+SectorType.EMERGENCY_CARE_ID+") ) "
                 + " GROUP BY b, s, cs, so, ct, ag, st "
                 + " ORDER BY s.id, cs.id ";
 
         List<Object[]> result = entityManager.createQuery(sqlQuery)
                 .setParameter("institutionId", institutionId)
-                .setParameter("sectorType", sectorType)
+                .setParameter("sectorsType", Arrays.asList(sectorsType))
                 .setParameter("internmentEpisodeActiveStatus", InternmentEpisodeStatus.ACTIVE_ID)
                 .getResultList();
 
