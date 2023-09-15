@@ -20,7 +20,7 @@
 		[translate]="'forms.REQUIRED'"></mat-error>
 </div>
 
-<ng-container *ngIf="institutionSelection">
+<ng-container *ngIf="institutionSelection && formReference.value.consultation">
 	<ng-container *ngIf="(appointment$ | async) > 0; else NOT_AVAILABLE_APPOINTMENT">
 		<span class="message" [innerHTML]="
 		'ambulatoria.paciente.nueva-consulta.reference-dialog.AVAILABLE_APPOINTMENT' |

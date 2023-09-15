@@ -6,7 +6,7 @@ import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.co
 import { ReferenceOriginInstitutionService } from '../../services/reference-origin-institution.service';
 import { UntypedFormGroup } from '@angular/forms';
 import { DiaryAvailableAppointmentsSearchService } from '@turnos/services/diary-available-appointments-search.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
 	selector: 'app-destination-institution-reference',
@@ -58,8 +58,9 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 	institutionSelection = false;
 	careLineId: number;
 	appointment$ = new BehaviorSubject<number>(undefined);
-
-
+	practiceOrProcedure = false;
+	practiceSnomedId;
+	clinicalSpecialtyId;
 	constructor(
 		private readonly institutionService: InstitutionService,
 		private readonly adressMasterData: AddressMasterDataService,
@@ -71,7 +72,37 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 		this.institutionSelection = false;
 
 		this.referenceOriginInstitutionService.originInstitutionInfo$.subscribe(info => this.originInstitutionInfo = info);
+
+		const practiceOrProcedure$ = this.formReference.controls.practiceOrProcedure.valueChanges.pipe(
+			debounceTime(300),
+			distinctUntilChanged()
+		);
+
+		const clinicalSpecialtyId$ = this.formReference.controls.clinicalSpecialtyId.valueChanges.pipe(
+			debounceTime(300),
+			distinctUntilChanged()
+		);
+
+		const careLine$ = this.formReference.controls.careLine.valueChanges.pipe(
+			debounceTime(300),
+			distinctUntilChanged()
+		);
+
+		combineLatest([practiceOrProcedure$, clinicalSpecialtyId$, careLine$]).subscribe(([practiceOrProcedure, clinicalSpecialtyId, careLine]) => {
+			this.practiceOrProcedure = !!practiceOrProcedure;
+
+			if (practiceOrProcedure) {
+				this.adressMasterData.getDepartmentsByCareLineAndPracticesAndClinicalSpecialty(practiceOrProcedure.id, clinicalSpecialtyId?.id, careLine?.id).subscribe(data => {
+					this.cleanFields();
+					this.departments = this.toTypeaheadOptions(data, 'description');
+					this.departmentDisable = false;
+					this.practiceSnomedId = practiceOrProcedure.id;
+					this.clinicalSpecialtyId = clinicalSpecialtyId?.id;
+				});
+			}
+		});
 	}
+
 
 	private toTypeaheadOptions(response: any[], attribute: string): TypeaheadOption<any>[] {
 		return response.map(r => {
@@ -92,16 +123,24 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 		this.defaultInstitution = this.clearTypeahead();
 		this.departmentSelected.emit(null);
 		this.institutionSelected.emit(null);
-		;
 	}
 
 	onDepartmentSelectionChange(departmentId: number) {
 		this.defaultInstitution = this.clearTypeahead();
 		if (departmentId) {
-			this.institutionService.getInstitutionsByDepartmentHavingClinicalSpecialty(departmentId, this.specialtyId, this.careLineId).subscribe((institutions: InstitutionBasicInfoDto[]) => {
-				this.institutions = this.toTypeaheadOptions(institutions, 'name');
-				this.institutionsDisable = false;
-			});
+			if (this.practiceOrProcedure) {
+				this.institutionService.getInstitutionsByReferenceByPracticeFilter
+					(this.formReference.controls.practiceOrProcedure.value.id, departmentId, this.careLineId, this.clinicalSpecialtyId).subscribe((institutions: InstitutionBasicInfoDto[]) => {
+						this.institutions = this.toTypeaheadOptions(institutions, 'name');
+						this.institutionsDisable = false;
+					});
+			}
+			else {
+				this.institutionService.getInstitutionsByDepartmentHavingClinicalSpecialty(departmentId, this.specialtyId, this.careLineId).subscribe((institutions: InstitutionBasicInfoDto[]) => {
+					this.institutions = this.toTypeaheadOptions(institutions, 'name');
+					this.institutionsDisable = false;
+				});
+			}
 		}
 		this.departmentId = departmentId;
 		this.departmentSelected.emit(departmentId);
@@ -119,13 +158,15 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 	}
 
 	setAppointments(institutionDestinationId: number) {
-		if (this.careLineId)
-			this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointmentsQuantity(institutionDestinationId, this.specialtyId, this.departmentId, this.careLineId).subscribe(rs =>
-				this.appointment$.next(rs));
-		else
-			this.diaryAvailableAppointmentsSearchService.getAvailableAppointmentsQuantity(institutionDestinationId, this.specialtyId).subscribe(rs =>
-				this.appointment$.next(rs));
+		if (this.formReference.value.consultation) {
+			if (this.careLineId)
+				this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointmentsQuantity(institutionDestinationId, this.specialtyId, this.departmentId, this.careLineId).subscribe(rs =>
+					this.appointment$.next(rs));
+			else
+				this.diaryAvailableAppointmentsSearchService.getAvailableAppointmentsQuantity(institutionDestinationId, this.specialtyId).subscribe(rs =>
+					this.appointment$.next(rs));
 
+		}
 	}
 
 	private setDepartaments() {
