@@ -1,20 +1,20 @@
 <h2 class="subtitle" [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.DESTINATION'"></h2>
 <form [formGroup]="formReference">
-    <div class="reference-type" fxLayoutGap="10px">
-        <mat-label fxLayout="column"
-            [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.SEARCH_BY_CARE_LINE'"></mat-label>
-        <mat-radio-group id="search_by_carelines" formControlName="searchByCareLine" fxLayoutGap="5px">
-            <mat-radio-button color="primary" [value]="DEFAULT_RADIO_OPTION" (click)="setCareLines()">
-                {{'buttons.YES' | translate}}
-            </mat-radio-button>
-            <mat-radio-button color="primary" [value]=false (click)="setSpecialty()">
-                {{'buttons.NO' | translate}}
-            </mat-radio-button>
-        </mat-radio-group>
-    </div>
+	<div class="reference-type" fxLayoutGap="10px">
+		<mat-label fxLayout="column"
+			[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.SEARCH_BY_CARE_LINE'"></mat-label>
+		<mat-radio-group id="search_by_carelines" formControlName="searchByCareLine" fxLayoutGap="5px">
+			<mat-radio-button color="primary" [value]="DEFAULT_RADIO_OPTION" (click)="setCareLines()">
+				{{'buttons.YES' | translate}}
+			</mat-radio-button>
+			<mat-radio-button color="primary" [value]=false (click)="setSpecialty()">
+				{{'buttons.NO' | translate}}
+			</mat-radio-button>
+		</mat-radio-group>
+	</div>
 
-	<ng-container *ngIf="formReference.value.searchByCareLine else allSpecielty">
-		<div>
+	<ng-container>
+		<div *ngIf="formReference.value.searchByCareLine">
 			<mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
 				<mat-label
 					[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_CARE_LINE'"></mat-label>
@@ -31,8 +31,13 @@
 				</ng-template>
 			</mat-form-field>
 		</div>
+		<div class="search-criteria">
+			<app-search-criteria searchCriteryStyle="'search-criteria'" label="ambulatoria.paciente.nueva-consulta.reference-dialog.REFERENCE_TYPE"
+				(selectedOption)="selectedOption($event)" fxLayoutGap="7px">
+			</app-search-criteria>
+		</div>
 
-		<div>
+		<div *ngIf="formReference.value.searchByCareLine else allSpecielty">
 			<mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
 				<mat-label
 					[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY'"></mat-label>
@@ -60,4 +65,31 @@
 			</mat-form-field>
 		</div>
 	</ng-template>
+	<ng-container *ngIf="!formReference.value.consultation">
+		<div  fxLayout="column">
+			<mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
+				<mat-label>Categoria de estudios</mat-label>
+				<mat-select id="study_category" name="studyCategory" formControlName="studyCategory">
+					<mat-option *ngFor="let study of studyCategories$ | async" [value]="study">
+						{{study.description | translate}}
+					</mat-option>
+				</mat-select>
+				<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+			</mat-form-field>
+		</div>
+		<div>
+			<div class="typeahead-field">
+				<app-typeahead id="practice_or_procedure"
+					 [options]="practices"
+					[titleInput]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PRACTICE_PROCEDURE' | translate"
+					(selectionChange)="onPracticeSelectionChange($event)"
+					[required]=true
+					spellcheck="false">
+				</app-typeahead>
+				<mat-error class="error-message" *ngIf="!formReference.value.practiceOrProcedure && submit"
+					[translate]="'forms.REQUIRED'"></mat-error>
+			</div>
+		</div>
+	</ng-container>
+
 </form>
