@@ -1,5 +1,7 @@
 {
 	"turnos": {
+		"CONSULTATION": "Consulta",
+		"PRACTICE": "Práctica/Procedimiento",
 		"home": {
 			"TITLE": "Gestión de turnos",
 			"actions": {

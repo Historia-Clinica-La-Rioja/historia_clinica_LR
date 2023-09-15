@@ -68,7 +68,7 @@
 	<ng-container *ngIf="!formReference.value.consultation">
 		<div  fxLayout="column">
 			<mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
-				<mat-label>Categoria de estudios</mat-label>
+				<mat-label>{{'ambulatoria.paciente.nueva-consulta.reference-dialog.STUDY_CATEGORY' | translate}}</mat-label>
 				<mat-select id="study_category" name="studyCategory" formControlName="studyCategory">
 					<mat-option *ngFor="let study of studyCategories$ | async" [value]="study">
 						{{study.description | translate}}
