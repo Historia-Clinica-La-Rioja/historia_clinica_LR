@@ -3,7 +3,7 @@ import { CareLineDto, ClinicalSpecialtyDto, DateTimeDto, EVirtualConsultationPri
 import { mapPriority, statusLabel, status } from '../../virtualConsultations.utils';
 import { timeDifference } from '@core/utils/date.utils';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
-import { map, take, race, forkJoin, Observable } from 'rxjs';
+import { map, race, forkJoin, Observable, take, Subscription } from 'rxjs';
 import { VirtualConsultationsFacadeService } from '../../virtual-consultations-facade.service';
 import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
 import { JitsiCallService } from '../../../jitsi/jitsi-call.service';
@@ -186,14 +186,14 @@ export class RequestAttentionComponent implements OnInit {
 				([notified, info]) => {
 					const data = toCallDetails(info)
 					const ref = this.dialog.open(InProgressCallComponent, { data, disableClose: true })
-
+					let subscription: Subscription;
 					ref.afterOpened().subscribe(
 						_ => {
 
 							const rejected$ = this.callStatesService.rejectedCall$.pipe(map(r => { return { ...r, origin: 'rejected' } }))
 							const accepted$ = this.callStatesService.acceptedCall$.pipe(map(r => { return { ...r, origin: 'accepted' } }))
 
-							race(rejected$, accepted$).pipe(take(1)).subscribe(
+							subscription = race(rejected$, accepted$).pipe(take(1)).subscribe(
 								(vc) => {
 									ref.close();
 									if (vc.origin === 'rejected') {
@@ -209,6 +209,7 @@ export class RequestAttentionComponent implements OnInit {
 
 					ref.afterClosed().subscribe(
 						r => {
+							subscription.unsubscribe();
 							if (!r) {
 								this.virtualConsultationService.notifyVirtualConsultationCancelledCall(virtualConsultation.id).subscribe();
 							}
