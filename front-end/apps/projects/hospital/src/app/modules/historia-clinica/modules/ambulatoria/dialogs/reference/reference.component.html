@@ -82,28 +82,12 @@
 				</div>
 
 				<div>
-					<app-carelines-and-specialties-reference [formReference]="formReference"
+					<app-carelines-and-specialties-reference [formReference]="formReference" [submitForm]="submitForm"
 						[updateFormFields]="referenceProblemsService.getProblems()|async" [setProvinceId]="provinceId"
 						(resetControls)="resetControls()"
 						(updateDepartamentsAndInstitution)="activateSpecialtiesAndCarelineFields()">
 					</app-carelines-and-specialties-reference>
 
-					<div class="reference-type">
-						<mat-label fxLayout="column"
-							[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.REFERENCE_TYPE'"></mat-label>
-						<mat-radio-group name="consultation" formControlName="consultation">
-							<mat-radio-button color="primary" value="true" [checked]="true">
-								<span class="consultation"
-									[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.CONSULTATION_OPTION'"></span>
-							</mat-radio-button>
-						</mat-radio-group>
-						<mat-radio-group name="procedure" formControlName="procedure">
-							<mat-radio-button color="primary" value="false" [disabled]="true">
-								<span
-									[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PROCEDURE_OPTION'"></span>
-							</mat-radio-button>
-						</mat-radio-group>
-					</div>
 
 					<app-destination-institution-reference [formReference]="formReference" [submitForm]="submitForm"
 						[updateFormFields]="updateDepartamentsAndInstitution"
