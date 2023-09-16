@@ -41,7 +41,7 @@ public interface CareLineInstitutionPracticeRepository extends JpaRepository<Car
 	List<CareLinePracticeBo> getAllByCareLineIds(@Param("careLineIds") List<Integer> careLineIds);
 
 	@Transactional(readOnly = true)
-	@Query("SELECT new ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo(s.id, s.sctid, s.pt) " +
+	@Query("SELECT DISTINCT NEW ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo(s.id, s.sctid, s.pt) " +
 			"FROM CareLineInstitutionPractice clip " +
 			"JOIN CareLineInstitution cli ON (clip.careLineInstitutionId = cli.id) " +
 			"JOIN SnomedRelatedGroup srg ON (clip.snomedRelatedGroupId = srg.id) " +

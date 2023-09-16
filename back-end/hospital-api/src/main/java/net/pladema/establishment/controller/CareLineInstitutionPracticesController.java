@@ -28,8 +28,8 @@ public class CareLineInstitutionPracticesController {
 
 	@GetMapping(value = "/careLine/{careLineId}")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
-	public ResponseEntity<List<SnomedDto>> getPracticesByCareLineAndInstitutionProvince(@PathVariable(name = "institutionId") Integer institutionId,
-																						@PathVariable(name = "careLineId") Integer careLineId) {
+	public ResponseEntity<List<SnomedDto>> getPracticesByCareLine(@PathVariable(name = "institutionId") Integer institutionId,
+																  @PathVariable(name = "careLineId") Integer careLineId) {
 		log.debug("Input parameters -> careLineId {}", careLineId);
 		var result = getCareLineInstitutionPractices.run(careLineId)
 				.stream()
