@@ -6,6 +6,7 @@ import { applicationConfig, moduleMetadata, type Preview } from "@storybook/angu
 import { StorybookTranslateModule } from "../src/app/storybook-translate-module";
 import { FlexLayoutModule } from "@angular/flex-layout";
 import '!style-loader!css-loader!sass-loader!./global.scss';
+import { PresentationModule } from "@presentation/presentation.module";
 
 
 export const decorators = [
@@ -16,6 +17,7 @@ export const decorators = [
 			FlexLayoutModule,
 			StorybookTranslateModule,
 			TranslateModule,
+			PresentationModule
 		],
 	}),
 	applicationConfig({

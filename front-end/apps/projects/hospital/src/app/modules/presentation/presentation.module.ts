@@ -82,6 +82,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ItemSummaryComponent } from './components/item-summary/item-summary.component';
 
 @NgModule({
 	declarations: [
@@ -159,6 +160,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 		PriorityComponent,
   		TitledSingleContentComponent,
   		FiltersSelectComponent,
+		ItemSummaryComponent,
 	],
 	imports: [
 		CommonModule,
@@ -238,6 +240,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 		FullHouseAddressPipe,
 		FullMedicalCoveragePipe,
 		PaginatePipe,
+		ItemSummaryComponent,
 		PatientToPersonPipe,
 		PersonIdentificationPipe,
 		TimeDtoToLocalTimePipe,
