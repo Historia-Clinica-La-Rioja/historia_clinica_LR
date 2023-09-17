@@ -5,6 +5,7 @@ import { TranslateModule } from "@ngx-translate/core";
 import { applicationConfig, moduleMetadata, type Preview } from "@storybook/angular";
 import { StorybookTranslateModule } from "../src/app/storybook-translate-module";
 import { FlexLayoutModule } from "@angular/flex-layout";
+import '!style-loader!css-loader!sass-loader!./global.scss';
 
 
 export const decorators = [
