@@ -50,11 +50,12 @@ public class ReferenceController {
 	@GetMapping("/requested")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<List<ReferenceSummaryDto>> getReferencesSummary(@PathVariable(name = "institutionId") Integer institutionId,
-														  @PathVariable(name = "patientId") Integer patientId,
-														  @RequestParam(name = "clinicalSpecialtyId") Integer clinicalSpecialtyId,
-														  @RequestParam(name = "careLineId") Integer careLineId) {
+																		  @PathVariable(name = "patientId") Integer patientId,
+																		  @RequestParam(value="clinicalSpecialtyId" , required = false) Integer clinicalSpecialtyId,
+																		  @RequestParam(name = "careLineId") Integer careLineId,
+																		  @RequestParam(value = "practiceId", required = false) Integer practiceId) {
 		log.debug("Input parameters -> institutionId {}, patientId {}, clinicalSpecialtyId {}, careLineId {}", institutionId, patientId, clinicalSpecialtyId, careLineId);
-		List<ReferenceSummaryBo> referenceSummaryBoList = getReferenceSummary.run(patientId, clinicalSpecialtyId, careLineId);
+		List<ReferenceSummaryBo> referenceSummaryBoList = getReferenceSummary.run(patientId, clinicalSpecialtyId, careLineId, practiceId);
 		List<ReferenceSummaryDto> result = getReferenceMapper.toReferenceSummaryDtoList(referenceSummaryBoList);
 		log.debug("Output -> result {}", result);
 		return ResponseEntity.ok().body(result);

@@ -108,13 +108,40 @@ public class ReferenceStorageImpl implements ReferenceStorage {
     }
 
 	@Override
-	public List<ReferenceSummaryBo> getReferencesSummary(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId) {
-    	log.debug("Input parameters -> patientId {}, clinicalSpecialtyid {}, careLineId {} ", patientId, clinicalSpecialtyId, careLineId);
-		List<ReferenceSummaryBo> queryResult = referenceRepository.getReferencesSummaryFromOutpatientConsultation(patientId, clinicalSpecialtyId, careLineId);
-		queryResult.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultation(patientId, clinicalSpecialtyId, careLineId));
+	public List<ReferenceSummaryBo> getReferencesSummary(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId, Integer practiceId) {
+    	log.debug("Input parameters -> patientId {}, clinicalSpecialtyid {}, careLineId {}, practiceId {} ", patientId, clinicalSpecialtyId, careLineId, practiceId);
+		List<ReferenceSummaryBo> queryResult = getReferencesSummaryBySearchCriteria(patientId, clinicalSpecialtyId, careLineId, practiceId);
 		boolean featureFlagNameSelfDetermination = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS);
 		queryResult.stream().forEach(r -> r.setIncludeNameSelfDetermination(featureFlagNameSelfDetermination));
 		log.debug("Output -> references {} ", queryResult);
+		return queryResult;
+	}
+
+	private List<ReferenceSummaryBo> getReferencesSummaryBySearchCriteria(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId, Integer practiceId) {
+		if (clinicalSpecialtyId != null && practiceId == null)
+			return getReferencesSummaryByClinicalSpecialtyId(patientId, clinicalSpecialtyId, careLineId);
+
+		if (clinicalSpecialtyId == null && practiceId != null)
+			return  getReferencesSummaryByPracticeId(patientId, practiceId, careLineId);
+
+		return getReferencesSummaryByClinicalSpecialtyIdAndPracticeId(patientId, clinicalSpecialtyId, practiceId, careLineId);
+	}
+
+	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialtyId(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId) {
+		List<ReferenceSummaryBo> queryResult = referenceRepository.getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyId(patientId, clinicalSpecialtyId, careLineId);
+		queryResult.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyId(patientId, clinicalSpecialtyId, careLineId));
+		return queryResult;
+	}
+
+	private List<ReferenceSummaryBo> getReferencesSummaryByPracticeId(Integer patientId, Integer practiceId, Integer careLineId) {
+		List<ReferenceSummaryBo> queryResult = referenceRepository.getReferencesSummaryFromOutpatientConsultationByPracticeId(patientId, practiceId, careLineId);
+		queryResult.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByPracticeId(patientId, practiceId, careLineId));
+		return queryResult;
+	}
+
+	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialtyIdAndPracticeId(Integer patientId, Integer clinicalSpecialtyId, Integer practiceId, Integer careLineId) {
+		List<ReferenceSummaryBo> queryResult = referenceRepository.getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyIdAndPracticeId(patientId, clinicalSpecialtyId, careLineId, practiceId);
+		queryResult.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyIdAndPracticeId(patientId, clinicalSpecialtyId, careLineId, practiceId));
 		return queryResult;
 	}
 

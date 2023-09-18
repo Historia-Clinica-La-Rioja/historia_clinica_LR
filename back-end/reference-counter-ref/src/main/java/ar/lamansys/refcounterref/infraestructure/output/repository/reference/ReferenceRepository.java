@@ -61,10 +61,11 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"WHERE oc.patientId = :patientId " +
 			"AND r.clinicalSpecialtyId = :clinicalSpecialtyId " +
 			"AND r.careLineId = :careLineId " +
-			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) ")
-	List<ReferenceSummaryBo> getReferencesSummaryFromOutpatientConsultation(@Param("patientId") Integer patientId,
-																			@Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
-																			@Param("careLineId") Integer careLineId);
+			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
+			"AND r.serviceRequestId IS NULL ")
+	List<ReferenceSummaryBo> getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyId(@Param("patientId") Integer patientId,
+																								 @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																								 @Param("careLineId") Integer careLineId);
 
 	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.id, i.name, " +
 			"oc.performedDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId," +
@@ -78,9 +79,110 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"WHERE oc.patientId = :patientId " +
 			"AND r.clinicalSpecialtyId = :clinicalSpecialtyId " +
 			"AND r.careLineId = :careLineId " +
-			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) ")
-	List<ReferenceSummaryBo> getReferencesSummaryFromOdontologyConsultation(@Param("patientId") Integer patientId,
-																			@Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
-																			@Param("careLineId") Integer careLineId);
+			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
+			"AND r.serviceRequestId IS NULL")
+	List<ReferenceSummaryBo> getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyId(@Param("patientId") Integer patientId,
+																								 @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																								 @Param("careLineId") Integer careLineId);
+
+	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.id, i.name, " +
+			"oc.startDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId," +
+			"r.phonePrefix, r.phoneNumber) " +
+			"FROM Reference r " +
+			"JOIN OutpatientConsultation oc ON r.encounterId = oc.id " +
+			"JOIN Institution i ON oc.institutionId = i.id " +
+			"JOIN HealthcareProfessional hp ON hp.id = oc.doctorId " +
+			"JOIN Person p ON p.id = hp.personId " +
+			"JOIN PersonExtended pe ON p.id = pe.id " +
+			"JOIN ServiceRequest sr ON r.serviceRequestId = sr.id " +
+			"JOIN Document d ON sr.id = d.sourceId " +
+			"JOIN DocumentDiagnosticReport ddr ON d.id = ddr.pk.documentId " +
+			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
+			"WHERE oc.patientId = :patientId " +
+			"AND r.careLineId = :careLineId " +
+			"AND dr.snomedId = :practiceId " +
+			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
+			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" +
+			"AND (dr.deleteable.deleted = false OR d.deleteable.deleted is null) " +
+			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null)")
+	List<ReferenceSummaryBo> getReferencesSummaryFromOutpatientConsultationByPracticeId(@Param("patientId") Integer patientId,
+																						@Param("practiceId") Integer practiceId,
+																						@Param("careLineId") Integer careLineId);
+
+	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.id, i.name, " +
+			"oc.performedDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId," +
+			"r.phonePrefix, r.phoneNumber) " +
+			"FROM Reference r " +
+			"JOIN OdontologyConsultation oc ON r.encounterId = oc.id " +
+			"JOIN Institution i ON oc.institutionId = i.id " +
+			"JOIN HealthcareProfessional hp ON hp.id = oc.doctorId " +
+			"JOIN Person p ON p.id = hp.personId " +
+			"JOIN PersonExtended pe ON p.id = pe.id " +
+			"JOIN ServiceRequest sr ON r.serviceRequestId = sr.id " +
+			"JOIN Document d ON sr.id = d.sourceId " +
+			"JOIN DocumentDiagnosticReport ddr ON d.id = ddr.pk.documentId " +
+			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
+			"WHERE oc.patientId = :patientId " +
+			"AND r.careLineId = :careLineId " +
+			"AND dr.snomedId = :practiceId " +
+			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
+			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" +
+			"AND (dr.deleteable.deleted = false OR d.deleteable.deleted is null) " +
+			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null)")
+	List<ReferenceSummaryBo> getReferencesSummaryFromOdontologyConsultationByPracticeId(@Param("patientId") Integer patientId,
+																						@Param("practiceId") Integer practiceId,
+																						@Param("careLineId") Integer careLineId);
+
+	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.id, i.name, " +
+			"oc.startDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId," +
+			"r.phonePrefix, r.phoneNumber) " +
+			"FROM Reference r " +
+			"JOIN OutpatientConsultation oc ON r.encounterId = oc.id " +
+			"JOIN Institution i ON oc.institutionId = i.id " +
+			"JOIN HealthcareProfessional hp ON hp.id = oc.doctorId " +
+			"JOIN Person p ON p.id = hp.personId " +
+			"JOIN PersonExtended pe ON p.id = pe.id " +
+			"JOIN ServiceRequest sr ON r.serviceRequestId = sr.id " +
+			"JOIN Document d ON sr.id = d.sourceId " +
+			"JOIN DocumentDiagnosticReport ddr ON d.id = ddr.pk.documentId " +
+			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
+			"WHERE oc.patientId = :patientId " +
+			"AND r.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND r.careLineId = :careLineId " +
+			"AND dr.snomedId = :practiceId " +
+			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId)" +
+			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" +
+			"AND (dr.deleteable.deleted = false OR d.deleteable.deleted is null) " +
+			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null)")
+	List<ReferenceSummaryBo> getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyIdAndPracticeId(@Param("patientId") Integer patientId,
+																											  @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																											  @Param("careLineId") Integer careLineId,
+																											  @Param("practiceId") Integer practiceId);
+
+	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.id, i.name, " +
+			"oc.performedDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId," +
+			"r.phonePrefix, r.phoneNumber) " +
+			"FROM Reference r " +
+			"JOIN OdontologyConsultation oc ON r.encounterId = oc.id " +
+			"JOIN Institution i ON oc.institutionId = i.id " +
+			"JOIN HealthcareProfessional hp ON hp.id = oc.doctorId " +
+			"JOIN Person p ON p.id = hp.personId " +
+			"JOIN PersonExtended pe ON p.id = pe.id " +
+			"JOIN ServiceRequest sr ON r.serviceRequestId = sr.id " +
+			"JOIN Document d ON sr.id = d.sourceId " +
+			"JOIN DocumentDiagnosticReport ddr ON d.id = ddr.pk.documentId " +
+			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
+			"WHERE oc.patientId = :patientId " +
+			"AND r.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND r.careLineId = :careLineId " +
+			"AND dr.snomedId = :practiceId " +
+			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
+			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" +
+			"AND (dr.deleteable.deleted = false OR d.deleteable.deleted is null) " +
+			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null)")
+	List<ReferenceSummaryBo> getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyIdAndPracticeId(@Param("patientId") Integer patientId,
+																								 			  @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																											  @Param("careLineId") Integer careLineId,
+																								 			  @Param("practiceId") Integer practiceId);
 
 }

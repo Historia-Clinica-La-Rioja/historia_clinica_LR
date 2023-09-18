@@ -15,5 +15,5 @@ public interface ReferenceStorage {
 
     List<ReferenceProblemBo> getReferencesProblems(Integer patientId);
 
-    List<ReferenceSummaryBo> getReferencesSummary(Integer patientId, Integer clinicalSpecialtyId, Integer diaryId);
+    List<ReferenceSummaryBo> getReferencesSummary(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId, Integer practiceId);
 }
