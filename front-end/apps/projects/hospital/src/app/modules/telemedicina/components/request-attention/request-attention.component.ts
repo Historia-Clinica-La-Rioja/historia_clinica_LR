@@ -201,6 +201,7 @@ export class RequestAttentionComponent implements OnInit {
 										this.dialog.open(RejectedCallComponent, { data });
 									} else {
 										this.jitsiCallService.open(virtualConsultation.callLink)
+										this.goToClinicalHistory(vc.patientData.id);
 									}
 								}
 							)

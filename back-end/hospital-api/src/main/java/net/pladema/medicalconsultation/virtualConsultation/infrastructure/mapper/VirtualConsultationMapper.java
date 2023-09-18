@@ -60,6 +60,9 @@ public interface VirtualConsultationMapper {
 	@Named("fromVirtualConsultationNotificationDataBo")
 	@Mapping(target = "priority", source = "priorityId")
 	@Mapping(target = "callLink", source = "callId", qualifiedByName = "generateCallLink")
+	@Mapping(target = "patientData.id", source = "patientId")
+	@Mapping(target = "patientData.firstName", source = "patientName")
+	@Mapping(target = "patientData.lastName", source = "patientLastName")
 	VirtualConsultationNotificationDataDto fromVirtualConsultationNotificationDataBo(VirtualConsultationNotificationDataBo virtualConsultationNotificationDataBo);
 
 	@Named("fromVirtualConsultationResponsibleProfessionalAvailabilityBo")

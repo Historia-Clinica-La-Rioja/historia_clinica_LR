@@ -11,6 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class VirtualConsultationNotificationDataBo {
 
+	private Integer patientId;
+
 	private String patientName;
 
 	private String patientSelfPerceivedName;

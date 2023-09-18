@@ -59,6 +59,8 @@ import { Color } from '@presentation/colored-label/colored-label.component';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { toCalendarEvent } from '@turnos/utils/appointment.utils';
 import { JitsiCallService } from '../../../jitsi/jitsi-call.service';
+import { Router } from '@angular/router';
+import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 
 const TEMPORARY_PATIENT = 3;
 const REJECTED_PATIENT = 6;
@@ -156,6 +158,7 @@ export class AppointmentComponent implements OnInit {
 		private readonly imageDecoderService: ImageDecoderService,
 		private readonly medicalCoverageInfo: MedicalCoverageInfoService,
 		private readonly jitsiCallService: JitsiCallService,
+		private readonly router: Router,
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_LLAMADO).subscribe(isEnabled => this.isMqttCallEnabled = isEnabled);
@@ -275,6 +278,7 @@ export class AppointmentComponent implements OnInit {
 	entryCall(){
 		this.jitsiCallService.open(this.appointment.callLink);
 		this.closeDialog();
+		this.router.navigate([`${AppRoutes.Institucion}/${this.contextService.institutionId}/ambulatoria/paciente/${this.appointment.patientId}`]);
 	}
 
 	dateFormToggle(): void {

@@ -39,7 +39,7 @@ public interface VirtualConsultationRepository extends SGXAuditableEntityJPARepo
     VirtualConsultationBo getVirtualConsultationById(@Param("virtualConsultationId") Integer virtualConsultationId);
 
 	@Transactional(readOnly = true)
-	@Query(" SELECT NEW net.pladema.medicalconsultation.virtualConsultation.domain.VirtualConsultationNotificationDataBo(p2.firstName, pe.nameSelfDetermination, p2.lastName, vc.priorityId, " +
+	@Query(" SELECT NEW net.pladema.medicalconsultation.virtualConsultation.domain.VirtualConsultationNotificationDataBo(p.id, p2.firstName, pe.nameSelfDetermination, p2.lastName, vc.priorityId, " +
 			"vc.creationable.createdOn, p3.firstName, p3.lastName, up.pk.userId, cs.name, i.name, vc.callId) " +
 			"FROM VirtualConsultation vc " +
 			"JOIN Patient p ON (p.id = vc.patientId) " +

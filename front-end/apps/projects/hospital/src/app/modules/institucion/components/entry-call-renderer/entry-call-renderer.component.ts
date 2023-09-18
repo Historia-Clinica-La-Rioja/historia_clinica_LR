@@ -72,9 +72,9 @@ export const toCallDetails = (entryCall: VirtualConsultationNotificationDataDto)
 		createdOn: dateTimeDtotoLocalDate(entryCall.creationDateTime),
 		institutionName: entryCall.institutionName,
 		patient: {
-			firstName: entryCall.patientName,
+			firstName: entryCall.patientData.firstName,
 			id: null,
-			lastName: entryCall.patientLastName,
+			lastName: entryCall.patientData.lastName,
 			gender: null
 		},
 		priority: mappedPriorities[entryCall.priority],

@@ -3876,8 +3876,7 @@ export interface VirtualConsultationNotificationDataDto {
     clinicalSpecialty: string;
     creationDateTime: DateTimeDto;
     institutionName: string;
-    patientLastName: string;
-    patientName: string;
+    patientData: PatientDto;
     priority: EVirtualConsultationPriority;
     responsibleFirstName: string;
     responsibleLastName: string;
