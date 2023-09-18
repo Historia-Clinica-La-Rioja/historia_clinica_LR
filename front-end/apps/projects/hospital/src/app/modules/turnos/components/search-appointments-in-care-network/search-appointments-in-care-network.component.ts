@@ -13,6 +13,7 @@ import { DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { DiaryAvailableAppointmentsSearchService, ProtectedAppointmentsFilter } from '@turnos/services/diary-available-appointments-search.service';
 import { Moment } from 'moment';
+import { SearchCriteria } from '../search-criteria/search-criteria.component';
 
 const PERIOD_DAYS = 7;
 const PAGE_SIZE_OPTIONS = [5, 10, 25, 100];
@@ -64,6 +65,8 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 	MODALITY_PATIENT_VIRTUAL_ATTENTION = EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
 	MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION
 	isEnableTelemedicina:boolean;
+	searchCriteria = SearchCriteria;
+	selectedTypeAttention = SearchCriteria.CONSULTATION;
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -305,6 +308,19 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		this.protectedAvaibleAppointments = [];
 		this.appointmentsCurrentPage = [];
 		this.showAppointmentResults = false;
+	}
+
+	setCriteria(selectedCriteria: SearchCriteria) {
+		this.selectedTypeAttention = selectedCriteria;
+		this.setValidators();
+	}
+
+	private setValidators() {
+		if (this.selectedTypeAttention === SearchCriteria.CONSULTATION) {
+			this.searchForm.controls.specialty.addValidators(Validators.required);
+			this.searchForm.controls.specialty.updateValueAndValidity();
+		}
+		this.showSpecialtyError = false;
 	}
 
 	private loadFirstPage(): void {
