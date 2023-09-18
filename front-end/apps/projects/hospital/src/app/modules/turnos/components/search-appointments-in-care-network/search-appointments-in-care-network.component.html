@@ -1,34 +1,19 @@
 <div id="container" fxLayout="column" fxLayoutGap="5px" [formGroup]="searchForm">
 
 	<span [translate]="'turnos.search-appointments-in-care-network.SEARCH_IN_CARE_NETWORK_CRITERIA'"
-		class="bottom-separation"></span>
-
-	<div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column"
-		fxLayoutAlign.lt-sm="start start" fxLayoutGap="0">
-		<div fxFlex="35" fxLayout="column" fxLayoutGap="5px">
-			<span>
-				<strong>
-					{{ 'turnos.search-appointments-in-care-network.CARELINE' | translate }}
-				</strong>
-			</span>
-			<app-typeahead id="careline"
-				[titleInput]="'turnos.search-appointments-in-care-network.CARELINE' | translate"
-				[options]="careLineTypeaheadOptions" (selectionChange)="setCareLine($event)">
-			</app-typeahead>
-			<div class="error-space">
-				<mat-error *ngIf="showCareLineError">{{ 'forms.REQUIRED' | translate }}</mat-error>
-			</div>
-		</div>
-
-		<div fxFlex="35" fxLayout="column" fxLayoutGap="5px">
-			<strong>{{ 'turnos.search-appointments-in-care-network.SPECIALTY' | translate }}</strong>
-			<app-typeahead id="specialty"
-				[titleInput]="'turnos.search-appointments-in-care-network.SPECIALTY' | translate"
-				[options]="specialtyTypeaheadOptions" (selectionChange)="setClinicalSpecialty($event)">
-			</app-typeahead>
-			<div class="error-space">
-				<mat-error *ngIf="showSpecialtyError">{{ 'forms.REQUIRED' | translate }}</mat-error>
-			</div>
+		class="bottom-separation"></span>	
+	<div class="max-width" fxLayout="column" fxLayoutGap="5px">
+		<span>
+			<strong>
+				{{ 'turnos.search-appointments-in-care-network.CARELINE' | translate }}
+			</strong>
+		</span>
+		<app-typeahead id="careline"
+			[titleInput]="'turnos.search-appointments-in-care-network.CARELINE' | translate"
+			[options]="careLineTypeaheadOptions" (selectionChange)="setCareLine($event)">
+		</app-typeahead>
+		<div class="error-space">
+			<mat-error *ngIf="showCareLineError">{{ 'forms.REQUIRED' | translate }}</mat-error>
 		</div>
 	</div>
 	<div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column" >
@@ -49,6 +34,16 @@
 			</div>
 		</div>
 
+	</div>
+	<div class="max-width" fxLayout="column" fxLayoutGap="5px">
+		<strong>{{ 'turnos.search-appointments-in-care-network.SPECIALTY' | translate }}</strong>
+		<app-typeahead id="specialty"
+			[titleInput]="'turnos.search-appointments-in-care-network.SPECIALTY' | translate"
+			[options]="specialtyTypeaheadOptions" (selectionChange)="setClinicalSpecialty($event)">
+		</app-typeahead>
+		<div class="error-space">
+			<mat-error *ngIf="showSpecialtyError">{{ 'forms.REQUIRED' | translate }}</mat-error>
+		</div>
 	</div>
 	<div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column"
 		fxLayoutAlign.lt-sm="start start" fxLayoutGap="0">
