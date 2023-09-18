@@ -144,7 +144,7 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 	}
 
 	private setProblems(problems: HCEPersonalHistoryDto[]){
-		this.problems = problems.map(prob => {
+		this.problems = problems?.map(prob => {
 			return this.mapToProblem(prob);
 		});
 	}
