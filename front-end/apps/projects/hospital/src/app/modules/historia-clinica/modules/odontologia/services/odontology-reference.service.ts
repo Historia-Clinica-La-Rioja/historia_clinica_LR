@@ -102,7 +102,7 @@ export class OdontologyReferenceService {
 	private mapToReferenceDto(reference: Reference): ReferenceDto {
 		return {
 			careLineId: reference.careLine ? reference.careLine.id : null,
-			clinicalSpecialtyId: reference.clinicalSpecialty.id,
+			clinicalSpecialtyId: reference.clinicalSpecialty?.id,
 			consultation: reference.consultation,
 			note: reference.note,
 			problems: reference.problems,
