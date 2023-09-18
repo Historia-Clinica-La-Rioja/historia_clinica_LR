@@ -17,6 +17,7 @@ import { format } from 'date-fns';
 import { DateFormat } from '@core/utils/date.utils';
 import { NUMBER_PATTERN } from '@core/utils/form.utils';
 import { REPORT_STATES_ID } from '../../constants/report';
+import { WorklistFacadeService } from '../../services/worklist-facade.service';
 
 const PAGE_SIZE_OPTIONS = [10];
 const PAGE_MIN_SIZE = 10;
@@ -29,7 +30,8 @@ const PATIENT_NAME = "fullName";
 @Component({
 	selector: 'app-worklist-by-informer',
 	templateUrl: './worklist-by-informer.component.html',
-	styleUrls: ['./worklist-by-informer.component.scss']
+	styleUrls: ['./worklist-by-informer.component.scss'],
+    providers: [WorklistFacadeService]
 })
 export class WorklistByInformerComponent implements OnInit {
 
@@ -65,7 +67,8 @@ export class WorklistByInformerComponent implements OnInit {
 		private readonly personMasterData: PersonMasterDataService,
 		private readonly router: Router,
 		private readonly contextService: ContextService,
-		private readonly formBuilder: UntypedFormBuilder
+		private readonly formBuilder: UntypedFormBuilder,
+		private readonly worklistFacadeService: WorklistFacadeService,
 	) { }
 
 	ngOnInit(): void {
@@ -82,6 +85,12 @@ export class WorklistByInformerComponent implements OnInit {
 			institution: new FormControl<string>(null),
 			status: new FormControl<number>(REPORT_STATES_ID.PENDING),
 		});
+		this.worklistFacadeService.reports$.subscribe(reports => {
+			this.worklists = this.mapToWorklist(reports);
+			this.workListsFiltered = this.worklists;
+			this.pageSlice = this.worklists.slice(0, PAGE_MIN_SIZE);
+			this.setFilters();
+		})
 		this.setWorkList();
 		this.setDateRanges();
 		this.setStatuses();
@@ -108,12 +117,10 @@ export class WorklistByInformerComponent implements OnInit {
 	}
 
 	setWorkList() {
-		this.worklistService.getByModalityAndInstitution(this.modalityId, format(new Date(this.dateRangeForm.value.start), DateFormat.API_DATE), format(new Date(this.dateRangeForm.value.end), DateFormat.API_DATE)).subscribe((worklist: WorklistDto[]) => {
-			this.worklists = this.mapToWorklist(worklist);
-			this.workListsFiltered = this.worklists;
-			this.pageSlice = this.worklists.slice(0, PAGE_MIN_SIZE);
-			this.setFilters();
-		});
+		this.worklistFacadeService.changeInformerFilters(
+			this.modalityId, 
+			format(new Date(this.dateRangeForm.value.start), DateFormat.API_DATE), 
+			format(new Date(this.dateRangeForm.value.end), DateFormat.API_DATE))
 	}
 
 	toggleFilter(value: boolean) {

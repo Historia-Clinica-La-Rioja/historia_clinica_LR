@@ -224,7 +224,7 @@ export class WorklistByTechnicalComponent implements OnInit {
         this.fetchingData = true;
         this.worklistFiltersComponent.clearInputs();
         this.disableInputs();
-        this.worklistFacadeService.changeFilters(equipmentId, this.startDate, this.endDate);
+        this.worklistFacadeService.changeTechnicalFilters(equipmentId, this.startDate, this.endDate);
     }
 
     private resetAppointmentsData() {
