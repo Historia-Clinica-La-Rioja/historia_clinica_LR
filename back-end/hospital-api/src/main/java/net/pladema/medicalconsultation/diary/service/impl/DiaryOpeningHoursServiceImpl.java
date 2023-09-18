@@ -176,6 +176,18 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
 		return sharedReferenceCounterReference.existsProtectedAppointmentInOpeningHour(openingHourId);
 	}
 
+	@Override
+	public Collection<DiaryOpeningHoursBo> getDiariesOpeningHoursByMedicalAttentionType(List<Integer> diaryIds, short medicalAttentionTypeId) {
+		LOG.debug("Input parameters -> diaryIds {}, medicalAttentionTypeId {} ", diaryIds, medicalAttentionTypeId);
+		Collection<DiaryOpeningHoursBo> result = new ArrayList<>();
+		if (!diaryIds.isEmpty()) {
+			List<DiaryOpeningHoursVo> resultQuery = diaryOpeningHoursRepository.getDiariesOpeningHoursByMedicalAttentionType(diaryIds, medicalAttentionTypeId);
+			result = resultQuery.stream().map(this::createDiaryOpeningHoursBo).collect(Collectors.toList());
+		}
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
 	private DiaryOpeningHoursBo createDiaryOpeningHoursBo(DiaryOpeningHoursVo diaryOpeningHoursVo) {
         LOG.debug("Input parameters -> diaryOpeningHoursVo {} ", diaryOpeningHoursVo);
         DiaryOpeningHoursBo result = new DiaryOpeningHoursBo();

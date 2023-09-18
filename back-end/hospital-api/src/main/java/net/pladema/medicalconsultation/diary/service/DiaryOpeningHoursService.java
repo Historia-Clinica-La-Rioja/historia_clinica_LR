@@ -25,4 +25,6 @@ public interface DiaryOpeningHoursService {
 
 	boolean hasProtectedAppointments(Integer openingHourId);
 
+	Collection<DiaryOpeningHoursBo> getDiariesOpeningHoursByMedicalAttentionType(List<Integer> diaryIds, short medicalAttentionTypeId);
+
 }

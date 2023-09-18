@@ -27,6 +27,7 @@ import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitExcept
 import net.pladema.medicalconsultation.diary.service.exception.DiaryEnumException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryException;
 import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
+import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryNotFoundEnumException;
@@ -413,16 +414,19 @@ public class DiaryServiceImpl implements DiaryService {
 		if (aliasOrClinicalSpecialtyName != null && practiceId != null)
 			 return diaryRepository.getActiveDiariesByAliasOrClinicalSpecialtyNameAndPracticeId(institutionId, aliasOrClinicalSpecialtyName, practiceId).stream()
 					 .map(this::createCompleteDiaryBoInstanceWithPractice)
-					 .map(completeOpeningHours()).collect(toList());
+					 .map(cd -> completeOpeningHoursByMedicalAttentionType(cd, MedicalAttentionType.PROGRAMMED))
+					 .collect(toList());
 
 		if (aliasOrClinicalSpecialtyName != null && practiceId == null)
 			return diaryRepository.getActiveDiariesByAliasOrClinicalSpecialtyName(institutionId, aliasOrClinicalSpecialtyName).stream()
 					.map(this::createCompleteDiaryBoInstance)
-					.map(completeOpeningHours()).collect(toList());
+					.map(cd -> completeOpeningHoursByMedicalAttentionType(cd, MedicalAttentionType.PROGRAMMED))
+					.collect(toList());
 
 		return diaryRepository.getActiveDiariesByPracticeId(institutionId, practiceId).stream()
 				.map(this::createCompleteDiaryBoInstanceWithPractice)
-				.map(completeOpeningHours()).collect(toList());
+				.map(cd -> completeOpeningHoursByMedicalAttentionType(cd, MedicalAttentionType.PROGRAMMED))
+				.collect(toList());
 	}
 
 	private List<EmptyAppointmentBo> getDiaryAvailableAppointments(CompleteDiaryBo diary,
@@ -526,4 +530,12 @@ public class DiaryServiceImpl implements DiaryService {
 					"No se puede realizar la búsqueda sin seleccionar el tipo de atención ");
 		}
 	}
+	
+	private CompleteDiaryBo completeOpeningHoursByMedicalAttentionType(CompleteDiaryBo completeDiary, short medicalAttentionTypeId) {
+		Collection<DiaryOpeningHoursBo> diaryOpeningHours = diaryOpeningHoursService
+				.getDiariesOpeningHoursByMedicalAttentionType(Stream.of(completeDiary.getId()).collect(toList()), medicalAttentionTypeId);
+		completeDiary.setDiaryOpeningHours(new ArrayList<>(diaryOpeningHours));
+		return completeDiary;
+	}
+
 }
