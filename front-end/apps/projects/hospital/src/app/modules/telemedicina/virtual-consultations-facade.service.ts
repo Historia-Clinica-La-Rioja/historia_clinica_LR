@@ -1,4 +1,3 @@
-import { Injectable } from '@angular/core';
 import { ERole, VirtualConsultationAvailableProfessionalAmountDto, VirtualConsultationDto, VirtualConsultationFilterDto, VirtualConsultationResponsibleProfessionalAvailabilityDto, VirtualConsultationStatusDataDto } from '@api-rest/api-model';
 import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
 import { Observable, ReplaySubject, map } from 'rxjs';
@@ -6,10 +5,9 @@ import { StompService } from '../../stomp.service';
 import { ContextService } from '@core/services/context.service';
 import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
+import { Injectable } from '@angular/core';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class VirtualConsultationsFacadeService {
 
 	virtualConsultationsRequestEmitter = new ReplaySubject<VirtualConsultationDto[]>();
@@ -57,8 +55,8 @@ export class VirtualConsultationsFacadeService {
 			responsibleHealthcareProfessionalId: null,
 			status: null,
 		};
-		if (!this.isVirtualConsultatitioResponsible) {
-			this.getDomainVirtualConsultation(filterCriteria);
+			if (!this.isVirtualConsultatitioResponsible) {
+				this.getDomainVirtualConsultation(filterCriteria);
 		}
 
 		this.getVirtualConsultationByInstitution(filterCriteria);

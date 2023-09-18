@@ -17,6 +17,7 @@ import { RequestAttentionComponent } from './components/request-attention/reques
 import { RequestInfoCardComponent } from './components/request-info-card/request-info-card.component';
 import { AvailableLabelComponent } from './components/available-label/available-label.component';
 import { InProgressCallComponent } from './components/in-progress-call/in-progress-call.component';
+import { VirtualConsultationsFacadeService } from './virtual-consultations-facade.service';
 
 
 
@@ -42,6 +43,7 @@ import { InProgressCallComponent } from './components/in-progress-call/in-progre
 		PacientesModule,
 		HistoriaClinicaModule,
 		CoreModule,
-	]
+	],
+	providers: [VirtualConsultationsFacadeService]
 })
 export class TelemedicinaModule { }

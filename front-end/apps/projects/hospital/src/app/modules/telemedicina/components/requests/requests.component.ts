@@ -23,6 +23,7 @@ import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/h
 export class RequestsComponent implements OnInit {
 	@Input() priorityOptions: Option[];
 	@Input() availitibyOptions: Option[];
+	@Input() virtualConsultationsFacadeService: VirtualConsultationsFacadeService;
 	virtualConsultations$: Observable<VirtualConsultationDto[]>;
 	virtualConsultatiosStatus = status;
 	initialResponsableStatus = false;
@@ -36,18 +37,17 @@ export class RequestsComponent implements OnInit {
 		private dialog: MatDialog,
 		private virtualConsultationService: VirtualConstultationService,
 		private contextService: ContextService,
-		private readonly virtualConsultationsFacadeService: VirtualConsultationsFacadeService,
 		private careLineService: CareLineService, private clinicalSpecialtyService: ClinicalSpecialtyService,
 		private healthcareProfessionalByInstitucion: HealthcareProfessionalByInstitutionService,
 	) {
-		this.virtualConsultationService.getResponsibleStatus(this.contextService.institutionId).subscribe(
-			status => this.initialResponsableStatus = status
-		)
 	}
 
 	ngOnInit(): void {
 		this.setStateOptions();
 		this.getOptionsFilters();
+		this.virtualConsultationService.getResponsibleStatus(this.contextService.institutionId).subscribe(
+			status => this.initialResponsableStatus = status
+		)
 		this.virtualConsultations$ = this.virtualConsultationsFacadeService.virtualConsultationsRequest$.pipe(map(requests =>
 			 requests.map(request =>   this.toVCToBeShown(request)
 			)

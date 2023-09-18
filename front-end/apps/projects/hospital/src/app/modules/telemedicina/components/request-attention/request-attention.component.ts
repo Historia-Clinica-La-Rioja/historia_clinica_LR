@@ -28,6 +28,7 @@ import { InstitutionService } from '@api-rest/services/institution.service';
 export class RequestAttentionComponent implements OnInit {
 	@Input() priorityOptions: Option[];
 	@Input() availitibyOptions: Option[];
+	@Input() virtualConsultationsFacadeService: VirtualConsultationsFacadeService;
 	virtualConsultations$: Observable<VirtualConsultation[]>;
 	toggleEnabled = false;
 	virtualConsultatiosStatus = status;
@@ -40,7 +41,6 @@ export class RequestAttentionComponent implements OnInit {
 	specialitiesOptions: ClinicalSpecialtyDto[];
 	institutionOptions: InstitutionBasicInfoDto[];
 	constructor(
-		private readonly virtualConsultationsFacadeService: VirtualConsultationsFacadeService,
 		private virtualConsultationService: VirtualConstultationService,
 		private jitsiCallService: JitsiCallService,
 		private readonly dialog: MatDialog,
