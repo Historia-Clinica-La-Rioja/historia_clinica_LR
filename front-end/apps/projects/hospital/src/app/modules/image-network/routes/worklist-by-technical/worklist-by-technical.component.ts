@@ -364,8 +364,12 @@ export class WorklistByTechnicalComponent implements OnInit {
         this.appointmentsService.requireReport(appointment.data.id).subscribe(() => {
             this.snackBarService.showSuccess(this.translateService.instant("image-network.worklist.REPORT_REQUIRED"))
             appointment.reportStatus = REPORT_STATES.find(state => state.id == REPORT_STATES_ID.PENDING);
+
             let appointmentFromAppointments = this.appointments.find(app => app.id === appointment.data.id);
             appointmentFromAppointments.reportStatusId = REPORT_STATES_ID.PENDING;
+
+            let appointmentFromDetailedAppointments = this.detailedAppointments.find(app => app.data.id === appointment.data.id);
+            appointmentFromDetailedAppointments.canBeDerived = true;
         })
     }
 
@@ -383,6 +387,7 @@ export class WorklistByTechnicalComponent implements OnInit {
                 let appointmentFromDetailedAppointments = this.detailedAppointments.find(appointment => appointment.data.id === appointmentId);
                 appointmentFromDetailedAppointments.derive  = destinationInstitution;
                 appointmentFromDetailedAppointments.reportStatus = REPORT_STATES.find(state => state.id == REPORT_STATES_ID.DERIVED);
+                appointmentFromDetailedAppointments.canBeDerived = false;
                 
                 let appointmentFromAppointments = this.appointments.find(appointment => appointment.id === appointmentId);
                 appointmentFromAppointments.derivedTo = destinationInstitution;
