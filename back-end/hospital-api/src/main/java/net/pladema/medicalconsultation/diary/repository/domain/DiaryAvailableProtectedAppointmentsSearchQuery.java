@@ -26,6 +26,7 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 	private Integer departmentId;
 	private Integer institutionId;
 	private Boolean includeNameSelfDetermination;
+	private Integer practiceId;
 
 	public DiaryAvailableProtectedAppointmentsSearchQuery(DiaryProtectedAppointmentsSearch diaryProtectedAppointmentsSearch) {
 		this.careLineId = diaryProtectedAppointmentsSearch.getCareLineId();
@@ -33,6 +34,7 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 		this.departmentId = diaryProtectedAppointmentsSearch.getDepartmentId();
 		this.institutionId = diaryProtectedAppointmentsSearch.getInstitutionId();
 		this.includeNameSelfDetermination = diaryProtectedAppointmentsSearch.getIncludeNameSelfDetermination();
+		this.practiceId = diaryProtectedAppointmentsSearch.getPracticeId();
 	}
 
 	public QueryPart select() {
@@ -42,8 +44,8 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 				"d.end_date, " +
 				"i.id institutionId, "+
 				"i.name institutionName, " +
-				"dp.id departmentId, " +
-				"dp.description departmentDescription, " +
+				"dpt.id departmentId, " +
+				"dpt.description departmentDescription, " +
 				"p.first_name, " +
 				"p.middle_names, " +
 				"p.last_name, " +
@@ -66,8 +68,8 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 				"	JOIN {h-schema}institution i ON (dof.institution_id = i.id) " +
 				" 	JOIN {h-schema}address a ON (i.address_id = a.id) " +
 				" 	JOIN {h-schema}city c ON (a.city_id = c.id) " +
-				" 	JOIN {h-schema}department dp ON (c.department_id = dp.id) " +
-				" 	JOIN {h-schema}clinical_specialty cs ON (d.clinical_specialty_id = cs.id) " +
+				" 	JOIN {h-schema}department dpt ON (c.department_id = dpt.id) " +
+				" 	LEFT JOIN {h-schema}clinical_specialty cs ON (d.clinical_specialty_id = cs.id) " +
 				" 	JOIN {h-schema}healthcare_professional hp ON (d.healthcare_professional_id = hp.id) " +
 				" 	JOIN {h-schema}person p ON (hp.person_id = p.id) " +
 				"	JOIN {h-schema}diary_care_line dcl on (d.id = dcl.diary_id) " +
@@ -76,12 +78,14 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 		if (includeNameSelfDetermination)
 			from = from + "LEFT JOIN {h-schema}person_extended pe ON (pe.person_id = p.id) ";
 
+		if (practiceId != null)
+			from = from + "LEFT JOIN {h-schema}diary_practice dp ON (d.id = dp.diary_id) ";
+
 		return new QueryPart(from);
 	}
 
 	public QueryPart where() {
-		String whereClause = " dp.id = " + this.departmentId +
-				" AND cs.id = " + this.clinicalSpecialtyId +
+		String whereClause = " dpt.id = " + this.departmentId +
 				" AND doh.protected_appointments_allowed = true" +
 				" AND d.active = true " +
 				" AND d.end_date >= CURRENT_DATE" +
@@ -90,6 +94,15 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 
 		if (this.institutionId != null)
 			whereClause = whereClause + " AND i.id = " + this.institutionId;
+
+		if (clinicalSpecialtyId != null)
+			whereClause = whereClause + " AND cs.id = " + this.clinicalSpecialtyId;
+
+		if (practiceId != null) {
+			whereClause = whereClause + " AND dp.snomed_id = " + this.practiceId +
+							"AND (dp.deleted = false OR dp.deleted IS NULL) ";
+
+		}
 
 		return new QueryPart(whereClause);
 	}
@@ -127,6 +140,7 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 		String professionalOtherLastName = (String) tuple[index++];
 		Integer clinicalSpecialtyId = (Integer) tuple[index++];
 		String clinicalSpecialtyName = (String) tuple[index++];
+
 		String doctorOffice = (String) tuple[index++];
 		Boolean isJointDiary = (Boolean) tuple[index++];
 
@@ -135,6 +149,9 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 			nameSelfDetermination = (String) tuple[index++];
 		String professionalFullName = buildProfessionalFullName(professionalFirstName, professionalMiddleNames,
 				professionalLastName, professionalOtherLastName, nameSelfDetermination);
+
+		ClinicalSpecialtyBo clinicalSpecialtyBo = clinicalSpecialtyId != null ? new ClinicalSpecialtyBo(clinicalSpecialtyId, clinicalSpecialtyName) : null;
+
 		return new DiaryAvailableProtectedAppointmentsInfoBo(
 				diaryId,
 				appointmentDuration,
@@ -143,9 +160,10 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 				new InstitutionBasicInfoBo(institutionId, institutionName),
 				new DepartmentBo(departmentId, departmentName),
 				professionalFullName,
-				new ClinicalSpecialtyBo(clinicalSpecialtyId, clinicalSpecialtyName),
+				clinicalSpecialtyBo,
 				doctorOffice,
-				isJointDiary);
+				isJointDiary
+		);
 	}
 
 	private String buildProfessionalFullName(String firstName, String middleNames,
