@@ -62,20 +62,20 @@
     <div class="row">
         <div class="gralinfo">
             <h3>Paciente:</h3>
-            <h4 style="text-transform: uppercase;" th:text="${patientName}"></h4>
+            <h4 style="text-transform: uppercase;" th:text="${args.patientName}"></h4>
             <br>
             <h3>Fecha:</h3>
-            <h4 th:text="${date}"></h4>
+            <h4 th:text="${args.date}"></h4>
             <br>
             <h3>Profesional:</h3>
-            <h4 style="text-transform: uppercase;" th:text="${professionalName}"></h4>
+            <h4 style="text-transform: uppercase;" th:text="${args.professionalName}"></h4>
             <br>
             <h3>Especialidad:</h3>
-            <h4 th:text="${clinicalSpecialty}"></h4>
+            <h4 th:text="${args.clinicalSpecialty}"></h4>
             <br>
             <h3>Link de la llamada:</h3>
             <h4>
-                <a th:href="${callLink}" th:text="${callLink}"></a>
+                <a th:href="${args.callLink}" th:text="${args.callLink}"></a>
             </h4>
             <br>
         </div>
