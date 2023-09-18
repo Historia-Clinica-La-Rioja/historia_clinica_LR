@@ -54,16 +54,17 @@ public class BookingInstitutionStorageImpl implements BookingInstitutionStorage 
 				"FROM booking_institution bi " +
 				"JOIN institution i ON (i.id = bi.institution_id) " +
 				"LEFT JOIN dependency d ON (d.id = i.dependency_id) " +
-				"JOIN address ad ON (i.address_id = ad.id) " +
-				"JOIN city c ON (ad.city_id = c.id) " +
-				"JOIN department d2 ON (c.department_id = d2.id) " +
+				"LEFT JOIN address ad ON (i.address_id = ad.id) " +
+				"LEFT JOIN city c ON (ad.city_id = c.id) " +
+				"LEFT JOIN department d2 ON (c.department_id = d2.id) " +
 				"JOIN doctors_office dof ON (dof.institution_id = i.id) " +
 				"JOIN diary di ON (di.doctors_office_id = dof.id) " +
+				"JOIN diary_opening_hours doh ON (doh.diary_id = di.id) " +
 				"JOIN healthcare_professional hp ON (hp.id = di.healthcare_professional_id) " +
 				"JOIN professional_professions pp ON(pp.healthcare_professional_id = hp.id) " +
 				"JOIN healthcare_professional_specialty hps ON (hps.professional_profession_id = pp.id) " +
 				"JOIN clinical_specialty cs ON cs.id = hps.clinical_specialty_id " +
-				"WHERE cs.clinical_specialty_type_id = 2 " +
+				"WHERE cs.clinical_specialty_type_id = 2 AND doh.external_appointments_allowed = true " +
 				"ORDER BY i.name, cs.name";
 
 		List<Object[]> rows = entityManager.createNativeQuery(sqlString).getResultList();
