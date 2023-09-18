@@ -16,7 +16,7 @@ export class DocumentTemplateService {
   ) { }
 
   getTemplatesByUserInformer(typeId: number): Observable<TemplateNamesDto[]> {
-    const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/documents//templates/${typeId}/user`;
+    const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/documents/templates/${typeId}/user`;
 		return this.http.get<TemplateNamesDto[]>(url);
   }
 }

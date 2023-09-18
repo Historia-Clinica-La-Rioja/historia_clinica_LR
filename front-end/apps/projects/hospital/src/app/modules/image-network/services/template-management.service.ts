@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { TemplateNamesDto, TextTemplateDto } from '@api-rest/api-model';
 import { DocumentTemplateService } from '@api-rest/services/document-template.service';
 import { ReportDetailsTemplateService } from '@api-rest/services/report-details-template.service';
-import { BehaviorSubject, Observable, take, tap } from 'rxjs';
+import { BehaviorSubject, Observable, map, take, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +21,8 @@ export class TemplateManagementService {
 
 
   getTemplatesImport(): Observable<TemplateNamesDto[]> {
-    this.load()
+    if (!(this.templateSource$.getValue().length > 0))
+      { this.load() }
     return this.templateImports$
   }
 
@@ -30,8 +31,9 @@ export class TemplateManagementService {
     .pipe(tap( _ => this.load()))
   }
 
-  existsImports(): boolean {
-    return this.templateSource$.getValue.length > 0
+  existsImports(): Observable<boolean> {
+    return this.getTemplatesImport().pipe(
+      map(templates => templates.length > 0))
   }
 
   getOneTemplateImports(templateId: number): Observable<TextTemplateDto> {

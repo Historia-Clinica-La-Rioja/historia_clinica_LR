@@ -70,6 +70,6 @@
 
 
 <ng-template #showInformerObservations>
-    <app-view-informer-observations [informerObservations]="study.info.informerObservations" [disableEditing]="disableContinueEditing" (updateEditing)="enabledEditing = true">
+    <app-view-informer-observations [informerObservations]="study.info.informerObservations" [disableEditing]="disableContinueEditing" (updateEditing)="updateEditing()">
     </app-view-informer-observations>
 </ng-template>

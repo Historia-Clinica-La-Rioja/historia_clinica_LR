@@ -10,7 +10,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AmbulatoryConsultationProblem, AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { map, Observable, of, switchMap, take } from 'rxjs';
+import { map, Observable, of, Subscription, switchMap, take } from 'rxjs';
 import { StudyAppointment } from '../../models/models';
 import { toStudyAppointment } from '../../utils/mapper.utils';
 import { AddConclusionFormComponent } from '../../dialogs/add-conclusion-form/add-conclusion-form.component';
@@ -45,7 +45,8 @@ export class ReportStudyComponent implements OnInit, OnDestroy {
 	userInfo: LoggedUserDto
 	institutionId = Number(getParam(this.route.snapshot,'id'))
 
-	disableImportFiles = false
+	disableImportFiles = true
+	subscriptionTemplate: Subscription
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -88,7 +89,9 @@ export class ReportStudyComponent implements OnInit, OnDestroy {
 
 		this.accountService.getInfo().pipe(take(1)).subscribe(user => this.userInfo = user);
 
-		this.disableImportFiles = this.templateManagementService.existsImports()
+		this.subscriptionTemplate = this.templateManagementService.existsImports()
+		.subscribe(existsTemplates => this.disableImportFiles = !existsTemplates)
+
 
 		this.form.controls.observations.valueChanges.subscribe(
 			template => {
@@ -121,6 +124,10 @@ export class ReportStudyComponent implements OnInit, OnDestroy {
 			this.child.clear();
 		}
 	  }
+
+	updateEditing(){
+		this.enabledEditing = true
+	}
 
 	saveDraft() {
 		this.submitted = true;
@@ -279,6 +286,7 @@ export class ReportStudyComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.templateManagementService.clearTemplateManagement()
+		this.subscriptionTemplate.unsubscribe()
 	}
 
 }
