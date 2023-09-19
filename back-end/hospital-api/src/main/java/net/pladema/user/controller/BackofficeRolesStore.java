@@ -5,6 +5,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import ar.lamansys.sgx.shared.security.UserInfo;
+
+import net.pladema.permissions.repository.enums.ERole;
+
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,10 +26,14 @@ import net.pladema.user.controller.filters.BackofficeRolesFilter;
 public class BackofficeRolesStore implements BackofficeStore<Role, Short> {
 	private final RoleRepository roleRepository;
 	private final BackofficeRolesFilter backofficeRolesFilter;
+	private final BackofficeAuthoritiesValidator backofficeAuthoritiesValidator;
 
 	@Override
 	public Page<Role> findAll(Role example, Pageable pageable) {
 		List<Role> content = toList(roleRepository.findAll()).stream().filter(backofficeRolesFilter::filterRoles).collect(Collectors.toList());
+		if(!backofficeAuthoritiesValidator.hasRole(ERole.ROOT)){
+			content = content.stream().filter(role -> !role.getId().equals(ERole.ADMINISTRADOR_DE_ACCESO_DOMINIO.getId())).collect(Collectors.toList());
+		}
 		return new PageImpl<>(content, pageable, content.size());
 	}
 
