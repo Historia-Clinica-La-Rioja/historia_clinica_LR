@@ -43,6 +43,7 @@ import { Observable, forkJoin } from 'rxjs';
 import { PrescripcionesService } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { TranslateService } from '@ngx-translate/core';
 import { differenceInDays } from 'date-fns';
+import { SearchAppointmentCriteria } from '@turnos/components/search-appointments-in-care-network/search-appointments-in-care-network.component';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -92,8 +93,8 @@ export class NewAppointmentComponent implements OnInit {
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean, patientId?: number,
-			protectedAppointment?: DiaryAvailableProtectedAppointmentsDto, careLineId?: number, isEquipmentAppointment?: boolean,
-			modalityAttention:EAppointmentModality
+			protectedAppointment?: DiaryAvailableProtectedAppointmentsDto, isEquipmentAppointment?: boolean,
+			modalityAttention:EAppointmentModality, searchAppointmentCriteria?: SearchAppointmentCriteria
 		},
 		public dialogRef: MatDialogRef<NewAppointmentComponent>,
 		private readonly formBuilder: UntypedFormBuilder,
@@ -233,7 +234,7 @@ export class NewAppointmentComponent implements OnInit {
 			.subscribe((reducedPatientDto: ReducedPatientDto) => {
 				this.patientFound();
 				if (this.data?.protectedAppointment) {
-					this.referenceService.getReferencesSummary(patientId, this.data.protectedAppointment.clinicalSpecialty.id, this.data.careLineId).subscribe(
+					this.referenceService.getReferencesSummary(patientId, this.data.searchAppointmentCriteria).subscribe(
 						references => {
 							this.referenceList = references ? references : [];
 							this.createReferenceDateViewList();

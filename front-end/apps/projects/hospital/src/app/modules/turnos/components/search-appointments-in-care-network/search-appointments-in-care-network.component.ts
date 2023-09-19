@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { AddressDto, AppFeature, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableProtectedAppointmentsDto, EAppointmentModality, InstitutionBasicInfoDto, ProvinceDto } from '@api-rest/api-model';
+import { AddressDto, AppFeature, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableProtectedAppointmentsDto, EAppointmentModality, InstitutionBasicInfoDto, ProvinceDto, SharedSnomedDto, SnomedDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
@@ -14,6 +14,8 @@ import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.co
 import { DiaryAvailableAppointmentsSearchService, ProtectedAppointmentsFilter } from '@turnos/services/diary-available-appointments-search.service';
 import { Moment } from 'moment';
 import { SearchCriteria } from '../search-criteria/search-criteria.component';
+import { BehaviorSubject } from 'rxjs';
+import { CareLineInstitutionPracticeService } from '@api-rest/services/care-line-institution-practice.service';
 
 const PERIOD_DAYS = 7;
 const PAGE_SIZE_OPTIONS = [5, 10, 25, 100];
@@ -67,6 +69,10 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 	isEnableTelemedicina:boolean;
 	searchCriteria = SearchCriteria;
 	selectedTypeAttention = SearchCriteria.CONSULTATION;
+	private practicesBehavior = new BehaviorSubject<SnomedDto[]>([]);
+	practices$ = this.practicesBehavior.asObservable();
+	showPracticeError = false;
+	searchAppointmentCriteria: SearchAppointmentCriteria;
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -79,6 +85,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		private changeDetectorRef: ChangeDetectorRef,
 		private readonly route: ActivatedRoute,
 		private readonly featureFlagService: FeatureFlagService,
+		private readonly careLineInstitutionPracticeService: CareLineInstitutionPracticeService,
 	) { this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.isEnableTelemedicina = isEnabled)
 	}
 
@@ -148,9 +155,11 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		this.searchForm.controls.specialty.reset();
 		if (careLine) {
 			this.specialties = careLine.clinicalSpecialties;
+			this.careLineInstitutionPracticeService.getPracticesByCareLine(careLine.id).subscribe(practices => this.practicesBehavior.next(practices))
 		}
 		else {
 			this.specialties = this.allSpecialties;
+			this.practicesBehavior.next([]);
 		}
 		this.loadSpecialtyTypeaheadOptions();
 	}
@@ -235,13 +244,20 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 
 			const filters: ProtectedAppointmentsFilter = {
 				careLineId: this.searchForm.value.careLine.id,
-				clinicalSpecialtyId: this.searchForm.value.specialty.id,
+				clinicalSpecialtyId: this.searchForm.value.specialty?.id,
 				departmentId: this.searchForm.value.department.id,
 				endSearchDate: endDateString,
 				initialSearchDate: startDateString,
 				institutionId: this.searchForm.value.institution ? this.searchForm.value.institution.id : null,
 				modality: this.searchForm.controls.modality.value,
+				practiceId: this.searchForm.controls.practiceId.value
 			};
+
+			this.searchAppointmentCriteria = {
+				careLineId: this.searchForm.value.careLine.id,
+				practiceId: this.searchForm.controls.practiceId.value,
+				specialtyId: this.searchForm.value.specialty?.id
+			}
 
 			this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointments(this.contextService.institutionId, filters).subscribe(
 				(availableAppointments: DiaryAvailableProtectedAppointmentsDto[]) => {
@@ -259,10 +275,18 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 			this.showInvalidFormMessage = true;
 			this.showAppointmentResults = this.showAppointmentsNotFoundMessage = false;
 			this.showCareLineError = !this.searchForm.value.careLine;
-			this.showSpecialtyError = !this.searchForm.value.specialty;
 			this.showDepartmentError = !this.searchForm.value.department;
 			this.showProvinceError = !this.searchForm.value.state;
 			this.showModalityError = !this.searchForm.value.modality;
+
+			if (!this.searchForm.value.specialty && this.searchForm.controls.specialty.hasValidator(Validators.required)) {
+				this.showSpecialtyError = true;
+			}
+
+			if (!this.searchForm.value.praticeId && this.searchForm.controls.practiceId.hasValidator(Validators.required)) {
+				this.showPracticeError = true;
+			}
+
 		}
 
 	}
@@ -279,6 +303,8 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		this.careLines = [];
 		this.specialties = [];
 		this.allSpecialties = [];
+		this.practicesBehavior.next([]);
+		this.selectedTypeAttention = SearchCriteria.CONSULTATION;
 
 
 		this.showAppointmentsNotFoundMessage = false;
@@ -312,15 +338,37 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 
 	setCriteria(selectedCriteria: SearchCriteria) {
 		this.selectedTypeAttention = selectedCriteria;
+		if (this.selectedTypeAttention === SearchCriteria.CONSULTATION)
+			this.searchForm.controls.practiceId.setValue(null);
+		this.resetResults();
 		this.setValidators();
+	}
+
+	setPractice(practice: SharedSnomedDto) {
+		if (practice)
+			this.searchForm.controls.practiceId.setValue(practice.id);
+		else {
+			this.searchForm.controls.practiceId.setValue(null);
+			this.resetResults();
+		}
+		this.showPracticeError = false;
 	}
 
 	private setValidators() {
 		if (this.selectedTypeAttention === SearchCriteria.CONSULTATION) {
 			this.searchForm.controls.specialty.addValidators(Validators.required);
 			this.searchForm.controls.specialty.updateValueAndValidity();
+			this.searchForm.controls.practiceId.removeValidators(Validators.required);
+			this.searchForm.controls.practiceId.updateValueAndValidity();
+		}
+		else {
+			this.searchForm.controls.practiceId.addValidators(Validators.required);
+			this.searchForm.controls.practiceId.updateValueAndValidity();
+			this.searchForm.controls.specialty.removeValidators(Validators.required);
+			this.searchForm.controls.specialty.updateValueAndValidity();
 		}
 		this.showSpecialtyError = false;
+		this.showPracticeError = false;
 	}
 
 	private loadFirstPage(): void {
@@ -362,7 +410,8 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 			institution: [null],
 			startDate: [this.today, Validators.required],
 			endDate: [{ value: endDate, disabled: true }, Validators.required],
-			modality: [this.MODALITY_ON_SITE_ATTENTION, Validators.required]
+			modality: [this.MODALITY_ON_SITE_ATTENTION, Validators.required],
+			practiceId: [null],
 		});
 	}
 
@@ -425,4 +474,10 @@ function specialtyToTypeaheadOption(specialty: ClinicalSpecialtyDto): TypeaheadO
 		value: specialty,
 		viewValue: specialty.name
 	};
+}
+
+export interface SearchAppointmentCriteria {
+	careLineId: number;
+	practiceId?: number;
+	specialtyId?: number;
 }

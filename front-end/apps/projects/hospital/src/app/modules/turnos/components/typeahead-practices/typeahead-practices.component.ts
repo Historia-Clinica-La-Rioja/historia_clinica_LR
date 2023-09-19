@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { SharedSnomedDto } from '@api-rest/api-model';
+import { SharedSnomedDto, SnomedDto } from '@api-rest/api-model';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 
 @Component({
@@ -9,12 +9,14 @@ import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.co
 })
 export class TypeaheadPracticesComponent {
 
-	practicesTypeahead: TypeaheadOption<SharedSnomedDto>[];
+	practicesTypeahead: TypeaheadOption<SharedSnomedDto | SnomedDto>[];
 	showError = false;
 	@Input()
 	set practices(list: SharedSnomedDto[]) {
 		if (list?.length)
 			this.practicesTypeahead = this.toTypeaheadOptionList(list);
+		else 
+			this.practicesTypeahead = [];	
 	}
 	@Output() selectedOption = new EventEmitter<SharedSnomedDto>();
 

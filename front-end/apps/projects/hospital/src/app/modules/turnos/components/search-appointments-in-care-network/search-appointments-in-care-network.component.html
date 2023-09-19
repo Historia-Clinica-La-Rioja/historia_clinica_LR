@@ -40,14 +40,28 @@
 		</div>
 
 	</div>
-	<div class="max-width" fxLayout="column" fxLayoutGap="5px">
-		<strong>{{ 'turnos.search-appointments-in-care-network.SPECIALTY' | translate }}</strong>
-		<app-typeahead id="specialty"
-			[titleInput]="'turnos.search-appointments-in-care-network.SPECIALTY' | translate"
-			[options]="specialtyTypeaheadOptions" (selectionChange)="setClinicalSpecialty($event)">
-		</app-typeahead>
-		<div class="error-space">
-			<mat-error *ngIf="showSpecialtyError">{{ 'forms.REQUIRED' | translate }}</mat-error>
+	<div fxLayout="row" fxLayoutGap="10px">
+		<div fxLayout="column" fxLayoutGap="5px">
+			<div fxLayout="row" fxLayoutGap="5px">
+				<strong>{{ 'turnos.search-appointments-in-care-network.SPECIALTY' | translate }}</strong>
+				<span *ngIf="selectedTypeAttention == searchCriteria.PRACTICES">{{ 'turnos.OPTIONAL' | translate }}</span>
+			</div>
+			<app-typeahead id="specialty"
+				[titleInput]="'turnos.search-appointments-in-care-network.SPECIALTY' | translate"
+				[options]="specialtyTypeaheadOptions" (selectionChange)="setClinicalSpecialty($event)">
+			</app-typeahead>
+			<div class="error-space">
+				<mat-error *ngIf="showSpecialtyError">{{ 'forms.REQUIRED' | translate }}</mat-error>
+			</div>
+		</div>
+		<div>
+			<app-typeahead-practices *ngIf="selectedTypeAttention == searchCriteria.PRACTICES"
+				[practices]="practices$ | async"
+				(selectedOption)="setPractice($event)">
+			</app-typeahead-practices>
+			<div class="error-space">
+				<mat-error *ngIf="showPracticeError">{{ 'forms.REQUIRED' | translate }}</mat-error>
+			</div>
 		</div>
 	</div>
 	<div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column"
@@ -133,7 +147,8 @@
 		<mat-card>
 			<div *ngFor="let appointment of appointmentsCurrentPage; last as isLast">
 				<app-appointment-result-view [appointment]="appointment" [patientId]="patientId"
-					[careLineId]="careLineId" (resetAppointmentList)="resetResults()" [modalityAttention]="searchForm.controls.modality.value">
+					(resetAppointmentList)="resetResults()" [modalityAttention]="searchForm.controls.modality.value"
+					[searchAppointmentCriteria]="searchAppointmentCriteria">
 				</app-appointment-result-view>
 				<mat-divider class="divider-list" inset *ngIf="!isLast"></mat-divider>
 			</div>

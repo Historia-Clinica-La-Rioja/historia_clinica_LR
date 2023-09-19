@@ -7,6 +7,7 @@ import { DatePipeFormat } from '@core/utils/date.utils';
 import { DateFormat, dateToMoment } from '@core/utils/moment.utils';
 import { ConfirmPrintAppointmentComponent } from '@turnos/dialogs/confirm-print-appointment/confirm-print-appointment.component';
 import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-appointment.component';
+import { SearchAppointmentCriteria } from '../search-appointments-in-care-network/search-appointments-in-care-network.component';
 
 @Component({
 	selector: 'app-appointment-result-view',
@@ -18,7 +19,7 @@ export class AppointmentResultViewComponent implements OnInit {
 	@Input() modalityAttention?: EAppointmentModality;
 	@Input() appointment: DiaryAvailableProtectedAppointmentsDto;
 	@Input() patientId: number;
-	@Input() careLineId: number;
+	@Input() searchAppointmentCriteria: SearchAppointmentCriteria;
 	@Output() resetAppointmentList = new EventEmitter<void>();
 	viewDate: string = '';
 	viewMinutes: string = '';
@@ -49,8 +50,8 @@ export class AppointmentResultViewComponent implements OnInit {
 				overturnMode: this.appointment.overturnMode,
 				patientId: this.patientId ? this.patientId : null,
 				protectedAppointment: this.appointment,
-				careLineId: this.careLineId ? this.careLineId : null,
 				modalityAttention: this.modalityAttention,
+				searchAppointmentCriteria: this.searchAppointmentCriteria
 			}
 		});
 		dialogRef.afterClosed().subscribe(
@@ -62,6 +63,12 @@ export class AppointmentResultViewComponent implements OnInit {
 					fullAppointmentDate = fullAppointmentDate[0].toUpperCase() + fullAppointmentDate.slice(1);
 					const timeData = appointmentHour.split(":");
 
+					let specialtyAndAlias = '';
+					if (result.alias)
+						specialtyAndAlias = `${result.alias}`;
+					if (result.clinicalSpecialtyName)
+						specialtyAndAlias = `${specialtyAndAlias} (${result.clinicalSpecialtyName})`;
+
 					if (result.email && !(this.modalityAttention === this.MODALITY_ON_SITE_ATTENTION)) {
 						var message = 'Se podrá acceder a la teleconsulta a través del link que se ha enviado a ' + `<strong> ${result.email}</strong>`
 					}
@@ -72,7 +79,7 @@ export class AppointmentResultViewComponent implements OnInit {
 							content: 'Se ha asignado un turno el ' +
 								`<strong>${fullAppointmentDate} ${timeData[0]}:${timeData[1]} hs </strong>` +
 								' para ' +
-								`${this.appointment.professionalFullName} (${this.appointment?.clinicalSpecialty?.name})` + ' en ' +
+								`${this.appointment.professionalFullName} ${specialtyAndAlias}` + ' en ' +
 								`${this.appointment.doctorOffice}`,
 							appointmentId: result.id,
 							message: message,

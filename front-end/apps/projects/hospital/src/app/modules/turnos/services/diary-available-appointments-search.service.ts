@@ -54,5 +54,6 @@ export interface ProtectedAppointmentsFilter {
   endSearchDate: string,
   initialSearchDate: string,
   institutionId?: number,
-  modality:EAppointmentModality
+  modality:EAppointmentModality,
+  practiceId?: number,
 }
