@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PracticeDto } from '@api-rest/api-model';
+import { SnomedDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -19,9 +19,9 @@ export class CareLineInstitutionPracticeService {
 		this.BASE_URL = `${environment.apiBase}/institution`;
 	}
 
-	getPracticesByCareLine(careLineId: number): Observable<PracticeDto[]> {
+	getPracticesByCareLine(careLineId: number): Observable<SnomedDto[]> {
 		const url = `${this.BASE_URL}/${this.contextService.institutionId}/careline-institution-practice/careLine/${careLineId}`;
-		return this.http.get<PracticeDto[]>(url);
+		return this.http.get<SnomedDto[]>(url);
 	}
 
 }

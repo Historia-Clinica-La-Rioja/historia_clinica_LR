@@ -228,6 +228,7 @@
                     "CONSULTATION_OPTION": "Consulta",
                     "PROCEDURE_OPTION": "Procedimiento",
                     "PLACEHOLDER_SPECIALITY": "Especialidad",
+					"PLACEHOLDER_SPECIALITY_OPTIONAL": "Especialidad (Opcional)",
                     "PLACEHOLDER_INSTITUTION": "Institución",
                     "PLACEHOLDER_SUMMARY": "Resumen de referencia solicitada",
                     "UPLOAD_FILES": "Adjuntar archivos",

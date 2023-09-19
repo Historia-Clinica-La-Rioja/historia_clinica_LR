@@ -39,8 +39,8 @@
 
 		<div *ngIf="formReference.value.searchByCareLine else allSpecielty">
 			<mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
-				<mat-label
-					[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY'"></mat-label>
+				<mat-label *ngIf="formReference.value.consultation" [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY'"></mat-label>
+				<mat-label	*ngIf="!formReference.value.consultation" [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY_OPTIONAL'"></mat-label>
 				<mat-select id="specialty" name="clinicalSpecialtyId" formControlName="clinicalSpecialtyId">
 					<mat-option *ngFor="let specialty of specialtiesSubject$ | async" [value]="specialty">
 						{{specialty.name | translate}}
@@ -54,8 +54,9 @@
 	<ng-template #allSpecielty>
 		<div>
 			<mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
-				<mat-label
-					[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY'"></mat-label>
+				<mat-label *ngIf="formReference.value.consultation" [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY'"></mat-label>
+				<mat-label	*ngIf="!formReference.value.consultation" [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY_OPTIONAL'"></mat-label>
+
 				<mat-select id="specialty" name="clinicalSpecialtyId" formControlName="clinicalSpecialtyId">
 					<mat-option *ngFor="let specialty of allSpecialtiesSubject$ | async" [value]="specialty">
 						{{specialty.name | translate}}
@@ -80,13 +81,16 @@
 		<div>
 			<div class="typeahead-field">
 				<app-typeahead id="practice_or_procedure"
+					[disabled]="practiceOrProcedureDisabled"
+					[externalSetValue]="defaultPractice"
+
 					 [options]="practices"
 					[titleInput]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PRACTICE_PROCEDURE' | translate"
 					(selectionChange)="onPracticeSelectionChange($event)"
 					[required]=true
 					spellcheck="false">
 				</app-typeahead>
-				<mat-error class="error-message" *ngIf="!formReference.value.practiceOrProcedure && submit"
+				<mat-error class="error-message" *ngIf="!formReference.controls.practiceOrProcedure.value && submit"
 					[translate]="'forms.REQUIRED'"></mat-error>
 			</div>
 		</div>

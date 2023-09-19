@@ -95,7 +95,7 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 		if (!this.formReference.value.consultation)
 			return {
 				problem:  this.referenceProblemsService.firstProblem(),
-				practice: this.formReference.value.practiceOrProcedure || null,
+				practice: this.formReference.controls.practiceOrProcedure.value || null,
 				categoryId: this.formReference.value.studyCategory?.id.toString(),
 			}
 		return null;

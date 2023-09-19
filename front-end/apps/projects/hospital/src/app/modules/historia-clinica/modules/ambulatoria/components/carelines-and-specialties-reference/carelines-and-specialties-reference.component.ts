@@ -22,6 +22,8 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 	practices = [];
 	originalPractices = [];
 	submit = false;
+	practiceOrProcedureDisabled = true;
+	defaultPractice: TypeaheadOption<any>;
 	@Input() set submitForm(submit: boolean) {
 		this.submit = submit;
 		if (submit && !this.formReference.value.consultation) {
@@ -63,8 +65,6 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 	ngOnInit(): void {
 		this.formReference.controls.searchByCareLine.valueChanges.subscribe((changes) => {
 			if (!changes) {
-				this.formReference.controls.practiceOrProcedure.setValue(null);
-				this.formReference.controls.practiceOrProcedure.reset();
 				this.practicesService.getPracticesFromInstitutions().subscribe((practices) => {
 					this.originalPractices = practices;
 					this.practices = this.toTypeaheadOptions(practices, 'pt');
@@ -74,8 +74,6 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 
 		this.formReference.controls.careLine.valueChanges.subscribe((changes) => {
 			if (changes) {
-				this.formReference.controls.practiceOrProcedure.setValue(null);
-				this.formReference.controls.practiceOrProcedure.reset();
 				this.careLineInstitutionPracticeService.getPracticesByCareLine(changes.id).subscribe((practices) => {
 					this.originalPractices = practices;
 					this.practices = this.toTypeaheadOptions(practices, 'pt');
@@ -85,18 +83,24 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 
 		this.studyCategories$ = this.requestMasterDataService.categories();
 		this.subscribesToChangesInForm();
+		this.formReference.controls.studyCategory.disable();
+		this.formReference.controls.practiceOrProcedure.disable();
 	}
-
 
 	setSpecialtyCareLine(): void {
 		const careLine = this.formReference.value.careLine;
 		if (careLine) {
 			this.formReference.controls.clinicalSpecialtyId.enable();
-			this.formReference.controls.clinicalSpecialtyId.setValidators([Validators.required]);
-			this.formReference.updateValueAndValidity();
+			this.formReference.controls.studyCategory.enable();
+			this.practiceOrProcedureDisabled = false;
 			this.specialtiesSubject$.next(this.formReference.value.careLine.clinicalSpecialties);
+		} else {
+			this.formReference.controls.studyCategory.disable();
+			this.practiceOrProcedureDisabled = true;
 		}
+		this.formReference.controls.studyCategory.updateValueAndValidity();
 	}
+
 	setSpecialty() {
 		this.formReference.controls.clinicalSpecialtyId.setValue(null);
 		this.formReference.controls.clinicalSpecialtyId.reset();
@@ -130,10 +134,16 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 			if (option === this.DEFAULT_RADIO_OPTION) {
 				disableInputs(this.formReference, this.referenceProblemsService.mapProblems());
 				this.updateClinicalSpecialtyFormField();
+				this.defaultPractice = this.clearTypeahead();
+				if (!this.formReference.controls.careLine.value)
+				this.practiceOrProcedureDisabled = true;
 			} else {
+				this.practiceOrProcedureDisabled = false;
 				this.formReference.controls.clinicalSpecialtyId.enable();
 				this.updateCareLineFormField();
 				this.setSpecialties();
+				this.formReference.controls.studyCategory.enable();
+				this.formReference.controls.studyCategory.updateValueAndValidity();
 			}
 			function disableInputs(formReference: UntypedFormGroup, referenceProblemDto: ReferenceProblemDto[]) {
 				if (referenceProblemDto.length === 0) {
@@ -227,5 +237,9 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 				this.allClinicalSpecialties = clinicalSpecialties;
 				this.allSpecialtiesSubject$.next(clinicalSpecialties);
 			});
+	}
+
+	private clearTypeahead() {
+		return { value: null, viewValue: null, compareValue: null }
 	}
 }
