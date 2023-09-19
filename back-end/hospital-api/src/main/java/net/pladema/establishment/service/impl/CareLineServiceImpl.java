@@ -74,8 +74,8 @@ public class CareLineServiceImpl implements CareLineService {
 	}
 
 	@Override
-	public List<CareLineBo> getCareLinesAttachedToInstitution() {
-		List<CareLineBo> result = careLineRepository.getCareLinesAttachedToInstitution();
+	public List<CareLineBo> getCareLinesAttachedToInstitutions() {
+		List<CareLineBo> result = careLineRepository.getCareLinesAttachedToInstitutions();
 		result.stream().forEach(careLine -> careLine.setClinicalSpecialties(careLineInstitutionSpecialtyRepository.getClinicalSpecialtiesByCareLineId(careLine.getId())));
 		LOG.debug(OUTPUT, result);
 		return result;
@@ -95,6 +95,15 @@ public class CareLineServiceImpl implements CareLineService {
 		log.debug("Input parameters -> institutionId {}", institutionId);
 		List<CareLineBo> result = careLineRepository.getVirtualConsultationCareLinesByInstitutionId(institutionId);
 		log.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<CareLineBo> getCareLinesAttachedToInstitution(Integer institutionId) {
+		LOG.debug("Input parameters -> institutionId {}", institutionId);
+		List<CareLineBo> result = careLineRepository.getAllByInstitutionId(institutionId);
+		result.stream().forEach(careLine -> careLine.setClinicalSpecialties(careLineInstitutionSpecialtyRepository.getClinicalSpecialtiesByCareLineId(careLine.getId())));
+		LOG.debug(OUTPUT, result);
 		return result;
 	}
 

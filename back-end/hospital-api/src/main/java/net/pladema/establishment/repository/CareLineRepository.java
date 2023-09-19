@@ -52,7 +52,7 @@ public interface CareLineRepository extends SGXAuditableEntityJPARepository<Care
 			"FROM CareLine cl " +
 			"JOIN CareLineInstitution cli ON (cl.id = cli.careLineId) " +
 			"WHERE cli.deleted = false")
-	List<CareLineBo> getCareLinesAttachedToInstitution();
+	List<CareLineBo> getCareLinesAttachedToInstitutions();
 
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.CareLineBo(cl.id, cl.description) " +

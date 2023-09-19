@@ -12,10 +12,12 @@ public interface CareLineService {
 	
 	List<CareLineBo> getAllByProblemsAndProvinceId(List<String> snomedSctids, Integer institutionId);
 
-	List<CareLineBo> getCareLinesAttachedToInstitution();
+	List<CareLineBo> getCareLinesAttachedToInstitutions();
 
 	List<CareLineBo> getByInstitutionIdAndPracticesId(Integer institutionId, List<Integer> practicesId);
 
 	List<CareLineBo> getVirtualConsultationCareLinesByInstitutionId(Integer institutionId);
+
+	List<CareLineBo> getCareLinesAttachedToInstitution(Integer institutionId);
 
 }

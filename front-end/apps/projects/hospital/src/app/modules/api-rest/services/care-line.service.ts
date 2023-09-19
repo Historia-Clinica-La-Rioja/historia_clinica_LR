@@ -44,8 +44,13 @@ export class CareLineService {
 		return this.http.get<CareLineDto[]>(url, { params });
 	 }
 
-	getCareLinesAttachedToInstitution(institutionId: number): Observable<CareLineDto[]> {
+	getCareLinesAttachedToInstitutions(institutionId: number): Observable<CareLineDto[]> {
 		const url = `${environment.apiBase}/institution/${institutionId}/carelines/attached`;
+		return this.http.get<CareLineDto[]>(url);
+	}
+
+	getCareLinesAttachedToInstitution(institutionId: number): Observable<CareLineDto[]> {
+		const url = `${environment.apiBase}/institution/${institutionId}/carelines/attached-to-institution`;
 		return this.http.get<CareLineDto[]>(url);
 	}
 

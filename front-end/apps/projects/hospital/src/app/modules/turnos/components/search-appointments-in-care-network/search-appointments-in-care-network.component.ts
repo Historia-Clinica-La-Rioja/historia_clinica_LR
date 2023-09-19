@@ -351,7 +351,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 	}
 
 	private initCareLines(): void {
-		this.careLineService.getCareLinesAttachedToInstitution(this.contextService.institutionId).subscribe(
+		this.careLineService.getCareLinesAttachedToInstitutions(this.contextService.institutionId).subscribe(
 			(careLines: CareLineDto[]) => {
 				this.careLines = careLines;
 				this.loadCareLineTypeaheadOptions();
