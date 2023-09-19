@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 export class RequestInfoCardComponent {
 	virtualConsultationsSubscription: Subscription;
 	@Input() virtualConsultation: any;
-	statusPending: EVirtualConsultationStatus.PENDING;
+	statusPending = EVirtualConsultationStatus.PENDING;
 
 	constructor() { }
 }

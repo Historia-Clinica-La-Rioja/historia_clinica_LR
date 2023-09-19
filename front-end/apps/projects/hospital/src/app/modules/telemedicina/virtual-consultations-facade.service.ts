@@ -95,16 +95,19 @@ export class VirtualConsultationsFacadeService {
 
 		this.virtualConsultationStatusChanged$.subscribe(
 			(newState: VirtualConsultationStatusDataDto) => {
+				if (!this.isVirtualConsultatitioResponsible) {
+					const attentionToChange = this.virtualConsultationsAttention.find(vc => vc.id === newState.virtualConsultationId);
+					if (attentionToChange) {
+						attentionToChange.status = newState.status;
+						this.virtualConsultationsAttentionEmitter.next(this.virtualConsultationsAttention)
+					}
+				}
 				const requesttoChange = this.virtualConsultationsRequest.find(vc => vc.id === newState.virtualConsultationId);
 				if (requesttoChange) {
 					requesttoChange.status = newState.status;
 					this.virtualConsultationsRequestEmitter.next(this.virtualConsultationsRequest)
 				}
-				const attentionToChange = this.virtualConsultationsAttention.find(vc => vc.id === newState.virtualConsultationId);
-				if (attentionToChange) {
-					attentionToChange.status = newState.status;
-					this.virtualConsultationsAttentionEmitter.next(this.virtualConsultationsAttention)
-				}
+
 			}
 		)
 
