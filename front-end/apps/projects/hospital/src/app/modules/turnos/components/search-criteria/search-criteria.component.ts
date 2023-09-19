@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 
@@ -7,12 +7,13 @@ import { MatRadioChange } from '@angular/material/radio';
 	templateUrl: './search-criteria.component.html',
 	styleUrls: ['./search-criteria.component.scss']
 })
-export class SearchCriteriaComponent implements OnInit {
+export class SearchCriteriaComponent implements OnInit, OnChanges {
 
 	form: UntypedFormGroup;
 	readonly searchCriteria = SearchCriteria;
 	@Input() label: string;
 	@Input() searchCriteryStyle?: string;
+	@Input() defaultOption?: SearchCriteria;
 	@Output() selectedOption = new EventEmitter<SearchCriteria>();
 
 	constructor(
@@ -25,6 +26,11 @@ export class SearchCriteriaComponent implements OnInit {
 			criteria: new UntypedFormControl(SearchCriteria.CONSULTATION),
 		});
 
+	}
+
+	ngOnChanges(changes: SimpleChanges) {
+		if (changes.defaultOption && this.form)
+			this.form.controls.criteria.setValue(changes.defaultOption.currentValue);
 	}
 
 	emit(searchCriteriaValue: MatRadioChange) {
