@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.documents.infrastructure.output.repository.entity;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ESourceType;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,7 @@ import java.time.ZoneId;
 @Setter
 @ToString
 @NoArgsConstructor
+@EqualsAndHashCode
 public class VClinicHistory {
 
 	@Id
