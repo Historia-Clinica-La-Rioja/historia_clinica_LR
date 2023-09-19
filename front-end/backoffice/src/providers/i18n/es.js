@@ -858,6 +858,23 @@ const messages = {
                 local: 'Locales'
             },
             createRelated: 'Crear regla'
+        },
+        clinicalspecialtyrules: {
+            fields: {
+                name: 'Nombre',
+                description: 'Descripción',
+                sctidCode: 'Código SNOMED',
+            },
+        },
+        practiceprocedurerules: {
+            fields: {
+                orden: 'Orden',
+                lastUpdate: 'Última actualización',
+                groupId: 'Grupo de terminología',
+                snomedId: 'Concepto Snomed',
+                conceptSctid: 'Snomed CT ID',
+                conceptPt: 'Término'
+            },
         }
     }
 };

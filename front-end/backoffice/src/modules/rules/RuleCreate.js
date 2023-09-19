@@ -34,10 +34,10 @@ const RuleCreate = (props) => {
             <ReferenceInput
                 label = "Especialidad"
                 source = "clinicalSpecialtyId"
-                reference = "clinicalspecialties"
+                reference = "clinicalspecialtyrules"
                 sort={{ field: 'name', order: 'ASC' }}
                 filterToQuery={searchText => ({name: searchText ? searchText : -1})}
-            >
+                            >
                 <AutocompleteInput optionText="name" optionValue="id" validate={[required()]} />
             </ReferenceInput>
         )}
@@ -46,7 +46,7 @@ const RuleCreate = (props) => {
             <ReferenceInput
                 label="Practica/Procedimiento"
                 source="snomedId"
-                reference="snomedgroupconcepts"
+                reference="practiceprocedurerules"
                 sort={{ field: 'conceptPt', order: 'ASC' }}
                 filterToQuery={searchText => ({ conceptPt: searchText, groupId: 16 })}
             >

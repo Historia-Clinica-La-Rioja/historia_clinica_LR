@@ -154,6 +154,8 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="holidays" {...holidays(permissions)} />,
     <Resource name="snomedgrouptypes" />,
     <Resource name="rules" {...rules(permissions)} />,
+    <Resource name="clinicalspecialtyrules" />,
+    <Resource name="practiceprocedurerules" />,
     // more
     <Resource name="identificationTypes" />,
     <Resource name="patient" />,
