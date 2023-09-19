@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DocumentTypeDto } from '@api-rest/api-model';
+import { DocumentTypeDto, EpisodeDocumentTypeDto } from '@api-rest/api-model';
 import { InternmentEpisodeDocumentService } from '@api-rest/services/internment-episode-document.service';
 import { ExtesionFile } from '@core/utils/extensionFile';
 import { hasError, requiredFileType } from '@core/utils/form.utils';
@@ -22,6 +22,7 @@ export class AttachDocumentPopupComponent implements OnInit {
 	hasError = hasError;
 	form: UntypedFormGroup;
 	documentTypes: TypeaheadOption<any>[];
+	consentDocumentTypes: EpisodeDocumentTypeDto[];
 	required: boolean = true;
 	file: File = null;
 	showGenerateDocument = false;
@@ -48,6 +49,13 @@ export class AttachDocumentPopupComponent implements OnInit {
 				this.documentTypes = options;
 			}
 		})
+
+		this.internmentEpisodeDocument.getConsentDocumentTypes().subscribe(response => {
+			if (response.length > 0)
+				this.consentDocumentTypes = response;
+		})
+
+
 	}
 
 	setFilterValues(response) {
