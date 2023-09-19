@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { AddressDto, CareLineDto, ClinicalSpecialtyDto, PracticeDto, ReferenceProblemDto } from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
@@ -241,5 +241,8 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 
 	private clearTypeahead() {
 		return { value: null, viewValue: null, compareValue: null }
+	}
+	clear(control: AbstractControl) {
+		control.reset();
 	}
 }

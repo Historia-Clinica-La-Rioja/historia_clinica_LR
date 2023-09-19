@@ -46,6 +46,11 @@
 						{{specialty.name | translate}}
 					</mat-option>
 				</mat-select>
+				<button id="clear_identification_type" type="button" mat-button
+					*ngIf="formReference?.value.clinicalSpecialtyId && !formReference?.value.consultation" matSuffix color="warn" mat-icon-button
+					(click)="clear(formReference.controls.clinicalSpecialtyId); $event.stopPropagation()">
+					<mat-icon>close</mat-icon>
+				</button>
 				<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 			</mat-form-field>
 		</div>
@@ -62,6 +67,11 @@
 						{{specialty.name | translate}}
 					</mat-option>
 				</mat-select>
+				<button id="clear_identification_type" type="button" mat-button
+					*ngIf="formReference?.value.clinicalSpecialtyId && !formReference?.value.consultation" matSuffix color="warn" mat-icon-button
+					(click)="clear(formReference.controls.clinicalSpecialtyId); $event.stopPropagation()">
+					<mat-icon>close</mat-icon>
+				</button>
 				<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 			</mat-form-field>
 		</div>
