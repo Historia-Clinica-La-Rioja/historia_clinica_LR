@@ -32,7 +32,8 @@ export class RequestsComponent implements OnInit {
 	professionalsOptions: Option[] = [];
 	stateOptions: Option[] = [];
 	filters: filter[] = [];
-
+	statusFinished= EVirtualConsultationStatus.FINISHED;
+	statusCanceled= EVirtualConsultationStatus.CANCELED;
 	constructor(
 		private dialog: MatDialog,
 		private virtualConsultationService: VirtualConstultationService,
