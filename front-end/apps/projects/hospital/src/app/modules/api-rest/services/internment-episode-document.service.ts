@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DocumentTypeDto, EpisodeDocumentResponseDto } from '@api-rest/api-model';
+import { DocumentTypeDto, EpisodeDocumentResponseDto, EpisodeDocumentTypeDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { ViewPdfService } from '@presentation/dialogs/view-pdf/view-pdf.service';
@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 })
 export class InternmentEpisodeDocumentService {
 
-	url: string = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments`;
+	url: string = `${environment.apiBase}/institutions/${this.contextService.institutionId}`;
 
 	constructor(
 		private http: HttpClient,
@@ -20,27 +20,32 @@ export class InternmentEpisodeDocumentService {
 	) { }
 
 	saveInternmentEpisodeDocument(file, internmentEpisodeId: number, episodeDocumentTypeId: number): Observable<number> {
-		const url = `${this.url}/${internmentEpisodeId}/episodedocuments/${episodeDocumentTypeId}`;
+		const url = `${this.url}/internments/${internmentEpisodeId}/episodedocuments/${episodeDocumentTypeId}`;
 		return this.http.post<number>(url, file);
 	}
 
 	getInternmentEpisodeDocuments(internmentEpisodeId: number): Observable<EpisodeDocumentResponseDto[]> {
-		const url = `${this.url}/${internmentEpisodeId}/episodedocuments`;
+		const url = `${this.url}/internments/${internmentEpisodeId}/episodedocuments`;
 		return this.http.get<EpisodeDocumentResponseDto[]>(url);
 	}
 
+	getConsentDocumentTypes(): Observable<EpisodeDocumentTypeDto[]> {
+		const url = `${this.url}/episodedocumenttypes`;
+		return this.http.get<EpisodeDocumentTypeDto[]>(url);
+	}
+
 	getDocumentTypes(): Observable<DocumentTypeDto[]> {
-		const url = `${this.url}/documentstypes`;
+		const url = `${this.url}/internments/documentstypes`;
 		return this.http.get<DocumentTypeDto[]>(url);
 	}
 
 	deleteDocument(episodeDocumentId: number): Observable<boolean> {
-		const url = `${this.url}/episodedocuments/${episodeDocumentId}`;
+		const url = `${this.url}/internments/episodedocuments/${episodeDocumentId}`;
 		return this.http.delete<boolean>(url);
 	}
 
 	download(episodeDocumentId: number, fileName: string) {
-		const url = `${this.url}/episodedocuments/download/${episodeDocumentId}`;
+		const url = `${this.url}/internments/episodedocuments/download/${episodeDocumentId}`;
 		this.viewPdfService.showDialog(
 			url,
 			fileName,
