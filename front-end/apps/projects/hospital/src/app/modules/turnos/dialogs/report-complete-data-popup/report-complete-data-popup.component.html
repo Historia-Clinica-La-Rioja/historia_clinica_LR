@@ -8,14 +8,20 @@
 		<h2>{{'turnos.search_references.reference.TITLE' | translate}}</h2>
 		<app-patient-summary [person]="reportCompleteData.patient"></app-patient-summary>
 	</div>
+		
+	<mat-dialog-content fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="20px">
+		<div fxLayout="column" fxLayoutGap="10px">
+			<app-expansion-section [title]="'turnos.search_references.reference.CONTACT_DATA'"
+				[collapsed]="colapseContactDetails">
+				<app-contact-details [contactDetails]="reportCompleteData.contactDetails"></app-contact-details>
+			</app-expansion-section>
+		
+			<mat-divider></mat-divider>
 
-	<mat-dialog-content fxLayout="column" fxLayoutGap="20px">
-
-		<app-expansion-section [title]="'turnos.search_references.reference.CONTACT_DATA'"
-			[collapsed]="colapseContactDetails">
-			<app-contact-details [contactDetails]="reportCompleteData.contactDetails"></app-contact-details>
-		</app-expansion-section>
-
+			<app-expansion-section [title]="'turnos.search_references.reference.REFERENCE_DATA'">
+				<app-reference-complete-data [reference]="reportCompleteData.reference"></app-reference-complete-data>
+			</app-expansion-section>
+		</div>
 	</mat-dialog-content>
 
 </div>

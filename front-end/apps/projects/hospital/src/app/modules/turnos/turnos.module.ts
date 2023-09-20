@@ -7,6 +7,7 @@ import { PresentationModule } from '@presentation/presentation.module';
 import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
 import { PatientSummaryComponent } from '../hsi-components/patient-summary/patient-summary.component';
+import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
 // routing
 import { TurnosRoutingModule } from './turnos-routing.module';
 import { AgendaComponent } from './routes/agenda/agenda.component';
@@ -23,6 +24,7 @@ import { EquipmentDiaryComponent } from './components/equipment-diary/equipment-
 import { EquipmentTranscribeOrderPopupComponent } from './dialogs/equipment-transcribe-order-popup/equipment-transcribe-order-popup.component';
 import { ImageNetworkAppointmentComponent } from './components/image-network-appointment/image-network-appointment.component';
 import { ProfessionalSelectComponent } from './components/professional-select/professional-select.component';
+import { ReferenceCompleteDataComponent } from './components/reference-complete-data/reference-complete-data.component';
 import { ReferenceListComponent } from './components/reference-list/reference-list.component';
 import { ReferenceReportComponent } from './components/reference-report/reference-report.component';
 import { ReportInformationComponent } from './components/report-information/report-information.component';
@@ -48,7 +50,6 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { EquipmentAppointmentsFacadeService } from './services/equipment-appointments-facade.service';
 import { MedicalOrderInputComponent } from './components/medical-order-input/medical-order-input.component';
 
-
 @NgModule({
 	declarations: [
 		// routing
@@ -66,6 +67,7 @@ import { MedicalOrderInputComponent } from './components/medical-order-input/med
 		EquipmentTranscribeOrderPopupComponent,
 		ImageNetworkAppointmentComponent,
 		ProfessionalSelectComponent,
+		ReferenceCompleteDataComponent,
 		ReferenceListComponent,
 		ReferenceReportComponent,
 		ReportInformationComponent,
@@ -97,11 +99,12 @@ import { MedicalOrderInputComponent } from './components/medical-order-input/med
 		PresentationModule,
 		LazyMaterialModule,
 		HistoriaClinicaModule,
-		PatientSummaryComponent
+		PatientSummaryComponent,
+		IdentifierCasesComponent,
 	],
 	exports: [
 		CalendarProfessionalViewComponent,
-		SearchCriteriaComponent
+		SearchCriteriaComponent,
 	],
 	providers: [
 		{

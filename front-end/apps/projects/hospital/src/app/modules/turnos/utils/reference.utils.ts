@@ -1,10 +1,9 @@
 import { EReferenceClosureType } from "@api-rest/api-model";
 import { PRIORITY } from "@historia-clinica/modules/ambulatoria/constants/reference-masterdata";
-import { Color } from "@presentation/colored-label/colored-label.component";
+import { Color, ColoredLabel } from "@presentation/colored-label/colored-label.component";
 import { ColoredIconText } from "@presentation/components/colored-icon-text/colored-icon-text.component";
 import { DescriptionPriority } from "@presentation/components/priority-select/priority-select.component";
 import { Priority } from "@presentation/components/priority/priority.component";
-import { ReferenceState } from "@turnos/components/report-information/report-information.component";
 import { APPOINTMENT_STATES_ID } from "@turnos/constants/appointment";
 
 export function getPriority(id: number): string {
@@ -28,9 +27,7 @@ export enum REFERENCE_STATES {
 	SERVED = 'ATENDIDO',
 }
 
-
-
-export function getReferenceState(appointmentStateId: number): ReferenceState {
+export function getState(appointmentStateId: number): ColoredLabel {
 
 	if (appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED || appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED)
 		return {

@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { ReferenceReportDto } from '@api-rest/api-model';
 import { Report } from '../report-information/report-information.component';
-import { APPOINTMENT_STATE, CLOSURE_OPTIONS, PRIORITY_OPTIONS, getColoredIconText, getPriority, getReferenceState } from '@turnos/utils/reference.utils';
+import { APPOINTMENT_STATE, CLOSURE_OPTIONS, PRIORITY_OPTIONS, getColoredIconText, getPriority, getState } from '@turnos/utils/reference.utils';
 import { filter } from '@presentation/components/filters-select/filters-select.component';
 import { PAGE_MIN_SIZE } from '@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications';
 import { AbstractControl, FormBuilder, UntypedFormGroup } from '@angular/forms';
@@ -37,7 +37,7 @@ export class ReferenceListComponent {
 	set reports(list: ReferenceReportDto[]) {
 		if (list?.length) {
 			this.allReferenceReports = list.map(report => {
-				const state = getReferenceState(report.appointmentStateId);
+				const state = getState(report.appointmentStateId);
 				return {
 					dto: report,
 					priority: getPriority(report.priority.id),

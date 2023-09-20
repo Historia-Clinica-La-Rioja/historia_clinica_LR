@@ -285,7 +285,8 @@
 			"VIEW_APPLICATION": "Ver solicitud",
 			"reference": {
 				"TITLE": "Detalle de solicitud",
-				"CONTACT_DATA": "Datos de contacto"
+				"CONTACT_DATA": "Datos de contacto",
+				"REFERENCE_DATA": "Datos de Referencia"
 			}
 		}
 	}

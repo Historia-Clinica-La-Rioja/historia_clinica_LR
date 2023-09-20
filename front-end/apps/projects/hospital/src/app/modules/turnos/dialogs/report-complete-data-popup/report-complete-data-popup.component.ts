@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ReferenceCompleteDataDto, ReferencePatientDto } from '@api-rest/api-model';
+import { ReferenceCompleteDataDto, ReferenceDataDto, ReferencePatientDto } from '@api-rest/api-model';
 import { ReferenceReportService } from '@api-rest/services/reference-report.service';
 import { ContactDetails } from '@turnos/components/contact-details/contact-details.component';
 import { PatientSummary } from '../../../hsi-components/patient-summary/patient-summary.component';
@@ -29,6 +29,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 				this.reportCompleteData = {
 					patient: this.mapToPatientSummary(patient),
 					contactDetails: this.mapToContactDetails(patient),
+					reference: referenceDetails.reference,
 				}
 			}));
 	}
@@ -57,4 +58,5 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 interface ReportCompleteData {
 	patient: PatientSummary;
 	contactDetails: ContactDetails;
+	reference: ReferenceDataDto;
 }
