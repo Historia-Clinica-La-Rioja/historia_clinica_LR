@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DocumentTypeDto, EpisodeDocumentTypeDto } from '@api-rest/api-model';
+import { EpisodeDocumentTypeDto } from '@api-rest/api-model';
 import { InternmentEpisodeDocumentService } from '@api-rest/services/internment-episode-document.service';
 import { ExtesionFile } from '@core/utils/extensionFile';
 import { hasError, requiredFileType } from '@core/utils/form.utils';
@@ -9,7 +9,6 @@ import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.co
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.pdf'];
-const INFORMED_CONSENT = "Consentimiento informado de ingreso";
 
 @Component({
 	selector: 'app-attach-document-popup',
@@ -26,6 +25,7 @@ export class AttachDocumentPopupComponent implements OnInit {
 	required: boolean = true;
 	file: File = null;
 	showGenerateDocument = false;
+	consentSelectedType: EpisodeDocumentTypeDto;
 
 	constructor(private fb: UntypedFormBuilder,
 		private internmentEpisodeDocument: InternmentEpisodeDocumentService,
@@ -55,7 +55,6 @@ export class AttachDocumentPopupComponent implements OnInit {
 				this.consentDocumentTypes = response;
 		})
 
-
 	}
 
 	setFilterValues(response) {
@@ -82,8 +81,9 @@ export class AttachDocumentPopupComponent implements OnInit {
 			});
 	}
 
-	setDocumentType(type: DocumentTypeDto) {
-		this.showGenerateDocument = !!(this.documentTypes.find(elem => elem.value === type)?.viewValue === INFORMED_CONSENT);
+	setDocumentType(type) {
+		this.consentSelectedType = this.consentDocumentTypes.find(elem => elem.id === type);
+		this.showGenerateDocument = this.consentSelectedType ? true : false;
 		this.form.get('type').setValue(type);
 	}
 
