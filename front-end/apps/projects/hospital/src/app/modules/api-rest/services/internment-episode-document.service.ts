@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DocumentTypeDto, EpisodeDocumentResponseDto, EpisodeDocumentTypeDto } from '@api-rest/api-model';
+import { DocumentTypeDto, EpisodeDocumentResponseDto, EpisodeDocumentTypeDto} from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { ViewPdfService } from '@presentation/dialogs/view-pdf/view-pdf.service';
@@ -37,6 +37,16 @@ export class InternmentEpisodeDocumentService {
 	getDocumentTypes(): Observable<DocumentTypeDto[]> {
 		const url = `${this.url}/internments/documentstypes`;
 		return this.http.get<DocumentTypeDto[]>(url);
+	}
+
+	generateConsentDocument(internmentEpisodeId: number, consentId: number) {
+		const url = `${this.url}/internments/${internmentEpisodeId}/episode-document-type/${consentId}`;
+		const fileName = `Consentimiento_${consentId}.pdf`;
+
+		this.viewPdfService.showDialog(
+			url,
+			fileName,
+		);
 	}
 
 	deleteDocument(episodeDocumentId: number): Observable<boolean> {
