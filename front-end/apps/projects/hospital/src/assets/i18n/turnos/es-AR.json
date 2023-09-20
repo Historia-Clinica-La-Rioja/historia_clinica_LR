@@ -284,7 +284,8 @@
 			"COUNTER_REFERENCE":"Contrarreferencia",
 			"VIEW_APPLICATION": "Ver solicitud",
 			"reference": {
-				"TITLE": "Detalle de solicitud"
+				"TITLE": "Detalle de solicitud",
+				"CONTACT_DATA": "Datos de contacto"
 			}
 		}
 	}

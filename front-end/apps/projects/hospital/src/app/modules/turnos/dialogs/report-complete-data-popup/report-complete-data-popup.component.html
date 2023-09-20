@@ -8,4 +8,14 @@
 		<h2>{{'turnos.search_references.reference.TITLE' | translate}}</h2>
 		<app-patient-summary [person]="reportCompleteData.patient"></app-patient-summary>
 	</div>
+
+	<mat-dialog-content fxLayout="column" fxLayoutGap="20px">
+
+		<app-expansion-section [title]="'turnos.search_references.reference.CONTACT_DATA'"
+			[collapsed]="colapseContactDetails">
+			<app-contact-details [contactDetails]="reportCompleteData.contactDetails"></app-contact-details>
+		</app-expansion-section>
+
+	</mat-dialog-content>
+
 </div>

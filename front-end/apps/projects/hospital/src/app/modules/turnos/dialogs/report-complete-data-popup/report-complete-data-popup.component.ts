@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ReferenceCompleteDataDto, ReferencePatientDto } from '@api-rest/api-model';
 import { ReferenceReportService } from '@api-rest/services/reference-report.service';
+import { ContactDetails } from '@turnos/components/contact-details/contact-details.component';
 import { PatientSummary } from '../../../hsi-components/patient-summary/patient-summary.component';
 import { Observable, tap } from 'rxjs';
 
@@ -13,8 +14,9 @@ import { Observable, tap } from 'rxjs';
 export class ReportCompleteDataPopupComponent implements OnInit {
 
 	referenceCompleteData$: Observable<ReferenceCompleteDataDto>;
-	reportCompleteData: ReportCompleteData;
+	reportCompleteData: ReportCompleteData;	
 
+	colapseContactDetails = false;		
 	constructor(
 		private readonly referenceReportService: ReferenceReportService,
 		@Inject(MAT_DIALOG_DATA) public data,
@@ -25,7 +27,8 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 			referenceDetails => {
 				const patient = referenceDetails.patient;
 				this.reportCompleteData = {
-					patient: this.mapToPatientSummary(patient)
+					patient: this.mapToPatientSummary(patient),
+					contactDetails: this.mapToContactDetails(patient),
 				}
 			}));
 	}
@@ -41,8 +44,17 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		}
 	}
 
+	private mapToContactDetails(value: ReferencePatientDto): ContactDetails {
+		return {
+			phonePrefix: value.phonePrefix,
+			phoneNumber: value.phoneNumber,
+			email: value.email
+		}
+	}
+
 }
 
 interface ReportCompleteData {
 	patient: PatientSummary;
+	contactDetails: ContactDetails;
 }
