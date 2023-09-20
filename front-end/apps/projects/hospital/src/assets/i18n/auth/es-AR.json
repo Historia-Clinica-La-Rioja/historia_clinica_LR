@@ -114,7 +114,9 @@
 				"API_PACIENTES": "API Pacientes",
 				"API_RECETAS": "API Recetas",
 				"API_SIPPLUS": "API Sip+",
-				"API_USERS": "API Usuarios"
+				"API_USERS": "API Usuarios",
+				"VIRTUAL_CONSULTATION_RESPONSIBLE": "Responsable de teleconsulta",
+				"VIRTUAL_CONSULTATION_PROFESSIONAL":"Profesional de teleconsulta"
 			}
 		}
 	}
