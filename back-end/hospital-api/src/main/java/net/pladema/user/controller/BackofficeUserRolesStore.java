@@ -5,6 +5,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import net.pladema.permissions.repository.RoleRepository;
+
+import net.pladema.permissions.repository.entity.Role;
+
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -35,6 +39,7 @@ public class BackofficeUserRolesStore implements BackofficeStore<UserRole, Long>
 	private final HealthcareProfessionalRepository healthcareProfessionalRepository;
 	private final ProfessionalProfessionRepository professionalProfessionRepository;
 	private final BackofficeRolesFilter backofficeRolesFilter;
+	private final RoleRepository roleRepository;
 
 
 	@Override
@@ -119,9 +124,11 @@ public class BackofficeUserRolesStore implements BackofficeStore<UserRole, Long>
 		if(!isProfessional(userRole))
 			return;
 		var professionalId = healthcareProfessionalRepository.getProfessionalId(userRole.getUserId());
-		if ((professionalId == null) || (professionalProfessionRepository.countActiveByHealthcareProfessionalId(professionalId)<=0))
+		if ((professionalId == null) || (professionalProfessionRepository.countActiveByHealthcareProfessionalId(professionalId)<=0)) {
+			String roleDescription = roleRepository.findById(userRole.getRoleId()).map(Role::getDescription).orElse("ERROR");
 			throw new BackofficeUserException(BackofficeUserExceptionEnum.PROFESSIONAL_REQUIRED,
-					String.format("El rol %s asignado requiere que el usuario sea un profesional", userRole.getRoleId()));
+					String.format("El rol %s asignado requiere que el usuario sea un profesional", roleDescription));
+		}
 	}
 
 	private boolean isProfessional(UserRole role) {
