@@ -47,7 +47,16 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 			" OR ece.emergencyCareStateId = " + EmergencyCareState.CON_ALTA_MEDICA + " ) " +
 			" AND ece.institutionId = :institutionId " +
 			" GROUP BY ece.id ")
-	Optional<Integer> emergencyCareEpisodeInProgress(@Param("institutionId") Integer institutionId, @Param("patientId") Integer patientId);
+	Optional<Integer> emergencyCareEpisodeInProgressByInstitution(@Param("institutionId") Integer institutionId, @Param("patientId") Integer patientId);
+
+	@Transactional(readOnly = true)
+	@Query( value = "SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece.id, ece.institutionId) " +
+			" FROM EmergencyCareEpisode ece " +
+			" WHERE ece.patientId = :patientId AND ( ece.emergencyCareStateId = " + EmergencyCareState.EN_ESPERA +
+			" OR ece.emergencyCareStateId = " + EmergencyCareState.EN_ATENCION +
+			" OR ece.emergencyCareStateId = " + EmergencyCareState.CON_ALTA_MEDICA + " ) " +
+			" GROUP BY ece.id ")
+	List<EmergencyCareVo> emergencyCareEpisodeInProgress(@Param("patientId") Integer patientId);
 
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe, pa.typeId, petd.nameSelfDetermination, dso.description, tc, pi, s.description, b, ecd.administrativeDischargeOn) "+

@@ -87,4 +87,9 @@ public class EmergencyCareVo implements Serializable {
 		this.policeInterventionDetails = policeInterventionDetails != null ? new PoliceInterventionDetailsVo(policeInterventionDetails) : null;
 		this.endDate = endDate;
 	}
+
+	public EmergencyCareVo(Integer id, Integer institutionId){
+		this.id = id;
+		this.institutionId = institutionId;
+	}
 }

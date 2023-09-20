@@ -79,7 +79,7 @@ export class PatientProfileComponent implements OnInit {
 						this.internmentEpisode = internmentEpisodeProcessDto;
 					});
 
-				this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
+				this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgressInTheInstitution(this.patientId)
 					.subscribe( emergencyCareEpisodeInProgressDto => {
 						this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto;
 					});

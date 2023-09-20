@@ -126,7 +126,7 @@ export class CardEstudiosComponent implements OnInit {
 			}
 		});
 
-		this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
+		this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgressInTheInstitution(this.patientId)
 			.pipe(
 				switchMap(
 					inProgressEpisode => {

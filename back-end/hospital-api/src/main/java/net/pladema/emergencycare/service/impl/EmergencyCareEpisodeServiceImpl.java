@@ -103,14 +103,30 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
     }
 
 	@Override
-	public EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgress(Integer institutionId, Integer patientId) {
+	public EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgressByInstitution(Integer institutionId, Integer patientId) {
 		LOG.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
 		EmergencyCareEpisodeInProgressBo result = new EmergencyCareEpisodeInProgressBo(null, false);
-		Optional<Integer> resultQuery = emergencyCareEpisodeRepository.emergencyCareEpisodeInProgress(institutionId, patientId);
+		Optional<Integer> resultQuery = emergencyCareEpisodeRepository.emergencyCareEpisodeInProgressByInstitution(institutionId, patientId);
 		resultQuery.ifPresent(id -> {
 			result.setId(id);
 			result.setInProgress(true);
 		});
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgress(Integer institutionId, Integer patientId) {
+		LOG.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
+		EmergencyCareEpisodeInProgressBo result = new EmergencyCareEpisodeInProgressBo(null, false);
+		List<EmergencyCareVo> resultQuery = emergencyCareEpisodeRepository.emergencyCareEpisodeInProgress(patientId);
+		if(!resultQuery.isEmpty()) {
+			result.setInProgress(true);
+			resultQuery.forEach(rq -> {
+				if (rq.getInstitutionId().equals(institutionId))
+					result.setId(rq.getId());
+			});
+		}
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

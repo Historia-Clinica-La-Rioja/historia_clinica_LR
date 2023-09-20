@@ -22,7 +22,7 @@
 		<div fxFlex="50" fxFlex.lt-md="100">
 			<div>
 				<app-patient-card *ngIf="personPhoto" [patient]="patientBasicData" [personPhoto]="personPhoto"
-					[internmentEpisodeProcess]="internmentEpisode"
+					[internmentEpisodeInProgress]="internmentEpisode?.id && internmentEpisode?.inProgress"
 					[emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress?.inProgress">
 					<div header class="header">
 						<app-patient-type-logo [patientTypeData]="patientTypeData"></app-patient-type-logo>

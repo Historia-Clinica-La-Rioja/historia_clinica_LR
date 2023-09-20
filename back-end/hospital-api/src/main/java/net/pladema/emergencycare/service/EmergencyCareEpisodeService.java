@@ -11,7 +11,9 @@ public interface  EmergencyCareEpisodeService {
 
     List<EmergencyCareBo> getAll(Integer institutionId);
 
-    EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgress(Integer institutionId, Integer patientId);
+    EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgressByInstitution(Integer institutionId, Integer patientId);
+
+	EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgress(Integer institutionId, Integer patientId);
 
 	EmergencyCareBo getEpisodeSummary(Integer institutionId, Integer episodeId);
 

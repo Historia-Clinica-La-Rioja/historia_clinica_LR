@@ -16,7 +16,7 @@
 						<div *ngIf="!isEmergencyCareTemporalPatient else temporalGuardPatient">
 							<app-patient-card-header *ngIf="personPhoto" [patient]="patient" [personPhoto]="personPhoto"
 								[showAdditionalInformation]="true" [internmentEpisodeProcess]="internmentEpisodeProcess"
-								[emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress?.inProgress"
+								[emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress?.id && emergencyCareEpisodeInProgress?.inProgress"
 								[personalAdditionalInformation]="personInformation">
 							</app-patient-card-header>
 						</div>

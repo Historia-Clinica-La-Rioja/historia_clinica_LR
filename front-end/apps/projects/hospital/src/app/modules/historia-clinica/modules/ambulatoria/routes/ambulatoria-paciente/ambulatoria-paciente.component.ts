@@ -192,7 +192,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 						this.hasInternmentEpisodeInThisInstitution = internmentEpisodeProcess.inProgress && !!internmentEpisodeProcess.id;
 						this.emergencyCareTabIndex = this.hasInternmentEpisodeInThisInstitution ? EMERGENCY_CARE_INDEX_WHEN_INTERNED : EMERGENCY_CARE_INDEX;
 
-						this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId).subscribe(
+						this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgressInTheInstitution(this.patientId).subscribe(
 							emergencyCareEpisodeInProgressDto => {
 
 								if (emergencyCareEpisodeInProgressDto.id) {
