@@ -28,7 +28,7 @@ public class HierarchicalUnitTypeController {
 	private final FetchHierarchicalUnitTypesByInstitutionId fetchHierarchicalUnitTypesByInstitutionId;
 
 	@GetMapping()
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ESPECIALISTA_MEDICO, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<List<HierarchicalUnitTypeDto>> getAllByInstitution(@PathVariable(name = "institutionId") Integer institutionId) {
 		log.debug("Input institutionId {} ", institutionId);
 		List<HierarchicalUnitTypeDto> result = fetchHierarchicalUnitTypesByInstitutionId.run(institutionId)

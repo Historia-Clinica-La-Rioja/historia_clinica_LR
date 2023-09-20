@@ -226,7 +226,7 @@ export class HomeComponent implements OnInit {
 		});
 
 		return `${licenseUnique.map((l) => 
-			this.licensesTypeMasterData.find(item => item.id === l.typeId).description + ' ' + l.licenseNumber)
+			this.licensesTypeMasterData?.find(item => item.id === l.typeId).description + ' ' + l.licenseNumber)
 			.join(' - ')}`;
 	}
 
