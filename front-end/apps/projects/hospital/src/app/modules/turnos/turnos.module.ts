@@ -40,6 +40,7 @@ import { ConfirmBookingComponent } from './dialogs/confirm-booking/confirm-booki
 import { ConfirmPrintAppointmentComponent } from './dialogs/confirm-print-appointment/confirm-print-appointment.component';
 import { NewAppointmentComponent } from './dialogs/new-appointment/new-appointment.component';
 import { NewAttentionComponent } from './dialogs/new-attention/new-attention.component';
+import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data-popup/report-complete-data-popup.component';
 // services
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { EquipmentAppointmentsFacadeService } from './services/equipment-appointments-facade.service';
@@ -81,7 +82,8 @@ import { MedicalOrderInputComponent } from './components/medical-order-input/med
 		ConfirmPrintAppointmentComponent,
 		NewAppointmentComponent,
 		NewAttentionComponent,
-  MedicalOrderInputComponent,
+		MedicalOrderInputComponent,
+		ReportCompleteDataPopupComponent,
 	],
 	imports: [
 		CommonModule,

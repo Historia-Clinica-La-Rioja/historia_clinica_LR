@@ -6,6 +6,8 @@ import { filter } from '@presentation/components/filters-select/filters-select.c
 import { PAGE_MIN_SIZE } from '@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications';
 import { AbstractControl, FormBuilder, UntypedFormGroup } from '@angular/forms';
 import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
+import { ReportCompleteDataPopupComponent } from '@turnos/dialogs/report-complete-data-popup/report-complete-data-popup.component';
+import { MatDialog } from '@angular/material/dialog';
 
 const REFERENCE_REQUESTED = -1;
 const PENDING_CLOSURE = -1;
@@ -57,6 +59,7 @@ export class ReferenceListComponent {
 	constructor(
 		private readonly changeDetectorRef: ChangeDetectorRef,
 		readonly formBuilder: FormBuilder,
+		private readonly dialog: MatDialog,
 	) { }
 
 	ngOnInit() {
@@ -210,6 +213,17 @@ export class ReferenceListComponent {
 		filters.push(filterCareLines);
 
 		this.filters = filters;
+	}
+
+	openRequest(referenceId: number) {
+		this.dialog.open(ReportCompleteDataPopupComponent, {
+			data: {
+				referenceId
+			},
+			autoFocus: false,
+			disableClose: true,
+			width: '40%',
+		});
 	}
 
 }

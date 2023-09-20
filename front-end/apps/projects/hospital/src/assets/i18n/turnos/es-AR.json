@@ -281,7 +281,8 @@
 			"CONTINUES_UNDER_OBSERVATION": "Continúa en observación",
 			"TREATMENT_BEGINS_IN_A_EFERENCE_CENTER":"Inicia tratamiento en centro de referencia",
 			"REQUIERES_COMPLEMENTARY_STUDIES":"Requiere estudios complementarios",
-			"COUNTER_REFERENCE":"Contrarreferencia"
+			"COUNTER_REFERENCE":"Contrarreferencia",
+			"VIEW_APPLICATION": "Ver solicitud"
 		}
 	}
 }
