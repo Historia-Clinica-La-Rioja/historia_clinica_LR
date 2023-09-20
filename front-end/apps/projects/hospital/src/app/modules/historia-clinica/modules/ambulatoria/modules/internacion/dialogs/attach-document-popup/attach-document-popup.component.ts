@@ -114,6 +114,8 @@ export class AttachDocumentPopupComponent implements OnInit {
 		window.open(fileUrl, '_blank');
 	}
 
-	generateDocument() { }
+	generateDocument() {
+		this.internmentEpisodeDocument.generateConsentDocument(this.data.internmentEpisodeId,this.consentSelectedType.consentId);
+	}
 
 }
