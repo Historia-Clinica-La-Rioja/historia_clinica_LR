@@ -309,3 +309,7 @@ databaseChangeLog:
     relativeToChangelogFile: true
 
 # Los forks deberían agregar sus incrementales debajo de esta línea para evitar conflictos
+
+- include:
+    file: incrementales-v2_9.yml
+    relativeToChangelogFile: true
