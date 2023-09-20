@@ -9,7 +9,12 @@ import { Subscription } from 'rxjs';
 })
 export class RequestInfoCardComponent {
 	virtualConsultationsSubscription: Subscription;
-	@Input() virtualConsultation: any;
+	virtualConsultation: any;
+	@Input() set setVirtualConsultation(virtualConsultation: any) {
+		this.virtualConsultation = virtualConsultation;
+		if (!virtualConsultation.problem)
+			this.virtualConsultation.problem = 'Sin información';
+	}
 	statusPending = EVirtualConsultationStatus.PENDING;
 
 	constructor() { }

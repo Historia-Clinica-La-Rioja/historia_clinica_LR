@@ -12,7 +12,7 @@
 </section>
 <section>
 	<div *ngFor="let virtualConsultation of virtualConsultations$ | async">
-		<app-request-info-card [virtualConsultation]="virtualConsultation">
+		<app-request-info-card [setVirtualConsultation]="virtualConsultation">
 			<div view-clinical-history>
 				<a (click)="goToClinicalHistory(virtualConsultation.patientData.id)"
 					class="primary">{{'pacientes.profile.SEE_CLINICAL_HISTORY' | translate}}</a>
