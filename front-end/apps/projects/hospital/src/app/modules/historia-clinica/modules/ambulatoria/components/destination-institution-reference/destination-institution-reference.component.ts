@@ -106,6 +106,15 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 				else this.practiceSnomedId = null
 			}
 		});
+
+		this.formReference.controls.problems.valueChanges.subscribe((changes) => {
+			this.defaultDepartment = null;
+			this.defaultInstitution = null;
+			this.onDepartmentSelectionChange(null);
+			this.onInstitutionSelectionChange(null);
+			this.departmentDisable = true;
+			this.institutionsDisable = true;
+		});
 	}
 
 

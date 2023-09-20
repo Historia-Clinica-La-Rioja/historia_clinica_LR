@@ -83,6 +83,20 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 		this.formReference.controls.studyCategory.disable();
 		this.formReference.controls.practiceOrProcedure.disable();
 		this.setAllSpecialties();
+
+		this.formReference.controls.problems.valueChanges.subscribe((changes) => {
+			this.formReference.controls.careLine.setValue(null);
+			this.formReference.controls.careLine.updateValueAndValidity();
+			this.formReference.controls.careLine.disable();
+			this.formReference.controls.clinicalSpecialtyId.setValue(null);
+			this.formReference.controls.clinicalSpecialtyId.updateValueAndValidity();
+			this.formReference.controls.practiceOrProcedure.setValue(null);
+			this.formReference.controls.practiceOrProcedure.updateValueAndValidity();
+			if (this.formReference.controls.searchByCareLine.value)
+				this.practiceOrProcedureDisabled = true;
+			this.defaultPractice = this.clearTypeahead();
+		});
+
 	}
 
 	setSpecialtyCareLine(): void {
@@ -235,6 +249,7 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 	private clearTypeahead() {
 		return { value: null, viewValue: null, compareValue: null }
 	}
+
 	clear(control: AbstractControl) {
 		control.reset();
 	}
