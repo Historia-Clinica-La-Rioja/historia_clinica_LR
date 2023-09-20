@@ -42,7 +42,7 @@ import {
 import { map, take } from 'rxjs/operators';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PermissionsService } from '@core/services/permissions.service';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { PatientNameService } from "@core/services/patient-name.service";
 import { PersonMasterDataService } from "@api-rest/services/person-master-data.service";
@@ -61,6 +61,7 @@ import { toCalendarEvent } from '@turnos/utils/appointment.utils';
 import { JitsiCallService } from '../../../jitsi/jitsi-call.service';
 import { Router } from '@angular/router';
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
+import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 
 const TEMPORARY_PATIENT = 3;
 const REJECTED_PATIENT = 6;
@@ -69,6 +70,7 @@ const ROLES_TO_CHANGE_STATE: ERole[] = [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA
 const ROLES_TO_EDIT: ERole[]
 	= [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 const ROLE_TO_DOWNDLOAD_REPORTS: ERole[] = [ERole.ADMINISTRATIVO];
+const ROLE_TO_MAKE_VIRTUAL_CONSULTATION: ERole[] = [ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 @Component({
 	selector: 'app-appointment',
 	templateUrl: './appointment.component.html',
@@ -107,6 +109,7 @@ export class AppointmentComponent implements OnInit {
 	hasRoleToEdit$: Observable<boolean>;
 	hasRoleToDownloadReports$: Observable<boolean>;
 	hasRoleToAddObservations$: Observable<boolean>;
+	canMakeVirtualConsultation: boolean;
 	patientMedicalCoverages: PatientMedicalCoverage[];
 	identificationType: IdentificationTypeDto;
 
@@ -134,7 +137,7 @@ export class AppointmentComponent implements OnInit {
 
 	isRejectedPatient: boolean = false;
 	selectedModality: string;
-	viewLinkCall:Boolean = true;
+	isVirtualConsultationModality: boolean = true;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			appointmentData: PatientAppointmentInformation,
@@ -159,6 +162,7 @@ export class AppointmentComponent implements OnInit {
 		private readonly medicalCoverageInfo: MedicalCoverageInfoService,
 		private readonly jitsiCallService: JitsiCallService,
 		private readonly router: Router,
+		private readonly healthcareProfessionalService: HealthcareProfessionalService,
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_LLAMADO).subscribe(isEnabled => this.isMqttCallEnabled = isEnabled);
@@ -232,7 +236,7 @@ export class AppointmentComponent implements OnInit {
 				switch (this.appointment.modality) {
 					case EAppointmentModality.ON_SITE_ATTENTION: {
 						this.selectedModality = this.modalitys.ON_SITE_ATTENTION;
-						this.viewLinkCall=false;
+						this.isVirtualConsultationModality = false;
 						break
 					}
 					case EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION: {
@@ -250,6 +254,15 @@ export class AppointmentComponent implements OnInit {
 		this.hasRoleToEdit$ = this.permissionsService.hasContextAssignments$(ROLES_TO_EDIT).pipe(take(1));
 
 		this.hasRoleToDownloadReports$ = this.permissionsService.hasContextAssignments$(ROLE_TO_DOWNDLOAD_REPORTS).pipe(take(1));
+
+		const loggedUserHealthcareProfessionalId$ = this.healthcareProfessionalService.getHealthcareProfessionalByUserId().pipe(take(1));
+		const loggedUserHasRoleToMakeVirtualConsultation$ = this.permissionsService.hasContextAssignments$(ROLE_TO_MAKE_VIRTUAL_CONSULTATION).pipe(take(1));
+
+		combineLatest([loggedUserHealthcareProfessionalId$, loggedUserHasRoleToMakeVirtualConsultation$]).subscribe(([healthcareProfessionalId, hasRole]) => {
+			this.canMakeVirtualConsultation = (this.data.agenda.healthcareProfessionalId === healthcareProfessionalId ||
+			this.data.agenda.associatedProfessionalsInfo.find(professional => professional.id === healthcareProfessionalId)) &&
+			hasRole;
+		});
 
 		this.personMasterDataService.getIdentificationTypes()
 			.subscribe(identificationTypes => {
