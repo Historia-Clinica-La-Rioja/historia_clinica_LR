@@ -2,7 +2,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { SnomedDto, SnomedECL, SnvsEventDto, SnvsEventManualClassificationsDto } from '@api-rest/api-model';
 import { SnomedSemanticSearch, SnomedService } from './snomed.service';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
-import { newMoment } from '@core/utils/moment.utils';
+import { newMomentLocal } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { hasError } from '@core/utils/form.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -56,7 +56,7 @@ export class AmbulatoryConsultationProblemsService {
 			snomed: [null, Validators.required],
 			severidad: [null],
 			cronico: [null],
-			fechaInicio: [newMoment()],
+			fechaInicio: [newMomentLocal()],
 			fechaFin: [null]
 		});
 
@@ -213,7 +213,7 @@ export class AmbulatoryConsultationProblemsService {
 	}
 
 	getFechaInicioMax(): Moment {
-		return newMoment();
+		return newMomentLocal();
 	}
 
 	getForm(): UntypedFormGroup {
@@ -239,7 +239,7 @@ export class AmbulatoryConsultationProblemsService {
 		this.form.controls.fechaFin.setErrors(null);
 		if (this.form.value.fechaFin) {
 			if (this.form.value.fechaInicio) {
-				const today = newMoment();
+				const today = newMomentLocal();
 				const newFechaFin: Moment = this.form.value.fechaFin;
 				if (newFechaFin.isBefore(this.form.value.fechaInicio, 'day')) {
 					this.form.controls.fechaFin.setErrors({ min: true });

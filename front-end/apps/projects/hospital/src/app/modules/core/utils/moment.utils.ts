@@ -49,6 +49,8 @@ export const MAT_APP_DATE_FORMATS = {
 
 export const newMoment = (): Moment => moment.utc(Date.now());
 
+export const newMomentLocal = (): Moment => moment(Date.now());
+
 export const dateToMoment = (date: Date): Moment => moment.utc(date);
 
 export const dateToMomentTimeZone = (date: Date): Moment => moment(date);
