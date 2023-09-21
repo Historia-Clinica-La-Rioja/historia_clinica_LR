@@ -1,7 +1,7 @@
 <section>
 	<h3 class="page-title">{{'telemedicina.requests.SUBTITLE' | translate}}</h3>
 	<div fxLayout="row" fxLayoutAlign="space-between start" >
-		<div>
+		<div id="content-filters">
 			<app-filters-select [setFilters]="filters" (searchCriteria)="prepareDtoFilter($event)"></app-filters-select>
 		</div>
 		<div fxLayout="column" fxLayoutAlign="end end" fxLayoutGap="1em">

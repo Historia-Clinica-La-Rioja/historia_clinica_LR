@@ -113,12 +113,12 @@ export class RequestsComponent implements OnInit {
 
 	prepareDtoFilter($event) {
 		let newCriteria: VirtualConsultationFilterDto = {};
-		newCriteria.availability = $event.availability.status ? null : $event.availability;
-		newCriteria.careLineId = $event.careLine.status ? null : $event.careLine;
-		newCriteria.clinicalSpecialtyId = $event.speciality.status ? null : $event.speciality;
-		newCriteria.priority = $event.priority.status ? null : $event.priority;
-		newCriteria.responsibleHealthcareProfessionalId = $event.professional.status ? null : $event.professional;
-		newCriteria.status = $event.state.status ? null : $event.state;
+		newCriteria.availability = $event.availability;
+		newCriteria.careLineId = $event.careLine;
+		newCriteria.clinicalSpecialtyId = $event.speciality;
+		newCriteria.priority = $event.priority;
+		newCriteria.responsibleHealthcareProfessionalId = $event.professional;
+		newCriteria.status = $event.state;
 		this.searchRequest(newCriteria);
 	}
 

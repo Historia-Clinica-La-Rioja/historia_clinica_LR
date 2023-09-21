@@ -25,8 +25,9 @@ export class FiltersSelectComponent implements OnInit {
 	toggleFilter(value: boolean) {
 		this.isFilterExpanded = value;
 	}
-	cleanStatuses() {
-		//this.filterForm.controls.status.setValue(null);
+
+	cleanStatuses(nameControl:any) {
+		this.filterForm.get(nameControl).setValue(null);
 	}
 
 	emitSearchCriteria(){
@@ -37,7 +38,7 @@ export class FiltersSelectComponent implements OnInit {
 		const group: any = {};
 		if (filters.length) {
 			filters.forEach(filter => {
-				group[filter.key] = new FormControl(new FormControl(null))
+				group[filter.key] = new FormControl(null)
 			});
 		}
 		return new FormGroup(group);
