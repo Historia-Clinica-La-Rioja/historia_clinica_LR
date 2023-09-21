@@ -42,6 +42,7 @@ import net.pladema.medicalconsultation.appointment.repository.domain.Appointment
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketImageBo;
+import net.pladema.medicalconsultation.appointment.repository.domain.MedicalCoverageAppoinmentOrderBo;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentObservation;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.repository.entity.HistoricAppointmentState;
@@ -520,7 +521,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 				()-> new AppointmentException(AppointmentEnumException.APPOINTMENT_ID_NOT_FOUND, "el id no corresponde con ningun turno asignado")) :
 				this.appointmentRepository.getAppointmentImageTicketData(appointmentId).orElseThrow(
 						()-> new AppointmentException(AppointmentEnumException.APPOINTMENT_ID_NOT_FOUND, "el id no corresponde con ningun turno asignado"));
-		//result.setIncludeNameSelfDetermination(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS.isActive());
+		if (result.getMedicalCoverage() == null && result.getMedicalCoverageAcronym() == null)
+		{
+			Optional<MedicalCoverageAppoinmentOrderBo> medicalCoverage = this.appointmentRepository.getMedicalCoverageOrderByAppointment(appointmentId);
+			result.setMedicalCoverage(medicalCoverage.get().getMedicalCoverage());
+			result.setMedicalCoverageAcronym(medicalCoverage.get().getMedicalCoverageAcronym());
+		}
 		log.trace(OUTPUT, result);
 		return result;
 	}

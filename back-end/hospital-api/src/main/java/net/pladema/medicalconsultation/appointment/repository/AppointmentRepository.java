@@ -18,6 +18,8 @@ import net.pladema.medicalconsultation.appointment.repository.domain.Appointment
 
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketImageBo;
 
+import net.pladema.medicalconsultation.appointment.repository.domain.MedicalCoverageAppoinmentOrderBo;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -327,6 +329,18 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN Institution i On(s.institutionId = i.id) " +
 			"WHERE a.id = :appointmentId ")
 	Optional<AppointmentTicketImageBo> getAppointmentImageTicketData(@Param("appointmentId") Integer appointmentId);
+
+
+	@Transactional(readOnly = true)
+	@Query(	"SELECT DISTINCT NEW net.pladema.medicalconsultation.appointment.repository.domain.MedicalCoverageAppoinmentOrderBo(" +
+			"mc.name, hi.acronym) " +
+			"FROM AppointmentOrderImage aoi " +
+			"LEFT JOIN ServiceRequest sr ON(aoi.orderId = sr.id) " +
+			"LEFT JOIN PatientMedicalCoverageAssn pmc ON(sr.medicalCoverageId = pmc.id) " +
+			"LEFT JOIN MedicalCoverage mc ON(pmc.medicalCoverageId = mc.id) " +
+			"LEFT JOIN HealthInsurance hi ON(hi.id = mc.id) " +
+			"WHERE aoi.pk.appointmentId = :appointmentId ")
+	Optional<MedicalCoverageAppoinmentOrderBo> getMedicalCoverageOrderByAppointment(@Param("appointmentId") Integer appointmentId);
 
 
 	@Transactional(readOnly = true)
