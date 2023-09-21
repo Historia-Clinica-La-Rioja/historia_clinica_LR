@@ -96,12 +96,11 @@
 					</app-carelines-and-specialties-reference>
 
 
-					<app-destination-institution-reference [formReference]="formReference" [submitForm]="submitForm"
+					<app-destination-institution-reference
+						[formReference]="formReference"
+						[submitForm]="submitForm"
 						[updateFormFields]="updateDepartamentsAndInstitution"
-						[careLine]="formReference.value.careLine?.id"
-						[clinicalSpecialty]="formReference.value.clinicalSpecialtyId?.id"
-						(departmentSelected)="onDepartmentSelectionChange($event)"
-						(institutionSelected)="onInstitutionSelectionChange($event)">
+						(provinceSelected)="onProvinceSelectionChange($event)">
 					</app-destination-institution-reference>
 				</div>
 			</div>

@@ -119,6 +119,11 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 		this.activateDepartamentsAndInstitution();
 	}
 
+	onProvinceSelectionChange(province: number) {
+		this.formReference.controls.provinceId.setValue(province);
+		this.clearCarelinesAndSpecialties = true;
+	}
+
 	activateDepartamentsAndInstitution() {
 		this.updateDepartamentsAndInstitution = true;
 	}

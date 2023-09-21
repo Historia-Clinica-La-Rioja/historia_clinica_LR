@@ -1,5 +1,5 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { AddressDto, DepartmentDto, InstitutionBasicInfoDto } from '@api-rest/api-model';
+import { Component, Input, OnInit } from '@angular/core';
+import { AddressDto, InstitutionBasicInfoDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
@@ -16,18 +16,6 @@ import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged } fr
 export class DestinationInstitutionReferenceComponent implements OnInit {
 	@Input() formReference: UntypedFormGroup;
 	@Input() submitForm: boolean;
-	@Input() set careLine(careLineId: number) {
-		this.specialtyId = null;
-		this.careLineId = careLineId;
-		this.setDepartaments();
-		this.onSpecialtySelectionChange();
-	};
-
-	@Input() set clinicalSpecialty(specialty: number) {
-		this.specialtyId = null;
-		this.specialtyId = specialty;
-		this.setDepartaments();
-	};
 
 	@Input() set updateFormFields(updateDepartamentsAndInstitution: boolean) {
 		if (updateDepartamentsAndInstitution) {
@@ -35,27 +23,17 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 		}
 	}
 
-	@Output() departmentSelected = new EventEmitter<number>();
-	@Output() institutionSelected = new EventEmitter<number>();
-	@Output() resetControls = new EventEmitter();
-
 	ZERO = 0;
-	provinceValue: number;
 	departments: TypeaheadOption<any>[];
 	institutions: TypeaheadOption<any>[];
-	defaultProvince: TypeaheadOption<any>;
 	defaultDepartment: TypeaheadOption<any>;
 	defaultInstitution: TypeaheadOption<any>;
 	departmentDisable = true;
 	institutionsDisable = true;
-	originalDestinationDepartment: TypeaheadOption<any>;
 	institutionDestinationId: number;
 	departmentId: number;
-	originDepartment: DepartmentDto;
 	originInstitutionInfo: AddressDto;
-	provinces: TypeaheadOption<any>[];
 	specialtyId: number;
-	isDayGreaterThanZero = false;
 	institutionSelection = false;
 	careLineId: number;
 	appointment$ = new BehaviorSubject<number>(undefined);
@@ -63,6 +41,7 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 	practiceOrProcedure = false;
 	practiceSnomedId;
 	clinicalSpecialtyId;
+
 	constructor(
 		private readonly institutionService: InstitutionService,
 		private readonly adressMasterData: AddressMasterDataService,
@@ -70,7 +49,7 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 		private readonly diaryAvailableAppointmentsSearchService: DiaryAvailableAppointmentsSearchService,
 	) { }
 
-	ngOnInit(): void {
+	ngOnInit() {
 		this.institutionSelection = false;
 
 		this.referenceOriginInstitutionService.originInstitutionInfo$.subscribe(info => this.originInstitutionInfo = info);
@@ -92,10 +71,9 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 
 		combineLatest([practiceOrProcedure$, clinicalSpecialtyId$, careLine$]).subscribe(([practiceOrProcedure, clinicalSpecialtyId, careLine]) => {
 			this.practiceOrProcedure = !!practiceOrProcedure;
-
+			this.cleanFields();
 			if (practiceOrProcedure) {
 				this.adressMasterData.getDepartmentsByCareLineAndPracticesAndClinicalSpecialty(practiceOrProcedure.id, clinicalSpecialtyId?.id, careLine?.id).subscribe(data => {
-					this.cleanFields();
 					this.departments = this.toTypeaheadOptions(data, 'description');
 					this.departmentDisable = false;
 					this.practiceSnomedId = practiceOrProcedure.id;
@@ -105,6 +83,19 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 				if (this.formReference.controls.practiceOrProcedure.value) this.practiceSnomedId = this.formReference.controls.practiceOrProcedure.value.id;
 				else this.practiceSnomedId = null
 			}
+		});
+
+		careLine$.subscribe(data => {
+			this.specialtyId = null;
+			this.careLineId = data?.id;
+			this.setDepartaments();
+			this.onSpecialtySelectionChange();
+		})
+
+		clinicalSpecialtyId$.subscribe(data => {
+			this.specialtyId = null;
+			this.specialtyId = data?.id;
+			this.setDepartaments();
 		});
 
 		this.formReference.controls.problems.valueChanges.subscribe((changes) => {
@@ -118,25 +109,12 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 	}
 
 
-	private toTypeaheadOptions(response: any[], attribute: string): TypeaheadOption<any>[] {
-		return response.map(r => {
-			return {
-				value: r.id,
-				compareValue: r[attribute],
-				viewValue: r[attribute]
-			}
-		})
-	}
-
-	private clearTypeahead() {
-		return { value: null, viewValue: null, compareValue: null }
-	}
 
 	onSpecialtySelectionChange() {
 		this.defaultDepartment = this.clearTypeahead();
 		this.defaultInstitution = this.clearTypeahead();
-		this.departmentSelected.emit(null);
-		this.institutionSelected.emit(null);
+		this.formReference.controls.departmentId.setValue(null);
+		this.formReference.controls.institutionDestinationId.setValue(null);
 	}
 
 	onDepartmentSelectionChange(departmentId: number) {
@@ -157,7 +135,7 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 			}
 		}
 		this.departmentId = departmentId;
-		this.departmentSelected.emit(departmentId);
+		this.formReference.controls.departmentId.setValue(departmentId);
 	}
 
 	onInstitutionSelectionChange(institutionDestinationId: number) {
@@ -168,17 +146,17 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 			this.institutionSelection = false;
 		}
 		this.institutionDestinationId = institutionDestinationId;
-		this.institutionSelected.emit(institutionDestinationId);
+		this.formReference.controls.institutionDestinationId.setValue(institutionDestinationId);
 	}
 
 	setAppointments(institutionDestinationId: number) {
 		if (this.careLineId) {
 			this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointmentsQuantity(institutionDestinationId, this.specialtyId, this.departmentId, this.careLineId, this.practiceSnomedId).subscribe(rs =>
 				this.protectedAppointment$.next(rs));
-			this.diaryAvailableAppointmentsSearchService.getAvailableAppiuntmentsQuantityByCarelineDiaries(institutionDestinationId, this.careLineId, this.practiceSnomedId, this.specialtyId).subscribe(rs => 
+			this.diaryAvailableAppointmentsSearchService.getAvailableAppiuntmentsQuantityByCarelineDiaries(institutionDestinationId, this.careLineId, this.practiceSnomedId, this.specialtyId).subscribe(rs =>
 				this.appointment$.next(rs));
 		}
-		else 
+		else
 			this.diaryAvailableAppointmentsSearchService.getAvailableAppointmentsQuantity(institutionDestinationId, this.specialtyId, this.practiceSnomedId).subscribe(rs =>
 				this.appointment$.next(rs));
 	}
@@ -201,4 +179,17 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 		this.institutionSelection = false;
 	}
 
+	private toTypeaheadOptions(response: any[], attribute: string): TypeaheadOption<any>[] {
+		return response.map(r => {
+			return {
+				value: r.id,
+				compareValue: r[attribute],
+				viewValue: r[attribute]
+			}
+		})
+	}
+
+	private clearTypeahead() {
+		return { value: null, viewValue: null, compareValue: null }
+	}
 }
