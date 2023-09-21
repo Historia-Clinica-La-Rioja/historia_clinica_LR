@@ -26,6 +26,8 @@ public class SectorSummaryVo {
 
     private List<ClinicalSpecialtyVo> clinicalSpecialties;
 
+	private List<HierarchicalUnitVo> hierarchicalUnit;
+
     public SectorSummaryVo(Sector sector, String careType, String sectorOrganization, String ageGroup) {
         this.id = sector.getId();
         this.description = sector.getDescription();
@@ -33,10 +35,15 @@ public class SectorSummaryVo {
         this.organizationType = sectorOrganization;
         this.ageGroup = ageGroup;
         this.clinicalSpecialties = new ArrayList<>();
+		this.hierarchicalUnit = new ArrayList<>();
     }
 
     public void addSpecialty(ClinicalSpecialtyVo clinicalSpecialty) {
         this.clinicalSpecialties.add(clinicalSpecialty);
     }
+
+	public void addHierarchicalUnit(HierarchicalUnitVo hierarchicalUnitVo) {
+		this.hierarchicalUnit.add(hierarchicalUnitVo);
+	}
 
 }

@@ -46,5 +46,4 @@ public interface BedMapper {
     
     @Named("fromPatientBedRelocationDto")
     HistoricPatientBedRelocation fromPatientBedRelocationDto(PatientBedRelocationDto patientBedRelocationDto);
-    
 }
