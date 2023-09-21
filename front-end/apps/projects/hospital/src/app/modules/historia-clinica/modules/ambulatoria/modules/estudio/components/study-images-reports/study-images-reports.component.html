@@ -1,8 +1,5 @@
 <div fxLayoutAlign="center center" fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="18px">
-    <mat-icon *ngIf="studyInfo.typeOrder === 'sin orden'" class="order-warn"
-        matTooltip="Orden pendiente">info_outline</mat-icon>
-    <mat-icon *ngIf="studyInfo.typeOrder === 'transcripta'" class="order-info"
-        matTooltip="Orden transcripta">attachment_outline</mat-icon>
+    <app-tooltip-order [typeOrder]="studyInfo.typeOrder"></app-tooltip-order>
     <div [ngClass]="isImageOrderCasesIncomplete ? 'files-section' : ''"  fxLayout="row" fxLayoutGap="18px" fxLayoutAlign="center center">
         <ng-container *ngIf="showAccessToFiles">
             <app-view-study class="view-study-btn"

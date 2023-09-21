@@ -2,7 +2,7 @@ import { DiagnosticReportInfoDto, HCEDocumentDataDto } from "@api-rest/api-model
 
 export const CATEGORY_IMAGE = "Diagnóstico por imágenes"
 
-export const enum E_TYPE_ORDER {
+export enum E_TYPE_ORDER {
 	TRANSCRIPTA = 'transcripta',
 	SIN_ORDEN = 'sin orden',
 	COMPLETA = 'completa'

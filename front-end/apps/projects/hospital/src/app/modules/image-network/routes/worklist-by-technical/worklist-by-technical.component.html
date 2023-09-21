@@ -83,6 +83,12 @@
                                         {{appointment.data.patient.id}}</span>
                                 </div>
 
+                                <div fxFlex.gt-sm="5">
+                                    <div *ngIf="!appointment.data.serviceRequestId">
+                                        <app-tooltip-order [typeOrder]="!appointment.data.studyName ? 'sin orden' : 'transcripta'"></app-tooltip-order>
+                                    </div>
+                                </div>
+
                                 <div fxFlex.gt-sm="20">
                                     <span class="study-name smaller-font" *ngIf="appointment.data.studyName; else noStudy" data-id="study-name">{{appointment.data.studyName | titlecase}}</span>
                                     <ng-template #noStudy><span class="study-name grey smaller-font">{{'image-network.worklist.details_study.PENDING_ORDER' | translate}}</span></ng-template>

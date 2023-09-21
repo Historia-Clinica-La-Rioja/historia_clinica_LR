@@ -19,6 +19,7 @@ import { WorklistFiltersComponent } from './components/worklist-filters/worklist
 import { SaveTemplateComponent } from './dialogs/save-template/save-template.component';
 import { ViewInformerObservationsComponent } from './components/view-informer-observations/view-informer-observations.component';
 import { ImportTemplateComponent } from './dialogs/import-template/import-template.component';
+import { TooltipOrderComponent } from './components/tooltip-order/tooltip-order.component';
 
 @NgModule({
     declarations: [
@@ -38,6 +39,7 @@ import { ImportTemplateComponent } from './dialogs/import-template/import-templa
         SaveTemplateComponent,
         ViewInformerObservationsComponent,
         ImportTemplateComponent,
+        TooltipOrderComponent
     ],
     imports: [
         CommonModule,
@@ -47,7 +49,8 @@ import { ImportTemplateComponent } from './dialogs/import-template/import-templa
     ],
     exports: [
         ViewStudyComponent,
-        ViewReportComponent
+        ViewReportComponent,
+        TooltipOrderComponent,
     ]
 })
 
