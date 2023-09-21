@@ -183,3 +183,17 @@ databaseChangeLog:
                       nullable: true
                     name: digital_signature_hash
                     type: varchar(44)
+
+    - changeSet:
+        id: addColumn-deleted-document_template
+        author: mromero
+        changes:
+          - addColumn:
+              tableName: document_template
+              columns:
+                - column:
+                    name: deleted
+                    type: boolean
+                    constraints:
+                      nullable: false
+                    defaultValue: ${boolean.false}
