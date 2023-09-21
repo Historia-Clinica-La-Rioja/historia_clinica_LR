@@ -79,7 +79,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"i.name AS institutionOrigin, cs.name AS clinicalSpecialtyDestination, " +
 				"cl.description AS careLine, cr.closure_type_id, i2.name AS institutionDestination " +
 				"FROM {h-schema}reference r " +
-				"JOIN {h-schema}clinical_specialty cs ON (r.clinical_specialty_id = cs.id) " +
+				"LEFT JOIN {h-schema}clinical_specialty cs ON (r.clinical_specialty_id = cs.id) " +
 				"JOIN {h-schema}outpatient_consultation oc ON (r.encounter_id = oc.id) " +
 				"JOIN {h-schema}institution i ON (oc.institution_id = i.id) " +
 				"JOIN {h-schema}clinical_specialty cs2 ON (oc.clinical_specialty_id = cs2.id) " +
@@ -99,7 +99,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"i.name AS institutionOrigin, cs.name as clinicalSpecialtyDestination, " +
 				"cl.description AS careLine, cr.closure_type_id, i2.name AS institutionDestination " +
 				"FROM {h-schema}reference r " +
-				"JOIN {h-schema}clinical_specialty cs ON (r.clinical_specialty_id = cs.id) " +
+				"LEFT JOIN {h-schema}clinical_specialty cs ON (r.clinical_specialty_id = cs.id) " +
 				"JOIN {h-schema}odontology_consultation oc ON (r.encounter_id = oc.id) " +
 				"JOIN {h-schema}institution i ON (oc.institution_id = i.id)" +
 				"JOIN {h-schema}clinical_specialty cs2 ON (oc.clinical_specialty_id = cs2.id) " +
