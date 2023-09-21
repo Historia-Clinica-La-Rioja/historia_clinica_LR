@@ -1806,6 +1806,12 @@ export interface HierarchicalUnitTypeDto {
     id: number;
 }
 
+export interface HierarchicalUnitVo {
+    id: number;
+    name: string;
+    typeId: number;
+}
+
 export interface HistoricClinicHistoryDownloadDto {
     downloadDate: DateTimeDto;
     id: number;
@@ -3413,6 +3419,7 @@ export interface SectorSummaryDto {
     careTypeId: number;
     clinicalSpecialties: ClinicalSpecialtyDto[];
     description: string;
+    hierarchicalUnit: HierarchicalUnitVo[];
     id: number;
     organizationType: string;
     organizationTypeId: number;

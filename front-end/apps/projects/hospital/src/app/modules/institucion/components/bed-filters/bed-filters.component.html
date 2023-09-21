@@ -38,4 +38,21 @@
         <mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
         <mat-datepicker #myDatepicker></mat-datepicker>
     </mat-form-field>
+
+	<mat-form-field appearance="outline">
+		<mat-label>{{'gestion-camas.filters.HIERARCHICAL_UNITS' | translate}}</mat-label>
+		<mat-select formControlName="hierarchicalUnits" multiple (selectionChange)="sendAllFiltersOnFilterChange()" name="hierarchicalUnits">
+		    <mat-select-trigger>
+			    {{hierarchicalUnits.value?.[0]?.name || ''}}
+			    <span *ngIf="(hierarchicalUnits.value?.length || 0) > 1">
+			    (+{{(hierarchicalUnits.value?.length || 0) - 1}} {{hierarchicalUnits.value?.length >= 2 ? 'más' : ''}})
+			    </span>
+		    </mat-select-trigger>
+		    <mat-option *ngFor="let h of hierarchicalUnits$ | async" [value]="h">{{h.name}}</mat-option>
+		</mat-select>
+        <button id="clear-hierarchicalUnits" type="button" mat-button *ngIf="form.controls.hierarchicalUnits.value?.length" matSuffix
+                color="warn" mat-icon-button (click)="clear(form.controls.hierarchicalUnits); $event.stopPropagation()">
+            <mat-icon>close</mat-icon>
+        </button>
+	</mat-form-field>
 </form>

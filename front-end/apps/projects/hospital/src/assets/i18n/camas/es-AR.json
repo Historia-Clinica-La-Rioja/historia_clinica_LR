@@ -24,7 +24,8 @@
             "SECTOR": "Sector",
             "SERVICE": "Servicio",
             "BED_CATEGORY": "Categoría",
-            "PROBABLE_DISCHARGE_DATE": "Fecha de alta probable"
+            "PROBABLE_DISCHARGE_DATE": "Fecha de alta probable",
+            "HIERARCHICAL_UNITS": "Unidades jerárquicas"
         }
     }
 }
