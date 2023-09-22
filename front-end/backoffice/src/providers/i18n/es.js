@@ -145,7 +145,8 @@ const messages = {
                 sectorId: 'Sector',
                 clinicalSpecialtySectorId: 'Especialidad | Sector',
                 roomNumber: 'Nro. habitación',
-                beds: 'Camas'
+                beds: 'Camas',
+                topic: 'Tópico'
             },
             createRelated: 'Crear Habitación'
         },
@@ -179,6 +180,7 @@ const messages = {
             createRelated: 'Crear Shockroom',
             fields: {
                 description: 'Nombre',
+                topic: 'Tópico'
             }
         },
         addresses: {

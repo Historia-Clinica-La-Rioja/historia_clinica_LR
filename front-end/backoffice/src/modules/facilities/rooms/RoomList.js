@@ -6,6 +6,7 @@ import {
     ReferenceField,
     TextField,
     TextInput,
+    usePermissions
 } from 'react-admin';
 import {
     SgxSelectInput,
@@ -22,18 +23,22 @@ const RoomFilter = props =>(
     </Filter>
 );
 
-const InstitutionList = props => (
-    <List {...props} hasCreate={false} filters={<RoomFilter/>}>
-        <Datagrid rowClick="show">
-            <TextField source="roomNumber"/>
-            <TextField source="description" />
-            <TextField source="type" />
-            <SgxDateField source="dischargeDate" />
-            <ReferenceField source="sectorId" reference="sectors">
-                <TextField source="description"/>
-            </ReferenceField>
-        </Datagrid>
-    </List>
-);
+const InstitutionList = props => {
+    const { permissions } = usePermissions();
+    return (
+        <List {...props} hasCreate={false} filters={<RoomFilter/>}>
+            <Datagrid rowClick="show">
+                <TextField source="roomNumber"/>
+                <TextField source="description" />
+                <TextField source="type" />
+                <SgxDateField source="dischargeDate" />
+                <ReferenceField source="sectorId" reference="sectors">
+                    <TextField source="description"/>
+                </ReferenceField>
+                {permissions && permissions.isOn('HABILITAR_LLAMADO') && <TextField source="topic" />}
+            </Datagrid>
+        </List>
+    )
+};
 
 export default InstitutionList;

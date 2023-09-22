@@ -6,6 +6,7 @@ import {
     required,
     SimpleForm,
     TextInput,
+    usePermissions
 } from 'react-admin';
 import {
     SgxDateInput,
@@ -14,7 +15,9 @@ import {
 
 const redirect = (basePath, id, data) => `/sectors/${data.sectorId}/show`;
 
-const RoomCreate = props => (
+const RoomCreate = props => {
+    const { permissions } = usePermissions();
+    return (
     <Create {...props}>
         <SimpleForm redirect={redirect} toolbar={<CustomToolbar />}>
             <TextInput source="roomNumber" validate={[required()]} />
@@ -22,16 +25,18 @@ const RoomCreate = props => (
             <TextInput source="type" validate={[required()]} />
             <SgxDateInput source="dischargeDate" />
 
-            <ReferenceInput
-                source="sectorId"
-                reference="sectors"
-                sort={{ field: 'description', order: 'ASC' }}
-                filterToQuery={searchText => ({description: searchText})}
-            >
-                <AutocompleteInput optionText="description" optionValue="id" options={{ disabled: true }} />
-            </ReferenceInput>
-        </SimpleForm>
-    </Create>
-);
+                <ReferenceInput
+                    source="sectorId"
+                    reference="sectors"
+                    sort={{ field: 'description', order: 'ASC' }}
+                    filterToQuery={searchText => ({description: searchText})}
+                >
+                    <AutocompleteInput optionText="description" optionValue="id" options={{ disabled: true }} />
+                </ReferenceInput>
+                {permissions && permissions.isOn('HABILITAR_LLAMADO') && <TextInput source="topic" />}
+            </SimpleForm>
+        </Create>
+    )
+};
 
 export default RoomCreate;

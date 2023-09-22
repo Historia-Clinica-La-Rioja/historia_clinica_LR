@@ -6,6 +6,7 @@ import {
     required,
     SimpleForm,
     TextInput,
+    usePermissions,
 } from 'react-admin';
 import SgxSelectInput from '../../../sgxSelectInput/SgxSelectInput';
 import CustomToolbar from '../../components/CustomToolbar';
@@ -23,6 +24,7 @@ const SectorField = ({formData}) => {
 }
 
 const ShockRoomEdit = (props) => {
+    const { permissions } = usePermissions();
     return (
         <Edit {...props}>
             <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true} />}>
@@ -36,6 +38,7 @@ const ShockRoomEdit = (props) => {
                 <FormDataConsumer>
                     {formDataProps => (<SectorField {...formDataProps} source="sectorId"/>)}
                 </FormDataConsumer>
+                {permissions && permissions.isOn('HABILITAR_LLAMADO') && <TextInput source="topic" />}
             </SimpleForm>
         </Edit>
     )

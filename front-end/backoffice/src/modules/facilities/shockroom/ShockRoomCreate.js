@@ -1,5 +1,5 @@
 import React from 'react';
-import { Create, required, SimpleForm, TextInput } from 'react-admin';
+import { Create, required, SimpleForm, TextInput, usePermissions } from 'react-admin';
 
 import SgxSelectInput from '../../../sgxSelectInput/SgxSelectInput';
 import CustomToolbar from '../../components/CustomToolbar';
@@ -7,6 +7,7 @@ import CustomToolbar from '../../components/CustomToolbar';
 const redirect = (basePath, id, data) => `/sectors/${data.sectorId}/show`;
 
 const ShockRoomCreate = (props) => {
+    const { permissions } = usePermissions();
     return (
         <Create {...props}>
             <SimpleForm redirect={redirect} toolbar={<CustomToolbar />}>
@@ -25,6 +26,9 @@ const ShockRoomCreate = (props) => {
                     allowEmpty={false}
                     validate={[required()]}
                     options={{ disabled: true }} />
+
+                {permissions && permissions.isOn('HABILITAR_LLAMADO') && <TextInput source="topic" />}
+
             </SimpleForm>
         </Create>
     )

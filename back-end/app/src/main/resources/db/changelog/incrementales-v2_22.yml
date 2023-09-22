@@ -1,3 +1,26 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v2_22 
+    - logicalFilePath: incrementales-v2_22
 
+    - changeSet:
+        id: shockroom_topic-addTopicColumn
+        comment: Create column topic in shockroom
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: topic
+                    type: varchar(255)
+              tableName: shockroom
+
+    - changeSet:
+        id: room_topic-addTopicColumn
+        comment: Create column topic in room
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: topic
+                    type: varchar(255)
+              tableName: room
