@@ -49,6 +49,8 @@ public class EquipmentAppointmentBo {
 
 	private Integer serviceRequestId;
 
+	private Integer transcribedServiceRequestId;
+
 	public static EquipmentAppointmentBo fromEquipmentAppointmentVo(EquipmentAppointmentVo equipmentAppointmentVo) {
 		return EquipmentAppointmentBo.builder()
 				.id(equipmentAppointmentVo.getId())
@@ -62,6 +64,7 @@ public class EquipmentAppointmentBo {
 				.reportStatusId(equipmentAppointmentVo.getReportStatusId())
 				.studyName(equipmentAppointmentVo.getStudyName())
 				.serviceRequestId(equipmentAppointmentVo.getServiceRequestId())
+				.transcribedServiceRequestId(equipmentAppointmentVo.getTranscribedServiceRequestId())
 				.build();
 	}
 

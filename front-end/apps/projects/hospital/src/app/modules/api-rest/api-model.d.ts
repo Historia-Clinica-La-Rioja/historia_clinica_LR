@@ -1364,6 +1364,7 @@ export interface EquipmentAppointmentListDto {
     reportStatusId: number;
     serviceRequestId: number;
     studyName: string;
+    transcribedServiceRequestId: number;
 }
 
 export interface EquipmentDiaryADto {

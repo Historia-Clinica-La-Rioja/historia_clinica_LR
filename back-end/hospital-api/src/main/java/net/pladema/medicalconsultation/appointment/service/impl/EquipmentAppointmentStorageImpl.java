@@ -22,7 +22,7 @@ public class EquipmentAppointmentStorageImpl implements EquipmentAppointmentStor
     public List<EquipmentAppointmentBo> getAppointmentsByEquipmentId(Integer equipmentId, Integer institutionId, LocalDate from, LocalDate to) {
 
         String sqlString = "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.EquipmentAppointmentVo(a, pe.identificationTypeId, pe.identificationNumber, " +
-                "(CASE WHEN aoi.destInstitutionId != :institutionId THEN i.id ELSE NULL END) AS idInstitution, i.name, aoi.reportStatusId, s.pt, aoi.orderId) " +
+                "(CASE WHEN aoi.destInstitutionId != :institutionId THEN i.id ELSE NULL END) AS idInstitution, i.name, aoi.reportStatusId, s.pt, aoi.orderId, aoi.transcribedOrderId) " +
                 "FROM Appointment AS a " +
                 "JOIN EquipmentAppointmentAssn AS eaa ON (a.id = eaa.pk.appointmentId) " +
                 "LEFT JOIN AppointmentObservation AS ao ON (a.id = ao.appointmentId) " +

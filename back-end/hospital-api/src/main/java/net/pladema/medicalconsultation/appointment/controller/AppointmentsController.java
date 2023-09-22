@@ -422,7 +422,8 @@ public class AppointmentsController {
 				institutionMapper.fromInstitutionBasicInfoBo(equipmentAppointmentBo.getDerivedTo()),
 				equipmentAppointmentBo.getReportStatusId(),
 				equipmentAppointmentBo.getStudyName(),
-				equipmentAppointmentBo.getServiceRequestId()
+				equipmentAppointmentBo.getServiceRequestId(),
+				equipmentAppointmentBo.getTranscribedServiceRequestId()
 		);
 	}
 

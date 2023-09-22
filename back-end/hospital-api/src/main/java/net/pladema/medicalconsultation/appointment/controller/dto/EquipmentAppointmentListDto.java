@@ -40,4 +40,6 @@ public class EquipmentAppointmentListDto {
 
 	private final Integer serviceRequestId;
 
+	private final Integer transcribedServiceRequestId;
+
 }
