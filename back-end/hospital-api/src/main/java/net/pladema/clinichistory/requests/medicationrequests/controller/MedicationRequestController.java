@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.snowstorm.exceptions.SnowstormPortException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -314,8 +315,7 @@ public class MedicationRequestController {
 	@GetMapping(value = "/most-frequent-pharmacos")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
 	public ResponseEntity<List<SharedSnomedDto>> mostFrequentPharmacosPreinscription(@PathVariable(name = "institutionId") Integer institutionId,
-																					   @PathVariable(name = "patientId") Integer patientId)
-	{
+																					   @PathVariable(name = "patientId") Integer patientId) throws SnowstormPortException {
 		LOG.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
 		List<SharedSnomedDto> result = fetchMostFrequentPharmacos.run(institutionId)
 				.stream()
