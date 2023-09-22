@@ -1586,6 +1586,15 @@ export interface EmergencyCareEpisodeListTriageDto {
     name: string;
 }
 
+export interface EmergencyCareEpisodeNotificationDto {
+    doctorName: string;
+    episodeId: number;
+    patientName: string;
+    placeName: string;
+    topic: string;
+    triageCategory: SharedTriageCategoryDto;
+}
+
 export interface EmergencyCareEvolutionNoteClinicalData {
     allergies: OutpatientAllergyConditionDto[];
     anthropometricData: OutpatientAnthropometricDataDto;
@@ -4280,6 +4289,11 @@ export interface SharedSnowstormSearchItemDto {
     conceptId: string;
     id: string;
     pt: string;
+}
+
+export interface SharedTriageCategoryDto {
+    colorCode: string;
+    name: string;
 }
 
 export interface ShockroomDto {

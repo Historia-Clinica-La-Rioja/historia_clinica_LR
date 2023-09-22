@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeStateService;
 import net.pladema.emergencycare.service.HistoricEmergencyEpisodeService;
+import net.pladema.emergencycare.service.NotifyEmergencyCareSchedulerCallService;
 import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
@@ -34,7 +35,9 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 
 	private HistoricEmergencyEpisodeService historicEmergencyEpisodeService;
 
-	private BedExternalService bedExternalService;
+	private final BedExternalService bedExternalService;
+
+	private final NotifyEmergencyCareSchedulerCallService notifyEmergencyCareSchedulerCallService;
 
 	@Override
 	public EEmergencyCareState getState(Integer episodeId, Integer institutionId) {
@@ -120,6 +123,7 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 				historicEmergencyEpisodeService.saveChange(toSave);
 			}
 		}
+		notifyEmergencyCareSchedulerCallService.run(episodeId);
 	}
 
 	private void saveHistoricEmergencyEpisode(Integer episodeId, Short emergencyCareStateId, Integer bedId, Integer shockroomId) {

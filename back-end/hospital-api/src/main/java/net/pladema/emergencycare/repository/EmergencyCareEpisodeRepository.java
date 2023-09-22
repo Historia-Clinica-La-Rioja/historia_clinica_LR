@@ -2,6 +2,7 @@ package net.pladema.emergencycare.repository;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.ObservationRiskFactor;
+import ar.lamansys.sgh.shared.domain.EmergencyCareEpisodeNotificationBo;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
 import net.pladema.emergencycare.repository.domain.PatientECEVo;
@@ -251,5 +252,19 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 			"JOIN Bed b ON (b.id = ece.bedId) " +
 			"WHERE ece.id = :emergencyCareEpisodeId")
 	Integer getRoomId(@Param("emergencyCareEpisodeId") Integer emergencyCareEpisodeId);
-	
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT NEW ar.lamansys.sgh.shared.domain.EmergencyCareEpisodeNotificationBo(ece.id, p2.firstName, p2.lastName, CASE WHEN ece.bedId IS NOT NULL THEN CONCAT('Habitacion ', r.roomNumber) WHEN ece.shockroomId IS NOT NULL THEN sr.description ELSE do.description END, " +
+			"tc.name, tc.colorCode, CASE WHEN ece.bedId IS NOT NULL THEN r.topic WHEN ece.shockroomId IS NOT NULL THEN sr.topic ELSE do.topic END) " +
+			"FROM EmergencyCareEpisode ece " +
+			"JOIN Patient p ON (p.id = ece.patientId)" +
+			"JOIN Person p2 ON (p2.id = p.personId) " +
+			"LEFT JOIN DoctorsOffice do ON (do.id = ece.doctorsOfficeId) " +
+			"LEFT JOIN Bed b ON (b.id = ece.bedId) " +
+			"LEFT JOIN Room r ON (r.id = b.roomId) " +
+			"LEFT JOIN Shockroom sr ON (sr.id = ece.shockroomId) " +
+			"JOIN TriageCategory tc ON (tc.id = ece.triageCategoryId) " +
+			"WHERE ece.id = :episodeId")
+    EmergencyCareEpisodeNotificationBo getSchedulerNotificationData(@Param("episodeId") Integer episodeId);
+
 }

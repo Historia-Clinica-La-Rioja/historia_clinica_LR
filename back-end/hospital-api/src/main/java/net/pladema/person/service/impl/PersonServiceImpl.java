@@ -11,23 +11,26 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import lombok.RequiredArgsConstructor;
 import net.pladema.patient.controller.dto.AuditPatientSearch;
+import net.pladema.person.repository.domain.CompletePersonNameBo;
+import net.pladema.person.repository.domain.DuplicatePersonVo;
+
+import net.pladema.person.repository.domain.PersonSearchResultVo;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 import net.pladema.person.repository.PersonExtendedRepository;
 import net.pladema.person.repository.PersonHistoryRepository;
 import net.pladema.person.repository.PersonRepository;
-import net.pladema.person.repository.domain.CompletePersonNameBo;
 import net.pladema.person.repository.domain.CompletePersonVo;
-import net.pladema.person.repository.domain.DuplicatePersonVo;
-import net.pladema.person.repository.domain.PersonSearchResultVo;
 import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.repository.entity.PersonHistory;
 import net.pladema.person.service.PersonService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -141,6 +144,14 @@ public class PersonServiceImpl implements PersonService {
 	public Optional<CompletePersonNameBo> findByHealthcareProfessionalPersonDataByDiaryId(Integer diaryId) {
 		LOG.debug("Input parameters -> diaryId {}", diaryId);
 		Optional<CompletePersonNameBo> result = personRepository.findProfessionalNameByDiaryId(diaryId);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public CompletePersonNameBo findByHealthcareProfessionalId(Integer healthcareProfessionalId) {
+		LOG.debug("Input parameters -> healthcareProfessionalId {}", healthcareProfessionalId);
+		CompletePersonNameBo result = personRepository.findByHealthcareProfessionalId(healthcareProfessionalId);
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

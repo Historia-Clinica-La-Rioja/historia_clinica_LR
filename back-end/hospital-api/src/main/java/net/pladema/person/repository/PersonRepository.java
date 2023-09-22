@@ -118,4 +118,13 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, AuditP
 			"JOIN PersonExtended pe ON (pe.id = p.id) " +
 			"WHERE p.id IN :personIds")
 	List<CompletePersonNameVo> getCompletePersonNameByIds(@Param("personIds") List<Integer> personIds);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.person.repository.domain.CompletePersonNameBo(p, pe.nameSelfDetermination, hp.id) " +
+			"FROM Person p " +
+			"JOIN PersonExtended pe ON (pe.id = p.id) " +
+			"JOIN HealthcareProfessional hp ON (hp.personId = p.id) " +
+			"WHERE hp.id = :healthcareProfessionalId")
+	CompletePersonNameBo findByHealthcareProfessionalId(@Param("healthcareProfessionalId") Integer healthcareProfessionalId);
+
 }
