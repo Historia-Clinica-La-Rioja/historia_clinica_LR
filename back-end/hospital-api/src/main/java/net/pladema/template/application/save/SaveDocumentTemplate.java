@@ -10,9 +10,9 @@ import net.pladema.template.application.create.CreateTemplate;
 import net.pladema.template.application.existsname.ExistsNameDocumentTemplate;
 import net.pladema.template.application.port.DocumentTemplateStorage;
 import net.pladema.template.domain.DocumentTemplateBo;
+import net.pladema.template.domain.enums.EDocumentTemplate;
 import net.pladema.template.domain.exceptions.DocumentTemplateException;
 import net.pladema.template.domain.exceptions.EDocumentTemplateException;
-import net.pladema.template.domain.enums.EDocumentTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,12 +35,12 @@ public class SaveDocumentTemplate {
         String json = createTemplate.run(documentTemplateBo);
 
         FileContentBo templateStream = FileContentBo.fromString(json);
-
-        var path = fileService.buildCompletePath(String.format("/user/%d/templates/%s/%s/",
+        String uuid = fileService.createUuid();
+        var path = fileService.buildCompletePath(String.format("/user/%d/templates/%s/%s",
                 documentTemplateBo.getUserId(),
                 EDocumentTemplate.map(documentTemplateBo.getTypeId()).getDescription(),
-                fileService.createUuid()));
-        FileInfo result = fileService.saveStreamInPath(path, documentTemplateBo.getName(), "PLANTILLA", false, templateStream);
+                uuid));
+        FileInfo result = fileService.saveStreamInPath(path, uuid, "PLANTILLA", false, templateStream);
 
         Long fileId = result.getId();
         documentTemplateStorage.save(documentTemplateBo, fileId);
