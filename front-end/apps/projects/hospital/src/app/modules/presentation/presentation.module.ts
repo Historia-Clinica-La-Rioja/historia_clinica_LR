@@ -25,6 +25,7 @@ import { DocumentSectionComponent } from './components/document-section/document
 import { DocumentSectionTableComponent } from './components/document-section-table/document-section-table.component';
 import { EditableFieldComponent } from './components/editable-field/editable-field.component';
 import { EmergencyCareTemporaryPatientHeader } from './components/emergency-care-temporary-patient-header/emergency-care-temporary-patient-header.component';
+import { ExpansionSectionComponent } from './components/expansion-section/expansion-section.component';
 import { FactorDeRiesgoComponent } from './components/factor-de-riesgo-current/factor-de-riesgo.component';
 import { FactorDeRiesgoCurrentPreviousComponent } from './components/factor-de-riesgo-current-previous/factor-de-riesgo-current-previous.component';
 import { FiltersCardComponent } from './components/filters-card/filters-card.component';
@@ -110,6 +111,7 @@ import { DateFormatPipe } from './pipes/date-format.pipe';
 		DocumentSectionTableComponent,
 		EditableFieldComponent,
 		EmergencyCareTemporaryPatientHeader,
+		ExpansionSectionComponent,
 		FactorDeRiesgoComponent,
 		FactorDeRiesgoCurrentPreviousComponent,
 		FiltersCardComponent,
@@ -209,6 +211,7 @@ import { DateFormatPipe } from './pipes/date-format.pipe';
 		DocumentSectionTableComponent,
 		EditableFieldComponent,
 		EmergencyCareTemporaryPatientHeader,
+		ExpansionSectionComponent,
 		FactorDeRiesgoComponent,
 		FactorDeRiesgoCurrentPreviousComponent,
 		FiltersCardComponent,
