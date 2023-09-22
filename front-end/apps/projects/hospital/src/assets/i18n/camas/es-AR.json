@@ -3,7 +3,9 @@
         "home": {
             "TITLE": "Gestión de camas",
             "SUBTITLE": "Disponibilidad de camas",
-            "NO_FILTERED_BEDS": "No hay resultados para la búsqueda seleccionada"
+            "NO_FILTERED_BEDS": "No hay resultados para la búsqueda seleccionada",
+            "HIERARCHICAL_UNITS": "Unidades jerárquicas:",
+            "WITHOUT_HIERARCHICAL_UNITS": "Sin información"
         },
         "detail": {
             "TITLE": "Detalle de cama",

@@ -8,6 +8,14 @@
 		<h2 class="sector-characteristic-label mat-h2" id="organization-type-label">{{sector.organizationType}}</h2>
 		<h2 class="sector-characteristic-label mat-h2" id="care-type-label">{{sector.careType}}</h2>
 		<h2 class="sector-characteristic-label mat-h2" id="age-group-label">{{sector.ageGroup}}</h2>
+		<div fxLayout="row" fxLayoutAlign="none center">
+			<h2 class="sector-characteristic-label mat-h2 margin-right" id="hierarchical-units-label">{{'gestion-camas.home.HIERARCHICAL_UNITS' | translate}}</h2>
+			<ng-container *ngFor="let hu of sector.hierarchicalUnits; let last = last">
+				<span class="sector-characteristic-label mat-h2">{{hu.name}}</span>
+				<span *ngIf="!last" class="sector-characteristic-label mat-h2 margin-right">,</span>
+			</ng-container>
+			<span *ngIf="!sector.hierarchicalUnits.length" class="sector-characteristic-label mat-h2">{{'gestion-camas.home.WITHOUT_HIERARCHICAL_UNITS' | translate}}</span>
+		</div>
 	</div>
 
 	<div fxLayout="row wrap" fxLayout.sm="column">
