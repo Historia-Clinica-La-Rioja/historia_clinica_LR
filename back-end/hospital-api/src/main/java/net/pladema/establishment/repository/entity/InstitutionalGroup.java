@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import net.pladema.establishment.controller.dto.InstitutionalGroupDto;
+
 import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
@@ -42,5 +44,11 @@ public class InstitutionalGroup extends SGXAuditableEntity<Integer> implements S
 
 	@Column(name="name")
 	private String name;
+
+	public InstitutionalGroup (InstitutionalGroupDto dto){
+		this.id = id;
+		this.typeId = dto.getTypeId();
+		this.name = dto.getName();
+	}
 
 }

@@ -1955,6 +1955,26 @@ export interface InstitutionUserPersonDto {
     personId: number;
 }
 
+export interface InstitutionalGroupDto {
+    id: number;
+    institutions: string;
+    name: string;
+    typeId: number;
+}
+
+export interface InstitutionalGroupInstitutionDto {
+    departmentName: string;
+    id: number;
+    institutionId: number;
+    institutionName: string;
+    institutionalGroupId: number;
+}
+
+export interface InstitutionalGroupTypeDto extends Serializable {
+    id: number;
+    value: string;
+}
+
 export interface InternmentEpisodeADto {
     bedId: number;
     dischargeDate: Date;
