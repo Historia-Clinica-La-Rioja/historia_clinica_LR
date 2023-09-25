@@ -357,7 +357,14 @@ export class WorklistByTechnicalComponent implements OnInit {
     }
 
     downloadOrder(appointment: EquipmentAppointmentListDto) : void {
-		this.prescripcionesService.downloadPrescriptionPdf(appointment.patient.id, [appointment.serviceRequestId], PrescriptionTypes.STUDY);
+        if (appointment.serviceRequestId) {
+            this.prescripcionesService.downloadPrescriptionPdf(appointment.patient.id, [appointment.serviceRequestId], PrescriptionTypes.STUDY);
+        } else {
+            this.prescripcionesService.downloadTranscribedAttachedFiles(appointment.patient.id, 22, 'image (1).png');
+            /*(appointment.transcribedOrderAttachedFiles as HCEDocumentDataDto[]).forEach(transcribedAttachedFile => {
+                this.prescripcionesService.downloadTranscribedAttachedFiles([transcribedAttachedFile.fileId], [transcribedAttachedFile.fileName]);
+            })*/
+        }
 	}
 
     requestReport(appointment: detailedAppointment) {

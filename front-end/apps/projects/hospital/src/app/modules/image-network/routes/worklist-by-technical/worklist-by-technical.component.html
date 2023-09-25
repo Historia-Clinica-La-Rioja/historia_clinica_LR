@@ -116,9 +116,9 @@
                                 </div>
                             </div>
                             <div fxFlex="5%" class="options-btn">
-                                <button *ngIf="appointment.data.appointmentStateId === appointmentStatesId.SERVED || appointment.data.serviceRequestId"
-                                    mat-icon-button [matMenuTriggerFor]="menu">
-                                    <mat-icon>more_vert</mat-icon>
+                                <button *ngIf="appointment.data.appointmentStateId === appointmentStatesId.SERVED || appointment.data.serviceRequestId || appointment.data.transcribedServiceRequestId"
+                                        mat-icon-button [matMenuTriggerFor]="menu">
+                                        <mat-icon>more_vert</mat-icon>
                                 </button>
                                 <mat-menu #menu="matMenu">
                                     <button *ngIf="appointment.reportStatus?.id != reportStates.NOT_REQUIRED && appointment.data.appointmentStateId === appointmentStatesId.SERVED"
@@ -130,7 +130,7 @@
                                         mat-menu-item (click)="requestReport(appointment)">
                                         <span [translate]="'image-network.worklist.REQUEST_REPORT'"></span>
                                     </button>
-                                    <button *ngIf="appointment.data.serviceRequestId" mat-menu-item (click)="downloadOrder(appointment.data)">
+                                    <button *ngIf="appointment.data.serviceRequestId || appointment.data.transcribedServiceRequestId" mat-menu-item (click)="downloadOrder(appointment.data)">
                                         <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DOWNLOAD_STUDY'"></span>
                                     </button>
                                 </mat-menu>

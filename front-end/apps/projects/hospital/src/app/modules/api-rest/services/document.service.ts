@@ -25,6 +25,14 @@ export class DocumentService {
 		);
 	}
 
+	public downloadTranscribedFile(document: HCEDocumentDataDto, patientId: number): void {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${document.id}/downloadTranscribedFile`;
+		this.viewPdfService.showDialog(
+			url,
+			document.filename,
+		);
+	}
+
 	public downloadUnnamedFile(fileId: number): void {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/documents/${fileId}/downloadFile`;
 		this.http.get(url,
