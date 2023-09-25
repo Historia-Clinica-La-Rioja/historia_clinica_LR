@@ -875,6 +875,27 @@ const messages = {
                 conceptSctid: 'Snomed CT ID',
                 conceptPt: 'Término'
             },
+        },
+        institutionalgroups: {
+            name: 'Grupo de instituciones |||| Grupos de instituciones',
+            fields: {
+                name: 'Nombre',
+                typeId: 'Tipo',
+                institutions: 'Instituciones'
+            },
+            tabs: {
+                institutions: 'Instituciones',
+                users: 'Usuarios'
+            },
+            createRelated: 'Crear Grupo de instituciones'
+        },
+        institutionalgroupinstitutions: {
+            name: 'Asociación de institución a Grupo',
+            fields: {
+                institutionId: 'Institución',
+                institutionalGroupId: 'Grupo de instituciones'
+            },
+            createRelated: 'Agregar institución'
         }
     }
 };

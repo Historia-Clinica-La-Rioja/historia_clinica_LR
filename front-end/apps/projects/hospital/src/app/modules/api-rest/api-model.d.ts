@@ -873,6 +873,13 @@ export interface DepartmentDto extends AbstractMasterdataDto<number> {
     provinceId: number;
 }
 
+export interface DepartmentInstitutionDto {
+    departmentId: number;
+    id: number;
+    name: string;
+    provinceId: number;
+}
+
 export interface DependencyDto extends Serializable {
     code: string;
     description: string;
