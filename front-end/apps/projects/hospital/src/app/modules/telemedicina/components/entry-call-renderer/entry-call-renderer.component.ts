@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ShowEntryCallService } from 'projects/hospital/src/app/modules/telemedicina/show-entry-call.service';
-import { EntryCallComponent } from '../entry-call/entry-call.component';
+import { EntryCallComponent } from '../../../institucion/components/entry-call/entry-call.component';
 import { EVirtualConsultationPriority, VirtualConsultationNotificationDataDto } from '@api-rest/api-model';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { Priority } from '@presentation/components/priority/priority.component';
 import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
 import { JitsiCallService } from '../../../jitsi/jitsi-call.service';
-import { CallDetails } from '../../../presentation/components/call-details/call-details.component';
+import { CallDetails } from '@presentation/components/call-details/call-details.component';
 
 @Component({
 	selector: 'app-entry-call-renderer',
@@ -34,6 +34,8 @@ export class EntryCallRendererComponent implements OnInit {
 	ngOnInit(): void {
 		this.showEntryCallService.$entryCall.subscribe(
 			(entryCall: VirtualConsultationNotificationDataDto) => {
+				console.log('Recibo valor');
+
 				if (entryCall) {
 					const data = toCallDetails(entryCall)
 					this.dialogRef = this.dialog.open(EntryCallComponent,
@@ -73,8 +75,8 @@ export const toCallDetails = (entryCall: VirtualConsultationNotificationDataDto)
 		institutionName: entryCall.institutionName,
 		patient: {
 			firstName: entryCall.patientData.firstName,
-			id: null,
 			lastName: entryCall.patientData.lastName,
+			id: null,
 			gender: null
 		},
 		priority: mappedPriorities[entryCall.priority],

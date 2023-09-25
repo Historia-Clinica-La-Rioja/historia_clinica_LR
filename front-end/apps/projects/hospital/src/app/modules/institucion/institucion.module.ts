@@ -14,7 +14,6 @@ import { BedFiltersComponent } from './components/bed-filters/bed-filters.compon
 import { BedMappingComponent } from './components/bed-mapping/bed-mapping.component';
 import { InstitucionComponent } from './institucion.component';
 import { EntryCallComponent } from './components/entry-call/entry-call.component';
-import { EntryCallRendererComponent } from './components/entry-call-renderer/entry-call-renderer.component';
 import { RejectedCallComponent } from './components/rejected-call/rejected-call.component';
 
 
@@ -27,7 +26,6 @@ import { RejectedCallComponent } from './components/rejected-call/rejected-call.
 		BedFiltersComponent,
 		BedMappingComponent,
 		EntryCallComponent,
-		EntryCallRendererComponent,
 		InstitucionComponent,
 		RejectedCallComponent,
 	],
