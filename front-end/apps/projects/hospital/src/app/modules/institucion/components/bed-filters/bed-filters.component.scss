@@ -16,3 +16,7 @@ form {
 	top: -6px;
 	cursor: pointer;
 }
+
+::ng-deep .mat-form-field-wrapper {
+	padding: 0;
+}

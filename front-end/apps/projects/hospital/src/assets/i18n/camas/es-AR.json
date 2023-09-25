@@ -2,10 +2,11 @@
     "gestion-camas": {
         "home": {
             "TITLE": "Gestión de camas",
-            "SUBTITLE": "Disponibilidad de camas",
-            "NO_FILTERED_BEDS": "No hay resultados para la búsqueda seleccionada",
+            "SUBTITLE": "Filtrar por",
             "HIERARCHICAL_UNITS": "Unidades jerárquicas:",
-            "WITHOUT_HIERARCHICAL_UNITS": "Sin información"
+            "WITHOUT_HIERARCHICAL_UNITS": "Sin información",
+            "NO_FILTERED_BEDS": "No hay resultados para la búsqueda seleccionada",
+            "RESULTS": "Resultado: {{bedsAmount}} camas encontradas"
         },
         "detail": {
             "TITLE": "Detalle de cama",
@@ -22,7 +23,6 @@
             "NOT_FREE": "Ocupada"
         },
         "filters": {
-            "FREE_BEDS": "Ver camas ocupadas",
             "SECTOR": "Sector",
             "SERVICE": "Servicio",
             "BED_CATEGORY": "Categoría",
