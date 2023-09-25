@@ -1,11 +1,11 @@
 package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import net.pladema.clinichistory.requests.servicerequests.repository.ListDiagnosticReportRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.domain.DiagnosticReportFilterVo;
 import net.pladema.clinichistory.requests.servicerequests.service.ListDiagnosticReportInfoService;
-import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,12 +29,10 @@ public class ListDiagnosticReportInfoServiceImpl implements ListDiagnosticReport
 
     @Override
     public List<DiagnosticReportBo> getList(DiagnosticReportFilterBo filter) {
+        LOG.trace("Input parameters -> filter {}", filter);
         DiagnosticReportFilterVo filterVo = new DiagnosticReportFilterVo(
-                filter.getPatientId(),
-                filter.getStatus(),
-                filter.getStudy(),
-                filter.getHealthCondition(),
-                filter.getCategory()
+                filter.getPatientId(), filter.getStatus(), filter.getStudy(), filter.getHealthCondition(),
+                filter.getCategory(), filter.getCategoriesToBeExcluded()
         );
         List<DiagnosticReportBo> result = listDiagnosticReportRepository.getList(filterVo).stream()
                 .map(this::createDiagnosticReportBo)
@@ -49,7 +47,7 @@ public class ListDiagnosticReportInfoServiceImpl implements ListDiagnosticReport
 				filter.getPatientId(),
 				filter.getStatus(),
 				null, null,
-				filter.getCategory()
+				filter.getCategory(), null
 		);
 		List<DiagnosticReportBo> result = listDiagnosticReportRepository.getMedicalOrderList(filterVo).stream()
 				.map(this::createDiagnosticReportBo)

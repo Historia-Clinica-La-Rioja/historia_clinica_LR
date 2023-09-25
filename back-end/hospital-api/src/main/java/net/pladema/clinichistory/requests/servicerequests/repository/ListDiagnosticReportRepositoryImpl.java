@@ -61,7 +61,8 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
                 "AND NOT t.status_id = :invalidStatus "+
                 (filter.getStudy() != null ? "AND ( UPPER(s.pt) LIKE :study OR t.id IN (SELECT t2.id FROM temporal t1 JOIN {h-schema}snomed s1 ON (t1.snomed_id = s1.id), temporal t2 WHERE t2.source_id = t1.source_id AND UPPER(s1.pt) LIKE :study) ) " : " ") +
                 (filter.getHealthCondition() != null ? "AND UPPER(h.pt) LIKE :healthCondition " : " ") +
-                (filter.getCategory() != null ? "AND UPPER(t.sr_categoryId) = :category " : " ");
+                (filter.getCategory() != null ? "AND UPPER(t.sr_categoryId) = :category " : " ") +
+				(filter.getCategoriesToBeExcluded() != null ? "AND UPPER(t.sr_categoryId) NOT IN (:categoriesExcluded) " : " ");
 
 		if (filter.getStatus() != null){
 			if (Stream.of(DiagnosticReportStatus.FINAL_RDI, DiagnosticReportStatus.FINAL).anyMatch(e -> e.equals(filter.getStatus()))){
@@ -96,6 +97,9 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
 
         if (filter.getCategory() != null)
             query.setParameter("category", filter.getCategory().toUpperCase());
+
+		if (filter.getCategoriesToBeExcluded() != null)
+			query.setParameter("categoriesExcluded", filter.getCategoriesToBeExcluded());
 
         List<Object[]> result = query.getResultList();
         return result;

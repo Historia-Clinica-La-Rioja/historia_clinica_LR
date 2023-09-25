@@ -276,12 +276,6 @@ export interface AppointmentListDto {
     protected: boolean;
 }
 
-export interface AppointmentOrderImageExistCheckDto extends Serializable {
-    appointmentId: number;
-    documentStatus: boolean;
-    hasActiveAppointment: boolean;
-}
-
 export interface AppointmentSearchDto {
     aliasOrSpecialtyName?: string;
     daysOfWeek: number[];
@@ -3883,6 +3877,18 @@ export interface StudyDto extends Serializable {
 
 export interface StudyIntanceUIDDto {
     uid: string;
+}
+
+export interface StudyOrderReportInfoDto {
+    creationDate: Date;
+    doctor: DoctorInfoDto;
+    hceDocumentDataDto: HCEDocumentDataDto;
+    healthCondition: string;
+    imageId: string;
+    seeStudy: boolean;
+    snomed: string;
+    status: boolean;
+    viewReport: boolean;
 }
 
 export interface StudyPacAssociationDto {

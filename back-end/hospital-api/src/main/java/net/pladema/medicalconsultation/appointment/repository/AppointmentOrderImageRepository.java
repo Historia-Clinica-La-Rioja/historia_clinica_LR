@@ -1,10 +1,8 @@
 package net.pladema.medicalconsultation.appointment.repository;
 
 
-import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentOrderImageExistCheckVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentOrderImage;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentOrderImagePK;
-import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -54,16 +52,6 @@ public interface AppointmentOrderImageRepository extends JpaRepository<Appointme
 			"FROM AppointmentOrderImage AS aoi " +
 			"WHERE aoi.pk.appointmentId = :appointmentId ")
 	Optional<Integer> getStudyId(@Param("appointmentId") Integer appointmentId);
-
-	@Transactional(readOnly = true)
-	@Query("SELECT new net.pladema.medicalconsultation.appointment.repository.domain.AppointmentOrderImageExistCheckVo(aoi.pk.appointmentId, d.statusId, aoi.studyId) " +
-			"FROM AppointmentOrderImage AS aoi "+
-			"JOIN Appointment AS app ON (aoi.pk.appointmentId = app.id) "+
-			"LEFT JOIN Document as d ON (aoi.documentId = d.id) "+
-			"WHERE aoi.studyId = :orderId "+
-			"AND (aoi.active = true " +
-			"OR app.appointmentStateId = "+ AppointmentState.SERVED +" )")
-	List<AppointmentOrderImageExistCheckVo> findAppointmentIdAndReportByOrderId(@Param("orderId") Integer orderId);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT 1 " +
@@ -130,4 +118,12 @@ public interface AppointmentOrderImageRepository extends JpaRepository<Appointme
 			"FROM AppointmentOrderImage aoi " +
 			"WHERE aoi.orderId = :orderId ")
 	List<Integer> getAppointmentIdsByOrderId(@Param("orderId") Integer orderId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE AppointmentOrderImage AS aoi " +
+			"SET aoi.studyId = :diagnosticReportId " +
+			"WHERE aoi.pk.appointmentId = :appointmentId")
+	void updateStudyId(@Param("appointmentId") Integer appointmentId,
+					   @Param("diagnosticReportId") Integer diagnosticReportId);
 }
