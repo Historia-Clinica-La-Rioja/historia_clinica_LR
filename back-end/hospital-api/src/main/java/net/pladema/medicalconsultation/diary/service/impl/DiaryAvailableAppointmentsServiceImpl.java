@@ -75,6 +75,8 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 			searchCriteria.setIncludeNameSelfDetermination(true);
 
 		List<DiaryAvailableProtectedAppointmentsInfoBo> diariesInfo = diaryAvailableProtectedAppointmentsSearchRepository.getAllDiaryProtectedAppointmentsByFilter(searchCriteria);
+		if (searchCriteria.getClinicalSpecialtyId() != null && searchCriteria.getPracticeId() == null)
+			diariesInfo = diariesInfo.stream().filter( diary -> !diaryService.hasPractices(diary.getDiaryId())).collect(Collectors.toList());
 		List<Integer> diaryIds = diariesInfo.stream().map(DiaryAvailableProtectedAppointmentsInfoBo::getDiaryId).collect(Collectors.toList());
 		Collection<AppointmentBo> assignedAppointments = appointmentService.getAppointmentsByDiaries(diaryIds, searchCriteria.getInitialSearchDate(), searchCriteria.getEndSearchDate());
 

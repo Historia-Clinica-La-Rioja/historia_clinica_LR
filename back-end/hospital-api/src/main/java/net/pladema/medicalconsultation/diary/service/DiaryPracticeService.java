@@ -11,4 +11,6 @@ public interface DiaryPracticeService {
 	List<SnomedBo> getAllByDiaryId(Integer diaryId);
 
 	List<SnomedBo> getPracticesByActiveDiaries(Integer institutionId);
+
+	boolean hasPractice(Integer diaryId);
 }

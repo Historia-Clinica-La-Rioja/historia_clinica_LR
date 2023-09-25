@@ -39,4 +39,6 @@ public interface DiaryService {
 
 	Optional<CompleteDiaryBo> getCompleteDiaryByAppointment (Integer appointmentId);
 
+	Boolean hasPractices(Integer diaryId);
+
 }

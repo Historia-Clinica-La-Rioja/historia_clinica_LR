@@ -58,6 +58,11 @@ public class DiaryPracticeServiceImpl implements DiaryPracticeService {
 		return diaryPracticeRepository.getActiveDiariesPractices(institutionId);
 	}
 
+	@Override
+	public boolean hasPractice(Integer diaryId) {
+		return diaryPracticeRepository.hasPractices(diaryId);
+	}
+
 	private void addDiaryPractice(Integer practiceId, Integer diaryId) {
 		log.debug("Save associate practice to diary, practice id: ", practiceId);
 		DiaryPractice diaryPractice = new DiaryPractice();
