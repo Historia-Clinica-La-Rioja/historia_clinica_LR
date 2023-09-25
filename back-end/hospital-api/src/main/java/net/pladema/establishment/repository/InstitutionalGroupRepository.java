@@ -23,4 +23,12 @@ public interface InstitutionalGroupRepository extends SGXAuditableEntityJPARepos
 			"AND igi.deleteable.deleted = FALSE")
 	List<String> getInstitutionsNamesById(@Param("id") Integer id);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT case when count(ig) > 0 then TRUE else FALSE END " +
+			"FROM InstitutionalGroup ig " +
+			"WHERE ig.typeId = :typeId " +
+			"AND ig.name = :name " +
+			"AND ig.deleteable.deleted = FALSE")
+	boolean existsByTypeIdAndName(@Param("typeId") Short typeId, @Param("name") String name);
+
 }
