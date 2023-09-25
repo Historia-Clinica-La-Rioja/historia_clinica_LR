@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 
 import { ContextService } from '@core/services/context.service';
@@ -21,17 +21,15 @@ import { MenuService } from '@extensions/services/menu.service';
 import { HomeRoutes } from '../home/home-routing.module';
 import { AppRoutes } from '../../app-routing.module';
 import { SIDEBAR_MENU } from './constants/menu';
-import { AppFeature, VirtualConsultationNotificationDataDto } from "@api-rest/api-model";
+import { AppFeature} from "@api-rest/api-model";
 import { WCExtensionsService } from '@extensions/services/wc-extensions.service';
-import { EntryCallStompService } from '../api-web-socket/entry-call-stomp.service';
-import { ShowEntryCallService } from 'projects/hospital/src/app/modules/telemedicina/show-entry-call.service';
 
 @Component({
 	selector: 'app-institucion',
 	templateUrl: './institucion.component.html',
 	styleUrls: ['./institucion.component.scss']
 })
-export class InstitucionComponent implements OnInit, OnDestroy {
+export class InstitucionComponent implements OnInit {
 	userProfileLink = ['/', AppRoutes.Home, HomeRoutes.Profile];
 	institutionHomeLink: any[];
 	menuItems$: Observable<MenuItem[]>;
@@ -39,7 +37,6 @@ export class InstitucionComponent implements OnInit, OnDestroy {
 	userInfo: UserInfo;
 	roles = [];
 	nameSelfDeterminationFF: boolean;
-	private entryCallSubs: Subscription;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -50,8 +47,6 @@ export class InstitucionComponent implements OnInit, OnDestroy {
 		private accountService: AccountService,
 		private featureFlagService: FeatureFlagService,
 		private readonly wcExtensionsService: WCExtensionsService,
-		private entryCallStompService: EntryCallStompService,
-		private showEntryCallService: ShowEntryCallService,
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
 			this.nameSelfDeterminationFF = isOn
@@ -59,12 +54,6 @@ export class InstitucionComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-
-		this.entryCallSubs = this.entryCallStompService.entryCall$.subscribe(
-			(call: VirtualConsultationNotificationDataDto) => {
-				this.showEntryCallService.show(call);
-			}
-		)
 
 		this.activatedRoute.paramMap.pipe(take(1)).subscribe(params => {
 			const institutionId = Number(params.get('id'));
@@ -82,7 +71,7 @@ export class InstitucionComponent implements OnInit, OnDestroy {
 				);
 
 			this.institutionService.getInstitutions(Array.of(institutionId))
-				.subscribe(institutionDto => 
+				.subscribe(institutionDto =>
 					this.institution = mapToLocation(institutionDto[0])
 				);
 			this.accountService.getInfo()
@@ -96,8 +85,5 @@ export class InstitucionComponent implements OnInit, OnDestroy {
 
 	}
 
-	ngOnDestroy(): void {
-		this.entryCallSubs.unsubscribe();
-	}
 
 }

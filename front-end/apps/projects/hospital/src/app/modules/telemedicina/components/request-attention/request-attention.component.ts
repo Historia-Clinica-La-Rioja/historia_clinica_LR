@@ -12,7 +12,7 @@ import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/con
 import { InProgressCallComponent } from '../in-progress-call/in-progress-call.component';
 import { EntryCallStompService } from '../../../api-web-socket/entry-call-stomp.service';
 import { RejectedCallComponent } from '@institucion/components/rejected-call/rejected-call.component';
-import { toCallDetails } from '@institucion/components/entry-call-renderer/entry-call-renderer.component';
+import { toCallDetails } from 'projects/hospital/src/app/modules/telemedicina/components/entry-call-renderer/entry-call-renderer.component';
 import { ContextService } from '@core/services/context.service';
 import { Router } from '@angular/router';
 import { Option, filter } from '@presentation/components/filters-select/filters-select.component';
@@ -200,7 +200,7 @@ export class RequestAttentionComponent implements OnInit {
 										const data = toCallDetails(vc);
 										this.dialog.open(RejectedCallComponent, { data });
 									} else {
-										this.jitsiCallService.open(virtualConsultation.callLink)
+										this.jitsiCallService.open(vc.callLink)
 										this.goToClinicalHistory(vc.patientData.id);
 									}
 								}

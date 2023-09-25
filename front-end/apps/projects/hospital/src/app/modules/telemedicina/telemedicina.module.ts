@@ -18,6 +18,7 @@ import { RequestInfoCardComponent } from './components/request-info-card/request
 import { AvailableLabelComponent } from './components/available-label/available-label.component';
 import { InProgressCallComponent } from './components/in-progress-call/in-progress-call.component';
 import { VirtualConsultationsFacadeService } from './virtual-consultations-facade.service';
+import { EntryCallRendererComponent } from './components/entry-call-renderer/entry-call-renderer.component';
 
 
 
@@ -34,6 +35,7 @@ import { VirtualConsultationsFacadeService } from './virtual-consultations-facad
 		RequestInfoCardComponent,
 		AvailableLabelComponent,
 		InProgressCallComponent,
+		EntryCallRendererComponent
 	],
 	imports: [
 		CommonModule,
@@ -44,6 +46,6 @@ import { VirtualConsultationsFacadeService } from './virtual-consultations-facad
 		HistoriaClinicaModule,
 		CoreModule,
 	],
-	providers: [VirtualConsultationsFacadeService]
+	providers: [VirtualConsultationsFacadeService,]
 })
 export class TelemedicinaModule { }
