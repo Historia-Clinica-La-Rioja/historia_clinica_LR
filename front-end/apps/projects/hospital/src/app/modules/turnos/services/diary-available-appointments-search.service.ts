@@ -37,7 +37,7 @@ export class DiaryAvailableAppointmentsSearchService {
   }
 
   getAvailableAppointmentsQuantity(institutionDestinationId: number, clinicalSpecialtyId: number): Observable<number> {
-	const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/available-appointments/by-clinical-specialty/quantity`;
+	const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/available-appointments/quantity/by-reference-filter`;
 
 	const queryParams = new HttpParams()
 	  .append('institutionDestinationId', JSON.stringify(institutionDestinationId))

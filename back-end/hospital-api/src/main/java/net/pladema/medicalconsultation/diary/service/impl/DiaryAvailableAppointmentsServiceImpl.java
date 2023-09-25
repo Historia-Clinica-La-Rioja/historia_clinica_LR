@@ -108,8 +108,7 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 	@Override
 	public Integer geAvailableAppointmentsBySearchCriteriaQuantity(Integer institutionId, Integer clinicalSpecialtyId, AppointmentSearchBo searchCriteria) {
 		log.debug("Input parameters -> institutionId {}, clinicalSpecialtyId {}, searchCriteria {}", institutionId, clinicalSpecialtyId, searchCriteria);
-		ClinicalSpecialtyBo clinicalSpecialty = clinicalSpecialtyService.getClinicalSpecialty(clinicalSpecialtyId).get();
-		searchCriteria.setAliasOrSpecialtyName(clinicalSpecialty.getName());
+		searchCriteria.setAliasOrSpecialtyName(clinicalSpecialtyId != null ? clinicalSpecialtyService.getClinicalSpecialty(clinicalSpecialtyId).get().getName() : null);
 		return diaryService.getEmptyAppointmentsBySearchCriteria(institutionId, searchCriteria, false).size();
 	}
 

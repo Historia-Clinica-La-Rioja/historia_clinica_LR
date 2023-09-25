@@ -387,7 +387,7 @@ public class DiaryServiceImpl implements DiaryService {
 		LOG.debug("Input parameters -> institutionId {}, searchCriteria {}, mustFilterByModality {}", institutionId, searchCriteria, mustFilterByModality);
 		List<EmptyAppointmentBo> emptyAppointments = new ArrayList<>();
 		validateSearchCriteria(searchCriteria);
-		List<CompleteDiaryBo> diaries =  getActiveDiariesByAliasOrClinicalSpecialtyNameOrPracticeId(institutionId, searchCriteria.getAliasOrSpecialtyName(), searchCriteria.getPracticeId());
+		List<CompleteDiaryBo> diaries =  getActiveDiariesBySearchCriteria(institutionId, searchCriteria.getAliasOrSpecialtyName(), searchCriteria.getPracticeId());
 
 		if (mustFilterByModality)
 			filterOpeningHoursByModality(searchCriteria, diaries);
@@ -415,7 +415,7 @@ public class DiaryServiceImpl implements DiaryService {
 	}
 
 
-	private List<CompleteDiaryBo> getActiveDiariesByAliasOrClinicalSpecialtyNameOrPracticeId(Integer institutionId, String aliasOrClinicalSpecialtyName, Integer practiceId) {
+	private List<CompleteDiaryBo> getActiveDiariesBySearchCriteria(Integer institutionId, String aliasOrClinicalSpecialtyName, Integer practiceId) {
 		LOG.debug("Input parameters -> institutionId {}, aliasOrClinicalSpecialtyName {}, practice {}", institutionId, aliasOrClinicalSpecialtyName, practiceId);
 		if (aliasOrClinicalSpecialtyName != null && practiceId != null)
 			 return diaryRepository.getActiveDiariesByAliasOrClinicalSpecialtyNameAndPracticeId(institutionId, aliasOrClinicalSpecialtyName, practiceId).stream()
@@ -423,7 +423,7 @@ public class DiaryServiceImpl implements DiaryService {
 					 .map(cd -> completeOpeningHoursByMedicalAttentionType(cd, MedicalAttentionType.PROGRAMMED))
 					 .collect(toList());
 
-		if (aliasOrClinicalSpecialtyName != null && practiceId == null)
+		if (aliasOrClinicalSpecialtyName != null)
 			return diaryRepository.getActiveDiariesByAliasOrClinicalSpecialtyName(institutionId, aliasOrClinicalSpecialtyName).stream()
 					.map(this::createCompleteDiaryBoInstance)
 					.map(cd -> completeOpeningHoursByMedicalAttentionType(cd, MedicalAttentionType.PROGRAMMED))

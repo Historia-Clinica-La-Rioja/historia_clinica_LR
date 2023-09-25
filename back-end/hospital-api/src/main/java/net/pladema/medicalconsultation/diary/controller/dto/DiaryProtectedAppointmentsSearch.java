@@ -48,16 +48,4 @@ public class DiaryProtectedAppointmentsSearch {
 	@Nullable
 	private Integer practiceId;
 
-	public DiaryProtectedAppointmentsSearch(Integer careLineId, Integer clinicalSpecialtyId, Integer departmentId, Integer institutionId, LocalDate initialSearchDate,
-											LocalDate endSearchDate, Boolean includeNameSelfDetermination, EAppointmentModality modality) {
-		this.careLineId = careLineId;
-		this.clinicalSpecialtyId = clinicalSpecialtyId;
-		this.departmentId = departmentId;
-		this.institutionId = institutionId;
-		this.initialSearchDate = initialSearchDate;
-		this.endSearchDate = endSearchDate;
-		this.includeNameSelfDetermination = includeNameSelfDetermination;
-		this.modality = modality;
-	}
-
 }
