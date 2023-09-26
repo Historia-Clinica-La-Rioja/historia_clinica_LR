@@ -6,6 +6,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { PresentationModule } from '@presentation/presentation.module';
 import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
+import { PatientSummaryComponent } from '../hsi-components/patient-summary/patient-summary.component';
 // routing
 import { TurnosRoutingModule } from './turnos-routing.module';
 import { AgendaComponent } from './routes/agenda/agenda.component';
@@ -93,7 +94,8 @@ import { MedicalOrderInputComponent } from './components/medical-order-input/med
 		// deps
 		PresentationModule,
 		LazyMaterialModule,
-		HistoriaClinicaModule
+		HistoriaClinicaModule,
+		PatientSummaryComponent
 	],
 	exports: [
 		CalendarProfessionalViewComponent,

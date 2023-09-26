@@ -1,1 +1,11 @@
-<p>application-summary-popup works!</p>
+<div fxLayoutAlign="end">
+	<button id="close" mat-icon-button mat-dialog-close>
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+<div *ngIf="referenceCompleteData$ | async">
+	<div mat-dialog-title>
+		<h2>{{'turnos.search_references.reference.TITLE' | translate}}</h2>
+		<app-patient-summary [person]="reportCompleteData.patient"></app-patient-summary>
+	</div>
+</div>
