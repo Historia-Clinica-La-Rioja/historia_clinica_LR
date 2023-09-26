@@ -60,15 +60,11 @@ public class CareLineServiceImpl implements CareLineService {
     }
 
     @Override
-	public List<CareLineBo> getAllByProblemsAndProvinceId(List<String> snomedSctids, Integer institutionId) {
-		LOG.debug("Input parameters -> snomedSctids {}, institutionId {}", snomedSctids, institutionId);
-		AddressBo institutionAddress = institutionService.getAddress(institutionId);
-		List<CareLineBo> result = new ArrayList<>();
-		if (institutionAddress.getProvinceId() != null) {
-			List<CareLineBo> careLinesByProvince = careLineRepository.getAllByProvinceId(institutionAddress.getProvinceId());
-			result = this.getCareLinesWithAllProblems(careLinesByProvince, snomedSctids);
-			result.forEach(careLine -> careLine.setClinicalSpecialties(careLineInstitutionSpecialtyRepository.getClinicalSpecialtiesByCareLineIdAndProvinceId(careLine.getId(), institutionAddress.getProvinceId())));
-		}
+	public List<CareLineBo> getAllByProblems(List<String> snomedSctids) {
+		LOG.debug("Input parameters -> snomedSctids {}", snomedSctids);
+		List<CareLineBo> careLines = careLineRepository.getCareLinesAttachedToInstitutions();
+		List<CareLineBo> result = this.getCareLinesWithAllProblems(careLines, snomedSctids);
+		result.forEach(careLine -> careLine.setClinicalSpecialties(careLineInstitutionSpecialtyRepository.getClinicalSpecialtiesByCareLineId(careLine.getId())));
 		LOG.trace(OUTPUT, result);
 		return result;
 	}
@@ -109,7 +105,7 @@ public class CareLineServiceImpl implements CareLineService {
 
 	public List<CareLineBo> getCareLinesWithAllProblems(List<CareLineBo> careLines, List<String> snomedSctids) {
 		List<Integer> careLineIds = careLines.stream().map(CareLineBo::getId).collect(Collectors.toList());
-		Map<Integer, List<SnomedBo>> problems = careLineProblemStorage.fetchAllByCareLineIds(careLineIds);
+		Map<Integer, List<SnomedBo>> problems = careLineProblemStorage.fetchBySnomedSctids(careLineIds, snomedSctids);
 		return careLines.stream()
 				.filter(cl -> problems.get(cl.getId())
 						.stream()

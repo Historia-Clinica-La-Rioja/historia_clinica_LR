@@ -7,6 +7,6 @@ import java.util.Map;
 
 public interface CareLineProblemStorage {
 
-	Map<Integer, List<SnomedBo>> fetchAllByCareLineIds(List<Integer> careLineIds);
+	Map<Integer, List<SnomedBo>> fetchBySnomedSctids(List<Integer> careLineIds, List<String> snomedSctids);
 
 }
