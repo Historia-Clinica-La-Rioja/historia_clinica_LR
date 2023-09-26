@@ -15,6 +15,8 @@ export class BedMappingComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() updateData: boolean;
 	@Input() sectorsType?: number[];
 	@Output() selectedBed = new EventEmitter<number>();
+	selectedBedIndex: number;
+	selectedBedSectorId: number;
 
 	public bedManagementList: BedManagement[];
 	private managementBed$: Subscription;
@@ -38,7 +40,9 @@ export class BedMappingComponent implements OnInit, OnChanges, OnDestroy {
 		}
 	}
 
-	selectBed(bedId: number) {
+	selectBed(bedId: number, index: number, sectorId: number) {
+		this.selectedBedSectorId = sectorId;
+		this.selectedBedIndex = index;
 		this.selectedBed.emit(bedId);
 	}
 

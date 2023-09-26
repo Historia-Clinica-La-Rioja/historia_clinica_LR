@@ -205,7 +205,6 @@ export class PatientBedRelocationComponent implements OnInit {
 	openBedAssignmentDialog(): void {
 
 		const dialogRef = this.dialog.open(BedAssignmentComponent, {
-			width: '80%',
 			data: {
 				sectorsType: [INTERNMENT_SECTOR]
 			}
