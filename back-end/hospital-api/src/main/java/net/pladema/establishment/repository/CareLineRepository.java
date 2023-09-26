@@ -37,18 +37,6 @@ public interface CareLineRepository extends SGXAuditableEntityJPARepository<Care
 
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.CareLineBo(cl.id, cl.description) " +
-			"FROM CareLine as cl " +
-			"JOIN CareLineInstitution cli ON (cl.id = cli.careLineId) " +
-			"JOIN Institution i ON (cli.institutionId = i.id) " +
-			"JOIN Address a ON (i.addressId = a.id) " +
-			"WHERE a.provinceId = :provinceId " +
-			"AND cl.deleteable.deleted IS FALSE " +
-			"AND cli.deleted IS FALSE ")
-	List<CareLineBo> getAllByProvinceId(@Param("provinceId") Short provinceId);
-
-
-	@Transactional(readOnly = true)
-	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.CareLineBo(cl.id, cl.description) " +
 			"FROM CareLine cl " +
 			"JOIN CareLineInstitution cli ON (cl.id = cli.careLineId) " +
 			"WHERE cli.deleted = false")

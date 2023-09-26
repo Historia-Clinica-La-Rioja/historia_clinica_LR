@@ -37,11 +37,11 @@ public class CareLineController {
 
 	@GetMapping(value = "/by-problems")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
-	public ResponseEntity<List<CareLineDto>> getAllByProblemsAndProvince(@PathVariable(name = "institutionId") Integer institutionId,
-																		 @RequestParam(name = "snomedSctids") List<String> snomedSctids) {
+	public ResponseEntity<List<CareLineDto>> getAllByProblems(@PathVariable(name = "institutionId") Integer institutionId,
+															  @RequestParam(name = "snomedSctids") List<String> snomedSctids) {
 		log.debug("Input parameters -> institutionId {}, snomedSctids {}", institutionId, snomedSctids);
-		List<CareLineBo> careLinesBo = careLineService.getAllByProblemsAndProvinceId(snomedSctids, institutionId);
-		log.debug("Get care lines by problems (snomed sctids) and institutionId  => {}", careLinesBo);
+		List<CareLineBo> careLinesBo = careLineService.getAllByProblems(snomedSctids);
+		log.debug("Get care lines by problems (snomed sctids) {}", careLinesBo);
 		return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLinesBo));
 	}
 

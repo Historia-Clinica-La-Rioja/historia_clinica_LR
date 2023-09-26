@@ -23,18 +23,17 @@ public class CareLineProblemStorageImpl implements CareLineProblemStorage {
 	private final CareLineProblemRepository careLineProblemRepository;
 
 	@Override
-	public Map<Integer, List<SnomedBo>> fetchAllByCareLineIds(List<Integer> careLineIds) {
-		log.debug("Fetch all problems adopted by care lines");
-		List<CareLineProblemBo> resultQuery = careLineProblemRepository.getAllByCareLineIds(careLineIds);
+	public Map<Integer, List<SnomedBo>> fetchBySnomedSctids(List<Integer> careLineIds, List<String> snomedSctids) {
+		log.debug("Fetch all by care lines and snomed sctids");
+		List<CareLineProblemBo> resultQuery = careLineProblemRepository.getAllByCareLineIdsAndSnomedSctids(careLineIds, snomedSctids);
 		Map<Integer, List<SnomedBo>> result = new HashMap<>();
-		careLineIds.stream()
-				.forEach(cl -> result.put(cl,
+		careLineIds.forEach(cl -> result.put(cl,
 						resultQuery
 								.stream()
 								.filter(clp -> clp.getCareLineId().equals(cl))
 								.map(CareLineProblemBo::getProblem)
 								.collect(Collectors.toList()))
-				);
+		);
 		return result;
 	}
 }
