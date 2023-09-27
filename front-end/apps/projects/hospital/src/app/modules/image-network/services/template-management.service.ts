@@ -31,6 +31,11 @@ export class TemplateManagementService {
     .pipe(tap( _ => this.load()))
   }
 
+  deleteTemplate(id: number): Observable<boolean> {
+    return this.documentTemplateService.deleteTemplatesByUserInformer(this.REPORT_DETAILS_RDI, id)
+    .pipe(tap( _ => this.load()))
+  }
+
   existsImports(): Observable<boolean> {
     return this.getTemplatesImport().pipe(
       map(templates => templates.length > 0))

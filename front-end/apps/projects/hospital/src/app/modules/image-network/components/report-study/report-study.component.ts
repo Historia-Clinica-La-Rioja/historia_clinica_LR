@@ -21,6 +21,7 @@ import { getParam } from '@historia-clinica/modules/ambulatoria/modules/estudio/
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { ImportTemplateComponent } from '../../dialogs/import-template/import-template.component';
 import { TemplateManagementService } from '../../services/template-management.service';
+import { DeleteTemplateComponent } from '../../dialogs/delete-template/delete-template.component';
 
 @Component({
 	selector: 'app-report-study',
@@ -230,6 +231,21 @@ export class ReportStudyComponent implements OnInit, OnDestroy {
 		this.disableContinueEditing = false;
 	}
 
+	openDeleteTemplate() {
+		this.dialog.open(DeleteTemplateComponent, {
+			autoFocus: false,
+			width: '45%',
+			disableClose: true,
+			restoreFocus: false,
+			height: '45%'
+		}).afterClosed().subscribe(
+			sucess => {
+				if (sucess)
+					this.snackBarService.showSuccess('image-network.worklist.details_study.SNACKBAR_SUCCESS_DELETE_TEMPLATE')
+			}
+		);
+	}
+
 	openSaveTemplate() {
 		const data: TemplateData = {
 			textReportInformer: this.form.get('observations').value,
@@ -246,7 +262,7 @@ export class ReportStudyComponent implements OnInit, OnDestroy {
 
 	openTemplateManagementByForm() {
 		let finalDialogRef: Observable<string>
-		finalDialogRef = this.form.valid ? this.openImportTemplate() : this.openDialogTemplateImportList()
+		finalDialogRef = this.form.valid ? this.openImportTemplateWithWarning() : this.openDialogTemplateImportList()
 		finalDialogRef.subscribe(
 			template => {
 				if (template) {
@@ -256,7 +272,7 @@ export class ReportStudyComponent implements OnInit, OnDestroy {
 			})
 	}
 
-	private openImportTemplate(): Observable<string>  {
+	private openImportTemplateWithWarning(): Observable<string>  {
 			const dialogRefConfirmation = this.dialog.open(DiscardWarningComponent, {
 				data: {
 					title: 'image-network.worklist.details_study.TEMPLATE_CONFIRM_TITLE',

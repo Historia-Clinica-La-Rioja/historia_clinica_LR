@@ -21,6 +21,7 @@ import { ViewInformerObservationsComponent } from './components/view-informer-ob
 import { ImportTemplateComponent } from './dialogs/import-template/import-template.component';
 import { TooltipOrderComponent } from './components/tooltip-order/tooltip-order.component';
 import { DownloadTranscribedOrderComponent } from './dialogs/download-transcribed-order/download-transcribed-order.component';
+import { DeleteTemplateComponent } from './dialogs/delete-template/delete-template.component';
 
 @NgModule({
     declarations: [
@@ -42,6 +43,8 @@ import { DownloadTranscribedOrderComponent } from './dialogs/download-transcribe
         ImportTemplateComponent,
         TooltipOrderComponent,
         DownloadTranscribedOrderComponent,
+        TooltipOrderComponent,
+        DeleteTemplateComponent
     ],
     imports: [
         CommonModule,
