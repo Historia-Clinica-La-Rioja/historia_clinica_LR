@@ -18,7 +18,7 @@
 			<div professionals-attending class="professionals-attending"><span class="grey">{{virtualConsultation.availableProfessionalsAmount}}
 					{{'telemedicina.requests.PROFESSIONAL_ATTENDING' | translate}}</span></div>
 			<div  actions>
-				<button mat-icon-button [matMenuTriggerFor]="menu" [disabled]="virtualConsultation.status === statusFinished || virtualConsultation.status === statusCanceled">
+				<button mat-icon-button [matMenuTriggerFor]="menu" [disabled]="virtualConsultation.status === statusFinished || virtualConsultation.status === statusCanceled || isVirtualConsultatitioProfessional">
 					<mat-icon>more_vert</mat-icon>
 				</button>
 				<mat-menu #menu="matMenu">

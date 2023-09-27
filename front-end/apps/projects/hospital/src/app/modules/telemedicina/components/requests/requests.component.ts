@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { NewTelemedicineRequestComponent } from '../../dialogs/new-telemedicine-request/new-telemedicine-request.component';
 import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
 import { ContextService } from '@core/services/context.service';
-import { CareLineDto, ClinicalSpecialtyDto, EVirtualConsultationStatus, VirtualConsultationDto, VirtualConsultationFilterDto } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, ERole, EVirtualConsultationStatus, VirtualConsultationDto, VirtualConsultationFilterDto } from '@api-rest/api-model';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { timeDifference } from '@core/utils/date.utils';
 import { statusLabel, mapPriority, status } from '../../virtualConsultations.utils';
@@ -14,6 +14,8 @@ import { CareLineService } from '@api-rest/services/care-line.service';
 import { Option, filter } from '@presentation/components/filters-select/filters-select.component';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
+import { PermissionsService } from '@core/services/permissions.service';
+import { anyMatch } from '@core/utils/array.utils';
 
 @Component({
 	selector: 'app-requests',
@@ -34,12 +36,14 @@ export class RequestsComponent implements OnInit {
 	filters: filter[] = [];
 	statusFinished= EVirtualConsultationStatus.FINISHED;
 	statusCanceled= EVirtualConsultationStatus.CANCELED;
+	isVirtualConsultatitioProfessional:boolean;
 	constructor(
 		private dialog: MatDialog,
 		private virtualConsultationService: VirtualConstultationService,
 		private contextService: ContextService,
 		private careLineService: CareLineService, private clinicalSpecialtyService: ClinicalSpecialtyService,
 		private healthcareProfessionalByInstitucion: HealthcareProfessionalByInstitutionService,
+		private readonly permissionsService: PermissionsService,
 	) {
 	}
 
@@ -53,6 +57,9 @@ export class RequestsComponent implements OnInit {
 			 requests.map(request =>   this.toVCToBeShown(request)
 			)
 		))
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.isVirtualConsultatitioProfessional = anyMatch<ERole>(userRoles, [ERole.VIRTUAL_CONSULTATION_PROFESSIONAL]);
+		});
 	}
 
 	getOptionsFilters() {
