@@ -1,9 +1,12 @@
 <div fxLayout="column" fxLayoutGap="0.1125em">
 	<mat-card>
         <div *ngIf="referenceReports.length else noInfo" fxLayout="column" fxLayoutGap="10px">
-            <ng-container *ngFor="let report of filteredReferenceReports">
-                <app-report-information [report]="report"></app-report-information>
-            </ng-container>
+            <div fxLayout="column" *ngFor="let report of filteredReferenceReports">
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
+                    <app-report-information fxFlex="85" [report]="report"></app-report-information>
+                </div>
+                <mat-divider class="divider-list" inset></mat-divider>
+            </div>
             <app-paginator [list]="referenceReports" (result)="changeView($event)"></app-paginator>
         </div>
         <ng-template #noInfo>

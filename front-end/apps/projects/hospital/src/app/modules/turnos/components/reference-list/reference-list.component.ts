@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { ReferenceReportDto } from '@api-rest/api-model';
 import { Report } from '../report-information/report-information.component';
-import { getColoredIconText, getPriority } from '@turnos/utils/reference.utils';
+import { getColoredIconText, getPriority, getReferenceState } from '@turnos/utils/reference.utils';
 
 @Component({
 	selector: 'app-reference-list',
@@ -17,10 +17,12 @@ export class ReferenceListComponent {
 	set reports(list: ReferenceReportDto[]) {
 		if (list?.length)
 			this.referenceReports = list.map(report => {
+				const state = getReferenceState(report.appointmentStateId);
 				return {
 					dto: report,
 					priority: getPriority(report.priority.id),
-					coloredIconText: getColoredIconText(report.closureType)
+					coloredIconText: getColoredIconText(report.closureType),
+					state,
 				}
 			});
 		else
