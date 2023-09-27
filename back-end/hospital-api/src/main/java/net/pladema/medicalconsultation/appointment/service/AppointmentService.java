@@ -91,4 +91,5 @@ public interface AppointmentService {
 
 	Integer patientHasCurrentAppointment(Integer institutionId, Integer patientId);
 
+	List<AppointmentBo> getAppointmentDataByAppointmentIds(List<Integer> appointmentIds);
 }

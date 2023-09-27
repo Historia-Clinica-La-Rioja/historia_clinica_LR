@@ -19,6 +19,7 @@ import net.pladema.medicalconsultation.appointment.repository.domain.Appointment
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketImageBo;
 
 import net.pladema.medicalconsultation.appointment.repository.domain.MedicalCoverageAppoinmentOrderBo;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -588,4 +589,16 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"WHERE a.id = :appointmentId " +
 			"AND d.deleteable.deleted = false OR d.deleteable.deleted is null")
 	Optional<HierarchicalUnit> findDiaryHierarchicalUnitIdByAppointment(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT new net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo(a.id, a.appointmentStateId, " +
+			"a.dateTypeId, a.hour) " +
+			"FROM Appointment a " +
+			"JOIN AppointmentAssn asn ON (a.id = asn.pk.appointmentId) " +
+			"JOIN Diary d ON (asn.pk.diaryId = d.id) " +
+			"WHERE a.id IN (:appointmentIds) " +
+			"AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR +
+			"AND d.deleteable.deleted = false OR d.deleteable.deleted is null " +
+			"ORDER BY a.dateTypeId DESC, a.hour ASC")
+	List<AppointmentBo> getAppointmentDataByAppointmentIds(@Param("appointmentIds") List<Integer> appointmentIds);
 }

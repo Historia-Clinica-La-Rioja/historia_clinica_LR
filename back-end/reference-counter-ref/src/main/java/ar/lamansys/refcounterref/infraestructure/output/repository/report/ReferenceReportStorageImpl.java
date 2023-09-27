@@ -1,5 +1,6 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.report;
 
+import ar.lamansys.refcounterref.application.port.ReferenceAppointmentStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceReportStorage;
 
 import ar.lamansys.refcounterref.domain.ReferenceReportBo;
@@ -8,6 +9,8 @@ import ar.lamansys.refcounterref.domain.enums.EReferencePriority;
 
 import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencehealthcondition.ReferenceHealthConditionRepository;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceAppointmentStateDto;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +26,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,6 +42,10 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 	private final FeatureFlagsService featureFlagsService;
 
 	private final ReferenceHealthConditionRepository referenceHealthConditionRepository;
+
+	private final ReferenceAppointmentStorage referenceAppointmentStorage;
+
+	private final SharedAppointmentPort sharedAppointmentPort;
 
 	@Override
 	public List<ReferenceReportBo> fetchReceivedReferencesReport(Integer institutionId, LocalDate from, LocalDate to) {
@@ -67,6 +76,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 
 		List<ReferenceReportBo> result = mapToReferenceReportBo(queryResult, includeNameSelfDetermination);
 		result = setReferenceProblems(result);
+		result = setAppointmentsState(result);
 
 		return result.stream()
 				.sorted(Comparator.comparing(ReferenceReportBo::getDate))
@@ -168,4 +178,16 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 		}).collect(Collectors.toList());
 	}
 
+	private List<ReferenceReportBo> setAppointmentsState(List<ReferenceReportBo> result) {
+		List<Integer> referenceIds = result.stream().map(ReferenceReportBo::getReferenceId).collect(Collectors.toList());
+		Map<Integer, List<Integer>> referenceAppointments = this.referenceAppointmentStorage.getReferenceAppointmentsIds(referenceIds);
+		Map<Integer, ReferenceAppointmentStateDto> referencesAppointmentStateData = this.sharedAppointmentPort.getReferencesAppointmentState(referenceAppointments)
+				.stream()
+				.collect(Collectors.toMap(ReferenceAppointmentStateDto::getReferenceId, Function.identity()));
+ 		return result.stream().peek(r -> {
+			ReferenceAppointmentStateDto ra = referencesAppointmentStateData.get(r.getReferenceId());
+			if (ra != null)
+				r.setAppointmentStateId(ra.getAppointmentStateId());
+		}).collect(Collectors.toList());
+	}
 }

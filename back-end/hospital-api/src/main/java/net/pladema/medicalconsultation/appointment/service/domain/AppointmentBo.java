@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
@@ -131,6 +130,13 @@ public class AppointmentBo {
 				.snomedId(appointment.getSnomedId())
 				.build();
     }
+
+	public AppointmentBo(Integer id, Short appointmentStateId, LocalDate date, LocalTime hour) {
+		this.id = id;
+		this.appointmentStateId = appointmentStateId;
+		this.date = date;
+		this.hour = hour;
+	}
 
 	@Override
 	public boolean equals(Object o) {

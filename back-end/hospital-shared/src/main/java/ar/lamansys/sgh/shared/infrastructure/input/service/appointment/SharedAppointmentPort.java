@@ -3,6 +3,7 @@ package ar.lamansys.sgh.shared.infrastructure.input.service.appointment;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.DocumentAppointmentDto;
@@ -10,6 +11,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.Publi
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceAppointmentStateDto;
 
 public interface SharedAppointmentPort {
 
@@ -41,4 +43,7 @@ public interface SharedAppointmentPort {
 	void saveDocumentAppointment(DocumentAppointmentDto documentAppointmentDto);
 
 	void deleteDocumentAppointment(DocumentAppointmentDto documentAppointmentDto);
+
+	List<ReferenceAppointmentStateDto> getReferencesAppointmentState(Map<Integer, List<Integer>> referenceAppointments);
+
 }

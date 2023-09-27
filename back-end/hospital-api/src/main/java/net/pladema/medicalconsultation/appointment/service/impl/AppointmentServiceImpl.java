@@ -622,6 +622,11 @@ public class AppointmentServiceImpl implements AppointmentService {
 		return result;
 	}
 
+	@Override
+	public List<AppointmentBo> getAppointmentDataByAppointmentIds(List<Integer> appointmentIds) {
+		return appointmentRepository.getAppointmentDataByAppointmentIds(appointmentIds);
+	}
+
 	private boolean dayIsIncludedInOpeningHours(LocalDate date, DiaryOpeningHoursBo diaryOpeningHours) {
 		final int SUNDAY_DB_VALUE = 0;
 		if (date.getDayOfWeek().getValue() == DayOfWeek.SUNDAY.getValue())

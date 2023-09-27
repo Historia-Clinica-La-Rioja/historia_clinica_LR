@@ -42,4 +42,5 @@ public class ReferenceReportDto {
 
 	private EReferenceClosureType closureType;
 
+	private Short appointmentStateId;
 }

@@ -1,5 +1,6 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.referenceappointment;
 
+import ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentBo;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 
 import org.springframework.data.jpa.repository.Modifying;
@@ -47,5 +48,12 @@ public interface ReferenceAppointmentRepository extends SGXAuditableEntityJPARep
 			"AND ra.deleteable.deleted = false")
 	boolean existsInOpeningHour(@Param("openingHourId") Integer openingHourId,
 								@Param("appointmentStates") List<Short> appointmentStates);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentBo(ra.pk.referenceId, ra.pk.appointmentId) " +
+			"FROM ReferenceAppointment ra " +
+			"WHERE ra.pk.referenceId IN (:referenceIds)" +
+			"AND ra.deleteable.deleted = false")
+	List<ReferenceAppointmentBo> getAppointmentIdsByReferenceIds(@Param("referenceIds") List<Integer> referenceIds);
 
 }

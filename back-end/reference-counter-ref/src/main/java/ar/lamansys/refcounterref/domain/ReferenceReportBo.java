@@ -45,4 +45,6 @@ public class ReferenceReportBo {
 
 	private EReferenceClosureType closureType;
 
+	private Short appointmentStateId;
+
 }

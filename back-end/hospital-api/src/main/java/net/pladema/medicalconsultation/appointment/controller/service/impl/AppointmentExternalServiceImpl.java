@@ -2,8 +2,11 @@ package net.pladema.medicalconsultation.appointment.controller.service.impl;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -11,6 +14,7 @@ import java.util.stream.Collectors;
 import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotNull;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceAppointmentStateDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
 
 import org.springframework.stereotype.Service;
@@ -197,6 +201,23 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	@Override
 	public void deleteDocumentAppointment(DocumentAppointmentDto documentAppointmentDto) {
 		this.documentAppointmentService.delete(DocumentAppointmentBo.makeTo(documentAppointmentDto));
+	}
+
+	@Override
+	public List<ReferenceAppointmentStateDto> getReferencesAppointmentState(Map<Integer, List<Integer>> referenceAppointments) {
+		List <ReferenceAppointmentStateDto> result = new ArrayList<>();
+		for (Map.Entry<Integer, List<Integer>> e : referenceAppointments.entrySet()) {
+			List<AppointmentBo> appointments = this.appointmentService.getAppointmentDataByAppointmentIds(e.getValue());
+			if (!appointments.isEmpty()) {
+				List<AppointmentBo> futureAppointments = appointments.stream()
+						.filter(a -> a.getDate().equals(LocalDate.now()) || a.getDate().isAfter(LocalDate.now()))
+						.sorted(Comparator.comparing(AppointmentBo::getDate).thenComparing(AppointmentBo::getHour))
+						.collect(Collectors.toList());
+				AppointmentBo appointment = !futureAppointments.isEmpty() ? futureAppointments.get(0) : appointments.get(0);
+				result.add(new ReferenceAppointmentStateDto(e.getKey(), appointment.getAppointmentStateId()));
+			}
+		}
+		return result;
 	}
 
 	private PublicAppointmentListDto mapToFromAppointmentInfoBo(AppointmentInfoBo appointmentInfoBo) {

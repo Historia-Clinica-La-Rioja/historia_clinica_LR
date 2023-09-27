@@ -3191,6 +3191,11 @@ export interface ReducedPatientDto {
     personalDataDto: BasicPersonalDataDto;
 }
 
+export interface ReferenceAppointmentStateDto {
+    appointmentStateId: number;
+    referenceId: number;
+}
+
 export interface ReferenceCounterReferenceFileDto extends Serializable {
     fileId: number;
     fileName: string;
@@ -3228,6 +3233,7 @@ export interface ReferenceProblemDto extends Serializable {
 }
 
 export interface ReferenceReportDto {
+    appointmentStateId: number;
     careLine: string;
     clinicalSpecialtyDestination: string;
     clinicalSpecialtyOrigin: string;
