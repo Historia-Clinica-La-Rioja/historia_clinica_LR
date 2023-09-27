@@ -16,11 +16,15 @@ mat-chip {
 	&.default {
 		background-color: $success-color;
 		color: white;
-		text-decoration: underline;
 	}	
 	&.error {
-		background-color: $error-color;
-		color: white;
+		background-color: white;
+		color: $error-color;
 		text-decoration: none;
+		border: 1px solid $error-color;
 	}
+}
+
+small {
+	color: $grey;
 }
