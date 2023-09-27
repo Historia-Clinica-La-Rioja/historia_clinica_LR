@@ -20,6 +20,7 @@ import { SaveTemplateComponent } from './dialogs/save-template/save-template.com
 import { ViewInformerObservationsComponent } from './components/view-informer-observations/view-informer-observations.component';
 import { ImportTemplateComponent } from './dialogs/import-template/import-template.component';
 import { TooltipOrderComponent } from './components/tooltip-order/tooltip-order.component';
+import { DownloadTranscribedOrderComponent } from './dialogs/download-transcribed-order/download-transcribed-order.component';
 
 @NgModule({
     declarations: [
@@ -39,7 +40,8 @@ import { TooltipOrderComponent } from './components/tooltip-order/tooltip-order.
         SaveTemplateComponent,
         ViewInformerObservationsComponent,
         ImportTemplateComponent,
-        TooltipOrderComponent
+        TooltipOrderComponent,
+        DownloadTranscribedOrderComponent,
     ],
     imports: [
         CommonModule,

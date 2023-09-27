@@ -109,12 +109,8 @@ export class PrescripcionesService {
 		}
 	}
 
-	downloadTranscribedAttachedFiles(patientId: number, documentId: number, fileName?: string): void {
-		this.documentService.downloadTranscribedFile({ id: documentId, filename: fileName }, patientId);
-		/*if (fileName)
-			this.documentService.downloadTranscribedFile({ id: documentId, filename: fileName });
-		else
-			this.documentService.downloadUnnamedFile(documentId);*/
+	getTranscribedAttachedFileUrl(patientId: number, documentId: number): string{
+		return this.documentService.getTranscribedFileUrl(documentId, patientId)
 	}
 
 	deleteStudy(patientId: number, serviceRequestId: number): Observable<string> {

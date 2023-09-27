@@ -126,7 +126,8 @@
             "VIEW_REPORT": "Ver informe",
             "DOWNLOAD_REPORT": "Descargar informe",
             "REPORT_NOT_REQUIRED": "No requiere informe",
-            "REPORT_REQUIRED": "Informe solicitado"
+            "REPORT_REQUIRED": "Informe solicitado",
+            "ATTACHED_DOCUMENTS": "Documentos adjuntos"
 		}
 
 	}

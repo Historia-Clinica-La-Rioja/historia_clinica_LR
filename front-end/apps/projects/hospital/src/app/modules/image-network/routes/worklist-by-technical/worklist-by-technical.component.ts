@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSelectChange } from '@angular/material/select';
 import { EquipmentAppointmentListDto, EquipmentDto, InstitutionBasicInfoDto, ModalityDto } from '@api-rest/api-model';
@@ -29,6 +29,7 @@ import * as moment from 'moment';
 import { SearchFilters, WorklistFiltersComponent } from '../../components/worklist-filters/worklist-filters.component';
 import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { WorklistFacadeService } from '../../services/worklist-facade.service';
+import { DownloadTranscribedOrderComponent } from '../../dialogs/download-transcribed-order/download-transcribed-order.component';
 
 const PAGE_SIZE_OPTIONS = [10];
 const PAGE_MIN_SIZE = 10;
@@ -360,10 +361,22 @@ export class WorklistByTechnicalComponent implements OnInit {
         if (appointment.serviceRequestId) {
             this.prescripcionesService.downloadPrescriptionPdf(appointment.patient.id, [appointment.serviceRequestId], PrescriptionTypes.STUDY);
         } else {
-            this.prescripcionesService.downloadTranscribedAttachedFiles(appointment.patient.id, 22, 'image (1).png');
-            /*(appointment.transcribedOrderAttachedFiles as HCEDocumentDataDto[]).forEach(transcribedAttachedFile => {
-                this.prescripcionesService.downloadTranscribedAttachedFiles([transcribedAttachedFile.fileId], [transcribedAttachedFile.fileName]);
-            })*/
+            //let attachedFiles = appointment.transcribedOrderAttachedFiles;
+            let attachedFiles = [];
+            attachedFiles.push({url: this.prescripcionesService.getTranscribedAttachedFileUrl(7210, 23), filename: 'image (2).png'})
+            attachedFiles.push({url: this.prescripcionesService.getTranscribedAttachedFileUrl(7210, 24), filename: 'image (1).png'})
+            if (attachedFiles.length > 1){
+                let openDialog: MatDialogRef<any, void>;
+                openDialog = this.dialog.open(DownloadTranscribedOrderComponent, {
+                    minWidth: '300px',
+                    minHeight: '150px',
+                    autoFocus: false,
+                    data: attachedFiles,
+                });
+                openDialog.afterClosed().subscribe();
+            } else {
+                window.open(attachedFiles[0].url, '_self')
+            }
         }
 	}
 
