@@ -16,3 +16,8 @@ export class ColoredLabelComponent {
 export enum Color {
 	RED = 'red', GREEN = 'green', YELLOW = 'yellow', GREY = 'grey', BLUE = 'blue'
 }
+
+export interface ColoredLabel {
+	description: string; 
+	color: Color;
+}
