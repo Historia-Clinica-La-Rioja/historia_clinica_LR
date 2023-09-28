@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSelectChange } from '@angular/material/select';
 import { EquipmentAppointmentListDto, EquipmentDto, InstitutionBasicInfoDto, ModalityDto } from '@api-rest/api-model';
@@ -357,28 +357,38 @@ export class WorklistByTechnicalComponent implements OnInit {
         this.appointments = this.appointments.map(app => (app.id === this.selectedAppointment.id ? { ...app, reportStatusId: statusToSet } : app));
     }
 
-    downloadOrder(appointment: EquipmentAppointmentListDto) : void {
+    downloadOrderHandler(appointment: EquipmentAppointmentListDto) : void {
+        let patientId = appointment.patient.id;
         if (appointment.serviceRequestId) {
-            this.prescripcionesService.downloadPrescriptionPdf(appointment.patient.id, [appointment.serviceRequestId], PrescriptionTypes.STUDY);
+            this.prescripcionesService.downloadPrescriptionPdf(patientId, [appointment.serviceRequestId], PrescriptionTypes.STUDY);
         } else {
-            //let attachedFiles = appointment.transcribedOrderAttachedFiles;
-            let attachedFiles = [];
-            attachedFiles.push({url: this.prescripcionesService.getTranscribedAttachedFileUrl(7210, 23), filename: 'image (2).png'})
-            attachedFiles.push({url: this.prescripcionesService.getTranscribedAttachedFileUrl(7210, 24), filename: 'image (1).png'})
-            if (attachedFiles.length > 1){
-                let openDialog: MatDialogRef<any, void>;
-                openDialog = this.dialog.open(DownloadTranscribedOrderComponent, {
-                    minWidth: '300px',
-                    minHeight: '150px',
-                    autoFocus: false,
-                    data: attachedFiles,
-                });
-                openDialog.afterClosed().subscribe();
-            } else {
-                window.open(attachedFiles[0].url, '_self')
-            }
+            this.downloadTranscribedOrder(patientId, appointment);
         }
 	}
+
+    downloadTranscribedOrder(patientId: number, appointment: EquipmentAppointmentListDto){
+        let attachedFiles = [];
+        appointment.transcribedOrderAttachedFiles.forEach(file => {
+            attachedFiles.push({url: this.prescripcionesService.getTranscribedAttachedFileUrl(patientId, file.id), filename: file.name})
+        })
+        
+        if (attachedFiles.length > 1){
+            this.dialog.open(DownloadTranscribedOrderComponent, {
+                minWidth: '300px',
+                minHeight: '150px',
+                autoFocus: false,
+                data: attachedFiles,
+            });
+        } else {
+            const anchor = document.createElement("a");
+            anchor.href = attachedFiles[0].url;
+            anchor.download = attachedFiles[0].filename;
+
+            document.body.appendChild(anchor);
+            anchor.click();
+            document.body.removeChild(anchor);
+        }
+    }
 
     requestReport(appointment: detailedAppointment) {
         this.appointmentsService.requireReport(appointment.data.id).subscribe(() => {

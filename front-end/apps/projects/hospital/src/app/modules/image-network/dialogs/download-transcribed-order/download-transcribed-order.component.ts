@@ -22,7 +22,13 @@ export class DownloadTranscribedOrderComponent implements OnInit {
 		this.dialogRef.close();
 	}
 
-    downloadOrder(document: ViewPdfBo) {
-        window.open(document.url, '_self');
+    downloadOrder(doc: ViewPdfBo) {
+        const anchor = document.createElement("a");
+        anchor.href = doc.url.toString();
+        anchor.download = doc.filename;
+
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
     }
 }
