@@ -1,4 +1,7 @@
 <div fxLayout="column" fxLayoutGap="0.1125em">
+
+	<app-filters-select [setFilters]="filters" (searchCriteria)="applyFilters($event)"></app-filters-select>
+
 	<mat-card>
         <div *ngIf="referenceReports.length else noInfo" fxLayout="column" fxLayoutGap="10px">
             <div fxLayout="column" *ngFor="let report of filteredReferenceReports">
