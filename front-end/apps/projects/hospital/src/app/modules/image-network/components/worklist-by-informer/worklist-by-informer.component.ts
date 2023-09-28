@@ -202,7 +202,7 @@ export class WorklistByInformerComponent implements OnInit {
 	}
 
 	private setDateRanges() {
-		this.dateRangeMax.setDate(this.dateRangeMax.getDate() + DATE_RANGE);
+		this.dateRangeMax.setDate(this.dateRangeMax.getDate());
 		this.dateRangeMin.setDate(this.dateRangeMin.getDate() - DATE_RANGE);
 	}
 
