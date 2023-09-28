@@ -1,19 +1,35 @@
-<div fxLayout="column" fxLayoutGap="0.1125em">
+<div fxLayout="column" fxLayoutGap="0.1125em" [formGroup]="formFilter">
+	<ng-container *ngIf="allReferenceReports.length">
+		<mat-form-field appearance="outline" class="serch">
+			<mat-label>{{'internaciones.internment-patient-card.SEARCH' |
+				translate}}</mat-label>
+			<input matInput formControlName="description" (keyup)="applyFilterByNameAndDocument($event)">
 
-	<app-filters-select [setFilters]="filters" (searchCriteria)="applyFilters($event)"></app-filters-select>
+			<mat-icon *ngIf="!formFilter.value.description else clear" matSuffix class="grey">search</mat-icon>
+
+			<ng-template #clear>
+				<button type="button" id="clear-filter-sector" *ngIf="formFilter.value.description" mat-button matSuffix
+					color="warn" mat-icon-button
+					(click)="clearFilterField(formFilter.controls.description); $event.stopPropagation()">
+					<mat-icon>close</mat-icon>
+				</button>
+			</ng-template>
+		</mat-form-field>
+		<app-filters-select [setFilters]="filters" (searchCriteria)="applyFilters($event)"></app-filters-select>
+	</ng-container>
 
 	<mat-card>
-        <div *ngIf="referenceReports.length else noInfo" fxLayout="column" fxLayoutGap="10px">
-            <div fxLayout="column" *ngFor="let report of filteredReferenceReports">
-                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
-                    <app-report-information fxFlex="85" [report]="report"></app-report-information>
-                </div>
-                <mat-divider class="divider-list" inset></mat-divider>
-            </div>
-            <app-paginator [list]="referenceReports" (result)="changeView($event)"></app-paginator>
-        </div>
-        <ng-template #noInfo>
-            <app-no-data></app-no-data>
-        </ng-template>
+		<div *ngIf="allReferenceReports.length else noInfo" fxLayout="column" fxLayoutGap="10px">
+			<div fxLayout="column" *ngFor="let report of filteredReferenceReports">
+				<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
+					<app-report-information fxFlex="85" [report]="report"></app-report-information>
+				</div>
+				<mat-divider class="divider-list" inset></mat-divider>
+			</div>
+			<app-paginator [list]="referenceReports" (result)="changeView($event)"></app-paginator>
+		</div>
+		<ng-template #noInfo>
+			<app-no-data></app-no-data>
+		</ng-template>
 	</mat-card>
 </div>

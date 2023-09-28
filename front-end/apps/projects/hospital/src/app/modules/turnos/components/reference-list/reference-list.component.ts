@@ -4,6 +4,8 @@ import { Report } from '../report-information/report-information.component';
 import { APPOINTMENT_STATE, CLOSURE_OPTIONS, PROORITY_OPTIONS, getColoredIconText, getPriority, getReferenceState } from '@turnos/utils/reference.utils';
 import { filter } from '@presentation/components/filters-select/filters-select.component';
 import { PAGE_MIN_SIZE } from '@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications';
+import { AbstractControl, FormBuilder, UntypedFormGroup } from '@angular/forms';
+import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 
 @Component({
 	selector: 'app-reference-list',
@@ -11,17 +13,18 @@ import { PAGE_MIN_SIZE } from '@historia-clinica/modules/ambulatoria/modules/ind
 	styleUrls: ['./reference-list.component.scss']
 })
 export class ReferenceListComponent {
-
-	pageLength = PAGE_MIN_SIZE;
 	filteredReferenceReports: Report[] = [];
-	referenceListWithoutFilterByName: Report[] = [];
 	referenceReports: Report[] = [];
 	filters: filter[] = [];
-	clinicalSpecialtyOptions = [];
-	priorityOptions = PROORITY_OPTIONS;
-	closureOptions = CLOSURE_OPTIONS;
-	appoitmentStatate = APPOINTMENT_STATE;
 	allReferenceReports: Report[] = [];
+	formFilter: UntypedFormGroup;
+	private applySearchFilter = '';
+	private priorityOptions = PROORITY_OPTIONS;
+	private closureOptions = CLOSURE_OPTIONS;
+	private appoitmentStatate = APPOINTMENT_STATE;
+	private pageLength = PAGE_MIN_SIZE;
+	private clinicalSpecialtyOptions = [];
+	private referenceListWithoutFilterByName: Report[] = [];
 
 	@Input()
 	set reports(list: ReferenceReportDto[]) {
@@ -42,12 +45,19 @@ export class ReferenceListComponent {
 			this.allReferenceReports = [];
 		this.referenceReports = this.allReferenceReports;
 		this.referenceListWithoutFilterByName = this.allReferenceReports;
-
+		this.formFilter?.reset();
 	};
 
 	constructor(
 		private readonly changeDetectorRef: ChangeDetectorRef,
+		readonly formBuilder: FormBuilder,
 	) { }
+
+	ngOnInit() {
+		this.formFilter = this.formBuilder.group({
+			description: [null]
+		});
+	}
 
 	changeView(result: Report[]) {
 		this.pageLength = result.length;
@@ -86,6 +96,35 @@ export class ReferenceListComponent {
 		this.referenceReports = referenceReportsFilters;
 		this.referenceListWithoutFilterByName = referenceReportsFilters;
 		this.filteredReferenceReports = referenceReportsFilters.slice(0, this.pageLength);
+		this.changeDetectorRef.detectChanges();
+	}
+
+	applyFilterByNameAndDocument($event: any) {
+		this.applySearchFilter = ($event?.target as HTMLInputElement).value?.replace(REMOVE_SUBSTRING_DNI, '');
+		this.filteredReferenceReports = this.referenceListWithoutFilterByName;
+		let list: Report[];
+
+		if (this.applySearchFilter) {
+			list = this.filteredReferenceReports.filter((r: Report) =>
+				r.dto.patientFullName.toLowerCase().includes(this.applySearchFilter.toLowerCase()) || r?.dto?.identificationNumber.toString().includes(this.applySearchFilter));
+		}
+
+		this.setReportList(list);
+	}
+
+
+	clearFilterField(control: AbstractControl) {
+		control.reset();
+		this.filteredReferenceReports = this.referenceListWithoutFilterByName.slice(0, this.pageLength);
+		this.changeDetectorRef.detectChanges();
+	}
+
+	private setReportList(list: Report[]) {
+		if (list)
+			this.filteredReferenceReports = list.slice(0, this.pageLength);
+		else
+			this.filteredReferenceReports = this.referenceListWithoutFilterByName.slice(0, this.pageLength);
+
 		this.changeDetectorRef.detectChanges();
 	}
 
@@ -138,6 +177,5 @@ export class ReferenceListComponent {
 		filters.push(filterAppoitmentStatate);
 		this.filters = filters;
 	}
-
 
 }
