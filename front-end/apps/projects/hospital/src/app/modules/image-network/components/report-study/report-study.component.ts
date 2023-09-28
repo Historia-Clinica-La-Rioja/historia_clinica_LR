@@ -178,7 +178,7 @@ export class ReportStudyComponent implements OnInit, OnDestroy {
 	private getInformerObservationsDto(confirmed: boolean): InformerObservationDto {
 		return {
 			id: this.study.info.informerObservations?.id,
-			evolutionNote: this.replaceTagBr(this.form.value.observations),
+			evolutionNote: this.replaceTagBr(this.form.value.observations, confirmed),
 			conclusions: this.ambulatoryConsultationProblemsService.getProblemas().map(
 				(p: ConclusionDto) => {
 					return { snomed: { pt: this.uppercaseFirstLetter(p.snomed.pt), sctid: p.snomed.sctid } };
@@ -193,8 +193,8 @@ export class ReportStudyComponent implements OnInit, OnDestroy {
 		return word.charAt(0).toUpperCase() + word.slice(1);
 	}
 
-	private replaceTagBr(observations: string): string {
-		return observations.replace(new RegExp("<br>", "g"), "<br></br>");
+	private replaceTagBr(observations: string, confirmed: boolean): string {
+		return confirmed ? observations.replace(new RegExp("<br>", "g"), "<br></br>") : observations;
 	}
 
 	private getStudy() {
