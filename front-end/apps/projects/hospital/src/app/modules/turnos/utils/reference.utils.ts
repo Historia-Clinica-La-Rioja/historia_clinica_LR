@@ -85,7 +85,7 @@ export const PRIORITY_OPTIONS = [{
 export const CLOSURE_OPTIONS = [
 	{
 		id: -1,
-		description: "Estado de solicitud"
+		description: "Referencia solicitada"
 	}, {
 		id: 1,
 		description: "Continúa en observación"

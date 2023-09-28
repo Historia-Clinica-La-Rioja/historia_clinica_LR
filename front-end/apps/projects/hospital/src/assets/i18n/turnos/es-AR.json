@@ -270,7 +270,15 @@
 			"DESTINATION": "destino",
 			"REQUESTED_REFERENCE": "Referencia solicitada",
 			"ONE_MORE_PROBLEM": "problema más",
-			"MORE_PROBLEMS": "problemas más"
+			"MORE_PROBLEMS": "problemas más",
+			"PRIORITY": "Prioridad",
+			"SHIFT_STATUS": "Estado del turno",
+			"SPECIALTY": "Especialidad",
+			"REQUEST_STATUS": "Estado de solicitud",
+			"CONTINUES_UNDER_OBSERVATION": "Continúa en observación",
+			"TREATMENT_BEGINS_IN_A_EFERENCE_CENTER":"Inicia tratamiento en centro de referencia",
+			"REQUIERES_COMPLEMENTARY_STUDIES":"Requiere estudios complementarios",
+			"COUNTER_REFERENCE":"Contrarreferencia"
 		}
 	}
 }
