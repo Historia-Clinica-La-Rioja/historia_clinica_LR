@@ -18,6 +18,7 @@ import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.
 })
 export class AppointmentDetailsComponent implements OnInit {
 	readonly MODALITY_PATIENT_VIRTUAL_ATTENTION: EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
+	readonly MODALITY_SECOND_OPINION_VIRTUAL: EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION;
 	@Input() modalityAttention?: EAppointmentModality;
 	@Input() emptyAppointment: EmptyAppointmentDto;
 	@Input() patientId: number;
@@ -100,8 +101,8 @@ export class AppointmentDetailsComponent implements OnInit {
 						specialtyAndAlias = `${this.emptyAppointment.alias}`;
 					if (this.emptyAppointment.clinicalSpecialtyName)
 						specialtyAndAlias = `${specialtyAndAlias} (${this.emptyAppointment.clinicalSpecialtyName})`;
-					
-					if (result.email && this.modalityAttention === this.MODALITY_PATIENT_VIRTUAL_ATTENTION) {
+
+					if (result.email && this.modalityAttention === this.MODALITY_PATIENT_VIRTUAL_ATTENTION || this.modalityAttention === this.MODALITY_SECOND_OPINION_VIRTUAL) {
 						var message = 'Se podrá acceder a la teleconsulta a través del link que se ha enviado a ' + `<strong> ${result.email}</strong>`
 					}
 					this.dialog.open(ConfirmPrintAppointmentComponent, {

@@ -193,7 +193,7 @@
 						<span>{{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn | date:"dd/MM/yyyy H:mm"}}hs.</span>
 					</div>
 				</div>
-				<div fxLayout="column" fxLayoutGap="10px" class="motive" *ngIf="isVirtualConsultationModality && canMakeVirtualConsultation">
+				<div fxLayout="column" fxLayoutGap="10px" class="motive" *ngIf="isVirtualConsultationModality && canMakeVirtualConsultation && selectedState !== appointmentStatesIds.SERVED">
 						<button type="button" mat-raised-button color="primary" (click)="entryCall()">
 							<mat-icon class="material-icons-outlined">video_call</mat-icon>
 							<span class="mat-body strong-size">
