@@ -1,0 +1,22 @@
+<div fxLayout="column" fxLayoutGap="10px">
+	<span class="title">{{'turnos.search_references.reference.APPOINTMENT_DATA' | translate}}</span>
+
+	<app-colored-label [description]="appointmentSummary.state.description" [color]="appointmentSummary.state.color"></app-colored-label>
+
+	<app-identifier-cases *ngIf="appointmentSummary.date" [identifierCase]="identiferCases.DATE"
+		[description]="appointmentSummary.date | viewDateDto: 'localdatetime' | date: 'fullDate'">
+	</app-identifier-cases>
+
+	<app-identifier-cases *ngIf="appointmentSummary.date" [identifierCase]="identiferCases.HOUR"
+		[description]="appointmentSummary.date | viewDateDto: 'localdatetime' | dateFormat: 'time' ">
+	</app-identifier-cases>
+
+	<app-identifier-cases *ngIf="appointmentSummary.professionalFullName" [identifierCase]="identiferCases.PROFESSIONAL"
+		[description]="appointmentSummary.professionalFullName">
+	</app-identifier-cases>
+
+	<app-identifier-cases *ngIf="appointmentSummary.institution" [identifierCase]="identiferCases.INSTITUTION"
+		[description]="appointmentSummary.institution">
+	</app-identifier-cases>
+
+</div>

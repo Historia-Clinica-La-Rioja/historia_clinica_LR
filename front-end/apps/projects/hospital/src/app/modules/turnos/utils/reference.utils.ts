@@ -47,10 +47,7 @@ export function getState(appointmentStateId: number): ColoredLabel {
 			color: Color.RED
 		}
 
-	return {
-		description: REFERENCE_STATES.PENDING,
-		color: Color.YELLOW
-	}
+	return PENDING;
 }
 
 export const APPOINTMENT_STATE = [{
@@ -97,3 +94,8 @@ export const CLOSURE_OPTIONS = [
 		description: "Contrarreferencia"
 	}
 ];
+
+export const PENDING: ColoredLabel = {
+	description: REFERENCE_STATES.PENDING,
+	color: Color.YELLOW
+}

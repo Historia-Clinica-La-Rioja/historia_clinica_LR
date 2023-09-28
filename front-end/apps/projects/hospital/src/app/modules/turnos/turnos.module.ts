@@ -17,6 +17,7 @@ import { EquipmentDiarySetupComponent } from './routes/equipment-diary-setup/equ
 // components
 import { AppointmentDetailsComponent } from './components/appointment-details/appointment-details.component';
 import { AppointmentResultViewComponent } from './components/appointment-result-view/appointment-result-view.component';
+import { AppointmentSummaryComponent } from './components/appointment-summary/appointment-summary.component';
 import { CalendarProfessionalViewComponent } from '@turnos/components/calendar-professional-view/calendar-professional-view.component';
 import { ContactDetailsComponent } from './components/contact-details/contact-details.component';
 import { DateRangeTimeFormComponent } from './components/date-range-time-form/date-range-time-form.component';
@@ -60,6 +61,7 @@ import { MedicalOrderInputComponent } from './components/medical-order-input/med
 		// components
 		AppointmentDetailsComponent,
 		AppointmentResultViewComponent,
+		AppointmentSummaryComponent,
 		CalendarProfessionalViewComponent,
 		ContactDetailsComponent,
 		DateRangeTimeFormComponent,
