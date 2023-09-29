@@ -118,6 +118,8 @@ export class AgendaHorarioService {
 					onSiteAttentionAllowed: true,
 					diaryType: this.diaryType
 				}
+				,
+				height: '95%'
 			});
 		dialogRef.afterClosed().subscribe(dialogInfo => {
 			if (!dialogInfo) {
@@ -174,7 +176,8 @@ export class AgendaHorarioService {
 						secondOpinionVirtualAttentionAllowed: !!event.meta.secondOpinionVirtualAttentionAllowed,
 						onSiteAttentionAllowed: true,
 						diaryType: this.diaryType
-					}
+					},
+					height: '95%'
 				});
 			dialogRef.afterClosed().subscribe(dialogInfo => {
 				if (!dialogInfo) {
