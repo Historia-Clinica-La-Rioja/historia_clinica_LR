@@ -381,7 +381,7 @@ public class ServiceRequestController {
     }
 
 	@GetMapping("/medicalOrders")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA')")
 	public List<DiagnosticReportInfoDto> getMedicalOrderList(@PathVariable(name = "institutionId") Integer institutionId,
 												 @PathVariable(name = "patientId") Integer patientId,
 												 @RequestParam(value = "statusId", required = false) String status,
@@ -449,7 +449,7 @@ public class ServiceRequestController {
 	}
 
 	@GetMapping("/transcribedOrders")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA')")
 	public List<TranscribedDiagnosticReportInfoDto> getList(@PathVariable(name = "institutionId") Integer institutionId,
 															@PathVariable(name = "patientId") Integer patientId,
 															 @RequestParam(value = "orderId", required = false) String orderId) {
