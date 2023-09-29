@@ -74,7 +74,7 @@ export class WorklistByInformerComponent implements OnInit {
 	ngOnInit(): void {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/imagenes/lista-trabajos`;
 		this.personMasterData.getIdentificationTypes().subscribe(types => this.identificationTypes = types);
-		this.modalities$ = this.modalityService.getModalitiesByStudiesCompleted();
+		this.modalities$ = this.modalityService.getAll();
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
 			this.nameSelfDeterminationFF = isOn
 		});
