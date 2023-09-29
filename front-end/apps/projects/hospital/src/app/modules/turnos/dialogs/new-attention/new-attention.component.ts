@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MasterDataInterface } from '../../../api-rest/api-model';
-import { MedicalConsultationMasterdataService } from '../../../api-rest/services/medical-consultation-masterdata.service';
+import { MasterDataInterface } from '@api-rest/api-model';
+import { MedicalConsultationMasterdataService } from '@api-rest/services/medical-consultation-masterdata.service';
 import { MEDICAL_ATTENTION } from '../../constants/descriptions';
 import { REMOVEATTENTION } from '@core/constants/validation-constants';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
@@ -24,9 +24,6 @@ export class NewAttentionComponent implements OnInit {
 
 	availableForBooking: boolean;
 	isEnableOnlineAppointments: boolean = false;
-	existsBookeddAppointment = false;
-	existsProtectedAppointments = false;
-	availableForAppoitmentOnline = false;
 	availbleForCareLine = false;
 	isEnableTelemedicina: boolean = false;
 
@@ -103,8 +100,8 @@ export class NewAttentionComponent implements OnInit {
 		}
 	}
 
-	validModality():boolean{
-		return(this.form.controls.patientVirtualAttentionAllowed.value || this.form.controls.secondOpinionVirtualAttentionAllowed.value || this.form.controls.onSiteAttentionAllowed.value)
+	validModality(): boolean {
+		return (this.form.controls.patientVirtualAttentionAllowed.value || this.form.controls.secondOpinionVirtualAttentionAllowed.value || this.form.controls.onSiteAttentionAllowed.value);
 	}
 
 	closeDialog() {
@@ -145,6 +142,6 @@ export interface NewAttentionElements {
 	openingHoursId?: number,
 	patientVirtualAttentionAllowed: boolean,
 	secondOpinionVirtualAttentionAllowed: boolean,
-	onSiteAttentionAllowed:boolean,
+	onSiteAttentionAllowed: boolean,
 	diaryType: EDiaryType
 }

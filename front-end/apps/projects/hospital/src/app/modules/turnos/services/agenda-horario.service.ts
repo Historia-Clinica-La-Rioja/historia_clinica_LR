@@ -1,4 +1,4 @@
-import { SnackBarService } from './../../presentation/services/snack-bar.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { fromEvent, Observable } from 'rxjs';
@@ -113,8 +113,8 @@ export class AgendaHorarioService {
 					protectedAppointmentsAllowed: !!event.meta.protectedAppointmentsAllowed,
 					hasSelectedLinesOfCare: this.hasSelectedLinesOfCare,
 					editMode: this.editMode,
-					patientVirtualAttentionAllowed: event.meta.patientVirtualAttentionAllowed ? true : false,
-					secondOpinionVirtualAttentionAllowed: event.meta.secondOpinionVirtualAttentionAllowed ? true : false,
+					patientVirtualAttentionAllowed: !!event.meta.patientVirtualAttentionAllowed,
+					secondOpinionVirtualAttentionAllowed: !!event.meta.secondOpinionVirtualAttentionAllowed,
 					onSiteAttentionAllowed: true,
 					diaryType: this.diaryType
 				}
@@ -170,9 +170,9 @@ export class AgendaHorarioService {
 						hasSelectedLinesOfCare: hasSelectedLinesOfCare,
 						openingHoursId: event.meta.diaryOpeningHourId,
 						protectedAppointmentsAllowed: !!event.meta.protectedAppointmentsAllowed,
-						patientVirtualAttentionAllowed: event.meta.patientVirtualAttentionAllowed ? true : false,
-						secondOpinionVirtualAttentionAllowed: event.meta.secondOpinionVirtualAttentionAllowed ? true : false,
-						onSiteAttentionAllowed: event.meta.onSiteAttentionAllowed ? true : false,
+						patientVirtualAttentionAllowed: !!event.meta.patientVirtualAttentionAllowed,
+						secondOpinionVirtualAttentionAllowed: !!event.meta.secondOpinionVirtualAttentionAllowed,
+						onSiteAttentionAllowed: true,
 						diaryType: this.diaryType
 					}
 				});
