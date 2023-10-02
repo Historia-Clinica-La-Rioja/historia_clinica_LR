@@ -21,14 +21,28 @@
 </div>
 
 <ng-container *ngIf="institutionSelection && formReference.value.consultation">
-	<ng-container *ngIf="(appointment$ | async) > 0; else NOT_AVAILABLE_APPOINTMENT">
-		<span class="message" [innerHTML]="
-		'ambulatoria.paciente.nueva-consulta.reference-dialog.AVAILABLE_APPOINTMENT' |
-		translate: { appointment: appointment$ | async }"></span>
-	</ng-container>
+	<ul>
+		<ng-container *ngIf="(protectedAppointment$ | async) > 0; else NOT_AVAILABLE_APPOINTMENT">
+			<span class="message" [innerHTML]="
+			'ambulatoria.paciente.nueva-consulta.reference-dialog.AVAILABLE_APPOINTMENT' |
+			translate: { appointment: protectedAppointment$ | async }"></span>
+		</ng-container>
 
-	<ng-template #NOT_AVAILABLE_APPOINTMENT>
-		<span class="message-warning"
-			[innerHTML]="'ambulatoria.paciente.nueva-consulta.reference-dialog.NOT_AVAILABLE_APPOINTMENT' | translate"></span>
-	</ng-template>
+		<ng-container *ngIf="appointment$ | async as appointment">
+			<li [ngClass]="appointment > 0? 'message' : 'message-warning'">
+				<ng-container *ngIf="appointment > 0; else notAvailableAppointment">
+					<span class="message">{{appointment}} {{'ambulatoria.paciente.nueva-consulta.reference-dialog.APPOINTMENT' | translate}}</span>
+				</ng-container>
+			</li>
+		</ng-container>
+
+		<ng-template #NOT_AVAILABLE_APPOINTMENT>
+			<span class="message-warning"
+				[innerHTML]="'ambulatoria.paciente.nueva-consulta.reference-dialog.NOT_AVAILABLE_APPOINTMENT' | translate"></span>
+		</ng-template>
+
+		<ng-template #notAvailableAppointment>
+			<span class="message-warning">{{ZERO}} {{'ambulatoria.paciente.nueva-consulta.reference-dialog.APPOINTMENT' | translate}}</span>
+		</ng-template>
+	</ul>
 </ng-container>

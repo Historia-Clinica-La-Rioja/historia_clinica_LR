@@ -10,9 +10,11 @@ import { Observable } from 'rxjs';
 })
 export class DiaryAvailableAppointmentsSearchService {
 
+  URL_PREFIX = 'medicalConsultations/available-appointments';
+
   constructor(
     private http: HttpClient,
-	private readonly contextService: ContextService,
+	  private readonly contextService: ContextService,
 
   ) { }
 
@@ -34,6 +36,23 @@ export class DiaryAvailableAppointmentsSearchService {
 	  .append('departmentId', JSON.stringify(departmentId));
 
 	return this.http.get<number>(url, { params: queryParams });
+  }
+
+  getAvailableAppiuntmentsQuantityByCarelineDiaries(institutionDestinationId: number, careLineId: number, practiceSnomedId: number, clinicalSpecialtyId: number): Observable<number> {
+    console.log('ESTOY EN LA FUNCION')
+    const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/${this.URL_PREFIX}/quantity/by-careline-diaries`;
+
+    let queryParams = new HttpParams()
+      .append('institutionDestinationId', JSON.stringify(institutionDestinationId))
+      .append('careLineId', JSON.stringify(careLineId));
+
+    if (practiceSnomedId)
+      queryParams = queryParams.append('practiceSnomedId', JSON.stringify(practiceSnomedId));
+      
+    else 
+      queryParams = queryParams.append('clinicalSpecialtyId', JSON.stringify(clinicalSpecialtyId));
+    
+    return this.http.get<number>(url, { params: queryParams });
   }
 
   getAvailableAppointmentsQuantity(institutionDestinationId: number, clinicalSpecialtyId: number): Observable<number> {

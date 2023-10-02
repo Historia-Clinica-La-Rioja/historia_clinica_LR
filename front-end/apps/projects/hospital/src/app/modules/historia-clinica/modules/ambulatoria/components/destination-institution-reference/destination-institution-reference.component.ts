@@ -39,6 +39,7 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 	@Output() institutionSelected = new EventEmitter<number>();
 	@Output() resetControls = new EventEmitter();
 
+	ZERO = 0;
 	provinceValue: number;
 	departments: TypeaheadOption<any>[];
 	institutions: TypeaheadOption<any>[];
@@ -58,6 +59,7 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 	institutionSelection = false;
 	careLineId: number;
 	appointment$ = new BehaviorSubject<number>(undefined);
+	protectedAppointment$ = new BehaviorSubject<number>(undefined);
 	practiceOrProcedure = false;
 	practiceSnomedId;
 	clinicalSpecialtyId;
@@ -158,15 +160,15 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 	}
 
 	setAppointments(institutionDestinationId: number) {
-		if (this.formReference.value.consultation) {
-			if (this.careLineId)
-				this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointmentsQuantity(institutionDestinationId, this.specialtyId, this.departmentId, this.careLineId).subscribe(rs =>
-					this.appointment$.next(rs));
-			else
-				this.diaryAvailableAppointmentsSearchService.getAvailableAppointmentsQuantity(institutionDestinationId, this.specialtyId).subscribe(rs =>
-					this.appointment$.next(rs));
-
+		if (this.careLineId) {
+			this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointmentsQuantity(institutionDestinationId, this.specialtyId, this.departmentId, this.careLineId).subscribe(rs =>
+				this.protectedAppointment$.next(rs));
+			this.diaryAvailableAppointmentsSearchService.getAvailableAppiuntmentsQuantityByCarelineDiaries(institutionDestinationId, this.careLineId, this.practiceSnomedId, this.specialtyId).subscribe(rs => 
+				this.appointment$.next(rs));
 		}
+		else 
+			this.diaryAvailableAppointmentsSearchService.getAvailableAppointmentsQuantity(institutionDestinationId, this.specialtyId).subscribe(rs =>
+				this.appointment$.next(rs));
 	}
 
 	private setDepartaments() {
