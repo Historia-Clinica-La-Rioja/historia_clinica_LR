@@ -2,7 +2,7 @@
 	<h3 class="page-title">{{'telemedicina.attention.SUBTITLE' | translate}}</h3>
 	<div fxLayout="row" fxLayoutAlign="space-between start">
 		<div>
-			<app-filters-select [setFilters]="filters" (searchCriteria)="prepareDtoFilter($event)"></app-filters-select>
+			<app-filters-select [setFilters]="filters" (searchCriteria)="prepareDtoFilter($event)" filtersSelectStyle="filters-telemedicina"></app-filters-select>
 		</div>
 		<div fxLayout="column" fxLayoutGap="1em" fxLayoutAlign="end end">
 			<app-toggle-avaiability (availabilityChanged)="availabilityChanged($event)"

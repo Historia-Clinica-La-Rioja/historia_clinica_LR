@@ -12,6 +12,8 @@ export class FiltersSelectComponent implements OnInit {
 		this.filters = filters;
 		this.filterForm = this.toFormGroup(this.filters);
 	}
+	@Input() automaticResponse = false;
+	@Input() filtersSelectStyle?: string;
 	@Output() searchCriteria = new EventEmitter();
 	filterForm: FormGroup;
 	filters: filter[];
@@ -20,6 +22,10 @@ export class FiltersSelectComponent implements OnInit {
 	constructor() { }
 
 	ngOnInit(): void {
+		if (this.automaticResponse)
+			this.filterForm.valueChanges.subscribe( _ => {
+				this.searchCriteria.emit(this.filterForm.value)
+			});
 	}
 
 	toggleFilter(value: boolean) {

@@ -1,11 +1,14 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { ReferenceReportDto } from '@api-rest/api-model';
 import { Report } from '../report-information/report-information.component';
-import { APPOINTMENT_STATE, CLOSURE_OPTIONS, PROORITY_OPTIONS, getColoredIconText, getPriority, getReferenceState } from '@turnos/utils/reference.utils';
+import { APPOINTMENT_STATE, CLOSURE_OPTIONS, PRIORITY_OPTIONS, getColoredIconText, getPriority, getReferenceState } from '@turnos/utils/reference.utils';
 import { filter } from '@presentation/components/filters-select/filters-select.component';
 import { PAGE_MIN_SIZE } from '@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications';
 import { AbstractControl, FormBuilder, UntypedFormGroup } from '@angular/forms';
 import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
+
+const REFERENCE_REQUESTED = -1;
+const PENDING_CLOSURE= -1;
 
 @Component({
 	selector: 'app-reference-list',
@@ -19,7 +22,7 @@ export class ReferenceListComponent {
 	allReferenceReports: Report[] = [];
 	formFilter: UntypedFormGroup;
 	private applySearchFilter = '';
-	private priorityOptions = PROORITY_OPTIONS;
+	private priorityOptions = PRIORITY_OPTIONS;
 	private closureOptions = CLOSURE_OPTIONS;
 	private appoitmentStatate = APPOINTMENT_STATE;
 	private pageLength = PAGE_MIN_SIZE;
@@ -38,7 +41,6 @@ export class ReferenceListComponent {
 					state,
 				}
 			});
-			this.prepareFilterClinicalSpecialty(list);
 			this.prepareFilters()
 		}
 		else
@@ -66,15 +68,15 @@ export class ReferenceListComponent {
 	}
 
 	applyFilters($event: any) {
-
 		let referenceReportsFilters = this.allReferenceReports;
+
 		if ($event?.priority)
 			referenceReportsFilters = referenceReportsFilters.filter((r: Report) => r.dto.priority.id === $event.priority);
 
 		if ($event?.closureType) {
 			referenceReportsFilters = referenceReportsFilters.filter((r: Report) => {
 				if (!r.dto?.closureType)
-					if ($event.closureType === -1)
+					if ($event.closureType === REFERENCE_REQUESTED)
 						return true
 				return (r.dto?.closureType?.id === $event.closureType)
 			});
@@ -84,9 +86,21 @@ export class ReferenceListComponent {
 		if ($event?.appoitmentState) {
 			referenceReportsFilters = referenceReportsFilters.filter((r: Report) => {
 				if (!r.dto?.appointmentStateId)
-					return ($event.appoitmentState === -1)
+					return ($event.appoitmentState === PENDING_CLOSURE)
 				return (r.dto.appointmentStateId === $event.appoitmentState)
 			});
+		}
+
+		this.prepareFilterClinicalSpecialty(referenceReportsFilters.map(referenceReports => referenceReports.dto));
+		this.filters.forEach((f, i) => {
+			if (f.key === "clinicalSpecialty")
+				this.filters[i].options = this.clinicalSpecialtyOptions;
+		});
+
+		if ($event?.clinicalSpecialty) {
+			let clinicalSpecialty = this.clinicalSpecialtyOptions.find(r => r?.id === $event.clinicalSpecialty)?.description;
+			if (clinicalSpecialty)
+				referenceReportsFilters = referenceReportsFilters.filter((r: Report) => r.dto.clinicalSpecialtyDestination === clinicalSpecialty);
 		}
 
 		this.referenceReports = referenceReportsFilters;
@@ -95,7 +109,7 @@ export class ReferenceListComponent {
 		this.changeDetectorRef.detectChanges();
 	}
 
-	applyFilterByNameAndDocument($event: any) {
+	applyFilterByNameAndDocument($event: KeyboardEvent) {
 		this.applySearchFilter = ($event?.target as HTMLInputElement).value?.replace(REMOVE_SUBSTRING_DNI, '');
 		this.filteredReferenceReports = this.referenceListWithoutFilterByName;
 		let list: Report[];
@@ -124,7 +138,7 @@ export class ReferenceListComponent {
 		this.changeDetectorRef.detectChanges();
 	}
 
-	private prepareFilterClinicalSpecialty(reports: any) {
+	private prepareFilterClinicalSpecialty(reports: ReferenceReportDto[]) {
 		this.clinicalSpecialtyOptions = reports.map(r => r.institutionDestination);
 
 		this.clinicalSpecialtyOptions = reports.map(r => r?.clinicalSpecialtyDestination);
@@ -143,19 +157,18 @@ export class ReferenceListComponent {
 
 	private prepareFilters() {
 		let filters = [];
-		let filterCareLines: filter = {
-			key: 'priority',
-			name: "turnos.search_references.PRIORITY",
-			options: this.priorityOptions,
-		}
-		filters.push(filterCareLines);
-
 		let filterClosureType: filter = {
 			key: 'closureType',
 			name: "turnos.search_references.REQUEST_STATUS",
 			options: this.closureOptions,
 		}
 		filters.push(filterClosureType);
+		let filterAppoitmentStatate: filter = {
+			key: 'appoitmentState',
+			name: "turnos.search_references.SHIFT_STATUS",
+			options: this.appoitmentStatate,
+		}
+		filters.push(filterAppoitmentStatate);
 
 		let filterClinicalSpecialtyDestination: filter = {
 			key: 'clinicalSpecialty',
@@ -163,13 +176,13 @@ export class ReferenceListComponent {
 			options: this.clinicalSpecialtyOptions,
 		}
 		filters.push(filterClinicalSpecialtyDestination);
-
-		let filterAppoitmentStatate: filter = {
-			key: 'appoitmentState',
-			name: "turnos.search_references.SHIFT_STATUS",
-			options: this.appoitmentStatate,
+		let filterCareLines: filter = {
+			key: 'priority',
+			name: "turnos.search_references.PRIORITY",
+			options: this.priorityOptions,
 		}
-		filters.push(filterAppoitmentStatate);
+		filters.push(filterCareLines);
+
 		this.filters = filters;
 	}
 
