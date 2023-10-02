@@ -29,11 +29,6 @@ export class AddressMasterDataService {
 		return this.http.get<any[]>(url);
 	}
 
-	getDepartmentsBySpecialy(provinceId: number, clinicalSpecialtyId: number): Observable<any[]> {
-		const url = `${environment.apiBase}/address/masterdata/province/${provinceId}/departments/with-specialty/${clinicalSpecialtyId}`;
-		return this.http.get<any[]>(url);
-	}
-
 	getCitiesByDepartment(departmentId: number): Observable<any[]> {
 		const url = `${environment.apiBase}/address/masterdata/department/${departmentId}/cities`;
 		return this.http.get<any[]>(url);
@@ -44,21 +39,12 @@ export class AddressMasterDataService {
 		return this.http.get<DepartmentDto>(url);
 	}
 
-	getActiveDiariesInInstitutionByClinicalSpecialty(provinceId: number, careLineId: number, clinicalSpecialtyId: number) {
-		const url = `${environment.apiBase}/address/masterdata/province/${provinceId}/departments/with-specialty/${clinicalSpecialtyId}`;
-		const queryParams = { careLineId: careLineId.toString() };
+	getDeparmentsByCareLineAndClinicalSpecialty(clinicalSpecialtyId: number, careLineId?: number) {
+		const url = `${environment.apiBase}/address/masterdata/institution/${this.contextService.institutionId}/departments/by-reference-clinical-specialty-filter`;
+		let queryParams = { clinicalSpecialtyId: clinicalSpecialtyId.toString() };
+		if (careLineId !== undefined && careLineId !== null)
+			queryParams['careLineId'] = careLineId.toString();
 		return this.http.get<any[]>(url, { params: queryParams });
-	};
-
-
-	getDepartmentsForReference(clinicalSpecialtyId: number, careLineId?: number) {
-		const url = `${environment.apiBase}/address/masterdata/institution/${this.contextService.institutionId}/departments/with-specialty/${clinicalSpecialtyId}`;
-		if (careLineId) {
-			const queryParams = { careLineId: careLineId.toString() };
-			return this.http.get<any[]>(url, { params: queryParams });
-		}
-		else
-			return this.http.get<any[]>(url);
 	}
 
 	getDepartmentsByCareLineAndPracticesAndClinicalSpecialty(practiceSnomedId: number, clinicalSpecialtyId?: number, careLineId?: number,) {

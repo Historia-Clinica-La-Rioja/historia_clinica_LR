@@ -36,8 +36,8 @@ public interface DepartmentRepository extends JpaRepository<Department, Short> {
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT d " +
 			"FROM Department d " +
-			"JOIN Address a ON (d.id = a.departmentId) " +
-			"JOIN Province p ON (a.provinceId = p.id) " +
+			"JOIN City c ON (d.id = c.departmentId)" +
+			"JOIN Address a ON (c.id = a.cityId) " +
 			"JOIN Institution i ON (i.addressId = a.id) " +
 			"JOIN CareLineInstitution cli ON (i.id = cli.institutionId) " +
 			"JOIN CareLineInstitutionSpecialty clis ON (cli.id = clis.careLineInstitutionId) " +
@@ -50,7 +50,8 @@ public interface DepartmentRepository extends JpaRepository<Department, Short> {
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT d " +
 			"FROM Department d " +
-			"JOIN Address a ON (d.id = a.departmentId) " +
+			"JOIN City c ON (d.id = c.departmentId) " +
+			"JOIN Address a ON (c.id = a.cityId) " +
 			"JOIN Institution i ON (i.addressId = a.id) " +
 			"JOIN UserRole ur ON (i.id = ur.institutionId )" +
 			"JOIN UserPerson up ON (ur.userId = up.pk.userId) " +
@@ -67,7 +68,8 @@ public interface DepartmentRepository extends JpaRepository<Department, Short> {
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT d " +
 			"FROM Department d " +
-			"JOIN Address a ON (d.id = a.departmentId) " +
+			"JOIN City c ON (d.id = c.departmentId)" +
+			"JOIN Address a ON (c.id = a.cityId) " +
 			"JOIN Institution i ON (a.id = i.addressId) " +
 			"JOIN CareLineInstitution cli ON (i.id = cli.institutionId) " +
 			"JOIN CareLineInstitutionPractice clip ON (cli.id = clip.careLineInstitutionId) " +
@@ -81,7 +83,8 @@ public interface DepartmentRepository extends JpaRepository<Department, Short> {
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT d " +
 			"FROM Department d " +
-			"JOIN Address a ON (d.id = a.departmentId) " +
+			"JOIN City c ON (d.id = c.departmentId)" +
+			"JOIN Address a ON (c.id = a.cityId) " +
 			"JOIN Institution i ON (a.id = i.addressId) " +
 			"JOIN CareLineInstitution cli ON (i.id = cli.institutionId) " +
 			"JOIN CareLineInstitutionSpecialty clis ON (cli.id = clis.careLineInstitutionId) " +
@@ -98,7 +101,8 @@ public interface DepartmentRepository extends JpaRepository<Department, Short> {
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT d " +
 			"FROM Department d " +
-			"JOIN Address a ON (d.id = a.departmentId) " +
+			"JOIN City c ON (d.id = c.departmentId)" +
+			"JOIN Address a ON (c.id = a.cityId) " +
 			"JOIN Institution i ON (a.id = i.addressId) " +
 			"JOIN UserRole ur ON (i.id = ur.institutionId )" +
 			"JOIN UserPerson up ON (ur.userId = up.pk.userId) " +
@@ -123,7 +127,8 @@ public interface DepartmentRepository extends JpaRepository<Department, Short> {
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT d " +
 			"FROM Department d " +
-			"JOIN Address a ON (d.id = a.departmentId) " +
+			"JOIN City c ON (d.id = c.departmentId)" +
+			"JOIN Address a ON (c.id = a.cityId) " +
 			"JOIN Institution i ON (a.id = i.addressId) " +
 			"JOIN SnomedGroup sg ON (i.id = sg.institutionId) " +
 			"JOIN SnomedGroup baseGroup ON (sg.groupId = baseGroup.id) " +

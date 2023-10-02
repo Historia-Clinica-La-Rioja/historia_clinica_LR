@@ -133,14 +133,15 @@ public class InstitutionController {
 		return result;
 	}
 
-	@GetMapping("/by-department/{departmentId}/with-specialty/{clinicalSpecialtyId}")
-	public @ResponseBody
-	List<InstitutionBasicInfoDto> getInstitutionsByDepartmentHavingClinicalSpecialty(@PathVariable("departmentId") Short departmentId,
-																					 @PathVariable("clinicalSpecialtyId") Integer clinicalSpecialtyId,
-																					 @RequestParam(name="careLineId", required = false) Integer careLineId)
+	@GetMapping("/{institutionId}/by-reference-clinical-specialty-filter")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public List<InstitutionBasicInfoDto> getInstitutionsByReferenceByClinicalSpecialtyFilter(@PathVariable("institutionId") Integer institutionId,
+																							 @RequestParam("departmentId") Short departmentId,
+																							 @RequestParam("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																							 @RequestParam(name="careLineId", required = false) Integer careLineId)
 	{
 		logger.debug("Input parameter -> departmentId {}, clinicalSpecialtyId {}, careLineId {}", departmentId, clinicalSpecialtyId, careLineId);
-		List<InstitutionBasicInfoBo> institutions = institutionService.getFromInstitutionDestinationReference(departmentId, clinicalSpecialtyId, careLineId);
+		List<InstitutionBasicInfoBo> institutions = institutionService.getInstitutionsByReferenceByClinicalSpecialtyFilter(departmentId, clinicalSpecialtyId, careLineId);
 		var result = institutionMapper.fromListInstitutionBasicInfoBo(institutions);
 		logger.trace("result -> {}", result);
 		return result;

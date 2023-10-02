@@ -62,11 +62,10 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"JOIN ProfessionalProfessions pp ON (hp.id = pp.healthcareProfessionalId) " +
 			"JOIN HealthcareProfessionalSpecialty hps ON (pp.id = hps.professionalProfessionId) " +
 			"JOIN Address a ON (a.id = i.addressId) " +
-			"JOIN Department d ON (a.departmentId = d.id) " +
-			"JOIN Province p ON (d.provinceId = p.id) " +
+			"JOIN City c ON (a.cityId = c.id) " +
 			"JOIN DoctorsOffice do ON (do.institutionId = i.id) " +
 			"JOIN Diary di ON (di.doctorsOfficeId = do.id) " +
-			"WHERE d.id = :departmentId " +
+			"WHERE c.departmentId = :departmentId " +
 			"AND di.clinicalSpecialtyId = :clinicalSpecialtyId " +
 			"AND di.active = TRUE " +
 			"AND di.endDate >= CURRENT_DATE " +
@@ -89,12 +88,11 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"JOIN ProfessionalProfessions pp ON (hp.id = pp.healthcareProfessionalId) " +
 			"JOIN HealthcareProfessionalSpecialty hps ON (pp.id = hps.professionalProfessionId) " +
 			"JOIN Address a ON (a.id = i.addressId) " +
-			"JOIN Department d ON (a.departmentId = d.id) " +
-			"JOIN Province p ON (d.provinceId = p.id) " +
+			"JOIN City c ON (a.cityId = c.id) " +
 			"JOIN DoctorsOffice do ON (do.institutionId = i.id) " +
 			"JOIN Diary di ON (di.doctorsOfficeId = do.id) " +
 			"JOIN DiaryCareLine dcl ON (dcl.pk.diaryId = di.id) " +
-			"WHERE d.id = :departmentId " +
+			"WHERE c.departmentId = :departmentId " +
 			"AND di.active = TRUE " +
 			"AND di.endDate >= CURRENT_DATE " +
 			"AND di.clinicalSpecialtyId = :clinicalSpecialtyId " +
@@ -122,11 +120,12 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) " +
 			"FROM Institution i " +
 			"JOIN Address a ON (a.id = i.addressId) " +
+			"JOIN City c ON (a.cityId = c.id) " +
 			"JOIN DoctorsOffice do ON (do.institutionId = i.id) " +
 			"JOIN Diary di ON (di.doctorsOfficeId = do.id) " +
 			"JOIN DiaryCareLine dcl ON (di.id = dcl.pk.diaryId) " +
 			"JOIN DiaryPractice dp ON (di.id = dp.diaryId) " +
-			"WHERE a.departmentId = :departmentId " +
+			"WHERE c.departmentId = :departmentId " +
 			"AND dp.snomedId = :practiceSnomedId " +
 			"AND dcl.pk.careLineId = :careLineId " +
 			"AND di.clinicalSpecialtyId = :clinicalSpecialtyId " +
@@ -144,11 +143,12 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) " +
 			"FROM Institution i " +
 			"JOIN Address a ON (a.id = i.addressId) " +
+			"JOIN City c ON (a.cityId = c.id) " +
 			"JOIN DoctorsOffice do ON (do.institutionId = i.id) " +
 			"JOIN Diary di ON (di.doctorsOfficeId = do.id) " +
 			"JOIN DiaryCareLine dcl ON (di.id = dcl.pk.diaryId) " +
 			"JOIN DiaryPractice dp ON (di.id = dp.diaryId) " +
-			"WHERE a.departmentId = :departmentId " +
+			"WHERE c.departmentId = :departmentId " +
 			"AND dp.snomedId = :practiceSnomedId " +
 			"AND dcl.pk.careLineId = :careLineId " +
 			"AND di.active = TRUE " +
@@ -164,10 +164,11 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) " +
 			"FROM Institution i " +
 			"JOIN Address a ON (a.id = i.addressId) " +
+			"JOIN City c ON (a.cityId = c.id) " +
 			"JOIN DoctorsOffice do ON (do.institutionId = i.id) " +
 			"JOIN Diary di ON (di.doctorsOfficeId = do.id) " +
 			"JOIN DiaryPractice dp ON (di.id = dp.diaryId) " +
-			"WHERE a.departmentId = :departmentId " +
+			"WHERE c.departmentId = :departmentId " +
 			"AND dp.snomedId = :practiceSnomedId " +
 			"AND di.clinicalSpecialtyId = :clinicalSpecialtyId " +
 			"AND di.active = TRUE " +
@@ -182,10 +183,11 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) " +
 			"FROM Institution i " +
 			"JOIN Address a ON (i.addressId = a.id) " +
+			"JOIN City c ON (a.cityId = c.id) " +
 			"JOIN DoctorsOffice do ON (i.id = do.institutionId) " +
 			"JOIN Diary di ON (do.id = di.doctorsOfficeId) " +
 			"JOIN DiaryPractice dp ON (di.id = dp.diaryId) " +
-			"WHERE a.departmentId = :departmentId " +
+			"WHERE c.departmentId = :departmentId " +
 			"AND dp.snomedId = :practiceSnomedId " +
 			"AND di.active = TRUE " +
 			"AND di.endDate >= CURRENT_DATE " +

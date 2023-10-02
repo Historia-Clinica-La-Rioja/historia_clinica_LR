@@ -56,14 +56,15 @@ export class InstitutionService {
 		return this.http.get<InstitutionBasicInfoDto[]>(`${environment.apiBase}/institution/province/${provinceId}`);
 	}
 
-	getInstitutionsByDepartmentHavingClinicalSpecialty(departmentId: number, clinicalSpecialtyId: number, careLine: number): Observable<InstitutionBasicInfoDto[]> {
-		const url = `${environment.apiBase}/institution/by-department/${departmentId}/with-specialty/${clinicalSpecialtyId}`;
+	getInstitutionsByReferenceByClinicalSpecialtyFilter(departmentId: number,clinicalSpecialtyId: number, careLine: number): Observable<InstitutionBasicInfoDto[]> {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/by-reference-clinical-specialty-filter`;
+		const queryParams = {departmentId: departmentId.toString(), clinicalSpecialtyId: clinicalSpecialtyId.toString()};
 		if (careLine) {
-			const queryParams = { careLineId: careLine.toString() };
+			queryParams['careLineId'] = careLine.toString();
 			return this.http.get<any[]>(url, { params: queryParams });
 		}
 		else
-			return this.http.get<any[]>(url);
+			return this.http.get<any[]>(url, { params: queryParams });
 	}
 
 	getVirtualConsultationInstitutions():Observable<InstitutionBasicInfoDto[]>{

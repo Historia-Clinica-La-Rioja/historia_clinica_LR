@@ -102,14 +102,10 @@ public class AddressMasterDataServiceImpl implements AddressMasterDataService {
 	}
 
 	@Override
-	public <T> Collection<T> getDepartmentsForReference(Integer institutionId, Integer careLineId, Integer clinicalSpecialtyId, Class<T> clazz) {
-		AddressBo institutionAddress = addressService.getAddressByInstitution(institutionId);
-		if (institutionAddress.getProvinceId() != null) {
-			if (careLineId == null)
-				return departmentRepository.findAllByProfessionalsWithClinicalSpecialtyId(clinicalSpecialtyId, clazz);
+	public <T> Collection<T> getDepartmentsByReferenceFilterByClinicalSpecialty(Integer careLineId, Integer clinicalSpecialtyId, Class<T> clazz) {
+		if (careLineId != null)
 			return departmentRepository.findAllByCareLineIdAndClinicalSpecialtyId(careLineId, clinicalSpecialtyId, clazz);
-		}
-		return Collections.emptyList();
+		return departmentRepository.findAllByProfessionalsWithClinicalSpecialtyId(clinicalSpecialtyId, clazz);
 	}
 
 	@Override

@@ -63,8 +63,8 @@ public class InstitutionServiceImpl implements InstitutionService {
 	}
 
 	@Override
-	public List<InstitutionBasicInfoBo> getFromInstitutionDestinationReference(Short departmentId, Integer clinicalSpecialtyId, Integer careLineId) {
-		log.debug("Fetch all institutions with active diaries filter by clinical specialty id and care line id");
+	public List<InstitutionBasicInfoBo> getInstitutionsByReferenceByClinicalSpecialtyFilter(Short departmentId, Integer clinicalSpecialtyId, Integer careLineId) {
+		log.debug("Fetch all institutions by reference by clinical specialty filter and active diaries");
 		if (careLineId == null )
 			return institutionRepository.getByDepartmentIdHavingActiveDiaryWithClinicalSpecialty(departmentId, clinicalSpecialtyId);
 		else
@@ -81,7 +81,7 @@ public class InstitutionServiceImpl implements InstitutionService {
 	@Override
 	public List<InstitutionBasicInfoBo> getInstitutionsByReferenceByPracticeFilter(Short departmentId, Integer practiceSnomedId,
 																				   Integer clinicalSpecialtyId, Integer careLineId) {
-		log.debug("Fetch all institutions by reference by practice filter");
+		log.debug("Fetch all institutions by reference by practice filter and active diaries");
 		if (careLineId != null && clinicalSpecialtyId != null)
 			return institutionRepository.getByDepartmentAndCareLineAndPracticeAndClinicalSpecialty(departmentId, clinicalSpecialtyId, careLineId, practiceSnomedId);
 		if (careLineId != null)

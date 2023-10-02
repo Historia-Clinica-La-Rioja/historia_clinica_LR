@@ -18,9 +18,9 @@ export class ClinicalSpecialtyService {
 		return this.http.get<any[]>(url);
 	}
 
-	getClinicalSpecialtiesByProvinceId(provinceId: number): Observable<ClinicalSpecialtyDto[]> {
-		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinicalspecialty/by-province/${provinceId}`;
-		return this.http.get<ClinicalSpecialtyDto[]>(url);
+	getClinicalSpecialtiesInAllInstitutions(): Observable<ClinicalSpecialtyDto[]> {
+		 const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinicalspecialty`;
+		 return this.http.get<ClinicalSpecialtyDto[]>(url);
 	}
 
 	getClinicalSpecialties(professionalsIds: number[]): Observable<ProfessionalsByClinicalSpecialtyDto[]> {
@@ -64,11 +64,6 @@ export class ClinicalSpecialtyService {
 		let params = new HttpParams();
 		params = params.append('destinationInstitutionId', institutionId);
 		return this.http.get<ClinicalSpecialtyDto[]>(url, { params });
-	}
-
-	getAllByDestinationInstitution(careLineId: number, destinationInstitutionId: number): Observable<ClinicalSpecialtyDto[]> {
-		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinicalspecialty/careline/${careLineId}/destinationinstitution/${destinationInstitutionId}`;
-		return this.http.get<ClinicalSpecialtyDto[]>(url);
 	}
 
 	getVirtualConsultationClinicalSpecialtiesByInstitutionId(): Observable<ClinicalSpecialtyDto[]> {

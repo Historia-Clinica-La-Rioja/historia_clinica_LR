@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AddressDto, CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, ReferenceProblemDto, MasterDataDto, ReferenceStudyDto } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, ReferenceProblemDto, MasterDataDto, ReferenceStudyDto } from '@api-rest/api-model';
 import { ReferenceOriginInstitutionService } from '../../services/reference-origin-institution.service';
 import { ReferenceProblemsService } from '../../services/reference-problems.service';
 import { Observable, tap } from 'rxjs';
@@ -27,7 +27,6 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 	priorities$: Observable<MasterDataDto[]>;
 
 	PRIORITY = PRIORITY;
-	provinceId: number;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: any,
@@ -35,14 +34,10 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly dialogRef: MatDialogRef<ReferenceComponent>,
 		private changeDetector: ChangeDetectorRef,
-		private readonly referenceMasterData: ReferenceMasterDataService,
-		private readonly referenceOriginInstitutionService: ReferenceOriginInstitutionService,
+		private readonly referenceMasterData: ReferenceMasterDataService
 	) { }
 
 	ngOnInit(): void {
-		this.referenceOriginInstitutionService.originInstitutionInfo$.subscribe((info: AddressDto) => {
-			this.provinceId = info?.provinceId
-		});
 
 		this.createReferenceForm();
 
@@ -111,11 +106,6 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 	removeSelectedFile(index): void {
 		this.selectedFiles.splice(index, 1);
 		this.selectedFilesShow.splice(index, 1);
-	}
-
-	onProvinceSelectionChange(province: number) {
-		this.formReference.controls.provinceId.setValue(province);
-		this.clearCarelinesAndSpecialties = true;
 	}
 
 	onDepartmentSelectionChange(department: number) {

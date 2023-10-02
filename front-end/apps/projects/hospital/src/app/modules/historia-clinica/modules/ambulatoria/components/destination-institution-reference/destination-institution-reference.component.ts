@@ -136,7 +136,7 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 					});
 			}
 			else {
-				this.institutionService.getInstitutionsByDepartmentHavingClinicalSpecialty(departmentId, this.specialtyId, this.careLineId).subscribe((institutions: InstitutionBasicInfoDto[]) => {
+				this.institutionService.getInstitutionsByReferenceByClinicalSpecialtyFilter(departmentId, this.specialtyId, this.careLineId).subscribe((institutions: InstitutionBasicInfoDto[]) => {
 					this.institutions = this.toTypeaheadOptions(institutions, 'name');
 					this.institutionsDisable = false;
 				});
@@ -171,8 +171,8 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 
 	private setDepartaments() {
 		this.cleanFields();
-		if (this.specialtyId) {
-			this.adressMasterData.getDepartmentsForReference(this.specialtyId, this.careLineId).subscribe(e => {
+		if (this.formReference.value.consultation && this.specialtyId) {
+			this.adressMasterData.getDeparmentsByCareLineAndClinicalSpecialty(this.specialtyId, this.careLineId).subscribe(e => {
 				this.departments = this.toTypeaheadOptions(e, 'description');
 				this.departmentDisable = false;
 			});

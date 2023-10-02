@@ -83,7 +83,7 @@
 
 				<div>
 					<app-carelines-and-specialties-reference [formReference]="formReference" [submitForm]="submitForm"
-						[updateFormFields]="referenceProblemsService.getProblems()|async" [setProvinceId]="provinceId"
+						[updateFormFields]="referenceProblemsService.getProblems()|async"
 						(resetControls)="resetControls()"
 						(updateDepartamentsAndInstitution)="activateSpecialtiesAndCarelineFields()">
 					</app-carelines-and-specialties-reference>
@@ -93,7 +93,6 @@
 						[updateFormFields]="updateDepartamentsAndInstitution"
 						[careLine]="formReference.value.careLine?.id"
 						[clinicalSpecialty]="formReference.value.clinicalSpecialtyId?.id"
-						(provinceSelected)="onProvinceSelectionChange($event)"
 						(departmentSelected)="onDepartmentSelectionChange($event)"
 						(institutionSelected)="onInstitutionSelectionChange($event)">
 					</app-destination-institution-reference>

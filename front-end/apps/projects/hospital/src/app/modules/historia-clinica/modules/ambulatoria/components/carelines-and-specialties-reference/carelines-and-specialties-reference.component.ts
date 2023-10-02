@@ -33,10 +33,6 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 	};
 
 	@Input() formReference: UntypedFormGroup;
-	@Input() set setProvinceId(provinceId: number) {
-		this.provinceId = provinceId;
-		this.setAllSpecialties();
-	};
 	@Input() problems: any[];
 	@Output() updateDepartamentsAndInstitution = new EventEmitter();
 	@Input() set updateFormFields(problems: any[]) {
@@ -85,6 +81,7 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 		this.subscribesToChangesInForm();
 		this.formReference.controls.studyCategory.disable();
 		this.formReference.controls.practiceOrProcedure.disable();
+		this.setAllSpecialties();
 	}
 
 	setSpecialtyCareLine(): void {
@@ -114,10 +111,6 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 		if (this.formReference.value.searchByCareLine != this.DEFAULT_RADIO_OPTION)
 			this.setSpecialties();
 
-	}
-
-	setSpecialtiesByProvince() {
-		this.specialtiesSubject$.next(this.allClinicalSpecialties);
 	}
 
 	private setSpecialties() {
@@ -232,11 +225,10 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 	}
 
 	private setAllSpecialties() {
-		if (this.provinceId)
-			this.clinicalSpecialty.getClinicalSpecialtiesByProvinceId(this.provinceId).subscribe((clinicalSpecialties: ClinicalSpecialtyDto[]) => {
-				this.allClinicalSpecialties = clinicalSpecialties;
-				this.allSpecialtiesSubject$.next(clinicalSpecialties);
-			});
+		this.clinicalSpecialty.getClinicalSpecialtiesInAllInstitutions().subscribe((clinicalSpecialties: ClinicalSpecialtyDto[]) => {
+			this.allClinicalSpecialties = clinicalSpecialties;
+			this.allSpecialtiesSubject$.next(clinicalSpecialties);
+		});
 	}
 
 	private clearTypeahead() {

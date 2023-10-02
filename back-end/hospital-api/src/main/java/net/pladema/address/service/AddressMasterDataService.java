@@ -24,7 +24,7 @@ public interface AddressMasterDataService {
 
 	DepartmentBo findDepartmentById(Short departmentId);
 
-	<T> Collection<T> getDepartmentsForReference(Integer provinceId, Integer careLineId, Integer clinicalSpecialtyId, Class<T> clazz);
+	<T> Collection<T> getDepartmentsByReferenceFilterByClinicalSpecialty(Integer careLineId, Integer clinicalSpecialtyId, Class<T> clazz);
 
 	<T> Collection<T> getDepartmentsByReferenceFilterByPractice(Integer practiceId, Integer careLineId, Integer clinicalSpecialtyId, Class<T> clazz);
 

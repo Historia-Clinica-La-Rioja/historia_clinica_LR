@@ -68,13 +68,13 @@ public class AddressMasterDataController {
 		return ResponseEntity.ok().body(resultDto);
 	}
 
-	@GetMapping(value = "/institution/{institutionId}/departments/with-specialty/{clinicalSpecialtyId}")
+	@GetMapping(value = "/institution/{institutionId}/departments/by-reference-clinical-specialty-filter")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
 	public ResponseEntity<Collection<AddressProjection>> getDeparmentsByCareLineAndClinicalSpecialty(@PathVariable("institutionId") Integer institutionId,
-																					@PathVariable("clinicalSpecialtyId") Integer clinicalSpecialtyId,
-																					@RequestParam(name = "careLineId", required = false) Integer careLineId) {
-		LOG.debug("{}", "All departments in province having clinical specialty");
-		return ResponseEntity.ok().body(addressMasterDataService.getDepartmentsForReference(institutionId, careLineId, clinicalSpecialtyId, AddressProjection.class));
+																									 @RequestParam("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																									 @RequestParam(name = "careLineId", required = false) Integer careLineId) {
+		LOG.debug("{}", "All departments by reference for clinical specialty filter");
+		return ResponseEntity.ok().body(addressMasterDataService.getDepartmentsByReferenceFilterByClinicalSpecialty(careLineId, clinicalSpecialtyId, AddressProjection.class));
 	}
 
 	@GetMapping(value = "/institution/{institutionId}/departments/by-reference-practice-filter")

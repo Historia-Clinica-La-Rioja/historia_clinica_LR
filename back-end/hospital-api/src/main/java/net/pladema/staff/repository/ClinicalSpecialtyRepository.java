@@ -88,15 +88,12 @@ public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpeci
 			"JOIN HealthcareProfessional hp ON (hp.id = pp.healthcareProfessionalId) " +
 			"JOIN UserPerson up ON (hp.personId = up.pk.personId) " +
 			"JOIN UserRole ur ON (up.pk.userId = ur.userId) " +
-			"JOIN Institution i ON (ur.institutionId = i.id) " +
-			"JOIN Address a ON (i.addressId = a.id) " +
-			"WHERE a.provinceId = :provinceId " +
-			"AND hps.deleteable.deleted = FALSE " +
+			"WHERE hps.deleteable.deleted = FALSE " +
 			"AND pp.deleteable.deleted = FALSE " +
 			"AND hp.deleteable.deleted = FALSE " +
 			"AND ur.deleteable.deleted = FALSE " +
 			"ORDER BY cs.name")
-	List<ClinicalSpecialtyBo> getClinicalSpecialtiesByProvinceId(@Param("provinceId") Short provinceId);
+	List<ClinicalSpecialtyBo> getClinicalSpecialtiesInAllInstitutions();
 
 	@Transactional(readOnly = true)
 	@Query(" SELECT DISTINCT NEW net.pladema.staff.service.domain.ClinicalSpecialtyBo(cs.id, cs.name) " +
