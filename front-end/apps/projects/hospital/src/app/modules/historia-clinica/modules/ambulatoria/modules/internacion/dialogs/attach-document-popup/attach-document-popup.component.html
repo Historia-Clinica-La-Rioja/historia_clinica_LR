@@ -20,7 +20,7 @@
 
 	<section class="file-actions" *ngIf="(!file && !hasError(form, 'required', 'type'))">
 		<div *ngIf="showGenerateDocument">
-			<button mat-stroked-button color="primary" fxFlex="100%" (click)="generateDocument()">
+			<button mat-stroked-button color="primary" fxFlex="100%" (click)="generateDocument()" [disabled]="!isAdministrative">
 				<mat-icon class="material-icons-outlined">add_circle_outline</mat-icon>
 				<span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.GENERATE_DOCUMENT'"></span>
 			</button>

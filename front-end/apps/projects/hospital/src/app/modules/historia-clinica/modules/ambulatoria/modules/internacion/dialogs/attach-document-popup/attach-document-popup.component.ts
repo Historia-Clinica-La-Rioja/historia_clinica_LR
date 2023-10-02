@@ -1,8 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { EpisodeDocumentTypeDto } from '@api-rest/api-model';
+import { ERole, EpisodeDocumentTypeDto } from '@api-rest/api-model';
 import { InternmentEpisodeDocumentService } from '@api-rest/services/internment-episode-document.service';
+import { PermissionsService } from '@core/services/permissions.service';
 import { ExtesionFile } from '@core/utils/extensionFile';
 import { hasError, requiredFileType } from '@core/utils/form.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
@@ -26,11 +27,13 @@ export class AttachDocumentPopupComponent implements OnInit {
 	file: File = null;
 	showGenerateDocument = false;
 	consentSelectedType: EpisodeDocumentTypeDto;
+	isAdministrative: boolean = false;
 
 	constructor(private fb: UntypedFormBuilder,
 		private internmentEpisodeDocument: InternmentEpisodeDocumentService,
 		public dialogRef: MatDialogRef<AttachDocumentPopupComponent>,
 		private readonly snackBarService: SnackBarService,
+		private readonly permissionService: PermissionsService,
 		@Inject(MAT_DIALOG_DATA) public data) { }
 
 	ngOnInit(): void {
@@ -40,6 +43,7 @@ export class AttachDocumentPopupComponent implements OnInit {
 			type: new UntypedFormControl(null, Validators.required)
 		});
 		this.setDocumentTypesFilter();
+		this.setIsAdministrative();
 	}
 
 	setDocumentTypesFilter() {
@@ -116,6 +120,11 @@ export class AttachDocumentPopupComponent implements OnInit {
 
 	generateDocument() {
 		this.internmentEpisodeDocument.generateConsentDocument(this.data.internmentEpisodeId,this.consentSelectedType.consentId);
+	}
+
+	private setIsAdministrative() {
+		this.permissionService.hasContextAssignments$([ERole.ADMINISTRATIVO])
+			.subscribe((isAdministrative: boolean) => this.isAdministrative = isAdministrative);
 	}
 
 }
