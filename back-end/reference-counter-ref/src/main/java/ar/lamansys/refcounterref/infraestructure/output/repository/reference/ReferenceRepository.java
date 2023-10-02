@@ -10,44 +10,48 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import ar.lamansys.refcounterref.domain.reference.ReferenceGetBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
 
 @Repository
 public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 
     @Transactional(readOnly = true)
-    @Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceGetBo(r.id, oc.startDate, " +
-            "rn.id, rn.description, cl.id, cl.description, cs.id, cs.name, oc.doctorId, " +
-            "p.firstName, px.nameSelfDetermination, p.lastName) " +
+    @Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.creationable.createdOn, " +
+            "rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name, cs2.id, cs2.name, "+
+			"hp.personId, r.priority, r.serviceRequestId) " +
             "FROM Reference r " +
             "JOIN OutpatientConsultation oc ON (r.encounterId = oc.id) " +
-            "JOIN ClinicalSpecialty cs ON (r.clinicalSpecialtyId = cs.id) " +
+			"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
+			"JOIN Institution i ON (oc.institutionId = i.id) " +
+			"LEFT JOIN Institution i2 ON (r.destinationInstitutionId = i2.id) " +
+			"LEFT JOIN ClinicalSpecialty cs2 ON (r.clinicalSpecialtyId = cs2.id) " +
             "LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
             "LEFT JOIN ReferenceNote rn ON (rn.id = r.referenceNoteId) " +
             "JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId) " +
-            "JOIN Person p ON (p.id = hp.personId) " +
-			"LEFT JOIN PersonExtended px ON(px.id = p.id) " +
             "WHERE oc.patientId = :patientId " +
-            "AND r.clinicalSpecialtyId IN (:clinicalSpecialtyIds)" +
+            "AND r.clinicalSpecialtyId IN (:clinicalSpecialtyIds) " +
             "AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId)")
-    List<ReferenceGetBo> getReferencesFromOutpatientConsultation(@Param("patientId") Integer patientId, @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds);
+    List<ReferenceDataBo> getReferencesFromOutpatientConsultation(@Param("patientId") Integer patientId,
+																  @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds);
 
     @Transactional(readOnly = true)
-    @Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceGetBo(r.id, oc.performedDate, " +
-            "rn.id, rn.description, cl.id, cl.description, cs.id, cs.name, oc.doctorId, " +
-            "p.firstName, px.nameSelfDetermination, p.lastName) " +
+    @Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.creationable.createdOn, " +
+			"rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name, cs2.id, cs2.name, "+
+			"hp.personId , r.priority, r.serviceRequestId) " +
             "FROM Reference r " +
             "JOIN OdontologyConsultation oc ON (r.encounterId = oc.id) " +
-            "JOIN ClinicalSpecialty cs ON (r.clinicalSpecialtyId = cs.id) " +
+			"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
+			"JOIN Institution i ON (oc.institutionId = i.id) " +
+			"LEFT JOIN Institution i2 ON (r.destinationInstitutionId = i2.id) " +
+			"LEFT JOIN ClinicalSpecialty cs2 ON (r.clinicalSpecialtyId = cs2.id) " +
             "LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
             "LEFT JOIN ReferenceNote rn ON (rn.id = r.referenceNoteId) " +
             "JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId) " +
-            "JOIN Person p ON (p.id = hp.personId) " +
-			"LEFT JOIN PersonExtended px ON(px.id = p.id) " +
             "WHERE oc.patientId = :patientId " +
-            "AND r.clinicalSpecialtyId IN (:clinicalSpecialtyIds)" +
-            "AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId)")
-    List<ReferenceGetBo> getReferencesFromOdontologyConsultation(@Param("patientId") Integer patientId, @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds);
+            "AND r.clinicalSpecialtyId IN (:clinicalSpecialtyIds) " +
+			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId)")
+    List<ReferenceDataBo> getReferencesFromOdontologyConsultation(@Param("patientId") Integer patientId,
+																  @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.id, i.name, " +

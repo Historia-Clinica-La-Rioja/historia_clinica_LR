@@ -1,10 +1,10 @@
 package ar.lamansys.refcounterref.infraestructure.input.rest.mapper;
 
 import ar.lamansys.refcounterref.domain.ReferenceReportBo;
-import ar.lamansys.refcounterref.domain.reference.ReferenceGetBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.ReferenceReportDto;
-import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.ReferenceGetDto;
+import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.ReferenceDataDto;
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.ReferenceSummaryDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.IterableMapping;
@@ -16,12 +16,12 @@ import java.util.List;
 @Mapper(uses = {LocalDateMapper.class})
 public interface GetReferenceMapper {
 
-    @Named("fromReferenceGetBo")
-    ReferenceGetDto fromReferenceGetBo(ReferenceGetBo referenceBo);
+    @Named("fromReferenceDataBo")
+	ReferenceDataDto fromReferenceDataBo(ReferenceDataBo referenceBo);
 
-    @Named("fromListReferenceGetBo")
-    @IterableMapping(qualifiedByName = "fromReferenceGetBo")
-    List<ReferenceGetDto> fromListReferenceGetBo(List<ReferenceGetBo> referenceGetBoList);
+    @Named("fromListReferenceDataBo")
+    @IterableMapping(qualifiedByName = "fromReferenceDataBo")
+    List<ReferenceDataDto> fromListReferenceDataBo(List<ReferenceDataBo> referenceDataBoList);
 
 	@Named("toReferenceSummaryDtoList")
 	List<ReferenceSummaryDto> toReferenceSummaryDtoList(List<ReferenceSummaryBo> referenceSummaryBoList);

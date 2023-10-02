@@ -29,4 +29,10 @@ public class SharedPersonImpl implements SharedPersonPort {
 				.orElseThrow(()-> new NotFoundException("person-not-found", String.format("La persona con id %s no existe", personId)));
 	}
 
+	@Override
+	public String getCompletePersonNameById(Integer personId) {
+		log.debug("Input paremeters -> personId {}", personId);
+		return personService.getCompletePersonNameById(personId);
+	}
+
 }

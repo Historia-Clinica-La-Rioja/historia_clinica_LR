@@ -1,6 +1,8 @@
 package net.pladema.clinichistory.requests.servicerequests.repository;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+import net.pladema.clinichistory.requests.servicerequests.domain.ServiceRequestProcedureInfoBo;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;
 
 import org.springframework.data.jpa.repository.Query;
@@ -33,4 +35,15 @@ public interface ServiceRequestRepository extends SGXAuditableEntityJPARepositor
 			"WHERE sr.id = :id")
 	Optional<Integer> getMedicalCoverageId(@Param("id") Integer id);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT new net.pladema.clinichistory.requests.servicerequests.domain.ServiceRequestProcedureInfoBo(sr.id, " +
+			"s.id, s.sctid, s.pt) " +
+			"FROM ServiceRequest sr " +
+			"JOIN Document d ON (sr.id = d.sourceId) " +
+			"JOIN DocumentDiagnosticReport ddr ON (d.id = ddr.pk.documentId) " +
+			"JOIN DiagnosticReport dr ON (ddr.pk.diagnosticReportId = dr.id) " +
+			"JOIN Snomed s ON (dr.snomedId = s.id) " +
+			"WHERE sr.id IN (:serviceRequestIds) " +
+			"AND d.typeId = "+ DocumentType.ORDER)
+	List<ServiceRequestProcedureInfoBo> getServiceRequestsProcedures(@Param("serviceRequestIds") List<Integer> serviceRequestIds);
 }

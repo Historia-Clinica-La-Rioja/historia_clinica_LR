@@ -3278,6 +3278,23 @@ export interface ReferenceCounterReferenceFileDto extends Serializable {
     fileName: string;
 }
 
+export interface ReferenceDataDto {
+    careLine: CareLineDto;
+    clinicalSpecialtyDestination: ClinicalSpecialtyDto;
+    clinicalSpecialtyOrigin: ClinicalSpecialtyDto;
+    closureType: EReferenceClosureType;
+    date: DateTimeDto;
+    files: ReferenceCounterReferenceFileDto[];
+    id: number;
+    institutionDestination: ReferenceInstitutionDto;
+    institutionOrigin: ReferenceInstitutionDto;
+    note: string;
+    priority: EReferencePriority;
+    problems: string[];
+    procedure: SharedSnomedDto;
+    professionalFullName: string;
+}
+
 export interface ReferenceDto extends Serializable {
     careLineId?: number;
     clinicalSpecialtyId?: number;
@@ -3293,15 +3310,9 @@ export interface ReferenceDto extends Serializable {
     study?: ReferenceStudyDto;
 }
 
-export interface ReferenceGetDto extends Serializable {
-    careLine: CareLineDto;
-    clinicalSpecialty: ClinicalSpecialtyDto;
-    files: ReferenceCounterReferenceFileDto[];
+export interface ReferenceInstitutionDto {
+    description: string;
     id: number;
-    note: ReferenceSummaryNoteDto;
-    problems: ReferenceProblemDto[];
-    professional: ProfessionalPersonDto;
-    referenceDate: DateDto;
 }
 
 export interface ReferenceProblemDto extends Serializable {
@@ -3324,6 +3335,11 @@ export interface ReferenceReportDto {
     priority: EReferencePriority;
     problems: string[];
     referenceId: number;
+}
+
+export interface ReferenceServiceRequestProcedureDto {
+    procedure: SharedSnomedDto;
+    serviceRequestId: number;
 }
 
 export interface ReferenceStudyDto {

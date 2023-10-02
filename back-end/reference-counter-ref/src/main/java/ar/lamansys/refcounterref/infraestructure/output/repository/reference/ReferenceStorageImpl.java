@@ -5,14 +5,15 @@ import ar.lamansys.refcounterref.application.port.ReferenceHealthConditionStorag
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStudyStorage;
 import ar.lamansys.refcounterref.domain.enums.EReferenceCounterReferenceType;
-import ar.lamansys.refcounterref.domain.file.ReferenceCounterReferenceFileBo;
 import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
-import ar.lamansys.refcounterref.domain.reference.ReferenceGetBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
 import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
+import ar.lamansys.refcounterref.domain.snomed.SnomedBo;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencehealthcondition.ReferenceHealthConditionRepository;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencenote.ReferenceNote;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencenote.ReferenceNoteRepository;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +45,8 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 
 	private final FeatureFlagsService featureFlagsService;
 
+	private final SharedPersonPort sharedPersonPort;
+
     @Override
 	@Transactional
     public List<Integer> save(List<CompleteReferenceBo> referenceBoList) {
@@ -60,7 +63,7 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 			List<Integer> referenceHealthConditionIds = referenceHealthConditionStorage.saveProblems(referenceId, referenceBo);
 			log.debug("referenceHealthConditionIds, referenceId -> {} {}", referenceHealthConditionIds, referenceId);
 			if (referenceBo.getStudy() != null) {
-				Integer orderId = referenceStudyStorage.run(referenceBo);
+				Integer orderId = referenceStudyStorage.save(referenceBo);
 				reference.setServiceRequestId(orderId);
 				referenceRepository.save(reference);
 				orderIds.add(orderId);
@@ -72,29 +75,10 @@ public class ReferenceStorageImpl implements ReferenceStorage {
     }
 
     @Override
-    public List<ReferenceGetBo> getReferences(Integer patientId, List<Integer> clinicalSpecialtyIds) {
-        List<ReferenceGetBo> queryResult = referenceRepository.getReferencesFromOutpatientConsultation(patientId, clinicalSpecialtyIds);
-        queryResult.addAll(referenceRepository.getReferencesFromOdontologyConsultation(patientId, clinicalSpecialtyIds));
-
-        List<Integer> referenceIds = queryResult.stream().map(ReferenceGetBo::getId).collect(Collectors.toList());
-
-        Map<Integer, List<ReferenceProblemBo>> problems = referenceHealthConditionRepository.getReferencesProblems(referenceIds)
-                .stream()
-                .map(ReferenceProblemBo::new)
-                .collect(Collectors.groupingBy(ReferenceProblemBo::getReferenceId));
-
-        queryResult = queryResult.stream().map(ref -> {
-            ref.setProblems(problems.get(ref.getId()));
-            return ref;
-        }).collect(Collectors.toList());
-
-        Map<Integer, List<ReferenceCounterReferenceFileBo>> files = referenceCounterReferenceFileStorage.getFilesByReferenceCounterReferenceIdsAndType(referenceIds, EReferenceCounterReferenceType.REFERENCIA);
-        List<ReferenceGetBo> result = queryResult.stream().map(ref -> {
-            ref.setFiles(files.get(ref.getId()));
-            return ref;
-        }).collect(Collectors.toList());
-
-        return result;
+    public List<ReferenceDataBo> getReferences(Integer patientId, List<Integer> clinicalSpecialtyIds) {
+		List<ReferenceDataBo> queryResult = referenceRepository.getReferencesFromOutpatientConsultation(patientId, clinicalSpecialtyIds);
+       	queryResult.addAll(referenceRepository.getReferencesFromOdontologyConsultation(patientId, clinicalSpecialtyIds));
+		return setReferenceDetails(queryResult);
     }
 
     @Override
@@ -139,6 +123,23 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 		List<ReferenceSummaryBo> queryResult = referenceRepository.getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyIdAndPracticeId(patientId, clinicalSpecialtyId, careLineId, practiceId);
 		queryResult.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyIdAndPracticeId(patientId, clinicalSpecialtyId, careLineId, practiceId));
 		return queryResult;
+	}
+	
+	private List<ReferenceDataBo> setReferenceDetails(List<ReferenceDataBo> references) {
+		List<Integer> referenceIds = references.stream().map(ReferenceDataBo::getId).collect(Collectors.toList());
+		var referencesProblems = referenceHealthConditionRepository.getReferencesProblems(referenceIds);
+		var files = referenceCounterReferenceFileStorage.getFilesByReferenceCounterReferenceIdsAndType(referenceIds, EReferenceCounterReferenceType.REFERENCIA);
+		var referencesStudiesIds = references.stream().filter(r -> r.getServiceRequestId() != null).collect(Collectors.toMap(ReferenceDataBo::getServiceRequestId, ReferenceDataBo::getId));
+		Map<Integer, SnomedBo> referencesProcedures = referenceStudyStorage.getReferencesProcedures(referencesStudiesIds);
+		return references.stream()
+				.peek(ref -> {
+					ref.setProblems(referencesProblems.stream()
+							.filter(rp -> rp.getReferenceId().equals(ref.getId()))
+							.map(rp -> rp.getSnomed().getPt()).collect(Collectors.toList()));
+					ref.setFiles(files.get(ref.getId()));
+					ref.setProcedure(referencesProcedures.get(ref.getId()));
+					ref.setProfessionalFullName(sharedPersonPort.getCompletePersonNameById(ref.getProfessionalPersonId()));
+				}).collect(Collectors.toList());
 	}
 
 }

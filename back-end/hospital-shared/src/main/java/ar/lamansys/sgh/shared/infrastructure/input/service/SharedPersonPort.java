@@ -6,4 +6,6 @@ public interface SharedPersonPort {
 
 	String getPersonFullNameById(Integer personId);
 
+	String getCompletePersonNameById(Integer personId);
+
 }

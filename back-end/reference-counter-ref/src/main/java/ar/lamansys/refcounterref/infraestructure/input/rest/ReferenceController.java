@@ -3,7 +3,7 @@ package ar.lamansys.refcounterref.infraestructure.input.rest;
 import ar.lamansys.refcounterref.application.getreferencesummary.GetReferenceSummary;
 import ar.lamansys.refcounterref.application.getreference.GetReference;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
-import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.ReferenceGetDto;
+import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.ReferenceDataDto;
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.ReferenceSummaryDto;
 import ar.lamansys.refcounterref.infraestructure.input.rest.mapper.GetReferenceMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,12 +37,12 @@ public class ReferenceController {
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
-    public List<ReferenceGetDto> getReference(
+    public List<ReferenceDataDto> getReferences(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId,
             @RequestParam List<Integer> clinicalSpecialtyIds) {
         log.debug("Input parameters -> patientId {}, clinicalSpecialtyIds {}", patientId, clinicalSpecialtyIds);
-        List<ReferenceGetDto> result = getReferenceMapper.fromListReferenceGetBo(getReference.run(patientId, clinicalSpecialtyIds));
+        List<ReferenceDataDto> result = getReferenceMapper.fromListReferenceDataBo(getReference.run(patientId, clinicalSpecialtyIds));
         log.debug("Output -> result {}", result);
         return result;
     }
