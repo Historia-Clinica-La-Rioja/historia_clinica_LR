@@ -30,6 +30,7 @@ import { SearchFilters, WorklistFiltersComponent } from '../../components/workli
 import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { WorklistFacadeService } from '../../services/worklist-facade.service';
 import { DownloadTranscribedOrderComponent } from '../../dialogs/download-transcribed-order/download-transcribed-order.component';
+import { ViewPdfBo } from '@presentation/dialogs/view-pdf/view-pdf.service';
 
 const PAGE_SIZE_OPTIONS = [10];
 const PAGE_MIN_SIZE = 10;
@@ -380,14 +381,18 @@ export class WorklistByTechnicalComponent implements OnInit {
                 data: attachedFiles,
             });
         } else {
-            const anchor = document.createElement("a");
-            anchor.href = attachedFiles[0].url;
-            anchor.download = attachedFiles[0].filename;
-
-            document.body.appendChild(anchor);
-            anchor.click();
-            document.body.removeChild(anchor);
+            this.downloadUniqueOrder(attachedFiles[0]);
         }
+    }
+
+    downloadUniqueOrder(file: ViewPdfBo){
+        const anchor = document.createElement("a");
+        anchor.href = file.url.toString();
+        anchor.download = file.filename;
+
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
     }
 
     requestReport(appointment: detailedAppointment) {
