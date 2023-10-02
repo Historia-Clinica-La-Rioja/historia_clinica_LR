@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import ar.lamansys.sgh.clinichistory.application.fetchorderimagefile.FetchOrderImageFileById;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.StudyWithoutOrderReportInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
@@ -143,6 +144,8 @@ public class ServiceRequestController {
 
 	private final PatientMedicalCoverageMapper patientMedicalCoverageMapper;
 
+	private final FetchOrderImageFileById fetchOrderImageFileById;
+
 
 	public ServiceRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService,
 									CreateServiceRequestService createServiceRequestService, CreateTranscribedServiceRequestService createTranscribedServiceRequestService, CreateServiceRequestMapper createServiceRequestMapper,
@@ -159,7 +162,7 @@ public class ServiceRequestController {
 									HospitalApiPublisher hospitalApiPublisher, FeatureFlagsService featureFlagsService,
 									DocumentAuthorFinder documentAuthorFinder,
 									SharedInstitutionPort sharedInstitutionPort, ExistCheckDiagnosticReportService existCheckDiagnosticReportService,
-									ListStudyWithoutOrderReportInfoService listStudyWithoutOrderReportInfoService, StudyWithoutOrderReportInfoMapper studyWithoutOrderReportInfoMapper, PatientMedicalCoverageService patientMedicalCoverageService, PatientMedicalCoverageMapper patientMedicalCoverageMapper) {
+									ListStudyWithoutOrderReportInfoService listStudyWithoutOrderReportInfoService, StudyWithoutOrderReportInfoMapper studyWithoutOrderReportInfoMapper, PatientMedicalCoverageService patientMedicalCoverageService, PatientMedicalCoverageMapper patientMedicalCoverageMapper, FetchOrderImageFileById fetchOrderImageFileById) {
 		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
 		this.createServiceRequestService = createServiceRequestService;
 		this.createTranscribedServiceRequestService = createTranscribedServiceRequestService;
@@ -192,6 +195,7 @@ public class ServiceRequestController {
 		this.studyWithoutOrderReportInfoMapper = studyWithoutOrderReportInfoMapper;
 		this.patientMedicalCoverageService = patientMedicalCoverageService;
 		this.patientMedicalCoverageMapper = patientMedicalCoverageMapper;
+		this.fetchOrderImageFileById = fetchOrderImageFileById;
 	}
 
     @PostMapping
@@ -264,6 +268,17 @@ public class ServiceRequestController {
 		var result = uploadTranscribedOrderFileService.execute(files, orderId, patientId);
 		LOG.debug(OUTPUT, result);
 		return result;
+	}
+
+	@GetMapping(value = "/{id}/downloadTranscribedFile")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PRESCRIPTOR, TECNICO, INFORMADOR')")
+	public ResponseEntity<Resource> downloadImg(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "id") Integer id)
+	{
+		var storedFileBo = fetchOrderImageFileById.run(id);
+
+		return StoredFileResponse.sendFile(storedFileBo);
 	}
 
     @PutMapping("/{diagnosticReportId}/complete")
