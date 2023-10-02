@@ -226,6 +226,18 @@ export interface AppointmentDailyAmountDto {
     spontaneous: number;
 }
 
+export interface AppointmentDataDto {
+    appointmentId: number;
+    date: DateDto;
+    hour: TimeDto;
+    institution: InstitutionInfoDto;
+    patientEmail: string;
+    phoneNumber: string;
+    phonePrefix: string;
+    professionalFullName: string;
+    state: number;
+}
+
 export interface AppointmentDto extends CreateAppointmentDto {
     appointmentStateId: number;
     callLink: string;

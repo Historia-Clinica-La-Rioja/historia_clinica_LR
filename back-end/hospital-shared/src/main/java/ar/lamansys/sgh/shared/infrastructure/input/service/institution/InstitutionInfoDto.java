@@ -25,4 +25,9 @@ public class InstitutionInfoDto implements Serializable {
 		this.name = name;
 		this.sisaCode = sisaCode;
 	}
+
+	public InstitutionInfoDto(Integer id, String name) {
+		this.id = id;
+		this.name = name;
+	}
 }

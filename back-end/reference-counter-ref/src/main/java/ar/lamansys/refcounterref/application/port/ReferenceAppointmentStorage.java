@@ -1,9 +1,11 @@
 package ar.lamansys.refcounterref.application.port;
 
 import ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.AppointmentDataDto;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface ReferenceAppointmentStorage {
 
@@ -11,4 +13,5 @@ public interface ReferenceAppointmentStorage {
 
 	Map<Integer, List<Integer>>  getReferenceAppointmentsIds(List<Integer> referenceId);
 
+	Optional<ReferenceAppointmentBo> getAppointmentData(Integer referenceId);
 }

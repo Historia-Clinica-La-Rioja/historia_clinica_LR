@@ -14,8 +14,14 @@ import java.util.stream.Collectors;
 import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotNull;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.AppointmentDataDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceAppointmentStateDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
+
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
 
 import org.springframework.stereotype.Service;
 
@@ -70,8 +76,13 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	private final DocumentAppointmentService documentAppointmentService;
 	private final FetchAppointments fetchAppointments;
 	private final LocalDateMapper localDateMapper;
+	private final SharedPersonPort sharedPersonPort;
 
-	public AppointmentExternalServiceImpl(AppointmentService appointmentService, AppointmentValidatorService appointmentValidatorService, CreateAppointmentService createAppointmentService, BookingPersonService bookingPersonService, CreateBookingAppointmentService createBookingAppointmentService, DocumentAppointmentService documentAppointmentService, FetchAppointments fetchAppointments, LocalDateMapper localDateMapper) {
+	public AppointmentExternalServiceImpl(AppointmentService appointmentService, AppointmentValidatorService appointmentValidatorService,
+										  CreateAppointmentService createAppointmentService, BookingPersonService bookingPersonService,
+										  CreateBookingAppointmentService createBookingAppointmentService, DocumentAppointmentService documentAppointmentService,
+										  FetchAppointments fetchAppointments, LocalDateMapper localDateMapper,
+										  SharedPersonPort sharedPersonPort) {
 		this.appointmentService = appointmentService;
 		this.appointmentValidatorService = appointmentValidatorService;
 		this.createAppointmentService = createAppointmentService;
@@ -80,6 +91,7 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 		this.documentAppointmentService = documentAppointmentService;
 		this.fetchAppointments = fetchAppointments;
 		this.localDateMapper = localDateMapper;
+		this.sharedPersonPort = sharedPersonPort;
 	}
 
 	@Override
@@ -205,19 +217,44 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 
 	@Override
 	public List<ReferenceAppointmentStateDto> getReferencesAppointmentState(Map<Integer, List<Integer>> referenceAppointments) {
-		List <ReferenceAppointmentStateDto> result = new ArrayList<>();
+		List<ReferenceAppointmentStateDto> result = new ArrayList<>();
 		for (Map.Entry<Integer, List<Integer>> e : referenceAppointments.entrySet()) {
-			List<AppointmentBo> appointments = this.appointmentService.getAppointmentDataByAppointmentIds(e.getValue());
-			if (!appointments.isEmpty()) {
-				List<AppointmentBo> futureAppointments = appointments.stream()
-						.filter(a -> a.getDate().equals(LocalDate.now()) || a.getDate().isAfter(LocalDate.now()))
-						.sorted(Comparator.comparing(AppointmentBo::getDate).thenComparing(AppointmentBo::getHour))
-						.collect(Collectors.toList());
-				AppointmentBo appointment = !futureAppointments.isEmpty() ? futureAppointments.get(0) : appointments.get(0);
-				result.add(new ReferenceAppointmentStateDto(e.getKey(), appointment.getAppointmentStateId()));
-			}
+			Optional<AppointmentSummaryBo> appointment = getNearestAppointment(e.getValue());
+            appointment.ifPresent(appointmentSummaryBo -> result.add(new ReferenceAppointmentStateDto(e.getKey(), appointmentSummaryBo.getStateId())));
 		}
 		return result;
+	}
+
+	@Override
+	public Optional<AppointmentDataDto> getNearestAppointmentData(List<Integer> appointments) {
+		log.debug("Get nearest appointment by appointmentsIds {}", appointments);
+		Optional<AppointmentSummaryBo> appointment = getNearestAppointment(appointments);
+		return appointment.map(this::mapFromAppointmentSummaryBo);
+	}
+
+	private Optional<AppointmentSummaryBo> getNearestAppointment(List<Integer> appointmentIds) {
+		List<AppointmentSummaryBo> appointments = this.appointmentService.getAppointmentDataByAppointmentIds(appointmentIds);
+		List<AppointmentSummaryBo> futureAppointments = appointments.stream()
+				.filter(a -> a.getDate().equals(LocalDate.now()) || a.getDate().isAfter(LocalDate.now()))
+				.sorted(Comparator.comparing(AppointmentSummaryBo::getDate).thenComparing(AppointmentSummaryBo::getHour))
+				.collect(Collectors.toList());
+		return !futureAppointments.isEmpty() ? Optional.of(futureAppointments.get(0)) : !appointments.isEmpty() ? Optional.of(appointments.get(0)) : Optional.empty();
+	}
+
+	private AppointmentDataDto mapFromAppointmentSummaryBo(AppointmentSummaryBo appointment) {
+		String patientFullName = sharedPersonPort.parseCompletePersonName(appointment.getProfessionalFirstName(), appointment.getProfessionalMiddleNames(),
+				appointment.getProfessionalLastName(), appointment.getProfessionalOtherLastNames(), appointment.getProfessionalNameSelfDetermination());
+		return AppointmentDataDto.builder()
+				.appointmentId(appointment.getId())
+				.state(appointment.getStateId())
+				.institution(new InstitutionInfoDto(appointment.getInstitution().getId(), appointment.getInstitution().getName()))
+				.date(localDateMapper.toDateDto(appointment.getDate()))
+				.hour(localDateMapper.toTimeDto(appointment.getHour()))
+				.phonePrefix(appointment.getPhonePrefix())
+				.phoneNumber(appointment.getPhoneNumber())
+				.professionalFullName(patientFullName)
+				.patientEmail(appointment.getPatientEmail())
+				.build();
 	}
 
 	private PublicAppointmentListDto mapToFromAppointmentInfoBo(AppointmentInfoBo appointmentInfoBo) {

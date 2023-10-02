@@ -13,6 +13,7 @@ import net.pladema.medicalconsultation.appointment.repository.domain.Appointment
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketImageBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
@@ -91,5 +92,5 @@ public interface AppointmentService {
 
 	Integer patientHasCurrentAppointment(Integer institutionId, Integer patientId);
 
-	List<AppointmentBo> getAppointmentDataByAppointmentIds(List<Integer> appointmentIds);
+	List<AppointmentSummaryBo> getAppointmentDataByAppointmentIds(List<Integer> appointmentIds);
 }

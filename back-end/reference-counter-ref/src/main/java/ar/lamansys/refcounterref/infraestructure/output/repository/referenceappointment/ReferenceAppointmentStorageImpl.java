@@ -2,14 +2,20 @@ package ar.lamansys.refcounterref.infraestructure.output.repository.referenceapp
 
 import ar.lamansys.refcounterref.application.port.ReferenceAppointmentStorage;
 
+import ar.lamansys.refcounterref.domain.reference.ReferenceInstitutionBo;
 import ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.AppointmentDataDto;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -18,6 +24,10 @@ import java.util.stream.Collectors;
 public class ReferenceAppointmentStorageImpl implements ReferenceAppointmentStorage {
 
 	private final ReferenceAppointmentRepository referenceAppointmentRepository;
+
+	private final SharedAppointmentPort sharedAppointmentPort;
+
+	private final LocalDateMapper localDateMapper;
 
 	@Override
 	public void save(Integer referenceId, Integer appointmentId) {
@@ -34,5 +44,29 @@ public class ReferenceAppointmentStorageImpl implements ReferenceAppointmentStor
 						Collectors.mapping(ReferenceAppointmentBo::getAppointmentId, Collectors.toList())));
 	}
 
+	@Override
+	public Optional<ReferenceAppointmentBo> getAppointmentData(Integer referenceId) {
+		log.debug("Fetch appointment data by referenceId -> referenceId {} ", referenceId);
+		Map<Integer, List<Integer>> appointments = this.getReferenceAppointmentsIds(Collections.singletonList(referenceId));
+		if (!appointments.isEmpty()) {
+			Optional<AppointmentDataDto> appointmentData = sharedAppointmentPort.getNearestAppointmentData(appointments.get(referenceId));
+			if (appointmentData.isPresent())
+				return Optional.of(mapFromAppointmentDataDto(appointmentData.get()));
+		}
+		return Optional.empty();
+	}
+
+	private ReferenceAppointmentBo mapFromAppointmentDataDto(AppointmentDataDto appointmentData) {
+		return ReferenceAppointmentBo.builder()
+				.appointmentId(appointmentData.getAppointmentId())
+				.appointmentStateId(appointmentData.getState())
+				.institution(new ReferenceInstitutionBo(appointmentData.getInstitution().getId(), appointmentData.getInstitution().getName()))
+				.date(localDateMapper.fromDateDto(appointmentData.getDate()).atTime(localDateMapper.fromTimeDto(appointmentData.getHour())))
+				.phonePrefix(appointmentData.getPhonePrefix())
+				.phoneNumber(appointmentData.getPhoneNumber())
+				.professionalFullName(appointmentData.getProfessionalFullName())
+				.email(appointmentData.getPatientEmail())
+				.build();
+	}
 
 }

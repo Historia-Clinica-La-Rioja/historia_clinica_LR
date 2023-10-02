@@ -132,13 +132,6 @@ public class AppointmentBo {
 				.build();
     }
 
-	public AppointmentBo(Integer id, Short appointmentStateId, LocalDate date, LocalTime hour) {
-		this.id = id;
-		this.appointmentStateId = appointmentStateId;
-		this.date = date;
-		this.hour = hour;
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

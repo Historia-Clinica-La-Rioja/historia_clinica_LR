@@ -54,6 +54,7 @@ import net.pladema.medicalconsultation.appointment.repository.entity.HistoricApp
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentEnumException;
@@ -623,7 +624,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public List<AppointmentBo> getAppointmentDataByAppointmentIds(List<Integer> appointmentIds) {
+	public List<AppointmentSummaryBo> getAppointmentDataByAppointmentIds(List<Integer> appointmentIds) {
+		log.debug("Input parameter -> appointmentIds {}", appointmentIds);
 		return appointmentRepository.getAppointmentDataByAppointmentIds(appointmentIds);
 	}
 

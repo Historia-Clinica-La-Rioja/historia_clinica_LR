@@ -21,6 +21,8 @@ import net.pladema.medicalconsultation.appointment.repository.domain.Appointment
 import net.pladema.medicalconsultation.appointment.repository.domain.MedicalCoverageAppoinmentOrderBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -595,14 +597,20 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	Optional<HierarchicalUnit> findDiaryHierarchicalUnitIdByAppointment(@Param("appointmentId") Integer appointmentId);
 
 	@Transactional(readOnly = true)
-	@Query("SELECT new net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo(a.id, a.appointmentStateId, " +
-			"a.dateTypeId, a.hour) " +
+	@Query("SELECT new net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo(a.id, a.appointmentStateId, " +
+			"i.id, i.name, a.dateTypeId, a.hour, a.phonePrefix, a.phoneNumber, a.patientEmail, p.firstName," +
+			" p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination) " +
 			"FROM Appointment a " +
 			"JOIN AppointmentAssn asn ON (a.id = asn.pk.appointmentId) " +
 			"JOIN Diary d ON (asn.pk.diaryId = d.id) " +
+			"JOIN DoctorsOffice dof ON (d.doctorsOfficeId = dof.id) " +
+			"JOIN Institution i ON (dof.institutionId = i.id) " +
+			"JOIN HealthcareProfessional hp ON(d.healthcareProfessionalId = hp.id) " +
+			"JOIN Person p ON (hp.personId = p.id) " +
+			"JOIN PersonExtended pe ON (p.id = pe.id) " +
 			"WHERE a.id IN (:appointmentIds) " +
 			"AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR +
 			"AND d.deleteable.deleted = false OR d.deleteable.deleted is null " +
 			"ORDER BY a.dateTypeId DESC, a.hour ASC")
-	List<AppointmentBo> getAppointmentDataByAppointmentIds(@Param("appointmentIds") List<Integer> appointmentIds);
+	List<AppointmentSummaryBo> getAppointmentDataByAppointmentIds(@Param("appointmentIds") List<Integer> appointmentIds);
 }

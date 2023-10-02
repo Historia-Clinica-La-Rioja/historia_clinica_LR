@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.AppointmentDataDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.DocumentAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentListDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingAppointmentDto;
@@ -45,5 +46,7 @@ public interface SharedAppointmentPort {
 	void deleteDocumentAppointment(DocumentAppointmentDto documentAppointmentDto);
 
 	List<ReferenceAppointmentStateDto> getReferencesAppointmentState(Map<Integer, List<Integer>> referenceAppointments);
+
+	Optional<AppointmentDataDto> getNearestAppointmentData(List<Integer> appointments);
 
 }
