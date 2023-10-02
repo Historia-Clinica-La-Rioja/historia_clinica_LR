@@ -336,6 +336,7 @@ public class InternmentEpisodeController {
 	}
 
 	@GetMapping("/{internmentEpisodeId}/episode-document-type/{consentId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
 	public ResponseEntity<Resource> generateEpisodeDocumentType(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "consentId") Integer consentId,
