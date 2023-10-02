@@ -149,6 +149,7 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 					personExtended.getReligion(),
 					getEthnicity(personExtended.getEthnicityId())
 			);
+			result.setEmail(personExtended.getEmail());
 			result.setNameSelfDetermination(personExtended.getNameSelfDetermination());
 			if (!personFileDtoList.isEmpty()) {
 				result.setFiles(personFileDtoList);

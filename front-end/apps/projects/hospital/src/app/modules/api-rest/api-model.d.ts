@@ -452,6 +452,7 @@ export interface BasicDataPersonDto extends Serializable {
     age: number;
     birthDate: Date;
     educationLevel: string;
+    email: string;
     ethnicity: string;
     files: PersonFileDto[];
     firstName: string;

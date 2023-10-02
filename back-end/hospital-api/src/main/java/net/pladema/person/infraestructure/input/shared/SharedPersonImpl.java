@@ -35,4 +35,10 @@ public class SharedPersonImpl implements SharedPersonPort {
 		return personService.getCompletePersonNameById(personId);
 	}
 
+	@Override
+	public String parseCompletePersonName(String firstName, String middleNames, String lastName, String otherLastNames, String selfDeterminateName) {
+		log.debug("Input paremeters -> firstName {}, middleNames {}, lastName {}, otherLastNames {}, selfDeterminationName {} ",
+				firstName, middleNames, lastName, otherLastNames, selfDeterminateName);
+		return personService.parseCompletePersonName(firstName, middleNames, lastName, otherLastNames, selfDeterminateName);
+	}
 }

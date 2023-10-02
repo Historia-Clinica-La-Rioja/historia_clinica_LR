@@ -62,6 +62,8 @@ public class BasicDataPersonDto implements Serializable {
 
 	private String ethnicity;
 
+	private String email;
+
 	/*public BasicDataPersonDto(Integer id, String firstName, String middleNames, String lastName, String otherLastNames, Short identificationTypeId, String identificationType, String identificationNumber, GenderDto gender, String selfPerceivedGender, Short age, LocalDate birthDate, String nameSelfDetermination, List<PersonFileDto> files) {
 		this.id = id;
 		this.firstName = firstName;

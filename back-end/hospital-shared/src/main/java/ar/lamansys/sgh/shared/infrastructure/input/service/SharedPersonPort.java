@@ -8,4 +8,6 @@ public interface SharedPersonPort {
 
 	String getCompletePersonNameById(Integer personId);
 
+	String parseCompletePersonName(String firstName, String middleNames, String lastName, String otherLastNames, String selfDeterminateName);
+
 }
