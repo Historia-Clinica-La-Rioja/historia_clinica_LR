@@ -13,11 +13,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.validation.ConstraintViolationException;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import ar.lamansys.sgh.clinichistory.application.ports.OrderImageFileStorage;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
@@ -65,10 +70,6 @@ import net.pladema.patient.controller.service.PatientExternalMedicalCoverageServ
 import net.pladema.patient.service.domain.PatientCoverageInsuranceDetailsBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
-import javax.validation.ConstraintViolationException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 @Slf4j
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -107,6 +108,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final EquipmentAppointmentStorage equipmentAppointmentStorage;
 
+	private final OrderImageFileStorage orderImageFileStorage;
+
 	public AppointmentServiceImpl(AppointmentRepository appointmentRepository,
 								  AppointmentObservationRepository appointmentObservationRepository,
 								  HistoricAppointmentStateRepository historicAppointmentStateRepository,
@@ -120,7 +123,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 								  AppointmentUpdateRepository appointmentUpdateRepository,
 								  AppointmentAssnRepository appointmentAssnRepository, AppointmentOrderImageRepository appointmentOrderImageRepository,
 								  SharedReferenceCounterReference sharedReferenceCounterReference, LocalDateMapper localDateMapper,
-								  EquipmentAppointmentStorage equipmentAppointmentStorage) {
+								  EquipmentAppointmentStorage equipmentAppointmentStorage, OrderImageFileStorage orderImageFileStorage) {
 		this.appointmentRepository = appointmentRepository;
 		this.appointmentObservationRepository = appointmentObservationRepository;
 		this.historicAppointmentStateRepository = historicAppointmentStateRepository;
@@ -137,6 +140,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 		this.sharedReferenceCounterReference = sharedReferenceCounterReference;
 		this.localDateMapper = localDateMapper;
 		this.equipmentAppointmentStorage = equipmentAppointmentStorage;
+		this.orderImageFileStorage = orderImageFileStorage;
 	}
 
 	@Override
@@ -168,11 +172,15 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Override
 	public Collection<EquipmentAppointmentBo> getAppointmentsByEquipmentId(Integer equipmentId, Integer institutionId, LocalDate from, LocalDate to) {
 		log.debug("Input parameters -> equipmentDiaryId {} institutionId {}, from {} to {}", equipmentId, institutionId, from, to);
-		Collection<EquipmentAppointmentBo> result = equipmentAppointmentStorage.getAppointmentsByEquipmentId(equipmentId, institutionId, from, to).stream()
+		Collection<EquipmentAppointmentBo> result = equipmentAppointmentStorage.getAppointmentsByEquipmentId(equipmentId, institutionId, from, to)
+				.stream()
 				.distinct()
 				.sorted(Comparator.comparing(EquipmentAppointmentBo::getDate, Comparator.nullsFirst(Comparator.naturalOrder())).thenComparing(EquipmentAppointmentBo::getHour))
+				.map(e -> {
+					e.setTranscribedOrderAttachedFiles(orderImageFileStorage.getOrderImageFileInfo(e.getTranscribedServiceRequestId()));
+					return e;
+				})
 				.collect(Collectors.toList());
-
 		log.debug("Result size {}", result.size());
 		log.trace(OUTPUT, result);
 		return result;

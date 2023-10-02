@@ -14,8 +14,6 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
-import net.pladema.medicalconsultation.appointment.application.GetCurrentAppointmentHierarchicalUnit.GetCurrentAppointmentHierarchicalUnit;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +49,7 @@ import net.pladema.establishment.controller.dto.HierarchicalUnitDto;
 import net.pladema.establishment.controller.mapper.InstitutionMapper;
 import net.pladema.establishment.service.domain.HierarchicalUnitBo;
 import net.pladema.imagenetwork.derivedstudies.service.MoveStudiesService;
+import net.pladema.medicalconsultation.appointment.application.GetCurrentAppointmentHierarchicalUnit.GetCurrentAppointmentHierarchicalUnit;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentDiary;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentState;
@@ -423,7 +422,8 @@ public class AppointmentsController {
 				equipmentAppointmentBo.getReportStatusId(),
 				equipmentAppointmentBo.getStudyName(),
 				equipmentAppointmentBo.getServiceRequestId(),
-				equipmentAppointmentBo.getTranscribedServiceRequestId()
+				equipmentAppointmentBo.getTranscribedServiceRequestId(),
+				null
 		);
 	}
 
@@ -463,6 +463,7 @@ public class AppointmentsController {
 	private EquipmentAppointmentListDto mapEquipmentData(EquipmentAppointmentBo equipmentAppointmentBo, Map<Integer, BasicPatientDto> patientData) {
 		AppointmentBasicPatientDto appointmentBasicPatientDto = toAppointmentBasicPatientDto(patientData.get(equipmentAppointmentBo.getPatientId()), null, null);
 		EquipmentAppointmentListDto result = appointmentMapper.toEquipmentAppointmentListDto(equipmentAppointmentBo, appointmentBasicPatientDto);
+		result.mapTranscribedOrderAttachedFiles(equipmentAppointmentBo.getTranscribedOrderAttachedFiles());
 		log.debug("AppointmentListDto id result {}", result.getId());
 		log.trace(OUTPUT, result);
 		return result;

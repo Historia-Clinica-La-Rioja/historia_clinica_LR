@@ -1364,6 +1364,7 @@ export interface EquipmentAppointmentListDto {
     reportStatusId: number;
     serviceRequestId: number;
     studyName: string;
+    transcribedOrderAttachedFiles?: OrderImageFileInfoDto[];
     transcribedServiceRequestId: number;
 }
 
@@ -2501,6 +2502,11 @@ export interface OdontologySnomedDto {
 export interface OpeningHoursDto extends TimeRangeDto {
     dayWeekId: number;
     id?: number;
+}
+
+export interface OrderImageFileInfoDto {
+    id: number;
+    name: string;
 }
 
 export interface OrganizationDto extends Serializable {

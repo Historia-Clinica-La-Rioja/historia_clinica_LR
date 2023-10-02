@@ -2,8 +2,10 @@ package net.pladema.medicalconsultation.appointment.service.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Objects;
 
+import ar.lamansys.sgh.clinichistory.domain.document.OrderImageFileReducedBo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -50,6 +52,9 @@ public class EquipmentAppointmentBo {
 	private Integer serviceRequestId;
 
 	private Integer transcribedServiceRequestId;
+
+	private List<OrderImageFileReducedBo> transcribedOrderAttachedFiles;
+
 
 	public static EquipmentAppointmentBo fromEquipmentAppointmentVo(EquipmentAppointmentVo equipmentAppointmentVo) {
 		return EquipmentAppointmentBo.builder()
