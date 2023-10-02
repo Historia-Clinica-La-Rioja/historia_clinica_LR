@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ReferenceDto, ReferenceSummaryDto } from '@api-rest/api-model';
+import { ReferenceDataDto, ReferenceSummaryDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { SearchAppointmentCriteria } from '@turnos/components/search-appointments-in-care-network/search-appointments-in-care-network.component';
@@ -21,9 +21,9 @@ export class ReferenceService {
 		this.URL_BASE = `${environment.apiBase}/institutions/${this.contextService.institutionId}/reference/patient/`;
 	}
 
-	getReferences(patientId: number, clinicalSpecialtyIds: number[]): Observable<ReferenceDto[]> {
+	getReferences(patientId: number, clinicalSpecialtyIds: number[]): Observable<ReferenceDataDto[]> {
 		const url = `${this.URL_BASE}${patientId}`;
-		return this.http.get<ReferenceDto[]>(url, {
+		return this.http.get<ReferenceDataDto[]>(url, {
 			params: {
 				clinicalSpecialtyIds
 			}

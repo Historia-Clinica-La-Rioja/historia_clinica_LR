@@ -107,6 +107,7 @@ import { MedicalOrderInputComponent } from './components/medical-order-input/med
 	exports: [
 		CalendarProfessionalViewComponent,
 		SearchCriteriaComponent,
+		ReferenceCompleteDataComponent
 	],
 	providers: [
 		{

@@ -16,38 +16,7 @@
 
             <mat-divider></mat-divider>
 
-			<app-colored-label
-				[description]="'ambulatoria.paciente.reference-notification.REFERENCE_REQUEST' | translate | uppercase"
-				[color]="Color.RED">
-			</app-colored-label>
-
-            <div class="primary" *ngFor="let problem of reference.problems" fxLayout="row" fxLayoutGap="10px">
-                <mat-icon color="primary">assignment</mat-icon>
-                <span> {{problem.snomed.pt}} </span>
-            </div>
-
-            <div class="reference-description" fxLayout="row" fxLayoutGap="10px" fxFlex="30px">
-                <span>{{reference.careLine.description}}</span>
-                <span>{{reference.clinicalSpecialty.name}}</span>
-            </div>
-
-            <span *ngIf="reference.note.description">“{{reference.note.description}}”</span>
-
-            <div class="primary" *ngFor="let file of reference.files" fxLayout="row">
-                <mat-icon>attachment_icon</mat-icon>
-                <span class="span-clickable" (click)="downloadReferenceFile(file)">
-                    {{file.fileName}}
-                </span>
-            </div>
-
-            <div class="grayText" fxLayout="row" fxLayoutAlign="space-between center" fxFlex="50px">
-				<span>
-					{{getFullName(reference.professional.firstName,
-						reference.professional.nameSelfDetermination)}}
-						{{reference.professional.lastName}}
-				</span>
-                <span>{{reference.referenceDate | viewDateDto: 'date' | dateFormat: 'date'}}</span>
-            </div>
+            <app-reference-complete-data [reference]="reference"></app-reference-complete-data>
 
             <div align="end" fxFlex="50px">
                 <button mat-raised-button color="primary" (click)="goToCounterreference(reference)">
