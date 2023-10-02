@@ -80,10 +80,6 @@ export class ReferenceListComponent {
 			});
 		}
 
-		if ($event?.clinicalSpecialty) {
-			let clinicalSpecialty = this.clinicalSpecialtyOptions.find(r => r?.id === $event.clinicalSpecialty).description;
-			referenceReportsFilters = referenceReportsFilters.filter((r: Report) => r.dto.clinicalSpecialtyDestination === clinicalSpecialty);
-		}
 
 		if ($event?.appoitmentState) {
 			referenceReportsFilters = referenceReportsFilters.filter((r: Report) => {
@@ -106,7 +102,7 @@ export class ReferenceListComponent {
 
 		if (this.applySearchFilter) {
 			list = this.filteredReferenceReports.filter((r: Report) =>
-				r.dto.patientFullName.toLowerCase().includes(this.applySearchFilter.toLowerCase()) || r?.dto?.identificationNumber.toString().includes(this.applySearchFilter));
+				r.dto.patientFullName.toLowerCase().includes(this.applySearchFilter.toLowerCase()) || r.dto?.identificationNumber?.toString().includes(this.applySearchFilter));
 		}
 
 		this.setReportList(list);
@@ -131,8 +127,7 @@ export class ReferenceListComponent {
 	private prepareFilterClinicalSpecialty(reports: any) {
 		this.clinicalSpecialtyOptions = reports.map(r => r.institutionDestination);
 
-		this.clinicalSpecialtyOptions = reports.map(r =>
-			r?.clinicalSpecialtyDestination);
+		this.clinicalSpecialtyOptions = reports.map(r => r?.clinicalSpecialtyDestination);
 
 		this.clinicalSpecialtyOptions = this.clinicalSpecialtyOptions.filter((especialidad) => especialidad !== undefined && especialidad !== null);
 
