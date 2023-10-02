@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,6 +29,18 @@ public class BackofficeInstitutionalGroupInstitutionStore implements BackofficeS
 	@Override
 	public Page<InstitutionalGroupInstitutionDto> findAll(InstitutionalGroupInstitutionDto example, Pageable pageable) {
 		List<InstitutionalGroupInstitutionDto> result = repository.findByInstitutionalGroupId(example.getInstitutionalGroupId()).stream().map(this::mapToDto).collect(Collectors.toList());
+		if (pageable.getSort().getOrderFor("institutionName") != null) {
+			if (pageable.getSort().getOrderFor("institutionName").isDescending())
+				result = result.stream().sorted(Comparator.comparing(dto -> dto.getInstitutionName().toLowerCase(), Comparator.reverseOrder())).collect(Collectors.toList());
+			else
+				result = result.stream().sorted(Comparator.comparing(dto -> dto.getInstitutionName().toLowerCase())).collect(Collectors.toList());
+		}
+		if (pageable.getSort().getOrderFor("departmentName") != null) {
+			if (pageable.getSort().getOrderFor("departmentName").isDescending())
+				result = result.stream().sorted(Comparator.nullsFirst(Comparator.comparing(InstitutionalGroupInstitutionDto::getDepartmentName)).thenComparing(InstitutionalGroupInstitutionDto::getInstitutionName).reversed()).collect(Collectors.toList());
+			else
+				result = result.stream().sorted(Comparator.nullsFirst(Comparator.comparing(InstitutionalGroupInstitutionDto::getDepartmentName)).thenComparing(InstitutionalGroupInstitutionDto::getInstitutionName)).collect(Collectors.toList());
+		}
 		return new PageImpl<>(result, pageable, result.size());
 	}
 

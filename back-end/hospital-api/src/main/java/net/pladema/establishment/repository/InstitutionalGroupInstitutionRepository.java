@@ -20,7 +20,8 @@ public interface InstitutionalGroupInstitutionRepository extends SGXAuditableEnt
 			"FROM InstitutionalGroupInstitution igi " +
 			"JOIN Institution i ON (i.id = igi.institutionId) " +
 			"JOIN Address a ON (a.id = i.addressId) " +
-			"LEFT JOIN Department d ON (a.departmentId = d.id) " +
+			"LEFT JOIN City c ON (a.cityId = c.id) " +
+			"LEFT JOIN Department d ON (c.departmentId = d.id) " +
 			"WHERE igi.institutionalGroupId = :institutionalGroupId " +
 			"AND igi.deleteable.deleted = FALSE ")
 	List<InstitutionalGroupInstitutionVo> findByInstitutionalGroupId(@Param("institutionalGroupId") Integer institutionalGroupId);

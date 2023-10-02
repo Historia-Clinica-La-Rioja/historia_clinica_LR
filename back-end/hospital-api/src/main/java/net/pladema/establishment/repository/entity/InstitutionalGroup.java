@@ -46,7 +46,7 @@ public class InstitutionalGroup extends SGXAuditableEntity<Integer> implements S
 	private String name;
 
 	public InstitutionalGroup (InstitutionalGroupDto dto){
-		this.id = id;
+		this.id = dto.getId();
 		this.typeId = dto.getTypeId();
 		this.name = dto.getName();
 	}

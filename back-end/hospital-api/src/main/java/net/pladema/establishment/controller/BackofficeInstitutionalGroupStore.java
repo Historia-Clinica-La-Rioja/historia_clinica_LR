@@ -59,10 +59,16 @@ public class BackofficeInstitutionalGroupStore implements BackofficeStore<Instit
 
 	@Override
 	public InstitutionalGroupDto save(InstitutionalGroupDto entity) {
-		InstitutionalGroup entityToSave = new InstitutionalGroup();
-		entityToSave.setTypeId(entity.getTypeId());
-		entityToSave.setName(entity.getName());
-		entity.setId(repository.save(entityToSave).getId());
+		if(entity.getId() != null) {
+			repository.findById(entity.getId()).ifPresent(group -> {
+				group.setName(entity.getName());
+				group.setTypeId(entity.getTypeId());
+				repository.save(group);
+			});
+		} else {
+			InstitutionalGroup entityToSave = new InstitutionalGroup(entity);
+			entity.setId(repository.save(entityToSave).getId());
+		}
 		return entity;
 	}
 
@@ -79,12 +85,20 @@ public class BackofficeInstitutionalGroupStore implements BackofficeStore<Instit
 
 	private InstitutionalGroupDto mapToDto (InstitutionalGroup entity){
 		InstitutionalGroupDto result = new InstitutionalGroupDto();
-		List<String> institutionNames = repository.getInstitutionsNamesById(entity.getId());
 		result.setId(entity.getId());
 		result.setName(entity.getName());
 		result.setTypeId(entity.getTypeId());
-		result.setInstitutions(Joiner.on(", ").join(institutionNames));
+		result.setInstitutions(getInstitutions(entity));
 		return result;
+	}
+
+	private String getInstitutions(InstitutionalGroup entity){
+		List<String> institutionNames = repository.getInstitutionsNamesById(entity.getId());
+		String institutions = Joiner.on(", ").join(institutionNames);
+		if (institutions.length() > 150){
+			institutions = institutions.substring(0,150).concat("...");
+		}
+		return institutions;
 	}
 
 }
