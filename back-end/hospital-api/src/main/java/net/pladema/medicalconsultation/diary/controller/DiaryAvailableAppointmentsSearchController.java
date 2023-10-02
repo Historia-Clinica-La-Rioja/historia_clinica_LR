@@ -50,7 +50,7 @@ public class DiaryAvailableAppointmentsSearchController {
 	@GetMapping("/protected")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<List<DiaryAvailableProtectedAppointmentsDto>> getAvailableProtectedAppointments(@PathVariable(name = "institutionId") Integer institutionId,
-			@RequestParam String diaryProtectedAppointmentsSearch) {
+																										  @RequestParam String diaryProtectedAppointmentsSearch) {
 		log.debug("Get all available protected appointments by filters {}, ", diaryProtectedAppointmentsSearch);
 		List<DiaryAvailableProtectedAppointmentsBo> diaryAvailableProtectedAppointmentsBoList = diaryAvailableAppointmentsService.getAvailableProtectedAppointmentsBySearchCriteria(parseFilter(diaryProtectedAppointmentsSearch), institutionId);
 		List<DiaryAvailableProtectedAppointmentsDto> result = diaryAvailableProtectedAppointmentsBoList.stream().map(diaryMapper::toDiaryAvailableProtectedAppointmentsDto).collect(Collectors.toList());
@@ -88,6 +88,23 @@ public class DiaryAvailableAppointmentsSearchController {
 		LocalDate to = from.plusDays(60);
 		AppointmentSearchBo appointmentSearch = new AppointmentSearchBo(EDayOfWeek.getAllIds(),null, LocalTime.MIN, LocalTime.MAX, from, to, practiceSnomedId);
 		Integer result = diaryAvailableAppointmentsService.geAvailableAppointmentsBySearchCriteriaQuantity(institutionDestinationId, clinicalSpecialtyId, appointmentSearch);
+		log.debug(OUTPUT, result);
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/quantity/by-careline-diaries")
+	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	public ResponseEntity<Integer> geAvailableAppointmentsQuantityByCareLineDiaries(@PathVariable(name = "institutionId") Integer institutionId,
+																					@RequestParam Integer institutionDestinationId,
+																					@RequestParam Integer careLineId,
+																					@RequestParam(value="practiceSnomedId", required = false) Integer practiceSnomedId,
+																					@RequestParam(value="clinicalSpecialtyId", required = false) Integer clinicalSpecialtyId) {
+		log.debug("Get available appointments quantity in diaries based on careline and search criteria: institutionDestinationId {}, careLineId {}, " +
+				"practiceSnomedId {}, clinicalSpecialtyId {} ", institutionDestinationId, careLineId, practiceSnomedId, clinicalSpecialtyId);
+		LocalDate from = LocalDate.now();
+		LocalDate to = from.plusDays(60);
+		AppointmentSearchBo appointmentSearch = new AppointmentSearchBo(EDayOfWeek.getAllIds(),null, LocalTime.MIN, LocalTime.MAX, from, to, practiceSnomedId);
+		Integer result = diaryAvailableAppointmentsService.geAvailableAppointmentsQuantityByCareLineDiaries(institutionDestinationId, clinicalSpecialtyId, appointmentSearch, careLineId);
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}

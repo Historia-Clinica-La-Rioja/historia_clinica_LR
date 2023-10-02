@@ -12,4 +12,6 @@ public interface DiaryAvailableAppointmentsService {
 
 	Integer geAvailableAppointmentsBySearchCriteriaQuantity(Integer institutionDestinationId, Integer clinicalSpecialtyId, AppointmentSearchBo searchCriteria);
 
+	Integer geAvailableAppointmentsQuantityByCareLineDiaries(Integer institutionId, Integer clinicalSpecialtyId, AppointmentSearchBo searchCriteria, Integer careLineId);
+
 }

@@ -9,10 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSearchBo;
+import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryProtectedAppointmentsSearch;
 import net.pladema.medicalconsultation.diary.repository.DiaryAvailableProtectedAppointmentsSearchRepository;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.medicalconsultation.diary.service.DiaryCareLineService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryAvailableProtectedAppointmentsBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryAvailableProtectedAppointmentsInfoBo;
@@ -24,7 +26,6 @@ import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
 
 import net.pladema.staff.service.ClinicalSpecialtyService;
-import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
 
 import org.springframework.stereotype.Service;
 
@@ -65,6 +66,8 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 	private final DiaryService diaryService;
 
 	private final ClinicalSpecialtyService clinicalSpecialtyService;
+
+	private final DiaryCareLineService diaryCareLineService;
 
 	@Override
 	public List<DiaryAvailableProtectedAppointmentsBo> getAvailableProtectedAppointmentsBySearchCriteria(DiaryProtectedAppointmentsSearch searchCriteria,
@@ -110,6 +113,19 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 		log.debug("Input parameters -> institutionId {}, clinicalSpecialtyId {}, searchCriteria {}", institutionId, clinicalSpecialtyId, searchCriteria);
 		searchCriteria.setAliasOrSpecialtyName(clinicalSpecialtyId != null ? clinicalSpecialtyService.getClinicalSpecialty(clinicalSpecialtyId).get().getName() : null);
 		return diaryService.getEmptyAppointmentsBySearchCriteria(institutionId, searchCriteria, false).size();
+	}
+
+	@Override
+	public Integer geAvailableAppointmentsQuantityByCareLineDiaries(Integer institutionId, Integer clinicalSpecialtyId, AppointmentSearchBo searchCriteria, Integer careLineId) {
+		log.debug("Fetch available appointments quantity in diaries based on careline and search criteria, " +
+				"input parameters -> institutionId {}, clinicalSpecialtyId {}, careLineId {}, searchCriteria {} ", institutionId, clinicalSpecialtyId, careLineId, searchCriteria);
+		searchCriteria.setAliasOrSpecialtyName(clinicalSpecialtyId != null ? clinicalSpecialtyService.getClinicalSpecialty(clinicalSpecialtyId).get().getName() : null);
+		List<EmptyAppointmentBo> availableAppointments = diaryService.getEmptyAppointmentsBySearchCriteria(institutionId, searchCriteria, false);
+		List<Integer> diariesByCareLineId = diaryCareLineService.getDiaryIdsByCareLineId(careLineId, institutionId);
+		List<EmptyAppointmentBo> result = availableAppointments.stream()
+				.filter(a -> diariesByCareLineId.contains(a.getDiaryId()))
+				.collect(Collectors.toList());
+		return result.size();
 	}
 
 	private List<DiaryAvailableProtectedAppointmentsBo> getDiaryAvailableAppointments(DiaryAvailableProtectedAppointmentsInfoBo diaryInfo,
