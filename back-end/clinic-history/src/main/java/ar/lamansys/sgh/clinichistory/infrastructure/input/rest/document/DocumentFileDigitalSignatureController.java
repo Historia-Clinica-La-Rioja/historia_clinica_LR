@@ -7,10 +7,14 @@ import ar.lamansys.sgh.clinichistory.application.signDocumentFile.SignDocumentFi
 import ar.lamansys.sgh.clinichistory.domain.document.DigitalSignatureDocumentBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.document.dto.DigitalSignatureDocumentDto;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.document.dto.SnomedConceptDto;
-
 import io.jsonwebtoken.lang.Collections;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,14 +52,12 @@ public class DocumentFileDigitalSignatureController {
 
 	@GetMapping()
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
-	public ResponseEntity<List<DigitalSignatureDocumentDto>> getPendingDocumentsByUser(@PathVariable(name = "institutionId") Integer institutionId) {
-		log.debug("Input parameters -> professionalId {}", UserInfo.getCurrentAuditor());
-		List<DigitalSignatureDocumentDto> result = getDocumentsByProfessional.run(UserInfo.getCurrentAuditor(), institutionId)
-				.stream()
-				.map(this::mapToDto)
-				.collect(Collectors.toList());
+	public Page<DigitalSignatureDocumentDto> getPendingDocumentsByUser(@PathVariable(name = "institutionId") Integer institutionId,
+																	   @PageableDefault(size = 5) @SortDefault.SortDefaults({@SortDefault(sort = "creationable.createdOn", direction = Sort.Direction.DESC)}) Pageable pageable) {
+		log.debug("Input parameters -> institutionId {}, pageable {}", institutionId, pageable);
+		Page<DigitalSignatureDocumentDto> result = getDocumentsByProfessional.run(UserInfo.getCurrentAuditor(), institutionId, pageable).map(this::mapToDto);
 		log.debug("Output result -> {}", result);
-		return ResponseEntity.ok(result);
+		return result;
 	}
 
 	private DigitalSignatureDocumentDto mapToDto(DigitalSignatureDocumentBo bo){

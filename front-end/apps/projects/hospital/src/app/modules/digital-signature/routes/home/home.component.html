@@ -12,7 +12,7 @@
     </header>
     <app-selectable-card
         *ngIf="!isLoading else loading"
-        [dataList]="documents" 
+        [dataList]="documents"
         [noDataMessage]="'digital-signature.NO_DOCUMENTS'"
         (selectedDataList)="selectedIds($event)"
         (downloadId)="download($event)"
@@ -20,6 +20,13 @@
         (selectedId)="seeDetails($event)">
         <span translate="digital-signature.UNSELECTED_DOCUMENT" class="unselected-document-message"></span>
     </app-selectable-card>
+	<mat-paginator #paginator
+               (page)="handlePageEvent($event)"
+               [length]="elementsAmount"
+               [pageSize]="PAGE_SIZE"
+			   [hidePageSize]="true"
+			   [showFirstLastButtons]="true">
+	</mat-paginator>
 </section>
 
 <ng-template #loading>

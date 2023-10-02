@@ -4,6 +4,9 @@ import ar.lamansys.sgh.clinichistory.domain.document.DigitalSignatureDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.DocumentFileBo;
 import ar.lamansys.sgh.clinichistory.domain.document.DocumentFileSummaryBo;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +16,7 @@ public interface DocumentFileStorage {
 
 	List<Long> getIdsByDocumentsIds(List<Long> ids);
 
-	List<DigitalSignatureDocumentBo> findDocumentsByUserAndInstitution(Integer userId, Integer institutionId);
+	Page<DigitalSignatureDocumentBo> findDocumentsByUserAndInstitution(Integer userId, Integer institutionId, Pageable pageable);
 
 	boolean isDocumentBelongsToUser(Long documentId, Integer userId);
 

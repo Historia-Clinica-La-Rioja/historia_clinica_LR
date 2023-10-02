@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.clinichistory.application.ports.DocumentFileStorage;
@@ -48,9 +51,11 @@ public class DocumentFileStorageImpl implements DocumentFileStorage {
 	}
 
 	@Override
-	public List<DigitalSignatureDocumentBo> findDocumentsByUserAndInstitution(Integer userId, Integer institutionId) {
-		List<DigitalSignatureDocumentBo> result = documentRepository.findDocumentsByUserAndInstitution(userId,institutionId);
+	public Page<DigitalSignatureDocumentBo> findDocumentsByUserAndInstitution(Integer userId, Integer institutionId, Pageable pageable) {
+		log.debug("Input parameters -> userId {}, institutionId {}, pageable {}", userId, institutionId, pageable);
+		Page<DigitalSignatureDocumentBo> result = documentRepository.findDocumentsByUserAndInstitution(userId, institutionId, pageable);
 		result.forEach(bo -> bo.setSnomedConceptBo(documentRepository.findSnomedConceptsByDocumentId(bo.getDocumentId())));
+		log.debug("Output -> {}", result);
 		return result;
 	}
 

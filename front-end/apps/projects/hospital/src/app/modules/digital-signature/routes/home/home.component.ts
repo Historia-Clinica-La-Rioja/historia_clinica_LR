@@ -27,6 +27,8 @@ export class HomeComponent implements OnInit {
     hasProfessionalCuil: boolean = false;
     ROUTE_PREFIX: string;
     detailedInformation: DetailedInformation;
+	readonly PAGE_SIZE = 5;
+	elementsAmount: number;
 
     constructor(private readonly digitalSignature: DigitalSignatureService,
                 private readonly documentService: DocumentService,
@@ -38,9 +40,9 @@ export class HomeComponent implements OnInit {
     ngOnInit(): void {
         this.ROUTE_PREFIX = `institucion/${this.contextService.institutionId}/`;
         this.account.getInfo().subscribe((result: LoggedUserDto) => {
-            if (result.cuil) 
+            if (result.cuil)
                 return this.setDocuments();
-            
+
             this.openDiscardWarningDialog(this.buildTextOption('digital-signature.dialogs.cuil.NO_CUIL', 'digital-signature.dialogs.cuil.CONTENT', 'buttons.ACCEPT'))
                 .afterClosed()
                 .subscribe((_) => {
@@ -50,14 +52,26 @@ export class HomeComponent implements OnInit {
     }
 
     setDocuments() {
+		const INITIAL_PAGE = 0;
         this.hasProfessionalCuil = true;
-        this.digitalSignature.getPendingDocumentsByUser()
+        this.fetchData(INITIAL_PAGE);
+    }
+
+	handlePageEvent(event) {
+		this.isLoading = true;
+		this.fetchData(event.pageIndex);
+	}
+
+	private fetchData(pageIndex: number): void {
+		this.digitalSignature.getPendingDocumentsByUser(pageIndex)
             .pipe(finalize(() => this.isLoading = false))
-            .subscribe((documents: DigitalSignatureDocumentDto[]) => {
-                this.digitalSignatureDocuments = documents;
+            .subscribe((documents: any) => {
+				if (!this.elementsAmount)
+					this.elementsAmount = documents.totalElements;
+                this.digitalSignatureDocuments = documents.content;
                 this.buildItemListCard();
             });
-    }
+	}
 
     selectedIds(ids: number[]) {
         this.selectedDocumentsId = ids;
@@ -202,7 +216,7 @@ export class HomeComponent implements OnInit {
 
     private getVerification(verificationId: string): string {
         let verification = 'Descartado';
-        if (verificationId === HEALTH_VERIFICATIONS.CONFIRMADO) 
+        if (verificationId === HEALTH_VERIFICATIONS.CONFIRMADO)
             verification = 'Confirmado'
         if (verificationId === HEALTH_VERIFICATIONS.PRESUNTIVO)
             verification = 'Presuntivo';

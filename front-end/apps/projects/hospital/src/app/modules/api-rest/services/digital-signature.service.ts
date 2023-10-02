@@ -15,8 +15,9 @@ export class DigitalSignatureService {
 	constructor(private readonly http: HttpClient,
 		        private readonly contextService: ContextService) { }
 
-    getPendingDocumentsByUser(): Observable<DigitalSignatureDocumentDto[]> {
-        return this.http.get<DigitalSignatureDocumentDto[]>(this.URL);
+    getPendingDocumentsByUser(pageNumber: number): Observable<any> {
+		const pageURL = `${this.URL}?page=${pageNumber}`;
+        return this.http.get<DigitalSignatureDocumentDto[]>(pageURL);
     }
 
     sign(documentsId: number[]): Observable<string> {

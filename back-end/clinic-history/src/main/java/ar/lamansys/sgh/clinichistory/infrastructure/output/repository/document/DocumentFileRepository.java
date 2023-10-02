@@ -2,10 +2,11 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 import ar.lamansys.sgh.clinichistory.domain.document.DigitalSignatureDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.SnomedConceptBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentFile;
-import ar.lamansys.sgh.shared.infrastructure.output.entities.ESignatureStatus;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -32,9 +33,10 @@ public interface DocumentFileRepository extends SGXAuditableEntityJPARepository<
 			"AND d.statusId = '" + DocumentStatus.FINAL + "' " +
 			"AND d.typeId != '" + DocumentType.DIGITAL_RECIPE + "' " +
 			"AND d.creationable.createdBy = :userId " +
-			"AND df.signatureStatusId != 3 " +
-			"ORDER BY d.creationable.createdOn DESC")
-	List<DigitalSignatureDocumentBo> findDocumentsByUserAndInstitution(@Param("userId") Integer userId, @Param("institutionId") Integer institutionId);
+			"AND df.signatureStatusId != 3")
+	Page<DigitalSignatureDocumentBo> findDocumentsByUserAndInstitution(@Param("userId") Integer userId,
+																	   @Param("institutionId") Integer institutionId,
+																	   Pageable pageable);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW ar.lamansys.sgh.clinichistory.domain.document.SnomedConceptBo(s.pt, hc.main) " +
