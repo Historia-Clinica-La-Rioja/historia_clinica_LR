@@ -22,7 +22,8 @@
 				"PRIORITY":"Prioridad",
 				"AVAILABILITY":"Disponibilidad",
 				"STATE": "Estado",
-				"INSTITUTION":"Institución"
+				"INSTITUTION":"Institución",
+				"PATIENT_SEARCH":"Buscar paciente"
 			}
 		},
 		"attention": {
