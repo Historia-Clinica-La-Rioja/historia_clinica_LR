@@ -18,6 +18,7 @@ import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpi
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentTypeBo;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.GeneratePdfException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentEpisodeNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.MoreThanOneConsentDocumentException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PatientNotFoundException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PersonNotFoundException;
 import net.pladema.clinichistory.hospitalization.service.summary.domain.ResponsibleDoctorBo;
@@ -497,6 +498,13 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 				String.format("%s_.pdf", "Documento de consentimiento"),
 				MediaType.APPLICATION_PDF
 		);
+	}
+
+	@Override
+	public void existsConsentDocumentInInternmentEpisode(Integer internmentEpisodeId, Integer consentId) throws MoreThanOneConsentDocumentException {
+		LOG.debug("Input parameters -> internmentEpisodeId {}, consentId {}", internmentEpisodeId, consentId);
+		if (internmentEpisodeRepository.existsConsentDocumentInInternmentEpisode(internmentEpisodeId, consentId))
+			throw new MoreThanOneConsentDocumentException();
 	}
 
 	private Map<String, Object> createContext(BasicDataPersonDto personDto, ResponsibleDoctorBo doctor, String institutionName, LocalDateTime entryDate, Integer internmentEpisodeId, String richBody, Integer consentId, List<String> procedures, String observations){

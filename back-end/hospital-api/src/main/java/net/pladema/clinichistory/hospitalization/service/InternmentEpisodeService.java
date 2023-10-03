@@ -6,6 +6,7 @@ import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummar
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.GeneratePdfException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentEpisodeNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.MoreThanOneConsentDocumentException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PatientNotFoundException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PersonNotFoundException;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
@@ -76,5 +77,7 @@ public interface InternmentEpisodeService {
 	boolean haveMoreThanOneIntermentEpisodesFromPatients(List<Integer> patients);
 
 	ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId, List<String> procedures, String observations, String doctor) throws GeneratePdfException, PatientNotFoundException, PersonNotFoundException, InternmentEpisodeNotFoundException;
+
+	void existsConsentDocumentInInternmentEpisode(Integer internmentEpisodeId, Integer consentId) throws MoreThanOneConsentDocumentException;
 
 }

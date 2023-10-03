@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.GeneratePdfException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentEpisodeNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.MoreThanOneConsentDocumentException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PatientNotFoundException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PersonNotFoundException;
 import org.slf4j.Logger;
@@ -129,16 +130,17 @@ public class InternmentEpisodeController {
 		this.mapper = mapper;
 	}
 
-	@PostMapping(value = "{internmentEpisodeId}/episodedocuments/{episodeDocumentTypeId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(value = "{internmentEpisodeId}/episodedocuments/{episodeDocumentTypeId}/consent/{consentId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@Transactional
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
 	public ResponseEntity<Integer> createEpisodeDocument(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "episodeDocumentTypeId") Integer episodeDocumentTypeId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-			@RequestPart("file") MultipartFile file) {
-		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, episodeDocumentTypeId {}, file {}", institutionId, internmentEpisodeId, episodeDocumentTypeId, file);
-		EpisodeDocumentDto dto = new EpisodeDocumentDto(file, episodeDocumentTypeId, internmentEpisodeId);
+			@PathVariable(name = "consentId") Integer consentId,
+			@RequestPart("file") MultipartFile file) throws MoreThanOneConsentDocumentException {
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, episodeDocumentTypeId {}, file {}, consentId", institutionId, internmentEpisodeId, episodeDocumentTypeId, file, consentId);
+		EpisodeDocumentDto dto = new EpisodeDocumentDto(file, episodeDocumentTypeId, internmentEpisodeId, consentId);
 		Integer result = createEpisodeDocument.run(dto);
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);

@@ -17,6 +17,9 @@
     <mat-error class="typeahead-required" *ngIf="hasError(form, 'required', 'type') && documentTypes?.length > 0"
         [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.TYPE_REQUIRED'">
     </mat-error>
+    <mat-error class="typeahead-required" *ngIf="hasError(form, 'invalid', 'type')">
+        {{hasConsentDocumentError}}
+    </mat-error>
 
 	<section class="file-actions" *ngIf="(!file && !hasError(form, 'required', 'type'))">
 		<div *ngIf="showGenerateDocument">

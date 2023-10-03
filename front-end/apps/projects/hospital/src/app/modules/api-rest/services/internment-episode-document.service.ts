@@ -19,8 +19,8 @@ export class InternmentEpisodeDocumentService {
 		private viewPdfService: ViewPdfService,
 	) { }
 
-	saveInternmentEpisodeDocument(file, internmentEpisodeId: number, episodeDocumentTypeId: number): Observable<number> {
-		const url = `${this.url}/internments/${internmentEpisodeId}/episodedocuments/${episodeDocumentTypeId}`;
+	saveInternmentEpisodeDocument(file, internmentEpisodeId: number, episodeDocumentTypeId: number, consentId: number): Observable<number> {
+		const url = `${this.url}/internments/${internmentEpisodeId}/episodedocuments/${episodeDocumentTypeId}/consent/${consentId}`;
 		return this.http.post<number>(url, file);
 	}
 

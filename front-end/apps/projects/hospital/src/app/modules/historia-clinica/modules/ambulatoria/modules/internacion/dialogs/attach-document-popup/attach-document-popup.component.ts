@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ERole, EpisodeDocumentTypeDto } from '@api-rest/api-model';
+import { ApiErrorMessageDto, ERole, EpisodeDocumentTypeDto } from '@api-rest/api-model';
 import { InternmentEpisodeDocumentService } from '@api-rest/services/internment-episode-document.service';
 import { PermissionsService } from '@core/services/permissions.service';
 import { ExtesionFile } from '@core/utils/extensionFile';
@@ -10,6 +10,7 @@ import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.co
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.pdf'];
+const REGULAR_DOCUMENT: number = 1;
 
 @Component({
 	selector: 'app-attach-document-popup',
@@ -28,6 +29,7 @@ export class AttachDocumentPopupComponent implements OnInit {
 	showGenerateDocument = false;
 	consentSelectedType: EpisodeDocumentTypeDto;
 	isAdministrative: boolean = false;
+	hasConsentDocumentError: string;
 
 	constructor(private fb: UntypedFormBuilder,
 		private internmentEpisodeDocument: InternmentEpisodeDocumentService,
@@ -78,11 +80,15 @@ export class AttachDocumentPopupComponent implements OnInit {
 
 		const formDataFile: FormData = new FormData();
 		formDataFile.append('file', this.file);
-		this.internmentEpisodeDocument.saveInternmentEpisodeDocument(formDataFile, this.data.internmentEpisodeId, this.form.get('type').value)
+		const consentId: number =  this.consentSelectedType?.consentId ? this.consentSelectedType.consentId : REGULAR_DOCUMENT;
+		this.internmentEpisodeDocument.saveInternmentEpisodeDocument(formDataFile, this.data.internmentEpisodeId, this.form.get('type').value, consentId)
 			.subscribe(resp => {
 				if (resp)
 					this.dialogRef.close()
-			});
+				}, (error: ApiErrorMessageDto) => {
+					this.form.controls.type.setErrors({invalid: true});
+					this.hasConsentDocumentError = error.text;
+				});
 	}
 
 	setDocumentType(type) {

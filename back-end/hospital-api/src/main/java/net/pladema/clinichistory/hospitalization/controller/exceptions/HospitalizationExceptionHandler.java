@@ -5,6 +5,7 @@ import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateI
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.GeneratePdfException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentDocumentException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentEpisodeNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.MoreThanOneConsentDocumentException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PatientNotFoundException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PersonNotFoundException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMedicalDischargeException;
@@ -86,6 +87,13 @@ public class HospitalizationExceptionHandler {
 	protected ApiErrorMessageDto handleInternmentNotFoundException(InternmentEpisodeNotFoundException ex) {
 		LOG.debug("InternmentNotFoundException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto("internment-episode-not-found", "Episodio de internación no encontrado");
+	}
+
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ExceptionHandler({MoreThanOneConsentDocumentException.class})
+	protected ApiErrorMessageDto handleMoreThanOneConsentDocumentException(MoreThanOneConsentDocumentException ex) {
+		LOG.debug("MoreThanOneConsentDocumentException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto("more-than-one-consent-document", "El paciente ya tiene un documento de ese tipo");
 	}
 
 }
