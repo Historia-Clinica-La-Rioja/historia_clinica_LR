@@ -197,3 +197,12 @@ databaseChangeLog:
                     constraints:
                       nullable: false
                     defaultValue: ${boolean.false}
+
+    - changeSet:
+        id: dropUniqueConstraint-document_template
+        author: mromero
+        changes:
+          - dropUniqueConstraint:
+                tableName: document_template
+                constraintName: UQ_document_template_user_id_type_id_name
+                uniqueColumns: user_id, type_id, name
