@@ -39,11 +39,13 @@ public class SectorSummaryVo {
     }
 
     public void addSpecialty(ClinicalSpecialtyVo clinicalSpecialty) {
-        this.clinicalSpecialties.add(clinicalSpecialty);
+		if (this.clinicalSpecialties.stream().noneMatch(clinicalSpecialtyVo -> clinicalSpecialtyVo.getId().equals(clinicalSpecialty.getId())))
+			this.clinicalSpecialties.add(clinicalSpecialty);
     }
 
-	public void addHierarchicalUnit(HierarchicalUnitVo hierarchicalUnitVo) {
-		this.hierarchicalUnit.add(hierarchicalUnitVo);
+	public void addHierarchicalUnit(HierarchicalUnitVo hierarchicalUnit) {
+		if (this.hierarchicalUnit.stream().noneMatch(hierarchicalUnitVo -> hierarchicalUnitVo.getId().equals(hierarchicalUnit.getId())))
+			this.hierarchicalUnit.add(hierarchicalUnit);
 	}
 
 }
