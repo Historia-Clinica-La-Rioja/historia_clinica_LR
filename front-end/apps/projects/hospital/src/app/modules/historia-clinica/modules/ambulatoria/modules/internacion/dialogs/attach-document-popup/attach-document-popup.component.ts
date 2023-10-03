@@ -8,11 +8,14 @@ import { PermissionsService } from '@core/services/permissions.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { ExtesionFile } from '@core/utils/extensionFile';
 import { hasError, requiredFileType } from '@core/utils/form.utils';
+import { ProblemasService } from '@historia-clinica/services/problemas.service';
+import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.pdf'];
 const REGULAR_DOCUMENT: number = 1;
+const SURGICAL_CONSENT_ID = 3;
 
 @Component({
 	selector: 'app-attach-document-popup',
@@ -37,12 +40,15 @@ export class AttachDocumentPopupComponent implements OnInit {
 	showSurgicalInfo = false;
 	isAdministrative: boolean = false;
 	hasConsentDocumentError: string;
+	procedureService: ProblemasService;
 
 	constructor(private fb: UntypedFormBuilder,
 		private internmentEpisodeDocument: InternmentEpisodeDocumentService,
 		private readonly healthcareProfessionalByInstitutionService: HealthcareProfessionalByInstitutionService,
 		public dialogRef: MatDialogRef<AttachDocumentPopupComponent>,
 		private readonly snackBarService: SnackBarService,
+		private readonly snomedService: SnomedService,
+		private readonly formBuilder: UntypedFormBuilder,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly permissionService: PermissionsService,
 		@Inject(MAT_DIALOG_DATA) public data
@@ -50,6 +56,7 @@ export class AttachDocumentPopupComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
 			this.nameSelfDeterminationFF = isOn
 		});
+		this.procedureService = new ProblemasService(this.formBuilder,this.snomedService,this.snackBarService);
 	}
 
 	ngOnInit(): void {
@@ -168,7 +175,14 @@ export class AttachDocumentPopupComponent implements OnInit {
 	}
 
 	generateDocument() {
-		this.internmentEpisodeDocument.generateConsentDocument(this.data.internmentEpisodeId,this.consentSelectedType.consentId);
+		if (this.consentSelectedType.consentId === SURGICAL_CONSENT_ID){
+			this.showSurgicalInfo = true;
+			this.showAttachFile = false;
+			this.showGenerateDocument = false;
+		}
+		else{
+			this.internmentEpisodeDocument.generateConsentDocument(this.data.internmentEpisodeId,this.consentSelectedType.consentId);
+		}
 	}
 
 	private setIsAdministrative() {

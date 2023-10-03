@@ -46,9 +46,15 @@
 				[titleInput]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.PROFESSIONAL' | translate"
 				[required]="required" (selectionChange)="setProfessional($event)">
 			</app-typeahead>
-			<mat-error class="typeahead-required" *ngIf="hasError(surgicalForm, 'required', 'professional') && professionals?.length > 0"
+			<mat-error class="typeahead-required"
+				*ngIf="hasError(surgicalForm, 'required', 'professional') && professionals?.length > 0"
 				[translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.PROFESSIONAL_REQUIRED'">
 			</mat-error>
+
+			<app-concepts-search
+				[label]="'historia-clinica.new-consultation-procedure-form.PROCEDURE'"
+				(search)="procedureService.openSearchDialog($event)">
+			</app-concepts-search>
 		</form>
 	</section>
 
