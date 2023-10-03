@@ -85,6 +85,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ItemSummaryComponent } from './components/item-summary/item-summary.component';
 import { SelectableCardComponent } from './components/selectable-card/selectable-card.component';
 import { DetailedInformationComponent } from './components/detailed-information/detailed-information.component';
+import { DateFormatPipe } from './pipes/date-format.pipe';
 
 @NgModule({
 	declarations: [
@@ -167,6 +168,7 @@ import { DetailedInformationComponent } from './components/detailed-information/
   		TitledSingleContentComponent,
   		FiltersSelectComponent,
 		ItemSummaryComponent,
+		DateFormatPipe,
 	],
 	imports: [
 		CommonModule,
@@ -257,6 +259,7 @@ import { DetailedInformationComponent } from './components/detailed-information/
 		ViewDatePipe,
 		ViewHourMinutePipe,
 		TitledSingleContentComponent,
+		DateFormatPipe,
 	],
 	entryComponents: [
 		DockPopupComponent,

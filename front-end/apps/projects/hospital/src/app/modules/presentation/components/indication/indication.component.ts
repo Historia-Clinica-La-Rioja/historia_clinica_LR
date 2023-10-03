@@ -40,8 +40,9 @@ export interface Content {
 	description: string;
 	extra_info?: ExtraInfo[];
 	createdBy: string;
-	timeElapsed: string;
+	timeElapsed?: string;
 	observations?: string;
+	createdOn?: Date;
 }
 
 export interface Status {

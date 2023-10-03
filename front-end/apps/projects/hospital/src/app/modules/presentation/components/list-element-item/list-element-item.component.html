@@ -21,7 +21,10 @@
 
 	<div fxLayout="row" fxFlex="20%" fxLayoutGap="10px" class="professional-elapsed-time color-grey">
 		<span>{{ content.createdBy }}</span>
-		<span>{{ content.timeElapsed }}</span>
+		<span *ngIf="content.timeElapsed else createdOn">{{ content.timeElapsed }}</span>
+		<ng-template #createdOn>
+			<span>{{ content.createdOn | dateFormat: 'datetime' }}</span>
+		</ng-template>
 	</div>
 	<ng-content></ng-content>
 </div>

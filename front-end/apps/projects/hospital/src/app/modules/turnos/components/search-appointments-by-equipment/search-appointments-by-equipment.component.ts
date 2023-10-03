@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EquipmentDiaryOptionsData, SearchEquipmentDiaryService } from '../../services/search-equipment-diary.service';
 import { MatOptionSelectionChange } from '@angular/material/core';
+import { stringToDate } from '@api-rest/mapper/date-dto.mapper';
 
 @Component({
 	selector: 'app-search-appointments-by-equipment',
@@ -32,8 +33,8 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 	equipmentSelected: EquipmentDto;
 
 	diaries: EquipmentDiaryDto[];
-	activeDiaries: EquipmentDiaryDto[] = [];
-	expiredDiaries: EquipmentDiaryDto[] = [];
+	activeDiaries: DiaryList[] = [];
+	expiredDiaries: DiaryList[] = [];
 
 	externalSelectedEquipment: TypeaheadOption<EquipmentDto>;
 
@@ -157,12 +158,23 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 		this.expiredDiaries = [];
 		this.activeDiaries = [];
 		if (diaries?.length)
-			diaries.forEach(diary =>
-				isAfter(startOfToday(), parseISO(diary.endDate)) ? this.expiredDiaries.push(diary) : this.activeDiaries.push(diary)
-			);
+			diaries.forEach(diary =>{
+				const newDiary: DiaryList = {
+					diaryList: diary,
+					endDate: stringToDate(diary.endDate),
+					startDate: stringToDate(diary.startDate)
+				}
+				isAfter(startOfToday(), parseISO(diary.endDate)) ? this.expiredDiaries.push(newDiary) : this.activeDiaries.push(newDiary)
+			});
 	}
 
 	goToEditAgenda(){
 		this.router.navigate([`institucion/${this.contextService.institutionId}/turnos/imagenes/agenda/${this.diarySelected.id}/editar`], { state : { selectedEquipment: this.equipmentSelected, selectedDiary: this.diarySelected}});
 	}
+}
+
+export interface DiaryList {
+	diaryList: EquipmentDiaryDto;
+    endDate: Date;
+    startDate: Date;
 }

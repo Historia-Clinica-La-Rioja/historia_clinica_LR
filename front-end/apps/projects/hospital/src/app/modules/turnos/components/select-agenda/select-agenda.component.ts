@@ -21,6 +21,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { BlockAgendaRangeComponent } from '@turnos/dialogs/block-agenda-range/block-agenda-range.component';
 import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
 import { AgendaFilters, AgendaOptionsData, AgendaSearchService } from '../../services/agenda-search.service';
+import { stringToDate } from '@api-rest/mapper/date-dto.mapper';
 
 @Component({
 	selector: 'app-select-agenda',
@@ -33,8 +34,8 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 
 	agendaSelected: DiaryListDto;
 	agendas: DiaryListDto[];
-	activeAgendas: DiaryListDto[] = [];
-	expiredAgendas: DiaryListDto[] = [];
+	activeAgendas: DiaryList[] = [];
+	expiredAgendas: DiaryList[] = [];
 	agendaFiltersSubscription: Subscription;
 	agendaIdSubscription: Subscription;
 	readonly dateFormats = DatePipeFormat;
@@ -100,9 +101,14 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 		this.expiredAgendas = [];
 		this.activeAgendas = [];
 		if (diaries?.length)
-			diaries.forEach(diary =>
-				isAfter(startOfToday(), parseISO(diary.endDate)) ? this.expiredAgendas.push(diary) : this.activeAgendas.push(diary)
-			);
+			diaries.forEach(diary => {
+				const newDiary: DiaryList = {
+					diaryList: diary,
+					endDate: stringToDate(diary.endDate),
+					startDate: stringToDate(diary.startDate)
+				}
+				isAfter(startOfToday(), parseISO(diary.endDate)) ? this.expiredAgendas.push(newDiary) : this.activeAgendas.push(newDiary)
+			});
 	}
 
 	goToEditAgenda(): void {
@@ -196,4 +202,10 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 		return clinicalSpecialtyName ? `${alias} (${clinicalSpecialtyName})` : `${alias}`;
 	}
 
+}
+
+export interface DiaryList {
+	diaryList: DiaryListDto;
+    endDate: Date;
+    startDate: Date;
 }

@@ -46,7 +46,7 @@
 						reference.professional.nameSelfDetermination)}}
 						{{reference.professional.lastName}}
 				</span>
-                <span>{{reference.referenceDate.day}}/{{reference.referenceDate.month}}/{{reference.referenceDate.year}}</span>
+                <span>{{reference.referenceDate | viewDateDto: 'date' | dateFormat: 'date'}}</span>
             </div>
 
             <div align="end" fxFlex="50px">

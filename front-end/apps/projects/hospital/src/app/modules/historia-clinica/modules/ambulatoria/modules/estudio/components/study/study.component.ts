@@ -84,8 +84,7 @@ export class StudyComponent implements OnInit {
 				content:  diagnosticReport.healthCondition.snomed.pt,
 			}]: null  ,
 			createdBy: diagnosticReport.doctor ? this.getProfessionalName(diagnosticReport.doctor) : "",
-			timeElapsed: updateDate ? updateDate.toLocaleDateString('es-AR') + ' - ' + updateDate.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) 
-			: ""
+			createdOn: updateDate
 		}
 	}
 
