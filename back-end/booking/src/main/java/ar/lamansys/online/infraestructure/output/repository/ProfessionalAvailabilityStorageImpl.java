@@ -35,7 +35,6 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 
 	private final EntityManager entityManager;
 
-
 	@Override
 	public Optional<ProfessionalAvailabilityBo> findAvailabilityByPracticeAndProfessional(
 			Integer institutionId, Integer professionalId,
@@ -46,13 +45,14 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 
 		var diaries = getActiveDiaries(professionalId, institutionId, clinicalSpecialtyId);
 		var activeAppointments = getAppointmentsByDiaries(diaries);
-
+		var holidays = getHolidays();
 
 		var slots = diaries.stream()
 				.filter(this::isScheduled)
 				.map(diary -> assembleListOfSlots(diary, activeAppointments))
 				.flatMap(List::stream)
 				.filter(diaryAvailabilityBo -> !diaryAvailabilityBo.getSlots().getSlots().isEmpty())
+				.filter(availability -> isWorkingDay(availability, holidays))
 				.collect(Collectors.toList());
 
 		ProfessionalAvailabilityBo availability = slots.isEmpty() ? null : new ProfessionalAvailabilityBo(
@@ -67,6 +67,10 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 		log.debug("Find availability -> {}", availability);
 
 		return Optional.ofNullable(availability);
+	}
+
+	private boolean isWorkingDay(DiaryAvailabilityBo diaryAvailabilityBo, List<LocalDate> holidays) {
+		return !holidays.contains(diaryAvailabilityBo.getSlots().getDate());
 	}
 
 	private boolean isScheduled(DiaryListBo diary) {
@@ -87,11 +91,6 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 		}
 	}
 
-	private boolean isForTheseDays(List<Short> days, DiaryListBo diaryListBo) {
-		var day = getOpeningHourDay(diaryListBo);
-		return days.contains(day);
-	}
-
 	private Short getOpeningHourDay(DiaryListBo diaryListBo) {
 		String query = "SELECT oh.day_week_id " +
 				"FROM opening_hours oh " +
@@ -99,6 +98,18 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 		return (Short)entityManager.createNativeQuery(query)
 				.setParameter("openingHoursId", diaryListBo.getOpeningHoursId())
 				.getSingleResult();
+	}
+
+	private List<LocalDate> getHolidays(){
+		String query = "SELECT h.date FROM holiday h WHERE h.deleted IS NOT TRUE";
+		return parseHolidays(entityManager.createNativeQuery(query)
+				.getResultList());
+	}
+
+	private List<LocalDate> parseHolidays(List<Object> resultList) {
+		return resultList.stream()
+				.map(row -> ((Date)row).toLocalDate())
+				.collect(Collectors.toList());
 	}
 
 	private String getName(Integer professionalId) {
@@ -150,28 +161,6 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 
 	private boolean inTheFuture(LocalTime time, LocalDate day) {
 		return day.isAfter(LocalDate.now()) || time.isAfter(LocalTime.now());
-	}
-
-	private List<LocalDate> getWorkingDays(LocalDate start, LocalDate end, List<Integer> days) {
-		return start.datesUntil(end).filter(date -> days.contains(date.getDayOfWeek().getValue()))
-				.collect(Collectors.toList());
-	}
-
-	private List<Short> getDays(Integer professionalId, Integer clinicalSpecialtyId, Integer practiceId) {
-		String query = "SELECT m.day " +
-				"FROM mandatory_professional_practice_free_days AS m " +
-				"JOIN clinical_specialty_mandatory_medical_practice AS c " +
-				"ON c.id = m.clinical_specialty_mandatory_medical_practice_id " +
-				"WHERE c.clinical_specialty_id = :clinicalSpecialtyId " +
-				"AND c.mandatory_medical_practice_id = :practiceId " +
-				"AND m.healthcare_professional_id = :healthcareProfessionalId";
-
-		List<Object> result = this.entityManager.createNativeQuery(query)
-				.setParameter("practiceId", practiceId)
-				.setParameter("clinicalSpecialtyId", clinicalSpecialtyId)
-				.setParameter("healthcareProfessionalId", professionalId)
-				.getResultList();
-		return result.stream().map(day -> (Short)day).collect(Collectors.toList());
 	}
 
 	private List<DiaryListBo> getActiveDiaries(Integer professionalId, Integer institutionId, Integer clinicalSpecialtyId) {
