@@ -41,6 +41,7 @@ export class ReferenceListComponent {
 					state,
 				}
 			});
+			this.prepareFilterClinicalSpecialty(list);
 			this.prepareFilters()
 		}
 		else
