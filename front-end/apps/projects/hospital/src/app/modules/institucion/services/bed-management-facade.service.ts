@@ -72,7 +72,7 @@ export class BedManagementFacadeService {
 	}
 
 	private filterByProbableDischargeDate(filter: BedManagementFilter, bed: BedSummaryDto): boolean {
-		return (filter.probableDischargeDate ? bed.probableDischargeDate ? momentParseDateTime(bed.probableDischargeDate).isSameOrBefore(momentParseDate(filter.probableDischargeDate)) : false : true);
+		return (filter.probableDischargeDate ? bed.probableDischargeDate ? momentParseDateTime(bed.probableDischargeDate).isSameOrAfter(momentParseDate(filter.probableDischargeDate)) : false : true);
 	}
 
 	private filterByFreeBed(filter: BedManagementFilter, bed: BedSummaryDto): boolean {

@@ -45,9 +45,11 @@
     <mat-form-field appearance="outline" *ngIf="!isEmergencyEpisode">
         <mat-label [translate]="'gestion-camas.filters.PROBABLE_DISCHARGE_DATE'"></mat-label>
         <input matInput id="date" [matDatepicker]="myDatepicker" formControlName="probableDischargeDate" (dateChange)="sendAllFiltersOnFilterChange()">
-        <mat-icon id="clear-probable-discharge-date" *ngIf="form.controls.probableDischargeDate.value" matDatepickerToggleIcon
-            (click)="clear(form.controls.probableDischargeDate); $event.stopPropagation()" color="warn">close</mat-icon>
         <mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
         <mat-datepicker #myDatepicker></mat-datepicker>
+        <button id="clear-probable-discharge-date" type="button" mat-button *ngIf="form.controls.probableDischargeDate.value" matSuffix
+            color="warn" mat-icon-button (click)="clear(form.controls.probableDischargeDate); $event.stopPropagation()">
+            <mat-icon>close</mat-icon>
+        </button>
     </mat-form-field>
 </form>
