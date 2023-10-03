@@ -23,7 +23,6 @@ export class DeleteTemplateComponent implements OnInit {
 	}
 
 	deleteTemplate(event:TemplateNamesDto): void {
-		console.log('deleteTemplate', event.id)
 		this.templateManagementService.deleteTemplate(event.id).subscribe(
 			_ => this.dialogRef.close(true)
 		)
