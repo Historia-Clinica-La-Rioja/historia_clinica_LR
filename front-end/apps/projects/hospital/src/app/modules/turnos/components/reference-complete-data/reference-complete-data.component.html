@@ -76,7 +76,7 @@
 
 	<div class="primary" *ngFor="let file of referenceCompleteData.dto.files" fxLayout="row">
 		<mat-icon>attachment_icon</mat-icon>
-		<span class="span-clickable">
+		<span class="span-clickable" (click)="downloadFile(file)">
 			{{file.fileName}}
 		</span>
 	</div>
