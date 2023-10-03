@@ -208,7 +208,7 @@ public class EmergencyCareEpisodeController {
     }
 
 	@GetMapping("/{episodeId}/has-evolution-note")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
 	public ResponseEntity<Boolean> hasEvolutionNote(@PathVariable(name = "institutionId") Integer institutionId,
 													   @PathVariable(name = "episodeId") Integer episodeId) {
 		LOG.debug("Get episode creation date -> institutionId {}, episodeId {}", institutionId, episodeId);
