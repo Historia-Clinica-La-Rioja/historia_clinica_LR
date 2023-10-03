@@ -137,7 +137,7 @@ export class AppointmentComponent implements OnInit {
 
 	isRejectedPatient: boolean = false;
 	selectedModality: string;
-	isVirtualConsultationModality: boolean = true;
+	isVirtualConsultationModality: boolean = false;
 	canDownloadReport = false;
 
 	constructor(
@@ -238,15 +238,16 @@ export class AppointmentComponent implements OnInit {
 				switch (this.appointment.modality) {
 					case EAppointmentModality.ON_SITE_ATTENTION: {
 						this.selectedModality = this.modalitys.ON_SITE_ATTENTION;
-						this.isVirtualConsultationModality = false;
 						break
 					}
 					case EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION: {
 						this.selectedModality = this.modalitys.SECOND_OPINION_VIRTUAL_ATTENTION;
+						this.isVirtualConsultationModality = true;
 						break
 					}
 					case EAppointmentModality.PATIENT_VIRTUAL_ATTENTION: {
 						this.selectedModality = this.modalitys.PATIENT_VIRTUAL_ATTENTION;
+						this.isVirtualConsultationModality = true;
 					}
 				}
 				this.checkDownloadReportAvailability();
