@@ -48,9 +48,10 @@ export class ReferenceListComponent {
 		}
 		else
 			this.allReferenceReports = [];
+		this.formFilter?.reset();
+		this.filteredByName = false;
 		this.referenceReports = this.allReferenceReports;
 		this.referenceListWithoutFilterByName = this.allReferenceReports;
-		this.formFilter?.reset();
 	};
 
 	constructor(
@@ -74,7 +75,6 @@ export class ReferenceListComponent {
 		this.filtersCustom = $event;
 		this.applyFilters(this.filtersCustom);
 	}
-
 
 	clearFilterField(control: AbstractControl) {
 		this.filteredByName = false;
@@ -145,7 +145,7 @@ export class ReferenceListComponent {
 		if (value) {
 			return reports.filter((r: Report) => {
 				const fieldValue = fieldSelector(r);
-				return !fieldValue && value === PENDING_CLOSURE || fieldValue === value;
+				return !fieldValue && value === valueFilter || fieldValue === value;
 			});
 		}
 		return reports;
