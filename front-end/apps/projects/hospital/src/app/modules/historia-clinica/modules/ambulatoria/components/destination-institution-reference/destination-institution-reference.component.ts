@@ -101,6 +101,9 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 					this.practiceSnomedId = practiceOrProcedure.id;
 					this.clinicalSpecialtyId = clinicalSpecialtyId?.id;
 				});
+			} else {
+				if (this.formReference.controls.practiceOrProcedure.value) this.practiceSnomedId = this.formReference.controls.practiceOrProcedure.value.id;
+				else this.practiceSnomedId = null
 			}
 		});
 	}
