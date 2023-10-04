@@ -60,9 +60,10 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 		});
 	}
 
-	changeDiarySelected(event: MatOptionSelectionChange, diary: EquipmentDiaryDto) {
+	changeDiarySelected(event: MatOptionSelectionChange, diary: DiaryList) {
 		if (event.isUserInput) {
-			this.diarySelected = diary;
+			this.diarySelected = diary.diaryList;
+			this.changeDetectorRef.detectChanges();
 		}
 	}
 
@@ -164,12 +165,14 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 					endDate: stringToDate(diary.endDate),
 					startDate: stringToDate(diary.startDate)
 				}
-				isAfter(startOfToday(), parseISO(diary.endDate)) ? this.expiredDiaries.push(newDiary) : this.activeDiaries.push(newDiary)
+				isAfter(startOfToday(), parseISO(diary.endDate)) ?
+				 this.expiredDiaries.push(newDiary) : this.activeDiaries.push(newDiary)
 			});
 	}
 
 	goToEditAgenda(){
-		this.router.navigate([`institucion/${this.contextService.institutionId}/turnos/imagenes/agenda/${this.diarySelected.id}/editar`], { state : { selectedEquipment: this.equipmentSelected, selectedDiary: this.diarySelected}});
+		this.router.navigate([`institucion/${this.contextService.institutionId}/turnos/imagenes/agenda/${this.diarySelected.id}/editar`],
+		{ state : { selectedEquipment: this.equipmentSelected, selectedDiary: this.diarySelected}});
 	}
 }
 
