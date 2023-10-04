@@ -330,8 +330,8 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 			result.setProblems(mapToReferenceProblemDtoList(r.getProblems()));
 			result.setFileIds(r.getFileIds());
 			result.setDestinationInstitutionId(r.getDestinationInstitutionId());
-			result.setPhonePrefix(r.getPhoneNumber());
 			result.setPhonePrefix(r.getPhonePrefix());
+			result.setPhoneNumber(r.getPhoneNumber());
 			result.setPriority(r.getPriority());
 			result.setStudy(r.getStudy() != null ? mapToReferenceStudyDto(r.getStudy()) : null);
 			result.setInstitutionId(institutionId);
