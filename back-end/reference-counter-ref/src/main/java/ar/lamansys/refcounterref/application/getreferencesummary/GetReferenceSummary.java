@@ -22,6 +22,7 @@ public class GetReferenceSummary {
 		assertContextValid(patientId, clinicalSpecialtyId, careLineId, practiceId);
 		log.debug("Input parameters -> patientId {}, clinicalSpecialtyId {}, careLineId {}, practiceId {}", patientId, clinicalSpecialtyId, careLineId, practiceId);
 		List<ReferenceSummaryBo> result = referenceStorage.getReferencesSummary(patientId, clinicalSpecialtyId, careLineId, practiceId);
+		log.debug("OUTPUT -> {}", result);
 		return result;
 	}
 

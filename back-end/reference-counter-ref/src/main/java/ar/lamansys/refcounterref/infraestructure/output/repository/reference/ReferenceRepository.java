@@ -49,6 +49,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
             "AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId)")
     List<ReferenceGetBo> getReferencesFromOdontologyConsultation(@Param("patientId") Integer patientId, @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds);
 
+	@Transactional(readOnly = true)
 	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.id, i.name, " +
 			"oc.startDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId," +
 			"r.phonePrefix, r.phoneNumber) " +
@@ -67,6 +68,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 																								 @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
 																								 @Param("careLineId") Integer careLineId);
 
+	@Transactional(readOnly = true)
 	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.id, i.name, " +
 			"oc.performedDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId," +
 			"r.phonePrefix, r.phoneNumber) " +
@@ -85,6 +87,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 																								 @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
 																								 @Param("careLineId") Integer careLineId);
 
+	@Transactional(readOnly = true)
 	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.id, i.name, " +
 			"oc.startDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId," +
 			"r.phonePrefix, r.phoneNumber) " +
@@ -103,12 +106,13 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"AND dr.snomedId = :practiceId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" +
-			"AND (dr.deleteable.deleted = false OR d.deleteable.deleted is null) " +
+			"AND (dr.deleteable.deleted = false OR dr.deleteable.deleted is null) " +
 			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null)")
 	List<ReferenceSummaryBo> getReferencesSummaryFromOutpatientConsultationByPracticeId(@Param("patientId") Integer patientId,
 																						@Param("practiceId") Integer practiceId,
 																						@Param("careLineId") Integer careLineId);
 
+	@Transactional(readOnly = true)
 	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.id, i.name, " +
 			"oc.performedDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId," +
 			"r.phonePrefix, r.phoneNumber) " +
@@ -127,12 +131,13 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"AND dr.snomedId = :practiceId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" +
-			"AND (dr.deleteable.deleted = false OR d.deleteable.deleted is null) " +
+			"AND (dr.deleteable.deleted = false OR dr.deleteable.deleted is null) " +
 			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null)")
 	List<ReferenceSummaryBo> getReferencesSummaryFromOdontologyConsultationByPracticeId(@Param("patientId") Integer patientId,
 																						@Param("practiceId") Integer practiceId,
 																						@Param("careLineId") Integer careLineId);
 
+	@Transactional(readOnly = true)
 	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.id, i.name, " +
 			"oc.startDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId," +
 			"r.phonePrefix, r.phoneNumber) " +
@@ -152,13 +157,14 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"AND dr.snomedId = :practiceId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId)" +
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" +
-			"AND (dr.deleteable.deleted = false OR d.deleteable.deleted is null) " +
+			"AND (dr.deleteable.deleted = false OR dr.deleteable.deleted is null) " +
 			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null)")
 	List<ReferenceSummaryBo> getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyIdAndPracticeId(@Param("patientId") Integer patientId,
 																											  @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
 																											  @Param("careLineId") Integer careLineId,
 																											  @Param("practiceId") Integer practiceId);
 
+	@Transactional(readOnly = true)
 	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.id, i.name, " +
 			"oc.performedDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId," +
 			"r.phonePrefix, r.phoneNumber) " +
@@ -178,7 +184,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"AND dr.snomedId = :practiceId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" +
-			"AND (dr.deleteable.deleted = false OR d.deleteable.deleted is null) " +
+			"AND (dr.deleteable.deleted = false OR dr.deleteable.deleted is null) " +
 			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null)")
 	List<ReferenceSummaryBo> getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyIdAndPracticeId(@Param("patientId") Integer patientId,
 																								 			  @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,

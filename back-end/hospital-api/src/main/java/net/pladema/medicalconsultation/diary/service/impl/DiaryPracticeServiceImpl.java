@@ -60,6 +60,7 @@ public class DiaryPracticeServiceImpl implements DiaryPracticeService {
 
 	@Override
 	public boolean hasPractice(Integer diaryId) {
+		log.debug("Input parameters -> diaryId {},", diaryId);
 		return diaryPracticeRepository.hasPractices(diaryId);
 	}
 
