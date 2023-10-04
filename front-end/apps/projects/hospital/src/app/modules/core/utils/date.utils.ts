@@ -94,3 +94,11 @@ export function timeDifference(createdOn: Date) {
 	}
 	return `${differenceInHours(new Date(), createdOn)}.${mins % 60} hs en espera`
 }
+
+export function fromStringToDateByDelimeter(date: string, delimeter: string): Date {
+	const dateData = date.split(delimeter);
+	const year = +dateData[0];
+	const month = +dateData[1] - 1;
+	const dayDate = +dateData[2];
+	return new Date(year, month, dayDate);
+}

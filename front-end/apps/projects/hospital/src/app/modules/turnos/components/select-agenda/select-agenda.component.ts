@@ -7,7 +7,7 @@ import { isAfter, parseISO, startOfToday } from 'date-fns';
 import { Subscription } from 'rxjs';
 
 import { ContextService } from '@core/services/context.service';
-import { DatePipeFormat } from '@core/utils/date.utils';
+import { DatePipeFormat, fromStringToDateByDelimeter } from '@core/utils/date.utils';
 import { processErrors } from '@core/utils/form.utils';
 
 import { DiaryListDto } from '@api-rest/api-model';
@@ -21,7 +21,6 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { BlockAgendaRangeComponent } from '@turnos/dialogs/block-agenda-range/block-agenda-range.component';
 import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
 import { AgendaFilters, AgendaOptionsData, AgendaSearchService } from '../../services/agenda-search.service';
-import { stringToDate } from '@api-rest/mapper/date-dto.mapper';
 
 @Component({
 	selector: 'app-select-agenda',
@@ -108,8 +107,8 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 			diaries.forEach(diary => {
 				const newDiary: DiaryList = {
 					diaryList: diary,
-					endDate: stringToDate(diary.endDate),
-					startDate: stringToDate(diary.startDate)
+					endDate: fromStringToDateByDelimeter(diary.endDate, '-'),
+					startDate: fromStringToDateByDelimeter(diary.startDate, '-')
 				}
 				isAfter(startOfToday(), parseISO(diary.endDate)) ? this.expiredAgendas.push(newDiary) : this.activeAgendas.push(newDiary)
 			});

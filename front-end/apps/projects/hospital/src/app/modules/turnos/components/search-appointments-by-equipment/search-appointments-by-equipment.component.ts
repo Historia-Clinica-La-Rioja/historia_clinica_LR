@@ -4,14 +4,13 @@ import { EquipmentDiaryDto, EquipmentDto, ModalityDto } from '@api-rest/api-mode
 import { EquipmentService } from '@api-rest/services/equipment.service';
 import { ModalityService } from '@api-rest/services/modality.service';
 import { ContextService } from '@core/services/context.service';
-import { DatePipeFormat } from '@core/utils/date.utils';
+import { DatePipeFormat, fromStringToDateByDelimeter } from '@core/utils/date.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { isAfter, startOfToday, parseISO } from 'date-fns';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EquipmentDiaryOptionsData, SearchEquipmentDiaryService } from '../../services/search-equipment-diary.service';
 import { MatOptionSelectionChange } from '@angular/material/core';
-import { stringToDate } from '@api-rest/mapper/date-dto.mapper';
 
 @Component({
 	selector: 'app-search-appointments-by-equipment',
@@ -23,7 +22,7 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 
 	@Input() selectedEquipment: EquipmentDto;
 	@Input() selectedDiary: EquipmentDiaryDto;
-	
+
 	modalities$: Observable<TypeaheadOption<ModalityDto>[]>;
 
 	equipmentsTypeaheadList: TypeaheadOption<EquipmentDto>[];
@@ -162,8 +161,8 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 			diaries.forEach(diary =>{
 				const newDiary: DiaryList = {
 					diaryList: diary,
-					endDate: stringToDate(diary.endDate),
-					startDate: stringToDate(diary.startDate)
+					endDate: fromStringToDateByDelimeter(diary.endDate, '-'),
+					startDate: fromStringToDateByDelimeter(diary.startDate, '-')
 				}
 				isAfter(startOfToday(), parseISO(diary.endDate)) ?
 				 this.expiredDiaries.push(newDiary) : this.activeDiaries.push(newDiary)
