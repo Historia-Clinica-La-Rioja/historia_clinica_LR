@@ -87,19 +87,24 @@ export class ReferenceListComponent {
 	applyFilterByNameAndDocument($event: KeyboardEvent) {
 		this.applySearchFilter = ($event?.target as HTMLInputElement).value?.replace(REMOVE_SUBSTRING_DNI, '');
 		const filterLowerCase = this.applySearchFilter.toLowerCase();
+		if (filterLowerCase.length > 0) {
+			const list = this.referenceListWithoutFilterByName.filter((r: Report) => {
+				const patientFullName = r.dto.patientFullName.toLowerCase();
+				const identificationNumber = r.dto?.identificationNumber?.toString();
 
-		const list = this.referenceListWithoutFilterByName.filter((r: Report) => {
-			const patientFullName = r.dto.patientFullName.toLowerCase();
-			const identificationNumber = r.dto?.identificationNumber?.toString();
+				return patientFullName.includes(filterLowerCase) || (identificationNumber && identificationNumber.includes(filterLowerCase));
+			});
 
-			return patientFullName.includes(filterLowerCase) || (identificationNumber && identificationNumber.includes(filterLowerCase));
-		});
-
-		this.setReportList(list);
+			this.setReportList(list);
+		} else {
+			this.filteredByName = false;
+			this.filteredReferenceByName = [];
+			this.applyFilters(this.filtersCustom);
+		}
 	}
 
 	private setReportList(list: Report[]) {
-		this.filteredByName = list.length > 0;
+		this.filteredByName = (list?.length > 0);
 		this.filteredReferenceByName = this.filteredByName ? list : [];
 		this.applyFilters(this.filtersCustom);
 	}
