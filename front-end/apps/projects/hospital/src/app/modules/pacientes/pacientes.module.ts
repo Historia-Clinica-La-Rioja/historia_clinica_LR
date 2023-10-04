@@ -100,7 +100,8 @@ import { SearchPatientComponent } from './component/search-patient/search-patien
 		CardPatientComponent,
 		ResumenDeGuardiaComponent,
 		SearchPatientComponent,
-		EditPatientComponent
+		EditPatientComponent,
+		AssignedAppointmentsComponent,
 	],
 	imports: [
 		FormsModule,

@@ -17,7 +17,8 @@
       "PATIENT_INTERNMENT_ANOTHER_INSTITUTION": "El paciente se encuentra internado en otra institución.",
       "REPORTS": "Informes",
       "MARKED_FOR_AUDIT": "Marcado para auditar",
-      "SEE_CLINICAL_HISTORY": "Ver historia clínica"
+      "SEE_CLINICAL_HISTORY": "Ver historia clínica",
+      "VIEW_APPOINTMENT_HISTORY": "Ver historial"
     },
     "form": {
       "ADDRESS": "Domicilio",

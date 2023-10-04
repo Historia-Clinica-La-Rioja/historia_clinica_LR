@@ -89,4 +89,9 @@ export class PatientProfileComponent implements OnInit {
 		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/ambulatoria/${AppRoutes.PortalPaciente}/${this.patientId}`;
 		this.router.navigate([url]);
 	}
+
+	newAppointment() {
+		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/turnos`;
+		this.router.navigate([url], { queryParams: { idPaciente: this.patientId } });
+	}
 }

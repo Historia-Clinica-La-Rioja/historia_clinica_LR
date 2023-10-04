@@ -11,8 +11,8 @@
 			</div>
 		</ng-container>
 		<mat-divider style="padding-top: 10px;"></mat-divider>
-		<button mat-button type="button" color="primary">
-			Ver historial
+		<button mat-button type="button" color="primary" (click)="openAppointmentHistoric()">
+			{{'pacientes.profile.VIEW_APPOINTMENT_HISTORY' | translate}}
 		</button>
 	</mat-card-content>
 </app-summary-card>
