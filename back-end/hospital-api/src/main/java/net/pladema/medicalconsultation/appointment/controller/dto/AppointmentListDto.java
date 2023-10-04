@@ -46,4 +46,6 @@ public class AppointmentListDto {
 
 	private final ProfessionalPersonDto professionalPersonDto;
 
+	private String patientEmail;
+
 }

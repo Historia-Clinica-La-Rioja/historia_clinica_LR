@@ -255,6 +255,7 @@ export interface AppointmentListDto {
     medicalCoverageName: string;
     overturn: boolean;
     patient: AppointmentBasicPatientDto;
+    patientEmail: string;
     phoneNumber: string;
     phonePrefix: string;
     professionalPersonDto: ProfessionalPersonDto;

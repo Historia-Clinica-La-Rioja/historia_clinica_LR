@@ -401,7 +401,8 @@ public class AppointmentsController {
 						? new ProfessionalPersonDto(
 						appointmentBo.getProfessionalPersonBo().getId(),
 						appointmentBo.getProfessionalPersonBo().getFullName(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)))
-						:  null
+						:  null,
+				appointmentBo.getPatientEmail()
 		);
 	}
 

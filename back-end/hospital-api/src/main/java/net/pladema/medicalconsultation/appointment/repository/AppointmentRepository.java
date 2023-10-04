@@ -85,13 +85,15 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
     @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
             "aa.pk.diaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
             "a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, doh.medicalAttentionTypeId, " +
-			"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames) " +
+			"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email) " +
             "FROM Appointment AS a " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
             "JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = aa.pk.diaryId) " +
 			"JOIN UserPerson us ON (a.creationable.createdBy = us.pk.userId) " +
 			"JOIN Person p ON (us.pk.personId = p.id) " +
 			"JOIN PersonExtended pex ON (p.id = pex.id) " +
+			"LEFT JOIN BookingAppointment ba ON a.id = ba.pk.appointmentId " +
+			"LEFT JOIN BookingPerson bp ON ba.pk.bookingPersonId = bp.id " +
             "WHERE aa.pk.diaryId = :diaryId AND a.appointmentStateId <> " + AppointmentState.CANCELLED_STR +
 			"AND aa.pk.openingHoursId = doh.pk.openingHoursId " +
 			"AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL ) " +
@@ -102,13 +104,15 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	@Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
 			"eaa.pk.equipmentDiaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
 			"a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, edoh.medicalAttentionTypeId, " +
-			"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames) " +
+			"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email) " +
 			"FROM Appointment AS a " +
 			"JOIN EquipmentAppointmentAssn AS eaa ON (a.id = eaa.pk.appointmentId) " +
 			"JOIN EquipmentDiaryOpeningHours AS edoh ON (edoh.pk.equipmentDiaryId = eaa.pk.equipmentDiaryId) " +
 			"JOIN UserPerson us ON (a.creationable.createdBy = us.pk.userId) " +
 			"JOIN Person p ON (us.pk.personId = p.id) " +
 			"JOIN PersonExtended pex ON (p.id = pex.id) " +
+			"LEFT JOIN BookingAppointment ba ON a.id = ba.pk.appointmentId " +
+			"LEFT JOIN BookingPerson bp ON ba.pk.bookingPersonId = bp.id " +
 			"WHERE eaa.pk.equipmentDiaryId = :diaryId AND a.appointmentStateId <> " + AppointmentState.CANCELLED_STR +
 			"AND eaa.pk.openingHoursId = edoh.pk.openingHoursId " +
 			"AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL ) " +

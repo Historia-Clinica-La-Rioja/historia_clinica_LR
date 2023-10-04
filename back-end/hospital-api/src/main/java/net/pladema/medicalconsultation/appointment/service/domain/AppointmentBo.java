@@ -94,6 +94,7 @@ public class AppointmentBo {
 				.appointmentBlockMotiveId(appointmentDiaryVo.getAppointmentBlockMotiveId())
 				.createdOn(appointmentDiaryVo.getCreatedOn())
 				.professionalPersonBo(appointmentDiaryVo.getProfessionalPersonVo() != null ? new ProfessionalPersonBo(appointmentDiaryVo.getProfessionalPersonVo()) : null)
+				.patientEmail(appointmentDiaryVo.getEmail())
 				.build();
 	}
 

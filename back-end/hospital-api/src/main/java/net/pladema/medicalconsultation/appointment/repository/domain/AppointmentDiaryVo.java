@@ -41,6 +41,8 @@ public class AppointmentDiaryVo {
 	private final LocalDateTime createdOn;
 
 	private final ProfessionalPersonVo professionalPersonVo;
+
+	private final String email;
 	
 	public AppointmentDiaryVo(
 			Integer diaryId,
@@ -62,8 +64,8 @@ public class AppointmentDiaryVo {
 			String lastName,
 			String nameSelfDetermination,
 			String middleNames,
-			String otherLastName
-	) {
+			String otherLastName,
+			String email) {
 		this.diaryId = diaryId;
 		this.id = id;
 		this.patientId = patientId;
@@ -78,6 +80,7 @@ public class AppointmentDiaryVo {
 		this.appointmentBlockMotiveId = appointmentBlockMotiveId;
 		this.updatedOn = updatedOn;
 		this.createdOn = createdOn;
+		this.email = email;
 		this.professionalPersonVo = personId != null ? new ProfessionalPersonVo(personId, firstName, lastName, nameSelfDetermination, middleNames, otherLastName) : null;
 	}
 
