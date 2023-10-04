@@ -9,6 +9,7 @@ import { RequestMasterDataService } from '@api-rest/services/request-masterdata.
 import { PracticesService } from '@api-rest/services/practices.service';
 import { CareLineInstitutionPracticeService } from '@api-rest/services/care-line-institution-practice.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
+import { SearchCriteria } from '@turnos/components/search-criteria/search-criteria.component';
 
 @Component({
 	selector: 'app-carelines-and-specialties-reference',
@@ -198,9 +199,9 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 
 	}
 
-	selectedOption($event: any) {
+	selectedOption($event: SearchCriteria) {
 		this.formReference.controls.consultation.setValue(!!!$event);
-		if ($event) {
+		if ($event === SearchCriteria.PRACTICES) {
 			this.formReference.controls.clinicalSpecialtyId.removeValidators([Validators.required]);
 			this.formReference.controls.clinicalSpecialtyId.setValue(null);
 			this.formReference.controls.practiceOrProcedure.setValidators([Validators.required]);

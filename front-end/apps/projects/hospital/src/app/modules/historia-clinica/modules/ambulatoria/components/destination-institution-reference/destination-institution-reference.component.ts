@@ -161,13 +161,13 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 
 	setAppointments(institutionDestinationId: number) {
 		if (this.careLineId) {
-			this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointmentsQuantity(institutionDestinationId, this.specialtyId, this.departmentId, this.careLineId).subscribe(rs =>
+			this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointmentsQuantity(institutionDestinationId, this.specialtyId, this.departmentId, this.careLineId, this.practiceSnomedId).subscribe(rs =>
 				this.protectedAppointment$.next(rs));
 			this.diaryAvailableAppointmentsSearchService.getAvailableAppiuntmentsQuantityByCarelineDiaries(institutionDestinationId, this.careLineId, this.practiceSnomedId, this.specialtyId).subscribe(rs => 
 				this.appointment$.next(rs));
 		}
 		else 
-			this.diaryAvailableAppointmentsSearchService.getAvailableAppointmentsQuantity(institutionDestinationId, this.specialtyId).subscribe(rs =>
+			this.diaryAvailableAppointmentsSearchService.getAvailableAppointmentsQuantity(institutionDestinationId, this.specialtyId, this.practiceSnomedId).subscribe(rs =>
 				this.appointment$.next(rs));
 	}
 
