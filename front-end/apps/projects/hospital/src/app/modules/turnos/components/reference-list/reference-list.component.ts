@@ -8,7 +8,7 @@ import { AbstractControl, FormBuilder, UntypedFormGroup } from '@angular/forms';
 import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 
 const REFERENCE_REQUESTED = -1;
-const PENDING_CLOSURE= -1;
+const PENDING_CLOSURE = -1;
 
 @Component({
 	selector: 'app-reference-list',
@@ -17,10 +17,12 @@ const PENDING_CLOSURE= -1;
 })
 export class ReferenceListComponent {
 	filteredReferenceReports: Report[] = [];
+	filteredReferenceByName: Report[] = [];
 	referenceReports: Report[] = [];
 	filters: filter[] = [];
 	allReferenceReports: Report[] = [];
 	formFilter: UntypedFormGroup;
+	filteredByName = false;
 	private applySearchFilter = '';
 	private priorityOptions = PRIORITY_OPTIONS;
 	private closureOptions = CLOSURE_OPTIONS;
@@ -28,7 +30,7 @@ export class ReferenceListComponent {
 	private pageLength = PAGE_MIN_SIZE;
 	private clinicalSpecialtyOptions = [];
 	private referenceListWithoutFilterByName: Report[] = [];
-
+	private filtersCustom;
 	@Input()
 	set reports(list: ReferenceReportDto[]) {
 		if (list?.length) {
@@ -68,74 +70,101 @@ export class ReferenceListComponent {
 		this.changeDetectorRef.detectChanges();
 	}
 
-	applyFilters($event: any) {
-		let referenceReportsFilters = this.allReferenceReports;
-
-		if ($event?.priority)
-			referenceReportsFilters = referenceReportsFilters.filter((r: Report) => r.dto.priority.id === $event.priority);
-
-		if ($event?.closureType) {
-			referenceReportsFilters = referenceReportsFilters.filter((r: Report) => {
-				if (!r.dto?.closureType)
-					if ($event.closureType === REFERENCE_REQUESTED)
-						return true
-				return (r.dto?.closureType?.id === $event.closureType)
-			});
-		}
-
-
-		if ($event?.appoitmentState) {
-			referenceReportsFilters = referenceReportsFilters.filter((r: Report) => {
-				if (!r.dto?.appointmentStateId)
-					return ($event.appoitmentState === PENDING_CLOSURE)
-				return (r.dto.appointmentStateId === $event.appoitmentState)
-			});
-		}
-
-		this.prepareFilterClinicalSpecialty(referenceReportsFilters.map(referenceReports => referenceReports.dto));
-		this.filters.forEach((f, i) => {
-			if (f.key === "clinicalSpecialty")
-				this.filters[i].options = this.clinicalSpecialtyOptions;
-		});
-
-		if ($event?.clinicalSpecialty) {
-			let clinicalSpecialty = this.clinicalSpecialtyOptions.find(r => r?.id === $event.clinicalSpecialty)?.description;
-			if (clinicalSpecialty)
-				referenceReportsFilters = referenceReportsFilters.filter((r: Report) => r.dto.clinicalSpecialtyDestination === clinicalSpecialty);
-		}
-
-		this.referenceReports = referenceReportsFilters;
-		this.referenceListWithoutFilterByName = referenceReportsFilters;
-		this.filteredReferenceReports = referenceReportsFilters.slice(0, this.pageLength);
-		this.changeDetectorRef.detectChanges();
-	}
-
-	applyFilterByNameAndDocument($event: KeyboardEvent) {
-		this.applySearchFilter = ($event?.target as HTMLInputElement).value?.replace(REMOVE_SUBSTRING_DNI, '');
-		this.filteredReferenceReports = this.referenceListWithoutFilterByName;
-		let list: Report[];
-
-		if (this.applySearchFilter) {
-			list = this.filteredReferenceReports.filter((r: Report) =>
-				r.dto.patientFullName.toLowerCase().includes(this.applySearchFilter.toLowerCase()) || r.dto?.identificationNumber?.toString().includes(this.applySearchFilter));
-		}
-
-		this.setReportList(list);
+	applyFiltersCustom($event: any) {
+		this.filtersCustom = $event;
+		this.applyFilters(this.filtersCustom);
 	}
 
 
 	clearFilterField(control: AbstractControl) {
+		this.filteredByName = false;
+		this.filteredReferenceByName = [];
 		control.reset();
 		this.filteredReferenceReports = this.referenceListWithoutFilterByName.slice(0, this.pageLength);
-		this.changeDetectorRef.detectChanges();
+		this.applyFilters(this.filtersCustom);
+	}
+
+	applyFilterByNameAndDocument($event: KeyboardEvent) {
+		this.applySearchFilter = ($event?.target as HTMLInputElement).value?.replace(REMOVE_SUBSTRING_DNI, '');
+		const filterLowerCase = this.applySearchFilter.toLowerCase();
+
+		const list = this.referenceListWithoutFilterByName.filter((r: Report) => {
+			const patientFullName = r.dto.patientFullName.toLowerCase();
+			const identificationNumber = r.dto?.identificationNumber?.toString();
+
+			return patientFullName.includes(filterLowerCase) || (identificationNumber && identificationNumber.includes(filterLowerCase));
+		});
+
+		this.setReportList(list);
 	}
 
 	private setReportList(list: Report[]) {
-		if (list)
-			this.filteredReferenceReports = list.slice(0, this.pageLength);
-		else
-			this.filteredReferenceReports = this.referenceListWithoutFilterByName.slice(0, this.pageLength);
+		this.filteredByName = list.length > 0;
+		this.filteredReferenceByName = this.filteredByName ? list : [];
+		this.applyFilters(this.filtersCustom);
+	}
 
+	private applyFilters($event: any) {
+		let referenceReportsFilters = this.filteredByName ? this.filteredReferenceByName : this.allReferenceReports;
+
+		referenceReportsFilters = this.filterByPriority(referenceReportsFilters, $event?.priority);
+		referenceReportsFilters = this.filterByClosureType(referenceReportsFilters, $event?.closureType);
+		referenceReportsFilters = this.filterByAppointmentState(referenceReportsFilters, $event?.appoitmentState);
+
+		if (!$event?.clinicalSpecialty) {
+			this.prepareFilterClinicalSpecialty(referenceReportsFilters.map(referenceReports => referenceReports.dto));
+			this.updateClinicalSpecialtyOptions();
+		} else {
+			const clinicalSpecialty = this.getClinicalSpecialtyDescription($event.clinicalSpecialty);
+			if (clinicalSpecialty) {
+				referenceReportsFilters = this.filterByClinicalSpecialty(referenceReportsFilters, clinicalSpecialty);
+			}
+		}
+
+		this.updateReferenceReports(referenceReportsFilters);
+	}
+
+	private filterByPriority(reports: Report[], priority: any): Report[] {
+		return priority ? reports.filter((r: Report) => r.dto.priority.id === priority) : reports;
+	}
+
+	private filterByClosureType(reports: Report[], closureType: any): Report[] {
+		return this.filterByNullableField(reports, closureType, (r: Report) => r.dto?.closureType?.id, REFERENCE_REQUESTED);
+	}
+
+	private filterByAppointmentState(reports: Report[], appointmentState: any): Report[] {
+		return this.filterByNullableField(reports, appointmentState, (r: Report) => r.dto?.appointmentStateId, PENDING_CLOSURE);
+	}
+
+	private filterByNullableField(reports: Report[], value: any, fieldSelector: (r: Report) => any, valueFilter: number): Report[] {
+		if (value) {
+			return reports.filter((r: Report) => {
+				const fieldValue = fieldSelector(r);
+				return !fieldValue && value === PENDING_CLOSURE || fieldValue === value;
+			});
+		}
+		return reports;
+	}
+
+	private updateClinicalSpecialtyOptions() {
+		const clinicalSpecialtyFilter = this.filters.find((f) => f.key === "clinicalSpecialty");
+		if (clinicalSpecialtyFilter) {
+			clinicalSpecialtyFilter.options = this.clinicalSpecialtyOptions;
+		}
+	}
+
+	private getClinicalSpecialtyDescription(clinicalSpecialtyId: any): string | undefined {
+		return this.clinicalSpecialtyOptions.find(r => r?.id === clinicalSpecialtyId)?.description;
+	}
+
+	private filterByClinicalSpecialty(reports: Report[], clinicalSpecialty: string): Report[] {
+		return reports.filter((r: Report) => r.dto.clinicalSpecialtyDestination === clinicalSpecialty);
+	}
+
+	private updateReferenceReports(filteredReports: Report[]) {
+		this.referenceReports = filteredReports;
+		this.referenceListWithoutFilterByName = filteredReports;
+		this.filteredReferenceReports = filteredReports.slice(0, this.pageLength);
 		this.changeDetectorRef.detectChanges();
 	}
 
