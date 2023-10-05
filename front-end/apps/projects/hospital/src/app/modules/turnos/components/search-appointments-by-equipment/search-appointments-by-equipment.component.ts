@@ -28,7 +28,7 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 	equipmentsTypeaheadList: TypeaheadOption<EquipmentDto>[];
 	equipments: EquipmentDto[] = [];
 
-	diarySelected: EquipmentDiaryDto;
+	diarySelected: DiaryList;
 	equipmentSelected: EquipmentDto;
 
 	diaries: EquipmentDiaryDto[];
@@ -61,8 +61,7 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 
 	changeDiarySelected(event: MatOptionSelectionChange, diary: DiaryList) {
 		if (event.isUserInput) {
-			this.diarySelected = diary.diaryList;
-			this.changeDetectorRef.detectChanges();
+			this.diarySelected = diary;
 		}
 	}
 
@@ -150,7 +149,11 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 		this.diaries = diaries;
 		this.categorizeAgendas(diaries);
 		if (diarySelectedId) {
-			this.diarySelected = this.diaries.find(agenda => agenda.id === diarySelectedId);
+			const diariesList: DiaryList[] = this.diaries.map(diary => {return {
+				diaryList: diary,
+				endDate: null,
+				startDate: null }})
+			this.diarySelected = diariesList.find(agenda => agenda.diaryList.id === diarySelectedId);
 		}
 	}
 
@@ -165,13 +168,14 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 					startDate: fromStringToDateByDelimeter(diary.startDate, '-')
 				}
 				isAfter(startOfToday(), parseISO(diary.endDate)) ?
-				 this.expiredDiaries.push(newDiary) : this.activeDiaries.push(newDiary)
+				this.expiredDiaries.push(newDiary) : this.activeDiaries.push(newDiary)
 			});
 	}
 
 	goToEditAgenda(){
-		this.router.navigate([`institucion/${this.contextService.institutionId}/turnos/imagenes/agenda/${this.diarySelected.id}/editar`],
-		{ state : { selectedEquipment: this.equipmentSelected, selectedDiary: this.diarySelected}});
+		const currenteDiarySelected: EquipmentDiaryDto = this.diarySelected.diaryList;
+		this.router.navigate([`institucion/${this.contextService.institutionId}/turnos/imagenes/agenda/${currenteDiarySelected.id}/editar`],
+		{ state : { selectedEquipment: this.equipmentSelected, selectedDiary: currenteDiarySelected}});
 	}
 }
 
