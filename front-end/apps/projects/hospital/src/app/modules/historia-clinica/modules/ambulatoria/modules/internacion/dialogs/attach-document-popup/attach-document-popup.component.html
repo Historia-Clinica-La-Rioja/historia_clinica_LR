@@ -61,6 +61,15 @@
 					<app-procedure-list [service]="procedureService"></app-procedure-list>
 				</app-titled-content-card>
 			</ng-container>
+
+			<mat-form-field appearance="outline" class="form-field">
+				<textarea formControlName="observation"
+					placeholder="{{'internaciones.internacion-paciente.documents.dialogs.attach.fields.OBSERVATIONS' | translate }}"
+					matInput type="text" id="observation">
+				</textarea>
+				<mat-error *ngIf="hasError(surgicalForm, 'required', 'observation')" [translate]="'forms.REQUIRED'">
+				</mat-error>
+			</mat-form-field>
 		</form>
 	</section>
 
