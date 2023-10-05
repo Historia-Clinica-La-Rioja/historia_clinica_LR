@@ -1,17 +1,17 @@
 import { moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
 import { ListElementItemComponent } from './list-element-item.component';
 import { EIndicationType } from '@api-rest/api-model';
-import { ColoredLabelComponent } from '@presentation/colored-label/colored-label.component';
+import { PresentationModule } from '@presentation/presentation.module';
 
 
 
 const meta: Meta<ListElementItemComponent> = {
-	title: 'Example/ListElementItemComponent',
+	title: 'HSI/ListElementItemComponent',
 	component: ListElementItemComponent,
 	tags: ['autodocs'],
 	decorators: [
 		moduleMetadata({
-			declarations: [ColoredLabelComponent]
+			imports: [PresentationModule]
 		}),
 	],
 };
