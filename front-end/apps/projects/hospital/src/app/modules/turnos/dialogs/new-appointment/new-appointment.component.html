@@ -12,7 +12,7 @@
 <div mat-dialog-content class="dialog-content">
 
 	<mat-stepper [selectedIndex]="initialIndex" #stepper labelPosition="bottom">
-		<mat-step [stepControl]="formSearch" label="{{'turnos.new-appointment.STEP_1' | translate}}">
+		<mat-step [stepControl]="formSearch" label="{{'turnos.new-appointment.STEP_1' | translate}}" [editable]="editableStep1">
 			<mat-card class="mat-typography mat-elevation-z0">
 				<form [formGroup]="formSearch" (ngSubmit)="search()">
 					<mat-card-content>

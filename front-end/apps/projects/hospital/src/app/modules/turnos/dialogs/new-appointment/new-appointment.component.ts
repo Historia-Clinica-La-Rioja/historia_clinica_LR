@@ -87,6 +87,7 @@ export class NewAppointmentComponent implements OnInit {
 	patientMedicalOrderTooltipDescription = '';
 	isOrderTranscribed = false;
 	transcribedOrder = null;
+	editableStep1 = true;
 	readonly MODALITY_PATIENT_VIRTUAL_ATTENTION = EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
     readonly MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION;
 
@@ -183,6 +184,7 @@ export class NewAppointmentComponent implements OnInit {
 			this.patientId = this.data.patientId;
 			this.isFormSubmitted = true;
 			this.patientSearch(this.data.patientId);
+			this.editableStep1 = false;
 		}
 	}
 
