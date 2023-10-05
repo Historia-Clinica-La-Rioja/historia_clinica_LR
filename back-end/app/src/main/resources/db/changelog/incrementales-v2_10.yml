@@ -175,3 +175,25 @@ databaseChangeLog:
                     UPDATE observation_vital_sign SET patient_id = row_data.patient_id WHERE id IN (SELECT tvs.observation_vital_sign_id FROM triage_vital_signs tvs WHERE tvs.triage_id = row_data.id);
                   END LOOP;
                 END $$;
+
+    - changeSet:
+        id: add-incharge_nurse_id-column-bed
+        author: fdemuguruza
+        changes:
+          - addColumn:
+              tableName: bed
+              columns:
+                - column:
+                    constraints:
+                      nullable: true
+                    name: incharge_nurse_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: incharge_nurse_id
+              baseTableName: bed
+              constraintName: FK_incharge_nurse_bed_users_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true

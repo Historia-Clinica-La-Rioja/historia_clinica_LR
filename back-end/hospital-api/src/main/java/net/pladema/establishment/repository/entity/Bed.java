@@ -44,5 +44,8 @@ public class Bed {
 	
 	@Column(name = "free", nullable = false)
 	private Boolean free;
+
+	@Column(name = "incharge_nurse_id")
+	private Integer inchargeNurseId;
 	
 }
