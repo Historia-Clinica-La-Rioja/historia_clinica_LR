@@ -8,7 +8,7 @@ import { PermissionsService } from '@core/services/permissions.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { ExtesionFile } from '@core/utils/extensionFile';
 import { hasError, requiredFileType } from '@core/utils/form.utils';
-import { ProblemasService } from '@historia-clinica/services/problemas.service';
+import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -40,7 +40,7 @@ export class AttachDocumentPopupComponent implements OnInit {
 	showSurgicalInfo = false;
 	isAdministrative: boolean = false;
 	hasConsentDocumentError: string;
-	procedureService: ProblemasService;
+	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService);
 
 	constructor(private fb: UntypedFormBuilder,
 		private internmentEpisodeDocument: InternmentEpisodeDocumentService,
@@ -56,7 +56,7 @@ export class AttachDocumentPopupComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
 			this.nameSelfDeterminationFF = isOn
 		});
-		this.procedureService = new ProblemasService(this.formBuilder,this.snomedService,this.snackBarService);
+
 	}
 
 	ngOnInit(): void {
@@ -67,7 +67,9 @@ export class AttachDocumentPopupComponent implements OnInit {
 		});
 
 		this.surgicalForm = this.fb.group({
-			professional: new UntypedFormControl(null, Validators.required)
+			professional: new UntypedFormControl(null, Validators.required),
+			procedures: new UntypedFormControl(null, Validators.required),
+			observation: new UntypedFormControl(null, Validators.required),
 		});
 
 		this.setDocumentTypesFilter();

@@ -51,10 +51,16 @@
 				[translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.PROFESSIONAL_REQUIRED'">
 			</mat-error>
 
-			<app-concepts-search
-				[label]="'historia-clinica.new-consultation-procedure-form.PROCEDURE'"
-				(search)="procedureService.openSearchDialog($event)">
-			</app-concepts-search>
+			<ng-container>
+				<app-concepts-search [label]="'historia-clinica.new-consultation-procedure-form.PROCEDURE'"
+					(search)="procedureService.openSearchDialogAndAddConcept($event)" class="form-field">
+				</app-concepts-search>
+
+				<app-titled-content-card *ngIf="!procedureService.isEmpty()"
+					[title]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.ADDED_PROCEDURES'">
+					<app-procedure-list [service]="procedureService"></app-procedure-list>
+				</app-titled-content-card>
+			</ng-container>
 		</form>
 	</section>
 

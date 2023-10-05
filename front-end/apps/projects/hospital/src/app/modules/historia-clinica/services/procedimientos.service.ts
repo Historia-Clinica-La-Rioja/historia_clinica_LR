@@ -85,6 +85,11 @@ export class ProcedimientosService {
 		this.form.controls.snomed.setValue(pt);
 	}
 
+	setAndAddConcept(selectedConcept: SnomedDto): void {
+		this.setConcept(selectedConcept)
+		this.addToList();
+	}
+
 	add(procedimiento: Procedimiento): boolean {
 		this.hasProcedure.next(this.isEmpty());
 		const currentItems = this.data.length;
@@ -136,6 +141,17 @@ export class ProcedimientosService {
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));
+		}
+	}
+
+	openSearchDialogAndAddConcept(searchValue: string): void {
+		if (searchValue) {
+			const search: SnomedSemanticSearch = {
+				searchValue,
+				eclFilter: this.ECL
+			};
+			this.snomedService.openConceptsSearchDialog(search)
+				.subscribe((selectedConcept: SnomedDto) => this.setAndAddConcept(selectedConcept));
 		}
 	}
 

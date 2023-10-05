@@ -484,14 +484,17 @@
 							"PROFESSIONAL": "Profesional cirujano",
 							"TYPE_REQUIRED": "El tipo de documento es obligatorio",
 							"PROFESSIONAL_REQUIRED": "El profesional cirujano es obligatorio",
-							"FILE": "El tipo de archivo debe estar en formato PDF"
+							"FILE": "El tipo de archivo debe estar en formato PDF",
+							"ADDED_PROCEDURES": "Procedimientos agregados",
+							"OBSERVATIONS": "Observaciones"
 						},
 						"actions": {
 							"GENERATE_DOCUMENT": "GENERAR DOCUMENTO",
 							"ATTACH_FILE": "ADJUNTAR ARCHIVO",
 							"CANCEL": "CANCELAR",
 							"CONTINUE": "CONTINUAR",
-							"ADD_DOCUMENT": "+ Agregar documento"
+							"ADD_DOCUMENT": "+ Agregar documento",
+							"GENERATE": "GENERAR"
 						}
 					},
 					"delete": {
