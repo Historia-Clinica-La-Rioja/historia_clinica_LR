@@ -188,6 +188,7 @@ export class WorklistByTechnicalComponent implements OnInit {
     }
 
     onEquipmentChange(equipment: MatSelectChange){
+        this.startPage = 0;
         this.resetDate();
         this.equipmentId = equipment.value.id;
         this.setDefaultStates();
@@ -196,6 +197,7 @@ export class WorklistByTechnicalComponent implements OnInit {
     }
 
     setSelectedDate(){
+        this.startPage = 0;
         this.startDate = this.filtersForm.get('datePicker').get('start').value?.format('YYYY-MM-DD');
         this.endDate = this.filtersForm.get('datePicker').get('end').value?.format('YYYY-MM-DD');
         if (this.startDate && this.endDate && this.equipmentId) {
