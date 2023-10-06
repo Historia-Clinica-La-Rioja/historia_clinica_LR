@@ -224,3 +224,37 @@ databaseChangeLog:
                   type: BOOLEAN
                   defaultValue: ${boolean.true}
               tableName: pac_server
+
+    - changeSet:
+        id: dropForeignKey-snomed_group-institution_id
+        author: mromero
+        changes:
+          - dropForeignKeyConstraint:
+              baseTableName: snomed_group
+              constraintName: FK_snomed_group_institution_id
+
+    - changeSet:
+        id: update-snomed_group-institution_id-default
+        author: mromero
+        changes:
+          - sql:
+              sql: |-
+                ALTER TABLE snomed_group ALTER COLUMN institution_id SET DEFAULT -1;
+
+    - changeSet:
+        id: update-snomed_group-institution_id
+        context: "!schema-only"
+        author: mromero
+        changes:
+          - sql:
+              sql: |-
+                UPDATE snomed_group SET institution_id = -1 WHERE institution_id IS NULL;
+
+    - changeSet:
+        id: addUniqueConstraint-snomed_group_description_institution_id
+        author: mromero
+        changes:
+          - addUniqueConstraint:
+              tableName: snomed_group
+              columnNames: description, institution_id
+              constraintName: UQ_snomed_group_description_institution_id

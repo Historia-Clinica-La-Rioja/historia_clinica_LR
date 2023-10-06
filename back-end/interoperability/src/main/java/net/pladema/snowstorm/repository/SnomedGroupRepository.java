@@ -2,7 +2,6 @@ package net.pladema.snowstorm.repository;
 
 import net.pladema.snowstorm.repository.domain.SnomedTemplateSearchVo;
 import net.pladema.snowstorm.repository.entity.SnomedGroup;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -90,7 +89,8 @@ public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Intege
 	@Query( " SELECT baseGroup.description " +
 			" FROM SnomedGroup sg " +
 			" JOIN SnomedGroup baseGroup ON sg.groupId = baseGroup.id " +
-			" WHERE sg.ecl = :ecl " )
-	List<String> getDescriptionByEcl(@Param("ecl") String ecl);
+			" WHERE sg.ecl = :ecl " +
+			" AND sg.groupType = :groupType" )
+	List<String> getDescriptionByParentGroupEcl(@Param("ecl") String ecl, @Param("groupType") Short groupType);
 
 }

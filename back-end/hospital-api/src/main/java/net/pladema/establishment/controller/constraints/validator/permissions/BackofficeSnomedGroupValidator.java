@@ -1,6 +1,6 @@
 package net.pladema.establishment.controller.constraints.validator.permissions;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
+import lombok.RequiredArgsConstructor;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;
@@ -8,11 +8,9 @@ import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.snowstorm.repository.SnomedGroupRepository;
 import net.pladema.snowstorm.repository.entity.SnomedGroup;
-
 import net.pladema.snowstorm.repository.entity.SnomedGroupType;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 import net.pladema.user.controller.BackofficeAuthoritiesValidator;
-
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -23,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 public class BackofficeSnomedGroupValidator implements BackofficePermissionValidator<SnomedGroup, Integer> {
 
 	public static final String NO_CUENTA_CON_SUFICIENTES_PRIVILEGIOS = "No cuenta con suficientes privilegios";
@@ -32,14 +31,6 @@ public class BackofficeSnomedGroupValidator implements BackofficePermissionValid
 	private final BackofficeAuthoritiesValidator authoritiesValidator;
 
 	private final SnomedGroupRepository snomedGroupRepository;
-
-	public BackofficeSnomedGroupValidator(PermissionEvaluator permissionEvaluator,
-										  BackofficeAuthoritiesValidator authoritiesValidator,
-										  SnomedGroupRepository snomedGroupRepository) {
-		this.permissionEvaluator = permissionEvaluator;
-		this.authoritiesValidator = authoritiesValidator;
-		this.snomedGroupRepository = snomedGroupRepository;
-	}
 
 	@Override
 	public void assertGetList(SnomedGroup entity) {
@@ -115,9 +106,11 @@ public class BackofficeSnomedGroupValidator implements BackofficePermissionValid
 	}
 
 	private void checkPracticeGroup(SnomedGroup entity) {
+		if (!entity.getGroupType().equals(SnomedGroupType.SEARCH_GROUP))
+			return;
 		String procedure = SnomedECL.PROCEDURE.toString();
-		String description = snomedGroupRepository.getDescriptionByEcl(entity.getEcl()).get(0);
-		if (!entity.getGroupType().equals(SnomedGroupType.SEARCH_GROUP) || !description.equals(procedure))
+		String description = snomedGroupRepository.getDescriptionByParentGroupEcl(entity.getEcl(), SnomedGroupType.SEARCH_GROUP).get(0);
+		if (!description.equals(procedure))
 			return;
 
 		Optional<List<SnomedGroup>> result = snomedGroupRepository.findByInstitutionIdAndGroupIdAndGroupType(
