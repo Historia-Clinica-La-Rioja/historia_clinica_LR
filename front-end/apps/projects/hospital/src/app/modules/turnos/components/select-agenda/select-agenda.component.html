@@ -2,10 +2,10 @@
 	fxLayout.xs="column" fxLayoutAlign.xs="space-between center">
 	<mat-form-field fxFlex.gt-xs="35%" appearance="outline">
 		<mat-label [translate]="'turnos.home.SELECT_AGENDA'"></mat-label>
-		<mat-select id="agenda-select" [(value)]="agendaSelected">
+		<mat-select id="agenda-select" [(value)]="currentAgenda">
 			<mat-optgroup id="active-agendas" *ngIf="activeAgendas?.length">
 				<mat-label><strong>{{ 'turnos.home.ACTIVES_AGENDAS_LABEL' | translate }}</strong></mat-label>
-				<mat-option *ngFor="let agenda of activeAgendas" [value]="agenda"
+				<mat-option *ngFor="let agenda of activeAgendas" [value]="agenda.diaryList"
 					(onSelectionChange)="changeAgendaSelected($event, agenda.diaryList)">
 					<span class="mat-body-strong">
 						{{agenda.diaryList.alias === undefined || agenda.diaryList.alias == "" ? agenda?.diaryList.clinicalSpecialtyName : getAliasAndSpecialtyText(agenda.diaryList.alias, agenda?.diaryList.clinicalSpecialtyName)}}
