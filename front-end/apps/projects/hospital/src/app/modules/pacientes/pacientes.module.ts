@@ -48,6 +48,7 @@ import { SearchPatientDialogComponent } from './dialogs/search-patient-dialog/se
 // pipes
 import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-and-specialty.pipe';
 import { SearchPatientComponent } from './component/search-patient/search-patient.component';
+import { AppointmentHistoricComponent } from './dialogs/appointment-historic/appointment-historic.component';
 
 
 
@@ -95,6 +96,7 @@ import { SearchPatientComponent } from './component/search-patient/search-patien
 		WarningEditIdentificationNumberComponent,
 		// pipes
 		ViewNameProfessionAndSpecialtyPipe,
+  AppointmentHistoricComponent,
 	],
 	exports: [
 		CardPatientComponent,

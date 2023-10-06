@@ -1,0 +1,14 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <h1>Historial de turnos de {{data.patientName}}</h1>
+    <button mat-icon-button mat-dialog-close>
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-dialog-content>
+    <div *ngIf="data?.appointmentHistoricList else noInfo">
+        
+    </div>
+    <ng-template #noInfo>
+        <app-no-data></app-no-data>
+    </ng-template>
+</mat-dialog-content>
