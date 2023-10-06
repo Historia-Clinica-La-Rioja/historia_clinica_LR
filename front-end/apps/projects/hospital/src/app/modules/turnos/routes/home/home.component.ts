@@ -17,6 +17,7 @@ export class HomeComponent implements OnInit {
 
 	routePrefix: string;
 
+	tabActive = 'OFERTA POR PROFESIONAL';
 	tabActiveIndex = 0;
 
 	ffIsOn = false;
@@ -27,6 +28,7 @@ export class HomeComponent implements OnInit {
 	selectedEquipment: EquipmentDto;
 	selectedDiary: EquipmentDiaryDto;
 
+	Tabs = Tabs;
 	readonly mssg = 'image-network.home.NO_PERMISSION';
 
 	constructor(
@@ -68,13 +70,21 @@ export class HomeComponent implements OnInit {
 	}
 
 	tabChanged(tabChangeEvent: MatTabChangeEvent): void {
-		this.tabActiveIndex = tabChangeEvent.index;
+		this.tabActive = tabChangeEvent.tab.textLabel;
 	}
 
 
 }
 
 export enum Tabs {
-	DIAGNOSTICO_POR_IMAGEN = 3
+	PROFESSIONAL = 'OFERTA POR PROFESIONAL',
+	SPECIALTY = 'OFERTA EN INSTITUCIÓN',
+	CARE_NETWORK = 'OFERTA EN RED DE ATENCIÓN',
+	DIAGNOSTICO_POR_IMAGEN = 'DIAGNÓSTICO POR IMÁGENES',
+	REPORT = 'SOLICITUDES'
+}
+
+export enum Redirect_Tabs {
+	DIAGNOSTICO_POR_IMAGEN = 1,
 }
 

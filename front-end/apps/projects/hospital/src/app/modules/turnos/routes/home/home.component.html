@@ -27,15 +27,15 @@
 	<mat-tab-group (selectedTabChange)="tabChanged($event)" [selectedIndex]="tabActiveIndex">
 		<mat-tab label="{{ 'turnos.home.SEARCH_BY_PROFESSIONAL' | translate | uppercase }}"
 			*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ADMINISTRADOR_AGENDA', 'ENFERMERO']">
-			<app-seach-appointments-by-professional [isVisible]="tabActiveIndex === 0"></app-seach-appointments-by-professional>
+			<app-seach-appointments-by-professional [isVisible]="tabActive === Tabs.PROFESSIONAL"></app-seach-appointments-by-professional>
 		</mat-tab>
 		<mat-tab label="{{ 'turnos.home.SEARCH_BY_INSTITUTION' | translate | uppercase }}"
 			*appHasRole="['ADMINISTRATIVO']">
-			<app-search-appointments-by-specialty [isVisible]="tabActiveIndex === 1"></app-search-appointments-by-specialty>
+			<app-search-appointments-by-specialty [isVisible]="tabActive === Tabs.SPECIALTY"></app-search-appointments-by-specialty>
 		</mat-tab>
 		<mat-tab label="{{ 'turnos.home.CARE_NETWORK_OFFER' | translate | uppercase }}"
 			*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-			<app-search-appointments-in-care-network [isVisible]="tabActiveIndex === 2">
+			<app-search-appointments-in-care-network [isVisible]="tabActive === Tabs.CARE_NETWORK">
 			</app-search-appointments-in-care-network>
 		</mat-tab>
 
@@ -47,7 +47,7 @@
 		<div *ngIf="ffReferenceReportIsOn">
 			<mat-tab label="{{ 'turnos.home.REQUESTS' | translate | uppercase }}" 
 				*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-				<app-reference-report></app-reference-report>
+				<app-reference-report [isVisible]="tabActive === Tabs.REPORT"></app-reference-report>
 			</mat-tab>
 		</div>
 	</mat-tab-group>

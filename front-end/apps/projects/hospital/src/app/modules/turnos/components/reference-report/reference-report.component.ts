@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { ERole, ReferenceReportDto } from '@api-rest/api-model';
 import { ReferenceReportService } from '@api-rest/services/reference-report.service';
 import { PermissionsService } from '@core/services/permissions.service';
@@ -23,6 +23,11 @@ export class ReferenceReportComponent implements OnInit {
 	disabled = false;
 	readonly today = new Date();
 	reports: ReferenceReportDto[] = [];
+	@Input()
+	set isVisible(value: boolean) {
+		if (value) 
+			this.getDateRangeReports();
+	}
 
 	constructor(
 		private readonly referenceReportService: ReferenceReportService,
@@ -57,7 +62,7 @@ export class ReferenceReportComponent implements OnInit {
 		this.disabled = true;
 		this.reports = [];
 		this.view = ReferenceView.RECEIVED;
-		this.referenceReportService.getAllReceivedReferences(this.dateRange.start, this.dateRange.end).subscribe( reports => {
+		this.referenceReportService.getAllReceivedReferences(this.dateRange.start, this.dateRange.end).subscribe(reports => {
 			this.reports = reports;
 			this.disabled = false;
 		});
@@ -68,7 +73,7 @@ export class ReferenceReportComponent implements OnInit {
 		this.disabled = true;
 		this.reports = [];
 		this.view = ReferenceView.REQUESTED;
-		this.referenceReportService.getAllRequestedReferences(this.dateRange.start, this.dateRange.end).subscribe( reports => {
+		this.referenceReportService.getAllRequestedReferences(this.dateRange.start, this.dateRange.end).subscribe(reports => {
 			this.reports = reports;
 			this.disabled = false;
 		});
