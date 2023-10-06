@@ -23,6 +23,10 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
 
+import net.pladema.medicalconsultation.appointment.service.domain.PatientAppointmentHistoryBo;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -613,4 +617,28 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null) " +
 			"ORDER BY a.dateTypeId DESC, a.hour ASC")
 	List<AppointmentSummaryBo> getAppointmentDataByAppointmentIds(@Param("appointmentIds") List<Integer> appointmentIds);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT NEW net.pladema.medicalconsultation.appointment.service.domain.PatientAppointmentHistoryBo(a.dateTypeId, a.hour, i.name, c.description, p.firstName, p.lastName, cs.name, " +
+			"s.pt, cs2.name, a.appointmentStateId, do2.description) " +
+			"FROM Appointment a " +
+			"JOIN AppointmentAssn aa ON (aa.pk.appointmentId = a.id) " +
+			"JOIN Diary d ON (d.id = aa.pk.diaryId) " +
+			"LEFT JOIN DiaryPractice dp ON (dp.diaryId = d.id) " +
+			"LEFT JOIN Snomed s ON (s.id = dp.snomedId) " +
+			"LEFT JOIN HierarchicalUnit hu ON (hu.id = d.hierarchicalUnitId) " +
+			"LEFT JOIN ClinicalSpecialty cs2 ON (cs2.id = hu.clinicalSpecialtyId) " +
+			"JOIN DoctorsOffice do2 ON (do2.id = d.doctorsOfficeId) " +
+			"JOIN Institution i ON (i.id = do2.institutionId) " +
+			"JOIN ClinicalSpecialty cs ON (cs.id = d.clinicalSpecialtyId) " +
+			"JOIN HealthcareProfessional hp ON (hp.id = d.healthcareProfessionalId) " +
+			"JOIN Person p ON (p.id = hp.personId) " +
+			"JOIN Address a2 ON (a2.id = i.addressId) " +
+			"JOIN City c ON (c.id = a2.cityId) " +
+			"WHERE a.patientId = :patientId " +
+			"AND (a.appointmentStateId = 3 " +
+			"OR a.appointmentStateId = 4 " +
+			"OR a.appointmentStateId = 5)")
+	Page<PatientAppointmentHistoryBo> getPatientHistory(@Param("patientId") Integer patientId, Pageable pageable);
+
 }

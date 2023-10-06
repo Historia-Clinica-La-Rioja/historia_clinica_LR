@@ -2821,6 +2821,19 @@ export interface PasswordResetResponseDto {
 export interface Path extends Comparable<Path>, Iterable<Path>, Watchable {
 }
 
+export interface PatientAppointmentHistoryDto {
+    city: string;
+    clinicalSpecialty: string;
+    dateTime: DateTimeDto;
+    doctorsOffice: string;
+    firstName: string;
+    institution: string;
+    lastName: string;
+    practice: string;
+    service: string;
+    statusId: number;
+}
+
 export interface PatientBedRelocationDto extends Serializable {
     destinationBedId: number;
     internmentEpisodeId: number;

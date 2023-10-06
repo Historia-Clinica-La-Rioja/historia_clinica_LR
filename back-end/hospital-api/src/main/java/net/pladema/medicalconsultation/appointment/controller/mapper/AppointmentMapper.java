@@ -6,6 +6,7 @@ import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentSho
 import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.EmptyAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.EquipmentAppointmentListDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.PatientAppointmentHistoryDto;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
@@ -15,6 +16,7 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSea
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentSearchDto;
 
 import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.domain.PatientAppointmentHistoryBo;
 import net.pladema.medicalconsultation.diary.controller.dto.BlockDto;
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
 
@@ -104,4 +106,10 @@ public interface AppointmentMapper {
 
 	@Named("toBlockBo")
 	BlockBo toBlockBo(BlockDto appointmentSearchDto);
+
+	@Named("toPatientAppointmentHistoryDto")
+	@Mapping(source = "date", target = "dateTime.date")
+	@Mapping(source = "time", target = "dateTime.time")
+	PatientAppointmentHistoryDto toPatientAppointmentHistoryDto(PatientAppointmentHistoryBo patientAppointmentHistoryBo);
+
 }
