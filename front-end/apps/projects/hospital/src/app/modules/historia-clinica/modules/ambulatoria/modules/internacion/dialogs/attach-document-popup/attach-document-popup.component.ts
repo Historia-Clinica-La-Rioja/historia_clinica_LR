@@ -69,7 +69,7 @@ export class AttachDocumentPopupComponent implements OnInit {
 		this.surgicalForm = this.fb.group({
 			professional: new UntypedFormControl(null, Validators.required),
 			procedures: new UntypedFormControl(null, Validators.required),
-			observation: new UntypedFormControl(null, Validators.required),
+			observation: new UntypedFormControl(null),
 		});
 
 		this.setDocumentTypesFilter();
@@ -79,13 +79,13 @@ export class AttachDocumentPopupComponent implements OnInit {
 
 	setProfessionalsFilter() {
 		this.healthcareProfessionalByInstitutionService.getAll().subscribe(professionals => {
-			this.professionals = professionals.map( professional => {
-					const professionalName = this.getFullNameByFF(professional);
-					return {
-						compareValue: professionalName,
-						value: professionalName
-					}
-				})
+			this.professionals = professionals.map(professional => {
+				const professionalName = this.getFullNameByFF(professional);
+				return {
+					compareValue: professionalName,
+					value: professionalName
+				}
+			})
 		});
 	}
 
@@ -177,14 +177,9 @@ export class AttachDocumentPopupComponent implements OnInit {
 	}
 
 	generateDocument() {
-		if (this.consentSelectedType.consentId === SURGICAL_CONSENT_ID){
-			this.showSurgicalInfo = true;
-			this.showAttachFile = false;
-			this.showGenerateDocument = false;
-		}
-		else{
-			this.internmentEpisodeDocument.generateConsentDocument(this.data.internmentEpisodeId,this.consentSelectedType.consentId);
-		}
+		this.consentSelectedType.consentId === SURGICAL_CONSENT_ID ?
+			this.openSurgicalForm() :
+			this.internmentEpisodeDocument.generateConsentDocument(this.data.internmentEpisodeId, this.consentSelectedType.consentId);
 	}
 
 	private setIsAdministrative() {
@@ -192,4 +187,23 @@ export class AttachDocumentPopupComponent implements OnInit {
 			.subscribe((isAdministrative: boolean) => this.isAdministrative = isAdministrative);
 	}
 
+	generate() {
+		this.internmentEpisodeDocument.generateConsentDocument(this.data.internmentEpisodeId, this.consentSelectedType.consentId);
+		this.hideSurgicalInfo();
+	}
+
+	hideSurgicalInfo() {
+		this.showSurgicalInfo = false;
+		this.showAttachFile = true;
+		this.showGenerateDocument = true;
+	}
+
+	openSurgicalForm() {
+		this.showSurgicalInfo = true;
+		this.showAttachFile = false;
+		this.showGenerateDocument = false;
+		this.procedureService.resetForm();
+		this.procedureService.removeAll();
+		this.surgicalForm.get('observation').setValue(null);
+	}
 }

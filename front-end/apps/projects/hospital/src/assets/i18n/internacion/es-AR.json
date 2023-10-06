@@ -484,6 +484,7 @@
 							"PROFESSIONAL": "Profesional cirujano",
 							"TYPE_REQUIRED": "El tipo de documento es obligatorio",
 							"PROFESSIONAL_REQUIRED": "El profesional cirujano es obligatorio",
+							"PROCEDURE_REQUIRED": "El procedimiento a realizar es obligatorio",
 							"FILE": "El tipo de archivo debe estar en formato PDF",
 							"ADDED_PROCEDURES": "Procedimientos agregados",
 							"OBSERVATIONS": "Observaciones"

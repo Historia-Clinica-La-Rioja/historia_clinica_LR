@@ -181,6 +181,10 @@ export class ProcedimientosService {
 		this.emitter.next(this.data)
 	}
 
+	removeAll(): void {
+		this.data = [];
+	}
+
 	getTableColumnConfig(): TableColumnConfig[] {
 		return this.tableColumnConfig;
 	}
