@@ -49,6 +49,7 @@ export class AssignedAppointmentsComponent implements OnInit {
 			width: '50%',
 			data: {
 				patientName: this.patientFullName,
+				patientId: this.patientId,
 			}
 		});
 	}

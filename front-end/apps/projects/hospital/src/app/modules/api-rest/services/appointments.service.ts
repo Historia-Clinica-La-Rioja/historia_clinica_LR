@@ -10,6 +10,7 @@ import {
 	ExternalPatientCoverageDto,
 	HierarchicalUnitDto,
 	InstitutionBasicInfoDto,
+	PatientAppointmentHistoryDto,
 	StudyIntanceUIDDto,
 	UpdateAppointmentDateDto,
 	UpdateAppointmentDto
@@ -272,6 +273,13 @@ export class AppointmentsService {
 	getAssignedAppointmentsList(patientId: number): Observable<AssignedAppointmentDto[]> {
 		const url = `${this.BASE_URL}/${patientId}/get-assigned-appointments`;
 		return this.http.get<AssignedAppointmentDto[]>(url);
+	}
+
+	getAppointmentHistoric(pageNumber: number, patientId: number): Observable<any> {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/appointment-history/patient/${patientId}/by-professional-diaries`;
+		let queryParam: HttpParams = new HttpParams();
+		queryParam = queryParam.append('page', pageNumber);
+        return this.http.get<PatientAppointmentHistoryDto[]>(url, { params: queryParam});
 	}
 
 	getCurrentAppointmentMedicalCoverage(patientId: number): Observable<ExternalPatientCoverageDto> {

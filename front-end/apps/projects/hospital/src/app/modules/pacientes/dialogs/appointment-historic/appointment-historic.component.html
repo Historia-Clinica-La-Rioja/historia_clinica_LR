@@ -5,8 +5,10 @@
     </button>
 </div>
 <mat-dialog-content>
-    <div *ngIf="data?.appointmentHistoricList else noInfo">
-        
+    <div>
+        <mat-paginator [length]="totalElements"
+            [pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)">
+        </mat-paginator>
     </div>
     <ng-template #noInfo>
         <app-no-data></app-no-data>
