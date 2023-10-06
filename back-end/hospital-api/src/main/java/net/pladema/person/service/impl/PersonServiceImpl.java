@@ -5,6 +5,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import ar.lamansys.sgh.shared.infrastructure.output.CompletePersonNameVo;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.patient.controller.dto.AuditPatientSearch;
 import net.pladema.person.repository.domain.CompletePersonNameBo;
 import net.pladema.person.repository.domain.DuplicatePersonVo;
@@ -37,6 +40,7 @@ public class PersonServiceImpl implements PersonService {
     private final PersonRepository personRepository;
     private final PersonExtendedRepository personExtendedRepository;
 	private final PersonHistoryRepository personHistoryRepository;
+	private final FeatureFlagsService featureFlagsService;
 
 
     @Override
@@ -140,6 +144,20 @@ public class PersonServiceImpl implements PersonService {
 		Optional<CompletePersonNameBo> result = personRepository.findProfessionalNameByDiaryId(diaryId);
 		LOG.debug(OUTPUT, result);
 		return result;
+	}
+
+	@Override
+	public String getCompletePersonNameById(Integer personId) {
+		LOG.debug("Input parameters -> personId {}", personId);
+		CompletePersonNameVo personName = personRepository.getCompletePersonNameById(personId);
+		return parseCompletePersonName(personName.getFirstName(), personName.getMiddleNames(), personName.getLastName(), personName.getOtherLastNames(), personName.getSelfDeterminateName());
+	}
+
+	@Override
+	public String parseCompletePersonName(String firstName, String middleNames, String lastName, String otherLastNames, String selfDeterminateName) {
+		String finalFirstName = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && selfDeterminateName != null ? selfDeterminateName : middleNames != null ? String.join(" ", firstName, middleNames) : firstName;
+		String finalLastName = otherLastNames != null ? String.join(" ", lastName, otherLastNames) : lastName;
+		return String.join(" ", finalFirstName, finalLastName);
 	}
 
 	private Supplier<NotFoundException> personNotFound(Integer personId) {

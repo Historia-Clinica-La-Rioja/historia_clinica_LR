@@ -43,4 +43,8 @@ public interface PersonService {
 
 	Optional<CompletePersonNameBo> findByHealthcareProfessionalPersonDataByDiaryId(Integer diaryId);
 
+	String getCompletePersonNameById(Integer personId);
+
+	String parseCompletePersonName(String firstName, String middleNames, String lastName, String otherLastNames, String selfDeterminateName);
+
 }
