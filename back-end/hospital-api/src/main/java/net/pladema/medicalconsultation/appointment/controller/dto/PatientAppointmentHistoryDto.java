@@ -26,6 +26,4 @@ public class PatientAppointmentHistoryDto {
 
 	private Short statusId;
 
-	private String doctorsOffice;
-
 }

@@ -2826,7 +2826,6 @@ export interface PatientAppointmentHistoryDto {
     clinicalSpecialty: string;
     dateTime: DateTimeDto;
     doctorName: string;
-    doctorsOffice: string;
     institution: string;
     practice: string;
     service: string;

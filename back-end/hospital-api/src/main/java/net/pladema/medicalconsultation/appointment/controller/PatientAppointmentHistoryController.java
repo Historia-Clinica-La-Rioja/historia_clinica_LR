@@ -31,7 +31,7 @@ public class PatientAppointmentHistoryController {
 	private final GetPatientAppointmentHistoryService getPatientAppointmentHistoryService;
 
 	@GetMapping("/by-professional-diaries")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRATIVO')")
 	public Page<PatientAppointmentHistoryDto> getPatientHistoryByProfessionalDiaries(@PathVariable(name = "institutionId") Integer institutionId,
 																					 @PathVariable(name = "patientId") Integer patientId,
 																					 @PageableDefault(size = 5) @SortDefault.SortDefaults({

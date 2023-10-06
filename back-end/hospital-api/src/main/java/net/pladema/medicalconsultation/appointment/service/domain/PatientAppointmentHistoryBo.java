@@ -30,10 +30,8 @@ public class PatientAppointmentHistoryBo {
 
 	private Short statusId;
 
-	private String doctorsOffice;
-
 	public PatientAppointmentHistoryBo(LocalDate date, LocalTime time, String institution, String city, Integer doctorPersonId, String clinicalSpecialty, String practice,
-									   String service, Short statusId, String doctorsOffice) {
+									   String service, Short statusId) {
 		this.date = date;
 		this.time = time;
 		this.institution = institution;
@@ -43,7 +41,6 @@ public class PatientAppointmentHistoryBo {
 		this.practice = practice;
 		this.service = service;
 		this.statusId = statusId;
-		this.doctorsOffice = doctorsOffice;
 	}
 
 }
