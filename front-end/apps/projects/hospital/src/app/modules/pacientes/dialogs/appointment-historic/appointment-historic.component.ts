@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PatientAppointmentHistoryDto } from '@api-rest/api-model';
-import { AppointmentsService } from '@api-rest/services/appointments.service';
+import { AppointmentHistoricService } from '@api-rest/services/appointment-historic.service';
 
 const PAGE_SIZE_OPTIONS = [5];
 const INITIAL_PAGE = 0;
@@ -19,7 +19,7 @@ export class AppointmentHistoricComponent implements OnInit {
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data,
-        private readonly appointmentService: AppointmentsService,
+        private readonly appointmentHistoricService: AppointmentHistoricService,
     ) { }
 
     ngOnInit(): void {
@@ -31,7 +31,7 @@ export class AppointmentHistoricComponent implements OnInit {
 	}
 
 	private fetchData(pageIndex: number): void {
-		this.appointmentService.getAppointmentHistoric(pageIndex, this.data.patientId)
+		this.appointmentHistoricService.getAppointmentHistoric(pageIndex, this.data.patientId)
             .subscribe((documents: any) => {
 				if (!this.totalElements)
 					this.totalElements = documents.totalElements;

@@ -275,7 +275,7 @@ export class AppointmentsService {
 		return this.http.get<AssignedAppointmentDto[]>(url);
 	}
 
-	getAppointmentHistoric(pageNumber: number, patientId: number): Observable<any> {
+	getAppointmentHistoric(pageNumber: number, patientId: number): Observable<PatientAppointmentHistoryDto[]> {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/appointment-history/patient/${patientId}/by-professional-diaries`;
 		let queryParam: HttpParams = new HttpParams();
 		queryParam = queryParam.append('page', pageNumber);
