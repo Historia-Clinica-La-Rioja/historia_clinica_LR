@@ -1,6 +1,5 @@
 package net.pladema.medicalconsultation.appointment.service.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +8,6 @@ import java.time.LocalTime;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class PatientAppointmentHistoryBo {
 
 	private LocalDate date;
@@ -20,9 +18,9 @@ public class PatientAppointmentHistoryBo {
 
 	private String city;
 
-	private String firstName;
+	private Integer doctorPersonId;
 
-	private String lastName;
+	private String doctorName;
 
 	private String clinicalSpecialty;
 
@@ -33,5 +31,19 @@ public class PatientAppointmentHistoryBo {
 	private Short statusId;
 
 	private String doctorsOffice;
+
+	public PatientAppointmentHistoryBo(LocalDate date, LocalTime time, String institution, String city, Integer doctorPersonId, String clinicalSpecialty, String practice,
+									   String service, Short statusId, String doctorsOffice) {
+		this.date = date;
+		this.time = time;
+		this.institution = institution;
+		this.city = city;
+		this.doctorPersonId = doctorPersonId;
+		this.clinicalSpecialty = clinicalSpecialty;
+		this.practice = practice;
+		this.service = service;
+		this.statusId = statusId;
+		this.doctorsOffice = doctorsOffice;
+	}
 
 }

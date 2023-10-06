@@ -8,6 +8,8 @@ import net.pladema.medicalconsultation.appointment.service.GetPatientAppointment
 
 import net.pladema.medicalconsultation.appointment.service.domain.PatientAppointmentHistoryBo;
 
+import net.pladema.person.service.PersonService;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,10 +21,13 @@ public class GetPatientAppointmentHistoryServiceImpl implements GetPatientAppoin
 
 	private AppointmentRepository appointmentRepository;
 
+	private PersonService personService;
+
 	@Override
 	public Page<PatientAppointmentHistoryBo> run(Integer patientId, Pageable pageable) {
 		log.debug("Input parameters -> patientId {}, pageable {}", patientId, pageable);
 		Page<PatientAppointmentHistoryBo> result = appointmentRepository.getPatientHistory(patientId, pageable);
+		result.forEach(historicData -> historicData.setDoctorName(personService.getCompletePersonNameById(historicData.getDoctorPersonId())));
 		log.debug("Output -> {}", result);
 		return result;
 	}

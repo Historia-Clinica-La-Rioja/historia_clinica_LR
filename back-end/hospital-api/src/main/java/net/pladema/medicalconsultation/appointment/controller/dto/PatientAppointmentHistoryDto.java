@@ -16,9 +16,7 @@ public class PatientAppointmentHistoryDto {
 
 	private String city;
 
-	private String firstName;
-
-	private String lastName;
+	private String doctorName;
 
 	private String clinicalSpecialty;
 
