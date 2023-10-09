@@ -1,0 +1,57 @@
+::ng-deep .mat-dialog-container {
+  padding: 1%;
+ }
+
+
+
+.popup-container {
+    max-height: 710px;
+    //max-width: 710px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 20px;
+    margin-left: 1%;
+
+  }
+
+  .mat-form-field {
+    width: 100%;
+  }
+
+  .popup-container h2 {
+    margin-top: 0;
+  }
+  
+  .popup-container mat-label {
+    display: block;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(63, 201, 255, 0.1);
+  
+  }
+  
+  .popup-container mat-select {
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(150, 201, 255, 0.1);
+   
+  }
+  
+  .popup-container app-escala-frail {
+    margin-top: 20px;
+    height: 300px;
+
+  }
+  
+  //BOTON DE CIERRE DENTRO DE FRAIL
+  .mat-button {
+  
+    float: right;
+    margin-top: -5%;  
+  }
+
+// BOTON DE CIERRE EN PRIMERA VENTANA- SELECCIONAR FORMULARIO
+//   .mat-icon-button {
+  
+//     float: right;
+//     margin-top: -6.3%;  
+//   }
