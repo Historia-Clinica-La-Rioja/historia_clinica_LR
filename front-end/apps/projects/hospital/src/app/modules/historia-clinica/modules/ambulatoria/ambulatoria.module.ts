@@ -74,7 +74,10 @@ import { PatientValidatorPopupComponent } from './dialogs/patient-validator-popu
 import { PrintAmbulatoriaComponent } from './routes/print-ambulatoria/print-ambulatoria.component';
 import { SearchSnomedConceptComponent } from './dialogs/search-snomed-concept/search-snomed-concept.component';
 import { TablaSapComponent } from './components/tabla-sap/tabla-sap.component';
-
+import { EscalaFrailComponent } from './components/cuestionarios/frail/escala-frail.component';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AdultoMayorComponent } from '@historia-clinica/components/emergente/inicio-estudio/inicio-estudio.component';
+import { EstudiosPopupComponent } from '@historia-clinica/components/emergente/pop-up/estudios-popup.component';
 @NgModule({
 	declarations: [
 		HomeComponent,
@@ -130,7 +133,10 @@ import { TablaSapComponent } from './components/tabla-sap/tabla-sap.component';
     	PrintAmbulatoriaComponent,
 		SearchSnomedConceptComponent,
   		TablaSapComponent,
-	],
+      	EscalaFrailComponent,
+		AdultoMayorComponent,
+		EstudiosPopupComponent
+ 	],
 	imports: [
 		CommonModule,
 		FormsModule,
@@ -152,7 +158,8 @@ import { TablaSapComponent } from './components/tabla-sap/tabla-sap.component';
 	],
 	providers: [
 		AmbulatoriaSummaryFacadeService,
-		HistoricalProblemsFacadeService
+		HistoricalProblemsFacadeService,
+		{ provide: MAT_DIALOG_DATA, useValue: {} }
 	]
 })
 export class AmbulatoriaModule {
