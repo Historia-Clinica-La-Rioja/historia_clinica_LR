@@ -208,7 +208,4 @@ export class EscalaFrailComponent implements OnInit {
      }
      );
   }
-
-  
- 
 }
