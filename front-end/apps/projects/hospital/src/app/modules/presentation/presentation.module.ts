@@ -29,6 +29,7 @@ import { FactorDeRiesgoComponent } from './components/factor-de-riesgo-current/f
 import { FactorDeRiesgoCurrentPreviousComponent } from './components/factor-de-riesgo-current-previous/factor-de-riesgo-current-previous.component';
 import { FiltersCardComponent } from './components/filters-card/filters-card.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { IdentifierComponent } from './components/identifier/identifier.component';
 import { ImgUploaderComponent } from './components/img-uploader/img-uploader.component';
 import { IndicationComponent } from './components/indication/indication.component';
 import { LabelComponent } from './components/label/label.component';
@@ -114,6 +115,7 @@ import { DateFormatPipe } from './pipes/date-format.pipe';
 		FiltersCardComponent,
 		FloatingDivComponent,
 		FooterComponent,
+		IdentifierComponent,
 		ImgUploaderComponent,
 		IndicationComponent,
 		LabelComponent,
@@ -212,6 +214,7 @@ import { DateFormatPipe } from './pipes/date-format.pipe';
 		FiltersCardComponent,
 		FloatingDivComponent,
 		IconedTextComponent,
+		IdentifierComponent,
 		ImgUploaderComponent,
 		IndicationComponent,
 		LabelComponent,
