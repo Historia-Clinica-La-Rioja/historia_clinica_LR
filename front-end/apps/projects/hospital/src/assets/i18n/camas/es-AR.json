@@ -18,7 +18,10 @@
             "PROBABLE_DISCHARGE_DATE": "Fecha de alta probable: ",
             "NO_DISCHARGE_DATE": "Sin información",
             "FREE": "Libre",
-            "NOT_FREE": "Ocupada"
+            "NOT_FREE": "Ocupada",
+            "more-actions": {
+                "NURSE_ASSIGN": "Asignar enfermero a cargo"
+            }
         },
         "filters": {
             "SECTOR": "Sector",

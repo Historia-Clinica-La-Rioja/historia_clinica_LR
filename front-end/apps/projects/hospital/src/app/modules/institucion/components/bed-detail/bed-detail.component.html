@@ -1,7 +1,16 @@
 <section class="page">
     <mat-card id="bed_card">
-        <mat-card-title>
-            <h2 class="mat-h2" *ngIf="bedInfo" [translate]="'gestion-camas.detail.BED_TITLE'" [translateParams]="{ bedNumber: bedInfo.bed.bedNumber }"></h2>
+        <mat-card-title *ngIf="bedInfo">
+            <h2 class="mat-h2" [translate]="'gestion-camas.detail.BED_TITLE'" [translateParams]="{ bedNumber: bedInfo.bed.bedNumber }"></h2>
+            <button *appHasRole="['ADMINISTRADOR_DE_CAMAS']" id="bed_nurse_assign_actions" mat-icon-button [matMenuTriggerFor]="actions">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+
+            <mat-menu #actions="matMenu">
+                <button mat-menu-item>
+                    <span [translate]="'gestion-camas.detail.more-actions.NURSE_ASSIGN'"></span>
+                </button> 
+            </mat-menu>
         </mat-card-title>
         <section *ngIf="!bedInfo">
             <mat-card-content>

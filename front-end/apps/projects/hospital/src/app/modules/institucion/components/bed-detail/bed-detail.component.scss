@@ -10,6 +10,11 @@ mat-card.mat-card {
 	padding-right: 25px;
 }
 
+mat-card-title {
+	display: flex;
+	justify-content: space-between;
+}
+
 mat-chip {
 
 	&.default {
