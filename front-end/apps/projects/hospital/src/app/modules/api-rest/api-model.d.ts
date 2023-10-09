@@ -2051,6 +2051,10 @@ export interface InstitutionUserPersonDto {
     personId: number;
 }
 
+export interface InstitutionUserRoleDto {
+    rolesId: number[];
+}
+
 export interface InstitutionalGroupDto {
     id: number;
     institutions: string;
@@ -2987,6 +2991,7 @@ export interface PersonBasicDataResponseDto extends Serializable {
 
 export interface PersonDataDto {
     firstName?: string;
+    fullName: string;
     identificationNumber: string;
     identificationType: string;
     lastName?: string;
