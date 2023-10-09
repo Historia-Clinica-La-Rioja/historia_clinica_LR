@@ -1,0 +1,84 @@
+.container {
+    padding-top: 15px;
+    padding: 20px;
+    max-width: 70%;
+    margin: auto;
+    border: 1px solid #e0eef7;
+    box-shadow: 0px 3px 3px 0px rgba(179,177,179,1);
+    margin-top: 3%;
+    text-align: left;
+     
+  }
+   
+  
+  .title1{
+  text-align: center;
+  background-color: #E0EEF7;
+  color: #2687c5;
+  font-family: "Roboto", "helvetica Neue", sans-serif;
+  font-size: 22px;
+   
+  }
+  
+  .tipos{
+  font-family: 'Roboto', sans-serif; 
+  border-radius: 5px;
+  border: none !important;
+  font-size: 18px;
+  color: #2687c5;
+  padding: 2%;
+  background-color: aliceblue;
+  }
+  
+  
+  
+  .btn {
+      margin-left: 45%;
+      margin-top: 5%;
+  
+  }
+  .btn2 {
+      margin-left: 45%;
+      margin-top: 5%;
+  
+  }
+  
+  .mat-radio-button{
+      font-size: 14px;
+      margin-left: 4px 1rem;
+      margin-bottom: 9px;
+      display: block;
+  }
+  
+  
+  .mat-checkbox{
+      font-size: 14px;
+      margin-left: 4px 1rem;
+      margin-bottom: 9px;
+      display: block;
+  }
+  table {
+  width: 100%;
+  }
+  
+  ::ng-deep .dark-panel .mat-expansion-panel-header-description {
+  background-color: #333;
+  }
+  
+  
+  .mat-raised-button{
+  
+      display: block;
+      margin: 0 auto;
+      margin-top: 5%;
+  }
+  
+  
+  .linea {
+    border-top: 1px solid rgb(66, 65, 65);
+    height: 2px;
+    padding: 1%;
+    margin: 20px auto 0 auto;
+  }
+  
+ 
