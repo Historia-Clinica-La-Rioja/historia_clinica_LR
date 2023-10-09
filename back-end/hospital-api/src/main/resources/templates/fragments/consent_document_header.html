@@ -40,7 +40,7 @@
             </tr>
             <tr>
                 <td>
-                    <h2>Ingreso a internación</h2>
+                    <h2 th:text="${subtitle}"></h2>
                 </td>
             </tr>
         </table>
@@ -83,6 +83,15 @@
                 </td>
             </tr>
         </table>
+        <div th:if="${procedures != null|| observations != null}">
+            <hr/>
+            <div class="bold big-font">Procedimientos a realizar</div>
+            <div style="display: inline" th:each="proc,iter: ${procedures}">
+                <span th:text="${proc}"></span>
+            </div>
+            <span th:text="${observations}"></span>
+            <hr/>
+        </div>
     </header>
 </body>
 

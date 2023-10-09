@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -338,11 +339,14 @@ public class InternmentEpisodeController {
 	@GetMapping("/{internmentEpisodeId}/episode-document-type/{consentId}")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
 	public ResponseEntity<Resource> generateEpisodeDocumentType(
+			@RequestParam(value = "procedures", required = false) List<String> procedures,
+			@RequestParam(value = "observations", required = false) String observations,
+			@RequestParam(value = "doctor", required = false) String doctor,
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "consentId") Integer consentId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) throws GeneratePdfException, InternmentEpisodeNotFoundException, PersonNotFoundException, PatientNotFoundException {
-		LOG.debug("Input parameters -> institutionId {}, consentId {}, intermentEpisodeId {} ", institutionId, consentId, internmentEpisodeId);
-		ResponseEntity<Resource> result = internmentEpisodeService.generateEpisodeDocumentType(institutionId, consentId, internmentEpisodeId);
+		LOG.debug("Input parameters -> institutionId {}, consentId {}, intermentEpisodeId {}, procedures {}, observations {}, doctor {}", institutionId, consentId, internmentEpisodeId, procedures, observations, doctor);
+		ResponseEntity<Resource> result = internmentEpisodeService.generateEpisodeDocumentType(institutionId, consentId, internmentEpisodeId, procedures, observations, doctor);
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

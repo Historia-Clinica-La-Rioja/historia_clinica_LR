@@ -12,7 +12,6 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgx.shared.files.pdf.PdfService;
 import ar.lamansys.sgx.shared.filestorage.application.FileContentBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
-import lombok.AllArgsConstructor;
 import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
 
@@ -66,6 +65,9 @@ import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
 import org.xhtmlrenderer.util.XRRuntimeException;
+
+import static net.pladema.staff.repository.entity.EpisodeDocumentType.ADMISSION_CONSENT;
+import static net.pladema.staff.repository.entity.EpisodeDocumentType.SURGICAL_CONSENT;
 
 @Service
 public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
@@ -457,8 +459,8 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	}
 
 	@Override
-	public ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId) throws GeneratePdfException, PatientNotFoundException, PersonNotFoundException, InternmentEpisodeNotFoundException {
-		LOG.debug("Input parameters -> institutionId {}, consentId {}, internmentEpisodeId {}", institutionId, consentId, internmentEpisodeId);
+	public ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId, List<String> procedures, String observations, String doctor) throws GeneratePdfException, PatientNotFoundException, PersonNotFoundException, InternmentEpisodeNotFoundException {
+		LOG.debug("Input parameters -> institutionId {}, consentId {}, internmentEpisodeId {}, procedures {}, observations {}, doctor {}", institutionId, consentId, internmentEpisodeId, procedures, observations, doctor);
 		InternmentEpisode internmentEpisode = getInternmentEpisode(internmentEpisodeId, institutionId);
 		Optional<Patient> patient = patientService.getPatient(internmentEpisode.getPatientId());
 		if (patient.isEmpty())
@@ -473,6 +475,10 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 			throw new InternmentEpisodeNotFoundException();
 		var isbo = internmentSummaryBo.get();
 
+		if (consentId.equals((int) SURGICAL_CONSENT) && doctor != null) {
+			isbo.setDoctor(new ResponsibleDoctorBo(null, doctor, null, null));
+		}
+
 		InstitutionBo institutionBo = institutionService.get(institutionId);
 		EpisodeDocumentTypeBo episodeDocumentTypeBo = fetchEpisodeDocumentTypeById.run(consentId);
 		Map<String, Object> context = createContext(mapToBasicDataPersonDto(pe),
@@ -480,7 +486,10 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 				institutionBo.getName(),
 				internmentEpisode.getEntryDate(),
 				internmentEpisodeId,
-				episodeDocumentTypeBo.getRichTextBody());
+				episodeDocumentTypeBo.getRichTextBody(),
+				consentId,
+				procedures,
+				observations);
 		String template = "consent_document";
 
 		return StoredFileResponse.sendFile(
@@ -490,7 +499,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		);
 	}
 
-	private Map<String, Object> createContext(BasicDataPersonDto personDto, ResponsibleDoctorBo doctor, String institutionName, LocalDateTime entryDate, Integer internmentEpisodeId, String richBody){
+	private Map<String, Object> createContext(BasicDataPersonDto personDto, ResponsibleDoctorBo doctor, String institutionName, LocalDateTime entryDate, Integer internmentEpisodeId, String richBody, Integer consentId, List<String> procedures, String observations){
 		Map<String, Object> ctx = new HashMap<>();
 		ctx.put("personDto", personDto);
 		ctx.put("doctorDto", doctor);
@@ -498,6 +507,9 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		ctx.put("entryDate", entryDate);
 		ctx.put("internmentEpisodeId", internmentEpisodeId);
 		ctx.put("richBody", richBody);
+		ctx.put("subtitle", consentId.equals(Integer.valueOf(ADMISSION_CONSENT)) ? "Ingreso" : "Quirúrgico");
+		ctx.put("procedures", procedures);
+		ctx.put("observations", observations);
 		return ctx;
 	}
 

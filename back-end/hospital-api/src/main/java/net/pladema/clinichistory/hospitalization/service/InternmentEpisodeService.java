@@ -75,6 +75,6 @@ public interface InternmentEpisodeService {
 
 	boolean haveMoreThanOneIntermentEpisodesFromPatients(List<Integer> patients);
 
-	ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId) throws GeneratePdfException, PatientNotFoundException, PersonNotFoundException, InternmentEpisodeNotFoundException;
+	ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId, List<String> procedures, String observations, String doctor) throws GeneratePdfException, PatientNotFoundException, PersonNotFoundException, InternmentEpisodeNotFoundException;
 
 }
