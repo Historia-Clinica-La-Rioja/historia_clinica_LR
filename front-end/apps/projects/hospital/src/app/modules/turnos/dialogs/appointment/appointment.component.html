@@ -7,32 +7,15 @@
 	<div mat-dialog-content class="window" id="window"
 		gdAreas="personal-data personal-data | coverage appointment | div-sup div-sup | state-observations reports | div-inf div-inf "
 		gdColumns="1fr 1fr" gdRows="auto" gdGap="10px 50px"
-		gdAreas.lt-md="personal-data | coverage | appointment | state-observations | reports"
-		gdColumns.lt-md="auto"
+		gdAreas.lt-md="personal-data | coverage | appointment | state-observations | reports" gdColumns.lt-md="auto"
 		gdGap.lt-md="0px">
 
 		<section gdArea="personal-data" id="personal-data" fxLayout="column" fxLayoutGap="5px">
 			<div class="header" fxLayout="row" fxLayoutAlign="space-between" fxLayout.lt-md="column">
-				<div class="header-content" fxLayout="row" fxLayoutAlign="start " fxLayoutGap="20px">
-					<img mat-card-md-image mat-card-avatar class="mat-card-patient-image" [src]="decodedPhoto$ | async"
-						onerror="this.src='../../../../../assets/images/empty-profile.png'">
-					<div fxLayout="column" fxLayoutAlign="center start">
-						<span class="mat-body-strong capitalize title-size"
-							*ngIf="data.appointmentData.patient.fullName">
-							{{ viewPatientName(data.appointmentData) | uppercase }}
-						</span>
-						<div>
-							<span id="patient_id" class="mat-body-strong subtitle-size">ID
-								{{data.appointmentData.patient.id}}
-							</span>•
-							<span class="mat-body-strong subtitle-size"
-								*ngIf="data.appointmentData.patient.identificationNumber">
-								{{identificationType?.description}}
-								{{data.appointmentData.patient.identificationNumber | number:'3.0-0'}}
-							</span>
-						</div>
-						<div *ngIf="!isRejectedPatient">
-							<a type="button" mat-icon-button color="primary"
+				<div class="header-content" fxLayout="column" fxLayoutAlign="start " fxLayoutGap="20px">
+					<app-patient-summary *ngIf="patientSummary" data-id="patient-summary" [person]="patientSummary"></app-patient-summary>
+					<div *ngIf="!isRejectedPatient">
+						<a type="button" mat-icon-button color="primary"
 							*appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 							[routerLink]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + data.appointmentData?.patient?.id"
 							(click)="closeDialog()">
@@ -41,7 +24,6 @@
 							</span>
 							<mat-icon color="primary">open_in_new</mat-icon>
 						</a>
-						</div>
 					</div>
 				</div>
 				<div fxLayoutAlign="end center" fxLayoutAlign.lt-md="start center">
@@ -60,7 +42,7 @@
 				<div fxLayout="column" fxLayoutGap="5px">
 					<span class="mat-caption normal-size">{{'turnos.appointment.coverageData.COVERAGE_DATA' |
 						translate}}</span>
-					<div fxLayout="row" fxLayoutGap="5px" fxLayout.xs="column" >
+					<div fxLayout="row" fxLayoutGap="5px" fxLayout.xs="column">
 						<span class="mat-body patient-info coverage-text subtitle-size" *ngIf="coverageData else noInfo"
 							matTooltip="{{coverageData.medicalCoverage.name}}">{{coverageText}}</span>
 						<span class="mat-body patient-info coverage-text subtitle-size" *ngIf="coverageNumber">/
@@ -78,8 +60,8 @@
 					<span *ngIf="phoneNumber else noInfo"
 						class="mat-body patient-info coverage-text subtitle-size">{{phoneNumber}}</span>
 				</div>
-				<button type="button" mat-icon-button color="primary" *ngIf="( hasRoleToEdit$ | async ) && !isRejectedPatient"
-					(click)="hideFilters()">
+				<button type="button" mat-icon-button color="primary"
+					*ngIf="( hasRoleToEdit$ | async ) && !isRejectedPatient" (click)="hideFilters()">
 					<mat-icon class="material-icons-outlined">edit</mat-icon>
 					<span class="mat-body strong-size">
 						{{'turnos.appointment.EDIT_PATIENT_INFO' | translate}}
@@ -120,9 +102,8 @@
 							<mat-error *ngIf="hasError(formEdit, 'maxlength', 'phonePrefix')"
 								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
 							</mat-error>
-							<mat-error
-							*ngIf="hasError(formEdit, 'pattern', 'phonePrefix')"
-							[translate]="'forms.FORMAT_NUMERIC'">
+							<mat-error *ngIf="hasError(formEdit, 'pattern', 'phonePrefix')"
+								[translate]="'forms.FORMAT_NUMERIC'">
 							</mat-error>
 						</mat-form-field>
 						<mat-form-field fxFlex="70%" appearance="outline">
@@ -136,14 +117,14 @@
 							<mat-error *ngIf="hasError(formEdit, 'maxlength', 'phoneNumber')"
 								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 15}">
 							</mat-error>
-							<mat-error
-							*ngIf="hasError(formEdit, 'pattern', 'phoneNumber')"
-							[translate]="'forms.FORMAT_NUMERIC'">
+							<mat-error *ngIf="hasError(formEdit, 'pattern', 'phoneNumber')"
+								[translate]="'forms.FORMAT_NUMERIC'">
 							</mat-error>
 						</mat-form-field>
 					</div>
 					<div class="confirm-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px">
-						<button mat-stroked-button color="primary" btn-block type="button" (click)="hideFilters(); updatePhoneValidators()">
+						<button mat-stroked-button color="primary" btn-block type="button"
+							(click)="hideFilters(); updatePhoneValidators()">
 							<span>{{'turnos.appointment.CANCEL' | translate}}</span>
 						</button>
 						<button mat-flat-button color="primary" [disabled]="isInvalidFormEdit()">
@@ -188,9 +169,11 @@
 					<div fxLayout="column" fxLayoutGap="10px" *ngIf="appointment?.protected">
 						<span class="purple">{{'turnos.appointment.PROTECTED' | translate}}</span>
 					</div>
-					<div fxLayout="column" class="assigned-by" *ngIf="data.appointmentData.professionalPersonDto else bookingAppointment">
+					<div fxLayout="column" class="assigned-by"
+						*ngIf="data.appointmentData.professionalPersonDto else bookingAppointment">
 						<span>{{'turnos.appointment.ASSIGNED_BY' | translate}}</span>
-						<span>{{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn | date:"dd/MM/yyyy H:mm"}}hs.</span>
+						<span>{{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn
+							| date:"dd/MM/yyyy H:mm"}}hs.</span>
 					</div>
 				</div>
 				<div fxLayout="column" fxLayoutGap="10px" class="motive" *ngIf="isVirtualConsultationModality && canMakeVirtualConsultation && selectedState !== appointmentStatesIds.SERVED">
@@ -294,8 +277,8 @@
 					</button>
 				</div>
 
-				<form [formGroup]="formMotive" (ngSubmit)="saveAbsent()" class="motive" *ngIf="isMotiveRequired() && !isRejectedPatient"
-					fxLayout="column">
+				<form [formGroup]="formMotive" (ngSubmit)="saveAbsent()" class="motive"
+					*ngIf="isMotiveRequired() && !isRejectedPatient" fxLayout="column">
 					<span class="mat-body-strong strong-size">{{'turnos.appointment.ABSENCE_MOTIVE' | translate}}</span>
 					<mat-form-field appearance="outline">
 						<textarea formControlName="motive"
@@ -333,12 +316,13 @@
 						<p class="mat-body strong-size">
 							{{observation}}
 						</p>
-						<button type="button" mat-icon-button color="primary" *ngIf="!isRejectedPatient" (click)="setHideObservationForm(false)">
+						<button type="button" mat-icon-button color="primary" *ngIf="!isRejectedPatient"
+							(click)="setHideObservationForm(false)">
 							<mat-icon class="material-icons-outlined">edit</mat-icon>
 						</button>
 					</div>
-					<form [formGroup]="formObservations" *ngIf="!hideObservationForm && !isRejectedPatient" fxLayout="column"
-						fxLayoutGap="5px" (ngSubmit)="updateObservation()">
+					<form [formGroup]="formObservations" *ngIf="!hideObservationForm && !isRejectedPatient"
+						fxLayout="column" fxLayoutGap="5px" (ngSubmit)="updateObservation()">
 						<mat-form-field appearance="outline">
 							<textarea formControlName="observation"
 								placeholder="{{'turnos.appointment.observations.ADD_OBSERVATION_SUBTITLE' | translate }}"
@@ -437,6 +421,7 @@
 <ng-template #bookingAppointment>
 	<div class="assigned-by" fxLayout="column">
 		<span>{{'turnos.appointment.ASSIGNED_BY' | translate}}</span>
-		<span>{{'turnos.appointment.BOOKING' | translate}} - {{data.appointmentData.createdOn | date:"dd/mm/yyyy H:mm"}}hs.</span>
+		<span>{{'turnos.appointment.BOOKING' | translate}} - {{data.appointmentData.createdOn | date:"dd/mm/yyyy
+			H:mm"}}hs.</span>
 	</div>
 </ng-template>

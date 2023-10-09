@@ -23,7 +23,6 @@ import {
 	EAppointmentModality,
 	DiaryLabelDto,
 	ERole,
-	IdentificationTypeDto,
 	PatientMedicalCoverageDto,
 	PersonPhotoDto,
 	ProfessionalPersonDto,
@@ -55,7 +54,6 @@ import {
 	combineLatest,
 } from 'rxjs';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
-import { PatientNameService } from "@core/services/patient-name.service";
 import { PersonMasterDataService } from "@api-rest/services/person-master-data.service";
 import { SummaryCoverageInformation } from '@historia-clinica/modules/ambulatoria/components/medical-coverage-summary-view/medical-coverage-summary-view.component';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -74,6 +72,9 @@ import { DiaryLabelService } from '@api-rest/services/diary-label.service';
 import { Router } from '@angular/router';
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
+
+import { PatientNameService } from '@core/services/patient-name.service';
+import { PatientSummary } from '../../../hsi-components/patient-summary/patient-summary.component';
 
 const TEMPORARY_PATIENT = 3;
 const REJECTED_PATIENT = 6;
@@ -123,7 +124,6 @@ export class AppointmentComponent implements OnInit {
 	hasRoleToAddObservations$: Observable<boolean>;
 	canMakeVirtualConsultation: boolean;
 	patientMedicalCoverages: PatientMedicalCoverage[];
-	identificationType: IdentificationTypeDto;
 
 	hideFilterPanel = false;
 
@@ -157,6 +157,7 @@ export class AppointmentComponent implements OnInit {
 	formLabel: UntypedFormGroup;
 	selectedDiaryLabelId: number;
 
+	patientSummary: PatientSummary;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			appointmentData: PatientAppointmentInformation,
@@ -174,7 +175,6 @@ export class AppointmentComponent implements OnInit {
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly permissionsService: PermissionsService,
 		private readonly featureFlagService: FeatureFlagService,
-		private readonly patientNameService: PatientNameService,
 		private readonly personMasterDataService: PersonMasterDataService,
 		private readonly patientService: PatientService,
 		private readonly imageDecoderService: ImageDecoderService,
@@ -182,8 +182,8 @@ export class AppointmentComponent implements OnInit {
 		private readonly jitsiCallService: JitsiCallService,
 		private readonly router: Router,
 		private readonly healthcareProfessionalService: HealthcareProfessionalService,
-		private readonly diaryLabelService: DiaryLabelService
-
+		private readonly diaryLabelService: DiaryLabelService,
+		private readonly patientNameService: PatientNameService
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_LLAMADO).subscribe(isEnabled => this.isMqttCallEnabled = isEnabled);
@@ -191,7 +191,7 @@ export class AppointmentComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.medicalCoverageInfo.clearAll();
-		if (this.data.appointmentData.patient.typeId === REJECTED_PATIENT){
+		if (this.data.appointmentData.patient.typeId === REJECTED_PATIENT) {
 			this.isRejectedPatient = true;
 		}
 		this.formMotive = this.formBuilder.group({
@@ -304,7 +304,15 @@ export class AppointmentComponent implements OnInit {
 
 		this.personMasterDataService.getIdentificationTypes()
 			.subscribe(identificationTypes => {
-				this.identificationType = identificationTypes.find(identificationType => identificationType.id == this.data.appointmentData.patient.identificationTypeId);
+				const identificationType = identificationTypes.find(identificationType => identificationType.id == this.data.appointmentData.patient.identificationTypeId);
+				this.patientSummary = {
+					fullName: this.patientNameService.completeName(this.data.appointmentData.patient.names.firstName, this.data.appointmentData.patient.names.nameSelfDetermination, this.data.appointmentData.patient.names.lastName, this.data.appointmentData.patient.names.middleNames, this.data.appointmentData.patient.names.otherLastNames),
+					id: this.data.appointmentData.patient.id,
+					identification: {
+						number: Number(this.data.appointmentData.patient.identificationNumber),
+						type: identificationType.description
+					}
+				}
 			});
 
 		this.patientService.getPatientPhoto(this.data.appointmentData.patient.id)
@@ -347,17 +355,17 @@ export class AppointmentComponent implements OnInit {
 		this.changeInputUpdatePermissions();
 	}
 
-	private changeInputUpdatePermissions(){
+	private changeInputUpdatePermissions() {
 		this.canCoverageBeEdited ? this.formEdit.get('newCoverageData').enable()
-							: this.formEdit.get('newCoverageData').disable();
+			: this.formEdit.get('newCoverageData').disable();
 	}
 
-	entryCall(){
+	entryCall() {
 		this.jitsiCallService.open(this.appointment.callLink);
 		this.closeDialog();
 		this.router.navigate([`${AppRoutes.Institucion}/${this.contextService.institutionId}/ambulatoria/paciente/${this.appointment.patientId}`]);
 	}
-	
+
 	private checkDownloadReportAvailability() {
 		this.hasRoleToDownloadReports$.subscribe(hasRole => {
 			this.canDownloadReport = this.downloadReportIsEnabled && !this.isAbsent() && (hasRole === true || this.data.hasPermissionToAssignShift)
@@ -848,10 +856,6 @@ export class AppointmentComponent implements OnInit {
 		}
 	}
 
-	viewPatientName(appointmentInformation: PatientAppointmentInformation): string {
-		return this.patientNameService.getPatientName(appointmentInformation.patient.fullName, appointmentInformation.patient.fullNameWithNameSelfDetermination);
-	}
-
 	clear(): void {
 		this.formEdit.controls.newCoverageData.setValue(null);
 	}
@@ -929,12 +933,18 @@ export class AppointmentComponent implements OnInit {
 export interface PatientAppointmentInformation {
 	patient: {
 		id: number,
-		fullName?: string
 		identificationNumber?: string,
 		identificationTypeId?: number,
 		typeId: number,
-		fullNameWithNameSelfDetermination?: string,
 		genderId?: number,
+		names: {
+			firstName: string,
+			lastName: string,
+			middleNames?: string,
+			nameSelfDetermination?: string,
+			otherLastNames?: string,
+		}
+
 	};
 	appointmentId: number;
 	appointmentStateId: number;

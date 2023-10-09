@@ -50,6 +50,8 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { EquipmentAppointmentsFacadeService } from './services/equipment-appointments-facade.service';
 // pipes
 import { PracticesPipe } from './pipes/practices.pipe';
+import { PatientSummaryComponent } from '../hsi-components/patient-summary/patient-summary.component';
+
 
 @NgModule({
 	declarations: [
@@ -103,6 +105,8 @@ import { PracticesPipe } from './pipes/practices.pipe';
 		LazyMaterialModule,
 		HistoriaClinicaModule,
 		ClipboardModule,
+		//Standalone Components
+		PatientSummaryComponent
 	],
 	exports: [
 		CalendarProfessionalViewComponent,

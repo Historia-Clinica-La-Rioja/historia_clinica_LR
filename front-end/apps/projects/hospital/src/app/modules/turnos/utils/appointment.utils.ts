@@ -75,7 +75,14 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
                 fullNameWithNameSelfDetermination: fullNameWithNameSelfDetermination,
                 identificationTypeId: appointment.patient?.person.identificationTypeId,
                 genderId: appointment.patient?.person.genderId,
-                email: appointment.patientEmail
+                email: appointment.patientEmail,
+				names: {
+					firstName: appointment.patient?.person.firstName,
+					lastName: appointment.patient?.person.lastName,
+					middleNames: appointment.patient?.person.middleNames,
+					nameSelfDetermination: appointment.patient?.person.nameSelfDetermination,
+					otherLastNames: appointment.patient?.person.otherLastNames,
+				}
             },
             overturn: appointment.overturn,
             appointmentId: appointment.id,
