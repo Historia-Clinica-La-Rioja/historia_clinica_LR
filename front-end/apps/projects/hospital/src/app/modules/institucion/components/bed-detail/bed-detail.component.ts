@@ -7,6 +7,7 @@ import { ConfirmDialogComponent } from "@presentation/dialogs/confirm-dialog/con
 import { MatDialog } from "@angular/material/dialog";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
+import { NurseAssignComponent } from '@institucion/dialogs/nurse-assign/nurse-assign.component';
 
 @Component({
 	selector: 'app-bed-detail',
@@ -89,5 +90,18 @@ export class BedDetailComponent implements OnInit, OnChanges {
 				);
 			}
 		})
+	}
+
+	openNurseAssign() {
+		this.dialog.open(NurseAssignComponent, {
+			data: {
+				bed: this.bedInfo
+			}
+		})
+		.afterClosed()
+		.subscribe((result: boolean) => {
+			if (result)
+				this.bedService.getBedInfo(this.bedId).subscribe(bedInfo => this.bedInfo = bedInfo);
+		});
 	}
 }

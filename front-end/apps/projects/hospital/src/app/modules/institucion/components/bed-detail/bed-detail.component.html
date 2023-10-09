@@ -7,7 +7,7 @@
             </button>
 
             <mat-menu #actions="matMenu">
-                <button mat-menu-item>
+                <button mat-menu-item (click)="openNurseAssign()">
                     <span [translate]="'gestion-camas.detail.more-actions.NURSE_ASSIGN'"></span>
                 </button> 
             </mat-menu>

@@ -15,6 +15,7 @@ import { BedMappingComponent } from './components/bed-mapping/bed-mapping.compon
 import { InstitucionComponent } from './institucion.component';
 import { EntryCallComponent } from './components/entry-call/entry-call.component';
 import { RejectedCallComponent } from './components/rejected-call/rejected-call.component';
+import { NurseAssignComponent } from './dialogs/nurse-assign/nurse-assign.component';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import { RejectedCallComponent } from './components/rejected-call/rejected-call.
 		EntryCallComponent,
 		InstitucionComponent,
 		RejectedCallComponent,
+  		NurseAssignComponent,
 	],
 	imports: [
 		CommonModule,

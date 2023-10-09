@@ -20,7 +20,12 @@
             "FREE": "Libre",
             "NOT_FREE": "Ocupada",
             "more-actions": {
-                "NURSE_ASSIGN": "Asignar enfermero a cargo"
+                "NURSE_ASSIGN": "Asignar enfermero a cargo",
+                "INCHARGE_NURSE": "Enfermero a cargo",
+                "SUBTITLE": "Ingrese los siguientes datos para asignar un enfermero a la cama {{bed}}",
+                "CANCEL": "Cancelar",
+                "SAVE": "Guardar",
+                "ASSIGN_SUCCESS": "Enfermero asignado existosamente"
             }
         },
         "filters": {
