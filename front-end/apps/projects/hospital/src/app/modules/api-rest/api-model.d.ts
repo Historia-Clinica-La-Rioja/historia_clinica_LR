@@ -996,6 +996,19 @@ export interface DocumentReduceInfoDto extends Serializable {
     typeId: number;
 }
 
+
+export interface FrailAnswers{
+    id: number;
+    idQuestion: number;
+    idAnswer: number;   
+}
+
+export interface FrailSummary{
+    institutionId: number;
+    patientId : number;
+    frailId: number;
+}
+
 export interface DocumentRequestDto {
     documentId: number;
     requestId: number;
