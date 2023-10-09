@@ -22,14 +22,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class ReferenceStorageImpl implements ReferenceStorage {
+
+	private static final Integer OUTPATIENT_SOURCE_TYPE_ID = 1;
 
     private final ReferenceRepository referenceRepository;
 
@@ -125,6 +129,17 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 		return queryResult;
 	}
 	
+	@Override
+	public Optional<ReferenceDataBo> getReferenceData(Integer referenceId) {
+		Integer sourceTypeId = referenceRepository.getReferenceEncounterTypeId(referenceId);
+		if (sourceTypeId == null)
+			return Optional.empty();
+		Optional<ReferenceDataBo> result = sourceTypeId.equals(OUTPATIENT_SOURCE_TYPE_ID) ? referenceRepository.getReferenceDataFromOutpatientConsultation(referenceId) :
+				referenceRepository.getReferenceDataFromOdontologyConsultation(referenceId);
+		result.ifPresent(referenceDataBo -> setReferenceDetails(Collections.singletonList(referenceDataBo)));
+		return result;
+	}
+
 	private List<ReferenceDataBo> setReferenceDetails(List<ReferenceDataBo> references) {
 		List<Integer> referenceIds = references.stream().map(ReferenceDataBo::getId).collect(Collectors.toList());
 		var referencesProblems = referenceHealthConditionRepository.getReferencesProblems(referenceIds);

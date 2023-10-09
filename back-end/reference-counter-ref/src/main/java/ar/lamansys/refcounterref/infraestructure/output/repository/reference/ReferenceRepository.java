@@ -1,6 +1,7 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.reference;
 
 import java.util.List;
+import java.util.Optional;
 
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
 
@@ -194,5 +195,43 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 																								 			  @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
 																											  @Param("careLineId") Integer careLineId,
 																								 			  @Param("practiceId") Integer practiceId);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT r.sourceTypeId FROM Reference r WHERE r.id = :referenceId")
+	Integer getReferenceEncounterTypeId(@Param("referenceId") Integer referenceId);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.patientId, oc.creationable.createdOn, " +
+			"rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name, cs2.id, cs2.name, "+
+			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId) " +
+			"FROM Reference r " +
+			"JOIN OutpatientConsultation oc ON (r.encounterId = oc.id) " +
+			"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
+			"JOIN Institution i ON (oc.institutionId = i.id) " +
+			"LEFT JOIN Institution i2 ON (r.destinationInstitutionId = i2.id) " +
+			"LEFT JOIN ClinicalSpecialty cs2 ON (r.clinicalSpecialtyId = cs2.id) " +
+			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
+			"LEFT JOIN ReferenceNote rn ON (rn.id = r.referenceNoteId) " +
+			"JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId) " +
+			"LEFT JOIN CounterReference cr ON (r.id = cr.referenceId) " +
+			"WHERE r.id = :referenceId ")
+	Optional<ReferenceDataBo> getReferenceDataFromOutpatientConsultation(@Param("referenceId") Integer referenceId);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.patientId, oc.creationable.createdOn, " +
+			"rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name, cs2.id, cs2.name, "+
+			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId) " +
+			"FROM Reference r " +
+			"JOIN OdontologyConsultation oc ON (r.encounterId = oc.id) " +
+			"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
+			"JOIN Institution i ON (oc.institutionId = i.id) " +
+			"LEFT JOIN Institution i2 ON (r.destinationInstitutionId = i2.id) " +
+			"LEFT JOIN ClinicalSpecialty cs2 ON (r.clinicalSpecialtyId = cs2.id) " +
+			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
+			"LEFT JOIN ReferenceNote rn ON (rn.id = r.referenceNoteId) " +
+			"JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId) " +
+			"LEFT JOIN CounterReference cr ON (r.id = cr.referenceId) " +
+			"WHERE r.id = :referenceId ")
+	Optional<ReferenceDataBo> getReferenceDataFromOdontologyConsultation(@Param("referenceId") Integer referenceId);
 
 }

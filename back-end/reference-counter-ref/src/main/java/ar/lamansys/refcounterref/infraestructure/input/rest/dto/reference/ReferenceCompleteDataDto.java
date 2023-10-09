@@ -1,18 +1,18 @@
 package ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @ToString
-public class ReferenceInstitutionDto {
+public class ReferenceCompleteDataDto {
 
-	private Integer id;
+	private ReferenceDataDto reference;
 
-	private String description;
+	private ReferenceAppointmentDto appointment;
+
+	private ReferencePatientDto patient;
 
 }

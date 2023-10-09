@@ -3281,9 +3281,23 @@ export interface ReducedPatientDto {
     personalDataDto: BasicPersonalDataDto;
 }
 
+export interface ReferenceAppointmentDto {
+    appointmentId: number;
+    appointmentStateId: number;
+    date: DateTimeDto;
+    institution: ReferenceInstitutionDto;
+    professionalFullName: string;
+}
+
 export interface ReferenceAppointmentStateDto {
     appointmentStateId: number;
     referenceId: number;
+}
+
+export interface ReferenceCompleteDataDto {
+    appointment: ReferenceAppointmentDto;
+    patient: ReferencePatientDto;
+    reference: ReferenceDataDto;
 }
 
 export interface ReferenceCounterReferenceFileDto extends Serializable {
@@ -3326,6 +3340,16 @@ export interface ReferenceDto extends Serializable {
 export interface ReferenceInstitutionDto {
     description: string;
     id: number;
+}
+
+export interface ReferencePatientDto {
+    email: string;
+    identificationNumber: string;
+    identificationType: string;
+    patientFullName: string;
+    patientId: number;
+    phoneNumber: string;
+    phonePrefix: string;
 }
 
 export interface ReferenceProblemDto extends Serializable {

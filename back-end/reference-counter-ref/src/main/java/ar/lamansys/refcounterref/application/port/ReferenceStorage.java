@@ -6,6 +6,7 @@ import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
 import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ReferenceStorage {
 
@@ -16,4 +17,7 @@ public interface ReferenceStorage {
     List<ReferenceProblemBo> getReferencesProblems(Integer patientId);
 
     List<ReferenceSummaryBo> getReferencesSummary(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId, Integer practiceId);
+
+	Optional<ReferenceDataBo> getReferenceData(Integer referenceId);
+
 }
