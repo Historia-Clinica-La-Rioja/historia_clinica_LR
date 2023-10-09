@@ -46,7 +46,8 @@ export class AssignedAppointmentsComponent implements OnInit {
 	openAppointmentHistoric(){
 		this.dialog.open(AppointmentHistoricComponent, {
 			autoFocus: false,
-			width: '50%',
+			width: '70%',
+			maxHeight: 'fit-content',
 			data: {
 				patientName: this.patientFullName,
 				patientId: this.patientId,

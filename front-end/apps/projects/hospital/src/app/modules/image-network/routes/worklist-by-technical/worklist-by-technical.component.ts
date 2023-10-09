@@ -9,11 +9,11 @@ import { mapDateWithHypenToDateWithSlash, timeToString } from '@api-rest/mapper/
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { EquipmentService } from '@api-rest/services/equipment.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { Color } from '@presentation/colored-label/colored-label.component';
 import {
 	WORKLIST_APPOINTMENT_STATES,
 	APPOINTMENT_STATES_ID,
 	AppointmentState,
+    stateColor,
 } from '@turnos/constants/appointment';
 import { REPORT_STATES, ReportState, REPORT_STATES_ID } from '../../constants/report';
 import { Observable } from 'rxjs';
@@ -34,13 +34,6 @@ import { ViewPdfBo } from '@presentation/dialogs/view-pdf/view-pdf.service';
 
 const PAGE_SIZE_OPTIONS = [10];
 const PAGE_MIN_SIZE = 10;
-const stateColor = {
-    [APPOINTMENT_STATES_ID.CONFIRMED]:  Color.YELLOW,
-    [APPOINTMENT_STATES_ID.ABSENT]: Color.GREY,
-    [APPOINTMENT_STATES_ID.SERVED]: Color.GREEN,
-    [APPOINTMENT_STATES_ID.CANCELLED]: Color.RED,
-    [APPOINTMENT_STATES_ID.ASSIGNED]: Color.BLUE
-}
 
 @Component({
     selector: 'app-worklist-by-technical',

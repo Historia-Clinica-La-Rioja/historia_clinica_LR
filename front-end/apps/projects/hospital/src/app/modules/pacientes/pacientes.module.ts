@@ -49,6 +49,7 @@ import { SearchPatientDialogComponent } from './dialogs/search-patient-dialog/se
 import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-and-specialty.pipe';
 import { SearchPatientComponent } from './component/search-patient/search-patient.component';
 import { AppointmentHistoricComponent } from './dialogs/appointment-historic/appointment-historic.component';
+import { AppointmentHistoricDetailComponent } from './component/appointment-historic-detail/appointment-historic-detail.component';
 
 
 
@@ -97,6 +98,7 @@ import { AppointmentHistoricComponent } from './dialogs/appointment-historic/app
 		// pipes
 		ViewNameProfessionAndSpecialtyPipe,
   AppointmentHistoricComponent,
+  AppointmentHistoricDetailComponent,
 	],
 	exports: [
 		CardPatientComponent,

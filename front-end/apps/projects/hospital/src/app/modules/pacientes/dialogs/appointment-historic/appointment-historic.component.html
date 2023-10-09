@@ -1,11 +1,15 @@
-<div fxLayout="row" fxLayoutAlign="space-between">
-    <h1>Historial de turnos de {{data.patientName}}</h1>
+<div fxLayout="row" fxLayoutAlign="space-between" style="margin-bottom: 1em;">
+    <h1 class="title">Historial de turnos de {{data.patientName}}</h1>
     <button mat-icon-button mat-dialog-close>
         <mat-icon>close</mat-icon>
     </button>
 </div>
-<mat-dialog-content>
-    <div>
+<mat-dialog-content class="dialog-content">
+    <div *ngIf="appointmentHistoric">
+        <div *ngFor="let appointment of appointmentHistoric">
+            <app-appointment-historic-detail [appointment]="appointment"></app-appointment-historic-detail>
+            <mat-divider style="margin: 0.9em 0;"></mat-divider>
+        </div>
         <mat-paginator [length]="totalElements"
             [pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)">
         </mat-paginator>

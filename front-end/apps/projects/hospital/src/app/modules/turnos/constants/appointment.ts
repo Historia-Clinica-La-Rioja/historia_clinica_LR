@@ -1,4 +1,5 @@
 import { EAppointmentModality } from "@api-rest/api-model";
+import { Color } from "@presentation/colored-label/colored-label.component";
 
 export const APPOINTMENT_DURATIONS = [
 	{
@@ -133,11 +134,20 @@ export const enum COLORES {
 	RESERVA_ALTA = '#FFFFFF',
 	RESERVA_VALIDACION = '#EB5757',
 	FUERA_DE_AGENDA = '#FF0000',
-	PROTECTED = '#AF26C5'
+	PROTECTED = '#AF26C5',
+	CANCELLED = '#F04848,'
 }
 
 export const MODALITYS = {
 		[EAppointmentModality.ON_SITE_ATTENTION]: 'turnos.ON_SITE_ATTENTION',
 		[EAppointmentModality.PATIENT_VIRTUAL_ATTENTION]: 'turnos.PATIENT_VIRTUAL_ATTENTION',
 		[EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION]: 'turnos.SECOND_OPINION_VIRTUAL_ATTENTION'
+}
+
+export const stateColor = {
+    [APPOINTMENT_STATES_ID.CONFIRMED]:  Color.YELLOW,
+    [APPOINTMENT_STATES_ID.ABSENT]: Color.GREY,
+    [APPOINTMENT_STATES_ID.SERVED]: Color.GREEN,
+    [APPOINTMENT_STATES_ID.CANCELLED]: Color.RED,
+    [APPOINTMENT_STATES_ID.ASSIGNED]: Color.BLUE,
 }
