@@ -519,8 +519,16 @@ export interface BedDto extends Serializable {
 
 export interface BedInfoDto extends Serializable {
     bed: BedDto;
+    bedNurse: BedNurseDto;
     patient: BasicPatientDto;
     probableDischargeDate: string;
+}
+
+export interface BedNurseDto {
+    fullName: string;
+    identificationNumber: string;
+    personId: number;
+    userId: number;
 }
 
 export interface BedSummaryDto {

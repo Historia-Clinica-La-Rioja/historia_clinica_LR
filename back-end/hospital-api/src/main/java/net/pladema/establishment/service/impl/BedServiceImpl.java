@@ -11,6 +11,8 @@ import net.pladema.establishment.repository.domain.BedSummaryVo;
 import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.repository.entity.HistoricPatientBedRelocation;
 import net.pladema.establishment.service.BedService;
+import net.pladema.person.service.PersonService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -35,12 +37,15 @@ public class BedServiceImpl implements BedService {
 
 	private final InternmentEpisodeExternalService internmentEpisodeExtService;
 
+	private final PersonService personService;
+
 	public BedServiceImpl(BedRepository bedRepository, HistoricPatientBedRelocationRepository historicPatientBedRelocationRepository,
-			InternmentEpisodeExternalService internmentEpisodeExtService, BedSummaryRepository bedSummaryRepository) {
+			InternmentEpisodeExternalService internmentEpisodeExtService, BedSummaryRepository bedSummaryRepository, PersonService personService) {
 		this.bedRepository = bedRepository;
 		this.bedSummaryRepository = bedSummaryRepository;
 		this.historicPatientBedRelocationRepository = historicPatientBedRelocationRepository;
 		this.internmentEpisodeExtService = internmentEpisodeExtService;
+		this.personService = personService;
 	}
 
 	@Override
@@ -106,6 +111,10 @@ public class BedServiceImpl implements BedService {
 	public Optional<BedInfoVo> getBedInfo(Integer bedId) {
 		LOG.debug("input parameters -> bedId {}", bedId);
 		Optional<BedInfoVo> result = bedRepository.getBedInfo(bedId).findFirst();
+		if (result.isPresent() && result.get().getBedNurse() != null) {
+			BedInfoVo r = result.get();
+			r.getBedNurse().setFullName(personService.getCompletePersonNameById(r.getBedNurse().getPersonId()));
+		}
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
