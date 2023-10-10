@@ -12,12 +12,13 @@
             id="nurses-select-list"
             titleInput="Nombre y apellido"
             [options]="nurses$ | async"
-            (selectionChange)="setNurse($event)">
+            (selectionChange)="setNurse($event)"
+            [externalSetValue]="preloadedNurse">
         </app-typeahead>
     </div>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
     <button mat-stroked-button color="primary" mat-dialog-close>{{'gestion-camas.detail.more-actions.CANCEL' | translate | uppercase}}</button>
-    <button mat-raised-button color="primary" (click)="saveAssignedNurse()">{{'gestion-camas.detail.more-actions.SAVE' | translate | uppercase}}</button>
+    <button mat-raised-button color="primary" (click)="saveAssignedNurse()" [disabled]="!selectedNurseId">{{'gestion-camas.detail.more-actions.SAVE' | translate | uppercase}}</button>
 </mat-dialog-actions>
