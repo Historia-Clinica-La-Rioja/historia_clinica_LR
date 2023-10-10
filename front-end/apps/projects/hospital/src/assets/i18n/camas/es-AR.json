@@ -19,6 +19,8 @@
             "NO_DISCHARGE_DATE": "Sin información",
             "FREE": "Libre",
             "NOT_FREE": "Ocupada",
+            "INCHARGE_NURSE": "Enfermero a cargo:",
+            "NURSE_DNI": "DNI: {{nurseDni}}",
             "more-actions": {
                 "NURSE_ASSIGN": "Asignar enfermero a cargo",
                 "INCHARGE_NURSE": "Enfermero a cargo",
