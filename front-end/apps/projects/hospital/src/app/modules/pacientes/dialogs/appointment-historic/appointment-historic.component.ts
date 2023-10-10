@@ -32,10 +32,15 @@ export class AppointmentHistoricComponent implements OnInit {
 
 	private fetchData(pageIndex: number): void {
 		this.appointmentHistoricService.getAppointmentHistoric(pageIndex, this.data.patientId)
-            .subscribe((documents: any) => {
+            .subscribe((documents: PaginatorDocumentData<PatientAppointmentHistoryDto[]>) => {
 				if (!this.totalElements)
 					this.totalElements = documents.totalElements;
                 this.appointmentHistoric = documents.content;
             });
 	}
+}
+
+export interface PaginatorDocumentData<T> {
+    totalElements: number,
+    content: T,
 }

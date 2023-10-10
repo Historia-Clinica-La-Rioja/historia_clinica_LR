@@ -50,6 +50,7 @@ import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-
 import { SearchPatientComponent } from './component/search-patient/search-patient.component';
 import { AppointmentHistoricComponent } from './dialogs/appointment-historic/appointment-historic.component';
 import { AppointmentHistoricDetailComponent } from './component/appointment-historic-detail/appointment-historic-detail.component';
+import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
 
 
 
@@ -116,7 +117,8 @@ import { AppointmentHistoricDetailComponent } from './component/appointment-hist
 		LazyMaterialModule,
 		PresentationModule,
 		InternacionesModule,
-		GuardiaModule
+		GuardiaModule,
+		IdentifierCasesComponent,
 	]
 })
 export class PacientesModule {

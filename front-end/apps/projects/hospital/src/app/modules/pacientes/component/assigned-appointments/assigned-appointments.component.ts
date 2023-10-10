@@ -20,7 +20,6 @@ export class AssignedAppointmentsComponent implements OnInit {
 	@Output() newAppointmentRequired = new EventEmitter();
 	assignedAppointmentsSummary = ASSIGNED_APPOINTMENTS_SUMMARY;
 	appointmentsList: AssignedAppointmentDto[] = [];
-	appointmentHistoric = false;
     patientFullName: string = '';
 
 	constructor(

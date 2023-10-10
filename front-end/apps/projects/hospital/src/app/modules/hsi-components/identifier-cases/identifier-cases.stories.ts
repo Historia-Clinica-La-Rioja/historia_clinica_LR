@@ -155,7 +155,7 @@ export const hourMin: Story = {
 
 export const hourFull: Story = {
 	args: {
-		identifierCase: IDENTIFIER_CASES.INSTITUTION,
+		identifierCase: IDENTIFIER_CASES.HOUR,
 		showLegend: true,
 		description: "Ejemplo de hora 10:20",
 		position: Position.COLUMN
@@ -177,3 +177,20 @@ export const districtFull: Story = {
 		position: Position.COLUMN
 	}
 };
+
+export const serviceMin: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.SERVICE,
+		description: "Ejemplo de servicio",
+	}
+};
+
+export const serviceFull: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.SERVICE,
+		showLegend: true,
+		description: "Ejemplo de servicio",
+		position: Position.COLUMN
+	}
+};
+
