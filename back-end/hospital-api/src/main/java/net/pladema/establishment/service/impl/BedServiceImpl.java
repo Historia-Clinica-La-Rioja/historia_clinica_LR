@@ -1,6 +1,8 @@
 package net.pladema.establishment.service.impl;
 
 import net.pladema.clinichistory.hospitalization.controller.externalservice.InternmentEpisodeExternalService;
+import net.pladema.establishment.controller.dto.BedDto;
+import net.pladema.establishment.controller.dto.BedInfoDto;
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.BedSummaryRepository;
 import net.pladema.establishment.repository.HistoricPatientBedRelocationRepository;
@@ -115,6 +117,14 @@ public class BedServiceImpl implements BedService {
 		LOG.trace(OUTPUT, result);
 		LOG.debug("Result size {}", result.size());
 		return result;
+	}
+
+	@Override
+	public void updateBedNurse(Integer userId, Integer bedId) {
+		LOG.debug("input parameters -> userId {}, bedId {}", userId, bedId);
+		Bed bed = bedRepository.getById(bedId);
+		bed.setInchargeNurseId(userId);
+		bedRepository.save(bed);
 	}
 
 }

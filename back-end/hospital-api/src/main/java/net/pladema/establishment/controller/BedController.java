@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import net.pladema.clinichistory.hospitalization.controller.dto.ProbableDischargeDateDto;
 import net.pladema.establishment.controller.dto.*;
 import net.pladema.establishment.repository.domain.BedSummaryVo;
 import org.slf4j.Logger;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -78,5 +81,15 @@ public class BedController {
 		List<Bed> beds = bedService.getFreeBeds(institutionId, clinicalSpecialtyId);
 		LOG.debug("Get free Beds by ClinicalSpecialty response=> {}", beds);
 		return ResponseEntity.ok(bedMapper.toListBedDto(beds));
+	}
+
+	@PutMapping("/{bedId}/update-bed-nurse")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_DE_CAMAS')")
+	public void updateBedNurse(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "bedId") Integer bedId,
+			@RequestBody Integer userId) {
+		LOG.debug("Input parameter -> institutionId {}, userId {}, bedId {}", institutionId, userId, bedId);
+		bedService.updateBedNurse(userId, bedId);
 	}
 }

@@ -3,6 +3,8 @@ package net.pladema.establishment.service;
 import java.util.List;
 import java.util.Optional;
 
+import net.pladema.establishment.controller.dto.BedDto;
+import net.pladema.establishment.controller.dto.BedInfoDto;
 import net.pladema.establishment.repository.domain.BedInfoVo;
 import net.pladema.establishment.repository.domain.BedSummaryVo;
 import net.pladema.establishment.repository.entity.Bed;
@@ -22,5 +24,7 @@ public interface BedService {
 	public Optional<BedInfoVo> getBedInfo(Integer bedId);
 	
 	public List<BedSummaryVo> getBedSummary(Integer institutionId, Short[] sectorType);
+
+	void updateBedNurse(Integer userId, Integer bedId);
 
 }
