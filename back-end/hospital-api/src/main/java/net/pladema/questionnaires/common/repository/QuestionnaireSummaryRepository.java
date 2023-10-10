@@ -1,8 +1,8 @@
 package net.pladema.questionnaires.common.repository;
 
-import net.pladema.questionnaires.common.dto.QuestionnaireSummary;
-
 import java.util.Optional;
+
+import net.pladema.questionnaires.common.dto.QuestionnaireSummary;
 
 public interface QuestionnaireSummaryRepository {
 

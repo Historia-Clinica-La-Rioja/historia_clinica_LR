@@ -45,7 +45,7 @@ public class QuestionnaireResponse extends SGXAuditableEntity<Integer> {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "questionnaire_response_id", nullable = false)
-	private List<Answer> frailAnswers;
+	private List<Answer> answers;
 
 	@Column(name = "status_id")
 	private Integer statusId;
