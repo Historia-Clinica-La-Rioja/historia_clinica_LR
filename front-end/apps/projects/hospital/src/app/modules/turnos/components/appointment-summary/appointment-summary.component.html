@@ -7,9 +7,12 @@
 		[description]="appointmentSummary.date | viewDateDto: 'localdatetime' | date: 'fullDate'">
 	</app-identifier-cases>
 
-	<app-identifier-cases *ngIf="appointmentSummary.date" [identifierCase]="identiferCases.HOUR"
-		[description]="appointmentSummary.date | viewDateDto: 'localdatetime' | dateFormat: 'time' ">
-	</app-identifier-cases>
+	<div fxLayout="row" *ngIf="appointmentSummary.date">
+		<app-identifier-cases [identifierCase]="identiferCases.HOUR"
+			[description]="appointmentSummary.date | viewDateDto: 'localdatetime' | dateFormat: 'time'">
+		</app-identifier-cases>
+		<span>hs</span>
+	</div>
 
 	<app-identifier-cases *ngIf="appointmentSummary.professionalFullName" [identifierCase]="identiferCases.PROFESSIONAL"
 		[description]="appointmentSummary.professionalFullName">

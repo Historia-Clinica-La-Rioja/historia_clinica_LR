@@ -3,7 +3,7 @@
 		<app-colored-icon-text id="closure-type" [coloredIconText]="referenceCompleteData.closureType"></app-colored-icon-text>
 
 		<span class="grey">
-			{{referenceCompleteData.dto.date | viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}
+			{{referenceCompleteData.dto.date | viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}hs
 		</span>
 	</div>
 
@@ -65,7 +65,8 @@
 				[showLegend]="true">
 			</app-identifier-cases>
 
-			<app-identifier-cases [identifierCase]="identiferCases.INSTITUTION"
+			<app-identifier-cases *ngIf="referenceCompleteData.dto.institutionDestination.id"
+				[identifierCase]="identiferCases.INSTITUTION"
 				[description]="referenceCompleteData.dto.institutionDestination.description"
 				[position]="Position.COLUMN" [showLegend]="true">
 			</app-identifier-cases>
