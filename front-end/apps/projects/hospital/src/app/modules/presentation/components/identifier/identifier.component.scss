@@ -1,5 +1,7 @@
 mat-icon {
     overflow: visible;
+    width: 20px;
+    height: 20px;
     font-size: 20px;
 }
 
@@ -11,7 +13,7 @@ mat-icon {
     display: flex;
     flex-direction: row;
     align-items: center center;
-    gap: 2px;
+    gap: 5px;
 }
 
 .row {
