@@ -48,14 +48,15 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 	@Query(value = " SELECT DISTINCT new net.pladema.staff.repository.domain.HealthcareProfessionalVo("
 			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber,p.id, pe.nameSelfDetermination, p.middleNames, p.otherLastNames)"
 			+ " FROM  HealthcareProfessional hp "
-			+ " INNER JOIN Person p ON hp.personId = p.id"
-			+ " LEFT JOIN PersonExtended pe ON (p.id = pe.id)"
-			+ " INNER JOIN UserPerson up ON up.pk.personId = p.id"
-			+ " INNER JOIN UserRole ur ON up.pk.userId = ur.userId"
+			+ " INNER JOIN Person p ON hp.personId = p.id "
+			+ " LEFT JOIN PersonExtended pe ON (p.id = pe.id) "
+			+ " INNER JOIN UserPerson up ON up.pk.personId = p.id "
+			+ " INNER JOIN UserRole ur ON up.pk.userId = ur.userId "
 			+ " WHERE ur.institutionId = :institutionId "
 			+ "	AND ur.roleId IN (:professionalERolIds) "
 			+ " AND hp.deleteable.deleted = false "
-			+ " ORDER BY p.lastName, p.firstName")
+			+ " AND ur.deleteable.deleted = false "
+			+ " ORDER BY p.lastName, p.firstName ")
     List<HealthcareProfessionalVo> findAllByInstitution(@Param("institutionId") Integer institutionId,
 														@Param("professionalERolIds") List<Short> professionalERoleIds);
 
