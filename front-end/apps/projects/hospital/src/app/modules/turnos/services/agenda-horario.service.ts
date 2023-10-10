@@ -174,7 +174,7 @@ export class AgendaHorarioService {
 						protectedAppointmentsAllowed: !!event.meta.protectedAppointmentsAllowed,
 						patientVirtualAttentionAllowed: !!event.meta.patientVirtualAttentionAllowed,
 						secondOpinionVirtualAttentionAllowed: !!event.meta.secondOpinionVirtualAttentionAllowed,
-						onSiteAttentionAllowed: true,
+						onSiteAttentionAllowed: !!event.meta.onSiteAttentionAllowed,
 						diaryType: this.diaryType
 					},
 					height: '95%'
