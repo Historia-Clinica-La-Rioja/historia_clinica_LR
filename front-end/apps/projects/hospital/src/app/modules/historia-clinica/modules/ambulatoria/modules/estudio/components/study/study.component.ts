@@ -14,10 +14,8 @@ import { ActionsButtonService } from '../../../indicacion/services/actions-butto
 import { CreatedDuring } from '../study-list-element/study-list-element.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { capitalize } from '@core/utils/core.utils';
-import { AppointmentOrderImageExistCheckDto } from '../../../../../../../api-rest/api-model';
 import { DiagnosticWithTypeReportInfoDto, E_TYPE_ORDER } from '../../model/ImageModel';
-import { ActivatedRoute } from '@angular/router';
-import { getParam } from '../../utils/utils';
+
 
 const IMAGE_DIAGNOSIS = 'Diagnóstico por imágenes';
 const isImageStudy = (study: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto): boolean => {
@@ -34,11 +32,7 @@ export class StudyComponent implements OnInit {
 	@Input() set studies(studies: DiagnosticReportInfoDto[] | DiagnosticWithTypeReportInfoDto[]){
 		studies.forEach((study: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto) => {
 			if (study.category === IMAGE_DIAGNOSIS ) {
-				if ((study as DiagnosticWithTypeReportInfoDto).typeOrder === E_TYPE_ORDER.COMPLETA)
-					this.prescripcionesService.getPrescriptionStatus(Number(getParam(this.route.snapshot,'idPaciente')), study.id).subscribe( documentInfo => {
-						this._studies.push(this.mapToStudyInformation(study, documentInfo));
-					})
-				else this._studies.push(this.mapToStudyInformationFromImageOrderCases(study as DiagnosticWithTypeReportInfoDto))
+				this._studies.push(this.mapToStudyInformationFromImageOrderCases(study as DiagnosticWithTypeReportInfoDto))
 			}
 			else {
 					this._studies.push(this.mapToStudyInformation(study));
@@ -63,7 +57,6 @@ export class StudyComponent implements OnInit {
 		private readonly prescripcionesService: PrescripcionesService,
 		private readonly translateService: TranslateService,
 		private readonly dialog: MatDialog,
-		private readonly route: ActivatedRoute,
 		private snackBarService: SnackBarService,
 		private featureFlagService: FeatureFlagService
 	) { }
@@ -84,7 +77,9 @@ export class StudyComponent implements OnInit {
 				content:  diagnosticReport.healthCondition.snomed.pt,
 			}]: null  ,
 			createdBy: diagnosticReport.doctor ? this.getProfessionalName(diagnosticReport.doctor) : "",
-			createdOn: updateDate
+			createdOn: updateDate,
+			timeElapsed: diagnosticReport.creationDate ? null : ''
+
 		}
 	}
 
@@ -99,7 +94,7 @@ export class StudyComponent implements OnInit {
 	}
 
 
-	private mapToStudyInformation(report: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto, appointment?: AppointmentOrderImageExistCheckDto): StudyInformation {
+	private mapToStudyInformation(report: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto, appointment?: any): StudyInformation {
         return {
             diagnosticInformation: report,
             hasActiveAppointment: appointment?.hasActiveAppointment,

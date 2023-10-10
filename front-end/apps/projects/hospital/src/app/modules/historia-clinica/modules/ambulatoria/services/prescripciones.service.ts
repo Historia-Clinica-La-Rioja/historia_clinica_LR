@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {
-	AppointmentOrderImageExistCheckDto,
 	CompleteRequestDto,
 	DiagnosticReportInfoDto,
 	DiagnosticReportInfoWithFilesDto,
@@ -64,12 +63,13 @@ export class PrescripcionesService {
 		return this.serviceRequestService.saveAttachedFiles(patientId, serviceRequestId, selectedFiles);
 	}
 
-	getPrescription(prescriptionType: PrescriptionTypes, patientId: number, statusId: string, medicationStatement: string, healthCondition: string, study?: string, categoryId?: string): Observable<any> {
+	getPrescription(prescriptionType: PrescriptionTypes, patientId: number, statusId: string, medicationStatement: string,
+		 healthCondition: string, study?: string, categoryId?: string, categoryExcluded?: string): Observable<any> {
 		switch (prescriptionType) {
 			case PrescriptionTypes.MEDICATION:
 				return this.medicationRequestService.medicationRequestList(patientId, statusId, medicationStatement, healthCondition);
 			case PrescriptionTypes.STUDY:
-				return this.serviceRequestService.getList(patientId, statusId, study, healthCondition, categoryId);
+				return this.serviceRequestService.getList(patientId, statusId, study, healthCondition, categoryId, categoryExcluded);
 		}
 	}
 
@@ -77,9 +77,6 @@ export class PrescripcionesService {
 			return this.medicationRequestService.medicationRequestListByRoles(patientId, statusId, medicationStatement, healthCondition);
 	}
 
-	getPrescriptionStatus(patientId: number, diagnosticReportId: number): Observable<AppointmentOrderImageExistCheckDto>{
-		return this.serviceRequestService.getStudyStatus(patientId, diagnosticReportId);
-	}
 
 	changeMedicationStatus(statusChange: string, patientId: number, medicationsIds: number[], dayQuantity?: number, observations?: string): Observable<void> {
 		switch (statusChange) {

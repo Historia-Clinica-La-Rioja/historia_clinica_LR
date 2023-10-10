@@ -4,10 +4,10 @@ import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import {
-	AppointmentOrderImageExistCheckDto,
 	CompleteRequestDto,
 	DiagnosticReportInfoDto, DiagnosticReportInfoWithFilesDto,
 	PrescriptionDto,
+	StudyOrderReportInfoDto,
 	StudyWithoutOrderReportInfoDto,
 	TranscribedDiagnosticReportInfoDto,
 	TranscribedOrderReportInfoDto,
@@ -30,12 +30,13 @@ export class ServiceRequestService {
 		private readonly downloadService: DownloadService,
 	) { }
 
-	getList(patientId: number, statusId?: string, study?: string, healthCondition?: string, categoryId?: string): Observable<DiagnosticReportInfoDto[]> {
+	getList(patientId: number, statusId?: string, study?: string, healthCondition?: string, categoryId?: string, categoriesToBeExcluded?: string): Observable<DiagnosticReportInfoDto[]> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = statusId ? queryParams.append('statusId', statusId) : queryParams;
 		queryParams = study ? queryParams.append('study', study) : queryParams;
 		queryParams = categoryId ? queryParams.append('category', categoryId) : queryParams;
 		queryParams = healthCondition ? queryParams.append('healthCondition', healthCondition) : queryParams;
+		queryParams = categoriesToBeExcluded ? queryParams.append('categoriesToBeExcluded', categoriesToBeExcluded) : queryParams;
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/`;
 		return this.http.get<DiagnosticReportInfoDto[]>(url, { params: queryParams });
 	}
@@ -50,10 +51,6 @@ export class ServiceRequestService {
 		return this.http.get<DiagnosticReportInfoDto[]>(url, { params: queryParams });
 	}
 
-	getStudyStatus(patientId: number, diagnosticReportId: number): Observable<AppointmentOrderImageExistCheckDto>{
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${diagnosticReportId}/existCheck`;
-		return this.http.get<AppointmentOrderImageExistCheckDto>(url);
-	}
 
 	create(patientId: number, prescriptionDto: PrescriptionDto): Observable<number[]> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests`;
@@ -147,4 +144,9 @@ export class ServiceRequestService {
 		return this.http.get<StudyWithoutOrderReportInfoDto[]>(url)
 	}
 
+	getListStudyOrder(patientId: number):Observable<StudyOrderReportInfoDto[]>
+	{
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/studyOrder`;
+		return this.http.get<StudyOrderReportInfoDto[]>(url)
+	}
 }

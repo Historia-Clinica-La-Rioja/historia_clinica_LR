@@ -24,7 +24,7 @@ import { Observable, of } from 'rxjs';
 import { EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
 import { EmergencyCareStateService } from '@api-rest/services/emergency-care-state.service';
 import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/guardia/services/new-emergency-care-evolution-note.service';
-import { DiagnosticWithTypeReportInfoDto } from '../../modules/estudio/model/ImageModel';
+import { DiagnosticWithTypeReportInfoDto, IMAGE_DIAGNOSIS_CATEGORY_ID } from '../../modules/estudio/model/ImageModel';
 import { ImageOrderCasesService } from '../../modules/estudio/services/image-order-cases.service';
 
 @Component({
@@ -168,7 +168,7 @@ export class CardEstudiosComponent implements OnInit {
 		const isImageCategory = this.categories[0].id === updatedCategoryId
 		const sourceImageCases$ = isImageCategory ? this.imageOrderCasesService.getImageOrderCasesFiltered(this.patientId,this.formFilter.value) : of([])
 		this.resetCategoryStudyList(updatedCategoryId);
-		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, null, null, null, null, updatedCategoryId)
+		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, null, null, null, null, updatedCategoryId, IMAGE_DIAGNOSIS_CATEGORY_ID)
 		.pipe(
 			tap(response => responseUpdate = response ),
 			switchMap( _ => sourceImageCases$))
@@ -185,7 +185,7 @@ export class CardEstudiosComponent implements OnInit {
 	private getStudy(): void {
 		const value = this.formFilter.value;
 		this.clearLoadedReports();
-		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, value.statusId, null, value.healthCondition, value.study, value.categoryId).
+		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, value.statusId, null, value.healthCondition, value.study, value.categoryId, IMAGE_DIAGNOSIS_CATEGORY_ID).
 		pipe(
 			tap(response => this.response = response ),
 			switchMap( _ => this.imageOrderCasesService.getImageOrderCasesFiltered(this.patientId,this.formFilter.value))
