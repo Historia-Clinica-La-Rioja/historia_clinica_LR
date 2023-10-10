@@ -1,6 +1,6 @@
 import { Component, ElementRef, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { CounterReferenceDto, DateDto, ReferenceCounterReferenceFileDto } from '@api-rest/api-model';
+import { CounterReferenceDto, DateDto, ReferenceCounterReferenceFileDto, ReferenceDataDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
@@ -50,7 +50,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	episodeData: EpisodeData;
 
 	constructor(
-		@Inject(OVERLAY_DATA) public data: any,
+		@Inject(OVERLAY_DATA) public data: CounterreferenceData,
 		public dockPopupRef: DockPopupRef,
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snomedService: SnomedService,
@@ -189,7 +189,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 					verificationId: null,
 				};
 			}),
-			clinicalSpecialtyId: this.data.reference.clinicalSpecialty.id,
+			clinicalSpecialtyId: this.data.reference.clinicalSpecialtyDestination.id,
 			counterReferenceNote: this.formReferenceClosure.value.description,
 			medications: this.medicacionesNuevaConsultaService.getMedicaciones().map((medicacion: Medicacion) => {
 				return {
@@ -264,4 +264,9 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		this.selectedFilesShow.splice(index, 1);
 	}
 
+}
+
+interface CounterreferenceData {
+	reference: ReferenceDataDto;
+	patientId: number;
 }

@@ -58,11 +58,11 @@ export class ReferenceNotificationService {
 			if (counterreference === null) {
 				return;
 			}
-			
+
 			if (counterreference === false) {
 				this.openConsultation.next(this.data.consultationType);
 			}
-			
+
 			if (counterreference.isACountisACounterrefer === true) {
 				this.openCounterreference(counterreference.reference);
 			}
@@ -72,7 +72,7 @@ export class ReferenceNotificationService {
 	openCounterreference(reference: ReferenceDto) {
 		const dialogRef = this.dockPopupService.open(CounterreferenceDockPopupComponent,
 			{
-				reference: reference,
+				reference,
 				patientId: this.data.patientId
 			}
 		);
