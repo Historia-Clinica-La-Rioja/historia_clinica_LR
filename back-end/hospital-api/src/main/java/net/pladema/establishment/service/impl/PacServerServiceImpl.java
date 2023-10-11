@@ -26,7 +26,7 @@ public class PacServerServiceImpl implements PacServerService {
 
 	@Override
 	public List<PacServerBO> getAllPacServer() {
-		List<PacServer> pacServer = pacServerRepository.findAll();
+		List<PacServer> pacServer = pacServerRepository.getAllActive();
 		List<PacServerBO> result = pacServer.stream().map(this::createPacServerBoInstance).collect(Collectors.toList());
 		return result;
 	}

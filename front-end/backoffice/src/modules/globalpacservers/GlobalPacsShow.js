@@ -9,7 +9,9 @@ import {
     EditButton,
     Button,
     useRecordContext,
-    useRedirect
+    useRedirect,
+    BooleanField
+
 } from 'react-admin';
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import {makeStyles} from "@material-ui/core/styles";
@@ -78,9 +80,9 @@ const GlobalPacsShow = props => (
             <ReferenceField source="pacServerProtocol" reference="pacserverprotocols" link={false}>
                 <TextField source="description" />
             </ReferenceField>
-            <TextField source="username" />
-            <TextField source="urlStow" />
-            <TextField source="urlAuth" />
+            <Labeled label="resources.pacservers.fields.active">
+               <BooleanField source="active" />
+            </Labeled>
         </SimpleShowLayout>
     </Show>
 );
