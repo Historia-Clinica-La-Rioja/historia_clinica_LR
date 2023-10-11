@@ -19,6 +19,7 @@ import { AvailableLabelComponent } from './components/available-label/available-
 import { InProgressCallComponent } from './components/in-progress-call/in-progress-call.component';
 import { VirtualConsultationsFacadeService } from './virtual-consultations-facade.service';
 import { EntryCallRendererComponent } from './components/entry-call-renderer/entry-call-renderer.component';
+import { TransferRequestComponent } from './dialogs/transfer-request/transfer-request.component';
 
 
 
@@ -35,7 +36,8 @@ import { EntryCallRendererComponent } from './components/entry-call-renderer/ent
 		RequestInfoCardComponent,
 		AvailableLabelComponent,
 		InProgressCallComponent,
-		EntryCallRendererComponent
+		EntryCallRendererComponent,
+ 		TransferRequestComponent,
 	],
 	imports: [
 		CommonModule,

@@ -17,6 +17,7 @@ import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/h
 import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
 import { capitalize } from '@core/utils/core.utils';
+import { TransferRequestComponent } from '../../dialogs/transfer-request/transfer-request.component';
 
 @Component({
 	selector: 'app-requests',
@@ -194,6 +195,16 @@ export class RequestsComponent implements OnInit {
 			}
 		)
 	}
+
+	transfer(virtualConsultation:VirtualConsultationDto){
+		 this.dialog.open(TransferRequestComponent, {
+			data: {
+				virtualConsultation:virtualConsultation
+			},
+			width: '33%'
+		});
+	}
+
 
 	prepareFilters() {
 		let filters = [];

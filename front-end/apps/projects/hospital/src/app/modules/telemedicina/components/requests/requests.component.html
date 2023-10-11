@@ -42,6 +42,10 @@
 						(click)="cancel(virtualConsultation.id)">
 						<span>Cancelar</span>
 					</button>
+					<button mat-menu-item *ngIf="virtualConsultation.status === virtualConsultatiosStatus.PENDING"
+					(click)="transfer(virtualConsultation)">
+					<span>Transferir solicitud</span>
+					</button>
 				</mat-menu>
 			</div>
 		</app-request-info-card>
