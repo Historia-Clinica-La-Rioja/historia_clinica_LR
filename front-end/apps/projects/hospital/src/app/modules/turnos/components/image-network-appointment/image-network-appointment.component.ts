@@ -4,7 +4,20 @@ import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { AppFeature, AppointmentDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto, CompleteEquipmentDiaryDto, UpdateAppointmentDto, AppointmentListDto, DiagnosticReportInfoDto, TranscribedDiagnosticReportInfoDto } from '@api-rest/api-model.d';
+import {
+	AppFeature,
+	AppointmentDto,
+	ERole,
+	IdentificationTypeDto,
+	PatientMedicalCoverageDto,
+	PersonPhotoDto,
+	CompleteEquipmentDiaryDto,
+	UpdateAppointmentDto,
+	AppointmentListDto,
+	DiagnosticReportInfoDto,
+	TranscribedDiagnosticReportInfoDto,
+	ApiErrorMessageDto,
+} from '@api-rest/api-model.d';
 import { VALIDATIONS, getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
 import { MapperService } from '@core/services/mapper.service';
 import {
@@ -14,10 +27,20 @@ import {
 	PatientMedicalCoverage,
 	PrivateHealthInsurance
 } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
-import { map, switchMap, take } from 'rxjs/operators';
+import {
+	catchError,
+	map,
+	switchMap,
+	take,
+} from 'rxjs/operators';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PermissionsService } from '@core/services/permissions.service';
-import { Observable, forkJoin, of } from 'rxjs';
+import {
+	EMPTY,
+	Observable,
+	forkJoin,
+	of,
+} from 'rxjs';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { PersonMasterDataService } from "@api-rest/services/person-master-data.service";
 import { SummaryCoverageInformation } from '@historia-clinica/modules/ambulatoria/components/medical-coverage-summary-view/medical-coverage-summary-view.component';
@@ -308,7 +331,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 			}).filter(value => value !== null && value !== undefined);
 		});
 	}
-	
+
 	private mapTranscribeOrderToMedicalOrderInfo(transcribedOrders: TranscribedDiagnosticReportInfoDto[]){
 		let text = 'image-network.appointments.medical-order.TRANSCRIBED_ORDER';
 
@@ -488,7 +511,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 			appointmentId: this.data.appointmentData.appointmentId,
 			serviceRequestId: this.medicalOrder ? this.medicalOrder.serviceRequestId : null,
 			isTranscribed: this.medicalOrder ? this.medicalOrder.isTranscribed : null,
-			studyId: this.medicalOrder ? 
+			studyId: this.medicalOrder ?
 						(!this.medicalOrder.isTranscribed ? this.medicalOrder.studyId : null) : null
 		}
 		this.appointmentService.updateAppointmentMedicalOrder(parameters.appointmentId, parameters.serviceRequestId, parameters.studyId, parameters.isTranscribed).subscribe();
@@ -574,7 +597,14 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 	}
 
 	callPatient(): void {
-		this.appointmentService.mqttCall(this.data.appointmentData.appointmentId).subscribe();
+		this.appointmentService.mqttCall(this.data.appointmentData.appointmentId)
+		.pipe(
+			catchError((error: ApiErrorMessageDto) => {
+                this.snackBarService.showError(error.text);
+                return EMPTY;
+            })
+		)
+		.subscribe();
 	}
 
 	hideFilters(): void {
