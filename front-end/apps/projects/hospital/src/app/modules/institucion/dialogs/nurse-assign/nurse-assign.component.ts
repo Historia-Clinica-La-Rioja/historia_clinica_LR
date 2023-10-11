@@ -5,7 +5,7 @@ import { BedService } from '@api-rest/services/bed.service';
 import { UserService } from '@api-rest/services/user.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { Observable, map } from 'rxjs';
+import { map } from 'rxjs';
 
 const NURSE_ROLE: number = 7;
 
@@ -16,7 +16,7 @@ const NURSE_ROLE: number = 7;
 })
 export class NurseAssignComponent implements OnInit {
 
-	nurses$: Observable<TypeaheadOption<PersonDataDto>[]>;
+	nurses: TypeaheadOption<PersonDataDto>[];
 	selectedNurseId: number;
 	preloadedNurse: TypeaheadOption<BedNurseDto>;
 
@@ -32,10 +32,13 @@ export class NurseAssignComponent implements OnInit {
 	}
 
 	private setNurses() {
-		this.nurses$ = this.userService.getUsersByInstitutionRoles([NURSE_ROLE])
+		this.userService.getUsersByInstitutionRoles([NURSE_ROLE])
 		.pipe(
 			map(toTypeaheadOptionList)
 		)
+		.subscribe((nurses: TypeaheadOption<PersonDataDto>[]) => {
+			this.nurses = nurses;
+		})
 
 		function toTypeaheadOptionList(nurses: PersonDataDto[]):
 		TypeaheadOption<PersonDataDto>[] {

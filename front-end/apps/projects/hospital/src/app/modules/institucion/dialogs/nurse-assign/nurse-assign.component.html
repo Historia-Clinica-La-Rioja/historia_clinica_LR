@@ -11,10 +11,11 @@
         <app-typeahead
             id="nurses-select-list"
             titleInput="Nombre y apellido"
-            [options]="nurses$ | async"
+            [options]="nurses"
             (selectionChange)="setNurse($event)"
             [externalSetValue]="preloadedNurse">
         </app-typeahead>
+        <mat-error *ngIf="!nurses.length">{{'gestion-camas.detail.more-actions.NO_NURSES_AVAILABLE' | translate}}</mat-error>
     </div>
 </mat-dialog-content>
 
