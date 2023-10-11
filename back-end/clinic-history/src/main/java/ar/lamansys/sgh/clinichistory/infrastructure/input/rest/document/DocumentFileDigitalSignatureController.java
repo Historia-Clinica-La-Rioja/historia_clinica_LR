@@ -7,6 +7,7 @@ import ar.lamansys.sgh.clinichistory.application.signDocumentFile.SignDocumentFi
 import ar.lamansys.sgh.clinichistory.domain.document.DigitalSignatureDocumentBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.document.dto.DigitalSignatureDocumentDto;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.datastructures.PageDto;
 import io.jsonwebtoken.lang.Collections;
 
 import org.springframework.data.domain.Page;
@@ -52,12 +53,12 @@ public class DocumentFileDigitalSignatureController {
 
 	@GetMapping()
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
-	public Page<DigitalSignatureDocumentDto> getPendingDocumentsByUser(@PathVariable(name = "institutionId") Integer institutionId,
-																	   @PageableDefault(size = 5) @SortDefault.SortDefaults({@SortDefault(sort = "creationable.createdOn", direction = Sort.Direction.DESC)}) Pageable pageable) {
+	public PageDto<DigitalSignatureDocumentDto> getPendingDocumentsByUser(@PathVariable(name = "institutionId") Integer institutionId,
+																		  @PageableDefault(size = 5) @SortDefault.SortDefaults({@SortDefault(sort = "creationable.createdOn", direction = Sort.Direction.DESC)}) Pageable pageable) {
 		log.debug("Input parameters -> institutionId {}, pageable {}", institutionId, pageable);
 		Page<DigitalSignatureDocumentDto> result = getDocumentsByProfessional.run(UserInfo.getCurrentAuditor(), institutionId, pageable).map(this::mapToDto);
 		log.debug("Output result -> {}", result);
-		return result;
+		return PageDto.fromPage(result);
 	}
 
 	private DigitalSignatureDocumentDto mapToDto(DigitalSignatureDocumentBo bo){

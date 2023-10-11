@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AllergyConditionDto, AnthropometricDataDto, DiagnosisDto, DigitalSignatureDocumentDto, DocumentDto, DocumentObservationsDto, HealthConditionDto, HealthHistoryConditionDto, LoggedUserDto, MedicationDto, ProcedureDto, ReasonDto, RiskFactorDto } from '@api-rest/api-model.d';
+import { AllergyConditionDto, AnthropometricDataDto, DiagnosisDto, DigitalSignatureDocumentDto, DocumentDto, DocumentObservationsDto, HealthConditionDto, HealthHistoryConditionDto, LoggedUserDto, MedicationDto, PageDto, ProcedureDto, ReasonDto, RiskFactorDto } from '@api-rest/api-model.d';
 import { DigitalSignatureService } from '@api-rest/services/digital-signature.service';
 import { ItemListCard, ItemListOption } from '@presentation/components/selectable-card/selectable-card.component';
 import { DocumentService } from '@api-rest/services/document.service';
@@ -65,9 +65,9 @@ export class HomeComponent implements OnInit {
 	private fetchData(pageIndex: number): void {
 		this.digitalSignature.getPendingDocumentsByUser(pageIndex)
             .pipe(finalize(() => this.isLoading = false))
-            .subscribe((documents: any) => {
+            .subscribe((documents: PageDto<DigitalSignatureDocumentDto>) => {
 				if (!this.elementsAmount)
-					this.elementsAmount = documents.totalElements;
+					this.elementsAmount = documents.totalElementsAmount;
                 this.digitalSignatureDocuments = documents.content;
                 this.buildItemListCard();
             });

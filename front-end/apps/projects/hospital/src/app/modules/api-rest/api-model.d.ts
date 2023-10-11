@@ -2777,6 +2777,11 @@ export interface PacsUrlDto {
     pacs: string[];
 }
 
+export interface PageDto<T> {
+    content: T[];
+    totalElementsAmount: number;
+}
+
 export interface ParenteralPlanDto extends IndicationDto {
     dosage: NewDosageDto;
     frequency: FrequencyDto;
