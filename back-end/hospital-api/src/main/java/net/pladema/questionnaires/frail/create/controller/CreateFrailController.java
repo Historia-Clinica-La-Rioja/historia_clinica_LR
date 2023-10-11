@@ -34,7 +34,7 @@ public class CreateFrailController implements CreateFrailAPI {
 
 	@Override
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
-	public ResponseEntity<Boolean> createPatientFrail(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "patientId") Integer patientId, CreateQuestionnaireDTO createFrailDTO) throws IOException {
+	public ResponseEntity<Boolean> createPatientFrail(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "patientId") Integer patientId, CreateQuestionnaireDTO createFrailDTO) {
 		QuestionnaireBO frailBO = createFrailDTO(patientId, createFrailDTO);
 
 		createFrailService.execute(frailBO);
