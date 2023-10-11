@@ -619,8 +619,8 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	List<AppointmentSummaryBo> getAppointmentDataByAppointmentIds(@Param("appointmentIds") List<Integer> appointmentIds);
 
 	@Transactional(readOnly = true)
-	@Query(" SELECT NEW net.pladema.medicalconsultation.appointment.service.domain.PatientAppointmentHistoryBo(a.dateTypeId, a.hour, i.name, c.description, hp.personId, cs.name, " +
-			"s.pt, cs2.name, a.appointmentStateId) " +
+	@Query(" SELECT DISTINCT NEW net.pladema.medicalconsultation.appointment.service.domain.PatientAppointmentHistoryBo(d.id, a.dateTypeId, a.hour, i.name, c.description, hp.personId, cs.name, " +
+			"cs2.name, a.appointmentStateId) " +
 			"FROM Appointment a " +
 			"JOIN AppointmentAssn aa ON (aa.pk.appointmentId = a.id) " +
 			"JOIN Diary d ON (d.id = aa.pk.diaryId) " +

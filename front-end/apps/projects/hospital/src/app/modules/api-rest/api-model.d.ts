@@ -2827,7 +2827,7 @@ export interface PatientAppointmentHistoryDto {
     dateTime: DateTimeDto;
     doctorName: string;
     institution: string;
-    practice: string;
+    practices: SnomedDto[];
     service: string;
     statusId: number;
 }
