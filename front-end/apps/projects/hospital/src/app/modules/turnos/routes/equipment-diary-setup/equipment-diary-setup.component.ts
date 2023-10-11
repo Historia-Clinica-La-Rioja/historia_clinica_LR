@@ -17,7 +17,7 @@ import { AgendaHorarioService, EDiaryType } from '@turnos/services/agenda-horari
 import { EquipmentService } from '@api-rest/services/equipment.service';
 import { EquipmentDiaryOpeningHoursService } from '@api-rest/services/equipment-diary-opening-hours.service';
 import { CompleteEquipmentDiaryDto, EquipmentDiaryADto, EquipmentDiaryDto, EquipmentDto, SectorDto } from '@api-rest/api-model';
-import { Redirect_Tabs } from '@turnos/routes/home/home.component';
+import { Tabs } from '@turnos/constants/tabs';
 
 const ROUTE_APPOINTMENT = 'turnos';
 const START = 0;
@@ -211,10 +211,10 @@ export class EquipmentDiarySetupComponent implements OnInit {
 			if (!window.history.state.selectedDiary) {
 				this.equipmentDiaryService.getBy(agendaId).subscribe(agenda => {
 					selectedDiary = agenda;
-					this.router.navigate([url], { state: { tab: Redirect_Tabs.DIAGNOSTICO_POR_IMAGEN, selectedEquipment, selectedDiary} });
+					this.router.navigate([url], { state: { tab: Tabs.IMAGE_NETWORK, selectedEquipment, selectedDiary} });
 				});
 			} else {
-				this.router.navigate([url], { state: { tab: Redirect_Tabs.DIAGNOSTICO_POR_IMAGEN, selectedEquipment, selectedDiary} });
+				this.router.navigate([url], { state: { tab: Tabs.IMAGE_NETWORK, selectedEquipment, selectedDiary} });
 			}
 		}
 	}
