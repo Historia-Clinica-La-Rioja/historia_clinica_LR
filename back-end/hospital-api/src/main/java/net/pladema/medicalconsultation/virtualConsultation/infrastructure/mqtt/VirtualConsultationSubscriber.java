@@ -1,16 +1,13 @@
 package net.pladema.medicalconsultation.virtualConsultation.infrastructure.mqtt;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-
-import net.pladema.medicalconsultation.virtualConsultation.domain.VirtualConsultationEventBo;
-
-import net.pladema.medicalconsultation.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationEventDto;
-
+import ar.lamansys.mqtt.domain.MqttMetadataBo;
+import ar.lamansys.mqtt.infraestructure.configuration.webSocket.QueueListener;
+import ar.lamansys.mqtt.infraestructure.input.service.MqttCallExternalService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.pladema.medicalconsultation.virtualConsultation.domain.VirtualConsultationEventBo;
+import net.pladema.medicalconsultation.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationEventDto;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,11 +15,10 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-import ar.lamansys.mqtt.domain.MqttMetadataBo;
-import ar.lamansys.mqtt.infraestructure.configuration.webSocket.QueueListener;
-import ar.lamansys.mqtt.infraestructure.input.service.MqttCallExternalService;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 @AllArgsConstructor
 @Slf4j
@@ -39,11 +35,11 @@ public class VirtualConsultationSubscriber {
 
 	@Bean
 	public void subscribe() throws MqttException {
-		mqttCallExternalService.subscribe(null, "HSI/VIRTUAL-CONSULTATION/NOTIFY", getQueueListeners());
-		mqttCallExternalService.subscribe(null, "HSI/VIRTUAL-CONSULTATION/CHANGE-RESPONSIBLE-STATE", handleTopicState("virtual-consultation-responsible-state-change"));
-		mqttCallExternalService.subscribe(null, "HSI/VIRTUAL-CONSULTATION/CHANGE-VIRTUAL-CONSULTATION-STATE", handleTopicState("virtual-consultation-state-change"));
-		mqttCallExternalService.subscribe(null, "HSI/VIRTUAL-CONSULTATION/NEW-VIRTUAL-CONSULTATION", handleTopicState("new-virtual-consultation"));
-		mqttCallExternalService.subscribe(null, "HSI/VIRTUAL-CONSULTATION/CHANGE-PROFESSIONAL-STATE", handleTopicState("virtual-consultation-professional-state-change"));
+		mqttCallExternalService.subscribe(null, "/HSI/VIRTUAL-CONSULTATION/NOTIFY", getQueueListeners());
+		mqttCallExternalService.subscribe(null, "/HSI/VIRTUAL-CONSULTATION/CHANGE-RESPONSIBLE-STATE", handleTopicState("virtual-consultation-responsible-state-change"));
+		mqttCallExternalService.subscribe(null, "/HSI/VIRTUAL-CONSULTATION/CHANGE-VIRTUAL-CONSULTATION-STATE", handleTopicState("virtual-consultation-state-change"));
+		mqttCallExternalService.subscribe(null, "/HSI/VIRTUAL-CONSULTATION/NEW-VIRTUAL-CONSULTATION", handleTopicState("new-virtual-consultation"));
+		mqttCallExternalService.subscribe(null, "/HSI/VIRTUAL-CONSULTATION/CHANGE-PROFESSIONAL-STATE", handleTopicState("virtual-consultation-professional-state-change"));
 	}
 
 	private List<Consumer<MqttMetadataBo>> handleTopicState(String webSocketPathDestination) {
