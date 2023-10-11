@@ -8,7 +8,11 @@
 
             <mat-menu #actions="matMenu">
                 <button mat-menu-item (click)="openNurseAssign()">
-                    <span [translate]="'gestion-camas.detail.more-actions.NURSE_ASSIGN'"></span>
+                    <span *ngIf="bedInfo.bedNurse else assignNurseTemplate" [translate]="'gestion-camas.detail.more-actions.NURSE_EDIT_ASSIGN'"></span>
+                    
+                    <ng-template #assignNurseTemplate>
+                        <span *ngIf="!bedInfo.bedNurse" [translate]="'gestion-camas.detail.more-actions.NURSE_ASSIGN'"></span>
+                    </ng-template>
                 </button> 
             </mat-menu>
         </mat-card-title>

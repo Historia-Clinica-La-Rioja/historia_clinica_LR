@@ -23,6 +23,7 @@
             "NURSE_DNI": "DNI: {{nurseDni}}",
             "more-actions": {
                 "NURSE_ASSIGN": "Asignar enfermero a cargo",
+                "NURSE_EDIT_ASSIGN": "Editar enfermero a cargo", 
                 "INCHARGE_NURSE": "Enfermero a cargo",
                 "SUBTITLE": "Ingrese los siguientes datos para asignar un enfermero a la cama {{bed}}",
                 "CANCEL": "Cancelar",
