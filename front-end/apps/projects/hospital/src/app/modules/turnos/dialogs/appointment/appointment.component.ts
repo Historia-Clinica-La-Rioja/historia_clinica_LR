@@ -13,6 +13,7 @@ import {
 	MODALITYS,
 } from '../../constants/appointment';
 import {
+	ApiErrorMessageDto,
 	AppFeature,
 	AppointmentDto,
 	AppointmentListDto,
@@ -39,10 +40,18 @@ import {
 	PatientMedicalCoverage,
 	PrivateHealthInsurance
 } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
-import { map, take } from 'rxjs/operators';
+import {
+	catchError,
+	map,
+	take,
+} from 'rxjs/operators';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PermissionsService } from '@core/services/permissions.service';
-import { Observable, combineLatest } from 'rxjs';
+import {
+	EMPTY,
+	Observable,
+	combineLatest,
+} from 'rxjs';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { PatientNameService } from "@core/services/patient-name.service";
 import { PersonMasterDataService } from "@api-rest/services/person-master-data.service";
@@ -733,7 +742,14 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	callPatient() {
-		this.appointmentService.mqttCall(this.data.appointmentData.appointmentId).subscribe();
+		this.appointmentService.mqttCall(this.data.appointmentData.appointmentId)
+		.pipe(
+			catchError((error: ApiErrorMessageDto) => {
+                this.snackBarService.showError(error.text);
+                return EMPTY;
+            })
+		)
+		.subscribe();
 	}
 
 	hideFilters(): void {

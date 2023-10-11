@@ -218,9 +218,9 @@ export class AppointmentsService {
 		return this.http.put<boolean>(url, updateAppointmentDate);
 	}
 
-	mqttCall(appointmentId: number): Observable<any> {
+	mqttCall(appointmentId: number): Observable<void> {
 		const url = `${this.BASE_URL}/${appointmentId}/notifyPatient`;
-		return this.http.post(url, {});
+		return this.http.post<void>(url, {});
 	}
 
 	getDailyAmounts(diaryId: number, from: string, to: string): Observable<AppointmentDailyAmountDto[]> {
@@ -297,7 +297,7 @@ export class AppointmentsService {
 		const url = `${this.BASE_URL}/get-study-instance-UID/${appointmentId}`;
 		return this.http.get<StudyIntanceUIDDto>(url);
 	}
-	
+
 	getCurrentAppointmentHierarchicalUnit(patientId: number): Observable<HierarchicalUnitDto> {
 		const url = `${this.BASE_URL}/patient/${patientId}/get-hierarchical-unit`;
 		return this.http.get<HierarchicalUnitDto>(url);

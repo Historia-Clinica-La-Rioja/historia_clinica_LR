@@ -89,6 +89,7 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDai
 import net.pladema.medicalconsultation.appointment.service.domain.DetailsOrderImageBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.exceptions.NotifyPatientException;
 import net.pladema.medicalconsultation.appointment.service.notifypatient.NotifyPatient;
 import net.pladema.patient.controller.mapper.PatientMedicalCoverageMapper;
 import net.pladema.patient.controller.service.PatientExternalService;
@@ -702,7 +703,7 @@ public class AppointmentsController {
 	public void notifyPatient(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "appointmentId") Integer appointmentId
-	) {
+	) throws NotifyPatientException {
 		notifyPatient.run(institutionId, appointmentId);
 	}
 
