@@ -1,14 +1,17 @@
 package net.pladema.establishment.service.impl;
 
+import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.clinichistory.hospitalization.controller.externalservice.InternmentEpisodeExternalService;
 import net.pladema.establishment.controller.dto.BedDto;
 import net.pladema.establishment.controller.dto.BedInfoDto;
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.BedSummaryRepository;
+import net.pladema.establishment.repository.HistoricInchargeNurseBedRepository;
 import net.pladema.establishment.repository.HistoricPatientBedRelocationRepository;
 import net.pladema.establishment.repository.domain.BedInfoVo;
 import net.pladema.establishment.repository.domain.BedSummaryVo;
 import net.pladema.establishment.repository.entity.Bed;
+import net.pladema.establishment.repository.entity.HistoricInchargeNurseBed;
 import net.pladema.establishment.repository.entity.HistoricPatientBedRelocation;
 import net.pladema.establishment.service.BedService;
 import net.pladema.person.service.PersonService;
@@ -39,13 +42,17 @@ public class BedServiceImpl implements BedService {
 
 	private final PersonService personService;
 
+	private final HistoricInchargeNurseBedRepository historicInchargeNurseBedRepository;
+
 	public BedServiceImpl(BedRepository bedRepository, HistoricPatientBedRelocationRepository historicPatientBedRelocationRepository,
-			InternmentEpisodeExternalService internmentEpisodeExtService, BedSummaryRepository bedSummaryRepository, PersonService personService) {
+			InternmentEpisodeExternalService internmentEpisodeExtService, BedSummaryRepository bedSummaryRepository, PersonService personService,
+			HistoricInchargeNurseBedRepository historicInchargeNurseBedRepository) {
 		this.bedRepository = bedRepository;
 		this.bedSummaryRepository = bedSummaryRepository;
 		this.historicPatientBedRelocationRepository = historicPatientBedRelocationRepository;
 		this.internmentEpisodeExtService = internmentEpisodeExtService;
 		this.personService = personService;
+		this.historicInchargeNurseBedRepository = historicInchargeNurseBedRepository;
 	}
 
 	@Override
@@ -134,6 +141,12 @@ public class BedServiceImpl implements BedService {
 		Bed bed = bedRepository.getById(bedId);
 		bed.setInchargeNurseId(userId);
 		bedRepository.save(bed);
+		historicInchargeNurseBedRepository.save(
+				new HistoricInchargeNurseBed(
+						userId,
+						bedId,
+						UserInfo.getCurrentAuditor()
+				)
+		);
 	}
-
 }

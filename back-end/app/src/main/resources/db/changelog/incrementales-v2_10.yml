@@ -197,3 +197,99 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: users
               validate: true
+
+    - changeSet:
+        id: createTable-historic_incharge_nurse_bed
+        comment: Create table historic_incharge_nurse_bed
+        author: fdemuguruza
+        changes:
+          - createTable:
+              tableName: historic_incharge_nurse_bed
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_historic_incharge_nurse_bed
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: true
+                    name: incharge_nurse_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: bed_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: incharge_nurse_id
+              baseTableName: historic_incharge_nurse_bed
+              constraintName: FK_incharge_nurse_bed_users_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: created_by
+              baseTableName: historic_incharge_nurse_bed
+              constraintName: FK_created_by_bed_users_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: updated_by
+              baseTableName: historic_incharge_nurse_bed
+              constraintName: FK_updated_by_bed_users_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: bed_id
+              baseTableName: historic_incharge_nurse_bed
+              constraintName: FK_bed_id_bed
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: bed
+              validate: true
