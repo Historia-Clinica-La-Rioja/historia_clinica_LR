@@ -200,4 +200,27 @@ databaseChangeLog:
           - sql:
               sql: |-
                 CREATE INDEX IF NOT EXISTS "IDX_snomed_sctid" ON snomed (sctid);
-
+    - changeSet:
+        id: drop-columns-pac_server
+        author: amurrie
+        changes:
+          - dropColumn:
+              columns:
+                - column:
+                    name: username
+                - column:
+                    name: password
+                - column:
+                    name: url_stow
+                - column:
+                    name: url_auth
+              tableName: pac_server
+          - addColumn:
+              columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  name: active
+                  type: BOOLEAN
+                  defaultValue: ${boolean.true}
+              tableName: pac_server

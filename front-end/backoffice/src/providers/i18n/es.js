@@ -730,6 +730,7 @@ const messages = {
                 password: 'Contraseña',
                 urlStow: 'url_stow',
                 urlAuth: 'url_auth',
+                active:'Activo para el envió de estudios',
             },
         },
         pacserversimagelvl: {
