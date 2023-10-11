@@ -619,7 +619,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	List<AppointmentSummaryBo> getAppointmentDataByAppointmentIds(@Param("appointmentIds") List<Integer> appointmentIds);
 
 	@Transactional(readOnly = true)
-	@Query(" SELECT DISTINCT NEW net.pladema.medicalconsultation.appointment.service.domain.PatientAppointmentHistoryBo(d.id, a.dateTypeId, a.hour, i.name, c.description, hp.personId, cs.name, " +
+	@Query(value = " SELECT DISTINCT NEW net.pladema.medicalconsultation.appointment.service.domain.PatientAppointmentHistoryBo(d.id, a.dateTypeId, a.hour, i.name, c.description, hp.personId, cs.name, " +
 			"cs2.name, a.appointmentStateId) " +
 			"FROM Appointment a " +
 			"JOIN AppointmentAssn aa ON (aa.pk.appointmentId = a.id) " +
@@ -637,7 +637,25 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"WHERE a.patientId = :patientId " +
 			"AND (a.appointmentStateId = 3 " +
 			"OR a.appointmentStateId = 4 " +
-			"OR a.appointmentStateId = 5)")
+			"OR a.appointmentStateId = 5)",
+		countQuery = " SELECT COUNT(DISTINCT a.id) " +
+				"FROM Appointment a " +
+				"JOIN AppointmentAssn aa ON (aa.pk.appointmentId = a.id) " +
+				"JOIN Diary d ON (d.id = aa.pk.diaryId) " +
+				"LEFT JOIN DiaryPractice dp ON (dp.diaryId = d.id) " +
+				"LEFT JOIN Snomed s ON (s.id = dp.snomedId) " +
+				"LEFT JOIN HierarchicalUnit hu ON (hu.id = d.hierarchicalUnitId) " +
+				"LEFT JOIN ClinicalSpecialty cs2 ON (cs2.id = hu.clinicalSpecialtyId) " +
+				"JOIN DoctorsOffice do2 ON (do2.id = d.doctorsOfficeId) " +
+				"JOIN Institution i ON (i.id = do2.institutionId) " +
+				"LEFT JOIN ClinicalSpecialty cs ON (cs.id = d.clinicalSpecialtyId) " +
+				"JOIN HealthcareProfessional hp ON (hp.id = d.healthcareProfessionalId) " +
+				"JOIN Address a2 ON (a2.id = i.addressId) " +
+				"JOIN City c ON (c.id = a2.cityId) " +
+				"WHERE a.patientId = :patientId " +
+				"AND (a.appointmentStateId = 3 " +
+				"OR a.appointmentStateId = 4 " +
+				"OR a.appointmentStateId = 5)")
 	Page<PatientAppointmentHistoryBo> getPatientHistory(@Param("patientId") Integer patientId, Pageable pageable);
 
 }
