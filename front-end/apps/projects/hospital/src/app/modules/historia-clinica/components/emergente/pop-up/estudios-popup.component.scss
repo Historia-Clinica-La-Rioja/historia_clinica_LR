@@ -2,15 +2,16 @@
   padding: 0%;
  }
 
+ 
+
 .popup-container {
     max-height: 710px;
-    //max-width: 710px;
     overflow-y: auto;
     border: 1px solid #ccc;
     border-radius: 4px;
     padding: 20px;
     margin-left: 1%;
-
+ 
   }
 
   .mat-form-field {
@@ -38,13 +39,14 @@
     margin-top: 20px;
     height: 300px;
 
+
   }
   
   //BOTON DE CIERRE 
   .mat-button {
   
     float: right;
-    margin-top: -5%;  
+    margin-top: -2.5%;  
   }
 
  
