@@ -4,12 +4,12 @@
 	<app-colored-label [description]="appointmentSummary.state.description" [color]="appointmentSummary.state.color"></app-colored-label>
 
 	<app-identifier-cases *ngIf="appointmentSummary.date" [identifierCase]="identiferCases.DATE"
-		[description]="appointmentSummary.date | viewDateDto: 'localdatetime' | date: 'fullDate'">
+		[description]="appointmentSummary.date.date | viewDateDto: 'date' | date: 'fullDate'">
 	</app-identifier-cases>
 
 	<div fxLayout="row" *ngIf="appointmentSummary.date">
 		<app-identifier-cases [identifierCase]="identiferCases.HOUR"
-			[description]="appointmentSummary.date | viewDateDto: 'localdatetime' | dateFormat: 'time'">
+			[description]="appointmentSummary.date.time | viewDateDto: 'time' | dateFormat: 'time'">
 		</app-identifier-cases>
 		<span>hs</span>
 	</div>
