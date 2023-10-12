@@ -2,7 +2,7 @@
 	width: 100%;
 }
 
-div {
+.end {
 	display: flex;
 	justify-content: flex-end;
 }
@@ -59,7 +59,13 @@ div {
     margin-top: 3vh;
 }
 
-.procedures {
+.form-field-reduced {
+    margin-top: 3vh;
 	margin-left: 0.5em;
+	width: 98%;
+}
+
+.observation {
+	margin-left: 0.3em;
 	width: 98%;
 }

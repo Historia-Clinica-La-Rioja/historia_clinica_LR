@@ -1,4 +1,4 @@
-<div>
+<div class="end">
 	<button mat-button mat-icon-button [mat-dialog-close]=true>
 		<mat-icon>close</mat-icon>
 	</button>
@@ -7,29 +7,27 @@
 <form [formGroup]="form" (ngSubmit)="save()">
 	<h1 [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.TITLE'"></h1>
 
-    <app-typeahead
-        *ngIf="documentTypes?.length > 0; else noDocumentsType"
-        [options]="documentTypes"
-        [titleInput]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.TYPE' | translate"
-        [required]="required"
-        (selectionChange)="setDocumentType($event)">
-    </app-typeahead>
-    <mat-error class="typeahead-required" *ngIf="hasError(form, 'required', 'type') && documentTypes?.length > 0"
-        [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.TYPE_REQUIRED'">
-    </mat-error>
-    <mat-error class="typeahead-required" *ngIf="hasError(form, 'invalid', 'type')">
-        {{hasConsentDocumentError}}
-    </mat-error>
+	<app-typeahead *ngIf="documentTypes?.length; else noDocumentsType" [options]="documentTypes"
+		[titleInput]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.TYPE' | translate"
+		[required]="required" (selectionChange)="setDocumentType($event)">
+	</app-typeahead>
+	<mat-error class="typeahead-required" *ngIf="hasError(form, 'required', 'type')"
+		[translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.TYPE_REQUIRED'">
+	</mat-error>
+	<mat-error class="typeahead-required" *ngIf="hasError(form, 'invalid', 'type')">
+		{{hasConsentDocumentError}}
+	</mat-error>
 
 	<section class="file-actions" *ngIf="(!file && !hasError(form, 'required', 'type'))">
-		<div *ngIf="showGenerateDocument">
-			<button mat-stroked-button color="primary" fxFlex="100%" (click)="generateDocument()" [disabled]="!isAdministrative">
+		<div *ngIf="showGenerateDocument" class="end">
+			<button mat-stroked-button color="primary" fxFlex="100%" (click)="generateDocument()"
+				[disabled]="!isAdministrative">
 				<mat-icon class="material-icons-outlined">add_circle_outline</mat-icon>
 				<span
 					[translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.GENERATE_DOCUMENT'"></span>
 			</button>
 		</div>
-		<div *ngIf="showAttachFile">
+		<div *ngIf="showAttachFile" class="end">
 			<button mat-stroked-button color="primary" fxFlex="100%" (click)="fileInput.click()">
 				<mat-icon>attachment</mat-icon>
 				<span
@@ -47,15 +45,14 @@
 				[required]="required" (selectionChange)="setProfessional($event)">
 			</app-typeahead>
 			<mat-error class="typeahead-required"
-				*ngIf="hasError(surgicalForm, 'required', 'professional') && professionals?.length > 0"
+				*ngIf="hasError(surgicalForm, 'required', 'professional') && professionals?.length"
 				[translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.PROFESSIONAL_REQUIRED'">
 			</mat-error>
 
-				<ng-container class="procedures form-field">
-					<app-concepts-search [label]="'historia-clinica.new-consultation-procedure-form.PROCEDURE'"
-						(search)="procedureService.openSearchDialogAndAddConcept($event)">
-					</app-concepts-search>
-				</ng-container>
+			<div class="form-field-reduced">
+				<app-concepts-search [label]="'historia-clinica.new-consultation-procedure-form.PROCEDURE'"
+					(search)="procedureService.openSearchDialogAndAddConcept($event)">
+				</app-concepts-search>
 				<mat-error class="typeahead-required"
 					*ngIf="hasError(surgicalForm, 'required', 'procedures') && procedureService.isEmpty()"
 					[translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.PROCEDURE_REQUIRED'">
@@ -64,15 +61,16 @@
 					[title]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.ADDED_PROCEDURES'">
 					<app-procedure-list [service]="procedureService"></app-procedure-list>
 				</app-titled-content-card>
+			</div>
 
-			<mat-form-field appearance="outline" class="form-field">
+			<mat-form-field appearance="outline" class="form-field observation">
 				<textarea formControlName="observation"
 					placeholder="{{'internaciones.internacion-paciente.documents.dialogs.attach.fields.OBSERVATIONS' | translate }}"
 					matInput type="text" id="observation">
 				</textarea>
 			</mat-form-field>
 
-			<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px">
+			<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px" class="end">
 				<button mat-stroked-button color="primary" btn-block type="button" (click)="hideSurgicalInfo()">
 					<span> {{'internaciones.internacion-paciente.documents.dialogs.attach.actions.CANCEL' |
 						translate}}</span>

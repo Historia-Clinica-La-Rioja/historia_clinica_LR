@@ -143,10 +143,11 @@ export class AttachDocumentPopupComponent implements OnInit {
 		this.consentSelectedType = this.consentDocumentTypes.find(elem => elem.id === type);
 		this.showGenerateDocument = this.consentSelectedType ? true : false;
 		this.showAttachFile = true;
+		this.showSurgicalInfo = false;
 		this.form.get('type').setValue(type);
 	}
 
-	setProfessional(professional: any) {
+	setProfessional(professional) {
 		this.surgicalForm.get('professional').setValue(professional);
 	}
 
@@ -177,6 +178,7 @@ export class AttachDocumentPopupComponent implements OnInit {
 	}
 
 	generateDocument() {
+		this.surgicalForm.reset();
 		this.consentSelectedType.consentId === SURGICAL_CONSENT_ID ?
 			this.openSurgicalForm() :
 			this.internmentEpisodeDocument.generateConsentDocument(this.data.internmentEpisodeId, this.consentSelectedType.consentId);
@@ -188,7 +190,10 @@ export class AttachDocumentPopupComponent implements OnInit {
 	}
 
 	generate() {
-		this.internmentEpisodeDocument.generateConsentDocument(this.data.internmentEpisodeId, this.consentSelectedType.consentId);
+		const procedures = this.procedureService.getProcedimientos().map(p => p.snomed.pt)
+		const observations = this.surgicalForm.value.observation ? this.surgicalForm.value.observation : '';
+		const professionalId = this.surgicalForm.value.professional;
+		this.internmentEpisodeDocument.generateConsentDocument(this.data.internmentEpisodeId, this.consentSelectedType.consentId, procedures, observations, professionalId);
 		this.hideSurgicalInfo();
 	}
 
@@ -204,6 +209,6 @@ export class AttachDocumentPopupComponent implements OnInit {
 		this.showGenerateDocument = false;
 		this.procedureService.resetForm();
 		this.procedureService.removeAll();
-		this.surgicalForm.get('observation').setValue(null);
+		this.surgicalForm.get('observation').setValue('');
 	}
 }
