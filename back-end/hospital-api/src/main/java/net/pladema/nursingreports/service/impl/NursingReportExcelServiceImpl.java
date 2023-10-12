@@ -13,6 +13,7 @@ import net.pladema.nursingreports.repository.NursingOutpatientConsultationDetail
 import net.pladema.nursingreports.repository.NursingProceduresConsultationDetail;
 import net.pladema.nursingreports.repository.NursingVaccineConsultationDetail;
 import net.pladema.nursingreports.service.NursingReportExcelService;
+import net.pladema.reportformat.DateFormat;
 
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,12 @@ public class NursingReportExcelServiceImpl implements NursingReportExcelService 
 	private ICellStyle titleStyle;
 	private ICellStyle fieldStyle;
 	private ICellStyle subTitleStyle;
+	private final DateFormat reformatdate;
+
+	public NursingReportExcelServiceImpl(DateFormat reformatdate) {
+		this.reformatdate = reformatdate;
+	}
+
 
 	@Override
 	public IWorkbook buildExcelNursingEmergency(String title, String[] headers, List<NursingEmergencyConsultationDetail> result) {
@@ -446,7 +453,7 @@ public class NursingReportExcelServiceImpl implements NursingReportExcelService 
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(content.getAttentionDate());
+		cell4.setCellValue(reformatdate.ReformatDateThree(content.getAttentionDate()));
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
@@ -478,7 +485,7 @@ public class NursingReportExcelServiceImpl implements NursingReportExcelService 
 		cell11.setCellStyle(style);
 
 		ICell cell12 = row.createCell(rowNumber.getAndIncrement());
-		cell12.setCellValue(content.getBirthDate());
+		cell12.setCellValue(reformatdate.ReformatDateFive(content.getBirthDate()));
 		cell12.setCellStyle(style);
 
 		ICell cell13 = row.createCell(rowNumber.getAndIncrement());
@@ -652,7 +659,7 @@ public class NursingReportExcelServiceImpl implements NursingReportExcelService 
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(content.getAttentionDate());
+		cell4.setCellValue(reformatdate.ReformatDateFour(content.getAttentionDate()));
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
@@ -680,7 +687,7 @@ public class NursingReportExcelServiceImpl implements NursingReportExcelService 
 		cell10.setCellStyle(style);
 
 		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
-		cell11.setCellValue(content.getBirthday());
+		cell11.setCellValue(reformatdate.ReformatDateThree(content.getBirthday()));
 		cell11.setCellStyle(style);
 
 		ICell cell12 = row.createCell(rowNumber.getAndIncrement());
@@ -789,7 +796,7 @@ public class NursingReportExcelServiceImpl implements NursingReportExcelService 
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(content.getAttentionDate());
+		cell4.setCellValue(reformatdate.ReformatDateThree(content.getAttentionDate()));
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
@@ -805,7 +812,7 @@ public class NursingReportExcelServiceImpl implements NursingReportExcelService 
 		cell7.setCellStyle(style);
 
 		ICell cell8 = row.createCell(rowNumber.getAndIncrement());
-		cell8.setCellValue(content.getPatientBirthDate());
+		cell8.setCellValue(reformatdate.ReformatDateThree(content.getPatientBirthDate()));
 		cell8.setCellStyle(style);
 
 		ICell cell9 = row.createCell(rowNumber.getAndIncrement());

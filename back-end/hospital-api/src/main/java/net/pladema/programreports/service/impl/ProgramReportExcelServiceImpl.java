@@ -14,6 +14,7 @@ import net.pladema.programreports.repository.RecuperoOdontologicoConsultationDet
 import net.pladema.programreports.repository.SumarGeneralConsultationDetail;
 import net.pladema.programreports.repository.SumarOdontologicoConsultationDetail;
 import net.pladema.programreports.service.ProgramReportExcelService;
+import net.pladema.reportformat.DateFormat;
 
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,12 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 	private ICellStyle titleStyle;
 	private ICellStyle fieldStyle;
 	private ICellStyle subTitleStyle;
+
+	private final DateFormat reformatdate;
+
+	public ProgramReportExcelServiceImpl(DateFormat reformatdate) {
+		this.reformatdate = reformatdate;
+	}
 
 	@Override
 	public IWorkbook buildExcelEpidemiologyOne(String title, String[] headers, List<EpidemiologyOneConsultationDetail> result) {
@@ -317,7 +324,7 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 		cell2.setCellStyle(style);
 
 		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
-		cell3.setCellValue(content.getBirthDate());
+		cell3.setCellValue(reformatdate.ReformatDate(content.getBirthDate()));
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
@@ -325,7 +332,7 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
-		cell5.setCellValue(content.getStartDate());
+		cell5.setCellValue(reformatdate.ReformatDate(content.getStartDate()));
 		cell5.setCellStyle(style);
 
 		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
@@ -387,7 +394,7 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(content.getAttentionDate());
+		cell4.setCellValue(reformatdate.ReformatDateThree(content.getAttentionDate()));
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
@@ -411,7 +418,7 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 		cell9.setCellStyle(style);
 
 		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
-		cell10.setCellValue(content.getBirthDate());
+		cell10.setCellValue(reformatdate.ReformatDateFive(content.getBirthDate()));
 		cell10.setCellStyle(style);
 
 		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
@@ -476,7 +483,7 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(content.getAttentionDate());
+		cell4.setCellValue(reformatdate.ReformatDateThree(content.getAttentionDate()));
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
@@ -496,7 +503,7 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 		cell8.setCellStyle(style);
 
 		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
-		cell9.setCellValue(content.getBirthDate());
+		cell9.setCellValue(reformatdate.ReformatDateFive(content.getBirthDate()));
 		cell9.setCellStyle(style);
 
 		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
@@ -718,7 +725,7 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(content.getAttentionDate());
+		cell4.setCellValue(reformatdate.ReformatDateThree(content.getAttentionDate()));
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
@@ -746,7 +753,7 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 		cell10.setCellStyle(style);
 
 		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
-		cell11.setCellValue(content.getBirthDate());
+		cell11.setCellValue(reformatdate.ReformatDateFive(content.getBirthDate()));
 		cell11.setCellStyle(style);
 
 		ICell cell12 = row.createCell(rowNumber.getAndIncrement());

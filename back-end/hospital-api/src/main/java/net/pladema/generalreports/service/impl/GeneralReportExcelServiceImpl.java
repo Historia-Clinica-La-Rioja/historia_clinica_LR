@@ -11,6 +11,7 @@ import net.pladema.generalreports.repository.ComplementaryStudiesConsultationDet
 import net.pladema.generalreports.repository.DiabeticHypertensionConsultationDetail;
 import net.pladema.generalreports.repository.EmergencyConsultationDetail;
 import net.pladema.generalreports.service.GeneralReportExcelService;
+import net.pladema.reportformat.DateFormat;
 
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,11 @@ public class GeneralReportExcelServiceImpl implements GeneralReportExcelService 
 	private ICellStyle titleStyle;
 	private ICellStyle fieldStyle;
 	private ICellStyle subTitleStyle;
+	private final DateFormat reformatdate;
+
+	public GeneralReportExcelServiceImpl(DateFormat reformatdate) {
+		this.reformatdate = reformatdate;
+	}
 
 	@Override
 	public IWorkbook buildExcelEmergency(String title, String[] headers, List<EmergencyConsultationDetail> result) {
@@ -232,7 +238,7 @@ public class GeneralReportExcelServiceImpl implements GeneralReportExcelService 
 		cell5.setCellStyle(style);
 
 		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
-		cell6.setCellValue(content.getAttentionDate());
+		cell6.setCellValue(reformatdate.ReformatDate(content.getAttentionDate()));
 		cell6.setCellStyle(style);
 
 		ICell cell7 = row.createCell(rowNumber.getAndIncrement());
@@ -305,7 +311,7 @@ public class GeneralReportExcelServiceImpl implements GeneralReportExcelService 
 		cell1.setCellStyle(style);
 
 		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
-		cell2.setCellValue(content.getAttentionDate());
+		cell2.setCellValue(reformatdate.ReformatDateFour(content.getAttentionDate()));
 		cell2.setCellStyle(style);
 
 		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
@@ -350,7 +356,7 @@ public class GeneralReportExcelServiceImpl implements GeneralReportExcelService 
 		cell.setCellStyle(style);
 
 		ICell cell1 = row.createCell(rowNumber.getAndIncrement());
-		cell1.setCellValue(content.getDate());
+		cell1.setCellValue(reformatdate.ReformatDateTwo(content.getDate()));
 		cell1.setCellStyle(style);
 
 		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
@@ -410,7 +416,7 @@ public class GeneralReportExcelServiceImpl implements GeneralReportExcelService 
 		cell17.setCellStyle(style);
 
 		ICell cell19 = row.createCell(rowNumber.getAndIncrement());
-		cell19.setCellValue(content.getDateOfIssue());
+		cell19.setCellValue(reformatdate.ReformatDateFour(content.getDateOfIssue()));
 		cell19.setCellStyle(style);
 
 		ICell cell20 = row.createCell(rowNumber.getAndIncrement());
