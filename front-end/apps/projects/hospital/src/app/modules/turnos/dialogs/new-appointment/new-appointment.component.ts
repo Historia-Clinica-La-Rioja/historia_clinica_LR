@@ -65,7 +65,7 @@ export class NewAppointmentComponent implements OnInit {
 	public formSearch: UntypedFormGroup;
 	public appointmentInfoForm: UntypedFormGroup;
 	public associateReferenceForm: UntypedFormGroup;
-	referenceList: ReferenceSummaryDto[] = [];
+	referenceList$: Observable<ReferenceSummaryDto[]>;
 	public identifyTypeArray: IdentificationTypeDto[];
 	public genderOptions: GenderDto[];
 	public healtInsuranceOptions: MedicalCoverageDto[] = [];
@@ -81,7 +81,6 @@ export class NewAppointmentComponent implements OnInit {
 	isFormSubmitted = false;
 	public isSubmitButtonDisabled = false;
 	VALIDATIONS = VALIDATIONS;
-	referenceDateViewList: string[];
 	lastAppointmentId = -1;
 	readonly dateFormats = DatePipeFormat;
 	patientMedicalOrderTooltipDescription = '';
@@ -92,11 +91,7 @@ export class NewAppointmentComponent implements OnInit {
     readonly MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: {
-			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean, patientId?: number,
-			protectedAppointment?: DiaryAvailableProtectedAppointmentsDto, isEquipmentAppointment?: boolean,
-			modalityAttention:EAppointmentModality, searchAppointmentCriteria?: SearchAppointmentCriteria
-		},
+		@Inject(MAT_DIALOG_DATA) public data: NewAppointmentData,
 		public dialogRef: MatDialogRef<NewAppointmentComponent>,
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly personMasterDataService: PersonMasterDataService,
@@ -235,14 +230,8 @@ export class NewAppointmentComponent implements OnInit {
 		this.patientService.getBasicPersonalData(patientId)
 			.subscribe((reducedPatientDto: ReducedPatientDto) => {
 				this.patientFound();
-				if (this.data?.protectedAppointment) {
-					this.referenceService.getReferencesSummary(patientId, this.data.searchAppointmentCriteria).subscribe(
-						references => {
-							this.referenceList = references ? references : [];
-							this.createReferenceDateViewList();
-						}
-					);
-				}
+				if (this.data?.protectedAppointment)
+					this.referenceList$ = this.referenceService.getReferencesSummary(patientId, this.data.searchAppointmentCriteria);
 				this.patient = reducedPatientDto;
 				this.appointmentInfoForm.controls.phonePrefix.setValue(reducedPatientDto.personalDataDto.phonePrefix);
 				this.appointmentInfoForm.controls.phoneNumber.setValue(reducedPatientDto.personalDataDto.phoneNumber);
@@ -256,16 +245,6 @@ export class NewAppointmentComponent implements OnInit {
 				this.patientNotFound();
 			});
 
-	}
-
-	private createReferenceDateViewList(): void {
-		let resultList = [];
-		this.referenceList.forEach(
-			(reference) => {
-				resultList.push(this.datePipe.transform(dateDtoToDate(reference.date), DatePipeFormat.SHORT_DATE));
-			}
-		);
-		this.referenceDateViewList = resultList;
 	}
 
 	mapToPersonIdentification(personalDataDto: BasicPersonalDataDto): PersonIdentification {
@@ -330,8 +309,6 @@ export class NewAppointmentComponent implements OnInit {
 
 	private createAppointment(itComesFromStep3?: boolean) {
 		this.clearQueryParams();
-		const phonePrefix = this.setPhonePrefix(itComesFromStep3);
-		const phoneNumber = this.setPhoneNumber(itComesFromStep3);
 		const newAppointment: CreateAppointmentDto = {
 			date: this.data.date,
 			diaryId: this.data.diaryId,
@@ -340,8 +317,8 @@ export class NewAppointmentComponent implements OnInit {
 			overturn: this.data.overturnMode,
 			patientId: this.patientId,
 			patientMedicalCoverageId: this.appointmentInfoForm.value.patientMedicalCoverage?.id,
-			phonePrefix,
-			phoneNumber,
+			phonePrefix: this.appointmentInfoForm.value.phonePrefix,
+			phoneNumber:  this.appointmentInfoForm.value.phoneNumber,
 			modality:this.data.modalityAttention ? this.data.modalityAttention : EAppointmentModality.ON_SITE_ATTENTION,
 			patientEmail:this.appointmentInfoForm.controls.patientEmail.value,
 			applicantHealthcareProfessionalEmail: this.associateReferenceForm.controls.professionalEmail.value ? this.associateReferenceForm.controls.professionalEmail.value : null,
@@ -381,12 +358,8 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	private assignAppointment(): void {
-		if(this.data.modalityAttention === this.MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION){
-			var valueEmail = this.associateReferenceForm.controls.professionalEmail.value;
-		}else{
-			valueEmail = this.appointmentInfoForm.controls.patientEmail.value;
-		}
-		this.referenceAppointmentService.associateReferenceAppointment(this.associateReferenceForm.controls.reference.value.referenceId, this.lastAppointmentId).subscribe(
+		const valueEmail = this.data.modalityAttention === this.MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION ? this.associateReferenceForm.controls.professionalEmail.value : this.appointmentInfoForm.controls.patientEmail.value;
+		this.referenceAppointmentService.associateReferenceAppointment(this.associateReferenceForm.controls.reference.value, this.lastAppointmentId).subscribe(
 			successfullyAssociated => {
 				if (successfullyAssociated) {
 					this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
@@ -525,31 +498,8 @@ export class NewAppointmentComponent implements OnInit {
 		this.showAddPatient = false;
 	}
 
-	private setPhonePrefix(itComesFromStep3: boolean): string {
-		if (!this.appointmentInfoForm.controls.phonePrefix.value && !itComesFromStep3)
-			return "";
-		if (this.appointmentInfoForm.controls.phonePrefix.value)
-			return this.appointmentInfoForm.controls.phonePrefix.value;
-		if (itComesFromStep3)
-			return this.associateReferenceForm.controls.reference.value.phonePrefix;
-	}
-
-	private setPhoneNumber(itComesFromStep3: boolean): string {
-		if (!this.appointmentInfoForm.controls.phoneNumber.value && !itComesFromStep3)
-			return "";
-		if (this.appointmentInfoForm.controls.phoneNumber.value)
-			return this.appointmentInfoForm.controls.phoneNumber.value;
-		if (itComesFromStep3)
-			return this.associateReferenceForm.controls.reference.value.phoneNumber;
-	}
-
 	private verifyExistingAppointment(): Observable<any> {
-		if (this.data.isEquipmentAppointment) {
-			return this.equipmentAppointmentFacade.verifyExistingEquipmentAppointment(this.patientId, this.data.date)
-		}
-		else {
-			return this.appointmentFacade.verifyExistingAppointment(this.patientId, this.data.date, this.data.hour)
-		}
+		return this.data.isEquipmentAppointment ? this.equipmentAppointmentFacade.verifyExistingEquipmentAppointment(this.patientId, this.data.date) : this.appointmentFacade.verifyExistingAppointment(this.patientId, this.data.date, this.data.hour)
 	}
 
 	private addAppointment(newAppointment: CreateAppointmentDto): Observable<number> {
@@ -565,6 +515,20 @@ export class NewAppointmentComponent implements OnInit {
 		else
 			return this.appointmentFacade.addAppointment(newAppointment);
 	}
+}
+
+export interface NewAppointmentData {
+	date: string,
+	diaryId: number,
+	hour: string,
+	openingHoursId: number,
+	overturnMode: boolean,
+	patientId?: number,
+	protectedAppointment?: DiaryAvailableProtectedAppointmentsDto,
+	isEquipmentAppointment?: boolean,
+	modalityAttention: EAppointmentModality,
+	searchAppointmentCriteria?: SearchAppointmentCriteria,
+	reference?: ReferenceSummaryDto
 }
 
 export interface medicalOrderInfo {
