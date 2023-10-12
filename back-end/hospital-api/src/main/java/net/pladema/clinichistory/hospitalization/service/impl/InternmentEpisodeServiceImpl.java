@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.hospitalization.service.impl;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -485,7 +486,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		Map<String, Object> context = createContext(mapToBasicDataPersonDto(pe),
 				isbo.getDoctor(),
 				institutionBo.getName(),
-				internmentEpisode.getEntryDate(),
+				LocalDateTime.from(internmentEpisode.getEntryDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3"))),
 				internmentEpisodeId,
 				episodeDocumentTypeBo.getRichTextBody(),
 				consentId,
