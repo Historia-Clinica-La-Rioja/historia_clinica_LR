@@ -586,6 +586,6 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN Diary AS d ON aa.pk.diaryId = d.id " +
 			"LEFT JOIN HierarchicalUnit AS hu ON hu.id = d.hierarchicalUnitId " +
 			"WHERE a.id = :appointmentId " +
-			"AND d.deleteable.deleted = false OR d.deleteable.deleted is null")
+			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)")
 	Optional<HierarchicalUnit> findDiaryHierarchicalUnitIdByAppointment(@Param("appointmentId") Integer appointmentId);
 }
