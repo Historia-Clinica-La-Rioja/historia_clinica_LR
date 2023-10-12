@@ -55,9 +55,8 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 																  @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.id, i.name, " +
-			"oc.startDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId," +
-			"r.phonePrefix, r.phoneNumber) " +
+	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
+			"oc.startDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId) " +
 			"FROM Reference r " +
 			"JOIN OutpatientConsultation oc ON r.encounterId = oc.id " +
 			"JOIN Institution i ON oc.institutionId = i.id " +
@@ -74,9 +73,8 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 																								 @Param("careLineId") Integer careLineId);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.id, i.name, " +
-			"oc.performedDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId," +
-			"r.phonePrefix, r.phoneNumber) " +
+	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
+			"oc.performedDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId) " +
 			"FROM Reference r " +
 			"JOIN OdontologyConsultation oc ON r.encounterId = oc.id " +
 			"JOIN Institution i ON oc.institutionId = i.id " +
@@ -93,9 +91,8 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 																								 @Param("careLineId") Integer careLineId);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.id, i.name, " +
-			"oc.startDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId," +
-			"r.phonePrefix, r.phoneNumber) " +
+	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
+			"oc.startDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId) " +
 			"FROM Reference r " +
 			"JOIN OutpatientConsultation oc ON r.encounterId = oc.id " +
 			"JOIN Institution i ON oc.institutionId = i.id " +
@@ -118,9 +115,8 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 																						@Param("careLineId") Integer careLineId);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.id, i.name, " +
-			"oc.performedDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId," +
-			"r.phonePrefix, r.phoneNumber) " +
+	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
+			"oc.performedDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId) " +
 			"FROM Reference r " +
 			"JOIN OdontologyConsultation oc ON r.encounterId = oc.id " +
 			"JOIN Institution i ON oc.institutionId = i.id " +
@@ -143,9 +139,8 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 																						@Param("careLineId") Integer careLineId);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.id, i.name, " +
-			"oc.startDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId," +
-			"r.phonePrefix, r.phoneNumber) " +
+	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
+			"oc.startDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId) " +
 			"FROM Reference r " +
 			"JOIN OutpatientConsultation oc ON r.encounterId = oc.id " +
 			"JOIN Institution i ON oc.institutionId = i.id " +
@@ -170,9 +165,8 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 																											  @Param("practiceId") Integer practiceId);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.id, i.name, " +
-			"oc.performedDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId," +
-			"r.phonePrefix, r.phoneNumber) " +
+	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
+			"oc.performedDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId) " +
 			"FROM Reference r " +
 			"JOIN OdontologyConsultation oc ON r.encounterId = oc.id " +
 			"JOIN Institution i ON oc.institutionId = i.id " +

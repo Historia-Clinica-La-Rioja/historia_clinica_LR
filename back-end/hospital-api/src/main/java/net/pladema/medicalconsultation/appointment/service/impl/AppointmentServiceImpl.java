@@ -744,14 +744,21 @@ public class AppointmentServiceImpl implements AppointmentService {
 	private Collection<AppointmentBo> setIsAppointmentProtected(Collection<AppointmentBo> appointments, List<Integer> diaryIds) {
 		List<Integer> protectedAppointments = sharedReferenceCounterReference.getProtectedAppointmentsIds(diaryIds);
 		appointments.stream().forEach(a -> {
-			if (protectedAppointments.contains(a.getId()))
+			if (protectedAppointments.contains(a.getId())) {
 				a.setProtected(true);
+				if (a.getPhonePrefix() == null && a.getPhoneNumber() == null) {
+					var referencePhone = sharedReferenceCounterReference.getReferencePhone(a.getId());
+					a.setPhonePrefix(referencePhone.getPhonePrefix());
+					a.setPhoneNumber(referencePhone.getPhoneNumber());
+				}
+			}
+
 			else
 				a.setProtected(false);
 		});
 		return appointments;
 	}
-	
+
 	private void verifyProtectedCondition(Integer appointmentId) {
 		boolean isProtected = sharedReferenceCounterReference.isProtectedAppointment(appointmentId);
 		if (isProtected)

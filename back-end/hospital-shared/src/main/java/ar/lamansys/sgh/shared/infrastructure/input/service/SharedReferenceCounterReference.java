@@ -4,6 +4,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterrefer
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceCounterReferenceFileDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceProblemDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferencePhoneDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,4 +26,6 @@ public interface SharedReferenceCounterReference {
 	void updateProtectedAppointment(Integer appointment);
 
 	boolean existsProtectedAppointmentInOpeningHour(Integer openingHourId);
+
+	ReferencePhoneDto getReferencePhone(Integer appointmentId);
 }

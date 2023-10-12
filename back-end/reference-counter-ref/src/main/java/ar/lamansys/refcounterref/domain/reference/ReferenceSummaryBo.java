@@ -14,11 +14,11 @@ import java.util.stream.Stream;
 @Setter
 public class ReferenceSummaryBo {
 
-	private Integer referenceId;
+	private Integer id;
 
 	private Integer careLineId;
 
-	private InstitutionBo institution;
+	private String institution;
 
 	private LocalDate date;
 
@@ -34,16 +34,12 @@ public class ReferenceSummaryBo {
 
 	private boolean includeNameSelfDetermination;
 
-	private String phonePrefix;
 
-	private String phoneNumber;
-
-	public ReferenceSummaryBo(Integer referenceId, Integer institutionId, String institutionName,
+	public ReferenceSummaryBo(Integer id, String institutionName,
 							  LocalDate date, String firstName, String middleNames, String lastName,
-							  String otherLastNames, String nameSelfDetermination, Integer careLineId,
-							  String phonePrefix, String phoneNumber) {
-		this.referenceId = referenceId;
-		this.institution = new InstitutionBo(institutionId, institutionName);
+							  String otherLastNames, String nameSelfDetermination, Integer careLineId) {
+		this.id = id;
+		this.institution = institutionName;
 		this.date = date;
 		this.firstName = firstName;
 		this.middleNames = middleNames;
@@ -51,8 +47,6 @@ public class ReferenceSummaryBo {
 		this.otherLastNames = otherLastNames;
 		this.nameSelfDetermination = nameSelfDetermination;
 		this.careLineId = careLineId;
-		this.phonePrefix = phonePrefix;
-		this.phoneNumber = phoneNumber;
 	}
 
 

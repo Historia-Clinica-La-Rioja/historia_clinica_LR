@@ -3410,6 +3410,11 @@ export interface ReferencePatientDto {
     phonePrefix: string;
 }
 
+export interface ReferencePhoneDto {
+    phoneNumber: string;
+    phonePrefix: string;
+}
+
 export interface ReferenceProblemDto extends Serializable {
     id?: number;
     snomed: SharedSnomedDto;
@@ -3446,11 +3451,9 @@ export interface ReferenceStudyDto {
 
 export interface ReferenceSummaryDto {
     date: DateDto;
-    institution: InstitutionInfoDto;
-    phoneNumber: string;
-    phonePrefix: string;
+    id: number;
+    institution: string;
     professionalFullName: string;
-    referenceId: number;
 }
 
 export interface ReferenceSummaryNoteDto extends Serializable {
