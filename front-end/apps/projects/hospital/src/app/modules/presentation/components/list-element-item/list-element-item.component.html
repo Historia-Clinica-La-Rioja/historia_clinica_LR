@@ -23,7 +23,7 @@
 		<span>{{ content.createdBy }}</span>
 		<span *ngIf="content.timeElapsed else createdOn">{{ content.timeElapsed }}</span>
 		<ng-template #createdOn>
-			<span>{{ content.createdOn | dateFormat: 'datetime' }}</span>
+			<span *ngIf="content.createdOn">{{ content.createdOn | dateFormat: 'datetime' }}</span>
 		</ng-template>
 	</div>
 	<ng-content></ng-content>
