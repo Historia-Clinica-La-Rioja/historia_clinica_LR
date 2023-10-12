@@ -1,3 +1,19 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v2_10 
 
+    - changeSet:
+        id: update-sector-informer-set-default_values
+        context: "!schema-only"
+        author: mromero
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE sector SET informer = false WHERE informer IS NULL;
+
+    - changeSet:
+        id: update-sector-informer-default
+        author: mromero
+        changes:
+            - sql:
+                sql: |-
+                     ALTER TABLE sector ALTER COLUMN informer SET DEFAULT false;
