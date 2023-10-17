@@ -5,7 +5,7 @@
     </button>
 </div>
 <mat-dialog-content class="dialog-content">
-    <div *ngIf="appointmentHistoric">
+    <div *ngIf="appointmentHistoric.length else noInfo">
         <div *ngFor="let appointment of appointmentHistoric">
             <app-appointment-historic-detail [appointment]="appointment"></app-appointment-historic-detail>
             <mat-divider class="divider"></mat-divider>
