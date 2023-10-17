@@ -53,4 +53,10 @@ export class HealthcareProfessionalByInstitutionService {
 			BASIC_URL_SUFIX + '/virtual-consultation';
 		return this.http.get<ProfessionalDto[]>(url);
 	}
+
+	getVirtualConsultationResponsiblesByInstitutionId(): Observable<ProfessionalDto[]> {
+		const url = `${environment.apiBase}` + BASIC_URL_PREFIX + '/' + `${this.contextService.institutionId}` +
+			BASIC_URL_SUFIX + '/virtual-consultation-responsibles';
+		return this.http.get<ProfessionalDto[]>(url);
+	}
 }

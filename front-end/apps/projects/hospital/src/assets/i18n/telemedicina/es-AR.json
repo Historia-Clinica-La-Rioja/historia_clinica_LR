@@ -11,6 +11,7 @@
 			"BUTTON_ADD":"+ Agregar nuevo paciente",
 			"TITLE_ADD_REQUEST":"Solicitud de consulta online",
 			"PROFESSIONAL_ATTENDING": "Profesionales atendiendo",
+			"TRANSFER_REQUEST": "Transferir solicitud",
 			"form": {
 				"PATIENT":"Paciente",
 				"CARELINE": "Línea de cuidado",
@@ -23,7 +24,8 @@
 				"AVAILABILITY":"Disponibilidad",
 				"STATE": "Estado",
 				"INSTITUTION":"Institución",
-				"PATIENT_SEARCH":"Buscar paciente"
+				"PATIENT_SEARCH":"Buscar paciente",
+				"ASSIGN_TO":"Asignar a "
 			}
 		},
 		"attention": {
