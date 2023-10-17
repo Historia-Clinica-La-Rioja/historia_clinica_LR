@@ -1413,6 +1413,7 @@ export interface EpicrisisSummaryDto extends DocumentSummaryDto {
 }
 
 export interface EpisodeDocumentDto {
+    consentId: number;
     episodeDocumentTypeId: number;
     file: MultipartFile;
     internmentEpisodeId: number;

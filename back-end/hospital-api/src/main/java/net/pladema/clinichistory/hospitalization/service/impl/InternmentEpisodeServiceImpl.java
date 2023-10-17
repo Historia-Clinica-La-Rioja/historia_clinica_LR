@@ -83,6 +83,8 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
     private static final String LOGGING_OUTPUT = "Output -> {}";
     private static final short ACTIVE = 1;
     private static final String WRONG_ID_EPISODE = "wrong-id-episode";
+	private static final String SURGICAL = "Quirúrgico";
+	private static final String ADMISSION = "Ingreso a internación";
 
     private final InternmentEpisodeRepository internmentEpisodeRepository;
 
@@ -516,7 +518,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		ctx.put("entryDate", entryDate);
 		ctx.put("internmentEpisodeId", internmentEpisodeId);
 		ctx.put("richBody", richBody);
-		ctx.put("subtitle", consentId.equals(Integer.valueOf(ADMISSION_CONSENT)) ? "Ingreso" : "Quirúrgico");
+		ctx.put("subtitle", consentId.equals((int) SURGICAL_CONSENT) ? SURGICAL : ADMISSION);
 		ctx.put("procedures", procedures);
 		ctx.put("observations", observations);
 		return ctx;
