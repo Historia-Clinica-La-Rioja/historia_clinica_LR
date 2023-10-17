@@ -1,9 +1,17 @@
 package ar.lamansys.online.infraestructure.input.service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import ar.lamansys.online.application.diary.FetchOpeningHoursBasicDataService;
+import ar.lamansys.online.application.diary.IsAppointmentAlreadyAssignedService;
 import ar.lamansys.online.application.integration.FetchBookingInstitutionsExtended;
+import ar.lamansys.online.domain.diary.DiaryBasicDataBo;
+import ar.lamansys.online.domain.diary.OpeningHoursBasicDataBo;
 import ar.lamansys.online.domain.integration.BookingInstitutionExtendedBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingInstitutionExtendedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
@@ -64,14 +72,42 @@ public class BookingExternalService implements SharedBookingPort {
 	private final FetchBookingProfessionals fetchBookingProfessionals;
 	private final FetchAvailabilityByPracticeAndProfessional fetchAvailabilityByPracticeAndProfessional;
 	private final FetchAvailabilityByPractice fetchAvailabilityByPractice;
+	private final FetchOpeningHoursBasicDataService fetchOpeningHoursBasicDataService;
+	private final IsAppointmentAlreadyAssignedService isAppointmentAlreadyAssignedService;
 
 	public SavedBookingAppointmentDto makeBooking(BookingDto bookingDto) {
+		log.debug("Input parameters -> bookingDto {}", bookingDto);
+		validateAppointment(bookingDto.getBookingAppointmentDto());
 		BookingBo bookingBo = new BookingBo(
 				bookingDto.getAppointmentDataEmail(),
 				mapToAppointment(bookingDto.getBookingAppointmentDto()),
 				mapToPerson(bookingDto.getBookingPersonDto())
 		);
 		return bookAppointment.run(bookingBo);
+	}
+
+	private void validateAppointment(BookingAppointmentDto bookingAppointmentDto) {
+		DiaryBasicDataBo diary = fetchOpeningHoursBasicDataService.fetchDiaryBasicDataByDiaryId(bookingAppointmentDto.getDiaryId());
+		if (diary.isEmpty())
+			throw new RuntimeException("La agenda solicitada no existe");
+
+		Optional<OpeningHoursBasicDataBo> relatedOpeningHours =  diary.getOpeningHours().stream().filter(oh -> oh.getId().equals(bookingAppointmentDto.getOpeningHoursId())).findFirst();
+		if (relatedOpeningHours.isEmpty())
+			throw new RuntimeException("La franja horaria del turno no es correcta");
+
+		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalTime appointmentTime = LocalTime.parse(bookingAppointmentDto.getHour(), timeFormatter);
+		LocalDate appointmentDate = LocalDate.parse(bookingAppointmentDto.getDay(), dateFormatter);
+		if (appointmentDateTimeIsNotValid(appointmentTime, relatedOpeningHours.get(), appointmentDate, diary))
+			throw new RuntimeException("El horario seleccionado no es válido para la franja horaria");
+
+		if (isAppointmentAlreadyAssignedService.run(bookingAppointmentDto.getDiaryId(), bookingAppointmentDto.getOpeningHoursId(), bookingAppointmentDto.getDay(), bookingAppointmentDto.getHour()))
+			throw new RuntimeException("El horario seleccionado para el turno ya se encuentra ocupado");
+	}
+
+	private boolean appointmentDateTimeIsNotValid(LocalTime appointmentTime, OpeningHoursBasicDataBo relatedOpeningHours, LocalDate appointmentDate, DiaryBasicDataBo diary) {
+		return appointmentTime.isBefore(relatedOpeningHours.getFrom()) || appointmentTime.isAfter(relatedOpeningHours.getTo()) || appointmentDate.isBefore(diary.getStartDate()) || appointmentDate.isAfter(diary.getEndDate());
 	}
 
 	public void cancelBooking(String uuid) {
