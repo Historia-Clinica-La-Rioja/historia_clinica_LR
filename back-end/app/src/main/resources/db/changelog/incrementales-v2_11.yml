@@ -33,6 +33,21 @@ databaseChangeLog:
                 - column:
                     name: until_date
                     type: datetime
+    
+    - changeSet:    
+        id: add-protected_appointment-column-reference_appointment
+        author: jvaldez
+        changes:
+          - addColumn:
+              tableName: reference_appointment
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: protected_appointment
+                    type: boolean
+                    defaultValue: ${boolean.true}
+
 
     - changeSet:
         id: v_attention-updateView
