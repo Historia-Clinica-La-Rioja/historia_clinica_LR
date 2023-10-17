@@ -25,6 +25,14 @@
         .header-footer-font {
             font-size: 15px;
         }
+
+        .wrap {
+            word-wrap: break-word;
+            text-align: justify;
+            text-justify: inter-word;
+            white-space: pre-wrap;
+            max-width: 100%;
+        }
     </style>
 </head>
 <body th:fragment="consent_document_header">
@@ -83,13 +91,18 @@
                 </td>
             </tr>
         </table>
-        <div th:if="${procedures != null|| observations != null}">
+        <div th:if="${procedures != null || observations != null}">
             <hr/>
-            <div class="bold big-font">Procedimientos a realizar</div>
-            <div style="display: inline" th:each="proc,iter: ${procedures}">
-                <span th:text="${proc}"></span>
+            <div th:if="${procedures}">
+                <div class="bold big-font">Procedimientos a realizar</div>
+                <div th:each="proc,iter: ${procedures}">
+                    <span th:text="${proc}" class="wrap"></span>
+                </div>
             </div>
-            <span th:text="${observations}"></span>
+            <div th:if="${observations != ''}">
+                <div class="bold big-font">Observaciones</div>
+                <div th:text="${observations}" class="wrap"></div>
+            </div>
             <hr/>
         </div>
     </header>
