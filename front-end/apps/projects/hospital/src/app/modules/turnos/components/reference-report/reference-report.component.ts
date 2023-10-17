@@ -46,7 +46,6 @@ export class ReferenceReportComponent implements OnInit {
 		this.referenceReportFacade.updateReports();
 		this.changeDetectorRef.detectChanges();
 	}
-
 }
 
 export enum ReferenceView {

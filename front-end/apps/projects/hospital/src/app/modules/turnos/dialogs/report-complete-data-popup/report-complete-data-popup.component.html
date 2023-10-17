@@ -25,4 +25,12 @@
 		<app-appointment-summary fxFlex="40" [appointmentSummary]="reportCompleteData.appointment"></app-appointment-summary>
 	</mat-dialog-content>
 
+	<div actions class="button" fxLayoutAlign="end end">
+		<button mat-stroked-button color="primary" id="assign-appointment-in-care-network"
+			*ngIf="popupActions?.assignAppointmentInCareNetwork"
+			(click)="assignAppointmentInCareNetwork()">
+			<span class="uppercase">{{'turnos.search_references.reference.ASSIGN_APPOINTMENT_IN_CARE_NETWORK' | translate}}</span>
+		</button>
+	</div>
+
 </div>

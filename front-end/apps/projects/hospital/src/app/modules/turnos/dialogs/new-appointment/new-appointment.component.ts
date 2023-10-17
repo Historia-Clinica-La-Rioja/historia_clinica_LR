@@ -16,7 +16,6 @@ import {
 	BasicPersonalDataDto,
 	ReducedPatientDto,
 	PatientMedicalCoverageDto,
-	DiaryAvailableProtectedAppointmentsDto,
 	ReferenceSummaryDto,
 	DiagnosticReportInfoDto,
 	TranscribedDiagnosticReportInfoDto,
@@ -65,7 +64,7 @@ export class NewAppointmentComponent implements OnInit {
 	public formSearch: UntypedFormGroup;
 	public appointmentInfoForm: UntypedFormGroup;
 	public associateReferenceForm: UntypedFormGroup;
-	referenceList$: Observable<ReferenceSummaryDto[]>;
+	referenceList: ReferenceSummaryDto[] = [];
 	public identifyTypeArray: IdentificationTypeDto[];
 	public genderOptions: GenderDto[];
 	public healtInsuranceOptions: MedicalCoverageDto[] = [];
@@ -109,7 +108,7 @@ export class NewAppointmentComponent implements OnInit {
 		private readonly datePipe: DatePipe,
 		private readonly equipmentAppointmentFacade: EquipmentAppointmentsFacadeService,
 		private prescripcionesService: PrescripcionesService,
-		private readonly translateService: TranslateService
+		private readonly translateService: TranslateService,
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
@@ -230,8 +229,8 @@ export class NewAppointmentComponent implements OnInit {
 		this.patientService.getBasicPersonalData(patientId)
 			.subscribe((reducedPatientDto: ReducedPatientDto) => {
 				this.patientFound();
-				if (this.data?.protectedAppointment)
-					this.referenceList$ = this.referenceService.getReferencesSummary(patientId, this.data.searchAppointmentCriteria);
+				if (this.data.protectedAppointment)
+					this.setReferenceInformation();
 				this.patient = reducedPatientDto;
 				this.appointmentInfoForm.controls.phonePrefix.setValue(reducedPatientDto.personalDataDto.phonePrefix);
 				this.appointmentInfoForm.controls.phoneNumber.setValue(reducedPatientDto.personalDataDto.phoneNumber);
@@ -359,7 +358,7 @@ export class NewAppointmentComponent implements OnInit {
 
 	private assignAppointment(): void {
 		const valueEmail = this.data.modalityAttention === this.MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION ? this.associateReferenceForm.controls.professionalEmail.value : this.appointmentInfoForm.controls.patientEmail.value;
-		this.referenceAppointmentService.associateReferenceAppointment(this.associateReferenceForm.controls.reference.value, this.lastAppointmentId).subscribe(
+		this.referenceAppointmentService.associateReferenceAppointment(this.associateReferenceForm.controls.reference.value.id, this.lastAppointmentId).subscribe(
 			successfullyAssociated => {
 				if (successfullyAssociated) {
 					this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
@@ -515,6 +514,17 @@ export class NewAppointmentComponent implements OnInit {
 		else
 			return this.appointmentFacade.addAppointment(newAppointment);
 	}
+
+	private setReferenceInformation() {
+		if (this.data.referenceSummary) {
+			const referenceSummary = this.data.referenceSummary;
+			this.referenceList = [referenceSummary];
+			this.associateReferenceForm.controls.reference.setValue(referenceSummary);
+			this.associateReferenceForm.controls.reference.disable();
+		}
+		else
+			this.referenceService.getReferencesSummary(this.patientId, this.data.searchAppointmentCriteria).subscribe(references => this.referenceList = references);
+	}
 }
 
 export interface NewAppointmentData {
@@ -524,11 +534,11 @@ export interface NewAppointmentData {
 	openingHoursId: number,
 	overturnMode: boolean,
 	patientId?: number,
-	protectedAppointment?: DiaryAvailableProtectedAppointmentsDto,
+	protectedAppointment?: boolean,
 	isEquipmentAppointment?: boolean,
 	modalityAttention: EAppointmentModality,
 	searchAppointmentCriteria?: SearchAppointmentCriteria,
-	reference?: ReferenceSummaryDto
+	referenceSummary?: ReferenceSummaryDto,
 }
 
 export interface medicalOrderInfo {

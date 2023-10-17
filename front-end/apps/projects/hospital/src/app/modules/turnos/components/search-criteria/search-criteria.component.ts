@@ -14,6 +14,7 @@ export class SearchCriteriaComponent implements OnInit, OnChanges {
 	@Input() label: string;
 	@Input() searchCriteryStyle?: string;
 	@Input() defaultOption?: SearchCriteria;
+	@Input() disabled = false;
 	@Output() selectedOption = new EventEmitter<SearchCriteria>();
 
 	constructor(
@@ -31,6 +32,9 @@ export class SearchCriteriaComponent implements OnInit, OnChanges {
 	ngOnChanges(changes: SimpleChanges) {
 		if (changes.defaultOption && this.form)
 			this.form.controls.criteria.setValue(changes.defaultOption.currentValue);
+
+		if (changes.disabled && this.form)
+			this.form.controls.criteria.disable();
 	}
 
 	emit(searchCriteriaValue: MatRadioChange) {

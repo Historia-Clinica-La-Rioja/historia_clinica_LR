@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DiaryAvailableProtectedAppointmentsDto, EAppointmentModality } from '@api-rest/api-model';
+import { DiaryAvailableProtectedAppointmentsDto, EAppointmentModality, ReferenceSummaryDto } from '@api-rest/api-model';
 import { dateDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DateFormat, dateToMoment } from '@core/utils/moment.utils';
@@ -9,6 +9,7 @@ import { ConfirmPrintAppointmentComponent } from '@turnos/dialogs/confirm-print-
 import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-appointment.component';
 import { SearchAppointmentCriteria } from '../search-appointments-in-care-network/search-appointments-in-care-network.component';
 import { HolidayCheckService } from '@turnos/services/holiday-check.service';
+import { ReferenceReportFacadeService } from '@turnos/services/reference-report-facade.service';
 
 @Component({
 	selector: 'app-appointment-result-view',
@@ -21,7 +22,8 @@ export class AppointmentResultViewComponent implements OnInit {
 	@Input() appointment: DiaryAvailableProtectedAppointmentsDto;
 	@Input() patientId: number;
 	@Input() searchAppointmentCriteria: SearchAppointmentCriteria;
-	@Output() resetAppointmentList = new EventEmitter<void>();
+	@Input() referenceSummary?: ReferenceSummaryDto;
+	@Output() resetInformation = new EventEmitter<void>();
 	viewDate: string = '';
 	viewMinutes: string = '';
 
@@ -29,6 +31,7 @@ export class AppointmentResultViewComponent implements OnInit {
 		private readonly datePipe: DatePipe,
 		private readonly dialog: MatDialog,
 		private readonly holidayService: HolidayCheckService,
+		private readonly referenceReportFacade: ReferenceReportFacadeService,
 	) { }
 
 	ngOnInit(): void {
@@ -42,7 +45,7 @@ export class AppointmentResultViewComponent implements OnInit {
 		const appointmentDate = dateToMoment(dateDtoToDate(this.appointment.date)).format(DateFormat.API_DATE);
 		const appointmentHour = this.datePipe.transform(timeDtoToDate(this.appointment.hour), DatePipeFormat.MEDIUM_TIME);
 		this.holidayService.checkAvailability(appointmentDate).subscribe(isAvailable => {
-			if (isAvailable){
+			if (isAvailable) {
 				const dialogRef = this.dialog.open(NewAppointmentComponent, {
 					width: '45%',
 					disableClose: true,
@@ -53,15 +56,16 @@ export class AppointmentResultViewComponent implements OnInit {
 						openingHoursId: this.appointment.openingHoursId,
 						overturnMode: this.appointment.overturnMode,
 						patientId: this.patientId ? this.patientId : null,
-						protectedAppointment: this.appointment,
+						protectedAppointment: true,
 						modalityAttention: this.modalityAttention,
-						searchAppointmentCriteria: this.searchAppointmentCriteria
+						searchAppointmentCriteria: this.searchAppointmentCriteria,
+						referenceSummary: this.referenceSummary
 					}
 				});
 				dialogRef.afterClosed().subscribe(
 					(result: any) => {
 						if (result !== -1) {
-							this.resetAppointmentList.emit();
+							this.resetInformation.emit();
 
 							var fullAppointmentDate = this.datePipe.transform(appointmentDate, DatePipeFormat.FULL_DATE);
 							fullAppointmentDate = fullAppointmentDate[0].toUpperCase() + fullAppointmentDate.slice(1);
@@ -76,6 +80,10 @@ export class AppointmentResultViewComponent implements OnInit {
 							if (result.email && !(this.modalityAttention === this.MODALITY_ON_SITE_ATTENTION)) {
 								var message = 'Se podrá acceder a la teleconsulta a través del link que se ha enviado a ' + `<strong> ${result.email}</strong>`
 							}
+
+							if (this.referenceSummary)
+								this.referenceReportFacade.updateReports();
+
 							this.dialog.open(ConfirmPrintAppointmentComponent, {
 								width: '40%',
 								data: {
@@ -92,7 +100,8 @@ export class AppointmentResultViewComponent implements OnInit {
 							});
 						}
 					}
-				);	
-			}});
-		}
+				);
+			}
+		});
+	}
 }

@@ -287,7 +287,8 @@
 				"TITLE": "Detalle de solicitud",
 				"CONTACT_DATA": "Datos de contacto",
 				"REFERENCE_DATA": "Datos de Referencia",
-				"APPOINTMENT_DATA": "Datos del turno"
+				"APPOINTMENT_DATA": "Datos del turno",
+				"ASSIGN_APPOINTMENT_IN_CARE_NETWORK":" asignar turno en red de atencion"
 			}
 		}
 	}

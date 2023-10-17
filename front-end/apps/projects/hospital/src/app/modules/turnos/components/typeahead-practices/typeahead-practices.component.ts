@@ -11,6 +11,7 @@ export class TypeaheadPracticesComponent {
 
 	practicesTypeahead: TypeaheadOption<SharedSnomedDto | SnomedDto>[];
 	showError = false;
+	externalSetValue: TypeaheadOption<SharedSnomedDto | SnomedDto>;
 	@Input()
 	set practices(list: SharedSnomedDto[]) {
 		if (list?.length)
@@ -18,6 +19,14 @@ export class TypeaheadPracticesComponent {
 		else 
 			this.practicesTypeahead = [];	
 	}
+	@Input() 
+	set externalValue (value: SharedSnomedDto){
+		if (value)
+			this.externalSetValue = this.toTypeaheadOption(value);
+		else
+			this.externalSetValue = null;	
+	};
+	@Input() disabled?: boolean;
 	@Output() selectedOption = new EventEmitter<SharedSnomedDto>();
 
 	constructor() { }
@@ -27,14 +36,14 @@ export class TypeaheadPracticesComponent {
 	}
 
 	private toTypeaheadOptionList(practices: SharedSnomedDto[]): TypeaheadOption<SharedSnomedDto>[] {
-		return practices.map(toTypeaheadOption);
+		return practices.map(this.toTypeaheadOption);
+	}
 
-		function toTypeaheadOption(practice: SharedSnomedDto): TypeaheadOption<SharedSnomedDto> {
-			return {
-				compareValue: practice.pt,
-				value: practice
-			};
-		}
+	private toTypeaheadOption(practice: SharedSnomedDto): TypeaheadOption<SharedSnomedDto> {
+		return {
+			compareValue: practice.pt,
+			value: practice
+		};
 	}
 
 }

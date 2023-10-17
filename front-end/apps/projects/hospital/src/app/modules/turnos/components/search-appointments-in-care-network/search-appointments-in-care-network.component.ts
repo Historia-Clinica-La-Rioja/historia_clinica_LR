@@ -16,7 +16,7 @@ import { Moment } from 'moment';
 import { SearchCriteria } from '../search-criteria/search-criteria.component';
 import { BehaviorSubject } from 'rxjs';
 import { CareLineInstitutionPracticeService } from '@api-rest/services/care-line-institution-practice.service';
-
+import { SearchAppointmentInformation, SearchAppointmentsInfoService } from '@turnos/services/search-appointment-info.service';
 const PERIOD_DAYS = 7;
 const PAGE_SIZE_OPTIONS = [5, 10, 25, 100];
 @Component({
@@ -26,7 +26,11 @@ const PAGE_SIZE_OPTIONS = [5, 10, 25, 100];
 })
 export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChanges {
 
-	@Input() isVisible = false;
+	@Input()
+	set isVisible(value: boolean) {
+		if (value)
+			this.setReferenceInformation();
+	};
 
 	searchForm: UntypedFormGroup;
 	provinces: ProvinceDto[] = [];
@@ -66,13 +70,14 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 	MODALITY_ON_SITE_ATTENTION = EAppointmentModality.ON_SITE_ATTENTION;
 	MODALITY_PATIENT_VIRTUAL_ATTENTION = EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
 	MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION
-	isEnableTelemedicina:boolean;
+	isEnableTelemedicina: boolean;
 	searchCriteria = SearchCriteria;
 	selectedTypeAttention = SearchCriteria.CONSULTATION;
 	private practicesBehavior = new BehaviorSubject<SnomedDto[]>([]);
 	practices$ = this.practicesBehavior.asObservable();
 	showPracticeError = false;
 	searchAppointmentCriteria: SearchAppointmentCriteria;
+	externalInformation: SearchAppointmentInformation;
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -86,7 +91,9 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		private readonly route: ActivatedRoute,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly careLineInstitutionPracticeService: CareLineInstitutionPracticeService,
-	) { this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.isEnableTelemedicina = isEnabled)
+		private readonly searchAppointmentsInfoService: SearchAppointmentsInfoService,
+	) {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.isEnableTelemedicina = isEnabled)
 	}
 
 	ngOnChanges(changes: SimpleChanges): void {
@@ -155,7 +162,8 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		this.searchForm.controls.specialty.reset();
 		if (careLine) {
 			this.specialties = careLine.clinicalSpecialties;
-			this.careLineInstitutionPracticeService.getPracticesByCareLine(careLine.id).subscribe(practices => this.practicesBehavior.next(practices))
+			if (!this.externalInformation?.formInformation?.careLine)
+				this.careLineInstitutionPracticeService.getPracticesByCareLine(careLine.id).subscribe(practices => this.practicesBehavior.next(practices))
 		}
 		else {
 			this.specialties = this.allSpecialties;
@@ -328,6 +336,22 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		this.protectedAvaibleAppointments = [];
 
 		this.appointmentsCurrentPage = [];
+		this.externalInformation = null;
+	}
+
+	clearForm() {
+		this.externalInformation = null;
+		const formControls = this.searchForm.controls;
+		formControls.specialty.setValue(null);
+		formControls.specialty.enable();
+		formControls.practiceId.setValue(null);
+		formControls.practiceId.enable();
+		formControls.careLine.setValue(null);
+		formControls.careLine.enable();
+		this.practicesBehavior.next([]);
+		this.selectedTypeAttention = SearchCriteria.CONSULTATION;
+		this.searchAppointmentsInfoService.clearInfo();
+		this.resetResults();
 	}
 
 	resetResults(): void {
@@ -432,6 +456,34 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 				this.loadSpecialtyTypeaheadOptions();
 			}
 		);
+	}
+
+	private setReferenceInformation(): void {
+
+		this.externalInformation = this.searchAppointmentsInfoService.getSearchAppointmentInfo();
+
+		if (!this.externalInformation)
+			return;
+
+		const { patientId, formInformation } = this.externalInformation;
+
+		this.patientId = patientId;
+
+		const { searchCriteria, careLine, clinicalSpecialty, practice } = formInformation;
+		this.setCriteria(searchCriteria);
+		this.setCareLine(careLine.value);
+
+		if (clinicalSpecialty) {
+			this.specialtyTypeaheadOptions = [clinicalSpecialty];
+			this.setClinicalSpecialty(clinicalSpecialty.value);
+		}
+
+		if (practice) {
+			this.practicesBehavior.next([practice]);
+			this.setPractice(practice);
+		}
+
+		this.searchAppointmentsInfoService.clearInfo();
 	}
 
 }
