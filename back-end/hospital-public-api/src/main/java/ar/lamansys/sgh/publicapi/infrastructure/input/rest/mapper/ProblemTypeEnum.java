@@ -8,7 +8,8 @@ public enum ProblemTypeEnum {
 	DIAGNOSIS("439401001"),
 	PROBLEM("55607006"),
 	PRIOR("57177007"),
-	CHRONIC("-55607006");
+	CHRONIC("-55607006"),
+	OTHER("00000001");
 
 	private final String id;
 

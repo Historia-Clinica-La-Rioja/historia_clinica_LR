@@ -45,10 +45,12 @@ public class ActivityStorageImpl implements ActivityStorage {
 	private static final String JOIN_HOSPITALIZATION = "LEFT JOIN {h-schema}internment_episode event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
 	private static final String JOIN_OUTPATIENT = "LEFT JOIN {h-schema}outpatient_consultation event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
 	private static final String JOIN_ODONTOLOGY = "LEFT JOIN {h-schema}odontology_consultation event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
+	private static final String JOIN_EMERGENCY_CARE = "LEFT JOIN {h-schema}emergency_care_evolution_note event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
 
 	private static final Integer HOSPITALIZATION = 0;
 	private static final Integer OUTPATIENT_CONSULTATION = 1;
 	private static final Integer ODONTOLOGY = 6;
+	private static final Integer EMERGENCY_CARE = 4;
 
 	private static final String JOIN_ANY_EVENT = "LEFT JOIN {h-schema}internment_episode ie ON ie.id = va.encounter_id AND va.scope_id =" + HOSPITALIZATION + " " +
 			"LEFT JOIN {h-schema}outpatient_consultation oc ON oc.id = va.encounter_id and va.scope_id =" + OUTPATIENT_CONSULTATION + " " +
@@ -170,7 +172,9 @@ public class ActivityStorageImpl implements ActivityStorage {
 				+ " UNION ALL " +
 				"("+String.format(SQL_STRING, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")"
 				+ " UNION ALL " +
-				"("+String.format(SQL_STRING_ODONTOLOGY, JOIN_ODONTOLOGY, whereClause + ODONTOLOGY) +")";
+				"("+String.format(SQL_STRING_ODONTOLOGY, JOIN_ODONTOLOGY, whereClause + ODONTOLOGY) +")"
+				+ " UNION ALL " +
+				"("+String.format(SQL_STRING, JOIN_EMERGENCY_CARE, whereClause + EMERGENCY_CARE) +")";
 
 
 		Query query = entityManager.createNativeQuery(finalQuery)
@@ -204,7 +208,9 @@ public class ActivityStorageImpl implements ActivityStorage {
 
 		String finalQuery = "("+String.format(SQL_STRING, JOIN_HOSPITALIZATION, whereClause + HOSPITALIZATION) +")"
 				+ " UNION ALL " +
-				"("+String.format(SQL_STRING, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")";
+				"("+String.format(SQL_STRING, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")"
+				+ " UNION ALL " +
+				"("+String.format(SQL_STRING, JOIN_EMERGENCY_CARE, whereClause + EMERGENCY_CARE) +")";
 		Query query = entityManager.createNativeQuery(finalQuery)
 				.setParameter("refsetCode", refsetCode)
 				.setParameter("identificationNumber", identificationNumber)
@@ -237,7 +243,9 @@ public class ActivityStorageImpl implements ActivityStorage {
 
 		String finalQuery = "("+String.format(SQL_STRING, JOIN_HOSPITALIZATION, whereClause + HOSPITALIZATION) +")"
 				+ " UNION ALL " +
-				"("+String.format(SQL_STRING, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")";
+				"("+String.format(SQL_STRING, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")"
+				+ " UNION ALL " +
+				"("+String.format(SQL_STRING, JOIN_EMERGENCY_CARE, whereClause + EMERGENCY_CARE) +")";
 		Query query = entityManager.createNativeQuery(finalQuery)
 				.setParameter("refsetCode", refsetCode)
 				.setParameter("fromDate", fromDate)
