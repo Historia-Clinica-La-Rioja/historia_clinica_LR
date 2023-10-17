@@ -31,6 +31,7 @@ export class ReferenceListComponent {
 	private appoitmentStatate = APPOINTMENT_STATE;
 	private pageLength = PAGE_MIN_SIZE;
 	private clinicalSpecialtyOptions = [];
+	private procedureOptions = [];
 	private referenceListWithoutFilterByName: Report[] = [];
 	private filtersCustom;
 	@Input()
@@ -46,6 +47,7 @@ export class ReferenceListComponent {
 				}
 			});
 			this.prepareFilterClinicalSpecialty(list);
+			this.prepareFilterProcedure(list);
 			this.prepareFilters()
 		}
 		else
@@ -109,14 +111,13 @@ export class ReferenceListComponent {
 		referenceReportsFilters = this.filterByClosureType(referenceReportsFilters, $event?.closureType);
 		referenceReportsFilters = this.filterByAppointmentState(referenceReportsFilters, $event?.appoitmentState);
 
-		if (!$event?.clinicalSpecialty) {
-			this.prepareFilterClinicalSpecialty(referenceReportsFilters.map(referenceReports => referenceReports.dto));
-			this.updateClinicalSpecialtyOptions();
-		} else {
-			const clinicalSpecialty = this.getClinicalSpecialtyDescription($event.clinicalSpecialty);
-			if (clinicalSpecialty) {
-				referenceReportsFilters = this.filterByClinicalSpecialty(referenceReportsFilters, clinicalSpecialty);
-			}
+		const clinicalSpecialty = this.getClinicalSpecialtyDescription($event.clinicalSpecialty);
+		if (clinicalSpecialty) {
+			referenceReportsFilters = this.filterByClinicalSpecialty(referenceReportsFilters, clinicalSpecialty);
+		}
+		const procedure = this.getProcedureDescription($event.procedure)
+		if (procedure) {
+			referenceReportsFilters = this.filterByProcedure(referenceReportsFilters, procedure);
 		}
 
 		this.updateReferenceReports(referenceReportsFilters);
@@ -144,19 +145,20 @@ export class ReferenceListComponent {
 		return reports;
 	}
 
-	private updateClinicalSpecialtyOptions() {
-		const clinicalSpecialtyFilter = this.filters.find((f) => f.key === "clinicalSpecialty");
-		if (clinicalSpecialtyFilter) {
-			clinicalSpecialtyFilter.options = this.clinicalSpecialtyOptions;
-		}
-	}
-
 	private getClinicalSpecialtyDescription(clinicalSpecialtyId: any): string | undefined {
 		return this.clinicalSpecialtyOptions.find(r => r?.id === clinicalSpecialtyId)?.description;
 	}
 
 	private filterByClinicalSpecialty(reports: Report[], clinicalSpecialty: string): Report[] {
 		return reports.filter((r: Report) => r.dto.clinicalSpecialtyDestination === clinicalSpecialty);
+	}
+
+	private getProcedureDescription(procedureId: number): string | undefined {
+		return this.procedureOptions.find(p => p?.id === procedureId)?.description;
+	}
+
+	private filterByProcedure(reports: Report[], procedure: string): Report[] {
+		return reports.filter((r: Report) => r.dto.procedure === procedure);
 	}
 
 	private updateReferenceReports(filteredReports: Report[]) {
@@ -184,6 +186,21 @@ export class ReferenceListComponent {
 		});
 	}
 
+	private prepareFilterProcedure(reports: ReferenceReportDto[]) {
+		this.procedureOptions = reports.map(r => r.procedure );
+
+		this.procedureOptions = this.procedureOptions.filter((procedure) => procedure !== undefined && procedure !== null);
+
+		this.procedureOptions = Array.from(new Set(this.procedureOptions));
+
+		this.procedureOptions = this.procedureOptions.map((procedure, index) => {
+			return {
+				id: index + 1,
+				description: procedure
+			};
+		});
+	}
+
 	private prepareFilters() {
 		let filters = [];
 		let filterClosureType: filter = {
@@ -192,6 +209,14 @@ export class ReferenceListComponent {
 			options: this.closureOptions,
 		}
 		filters.push(filterClosureType);
+
+		let filterProcedure: filter = {
+			key: 'procedure',
+			name: "turnos.PRACTICE",
+			options: this.procedureOptions,
+		}
+		filters.push(filterProcedure);
+
 		let filterAppoitmentStatate: filter = {
 			key: 'appoitmentState',
 			name: "turnos.search_references.SHIFT_STATUS",
@@ -205,6 +230,7 @@ export class ReferenceListComponent {
 			options: this.clinicalSpecialtyOptions,
 		}
 		filters.push(filterClinicalSpecialtyDestination);
+
 		let filterCareLines: filter = {
 			key: 'priority',
 			name: "turnos.search_references.PRIORITY",
