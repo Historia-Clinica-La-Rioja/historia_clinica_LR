@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:fragment="headerfiles">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Reporte Imagenes</title>
+    <th:block th:include="fragments/bootstrap-css.html :: style-inline"></th:block>
+    <style>
+        .page-header {
+            top: 0;
+            width: 100%;
+        }
+
+        .page-footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            font-size: 10px;
+        }
+
+        table {
+            width: 76%;
+            -fs-table-paginate: paginate;
+            border-collapse: collapse;
+        }
+
+        .wide_wrapped_text {
+            word-wrap: break-word;
+            text-align: justify;
+            text-justify: inter-word;
+            white-space: pre-wrap;
+            font-size: 13.21px;
+        }
+
+        @page {
+            margin: 5mm;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background: #333;
+        }
+
+        .row-content {
+            float: left;
+            margin-right: 30px;
+        }
+
+        .data-text {
+            font-weight: 400;
+            font-size: 13.21px;
+        }
+
+        .data-text-title {
+            font-weight: 400;
+            font-size: 13.21px;
+            margin-right: 7px;
+        }
+
+        .section-title {
+            font-weight: 700;
+            font-size: 13.21px;
+            padding-bottom: 5px;
+        }
+
+        .data-title {
+            font-weight: 700;
+            font-size: 10.57px;
+            margin-bottom: 5px;
+        }
+
+        @media print {
+            thead {
+                display: table-header-group;
+            }
+
+            tfoot {
+                display: table-footer-group;
+            }
+
+            body,
+            html {
+                margin: 0;
+                padding: 0;
+            }
+        }
+
+        .section-title {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            flex-direction: row;
+            padding-bottom: 5px;
+        }
+
+        .section-title_row {
+            display: flex;
+            width: 50%;
+            justify-content: space-between;
+            flex-direction: column;
+            padding-bottom: 5px;
+        }
+
+        .sign-professional {
+            display: flex;
+            flex-direction: column;
+            margin-left: 69%;
+            margin-top: 3%;
+        }
+
+        .header-loyout {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .logo {
+            height: 80px;
+            margin-right: 15%;
+            margin-top: 1%;
+
+        }
+
+        .row-line {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .comma-list {
+            display: flex;
+            list-style: none;
+            padding: 0px;
+        }
+
+        .comma-list div::after {
+            content: ", ";
+        }
+
+        .comma-list div:last-child::after {
+            content: "";
+        }
+
+        .comma-list-column {
+            display: inline;
+            list-style: none;
+            padding: 0px;
+        }
+
+        .comma-list-column div::after {
+            content: ", ";
+        }
+
+        .comma-list-column div:last-child::after {
+            content: "";
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div th:fragment="header">
+        <div class="header-loyout">
+            <div class="section-title_row">
+                <h2 style="width: 50%; float:left;" th:text="'getNameInstitution()'">Hospital Español</h2>
+                <div class="data-text" th:text="getFinalAddress()">Calle 9 175,
+                    B1902
+                    La Plata, Provincia de Buenos Aires</div>
+                <div>
+                    <div class="data-text" th:text="'Tel : ' + getTelephone()">Tel :</div>
+                    <div class="data-text" th:text="getInstitutionPhoneNumber()"></div>
+                </div>
+                <div class="data-text" th:text="getInstitutionEmailAdress">www.hospitalespañol.com.ar</div>
+            </div>
+            <!-- <img style="height: 40px; float: right;" th:src="@{classpath:static/images/logoHsi.png}" alt="Logo"></img> -->
+            <img class="logo" src="./static/images/logoHsi.png" alt="Logo"></img>
+        </div>
+        <div class="section-title">
+            <h2 style="width: 50%; float:left;">Informe de Imágenes</h2>
+        </div>
+    </div>
+
+
+    <div th:fragment="patientData">
+        <div>
+            <div class="row-content">
+                <div class="data-title">Fecha :</div>
+                <div class="data-text" th:text="${#temporals.format(printDate, 'dd-MM-yyyy HH:mm')}">12/12/2023</div>
+            </div>
+            <div>
+                <div class="data-title">Estudios :</div>
+                <div class="data-text" th:text="${studies}"></div>
+            </div>
+            <div style="clear: both;padding-top: 1px">
+                <hr />
+            </div>
+
+            <div class="section-title">Datos del paciente</div>
+            <div>
+                <div class="row-content">
+                    <div class="data-title">Nombre y apellido</div>
+                    <div class="data-text" th:text="${patient.person.completeName()}">Maria Ester Gonzalez</div>
+                </div>
+                <div class="row-content">
+                    <div class="data-title">Documento</div>
+                    <div class="data-text" th:text="${patient.person.identificationNumber}">14845110</div>
+                </div>
+                <div class="row-content">
+                    <div class="data-title">Edad</div>
+                    <div class="data-text" th:text="${patientAge}">63</div>
+                </div>
+                <div class="row-content">
+                    <div class="data-title">Fecha nac.</div>
+                    <div class="data-text" th:text="${#temporals.format(patient.person.birthDate, 'dd/MM/yyyy')}">
+                        16/08/1978</div>
+                </div>
+            </div>
+            <div style="clear: both;padding-top: 1px">
+                <hr />
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="professionalData">
+        <div class="section-title"> Profesional solicitante </div>
+        <div>
+            <div class="row-content">
+                <div class="data-title">Nombre y apellido</div>
+                <div class="data-text" th:text="${professionalCompleteName}">Garcia Mariana</div>
+            </div>
+            <div class="row-content">
+                <div class="data-title">Especialidad</div>
+                <div class="data-text" th:text="${professionalProfessions}">Cardiologa</div>
+            </div>
+            <div class="row-content">
+                <div class="data-title">MN</div>
+                <div th:if="${ getMn() != null}" class="data-text" th:text="${getMn()}"> - </div>
+                <div th:if="${ getMn() == null}" class=" data-text" th:text="${' - '}"></div>
+            </div>
+            <div class="row-content">
+                <div class="data-title">MP</div>
+                <div th:if="${ getMp != null}" class="data-text" th:text="${getMp()}">09082233</div>
+                <div th:if="${ getMp == null}" class="data-text" th:text="${' - '}"></div>
+            </div>
+        </div>
+        <div style="clear: both;padding-top: 1px">
+            <hr />
+        </div>
+    </div>
+
+    <div th:fragment="DetailData">
+        <div>
+            <div class="section-title"> Detalles del informe </div>
+            <div>
+                <p>RM DE RODILLA DERECHA TÉCNICA: Resonador ESSENZA de SIEMENS, de 1.5 Tesla. Se realizan cortes
+                    coronales,
+                    sagitales y axiales de la rodilla, mediante secuencias potenciadas en T1, DP y T2. Ruptura aguda del
+                    LCA
+                    con alteración de la señal y discontinuidad de sus fibras en el tercio medio-proximal consistente
+                    con un
+                    desgarro.</p>
+                <ul>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Impresiona corresponder a una rotura completa, no obstante
+                        debe
+                        ser correlacionado junto al examen físico.&nbsp;</li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Edema intraóseo postraumático en el margen posterior de
+                        ambos
+                        platillos tibiales a predominio del externo y contusión osteocondral en el margen lateral del
+                        cóndilo femoral externo.&nbsp;</li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Menisco interno y externo de morfología conservada, con
+                        señal
+                        normal y sin signos de desgarro.&nbsp;</li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ligamento cruzado posterior de trayecto y señal normal.
+                        Ligamentos colateral medial y lateral de espesor y señal habitual.&nbsp;</li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tendones del cuádriceps y rotuliano normales. Cartílago
+                        articular normal sin defectos focales, artrosis u otras anomalías.&nbsp;</li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Las estructuras óseas son normales sin contusiones,
+                        fracturas u
+                        otras alteraciones. Discreto aumento del liquido articular.</li>
+                </ul>
+                <p><br></br></p>
+                <p>Estimado colega. Quedamos a su disposición por cualquier interconsulta que desee realizar. </p>
+                <p>Se atenderán las inquietudes de los colegas,&nbsp;</p>
+                <p>email: mariana.calvo@cid-sanatoriotandil.com</p>
+            </div>
+            <!-- <div th:text="${getReportData()}"></div> -->
+            <div style="clear: both;padding-top: 1px">
+                <hr />
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="conclusionsData">
+        <div th:if="${ getConclusions() != null}">
+            <div class="section-title"> Conclusiones </div>
+            <!-- <div th:each="conclusion,iter: ${getConclusions()}">
+                <ul>
+                    <li th:text="${conclusion}"></li>
+                </ul>
+            </div> -->
+        </div>
+        <br />
+        <div>
+            <span class="section-title">Atte.</span>
+            <br />
+            <br />
+            <br />
+        </div>
+        <div>
+            <div class="sign-professional">
+                <div class="data-text" th:text="${professionalCompleteName}">Fernandez Juan</div>
+                <!-- <div  class="comma-list" th:each="profesion,iter: ${professionalProfessions}">
+                                <div>
+                                    <div class="data-text" th:text="${profesion}"></div>
+                                </div>
+                        </div> -->
+                <div class="comma-list-column">
+                    <div class="data-text">Especialista jerarquizado en Diagnostico por imagenes</div>
+                    <div class="data-text">Especialista odontologo</div>
+                    <div class="data-text">Especialista tecnico</div>
+                </div>
+                <!-- <div th:if="${ getMp == null}">
+                                <div class="data-text" th:text="${' - '}">M.P 100707</div>
+                            </div>
+                            <div th:if="${ getMp != null}">
+                                <div class="row-line">
+                                        <div class="data-text-title" th:text="${M.P}">M.P</div>
+                                        <div class="comma-list" th:each="mp,iter: ${getMp}">
+                                            <div class="data-text" th:text="${getMp()}">09082233</div>
+                                        </div>
+                                </div>
+                            </div>
+                            <div th:if="${ getMn == null}">
+                                <div class="data-text" th:text="${' - '}">M.P 100707</div>
+                            </div>
+                            <div th:if="${ getMn != null}">
+                                <div class="row-line">
+                                    <div class="data-text-title" th:text="${M.N}">M.N</div>
+                                    <div class="comma-list" th:each="mn,iter: ${getMn}">
+                                        <div class="data-text" th:text="${getMn()}">09082233</div>
+                                    </div>
+                                </div>
+                            </div> -->
+                <div class="row-line">
+                    <div class="data-text-title" th:text="${getMp()}">M.P</div>
+                    <div class="comma-list">
+                        <div class="data-text">09082233</div>
+                        <div class="data-text">09082244</div>
+                    </div>
+                </div>
+                <div class="data-text" th:text="${getMn()}">M.N 100707</div>
+            </div>
+            <br />
+            <br />
+            <br />
+        </div>
+
+</body>
+
+</html>
