@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-appointment.component';
-import { EAppointmentModality, EmptyAppointmentDto } from '@api-rest/api-model';
+import { EAppointmentModality, EmptyAppointmentDto, ReferenceSummaryDto } from '@api-rest/api-model';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
 import { ConfirmPrintAppointmentComponent } from '@turnos/dialogs/confirm-print-appointment/confirm-print-appointment.component';
@@ -10,6 +10,7 @@ import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { Moment } from 'moment';
 import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
+import { ReferenceReportFacadeService } from '@turnos/services/reference-report-facade.service';
 
 @Component({
 	selector: 'app-appointment-details',
@@ -24,7 +25,8 @@ export class AppointmentDetailsComponent implements OnInit {
 	@Input() patientId: number;
 	@Input() searchInitialDate: Moment;
 	@Input() searchEndingDate: Moment;
-	@Output() resetAppointmentList = new EventEmitter<void>();
+	@Input() referenceSummary?: ReferenceSummaryDto;
+	@Output() resetInformation = new EventEmitter<void>();
 	appointmentTime: Date = new Date();
 	private selectedHolidayDay: Date;
 
@@ -32,7 +34,8 @@ export class AppointmentDetailsComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly datePipe: DatePipe,
 		private readonly holidayService: HolidaysService,
-		private readonly appointmentsFacade: AppointmentsFacadeService
+		private readonly appointmentsFacade: AppointmentsFacadeService,
+		private readonly referenceReportFacade: ReferenceReportFacadeService,
 	) { }
 
 	ngOnInit(): void {
@@ -84,13 +87,15 @@ export class AppointmentDetailsComponent implements OnInit {
 				openingHoursId: this.emptyAppointment.openingHoursId,
 				overturnMode: false,
 				patientId: this.patientId ? this.patientId : null,
-				modalityAttention: this.modalityAttention
+				modalityAttention: this.modalityAttention,
+				protectedAppointment: !!this.referenceSummary,
+				referenceSummary: this.referenceSummary,
 			}
 		});
 		dialogReference.afterClosed().subscribe(
 			(result: any) => {
 				if (result !== -1) {
-					this.resetAppointmentList.emit();
+					this.resetInformation.emit();
 
 					var fullAppointmentDate = this.datePipe.transform(this.emptyAppointment.date, DatePipeFormat.FULL_DATE);
 					fullAppointmentDate = fullAppointmentDate[0].toUpperCase() + fullAppointmentDate.slice(1);
@@ -104,6 +109,9 @@ export class AppointmentDetailsComponent implements OnInit {
 					if (result.email && (this.modalityAttention === this.MODALITY_PATIENT_VIRTUAL_ATTENTION || this.modalityAttention === this.MODALITY_SECOND_OPINION_VIRTUAL)) {
 						var message = 'Se podrá acceder a la teleconsulta a través del link que se ha enviado a ' + `<strong> ${result.email}</strong>`
 					}
+
+					if (this.referenceSummary) 
+						this.referenceReportFacade.updateReports();
 					this.dialog.open(ConfirmPrintAppointmentComponent, {
 						width: '40%',
 						data: {

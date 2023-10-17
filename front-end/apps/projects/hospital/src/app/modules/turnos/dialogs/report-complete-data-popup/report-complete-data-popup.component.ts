@@ -50,6 +50,12 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 			}));
 	}
 
+	assignAppointmentInInstitution(): void {
+		this.searchAppointmentsInfoService.loadInformation(this.reportCompleteData.patient.id, this.reportCompleteData.reference);
+		this.dialogRef.close();
+		this.tabsService.setTab(Tabs.INSTITUTION);
+	}
+
 	assignAppointmentInCareNetwork(): void {
 		this.searchAppointmentsInfoService.loadInformation(this.reportCompleteData.patient.id, this.reportCompleteData.reference);
 		this.dialogRef.close();

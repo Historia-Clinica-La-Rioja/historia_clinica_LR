@@ -1,7 +1,9 @@
 <div fxLayout="column" fxLayoutGap="40px">
 	<form [formGroup]="form" fxLayout="column" fxLayoutGap="32px" style="padding-top: 16px;" (ngSubmit)="submit()">
 		<span [translate]="'turnos.home.SEARCH_BY_INSTITUTION_CRITERIA'"></span>
-		<app-search-criteria [label]="'turnos.TYPE_ATTENTION'" [searchCriteryStyle]="'bold'" (selectedOption)="setCriteria($event)"></app-search-criteria>
+		<app-search-criteria [label]="'turnos.TYPE_ATTENTION'" [searchCriteryStyle]="'bold'" 
+			[defaultOption]="selectedSearchCriteria" [disabled]="externalInformation?.disabledInput"
+			(selectedOption)="setCriteria($event)"></app-search-criteria>
 
 		<div fxLayout="row" fxLayoutGap="32px">
 			<div fxLayout="column" fxLayoutGap="8px">
@@ -11,7 +13,8 @@
 				</div>
 				<app-typeahead
 					[titleInput]="'turnos.home.SPECIALTY_SEARCH' | translate"
-					[options]="aliasTypeaheadOptions$ | async"
+					[options]="aliasTypeaheadOptions"
+					[externalSetValue]="externalSetValueSpecialty" [disabled]="externalInformation?.disabledInput"
 					(selectionChange)="setClinicalSpecialty($event)">
 				</app-typeahead>
 
@@ -20,7 +23,8 @@
 
 			<div *ngIf="searchCriteria.PRACTICES == selectedSearchCriteria" fxLayout="column" fxLayoutGap="8px"
 				style="max-width: 25%;">
-				<app-typeahead-practices [practices]="practices$ | async"
+				<app-typeahead-practices [practices]="practices" 
+					[externalValue]="externalInformation?.formInformation?.practice" [disabled]="externalInformation?.disabledInput"
 					(selectedOption)="setPractice($event)"></app-typeahead-practices>
 				<mat-error class="error-space" *ngIf="showPracticeError">{{ 'forms.REQUIRED' | translate }}</mat-error>
 			</div>
@@ -100,8 +104,8 @@
 			<span style="font-style: italic;" [translate]="'turnos.home.RESULT_DISCLAIMER'"></span>
 			<mat-card>
 				<div style="padding-top: 15px; padding-bottom: 15px;" *ngFor="let emptyAppointment of emptyAppointmentsFiltered; let last = last">
-					<app-appointment-details (resetAppointmentList)="resetEmptyAppointmentList($event)" [emptyAppointment]="emptyAppointment" [patientId]="patientId"
-					[searchInitialDate]="form.controls.searchInitialDate.value"
+					<app-appointment-details (resetInformation)="clearInformation()" [emptyAppointment]="emptyAppointment" [patientId]="patientId"
+					[searchInitialDate]="form.controls.searchInitialDate.value" [referenceSummary]="externalInformation?.referenceSummary"
 					[searchEndingDate]="form.controls.searchEndingDate.value" [modalityAttention]="form.controls.modality.value"></app-appointment-details>
 					<mat-divider style="margin-top: 15px;" *ngIf="!last"></mat-divider>
 				</div>

@@ -26,6 +26,11 @@
 	</mat-dialog-content>
 
 	<div actions class="button" fxLayoutAlign="end end">
+		<button mat-flat-button color="primary" id="assign-appointment-in-institution"
+			*ngIf="popupActions?.assignAppointmentInInstitution"
+			(click)="assignAppointmentInInstitution()">
+			<span class="uppercase">{{'turnos.home.ASSIGN_APPOINTMENT' | translate}}</span>
+		</button>
 		<button mat-stroked-button color="primary" id="assign-appointment-in-care-network"
 			*ngIf="popupActions?.assignAppointmentInCareNetwork"
 			(click)="assignAppointmentInCareNetwork()">

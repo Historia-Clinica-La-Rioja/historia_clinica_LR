@@ -8,12 +8,10 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import * as moment from 'moment';
 import { Moment } from 'moment';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { SearchCriteria } from '../search-criteria/search-criteria.component';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { PracticesService } from '@api-rest/services/practices.service';
-
+import { SearchAppointmentInformation, SearchAppointmentsInfoService } from '@turnos/services/search-appointment-info.service';
 const PAGE_MIN_SIZE = 5;
 
 @Component({
@@ -24,8 +22,12 @@ const PAGE_MIN_SIZE = 5;
 export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
 	@ViewChild('paginator') paginator: MatPaginator;
-	@Input() isVisible = false;
-	aliasTypeaheadOptions$: Observable<TypeaheadOption<string>[]>;
+	@Input()
+	set isVisible(value: boolean) {
+		if (value)
+			this.setReferenceInformation();
+	};
+	aliasTypeaheadOptions: TypeaheadOption<string>[];
 	timesToFilter: TimeDto[];
 	initialTimes: TimeDto[];
 	endingTimes: TimeDto[];
@@ -41,7 +43,9 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	isEnableTelemedicina: boolean;
 	searchCriteria = SearchCriteria;
 	selectedSearchCriteria = SearchCriteria.CONSULTATION;
-	practices$: Observable<SharedSnomedDto[]>;
+	practices: SharedSnomedDto[];
+	externalInformation: SearchAppointmentInformation;
+	externalSetValueSpecialty: TypeaheadOption<string>;
 
 	dateSearchFilter = (d: Moment): boolean => {
 		const parsedDate = d?.toDate();
@@ -55,6 +59,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		private readonly route: ActivatedRoute,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly practicesService: PracticesService,
+		private readonly searchAppointmentsInfoService: SearchAppointmentsInfoService,
 	) { this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.isEnableTelemedicina = isEnabled) }
 
 	ngOnInit(): void {
@@ -82,14 +87,16 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 			practice: [null],
 		});
 
-		this.aliasTypeaheadOptions$ = this.getClinicalSpecialtiesTypeaheadOptions$();
-		this.practices$ = this.practicesService.getByActiveDiaries();
+		this.setClinicalSpecialtiesTypeaheadOptions();
+		this.practicesService.getByActiveDiaries().subscribe(practices => {
+			this.practices = practices;
+		});
 	}
 
 	ngOnChanges(changes: SimpleChanges): void {
 		if (changes['isVisible'].previousValue && !changes['isVisible'].currentValue) {
+			this.clearResults();
 			this.ngOnInit();
-			this.resetEmptyAppointmentList(null);
 		}
 	}
 	private initializeTimeFilters() {
@@ -122,19 +129,16 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		return time1.hours > time2.hours || (time1.hours === time2.hours && time1.minutes > time2.minutes);
 	}
 
-	private getClinicalSpecialtiesTypeaheadOptions$() {
-		return this.diaryService.getActiveDiariesAliases().pipe(map(toTypeaheadOptionList));
+	private setClinicalSpecialtiesTypeaheadOptions(): void {
+		this.diaryService.getActiveDiariesAliases().subscribe(clinicalSpecialties =>
+			this.aliasTypeaheadOptions = clinicalSpecialties.map(specialty => this.toTypeaheadOption(specialty))
+		)
+	}
 
-		function toTypeaheadOptionList(clinicalSpecialtiesList: string[]):
-			TypeaheadOption<string>[] {
-			return clinicalSpecialtiesList.map(toTypeaheadOption);
-
-			function toTypeaheadOption(clinicalSpecialty: string): TypeaheadOption<string> {
-				return {
-					compareValue: clinicalSpecialty,
-					value: clinicalSpecialty
-				};
-			}
+	private toTypeaheadOption(clinicalSpecialty: string): TypeaheadOption<string> {
+		return {
+			compareValue: clinicalSpecialty,
+			value: clinicalSpecialty
 		}
 	}
 
@@ -177,7 +181,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 			this.diaryService.generateEmptyAppointments(searchAppointmentDto).subscribe(emptyAppointments => {
 				this.emptyAppointments = emptyAppointments;
 				this.emptyAppointmentsFiltered = this.emptyAppointments.slice(0, PAGE_MIN_SIZE);
-				if (this.paginator){
+				if (this.paginator) {
 					this.paginator.pageSize = PAGE_MIN_SIZE;
 				}
 			});
@@ -199,8 +203,17 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		this.emptyAppointmentsFiltered = this.emptyAppointments.slice($event.pageIndex * $event.pageSize, $event.pageIndex * $event.pageSize + $event.pageSize);
 	}
 
-	resetEmptyAppointmentList(event) {
-		this.emptyAppointments = null;
+	clearInformation() {
+		this.searchAppointmentsInfoService.clearInfo();
+		this.clearResults();
+	}
+
+	clearResults() {
+		this.externalInformation = null;
+		this.externalSetValueSpecialty = null;
+		this.resetControls();
+		this.clearLists();		
+		this.selectedSearchCriteria = SearchCriteria.CONSULTATION;
 	}
 
 	setCriteria(selectedCriteria: SearchCriteria) {
@@ -247,6 +260,48 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 			modality: this.form.controls.modality.value,
 			practiceId: this.form.controls.practice.value
 		}
+	}
+
+	private setReferenceInformation(): void {
+		this.externalInformation = this.searchAppointmentsInfoService.getSearchAppointmentInfo();
+
+		if (!this.externalInformation)
+			return;
+
+		const { patientId, formInformation } = this.externalInformation;
+
+		this.patientId = patientId;
+
+		const { searchCriteria, clinicalSpecialty, practice } = formInformation;
+		this.setCriteria(searchCriteria);
+
+		if (clinicalSpecialty) {
+			const specialtyValue = clinicalSpecialty.value;
+			this.externalSetValueSpecialty = this.toTypeaheadOption(specialtyValue.name);
+			this.aliasTypeaheadOptions = [this.toTypeaheadOption(specialtyValue.name)];
+			this.setClinicalSpecialty(specialtyValue);
+		}
+
+		if (practice) {
+			this.practices = [practice];
+			this.setPractice(practice);
+		}
+
+		this.searchAppointmentsInfoService.clearInfo();
+	}
+
+	private clearLists() {
+		this.practices = [];
+		this.emptyAppointments = null;
+		this.emptyAppointmentsFiltered = null;
+	}
+
+	private resetControls() {
+		const formControls = this.form.controls;
+		formControls.clinicalSpecialty.setValue(null);
+		formControls.clinicalSpecialty.enable();
+		formControls.practice.setValue(null);
+		formControls.practice.enable();
 	}
 
 
