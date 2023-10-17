@@ -13,7 +13,6 @@ import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -76,7 +75,7 @@ public interface InternmentEpisodeService {
 
 	boolean haveMoreThanOneIntermentEpisodesFromPatients(List<Integer> patients);
 
-	ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId, List<String> procedures, String observations, String doctor) throws GeneratePdfException, PatientNotFoundException, PersonNotFoundException, InternmentEpisodeNotFoundException;
+	ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId, List<String> procedures, String observations, String professionalId) throws GeneratePdfException, PatientNotFoundException, PersonNotFoundException, InternmentEpisodeNotFoundException;
 
 	void existsConsentDocumentInInternmentEpisode(Integer internmentEpisodeId, Integer consentId) throws MoreThanOneConsentDocumentException;
 

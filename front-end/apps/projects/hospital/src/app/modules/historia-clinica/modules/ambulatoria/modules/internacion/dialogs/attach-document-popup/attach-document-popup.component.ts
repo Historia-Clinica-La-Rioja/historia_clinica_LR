@@ -83,7 +83,8 @@ export class AttachDocumentPopupComponent implements OnInit {
 				const professionalName = this.getFullNameByFF(professional);
 				return {
 					compareValue: professionalName,
-					value: professionalName
+					value: professional.id.toString(),
+					viewValue: professionalName
 				}
 			})
 		});

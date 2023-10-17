@@ -19,6 +19,9 @@ import net.pladema.establishment.service.InstitutionService;
 import net.pladema.patient.service.PatientService;
 import net.pladema.person.service.PersonService;
 
+import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNumberByProfessional;
+import net.pladema.staff.service.HealthcareProfessionalService;
+
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -121,6 +124,12 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 	@Mock
 	private FetchEpisodeDocumentTypeById fetchEpisodeDocumentTypeById;
 
+	@Mock
+	private HealthcareProfessionalService healthcareProfessionalService;
+
+	@Mock
+	private GetLicenseNumberByProfessional getLicenseNumberByProfessional;
+
 	@BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -136,7 +145,9 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 				patientService,
 				personService,
 				institutionService,
-				fetchEpisodeDocumentTypeById);
+				fetchEpisodeDocumentTypeById,
+				healthcareProfessionalService,
+				getLicenseNumberByProfessional);
         createEvolutionNoteService = new CreateEvolutionNoteServiceImpl(
                 documentFactory,
                 internmentEpisodeService,

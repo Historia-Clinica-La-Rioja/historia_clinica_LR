@@ -343,12 +343,12 @@ public class InternmentEpisodeController {
 	public ResponseEntity<Resource> generateEpisodeDocumentType(
 			@RequestParam(value = "procedures", required = false) List<String> procedures,
 			@RequestParam(value = "observations", required = false) String observations,
-			@RequestParam(value = "doctor", required = false) String doctor,
+			@RequestParam(value = "professionalId", required = false) String professionalId,
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "consentId") Integer consentId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) throws GeneratePdfException, InternmentEpisodeNotFoundException, PersonNotFoundException, PatientNotFoundException {
-		LOG.debug("Input parameters -> institutionId {}, consentId {}, intermentEpisodeId {}, procedures {}, observations {}, doctor {}", institutionId, consentId, internmentEpisodeId, procedures, observations, doctor);
-		ResponseEntity<Resource> result = internmentEpisodeService.generateEpisodeDocumentType(institutionId, consentId, internmentEpisodeId, procedures, observations, doctor);
+		LOG.debug("Input parameters -> institutionId {}, consentId {}, intermentEpisodeId {}, procedures {}, observations {}, professionalId {}", institutionId, consentId, internmentEpisodeId, procedures, observations, professionalId);
+		ResponseEntity<Resource> result = internmentEpisodeService.generateEpisodeDocumentType(institutionId, consentId, internmentEpisodeId, procedures, observations, professionalId);
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

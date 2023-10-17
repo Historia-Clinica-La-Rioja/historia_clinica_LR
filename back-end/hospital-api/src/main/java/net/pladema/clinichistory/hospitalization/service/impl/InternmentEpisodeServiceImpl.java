@@ -30,6 +30,10 @@ import net.pladema.patient.service.PatientService;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.service.PersonService;
 
+import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNumberByProfessional;
+import net.pladema.staff.domain.ProfessionalLicenseNumberBo;
+import net.pladema.staff.service.HealthcareProfessionalService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -67,8 +71,6 @@ import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
 import org.xhtmlrenderer.util.XRRuntimeException;
-
-import static net.pladema.staff.repository.entity.EpisodeDocumentType.ADMISSION_CONSENT;
 import static net.pladema.staff.repository.entity.EpisodeDocumentType.SURGICAL_CONSENT;
 
 @Service
@@ -112,7 +114,25 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 
 	private final FetchEpisodeDocumentTypeById fetchEpisodeDocumentTypeById;
 
-	public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository, DateTimeProvider dateTimeProvider, EvolutionNoteDocumentRepository evolutionNoteDocumentRepository, PatientDischargeRepository patientDischargeRepository, MedicalCoveragePlanRepository medicalCoveragePlanRepository, DocumentService documentService, InternmentEpisodeStorage internmentEpisodeStorage, FeatureFlagsService featureFlagsService, PdfService pdfService, PatientService patientService, PersonService personService, InstitutionService institutionService, FetchEpisodeDocumentTypeById fetchEpisodeDocumentTypeById) {
+	private final HealthcareProfessionalService healthcareProfessionalService;
+
+	private final GetLicenseNumberByProfessional getLicenseNumberByProfessional;
+
+	public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository,
+										DateTimeProvider dateTimeProvider,
+										EvolutionNoteDocumentRepository evolutionNoteDocumentRepository,
+										PatientDischargeRepository patientDischargeRepository,
+										MedicalCoveragePlanRepository medicalCoveragePlanRepository,
+										DocumentService documentService,
+										InternmentEpisodeStorage internmentEpisodeStorage,
+										FeatureFlagsService featureFlagsService,
+										PdfService pdfService,
+										PatientService patientService,
+										PersonService personService,
+										InstitutionService institutionService,
+										FetchEpisodeDocumentTypeById fetchEpisodeDocumentTypeById,
+										HealthcareProfessionalService healthcareProfessionalService,
+										GetLicenseNumberByProfessional getLicenseNumberByProfessional) {
 		this.internmentEpisodeRepository = internmentEpisodeRepository;
 		this.dateTimeProvider = dateTimeProvider;
 		this.evolutionNoteDocumentRepository = evolutionNoteDocumentRepository;
@@ -126,6 +146,8 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		this.personService = personService;
 		this.institutionService = institutionService;
 		this.fetchEpisodeDocumentTypeById = fetchEpisodeDocumentTypeById;
+		this.healthcareProfessionalService = healthcareProfessionalService;
+		this.getLicenseNumberByProfessional = getLicenseNumberByProfessional;
 	}
 
 	@Override
@@ -463,8 +485,8 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	}
 
 	@Override
-	public ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId, List<String> procedures, String observations, String doctor) throws GeneratePdfException, PatientNotFoundException, PersonNotFoundException, InternmentEpisodeNotFoundException {
-		LOG.debug("Input parameters -> institutionId {}, consentId {}, internmentEpisodeId {}, procedures {}, observations {}, doctor {}", institutionId, consentId, internmentEpisodeId, procedures, observations, doctor);
+	public ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId, List<String> procedures, String observations, String professionalId) throws GeneratePdfException, PatientNotFoundException, PersonNotFoundException, InternmentEpisodeNotFoundException {
+		LOG.debug("Input parameters -> institutionId {}, consentId {}, internmentEpisodeId {}, procedures {}, observations {}, professionalId {}", institutionId, consentId, internmentEpisodeId, procedures, observations, professionalId);
 		InternmentEpisode internmentEpisode = getInternmentEpisode(internmentEpisodeId, institutionId);
 		Optional<Patient> patient = patientService.getPatient(internmentEpisode.getPatientId());
 		if (patient.isEmpty())
@@ -479,8 +501,13 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 			throw new InternmentEpisodeNotFoundException();
 		var isbo = internmentSummaryBo.get();
 
-		if (consentId.equals((int) SURGICAL_CONSENT) && doctor != null) {
-			isbo.setDoctor(new ResponsibleDoctorBo(null, doctor, null, null));
+		if (consentId.equals((int) SURGICAL_CONSENT)) {
+			var professional = healthcareProfessionalService.findActiveProfessionalById(Integer.parseInt((professionalId)));
+			var licenses = getLicenseNumberByProfessional.run(professional.getId());
+			isbo.setDoctor(new ResponsibleDoctorBo(professional.getId(), professional.getFirstName(), professional.getLastName(), licenses
+					.stream()
+					.map(ProfessionalLicenseNumberBo::getCompleteTypeLicenseNumber)
+					.collect(Collectors.toList())));
 		}
 
 		InstitutionBo institutionBo = institutionService.get(institutionId);

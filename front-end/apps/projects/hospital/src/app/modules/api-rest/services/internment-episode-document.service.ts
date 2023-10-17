@@ -39,7 +39,7 @@ export class InternmentEpisodeDocumentService {
 		return this.http.get<DocumentTypeDto[]>(url);
 	}
 
-	generateConsentDocument(internmentEpisodeId: number, consentId: number, procedures?: string[], observations?: string, professional?: string) {
+	generateConsentDocument(internmentEpisodeId: number, consentId: number, procedures?: string[], observations?: string, professionalId?: string) {
 		const url = `${this.url}/internments/${internmentEpisodeId}/episode-document-type/${consentId}`;
 		const fileName = `Consentimiento_${consentId}.pdf`;
 
@@ -47,7 +47,7 @@ export class InternmentEpisodeDocumentService {
 			this.viewPdfService.showDialog(
 				url,
 				fileName,
-				{ procedures: `${procedures.join(',')}`, observations: observations, doctor: professional}
+				{ procedures: `${procedures.join(',')}`, observations: observations, professionalId}
 			);
 		}
 		else {

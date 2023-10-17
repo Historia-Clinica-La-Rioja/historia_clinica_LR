@@ -17,6 +17,9 @@ import net.pladema.establishment.service.InstitutionService;
 import net.pladema.patient.service.PatientService;
 import net.pladema.person.service.PersonService;
 
+import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNumberByProfessional;
+import net.pladema.staff.service.HealthcareProfessionalService;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -111,6 +114,12 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
 	@Mock
 	private FetchEpisodeDocumentTypeById fetchEpisodeDocumentTypeById;
 
+	@Mock
+	private HealthcareProfessionalService healthcareProfessionalService;
+
+	@Mock
+	private GetLicenseNumberByProfessional getLicenseNumberByProfessional;
+
     @BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -126,7 +135,9 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
 				patientService,
 				personService,
 				institutionService,
-				fetchEpisodeDocumentTypeById);
+				fetchEpisodeDocumentTypeById,
+				healthcareProfessionalService,
+				getLicenseNumberByProfessional);
         createEpicrisisService = new CreateEpicrisisServiceImpl(
                 documentFactory,
                 internmentEpisodeService,
