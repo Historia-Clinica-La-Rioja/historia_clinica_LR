@@ -1,5 +1,7 @@
 .masEstudios {
-  padding: 20px;
+  padding: 15px;
+  margin-left: 1.6%;
+  margin-right: 1.6%;
 }
 
 .masEstudios .botones button {
@@ -16,15 +18,30 @@
   font-size: medium;
   display: flex; 
   align-items: center; 
-  margin-left: 5%;
+  max-height: 24px;
 }
+
 
 // .icon-container {
-//   margin-right: 10px; /* Ajusta el margen entre el icono y el texto si es necesario */
+//   margin-right: 10px;
 // }
 
+
 .mat-card-header mat-icon {
-  margin-right: 5px; /* Ajusta el margen entre el icono y el texto si es necesario */
+  margin-right: 5px; 
   height: 25px;
+  position: relative;
+  right: 15px;
+ }
+
+.title{
+  position: relative;
+  right: 4px;
 }
 
+
+.btnEstudios {
+  position: relative;
+  left: 19px;
+  padding: 1.3%;
+}
