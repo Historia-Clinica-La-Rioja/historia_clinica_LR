@@ -89,7 +89,7 @@ export class ReferenceReportComponent implements OnInit {
 
 }
 
-enum ReferenceView {
+export enum ReferenceView {
 	REQUESTED,
 	RECEIVED
 }

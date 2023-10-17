@@ -51,6 +51,7 @@ import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data
 // services
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { EquipmentAppointmentsFacadeService } from './services/equipment-appointments-facade.service';
+import { SearchAppointmentsInfoService } from './services/search-appointment-info.service';
 import { TabsService } from './services/tabs.service';
 // pipes
 import { MeetingRoomPipe } from './pipes/meeting-room.pipe';
@@ -125,6 +126,7 @@ import { PracticesPipe } from './pipes/practices.pipe';
 		},
 		EquipmentAppointmentsFacadeService,
 		TabsService,
+		SearchAppointmentsInfoService,
 	]
 })
 export class TurnosModule {
