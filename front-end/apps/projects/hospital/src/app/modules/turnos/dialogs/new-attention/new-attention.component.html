@@ -18,7 +18,7 @@
 	</div>
 
 
-	<form [formGroup]="form" (ngSubmit)="submit()">
+	<form [formGroup]="form" (ngSubmit)="submit()" *ngIf="this.form?.value?.medicalAttentionType">
 
 		<div fxLayout="column" fxLayoutAlign="center none">
 			<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
@@ -67,7 +67,7 @@
 
 		</div>
 
-		<div fxLayout="column" *ngIf="form?.value?.medicalAttentionType?.description != SPONTANEOUS ">
+		<div fxLayout="column" *ngIf="!isSpontaneousMedicalAttention">
 			<div translate="turnos.agenda-setup.OVERTURN_COUNT"></div>
 			<div>
 				<mat-form-field floatLabel="never" appearance="outline">
@@ -78,7 +78,7 @@
 		</div>
 
 
-		<div *ngIf="form?.value?.medicalAttentionType?.description != SPONTANEOUS && data.diaryType == 0">
+		<div *ngIf="!isSpontaneousMedicalAttention && data.diaryType == 0">
 			<div fxLayout="column">
 				<div mat-dialog-title>
 					{{'turnos.agenda-setup.dialog.MODALITY' | translate}}

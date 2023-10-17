@@ -26,6 +26,7 @@ export class NewAttentionComponent implements OnInit {
 	isEnableOnlineAppointments: boolean = false;
 	availbleForCareLine = false;
 	isEnableTelemedicina: boolean = false;
+	isSpontaneousMedicalAttention = false;
 
 	constructor(
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
@@ -40,17 +41,6 @@ export class NewAttentionComponent implements OnInit {
 
 
 	ngOnInit(): void {
-		this.medicalConsultationMasterdataService.getMedicalAttention()
-			.subscribe(medicalAttentionTypes => {
-				this.medicalAttentionTypes = medicalAttentionTypes;
-				let medicalAttentionTypeDefaultValue;
-				if (this.data.medicalAttentionTypeId) {
-					medicalAttentionTypeDefaultValue = medicalAttentionTypes.find(medicalAttentionType => medicalAttentionType.id === this.data.medicalAttentionTypeId);
-				} else {
-					medicalAttentionTypeDefaultValue = this.medicalAttentionTypes[0];
-				}
-				this.form.controls.medicalAttentionType.setValue(medicalAttentionTypeDefaultValue);
-			});
 		this.form = this.formBuilder.group({
 			startingHour: [this.data.start, Validators.required],
 			endingHour: [this.data.end, Validators.required],
@@ -62,6 +52,19 @@ export class NewAttentionComponent implements OnInit {
 			secondOpinionVirtualAttentionAllowed: [this.data.secondOpinionVirtualAttentionAllowed],
 			onSiteAttentionAllowed:[this.data.onSiteAttentionAllowed],
 		});
+
+		this.medicalConsultationMasterdataService.getMedicalAttention()
+			.subscribe(medicalAttentionTypes => {
+				this.medicalAttentionTypes = medicalAttentionTypes;
+				let medicalAttentionTypeDefaultValue;
+				if (this.data.medicalAttentionTypeId) {
+					medicalAttentionTypeDefaultValue = medicalAttentionTypes.find(medicalAttentionType => medicalAttentionType.id === this.data.medicalAttentionTypeId);
+				} else {
+					medicalAttentionTypeDefaultValue = this.medicalAttentionTypes[0];
+				}
+				this.form.controls.medicalAttentionType.setValue(medicalAttentionTypeDefaultValue);
+				this.isSpontaneousMedicalAttention = this.form?.value?.medicalAttentionType?.description === this.SPONTANEOUS;
+			});
 
 		this.availableForBooking = this.data.availableForBooking;
 		this.availbleForCareLine = this.data?.hasSelectedLinesOfCare ? this.data.protectedAppointmentsAllowed : false;
@@ -75,11 +78,13 @@ export class NewAttentionComponent implements OnInit {
 		const medicalAttentionType = this.form.controls.medicalAttentionType.value;
 
 		if (medicalAttentionType.description === MEDICAL_ATTENTION.SPONTANEOUS) {
+			this.isSpontaneousMedicalAttention = true;
 			this.form.controls.availableForBooking.setValue(false);
 			this.form.controls.protectedAppointmentsAllowed.setValue(false);
 			this.form.controls.overturnCount.disable();
 			this.form.controls.availableForBooking.disable();
 		} else {
+			this.isSpontaneousMedicalAttention = false;
 			this.form.controls.overturnCount.enable();
 			this.form.controls.availableForBooking.enable();
 		}

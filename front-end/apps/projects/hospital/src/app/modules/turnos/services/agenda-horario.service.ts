@@ -177,7 +177,8 @@ export class AgendaHorarioService {
 						onSiteAttentionAllowed: !!event.meta.onSiteAttentionAllowed,
 						diaryType: this.diaryType
 					},
-					height: '95%'
+					maxHeight: 'fit-content',
+					autoFocus: false,
 				});
 			dialogRef.afterClosed().subscribe(dialogInfo => {
 				if (!dialogInfo) {
