@@ -80,8 +80,9 @@
 
 		<div *ngIf="!isSpontaneousMedicalAttention && data.diaryType == 0">
 			<div fxLayout="column">
-				<div mat-dialog-title>
-					{{'turnos.agenda-setup.dialog.MODALITY' | translate}}
+				<div fxLayout="column" >
+					<p mat-dialog-title>{{'turnos.agenda-setup.dialog.MODALITY' | translate}}</p>
+					<mat-error *ngIf="showErrorModality" [translate]="'forms.REQUIRED'"></mat-error>
 				</div>
 				<mat-checkbox color="primary" [disabled]="!isEnableTelemedicina" formControlName="onSiteAttentionAllowed">
 					<span>

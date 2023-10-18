@@ -27,6 +27,7 @@ export class NewAttentionComponent implements OnInit {
 	availbleForCareLine = false;
 	isEnableTelemedicina: boolean = false;
 	isSpontaneousMedicalAttention = false;
+	showErrorModality: boolean = false;
 
 	constructor(
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
@@ -50,7 +51,7 @@ export class NewAttentionComponent implements OnInit {
 			protectedAppointmentsAllowed: [this.data?.protectedAppointmentsAllowed],
 			patientVirtualAttentionAllowed: [this.data.patientVirtualAttentionAllowed],
 			secondOpinionVirtualAttentionAllowed: [this.data.secondOpinionVirtualAttentionAllowed],
-			onSiteAttentionAllowed:[this.data.onSiteAttentionAllowed],
+			onSiteAttentionAllowed: [this.data.onSiteAttentionAllowed],
 		});
 
 		this.medicalConsultationMasterdataService.getMedicalAttention()
@@ -106,7 +107,12 @@ export class NewAttentionComponent implements OnInit {
 	}
 
 	validModality(): boolean {
-		return (this.form.controls.patientVirtualAttentionAllowed.value || this.form.controls.secondOpinionVirtualAttentionAllowed.value || this.form.controls.onSiteAttentionAllowed.value);
+		if (this.form.controls.patientVirtualAttentionAllowed.value || this.form.controls.secondOpinionVirtualAttentionAllowed.value || this.form.controls.onSiteAttentionAllowed.value) {
+			this.showErrorModality = false;
+		} else {
+			this.showErrorModality = true;
+		}
+		return (!this.showErrorModality);
 	}
 
 	closeDialog() {
