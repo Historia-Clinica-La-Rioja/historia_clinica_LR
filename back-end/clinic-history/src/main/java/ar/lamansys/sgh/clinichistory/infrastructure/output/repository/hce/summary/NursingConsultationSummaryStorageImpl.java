@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class NursingConsultationSummaryStorageImpl implements NursingConsultatio
     @Override
     @Transactional(readOnly = true)
     public List<NursingEvolutionSummaryBo> getAllNursingEvolutionSummary(Integer patientId) {
-        String sqlString = " SELECT nc.id, nc.performedDate, "
+        String sqlString = " SELECT nc.id, nc.creationable.createdOn, "
                 + "hp.id AS healthcarProfessionalId, hp.licenseNumber, hp.personId, "
                 + "p.firstName, p.lastName, p.identificationNumber, pe.nameSelfDetermination, "
                 + "cs.id AS clinicalSpecialtyId, cs.name AS clinicalSpecialtyName, cs.clinicalSpecialtyTypeId, "
@@ -55,7 +56,7 @@ public class NursingConsultationSummaryStorageImpl implements NursingConsultatio
         queryResult.forEach(a ->
                 result.add(new NursingEvolutionSummaryBo(
                         (Integer)a[0],
-                        a[1] != null ? (LocalDate)a[1] : null,
+                        a[1] != null ? (LocalDateTime) a[1] : null,
 						new HealthcareProfessionalBo((Integer) a[2], (String) a[3], (Integer) a[4], (String) a[5], (String) a[6], (String) a[7], (String) a[8],(String) a[15], (String) a[16]),
 						a[9] != null ? new ClinicalSpecialtyBo((Integer)a[9], (String)a[10], (Short) a[11]) : null,
 						(String)a[12],

@@ -1685,7 +1685,7 @@ export interface HCEEffectiveClinicalObservationDto extends HCEClinicalObservati
     effectiveTime: string;
 }
 
-export interface HCEEvolutionSummaryDto extends Serializable {
+export interface HCEEvolutionSummaryDto {
     clinicalSpecialty: ClinicalSpecialtyDto;
     consultationId: number;
     document: HCEDocumentDataDto;
@@ -1695,7 +1695,7 @@ export interface HCEEvolutionSummaryDto extends Serializable {
     procedures: HCEProcedureDto[];
     professional: HCEHealthcareProfessionalDto;
     reasons: HCEReasonDto[];
-    startDate: string;
+    startDate: DateTimeDto;
 }
 
 export interface HCEHealthConditionDto extends HCEPersonalHistoryDto {

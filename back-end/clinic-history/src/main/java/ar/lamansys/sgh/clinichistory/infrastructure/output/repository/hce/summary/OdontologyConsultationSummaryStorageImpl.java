@@ -1,14 +1,5 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.summary;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import ar.lamansys.sgh.clinichistory.application.ports.OdontologyConsultationSummaryStorage;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.ClinicalSpecialtyBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.DocumentDataBo;
@@ -23,6 +14,14 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class OdontologyConsultationSummaryStorageImpl implements OdontologyConsultationSummaryStorage {
@@ -37,7 +36,7 @@ public class OdontologyConsultationSummaryStorageImpl implements OdontologyConsu
     @Transactional(readOnly = true)
     @Override
     public List<OdontologyEvolutionSummaryBo> getAllOdontologyEvolutionSummary(Integer patientId) {
-        String sqlString =" SELECT oc.id, oc.performedDate, "
+        String sqlString =" SELECT oc.id, oc.creationable.createdOn, "
                 + "hp.id AS healthcarProfessionalId, hp.licenseNumber, hp.personId, "
                 + "p.firstName, p.lastName, p.identificationNumber, pe.nameSelfDetermination, "
                 + "cs.id AS clinicalSpecialtyId, cs.name AS clinicalSpecialtyName, cs.clinicalSpecialtyTypeId, "
@@ -62,7 +61,7 @@ public class OdontologyConsultationSummaryStorageImpl implements OdontologyConsu
         queryResult.forEach(a ->
                 result.add(new OdontologyEvolutionSummaryBo(
                         (Integer)a[0],
-                        a[1] != null ? (LocalDate)a[1] : null,
+                        a[1] != null ? (LocalDateTime) a[1] : null,
                         new HealthcareProfessionalBo((Integer) a[2], (String) a[3], (Integer) a[4], (String) a[5], (String) a[6], (String) a[7], (String) a[8],(String) a[15], (String) a[16] ),
                         a[9] != null ? new ClinicalSpecialtyBo((Integer)a[9], (String)a[10], (Short) a[11]) : null,
                         (String)a[12],

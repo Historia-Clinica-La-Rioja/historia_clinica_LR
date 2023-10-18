@@ -1,21 +1,19 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
-import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.validation.Valid;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 @ToString
-public class HCEEvolutionSummaryDto implements Serializable {
+public class HCEEvolutionSummaryDto {
 
     private Integer consultationId;
 
@@ -25,8 +23,7 @@ public class HCEEvolutionSummaryDto implements Serializable {
 
     private List<HCEHealthConditionDto> healthConditions;
 
-    @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
-    private String startDate;
+    private DateTimeDto startDate;
 
     private List<HCEReasonDto> reasons;
 

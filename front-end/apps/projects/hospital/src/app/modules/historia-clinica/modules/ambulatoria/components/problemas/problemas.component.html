@@ -336,7 +336,7 @@
 															<h3 class="mat-h2 primary"
 																[translate]="'ambulatoria.paciente.problemas.historical-problems.CONSULTATION_DATE'">
 															</h3>
-															{{historicalProblem.consultationDate | date : 'dd/MM/yyyy'}}
+															{{historicalProblem.consultationDate | viewDateDto: 'localdatetime' | date : 'dd/MM/yyyy'}}
 														</div>
 														<div>
 															<h3 class="mat-h2 primary"
