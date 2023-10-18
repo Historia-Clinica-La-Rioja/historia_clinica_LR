@@ -1,4 +1,4 @@
-package net.pladema.questionnaires.common.domain.service;
+package net.pladema.questionnaires.frail.get.domain.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,7 +6,7 @@ import java.util.Optional;
 import net.pladema.questionnaires.common.domain.Answer;
 import net.pladema.questionnaires.common.dto.QuestionnaireSummary;
 
-public interface GetQuestionnaireService {
+public interface GetFrailService {
 
 	List<Answer> findPatientQuestionnaire(Integer patientId);
 

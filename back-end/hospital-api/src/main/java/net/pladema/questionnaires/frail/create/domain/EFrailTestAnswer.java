@@ -29,11 +29,11 @@ public enum EFrailTestAnswer {
 	A10((short) 66, (short)20, "Sí", 1),
 	A11((short) 66, (short)19, "No", 0),
 
-	A12((short) 68, (short)47, "> 5%", 1),
-	A13((short) 68, (short)48, "< 5%", 0),
+	A12((short) 68, (short)47, "Mayor al 5%", 1),
+	A13((short) 68, (short)48, "Menor al 5%", 0),
 
-	A14((short) 70, (short)49, "0-2: Pre-frágil", 0),
-	A15((short) 70, (short)50, "3-5: Frágil", 1);
+	A14((short) 70, (short)49, "0 a 2: Pre-frágil", 0),
+	A15((short) 70, (short)50, "3 a 5: Frágil", 1);
 
 	private final Short questionId;
 	private final Short answerId;

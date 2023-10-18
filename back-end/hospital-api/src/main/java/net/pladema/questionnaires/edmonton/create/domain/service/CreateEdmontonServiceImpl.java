@@ -1,4 +1,4 @@
-package net.pladema.questionnaires.frail.create.domain.service;
+package net.pladema.questionnaires.edmonton.create.domain.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,21 +11,21 @@ import net.pladema.questionnaires.common.domain.Answer;
 import net.pladema.questionnaires.common.domain.QuestionnaireResponse;
 import net.pladema.questionnaires.common.domain.model.QuestionnaireAnswerBO;
 import net.pladema.questionnaires.common.domain.model.QuestionnaireBO;
-import net.pladema.questionnaires.frail.get.domain.service.GetFrailService;
+import net.pladema.questionnaires.edmonton.get.domain.service.GetEdmontonService;
 import net.pladema.questionnaires.common.dto.QuestionnaireDTO;
-import net.pladema.questionnaires.frail.create.repository.FrailRepository;
+import net.pladema.questionnaires.edmonton.create.repository.EdmontonRepository;
 
 @Service
-public class CreateFrailServiceImpl implements CreateFrailService {
+public class CreateEdmontonServiceImpl implements CreateEdmontonService {
 
-	private static final Logger logger = LoggerFactory.getLogger(CreateFrailServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(CreateEdmontonServiceImpl.class);
 
-	private final FrailRepository frailRepository;
+	private final EdmontonRepository edmontonRepository;
 
-	private final GetFrailService getQuestionnaireService;
+	private final GetEdmontonService getQuestionnaireService;
 
-	public CreateFrailServiceImpl(FrailRepository frailRepository, GetFrailService getQuestionnaireService) {
-		this.frailRepository = frailRepository;
+	public CreateEdmontonServiceImpl(EdmontonRepository edmontonRepository, GetEdmontonService getQuestionnaireService) {
+		this.edmontonRepository = edmontonRepository;
 		this.getQuestionnaireService = getQuestionnaireService;
 	}
 
@@ -43,14 +43,14 @@ public class CreateFrailServiceImpl implements CreateFrailService {
 			for (Answer answer : lst) {
 				Integer id = answer.getQuestionnaireResponseId();
 				logger.debug("Processing answer with id {}", id);
-				QuestionnaireResponse questionnaireResponse = new QuestionnaireResponse(frailRepository.findById(id));
-				frailRepository.updateStatusById(questionnaireResponse.getId(), 3);
+				QuestionnaireResponse questionnaireResponse = new QuestionnaireResponse(edmontonRepository.findById(id));
+				edmontonRepository.updateStatusById(questionnaireResponse.getId(), 3);
 			}
 
 			QuestionnaireResponse entity = createQuestionnaireTest(questionnaireBO);
 
-			frailRepository.save(entity);
-			logger.info("Frail questionnaire created and saved for patient with id {}", patientId);
+			edmontonRepository.save(entity);
+			logger.info("Edmonton questionnaire created and saved for patient with id {}", patientId);
 		}
 		logger.info("Execution of the 'execute' method completed.");
 		return questionnaireBO;
@@ -60,9 +60,8 @@ public class CreateFrailServiceImpl implements CreateFrailService {
 		QuestionnaireResponse questionnaireResponse = new QuestionnaireResponse();
 		QuestionnaireAnswerBO answerBO;
 		Answer answer;
-		Integer questionnaireId = 3;
+		Integer questionnaireId = 1;
 		Integer statusId = 2;
-		int currentQuestionId = 60;
 
 		questionnaireResponse.setPatientId(Math.toIntExact(questionnaireBO.getPatientId()));
 
@@ -72,10 +71,9 @@ public class CreateFrailServiceImpl implements CreateFrailService {
 				answerBO = questionnaireAnswerBO;
 				answer = new Answer();
 				answer.setAnswerId(Math.toIntExact(answerBO.getAnswerId()));
-				answer.setItemId(currentQuestionId);
+				answer.setItemId(Math.toIntExact(answerBO.getQuestionId()));
 				answer.setValue(String.valueOf(answerBO.getValue()));
 				questionnaireResponse.getAnswers().add(answer);
-				currentQuestionId += 2;
 			}
 			questionnaireResponse.setQuestionnaireId(questionnaireId);
 			questionnaireResponse.setStatusId(statusId);

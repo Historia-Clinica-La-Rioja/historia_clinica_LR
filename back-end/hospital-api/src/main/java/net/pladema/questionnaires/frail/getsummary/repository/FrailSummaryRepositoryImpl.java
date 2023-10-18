@@ -1,16 +1,15 @@
-package net.pladema.questionnaires.frail.get.repository;
+package net.pladema.questionnaires.frail.getsummary.repository;
 
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
-import net.pladema.questionnaires.common.dto.QuestionnaireSummary;
-import net.pladema.questionnaires.common.repository.QuestionnaireSummaryRepository;
-
 import org.springframework.stereotype.Repository;
 
+import net.pladema.questionnaires.common.dto.QuestionnaireSummary;
+
 @Repository
-public class FrailSummaryRepositoryImpl implements QuestionnaireSummaryRepository {
+public class FrailSummaryRepositoryImpl implements FrailSummaryRepository {
 
 	private final EntityManager entityManager;
 

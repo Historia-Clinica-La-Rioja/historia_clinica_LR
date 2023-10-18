@@ -1,7 +1,7 @@
-package net.pladema.questionnaires.common.domain.service;
+package net.pladema.questionnaires.edmonton.create.domain.service;
 
 import net.pladema.questionnaires.common.domain.model.QuestionnaireBO;
 
-public interface CreateQuestionnaireService {
+public interface CreateEdmontonService {
 	QuestionnaireBO execute (QuestionnaireBO questionnaireBO);
 }

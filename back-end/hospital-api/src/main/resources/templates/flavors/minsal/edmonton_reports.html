@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+    <title>Prueba de Edmonton</title>
+    <!-- Bootstrap's .css -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous"></link>
+    <style>
+        body {
+           border: 1px solid black;
+           padding: 10px;
+           font-family: Tahoma, Verdana, sans-serif;
+        }
+        h4 {
+           margin: 15px 0px;
+           color: #2687c5;
+           background-color: #f0f8ff;
+           border-top: 1px solid black;
+           font-weight: normal;
+        }
+
+        p {
+           font-weight: bold;
+           font-size: 15px;
+        }
+
+        label {
+           width: 70%;
+           page-break-inside: avoid;
+           margin: 2px 0px;
+        }
+
+
+    </style>
+</head>
+<body th:fragment="frail">
+    <div class="container">
+        <h3>Prueba de Edmonton (fragilidad) - Resultados de informe</h3>
+
+        <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[0]}">
+            <h4>Cognitivo</h4>
+            <p>Por favor imagina que este círculo pre-dibujado es un reloj. Me gustaría que pusiera los números en las posiciones correctas y luego poner las manecillas para indicar la hora "once con diez minutos"</p>
+            <label>
+                <input type="checkbox" name="opt1" th:checked="${respuesta.answerId == 1}"></input>
+                Sin errores
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt2" th:checked="${respuesta.answerId == 2}"></input>
+                Errores mínimos de espaciado
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt3" th:checked="${respuesta.answerId == 3}"></input>
+                Otros errores
+            </label><br></br>
+        </div>
+
+        <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[1]}">
+            <h4>Estado de salud general</h4>
+            <p>En el último año, ¿cuántas veces ha estado hospitalizado?</p>
+            <label>
+                <input type="checkbox" name="opt4" th:checked="${respuesta.answerId == 4}"></input>
+                0
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt5" th:checked="${respuesta.answerId == 5}"></input>
+                1 o 2
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt6" th:checked="${respuesta.answerId == 6}"></input>
+                3 o más veces
+            </label><br></br>
+        </div>
+        <div class="itemcontainer" th:each="respuesta : ${answers[2]}">
+            <p>En general, ¿cómo describiría su salud?</p>
+            <label>
+                <input type="checkbox" name="opt7" th:checked="${respuesta.answerId == 7}"></input>
+                Excelente
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt8" th:checked="${respuesta.answerId == 8}"></input>
+                Razonable
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt9" th:checked="${respuesta.answerId == 9}"></input>
+                Mala
+            </label><br></br>
+        </div>
+
+        <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[3]}">
+            <h4>Rendimiento funcional</h4>
+            <p>Me gustaría que se sentara en esta silla con su espalda y brazos relajados. Luego, cuando diga 'ya', por favor párese y camine a un ritmo cómodo y seguro a la marca del suelo (aproximadamente a tres metros de distancia), regrese a su silla y tome asiento.</p>
+            <label>
+                <input type="checkbox" name="opt10" th:checked="${respuesta.answerId == 10}"></input>
+                0 a 10 segundos
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt11" th:checked="${respuesta.answerId == 11}"></input>
+                11 a 20 segundos
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt12" th:checked="${respuesta.answerId == 12}"></input>
+                Más de 20 segundos
+            </label><br></br>
+        </div>
+
+        <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[4]}">
+            <h4>Independencia funcional</h4>
+            <p>¿Con cuántas de las siguientes actividades necesita ayuda? (preparar la comida, compras, transporte, comunicación telefónica, cuidado del hogar, lavado de ropa, manejo de dinero, toma de medicamentos)</p>
+            <label>
+                <input type="checkbox" name="opt13" th:checked="${respuesta.answerId == 13}"></input>
+                0 o 1
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt14" th:checked="${respuesta.answerId == 14}"></input>
+                Entre 2 y 4
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt15" th:checked="${respuesta.answerId == 15}"></input>
+                4 o más veces
+            </label><br></br>
+        </div>
+
+        <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[5]}">
+            <h4>Soporte social</h4>
+            <p>Cuando usted necesita ayuda, ¿puede contar con alguien que esté dispuesto y disponible para atender sus necesidades o problemas?</p>
+            <label>
+                <input type="checkbox" name="opt16" th:checked="${respuesta.answerId == 16}"></input>
+                Siempre
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt17" th:checked="${respuesta.answerId == 17}"></input>
+                A veces
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt18" th:checked="${respuesta.answerId == 18}"></input>
+                Nunca
+            </label><br></br>
+        </div>
+
+        <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[6]}">
+            <h4>Uso de medicamentos</h4>
+            <p>¿Usa cinco o más medicamentos a diario?</p>
+            <label>
+                <input type="checkbox" name="opt19" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt20" th:checked="${respuesta.answerId == 20}"></input>
+                Sí
+            </label><br></br>
+        </div>
+        <div class="itemcontainer" th:each="respuesta : ${answers[7]}">
+            <p>¿Se olvida de tomar sus medicamentos en ocasiones?</p>
+            <label>
+                <input type="checkbox" name="opt21" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt22" th:checked="${respuesta.answerId == 20}"></input>
+                Sí
+            </label><br></br>
+        </div>
+
+        <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[8]}">
+            <h4>Nutrición</h4>
+            <p>¿Ha perdido peso recientemente como para que su ropa le quede suelta?</p>
+            <label>
+                <input type="checkbox" name="opt23" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt24" th:checked="${respuesta.answerId == 20}"></input>
+                Sí
+            </label><br></br>
+        </div>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[9]}">
+            <h4>Ánimo</h4>
+            <p>¿Siente con frecuencia tristeza o depresión?</p>
+            <label>
+                <input type="checkbox" name="opt25" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt26" th:checked="${respuesta.answerId == 20}"></input>
+                Sí
+            </label><br></br>
+        </div>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[10]}">
+            <h4>Incontinencia</h4>
+            <p>¿Tiene algún problema con el control para orinar? Es decir, ¿puede contener la orina si lo desea?</p>
+            <label>
+                <input type="checkbox" name="opt27" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt28" th:checked="${respuesta.answerId == 20}"></input>
+                Sí
+            </label><br></br>
+        </div>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[11]}">
+            <h4>Total</h4>
+            <p>El puntaje final de la prueba realizada se interpreta como:</p>
+            <label>
+                <input type="checkbox" name="opt29" th:checked="${respuesta.answerId == 21}"></input>
+                4 o menor: individuo sano
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt30" th:checked="${respuesta.answerId == 22}"></input>
+                5 o 6: vulnerable
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt31" th:checked="${respuesta.answerId == 23}"></input>
+                7 u 8: fragilidad leve
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt32" th:checked="${respuesta.answerId == 24}"></input>
+                9 o 10: fragilidad moderada
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt33" th:checked="${respuesta.answerId == 25}"></input>
+                11 o mayor: fragilidad severa
+            </label><br></br>
+        </div>
+
+    </div>
+    <!-- Bootstrap's script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</body>
+</html>

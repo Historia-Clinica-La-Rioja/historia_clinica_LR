@@ -1,5 +1,6 @@
-package net.pladema.questionnaires.frail.get.controller;
+package net.pladema.questionnaires.edmonton.get.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,22 +9,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.pladema.questionnaires.common.domain.Answer;
-import net.pladema.questionnaires.frail.get.domain.service.GetFrailService;
+import net.pladema.questionnaires.edmonton.get.domain.service.GetEdmontonService;
 import net.pladema.questionnaires.common.dto.QuestionnaireAnswers;
 import net.pladema.questionnaires.common.dto.QuestionnaireDTO;
 
 @RestController
 @Validated
 @RequestMapping("/institution/{institutionId}/patient/{patientId}/hce/general-state")
-public class GetFrailController implements GetFrailAPI {
+public class GetEdmontonController implements GetEdmontonAPI {
 
-	private final GetFrailService getQuestionnaireService;
+	private final GetEdmontonService getQuestionnaireService;
 
-	public GetFrailController(GetFrailService getQuestionnaireService) {
+	public GetEdmontonController(GetEdmontonService getQuestionnaireService) {
 		this.getQuestionnaireService = getQuestionnaireService;
 	}
 
-	public QuestionnaireDTO getPatientConsultationFrailTest(Integer institutionId, Integer patientId) {
+	public QuestionnaireDTO getPatientConsultationEdmontonTest(Integer institutionId, Integer patientId) throws IOException {
 
 		QuestionnaireDTO questionnaireDTO = new QuestionnaireDTO();
 		List<Answer> lst = getQuestionnaireService.findPatientQuestionnaire(patientId);

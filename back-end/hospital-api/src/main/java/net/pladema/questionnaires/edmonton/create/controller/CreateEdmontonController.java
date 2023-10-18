@@ -1,4 +1,4 @@
-package net.pladema.questionnaires.frail.create.controller;
+package net.pladema.questionnaires.edmonton.create.controller;
 
 import java.util.ArrayList;
 
@@ -13,45 +13,45 @@ import org.springframework.web.bind.annotation.RestController;
 
 import net.pladema.questionnaires.common.domain.model.QuestionnaireAnswerBO;
 import net.pladema.questionnaires.common.domain.model.QuestionnaireBO;
-import net.pladema.questionnaires.frail.create.domain.service.CreateFrailService;
+import net.pladema.questionnaires.edmonton.create.domain.service.CreateEdmontonService ;
 import net.pladema.questionnaires.common.dto.CreateQuestionnaireDTO;
 import net.pladema.questionnaires.common.dto.QuestionnaireAnswerDTO;
-import net.pladema.questionnaires.frail.create.domain.EFrailTestAnswer;
+import net.pladema.questionnaires.edmonton.create.domain.EEdmontonTestAnswer;
 
 @RestController
 @Validated
 @RequestMapping("/institution/{institutionId}/patient/{patientId}/hce/general-state")
-public class CreateFrailController implements CreateFrailAPI {
+public class CreateEdmontonController implements CreateEdmontonAPI {
 
-	private static final Logger logger = LoggerFactory.getLogger(CreateFrailController.class);
+	private static final Logger logger = LoggerFactory.getLogger(CreateEdmontonController.class);
 
-	private final CreateFrailService createFrailService;
+	private final CreateEdmontonService createEdmontonService;
 
-	public CreateFrailController(CreateFrailService createFrailService) {
-		this.createFrailService = createFrailService;
+	public CreateEdmontonController(CreateEdmontonService createEdmontonService) {
+		this.createEdmontonService = createEdmontonService;
 	}
 
 	@Override
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
-	public ResponseEntity<Boolean> createPatientFrail(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "patientId") Integer patientId, CreateQuestionnaireDTO createFrailDTO) {
-		QuestionnaireBO frailBO = createFrailDTO(patientId, createFrailDTO);
+	public ResponseEntity<Boolean> createPatientEdmonton (@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "patientId") Integer patientId, CreateQuestionnaireDTO createEdmontonDTO) {
+		QuestionnaireBO edmontonBO = createEdmontonDTO(patientId, createEdmontonDTO);
 
-		createFrailService.execute(frailBO);
+		createEdmontonService.execute(edmontonBO);
 
-		logger.debug("Frail scale test created successfully.");
+		logger.debug("Edmonton frailty test created successfully.");
 
 		return ResponseEntity.ok().body(true);
 	}
 
-	private QuestionnaireBO createFrailDTO(Integer patientId, CreateQuestionnaireDTO createFrailDTO) {
+	private QuestionnaireBO createEdmontonDTO(Integer patientId, CreateQuestionnaireDTO createEdmontonDTO) {
 		QuestionnaireBO reg = new QuestionnaireBO();
 		QuestionnaireAnswerBO lstReg;
 		reg.setPatientId(patientId);
-		if (createFrailDTO.getQuestionnaire() != null && !createFrailDTO.getQuestionnaire().isEmpty()) {
+		if (createEdmontonDTO.getQuestionnaire() != null && !createEdmontonDTO.getQuestionnaire().isEmpty()) {
 			reg.setAnswers(new ArrayList<>());
-			for (QuestionnaireAnswerDTO dto : createFrailDTO.getQuestionnaire()) {
+			for (QuestionnaireAnswerDTO dto : createEdmontonDTO.getQuestionnaire()) {
 				lstReg = new QuestionnaireAnswerBO();
-				EFrailTestAnswer eReg = EFrailTestAnswer.getById(dto.getAnswerId());
+				EEdmontonTestAnswer eReg = EEdmontonTestAnswer.getById(dto.getAnswerId());
 				lstReg.setAnswerId(eReg.getAnswerId());
 				lstReg.setValue(eReg.getValue());
 				lstReg.setQuestionId(eReg.getQuestionId());

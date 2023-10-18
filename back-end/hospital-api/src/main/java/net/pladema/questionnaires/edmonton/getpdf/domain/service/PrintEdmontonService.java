@@ -1,11 +1,12 @@
-package net.pladema.questionnaires.common.domain.service;
+package net.pladema.questionnaires.edmonton.getpdf.domain.service;
+
+import net.pladema.questionnaires.common.dto.PrintQuestionnaireDTO;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
-import net.pladema.questionnaires.common.dto.PrintQuestionnaireDTO;
 
-public interface PrintQuestionnaireService {
+public interface PrintEdmontonService {
 
 	List<PrintQuestionnaireDTO> getPrintQuestionnaire(Long questionnaireId);
 

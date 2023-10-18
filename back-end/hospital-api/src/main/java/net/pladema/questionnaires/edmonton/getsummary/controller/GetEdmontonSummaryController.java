@@ -1,34 +1,35 @@
-package net.pladema.questionnaires.frail.getsummary.controller;
+package net.pladema.questionnaires.edmonton.getsummary.controller;
 
-import java.util.Optional;
+import net.pladema.questionnaires.edmonton.get.domain.service.GetEdmontonService;
+
+import net.pladema.questionnaires.common.dto.QuestionnaireSummary;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.pladema.questionnaires.frail.get.domain.service.GetFrailService;
-import net.pladema.questionnaires.common.dto.QuestionnaireSummary;
+import java.util.Optional;
 
 @RestController
 @Validated
 @RequestMapping("/institution/{institutionId}/patient/{patientId}/hce/general-state/summary")
-public class GetFrailSummaryController implements GetFrailSummary {
+public class GetEdmontonSummaryController implements GetEdmontonSummary {
 
-	private final GetFrailService getQuestionnaireService;
+	private final GetEdmontonService getQuestionnaireService;
 
-	public GetFrailSummaryController(GetFrailService getFrailService) {
-		this.getQuestionnaireService = getFrailService;
+	public GetEdmontonSummaryController(GetEdmontonService getQuestionnaireService) {
+		this.getQuestionnaireService = getQuestionnaireService;
 	}
 
 	@Override
-	public ResponseEntity<QuestionnaireSummary> getPatientConsultationFrail(Integer institutionId, Integer patientId, Integer questionnaire) {
+	public ResponseEntity<QuestionnaireSummary> getPatientConsultationEdmonton(Integer institutionId, Integer patientId, Integer questionnaire) {
 
 		QuestionnaireSummary questionnaireSummary = new QuestionnaireSummary();
 
 		Optional<QuestionnaireSummary> result = getQuestionnaireService.findQuestionnaireSummary(questionnaire);
 
-		questionnaireSummary.setTitle("Escala de fragilidad 'Frail'");
+		questionnaireSummary.setTitle("Escala de fragilidad 'Edmonton'");
 		questionnaireSummary.setProfessionalName(result.get().getProfessionalName());
 		questionnaireSummary.setProfessionalMiddleName(result.get().getProfessionalMiddleName());
 		questionnaireSummary.setProfessionalLastName(result.get().getProfessionalLastName());

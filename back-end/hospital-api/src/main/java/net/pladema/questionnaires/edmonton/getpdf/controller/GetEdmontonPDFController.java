@@ -1,4 +1,5 @@
-package net.pladema.questionnaires.frail.getpdf.controller;
+package net.pladema.questionnaires.edmonton.getpdf.controller;
+
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,21 +23,23 @@ import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
 import ar.lamansys.sgx.shared.files.pdf.PdfService;
 import ar.lamansys.sgx.shared.filestorage.application.FileContentBo;
+import net.pladema.questionnaires.edmonton.getpdf.domain.service.PrintEdmontonService;
 import net.pladema.questionnaires.common.dto.PrintQuestionnaireDTO;
-import net.pladema.questionnaires.frail.getpdf.domain.service.PrintFrailService;
 
 @RestController
 @Validated
 @RequestMapping("/institution/patient/outpatient/consultation/")
-public class GetFrailPDFController implements GetFrailPDFAPI {
+public class GetEdmontonPDFController implements GetEdmontonPDFAPI {
 
 	public static final String OUTPUT = "Output -> {}";
-	private static final Logger logger = LoggerFactory.getLogger(GetFrailPDFController.class);
-	private final PrintFrailService printQuestionnaireService;
+
+	private static final Logger logger = LoggerFactory.getLogger(GetEdmontonPDFController.class);
+
+	private final PrintEdmontonService printQuestionnaireService;
+
 	private final PdfService pdfService;
 
-
-	public GetFrailPDFController(PrintFrailService printQuestionnaireService, PdfService pdfService) {
+	public GetEdmontonPDFController(PrintEdmontonService printQuestionnaireService, PdfService pdfService) {
 		this.printQuestionnaireService = printQuestionnaireService;
 		this.pdfService = pdfService;
 	}
@@ -53,6 +56,7 @@ public class GetFrailPDFController implements GetFrailPDFAPI {
 
 		String outputFileName = printQuestionnaireService.createQuestionnaireFileName(questionnaireId, now);
 
+
 		try {
 			return generatedPDFResponse(context, outputFileName);
 		} catch (IOException e) {
@@ -62,8 +66,8 @@ public class GetFrailPDFController implements GetFrailPDFAPI {
 	}
 
 	private ResponseEntity<InputStreamResource> generatedPDFResponse(Map<String, Object> context, String outputFileName) throws IOException {
-		logger.debug("input parameters -> context: {}, outputFileName: {}", "frail_reports", outputFileName);
-		FileContentBo fileContentBo = pdfService.generate("frail_reports", context);
+		logger.debug("input parameters -> context: {}, outputFileName: {}", "edmonton_reports", outputFileName);
+		FileContentBo fileContentBo = pdfService.generate("edmonton_reports", context);
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		try {
 			fileContentBo.getStream().transferTo(outputStream);
@@ -78,6 +82,4 @@ public class GetFrailPDFController implements GetFrailPDFAPI {
 
 		return response;
 	}
-
-
 }
