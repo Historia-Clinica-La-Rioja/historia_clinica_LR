@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import net.pladema.establishment.repository.InstitutionalGroupUserRepository;
 import net.pladema.permissions.repository.RoleRepository;
 
 import net.pladema.permissions.repository.entity.Role;
@@ -40,6 +41,7 @@ public class BackofficeUserRolesStore implements BackofficeStore<UserRole, Long>
 	private final ProfessionalProfessionRepository professionalProfessionRepository;
 	private final BackofficeRolesFilter backofficeRolesFilter;
 	private final RoleRepository roleRepository;
+	private final InstitutionalGroupUserRepository institutionalGroupUserRepository;
 
 
 	@Override
@@ -157,6 +159,8 @@ public class BackofficeUserRolesStore implements BackofficeStore<UserRole, Long>
 			if(isROOTUser(user.getUsername()))
 				throw new BackofficeUserException(BackofficeUserExceptionEnum.ROOT_LOST_PERMISSION, "El admin no puede perder el rol: ROOT");
 		}
+		if (isManager(userRole) && institutionalGroupUserRepository.existsByUserId(userRole.getUserId()))
+			throw new BackofficeUserException(BackofficeUserExceptionEnum.USER_BELONGS_TO_GROUP, "El usuario no puede perder el rol ya que se encuentra asociado a grupos institucionales");
 		userRoleRepository.deleteById(id);
 	}
 
