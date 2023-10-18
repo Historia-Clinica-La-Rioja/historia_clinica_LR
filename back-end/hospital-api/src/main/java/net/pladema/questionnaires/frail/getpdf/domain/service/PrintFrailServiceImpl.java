@@ -48,7 +48,7 @@ public class PrintFrailServiceImpl implements PrintFrailService {
 	@Override
 	public String createQuestionnaireFileName(Long questionnaireId, ZonedDateTime questionnaireDate) {
 		logger.debug("input parameters -> questionnaireId {}, questionnaireDate {}", questionnaireId, questionnaireDate);
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH_mm_ss");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH_mm_ss");
 		String formattedDate = questionnaireDate.format(formatter);
 		//String outputFileName = String.format("Frail - ID: %s - Fecha: %s.pdf", questionnaireId, questionnaireDate);
 		String outputFileName = String.format("Prueba de Frail - %s - %s.pdf", questionnaireId, formattedDate);
