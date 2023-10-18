@@ -116,5 +116,12 @@ public interface UserRoleRepository extends SGXAuditableEntityJPARepository<User
 	List<UserRole> findByInstitutionIdAndUserId(@Param("institutionId") Integer institutionId,
 												@Param("userId") Integer userId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT ur.userId "+
+			"FROM UserRole ur " +
+			"WHERE ur.roleId IN :rolesId " +
+			"AND ur.deleteable.deleted = FALSE")
+	List<Integer> findUsersByRoles(@Param("rolesId") List<Short> rolesId);
+
 	// @formatter:on
 }

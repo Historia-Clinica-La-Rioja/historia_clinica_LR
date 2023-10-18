@@ -15,4 +15,20 @@ import java.util.List;
 @Repository
 public interface InstitutionalGroupUserRepository extends SGXAuditableEntityJPARepository<InstitutionalGroupUser, Integer> {
 
+	@Transactional(readOnly = true)
+	@Query("SELECT case when count(igu) > 0 then TRUE else FALSE END " +
+			"FROM InstitutionalGroupUser igu " +
+			"WHERE igu.institutionalGroupId = :institutionalGroupId " +
+			"AND igu.userId = :userId " +
+			"AND igu.deleteable.deleted = FALSE")
+	boolean existsByInstitutionalGroupIdAndUserId (@Param("institutionalGroupId") Integer institutionalGroupId, @Param("userId") Integer userId);
+
+
+	@Transactional(readOnly = true)
+	@Query("SELECT case when count(igu) > 0 then TRUE else FALSE END " +
+			"FROM InstitutionalGroupUser igu " +
+			"WHERE igu.userId = :userId " +
+			"AND igu.deleteable.deleted = FALSE")
+	boolean existsByUserId (@Param("userId") Integer userId);
+
 }

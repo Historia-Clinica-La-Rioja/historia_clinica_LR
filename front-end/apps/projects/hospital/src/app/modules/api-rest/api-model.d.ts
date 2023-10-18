@@ -2196,6 +2196,15 @@ export interface MainDiagnosisDto extends Serializable {
     notes: DocumentObservationsDto;
 }
 
+export interface ManagerUserPersonDto {
+    completeName: string;
+    id: number;
+    identificationNumber: string;
+    personId: number;
+    role: string;
+    searchText: string;
+}
+
 export interface ManualClassificationDto {
     description: string;
     id: number;
