@@ -106,6 +106,7 @@ public class BackofficeUserRolesStore implements BackofficeStore<UserRole, Long>
 			throw new BackofficeUserException(BackofficeUserExceptionEnum.USER_INVALID_ROLE, "El tipo de rol requiere definir una institución ");
 		if (ERoleLevel.LEVEL0.equals(ERole.map(userRole.getRoleId()).getLevel()) && assignedInstitution(userRole))
 			throw new BackofficeUserException(BackofficeUserExceptionEnum.USER_INVALID_ROLE, "El tipo de rol no debe asociarse a una institución ");
+		checkManagerRole(userRole);
 		return user;
 	}
 
@@ -172,6 +173,21 @@ public class BackofficeUserRolesStore implements BackofficeStore<UserRole, Long>
 		return StreamSupport
 				.stream(roles.spliterator(), false)
 				.collect(Collectors.toList());
+	}
+
+	private void checkManagerRole(UserRole userRole){
+		if (!isManager(userRole))
+			return;
+		List<Short> rolesIds = userRoleRepository.findByUserId(userRole.getUserId()).stream().map(UserRole::getRoleId).collect(Collectors.toList());
+		if (rolesIds.contains(ERole.GESTOR_DE_ACCESO_DE_DOMINIO.getId()) || rolesIds.contains(ERole.GESTOR_DE_ACCESO_REGIONAL.getId()) || rolesIds.contains(ERole.GESTOR_DE_ACCESO_LOCAL.getId()))
+			throw new BackofficeUserException(BackofficeUserExceptionEnum.USER_INVALID_ROLE, "El usuario ya cuenta con un rol de tipo Gestor");
+	}
+
+	private boolean isManager(UserRole role){
+		Short roleId = role.getRoleId();
+		return roleId.equals(ERole.GESTOR_DE_ACCESO_DE_DOMINIO.getId()) ||
+				roleId.equals(ERole.GESTOR_DE_ACCESO_REGIONAL.getId()) ||
+				roleId.equals(ERole.GESTOR_DE_ACCESO_LOCAL.getId());
 	}
 
 }
