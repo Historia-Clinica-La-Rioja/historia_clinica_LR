@@ -34,7 +34,7 @@ import carelineproblems from './carelineproblems';
 import userroles from './userroles';
 import hierarchicalunittypes from './hierarchicalunittypes';
 
-import { ROOT, ADMINISTRADOR } from './roles';
+import { ROOT, ADMINISTRADOR, ADMINISTRADOR_DE_ACCESO_DOMINIO } from './roles';
 import snomedconcepts from './snomedconcepts';
 import snomedrelatedgroups from './snomedrelatedgroups';
 import medicalcoverageplans from "./medicalcoverageplans";
@@ -101,7 +101,7 @@ const resourcesAdminRoot = (permissions: SGXPermissions) => [
 
 const resourcesFor = (permissions: SGXPermissions) =>
     permissions.hasAnyAssignment(
-        ROOT, ADMINISTRADOR
+        ROOT, ADMINISTRADOR, ADMINISTRADOR_DE_ACCESO_DOMINIO
     ) ? resourcesAdminRoot(permissions): resourcesAdminInstitucional(permissions);
 
 const resources = (permissions: SGXPermissions) => [

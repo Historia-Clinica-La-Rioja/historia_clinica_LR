@@ -38,19 +38,19 @@ public class BackofficeHierarchicalUnitStaffValidator implements BackofficePermi
 	private final BackofficeAuthoritiesValidator authoritiesValidator;
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_DE_ACCESO_DOMINIO')")
 	public void assertGetList(HierarchicalUnitStaff entity) {
 
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_DE_ACCESO_DOMINIO')")
 	public List<Integer> filterIdsByPermission(List<Integer> ids) {
 		return null;
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_DE_ACCESO_DOMINIO')")
 	public void assertGetOne(Integer id) {
 
 	}
@@ -79,7 +79,7 @@ public class BackofficeHierarchicalUnitStaffValidator implements BackofficePermi
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_DE_ACCESO_DOMINIO')")
 	public ItemsAllowed<Integer> itemsAllowedToList(HierarchicalUnitStaff entity) {
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return new ItemsAllowed<>();
@@ -97,7 +97,7 @@ public class BackofficeHierarchicalUnitStaffValidator implements BackofficePermi
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_DE_ACCESO_DOMINIO')")
 	public ItemsAllowed<Integer> itemsAllowedToList() {
 		return new ItemsAllowed<>();
 	}

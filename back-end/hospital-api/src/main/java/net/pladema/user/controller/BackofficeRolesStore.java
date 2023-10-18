@@ -38,6 +38,13 @@ public class BackofficeRolesStore implements BackofficeStore<Role, Short> {
 			content = content.stream().filter(role -> !role.getId().equals(ERole.GESTOR_DE_ACCESO_LOCAL.getId()) &&
 					!role.getId().equals(ERole.GESTOR_DE_ACCESO_REGIONAL.getId()) &&
 					!role.getId().equals(ERole.GESTOR_DE_ACCESO_DE_DOMINIO.getId())).collect(Collectors.toList());
+		} else {
+			if (!backofficeAuthoritiesValidator.hasRole(ERole.ROOT) && !backofficeAuthoritiesValidator.hasRole(ERole.ADMINISTRADOR)) {
+				content = content.stream().filter(role -> role.getId().equals(ERole.GESTOR_DE_ACCESO_LOCAL.getId()) ||
+						role.getId().equals(ERole.GESTOR_DE_ACCESO_REGIONAL.getId()) ||
+						role.getId().equals(ERole.GESTOR_DE_ACCESO_DE_DOMINIO.getId())).collect(Collectors.toList());
+
+			}
 		}
 		return new PageImpl<>(content, pageable, content.size());
 	}

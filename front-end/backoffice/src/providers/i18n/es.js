@@ -368,7 +368,7 @@ const messages = {
                 email: "E-mail",
                 roles: 'Roles',
                 hierarchicalUnits: 'Unidades jerárquicas',
-                institutionsGroups: 'Grupos institucionales'
+                institutionalGroups: 'Grupos institucionales'
             },
             fieldGroups: {
                 passwordResets: 'Establecer clave de acceso',
