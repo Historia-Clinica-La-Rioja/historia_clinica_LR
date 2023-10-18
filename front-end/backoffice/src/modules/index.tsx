@@ -74,6 +74,7 @@ import hierarchicalunitsectors from './hierarchicalunitsectors';
 import rules from './rules';
 import institutionalgroups from './institutionalgroups';
 import institutionalgroupinstitutions from './institutionalgroupinstitutions';
+import institutionalgroupusers from './institutionalgroupusers';
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
     permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
@@ -139,6 +140,8 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="institutionalgrouptypes" />,
     <Resource name="institutionalgroupinstitutions" {...institutionalgroupinstitutions(permissions)} />,
     <Resource name="departmentinstitutions" />,
+    <Resource name="institutionalgroupusers" {...institutionalgroupusers(permissions)} />,
+    <Resource name="manageruserpersons" />,
     // debug
     <Resource name="snvs"  {...snvs} />,
     <Resource name="documentfiles" {...documentFiles(permissions)} />,

@@ -10,7 +10,7 @@ import {
     DeleteButton,
     ReferenceManyField,
     Datagrid
- } from "react-admin";    
+} from "react-admin";    
 
  import CreateRelatedButton from "../components/CreateRelatedButton";
 
@@ -24,6 +24,18 @@ const AddInstitutionToGroup = (props) => {
             reference="institutionalgroupinstitutions"
             refFieldName="institutionalGroupId"
             label="resources.institutionalgroupinstitutions.createRelated"/>
+    );
+};
+
+const AddUserToGroup = (props) => {
+    const record = useRecordContext(props);
+    const customRecord = {institutionalGroupId: record.id};
+    return (
+        <CreateRelatedButton
+            customRecord={customRecord}
+            reference="institutionalgroupusers"
+            refFieldName="institutionalGroupId"
+            label="resources.institutionalgroupusers.createRelated" />
     );
 };
 
@@ -45,6 +57,28 @@ const ShowInstitutions = (props) => {
     );
 };
 
+const ShowUsers = (props) => {
+    return (
+        <ReferenceManyField
+            id='institutionalgroupusers'
+            addLabel={false}
+            reference='institutionalgroupusers'
+            target='institutionalGroupId'
+        >
+            <Datagrid
+                empty={<p style={{marginTop:10, color:'#8c8c8c'}}>Sin usuarios asociadas</p>}>
+                <ReferenceField source="userId" reference="manageruserpersons" label='Nombre' link={false}>
+                    <TextField label='Nombre' source='completeName' />
+                </ReferenceField>
+                <ReferenceField source="userId" reference="manageruserpersons" label="Rol" link={false}>
+                    <TextField label='Rol' source='role' />
+                </ReferenceField>
+                <DeleteButton redirect={false} />
+            </Datagrid>
+        </ReferenceManyField>
+    )
+}
+
 const InstitutionalGroupShow = (props) => {
     return (
         <Show {...props}>
@@ -60,6 +94,8 @@ const InstitutionalGroupShow = (props) => {
                             <ShowInstitutions />
                         </Tab>
                         <Tab label="Usuarios" id="usuarios">
+                            <AddUserToGroup />
+                            <ShowUsers />
                         </Tab>
                     </TabbedShowLayout>
                 </Fragment>
@@ -70,4 +106,4 @@ const InstitutionalGroupShow = (props) => {
 
 export default InstitutionalGroupShow;
 
-export {AddInstitutionToGroup, ShowInstitutions};
+export {AddInstitutionToGroup, AddUserToGroup, ShowInstitutions, ShowUsers};

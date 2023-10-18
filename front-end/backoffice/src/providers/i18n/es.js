@@ -897,6 +897,14 @@ const messages = {
                 institutionalGroupId: 'Grupo de instituciones'
             },
             createRelated: 'Agregar institución'
+        },
+        institutionalgroupusers: {
+            name: 'Asociación de usuario a Grupo',
+            fields: {
+                userId: 'Usuario',
+                institutionalGroupId: 'Grupo de instituciones'
+            },
+            createRelated: 'Agregar usuario'
         }
     }
 };
