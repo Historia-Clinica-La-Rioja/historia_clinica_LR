@@ -19,7 +19,21 @@ const EpisodeDocumentTypeEdit = props => {
     const userIsAdminInstitutional = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.role)).length > 0;
     return (<Edit {...props} hasEdit={userIsAdminInstitutional}>
         <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true}/>} className={classes.styles}>
-            <TextInput source="description" validate={[required()]} />
+            {
+                <FormDataConsumer>
+                {formDataProps => {
+                  const isConsentType = formDataProps.formData.consentId !== ConsentTypes()[0].id;
+                  
+                  return (
+                    <TextInput
+                      source="description"
+                      validate={[required()]}
+                      disabled={isConsentType}
+                    />
+                  );
+                }}
+              </FormDataConsumer>
+            }
             {userIsAdminInstitutional && <FormDataConsumer>
                 {formDataProps => ((formDataProps.formData.consentId !== ConsentTypes()[0].id) ? <RichTextInput source="richTextBody" label="Detalles del documento" validate={[required()]} fullWidth/> : null)}
             </FormDataConsumer>}
