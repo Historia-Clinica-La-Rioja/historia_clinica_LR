@@ -2,15 +2,16 @@
   padding: 0%;
  }
 
- 
-
+ ::ng-deep .mat-select-panel {
+  position: relative; 
+  top: 10%;
+}
 .popup-container {
     max-height: 710px;
     overflow-y: auto;
     border: 1px solid #ccc;
     border-radius: 4px;
     padding: 30px; //se cambio de 20px a 30px 
-    margin-left: 1%;
  
   }
 
@@ -38,8 +39,6 @@
   .popup-container app-escala-frail {
     margin-top: 20px;
     height: 300px;
-
-
   }
   
   //BOTON DE CIERRE 
