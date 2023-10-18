@@ -1,18 +1,32 @@
 <section id="select-agenda" *ngIf="agendas?.length" fxLayout="row" fxLayoutAlign="space-between center"
 	fxLayout.xs="column" fxLayoutAlign.xs="space-between center">
-	<mat-form-field fxFlex.gt-xs="35%" appearance="outline">
+	<mat-form-field fxFlex.gt-xs="47%" appearance="outline">
 		<mat-label [translate]="'turnos.home.SELECT_AGENDA'"></mat-label>
 		<mat-select id="agenda-select" [(value)]="currentAgenda">
 			<mat-optgroup id="active-agendas" *ngIf="activeAgendas?.length">
 				<mat-label><strong>{{ 'turnos.home.ACTIVES_AGENDAS_LABEL' | translate }}</strong></mat-label>
 				<mat-option *ngFor="let agenda of activeAgendas" [value]="agenda.diaryList"
-					(onSelectionChange)="changeAgendaSelected($event, agenda.diaryList)">
-					<span class="mat-body-strong">
-						{{agenda.diaryList.alias === undefined || agenda.diaryList.alias == "" ? agenda?.diaryList.clinicalSpecialtyName : getAliasAndSpecialtyText(agenda.diaryList.alias, agenda?.diaryList.clinicalSpecialtyName)}}
-					</span>
-					<span class="mat-body">
-						{{agenda.startDate | dateFormat: 'date' }} - {{agenda.endDate | dateFormat: 'date' }}
-					</span>
+					(onSelectionChange)="changeAgendaSelected($event, agenda.diaryList)"
+					matTooltip="{{agenda.diaryList.practices | practiceList }}">
+						<div fxFlex="60%" class="text-container">
+							<span *ngIf="agenda?.diaryList.alias">{{agenda.diaryList.alias }} </span>
+
+							<span *ngIf="agenda.diaryList.practices?.length">({{agenda.diaryList.practices | practiceList}})</span>
+
+							<span *ngIf="(agenda?.diaryList.alias && !agenda.diaryList.practices?.length) else withOutAlias">
+								({{agenda.diaryList.clinicalSpecialtyName}})
+							</span>
+							<ng-template #withOutAlias>
+								<span>
+									{{agenda.diaryList.clinicalSpecialtyName}}
+								</span>
+							</ng-template>
+						</div>
+						<div fxFlex="40%">
+							<span >
+								{{agenda.startDate | dateFormat: 'date' }} - {{agenda.endDate | dateFormat: 'date' }}
+							</span>
+						</div>
 				</mat-option>
 			</mat-optgroup>
 			<mat-optgroup id="expired-agendas" *ngIf="expiredAgendas?.length">
@@ -46,8 +60,8 @@
 			(click)="blockAgenda()">
 			<mat-icon>block</mat-icon>
 		</button>
-		<button mat-flat-button color="warn" *appHasRole="['ADMINISTRADOR_AGENDA']" id="delete_agenda" name="delete_agenda"
-		        (click)="deleteAgenda()">
+		<button mat-flat-button color="warn" *appHasRole="['ADMINISTRADOR_AGENDA']" id="delete_agenda"
+			name="delete_agenda" (click)="deleteAgenda()">
 			<mat-icon>delete</mat-icon>
 		</button>
 	</div>
