@@ -41,7 +41,10 @@ public enum ERole {
 	VIRTUAL_CONSULTATION_RESPONSIBLE(34, "VIRTUAL_CONSULTATION_RESPONSIBLE", ERoleLevel.LEVEL1),
 	API_IMAGENES(35, "API_IMAGENES", ERoleLevel.LEVEL0),
 	API_ORQUESTADOR(36, "API_ORQUESTADOR", ERoleLevel.LEVEL1),
-	ADMINISTRADOR_DE_ACCESO_DOMINIO(37, "ADMINISTRADOR_DE_ACCESO_DOMINIO", ERoleLevel.LEVEL0)
+	ADMINISTRADOR_DE_ACCESO_DOMINIO(37, "ADMINISTRADOR_DE_ACCESO_DOMINIO", ERoleLevel.LEVEL0),
+	GESTOR_DE_ACCESO_DE_DOMINIO(38, "GESTOR_DE_ACCESO_DE_DOMINIO", ERoleLevel.LEVEL0),
+	GESTOR_DE_ACCESO_LOCAL(39, "GESTOR_DE_ACCESO_LOCAL", ERoleLevel.LEVEL0),
+	GESTOR_DE_ACCESO_REGIONAL(40, "GESTOR_DE_ACCESO_REGIONAL", ERoleLevel.LEVEL0)
 	;
 
     private Short id;
@@ -70,4 +73,12 @@ public enum ERole {
         }
         throw new NotFoundException("role-not-exists", String.format("El rol %s no existe", id));
     }
+
+	public static ERole map(java.lang.String value) {
+		for(ERole e : values()) {
+			if(e.value.equals(value)) return e;
+		}
+		throw new NotFoundException("role-not-exists", String.format("El rol %s no existe", value));
+	}
+
 }

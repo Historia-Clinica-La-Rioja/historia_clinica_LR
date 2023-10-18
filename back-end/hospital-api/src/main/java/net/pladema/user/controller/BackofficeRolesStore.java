@@ -34,6 +34,11 @@ public class BackofficeRolesStore implements BackofficeStore<Role, Short> {
 		if(!backofficeAuthoritiesValidator.hasRole(ERole.ROOT)){
 			content = content.stream().filter(role -> !role.getId().equals(ERole.ADMINISTRADOR_DE_ACCESO_DOMINIO.getId())).collect(Collectors.toList());
 		}
+		if(!backofficeAuthoritiesValidator.hasRole(ERole.ADMINISTRADOR_DE_ACCESO_DOMINIO)){
+			content = content.stream().filter(role -> !role.getId().equals(ERole.GESTOR_DE_ACCESO_LOCAL.getId()) &&
+					!role.getId().equals(ERole.GESTOR_DE_ACCESO_REGIONAL.getId()) &&
+					!role.getId().equals(ERole.GESTOR_DE_ACCESO_DE_DOMINIO.getId())).collect(Collectors.toList());
+		}
 		return new PageImpl<>(content, pageable, content.size());
 	}
 
@@ -72,4 +77,5 @@ public class BackofficeRolesStore implements BackofficeStore<Role, Short> {
 				.stream(roles.spliterator(), false)
 				.collect(Collectors.toList());
 	}
+
 }
