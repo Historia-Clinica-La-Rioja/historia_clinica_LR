@@ -1,5 +1,5 @@
 <div fxLayout="column" fxLayoutAlign="start" fxLayoutGap="10px">
-	<div fxLayout="row" fxLayoutGap="20px">
+	<div fxLayout="column" fxLayoutGap="20px">
 		<div id="sector" fxLayoutAlign="start center" fxLayoutGap="5px">
 			<mat-icon class="icon-color" mat-list-icon fontSet="material-icons-outlined" [inline]="true"
 				matTooltip="{{'turnos.home.SECTOR_CONSULTORY_TOOLTIP' | translate}}">meeting_room</mat-icon>
@@ -10,6 +10,12 @@
 				<span>{{agenda?.doctorsOfficeDescription}} | {{agenda?.sectorDescription}} | {{agenda?.hierarchicalUnitAlias}}</span>
 			</ng-template>
 		</div>
+
+		<ng-container *ngIf="agenda?.practicesInfo.length">
+			<app-identifier-cases [identifierCase]="identiferCases.PRACTICE"
+				[description]="practices | practiceList | uppercase">
+			</app-identifier-cases>
+		</ng-container>
 	</div>
 
 	<div id="care_lines" *ngIf="agenda?.careLinesInfo.length" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
