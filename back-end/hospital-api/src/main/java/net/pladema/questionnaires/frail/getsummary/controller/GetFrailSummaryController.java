@@ -7,8 +7,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.pladema.questionnaires.frail.get.domain.service.GetFrailService;
 import net.pladema.questionnaires.common.dto.QuestionnaireSummary;
+import net.pladema.questionnaires.frail.get.domain.service.GetFrailService;
 
 @RestController
 @Validated

@@ -11,9 +11,9 @@ import net.pladema.questionnaires.common.domain.Answer;
 import net.pladema.questionnaires.common.domain.QuestionnaireResponse;
 import net.pladema.questionnaires.common.domain.model.QuestionnaireAnswerBO;
 import net.pladema.questionnaires.common.domain.model.QuestionnaireBO;
-import net.pladema.questionnaires.frail.get.domain.service.GetFrailService;
 import net.pladema.questionnaires.common.dto.QuestionnaireDTO;
 import net.pladema.questionnaires.frail.create.repository.FrailRepository;
+import net.pladema.questionnaires.frail.get.domain.service.GetFrailService;
 
 @Service
 public class CreateFrailServiceImpl implements CreateFrailService {

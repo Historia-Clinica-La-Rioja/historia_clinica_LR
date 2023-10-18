@@ -1,15 +1,14 @@
 package net.pladema.questionnaires.edmonton.getsummary.controller;
 
-import net.pladema.questionnaires.edmonton.get.domain.service.GetEdmontonService;
-
-import net.pladema.questionnaires.common.dto.QuestionnaireSummary;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
+import net.pladema.questionnaires.common.dto.QuestionnaireSummary;
+import net.pladema.questionnaires.edmonton.get.domain.service.GetEdmontonService;
 
 @RestController
 @Validated

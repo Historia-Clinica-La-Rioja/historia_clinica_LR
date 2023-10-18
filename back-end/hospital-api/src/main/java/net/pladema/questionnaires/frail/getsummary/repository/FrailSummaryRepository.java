@@ -1,8 +1,8 @@
 package net.pladema.questionnaires.frail.getsummary.repository;
 
-import net.pladema.questionnaires.common.dto.QuestionnaireSummary;
-
 import java.util.Optional;
+
+import net.pladema.questionnaires.common.dto.QuestionnaireSummary;
 
 public interface FrailSummaryRepository {
 

@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.pladema.questionnaires.common.domain.Answer;
-import net.pladema.questionnaires.frail.get.domain.service.GetFrailService;
 import net.pladema.questionnaires.common.dto.QuestionnaireAnswers;
 import net.pladema.questionnaires.common.dto.QuestionnaireDTO;
+import net.pladema.questionnaires.frail.get.domain.service.GetFrailService;
 
 @RestController
 @Validated

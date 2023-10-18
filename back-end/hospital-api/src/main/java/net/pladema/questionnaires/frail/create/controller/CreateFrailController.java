@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import net.pladema.questionnaires.common.domain.model.QuestionnaireAnswerBO;
 import net.pladema.questionnaires.common.domain.model.QuestionnaireBO;
-import net.pladema.questionnaires.frail.create.domain.service.CreateFrailService;
 import net.pladema.questionnaires.common.dto.CreateQuestionnaireDTO;
 import net.pladema.questionnaires.common.dto.QuestionnaireAnswerDTO;
 import net.pladema.questionnaires.frail.create.domain.EFrailTestAnswer;
+import net.pladema.questionnaires.frail.create.domain.service.CreateFrailService;
 
 @RestController
 @Validated

@@ -1,15 +1,15 @@
 package net.pladema.questionnaires.edmonton.getsummary.domain.service;
 
-import net.pladema.questionnaires.common.domain.Answer;
-import net.pladema.questionnaires.edmonton.get.domain.service.GetEdmontonService;
-import net.pladema.questionnaires.common.dto.QuestionnaireSummary;
-import net.pladema.questionnaires.edmonton.getsummary.repository.EdmontonSummaryRepository;
-import net.pladema.questionnaires.edmonton.create.repository.EdmontonRepository;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import net.pladema.questionnaires.common.domain.Answer;
+import net.pladema.questionnaires.common.dto.QuestionnaireSummary;
+import net.pladema.questionnaires.edmonton.create.repository.EdmontonRepository;
+import net.pladema.questionnaires.edmonton.get.domain.service.GetEdmontonService;
+import net.pladema.questionnaires.edmonton.getsummary.repository.EdmontonSummaryRepository;
 
 @Service
 public class GetEdmontonServiceImpl implements GetEdmontonService {
