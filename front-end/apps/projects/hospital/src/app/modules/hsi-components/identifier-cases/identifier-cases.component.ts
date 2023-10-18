@@ -45,6 +45,7 @@ export enum IDENTIFIER_CASES {
 	HOUR = 'Hora',
 	DISTRICT = 'Partido',
 	SERVICE = 'Servicio',
+	MEETING_ROOM = 'meeting_room'
 }
 
 const institution: IconLegend = {
@@ -97,6 +98,11 @@ const service: IconLegend = {
 	legend: 'Servicio',
 }
 
+const meeting_room: IconLegend = {
+	icon: 'meeting_room',
+	legend: 'Consultorio y sector',
+}
+
 const IDENTIFIER_CASES_ALTERNATIVES = {
 	[IDENTIFIER_CASES.INSTITUTION]: institution,
 	[IDENTIFIER_CASES.CARE_LINE]: careLine,
@@ -108,4 +114,5 @@ const IDENTIFIER_CASES_ALTERNATIVES = {
 	[IDENTIFIER_CASES.HOUR]: hour,
 	[IDENTIFIER_CASES.DISTRICT]: district,
 	[IDENTIFIER_CASES.SERVICE]: service,
+	[IDENTIFIER_CASES.MEETING_ROOM]: meeting_room,
 }
