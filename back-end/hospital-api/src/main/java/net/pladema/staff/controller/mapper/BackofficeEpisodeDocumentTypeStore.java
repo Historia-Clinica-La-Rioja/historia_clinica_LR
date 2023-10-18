@@ -21,6 +21,8 @@ public class BackofficeEpisodeDocumentTypeStore implements BackofficeStore<Episo
 
 	private final EpisodeDocumentTypeRepository repository;
 
+	private final static Integer REGULAR_DOCUMENT = 1;
+
 	private final XHTMLUtils XHTMLUtils;
 
 	public BackofficeEpisodeDocumentTypeStore(EpisodeDocumentTypeRepository repository, XHTMLUtils XHTMLUtils) {
@@ -56,15 +58,8 @@ public class BackofficeEpisodeDocumentTypeStore implements BackofficeStore<Episo
 
 	@Override
 	public EpisodeDocumentType save(EpisodeDocumentType entity) {
-		if (entity.getConsentId() == null || entity.getConsentId() == EpisodeDocumentType.REGULAR) {
-			entity.setConsentId(Integer.valueOf(EpisodeDocumentType.REGULAR));
-			entity.setRichTextBody(null);
-		}
-
-		if (entity.getConsentId() != EpisodeDocumentType.REGULAR
-			&& entity.getId() == null
-			&& repository.existsConsentDocumentById(entity.getConsentId()))
-			throw new BackofficeValidationException("Ya existe ese documento de consentimiento");
+		if (entity.getConsentId() == null)
+			entity.setConsentId(REGULAR_DOCUMENT);
 
 		if (entity.getRichTextBody() != null)
 			entity.setRichTextBody(XHTMLUtils.toXHTML(entity.getRichTextBody(), true));

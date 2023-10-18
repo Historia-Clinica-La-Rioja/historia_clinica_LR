@@ -91,7 +91,7 @@
                     <span th:text="${proc}" class="wrap"></span>
                 </div>
             </div>
-            <div th:if="${observations != ''}">
+            <div th:if="${observations != null && observations != ''}">
                 <div class="bold big-font">Observaciones</div>
                 <div th:text="${observations}" class="wrap"></div>
             </div>

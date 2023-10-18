@@ -4,13 +4,9 @@ import {
     SimpleForm,
     TextInput,
     usePermissions,
-    SelectInput,
-    FormDataConsumer,
-    useTranslate
 } from 'react-admin';
 import CustomToolbar from "../components/CustomToolbar";
 import {ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE} from "../roles";
-import RichTextInput from 'ra-input-rich-text';
 import {makeStyles} from "@material-ui/core/styles";
 
 const EpisodeDocumentTypeCreate = (props) => {
@@ -20,13 +16,6 @@ const EpisodeDocumentTypeCreate = (props) => {
     return (<Create {...props} hasCreate={userIsAdminInstitutional}>
         <SimpleForm toolbar={<CustomToolbar />} redirect="list" className={classes.styles}>
             <TextInput source="description" label="Tipo de documento" validate={[required()]} />
-            {userIsAdminInstitutional && <SelectInput source="consentId" label="Tipo de consentimiento" defaultValue={ConsentTypes()[0].id} choices={ConsentTypes()} />}
-
-            {userIsAdminInstitutional && (
-                <FormDataConsumer>
-                    {formDataProps => (<RichTextBody {...formDataProps}/>)}
-                </FormDataConsumer>)
-            }
         </SimpleForm>
     </Create>)
 };
@@ -49,11 +38,6 @@ export const ConsentTypes = () => {
             id: 3, name: 'Consentimiento informado quirúrgico'
         }
     ]
-}
-
-const RichTextBody = ({formData}) => {
-    const translate = useTranslate();
-    return (formData.consentId !== ConsentTypes()[0].id) ? <RichTextInput source="richTextBody" label="Detalles del documento" defaultValue={translate('resources.episodedocumenttypes.fields.body')} validate={[required()]} fullWidth/> : null
 }
 
 export default EpisodeDocumentTypeCreate;

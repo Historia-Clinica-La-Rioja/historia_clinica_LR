@@ -1,5 +1,5 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v2_10 
+    - logicalFilePath: incrementales-v2_10
 
     - changeSet:
         id: update-sector-informer-set-default_values
@@ -97,3 +97,56 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: users
               validate: true
+      
+    - changeSet:
+        id: createConsentDocuments-episode-document-types
+        author: fdemuguruza
+        dbms: postgresql
+        changes:
+          - sql: |
+              DELETE FROM episode_document_types WHERE consent_id = 2;
+              DELETE FROM episode_document_types WHERE consent_id = 3;
+              INSERT INTO episode_document_types (description, rich_text_body, consent_id)
+              VALUES ('Consentimiento informado de Internación', 'Estimado(a) paciente,
+              <br />
+              antes de llevar a cabo el procedimiento quirúrgico al que ha sido programado(a), es importante que comprenda y acepte plenamente los detalles de la intervención y los riesgos asociados. Por lo tanto, le solicitamos que lea detenidamente y firme este formulario de consentimiento informado. Procedimiento quirúrgico propuesto: [ Describir el procedimiento quirúrgico específico ]
+              <br />
+              Objetivo de la cirugía: [ Explicar el propósito o el objetivo de la cirugía ]
+              <br />
+              Riesgos y complicaciones:
+                Aunque se espera que esta cirugía sea beneficiosa, es importante tener en cuenta que existen ciertos riesgos y complicaciones asociados. Estos pueden incluir, pero no se limitan a:
+              <br />
+              <ol>
+              <li>Sangrado excesivo durante o después de la cirugía.</li>
+              <li>Infección en el sitio quirúrgico.</li>
+              <li>Reacciones adversas a la anestesia o medicamentos utilizados durante la cirugía.</li>
+              <li>Lesiones a órganos o tejidos adyacentes durante la cirugía.</li>
+              <li>Formación de coágulos sanguíneos.</li>
+              <li>Dolor o malestar persistente después de la cirugía.</li>
+              <li>Resultados estéticos o insatisfactorios.</li>
+              <li>Necesidad de procedimientos adicionales o revisiones quirúrgicas.</li>
+              </ol>
+              <br />
+              Alternativas: Existen alternativas al procedimiento quirúrgico propuesto, como [mencionar las alternativas disponibles]. Sin embargo, es importante tener en cuenta que estas alternativas pueden no proporcionar los mismos resultados o beneficios que la cirugía propuesta.', 2);
+              INSERT INTO episode_document_types (description, rich_text_body, consent_id)
+              VALUES ('Consentimiento informado Quirúrgico', 'Estimado(a) paciente,
+              <br />
+              antes de llevar a cabo el procedimiento quirúrgico al que ha sido programado(a), es importante que comprenda y acepte plenamente los detalles de la intervención y los riesgos asociados. Por lo tanto, le solicitamos que lea detenidamente y firme este formulario de consentimiento informado. Procedimiento quirúrgico propuesto: [ Describir el procedimiento quirúrgico específico ]
+              <br />
+              Objetivo de la cirugía: [ Explicar el propósito o el objetivo de la cirugía ]
+              <br />
+              Riesgos y complicaciones:
+                Aunque se espera que esta cirugía sea beneficiosa, es importante tener en cuenta que existen ciertos riesgos y complicaciones asociados. Estos pueden incluir, pero no se limitan a:
+              <br />
+              <ol>
+              <li>Sangrado excesivo durante o después de la cirugía.</li>
+              <li>Infección en el sitio quirúrgico.</li>
+              <li>Reacciones adversas a la anestesia o medicamentos utilizados durante la cirugía.</li>
+              <li>Lesiones a órganos o tejidos adyacentes durante la cirugía.</li>
+              <li>Formación de coágulos sanguíneos.</li>
+              <li>Dolor o malestar persistente después de la cirugía.</li>
+              <li>Resultados estéticos o insatisfactorios.</li>
+              <li>Necesidad de procedimientos adicionales o revisiones quirúrgicas.</li>
+              </ol>
+              <br />
+              Alternativas: Existen alternativas al procedimiento quirúrgico propuesto, como [mencionar las alternativas disponibles]. Sin embargo, es importante tener en cuenta que estas alternativas pueden no proporcionar los mismos resultados o beneficios que la cirugía propuesta.', 3);

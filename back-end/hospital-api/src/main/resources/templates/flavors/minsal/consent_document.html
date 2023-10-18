@@ -39,14 +39,17 @@
             text-align: justify;
             text-justify: inter-word;
             white-space: pre-wrap;
-            margin-top: 50px;
+        }
+
+        .header {
+            margin-bottom: 50px;
         }
     </style>
 </head>
 <body>
     <table>
         <thead><tr><td>
-            <div>
+            <div class="header">
                 <th:block th:include="fragments/consent_document_header.html :: consent_document_header"></th:block>
             </div>
         </td></tr></thead>
