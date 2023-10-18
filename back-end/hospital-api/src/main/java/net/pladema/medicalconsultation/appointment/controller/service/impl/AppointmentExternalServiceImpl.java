@@ -231,6 +231,14 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 		return appointment.map(this::mapFromAppointmentSummaryBo);
 	}
 
+	@Override
+	public Boolean openingHourAllowedProtectedAppointments(Integer appointmentId) {
+		log.debug("Input parameters -> appointmentId {}", appointmentId);
+		Boolean result = appointmentService.openingHourAllowedProtectedAppointment(appointmentId);
+		log.debug(OUTPUT , result);
+		return result;
+	}
+
 	private Optional<AppointmentSummaryBo> getNearestAppointment(List<Integer> appointmentIds) {
 		List<AppointmentSummaryBo> appointments = this.appointmentService.getAppointmentDataByAppointmentIds(appointmentIds);
 		List<AppointmentSummaryBo> futureAppointments = appointments.stream()

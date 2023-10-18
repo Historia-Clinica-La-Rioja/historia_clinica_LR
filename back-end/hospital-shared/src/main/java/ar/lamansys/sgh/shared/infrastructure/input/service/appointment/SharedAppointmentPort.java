@@ -49,4 +49,6 @@ public interface SharedAppointmentPort {
 
 	Optional<AppointmentDataDto> getNearestAppointmentData(List<Integer> appointments);
 
+	Boolean openingHourAllowedProtectedAppointments(Integer appointmentId);
+
 }

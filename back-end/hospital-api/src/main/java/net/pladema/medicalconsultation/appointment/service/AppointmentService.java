@@ -93,4 +93,6 @@ public interface AppointmentService {
 	Integer patientHasCurrentAppointment(Integer institutionId, Integer patientId);
 
 	List<AppointmentSummaryBo> getAppointmentDataByAppointmentIds(List<Integer> appointmentIds);
+
+	Boolean openingHourAllowedProtectedAppointment(Integer appointmentId);
 }

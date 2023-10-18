@@ -629,6 +629,14 @@ public class AppointmentServiceImpl implements AppointmentService {
 		return appointmentRepository.getAppointmentDataByAppointmentIds(appointmentIds);
 	}
 
+	@Override
+	public Boolean openingHourAllowedProtectedAppointment(Integer appointmentId) {
+		log.debug("Input parameter -> appointmentId {}", appointmentId);
+		Boolean result = appointmentRepository.openingHourAllowedProtectedAppointment(appointmentId);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
 	private boolean dayIsIncludedInOpeningHours(LocalDate date, DiaryOpeningHoursBo diaryOpeningHours) {
 		final int SUNDAY_DB_VALUE = 0;
 		if (date.getDayOfWeek().getValue() == DayOfWeek.SUNDAY.getValue())
