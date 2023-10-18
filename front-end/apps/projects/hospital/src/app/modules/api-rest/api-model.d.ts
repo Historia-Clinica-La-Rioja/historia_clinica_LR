@@ -1461,6 +1461,7 @@ export interface EquipmentDiaryDto extends EquipmentDiaryADto {
 export interface EquipmentDiaryOpeningHoursDto extends Overlapping<EquipmentDiaryOpeningHoursDto> {
     externalAppointmentsAllowed: boolean;
     medicalAttentionTypeId: number;
+    onSiteAttentionAllowed?: boolean;
     openingHours: EquipmentOpeningHoursDto;
     overturnCount?: number;
     protectedAppointmentsAllowed: boolean;
