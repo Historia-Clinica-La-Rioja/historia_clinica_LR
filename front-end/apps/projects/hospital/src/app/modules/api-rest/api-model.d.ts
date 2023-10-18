@@ -1005,6 +1005,7 @@ export interface DiaryListDto {
     endDate: string;
     id: number;
     includeHoliday: boolean;
+    practices: string[];
     professionalAssignShift: boolean;
     startDate: string;
 }

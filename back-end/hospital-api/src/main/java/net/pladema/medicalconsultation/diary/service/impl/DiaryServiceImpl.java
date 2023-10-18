@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.diary.service.impl;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -248,6 +249,8 @@ public class DiaryServiceImpl implements DiaryService {
 	private DiaryBo createDiaryBoInstance(DiaryListVo diaryListVo) {
 		LOG.debug("Input parameters -> diaryListVo {}", diaryListVo);
 		DiaryBo result	 = new DiaryBo();
+		List<SnomedBo> practices = diaryPracticeService.getAllByDiaryId(diaryListVo.getId());
+		List<String> stringPractices = practices.stream().map(SnomedBo::getPt).collect(Collectors.toList());
 		result.setId(diaryListVo.getId());
 		result.setDoctorsOfficeId(diaryListVo.getDoctorsOfficeId());
 		result.setDoctorsOfficeDescription(diaryListVo.getDoctorsOfficeDescription());
@@ -260,7 +263,8 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setAlias(diaryListVo.getAlias());
 		result.setClinicalSpecialtyName(diaryListVo.getClinicalSpecialtyName());
 		result.setPredecessorProfessionalId(diaryListVo.getPredecessorProfessionalId());
-		result.setHierarchicalUnitId(diaryListVo.getHierarchicalUnitId());
+		result.setHierarchicalUnitId(diaryListVo.getHierarchicalUnitId());	
+		result.setPractices(stringPractices);
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

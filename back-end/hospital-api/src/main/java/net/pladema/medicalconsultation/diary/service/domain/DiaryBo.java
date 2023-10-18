@@ -8,6 +8,7 @@ import lombok.ToString;
 import java.time.LocalDate;
 import java.util.List;
 
+
 @Getter
 @Setter
 @ToString
@@ -54,5 +55,7 @@ public class DiaryBo {
 	protected Integer hierarchicalUnitId;
     
 	protected List<Integer> practicesId;
+	
+	protected List<String> practices;
     
 }
