@@ -15,7 +15,7 @@ const SERVICE = 8;
 
 const ServiceField = ({formData, ...rest}) => {
     return formData.typeId !== SERVICE ? null : (
-        <ReferenceInput {...rest} sort={{ field: 'description', order: 'ASC' }}>
+        <ReferenceInput {...rest} sort={{ field: 'name', order: 'ASC' }}>
             <SelectInput optionText="name" optionValue="id" />
         </ReferenceInput>
     )
