@@ -51,6 +51,10 @@ import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { EquipmentAppointmentsFacadeService } from './services/equipment-appointments-facade.service';
 import { MedicalOrderInputComponent } from './components/medical-order-input/medical-order-input.component';
+// pipes
+import { PracticesPipe } from './pipes/practices.pipe';
+import { MeetingRoomPipe } from './pipes/meeting-room.pipe';
+
 
 @NgModule({
 	declarations: [
@@ -92,6 +96,9 @@ import { MedicalOrderInputComponent } from './components/medical-order-input/med
 		NewAttentionComponent,
 		MedicalOrderInputComponent,
 		ReportCompleteDataPopupComponent,
+		//pipes
+  		PracticesPipe,
+ 		MeetingRoomPipe,
 	],
 	imports: [
 		CommonModule,
