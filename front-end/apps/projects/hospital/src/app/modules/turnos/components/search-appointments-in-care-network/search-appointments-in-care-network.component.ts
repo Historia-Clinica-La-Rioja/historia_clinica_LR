@@ -17,6 +17,9 @@ import { SearchCriteria } from '../search-criteria/search-criteria.component';
 import { BehaviorSubject } from 'rxjs';
 import { CareLineInstitutionPracticeService } from '@api-rest/services/care-line-institution-practice.service';
 import { SearchAppointmentInformation, SearchAppointmentsInfoService } from '@turnos/services/search-appointment-info.service';
+import { TabsService } from '@turnos/services/tabs.service';
+import { Tabs } from '@turnos/constants/tabs';
+
 const PERIOD_DAYS = 7;
 const PAGE_SIZE_OPTIONS = [5, 10, 25, 100];
 @Component({
@@ -78,6 +81,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 	showPracticeError = false;
 	searchAppointmentCriteria: SearchAppointmentCriteria;
 	externalInformation: SearchAppointmentInformation;
+	showSectionToSearchAppointmentsInInstitution = false;
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -92,8 +96,9 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly careLineInstitutionPracticeService: CareLineInstitutionPracticeService,
 		private readonly searchAppointmentsInfoService: SearchAppointmentsInfoService,
-	) {
-		this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.isEnableTelemedicina = isEnabled)
+		private readonly tabsService: TabsService,
+	) { 
+		this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.isEnableTelemedicina = isEnabled);
 	}
 
 	ngOnChanges(changes: SimpleChanges): void {
@@ -273,6 +278,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 					this.showAppointmentsNotFoundMessage = !this.protectedAvaibleAppointments?.length
 					this.showAppointmentResults = !this.showAppointmentsNotFoundMessage;
 					this.careLineId = this.searchForm.value.careLine.id;
+					this.showSectionToSearchAppointmentsInInstitution = this.externalInformation?.enableSectionToSearchAppointmentInOtherTab;
 					if (this.showAppointmentResults) {
 						this.loadFirstPage();
 					}
@@ -336,6 +342,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		this.protectedAvaibleAppointments = [];
 
 		this.appointmentsCurrentPage = [];
+		this.showSectionToSearchAppointmentsInInstitution = false;
 		this.externalInformation = null;
 	}
 
@@ -350,6 +357,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		formControls.careLine.enable();
 		this.practicesBehavior.next([]);
 		this.selectedTypeAttention = SearchCriteria.CONSULTATION;
+		this.showSectionToSearchAppointmentsInInstitution = false;
 		this.searchAppointmentsInfoService.clearInfo();
 		this.resetResults();
 	}
@@ -376,6 +384,11 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 			this.resetResults();
 		}
 		this.showPracticeError = false;
+	}
+
+	searchAppointmentsInstitution() {
+		this.searchAppointmentsInfoService.loadInformation(this.patientId, this.externalInformation.referenceCompleteData);
+		this.tabsService.setTab(Tabs.INSTITUTION);
 	}
 
 	private setValidators() {

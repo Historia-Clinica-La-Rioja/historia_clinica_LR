@@ -12,6 +12,9 @@ import { SearchCriteria } from '../search-criteria/search-criteria.component';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { PracticesService } from '@api-rest/services/practices.service';
 import { SearchAppointmentInformation, SearchAppointmentsInfoService } from '@turnos/services/search-appointment-info.service';
+import { Tabs } from '@turnos/constants/tabs';
+import { TabsService } from '@turnos/services/tabs.service';
+
 const PAGE_MIN_SIZE = 5;
 
 @Component({
@@ -46,6 +49,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	practices: SharedSnomedDto[];
 	externalInformation: SearchAppointmentInformation;
 	externalSetValueSpecialty: TypeaheadOption<string>;
+	showCareNetworkSection = false;
 
 	dateSearchFilter = (d: Moment): boolean => {
 		const parsedDate = d?.toDate();
@@ -60,6 +64,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly practicesService: PracticesService,
 		private readonly searchAppointmentsInfoService: SearchAppointmentsInfoService,
+		private readonly tabsService: TabsService,
 	) { this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.isEnableTelemedicina = isEnabled) }
 
 	ngOnInit(): void {
@@ -184,6 +189,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 				if (this.paginator) {
 					this.paginator.pageSize = PAGE_MIN_SIZE;
 				}
+				this.showCareNetworkSection = this.externalInformation?.enableSectionToSearchAppointmentInOtherTab;
 			});
 		}
 		else {
@@ -214,6 +220,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		this.resetControls();
 		this.clearLists();		
 		this.selectedSearchCriteria = SearchCriteria.CONSULTATION;
+		this.showCareNetworkSection = false;
 	}
 
 	setCriteria(selectedCriteria: SearchCriteria) {
@@ -230,6 +237,11 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 			this.emptyAppointmentsFiltered = [];
 		}
 		this.showPracticeError = false;
+	}
+
+	searchAppointmentsInCareNetwork() {
+		this.searchAppointmentsInfoService.loadInformation(this.patientId, this.externalInformation.referenceCompleteData);
+		this.tabsService.setTab(Tabs.CARE_NETWORK);
 	}
 
 	private setValidators() {

@@ -119,4 +119,14 @@
 			</mat-card>
 		</ng-template>
 	</div>
+
+	<div *ngIf="showCareNetworkSection" fxLayout="column" fxLayoutGap="15px">
+		<strong class="category-title">{{ 'turnos.home.NOT_FOUND_APPOINTMENTS' | translate}}</strong>
+
+		<div>
+			<button mat-flat-button color="primary" (click)="searchAppointmentsInCareNetwork()">
+				<span [translate]="'turnos.home.SEARCH_IN_CARE_NETWORK'"></span>
+			</button>
+		</div>
+	</div>
 </div>

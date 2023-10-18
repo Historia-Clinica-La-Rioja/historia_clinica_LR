@@ -30,11 +30,15 @@ export class SearchCriteriaComponent implements OnInit, OnChanges {
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
-		if (changes.defaultOption && this.form)
-			this.form.controls.criteria.setValue(changes.defaultOption.currentValue);
+		if (this.form) {
+			if (changes.defaultOption)
+				this.form.controls.criteria.setValue(changes.defaultOption.currentValue);
 
-		if (changes.disabled && this.form)
-			this.form.controls.criteria.disable();
+			if (changes.disabled.currentValue)
+				this.form.controls.criteria.disable();
+			else
+				this.form.controls.criteria.enable();
+		}
 	}
 
 	emit(searchCriteriaValue: MatRadioChange) {
@@ -47,5 +51,3 @@ export enum SearchCriteria {
 	CONSULTATION,
 	PRACTICES
 }
-
-

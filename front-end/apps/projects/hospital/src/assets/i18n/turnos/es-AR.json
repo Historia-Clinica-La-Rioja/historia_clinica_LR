@@ -38,6 +38,8 @@
 			"PERCENTAGE_PROTECTED_APPOINTMENT": "% de turnos protegidos por día",
 			"REQUESTS": "solicitudes",
 			"PRACTICES": "Prácticas",
+			"NOT_FOUND_APPOINTMENTS": "¿No encuentra turnos disponibles para el paciente?",
+			"SEARCH_IN_CARE_NETWORK": "Buscar turnos en red de atención",
 			"messages": {
 				"NO_SPECIFIED_DATE": "Por favor ingrese una fecha para realizar la búsqueda"
 			}
@@ -59,7 +61,8 @@
 			"SEARCH_START_DATE": "Fecha de inicio de búsqueda",
 			"NOT_FOUND_APPOINTMENTS": "No se han encontrado turnos disponibles con esos criterios de búsqueda.",
 			"INVALID_FORM_MESSAGE": "Debe ingresar todos los campos obligatorios marcados para la búsqueda",
-			"AVAILABLE_APPOINTMENTS_TITLE": "Turnos disponibles encontrados"
+			"AVAILABLE_APPOINTMENTS_TITLE": "Turnos disponibles encontrados",
+			"BACK_TO_INSTITUTION_TAB": "Volver a turnos en institución"
 		},
 		"appointment-result-view": {
 			"JOINT_DIARY": "agenda conjunta"
