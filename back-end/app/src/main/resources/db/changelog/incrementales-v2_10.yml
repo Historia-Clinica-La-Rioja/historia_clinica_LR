@@ -17,3 +17,83 @@ databaseChangeLog:
             - sql:
                 sql: |-
                      ALTER TABLE sector ALTER COLUMN informer SET DEFAULT false;
+
+    - changeSet:
+        id: createTable-institutional_group_user
+        comment: Create table institutional_group_user
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: institutional_group_user
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_institutional_group_user
+                    name: id
+                    type: int
+                - column:
+                    name: institutional_group_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: user_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: institutional_group_id
+              baseTableName: institutional_group_user
+              constraintName: FK_institutional_group_user_institutional_group_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: institutional_group
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: user_id
+              baseTableName: institutional_group_user
+              constraintName: FK_institutional_group_user_user_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true
