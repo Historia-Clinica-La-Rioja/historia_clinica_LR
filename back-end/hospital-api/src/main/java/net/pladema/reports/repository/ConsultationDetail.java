@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @ToString
@@ -47,7 +49,7 @@ public class ConsultationDetail {
 
 	private String affiliateNumber;
 
-	private String startDate;
+	private LocalDateTime startDate;
 
 	private Integer clinicalSpecialtyId;
 

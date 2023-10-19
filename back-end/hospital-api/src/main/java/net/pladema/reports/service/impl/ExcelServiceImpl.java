@@ -1,5 +1,7 @@
 package net.pladema.reports.service.impl;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -242,7 +244,7 @@ public class ExcelServiceImpl implements ExcelService {
 			cell24.setCellStyle(style);
 
 			ICell cell14 = row.createCell(rowNumber.getAndIncrement());
-			cell14.setCellValue(content.getStartDate());
+			cell14.setCellValue(content.getStartDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 			cell14.setCellStyle(style);
 			ICell cell15 = row.createCell(rowNumber.getAndIncrement());
 			cell15.setCellValue(content.getClinicalSpecialty());
