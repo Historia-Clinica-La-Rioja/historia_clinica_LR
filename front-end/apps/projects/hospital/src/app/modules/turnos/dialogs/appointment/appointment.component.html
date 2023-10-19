@@ -200,7 +200,12 @@
 								{{'turnos.appointment.JOIN_CALL' | translate}}
 							</span>
 						</button>
-						<span class="assigned-by">{{appointment?.callLink}}</span>
+						<div fxLayout="row" fxLayoutAlign="space-around center">
+							<span class="assigned-by">{{appointment?.callLink}}</span>
+							<button mat-icon-button (click)="copied()" [cdkCopyToClipboard]="appointment?.callLink">
+								<mat-icon>content_copy</mat-icon>
+							  </button>
+						</div>	
 				</div>
 				<button type="button" mat-icon-button color="primary"
 					*ngIf="(selectedState === appointmentStatesIds.ASSIGNED) && ( hasRoleToEdit$ | async ) && !isVirtualConsultationModality" (click)="openDateForm()">

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CalendarDateFormatter, CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 // deps
+import { ClipboardModule } from '@angular/cdk/clipboard';
 import { PresentationModule } from '@presentation/presentation.module';
 import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
@@ -103,6 +104,7 @@ import { MedicalOrderInputComponent } from './components/medical-order-input/med
 		HistoriaClinicaModule,
 		PatientSummaryComponent,
 		IdentifierCasesComponent,
+		ClipboardModule,
 	],
 	exports: [
 		CalendarProfessionalViewComponent,

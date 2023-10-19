@@ -831,6 +831,12 @@ export class AppointmentComponent implements OnInit {
 			this.hideObservationTitle = false;
 	}
 
+	copied() {
+		this.snackBarService.showSuccess('messages.COPIED');
+		setTimeout(() => {
+		}, 300);
+	}
+
 	private updateSummaryCoverageData(): void {
 		let summaryInfo: SummaryCoverageInformation = {};
 		if (this.coverageData) {
