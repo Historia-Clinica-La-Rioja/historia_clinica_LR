@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, ElementRef, OnInit } from '@angular/core'
 import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { SECTOR_AMBULATORIO } from "@historia-clinica/modules/guardia/constants/masterdata";
 import { TranslateService } from '@ngx-translate/core';
 import { DAYS_OF_WEEK } from 'angular-calendar';
 import { Observable, filter, map, switchMap } from 'rxjs';
@@ -23,7 +24,7 @@ import {
 	DoctorsOfficeDto,
 	HierarchicalUnitDto,
 	OccupationDto,
-	ProfessionalDto,
+	ProfessionalDto, SectorDto,
 	SnomedDto
 } from '@api-rest/api-model';
 import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
@@ -61,7 +62,6 @@ export class AgendaSetupComponent implements OnInit {
 	appointmentManagement = false;
 	autoRenew = false;
 	closingTime: number;
-	defaultDoctorOffice: DoctorsOfficeDto;
 	doctorOffices: DoctorsOfficeDto[];
 	editMode = false;
 	errors: string[] = [];
@@ -71,7 +71,7 @@ export class AgendaSetupComponent implements OnInit {
 	minDate = new Date();
 	openingTime: number;
 	professionals: ProfessionalDto[];
-	sectors;
+	sectors: SectorDto[];
 	agendaHorarioService: AgendaHorarioService;
 	professionalSpecialties: any[];
 	specialityId: number;
@@ -231,8 +231,8 @@ export class AgendaSetupComponent implements OnInit {
 		});
 
 
-		this.sectorService.getAll().subscribe(data => {
-			this.sectors = data;
+		this.sectorService.getAllSectorByType(SECTOR_AMBULATORIO).subscribe(data => {
+			this.sectors = this.filterSectorsWithoutDoctorsOffice(data);
 		});
 
 		this.healthcareProfessionalService.getAll().subscribe(data => {
@@ -764,5 +764,9 @@ export class AgendaSetupComponent implements OnInit {
 		this.form.controls.practices.updateValueAndValidity();
 		this.form.controls.healthcareProfessionalSpecialtyId.removeValidators([Validators.required]);
 		this.form.controls.healthcareProfessionalSpecialtyId.updateValueAndValidity();
+	}
+
+	private filterSectorsWithoutDoctorsOffice(sectors: SectorDto[]) {
+		return sectors.filter(sector => sector.hasDoctorsOffice);
 	}
 }

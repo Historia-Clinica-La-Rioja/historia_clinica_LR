@@ -3590,8 +3590,9 @@ export interface SavedEpisodeDocumentResponseDto {
     uuidFile: string;
 }
 
-export interface SectorDto extends Serializable {
+export interface SectorDto {
     description: string;
+    hasDoctorsOffice: boolean;
     id: number;
 }
 

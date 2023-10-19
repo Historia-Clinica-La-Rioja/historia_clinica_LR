@@ -59,7 +59,6 @@ export class EquipmentDiarySetupComponent implements OnInit {
 
 	editMode = false;
 	editingDiaryId: number;
-	editingDiary: CompleteEquipmentDiaryDto;
 
 	constructor(
 		private readonly el: ElementRef,
@@ -99,7 +98,7 @@ export class EquipmentDiarySetupComponent implements OnInit {
 
 		this.sectorService.getTypes().subscribe(types => {
 			const diagnosticImagingId = types.find(type => type.description === DIAGNOSTIC_IMAGING).id;
-			this.sectors$ = this.sectorService.getDiagnosticImagingType(diagnosticImagingId);
+			this.sectors$ = this.sectorService.getAllSectorByType(diagnosticImagingId);
 		});
 
 		this.route.data.subscribe(data => {
