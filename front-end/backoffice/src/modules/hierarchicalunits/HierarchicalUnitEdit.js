@@ -13,10 +13,12 @@ import {HierarchicalUnitChilds, HierarchicalUnitParents, HierarchicalUnitStaff, 
 
 const SERVICE = 8;
 
+const searchToFilter = searchText => ({name: searchText ? searchText : -1});
+
 const ServiceField = ({formData, ...rest}) => {
     return formData.typeId !== SERVICE ? null : (
-        <ReferenceInput {...rest} sort={{ field: 'name', order: 'ASC' }}>
-            <SelectInput optionText="name" optionValue="id" />
+        <ReferenceInput {...rest} sort={{ field: 'name', order: 'ASC' }} filterToQuery={searchToFilter}>
+            <AutocompleteInput optionText="name" optionValue="id" validate={[required()]} />
         </ReferenceInput>
     )
 }
