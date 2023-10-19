@@ -45,7 +45,9 @@ export enum IDENTIFIER_CASES {
 	HOUR = 'Hora',
 	DISTRICT = 'Partido',
 	SERVICE = 'Servicio',
-	MEETING_ROOM = 'meeting_room'
+	MEETING_ROOM = 'Sala de reuniones',
+	CLEAN_HANDS = 'Linea de cuidado',
+	GROUP = 'Información de profesionales asociados',
 }
 
 const institution: IconLegend = {
@@ -103,6 +105,16 @@ const meeting_room: IconLegend = {
 	legend: 'Consultorio y sector',
 }
 
+const clean_hands: IconLegend = {
+	icon: 'clean_hands',
+	legend: 'Consultorio y sector',
+}
+
+const group: IconLegend = {
+	icon: 'group',
+	legend: 'Agenda conjunta',
+}
+
 const IDENTIFIER_CASES_ALTERNATIVES = {
 	[IDENTIFIER_CASES.INSTITUTION]: institution,
 	[IDENTIFIER_CASES.CARE_LINE]: careLine,
@@ -115,4 +127,6 @@ const IDENTIFIER_CASES_ALTERNATIVES = {
 	[IDENTIFIER_CASES.DISTRICT]: district,
 	[IDENTIFIER_CASES.SERVICE]: service,
 	[IDENTIFIER_CASES.MEETING_ROOM]: meeting_room,
+	[IDENTIFIER_CASES.CLEAN_HANDS]: clean_hands,
+	[IDENTIFIER_CASES.GROUP]: group,
 }

@@ -194,3 +194,50 @@ export const serviceFull: Story = {
 	}
 };
 
+export const  meetingRoomMin: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.MEETING_ROOM,
+		description: "Ejemplo de sala de reuniones",
+	}
+};
+
+export const  meetingRoomFull: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.MEETING_ROOM,
+		showLegend: true,
+		description: "Ejemplo de sala de reuniones",
+		position: Position.COLUMN
+	}
+};
+
+export const  cleanHandsMin: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.CLEAN_HANDS,
+		description: "Ejemplo de linea de cuidado",
+	}
+};
+
+export const cleanHandsFull: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.CLEAN_HANDS,
+		showLegend: true,
+		description: "Ejemplo de linea de cuidado",
+		position: Position.COLUMN
+	}
+};
+
+export const groupMin: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.GROUP,
+		description: "Ejemplo de información de profesionales asociados",
+	}
+};
+
+export const groupFull: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.GROUP,
+		showLegend: true,
+		description: "Ejemplo de información de profesionales asociados",
+		position: Position.COLUMN
+	}
+};
