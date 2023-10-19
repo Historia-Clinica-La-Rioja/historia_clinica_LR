@@ -4,25 +4,25 @@
 
         <div fxLayout="row" fxLayoutGap="30px" fxLayout.lt-md="column">
 
-            <mat-button-toggle-group value="{{view}}">
+            <mat-button-toggle-group value="{{referenceReportFacade.dashboardView}}" (change)="referenceReportFacade.updateDashboardView($event)">
                 <mat-button-toggle value="{{referenceView.RECEIVED}}" *appHasRole="['ADMINISTRATIVO']"
-                    (click)="getReceived()" [disabled]="disabled">
+                    [disabled]="referenceReportFacade.disabledDashboardActions">
                     {{'turnos.search_references.RECEIVED' | translate}}
                 </mat-button-toggle>
                 <mat-button-toggle value="{{referenceView.REQUESTED}}"
                     *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ADMINISTRATIVO']"
-                    (click)="getRequested()" [disabled]="disabled">
+                    [disabled]="referenceReportFacade.disabledDashboardActions">
                     {{'turnos.search_references.REQUEST' | translate}}
                 </mat-button-toggle>
             </mat-button-toggle-group>
             <div fxLayout="column">
-                <app-date-range-picker [label]="'turnos.search_references.FILTER_BY_PERIOD'" [dateRange]="dateRange"
-                    (dateRangeChange)="checkDays($event)" [disabled]="disabled"></app-date-range-picker>
+                <app-date-range-picker [label]="'turnos.search_references.FILTER_BY_PERIOD'" [dateRange]="referenceReportFacade.dateRange"
+                    (dateRangeChange)="checkDays($event)" [disabled]="referenceReportFacade.disabledDashboardActions"></app-date-range-picker>
                 <mat-error *ngIf="showValidation">{{'turnos.search_references.PERIOD_VALIDATIONS' | translate}}</mat-error>
             </div>
         </div>
 
-        <app-reference-list [reports]="reports"></app-reference-list>
+        <app-reference-list [reports]="reports$ | async"></app-reference-list>
     </div>
 
 </app-content>

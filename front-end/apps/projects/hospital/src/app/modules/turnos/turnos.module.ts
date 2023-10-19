@@ -51,12 +51,12 @@ import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data
 // services
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { EquipmentAppointmentsFacadeService } from './services/equipment-appointments-facade.service';
+import { ReferenceReportFacadeService } from './services/reference-report-facade.service';
 import { SearchAppointmentsInfoService } from './services/search-appointment-info.service';
 import { TabsService } from './services/tabs.service';
 // pipes
 import { MeetingRoomPipe } from './pipes/meeting-room.pipe';
 import { PracticesPipe } from './pipes/practices.pipe';
-
 @NgModule({
 	declarations: [
 		// routing
@@ -125,8 +125,9 @@ import { PracticesPipe } from './pipes/practices.pipe';
 			useClass: CustomDateFormatter,
 		},
 		EquipmentAppointmentsFacadeService,
-		TabsService,
+		ReferenceReportFacadeService,
 		SearchAppointmentsInfoService,
+		TabsService,
 	]
 })
 export class TurnosModule {
