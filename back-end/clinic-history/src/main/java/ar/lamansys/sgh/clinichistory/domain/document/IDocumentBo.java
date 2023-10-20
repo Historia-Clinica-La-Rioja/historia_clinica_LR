@@ -31,7 +31,7 @@ public interface IDocumentBo {
         return null;
     }
 
-	//default AddressBo institutionAddress;
+	//default AddressDto institutionAddress;
 
     default Long getId() {
         return null;

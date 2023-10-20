@@ -195,7 +195,7 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 	private Long setRequiredFieldsAndSaveDocument(Integer appointmentId, InformerObservationBo obs, boolean createFile) {
 		obs.setEncounterId(appointmentId);
 		obs.setConfirmed(createFile);
-		obs.setInstitutionAddress(institutionService.getAddress(obs.getInstitutionId()));
+		//obs.setInstitutionAddress(institutionService.getAddress(obs.getInstitutionId()));
 		obs.setDiagnosticReports(List.of(diagnosticReportInfoService.getByAppointmentId(appointmentId)));
 
 		Integer patientId = appointmentRepository.getPatientByAppointmentId(appointmentId);
