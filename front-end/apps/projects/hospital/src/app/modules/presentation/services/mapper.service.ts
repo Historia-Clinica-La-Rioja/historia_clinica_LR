@@ -174,7 +174,7 @@ export class MapperService {
 	}
 
 	private static _toBedManagement(bedSummary: BedSummaryDto[]): BedManagement[] {
-		const bedManagement: BedManagement[] = [];
+		let bedManagement: BedManagement[] = [];
 		bedSummary.forEach(summary => {
 			const sector = bedManagement.find(e => e.sectorId === summary.sector.id);
 
@@ -211,6 +211,7 @@ export class MapperService {
 				bedManagement.push(newSector);
 			}
 		});
+		bedManagement = MapperService.sortBeds(bedManagement);	
 		return bedManagement;
 	}
 
@@ -256,4 +257,30 @@ export class MapperService {
 
 	}
 
+	private static sortBeds(bedManagement: BedManagement[]): BedManagement[] {
+		bedManagement.forEach(bd => {
+			bd.beds.sort((b1, b2)=> {
+				const bedNumberA = b1.bedNumber.toLowerCase();
+				const bedNumberB = b2.bedNumber.toLowerCase();
+
+				function isNumeric(str) {
+					return /^\d+(\.\d+)?$/.test(str);
+				}
+
+				const isNumberA = isNumeric(bedNumberA);
+				const isNumberB = isNumeric(bedNumberB);
+
+				if (isNumberA && isNumberB) {
+					return parseFloat(bedNumberA) - parseFloat(bedNumberB);
+				} else if (isNumberA) {
+					return -1;
+				} else if (isNumberB) {
+					return 1;
+				} else {
+					return bedNumberA.localeCompare(bedNumberB);
+				}
+			});
+		})
+		return bedManagement;
+	}
 }
