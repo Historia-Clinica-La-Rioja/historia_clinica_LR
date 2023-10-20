@@ -140,17 +140,31 @@ export class AttachDocumentPopupComponent implements OnInit {
 				});
 	}
 
+	setControlTouched(control) {
+        control.markAsTouched();
+    }
+
 	setDocumentType(type) {
 		this.consentSelectedType = this.consentDocumentTypes.find(elem => elem.id === type);
 		this.showGenerateDocument = this.consentSelectedType ? true : false;
 		this.showAttachFile = true;
 		this.showSurgicalInfo = false;
-		this.form.get('type').setValue(type);
+		if (!type)
+			this.setControlTouched(this.form.get('type'));
+		else {
+            this.form.get('type').markAsUntouched();
+			this.form.get('type').setValue(type);
+		}
 	}
 
 	setProfessional(professional) {
-		this.surgicalForm.get('professional').setValue(professional);
-	}
+        if (!professional)
+            this.setControlTouched(this.surgicalForm.get('professional'))
+        else {
+            this.surgicalForm.get('professional').markAsUntouched();
+            this.surgicalForm.get('professional').setValue(professional);
+        }
+    }
 
 	onFileSelected(event) {
 		const file: File = event.target.files[0];

@@ -8,10 +8,11 @@
 	<h1 [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.TITLE'"></h1>
 
 	<app-typeahead *ngIf="documentTypes?.length; else noDocumentsType" [options]="documentTypes"
+		(click)="setControlTouched(form.get('type'))"
 		[titleInput]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.TYPE' | translate"
 		[required]="required" (selectionChange)="setDocumentType($event)">
 	</app-typeahead>
-	<mat-error class="typeahead-required" *ngIf="hasError(form, 'required', 'type')"
+	<mat-error class="typeahead-required" *ngIf="form.controls['type'].touched"
 		[translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.TYPE_REQUIRED'">
 	</mat-error>
 	<mat-error class="typeahead-required" *ngIf="hasError(form, 'invalid', 'type')">
@@ -41,11 +42,12 @@
 	<section class="surgical-info" *ngIf="showSurgicalInfo">
 		<form [formGroup]="surgicalForm" (ngSubmit)="generate()">
 			<app-typeahead *ngIf="professionals?.length > 0; else noProfessional" [options]="professionals"
+				(click)="setControlTouched(surgicalForm.get('professional'))"
 				[titleInput]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.PROFESSIONAL' | translate"
 				[required]="required" (selectionChange)="setProfessional($event)">
 			</app-typeahead>
 			<mat-error class="typeahead-required"
-				*ngIf="hasError(surgicalForm, 'required', 'professional') && professionals?.length"
+				*ngIf="surgicalForm.controls['professional'].touched && professionals?.length"
 				[translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.PROFESSIONAL_REQUIRED'">
 			</mat-error>
 
