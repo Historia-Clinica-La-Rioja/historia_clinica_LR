@@ -94,5 +94,9 @@ export class VirtualConstultationService {
 		return this.http.post(url, {})
 	}
 
+	transferResponsibleProfessionaltOfVirtualConsultation(virtualConsultationId : number,responsibleHealthcareProfessionalId:number){
+		const url = `${this.BASE_URL}/${virtualConsultationId}/transfer`;
+		return this.http.put(url,responsibleHealthcareProfessionalId);
+	}
 }
 

@@ -18,6 +18,7 @@ import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
 import { capitalize } from '@core/utils/core.utils';
 import { TransferRequestComponent } from '../../dialogs/transfer-request/transfer-request.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
 	selector: 'app-requests',
@@ -37,10 +38,10 @@ export class RequestsComponent implements OnInit {
 	professionalsOptions: Option[] = [];
 	stateOptions: Option[] = [];
 	filters: filter[] = [];
-	statusFinished= EVirtualConsultationStatus.FINISHED;
-	statusCanceled= EVirtualConsultationStatus.CANCELED;
-	isVirtualConsultatitioProfessional:boolean;
-	patientFilter:string;
+	statusFinished = EVirtualConsultationStatus.FINISHED;
+	statusCanceled = EVirtualConsultationStatus.CANCELED;
+	isVirtualConsultatitioProfessional: boolean;
+	patientFilter: string;
 	applySearchFilter = '';
 
 	constructor(
@@ -50,6 +51,7 @@ export class RequestsComponent implements OnInit {
 		private careLineService: CareLineService, private clinicalSpecialtyService: ClinicalSpecialtyService,
 		private healthcareProfessionalByInstitucion: HealthcareProfessionalByInstitutionService,
 		private readonly permissionsService: PermissionsService,
+		private readonly snackBarService: SnackBarService,
 	) {
 	}
 
@@ -61,11 +63,11 @@ export class RequestsComponent implements OnInit {
 		)
 
 		this.virtualConsultationsFiltered$ = this.virtualConsultationsFacadeService.virtualConsultationsRequest$.pipe(map(requests =>
-			requests.map(request =>   this.toVCToBeShown(request)
+			requests.map(request => this.toVCToBeShown(request)
 			)
 		))
 		this.virtualConsultationsBackUp$ = this.virtualConsultationsFacadeService.virtualConsultationsRequest$.pipe(map(requests =>
-			requests.map(request =>   this.toVCToBeShown(request)
+			requests.map(request => this.toVCToBeShown(request)
 			)
 		))
 
@@ -196,13 +198,24 @@ export class RequestsComponent implements OnInit {
 		)
 	}
 
-	transfer(virtualConsultation:VirtualConsultationDto){
-		 this.dialog.open(TransferRequestComponent, {
+	transfer(virtualConsultation: VirtualConsultationDto) {
+		const ref = this.dialog.open(TransferRequestComponent, {
 			data: {
-				virtualConsultation:virtualConsultation
+				virtualConsultation: virtualConsultation
 			},
 			width: '33%'
 		});
+		ref.afterClosed().subscribe(
+			responsibleId => {
+				if (responsibleId) {
+					this.virtualConsultationService.transferResponsibleProfessionaltOfVirtualConsultation(virtualConsultation.id, responsibleId).subscribe(res => {
+						if (res) {
+							this.snackBarService.showSuccess('¡Solicitud transferida!');
+						}
+					})
+				}
+			}
+		)
 	}
 
 
@@ -260,18 +273,18 @@ export class RequestsComponent implements OnInit {
 
 	private applyFiltes(): void {
 		if (this.applySearchFilter.length) {
-		this.virtualConsultationsFiltered$= of(this.filter());
-		}else{
+			this.virtualConsultationsFiltered$ = of(this.filter());
+		} else {
 			this.virtualConsultationsFiltered$ = this.virtualConsultationsBackUp$;
 		}
 	}
 
 	private filter(): VirtualConsultationDto[] {
-		let listFilter =[];
-		 this.virtualConsultationsBackUp$.subscribe(data=>{
+		let listFilter = [];
+		this.virtualConsultationsBackUp$.subscribe(data => {
 			listFilter = data;
 		});
-			return listFilter.filter((e: VirtualConsultationDto) => this.getFullName(e).toLowerCase().includes(this.applySearchFilter.toLowerCase()))
+		return listFilter.filter((e: VirtualConsultationDto) => this.getFullName(e).toLowerCase().includes(this.applySearchFilter.toLowerCase()))
 	}
 
 	getFullName(patient: VirtualConsultationDto): string {

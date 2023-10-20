@@ -22,14 +22,14 @@ export class TransferRequestComponent implements OnInit {
     virtualConsultation: VirtualConsultationDto
   }, private patientService: PatientService,
     private mapperService: MapperService,
-    private healthcareProfessionalByInstitucion: HealthcareProfessionalByInstitutionService,private namesService: PatientNameService) {
+    private healthcareProfessionalByInstitucion: HealthcareProfessionalByInstitutionService, private namesService: PatientNameService) {
 
   }
 
   ngOnInit(): void {
     this.healthcareProfessionalByInstitucion.getVirtualConsultationResponsiblesByInstitutionId().subscribe(professionals => {
-      this.responsibleProfessionals = professionals.map( professional => {
-        const professionalName = this.namesService.completeName(professional.firstName,professional.nameSelfDetermination,professional.lastName,professional.middleNames,professional.otherLastNames);
+      this.responsibleProfessionals = professionals.map(professional => {
+        const professionalName = this.namesService.completeName(professional.firstName, professional.nameSelfDetermination, professional.lastName, professional.middleNames, professional.otherLastNames);
         return {
           compareValue: professionalName,
           value: professional.id
@@ -42,6 +42,11 @@ export class TransferRequestComponent implements OnInit {
       })
   }
 
-  onResponsibleSelectionChange(event) {
+  setResponsibleSelectionChange(event) {
+    this.resposibleSelected = event;
+  }
+
+  confirm() {
+    this.dialogRef.close(this.resposibleSelected);
   }
 }
