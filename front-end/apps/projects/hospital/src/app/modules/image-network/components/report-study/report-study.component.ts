@@ -132,8 +132,8 @@ export class ReportStudyComponent implements OnInit, OnDestroy {
 
 	saveDraft() {
 		this.submitted = true;
-		this.setTextEditorLength(this.form.controls.observations.value)
 		if (this.form.valid && this.textEditorLength) {
+			this.setTextEditorLength(this.form.controls.observations.value)
 			this.disableContinueEditing = true;
 			this.enabledEditing = false;
 			if (this.study.info.informerObservations?.id) {
@@ -153,8 +153,8 @@ export class ReportStudyComponent implements OnInit, OnDestroy {
 
 	save() {
 		this.submitted = true;
-		this.setTextEditorLength(this.form.controls.observations.value)
 		if (this.form.valid && this.textEditorLength) {
+			this.setTextEditorLength(this.form.controls.observations.value)
 			this.disableContinueEditing = true;
 			this.enabledEditing = false;
 			if (this.study.info.informerObservations?.id) {
