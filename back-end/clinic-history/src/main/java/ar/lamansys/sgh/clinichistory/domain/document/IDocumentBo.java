@@ -31,6 +31,8 @@ public interface IDocumentBo {
         return null;
     }
 
+	//default AddressBo institutionAddress;
+
     default Long getId() {
         return null;
     }
@@ -120,6 +122,10 @@ public interface IDocumentBo {
     default List<DiagnosticReportBo> getDiagnosticReports(){
         return Collections.emptyList();
     };
+
+	default String getEvolutionNote(){
+		return null;
+	}
 
     default List<DentalActionBo> getDentalActions() {
         return Collections.emptyList();

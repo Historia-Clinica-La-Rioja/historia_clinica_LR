@@ -104,6 +104,11 @@ public class AuditableContextBuilder {
 			logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
 			return contextMap;
 		}
+		if (document.getDocumentType() == DocumentType.MEDICAL_IMAGE_REPORT) {
+			addImageReportData(contextMap, document);
+			logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
+			return contextMap;
+		}
 		addDocumentInfo(contextMap, document);
 		logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
 		return contextMap;
@@ -164,6 +169,16 @@ public class AuditableContextBuilder {
 		ctx.put("nameSelfDeterminationFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
 		ctx.put("requestDate", date);
 		ctx.put("institution",sharedInstitutionPort.fetchInstitutionById(document.getInstitutionId()));
+	}
+
+	private <T extends IDocumentBo> void addImageReportData(Map<String, Object> ctx, T document) {
+		ctx.put("diagnosticReportList", document.getDiagnosticReports());
+		ctx.put("institutionHeader",sharedInstitutionPort.fetchInstitutionIDataById(document.getInstitutionId()));
+		ctx.put("author", authorFromDocumentFunction.apply(document.getId()));
+		ctx.put("performedDate", document.getPerformedDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
+		ctx.put("evolutionNote", document.getEvolutionNote());
+		ctx.put("conclusions", document.getConclusions());
+		logger.debug("srlfjghsfkdjFBAF");
 	}
 
 	private <T extends IDocumentBo> void addDigitalRecipeContextDocumentData(Map<String, Object> ctx, T document) {
