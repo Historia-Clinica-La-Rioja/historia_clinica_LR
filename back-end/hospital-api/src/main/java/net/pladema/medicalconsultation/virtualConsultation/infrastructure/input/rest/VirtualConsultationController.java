@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import net.pladema.medicalconsultation.virtualConsultation.application.changeResponsibleProfessionalOfVirtualConsultationService.ChangeResponsibleProfessionalOfVirtualConsultationService;
 import net.pladema.medicalconsultation.virtualConsultation.application.notifyVirtualConsultationAcceptedCall.NotifyVirtualConsultationAcceptedCallService;
 import net.pladema.medicalconsultation.virtualConsultation.application.notifyVirtualConsultationCancelledCall.NotifyVirtualConsultationCancelledCallService;
 import net.pladema.medicalconsultation.virtualConsultation.application.notifyVirtualConsultationIncomingCall.NotifyVirtualConsultationIncomingCallService;
@@ -80,6 +81,8 @@ public class VirtualConsultationController {
 	private final ChangeResponsibleProfessionalAvailabilityService changeResponsibleProfessionalAvailabilityService;
 
 	private final ChangeVirtualConsultationStatusService changeVirtualConsultationStatusService;
+
+	private final ChangeResponsibleProfessionalOfVirtualConsultationService changeResponsibleProfessionalOfVirtualConsultationService;
 
 	private final ObjectMapper objectMapper;
 
@@ -255,6 +258,17 @@ public class VirtualConsultationController {
 		log.debug("Input parameters -> institutionId {}", institutionId);
 		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
 		Boolean result = getResponsibleProfessionalAvailabilityService.run(doctorId, institutionId);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+
+	@PutMapping(value = "/{virtualConsultationId}/transfer")
+	@PreAuthorize("hasAnyAuthority('VIRTUAL_CONSULTATION_PROFESSIONAL', 'VIRTUAL_CONSULTATION_RESPONSIBLE')")
+	public Boolean transferResponsibleProfessionaltOfVirtualConsultation(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId,
+											   @RequestBody @Valid Integer responsibleHealthcareProfessionalId) throws JsonProcessingException {
+		log.debug("Input parameters -> virtualConsultationId {}, responsibleProfessionalId {}", virtualConsultationId, responsibleHealthcareProfessionalId);
+		Boolean result = changeResponsibleProfessionalOfVirtualConsultationService.run(virtualConsultationId, responsibleHealthcareProfessionalId);
 		log.debug("Output -> {}", result);
 		return result;
 	}

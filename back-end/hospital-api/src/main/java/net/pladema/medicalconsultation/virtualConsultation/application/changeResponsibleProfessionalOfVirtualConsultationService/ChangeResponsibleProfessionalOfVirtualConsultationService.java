@@ -1,0 +1,6 @@
+package net.pladema.medicalconsultation.virtualConsultation.application.changeResponsibleProfessionalOfVirtualConsultationService;
+
+public interface ChangeResponsibleProfessionalOfVirtualConsultationService {
+
+	Boolean run (Integer virtualConsultationId, Integer responsibleHealthcareProfessionalId);
+}
