@@ -150,15 +150,15 @@ public class EmergencyCareEpisodeController {
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.adultGynecologicalEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare.setInstitutionId(institutionId);
 
+		if (newEmergencyCare.getPatient() == null || newEmergencyCare.getPatient().getId() == null)
+			newEmergencyCare.setPatient(createEmergencyCareEpisodePatient());
+
         NewRiskFactorsObservationDto riskFactorsObservationDto =
-                riskFactorExternalService.saveRiskFactors(body.patientId(), body.riskFactorsObservation());
+                riskFactorExternalService.saveRiskFactors(newEmergencyCare.getPatient().getId(), body.riskFactorsObservation());
         newEmergencyCare.setTriageRiskFactorIds(getRiskFactorIds(riskFactorsObservationDto));
 
         List<SnomedDto> reasons = reasonExternalService.addSnomedReasons(body.reasons());
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
-
-		if (newEmergencyCare.getPatient() == null || newEmergencyCare.getPatient().getId() == null)
-			newEmergencyCare.setPatient(createEmergencyCareEpisodePatient());
 
 		RiskFactorBo riskFactors = riskFactorMapper.fromRiskFactorsObservationDto(riskFactorsObservationDto);
 		riskFactorExternalService.formatRiskFactors(riskFactors);
@@ -177,15 +177,15 @@ public class EmergencyCareEpisodeController {
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.pediatricEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare.setInstitutionId(institutionId);
 
+		if (newEmergencyCare.getPatient() == null || newEmergencyCare.getPatient().getId() == null)
+			newEmergencyCare.setPatient(createEmergencyCareEpisodePatient());
+
         NewRiskFactorsObservationDto riskFactorsObservationDto = triageRiskFactorMapper.fromTriagePediatricDto(body.getTriage());
-        riskFactorsObservationDto = riskFactorExternalService.saveRiskFactors(body.patientId(), riskFactorsObservationDto);
+        riskFactorsObservationDto = riskFactorExternalService.saveRiskFactors(newEmergencyCare.getPatient().getId(), riskFactorsObservationDto);
         newEmergencyCare.setTriageRiskFactorIds(getRiskFactorIds(riskFactorsObservationDto));
 
         List<SnomedDto> reasons = reasonExternalService.addSnomedReasons(body.reasons());
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
-
-		if (newEmergencyCare.getPatient() == null || newEmergencyCare.getPatient().getId() == null)
-			newEmergencyCare.setPatient(createEmergencyCareEpisodePatient());
 
 		RiskFactorBo riskFactors = riskFactorMapper.fromRiskFactorsObservationDto(riskFactorsObservationDto);
 		riskFactorExternalService.formatRiskFactors(riskFactors);
