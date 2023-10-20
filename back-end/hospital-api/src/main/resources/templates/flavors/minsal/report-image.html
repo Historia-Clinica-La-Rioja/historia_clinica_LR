@@ -130,21 +130,22 @@
         body {
             font-family: 'Roboto', sans-serif;
         }
+        .evolution-note{
+            width: 100%;
+            word-wrap: break-word;
+        }
     </style>
 </head>
 <body>
 <div th:fragment="header">
     <div class="header-layout">
         <div class="section-title_row">
-            <h2 style="width: 50%; float:left;" th:text="${institutionName}"></h2>
-            <div class="data-text" > get addreess Calle 9 175,
-                B1902
-                La Plata, Provincia de Buenos Aires</div>
+            <h2 style="width: 50%; float:left;" th:text="${institutionHeader.name}"></h2>
+            <div class="data-text">DIRECCION</div>
             <div>
-                <div class="data-text" > getTelephone Tel :</div>
-                <div class="data-text" >getInstitutionPhoneNumber </div>
+                <div class="data-text" th:text="${institutionHeader.phone}"></div>
+                <div class="data-text" th:text="${institutionHeader.email}"></div>
             </div>
-            <div class="data-text" th:text="getInstitutionEmailAddress">www.hospitalespañol.com.ar</div>
         </div>
         <!-- <img style="height: 40px; float: right;" th:src="@{classpath:static/images/logoHsi.png}" alt="Logo"></img> -->
         <img class="logo" src="./static/images/logoHsi.png" alt="Logo"></img>
@@ -162,7 +163,11 @@
             </div>
             <div class="row-content">
                 <div class="data-title">Estudios :</div>
-                <div class="data-text" th:text="${studies}"></div>
+                <div  class="comma-list" th:each="diagnosticReport,iter: ${diagnosticReportList}">
+                    <div>
+                        <div class="data-text" th:text="${diagnosticReport.snomed.pt}"></div>
+                    </div>
+                </div>
             </div>
         </div>
         <div style="clear: both;padding-top: 1px">
@@ -183,7 +188,7 @@
             </div>
             <div class="row-content">
                 <div class="data-title">Documento</div>
-                <div class="data-text" >14845110</div>
+                <div class="data-text" th:text="${patient.person.identificationType + patient.person.identificationNumber}"></div>
             </div>
             <div class="row-content">
                 <div class="data-title">Edad</div>
@@ -205,7 +210,7 @@
         <div class="row-content">
             <div class="data-title">Nombre y apellido</div>
             <div class="data-text" th:if="${!selfPerceivedFF || author.nameSelfDetermination == null || author.nameSelfDetermination == '' }" >
-                <label th:text="${author.firstName"></label>
+                <label th:text="${author.firstName}"></label>
                 <label th:text="${author.lastName + (author.otherLastNames != null ? ' ' + author.otherLastNames : '') }"></label>
             </div>
             <div class="data-text" th:if="${selfPerceivedFF && author.nameSelfDetermination != null && author.nameSelfDetermination != ''}">
@@ -241,54 +246,13 @@
 <div th:fragment="DetailData">
     <div>
         <div class="section-title"> Detalles del informe </div>
-        <div>
-            <p>RM DE RODILLA DERECHA TÉCNICA: Resonador ESSENZA de SIEMENS, de 1.5 Tesla. Se realizan cortes
-                coronales,
-                sagitales y axiales de la rodilla, mediante secuencias potenciadas en T1, DP y T2. Ruptura aguda del
-                LCA
-                con alteración de la señal y discontinuidad de sus fibras en el tercio medio-proximal consistente
-                con un
-                desgarro.</p>
-            <ul>
-                <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Impresiona corresponder a una rotura completa, no obstante
-                    debe
-                    ser correlacionado junto al examen físico.&nbsp;</li>
-                <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Edema intraóseo postraumático en el margen posterior de
-                    ambos
-                    platillos tibiales a predominio del externo y contusión osteocondral en el margen lateral del
-                    cóndilo femoral externo.&nbsp;</li>
-                <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Menisco interno y externo de morfología conservada, con
-                    señal
-                    normal y sin signos de desgarro.&nbsp;</li>
-                <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ligamento cruzado posterior de trayecto y señal normal.
-                    Ligamentos colateral medial y lateral de espesor y señal habitual.&nbsp;</li>
-                <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tendones del cuádriceps y rotuliano normales. Cartílago
-                    articular normal sin defectos focales, artrosis u otras anomalías.&nbsp;</li>
-                <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Las estructuras óseas son normales sin contusiones,
-                    fracturas u
-                    otras alteraciones. Discreto aumento del liquido articular.</li>
-            </ul>
-            <p><br></br></p>
-            <p>Estimado colega. Quedamos a su disposición por cualquier interconsulta que desee realizar. </p>
-            <p>Se atenderán las inquietudes de los colegas,&nbsp;</p>
-            <p>email: mariana.calvo@cid-sanatoriotandil.com</p>
-        </div>
-        <!-- <div th:text="${getReportData()}"></div> -->
+        <div class="evolution-note" th:utext="${evolutionNote}"></div>
         <div style="clear: both;padding-top: 1px">
             <hr />
         </div>
     </div>
 </div>
 <div th:fragment="conclusionsData">
-    <!--<div th:if="${ getConclusions() != null}">
-        <div class="section-title"> Conclusiones </div>
-        <div th:each="conclusion,iter: ${getConclusions()}">
-            <ul>
-                <li th:text="${conclusion}"></li>
-            </ul>
-        </div>
-    </div>
-     Conclusions image report -->
     <div th:fragment="conclusions">
         <div th:if="${not #lists.isEmpty(conclusions)}">
             <h3>Conclusiones</h3>
@@ -307,7 +271,7 @@
     <div>
         <div class="sign-professional">
             <div class="data-text" th:if="${!selfPerceivedFF || author.nameSelfDetermination == null || author.nameSelfDetermination == '' }" >
-                <label th:text="${author.firstName"></label>
+                <label th:text="${author.firstName}"></label>
                 <label th:text="${author.lastName + (author.otherLastNames != null ? ' ' + author.otherLastNames : '') }"></label>
             </div>
             <div class="data-text" th:if="${selfPerceivedFF && author.nameSelfDetermination != null && author.nameSelfDetermination != ''}">
@@ -321,33 +285,73 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="comma-list-column">
-                <div class="data-text">Especialista jerarquizado en Diagnostico por imagenes</div>
-                <div class="data-text">Especialista odontologo</div>
-                <div class="data-text">Especialista tecnico</div>
-            </div> -->
-            <!-- <div th:if="${ getMp == null}">
-                            <div class="data-text" th:text="${' - '}">M.P 100707</div>
-                        </div>
-                        <div th:if="${ getMp != null}">
-                            <div class="row-line">
-                                    <div class="data-text-title" th:text="${M.P}">M.P</div>
-                                    <div class="comma-list" th:each="mp,iter: ${getMp}">
-                                        <div class="data-text" th:text="${getMp()}">09082233</div>
-                                    </div>
+
+            <div th:if="${not #lists.isEmpty(author.professions)}">
+                <div th:each="profession,iter: ${author.professions}">
+                    <div th:if="${not #lists.isEmpty(profession.licenses)}">
+                        <div th:each="license,iter: ${profession.licenses}">
+                            <div class="row-line" th:if="${#strings.equals(license.type, 'MN')}">
+                                <span class="data-text">M.N </span>
+                                <div class="data-text" th:text="${license.number}"></div>
                             </div>
                         </div>
-                        <div th:if="${ getMn == null}">
-                            <div class="data-text" th:text="${' - '}">M.P 100707</div>
-                        </div>
-                        <div th:if="${ getMn != null}">
-                            <div class="row-line">
-                                <div class="data-text-title" th:text="${M.N}">M.N</div>
-                                <div class="comma-list" th:each="mn,iter: ${getMn}">
-                                    <div class="data-text" th:text="${getMn()}">09082233</div>
+                    </div>
+                    <div th:if="${not #lists.isEmpty(profession.specialties)}">
+                        <div th:each="specialty,iter: ${profession.specialties}">
+                            <div th:each="license,iter: ${specialty.licenses}">
+                                <div class="row-line" th:if="${#strings.equals(license.type, 'MN')}">
+                                    <span class="data-text" >M.N</span>
+                                    <div class="data-text" th:text="${license.number}"></div>
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${not #lists.isEmpty(author.professions)}">
+                <div th:each="profession,iter: ${author.professions}">
+                    <div th:if="${not #lists.isEmpty(profession.licenses)}">
+                        <div th:each="license,iter: ${profession.licenses}">
+                            <div class="row-line" th:if="${#strings.equals(license.type, 'MP')}">
+                                <span class="data-text">M.P </span>
+                                <div class="data-text" th:text="${license.number}"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${not #lists.isEmpty(profession.specialties)}">
+                        <div th:each="specialty,iter: ${profession.specialties}">
+                            <div th:each="license,iter: ${specialty.licenses}">
+                                <div class="row-line" th:if="${#strings.equals(license.type, 'MP')}">
+                                    <span class="data-text" >M.P</span>
+                                    <div class="data-text" th:text="${license.number}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div th:if="${author.professions == null || }">
+                <div class="data-text" th:text="${' - '}">M.P 100707</div>
+            </div>
+            <div th:if="${ getMp != null}">
+                <div class="row-line">
+                    <div class="data-text-title" th:text="${M.P}">M.P</div>
+                    <div class="comma-list" th:each="mp,iter: ${getMp}">
+                        <div class="data-text" th:text="${getMp()}">09082233</div>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${ getMn == null}">
+                <div class="data-text" th:text="${' - '}">M.P 100707</div>
+            </div>
+            <div th:if="${ getMn != null}">
+                <div class="row-line">
+                    <div class="data-text-title" th:text="${M.N}">M.N</div>
+                    <div class="comma-list" th:each="mn,iter: ${getMn}">
+                        <div class="data-text" th:text="${getMn()}">09082233</div>
+                    </div>
+                </div>
+            </div> -->
             <!--<div class="row-line">
                 <div class="data-text-title" th:text="${getMp()}">M.P</div>
                 <div class="comma-list">
