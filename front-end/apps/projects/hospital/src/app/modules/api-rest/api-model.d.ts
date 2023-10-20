@@ -2046,8 +2046,10 @@ export interface InstitutionDto extends Serializable {
 }
 
 export interface InstitutionInfoDto extends Serializable {
+    email: string;
     id: number;
     name: string;
+    phone: string;
     sisaCode: string;
 }
 

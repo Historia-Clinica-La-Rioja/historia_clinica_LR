@@ -34,6 +34,13 @@ public class InstitutionExternalServiceImpl implements InstitutionExternalServic
     }
 
 	@Override
+	public InstitutionInfoDto fetchInstitutionIDataById(Integer id) {
+		return Optional.ofNullable(institutionService.get(id))
+				.map(institutionBo -> new InstitutionInfoDto(institutionBo.getId(), institutionBo.getName(), institutionBo.getPhone(), institutionBo.getEmail()))
+				.orElse(null);
+	}
+
+	@Override
 	public InstitutionInfoDto fetchInstitutionBySisaCode(String sisaCode) {
 		return Optional.ofNullable(institutionService.get(sisaCode))
 				.map(institutionBo -> new InstitutionInfoDto(institutionBo.getId(), institutionBo.getName(), institutionBo.getSisaCode()))

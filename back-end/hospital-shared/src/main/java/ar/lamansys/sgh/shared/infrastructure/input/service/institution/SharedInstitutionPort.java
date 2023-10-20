@@ -5,5 +5,7 @@ public interface SharedInstitutionPort {
 
     InstitutionInfoDto fetchInstitutionById(Integer id);
 
+	InstitutionInfoDto fetchInstitutionIDataById(Integer id);
+
 	InstitutionInfoDto fetchInstitutionBySisaCode(String sisaCode);
 }
