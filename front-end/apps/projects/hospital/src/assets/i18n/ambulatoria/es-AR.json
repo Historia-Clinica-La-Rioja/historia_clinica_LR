@@ -243,9 +243,8 @@
                     "PHONE_PREFIX": "Prefijo",
                     "PRIORITY_CRITERIA": "Criterio de priorización",
 					"RECEIVER": "Receptor",
-					"AVAILABLE_APPOINTMENT": "<b>{{ appointment }}</b> turnos disponibles en los próximos 60 dias.",
+					"PROTECTED_APPOINTMENT": " turnos protegidos disponibles para ser asignados por red de atención en los próximos 60 días.",
                     "APPOINTMENT": " turnos disponibles para ser asignados por la institución destino en los próximos 60 días.",
-					"NOT_AVAILABLE_APPOINTMENT": "Sin turnos disponibles en los proximos 60 días.",
 					"PRACTICE_PROCEDURE": "Práctica/procedimiento",
 					"STUDY_CATEGORY": "Categoría de estudios"
                 }
