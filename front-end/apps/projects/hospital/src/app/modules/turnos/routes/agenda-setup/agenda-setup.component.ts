@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { DAYS_OF_WEEK } from 'angular-calendar';
-import { Observable, filter, switchMap } from 'rxjs';
+import { Observable, filter, map, switchMap } from 'rxjs';
 
 import { getError, hasError, processErrors, scrollIntoError } from '@core/utils/form.utils';
 import { ContextService } from '@core/services/context.service';
@@ -189,13 +189,13 @@ export class AgendaSetupComponent implements OnInit {
 				this.route.paramMap.subscribe((params) => {
 					this.editingDiaryId = Number(params.get('agendaId'));
 					this.diaryService.get(this.editingDiaryId).subscribe((diary: CompleteDiaryDto) => {
+						this.setHierarchicalUnitsSync(diary.healthcareProfessionalId).subscribe(response => {
+							this.hierarchicalUnits = response;
+							this.setValuesFromExistingAgenda(diary);
+						});
 						this.minDate = momentParseDate(diary.startDate).toDate();
-						this.setValuesFromExistingAgenda(diary);
 						this.disableNotEditableControls();
 						this.validateLineOfCare();
-						if (this.lineOfCareAndPercentageOfProtectedAppointmentsValid) {
-						}
-
 					});
 
 				});
@@ -299,8 +299,8 @@ export class AgendaSetupComponent implements OnInit {
 			this.professionals = healthcareProfessionals;
 			const healthcareProfessionalId = healthcareProfessionals.find(professional => professional.id === diary.healthcareProfessionalId);
 			this.form.controls.healthcareProfessionalId.setValue(healthcareProfessionalId.id);
-			if (!!diary?.hierarchicalUnitAlias)
-				this.setHierarchicalUnitsByName(diary?.hierarchicalUnitAlias);
+			if (!!diary?.hierarchicalUnitId)
+				this.setHierarchicalUnitsByName(diary?.hierarchicalUnitId);
 
 			this.specialtyService.getAllSpecialtyByProfessional(this.contextService.institutionId, healthcareProfessionalId.id)
 				.subscribe(response => {
@@ -360,10 +360,12 @@ export class AgendaSetupComponent implements OnInit {
 
 	}
 
-	private setHierarchicalUnitsByName(name: string) {
+	private setHierarchicalUnitsByName(hierarchicalUnitId: number) {
 		this.form.get('hierarchicalUnit').disable();
 		this.loadSavedData = true;
-		this.form.controls.hierarchicalUnit.setValue(this.hierarchicalUnits.filter(e => e.name === name));
+		if(this.hierarchicalUnits.length){
+			this.form.controls.hierarchicalUnit.setValue(hierarchicalUnitId);
+		}
 		this.form.controls.professionalReplacedId.updateValueAndValidity();
 	}
 
@@ -495,7 +497,7 @@ export class AgendaSetupComponent implements OnInit {
 			doctorsOfficeId: this.form.getRawValue().doctorOffice.id,
 
 			predecessorProfessionalId: this.form.value?.professionalReplacedId,
-			hierarchicalUnitId: this.form.value.temporaryReplacement ? this.form.value?.hierarchicalUnitTemporary : this.form.value?.hierarchicalUnit,
+			hierarchicalUnitId: this.form.get("temporaryReplacement").value ? this.form.get("hierarchicalUnitTemporary").value : this.form.get("hierarchicalUnit").value,
 
 			startDate: momentFormat(this.form.value.startDate, DateFormat.API_DATE),
 			endDate: momentFormat(this.form.value.endDate, DateFormat.API_DATE),
@@ -534,6 +536,21 @@ export class AgendaSetupComponent implements OnInit {
 					this.updateFormWithoutDiary();
 				}
 			});
+	}
+
+	setHierarchicalUnitsSync(healthcareProfessionalId: number, diary?: CompleteDiaryDto): Observable<HierarchicalUnitDto[]> {
+		return this.professionalService.geUserIdByHealthcareProfessional(healthcareProfessionalId)
+			.pipe(
+				switchMap((userId: number) => this.hierarchicalUnitsService.fetchAllByUserIdAndInstitutionId(userId))
+			)
+			.pipe(map(response => {
+				if (diary?.hierarchicalUnitId) {
+					this.updateFormWithDiary(diary);
+				} else {
+					this.updateFormWithoutDiary();
+				}
+				return response
+			}));
 	}
 
 	private updateFormWithDiary(diary: CompleteDiaryDto) {
