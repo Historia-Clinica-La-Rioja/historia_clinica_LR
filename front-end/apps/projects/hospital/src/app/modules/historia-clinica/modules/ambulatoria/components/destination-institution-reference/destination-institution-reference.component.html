@@ -24,9 +24,9 @@
 	<ul>
 		<ng-container *ngIf="careLineId">
 			<ng-container *ngIf="{ observableValue: protectedAppointment$ | async } as protectedAppointment">
-				<li [ngClass]="protectedAppointment.observableValue > 0? 'message-protected' : 'message-warning'">
+				<li class="message" [ngClass]="protectedAppointment.observableValue > 0? 'purple' : 'red'">
 					<ng-container *ngIf="protectedAppointment.observableValue > 0; else notAvailableProtectedAppointment">
-						<span class="message-protected">{{protectedAppointment.observableValue}} {{'ambulatoria.paciente.nueva-consulta.reference-dialog.PROTECTED_APPOINTMENT' | translate}}</span>
+						<span class="message purple">{{protectedAppointment.observableValue}} {{'ambulatoria.paciente.nueva-consulta.reference-dialog.PROTECTED_APPOINTMENT' | translate}}</span>
 					</ng-container>
 				</li>
 			</ng-container>
@@ -34,20 +34,20 @@
 		</ng-container>
 
 		<ng-container *ngIf="{ observableValue: appointment$ | async } as appointment">
-			<li [ngClass]="appointment.observableValue > 0? 'message' : 'message-warning'">
+			<li class="message" [ngClass]="appointment.observableValue > 0? 'green' : 'red'">
 				<ng-container *ngIf="appointment.observableValue > 0; else notAvailableAppointment">
-					<span class="message">{{appointment.observableValue}} {{'ambulatoria.paciente.nueva-consulta.reference-dialog.APPOINTMENT' | translate}}</span>
+					<span class="message green">{{appointment.observableValue}} {{'ambulatoria.paciente.nueva-consulta.reference-dialog.APPOINTMENT' | translate}}</span>
 				</ng-container>
 			</li>
 		</ng-container>
 
 
 		<ng-template #notAvailableProtectedAppointment>
-			<span class="message-warning">{{ZERO}} {{'ambulatoria.paciente.nueva-consulta.reference-dialog.PROTECTED_APPOINTMENT' | translate}}</span>
+			<span class="message red">{{ZERO}} {{'ambulatoria.paciente.nueva-consulta.reference-dialog.PROTECTED_APPOINTMENT' | translate}}</span>
 		</ng-template>
 
 		<ng-template #notAvailableAppointment>
-			<span class="message-warning">{{ZERO}} {{'ambulatoria.paciente.nueva-consulta.reference-dialog.APPOINTMENT' | translate}}</span>
+			<span class="message red">{{ZERO}} {{'ambulatoria.paciente.nueva-consulta.reference-dialog.APPOINTMENT' | translate}}</span>
 		</ng-template>
 
 	</ul>
