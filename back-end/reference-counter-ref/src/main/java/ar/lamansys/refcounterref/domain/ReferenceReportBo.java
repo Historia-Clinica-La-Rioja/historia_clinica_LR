@@ -19,7 +19,17 @@ import java.util.stream.Stream;
 @ToString
 public class ReferenceReportBo {
 
-	private Integer referenceId;
+	private Integer id;
+
+	private String patientFirstName;
+
+	private String patientMiddleNames;
+
+	private String patientLastName;
+
+	private String patientOtherLastNames;
+
+	private String patientNameSelfDetermination;
 
 	private String patientFullName;
 
@@ -47,4 +57,7 @@ public class ReferenceReportBo {
 
 	private Short appointmentStateId;
 
+	private Integer serviceRequestId;
+
+	private String procedure;
 }

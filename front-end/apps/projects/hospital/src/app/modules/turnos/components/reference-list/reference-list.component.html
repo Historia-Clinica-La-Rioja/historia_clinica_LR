@@ -25,7 +25,7 @@
 				<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
 					<app-report-information fxFlex="85" [report]="report"></app-report-information>
 					<div fxFlex="15">
-                        <button mat-stroked-button (click)="openRequest(report.dto.referenceId)" color="primary">
+                        <button mat-stroked-button (click)="openRequest(report.dto.id)" color="primary">
                             {{ 'turnos.search_references.VIEW_APPLICATION' | translate}}
                         </button>
                     </div>

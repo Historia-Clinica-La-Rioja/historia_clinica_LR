@@ -3393,6 +3393,7 @@ export interface ReferenceReportDto {
     clinicalSpecialtyOrigin: string;
     closureType: EReferenceClosureType;
     date: DateTimeDto;
+    id: number;
     identificationNumber: string;
     identificationType: string;
     institutionDestination: string;
@@ -3400,7 +3401,7 @@ export interface ReferenceReportDto {
     patientFullName: string;
     priority: EReferencePriority;
     problems: string[];
-    referenceId: number;
+    procedure: string;
 }
 
 export interface ReferenceServiceRequestProcedureDto {

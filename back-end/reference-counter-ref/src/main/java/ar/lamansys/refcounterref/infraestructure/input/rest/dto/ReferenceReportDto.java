@@ -16,7 +16,7 @@ import java.util.List;
 @ToString
 public class ReferenceReportDto {
 
-	private Integer referenceId;
+	private Integer id;
 
 	private String patientFullName;
 
@@ -43,4 +43,7 @@ public class ReferenceReportDto {
 	private EReferenceClosureType closureType;
 
 	private Short appointmentStateId;
+
+	private String procedure;
+
 }
