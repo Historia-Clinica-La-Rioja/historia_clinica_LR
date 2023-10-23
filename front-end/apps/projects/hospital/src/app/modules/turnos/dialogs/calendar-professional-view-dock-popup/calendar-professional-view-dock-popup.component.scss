@@ -41,3 +41,10 @@ mat-form-field {
 div.spinner {
 	@include centered-spinner;
 }
+
+.text-container {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	width: 100%;
+}
