@@ -40,7 +40,9 @@ public class BackofficeInstitutionalGroupValidator implements BackofficeEntityVa
 	@Override
 	@PreAuthorize("hasAnyAuthority('ADMINISTRADOR_DE_ACCESO_DOMINIO')")
 	public void assertDelete(Integer id) {
-
+		if(institutionalGroupRepository.existsUsersByGroupId(id)){
+			throw new BackofficeValidationException("institutional-group.have.users.related");
+		}
 	}
 
 	public void assertValidFields (InstitutionalGroupDto entity){

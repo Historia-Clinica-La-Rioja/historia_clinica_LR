@@ -34,13 +34,13 @@ public class BackofficeInstitutionalGroupUserValidator implements BackofficeEnti
 			throw new BackofficeValidationException("");
 		List<Short> roles = userRoleRepository.findByUserId(entity.getUserId()).stream().map(UserRole::getRoleId).collect(Collectors.toList());
 		if (!roles.contains(ERole.GESTOR_DE_ACCESO_REGIONAL.getId()) &&	 !roles.contains(ERole.GESTOR_DE_ACCESO_LOCAL.getId())) {
-			throw new BackofficeValidationException("El usuario no cuenta con los roles necesarios");
+			throw new BackofficeValidationException("institutional-group-user.invalid.user.roles");
 		}
 		if(roles.contains(ERole.GESTOR_DE_ACCESO_LOCAL.getId()) && repository.existsByUserId(entity.getUserId())){
-			throw new BackofficeValidationException("El usuario ya pertenece a un grupo institucional");
+			throw new BackofficeValidationException("institutional-group-user.one.group.constraint");
 		}
 		if(roles.contains(ERole.GESTOR_DE_ACCESO_REGIONAL.getId()) && repository.existsByInstitutionalGroupIdAndUserId(entity.getInstitutionalGroupId(), entity.getUserId())){
-			throw new BackofficeValidationException("El usuario ya pertenece al grupo institucional");
+			throw new BackofficeValidationException("institutional-group-user.already.exists");
 		}
 	}
 
