@@ -471,6 +471,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN Person pe ON p.personId = pe.id " +
 			"JOIN PersonExtended pex ON pe.id = pex.id " +
 			"WHERE e.modalityId = :modalityId " +
+			"AND aoi.reportStatusId != 4 " +
 			"AND aoi.destInstitutionId = :institutionId " +
 			"AND doi.completedOn BETWEEN :startDate AND :endDate " +
 			"AND aoi.completed = true " +
@@ -503,6 +504,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN Person pe ON p.personId = pe.id " +
 			"JOIN PersonExtended pex ON pe.id = pex.id " +
 			"WHERE aoi.destInstitutionId = :institutionId " +
+			"AND aoi.reportStatusId != 4 " +
 			"AND aoi.completed = true " +
 			"AND doi.completedOn BETWEEN :startDate AND :endDate " +
 			"AND a.id NOT IN ( SELECT aoi2.pk.appointmentId " +
@@ -551,6 +553,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN AppointmentOrderImage aoi ON a.id = aoi.pk.appointmentId " +
 			"JOIN Document d ON aoi.documentId = d.id " +
 			"WHERE e.modalityId = :modalityId " +
+			"AND aoi.reportStatusId != 4 " +
 			"AND d.updateable.updatedOn BETWEEN :startDate AND :endDate " +
 			"AND aoi.destInstitutionId = :institutionId " +
 			"AND d.statusId = '" + DocumentStatus.FINAL + "'"	+ "  " +
@@ -574,6 +577,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN Document d ON aoi.documentId = d.id " +
 			"JOIN Institution i ON d.institutionId = i.id " +
 			"WHERE aoi.destInstitutionId = :institutionId " +
+			"AND aoi.reportStatusId != 4 " +
 			"AND d.updateable.updatedOn BETWEEN :startDate AND :endDate " +
 			"AND d.statusId = '" + DocumentStatus.FINAL + "'"	+ "  " +
 			"AND d.sourceTypeId =" + SourceType.MEDICAL_IMAGE + "  " +
