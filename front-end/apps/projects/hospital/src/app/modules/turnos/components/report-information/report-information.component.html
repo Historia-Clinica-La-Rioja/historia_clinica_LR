@@ -39,9 +39,9 @@
     <div id="destination-data" fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px" fxFlex="15%">
         <span class="grey">{{'turnos.search_references.DESTINATION' | translate | uppercase}}</span>
         <div fxLayout="column" fxLayoutAlign="start start" fxFlex="100%">
+            <app-iconed-text *ngIf="report.dto.procedure" icon="library_add" [text]="report.dto.procedure"></app-iconed-text>
             <app-iconed-text *ngIf="report.dto.clinicalSpecialtyDestination" icon="medical_services" [text]="report.dto.clinicalSpecialtyDestination"></app-iconed-text>
-            <app-iconed-text *ngIf="report.dto.careLine" icon="library_add"
-                [text]="report.dto.careLine"></app-iconed-text>
+            <app-iconed-text *ngIf="report.dto.careLine" icon="diversity_1" [text]="report.dto.careLine"></app-iconed-text>
             <app-iconed-text *ngIf="report.dto.institutionDestination" icon="domain" [text]="report.dto.institutionDestination"></app-iconed-text>
         </div>
     </div>
