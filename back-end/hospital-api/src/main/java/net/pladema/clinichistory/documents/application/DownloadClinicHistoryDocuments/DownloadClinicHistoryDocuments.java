@@ -125,7 +125,7 @@ public class DownloadClinicHistoryDocuments {
 					PDPage currentDocumentPage = modifiedDocument.getPage(pageIterator);
 
 					float width = currentDocumentPage.getArtBox().getWidth() - 63f;
-					float height = currentDocumentPage.getArtBox().getHeight() - 823f;
+					float height = currentDocumentPage.getArtBox().getHeight() - 825f;
 
 					try (PDPageContentStream contentStream = new PDPageContentStream(modifiedDocument, currentDocumentPage, PDPageContentStream.AppendMode.APPEND, true)) {
 							// Agrega el número de página y el número total de páginas
