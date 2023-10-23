@@ -196,7 +196,8 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		obs.setEncounterId(appointmentId);
 		obs.setConfirmed(createFile);
 		//obs.setInstitutionAddress(institutionService.getAddress(obs.getInstitutionId()));
-		obs.setDiagnosticReports(List.of(diagnosticReportInfoService.getByAppointmentId(appointmentId)));
+
+		obs.setDiagnosticReports(diagnosticReportInfoService.getByAppointmentId(appointmentId) != null ? List.of(diagnosticReportInfoService.getByAppointmentId(appointmentId)) : null);
 
 		Integer patientId = appointmentRepository.getPatientByAppointmentId(appointmentId);
 		obs.setPatientId(patientId);

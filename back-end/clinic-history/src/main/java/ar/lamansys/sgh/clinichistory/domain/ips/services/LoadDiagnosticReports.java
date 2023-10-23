@@ -39,12 +39,14 @@ public class LoadDiagnosticReports {
     public List<Integer> run(Long documentId, Integer patientId, List<DiagnosticReportBo> diagnosticReportBos) {
         LOG.debug("Input parameters -> documentId {}, patientId {}, studyBo {}", documentId, patientId, diagnosticReportBos);
         List<Integer> result = new ArrayList<>();
-        diagnosticReportBos.forEach(diagnosticReportBo -> {
-            DiagnosticReport diagnosticReport = getNewDiagnosticReport(patientId, diagnosticReportBo);
-            result.add(diagnosticReportRepository.save(diagnosticReport).getId());
-            diagnosticReportRepository.save(diagnosticReport);
-            documentService.createDocumentDiagnosticReport(documentId, diagnosticReport.getId());
-        });
+		if (diagnosticReportBos != null) {
+			diagnosticReportBos.forEach(diagnosticReportBo -> {
+				DiagnosticReport diagnosticReport = getNewDiagnosticReport(patientId, diagnosticReportBo);
+				result.add(diagnosticReportRepository.save(diagnosticReport).getId());
+				diagnosticReportRepository.save(diagnosticReport);
+				documentService.createDocumentDiagnosticReport(documentId, diagnosticReport.getId());
+			});
+		}
         LOG.trace(OUTPUT, result);
         return result;
     }
