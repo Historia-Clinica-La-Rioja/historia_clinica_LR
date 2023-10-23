@@ -52,13 +52,12 @@
 			</mat-error>
 
 			<div class="form-field-reduced">
-				<app-concepts-search [label]="'historia-clinica.new-consultation-procedure-form.PROCEDURE'"
-					(search)="procedureService.openSearchDialogAndAddConcept($event)">
-				</app-concepts-search>
-				<mat-error class="typeahead-required"
-					*ngIf="hasError(surgicalForm, 'required', 'procedures') && procedureService.isEmpty()"
-					[translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.PROCEDURE_REQUIRED'">
-				</mat-error>
+				<div>
+					<button mat-button type="button" id="add-procedure-button" color="primary"
+						(click)="addProcedure()">
+						+ {{ 'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD' | translate }}
+					</button>
+				</div>
 				<app-titled-content-card *ngIf="!procedureService.isEmpty()"
 					[title]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.ADDED_PROCEDURES'">
 					<app-procedure-list [service]="procedureService"></app-procedure-list>

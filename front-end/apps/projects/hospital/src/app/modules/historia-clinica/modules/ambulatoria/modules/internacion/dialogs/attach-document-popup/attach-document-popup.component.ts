@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { ApiErrorMessageDto, ERole, AppFeature, EpisodeDocumentTypeDto, ProfessionalDto } from '@api-rest/api-model';
 import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import { InternmentEpisodeDocumentService } from '@api-rest/services/internment-episode-document.service';
@@ -12,6 +12,7 @@ import { ProcedimientosService } from '@historia-clinica/services/procedimientos
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 
 const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.pdf'];
 const REGULAR_DOCUMENT: number = 1;
@@ -41,6 +42,7 @@ export class AttachDocumentPopupComponent implements OnInit {
 	isAdministrative: boolean = false;
 	hasConsentDocumentError: string;
 	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService);
+	searchConceptsLocallyFF = false;
 
 	constructor(private fb: UntypedFormBuilder,
 		private internmentEpisodeDocument: InternmentEpisodeDocumentService,
@@ -51,11 +53,15 @@ export class AttachDocumentPopupComponent implements OnInit {
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly permissionService: PermissionsService,
+		private readonly dialog: MatDialog,
 		@Inject(MAT_DIALOG_DATA) public data
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
 			this.nameSelfDeterminationFF = isOn
 		});
+		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
+			this.searchConceptsLocallyFF = isOn;
+		})
 
 	}
 
@@ -75,6 +81,19 @@ export class AttachDocumentPopupComponent implements OnInit {
 		this.setDocumentTypesFilter();
 		this.setProfessionalsFilter();
 		this.setIsAdministrative();
+	}
+
+	addProcedure() {
+		this.dialog.open(NewConsultationProcedureFormComponent, {
+			data: {
+				procedureService: this.procedureService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFF,
+				hideDate: true
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
 	}
 
 	setProfessionalsFilter() {
