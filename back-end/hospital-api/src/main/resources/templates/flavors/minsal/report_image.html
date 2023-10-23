@@ -195,9 +195,19 @@
                 </div>
                 <div class="row-content">
                     <div class="data-title-span">Estudios :</div>
-                    <span class="comma-list" th:each="diagnosticReport,iter: ${diagnosticReportList}">
-                        <span class="data-text" th:text="${diagnosticReport.snomed.pt}"></span>
-                    </span>
+                    <div th:if="${not #lists.isEmpty(diagnosticReportList)}">
+                        <span class="comma-list" th:each="diagnosticReport,iter: ${diagnosticReportList}">
+                            <span class="data-text" th:text="${diagnosticReport.snomed.pt}"></span>
+                        </span>
+                    </div>
+                    <div th:if="${transcribedDiagnosticReport != null}">
+                        <span class="data-text" th:text="${transcribedDiagnosticReport.studyName}"></span>
+                    </div>
+                    <div th:if="${transcribedDiagnosticReport == null && #lists.isEmpty(diagnosticReportList)}">
+                        <span class="data-text" th:text="${' - '}"></span>
+                    </div>
+
+        
                 </div>
             </div>
             <div style="clear: both;padding-top: 1px">
