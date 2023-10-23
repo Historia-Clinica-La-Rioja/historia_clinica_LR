@@ -1,12 +1,20 @@
 package net.pladema.clinichistory.requests.servicerequests.infrastructure.output;
 
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import javax.transaction.Transactional;
+
+import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentReportSnomedConceptRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
@@ -23,6 +31,7 @@ import net.pladema.clinichistory.requests.servicerequests.domain.InformerObserva
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmentBo;
 import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
 import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
+import net.pladema.clinichistory.requests.servicerequests.service.ListTranscribedDiagnosticReportInfoService;
 import net.pladema.establishment.service.InstitutionService;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
@@ -32,13 +41,6 @@ import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.person.controller.service.PersonExternalService;
 import net.pladema.user.controller.dto.UserPersonDto;
 import net.pladema.user.repository.UserPersonRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
-
-import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -62,6 +64,8 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 	private final InstitutionService institutionService;
 
 	private final DiagnosticReportInfoService diagnosticReportInfoService;
+
+	private final ListTranscribedDiagnosticReportInfoService transcribedDiagnosticReportInfoService;
 
 	@Override
 	public StudyAppointmentBo getStudyByAppointment(Integer appointmentId) {
@@ -198,6 +202,7 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		//obs.setInstitutionAddress(institutionService.getAddress(obs.getInstitutionId()));
 
 		obs.setDiagnosticReports(diagnosticReportInfoService.getByAppointmentId(appointmentId) != null ? List.of(diagnosticReportInfoService.getByAppointmentId(appointmentId)) : null);
+		obs.setTranscribedDiagnosticReport(transcribedDiagnosticReportInfoService.getByAppointmentId(appointmentId));
 
 		Integer patientId = appointmentRepository.getPatientByAppointmentId(appointmentId);
 		obs.setPatientId(patientId);

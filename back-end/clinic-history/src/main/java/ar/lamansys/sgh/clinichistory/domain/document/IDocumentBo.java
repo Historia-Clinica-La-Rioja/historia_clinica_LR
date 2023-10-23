@@ -23,6 +23,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 
 public interface IDocumentBo {
@@ -122,6 +123,10 @@ public interface IDocumentBo {
     default List<DiagnosticReportBo> getDiagnosticReports(){
         return Collections.emptyList();
     };
+
+	default TranscribedDiagnosticReportBo getTranscribedDiagnosticReport(){
+		return null;
+	};
 
 	default String getEvolutionNote(){
 		return null;

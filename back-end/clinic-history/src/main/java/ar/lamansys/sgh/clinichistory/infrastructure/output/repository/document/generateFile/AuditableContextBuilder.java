@@ -173,6 +173,7 @@ public class AuditableContextBuilder {
 
 	private <T extends IDocumentBo> void addImageReportData(Map<String, Object> ctx, T document) {
 		ctx.put("diagnosticReportList", document.getDiagnosticReports());
+		ctx.put("transcribedDiagnosticReport", document.getTranscribedDiagnosticReport());
 		ctx.put("institutionHeader",sharedInstitutionPort.fetchInstitutionIDataById(document.getInstitutionId()));
 		ctx.put("author", authorFromDocumentFunction.apply(document.getId()));
 		ctx.put("performedDate", document.getPerformedDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
