@@ -25,6 +25,9 @@ export class VirtualConsultationStompService {
 		this.stompService.watch('/topic/virtual-consultation-professional-state-change')
 			.pipe(map(m => JSON.parse(m.body)))
 
+	responsibleProfessionalChanged$: Observable<any> =
+		this.stompService.watch('/topic/virtual-consultation-responsible-professional-change')
+			.pipe(map(m => JSON.parse(m.body)))
 
 	constructor(
 		private readonly stompService: StompService,

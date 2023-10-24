@@ -1,7 +1,11 @@
 package net.pladema.medicalconsultation.virtualConsultation.application.changeResponsibleProfessionalOfVirtualConsultationService;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.medicalconsultation.virtualConsultation.domain.VirtualConsultationResponsibleProfessionalChangeBo;
+import net.pladema.medicalconsultation.virtualConsultation.infrastructure.mqtt.VirtualConsultationPublisher;
 import net.pladema.medicalconsultation.virtualConsultation.infrastructure.output.repository.VirtualConsultationRepository;
 import org.springframework.stereotype.Service;
 
@@ -10,12 +14,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChangeResponsibleProfessionalOfVirtualConsultationServiceImpl implements ChangeResponsibleProfessionalOfVirtualConsultationService {
 
+	private final ObjectMapper objectMapper;
+
+	private final VirtualConsultationPublisher virtualConsultationPublisher;
+
 	private final VirtualConsultationRepository virtualConsultationRepository;
 
 	@Override
-	public Boolean run(Integer virtualConsultationId, Integer responsibleHealthcareProfessionalId){
+	public Boolean run(Integer virtualConsultationId, Integer responsibleHealthcareProfessionalId) throws JsonProcessingException {
 		log.debug("input parameters -> virtualConsultationId{}, responsibleHealthcareProfessionalId{}", virtualConsultationId, responsibleHealthcareProfessionalId);
 		virtualConsultationRepository.updateResponsibleId(virtualConsultationId,responsibleHealthcareProfessionalId);
+		VirtualConsultationResponsibleProfessionalChangeBo message = new VirtualConsultationResponsibleProfessionalChangeBo(responsibleHealthcareProfessionalId,virtualConsultationId);
+		virtualConsultationPublisher.publish("CHANGE-RESPONSIBLE-PROFESSIONAL", objectMapper.writeValueAsString(message));
 		return true;
 	}
 }

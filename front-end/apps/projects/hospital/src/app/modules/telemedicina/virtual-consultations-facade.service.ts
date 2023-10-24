@@ -64,7 +64,18 @@ export class VirtualConsultationsFacadeService {
 			}
 		)
 
-
+		this.virtualConsultationStompService.responsibleProfessionalChanged$.subscribe((responsibleProfessional : any)=>{
+			this.virtualConsultationService.getResponsibleProfessional(responsibleProfessional.healthcareProfessionalId,this.contextService.institutionId).subscribe(res=>{
+				if (!this.isVirtualConsultatitioResponsible) {
+					const attentionToChange = this.virtualConsultationsAttention.find(vc => vc.id === responsibleProfessional.virtualConsultationId);
+					attentionToChange.responsibleData = res;
+					this.virtualConsultationsAttentionEmitter.next(this.virtualConsultationsAttention)
+				}
+				const requesttoChange = this.virtualConsultationsRequest.find(vc => vc.id === responsibleProfessional.virtualConsultationId);
+				requesttoChange.responsibleData = res;
+				this.virtualConsultationsRequestEmitter.next(this.virtualConsultationsRequest)	
+			})
+		})
 
 		this.virtualConsultationStompService.professionalAvailableChanged$.subscribe(
 			(availabilityChanged: VirtualConsultationAvailableProfessionalAmountDto[]) => {
