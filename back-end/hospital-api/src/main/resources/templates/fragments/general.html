@@ -675,6 +675,13 @@
         </div>
     </div>
 
+        <!-- Report Image -->
+     <div th:fragment="report-image">
+        <div class="center-padding wide_wrapped_text">
+            [(${evolutionNote})]
+        </div>
+    </div>
+
 </body>
 <footer class="footer-dark" th:fragment="footer" th:if="${author != null}">
     <div style="text-align:right">

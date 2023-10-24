@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Reporte Imagenes</title>
     <th:block th:include="fragments/bootstrap-css.html :: style-inline"></th:block>
+    <th:block th:include="fragments/general.html :: headerfiles"></th:block>
     <style>
         .page-header {
             top: 0;
@@ -183,7 +184,7 @@
                 </div>
             </div>
             <div style="width: 35%; float: right">
-                <img style="height: 70px" th:src="@{classpath:/static/images/logo_hsi.png}" alt="Logo"></img>
+                <img style="height: 70px" th:src="@{classpath:/static/images/sponsor-logo-512x128.png}" alt="Logo"></img>
             </div>
         </div>
         <div class="section-title">
@@ -359,9 +360,7 @@
     </div>
     <div th:fragment="DetailData">
         <div class="section-title"> Detalles del informe </div>
-        <div class="center-padding wide_wrapped_text">
-            [(${evolutionNote})]
-        </div>
+        <div th:replace="fragments/general.html :: report-image"></div>
         <div style="clear: both;padding-top: 1px">
             <hr />
         </div>
@@ -386,9 +385,9 @@
         <div class="sign-professional">
             <div class="data-text"
                 th:if="${!selfPerceivedFF || author.nameSelfDetermination == null || author.nameSelfDetermination == '' }">
-                <label th:text="${author.firstName}"></label>
                 <label
-                    th:text="${author.lastName + (author.otherLastNames != null ? ' ' + author.otherLastNames : '') }"></label>
+                th:text="${author.lastName + (author.otherLastNames != null ? ' ' + author.otherLastNames : '') }"></label>
+                <label th:text="${author.firstName}"></label>
             </div>
             <div class="data-text"
                 th:if="${selfPerceivedFF && author.nameSelfDetermination != null && author.nameSelfDetermination != ''}">
