@@ -19,18 +19,30 @@
                                     (onSelectionChange)="changeDiarySelected($event, diary)"
 									matTooltip="{{diary.practices | practiceList }}" >
 									<div fxFlex="60%" class="text-container">
-										<span *ngIf="diary?.alias">{{diary.alias }} </span>
+										<span *ngIf="diary.alias">{{diary.alias }} </span>
 
-										<span *ngIf="diary.practices?.length">({{diary.practices | practiceList}})</span>
-
-										<span *ngIf="(diary?.alias && !diary.practices?.length) else withOutAlias">
-											({{diary.clinicalSpecialtyName}})
-										</span>
-										<ng-template #withOutAlias>
-											<span>
-												{{diary.clinicalSpecialtyName}}
+										<ng-container *ngIf="diary.practices?.length">
+											<span *ngIf="diary.alias else withOutAliasPractices">
+												({{diary.practices | practiceList}})
 											</span>
-										</ng-template>
+											<ng-template #withOutAliasPractices>
+												<span>
+													{{diary.practices | practiceList}}
+												</span>
+											</ng-template>
+										</ng-container>
+
+										<ng-container *ngIf="!diary.practices?.length">
+											<span *ngIf="diary.alias else withOutAlias">
+												({{diary.clinicalSpecialtyName}})
+											</span>
+											<ng-template #withOutAlias>
+												<span>
+													{{diary.clinicalSpecialtyName}}
+												</span>
+											</ng-template>
+										</ng-container>
+
 									</div>
 									<div fxFlex="40%">
 										<span >

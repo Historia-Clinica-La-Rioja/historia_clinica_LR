@@ -7,10 +7,12 @@ import { CompleteDiaryDto } from '@api-rest/api-model';
 export class MeetingRoomPipe implements PipeTransform {
 
 	transform(agenda: CompleteDiaryDto): string {
-		const doctorsOfficeDescription = agenda.doctorsOfficeDescription || '';
-		const sectorDescription = agenda.sectorDescription || '';
+		const doctorsOfficeDescription = agenda?.doctorsOfficeDescription || '';
+		const sectorDescription = agenda?.sectorDescription || '';
+		const hierarchicalUnitAlias = agenda?.hierarchicalUnitAlias || '';
 
-		return doctorsOfficeDescription + (doctorsOfficeDescription && sectorDescription ? ' | ' : '') + sectorDescription;
+
+		return doctorsOfficeDescription + (doctorsOfficeDescription && sectorDescription ? ' | ' : '') + sectorDescription + (sectorDescription && hierarchicalUnitAlias ? ' | ' : '') + hierarchicalUnitAlias ;
 	  }
 
 }

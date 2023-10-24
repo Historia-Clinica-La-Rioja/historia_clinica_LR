@@ -11,16 +11,27 @@
 						<div fxFlex="60%" class="text-container">
 							<span *ngIf="agenda?.diaryList.alias">{{agenda.diaryList.alias }} </span>
 
-							<span *ngIf="agenda.diaryList.practices?.length">({{agenda.diaryList.practices | practiceList}})</span>
-
-							<span *ngIf="(agenda?.diaryList.alias && !agenda.diaryList.practices?.length) else withOutAlias">
-								({{agenda.diaryList.clinicalSpecialtyName}})
-							</span>
-							<ng-template #withOutAlias>
-								<span>
-									{{agenda.diaryList.clinicalSpecialtyName}}
+							<ng-container *ngIf="agenda.diaryList.practices?.length">
+								<span *ngIf="agenda?.diaryList.alias else withOutAliasPractices">
+									({{agenda.diaryList.practices | practiceList}})
 								</span>
-							</ng-template>
+								<ng-template #withOutAliasPractices>
+									<span>
+										{{agenda.diaryList.practices | practiceList}}
+									</span>
+								</ng-template>
+							</ng-container>
+
+							<ng-container *ngIf="!agenda.diaryList.practices?.length">
+								<span *ngIf="agenda?.diaryList.alias else withOutAlias">
+									({{agenda.diaryList.clinicalSpecialtyName}})
+								</span>
+								<ng-template #withOutAlias>
+									<span>
+										{{agenda.diaryList.clinicalSpecialtyName}}
+									</span>
+								</ng-template>
+							</ng-container>
 						</div>
 						<div fxFlex="40%">
 							<span >
