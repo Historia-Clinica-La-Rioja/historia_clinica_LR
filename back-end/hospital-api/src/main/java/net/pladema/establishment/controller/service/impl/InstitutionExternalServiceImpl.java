@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import ar.lamansys.sgh.shared.domain.general.AddressBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
@@ -34,9 +35,15 @@ public class InstitutionExternalServiceImpl implements InstitutionExternalServic
     }
 
 	@Override
-	public InstitutionInfoDto fetchInstitutionIDataById(Integer id) {
+	public InstitutionInfoDto fetchInstitutionDataById(Integer id) {
 		return Optional.ofNullable(institutionService.get(id))
 				.map(institutionBo -> new InstitutionInfoDto(institutionBo.getId(), institutionBo.getName(), institutionBo.getPhone(), institutionBo.getEmail()))
+				.orElse(null);
+	}
+
+	@Override
+	public AddressBo fetchInstitutionAddress(Integer id){
+		return Optional.ofNullable(institutionService.getInstitutionAddress(id))
 				.orElse(null);
 	}
 

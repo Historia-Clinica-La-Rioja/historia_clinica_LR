@@ -16,6 +16,8 @@ public interface InstitutionService {
 
 	AddressBo getAddress(Integer institutionId);
 
+	ar.lamansys.sgh.shared.domain.general.AddressBo getInstitutionAddress(Integer institutionId);
+
 	List<InstitutionBasicInfoBo> getInstitutionsByReferenceByClinicalSpecialtyFilter(Short departmentId, Integer clinicalSpecialtyId, Integer careLineId);
 
 	List<InstitutionBasicInfoBo> getVirtualConsultationInstitutions();

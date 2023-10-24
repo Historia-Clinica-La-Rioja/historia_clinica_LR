@@ -25,6 +25,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
+import ar.lamansys.sgh.shared.domain.general.AddressBo;
 
 public interface IDocumentBo {
 
@@ -32,7 +33,7 @@ public interface IDocumentBo {
         return null;
     }
 
-	//default AddressDto institutionAddress;
+	default AddressBo getInstitutionAddress(){return null;}
 
     default Long getId() {
         return null;

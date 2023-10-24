@@ -2,12 +2,11 @@ package net.pladema.establishment.service.impl;
 
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.address.controller.service.domain.AddressBo;
 import net.pladema.address.service.AddressService;
 import net.pladema.establishment.repository.InstitutionRepository;
@@ -20,34 +19,34 @@ import net.pladema.establishment.service.domain.InstitutionBo;
 @Slf4j
 public class InstitutionServiceImpl implements InstitutionService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InstitutionServiceImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(InstitutionServiceImpl.class);
 
-    private static final String LOGGING_INPUT = "Input parameters -> institutionId {} ";
+	private static final String LOGGING_INPUT = "Input parameters -> institutionId {} ";
 
-    private final InstitutionRepository institutionRepository;
+	private final InstitutionRepository institutionRepository;
 
-    private final InstitutionBoMapper institutionBoMapper;
+	private final InstitutionBoMapper institutionBoMapper;
 
 	private final AddressService addressService;
 
-    public InstitutionServiceImpl(InstitutionRepository institutionRepository, InstitutionBoMapper institutionBoMapper, AddressService addressService) {
-        this.institutionRepository = institutionRepository;
-        this.institutionBoMapper = institutionBoMapper;
+	public InstitutionServiceImpl(InstitutionRepository institutionRepository, InstitutionBoMapper institutionBoMapper, AddressService addressService) {
+		this.institutionRepository = institutionRepository;
+		this.institutionBoMapper = institutionBoMapper;
 		this.addressService = addressService;
-    }
+	}
 
 	@Override
 	public List<InstitutionBasicInfoBo> getInstitutionsByImageSectors(){
 		return institutionRepository.getByDiagnosisImagesSectors();
 	}
 
-    @Override
-    public InstitutionBo get(Integer id) {
-        LOG.debug(LOGGING_INPUT, id);
-        return institutionRepository.findById(id)
-                .map(institutionBoMapper::toInstitutionBo)
-                .orElse(null);
-    }
+	@Override
+	public InstitutionBo get(Integer id) {
+		LOG.debug(LOGGING_INPUT, id);
+		return institutionRepository.findById(id)
+				.map(institutionBoMapper::toInstitutionBo)
+				.orElse(null);
+	}
 
 	@Override
 	public InstitutionBo get(String sisaCode) {
@@ -60,6 +59,11 @@ public class InstitutionServiceImpl implements InstitutionService {
 	@Override
 	public AddressBo getAddress(Integer institutionId) {
 		return addressService.getAddressByInstitution(institutionId);
+	}
+
+	@Override
+	public ar.lamansys.sgh.shared.domain.general.AddressBo getInstitutionAddress(Integer institutionId) {
+		return addressService.getAddressDataByInstitution(institutionId);
 	}
 
 	@Override
