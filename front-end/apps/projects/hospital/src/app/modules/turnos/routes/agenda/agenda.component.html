@@ -1,10 +1,8 @@
 <div fxLayout="column" fxLayoutAlign="start" fxLayoutGap="10px">
-	<div fxLayout="column" fxLayoutGap="20px">
-		<ng-container *ngIf="agenda?.practicesInfo.length">
-			<app-identifier-cases [identifierCase]="identiferCases.MEETING_ROOM"
-				[description]="agenda | meetingRoom | uppercase">
-			</app-identifier-cases>
-		</ng-container>
+	<div fxLayout="column" fxLayoutGap="10px">
+		<app-identifier-cases [identifierCase]="identiferCases.MEETING_ROOM"
+			[description]="agenda | meetingRoom | uppercase">
+		</app-identifier-cases>
 
 		<ng-container *ngIf="agenda?.practicesInfo.length">
 			<app-identifier-cases [identifierCase]="identiferCases.PRACTICE"
@@ -12,14 +10,11 @@
 			</app-identifier-cases>
 		</ng-container>
 	</div>
-
 	<div id="care_lines" *ngIf="agenda?.careLinesInfo.length" fxLayout="row" fxLayoutAlign="start center"
 		fxLayoutGap="5px">
-		<app-identifier-cases [identifierCase]="identiferCases.CLEAN_HANDS"
-			[description]="careLinesToShow">
+		<app-identifier-cases [identifierCase]="identiferCases.CLEAN_HANDS" [description]="careLinesToShow">
 		</app-identifier-cases>
 	</div>
-
 	<div id="professionals" fxLayout="row" fxLayoutGap="5px" *ngIf="agenda?.associatedProfessionalsInfo.length">
 		<app-identifier-cases [identifierCase]="identiferCases.GROUP"
 			[description]="associatedProfessionalsToShow">
