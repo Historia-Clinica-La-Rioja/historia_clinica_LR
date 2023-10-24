@@ -1,9 +1,28 @@
-import { AppointmentListDto } from "@api-rest/api-model";
-import { DateFormat, buildFullDate, momentParseDate, momentParseTime } from "@core/utils/moment.utils";
-import { APPOINTMENT_STATES_ID, BLUE_TEXT, COLORES, GREY_TEXT, PURPLE_TEXT, TEMPORARY_PATIENT, WHITE_TEXT } from "@turnos/constants/appointment";
-import { AppointmentBlockMotivesFacadeService } from "@turnos/services/appointment-block-motives-facade.service";
-import { CalendarEvent } from "angular-calendar";
-import { Moment } from "moment";
+import { CalendarEvent } from 'angular-calendar';
+import { Moment } from 'moment';
+
+import {
+	AppointmentListDto,
+} from '@api-rest/api-model';
+import {
+    DateFormat,
+    buildFullDate,
+    momentParseDate,
+    momentParseTime,
+} from '@core/utils/moment.utils';
+import {
+	APPOINTMENT_STATES_ID,
+	BLUE_TEXT,
+	COLORES,
+	GREY_TEXT,
+	PURPLE_TEXT,
+	TEMPORARY_PATIENT,
+	WHITE_TEXT,
+} from '@turnos/constants/appointment';
+import {
+	AppointmentBlockMotivesFacadeService,
+} from '@turnos/services/appointment-block-motives-facade.service';
+
 
 export function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto, viewName?: string, appointmentBlockMotivesFacadeService?: AppointmentBlockMotivesFacadeService): CalendarEvent {
     const fullName = [appointment.patient?.person.lastName, appointment.patient?.person.firstName].
@@ -44,7 +63,7 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
             medicalCoverageName: appointment.medicalCoverageName,
             affiliateNumber: appointment.medicalCoverageAffiliateNumber,
             createdOn: appointment.createdOn,
-            professionalPersonDto: appointment.professionalPersonDto
+            professionalPersonDto: appointment.professionalPersonDto,
         }
     };
 
@@ -56,6 +75,7 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
         if (appointment.patient?.typeId === TEMPORARY_PATIENT) {
             return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE)} ${viewName ? viewName : ''} (Temporal)`;
         }
+
         return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE)}	 ${viewName}`;
     }
 }
@@ -110,8 +130,8 @@ export function getSpanColor(appointment: AppointmentListDto): string {
     }
 
     if (showProtectedAppointment(appointment)) {
-		return PURPLE_TEXT;
-	}
+        return PURPLE_TEXT;
+    }
 
     return WHITE_TEXT;
 }

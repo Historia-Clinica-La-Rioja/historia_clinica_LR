@@ -49,4 +49,9 @@ public class RiskFactorsReportDto implements Serializable {
 	@Nullable
 	private ReportClinicalObservationDto cardiovascularRisk;
 
+	public boolean hasValues() {
+		return systolicBloodPressure != null || diastolicBloodPressure != null || temperature != null || heartRate != null || respiratoryRate != null
+				|| bloodOxygenSaturation != null || bloodGlucose != null || glycosylatedHemoglobin != null || cardiovascularRisk != null;
+	}
+
 }

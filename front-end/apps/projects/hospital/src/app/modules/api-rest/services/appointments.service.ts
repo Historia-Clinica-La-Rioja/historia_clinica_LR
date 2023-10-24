@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import {
 	AppointmentDailyAmountDto,
 	AppointmentDto,
-	AppointmentListDto, AppointmentShortSummaryDto,
+	AppointmentListDto,
+	AppointmentShortSummaryDto,
 	AssignedAppointmentDto,
 	CreateAppointmentDto,
 	DetailsOrderImageDto,
@@ -13,15 +14,19 @@ import {
 	PatientAppointmentHistoryDto,
 	StudyIntanceUIDDto,
 	UpdateAppointmentDateDto,
-	UpdateAppointmentDto
+	UpdateAppointmentDto,
 } from '@api-rest/api-model';
 import { Observable, of } from 'rxjs';
 
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { ContextService } from '@core/services/context.service';
-import { DownloadService } from "@core/services/download.service";
-import { DateFormat, momentFormat } from "@core/utils/moment.utils";
+import { DownloadService } from '@core/services/download.service';
+import {
+	DateFormat,
+	momentFormat,
+} from '@core/utils/moment.utils';
+
 import { environment } from '@environments/environment';
 import * as moment from 'moment';
 

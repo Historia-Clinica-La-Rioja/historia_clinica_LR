@@ -63,7 +63,6 @@ const routes: Routes = [
 				canActivate: [FeatureFlagGuard],
 				data: { featureFlag: AppFeature.HABILITAR_TELEMEDICINA }
 			},
-			{ path: 'web-components/:wcId', component: InstitutionRoutedExternalComponent},
 			{
 				path: 'firma-digital/documentos',
 				loadChildren: () => import('../digital-signature/digital-signature.module').then(m => m.DigitalSignatureModule),

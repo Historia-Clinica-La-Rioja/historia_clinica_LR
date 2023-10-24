@@ -34,7 +34,11 @@ import carelineproblems from './carelineproblems';
 import userroles from './userroles';
 import hierarchicalunittypes from './hierarchicalunittypes';
 
-import { ROOT, ADMINISTRADOR, ADMINISTRADOR_DE_ACCESO_DOMINIO } from './roles';
+import {
+    ROOT,
+    ADMINISTRADOR,
+    ADMINISTRADOR_DE_ACCESO_DOMINIO,
+} from './roles';
 import snomedconcepts from './snomedconcepts';
 import snomedrelatedgroups from './snomedrelatedgroups';
 import medicalcoverageplans from "./medicalcoverageplans";

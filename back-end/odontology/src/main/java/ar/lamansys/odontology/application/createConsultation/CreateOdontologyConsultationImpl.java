@@ -1,5 +1,7 @@
 package ar.lamansys.odontology.application.createConsultation;
 
+import static ar.lamansys.odontology.domain.consultation.ConsultationInfoBo.newConsultationInfoBo;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -137,12 +139,15 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 		processDentalActions(consultationBo);
 		drawOdontogramService.run(consultationBo.getPatientId(), consultationBo.getDentalActions());
 
-		Integer medicalCoverageId = consultationBo.getPatientMedicalCoverageId();
-		if (medicalCoverageId == null)
-			medicalCoverageId = odontologyAppointmentStorage.getPatientMedicalCoverageId(consultationBo.getPatientId(), doctorInfoBo.getId());
+		setPatientMedicalCoverageIfEmpty(consultationBo, doctorInfoBo);
 
 		LocalDate now = dateTimeProvider.nowDate();
-		Integer encounterId = odontologyConsultationStorage.save(new ConsultationInfoBo(null, consultationBo, medicalCoverageId, doctorInfoBo.getId(), now, true, consultationBo.getHierarchicalUnitId()));
+		Integer encounterId = odontologyConsultationStorage.save(newConsultationInfoBo(
+				consultationBo,
+				doctorInfoBo.getId(),
+				now,
+				true
+		));
 
 
 		consultationBo.setConsultationId(encounterId);
@@ -155,7 +160,14 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
 		List<Integer> orderIds = new ArrayList<>();
 		if (!consultationBo.getReferences().isEmpty()) {
-			orderIds = sharedReferenceCounterReference.saveReferences(mapToCompleteReferenceDto(consultationBo.getReferences(), consultationBo.getInstitutionId(), doctorInfoBo.getId(), medicalCoverageId, consultationBo.getPatientId(), encounterId));
+			orderIds = sharedReferenceCounterReference.saveReferences(mapToCompleteReferenceDto(
+					consultationBo.getReferences(),
+					consultationBo.getInstitutionId(),
+					doctorInfoBo.getId(),
+					consultationBo.getPatientMedicalCoverageId(),
+					consultationBo.getPatientId(),
+					encounterId
+			));
 		}
 
 		publisher.run(consultationBo.getPatientId(), consultationBo.getInstitutionId(), EOdontologyTopicDto.NUEVA_CONSULTA);
@@ -166,7 +178,13 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 		return result;
     }
 
-    private void processDentalActions(ConsultationBo consultationBo) {
+	private void setPatientMedicalCoverageIfEmpty(ConsultationBo consultationBo, DoctorInfoBo doctorInfoBo) {
+		if (consultationBo.getPatientMedicalCoverageId() == null) {
+			consultationBo.setPatientMedicalCoverageId(odontologyAppointmentStorage.getPatientMedicalCoverageId(consultationBo.getPatientId(), doctorInfoBo.getId()));
+		}
+	}
+
+	private void processDentalActions(ConsultationBo consultationBo) {
         LOG.debug("Input parameter -> consultationBo {}", consultationBo);
         setDefaultProblem(consultationBo);
         setCpoCeoIndicesInDentalActions(consultationBo);

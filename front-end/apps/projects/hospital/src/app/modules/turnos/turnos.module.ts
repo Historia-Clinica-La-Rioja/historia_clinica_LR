@@ -25,6 +25,7 @@ import { DateRangeTimeFormComponent } from './components/date-range-time-form/da
 import { EquipmentDiaryComponent } from './components/equipment-diary/equipment-diary.component';
 import { EquipmentTranscribeOrderPopupComponent } from './dialogs/equipment-transcribe-order-popup/equipment-transcribe-order-popup.component';
 import { ImageNetworkAppointmentComponent } from './components/image-network-appointment/image-network-appointment.component';
+import { MedicalOrderInputComponent } from './components/medical-order-input/medical-order-input.component';
 import { ProfessionalSelectComponent } from './components/professional-select/professional-select.component';
 import { ReferenceCompleteDataComponent } from './components/reference-complete-data/reference-complete-data.component';
 import { ReferenceListComponent } from './components/reference-list/reference-list.component';
@@ -34,8 +35,8 @@ import { SeachAppointmentsByProfessionalComponent } from './components/seach-app
 import { SearchAppointmentsByEquipmentComponent } from './components/search-appointments-by-equipment/search-appointments-by-equipment.component';
 import { SearchAppointmentsBySpecialtyComponent } from './components/search-appointments-by-specialty/search-appointments-by-specialty.component';
 import { SearchAppointmentsInCareNetworkComponent } from './components/search-appointments-in-care-network/search-appointments-in-care-network.component';
-import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
 import { SearchCriteriaComponent } from './components/search-criteria/search-criteria.component';
+import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
 import { TypeaheadPracticesComponent } from './components/typeahead-practices/typeahead-practices.component';
 // dialogs
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
@@ -50,10 +51,9 @@ import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data
 // services
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { EquipmentAppointmentsFacadeService } from './services/equipment-appointments-facade.service';
-import { MedicalOrderInputComponent } from './components/medical-order-input/medical-order-input.component';
 // pipes
-import { PracticesPipe } from './pipes/practices.pipe';
 import { MeetingRoomPipe } from './pipes/meeting-room.pipe';
+import { PracticesPipe } from './pipes/practices.pipe';
 
 
 @NgModule({
@@ -73,6 +73,7 @@ import { MeetingRoomPipe } from './pipes/meeting-room.pipe';
 		EquipmentDiaryComponent,
 		EquipmentTranscribeOrderPopupComponent,
 		ImageNetworkAppointmentComponent,
+		MedicalOrderInputComponent,
 		ProfessionalSelectComponent,
 		ReferenceCompleteDataComponent,
 		ReferenceListComponent,
@@ -94,11 +95,10 @@ import { MeetingRoomPipe } from './pipes/meeting-room.pipe';
 		ConfirmPrintAppointmentComponent,
 		NewAppointmentComponent,
 		NewAttentionComponent,
-		MedicalOrderInputComponent,
 		ReportCompleteDataPopupComponent,
 		//pipes
-  		PracticesPipe,
- 		MeetingRoomPipe,
+		MeetingRoomPipe,
+		PracticesPipe,
 	],
 	imports: [
 		CommonModule,
@@ -115,15 +115,15 @@ import { MeetingRoomPipe } from './pipes/meeting-room.pipe';
 	],
 	exports: [
 		CalendarProfessionalViewComponent,
+		ReferenceCompleteDataComponent,
 		SearchCriteriaComponent,
-		ReferenceCompleteDataComponent
 	],
 	providers: [
 		{
 			provide: CalendarDateFormatter,
 			useClass: CustomDateFormatter,
 		},
-		EquipmentAppointmentsFacadeService
+		EquipmentAppointmentsFacadeService,
 	]
 })
 export class TurnosModule {
