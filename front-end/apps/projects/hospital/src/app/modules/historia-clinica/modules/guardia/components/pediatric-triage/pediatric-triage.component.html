@@ -3,7 +3,8 @@
 
 		<section id="triage">
 			<app-triage (triageCategoryIdChange)="setTriageCategoryId($event)"
-				(doctorsOfficeIdChange)="setDoctorsOfficeId($event)">
+				(doctorsOfficeIdChange)="setDoctorsOfficeId($event)"
+				[canAssignNotDefinedTriageLevel]="canAssignNotDefinedTriageLevel">
 			</app-triage>
 		</section>
 

@@ -17,6 +17,8 @@ export class NewEpisodePediatricTriageComponent {
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 
+	NOT_DEFINED_TRIAGE_LEVEL_AVAILABLE= true;
+
 	constructor(
 		private readonly newEpisodeService: NewEpisodeService,
 		private readonly emergercyCareEpisodeService: EmergencyCareEpisodeService,

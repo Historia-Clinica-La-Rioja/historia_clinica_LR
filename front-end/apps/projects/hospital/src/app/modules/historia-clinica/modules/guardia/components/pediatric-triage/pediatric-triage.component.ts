@@ -21,6 +21,7 @@ export class PediatricTriageComponent implements OnInit {
 	@Input() confirmLabel = 'Confirmar episodio';
 	@Input() cancelLabel = 'Volver';
 	@Input() disableConfirmButton: boolean;
+	@Input() canAssignNotDefinedTriageLevel: boolean;
 	@Output() confirm = new EventEmitter();
 	@Output() cancel = new EventEmitter();
 	private triageCategoryId: number;
@@ -40,7 +41,7 @@ export class PediatricTriageComponent implements OnInit {
 		respiratoryRetractionId: (control) => control.controls.respiratoryRetractionId.reset(),
 		perfusionId: (control) => control.controls.perfusionId.reset(),
 	}
-	
+
 	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
 
 	constructor(

@@ -53,6 +53,8 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 
     private static final String CARE_EPISODE_NOT_FOUND = "El episodio de guardia no se encontró o no existe";
 
+	private final Short WITHOUT_TRIAGE_LEVEL_ID = 6;
+
     private final TriageService triageService;
 
     private final PoliceInterventionRepository policeInterventionRepository;
@@ -373,26 +375,35 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 
     private TriageBo saveTriageAdult(SaveTriageArgs args) {
         LOG.debug("Input parameters -> triageBo {}, emergencyCareEpisodeId {}, institutionId {}", args.triageBo, args.emergencyCareEpisodeId, args.institutionId);
-        args.triageBo.setEmergencyCareEpisodeId(args.emergencyCareEpisodeId);
-        TriageBo result = triageService.createAdultGynecological(args.triageBo, args.institutionId);
-        LOG.debug(OUTPUT, result);
-        return result;
+		if (!args.triageBo.getCategoryId().equals(WITHOUT_TRIAGE_LEVEL_ID)) {
+			args.triageBo.setEmergencyCareEpisodeId(args.emergencyCareEpisodeId);
+			TriageBo result = triageService.createAdultGynecological(args.triageBo, args.institutionId);
+			LOG.debug(OUTPUT, result);
+			return result;
+		}
+		return null;
     }
 
     private TriageBo saveTriageAdministrative(SaveTriageArgs args) {
         LOG.debug("Input parameters -> triageBo {}, emergencyCareEpisodeId {}, institutionId {}", args.triageBo, args.emergencyCareEpisodeId, args.institutionId);
-        args.triageBo.setEmergencyCareEpisodeId(args.emergencyCareEpisodeId);
-        TriageBo result = triageService.createAdministrative(args.triageBo, args.institutionId);
-        LOG.debug(OUTPUT, result);
-        return result;
+		if (!args.triageBo.getCategoryId().equals(WITHOUT_TRIAGE_LEVEL_ID)) {
+			args.triageBo.setEmergencyCareEpisodeId(args.emergencyCareEpisodeId);
+			TriageBo result = triageService.createAdministrative(args.triageBo, args.institutionId);
+			LOG.debug(OUTPUT, result);
+			return result;
+		}
+		return null;
     }
 
     private TriageBo saveTriagePediatric(SaveTriageArgs args) {
         LOG.debug("Input parameters -> triageBo {}, emergencyCareEpisodeId {}, institutionId {}", args.triageBo, args.emergencyCareEpisodeId, args.institutionId);
-        args.triageBo.setEmergencyCareEpisodeId(args.emergencyCareEpisodeId);
-        TriageBo result = triageService.createPediatric(args.triageBo, args.institutionId);
-        LOG.debug(OUTPUT, result);
-        return result;
+		if (!args.triageBo.getCategoryId().equals(WITHOUT_TRIAGE_LEVEL_ID)) {
+			args.triageBo.setEmergencyCareEpisodeId(args.emergencyCareEpisodeId);
+			TriageBo result = triageService.createPediatric(args.triageBo, args.institutionId);
+			LOG.debug(OUTPUT, result);
+			return result;
+		}
+		return null;
     }
 
     private List<ReasonBo> saveReasons(List<ReasonBo> reasons, Integer emergencyCareEpisodeId) {

@@ -8,7 +8,8 @@
 			<h3 [translate]="'guardia.new-episode.ADM_TRIAGE'"></h3>
 			<app-administrative-triage [disableConfirmButton]="disable"
 									   (confirm)="confirmEvent($event)"
-									   (cancel)="cancelEvent()"></app-administrative-triage>
+									   (cancel)="cancelEvent()"
+									   [canAssignNotDefinedTriageLevel]="NOT_DEFINED_TRIAGE_LEVEL_AVAILABLE"></app-administrative-triage>
 		</div>
 	</section>
 </app-content>

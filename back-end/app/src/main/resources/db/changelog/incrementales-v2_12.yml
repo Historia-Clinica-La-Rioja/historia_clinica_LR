@@ -1,3 +1,11 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v2_12 
 
+    - changeSet:
+        id: add-without-triage-triage-category
+        author: mmalyvarni
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO triage_category (id, name, description, color_name, color_code) VALUES (6, 'Sin triage', 'Sin definir', 'Gris', '#E6E6E6');

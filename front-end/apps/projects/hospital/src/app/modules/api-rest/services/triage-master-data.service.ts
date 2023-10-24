@@ -44,6 +44,14 @@ const TRIAGE_CATEGORIES = [
 			name: 'blue',
 			code: 'some'
 		}
+	},
+	{
+		id: 6,
+		description: 'Sin triage',
+		colour: {
+			name: 'gray',
+			code: 'soma'
+		}
 	}
 ];
 

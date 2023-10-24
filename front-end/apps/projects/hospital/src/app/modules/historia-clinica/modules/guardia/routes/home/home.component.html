@@ -217,7 +217,7 @@
 
 								<div id="triage" fxFlex="25%" fxLayout="column">
 									<div class="triage-chip"
-										[ngStyle]="{'color':episode.triage.id === triages.AMARILLO_NIVEL_3 ? 'black' : 'white' }"
+										[ngStyle]="{'color':episode.triage.id === triages.AMARILLO_NIVEL_3 || episode.triage.id === triages.GRIS_SIN_TRIAGE ? 'black' : 'white' }"
 										[style.background-color]="episode.triage.color">{{ episode.triage.name }}</div>
 									<span class="mat-small">{{ episode.type?.description }}</span>
 								</div>

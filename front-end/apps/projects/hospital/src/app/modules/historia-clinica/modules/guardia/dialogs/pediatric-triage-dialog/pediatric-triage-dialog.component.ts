@@ -14,6 +14,7 @@ export class PediatricTriageDialogComponent {
 
 	private triage: TriagePediatricDto;
 	requestPending = false;
+	NOT_DEFINED_TRIAGE_LEVEL_AVAILABLE = false;
 
 	constructor(
 		private triageService: TriageService,

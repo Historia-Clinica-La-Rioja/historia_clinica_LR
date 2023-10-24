@@ -11,6 +11,7 @@ export class AdministrativeTriageComponent {
 	@Input() confirmLabel = 'Confirmar episodio';
 	@Input() cancelLabel = 'Volver';
 	@Input() disableConfirmButton: boolean;
+	@Input() canAssignNotDefinedTriageLevel: boolean;
 	@Output() confirm = new EventEmitter();
 	@Output() cancel = new EventEmitter();
 	private triageCategoryId: number;

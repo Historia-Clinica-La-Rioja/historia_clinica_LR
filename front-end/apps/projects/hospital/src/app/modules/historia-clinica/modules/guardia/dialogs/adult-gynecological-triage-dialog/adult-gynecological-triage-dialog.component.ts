@@ -14,6 +14,7 @@ export class AdultGynecologicalTriageDialogComponent {
 
 	private triage: TriageAdultGynecologicalDto;
 	requestPending = false;
+	NOT_DEFINED_TRIAGE_LEVEL_AVAILABLE = false;
 
 	constructor(
 		private triageService: TriageService,
