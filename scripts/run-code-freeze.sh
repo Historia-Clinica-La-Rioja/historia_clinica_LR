@@ -91,7 +91,7 @@ echo "
     relativeToChangelogFile: true" >> back-end/app/src/main/resources/db/changelog/db.changelog-master.yaml
 git add back-end/app/src/main/resources/db/
 git commit -m "Comienza desarrollo de $NEXT_MM_VERSION"
-#git push ${REMOTE} code-freeze -o merge_request.create -o merge_request.merge_when_pipeline_succeeds -o merge_request.remove_source_branch -o merge_request.title="Code Freeze  V${CURR_VERSION}"
+git push ${REMOTE} code-freeze -o merge_request.create -o merge_request.merge_when_pipeline_succeeds -o merge_request.remove_source_branch -o merge_request.title="Code Freeze  V${CURR_VERSION}"
 echo "git push code freeze"
 echo "
 ### 4. Generar branch de regresion (sin el último commit)
@@ -104,7 +104,7 @@ mvn -B -f=back-end/pom-parent.xml versions:set-property \
     -DgenerateBackupPoms=false
 git add back-end/pom-parent.xml
 git commit -m "Comienza regresion $MM_VERSION"
-#git push ${REMOTE} "rc-$MM_VERSION"
+git push ${REMOTE} "rc-$MM_VERSION"
 echo "git push rc-$MM_VERSION "
 git checkout master
 
@@ -121,7 +121,7 @@ git checkout stage
 git fetch ${REMOTE} stage
 git reset --hard ${REMOTE}/stage
 git checkout -b "rc-$MM_VERSION_AMBIENTES_ANTERIOR"
-#git push ${REMOTE} "rc-$MM_VERSION_AMBIENTES_ANTERIOR"
+git push ${REMOTE} "rc-$MM_VERSION_AMBIENTES_ANTERIOR"
 git checkout stage
 
 # Define el nuevo valor para 'tag'
@@ -141,7 +141,7 @@ fi
 
 git add .
 git commit -m "Actualiza version stage"
-#git push ${REMOTE} stage
+git push ${REMOTE} stage
 
 echo "Ahora debes esperar que deploye ambiente con version anterior y stage."
 echo "-----------------------------------------------------------------"
