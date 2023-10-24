@@ -1,14 +1,10 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
 
-import java.util.Optional;
-
-import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
+import ar.lamansys.sgh.shared.infrastructure.input.service.imagenetwork.SharedDiagnosticImagingOrder;
 import lombok.RequiredArgsConstructor;
+import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
+import net.pladema.clinichistory.requests.servicerequests.repository.TranscribedServiceRequestRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.DetailsOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentOrderImage;
@@ -16,16 +12,21 @@ import net.pladema.medicalconsultation.appointment.repository.entity.DetailsOrde
 import net.pladema.medicalconsultation.appointment.service.AppointmentOrderImageService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentOrderImageBo;
 import net.pladema.medicalconsultation.appointment.service.domain.DetailsOrderImageBo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageService {
+public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageService, SharedDiagnosticImagingOrder {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AppointmentOrderImageServiceImpl.class);
 
 	private final AppointmentOrderImageRepository appointmentOrderImageRepository;
 	private final DetailsOrderImageRepository detailsOrderImageRepository;
-
+	private final TranscribedServiceRequestRepository transcribedServiceRequestRepository;
 
 	@Override
 	public boolean isAlreadyCompleted(Integer appointmentId) {
@@ -93,5 +94,16 @@ public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageSe
 		appointmentOrderImageRepository.updateOrderId(appointmentId, studyId, orderId);
 		return Boolean.TRUE;
 	}
-	
+
+	@Override
+	public Optional<Integer> getDiagnosticImagingOrderAuthorId(Integer appointmentId) {
+		LOG.debug("Input parameters -> appointmentId '{}'", appointmentId);
+		return appointmentOrderImageRepository.getDiagnosticImagingOrderAuthorId(appointmentId);
+	}
+
+	@Override
+	public Optional<String> getDiagnosticImagingTranscribedOrderAuthor(Integer transcribedOrderId) {
+		LOG.debug("Input parameters -> transcribedOrderId '{}'", transcribedOrderId);
+		return transcribedServiceRequestRepository.getHealthcareProfessionalName(transcribedOrderId);
+	}
 }

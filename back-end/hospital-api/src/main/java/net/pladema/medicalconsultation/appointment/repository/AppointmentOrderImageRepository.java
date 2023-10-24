@@ -1,13 +1,10 @@
 package net.pladema.medicalconsultation.appointment.repository;
 
 
-import java.util.List;
-import java.util.Optional;
-
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentOrderImageExistCheckVo;
-
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentOrderImage;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentOrderImagePK;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,8 +12,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentOrderImage;
-import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentOrderImagePK;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AppointmentOrderImageRepository extends JpaRepository<AppointmentOrderImage, AppointmentOrderImagePK> {
@@ -120,4 +117,11 @@ public interface AppointmentOrderImageRepository extends JpaRepository<Appointme
 			"WHERE aoi.pk.appointmentId = :appointmentId")
 	void updateTranscribedOrderId(@Param("appointmentId") Integer appointmentId,
 					   @Param("orderId") Integer orderId );
+
+	@Transactional(readOnly = true)
+	@Query("SELECT sr.creationable.createdBy " +
+			"FROM AppointmentOrderImage aoi " +
+			"JOIN ServiceRequest sr ON aoi.orderId = sr.id " +
+			"WHERE aoi.pk.appointmentId = :appointmentId ")
+	Optional<Integer> getDiagnosticImagingOrderAuthorId(@Param("appointmentId") Integer appointmentId);
 }

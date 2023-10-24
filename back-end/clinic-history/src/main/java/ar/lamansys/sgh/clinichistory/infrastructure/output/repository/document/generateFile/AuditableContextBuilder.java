@@ -1,29 +1,5 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import javax.imageio.ImageIO;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.client.j2se.MatrixToImageConfig;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.oned.Code128Writer;
-
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
@@ -33,6 +9,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.imagenetwork.SharedDiagnosticImagingOrder;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.SharedImmunizationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
@@ -43,7 +21,29 @@ import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.client.j2se.MatrixToImageConfig;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.oned.Code128Writer;
 import net.pladema.assets.service.AssetsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import javax.imageio.ImageIO;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class AuditableContextBuilder {
@@ -62,6 +62,8 @@ public class AuditableContextBuilder {
 	private final PatientMedicalCoverageService patientMedicalCoverageService;
 
 	private final AssetsService assetsService;
+	private final SharedStaffPort sharedStaffPort;
+	private final SharedDiagnosticImagingOrder sharedDiagnosticImagingOrder;
 
 	@Value("${prescription.domain.number}")
 	private Integer recipeDomain;
@@ -75,10 +77,12 @@ public class AuditableContextBuilder {
 			LocalDateMapper localDateMapper,
 			FeatureFlagsService featureFlagsService, SharedInstitutionPort sharedInstitutionPort,
 			PatientMedicalCoverageService patientMedicalCoverageService,
-			AssetsService assetsService) {
+			AssetsService assetsService, SharedStaffPort sharedStaffPort, SharedDiagnosticImagingOrder sharedDiagnosticImagingOrder) {
 		this.sharedImmunizationPort = sharedImmunizationPort;
 		this.localDateMapper = localDateMapper;
 		this.sharedInstitutionPort = sharedInstitutionPort;
+		this.sharedStaffPort = sharedStaffPort;
+		this.sharedDiagnosticImagingOrder = sharedDiagnosticImagingOrder;
 		this.logger = LoggerFactory.getLogger(getClass());
 		this.basicDataFromPatientLoader = sharedPatientPort::getBasicDataFromPatient;
 		this.authorFromDocumentFunction = (Long documentId) -> documentAuthorFinder.getAuthor(documentId);
@@ -177,6 +181,15 @@ public class AuditableContextBuilder {
 		ctx.put("institutionHeader",sharedInstitutionPort.fetchInstitutionDataById(document.getInstitutionId()));
 		ctx.put("institutionAddress",sharedInstitutionPort.fetchInstitutionAddress(document.getInstitutionId()));
 		ctx.put("author", authorFromDocumentFunction.apply(document.getId()));
+
+		Optional.ofNullable(document.getDiagnosticReports())
+				.flatMap(l -> sharedDiagnosticImagingOrder.getDiagnosticImagingOrderAuthorId(document.getEncounterId()))
+				.ifPresent(professionalId -> ctx.put("authorOrder", sharedStaffPort.getProfessionalComplete(professionalId)));
+
+		Optional.ofNullable(document.getTranscribedDiagnosticReport())
+				.flatMap(l -> sharedDiagnosticImagingOrder.getDiagnosticImagingTranscribedOrderAuthor(l.getServiceRequestId()))
+				.ifPresent(professional -> ctx.put("authorTranscribedOrder", professional));
+
 		ctx.put("performedDate", document.getPerformedDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
 		ctx.put("evolutionNote", document.getEvolutionNote());
 		ctx.put("conclusions", document.getConclusions());

@@ -101,6 +101,7 @@
         }
 
         .section-title_row {
+            display: flex;
             width: 50%;
             float: left;
         }
@@ -256,39 +257,56 @@
     </div>
     <div th:fragment="professionalData">
         <div class="section-title"> Profesional solicitante </div>
-        <div>
+
+        <div th:if="${authorOrder == null && authorTranscribedOrder == null}">
+            <div class="data-text">
+                Sin profesional asociado
+            </div>
+        </div>
+
+        <div th:if="${authorOrder != null || authorTranscribedOrder != null}">
             <div class="row-content">
                 <div class="data-title">Apellido y nombre</div>
-                <div class="data-text"
-                    th:if="${!selfPerceivedFF || author.nameSelfDetermination == null || author.nameSelfDetermination == '' }">
-                    <label
-                        th:text="${author.lastName + (author.otherLastNames != null ? ' ' + author.otherLastNames : '') }"></label>
-                    <label th:text="${author.firstName}"></label>
+                <div th:if="${authorTranscribedOrder != null}">
+                    <div class="data-text">
+                        <label th:text="${authorTranscribedOrder}"></label>
+                    </div>
                 </div>
-                <div class="data-text"
-                    th:if="${selfPerceivedFF && author.nameSelfDetermination != null && author.nameSelfDetermination != ''}">
-                    <label
-                        th:text="${author.lastName + (author.otherLastNames != null ? ' ' + author.otherLastNames : '') }"></label>
-                    <label th:text="${author.nameSelfDetermination}"></label>
+                <div th:if="${authorOrder != null}">
+                    <div class="data-text"
+                        th:if="${!selfPerceivedFF || authorOrder.nameSelfDetermination == null || authorOrder.nameSelfDetermination == '' }">
+                        <label
+                            th:text="${authorOrder.lastName + (authorOrder.otherLastNames != null ? ' ' + authorOrder.otherLastNames : '') }"></label>
+                        <label th:text="${authorOrder.firstName}"></label>
+                    </div>
+                    <div class="data-text"
+                        th:if="${selfPerceivedFF && authorOrder.nameSelfDetermination != null && authorOrder.nameSelfDetermination != ''}">
+
+                        <label
+                            th:text="${authorOrder.lastName + (authorOrder.otherLastNames != null ? ' ' + authorOrder.otherLastNames : '') }"></label>
+                        <label th:text="${authorOrder.nameSelfDetermination}"></label>
+                    </div>
                 </div>
             </div>
             <div class="row-content">
                 <div class="data-title">Especialidad</div>
-                <div class="data-text" th:each="profession,iter: ${author.professions}">
-                    <div class="comma-list" th:each="specialty,iter: ${profession.specialties}">
-                        <div>
-                            <div class="data-text" th:text="${specialty.specialty.name}"></div>
+                <div th:if="${authorOrder != null}">
+                    <div class="data-text" th:each="profession,iter: ${authorOrder.professions}">
+                        <div class="comma-list" th:each="specialty,iter: ${profession.specialties}">
+                            <div>
+                                <div class="data-text" th:text="${specialty.specialty.name}"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row-content">
                 <div class="data-title">MN</div>
-                <span th:if="${#lists.isEmpty(author.professions)}">
+                <span th:if="${authorTranscribedOrder != null || (authorOrder != null && #lists.isEmpty(authorOrder.professions))}">
                     <span class="data-text" th:text="${' - '}"></span>
                 </span>
-                <span th:if="${not #lists.isEmpty(author.professions)}">
-                    <span th:each="profession,iter: ${author.professions}">
+                <span th:if="${authorOrder != null && not #lists.isEmpty(authorOrder.professions)}">
+                    <span th:each="profession,iter: ${authorOrder.professions}">
                         <span th:if="${not #lists.isEmpty(profession.licenses)}">
                             <span class="comma-list" th:each="license,iter: ${profession.licenses}">
                                 <span th:if="${#strings.equals(license.type, 'MN')}">
@@ -310,11 +328,11 @@
             </div>
             <div class="row-content">
                 <div class="data-title">MP</div>
-                <span th:if="${#lists.isEmpty(author.professions)}">
+                <span th:if="${authorTranscribedOrder != null || (authorOrder != null && #lists.isEmpty(authorOrder.professions))}">
                     <span class="data-text" th:text="${' - '}"></span>
                 </span>
-                <span th:if="${not #lists.isEmpty(author.professions)}">
-                    <span th:each="profession,iter: ${author.professions}">
+                <span th:if="${authorOrder != null && not #lists.isEmpty(authorOrder.professions)}">
+                    <span th:each="profession,iter: ${authorOrder.professions}">
                         <span th:if="${not #lists.isEmpty(profession.licenses)}">
                             <span class="comma-list" th:each="license,iter: ${profession.licenses}">
                                 <span class="row-line" th:if="${#strings.equals(license.type, 'MP')}">

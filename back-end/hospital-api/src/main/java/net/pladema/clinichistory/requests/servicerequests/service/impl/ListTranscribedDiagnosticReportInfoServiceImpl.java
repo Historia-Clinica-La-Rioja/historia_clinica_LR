@@ -1,19 +1,17 @@
 package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
-import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedOrderReportInfoBo;
-
+import net.pladema.clinichistory.requests.servicerequests.repository.ListTranscribedDiagnosticReportRepository;
+import net.pladema.clinichistory.requests.servicerequests.service.ListTranscribedDiagnosticReportInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
-import net.pladema.clinichistory.requests.servicerequests.repository.ListTranscribedDiagnosticReportRepository;
-import net.pladema.clinichistory.requests.servicerequests.service.ListTranscribedDiagnosticReportInfoService;
+import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ListTranscribedDiagnosticReportInfoServiceImpl implements ListTranscribedDiagnosticReportInfoService {
@@ -60,6 +58,7 @@ public class ListTranscribedDiagnosticReportInfoServiceImpl implements ListTrans
         TranscribedDiagnosticReportBo result = new TranscribedDiagnosticReportBo();
 		result.setServiceRequestId((Integer) row[0]);
         result.setStudyId((Integer) row[1]);
+        result.setStudyName((String) row[2]);
         result.setStudyName((String) row[2]);
         LOG.trace(OUTPUT, result);
         return result;
