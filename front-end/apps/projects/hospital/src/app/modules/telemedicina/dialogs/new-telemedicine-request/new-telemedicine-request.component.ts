@@ -63,10 +63,9 @@ export class NewTelemedicineRequestComponent implements OnInit {
 	}
 
 	prepareVirtualConsultationRequest(informationConsultation: any) {
+		this.secondStepForm.controls.requestInformationData.setValue(informationConsultation);
 		if (informationConsultation) {
-			this.secondStepForm.controls.requestInformationData.setValue(informationConsultation);
 			this.virtualConsultationRequest = this.mapToVirtualConsultationRequestDto(informationConsultation);
-
 		}
 	}
 	saveVirtualConsultationRequest() {

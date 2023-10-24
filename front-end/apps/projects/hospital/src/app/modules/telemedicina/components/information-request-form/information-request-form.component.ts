@@ -21,8 +21,8 @@ export class InformationRequestFormComponent implements OnInit {
 	informationForm: UntypedFormGroup;
 	@Input() patient: PatientBasicData;
 	@Input() patientPhoto: PersonPhotoDto;
-	@Input() set confirmAndValidateForm(isConfirmAndValidateForm: Observable<boolean> ){
-		isConfirmAndValidateForm.subscribe(change=>{
+	@Input() set confirmAndValidateForm(isConfirmAndValidateForm: Observable<boolean>) {
+		isConfirmAndValidateForm.subscribe(change => {
 			this.validateAndDisplayErrors();
 		})
 	}
@@ -57,7 +57,9 @@ export class InformationRequestFormComponent implements OnInit {
 		})
 		this.informationForm.statusChanges.subscribe((isValid: FormControlStatus) => {
 			if (isValid === VALID) {
-				this.requestInformationData.emit(this.informationForm.value)
+				this.requestInformationData.emit(this.informationForm.value);
+			} else {
+				this.requestInformationData.emit(null);
 			}
 		})
 	}
@@ -95,8 +97,8 @@ export class InformationRequestFormComponent implements OnInit {
 	}
 
 	setMotive(motive: MotivoConsulta) {
-		this.informationForm.controls.motive.setValue(motive);	
-		this.showMotiveError = motive? false : true;
+		this.informationForm.controls.motive.setValue(motive);
+		this.showMotiveError = motive ? false : true;
 	}
 
 	setProblem(problem: AmbulatoryConsultationProblem) {
