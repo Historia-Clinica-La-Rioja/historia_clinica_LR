@@ -5,7 +5,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Reporte Imagenes</title>
     <th:block th:include="fragments/bootstrap-css.html :: style-inline"></th:block>
-    <th:block th:include="fragments/general.html :: headerfiles"></th:block>
     <style>
         .page-header {
             top: 0;
@@ -102,11 +101,8 @@
         }
 
         .section-title_row {
-            display: flex;
             width: 50%;
-            justify-content: space-between;
-            flex-direction: column;
-            padding-bottom: 5px;
+            float: left;
         }
 
         .sign-professional {
@@ -115,9 +111,7 @@
         }
 
         .header-layout {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            width: 100%;
         }
 
         .logo {
@@ -172,17 +166,27 @@
     <div th:fragment="header">
         <div class="header-layout">
             <div class="section-title_row">
-                <h2 style="width: 50%;" th:text="${institutionHeader.name}"></h2>
-                <div class="data-text">DIRECCION</div>
+                <h2  th:text="${institutionHeader.name}"></h2>
+                <span class="data-text">
+                    <span  th:if="${institutionAddress.street != null}" th:text="${institutionAddress.street + ', '}"></span>
+                    <span th:if="${institutionAddress.number != null}" th:text="${institutionAddress.number + ', '}"></span>
+                    <span th:if="${institutionAddress.floor != null}" th:text="${institutionAddress.floor + ', '}"></span>
+                    <span th:if="${institutionAddress.apartment != null}" th:text="${institutionAddress.apartment + ', '}"></span>
+                    <span th:if="${institutionAddress.postCode != null}" th:text="${institutionAddress.postCode + ', '}"></span>
+                    <span th:if="${institutionAddress.cityName != null}" th:text="${institutionAddress.cityName + ', '}"></span>
+                    <span th:if="${institutionAddress.stateName != null}" th:text="${institutionAddress.stateName}"></span>
+                </span>
                 <div>
                     <div class="data-text" th:text="${institutionHeader.phone}"></div>
                     <div class="data-text" th:text="${institutionHeader.email}"></div>
                 </div>
             </div>
+            <div style="width: 35%; float: right">
+                <img style="height: 70px" th:src="@{classpath:/static/images/logo_hsi.png}" alt="Logo"></img>
+            </div>
         </div>
-        <img style="height: 40px; float: right;" th:src="@{classpath:/static/images/logo_hsi.png}" alt="Logo"></img>
         <div class="section-title">
-            <h2 style="width: 100%; float:left;">Informe de Imágenes</h2>
+            <h2 style="width: 100%; float:left;margin-top: 15px;">Informe de Imágenes</h2>
         </div>
         <br/>
     </div>
@@ -216,19 +220,19 @@
             <div class="section-title">Datos del paciente</div>
             <div>
                 <div class="row-content">
-                    <div class="data-title">Nombre y apellido</div>
+                    <div class="data-title">Apellido y nombre</div>
                     <div class="data-text"
                         th:if="${!selfPerceivedFF || patient.person.nameSelfDetermination == null || patient.person.nameSelfDetermination == '' }">
                         <label
-                            th:text="${patient.person.firstName + (patient.person.middleNames != null ? ' ' + patient.person.middleNames : '') }"></label>
-                        <label
                             th:text="${patient.person.lastName + (patient.person.otherLastNames != null ? ' ' + patient.person.otherLastNames : '') }"></label>
+                        <label
+                            th:text="${patient.person.firstName + (patient.person.middleNames != null ? ' ' + patient.person.middleNames : '') }"></label>
                     </div>
                     <div class="data-text"
                         th:if="${selfPerceivedFF && patient.person.nameSelfDetermination != null && patient.person.nameSelfDetermination != ''}">
-                        <label th:text="${patient.person.nameSelfDetermination}"></label>
                         <label
                             th:text="${patient.person.lastName + (patient.person.otherLastNames != null ? ' ' + patient.person.otherLastNames : '') }"></label>
+                        <label th:text="${patient.person.nameSelfDetermination}"></label>
                     </div>
                 </div>
                 <div class="row-content">
@@ -254,18 +258,18 @@
         <div class="section-title"> Profesional solicitante </div>
         <div>
             <div class="row-content">
-                <div class="data-title">Nombre y apellido</div>
+                <div class="data-title">Apellido y nombre</div>
                 <div class="data-text"
                     th:if="${!selfPerceivedFF || author.nameSelfDetermination == null || author.nameSelfDetermination == '' }">
-                    <label th:text="${author.firstName}"></label>
                     <label
                         th:text="${author.lastName + (author.otherLastNames != null ? ' ' + author.otherLastNames : '') }"></label>
+                    <label th:text="${author.firstName}"></label>
                 </div>
                 <div class="data-text"
                     th:if="${selfPerceivedFF && author.nameSelfDetermination != null && author.nameSelfDetermination != ''}">
-                    <label th:text="${author.nameSelfDetermination}"></label>
                     <label
                         th:text="${author.lastName + (author.otherLastNames != null ? ' ' + author.otherLastNames : '') }"></label>
+                    <label th:text="${author.nameSelfDetermination}"></label>
                 </div>
             </div>
             <div class="row-content">
