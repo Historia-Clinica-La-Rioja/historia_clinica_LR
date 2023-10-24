@@ -1,7 +1,15 @@
 package net.pladema.imagenetwork.derivedstudies.service.impl;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.mqtt.application.ports.MqttClientService;
 import ar.lamansys.mqtt.domain.MqttMetadataBo;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import net.pladema.establishment.service.EquipmentService;
 import net.pladema.establishment.service.OrchestratorService;
@@ -21,12 +29,6 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryService;
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.CompleteEquipmentDiaryBo;
 import net.pladema.scheduledjobs.jobs.MoveStudiesJob;
-import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -162,6 +164,13 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 			mqttClientService.publish(data);
 		}
 
+	}
+
+	@Override
+	public Integer getInstitutionByAppointmetId(Integer appointmentId) {
+		return moveStudiesRepository.getInstitutionIdByAppointmetId(appointmentId)
+				.orElseThrow(
+				() -> new NotFoundException("moveStudie-not-found", "moveStudie not found"));
 	}
 
 	private MoveStudiesBO createMoveStudyBOInstance(MoveStudies moveStudy){

@@ -32,7 +32,7 @@ import net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmen
 import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
 import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.ListTranscribedDiagnosticReportInfoService;
-import net.pladema.establishment.service.InstitutionService;
+import net.pladema.imagenetwork.derivedstudies.service.MoveStudiesService;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.medicalconsultation.appointment.repository.DetailsOrderImageRepository;
@@ -61,11 +61,9 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 	private final DocumentFactory documentFactory;
 	private final DateTimeProvider dateTimeProvider;
 	private final SharedDocumentPort sharedDocumentPort;
-	private final InstitutionService institutionService;
-
 	private final DiagnosticReportInfoService diagnosticReportInfoService;
-
 	private final ListTranscribedDiagnosticReportInfoService transcribedDiagnosticReportInfoService;
+	private final MoveStudiesService moveStudiesService;
 
 	@Override
 	public StudyAppointmentBo getStudyByAppointment(Integer appointmentId) {
@@ -199,14 +197,16 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 	private Long setRequiredFieldsAndSaveDocument(Integer appointmentId, InformerObservationBo obs, boolean createFile) {
 		obs.setEncounterId(appointmentId);
 		obs.setConfirmed(createFile);
-		//obs.setInstitutionAddress(institutionService.getAddress(obs.getInstitutionId()));
+
+		Integer originInstitutionId =moveStudiesService.getInstitutionByAppointmetId(appointmentId);
+		if (originInstitutionId != null && originInstitutionId != obs.getInstitutionId())
+			obs.setInstitutionId(originInstitutionId);
 
 		obs.setDiagnosticReports(diagnosticReportInfoService.getByAppointmentId(appointmentId) != null ? List.of(diagnosticReportInfoService.getByAppointmentId(appointmentId)) : null);
 		obs.setTranscribedDiagnosticReport(transcribedDiagnosticReportInfoService.getByAppointmentId(appointmentId));
 
-		Integer patientId = appointmentRepository.getPatientByAppointmentId(appointmentId);
-		obs.setPatientId(patientId);
-		BasicPatientDto bpd = patientExternalService.getBasicDataFromPatient(patientId);
+		obs.setPatientId(appointmentRepository.getPatientByAppointmentId(appointmentId));
+		BasicPatientDto bpd = patientExternalService.getBasicDataFromPatient(obs.getPatientId());
 		obs.setPatientInfo(new PatientInfoBo(bpd.getId(), bpd.getPerson().getGender().getId(), bpd.getPerson().getAge(),bpd.getIdentificationType(), bpd.getIdentificationNumber()));
 
 		LocalDateTime now = dateTimeProvider.nowDateTime();
