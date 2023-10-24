@@ -95,8 +95,8 @@ export class InformationRequestFormComponent implements OnInit {
 	}
 
 	setMotive(motive: MotivoConsulta) {
-		this.informationForm.controls.motive.setValue(motive);
-		this.showMotiveError = false;
+		this.informationForm.controls.motive.setValue(motive);	
+		this.showMotiveError = motive? false : true;
 	}
 
 	setProblem(problem: AmbulatoryConsultationProblem) {
