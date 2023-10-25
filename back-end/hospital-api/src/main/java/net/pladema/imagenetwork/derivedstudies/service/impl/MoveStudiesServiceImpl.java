@@ -169,8 +169,7 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 	@Override
 	public Integer getInstitutionByAppointmetId(Integer appointmentId) {
 		return moveStudiesRepository.getInstitutionIdByAppointmetId(appointmentId)
-				.orElseThrow(
-				() -> new NotFoundException("moveStudie-not-found", "moveStudie not found"));
+				.orElse(null);
 	}
 
 	private MoveStudiesBO createMoveStudyBOInstance(MoveStudies moveStudy){

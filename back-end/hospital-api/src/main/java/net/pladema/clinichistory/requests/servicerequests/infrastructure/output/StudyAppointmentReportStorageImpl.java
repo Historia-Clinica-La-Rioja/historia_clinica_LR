@@ -1,7 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.infrastructure.output;
 
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -209,8 +208,7 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		BasicPatientDto bpd = patientExternalService.getBasicDataFromPatient(obs.getPatientId());
 		obs.setPatientInfo(new PatientInfoBo(bpd.getId(), bpd.getPerson().getGender().getId(), bpd.getPerson().getAge(),bpd.getIdentificationType(), bpd.getIdentificationNumber()));
 
-		LocalDateTime now = dateTimeProvider.nowDateTime();
-		obs.setPerformedDate(now);
+		obs.setPerformedDate(detailsOrderImageRepository.getCompletedDateByAppointmentId(appointmentId));
 
 		Long documentId = documentFactory.run(obs, createFile);
 
