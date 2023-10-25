@@ -31,11 +31,13 @@ public class ListStudyOrderReportRepositoryImpl implements ListStudyOrderReportR
                 "s.pt AS study, " +
                 "s2.pt AS problem, " +
                 "df.file_name, " +
-                "d.status_id " +
+                "d.status_id, " +
+                "st.description AS source " +
                 "FROM {h-schema}document d " +
                 "JOIN {h-schema}document_diagnostic_report ddr ON d.id = ddr.document_id " +
                 "JOIN {h-schema}diagnostic_report dr ON ddr.diagnostic_report_id = dr.id " +
                 "JOIN {h-schema}service_request sr ON d.source_id = sr.id " +
+                "JOIN {h-schema}source_type st ON sr.source_type_id = st.id " +
                 "JOIN {h-schema}health_condition hc ON dr.health_condition_id = hc.id " +
                 "JOIN {h-schema}snomed s ON dr.snomed_id = s.id " +
                 "JOIN {h-schema}snomed s2 ON hc.snomed_id = s2.id " +

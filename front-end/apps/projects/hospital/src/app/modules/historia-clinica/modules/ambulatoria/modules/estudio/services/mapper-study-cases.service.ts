@@ -78,7 +78,7 @@ constructor() { }
 			observations: null,
 			serviceRequestId: null,
 			snomed: {id: null, sctid: null, pt: studyOrder.snomed},
-			source: null,
+			source: studyOrder.source,
 			sourceId: null,
 			statusId: studyOrder.status ? STUDY_STATUS.FINAL.id : STUDY_STATUS.REGISTERED.id,
 			typeOrder: E_TYPE_ORDER.COMPLETA,

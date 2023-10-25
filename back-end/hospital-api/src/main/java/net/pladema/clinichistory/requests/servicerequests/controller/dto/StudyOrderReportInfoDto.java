@@ -25,4 +25,5 @@ public class StudyOrderReportInfoDto {
     private Boolean seeStudy;
     private Boolean viewReport;
     private DoctorInfoDto doctor;
+    private String source;
 }

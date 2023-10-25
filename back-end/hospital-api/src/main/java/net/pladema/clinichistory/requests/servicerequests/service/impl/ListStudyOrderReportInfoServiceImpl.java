@@ -41,6 +41,7 @@ public class ListStudyOrderReportInfoServiceImpl implements ListStudyOrderReport
         result.setHealthCondition((String) row[6]);
         result.setFileName((String) row[7]);
         result.setDocumentStatus((String) row[8]);
+        result.setSource((String) row[9]);
         return result;
     }
 }

@@ -3887,6 +3887,7 @@ export interface StudyOrderReportInfoDto {
     imageId: string;
     seeStudy: boolean;
     snomed: string;
+    source: string;
     status: boolean;
     viewReport: boolean;
 }

@@ -25,4 +25,5 @@ public class StudyOrderReportInfoBo {
     private String snomed;
     private LocalDateTime creationDate;
     private Integer doctorUserId;
+    private String source;
 }

@@ -25,6 +25,7 @@ public class StudyOrderReportInfoMapper {
         result.setImageId(studyOrderReportInfoBo.getImageId());
         result.setHealthCondition(studyOrderReportInfoBo.getHealthCondition());
         result.setDoctor(DoctorInfoDto.from(professionalDto));
+        result.setSource(studyOrderReportInfoBo.getSource());
 
         if (studyOrderReportInfoBo.getDocumentId() != null) {
             HCEDocumentDataDto hceDocumentDataDto = new HCEDocumentDataDto();
