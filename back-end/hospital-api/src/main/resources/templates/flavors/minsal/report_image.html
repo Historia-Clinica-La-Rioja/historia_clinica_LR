@@ -319,7 +319,7 @@
                             <span th:each="specialty,iter: ${profession.specialties}">
                                 <span class="comma-list" th:each="license,iter: ${specialty.licenses}">
                                     <span th:if="${#strings.equals(license.type, 'MN')}">
-                                        <span th:text="${license.number}"></span>
+                                        <span class="data-text" th:text="${license.number}"></span>
                                     </span>
                                 </span>
                             </span>
