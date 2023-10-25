@@ -2,8 +2,6 @@ package net.pladema.establishment.service.impl;
 
 import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.clinichistory.hospitalization.controller.externalservice.InternmentEpisodeExternalService;
-import net.pladema.establishment.controller.dto.BedDto;
-import net.pladema.establishment.controller.dto.BedInfoDto;
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.BedSummaryRepository;
 import net.pladema.establishment.repository.HistoricInchargeNurseBedRepository;
@@ -18,9 +16,13 @@ import net.pladema.person.service.PersonService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -141,6 +143,7 @@ public class BedServiceImpl implements BedService {
 		Bed bed = bedRepository.getById(bedId);
 		bed.setInchargeNurseId(userId);
 		bedRepository.save(bed);
+		updatePreviousHistoricInchargeNurseBed(bedId);
 		historicInchargeNurseBedRepository.save(
 				new HistoricInchargeNurseBed(
 						userId,
@@ -148,5 +151,13 @@ public class BedServiceImpl implements BedService {
 						UserInfo.getCurrentAuditor()
 				)
 		);
+	}
+
+	private void updatePreviousHistoricInchargeNurseBed(Integer bedId) {
+		List<HistoricInchargeNurseBed> historic = historicInchargeNurseBedRepository.getLatestHistoricInchargeNurseBedByBedId(bedId, PageRequest.of(0, 1));
+		if (!historic.isEmpty()) {
+			historic.get(0).setUntilDate(LocalDateTime.now());
+			historicInchargeNurseBedRepository.save(historic.get(0));
+		}
 	}
 }

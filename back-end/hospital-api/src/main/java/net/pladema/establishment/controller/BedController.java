@@ -88,7 +88,7 @@ public class BedController {
 	public void updateBedNurse(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "bedId") Integer bedId,
-			@RequestBody Integer userId) {
+			@RequestBody(required = false) Integer userId) {
 		LOG.debug("Input parameter -> institutionId {}, userId {}, bedId {}", institutionId, userId, bedId);
 		bedService.updateBedNurse(userId, bedId);
 	}
