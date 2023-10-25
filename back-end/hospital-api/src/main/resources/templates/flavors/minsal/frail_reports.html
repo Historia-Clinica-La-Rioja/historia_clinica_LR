@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+    <title>Prueba de Frail</title>
+    <!-- Bootstrap's .css -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous"></link>
+    <style>
+        body {
+           border: 1px solid black;
+           padding: 10px;
+           font-family: Tahoma, Verdana, sans-serif;
+        }
+        h4 {
+           margin: 15px 0px;
+           color: #2687c5;
+           background-color: #f0f8ff;
+           border-top: 1px solid black;
+           font-weight: normal;
+        }
+
+        p {
+           font-weight: bold;
+           font-size: 15px;
+        }
+
+        label {
+           width: 70%;
+           page-break-inside: avoid;
+           margin: 2px 0px;
+        }
+
+
+    </style>
+</head>
+<body th:fragment="frail">
+    <div class="container">
+        <h3>Prueba de Frail (fragilidad) - Resultados de informe</h3>
+
+        <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[0]}">
+            <h4>Fatigabilidad</h4>
+            <p>¿Qué parte del tiempo durante las últimas 4 semanas te sentiste cansado/a?</p>
+            <label>
+                <input type="checkbox" name="opt1" th:checked="${respuesta.answerId == 42}"></input>
+                Todo el tiempo
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt2" th:checked="${respuesta.answerId == 43}"></input>
+                La mayoría de las veces
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt3" th:checked="${respuesta.answerId == 44}"></input>
+                Parte del tiempo
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt4" th:checked="${respuesta.answerId == 45}"></input>
+                Un poco de tiempo
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt5" th:checked="${respuesta.answerId == 46}"></input>
+                En ningún momento
+            </label><br></br>
+        </div>
+
+        <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[1]}">
+            <h4>Resistencia</h4>
+            <p>¿Tiene alguna dificultad para caminar 10 escalones sin descansar por usted mismo, sin ningún tipo de ayuda?</p>
+            <label>
+                <input type="checkbox" name="opt6" th:checked="${respuesta.answerId == 20}"></input>
+                Sí
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt7" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+        </div>
+
+        <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[2]}">
+            <h4>Deambulación</h4>
+            <p>Por su cuenta y sin el uso de ayudas, ¿tiene alguna dificultad para caminar varios cientos de metros?</p>
+            <label>
+                <input type="checkbox" name="opt8" th:checked="${respuesta.answerId == 20}"></input>
+                Sí
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt9" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+        </div>
+
+        <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[3]}">
+            <h4>Comorbilidad</h4>
+            <p>¿Alguna vez un médico le dijo que usted tiene: hipertensión, diabetes, cáncer (que no sea un cáncer de piel de menor importancia), enfermedad pulmonar crónica, ataque cardíaco, insuficiencia cardíaca congestiva, angina de pecho, asma, artritis, ictus y enfermedad renal? (cant. menor a 5 = 'No', cant. mayor o igual 5 = 'Sí')</p>
+            <label>
+                <input type="checkbox" name="opt10" th:checked="${respuesta.answerId == 20}"></input>
+                Sí
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt11" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+        </div>
+
+        <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[4]}">
+            <h4>Pérdida de peso</h4>
+            <p>¿Cúanto peso corporal ha perdido en comparación con el año/mes previo (midiéndose con ropa puesta y sin zapatos)?</p>
+            <label>
+                <input type="checkbox" name="opt12" th:checked="${respuesta.answerId == 47}"></input>
+                Más del 5% (pérdida de peso)
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt13" th:checked="${respuesta.answerId == 48}"></input>
+                Menos del 5% (mínima o sin pérdida de peso)
+            </label><br></br>
+        </div>
+
+        <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[5]}">
+            <h4>Interpretación de puntaje</h4>
+            <p>La sumatoria da como resultado</p>
+            <label>
+                <input type="checkbox" name="opt14" th:checked="${respuesta.answerId == 49}"></input>
+                0 a 2 - persona pre-frágil
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt15" th:checked="${respuesta.answerId == 50}"></input>
+                3 a 5 - persona frágil
+            </label><br></br>
+        </div>
+
+    </div>
+    <!-- Bootstrap's script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</body>
+</html>
