@@ -23,7 +23,7 @@ public class ListStudyOrderReportRepositoryImpl implements ListStudyOrderReportR
     public List<Object[]> execute(Integer patientId) {
         log.debug("Input parameters -> patientId {}", patientId);
 
-        String sqlString = "SELECT aoi.completed, " +
+        String sqlString = "SELECT DISTINCT aoi.completed, " +
                 "sr.created_by, " +
                 "sr.request_date, " +
                 "aoi.image_id, " +
