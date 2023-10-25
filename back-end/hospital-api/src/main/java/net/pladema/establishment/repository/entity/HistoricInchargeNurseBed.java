@@ -37,6 +37,9 @@ public class HistoricInchargeNurseBed extends SGXAuditableEntity<Integer> implem
 	@Column(name = "bed_id")
 	private Integer bedId;
 
+	@Column(name = "until_date")
+	private LocalDateTime untilDate;
+
 	public HistoricInchargeNurseBed(Integer inchargeNurseId, Integer bedId, Integer createdBy) {
 		this.inchargeNurseId = inchargeNurseId;
 		this.bedId = bedId;
