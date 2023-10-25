@@ -57,6 +57,8 @@ import { TabsService } from './services/tabs.service';
 // pipes
 import { MeetingRoomPipe } from './pipes/meeting-room.pipe';
 import { PracticesPipe } from './pipes/practices.pipe';
+import { ShowProblemsPipe } from './pipes/show-problems.pipe';
+
 @NgModule({
 	declarations: [
 		// routing
@@ -100,6 +102,7 @@ import { PracticesPipe } from './pipes/practices.pipe';
 		//pipes
 		MeetingRoomPipe,
 		PracticesPipe,
+  		ShowProblemsPipe,
 	],
 	imports: [
 		CommonModule,
