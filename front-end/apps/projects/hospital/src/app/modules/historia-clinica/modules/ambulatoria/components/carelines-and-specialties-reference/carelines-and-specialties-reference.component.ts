@@ -62,6 +62,8 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 	}
 
 	setSpecialtyCareLine() {
+		this.formReference.controls.clinicalSpecialtyId.reset();
+
 		const careLine = this.formReference.value.careLine;
 		if (careLine) {
 			this.formReference.controls.clinicalSpecialtyId.enable();
@@ -76,6 +78,8 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 	}
 
 	setSpecialty() {
+		this.formReference.controls.practiceOrProcedure.setValue(null);
+		this.formReference.controls.practiceOrProcedure.reset();
 		this.formReference.controls.clinicalSpecialtyId.setValue(null);
 		this.formReference.controls.clinicalSpecialtyId.reset();
 	}
@@ -138,8 +142,6 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 		const controls = this.formReference.controls;
 		controls.practiceOrProcedure.setValue(null);
 		controls.practiceOrProcedure.updateValueAndValidity();
-		if (controls.searchByCareLine.value)
-			this.practiceOrProcedureDisabled = true;
 		this.defaultPractice = this.clearTypeahead();
 	}
 

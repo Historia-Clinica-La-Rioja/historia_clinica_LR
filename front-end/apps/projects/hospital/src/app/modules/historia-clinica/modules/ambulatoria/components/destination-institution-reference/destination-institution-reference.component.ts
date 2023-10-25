@@ -55,7 +55,6 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 		this.referenceOriginInstitutionService.originInstitutionInfo$.subscribe(info => this.originInstitutionInfo = info);
 
 		const practiceOrProcedure$ = this.formReference.controls.practiceOrProcedure.valueChanges.pipe(
-			debounceTime(300),
 			distinctUntilChanged()
 		);
 
