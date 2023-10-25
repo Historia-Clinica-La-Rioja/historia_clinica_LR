@@ -62,6 +62,11 @@
             position: relative;
             display: block;
         }
+        @media print {
+            table {
+                page-break-inside: avoid;
+            }
+        }
 	</style>
 </head>
 <body th:fragment="data">
@@ -121,11 +126,52 @@
                 </div>
                 <br/>
             </div>
+            <div th:if="${contactInfo != null}">
+                <strong>Dirección del paciente: </strong>
+                <label th:text="${#strings.defaultString(contactInfo.address.completeAddress, '-')}"></label>
+                <br/>
+                <strong>Teléfono: </strong>
+                <label th:text="${#strings.defaultString(contactInfo.phone.completePhone, '-')}"></label>
+            </div>
         </div>
     </header>
     <div>
         <div class="ml-2 mr-2">
-            <table class="table ">
+            <table th:if="${recipe}" th:each="medication,iter: ${request.medications}" class="table">
+                <colgroup>
+                    <col style="width: 5%;"/>
+                    <col style="width: 10%;"/>
+                    <col style="width: 15%;"/>
+                    <col style="width: 30%;"/>
+                    <col style="width: 15%;"/>
+                    <col style="width: 25%;"/>
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th class="thead-light"> N° </th>
+                        <th class="thead-light"> CIE10 </th>
+                        <th class="thead-light"> Diagnóstico </th>
+                        <th class="thead-light"> Medicación </th>
+                        <th class="thead-light"> Intervalo </th>
+                        <th class="thead-light"> Tiempo de administración </th>
+                    </tr>
+                    <tr>
+                        <td th:text="${(iter.index + 1)}"></td>
+                        <td th:text="${#strings.defaultString(medication.healthCondition.cie10codes, '-')}"></td>
+                        <td th:text="${medication.healthCondition.snomed.pt}"></td>
+                        <td th:text="${medication.snomed.pt}"></td>
+                        <td th:text="${medication.dosage.periodUnit != 'd' ? 'Cada ' + medication.dosage.frequency + ' hs.' : 'Diariamente'}"></td>
+                        <td th:text="${medication.dosage.duration != 0 ? 'Durante ' + #numbers.formatDecimal(medication.dosage.duration, 0, 0) + ' días' : 'Habitualmente'}"></td>
+                    </tr>
+                    <tr>
+                        <th class="thead-light" colspan="6"> Observaciones </th>
+                    </tr>
+                    <tr>
+                        <td colspan="6" th:text="${#strings.defaultString(medication.note, '-')}"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table th:if="${order}" class="table ">
                 <colgroup>
                     <col span="1" style="width: 5%;"/>
                     <col span="1" style="width: 10%;"/>
@@ -138,21 +184,11 @@
                     <th scope="col">N° </th>
                     <th scope="col">CIE10 </th>
                     <th scope="col">Diagnóstico </th>
-                    <th scope="col" th:if="${recipe}" > Medicación </th>
-                    <th scope="col" th:if="${order}" > Estudio </th>
+                    <th scope="col"> Estudio </th>
                     <th scope="col" >Observaciones </th>
                 </tr>
                 </thead>
-                <tbody th:if="${recipe}">
-                    <tr th:each="medication,iter: ${request.medications}">
-                        <td class="centered-cell" th:text="${(iter.index + 1)}"></td>
-                        <td th:text="${#strings.defaultString(medication.healthCondition.cie10codes, '-')}"></td>
-                        <td th:text="${medication.healthCondition.snomed.pt}"></td>
-                        <td th:text="${medication.snomed.pt}"></td>
-                        <td th:text="${#strings.defaultString(medication.note, '-')}"></td>
-                    </tr>
-                </tbody>
-                <tbody th:if="${order}">
+                <tbody>
                     <tr th:each="order,iter: ${request.diagnosticReports}">
                         <td class="centered-cell" th:text="${(iter.index + 1)}"></td>
                         <td th:text="${#strings.defaultString(order.healthCondition.cie10codes, '-')}"></td>
@@ -165,7 +201,7 @@
         </div>
     </div>
     <br/>
-    <footer>
+    <footer style="page-break-inside: avoid;">
         <div class="footer-left">
             <div th:if="${nameSelfDeterminationFF && professional.getNameSelfDetermination() != null && !professional.getNameSelfDetermination().isEmpty()}">
                 <strong >Profesional: </strong><label th:text="${professional.getCompleteName(professional.getNameSelfDetermination())}"></label>

@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.output.CompletePersonNameVo;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
@@ -158,6 +159,14 @@ public class PersonServiceImpl implements PersonService {
 		String finalFirstName = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && selfDeterminateName != null ? selfDeterminateName : middleNames != null ? String.join(" ", firstName, middleNames) : firstName;
 		String finalLastName = otherLastNames != null ? String.join(" ", lastName, otherLastNames) : lastName;
 		return String.join(" ", finalFirstName, finalLastName);
+	}
+
+	@Override
+	public ContactInfoBo getContactInfoById(Integer personId) {
+		LOG.debug("Input parameters -> personId {}", personId);
+		ContactInfoBo result = personExtendedRepository.getContactInfoById(personId);
+		LOG.debug(OUTPUT, result);
+		return result;
 	}
 
 	private Supplier<NotFoundException> personNotFound(Integer personId) {

@@ -1,5 +1,7 @@
 package net.pladema.person.infraestructure.input.shared;
 
+import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
@@ -40,5 +42,13 @@ public class SharedPersonImpl implements SharedPersonPort {
 		log.debug("Input paremeters -> firstName {}, middleNames {}, lastName {}, otherLastNames {}, selfDeterminationName {} ",
 				firstName, middleNames, lastName, otherLastNames, selfDeterminateName);
 		return personService.parseCompletePersonName(firstName, middleNames, lastName, otherLastNames, selfDeterminateName);
+	}
+
+	@Override
+	public ContactInfoBo getPersonContactInfoById(Integer personId) {
+		log.debug("Input paremeters -> personId {}", personId);
+		ContactInfoBo result = personService.getContactInfoById(personId);
+		log.debug("Output -> {}", result);
+		return result;
 	}
 }

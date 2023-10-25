@@ -6,9 +6,11 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.RiskFactorMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.imagenetwork.SharedDiagnosticImagingOrder;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.SharedImmunizationPort;
@@ -65,6 +67,8 @@ public class AuditableContextBuilder {
 	private final SharedStaffPort sharedStaffPort;
 	private final SharedDiagnosticImagingOrder sharedDiagnosticImagingOrder;
 
+	private final Function<Integer, ContactInfoBo> personContactInfoFunction;
+
 	@Value("${prescription.domain.number}")
 	private Integer recipeDomain;
 
@@ -77,7 +81,10 @@ public class AuditableContextBuilder {
 			LocalDateMapper localDateMapper,
 			FeatureFlagsService featureFlagsService, SharedInstitutionPort sharedInstitutionPort,
 			PatientMedicalCoverageService patientMedicalCoverageService,
-			AssetsService assetsService, SharedStaffPort sharedStaffPort, SharedDiagnosticImagingOrder sharedDiagnosticImagingOrder) {
+			AssetsService assetsService, 
+			SharedStaffPort sharedStaffPort, 
+			SharedDiagnosticImagingOrder sharedDiagnosticImagingOrder,
+			SharedPersonPort sharedPersonPort) {
 		this.sharedImmunizationPort = sharedImmunizationPort;
 		this.localDateMapper = localDateMapper;
 		this.sharedInstitutionPort = sharedInstitutionPort;
@@ -92,6 +99,7 @@ public class AuditableContextBuilder {
 		this.featureFlagsService = featureFlagsService;
 		this.patientMedicalCoverageService = patientMedicalCoverageService;
 		this.assetsService = assetsService;
+		this.personContactInfoFunction = sharedPersonPort::getPersonContactInfoById;
 	}
 
 	public <T extends IDocumentBo> Map<String,Object> buildContext(T document, Integer patientId){
@@ -165,6 +173,7 @@ public class AuditableContextBuilder {
 		ctx.put("order", false);
 		ctx.put("request", document);
 		ctx.put("professional", authorFromDocumentFunction.apply(document.getId()));
+		ctx.put("contactInfo", personContactInfoFunction.apply(((BasicPatientDto) ctx.get("patient")).getPerson().getId()));
 
 		var patientCoverage = patientMedicalCoverageService.getCoverage(document.getMedicalCoverageId());
 		patientCoverage.ifPresent(sharedPatientMedicalCoverageBo -> ctx.put("patientCoverage", sharedPatientMedicalCoverageBo));
