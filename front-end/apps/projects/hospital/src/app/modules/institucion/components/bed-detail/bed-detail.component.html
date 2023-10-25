@@ -7,13 +7,20 @@
             </button>
 
             <mat-menu #actions="matMenu">
-                <button mat-menu-item (click)="openNurseAssign()">
-                    <span *ngIf="bedInfo.bedNurse else assignNurseTemplate" [translate]="'gestion-camas.detail.more-actions.NURSE_EDIT_ASSIGN'"></span>
-                    
-                    <ng-template #assignNurseTemplate>
-                        <span *ngIf="!bedInfo.bedNurse" [translate]="'gestion-camas.detail.more-actions.NURSE_ASSIGN'"></span>
-                    </ng-template>
-                </button> 
+                <div *ngIf="bedInfo.bedNurse else assignNurseTemplate">
+                    <button mat-menu-item (click)="openNurseAssign()">
+                        <span [translate]="'gestion-camas.detail.more-actions.NURSE_EDIT_ASSIGN'"></span>
+                    </button> 
+                    <button mat-menu-item (click)="deleteAssignedNurse()">
+                        <span [translate]="'gestion-camas.detail.more-actions.DELETE_NURSE'"></span>
+                    </button> 
+                </div>
+
+                <ng-template #assignNurseTemplate>
+                    <button mat-menu-item (click)="openNurseAssign()">
+                        <span [translate]="'gestion-camas.detail.more-actions.NURSE_ASSIGN'"></span>
+                    </button>
+                </ng-template>
             </mat-menu>
         </mat-card-title>
         <section *ngIf="!bedInfo">

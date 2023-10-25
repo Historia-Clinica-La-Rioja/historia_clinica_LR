@@ -40,7 +40,7 @@ export class BedService {
 		return this.http.post<PatientBedRelocationDto>(url, patientBedRelocationDto);
 	}
 
-	updateBedNurse(userId: number, bedId: number): Observable<void> {
+	updateBedNurse(bedId: number, userId?: number): Observable<void> {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/bed/${bedId}/update-bed-nurse`;
 		return this.http.put<void>(url, userId);
 	}

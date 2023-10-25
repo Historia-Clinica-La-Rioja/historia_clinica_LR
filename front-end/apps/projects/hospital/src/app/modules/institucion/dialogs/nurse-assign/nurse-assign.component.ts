@@ -66,7 +66,7 @@ export class NurseAssignComponent implements OnInit {
 	}
 
 	saveAssignedNurse() {
-		this.bedService.updateBedNurse(this.selectedNurseId, this.data.bed.bed.id)
+		this.bedService.updateBedNurse(this.data.bed.bed.id, this.selectedNurseId)
 		.subscribe({
 			next: (_) => {
 				this.dialogRef.close(true);
