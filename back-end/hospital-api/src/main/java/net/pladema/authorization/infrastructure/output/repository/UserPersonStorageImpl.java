@@ -35,7 +35,7 @@ public class UserPersonStorageImpl implements UserPersonStorage {
 						() -> personExternalService.getPersonPhoto(userDto.getPersonId()).getImageData(),
 						userDto.getNameSelfDetermination(),
 						userDto.getPreviousLogin(),
-						personExternalService.getBasicPersonalDataDto(userDto.getPersonId()).getCuil()
+						userDto.getPersonId() != null ? personExternalService.getBasicPersonalDataDto(userDto.getPersonId()).getCuil(): null
 				))
 				.orElseThrow(() -> new InvalidUserException(InvalidUserExceptionEnum.INVALID_USER, userId));
     }
