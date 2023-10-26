@@ -73,6 +73,7 @@ import { EmergencyCareProblemsComponent } from './components/emergency-care-prob
 import { PatientValidatorPopupComponent } from './dialogs/patient-validator-popup/patient-validator-popup.component';
 import { PrintAmbulatoriaComponent } from './routes/print-ambulatoria/print-ambulatoria.component';
 import { SearchSnomedConceptComponent } from './dialogs/search-snomed-concept/search-snomed-concept.component';
+import { ProblemsOptionsMenuComponent } from './components/problems-options-menu/problems-options-menu.component';
 
 @NgModule({
 	declarations: [
@@ -128,6 +129,7 @@ import { SearchSnomedConceptComponent } from './dialogs/search-snomed-concept/se
 		PatientValidatorPopupComponent,
     	PrintAmbulatoriaComponent,
 		SearchSnomedConceptComponent,
+  ProblemsOptionsMenuComponent,
 	],
 	imports: [
 		CommonModule,

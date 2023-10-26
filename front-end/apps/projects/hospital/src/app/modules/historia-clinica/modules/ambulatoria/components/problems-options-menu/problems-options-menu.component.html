@@ -1,0 +1,18 @@
+<button
+    *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+    mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>more_vert</mat-icon>
+</button>
+<mat-menu #menu="matMenu">
+    <button *ngIf="hasNewConsultationEnabled$ | async" mat-menu-item
+        (click)="openNuevaConsulta(problem)">
+        <span
+            [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
+    </button>
+    <button mat-menu-item (click)="solveProblemPopUp(problem)">
+        <span [translate]="'ambulatoria.paciente.problemas.END'"></span>
+    </button>
+    <button mat-menu-item>
+        <span [translate]="'ambulatoria.paciente.problemas.AMEND_PROBLEM'"></span>
+    </button>
+</mat-menu>
