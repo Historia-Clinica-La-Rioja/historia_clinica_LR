@@ -164,10 +164,10 @@ export class FrailScaleComponent implements OnInit {
       title: '¿Está seguro de enviar el formulario?',
       text: 'Por favor, revise las opciones marcadas antes de presionar Enviar',
       showDenyButton: true,
-      showCancelButton: true,
+      showCancelButton: false,
       confirmButtonText: 'Enviar',
       confirmButtonColor: '#2687c5',
-      denyButtonText: 'No enviar',
+      denyButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({
