@@ -19,8 +19,8 @@ export class FrailService {
     return this.http.post<boolean>(url, frailData);
   }
 
-  getFrailSummary(institutionId: number, patientId: number, frailId: number): Observable<FrailSummary> {
-    const url = `${environment.apiBase}/institution/${institutionId}/patient/${patientId}/hce/general-state/summary/frail/${frailId}`;
+  getFrailSummary(institutionId: number, patientId: number, questionnaireId: number): Observable<FrailSummary> {
+    const url = `${environment.apiBase}/institution/${institutionId}/patient/${patientId}/hce/general-state/summary/frail/${questionnaireId}`;
     return this.http.get<FrailSummary>(url);
   }
 
@@ -29,8 +29,8 @@ export class FrailService {
     return this.http.get<FrailAnswers[]>(url);
   }
 
-  getPdf(frailId: number) {
-    const url = `${environment.apiBase}/institution/patient/outpatient/consultation/frail/${frailId}/pdf-download`; 
+  getPdf(questionnaireId: number) {
+    const url = `${environment.apiBase}/institution/patient/outpatient/consultation/frail/${questionnaireId}/pdf-download`; 
     return this.http.get<boolean>(url);
   
   }
