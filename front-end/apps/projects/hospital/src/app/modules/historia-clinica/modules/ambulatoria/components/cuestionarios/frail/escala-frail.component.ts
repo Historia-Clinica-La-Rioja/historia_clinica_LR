@@ -1,7 +1,8 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
-import { FrailService } from '@api-rest/services/frail.service';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+// import { FrailService } from '@api-rest/services/frail.service';
+// import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -22,11 +23,23 @@ export class EscalaFrailComponent implements OnInit {
   routePrefix: number;
   submitted: boolean = false;
 
+  // constructor(
+  //   private frailService: FrailService,
+  //   @Inject(MAT_DIALOG_DATA) public data: any
+  // ) { 
+  //   this.patientId = data.patientId;
+  //   console.log(this.patientId);
+  // }
+
   constructor(
-    private frailService: FrailService,
-    @Inject (MAT_DIALOG_DATA) public data: any,
-  ) { 
-    this.patientId = data.patientId;
+    private readonly route: ActivatedRoute,
+  ){ 
+    this.route.paramMap.subscribe(
+      (params) => {
+				this.patientId = Number(params.get('idPaciente'));
+        console.log(this.patientId)
+      }
+    )
   }
 
   ngOnInit(): void {
@@ -199,13 +212,13 @@ export class EscalaFrailComponent implements OnInit {
   
   enviarFormulario(): void {
 
-    this.frailService.createFrail(this.patientId, this.construirDatos()).subscribe(
-      () => {
+    // this.frailService.createFrail(this.patientId, this.construirDatos()).subscribe(
+    //   () => {
 
-      },
-     (error) => {
+    //   },
+    //  (error) => {
       
-     }
-     );
+    //  }
+    //  );
   }
 }
