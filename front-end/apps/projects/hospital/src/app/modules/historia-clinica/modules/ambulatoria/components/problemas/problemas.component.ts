@@ -185,6 +185,11 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		).subscribe(data => this.historicalProblemsList = data);
 	}
 
+	scrollToHistoric(){
+		let historic = document.getElementById("historical-problems");
+		historic.scrollIntoView({behavior: 'smooth'});
+	}
+
 	filterByProblemOnProblemClick(problem: HCEPersonalHistoryDto) {
 		this.historicalProblemsFacadeService.sendHistoricalProblemsFilter({
 			specialty: null,
@@ -194,6 +199,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 			referenceStateId: null,
 		});
 		this.selectedTab = 0;
+		this.scrollToHistoric()
 	}
 
 	hideFilters() {

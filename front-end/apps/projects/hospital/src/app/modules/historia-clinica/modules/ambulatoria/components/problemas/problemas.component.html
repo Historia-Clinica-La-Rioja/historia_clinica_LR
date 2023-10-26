@@ -29,7 +29,7 @@
 								</mat-list-item>
 							</div>
 							<div fxLayout="row" *ngFor="let problem of (activeProblems$ | async)">
-								<mat-list-item (click)="filterByProblemOnProblemClick(problem)">
+								<mat-list-item>
 									<div fxFlex="50%">
 										<span mat-line class="capitalize-first-letter">
 											{{ problem.snomed.pt }}
@@ -52,7 +52,8 @@
 									</div>
 
 									<div fxFlex="5%">
-										<app-problems-options-menu [problem]="problem" [nuevaConsultaRef]="nuevaConsultaRef"></app-problems-options-menu>
+										<app-problems-options-menu [problem]="problem" [nuevaConsultaRef]="nuevaConsultaRef"
+											(setProblemOnHistoric)="scrollToHistoric()"></app-problems-options-menu>
 									</div>
 
 								</mat-list-item>
@@ -79,7 +80,7 @@
 								</mat-list-item>
 							</div>
 							<div fxLayout="row" *ngFor="let problem of (chronicProblems$ | async)">
-								<mat-list-item (click)="filterByProblemOnProblemClick(problem)">
+								<mat-list-item>
 									<div fxFlex="50%">
 										<span mat-line class="capitalize-first-letter">
 											{{ problem.snomed.pt}}
@@ -102,7 +103,8 @@
 									</div>
 
 									<div fxFlex="5%">
-										<app-problems-options-menu [problem]="problem" [nuevaConsultaRef]="nuevaConsultaRef"></app-problems-options-menu>
+										<app-problems-options-menu [problem]="problem" [nuevaConsultaRef]="nuevaConsultaRef"
+											(setProblemOnHistoric)="scrollToHistoric()"></app-problems-options-menu>
 									</div>
 								</mat-list-item>
 								<mat-divider></mat-divider>
