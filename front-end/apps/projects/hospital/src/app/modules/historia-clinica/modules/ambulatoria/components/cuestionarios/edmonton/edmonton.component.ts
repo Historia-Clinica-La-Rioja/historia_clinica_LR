@@ -1,0 +1,260 @@
+import { Input, Inject,Component, ChangeDetectionStrategy} from '@angular/core';
+import { EdmontonService } from '@api-rest/services/edmonton.service';
+import { ContextService } from '@core/services/context.service';
+import { BasicPatientDto } from '@api-rest/api-model';
+import Swal from 'sweetalert2';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+
+
+@Component({
+  selector: 'app-edmonton',
+  templateUrl: './edmonton.component.html',
+  styleUrls: ['./edmonton.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class EdmontonComponent {
+  
+  private readonly routePrefix;
+  totalSum: number;
+  selectedCognitiveOption: number;
+  selectedHealthStatusOption: number;
+  selectedHealthStatusOptionDos: number;
+  selectedFunctionIndOption: number;
+  selectedSupportOption: number;
+  selectedSupportSocOption: number;
+  selectedMedicationOption: number;
+  selectedMedicationOptionDos: number;
+  selectedNutritionOption: number;
+  selectedAnimoOption: number;
+  selectedContingenciaOption: number;
+  selectedRendimientoFuncOption: number; 
+  selectedCalificacionFuncOption: number;
+  submitted: boolean = false;
+  @Input() patientId: number;
+  sumaAcumulada: number = 0; 
+  selectedValues: number[] = [];
+  cumulativeSum: number = 0;
+  patientData: BasicPatientDto | undefined;
+  datos: any;
+
+  constructor(
+    private edmontonService: EdmontonService,
+    private readonly contextService: ContextService,
+    @Inject (MAT_DIALOG_DATA) public data: any,
+    ) 
+    {
+      this.patientId = data.patientId;
+      this.routePrefix = `${this.contextService.institutionId}`;
+      console.log("data en edmonton", this.patientId)
+    }
+
+    onOptionSelected(questionIndex: number, value: number): void {
+      this.selectedValues[questionIndex] = value;
+      this.calcularSuma();
+    }
+    
+    
+  
+    calcularSuma(): void {
+      const valueToSumMapping = {
+        1: 0,
+        2: 1,
+        3: 2,
+        4: 0,
+        5: 1,
+        6: 2,
+        7: 0,
+        8: 1,
+        9: 2,
+        10: 0,
+        11: 1,
+        12: 2,
+        13: 0,
+        14: 1,
+        15: 2,
+        16: 0,
+        17: 1,
+        18: 2,
+        19: 0,
+        20: 1,
+      };
+      
+      this.sumaAcumulada = this.selectedValues.reduce((acc, value) => {
+        const mappedSum = valueToSumMapping[value] || 0; // Usar el mapeo
+        const totalScore = acc + mappedSum
+        
+        if (totalScore >= 4) {
+            this.sumaAcumulada=0
+        } else if(totalScore >= 5 && totalScore <=6) {
+            this.sumaAcumulada=1
+        }else if(totalScore >= 7 && totalScore <=8){
+            this.sumaAcumulada=2
+        }else if (totalScore >= 9 && totalScore <=10){
+          this.sumaAcumulada=3
+        }else if (totalScore >= 11){
+          this.sumaAcumulada=4
+        }
+        return this.sumaAcumulada;
+      }, 0);
+    }
+    
+    getDataSumAttributeValue(index: number): string {
+      const radioGroup = document.getElementById('cognitiveOptions');
+      if (radioGroup) {
+        const radioButtons = radioGroup.querySelectorAll('mat-radio-button');
+        if (radioButtons && index >= 0 && index < radioButtons.length) {
+          return radioButtons[index].getAttribute('data-sum');
+        }
+      }
+      return undefined;
+    }
+    
+ 
+  
+  construirDatos() {
+    const datos = {
+      edMonton: []
+    };
+    datos.edMonton = [
+      {
+          questionId: 2,
+          answerId: this.selectedCognitiveOption  
+      },
+      {
+          questionId: 4, 
+          answerId: this.selectedHealthStatusOption
+      },
+      {
+          questionId: 5, 
+          answerId: this.selectedHealthStatusOptionDos
+      },
+      {
+          questionId: 7, 
+          answerId: this.selectedFunctionIndOption
+      },
+      {
+          questionId: 9, 
+          answerId: this.selectedSupportSocOption
+      },
+      {
+          questionId: 11, 
+          answerId: this.selectedRendimientoFuncOption
+      },
+      {
+          questionId: 13, 
+          answerId: this.selectedMedicationOption
+      },
+      {
+          questionId: 14, 
+          answerId: this.selectedMedicationOptionDos
+      },
+      {
+          questionId: 16, 
+          answerId: this.selectedNutritionOption
+      },
+      {
+          questionId: 18, 
+          answerId: this.selectedAnimoOption
+      },
+      {
+          questionId: 20, 
+          answerId: this.selectedContingenciaOption
+      },
+      
+      {
+        questionId: 21, 
+        answerId: 2,
+    },
+    console.log("Array en edmonton",datos)
+      
+    ];
+
+    return datos.edMonton;
+
+       
+  }
+  
+ 
+  onSubmit(): void {
+    this.submitted = true;
+      
+    if (
+      this.selectedCognitiveOption === 0 ,
+      this.selectedHealthStatusOption ===0,
+      this.selectedHealthStatusOptionDos === 0,
+      this.selectedFunctionIndOption === 0,
+      this.selectedSupportSocOption === 0,
+      this.selectedRendimientoFuncOption === 0,
+      this.selectedMedicationOption === 0,
+      this.selectedMedicationOptionDos === 0,
+      this.selectedNutritionOption === 0 ,
+      this.selectedAnimoOption ===0,
+      this.selectedContingenciaOption===0
+      
+    ) {
+      alert('Por favor, complete todas las selecciones requeridas.');
+      return; 
+    }
+    Swal.fire({
+      icon: 'question',
+      iconColor: '#2687c5',
+      title: '¿Está seguro de enviar el formulario?',
+      text: 'Por favor, revise las opciones marcadas antes de presionar Enviar',
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Enviar',
+      confirmButtonColor: '#2687c5',
+      denyButtonText: 'No enviar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          icon: 'info',
+          iconColor: '#2687c5',
+          title: 'Enviando...',
+          text: 'Por favor, espere un momento.',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+            setTimeout(() => {
+              Swal.close();
+              this.enviarFormulario(); 
+            }, 2000);
+          },
+        });
+      } else if (result.isDenied) {
+        Swal.fire({
+          icon: 'warning',
+          iconColor: '#ff0000',
+          title: 'Formulario cancelado',
+          text: 'El formulario no ha sido enviado.',
+          confirmButtonColor: '#2687c5',
+          confirmButtonText: 'Aceptar',
+        });
+      }
+    });
+    //this.edmontonService.crearEdMonton(this.patientId, this.routePrefix, this.construirDatos()).subscribe(result => {
+     // alert('Formulario enviado');
+    //});
+  }
+
+  enviarFormulario(): void {
+    
+    const datos = this.construirDatos().slice(0, -1);
+    console.log("paciente en edmonton",this.patientId)
+    console.log("institucion en edmoton", this.routePrefix)
+    this.edmontonService.crearEdMonton(this.routePrefix, this.patientId, datos).subscribe(
+      () => {
+
+      },
+     (error) => {
+      
+     }
+     );
+  }
+  
+  
+}
+
+
+

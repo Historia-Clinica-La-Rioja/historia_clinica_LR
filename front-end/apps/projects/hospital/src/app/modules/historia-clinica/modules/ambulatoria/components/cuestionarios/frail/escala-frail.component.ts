@@ -198,6 +198,7 @@ export class EscalaFrailComponent implements OnInit {
   }
   
   enviarFormulario(): void {
+    console.log("frail", this.patientId)
 
     this.frailService.createFrail(this.patientId, this.construirDatos()).subscribe(
       () => {

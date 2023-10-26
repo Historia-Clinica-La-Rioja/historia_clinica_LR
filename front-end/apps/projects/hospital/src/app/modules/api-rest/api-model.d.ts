@@ -996,6 +996,17 @@ export interface DocumentReduceInfoDto extends Serializable {
     typeId: number;
 }
 
+export interface EdMontonAnswers{
+    id: number;
+    idQuestion: number;
+    idAnswer: number;   
+}
+
+export interface EdMontonSummary{
+    institutionId: number;
+    patientId : number;
+    edMontonId: number;
+}
 
 export interface FrailAnswers{
     id: number;

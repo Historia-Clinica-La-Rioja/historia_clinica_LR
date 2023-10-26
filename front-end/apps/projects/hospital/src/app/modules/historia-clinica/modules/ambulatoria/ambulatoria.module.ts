@@ -78,6 +78,7 @@ import { EscalaFrailComponent } from './components/cuestionarios/frail/escala-fr
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AdultoMayorComponent } from '@historia-clinica/components/emergente/inicio-estudio/inicio-estudio.component';
 import { EstudiosPopupComponent } from '@historia-clinica/components/emergente/pop-up/estudios-popup.component';
+import { EdmontonComponent } from './components/cuestionarios/edmonton/edmonton.component';
 @NgModule({
 	declarations: [
 		HomeComponent,
@@ -135,7 +136,8 @@ import { EstudiosPopupComponent } from '@historia-clinica/components/emergente/p
   		TablaSapComponent,
       	EscalaFrailComponent,
 		AdultoMayorComponent,
-		EstudiosPopupComponent
+		EstudiosPopupComponent,
+  		EdmontonComponent
  	],
 	imports: [
 		CommonModule,
