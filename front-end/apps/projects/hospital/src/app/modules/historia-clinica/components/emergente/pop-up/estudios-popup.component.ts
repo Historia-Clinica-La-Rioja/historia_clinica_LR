@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';  
 
+
 @Component({
   selector: 'app-pop-up',
   templateUrl: './estudios-popup.component.html',
@@ -10,8 +11,9 @@ export class EstudiosPopupComponent {
   selectedOption: string = '';
   patientId: number;
 
-  constructor(private dialogRef: MatDialogRef<EstudiosPopupComponent>) {
-  }
+  constructor(
+    private dialogRef: MatDialogRef<EstudiosPopupComponent>
+  ) { }
 
   closeModal(simpleClose: boolean, completed?: boolean): void {
     if (simpleClose) {

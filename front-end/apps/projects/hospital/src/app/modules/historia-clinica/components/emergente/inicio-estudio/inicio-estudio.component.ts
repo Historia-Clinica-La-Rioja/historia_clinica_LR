@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EstudiosPopupComponent } from '../pop-up/estudios-popup.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
   
 @Component({
   selector: 'app-adulto-mayor',
@@ -9,10 +10,17 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class AdultoMayorComponent implements OnInit {
   patientId: number;
-  private readonly routePrefix: string;
 
   constructor(
-    private dialog: MatDialog  ) { }
+    private readonly route: ActivatedRoute,
+    private dialog: MatDialog  
+  ) { 
+    this.route.paramMap.subscribe(
+      (params) => {
+				this.patientId = Number(params.get('idPaciente'));
+      }
+    )
+  }
 
   ngOnInit(): void {
    }
@@ -21,8 +29,7 @@ export class AdultoMayorComponent implements OnInit {
     const dialogRef = this.dialog.open(EstudiosPopupComponent, {
       width: '800px',
       data: {
-        patientId: this.patientId,
-        institutionId: this.routePrefix
+        patientId: this.patientId
       }
     });
 
