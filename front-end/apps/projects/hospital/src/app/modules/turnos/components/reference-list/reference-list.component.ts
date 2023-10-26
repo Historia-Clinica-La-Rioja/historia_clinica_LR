@@ -111,11 +111,11 @@ export class ReferenceListComponent {
 		referenceReportsFilters = this.filterByClosureType(referenceReportsFilters, $event?.closureType);
 		referenceReportsFilters = this.filterByAppointmentState(referenceReportsFilters, $event?.appoitmentState);
 
-		const clinicalSpecialty = this.getClinicalSpecialtyDescription($event.clinicalSpecialty);
+		const clinicalSpecialty = this.getClinicalSpecialtyDescription($event?.clinicalSpecialty);
 		if (clinicalSpecialty) {
 			referenceReportsFilters = this.filterByClinicalSpecialty(referenceReportsFilters, clinicalSpecialty);
 		}
-		const procedure = this.getProcedureDescription($event.procedure)
+		const procedure = this.getProcedureDescription($event?.procedure)
 		if (procedure) {
 			referenceReportsFilters = this.filterByProcedure(referenceReportsFilters, procedure);
 		}
