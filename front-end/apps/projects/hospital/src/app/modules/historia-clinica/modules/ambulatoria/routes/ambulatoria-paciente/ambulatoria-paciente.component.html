@@ -280,7 +280,6 @@
 							<app-adulto-mayor></app-adulto-mayor>
 						</ng-template>
 					</mat-tab>
-					
 					<mat-tab *ngFor="let extensionWCTab of extensionWCTabs$ | async" [id]="extensionWCTab.title">
 						<ng-template mat-tab-label>
 							<span>{{extensionWCTab.title | uppercase}}</span>
