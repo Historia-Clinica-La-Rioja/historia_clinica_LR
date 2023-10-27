@@ -15,6 +15,7 @@ import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { WCExtensionsService } from '@extensions/services/wc-extensions.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { WCParams } from '@extensions/components/ui-external-component/ui-external-component.component';
+import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
 
 @Component({
 	selector: 'app-instituciones',
@@ -39,7 +40,8 @@ export class InstitucionesComponent {
 		private router: Router,
 		private accountService: AccountService,
 		private wcExtensionsService: WCExtensionsService,
-		private readonly snackBarService: SnackBarService
+		private readonly snackBarService: SnackBarService,
+		private readonly hierarchicalUnitService: HierarchicalUnitService
 	) {
 		loggedUserService.assignments$.subscribe((allRoles: RoleAssignmentDto[]) => {
 			this.userRoles = allRoles;
@@ -100,6 +102,7 @@ export class InstitucionesComponent {
 			this.router.navigate([AppRoutes.Backoffice]);
 		} else {
 			if (this.hasAccessToInstitution(institutionDto.id)){
+				this.hierarchicalUnitService.resetForm();
 				this.router.navigate([AppRoutes.Institucion, institutionDto.id]);
 			} else {
 				this.snackBarService.showError("No es posible acceder a Receta Digital todavia");
