@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -53,13 +54,16 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
     }
 
     @Override
-    public CounterReferenceSummaryDto getCounterReference(Integer referenceId) {
+    public Optional<CounterReferenceSummaryDto> getCounterReference(Integer referenceId) {
         log.debug("Input parameter -> referenceId {}", referenceId);
-        CounterReferenceSummaryBo counterReferenceSummaryBo = getCounterReference.run(referenceId);
-        CounterReferenceSummaryDto result = counterReferenceSummaryMapper.fromCounterReferenceSummaryBo(counterReferenceSummaryBo);
-        if(result.getId() != null)
-            result.setProcedures(mapToCounterReferenceSummaryProcedureDto(counterReferenceSummaryBo.getProcedures()));
-        return result;
+        Optional<CounterReferenceSummaryBo> counterReferenceSummaryBo = getCounterReference.run(referenceId);
+		if (counterReferenceSummaryBo.isPresent()) {
+			CounterReferenceSummaryBo cr = counterReferenceSummaryBo.get();
+			CounterReferenceSummaryDto result = counterReferenceSummaryMapper.fromCounterReferenceSummaryBo(cr);
+			result.setProcedures(mapToCounterReferenceSummaryProcedureDto(cr.getProcedures()));
+			return Optional.of(result);
+		}
+        return Optional.empty();
     }
 
     @Override

@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -31,15 +32,17 @@ public class CounterReferenceStorageImpl implements CounterReferenceStorage {
     }
 
     @Override
-    public CounterReferenceSummaryBo getCounterReference(Integer referenceId) {
+    public Optional<CounterReferenceSummaryBo> getCounterReference(Integer referenceId) {
         log.debug("Input parameter -> referenceId {}", referenceId);
-        CounterReferenceSummaryBo counterReferenceSummaryBo = counterReferenceRepository.findByReferenceId(referenceId).orElse(new CounterReferenceSummaryBo());
-        if(counterReferenceSummaryBo.getId() != null) {
-            counterReferenceSummaryBo.setProcedures(this.getProceduresByCounterReference(counterReferenceSummaryBo.getId()));
-            counterReferenceSummaryBo.setFiles(referenceCounterReferenceFileStorage.getFilesByReferenceCounterReferenceIdAndType(counterReferenceSummaryBo.getId(),
+        List<CounterReferenceSummaryBo> counterReferences = counterReferenceRepository.findByReferenceId(referenceId);
+        if (!counterReferences.isEmpty()) {
+			CounterReferenceSummaryBo cr = counterReferences.get(0);
+			cr.setProcedures(this.getProceduresByCounterReference(cr.getId()));
+			cr.setFiles(referenceCounterReferenceFileStorage.getFilesByReferenceCounterReferenceIdAndType(cr.getId(),
                     EReferenceCounterReferenceType.CONTRARREFERENCIA.getId().intValue()));
+			return Optional.of(cr);
         }
-        return counterReferenceSummaryBo;
+        return Optional.empty();
     }
 
     @Override

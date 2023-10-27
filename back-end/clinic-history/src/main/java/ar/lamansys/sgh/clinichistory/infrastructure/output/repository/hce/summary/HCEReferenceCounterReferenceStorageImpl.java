@@ -30,7 +30,9 @@ public class HCEReferenceCounterReferenceStorageImpl implements HCEReferenceCoun
     @Override
     public CounterReferenceSummaryBo getCounterReference(Integer referenceId) {
         log.debug("Input parameter -> referenceId {}", referenceId);
-		return mapToCounterReferenceSummaryBo(sharedReferenceCounterReference.getCounterReference(referenceId));
+		return sharedReferenceCounterReference.getCounterReference(referenceId)
+				.map(this::mapToCounterReferenceSummaryBo)
+				.orElse(new CounterReferenceSummaryBo());
     }
 
     @Override

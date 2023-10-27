@@ -82,7 +82,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 	}
 
 	private String getOutpatientReferenceQueryFragment() {
-		return "SELECT r.id, r.priority, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
+		return "SELECT DISTINCT r.id, r.priority, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
 				"pex.name_self_determination, it.description, pe.identification_number, oc.created_on , cs2.name AS clinicalSpecialtyOrigin, " +
 				"i.name AS institutionOrigin, cs.name AS clinicalSpecialtyDestination, " +
 				"cl.description AS careLine, cr.closure_type_id, i2.name AS institutionDestination, r.service_request_id " +
@@ -102,7 +102,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 	}
 
 	private String getOdontologyReferenceQueryFragment() {
-		return "SELECT r.id, r.priority, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
+		return "SELECT DISTINCT r.id, r.priority, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
 				"pex.name_self_determination, it.description, pe.identification_number, oc.created_on, cs2.name AS clinicalSpecialtyOrigin, " +
 				"i.name AS institutionOrigin, cs.name as clinicalSpecialtyDestination, " +
 				"cl.description AS careLine, cr.closure_type_id, i2.name AS institutionDestination, r.service_request_id " +

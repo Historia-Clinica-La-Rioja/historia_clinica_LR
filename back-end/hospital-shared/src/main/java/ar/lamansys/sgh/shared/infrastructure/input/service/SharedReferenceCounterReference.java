@@ -7,12 +7,13 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterrefer
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface SharedReferenceCounterReference {
 
     List<ReferenceCounterReferenceFileDto> getReferenceFilesData(Integer referenceId);
 
-    CounterReferenceSummaryDto getCounterReference(Integer referenceId);
+    Optional<CounterReferenceSummaryDto> getCounterReference(Integer referenceId);
 
 	List<Integer> saveReferences(List<CompleteReferenceDto> references);
 

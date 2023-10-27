@@ -201,7 +201,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 	Integer getReferenceEncounterTypeId(@Param("referenceId") Integer referenceId);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.patientId, oc.creationable.createdOn, " +
+	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.patientId, oc.creationable.createdOn, " +
 			"rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name, cs2.id, cs2.name, "+
 			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId) " +
 			"FROM Reference r " +
@@ -218,7 +218,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 	Optional<ReferenceDataBo> getReferenceDataFromOutpatientConsultation(@Param("referenceId") Integer referenceId);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.patientId, oc.creationable.createdOn, " +
+	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.patientId, oc.creationable.createdOn, " +
 			"rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name, cs2.id, cs2.name, "+
 			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId) " +
 			"FROM Reference r " +
