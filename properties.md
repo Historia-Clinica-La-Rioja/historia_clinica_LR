@@ -343,3 +343,9 @@ Se crearon las siguientes propiedades para configurar la funcionalidad de red de
 |----------------------------------------|----------------------|-----------------------|-----------|-------------------------------------------------------------------------------------------------------|---------|
 | app.imagenetwork.permission.expiration | -                    | 60m                   | Opcional  | Define cuanto tiempo de validez posee un token desde que se genera, para acceder a un estudio médico. | v2.1.0  |
 | app.imagenetwork.viewer.web.url        | VIEWER_WEB_URL       | http://localhost:3000 | Opcional  | Establece la URL donde se encuentra el visualizador web definido para ver estudios médicos.           | v2.1.0  |
+
+## Problemas en HC
+
+| Propiedad                              | Variable de ambiente | Valor por defecto | Necesidad | Descripcion                                                                                                | Desde    |
+|----------------------------------------|----------------------|-------------------|-----------|------------------------------------------------------------------------------------------------------------|----------|
+| app.problems.set-incorrect.time-window | -                    | 24h               | Opcional  | Define la ventana de tiempo dentro de la cual un problema puede ser marcado como cargado por error (en hs) | v.2.11.0 |
