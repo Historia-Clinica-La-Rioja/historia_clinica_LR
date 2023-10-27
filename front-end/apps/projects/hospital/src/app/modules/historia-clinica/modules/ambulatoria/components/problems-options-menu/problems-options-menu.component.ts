@@ -10,6 +10,7 @@ import { Observable, Subject, take } from 'rxjs';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { SolveProblemComponent } from '@historia-clinica/dialogs/solve-problem/solve-problem.component';
 import { HistoricalProblemsFacadeService } from '../../services/historical-problems-facade.service';
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 
 @Component({
     selector: 'app-problems-options-menu',
@@ -115,4 +116,24 @@ export class ProblemsOptionsMenuComponent implements OnInit {
 		});
         this.setProblemOnHistoric.next(true);
     }
+
+	amendProblem(problem: HCEPersonalHistoryDto) {
+		const warnignComponent = this.dialog.open(DiscardWarningComponent,
+			{
+				disableClose: true,
+				data: {
+					title: 'ambulatoria.paciente.problemas.amend_problems.TITLE',
+					content: 'ambulatoria.paciente.problemas.amend_problems.CONTENT',
+					okButtonLabel: 'buttons.CONTINUE',
+					cancelButtonLabel: 'buttons.CANCEL',
+					buttonClose: true,
+				},
+				maxWidth: '500px'
+			});
+		warnignComponent.afterClosed().subscribe(confirmed => {
+			if (confirmed) {
+				
+			}
+		});
+	}
 }

@@ -363,8 +363,12 @@
                     "FAILED_REPORT_ERROR": "Fallo al reportar el problema"
                 },
                 "PENDING_REFERENCE": "Referencia pendiente",
-                "AMEND_PROBLEM": "Subsanar registro",
-                "VIEW_DETAIL": "Ver detalle"
+                "VIEW_DETAIL": "Ver detalle",
+                "amend_problems": {
+                    "AMEND_PROBLEM": "Marcar como registro incorrecto",
+                    "TITLE": "Turnos y referencias asociados",
+                    "CONTENT": "Al marcar este problema como erróneo, todas las referencias y/o turnos asociados al mismo se cancelarán automáticamente."
+                }
             },
             "ordenes_prescripciones": {
                 "TAB_LABEL": "Órdenes y prescripciones",
