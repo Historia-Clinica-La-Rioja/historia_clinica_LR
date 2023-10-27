@@ -37,15 +37,30 @@ public class CreateServiceRequestPdf {
 
     public StoredFileBo run(Integer institutionId, Integer patientId, Integer serviceRequestId) {
         log.debug("Input parameters -> institutionId {}, patientId {}, serviceRequestId {}", institutionId, patientId, serviceRequestId);
-        StoredFileBo storedFileBo;
 
-        if (AppFeature.HABILITAR_NUEVO_FORMATO_PDF_ORDENES_PRESTACION.isActive())
-            return null; // llamar nuevo servicio
-        else
-            storedFileBo = createRecipeOrderTable(institutionId, patientId, serviceRequestId);
+        StoredFileBo storedFileBo = AppFeature.HABILITAR_NUEVO_FORMATO_PDF_ORDENES_PRESTACION.isActive()
+                    ? createDeliveryOrderForm(institutionId, patientId, serviceRequestId)
+                    : createRecipeOrderTable(institutionId, patientId, serviceRequestId);
 
         log.debug("OUTPUT -> {}", storedFileBo);
         return storedFileBo;
+    }
+
+    private StoredFileBo createDeliveryOrderForm(Integer institutionId, Integer patientId, Integer serviceRequestId) {
+
+        // obtener datos de hsi para el template formulario V --> form_report
+        // ...
+        BasicPatientDto patientDto = null;
+        // ...
+
+        // crear el contextMap con las variables requeridas
+        Map<String, Object> context = createDeliveryOrderFormContext();
+
+        String template = "form_report";
+
+        return new StoredFileBo(pdfService.generate(template, context),
+                String.format("%s_%s.pdf", patientDto.getIdentificationNumber(), serviceRequestId),
+                MediaType.APPLICATION_PDF.toString());
     }
 
     private StoredFileBo createRecipeOrderTable(Integer institutionId, Integer patientId, Integer serviceRequestId) {
@@ -81,6 +96,13 @@ public class CreateServiceRequestPdf {
         ctx.put("nameSelfDeterminationFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
         ctx.put("requestDate", date);
 
+        log.trace("Output -> {}", ctx);
+        return ctx;
+    }
+
+    private Map<String, Object> createDeliveryOrderFormContext() {
+
+        Map<String, Object> ctx = new HashMap<>();
         log.trace("Output -> {}", ctx);
         return ctx;
     }
