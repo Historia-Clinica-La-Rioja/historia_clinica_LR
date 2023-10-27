@@ -181,8 +181,17 @@ export class FrailScaleComponent implements OnInit {
             setTimeout(() => {
               Swal.close();
               this.enviarFormulario(); 
+
+              Swal.fire({
+                icon: 'success',
+                iconColor: '#2687c5',
+                title: 'Enviado exitosamente',
+                confirmButtonColor: '#2687c5',
+                confirmButtonText: 'Aceptar',
+              });
             }, 2000);
-          },
+          }
+          
         });
       } else if (result.isDenied) {
         Swal.fire({
