@@ -10,7 +10,6 @@
 	align-content: flex-start;
 	gap: 1.1875rem;
 	flex-shrink: 0;
-	flex-wrap: wrap;
 	align-items: center;
 }
 
@@ -24,6 +23,7 @@
 .title {
 	font-weight: 500;
 	font-size: 1rem;
+	flex-wrap: wrap;
 }
 
 .subtitle {

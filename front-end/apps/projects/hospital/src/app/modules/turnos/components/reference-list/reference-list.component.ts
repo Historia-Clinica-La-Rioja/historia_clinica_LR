@@ -8,6 +8,7 @@ import { AbstractControl, FormBuilder, UntypedFormGroup } from '@angular/forms';
 import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 import { ReportCompleteDataPopupComponent } from '@turnos/dialogs/report-complete-data-popup/report-complete-data-popup.component';
 import { MatDialog } from '@angular/material/dialog';
+import { toReport } from '@turnos/utils/mapper.utils';
 
 const REFERENCE_REQUESTED = -1;
 const PENDING_CLOSURE = -1;
@@ -37,15 +38,7 @@ export class ReferenceListComponent {
 	@Input()
 	set reports(list: ReferenceReportDto[]) {
 		if (list?.length) {
-			this.allReferenceReports = list.map(report => {
-				const state = getState(report.appointmentStateId);
-				return {
-					dto: report,
-					priority: getPriority(report.priority.id),
-					coloredIconText: getColoredIconText(report.closureType),
-					state,
-				}
-			});
+			this.allReferenceReports = list.map(report => toReport(report));
 			this.prepareFilterClinicalSpecialty(list);
 			this.prepareFilterProcedure(list);
 			this.prepareFilters()

@@ -1,8 +1,9 @@
-import { ReferenceAppointmentDto, ReferencePatientDto } from "@api-rest/api-model"
+import { ReferenceAppointmentDto, ReferencePatientDto, ReferenceReportDto } from "@api-rest/api-model"
 import { PatientSummary } from "../../hsi-components/patient-summary/patient-summary.component"
-import { getState } from "./reference.utils"
+import { getColoredIconText, getPriority, getState } from "./reference.utils"
 import { ContactDetails } from "@turnos/components/contact-details/contact-details.component"
-import { AppointmentSummary } from "@turnos/components/appointment-summary/appointment-summary.component"
+import { AppointmentSummary } from "@turnos/components/appointment-summary/appointment-summary.component";
+import { Report } from "../components/report-information/report-information.component";
 
 export const toPatientSummary = (patient: ReferencePatientDto): PatientSummary => {
     return {
@@ -30,4 +31,26 @@ export const toAppointmentSummary = (value: ReferenceAppointmentDto): Appointmen
         professionalFullName: value.professionalFullName,
         institution: value.institution.description
     }
+}
+
+export const toReport = (report: ReferenceReportDto): Report => {
+    return {
+        dto: report,
+        priority: getPriority(report.priority.id),
+        coloredIconText: getColoredIconText(report.closureType),
+        state: getState(report.appointmentStateId),
+        patient: toMinPatientSummary(report.patientFullName, report.identificationType, +report.identificationNumber)
+    }
+}
+
+
+export const toMinPatientSummary = (fullName: string, identificationType: string, identificationNumber: number): PatientSummary => {
+    return (identificationNumber) ?
+        {
+            fullName,
+            identification: {
+                type: identificationType,
+                number: identificationNumber
+            }
+        } : { fullName, }
 }

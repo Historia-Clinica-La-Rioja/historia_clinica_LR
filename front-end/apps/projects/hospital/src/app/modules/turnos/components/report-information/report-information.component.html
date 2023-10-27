@@ -1,23 +1,14 @@
 <div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-between start" fxLayoutGap="10px"
     fxLayoutGap.lt-md="30px">
 
-    <div id="patient-data" fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="5px" fxFlex="15%">
-        <span class="bold content">{{report.dto.patientFullName}}</span>
-
-        <div *ngIf="report.dto.identificationType && report.dto.identificationNumber" fxLayoutGap="5px" fxFlex="10%">
-            <span>{{report.dto.identificationType}}</span>
-            <span>{{report.dto.identificationNumber}}</span>
-        </div>
-    </div>
+    <app-patient-summary fxFlex="20%" [person]="report.patient" [size]="size"></app-patient-summary>
 
     <div id="problems-priority-data" fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px" fxFlex="15%">
-        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
 
-            <app-identifier-cases style="white-space: pre-line" *ngIf="report.dto.clinicalSpecialtyOrigin" [identifierCase]="identiferCases.PROBLEM"
-                [description]="report.dto.problems | showProblems" id="problem">
-            </app-identifier-cases>
+        <app-identifier-cases style="white-space: pre-line" *ngIf="report.dto.clinicalSpecialtyOrigin" [identifierCase]="identiferCases.PROBLEM"
+            [description]="report.dto.problems | showProblems" id="problem">
+        </app-identifier-cases>
 
-        </div>
         <app-priority [priority]="report.priority"></app-priority>
         <span class="grey">{{report.dto.date | viewDateDto: 'localdatetime' | date: 'dd/MM/yyyy - HH:mm'}}</span>
     </div>
