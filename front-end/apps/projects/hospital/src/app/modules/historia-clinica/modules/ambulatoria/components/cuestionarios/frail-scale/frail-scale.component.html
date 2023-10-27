@@ -1,0 +1,94 @@
+<div class="container">
+    <form (ngSubmit)="submitForm()" #formulario="ngForm">
+      <h2 class="title1" id="3">Escala de Frail</h2>
+  
+      <!-- CASO 1 -->
+      <div class="text">
+        <h3 class="tipos" id="59">Fatigabilidad</h3>
+        <p>¿Qué parte del tiempo durante las últimas 4 semanas te sentiste cansado/a?</p>
+        <mat-radio-group id="60" name="fatigability" [(ngModel)]="selectedFatigability" (change)="calculateTotal()">
+
+          <mat-radio-button color="primary" value="A">Todo el tiempo</mat-radio-button>
+          <mat-radio-button color="primary" value="B">La mayoría de las veces</mat-radio-button>
+          <mat-radio-button color="primary" value="C">Parte del tiempo</mat-radio-button>
+          <mat-radio-button color="primary" value="D">Un poco de tiempo</mat-radio-button>
+          <mat-radio-button color="primary" value="E">En ningún momento</mat-radio-button>
+        </mat-radio-group>
+      </div>
+  
+      <!-- CASO 2 -->
+      <div class="text">
+        <h3 class="tipos" id="61">Resistencia</h3>
+        <p>¿Tiene alguna dificultad para caminar 10 escalones sin descansar por usted mismo, sin ningún tipo de ayuda?</p>
+        <mat-radio-group id="62" name="endurance" [(ngModel)]="selectedEndurance" (change)="calculateTotal()">
+
+          <mat-radio-button color="primary" value="A1">Si</mat-radio-button>
+          <mat-radio-button color="primary" value="B1">No</mat-radio-button>
+        </mat-radio-group>
+      </div>
+  
+      <!-- CASO 3 -->
+      <div class="text">
+        <h3 class="tipos" id="63">Deambulación</h3>
+        <p>Por ti mismo y sin el uso de ayudas, ¿tiene alguna dificultad para caminar varios cientos de metros?</p>
+        <mat-radio-group id="64" name="ambulation" [(ngModel)]="selectedAmbulation" (change)="calculateTotal()">
+          <mat-radio-button color="primary" value="A2">Si</mat-radio-button>
+          <mat-radio-button color="primary" value="B2">No</mat-radio-button>
+        </mat-radio-group>
+      </div>
+  
+      <!-- CASO 4 -->
+      <div class="text">
+        <h3 class="tipos" id="65">Comorbilidad</h3>
+        <p>Alguna vez un médico le dijo que usted tiene:</p>
+        <mat-checkbox-group name="patologiasComorbilidad" [(ngModel)]="selectedComorbidity" >
+          <mat-checkbox color="primary" value="P1">Hipertensión</mat-checkbox>
+          <mat-checkbox color="primary" value="P2">Diabetes</mat-checkbox>
+          <mat-checkbox color="primary" value="P3">Cáncer (Que no sea un cáncer de piel de menor importancia)</mat-checkbox>
+          <mat-checkbox color="primary" value="P4">Enfermedad pulmonar crónica</mat-checkbox>
+          <mat-checkbox color="primary" value="P5">Ataque cardíaco</mat-checkbox>
+          <mat-checkbox color="primary" value="P6">Insuficiencia cardíaca congestiva</mat-checkbox>
+          <mat-checkbox color="primary" value="P7">Angina de pecho</mat-checkbox>
+          <mat-checkbox color="primary" value="P8">Asma</mat-checkbox>
+          <mat-checkbox color="primary" value="P9">Artritis</mat-checkbox>
+          <mat-checkbox color="primary" value="P10">Ictus</mat-checkbox>
+          <mat-checkbox color="primary" value="P11">Enfermedad renal</mat-checkbox>
+        </mat-checkbox-group>
+  
+        <!--<mat-divider ngcontent-rqs-c486 role="separator" class="mat-divider mat-divider-horizonal ng-star-inserted" aria-orientation="horizontal" style="margin-bottom: 20px;"></mat-divider>-->
+  
+        <div class="linea"></div>
+  
+        <mat-radio-group id="66" name="ComorbidityCount" [(ngModel)]="selectedComorbidityCount" (change)="calculateTotal()">
+          <p>- Despues de haber seleccionado anteriormente las cantidad correcta de patologias según criterio medico, marque la opción correcta:</p>
+          <mat-radio-button color="primary" value="A3">Tiene 5 o más patologias</mat-radio-button>
+          <mat-radio-button color="primary" value="B3">Tiene menos de 5 patologias o ninguna</mat-radio-button>
+        </mat-radio-group>
+      </div>
+  
+      <!-- CASO 5 -->
+      <div class="text">
+        <h3 class="tipos" id="67">Pérdida de peso</h3>
+        <p>¿Cuánto pesa con la ropa puesta, pero sin zapatos (peso actual)?</p>
+        <mat-radio-group id="68" name="weightLoss" [(ngModel)]="selectedWeightLoss" (change)="calculateTotal()">
+          <mat-radio-button color="primary" value="A4">Más de 5kg (lo que representa un 5% de pérdida de peso)</mat-radio-button>
+          <mat-radio-button color="primary" value="B4">Menos de 5kg (peso hace un año - peso actual/peso hace un año)</mat-radio-button>
+        </mat-radio-group>
+      </div>
+  
+  
+      <!-- PUNTAJE -->
+      <div class="text">
+        <h3 class="tipos" id="69">Interpretación de puntaje</h3>
+        <p id="70">La sumatoria da como resultado:</p>
+        <mat-radio-group id="puntaje" name="points" [(ngModel)]="selectedCalificacion" [disabled]="true">
+          <mat-radio-button color="primary" id="49" value="A5">Se considera PERSONA PRE FRÁGIL</mat-radio-button>
+          <mat-radio-button color="primary" id="50" value="B5">Se considera PERSONA FRÁGIL</mat-radio-button>
+        </mat-radio-group>
+  
+        
+        <button mat-raised-button color="primary" [disabled]="isSubmitDisabled()" type="submit">Enviar Formulario</button>
+      </div>
+    </form>
+  </div>
+  
