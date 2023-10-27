@@ -37,27 +37,35 @@ public class CreateServiceRequestPdf {
 
     public StoredFileBo run(Integer institutionId, Integer patientId, Integer serviceRequestId) {
         log.debug("Input parameters -> institutionId {}, patientId {}, serviceRequestId {}", institutionId, patientId, serviceRequestId);
+        StoredFileBo storedFileBo;
 
-        var serviceRequestBo = getServiceRequestInfoService.run(serviceRequestId);
-        var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
-        var institutionDto = sharedInstitutionPort.fetchInstitutionById(institutionId);
-        var patientCoverageDto = patientExternalMedicalCoverageService.getCoverage(serviceRequestBo.getMedicalCoverageId());
-        var context = createContext(serviceRequestBo, patientDto, patientCoverageDto, institutionDto);
-
-        String template = "recipe_order_table";
-
-        StoredFileBo storedFileBo = new StoredFileBo(pdfService.generate(template, context),
-                String.format("%s_%s.pdf", patientDto.getIdentificationNumber(), serviceRequestId),
-                MediaType.APPLICATION_PDF.toString());
+        if (AppFeature.HABILITAR_NUEVO_FORMATO_PDF_ORDENES_PRESTACION.isActive())
+            return null; // llamar nuevo servicio
+        else
+            storedFileBo = createRecipeOrderTable(institutionId, patientId, serviceRequestId);
 
         log.debug("OUTPUT -> {}", storedFileBo);
         return storedFileBo;
     }
 
-    private Map<String, Object> createContext(ServiceRequestBo serviceRequestBo,
-                                              BasicPatientDto patientDto,
-                                              PatientMedicalCoverageDto patientCoverageDto,
-                                              InstitutionInfoDto institutionDto) {
+    private StoredFileBo createRecipeOrderTable(Integer institutionId, Integer patientId, Integer serviceRequestId) {
+        var serviceRequestBo = getServiceRequestInfoService.run(serviceRequestId);
+        var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
+        var institutionDto = sharedInstitutionPort.fetchInstitutionById(institutionId);
+        var patientCoverageDto = patientExternalMedicalCoverageService.getCoverage(serviceRequestBo.getMedicalCoverageId());
+        var context = createRecipeOrderTableContext(serviceRequestBo, patientDto, patientCoverageDto, institutionDto);
+
+        String template = "recipe_order_table";
+
+        return new StoredFileBo(pdfService.generate(template, context),
+                String.format("%s_%s.pdf", patientDto.getIdentificationNumber(), serviceRequestId),
+                MediaType.APPLICATION_PDF.toString());
+    }
+
+    private Map<String, Object> createRecipeOrderTableContext(ServiceRequestBo serviceRequestBo,
+                                                              BasicPatientDto patientDto,
+                                                              PatientMedicalCoverageDto patientCoverageDto,
+                                                              InstitutionInfoDto institutionDto) {
         log.trace("Input parameters -> serviceRequestBo {}, patientDto {}, patientCoverageDto {}, institutionInfoDto {}",
                 serviceRequestBo, patientDto, patientCoverageDto, institutionDto);
 
