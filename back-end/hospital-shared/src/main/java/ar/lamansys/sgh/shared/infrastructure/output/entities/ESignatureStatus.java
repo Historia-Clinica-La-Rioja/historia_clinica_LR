@@ -5,6 +5,7 @@ import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 
 public enum ESignatureStatus {
 
+	CANNOT_BE_SIGNED(-1, "No apto para firmar"),
     PENDING(1, "Firma pendiente"),
     IN_PROGRESS(2, "Firma en proceso"),
     SIGNED(3, "Firmado")

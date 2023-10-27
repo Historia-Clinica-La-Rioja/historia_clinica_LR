@@ -304,3 +304,12 @@ databaseChangeLog:
                 - column:
                     name: until_date
                     type: datetime
+        
+    - changeSet:    
+        id: update-document_file-signature_status_id
+        context: "!schema-only"
+        author: mmalyvarni
+        changes:
+          - sql:
+              sql: |-
+                UPDATE document_file SET signature_status_id = -1;

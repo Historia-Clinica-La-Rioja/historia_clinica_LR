@@ -33,6 +33,7 @@ public interface DocumentFileRepository extends SGXAuditableEntityJPARepository<
 			"AND d.statusId = '" + DocumentStatus.FINAL + "' " +
 			"AND d.typeId != '" + DocumentType.DIGITAL_RECIPE + "' " +
 			"AND d.creationable.createdBy = :userId " +
+			"AND df.signatureStatusId != -1 " +
 			"AND df.signatureStatusId != 3")
 	Page<DigitalSignatureDocumentBo> findDocumentsByUserAndInstitution(@Param("userId") Integer userId,
 																	   @Param("institutionId") Integer institutionId,
@@ -50,5 +51,11 @@ public interface DocumentFileRepository extends SGXAuditableEntityJPARepository<
 	@Modifying
 	@Query("UPDATE DocumentFile df SET df.digitalSignatureHash = :hash WHERE df.id = :documentId")
 	void updateDigitalSignatureHash(@Param("documentId") Long documentId, @Param("hash") String hash);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT COUNT(1) > 0 " +
+			"FROM DocumentFile df " +
+			"WHERE df.signatureStatusId > 0")
+	boolean documentsWereAlreadySigned();
 
 }
