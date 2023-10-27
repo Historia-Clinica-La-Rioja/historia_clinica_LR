@@ -14,6 +14,7 @@ import { NuevaConsultaDockPopupComponent } from '@historia-clinica/modules/ambul
 import { SolveProblemComponent } from '@historia-clinica/dialogs/solve-problem/solve-problem.component';
 import { anyMatch } from '@core/utils/array.utils';
 import { PermissionsService } from '@core/services/permissions.service';
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 
 @Component({
 	selector: 'app-antecedentes-personales-summary',
@@ -126,6 +127,26 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 				this.canOnlyViewSelfAddedProblems ?
 				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({ personalHistoriesByRole: true, problems: true })
 				: this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({ personalHistories: true, problems: true });
+			}
+		});
+	}
+	
+	amendProblem(problem: HCEPersonalHistoryDto) {
+		const warnignComponent = this.dialog.open(DiscardWarningComponent,
+			{
+				disableClose: true,
+				data: {
+					title: 'ambulatoria.paciente.problemas.amend_problems.TITLE',
+					content: 'ambulatoria.paciente.problemas.amend_problems.CONTENT',
+					okButtonLabel: 'buttons.CONTINUE',
+					cancelButtonLabel: 'buttons.CANCEL',
+					buttonClose: true,
+				},
+				maxWidth: '500px'
+			});
+		warnignComponent.afterClosed().subscribe(confirmed => {
+			if (confirmed) {
+				
 			}
 		});
 	}
