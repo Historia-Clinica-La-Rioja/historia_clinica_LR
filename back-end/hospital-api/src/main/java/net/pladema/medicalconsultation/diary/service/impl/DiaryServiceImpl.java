@@ -211,14 +211,15 @@ public class DiaryServiceImpl implements DiaryService {
 
 	@Override
 	public List<DiaryBo> getAllOverlappingDiary(@NotNull Integer healthcareProfessionalId, @NotNull Integer doctorsOfficeId,
-												@NotNull LocalDate newDiaryStart, @NotNull  LocalDate newDiaryEnd, Optional<Integer> excludeDiaryId) {
+												@NotNull Integer institutionId, @NotNull LocalDate newDiaryStart, @NotNull  LocalDate newDiaryEnd,
+												Optional<Integer> excludeDiaryId) {
 		LOG.debug(
 				"Input parameters -> doctorsOfficeId {}, newDiaryStart {}, newDiaryEnd {}",
 				doctorsOfficeId, newDiaryStart, newDiaryEnd);
 		List<Diary> diaries = excludeDiaryId.isPresent()
 				? diaryRepository.findAllOverlappingDiaryExcludingDiary(healthcareProfessionalId, doctorsOfficeId,
-				newDiaryStart, newDiaryEnd, excludeDiaryId.get())
-				: diaryRepository.findAllOverlappingDiary(healthcareProfessionalId, doctorsOfficeId, newDiaryStart,
+				institutionId, newDiaryStart, newDiaryEnd, excludeDiaryId.get())
+				: diaryRepository.findAllOverlappingDiary(healthcareProfessionalId, doctorsOfficeId, institutionId, newDiaryStart,
 				newDiaryEnd);
 		List<DiaryBo> result = diaries.stream().map(this::createDiaryBoInstance).collect(Collectors.toList());
 		LOG.debug(OUTPUT, result);
@@ -343,6 +344,7 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setIncludeHoliday(diary.isIncludeHoliday());
 		result.setHealthcareProfessionalId(diary.getHealthcareProfessionalId());
 		result.setDeleted(diary.isDeleted());
+		result.setAlias(diary.getAlias());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

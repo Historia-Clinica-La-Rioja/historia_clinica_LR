@@ -18,7 +18,7 @@ public interface DiaryService {
 	
 	Boolean deleteDiary(Integer diaryId);
 
-    List<DiaryBo> getAllOverlappingDiary(Integer healthcareProfessionalId, Integer doctorsOfficeId,
+    List<DiaryBo> getAllOverlappingDiary(Integer healthcareProfessionalId, Integer doctorsOfficeId, Integer institutionId,
                                          LocalDate newDiaryStart, LocalDate newDiaryEnd, Optional<Integer> excludeDiaryId);
 
     Collection<DiaryBo> getActiveDiariesBy(Integer associatedHealthcareProfessionalId, Integer healthcareProfessionalId, Integer specialtyId, Integer institutionId);

@@ -57,5 +57,6 @@ public class DiaryBo {
 	protected List<Integer> practicesId;
 	
 	protected List<String> practices;
-    
+
+	protected Integer institutionId;
 }

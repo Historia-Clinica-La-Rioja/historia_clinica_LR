@@ -513,6 +513,7 @@ export class AgendaSetupComponent implements OnInit {
 			careLines: this.careLinesSelected.map(careLine => { return careLine.id }),
 			practicesId: this.form.controls.practices.value,
 			protectedAppointmentsPercentage: null,
+			institutionId : this.contextService.institutionId,
 		};
 	}
 

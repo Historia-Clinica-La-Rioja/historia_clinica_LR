@@ -20,25 +20,33 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
     @Transactional(readOnly = true)
     @Query("SELECT d " +
             "FROM Diary AS d " +
+			"JOIN DoctorsOffice dof ON (d.doctorsOfficeId = dof.id) " +
 			"WHERE (d.healthcareProfessionalId = :hpId OR d.doctorsOfficeId = :doId) " +
             "AND d.startDate <= :endDate " +
             "AND d.endDate >= :startDate " +
-            "AND d.deleteable.deleted = false")
+			"AND dof.institutionId = :institutionId " +
+            "AND d.deleteable.deleted = false " +
+			"AND NOT EXISTS (SELECT dap.id FROM DiaryAssociatedProfessional dap WHERE dap.diaryId = d.id)")
 	List<Diary> findAllOverlappingDiary(@Param("hpId") Integer healthcareProfessionalId,
 										@Param("doId") Integer doctorsOfficeId,
+										@Param("institutionId") Integer institutionId,
 										@Param("startDate") LocalDate newDiaryStart,
                                         @Param("endDate") LocalDate newDiaryEnd);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT d " +
 			"FROM Diary AS d " +
+			"JOIN DoctorsOffice dof ON (d.doctorsOfficeId = dof.id) " +
 			"WHERE (d.healthcareProfessionalId = :hpId OR d.doctorsOfficeId = :doId) " +
 			"AND d.startDate <= :endDate " +
 			"AND d.endDate >= :startDate " +
 			"AND d.id <> :excludeDiaryId " +
-			"AND d.deleteable.deleted = false")
+			"AND dof.institutionId = :institutionId " +
+			"AND d.deleteable.deleted = false " +
+			"AND NOT EXISTS (SELECT dap.id FROM DiaryAssociatedProfessional dap WHERE dap.diaryId = d.id)")
 	List<Diary> findAllOverlappingDiaryExcludingDiary(@Param("hpId") Integer healthcareProfessionalId,
 													  @Param("doId") Integer doctorsOfficeId,
+													  @Param("institutionId") Integer institutionId,
 													  @Param("startDate") LocalDate newDiaryStart,
 													  @Param("endDate") LocalDate newDiaryEnd,
 													  @Param("excludeDiaryId") Integer excludeDiaryId);
