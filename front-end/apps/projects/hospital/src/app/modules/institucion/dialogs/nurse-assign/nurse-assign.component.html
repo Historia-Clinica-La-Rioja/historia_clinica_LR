@@ -15,7 +15,7 @@
             (selectionChange)="setNurse($event)"
             [externalSetValue]="preloadedNurse">
         </app-typeahead>
-        <mat-error *ngIf="!nurses.length">{{'gestion-camas.detail.more-actions.NO_NURSES_AVAILABLE' | translate}}</mat-error>
+        <mat-error *ngIf="!nurses?.length">{{'gestion-camas.detail.more-actions.NO_NURSES_AVAILABLE' | translate}}</mat-error>
     </div>
 </mat-dialog-content>
 
