@@ -253,7 +253,7 @@
                 "title": {
                     "AT_LEAST_ONE": "Hay al menos una ",
                     "REFERENCE_APPLICATION": "solicitud de referencia ",
-                    "CARE_LINE_RELATED": "en relación a la línea de cuidado a la que usted pertenece:"
+                    "CARE_LINE_RELATED": "en relación a su especialidad:"
                 },
                 "REFERENCE_REQUEST": "REFERENCIA SOLICITADA",
                 "OMIT_REFERENCE": "Si no desea responder a la referencia y realizar una consulta independientemente seleccione 'Consulta clásica'.",
