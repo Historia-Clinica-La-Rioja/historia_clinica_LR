@@ -2,6 +2,7 @@ package ar.lamansys.sgh.clinichistory.domain.hce;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEHealthConditionVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,5 +57,9 @@ public class HCEPersonalHistoryBo extends HCEClinicalTermBo {
 
     public boolean isSolvedProblem() {
         return getStatusId().equals(ConditionClinicalStatus.SOLVED);
+    }
+
+    public boolean isMarkedAsError() {
+        return getVerificationId().equalsIgnoreCase(ConditionVerificationStatus.ERROR);
     }
 }

@@ -125,6 +125,18 @@ public class HCEHealthConditionsServiceImpl implements HCEHealthConditionsServic
     }
 
     @Override
+    public List<HCEPersonalHistoryBo> getProblemsAndChronicConditionsMarkedAsError(Integer patientId) {
+        log.debug(LOGGING_INPUT, patientId);
+        List<HCEPersonalHistoryBo> result = hceHealthConditionRepository.getPersonalHistories(patientId).stream()
+                .map(HCEPersonalHistoryBo::new)
+                .filter(HCEPersonalHistoryBo::isMarkedAsError)
+                .sorted(Comparator.comparing(HCEPersonalHistoryBo::getStartDate).reversed())
+                .collect(Collectors.toList());
+        log.debug(LOGGING_OUTPUT, result);
+        return result;
+    }
+
+    @Override
     public List<HCEHospitalizationBo> getHospitalizationHistory(Integer patientId) {
         log.debug(LOGGING_INPUT, patientId);
         List<HCEHospitalizationVo> resultQuery = hceHealthConditionRepository.getHospitalizationHistory(patientId);

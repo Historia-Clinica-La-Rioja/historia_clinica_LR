@@ -56,12 +56,10 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 "FROM t " +
                 "JOIN {h-schema}snomed s ON snomed_id = s.id " +
                 "WHERE rw = 1 " +
-                "AND NOT verification_status_id = :verificationId  " +
                 "ORDER BY t.updated_on DESC";
 
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
                 .setParameter("docStatusId", List.of(DocumentStatus.FINAL, DocumentStatus.DRAFT))
-                .setParameter("verificationId", ConditionVerificationStatus.ERROR)
                 .setParameter("patientId", patientId)
                 .setParameter("validProblemTypes", Arrays.asList(ProblemType.PROBLEM, ProblemType.CHRONIC))
                 .setParameter("documentTypes", List.of(DocumentType.OUTPATIENT, DocumentType.ODONTOLOGY))
@@ -111,12 +109,10 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
 				"FROM t " +
 				"JOIN {h-schema}snomed s ON snomed_id = s.id " +
 				"WHERE rw = 1 " +
-				"AND NOT verification_status_id = :verificationId  " +
 				"ORDER BY t.updated_on DESC";
 
 		List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
 				.setParameter("docStatusId", List.of(DocumentStatus.FINAL, DocumentStatus.DRAFT))
-				.setParameter("verificationId", ConditionVerificationStatus.ERROR)
 				.setParameter("patientId", patientId)
 				.setParameter("validProblemTypes", Arrays.asList(ProblemType.PROBLEM, ProblemType.CHRONIC))
 				.setParameter("documentTypes", List.of(DocumentType.OUTPATIENT, DocumentType.ODONTOLOGY))
