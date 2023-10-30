@@ -198,3 +198,31 @@ databaseChangeLog:
                 FROM rule r
                 CROSS JOIN institutional_group ig
                 WHERE r.deleted = false AND ig.deleted = false;
+
+    - changeSet:
+        id: createTable-problem_error_reason
+        author: mromero
+        changes:
+            - createTable:
+                tableName: problem_error_reason
+                columns:
+                  - column:
+                      constraints:
+                        primaryKey: true
+                        primaryKeyName: PK_problem_error_reason
+                      name: health_condition_id
+                      type: int
+                  - column:
+                      constraints:
+                        nullable: false
+                      name: reason_id
+                      type: smallint
+            - addForeignKeyConstraint:
+                  baseColumnNames: health_condition_id
+                  baseTableName: problem_error_reason
+                  constraintName: FK_problem_error_reason_health_condition_id
+                  onDelete: NO ACTION
+                  onUpdate: NO ACTION
+                  referencedColumnNames: id
+                  referencedTableName: health_condition
+                  validate: true
