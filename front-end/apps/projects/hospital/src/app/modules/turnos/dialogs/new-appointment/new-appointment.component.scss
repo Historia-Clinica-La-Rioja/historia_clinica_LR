@@ -43,3 +43,7 @@
 	height: 100%;
 	overflow: auto;
 }
+
+.bold{
+	@include font-weight-bold;
+}

@@ -64,6 +64,7 @@ export class NewAppointmentComponent implements OnInit {
 	public formSearch: UntypedFormGroup;
 	public appointmentInfoForm: UntypedFormGroup;
 	public associateReferenceForm: UntypedFormGroup;
+	public modalityForm: UntypedFormGroup;
 	referenceList: ReferenceSummaryDto[] = [];
 	public identifyTypeArray: IdentificationTypeDto[];
 	public genderOptions: GenderDto[];
@@ -86,6 +87,7 @@ export class NewAppointmentComponent implements OnInit {
 	isOrderTranscribed = false;
 	transcribedOrder = null;
 	editableStep1 = true;
+	readonly MODALITY_ON_SITE_ATTENTION = EAppointmentModality.ON_SITE_ATTENTION;
 	readonly MODALITY_PATIENT_VIRTUAL_ATTENTION = EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
     readonly MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION;
 
@@ -349,7 +351,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	showConfirmButton(): boolean {
-		return this.formSearch.controls.completed.value && !this.data.protectedAppointment;
+		return this.formSearch.controls.completed.value && !this.data.protectedAppointment && this.stepper.selectedIndex === 2;
 	}
 
 	disableConfirmButtonStep3(): boolean {
@@ -387,14 +389,16 @@ export class NewAppointmentComponent implements OnInit {
 		return this.appointmentInfoForm.valid;
 	}
 
-	toFirstStep(stepper: MatStepper) {
-		this.formSearch.controls.completed.reset();
-		this.appointmentInfoForm.reset();
-		this.patientMedicalOrders = [];
-		if (this.transcribedOrder){
-			this.prescripcionesService.deleteTranscribedOrder(this.patientId, this.transcribedOrder.serviceRequestId).subscribe(() => {
-				this.transcribedOrder = null;
-				this.patientMedicalOrderTooltipDescription = '' });
+	back(stepper: MatStepper) {
+		if(stepper.selectedIndex === 2){
+			this.formSearch.controls.completed.reset();
+			this.appointmentInfoForm.reset();
+			this.patientMedicalOrders = [];
+			if (this.transcribedOrder){
+				this.prescripcionesService.deleteTranscribedOrder(this.patientId, this.transcribedOrder.serviceRequestId).subscribe(() => {
+					this.transcribedOrder = null;
+					this.patientMedicalOrderTooltipDescription = '' });
+			}
 		}
 		this.goBack(stepper);
 	}

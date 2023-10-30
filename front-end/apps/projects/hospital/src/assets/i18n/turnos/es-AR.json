@@ -135,6 +135,7 @@
 			"NEW_APPOINTMENT": "Nuevo turno",
 			"BUTTON_ADD_PATIENT": "Crear paciente",
 			"BUTTON_SEARCH": "Buscar",
+			"STEP_0": "Modalidad",
 			"STEP_1": "Búsqueda de paciente",
 			"STEP_2": "Información paciente",
 			"STEP_3": "Referencia",
@@ -148,6 +149,7 @@
 			"PRINT_APPOINTMENT_BUTTON": "Imprimir turno",
 			"ASSIGNED_APPOINTMENT": "Turno asignado",
 			"PROFESSIONAL_EMAIL":"Mail del profesional solicitante",
+			"MODALITY_SELECT":"Seleccione modalidad",
 			"fields": {
 				"DOCUMENT_TYPE": "Tipo de documento",
 				"DOCUMENT_NUMBER": "Nº de documento"
