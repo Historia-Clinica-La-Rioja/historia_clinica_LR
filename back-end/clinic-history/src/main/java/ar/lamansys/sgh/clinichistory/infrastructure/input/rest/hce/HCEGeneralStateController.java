@@ -1,22 +1,5 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import ar.lamansys.sgx.shared.security.UserInfo;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEAllergyService;
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEClinicalObservationService;
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEHealthConditionsService;
@@ -55,12 +38,29 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineD
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/patient/{patientId}/hce/general-state")
 @Tag(name = "HCE General State", description = "HCE General State")
 @Validated
+@RequiredArgsConstructor
 @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, PERSONAL_DE_FARMACIA, PRESCRIPTOR, ADMINISTRATIVO_RED_DE_IMAGENES')")
 public class HCEGeneralStateController {
 
@@ -96,35 +96,6 @@ public class HCEGeneralStateController {
 	private final GetActiveEpisodeMedicalCoverage getActiveEpisodeMedicalCoverage;
 
 	private final GetCriticalAllergies getCriticalAllergies;
-
-    public HCEGeneralStateController(HCEHealthConditionsService hceHealthConditionsService,
-                                     HCEClinicalObservationService hceClinicalObservationService,
-                                     HCEGeneralStateMapper hceGeneralStateMapper,
-                                     HCEImmunizationService hceImmunizationService,
-                                     HCEMedicationService hceMedicationService,
-                                     HCEAllergyService hceAllergyService,
-                                     HCEToothRecordService hceToothRecordService,
-                                     LocalDateMapper localDateMapper,
-                                     SharedImmunizationPort sharedImmunizationPort,
-                                     SharedInstitutionPort sharedInstitutionPort,
-                                     SharedStaffPort sharedStaffPort, FetchSummaryClinicHistory fetchSummaryClinicHistory,
-									 GetActiveEpisodeMedicalCoverage getActiveEpisodeMedicalCoverage,
-									 GetCriticalAllergies getCriticalAllergies) {
-        this.hceHealthConditionsService = hceHealthConditionsService;
-        this.hceClinicalObservationService = hceClinicalObservationService;
-        this.hceGeneralStateMapper = hceGeneralStateMapper;
-        this.hceImmunizationService = hceImmunizationService;
-        this.hceMedicationService = hceMedicationService;
-        this.hceAllergyService = hceAllergyService;
-        this.hceToothRecordService = hceToothRecordService;
-        this.localDateMapper = localDateMapper;
-        this.sharedImmunizationPort = sharedImmunizationPort;
-        this.sharedInstitutionPort = sharedInstitutionPort;
-        this.sharedStaffPort = sharedStaffPort;
-        this.fetchSummaryClinicHistory = fetchSummaryClinicHistory;
-		this.getActiveEpisodeMedicalCoverage = getActiveEpisodeMedicalCoverage;
-    	this.getCriticalAllergies = getCriticalAllergies;
-	}
 
     @GetMapping("/personalHistories")
     public ResponseEntity<List<HCEPersonalHistoryDto>> getPersonalHistories(
@@ -301,6 +272,17 @@ public class HCEGeneralStateController {
             @PathVariable(name = "patientId") Integer patientId) {
         LOG.debug(LOGGING_INPUT, institutionId, patientId);
         List<HCEPersonalHistoryBo> resultService = hceHealthConditionsService.getSolvedProblems(patientId);
+        List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
+        LOG.debug(LOGGING_OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/problemsMarkedAsError")
+    public ResponseEntity<List<HCEPersonalHistoryDto>> getProblemsMarkedAsError(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "patientId") Integer patientId) {
+        LOG.debug(LOGGING_INPUT, institutionId, patientId);
+        List<HCEPersonalHistoryBo> resultService = hceHealthConditionsService.getProblemsAndChronicConditionsMarkedAsError(patientId);
         List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
         LOG.debug(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
