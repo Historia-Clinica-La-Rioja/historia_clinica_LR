@@ -37,6 +37,7 @@ export class EdmontonComponent {
   cumulativeSum: number = 0;
   patientData: BasicPatientDto | undefined;
   datos: any;
+  
 
   constructor(
     private edmontonService: EdmontonService,
@@ -53,6 +54,7 @@ export class EdmontonComponent {
       this.selectedValues[questionIndex] = value;
       this.calcularSuma();
     }
+    
     
     
   
@@ -110,8 +112,74 @@ export class EdmontonComponent {
       return undefined;
     }
     
- 
-  
+    sharedLyric(answerId: number): string {
+      switch (answerId) {
+        case 1:
+          return "A1";
+        case 2:
+          return "A2";
+        case 3:
+          return "A3";
+        case 4: 
+          return "A4";
+        case 5: 
+          return "A5";
+        case 6:
+          return "A6";
+        case 7:
+          return "A7";
+        case 8:
+          return "A8";
+        case 9:
+          return "A9";
+        case 10:
+          return "A10";
+        case 11:
+          return "A11";
+        case 12: 
+          return "A12";
+        case 13:
+          return "A13";
+        case 14:
+          return "A14";
+        case 15:
+          return "A15";
+        case 16: 
+          return "A16";
+        case 17: 
+          return "A17";
+        case 18:
+          return "A18"
+        default:
+          return ""; 
+      }
+    }
+    value_1(questionId:number, answerId:number ): string {
+      if (questionId === 13 && answerId === 19) {
+        return "A19";
+      } else if (questionId === 14 && answerId === 19) {
+        return "A21";
+      } else if (questionId === 16 && answerId === 19) {
+        return "A23";
+      } else if (questionId === 18 && answerId === 19) {
+        return "A25";
+      } else if (questionId === 20 && answerId === 19) {
+        return "A27";
+      } else {
+          if(questionId === 13 && answerId === 20 ){
+            return "A20";
+          }else if (questionId === 14 && answerId === 20) {
+            return "A22";
+          }else if (questionId === 16 && answerId === 20) {
+            return "A24";
+          }else if (questionId === 18 && answerId === 20) {
+            return "A26";
+          }else if (questionId === 20 && answerId === 20) {
+            return "A28";
+          }
+      }
+    }
+
   construirDatos() {
     const datos = {
       edMonton: []
@@ -119,56 +187,69 @@ export class EdmontonComponent {
     datos.edMonton = [
       {
           questionId: 2,
-          answerId: this.selectedCognitiveOption  
+          answerId: this.selectedCognitiveOption,
+          value: this.sharedLyric(this.selectedCognitiveOption)  
       },
       {
           questionId: 4, 
-          answerId: this.selectedHealthStatusOption
+          answerId: this.selectedHealthStatusOption,
+          value: this.sharedLyric(this.selectedHealthStatusOption)
       },
       {
           questionId: 5, 
-          answerId: this.selectedHealthStatusOptionDos
+          answerId: this.selectedHealthStatusOptionDos,
+          value: this.sharedLyric(this.selectedHealthStatusOptionDos)
       },
       {
           questionId: 7, 
-          answerId: this.selectedFunctionIndOption
+          answerId: this.selectedFunctionIndOption,
+          value: this.sharedLyric(this.selectedFunctionIndOption)
       },
       {
           questionId: 9, 
-          answerId: this.selectedSupportSocOption
+          answerId: this.selectedSupportSocOption,
+          value: this.sharedLyric(this.selectedSupportSocOption)
       },
       {
           questionId: 11, 
-          answerId: this.selectedRendimientoFuncOption
+          answerId: this.selectedRendimientoFuncOption,
+          value: this.sharedLyric(this.selectedRendimientoFuncOption)
       },
       {
           questionId: 13, 
-          answerId: this.selectedMedicationOption
+          answerId: this.selectedMedicationOption,
+          value: this.value_1(13, this.selectedMedicationOption)
       },
       {
           questionId: 14, 
-          answerId: this.selectedMedicationOptionDos
+          answerId: this.selectedMedicationOptionDos,
+          value: this.value_1(14, this.selectedMedicationOptionDos)
       },
       {
           questionId: 16, 
-          answerId: this.selectedNutritionOption
+          answerId: this.selectedNutritionOption,
+          value: this.value_1(16, this.selectedNutritionOption)
       },
       {
           questionId: 18, 
-          answerId: this.selectedAnimoOption
+          answerId: this.selectedAnimoOption,
+          value: this.value_1(18, this.selectedAnimoOption)
       },
       {
           questionId: 20, 
-          answerId: this.selectedContingenciaOption
+          answerId: this.selectedContingenciaOption,
+          value: this.value_1(20, this.selectedContingenciaOption)     
       },
       
       {
-        questionId: 21, 
-        answerId: 2,
-    },
+        questionId: 22, 
+        answerId: 21,
+        value: "A29"
+      },
+    ];
     console.log("Array en edmonton",datos)
       
-    ];
+    
 
     return datos.edMonton;
 
@@ -240,7 +321,7 @@ export class EdmontonComponent {
 
   enviarFormulario(): void {
     
-    const datos = this.construirDatos().slice(0, -1);
+    const datos = this.construirDatos();
     console.log("paciente en edmonton",this.patientId)
     console.log("institucion en edmoton", this.routePrefix)
     this.edmontonService.crearEdMonton(this.routePrefix, this.patientId, datos).subscribe(
