@@ -1,9 +1,12 @@
 package net.pladema.reports.controller.dto;
 
+import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
 import lombok.Getter;
 import lombok.Setter;
+import net.pladema.establishment.service.domain.InternmentPatientBedRoomBo;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -36,4 +39,40 @@ public class FormVDto {
     private String sisaCode;
 
     private String cie10Codes;
+
+	private String medicalCoverageCondition;
+
+	private String establishmentProvinceCode;
+
+	private Integer hcnId;
+
+	private String completeProfessionalName;
+
+	private List<String> licenses;
+
+	private String bedNumber;
+
+	private String roomDescription;
+
+	public FormVDto(String establishment, String completePatientName,
+					ContactInfoBo contactInfo, LocalDate reportDate,
+					String medicalCoverage, String problems,
+					String medicalCoverageCondition, String establishmentProvinceCode,
+					Integer hcnId, String completeProfessionalName,
+					List<String> licenses, String bedNumber,
+					String roomDescription) {
+		this.establishment = establishment;
+		this.completePatientName = completePatientName;
+		this.address = contactInfo.getAddress().getCompleteAddress();
+		this.reportDate = reportDate;
+		this.medicalCoverage = medicalCoverage;
+		this.problems = problems;
+		this.medicalCoverageCondition = medicalCoverageCondition;
+		this.establishmentProvinceCode = establishmentProvinceCode;
+		this.hcnId = hcnId;
+		this.completeProfessionalName = completeProfessionalName;
+		this.licenses = licenses;
+		this.bedNumber = bedNumber;
+		this.roomDescription = roomDescription;
+	}
 }

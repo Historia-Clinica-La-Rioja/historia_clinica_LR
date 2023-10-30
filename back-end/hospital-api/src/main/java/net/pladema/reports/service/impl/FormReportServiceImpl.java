@@ -217,7 +217,7 @@ public class FormReportServiceImpl implements FormReportService {
         ctx.put("patientAge", reportDataDto.getPatientAge());
         ctx.put("documentType", reportDataDto.getDocumentType());
         ctx.put("documentNumber", reportDataDto.getDocumentNumber());
-        ctx.put("sisaCode", reportDataDto.getSisaCode());
+        ctx.put("code", reportDataDto.getSisaCode());
         return ctx;
     }
 

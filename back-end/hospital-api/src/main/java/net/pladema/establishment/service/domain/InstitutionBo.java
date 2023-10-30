@@ -24,4 +24,6 @@ public class InstitutionBo {
 
     private String timezone;
 
+	private String provinceCode;
+
 }

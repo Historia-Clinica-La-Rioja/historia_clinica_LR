@@ -4,6 +4,7 @@ import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import net.pladema.clinichistory.hospitalization.service.domain.RoomBo;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeReasonRepository;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.emergencycare.repository.PoliceInterventionRepository;
@@ -156,7 +157,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
                 .map(ReasonBo::new)
                 .collect(Collectors.toList());
         result.setReasons(reasons);
-
+		result.setRoom(emergencyCareEpisode.getRoom() != null ? new RoomBo(emergencyCareEpisode.getRoom()): null);
         result.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, result.getCreatedOn()));
 		LOG.debug(OUTPUT, result);
 		return result;

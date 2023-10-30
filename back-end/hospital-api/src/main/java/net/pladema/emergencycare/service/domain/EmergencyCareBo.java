@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import net.pladema.clinichistory.hospitalization.service.domain.BedBo;
+import net.pladema.clinichistory.hospitalization.service.domain.RoomBo;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
@@ -66,6 +67,8 @@ public class EmergencyCareBo {
 	
 	private LocalDateTime endDate;
 
+	private RoomBo room;
+
     public EmergencyCareBo(EmergencyCareVo emergencyCareVo){
         this.id = emergencyCareVo.getId();
         this.patient = emergencyCareVo.getPatient() != null ? new PatientECEBo(emergencyCareVo.getPatient()) : null;
@@ -116,5 +119,13 @@ public class EmergencyCareBo {
     public Integer getDoctorsOfficeId() {
         return (this.getDoctorsOffice() != null) ? this.getDoctorsOffice().getId() : null;
     }
+
+	public String getBedNumber() {
+		return bed != null ? bed.getBedNumber(): null;
+	}
+
+	public String getRoomDescription() {
+		return room != null ? room.getDescription(): null;
+	}
 
 }

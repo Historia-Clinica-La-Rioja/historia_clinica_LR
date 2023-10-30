@@ -415,7 +415,7 @@ public class ServiceRequestController {
 	}
 
     @GetMapping(value = "/{serviceRequestId}/download-pdf")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, TECNICO')")
+//    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, TECNICO')")
     public ResponseEntity<Resource> downloadPdf(@PathVariable(name = "institutionId") Integer institutionId,
 												@PathVariable(name = "patientId") Integer patientId,
 												@PathVariable(name = "serviceRequestId") Integer serviceRequestId) throws PDFDocumentException {

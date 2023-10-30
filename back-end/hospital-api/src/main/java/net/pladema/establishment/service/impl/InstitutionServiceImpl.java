@@ -94,5 +94,4 @@ public class InstitutionServiceImpl implements InstitutionService {
 			return institutionRepository.getAllByDepartmentAndClinicalSpecialtyAndPractice(departmentId, clinicalSpecialtyId, practiceSnomedId);
 		return institutionRepository.getByDepartmentAndPractice(departmentId, practiceSnomedId);
 	}
-
 }

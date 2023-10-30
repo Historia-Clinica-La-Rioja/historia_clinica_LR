@@ -40,7 +40,7 @@ public class InternmentEpisodeStorageImpl implements InternmentEpisodeStorage {
 				"b.id as bedId, b.bedNumber, " +
 				"r.id as roomId, r.roomNumber, sector.description, " +
 				"hpg.pk.healthcareProfessionalId," +
-				"rc, ie.statusId, ie.probableDischargeDate, pd.administrativeDischargeDate, pd.physicalDischargeDate, pd.medicalDischargeDate " +
+				"rc, ie.statusId, ie.probableDischargeDate, pd.administrativeDischargeDate, pd.physicalDischargeDate, pd.medicalDischargeDate, r.description " +
 				"FROM InternmentEpisode ie " +
 				"JOIN Bed b ON (b.id = ie.bedId) " +
 				"JOIN Room r ON (r.id = b.roomId) " +
@@ -77,7 +77,8 @@ public class InternmentEpisodeStorageImpl implements InternmentEpisodeStorage {
 				row[14] != null ? ((LocalDateTime) row[14]) : null,
 				row[15] != null ? ((LocalDateTime) row[15]) : null,
 				row[16] != null ? ((LocalDateTime) row[16]) : null,
-				row[17] != null ? ((LocalDateTime) row[17]) : null);
+				row[17] != null ? ((LocalDateTime) row[17]) : null,
+				row[18] != null ? (String) row[18] : null);
 	}
 
 	private ResponsibleDoctorVo buildResponsableDoctor(Integer professionalId) {

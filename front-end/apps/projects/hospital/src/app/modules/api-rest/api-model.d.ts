@@ -1618,17 +1618,24 @@ export interface FilePathBo {
 export interface FormVDto {
     address: string;
     affiliateNumber: string;
+    bedNumber: string;
     cie10Codes: string;
     completePatientName: string;
+    completeProfessionalName: string;
     consultationDate: Date;
     documentNumber: string;
     documentType: string;
     establishment: string;
+    establishmentProvinceCode: string;
+    hcnId: number;
+    licenses: string[];
     medicalCoverage: string;
+    medicalCoverageCondition: string;
     patientAge: number;
     patientGender: string;
     problems: string;
     reportDate: Date;
+    roomDescription: string;
     sisaCode: string;
 }
 
@@ -2939,9 +2946,11 @@ export interface PatientMedicalCoverageDto {
     active: boolean;
     affiliateNumber?: string;
     condition: EPatientMedicalCoverageCondition;
+    conditionValue?: string;
     endDate?: string;
     id?: number;
     medicalCoverage: CoverageDto;
+    medicalCoverageName?: string;
     planId?: number;
     planName?: string;
     startDate?: string;

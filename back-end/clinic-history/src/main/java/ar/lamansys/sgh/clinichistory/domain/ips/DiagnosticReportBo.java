@@ -30,4 +30,8 @@ public class DiagnosticReportBo extends ClinicalTerm {
     private List<FileBo> files;
 
 	private Integer sourceId;
+
+	public String getSnomedPt() {
+		return this.healthCondition.getSnomedPt();
+	}
 }

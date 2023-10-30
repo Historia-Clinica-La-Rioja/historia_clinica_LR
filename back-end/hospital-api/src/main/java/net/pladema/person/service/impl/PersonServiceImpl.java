@@ -9,6 +9,7 @@ import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.output.CompletePersonNameVo;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import net.pladema.address.repository.entity.Address;
 import net.pladema.patient.controller.dto.AuditPatientSearch;
 import net.pladema.person.repository.domain.CompletePersonNameBo;
 import net.pladema.person.repository.domain.DuplicatePersonVo;
