@@ -271,11 +271,11 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	private setValuesFromExistingAgenda(diary: CompleteDiaryDto): void {
-
 		if (diary.predecessorProfessionalId) {
 			this.temporary = true;
 			this.form.controls.temporaryReplacement.setValue(true);
 			this.form.controls.professionalReplacedId.setValue(diary.predecessorProfessionalId);
+			this.form.controls.hierarchicalUnitTemporary.disable();
 			this.form.get('professionalReplacedId').disable();
 		} else {
 			this.form.controls.healthcareProfessionalId.setValue(diary.healthcareProfessionalId);
@@ -496,7 +496,7 @@ export class AgendaSetupComponent implements OnInit {
 			healthcareProfessionalId: this.form.getRawValue().healthcareProfessionalId,
 			doctorsOfficeId: this.form.getRawValue().doctorOffice.id,
 
-			predecessorProfessionalId: this.form.value?.professionalReplacedId,
+			predecessorProfessionalId: this.form.get("professionalReplacedId").value,
 			hierarchicalUnitId: this.form.get("temporaryReplacement").value ? this.form.get("hierarchicalUnitTemporary").value : this.form.get("hierarchicalUnit").value,
 
 			startDate: momentFormat(this.form.value.startDate, DateFormat.API_DATE),
