@@ -1,0 +1,39 @@
+.container {
+    margin-bottom: 15px;
+}
+
+.header {
+    margin-bottom: 25px;
+    display: block;
+}
+
+.title {
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.hint {
+    font-size: 12px;
+    margin-left: 1em;
+}
+
+.error-message {
+	margin-left: 1em;
+	font-size: 12px;
+}
+
+.observations {
+	height: 5em;
+    width: 100%;
+}
+
+:host ::ng-deep .mat-form-field {
+    display: flex;
+    width: 100%;
+}
+
+:host ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0;
+    width: 100%;
+}

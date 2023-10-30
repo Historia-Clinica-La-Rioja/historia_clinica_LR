@@ -15,6 +15,7 @@ import { SolveProblemComponent } from '@historia-clinica/dialogs/solve-problem/s
 import { anyMatch } from '@core/utils/array.utils';
 import { PermissionsService } from '@core/services/permissions.service';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
+import { AmendProblemComponent } from '@historia-clinica/modules/ambulatoria/dialogs/amend-problem/amend-problem.component';
 
 @Component({
 	selector: 'app-antecedentes-personales-summary',
@@ -146,9 +147,23 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 			});
 		warnignComponent.afterClosed().subscribe(confirmed => {
 			if (confirmed) {
-				
+				this.openAmendProblemDialog(problem);
 			}
 		});
+	}
+
+	private openAmendProblemDialog(problem: HCEPersonalHistoryDto) {
+		const amendProblemDialog = this.dialog.open(AmendProblemComponent, 
+			{
+				autoFocus: false,
+				minWidth: '500px',
+			})
+		amendProblemDialog.afterClosed().subscribe((errorData) => {
+			if(errorData){
+				console.log(problem.id)
+				console.log(errorData)
+			}
+		})
 	}
 
 	private openDockPopup(idProblema: number) {

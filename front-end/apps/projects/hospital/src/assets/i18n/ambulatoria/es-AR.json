@@ -367,7 +367,11 @@
                 "amend_problems": {
                     "AMEND_PROBLEM": "Marcar como registro incorrecto",
                     "TITLE": "Turnos y referencias asociados",
-                    "CONTENT": "Al marcar este problema como erróneo, todas las referencias y/o turnos asociados al mismo se cancelarán automáticamente."
+                    "CONTENT": "Al marcar este problema como erróneo, todas las referencias y/o turnos asociados al mismo se cancelarán automáticamente.",
+                    "MARK_AS_ERROR": "Marcar como registro erróneo",
+                    "COMPLETE_DATA": "Ingrese los siguientes datos",
+                    "ERROR_MOTIVE": "Motivo del error",
+                    "OBSERVATIONS": "Observaciones*"
                 }
             },
             "ordenes_prescripciones": {

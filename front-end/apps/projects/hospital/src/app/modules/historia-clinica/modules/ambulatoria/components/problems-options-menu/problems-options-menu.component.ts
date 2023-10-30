@@ -11,6 +11,7 @@ import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { SolveProblemComponent } from '@historia-clinica/dialogs/solve-problem/solve-problem.component';
 import { HistoricalProblemsFacadeService } from '../../services/historical-problems-facade.service';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
+import { AmendProblemComponent } from '../../dialogs/amend-problem/amend-problem.component';
 
 @Component({
     selector: 'app-problems-options-menu',
@@ -132,8 +133,22 @@ export class ProblemsOptionsMenuComponent implements OnInit {
 			});
 		warnignComponent.afterClosed().subscribe(confirmed => {
 			if (confirmed) {
-				
+				this.openAmendProblemDialog(problem);
 			}
 		});
+	}
+
+	private openAmendProblemDialog(problem: HCEPersonalHistoryDto) {
+		const amendProblemDialog = this.dialog.open(AmendProblemComponent, 
+			{
+				autoFocus: false,
+				minWidth: '500px',
+			})
+		amendProblemDialog.afterClosed().subscribe((errorData) => {
+			if(errorData){
+				console.log(problem.id)
+				console.log(errorData)
+			}
+		})
 	}
 }
