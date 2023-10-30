@@ -18,11 +18,11 @@ constructor(
 
   }
 
-crearEdMonton(institutionId: number, patientId  : number, datos: any[]): Observable<boolean> {
+crearEdMonton(institutionId: number, patientId  : number, datos: any): Observable<boolean> {
   console.log("en servicio ", patientId )
-  console.log("array", datos)
+  console.log("array", datos, " institucion", institutionId)
 
-  const url = `${environment.apiBase}/institution/${institutionId}/patient/${patientId}/hce/general-state/edmonton`;
+  const url = `${environment.apiBase}/institution/${institutionId}/patient/${patientId}/hce/general-state/edmonton`; 
   return this.http.post<boolean>(url, datos);
 }
 

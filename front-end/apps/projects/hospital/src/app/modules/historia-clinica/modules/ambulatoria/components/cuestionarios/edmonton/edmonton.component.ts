@@ -37,6 +37,8 @@ export class EdmontonComponent {
   cumulativeSum: number = 0;
   patientData: BasicPatientDto | undefined;
   datos: any;
+  selectedCalificacion: string = '';
+
   
 
   constructor(
@@ -54,51 +56,40 @@ export class EdmontonComponent {
       this.selectedValues[questionIndex] = value;
       this.calcularSuma();
     }
-    
-    
-    
-  
-    calcularSuma(): void {
-      const valueToSumMapping = {
-        1: 0,
-        2: 1,
-        3: 2,
-        4: 0,
-        5: 1,
-        6: 2,
-        7: 0,
-        8: 1,
-        9: 2,
-        10: 0,
-        11: 1,
-        12: 2,
-        13: 0,
-        14: 1,
-        15: 2,
-        16: 0,
-        17: 1,
-        18: 2,
-        19: 0,
-        20: 1,
-      };
       
+    calcularSuma(): void {
+      const valueToSumMapping = {};
+      for (let i = 1; i <= 20; i++) {
+        if (i % 3 === 1) {
+          valueToSumMapping[i] = 0;
+        } else if (i % 3 === 2) {
+          valueToSumMapping[i] = 1;
+        } else {
+          valueToSumMapping[i] = 2;
+        }
+      }
+    
       this.sumaAcumulada = this.selectedValues.reduce((acc, value) => {
         const mappedSum = valueToSumMapping[value] || 0; // Usar el mapeo
-        const totalScore = acc + mappedSum
-        
-        if (totalScore >= 4) {
-            this.sumaAcumulada=0
-        } else if(totalScore >= 5 && totalScore <=6) {
-            this.sumaAcumulada=1
-        }else if(totalScore >= 7 && totalScore <=8){
-            this.sumaAcumulada=2
-        }else if (totalScore >= 9 && totalScore <=10){
-          this.sumaAcumulada=3
-        }else if (totalScore >= 11){
-          this.sumaAcumulada=4
-        }
-        return this.sumaAcumulada;
+        return acc + mappedSum;
       }, 0);
+    
+      if (this.sumaAcumulada >= 11) {
+        this.selectedCalificacion = 'A33';
+        this.sumaAcumulada = 4;
+      } else if (this.sumaAcumulada >= 9) {
+        this.selectedCalificacion = 'A32';
+        this.sumaAcumulada = 3;
+      } else if (this.sumaAcumulada >= 7) {
+        this.selectedCalificacion = 'A31';
+        this.sumaAcumulada = 2;
+      } else if (this.sumaAcumulada >= 5) {
+        this.selectedCalificacion = 'A30';
+        this.sumaAcumulada = 1;
+      } else {
+        this.selectedCalificacion = 'A29'
+        this.sumaAcumulada = 0;
+      }
     }
     
     getDataSumAttributeValue(index: number): string {
@@ -181,6 +172,7 @@ export class EdmontonComponent {
     }
 
   construirDatos() {
+    this.calcularSuma();
     const datos = {
       edMonton: []
     };
@@ -243,8 +235,8 @@ export class EdmontonComponent {
       
       {
         questionId: 22, 
-        answerId: 21,
-        value: "A29"
+        answerId: this.sumaAcumulada,
+        value: this.selectedCalificacion
       },
     ];
     console.log("Array en edmonton",datos)
@@ -314,9 +306,6 @@ export class EdmontonComponent {
         });
       }
     });
-    //this.edmontonService.crearEdMonton(this.patientId, this.routePrefix, this.construirDatos()).subscribe(result => {
-     // alert('Formulario enviado');
-    //});
   }
 
   enviarFormulario(): void {
