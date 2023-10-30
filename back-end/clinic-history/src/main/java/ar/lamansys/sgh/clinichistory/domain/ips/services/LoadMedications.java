@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class LoadMedications {
@@ -98,7 +99,7 @@ public class LoadMedications {
 				medicationBo.getIsDigital(),
 				medicationBo.getPrescriptionDate(),
 				medicationBo.getDueDate());
-
+		medicationStatement.setUuid(UUID.randomUUID());
         medicationStatement = medicationStatementRepository.save(medicationStatement);
         LOG.debug("medicationStatement saved -> {}", medicationStatement.getId());
         LOG.debug(OUTPUT, medicationStatement);

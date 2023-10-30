@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -122,6 +123,7 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
 		else {
 			MedicationRequest result = generateBasicMedicationrequest(medicationRequest);
 			result.setRequestDate(LocalDate.now());
+			result.setUuid(UUID.randomUUID());
 			result = medicationRequestRepository.save(result);
 			medicationRequestIds.put(result.getId(), medicationRequest.getRequestDate());
 		}
@@ -135,6 +137,7 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
 			result.setRepetitions(currentRequest == 0 ? medicationRequest.getRepetitions() : 0);
 			result.setIsPostDated(currentRequest == 0);
 			result.setRequestDate(iterationDate);
+			result.setUuid(UUID.randomUUID());
 			result = medicationRequestRepository.save(result);
 			originalMedicationRequestId.put(result.getId(), iterationDate);
 			iterationDate = iterationDate.plusDays(30);

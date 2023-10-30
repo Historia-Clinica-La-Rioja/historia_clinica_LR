@@ -1,3 +1,25 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v2_11 
+    - logicalFilePath: incrementales-v2_11
+
+    - changeSet:
+        id: addColumn-uuid-medication-request
+        author: mvalin
+        changes:
+          - addColumn:
+              tableName: medication_request
+              columns:
+                - column:
+                    name: uuid
+                    type: uuid
+
+    - changeSet:
+        id: addColumn-uuid-medication-statement
+        author: mvalin
+        changes:
+          - addColumn:
+              tableName: medication_statement
+              columns:
+                - column:
+                    name: uuid
+                    type: uuid
 
