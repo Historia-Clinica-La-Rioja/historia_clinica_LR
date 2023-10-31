@@ -1,0 +1,16 @@
+<form class="display" [formGroup]="filterForm">
+	<ng-container *ngFor="let filter of filters">
+		<mat-form-field appearance="outline">
+			<mat-label>{{filter?.name | translate}}</mat-label>
+			<mat-select [id]="filter.key" [formControlName]="filter.key">
+				<mat-option *ngFor="let option of filter.options" [value]="option.id" (click)="emitSearchCriteria()">
+					{{option?.description}} {{option?.name}}
+				</mat-option>
+			</mat-select>
+			<button *ngIf="filterForm.get(filter.key).value" mat-button matSuffix color="warn" mat-icon-button
+				(click)="clear(filter.key); $event.stopPropagation()">
+				<mat-icon>close</mat-icon>
+			</button>
+		</mat-form-field>
+	</ng-container>
+</form>

@@ -32,6 +32,7 @@ import { FactorDeRiesgoComponent } from './components/factor-de-riesgo-current/f
 import { FactorDeRiesgoCurrentPreviousComponent } from './components/factor-de-riesgo-current-previous/factor-de-riesgo-current-previous.component';
 import { FilterButtonComponent } from './components/filter-button/filter-button.component';
 import { FiltersCardComponent } from './components/filters-card/filters-card.component';
+import { FiltersSelectV2Component } from './components/filters-select-v2/filters-select-v2.component';
 import { FiltersTypeaheadComponent } from '../presentation/components/filters-typeahead/filters-typeahead.component';
 import { FiltersSelectComponent } from './components/filters-select/filters-select.component';
 import { FloatingDivComponent } from './components/floating-div/floating-div.component';
@@ -121,6 +122,7 @@ import { ButtonComponent } from './components/button/button.component';
 		FactorDeRiesgoCurrentPreviousComponent,
 		FilterButtonComponent,
 		FiltersCardComponent,
+		FiltersSelectV2Component,
 		FiltersTypeaheadComponent,
 		FloatingDivComponent,
 		FooterComponent,
