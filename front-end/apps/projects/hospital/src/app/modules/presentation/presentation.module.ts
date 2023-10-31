@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule, FlexModule } from '@angular/flex-layout';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-
 // deps
 import { CoreModule } from '@core/core.module';
 import { AppMaterialModule } from '@material/app.material.module';
@@ -61,6 +59,7 @@ import { PersonShortDescriptionComponent } from './components/person-short-descr
 import { PriorityComponent } from './components/priority/priority.component';
 import { PrioritySelectComponent } from './components/priority-select/priority-select.component';
 import { RichTextEditorComponent } from './components/rich-text-editor/rich-text-editor.component';
+import { SearchComponent } from './components/search/search.component';
 import { SelectableCardComponent } from './components/selectable-card/selectable-card.component';
 import { SummaryCardComponent } from './components/summary-card/summary-card.component';
 import { TableComponent } from './components/table/table.component';
@@ -89,6 +88,7 @@ import { TimeDtoToLocalTimePipe } from './pipes/time-dto-to-local-time.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
 	declarations: [
@@ -144,6 +144,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		PriorityComponent,
 		PrioritySelectComponent,
 		RichTextEditorComponent,
+		SearchComponent,
 		SelectableCardComponent,
 		SummaryCardComponent,
 		TableComponent,
@@ -242,6 +243,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		PriorityComponent,
 		PrioritySelectComponent,
 		RichTextEditorComponent,
+		SearchComponent,
 		SelectableCardComponent,
 		SummaryCardComponent,
 		TableComponent,

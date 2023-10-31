@@ -12,7 +12,7 @@ import { Sector } from '@institucion/services/bed-management-facade.service';
 import { SectorService } from '@api-rest/services/sector.service';
 import { RoomService } from '@api-rest/services/room.service';
 import { pushIfNotExists } from '@core/utils/array.utils';
-import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
+import { SEARCH_CASES } from 'projects/hospital/src/app/modules/hsi-components/search-cases/search-cases.component';
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 const PAGE_SIZE_MIN = [5];
@@ -25,12 +25,13 @@ const PAGE_MIN_SIZE = 5;
 })
 
 export class InternmentPatientCardComponent {
+	filters = [SEARCH_CASES.LOWER_CASE, SEARCH_CASES.REMOVE_DOT];
 	formFilter: UntypedFormGroup;
 	panelOpenState = false;
 	pageSliceObs$: Observable<CardModel[]>;
 	sectors = [];
 	rooms = [];
-	private applySearchFilter = '';
+	private description = '';
 	private sizePageSelect = PAGE_MIN_SIZE;
 	pageSizeOptions: number[] = PAGE_SIZE_OPTIONS;
 	numberOfPatients = 0;
@@ -128,8 +129,8 @@ export class InternmentPatientCardComponent {
 		this.pageSlice = this.pageSlice.slice(startPage, $event.pageSize + startPage);
 	}
 
-	applyFilter($event: any): void {
-		this.applySearchFilter = ($event.target as HTMLInputElement).value?.replace(REMOVE_SUBSTRING_DNI, '');
+	applyFilter(description: string) {
+		this.description = description;
 		this.upDateFilters();
 	}
 
@@ -166,8 +167,8 @@ export class InternmentPatientCardComponent {
 			listFilter = listFilter.filter(p => p.sectorDescription === this.formFilter.value.sector)
 		if (this.formFilter?.value.physical)
 			listFilter = listFilter.filter(p => p.hasPhysicalDischarge === this.formFilter.value.physical);
-		if (this.applySearchFilter) {
-			listFilter = listFilter.filter((e: CardModel) => e?.name.toLowerCase().includes(this.applySearchFilter.toLowerCase()) || e?.dni.toString().includes(this.applySearchFilter));
+		if (this.description) {
+			listFilter = listFilter.filter((e: CardModel) => e?.name.toLowerCase().includes(this.description) || e?.dni.toString().includes(this.description));
 		}
 		return listFilter;
 	}
