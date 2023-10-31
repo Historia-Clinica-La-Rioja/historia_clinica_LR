@@ -21,6 +21,10 @@ public class ProblemBo extends HealthConditionBo {
 
     private boolean chronic = false;
 
+    private Short errorReasonId;
+
+    private String errorObservations;
+
     public ProblemBo(SnomedBo snomedBo) {
         super(snomedBo);
     }
