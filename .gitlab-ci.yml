@@ -25,3 +25,12 @@ code_freeze:
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
       when: manual
+
+generar_release:
+  stage: publish-docker-image
+  image: bitnami/git:2.42.0
+  script:
+    - ./scripts/run-release.sh
+  only:
+    - /^rc-.*$/ 
+  when: manual
