@@ -313,7 +313,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 	private openNewAppointmentDialog(clickedDate: Moment, openingHourId: number, addingOverturn: boolean) {
 		const dialogRef = this.dialog.open(NewAppointmentComponent, {
-			width: '35%',
+			width: '40%',
 			disableClose: true,
 			data: {
 				date: clickedDate.format(DateFormat.API_DATE),

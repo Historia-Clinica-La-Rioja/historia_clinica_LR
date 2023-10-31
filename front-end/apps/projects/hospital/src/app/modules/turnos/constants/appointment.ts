@@ -1,5 +1,5 @@
 import { EAppointmentModality } from "@api-rest/api-model";
-import { Color } from "@presentation/colored-label/colored-label.component";
+import { Color, ColoredLabel } from "@presentation/colored-label/colored-label.component";
 
 export const APPOINTMENT_DURATIONS = [
 	{
@@ -150,4 +150,16 @@ export const stateColor = {
     [APPOINTMENT_STATES_ID.SERVED]: Color.GREEN,
     [APPOINTMENT_STATES_ID.CANCELLED]: Color.RED,
     [APPOINTMENT_STATES_ID.ASSIGNED]: Color.BLUE,
+}
+
+export const onSiteAttentionColoredLabel : ColoredLabel = {
+	description: MODALITYS[EAppointmentModality.ON_SITE_ATTENTION],
+	color: Color.BLUE,
+	icon: 'person',
+}
+
+export const virtualAttentionColoredLabel : ColoredLabel = {
+	description: MODALITYS[EAppointmentModality.PATIENT_VIRTUAL_ATTENTION],
+	color: Color.PURPLE,
+	icon: 'video_call',
 }

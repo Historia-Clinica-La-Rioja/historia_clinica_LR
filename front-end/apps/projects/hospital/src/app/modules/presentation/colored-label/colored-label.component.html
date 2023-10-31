@@ -1,4 +1,4 @@
  <div fxLayout="row" fxLayoutAlign="space-between center" class="{{color}}">
-    <mat-icon>{{icon}}</mat-icon>
+    <mat-icon *ngIf="icon">{{icon}}</mat-icon>
     <span>{{description}}</span>
  </div>

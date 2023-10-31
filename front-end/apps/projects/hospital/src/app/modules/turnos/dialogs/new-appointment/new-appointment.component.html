@@ -6,11 +6,24 @@
 			<mat-icon>close</mat-icon>
 		</button>
 	</div>
-	<div class="mat-h3" fxLayoutAlign="start center">
-		<mat-icon color="primary" class="appointment-title-icon">event</mat-icon>
-		<span>{{data.date | date:dateFormats.FULL_DATE}}</span>
-		<span class="appointment-title-dot">●</span>
-		<span>{{data.hour | viewHourMinute}}hs</span>
+	<div fxLayout="row" fxLayout.xs="column" class="mat-h3" fxLayoutGap="1rem" fxLayoutAlign.xs="space-around start">
+		<div fxLayout="row" fxLayout.xs="column">
+			<div fxLayout="row" fxLayoutAlign="space-between center">
+				<mat-icon color="primary" class="appointment-title-icon">event</mat-icon>
+				<span>{{data.date | date:dateFormats.FULL_DATE}}</span>
+			</div>
+			<div fxLayout="row" fxLayoutAlign="start center">
+				<span class="appointment-title-dot">●</span>
+				<span>{{data.hour | viewHourMinute}}hs</span>
+			</div>
+		</div>
+
+		<div *ngIf="stepper.selectedIndex > 0 && modalityColorLabel">
+			<app-colored-label
+				[description]="modalityColorLabel.description | translate"
+				[color]="modalityColorLabel.color" [icon]="modalityColorLabel.icon">
+			</app-colored-label>
+		</div>
 	</div>
 </div>
 
@@ -239,7 +252,7 @@
 		[disabled]="isSubmitButtonDisabled">
 		<span [translate]="'buttons.CONFIRM'"></span>
 	</button>
-	<button id="next" (click)="stepper.next()" *ngIf="stepper.selectedIndex !== 1 && stepper.selectedIndex !== 2 || (data.protectedAppointment && stepper.selectedIndex === 2) " mat-raised-button type="button" color="primary">
+	<button id="next" (click)="stepper.next()" *ngIf="(!data.protectedAppointment && stepper.selectedIndex !== 1 && stepper.selectedIndex !== 2) || (data.protectedAppointment && stepper.selectedIndex === 2) " mat-raised-button type="button" color="primary">
 		<span [translate]="'buttons.CONTINUE'"></span>
 	</button>
 	<button id="confirm-from-step-3" (click)="submit(true)" mat-raised-button type="button" color="primary"

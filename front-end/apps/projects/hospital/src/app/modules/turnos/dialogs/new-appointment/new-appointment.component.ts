@@ -43,6 +43,8 @@ import { PrescripcionesService } from '@historia-clinica/modules/ambulatoria/ser
 import { TranslateService } from '@ngx-translate/core';
 import { differenceInDays } from 'date-fns';
 import { SearchAppointmentCriteria } from '@turnos/components/search-appointments-in-care-network/search-appointments-in-care-network.component';
+import { ColoredLabel } from '@presentation/colored-label/colored-label.component';
+import { onSiteAttentionColoredLabel, virtualAttentionColoredLabel } from '@turnos/constants/appointment';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -92,7 +94,7 @@ export class NewAppointmentComponent implements OnInit {
 	readonly MODALITY_PATIENT_VIRTUAL_ATTENTION = EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
 	readonly MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION;
 	modalitySelected: EAppointmentModality = this.MODALITY_ON_SITE_ATTENTION;
-
+	modalityColorLabel: ColoredLabel;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: NewAppointmentData,
 		public dialogRef: MatDialogRef<NewAppointmentComponent>,
@@ -194,12 +196,14 @@ export class NewAppointmentComponent implements OnInit {
 		if (this.modalitySelected === this.MODALITY_PATIENT_VIRTUAL_ATTENTION) {
 			this.appointmentInfoForm.setControl('patientEmail', new UntypedFormControl(null, [Validators.required, Validators.email]));
 			this.appointmentInfoForm.controls.patientEmail.updateValueAndValidity();
+			this.modalityColorLabel = virtualAttentionColoredLabel;
 		} else if (this.modalitySelected === this.MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION) {
 			this.associateReferenceForm.setControl('professionalEmail', new UntypedFormControl(null, [Validators.required, Validators.email]));
 			this.associateReferenceForm.controls.professionalEmail.updateValueAndValidity();
 		}else{
 			this.appointmentInfoForm.setControl('patientEmail', new UntypedFormControl(null, [Validators.email]));
 			this.appointmentInfoForm.controls.patientEmail.updateValueAndValidity();
+			this.modalityColorLabel = onSiteAttentionColoredLabel;
 		}
 	}
 
