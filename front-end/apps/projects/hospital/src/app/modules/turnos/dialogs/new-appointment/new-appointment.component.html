@@ -2,7 +2,7 @@
 	<div fxLayout="row" fxLayoutAlign="space-between start">
 		<p class="mat-h2"
 			[translate]="data.overturnMode ? 'turnos.overturns.CREATE' : 'turnos.new-appointment.NEW_APPOINTMENT'"></p>
-		<button id="close-dialog" mat-icon-button [mat-dialog-close]="-1" type="button" class="icon-close">
+		<button id="close-dialog" mat-icon-button [mat-dialog-close]="-1" (click)="cancelBtnActions()" type="button" class="icon-close">
 			<mat-icon>close</mat-icon>
 		</button>
 	</div>
@@ -17,12 +17,12 @@
 <div mat-dialog-content class="dialog-content">
 
 	<mat-stepper [selectedIndex]="initialIndex" #stepper labelPosition="bottom">
-		<mat-step [stepControl]="modalityForm" label="{{'turnos.new-appointment.STEP_0' | translate}}">
+		<mat-step [stepControl]="modalityForm" label="{{'turnos.new-appointment.STEP_0' | translate}}" [editable]="editableStepModality">
 			<mat-card class="mat-typography mat-elevation-z0">
 				<form [formGroup]="modalityForm">
 					<div fxLayout="column" fxLayoutGap="16px">
 						<mat-label class="bold">{{'turnos.new-appointment.MODALITY_SELECT' | translate}}</mat-label>
-						<mat-radio-group fxLayout="column" fxLayoutGap="16px" formControlName="modality">
+						<mat-radio-group fxLayout="column" fxLayoutGap="16px" formControlName="modality" (change)="setModalityValidation()">
 							<mat-radio-button color="primary"
 								[value]="MODALITY_ON_SITE_ATTENTION">{{'turnos.ON_SITE_ATTENTION' |
 								translate}}</mat-radio-button>
@@ -219,10 +219,6 @@
 </div>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
-	<button id="cancel" *ngIf="stepper.selectedIndex !== 1" mat-stroked-button color="primary"
-		(click)="cancelBtnActions()" [mat-dialog-close]="-1">
-		<span [translate]="'buttons.CANCEL'"></span>
-	</button>
 	<button id="back" class="back-btn" *ngIf="stepper.selectedIndex > 0" mat-stroked-button color="primary"
 		[disabled]="preselectedPatient" (click)="back(stepper)">
 		<span [translate]="'buttons.BACK'"></span>
@@ -235,7 +231,7 @@
 			</button>
 		</ng-container>
 		<button id="search-patient" mat-flat-button color="primary" type="submit" (click)="search()">
-			<span [translate]="'turnos.new-appointment.BUTTON_SEARCH'"></span>
+			<span [translate]="'buttons.CONTINUE'"></span>
 		</button>
 	</div>
 
@@ -243,9 +239,8 @@
 		[disabled]="isSubmitButtonDisabled">
 		<span [translate]="'buttons.CONFIRM'"></span>
 	</button>
-	<button id="next" (click)="stepper.next()" mat-raised-button type="button" color="primary"
-		*ngIf="data.protectedAppointment && stepper.selectedIndex === 2" [disabled]="!appointmentInfoForm.valid">
-		<span [translate]="'buttons.NEXT'"></span>
+	<button id="next" (click)="stepper.next()" *ngIf="stepper.selectedIndex !== 1 && stepper.selectedIndex !== 2 || (data.protectedAppointment && stepper.selectedIndex === 2) " mat-raised-button type="button" color="primary">
+		<span [translate]="'buttons.CONTINUE'"></span>
 	</button>
 	<button id="confirm-from-step-3" (click)="submit(true)" mat-raised-button type="button" color="primary"
 		*ngIf="data.protectedAppointment && stepper.selectedIndex === 3" [disabled]="disableConfirmButtonStep3()">

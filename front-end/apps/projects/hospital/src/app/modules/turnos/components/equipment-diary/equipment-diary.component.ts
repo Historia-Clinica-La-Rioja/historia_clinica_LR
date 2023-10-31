@@ -176,6 +176,7 @@ export class EquipmentDiaryComponent implements OnInit {
 	private openNewAppointmentDialog(clickedDate: Moment, openingHourId: number, addingOverturn: boolean) {
 		const dialogRef = this.dialog.open(NewAppointmentComponent, {
 			width: '35%',
+			disableClose: true,
 			data: {
 				date: clickedDate.format(DateFormat.API_DATE),
 				diaryId: this.diary.id,

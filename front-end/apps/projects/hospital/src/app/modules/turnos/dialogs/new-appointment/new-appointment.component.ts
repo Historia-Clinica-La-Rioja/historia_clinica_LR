@@ -87,9 +87,11 @@ export class NewAppointmentComponent implements OnInit {
 	isOrderTranscribed = false;
 	transcribedOrder = null;
 	editableStep1 = true;
+	editableStepModality = true;
 	readonly MODALITY_ON_SITE_ATTENTION = EAppointmentModality.ON_SITE_ATTENTION;
 	readonly MODALITY_PATIENT_VIRTUAL_ATTENTION = EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
-    readonly MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION;
+	readonly MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION;
+	modalitySelected: EAppointmentModality = this.MODALITY_ON_SITE_ATTENTION;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: NewAppointmentData,
@@ -113,10 +115,19 @@ export class NewAppointmentComponent implements OnInit {
 		private readonly translateService: TranslateService,
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
+		if(this.data.modalityAttention){
+			this.modalitySelected = this.data.modalityAttention;
+			this.editableStepModality=false;
+			this.initialIndex=1;
+		}
+	
 	}
 
 	ngOnInit(): void {
-
+		this.modalityForm = this.formBuilder.group ({
+			modality:[this.modalitySelected, Validators.required],
+		})
+	
 		this.formSearch = this.formBuilder.group({
 			identifType: [null, Validators.required],
 			identifNumber: [null, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
@@ -132,13 +143,13 @@ export class NewAppointmentComponent implements OnInit {
 			medicalOrder: this.formBuilder.group({
 				appointmentMedicalOrder: [null]
 			}),
-			patientEmail:[null, [Validators.email]]
+			patientEmail: [null, [Validators.email]]
 		});
 
 
 		this.associateReferenceForm = this.formBuilder.group({
 			reference: [null, Validators.required],
-			professionalEmail: [null,Validators.email]
+			professionalEmail: [null, Validators.email]
 		});
 
 
@@ -164,14 +175,7 @@ export class NewAppointmentComponent implements OnInit {
 				updateControlValidator(this.formSearch, 'identifNumber', [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]);
 				updateControlValidator(this.formSearch, 'gender', [Validators.required]);
 			});
-			if(this.data.modalityAttention === this.MODALITY_PATIENT_VIRTUAL_ATTENTION){
-				this.appointmentInfoForm.setControl('patientEmail', new UntypedFormControl(null, [Validators.required,Validators.email]));
-				this.appointmentInfoForm.controls.patientEmail.updateValueAndValidity();
-			}else if(this.data.modalityAttention === this.MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION){
-				this.associateReferenceForm.setControl('professionalEmail', new UntypedFormControl(null, [Validators.required,Validators.email]));
-				this.associateReferenceForm.controls.patientEmail.updateValueAndValidity();
-			}
-			this.appointmentInfoForm.markAllAsTouched();
+		this.appointmentInfoForm.markAllAsTouched();
 
 		this.formSearch.controls.patientId.patchValue(this.data.patientId);
 		if (this.data.patientId) {
@@ -181,6 +185,21 @@ export class NewAppointmentComponent implements OnInit {
 			this.isFormSubmitted = true;
 			this.patientSearch(this.data.patientId);
 			this.editableStep1 = false;
+		}
+		this.setModalityValidation();
+	}
+
+	setModalityValidation() {
+		this.modalitySelected = this.modalityForm.controls.modality.value;
+		if (this.modalitySelected === this.MODALITY_PATIENT_VIRTUAL_ATTENTION) {
+			this.appointmentInfoForm.setControl('patientEmail', new UntypedFormControl(null, [Validators.required, Validators.email]));
+			this.appointmentInfoForm.controls.patientEmail.updateValueAndValidity();
+		} else if (this.modalitySelected === this.MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION) {
+			this.associateReferenceForm.setControl('professionalEmail', new UntypedFormControl(null, [Validators.required, Validators.email]));
+			this.associateReferenceForm.controls.professionalEmail.updateValueAndValidity();
+		}else{
+			this.appointmentInfoForm.setControl('patientEmail', new UntypedFormControl(null, [Validators.email]));
+			this.appointmentInfoForm.controls.patientEmail.updateValueAndValidity();
 		}
 	}
 
@@ -242,6 +261,7 @@ export class NewAppointmentComponent implements OnInit {
 					updateControlValidator(this.appointmentInfoForm, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
 				}
 				this.setMedicalCoverages();
+				this.stepper.next();
 			}, _ => {
 				this.patientNotFound();
 			});
@@ -305,6 +325,8 @@ export class NewAppointmentComponent implements OnInit {
 				this.isSubmitButtonDisabled = false;
 				processErrors(error, (msg) => this.snackBarService.showError(msg));
 			})
+		}else{
+			
 		}
 	}
 
@@ -318,10 +340,10 @@ export class NewAppointmentComponent implements OnInit {
 			overturn: this.data.overturnMode,
 			patientId: this.patientId,
 			patientMedicalCoverageId: this.appointmentInfoForm.value.patientMedicalCoverage?.id,
-			phonePrefix: this.appointmentInfoForm.value.phonePrefix,
+			phonePrefix:this.appointmentInfoForm.value.phonePrefix,
 			phoneNumber:  this.appointmentInfoForm.value.phoneNumber,
-			modality:this.data.modalityAttention ? this.data.modalityAttention : EAppointmentModality.ON_SITE_ATTENTION,
-			patientEmail:this.appointmentInfoForm.controls.patientEmail.value,
+			modality: this.modalitySelected,
+			patientEmail: this.appointmentInfoForm.controls.patientEmail.value,
 			applicantHealthcareProfessionalEmail: this.associateReferenceForm.controls.professionalEmail.value ? this.associateReferenceForm.controls.professionalEmail.value : null,
 		};
 		this.addAppointment(newAppointment).subscribe((appointmentId: number) => {
@@ -331,7 +353,7 @@ export class NewAppointmentComponent implements OnInit {
 			}
 			else {
 				this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
-				this.dialogRef.close({id:appointmentId,email:this.appointmentInfoForm.controls.patientEmail.value});
+				this.dialogRef.close({ id: appointmentId, email: this.appointmentInfoForm.controls.patientEmail.value });
 			}
 		}, error => {
 			this.isSubmitButtonDisabled = false;
@@ -359,12 +381,16 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	private assignAppointment(): void {
-		const valueEmail = this.data.modalityAttention === this.MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION ? this.associateReferenceForm.controls.professionalEmail.value : this.appointmentInfoForm.controls.patientEmail.value;
-		this.referenceAppointmentService.associateReferenceAppointment(this.associateReferenceForm.controls.reference.value.id, this.lastAppointmentId).subscribe(
+		if (this.data.modalityAttention === this.MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION) {
+			var valueEmail = this.associateReferenceForm.controls.professionalEmail.value;
+		} else {
+			valueEmail = this.appointmentInfoForm.controls.patientEmail.value;
+		}
+		this.referenceAppointmentService.associateReferenceAppointment(this.associateReferenceForm.controls.reference.value.referenceId, this.lastAppointmentId).subscribe(
 			successfullyAssociated => {
 				if (successfullyAssociated) {
 					this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
-					this.dialogRef.close({id:this.lastAppointmentId,email:valueEmail});
+					this.dialogRef.close({ id: this.lastAppointmentId, email: valueEmail });
 				}
 				else {
 					this.snackBarService.showError('turnos.new-appointment.messages.COULD_NOT_ASSOCIATE')
@@ -386,18 +412,20 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	private isAppointmentFormValid() {
+		this.appointmentInfoForm.markAllAsTouched();
 		return this.appointmentInfoForm.valid;
 	}
 
 	back(stepper: MatStepper) {
-		if(stepper.selectedIndex === 2){
+		if (stepper.selectedIndex === 2) {
 			this.formSearch.controls.completed.reset();
 			this.appointmentInfoForm.reset();
 			this.patientMedicalOrders = [];
-			if (this.transcribedOrder){
+			if (this.transcribedOrder) {
 				this.prescripcionesService.deleteTranscribedOrder(this.patientId, this.transcribedOrder.serviceRequestId).subscribe(() => {
 					this.transcribedOrder = null;
-					this.patientMedicalOrderTooltipDescription = '' });
+					this.patientMedicalOrderTooltipDescription = ''
+				});
 			}
 		}
 		this.goBack(stepper);
@@ -449,7 +477,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	cancelBtnActions() {
-		if (this.transcribedOrder){
+		if (this.transcribedOrder) {
 			this.prescripcionesService.deleteTranscribedOrder(this.patientId, this.transcribedOrder.serviceRequestId).subscribe();
 		}
 		this.clearQueryParams();
@@ -464,24 +492,25 @@ export class NewAppointmentComponent implements OnInit {
 		});
 	}
 
-	mapDiagnosticReportInfoDtoToMedicalOrderInfo(patientMedicalOrders: DiagnosticReportInfoDto[]){
+	mapDiagnosticReportInfoDtoToMedicalOrderInfo(patientMedicalOrders: DiagnosticReportInfoDto[]) {
 		let text = 'image-network.appointments.medical-order.ORDER';
 
 		this.translateService.get(text).subscribe(translatedText => {
 			patientMedicalOrders.map(diagnosticReportInfo => {
-				if (differenceInDays(new Date(), new Date(diagnosticReportInfo.creationDate)) <= ORDER_EXPIRED_DAYS){
+				if (differenceInDays(new Date(), new Date(diagnosticReportInfo.creationDate)) <= ORDER_EXPIRED_DAYS) {
 					this.patientMedicalOrders.push({
 						serviceRequestId: diagnosticReportInfo.serviceRequestId,
 						studyName: diagnosticReportInfo.snomed.pt,
 						studyId: diagnosticReportInfo.id,
 						displayText: `${translatedText} # ${diagnosticReportInfo.serviceRequestId} - ${diagnosticReportInfo.snomed.pt}`,
 						isTranscribed: false
-					})}
+					})
+				}
 			}).filter(value => value !== null && value !== undefined);
 		});
 	}
 
-	mapTranscribeOrderToMedicalOrderInfo(transcribedOrders: TranscribedDiagnosticReportInfoDto[]){
+	mapTranscribeOrderToMedicalOrderInfo(transcribedOrders: TranscribedDiagnosticReportInfoDto[]) {
 		let text = 'image-network.appointments.medical-order.TRANSCRIBED_ORDER';
 
 		this.translateService.get(text).subscribe(translatedText => {
@@ -496,7 +525,7 @@ export class NewAppointmentComponent implements OnInit {
 		});
 	}
 
-	goBack(stepper: MatStepper){
+	goBack(stepper: MatStepper) {
 		stepper.previous();
 		this.showAddPatient = false;
 	}
