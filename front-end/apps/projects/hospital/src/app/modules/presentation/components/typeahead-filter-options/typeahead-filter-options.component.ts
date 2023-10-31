@@ -3,7 +3,7 @@ import { TypeaheadOption } from '../typeahead/typeahead.component';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { startWith, map } from 'rxjs';
-import { SelectedFilterOption } from '../filters-typeahead/filters-typeahead.component';
+import { SelectedFilterOption } from '../filters/filters.component';
 
 @Component({
 	selector: 'app-typeahead-filter-options',

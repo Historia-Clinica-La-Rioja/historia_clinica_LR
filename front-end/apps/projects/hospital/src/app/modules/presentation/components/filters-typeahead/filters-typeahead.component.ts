@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TypeaheadFilterOptions } from '../typeahead-filter-options/typeahead-filter-options.component';
+import { SelectedFilterOption } from '../filters/filters.component';
 
 @Component({
 	selector: 'app-filters-typeahead',
@@ -29,11 +30,6 @@ export class FiltersTypeaheadComponent {
 	private clearOption(option: SelectedFilterOption) {
 		this.selectedFilterOptions = this.selectedFilterOptions.filter(filter => filter.key !== option.key);
 	}
-}
-
-export interface SelectedFilterOption {
-	key: string;
-	value: any;
 }
 
 export interface FilterTypeahead {

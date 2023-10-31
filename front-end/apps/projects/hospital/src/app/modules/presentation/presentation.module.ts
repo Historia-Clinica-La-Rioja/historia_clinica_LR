@@ -30,6 +30,7 @@ import { EmergencyCareTemporaryPatientHeader } from './components/emergency-care
 import { ExpansionSectionComponent } from './components/expansion-section/expansion-section.component';
 import { FactorDeRiesgoComponent } from './components/factor-de-riesgo-current/factor-de-riesgo.component';
 import { FactorDeRiesgoCurrentPreviousComponent } from './components/factor-de-riesgo-current-previous/factor-de-riesgo-current-previous.component';
+import { FiltersComponent } from './components/filters/filters.component';
 import { FilterButtonComponent } from './components/filter-button/filter-button.component';
 import { FiltersCardComponent } from './components/filters-card/filters-card.component';
 import { FiltersSelectV2Component } from './components/filters-select-v2/filters-select-v2.component';
@@ -120,6 +121,7 @@ import { ButtonComponent } from './components/button/button.component';
 		ExpansionSectionComponent,
 		FactorDeRiesgoComponent,
 		FactorDeRiesgoCurrentPreviousComponent,
+		FiltersComponent,
 		FilterButtonComponent,
 		FiltersCardComponent,
 		FiltersSelectV2Component,
@@ -225,6 +227,7 @@ import { ButtonComponent } from './components/button/button.component';
 		ExpansionSectionComponent,
 		FactorDeRiesgoComponent,
 		FactorDeRiesgoCurrentPreviousComponent,
+		FiltersComponent,
 		FilterButtonComponent,
 		FiltersCardComponent,
 		FiltersSelectComponent,
