@@ -1,16 +1,19 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
-
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
-import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.*;
-
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.EvolutionSummaryBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ErrorProblemDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientEvolutionSummaryDto;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientReasonDto;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientUpdateImmunizationDto;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.EvolutionSummaryBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
 import net.pladema.staff.controller.mapper.HealthcareProfessionalMapper;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -44,6 +47,9 @@ public interface OutpatientConsultationMapper {
     @Named("fromListOutpatientEvolutionSummaryBo")
     @IterableMapping(qualifiedByName = "fromOutpatientEvolutionSummaryBo")
     List<OutpatientEvolutionSummaryDto> fromListOutpatientEvolutionSummaryBo(List<EvolutionSummaryBo> evolutionSummaryBos);
+
+    @Named("fromErrorProblemDto")
+    ProblemBo fromErrorProblemDto(ErrorProblemDto errorProblemDto);
 
 }
 

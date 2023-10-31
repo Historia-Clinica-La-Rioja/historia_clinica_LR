@@ -1496,6 +1496,12 @@ export interface EquipmentOpeningHoursDto extends TimeRangeDto {
     id?: number;
 }
 
+export interface ErrorProblemDto {
+    errorObservations: string;
+    errorReasonId: number;
+    id: number;
+}
+
 export interface EthnicityDto extends Serializable {
     id: number;
     pt: string;
