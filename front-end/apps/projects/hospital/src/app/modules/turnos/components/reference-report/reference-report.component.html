@@ -2,15 +2,14 @@
     <div fxLayout="column">
         <h2 class="capitalize-first-letter">{{'turnos.search_references.REQUEST_LIST' | translate}}</h2>
 
-        <div fxLayout="row" fxLayoutGap="30px" fxLayout.lt-md="column">
+        <div fxLayout="row" fxLayoutGap="30px" fxLayout.lt-md="column" *appHasRole="['ADMINISTRATIVO']">
 
             <mat-button-toggle-group value="{{referenceReportFacade.dashboardView}}" (change)="referenceReportFacade.updateDashboardView($event.value)">
-                <mat-button-toggle value="{{referenceView.RECEIVED}}" *appHasRole="['ADMINISTRATIVO']"
+                <mat-button-toggle value="{{referenceView.RECEIVED}}"
                     [disabled]="referenceReportFacade.disabledDashboardActions">
                     {{'turnos.search_references.RECEIVED' | translate}}
                 </mat-button-toggle>
                 <mat-button-toggle value="{{referenceView.REQUESTED}}"
-                    *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ADMINISTRATIVO']"
                     [disabled]="referenceReportFacade.disabledDashboardActions">
                     {{'turnos.search_references.REQUEST' | translate}}
                 </mat-button-toggle>
