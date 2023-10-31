@@ -32,6 +32,7 @@ import { FactorDeRiesgoComponent } from './components/factor-de-riesgo-current/f
 import { FactorDeRiesgoCurrentPreviousComponent } from './components/factor-de-riesgo-current-previous/factor-de-riesgo-current-previous.component';
 import { FilterButtonComponent } from './components/filter-button/filter-button.component';
 import { FiltersCardComponent } from './components/filters-card/filters-card.component';
+import { FiltersTypeaheadComponent } from '../presentation/components/filters-typeahead/filters-typeahead.component';
 import { FiltersSelectComponent } from './components/filters-select/filters-select.component';
 import { FloatingDivComponent } from './components/floating-div/floating-div.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -67,6 +68,7 @@ import { TitledContentCardComponent } from './components/titled-content-card/tit
 import { TitledContentComponent } from './components/titled-content/titled-content.component';
 import { TitledSingleContentComponent } from './components/titled-single-content/titled-single-content.component';
 import { TypeaheadComponent } from './components/typeahead/typeahead.component';
+import { TypeaheadFilterOptionsComponent } from './components/typeahead-filter-options/typeahead-filter-options.component';
 import { UserBadgeComponent } from './components/user-badge/user-badge.component';
 
 // dialogs
@@ -119,6 +121,7 @@ import { ButtonComponent } from './components/button/button.component';
 		FactorDeRiesgoCurrentPreviousComponent,
 		FilterButtonComponent,
 		FiltersCardComponent,
+		FiltersTypeaheadComponent,
 		FloatingDivComponent,
 		FooterComponent,
 		IconedTextComponent,
@@ -155,6 +158,7 @@ import { ButtonComponent } from './components/button/button.component';
 		UserBadgeComponent,
   		FiltersSelectComponent,
   		TitledSingleContentComponent,
+		TypeaheadFilterOptionsComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
