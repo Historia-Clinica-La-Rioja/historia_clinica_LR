@@ -249,6 +249,32 @@ databaseChangeLog:
           - sql:
               sql: |-
                 UPDATE snomed_group SET institution_id = -1 WHERE institution_id IS NULL;
+                
+    - changeSet:
+        id: update-snomed_group-description-duplicated
+        context: "!schema-only"
+        author: mromero
+        changes:
+          - sql:
+              sql: |-
+                UPDATE snomed_group s
+                  SET description = (SELECT t.description
+                                    FROM (SELECT s1.id, 
+                                        concat(s1.description, '-', 
+                                            row_number() over (partition by s1.institution_id order by s1.id)) AS description
+                                        FROM snomed_group s1
+                                            JOIN snomed_group s2 ON s1.group_id = s2.id
+                                        WHERE s2.description LIKE 'PROCEDURE'
+                                          AND s1.group_type = 3
+                                          AND s.institution_id = s1.institution_id) AS t
+                                    WHERE t.id = s.id)
+                  WHERE s.group_type = 3
+                   AND (SELECT CASE WHEN count(*) > 1 THEN TRUE ELSE FALSE END
+                        FROM snomed_group s3
+                            JOIN snomed_group s4 ON s3.group_id = s4.id
+                        WHERE s4.description LIKE 'PROCEDURE'
+                          AND s3.group_type = 3
+                          AND s.institution_id = s3.institution_id);
 
     - changeSet:
         id: addUniqueConstraint-snomed_group_description_institution_id
