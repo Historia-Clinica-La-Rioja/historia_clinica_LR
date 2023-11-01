@@ -1,12 +1,12 @@
 package ar.lamansys.sgh.clinichistory.domain.hce;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEHealthConditionVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEHealthConditionVo;
 
 import java.time.LocalDate;
 
@@ -32,7 +32,9 @@ public class HCEPersonalHistoryBo extends HCEClinicalTermBo {
 
     private boolean hasPendingReference;
 
-    public HCEPersonalHistoryBo(HCEHealthConditionVo source){
+    private Boolean canBeMarkAsError;
+
+    public HCEPersonalHistoryBo(HCEHealthConditionVo source) {
         super(source.getId(), source.getSnomed(), source.getStatusId(), source.getStatus(), source.getPatientId());
         this.verificationId = source.getVerificationId();
         this.verification = source.getVerification();
@@ -41,6 +43,7 @@ public class HCEPersonalHistoryBo extends HCEClinicalTermBo {
         this.startDate = source.getStartDate();
         this.inactivationDate = source.getInactivationDate();
         this.main = source.isMain();
+        this.canBeMarkAsError = !isSolvedProblem();
     }
 
     public boolean isChronic() {

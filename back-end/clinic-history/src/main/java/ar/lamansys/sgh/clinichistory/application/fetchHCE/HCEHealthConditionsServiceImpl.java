@@ -1,15 +1,16 @@
 package ar.lamansys.sgh.clinichistory.application.fetchHCE;
 
+import ar.lamansys.sgh.clinichistory.application.markaserroraproblem.IsSameUserIdFromHealthCondition;
+import ar.lamansys.sgh.clinichistory.application.markaserroraproblem.IsWithinExpirationTimeLimit;
 import ar.lamansys.sgh.clinichistory.application.ports.HCEReferenceCounterReferenceStorage;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEHospitalizationBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEPersonalHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEReferenceProblemBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.HCEHealthConditionRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEHealthConditionVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEHospitalizationVo;
-import ar.lamansys.sgh.clinichistory.domain.hce.HCEHospitalizationBo;
-import ar.lamansys.sgh.clinichistory.domain.hce.HCEPersonalHistoryBo;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -17,64 +18,67 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class HCEHealthConditionsServiceImpl implements HCEHealthConditionsService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(HCEHealthConditionsServiceImpl.class);
 
     private static final String LOGGING_OUTPUT = "Output -> {}";
     private static final String LOGGING_INPUT = "Input parameters -> patientId {} ";
 
     private final HCEHealthConditionRepository hceHealthConditionRepository;
     private final HCEReferenceCounterReferenceStorage hceReferenceCounterReferenceStorage;
-
-    public HCEHealthConditionsServiceImpl(HCEHealthConditionRepository hceHealthConditionRepository,
-                                          HCEReferenceCounterReferenceStorage hceReferenceCounterReferenceStorage) {
-        this.hceHealthConditionRepository = hceHealthConditionRepository;
-        this.hceReferenceCounterReferenceStorage = hceReferenceCounterReferenceStorage;
-    }
-
+    
+    private final IsSameUserIdFromHealthCondition isSameUserIdFromHealthCondition;
+    
+    private final IsWithinExpirationTimeLimit isWithinExpirationTimeLimit;
 
     @Override
     public List<HCEPersonalHistoryBo> getActivePersonalHistories(Integer patientId) {
-        LOG.debug(LOGGING_INPUT, patientId);
+        log.debug(LOGGING_INPUT, patientId);
         List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getPersonalHistories(patientId);
         List<HCEPersonalHistoryBo> result = resultQuery.stream()
                 .map(HCEPersonalHistoryBo::new)
                 .filter(HCEPersonalHistoryBo::isActive)
+                .peek(hcePersonalHistoryBo -> hcePersonalHistoryBo.setCanBeMarkAsError(this.canBeMarkAsError(hcePersonalHistoryBo)))
 				.sorted(Comparator.comparing(HCEPersonalHistoryBo::getStartDate, Comparator.nullsFirst(Comparator.naturalOrder())).reversed())
                 .collect(Collectors.toList());
-        LOG.debug(LOGGING_OUTPUT, result);
+        log.debug(LOGGING_OUTPUT, result);
         return result;
     }
 
 	@Override
 	public List<HCEPersonalHistoryBo> getActivePersonalHistoriesByUser(Integer patientId, Integer userId) {
-		LOG.debug(LOGGING_INPUT, patientId);
+		log.debug(LOGGING_INPUT, patientId);
 		List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getPersonalHistoriesByUser(patientId, userId);
 		List<HCEPersonalHistoryBo> result = resultQuery.stream()
 				.map(HCEPersonalHistoryBo::new)
 				.filter(HCEPersonalHistoryBo::isActive)
+                .peek(hcePersonalHistoryBo -> hcePersonalHistoryBo.setCanBeMarkAsError(this.canBeMarkAsError(hcePersonalHistoryBo)))
 				.sorted(Comparator.comparing(HCEPersonalHistoryBo::getStartDate, Comparator.nullsFirst(Comparator.naturalOrder())).reversed())
 				.collect(Collectors.toList());
-		LOG.debug(LOGGING_OUTPUT, result);
+		log.debug(LOGGING_OUTPUT, result);
 		return result;
 	}
 
     @Override
     public List<HCEPersonalHistoryBo> getFamilyHistories(Integer patientId) {
-        LOG.debug(LOGGING_INPUT, patientId);
+        log.debug(LOGGING_INPUT, patientId);
         List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getFamilyHistories(patientId);
         List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).collect(Collectors.toList());
-        LOG.debug(LOGGING_OUTPUT, result);
+        log.debug(LOGGING_OUTPUT, result);
         return result;
     }
 
     @Override
     public List<HCEPersonalHistoryBo> getChronicConditions(Integer patientId) {
-        LOG.debug(LOGGING_INPUT, patientId);
+        log.debug(LOGGING_INPUT, patientId);
         List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getPersonalHistories(patientId);
-        List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).filter(HCEPersonalHistoryBo::isChronic)
-                .sorted(Comparator.comparing(HCEPersonalHistoryBo::getStartDate, Comparator.nullsFirst(Comparator.naturalOrder())).reversed()).collect(Collectors.toList());
+        List<HCEPersonalHistoryBo> result = resultQuery.stream()
+                .map(HCEPersonalHistoryBo::new)
+                .filter(HCEPersonalHistoryBo::isChronic)
+                .peek(hcePersonalHistoryBo -> hcePersonalHistoryBo.setCanBeMarkAsError(this.canBeMarkAsError(hcePersonalHistoryBo)))
+                .sorted(Comparator.comparing(HCEPersonalHistoryBo::getStartDate, Comparator.nullsFirst(Comparator.naturalOrder())).reversed())
+                .collect(Collectors.toList());
 
         List<HCEReferenceProblemBo> problemsWithReferences = hceReferenceCounterReferenceStorage.getProblemsWithReferences(patientId);
         result.stream().forEach(p -> {
@@ -84,16 +88,19 @@ public class HCEHealthConditionsServiceImpl implements HCEHealthConditionsServic
             });
         });
 
-        LOG.debug(LOGGING_OUTPUT, result);
+        log.debug(LOGGING_OUTPUT, result);
         return result;
     }
 
     @Override
     public List<HCEPersonalHistoryBo> getActiveProblems(Integer patientId) {
-        LOG.debug(LOGGING_INPUT, patientId);
+        log.debug(LOGGING_INPUT, patientId);
         List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getPersonalHistories(patientId);
-        List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).filter(HCEPersonalHistoryBo::isActiveProblem)
-                .sorted(Comparator.comparing(HCEPersonalHistoryBo::getStartDate, Comparator.nullsFirst(Comparator.naturalOrder())).reversed()).collect(Collectors.toList());
+        List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new)
+                .filter(HCEPersonalHistoryBo::isActiveProblem)
+                .peek(hcePersonalHistoryBo -> hcePersonalHistoryBo.setCanBeMarkAsError(this.canBeMarkAsError(hcePersonalHistoryBo)))
+                .sorted(Comparator.comparing(HCEPersonalHistoryBo::getStartDate, Comparator.nullsFirst(Comparator.naturalOrder())).reversed())
+                .collect(Collectors.toList());
 
         List<HCEReferenceProblemBo> problemsWithReferences = hceReferenceCounterReferenceStorage.getProblemsWithReferences(patientId);
         result.stream().forEach(p -> {
@@ -103,35 +110,40 @@ public class HCEHealthConditionsServiceImpl implements HCEHealthConditionsServic
             });
         });
 
-        LOG.debug(LOGGING_OUTPUT, result);
+        log.debug(LOGGING_OUTPUT, result);
         return result;
     }
 
     @Override
     public List<HCEPersonalHistoryBo> getSolvedProblems(Integer patientId) {
-        LOG.debug(LOGGING_INPUT, patientId);
+        log.debug(LOGGING_INPUT, patientId);
         List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getPersonalHistories(patientId);
         List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).filter(HCEPersonalHistoryBo::isSolvedProblem)
                 .sorted(Comparator.comparing(HCEPersonalHistoryBo::getStartDate).reversed()).collect(Collectors.toList());
-        LOG.debug(LOGGING_OUTPUT, result);
+        log.debug(LOGGING_OUTPUT, result);
         return result;
     }
 
     @Override
     public List<HCEHospitalizationBo> getHospitalizationHistory(Integer patientId) {
-        LOG.debug(LOGGING_INPUT, patientId);
+        log.debug(LOGGING_INPUT, patientId);
         List<HCEHospitalizationVo> resultQuery = hceHealthConditionRepository.getHospitalizationHistory(patientId);
         List<HCEHospitalizationBo> result = resultQuery.stream().map(HCEHospitalizationBo::new).collect(Collectors.toList());
-        LOG.debug(LOGGING_OUTPUT, result);
+        log.debug(LOGGING_OUTPUT, result);
         return result;
     }
 
 	@Override
 	public List<HCEHospitalizationBo> getEmergencyCareHistory(Integer patientId) {
-		LOG.debug(LOGGING_INPUT, patientId);
+		log.debug(LOGGING_INPUT, patientId);
 		List<HCEHospitalizationVo> resultQuery = hceHealthConditionRepository.getEmergencyCareHistory(patientId);
 		List<HCEHospitalizationBo> result = resultQuery.stream().map(HCEHospitalizationBo::new).collect(Collectors.toList());
-		LOG.debug(LOGGING_OUTPUT, result);
+		log.debug(LOGGING_OUTPUT, result);
 		return result;
 	}
+
+    private Boolean canBeMarkAsError(HCEPersonalHistoryBo hcePersonalHistoryBo) {
+        return isSameUserIdFromHealthCondition.run(hcePersonalHistoryBo.getId())
+                && isWithinExpirationTimeLimit.run(hcePersonalHistoryBo.getId());
+    }
 }

@@ -1759,6 +1759,7 @@ export interface HCEMedicationDto extends ClinicalTermDto {
 }
 
 export interface HCEPersonalHistoryDto extends HCEClinicalTermDto {
+    canBeMarkAsError?: boolean;
     hasPendingReference: boolean;
     inactivationDate: string;
     severity: string;
