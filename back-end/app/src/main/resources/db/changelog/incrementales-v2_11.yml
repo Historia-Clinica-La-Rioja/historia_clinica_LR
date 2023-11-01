@@ -23,3 +23,14 @@ databaseChangeLog:
                     name: uuid
                     type: uuid
 
+    - changeSet:
+        id: add-until_date-column-historic_incharge_nurse_bed
+        author: fdemuguruza
+        changes:
+          - addColumn:
+              tableName: historic_incharge_nurse_bed
+              columns:
+                - column:
+                    name: until_date
+                    type: datetime
+
