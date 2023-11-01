@@ -7,6 +7,7 @@ import { HceGeneralStateService } from '@api-rest/services/hce-general-state.ser
 import { hasError } from '@core/utils/form.utils';
 import { PrescripcionesService } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable, map, of, switchMap } from 'rxjs';
 
 @Component({
     selector: 'app-equipment-transcribe-order-popup',
@@ -32,7 +33,7 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data,
         private readonly formBuilder: FormBuilder,
 		private readonly hceGeneralStateService: HceGeneralStateService,
-		private prescriptionService: PrescripcionesService,
+		private readonly prescriptionService: PrescripcionesService,
 		private readonly translateService: TranslateService
         ) { }
 
@@ -81,11 +82,30 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
         this.checkForOrderDeletion();
 
         this.prescriptionService.createTranscribedOrder(this.data.patientId, this.selectedStudy, this.selectedProblem, orderProfessional, orderInstitution)
-            .subscribe(serviceRequestId => {
-                this.prescriptionService.saveAttachedFiles(this.data.patientId, serviceRequestId, this.selectedFiles).subscribe();
-                let text = 'image-network.appointments.medical-order.TRANSCRIBED_ORDER';
-                this.translateService.get(text).subscribe(translatedText => {
-                    let transcribedOrder = {
+        .pipe(
+         switchMap(serviceRequestId => this.saveAttachedFilesByCondition(serviceRequestId)),
+         switchMap(serviceRequestId => this.buildTranscribedOrderContext(serviceRequestId)))
+            .subscribe(transcribedOrderContext => {
+                        this.dialogRef.close({
+                        transcribedOrderContext,
+                        order: {
+                            serviceRequestId: transcribedOrderContext.ContextInfo.serviceRequestId,
+                            studyName: this.selectedStudy.pt,
+                            displayText: `${transcribedOrderContext.title} - ${this.selectedStudy.pt}`,
+                            isTranscribed: true
+                    }})
+
+        })
+    }
+
+    private buildTranscribedOrderContext(serviceRequestId: number): Observable<TranscribeOrderPopupContext> {
+        let orderProfessional = this.transcribeOrderForm.controls.professional?.value;
+        let orderInstitution = this.transcribeOrderForm.controls.institution?.value;
+        let text = 'image-network.appointments.medical-order.TRANSCRIBED_ORDER';
+        return this.translateService.get(text)
+            .pipe(map(translatedText => {
+                return {
+                    ContextInfo: {
                         study: this.selectedStudy,
                         serviceRequestId: serviceRequestId,
                         problem: this.selectedProblem,
@@ -93,18 +113,16 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
                         institution: orderInstitution,
                         selectedFiles: this.selectedFiles,
                         selectedFilesShow: this.selectedFilesShow
-                    }
-                    this.dialogRef.close({
-                        transcribedOrder,
-                        order: {
-                            serviceRequestId: serviceRequestId,
-                            studyName: this.selectedStudy.pt,
-                            displayText: `${translatedText} - ${this.selectedStudy.pt}`,
-                            isTranscribed: true
-                    }})
-            });
-        })
-        
+                    },
+                    title: translatedText
+                }
+            }))
+    }
+
+    private saveAttachedFilesByCondition(serviceRequestId: number): Observable<number> {
+        const sourceExistsAttachedFiles$: Observable<number> = this.prescriptionService.saveAttachedFiles(this.data.patientId, serviceRequestId, this.selectedFiles).pipe(map( _ => serviceRequestId ))
+        const source$ = this.selectedFiles.length > 0 ?  sourceExistsAttachedFiles$ : of(serviceRequestId)
+        return source$
     }
 
     checkForOrderDeletion(){
@@ -123,10 +141,11 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
         })
     }
 
+
     isFormValid(): boolean {
-        if(this.selectedFiles.length && !this.filesExtension)
-            return this.transcribeOrderForm.valid;
-        return false
+        if (this.selectedFiles.length > 0)
+            return !this.filesExtension && this.transcribeOrderForm.valid
+        return this.transcribeOrderForm.valid
     }
 
     onFileSelected($event){
@@ -171,4 +190,20 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
         this.selectedProblem = null;
         this.transcribeOrderForm.controls.assosiatedProblem.setValue(null);
     }
+}
+
+
+export interface TranscribeOrderPopupContext {
+    ContextInfo: InfoTranscribeOrderPopup,
+    title: string
+}
+
+export interface InfoTranscribeOrderPopup {
+    study: SnomedDto
+    serviceRequestId: number
+    problem: SnomedDto
+    professional: string
+    institution: string
+    selectedFiles: File[]
+    selectedFilesShow: File[]
 }
