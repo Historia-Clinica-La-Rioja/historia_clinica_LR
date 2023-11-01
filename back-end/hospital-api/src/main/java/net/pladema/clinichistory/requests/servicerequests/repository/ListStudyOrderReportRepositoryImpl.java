@@ -27,7 +27,7 @@ public class ListStudyOrderReportRepositoryImpl implements ListStudyOrderReportR
                 "sr.created_by, " +
                 "sr.request_date, " +
                 "aoi.image_id, " +
-                "d.id, " +
+                "df.id, " +
                 "s.pt AS study, " +
                 "s2.pt AS problem, " +
                 "df.file_name, " +
