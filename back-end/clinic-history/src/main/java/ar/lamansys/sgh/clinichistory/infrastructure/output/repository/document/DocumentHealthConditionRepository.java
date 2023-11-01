@@ -10,7 +10,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DocumentHealthConditionRepository extends JpaRepository<DocumentHealthCondition, DocumentHealthConditionPK> {
@@ -42,5 +44,19 @@ public interface DocumentHealthConditionRepository extends JpaRepository<Documen
             "LEFT JOIN Note n ON (n.id = hc.noteId) " +
             "WHERE dh.pk.documentId = :documentId ")
     List<HealthConditionVo> getHealthConditionFromDocumentToReport(@Param("documentId") Long documentId);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT d.creationable.createdBy " +
+            "FROM DocumentHealthCondition dhc " +
+            "JOIN Document d ON dhc.pk.documentId = d.id " +
+            "WHERE dhc.pk.healthConditionId = :healthConditionId")
+    Optional<Integer> getUserId(@Param("healthConditionId") Integer healthConditionId);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT d.creationable.createdOn " +
+            "FROM DocumentHealthCondition dhc " +
+            "JOIN Document d ON dhc.pk.documentId = d.id " +
+            "WHERE dhc.pk.healthConditionId = :healthConditionId")
+    Optional<LocalDateTime> getCreatedOn(@Param("healthConditionId") Integer healthConditionId);
 
 }
