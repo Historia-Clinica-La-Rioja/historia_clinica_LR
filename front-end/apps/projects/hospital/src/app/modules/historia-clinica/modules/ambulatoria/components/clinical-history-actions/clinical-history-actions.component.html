@@ -71,6 +71,12 @@
 					{{'ambulatoria.paciente.card.buttons.actions.MEDICAL_DISCHARGE' | translate}}
 				</button>
 			</ng-container>
+			<ng-container>
+				<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO']" class="actions"
+					(click)="openSurgicalReport()">
+					{{'ambulatoria.paciente.card.buttons.actions.SURGICAL_REPORT' | translate}}
+				</button>
+			</ng-container>
 		</div>
 		<div *ngTemplateOutlet="showBothConsultation"></div>
 

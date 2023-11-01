@@ -272,6 +272,10 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		this.documentActions.editEpicrisisDraft(this.documentEpicrisisDraft);
 	}
 
+	openSurgicalReport() {
+		this.internmentActions.openSurgicalReport();
+	}
+
 	newTriage() {
 		this.dialog.open(this.triageComponent, { data: this.episode.id })
 	}

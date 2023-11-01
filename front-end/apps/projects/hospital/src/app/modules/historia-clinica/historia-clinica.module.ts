@@ -62,6 +62,7 @@ import { AlergiasFormComponent } from './components/alergias-form/alergias-form.
 import { EmergencyCareEpisodeAttendService } from './services/emergency-care-episode-attend.service';
 import { EpisodeDataComponent } from './components/episode-data/episode-data.component';
 import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-search-dialog/problem-concept-search-dialog.component';
+import { SurgicalReportDockPopupComponent } from './components/surgical-report-dock-popup/surgical-report-dock-popup.component';
 import { ReferenceStateLabelComponent } from './components/reference-state-label/reference-state-label.component';
 import { PersonalHistoriesBackgroundListComponent } from './components/personal-histories-background-list/personal-histories-background-list.component';
 import { PersonalHistoriesSummaryComponent } from './components/personal-histories-summary/personal-histories-summary.component';
@@ -127,6 +128,7 @@ import { PersonalHistoriesSummaryComponent } from './components/personal-histori
 		ProblemConceptSearchDialogComponent,
   		PersonalHistoriesBackgroundListComponent,
     	PersonalHistoriesSummaryComponent,
+  		SurgicalReportDockPopupComponent,
 	],
 	imports: [
 		CommonModule,
