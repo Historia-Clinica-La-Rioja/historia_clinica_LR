@@ -147,7 +147,8 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 			});
 		warnignComponent.afterClosed().subscribe(confirmed => {
 			if (confirmed) {
-				this.openAmendProblemDialog(problem);
+				let hasReferences = false;
+				hasReferences ? this.openAmendProblemDialog(problem) : this.openErrorDialog();
 			}
 		});
 	}
@@ -165,6 +166,25 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 			}
 		})
 	}
+
+	private openErrorDialog(){
+		const confirmDialog = this.dialog.open(DiscardWarningComponent, { data: getConfirmDataDialog() });
+		confirmDialog.afterClosed().subscribe(confirmed => {
+			if (confirmed) {
+			}
+		});
+
+		function getConfirmDataDialog() {
+			const keyPrefix = 'ambulatoria.paciente.problemas.amend_problems.error';
+			return {
+				title: `${keyPrefix}.TITLE`,
+				content: `${keyPrefix}.CONTENT`,
+				okButtonLabel: `${keyPrefix}.OK_BUTTON`,
+				errorMode: true,
+				color: 'warn'
+			};
+		}
+	}	
 
 	private openDockPopup(idProblema: number) {
 		this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(true);

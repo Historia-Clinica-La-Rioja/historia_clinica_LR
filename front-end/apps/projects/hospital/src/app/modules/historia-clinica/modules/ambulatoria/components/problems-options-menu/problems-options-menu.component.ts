@@ -28,7 +28,7 @@ export class ProblemsOptionsMenuComponent implements OnInit {
 			delete this.nuevaConsultaFromProblemaRef;
 		}
 	}
-    @Output() setProblemOnHistoric = new Subject<boolean>();
+    @Output() setProblemOnHistoric = new Subject<HCEPersonalHistoryDto>();
     patientId: number;
     hasNewConsultationEnabled$: Observable<boolean>;
 	private nuevaConsultaAmbulatoriaRef: DockPopupRef;
@@ -115,7 +115,7 @@ export class ProblemsOptionsMenuComponent implements OnInit {
 			consultationDate: null,
 			referenceStateId: null,
 		});
-        this.setProblemOnHistoric.next(true);
+        this.setProblemOnHistoric.next(problem);
     }
 
 	amendProblem(problem: HCEPersonalHistoryDto) {
@@ -133,7 +133,8 @@ export class ProblemsOptionsMenuComponent implements OnInit {
 			});
 		warnignComponent.afterClosed().subscribe(confirmed => {
 			if (confirmed) {
-				this.openAmendProblemDialog(problem);
+				let hasReferences = true;
+				hasReferences ? this.openAmendProblemDialog(problem) : this.openErrorDialog();
 			}
 		});
 	}
@@ -151,4 +152,23 @@ export class ProblemsOptionsMenuComponent implements OnInit {
 			}
 		})
 	}
+
+	private openErrorDialog(){
+		const confirmDialog = this.dialog.open(DiscardWarningComponent, { data: getConfirmDataDialog() });
+		confirmDialog.afterClosed().subscribe(confirmed => {
+			if (confirmed) {
+			}
+		});
+
+		function getConfirmDataDialog() {
+			const keyPrefix = 'ambulatoria.paciente.problemas.amend_problems.error';
+			return {
+				title: `${keyPrefix}.TITLE`,
+				content: `${keyPrefix}.CONTENT`,
+				okButtonLabel: `${keyPrefix}.OK_BUTTON`,
+				errorMode: true,
+				color: 'warn'
+			};
+		}
+	}			
 }

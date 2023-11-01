@@ -367,11 +367,16 @@
                 "amend_problems": {
                     "AMEND_PROBLEM": "Marcar como registro incorrecto",
                     "TITLE": "Turnos y referencias asociados",
-                    "CONTENT": "Al marcar este problema como erróneo, todas las referencias y/o turnos asociados al mismo se cancelarán automáticamente.",
-                    "MARK_AS_ERROR": "Marcar como registro erróneo",
+                    "CONTENT": "Al marcar este registro como incorrecto, todas las referencias y/o turnos asociados al mismo se cancelarán automáticamente.",
+                    "MARK_AS_ERROR": "Marcar como registro incorrecto",
                     "COMPLETE_DATA": "Ingrese los siguientes datos",
                     "ERROR_MOTIVE": "Motivo del error",
-                    "OBSERVATIONS": "Observaciones*"
+                    "OBSERVATIONS": "Observaciones*",
+                    "error": {
+                        "TITLE": "No se puede marcar el registro como incorrecto",
+                        "CONTENT": "Al estar asociado a un turno confirmado o atendido, no se puede marcar el problema como registro incorrecto.",
+                        "OK_BUTTON": "Aceptar"
+                    }
                 }
             },
             "ordenes_prescripciones": {
