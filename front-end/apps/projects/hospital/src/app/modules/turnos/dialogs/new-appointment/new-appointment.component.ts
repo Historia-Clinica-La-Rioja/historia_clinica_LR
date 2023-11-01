@@ -44,7 +44,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { differenceInDays } from 'date-fns';
 import { SearchAppointmentCriteria } from '@turnos/components/search-appointments-in-care-network/search-appointments-in-care-network.component';
 import { ColoredLabel } from '@presentation/colored-label/colored-label.component';
-import { onSiteAttentionColoredLabel, virtualAttentionColoredLabel } from '@turnos/constants/appointment';
+import { onSiteAttentionColoredLabel, secondOpinionAttentionColoredLabel, virtualAttentionColoredLabel } from '@turnos/constants/appointment';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -200,6 +200,7 @@ export class NewAppointmentComponent implements OnInit {
 		} else if (this.modalitySelected === this.MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION) {
 			this.associateReferenceForm.setControl('professionalEmail', new UntypedFormControl(null, [Validators.required, Validators.email]));
 			this.associateReferenceForm.controls.professionalEmail.updateValueAndValidity();
+			this.modalityColorLabel = secondOpinionAttentionColoredLabel;
 		}else{
 			this.appointmentInfoForm.setControl('patientEmail', new UntypedFormControl(null, [Validators.email]));
 			this.appointmentInfoForm.controls.patientEmail.updateValueAndValidity();

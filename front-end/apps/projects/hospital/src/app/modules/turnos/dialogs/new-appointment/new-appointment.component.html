@@ -18,7 +18,7 @@
 			</div>
 		</div>
 
-		<div *ngIf="stepper.selectedIndex > 0 && modalityColorLabel">
+		<div *ngIf="stepper.selectedIndex > 0 ">
 			<app-colored-label
 				[description]="modalityColorLabel.description | translate"
 				[color]="modalityColorLabel.color" [icon]="modalityColorLabel.icon">

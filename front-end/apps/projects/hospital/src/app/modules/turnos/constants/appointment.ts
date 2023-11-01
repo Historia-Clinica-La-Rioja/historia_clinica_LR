@@ -163,3 +163,9 @@ export const virtualAttentionColoredLabel : ColoredLabel = {
 	color: Color.PURPLE,
 	icon: 'video_call',
 }
+
+export const secondOpinionAttentionColoredLabel : ColoredLabel = {
+	description: MODALITYS[EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION],
+	color: Color.YELLOW,
+	icon: 'video_call',
+}
