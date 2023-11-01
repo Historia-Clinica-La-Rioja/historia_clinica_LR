@@ -14,7 +14,7 @@
 
     <div class="container" data-id="motive">
         <app-typeahead id="motive" name="motive"
-            [options]="[{value: 'option1', compareValue:'option1'}, {value: 'option2', compareValue:'option2'}]"
+            [options]="motives"
             [titleInput]="'ambulatoria.paciente.problemas.amend_problems.ERROR_MOTIVE' | translate"
             (selectionChange)="onMotiveSelectionChange($event)" [required]=true>
         </app-typeahead>
