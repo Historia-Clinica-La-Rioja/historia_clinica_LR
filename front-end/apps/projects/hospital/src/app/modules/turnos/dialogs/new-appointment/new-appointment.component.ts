@@ -38,13 +38,14 @@ import { ReferenceAppointmentService } from '@api-rest/services/reference-appoin
 import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { EquipmentAppointmentsFacadeService } from '@turnos/services/equipment-appointments-facade.service';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { PrescripcionesService } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { TranslateService } from '@ngx-translate/core';
 import { differenceInDays } from 'date-fns';
 import { SearchAppointmentCriteria } from '@turnos/components/search-appointments-in-care-network/search-appointments-in-care-network.component';
 import { ColoredLabel } from '@presentation/colored-label/colored-label.component';
-import { onSiteAttentionColoredLabel, secondOpinionAttentionColoredLabel, virtualAttentionColoredLabel } from '@turnos/constants/appointment';
+import { virtualAttentionColoredLabel, secondOpinionAttentionColoredLabel, onSiteAttentionColoredLabel } from '@turnos/components/modality-label/modality-label.component';
+import { MODALITYS_TYPES } from '@turnos/constants/appointment';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -59,9 +60,9 @@ const ORDER_EXPIRED_DAYS = 30;
 	providers: [EquipmentAppointmentsFacadeService]
 })
 export class NewAppointmentComponent implements OnInit {
-
+	indexStep = Steps;
 	@ViewChild('stepper', { static: false }) stepper: MatStepper;
-	initialIndex = 0;
+	initialIndex = this.indexStep.MODALITY;
 	preselectedPatient = false;
 	public formSearch: UntypedFormGroup;
 	public appointmentInfoForm: UntypedFormGroup;
@@ -95,6 +96,9 @@ export class NewAppointmentComponent implements OnInit {
 	readonly MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION;
 	modalitySelected: EAppointmentModality = this.MODALITY_ON_SITE_ATTENTION;
 	modalityColorLabel: ColoredLabel;
+	viewModalityLabel$: Observable<boolean> = of(false);
+	modalitys = MODALITYS_TYPES.slice(0, 2);
+	
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: NewAppointmentData,
 		public dialogRef: MatDialogRef<NewAppointmentComponent>,
@@ -117,19 +121,19 @@ export class NewAppointmentComponent implements OnInit {
 		private readonly translateService: TranslateService,
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
-		if(this.data.modalityAttention){
+		if (this.data.modalityAttention) {
 			this.modalitySelected = this.data.modalityAttention;
-			this.editableStepModality=false;
-			this.initialIndex=1;
+			this.editableStepModality = false;
+			this.initialIndex = this.indexStep.SEARCH;
+			this.viewModalityLabel$ = of(true);
 		}
-	
 	}
 
 	ngOnInit(): void {
-		this.modalityForm = this.formBuilder.group ({
-			modality:[this.modalitySelected, Validators.required],
+		this.modalityForm = this.formBuilder.group({
+			modality: [this.modalitySelected, Validators.required],
 		})
-	
+
 		this.formSearch = this.formBuilder.group({
 			identifType: [null, Validators.required],
 			identifNumber: [null, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
@@ -182,29 +186,44 @@ export class NewAppointmentComponent implements OnInit {
 		this.formSearch.controls.patientId.patchValue(this.data.patientId);
 		if (this.data.patientId) {
 			this.preselectedPatient = true;
-			this.initialIndex = 1;
+			this.initialIndex = this.indexStep.SEARCH;
 			this.patientId = this.data.patientId;
 			this.isFormSubmitted = true;
 			this.patientSearch(this.data.patientId);
 			this.editableStep1 = false;
 		}
-		this.setModalityValidation();
+		this.setModalityValidation(this.modalitySelected);
 	}
 
-	setModalityValidation() {
-		this.modalitySelected = this.modalityForm.controls.modality.value;
-		if (this.modalitySelected === this.MODALITY_PATIENT_VIRTUAL_ATTENTION) {
-			this.appointmentInfoForm.setControl('patientEmail', new UntypedFormControl(null, [Validators.required, Validators.email]));
-			this.appointmentInfoForm.controls.patientEmail.updateValueAndValidity();
-			this.modalityColorLabel = virtualAttentionColoredLabel;
-		} else if (this.modalitySelected === this.MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION) {
-			this.associateReferenceForm.setControl('professionalEmail', new UntypedFormControl(null, [Validators.required, Validators.email]));
-			this.associateReferenceForm.controls.professionalEmail.updateValueAndValidity();
-			this.modalityColorLabel = secondOpinionAttentionColoredLabel;
-		}else{
-			this.appointmentInfoForm.setControl('patientEmail', new UntypedFormControl(null, [Validators.email]));
-			this.appointmentInfoForm.controls.patientEmail.updateValueAndValidity();
-			this.modalityColorLabel = onSiteAttentionColoredLabel;
+	setModalityValidation(modality) {
+		this.modalitySelected = modality;
+
+		switch (this.modalitySelected) {
+			case this.MODALITY_PATIENT_VIRTUAL_ATTENTION:
+				this.appointmentInfoForm.setControl('patientEmail', new UntypedFormControl(null, [Validators.required, Validators.email]));
+				this.appointmentInfoForm.controls.patientEmail.updateValueAndValidity();
+				this.modalityColorLabel = virtualAttentionColoredLabel;
+				break;
+
+			case this.MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION:
+				this.associateReferenceForm.setControl('professionalEmail', new UntypedFormControl(null, [Validators.required, Validators.email]));
+				this.associateReferenceForm.controls.professionalEmail.updateValueAndValidity();
+				this.modalityColorLabel = secondOpinionAttentionColoredLabel;
+				break;
+
+			case this.MODALITY_ON_SITE_ATTENTION:
+				this.appointmentInfoForm.setControl('patientEmail', new UntypedFormControl(null, [Validators.email]));
+				this.appointmentInfoForm.controls.patientEmail.updateValueAndValidity();
+				this.modalityColorLabel = onSiteAttentionColoredLabel;
+				break;
+		}
+	}
+
+	onStepChange(stepper: MatStepper) {
+		if (stepper.selectedIndex > this.indexStep.MODALITY) {
+			this.viewModalityLabel$ = of(true);
+		} else {
+			this.viewModalityLabel$ = of(false);
 		}
 	}
 
@@ -284,7 +303,7 @@ export class NewAppointmentComponent implements OnInit {
 	private patientFound() {
 		this.formSearch.controls.completed.setValue(true);
 		this.snackBarService.showSuccess('turnos.new-appointment.messages.SUCCESS');
-		if (this.initialIndex !== 1)
+		if (this.initialIndex !== this.indexStep.SEARCH)
 			this.stepper.next();
 	}
 
@@ -330,8 +349,6 @@ export class NewAppointmentComponent implements OnInit {
 				this.isSubmitButtonDisabled = false;
 				processErrors(error, (msg) => this.snackBarService.showError(msg));
 			})
-		}else{
-			
 		}
 	}
 
@@ -378,7 +395,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	showConfirmButton(): boolean {
-		return this.formSearch.controls.completed.value && !this.data.protectedAppointment && this.stepper.selectedIndex === 2;
+		return this.formSearch.controls.completed.value && !this.data.protectedAppointment && this.stepper.selectedIndex === this.indexStep.INFO;
 	}
 
 	disableConfirmButtonStep3(): boolean {
@@ -405,7 +422,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	disablePreviuosStep(stepperParam: MatStepper) {
-		if (stepperParam.selectedIndex === 0) {
+		if (stepperParam.selectedIndex === this.indexStep.MODALITY) {
 			this.editable = false;
 		}
 	}
@@ -422,7 +439,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	back(stepper: MatStepper) {
-		if (stepper.selectedIndex === 2) {
+		if (stepper.selectedIndex === this.indexStep.INFO) {
 			this.formSearch.controls.completed.reset();
 			this.appointmentInfoForm.reset();
 			this.patientMedicalOrders = [];
@@ -586,4 +603,10 @@ export interface medicalOrderInfo {
 	displayText: string,
 	isTranscribed: boolean,
 	coverageDto?: PatientMedicalCoverageDto,
+}
+enum Steps {
+	MODALITY = 0,
+	SEARCH = 1,
+	INFO = 2,
+	PROTECTED = 3,
 }

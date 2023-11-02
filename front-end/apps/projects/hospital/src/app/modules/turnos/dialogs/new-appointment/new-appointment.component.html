@@ -18,33 +18,19 @@
 			</div>
 		</div>
 
-		<div *ngIf="stepper.selectedIndex > 0 ">
-			<app-colored-label
-				[description]="modalityColorLabel.description | translate"
-				[color]="modalityColorLabel.color" [icon]="modalityColorLabel.icon">
-			</app-colored-label>
+		<div *ngIf="viewModalityLabel$ | async ">
+			<app-modality-label [modalityColorLabel]="modalityColorLabel"></app-modality-label>
 		</div>
 	</div>
 </div>
 
 <div mat-dialog-content class="dialog-content">
 
-	<mat-stepper [selectedIndex]="initialIndex" #stepper labelPosition="bottom">
+	<mat-stepper [selectedIndex]="initialIndex" #stepper labelPosition="bottom" (selectionChange)="onStepChange($event)">
 		<mat-step [stepControl]="modalityForm" label="{{'turnos.new-appointment.STEP_0' | translate}}" [editable]="editableStepModality">
 			<mat-card class="mat-typography mat-elevation-z0">
-				<form [formGroup]="modalityForm">
-					<div fxLayout="column" fxLayoutGap="16px">
-						<mat-label class="bold">{{'turnos.new-appointment.MODALITY_SELECT' | translate}}</mat-label>
-						<mat-radio-group fxLayout="column" fxLayoutGap="16px" formControlName="modality" (change)="setModalityValidation()">
-							<mat-radio-button color="primary"
-								[value]="MODALITY_ON_SITE_ATTENTION">{{'turnos.ON_SITE_ATTENTION' |
-								translate}}</mat-radio-button>
-							<mat-radio-button color="primary"
-								[value]="MODALITY_PATIENT_VIRTUAL_ATTENTION">{{'turnos.PATIENT_VIRTUAL_ATTENTION' |
-								translate}}</mat-radio-button>
-						</mat-radio-group>
-					</div>
-				</form>
+				<app-modality-radio-button-form (selectedModality)="setModalityValidation($event)" 
+				 [modalitys]="modalitys" layout="column"></app-modality-radio-button-form>
 			</mat-card>
 		</mat-step>
 		<mat-step [stepControl]="formSearch" label="{{'turnos.new-appointment.STEP_1' | translate}}"
@@ -232,11 +218,11 @@
 </div>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
-	<button id="back" class="back-btn" *ngIf="stepper.selectedIndex > 0" mat-stroked-button color="primary"
+	<button id="back" class="back-btn" *ngIf="stepper.selectedIndex > indexStep.MODALITY" mat-stroked-button color="primary"
 		[disabled]="preselectedPatient" (click)="back(stepper)">
 		<span [translate]="'buttons.BACK'"></span>
 	</button>
-	<div fxLayout="row" fxLayoutAlign="end" *ngIf="stepper.selectedIndex === 1">
+	<div fxLayout="row" fxLayoutAlign="end" *ngIf="stepper.selectedIndex === indexStep.SEARCH">
 		<ng-container *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
 			<button id="add-patient" mat-flat-button [mat-dialog-close]="-1" color="primary" (click)="goCreatePatient()"
 				*ngIf="showAddPatient">
@@ -252,11 +238,11 @@
 		[disabled]="isSubmitButtonDisabled">
 		<span [translate]="'buttons.CONFIRM'"></span>
 	</button>
-	<button id="next" (click)="stepper.next()" *ngIf="(!data.protectedAppointment && stepper.selectedIndex !== 1 && stepper.selectedIndex !== 2) || (data.protectedAppointment && stepper.selectedIndex === 2) " mat-raised-button type="button" color="primary">
+	<button id="next" (click)="stepper.next()" *ngIf="(!data.protectedAppointment && stepper.selectedIndex !== indexStep.SEARCH && stepper.selectedIndex !== indexStep.INFO) || (data.protectedAppointment && stepper.selectedIndex === indexStep.INFO) " mat-raised-button type="button" color="primary">
 		<span [translate]="'buttons.CONTINUE'"></span>
 	</button>
 	<button id="confirm-from-step-3" (click)="submit(true)" mat-raised-button type="button" color="primary"
-		*ngIf="data.protectedAppointment && stepper.selectedIndex === 3" [disabled]="disableConfirmButtonStep3()">
+		*ngIf="data.protectedAppointment && stepper.selectedIndex === indexStep.PROTECTED" [disabled]="disableConfirmButtonStep3()">
 		<span [translate]="'buttons.CONFIRM'"></span>
 	</button>
 </mat-dialog-actions>

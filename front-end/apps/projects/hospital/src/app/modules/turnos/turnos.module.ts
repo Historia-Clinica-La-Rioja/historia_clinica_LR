@@ -32,6 +32,8 @@ import { SearchAppointmentsInCareNetworkComponent } from './components/search-ap
 import { SearchCriteriaComponent } from './components/search-criteria/search-criteria.component';
 import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
 import { TypeaheadPracticesComponent } from './components/typeahead-practices/typeahead-practices.component';
+import { ModalityLabelComponent } from './components/modality-label/modality-label.component';
+import { ModalityRadioButtonFormComponent } from './components/modality-radio-button-form/modality-radio-button-form.component';
 // dialogs
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
 import { BlockAgendaRangeComponent } from './dialogs/block-agenda-range/block-agenda-range.component';
@@ -72,6 +74,8 @@ import { PracticesPipe } from './pipes/practices.pipe';
 		SearchCriteriaComponent,
 		SelectAgendaComponent,
 		TypeaheadPracticesComponent,
+		ModalityLabelComponent,
+		ModalityRadioButtonFormComponent,
 		// dialogs
 		AppointmentComponent,
 		BlockAgendaRangeComponent,
