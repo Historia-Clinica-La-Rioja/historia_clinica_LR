@@ -2082,6 +2082,18 @@ export interface InstitutionalGroupInstitutionDto {
     institutionalGroupId: number;
 }
 
+export interface InstitutionalGroupRuleDto {
+    clinicalSpecialtyId: number;
+    comment: string;
+    id: number;
+    institutionalGroupId: number;
+    regulated: boolean;
+    ruleId: number;
+    ruleLevel: string;
+    ruleName: string;
+    snomedId: number;
+}
+
 export interface InstitutionalGroupTypeDto extends Serializable {
     id: number;
     value: string;

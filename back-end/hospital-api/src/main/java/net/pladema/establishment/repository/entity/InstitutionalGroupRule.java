@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import net.pladema.establishment.controller.dto.InstitutionalGroupRuleDto;
+
 import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
@@ -45,5 +47,13 @@ public class InstitutionalGroupRule extends SGXAuditableEntity<Integer> implemen
 
 	@Column(name = "comment")
 	private String comment;
+
+	public InstitutionalGroupRule(InstitutionalGroupRuleDto dto){
+		this.id = dto.getId();
+		this.ruleId = dto.getRuleId();
+		this.institutionalGroupId = dto.getInstitutionalGroupId();
+		this.regulated = dto.isRegulated();
+		this.comment = dto.getComment();
+	}
 
 }
