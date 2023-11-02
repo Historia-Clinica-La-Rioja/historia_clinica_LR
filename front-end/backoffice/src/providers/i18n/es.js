@@ -906,6 +906,14 @@ const messages = {
                 institutionalGroupId: 'Grupo de instituciones'
             },
             createRelated: 'Agregar usuario'
+        },
+        institutionalgrouprules: {
+            name: 'Regla local',
+            fields: {
+                ruleId: 'Regla',
+                institutionalGroupId: 'Grupo de instituciones'
+            },
+            createRelated: 'Crear regla local'
         }
     }
 };

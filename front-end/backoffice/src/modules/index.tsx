@@ -79,6 +79,8 @@ import rules from './rules';
 import institutionalgroups from './institutionalgroups';
 import institutionalgroupinstitutions from './institutionalgroupinstitutions';
 import institutionalgroupusers from './institutionalgroupusers';
+import institutionalgrouprules from './institutionalgrouprules';
+
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
     permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
@@ -146,6 +148,8 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="departmentinstitutions" />,
     <Resource name="institutionalgroupusers" {...institutionalgroupusers(permissions)} />,
     <Resource name="manageruserpersons" />,
+    <Resource name="institutionalgrouprules" {...institutionalgrouprules(permissions)} />,
+
     // debug
     <Resource name="snvs"  {...snvs} />,
     <Resource name="documentfiles" {...documentFiles(permissions)} />,

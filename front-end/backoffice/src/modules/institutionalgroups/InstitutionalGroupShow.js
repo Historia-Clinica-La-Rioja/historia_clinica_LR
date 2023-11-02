@@ -9,7 +9,9 @@ import {
     ReferenceField,
     DeleteButton,
     ReferenceManyField,
-    Datagrid
+    Datagrid,
+    EditButton,
+    FunctionField
 } from "react-admin";    
 
  import CreateRelatedButton from "../components/CreateRelatedButton";
@@ -38,6 +40,19 @@ const AddUserToGroup = (props) => {
             label="resources.institutionalgroupusers.createRelated" />
     );
 };
+
+const CreateRule = (props) => {
+    const record = useRecordContext(props);
+    const customRecord = {institutionalGroupId: record.id};
+    return (
+        <CreateRelatedButton
+            customRecord={customRecord}
+            reference="institutionalgrouprules"
+            refFieldName="institutionalGroupId"
+            label="resources.institutionalgrouprules.createRelated" />
+    );
+};
+
 
 const ShowInstitutions = (props) => {
     return  (
@@ -79,6 +94,26 @@ const ShowUsers = (props) => {
     )
 }
 
+const ShowLocalRules = (props) => {
+    return (
+        <ReferenceManyField
+            id='institutionalgrouprules'
+            addLabel={false}
+            reference='institutionalgrouprules'
+            target='institutionalGroupId'
+        >
+            <Datagrid
+                empty={<p style={{marginTop:10, color:'#8c8c8c'}}>Sin reglas asociadas</p>}>
+                <TextField label="Especialidad / Práctica o procedimiento" source="ruleName" />
+                <TextField label="Nivel" source="ruleLevel" />
+                <FunctionField label="Regulación" render={record => record.regulated ? 'Se regula' : 'No se regula'}/>
+                <TextField label="Comentario" source="comment" sortable={false}/>
+                <EditButton />
+            </Datagrid>
+        </ReferenceManyField>
+    );
+};
+
 const InstitutionalGroupShow = (props) => {
     return (
         <Show {...props}>
@@ -97,6 +132,10 @@ const InstitutionalGroupShow = (props) => {
                             <AddUserToGroup />
                             <ShowUsers />
                         </Tab>
+                        <Tab label="Reglas Locales" id="reglaslocales">
+                            <CreateRule />
+                            <ShowLocalRules />
+                        </Tab>
                     </TabbedShowLayout>
                 </Fragment>
             </SimpleShowLayout>
@@ -106,4 +145,4 @@ const InstitutionalGroupShow = (props) => {
 
 export default InstitutionalGroupShow;
 
-export {AddInstitutionToGroup, AddUserToGroup, ShowInstitutions, ShowUsers};
+export {AddInstitutionToGroup, AddUserToGroup, CreateRule, ShowInstitutions, ShowUsers, ShowLocalRules};

@@ -11,7 +11,7 @@ import {
     maxLength
 } from 'react-admin';
 
-import {AddInstitutionToGroup, AddUserToGroup, ShowInstitutions, ShowUsers} from './InstitutionalGroupShow';
+import {AddInstitutionToGroup, AddUserToGroup, CreateRule, ShowInstitutions, ShowUsers, ShowLocalRules} from './InstitutionalGroupShow';
 
 const InstitutionalGroupEdit = props => {
     return (
@@ -32,6 +32,10 @@ const InstitutionalGroupEdit = props => {
                         <Tab label="Usuarios" id="usuarios">
                             <AddUserToGroup />
                             <ShowUsers />
+                        </Tab>
+                        <Tab label="Reglas Locales" id="reglaslocales">
+                            <CreateRule />
+                            <ShowLocalRules />
                         </Tab>
                     </TabbedShowLayout>
                 </Fragment>
