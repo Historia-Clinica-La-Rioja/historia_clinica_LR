@@ -868,7 +868,7 @@ const messages = {
                 sctidCode: 'Código SNOMED',
             },
         },
-        practiceprocedurerules: {
+        snomedprocedurerules: {
             fields: {
                 orden: 'Orden',
                 lastUpdate: 'Última actualización',

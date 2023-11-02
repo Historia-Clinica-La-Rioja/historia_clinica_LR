@@ -172,7 +172,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="snomedgrouptypes" />,
     <Resource name="rules" {...rules(permissions)} />,
     <Resource name="clinicalspecialtyrules" />,
-    <Resource name="practiceprocedurerules" />,
+    <Resource name="snomedprocedurerules" />,
 
     // more
     <Resource name="identificationTypes" />,

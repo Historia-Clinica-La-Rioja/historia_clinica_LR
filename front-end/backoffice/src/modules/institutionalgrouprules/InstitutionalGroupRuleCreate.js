@@ -48,9 +48,9 @@ const InstitutionalGroupRuleCreate = (props) => {
             <ReferenceInput
                 label="Practica/Procedimiento"
                 source="snomedId"
-                reference="practiceprocedurerules"
+                reference="snomedprocedurerules"
                 sort={{ field: 'conceptPt', order: 'ASC' }}
-                filterToQuery={searchText => ({ conceptPt: searchText, groupId: 16 })}
+                filterToQuery={searchText => ({ conceptPt: searchText })}
             >
                 <AutocompleteInput optionText="conceptPt" optionValue="id" validate={[required()]} resettable />
             </ReferenceInput>

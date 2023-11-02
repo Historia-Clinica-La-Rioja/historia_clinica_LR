@@ -3714,6 +3714,15 @@ export interface SnomedEclDto {
     value: string;
 }
 
+export interface SnomedProcedureDto {
+    conceptId: number;
+    conceptPt: string;
+    conceptSctid: string;
+    groupDescription: string;
+    groupId: number;
+    id: number;
+}
+
 export interface SnomedResponseDto extends Serializable {
     items: SnomedDto[];
     total: number;
@@ -4452,7 +4461,7 @@ export const enum ERole {
 }
 
 export const enum ESignatureStatus {
-    PENDING = "PENDING",
+        PENDING = "PENDING",
     IN_PROGRESS = "IN_PROGRESS",
     SIGNED = "SIGNED",
 }
