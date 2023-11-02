@@ -1,10 +1,10 @@
 package ar.lamansys.sgx.shared.flavor.instances;
 
-import java.util.EnumMap;
-import java.util.Optional;
-
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.states.InitialFeatureStates;
+
+import java.util.EnumMap;
+import java.util.Optional;
 
 public class HospitalsFeatureStates implements InitialFeatureStates {
 
@@ -64,6 +64,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO, false);
 		map.put(AppFeature.HABILITAR_OBLIGATORIEDAD_UNIDADES_JERARQUICAS, false);
 		map.put(AppFeature.HABILITAR_FIRMA_DIGITAL, false);
+		map.put(AppFeature.HABILITAR_RESOLUCION_PROBLEMAS_CARGADOS_COMO_ERROR_EN_DESARROLLO, false);
 	}
 
 	@Override
