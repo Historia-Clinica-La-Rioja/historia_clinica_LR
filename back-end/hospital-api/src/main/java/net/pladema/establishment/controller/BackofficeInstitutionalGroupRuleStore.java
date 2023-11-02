@@ -74,9 +74,6 @@ public class BackofficeInstitutionalGroupRuleStore implements BackofficeStore<In
 				institutionalGroupRuleRepository.save(institutionalGroupRule);
 			});
 		} else {
-			if (entity.getSnomedId() != null) {
-				entity.setSnomedId(snomedRelatedGroupRepository.getSnomedIdById(entity.getSnomedId()).orElse(null));
-			}
 			entity.setRuleId(saveRule(entity));
 			entity.setRegulated(true);
 			entity.setId(institutionalGroupRuleRepository.save(new InstitutionalGroupRule(entity)).getId());

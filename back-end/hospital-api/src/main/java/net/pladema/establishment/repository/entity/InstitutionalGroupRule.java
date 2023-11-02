@@ -2,6 +2,7 @@ package net.pladema.establishment.repository.entity;
 
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +28,7 @@ import java.io.Serializable;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners(SGXAuditListener.class)
 @Where(clause = "deleted=false")
 public class InstitutionalGroupRule extends SGXAuditableEntity<Integer> implements Serializable {

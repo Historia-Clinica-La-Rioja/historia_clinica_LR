@@ -4,7 +4,11 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata
 import net.pladema.establishment.controller.dto.ERuleLevel;
 import net.pladema.establishment.controller.dto.ERuleType;
 import net.pladema.establishment.controller.dto.RuleDto;
+import net.pladema.establishment.repository.InstitutionalGroupRepository;
+import net.pladema.establishment.repository.InstitutionalGroupRuleRepository;
 import net.pladema.establishment.repository.RuleRepository;
+import net.pladema.establishment.repository.entity.InstitutionalGroup;
+import net.pladema.establishment.repository.entity.InstitutionalGroupRule;
 import net.pladema.establishment.repository.entity.Rule;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 
@@ -18,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -30,15 +35,21 @@ public class BackofficeRuleStore implements BackofficeStore <RuleDto, Integer> {
 	private final ClinicalSpecialtyRepository clinicalSpecialtyRepository;
 	private final SnomedRepository snomedRepository;
 	private final SnomedRelatedGroupRepository snomedRelatedGroupRepository;
+	private final InstitutionalGroupRepository institutionalGroupRepository;
+	private final InstitutionalGroupRuleRepository institutionalGroupRuleRepository;
 
 	public BackofficeRuleStore (RuleRepository ruleRepository,
 								ClinicalSpecialtyRepository clinicalSpecialtyRepository,
 								SnomedRepository snomedRepository,
-								SnomedRelatedGroupRepository snomedRelatedGroupRepository) {
+								SnomedRelatedGroupRepository snomedRelatedGroupRepository,
+								InstitutionalGroupRepository institutionalGroupRepository,
+								InstitutionalGroupRuleRepository institutionalGroupRuleRepository) {
 		this.ruleRepository = ruleRepository;
 		this.clinicalSpecialtyRepository = clinicalSpecialtyRepository;
 		this.snomedRepository = snomedRepository;
 		this.snomedRelatedGroupRepository = snomedRelatedGroupRepository;
+		this.institutionalGroupRepository = institutionalGroupRepository;
+		this.institutionalGroupRuleRepository = institutionalGroupRuleRepository;
 	}
 	@Override
 	public Page<RuleDto> findAll(RuleDto example, Pageable pageable) {
@@ -72,12 +83,20 @@ public class BackofficeRuleStore implements BackofficeStore <RuleDto, Integer> {
 		if (entity.getSnomedId() != null){
 			entity.setSnomedId(snomedRelatedGroupRepository.getSnomedIdById(entity.getSnomedId()).orElse(null));
 		}
+		entity.setLevel(ERuleLevel.GENERAL.getId());
 		entity.setId(ruleRepository.save(new Rule(entity)).getId());
+		List<Integer> localRuleIds = ruleRepository.findByClinicalSpecialtyIdOrSnomedId(entity.getClinicalSpecialtyId(), entity.getSnomedId())
+				.stream().filter(rule -> rule.getLevel().equals(ERuleLevel.LOCAL.getId())).map(Rule::getId).collect(Collectors.toList());
+		institutionalGroupRuleRepository.deleteByRuleIds(localRuleIds);
+		List<Integer> institutionalGroupsIds = institutionalGroupRepository.findAll().stream().map(InstitutionalGroup::getId).collect(Collectors.toList());
+		List<InstitutionalGroupRule> localRules = getLocalRuleList(institutionalGroupsIds, entity.getId());
+		institutionalGroupRuleRepository.saveAll(localRules);
 		return entity;
 	}
 
 	@Override
 	public void deleteById(Integer id) {
+		institutionalGroupRuleRepository.deleteByRuleIds(List.of(id));
 		ruleRepository.deleteById(id);
 	}
 
@@ -93,6 +112,15 @@ public class BackofficeRuleStore implements BackofficeStore <RuleDto, Integer> {
 		result.setSnomedId(entity.getSnomedId());
 		String ruleName = entity.getClinicalSpecialtyId() != null ? clinicalSpecialtyRepository.getById(entity.getClinicalSpecialtyId()).getName() : snomedRepository.getById(entity.getSnomedId()).getPt();
 		result.setName(ruleName);
+		return result;
+	}
+
+	private List<InstitutionalGroupRule> getLocalRuleList(List<Integer> institutionalGroupIds, Integer ruleId){
+		List<InstitutionalGroupRule> result = new ArrayList<>();
+		institutionalGroupIds.forEach(institutionalGroupId -> {
+			InstitutionalGroupRule localRule = new InstitutionalGroupRule(null, ruleId, institutionalGroupId, true, null);
+			result.add(localRule);
+		});
 		return result;
 	}
 

@@ -1,5 +1,6 @@
 package net.pladema.establishment.controller;
 
+import net.pladema.establishment.controller.dto.ERuleLevel;
 import net.pladema.establishment.repository.RuleRepository;
 import net.pladema.establishment.repository.entity.Rule;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
@@ -39,7 +40,7 @@ public class BackofficePracticeProcedureRuleStore implements BackofficeStore<VSn
 
 	@Override
 	public Page<VSnomedGroupConcept> findAll(VSnomedGroupConcept example, Pageable pageable) {
-		List<Integer> existingRulesPracticeProcedureIds = ruleRepository.findAll().stream().map(Rule::getSnomedId).filter(Objects::nonNull).collect(Collectors.toList());
+		List<Integer> existingRulesPracticeProcedureIds = ruleRepository.findAll().stream().filter(rule -> rule.getLevel().equals(ERuleLevel.GENERAL.getId())).map(Rule::getSnomedId).filter(Objects::nonNull).collect(Collectors.toList());
 		List<Integer> snomedRelatedGroupIds = snomedRelatedGroupRepository.getIdsBySnomedIds(existingRulesPracticeProcedureIds);
 		List<VSnomedGroupConcept> concepts = vSnomedGroupConceptRepository.findAll(
 				buildExample(example),

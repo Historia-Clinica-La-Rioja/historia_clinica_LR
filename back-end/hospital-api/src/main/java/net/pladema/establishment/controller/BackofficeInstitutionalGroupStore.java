@@ -5,6 +5,7 @@ import com.google.common.base.Joiner;
 import net.pladema.establishment.controller.dto.InstitutionalGroupDto;
 import net.pladema.establishment.repository.InstitutionalGroupInstitutionRepository;
 import net.pladema.establishment.repository.InstitutionalGroupRepository;
+import net.pladema.establishment.repository.InstitutionalGroupRuleRepository;
 import net.pladema.establishment.repository.entity.InstitutionalGroup;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 
@@ -15,7 +16,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,10 +25,14 @@ public class BackofficeInstitutionalGroupStore implements BackofficeStore<Instit
 
 	private final InstitutionalGroupRepository repository;
 	private final InstitutionalGroupInstitutionRepository institutionsGroupInstitutionRepository;
+	private final InstitutionalGroupRuleRepository institutionalGroupRuleRepository;
 
-	public BackofficeInstitutionalGroupStore(InstitutionalGroupRepository repository, InstitutionalGroupInstitutionRepository institutionsGroupInstitutionRepository){
+	public BackofficeInstitutionalGroupStore(InstitutionalGroupRepository repository,
+											 InstitutionalGroupInstitutionRepository institutionsGroupInstitutionRepository,
+											 InstitutionalGroupRuleRepository institutionalGroupRuleRepository){
 		this.repository = repository;
 		this.institutionsGroupInstitutionRepository = institutionsGroupInstitutionRepository;
+		this.institutionalGroupRuleRepository = institutionalGroupRuleRepository;
 	}
 
 	@Override
@@ -74,6 +78,7 @@ public class BackofficeInstitutionalGroupStore implements BackofficeStore<Instit
 
 	@Override
 	public void deleteById(Integer id) {
+		institutionalGroupRuleRepository.deleteByInstitutionalGroupId(id);
 		institutionsGroupInstitutionRepository.deleteByInstitutionalGroupId(id);
 		repository.deleteById(id);
 	}
