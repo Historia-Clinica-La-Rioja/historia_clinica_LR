@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { AppointmentDailyAmountDto, CompleteDiaryDto, DiaryOpeningHoursDto, ERole, MedicalCoverageDto, ProfessionalDto, ProfessionalPersonDto, SnomedDto } from '@api-rest/api-model';
+import { AppointmentDailyAmountDto, CompleteDiaryDto, DiaryOpeningHoursDto, EAppointmentModality, ERole, MedicalCoverageDto, ProfessionalDto, ProfessionalPersonDto, SnomedDto } from '@api-rest/api-model';
 import { DiaryService } from '@api-rest/services/diary.service';
 import {
 	buildFullDate,
@@ -94,6 +94,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() showAll = true;
 	@Input() view: CalendarView = CalendarView.Week;
 	@Input() viewDate: Date = new Date();
+	modality: EAppointmentModality;
 
 	constructor(
 		private readonly dialog: MatDialog,
@@ -253,13 +254,27 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		});
 	}
 
+	setModality(diaryOpeningHour: DiaryOpeningHoursDto){
+		if (diaryOpeningHour.onSiteAttentionAllowed){
+			this.modality= EAppointmentModality.ON_SITE_ATTENTION;
+		}
+		if(diaryOpeningHour.patientVirtualAttentionAllowed){
+			if(this.modality === null){
+				this.modality =EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
+			}else{
+				this.modality = null;
+			}
+		}
+	}
+
 	onClickedSegment(event) {
 		if (this.getOpeningHoursId(event.date) && this.enableAppointmentScheduling) {
+		
 			const clickedDate: Moment = dateToMomentTimeZone(event.date);
 			const openingHourId: number = this.getOpeningHoursId(event.date);
 			const diaryOpeningHourDto: DiaryOpeningHoursDto =
 				this.diaryOpeningHours.find(diaryOpeningHour => diaryOpeningHour.openingHours.id === openingHourId);
-
+				this.setModality(diaryOpeningHourDto);
 			forkJoin([
 				this.getAppointmentAt(event.date).pipe(take(1)),
 				this.allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto, clickedDate).pipe(take(1))
@@ -322,6 +337,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				openingHoursId: openingHourId,
 				overturnMode: addingOverturn,
 				patientId: this.patientId ? Number(this.patientId) : null,
+				modalityAttention: this.modality,
 			}
 		});
 		dialogRef.afterClosed().subscribe(() => this.appointmentFacade.loadAppointments());
