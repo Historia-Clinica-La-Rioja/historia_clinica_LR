@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.establishment.controller.dto.RuleDto;
 
 import org.hibernate.annotations.Where;
 
@@ -21,34 +20,30 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "rule")
+@Table(name = "institutional_group_rule")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @EntityListeners(SGXAuditListener.class)
 @Where(clause = "deleted=false")
-public class Rule extends SGXAuditableEntity<Integer> implements Serializable {
+public class InstitutionalGroupRule extends SGXAuditableEntity<Integer> implements Serializable {
 
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(name = "clinical_specialty_id")
-	private Integer clinicalSpecialtyId;
+	@Column(name = "rule_id")
+	private Integer ruleId;
 
-	@Column(name = "snomed_id")
-	private Integer snomedId;
+	@Column(name = "institutional_group_id")
+	private Integer institutionalGroupId;
 
-	@Column(name = "level")
-	private Short level;
+	@Column(name = "regulated")
+	private boolean regulated;
 
-	public Rule (RuleDto dto){
-		this.id = dto.getId();
-		this.clinicalSpecialtyId = dto.getClinicalSpecialtyId();
-		this.snomedId = dto.getSnomedId();
-		this.level = dto.getLevel();
-	}
+	@Column(name = "comment")
+	private String comment;
 
 }
