@@ -148,7 +148,7 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 		warnignComponent.afterClosed().subscribe(confirmed => {
 			if (confirmed) {
 				let hasReferences = false;
-				hasReferences ? this.openAmendProblemDialog(problem) : this.openErrorDialog();
+				!hasReferences ? this.openAmendProblemDialog(problem) : this.openErrorDialog();
 			}
 		});
 	}
@@ -158,6 +158,10 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 			{
 				autoFocus: false,
 				minWidth: '500px',
+				data: {
+					problemId: problem.id,
+					patientId: this.patientId
+				}
 			})
 		amendProblemDialog.afterClosed().subscribe((errorData) => {
 			if(errorData){

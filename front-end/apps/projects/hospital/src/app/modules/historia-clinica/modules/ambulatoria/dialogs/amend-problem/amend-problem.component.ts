@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import {  MatDialogRef } from '@angular/material/dialog';
-import { MasterDataDto } from '@api-rest/api-model';
+import {  MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ErrorProblemDto, MasterDataDto } from '@api-rest/api-model';
+import { ExternalClinicalHistoryService } from '@api-rest/services/external-clinical-history.service';
 import { HceMasterdataService } from '@api-rest/services/hce-masterdata.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
+import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 
 @Component({
     selector: 'app-amend-problem',
@@ -18,9 +20,15 @@ export class AmendProblemComponent implements OnInit {
     submit = false;
     
     constructor(
+        @Inject(MAT_DIALOG_DATA) public data: {
+			problemId: number,
+            patientId: number,
+		},
         public dialogRef: MatDialogRef<AmendProblemComponent>,
 		private readonly formBuilder: UntypedFormBuilder,
         private readonly HCEMasterdataService: HceMasterdataService,
+		private externalClinicalHistoryService: ExternalClinicalHistoryService,
+		private ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
     ) { 
     }
 
@@ -42,10 +50,40 @@ export class AmendProblemComponent implements OnInit {
 
     save() {
         this.markAsSaved();
-        if (this.motive && this.form.get("observations").value){
-            this.dialogRef.close(this.motive);
+        let observations = this.form.get("observations").value;
+        if (this.motive && observations){
+            let errorData: ErrorData = {
+                motiveId: this.motive.id, 
+                observations: observations
+            }
+            this.markProblemAsError(errorData, this.data.problemId);
         }
     }
+
+    private markProblemAsError(errorData: ErrorData, problemId: number){
+		if(errorData){
+			let errorProblem: ErrorProblemDto = {
+				errorObservations: errorData.observations,
+				errorReasonId: errorData.motiveId,
+				id: problemId
+			}
+			this.externalClinicalHistoryService.markProblemAsError(this.data.patientId, errorProblem).subscribe(succedeed => {
+				if(succedeed){
+					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({
+						allergies: false,
+						familyHistories: false,
+						personalHistories: true,
+						personalHistoriesByRole: true,
+						riskFactors: false,
+						medications: false,
+						anthropometricData: false,
+						problems: true
+					});
+                    this.dialogRef.close();
+				}
+			})
+		}
+	}
 
     private masterDataDtoToTypeahead(motive: MasterDataDto): TypeaheadOption<MasterDataDto> {
 		return {
@@ -60,7 +98,7 @@ export class AmendProblemComponent implements OnInit {
     }
 }
 
-export interface ErrorMotive {
-    errorReasonId: number;
-    errorObservations: string;
+export interface ErrorData {
+    motiveId: number;
+    observations: string;
 }

@@ -133,8 +133,8 @@ export class ProblemsOptionsMenuComponent implements OnInit {
 			});
 		warnignComponent.afterClosed().subscribe(confirmed => {
 			if (confirmed) {
-				let hasReferences = true;
-				hasReferences ? this.openAmendProblemDialog(problem) : this.openErrorDialog();
+				let hasReferences = false;
+				!hasReferences ? this.openAmendProblemDialog(problem) : this.openErrorDialog();
 			}
 		});
 	}
@@ -144,13 +144,12 @@ export class ProblemsOptionsMenuComponent implements OnInit {
 			{
 				autoFocus: false,
 				minWidth: '500px',
+				data: {
+					problemId: problem.id,
+					patientId: this.patientId
+				}
 			})
-		amendProblemDialog.afterClosed().subscribe((errorData) => {
-			if(errorData){
-				console.log(problem.id)
-				console.log(errorData)
-			}
-		})
+		amendProblemDialog.afterClosed().subscribe()
 	}
 
 	private openErrorDialog(){
