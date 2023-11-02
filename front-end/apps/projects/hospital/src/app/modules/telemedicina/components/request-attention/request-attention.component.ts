@@ -20,6 +20,7 @@ import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { capitalize } from '@core/utils/core.utils';
+import { VirtualConsultationCustom } from '../request-info-card/request-info-card.component';
 
 @Component({
 	selector: 'app-request-attention',
@@ -30,8 +31,8 @@ export class RequestAttentionComponent implements OnInit {
 	@Input() priorityOptions: Option[];
 	@Input() availitibyOptions: Option[];
 	@Input() virtualConsultationsFacadeService: VirtualConsultationsFacadeService;
-	virtualConsultationsFiltered$: Observable<VirtualConsultationDto[]>;
-	virtualConsultationsBackUp$: Observable<VirtualConsultationDto[]>;
+	virtualConsultationsFiltered$: Observable<VirtualConsultationCustom[]>;
+	virtualConsultationsBackUp$: Observable<VirtualConsultationCustom[]>;
 	toggleEnabled = false;
 	virtualConsultatiosStatus = status;
 	initialProfessionalStatus = false;
@@ -242,9 +243,10 @@ export class RequestAttentionComponent implements OnInit {
 		this.router.navigate([route]);
 	}
 
-	private toVCToBeShown(vc: VirtualConsultationDto) {
+	private toVCToBeShown(vc: VirtualConsultationDto) : VirtualConsultationCustom {
 		return {
 			...vc,
+			responsibleData: {available:vc.responsibleData.available,firstName:null,healthcareProfessionalId:vc.responsibleData.healthcareProfessionalId,lastName:null},
 			statusLabel: statusLabel[vc.status],
 			priorityLabel: mapPriority[vc.priority],
 			waitingTime: timeDifference(dateTimeDtotoLocalDate(vc.creationDateTime))
@@ -264,7 +266,7 @@ export class RequestAttentionComponent implements OnInit {
 		}
 	}
 
-	private filter(): VirtualConsultationDto[] {
+	private filter(): VirtualConsultationCustom[] {
 		let listFilter =[];
 		 this.virtualConsultationsBackUp$.subscribe(data=>{
 			listFilter = data;

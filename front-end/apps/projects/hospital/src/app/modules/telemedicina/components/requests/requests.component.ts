@@ -19,6 +19,7 @@ import { anyMatch } from '@core/utils/array.utils';
 import { capitalize } from '@core/utils/core.utils';
 import { TransferRequestComponent } from '../../dialogs/transfer-request/transfer-request.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { VirtualConsultationCustom } from '../request-info-card/request-info-card.component';
 
 @Component({
 	selector: 'app-requests',
@@ -29,8 +30,8 @@ export class RequestsComponent implements OnInit {
 	@Input() priorityOptions: Option[];
 	@Input() availitibyOptions: Option[];
 	@Input() virtualConsultationsFacadeService: VirtualConsultationsFacadeService;
-	virtualConsultationsFiltered$: Observable<VirtualConsultationDto[]>;
-	virtualConsultationsBackUp$: Observable<VirtualConsultationDto[]>;
+	virtualConsultationsFiltered$: Observable<VirtualConsultationCustom[]>;
+	virtualConsultationsBackUp$: Observable<VirtualConsultationCustom[]>;
 	virtualConsultatiosStatus = status;
 	initialResponsableStatus = false;
 	careLinesOptions: CareLineDto[];
@@ -119,12 +120,13 @@ export class RequestsComponent implements OnInit {
 		this.stateOptions.push(state);
 	}
 
-	private toVCToBeShown(vc: VirtualConsultationDto) {
+	private toVCToBeShown(vc: VirtualConsultationDto): VirtualConsultationCustom {
 		return {
 			...vc,
+			institutionData: {name:null,id:vc.institutionData.id},
 			statusLabel: statusLabel[vc.status],
 			priorityLabel: mapPriority[vc.priority],
-			waitingTime: timeDifference(dateTimeDtotoLocalDate(vc.creationDateTime))
+			waitingTime: timeDifference(dateTimeDtotoLocalDate(vc.creationDateTime)),
 		}
 	}
 
@@ -279,9 +281,9 @@ export class RequestsComponent implements OnInit {
 		}
 	}
 
-	private filter(): VirtualConsultationDto[] {
-		let listFilter = [];
-		this.virtualConsultationsBackUp$.subscribe(data => {
+	private filter(): VirtualConsultationCustom[] {
+		let listFilter =[];
+		 this.virtualConsultationsBackUp$.subscribe(data=>{
 			listFilter = data;
 		});
 		return listFilter.filter((e: VirtualConsultationDto) => this.getFullName(e).toLowerCase().includes(this.applySearchFilter.toLowerCase()))
