@@ -1,8 +1,5 @@
 package ar.lamansys.sgh.clinichistory.application.document;
 
-import java.util.List;
-import java.util.Optional;
-
 import ar.lamansys.sgh.clinichistory.domain.document.DocumentDownloadDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
@@ -31,6 +28,9 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentRiskFactor;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentTriage;
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface DocumentService {
 
@@ -79,6 +79,8 @@ public interface DocumentService {
     DocumentDiagnosticReport getDocumentFromDiagnosticReport(Integer drid);
 
     List<Long> getDocumentId(Integer sourceId, Short sourceTypeId);
+
+    List<Long> getDocumentIdBySourceAndType(Integer sourceId, Short typeId);
 
     void deleteHealthConditionHistory(Long documentId);
 

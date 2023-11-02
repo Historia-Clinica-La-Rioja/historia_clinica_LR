@@ -5,8 +5,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.DocumentRepositoryCustom;
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
-
-
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -38,6 +36,12 @@ public interface DocumentRepository extends SGXAuditableEntityJPARepository<Docu
             "FROM Document d " +
             "WHERE d.sourceId = :sourceId AND d.sourceTypeId = :sourceTypeId")
     List<Long> findBySourceIdAndSourceTypeId(@Param("sourceId") Integer sourceId, @Param("sourceTypeId") Short sourceTypeId );
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT d.id " +
+			"FROM Document d " +
+			"WHERE d.sourceId = :sourceId AND d.typeId = :typeId")
+	List<Long> findBySourceIdAndTypeId(@Param("sourceId") Integer sourceId, @Param("typeId") Short typeId);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT d.sourceTypeId " +
