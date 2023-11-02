@@ -18,6 +18,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.DiagnosticReportStatus;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.outpatient.application.exceptions.MarkAsErrorAProblemException;
@@ -31,6 +32,8 @@ import net.pladema.clinichistory.requests.servicerequests.service.domain.Diagnos
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.service.AppointmentOrderImageService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,6 +58,7 @@ public class MarkAsErrorAProblem {
     private final ServiceRequestRepository serviceRequestRepository;
     private final AppointmentService appointmentService;
     private final AppointmentOrderImageService appointmentOrderImageService;
+    private final MessageSource messageSource;
 
     @Transactional
     public boolean run(Integer institutionId, Integer patientId, ProblemBo problem) {
@@ -95,6 +99,8 @@ public class MarkAsErrorAProblem {
         this.updateHealthCondition(problem);
 
         this.deleteServiceRequestDocuments(studiesRelatedToProblem);
+
+        this.cancelAppointments(appointmentsRDI);
 
         log.debug("Output -> {}", true);
         return true;
@@ -161,5 +167,11 @@ public class MarkAsErrorAProblem {
                 .filter(serviceRequest -> serviceRequest.getCategoryId().equals(ServiceRequestCategory.DIAGNOSTIC_IMAGING))
                 .map(ServiceRequest::getId)
                 .collect(Collectors.toList());
+    }
+
+    private void cancelAppointments(List<Integer> appIds) {
+        appIds.forEach(appId -> appointmentService.updateState(appId, AppointmentState.CANCELLED,
+                UserInfo.getCurrentAuditor(),
+                messageSource.getMessage("app.problems.warning.cancel-appointments", null, LocaleContextHolder.getLocale())));
     }
 }
