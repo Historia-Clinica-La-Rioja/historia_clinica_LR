@@ -24,14 +24,19 @@ import net.pladema.clinichistory.outpatient.application.exceptions.MarkAsErrorAP
 import net.pladema.clinichistory.outpatient.application.exceptions.MarkAsErrorAProblemExceptionEnum;
 import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;
+import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequestCategory;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequestStatus;
 import net.pladema.clinichistory.requests.servicerequests.service.ListDiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
+import net.pladema.medicalconsultation.appointment.service.AppointmentOrderImageService;
+import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,6 +53,8 @@ public class MarkAsErrorAProblem {
     private final DocumentService documentService;
     private final DiagnosticReportRepository diagnosticReportRepository;
     private final ServiceRequestRepository serviceRequestRepository;
+    private final AppointmentService appointmentService;
+    private final AppointmentOrderImageService appointmentOrderImageService;
 
     @Transactional
     public boolean run(Integer institutionId, Integer patientId, ProblemBo problem) {
@@ -67,6 +74,22 @@ public class MarkAsErrorAProblem {
                 .findAny()
                 .ifPresent((diagnoticReportCompleted) -> {
                     throw new MarkAsErrorAProblemException(MarkAsErrorAProblemExceptionEnum.HAS_AT_LEAST_ONE_STUDY_COMPLETED, "app.problems.error.has-at-least-one-study-completed");
+                });
+
+        var appointmentsRDI = getDiagnosticImagingOrders(studiesRelatedToProblem).stream()
+                .map(appointmentOrderImageService::getAppointmentIdByOrderId)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+
+        appointmentsRDI.stream()
+                .map(appointmentService::getAppointment)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .filter(appointmentBo -> appointmentBo.getAppointmentStateId().equals(AppointmentState.CONFIRMED) ||
+                                         appointmentBo.getAppointmentStateId().equals(AppointmentState.SERVED))
+                .findAny()
+                .ifPresent((appointmentConfirmedOrServed) -> {
+                    throw new MarkAsErrorAProblemException(MarkAsErrorAProblemExceptionEnum.HAS_AT_LEAST_ONE_APPOINTMENT_CONFIRMED_OR_SERVED, "app.problems.error.has-at-least-one-appointment-served-or-confirmed");
                 });
 
         this.updateHealthCondition(problem);
@@ -126,5 +149,17 @@ public class MarkAsErrorAProblem {
                 .orElseThrow(() -> new NotFoundException("servicerequest-not-found", "Servicerequest not found"));
         sr.setStatusId(ServiceRequestStatus.ERROR);
         this.serviceRequestRepository.save(sr);
+    }
+
+    private List<Integer> getDiagnosticImagingOrders(List<DiagnosticReportBo> studiesRelatedToProblem) {
+        return studiesRelatedToProblem.stream()
+                .map(DiagnosticReportBo::getEncounterId)
+                .distinct()
+                .map(serviceRequestRepository::findById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .filter(serviceRequest -> serviceRequest.getCategoryId().equals(ServiceRequestCategory.DIAGNOSTIC_IMAGING))
+                .map(ServiceRequest::getId)
+                .collect(Collectors.toList());
     }
 }

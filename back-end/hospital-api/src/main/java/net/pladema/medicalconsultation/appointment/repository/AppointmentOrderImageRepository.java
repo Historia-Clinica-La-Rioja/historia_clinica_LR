@@ -124,4 +124,10 @@ public interface AppointmentOrderImageRepository extends JpaRepository<Appointme
 			"JOIN ServiceRequest sr ON aoi.orderId = sr.id " +
 			"WHERE aoi.pk.appointmentId = :appointmentId ")
 	Optional<Integer> getDiagnosticImagingOrderAuthorId(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT aoi.pk.appointmentId " +
+			"FROM AppointmentOrderImage aoi " +
+			"WHERE aoi.orderId = :orderId ")
+	List<Integer> getAppointmentIdsByOrderId(@Param("orderId") Integer orderId);
 }

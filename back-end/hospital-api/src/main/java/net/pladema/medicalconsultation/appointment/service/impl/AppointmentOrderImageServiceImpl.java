@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -105,5 +106,11 @@ public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageSe
 	public Optional<String> getDiagnosticImagingTranscribedOrderAuthor(Integer transcribedOrderId) {
 		LOG.debug("Input parameters -> transcribedOrderId '{}'", transcribedOrderId);
 		return transcribedServiceRequestRepository.getHealthcareProfessionalName(transcribedOrderId);
+	}
+
+	@Override
+	public List<Integer> getAppointmentIdByOrderId(Integer orderId) {
+		LOG.debug("Input parameters -> orderId '{}'", orderId);
+		return appointmentOrderImageRepository.getAppointmentIdsByOrderId(orderId);
 	}
 }
