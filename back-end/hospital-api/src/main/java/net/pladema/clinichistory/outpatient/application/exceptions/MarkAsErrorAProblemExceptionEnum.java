@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum MarkAsErrorAProblemExceptionEnum {
     FORBIDDEN_USER_ID,
-    TIME_WINDOW_EXPIRATION
+    TIME_WINDOW_EXPIRATION,
+    HAS_AT_LEAST_ONE_STUDY_COMPLETED,
     ;
 }
