@@ -34,7 +34,7 @@ export class ProblemsOptionsMenuComponent implements OnInit {
     hasNewConsultationEnabled$: Observable<boolean>;
 	private nuevaConsultaAmbulatoriaRef: DockPopupRef;
 	private nuevaConsultaFromProblemaRef: DockPopupRef;
-	isMarkProblemAsErrorActive$: Observable<boolean>;
+	isMarkProblemAsErrorActive: boolean;
 
     // Injected dependencies
     private dockPopupService: DockPopupService;
@@ -52,7 +52,9 @@ export class ProblemsOptionsMenuComponent implements OnInit {
                     this.patientId = Number(params.get('idPaciente'));
                 }
 			);
-			this.isMarkProblemAsErrorActive$ = this.featureFlagService.isActive(AppFeature.HABILITAR_RESOLUCION_PROBLEMAS_CARGADOS_COMO_ERROR_EN_DESARROLLO);
+			this.featureFlagService.isActive(AppFeature.HABILITAR_RESOLUCION_PROBLEMAS_CARGADOS_COMO_ERROR_EN_DESARROLLO).subscribe(isOn => {
+				this.isMarkProblemAsErrorActive = isOn;
+			});
         }
 
     ngOnInit(): void {
