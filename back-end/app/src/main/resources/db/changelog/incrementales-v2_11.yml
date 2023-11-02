@@ -71,3 +71,115 @@ databaseChangeLog:
                         ecen.created_by, ecen.created_on, ecen.updated_by, ecen.updated_on, ecen.deleted_by, ecen.deleted_on, ecen.deleted
                 FROM emergency_care_evolution_note ecen
                 JOIN document d ON (d.source_id = ecen.id AND d.source_type_id = 4)
+
+    - changeSet:
+        id: dropColumn-type_id-rule
+        author: fsimaro
+        changes:
+          - dropColumn:
+              tableName: rule
+              columnName: type_id
+              
+    - changeSet:
+        id: addColumn-level-rule
+        author: fsimaro
+        changes:
+          - addColumn:
+              tableName: rule
+              columns:
+                - column:
+                    name: level
+                    type: smallint
+                    constraints:
+                      nullable: false
+                    defaultValue: 0
+
+    - changeSet:
+        id: createTable-institutional_group_rule
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: institutional_group_rule
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_institutional_group_rule
+                    name: id
+                    type: int
+                - column:
+                    name: rule_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      foreignKeyName: FK_institutional_group_rule_rule_id
+                      references: rule(id)
+                - column:
+                    name: institutional_group_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      foreignKeyName: FK_institutional_group_rule_institutional_group_id
+                      references: institutional_group(id)
+                - column:
+                    name: regulated
+                    type: boolean
+                    constraints:
+                      nullable: false
+                    defaultValue: ${boolean.true}
+                - column:
+                    name: comment
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: relate_rules_to_groups
+        author: fsimaro
+        comment: Relate rules to groups
+        changes:
+          - sql:
+              dbms: postgresql  # Ajusta según tu base de datos
+              endDelimiter: ;
+              splitStatements: true
+              sql: |
+                INSERT INTO institutional_group_rule (rule_id, institutional_group_id)
+                SELECT r.id, ig.id
+                FROM rule r
+                CROSS JOIN institutional_group ig
+                WHERE r.deleted = false AND ig.deleted = false;
