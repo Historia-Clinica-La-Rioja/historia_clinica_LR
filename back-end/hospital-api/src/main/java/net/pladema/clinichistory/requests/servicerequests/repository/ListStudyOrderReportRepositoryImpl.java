@@ -41,7 +41,7 @@ public class ListStudyOrderReportRepositoryImpl implements ListStudyOrderReportR
                 "JOIN {h-schema}health_condition hc ON dr.health_condition_id = hc.id " +
                 "JOIN {h-schema}snomed s ON dr.snomed_id = s.id " +
                 "JOIN {h-schema}snomed s2 ON hc.snomed_id = s2.id " +
-                "LEFT JOIN {h-schema}appointment_order_image aoi ON sr.id = aoi.order_id " +
+                "LEFT JOIN {h-schema}appointment_order_image aoi ON sr.id = aoi.order_id AND aoi.active = true " +
                 "LEFT JOIN {h-schema}document_file df ON aoi.document_id = df.id " +
                 "WHERE dr.patient_id = :patientId " +
                 "AND d.type_id = :documentType " +
