@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { removeAccents } from '@core/utils/core.utils';
 import { PresentationModule } from '@presentation/presentation.module';
 
 @Component({
@@ -37,9 +38,11 @@ const REMOVE_DOT = /[.]/g;
 export enum SEARCH_CASES {
 	LOWER_CASE = 'Eliminar mayusculas',
 	REMOVE_DOT = 'Eliminar puntos',
+	REMOVE_ACCENTS = 'Eliminar acentos',
 }
 
 export const FILTER_CASES = {
 	[SEARCH_CASES.LOWER_CASE]: (str: string) => str.toLowerCase(),
 	[SEARCH_CASES.REMOVE_DOT]: (str: string) => str.replace(REMOVE_DOT, ''),
+	[SEARCH_CASES.REMOVE_ACCENTS]: (str: string) => removeAccents(str),
 }
