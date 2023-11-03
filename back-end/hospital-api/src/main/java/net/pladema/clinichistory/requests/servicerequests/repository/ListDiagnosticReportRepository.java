@@ -6,5 +6,7 @@ import net.pladema.clinichistory.requests.servicerequests.repository.domain.Diag
 import java.util.List;
 
 public interface ListDiagnosticReportRepository {
-    List<Object[]> execute(DiagnosticReportFilterVo filter);
+    List<Object[]> getList(DiagnosticReportFilterVo filter);
+
+	List<Object[]> getMedicalOrderList(DiagnosticReportFilterVo filter);
 }

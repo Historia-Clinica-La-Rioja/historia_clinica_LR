@@ -22,7 +22,7 @@ export class BedAssignmentComponent implements OnInit, OnDestroy {
 	constructor(
 		public dialogRef: MatDialogRef<BedAssignmentComponent>,
 		private bedManagementFacadeService: BedManagementFacadeService,
-		@Inject(MAT_DIALOG_DATA) public data: number,
+		@Inject(MAT_DIALOG_DATA) public data,
   	) {}
 
 	ngOnInit(): void {
@@ -32,7 +32,7 @@ export class BedAssignmentComponent implements OnInit, OnDestroy {
 			probableDischargeDate: null,
 			filled: false
 		});
-		this.managementBed$ = this.bedManagementFacadeService.getBedManagement(this.data).pipe(
+		this.managementBed$ = this.bedManagementFacadeService.getBedManagement(this.data.sectorsType).pipe(
 			tap(bedsSummary => this.bedsAmount = bedsSummary ? bedsSummary.length : 0)
 		).subscribe(data => {
 			this.existBedManagementList = data ? true : false;

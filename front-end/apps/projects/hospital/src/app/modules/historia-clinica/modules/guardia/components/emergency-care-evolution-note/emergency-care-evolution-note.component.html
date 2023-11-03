@@ -5,7 +5,7 @@
 
 <app-titled-content *ngIf="diagnosticosContent?.length" icon="report" title="Diagnósticos" [content]="diagnosticosContent"></app-titled-content>
 
-<app-titled-content *ngIf="evolucionContent?.length" icon="chat" title="Evolución" [content]="evolucionContent"></app-titled-content>
+<app-titled-single-content *ngIf="evolucionContent?.length" icon="chat" title="Evolución" [content]="evolucionContent"></app-titled-single-content>
 
 <app-titled-content *ngIf="antropometricosContent?.length" icon="accessibility" title="Datos antropométricos" [content]="antropometricosContent"></app-titled-content>
 

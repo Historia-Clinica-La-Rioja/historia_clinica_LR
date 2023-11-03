@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import {
     Show,
     SimpleShowLayout,
@@ -9,13 +9,14 @@ import {
     ReferenceManyField,
     Datagrid,
     ListButton,
-    usePermissions
+    usePermissions,
+    Tab,
+    TabbedShowLayout,
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
-import {ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE} from "../roles";
-
-const UNIDADES_JEARQUICAS_FF = 'HABILITAR_UNIDADES_JERARQUICAS_EN_DESARROLLO';
+import { ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE } from "../roles";
+import UnidadesJerarquicas from './UnidadesJerarquicas';
 
 const InstitutionShowActions = ({ data }) => {
     return (!data || !data.id) ? <TopToolbar/> :
@@ -57,6 +58,9 @@ const ShowHierarchicalUnits = () => {
                   empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin unidades jerárquicas definidas</p>}>
             <TextField source="id" />
             <TextField source="alias"/>
+            <ReferenceField source="typeId" reference="hierarchicalunittypes" link={false}>
+                <TextField source="description" />
+            </ReferenceField>
             <EditButton disabled={!UserIsInstitutionalAdmin()}/>
         </Datagrid>
     </ReferenceManyField>
@@ -64,7 +68,6 @@ const ShowHierarchicalUnits = () => {
 };
 
 const InstitutionShow = props => {
-    const { permissions } = usePermissions();
     return (
         <Show actions={<InstitutionShowActions />} {...props}>
             <SimpleShowLayout>
@@ -110,13 +113,26 @@ const InstitutionShow = props => {
                         <EditButton />
                     </Datagrid>
                 </ReferenceManyField>
-                { permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <SectionTitle label="resources.institutions.fields.hierarchicalUnits"/>}
-                { permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <CreateHierarchicalUnit/>}
-                { permissions && permissions.isOn(UNIDADES_JEARQUICAS_FF) && <ShowHierarchicalUnits/>}
+                <SectionTitle label="resources.institutions.fields.hierarchicalUnits" />
+                <CreateHierarchicalUnit />
+               <HierarchicalUnitTabs {...props} />
             </SimpleShowLayout>
         </Show>
     );
 }
 
+const HierarchicalUnitTabs = (props) => (
+    <Fragment>
+        <TabbedShowLayout>
+            <Tab label="Lista" id="lista">
+                <ShowHierarchicalUnits />
+            </Tab>
+            <Tab label="Grafico" id="grafico">
+                <UnidadesJerarquicas institutionId={props.id} />
+            </Tab>
+        </TabbedShowLayout>
+    </Fragment>
+)
+
 export default InstitutionShow;
-export { CreateHierarchicalUnit, UserIsInstitutionalAdmin, ShowHierarchicalUnits, UNIDADES_JEARQUICAS_FF };
+export { CreateHierarchicalUnit, UserIsInstitutionalAdmin, HierarchicalUnitTabs };

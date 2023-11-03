@@ -35,6 +35,8 @@ import net.pladema.person.service.PersonService;
 @RequiredArgsConstructor
 public class MergePatientStorageImpl implements MergePatientStorage {
 
+	private final static Integer NO_INSTITUTION = -1;
+
 	private final PatientRepository patientRepository;
 
 	private final PatientService patientService;
@@ -62,7 +64,8 @@ public class MergePatientStorageImpl implements MergePatientStorage {
 		log.debug("Input parameters -> patientIdToInactivate {}, referencePatientId {}, institutionId {} ", patientIdToInactivate, referencePatientId, institutionId);
 		patientRepository.findById(patientIdToInactivate).orElseThrow(() -> new MergePatientException(MergePatientExceptionEnum.PATIENT_NOT_EXISTS, String.format("El paciente a inactivar con id %s no se encuentra", patientIdToInactivate)));
 		patientRepository.deleteById(patientIdToInactivate);
-		auditActionPatient(institutionId, patientIdToInactivate, EActionType.DELETE);
+		if (institutionId != NO_INSTITUTION)
+			auditActionPatient(institutionId, patientIdToInactivate, EActionType.DELETE);
 		personService.findByPatientId(patientIdToInactivate)
 				.ifPresent(person -> disableUserByPersonId(person.getId()));
 	}
@@ -73,7 +76,8 @@ public class MergePatientStorageImpl implements MergePatientStorage {
 		MergedInactivePatient mip = mergedInactivePatientRepository.findByInactivePatientId(patientIdToReactivate)
 				.orElseThrow(() -> new MergePatientException(MergePatientExceptionEnum.PATIENT_INACTIVE_NOT_EXISTS, String.format("El paciente con id %s no se encuentra inactivo", patientIdToReactivate)));
 		patientRepository.reactivate(mip.getInactivePatientId());
-		auditActionPatient(institutionId, patientIdToReactivate, EActionType.UPDATE);
+		if (institutionId != NO_INSTITUTION)
+			auditActionPatient(institutionId, patientIdToReactivate, EActionType.UPDATE);
 		personService.findByPatientId(patientIdToReactivate)
 				.ifPresent(person -> enableUserByPersonId(person.getId()));
 	}
@@ -85,21 +89,23 @@ public class MergePatientStorageImpl implements MergePatientStorage {
 			throw new MergePatientException(MergePatientExceptionEnum.PATIENT_NOT_EXISTS, String.format("El paciente con id %s no existe", patientId));
 		Person person = personService.findByPatientId(patientId).orElseThrow(() -> new MergePatientException(MergePatientExceptionEnum.ASSOCIATED_PERSON_NOT_FOUND, String.format("No se encuentra persona asociada al paciente con id %s", patientId)));
 		person.setFirstName(basicPersonData.getFirstName());
-		person.setMiddleNames(basicPersonData.getMiddleNames());
+		if(basicPersonData.getMiddleNames() != null)
+			person.setMiddleNames(basicPersonData.getMiddleNames());
 		person.setLastName(basicPersonData.getLastName());
-		person.setOtherLastNames(basicPersonData.getOtherLastNames());
+		if(basicPersonData.getOtherLastNames() != null)
+			person.setOtherLastNames(basicPersonData.getOtherLastNames());
 		person.setIdentificationTypeId(basicPersonData.getIdentificationTypeId());
 		person.setIdentificationNumber(basicPersonData.getIdentificationNumber());
 		person.setBirthDate(basicPersonData.getBirthDate());
 		personService.addPerson(person);
 
-		if (featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)) {
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && basicPersonData.getNameSelfDetermination() != null) {
 			PersonExtended personExtended = personService.getPersonExtended(person.getId());
 			personExtended.setNameSelfDetermination(basicPersonData.getNameSelfDetermination());
 			personService.addPersonExtended(personExtended);
 		}
-
-		auditActionPatient(institutionId, patientId, EActionType.UPDATE);
+		if (institutionId != NO_INSTITUTION)
+			auditActionPatient(institutionId, patientId, EActionType.UPDATE);
 	}
 
 	@Override

@@ -41,7 +41,8 @@ const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
-	styleUrls: ['./home.component.scss']
+	styleUrls: ['./home.component.scss'],
+	providers: [TriageDefinitionsService]
 })
 export class HomeComponent implements OnInit {
 

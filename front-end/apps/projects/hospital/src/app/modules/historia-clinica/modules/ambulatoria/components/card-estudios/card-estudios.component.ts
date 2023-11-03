@@ -19,11 +19,13 @@ import { CreateOutpatientOrderComponent, NewOutpatientOrder } from "@historia-cl
 import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
 import { PermissionsService } from "@core/services/permissions.service";
 import { EmergencyCareEpisodeSummaryService } from '@api-rest/services/emergency-care-episode-summary.service';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
 import { EmergencyCareStateService } from '@api-rest/services/emergency-care-state.service';
 import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/guardia/services/new-emergency-care-evolution-note.service';
+import { DiagnosticWithTypeReportInfoDto } from '../../modules/estudio/model/ImageModel';
+import { ImageOrderCasesService } from '../../modules/estudio/services/image-order-cases.service';
 
 @Component({
 	selector: 'app-card-estudios',
@@ -34,7 +36,7 @@ export class CardEstudiosComponent implements OnInit {
 
 	public readonly estudios = ESTUDIOS;
 	public readonly STUDY_STATUS = STUDY_STATUS;
-	imageDiagnotics: DiagnosticReportInfoDto[] = [];
+	imageDiagnotics: DiagnosticReportInfoDto[] | DiagnosticWithTypeReportInfoDto[]= [];
 	laboratoryDiagnotics: DiagnosticReportInfoDto[] = [];
 	pathologicAnatomyDiagnotics: DiagnosticReportInfoDto[] = [];
 	hemotherapyDiagnotics: DiagnosticReportInfoDto[] = [];
@@ -54,6 +56,8 @@ export class CardEstudiosComponent implements OnInit {
 	intermentDiagnosis;
 	emergencyCareDiagnosis;
 	episodeId: number;
+	response: DiagnosticReportInfoDto[] = []
+
 
 	@Input() filterBy: {
 		source: string,
@@ -92,7 +96,8 @@ export class CardEstudiosComponent implements OnInit {
 		private readonly permissionsService: PermissionsService,
 		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService,
 		private readonly emergencyCareStateService: EmergencyCareStateService,
-		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService
+		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService,
+		private readonly imageOrderCasesService: ImageOrderCasesService
 	) { }
 
 	ngOnInit(): void {
@@ -158,16 +163,40 @@ export class CardEstudiosComponent implements OnInit {
 		});
 	}
 
+	updateModifiedStudyList(updatedCategoryId: string) {
+		let responseUpdate = []
+		const isImageCategory = this.categories[0].id === updatedCategoryId
+		const sourceImageCases$ = isImageCategory ? this.imageOrderCasesService.getImageOrderCasesFiltered(this.patientId,this.formFilter.value) : of([])
+		this.resetCategoryStudyList(updatedCategoryId);
+		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, null, null, null, null, updatedCategoryId)
+		.pipe(
+			tap(response => responseUpdate = response ),
+			switchMap( _ => sourceImageCases$))
+			.subscribe((responseImageCases: DiagnosticWithTypeReportInfoDto[]) => {
+				responseUpdate.forEach(report => {
+					report.creationDate = new Date(report.creationDate);
+					this.classifyReport(report);
+				})
+				if (isImageCategory)
+					this.imageDiagnotics = this.imageOrderCasesService.getImagesDiagnosticAllCases(this.imageDiagnotics,responseImageCases);
+			});
+	}
+
 	private getStudy(): void {
 		const value = this.formFilter.value;
 		this.clearLoadedReports();
-		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, value.statusId, null, value.healthCondition, value.study, value.categoryId)
-			.subscribe((response: DiagnosticReportInfoDto[]) => {
-				response = this.filterBy ? response.filter(r => r.sourceId === this.filterBy.id && r.source === this.filterBy.source) : response;
-				response.forEach(report => {
+		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, value.statusId, null, value.healthCondition, value.study, value.categoryId).
+		pipe(
+			tap(response => this.response = response ),
+			switchMap( _ => this.imageOrderCasesService.getImageOrderCasesFiltered(this.patientId,this.formFilter.value))
+		)
+		.subscribe((responseImageCases: DiagnosticWithTypeReportInfoDto[]) => {
+				this.response = this.filterBy ? this.response.filter(r => r.sourceId === this.filterBy.id && r.source === this.filterBy.source) : this.response;
+				this.response.forEach(report => {
 					report.creationDate = new Date(report.creationDate);
 					this.classifyReport(report);
 				});
+				this.imageDiagnotics = this.imageOrderCasesService.getImagesDiagnosticAllCases(this.imageDiagnotics,responseImageCases);
 			});
 	}
 
@@ -334,6 +363,7 @@ export class CardEstudiosComponent implements OnInit {
 		}
 	}
 
+
 	compareReports(firstReport: DiagnosticReportInfoDto, secondReport: DiagnosticReportInfoDto): boolean {
 		return firstReport.id === secondReport.id;
 	}
@@ -344,16 +374,17 @@ export class CardEstudiosComponent implements OnInit {
 			(this.otherProceduresAndPracticesDiagnotics.length == 0) && (this.adviceDiagnotics.length == 0) && (this.educationDiagnotics.length == 0));
 	}
 
-	updateModifiedStudyList(updatedCategoryId: string) {
-		this.resetCategoryStudyList(updatedCategoryId);
-		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, null, null, null, null, updatedCategoryId)
-			.subscribe((response: DiagnosticReportInfoDto[]) => {
-				response.forEach(report => {
-					report.creationDate = new Date(report.creationDate);
-					this.classifyReport(report);
-				})
-			});
-	}
+	// TODO: Analizar despues de refactor
+	// updateModifiedStudyList(updatedCategoryId: string) {
+	// 	this.resetCategoryStudyList(updatedCategoryId);
+	// 	this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, null, null, null, null, updatedCategoryId)
+	// 		.subscribe((response: DiagnosticReportInfoDto[]) => {
+	// 			response.forEach(report => {
+	// 				report.creationDate = new Date(report.creationDate);
+	// 				this.classifyReport(report);
+	// 			})
+	// 		});
+	// }
 
 	private resetCategoryStudyList(updatedCategoryId: string) {
 		switch (updatedCategoryId) {

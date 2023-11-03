@@ -18,7 +18,8 @@
 			"REPORTES": "Reportes",
 			"REPORTES_PROVINCIALES": "Reportes provinciales",
 			"LOGOUT": "Cerrar sesión",
-			"AUDIT": "Auditoria"
+			"AUDIT": "Auditoria",
+			"TELEMEDICINE":"TeleSalud"
 		}
 	},
 	"buttons": {
@@ -47,7 +48,11 @@
 		"CSV_DOWNLOAD": "DESCARGAR .CSV",
 		"ELECTRONIC_FIRM": "Firmar electrónicamente",
 		"ALL": "Todos",
-		"RETRY":"Reintentar"
+		"RETRY":"Reintentar",
+		"YES_CONTINUE":"Si, continuar",
+		"NO_CANCEL":"No, cancelar",
+		"FILTER":"Filtrar",
+		"IMPORT":"Importar"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",
@@ -111,7 +116,8 @@
 		"ART": "ART"
 	},
 	"messages": {
-		"NO_DATA": "No hay información para mostrar"
+		"NO_DATA": "No hay información para mostrar",
+		"COPIED": "¡Copiado!"
 	},
 	"profile": {
 		"PICTURE": "Foto de perfil"

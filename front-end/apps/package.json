@@ -8,7 +8,9 @@
     "build:prod": "node version.js && ng build hospital",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "ci:test": "ng test --no-watch --no-progress --browsers=ChromeHeadlessCI"
+    "ci:test": "ng test --no-watch --no-progress --browsers=ChromeHeadlessCI",
+    "storybook": "ng run hospital:storybook",
+    "build-storybook": "ng run hospital:build-storybook"
   },
   "private": true,
   "dependencies": {
@@ -29,6 +31,7 @@
     "@cubejs-client/ngx": "^0.29.0",
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
+    "@stomp/rx-stomp": "^2.0.0",
     "angular-calendar": "^0.30.1",
     "angular-code-input": "^1.6.0",
     "angular-oauth2-oidc": "^14.0.1",
@@ -55,9 +58,15 @@
     "@angular-devkit/build-angular": "^14.2.11",
     "@angular/cli": "^14.2.11",
     "@angular/compiler-cli": "^14.3.0",
+    "@storybook/addon-essentials": "^7.0.24",
+    "@storybook/addon-interactions": "^7.0.24",
+    "@storybook/addon-links": "^7.0.24",
+    "@storybook/angular": "^7.0.24",
+    "@storybook/blocks": "^7.0.24",
+    "@storybook/testing-library": "^0.0.14-next.2",
     "@types/jasmine": "~3.8.0",
     "@types/jest": "^27.4.0",
-    "@types/node": "^12.11.1",
+    "@types/node": "^20.3.2",
     "jasmine-core": "~3.8.0",
     "karma": "~6.3.0",
     "karma-chrome-launcher": "~3.1.0",
@@ -65,6 +74,9 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
     "moment-locales-webpack-plugin": "^1.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "storybook": "^7.0.24",
     "typescript": "~4.8.4",
     "webpack-dev-server": "^4.4.0"
   }

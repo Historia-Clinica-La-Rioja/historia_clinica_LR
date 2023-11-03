@@ -147,11 +147,17 @@ public enum AppFeature implements Feature {
 	@Label("Indica si está habilitada la acción de imprimir HC de pacientes")
 	HABILITAR_IMPRESION_HISTORIA_CLINICA_EN_DESARROLLO,
 
-	@Label("Indica si está habilitada la carga de caché de terminología")
-	HABILITAR_CARGA_CACHE_EN_DESARROLLO,
+	@Label("Indica si está habilitado el uso de API Pública con el Rol genérico")
+	HABILITAR_API_CONSUMER,
 
-	@Label("Indica si está habilitada en backoffice la funcionalidad asociada a unidades jerárquicas")
-	HABILITAR_UNIDADES_JERARQUICAS_EN_DESARROLLO,
+	@Label("Indica si el módulo de telemedicina está activo")
+	HABILITAR_TELEMEDICINA,
+
+	@Label("Indica si está disponible la solapa referencias del módulo Gestión de turnos")
+	HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO,
+	
+	@Label("Habilita la obligatoriedad del campo de unidades jerárquicas como requerido")
+	HABILITAR_OBLIGATORIEDAD_UNIDADES_JERARQUICAS,
 	;
 
     public boolean isActive() {

@@ -8,7 +8,9 @@ public interface EquipmentService {
 
 	List<EquipmentBO> getEquipmentBySector(Integer sectorId);
 
-	List<EquipmentBO> getEquipmentByInstitution(Integer institutionId);
+    List<EquipmentBO> getEquipmentByModalityInInstitution(Integer modalityId, Integer institutionId);
+
+    List<EquipmentBO> getEquipmentByInstitution(Integer institutionId);
 
 	EquipmentBO getEquipment (Integer equipmentId);
 

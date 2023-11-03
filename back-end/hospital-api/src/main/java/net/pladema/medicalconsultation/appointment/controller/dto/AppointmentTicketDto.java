@@ -39,7 +39,10 @@ public class AppointmentTicketDto {
 		else medicalCoverage = bo.getMedicalCoverage();
 
 		institution = bo.getInstitution().toUpperCase(Locale.ROOT);
-		documentNumber = decimalFormat.format(Integer.parseInt(bo.getDocumentNumber())).replaceAll(",", ".");
+		if (bo.getDocumentNumber() != null)
+			documentNumber = decimalFormat.format(Integer.parseInt(bo.getDocumentNumber())).replaceAll(",", ".");
+		else
+			documentNumber = null;
 		patientFullName = bo.getPatientFullName().toUpperCase(Locale.ROOT);
 		this.medicalCoverage = medicalCoverage == null ? notMedicalCoverage : medicalCoverage.toUpperCase(Locale.ROOT);
 		date = bo.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));

@@ -1,6 +1,8 @@
 package net.pladema.sgh.app.security.infraestructure.configuration;
 
-import net.pladema.sgh.app.security.infraestructure.filters.TwoFactorAuthenticationFilter;
+import static net.pladema.sgh.app.security.infraestructure.filters.PublicApiAuthenticationFilter.PUBLIC_API_CONTEXT_MATCHER;
+
+import java.util.stream.Stream;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,6 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgh.app.security.infraestructure.filters.AuthorizationFilter;
 import net.pladema.sgh.app.security.infraestructure.filters.PublicApiAuthenticationFilter;
+import net.pladema.sgh.app.security.infraestructure.filters.TwoFactorAuthenticationFilter;
+import net.pladema.user.controller.filters.BackofficeRolesFilter;
 
 @Configuration
 @Slf4j
@@ -44,31 +48,36 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	private String[] BOOKING_API_RESOURCES = new String[]{};
 
-	private final AuthenticationTokenFilter authenticationTokenFilter;
-
 	private final ActuatorConfiguration actuatorConfiguration;
 
-	private final AuthorizationFilter authorizationFilter;
-
-	private final PublicApiAuthenticationFilter publicApiAuthenticationFilter;
+	private final AuthenticationTokenFilter authenticationTokenFilter;
 
 	private final OAuth2AuthenticationFilter oAuth2AuthenticationFilter;
 
+	private final PublicApiAuthenticationFilter publicApiAuthenticationFilter;
+
+	private final AuthorizationFilter authorizationFilter;
+
 	private final TwoFactorAuthenticationFilter twoFactorAuthenticationFilter;
 
-	public WebSecurityConfiguration(AuthenticationTokenFilter authenticationTokenFilter,
-									ActuatorConfiguration actuatorConfiguration,
-									AuthorizationFilter authorizationFilter,
-									PublicApiAuthenticationFilter publicApiAuthenticationFilter,
-									OAuth2AuthenticationFilter oAuth2AuthenticationFilter,
-									FeatureFlagsService featureFlagsService,
-									TwoFactorAuthenticationFilter twoFactorAuthenticationFilter) {
-		this.authenticationTokenFilter = authenticationTokenFilter;
+	public WebSecurityConfiguration(
+			ActuatorConfiguration actuatorConfiguration,
+			FeatureFlagsService featureFlagsService,
+			//
+			AuthenticationTokenFilter authenticationTokenFilter,
+			OAuth2AuthenticationFilter oAuth2AuthenticationFilter,
+			PublicApiAuthenticationFilter publicApiAuthenticationFilter,
+			AuthorizationFilter authorizationFilter,
+			TwoFactorAuthenticationFilter twoFactorAuthenticationFilter
+	) {
 		this.actuatorConfiguration = actuatorConfiguration;
-		this.authorizationFilter = authorizationFilter;
-		this.publicApiAuthenticationFilter = publicApiAuthenticationFilter;
+		// filters
+		this.authenticationTokenFilter = authenticationTokenFilter;
 		this.oAuth2AuthenticationFilter = oAuth2AuthenticationFilter;
+		this.publicApiAuthenticationFilter = publicApiAuthenticationFilter;
+		this.authorizationFilter = authorizationFilter;
 		this.twoFactorAuthenticationFilter = twoFactorAuthenticationFilter;
+
 		if (featureFlagsService.isOn(AppFeature.LIBERAR_API_RESERVA_TURNOS))
 				this.BOOKING_API_RESOURCES =  new String[]{
 					"/public-api/appointment/booking/**",
@@ -79,7 +88,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		
+
+		String[] publicApiRolesAuthorities = Stream.concat(
+				Stream.of(ERole.API_CONSUMER),
+				BackofficeRolesFilter.PUBLIC_API_ROLES.stream()
+			)
+			.map(ERole::getValue)
+			.toArray(String[]::new);
+
+
 		// @formatter:off
 		httpSecurity.csrf().disable()
 		.sessionManagement()
@@ -100,7 +117,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(BACKOFFICE + "/**").hasAnyAuthority(
 					ERole.ROOT.getValue(),
 					ERole.ADMINISTRADOR.getValue(),
-					ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.getValue())
+					ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.getValue(),
+					ERole.ADMINISTRADOR_DE_ACCESO_DOMINIO.getValue())
 				.antMatchers(RECAPTCHA + "/**").permitAll()
 				.antMatchers("/oauth/**").permitAll()
 				.antMatchers(HttpMethod.GET,PUBLIC + "/**").permitAll()
@@ -109,7 +127,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/assets/**").permitAll()
 				.antMatchers("/fhir/**").permitAll()
 				.antMatchers(BOOKING_API_RESOURCES).permitAll()
-				.antMatchers("/public-api/**").hasAnyAuthority(ERole.API_CONSUMER.getValue())
+				.antMatchers(PUBLIC_API_CONTEXT_MATCHER).hasAnyAuthority(publicApiRolesAuthorities)
 				.antMatchers("/**").authenticated()
 		.anyRequest().authenticated();
 

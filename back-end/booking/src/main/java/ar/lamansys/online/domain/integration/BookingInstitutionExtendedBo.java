@@ -13,24 +13,26 @@ import java.util.Objects;
 @Builder
 @Setter
 public class BookingInstitutionExtendedBo {
-    private final Integer id;
-    private final String description;
+	private final Integer id;
+	private final String description;
 	private final String sisaCode;
 	private final String dependency;
 	private final String address;
-
-	private List<String> clinicalSpecialtiesNames;
+	private final String city;
+	private final String department;
+	private final List<String> clinicalSpecialtiesNames;
+	private final List<String> aliases;
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (!(o instanceof BookingInstitutionExtendedBo)) return false;
 		BookingInstitutionExtendedBo that = (BookingInstitutionExtendedBo) o;
-		return Objects.equals(id, that.id) && Objects.equals(description, that.description) && Objects.equals(sisaCode, that.sisaCode) && Objects.equals(dependency, that.dependency) && Objects.equals(address, that.address);
+		return Objects.equals(getId(), that.getId());
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, description, sisaCode, dependency, address);
+		return Objects.hash(getId());
 	}
 }

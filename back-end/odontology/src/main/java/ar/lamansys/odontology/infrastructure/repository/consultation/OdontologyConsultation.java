@@ -52,7 +52,11 @@ public class OdontologyConsultation extends SGXAuditableEntity<Integer> {
     @Column(name = "billable", nullable = false)
     private Boolean billable;
 
-    public OdontologyConsultation(Integer id, Integer institutionId, Integer patientId, Integer doctorId,
+	@Column(name = "hierarchical_unit_id")
+	private Integer hierarchicalUnitId;
+
+
+	public OdontologyConsultation(Integer id, Integer institutionId, Integer patientId, Integer doctorId,
                                Integer clinicalSpecialtyId, LocalDate performedDate, boolean billable) {
         super();
         this.id = id;
@@ -74,6 +78,7 @@ public class OdontologyConsultation extends SGXAuditableEntity<Integer> {
         this.performedDate = consultation.getPerformedDate();
         this.clinicalSpecialtyId = consultation.getClinicalSpecialtyId();
         this.patientMedicalCoverageId = consultation.getPatientMedicalCoverageId();
+		this.hierarchicalUnitId = consultation.getHierarchicalUnitId();
     }
 
 }

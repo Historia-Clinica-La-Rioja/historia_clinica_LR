@@ -86,41 +86,35 @@ public class BookingSpecialtyStorageImpl implements BookingSpecialtyStorage {
     ) {
 
         log.debug(
-                "Find practice by healthcareProfessionalId {} and by HealthInsurance {} and clinical specialty {} depending on all: {}",
-                healthcareProfessionalId,
-				medicalCoverageId,
+                "Find practice by healthInsurance {} and clinical specialty {} depending on all: {}",
+                medicalCoverageId,
                 clinicalSpecialtyId,
                 all
         );
 
-        String sqlString = all ?
-                "SELECT DISTINCT csmmp.mandatory_medical_practice_id AS practice_id, " +
-                "mmp.description AS practice_name, " +
-                "CASE WHEN hip.medical_coverage_id = :medicalCoverageId THEN 1 ELSE 0 END AS has_coverage, " +
-                "hip.coverage_information as coverage_info, " +
-                "mmp.snomed_id as snomed_id " +
-                "FROM mandatory_medical_practice mmp " +
-                "JOIN clinical_specialty_mandatory_medical_practice csmmp ON (mmp.mandatory_medical_practice_id = csmmp.mandatory_medical_practice_id) " +
-                "JOIN mandatory_professional_practice_free_days mmpd ON (mmpd.clinical_specialty_mandatory_medical_practice_id = csmmp.id) " +
-                "LEFT JOIN health_insurance_practice hip ON (hip.clinical_specialty_mandatory_medical_practice_id = csmmp.id) " +
-                "WHERE mmpd.healthcare_professional_id = :healthcareProfessionalId " +
-                "AND csmmp.clinical_specialty_id = :clinicalSpecialtyId "
-                :
-                "SELECT DISTINCT csmmp.mandatory_medical_practice_id AS practice_id, " +
-                        "mmp.description AS practice_name, " +
-                        "CASE WHEN hip.medical_coverage_id = :medicalCoverageId THEN 1 ELSE 0 END AS has_coverage, " +
-                        "hip.coverage_information as coverage_info, " +
-                        "mmp.snomed_id as snomed_id " +
-                        "FROM mandatory_professional_practice_free_days mmpd " +
-                        "JOIN clinical_specialty_mandatory_medical_practice csmmp ON (mmpd.clinical_specialty_mandatory_medical_practice_id = csmmp.id) " +
-                        "JOIN mandatory_medical_practice mmp ON (mmp.mandatory_medical_practice_id = csmmp.mandatory_medical_practice_id) " +
-                        "JOIN health_insurance_practice hip ON (hip.clinical_specialty_mandatory_medical_practice_id = csmmp.id) " +
-                        "WHERE mmpd.healthcare_professional_id = :healthcareProfessionalId " +
-                        "AND hip.medical_coverage_id = :medicalCoverageId " +
-                        "AND csmmp.clinical_specialty_id = :clinicalSpecialtyId";
+		String sqlString = all ?
+				"SELECT DISTINCT csmmp.mandatory_medical_practice_id AS practice_id, " +
+						"mmp.description AS practice_name, " +
+						"CASE WHEN hip.medical_coverage_id = :medicalCoverageId THEN 1 ELSE 0 END AS has_coverage, " +
+						"hip.coverage_information as coverage_info, " +
+						"mmp.snomed_id as snomed_id " +
+						"FROM mandatory_medical_practice mmp " +
+						"JOIN clinical_specialty_mandatory_medical_practice csmmp ON (mmp.mandatory_medical_practice_id = csmmp.mandatory_medical_practice_id) " +
+						"LEFT JOIN health_insurance_practice hip ON (hip.clinical_specialty_mandatory_medical_practice_id = csmmp.id) " +
+						"WHERE csmmp.clinical_specialty_id = :clinicalSpecialtyId "
+				:
+				"SELECT DISTINCT csmmp.mandatory_medical_practice_id AS practice_id, " +
+						"mmp.description AS practice_name, " +
+						"CASE WHEN hip.medical_coverage_id = :medicalCoverageId THEN 1 ELSE 0 END AS has_coverage, " +
+						"hip.coverage_information as coverage_info, " +
+						"mmp.snomed_id as snomed_id " +
+						"FROM clinical_specialty_mandatory_medical_practice csmmp " +
+						"JOIN mandatory_medical_practice mmp ON (mmp.mandatory_medical_practice_id = csmmp.mandatory_medical_practice_id) " +
+						"JOIN health_insurance_practice hip ON (hip.clinical_specialty_mandatory_medical_practice_id = csmmp.id) " +
+						"WHERE hip.medical_coverage_id = :medicalCoverageId " +
+						"AND csmmp.clinical_specialty_id = :clinicalSpecialtyId";
 
-        List<Object[]> rows = entityManager.createNativeQuery(sqlString)
-                .setParameter("healthcareProfessionalId", healthcareProfessionalId)
+		List<Object[]> rows = entityManager.createNativeQuery(sqlString)
                 .setParameter("medicalCoverageId", medicalCoverageId)
                 .setParameter("clinicalSpecialtyId", clinicalSpecialtyId)
                 .getResultList();

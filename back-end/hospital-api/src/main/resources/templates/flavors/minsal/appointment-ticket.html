@@ -38,7 +38,11 @@
     <p class="api-data" th:text="${institution}"></p>
     <div class="separator"></div>
     <p class="data-block" th:text="${'Datos del paciente: '}"></p>
-    <p class="data-block" th:text="${'Nro documento: ' + dni}"></p>
+    <p class="data-block">
+        Nro documento:
+        <span th:if="${dni}" th:text="${dni}"></span>
+        <span th:unless="${dni}">Sin información</span>
+    </p>
     <p th:text="${'Apellido y nombre:'}"></p>
     <p class="api-data data-block" th:text="${patientFullName}"></p>
     <p th:text="${'Cobertura médica:'}"></p>

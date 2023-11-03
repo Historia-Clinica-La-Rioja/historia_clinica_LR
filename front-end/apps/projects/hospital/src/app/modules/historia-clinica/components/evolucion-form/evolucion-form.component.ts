@@ -1,5 +1,6 @@
 import { Component, forwardRef } from '@angular/core';
 import { FormBuilder, NG_VALUE_ACCESSOR} from '@angular/forms';
+import { hasError } from '@core/utils/form.utils';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -15,7 +16,7 @@ import { Subscription } from 'rxjs';
 	]
 })
 export class EvolucionFormComponent {
-
+	hasError = hasError;
 	onChangeSub: Subscription;
 	formEvolucion = this.formBuilder.group({
 		evolucion: [],

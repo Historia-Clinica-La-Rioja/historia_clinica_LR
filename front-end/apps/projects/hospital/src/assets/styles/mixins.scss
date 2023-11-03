@@ -82,6 +82,7 @@
 	@include presentation-mixins($theme);
 	@include turnos-mixins($theme);
 	@include historia-clinica-mixins($theme);
+
 	$palette-primary: map-get($theme, primary);
 	$palette-warn: map-get($theme, warn);
 

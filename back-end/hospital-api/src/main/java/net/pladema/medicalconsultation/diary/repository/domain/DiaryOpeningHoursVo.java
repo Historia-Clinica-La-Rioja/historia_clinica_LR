@@ -20,11 +20,40 @@ public class DiaryOpeningHoursVo {
 
     private final Boolean externalAppointmentsAllowed;
 
-    public DiaryOpeningHoursVo(Integer diaryId, OpeningHours op, Short medicalAttentionTypeId, Short overturnCount, Boolean externalAppointmentsAllowed){
+	private final Boolean protectedAppointmentsAllowed;
+
+	private final Boolean onSiteAttentionAllowed;
+
+	private final Boolean patientVirtualAttentionAllowed;
+
+	private final Boolean secondOpinionVirtualAttentionAllowed;
+
+    public DiaryOpeningHoursVo(Integer diaryId, OpeningHours op, Short medicalAttentionTypeId,
+							   Short overturnCount, Boolean externalAppointmentsAllowed){
         this.diaryId = diaryId;
         this.openingHours = op;
         this.medicalAttentionTypeId = medicalAttentionTypeId;
         this.overturnCount = overturnCount;
         this.externalAppointmentsAllowed = externalAppointmentsAllowed;
+		this.protectedAppointmentsAllowed = null;
+		this.onSiteAttentionAllowed = null;
+		this.patientVirtualAttentionAllowed = null;
+		this.secondOpinionVirtualAttentionAllowed = null;
     }
+
+	public DiaryOpeningHoursVo(Integer diaryId, OpeningHours op, Short medicalAttentionTypeId,
+							   Short overturnCount, Boolean externalAppointmentsAllowed,
+							   Boolean protectedAppointmentsAllowed, Boolean onSiteAttentionAllowed,
+							   Boolean patientVirtualAttentionAllowed, Boolean secondOpinionVirtualAttentionAllowed){
+		this.diaryId = diaryId;
+		this.openingHours = op;
+		this.medicalAttentionTypeId = medicalAttentionTypeId;
+		this.overturnCount = overturnCount;
+		this.externalAppointmentsAllowed = externalAppointmentsAllowed;
+		this.protectedAppointmentsAllowed = protectedAppointmentsAllowed;
+		this.onSiteAttentionAllowed = onSiteAttentionAllowed;
+		this.patientVirtualAttentionAllowed = patientVirtualAttentionAllowed;
+		this.secondOpinionVirtualAttentionAllowed = secondOpinionVirtualAttentionAllowed;
+	}
+
 }

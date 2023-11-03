@@ -18,7 +18,9 @@ public interface HealthcareProfessionalService {
 
     HealthcareProfessionalGroup addHealthcareProfessionalGroup(Integer internmentEpisodeId, Integer healthcareProfessionalId);
 
-    Integer getProfessionalId(Integer userId);
+    Integer getProfessionalId(Integer userId); 
+
+	Integer getUserIdHealthcareProfessionalId(Integer healthcareProfessionalId);
 
     HealthcareProfessionalBo findActiveProfessionalById(Integer healthcareProfessionalId);
 
@@ -29,4 +31,6 @@ public interface HealthcareProfessionalService {
     Integer saveProfessional(HealthcareProfessionalCompleteBo professionalCompleteBo);
 
 	Optional<Integer> getProfessionalIdByPersonId(Integer personId);
+
+	List<HealthcareProfessionalBo> getVirtualConsultationProfessionalsByInstitutionId(Integer institutionId);
 }

@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HealthConditionDto } from '@api-rest/api-model';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
+import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
 import { BasicTable } from '@material/model/table.model';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class ProblemEpicrisisService {
+
+	constructor(
+		readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
+	) { }
 
 	private table: BasicTable<HealthConditionDto> = {
 		data: [],
@@ -23,16 +26,20 @@ export class ProblemEpicrisisService {
 
 	initTable(problem?: HealthConditionDto[]) {
 		this.table.data = problem ? [...problem] : [];
+		this.componentEvaluationManagerService.otherProblems = this.table.data;
 	}
 
 	addProblem(newProblem: HealthConditionDto) {
 		const duplicatedProblem = this.table.data.find(diagnosis => diagnosis.snomed.sctid === newProblem.snomed.sctid);
-		if (!duplicatedProblem)
+		if (!duplicatedProblem) {
 			this.table.data = pushTo<HealthConditionDto>(this.table?.data, newProblem);
+			this.componentEvaluationManagerService.otherProblems = this.table.data;
+		}
 	}
 
 	remove(index: number) {
 		this.table.data = removeFrom<HealthConditionDto>(this.table.data, index);
+		this.componentEvaluationManagerService.otherProblems = this.table.data;
 	}
 
 	getTable(): BasicTable<HealthConditionDto> {
@@ -49,5 +56,10 @@ export class ProblemEpicrisisService {
 
 	setProblems(problems: HealthConditionDto[]) {
 		this.table.data = problems;
+		this.componentEvaluationManagerService.otherProblems = this.table.data;
+	}
+
+	isEmpty(): boolean {
+		return (!this.table?.data || this.table.data?.length === 0);
 	}
 }

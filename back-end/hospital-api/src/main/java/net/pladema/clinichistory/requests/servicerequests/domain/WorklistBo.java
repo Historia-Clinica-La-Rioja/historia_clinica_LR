@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
 
 import java.time.LocalDateTime;
 
@@ -37,7 +38,10 @@ public class WorklistBo {
 
 	private Integer appointmentId;
 
-	public WorklistBo(Integer patientId, Short patientIdentificationTypeId, String patientIdentificationNumber, String patientFirstName, String patientMiddleNames, String patientLastName, String patientOtherNames, String patientNameSelfDetermiantion, Integer appointmentId, LocalDateTime actionTime) {
+	private InstitutionBasicInfoBo completionInstitution;
+
+	public WorklistBo(Integer patientId, Short patientIdentificationTypeId, String patientIdentificationNumber, String patientFirstName, String patientMiddleNames, String patientLastName, String patientOtherNames, String patientNameSelfDetermiantion, Integer appointmentId, LocalDateTime actionTime,
+					  Integer completionInstitutionId, String completionInstitutionName) {
 		this.patientId = patientId;
 		this.patientIdentificationTypeId = patientIdentificationTypeId;
 		this.patientIdentificationNumber = patientIdentificationNumber;
@@ -48,6 +52,7 @@ public class WorklistBo {
 		this.patientNameSelfDetermiantion = patientNameSelfDetermiantion;
 		this.appointmentId = appointmentId;
 		this.actionTime = actionTime;
+		this.completionInstitution = new InstitutionBasicInfoBo(completionInstitutionId, completionInstitutionName);
 	}
 
 

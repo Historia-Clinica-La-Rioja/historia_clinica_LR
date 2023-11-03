@@ -60,7 +60,7 @@ public class EmergencyCareEvolutionNoteController {
 	private final CreateEmergencyCareEvolutionNoteDocumentService createEmergencyCareEvolutionNoteDocumentService;
 
 	@PostMapping
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
 	public ResponseEntity<Boolean> saveEmergencyCareEvolutionNote(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "episodeId") Integer episodeId,
@@ -96,7 +96,7 @@ public class EmergencyCareEvolutionNoteController {
 
 	private void assertValidEmergencyCareEvolutionNote(EmergencyCareEvolutionNoteDto evolutionNote) {
 		Assert.isTrue(evolutionNote.getMainDiagnosis() != null, "La nota de evolución de guardia debe contener un diagnóstico principal");
-		Assert.isTrue(evolutionNote.getEvolutionNote() != null, "La nota de evolución de guardia debe contener una nota de evolución");
+		Assert.isTrue(evolutionNote.getEvolutionNote() != null, "La nota de evolución de guardia debe contener una evolución");
 		Assert.isTrue(evolutionNote.getClinicalSpecialtyId() != null, "La nota de evolución de guardia debe tener asociada una especialidad");
 	}
 

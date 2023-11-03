@@ -1,0 +1,21 @@
+<form [formGroup]="form">
+    <mat-form-field formGroupName="medicalOrder" appearance="outline" fxFlex>
+        <mat-label translate="image-network.appointments.medical-order.NEW_MEDICAL_ORDER"></mat-label>
+        <mat-select formControlName="appointmentMedicalOrder" (selectionChange)="changeOrderSelection()"
+            matTooltip="{{patientMedicalOrderTooltipDescription | titlecase}}">
+            <mat-option id="medicalOrder" name="medicalOrder" *ngFor="let patientMedicalOrder of patientMedicalOrders"
+                [value]="patientMedicalOrder" matTooltip="{{patientMedicalOrder.displayText | titlecase}}">
+                {{patientMedicalOrder.displayText | titlecase}}
+            </mat-option>
+            <mat-divider></mat-divider>
+            <mat-option (click)="newTranscribedOrder()">
+                <span class="color-primary"
+                    [translate]="'image-network.appointments.medical-order.TRANSCRIBE_ORDER'"></span>
+            </mat-option>
+        </mat-select>
+        <button *ngIf="form.get('medicalOrder').get('appointmentMedicalOrder').value" mat-button matSuffix color="warn" mat-icon-button
+            (click)="cleanInput(); $event.stopPropagation()" [disabled]="disabled">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-form-field>
+</form>

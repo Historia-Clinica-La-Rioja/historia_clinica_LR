@@ -17,23 +17,18 @@ export class AuthenticationService {
 		private readonly dialogRef: MatDialog,
 	) { }
 
-	logout() {
-		this.authService.logout();
+	logout(): Observable<any> {
 		this.loggedUserService.reset();
 		this.closeModals();
-		this.router.navigate(['/auth/login'], {
-			queryParams: {
-				returnUrl: this.router.routerState.snapshot.url
-			}
-		});
+		return this.authService.logout();
 	}
 
 	closeModals() {
 		this.dialogRef.closeAll();
 	}
 
-	public go(url?: string) {
-		url ? this.router.navigateByUrl(url) : this.router.navigate(['/home']);
+	public go() {
+		this.router.navigate(['/home']);
 	}
 
 	login(username: string, password: string, recaptchaResponse: string): Observable<any> {

@@ -1,0 +1,12 @@
+<app-content width="narrow" *ngIf="(keyManage$ | async) as keyManage; else loading">
+	<app-user-keys *ngIf="keyManage.isAllow else notAllowed" ></app-user-keys>
+</app-content>
+
+<ng-template #loading>
+	<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</ng-template>
+
+<ng-template #notAllowed>
+	<mat-card>No cuenta con algún rol para administrar APIKeys</mat-card>
+</ng-template>
+

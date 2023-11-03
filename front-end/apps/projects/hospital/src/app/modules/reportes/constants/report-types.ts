@@ -15,5 +15,9 @@ export const REPORT_TYPES = [
 	{
 		description: 'Pacientes hipertensos',
 		id: 4
+	},
+	{
+		description: 'Reporte epidemiológico semanal',
+		id: 5
 	}
 ];

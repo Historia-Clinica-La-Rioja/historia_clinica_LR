@@ -1,10 +1,12 @@
 package net.pladema.medicalconsultation.appointment.controller.mapper;
 
+import ar.lamansys.sgh.shared.HospitalSharedAutoConfiguration;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentEquipmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.EmptyAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.EquipmentAppointmentListDto;
+import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
@@ -31,7 +33,7 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDailyAmountBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
 
-@Mapper(uses = {LocalDateMapper.class})
+@Mapper(uses = {LocalDateMapper.class, EAppointmentModality.class})
 public interface AppointmentMapper {
 
     @Named("toAppointmentListDto")
@@ -43,6 +45,8 @@ public interface AppointmentMapper {
     @Mapping(target = "patient", source = "patient")
     @Mapping(target = "phoneNumber", source = "appointmentBo.phoneNumber")
 	@Mapping(target = "isProtected", source = "appointmentBo.protected")
+	@Mapping(target = "createdOn", source = "appointmentBo.createdOn")
+	@Mapping(target = "professionalPersonDto", source = "appointmentBo.professionalPersonBo")
     AppointmentListDto toAppointmentListDto(AppointmentBo appointmentBo, AppointmentBasicPatientDto patient);
 
 	@Named("toEquipmentAppointmentListDto")
@@ -53,13 +57,28 @@ public interface AppointmentMapper {
 	@Mapping(target = "appointmentStateId", source = "equipmentAppointmentBo.appointmentStateId")
 	@Mapping(target = "patient", source = "patient")
 	@Mapping(target = "isProtected", source = "equipmentAppointmentBo.protected")
+	@Mapping(target = "reportStatusId", source = "equipmentAppointmentBo.reportStatusId")
+	@Mapping(target = "studyName", source = "equipmentAppointmentBo.studyName")
 	EquipmentAppointmentListDto toEquipmentAppointmentListDto(EquipmentAppointmentBo equipmentAppointmentBo, AppointmentBasicPatientDto patient);
   
     @Named("toAppointmentDto")
 	@Mapping(target = "protected", source = "appointmentBo.protected")
+	@Mapping(target = "orderData.serviceRequestId", source = "appointmentBo.orderData.encounterId")
+	@Mapping(target = "transcribedOrderData", source = "appointmentBo.transcribedData")
+	@Mapping(target = "modality", source = "modalityId")
+	@Mapping(target = "callLink", source = "callId", qualifiedByName = "generateCallLink")
 	AppointmentDto toAppointmentDto(AppointmentBo appointmentBo);
 
+	@Named("generateCallLink")
+	default String generateCallLink(String callId) {
+		if (callId != null)
+			return HospitalSharedAutoConfiguration.JITSI_DOMAIN_URL + "/" + callId;
+		else
+			return null;
+	}
+
     @Named("toAppointmentBo")
+	@Mapping(target = "modalityId", source = "modality.id")
     AppointmentBo toAppointmentBo(CreateAppointmentDto createAppointmentDto);
 
     @Named("toAppointmentDailyAmountDto")

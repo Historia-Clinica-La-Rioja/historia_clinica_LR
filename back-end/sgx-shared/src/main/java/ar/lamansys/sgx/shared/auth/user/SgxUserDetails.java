@@ -1,12 +1,13 @@
 package ar.lamansys.sgx.shared.auth.user;
 
+import java.util.Collection;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-
 public class SgxUserDetails implements UserDetails {
 
+	public static SgxUserDetails ANONYMOUS = new SgxUserDetails(-1, "anonymousUser");
 	private static final long serialVersionUID = 1654234256805942674L;
 
 	public final Integer userId;
@@ -25,19 +26,13 @@ public class SgxUserDetails implements UserDetails {
 	
 	private Boolean enabled = true;
 
-	public SgxUserDetails(Integer userId) {
-		this.userId = userId;
-	}
-
 	public SgxUserDetails(Integer userId, String username) {
 		this.userId = userId;
 		this.username = username;
 	}
 
-	public SgxUserDetails(Integer userId, String username, Collection<? extends GrantedAuthority> authorities) {
-		this.userId = userId;
-		this.username = username;
-		this.authorities = authorities;
+	public SgxUserDetails(Integer userId) {
+		this(userId, null);
 	}
 
 	@Override

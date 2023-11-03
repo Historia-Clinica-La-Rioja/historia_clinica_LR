@@ -1,0 +1,33 @@
+{
+	"telemedicina": {
+		"TITLE":"TeleSalud",
+		"PATIENTS_SEARCH":"Búsqueda de pacientes",
+		"REQUEST_INFORMATION": "Información solicitud",
+		"AVAILABLE": "Disponible",
+		"NOT_AVAILABLE": "No disponible para llamada",
+		"requests": {
+			"TITLE":"Solicitudes",
+			"SUBTITLE":"Listado de solicitudes para atención online",
+			"BUTTON_ADD":"+ Agregar nuevo paciente",
+			"TITLE_ADD_REQUEST":"Solicitud de consulta online",
+			"PROFESSIONAL_ATTENDING": "Profesionales atendiendo",
+			"form": {
+				"PATIENT":"Paciente",
+				"CARELINE": "Línea de cuidado",
+				"SPECIALTY": "Especialidad",
+				"PRIORIZATION": "Criterio de priorización",
+				"REASONS_CONSULTATION": "Motivos de consulta",
+				"PROBLEM": "Problema (Opcional)",
+				"APPLICANT_PROFESSIONAL":"profesional solicitante",
+				"PRIORITY":"Prioridad",
+				"AVAILABILITY":"Disponibilidad",
+				"STATE": "Estado",
+				"INSTITUTION":"Institución"
+			}
+		},
+		"attention": {
+			"SUBTITLE":"Listado de espera para atención online",
+			"BUTTON_TAKE_TURN":"Tomar turno"
+		}
+	}
+}

@@ -18,6 +18,7 @@ import { EmergencyCareTypes, EstadosEpisodio } from '@historia-clinica/modules/g
 import { SelectConsultorioComponent } from '@historia-clinica/modules/guardia/dialogs/select-consultorio/select-consultorio.component';
 import { EpisodeStateService } from '@historia-clinica/modules/guardia/services/episode-state.service';
 import { GuardiaMapperService } from '@historia-clinica/modules/guardia/services/guardia-mapper.service';
+import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/guardia/services/new-emergency-care-evolution-note.service';
 import { TriageDefinitionsService } from '@historia-clinica/modules/guardia/services/triage-definitions.service';
 import { EmergencyCareEpisodeAttendService } from '@historia-clinica/services/emergency-care-episode-attend.service';
 import { NewTriageService } from '@historia-clinica/services/new-triage.service';
@@ -30,7 +31,8 @@ const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 @Component({
 	selector: 'app-resumen-de-guardia',
 	templateUrl: './resumen-de-guardia.component.html',
-	styleUrls: ['./resumen-de-guardia.component.scss']
+	styleUrls: ['./resumen-de-guardia.component.scss'],
+	providers: [TriageDefinitionsService]
 })
 export class ResumenDeGuardiaComponent implements OnInit {
 
@@ -74,7 +76,8 @@ export class ResumenDeGuardiaComponent implements OnInit {
 		private readonly newTriageService: NewTriageService,
 		private readonly emergencyCareEpisodeAttend: EmergencyCareEpisodeAttendService,
 		private readonly triageDefinitionsService: TriageDefinitionsService,
-		private readonly emergencyCareStateChangedService: EmergencyCareStateChangedService
+		private readonly emergencyCareStateChangedService: EmergencyCareStateChangedService,
+		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService,
 	) {
 
 	}
@@ -89,6 +92,8 @@ export class ResumenDeGuardiaComponent implements OnInit {
 				this.setEpisodeState();
 			}
 		);
+
+		this.newEmergencyCareEvolutionNoteService.new$.subscribe(() => this.calculateAvailableActions());
 
 		this.loadEpisode()
 
@@ -225,7 +230,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 				this.availableActions = [];
 				// Following code within this function must be in this order
 
-				if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ATENCION) {
+				if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ATENCION && hasEvolutionNote) {
 					let action: ActionInfo = {
 						label: 'ambulatoria.paciente.guardia.MEDICAL_DISCHARGE_BUTTON',
 						id: 'medical_discharge',

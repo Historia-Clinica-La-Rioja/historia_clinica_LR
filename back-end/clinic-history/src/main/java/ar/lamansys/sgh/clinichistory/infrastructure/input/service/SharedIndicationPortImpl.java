@@ -389,7 +389,7 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 				localDateMapper.toDateTimeDto(bo.getCreatedOn()),
 				snomedDto,
 				dosageDto,
-				bo.getVia(),
+				bo.getViaId(),
 				bo.getNote());
 	}
 
@@ -399,7 +399,7 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 		PharmacoSummaryDto result = new PharmacoSummaryDto();
 		result.setSnomed(snomedDto);
 		result.setDosage(dosageDto);
-		result.setVia(bo.getVia());
+		result.setViaId(bo.getViaId());
 		return result;
 	}
 

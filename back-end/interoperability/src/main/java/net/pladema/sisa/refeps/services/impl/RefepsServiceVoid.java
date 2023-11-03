@@ -3,9 +3,6 @@ package net.pladema.sisa.refeps.services.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.pladema.sisa.refeps.controller.dto.LicenseDataDto;
-import net.pladema.sisa.refeps.controller.dto.ValidatedLicenseDataDto;
-
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +10,8 @@ import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.sisa.refeps.controller.dto.LicenseDataDto;
+import net.pladema.sisa.refeps.controller.dto.ValidatedLicenseDataDto;
 import net.pladema.sisa.refeps.services.RefepsService;
 import net.pladema.sisa.refeps.services.domain.ValidatedLicenseNumberBo;
 import net.pladema.sisa.refeps.services.exceptions.RefepsApiException;
@@ -32,7 +31,7 @@ public class RefepsServiceVoid implements RefepsService {
 
 
 	@Override
-	public List<ValidatedLicenseNumberBo> validateLicenseNumber(String identificationNumber, List<String> licenses) throws RefepsApiException, RefepsLicenseException {
+	public List<ValidatedLicenseNumberBo> validateLicenseNumber(Integer healthcareProfessionalId, String identificationNumber, List<String> licenses) throws RefepsApiException, RefepsLicenseException {
 		if (!featureFlagsService.isOn(AppFeature.HABILITAR_VALIDACION_MATRICULAS_SISA)) {
 			throw new RefepsLicenseException(RefepsExceptionsEnum.GENERIC_ERROR, "El servicio de REFEPS no se encuentra habilitado");
 		}
@@ -42,7 +41,7 @@ public class RefepsServiceVoid implements RefepsService {
 	}
 
 	@Override
-	public List<ValidatedLicenseDataDto> validateLicenseNumberAndType(String identificationNumber, List<LicenseDataDto> licensesData) throws RefepsApiException, RefepsLicenseException {
+	public List<ValidatedLicenseDataDto> validateLicenseNumberAndType(Integer healthcareProfessionalId, String identificationNumber, List<LicenseDataDto> licensesData) throws RefepsApiException, RefepsLicenseException {
 		if (!featureFlagsService.isOn(AppFeature.HABILITAR_VALIDACION_MATRICULAS_SISA)) {
 			throw new RefepsLicenseException(RefepsExceptionsEnum.GENERIC_ERROR, "El servicio de REFEPS no se encuentra habilitado");
 		}

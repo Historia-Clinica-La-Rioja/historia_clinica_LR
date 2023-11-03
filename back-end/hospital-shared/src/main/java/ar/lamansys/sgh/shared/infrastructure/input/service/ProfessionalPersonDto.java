@@ -37,4 +37,9 @@ public class ProfessionalPersonDto implements Serializable {
 		this.lastName = lastName;
 		this.nameSelfDetermination = nameSelfDetermination;
 	}
+
+	public ProfessionalPersonDto(Integer id, String fullName) {
+		this.id = id;
+		this.fullName = fullName;
+	}
 }

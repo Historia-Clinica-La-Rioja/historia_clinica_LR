@@ -42,6 +42,7 @@ export class HomeComponent implements OnInit {
 
 	private readonly routePrefix;
 
+
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly personMasterDataService: PersonMasterDataService,
@@ -50,6 +51,7 @@ export class HomeComponent implements OnInit {
 		private readonly contextService: ContextService,
 		private readonly patientNameService: PatientNameService,
 		private readonly featureFlagService: FeatureFlagService,
+
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isEnabled => {
@@ -60,7 +62,9 @@ export class HomeComponent implements OnInit {
 	ngOnInit(): void {
 		this.initPersonalInformationForm();
 		this.setMasterData();
+
 	}
+
 
 	private initPersonalInformationForm() {
 		this.personalInformationForm = this.formBuilder.group({
@@ -116,7 +120,7 @@ export class HomeComponent implements OnInit {
 			this.formSubmitted = true;
 			this.requiringValues = false;
 			this.requiringAtLeastOneMoreValue = false;
-			this.personalInformationForm.value.identificationNumber = this.personalInformationForm.value.identificationNumber?.replace(REMOVE_SUBSTRING_DNI,'');
+			this.personalInformationForm.value.identificationNumber = this.personalInformationForm.value.identificationNumber?.replace(REMOVE_SUBSTRING_DNI, '');
 			const personalInformationReq: PersonInformationRequest = this.personalInformationForm.value;
 			this.patientService.searchPatientOptionalFilters(personalInformationReq)
 				.subscribe((data: LimitedPatientSearchDto) => {
@@ -256,5 +260,7 @@ export class HomeComponent implements OnInit {
 			return true
 		return false;
 	}
+
+
 
 }

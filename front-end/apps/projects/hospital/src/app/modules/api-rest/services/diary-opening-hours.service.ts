@@ -39,4 +39,14 @@ export class DiaryOpeningHoursService {
 			});
 	}
 
+
+	existsProtectedAppointmentsInOpeningHours(openingHourId: number): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diaryOpeningHours/${openingHourId}/exists-protected-appointments`;
+		return this.http.get<boolean>(url);
+	}
+
+	existsBookeddAppointmentInOpeningHours(openingHourId: number): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diaryOpeningHours/${openingHourId}/exists-booked-appointments`;
+		return this.http.get<boolean>(url);
+	}
 }

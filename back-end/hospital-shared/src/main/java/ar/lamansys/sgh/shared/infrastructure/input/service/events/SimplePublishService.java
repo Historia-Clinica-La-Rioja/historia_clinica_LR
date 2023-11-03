@@ -1,9 +1,9 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service.events;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.MqttTypeBo;
 import ar.lamansys.mqtt.infraestructure.input.MqttDtoUtils;
 import ar.lamansys.mqtt.infraestructure.input.rest.dto.MqttMetadataDto;
 import ar.lamansys.mqtt.infraestructure.input.service.MqttCallExternalService;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.MqttTypeBo;
 
 public class SimplePublishService {
 
@@ -16,14 +16,20 @@ public class SimplePublishService {
 	}
 
 	public void publish(Integer patientId, Integer institutionId, String topic) {
-		String fullTopic = "HSI/INSTITUTION/"+ institutionId + "/" + namePrefix + "/" +  topic;
+		String fullTopic = "/HSI/INSTITUTION/"+ institutionId + "/" + namePrefix + "/" +  topic;
 		String message = getSimplePayload(patientId, fullTopic);
 		MqttMetadataDto mqttMetadataDto = MqttDtoUtils.getMqtMetadataDto(fullTopic, message);
 		mqttCallExternalService.publish(mqttMetadataDto);
 	}
 
+	public void genericPublish(String topic, String message) {
+		String fullTopic = "/HSI/" + namePrefix + "/" +  topic;
+		MqttMetadataDto mqttMetadataDto = MqttDtoUtils.getMqtMetadataDto(fullTopic, message);
+		mqttCallExternalService.publish(mqttMetadataDto);
+	}
+
 	public void appointmentCallerPublish(String topic, NotifyPatientDto notifyPatientDto) {
-		String fullTopic = "HSI/" + namePrefix + "/" + topic + "/" + notifyPatientDto.getTopic();
+		String fullTopic = "/HSI/" + namePrefix + "/" + topic + "/" + notifyPatientDto.getTopic();
 		notifyPatientDto.setTopic(fullTopic);
 		mqttCallExternalService.publish(mapTo(notifyPatientDto));
 	}

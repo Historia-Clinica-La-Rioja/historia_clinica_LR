@@ -46,7 +46,7 @@
       "GENERAL_PRACTITIONER": "Médico de cabecera",
       "IDENTIFICATION_TYPE": "Tipo de documento",
       "IDENTIFICATION_NUMBER": "Nº de documento",
-      "INVALID": "El campo es invalido.",
+      "INVALID": "El campo es inválido.",
       "LAST_NAME": "Primer apellido",
       "LAST_NAME_TITLE": "Apellidos",
       "MAX_CHARACTER": "Introduzca como máximo 11 caracteres",
@@ -193,13 +193,19 @@
       "PROFESSION": "Profesión:",
       "SPECIALTY": "Especialidad:",
 	  "NO_DOCUMENTS":"Aun no hay archivos adjuntos cargados",
+      "USER_DISABLE": "No se pueden editar unidades jerárquicas en usuarios deshabilitados.",
+      "USER_WITHOUT_ROLES": "No se pueden agregar unidades jerárquicas en usuarios sin roles",
+      "HIERARCHICAL_UNITS_PENDING": "unidades jerárquicas pendientes",
+      "HIERARCHICAL_UNITS_ASSOCIATED": "unidades jerárquicas asociadas:",
+      "RESPONSIBLE": "responsable",
       "buttons": {
         "CREATE_USER": "CREAR USUARIO",
         "SET_ACCESS_DATA": "ESTABLECER DATOS DE ACCESO",
         "RESET_ACCESS_DATA": "RESTABLECER DATOS DE ACCESO",
         "EDIT_ROLES": "EDITAR ROLES",
         "EDIT_PROFESSIONS": "EDITAR PROFESIONES",
-        "EDIT_LICENSES": "EDITAR MATRICULAS"
+        "EDIT_LICENSES": "EDITAR MATRICULAS",
+        "EDIT_HIERARCHICAL_UNITS": "editar unidades jerarquicas"
       },
       "messages": {
         "SUCCESS": "El usuario se creó exitosamente",
@@ -266,6 +272,15 @@
         "ERROR": "Error al guardaron los cambios de roles"
       }
     },
+    "edit_hierarchical_units": {
+      "TITLE": "editar unidades jerárquicas",
+      "LABEL": "Seleccionar unidad jerárquica",
+      "ADD_HIERARCHICAL_UNITS": "Asociar otra unidad jerárquica",
+      "RESPONSIBLE": "responsable",
+      "message": {
+        "ERROR": "Error al guardar los cambios en unidades jerárquicas"
+      }
+    },
     "card_roles": {
       "ROL_COLUMN": "Rol",
       "INSTITUTION_COLUMN": "Institución",
@@ -311,7 +326,7 @@
 		"BUTTON_CANCEL":"No, cancelar",
 		"BUTTON_CONFIRM":"Si, fusionar",
 		"TITLE_CONFIRMED_FUSION":"Pacientes fusionados con éxito",
-		"SUBTITLE_CONFIRMED_FUSION":"Ahora el paciente con ID {{id}} contiene la información clínica de los pacientes fusionados.",
+		"SUBTITLE_CONFIRMED_FUSION":"Ahora el paciente con ID {{id}} contiene la información clínica de los pacientes fusionados. En caso de querer deshacer la fusión deberá dirigirse a la pantalla 'Desvincular pacientes'.",
 		"LABEL_FILTER":"Filtrado por ",
 		"MESSAGE_VALIDATION_FUSION": "Es necesario seleccionar al menos dos pacientes para realizar la fusión",
 		"MESSAGE_VALIDATION_COLUMNS": "Es necesario seleccionar al menos un dato de cada columna para realizar la fusión",
@@ -338,7 +353,26 @@
 		"BUTTON_SAVE_NOT_RESOLVED":"Guardar y no resolver",
 		"SAVE_OK_EDIT_AUDIT":"La indicación se marcó como resuelta y el paciente fue editado con éxito.",
 		"TITLE_NO_DATA_RENAPER":"La información ingresada no se encuentra en Renaper",
-		"SUBTITLE_NO_DATA_RENAPER":"Por favor, revise los datos ingresados y vuelva a intentar"
+		"SUBTITLE_NO_DATA_RENAPER":"Por favor, revise los datos ingresados y vuelva a intentar",
+		"LABEL_PATIENT_REJECTED":"El paciente “Rechazado” no se verá en el resto del los módulos del sistema.",
+		"TITLE_ERROR_REJECTED":"El paciente tiene un encuentro activo",
+		"LABEL_ERROR_REJECTED": "El paciente no puede rechazarse porque tiene al menos un encuentro activo. Para rechazar el paciente no debe estar en un episodio abierto de guardia o internación y no debe tener turnos asignados",
+		"TITLE_ERROR_REJECTED_PATIENT_HAS_USER":"Rechazar paciente",
+		"SUBTITLE_ERROR_REJECTED_PATIENT_HAS_USER":"Si cambia el estado a 'Rechazado' el paciente no será más visible en el resto de los módulos del sistema y en caso de contar con un usuario, el mismo quedará deshabilitado. Una vez rechazado el paciente no podrá volver a validarse.",
+		"QUESTION_ERROR_REJECTED_PATIENT_HAS_USER":"¿Está seguro que desea cambiar el estado a 'Rechazado'?",
+		"TITLE_UNLINK_PATIENT":"Desvincular pacientes",
+		"SUBTITLE_UNLINK_PATIENT":"Separar datos de pacientes fusionados",
+		"MERGERS":"Fusiones",
+		"CLARIFICATION_UNLINK_PATIENT":"Por favor, seleccione en la columna izquierda el paciente que desea desvincular del paciente principal.",
+		"BUTTON_UNLINK":"Desvincular",
+		"BUTTON_YES_UNLINK":"Si, desvincular",
+		"AUDIT_OF":"Auditoría de ",
+		"QUESTION_WARNING_UNLINK":"¿Está seguro que desea realizar la desvinculación? ",
+		"ERROR_UNLINK":"Seleccione un paciente para desvincularlo del paciente principal",
+		"TITLE_CONFIRMED_UNMERGE":"Paciente desvinculado con éxito",
+		"SUBTITLE_CONFIRMED_UNMERGE":"El paciente ID {{idUnmerge}} y la información clínica asociada al mismo fue desvinculada del paciente ID {{idFusion}}. Ahora aparecerán en el sistema como pacientes independientes.",
+		"TEXT_CONFIRMED_UNMERGE":" En caso de querer deshacer la desvinculación deberá dirigirse a la pantalla de 'Fusión de pacientes'.",
+		"TITLE_MARKED_FOR_AUDIT":"Marcados para auditar"
 	}
   }
 }

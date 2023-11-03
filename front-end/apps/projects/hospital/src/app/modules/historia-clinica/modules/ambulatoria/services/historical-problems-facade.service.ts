@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {
 	ClinicalSpecialtyDto,
 	HCEEvolutionSummaryDto,
-	OutpatientSummaryReferenceDto
+	HCEReferenceDto
 } from '@api-rest/api-model';
 import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
 import { pushIfNotExists } from '@core/utils/array.utils';
@@ -192,6 +192,6 @@ export class HistoricalProblems {
 			procedureId: string;
 			procedurePt: string;
 		}[];
-	reference: OutpatientSummaryReferenceDto[];
+	reference: HCEReferenceDto[];
 }
 

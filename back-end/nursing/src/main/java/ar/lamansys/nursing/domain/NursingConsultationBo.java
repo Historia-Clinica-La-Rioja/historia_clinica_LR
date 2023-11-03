@@ -37,4 +37,6 @@ public class NursingConsultationBo {
 
     private List<@Valid NursingProcedureBo> procedures = new ArrayList<>();
 
+	private Integer hierarchicalUnitId;
+
 }

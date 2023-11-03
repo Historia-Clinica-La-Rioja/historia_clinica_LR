@@ -2,9 +2,25 @@ package ar.lamansys.sgx.shared.files.pdf;
 
 import static ar.lamansys.sgx.shared.files.StreamsUtils.streamException;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
+
+import com.lowagie.text.Document;
+
+import com.lowagie.text.DocumentException;
+
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfReader;
+
+import com.lowagie.text.pdf.PdfWriter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +38,13 @@ import ar.lamansys.sgx.shared.templating.CustomizableTemplateEngine;
 @Component
 public class PdfService {
 
-    private final Function<String, String> calculateTemplateNameWithFlavor;
+	private final Logger LOG = LoggerFactory.getLogger(PdfService.class);
+
+	private final Function<String, String> calculateTemplateNameWithFlavor;
 
     private final SpringTemplateEngine templateEngine;
 
 	private final CustomizableTemplateEngine customizableTemplateEngine;
-
-	private static final Logger LOG = LoggerFactory.getLogger(PdfService.class);
 
 	public static final String OUTPUT = "Output -> {}";
 
@@ -57,6 +73,42 @@ public class PdfService {
 		Context context = buildContext(contextMap);
 		String generatedHTML = customizableTemplateEngine.process(templateName, context);
 		return buildResponse(generatedHTML, templateName);
+	}
+	
+	public byte[] mergePdfFiles(List<InputStream> inputList) throws IOException, DocumentException {
+		LOG.debug("Input parameter -> inputList {}", inputList);
+		Document document = new Document();
+		List<PdfReader> readers = new ArrayList<>();
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		Iterator<InputStream> pdfIterator = inputList.iterator();
+		while (pdfIterator.hasNext()) {
+			InputStream pdf = pdfIterator.next();
+			PdfReader pdfReader = new PdfReader(pdf);
+			readers.add(pdfReader);
+		}
+		PdfWriter writer = PdfWriter.getInstance(document, outputStream);
+		document.open();
+		PdfContentByte pageContentByte = writer.getDirectContent();
+		PdfImportedPage pdfImportedPage;
+		int currentPdfReaderPage = 1;
+		Iterator<PdfReader> iteratorPDFReader = readers.iterator();
+		while (iteratorPDFReader.hasNext()) {
+			PdfReader pdfReader = iteratorPDFReader.next();
+			while (currentPdfReaderPage <= pdfReader.getNumberOfPages()) {
+				document.newPage();
+				pdfImportedPage = writer.getImportedPage(
+						pdfReader, currentPdfReaderPage);
+				pageContentByte.addTemplate(pdfImportedPage, 0, 0);
+				currentPdfReaderPage++;
+			}
+			currentPdfReaderPage = 1;
+		}
+		outputStream.flush();
+		document.close();
+		outputStream.close();
+		byte[] result = outputStream.toByteArray();
+		LOG.debug("Output -> {}", result);
+		return result;
 	}
 
     private static Context buildContext(Map<String,Object> contextMap) {

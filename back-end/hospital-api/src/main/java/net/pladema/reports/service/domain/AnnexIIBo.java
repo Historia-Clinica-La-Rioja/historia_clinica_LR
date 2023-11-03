@@ -11,8 +11,6 @@ import net.pladema.reports.repository.entity.AnnexIIOutpatientVo;
 @Setter
 public class AnnexIIBo {
 
-    private LocalDate reportDate;
-
     private String establishment;
 
     private String completePatientName;
@@ -52,7 +50,6 @@ public class AnnexIIBo {
 	private LocalDate medicalCoverageEndDate;
 
     public AnnexIIBo(AnnexIIOutpatientVo annexIIOutpatientVo){
-        this.reportDate = LocalDate.now();
         this.establishment = annexIIOutpatientVo.getEstablishment();
         this.completePatientName = annexIIOutpatientVo.getCompletePatientName();
         this.documentType = annexIIOutpatientVo.getDocumentType ();
@@ -68,14 +65,10 @@ public class AnnexIIBo {
         this.problems = annexIIOutpatientVo.getProblems();
 
 		this.medicalCoverage = annexIIOutpatientVo.getMedicalCoverage();
-		this.affiliateNumber = annexIIOutpatientVo.getAffiliateNumber();
-		this.medicalCoverageStartDate = annexIIOutpatientVo.getStartDate();
-		this.medicalCoverageEndDate = annexIIOutpatientVo.getEndDate();
 		this.rnos = annexIIOutpatientVo.getRnos();
     }
 
     public AnnexIIBo(AnnexIIAppointmentVo annexIIAppointmentVo){
-        this.reportDate = LocalDate.now();
         this.establishment = annexIIAppointmentVo.getEstablishment();
         this.completePatientName = annexIIAppointmentVo.getCompletePatientName();
         this.documentType = annexIIAppointmentVo.getDocumentType ();
@@ -87,7 +80,6 @@ public class AnnexIIBo {
         this.attentionDate = annexIIAppointmentVo.getAttentionDate();
         this.appointmentState = annexIIAppointmentVo.getAppointmentState();
         this.medicalCoverage = annexIIAppointmentVo.getMedicalCoverage();
-        this.affiliateNumber = annexIIAppointmentVo.getAffiliateNumber();
 		this.rnos = annexIIAppointmentVo.getRnos();
     }
 

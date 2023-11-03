@@ -39,12 +39,15 @@ import { NewConsultationAddReasonFormComponent } from '@historia-clinica/dialogs
 import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
 import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
-import { PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { forkJoin, Observable, of } from 'rxjs';
 import { NewConsultationFamilyHistoryFormComponent } from '../new-consultation-family-history-form/new-consultation-family-history-form.component';
 import { PreviousDataComponent } from '../previous-data/previous-data.component';
 import { HCEPersonalHistory } from '../reference/reference.component';
 import { SnvsReportsResultComponent } from '../snvs-reports-result/snvs-reports-result.component';
+import { EpisodeData } from '@historia-clinica/components/episode-data/episode-data.component';
+import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
+import { ConfirmarPrescripcionComponent } from '../ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
+import { PrescriptionTypes } from '../../services/prescripciones.service';
 
 const TIME_OUT = 5000;
 
@@ -84,13 +87,13 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 	snowstormServiceNotAvailable = false;
 	snowstormServiceErrorMessage: string;
-	patientMedicalCoverage: PatientMedicalCoverage;
-	clinicalSpecialty: ClinicalSpecialtyDto;
+	episodeData: EpisodeData;
 
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: NuevaConsultaData,
+		private readonly hierarchicalUnitFormService: HierarchicalUnitService,
 		public dockPopupRef: DockPopupRef,
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snomedService: SnomedService,
@@ -235,6 +238,11 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 								scrollIntoError(this.factoresDeRiesgoFormService.getForm(), this.el)
 							}, 300);
 						}
+						if (this.hierarchicalUnitFormService.isValidForm()) {
+							setTimeout(() => {
+								scrollIntoError(this.hierarchicalUnitFormService.getForm(), this.el)
+							}, 300);
+						}
 					}
 
 				}
@@ -304,7 +312,10 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		}
 
 		this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, this.data.idPaciente).subscribe(
-			_ => {
+			res => {
+				res.orderIds.forEach((orderId) => {
+					this.openNewEmergencyCareStudyConfirmationDialog([orderId]);
+				  });
 				this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS', { duration: TIME_OUT });
 				this.dockPopupRef.close(mapToFieldsToUpdate(nuevaConsulta));
 				if (this.thereAreProblemsToSnvsReport()) {
@@ -356,11 +367,30 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		}
 	}
 
+	private openNewEmergencyCareStudyConfirmationDialog(order: number[]) {
+		this.dialog.open(ConfirmarPrescripcionComponent,
+			{
+				disableClose: true,
+				data: {
+					titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.STUDY_TITLE',
+					downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_STUDY',
+					successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_STUDY_SUCCESS',
+					prescriptionType: PrescriptionTypes.STUDY,
+					patientId: this.data.idPaciente,
+					prescriptionRequest: order,
+				},
+				width: '35%',
+			});
+	}
+
 	public isValidConsultation(): boolean {
 		if (this.datosAntropometricosNuevaConsultaService.getForm().invalid)
 			return false;
 		if (this.factoresDeRiesgoFormService.getForm().invalid)
 			return false;
+		if (this.hierarchicalUnitFormService.isValidForm()) {
+			return false;
+		}
 		return true;
 	}
 
@@ -403,7 +433,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				};
 			}
 			),
-			patientMedicalCoverageId: this.patientMedicalCoverage?.id,
+			patientMedicalCoverageId: this.episodeData.medicalCoverageId,
 			problems: this.ambulatoryConsultationProblemsService.getProblemas().map(
 				(problema: Problema) => {
 					return {
@@ -418,8 +448,9 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			procedures: this.procedimientoNuevaConsultaService.getProcedimientos(),
 			reasons: this.motivoNuevaConsultaService.getMotivosConsulta(),
 			riskFactors: this.factoresDeRiesgoFormService.getFactoresDeRiesgo(),
-			clinicalSpecialtyId: this.clinicalSpecialty?.id,
+			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
 			references: this.ambulatoryConsultationReferenceService.getOutpatientReferences(),
+			hierarchicalUnitId: this.episodeData.hierarchicalUnitId,
 		};
 	}
 
@@ -584,13 +615,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		});
 	}
 
-	setPatientMedicalCoverage(patientMedicalCoverage: PatientMedicalCoverage) {
-		this.patientMedicalCoverage = patientMedicalCoverage;
-	}
-
-	setClinicalSpecialty(clinicalSpecialty: ClinicalSpecialtyDto) {
-		this.clinicalSpecialty = clinicalSpecialty;
-	}
 }
 
 export interface NuevaConsultaData {

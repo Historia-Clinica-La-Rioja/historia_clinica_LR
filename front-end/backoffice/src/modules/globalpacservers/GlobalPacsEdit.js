@@ -7,9 +7,9 @@ import {
     maxLength,
     FormDataConsumer,
     usePermissions,
-    PasswordInput,
     ReferenceInput,
-    SelectInput
+    SelectInput,
+    BooleanInput
 } from 'react-admin';
 import CustomToolbar from "../components/CustomToolbar";
 import { ROOT } from "../roles";
@@ -64,25 +64,7 @@ const GlobalPacsEdit = props => {
             </FormDataConsumer>
 
             {/* Username */}
-            <TextInput source="username" validate={[
-                required(),
-                maxLength(50)]}
-            />
-
-            {/* Password */}
-            <PasswordInput source="password" validate={[
-                required()]}
-            />
-
-            {/* url_stow */}
-            <TextInput source="urlStow" validate={[
-                required()]}
-            />
-
-            {/* url_auth */}
-            <TextInput source="urlAuth" validate={[
-                required()]}
-            />
+            <BooleanInput label="resources.pacservers.fields.active" source="active" />
 
         </SimpleForm>
     </Edit>)

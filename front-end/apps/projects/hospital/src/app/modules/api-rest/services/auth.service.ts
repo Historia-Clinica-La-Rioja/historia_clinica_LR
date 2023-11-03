@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import {LoginDto, OauthConfigDto, PasswordDto} from '@api-rest/api-model';
+import { LoginDto, OauthConfigDto, PasswordDto } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 
 @Injectable({
@@ -23,15 +23,15 @@ export class AuthService {
 				recaptcha: recaptchaResponse
 			});
 		}
-		return this.http.post<any>(`${environment.apiBase}/auth`, loginDto, {headers: httpHeaders});
+		return this.http.post<any>(`${environment.apiBase}/auth`, loginDto, { headers: httpHeaders });
 	}
 
 	tokenRefresh(): Observable<any> {
 		return this.http.post<any>(`${environment.apiBase}/auth/refresh`, undefined);
 	}
 
-	logout(): void {
-		this.http.delete<any>(`${environment.apiBase}/auth/refresh`).subscribe();
+	logout(): Observable<any> {
+		return this.http.delete<any>(`${environment.apiBase}/auth/refresh`);
 	}
 
 	completeLoginWith2FA(code: string): Observable<any> {
@@ -46,11 +46,11 @@ export class AuthService {
 		return this.http.get<OauthConfigDto>(`${environment.apiBase}/oauth/config`);
 	}
 
-	updatePassword(newPasword: PasswordDto): Observable<any>{
+	updatePassword(newPasword: PasswordDto): Observable<any> {
 		return this.http.patch<void>(`${environment.apiBase}/passwords`, newPasword);
 	}
 
 	restorePassword(username: string): Observable<any> {
-		return this.http.post<any>(`${environment.apiBase}/auth/public-user/restore-password`,{}, { responseType: 'text' as 'json' , params: { username: username } });
+		return this.http.post<any>(`${environment.apiBase}/auth/public-user/restore-password`, {}, { responseType: 'text' as 'json', params: { username: username } });
 	}
 }

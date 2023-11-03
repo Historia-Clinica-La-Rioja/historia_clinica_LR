@@ -50,7 +50,7 @@
 						Introduzca como máximo 11 caracteres
 						</mat-error>
 						<div id="updateDNI">
-							<button *ngIf="hasAuditorRole && !dniWasEdited" mat-button type="button" color="primary"  (click)="setDNI()">{{'pacientes.form.UPDATE_IDENTIFICATION_NUMBER' | translate}}</button>
+							<button *ngIf="hasAuditorRole && !dniWasEdited && !(form.controls.stateId.value === rejectedId)" mat-button type="button" color="primary"  (click)="setDNI()">{{'pacientes.form.UPDATE_IDENTIFICATION_NUMBER' | translate}}</button>
 						</div>
 					</div>
 				</div>
@@ -115,7 +115,7 @@
 						</div>
 						<mat-form-field appearance="outline" class="matInput">
 							<mat-select id="stateId" name="stateId" formControlName="stateId"
-								placeholder="{{'pacientes.form.SELECT' | translate}}">
+								placeholder="{{'pacientes.form.SELECT' | translate}}" (ngModelChange)="setStateAndDisabledInputs($event)">
 								<mat-option *ngFor="let state of typesPatient" [value]="state.id">
 									{{state.description}}
 								</mat-option>
@@ -123,6 +123,11 @@
 						</mat-form-field>
 
 					</div>
+				</div>
+
+				<div *ngIf="form.controls.stateId.value === rejectedId" class="mb-2" fxLayout="row" fxLayoutAlign="start center">
+					<mat-icon class="color-orange" id="icon-error">error_outlined</mat-icon>
+					<span class="color-orange">{{'pacientes.audit.LABEL_PATIENT_REJECTED' | translate }}</span>
 				</div>
 
 				<div>
@@ -342,6 +347,9 @@
 					<mat-form-field appearance="outline">
 						<input id="addressNumber" name="addressNumber" formControlName="addressNumber" maxlength="5"
 							placeholder="{{'pacientes.form.ADDRESS_NUMBER' | translate}}" matInput>
+						<mat-error *ngIf="hasError(form, 'pattern', 'addressNumber')"
+							[translate]="'forms.FORMAT_NUMERIC'">
+						</mat-error>
 					</mat-form-field>
 
 					<mat-form-field appearance="outline">

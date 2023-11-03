@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.patient.controller.service.exception.AuditPatientException;
 
+import net.pladema.patient.controller.service.exception.RejectedPatientException;
+
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,13 @@ public class PatientExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({AuditPatientException.class})
 	protected ApiErrorMessageDto handleAuditPatientException(AuditPatientException ex) {
+		log.debug("AuditPatientException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({RejectedPatientException.class})
+	protected ApiErrorMessageDto handleRejectedPatientException(RejectedPatientException ex) {
 		log.debug("AuditPatientException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
 	}

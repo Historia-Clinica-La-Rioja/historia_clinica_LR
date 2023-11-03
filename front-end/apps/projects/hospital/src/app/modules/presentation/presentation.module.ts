@@ -12,10 +12,13 @@ import { BarComponent } from './components/bar/bar.component';
 import { CardComponent } from './components/card/card.component';
 import { CategoryHeaderDividerComponent } from './components/category-header-divider/category-header-divider.component';
 import { CellTemplatesComponent } from './components/cell-templates/cell-templates.component';
+import { ChipsAutocompleteComponent } from './components/chips-autocomplete/chips-autocomplete.component';
 import { ColoredDivPatientStateComponent } from './components/colored-div-patient-state/colored-div-patient-state.component';
+import { ColoredIconTextComponent } from './components/colored-icon-text/colored-icon-text.component';
 import { ColoredLabelComponent } from './colored-label/colored-label.component';
 import { ContentTitleComponent } from './components/content-title/content-title.component';
 import { DatepickerComponent } from './components/datepicker/datepicker.component';
+import { DateRangePickerComponent } from './components/date-range-picker/date-range-picker.component';
 import { DetailBoxComponent } from './components/detail-box/detail-box.component';
 import { DockPopupComponent } from './components/dock-popup/dock-popup.component';
 import { DocumentSectionComponent } from './components/document-section/document-section.component';
@@ -49,6 +52,17 @@ import { TitledContentCardComponent } from './components/titled-content-card/tit
 import { TitledContentComponent } from './components/titled-content/titled-content.component';
 import { TypeaheadComponent } from './components/typeahead/typeahead.component';
 import { UserBadgeComponent } from './components/user-badge/user-badge.component';
+import { FilterButtonComponent } from './components/filter-button/filter-button.component';
+import { FloatingDivComponent } from './components/floating-div/floating-div.component';
+import { PrioritySelectComponent } from './components/priority-select/priority-select.component';
+import { PersonShortDescriptionComponent } from './components/person-short-description/person-short-description.component';
+import { IconedTextComponent } from './components/iconed-text/iconed-text.component';
+import { PaginatorComponent } from './components/paginator/paginator.component';
+import { PriorityComponent } from './components/priority/priority.component';
+import { CallDetailsComponent } from './components/call-details/call-details.component';
+import { TitledSingleContentComponent } from './components/titled-single-content/titled-single-content.component';
+import { FiltersSelectComponent } from './components/filters-select/filters-select.component';
+
 // dialogs
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
@@ -67,20 +81,24 @@ import { TimeDtoToLocalTimePipe } from './pipes/time-dto-to-local-time.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
-
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
 	declarations: [
 		// components
 		AsignPatientButtonComponent,
 		BarComponent,
+		CallDetailsComponent,
 		CardComponent,
 		CategoryHeaderDividerComponent,
 		CellTemplatesComponent,
+		ChipsAutocompleteComponent,
 		ColoredDivPatientStateComponent,
+		ColoredIconTextComponent,
 		ColoredLabelComponent,
 		ContentTitleComponent,
 		DatepickerComponent,
+		DateRangePickerComponent,
 		DetailBoxComponent,
 		DockPopupComponent,
 		DocumentSectionComponent,
@@ -90,6 +108,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		FactorDeRiesgoComponent,
 		FactorDeRiesgoCurrentPreviousComponent,
 		FiltersCardComponent,
+		FloatingDivComponent,
 		FooterComponent,
 		ImgUploaderComponent,
 		IndicationComponent,
@@ -114,6 +133,9 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TitledContentComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
+		FilterButtonComponent,
+		PaginatorComponent,
+		PrioritySelectComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
@@ -132,7 +154,11 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
-
+		PersonShortDescriptionComponent,
+		IconedTextComponent,
+		PriorityComponent,
+  		TitledSingleContentComponent,
+  		FiltersSelectComponent,
 	],
 	imports: [
 		CommonModule,
@@ -142,7 +168,8 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		CoreModule,
 		AppMaterialModule,
 		PdfViewerModule,
-		QuillModule.forRoot()
+		QuillModule.forRoot(),
+		DragDropModule
 	],
 	exports: [
 		FlexModule,
@@ -153,13 +180,17 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		// components
 		AsignPatientButtonComponent,
 		BarComponent,
+		CallDetailsComponent,
 		CardComponent,
 		CategoryHeaderDividerComponent,
 		CellTemplatesComponent,
+		ChipsAutocompleteComponent,
 		ColoredDivPatientStateComponent,
+		ColoredIconTextComponent,
 		ColoredLabelComponent,
 		ContentTitleComponent,
 		DatepickerComponent,
+		DateRangePickerComponent,
 		DetailBoxComponent,
 		DockPopupComponent,
 		DocumentSectionComponent,
@@ -169,6 +200,8 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		FactorDeRiesgoComponent,
 		FactorDeRiesgoCurrentPreviousComponent,
 		FiltersCardComponent,
+		FloatingDivComponent,
+		IconedTextComponent,
 		ImgUploaderComponent,
 		IndicationComponent,
 		LabelComponent,
@@ -180,10 +213,13 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		MessageFlaggedForAuditComponent,
 		NewDocumentSectionComponent,
 		NoDataComponent,
+		PaginatorComponent,
 		PatientCardComponent,
 		PatientCardHeaderComponent,
 		PatientTypeLogoComponent,
 		PersonalInformationComponent,
+		PersonShortDescriptionComponent,
+		PriorityComponent,
 		RichTextEditorComponent,
 		SummaryCardComponent,
 		TableComponent,
@@ -191,6 +227,9 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TitledContentComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
+		FilterButtonComponent,
+		PrioritySelectComponent,
+		FiltersSelectComponent,
 		// dialogs
 		// directives
 		CtrlTemplateDirective,
@@ -205,6 +244,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
+		TitledSingleContentComponent,
 	],
 	entryComponents: [
 		DockPopupComponent,

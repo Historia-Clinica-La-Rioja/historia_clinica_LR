@@ -16,18 +16,8 @@ export class CounterreferenceService {
 	) { }
 
 	createCounterReference(patientId: any, counterreference: CounterReferenceDto): Observable<any> {
-		const body = {
-			referenceId: counterreference.referenceId,
-			allergies: counterreference.allergies,
-			clinicalSpecialtyId: counterreference.clinicalSpecialtyId,
-			counterReferenceNote: counterreference.counterReferenceNote,
-			medications: counterreference.medications,
-			procedures: counterreference.procedures,
-			fileIds: counterreference.fileIds,
-			closureTypeId: counterreference.closureTypeId
-		};
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/counterreference`;
-		return this.http.post(url, body);
+		return this.http.post(url, counterreference);
 	}
 }
 

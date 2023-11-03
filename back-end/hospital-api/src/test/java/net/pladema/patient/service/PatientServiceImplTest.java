@@ -5,12 +5,19 @@ import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitRepository;
 import net.pladema.audit.repository.HospitalAuditRepository;
+import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
+import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.federar.services.FederarService;
+import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.repository.AuditablePatientRepository;
+import net.pladema.patient.repository.MergedInactivePatientRepository;
+import net.pladema.patient.repository.MergedPatientRepository;
 import net.pladema.patient.repository.PatientAuditRepository;
+import net.pladema.patient.repository.PatientHistoryRepository;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
 import net.pladema.patient.repository.PatientRepository;
+import net.pladema.patient.repository.PatientRepositoryImpl;
 import net.pladema.patient.repository.PatientTypeRepository;
 import net.pladema.patient.repository.PrivateHealthInsuranceDetailsRepository;
 import net.pladema.patient.repository.entity.Patient;
@@ -66,6 +73,26 @@ class PatientServiceImplIntegrationTest extends UnitRepository {
 	@Mock
 	private PatientTypeRepository patientTypeRepository;
 
+	@Mock
+	private EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;
+
+	@Mock
+	private InternmentEpisodeRepository internmentEpisodeRepository;
+
+	@Mock
+	private AppointmentRepository appointmentRepository;
+	@Mock
+    private PatientHistoryRepository patientHistoryRepository;
+
+    @Mock
+    private MergedPatientRepository mergedPatientRepository;
+
+	@Mock
+	private MergedInactivePatientRepository mergedInactivePatientRepository;
+
+	@Mock
+	private PatientRepositoryImpl patientRepositoryCustom;
+
 	@BeforeEach
     void setUp(){
         patientService = new PatientServiceImpl(
@@ -78,7 +105,14 @@ class PatientServiceImplIntegrationTest extends UnitRepository {
                 patientAuditRepository,
                 featureFlagsService,
 				auditablePatientRepository,
-				localDateMapper, patientTypeRepository);
+				localDateMapper, patientTypeRepository,
+				internmentEpisodeRepository,
+				emergencyCareEpisodeRepository,
+				appointmentRepository,
+				patientHistoryRepository,
+                mergedPatientRepository,
+				mergedInactivePatientRepository,
+				patientRepositoryCustom);
     }
 
     @Test

@@ -12,9 +12,7 @@ import { AdultGynecologicalTriageDialogComponent } from '../dialogs/adult-gyneco
 export const ROLES_TO_MEDIC_TRIAGE: ERole[] = [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO];
 export const ROUTE_EMERGENCY_CARE = '/guardia';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class TriageDefinitionsService {
 
 	private readonly routePrefix;

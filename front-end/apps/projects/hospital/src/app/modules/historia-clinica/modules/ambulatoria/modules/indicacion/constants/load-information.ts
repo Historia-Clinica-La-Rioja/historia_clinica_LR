@@ -48,7 +48,7 @@ export function loadExtraInfoPharmaco(pharmaco: any, loadFrequency: boolean, via
 	}
 	extra_info.push({
 		title: 'indicacion.internment-card.sections.indication-extra-description.VIA',
-		content: vias.find(v => v.id === pharmaco.via)?.description
+		content: vias.find(v => v.id === pharmaco.viaId)?.description
 	})
 	if (loadFrequency)
 		return extra_info.concat(showFrequency(pharmaco.dosage));

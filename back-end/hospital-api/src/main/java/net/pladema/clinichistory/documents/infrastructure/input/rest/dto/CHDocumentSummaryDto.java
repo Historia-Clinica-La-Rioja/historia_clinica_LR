@@ -20,6 +20,8 @@ public class CHDocumentSummaryDto {
 
 	private String encounterType;
 
+	private String documentType;
+
 	private String professional;
 
 	private String institution;

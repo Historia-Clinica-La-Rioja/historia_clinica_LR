@@ -24,7 +24,8 @@ public class SgxMqttCallback implements IMqttMessageListener, MqttCallbackExtend
 
     @Override
     public void connectionLost(Throwable throwable) {
-		throwable.printStackTrace();
+		log.error("MQTT Connection lost {} ", throwable.getMessage());
+		log.debug("MQTT Connection", throwable);
 	}
 
     @Override
@@ -36,10 +37,12 @@ public class SgxMqttCallback implements IMqttMessageListener, MqttCallbackExtend
 
 	@Override
 	public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
+		log.debug("MQTT delivery complete {}", iMqttDeliveryToken);
 	}
 
 	@Override
 	public void connectComplete(boolean connected, String s) {
+		log.debug("MQTT connect complete {}: {}", connected, s);
 	}
 
 	private MqttMetadataBo mapTo(String topic, MqttMessage message) {

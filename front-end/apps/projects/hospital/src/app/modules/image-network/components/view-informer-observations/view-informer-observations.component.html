@@ -1,0 +1,31 @@
+<div fxLayout="column" *ngIf="informerObservations">
+    <div class="content">
+        <div *ngFor="let conclution of informerObservations.conclusions">
+            <span>{{conclution.snomed.pt}}</span>
+        </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+        <span class="bold">{{ 'image-network.worklist.details_study.OBSERVATIONS' | translate }}</span>
+    </div>
+
+
+    <div class="observations" [innerHtml]="informerObservations.evolutionNote"></div>
+    <div fxLayout="column" fxLayoutGap="25px">
+        <div class="grey" fxLayout="row" fxLayoutAlign="space-between">
+            <span>{{informerObservations.createdBy}}</span>
+            <div fxLayout="row" fxLayoutGap="10px">
+                <span class="grey" *ngIf="!informerObservations.confirmed">
+                    {{ 'image-network.worklist.details_study.DRAFT_REPORT' | translate }}
+                </span>
+                <span>{{ informerObservations.actionTime | viewDateDto: 'localdatetime' | date : 'short'}} hs</span>
+            </div>
+        </div>
+        <ng-container *ngIf="!informerObservations.confirmed">
+            <button id="still_editing" mat-stroked-button class="button" color="primary"
+                (click)="enableEditing()" [disabled]="disableEditing">
+                <span>{{ 'image-network.worklist.details_study.CONTINUE_EDITING' | translate | uppercase }}</span>
+            </button>
+        </ng-container>
+    </div>
+</div>

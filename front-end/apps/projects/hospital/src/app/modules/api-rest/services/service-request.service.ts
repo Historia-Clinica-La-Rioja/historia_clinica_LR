@@ -4,11 +4,14 @@ import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import {
+	AppointmentOrderImageExistCheckDto,
 	CompleteRequestDto,
 	DiagnosticReportInfoDto, DiagnosticReportInfoWithFilesDto,
 	PrescriptionDto,
 	SnomedDto,
+	StudyWithoutOrderReportInfoDto,
 	TranscribedDiagnosticReportInfoDto,
+	TranscribedOrderReportInfoDto,
 	TranscribedPrescriptionDto,
 } from '@api-rest/api-model';
 
@@ -28,7 +31,7 @@ export class ServiceRequestService {
 		private readonly downloadService: DownloadService,
 	) { }
 
-	getList(patientId: number, statusId: string, study: string, healthCondition: string, categoryId: string): Observable<DiagnosticReportInfoDto[]> {
+	getList(patientId: number, statusId?: string, study?: string, healthCondition?: string, categoryId?: string): Observable<DiagnosticReportInfoDto[]> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = statusId ? queryParams.append('statusId', statusId) : queryParams;
 		queryParams = study ? queryParams.append('study', study) : queryParams;
@@ -48,9 +51,9 @@ export class ServiceRequestService {
 		return this.http.get<DiagnosticReportInfoDto[]>(url, { params: queryParams });
 	}
 
-	getStudyStatus(patientId: number, serviceRequestId: number): Observable<boolean>{
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${serviceRequestId}/existCheck`;
-		return this.http.get<boolean>(url);
+	getStudyStatus(patientId: number, diagnosticReportId: number): Observable<AppointmentOrderImageExistCheckDto>{
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${diagnosticReportId}/existCheck`;
+		return this.http.get<AppointmentOrderImageExistCheckDto>(url);
 	}
 
 	create(patientId: number, prescriptionDto: PrescriptionDto): Observable<number[]> {
@@ -74,6 +77,14 @@ export class ServiceRequestService {
 		return this.http.delete<void>(url)
 	}
 
+	getMedicalOrders(patientId: number, statusId: string, categoryId: string): Observable<DiagnosticReportInfoDto[]> {
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = statusId ? queryParams.append('statusId', statusId) : queryParams;
+		queryParams = categoryId ? queryParams.append('category', categoryId) : queryParams;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/medicalOrders`;
+		return this.http.get<DiagnosticReportInfoDto[]>(url, { params: queryParams });
+	}
+
 	getTranscribedOrders(patientId: number): Observable<TranscribedDiagnosticReportInfoDto[]>{
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/transcribedOrders`;
 		return this.http.get<TranscribedDiagnosticReportInfoDto[]>(url)
@@ -84,7 +95,7 @@ export class ServiceRequestService {
 		Array.from(selectedFiles).forEach(file => filesFormdata.append('files', file));
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${serviceRequestId}/uploadFiles`;
 		return this.http.post<void>(url, filesFormdata)
-	} 
+	}
 
 	complete(patientId: number, diagnosticReportId: number, completeRequestDto: CompleteRequestDto, files: File[]): Observable<void> {
 		const commonUrl = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${diagnosticReportId}`;
@@ -101,6 +112,11 @@ export class ServiceRequestService {
 		}
 		else
 			return this.http.put<void>(completeUrl, completeRequestDto);
+	}
+
+	completeByRdi(patientId: number, appointmentId: number): Observable<void> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${appointmentId}/completeByRDI`
+		return this.http.put<void>(url, {})
 	}
 
 	delete(patientId: number, serviceRequestId: number): Observable<string> {
@@ -124,6 +140,18 @@ export class ServiceRequestService {
 	downloadPdf(patientId: number, serviceRequestId: number) {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${serviceRequestId}/download-pdf`;
 		this.viewPdfService.showDialog(url, 'Orden ' + serviceRequestId);
+	}
+
+	getStudyTranscribedOrder(patientId: number): Observable<TranscribedOrderReportInfoDto[]>
+	{
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/studyTranscribedOrder`;
+		return this.http.get<TranscribedOrderReportInfoDto[]>(url)
+	}
+
+	getStudyWithoutOrder(patientId: number): Observable<StudyWithoutOrderReportInfoDto[]>
+	{
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/studyWithoutOrder`;
+		return this.http.get<StudyWithoutOrderReportInfoDto[]>(url)
 	}
 
 }

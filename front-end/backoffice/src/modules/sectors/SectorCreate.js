@@ -1,4 +1,5 @@
 import React from 'react';
+import { useForm } from 'react-final-form';
 import {
     AutocompleteInput,
     Create,
@@ -19,12 +20,22 @@ const DIAGNOSTICO_POR_IMAGENES = 4;
 const redirect = (basePath, id, data) => `/institutions/${data.institutionId}/show`;
 
 const SectorType = (sourceId) => {
+    const form = useForm();
+
     return (
         <ReferenceInput
             {...sourceId}
             reference="sectortypes"
             sort={{ field: 'description', order: 'ASC' }}
             defaultValue={SIN_TIPO}
+            onChange={ _ => {
+                form.change('informer', null);
+                form.change('ageGroupId', null);
+                form.change('sectorOrganizationId', null);
+                form.change('careTypeId', null);
+                form.change('hospitalizationTypeId', null);
+            }
+        }
         >
             <SelectInput optionText="description" optionValue="id"/>
         </ReferenceInput>);

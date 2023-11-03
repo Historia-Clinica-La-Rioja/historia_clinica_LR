@@ -1,5 +1,6 @@
 package ar.lamansys.odontology.domain.consultation;
 
+import ar.lamansys.odontology.domain.consultation.reference.ReferenceBo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,11 +39,15 @@ public class ConsultationBo {
 
     private List<ConsultationMedicationBo> medications = new ArrayList<>();
 
-    private String evolutionNote;
+	private List<ReferenceBo> references = new ArrayList<>();
+
+	private String evolutionNote;
 
     private Integer permanentTeethPresent;
 
     private Integer temporaryTeethPresent;
 
 	private Integer patientMedicalCoverageId;
+
+	private Integer hierarchicalUnitId;
 }

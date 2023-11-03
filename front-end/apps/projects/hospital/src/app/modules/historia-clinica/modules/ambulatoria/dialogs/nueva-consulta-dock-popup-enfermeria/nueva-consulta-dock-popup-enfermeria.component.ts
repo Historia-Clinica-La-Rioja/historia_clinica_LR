@@ -15,7 +15,6 @@ import { ProblemasService } from '@historia-clinica/services/problemas.service';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { TranslateService } from '@ngx-translate/core';
-import { PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { SuggestedFieldsPopupComponent } from '@presentation/components/suggested-fields-popup/suggested-fields-popup.component';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
@@ -26,6 +25,8 @@ import { MedicacionesNuevaConsultaService } from '../../services/medicaciones-nu
 import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta.service';
 import { NewNurseConsultationSuggestedFieldsService } from '../../services/new-nurse-consultation-suggested-fields.service';
 import { NuevaConsultaData } from '../nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
+import { EpisodeData } from '@historia-clinica/components/episode-data/episode-data.component';
+import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
 
 export interface FieldsToUpdate {
 	riskFactors: boolean;
@@ -64,8 +65,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	specialties: ClinicalSpecialtyDto[];
 	problems: ClinicalTermDto[];
 	searchConceptsLocallyFFIsOn = false;
-	patientMedicalCoverage: PatientMedicalCoverage;
-	clinicalSpecialty: ClinicalSpecialtyDto;
+	episodeData: EpisodeData;
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 
 
@@ -89,6 +89,8 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		private readonly translateService: TranslateService,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly el: ElementRef,
+		private readonly hierarchicalUnitFormService: HierarchicalUnitService,
+
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
@@ -194,6 +196,11 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 						scrollIntoError(this.factoresDeRiesgoFormService.getForm(), this.el)
 					}, 300);
 				}
+				if (this.hierarchicalUnitFormService.isValidForm()) {
+					setTimeout(() => {
+						scrollIntoError(this.hierarchicalUnitFormService.getForm(), this.el)
+					}, 300);
+				}
 			}
 		}
 	}
@@ -264,18 +271,21 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 			return false;
 		if (this.factoresDeRiesgoFormService.getForm().invalid)
 			return false;
+		if (this.hierarchicalUnitFormService.isValidForm())
+			return false;
 		return true;
 	}
 
 	private buildCreateOutpatientDto(): NursingConsultationDto {
 		return {
 			anthropometricData: this.datosAntropometricosNuevaConsultaService.getDatosAntropometricos(),
-			clinicalSpecialtyId: this.clinicalSpecialty?.id,
+			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
 			evolutionNote: this.formEvolucion.value?.evolucion,
 			problem: this.formEvolucion.value?.clinicalProblem,
 			procedures: this.procedimientoNuevaConsultaService.getProcedimientos(),
 			riskFactors: this.factoresDeRiesgoFormService.getFactoresDeRiesgo(),
-			patientMedicalCoverageId: this.patientMedicalCoverage?.id
+			patientMedicalCoverageId: this.episodeData.medicalCoverageId,
+			hierarchicalUnitId: this.episodeData.hierarchicalUnitId,
 		}
 	}
 
@@ -291,14 +301,6 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 
 	clear(control: AbstractControl): void {
 		control.reset();
-	}
-
-	setPatientMedicalCoverage(patientMedicalCoverage: PatientMedicalCoverage) {
-		this.patientMedicalCoverage = patientMedicalCoverage;
-	}
-
-	setClinicalSpecialty(clinicalSpecialty: ClinicalSpecialtyDto) {
-		this.clinicalSpecialty = clinicalSpecialty;
 	}
 
 }

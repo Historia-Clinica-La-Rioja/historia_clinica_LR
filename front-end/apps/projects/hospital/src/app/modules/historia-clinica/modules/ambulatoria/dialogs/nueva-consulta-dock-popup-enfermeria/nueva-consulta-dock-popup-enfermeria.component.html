@@ -5,8 +5,7 @@
 		<app-new-consultation-expansion-section id="episode-data"
 		[title]="'ambulatoria.paciente.nueva-consulta.EPISODE_DATA' | translate" icon="medical_services"
 			[isEmpty]="false" [collapsed]="false" [hideBorder]="true">
-			<app-episode-data [idPatient]="data.idPaciente" (clinicalSpecialty)="setClinicalSpecialty($event)"
-				(medicalCoverage)="setPatientMedicalCoverage($event)"></app-episode-data>
+			<app-episode-data [patientId]="data.idPaciente" (episodeData)="episodeData = $event"></app-episode-data>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="datos_antropometricos"

@@ -4,8 +4,11 @@ import net.pladema.establishment.controller.constraints.validator.permissions.Ba
 import net.pladema.establishment.repository.SectorRepository;
 import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.medicalconsultation.doctorsoffice.repository.DoctorsOfficeRepository;
+import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
+import net.pladema.sgx.backoffice.rest.SingleAttributeBackofficeQueryAdapter;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.http.HttpHeaders;
@@ -25,22 +28,29 @@ public class BackofficeSectorController extends AbstractBackofficeController<Sec
 
     private static final Map<String, String> constraintTocode;
     static {
-		constraintTocode = Map.of("uq_sector_description_institution_id", "sector-description-inst-unique");
+		constraintTocode = Map.of(
+				"uq_sector_description_institution_id", "sector-description-inst-unique"
+				);
+
     }
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ ConstraintViolationException.class })
-	public ResponseEntity<Object> handleValidationExceptions(ConstraintViolationException ex, WebRequest request) {
+	public ApiErrorMessageDto handleValidationExceptions(ConstraintViolationException ex) {
 		String sqlError = NestedExceptionUtils.getMostSpecificCause(ex).getLocalizedMessage();
-		String constraintCode = constraintTocode.getOrDefault(ex.getConstraintName(), "constraint-default");
-		ApiErrorMessageDto apiErrors = new ApiErrorMessageDto(constraintCode, sqlError);
-		return new ResponseEntity<>(apiErrors, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		String constraintCode = constraintCode(ex);
+		return new ApiErrorMessageDto(constraintCode, sqlError);
+	}
+
+	private String constraintCode(ConstraintViolationException ex) {
+		String constraintName = ex.getConstraintName() != null ? ex.getConstraintName() : "constraint-default";
+		return constraintTocode.getOrDefault(constraintName, "constraint-default");
 	}
 	
-	public BackofficeSectorController(SectorRepository repository,
-									  DoctorsOfficeRepository doctorsOfficeRepository,
+	public BackofficeSectorController(SectorRepository sectorRepository,
 									  BackofficeSectorValidator sectorValidator) {
-		super(new SectorStore(repository, doctorsOfficeRepository), sectorValidator);
+		super(new BackofficeRepository<Sector, Integer>(sectorRepository,
+				new SingleAttributeBackofficeQueryAdapter<Sector>("description")), sectorValidator);
 	}
 
 }

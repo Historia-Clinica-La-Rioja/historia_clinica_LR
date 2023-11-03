@@ -47,6 +47,7 @@ public class EpicrisisServiceImpl implements EpicrisisService {
             result.setAnthropometricData(documentService.getAnthropometricDataStateFromDocument(document.getId()));
             result.setRiskFactors(documentService.getRiskFactorStateFromDocument(document.getId()));
 			result.setMedications(documentService.getMedicationStateFromDocument(document.getId()));
+			result.setProcedures(documentService.getProcedureStateFromDocument(document.getId()));
             result.setNotes(loadNotes(document));
 			result.setOtherProblems(generalHealthConditionBo.getOtherProblems());
 			result.setExternalCause(documentService.getExternalCauseFromDocument(document.getId()));

@@ -11,4 +11,5 @@ import lombok.ToString;
 @NoArgsConstructor
 public class DetailsOrderImageDto {
 	private String observations;
+	private Boolean isReportRequired;
 }

@@ -67,3 +67,8 @@
 .last-printed {
 	margin: 1.5em 1em;
 }
+
+.spinner {
+	margin-top: 2em;
+	@include centered-spinner;
+}

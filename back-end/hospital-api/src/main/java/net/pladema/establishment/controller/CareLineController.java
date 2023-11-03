@@ -35,23 +35,39 @@ public class CareLineController {
         return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLinesBo));
     }
 
-	@GetMapping(value = "/problems")
+	@GetMapping(value = "/by-problems")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
-	public ResponseEntity<List<CareLineDto>> getByProblemSnomedIdsAndDestinationInstitutionIdWithActiveDiaries(@PathVariable(name = "institutionId") Integer institutionId,
-																				   @RequestParam(name = "problemSnomedIds") List<String> problemSnomedIds,
-                                                                                   @RequestParam Integer destinationInstitutionId) {
-		log.debug("Input parameters -> institutionId {}, problemSnomedIds {}", institutionId, problemSnomedIds);
-		List<CareLineBo> careLinesBo = careLineService.getCareLinesByProblemsSctidsAndDestinationInstitutionIdWithActiveDiaries(problemSnomedIds, destinationInstitutionId);
-		log.debug("Get care lines by snomedId and institutionId  => {}", careLinesBo);
+	public ResponseEntity<List<CareLineDto>> getAllByProblems(@PathVariable(name = "institutionId") Integer institutionId,
+															  @RequestParam(name = "snomedSctids") List<String> snomedSctids) {
+		log.debug("Input parameters -> institutionId {}, snomedSctids {}", institutionId, snomedSctids);
+		List<CareLineBo> careLinesBo = careLineService.getAllByProblems(snomedSctids);
+		log.debug("Get care lines by problems (snomed sctids) {}", careLinesBo);
 		return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLinesBo));
 	}
 
 	@GetMapping("/attached")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
-	public ResponseEntity<List<CareLineDto>> getCareLinesAttachedToInstitution(@PathVariable(name = "institutionId") Integer institutionId) {
-    	List<CareLineBo> careLinesBo = careLineService.getCareLinesAttachedToInstitution();
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, VIRTUAL_CONSULTATION_PROFESSIONAL, VIRTUAL_CONSULTATION_RESPONSIBLE')")
+	public ResponseEntity<List<CareLineDto>> getCareLinesAttachedToInstitutions(@PathVariable(name = "institutionId") Integer institutionId) {
+    	List<CareLineBo> careLinesBo = careLineService.getCareLinesAttachedToInstitutions();
 		log.debug("Get all care lines with clinical specialties => {}", careLinesBo);
 		return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLinesBo));
+	}
+
+	@GetMapping("/attached-to-institution")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, VIRTUAL_CONSULTATION_PROFESSIONAL, VIRTUAL_CONSULTATION_RESPONSIBLE')")
+	public ResponseEntity<List<CareLineDto>> getCareLinesAttachedToInstitution(@PathVariable(name = "institutionId") Integer institutionId) {
+		log.debug("Input parameters -> institutionId {}", institutionId);
+		List<CareLineBo> careLinesBo = careLineService.getCareLinesAttachedToInstitution(institutionId);
+		log.debug("Get all care lines with clinical specialties => {}", careLinesBo);
+		return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLinesBo));
+	}
+
+	@GetMapping("/virtual-consultation")
+	public List<CareLineDto> getVirtualConsultationCareLinesByInstitutionId(@PathVariable(name = "institutionId") Integer institutionId) {
+		log.debug("Input parameters -> institutionId {}", institutionId);
+		List<CareLineDto> result = careLineMapper.toListCareLineDto(careLineService.getVirtualConsultationCareLinesByInstitutionId(institutionId));
+		log.debug("Output -> {}", result);
+		return result;
 	}
 
 }

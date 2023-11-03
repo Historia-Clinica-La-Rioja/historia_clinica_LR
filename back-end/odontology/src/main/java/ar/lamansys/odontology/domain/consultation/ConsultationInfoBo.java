@@ -30,7 +30,9 @@ public class ConsultationInfoBo {
 
     List<ConsultationReasonBo> reasons;
 
-    public ConsultationInfoBo(Integer id, ConsultationBo consultation, Integer patientMedicalCoverageId, Integer doctorId, LocalDate performedDate, boolean billable) {
+	private Integer hierarchicalUnitId;
+
+    public ConsultationInfoBo(Integer id, ConsultationBo consultation, Integer patientMedicalCoverageId, Integer doctorId, LocalDate performedDate, boolean billable, Integer hierarchicalUnitId) {
         this.id = id;
         this.patientId = consultation.getPatientId();
         this.institutionId = consultation.getInstitutionId();
@@ -40,6 +42,7 @@ public class ConsultationInfoBo {
         this.doctorId = doctorId;
         this.performedDate = performedDate;
         this.billable = billable;
+		this.hierarchicalUnitId = hierarchicalUnitId;
     }
 
 }

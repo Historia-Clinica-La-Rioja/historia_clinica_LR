@@ -45,6 +45,9 @@ public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements IDocumen
     @NotNull(message = "{value.mandatory}")
     private List<@Valid HealthHistoryConditionBo> personalHistories;
 
+	@NotNull(message = "{value.mandatory}")
+	private List<@Valid ProcedureBo> procedures;
+
     @NotNull(message = "{value.mandatory}")
     private List<@Valid HealthHistoryConditionBo> familyHistories;
 

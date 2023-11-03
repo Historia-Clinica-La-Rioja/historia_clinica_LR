@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
 	APatientDto,
 	BMPatientDto, BMPersonDto, CompletePatientDto, EAuditType, EducationLevelDto, ERole, EthnicityDto, GenderDto,
-	IdentificationTypeDto, PatientMedicalCoverageDto, PatientType, PersonOccupationDto, SelfPerceivedGenderDto
+	IdentificationTypeDto, PatientMedicalCoverageDto, PatientType, PersonOccupationDto, RoleAssignmentDto, SelfPerceivedGenderDto
 } from '@api-rest/api-model';
 import * as moment from 'moment';
 import { Moment } from 'moment';
@@ -36,9 +36,15 @@ import { MessageForAuditComponent } from '@pacientes/dialogs/message-for-audit/m
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Observable } from 'rxjs';
+import { UserService } from '@api-rest/services/user.service';
+import { LoggedUserService } from '../../../auth/services/logged-user.service';
+import { anyMatch } from '@core/utils/array.utils';
+import { NO_INSTITUTION } from '../../../home/home.component';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
+const ERROR_ENCOUNTER_ACTIVE_EXISTS = 'ENCOUNTER_ACTIVE_EXISTS';
+const REJECTTED = 'Rechazado';
 
 @Component({
 	selector: 'app-edit-patient',
@@ -46,6 +52,16 @@ const ROUTE_PROFILE = 'pacientes/profile/';
 	styleUrls: ['./edit-patient.component.scss']
 })
 export class EditPatientComponent implements OnInit {
+
+	currentEducationLevelDescription: string;
+	currentOccupationDescription: string;
+	hasInstitutionalAdministratorRole = false;
+	hasToSaveFiles: boolean = false;
+	typesPatient: PatientType[];
+	hasAuditorRole: boolean = false;
+	idTypeDni: number;
+	dniWasEdited: boolean = false;
+	rejectedId: number;
 
 	readonly PERSON_MAX_LENGTH = PERSON.MAX_LENGTH;
 	readonly GENDER_MAX_LENGTH = VALIDATIONS.MAX_LENGTH.gender;
@@ -77,14 +93,6 @@ export class EditPatientComponent implements OnInit {
 	public ethnicities: EthnicityDto[];
 	public occupations: PersonOccupationDto[];
 	public educationLevels: EducationLevelDto[];
-	currentEducationLevelDescription: string;
-	currentOccupationDescription: string;
-	hasInstitutionalAdministratorRole = false;
-	hasToSaveFiles: boolean = false;
-	typesPatient: PatientType[];
-	hasAuditorRole: boolean = false;
-	idTypeDni: number;
-	dniWasEdited: boolean = false;
 
 	constructor(
 		private formBuilder: UntypedFormBuilder,
@@ -105,14 +113,14 @@ export class EditPatientComponent implements OnInit {
 		private readonly datePipe: DatePipe,
 		private patientMasterDataService: PatientMasterDataService,
 		private auditPatientService: AuditPatientService,
+		private readonly userService: UserService,
+		private loggedUserService: LoggedUserService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
 	ngOnInit(): void {
-		this.permissionsService.hasContextAssignments$([ERole.AUDITOR_MPI]).subscribe(isAuditor => {
-			this.hasAuditorRole = isAuditor;
-		})
+		this.loggedUserService.assignments$.subscribe((roleAssignment: RoleAssignmentDto[]) => this.hasAuditorRole = anyMatch<ERole>(roleAssignment.map(roleAssignment => roleAssignment.role), [ERole.AUDITOR_MPI]));
 		this.route.queryParams
 			.subscribe(params => {
 				this.patientId = params.id;
@@ -195,7 +203,7 @@ export class EditPatientComponent implements OnInit {
 								}
 								this.form.setControl('addressCityId', new UntypedFormControl(personInformationData.cityId));
 								this.form.setControl('addressStreet', new UntypedFormControl(personInformationData.street));
-								this.form.setControl('addressNumber', new UntypedFormControl(personInformationData.number));
+								this.form.setControl('addressNumber', new UntypedFormControl(personInformationData.number, [Validators.pattern(PATTERN_INTEGER_NUMBER)]));
 								this.form.setControl('addressFloor', new UntypedFormControl(personInformationData.floor));
 								this.form.setControl('addressApartment', new UntypedFormControl(personInformationData.apartment));
 								this.form.setControl('addressQuarter', new UntypedFormControl(personInformationData.quarter));
@@ -208,7 +216,7 @@ export class EditPatientComponent implements OnInit {
 								this.restrictFormEdit();
 								if (this.hasAuditorRole) {
 									this.form.controls.patientId.disable();
-									if(this.form.controls.identificationTypeId.value === this.idTypeDni){
+									if (this.form.controls.identificationTypeId.value === this.idTypeDni) {
 										this.form.controls.identificationNumber.disable();
 									}
 								}
@@ -254,6 +262,12 @@ export class EditPatientComponent implements OnInit {
 								if (this.hasAuditorRole) {
 									this.auditPatientService.getTypesPatient().subscribe(res => {
 										this.typesPatient = res;
+										this.rejectedId = this.typesPatient.find(type => type.description === REJECTTED).id;
+										if (this.form.controls.stateId.value === this.rejectedId) {
+											this.form.controls.stateId.disable();
+											this.form.controls.identificationNumber.disable();
+											this.form.controls.identificationTypeId.disable();
+										}
 									})
 								} else {
 									this.patientMasterDataService.getTypesPatient().subscribe(res => {
@@ -263,10 +277,12 @@ export class EditPatientComponent implements OnInit {
 								//Tooltips
 								this.currentOccupationDescription = this.occupations.find(occupation => occupation.id === personInformationData.occupationId)?.description;
 								this.currentEducationLevelDescription = this.educationLevels.find(educationLevel => educationLevel.id === personInformationData.educationLevelId)?.description;
-								this.personService.canEditUserData(completeData.person.id).subscribe(canEditUserData => {
-									if (!canEditUserData)
-										this.form.controls.email.disable();
-								});
+								if (this.contextService.institutionId != NO_INSTITUTION) {
+									this.personService.canEditUserData(completeData.person.id).subscribe(canEditUserData => {
+										if (!canEditUserData)
+											this.form.controls.email.disable();
+									});
+								}
 								this.permissionsService.hasContextAssignments$([ERole.AUDITOR_MPI]).subscribe(canEditPatientStatus => {
 									this.form.controls.patientId.disable();
 									if (!canEditPatientStatus)
@@ -401,6 +417,32 @@ export class EditPatientComponent implements OnInit {
 						this.hasToSaveFiles = true;
 					}
 				})
+			} else if (this.form.controls.stateId.value === this.rejectedId) {
+				this.userService.getUserData(this.completeDataPatient.person.id)
+					.subscribe(userDataDto => {
+						if (userDataDto) {
+							const dialogRef = this.dialog.open(DiscardWarningComponent, {
+								data: {
+									title: 'pacientes.audit.TITLE_ERROR_REJECTED_PATIENT_HAS_USER',
+									content: 'pacientes.audit.SUBTITLE_ERROR_REJECTED_PATIENT_HAS_USER',
+									contentBold: 'pacientes.audit.QUESTION_ERROR_REJECTED_PATIENT_HAS_USER',
+									okButtonLabel: 'buttons.YES_CONTINUE',
+									cancelButtonLabel: 'buttons.NO_CANCEL',
+									buttonClose: true,
+									color: 'warn',
+									okBottonColor: 'warn'
+								},
+								disableClose: true,
+								width: '35%',
+								autoFocus: false,
+							})
+							dialogRef.afterClosed().subscribe(isContinue => {
+								if (isContinue) {
+									this.hasToSaveFiles = true;
+								}
+							})
+						}
+					});
 			} else {
 				this.hasToSaveFiles = true;
 			}
@@ -525,10 +567,27 @@ export class EditPatientComponent implements OnInit {
 							this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
 						}
 						this.snackBarService.showSuccess(this.getMessagesSuccess());
-					}, _ => this.snackBarService.showError(this.getMessagesError()));
+					}, error => {
+						if (error.code === ERROR_ENCOUNTER_ACTIVE_EXISTS) {
+							this.dialog.open(DiscardWarningComponent, {
+								data: {
+									title: 'pacientes.audit.TITLE_ERROR_REJECTED',
+									content: 'pacientes.audit.LABEL_ERROR_REJECTED',
+									okButtonLabel: 'buttons.CLOSE',
+									buttonClose: true,
+									errorMode: true,
+								},
+								disableClose: true,
+								width: '35%',
+								autoFocus: false
+							});
+							this.hasToSaveFiles = null;
+						} else {
+							this.snackBarService.showError(this.getMessagesError());
+						}
+					})
 			})
 		}
-
 	}
 
 	private mapToPersonRequest(): APatientDto {
@@ -625,7 +684,7 @@ export class EditPatientComponent implements OnInit {
 
 	setIdentificationType(value: any) {
 		const button = document.getElementById('updateDNI');
-		if(this.hasAuditorRole){
+		if (this.hasAuditorRole) {
 			if (value !== this.idTypeDni) {
 				this.form.controls.identificationNumber.enable();
 				button.style.display = "none";
@@ -648,7 +707,18 @@ export class EditPatientComponent implements OnInit {
 		})
 
 	}
+	setStateAndDisabledInputs(value: any) {
+		if (value === this.rejectedId) {
+			this.form.controls.identificationNumber.disable();
+			this.form.controls.identificationTypeId.disable();
 
+		} else if (!(this.form.controls.identificationTypeId.value === this.idTypeDni)) {
+			this.form.controls.identificationNumber.enable();
+			this.form.controls.identificationTypeId.enable();
+		} else {
+			this.form.controls.identificationTypeId.enable();
+		}
+	}
 	setValuesAndDisabled(data: PersonBasicDataResponseCustom) {
 		this.dniWasEdited = true;
 

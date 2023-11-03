@@ -3,6 +3,7 @@ package ar.lamansys.odontology.domain.consultation;
 import ar.lamansys.odontology.infrastructure.repository.consultation.OdontologyConsultation;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OdontologyConsultationStorage {
 
@@ -14,5 +15,7 @@ public interface OdontologyConsultationStorage {
 	List<OdontologyConsultation> findAllById(List<Integer> ids);
 
 	OdontologyConsultation getLastByPatientId(Integer patientId);
+
+	Optional<Integer> getPatientMedicalCoverageId(Integer id);
 
 }

@@ -42,6 +42,8 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
             rnos: appointment.healthInsuranceId,
             medicalCoverageName: appointment.medicalCoverageName,
             affiliateNumber: appointment.medicalCoverageAffiliateNumber,
+            createdOn: appointment.createdOn,
+            professionalPersonDto: appointment.professionalPersonDto
         }
     };
 

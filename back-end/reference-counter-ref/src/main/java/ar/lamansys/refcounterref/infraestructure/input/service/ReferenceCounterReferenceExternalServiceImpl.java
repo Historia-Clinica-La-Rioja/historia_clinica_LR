@@ -11,6 +11,7 @@ import ar.lamansys.refcounterref.infraestructure.input.service.mapper.CounterRef
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.ReferenceMapper;
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.ReferenceProblemMapper;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referenceappointment.ReferenceAppointmentRepository;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CompleteReferenceDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryProcedureDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceCounterReferenceFileDto;
@@ -23,14 +24,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
 @Service
 public class ReferenceCounterReferenceExternalServiceImpl implements SharedReferenceCounterReference {
+
+	private final static Short ASSIGNED = 1;
+	private final static Short CONFIRMED = 2;
 
     private final CreateReference createReference;
     private final GetReferenceFile getReferenceFile;
@@ -59,9 +63,9 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
     }
 
     @Override
-    public void saveReferences(Integer encounterId, Integer sourceTypeId, List<ReferenceDto> refrenceDtoList) {
-        log.debug("Input parameters -> encounterId {}, sourceTypeId {}, referenceDtoList {}", encounterId, sourceTypeId, refrenceDtoList);
-        createReference.run(encounterId, sourceTypeId, referenceMapper.fromReferenceDtoList(refrenceDtoList));
+    public List<Integer> saveReferences(List<CompleteReferenceDto> references) {
+        log.debug("Input parameters -> references {}", references);
+        return createReference.run(referenceMapper.fromCompleteReferenceDtoList(references));
     }
 
     @Override
@@ -69,12 +73,6 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
         log.debug("Input parameters -> patientId {} ", patientId);
         return referenceProblemMapper.fromReferenceProblemBoList(getReferenceProblem.run(patientId));
     }
-
-	@Override
-	public Integer getAssignedProtectedAppointmentsQuantity(Integer diaryId, LocalDate day, Short appointmentStateId) {
-		log.debug("Input parameters -> diaryId {}, day {}, appointmentStateId {}", diaryId, day, appointmentStateId);
-        return referenceAppointmentRepository.getAssignedProtectedAppointmentsQuantity(diaryId, day, appointmentStateId);
-	}
 
 	@Override
 	public List<Integer> getProtectedAppointmentsIds(List<Integer> diaryIds) {
@@ -91,6 +89,11 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
 	public void updateProtectedAppointment(Integer appointmentId) {
     	log.debug("Delete reference appointment {}, ", appointmentId);
     	referenceAppointmentRepository.deleteByAppointmentId(appointmentId);
+	}
+
+	public boolean existsProtectedAppointmentInOpeningHour(Integer openingHourId) {
+		log.debug("There are protected appointment in a opening hour with id {}", openingHourId);
+		return referenceAppointmentRepository.existsInOpeningHour(openingHourId, Arrays.asList(ASSIGNED, CONFIRMED));
 	}
 
 	private List<ReferenceCounterReferenceFileDto> mapToReferenceCounterReferenceFileDto(List<ReferenceCounterReferenceFileBo> referenceCounterReferenceFileBos) {

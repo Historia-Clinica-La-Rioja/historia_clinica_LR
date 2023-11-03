@@ -22,6 +22,7 @@ public class DiagnosticReportStatus {
 	private static final long serialVersionUID = -3053291021636483828L;
 
 	public static final String REGISTERED = "1";
+	public static final String FINAL_RDI = "2";
 	public static final String PARTIAL = "255609007";
 	public static final String FINAL = "261782000";
 	public static final String CORRECTED = "33714007";

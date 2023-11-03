@@ -17,4 +17,9 @@ export class PatientMergeService {
 		const url = `${environment.apiBase}/patient-merge/institution/${this.contextService.institutionId}/merge`;
 		return this.http.post<number>(url,patientToMerge);
 	}
+
+	unmerge(patientToMerge:PatientToMergeDto):Observable<number>{
+		const url = `${environment.apiBase}/patient-merge/institution/${this.contextService.institutionId}/unmerge`;
+		return this.http.post<number>(url,patientToMerge);
+	}
 }

@@ -14,11 +14,11 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.stats.TimeProfilingUtil;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class LoggingRequestInterceptor implements ClientHttpRequestInterceptor {
-
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
@@ -26,38 +26,53 @@ public class LoggingRequestInterceptor implements ClientHttpRequestInterceptor {
 		var requestStat = TimeProfilingUtil.start("REST");
         ClientHttpResponse response = execution.execute(request, body);
 		requestStat.done(req);
-        traceResponse(response, req);
+		var respStatus = debugResponse(response, req);
+		traceResponse(response, req, respStatus);
         return response;
     }
 
-    private String traceRequest(HttpRequest request, byte[] body) {
+	private String traceRequest(HttpRequest request, byte[] body) {
 		var req = String.format("%s: %s", request.getMethod(), request.getURI());
-		logger.debug("===========================Request begin================================================");
-        logger.debug(req);
-        logger.debug("Method      : {}", request.getMethod());
-        logger.debug("Headers     : {}", request.getHeaders() );
-        logger.debug("Request body: {}", new String(body, StandardCharsets.UTF_8));
-        logger.debug("===========================Request end================================================");
+		log.trace("===========================Request begin================================================");
+		log.trace(req);
+		log.trace("Method      : {}", request.getMethod());
+		log.trace("Headers     : {}", request.getHeaders() );
+		log.trace("Request body: {}", new String(body, StandardCharsets.UTF_8));
+		log.trace("===========================Request end================================================");
 		return req;
     }
 
-    private void traceResponse(ClientHttpResponse response, String req) throws IOException {
-        StringBuilder inputStringBuilder = new StringBuilder();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getBody(), StandardCharsets.UTF_8));
-        String line = bufferedReader.readLine();
-        while (line != null) {
-            inputStringBuilder.append(line);
-            inputStringBuilder.append('\n');
-            line = bufferedReader.readLine();
-        }
-        logger.debug("============================Response begin==========================================");
-		logger.debug(req);
-        logger.debug("Status code  : {}", response.getStatusCode());
-        logger.debug("Status text  : {}", response.getStatusText());
-        logger.debug("Headers      : {}", response.getHeaders());
-        logger.debug("Response body: {}", inputStringBuilder);
-        logger.debug("============================Response end=================================================");
+	private String debugResponse(ClientHttpResponse response, String req) throws IOException {
+		var resp = String.format("%s '%s'", response.getStatusCode(), response.getStatusText());
+		log.debug("Obtuve {} desde {}", resp, req);
+		return resp;
+	}
+
+    private void traceResponse(ClientHttpResponse response, String req, String respStatus) throws IOException {
+		if (!log.isTraceEnabled()) {
+			return;
+		}
+
+        log.trace("============================Response begin==========================================");
+		log.trace(req);
+		log.trace("Status code  : {}", response.getStatusCode());
+		log.trace("Status text  : {}", response.getStatusText());
+		log.trace("Headers      : {}", response.getHeaders());
+		log.trace("Response body: {}", buildBody(response));
+		log.trace("============================Response end=================================================");
 
     }
+
+	private static StringBuilder buildBody(ClientHttpResponse response) throws IOException {
+		StringBuilder inputStringBuilder = new StringBuilder();
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getBody(), StandardCharsets.UTF_8));
+		String line = bufferedReader.readLine();
+		while (line != null) {
+			inputStringBuilder.append(line);
+			inputStringBuilder.append('\n');
+			line = bufferedReader.readLine();
+		}
+		return inputStringBuilder;
+	}
 
 }

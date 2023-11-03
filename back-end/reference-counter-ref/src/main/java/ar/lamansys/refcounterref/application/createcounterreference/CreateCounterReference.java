@@ -41,20 +41,20 @@ public class CreateCounterReference {
         assertContextValid(counterReferenceBo, doctorInfoBo);
 
         LocalDate now = dateTimeProvider.nowDate();
-        Integer medicalCoverageId = counterReferenceAppointmentStorage.getPatientMedicalCoverageId(counterReferenceBo.getPatientId(), doctorInfoBo.getId());
 
         var encounterId = counterReferenceStorage.save(
                 new CounterReferenceInfoBo(null,
                         counterReferenceBo.getReferenceId(),
                         counterReferenceBo.getPatientId(),
-                        medicalCoverageId,
+                        counterReferenceBo.getPatientMedicalCoverageId(),
                         counterReferenceBo.getInstitutionId(),
                         counterReferenceBo.getClinicalSpecialtyId(),
                         now,
                         doctorInfoBo.getId(),
                         true,
                         counterReferenceBo.getFileIds(),
-						counterReferenceBo.getClosureTypeId()));
+						counterReferenceBo.getClosureTypeId(),
+						counterReferenceBo.getHierarchicalUnitId()));
 
         counterReferenceDocumentStorage.save(new CounterReferenceDocumentBo(null, counterReferenceBo, encounterId, doctorInfoBo.getId(), now));
 

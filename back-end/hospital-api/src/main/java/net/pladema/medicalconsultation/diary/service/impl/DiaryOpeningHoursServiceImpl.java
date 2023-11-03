@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -52,6 +54,8 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
 
     private final DiaryBoMapper diaryBoMapper;
 
+	private final SharedReferenceCounterReference sharedReferenceCounterReference;
+
     @Override
     public void load(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours) {
         Sort sort = Sort.by("dayWeekId", "from");
@@ -88,6 +92,10 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
         diaryOpeningHours.setMedicalAttentionTypeId(doh.getMedicalAttentionTypeId());
         diaryOpeningHours.setOverturnCount((doh.getOverturnCount() != null) ? doh.getOverturnCount() : 0);
         diaryOpeningHours.setExternalAppointmentsAllowed(doh.getExternalAppointmentsAllowed());
+		diaryOpeningHours.setProtectedAppointmentsAllowed(doh.getProtectedAppointmentsAllowed());
+		diaryOpeningHours.setOnSiteAttentionAllowed(doh.getOnSiteAttentionAllowed());
+		diaryOpeningHours.setPatientVirtualAttentionAllowed(doh.getPatientVirtualAttentionAllowed());
+		diaryOpeningHours.setSecondOpinionVirtualAttentionAllowed(doh.getSecondOpinionVirtualAttentionAllowed());
         return diaryOpeningHours;
     }
 
@@ -162,7 +170,25 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
 		return result;
 	}
 
-    private DiaryOpeningHoursBo createDiaryOpeningHoursBo(DiaryOpeningHoursVo diaryOpeningHoursVo) {
+	@Override
+	public boolean hasProtectedAppointments(Integer openingHourId) {
+		LOG.debug("Input parameters -> openingHourId {} ", openingHourId);
+		return sharedReferenceCounterReference.existsProtectedAppointmentInOpeningHour(openingHourId);
+	}
+
+	@Override
+	public Collection<DiaryOpeningHoursBo> getDiariesOpeningHoursByMedicalAttentionType(List<Integer> diaryIds, short medicalAttentionTypeId) {
+		LOG.debug("Input parameters -> diaryIds {}, medicalAttentionTypeId {} ", diaryIds, medicalAttentionTypeId);
+		Collection<DiaryOpeningHoursBo> result = new ArrayList<>();
+		if (!diaryIds.isEmpty()) {
+			List<DiaryOpeningHoursVo> resultQuery = diaryOpeningHoursRepository.getDiariesOpeningHoursByMedicalAttentionType(diaryIds, medicalAttentionTypeId);
+			result = resultQuery.stream().map(this::createDiaryOpeningHoursBo).collect(Collectors.toList());
+		}
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	private DiaryOpeningHoursBo createDiaryOpeningHoursBo(DiaryOpeningHoursVo diaryOpeningHoursVo) {
         LOG.debug("Input parameters -> diaryOpeningHoursVo {} ", diaryOpeningHoursVo);
         DiaryOpeningHoursBo result = new DiaryOpeningHoursBo();
         result.setDiaryId(diaryOpeningHoursVo.getDiaryId());
@@ -170,6 +196,10 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
         result.setOverturnCount(diaryOpeningHoursVo.getOverturnCount());
         result.setOpeningHours(new OpeningHoursBo(diaryOpeningHoursVo.getOpeningHours()));
         result.setExternalAppointmentsAllowed(diaryOpeningHoursVo.getExternalAppointmentsAllowed());
+		result.setProtectedAppointmentsAllowed(diaryOpeningHoursVo.getProtectedAppointmentsAllowed());
+		result.setOnSiteAttentionAllowed(diaryOpeningHoursVo.getOnSiteAttentionAllowed());
+		result.setPatientVirtualAttentionAllowed(diaryOpeningHoursVo.getPatientVirtualAttentionAllowed());
+		result.setSecondOpinionVirtualAttentionAllowed(diaryOpeningHoursVo.getSecondOpinionVirtualAttentionAllowed());
         LOG.debug(OUTPUT, result);
         return result;
     }

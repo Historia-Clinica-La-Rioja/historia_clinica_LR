@@ -23,6 +23,8 @@ import { CoreModule } from '@core/core.module';
 //
 import { environment } from '@environments/environment';
 import { OAuthModule } from "angular-oauth2-oidc";
+import { StompService } from './stomp.service';
+import { stompServiceFactory } from './stomp-factory';
 
 registerLocaleData(localeEsAr, localeEsArExtras);
 
@@ -60,6 +62,7 @@ registerLocaleData(localeEsAr, localeEsArExtras);
 		DatePipe,
 		TitleCasePipe,
 		{ provide: LOCALE_ID, useValue: DEFAULT_LANG }, // Esto lo usa el calendario
+		{ provide: StompService, useFactory: stompServiceFactory }
 	],
 	bootstrap: [AppComponent]
 })
@@ -89,6 +92,7 @@ export function createTranslateLoader(http: HttpClient): TranslateLoader {
 			{ prefix: './assets/i18n/indicacion/', suffix },
 			{ prefix: './assets/i18n/home/', suffix },
 			{ prefix: './assets/i18n/image-network/', suffix },
+			{ prefix: './assets/i18n/telemedicina/', suffix },
 		]
 	);
 }

@@ -1,9 +1,10 @@
 package ar.lamansys.odontology.application.createConsultation;
 
 import ar.lamansys.odontology.domain.consultation.ConsultationBo;
+import ar.lamansys.odontology.domain.consultation.ConsultationResponseBo;
 
 public interface CreateOdontologyConsultation {
 
-    Integer run(ConsultationBo consultationBo);
+    ConsultationResponseBo run(ConsultationBo consultationBo);
 
 }

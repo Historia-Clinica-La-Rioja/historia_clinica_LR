@@ -25,4 +25,9 @@ export class HealthcareProfessionalService {
 		const url = `${environment.apiBase}/healthcareprofessional/by-user-logged`;
 		return this.http.get<number>(url);
 	}
+
+	geUserIdByHealthcareProfessional(healthcareProfesionalId: number): Observable<number> {
+		const url = `${environment.apiBase}/healthcareprofessional/${healthcareProfesionalId}`;
+		return this.http.get<number>(url);
+	}
 }

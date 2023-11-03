@@ -84,7 +84,8 @@ export class EpisodeFilterService {
 	}
 
 	static filterAdministrativeDischarge(episode: Episode, filters: EpisodeFilters) {
-		return (filters.administrativeDischarge ? episode.state.id === EstadosEpisodio.CON_ALTA_ADMINISTRATIVA : true);
+		const administrativeDischarge = episode.state.id === EstadosEpisodio.CON_ALTA_ADMINISTRATIVA;
+		return (filters.administrativeDischarge ?  administrativeDischarge : !administrativeDischarge);
 	}
 
 	getForm(): UntypedFormGroup {

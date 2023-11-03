@@ -15,6 +15,7 @@ export class ConfirmPrintAppointmentComponent {
 		@Inject(MAT_DIALOG_DATA) public data: {
 			title: string,
 			content: string,
+			message?: string,
 			appointmentId: number,
 		}
 	) {

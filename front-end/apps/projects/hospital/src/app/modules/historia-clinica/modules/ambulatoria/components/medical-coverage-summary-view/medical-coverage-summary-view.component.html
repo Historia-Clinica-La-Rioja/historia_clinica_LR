@@ -8,12 +8,12 @@
 				<span class="color-primary bold line-height"> {{ title | translate }} </span>
 			</div>
             <div fxLayout="column" *ngIf="thereIsCoverageInfo() else noCoverage">
-                <span class="bold"> {{ coverageInfo?.name }} </span>
+                <span class="bold"  data-id="coverage-name"> {{ coverageInfo?.name }} </span>
                 <span *ngIf="coverageInfo?.plan && coverageInfo?.condition else showPlanOrCondition"
-                    class="lowercase capitalize-first-letter">
+                    class="lowercase capitalize-first-letter" data-id="coverage-info">
                     {{ coverageInfo.plan }} | {{ coverageInfo.condition }}
                 </span>
-                <span *ngIf="coverageInfo?.type!=typeART">
+                <span *ngIf="coverageInfo?.type!=typeART" data-id="coverage-affiliate">
                     {{ 'ambulatoria.medical-coverage-summary-view.AFFILIATE_NUMBER' | translate }}
                     <ng-container *ngIf="coverageInfo?.affiliateNumber else noInfo">
                         {{ coverageInfo.affiliateNumber }}
@@ -24,7 +24,7 @@
                         </span>
                     </ng-template>
                 </span>
-				<div *ngIf="coverageInfo?.type==typeART" fxLayout="column">
+				<div *ngIf="coverageInfo?.type==typeART" data-id="coverage-ART" fxLayout="column">
 					<span translate="medical-coverage.ART"></span>
 					<span *ngIf="coverageInfo?.cuit" translate="medical-coverage.CUIT_VIEW"
 						  [translateParams]="{cuit: coverageInfo.cuit}"></span>
@@ -35,16 +35,16 @@
 </div>
 
 <ng-template #showPlanOrCondition>
-    <span *ngIf="coverageInfo?.plan" class="lowercase capitalize-first-letter">
+    <span data-id="coverage-plan" *ngIf="coverageInfo?.plan" class="lowercase capitalize-first-letter">
         {{ coverageInfo.plan }}
     </span>
-    <span *ngIf="coverageInfo?.condition" class="lowercase capitalize-first-letter">
+    <span data-id="coverage-condition" *ngIf="coverageInfo?.condition" class="lowercase capitalize-first-letter">
         {{ coverageInfo.condition }}
     </span>
 </ng-template>
 
 <ng-template #noCoverage>
-    <span class="color-grey">
+    <span data-id="no-coverage" class="color-grey">
         {{ 'ambulatoria.medical-coverage-summary-view.WITHOUT_COVERAGE' | translate }}
     </span>
 </ng-template>

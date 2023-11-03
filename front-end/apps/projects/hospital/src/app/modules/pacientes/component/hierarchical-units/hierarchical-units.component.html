@@ -1,0 +1,45 @@
+<div class="card" fxLayout="column" fxLayoutGap="15px">
+    <ng-container *ngIf="enable else userDisable">
+        <div class="container" fxLayout="column" fxLayoutGap="10px" *ngIf="personHU.length else hierarchicalUnitsPending">
+            <div>
+                <strong class="capitalize-first-letter" fxFlex="60%">{{'pacientes.user_data.HIERARCHICAL_UNITS_ASSOCIATED' | translate }}</strong>
+                <strong fxFlex="40%">{{'pacientes.user_data.RESPONSIBLE' | translate | titlecase }}</strong>
+            </div>
+            <mat-list class="custom-list" fxLayout="column" fxLayoutGap="10px">
+                <div class="item hu-data-list" *ngFor="let hu of personHU">
+                    <span fxFlex="60%">{{hu.hierarchicalUnitAlias}}</span>
+                    <div fxFlex="40%" *ngIf="hu.responsible else noResponsible">
+                        <span>{{'forms.YES' | translate}} </span>
+                    </div>
+                    <ng-template #noResponsible>
+                        -
+                    </ng-template>
+                </div>
+            </mat-list>
+
+            <div *ngTemplateOutlet="userWithoutRoles"></div>            
+        </div>
+        <ng-template #hierarchicalUnitsPending>
+           <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px" *ngIf="hasRoles else userWithoutRoles">
+                <mat-icon color="warn">error_outline</mat-icon>
+                <span class="red capitalize-first-letter">{{'pacientes.user_data.HIERARCHICAL_UNITS_PENDING' | translate}}</span>
+            </div>
+        </ng-template>
+
+        <ng-template #userWithoutRoles>
+            <div *ngIf="!hasRoles">
+                <span class="disable capitalize-first-letter"> {{'pacientes.user_data.USER_WITHOUT_ROLES' | translate }}</span>
+            </div>
+        </ng-template>
+
+    </ng-container>
+    <ng-template #userDisable>
+        <span class="disable capitalize-first-letter"> {{'pacientes.user_data.USER_DISABLE' | translate }}</span>
+    </ng-template>
+    <div>
+        <button id="edit-hierarchical-units" mat-stroked-button color="primary" [disabled]="!enable"
+            (click)="editHierarchicalUnits()">
+            <span class="uppercase" [translate]="'pacientes.user_data.buttons.EDIT_HIERARCHICAL_UNITS'"></span>
+        </button>
+    </div>
+</div>

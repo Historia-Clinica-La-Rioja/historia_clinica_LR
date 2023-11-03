@@ -32,17 +32,31 @@ public class DiaryOpeningHours implements Serializable {
     @Column(name = "external_appointments_allowed")
     private Boolean externalAppointmentsAllowed;
 
+	@Column(name = "protected_appointments_allowed")
+	private Boolean protectedAppointmentsAllowed;
+
+	@Column(name = "on_site_attention_allowed")
+	private Boolean onSiteAttentionAllowed;
+
+	@Column(name = "patient_virtual_attention_allowed")
+	private Boolean patientVirtualAttentionAllowed;
+
+	@Column(name = "second_opinion_virtual_attention_allowed")
+	private Boolean secondOpinionVirtualAttentionAllowed;
+    
     public DiaryOpeningHours(
             Integer diaryId,
             Integer openingHoursId,
             Short medicalAttentionTypeId,
             Short overturnCount,
-            Boolean externalAppointmentsAllowed
+            Boolean externalAppointmentsAllowed,
+			Boolean protectedAppointmentsAllowed
     ) {
         this.pk = new DiaryOpeningHoursPK(diaryId, openingHoursId);
         this.medicalAttentionTypeId = medicalAttentionTypeId;
         this.overturnCount = overturnCount;
         this.externalAppointmentsAllowed = externalAppointmentsAllowed;
+		this.protectedAppointmentsAllowed = protectedAppointmentsAllowed;
     }
 
     public void plusOverTurnCount() {

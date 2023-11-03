@@ -28,7 +28,7 @@ public class ListDiagnosticReportInfoServiceImpl implements ListDiagnosticReport
     }
 
     @Override
-    public List<DiagnosticReportBo> execute(DiagnosticReportFilterBo filter) {
+    public List<DiagnosticReportBo> getList(DiagnosticReportFilterBo filter) {
         DiagnosticReportFilterVo filterVo = new DiagnosticReportFilterVo(
                 filter.getPatientId(),
                 filter.getStatus(),
@@ -36,12 +36,27 @@ public class ListDiagnosticReportInfoServiceImpl implements ListDiagnosticReport
                 filter.getHealthCondition(),
                 filter.getCategory()
         );
-        List<DiagnosticReportBo> result = listDiagnosticReportRepository.execute(filterVo).stream()
+        List<DiagnosticReportBo> result = listDiagnosticReportRepository.getList(filterVo).stream()
                 .map(this::createDiagnosticReportBo)
                 .collect(Collectors.toList());
         LOG.trace("OUTPUT List -> {}", result);
         return result;
     }
+
+	@Override
+	public List<DiagnosticReportBo> getMedicalOrderList(DiagnosticReportFilterBo filter) {
+		DiagnosticReportFilterVo filterVo = new DiagnosticReportFilterVo(
+				filter.getPatientId(),
+				filter.getStatus(),
+				null, null,
+				filter.getCategory()
+		);
+		List<DiagnosticReportBo> result = listDiagnosticReportRepository.getMedicalOrderList(filterVo).stream()
+				.map(this::createDiagnosticReportBo)
+				.collect(Collectors.toList());
+		LOG.trace("OUTPUT List -> {}", result);
+		return result;
+	}
 
     private DiagnosticReportBo createDiagnosticReportBo(Object[] row) {
         LOG.debug("Input parameters -> row {}", row);

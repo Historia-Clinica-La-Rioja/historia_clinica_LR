@@ -1,7 +1,9 @@
 import {UntypedFormGroup, UntypedFormArray, AbstractControl, UntypedFormControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { Moment } from 'moment';
-import { newMoment, momentFormat, DateFormat } from './moment.utils';
+import { momentFormat, newMoment } from './moment.utils';
+import { DateFormat } from './date.utils';
+import { format } from 'date-fns';
 
 export const VALIDATIONS = {
 	MAX_LENGTH: {
@@ -60,6 +62,16 @@ export function futureTimeValidation(control: UntypedFormControl): ValidationErr
 	return null;
 }
 
+export function futureTimeValidationDate(control: UntypedFormControl): ValidationErrors | null {
+	const time: string = control.value;
+	const today: Date = new Date();
+	if (isValidTime(time)) {
+		if (time > format(today, DateFormat.HOUR_MINUTE))
+			return { futureTime: true };
+	}
+	return null;
+}
+
 export function beforeTimeValidation(moment: Moment) {
 	return (control: UntypedFormControl): ValidationErrors | null => {
 		const time: string = control.value;
@@ -69,6 +81,17 @@ export function beforeTimeValidation(moment: Moment) {
 					beforeTime: true
 				};
 			}
+		}
+		return null;
+	};
+}
+
+export function beforeTimeValidationDate(date: Date) {
+	return (control: UntypedFormControl): ValidationErrors | null => {
+		const time: string = control.value;
+		if (isValidTime(time)) {
+			if (time < format(date, DateFormat.HOUR_MINUTE))
+				return { beforeTime: true };
 		}
 		return null;
 	};

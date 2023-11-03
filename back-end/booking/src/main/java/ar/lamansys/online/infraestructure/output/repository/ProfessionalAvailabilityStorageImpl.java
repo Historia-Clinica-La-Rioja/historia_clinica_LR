@@ -35,7 +35,6 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 
 	private final EntityManager entityManager;
 
-
 	@Override
 	public Optional<ProfessionalAvailabilityBo> findAvailabilityByPracticeAndProfessional(
 			Integer institutionId, Integer professionalId,
@@ -44,20 +43,19 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 	) {
 		log.debug("Find availability");
 
-		var diaries = getActiveDiaries(professionalId, institutionId);
-		var days = getDays(professionalId, clinicalSpecialtyId, practiceId);
-		diaries = diaries.stream().filter(diaryListBo -> isForTheseDays(days, diaryListBo)).collect(Collectors.toList());
+		var diaries = getActiveDiaries(professionalId, institutionId, clinicalSpecialtyId);
 		var activeAppointments = getAppointmentsByDiaries(diaries);
-
+		var holidays = getHolidays();
 
 		var slots = diaries.stream()
 				.filter(this::isScheduled)
-				.map(diary -> assembleListOfSlots(diary, days, activeAppointments))
+				.map(diary -> assembleListOfSlots(diary, activeAppointments))
 				.flatMap(List::stream)
 				.filter(diaryAvailabilityBo -> !diaryAvailabilityBo.getSlots().getSlots().isEmpty())
+				.filter(availability -> isWorkingDay(availability, holidays))
 				.collect(Collectors.toList());
 
-		ProfessionalAvailabilityBo availability = new ProfessionalAvailabilityBo(
+		ProfessionalAvailabilityBo availability = slots.isEmpty() ? null : new ProfessionalAvailabilityBo(
 				slots,
 				new BookingProfessionalBo(
 						professionalId,
@@ -68,7 +66,11 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 
 		log.debug("Find availability -> {}", availability);
 
-		return Optional.of(availability);
+		return Optional.ofNullable(availability);
+	}
+
+	private boolean isWorkingDay(DiaryAvailabilityBo diaryAvailabilityBo, List<LocalDate> holidays) {
+		return !holidays.contains(diaryAvailabilityBo.getSlots().getDate());
 	}
 
 	private boolean isScheduled(DiaryListBo diary) {
@@ -89,11 +91,6 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 		}
 	}
 
-	private boolean isForTheseDays(List<Short> days, DiaryListBo diaryListBo) {
-		var day = getOpeningHourDay(diaryListBo);
-		return days.contains(day);
-	}
-
 	private Short getOpeningHourDay(DiaryListBo diaryListBo) {
 		String query = "SELECT oh.day_week_id " +
 				"FROM opening_hours oh " +
@@ -101,6 +98,18 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 		return (Short)entityManager.createNativeQuery(query)
 				.setParameter("openingHoursId", diaryListBo.getOpeningHoursId())
 				.getSingleResult();
+	}
+
+	private List<LocalDate> getHolidays(){
+		String query = "SELECT h.date FROM holiday h WHERE h.deleted IS NOT TRUE";
+		return parseHolidays(entityManager.createNativeQuery(query)
+				.getResultList());
+	}
+
+	private List<LocalDate> parseHolidays(List<Object> resultList) {
+		return resultList.stream()
+				.map(row -> ((Date)row).toLocalDate())
+				.collect(Collectors.toList());
 	}
 
 	private String getName(Integer professionalId) {
@@ -113,20 +122,19 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 				.getSingleResult();
 	}
 
-	private List<DiaryAvailabilityBo> assembleListOfSlots(DiaryListBo diary, List<Short> days, List<AppointmentDiaryBo> activeAppointments) {
-		return createListOfSlots(diary, days, activeAppointments).stream()
+	private List<DiaryAvailabilityBo> assembleListOfSlots(DiaryListBo diary, List<AppointmentDiaryBo> activeAppointments) {
+		return createListOfSlots(diary, activeAppointments).stream()
 				.map(slot -> new DiaryAvailabilityBo(diary, slot))
 				.collect(Collectors.toList());
 	}
 
-	private List<AvailabilityBo> createListOfSlots(DiaryListBo diary, List<Short> days, List<AppointmentDiaryBo> activeAppointments) {
-		var localDays = days.stream().map(Short::intValue).collect(Collectors.toList());
+	private List<AvailabilityBo> createListOfSlots(DiaryListBo diary, List<AppointmentDiaryBo> activeAppointments) {
 
 		var validDates = diary.getStartDate().isBefore(LocalDate.now())  ?
-				getWorkingDays(LocalDate.now(), diary.getEndDate(), localDays) :
-				getWorkingDays(diary.getStartDate(), diary.getEndDate(), localDays);
+				LocalDate.now().datesUntil(diary.getEndDate()) :
+				diary.getStartDate().datesUntil(diary.getEndDate());
 
-		return validDates.stream()
+		return validDates
 				.map(day -> constructAvailabilityBo(diary, day, activeAppointments))
 				.collect(Collectors.toList());
 	}
@@ -155,29 +163,7 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 		return day.isAfter(LocalDate.now()) || time.isAfter(LocalTime.now());
 	}
 
-	private List<LocalDate> getWorkingDays(LocalDate start, LocalDate end, List<Integer> days) {
-		return start.datesUntil(end).filter(date -> days.contains(date.getDayOfWeek().getValue()))
-				.collect(Collectors.toList());
-	}
-
-	private List<Short> getDays(Integer professionalId, Integer clinicalSpecialtyId, Integer practiceId) {
-		String query = "SELECT m.day " +
-				"FROM mandatory_professional_practice_free_days AS m " +
-				"JOIN clinical_specialty_mandatory_medical_practice AS c " +
-				"ON c.id = m.clinical_specialty_mandatory_medical_practice_id " +
-				"WHERE c.clinical_specialty_id = :clinicalSpecialtyId " +
-				"AND c.mandatory_medical_practice_id = :practiceId " +
-				"AND m.healthcare_professional_id = :healthcareProfessionalId";
-
-		List<Object> result = this.entityManager.createNativeQuery(query)
-				.setParameter("practiceId", practiceId)
-				.setParameter("clinicalSpecialtyId", clinicalSpecialtyId)
-				.setParameter("healthcareProfessionalId", professionalId)
-				.getResultList();
-		return result.stream().map(day -> (Short)day).collect(Collectors.toList());
-	}
-
-	private List<DiaryListBo> getActiveDiaries(Integer professionalId, Integer institutionId) {
+	private List<DiaryListBo> getActiveDiaries(Integer professionalId, Integer institutionId, Integer clinicalSpecialtyId) {
 		String query = "SELECT d.id, " +
 				"d.doctors_office_id, " +
 				"dof.description, " +
@@ -187,11 +173,12 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 				"oh.from, " +
 				"oh.to, " +
 				"oh.id as opening_hours_id " +
-				"FROM v_booking_diary AS d " +
+				"FROM diary AS d " +
 				"JOIN v_booking_doctors_office AS dof ON (dof.id = d.doctors_office_id) " +
 				"JOIN v_booking_diary_opening_hours AS doh ON (doh.diary_id = d.id) " +
 				"JOIN v_booking_opening_hours AS oh ON (doh.opening_hours_id = oh.id) " +
 				"WHERE d.healthcare_professional_id = :hcpId " +
+				"AND d.clinical_specialty_id = :clinicalSpecialtyId " +
 				"AND dof.institution_id = :instId " +
 				"AND d.active = true " +
 				"AND (d.deleted IS NULL OR d.deleted = false) " +
@@ -200,6 +187,7 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 		List<Object[]> result = this.entityManager.createNativeQuery(query)
 				.setParameter("hcpId", professionalId)
 				.setParameter("instId", institutionId)
+				.setParameter("clinicalSpecialtyId", clinicalSpecialtyId)
 				.getResultList();
 		return result.stream().map(row -> new DiaryListBo(
 				(Integer) row[0],
@@ -266,10 +254,10 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 
 	private List<BookingProfessionalBo> findProfessionals(Integer institutionId, Integer clinicalSpecialtyId, Integer practiceId, Integer medicalCoverageId) {
 		String query = "SELECT DISTINCT CONCAT(p.last_name,', ',p.first_name) AS professional, " +
-				"mppfd.healthcare_professional_id " +
-				"FROM mandatory_professional_practice_free_days mppfd " +
-				"JOIN clinical_specialty_mandatory_medical_practice csmmp ON csmmp.id = mppfd.clinical_specialty_mandatory_medical_practice_id " +
-				"JOIN v_booking_healthcare_professional hp ON mppfd.healthcare_professional_id = hp.id " +
+				"hp.id " +
+				"FROM clinical_specialty_mandatory_medical_practice csmmp " +
+				"JOIN v_booking_healthcare_professional_specialty hps ON (csmmp.clinical_specialty_id = hps.clinical_specialty_id) " +
+				"JOIN v_booking_healthcare_professional hp ON hps.healthcare_professional_id = hp.id " +
 				"JOIN v_booking_person p ON p.id = hp.person_id " +
 				"INNER JOIN v_booking_user_person up ON up.person_id = p.id " +
 				"INNER JOIN v_booking_user_role ur ON up.user_id = ur.user_id " +

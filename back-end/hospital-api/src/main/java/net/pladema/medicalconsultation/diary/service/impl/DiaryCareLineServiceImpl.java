@@ -42,7 +42,7 @@ public class DiaryCareLineServiceImpl implements DiaryCareLineService, SharedDia
 				cl.setDeleted(false);
 				cl.setDeletedBy(null);
 				cl.setDeletedOn(null);
-				this.diaryCareLineRepository.save(cl);
+				this.diaryCareLineRepository.saveAndFlush(cl);
 			}
 		}, () -> {
 			log.debug("Save associate care line to diary, care line id: ", clId);
@@ -72,5 +72,13 @@ public class DiaryCareLineServiceImpl implements DiaryCareLineService, SharedDia
 		List<Integer> result = diaryCareLineRepository.getCareLineIdsByDiary(diaryId);
 		log.trace("Output -> {}", result);
 		return result;
+	}
+
+	@Override
+	public List<CareLineBo> getPossibleCareLinesForDiaryByPractices(Integer institutionId, List<Integer> practicesId) {
+		log.debug("Input parameters -> institutionId {}, practicesId {}", institutionId, practicesId);
+		List<CareLineBo> careLines = careLineService.getByInstitutionIdAndPracticesId(institutionId, practicesId);
+		log.trace("Output -> {}", careLines);
+		return careLines;
 	}
 }

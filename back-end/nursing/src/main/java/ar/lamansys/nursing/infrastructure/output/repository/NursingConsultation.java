@@ -57,6 +57,9 @@ public class NursingConsultation extends SGXAuditableEntity<Integer> {
     @Column(name = "performed_date")
     private LocalDate performedDate;
 
+	@Column(name = "hierarchical_unit_id")
+	private Integer hierarchicalUnitId;
+
     public NursingConsultation(NursingConsultationInfoBo nursingConsultationInfoBo) {
         super();
         this.id = nursingConsultationInfoBo.getId();
@@ -67,6 +70,7 @@ public class NursingConsultation extends SGXAuditableEntity<Integer> {
         this.doctorId = nursingConsultationInfoBo.getDoctorId();
         this.clinicalSpecialtyId = nursingConsultationInfoBo.getClinicalSpecialtyId();
         this.performedDate = nursingConsultationInfoBo.getPerformedDate();
+		this.hierarchicalUnitId = nursingConsultationInfoBo.getHierarchicalUnitId();
     }
 
 }

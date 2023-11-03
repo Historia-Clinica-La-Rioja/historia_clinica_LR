@@ -4,8 +4,22 @@
 		<mat-icon class="green">check_circle_outline</mat-icon>
 	</div>
 
-	<h2 mat-dialog-title translate="pacientes.audit.TITLE_CONFIRMED_FUSION" ></h2>
-	<span translate="pacientes.audit.SUBTITLE_CONFIRMED_FUSION" [translateParams]="{id: data.idPatient}" ></span>
+	<ng-container *ngIf="isFusion ; else noTitleFusion">
+		<h2 mat-dialog-title translate="pacientes.audit.TITLE_CONFIRMED_FUSION" ></h2>
+	</ng-container>
+	<ng-template #noTitleFusion>
+		<h2 mat-dialog-title translate="pacientes.audit.TITLE_CONFIRMED_UNMERGE" ></h2>
+	</ng-template>
+
+	<ng-container *ngIf="isFusion ; else noFusion">
+		<span translate="pacientes.audit.SUBTITLE_CONFIRMED_FUSION" [translateParams]="{id: data.idPatients}" ></span>
+	</ng-container>
+	<ng-template #noFusion>
+		<span translate="pacientes.audit.SUBTITLE_CONFIRMED_UNMERGE" [translateParams]="{idUnmerge: data.idPatients[0], idFusion:data.idPatients[1]}" ></span>
+		<span translate="pacientes.audit.TEXT_CONFIRMED_UNMERGE"></span>
+	</ng-template>
+
+
 
 	<div mat-dialog-actions fxLayout="row" fxLayoutGap="25px" class="margin-bottom">
 		<button mat-raised-button mat-dialog-close cdkFocusInitial color='primary' class="uppercase">

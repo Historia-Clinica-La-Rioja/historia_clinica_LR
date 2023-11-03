@@ -1,15 +1,20 @@
 package net.pladema.patient.repository;
 
-import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
 
 
 @Repository
@@ -60,6 +65,46 @@ public class PatientMedicalCoverageRepositoryImpl implements PatientMedicalCover
 		return result;
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public Optional<PatientMedicalCoverageVo> getActivePatientCoverageByOrderId(Integer orderId) {
+		String sqlString = "SELECT pmc.id as pmcid, pmc.affiliateNumber, pmc.vigencyDate, pmc.active, mc.id as mcid, mc.name, mc.cuit, mc.type, hi.rnos, hi.acronym, pmc.conditionId, pmc.startDate, pmc.endDate, pmc.planId " +
+				"FROM PatientMedicalCoverageAssn pmc " +
+				"JOIN MedicalCoverage mc ON (pmc.medicalCoverageId = mc.id) " +
+				"LEFT JOIN HealthInsurance hi ON (mc.id = hi.id) " +
+				"LEFT JOIN PrivateHealthInsurance phi ON (mc.id = phi.id) "+
+				"LEFT JOIN ServiceRequest sr ON (pmc.id = sr.medicalCoverageId) "+
+				"WHERE pmc.active = true " +
+				"AND mc.deleteable.deleted = false " +
+				"AND sr.id = :orderId ";
+
+		try{
+			Query queryResult =  entityManager.createQuery(sqlString);
+			queryResult.setParameter("orderId", orderId);
+			return Optional.of((Object[]) queryResult.getSingleResult())
+					.map(this::mapResponse);
+		} catch(NoResultException e) {
+			return null;
+		}
+	}
+
+	private PatientMedicalCoverageVo mapResponse(Object[] h) {
+		return  new PatientMedicalCoverageVo(
+				(Integer) h[0],
+				(String) h[1],
+				(LocalDate) h[2],
+				(Boolean) h[3],
+				(Integer) h[4],
+				(String) h[5],
+				(String) h[6],
+				(Short) h[7],
+				(Integer) h[8],
+				(String) h[9],
+				(Short)h[10],
+				(LocalDate) h[11],
+				(LocalDate) h[12],
+				(Integer) h[13]);
+	}
 
 	@Override
 	@Transactional(readOnly = true)

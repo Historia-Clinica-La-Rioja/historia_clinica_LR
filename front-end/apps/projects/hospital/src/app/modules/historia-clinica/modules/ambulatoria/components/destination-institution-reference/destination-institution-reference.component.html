@@ -1,23 +1,34 @@
-<h2 class="subtitle" [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.DESTINATION'"></h2>
+<h2 class="subtitle">
+	{{'ambulatoria.paciente.nueva-consulta.reference-dialog.RECEIVER' | translate}}
+</h2>
 <div class="typeahead-field">
-    <app-typeahead id="provinceDestination" [options]="provinces" [externalSetValue]="defaultProvince"
-        [titleInput]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PROVINCE' | translate"
-        (selectionChange)="onProvinceSelectionChange($event)">
-    </app-typeahead>
+	<app-typeahead id="departmentDestination" [disabled]="departmentDisable" [options]="departments"
+		[externalSetValue]="defaultDepartment"
+		[titleInput]="'ambulatoria.paciente.nueva-consulta.reference-dialog.DEPARTMENT' | translate"
+		(selectionChange)="onDepartmentSelectionChange($event)">
+	</app-typeahead>
+	<mat-error class="error-message" *ngIf="!departmentId && submitForm" [translate]="'forms.REQUIRED'"></mat-error>
 </div>
 
 <div class="typeahead-field">
-    <app-typeahead id="departmentDestination" [options]="departments" [externalSetValue]="defaultDepartment"
-        [titleInput]="'ambulatoria.paciente.nueva-consulta.reference-dialog.DEPARTMENT' | translate"
-        [disabled]="departmentDisable" (selectionChange)="onDepartmentSelectionChange($event)">
-    </app-typeahead>
+	<app-typeahead id="institutionDestination" [disabled]="institutionsDisable" [options]="institutions"
+		[externalSetValue]="defaultInstitution"
+		[titleInput]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_INSTITUTION' | translate"
+		(selectionChange)="onInstitutionSelectionChange($event)" [required]=true spellcheck="false">
+	</app-typeahead>
+	<mat-error class="error-message" *ngIf="!institutionDestinationId && submitForm"
+		[translate]="'forms.REQUIRED'"></mat-error>
 </div>
 
-<div class="typeahead-field">
-    <app-typeahead id="institutionDestination" [options]="institutions" [externalSetValue]="defaultInstitution"
-        [titleInput]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_INSTITUTION' | translate"
-        (selectionChange)="onInstitutionSelectionChange($event)" [required]=true spellcheck="false">
-    </app-typeahead>
-    <mat-error class="error-message" *ngIf="!institutionDestinationId && submitForm"
-        [translate]="'forms.REQUIRED'"></mat-error>
-</div>
+<ng-container *ngIf="institutionSelection && formReference.value.consultation">
+	<ng-container *ngIf="(appointment$ | async) > 0; else NOT_AVAILABLE_APPOINTMENT">
+		<span class="message" [innerHTML]="
+		'ambulatoria.paciente.nueva-consulta.reference-dialog.AVAILABLE_APPOINTMENT' |
+		translate: { appointment: appointment$ | async }"></span>
+	</ng-container>
+
+	<ng-template #NOT_AVAILABLE_APPOINTMENT>
+		<span class="message-warning"
+			[innerHTML]="'ambulatoria.paciente.nueva-consulta.reference-dialog.NOT_AVAILABLE_APPOINTMENT' | translate"></span>
+	</ng-template>
+</ng-container>

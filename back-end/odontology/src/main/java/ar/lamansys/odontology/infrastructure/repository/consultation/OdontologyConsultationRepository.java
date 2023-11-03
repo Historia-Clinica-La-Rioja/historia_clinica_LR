@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OdontologyConsultationRepository extends SGXAuditableEntityJPARepository<OdontologyConsultation, Integer> {
@@ -28,5 +29,11 @@ public interface OdontologyConsultationRepository extends SGXAuditableEntityJPAR
 			"WHERE oc.patientId = :patientId " +
 			"ORDER BY oc.updateable.updatedOn ASC")
 	List<OdontologyConsultation> getLastOdontologyConsultationFromPatient(@Param("patientId") Integer patientId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT oc.patientMedicalCoverageId " +
+			"FROM OdontologyConsultation oc " +
+			"WHERE oc.id = :id")
+	Optional<Integer> getPatientMedicalCoverageId(@Param("id") Integer id);
 
 }

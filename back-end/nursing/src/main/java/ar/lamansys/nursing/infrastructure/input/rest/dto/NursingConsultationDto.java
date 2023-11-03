@@ -48,4 +48,7 @@ public class NursingConsultationDto implements Serializable {
 	@Nullable
 	private Integer patientMedicalCoverageId;
 
+	@Nullable
+	private Integer hierarchicalUnitId;
+
 }

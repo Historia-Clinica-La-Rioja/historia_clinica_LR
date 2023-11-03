@@ -35,11 +35,13 @@ public class MqttClientServiceImpl implements MqttClientService {
 			log.error("No se puede realizar la siguiente publicación {} no se puede realizar porque no hay conexión al broker", mqttMetadataBo);
 			return false;
 		}
+		log.debug("MQTT publishing {}", mqttMetadataBo);
 		try {
 			MqttMessage mqttMessage = new MqttMessage(mqttMetadataBo.getMessageBytes());
 			mqttMessage.setQos(mqttMetadataBo.getQos());
 			mqttMessage.setRetained(mqttMetadataBo.isRetained());
 			mqttClient.publish(mqttMetadataBo.getTopic().toUpperCase(), mqttMessage);
+			log.info("MQTT published {}", mqttMetadataBo.getTopic());
 		} catch (MqttException exc) {
 			log.error("Error al publicar {} => {} ",mqttMetadataBo,  exc.getMessage());
 			return false;

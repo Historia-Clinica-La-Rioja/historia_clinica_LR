@@ -26,4 +26,8 @@ public class ReferenceProblemDto implements Serializable {
     @NotNull(message = "{value.mandatory}")
     private SharedSnomedDto snomed;
 
+	public ReferenceProblemDto (String sctid, String pt) {
+		this.snomed = new SharedSnomedDto(sctid, pt);
+	}
+
 }

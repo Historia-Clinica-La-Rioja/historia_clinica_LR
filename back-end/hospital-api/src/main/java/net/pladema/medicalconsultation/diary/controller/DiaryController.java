@@ -291,7 +291,7 @@ public class DiaryController {
 			@RequestBody AppointmentSearchDto searchCriteria) {
 		log.debug("Generate all empty appointments by Institution {} and criteria {} ", institutionId, searchCriteria);
 		AppointmentSearchBo searchCriteriaBo = appointmentMapper.toAppointmentSearchBo(searchCriteria);
-		List<EmptyAppointmentBo> emptyAppointments = diaryService.getEmptyAppointmentsBySearchCriteria(institutionId, searchCriteriaBo);
+		List<EmptyAppointmentBo> emptyAppointments = diaryService.getEmptyAppointmentsBySearchCriteria(institutionId, searchCriteriaBo, true);
 		List<EmptyAppointmentDto> result = emptyAppointments.stream().map(appointmentMapper::toEmptyAppointmentDto).collect(Collectors.toList());
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);

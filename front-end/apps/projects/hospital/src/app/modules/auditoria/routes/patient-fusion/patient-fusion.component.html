@@ -7,19 +7,18 @@
 				<span>{{'buttons.BACK' | translate}}</span>
 			</button>
 		</section>
-		<h3>{{infoPatientToAudit}}</h3>
+		<h3 class="capitalize">{{'pacientes.audit.AUDIT_OF' | translate }} {{infoPatientToAudit}}</h3>
 		<p>{{'pacientes.audit.LABEL_FILTER' | translate}} {{filterBy | translate}}</p>
 	</section>
 
 	<section>
-		<mat-card class="primary background-primary"  fxLayout="row" >
+		<mat-card class="primary background-primary" fxLayout="row">
 			<mat-icon>error_outline</mat-icon>
 			<div class="clarifications">
 				<p>{{'pacientes.audit.CLARIFICATION_ONE' | translate}}</p>
 				<p>{{'pacientes.audit.CLARIFICATION_TWO' | translate}}</p>
 				<p>{{'pacientes.audit.CLARIFICATION_THREE' | translate}}</p>
 			</div>
-
 		</mat-card>
 	</section>
 	<section>
@@ -53,7 +52,6 @@
 
 				</div>
 			</div>
-
 			<mat-divider></mat-divider>
 			<div *ngFor="let patient of pageSlice;last as isLast">
 				<div fxLayout="row" fxLayoutAlign="space-between" class="content">
@@ -63,6 +61,7 @@
 
 					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
 						<mat-radio-button color="primary" *ngIf="patient.selected"
+							[disabled]="patient.typeId === rejectedId"
 							(change)="setValuesPatientFusion(keyAttributes.PATIENT_ID,patient.patientId)"></mat-radio-button>
 						<span>{{patient?.patientId}}
 						</span>
@@ -76,7 +75,8 @@
 					<div *ngIf="nameSelfDeterminationFF" fxLayoutAlign="start center" class="content" fxFlex="15%">
 						<mat-radio-button color="primary" name="nameSelfDetermination" *ngIf="patient.selected"
 							(change)="setValuesPatientFusion(keyAttributes.NAMESELFDETERMINATION,patient.nameSelfDetermination,null,patient.patientId)"></mat-radio-button>
-						<span *ngIf="patient.nameSelfDetermination else noData">{{patient?.nameSelfDetermination}}</span>
+						<span
+							*ngIf="patient.nameSelfDetermination else noData">{{patient?.nameSelfDetermination}}</span>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="15%">
 						<mat-radio-button color="primary" name="lastName" *ngIf="patient.selected"
@@ -103,7 +103,8 @@
 							uppercase}}</span>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
-						<button mat-stroked-button color="primary" (click)="viewPatient(patient)">{{'pacientes.audit.LABEL_BUTTON_VIEW' |
+						<button mat-stroked-button color="primary"
+							(click)="viewPatient(patient)">{{'pacientes.audit.LABEL_BUTTON_VIEW' |
 							translate}}</button>
 					</div>
 				</div>
@@ -119,10 +120,13 @@
 			<div>
 				<p class="warn" *ngIf="validationTwoSelectedPatients">{{'pacientes.audit.MESSAGE_VALIDATION_FUSION' |
 					translate}}</p>
-				<p class="warn" *ngIf="validationColumns">{{'pacientes.audit.MESSAGE_VALIDATION_COLUMNS' | translate}}</p>
+				<p class="warn" *ngIf="validationColumns">{{'pacientes.audit.MESSAGE_VALIDATION_COLUMNS' | translate}}
+				</p>
 			</div>
-
-			<button mat-raised-button color="primary" (click)="merge()">{{'pacientes.audit.LABEL_BUTTON_MERGE' |
+			<div *ngIf="isLoadingRequestMerge" fxFlex="80%">
+				<mat-progress-bar class="progress-bar" mode="indeterminate"></mat-progress-bar>
+			</div>
+			<button mat-raised-button color="primary" (click)="merge()" [disabled]="isLoadingRequestMerge">{{'pacientes.audit.LABEL_BUTTON_MERGE' |
 				translate | uppercase}}</button>
 		</div>
 
@@ -131,5 +135,6 @@
 		</ng-template>
 
 		<ng-template #noData><span>-</span></ng-template>
+
 	</section>
 </app-content>

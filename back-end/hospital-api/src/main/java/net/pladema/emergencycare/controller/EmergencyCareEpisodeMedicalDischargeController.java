@@ -77,9 +77,8 @@ public class EmergencyCareEpisodeMedicalDischargeController {
         Integer patientId = emergencyCareBo.getPatient().getId();
         BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         PatientInfoBo patientInfo =  new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
-        ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
         MedicalDischargeBo medicalDischargeBo = emergencyCareDischargeMapper.toMedicalDischargeBo(medicalDischargeDto,medicalDischargeBy,patientInfo, episodeId, institutionId);
-        boolean saved = emergencyCareEpisodeDischargeService.newMedicalDischarge(medicalDischargeBo, institutionZoneId, institutionId);
+        boolean saved = emergencyCareEpisodeDischargeService.newMedicalDischarge(medicalDischargeBo, institutionId);
         emergencyCareEpisodeStateService.changeState(episodeId, institutionId, EmergencyCareState.CON_ALTA_MEDICA, null, null, null);
 		hospitalApiPublisher.publish(medicalDischargeBo.getPatientId(), institutionId, EHospitalApiTopicDto.ALTA_MEDICA);
         LOG.debug("Output -> {}", saved);

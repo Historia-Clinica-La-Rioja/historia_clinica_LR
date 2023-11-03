@@ -41,6 +41,8 @@ export class AmbulatoryConsultationProblemsService {
 	reportFF = false;
 	private problems = new BehaviorSubject<AmbulatoryConsultationProblem[]>([]);
 	readonly problems$ = this.problems.asObservable();
+	conclusions$ = new BehaviorSubject<SnomedDto>(null);
+	showInitialDate = true;
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -59,6 +61,10 @@ export class AmbulatoryConsultationProblemsService {
 		});
 
 		this.data = [];
+	}
+
+	setShowInitialDate(value: boolean){
+		this.showInitialDate = value;
 	}
 
 	setReportFF(value: boolean): void {
@@ -108,22 +114,22 @@ export class AmbulatoryConsultationProblemsService {
 		return currentItems === this.data.length;
 	}
 
-	addControl(problema: AmbulatoryConsultationProblem): void {
+	addControl(problema: AmbulatoryConsultationProblem, isConclusion?: boolean): void {
 		if (this.add(problema))
-			this.snackBarService.showError("Problema duplicado");
+			isConclusion ? this.snackBarService.showError("Conclusion duplicada") : this.snackBarService.showError("Problema duplicado");
 	}
 
 	compareSpeciality(data: AmbulatoryConsultationProblem, data1: AmbulatoryConsultationProblem): boolean {
 		return data.snomed.sctid === data1.snomed.sctid;
 	}
 
-	addToList(reportProblemIsOn: boolean) {
+	addToList(reportProblemIsOn: boolean, isConclusion?: boolean) {
 		if (this.form.valid && this.snomedConcept) {
 			const nuevoProblema: AmbulatoryConsultationProblem = {
 				snomed: this.snomedConcept,
 				codigoSeveridad: this.form.value.severidad,
 				cronico: this.form.value.cronico,
-				fechaInicio: this.form.value.fechaInicio,
+				fechaInicio: this.showInitialDate ? this.form.value.fechaInicio : null,
 				fechaFin: this.form.value.fechaFin
 			};
 			if (reportProblemIsOn) {
@@ -155,7 +161,7 @@ export class AmbulatoryConsultationProblemsService {
 					}
 				);
 			}
-			return this.addControlAndResetForm(nuevoProblema);
+			return this.addControlAndResetForm(nuevoProblema, isConclusion);
 		}
 	}
 
@@ -188,6 +194,24 @@ export class AmbulatoryConsultationProblemsService {
 		}
 	}
 
+	openConclusionSearchDialog(searchValue: string): void {
+		if (searchValue) {
+			const search: SnomedSemanticSearch = {
+				searchValue,
+				eclFilter: this.ECL,
+			};
+			this.snomedService.openConceptsSearchDialog(search)
+				.subscribe((selectedConcept: SnomedDto) => {
+					this.setConcept(selectedConcept);
+					this.conclusions$.next(selectedConcept)}
+				);
+		}
+	}
+
+	resetConclusion() {
+		this.conclusions$.next(null)
+	}
+
 	getFechaInicioMax(): Moment {
 		return newMoment();
 	}
@@ -206,6 +230,7 @@ export class AmbulatoryConsultationProblemsService {
 
 	remove(index: number): void {
 		this.data = removeFrom<AmbulatoryConsultationProblem>(this.data, index);
+		this.problems.next(this.data);
 	}
 
 	// custom validation was required because the [max] input of MatDatepicker
@@ -251,8 +276,8 @@ export class AmbulatoryConsultationProblemsService {
 		return this.ECL;
 	}
 
-	private addControlAndResetForm(nuevoProblema: AmbulatoryConsultationProblem) {
-		this.addControl(nuevoProblema);
+	private addControlAndResetForm(nuevoProblema: AmbulatoryConsultationProblem, isConclusion?: boolean) {
+		this.addControl(nuevoProblema, isConclusion);
 		this.resetForm();
 	}
 

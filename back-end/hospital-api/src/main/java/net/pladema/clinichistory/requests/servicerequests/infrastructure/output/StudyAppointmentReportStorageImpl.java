@@ -5,47 +5,35 @@ import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentReportSnomedConceptRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentReportSnomedConcept;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import net.pladema.clinichistory.requests.servicerequests.application.port.StudyAppointmentReportStorage;
 import net.pladema.clinichistory.requests.servicerequests.domain.InformerObservationBo;
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmentBo;
-import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EInformerWorklistStatus;
-
-import net.pladema.clinichistory.requests.servicerequests.infrastructure.output.ReportSnomedConcept.ReportSnomedConcept;
-import net.pladema.clinichistory.requests.servicerequests.infrastructure.output.ReportSnomedConcept.ReportSnomedConceptRepository;
+import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
-
-
 import net.pladema.medicalconsultation.appointment.repository.DetailsOrderImageRepository;
-
 import net.pladema.medicalconsultation.appointment.repository.entity.DetailsOrderImage;
-import net.pladema.medicalconsultation.appointment.repository.entity.DetailsOrderImagePK;
 import net.pladema.patient.controller.service.PatientExternalService;
-import net.pladema.permissions.repository.enums.ERole;
-
 import net.pladema.person.controller.service.PersonExternalService;
 import net.pladema.user.controller.dto.UserPersonDto;
-
 import net.pladema.user.repository.UserPersonRepository;
-
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.time.LocalDateTime;
-import java.util.stream.Collectors;
 import javax.transaction.Transactional;
-
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,7 +44,7 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 
 	private final AppointmentRepository appointmentRepository;
 	private final AppointmentOrderImageRepository appointmentOrderImageRepository;
-	private final ReportSnomedConceptRepository reportSnomedConceptRepository;
+	private final DocumentReportSnomedConceptRepository documentReportSnomedConceptRepository;
 	private final FeatureFlagsService featureFlagsService;
 	private final DetailsOrderImageRepository detailsOrderImageRepository;
 	private final SnomedService snomedService;
@@ -80,8 +68,9 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		Optional<Long> reportDocumentId = appointmentOrderImageRepository.getReportDocumentIdByAppointmentId(appointmentId);
 
 		if (reportDocumentId.isPresent()) {
+			Long documentId = reportDocumentId.get();
 			var obs = new InformerObservationBo();
-			documentService.findById(reportDocumentId.get()).ifPresent( d -> {
+			documentService.findById(documentId).ifPresent( d -> {
 				if (d.getEvolutionNoteId() != null)
 					obs.setEvolutionNote(noteService.getDescriptionById(d.getEvolutionNoteId()));
 				obs.setActionTime(d.getUpdatedOn());
@@ -90,26 +79,23 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 				obs.setId(d.getId());
 			});
 
-			obs.setProblems(reportSnomedConceptRepository.getSnomedConceptsByReportDocumentId(obs.getId())
-					.stream().map(snomedService::getSnomed).map(ProblemBo::new).collect(Collectors.toList()));
+			obs.setConclusions(documentService.getConclusionsFromDocument(documentId));
 			result.setInformerObservations(obs);
 
 			if(obs.isConfirmed()) {
-				result.setStatusId(EInformerWorklistStatus.COMPLETED.getId());
+				result.setStatusId(EDiagnosticImageReportStatus.COMPLETED.getId());
 				result.setActionTime(obs.getActionTime());
 			}
 			else {
-				result.setStatusId(EInformerWorklistStatus.PENDING.getId());
-				Optional<DetailsOrderImage> doi = detailsOrderImageRepository.findById(new DetailsOrderImagePK(appointmentId, ERole.TECNICO.getId()));
-				if (doi.isPresent())
-					result.setActionTime(doi.get().getCompletedOn());
+				result.setStatusId(EDiagnosticImageReportStatus.PENDING.getId());
+				Optional<DetailsOrderImage> doi = detailsOrderImageRepository.findById(appointmentId);
+				doi.ifPresent(detailsOrderImage -> result.setActionTime(detailsOrderImage.getCompletedOn()));
 			}
 		}
 		else {
-			result.setStatusId(EInformerWorklistStatus.PENDING.getId());
-			Optional<DetailsOrderImage> doi = detailsOrderImageRepository.findById(new DetailsOrderImagePK(appointmentId, ERole.TECNICO.getId()));
-			if (doi.isPresent())
-				result.setActionTime(doi.get().getCompletedOn());
+			result.setStatusId(EDiagnosticImageReportStatus.PENDING.getId());
+			Optional<DetailsOrderImage> doi = detailsOrderImageRepository.findById(appointmentId);
+			doi.ifPresent(detailsOrderImage -> result.setActionTime(detailsOrderImage.getCompletedOn()));
 		}
 
 		log.debug("Output -> {}", result);
@@ -123,7 +109,6 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		log.debug("Input parameters -> appointmentId {}, informerObservations {}", appointmentId, informerObservations);
 
 		assertEvolutionNoteIsNotNull(informerObservations.getEvolutionNote());
-		assertProblemsIsNotEmptyAndNull(informerObservations.getProblems());
 
 		Long result = setRequiredFieldsAndSaveDocument(appointmentId, informerObservations, false);
 
@@ -137,7 +122,6 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		log.debug("Input parameters -> appointmentId {}, informerObservations {}", appointmentId, informerObservations);
 
 		assertEvolutionNoteIsNotNull(informerObservations.getEvolutionNote());
-		assertProblemsIsNotEmptyAndNull(informerObservations.getProblems());
 
 		Optional<Long> reportDocumentId = appointmentOrderImageRepository.getReportDocumentIdByAppointmentId(appointmentId);
 
@@ -158,7 +142,6 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		log.debug("Input parameters -> appointmentId {}, informerObservations {}", appointmentId, informerObservations);
 
 		assertEvolutionNoteIsNotNull(informerObservations.getEvolutionNote());
-		assertProblemsIsNotEmptyAndNull(informerObservations.getProblems());
 
 		Optional<Long> reportDocumentId = appointmentOrderImageRepository.getReportDocumentIdByAppointmentId(appointmentId);
 
@@ -177,7 +160,6 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		log.debug("Input parameters -> appointmentId {}, informerObservations {}", appointmentId, informerObservations);
 
 		assertEvolutionNoteIsNotNull(informerObservations.getEvolutionNote());
-		assertProblemsIsNotEmptyAndNull(informerObservations.getProblems());
 
 		Long result = setRequiredFieldsAndSaveDocument(appointmentId, informerObservations, true);
 		log.debug("Output -> {}", result);
@@ -188,19 +170,20 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		Assert.notNull(evolutionNote, "Las observaciones son obligatorias");
 	}
 
-	private void assertProblemsIsNotEmptyAndNull(List<ProblemBo> problems) {
-		Assert.notNull(problems, "Es obligatoria que se agregue al menos un problema");
-		Assert.isTrue(!problems.isEmpty(), "Es obligatoria que se agregue al menos un problema");
+	private void assertConclusionsIsNotEmptyAndNull(List<ConclusionBo> conclusions) {
+		Assert.notNull(conclusions, "Es obligatorio que se agregue al menos una conclusión");
+		Assert.isTrue(!conclusions.isEmpty(), "Es obligatorio que se agregue al menos una conclusión");
 	}
 
-	private void saveSnomedConceptReport(Long id, List<ProblemBo> problems) {
-		problems.stream().forEach(problem -> {
-			ReportSnomedConcept rsc = new ReportSnomedConcept(
-					id,
-					snomedService.getSnomedId(problem.getSnomed())
-							.orElseGet(() -> snomedService.createSnomedTerm(problem.getSnomed())));
-			reportSnomedConceptRepository.save(rsc);
-		});
+	private void saveSnomedConceptReport(Long id, List<ConclusionBo> conclusions) {
+		if (conclusions != null)
+			conclusions.forEach(conclusion -> {
+				DocumentReportSnomedConcept rsc = new DocumentReportSnomedConcept(
+						id,
+						snomedService.getSnomedId(conclusion.getSnomed())
+								.orElseGet(() -> snomedService.createSnomedTerm(conclusion.getSnomed())));
+				documentReportSnomedConceptRepository.save(rsc);
+			});
 	}
 
 	private Long setRequiredFieldsAndSaveDocument(Integer appointmentId, InformerObservationBo obs, boolean createFile) {
@@ -218,14 +201,15 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		Long documentId = documentFactory.run(obs, createFile);
 
 		appointmentOrderImageRepository.setReportDocumentId(appointmentId, documentId);
+		appointmentOrderImageRepository.updateReportStatusId(appointmentId, EDiagnosticImageReportStatus.COMPLETED.getId());
 
-		saveSnomedConceptReport(documentId, obs.getProblems());
+		saveSnomedConceptReport(documentId, obs.getConclusions());
 
 		return documentId;
 	}
 
 	private void deletedOldSnomedConcepts(Long reportDocumentId) {
-		reportSnomedConceptRepository.deleteByReportDocumentId(reportDocumentId);
+		documentReportSnomedConceptRepository.deleteByReportDocumentId(reportDocumentId);
 	}
 
 	private String getFullNameByUserId(Integer userId) {

@@ -80,4 +80,29 @@ public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpeci
 	List<ClinicalSpecialty> getAllByCareLineIdAndDestinationInstitutionId(@Param("careLineId") Integer careLineId,
 																		  @Param("destinationInstitutionId") Integer destinationInstitutionId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT NEW net.pladema.staff.service.domain.ClinicalSpecialtyBo(cs.id, cs.name) " +
+			"FROM ClinicalSpecialty cs " +
+			"JOIN HealthcareProfessionalSpecialty hps ON (cs.id = hps.clinicalSpecialtyId) " +
+			"JOIN ProfessionalProfessions pp ON (hps.professionalProfessionId = pp.id) " +
+			"JOIN HealthcareProfessional hp ON (hp.id = pp.healthcareProfessionalId) " +
+			"JOIN UserPerson up ON (hp.personId = up.pk.personId) " +
+			"JOIN UserRole ur ON (up.pk.userId = ur.userId) " +
+			"JOIN Institution i ON (ur.institutionId = i.id) " +
+			"JOIN Address a ON (i.addressId = a.id) " +
+			"WHERE a.provinceId = :provinceId " +
+			"AND hps.deleteable.deleted = FALSE " +
+			"AND pp.deleteable.deleted = FALSE " +
+			"AND hp.deleteable.deleted = FALSE " +
+			"AND ur.deleteable.deleted = FALSE " +
+			"ORDER BY cs.name")
+	List<ClinicalSpecialtyBo> getClinicalSpecialtiesByProvinceId(@Param("provinceId") Short provinceId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT DISTINCT NEW net.pladema.staff.service.domain.ClinicalSpecialtyBo(cs.id, cs.name) " +
+			"FROM ClinicalSpecialty cs " +
+			"JOIN VirtualConsultation vc ON (vc.clinicalSpecialtyId = cs.id) " +
+			"WHERE vc.institutionId = :institutionId")
+	List<ClinicalSpecialtyBo> getVirtualConsultationClinicalSpecialtiesByInstitutionId(@Param("institutionId") Integer institutionId);
+
 }

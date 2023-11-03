@@ -24,8 +24,9 @@ import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service'
 import { SECTOR_AMBULATORIO } from '../../constants/masterdata';
 import { MotivoNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
-import { Patient, SearchPatientComponent } from '@pacientes/component/search-patient/search-patient.component';
+import { Patient } from '@pacientes/component/search-patient/search-patient.component';
 import { MIN_DATE } from "@core/utils/date.utils";
+import { SearchPatientDialogComponent } from '@pacientes/dialogs/search-patient-dialog/search-patient-dialog.component';
 
 @Component({
 	selector: 'app-admision-administrativa',
@@ -109,7 +110,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	}
 
 	searchPatient(): void {
-		const dialogRef = this.dialog.open(SearchPatientComponent);
+		const dialogRef = this.dialog.open(SearchPatientDialogComponent);
 
 		dialogRef.afterClosed()
 			.subscribe((foundPatient: Patient) => {

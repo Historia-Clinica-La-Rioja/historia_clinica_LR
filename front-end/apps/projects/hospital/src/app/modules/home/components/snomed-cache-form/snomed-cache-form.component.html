@@ -1,39 +1,19 @@
 <form [formGroup]="form" class="form" (ngSubmit)="submit()">
-	<mat-card class="example-card">
-		<mat-card-title>Agregar terminología a importar</mat-card-title>
-		<mat-card-content>
-			<div fxLayout="column">
-				<mat-form-field appearance="outline">
-					<mat-label translate="configuracion.snomed-cache.form.ecl.LABEL"></mat-label>
-					<mat-select placeholder="ECL" formControlName="ecl">
-						<mat-option
-							*ngFor="let anEcl of ECL_LIST"
-							[value]="anEcl">
-							{{ anEcl }}
-						</mat-option>
-					</mat-select>
-					<mat-error *ngIf="hasError('required', 'ecl')">
-						<span translate="configuracion.snomed-cache.form.ecl.REQUIRED"></span>
-					</mat-error>
-				</mat-form-field>
-				<mat-form-field appearance="outline">
-					<mat-label translate="configuracion.snomed-cache.form.url.LABEL"></mat-label>
-					<input formControlName="url" type="text" matInput>
-					<mat-error *ngIf="hasError('required', 'url')">
-						<span translate="configuracion.snomed-cache.form.url.REQUIRED"></span>
-					</mat-error>
-				</mat-form-field>
-			</div>
-		</mat-card-content>
-		<mat-card-actions>
-			<button class="uppercase" mat-button mat-raised-button color="primary"
-			type="submit"
-			[disabled]="loading"
-			translate="configuracion.snomed-cache.form.SUBMIT"></button>
-		</mat-card-actions>
-		<mat-card-footer *ngIf="loading">
-			<mat-progress-bar mode="indeterminate"></mat-progress-bar>
-		</mat-card-footer>
-	</mat-card>
-
+	<h1 class="card-title">{{'configuracion.snomed-cache.form.TITLE' | translate}}</h1>
+	<div fxLayout="column">
+		<mat-form-field appearance="outline">
+			<mat-label translate="configuracion.snomed-cache.form.url.LABEL"></mat-label>
+			<input formControlName="url" type="text" matInput placeholder={{urlPlaceholder}}>
+			<mat-error *ngIf="hasError('required', 'url')">
+				<span translate="configuracion.snomed-cache.form.url.REQUIRED"></span>
+			</mat-error>
+		</mat-form-field>
+	</div>
+	<button class="uppercase" mat-button mat-raised-button color="primary"
+		type="submit"
+		[disabled]="loading"
+		translate="configuracion.snomed-cache.form.SUBMIT"></button>
+	<div class="loader" *ngIf="loading">
+		<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+	</div>
 </form>
