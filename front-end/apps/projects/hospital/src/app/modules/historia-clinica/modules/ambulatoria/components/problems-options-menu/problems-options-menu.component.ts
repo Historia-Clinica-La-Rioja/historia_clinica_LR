@@ -151,7 +151,7 @@ export class ProblemsOptionsMenuComponent implements OnInit {
 	}
 
 	private openAmendProblemDialog(problem: HCEPersonalHistoryDto, problemInfo: ProblemInfoDto[]) {
-		const amendProblemDialog = this.dialog.open(AmendProblemComponent, 
+		this.dialog.open(AmendProblemComponent, 
 			{
 				autoFocus: false,
 				minWidth: '500px',
@@ -161,7 +161,6 @@ export class ProblemsOptionsMenuComponent implements OnInit {
 					problemInfo
 				}
 			})
-		amendProblemDialog.afterClosed().subscribe()
 	}
 
 	private openErrorDialog(content: string){

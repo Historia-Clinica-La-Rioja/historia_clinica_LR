@@ -164,7 +164,7 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 	}
 
 	private openAmendProblemDialog(problem: HCEPersonalHistoryDto, problemInfo: ProblemInfoDto[]) {
-		const amendProblemDialog = this.dialog.open(AmendProblemComponent, 
+		this.dialog.open(AmendProblemComponent, 
 			{
 				autoFocus: false,
 				minWidth: '500px',
@@ -174,19 +174,10 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 					problemInfo
 				}
 			})
-		amendProblemDialog.afterClosed().subscribe((errorData) => {
-			if(errorData){
-
-			}
-		})
 	}
 
 	private openErrorDialog(content: string){
-		const confirmDialog = this.dialog.open(DiscardWarningComponent, { data: getConfirmDataDialog() });
-		confirmDialog.afterClosed().subscribe(confirmed => {
-			if (confirmed) {
-			}
-		});
+		this.dialog.open(DiscardWarningComponent, { data: getConfirmDataDialog() });
 
 		function getConfirmDataDialog() {
 			const keyPrefix = 'ambulatoria.paciente.problemas.amend_problems.error';
