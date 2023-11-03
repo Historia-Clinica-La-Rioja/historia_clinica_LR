@@ -1,7 +1,6 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller;
 
 
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ErrorProblemDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ConsultationResponseDto;
 import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
@@ -46,9 +45,4 @@ public interface OutpatientConsultationAPI {
             @PathVariable(name = "patientId") Integer patientId,
             @RequestBody @Valid HealthConditionNewConsultationDto solvedProblemDto) throws IOException, PDFDocumentException;
 
-    @PostMapping("/markProblemAsError")
-    ResponseEntity<Boolean> markAsErrorHealthCondition(
-            @PathVariable(name = "institutionId") Integer institutionId,
-            @PathVariable(name = "patientId") Integer patientId,
-            @RequestBody @Valid ErrorProblemDto problemDto) throws IOException, PDFDocumentException;
 }

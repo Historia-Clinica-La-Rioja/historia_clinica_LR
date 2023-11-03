@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
+package net.pladema.clinichistory.outpatient.infrastructure.input.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @ToString
-public class ErrorProblemDto {
+public class ErrorProblemDto extends ProblemInfoDto {
 
     @NotNull(message = "{value.mandatory}")
     private Integer id;

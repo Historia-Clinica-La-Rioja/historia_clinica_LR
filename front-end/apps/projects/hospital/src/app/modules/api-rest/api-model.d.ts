@@ -1496,7 +1496,7 @@ export interface EquipmentOpeningHoursDto extends TimeRangeDto {
     id?: number;
 }
 
-export interface ErrorProblemDto {
+export interface ErrorProblemDto extends ProblemInfoDto {
     errorObservations: string;
     errorReasonId: number;
     id: number;
@@ -3136,6 +3136,12 @@ export interface ProblemDto extends HealthConditionDto {
     endDate: Date;
     severity: string;
     startDate: Date;
+}
+
+export interface ProblemInfoDto {
+    appointmentsId?: number[];
+    diagnosticReportsId?: number[];
+    serviceRequestsId?: number[];
 }
 
 export interface ProcedureDto {

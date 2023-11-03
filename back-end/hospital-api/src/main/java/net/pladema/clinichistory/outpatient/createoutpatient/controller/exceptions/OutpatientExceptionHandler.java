@@ -4,7 +4,7 @@ import ar.lamansys.sgh.clinichistory.application.calculatecie10.exceptions.HCICI
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import lombok.RequiredArgsConstructor;
-import net.pladema.clinichistory.outpatient.application.exceptions.MarkAsErrorAProblemException;
+import net.pladema.clinichistory.outpatient.application.markaserroraproblem.exceptions.MarkAsErrorAProblemException;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientDocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
