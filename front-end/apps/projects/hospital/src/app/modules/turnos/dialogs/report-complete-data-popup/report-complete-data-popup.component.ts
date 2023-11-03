@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ReferenceAppointmentDto, ReferenceCompleteDataDto, ReferenceDataDto, ERole, EReferenceClosureType } from '@api-rest/api-model';
 import { ReferenceReportService } from '@api-rest/services/reference-report.service';
 import { ContactDetails } from '@turnos/components/contact-details/contact-details.component';
@@ -15,6 +15,7 @@ import { ReferenceView } from '@turnos/components/reference-report/reference-rep
 import { SearchAppointmentsInfoService } from '@turnos/services/search-appointment-info.service';
 import { TabsService } from '@turnos/services/tabs.service';
 import { ReferenceReportFacadeService } from '@turnos/services/reference-report-facade.service';
+import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 
 @Component({
 	selector: 'app-report-complete-data-popup',
@@ -30,6 +31,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	popupActions: PopUpActions;
 
 	Tabs = Tabs;
+	private appointmentId: number;
 
 	constructor(
 		private readonly referenceReportService: ReferenceReportService,
@@ -38,6 +40,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		public dialogRef: MatDialogRef<ReportCompleteDataPopupComponent>,
 		private readonly referenceReportFacade: ReferenceReportFacadeService,
 		private readonly tabsService: TabsService,
+		private readonly dialog: MatDialog,
 		@Inject(MAT_DIALOG_DATA) public data,
 	) { }
 
@@ -62,9 +65,25 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		this.tabsService.setTab(Tabs.CARE_NETWORK);
 	}
 
+	cancelAppointment(): void {
+		const dialogRef = this.dialog.open(CancelAppointmentComponent, {
+			data: {
+				appointmentId: this.appointmentId
+			}
+		});
+		dialogRef.afterClosed().subscribe(canceledAppointment => {
+			if (canceledAppointment) {
+				this.referenceReportFacade.updateReports();
+				this.dialogRef.close();	
+			}
+		});
+	}
+
+
 	private setReportData(referenceDetails: ReferenceCompleteDataDto): void {
 		const patient = referenceDetails.patient;
 		const pendingAppointment: AppointmentSummary = { state: PENDING };
+		this.appointmentId = referenceDetails.appointment?.appointmentId;
 		this.reportCompleteData = {
 			patient: toPatientSummary(patient),
 			contactDetails: toContactDetails(patient),
@@ -74,6 +93,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	}
 
 	private setPopUpActions(appointment: ReferenceAppointmentDto, closureType: EReferenceClosureType): void {
+		this.setCancelAppointment(appointment?.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED || appointment?.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED);
 		if (!closureType) {
 			const assignAppointment = !appointment || appointment?.appointmentStateId === APPOINTMENT_STATES_ID.ABSENT;
 
@@ -102,6 +122,13 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 			this.setAssignAppointmentInCareNetwork(true);
 	}
 
+	private setCancelAppointment(value: boolean): void {
+		this.popupActions = {
+			...this.popupActions,
+			cancelAppointment: value
+		}
+	}
+
 	private setAssignAppointmentInInstitution(value: boolean): void {
 		this.popupActions = {
 			...this.popupActions,
@@ -128,4 +155,5 @@ interface ReportCompleteData {
 interface PopUpActions {
 	assignAppointmentInCareNetwork: boolean;
 	assignAppointmentInInstitution: boolean;
+	cancelAppointment: boolean;
 }
