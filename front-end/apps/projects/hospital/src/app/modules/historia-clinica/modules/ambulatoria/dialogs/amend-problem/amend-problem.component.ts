@@ -50,7 +50,7 @@ export class AmendProblemComponent implements OnInit {
 
     save() {
         this.markAsSaved();
-        let observations = this.form.get("observations").value;
+        let observations = this.form.controls.observations.value;
         if (this.motive && observations){
             let errorData: ErrorData = {
                 motiveId: this.motive.id, 
@@ -94,7 +94,7 @@ export class AmendProblemComponent implements OnInit {
 
     private markAsSaved() {
         this.submit = true;
-        this.form.get('observations')?.markAsTouched();
+        this.form.controls.observations?.markAsTouched();
     }
 }
 

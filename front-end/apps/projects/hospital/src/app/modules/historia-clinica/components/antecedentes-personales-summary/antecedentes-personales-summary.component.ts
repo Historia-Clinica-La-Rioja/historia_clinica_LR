@@ -145,8 +145,8 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 				data: {
 					title: 'ambulatoria.paciente.problemas.amend_problems.TITLE',
 					content: 'ambulatoria.paciente.problemas.amend_problems.CONTENT',
-					okButtonLabel: 'buttons.CONTINUE',
-					cancelButtonLabel: 'buttons.CANCEL',
+					okButtonLabel: 'ambulatoria.paciente.problemas.amend_problems.OK_BUTTON',
+					cancelButtonLabel : 'ambulatoria.paciente.problemas.amend_problems.BACK_BUTTON',
 					buttonClose: true,
 				},
 				maxWidth: '500px'
@@ -188,7 +188,7 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 			const keyPrefix = 'ambulatoria.paciente.problemas.amend_problems.error';
 			return {
 				title: `${keyPrefix}.TITLE`,
-				content: `${keyPrefix}.CONTENT`,
+				content: `${keyPrefix}.CONTENT-FOR-APPOINTMENT`,
 				okButtonLabel: `${keyPrefix}.OK_BUTTON`,
 				errorMode: true,
 				color: 'warn'

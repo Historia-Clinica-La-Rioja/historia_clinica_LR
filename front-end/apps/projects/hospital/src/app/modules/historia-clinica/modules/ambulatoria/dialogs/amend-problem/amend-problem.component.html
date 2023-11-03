@@ -30,7 +30,7 @@
                 <textarea class="observations" matInput type="text"  name="observations" formControlName="observations"
                     placeholder="{{'ambulatoria.paciente.problemas.amend_problems.OBSERVATIONS' | translate}}" required></textarea>
             </mat-form-field>
-            <mat-error *ngIf="!form.get('observations').value && submit" class="error-message" [translate]="'forms.REQUIRED'"></mat-error>
+            <mat-error *ngIf="!form.controls.observations.value && form.controls.observations.touched" class="error-message" [translate]="'forms.REQUIRED'"></mat-error>
         </div>
     </form>
 </mat-dialog-content>
