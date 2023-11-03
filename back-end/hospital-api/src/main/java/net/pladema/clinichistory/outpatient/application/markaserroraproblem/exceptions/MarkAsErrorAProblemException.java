@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.outpatient.application.exceptions;
+package net.pladema.clinichistory.outpatient.application.markaserroraproblem.exceptions;
 
 import lombok.Getter;
 
