@@ -239,8 +239,8 @@
                 </div>
                 <div class="row-content">
                     <div class="data-title">Documento</div>
-                    <div class="data-text"
-                        th:text="${patient.person.identificationType + ' - ' + patient.person.identificationNumber}"></div>
+                    <div class="data-text" th:if="${patient.person.identificationNumber != null}" th:text="${patient.person.identificationType + ' - ' + patient.person.identificationNumber}"></div>
+                    <div class="data-text" th:unless="${patient.person.identificationNumber != null}">Sin información</div>
                 </div>
                 <div class="row-content">
                     <div class="data-title">Edad</div>

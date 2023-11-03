@@ -52,7 +52,7 @@
                     <div style="height: 50px;">
                         <button id="button-filter" mat-button color="primary" fxLayoutAlign="center start" (click)="setPanelState()">
                             <mat-icon color="primary">filter_list</mat-icon>
-                            {{'internaciones.internment-patient-card.filters.FILTER'| translate | uppercase }} <mat-icon color="primary" 
+                            {{'internaciones.internment-patient-card.filters.FILTER'| translate | uppercase }} <mat-icon color="primary"
                             [ngClass]="{'button-filter-effect':panelOpenState }">
                                 keyboard_arrow_down</mat-icon>
                         </button>
@@ -79,7 +79,7 @@
                                         {{appointment.patientFullName | titlecase}}
                                     </span>
                                     <span class="patient-identification grey smaller-font">DNI
-                                        {{appointment.data.patient.person.identificationNumber}} - ID
+                                        {{appointment.data.patient.person.identificationNumber ? appointment.data.patient.person.identificationNumber : 'Sin información'}} - ID
                                         {{appointment.data.patient.id}}</span>
                                 </div>
 
@@ -104,7 +104,7 @@
 										<span class="uppercase" [translate]="'image-network.appointments.FINISH'"></span>
 									</button>
                                     <div *ngIf="appointment.data.appointmentStateId === appointmentStatesId.SERVED" fxFlexLayout="row">
-                                        <app-view-report *ngIf="appointment.reportStatus.id == reportStates.COMPLETED; else showLabel" 
+                                        <app-view-report *ngIf="appointment.reportStatus.id == reportStates.COMPLETED; else showLabel"
                                             [appointmentId]="appointment.data.id" [buttonText]="'image-network.worklist.VIEW_REPORT'">
                                         </app-view-report>
                                         <ng-template #showLabel>

@@ -118,8 +118,8 @@ export class WorklistByInformerComponent implements OnInit {
 
 	setWorkList() {
 		this.worklistFacadeService.changeInformerFilters(
-			this.modalityId, 
-			format(new Date(this.dateRangeForm.value.start), DateFormat.API_DATE), 
+			this.modalityId,
+			format(new Date(this.dateRangeForm.value.start), DateFormat.API_DATE),
 			format(new Date(this.dateRangeForm.value.end), DateFormat.API_DATE))
 	}
 
@@ -136,7 +136,7 @@ export class WorklistByInformerComponent implements OnInit {
 
 	onChanges(): void {
 		combineLatest([
-			this.filterForm.get('patientName').valueChanges.pipe(startWith(null)), 
+			this.filterForm.get('patientName').valueChanges.pipe(startWith(null)),
 			this.filterForm.get('patientDocument').valueChanges.pipe(startWith(null)),
 			this.filterForm.get('status').valueChanges.pipe(startWith(null)),
 			this.filterForm.get('institution').valueChanges.pipe(startWith(null)),
@@ -154,7 +154,7 @@ export class WorklistByInformerComponent implements OnInit {
 			this.getValueControl('patientName')
 				? this.filteredByString(this.getValueControl('patientName'), PATIENT_INFORMATION, PATIENT_NAME)
 			  	: of(this.worklists),
-	  
+
 			this.getValueControl('status')
 			  	? this.filteredByStatus()
 			  	: of(this.worklists),
@@ -211,7 +211,7 @@ export class WorklistByInformerComponent implements OnInit {
 			return {
 				patientInformation: {
 					fullName: this.capitalizeName(w.patientFullName),
-					identification: `${this.getIdentificationType(w.patientIdentificationTypeId)} ${w.patientIdentificationNumber} - ID ${w.patientId}`,
+					identification: `${this.getIdentificationType(w.patientIdentificationTypeId)} ${w.patientIdentificationNumber ? w.patientIdentificationNumber : 'Sin información'} - ID ${w.patientId}`,
 				},
 				state: mapToState(w.statusId),
 				date: dateTimeDtotoLocalDate(w.actionTime),
