@@ -190,6 +190,11 @@
             text-transform: uppercase;
         }
 
+        .professional-name-licenses {
+            margin-top: 16px;
+            text-align: center;
+        }
+
     </style>
 </head>
 
@@ -204,7 +209,7 @@
     </div>
     <div class="row-data">
         <div class="establishment" th:text="${establishment}"></div>
-        <div class="code" th:text="${sisaCode}"></div>
+        <div class="code" th:text="${code}"></div>
     </div>
     <div class="row">
         <div class="complete-name">2. APELLIDOS Y NOMBRES</div>
@@ -234,10 +239,10 @@
         <div class="age" th:text="${patientAge}"></div>
         <div class="doc-number" th:text="${documentNumber}"></div>
         <div class="doc-type" th:text="${documentType}"></div>
-        <div class="ce">&nbsp;</div>
-        <div class="room">&nbsp;</div>
-        <div class="bed">&nbsp;</div>
-        <div class="hcn">&nbsp;</div>
+        <div class="ce" th:if="${ce}">X</div>
+        <div class="room" th:text="${room}"></div>
+        <div class="bed" th:text="${bed}"></div>
+        <div class="hcn" th:text="${hcnId}"></div>
     </div>
     <div class="row">
         <div class="condition">12. CONDICIÓN</div>
@@ -246,7 +251,7 @@
         <div class="affiliate-number">15. N° DE AFILIADO</div>
     </div>
     <div class="row-data">
-        <div class="condition">&nbsp;</div>
+        <div class="condition" th:text="${medicalCoverageCondition}"></div>
         <div class="coverage" th:text="${medicalCoverage}"></div>
         <div class="affiliate-type">&nbsp;</div>
         <div class="affiliate-number" th:text="${affiliateNumber}"></div>
@@ -259,7 +264,8 @@
         <div class="row-data" th:each="problem, iter: ${#strings.arraySplit(problems,'|')}" th:style="${iter.index == 0 ? 'margin-top: 0px' : 'margin-top:5px'}"
              th:with="cie10CodesList = ${#strings.arraySplit(cie10Codes,'|')}">
             <div class="diagnosis" th:text="${problem}"></div>
-            <div class="code" th:text="${cie10CodesList[iter.index]}"></div>
+            <div th:if="${cie10Codes != null}" class="code" th:text="${cie10CodesList[iter.index]}"></div>
+            <div th:unless="${cie10Codes != null}" class="code">&nbsp;</div>
         </div>
     </div>
     <div th:unless="${problems != null}">
@@ -276,6 +282,9 @@
         <div class="concept">
             <div class="concept-title">19. CONCEPTO</div>
             <div class="space"><p class="rp-concept">Rp/</p>
+                <div th:each="study,iter: ${studies}">
+                    <span th:text="${study}"></span>
+                </div>
             </div>
         </div>
         <div class="unitary">
@@ -301,6 +310,12 @@
         <div class="total-billing">
             <div class="total-billing-data"><p>24. TOTAL</p></div>
             <div class="affiliate-billing">25. CONFORME AFILIADO</div>
+            <div class="professional-name-licenses">
+                <div th:text="${completeProfessionalName}"></div>
+                <div th:each="license,iter: ${licenses}">
+                    <span th:text="${license}"></span>
+                </div>
+            </div>
         </div>
         <div class="data-billing">
             <div class="border-bottom">&nbsp;</div>
