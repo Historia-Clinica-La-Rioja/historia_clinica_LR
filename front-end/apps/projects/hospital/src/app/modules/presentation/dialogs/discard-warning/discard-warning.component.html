@@ -7,7 +7,12 @@
 <div class="report" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
 
 	<div fxLayout="row" class="image" fxLayoutAlign="center">
-		<img src='assets/images/error_outline.png'>
+		<ng-container *ngIf="data.errorMode;  else noError">
+			<mat-icon class="material-icons-outlined" color="warn">cancel</mat-icon>
+		</ng-container>
+		<ng-template #noError>
+			<mat-icon class="material-icons-outlined" [color]="data.color">error_outlined</mat-icon>
+		</ng-template>
 	</div>
 
 	<h1 mat-dialog-title [ngClass]="!data.content && !data.contentBold ? 'no-margin-bottom' : 'margin-bottom'">{{ data.title | translate}}</h1>
@@ -21,7 +26,7 @@
 	</div>
 
 	<div mat-dialog-actions fxLayout="row" fxLayoutGap="25px">
-		<button mat-stroked-button [mat-dialog-close]=false color="primary" class="uppercase" id="cancel-button">
+		<button *ngIf="!data.errorMode" mat-stroked-button [mat-dialog-close]=false [color]="data.color" class="uppercase" id="cancel-button">
 			{{(data.cancelButtonLabel? data.cancelButtonLabel : 'buttons.CANCEL') | translate}}</button>
 		<button mat-raised-button [mat-dialog-close]=true cdkFocusInitial [color]='okBottonColor' class="uppercase"
 			id="okButton-button">

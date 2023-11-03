@@ -109,7 +109,11 @@ export class EmergencyCareEpisodeAttendService {
 			}
 	
 			if (attendPlace.attentionPlace === AttentionPlace.HABITACION) {
-				this.dialog.open(BedAssignmentComponent, {data: SECTOR_GUARDIA})
+				this.dialog.open(BedAssignmentComponent, {
+						data: {
+							sectorsType: [SECTOR_GUARDIA]
+						}
+					})
 					.afterClosed()
 					.subscribe((bed: BedInfoDto) => {
 						if (!bed) return;

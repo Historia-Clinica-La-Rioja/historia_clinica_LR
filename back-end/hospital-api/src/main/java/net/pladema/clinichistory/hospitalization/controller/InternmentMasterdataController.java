@@ -3,7 +3,7 @@ package net.pladema.clinichistory.hospitalization.controller;
 import ar.lamansys.sgh.clinichistory.domain.ips.EUnit;
 import ar.lamansys.sgh.clinichistory.domain.ips.EVia;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.indication.OtherIndicationType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.*;
 import ar.lamansys.sgx.shared.masterdata.domain.EnumWriter;
@@ -119,9 +119,18 @@ public class InternmentMasterdataController {
     }
 
     @GetMapping(value = "/document/type")
-    public ResponseEntity<Collection<MasterDataProjection>> getDocumentType(){
-        LOG.debug("{}", "All document type");
-        return ResponseEntity.ok().body(masterDataService.findAll(DocumentType.class));
+    public ResponseEntity<Collection<MasterDataDto>> getDocumentType(){
+        LOG.debug("{}", "All internment document types");
+		Collection<MasterDataDto> internmentDocumentTypes = EDocumentType.getAllInternmentDocumentTypes()
+				.stream()
+				.map(eDocumentType -> {
+					MasterDataDto result = new MasterDataDto();
+					result.setId(eDocumentType.getId());
+					result.setDescription(getDocumentTypeDescription(eDocumentType.getValue()));
+					return result;
+				})
+				.collect(Collectors.toList());
+		return ResponseEntity.ok().body(internmentDocumentTypes);
     }
 
     @GetMapping(value = "/observation")
@@ -182,5 +191,22 @@ public class InternmentMasterdataController {
 		LOG.debug("{}", "All units types");
 		return ResponseEntity.ok().body(EnumWriter.writeList(EUnit.getAll()));
 	}
-    
+
+	private String getDocumentTypeDescription(String despcription) {
+		String result = null;
+		switch(despcription) {
+			case "evolutionNote":
+				result = "Nota de evolución";
+				break;
+			case "anamnesis":
+				result = "Evaluación de ingreso";
+				break;
+			case "nursingEvolutionNote":
+				result = "Nota de evolución de enfermería";
+				break;
+			default:
+				result = "Epicrisis";
+		}
+		return result;
+	}
 }

@@ -11,7 +11,7 @@
 					</mat-label>
 					<input matInput id="probableDischargeDate" [matDatepicker]="myDatepicker" formControlName="probableDischargeDate" [min]="minDate">
 					<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
-					<mat-datepicker #myDatepicker startView="multi-year" (yearSelected)="chosenYearHandler($event)"
+					<mat-datepicker #myDatepicker (yearSelected)="chosenYearHandler($event)"
 									(monthSelected)="chosenMonthHandler($event)">
 					</mat-datepicker>
 				</mat-form-field>

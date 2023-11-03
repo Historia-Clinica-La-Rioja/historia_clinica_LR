@@ -83,6 +83,14 @@ public class ConsultationDetail {
 
 	private String ceo;
 
+	private Integer hierarchicalUnitId;
+
+	private String hierarchicalUnitAlias;
+
+	private Integer hierarchicalUnitTypeId;
+
+	private String hierarchicalUnitTypeDescription;
+
 	public ConsultationDetail(ConsultationDetailWithoutInstitution consultation, InstitutionInfo institutionInfo){
 		this.province = institutionInfo.getProvince();
 		this.department = institutionInfo.getDepartment();
@@ -118,5 +126,9 @@ public class ConsultationDetail {
 		this.headCircunference = consultation.getHeadCircunference();
 		this.cpo = consultation.getCpo();
 		this.ceo = consultation.getCeo();
+		this.hierarchicalUnitId = consultation.getHierarchicalUnitId();
+		this.hierarchicalUnitAlias = consultation.getHierarchicalUnitAlias();
+		this.hierarchicalUnitTypeId = consultation.getHierarchicalUnitTypeId();
+		this.hierarchicalUnitTypeDescription = consultation.getHierarchicalUnitTypeDescription();
 	}
 }

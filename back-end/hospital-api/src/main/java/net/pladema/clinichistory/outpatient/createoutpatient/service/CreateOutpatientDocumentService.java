@@ -4,5 +4,5 @@ import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.Outp
 
 public interface CreateOutpatientDocumentService {
     
-    OutpatientDocumentBo execute(OutpatientDocumentBo outpatient);
+    OutpatientDocumentBo execute(OutpatientDocumentBo outpatient, Boolean createFile);
 }

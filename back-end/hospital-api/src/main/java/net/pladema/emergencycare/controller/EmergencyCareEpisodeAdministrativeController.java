@@ -35,7 +35,7 @@ public class EmergencyCareEpisodeAdministrativeController {
 	}
 
 	@GetMapping
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, PRESCRIPTOR')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, PRESCRIPTOR, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<ResponseEmergencyCareDto> getAdministrative(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "episodeId") Integer episodeId) {

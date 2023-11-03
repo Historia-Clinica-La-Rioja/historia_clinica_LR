@@ -1,0 +1,25 @@
+<div fxLayout="row">
+	<app-filter-button (isExpandedEmitter)="toggleFilter($event)"></app-filter-button>
+</div>
+
+<div *ngIf="isFilterExpanded" id="filters" fxLayout="row" fxLayoutAlign="start end">
+	<form [formGroup]="filterForm">
+		<ng-container *ngFor="let filter of filters">
+			<mat-form-field appearance="outline">
+				<mat-label>{{filter?.name | translate}}</mat-label>
+				<mat-select [id]="filter.key" [formControlName]="filter?.key">
+					<mat-option *ngFor="let option of filter.options" [value]="option.id">
+						{{option?.description}} {{option?.name}}
+					</mat-option>
+				</mat-select>
+				<button *ngIf="filterForm.get(filter.key).value !== null " mat-button matSuffix color="warn" mat-icon-button
+				(click)="cleanStatuses(filter.key); $event.stopPropagation()">
+				<mat-icon>close</mat-icon>
+			</button>
+			</mat-form-field>
+		</ng-container>
+	</form>
+	<div id="button-filter">
+		<button mat-raised-button color="primary" (click)="emitSearchCriteria()">{{'buttons.FILTER' | translate}} </button>
+	</div>
+</div>

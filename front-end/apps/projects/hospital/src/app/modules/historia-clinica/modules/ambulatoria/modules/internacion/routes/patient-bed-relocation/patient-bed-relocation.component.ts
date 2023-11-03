@@ -30,6 +30,7 @@ import { PersonService } from '@api-rest/services/person.service';
 import { BedAssignmentComponent } from '@historia-clinica/dialogs/bed-assignment/bed-assignment.component';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { InternmentEpisodeSummary } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
+import { INTERNMENT_SECTOR } from '@historia-clinica/modules/guardia/constants/masterdata';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -204,7 +205,10 @@ export class PatientBedRelocationComponent implements OnInit {
 	openBedAssignmentDialog(): void {
 
 		const dialogRef = this.dialog.open(BedAssignmentComponent, {
-			width: '80%'
+			width: '80%',
+			data: {
+				sectorsType: [INTERNMENT_SECTOR]
+			}
 		});
 
 		dialogRef.afterClosed().subscribe((bedInfo: BedInfoDto) => {

@@ -6,7 +6,8 @@ import {
 	DocumentSearchFilterDto,
 	EDocumentSearch,
 	DocumentSearchDto,
-	DocumentHistoricDto
+	DocumentHistoricDto,
+	MasterDataDto
 } from '@api-rest/api-model';
 import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { hasError } from '@core/utils/form.utils';
@@ -19,6 +20,7 @@ import { EditDocumentActionService } from '@historia-clinica/modules/ambulatoria
 import { fromStringToDate } from "@core/utils/date.utils";
 import { InternmentActionsService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-actions.service';
 import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
+import { InternacionMasterDataService } from "@api-rest/services/internacion-master-data.service";
 
 @Component({
 	selector: 'app-documents-summary',
@@ -34,6 +36,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	@Input() internmentEpisodeAdmissionDatetime: string;
 
 	public searchFields: SearchField[] = DOCUMENTS_SEARCH_FIELDS;
+	public documentTypes: MasterDataDto [] = [];
 	public documentsToShow: DocumentSearch[] = [];
 	public readonly documentsSummary = DOCUMENTS;
 	public today: Moment = newMoment();
@@ -52,17 +55,20 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		private readonly documentActions: DocumentActionsService,
 		private readonly patientNameService: PatientNameService,
 		readonly internmentActions: InternmentActionsService,
-		private ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService
+		private ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
+		private readonly internacionMasterDataService: InternacionMasterDataService
 	) {
 		this.form = this.formBuilder.group({
 			text: [''],
 			date: [null],
 			field: [null],
+			documentType: [null],
 			mainDiagnosisOnly: [false],
 			documentsWithoutDiagnosis: [false],
 		}, {
 			validators: this.filterFieldIsRequiredWhenInputIsSet()
 		});
+		this.internacionMasterDataService.getDocumentTypes().subscribe(dt => this.documentTypes = dt);
 	}
 
 	ngOnChanges() {
@@ -93,15 +99,23 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	private buildSearchFilter(): DocumentSearchFilterDto {
 		if (this.isDate(this.form.value.field) && !this.form.value.date) {
 			return null;
-		} else if (!this.isDate(this.form.value.field) && this.form.value.text === '') {
+		} else if (!this.isDate(this.form.value.field) && (this.form.value.text === '' || this.form.value.text === null)
+				&& this.form.value.documentType === null) {
 			return null;
 		} else {
 			return {
-				plainText: this.isDate(this.form.value.field) ? momentFormat(this.form.value.date, DateFormat.API_DATE)
-					: this.form.value.text,
+				plainText: this.getPlainText(),
 				searchType: this.form.value.field,
 			};
 		}
+	}
+
+	private getPlainText(): string {
+		if (this.isDate(this.form.value.field))
+			return momentFormat(this.form.value.date, DateFormat.API_DATE);
+		else if (this.form.value.field === 'DOCUMENT_TYPE')
+			return this.form.value.documentType
+		return this.form.value.text
 	}
 
 	private isDate(field): boolean {
@@ -148,6 +162,15 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 
 	viewEvolutionNote(): boolean {
 		return !!(this.activeDocument?.document.notes || this.activeDocument?.document.procedures.length > 0);
+	}
+
+	resetFilter(control: AbstractControl) {
+		control.setValue(null);
+		this.form.value.documentType = null;
+		this.form.value.text = null;
+		this.form.value.field = null;
+		this.form.value.date = null;
+		this.search();
 	}
 
 	setFilterValueAndSearchIfEmptyForm(control: AbstractControl, value: string) {

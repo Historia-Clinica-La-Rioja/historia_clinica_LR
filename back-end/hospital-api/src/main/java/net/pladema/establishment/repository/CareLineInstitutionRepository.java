@@ -33,4 +33,12 @@ public interface CareLineInstitutionRepository extends JpaRepository<CareLineIns
 			"FROM CareLineInstitution cli " +
 			"WHERE cli.institutionId IN :institutionsIds ")
 	List<Integer> getAllIdsByInstitutionsId(@Param("institutionsIds") List<Integer> institutionsIds);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT 1 " +
+			"FROM CareLineInstitution cli " +
+			"WHERE cli.careLineId = :careLineId " +
+			"AND cli.institutionId = :institutionId " +
+			"AND cli.deleted IS FALSE")
+	Integer careLineIsAvailableInInstitution(@Param("careLineId") Integer careLineId, @Param("institutionId") Integer institutionId);
 }

@@ -1,0 +1,11 @@
+package net.pladema.medicalconsultation.virtualConsultation.application.getAvailableProfessionalAmountByProfessionalId;
+
+import java.util.List;
+
+import net.pladema.medicalconsultation.virtualConsultation.domain.VirtualConsultationAvailableProfessionalAmountBo;
+
+public interface GetAvailableProfessionalAmountByProfessionalIdService {
+
+	List<VirtualConsultationAvailableProfessionalAmountBo> run(Integer healthcareProfessionalId);
+
+}

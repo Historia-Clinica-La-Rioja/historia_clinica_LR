@@ -8,6 +8,7 @@ import {
     TextInput,
     maxLength,
     useGetOne,
+    BooleanInput,
     AutocompleteInput
 } from 'react-admin';
 
@@ -42,6 +43,7 @@ const EquipmentEdit = props => {
                 >
                     <AutocompleteInput optionText={renderModality} optionValue="id"/>
                 </ReferenceInput>
+                <BooleanInput label="resources.equipment.fields.createId" source="createId" />
             </SimpleForm>
 
         </Edit>

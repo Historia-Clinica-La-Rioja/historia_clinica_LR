@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.documents.infrastructure.output.repository.entity;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ESourceType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Entity
 @Table(name = "v_clinic_history")
@@ -63,11 +65,23 @@ public class VClinicHistory {
 	@Column(name = "request_source_type_id")
 	private Short requestSourceTypeId;
 
-	@Column(name = "start_date")
-	private LocalDateTime startDate;
+	@Column(name = "internment_start_date")
+	private LocalDateTime internmentStartDate;
 
-	@Column(name = "end_date")
-	private LocalDateTime endDate;
+	@Column(name = "internment_end_date")
+	private LocalDateTime internmentEndDate;
+
+	@Column(name = "emergency_care_start_date")
+	private LocalDateTime emergencyCareStartDate;
+
+	@Column(name = "emergency_care_end_date")
+	private LocalDateTime emergencyCareEndDate;
+
+	@Column(name = "service_request_end_date")
+	private LocalDateTime serviceRequestEndDate;
+
+	@Column(name = "medication_end_date")
+	private LocalDateTime medicationEndDate;
 
 	@Column(name = "patient_age_period")
 	private String patientAgePeriod;
@@ -81,40 +95,45 @@ public class VClinicHistory {
 			@AttributeOverride( name = "medicines", column = @Column(name = "medicines")),
 			@AttributeOverride( name = "allergies", column = @Column(name = "allergies")),
 			@AttributeOverride( name = "vaccines", column = @Column(name = "vaccines")),
-			@AttributeOverride( name = "risk_factors", column = @Column(name = "risk_factors")),
-			@AttributeOverride( name = "outpatientConsultationReasons", column = @Column(name = "outpatient_consultation_reasons")),
+			@AttributeOverride( name = "bloodType", column = @Column(name = "blood_type")),
+			@AttributeOverride( name = "anthropometricData", column = @Column(name = "anthropometric_data")),
+			@AttributeOverride( name = "epicrisisOtherCircumstances", column = @Column(name = "epicrisis_other_circumstances")),
+			@AttributeOverride( name = "epicrisisExternalCause", column = @Column(name = "epicrisis_external_cause")),
+			@AttributeOverride( name = "epicrisisObstetricEvent", column = @Column(name = "epicrisis_obstetric_event")),
+			@AttributeOverride( name = "riskFactors", column = @Column(name = "risk_factors")),
+			@AttributeOverride( name = "pediatricRiskFactors", column = @Column(name = "pediatric_risk_factors")),
+			@AttributeOverride( name = "outpatientReferences", column = @Column(name = "outpatient_references")),
+			@AttributeOverride( name = "serviceRequestCategory", column = @Column(name = "service_request_category")),
+			@AttributeOverride( name = "serviceRequestStudies", column = @Column(name = "service_request_studies")),
+			@AttributeOverride( name = "consultationReasons", column = @Column(name = "consultation_reasons")),
 			@AttributeOverride( name = "odontologyProcedure", column = @Column(name = "odontology_procedure")),
-			@AttributeOverride( name = "odontologyDiagnostic", column = @Column(name = "odontology_diagnostic"))
+			@AttributeOverride( name = "odontologyDiagnostic", column = @Column(name = "odontology_diagnostic")),
+			@AttributeOverride( name = "odontologyPieces", column = @Column(name = "odontology_pieces")),
+			@AttributeOverride( name = "indication", column = @Column(name = "indication")),
+			@AttributeOverride( name = "referenceCounterReference", column = @Column(name = "reference_counter_reference")),
+			@AttributeOverride( name = "counterReferenceClosure", column = @Column(name = "counter_reference_closure")),
+			@AttributeOverride( name = "notes", column = @Column(name = "notes")),
 	})
-	private CHDocumentHealthConditionSummary healthConditionSummary;
+	private CHDocumentSummary healthConditionSummary;
 
-	@Embedded
-	@AttributeOverrides({
-			@AttributeOverride(name = "service_request_details", column = @Column(name = "service_request_details")),
-			@AttributeOverride(name = "service_request_studies", column = @Column(name = "service_request_studies")),
-			@AttributeOverride(name = "service_request_result", column = @Column(name = "service_request_result"))
-	})
-	private CHServiceRequestSummary serviceRequestSummary;
+	public LocalDateTime getStartDate(){
+		if (sourceTypeId.equals(ESourceType.HOSPITALIZATION.getId()) || (sourceTypeId.equals(ESourceType.ORDER.getId()) && requestSourceTypeId.equals(ESourceType.HOSPITALIZATION.getId())))
+			return internmentStartDate.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")).toLocalDateTime();
+		if (sourceTypeId.equals(ESourceType.EMERGENCY_CARE.getId()) || (sourceTypeId.equals(ESourceType.ORDER.getId()) && requestSourceTypeId.equals(ESourceType.EMERGENCY_CARE.getId())))
+			return emergencyCareStartDate.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")).toLocalDateTime();
+		return createdOn.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")).toLocalDateTime();
+	}
 
-	@Embedded
-	@AttributeOverrides({
-			@AttributeOverride( name = "diet", column = @Column(name = "diet")),
-			@AttributeOverride( name = "otherIndication", column = @Column(name = "other_indication")),
-			@AttributeOverride( name = "pharmaco", column = @Column(name = "pharmaco")),
-			@AttributeOverride( name = "parenteralPlan", column = @Column(name = "parenteral_plan"))
-	})
-	private CHInternmentIndicationsSummary internmentIndications;
-
-	@Embedded
-	@AttributeOverrides({
-			@AttributeOverride( name = "currentIllness", column = @Column(name = "current_illness_note")),
-			@AttributeOverride( name = "physicalExam", column = @Column(name = "physical_exam_note")),
-			@AttributeOverride( name = "evolution", column = @Column(name = "evolution_note")),
-			@AttributeOverride( name = "clinicalImpression", column = @Column(name = "clinical_impression_note")),
-			@AttributeOverride( name = "otherNote", column = @Column(name = "other_note")),
-			@AttributeOverride( name = "indicationNote", column = @Column(name = "indications_note")),
-			@AttributeOverride( name = "observations", column = @Column(name = "observations"))
-	})
-	private CHDocumentNotesSummary notes;
+	public LocalDateTime getEndDate(){
+		if (sourceTypeId.equals(ESourceType.HOSPITALIZATION.getId()) || (sourceTypeId.equals(ESourceType.ORDER.getId()) && requestSourceTypeId.equals(ESourceType.HOSPITALIZATION.getId())))
+			return internmentEndDate != null ? internmentEndDate.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")).toLocalDateTime() : null;
+		if (sourceTypeId.equals(ESourceType.EMERGENCY_CARE.getId()) || (sourceTypeId.equals(ESourceType.ORDER.getId()) && requestSourceTypeId.equals(ESourceType.EMERGENCY_CARE.getId())))
+			return emergencyCareEndDate != null ? emergencyCareEndDate : null;
+		if (sourceTypeId.equals(ESourceType.ORDER.getId()))
+			return serviceRequestEndDate != null ? serviceRequestEndDate.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")).toLocalDateTime() : null;
+		if (sourceTypeId.equals(ESourceType.RECIPE.getId()))
+			return medicationEndDate != null ? medicationEndDate.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")).toLocalDateTime() : null;
+		return createdOn.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")).toLocalDateTime();
+	}
 
 }

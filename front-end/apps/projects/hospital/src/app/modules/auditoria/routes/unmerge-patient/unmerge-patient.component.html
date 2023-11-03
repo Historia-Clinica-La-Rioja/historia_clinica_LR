@@ -1,0 +1,124 @@
+<app-content width="full">
+	<section>
+		<h2 class="page-title">{{'pacientes.audit.TITLE_UNLINK_PATIENT' | translate}}</h2>
+		<section>
+			<button mat-icon-button color="primary" (click)="goToBack()">
+				<mat-icon>arrow_back</mat-icon>
+				<span>{{'buttons.BACK' | translate}}</span>
+			</button>
+		</section>
+		<h3 class="capitalize">{{'pacientes.audit.AUDIT_OF' | translate }} {{infoPatientToAudit}}</h3>
+	</section>
+
+	<section>
+		<mat-card class="primary background-primary" fxLayout="row">
+			<mat-icon>error_outline</mat-icon>
+			<div class="clarifications">
+				<p>{{'pacientes.audit.CLARIFICATION_UNLINK_PATIENT' | translate}}</p>
+			</div>
+		</mat-card>
+	</section>
+	<section>
+		<mat-card>
+			<div fxLayout="row" fxLayoutAlign="space-between" class="content grey">
+				<div fxLayoutAlign="start center" class="content" fxFlex="5%">
+				</div>
+				<div fxLayoutAlign="start center" class="content" fxFlex="10%">
+					<span>{{'pacientes.audit.LABEL_ID' | translate}}</span>
+				</div>
+				<div fxLayoutAlign="start center" class="content" fxFlex="15%">
+					<span>{{'pacientes.audit.LABEL_NAME' | translate}}</span>
+				</div>
+				<div *ngIf="nameSelfDeterminationFF" fxLayoutAlign="start center" class="content" fxFlex="13%">
+					<span>{{'pacientes.form.NAME_SELF_DETERMINATION' | translate}}</span>
+				</div>
+				<div fxLayoutAlign="start center" class="content" fxFlex="15%">
+					<span>{{'pacientes.audit.LABEL_LASTNAME' | translate}}</span>
+				</div>
+				<div fxLayoutAlign="start center" class="content" fxFlex="12%">
+					<span>{{'pacientes.audit.LABEL_BIRTHDATE' | translate}}</span>
+				</div>
+				<div fxLayoutAlign="start center" class="content" fxFlex="15%">
+					<span>{{'pacientes.audit.LABEL_DOC' | translate}}</span>
+				</div>
+				<div fxLayoutAlign="start center" class="content" fxFlex="10%">
+					<span>{{'pacientes.audit.LABEL_STATE' | translate }}</span>
+				</div>
+				<div fxLayoutAlign="start center" class="content" fxFlex="10%">
+
+				</div>
+			</div>
+			<mat-divider></mat-divider>
+			<div *ngFor="let patient of pageSlice;last as isLast; first as isFirst"
+				[ngClass]="isFirst ? 'background-first' : '' ">
+				<div fxLayout="row" fxLayoutAlign="space-between" class="content">
+					<div fxLayoutAlign="start center" class="content" fxFlex="5%">
+						<mat-radio-group [(ngModel)]="patientToUnlink">
+							<mat-radio-button *ngIf="!isFirst" color="primary" [value]="patient"></mat-radio-button>
+						</mat-radio-group>
+
+					</div>
+
+					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
+						<span>{{patient?.patientId}}
+						</span>
+					</div>
+					<div fxLayoutAlign="start center" class="content" fxFlex="15%">
+						<span *ngIf="patient.firstName else noData">{{patient?.firstName}}
+							{{patient?.middleNames}}</span>
+					</div>
+					<div *ngIf="nameSelfDeterminationFF" fxLayoutAlign="start center" class="content" fxFlex="15%">
+						<span
+							*ngIf="patient.nameSelfDetermination else noData">{{patient?.nameSelfDetermination}}</span>
+					</div>
+					<div fxLayoutAlign="start center" class="content" fxFlex="15%">
+						<span *ngIf="patient.lastName else noData">{{patient?.lastName}}
+							{{patient?.otherLastNames}}</span>
+					</div>
+					<div fxLayoutAlign="start center" class="content" fxFlex="12%">
+						<span *ngIf="patient.lastName else noData">{{patient?.birthdate | date: 'dd/MM/yyyy'
+							}}</span>
+					</div>
+					<div fxLayoutAlign="start center" class="content" fxFlex="15%">
+						<span
+							*ngIf="patient.identificationTypeId else noData">{{getIdentificationType(patient?.identificationTypeId)}}
+							&nbsp;</span>
+						<span *ngIf="patient.identificationNumber else noData">{{patient?.identificationNumber}}</span>
+					</div>
+					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
+						<span *ngIf="patient.lastName else noData">{{getPatientType(patient?.typeId) |
+							uppercase}}</span>
+					</div>
+					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
+					</div>
+				</div>
+				<mat-divider *ngIf="!isLast" insert class="divider"></mat-divider>
+			</div>
+			<mat-paginator *ngIf="(listPatientData?.length !== 0)" [length]="numberOfPatients"
+				[pageSizeOptions]="pageSizeOptions" [pageSize]="initialSize" (page)="onPageChange($event)"
+				showFirstLastButtons>
+			</mat-paginator>
+		</mat-card>
+
+		<div fxLayout="row" fxLayoutAlign="space-between center" id="div-button">
+			<div>
+				<p class="warn" *ngIf="validationPatientToUnlink">
+					{{'pacientes.audit.ERROR_UNLINK' | translate }}
+				</p>
+			</div>
+			<div *ngIf="isLoadingRequestUnmerge" fxFlex="80%">
+				<mat-progress-bar class="progress-bar" mode="indeterminate"></mat-progress-bar>
+			</div>
+			<button mat-raised-button color="primary"
+				(click)="unlink()" [disabled]="isLoadingRequestUnmerge">{{'pacientes.audit.BUTTON_UNLINK' |
+				translate | uppercase}}</button>
+		</div>
+
+		<ng-template #noInfo>
+			<app-no-data></app-no-data>
+		</ng-template>
+
+		<ng-template #noData><span>-</span></ng-template>
+
+	</section>
+</app-content>

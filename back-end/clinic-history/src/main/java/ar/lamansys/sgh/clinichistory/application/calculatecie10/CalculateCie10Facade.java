@@ -1,10 +1,7 @@
 package ar.lamansys.sgh.clinichistory.application.calculatecie10;
 
-import ar.lamansys.sgh.clinichistory.application.calculatecie10.exceptions.HCICIE10Exception;
-import ar.lamansys.sgh.clinichistory.application.calculatecie10.exceptions.HCICIE10ExceptionEnum;
 import net.pladema.snowstorm.services.CalculateCie10CodesService;
 import net.pladema.snowstorm.services.domain.Cie10RuleFeature;
-import net.pladema.snowstorm.services.exceptions.SnowstormApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,8 +23,9 @@ public class CalculateCie10Facade {
         String result;
         try {
             result = calculateCie10CodesService.execute(sctid, map(features));
-        } catch (SnowstormApiException e) {
-            throw new HCICIE10Exception(HCICIE10ExceptionEnum.SNOWSTORM_TIMEOUT_SERVICE, e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+			return null;
         }
         return result;
     }

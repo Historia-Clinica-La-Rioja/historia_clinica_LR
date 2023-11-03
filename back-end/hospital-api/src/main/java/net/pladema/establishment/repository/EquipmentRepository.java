@@ -25,5 +25,13 @@ public interface EquipmentRepository extends JpaRepository<Equipment, Integer> {
 			"WHERE i.id = :institutionId ")
 	List<Equipment> getEquipmentByInstitution(@Param("institutionId") Integer sectorId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT e "+
+			"FROM Equipment AS e " +
+			"JOIN Sector AS s ON (s.id = e.sectorId)" +
+			"WHERE e.modalityId = :modalityId AND s.institutionId = :institutionId")
+	List<Equipment> getEquipmentByModalityInInstitution(@Param("modalityId") Integer modalityId,
+														@Param("institutionId") Integer institutionId);
+
 }
 

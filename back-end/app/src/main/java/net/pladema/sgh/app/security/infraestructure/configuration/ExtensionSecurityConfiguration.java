@@ -17,9 +17,19 @@ public class ExtensionSecurityConfiguration {
 	public ExtensionAuthorization extensionAuthorization(
 			LoggedUserService loggedUser
 	)  {
+		/**
+		 * Por cada ítem de menú, define la función que valida que el usuario tenga
+		 * los roles indicados
+		 */
 		return buildExtensionAuthorization()
-				.isInstitutionMenuAllowed("references", loggedUser.hasAnyInstitutionRole(ERole.ADMINISTRATIVO))
-				.isInstitutionMenuAllowed("reportesEstadisticos", loggedUser.hasAnyInstitutionRole(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE))
+				.isInstitutionMenuAllowed(
+						"references",
+						loggedUser.hasAnyInstitutionRole(ERole.ADMINISTRATIVO)
+				)
+				.isInstitutionMenuAllowed(
+						"reportesEstadisticos",
+						loggedUser.hasAnyInstitutionRole(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE)
+				)
 				.systemMenu(DemoExtensionService.PUBLIC_MENU_LIST, () -> true)
 				.build();
 	}

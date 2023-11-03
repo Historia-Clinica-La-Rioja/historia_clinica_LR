@@ -45,7 +45,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.OCULTAR_LISTADO_PROFESIONES_WEBAPP, true);
 		map.put(AppFeature.HABILITAR_MODULO_ENF_EN_DESARROLLO, false);
 		map.put(AppFeature.HABILITAR_2FA, false);
-		map.put(AppFeature.HABILITAR_EXTENSIONES_WEB_COMPONENTS, false);
+		map.put(AppFeature.HABILITAR_EXTENSIONES_WEB_COMPONENTS, true);
 		map.put(AppFeature.HABILITAR_NOTIFICACIONES_TURNOS, false);
 		map.put(AppFeature.HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA, true);
 		map.put(AppFeature.HABILITAR_REPORTES_ESTADISTICOS, false);
@@ -56,11 +56,13 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_VALIDACION_MATRICULAS_SISA, false);
 		map.put(AppFeature.HABILITAR_RECETA_DIGITAL, false);
 		map.put(AppFeature.HABILITAR_PRESCRIPCION_RECETA, false);
-		map.put(AppFeature.HABILITAR_MODULO_AUDITORIA, false);		
+		map.put(AppFeature.HABILITAR_MODULO_AUDITORIA, false);
 		map.put(AppFeature.HABILITAR_CAMPOS_CIPRES_EPICRISIS, false);
 		map.put(AppFeature.HABILITAR_IMPRESION_HISTORIA_CLINICA_EN_DESARROLLO, false);
-		map.put(AppFeature.HABILITAR_CARGA_CACHE_EN_DESARROLLO, false);
-		map.put(AppFeature.HABILITAR_UNIDADES_JERARQUICAS_EN_DESARROLLO, false);
+		map.put(AppFeature.HABILITAR_API_CONSUMER, true);
+		map.put(AppFeature.HABILITAR_TELEMEDICINA, false);
+		map.put(AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO, false);
+		map.put(AppFeature.HABILITAR_OBLIGATORIEDAD_UNIDADES_JERARQUICAS, false);
 	}
 
 	@Override

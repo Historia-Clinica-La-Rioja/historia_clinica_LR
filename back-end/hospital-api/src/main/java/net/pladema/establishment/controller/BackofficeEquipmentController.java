@@ -23,6 +23,9 @@ public class BackofficeEquipmentController extends AbstractBackofficeController<
 
 	@Override
 	public Equipment create(@Valid @RequestBody Equipment entity) {
+		if (entity.getCreateId() == null){
+			entity.setCreateId(false);
+		}
 		return super.create(entity);
 
 	}

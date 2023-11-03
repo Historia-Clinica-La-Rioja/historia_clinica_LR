@@ -1,0 +1,34 @@
+<app-titled-content-card [title]="title">
+	<div *ngIf="concepts?.length else noData" fxLayout="column">
+		<ng-container *ngFor="let item of concepts; index as i; last as isLast">
+			<div fxLayout="row" fxLayoutGap="15px" id="add">
+				<mat-checkbox [checked]="item.isAdded" (change)="updateAllChecked(item)">
+					<span class="capitalize">{{ item.concept.snomed.pt | titlecase}}</span>
+					<em *ngIf="item.concept?.administrationDate" class="mat-caption gray-caption">
+						{{ item.concept.administrationDate | date: 'shortDate' }}
+					</em>
+				</mat-checkbox>
+			</div>
+			<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+		</ng-container>
+		<div *ngIf="concepts.length>1" id="toggle-all-Selection" class="checkbox">
+			<br>
+			<ng-container id="all-selection">
+				<mat-checkbox  [checked]="allChecked" (change)="setAll($event.checked)">
+					{{'internaciones.epicrisis.list-concept.INCLUDE_ALL' | translate}}</mat-checkbox>
+			</ng-container>
+		</div>
+
+		<ng-template #noData>
+			<div class="no-data mat-typography gray-caption">
+				<span>{{'internaciones.epicrisis.list-concept.NO_DATA' | translate}}</span>
+			</div>
+		</ng-template>
+	</div>
+
+	<ng-template #noData>
+		<div class="no-data mat-typography gray-caption">
+			<span>{{'internaciones.epicrisis.list-concept.NO_DATA' | translate}}</span>
+		</div>
+	</ng-template>
+</app-titled-content-card>

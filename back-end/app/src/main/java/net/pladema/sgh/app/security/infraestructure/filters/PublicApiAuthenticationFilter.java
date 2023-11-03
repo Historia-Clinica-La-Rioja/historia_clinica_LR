@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -28,6 +27,8 @@ import net.pladema.sgh.app.security.infraestructure.authorization.InstitutionGra
 @Slf4j
 @Component
 public class PublicApiAuthenticationFilter extends OncePerRequestFilter {
+
+	public static final String PUBLIC_API_CONTEXT_MATCHER = "/public-api/**";
 
 	private final String apiKeyHeader;
 
@@ -49,13 +50,10 @@ public class PublicApiAuthenticationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws ServletException, IOException {
 
-		Optional.ofNullable(SecurityContextUtils.getAuthentication())
-				.ifPresentOrElse(
-						auth -> SecurityContextHolder.getContext().setAuthentication(auth),
-						() -> extractApiKey(request)
-								.flatMap(apiKeyExternalService::login)
-								.map(userInfo -> new UsernamePasswordAuthenticationToken(new SgxUserDetails(userInfo.getId()), "", getAuthorities(userInfo.getId())))
-								.ifPresent(opA -> SecurityContextHolder.getContext().setAuthentication(opA)));
+		extractApiKey(request)
+			.flatMap(apiKeyExternalService::login)
+			.map(userInfo -> new UsernamePasswordAuthenticationToken(new SgxUserDetails(userInfo.getId()), "", getAuthorities(userInfo.getId())))
+			.ifPresent(SecurityContextUtils::setAuthentication);
 		log.debug("Request {}", request);
 		chain.doFilter(request, response);
 		log.debug("Response {}", response);
@@ -75,7 +73,7 @@ public class PublicApiAuthenticationFilter extends OncePerRequestFilter {
 
 	@Override
 	public boolean shouldNotFilter(HttpServletRequest request) {
-		var matcher = new AntPathRequestMatcher("/public-api/**");
+		var matcher = new AntPathRequestMatcher(PUBLIC_API_CONTEXT_MATCHER);
 		boolean result = !matcher.matches(request);
 		log.debug("Should not filter request {} ?, result {}", request.getPathInfo(), result);
 		return result;

@@ -32,31 +32,49 @@
 						</div>
 					</div>
 				</div>
+				<div fxLayoutAlign="end center" fxLayoutAlign.lt-md="start center">
+					<button id="print-appointment" mat-stroked-button color="primary" btn-block type="button"
+						(click)="getAppointmentTicketReport()">
+						<mat-icon fontSet="material-icons-outlined">print</mat-icon>
+						<span class="uppercase">{{'turnos.appointment.PRINT' | translate}}</span>
+					</button>
+					<div class="none" id="pdfPrinter"></div>
+				</div>
 			</div>
 		</section>
 
 		<section gdArea="coverage">
 			<ng-container *ngIf="!hideFilterPanel else editAppointment">
-				<div fxLayout="column" fxLayoutGap="5px">
+				<div class="info-card" fxLayout="column" fxLayoutGap="5px">
+					<span class="mat-caption normal-size">{{'image-network.appointments.MEDICAL_ORDER' |
+						translate}}</span>
+					<div fxLayout="row" fxLayoutGap="5px" fxLayout.xs="column">
+						<span class="mat-body subtitle-size medical-order-description"
+							*ngIf="medicalOrder else noInfo" matTooltip="{{medicalOrder.displayText | titlecase}}">
+							{{medicalOrder.displayText | titlecase}}</span>
+					</div>
+				</div>
+				<div class="info-card" fxLayout="column" fxLayoutGap="5px">
 					<span class="mat-caption normal-size">{{'turnos.appointment.coverageData.COVERAGE_DATA' |
 						translate}}</span>
 					<div fxLayout="row" fxLayoutGap="5px" fxLayout.xs="column">
-						<span class="mat-body patient-info coverage-text subtitle-size" *ngIf="coverageData else noInfo"
+						<span class="mat-body patient-info description-text subtitle-size"
+							*ngIf="coverageData else noInfo"
 							matTooltip="{{coverageData.medicalCoverage.name}}">{{coverageText}}</span>
-						<span class="mat-body patient-info coverage-text subtitle-size" *ngIf="coverageNumber">/
+						<span class="mat-body patient-info description-text subtitle-size" *ngIf="coverageNumber">/
 							{{coverageNumber}}
 						</span>
-						<span class="mat-body patient-info coverage-text lowercase subtitle-size"
+						<span class="mat-body patient-info description-text lowercase subtitle-size"
 							*ngIf="coverageCondition">/
 							{{coverageCondition}}
 						</span>
 					</div>
 				</div>
-				<div fxLayout="column" fxLayoutGap="5px">
+				<div class="info-card" fxLayout="column" fxLayoutGap="5px">
 					<span class="mat-caption normal-size">{{'turnos.appointment.phoneNumber.PHONE_NUMBER' |
 						translate}}</span>
 					<span *ngIf="phoneNumber else noInfo"
-						class="mat-body patient-info coverage-text subtitle-size">{{phoneNumber}}</span>
+						class="mat-body patient-info description-text subtitle-size">{{phoneNumber}}</span>
 				</div>
 				<button type="button" mat-icon-button color="primary" *ngIf="( hasRoleToEdit$ | async )"
 					(click)="hideFilters()">
@@ -69,9 +87,12 @@
 
 			<ng-template #editAppointment>
 				<form [formGroup]="formEdit" fxLayout="column" fxLayoutGap="5px" (ngSubmit)="edit()">
-					<mat-form-field appearance="outline" *ngIf="isAssigned()">
+					<app-medical-order-input [patientMedicalOrders]="patientMedicalOrders"
+						[patientId]="data.appointmentData.patient.id" [disabled]="!canOrderBeEdited" (selectionChange)="setAsociatedCoverageData($event)"></app-medical-order-input>
+
+					<mat-form-field appearance="outline">
 						<button type="button" mat-button matSuffix color="warn" mat-icon-button
-							*ngIf="formEdit.value.newCoverageData" (click)="clear(); $event.stopPropagation()">
+							*ngIf="formEdit.value.newCoverageData" (click)="clearCoverageData(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
 						<mat-label>{{'pacientes.form.MEDICAL_COVERAGE' | translate}}</mat-label>
@@ -131,6 +152,27 @@
 					</div>
 				</form>
 			</ng-template>
+		</section>
+
+		<section gdArea="appointment" id="appointment" class="appointment-details section" fxLayout="column">
+			<span class="mat-body-strong subtitle-size appointment-title">{{'turnos.appointment.TITLE' |
+				translate}}</span>
+			<div>
+				<div fxLayout="column" fxLayoutGap="10px">
+					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start" data-id="appointment-date">
+						<app-iconed-text icon="calendar_today" text="{{selectedDate | date:'EEEE, d ' | titlecase }} de {{selectedDate | date:'MMMM ' | titlecase}} de {{selectedDate | date:'y ' | titlecase}}"></app-iconed-text>
+					</div>
+					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start" data-id="appointment-time">
+						<app-iconed-text icon="access_time" text="{{selectedDate | date:'H:mm'}} hs"></app-iconed-text>
+					</div>
+					<div fxLayout="column" fxLayoutGap="10px" *ngIf="appointment?.protected">
+						<span class="purple">{{'turnos.appointment.PROTECTED' | translate}}</span>
+					</div>
+					<div fxLayout="column" class="assigned-by normal-size" *ngIf="data.appointmentData.professionalPersonDto else bookingAppointment" data-id="assignment-professional">
+						<span>{{'turnos.appointment.ASSIGNED_BY' | translate}} {{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn | date:"dd/MM/yyyy H:mm"}}hs.</span>
+					</div>
+				</div>
+			</div>
 		</section>
 
 		<section gdArea="state-observations">
@@ -220,7 +262,14 @@
 </div>
 
 <ng-template #noInfo>
-	<span class="mat-body patient-no-info coverage-text subtitle-size">
+	<span class="mat-body patient-no-info description-text subtitle-size">
 		{{'turnos.appointment.NO-INFO' | translate}}
 	</span>
+</ng-template>
+
+<ng-template #bookingAppointment>
+	<div class="assigned-by" fxLayout="column">
+		<span>{{'turnos.appointment.ASSIGNED_BY' | translate}}</span>
+		<span>{{'turnos.appointment.BOOKING' | translate}} - {{data.appointmentData.createdOn | date:"dd/mm/yyyy H:mm"}}hs.</span>
+	</div>
 </ng-template>

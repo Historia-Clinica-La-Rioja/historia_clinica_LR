@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import lombok.SneakyThrows;
 import net.pladema.establishment.service.domain.OrchestratorBO;
@@ -61,7 +63,7 @@ public class MoveStudiesJob {
 
 	private final PacServerService pacServerService;
 
-
+	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
 	@Scheduled(cron = "${scheduledjobs.movestudies.seconds} " +
 			"${scheduledjobs.movestudies.minutes} " +
@@ -77,6 +79,8 @@ public class MoveStudiesJob {
 		List<MoveStudiesBO> moveStudies = moveStudiesService.getMoveStudies();
 		Map<Integer, List<MoveStudiesBO>> orchestrators = new HashMap<>();
 		for(MoveStudiesBO moveStudyBO:moveStudies){
+			PacServerBO pacServer = pacServerService.getPacServer(moveStudyBO.getPacServerId());
+			moveStudyBO.setDomainPac(pacServer != null? pacServer.getDomanin(): "none");
 			List<MoveStudiesBO> list = orchestrators.get(moveStudyBO.getOrchestratorId());
 			if (list == null){
 				List<MoveStudiesBO> newList = new ArrayList<>();
@@ -87,7 +91,6 @@ public class MoveStudiesJob {
 			}
 
 		}
-		List<Thread> threads = new ArrayList<>();
 		for (Map.Entry<Integer, List<MoveStudiesBO>> entry : orchestrators.entrySet()) {
 			List<MoveStudiesBO> result = entry.getValue();
 			OrchestratorBO orchestrator = orchestratorService.getOrchestrator(entry.getKey());
@@ -105,11 +108,10 @@ public class MoveStudiesJob {
 					subResult = result;
 				}
 				if (!subResult.isEmpty() && !MOVING.equals(subResult.get(0).getStatus())){
-					threads.add(new Thread(new MoveImageByOrchestrator(generateStudyTokenJWT, subResult,orchestrator, pacServerService, mqttClientService, moveStudiesService)));
+					executorService.execute(new MoveImageByOrchestrator(generateStudyTokenJWT, subResult,orchestrator, mqttClientService, moveStudiesService));
 				}
 			}
 		}
-		threads.forEach(thread -> thread.run());
 
 		log.warn("Scheduled MoveStudiesJob done at {}", new Date());
 	}
@@ -129,23 +131,27 @@ public class MoveStudiesJob {
 
 		String status = moveStudyBO.getStatus();
 		if (MOVING.equals(status)){
-			moveStudyBO.setCalculatedPriority(Double.MAX_VALUE);
+			moveStudyBO.setCalculatedPriority(Double.MAX_VALUE -1);
 		} else {
-			Double weightSize = orchestrator.getWeightSize();
-			Double weightDays = orchestrator.getWeightDays();
-			Double weightPriority = orchestrator.getWeightPriority();
+			if(moveStudyBO.getPriorityMax() > 0){
+				moveStudyBO.setCalculatedPriority(Double.MAX_VALUE);
+			} else{
+				Double weightSize = orchestrator.getWeightSize();
+				Double weightDays = orchestrator.getWeightDays();
+				Double weightPriority = orchestrator.getWeightPriority();
 
-			Double priority = moveStudyBO.getPriority() * weightPriority;
+				Double priority = moveStudyBO.getPriority() * weightPriority;
 
-			Double megabytes = (moveStudyBO.getSizeImage() != null ? moveStudyBO.getSizeImage() : 1) / MEGA;
-			Double size = megabytes * weightSize;
+				Double megabytes = (moveStudyBO.getSizeImage() != null ? moveStudyBO.getSizeImage() : 1) / MEGA;
+				Double size = megabytes * weightSize;
 
-			LocalDate dateMove = moveStudyBO.getDerivedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-			LocalDate currentDate = LocalDate.now();
-			long differenceDays = ChronoUnit.DAYS.between(dateMove, currentDate);
-			Double old = differenceDays * weightDays ;
+				LocalDate dateMove = moveStudyBO.getDerivedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				LocalDate currentDate = LocalDate.now();
+				long differenceDays = ChronoUnit.DAYS.between(dateMove, currentDate);
+				Double old = differenceDays * weightDays ;
 
-			moveStudyBO.setCalculatedPriority(priority + size + old);
+				moveStudyBO.setCalculatedPriority(priority + size + old);
+			}
 		}
 
 	}
@@ -159,18 +165,15 @@ class MoveImageByOrchestrator implements Runnable {
 
 	private final OrchestratorBO orchestrator;
 
-	private final PacServerService pacServerService;
-
 	private final MqttClientService mqttClientService;
 
 	private final MoveStudiesService moveStudiesService;
 
 	private final GenerateStudyTokenJWT generateStudyTokenJWT;
 
-	public MoveImageByOrchestrator(GenerateStudyTokenJWT generateStudyTokenJWT, List<MoveStudiesBO>moveStudies, OrchestratorBO orchestrator, PacServerService pacServerService, MqttClientService mqttClientService, MoveStudiesService moveStudiesService) {
+	public MoveImageByOrchestrator(GenerateStudyTokenJWT generateStudyTokenJWT, List<MoveStudiesBO>moveStudies, OrchestratorBO orchestrator, MqttClientService mqttClientService, MoveStudiesService moveStudiesService) {
 		this.moveStudies = moveStudies;
 		this.orchestrator = orchestrator;
-		this.pacServerService = pacServerService;
 		this.mqttClientService = mqttClientService;
 		this.moveStudiesService = moveStudiesService;
 		this.generateStudyTokenJWT = generateStudyTokenJWT;
@@ -184,11 +187,9 @@ class MoveImageByOrchestrator implements Runnable {
 		Integer attempsNumber = orchestrator.getAttempsNumber();
 		for(MoveStudiesBO moveStudy: moveStudies){
 			if(moveStudy.getAttempsNumber() < attempsNumber){
-				PacServerBO pacServer = pacServerService.getPacServer(moveStudy.getPacServerId());
-				String hostMove =pacServer.getDomanin();
 				String token = generateStudyTokenJWT.run(moveStudy.getImageId());
 				String json = "{\n" + "    \"StudyInstanceUID\": \"" + moveStudy.getImageId() + "\",\n" +
-						"    \"to_host\": \"" + hostMove + "\",\n" +
+						"    \"to_host\": \"" + moveStudy.getDomainPac() + "\",\n" +
 						"    \"IdMove\": \"" + moveStudy.getId() + "\",\n" +
 						"    \"Token\": \"" + token + "\" \n}" ;
 				MqttMetadataBo data = new MqttMetadataBo(topic, json,false,2);

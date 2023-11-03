@@ -5,23 +5,15 @@ cube(`TablaHipertension`, {
         JOIN snomed_related_group srg ON (srg.group_id = sg.id)
         WHERE sg.description = 'HYPERTENSION'),
         dp1 AS (
-        SELECT ovs.patient_id, ovs.value, date(ovs.effective_time) AS creation_date
+        SELECT DISTINCT ON (ovs.patient_id) ovs.patient_id, ovs.value, date(ovs.effective_time) AS creation_date
         FROM observation_vital_sign ovs 
-        WHERE ovs.id = (SELECT ovs2.id 
-                            FROM observation_vital_sign ovs2 
-                            WHERE ovs2.patient_id = ovs.patient_id 
-                            AND ovs2.snomed_id = 2
-                            ORDER BY ovs2.effective_time DESC
-                            LIMIT 1)),
+        WHERE ovs.snomed_id = 2
+        ORDER BY ovs.patient_id, ovs.effective_time DESC),
         sp1 AS (
-        SELECT ovs.patient_id, ovs.value, date(ovs.effective_time) AS creation_date
+        SELECT DISTINCT ON (ovs.patient_id) ovs.patient_id, ovs.value, date(ovs.effective_time) AS creation_date
         FROM observation_vital_sign ovs 
-        WHERE ovs.id = (SELECT ovs2.id 
-                            FROM observation_vital_sign ovs2 
-                            WHERE ovs2.patient_id = ovs.patient_id 
-                            AND ovs2.snomed_id = 1
-                            ORDER BY ovs2.effective_time DESC
-                            LIMIT 1)),
+        WHERE ovs.snomed_id = 1
+        ORDER BY ovs.patient_id, ovs.effective_time DESC),
         dp2 AS (
         SELECT ovs.patient_id, ovs.value, date(ovs.effective_time) AS creation_date
         FROM observation_vital_sign ovs 
@@ -43,89 +35,56 @@ cube(`TablaHipertension`, {
                             OFFSET 1
                             LIMIT 1)),
         cr AS (
-        SELECT ovs.patient_id, ovs.value, date(ovs.effective_time) AS creation_date
+        SELECT DISTINCT ON (ovs.patient_id) ovs.patient_id, ovs.value, date(ovs.effective_time) AS creation_date
         FROM observation_vital_sign ovs 
-        WHERE ovs.id = (SELECT ovs2.id 
-                            FROM observation_vital_sign ovs2 
-                            WHERE ovs2.patient_id = ovs.patient_id 
-                            AND ovs2.snomed_id = 1482
-                            ORDER BY ovs2.effective_time DESC
-                            LIMIT 1)),
+        WHERE ovs.snomed_id = 1482
+        ORDER BY ovs.patient_id, ovs.effective_time DESC),
         la AS (
-        SELECT hc.patient_id, hc.snomed_id, hc.created_on 
+        SELECT DISTINCT ON (hc.patient_id, hc.snomed_id) hc.patient_id, hc.snomed_id, hc.created_on 
         FROM health_condition hc
-        WHERE hc.id = (SELECT hc2.id
-                        FROM health_condition hc2 
-                        WHERE hc2.patient_id = hc.patient_id 
-                        AND hc2.snomed_id in (select snomed_id from rc)
-                        AND hc2.snomed_id = hc.snomed_id
-                        ORDER BY hc2.created_on DESC
-                        LIMIT 1)),
+        WHERE hc.snomed_id IN (SELECT snomed_id FROM rc)
+        ORDER BY hc.patient_id, hc.snomed_id, hc.created_on DESC),
         lf AS (
-        SELECT dr.patient_id, date(dr.created_on) AS result_date
+        SELECT DISTINCT ON (dr.patient_id) dr.patient_id, date(dr.created_on) AS result_date
         FROM diagnostic_report dr  
-        WHERE dr.id = (SELECT dr2.id 
-                            FROM diagnostic_report dr2 
-                            join snomed s on (s.id = dr2.snomed_id)
-                            WHERE dr2.patient_id = dr.patient_id 
-                            and s.sctid = '401531000221109'
-                            and dr2.status_id = '261782000'
-                            ORDER BY dr2.updated_on DESC
-                            LIMIT 1)),
+        JOIN snomed s ON (s.id = dr.snomed_id)
+        WHERE s.sctid = '401531000221109'
+        AND dr.status_id = '261782000'
+        ORDER BY dr.patient_id, dr.updated_on DESC),
         lac AS (
-        SELECT dr.patient_id, date(dr.created_on) AS result_date
-        FROM diagnostic_report dr  
-        WHERE dr.id = (SELECT dr2.id 
-                            FROM diagnostic_report dr2 
-                            join snomed s on (s.id = dr2.snomed_id)
-                            WHERE dr2.patient_id = dr.patient_id 
-                            and s.sctid = '250745003'
-                            and dr2.status_id = '261782000'
-                            ORDER BY dr2.updated_on DESC
-                            LIMIT 1)),
+        SELECT DISTINCT ON (dr.patient_id) dr.patient_id, date(dr.created_on) AS result_date
+        FROM diagnostic_report dr
+        JOIN snomed s ON (s.id = dr.snomed_id)  
+        WHERE s.sctid = '250745003'
+        and dr.status_id = '261782000'
+        ORDER BY dr.patient_id, dr.updated_on DESC),
         lc AS (
-        SELECT dr.patient_id, date(dr.created_on) AS result_date
+        SELECT DISTINCT ON (dr.patient_id) dr.patient_id, date(dr.created_on) AS result_date
         FROM diagnostic_report dr  
-        WHERE dr.id = (SELECT dr2.id 
-                            FROM diagnostic_report dr2 
-                            join snomed s on (s.id = dr2.snomed_id)
-                            WHERE dr2.patient_id = dr.patient_id 
-                            and s.sctid = '70901006'
-                            and dr2.status_id = '261782000'
-                            ORDER BY dr2.updated_on DESC
-                            LIMIT 1)),
+        JOIN snomed s ON (s.id = dr.snomed_id)
+        WHERE s.sctid = '70901006'
+        and dr.status_id = '261782000'
+        ORDER BY dr.patient_id, dr.updated_on DESC),
         lep as (
-        SELECT dr.patient_id, date(dr.created_on) AS result_date
+        SELECT DISTINCT ON (dr.patient_id) dr.patient_id, date(dr.created_on) AS result_date
         FROM diagnostic_report dr 
-        WHERE dr.id IN (SELECT dr2.id 
-                            FROM diagnostic_report dr2
-                            JOIN snomed s ON (s.id = dr2.snomed_id)
-                            JOIN snomed_related_group srg ON (srg.snomed_id = s.id)
-                            JOIN snomed_group sg ON (sg.id = srg.group_id)
-                            WHERE dr2.patient_id = dr.patient_id 
-                            AND sg.description = 'ELECTROCARDIOGRAPHIC_PROCEDURE'
-                            AND dr2.status_id = '261782000'
-                            ORDER BY dr2.updated_on DESC
-                            LIMIT 1)),
+        JOIN snomed s ON (s.id = dr.snomed_id)
+        JOIN snomed_related_group srg ON (srg.snomed_id = s.id)
+        JOIN snomed_group sg ON (sg.id = srg.group_id)
+        WHERE sg.description = 'ELECTROCARDIOGRAPHIC_PROCEDURE'
+        AND dr.status_id = '261782000'
+        ORDER BY dr.patient_id, dr.updated_on DESC),
         lp AS (
-        SELECT hc.patient_id, date(hc.start_date) AS result_date
+        SELECT DISTINCT ON (hc.patient_id) hc.patient_id, date(hc.start_date) AS result_date
         FROM health_condition hc 
-        WHERE hc.id IN (
-            SELECT hc2.id  
-                    FROM document d2
-                    JOIN document_health_condition dhc2 ON (dhc2.document_id = d2.id)
-                    JOIN health_condition hc2 ON (hc2.id = dhc2.health_condition_id) 
-                    WHERE hc.snomed_id IN (
-                        SELECT rc.snomed_id  
-                        FROM rc)
-                    AND hc2.problem_id IN ('55607006', '-55607006')
-                    AND d2.status_id IN ('445665009', '445667001') 
-                    AND d2.type_id IN (4, 9) 
-                    AND hc2.start_date IS NOT NULL
-                    AND hc2.patient_id = hc.patient_id
-                    AND hc2.snomed_id = hc.snomed_id
-                    ORDER BY hc2.start_date
-                    LIMIT 1))
+        JOIN document_health_condition dhc ON (dhc.health_condition_id = hc.id)
+        JOIN document d ON (d.id = dhc.document_id)
+        WHERE hc.snomed_id IN (SELECT rc.snomed_id FROM rc)
+        AND hc.problem_id IN ('55607006', '-55607006')
+        AND d.status_id IN ('445665009', '445667001') 
+        AND d.type_id IN (4, 9) 
+        AND hc.start_date IS NOT NULL
+        ORDER BY hc.patient_id, hc.start_date DESC)
         SELECT DISTINCT CASE WHEN p3.name_self_determination IS NULL THEN CONCAT(p2.first_name, ' ', p2.middle_names) WHEN p3.name_self_determination IS NOT NULL THEN p3.name_self_determination END AS name, 
         CONCAT(p2.last_name, ' ', p2.other_last_names) AS last_name, it.description || ' ' || p2.identification_number AS identification_number, s.pt AS problem, TO_CHAR(lp.result_date, 'DD/MM/YYYY') AS problem_start_date, 
         a.street || ' ' || a."number" AS address, c.description AS city_name, cr.value || '% (' || TO_CHAR(cr.creation_date, 'DD/MM/YYYY') || ')' AS cardiovascular_risk_value,

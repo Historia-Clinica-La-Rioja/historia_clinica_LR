@@ -43,6 +43,12 @@ public class EquipmentAppointmentBo {
 
 	private InstitutionBasicInfoBo derivedTo;
 
+	private Short reportStatusId;
+
+	private String studyName;
+
+	private Integer serviceRequestId;
+
 	public static EquipmentAppointmentBo fromEquipmentAppointmentVo(EquipmentAppointmentVo equipmentAppointmentVo) {
 		return EquipmentAppointmentBo.builder()
 				.id(equipmentAppointmentVo.getId())
@@ -53,6 +59,9 @@ public class EquipmentAppointmentBo {
 				.overturn(equipmentAppointmentVo.isOverturn())
 				.patientMedicalCoverageId(equipmentAppointmentVo.getPatientMedicalCoverageId())
 				.derivedTo(equipmentAppointmentVo.getInstitutionBasicInfoBo())
+				.reportStatusId(equipmentAppointmentVo.getReportStatusId())
+				.studyName(equipmentAppointmentVo.getStudyName())
+				.serviceRequestId(equipmentAppointmentVo.getServiceRequestId())
 				.build();
 	}
 

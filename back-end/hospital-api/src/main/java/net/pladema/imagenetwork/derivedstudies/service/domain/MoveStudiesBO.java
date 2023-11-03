@@ -42,4 +42,8 @@ public class MoveStudiesBO {
 	private String status;
 
 	private Double calculatedPriority;
+
+	private Integer institutionId;
+
+	private String domainPac;
 }

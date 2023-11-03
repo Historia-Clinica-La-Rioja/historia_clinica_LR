@@ -22,6 +22,7 @@ import { CardLicenseComponent } from './component/card-license/card-license.comp
 import { CardProfessionsComponent } from './component/card-professions/card-professions.component';
 import { CardPatientComponent } from './component/card-patient/card-patient.component';
 import { CardRolesComponent } from './component/card-roles/card-roles.component';
+import { HierarchicalUnitsComponent } from './component/hierarchical-units/hierarchical-units.component';
 import { LicenseFormComponent } from './component/license-form/license-form.component';
 import { ProfessionSpecialtiesFormComponent } from './component/profession-specialties-form/profession-specialties-form.component';
 import { SearchCreateComponent } from './component/search-create/search-create.component';
@@ -31,6 +32,7 @@ import { EditIdentificationNumberComponent } from './dialogs/edit-identification
 import { FilesUploaderComponent } from './component/files-uploader/files-uploader.component';
 // dialogs
 import { ArtComponent } from './dialogs/art/art.component';
+import { EditHierarchicalUnitsComponent } from './dialogs/edit-hierarchical-units/edit-hierarchical-units.component';
 import { EditLicenseComponent } from './dialogs/edit-license/edit-license.component';
 import { EditPrefessionsSpecialtiesComponent } from './dialogs/edit-prefessions-specialties/edit-prefessions-specialties.component';
 import { EditRolesComponent } from './dialogs/edit-roles/edit-roles.component';
@@ -41,9 +43,11 @@ import { ReportsComponent } from './dialogs/reports/reports.component';
 import { ScanPatientComponent } from './dialogs/scan-patient/scan-patient.component';
 import { MessageForAuditComponent } from './dialogs/message-for-audit/message-for-audit.component';
 import { WarningEditIdentificationNumberComponent } from './dialogs/warning-edit-identification-number/warning-edit-identification-number.component';
+import { SearchPatientDialogComponent } from './dialogs/search-patient-dialog/search-patient-dialog.component';
 
 // pipes
 import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-and-specialty.pipe';
+import { SearchPatientComponent } from './component/search-patient/search-patient.component';
 
 
 
@@ -66,14 +70,17 @@ import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-
 		CardProfessionsComponent,
 		CardRolesComponent,
 		FilesUploaderComponent,
+		HierarchicalUnitsComponent,
 		LicenseFormComponent,
 		ProfessionSpecialtiesFormComponent,
 		ResumenDeGuardiaComponent,
 		SearchCreateComponent,
+		SearchPatientComponent,
 		ViewPatientDetailComponent,
-  		EditIdentificationNumberComponent,
+		EditIdentificationNumberComponent,
 		// dialogs
 		ArtComponent,
+		EditHierarchicalUnitsComponent,
 		EditLicenseComponent,
 		EditPrefessionsSpecialtiesComponent,
 		EditRolesComponent,
@@ -84,13 +91,16 @@ import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-
 		ReportsComponent,
 		ScanPatientComponent,
 		ScanPatientComponent,
-    	WarningEditIdentificationNumberComponent,
+		SearchPatientDialogComponent,
+		WarningEditIdentificationNumberComponent,
 		// pipes
 		ViewNameProfessionAndSpecialtyPipe,
 	],
 	exports: [
 		CardPatientComponent,
 		ResumenDeGuardiaComponent,
+		SearchPatientComponent,
+		EditPatientComponent
 	],
 	imports: [
 		FormsModule,

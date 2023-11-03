@@ -157,11 +157,14 @@
         <query>SELECT oc.doctor_id as professional_id,
             cs.id as specialty_id, cs."name" as specialty, cs.clinical_specialty_type_id as specialtyType,
             extract(year from (age(oc.start_date, per.birth_date))) as "age", per.gender_id,
-            CASE WHEN oc.patient_medical_coverage_id is null THEN false ELSE true END as "OS"
+            CASE WHEN oc.patient_medical_coverage_id is null THEN false ELSE true END as "OS",
+			oc.hierarchical_unit_id as hierarchicalUnitId, hut.id as hierarchicalUnitTypeId
             FROM outpatient_consultation oc
             LEFT JOIN clinical_specialty cs on (oc.clinical_specialty_id = cs.id)
             JOIN patient pat on (oc.patient_id = pat.id)
             JOIN person per on (pat.person_id = per.id)
+			LEFT JOIN hierarchical_unit hu ON (oc.hierarchical_unit_id = hu.id)
+			LEFT JOIN hierarchical_unit_type hut ON (hu.type_id = hut.id)
             WHERE oc.institution_id = :institutionId
             AND oc.start_date between :from and :to
             AND oc.billable
@@ -169,7 +172,8 @@
             SELECT vc.doctor_id as professional_id,
             cs.id as specialty_id, cs."name" as specialty, cs.clinical_specialty_type_id as specialtyType,
             extract(year from (age(vc.performed_date, per.birth_date))) as "age", per.gender_id,
-            CASE WHEN vc.patient_medical_coverage_id is null THEN false ELSE true END as "OS"
+            CASE WHEN vc.patient_medical_coverage_id is null THEN false ELSE true END as "OS",
+			NULL as hierarchicalUnitId, NULL as hierarchicalUnitTypeId
             FROM vaccine_consultation vc
             LEFT JOIN clinical_specialty cs on (vc.clinical_specialty_id = cs.id)
             JOIN patient pat on (vc.patient_id = pat.id)
@@ -184,11 +188,14 @@
 		<query>SELECT oc.doctor_id as professional_id,
 			cs.id as specialty_id, cs."name" as specialty, cs.clinical_specialty_type_id as specialtyType,
 			extract(year from (age(oc.created_on, per.birth_date))) as "age", per.gender_id,
-			CASE WHEN oc.patient_medical_coverage_id is null THEN false ELSE true END as "OS"
+			CASE WHEN oc.patient_medical_coverage_id is null THEN false ELSE true END as "OS",
+			oc.hierarchical_unit_id as hierarchicalUnitId, hut.id as hierarchicalUnitTypeId
 			FROM odontology_consultation oc
 			LEFT JOIN clinical_specialty cs on (oc.clinical_specialty_id = cs.id)
 			JOIN patient pat on (oc.patient_id = pat.id)
 			JOIN person per on (pat.person_id = per.id)
+			LEFT JOIN hierarchical_unit hu on (oc.hierarchical_unit_id = hu.id)
+			LEFT JOIN hierarchical_unit_type hut on (hu.type_id = hut.id)
 			WHERE oc.institution_id = :institutionId
 			AND oc.created_on between :from and :to
 			AND oc.billable
@@ -200,11 +207,14 @@
 			SELECT nc.doctor_id as professional_id,
 			cs.id as specialty_id, cs."name" as specialty, cs.clinical_specialty_type_id as specialtyType,
 			extract(year from (age(nc.created_on, per.birth_date))) as "age", per.gender_id,
-			CASE WHEN nc.patient_medical_coverage_id is null THEN false ELSE true END as "OS"
+			CASE WHEN nc.patient_medical_coverage_id is null THEN false ELSE true END as "OS",
+			nc.hierarchical_unit_id as hierarchicalUnitId, hut.id as hierarchicalUnitTypeId
 			FROM nursing_consultation nc
 			LEFT JOIN clinical_specialty cs on (nc.clinical_specialty_id = cs.id)
 			JOIN patient pat on (nc.patient_id = pat.id)
 			JOIN person per on (pat.person_id = per.id)
+			LEFT JOIN hierarchical_unit hu on (nc.hierarchical_unit_id = hu.id)
+			LEFT JOIN hierarchical_unit_type hut on (hu.type_id = hut.id)
 			WHERE nc.institution_id = :institutionId
 			AND nc.created_on between :from and :to
 		</query>
@@ -223,7 +233,7 @@
 			MAX(CASE WHEN ovs.loinc_code='62854-5' THEN ovs.value END) as glycosylatedHemoglobin,
 			MAX(CASE WHEN ovs.loinc_code='15074-8' THEN ovs.value END) as bloodGlucose,
 			MAX(CASE WHEN ovs.loinc_code='11947-9' THEN ovs.value END) as headCircunference,
-			'outpatient' as consultation_type
+			'outpatient' as consultation_type, oc.hierarchical_unit_id as hierarchicalUnitId
 			FROM outpatient_consultation oc
 			LEFT JOIN (
 			SELECT ocr.outpatient_consultation_id AS oc_id , STRING_AGG(r.description, ', ') AS description
@@ -256,7 +266,7 @@
 			vc.doctor_id, vc.performed_date as start_date, NULL AS reasons,  NULL AS problems, NULL as procedures,
 			NULL AS weight, NULL AS height, NULL AS systolicBloodPressure, NULL AS diastolicBloodPressure,
 			NULL as cardiovascularRisk, NULL as glycosylatedHemoglobin, NULL as bloodGlucose, NULL as headCircunference,
-			'vaccine' as consultation_type
+			'vaccine' as consultation_type, NULL as hierarchicalUnitId
 			FROM vaccine_consultation vc
 			WHERE vc.institution_id = :institutionId
 			AND vc.billable = true
@@ -276,7 +286,9 @@
 			CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as professionalName,
 			cst.reasons as reasons,  cst.problems, cst.procedures,
 			cst.weight, cst.height, cst.systolicBloodPressure, cst.diastolicBloodPressure,
-			cst.cardiovascularRisk, cst.glycosylatedHemoglobin, cst.bloodGlucose, cst.headCircunference, null as cpo, null as ceo
+			cst.cardiovascularRisk, cst.glycosylatedHemoglobin, cst.bloodGlucose, cst.headCircunference, null as cpo, null as ceo,
+			cst.hierarchicalUnitId as hierarchicalUnitId, hu.alias as hierarchicalUnitAlias,
+			hut.id as hierarchicalUnitTypeId, hut.description as hierarchicalUnitTypeDescription
 			FROM consultation cst
 			JOIN patient pa ON (cst.patient_id = pa.id)
 			JOIN person pe ON (pa.person_id = pe.id)
@@ -290,6 +302,8 @@
 			LEFT JOIN clinical_specialty cs ON (cst.clinical_specialty_id = cs.id)
 			JOIN healthcare_professional hp ON (cst.doctor_id = hp.id)
 			JOIN person p2 ON (hp.person_id = p2.id)
+			LEFT JOIN hierarchical_unit hu ON (cst.hierarchicalUnitId = hu.id)
+			LEFT JOIN hierarchical_unit_type hut ON (hu.type_id = hut.id)
 		</query>
     </named-native-query>
 
@@ -301,7 +315,7 @@
 			concat_ws('/split/', procedures.description, odontology_procedures.description) as procedures,
 			null as weight, null as height, null as systolicBloodPressure, null as diastolicBloodPressure,
 			null as cardiovascularRisk, null as glycosylatedHemoglobin, null as bloodGlucose, null as headCircunference, concat_ws('-', oci.permanent_c, oci.permanent_p, oci.permanent_o) as cpo,  concat_ws('-', oci.temporary_c, oci.temporary_e, oci.temporary_o) as ceo,
-			'odontology' as consultation_type
+			'odontology' as consultation_type, oc.hierarchical_unit_id as hierarchicalUnitId
 			FROM odontology_consultation oc
 			LEFT JOIN (
 			SELECT ocr.odontology_consultation_id AS oc_id , STRING_AGG(r.description, ', ') AS description
@@ -358,7 +372,9 @@
 			CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as professionalName,
 			cst.reasons as reasons,  cst.problems, cst.procedures,
 			cst.weight, cst.height, cst.systolicBloodPressure, cst.diastolicBloodPressure,
-			cst.cardiovascularRisk, cst.glycosylatedHemoglobin, cst.bloodGlucose, cst.headCircunference, cst.cpo, cst.ceo
+			cst.cardiovascularRisk, cst.glycosylatedHemoglobin, cst.bloodGlucose, cst.headCircunference, cst.cpo, cst.ceo,
+			cst.hierarchicalUnitId as hierarchicalUnitId, hu.alias as hierarchicalUnitAlias,
+			hut.id as hierarchicalUnitTypeId, hut.description as hierarchicalUnitTypeDescription
 			FROM consultation cst
 			JOIN patient pa ON (cst.patient_id = pa.id)
 			JOIN person pe ON (pa.person_id = pe.id)
@@ -372,6 +388,8 @@
 			LEFT JOIN clinical_specialty cs ON (cst.clinical_specialty_id = cs.id)
 			JOIN healthcare_professional hp ON (cst.doctor_id = hp.id)
 			JOIN person p2 ON (hp.person_id = p2.id)
+			LEFT JOIN hierarchical_unit hu ON (cst.hierarchicalUnitId = hu.id)
+			LEFT JOIN hierarchical_unit_type hut ON (hu.type_id = hut.id)
 		</query>
 	</named-native-query>
 
@@ -388,7 +406,7 @@
 			MAX(CASE WHEN ovs.loinc_code='62854-5' THEN ovs.value END)  as glycosylatedHemoglobin,
 			MAX(CASE WHEN ovs.loinc_code='15074-8' THEN ovs.value END) as bloodGlucose,
 			MAX(CASE WHEN ovs.loinc_code='11947-9' THEN ovs.value END) as headCircunference,
-			'nursing' as consultation_type
+			'nursing' as consultation_type, oc.hierarchical_unit_id as hierarchicalUnitId
 			FROM nursing_consultation oc
 			JOIN document d ON (d.source_id = oc.id and d.source_type_id = 7)
 			LEFT JOIN (
@@ -425,7 +443,9 @@
 			CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as professionalName,
 			cst.reasons as reasons,  cst.problems, cst.procedures,
 			cst.weight, cst.height, cst.systolicBloodPressure, cst.diastolicBloodPressure,
-			cst.cardiovascularRisk, cst.glycosylatedHemoglobin, cst.bloodGlucose, cst.headCircunference, null as cpo, null as ceo
+			cst.cardiovascularRisk, cst.glycosylatedHemoglobin, cst.bloodGlucose, cst.headCircunference, null as cpo, null as ceo,
+			cst.hierarchicalUnitId as hierarchicalUnitId, hu.alias as hierarchicalUnitAlias,
+			hut.id as hierarchicalUnitTypeId, hut.description as hierarchicalUnitTypeDescription
 			FROM consultation cst
 			JOIN patient pa ON (cst.patient_id = pa.id)
 			JOIN person pe ON (pa.person_id = pe.id)
@@ -439,6 +459,8 @@
 			LEFT JOIN clinical_specialty cs ON (cs.id = cst.clinical_specialty_id)
 			JOIN healthcare_professional hp ON (cst.doctor_id = hp.id)
 			JOIN person p2 ON (hp.person_id = p2.id)
+			LEFT JOIN hierarchical_unit hu ON (cst.hierarchicalUnitId = hu.id)
+			LEFT JOIN hierarchical_unit_type hut ON (hu.type_id = hut.id)
 		</query>
 	</named-native-query>
 
@@ -1857,7 +1879,9 @@
             <column name="age" class="java.lang.Integer"/>
             <column name="gender_id" class="java.lang.Short"/>
             <column name="OS" class="java.lang.Boolean"/>
-        </constructor-result>
+			<column name="hierarchicalUnitId" class="java.lang.Integer"/>
+			<column name="hierarchicalUnitTypeId" class="java.lang.Integer"/>
+		</constructor-result>
     </sql-result-set-mapping>
     <sql-result-set-mapping name="Reports.ConsultationDetailResult">
         <constructor-result target-class="net.pladema.reports.repository.ConsultationDetailWithoutInstitution">
@@ -1891,7 +1915,11 @@
 			<column name="headCircunference" class="java.lang.String"/>
 			<column name="cpo" class="java.lang.String"/>
 			<column name="ceo" class="java.lang.String"/>
-        </constructor-result>
+			<column name="hierarchicalUnitId" class="java.lang.Integer"/>
+			<column name="hierarchicalUnitAlias" class="java.lang.String"/>
+			<column name="hierarchicalUnitTypeId" class="java.lang.Integer"/>
+			<column name="hierarchicalUnitTypeDescription" class="java.lang.String"/>
+		</constructor-result>
 
     </sql-result-set-mapping>
 

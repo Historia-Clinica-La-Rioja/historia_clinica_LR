@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -48,6 +49,10 @@ public class DiaryBo {
 
 	protected List<Integer> careLines;
 
-	protected Integer protectedAppointmentsPercentage;
+	protected Integer predecessorProfessionalId;
+
+	protected Integer hierarchicalUnitId;
+    
+	protected List<Integer> practicesId;
     
 }

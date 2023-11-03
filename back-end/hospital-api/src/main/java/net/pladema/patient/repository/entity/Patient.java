@@ -70,6 +70,14 @@ public class Patient extends SGXAuditableEntity<Integer> {
 		this.nationalId = patientPersonVo.getNationalId();
 		this.comments = patientPersonVo.getComments();
 		this.identityVerificationStatusId = patientPersonVo.getIdentityVerificationStatusId();
+		this.setCreatedBy(patientPersonVo.getCreatedBy());
+		this.setCreatedOn(patientPersonVo.getCreatedOn());
+		this.setUpdatedBy(patientPersonVo.getUpdatedBy());
+		this.setUpdatedOn(patientPersonVo.getUpdatedOn());
+		this.setDeletedBy(patientPersonVo.getDeletedBy());
+		this.setUpdatedOn(patientPersonVo.getDeletedOn());
+		this.setDeleted(patientPersonVo.getDeleted());
+		this.auditTypeId = patientPersonVo.getAuditTypeId();
 	}
 
 	public boolean isValidated() {

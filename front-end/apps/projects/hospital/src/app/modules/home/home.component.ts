@@ -19,8 +19,11 @@ import { NO_ROLES_USER_SIDEBAR_MENU, ROLES_USER_SIDEBAR_MENU } from './constants
 
 import { HomeRoutes } from '../home/home-routing.module';
 import { AppRoutes } from '../../app-routing.module';
-import { Slot, SlotedInfo, WCExtensionsService } from '@extensions/services/wc-extensions.service';
+import { WCExtensionsService } from '@extensions/services/wc-extensions.service';
 import { MenuItemDef } from '@core/core-model';
+import { ContextService } from '@core/services/context.service';
+
+export const NO_INSTITUTION: number = -1;
 
 @Component({
 	selector: 'app-home',
@@ -33,35 +36,20 @@ export class HomeComponent implements OnInit {
 	userInfo: UserInfo;
 	nameSelfDeterminationFF: boolean;
 
-	homeExtensions$: Observable<any[]>;
+	homeExtensions$: Observable<MenuItem[]>;
 	constructor(
 		private extensionMenuService: MenuService,
 		private accountService: AccountService,
 		private featureFlagService: FeatureFlagService,
 		private loggedUserService: LoggedUserService,
 		private readonly wcExtensionsService: WCExtensionsService,
+		private contextService: ContextService
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
 			this.nameSelfDeterminationFF = isOn
 		});
-		this.homeExtensions$ = this.wcExtensionsService.getComponentsFromSlot(Slot.HOME_MENU)
-			.pipe(
-				map(array => {
-					return array.map(this.map)
-				})
-			);
-	}
-
-	private map(slotedInfo: SlotedInfo): MenuItem {
-		const url = slotedInfo.title.split(' ').join('-');
-		return {
-			label: {
-				text: slotedInfo.title,
-			},
-			icon: 'home',
-			id: url,
-			url: `web-components/${slotedInfo.componentName}`,
-		}
+		this.homeExtensions$ = this.wcExtensionsService.getSystemHomeMenu();
+		this.contextService.setInstitutionId(NO_INSTITUTION);
 	}
 
 	ngOnInit(): void {

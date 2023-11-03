@@ -42,19 +42,11 @@ public class PacServer {
 	@Column(name = "pac_server_protocol_id", nullable = false)
 	private Short pacServerProtocol;
 
-	@Column(name = "username", nullable = false, length = 50)
-	private String username;
-
-	@Column(name = "password", nullable = false)
-	private String password;
-
-	@Column(name = "url_stow", nullable = false)
-	private String urlStow;
-
-	@Column(name = "url_auth", nullable = false)
-	private String urlAuth;
+	@Column(name = "active", nullable = false)
+	private Boolean active;
 
 	@Column(name = "institution_id", nullable = true)
 	private Integer institutionId;
+
 
 }

@@ -1,26 +1,55 @@
 <h2 class="subtitle" translate="image-network.worklist.details_study.REPORT"></h2>
 
-<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-    <mat-icon fontSet="material-icons-outlined">error_outline</mat-icon>
-    <span class="bold">{{ 'image-network.worklist.details_study.PROBLEMS' | translate }}</span>
+<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" *ngIf="study?.info.informerObservations?.conclusions?.length">
+    <span class="bold">{{ 'image-network.worklist.details_study.CONCLUTIONS' | translate }}</span>
 </div>
 
-<form [formGroup]="form" *ngIf="enabledEditing else showInformerObservations" fxLayout="column" fxLayoutGap="2vh">
+
+<form [formGroup]="form" *ngIf="enabledEditing else showInformerObservations" fxLayout="column">
+
+    <div *ngIf="searchConceptsLocallyFFIsOn">
+        <app-concept-typeahead-search id="typeaheadSearch" [ecl]="ambulatoryConsultationProblemsService.getECL()"
+            [placeholder]="'image-network.worklist.details_study.conclutions.SEARCH_CONCLUTION'"
+            appearanceOutline="true" (conceptSelected)="addTypeaheadConclusion($event)">
+    </app-concept-typeahead-search>
+    </div>
 
     <app-titled-content-card *ngIf="!ambulatoryConsultationProblemsService.isEmpty()"
-        title="{{ 'ambulatoria.paciente.nueva-consulta.problemas.PROBLEMA' }}" class="content">
-        <app-problem-list [problemsService]="ambulatoryConsultationProblemsService"></app-problem-list>
+        title="{{ 'image-network.worklist.details_study.conclutions.REGISTERED_CONCLUTIONS' }}" class="card">
+        <app-problem-list [problemsService]="ambulatoryConsultationProblemsService" [canEdit]="false"></app-problem-list>
     </app-titled-content-card>
 
-    <button mat-button id="add-problem-button" color="primary" (click)="addProblem()">
-        + {{ 'ambulatoria.paciente.nueva-consulta.problemas.buttons.ADD' | translate }}
-    </button>
+    <div *ngIf="!searchConceptsLocallyFFIsOn">
+        <button mat-button class="add-btn" id="add-problem-button" color="primary" (click)="addProblem()">
+            + {{ 'image-network.worklist.details_study.conclutions.ADD_CONCLUTION' | translate }}
+        </button>
+    </div>
 
-    <mat-error *ngIf="submitted && !problems.length" [translate]="'forms.REQUIRED'"></mat-error>
+    <div fxLayout="row" fxLayoutAlign="space-between center" class="margin">
+        <span class="bold">{{ 'image-network.worklist.details_study.OBSERVATIONS' | translate }}</span>
+        <div fxLayout="row" fxLayoutAlign="center center">
+            <span mat-button class="bold template-label"  color="primary">
+                {{ 'image-network.worklist.details_study.TEMPLATE' | translate }}
+            </span>
+            <button  id="actions-template-button"  color="primary" mat-icon-button [matMenuTriggerFor]="menu" >
+                <mat-icon>arrow_drop_down</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <ng-container >
+                    <button mat-menu-item (click)="openSaveTemplate()" [disabled]="!form.valid || textEditorLength === 0" >
+                        <span [translate]="'image-network.worklist.details_study.SAVE_TEMPLATE_TITLE'"></span>
+                    </button>
+                    <button mat-menu-item (click)="openTemplateManagementByForm()" [disabled]="disableImportFiles">
+                        <span [translate]="'image-network.worklist.details_study.IMPORT_TEMPLATE'"></span>
+                    </button>
+                </ng-container>
+            </mat-menu>
+        </div>
+    </div>
 
-    <div fxLayout="column" fxLayoutGap="30px">
+    <div fxLayout="column" fxLayoutGap="30px" style="margin-top: 0.7rem;">
         <app-rich-text-editor [formParent]="form" [controlParent]="form.controls.observations"></app-rich-text-editor>
-        <mat-error *ngIf="submitted && form.hasError('required','observations')"
+        <mat-error *ngIf="submitted && (form.hasError('required','observations') || !textEditorLength)"
             [translate]="'forms.REQUIRED'"></mat-error>
 
         <div fxLayout="row" fxLayoutGap="30px">
@@ -41,32 +70,6 @@
 
 
 <ng-template #showInformerObservations>
-    <div fxLayout="column" *ngIf="study.info.informerObservations">
-        <div class="content" *ngFor="let problem of study.info.informerObservations.problems">
-            <span>{{problem.snomed.pt}}</span>
-        </div>
-
-        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-            <mat-icon fontSet="material-icons-outlined">chat</mat-icon>
-            <span class="bold">{{ 'image-network.worklist.details_study.OBSERVATIONS' | translate }}</span>
-        </div>
-
-
-        <div class="observations" [innerHtml]="study.info.informerObservations.evolutionNote"></div>
-        <div class="grey" fxLayout="row" fxLayoutAlign="space-between">
-            <span>{{study.info.informerObservations.createdBy}}</span>
-            <div fxLayout="row" fxLayoutGap="10px">
-                <span class="grey" *ngIf="!study.info.informerObservations.confirmed">
-                    {{ 'image-network.worklist.details_study.DRAFT_REPORT' | translate }}
-                </span>
-                <span>{{ study.info.informerObservations.actionTime | viewDateDto: 'localdatetime' | date : 'short'}} hs</span>
-            </div>
-        </div>
-        <div fxLayout="row" fxLayoutGap="30px" *ngIf="!study.info.informerObservations.confirmed">
-            <button id="still_editing" mat-stroked-button class="button" color="primary"
-                (click)="enabledEditing = true" [disabled]="disableContinueEditing">
-                <span>{{ 'image-network.worklist.details_study.CONTINUE_EDITING' | translate | uppercase }}</span>
-            </button>
-        </div>
-    </div>
+    <app-view-informer-observations [informerObservations]="study.info.informerObservations" [disableEditing]="disableContinueEditing" (updateEditing)="updateEditing()">
+    </app-view-informer-observations>
 </ng-template>

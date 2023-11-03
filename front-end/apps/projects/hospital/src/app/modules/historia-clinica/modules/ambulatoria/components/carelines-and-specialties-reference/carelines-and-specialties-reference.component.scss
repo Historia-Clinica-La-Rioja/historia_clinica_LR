@@ -1,6 +1,5 @@
 .reference-type {
 	font-size: 15px;
-	
 	.mat-radio-button ~ .mat-radio-button {
 		margin-left: 50px;
     }
@@ -11,4 +10,20 @@
 	}
 
 	height: 60px;
+}
+
+.search-criteria {
+	margin-bottom: 10px;
+	font-weight: 500;
+	font-size: 15px;
+}
+
+.error-message {
+	padding-left: 10px;
+	font-size: 10.5px;
+}
+
+.typeahead-field {
+	padding-bottom: 16.8px;
+	margin: 3.5px 0;
 }

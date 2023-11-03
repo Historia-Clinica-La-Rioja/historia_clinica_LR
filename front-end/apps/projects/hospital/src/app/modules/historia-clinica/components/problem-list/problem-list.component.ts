@@ -14,6 +14,7 @@ export class ProblemListComponent implements OnInit {
 
   @Input() problemsService: AmbulatoryConsultationProblemsService;
   @Input() diagnosesService: ProblemasService;
+  @Input() canEdit?: boolean;
   DateFormat = DateFormat;
   SEVERITY_CODES = SEVERITY_CODES;
   activeService = null;
@@ -23,7 +24,7 @@ export class ProblemListComponent implements OnInit {
   ngOnInit(): void {
     if (this.problemsService) {
       this.activeService = this.problemsService;
-      this.activeService.canEdit = true;
+      this.activeService.canEdit = this.canEdit !== undefined ? this.canEdit : true;
     }
     else {
       this.activeService = this.diagnosesService;

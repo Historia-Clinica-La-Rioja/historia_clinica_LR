@@ -18,11 +18,11 @@ export class BedService {
 		return this.http.get<BedDto[]>(url);
 	}
 
-	getBedsSummary(sectorType?: number): Observable<BedSummaryDto[]> {
+	getBedsSummary(sectorsType?: number[]): Observable<BedSummaryDto[]> {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/bed/summary-list`;
-		let queryParams: HttpParams = new HttpParams();
-		queryParams = sectorType ? queryParams.append('sectorType', sectorType) : queryParams;
-		return this.http.get<BedSummaryDto[]>(url, {params: queryParams});
+		let params = new HttpParams();
+		params = params.append('sectorsType', sectorsType.join(', '));
+		return this.http.get<BedSummaryDto[]>(url, {params});
 	}
 
 	getBedInfo(bedId): Observable<BedInfoDto> {

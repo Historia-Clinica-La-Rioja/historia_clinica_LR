@@ -2,7 +2,6 @@ package net.pladema.snowstorm.repository;
 
 import net.pladema.snowstorm.repository.domain.SnomedTemplateSearchVo;
 import net.pladema.snowstorm.repository.entity.SnomedGroup;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -72,8 +71,26 @@ public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Intege
 			"WHERE sg.institutionId = :institutionId " +
 			"AND sg.groupId = :groupId " +
 			"AND sg.groupType = :groupType ")
-	Optional<SnomedGroup> findByInstitutionIdAndGroupIdAndGroupType(@Param("institutionId") Integer institutionId,
+	Optional<List<SnomedGroup>> findByInstitutionIdAndGroupIdAndGroupType(@Param("institutionId") Integer institutionId,
+																		  @Param("groupId") Integer groupId,
+																		  @Param("groupType") Short groupType);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT sg " +
+			"FROM SnomedGroup sg " +
+			"JOIN SnomedRelatedGroup srg ON sg.id = srg.snomedId " +
+			"WHERE sg.institutionId = :institutionId " +
+			"AND sg.groupId = :groupId " +
+			"AND sg.groupType = :groupType ")
+	Optional<List<SnomedGroup>> findPracticeGroupAndCheckConceptAssociated(@Param("institutionId") Integer institutionId,
 																	@Param("groupId") Integer groupId,
 																	@Param("groupType") Short groupType);
+
+	@Query( " SELECT baseGroup.description " +
+			" FROM SnomedGroup sg " +
+			" JOIN SnomedGroup baseGroup ON sg.groupId = baseGroup.id " +
+			" WHERE sg.ecl = :ecl " +
+			" AND sg.groupType = :groupType" )
+	List<String> getDescriptionByParentGroupEcl(@Param("ecl") String ecl, @Param("groupType") Short groupType);
 
 }

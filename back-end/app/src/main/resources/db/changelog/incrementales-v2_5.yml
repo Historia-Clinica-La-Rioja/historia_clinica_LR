@@ -1,0 +1,43 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v2_5
+
+    - changeSet:
+        id: addColumn-priority-reference
+        author: jvaldez
+        comment: Add priority column to reference table
+        changes:
+          - addColumn:
+              tableName: reference
+              columns:
+                - column:
+                    name: priority
+                    type: int
+                    constraints:
+                      nullable: false
+                    defaultValue: -1
+
+    - changeSet:
+        id: update-priority-reference
+        author: jvaldez
+        comment: update references already created
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE reference SET priority = 3;
+    
+    - changeSet:
+        id: update_report_status_id-to_complete-appointment_order_image
+        author: lbergottini
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE appointment_order_image AS aoi
+                SET report_status_id = 1
+                FROM Document d
+                WHERE aoi.document_Id = d.id
+                AND d.status_Id = '445665009'
+                AND d.source_Type_Id = 9
+                AND d.type_Id = 17
+                AND (d.deleted = false OR d.deleted is null);

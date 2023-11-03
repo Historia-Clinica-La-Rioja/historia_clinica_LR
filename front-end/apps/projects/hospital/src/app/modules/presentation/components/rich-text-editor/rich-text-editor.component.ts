@@ -12,6 +12,9 @@ export class RichTextEditorComponent {
 	@Input() formParent: FormGroup;
 	@Input() controlParent: FormControl;
 	@Input() config = {
+		clipboard: {
+			matchVisual: false
+		  },
 		toolbar: [
 			['bold', 'italic', 'underline', 'strike'],
 			['blockquote'],

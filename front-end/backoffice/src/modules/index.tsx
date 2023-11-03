@@ -66,6 +66,12 @@ import orchestrator from "./orchestrator";
 import equipment from "./equipment";
 import modality from "./modality";
 import shockroom from './shockroom';
+import hierarchicalunitrelationships from "./hierarchicalunitrelationships";
+import hierarchicalunitstaff from "./hierarchicalunitstaff";
+import institutionuserpersons from "./institutionuserpersons";
+import movestudies from './movestudies';
+import hierarchicalunitsectors from './hierarchicalunitsectors';
+import rules from './rules';
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
     permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
@@ -122,7 +128,11 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="practicesinstitution" />,
     <Resource name="carelinespecialtyinstitution" />,
     <Resource name="snowstormproblems" />,
-    <Resource name="hierarchicalunits" {...hierarchicalunits(permissions)} />,
+    <Resource name="hierarchicalunits" {...hierarchicalunits} />,
+    <Resource name="hierarchicalunitrelationships" {...hierarchicalunitrelationships} />,
+    <Resource name="hierarchicalunitstaff" {...hierarchicalunitstaff} />,
+    <Resource name="institutionuserpersons" {...institutionuserpersons} />,
+    <Resource name="hierarchicalunitsectors" {...hierarchicalunitsectors} />,
     // debug
     <Resource name="snvs"  {...snvs} />,
     <Resource name="documentfiles" {...documentFiles(permissions)} />,
@@ -143,6 +153,9 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="professionalspecialties" {...professionalSpecialties(permissions)} />,
     <Resource name="holidays" {...holidays(permissions)} />,
     <Resource name="snomedgrouptypes" />,
+    <Resource name="rules" {...rules(permissions)} />,
+    <Resource name="clinicalspecialtyrules" />,
+    <Resource name="practiceprocedurerules" />,
     // more
     <Resource name="identificationTypes" />,
     <Resource name="patient" />,
@@ -170,6 +183,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="orchestrator" {...orchestrator} />,
     <Resource name="equipment" {...equipment} />,
     <Resource name="modality" {...modality} />,
+    <Resource name="movestudies" {...movestudies(permissions)} />,
 
     <Resource name="snomedgroupconcepts" />,
     <Resource name="snomedrelatedgroups"  {...snomedrelatedgroups} />,

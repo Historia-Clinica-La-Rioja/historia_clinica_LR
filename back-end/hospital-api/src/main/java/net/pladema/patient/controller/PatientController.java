@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatientType;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.patient.controller.dto.PatientLastEditInfoDto;
 import net.pladema.permissions.repository.enums.ERole;
@@ -114,6 +115,8 @@ public class PatientController {
 
 	private static final long errorRangeTime = 100;
 
+	private final static Integer NO_INSTITUTION = -1;
+
 	public PatientController(PatientService patientService, PersonExternalService personExternalService,
 							 AddressExternalService addressExternalService, PatientMapper patientMapper, PersonMapper personMapper,
 							 ObjectMapper jackson, PatientTypeRepository patientTypeRepository, AdditionalDoctorService additionalDoctorService,
@@ -170,7 +173,8 @@ public class PatientController {
 		BMPersonDto createdPerson = personExternalService.addPerson(patientDto);
 		AddressDto addressToAdd = persistPatientAddress(patientDto, Optional.empty());
 		personExternalService.addPersonExtended(patientDto, createdPerson.getId(), addressToAdd.getId());
-		Patient createdPatient = persistPatientData(patientDto, createdPerson, null, institutionId);
+		Patient patient = persistPatientData(patientDto, createdPerson, null, institutionId);
+		Patient createdPatient = clonePatient(patient);
 		if (createdPatient.isValidated()) {
 			Person person = personMapper.fromPersonDto(createdPerson);
 
@@ -181,6 +185,7 @@ public class PatientController {
 						nationalId -> {
 							createdPatient.setNationalId(nationalId);
 							createdPatient.setTypeId(PatientType.PERMANENT);
+							patientService.addPatient(createdPatient);
 							LOG.debug("Successful federated patient with nationalId => {}", nationalId);
 						}
 				);
@@ -188,12 +193,33 @@ public class PatientController {
 			catch (Exception ex){
 				LOG.error("Fallo en la comunicación => {}", ex.getMessage());
 			}
-			patientService.addPatient(createdPatient);
 		}
 
 		patientService.auditActionPatient(institutionId, createdPatient.getId(), EActionType.CREATE);
 
 		return ResponseEntity.created(new URI("")).body(createdPatient.getId());
+	}
+
+	private Patient clonePatient(Patient p){
+		Patient result =  new Patient();
+		result.setId(p.getId());
+		result.setPersonId(p.getPersonId());
+		result.setTypeId(p.getTypeId());
+		result.setPossibleDuplicate(p.getPossibleDuplicate());
+		result.setNationalId(p.getNationalId());
+		result.setComments(p.getComments());
+		result.setIdentityVerificationStatusId(p.getIdentityVerificationStatusId());
+		result.setAuditTypeId(p.getAuditTypeId());
+		result.setCreatedOn(p.getCreatedOn());
+		result.setCreatedBy(p.getCreatedBy());
+		result.setUpdatedOn(p.getUpdatedOn());
+		result.setUpdatedBy(p.getUpdatedBy());
+		result.setDeleted(p.isDeleted());
+		if(p.getDeleteable()!=null){
+			result.setDeletedOn(p.getDeletedOn());
+			result.setDeletedBy(p.getDeletedBy());
+		}
+		return result;
 	}
 
 
@@ -205,17 +231,22 @@ public class PatientController {
 												 @RequestBody APatientDto patientDto) throws URISyntaxException {
 		LOG.debug("Input data -> APatientDto {} ", patientDto);
 		Patient patient = patientService.getPatient(patientId).orElseThrow(() -> new NotFoundException("patient-not-found", "Patient not found"));
+		if(!patient.getTypeId().equals(EPatientType.REJECTED.getId()) && patientDto.getTypeId().equals(EPatientType.REJECTED.getId())){
+			patientService.assertHasActiveEncountersByPatientId(patientId);
+			hospitalUserStorage.getUserDataByPersonId(patient.getPersonId())
+					.ifPresent(u-> hospitalUserStorage.disableUser(u.getId()));
+		}
 		BMPersonDto createdPerson = personExternalService.updatePerson(patientDto, patient.getPersonId());
 		PersonExtended personExtendedUpdated = personExternalService.updatePersonExtended(patientDto,
 				createdPerson.getId());
 		persistPatientAddress(patientDto, Optional.of(personExtendedUpdated.getAddressId()));
 		Patient createdPatient = persistPatientData(patientDto, createdPerson, patient, institutionId);
 
-		patientService.auditActionPatient(institutionId,patientId, EActionType.UPDATE);
-
-		if (patientDto.getAuditType() != null && patientDto.getAuditType().equals(EAuditType.TO_AUDIT))
-			patientService.persistSelectionForAnAudict(patientId, institutionId, patientDto.getMessage());
-
+		if (institutionId != NO_INSTITUTION) {
+			patientService.auditActionPatient(institutionId,patientId, EActionType.UPDATE);
+			if (patientDto.getAuditType() != null && patientDto.getAuditType().equals(EAuditType.TO_AUDIT))
+				patientService.persistSelectionForAnAudict(patientId, institutionId, patientDto.getMessage());
+		}
 		return ResponseEntity.created(new URI("")).body(createdPatient.getId());
 	}
 
@@ -236,7 +267,7 @@ public class PatientController {
 	public ResponseEntity<BasicPatientDto> getBasicDataPatient(@PathVariable(name = "patientId") Integer patientId) {
 		LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
 
-		Patient patient = patientService.getPatient(patientId)
+		Patient patient = patientService.getActivePatient(patientId)
 				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
 		BasicPatientDto result = new BasicPatientDto(patient.getId(), patient.getTypeId());
 		if (patient.getPersonId() != null) {
@@ -284,7 +315,7 @@ public class PatientController {
 	public ResponseEntity<Boolean> addPatientPhoto(@PathVariable(name = "patientId") Integer patientId,
 												   @RequestBody PersonPhotoDto personPhotoDto) {
 		LOG.debug("Input parameters -> patientId {}, PersonPhotoDto {}", patientId, personPhotoDto);
-		Patient patient = patientService.getPatient(patientId)
+		Patient patient = patientService.getActivePatient(patientId)
 				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
 		boolean result = personExternalService.savePersonPhoto(patient.getPersonId(), personPhotoDto.getImageData());
 		LOG.debug(OUTPUT, result);
@@ -326,7 +357,7 @@ public class PatientController {
 	@GetMapping("/{patientId}/appointment-patient-data")
 	public ResponseEntity<ReducedPatientDto> getBasicPersonalData(@PathVariable(name = "patientId") Integer patientId) {
 		LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
-		Patient patient = patientService.getPatient(patientId)
+		Patient patient = patientService.getActivePatient(patientId)
 				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
 		BasicPersonalDataDto personData = personExternalService.getBasicPersonalDataDto(patient.getPersonId());
 		ReducedPatientDto result = new ReducedPatientDto(personData, patient.getTypeId());

@@ -30,7 +30,40 @@
 		</div>
 	</div>
 		<div *ngIf="form.controls['reportType'].value == 1 || form.controls['reportType'].value == 2 ">
-			<div fxLayout="row" fxLayoutGap="30px" style="padding-top: 10px">
+
+			<div fxLayout="row" fxLayoutGap="30px" class="padding-top">
+				<div fxFlex="50%" fxLayoutGap="5px">
+					<div>
+						<mat-label [translate]="'reportes.form.HIERARCHICAL_UNIT_TYPE'"></mat-label>
+					</div>
+					<app-typeahead
+						[placeholder]="'reportes.form.HIERARCHICAL_UNIT_TYPE_PLACEHOLDER'"
+						[options]="hierarchicalUnitTypesTypeahead"
+						(selectionChange)="setHierarchicalUnitType($event)">
+					</app-typeahead>
+				</div>
+			</div>
+
+			<div fxLayout="row" fxLayoutGap="30px" class="padding-top">
+				<div fxFlex="50%" fxLayoutGap="5px">
+					<div>
+						<mat-label [translate]="'reportes.form.HIERARCHICAL_UNIT'"></mat-label>
+					</div>
+					<app-typeahead
+						[placeholder]="'reportes.form.HIERARCHICAL_UNIT_PLACEHOLDER'"
+						[options]="hierarchicalUnitsTypeahead"
+						(selectionChange)="setHierarchicalUnit($event)">
+					</app-typeahead>
+				</div>
+			</div>
+
+			<div fxLayout="row" fxLayoutGap="30px" class="padding-top">
+				<mat-slide-toggle formControlName="includeHierarchicalUnitDescendants" [disabled]="!this.form.controls.hierarchicalUnitId.value">
+					<span> {{'reportes.form.INCLUDE_DESCENDANTS' | translate}}</span>
+				</mat-slide-toggle>
+			</div>
+
+			<div fxLayout="row" fxLayoutGap="30px" class="padding-top">
 				<div id="start-date" fxFlex="50%" fxLayout="column" fxLayoutGap="5px">
 					<div>
 						<mat-label [translate]="'reportes.form.START_DATE'"></mat-label>
@@ -100,8 +133,11 @@
 			</div>
 
 		</div>
-			<div fxLayout="row" fxLayoutAlign="end" style="margin-top: 20px">
-				<button class="uppercase" mat-raised-button color="primary" (click)="generateReport()">
+			<div *ngIf="isLoadingRequestReport" class="padding-top">
+				<mat-progress-bar class="progress-bar" mode="indeterminate"></mat-progress-bar>
+			</div>
+			<div id="generate-report" fxLayout="row" fxLayoutAlign="end" class="padding-top">
+				<button class="uppercase" mat-raised-button color="primary" (click)="generateReport()" [disabled]="isLoadingRequestReport">
 					<span [translate]="'reportes.form.SUBMIT'"></span>
 				</button>
 			</div>

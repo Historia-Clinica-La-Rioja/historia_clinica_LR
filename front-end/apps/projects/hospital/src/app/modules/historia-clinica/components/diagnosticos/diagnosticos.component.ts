@@ -11,25 +11,23 @@ import { SelectMainDiagnosisComponent } from '../../modules/ambulatoria/modules/
 @Component({
 	selector: 'app-diagnosticos',
 	templateUrl: './diagnosticos.component.html',
-	styleUrls: ['./diagnosticos.component.scss'],
-	providers: []
+	styleUrls: ['./diagnosticos.component.scss']
 })
 export class DiagnosticosComponent {
+
+	allChecked = false;
+	diagnosticos: DiagnosisDto[];
 	@Input() showTitle = false;
+
+
+	@Input() set listDiagnosis(diagnosticos: DiagnosisDto[]) {
+		this.diagnosticos = diagnosticos;
+		this.allChecked = diagnosticos?.every(t => t.isAdded);
+	};
+	@Input() mainDiagnosis: HealthConditionDto;
+	@Input() type: string;
 	@Output() diagnosisChange = new EventEmitter();
 	@Output() mainDiagnosisChange = new EventEmitter();
-
-	@Input()
-	diagnosticos: DiagnosisDto[] = [];
-	_mainDiagnosis: HealthConditionDto;
-
-	@Input()
-	set mainDiagnosis(newMainDiagnosis: HealthConditionDto) {
-		this._mainDiagnosis = newMainDiagnosis;
-		this.mainDiagnosisChange.emit(this._mainDiagnosis)
-	}
-	@Input()
-	type: string;
 
 	CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
 	ACTIVE = HEALTH_CLINICAL_STATUS.ACTIVO;
@@ -41,6 +39,9 @@ export class DiagnosticosComponent {
 
 	) { }
 
+	private isMainDiagnosis(diagnosis: DiagnosisDto): boolean {
+		return !this.diagnosticos.find(currentDiagnosis => currentDiagnosis.snomed.pt === diagnosis.snomed.pt) && diagnosis.snomed.pt != this.mainDiagnosis?.snomed.pt
+	}
 	openCreationDialog(isMainDiagnosis: boolean) {
 		const dialogRef = this.dialog.open(DiagnosisCreationEditionComponent, {
 			width: '450px',
@@ -52,7 +53,7 @@ export class DiagnosticosComponent {
 
 		dialogRef.afterClosed().subscribe(diagnosis => {
 			if (diagnosis) {
-				if (!this.diagnosticos.find(currentDiagnosis => currentDiagnosis.snomed.pt === diagnosis.snomed.pt) && diagnosis.snomed.pt != this._mainDiagnosis?.snomed.pt) {
+				if (this.isMainDiagnosis(diagnosis)) {
 
 					if (isMainDiagnosis) {
 						this.componentEvaluationManagerService.mainDiagnosis = diagnosis;
@@ -60,6 +61,7 @@ export class DiagnosticosComponent {
 						diagnosis.verificationId = this.CONFIRMED;
 						diagnosis.statusId = this.ACTIVE;
 						this.mainDiagnosis = diagnosis;
+						this.mainDiagnosisChange.emit(this.mainDiagnosis);
 					}
 					else {
 						this.diagnosticos.push(diagnosis);
@@ -77,23 +79,25 @@ export class DiagnosticosComponent {
 		const dialogRef = this.dialog.open(SelectMainDiagnosisComponent, {
 			width: '450px',
 			data: {
-				currentMainDiagnosis: this._mainDiagnosis,
+				currentMainDiagnosis: this.mainDiagnosis,
 				otherDiagnoses: this.diagnosticos.filter(d => d.statusId === this.ACTIVE)
 			}
 		});
 
 		dialogRef.afterClosed().subscribe(potentialNewMainDiagnosis => {
 			if (potentialNewMainDiagnosis) {
-				if (potentialNewMainDiagnosis != this._mainDiagnosis) {
+				if (potentialNewMainDiagnosis != this.mainDiagnosis) {
 					this.componentEvaluationManagerService.mainDiagnosis = potentialNewMainDiagnosis;
-					let oldMainDiagnosis = this._mainDiagnosis;
+					let oldMainDiagnosis = this.mainDiagnosis;
 					this.diagnosticos.push(oldMainDiagnosis);
 					this.diagnosticos.splice(this.diagnosticos.indexOf(potentialNewMainDiagnosis), 1);
 					this.mainDiagnosis = potentialNewMainDiagnosis;
-					this._mainDiagnosis.isAdded = true;
-					this._mainDiagnosis.verificationId = this.CONFIRMED;
-					this._mainDiagnosis.statusId = this.ACTIVE;
-					(<DiagnosisDto>this._mainDiagnosis).presumptive = false;
+					this.mainDiagnosis.isAdded = true;
+					this.mainDiagnosis.verificationId = this.CONFIRMED;
+					this.mainDiagnosis.statusId = this.ACTIVE;
+					(<DiagnosisDto>this.mainDiagnosis).presumptive = false;
+					this.mainDiagnosisChange.emit(this.mainDiagnosis);
+
 				}
 			}
 		});
@@ -105,5 +109,28 @@ export class DiagnosticosComponent {
 			this.diagnosticos.splice(index, 1);
 			this.componentEvaluationManagerService.diagnosis = this.diagnosticos;
 		}
+	}
+
+	removeMainDiagnosis() {
+		this.mainDiagnosisChange.emit(null);
+	}
+
+	updateAll() {
+		this.allChecked = this.diagnosticos?.every(t => t.isAdded);
+	}
+
+	someComplete(): boolean {
+		if (this.diagnosticos == null) {
+			return false;
+		}
+		return this.diagnosticos.filter(t => t.isAdded).length > 0 && !this.allChecked;
+	}
+
+	setAll(completed: boolean) {
+		this.allChecked = completed;
+		if (this.diagnosticos == null) {
+			return;
+		}
+		this.diagnosticos.forEach(t => (t.isAdded = completed));
 	}
 }

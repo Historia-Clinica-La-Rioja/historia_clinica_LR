@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { NewbornDto, ObstetricEventDto } from '@api-rest/api-model';
+import { ObstetricFormService } from '../../services/obstetric-form.service';
 import { FormDynamicNewBornComponent } from '../form-dynamic-new-born/form-dynamic-new-born.component';
 
 @Component({
@@ -13,10 +14,13 @@ export class ObstetricComponent {
 	newborns: NewbornDto[];
 	@ViewChild(FormDynamicNewBornComponent) formulario!: FormDynamicNewBornComponent;
 
-	constructor() { }
+	constructor(
+		readonly obstetricFormService: ObstetricFormService,
+	) { }
 
 	setObstetricEvent(obstetricEvent: ObstetricEventDto) {
 		this.obstetricEvent = obstetricEvent;
+		this.obstetricFormService.obstetric = obstetricEvent;
 	}
 
 	getForm(): ObstetricEventDto {

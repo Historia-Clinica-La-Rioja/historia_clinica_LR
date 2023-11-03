@@ -25,16 +25,14 @@ public class EquipmentController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(EquipmentController.class);
 
-	private EquipmentService equipmentService;
+	private final EquipmentService equipmentService;
 
-	private EquipmentBOMapper equipmentBOMapper;
+	private final EquipmentBOMapper equipmentBOMapper;
 
 	public EquipmentController(EquipmentService equipmentService, EquipmentBOMapper equipmentBOMapper) {
 		this.equipmentService = equipmentService;
 		this.equipmentBOMapper = equipmentBOMapper;
 	}
-
-
 
 	@GetMapping("/sector/{sectorId}")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA')")
@@ -44,6 +42,18 @@ public class EquipmentController {
 		List<EquipmentBO> equipments = equipmentService.getEquipmentBySector(sectorId);
 		List<EquipmentDto> result = equipmentBOMapper.toListEquipmentDto(equipments);
 		LOG.debug("Get all equipment by sector => {}", equipments);
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/modality/{modalityId}")
+	@PreAuthorize("hasPermission(#institutionId, 'TECNICO')")
+	public ResponseEntity<List<EquipmentDto>>  getAllByModalityInInstitution(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "modalityId") Integer modalityId) {
+		LOG.debug("Input -> institutionId {}, modalityId {}", institutionId, modalityId);
+		List<EquipmentBO> equipments = equipmentService.getEquipmentByModalityInInstitution(modalityId, institutionId);
+		List<EquipmentDto> result = equipmentBOMapper.toListEquipmentDto(equipments);
+		LOG.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}
 

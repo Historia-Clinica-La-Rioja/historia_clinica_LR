@@ -47,7 +47,7 @@ class CreateOutpatientDocumentServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidInstitutionId() {
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createOutpatientDocumentService.execute(validOutpatientConsultation(null, 8))
+                createOutpatientDocumentService.execute(validOutpatientConsultation(null, 8), true)
         );
         String expectedMessage = "El id de la institución es obligatorio";
         String actualMessage = exception.getMessage();
@@ -57,7 +57,7 @@ class CreateOutpatientDocumentServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidEpisodeId() {
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createOutpatientDocumentService.execute(validOutpatientConsultation(8, null))
+                createOutpatientDocumentService.execute(validOutpatientConsultation(8, null), true)
         );
         String expectedMessage = "El id del encuentro asociado es obligatorio";
         String actualMessage = exception.getMessage();
@@ -72,7 +72,7 @@ class CreateOutpatientDocumentServiceImplTest extends UnitRepository {
         outpatientDocumentBo.setAllergies(List.of(new AllergyConditionBo(new SnomedBo("SCTID", "PT")), new AllergyConditionBo(new SnomedBo("SCTID", "PT"))));
         outpatientDocumentBo.setProcedures(List.of(new ProcedureBo(new SnomedBo("SCTID", "PT")), new ProcedureBo(new SnomedBo("SCTID", "PT"))));
         CreateOutpatientDocumentException exception = Assertions.assertThrows(CreateOutpatientDocumentException.class, () ->
-                createOutpatientDocumentService.execute(outpatientDocumentBo)
+                createOutpatientDocumentService.execute(outpatientDocumentBo, true)
         );
         assertEquals(5, exception.getMessages().size());
         assertTrue(exception.getMessages().containsAll(List.of("Problemas médicos repetidos",

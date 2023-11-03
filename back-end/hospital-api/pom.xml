@@ -39,12 +39,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>ar.lamansys</groupId>
-			<artifactId>sgx-mqtt</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
 			<groupId>ar.lamansys.hsi</groupId>
 			<artifactId>extensions</artifactId>
 			<version>${revision}</version>

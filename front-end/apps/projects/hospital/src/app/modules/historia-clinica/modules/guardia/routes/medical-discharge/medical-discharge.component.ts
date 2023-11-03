@@ -9,18 +9,16 @@ import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-e
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { ContextService } from '@core/services/context.service';
 import { sortBy } from '@core/utils/array.utils';
-import { futureTimeValidation, hasError, beforeTimeValidation, TIME_PATTERN } from '@core/utils/form.utils';
-import { DateFormat, dateToMoment, momentFormat, newMoment } from '@core/utils/moment.utils';
+import { futureTimeValidationDate, hasError, beforeTimeValidationDate, TIME_PATTERN } from '@core/utils/form.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { Moment } from 'moment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { ProblemasService } from '../../../../services/problemas.service';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { MIN_DATE } from "@core/utils/date.utils";
-import * as moment from 'moment';
+import { DateFormat, MIN_DATE } from "@core/utils/date.utils";
+import { format, isSameDay } from 'date-fns';
 
 @Component({
 	selector: 'app-medical-discharge',
@@ -39,7 +37,7 @@ export class MedicalDischargeComponent implements OnInit {
 	problemasService: ProblemasService;
 	severityTypes: any[];
 	today = new Date();
-	episodeCreatedOn: Moment;
+	episodeCreatedOn: Date;
 	formSubmited = false;
 	private episodeId: number;
 	private patientId: number;
@@ -66,8 +64,8 @@ export class MedicalDischargeComponent implements OnInit {
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
 			dateTime: this.formBuilder.group({
-				date: [moment(), Validators.required],
-				time: [momentFormat(newMoment(), DateFormat.HOUR_MINUTE)]
+				date: [new Date(), Validators.required],
+				time: [format(new Date(), DateFormat.HOUR_MINUTE)],
 			}),
 			autopsy: [null],
 			dischargeTypeId: [DischargeTypes.ALTA_MEDICA, Validators.required]
@@ -76,7 +74,7 @@ export class MedicalDischargeComponent implements OnInit {
 		this.route.paramMap.subscribe(params => {
 			this.episodeId = Number(params.get('id'));
 			const episodeCreatedOn$ = this.emergencyCareEpisodeService.getCreationDate(this.episodeId)
-				.pipe(map(dateTimeDtoToDate), map(dateToMoment));
+				.pipe(map(dateTimeDtoToDate));
 
 			episodeCreatedOn$.subscribe(episodeCreatedOn => {
 				this.episodeCreatedOn = episodeCreatedOn;
@@ -122,20 +120,20 @@ export class MedicalDischargeComponent implements OnInit {
 
 	}
 
-	private setDateTimeValidation(episodeCreatedOn: Moment): void {
+	private setDateTimeValidation(episodeCreatedOn: Date): void {
 		const dateControl: UntypedFormGroup = (this.form.controls.dateTime) as UntypedFormGroup;
 		const timeControl: AbstractControl = dateControl.controls.time;
-		timeControl.setValidators([Validators.required, beforeTimeValidation(episodeCreatedOn),
-			futureTimeValidation, Validators.pattern(TIME_PATTERN)]);
+		timeControl.setValidators([Validators.required, beforeTimeValidationDate(episodeCreatedOn),
+			futureTimeValidationDate, Validators.pattern(TIME_PATTERN)]);
 
 		this.form.get('dateTime.date').valueChanges.subscribe(
-			(selectedDate: Moment) => {
+			selectedDate => {
 				timeControl.clearValidators();
 				requiredAndPatternValidation();
-				if (newMoment().isSame(selectedDate, 'day')) {
+				if (isSameDay(new Date(), new Date(selectedDate))) {
 					beforeTodayValidation();
 				}
-				if (episodeCreatedOn.isSame(selectedDate, 'day')) {
+				if (isSameDay(episodeCreatedOn, new Date(selectedDate))) {
 					afterEpisodeCreationValidation();
 				}
 
@@ -146,13 +144,13 @@ export class MedicalDischargeComponent implements OnInit {
 
 				function beforeTodayValidation(): void {
 					const existingValidators = timeControl.validator;
-					timeControl.setValidators([existingValidators, futureTimeValidation]);
+					timeControl.setValidators([existingValidators, futureTimeValidationDate]);
 					timeControl.updateValueAndValidity();
 				}
 
 				function afterEpisodeCreationValidation(): void {
 					const existingValidators = timeControl.validator;
-					timeControl.setValidators([existingValidators, beforeTimeValidation(episodeCreatedOn)]);
+					timeControl.setValidators([existingValidators, beforeTimeValidationDate(episodeCreatedOn)]);
 					timeControl.updateValueAndValidity();
 				}
 			}
@@ -162,7 +160,7 @@ export class MedicalDischargeComponent implements OnInit {
 
 export class MedicalDischargeForm {
 	dateTime: {
-		date: Moment,
+		date: Date,
 		time: string
 	};
 	autopsy: boolean;

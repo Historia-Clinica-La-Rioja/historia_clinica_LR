@@ -8,12 +8,12 @@ Extensiones tiene como objetivo plantear un mecanismo claro y sencillo para perm
 
 Esta alternativa tiene la ventaja de permitir actualizar la versión del sistema central sin requerir una revisión manual del código, buildear y publicar un contenedor modificado.
 
-La desventaja es que los puntos de extensión permitidos son definidos previamente y aunque pueden ampliarse en una nueva versión del sistema, puede suceder que no sea suficiente para la Jurisdicción.
+La desventaja es que los puntos de extensión permitidos son definidos previamente y aunque pueden ampliarse en una nueva versión del sistema, puede suceder que no sea suficiente para el Dominio.
 
 
 ## Implementación
 
-Para cumplir con el propósito mencionado se creó un módulo bajo la carpeta de back-end llamado `extensiones` que expone los endpoints con el prefijo "extensions".
+Para cumplir con el propósito mencionado se creó [el módulo 'sgx-extensions'](../back-end/extensions/) que expone los endpoints con el prefijo "extensions".
 
 Actualmente SGH brinda tres puntos de extensión de la aplicación:
 

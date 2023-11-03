@@ -204,7 +204,8 @@ export class MapperService {
 						bedId: summary.bed.id,
 						bedNumber: summary.bed.bedNumber,
 						free: summary.bed.free
-					}]
+					}],
+					sectorTypeDescription: summary.sectorType.description
 				};
 				bedManagement.push(newSector);
 			}

@@ -10,6 +10,7 @@ import java.util.Optional;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketBo;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketImageBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
@@ -31,7 +32,7 @@ public interface AppointmentService {
 	Collection<AppointmentBo> getAppointmentsByEquipmentDiary(Integer equipmentDiaryId, LocalDate from, LocalDate to);
 
 
-	Collection<EquipmentAppointmentBo> getAppointmentsByEquipmentId(Integer equipmentDiaryId, Integer institutionId);
+	Collection<EquipmentAppointmentBo> getAppointmentsByEquipmentId(Integer equipmentDiaryId, Integer institutionId, LocalDate from, LocalDate to);
 
 	Collection<AppointmentBo> getAppointmentsByProfessionalInInstitution(Integer healthcareProfessionalId, Integer institutionId, LocalDate from, LocalDate to);
 
@@ -66,13 +67,15 @@ public interface AppointmentService {
 
 	PatientMedicalCoverageBo getCurrentAppointmentMedicalCoverage(Integer patientId, Integer institutionId);
 
-	Collection<AppointmentAssignedBo> getCompleteAssignedAppointmentInfo(Integer patientId);
+	Collection<AppointmentAssignedBo> getCompleteAssignedAppointmentInfo(Integer patientId, LocalDate minDate, LocalDate maxDate);
 
 	AppointmentBo updateAppointment(UpdateAppointmentBo appointmentDto);
 
     void delete(AppointmentBo appointmentBo);
 
 	AppointmentTicketBo getAppointmentTicketData(Integer appointmentId);
+
+	AppointmentTicketImageBo getAppointmentImageTicketData(Integer appointmentId, boolean isTranscribed);
 
 	AppointmentShortSummaryBo getAppointmentFromDeterminatedDate(Integer patientId, Integer institutionId, LocalDate date, LocalTime hour);
 
@@ -85,4 +88,7 @@ public interface AppointmentService {
 	List<AppointmentBo> unblockAppointments(BlockBo unblockDto, DiaryBo diaryBo, LocalDate startingBlockingDate, LocalDate endingBlockingDate);
 
 	boolean setAppointmentPatientMedicalCoverageId(Integer patientId, List<Integer> patientMedicalCoverages, Integer newPatientMedicalCoverageId);
+
+	Integer patientHasCurrentAppointment(Integer institutionId, Integer patientId);
+
 }

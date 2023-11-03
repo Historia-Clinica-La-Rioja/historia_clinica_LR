@@ -36,7 +36,7 @@ h2 {
 
 .reference-type {
 	font-size: 15px;
-	
+
 	.mat-radio-button ~ .mat-radio-button {
 		margin-left: 50px;
 	}
@@ -68,7 +68,25 @@ h2 {
 	padding-top: 5%;
 }
 
-.phone-title {
+.subtitle {
 	font-weight: 500;
-	height: 30px;;
+	height: 30px;
+}
+
+.circle {
+	width: 11px;
+	height: 11px;
+	border-radius: 50%;
+}
+
+.red {
+	background-color: #EB5757;
+}
+
+.orange {
+	background-color: #FFA500;
+}
+
+.green {
+	background-color: #32C25B;
 }

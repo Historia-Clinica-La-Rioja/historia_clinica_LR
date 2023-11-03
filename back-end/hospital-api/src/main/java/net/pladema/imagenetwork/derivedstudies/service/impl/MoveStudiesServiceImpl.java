@@ -54,12 +54,13 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 				new Date(),
 				moveStudyBO.getPriorityMax(),
 				moveStudyBO.getAttempsNumber(),
-				moveStudyBO.getStatus());
+				moveStudyBO.getStatus(),
+				moveStudyBO.getInstitutionId());
 		return moveStudiesRepository.save(moveStudy).getId();
 	}
 
 	@Override
-	public Integer create(Integer appointmentId) {
+	public Integer create(Integer appointmentId, Integer institutionId) {
 		List<PacServerBO> pacServers = pacServerService.getAllPacServer();
 		String imageId = appointmentOrderImageService.getImageId(appointmentId).orElse("none");
 		MoveStudiesBO moveStudyBO = new MoveStudiesBO();
@@ -80,6 +81,7 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 			moveStudyBO.setOrchestratorId(orchestratorId);
 			moveStudyBO.setImageId(imageId);
 			moveStudyBO.setPriority(5);
+			moveStudyBO.setInstitutionId(institutionId);
 			return save(moveStudyBO);
 		}
 		return -1;
@@ -94,8 +96,20 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 	}
 
 	@Override
-	public void updateSize(Integer idMove, Integer size) {
+	public void updateSize(Integer idMove, Integer size, String imageId) {
 		moveStudiesRepository.updateSize(idMove, size);
+		MoveStudies moveStudy = moveStudiesRepository.findById(idMove).orElse(null);
+		if (moveStudy!= null &&
+				!moveStudy.getImageId().equals(imageId) &&
+				!"none".equals(imageId) ){
+			appointmentOrderImageService.setImageId(moveStudy.getAppointmentId(), imageId);
+			moveStudiesRepository.updateImageId(idMove,imageId);
+		}
+	}
+
+	@Override
+	public Optional<Integer> findInstitutionId(Integer idMove) {
+		return moveStudiesRepository.findInstitutionId(idMove);
 	}
 
 	@Override
@@ -106,8 +120,11 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 	@Override
 	public void updateStatusAndResult(Integer idMove, String status, String result) {
 		moveStudiesRepository.updateStatusandResult(idMove, status, result);
-
+		if(MoveStudiesJob.MOVING.equals(status)){
+			moveStudiesRepository.updateBeginOfMove(idMove, new Date());
+		}
 		if ("200".equals(result)) {
+			moveStudiesRepository.updateEndOfMove(idMove, new Date());
 			Optional<MoveStudies> moveStudy = moveStudiesRepository.findById(idMove);
 			if (moveStudy.isPresent()) {
 				MoveStudies ms = moveStudy.get();

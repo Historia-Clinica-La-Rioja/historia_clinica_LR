@@ -35,6 +35,7 @@
 			<div *ngFor="let tooth of quadrants?.quadrant5.teeth" fxLayout="column" fxLayoutAlign="center center">
 				<span>{{quadrants.quadrant5.code}}{{tooth.code}}</span>
 				<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant5.code)"
+					matTooltip="Pieza {{quadrants.quadrant5.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip"
 					[findingsAndProcedures]="actionsFrom[tooth.snomed.sctid]"
 					[records]="currentDraws[tooth.snomed.sctid]">
 					[findingsAndProcedures]="actionsFrom[tooth.snomed.sctid]">

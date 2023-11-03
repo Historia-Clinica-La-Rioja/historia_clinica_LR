@@ -96,7 +96,7 @@
 
 			<app-study-images-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[0].id)"
 				*ngIf="imageDiagnotics.length > 0 && (hasHealthRelatedRole || hasPicturesStaffRole)" fxFlex="100%"
-				mat-list-item class="item-padding" [images]="imageDiagnotics" [patientId]="patientId">
+				mat-list-item class="item-padding"  [images]="imageDiagnotics" [patientId]="patientId">
 			</app-study-images-card>
 
 			<app-study-laboratory-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[1].id)"

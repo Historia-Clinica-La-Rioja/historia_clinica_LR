@@ -58,15 +58,14 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
+		this.agendaSearchService.clearAll();
 		this.agendaFiltersSubscription = this.agendaSearchService.getAgendas$().subscribe((data: AgendaOptionsData) => {
 			if (data) {
 				this.loadAgendas(data.agendas, data.idAgendaSelected);
 				this.filters = data.filteredBy;
 			}
 		});
-
 		this.route.queryParams.subscribe(qp => this.patientId = Number(qp.idPaciente));
-
 	}
 
 	ngOnDestroy() {
@@ -194,7 +193,7 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 	}
 
 	getAliasAndSpecialtyText(alias: string, clinicalSpecialtyName: string): string {
-		return `${alias} (${clinicalSpecialtyName})`;
+		return clinicalSpecialtyName ? `${alias} (${clinicalSpecialtyName})` : `${alias}`;
 	}
 
 }

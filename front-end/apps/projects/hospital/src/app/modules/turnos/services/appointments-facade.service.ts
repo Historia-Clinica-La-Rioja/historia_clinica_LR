@@ -8,7 +8,8 @@ import {
 	CreateAppointmentDto,
 	ProfessionalDto,
 	UpdateAppointmentDateDto,
-	UpdateAppointmentDto
+	UpdateAppointmentDto,
+	HolidayDto,
 } from '@api-rest/api-model';
 import {
 	momentParseTime,
@@ -22,6 +23,9 @@ import { AppointmentBlockMotivesFacadeService } from './appointment-block-motive
 import { HolidaysService } from '@api-rest/services/holidays.service';
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { toCalendarEvent } from '@turnos/utils/appointment.utils';
+import { TranslateService } from '@ngx-translate/core';
+import { DatePipe } from '@angular/common';
+import { DatePipeFormat } from '@core/utils/date.utils';
 
 @Injectable({
 	providedIn: 'root'
@@ -48,7 +52,9 @@ export class AppointmentsFacadeService {
 		private readonly appointmentService: AppointmentsService,
 		private readonly patientNameService: PatientNameService,
 		private readonly appointmentBlockMotivesFacadeService: AppointmentBlockMotivesFacadeService,
-		private readonly holidayService: HolidaysService
+		private readonly holidayService: HolidaysService,
+		private readonly translateService: TranslateService,
+		private readonly datePipe: DatePipe
 
 	) {
 		this.appointments$ = this.appointmenstEmitter.asObservable();
@@ -119,6 +125,34 @@ export class AppointmentsFacadeService {
 
 	getHolidays(): Observable<CalendarEvent[]> {
 		return this.holidays$;
+	}
+
+	checkIfHoliday(holidays: HolidayDto[], newAppointmentDate: string): Date {
+		let selectedHolidayDay;
+		holidays.map(day => {
+			const holidayDate = dateDtoToDate(day.date);
+			const appointmentDate = new Date(newAppointmentDate);
+
+			const holidayUTCDate = holidayDate.getUTCDate() + ',' + holidayDate.getUTCMonth() + ',' + holidayDate.getUTCFullYear();
+			const appointmentUTCDate = appointmentDate.getUTCDate() + ',' + appointmentDate.getUTCMonth() + ',' + appointmentDate.getUTCFullYear();
+			if (holidayUTCDate === appointmentUTCDate) {
+				selectedHolidayDay = holidayDate;
+			}
+			
+		});
+		return selectedHolidayDay;
+	}
+
+	getHolidayData(selectedDay: Date) {
+		const holidayText = this.translateService.instant('turnos.holiday.HOLIDAY_RELATED');
+		const holidayDateText = this.datePipe.transform(selectedDay, DatePipeFormat.FULL_DATE);
+		return {
+			title: 'turnos.holiday.TITLE',
+			content: `${holidayDateText.charAt(0).toUpperCase() + holidayDateText.slice(1)} ${holidayText}`,
+			contentBold: `turnos.holiday.HOLIDAY_DISCLAIMER`,
+			okButtonLabel: 'turnos.holiday.OK_BUTTON',
+			cancelButtonLabel: 'turnos.holiday.CANCEL_BUTTON',
+		};
 	}
 
 	updatePhoneNumber(appointmentId: number, phonePrefix: string, phoneNumber: string): Observable<boolean> {

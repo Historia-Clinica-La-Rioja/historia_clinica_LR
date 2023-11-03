@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 
 @Getter
 @Setter
@@ -30,4 +31,7 @@ public class AppointmentDto extends CreateAppointmentDto {
 	private String observationBy;
 
 	private boolean isProtected;
+
+	private String callLink;
+
 }

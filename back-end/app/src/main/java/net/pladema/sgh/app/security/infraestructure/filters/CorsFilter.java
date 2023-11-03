@@ -42,9 +42,9 @@ public class CorsFilter implements Filter {
 		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Accept-Language,  " + tokenHeader);
 		response.setHeader("App-Node", appNode.nodeId);
 
-		var entpointStat = TimeProfilingUtil.start("Endpoint");
+		var endpointStat = TimeProfilingUtil.start("Endpoint");
 		chain.doFilter(req, res);
-		entpointStat.done(requestURI);
+		endpointStat.done(requestURI);
 	}
 
 	@Override

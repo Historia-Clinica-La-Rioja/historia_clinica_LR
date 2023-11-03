@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppFeature, DuplicatePatientDto, IdentificationTypeDto, PatientPersonalInfoDto, PatientToMergeDto, PatientType } from '@api-rest/api-model';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { ContextService } from '@core/services/context.service';
 import { AuditPatientService } from '@api-rest/services/audit-patient.service';
 import { Observable, of } from 'rxjs';
 import { PatientMasterDataService } from '@api-rest/services/patient-master-data.service';
@@ -17,15 +16,14 @@ import { Filters } from '../control-patient-duplicate/control-patient-duplicate.
 import { PatientProfilePopupComponent } from '../../dialogs/patient-profile-popup/patient-profile-popup.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 
-const ROUTE_CONTROL_PATIENT_DUPLICATE = "auditoria/control-pacientes-duplicados"
-
+const ROUTE_CONTROL_PATIENT_DUPLICATE = "home/auditoria/control-pacientes-duplicados"
+const REJECTTED = "Rechazado";
 @Component({
 	selector: 'app-patient-fusion',
 	templateUrl: './patient-fusion.component.html',
 	styleUrls: ['./patient-fusion.component.scss']
 })
 export class PatientFusionComponent implements OnInit {
-	private readonly routePrefix;
 	readonly pageSizeOptions: number[] = PAGE_SIZE_OPTIONS;
 	listPatientData$: Observable<PatientPersonalInfoDto[]>;
 	listPatientData: PatientPersonalInfoDto[];
@@ -34,7 +32,6 @@ export class PatientFusionComponent implements OnInit {
 	patientsTypes: PatientType[];
 	keyAttributes = KeyAttributes;
 	oldPatientsIds: number[] = [];
-	pageSliceObs$: Observable<PatientPersonalInfoDto[]>;
 	numberOfPatients = 0;
 	pageSlice: PatientPersonalInfoDto[];
 	initialSize: Observable<any>;
@@ -44,6 +41,8 @@ export class PatientFusionComponent implements OnInit {
 	validationTwoSelectedPatients: boolean = false;
 	validationColumns: boolean = false;
 	nameSelfDeterminationFF: boolean;
+	rejectedId: number;
+	patientId: number;
 	patientToMergeAuxKeyId: any = {
 		names: null,
 		identification: null,
@@ -68,14 +67,13 @@ export class PatientFusionComponent implements OnInit {
 			phoneNumber: null,
 		},
 	}
+	isLoadingRequestMerge: boolean = false;
 
-	constructor(private router: Router, private contextService: ContextService, private personMasterDataService: PersonMasterDataService,
+	constructor(private router: Router, private personMasterDataService: PersonMasterDataService,
 		private auditPatientService: AuditPatientService,
 		private patientMasterDataService: PatientMasterDataService, private patientMergeService: PatientMergeService, private dialog: MatDialog,
 		private readonly snackBarService: SnackBarService,
 		private readonly featureFlagService: FeatureFlagService) {
-		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
-
 	}
 
 	ngOnInit(): void {
@@ -85,32 +83,43 @@ export class PatientFusionComponent implements OnInit {
 		this.personMasterDataService.getIdentificationTypes()
 			.subscribe(identificationTypes => {
 				this.identificationTypeList = identificationTypes;
-				this.setInfo();
+
 			});
 
 		this.patientMasterDataService.getTypesPatient().subscribe((patientsTypes: PatientType[]) => {
 			this.patientsTypes = patientsTypes;
+			this.rejectedId = this.patientsTypes.find(type => type.description === REJECTTED).id;
 		})
 
-		this.auditPatientService.getPatientPersonalInfo(this.patientToAudit).subscribe((patientPersonalData: PatientPersonalInfoDto[]) => {
-			this.listPatientData = this.setListPatientData(patientPersonalData);
-			this.listPatientData$ = of(this.listPatientData);
+		this.getListPatientData();
 
-			this.pageSlice = this.listPatientData.slice(0, PAGE_MIN_SIZE);
-			this.numberOfPatients = this.listPatientData.length || 0;
-			this.initialSize = of(PAGE_MIN_SIZE);
-		})
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
 			this.nameSelfDeterminationFF = isOn
 		});
 	}
 
+	getListPatientData() {
+		this.auditPatientService.getPatientPersonalInfo(this.patientToAudit).subscribe((patientPersonalData: PatientPersonalInfoDto[]) => {
+			this.listPatientData = this.setListPatientData(patientPersonalData);
+			this.listPatientData$ = of(this.listPatientData);
+
+			this.setInitPage();
+			this.setInfo();
+		})
+	}
+
+	setInitPage() {
+		this.pageSlice = this.listPatientData.slice(0, PAGE_MIN_SIZE);
+		this.numberOfPatients = this.listPatientData.length || 0;
+		this.initialSize = of(PAGE_MIN_SIZE);
+	}
+
 	setInfo() {
-		this.infoPatientToAudit = 'Auditoría de ' + this.patientToAudit.firstName + " ";
+		this.infoPatientToAudit = this.patientToAudit?.firstName ? this.patientToAudit.firstName + " " : '';
 		if (this.patientToAudit?.middleNames) {
 			this.infoPatientToAudit += this.patientToAudit.middleNames + " ";
 		}
-		this.infoPatientToAudit += this.patientToAudit.lastName + " ";
+		this.infoPatientToAudit += this.patientToAudit?.lastName ? this.patientToAudit.lastName + " " : '';
 		if (this.patientToAudit?.otherLastNames) {
 			this.infoPatientToAudit += this.patientToAudit.otherLastNames;
 		}
@@ -125,7 +134,6 @@ export class PatientFusionComponent implements OnInit {
 				this.infoPatientToAudit += " | " + this.getIdentificationType(this.patientToAudit?.identificationTypeId) + " " + this.patientToAudit.identificationNumber + " | Fecha Nac. " + this.patientToAudit?.birthdate;
 				break;
 			case this.filters.FILTER_DNI:
-				this.infoPatientToAudit = "Auditoría de "
 				this.infoPatientToAudit += this.getIdentificationType(this.patientToAudit?.identificationTypeId) + " " + this.patientToAudit.identificationNumber;
 				break;
 		}
@@ -139,7 +147,7 @@ export class PatientFusionComponent implements OnInit {
 	}
 
 	goToBack() {
-		this.router.navigate([this.routePrefix + ROUTE_CONTROL_PATIENT_DUPLICATE])
+		this.router.navigate([ROUTE_CONTROL_PATIENT_DUPLICATE])
 	}
 
 	getIdentificationType(value: number) {
@@ -227,7 +235,8 @@ export class PatientFusionComponent implements OnInit {
 					identification: '-' + this.getIdentificationType(this.patientToMerge.registrationDataPerson.identificationTypeId) + ' ' + this.patientToMerge.registrationDataPerson.identificationNumber,
 					birthDate: '- Fecha Nac. ' + this.patientToMerge.registrationDataPerson.birthDate,
 					idPatient: '- ID ' + this.patientToMerge.activePatientId,
-					nameSelfDetermination: this.nameSelfDeterminationFF ? this.patientToMerge.registrationDataPerson.nameSelfDetermination? '- '+ this.patientToMerge.registrationDataPerson.nameSelfDetermination : "-" :null,
+					nameSelfDetermination: this.nameSelfDeterminationFF ? this.patientToMerge.registrationDataPerson.nameSelfDetermination ? '- ' + this.patientToMerge.registrationDataPerson.nameSelfDetermination : "-" : null,
+					labelButtonConfirm: 'pacientes.audit.BUTTON_CONFIRM'
 				},
 				disableClose: true,
 				width: '35%',
@@ -235,11 +244,13 @@ export class PatientFusionComponent implements OnInit {
 			})
 			dialogRef.afterClosed().subscribe(confirmed => {
 				if (confirmed) {
+					this.isLoadingRequestMerge = true;
 					this.completePatientDataToMerge();
 					this.patientMergeService.merge(this.patientToMerge).subscribe(res => {
+						this.isLoadingRequestMerge = false;
 						const dialogRef2 = this.dialog.open(ConfirmedFusionComponent, {
 							data: {
-								idPatient: this.patientToMerge.activePatientId
+								idPatients: this.patientToMerge.activePatientId
 							},
 							disableClose: true,
 							width: '35%',
@@ -251,6 +262,7 @@ export class PatientFusionComponent implements OnInit {
 					}, error => {
 						this.snackBarService.showError(error.text);
 						this.oldPatientsIds.push(this.patientToMerge.activePatientId);
+						this.isLoadingRequestMerge = false;
 					})
 				}
 			});
@@ -269,7 +281,6 @@ export class PatientFusionComponent implements OnInit {
 		} else {
 			this.validationColumns = false;
 		}
-
 	}
 
 	completePatientDataToMerge() {
@@ -301,6 +312,7 @@ export class PatientFusionComponent implements OnInit {
 		this.dialog.open(PatientProfilePopupComponent, {
 			data: {
 				patientId: patient.patientId,
+				viewCardToAudit: true
 			},
 			height: "600px",
 			width: '30%',

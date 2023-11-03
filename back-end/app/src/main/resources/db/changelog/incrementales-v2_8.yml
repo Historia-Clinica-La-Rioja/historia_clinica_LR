@@ -1,0 +1,286 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v2_8
+      
+    - changeSet:
+        id: addColumns-begin_of_move-end_of_move-move_studies
+        author: amurrie
+        changes:
+          - addColumn:
+              tableName: move_studies
+              columns:
+                - column:
+                    constraints:
+                      nullable: true
+                    name: begin_of_move
+                    type: datetime
+                - column:
+                    constraints:
+                      nullable: true
+                    name: end_of_move
+                    type: datetime
+
+    - changeSet:
+        id: addColumn-service_request-id-reference
+        comment: Add column service_request-id to reference table
+        author: bchacon
+        changes:
+          - addColumn:
+              tableName: reference
+              columns:
+                - column:
+                    name: service_request_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: service_request_id
+              baseTableName: reference
+              constraintName: FK_reference_service_request_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: service_request
+              validate: true
+
+    - changeSet:
+        id: dropNotNullConstraint-clinical_specialty_id-reference
+        comment: Drop not null constraint in clinical_specialty_id colum in reference table
+        author: bchacon
+        changes:
+          - dropNotNullConstraint:
+              tableName: reference
+              columnName: clinical_specialty_id
+              columnDataType: int
+
+    - changeSet:
+        id: createTable-document_template
+        author: mromero
+        changes:
+          - createTable:
+              tableName: document_template
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_document_template
+                    name: id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: user_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: name
+                    type: varchar(40)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: type_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: institution_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: file_id
+                    type: bigint
+          - addForeignKeyConstraint:
+              baseColumnNames: user_id
+              baseTableName: document_template
+              constraintName: FK_document_template_user_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: institution_id
+              baseTableName: document_template
+              constraintName: FK_document_template_institution_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: institution
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: file_id
+              baseTableName: document_template
+              constraintName: FK_file_info_template_file_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: file_info
+              validate: true
+          - addUniqueConstraint:
+              tableName: document_template
+              columnNames: user_id, type_id, name
+              constraintName: UQ_document_template_user_id_type_id_name
+
+    - changeSet:
+        id: createTable-rule
+        comment: Create table rule
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: rule
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_rule
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      references: clinical_specialty(id)
+                      foreignKeyName: FK_clinical_specialty_rule
+                      nullable: true
+                    name: clinical_specialty_id
+                    type: int
+                - column:
+                    constraints:
+                      references: snomed(id)
+                      foreignKeyName: FK_snomed_rule
+                      nullable: true
+                    name: snomed_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: type_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: createIndexSctid-snomed
+        author: bchacon
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_snomed_sctid" ON snomed (sctid);
+    - changeSet:
+        id: drop-columns-pac_server
+        author: amurrie
+        changes:
+          - dropColumn:
+              columns:
+                - column:
+                    name: username
+                - column:
+                    name: password
+                - column:
+                    name: url_stow
+                - column:
+                    name: url_auth
+              tableName: pac_server
+          - addColumn:
+              columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  name: active
+                  type: BOOLEAN
+                  defaultValue: ${boolean.true}
+              tableName: pac_server
+
+    - changeSet:
+        id: dropForeignKey-snomed_group-institution_id
+        author: mromero
+        changes:
+          - dropForeignKeyConstraint:
+              baseTableName: snomed_group
+              constraintName: FK_snomed_group_institution_id
+
+    - changeSet:
+        id: update-snomed_group-institution_id-default
+        author: mromero
+        changes:
+          - sql:
+              sql: |-
+                ALTER TABLE snomed_group ALTER COLUMN institution_id SET DEFAULT -1;
+
+    - changeSet:
+        id: update-snomed_group-institution_id
+        context: "!schema-only"
+        author: mromero
+        changes:
+          - sql:
+              sql: |-
+                UPDATE snomed_group SET institution_id = -1 WHERE institution_id IS NULL;
+                
+    - changeSet:
+        id: update-snomed_group-description-duplicated
+        context: "!schema-only"
+        author: mromero
+        changes:
+          - sql:
+              sql: |-
+                UPDATE snomed_group s
+                  SET description = (SELECT t.description
+                                    FROM (SELECT s1.id, 
+                                        concat(s1.description, '-', 
+                                            row_number() over (partition by s1.institution_id order by s1.id)) AS description
+                                        FROM snomed_group s1
+                                            JOIN snomed_group s2 ON s1.group_id = s2.id
+                                        WHERE s2.description LIKE 'PROCEDURE'
+                                          AND s1.group_type = 3
+                                          AND s.institution_id = s1.institution_id) AS t
+                                    WHERE t.id = s.id)
+                  WHERE s.group_type = 3
+                   AND (SELECT CASE WHEN count(*) > 1 THEN TRUE ELSE FALSE END
+                        FROM snomed_group s3
+                            JOIN snomed_group s4 ON s3.group_id = s4.id
+                        WHERE s4.description LIKE 'PROCEDURE'
+                          AND s3.group_type = 3
+                          AND s.institution_id = s3.institution_id);
+
+    - changeSet:
+        id: addUniqueConstraint-snomed_group_description_institution_id
+        author: mromero
+        changes:
+          - addUniqueConstraint:
+              tableName: snomed_group
+              columnNames: description, institution_id
+              constraintName: UQ_snomed_group_description_institution_id

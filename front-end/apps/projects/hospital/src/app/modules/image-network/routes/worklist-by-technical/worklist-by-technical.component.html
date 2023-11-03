@@ -3,35 +3,70 @@
         <h2 class="page-title">{{'image-network.appointments.WORKLIST' | translate }}</h2>
 
         <div *ngIf="permission; else noPermission">
-            <mat-form-field class="dropdown-container" appearance="outline">
-                <mat-label [translate]="'image-network.equipment-diary-setup.EQUIPMENT_SELECT'"></mat-label>
-                <mat-select id="equipment" (selectionChange)="onEquipmentChange($event)" fxFlex="98%">
-                    <mat-option *ngFor="let equipment of (equipments$ | async)" id="equipment.name" [value]="equipment">
-                        {{equipment.name}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+            <form [formGroup]="filtersForm">
+                <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="10px">
+                    <div data-id="modality-filter">
+                        <mat-form-field appearance="outline">
+                            <mat-label [translate]="'image-network.worklist.filters.MODALITY'"></mat-label>
+                            <mat-select formControlName="modality" id="modality" fxFlex="98%"
+                                (selectionChange)="onModalityChange()">
+                                <mat-option *ngFor="let modality of (modalities$ | async)" id="modality.description"
+                                    [value]="modality">
+                                    {{modality.description}}
+                                </mat-option>
+                            </mat-select>
+                            <button *ngIf="filtersForm.controls.modality.value" mat-button matSuffix color="warn"
+                                mat-icon-button (click)="cleanModalityInput(); $event.stopPropagation()">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                    <div data-id="equipment-filter">
+                        <mat-form-field appearance="outline">
+                            <mat-label [translate]="'image-network.equipment-diary-setup.EQUIPMENT_SELECT'"></mat-label>
+                            <mat-select formControlName="equipment" id="equipment"
+                                (selectionChange)="onEquipmentChange($event)" fxFlex="98%">
+                                <mat-option *ngFor="let equipment of equipments" id="equipment.name"
+                                    [value]="equipment">
+                                    {{equipment.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div data-id="date-filter">
+                        <mat-form-field appearance="outline">
+                            <mat-label [translate]="'image-network.worklist.filters.DATE_SELECT'"></mat-label>
+                            <div fxFlex fxLayout="row">
+                                <mat-date-range-input [formGroup]="filtersForm.get('datePicker')" [rangePicker]="picker"
+                                    [max]="today" [min]="minDate" fxLayoutAlign="center center">
+                                    <input matStartDate formControlName="start" readonly>
+                                    <input matEndDate formControlName="end" readonly (dateChange)="setSelectedDate()">
+                                </mat-date-range-input>
+                                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-date-range-picker #picker></mat-date-range-picker>
+                            </div>
+                            <mat-error *ngIf="hasError(filtersForm.get('datePicker'), 'required', 'end')"
+                                [translate]="'forms.REQUIRED'"></mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div style="height: 50px;">
+                        <button id="button-filter" mat-button color="primary" fxLayoutAlign="center start" (click)="setPanelState()">
+                            <mat-icon color="primary">filter_list</mat-icon>
+                            {{'internaciones.internment-patient-card.filters.FILTER'| translate | uppercase }} <mat-icon color="primary" 
+                            [ngClass]="{'button-filter-effect':panelOpenState }">
+                                keyboard_arrow_down</mat-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="10px" [hidden]="!panelOpenState">
+                    <app-worklist-filters [appointmentsStates]="appointmentsStates" [defaultStates]="defaultStates" [panelOpenState]="panelOpenState" (search)="search($event)"></app-worklist-filters>
+                </div>
+            </form>
 
             <mat-card class="worklist-card">
 
-                <div class="filters-container">
-                    <mat-form-field class="state-dropdown-container" appearance="outline">
-                        <mat-label>{{'image-network.appointments.FILTER_BY_STATE' | translate }}</mat-label>
-                        <mat-select #select [formControl]="states" (selectionChange)="onStatusChange($event)" multiple>
-                            <mat-select-trigger>{{selectedStates}}</mat-select-trigger>
-                            <mat-option *ngFor="let appointmentState of appointmentsStates" (click)="checkSelection()"
-                                [value]="appointmentState">{{appointmentState.description}}</mat-option>
-                            <mat-divider class="dropdown-divider"></mat-divider>
-                            <div class="select-all">
-                                <mat-checkbox [(ngModel)]="allSelected" [ngModelOptions]="{standalone: true}"
-                                    (change)="toggleAllSelection()" color="primary">{{'buttons.ALL' | translate }}</mat-checkbox>
-                            </div>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-
-                <mat-list class="mat-form-field-wrapper" *ngIf="detailedAppointments.length">
-                    <mat-divider></mat-divider>
+                <mat-list class="mat-form-field-wrapper" *ngIf="detailedAppointments.length; else nothingToShow">
                     <div *ngFor="let appointment of pageSlice">
                         <mat-list-item class="appointment-detail">
                             <div class="appointment-container" fxFlex="100">
@@ -39,23 +74,18 @@
                                     fxFlex.gt-sm="13" description={{appointment.description}}
                                     color="{{appointment.color}}"></app-colored-label>
 
-                                <div class="patient-information" fxFlex.gt-sm="50">
+                                <div class="patient-information" fxFlex.gt-sm="35">
                                     <span class="patient-name">
-                                        <span class="naming"
-                                            *ngIf="nameSelfDeterminationFF && appointment.nameSelfDetermination.length">
-                                            {{appointment.nameSelfDetermination}}
-                                        </span>
-                                        <span class="naming"
-                                            *ngIf="!nameSelfDeterminationFF || !appointment.nameSelfDetermination.length">
-                                            {{appointment.firstName}} 
-                                        </span>
-                                        <span class="naming white-space">                                        
-                                            {{appointment.lastName}} 
-                                        </span>
+                                        {{appointment.patientFullName | titlecase}}
                                     </span>
                                     <span class="patient-identification grey smaller-font">DNI
                                         {{appointment.data.patient.person.identificationNumber}} - ID
                                         {{appointment.data.patient.id}}</span>
+                                </div>
+
+                                <div fxFlex.gt-sm="20">
+                                    <span class="study-name smaller-font" *ngIf="appointment.data.studyName; else noStudy" data-id="study-name">{{appointment.data.studyName | titlecase}}</span>
+                                    <ng-template #noStudy><span class="study-name grey smaller-font">{{'image-network.worklist.details_study.PENDING_ORDER' | translate}}</span></ng-template>
                                 </div>
 
                                 <div class="appointment-date-information smaller-font" fxFlex.gt-sm="15">
@@ -64,33 +94,53 @@
                                     </span>
                                 </div>
 								<div fxFlex.gt-sm="20" fxFlex.gt-md="17" fxLayoutAlign="center center">
-									<button mat-flat-button color="primary" fxFlex="90" *ngIf="appointment.canBeFinished" (click)="finishStudy(appointment.data)">
+									<button mat-raised-button color="primary" fxFlex="90" *ngIf="appointment.canBeFinished" (click)="finishStudy(appointment.data)">
 										<span class="uppercase" [translate]="'image-network.appointments.FINISH'"></span>
 									</button>
-                                    <div *ngIf="appointment.data.appointmentStateId === appointmentStatesId.SERVED" >
-                                        <span *ngIf="!appointment.derive; else institutionDerived" class="derive-information smaller-font orange">{{'image-network.worklist.PENDING_REPORT' | translate}}</span>
-                                        <ng-template #institutionDerived><span class="derive-information smaller-font grey">{{'image-network.worklist.DERIVED_REPORT' | translate}}{{appointment.derive?.name}}</span></ng-template>
+                                    <div *ngIf="appointment.data.appointmentStateId === appointmentStatesId.SERVED" fxFlexLayout="row">
+                                        <app-view-report *ngIf="appointment.reportStatus.id == reportStates.COMPLETED; else showLabel" 
+                                            [appointmentId]="appointment.data.id" [buttonText]="'image-network.worklist.VIEW_REPORT'">
+                                        </app-view-report>
+                                        <ng-template #showLabel>
+                                            <span class="derive-information smaller-font {{appointment.reportStatus.color}}">
+                                                {{appointment.reportStatus.description}}{{appointment.reportStatus.id == reportStates.DERIVED ? appointment.derive?.name : null}}
+                                            </span>
+                                        </ng-template>
                                     </div>
-								</div>
+                                </div>
                             </div>
-                            <div fxFlex="5%">
-                                <button *ngIf="appointment.data.appointmentStateId === appointmentStatesId.SERVED"
+                            <div fxFlex="5%" class="options-btn">
+                                <button *ngIf="appointment.data.appointmentStateId === appointmentStatesId.SERVED || appointment.data.serviceRequestId"
                                     mat-icon-button [matMenuTriggerFor]="menu">
                                     <mat-icon>more_vert</mat-icon>
                                 </button>
                                 <mat-menu #menu="matMenu">
-                                    <button *ngIf="true" mat-menu-item (click)="deriveReport(appointment.data.id)" [disabled]="appointment.derive">
+                                    <button *ngIf="appointment.reportStatus?.id != reportStates.NOT_REQUIRED && appointment.data.appointmentStateId === appointmentStatesId.SERVED"
+                                        mat-menu-item (click)="deriveReport(appointment.data.id)"
+                                        [disabled]="!appointment.canBeDerived">
                                         <span [translate]="'image-network.worklist.DERIVE_REPORT'"></span>
+                                    </button>
+                                    <button *ngIf="appointment.reportStatus?.id == reportStates.NOT_REQUIRED"
+                                        mat-menu-item (click)="requestReport(appointment)">
+                                        <span [translate]="'image-network.worklist.REQUEST_REPORT'"></span>
+                                    </button>
+                                    <button *ngIf="appointment.data.serviceRequestId" mat-menu-item (click)="downloadOrder(appointment.data)">
+                                        <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DOWNLOAD_STUDY'"></span>
                                     </button>
                                 </mat-menu>
                             </div>
                         </mat-list-item>
                         <mat-divider></mat-divider>
                     </div>
-                    <mat-paginator #paginator *ngIf="(detailedAppointments.length !== 0)" [length]="detailedAppointments.length"
-                        [pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)">
+                    <mat-paginator #paginator *ngIf="(detailedAppointments.length !== 0)"
+                        [length]="detailedAppointments.length" [pageSizeOptions]="pageSizeOptions"
+                        (page)="onPageChange($event)">
                     </mat-paginator>
                 </mat-list>
+
+                <ng-template #nothingToShow>
+                    <app-no-data *appHasRole="['TECNICO']" [message]="nothingToShowMssg"></app-no-data>
+                </ng-template>
             </mat-card>
         </div>
     </mat-card>

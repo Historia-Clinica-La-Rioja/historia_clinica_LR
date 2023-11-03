@@ -1,0 +1,14 @@
+<form [formGroup]="form" class="form">
+	<span>{{ 'profile.api-key.generate-dialog.ENTRY_NAME' | translate }}</span>
+	<div fxLayout="column">
+		<mat-form-field appearance="outline">
+			<input formControlName="name" type="text" matInput
+				placeholder="{{'profile.api-key.generate-dialog.ENTRY_NAME_PLACEHOLDER' | translate}}"
+			>
+			<mat-error *ngIf="hasError('required', 'name')">
+				<span translate="forms.REQUIRED"></span>
+			</mat-error>
+		</mat-form-field>
+	</div>
+
+</form>

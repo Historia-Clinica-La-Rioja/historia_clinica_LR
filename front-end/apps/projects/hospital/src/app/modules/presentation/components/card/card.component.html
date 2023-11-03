@@ -29,11 +29,11 @@
 		</mat-card-content>
 	</div>
 	<section>
-		<div fxLayoutAlign="center start" fxLayout.gt-md="row" fxLayoutAlign.lt-sm="start start" fxFlex="20%"
+		<div fxLayoutAlign="center start" fxLayout.gt-md="row" fxLayoutAlign.lt-sm="start start"
 			fxLayout="column">
 			<ng-container *ngFor="let action of cardContent.actions">
 				<div id="view" *ngIf="!cardContent?.ranking && action.display" class="button">
-					<button id="view-button" mat-flat-button color="primary" (click)="goTo(action.do)">
+					<button id="view-button" mat-stroked-button color="primary" (click)="goTo(action.do)">
 						<span>{{ action.display | translate | uppercase }}</span>
 					</button>
 				</div>

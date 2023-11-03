@@ -3,6 +3,10 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public enum EDocumentType {
 
     ANAMNESIS(1, "anamnesis", "anamnesis"),
@@ -50,4 +54,9 @@ public enum EDocumentType {
         throw new NotFoundException("document-type-not-exists", String.format("El tipo de documento %s no existe", id));
     }
 
+	public static List<EDocumentType> getAllInternmentDocumentTypes(){
+		return Stream.of(EDocumentType.ANAMNESIS, EDocumentType.EVALUATION_NOTE,
+						EDocumentType.NURSING_EVOLUTION_NOTE, EDocumentType.EPICRISIS)
+				.collect(Collectors.toList());
+	}
 }

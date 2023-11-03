@@ -6,7 +6,7 @@ import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPAReposito
 import net.pladema.patient.repository.entity.MergedPatient;
 
 @Repository
-public interface MergedPatientRepository extends SGXAuditableEntityJPARepository<MergedPatient, Integer> {
+public interface MergedPatientRepository extends SGXAuditableEntityJPARepository<MergedPatient, Integer>, MergedPatientRepositorySearch {
 
 
 }

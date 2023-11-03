@@ -15,7 +15,7 @@ public class CompleteDiaryListVo extends DiaryListVo {
 	private final Integer sectorId;
 
 	private final String sectorDescription;
-	
+
 	private final Integer healthcareProfessionalId;
 
 	private final String doctorFirstName;
@@ -28,6 +28,8 @@ public class CompleteDiaryListVo extends DiaryListVo {
 
 	private String doctorNameSelfDetermination;
 
+	private String hierarchicalUnitAlias;
+
 	public CompleteDiaryListVo(Diary diary, String doctorsOfficeDescription, Integer sectorId,
 							   String sectorDescription, Integer healthcareProfessionalId, String specialtyName) {
 		super(diary, doctorsOfficeDescription, specialtyName);
@@ -36,6 +38,18 @@ public class CompleteDiaryListVo extends DiaryListVo {
 		this.healthcareProfessionalId = healthcareProfessionalId;
 		this.doctorFirstName = null;
 		this.doctorLastName = null;
+	}
+
+	public CompleteDiaryListVo(Diary diary, String doctorsOfficeDescription, Integer sectorId,
+							   String sectorDescription, Integer healthcareProfessionalId,
+							   String specialtyName, String hierarchicalUnitAlias) {
+		super(diary, doctorsOfficeDescription, specialtyName);
+		this.sectorId = sectorId;
+		this.sectorDescription = sectorDescription;
+		this.healthcareProfessionalId = healthcareProfessionalId;
+		this.doctorFirstName = null;
+		this.doctorLastName = null;
+		this.hierarchicalUnitAlias = hierarchicalUnitAlias;
 	}
 
 	public CompleteDiaryListVo(Diary diary, String doctorsOfficeDescription, Integer sectorId,

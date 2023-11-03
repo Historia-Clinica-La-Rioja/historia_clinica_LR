@@ -1,0 +1,44 @@
+<div mat-dialog-title>
+    <div fxLayout="row" fxLayoutAlign="end end">
+        <button mat-dialog-close mat-icon-button>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <div class="mat-h2 capitalize-first-letter" [translate]="'pacientes.edit_hierarchical_units.TITLE'"></div>
+</div>
+
+<form mat-dialog-content [formGroup]="form">
+    <div fxLayout="column" fxLayoutGap="10px" formArrayName="hierarchicalUnits">
+        <div *ngFor="let huControls of huFormArray.controls; let i=index" [formGroupName]="i">
+            <div fxLayoutGap="20px" fxLayoutAlign="space-between center">
+                <mat-form-field appearance="outline">
+                    <mat-label>
+                        {{ 'pacientes.edit_hierarchical_units.LABEL' | translate }}
+                    </mat-label>
+                    <mat-select formControlName="hierarchicalUnit" [compareWith]="compareHU" (selectionChange)="filterOptions($event.value)">
+                        <mat-option *ngFor="let hu of allHU" [value]="hu" [disabled]="hu.disabled">
+                            {{hu.name}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="huControls.hasError('required', 'hierarchicalUnit')"
+                        [translate]="'forms.REQUIRED'"></mat-error>
+                    <button type="button" mat-button matSuffix color="warn" mat-icon-button
+                        (click)="clear(i); $event.stopPropagation()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+
+                <mat-slide-toggle formControlName="isResponsible" color="primary"></mat-slide-toggle>
+                <mat-label>{{ 'pacientes.edit_hierarchical_units.RESPONSIBLE' | translate | titlecase }}</mat-label>
+            </div>
+        </div>
+    </div>
+    <button mat-button color="primary" (click)="addEmpty()" [disabled]="!form.valid || !data.hasRoles">
+        +{{'pacientes.edit_hierarchical_units.ADD_HIERARCHICAL_UNITS' | translate }}
+    </button>
+</form>
+<div mat-dialog-actions fxLayoutAlign="end end">
+    <button mat-raised-button color="primary" (click)="save()">
+        {{'buttons.CONFIRM' | translate | uppercase}}
+    </button>
+</div>

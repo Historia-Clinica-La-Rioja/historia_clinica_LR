@@ -1,12 +1,15 @@
 package net.pladema.patient.repository;
 
-import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
-
 import java.util.List;
+import java.util.Optional;
+
+import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
 
 public interface PatientMedicalCoverageRepositoryCustom {
 
 	List<PatientMedicalCoverageVo> getActivePatientCoverages(Integer patientId);
+
+	Optional<PatientMedicalCoverageVo> getActivePatientCoverageByOrderId(Integer orderId);
 
 	List<PatientMedicalCoverageVo> getActivePatientHealthInsurances(Integer patientId);
 

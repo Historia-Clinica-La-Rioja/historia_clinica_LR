@@ -6,7 +6,8 @@
 		</div>
 		<div>
 			<h3 [translate]="'guardia.new-episode.ADM_TRIAGE'"></h3>
-			<app-administrative-triage (confirm)="confirmEvent($event)"
+			<app-administrative-triage [disableConfirmButton]="disable"
+									   (confirm)="confirmEvent($event)"
 									   (cancel)="cancelEvent()"></app-administrative-triage>
 		</div>
 	</section>

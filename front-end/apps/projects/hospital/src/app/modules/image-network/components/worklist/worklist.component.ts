@@ -24,6 +24,7 @@ export interface Worklist {
 	state: State;
 	date: Date;
 	appointmentId: number;
+	institutionName: string
 }
 
 interface PatientInformation {

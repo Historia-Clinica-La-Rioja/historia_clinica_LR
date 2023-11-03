@@ -15,18 +15,16 @@ import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
 import net.pladema.emergencycare.repository.entity.EmergencyCareDischarge;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeDischargeService;
+import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.EpisodeDischargeBo;
 import net.pladema.emergencycare.service.domain.MedicalDischargeBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,9 +40,11 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
     private final DocumentHealthConditionRepository documentHealthConditionRepository;
     private final EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;
     private final DateTimeProvider dateTimeProvider;
+	private final EmergencyCareEpisodeService emergencyCareEpisodeService;
 
     EmergencyCareEpisodeDischargeServiceImpl(EmergencyCareEpisodeDischargeRepository emergencyCareEpisodeDischargeRepository, DocumentFactory documentFactory,
-                                             DischargeTypeRepository dischargeTypeRepository, DocumentService documentService, DocumentHealthConditionRepository documentHealthConditionRepository, EmergencyCareEpisodeRepository emergencyCareEpisodeRepository, DateTimeProvider dateTimeProvider) {
+                                             DischargeTypeRepository dischargeTypeRepository, DocumentService documentService, DocumentHealthConditionRepository documentHealthConditionRepository, EmergencyCareEpisodeRepository emergencyCareEpisodeRepository, DateTimeProvider dateTimeProvider,
+											 EmergencyCareEpisodeService emergencyCareEpisodeService) {
         this.emergencyCareEpisodeDischargeRepository = emergencyCareEpisodeDischargeRepository;
         this.documentFactory = documentFactory;
         this.dischargeTypeRepository = dischargeTypeRepository;
@@ -52,12 +52,13 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
         this.documentHealthConditionRepository = documentHealthConditionRepository;
         this.emergencyCareEpisodeRepository = emergencyCareEpisodeRepository;
         this.dateTimeProvider = dateTimeProvider;
+		this.emergencyCareEpisodeService = emergencyCareEpisodeService;
     }
 
     @Override
-    public boolean newMedicalDischarge(MedicalDischargeBo medicalDischarge, ZoneId institutionZoneId, Integer institutionId) {
+    public boolean newMedicalDischarge(MedicalDischargeBo medicalDischarge,Integer institutionId) {
         LOG.debug("Medical discharge service -> medicalDischargeBo {}", medicalDischarge);
-        validateMedicalDischarge(medicalDischarge, institutionZoneId, institutionId);
+        validateMedicalDischarge(medicalDischarge, institutionId);
         EmergencyCareDischarge newDischarge = toEmergencyCareDischarge(medicalDischarge);
         emergencyCareEpisodeDischargeRepository.save(newDischarge);
         documentFactory.run(medicalDischarge, false);
@@ -91,30 +92,30 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
         return new EmergencyCareDischarge(medicalDischarge.getSourceId(),medicalDischarge.getMedicalDischargeOn(),medicalDischarge.getMedicalDischargeBy(),medicalDischarge.getAutopsy(), medicalDischarge.getDischargeTypeId());
     }
 
-    private void validateMedicalDischarge(MedicalDischargeBo medicalDischarge, ZoneId institutionZoneId, Integer institutionId) {
+    private void validateMedicalDischarge(MedicalDischargeBo medicalDischarge, Integer institutionId) {
         EmergencyCareVo emergencyCareVo = assertExistEmergencyCareEpisode(medicalDischarge.getSourceId(),institutionId);
         //TODO validar que el episodio este en atencion
         LocalDateTime medicalDischargeOn = medicalDischarge.getMedicalDischargeOn();
-        assertMedicalDischargeIsAfterEpisodeCreationDate(medicalDischargeOn, emergencyCareVo.getCreatedOn(), institutionZoneId);
-        assertMedicalDischargeIsBeforeToday(institutionZoneId, medicalDischargeOn);
+        assertMedicalDischargeIsAfterEpisodeCreationDate(medicalDischargeOn, emergencyCareVo.getCreatedOn());
+        assertMedicalDischargeIsBeforeToday(medicalDischargeOn);
+		assertHasEvolutionNote(medicalDischarge.getEncounterId());
     }
+
+	private void assertHasEvolutionNote(Integer emergencyCareEpisodeId) {
+		Assert.isTrue(emergencyCareEpisodeService.hasEvolutionNote(emergencyCareEpisodeId), "El episodio debe contar con una nota de evolución para iniciar el alta médica");
+	}
 
     private EmergencyCareVo assertExistEmergencyCareEpisode(Integer episodeId, Integer institutionId) {
         return emergencyCareEpisodeRepository.getEpisode(episodeId, institutionId)
                 .orElseThrow(() -> new NotFoundException("El episodio de guardia no existe", "El episodio de guardia no existe"));
     }
 
-    private void assertMedicalDischargeIsAfterEpisodeCreationDate(LocalDateTime medicalDischargeOn, LocalDateTime emergencyCareCreatedOn, ZoneId institutionZoneId) {
-        LocalDateTime zonedEmergencyCareCreatedOn = emergencyCareCreatedOn
-                .atZone(ZoneId.of(JacksonDateFormatConfig.UTC_ZONE_ID))
-                .withZoneSameInstant(institutionZoneId)
-                .toLocalDateTime()
-                .truncatedTo(ChronoUnit.MINUTES);
-        Assert.isTrue( !medicalDischargeOn.isBefore(zonedEmergencyCareCreatedOn), "care-episode.medical-discharge.exceeds-min-date");
+    private void assertMedicalDischargeIsAfterEpisodeCreationDate(LocalDateTime medicalDischargeOn, LocalDateTime emergencyCareCreatedOn) {
+       Assert.isTrue( !medicalDischargeOn.isBefore(emergencyCareCreatedOn), "care-episode.medical-discharge.exceeds-min-date");
     }
 
-    private void assertMedicalDischargeIsBeforeToday(ZoneId institutionZoneId, LocalDateTime medicalDischargeOn) {
-        LocalDateTime today = dateTimeProvider.nowDateTimeWithZone(institutionZoneId);
+    private void assertMedicalDischargeIsBeforeToday(LocalDateTime medicalDischargeOn) {
+        LocalDateTime today = dateTimeProvider.nowDateTime();
         Assert.isTrue( !medicalDischargeOn.isAfter(today), "care-episode.medical-discharge.exceeds-max-date");
     }
 }

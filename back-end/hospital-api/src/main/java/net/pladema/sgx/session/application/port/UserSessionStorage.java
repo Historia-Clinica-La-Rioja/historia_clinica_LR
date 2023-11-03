@@ -4,11 +4,7 @@ import java.util.stream.Stream;
 
 import net.pladema.permissions.service.dto.RoleAssignment;
 
-public interface UserSessionStorage {
-	/**
-	 * Retorna el ID del usuario que hizo el request
-	 */
-	Integer getUserId();
+public interface UserSessionStorage extends UserIdStorage {
 
 	/**
 	 * Retorna los roles usuario que hizo el request

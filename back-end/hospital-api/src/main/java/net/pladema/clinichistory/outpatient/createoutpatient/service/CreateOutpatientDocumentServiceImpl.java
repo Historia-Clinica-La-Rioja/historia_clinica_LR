@@ -39,13 +39,13 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
 
 
     @Override
-    public OutpatientDocumentBo execute(OutpatientDocumentBo outpatient) {
+    public OutpatientDocumentBo execute(OutpatientDocumentBo outpatient, Boolean createFile) {
         LOG.debug("Input parameters -> outpatient {}", outpatient);
 
         assertContextValid(outpatient);
 		LocalDateTime now = dateTimeProvider.nowDateTime();
 		outpatient.setPerformedDate(now);
-        outpatient.setId(documentFactory.run(outpatient, true));
+        outpatient.setId(documentFactory.run(outpatient, createFile));
 
         updateOutpatientConsultationService.updateOutpatientDocId(outpatient.getEncounterId(), outpatient.getId());
         LOG.debug(OUTPUT, outpatient);

@@ -1,0 +1,21 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<span mat-dialog-title [translate]="'ambulatoria.paciente.nueva-consulta.problemas.buttons.ADD'"></span>
+	<button mat-icon-button (click)="close()">
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+
+<div mat-dialog-content>
+	<app-concepts-search *ngIf="!data.searchConceptsLocallyFF else problemTypeaheadSearch"
+		[label]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'"
+		(search)="data.ambulatoryConsultationProblemsService.openSearchDialog($event)">
+	</app-concepts-search>
+
+	<ng-template #problemTypeaheadSearch>
+		<app-concept-typeahead-search [ecl]="data.ambulatoryConsultationProblemsService.getECL()"
+			[placeholder]="'ambulatoria.paciente.nueva-consulta.problemas.SEARCH_PLACEHOLDER'"
+			(conceptSelected)="addProblem($event)" [enableSubmitButton]="enableSubmitButton"
+			[buttonMessage]="'ambulatoria.paciente.nueva-consulta.problemas.buttons.ADD'">
+		</app-concept-typeahead-search>
+	</ng-template>
+</div>

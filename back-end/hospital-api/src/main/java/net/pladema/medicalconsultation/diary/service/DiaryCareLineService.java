@@ -12,4 +12,6 @@ public interface DiaryCareLineService {
 
 	List<CareLineBo> getAllCareLinesByDiaryId(Integer diaryId, Integer healthCareProfessionalId);
 
+	List<CareLineBo> getPossibleCareLinesForDiaryByPractices(Integer institutionId, List<Integer> practicesId);
+
 }

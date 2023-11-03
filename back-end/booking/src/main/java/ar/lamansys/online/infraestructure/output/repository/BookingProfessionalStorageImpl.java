@@ -28,18 +28,30 @@ public class BookingProfessionalStorageImpl implements BookingProfessionalStorag
 	public Optional<List<BookingProfessionalBo>> findBookingProfessionals(Integer institutionId, Integer medicalCoverageId, boolean all) {
 		logger.debug("Find professionals by medicalCoverageId {} and institution {}", medicalCoverageId, institutionId);
 
-		String joinSentences = all ? "LEFT JOIN healthcare_professional_health_insurance AS hphi " +
-				"ON (hphi.healthcare_professional_id = hp.id) " +
-				"JOIN v_booking_person p ON (p.id = hp.person_id) " +
-				"JOIN v_booking_user_person up ON (p.id = up.person_id) " +
-				"JOIN v_booking_user_role ur ON (ur.user_id = up.user_id) " +
-				"WHERE ur.institution_id = :institutionId " :
+		String joinSentences = all ?
+				"LEFT JOIN healthcare_professional_health_insurance AS hphi " +
+						"ON (hphi.healthcare_professional_id = hp.id) " +
+						"JOIN v_booking_person p ON (p.id = hp.person_id) " +
+						"JOIN v_booking_user_person up ON (p.id = up.person_id) " +
+						"JOIN v_booking_user_role ur ON (ur.user_id = up.user_id) " +
+						"WHERE ur.institution_id = :institutionId " +
+						"AND EXISTS (SELECT d.healthcare_professional_id " +
+						"FROM v_booking_diary d " +
+						"JOIN v_booking_diary_opening_hours doh ON (d.id = doh.diary_id) " +
+						"WHERE d.healthcare_professional_id = hp.id " +
+						"AND doh.external_appointments_allowed = true) "
+				:
 				"JOIN healthcare_professional_health_insurance AS hphi ON (hphi.healthcare_professional_id = hp.id) " +
-				"JOIN v_booking_person p ON (p.id = hp.person_id) " +
-				"JOIN v_booking_user_person up ON (p.id = up.person_id) " +
-				"JOIN v_booking_user_role ur ON (ur.user_id = up.user_id) " +
-				"WHERE ur.institution_id = :institutionId " +
-				"AND hphi.medical_coverage_id = :medicalCoverageId ";
+						"JOIN v_booking_person p ON (p.id = hp.person_id) " +
+						"JOIN v_booking_user_person up ON (p.id = up.person_id) " +
+						"JOIN v_booking_user_role ur ON (ur.user_id = up.user_id) " +
+						"WHERE ur.institution_id = :institutionId " +
+						"AND hphi.medical_coverage_id = :medicalCoverageId " +
+						"AND EXISTS (SELECT d.healthcare_professional_id " +
+						"FROM v_booking_diary d " +
+						"JOIN v_booking_diary_opening_hours doh ON (d.id = doh.diary_id) " +
+						"WHERE d.healthcare_professional_id = hp.id " +
+						"AND doh.external_appointments_allowed = true) ";
 
 		String sqlString = "SELECT DISTINCT hp.id, " +
 				"p.first_name, " +

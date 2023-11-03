@@ -12,6 +12,7 @@ import { ConceptsSearchComponent } from './components/concepts-search/concepts-s
 import { ConceptTypeaheadSearchComponent } from './components/concept-typeahead-search/concept-typeahead-search.component';
 import { DocumentsSummaryComponent } from './components/documents-summary/documents-summary.component';
 import { EffectiveTimeComponent } from './components/effective-time/effective-time.component';
+import { HierarchicalUnitConsultationComponent } from './components/hierarchical-unit-consultation/hierarchical-unit-consultation.component';
 import { InternacionAntecedentesPersonalesSummaryComponent } from './components/internacion-antecedentes-personales-summary/internacion-antecedentes-personales-summary.component';
 import { MedicacionSummaryComponent } from './components/medicacion-summary/medicacion-summary.component';
 import { FactoresDeRiesgoSummaryComponent } from './components/factores-de-riesgo-summary/factores-de-riesgo-summary.component';
@@ -60,6 +61,7 @@ import { FactoresDeRiesgoFormV2Component } from './components/factores-de-riesgo
 import { AlergiasFormComponent } from './components/alergias-form/alergias-form.component';
 import { EmergencyCareEpisodeAttendService } from './services/emergency-care-episode-attend.service';
 import { EpisodeDataComponent } from './components/episode-data/episode-data.component';
+import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-search-dialog/problem-concept-search-dialog.component';
 
 @NgModule({
 	declarations: [
@@ -71,6 +73,7 @@ import { EpisodeDataComponent } from './components/episode-data/episode-data.com
 		ConceptsSearchComponent,
 		DocumentsSummaryComponent,
 		EffectiveTimeComponent,
+		HierarchicalUnitConsultationComponent,
 		InternacionAntecedentesPersonalesSummaryComponent,
 		MedicacionSummaryComponent,
 		FactoresDeRiesgoSummaryComponent,
@@ -116,7 +119,8 @@ import { EpisodeDataComponent } from './components/episode-data/episode-data.com
 		MedicacionesFormComponent,
 		ProcedimientosFormComponent,
 		FactoresDeRiesgoFormV2Component,
-		AlergiasFormComponent
+		AlergiasFormComponent,
+		ProblemConceptSearchDialogComponent,
 	],
 	imports: [
 		CommonModule,

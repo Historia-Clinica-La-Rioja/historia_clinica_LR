@@ -1,11 +1,12 @@
 package net.pladema.terminology.cache.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.function.Predicate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import net.pladema.UnitRepository;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 import net.pladema.snowstorm.services.loadCsv.UpdateConceptsResultBo;
 import net.pladema.terminology.cache.controller.dto.TerminologyCSVDto;
+import net.pladema.terminology.cache.controller.dto.TerminologyECLStatusDto;
 import net.pladema.terminology.cache.infrastructure.output.SnomedCacheFileIngestor;
 import net.pladema.terminology.cache.infrastructure.output.SnomedCacheFileStorage;
 import net.pladema.terminology.cache.infrastructure.output.SnowmedCacheFileDownloadService;
@@ -30,6 +32,11 @@ import net.pladema.terminology.cache.jobs.IngestCacheCSVJob;
 
 @ExtendWith(MockitoExtension.class)
 class TerminologyCacheControllerTest extends UnitRepository {
+	private static final TerminologyCSVDto ALLERGY_CSV = new TerminologyCSVDto(SnomedECL.ALLERGY, "http://lamansys.ar/ecl/ALLERGY.csv");
+	private static final TerminologyCSVDto DIAGNOSIS_CSV = new TerminologyCSVDto(SnomedECL.DIAGNOSIS, "http://lamansys.ar/ecl/ECL.csv");
+	private static final TerminologyCSVDto PROCEDURE_CSV = new TerminologyCSVDto(SnomedECL.PROCEDURE, "http://lamansys.ar/ecl/PROCEDURE.csv");
+	private static final TerminologyCSVDto BAD_CSV = new TerminologyCSVDto(SnomedECL.FAMILY_RECORD, "http://lamansys.ar/ecl/picture.png");
+
 
 	@Autowired
 	private SnomedCacheFileRepository snomedCacheFileRepository;
@@ -61,9 +68,7 @@ class TerminologyCacheControllerTest extends UnitRepository {
 	@Test
 	void addCSV_ToQueue() {
 
-		controller.addCSV(
-				new TerminologyCSVDto(SnomedECL.DIAGNOSIS, "http://lamansys.ar/ecl/ECL.csv")
-		);
+		controller.addCSV(DIAGNOSIS_CSV);
 
 		var queue = controller.getQueue();
 
@@ -80,15 +85,11 @@ class TerminologyCacheControllerTest extends UnitRepository {
 	}
 
 	@Test
-	void addCSV_Download() {
+	void addCSV_Download_WithError() {
 
-		controller.addCSV(
-				new TerminologyCSVDto(SnomedECL.ALLERGY, "http://lamansys.ar/ecl/ECL.csv")
-		);
+		controller.addCSV(ALLERGY_CSV);
 
-		when(snomedCacheFileStorage.save(anyString()))
-				.thenThrow(new RuntimeException("Imposible leer"));
-		downloadJob.execute();
+		downloadFail(ALLERGY_CSV.url, "Imposible leer");
 
 		var queue = controller.getQueue();
 
@@ -97,7 +98,7 @@ class TerminologyCacheControllerTest extends UnitRepository {
 		var queueItem = queue.get(0);
 
 		assertThat(queueItem)
-				.hasFieldOrPropertyWithValue("url", "http://lamansys.ar/ecl/ECL.csv")
+				.hasFieldOrPropertyWithValue("url", "http://lamansys.ar/ecl/ALLERGY.csv")
 				.hasFieldOrPropertyWithValue("ecl", SnomedECL.ALLERGY)
 				.hasFieldOrPropertyWithValue("downloadedError", "Imposible leer")
 		;
@@ -106,25 +107,17 @@ class TerminologyCacheControllerTest extends UnitRepository {
 	@Test
 	void addCSV_Download_Ingest() {
 
-		controller.addCSV(
-				new TerminologyCSVDto(SnomedECL.ALLERGY, "http://lamansys.ar/ecl/ECL.csv")
-		);
-
-		when(snomedCacheFileStorage.save(anyString()))
-				.thenReturn(newFileInfo(18L));
+		controller.addCSV(ALLERGY_CSV);
 
 		assertThat(controller.getQueue())
 				.hasSize(1);
 
-		downloadJob.execute();
+		downloadJob(ALLERGY_CSV.url, 18L);
 
 		assertThat(controller.getQueue())
 				.hasSize(1);
 
-		when(snomedCacheFileIngestor.run(anyLong(), anyString()))
-				.thenReturn(newUpdateConceptsResultBo("ECL"));
-
-		ingestJob.execute();
+		ingestJob(ALLERGY_CSV.ecl, 18L);
 
 		assertThat(controller.getQueue())
 				.isEmpty();
@@ -134,41 +127,115 @@ class TerminologyCacheControllerTest extends UnitRepository {
 	@Test
 	void addCSV_Download_Injest_Multiple() {
 
-		controller.addCSV(
-				new TerminologyCSVDto(SnomedECL.ALLERGY, "http://lamansys.ar/ecl/ECL.csv")
-		);
-		controller.addCSV(
-				new TerminologyCSVDto(SnomedECL.DIAGNOSIS, "http://lamansys.ar/ecl/ECL2.csv")
-		);
+		controller.addCSV(ALLERGY_CSV);
+		controller.addCSV(DIAGNOSIS_CSV);
 
 		assertThat(controller.getQueue())
 				.hasSize(2);
 
+		downloadJob(ALLERGY_CSV.url, 18L);
+		ingestJob(ALLERGY_CSV.ecl, 18L);
 
-		when(snomedCacheFileStorage.save(anyString()))
-				.thenReturn(newFileInfo(18L));
+		assertThat(controller.getQueue())
+				.hasSize(1);
+
+		downloadJob(DIAGNOSIS_CSV.url, 19L);
+		ingestJobFail(DIAGNOSIS_CSV.ecl, 19L);
+
+		ingestJob.execute();
+
+		assertThat(controller.getQueue())
+				.hasSize(1);
+
+	}
+
+	@Test
+	void addCSV_getStatus() {
+
+		assertThat(controller.getStatus())
+				.hasSize(SnomedECL.values().length);
+
+		assertThat(controller.getQueue()).hasSize(0);
+		controller.addCSV(ALLERGY_CSV);
+		assertThat(controller.getQueue()).hasSize(1);
+		controller.addCSV(DIAGNOSIS_CSV);
+		assertThat(controller.getQueue()).hasSize(2);
+		controller.addCSV(BAD_CSV);
+		assertThat(controller.getQueue()).hasSize(3);
+
+		downloadJob(ALLERGY_CSV.url, 13L); // allergy
+		assertThat(controller.getQueue()).hasSize(3);
+
+		downloadJob(DIAGNOSIS_CSV.url, 14L); // diagnosis
+		assertThat(controller.getQueue()).hasSize(3);
+
+		downloadJob(BAD_CSV.url, 15L); // bad csv
+		assertThat(controller.getQueue()).hasSize(3);
+
+		ingestJob(ALLERGY_CSV.ecl, 13L);
+		assertThat(controller.getQueue()).hasSize(2);
+		ingestJob(DIAGNOSIS_CSV.ecl, 14L);
+		assertThat(controller.getQueue()).hasSize(1);
+		ingestJobFail(BAD_CSV.ecl, 15L); // bad csv
+		assertThat(controller.getQueue()).hasSize(1);
+
+		controller.addCSV(ALLERGY_CSV);
+		assertThat(controller.getQueue()).hasSize(2);
+
+		controller.addCSV(PROCEDURE_CSV);
+		assertThat(controller.getQueue()).hasSize(3);
+
+
+		var statusFound = controller.getStatus();
+
+		assertThat(getEclStatus(statusFound, SnomedECL.ALLERGY).successful)
+				.hasFieldOrProperty("id");
+		assertThat(getEclStatus(statusFound, SnomedECL.DIAGNOSIS).successful)
+				.hasFieldOrProperty("id");
+		assertThat(getEclStatus(statusFound, BAD_CSV.ecl).successful)
+				.isNull();
+		assertThat(getEclStatus(statusFound, SnomedECL.PROCEDURE).successful)
+				.isNull();
+
+	}
+
+	private void downloadJob(String url, Long fileId) {
+		when(snomedCacheFileStorage.save(eq(url)))
+				.thenReturn(newFileInfo(fileId));
 		downloadJob.execute();
+	}
 
-		when(snomedCacheFileIngestor.run(anyLong(), anyString()))
+	private void downloadFail(String url, String message) {
+		when(snomedCacheFileStorage.save(eq(url)))
+				.thenThrow(new RuntimeException(message));
+		downloadJob.execute();
+	}
+
+	private void ingestJob(SnomedECL ecl, Long fileId) {
+		when(snomedCacheFileIngestor.run(eq(fileId), eq(ecl.name())))
 				.thenReturn(newUpdateConceptsResultBo("ECL"));
 
 		ingestJob.execute();
+	}
 
-		assertThat(controller.getQueue())
-				.hasSize(1);
-
-		when(snomedCacheFileStorage.save(anyString()))
-				.thenReturn(newFileInfo(19L));
-		downloadJob.execute();
-
-		when(snomedCacheFileIngestor.run(anyLong(), anyString()))
+	private void ingestJobFail(SnomedECL ecl, Long fileId) {
+		when(snomedCacheFileIngestor.run(eq(fileId), eq(ecl.name())))
 				.thenThrow(new RuntimeException("Failed to parse CSV file: (line 28) invalid char between encapsulated token and delimiter"));
-
 		ingestJob.execute();
+	}
 
-		assertThat(controller.getQueue())
-				.hasSize(1);
+	private static TerminologyECLStatusDto getEclStatus(
+			List<TerminologyECLStatusDto> statusFound,
+			SnomedECL snomedECL
+	) {
+		return statusFound.stream()
+				.filter(isStatusForECL(snomedECL))
+				.findFirst()
+				.get();
+	}
 
+	private static Predicate<TerminologyECLStatusDto> isStatusForECL(SnomedECL snomedECL) {
+		return (s) -> s.ecl.equals(snomedECL);
 	}
 
 	private static FileInfo newFileInfo(Long id) {

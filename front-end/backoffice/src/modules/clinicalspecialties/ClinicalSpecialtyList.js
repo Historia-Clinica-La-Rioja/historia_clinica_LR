@@ -15,7 +15,7 @@ const ClinicalSpecialityFilter = (props) => (
 );
 
 const ClinicalSpecialtyList = props => (
-    <List {...props} filters={<ClinicalSpecialityFilter />} bulkActionButtons={false}>
+    <List {...props} filters={<ClinicalSpecialityFilter />} bulkActionButtons={false} sort={{ field: 'name', order: 'ASC' }}>
         <Datagrid rowClick="show">
             <TextField source="name" />
             <TextField source="sctidCode" />

@@ -1,0 +1,7 @@
+<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="1em">
+	<img class="patient-image" [src]="decodedPhoto$ | async"
+		onerror="this.src='../../../../../assets/images/empty-profile.png'">
+	<span class="patient-name" id="title">
+		{{viewPatientName()}} {{person?.lastName}} {{person?.otherLastNames}}
+	</span>
+</div>

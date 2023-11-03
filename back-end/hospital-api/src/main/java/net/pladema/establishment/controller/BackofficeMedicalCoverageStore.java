@@ -20,6 +20,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +44,7 @@ public class BackofficeMedicalCoverageStore implements BackofficeStore<Backoffic
     public Page<BackofficeCoverageDto> findAll(BackofficeCoverageDto coverage, Pageable pageable) {
         ExampleMatcher customExampleMatcher = ExampleMatcher.matchingAny()
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
-        List<BackofficeCoverageDto> result = medicalCoverageRepository.findAll(Example.of(new MedicalCoverage(coverage.getId(), coverage.getName(),coverage.getCuit(), coverage.getType()), customExampleMatcher)).stream()
+        List<BackofficeCoverageDto> result = medicalCoverageRepository.findAll(Example.of(new MedicalCoverage(coverage.getId(), coverage.getName(),coverage.getCuit(), coverage.getType()), customExampleMatcher), PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort())).stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
         if(coverage.getType()!=null)

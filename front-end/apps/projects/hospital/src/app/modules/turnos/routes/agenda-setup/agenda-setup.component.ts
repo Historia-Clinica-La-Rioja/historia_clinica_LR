@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { DAYS_OF_WEEK } from 'angular-calendar';
-import { Observable } from 'rxjs';
+import { Observable, filter, switchMap } from 'rxjs';
 
 import { getError, hasError, processErrors, scrollIntoError } from '@core/utils/form.utils';
 import { ContextService } from '@core/services/context.service';
@@ -15,26 +15,32 @@ import { SectorService } from '@api-rest/services/sector.service';
 import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service';
 import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import {
+	AppFeature,
 	CareLineDto,
 	CompleteDiaryDto,
 	DiaryADto,
 	DiaryDto,
 	DoctorsOfficeDto,
+	HierarchicalUnitDto,
 	OccupationDto,
 	ProfessionalDto,
+	SnomedDto
 } from '@api-rest/api-model';
 import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
 import { DiaryService } from '@api-rest/services/diary.service';
 import { APPOINTMENT_DURATIONS, MINUTES_IN_HOUR } from '../../constants/appointment';
-import { AgendaHorarioService } from '../../services/agenda-horario.service';
+import { AgendaHorarioService, EDiaryType } from '../../services/agenda-horario.service';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { SpecialtyService } from '@api-rest/services/specialty.service';
-import { CareLineService } from '@api-rest/services/care-line.service';
+import { HierarchicalUnitsService } from '@api-rest/services/hierarchical-units.service';
+import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
+import { DiaryCareLineService } from '@api-rest/services/diary-care-line.service';
+import { PracticesService } from '@api-rest/services/practices.service';
+import { ChipsOption } from '@presentation/components/chips-autocomplete/chips-autocomplete.component';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 const ROUTE_APPOINTMENT = 'turnos';
 const ROUTE_AGENDAS = "agenda";
-const MAX_INPUT = 100;
-const PATTERN = /^[0-9]\d*$/;
 
 @Component({
 	selector: 'app-agenda-setup',
@@ -47,6 +53,9 @@ export class AgendaSetupComponent implements OnInit {
 	readonly TODAY: Date = new Date();
 	readonly PIXEL_SIZE_HEIGHT = 30;
 	readonly TURN_STARTING_HOUR = 6;
+
+	CONSULTATION = true;
+	PRACTICE = false;
 
 	appointmentDurations = APPOINTMENT_DURATIONS;
 	appointmentManagement = false;
@@ -71,11 +80,20 @@ export class AgendaSetupComponent implements OnInit {
 	getError = getError;
 	careLines: CareLineDto[] = [];
 	careLinesSelected: CareLineDto[] = [];
+	hierarchicalUnits: HierarchicalUnitDto[] = [];
+	professionalsWithoutResponsibility = [];
 	private editingDiaryId = null;
 	private readonly routePrefix;
 	private mappedCurrentWeek = {};
 	lineOfCareAndPercentageOfProtectedAppointmentsValid = true;
-
+	loadSavedData = false;
+	temporary = false;
+	practices: SnomedDto[];
+	practicesOptions: ChipsOption<SnomedDto>[];
+	practicesSelected: ChipsOption<SnomedDto>[] = [];
+	showPractices = false;
+	hasHealthcareProfessional = false;
+	private fieldHierarchicalUnitRequired = false;
 	constructor(
 		private readonly el: ElementRef,
 		private readonly sectorService: SectorService,
@@ -92,10 +110,17 @@ export class AgendaSetupComponent implements OnInit {
 		private readonly route: ActivatedRoute,
 		private readonly patientNameService: PatientNameService,
 		private readonly specialtyService: SpecialtyService,
-		private readonly carelineService: CareLineService
+		private readonly hierarchicalUnitsService: HierarchicalUnitsService,
+		private readonly professionalService: HealthcareProfessionalService,
+		private readonly diaryCareLine: DiaryCareLineService,
+		private readonly featureFlagService: FeatureFlagService,
+		private readonly practicesService: PracticesService,
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
-		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY, snackBarService);
+		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY, snackBarService, EDiaryType.CLASSIC);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_OBLIGATORIEDAD_UNIDADES_JERARQUICAS).subscribe(isOn =>
+			this.fieldHierarchicalUnitRequired = isOn
+		);
 	}
 
 	ngOnInit(): void {
@@ -108,19 +133,55 @@ export class AgendaSetupComponent implements OnInit {
 			sectorId: new UntypedFormControl(null, [Validators.required]),
 			doctorOffice: new UntypedFormControl(null, [Validators.required]),
 			healthcareProfessionalId: new UntypedFormControl(null, [Validators.required]),
+			professionalReplacedId: new UntypedFormControl(null),
 			startDate: new UntypedFormControl(null, [Validators.required]),
 			endDate: new UntypedFormControl(null, [Validators.required]),
+			hierarchicalUnit: new UntypedFormControl(null),
+			hierarchicalUnitTemporary: new UntypedFormControl(null),
 			appointmentDuration: new UntypedFormControl(null, [Validators.required]),
 			healthcareProfessionalSpecialtyId: new UntypedFormControl(null, [Validators.required]),
 			conjointDiary: new UntypedFormControl(false, [Validators.nullValidator]),
+			temporaryReplacement: new UntypedFormControl(false),
 			alias: new UntypedFormControl(null, [Validators.nullValidator]),
 			otherProfessionals: new UntypedFormArray([], [this.otherPossibleProfessionals()]),
-			protectedAppointmentsPercentage: new UntypedFormControl({ value: 0, disabled: true }, [Validators.pattern(PATTERN), Validators.max(MAX_INPUT)]),
-			careLines: new UntypedFormControl([null])
+			careLines: new UntypedFormControl([null]),
+			diaryType: new UntypedFormControl(this.CONSULTATION),
+			practices: new UntypedFormControl([])
 		});
+
+		if (this.fieldHierarchicalUnitRequired) {
+			const hierarchicalUnitCtrl = this.form.controls.hierarchicalUnit;
+			hierarchicalUnitCtrl.setValidators(Validators.required);
+			hierarchicalUnitCtrl.updateValueAndValidity();
+		}
 
 		this.form.controls.appointmentDuration.valueChanges
 			.subscribe(newDuration => this.hourSegments = MINUTES_IN_HOUR / newDuration);
+
+		this.form.controls.temporaryReplacement.valueChanges.subscribe((temporaryReplacement: boolean) => {
+			const hierarchicalUnitCtrl = this.form.controls.hierarchicalUnit;
+			const hierarchicalUnitTemporaryCtrl = this.form.controls.hierarchicalUnitTemporary;
+			const professionalReplacedIdCtrl = this.form.controls.professionalReplacedId;
+			if (temporaryReplacement) {
+				hierarchicalUnitTemporaryCtrl.setValue(null);
+				professionalReplacedIdCtrl.setValidators([Validators.required]);
+				hierarchicalUnitTemporaryCtrl.setValidators([Validators.required]);
+				hierarchicalUnitCtrl.setValue(null);
+				if (this.fieldHierarchicalUnitRequired){
+					hierarchicalUnitCtrl.clearValidators();
+					hierarchicalUnitCtrl.updateValueAndValidity();
+				}
+			}
+			else {
+				professionalReplacedIdCtrl.clearValidators();
+				hierarchicalUnitTemporaryCtrl.clearValidators();
+				this.setHierarchicalUnits(this.form.value.healthcareProfessionalId);
+			}
+			professionalReplacedIdCtrl.updateValueAndValidity();
+			hierarchicalUnitTemporaryCtrl.updateValueAndValidity();
+		});
+
+
 
 		this.route.data.subscribe(data => {
 			if (data["editMode"]) {
@@ -131,20 +192,77 @@ export class AgendaSetupComponent implements OnInit {
 						this.minDate = momentParseDate(diary.startDate).toDate();
 						this.setValuesFromExistingAgenda(diary);
 						this.disableNotEditableControls();
-						this.validateLineOfCareAndPercentageOfProtectedAppointments();
+						this.validateLineOfCare();
 						if (this.lineOfCareAndPercentageOfProtectedAppointmentsValid) {
-							this.form.controls.protectedAppointmentsPercentage.enable();
 						}
+
 					});
 
 				});
 			}
+			else {
+				this.form.controls.healthcareProfessionalId.valueChanges
+					.pipe(filter(id => !!id))
+					.subscribe((healthcareProfessionalId: number) => {
+						this.form.controls.hierarchicalUnit.setValue(null);
+						const professionalsWithoutSelected = this.professionals.filter((p: ProfessionalDto) => p.id !== healthcareProfessionalId);
+						const { professionalReplacedId, temporaryReplacement } = this.form.value;
+
+						this.professionalsWithoutResponsibility = professionalsWithoutSelected;
+
+						if (temporaryReplacement) {
+							if (professionalReplacedId === healthcareProfessionalId) {
+								this.form.controls.hierarchicalUnitTemporary.setValue(null);
+								this.form.controls.professionalReplacedId.setValue(null);
+							}
+						} else {
+							this.setHierarchicalUnits(healthcareProfessionalId);
+						}
+					});
+
+				this.form.controls.professionalReplacedId.valueChanges.pipe(filter(healthcareProfessionalId => !!healthcareProfessionalId)).subscribe((professionalReplacedId: number) => {
+					this.form.controls.hierarchicalUnit.setValue(null);
+					if (this.form.value.temporaryReplacement) {
+						this.form.controls.hierarchicalUnitTemporary.setValue(null);
+						this.setHierarchicalUnits(professionalReplacedId);
+					}
+				});
+			}
 		});
+
+
 		this.sectorService.getAll().subscribe(data => {
 			this.sectors = data;
 		});
 
-		this.healthcareProfessionalService.getAll().subscribe(data => this.professionals = data);
+		this.healthcareProfessionalService.getAll().subscribe(data => {
+			this.professionals = data;
+			this.professionalsWithoutResponsibility = data
+		});
+
+		if (!this.editMode) {
+
+			this.form.controls.diaryType.valueChanges.subscribe(diaryType => {
+				switch (diaryType) {
+					case this.CONSULTATION: {
+						this.validationsConsultation();
+						if (this.form.value.healthcareProfessionalSpecialtyId)
+							this.setCarelinesBySpecialty();
+						this.showPractices = false;
+						this.clearPractices();
+						this.clearCareLines();
+						break;
+					}
+					case this.PRACTICE: {
+						this.setPractices();
+						this.validationsPractices();
+						this.clearCareLines();
+						this.showPractices = true;
+						break;
+					}
+				}
+			});
+		}
 
 	}
 
@@ -153,8 +271,21 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	private setValuesFromExistingAgenda(diary: CompleteDiaryDto): void {
-		this.form.controls.sectorId.setValue(diary.sectorId);
 
+		if (diary.predecessorProfessionalId) {
+			this.temporary = true;
+			this.form.controls.temporaryReplacement.setValue(true);
+			this.form.controls.professionalReplacedId.setValue(diary.predecessorProfessionalId);
+			this.form.get('professionalReplacedId').disable();
+		} else {
+			this.form.controls.healthcareProfessionalId.setValue(diary.healthcareProfessionalId);
+			if (!diary?.hierarchicalUnitAlias) {
+				this.form.markAllAsTouched();
+				this.hasHealthcareProfessional = true;
+			}
+		}
+
+		this.form.controls.sectorId.setValue(diary.sectorId);
 		this.doctorsOfficeService.getAll(diary.sectorId)
 			.subscribe((doctorsOffice: DoctorsOfficeDto[]) => {
 				this.doctorOffices = doctorsOffice;
@@ -168,15 +299,19 @@ export class AgendaSetupComponent implements OnInit {
 			this.professionals = healthcareProfessionals;
 			const healthcareProfessionalId = healthcareProfessionals.find(professional => professional.id === diary.healthcareProfessionalId);
 			this.form.controls.healthcareProfessionalId.setValue(healthcareProfessionalId.id);
+			if (!!diary?.hierarchicalUnitAlias)
+				this.setHierarchicalUnitsByName(diary?.hierarchicalUnitAlias);
+
 			this.specialtyService.getAllSpecialtyByProfessional(this.contextService.institutionId, healthcareProfessionalId.id)
 				.subscribe(response => {
 					this.professionalSpecialties = response;
 					this.form.controls.healthcareProfessionalSpecialtyId.markAsTouched();
 					if (this.professionalSpecialties.find(specialty => specialty.id === diary.clinicalSpecialtyId)) {
 						this.form.controls.healthcareProfessionalSpecialtyId.setValue(diary.clinicalSpecialtyId);
-						this.getCareLines();
+						if (!diary.practicesInfo.length)
+							this.setCarelinesBySpecialty();
 					}
-				})
+				});
 		});
 
 		this.form.controls.healthcareProfessionalId.setValue(diary.healthcareProfessionalId);
@@ -205,14 +340,31 @@ export class AgendaSetupComponent implements OnInit {
 			this.form.controls.alias.setValue(diary.alias);
 		}
 
-		if (diary.protectedAppointmentsPercentage)
-			this.form.controls.protectedAppointmentsPercentage.setValue(diary.protectedAppointmentsPercentage);
-
 		if (diary.careLinesInfo.length)
 			this.careLinesSelected = diary.careLinesInfo;
 
 		this.setSpecialityId(diary.clinicalSpecialtyId);
 		this.setAlias(diary.alias);
+		diary.predecessorProfessionalId ? this.setHierarchicalUnits(diary.predecessorProfessionalId, diary) : this.setHierarchicalUnits(diary.healthcareProfessionalId, diary);
+
+		this.form.controls.diaryType.disable();
+
+		if (diary.practicesInfo.length > 0) {
+			this.form.controls.diaryType.setValue(this.PRACTICE);
+			this.showPractices = true;
+			this.practicesSelected = diary.practicesInfo.map(p => { return this.toChipsOptions(p) });
+			this.setPractices();
+			this.getCarelinesByPractices(diary.practicesInfo.map(p => { return p.id }));
+			this.validationsPractices();
+		}
+
+	}
+
+	private setHierarchicalUnitsByName(name: string) {
+		this.form.get('hierarchicalUnit').disable();
+		this.loadSavedData = true;
+		this.form.controls.hierarchicalUnit.setValue(this.hierarchicalUnits.filter(e => e.name === name));
+		this.form.controls.professionalReplacedId.updateValueAndValidity();
 	}
 
 	private setSpecialityId(healthcareProfesionalId) {
@@ -264,7 +416,7 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	save(): void {
-		if (this.form.valid && this.lineOfCareAndPercentageOfProtectedAppointmentsValid) {
+		if (this.form.valid) {
 			this.openDialog();
 		} else {
 			scrollIntoError(this.form, this.el);
@@ -336,12 +488,14 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	private buildDiaryADto(): DiaryADto {
-		const percentage = this.form.value.protectedAppointmentsPercentage;
 		return {
 
 			appointmentDuration: this.form.getRawValue().appointmentDuration,
 			healthcareProfessionalId: this.form.getRawValue().healthcareProfessionalId,
 			doctorsOfficeId: this.form.getRawValue().doctorOffice.id,
+
+			predecessorProfessionalId: this.form.value?.professionalReplacedId,
+			hierarchicalUnitId: this.form.value.temporaryReplacement ? this.form.value?.hierarchicalUnitTemporary : this.form.value?.hierarchicalUnit,
 
 			startDate: momentFormat(this.form.value.startDate, DateFormat.API_DATE),
 			endDate: momentFormat(this.form.value.endDate, DateFormat.API_DATE),
@@ -355,7 +509,8 @@ export class AgendaSetupComponent implements OnInit {
 			alias: this.form.value.alias === "" ? null : this.form.value.alias,
 			diaryAssociatedProfessionalsId: this.form.value.otherProfessionals.map(professional => professional.healthcareProfessionalId),
 			careLines: this.careLinesSelected.map(careLine => { return careLine.id }),
-			protectedAppointmentsPercentage: percentage ? percentage : 0
+			practicesId: this.form.controls.practices.value,
+			protectedAppointmentsPercentage: null,
 		};
 	}
 
@@ -366,8 +521,55 @@ export class AgendaSetupComponent implements OnInit {
 		scrollbar?.scrollTo(0, this.PIXEL_SIZE_HEIGHT * this.TURN_STARTING_HOUR * this.hourSegments);
 	}
 
+	setHierarchicalUnits(healthcareProfessionalId: number, diary?: CompleteDiaryDto) {
+		this.professionalService.geUserIdByHealthcareProfessional(healthcareProfessionalId)
+			.pipe(
+				switchMap((userId: number) => this.hierarchicalUnitsService.fetchAllByUserIdAndInstitutionId(userId))
+			)
+			.subscribe(response => {
+				this.hierarchicalUnits = response;
+				if (diary?.hierarchicalUnitId) {
+					this.updateFormWithDiary(diary);
+				} else {
+					this.updateFormWithoutDiary();
+				}
+			});
+	}
+
+	private updateFormWithDiary(diary: CompleteDiaryDto) {
+		this.hierarchicalUnits = [{
+			id: diary.hierarchicalUnitId,
+			name: diary.hierarchicalUnitAlias,
+			typeId: 0,
+		}];
+
+		const controlName = diary.predecessorProfessionalId ? 'hierarchicalUnitTemporary' : 'hierarchicalUnit';
+		const control = this.form.controls[controlName];
+		control.setValue(diary.hierarchicalUnitId);
+		control.updateValueAndValidity();
+	}
+
+	private updateFormWithoutDiary() {
+		if (this.hierarchicalUnits.length) {
+			const targetControl = this.form.value.temporaryReplacement ? 'hierarchicalUnitTemporary' : 'hierarchicalUnit';
+			const control = this.form.controls[targetControl];
+
+			control.setValue(this.hierarchicalUnits[0].id);
+			control.updateValueAndValidity();
+		} else {
+			if (this.fieldHierarchicalUnitRequired)
+				this.form.markAllAsTouched();
+		}
+	}
+
+
 	getProfessionalSpecialties() {
 		this.resetValues();
+		this.specialtyService.getAllSpecialtyByProfessional(this.contextService.institutionId, this.form.get("healthcareProfessionalId").value)
+			.subscribe(response => this.professionalSpecialties = response)
+	}
+
+	getProfessionalReplacement() {
 		this.specialtyService.getAllSpecialtyByProfessional(this.contextService.institutionId, this.form.get("healthcareProfessionalId").value)
 			.subscribe(response => this.professionalSpecialties = response)
 	}
@@ -408,6 +610,13 @@ export class AgendaSetupComponent implements OnInit {
 		}
 	}
 
+	updateTemporaryReplacementForm() {
+		if (!this.form.value.temporaryReplacement) {
+			this.form.controls.professionalReplacedId.setValue(null);
+			this.form.controls.temporaryReplacement.setValue(false);
+		}
+	}
+
 	private otherPossibleProfessionals(): ValidatorFn {
 		return (control: UntypedFormArray): ValidationErrors | null => {
 			return control.valid ? null : { validProfessionals: { valid: false } };
@@ -428,23 +637,24 @@ export class AgendaSetupComponent implements OnInit {
 		return this.professionals?.filter(professional => professional.id !== this.form.controls.healthcareProfessionalId.value);
 	}
 
-	getCareLines() {
-		const specialtyId = this.form.get("healthcareProfessionalSpecialtyId").value;
-		this.carelineService.getCareLinesBySpecialty(specialtyId).subscribe(careLines => {
-			this.careLines = careLines;
-			this.checkCareLinesSelected();
-		});
-		if (specialtyId && specialtyId !== this.specialityId) {
-			this.form.controls.alias.setValue('');
-		} else {
-			this.form.controls.alias.setValue(this.alias);
+	setCarelinesBySpecialty() {
+		if (this.form.controls.diaryType.value === this.CONSULTATION) {
+			const specialtyId = this.form.get("healthcareProfessionalSpecialtyId").value;
+			this.diaryCareLine.getPossibleCareLinesForDiary(specialtyId).subscribe(careLines => {
+				this.careLines = careLines;
+				this.checkCareLinesSelected();
+			});
+			if (specialtyId && specialtyId !== this.specialityId) {
+				this.form.controls.alias.setValue('');
+			} else {
+				this.form.controls.alias.setValue(this.alias);
+			}
 		}
 	}
 
-	validateLineOfCareAndPercentageOfProtectedAppointments() {
-		if (this.form.controls.protectedAppointmentsPercentage.value !== 0 && !this.careLinesSelected.length) {
+	validateLineOfCare() {
+		if (!this.careLinesSelected.length) {
 			this.lineOfCareAndPercentageOfProtectedAppointmentsValid = false;
-			this.form.controls.protectedAppointmentsPercentage.enable();
 		} else {
 			this.lineOfCareAndPercentageOfProtectedAppointmentsValid = true;
 		}
@@ -452,10 +662,6 @@ export class AgendaSetupComponent implements OnInit {
 
 	setCareLines(careLines: string[]) {
 		if (careLines.length) {
-			if (!this.form.controls.protectedAppointmentsPercentage.hasValidator(Validators.required)) {
-				this.addValidators();
-			}
-			this.form.controls.protectedAppointmentsPercentage.enable();
 			this.careLinesSelected = careLines.map(careLine => ({
 				id: this.careLines.find(c => c.description === careLine).id,
 				description: careLine,
@@ -463,13 +669,35 @@ export class AgendaSetupComponent implements OnInit {
 			}));
 		}
 		else {
-			this.form.controls.protectedAppointmentsPercentage.removeValidators([Validators.required]);
-			this.form.controls.protectedAppointmentsPercentage.disable();
-			this.form.controls.protectedAppointmentsPercentage.setValue(0);
 			this.careLinesSelected = [];
 		}
-		this.form.controls.protectedAppointmentsPercentage.updateValueAndValidity();
-		this.validateLineOfCareAndPercentageOfProtectedAppointments();
+		this.validateLineOfCare();
+	}
+
+	setPractices() {
+		this.practicesService.get().subscribe(s => {
+			this.practices = s.map(p => { return { id: p.id, sctid: p.sctid, pt: p.pt } });
+			this.practicesOptions = this.practices.map(p => {
+				return this.toChipsOptions(p)
+			});
+		});
+	}
+
+	setDiaryPracticesAndGetCarelines(selected: ChipsOption<SnomedDto>[]) {
+		const result: number[] = selected.map(s => s.value.id);
+		this.form.controls.practices.setValue(result);
+		this.getCarelinesByPractices(result);
+	}
+
+	getCarelinesByPractices(practicesId: number[]) {
+		if (practicesId.length) {
+			this.diaryCareLine.getPossibleCareLinesForDiaryByPractices(practicesId).subscribe(carelines => {
+				this.careLines = carelines;
+				this.checkCareLinesSelected();
+			});
+		}
+		else
+			this.careLines = [];
 	}
 
 	private checkCareLinesSelected() {
@@ -484,15 +712,39 @@ export class AgendaSetupComponent implements OnInit {
 		this.form.controls.careLines.patchValue(careLinesDescription);
 	}
 
-	private addValidators() {
-		this.form.controls.protectedAppointmentsPercentage.addValidators([Validators.required]);
-		this.form.controls.protectedAppointmentsPercentage.markAsTouched();
-	}
-
 	private resetValues() {
 		this.form.controls.healthcareProfessionalSpecialtyId.reset();
 		this.form.controls.careLines.reset();
-		this.form.controls.protectedAppointmentsPercentage.removeValidators([Validators.required]);
-		this.form.controls.protectedAppointmentsPercentage.updateValueAndValidity();
+	}
+
+	private toChipsOptions(p: SnomedDto): ChipsOption<SnomedDto> {
+		return { value: p, compareValue: p.pt, identifier: p.id }
+	}
+
+	private clearCareLines() {
+		this.careLines = [];
+		this.careLinesSelected = [];
+	}
+
+	private clearPractices() {
+		this.practices = [];
+		this.practicesOptions = [];
+		this.practicesSelected = [];
+		this.form.controls.practices.setValue([]);
+	}
+
+	private validationsConsultation() {
+		this.form.controls.practices.removeValidators([Validators.required]);
+		this.form.controls.practices.updateValueAndValidity();
+		this.form.controls.practices.reset();
+		this.form.controls.healthcareProfessionalSpecialtyId.addValidators([Validators.required]);
+		this.form.controls.healthcareProfessionalSpecialtyId.updateValueAndValidity();
+	}
+
+	private validationsPractices() {
+		this.form.controls.practices.addValidators([Validators.required]);
+		this.form.controls.practices.updateValueAndValidity();
+		this.form.controls.healthcareProfessionalSpecialtyId.removeValidators([Validators.required]);
+		this.form.controls.healthcareProfessionalSpecialtyId.updateValueAndValidity();
 	}
 }

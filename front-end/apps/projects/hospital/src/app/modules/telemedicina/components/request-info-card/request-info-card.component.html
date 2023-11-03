@@ -1,0 +1,46 @@
+<div fxLayout="column" fxLayoutGap="0.1125em">
+	<mat-card fxLayout="row" fxLayoutAlign="space-between space-between">
+
+		<div id="datos-paciente" fxFlex="15%">
+			<span class="font-bold">{{virtualConsultation.patientData.lastName}} {{virtualConsultation.patientData.name}}</span>
+			<div>
+				<span>{{virtualConsultation.patientData.gender}} | </span>
+				<span>{{virtualConsultation.patientData.age}} años</span>
+			</div>
+			<ng-content select="[view-clinical-history]"></ng-content>
+		</div>
+
+		<div id="datos-motivo" fxLayout="column" fxLayoutAlign="center start" fxFlex="20%">
+			<app-iconed-text icon="feedback" [text]="virtualConsultation.problem"></app-iconed-text>
+			<app-iconed-text icon="error_outline" [text]="virtualConsultation.motive"></app-iconed-text>
+			<app-priority [priority]="virtualConsultation.priorityLabel"></app-priority>
+		</div>
+
+		<div id="datos-clinicos" fxLayout="column" fxLayoutAlign="start start" fxFlex="20%">
+			<app-iconed-text icon="medical_services" [text]="virtualConsultation.clinicalSpecialty"></app-iconed-text>
+			<app-iconed-text icon="library_add" [text]="virtualConsultation.careLine"></app-iconed-text>
+			<app-iconed-text *ngIf="virtualConsultation.institutionData.name" icon="domain" [text]="virtualConsultation.institutionData.name"></app-iconed-text>
+		</div>
+
+		<div id="datos-solicitante" fxLayout="column" fxLayoutAlign="start start" fxFlex="15%">
+			<span class="grey">{{virtualConsultation.responsibleData.firstName}}
+				{{virtualConsultation.responsibleData.lastName}} </span>
+			<app-available-label [available]="virtualConsultation.responsibleData.available"></app-available-label>
+		</div>
+
+		<div id="datos-espera-de-atencion" fxLayout="column" fxLayoutAlign="start start" fxFlex="15%" *ngIf="virtualConsultation.status === statusPending">
+			<app-iconed-text class="grey" icon="schedule" [text]="virtualConsultation.waitingTime"></app-iconed-text>
+			<ng-content select="[professionals-attending]"></ng-content>
+		</div>
+
+		<div id="dato-estado-solicitud" fxFlex="10%" fxLayout="column" fxLayoutAlign="start center">
+			<app-colored-label [description]="virtualConsultation.statusLabel.description"
+				[color]="virtualConsultation.statusLabel.color"></app-colored-label>
+		</div>
+
+		<div id="acciones" fxLayout="column" fxLayoutAlign="start end">
+			<ng-content select="[actions]"></ng-content>
+		</div>
+	</mat-card>
+
+</div>

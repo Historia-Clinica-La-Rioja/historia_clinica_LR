@@ -25,7 +25,7 @@ export class AlergiasSummaryComponent {
 	@Input() patientId: number;
 	@Input()
 	set allergiesDto(allergiesDto: HCEAllergyDto[] | AllergyConditionDto[]) {
-		if (allergiesDto.length) {
+		if (allergiesDto?.length) {
 			this.setCategoryAndCriticallyAndAllergies(allergiesDto);
 		}
 	}

@@ -114,21 +114,19 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		],
 	},
 	{
-		text: 'app.menu.AUDIT',
-		icon: 'groups',
-		id: 'auditoria',
-		url: './auditoria',
-		permissions: [
-		ERole.AUDITOR_MPI
-		],
-		featureFlag: AppFeature.HABILITAR_MODULO_AUDITORIA
-	},
-	{
 		text: 'app.menu.LISTADO_DE_TRABAJO',
 		icon: 'assignment_ind',
 		id: 'listadoTrabajo',
 		url: './imagenes/lista-trabajos',
 		permissions: [ERole.TECNICO, ERole.INFORMADOR],
 		featureFlag: AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES
+	},
+	{
+		text: 'app.menu.TELEMEDICINE',
+		icon: 'calendar_today',
+		id: 'telemedicina',
+		url: './telesalud',
+		permissions: [ERole.VIRTUAL_CONSULTATION_PROFESSIONAL, ERole.VIRTUAL_CONSULTATION_RESPONSIBLE],
+		featureFlag: AppFeature.HABILITAR_TELEMEDICINA
 	},
 ];

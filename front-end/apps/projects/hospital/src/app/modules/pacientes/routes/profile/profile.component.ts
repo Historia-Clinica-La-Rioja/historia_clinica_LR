@@ -477,6 +477,7 @@ export class ProfileComponent implements OnInit {
 		this.userService.enableUser(this.userData.id, this.form.value.enable)
 			.subscribe(userId => {
 				this.snackBarService.showSuccess('pacientes.user_data.messages.UPDATE_SUCCESS');
+				this.userData.enable = this.form.value.enable;
 			}, error => {
 				processErrors(error, (msg) => this.snackBarService.showError(msg));
 				this.form.controls.enable.setValue(this.userData.enable);

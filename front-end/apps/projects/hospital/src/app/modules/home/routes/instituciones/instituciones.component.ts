@@ -12,8 +12,9 @@ import { InstitutionService } from '@api-rest/services/institution.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AccountService } from '@api-rest/services/account.service';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
-import { Slot, SlotedInfo, WCExtensionsService } from '@extensions/services/wc-extensions.service';
+import { WCExtensionsService } from '@extensions/services/wc-extensions.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { WCParams } from '@extensions/components/ui-external-component/ui-external-component.component';
 
 @Component({
 	selector: 'app-instituciones',
@@ -21,14 +22,14 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 	styleUrls: ['./instituciones.component.scss']
 })
 export class InstitucionesComponent {
-	institutions: { id: number, name: string }[] = null;
+	institutions: { id: number, name: string }[] = [];
 	patientPortalEnabled: boolean;
 	webappInstitutionsAccess: boolean;
 	backofficeAccess: boolean;
 	patientPortalAccess: boolean;
 	previousLogin: Date;
 	enabledPreviousLogin = false;
-	extensions$: Observable<SlotedInfo[]>;
+	extensions$: Observable<WCParams[]>;
 	userRoles: RoleAssignmentDto[];
 
 	constructor(
@@ -66,7 +67,7 @@ export class InstitucionesComponent {
 		});
 
 		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE).subscribe(isOn => this.patientPortalEnabled = isOn);
-		this.extensions$ = this.wcExtensionsService.getComponentsFromSlot(Slot.SYSTEM_HOME_PAGE);
+		this.extensions$ = this.wcExtensionsService.getSystemHomeComponents();
 	}
 
 	ngOnInit(): void {
@@ -114,7 +115,8 @@ export class InstitucionesComponent {
 		return allRoles
 			.filter((ra) => ra.role === ERole.ROOT ||
 				ra.role === ERole.ADMINISTRADOR ||
-				ra.role === ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE).length > 0;
+				ra.role === ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE ||
+				ra.role === ERole.ADMINISTRADOR_DE_ACCESO_DOMINIO).length > 0;
 	}
 
 	hasAccessToWebappInstitutions(allRoles: RoleAssignmentDto[]) {

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 
 import org.junit.jupiter.api.Assertions;
@@ -72,6 +73,9 @@ class CreateOdontologyConsultationImplTest {
 	@Mock
 	private SharedAppointmentPort sharedAppointmentPort;
 
+	@Mock
+	private SharedReferenceCounterReference sharedReferenceCounterReference;
+
     @Mock
     private CpoCeoIndicesCalculator cpoCeoIndicesCalculator;
 
@@ -98,7 +102,8 @@ class CreateOdontologyConsultationImplTest {
                 drawOdontogramService,
                 sharedAppointmentPort, cpoCeoIndicesCalculator,
                 getToothSurfacesService, odontologyAppointmentStorage,
-                getToothService, publisher);
+                getToothService, publisher,
+				sharedReferenceCounterReference);
     }
 
     @Test

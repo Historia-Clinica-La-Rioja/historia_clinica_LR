@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { ProfessionalLicenseService } from "@api-rest/services/professional-license.service";
+import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Moment } from 'moment';
@@ -10,8 +12,14 @@ import { MIN_DATE } from '@core/utils/date.utils';
 
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 
-import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
-import { ERole, ProfessionalDto, ProfessionalsByClinicalSpecialtyDto } from '@api-rest/api-model';
+import {
+	AppFeature,
+	ERole,
+	HierarchicalUnitDto,
+	HierarchicalUnitTypeDto, LicenseNumberTypeDto, ProfessionalDto,
+	ProfessionalLicenseNumberDto, ProfessionalRegistrationNumbersDto,
+	ProfessionalsByClinicalSpecialtyDto
+} from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { ReportsService } from '@api-rest/services/reports.service';
 
@@ -19,6 +27,8 @@ import { REPORT_TYPES } from '../../constants/report-types';
 import { UIComponentDto } from '@extensions/extensions-model';
 import { anyMatch } from '@core/utils/array.utils';
 import { PermissionsService } from '@core/services/permissions.service';
+import { HierarchicalUnitsService } from "@api-rest/services/hierarchical-units.service";
+import { HierarchicalUnitTypeService } from "@api-rest/services/hierarchical-unit-type.service";
 
 @Component({
 	selector: 'app-home',
@@ -32,11 +42,13 @@ export class HomeComponent implements OnInit {
 
 	public hasError = hasError;
 
-	professionalsTypeahead: TypeaheadOption<ProfessionalDto>[];
+	professionalsTypeahead: TypeaheadOption<ProfessionalRegistrationNumbersDto>[];
 	professionalInitValue: TypeaheadOption<ProfessionalDto>;
-	professionals: ProfessionalDto[] = [];
+	professionals: ProfessionalRegistrationNumbersDto[] = [];
+	hierarchicalUnitTypesTypeahead: TypeaheadOption<HierarchicalUnitTypeDto>[];
+	hierarchicalUnitsTypeahead: TypeaheadOption<HierarchicalUnitDto>[];
+	hierarchicalUnits: HierarchicalUnitDto[];
 
-	specialtiesTypeahead: TypeaheadOption<ProfessionalsByClinicalSpecialtyDto>[];
 	specialtiesTypeaheadOptions$: Observable<TypeaheadOption<ProfessionalsByClinicalSpecialtyDto>[]>;
 
 	idProfessional: number;
@@ -48,13 +60,22 @@ export class HomeComponent implements OnInit {
 
 	cubeReportData: UIComponentDto;
 
+	isLoadingRequestReport = false;
+	private nameSelfDeterminationFF = false;
+	private licensesTypeMasterData: LicenseNumberTypeDto[];
+
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
-		private readonly healthcareProfessionalService: HealthcareProfessionalByInstitutionService,
+		private readonly professionalLicenseService: ProfessionalLicenseService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly reportsService: ReportsService,
 		private readonly permissionsService: PermissionsService,
-	) { }
+		private readonly hierarchicalUnitsService: HierarchicalUnitsService,
+		private readonly hierarchicalUnitTypeService: HierarchicalUnitTypeService,
+		private readonly featureFlagService: FeatureFlagService,
+	) {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn =>{this.nameSelfDeterminationFF = isOn});
+	}
 
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
@@ -63,8 +84,11 @@ export class HomeComponent implements OnInit {
 			endDate: [this.lastDayOfThisMonth(), Validators.required],
 			specialtyId: [null],
 			professionalId: [null],
+			hierarchicalUnitTypeId: [null],
+			hierarchicalUnitId: [null],
+			includeHierarchicalUnitDescendants: [null]
 		});
-		this.healthcareProfessionalService.getAll().subscribe(professionals => {
+		this.professionalLicenseService.getAllProfessionalRegistrationNumbers().subscribe(professionals => {
 			this.professionals = professionals;
 			this.specialtiesTypeaheadOptions$ = this.getSpecialtiesTypeaheadOptions$(professionals);
 			this.professionalsTypeahead = professionals.map(d => this.toProfessionalTypeahead(d));
@@ -72,6 +96,15 @@ export class HomeComponent implements OnInit {
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			if (!anyMatch<ERole>(userRoles, [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, ERole.PERSONAL_DE_ESTADISTICA]))
 				this.REPORT_TYPES = this.REPORT_TYPES.filter(report => report.id != 1 && report.id != 2);
+		});
+		this.hierarchicalUnitsService.getByInstitution().subscribe(hierarchicalUnits => {
+			this.hierarchicalUnits = hierarchicalUnits;
+			this.hierarchicalUnitsTypeahead = hierarchicalUnits.map(hu => this.toHierarchicalUnitTypeahead(hu));
+		});
+		this.hierarchicalUnitTypeService.getByInstitution().subscribe( hierarchicalUnitTypes => this.hierarchicalUnitTypesTypeahead = hierarchicalUnitTypes.map(hut => this.toHierarchicalUnitTypeTypeahead(hut)));
+
+		this.professionalLicenseService.getLicensesType().subscribe(licensesTypeMasterData => {
+			this.licensesTypeMasterData = licensesTypeMasterData;
 		});
 	}
 
@@ -93,8 +126,8 @@ export class HomeComponent implements OnInit {
 		return today;
 	}
 
-	private getSpecialtiesTypeaheadOptions$(doctors: ProfessionalDto[]) {
-		return this.clinicalSpecialtyService.getClinicalSpecialties(doctors.map(d => d.id))
+	private getSpecialtiesTypeaheadOptions$(doctors: ProfessionalRegistrationNumbersDto[]) {
+		return this.clinicalSpecialtyService.getClinicalSpecialties(doctors.map(d => d.healthcareProfessionalId))
 			.pipe(map(toTypeaheadOptionList));
 
 		function toTypeaheadOptionList(prosBySpecialtyList: ProfessionalsByClinicalSpecialtyDto[]):
@@ -119,31 +152,82 @@ export class HomeComponent implements OnInit {
 		this.professionalsTypeahead = professionalsFilteredBy.map(d => this.toProfessionalTypeahead(d));
 	}
 
-	setProfessional(professional: ProfessionalDto) {
+	public setHierarchicalUnitType(hierarchicalUnitTypeDto: HierarchicalUnitTypeDto) {
+		this.form.controls.hierarchicalUnitTypeId.setValue(hierarchicalUnitTypeDto?.id);
+		const hierarchicalUnitsFilteredBy = this.getHierarchicalUnitsFilteredBy(hierarchicalUnitTypeDto);
+		this.hierarchicalUnitsTypeahead = hierarchicalUnitsFilteredBy.map(hu => this.toHierarchicalUnitTypeahead(hu));
+
+		if (!hierarchicalUnitTypeDto) {
+			this.form.controls.includeHierarchicalUnitDescendants.setValue(false);
+			this.form.controls.hierarchicalUnitId.setValue(null);		}
+	}
+
+	public setHierarchicalUnit(hierarchicalUnitDto: HierarchicalUnitDto) {
+		if (hierarchicalUnitDto)
+			this.form.controls.hierarchicalUnitId.setValue(hierarchicalUnitDto?.id);
+		else {
+			this.form.controls.includeHierarchicalUnitDescendants.setValue(false);
+			this.form.controls.hierarchicalUnitId.setValue(null);
+		}
+	}
+
+	setProfessional(professional: ProfessionalLicenseNumberDto) {
 		this.idProfessional = professional?.id;
 		this.form.controls.professionalId.setValue(professional?.id);
 	}
 
-	private getProfessionalsFilteredBy(specialty: ProfessionalsByClinicalSpecialtyDto): ProfessionalDto[] {
+	private getProfessionalsFilteredBy(specialty: ProfessionalsByClinicalSpecialtyDto): ProfessionalRegistrationNumbersDto[] {
 		if (specialty?.professionalsIds) {
-			return this.professionals.filter(p => specialty.professionalsIds.find(e => e === p.id));
+			return this.professionals.filter(p => specialty.professionalsIds.find(e => e === p.healthcareProfessionalId));
 		}
 		return this.professionals;
 	}
 
-	private toProfessionalTypeahead(professionalDto: ProfessionalDto): TypeaheadOption<ProfessionalDto> {
+	private getHierarchicalUnitsFilteredBy(hierarchicalUnitTypeDto: HierarchicalUnitTypeDto): HierarchicalUnitDto[] {
+		if (hierarchicalUnitTypeDto?.id) {
+			return this.hierarchicalUnits.filter(hu => hu.typeId === hierarchicalUnitTypeDto.id);
+		}
+		return this.hierarchicalUnits;
+	}
+
+	private toProfessionalTypeahead(professionalRegistrationNumbersDto: ProfessionalRegistrationNumbersDto): TypeaheadOption<ProfessionalRegistrationNumbersDto> {
 		return {
-			compareValue: this.getFullNameLicence(professionalDto),
-			value: professionalDto
+			compareValue: this.getFullNameLicense(professionalRegistrationNumbersDto),
+			value: professionalRegistrationNumbersDto
 		};
 	}
 
-	getFullNameLicence(professional: ProfessionalDto): string {
-		return professional.licenceNumber ? `${this.getFullName(professional)} - ${professional.licenceNumber}` : `${this.getFullName(professional)}`;
+	private toHierarchicalUnitTypeTypeahead(hierarchicalUnitTypeDto: HierarchicalUnitTypeDto): TypeaheadOption<HierarchicalUnitTypeDto> {
+		return {
+			compareValue: hierarchicalUnitTypeDto.description,
+			value: hierarchicalUnitTypeDto
+		};
 	}
 
-	getFullName(professional: ProfessionalDto): string {
-		return `${professional.lastName}, ${professional.firstName}`;
+	private toHierarchicalUnitTypeahead(hierarchicalUnitDto: HierarchicalUnitDto): TypeaheadOption<HierarchicalUnitDto> {
+		return {
+			compareValue: hierarchicalUnitDto.name,
+			value: hierarchicalUnitDto
+		};
+	}
+
+	getFullNameLicense(professional: ProfessionalRegistrationNumbersDto): string {
+		return `${this.getFullName(professional)} ${professional.license.length ? '-' : ''} ${this.getFullLicense(professional.license)}`;
+	}
+
+	getFullName(professional: ProfessionalRegistrationNumbersDto): string {
+		const nameSelfDetermination = professional.nameSelfDetermination;
+		return `${professional.lastName}, ${this.nameSelfDeterminationFF && nameSelfDetermination ? nameSelfDetermination : professional.firstName}`;
+	}
+
+	getFullLicense(license: ProfessionalLicenseNumberDto[]): string {
+		const licenseUnique = license.filter((item, index, arr) => {
+			return !arr.slice(0, index).some(other => (other.typeId === item.typeId && other.licenseNumber === item.licenseNumber));
+		});
+
+		return `${licenseUnique.map((l) => 
+			this.licensesTypeMasterData.find(item => item.id === l.typeId).description + ' ' + l.licenseNumber)
+			.join(' - ')}`;
 	}
 
 	checkValidDates() {
@@ -174,25 +258,41 @@ export class HomeComponent implements OnInit {
 	generateReport() {
 		this.submitted = true;
 		if (this.form.valid) {
+			this.isLoadingRequestReport = true;
 			const params = {
 				startDate: this.form.controls.startDate.value,
 				endDate: this.form.controls.endDate.value,
 				specialtyId: this.form.controls.specialtyId.value,
-				professionalId: this.form.controls.professionalId.value
+				professionalId: this.form.controls.professionalId.value,
+				hierarchicalUnitTypeId: this.form.controls.hierarchicalUnitTypeId.value,
+				hierarchicalUnitId: this.form.controls.hierarchicalUnitId.value,
+				includeHierarchicalUnitDescendants: this.form.controls.includeHierarchicalUnitDescendants.value
 			}
 			const reportId = this.form.controls.reportType.value;
 			switch (reportId) {
 				case 1:
-					this.reportsService.getMonthlyReport(params, `${this.REPORT_TYPES[0].description}.xls`).subscribe();
+					this.reportsService.getMonthlyReport(params, `${this.REPORT_TYPES[0].description}.xls`).subscribe(() => this.isLoadingRequestReport = false);
 					break;
 				case 2:
-					this.reportsService.getOutpatientSummaryReport(params, `${this.REPORT_TYPES[1].description}.xls`).subscribe();
+					this.reportsService.getOutpatientSummaryReport(params, `${this.REPORT_TYPES[1].description}.xls`).subscribe(() => this.isLoadingRequestReport = false);
 					break;
 				case 3:
-					this.reportsService.getDiabetesReport().subscribe(result => this.cubeReportData = result);
+					this.reportsService.getDiabetesReport().subscribe(result => {
+						this.cubeReportData = result
+						this.isLoadingRequestReport = false
+					});
 					break;
 				case 4:
-					this.reportsService.getHypertensionReport().subscribe(result => this.cubeReportData = result);
+					this.reportsService.getHypertensionReport().subscribe(result => {
+						this.cubeReportData = result
+						this.isLoadingRequestReport = false
+					});
+					break;
+				case 5:
+					this.reportsService.getEpidemiologicalWeekReport().subscribe(result => {
+						this.cubeReportData = result
+						this.isLoadingRequestReport = false
+					});
 					break;
 				default:
 			}

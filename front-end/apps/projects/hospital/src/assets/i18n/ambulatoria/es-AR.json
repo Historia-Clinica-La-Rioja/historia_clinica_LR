@@ -228,6 +228,7 @@
                     "CONSULTATION_OPTION": "Consulta",
                     "PROCEDURE_OPTION": "Procedimiento",
                     "PLACEHOLDER_SPECIALITY": "Especialidad",
+					"PLACEHOLDER_SPECIALITY_OPTIONAL": "Especialidad (Opcional)",
                     "PLACEHOLDER_INSTITUTION": "Institución",
                     "PLACEHOLDER_SUMMARY": "Resumen de referencia solicitada",
                     "UPLOAD_FILES": "Adjuntar archivos",
@@ -239,7 +240,13 @@
                     "DESTINATION": "Destino",
                     "PATIENT_PHONE": "Teléfono del paciente",
                     "PHONE_NUMBER": "Número",
-                    "PHONE_PREFIX": "Prefijo"
+                    "PHONE_PREFIX": "Prefijo",
+                    "PRIORITY_CRITERIA": "Criterio de priorización",
+					"RECEIVER": "Receptor",
+					"AVAILABLE_APPOINTMENT": "<b>{{ appointment }}</b> turnos disponibles en los próximos 60 dias.",
+					"NOT_AVAILABLE_APPOINTMENT": "Sin turnos disponibles en los proximos 60 días.",
+					"PRACTICE_PROCEDURE": "Práctica/procedimiento",
+					"STUDY_CATEGORY": "Categoría de estudios"
                 }
             },
             "reference-notification": {
@@ -302,13 +309,13 @@
                     "EVOLUTION_NOTE": "Descripción/Resumen",
                     "CONSULTATION_DATE": "Fecha de consulta",
                     "REFERENCE_REQUEST": "referencia solicitada",
-                    "CARE_LINE": "Línea de cuidado:",
-                    "INSTITUTION": "Institución:",
+                    "CARE_LINE": "Línea de cuidado",
+                    "INSTITUTION": "Institución",
                     "SUMMARY_REFERENCE": "Resumen de referencia",
-                    "COUNTERREFERENCE": "Contrarreferencia",
                     "PROCEDURE": "Procedimientos:",
                     "REFERENCE_CLOSURE": "Cierre de referencia",
-                    "CONSULTATION_INSTITUTION": "Institución"
+                    "CONSULTATION_INSTITUTION": "Institución",
+					"REFERENCE_DESTINATION_INSTITUTION": "Institución destino"
                 },
                 "historical-problems-filters": {
                     "SPECIALTY": "Especialidad",
@@ -688,6 +695,7 @@
 			"SUBTITLE": "Seleccione los criterios para la impresion de historia clínica",
 			"BACK": "Volver",
 			"SEARCH": "Buscar",
+			"SPINNER_DESCRIPTION": "Consultando información",
 			"date-picker": {
 				"TITLE": "Fechas",
 				"LABEL": "Rango de fechas",
@@ -713,6 +721,15 @@
 				"REPORTS": "Informes de los resultados de los estudios complementarios"
 			},
 			"encounter-list": {
+				"header": {
+					"START_DATE": "Inicio",
+					"END_DATE": "Fin",
+					"ENCOUNTER_TYPE": "Tipo de encuentro",
+					"DOCUMENT_TYPE": "Tipo de documento",
+					"PROBLEM": "Problema",
+					"INSTITUTION": "Institución",
+					"PROFESSIONAL": "Profesional"
+				},
 				"TITLE": "Listado de encuentros",
 				"SUBTITLE": "Seleccione los episodios que desea incluir en la impresión de la historia clínica",
 				"ALL": "Todos",

@@ -3,7 +3,23 @@
     color:  #525659;
 }
 
-.observations {
-    padding: 15px 30px;
-	word-wrap: break-word;
+.bold {
+    font-weight: bold;
+}
+
+.card {
+    margin-top: 1rem;
+}
+
+.add-btn {
+    align-self: flex-start;
+    padding: 0 !important;
+}
+
+.template-label {
+    color: #2687c5
+}
+
+.margin {
+    margin-top: 2rem;
 }

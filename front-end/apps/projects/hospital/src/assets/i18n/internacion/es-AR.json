@@ -23,6 +23,7 @@
 				"TITLE": "Antecedentes personales",
 				"ADD": "Agregar antecedente",
 				"PERSONAL_HISTORY": "Antecedente personal",
+				"LIST_CARD_TITLE": "Antecedentes personales",
 				"table": {
 					"TITLE": "Antecedentes personales seleccionados",
 					"columns": {
@@ -34,6 +35,7 @@
 				"TITLE": "Antecedentes familiares",
 				"ADD": "Agregar antecedente",
 				"FAMILY_HISTORY": "Antecedente familiar",
+				"LIST_CARD_TITLE": "Antecedentes familiar registrados",
 				"table": {
 					"TITLE": "Antecedentes familiares seleccionados",
 					"columns": {
@@ -211,6 +213,7 @@
 		"epicrisis": {
 			"TITLE": "Epicrisis",
 			"SUBTITLE": "Completa los siguientes datos.",
+			"MESSAGE-REMEMBER": "Seleccione los datos que desea incluir en la Epicrisis",
 			"alergias": {
 				"TITLE": "Alergias",
 				"table": {
@@ -251,6 +254,7 @@
 				"TITLE_PRINCIPAL": "Diagnóstico principal",
 				"DIAGNOSIS": "Diagnóstico",
 				"PRESUMPTIVE": "Presuntivo",
+				"INCLUDE_ALL": "incluir todos",
 				"table": {
 					"TITLE": "Diagnósticos registrados",
 					"columns": {
@@ -258,6 +262,12 @@
 						"STATUS": "Estado",
 						"VERIFICATION": "Verificación"
 					}
+				}
+			},
+			"procedimientos": {
+				"TITLE": "Procedimientos",
+				"table": {
+					"TITLE": "Procedimientos registrados"
 				}
 			},
 			"vacunas": {
@@ -307,6 +317,10 @@
 			"warning-dialog": {
 				"FIRST_TEXT": "Se han realizado evoluciones sobre el episodio de internación posteriores a la última versión del borrador.",
 				"SECOND_TEXT": "Por favor, revise los últimos datos cargados."
+			},
+			"list-concept": {
+				"INCLUDE_ALL": "Incluir todos",
+				"NO_DATA": "No se registraron datos en el episodio"
 			}
 		},
 		"clinical-assessment-diagnosis": {
@@ -379,6 +393,7 @@
 				"DIAGNOSIS": "Diagnóstico",
 				"PROFESSIONAL": "Profesional",
 				"CREATEDON": "Fecha",
+				"DOCUMENT_TYPE": "Tipo de documento",
 				"ALL": "Todos"
 			},
 			"info": {

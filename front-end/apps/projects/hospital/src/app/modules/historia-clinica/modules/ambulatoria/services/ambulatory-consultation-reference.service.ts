@@ -100,7 +100,7 @@ export class AmbulatoryConsultationReferenceService {
 	private mapToReferenceDto(reference: Reference): ReferenceDto {
 		return {
 			careLineId: reference.careLine ? reference.careLine.id : null,
-			clinicalSpecialtyId: reference.clinicalSpecialty.id,
+			clinicalSpecialtyId: reference.clinicalSpecialty?.id || null,
 			consultation: reference.consultation,
 			note: reference.note,
 			problems: reference.problems,
@@ -108,7 +108,9 @@ export class AmbulatoryConsultationReferenceService {
 			fileIds: reference.fileIds,
 			destinationInstitutionId: reference.destinationInstitutionId,
 			phoneNumber: reference.phoneNumber,
-			phonePrefix: reference.phonePrefix
+			phonePrefix: reference.phonePrefix,
+			priority: reference.priority,
+			study: reference?.referenceStudy
 		}
 	}
 }

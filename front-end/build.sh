@@ -12,7 +12,7 @@ npm -v
 start_apps=$(date +%s)
 echo "Building Webapp: start"
 cd apps
-[ -d "node_modules" ] || npm install
+[ -d "node_modules" ] || npm ci
 npm run build:prod
 cd -
 
@@ -38,4 +38,11 @@ mv apps/dist/hospital .docker/front-end
 echo "el built-commit es $(git rev-parse HEAD)" > .docker/front-end/git-sha
 
 echo "Building Frontend: output"
+
+
+echo "Building Storybook: start"
+cd apps
+npm run build-storybook
+cd -
+mv apps/storybook-static .docker/storybook
 ls -lha .docker/*

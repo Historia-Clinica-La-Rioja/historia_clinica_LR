@@ -1,7 +1,5 @@
 <app-content width="full">
 	<div fxLayout="column" fxLayoutGap="10px">
-
-
 		<mat-card *ngIf="(institucion$ | async) as institucion; else loading">
 			<mat-card-header>
 				<mat-card-title>{{institucion.name}}</mat-card-title>
@@ -16,10 +14,10 @@
 				<button mat-button color="primary" (click)="switchInstitution()">CAMBIAR DE INSTITUCIÓN</button>
 			</mat-card-actions>
 		</mat-card>
-		<ng-template #loading>
-			<mat-progress-bar mode="indeterminate"></mat-progress-bar>
-		</ng-template>
-		<mat-card *ngFor=" let extension of extensions$ | async">
+		<mat-card *ngFor="let extension of extensions$ | async">
+			<mat-card-header>
+				<mat-card-title>{{extension.title}}</mat-card-title>
+			</mat-card-header>
 			<mat-card-content>
 				<app-ui-external-component type="external_component" [params]="extension">
 				</app-ui-external-component>
@@ -27,3 +25,7 @@
 		</mat-card>
 	</div>
 </app-content>
+
+<ng-template #loading>
+	<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</ng-template>

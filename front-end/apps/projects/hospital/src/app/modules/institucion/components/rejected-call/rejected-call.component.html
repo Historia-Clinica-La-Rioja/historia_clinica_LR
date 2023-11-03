@@ -1,0 +1,15 @@
+<div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="2em">
+
+	<div mat-dialog-title fxLayout="column" fxLayoutAlign="center center">
+		<mat-icon color="warn">phone_missed</mat-icon>
+		<span>Teleconsulta rechazada</span>
+	</div>
+
+	<mat-dialog-content fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="1.5em">
+		<app-call-details [callDetails]="rejectedCall"></app-call-details>
+	</mat-dialog-content>
+
+	<mat-dialog-actions>
+		<button mat-raised-button color="primary" mat-dialog-close>CERRAR</button>
+	</mat-dialog-actions>
+</div>

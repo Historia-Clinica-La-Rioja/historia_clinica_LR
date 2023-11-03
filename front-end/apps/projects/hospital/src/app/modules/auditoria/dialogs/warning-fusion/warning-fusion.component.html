@@ -4,23 +4,34 @@
 		<img src='assets/images/error_outline.png'>
 	</div>
 
-	<h2 mat-dialog-title translate="pacientes.audit.TITLE_WARNING" [translateParams]="{cant: data.cant}" ></h2>
+	<ng-container *ngIf="data.title ; else titleFusion">
+		<h2 mat-dialog-title>{{data.title}}</h2>
+	</ng-container>
+	<ng-template #titleFusion>
+		<h2 mat-dialog-title translate="pacientes.audit.TITLE_WARNING" [translateParams]="{cant: data.cant}"></h2>
+	</ng-template>
 
 	<div mat-dialog-content class="content" fxLayout="column" fxLayoutAlign="space-around center" >
-		<span class="bold text-center margin-bottom" >{{'pacientes.audit.SUBTITLE_WARNING' | translate}}</span>
+		<span *ngIf="!data.title" class="bold text-center margin-bottom" >{{'pacientes.audit.SUBTITLE_WARNING' | translate}}</span>
 		<strong innerHTML="{{ data.fullName | translate}}"></strong>
 		<strong innerHTML="{{ data?.nameSelfDetermination | translate}}"></strong>
 		<strong innerHTML="{{ data.identification | translate}}"></strong>
 		<strong innerHTML="{{ data.birthDate | translate}}"></strong>
 	</div>
 
-	<div mat-dialog-content fxLayoutGap="25px" fxLayout="column" fxLayoutAlign="space-around center">
+	<div *ngIf="!data.title" mat-dialog-content fxLayoutGap="25px" fxLayout="column" fxLayoutAlign="space-around center">
 		<span class="bold text-center" aling="center">{{'pacientes.audit.LABEL_WARNING' | translate}}</span>
 		<strong innerHTML="{{ data.idPatient | translate}}"></strong>
 	</div>
 
 	<div mat-dialog-content fxLayoutGap="25px">
-		<strong>{{'pacientes.audit.QUESTION_WARNING' | translate}}</strong>
+		<ng-container *ngIf="data.title ; else questionFusion">
+			<strong>{{'pacientes.audit.QUESTION_WARNING_UNLINK' | translate}}</strong>
+		</ng-container>
+		<ng-template #questionFusion>
+			<strong>{{'pacientes.audit.QUESTION_WARNING' | translate}}</strong>
+		</ng-template>
+
 	</div>
 
 	<div mat-dialog-actions fxLayout="row" fxLayoutGap="25px" class="margin-bottom">
@@ -28,6 +39,6 @@
 			{{'pacientes.audit.BUTTON_CANCEL' | translate}}</button>
 		<button mat-raised-button [mat-dialog-close]=true cdkFocusInitial color='primary' class="uppercase"
 			id="okButton-button">
-			{{'pacientes.audit.BUTTON_CONFIRM' | translate}}</button>
+			{{data.labelButtonConfirm | translate}}</button>
 	</div>
 </div>

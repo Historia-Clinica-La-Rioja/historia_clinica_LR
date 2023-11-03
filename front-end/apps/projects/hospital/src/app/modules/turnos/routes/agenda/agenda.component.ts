@@ -259,6 +259,11 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 			const diaryOpeningHourDto: DiaryOpeningHoursDto =
 				this.diaryOpeningHours.find(diaryOpeningHour => diaryOpeningHour.openingHours.id === openingHourId);
 
+			if (!diaryOpeningHourDto.onSiteAttentionAllowed) {
+				this.snackBarService.showError("La franja horaria seleccionada no admite turnos presenciales");
+				return;
+			}
+
 			forkJoin([
 				this.getAppointmentAt(event.date).pipe(take(1)),
 				this.allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto, clickedDate).pipe(take(1))

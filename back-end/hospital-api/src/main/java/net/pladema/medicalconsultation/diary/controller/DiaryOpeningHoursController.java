@@ -86,4 +86,15 @@ public class DiaryOpeningHoursController {
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
+
+	@GetMapping(value = "/{openingHourId}/exists-protected-appointments")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA')")
+	public ResponseEntity<Boolean> existsProtectedAppointmentsInOpeningHours(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "openingHourId") Integer openingHourId) {
+		LOG.debug("Input parameters -> institutionId {}, openingHourId {} ", institutionId, openingHourId);
+		boolean result = diaryOpeningHoursService.hasProtectedAppointments(openingHourId);
+		return ResponseEntity.ok().body(result);
+	}
+
 }

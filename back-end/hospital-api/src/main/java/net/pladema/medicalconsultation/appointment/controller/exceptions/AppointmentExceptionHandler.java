@@ -3,6 +3,7 @@ package net.pladema.medicalconsultation.appointment.controller.exceptions;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentException;
+import net.pladema.medicalconsultation.appointment.service.exceptions.NotifyPatientException;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryNotFoundException;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Locale;
+import java.util.Map;
 
 @RestControllerAdvice(basePackages = "net.pladema.medicalconsultation.appointment")
 @Slf4j
@@ -36,5 +38,23 @@ public class AppointmentExceptionHandler {
 		log.debug("AppointmentException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode(), ex.getMessage());
 	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ NotifyPatientException.class })
+	protected ApiErrorMessageDto handleNotifyPatientException(NotifyPatientException ex) {
+		log.debug("NotifyPatientException exception -> {}", ex.getMessage());
+		if (ex.sectorId == null) {
+			return new ApiErrorMessageDto(
+					"no-data",
+					"No se pudo enviar la notificación"
+			);
+		}
+		return new ApiErrorMessageDto(
+				"no-topic",
+				String.format("Falta configurar el sector %s", ex.sectorId),
+				Map.of("sectorId", ex.sectorId)
+		);
+	}
+
 }
 

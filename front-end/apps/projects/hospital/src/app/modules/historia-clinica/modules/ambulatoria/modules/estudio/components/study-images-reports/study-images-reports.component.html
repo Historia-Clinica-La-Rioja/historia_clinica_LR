@@ -1,0 +1,26 @@
+<div fxLayoutAlign="center center" fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="18px">
+    <mat-icon *ngIf="studyInfo.typeOrder === 'sin orden'" class="order-warn"
+        matTooltip="Orden pendiente">info_outline</mat-icon>
+    <mat-icon *ngIf="studyInfo.typeOrder === 'transcripta'" class="order-info"
+        matTooltip="Orden transcripta">attachment_outline</mat-icon>
+    <div [ngClass]="isImageOrderCasesIncomplete ? 'files-section' : ''"  fxLayout="row" fxLayoutGap="18px" fxLayoutAlign="center center">
+        <ng-container *ngIf="showAccessToFiles">
+            <app-view-study class="view-study-btn"
+                [isImageId]="studyInfo.infoOrderInstances?.seeStudy"
+                [appointmentId]="appointmentId">
+            </app-view-study>
+            <div class="report-status">
+                <span *ngIf="!reportStatus; else pendingReport" class="report-label">{{'image-network.worklist.PENDING_REPORT' |
+                    translate}}</span>
+                <ng-template #pendingReport>
+                    <app-view-report
+                        [buttonText]="'image-network.worklist.VIEW_REPORT'"
+                        [appointmentId]="appointmentId"
+                        [fileInfo]="studyInfo.infoOrderInstances?.hceDocumentDataDto"
+                        >
+                    </app-view-report>
+                </ng-template>
+            </div>
+        </ng-container>
+    </div>
+</div>
