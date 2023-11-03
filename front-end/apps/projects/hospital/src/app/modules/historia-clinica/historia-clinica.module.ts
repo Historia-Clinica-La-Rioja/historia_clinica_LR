@@ -116,7 +116,8 @@ import { EpisodeDataComponent } from './components/episode-data/episode-data.com
 		MedicacionesFormComponent,
 		ProcedimientosFormComponent,
 		FactoresDeRiesgoFormV2Component,
-		AlergiasFormComponent
+		AlergiasFormComponent,
+  
 	],
 	imports: [
 		CommonModule,

@@ -4,7 +4,7 @@ import { ContextService } from '@core/services/context.service';
 import { BasicPatientDto } from '@api-rest/api-model';
 import Swal from 'sweetalert2';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+import { CreateQuestionnaireDTO, QuestionnaireAnswerDTO } from '@api-rest/api-model';
 
 
 @Component({
@@ -32,7 +32,7 @@ export class EdmontonComponent {
   selectedCalificacionFuncOption: number;
   submitted: boolean = false;
   @Input() patientId: number;
-  sumaAcumulada: number = 0; 
+  sumaAcumulada: number; 
   selectedValues: number[] = [];
   cumulativeSum: number = 0;
   patientData: BasicPatientDto | undefined;
@@ -54,6 +54,7 @@ export class EdmontonComponent {
 
     onOptionSelected(questionIndex: number, value: number): void {
       this.selectedValues[questionIndex] = value;
+      console.log('Después de la actualización:', this.selectedValues);
       this.calcularSuma();
     }
       
@@ -76,32 +77,22 @@ export class EdmontonComponent {
     
       if (this.sumaAcumulada >= 11) {
         this.selectedCalificacion = 'A33';
-        this.sumaAcumulada = 4;
+        this.sumaAcumulada = 25;
       } else if (this.sumaAcumulada >= 9) {
         this.selectedCalificacion = 'A32';
-        this.sumaAcumulada = 3;
+        this.sumaAcumulada = 24;
       } else if (this.sumaAcumulada >= 7) {
         this.selectedCalificacion = 'A31';
-        this.sumaAcumulada = 2;
+        this.sumaAcumulada = 23;
       } else if (this.sumaAcumulada >= 5) {
         this.selectedCalificacion = 'A30';
-        this.sumaAcumulada = 1;
+        this.sumaAcumulada = 22;
       } else {
         this.selectedCalificacion = 'A29'
-        this.sumaAcumulada = 0;
+        this.sumaAcumulada = 21;
       }
     }
     
-    getDataSumAttributeValue(index: number): string {
-      const radioGroup = document.getElementById('cognitiveOptions');
-      if (radioGroup) {
-        const radioButtons = radioGroup.querySelectorAll('mat-radio-button');
-        if (radioButtons && index >= 0 && index < radioButtons.length) {
-          return radioButtons[index].getAttribute('data-sum');
-        }
-      }
-      return undefined;
-    }
     
     sharedLyric(answerId: number): string {
       switch (answerId) {
@@ -171,12 +162,9 @@ export class EdmontonComponent {
       }
     }
 
-  construirDatos() {
+    construirDatos(): CreateQuestionnaireDTO {
     this.calcularSuma();
-    const datos = {
-      edMonton: []
-    };
-    datos.edMonton = [
+    const questionnaireAnswers: QuestionnaireAnswerDTO[] = [
       {
           questionId: 2,
           answerId: this.selectedCognitiveOption,
@@ -210,27 +198,27 @@ export class EdmontonComponent {
       {
           questionId: 13, 
           answerId: this.selectedMedicationOption,
-          value: this.value_1(13, this.selectedMedicationOption)
+          value: ''
       },
       {
           questionId: 14, 
           answerId: this.selectedMedicationOptionDos,
-          value: this.value_1(14, this.selectedMedicationOptionDos)
+          value: ''
       },
       {
           questionId: 16, 
           answerId: this.selectedNutritionOption,
-          value: this.value_1(16, this.selectedNutritionOption)
+          value: ''
       },
       {
           questionId: 18, 
           answerId: this.selectedAnimoOption,
-          value: this.value_1(18, this.selectedAnimoOption)
+          value: ''
       },
       {
           questionId: 20, 
           answerId: this.selectedContingenciaOption,
-          value: this.value_1(20, this.selectedContingenciaOption)     
+          value: ''    
       },
       
       {
@@ -239,13 +227,11 @@ export class EdmontonComponent {
         value: this.selectedCalificacion
       },
     ];
-    console.log("Array en edmonton",datos)
-      
-    
-
-    return datos.edMonton;
-
-       
+    const questionnaireData: CreateQuestionnaireDTO = {
+      questionnaire: questionnaireAnswers
+    };
+  
+    return questionnaireData;
   }
   
  
@@ -310,17 +296,18 @@ export class EdmontonComponent {
 
   enviarFormulario(): void {
     
-    const datos = this.construirDatos();
+    const datos: CreateQuestionnaireDTO = this.construirDatos();
     console.log("paciente en edmonton",this.patientId)
     console.log("institucion en edmoton", this.routePrefix)
+    console.log("suma", this.sumaAcumulada)
     this.edmontonService.crearEdMonton(this.routePrefix, this.patientId, datos).subscribe(
       () => {
-
+        console.log('Los datos se han enviado correctamente.');
       },
-     (error) => {
-      
-     }
-     );
+      (error) => {
+        console.log('Los datos no se han enviado correctamente.');
+      }
+    );
   }
   
   

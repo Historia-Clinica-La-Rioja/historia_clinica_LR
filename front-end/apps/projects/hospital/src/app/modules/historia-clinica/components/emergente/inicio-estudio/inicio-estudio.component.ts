@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { BasicPatientDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { ActivatedRoute } from '@angular/router';
-
+import { VerEstudiosComponent } from '../pop-up/ver-estudios/ver-estudios.component';
 @Component({
   selector: 'app-adulto-mayor',
   templateUrl: './inicio-estudio.component.html',
@@ -48,4 +48,18 @@ export class AdultoMayorComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
      });
   }
+
+  mostrarPopupVerEstudios(): void {
+    const dialogRef = this.dialog.open(VerEstudiosComponent, {
+      width: '800px',
+      data: {
+        patientId: this.patientId,
+        institutionId: this.routePrefix,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+     });
+  }
+
 }

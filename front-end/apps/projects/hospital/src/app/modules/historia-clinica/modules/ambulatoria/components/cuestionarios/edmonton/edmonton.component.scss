@@ -60,3 +60,33 @@ width: 100%;
 background-color: #333;
 }
 
+
+.sano {
+    color: green;
+    font-weight: bold;
+  }
+  
+  .preocupante {
+    color: red;
+    font-weight: bold;
+  }
+  
+  .normal {
+    color: orange;
+    font-weight: bold;
+  }
+  
+
+.resultados-container {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .resultados-titulo {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  

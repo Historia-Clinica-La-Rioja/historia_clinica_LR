@@ -15,6 +15,7 @@ export class FrailService {
     private readonly http: HttpClient  ) {}
 
   createFrail(patientId: number, frailData: any): Observable<boolean> {
+    console.log("frail", frailData )
     const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/frail`; 
     return this.http.post<boolean>(url, frailData);
   }
