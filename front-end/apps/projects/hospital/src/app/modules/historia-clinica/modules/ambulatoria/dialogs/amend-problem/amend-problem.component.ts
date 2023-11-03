@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import {  MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ErrorProblemDto, MasterDataDto } from '@api-rest/api-model';
+import { ErrorProblemDto, MasterDataDto, ProblemInfoDto } from '@api-rest/api-model';
 import { ExternalClinicalHistoryService } from '@api-rest/services/external-clinical-history.service';
 import { HceMasterdataService } from '@api-rest/services/hce-masterdata.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
@@ -23,6 +23,7 @@ export class AmendProblemComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: {
 			problemId: number,
             patientId: number,
+            problemInfo: ProblemInfoDto[],
 		},
         public dialogRef: MatDialogRef<AmendProblemComponent>,
 		private readonly formBuilder: UntypedFormBuilder,
@@ -65,7 +66,8 @@ export class AmendProblemComponent implements OnInit {
 			let errorProblem: ErrorProblemDto = {
 				errorObservations: errorData.observations,
 				errorReasonId: errorData.motiveId,
-				id: problemId
+				id: problemId,
+                ...this.data.problemInfo
 			}
 			this.externalClinicalHistoryService.markProblemAsError(this.data.patientId, errorProblem).subscribe(succedeed => {
 				if(succedeed){

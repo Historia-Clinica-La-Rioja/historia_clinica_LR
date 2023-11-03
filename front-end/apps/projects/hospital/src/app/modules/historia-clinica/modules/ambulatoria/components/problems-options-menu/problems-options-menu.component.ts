@@ -1,6 +1,6 @@
 import { Component, Injector, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { AppFeature, HCEPersonalHistoryDto } from '@api-rest/api-model';
+import { ApiErrorMessageDto, AppFeature, HCEPersonalHistoryDto, ProblemInfoDto } from '@api-rest/api-model';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
@@ -13,6 +13,7 @@ import { HistoricalProblemsFacadeService } from '../../services/historical-probl
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { AmendProblemComponent } from '../../dialogs/amend-problem/amend-problem.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 
 @Component({
     selector: 'app-problems-options-menu',
@@ -44,6 +45,7 @@ export class ProblemsOptionsMenuComponent implements OnInit {
         public dialog: MatDialog,
 		private injector: Injector,
 		private historicalProblemsFacadeService: HistoricalProblemsFacadeService,
+		private outpatientConsultationService: OutpatientConsultationService,
 		private readonly featureFlagService: FeatureFlagService,
         ) {
             this.dockPopupService = this.injector.get<DockPopupService>(DockPopupService);
@@ -140,37 +142,36 @@ export class ProblemsOptionsMenuComponent implements OnInit {
 			});
 		warnignComponent.afterClosed().subscribe(confirmed => {
 			if (confirmed) {
-				let hasReferences = false;
-				!hasReferences ? this.openAmendProblemDialog(problem) : this.openErrorDialog();
+				this.outpatientConsultationService.validateProblemAsError(this.patientId, problem.id).subscribe({
+					next: (problemInfo: ProblemInfoDto[]) => this.openAmendProblemDialog(problem, problemInfo),
+    				error: (e: ApiErrorMessageDto) => this.openErrorDialog(e.text),
+				})
 			}
 		});
 	}
 
-	private openAmendProblemDialog(problem: HCEPersonalHistoryDto) {
+	private openAmendProblemDialog(problem: HCEPersonalHistoryDto, problemInfo: ProblemInfoDto[]) {
 		const amendProblemDialog = this.dialog.open(AmendProblemComponent, 
 			{
 				autoFocus: false,
 				minWidth: '500px',
 				data: {
 					problemId: problem.id,
-					patientId: this.patientId
+					patientId: this.patientId,
+					problemInfo
 				}
 			})
 		amendProblemDialog.afterClosed().subscribe()
 	}
 
-	private openErrorDialog(){
-		const confirmDialog = this.dialog.open(DiscardWarningComponent, { data: getConfirmDataDialog() });
-		confirmDialog.afterClosed().subscribe(confirmed => {
-			if (confirmed) {
-			}
-		});
+	private openErrorDialog(content: string){
+		this.dialog.open(DiscardWarningComponent, { data: getConfirmDataDialog(content) });
 
-		function getConfirmDataDialog() {
+		function getConfirmDataDialog(content: string) {
 			const keyPrefix = 'ambulatoria.paciente.problemas.amend_problems.error';
 			return {
 				title: `${keyPrefix}.TITLE`,
-				content: `${keyPrefix}.CONTENT`,
+				content: `${content}`,
 				okButtonLabel: `${keyPrefix}.OK_BUTTON`,
 				errorMode: true,
 				color: 'warn'

@@ -376,8 +376,6 @@
                     "BACK_BUTTON": "Volver",
                     "error": {
                         "TITLE": "No se puede marcar el registro como incorrecto",
-                        "CONTENT-FOR-APPOINTMENT": "Al estar asociado a un turno confirmado o atendido, no se puede marcar el problema como registro incorrecto.",
-                        "CONTENT-FOR-STUDY": "Al estar asociado a un estudio completado, no se puede marcar el problema como registro incorrecto.",
                         "OK_BUTTON": "Aceptar"
                     }
                 }

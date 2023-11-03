@@ -1,5 +1,5 @@
 import {Component, Injector, Input, OnInit} from '@angular/core';
-import {AppFeature, HCEPersonalHistoryDto} from '@api-rest/api-model';
+import {ApiErrorMessageDto, AppFeature, HCEPersonalHistoryDto, ProblemInfoDto} from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import {SummaryHeader} from '@presentation/components/summary-card/summary-card.component';
 import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
@@ -17,6 +17,7 @@ import { PermissionsService } from '@core/services/permissions.service';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { AmendProblemComponent } from '@historia-clinica/modules/ambulatoria/dialogs/amend-problem/amend-problem.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 
 @Component({
 	selector: 'app-antecedentes-personales-summary',
@@ -53,6 +54,7 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 		private route: ActivatedRoute,
 		private injector: Injector,
 		private readonly featureFlagService: FeatureFlagService,
+		private outpatientConsultationService: OutpatientConsultationService,
 	) {
 		this.dockPopupService = this.injector.get<DockPopupService>(DockPopupService);
 		this.route.paramMap.subscribe(
@@ -153,31 +155,33 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 			});
 		warnignComponent.afterClosed().subscribe(confirmed => {
 			if (confirmed) {
-				let hasReferences = false;
-				!hasReferences ? this.openAmendProblemDialog(problem) : this.openErrorDialog();
+				this.outpatientConsultationService.validateProblemAsError(this.patientId, problem.id).subscribe({
+					next: (problemInfo: ProblemInfoDto[]) => this.openAmendProblemDialog(problem, problemInfo),
+    				error: (e: ApiErrorMessageDto) => this.openErrorDialog(e.text),
+				})
 			}
 		});
 	}
 
-	private openAmendProblemDialog(problem: HCEPersonalHistoryDto) {
+	private openAmendProblemDialog(problem: HCEPersonalHistoryDto, problemInfo: ProblemInfoDto[]) {
 		const amendProblemDialog = this.dialog.open(AmendProblemComponent, 
 			{
 				autoFocus: false,
 				minWidth: '500px',
 				data: {
 					problemId: problem.id,
-					patientId: this.patientId
+					patientId: this.patientId,
+					problemInfo
 				}
 			})
 		amendProblemDialog.afterClosed().subscribe((errorData) => {
 			if(errorData){
-				console.log(problem.id)
-				console.log(errorData)
+
 			}
 		})
 	}
 
-	private openErrorDialog(){
+	private openErrorDialog(content: string){
 		const confirmDialog = this.dialog.open(DiscardWarningComponent, { data: getConfirmDataDialog() });
 		confirmDialog.afterClosed().subscribe(confirmed => {
 			if (confirmed) {
@@ -188,7 +192,7 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 			const keyPrefix = 'ambulatoria.paciente.problemas.amend_problems.error';
 			return {
 				title: `${keyPrefix}.TITLE`,
-				content: `${keyPrefix}.CONTENT-FOR-APPOINTMENT`,
+				content: `${content}`,
 				okButtonLabel: `${keyPrefix}.OK_BUTTON`,
 				errorMode: true,
 				color: 'warn'
