@@ -129,7 +129,7 @@ export class CardPatientComponent {
 		})
 	}
 	private getLastNames(patient: PatientSearchDto): string {
-		return patient.person?.otherLastNames ? patient.person?.lastName + ' ' + patient.person?.otherLastNames : patient.person?.lastName;
+		return patient.person?.otherLastNames ? patient.person?.lastName || '' + ' ' + patient.person?.otherLastNames : patient.person?.lastName || '';
 	}
 	onPageChange($event: any): void {
 		const page = $event;
