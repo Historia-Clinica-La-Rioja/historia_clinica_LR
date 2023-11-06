@@ -157,8 +157,8 @@ public class PersonServiceImpl implements PersonService {
 
 	@Override
 	public String parseCompletePersonName(String firstName, String middleNames, String lastName, String otherLastNames, String selfDeterminateName) {
-		String finalFirstName = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && selfDeterminateName != null ? selfDeterminateName : middleNames != null ? String.join(" ", firstName, middleNames) : firstName;
-		String finalLastName = otherLastNames != null ? String.join(" ", lastName, otherLastNames) : lastName;
+		String finalFirstName = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && selfDeterminateName != null ? selfDeterminateName : middleNames != null ? String.join(" ", firstName != null ? firstName : "", middleNames != null ? middleNames : "") : firstName != null ? firstName : "";
+		String finalLastName = otherLastNames != null ? String.join(" ", lastName != null ? lastName : "", otherLastNames != null ? otherLastNames : "") : lastName != null ? lastName : "";
 		return String.join(" ", finalFirstName, finalLastName);
 	}
 
