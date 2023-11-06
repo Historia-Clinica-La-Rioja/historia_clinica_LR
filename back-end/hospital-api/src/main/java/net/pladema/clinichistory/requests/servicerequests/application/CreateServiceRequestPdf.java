@@ -13,6 +13,7 @@ import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo
 import ar.lamansys.sgx.shared.strings.StringHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.InternmentPatientService;
 import net.pladema.clinichistory.hospitalization.service.summary.domain.ResponsibleDoctorBo;
 import net.pladema.clinichistory.requests.servicerequests.service.GetServiceRequestInfoService;
@@ -27,6 +28,7 @@ import net.pladema.establishment.service.domain.InternmentPatientBedRoomBo;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.service.PersonService;
 import net.pladema.reports.controller.dto.FormVDto;
@@ -63,6 +65,7 @@ public class CreateServiceRequestPdf {
 	private final InternmentPatientService internmentPatientService;
 	private final FetchLastBedByEmergencyEpisodePatientDate fetchLastBedByEmergencyEpisodePatientDate;
 	private final EmergencyCareEpisodeService emergencyCareEpisodeService;
+	private final InternmentEpisodeService internmentEpisodeService;
 
     public StoredFileBo run(Integer institutionId, Integer patientId, Integer serviceRequestId) {
         log.debug("Input parameters -> institutionId {}, patientId {}, serviceRequestId {}", institutionId, patientId, serviceRequestId);
@@ -80,7 +83,11 @@ public class CreateServiceRequestPdf {
 		InstitutionBo institutionBo = institutionService.get(institutionId);
 		Person person = personService.findByPatientId(patientId).orElseThrow();
 		ServiceRequestBo serviceRequestBo = getServiceRequestInfoService.run(serviceRequestId);
-		PatientMedicalCoverageDto patientCoverageDto = patientExternalMedicalCoverageService.getCoverage(serviceRequestBo.getMedicalCoverageId());
+		Integer internmentEpisodeId = internmentPatientService.internmentEpisodeInProcess(institutionId, patientId).getId();
+		var medicalCoverageOpt = internmentEpisodeService.getMedicalCoverage(internmentEpisodeId);
+		PatientMedicalCoverageBo medicalCoverage = null;
+		if (medicalCoverageOpt.isPresent())
+			medicalCoverage = medicalCoverageOpt.get();
 		HealthcareProfessionalBo professional = healthcareProfessionalService.findActiveProfessionalById(serviceRequestBo.getDoctorId());
 		List<ProfessionalLicenseNumberBo> licenses = getLicenseNumberByProfessional.run(professional.getId());
 		ResponsibleDoctorBo responsibleDoctorBo = new ResponsibleDoctorBo(professional.getId(), professional.getFirstName(), professional.getLastName(), licenses
@@ -92,7 +99,7 @@ public class CreateServiceRequestPdf {
 		EmergencyEpisodePatientBedRoomBo eepbr = getEmergencyEpisodeLastBed(institutionId, patientId, serviceRequestBo);
 		String bedNumber = ipbr != null ? ipbr.getBed() : eepbr != null ? eepbr.getBed() : null;
 		String roomDescription = ipbr != null ? ipbr.getRoom() : eepbr != null ? eepbr.getRoom() : null;
-		FormVDto formVDto = mapToFormVDto(institutionBo, person, serviceRequestBo, patientCoverageDto, patientId, responsibleDoctorBo, bedNumber, roomDescription, sharedPersonPort.getCompletePersonNameById(professional.getPersonId()));
+		FormVDto formVDto = mapToFormVDto(institutionBo, person, serviceRequestBo, patientId, responsibleDoctorBo, bedNumber, roomDescription, sharedPersonPort.getCompletePersonNameById(professional.getPersonId()), medicalCoverage);
         Map<String, Object> context = createDeliveryOrderFormContext(formVDto, serviceRequestBo);
         String template = "form_report";
 
@@ -122,19 +129,19 @@ public class CreateServiceRequestPdf {
 	private FormVDto mapToFormVDto(InstitutionBo institutionBo,
 								   Person person,
 								   ServiceRequestBo serviceRequestBo,
-								   PatientMedicalCoverageDto patientCoverageDto,
 								   Integer patientId,
 								   ResponsibleDoctorBo responsibleDoctorBo,
 								   String bedNumber,
 								   String roomDescription,
-								   String completeProfessionalName) {
+								   String completeProfessionalName,
+								   PatientMedicalCoverageBo medicalCoverageBo) {
 		return new FormVDto(institutionBo.getName(),
 				StringHelper.reverseString(sharedPersonPort.getCompletePersonNameById(person.getId())),
 				sharedPersonPort.getPersonContactInfoById(person.getId()),
 				serviceRequestBo.getRequestDate().toLocalDate(),
-				patientCoverageDto != null ? patientCoverageDto.getMedicalCoverageName(): null,
+				medicalCoverageBo != null ? medicalCoverageBo.getMedicalCoverageName(): null,
 				serviceRequestBo.getProblems().toString(),
-				patientCoverageDto != null ? patientCoverageDto.getConditionValue(): null,
+				medicalCoverageBo != null ? medicalCoverageBo.getConditionValue(): null,
 				institutionBo.getProvinceCode(),
 				patientId,
 				completeProfessionalName,
