@@ -239,7 +239,12 @@
         <div class="age" th:text="${patientAge}"></div>
         <div class="doc-number" th:text="${documentNumber}"></div>
         <div class="doc-type" th:text="${documentType}"></div>
-        <div class="ce" th:if="${ce}">X</div>
+        <div class="ce">
+            <label th:if="${ce}">X</label>
+            <label th:unless="${ce}">
+                &nbsp;
+            </label>
+        </div>
         <div class="room" th:text="${room}"></div>
         <div class="bed" th:text="${bed}"></div>
         <div class="hcn" th:text="${hcnId}"></div>
