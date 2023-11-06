@@ -34,7 +34,7 @@ export class SearchCriteriaComponent implements OnInit, OnChanges {
 			if (changes.defaultOption)
 				this.form.controls.criteria.setValue(changes.defaultOption.currentValue);
 
-			if (changes.disabled.currentValue)
+			if (changes.disabled?.currentValue)
 				this.form.controls.criteria.disable();
 			else
 				this.form.controls.criteria.enable();

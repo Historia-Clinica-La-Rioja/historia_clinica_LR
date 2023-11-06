@@ -14,7 +14,23 @@ export class TabsService {
 
 	constructor(
 		private readonly permissionService: PermissionsService
-	) {
+	) { }
+
+	setTab(value: string) {
+		if (!this.allUserRolesTabs.length)
+			this.setUserRolesTabs();
+		const index = this.allUserRolesTabs.findIndex(tab => value === tab);
+		this.tabActive = this.allUserRolesTabs[index];
+		this.selectedIndex = index;
+	}
+
+	clearInfo() {
+		this.selectedIndex = 0;
+		this.tabActive = Tabs.PROFESSIONAL;
+		this.allUserRolesTabs = [];
+	}
+
+	private setUserRolesTabs() {
 		this.permissionService.contextAssignments$().pipe(
 			take(1),
 			map(roles => roles.includes(ERole.ADMINISTRATIVO) ? this.sortByRole(roles) : roles))
@@ -24,17 +40,6 @@ export class TabsService {
 					currentRolTabs?.forEach(rolTab => this.allUserRolesTabs = pushIfNotExists(this.allUserRolesTabs, rolTab, this.equalsTabs));
 				})
 			);
-	}
-
-	setTab(value: string) {
-		const index = this.allUserRolesTabs.findIndex(tab => value === tab);
-		this.tabActive = this.allUserRolesTabs[index];
-		this.selectedIndex = index;
-	}
-
-	clearInfo() {
-		this.selectedIndex = 0;
-		this.tabActive = Tabs.PROFESSIONAL;
 	}
 
 	private sortByRole(roles: ERole[]): ERole[] {

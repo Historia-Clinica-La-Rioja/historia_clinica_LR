@@ -4,7 +4,7 @@ import { ReferenceAppointmentDto, ReferenceCompleteDataDto, ReferenceDataDto, ER
 import { ReferenceReportService } from '@api-rest/services/reference-report.service';
 import { ContactDetails } from '@turnos/components/contact-details/contact-details.component';
 import { PatientSummary } from '../../../hsi-components/patient-summary/patient-summary.component';
-import { Observable, tap } from 'rxjs';
+import { Observable, take, tap } from 'rxjs';
 import { AppointmentSummary } from '@turnos/components/appointment-summary/appointment-summary.component';
 import { PENDING } from '@turnos/utils/reference.utils';
 import { APPOINTMENT_STATES_ID } from '@turnos/constants/appointment';
@@ -74,7 +74,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(canceledAppointment => {
 			if (canceledAppointment) {
 				this.referenceReportFacade.updateReports();
-				this.dialogRef.close();	
+				this.dialogRef.close();
 			}
 		});
 	}
@@ -99,6 +99,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 
 			if (assignAppointment)
 				this.permissionService.hasContextAssignments$([ERole.ADMINISTRATIVO])
+					.pipe(take(1))
 					.subscribe(hasRole => hasRole ? this.setAdministrativeActions() : this.setMedicalActions())
 		}
 	}
@@ -107,14 +108,14 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		const dashboardView = this.referenceReportFacade.dashboardView;
 		const careLineId = this.reportCompleteData.reference.careLine.id;
 
-		if (dashboardView === ReferenceView.RECEIVED) {
+		if (dashboardView == ReferenceView.RECEIVED) {
 			this.setAssignAppointmentInInstitution(true);
 			this.searchAppointmentsInfoService.searchAppointmentsInTabs = !!careLineId;
 		} else if (careLineId) {
 			this.setAssignAppointmentInCareNetwork(true);
 			this.searchAppointmentsInfoService.searchAppointmentsInTabs = false;
 		}
-		
+
 	}
 
 	private setMedicalActions(): void {

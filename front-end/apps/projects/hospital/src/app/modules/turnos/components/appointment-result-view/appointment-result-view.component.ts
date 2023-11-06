@@ -9,7 +9,6 @@ import { ConfirmPrintAppointmentComponent } from '@turnos/dialogs/confirm-print-
 import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-appointment.component';
 import { SearchAppointmentCriteria } from '../search-appointments-in-care-network/search-appointments-in-care-network.component';
 import { HolidayCheckService } from '@turnos/services/holiday-check.service';
-import { ReferenceReportFacadeService } from '@turnos/services/reference-report-facade.service';
 
 @Component({
 	selector: 'app-appointment-result-view',
@@ -31,7 +30,6 @@ export class AppointmentResultViewComponent implements OnInit {
 		private readonly datePipe: DatePipe,
 		private readonly dialog: MatDialog,
 		private readonly holidayService: HolidayCheckService,
-		private readonly referenceReportFacade: ReferenceReportFacadeService,
 	) { }
 
 	ngOnInit(): void {
@@ -80,9 +78,6 @@ export class AppointmentResultViewComponent implements OnInit {
 							if (result.email && !(this.modalityAttention === this.MODALITY_ON_SITE_ATTENTION)) {
 								var message = 'Se podrá acceder a la teleconsulta a través del link que se ha enviado a ' + `<strong> ${result.email}</strong>`
 							}
-
-							if (this.referenceSummary)
-								this.referenceReportFacade.updateReports();
 
 							this.dialog.open(ConfirmPrintAppointmentComponent, {
 								width: '40%',

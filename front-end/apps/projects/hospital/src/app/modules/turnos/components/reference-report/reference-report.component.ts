@@ -32,7 +32,7 @@ export class ReferenceReportComponent implements OnInit {
 			this.referenceReportFacade.dashboardView = !hasRole ? ReferenceView.REQUESTED : ReferenceView.RECEIVED;
 		});
 
-		this.reports$ = this.referenceReportFacade.referencesReport$;
+		this.referenceReportFacade.updateReports();
 	}
 
 	checkDays(dateRange: DateRange) {
@@ -49,6 +49,6 @@ export class ReferenceReportComponent implements OnInit {
 }
 
 export enum ReferenceView {
-	REQUESTED,
+	REQUESTED = 1,
 	RECEIVED
 }

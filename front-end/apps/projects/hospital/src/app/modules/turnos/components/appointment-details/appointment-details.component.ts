@@ -10,7 +10,6 @@ import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { Moment } from 'moment';
 import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
-import { ReferenceReportFacadeService } from '@turnos/services/reference-report-facade.service';
 
 @Component({
 	selector: 'app-appointment-details',
@@ -35,7 +34,6 @@ export class AppointmentDetailsComponent implements OnInit {
 		private readonly datePipe: DatePipe,
 		private readonly holidayService: HolidaysService,
 		private readonly appointmentsFacade: AppointmentsFacadeService,
-		private readonly referenceReportFacade: ReferenceReportFacadeService,
 	) { }
 
 	ngOnInit(): void {
@@ -110,8 +108,6 @@ export class AppointmentDetailsComponent implements OnInit {
 						var message = 'Se podrá acceder a la teleconsulta a través del link que se ha enviado a ' + `<strong> ${result.email}</strong>`
 					}
 
-					if (this.referenceSummary) 
-						this.referenceReportFacade.updateReports();
 					this.dialog.open(ConfirmPrintAppointmentComponent, {
 						width: '40%',
 						data: {

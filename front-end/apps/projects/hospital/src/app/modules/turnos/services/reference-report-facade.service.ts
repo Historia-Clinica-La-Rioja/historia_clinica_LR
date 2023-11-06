@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { ReferenceReportDto } from '@api-rest/api-model';
 import { ReferenceReportService } from '@api-rest/services/reference-report.service';
 import { dateMinusDays } from '@core/utils/date.utils';
@@ -15,7 +14,7 @@ export class ReferenceReportFacadeService {
 	readonly referencesReport$ = this.referencesReport.asObservable();
 
 	dateRange: DateRange;
-	dashboardView = ReferenceView.RECEIVED;
+	dashboardView: ReferenceView;
 	disabledDashboardActions = false;
 
 	constructor(
@@ -26,15 +25,17 @@ export class ReferenceReportFacadeService {
 			start: dateMinusDays(today, MAX_DAYS),
 			end: today
 		}
+
+		this.dashboardView = ReferenceView.RECEIVED;
 	}
 
 	updateReports() {
 		this.disabledDashboardActions = true;
-		this.dashboardView === ReferenceView.RECEIVED ? this.updateReceivedReferences() : this.updateRequestedReferences();
+		this.dashboardView == ReferenceView.REQUESTED ? this.updateRequestedReferences() : this.updateReceivedReferences();
 	}
 
-	updateDashboardView(dashboardView: MatButtonToggleChange) {
-		this.dashboardView = dashboardView.value;
+	updateDashboardView(dashboardView: ReferenceView) {
+		this.dashboardView = dashboardView;
 		this.updateReports();
 	}
 

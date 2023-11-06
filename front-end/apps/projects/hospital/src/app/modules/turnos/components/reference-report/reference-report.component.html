@@ -4,7 +4,7 @@
 
         <div fxLayout="row" fxLayoutGap="30px" fxLayout.lt-md="column">
 
-            <mat-button-toggle-group value="{{referenceReportFacade.dashboardView}}" (change)="referenceReportFacade.updateDashboardView($event)">
+            <mat-button-toggle-group value="{{referenceReportFacade.dashboardView}}" (change)="referenceReportFacade.updateDashboardView($event.value)">
                 <mat-button-toggle value="{{referenceView.RECEIVED}}" *appHasRole="['ADMINISTRATIVO']"
                     [disabled]="referenceReportFacade.disabledDashboardActions">
                     {{'turnos.search_references.RECEIVED' | translate}}
@@ -22,7 +22,7 @@
             </div>
         </div>
 
-        <app-reference-list [reports]="reports$ | async"></app-reference-list>
+        <app-reference-list [reports]="referenceReportFacade.referencesReport$ | async"></app-reference-list>
     </div>
 
 </app-content>
