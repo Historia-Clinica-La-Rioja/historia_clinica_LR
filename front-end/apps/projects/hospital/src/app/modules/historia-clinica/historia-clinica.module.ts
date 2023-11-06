@@ -62,6 +62,7 @@ import { AlergiasFormComponent } from './components/alergias-form/alergias-form.
 import { EmergencyCareEpisodeAttendService } from './services/emergency-care-episode-attend.service';
 import { EpisodeDataComponent } from './components/episode-data/episode-data.component';
 import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-search-dialog/problem-concept-search-dialog.component';
+import { VerEstudiosComponent } from './components/emergente/pop-up/ver-estudios/ver-estudios.component';
 
 @NgModule({
 	declarations: [
@@ -121,6 +122,7 @@ import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-s
 		FactoresDeRiesgoFormV2Component,
 		AlergiasFormComponent,
 		ProblemConceptSearchDialogComponent,
+  VerEstudiosComponent,
 	],
 	imports: [
 		CommonModule,
