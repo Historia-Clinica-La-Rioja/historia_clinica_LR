@@ -71,4 +71,9 @@ export class ClinicalSpecialtyService {
 		return this.http.get<ClinicalSpecialtyDto[]>(url);
 	}
 
+	getAll(): Observable<ClinicalSpecialtyDto[]> {
+		const url = `${environment.apiBase}/clinicalSpecialty`;
+		return this.http.get<ClinicalSpecialtyDto[]>(url);
+	}
+
 }

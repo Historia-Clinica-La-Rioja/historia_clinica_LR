@@ -58,6 +58,7 @@ import { TabsService } from './services/tabs.service';
 import { MeetingRoomPipe } from './pipes/meeting-room.pipe';
 import { PracticesPipe } from './pipes/practices.pipe';
 import { ShowProblemsPipe } from './pipes/show-problems.pipe';
+import { ReportFiltersComponent } from './components/report-filters/report-filters.component';
 
 @NgModule({
 	declarations: [
@@ -82,6 +83,7 @@ import { ShowProblemsPipe } from './pipes/show-problems.pipe';
 		ReferenceListComponent,
 		ReferenceReportComponent,
 		ReportInformationComponent,
+		ReportFiltersComponent,
 		SeachAppointmentsByProfessionalComponent,
 		SearchAppointmentsByEquipmentComponent,
 		SearchAppointmentsBySpecialtyComponent,

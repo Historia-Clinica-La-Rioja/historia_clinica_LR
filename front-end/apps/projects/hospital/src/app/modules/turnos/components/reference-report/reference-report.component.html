@@ -1,27 +1,5 @@
 <app-content>
-    <div fxLayout="column">
-        <h2 class="capitalize-first-letter">{{'turnos.search_references.REQUEST_LIST' | translate}}</h2>
-
-        <div fxLayout="row" fxLayoutGap="30px" fxLayout.lt-md="column" *appHasRole="['ADMINISTRATIVO']">
-
-            <mat-button-toggle-group value="{{referenceReportFacade.dashboardView}}" (change)="referenceReportFacade.updateDashboardView($event.value)">
-                <mat-button-toggle value="{{referenceView.RECEIVED}}"
-                    [disabled]="referenceReportFacade.disabledDashboardActions">
-                    {{'turnos.search_references.RECEIVED' | translate}}
-                </mat-button-toggle>
-                <mat-button-toggle value="{{referenceView.REQUESTED}}"
-                    [disabled]="referenceReportFacade.disabledDashboardActions">
-                    {{'turnos.search_references.REQUEST' | translate}}
-                </mat-button-toggle>
-            </mat-button-toggle-group>
-            <div fxLayout="column">
-                <app-date-range-picker [label]="'turnos.search_references.FILTER_BY_PERIOD'" [dateRange]="referenceReportFacade.dateRange"
-                    (dateRangeChange)="checkDays($event)" [disabled]="referenceReportFacade.disabledDashboardActions"></app-date-range-picker>
-                <mat-error *ngIf="showValidation">{{'turnos.search_references.PERIOD_VALIDATIONS' | translate}}</mat-error>
-            </div>
-        </div>
-
-        <app-reference-list [reports]="referenceReportFacade.referencesReport$ | async"></app-reference-list>
-    </div>
-
+    <h2 class="capitalize-first-letter">{{'turnos.search_references.REQUEST_LIST' | translate}}</h2>
+    <app-report-filters></app-report-filters>
+    <app-reference-list [reports]="referenceReportFacade.referencesReport$ | async"></app-reference-list>
 </app-content>

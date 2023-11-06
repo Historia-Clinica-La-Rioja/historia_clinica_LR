@@ -161,7 +161,7 @@ public class ClinicalSpecialtyController {
 	}
 
 	@GetMapping("/institution/{institutionId}/clinicalspecialty")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRATIVO')")
 	public ResponseEntity<List<ClinicalSpecialtyDto>> getClinicalSpecialtiesInAllInstitutions(@PathVariable(name = "institutionId") Integer institutionId){
 		List<ClinicalSpecialtyBo> clinicalSpecialties = clinicalSpecialtyService.getClinicalSpecialtiesInAllInstitutions();
 		LOG.debug("Get all Clinical Specialties in institutions {}", clinicalSpecialties);

@@ -50,7 +50,7 @@ public class PracticesController {
 	}
 
 	@GetMapping()
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRATIVO')")
 	public ResponseEntity<List<SharedSnomedDto>> getPracticesFromInstitutions(@PathVariable(name = "institutionId") Integer institutionId) {
 		List<SharedSnomedDto> result = getPracticesFromInstitutions.run();
 		log.debug("Get practices from all institutions -> ", result);

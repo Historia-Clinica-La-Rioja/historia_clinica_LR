@@ -1,4 +1,4 @@
-<div fxLayout="row" fxLayoutAlign="start center">
+<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start" fxLayout.lt-md="column">
     <ng-content></ng-content>
     <app-filter-button (isExpandedEmitter)="isFilterExpanded = $event"></app-filter-button>
 </div>
@@ -8,7 +8,7 @@
     <app-filters-typeahead *ngIf="filters.typeaheads?.length" [filters]="filters.typeaheads" (selectedFilters)="setTypeaheadResults($event)"></app-filters-typeahead>
 
     <div id="button-filter">
-        <button mat-raised-button color="primary" (click)="emitResult()">{{'buttons.FILTER' | translate}}
+        <button mat-raised-button color="primary" (click)="emitResult()">{{'buttons.APPLY_FILTERS' | translate}}
         </button>
     </div>
 </div>

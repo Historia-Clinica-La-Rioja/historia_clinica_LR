@@ -11,11 +11,11 @@ import { APPOINTMENT_STATES_ID } from '@turnos/constants/appointment';
 import { Tabs } from '@turnos/constants/tabs';
 import { PermissionsService } from '@core/services/permissions.service';
 import { toPatientSummary, toContactDetails, toAppointmentSummary } from '@turnos/utils/mapper.utils';
-import { ReferenceView } from '@turnos/components/reference-report/reference-report.component';
 import { SearchAppointmentsInfoService } from '@turnos/services/search-appointment-info.service';
 import { TabsService } from '@turnos/services/tabs.service';
 import { ReferenceReportFacadeService } from '@turnos/services/reference-report-facade.service';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
+import { DashboardView } from '@turnos/components/report-filters/report-filters.component';
 
 @Component({
 	selector: 'app-report-complete-data-popup',
@@ -108,7 +108,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		const dashboardView = this.referenceReportFacade.dashboardView;
 		const careLineId = this.reportCompleteData.reference.careLine.id;
 
-		if (dashboardView == ReferenceView.RECEIVED) {
+		if (dashboardView == DashboardView.RECEIVED) {
 			this.setAssignAppointmentInInstitution(true);
 			this.searchAppointmentsInfoService.searchAppointmentsInTabs = !!careLineId;
 		} else if (careLineId) {

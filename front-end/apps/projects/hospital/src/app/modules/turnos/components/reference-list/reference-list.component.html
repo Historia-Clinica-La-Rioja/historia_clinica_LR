@@ -1,38 +1,20 @@
-<div fxLayout="column" fxLayoutGap="0.1125em" [formGroup]="formFilter">
-	<ng-container *ngIf="allReferenceReports.length">
-		<mat-form-field appearance="outline" class="search">
-			<mat-label>{{'internaciones.internment-patient-card.SEARCH' |
-				translate}}</mat-label>
-			<input matInput formControlName="description" (keyup)="applyFilterByNameAndDocument($event)">
-
-			<mat-icon *ngIf="!formFilter.value.description else clear" matSuffix class="grey">search</mat-icon>
-
-			<ng-template #clear>
-				<button type="button" id="clear-filter-sector" *ngIf="formFilter.value.description" mat-button matSuffix
-					color="warn" mat-icon-button
-					(click)="clearFilterField(formFilter.controls.description); $event.stopPropagation()">
-					<mat-icon>close</mat-icon>
-				</button>
-			</ng-template>
-		</mat-form-field>
-		<app-filters-select [setFilters]="filters" automaticResponse="true" (searchCriteria)="applyFiltersCustom($event)"
-		filtersSelectStyle="filters-reference"></app-filters-select>
-	</ng-container>
-
+<div fxLayout="column" fxLayoutGap="0.1125em">
 	<mat-card>
-		<div *ngIf="allReferenceReports.length else noInfo" fxLayout="column" fxLayoutGap="10px">
-			<div fxLayout="column" *ngFor="let report of filteredReferenceReports">
+		<div *ngIf="referenceReports?.length else noInfo" fxLayout="column" fxLayoutGap="10px">
+			<div fxLayout="column" *ngFor="let report of referenceReports">
 				<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
 					<app-report-information fxFlex="85" [report]="report"></app-report-information>
 					<div fxFlex="15">
-                        <button mat-stroked-button (click)="openRequest(report.dto.id)" color="primary">
-                            {{ 'turnos.search_references.VIEW_APPLICATION' | translate}}
-                        </button>
-                    </div>
+						<button mat-stroked-button (click)="openRequest(report.dto.id)" color="primary">
+							{{ 'turnos.search_references.VIEW_APPLICATION' | translate}}
+						</button>
+					</div>
 				</div>
 				<mat-divider class="divider-list" inset></mat-divider>
 			</div>
-			<app-paginator [list]="referenceReports" (result)="changeView($event)"></app-paginator>
+			<mat-paginator [length]="totalElementsAmount" [pageSizeOptions]="pageSizeOptions"
+				(page)="referenceReportFacadeService.updatePaginator($event)">
+			</mat-paginator>
 		</div>
 		<ng-template #noInfo>
 			<app-no-data></app-no-data>

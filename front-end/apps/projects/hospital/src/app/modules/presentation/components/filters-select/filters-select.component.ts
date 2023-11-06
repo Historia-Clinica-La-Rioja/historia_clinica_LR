@@ -12,7 +12,6 @@ export class FiltersSelectComponent {
 		this.filters = filters;
 		this.filterForm = this.toFormGroup(this.filters);
 	}
-	@Input() automaticResponse = false;
 	@Input() filtersSelectStyle?: string;
 	@Output() searchCriteria = new EventEmitter();
 	filterForm: FormGroup;
@@ -27,8 +26,6 @@ export class FiltersSelectComponent {
 
 	cleanStatuses(nameControl:any) {
 		this.filterForm.get(nameControl).setValue(null);
-		if (this.automaticResponse)
-			this.emitSearchCriteria();
 	}
 
 	emitSearchCriteria(){
@@ -44,12 +41,6 @@ export class FiltersSelectComponent {
 		}
 		return new FormGroup(group);
 	}
-
-	emitAutomaticResponse() {
-		if (this.automaticResponse)
-			this.emitSearchCriteria();
-	}
-
 
 }
 export interface filter {

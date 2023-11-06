@@ -286,6 +286,7 @@
 			"REQUIERES_COMPLEMENTARY_STUDIES":"Requiere estudios complementarios",
 			"COUNTER_REFERENCE":"Contrarreferencia",
 			"VIEW_APPLICATION": "Ver solicitud",
+			"DOCUMENT_SEARCH": "Buscar por documento",
 			"reference": {
 				"TITLE": "Detalle de solicitud",
 				"CONTACT_DATA": "Datos de contacto",

@@ -1,10 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ReferenceCompleteDataDto, ReferenceReportDto } from '@api-rest/api-model';
+import { PageDto, ReferenceCompleteDataDto, ReferenceReportDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
-import { DateFormat } from '@core/utils/date.utils';
 import { environment } from '@environments/environment';
-import { format } from 'date-fns';
+import { DashboardFilters } from '@turnos/components/report-filters/report-filters.component';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -23,22 +22,22 @@ export class ReferenceReportService {
 		this.PREFIX_URL = `references-report`;
 	}
 
-	getAllReceivedReferences(from: Date, to: Date): Observable<ReferenceReportDto[]> {
+	getAllReceivedReferences(filters: DashboardFilters, pageSize: number, pageNumber: number): Observable<PageDto<ReferenceReportDto>> {
 		const url = `${this.BASE_URL}/${this.contextService.institutionId}/${this.PREFIX_URL}/received`;
 		let params: HttpParams = new HttpParams();
-
-		params = params.append('from', format(from, DateFormat.API_DATE));
-		params = params.append('to', format(to, DateFormat.API_DATE));
-		return this.http.get<ReferenceReportDto[]>(url, { params });
+		params = params.append('filter', JSON.stringify(filters));
+		params = params.append('pageNumber', pageNumber);
+		params = params.append('pageSize', pageSize);
+		return this.http.get<PageDto<ReferenceReportDto>>(url, { params });
 	}
 
-	getAllRequestedReferences(from: Date, to: Date): Observable<ReferenceReportDto[]> {
+	getAllRequestedReferences(filters: DashboardFilters, pageSize: number, pageNumber: number): Observable<PageDto<ReferenceReportDto>> {
 		const url = `${this.BASE_URL}/${this.contextService.institutionId}/${this.PREFIX_URL}/requested`;
 		let params: HttpParams = new HttpParams();
-
-		params = params.append('from', format(from, DateFormat.API_DATE));
-		params = params.append('to', format(to, DateFormat.API_DATE));
-		return this.http.get<ReferenceReportDto[]>(url, { params });
+		params = params.append('filter', JSON.stringify(filters));
+		params = params.append('pageNumber', pageNumber);
+		params = params.append('pageSize', pageSize);
+		return this.http.get<PageDto<ReferenceReportDto>>(url, { params });
 	}
 
 	getReferenceDetail(id: number): Observable<ReferenceCompleteDataDto> {

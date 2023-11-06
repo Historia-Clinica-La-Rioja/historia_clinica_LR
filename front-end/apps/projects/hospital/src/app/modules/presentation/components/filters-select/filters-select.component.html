@@ -7,7 +7,7 @@
 		<ng-container *ngFor="let filter of filters">
 			<mat-form-field [class]="filtersSelectStyle" appearance="outline">
 				<mat-label>{{filter?.name | translate}}</mat-label>
-				<mat-select [id]="filter.key" [formControlName]="filter?.key" (selectionChange)="emitAutomaticResponse()">
+				<mat-select [id]="filter.key" [formControlName]="filter?.key">
 					<mat-option *ngFor="let option of filter.options" [value]="option.id">
 						{{option?.description}} {{option?.name}}
 					</mat-option>
@@ -19,7 +19,7 @@
 			</mat-form-field>
 		</ng-container>
 	</form>
-	<div *ngIf="!automaticResponse" id="button-filter">
+	<div id="button-filter">
 		<button mat-raised-button color="primary" (click)="emitSearchCriteria()">{{'buttons.FILTER' | translate}} </button>
 	</div>
 </div>

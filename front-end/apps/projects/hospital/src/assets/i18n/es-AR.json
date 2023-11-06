@@ -54,7 +54,8 @@
 		"FILTER":"Filtrar",
 		"IMPORT":"Importar",
 		"PDF_DOWNLOAD": "DESCARGAR .PDF",
-		"SIGN": "Firmar documento"
+		"SIGN": "Firmar documento",
+		"APPLY_FILTERS": "Aplicar filtros"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",
