@@ -11,15 +11,14 @@ import java.util.stream.Stream;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum EProblemErrorReason {
 
-    C1(1, "Accidente o distracción"),
-    C2(2, "Problema duplicado"),
-    C3(3, "No pertenece a este paciente"),
-    C4(4, "Se ignora");
+    PROBLEM_INCORRECT((short) 1, "Problema incorrecto"),
+    PATIENT_INCORRECT((short) 2, "Paciente asignado incorrectamente"),
+    ;
 
-    private final Number id;
+    private final Short id;
     private final String description;
 
-    EProblemErrorReason(Number id, String description) {
+    EProblemErrorReason(Short id, String description) {
         this.id = id;
         this.description = description;
     }
@@ -38,9 +37,7 @@ public enum EProblemErrorReason {
     }
 
     @JsonCreator
-    public static EProblemErrorReason map(Number id) {
-        if (id == null)
-            return null;
+    public static EProblemErrorReason map(Short id) {
         for (EProblemErrorReason e : values()) {
             if (e.id.equals(id)) return e;
         }
