@@ -10,6 +10,7 @@ import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.files.pdf.PdfService;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
+import ar.lamansys.sgx.shared.strings.StringHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.service.InternmentPatientService;
@@ -128,7 +129,7 @@ public class CreateServiceRequestPdf {
 								   String roomDescription,
 								   String completeProfessionalName) {
 		return new FormVDto(institutionBo.getName(),
-				sharedPersonPort.getCompletePersonNameById(person.getId()),
+				StringHelper.reverseString(sharedPersonPort.getCompletePersonNameById(person.getId())),
 				sharedPersonPort.getPersonContactInfoById(person.getId()),
 				serviceRequestBo.getRequestDate().toLocalDate(),
 				patientCoverageDto != null ? patientCoverageDto.getMedicalCoverageName(): null,
