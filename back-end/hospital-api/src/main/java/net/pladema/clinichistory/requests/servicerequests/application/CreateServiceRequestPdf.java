@@ -91,7 +91,7 @@ public class CreateServiceRequestPdf {
 		EmergencyEpisodePatientBedRoomBo eepbr = getEmergencyEpisodeLastBed(institutionId, patientId, serviceRequestBo);
 		String bedNumber = ipbr != null ? ipbr.getBed() : eepbr != null ? eepbr.getBed() : null;
 		String roomDescription = ipbr != null ? ipbr.getRoom() : eepbr != null ? eepbr.getRoom() : null;
-		FormVDto formVDto = mapToFormVDto(institutionBo, person, serviceRequestBo, patientCoverageDto, patientId, responsibleDoctorBo, bedNumber, roomDescription);
+		FormVDto formVDto = mapToFormVDto(institutionBo, person, serviceRequestBo, patientCoverageDto, patientId, responsibleDoctorBo, bedNumber, roomDescription, sharedPersonPort.getCompletePersonNameById(professional.getPersonId()));
         Map<String, Object> context = createDeliveryOrderFormContext(formVDto, serviceRequestBo);
         String template = "form_report";
 
@@ -125,7 +125,8 @@ public class CreateServiceRequestPdf {
 								   Integer patientId,
 								   ResponsibleDoctorBo responsibleDoctorBo,
 								   String bedNumber,
-								   String roomDescription) {
+								   String roomDescription,
+								   String completeProfessionalName) {
 		return new FormVDto(institutionBo.getName(),
 				sharedPersonPort.getCompletePersonNameById(person.getId()),
 				sharedPersonPort.getPersonContactInfoById(person.getId()),
@@ -135,7 +136,7 @@ public class CreateServiceRequestPdf {
 				patientCoverageDto != null ? patientCoverageDto.getConditionValue(): null,
 				institutionBo.getProvinceCode(),
 				patientId,
-				String.join(" ", responsibleDoctorBo.getFirstName(), responsibleDoctorBo.getLastName()),
+				completeProfessionalName,
 				responsibleDoctorBo.getLicenses(),
 				bedNumber,
 				roomDescription
