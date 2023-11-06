@@ -1,1 +1,9 @@
-<p>get-edmonton works!</p>
+<ul *ngIf="edmontonAnswers && edmontonAnswers.length">
+    <li *ngFor="let questionAnswer of edmontonAnswers">
+      <strong>Pregunta:</strong> {{ diccionarioPreguntas[questionAnswer.idQuestion] }}
+      <br>
+      <strong>Respuesta:</strong> {{ diccionarioRespuestas[questionAnswer.idAnswer] }}
+      <br><br>
+    </li>
+  </ul>
+  

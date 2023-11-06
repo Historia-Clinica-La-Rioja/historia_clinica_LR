@@ -1,0 +1,92 @@
+.container {
+    padding-top: 15px;
+  padding: 20px;
+  max-width: 70%;
+  margin: auto;
+  border: 1px solid #e0eef7;
+  box-shadow: 0px 3px 3px 0px rgba(179,177,179,1);
+  margin-top: 3%;
+  text-align: left;
+}
+
+.title1{
+//text-align: center;
+//background-color: #E0EEF7;
+//color: #2687c5;
+//font-style:oblique;
+font-family: "Roboto", "helvetica Neue", sans-serif;
+}
+
+.tipos{
+//font-style:oblique;
+font-family: 'Roboto', sans-serif; 
+border-radius: 5px;
+border: none !important;
+font-size: 18px;
+color: #2687c5;
+
+background-color: aliceblue;
+}
+
+.text{
+
+    font-size: 15px;
+    
+    }
+
+.btn {
+    margin-left: 45%;
+    margin-top: 5%;
+
+}
+.btn2 {
+    margin-left: 45%;
+    margin-top: 5%;
+
+}
+
+.mat-radio-button{
+    font-size: 14px;
+    margin-left: 4px 1rem;
+    margin-bottom: 9px;
+    display: block;
+}
+
+table {
+width: 100%;
+}
+
+::ng-deep .dark-panel .mat-expansion-panel-header-description {
+background-color: #333;
+}
+
+
+.sano {
+    color: green;
+    font-weight: bold;
+  }
+  
+  .preocupante {
+    color: red;
+    font-weight: bold;
+  }
+  
+  .normal {
+    color: orange;
+    font-weight: bold;
+  }
+  
+
+.resultados-container {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .resultados-titulo {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
