@@ -69,7 +69,7 @@ public class FormVBo {
         this.completePatientName = Stream.of(formVAppointmentVo.getFirstName(), formVAppointmentVo.getMiddleNames(), formVAppointmentVo.getLastName(), formVAppointmentVo.getOtherLastNames())
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining(" "));
-        this.reportDate = LocalDate.now();
+        this.reportDate = formVAppointmentVo.getDate().toLocalDate();
         this.patientGender = formVAppointmentVo.getPatientGender();
         this.patientAge = formVAppointmentVo.getAge();
         this.documentType = formVAppointmentVo.getDocumentType();
