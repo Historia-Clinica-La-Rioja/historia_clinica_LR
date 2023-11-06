@@ -102,7 +102,7 @@ public class CanBeMarkAsError {
 
     private void assertContextValidAppointmentsRDI(List<Integer> appIds) {
         appIds.stream()
-                .map(appointmentService::getAppointment)
+                .map(appointmentService::getEquipmentAppointment)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .filter(appointmentBo -> appointmentBo.getAppointmentStateId().equals(AppointmentState.CONFIRMED) ||
