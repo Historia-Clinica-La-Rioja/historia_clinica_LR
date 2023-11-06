@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,9 +46,17 @@ public class BackofficeInstitutionalGroupRuleStore implements BackofficeStore<In
 				.stream()
 				.map(this::mapToDto)
 				.collect(Collectors.toList());
+		if (pageable.getSort().getOrderFor("ruleLevel") != null && pageable.getSort().getOrderFor("ruleLevel").isDescending()){
+			result.sort(Comparator.comparing(InstitutionalGroupRuleDto::getRuleLevel, Comparator.reverseOrder())
+					.thenComparing(InstitutionalGroupRuleDto::getRuleName, String.CASE_INSENSITIVE_ORDER));
+		} else {
+			result.sort(Comparator.comparing(InstitutionalGroupRuleDto::getRuleLevel, Comparator.naturalOrder())
+					.thenComparing(InstitutionalGroupRuleDto::getRuleName, String.CASE_INSENSITIVE_ORDER));
+		}
+		int totalElements = result.size();
 		int minIndex = pageable.getPageNumber() * pageable.getPageSize();
 		int maxIndex = minIndex + pageable.getPageSize();
-		return new PageImpl<>(result.subList(minIndex, Math.min(maxIndex, result.size())), pageable, result.size());
+		return new PageImpl<>(result.subList(minIndex, Math.min(maxIndex, result.size())), pageable, totalElements);
 	}
 
 	@Override

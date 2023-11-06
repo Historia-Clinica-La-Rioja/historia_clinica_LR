@@ -11,7 +11,8 @@ import {
     ReferenceManyField,
     Datagrid,
     EditButton,
-    FunctionField
+    FunctionField,
+    Pagination
 } from "react-admin";    
 
  import CreateRelatedButton from "../components/CreateRelatedButton";
@@ -61,6 +62,7 @@ const ShowInstitutions = (props) => {
             addLabel={false}
             reference="institutionalgroupinstitutions"
             target="institutionalGroupId"
+            pagination={<Pagination />}
         >
         <Datagrid
                   empty={<p style={{marginTop:10, color:'#8c8c8c'}}>Sin instituciones asociadas</p>}>
@@ -79,6 +81,7 @@ const ShowUsers = (props) => {
             addLabel={false}
             reference='institutionalgroupusers'
             target='institutionalGroupId'
+            pagination={<Pagination />}
         >
             <Datagrid
                 empty={<p style={{marginTop:10, color:'#8c8c8c'}}>Sin usuarios asociadas</p>}>
@@ -101,6 +104,7 @@ const ShowLocalRules = (props) => {
             addLabel={false}
             reference='institutionalgrouprules'
             target='institutionalGroupId'
+            pagination={<Pagination />}
         >
             <Datagrid
                 empty={<p style={{marginTop:10, color:'#8c8c8c'}}>Sin reglas asociadas</p>}>
@@ -115,7 +119,7 @@ const ShowLocalRules = (props) => {
 };
 
 const InstitutionalGroupShow = (props) => {
-    return (
+        return (
         <Show {...props}>
             <SimpleShowLayout>
                 <ReferenceField source="typeId" reference="institutionalgrouptypes" link={false}>
