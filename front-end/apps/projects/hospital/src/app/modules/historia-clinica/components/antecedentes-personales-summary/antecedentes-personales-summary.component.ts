@@ -15,7 +15,7 @@ import { SolveProblemComponent } from '@historia-clinica/dialogs/solve-problem/s
 import { anyMatch } from '@core/utils/array.utils';
 import { PermissionsService } from '@core/services/permissions.service';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
-import { AmendProblemComponent } from '@historia-clinica/modules/ambulatoria/dialogs/amend-problem/amend-problem.component';
+import { AmendProblemComponent, AmendProblemData } from '@historia-clinica/modules/ambulatoria/dialogs/amend-problem/amend-problem.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 
@@ -164,15 +164,16 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 	}
 
 	private openAmendProblemDialog(problem: HCEPersonalHistoryDto, problemInfo: ProblemInfoDto[]) {
+		let amendProblemData: AmendProblemData = {
+			problemId: problem.id,
+			patientId: this.patientId,
+			problemInfo
+		}
 		this.dialog.open(AmendProblemComponent, 
 			{
 				autoFocus: false,
 				minWidth: '500px',
-				data: {
-					problemId: problem.id,
-					patientId: this.patientId,
-					problemInfo
-				}
+				data: { amendProblemData }
 			})
 	}
 

@@ -21,7 +21,7 @@
         <mat-hint class="hint">
             {{ 'historia-clinica.concept-typeahead-search.AT_LEAST_THREE_CHARACTERS_MESSAGE' | translate }}
         </mat-hint>
-        <mat-error *ngIf="!motive && submit" class="error-message" [translate]="'forms.REQUIRED'"></mat-error>
+        <mat-error *ngIf="!form.controls.motive.value && form.controls.motive.touched" class="error-message" [translate]="'forms.REQUIRED'"></mat-error>
     </div>
 
     <form [formGroup]="form">

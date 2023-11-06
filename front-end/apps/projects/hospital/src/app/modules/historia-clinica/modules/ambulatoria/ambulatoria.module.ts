@@ -130,8 +130,8 @@ import { AmendProblemComponent } from './dialogs/amend-problem/amend-problem.com
 		PatientValidatorPopupComponent,
     	PrintAmbulatoriaComponent,
 		SearchSnomedConceptComponent,
-  ProblemsOptionsMenuComponent,
-  AmendProblemComponent,
+  		ProblemsOptionsMenuComponent,
+  		AmendProblemComponent,
 	],
 	imports: [
 		CommonModule,

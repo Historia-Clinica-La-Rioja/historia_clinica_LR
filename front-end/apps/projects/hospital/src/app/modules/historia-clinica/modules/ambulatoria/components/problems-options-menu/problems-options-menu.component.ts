@@ -4,14 +4,13 @@ import { ApiErrorMessageDto, AppFeature, HCEPersonalHistoryDto, ProblemInfoDto }
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
-import { ActivatedRoute } from '@angular/router';
 import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 import { Observable, Subject, take } from 'rxjs';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { SolveProblemComponent } from '@historia-clinica/dialogs/solve-problem/solve-problem.component';
 import { HistoricalProblemsFacadeService } from '../../services/historical-problems-facade.service';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
-import { AmendProblemComponent } from '../../dialogs/amend-problem/amend-problem.component';
+import { AmendProblemComponent, AmendProblemData } from '../../dialogs/amend-problem/amend-problem.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 
@@ -30,30 +29,24 @@ export class ProblemsOptionsMenuComponent implements OnInit {
 			delete this.nuevaConsultaFromProblemaRef;
 		}
 	}
+	@Input() patientId: number;
     @Output() setProblemOnHistoric = new Subject<HCEPersonalHistoryDto>();
-    patientId: number;
     hasNewConsultationEnabled$: Observable<boolean>;
+	isMarkProblemAsErrorActive: boolean;
 	private nuevaConsultaAmbulatoriaRef: DockPopupRef;
 	private nuevaConsultaFromProblemaRef: DockPopupRef;
-	isMarkProblemAsErrorActive: boolean;
 
     // Injected dependencies
     private dockPopupService: DockPopupService;
     constructor(
-        private route: ActivatedRoute,
 		private ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
         public dialog: MatDialog,
 		private injector: Injector,
-		private historicalProblemsFacadeService: HistoricalProblemsFacadeService,
-		private outpatientConsultationService: OutpatientConsultationService,
+		private readonly historicalProblemsFacadeService: HistoricalProblemsFacadeService,
+		private readonly outpatientConsultationService: OutpatientConsultationService,
 		private readonly featureFlagService: FeatureFlagService,
         ) {
             this.dockPopupService = this.injector.get<DockPopupService>(DockPopupService);
-            this.route.paramMap.subscribe(
-                (params) => {
-                    this.patientId = Number(params.get('idPaciente'));
-                }
-			);
 			this.featureFlagService.isActive(AppFeature.HABILITAR_RESOLUCION_PROBLEMAS_CARGADOS_COMO_ERROR_EN_DESARROLLO).subscribe(isOn => {
 				this.isMarkProblemAsErrorActive = isOn;
 			});
@@ -63,15 +56,15 @@ export class ProblemsOptionsMenuComponent implements OnInit {
 		this.hasNewConsultationEnabled$ = this.ambulatoriaSummaryFacadeService.hasNewConsultationEnabled$;
     }
 
-    openNuevaConsulta(problema: HCEPersonalHistoryDto): void {
+    openNuevaConsulta(): void {
 		if (!this.nuevaConsultaFromProblemaRef) {
 			if (!this.nuevaConsultaAmbulatoriaRef) {
-				this.openDockPopup(problema.id);
+				this.openDockPopup(this.problem.id);
 			} else {
 				const confirmDialog = this.dialog.open(ConfirmDialogComponent, { data: getConfirmDataDialog() });
 				confirmDialog.afterClosed().subscribe(confirmed => {
 					if (confirmed) {
-						this.openDockPopup(problema.id);
+						this.openDockPopup(this.problem.id);
 						this.nuevaConsultaAmbulatoriaRef.close();
 					}
 				});
@@ -91,7 +84,7 @@ export class ProblemsOptionsMenuComponent implements OnInit {
 
     private openDockPopup(idProblema: number) {
 		this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(true);
-		const idPaciente = this.route.snapshot.paramMap.get('idPaciente');
+		const idPaciente = this.patientId
 		this.nuevaConsultaFromProblemaRef =
 			this.dockPopupService.open(NuevaConsultaDockPopupComponent, { idPaciente, idProblema });
 		this.nuevaConsultaFromProblemaRef.afterClosed().pipe(take(1)).subscribe(fieldsToUpdate => {
@@ -103,10 +96,10 @@ export class ProblemsOptionsMenuComponent implements OnInit {
 		});
 	}
 
-    solveProblemPopUp(problema: HCEPersonalHistoryDto) {
+    solveProblemPopUp() {
 		this.dialog.open(SolveProblemComponent, {
 			data: {
-				problema,
+				problema: this.problem,
 				patientId: this.patientId
 			}
 		}).afterClosed().subscribe(submitted => {
@@ -116,50 +109,51 @@ export class ProblemsOptionsMenuComponent implements OnInit {
 		});
 	}
 
-    filterByProblemOnProblemClick(problem: HCEPersonalHistoryDto) {
+    filterByProblemOnProblemClick() {
 		this.historicalProblemsFacadeService.sendHistoricalProblemsFilter({
 			specialty: null,
 			professional: null,
-			problem: problem.snomed.sctid,
+			problem: this.problem.snomed.sctid,
 			consultationDate: null,
 			referenceStateId: null,
 		});
-        this.setProblemOnHistoric.next(problem);
+        this.setProblemOnHistoric.next(this.problem);
     }
 
-	amendProblem(problem: HCEPersonalHistoryDto) {
+	amendProblem() {
 		const warnignComponent = this.dialog.open(DiscardWarningComponent,
 			{
 				disableClose: true,
 				data: {
 					title: 'ambulatoria.paciente.problemas.amend_problems.TITLE',
 					content: 'ambulatoria.paciente.problemas.amend_problems.CONTENT',
-					okButtonLabel: 'buttons.CONTINUE',
-					cancelButtonLabel: 'buttons.CANCEL',
+					okButtonLabel: 'ambulatoria.paciente.problemas.amend_problems.OK_BUTTON',
+					cancelButtonLabel: 'ambulatoria.paciente.problemas.amend_problems.BACK_BUTTON',
 					buttonClose: true,
 				},
 				maxWidth: '500px'
 			});
 		warnignComponent.afterClosed().subscribe(confirmed => {
 			if (confirmed) {
-				this.outpatientConsultationService.validateProblemAsError(this.patientId, problem.id).subscribe({
-					next: (problemInfo: ProblemInfoDto[]) => this.openAmendProblemDialog(problem, problemInfo),
+				this.outpatientConsultationService.validateProblemAsError(this.patientId, this.problem.id).subscribe({
+					next: (problemInfo: ProblemInfoDto[]) => this.openAmendProblemDialog(problemInfo),
     				error: (e: ApiErrorMessageDto) => this.openErrorDialog(e.text),
 				})
 			}
 		});
 	}
 
-	private openAmendProblemDialog(problem: HCEPersonalHistoryDto, problemInfo: ProblemInfoDto[]) {
+	private openAmendProblemDialog(problemInfo: ProblemInfoDto[]) {
+		let amendProblemData: AmendProblemData = {
+			problemId: this.problem.id,
+			patientId: this.patientId,
+			problemInfo
+		}
 		this.dialog.open(AmendProblemComponent, 
 			{
 				autoFocus: false,
 				minWidth: '500px',
-				data: {
-					problemId: problem.id,
-					patientId: this.patientId,
-					problemInfo
-				}
+				data: { amendProblemData }
 			})
 	}
 

@@ -4,18 +4,18 @@
     <mat-icon>more_vert</mat-icon>
 </button>
 <mat-menu #menu="matMenu" data-id="menu-dialog">
-    <button mat-menu-item (click)="filterByProblemOnProblemClick(problem)" data-id="view-datails">
+    <button mat-menu-item (click)="filterByProblemOnProblemClick()" data-id="view-datails">
         <span [translate]="'ambulatoria.paciente.problemas.VIEW_DETAIL'"></span>
     </button>
     <button *ngIf="hasNewConsultationEnabled$ | async" mat-menu-item
-        (click)="openNuevaConsulta(problem)" data-id="new-consultation">
+        (click)="openNuevaConsulta()" data-id="new-consultation">
         <span
             [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
     </button>
-    <button mat-menu-item (click)="solveProblemPopUp(problem)" data-id="solve-problem">
+    <button mat-menu-item (click)="solveProblemPopUp()" data-id="solve-problem">
         <span [translate]="'ambulatoria.paciente.problemas.END'"></span>
     </button>
-    <button *ngIf="isMarkProblemAsErrorActive && problem.canBeMarkAsError" mat-menu-item (click)="amendProblem(problem)" data-id="mark-as-error">
+    <button *ngIf="isMarkProblemAsErrorActive && problem.canBeMarkAsError" mat-menu-item (click)="amendProblem()" data-id="mark-as-error">
         <span [translate]="'ambulatoria.paciente.problemas.amend_problems.AMEND_PROBLEM'"></span>
     </button>
 </mat-menu>
