@@ -52,6 +52,9 @@
     <mat-form-field appearance="outline" class="full-width">
         <mat-label translate="image-network.appointments.medical-order.INSTITUTION"></mat-label>
         <input formControlName="institution" type="text" matInput>
+        <mat-error *ngIf="hasError(transcribeOrderForm, 'required', 'professional')">
+            <span translate="forms.REQUIRED"></span>
+        </mat-error>
     </mat-form-field>
 
     <mat-divider></mat-divider>

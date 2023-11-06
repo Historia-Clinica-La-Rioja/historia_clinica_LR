@@ -42,7 +42,7 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
             study: [null, Validators.required],
             assosiatedProblem: [null, Validators.required],
             professional: [null, Validators.required],
-            institution: [null]
+            institution: [null, Validators.required ]
         });
         if (this.data.transcribedOrder){
             this.selectedStudy = this.data.transcribedOrder.study;
@@ -83,7 +83,7 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
 
         this.prescriptionService.createTranscribedOrder(this.data.patientId, this.selectedStudy, this.selectedProblem, orderProfessional, orderInstitution)
         .pipe(
-         switchMap(serviceRequestId => this.saveAttachedFilesByCondition(serviceRequestId)),
+         switchMap(serviceRequestId => this.handleAttachedFilesByCondition(serviceRequestId)),
          switchMap(serviceRequestId => this.buildTranscribedOrderContext(serviceRequestId)))
             .subscribe(transcribedOrderContext => {
                         this.dialogRef.close({
@@ -119,7 +119,7 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
             }))
     }
 
-    private saveAttachedFilesByCondition(serviceRequestId: number): Observable<number> {
+    private handleAttachedFilesByCondition(serviceRequestId: number): Observable<number> {
         const sourceExistsAttachedFiles$: Observable<number> = this.prescriptionService.saveAttachedFiles(this.data.patientId, serviceRequestId, this.selectedFiles).pipe(map( _ => serviceRequestId ))
         const source$ = this.selectedFiles.length > 0 ?  sourceExistsAttachedFiles$ : of(serviceRequestId)
         return source$
