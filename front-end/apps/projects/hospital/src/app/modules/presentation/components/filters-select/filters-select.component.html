@@ -7,7 +7,7 @@
 		<ng-container *ngFor="let filter of filters">
 			<mat-form-field [class]="filtersSelectStyle" appearance="outline">
 				<mat-label>{{filter?.name | translate}}</mat-label>
-				<mat-select [id]="filter.key" [formControlName]="filter?.key">
+				<mat-select [id]="filter.key" [formControlName]="filter?.key" (selectionChange)="emitAutomaticResponse()">
 					<mat-option *ngFor="let option of filter.options" [value]="option.id">
 						{{option?.description}} {{option?.name}}
 					</mat-option>
