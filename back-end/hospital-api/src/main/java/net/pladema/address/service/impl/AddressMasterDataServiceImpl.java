@@ -1,7 +1,6 @@
 package net.pladema.address.service.impl;
 
 import net.pladema.address.controller.mapper.DepartmentMapper;
-import net.pladema.address.controller.service.domain.AddressBo;
 import net.pladema.address.controller.service.domain.DepartmentBo;
 import net.pladema.address.repository.CityRepository;
 import net.pladema.address.repository.CountryRepository;
@@ -21,7 +20,6 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Collections;
 
 @Service
 public class AddressMasterDataServiceImpl implements AddressMasterDataService {

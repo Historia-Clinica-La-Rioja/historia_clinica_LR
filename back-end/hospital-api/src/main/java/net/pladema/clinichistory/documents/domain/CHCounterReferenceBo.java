@@ -7,8 +7,6 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.documents.infrastructure.output.repository.entity.VClinicHistory;
 
-import org.apache.logging.log4j.util.Strings;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -8,7 +8,6 @@ import lombok.ToString;
 import net.pladema.clinichistory.documents.infrastructure.output.repository.entity.VClinicHistory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

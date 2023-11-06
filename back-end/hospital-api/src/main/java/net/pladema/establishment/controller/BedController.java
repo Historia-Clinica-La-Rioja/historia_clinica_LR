@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import net.pladema.clinichistory.hospitalization.controller.dto.ProbableDischargeDateDto;
 import net.pladema.establishment.controller.dto.*;
 import net.pladema.establishment.repository.domain.BedSummaryVo;
 import org.slf4j.Logger;

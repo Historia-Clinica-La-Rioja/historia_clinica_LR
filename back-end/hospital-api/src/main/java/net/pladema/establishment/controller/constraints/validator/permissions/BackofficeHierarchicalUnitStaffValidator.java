@@ -15,7 +15,6 @@ import net.pladema.sgx.exceptions.BackofficeValidationException;
 
 import net.pladema.user.controller.BackofficeAuthoritiesValidator;
 
-import org.springframework.data.domain.Example;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 

@@ -17,8 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.patient.application.mergepatient.MergePatient;
 import net.pladema.patient.controller.dto.PatientToMergeDto;
 
-import java.util.List;
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor

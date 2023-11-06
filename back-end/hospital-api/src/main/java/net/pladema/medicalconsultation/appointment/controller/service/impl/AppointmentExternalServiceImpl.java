@@ -20,7 +20,6 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.institution.Instituti
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceAppointmentStateDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
 
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
 
 import org.springframework.stereotype.Service;

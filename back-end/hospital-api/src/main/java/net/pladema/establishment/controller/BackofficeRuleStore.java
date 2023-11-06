@@ -2,7 +2,6 @@ package net.pladema.establishment.controller;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.SnomedRepository;
 import net.pladema.establishment.controller.dto.ERuleLevel;
-import net.pladema.establishment.controller.dto.ERuleType;
 import net.pladema.establishment.controller.dto.RuleDto;
 import net.pladema.establishment.repository.InstitutionalGroupRepository;
 import net.pladema.establishment.repository.InstitutionalGroupRuleRepository;
@@ -18,7 +17,6 @@ import net.pladema.staff.repository.ClinicalSpecialtyRepository;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 

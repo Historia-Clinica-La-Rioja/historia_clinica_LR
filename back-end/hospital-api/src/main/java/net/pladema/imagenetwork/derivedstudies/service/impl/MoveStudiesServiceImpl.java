@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import ar.lamansys.mqtt.application.ports.MqttClientService;
 import ar.lamansys.mqtt.domain.MqttMetadataBo;
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import net.pladema.establishment.service.EquipmentService;
 import net.pladema.establishment.service.OrchestratorService;

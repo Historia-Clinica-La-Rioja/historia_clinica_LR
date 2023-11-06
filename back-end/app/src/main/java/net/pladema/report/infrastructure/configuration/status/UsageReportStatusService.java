@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import net.pladema.hsi.extensions.configuration.features.FeatureProperty;
 import net.pladema.hsi.extensions.configuration.features.FeatureStatusService;
-import net.pladema.report.application.ReportWSStorage;
 import net.pladema.report.infrastructure.output.rest.ReportWSConfig;
 
 @Service

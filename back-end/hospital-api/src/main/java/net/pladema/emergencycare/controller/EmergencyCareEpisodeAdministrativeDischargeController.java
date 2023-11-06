@@ -12,8 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.ZoneId;
-
 @RestController
 @RequestMapping("/institution/{institutionId}/emergency-care/episodes/{episodeId}/administrative-discharge")
 @Tag(name = "Emergency care episodes administrative discharge", description = "Emergency care episodes administrative discharge")

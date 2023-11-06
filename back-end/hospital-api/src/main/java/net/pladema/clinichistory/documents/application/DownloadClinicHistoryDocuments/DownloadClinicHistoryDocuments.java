@@ -8,8 +8,6 @@ import ar.lamansys.sgx.shared.security.UserInfo;
 
 import com.lowagie.text.DocumentException;
 
-import com.lowagie.text.pdf.ShadingColor;
-
 import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.clinichistory.documents.application.ClinicHistoryStorage;
@@ -18,15 +16,10 @@ import net.pladema.clinichistory.documents.domain.CHDocumentBo;
 import net.pladema.clinichistory.documents.domain.ECHEncounterType;
 import net.pladema.clinichistory.documents.infrastructure.output.repository.ClinicHistoryContextBuilder;
 
-import org.apache.pdfbox.contentstream.operator.graphics.ShadingFill;
-import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.graphics.shading.PDShading;
 import org.springframework.data.util.Pair;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;

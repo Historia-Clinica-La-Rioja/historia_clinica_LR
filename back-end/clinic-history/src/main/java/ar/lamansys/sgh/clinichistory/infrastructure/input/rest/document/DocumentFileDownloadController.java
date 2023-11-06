@@ -15,10 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgh.clinichistory.application.fetchAllDocumentInfo.FetchAllDocumentInfo;
 import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.FetchDocumentFileById;
-import ar.lamansys.sgh.clinichistory.domain.document.DocumentBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.DocumentDto;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.function.Function;

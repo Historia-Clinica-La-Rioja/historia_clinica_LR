@@ -5,8 +5,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import ar.lamansys.sgx.shared.security.UserInfo;
-
 import net.pladema.permissions.repository.enums.ERole;
 
 import org.springframework.data.domain.Example;

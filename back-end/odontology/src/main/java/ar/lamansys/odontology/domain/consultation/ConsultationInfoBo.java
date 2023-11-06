@@ -2,7 +2,6 @@ package ar.lamansys.odontology.domain.consultation;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;

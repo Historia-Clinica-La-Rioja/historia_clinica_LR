@@ -1,7 +1,5 @@
 package net.pladema.clinichistory.documents.domain;
 
-import ca.uhn.fhir.rest.annotation.Search;
-
 import com.google.common.base.Joiner;
 
 import lombok.Getter;

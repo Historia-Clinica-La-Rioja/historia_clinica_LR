@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.pladema.establishment.repository.entity.InstitutionalGroupRule;
 
 @Getter
 @Setter

@@ -47,7 +47,6 @@ import ar.lamansys.odontology.domain.consultation.ClinicalTermsValidatorUtils;
 import ar.lamansys.odontology.domain.consultation.ConsultationBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDiagnosticBo;
-import ar.lamansys.odontology.domain.consultation.ConsultationInfoBo;
 import ar.lamansys.odontology.domain.consultation.DoctorInfoBo;
 import ar.lamansys.odontology.domain.consultation.OdontologyAppointmentStorage;
 import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;

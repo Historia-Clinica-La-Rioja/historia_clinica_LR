@@ -1,7 +1,6 @@
 package net.pladema.medicalconsultation.appointment.service.notifypatient;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 

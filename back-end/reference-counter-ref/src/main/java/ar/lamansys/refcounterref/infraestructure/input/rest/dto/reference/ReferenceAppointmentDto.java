@@ -1,8 +1,6 @@
 package ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference;
 
-import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
-import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

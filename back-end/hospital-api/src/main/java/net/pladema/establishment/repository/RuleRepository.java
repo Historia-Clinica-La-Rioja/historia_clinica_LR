@@ -1,7 +1,6 @@
 package net.pladema.establishment.repository;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
-import net.pladema.establishment.controller.dto.ERuleLevel;
 import net.pladema.establishment.repository.entity.Rule;
 
 import org.springframework.data.jpa.repository.Query;
@@ -9,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface RuleRepository extends SGXAuditableEntityJPARepository<Rule, Integer> {
 

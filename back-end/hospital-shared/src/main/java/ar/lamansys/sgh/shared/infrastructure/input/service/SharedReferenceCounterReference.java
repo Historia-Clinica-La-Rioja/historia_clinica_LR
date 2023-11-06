@@ -5,7 +5,6 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterrefer
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceCounterReferenceFileDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceProblemDto;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 

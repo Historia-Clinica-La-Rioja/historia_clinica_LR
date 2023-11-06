@@ -4461,7 +4461,8 @@ export const enum ERole {
 }
 
 export const enum ESignatureStatus {
-        PENDING = "PENDING",
+    CANNOT_BE_SIGNED = "CANNOT_BE_SIGNED",
+    PENDING = "PENDING",
     IN_PROGRESS = "IN_PROGRESS",
     SIGNED = "SIGNED",
 }

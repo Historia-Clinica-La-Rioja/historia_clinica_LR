@@ -5,7 +5,6 @@ import com.google.common.base.Joiner;
 import net.pladema.clinichistory.documents.infrastructure.output.repository.entity.VClinicHistory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

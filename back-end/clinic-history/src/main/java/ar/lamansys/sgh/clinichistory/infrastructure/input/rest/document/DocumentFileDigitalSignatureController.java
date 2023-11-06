@@ -1,7 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.document;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.clinichistory.application.signDocumentFile.SignDocumentFile;
 import ar.lamansys.sgh.clinichistory.domain.document.DigitalSignatureDocumentBo;
@@ -11,7 +10,6 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.datastructures.PageDt
 import io.jsonwebtoken.lang.Collections;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;

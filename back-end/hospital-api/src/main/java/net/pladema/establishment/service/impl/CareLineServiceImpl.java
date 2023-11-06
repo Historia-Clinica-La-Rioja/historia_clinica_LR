@@ -3,7 +3,6 @@ package net.pladema.establishment.service.impl;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.address.controller.service.domain.AddressBo;
 import net.pladema.establishment.application.port.CareLineInstitutionPracticeStorage;
 import net.pladema.establishment.application.port.carelineproblem.CareLineProblemStorage;
 import net.pladema.establishment.repository.CareLineInstitutionSpecialtyRepository;
@@ -16,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

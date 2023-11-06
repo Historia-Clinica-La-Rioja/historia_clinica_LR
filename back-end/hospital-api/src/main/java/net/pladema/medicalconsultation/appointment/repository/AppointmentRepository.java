@@ -19,7 +19,6 @@ import net.pladema.medicalconsultation.appointment.repository.domain.Appointment
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketImageBo;
 
 import net.pladema.medicalconsultation.appointment.repository.domain.MedicalCoverageAppoinmentOrderBo;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
 

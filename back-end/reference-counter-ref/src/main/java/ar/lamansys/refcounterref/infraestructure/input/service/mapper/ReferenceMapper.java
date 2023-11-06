@@ -1,9 +1,8 @@
 package ar.lamansys.refcounterref.infraestructure.input.service.mapper;
 
 import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
-import ar.lamansys.refcounterref.domain.reference.ReferenceBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CompleteReferenceDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceDto;
+
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;

@@ -3,8 +3,6 @@ package ar.lamansys.sgh.publicapi.infrastructure.output;
 import ar.lamansys.sgh.publicapi.digitalsignature.application.port.out.exception.DigitalSignatureCallbackEnumException;
 import ar.lamansys.sgh.publicapi.digitalsignature.application.port.out.exception.DigitalSignatureCallbackException;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.interactive.digitalsignature.ExternalSigningSupport;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.publicapi.digitalsignature.application.port.out.DigitalSignatureCallbackStorage;

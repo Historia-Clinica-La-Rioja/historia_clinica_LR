@@ -2,7 +2,6 @@ package ar.lamansys.sgh.clinichistory.application.ports;
 
 import ar.lamansys.sgh.clinichistory.domain.document.DigitalSignatureDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.DocumentFileBo;
-import ar.lamansys.sgh.clinichistory.domain.document.DocumentFileSummaryBo;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
