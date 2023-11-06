@@ -20,13 +20,7 @@ export class ReferenceReportFacadeService {
 	constructor(
 		private readonly referenceReportService: ReferenceReportService,
 	) {
-		const today = new Date();
-		this.dateRange = {
-			start: dateMinusDays(today, MAX_DAYS),
-			end: today
-		}
-
-		this.dashboardView = ReferenceView.RECEIVED;
+		this.initializeFilters();
 	}
 
 	updateReports() {
@@ -37,6 +31,16 @@ export class ReferenceReportFacadeService {
 	updateDashboardView(dashboardView: ReferenceView) {
 		this.dashboardView = dashboardView;
 		this.updateReports();
+	}
+
+	initializeFilters() {
+		const today = new Date();
+		this.dateRange = {
+			start: dateMinusDays(today, MAX_DAYS),
+			end: today
+		}
+
+		this.dashboardView = ReferenceView.RECEIVED;
 	}
 
 	private updateReceivedReferences() {

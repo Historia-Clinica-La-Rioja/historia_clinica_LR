@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ERole, ReferenceReportDto } from '@api-rest/api-model';
 import { PermissionsService } from '@core/services/permissions.service';
 import { DateRange } from '@presentation/components/date-range-picker/date-range-picker.component';
@@ -14,7 +14,7 @@ const ADMINISTRATIVE = [ERole.ADMINISTRATIVO];
 	templateUrl: './reference-report.component.html',
 	styleUrls: ['./reference-report.component.scss']
 })
-export class ReferenceReportComponent implements OnInit {
+export class ReferenceReportComponent implements OnInit, OnDestroy {
 
 	referenceView = ReferenceView;
 	showValidation = false;
@@ -33,6 +33,10 @@ export class ReferenceReportComponent implements OnInit {
 		});
 
 		this.referenceReportFacade.updateReports();
+	}
+
+	ngOnDestroy(): void {
+		this.referenceReportFacade.initializeFilters();
 	}
 
 	checkDays(dateRange: DateRange) {
