@@ -17,6 +17,7 @@ export class TransferRequestComponent implements OnInit {
   patientBasicData: PatientBasicData;
   responsibleProfessionals: TypeaheadOption<any>[];
   resposibleSelected: ProfessionalDto;
+  showMessage: boolean = false;
 
   constructor(public dialogRef: MatDialogRef<TransferRequestComponent>, @Inject(MAT_DIALOG_DATA) public data: {
     virtualConsultation: VirtualConsultationDto
@@ -44,9 +45,14 @@ export class TransferRequestComponent implements OnInit {
 
   setResponsibleSelectionChange(event) {
     this.resposibleSelected = event;
+    this.showMessage = false;
   }
 
   confirm() {
-    this.dialogRef.close(this.resposibleSelected);
+    if (this.resposibleSelected) {
+      this.dialogRef.close(this.resposibleSelected);
+    } else {
+      this.showMessage = true;
+    }
   }
 }

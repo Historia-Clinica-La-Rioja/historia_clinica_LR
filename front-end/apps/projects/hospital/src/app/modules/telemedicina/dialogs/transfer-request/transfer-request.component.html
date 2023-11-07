@@ -15,6 +15,7 @@
     <div>
         <p>{{'telemedicina.requests.form.ASSIGN_TO' | translate}}</p>
      <app-typeahead [options]="responsibleProfessionals" (selectionChange)="setResponsibleSelectionChange($event)"></app-typeahead>
+     <mat-error *ngIf="showMessage" [translate]="'forms.REQUIRED'"></mat-error>
     </div>
 </mat-dialog-content>
 
