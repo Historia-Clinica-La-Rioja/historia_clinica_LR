@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public interface HistoricEmergencyEpisodeRepository extends SGXAuditableEntityJPARepository<HistoricEmergencyEpisode, HistoricEmergencyEpisodePK> {
 
 	@Transactional(readOnly = true)
-	@Query("SELECT NEW net.pladema.emergencycare.service.domain.EmergencyEpisodePatientBedRoomBo(b.bedNumber, r.description) " +
+	@Query("SELECT NEW net.pladema.emergencycare.service.domain.EmergencyEpisodePatientBedRoomBo(b.bedNumber, r.roomNumber) " +
 			"FROM HistoricEmergencyEpisode hee " +
 			"LEFT JOIN Bed b ON hee.bedId = b.id " +
 			"LEFT JOIN Room r ON b.roomId = r.id " +

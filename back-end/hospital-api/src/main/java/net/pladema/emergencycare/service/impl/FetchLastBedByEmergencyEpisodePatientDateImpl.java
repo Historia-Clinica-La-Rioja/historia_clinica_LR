@@ -24,6 +24,6 @@ public class FetchLastBedByEmergencyEpisodePatientDateImpl implements FetchLastB
 		if (!result.getContent().isEmpty())
 			return new EmergencyEpisodePatientBedRoomBo(result.getContent().get(0).getBed(), result.getContent().get(0).getRoom());
 		EmergencyCareBo emergencyCareBo = emergencyCareEpisodeService.get(emergencyEpisodeId, institutionId);
-		return new EmergencyEpisodePatientBedRoomBo(emergencyCareBo.getBedNumber(), emergencyCareBo.getRoomDescription());
+		return new EmergencyEpisodePatientBedRoomBo(emergencyCareBo.getBedNumber(), emergencyCareBo.getBedNumber());
 	}
 }

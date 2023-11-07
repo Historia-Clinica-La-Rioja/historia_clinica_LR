@@ -99,8 +99,8 @@ public class CreateServiceRequestPdf {
 		InternmentPatientBedRoomBo ipbr = getInternmentLastBed(institutionId, patientId, serviceRequestBo);
 		EmergencyEpisodePatientBedRoomBo eepbr = getEmergencyEpisodeLastBed(institutionId, patientId, serviceRequestBo);
 		String bedNumber = ipbr != null ? ipbr.getBed() : eepbr != null ? eepbr.getBed() : null;
-		String roomDescription = ipbr != null ? ipbr.getRoom() : eepbr != null ? eepbr.getRoom() : null;
-		FormVDto formVDto = mapToFormVDto(institutionBo, person, serviceRequestBo, patientId, responsibleDoctorBo, bedNumber, roomDescription, sharedPersonPort.getCompletePersonNameById(professional.getPersonId()), medicalCoverage);
+		String roomNumber = ipbr != null ? ipbr.getRoom() : eepbr != null ? eepbr.getRoom() : null;
+		FormVDto formVDto = mapToFormVDto(institutionBo, person, serviceRequestBo, patientId, responsibleDoctorBo, bedNumber, roomNumber, sharedPersonPort.getCompletePersonNameById(professional.getPersonId()), medicalCoverage);
         Map<String, Object> context = createDeliveryOrderFormContext(formVDto, serviceRequestBo);
         String template = "form_report";
 
@@ -133,7 +133,7 @@ public class CreateServiceRequestPdf {
 								   Integer patientId,
 								   ResponsibleDoctorBo responsibleDoctorBo,
 								   String bedNumber,
-								   String roomDescription,
+								   String roomNumber,
 								   String completeProfessionalName,
 								   PatientMedicalCoverageBo medicalCoverageBo) {
 		return new FormVDto(institutionBo.getName(),
@@ -148,7 +148,7 @@ public class CreateServiceRequestPdf {
 				completeProfessionalName,
 				responsibleDoctorBo.getLicenses(),
 				bedNumber,
-				roomDescription
+				roomNumber
 		);
 	}
 
@@ -206,7 +206,7 @@ public class CreateServiceRequestPdf {
 		ctx.put("completeProfessionalName", formVDto.getCompleteProfessionalName());
 		ctx.put("licenses", formVDto.getLicenses());
 		ctx.put("medicalCoverageCondition", formVDto.getMedicalCoverageCondition());
-		ctx.put("room", formVDto.getRoomDescription());
+		ctx.put("room", formVDto.getRoomNumber());
 		ctx.put("bed", formVDto.getBedNumber());
         log.trace("Output -> {}", ctx);
         return ctx;

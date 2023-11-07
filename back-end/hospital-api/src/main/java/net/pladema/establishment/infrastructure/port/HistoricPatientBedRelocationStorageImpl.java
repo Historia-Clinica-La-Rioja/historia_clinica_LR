@@ -25,6 +25,6 @@ public class HistoricPatientBedRelocationStorageImpl implements HistoricPatientB
 		if (!result.getContent().isEmpty())
 			return new InternmentPatientBedRoomBo(result.getContent().get(0).getBed(), result.getContent().get(0).getRoom());
 		InternmentSummaryBo summary = internmentEpisodeService.getIntermentSummary(internmentId).orElseThrow();
-		return new InternmentPatientBedRoomBo(summary.getBedNumber(), summary.getRoomDescription());
+		return new InternmentPatientBedRoomBo(summary.getBedNumber(), summary.getRoomNumber());
 	}
 }

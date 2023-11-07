@@ -22,7 +22,7 @@ public interface HistoricPatientBedRelocationRepository extends SGXAuditableEnti
 			@Param("internmentEpisodeId") Integer internmentEpisodeId);
 
 	@Transactional(readOnly = true)
-	@Query("SELECT NEW net.pladema.establishment.service.domain.InternmentPatientBedRoomBo(b.bedNumber, r.description) " +
+	@Query("SELECT NEW net.pladema.establishment.service.domain.InternmentPatientBedRoomBo(b.bedNumber, r.roomNumber) " +
 			"FROM HistoricPatientBedRelocation hpbr " +
 			"JOIN Bed b ON hpbr.originBedId = b.id " +
 			"JOIN Room r ON b.roomId = r.id " +

@@ -52,7 +52,7 @@ public class FormVDto {
 
 	private String bedNumber;
 
-	private String roomDescription;
+	private String roomNumber;
 
 	public FormVDto(String establishment, String completePatientName,
 					ContactInfoBo contactInfo, LocalDate reportDate,
@@ -60,7 +60,7 @@ public class FormVDto {
 					String medicalCoverageCondition, String establishmentProvinceCode,
 					Integer hcnId, String completeProfessionalName,
 					List<String> licenses, String bedNumber,
-					String roomDescription) {
+					String roomNumber) {
 		this.establishment = establishment;
 		this.completePatientName = completePatientName;
 		this.address = contactInfo.getAddress().getCompleteAddress();
@@ -73,6 +73,6 @@ public class FormVDto {
 		this.completeProfessionalName = completeProfessionalName;
 		this.licenses = licenses;
 		this.bedNumber = bedNumber;
-		this.roomDescription = roomDescription;
+		this.roomNumber = roomNumber;
 	}
 }
