@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+    <title>Cuestionario de antecedentes familiares</title>
+    <!-- Bootstrap's .css -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous"></link>
+    <style>
+        body {
+           border: 1px solid black;
+           padding: 10px;
+           font-family: Tahoma, Verdana, sans-serif;
+        }
+        h4 {
+           margin: 15px 0px;
+           color: #2687c5;
+           background-color: #f0f8ff;
+           border-top: 1px solid black;
+           font-weight: normal;
+        }
+
+        p {
+           font-weight: bold;
+           font-size: 15px;
+        }
+
+        label {
+           width: 70%;
+           page-break-inside: avoid;
+           margin: 2px 0px;
+        }
+
+
+    </style>
+</head>
+<body th:fragment="familybg">
+    <div class="container">
+        <h3>Cuestionario de antecedentes familiares - Resultados de informe</h3>
+
+        <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[0]}">
+            <h4>¿Con qué familiar(es) convive?</h4>
+            <p>Madre</p>
+            <label>
+                <input type="checkbox" name="opt1" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt2" th:checked="${respuesta.answerId == 26}"></input>
+                En la casa
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt3" th:checked="${respuesta.answerId == 27}"></input>
+                Fuera del cuarto
+            </label><br></br>
+        </div>
+        <div class="itemcontainer" th:each="respuesta : ${answers[1]}">
+            <p>Padre</p>
+            <label>
+                <input type="checkbox" name="opt4" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt5" th:checked="${respuesta.answerId == 26}"></input>
+                En la casa
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt6" th:checked="${respuesta.answerId == 27}"></input>
+                Fuera del cuarto
+            </label><br></br>
+        </div>
+        <div class="itemcontainer" th:each="respuesta : ${answers[2]}">
+            <p>Madrastra</p>
+            <label>
+                <input type="checkbox" name="opt7" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt8" th:checked="${respuesta.answerId == 26}"></input>
+                En la casa
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt9" th:checked="${respuesta.answerId == 27}"></input>
+                Fuera del cuarto
+            </label><br></br>
+        </div>
+        <div class="itemcontainer" th:each="respuesta : ${answers[3]}">
+            <p>Padrastro</p>
+            <label>
+                <input type="checkbox" name="opt10" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt11" th:checked="${respuesta.answerId == 26}"></input>
+                En la casa
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt12" th:checked="${respuesta.answerId == 27}"></input>
+                Fuera del cuarto
+            </label><br></br>
+        </div>
+        <div class="itemcontainer" th:each="respuesta : ${answers[4]}">
+            <p>Padre</p>
+            <label>
+                <input type="checkbox" name="opt13" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt14" th:checked="${respuesta.answerId == 26}"></input>
+                En la casa
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt15" th:checked="${respuesta.answerId == 27}"></input>
+                Fuera del cuarto
+            </label><br></br>
+        </div>
+        <div class="itemcontainer" th:each="respuesta : ${answers[5]}">
+            <p>Padre</p>
+            <label>
+                <input type="checkbox" name="opt16" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt17" th:checked="${respuesta.answerId == 26}"></input>
+                En la casa
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt18" th:checked="${respuesta.answerId == 27}"></input>
+                Fuera del cuarto
+            </label><br></br>
+        </div>
+        <div class="itemcontainer" th:each="respuesta : ${answers[6]}">
+            <p>Padre</p>
+            <label>
+                <input type="checkbox" name="opt19" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt20" th:checked="${respuesta.answerId == 26}"></input>
+                En la casa
+            </label><br></br>
+            <label>
+                <input type="checkbox" name="opt21" th:checked="${respuesta.answerId == 27}"></input>
+                Fuera del cuarto
+            </label><br></br>
+        </div>
+
+        <hr></hr>
+
+    </div>
+    <!-- Bootstrap's script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</body>
+</html>

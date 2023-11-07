@@ -1,4 +1,4 @@
-package net.pladema.questionnaires.frail.create.controller;
+package net.pladema.questionnaires.familybg.create.controller;
 
 import java.util.ArrayList;
 
@@ -16,49 +16,50 @@ import net.pladema.questionnaires.common.domain.model.QuestionnaireAnswerBO;
 import net.pladema.questionnaires.common.domain.model.QuestionnaireBO;
 import net.pladema.questionnaires.common.dto.CreateQuestionnaireDTO;
 import net.pladema.questionnaires.common.dto.QuestionnaireAnswerDTO;
-import net.pladema.questionnaires.frail.create.domain.EFrailTestAnswer;
-import net.pladema.questionnaires.frail.create.domain.service.CreateFrailService;
+import net.pladema.questionnaires.familybg.create.domain.EFamilyBgTestAnswer;
+import net.pladema.questionnaires.familybg.create.domain.service.CreateFamilyBgService;
 
 @RestController
 @Validated
 @RequestMapping("/institution/{institutionId}/patient/{patientId}/hce/general-state")
-public class CreateFrailController implements CreateFrailAPI {
+public class CreateFamilyBgController implements CreateFamilyBgAPI {
 
-	private static final Logger logger = LoggerFactory.getLogger(CreateFrailController.class);
+	private static final Logger logger = LoggerFactory.getLogger(CreateFamilyBgController.class);
 
-	private final CreateFrailService createFrailService;
+	private final CreateFamilyBgService createFamilyBgService;
 
-	public CreateFrailController(CreateFrailService createFrailService) {
-		this.createFrailService = createFrailService;
+	public CreateFamilyBgController(CreateFamilyBgService createFamilyBgService) {
+		this.createFamilyBgService = createFamilyBgService;
 	}
 
 	@Override
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
-	public ResponseEntity<Boolean> createPatientFrail(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "patientId") Integer patientId, @RequestBody CreateQuestionnaireDTO createFrailDTO) {
-		QuestionnaireBO frailBO = createFrailDTO(patientId, createFrailDTO);
+	public ResponseEntity<Boolean> createPatientFamilyBg(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "patientId") Integer patientId, @RequestBody CreateQuestionnaireDTO createFamilyBgDTO) {
+		QuestionnaireBO familyBgBO = createFamilyBgDTO(patientId, createFamilyBgDTO);
 
-		createFrailService.execute(frailBO);
+		createFamilyBgService.execute(familyBgBO);
 
-		logger.debug("Frail scale test created successfully.");
+		logger.debug("Family background questionnaire created successfully.");
 
 		return ResponseEntity.ok().body(true);
 	}
 
-	private QuestionnaireBO createFrailDTO(Integer patientId, CreateQuestionnaireDTO createFrailDTO) {
+	private QuestionnaireBO createFamilyBgDTO(Integer patientId, CreateQuestionnaireDTO createFamilyBgDTO) {
 		QuestionnaireBO reg = new QuestionnaireBO();
 		QuestionnaireAnswerBO lstReg;
 		reg.setPatientId(patientId);
-		if (createFrailDTO.getQuestionnaire() != null && !createFrailDTO.getQuestionnaire().isEmpty()) {
+		if (createFamilyBgDTO.getQuestionnaire() != null && !createFamilyBgDTO.getQuestionnaire().isEmpty()) {
 			reg.setAnswers(new ArrayList<>());
-			for (QuestionnaireAnswerDTO dto : createFrailDTO.getQuestionnaire()) {
+			for (QuestionnaireAnswerDTO dto : createFamilyBgDTO.getQuestionnaire()) {
 				lstReg = new QuestionnaireAnswerBO();
-				EFrailTestAnswer eReg = EFrailTestAnswer.getById(dto.getAnswerId());
+				EFamilyBgTestAnswer eReg = EFamilyBgTestAnswer.getById(dto.getQuestionId());
 				lstReg.setAnswerId(eReg.getAnswerId());
-				lstReg.setValue(eReg.getValue());
 				lstReg.setQuestionId(eReg.getQuestionId());
+				lstReg.setValue(Integer.valueOf(dto.getValue()));
 				reg.getAnswers().add(lstReg);
 			}
 		}
 		return reg;
 	}
+
 }

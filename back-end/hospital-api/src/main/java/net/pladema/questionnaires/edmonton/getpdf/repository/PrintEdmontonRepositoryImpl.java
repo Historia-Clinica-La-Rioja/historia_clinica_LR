@@ -6,10 +6,12 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
-import net.pladema.questionnaires.common.domain.Answer;
-import net.pladema.questionnaires.common.repository.PrintQuestionnaireRepository;
+import org.springframework.stereotype.Repository;
 
-public class PrintEdmontonRepositoryImpl implements PrintQuestionnaireRepository {
+import net.pladema.questionnaires.common.domain.Answer;
+
+@Repository
+public class PrintEdmontonRepositoryImpl implements PrintEdmontonRepository {
 
 	private final EntityManager entityManager;
 

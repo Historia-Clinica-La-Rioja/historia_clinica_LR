@@ -1,4 +1,4 @@
-package net.pladema.questionnaires.frail.getpdf.repository;
+package net.pladema.questionnaires.familybg.getpdf.repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Repository;
 import net.pladema.questionnaires.common.domain.Answer;
 
 @Repository
-public class PrintFrailRepositoryImpl implements PrintFrailRepository {
+public class PrintFamilyBgRepositoryImpl implements PrintFamilyBgRepository {
 
 	private final EntityManager entityManager;
 
-	public PrintFrailRepositoryImpl(EntityManager entityManager) {
+	public PrintFamilyBgRepositoryImpl(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
 
@@ -23,7 +23,10 @@ public class PrintFrailRepositoryImpl implements PrintFrailRepository {
 	public Optional<List<Answer>> getQuestionnaireReportInfo(Long questionnaireTestId) {
 		String query = "SELECT ans.item_id, ans.option_id, ans.value " + "FROM {h-schema}minsal_lr_questionnaire_response as qr " + "INNER JOIN {h-schema}minsal_lr_answer ans ON ans.questionnaire_response_id = qr.id " + "WHERE qr.id = :questionnaireTestId";
 
-		List<Object[]> queryResult = entityManager.createNativeQuery(query).setParameter("questionnaireTestId", questionnaireTestId).getResultList();
+		List<Object[]> queryResult = entityManager
+				.createNativeQuery(query)
+				.setParameter("questionnaireTestId", questionnaireTestId)
+				.getResultList();
 
 		List<Answer> answers = new ArrayList<>();
 
