@@ -21,12 +21,10 @@ public interface HistoricEmergencyEpisodeRepository extends SGXAuditableEntityJP
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.emergencycare.service.domain.EmergencyEpisodePatientBedRoomBo(b.bedNumber, r.description) " +
 			"FROM HistoricEmergencyEpisode hee " +
-			"JOIN EmergencyCareEpisode ece ON hee.pk.emergencyCareEpisodeId = ece.id " +
-			"JOIN Bed b ON hee.bedId = b.id " +
-			"JOIN Room r ON b.roomId = r.id " +
+			"LEFT JOIN Bed b ON hee.bedId = b.id " +
+			"LEFT JOIN Room r ON b.roomId = r.id " +
 			"WHERE hee.pk.changeStateDate <= :requestDate " +
-			"AND ece.id = :emergencyId " +
-			"AND hee.bedId IS NOT NULL " +
+			"AND hee.pk.emergencyCareEpisodeId = :emergencyId " +
 			"ORDER BY hee.pk.changeStateDate DESC")
 	Page<EmergencyEpisodePatientBedRoomBo> getLastBedByEmergencyEpisodePatientDate(@Param("emergencyId") Integer emergencyId,
 																				   @Param("requestDate") LocalDateTime requestDate,
