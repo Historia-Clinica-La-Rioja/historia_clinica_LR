@@ -30,5 +30,15 @@
 				<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
 			</div>
 		</app-titled-content-card>
+
+		<div class="form-field-reduced">
+			<app-concepts-search [label]="'ambulatoria.paciente.surgical-report.diagnosis.SURGERY'"
+				(search)="procedureService.openSearchDialogAndAddConcept($event)">
+			</app-concepts-search>
+			<app-titled-content-card *ngIf="!procedureService.isEmpty()"
+				[title]="'ambulatoria.paciente.surgical-report.diagnosis.SURGERY'">
+				<app-procedure-list [service]="procedureService"></app-procedure-list>
+			</app-titled-content-card>
+		</div>
 	</form>
 </app-new-consultation-expansion-section>

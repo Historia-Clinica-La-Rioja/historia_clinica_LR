@@ -3,7 +3,9 @@ import { FormBuilder, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DiagnosisDto } from '@api-rest/api-model';
 import { DiagnosisCreationEditionComponent } from '@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
-import { Observable } from 'rxjs';
+import { Procedimiento, ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
+import { SnomedService } from '@historia-clinica/services/snomed.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
 	selector: 'app-surgical-report-diagnosis',
@@ -12,18 +14,21 @@ import { Observable } from 'rxjs';
 })
 export class SurgicalReportDiagnosisComponent implements OnInit {
 
-	@Input() diagnosis$: Observable<DiagnosisDto[]>;
 	@Input() diagnosis: DiagnosisDto[];
 
 	selectedDiagnosis: DiagnosisDto[] = [];
 	form = this.formBuilder.group({
 		diagnosis: new FormControl<DiagnosisDto[] | null>([]),
+		surgery: new FormControl<Procedimiento[] | null>([]),
 	});
+
+	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService);
 
 	constructor(
 		private formBuilder: FormBuilder,
 		public dialog: MatDialog,
-
+		private readonly snomedService: SnomedService,
+		private readonly snackBarService: SnackBarService,
 	) { }
 
 	ngOnInit(): void { }

@@ -287,7 +287,8 @@
 				"diagnosis": {
 					"TITLE": "Diagnósticos",
 					"PRE_SURGERY": "Diagnóstico Pre-Operatorio",
-					"ADD": "+ Agregar otro diagnóstico"
+					"ADD": "+ Agregar otro diagnóstico",
+					"SURGERY": "Cirugía Propuesta"
 				}
 			},
             "problemas": {
