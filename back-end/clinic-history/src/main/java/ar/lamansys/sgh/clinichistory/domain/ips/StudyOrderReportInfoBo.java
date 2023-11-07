@@ -16,14 +16,16 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class StudyOrderReportInfoBo {
 
+    private Boolean status;
+    private Integer doctorUserId;
+    private LocalDateTime creationDate;
     private String imageId;
     private BigInteger documentId;
-    private String fileName;
-    private String documentStatus;
-    private Boolean status;
-    private String healthCondition;
     private String snomed;
-    private LocalDateTime creationDate;
-    private Integer doctorUserId;
+    private String healthCondition;
+    private String fileName;
     private String source;
+    private Integer serviceRequestId;
+    private Integer diagnosticReportId;
+
 }

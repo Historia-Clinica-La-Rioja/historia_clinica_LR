@@ -56,7 +56,7 @@ constructor() { }
 	}
 
 
-	mapToInfoNewTypeOrderDto(source: TranscribedOrderReportInfoDto | StudyWithoutOrderReportInfoDto ): InfoNewTypeOrderDto {
+	mapToInfoNewTypeOrderDto(source: TranscribedOrderReportInfoDto | StudyWithoutOrderReportInfoDto | StudyOrderReportInfoDto): InfoNewTypeOrderDto {
 		return {
 			imageId: source.imageId,
 			hceDocumentDataDto: source.hceDocumentDataDto,
@@ -74,9 +74,9 @@ constructor() { }
 			creationDate: new Date(studyOrder.creationDate),
 			doctor: studyOrder.doctor,
 			healthCondition: {id: null , snomed:{sctid: null , pt:studyOrder.healthCondition}},
-			id: null,
+			id: studyOrder.diagnosticReportId,
 			observations: null,
-			serviceRequestId: null,
+			serviceRequestId: studyOrder.serviceRequestId,
 			snomed: {id: null, sctid: null, pt: studyOrder.snomed},
 			source: studyOrder.source,
 			sourceId: null,

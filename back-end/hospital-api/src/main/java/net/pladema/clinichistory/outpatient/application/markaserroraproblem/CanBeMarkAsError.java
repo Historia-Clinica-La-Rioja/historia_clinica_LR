@@ -59,7 +59,7 @@ public class CanBeMarkAsError {
         this.assertContextValid(healthConditionId);
 
         var studies = listDiagnosticReportInfoService.getList(
-                        new DiagnosticReportFilterBo(patientId, null, null, null, null))
+                        new DiagnosticReportFilterBo(patientId, null, null, null, null, null))
                 .stream()
                 .filter(diagnosticReportBo -> healthConditionId.equals(diagnosticReportBo.getHealthCondition().getId()))
                 .collect(Collectors.toList());

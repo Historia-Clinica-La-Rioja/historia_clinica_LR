@@ -40,8 +40,9 @@ public class ListStudyOrderReportInfoServiceImpl implements ListStudyOrderReport
         result.setSnomed((String) row[5]);
         result.setHealthCondition((String) row[6]);
         result.setFileName((String) row[7]);
-        result.setDocumentStatus((String) row[8]);
-        result.setSource((String) row[9]);
+        result.setSource((String) row[8]);
+        result.setServiceRequestId((Integer) row[9]);
+        result.setDiagnosticReportId((Integer) row[10]);
         return result;
     }
 }

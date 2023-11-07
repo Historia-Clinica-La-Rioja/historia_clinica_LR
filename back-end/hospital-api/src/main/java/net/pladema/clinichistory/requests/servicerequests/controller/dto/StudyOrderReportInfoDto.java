@@ -16,14 +16,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudyOrderReportInfoDto {
+
+    private Boolean status;
+    private DoctorInfoDto doctor;
+    private LocalDateTime creationDate;
     private String imageId;
     private HCEDocumentDataDto hceDocumentDataDto;
-    private String healthCondition;
     private String snomed;
-    private Boolean status;
-    private LocalDateTime creationDate;
-    private Boolean seeStudy;
-    private Boolean viewReport;
-    private DoctorInfoDto doctor;
+    private String healthCondition;
     private String source;
+    private Boolean seeStudy = false;
+    private Boolean viewReport = false;
+    private Integer serviceRequestId;
+    private Integer diagnosticReportId;
+
 }

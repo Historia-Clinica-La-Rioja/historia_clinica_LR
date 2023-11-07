@@ -3881,11 +3881,13 @@ export interface StudyIntanceUIDDto {
 
 export interface StudyOrderReportInfoDto {
     creationDate: Date;
+    diagnosticReportId: number;
     doctor: DoctorInfoDto;
     hceDocumentDataDto: HCEDocumentDataDto;
     healthCondition: string;
     imageId: string;
     seeStudy: boolean;
+    serviceRequestId: number;
     snomed: string;
     source: string;
     status: boolean;
