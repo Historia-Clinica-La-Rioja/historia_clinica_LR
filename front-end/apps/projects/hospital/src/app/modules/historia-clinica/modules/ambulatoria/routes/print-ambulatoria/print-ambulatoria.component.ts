@@ -241,7 +241,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 						default: return item[property];
 					}
 				};
-				this.sort.sort(({ id: 'startDate', start: 'desc' }) as MatSortable);
+				this.sort?.sort(({ id: 'startDate', start: 'desc' }) as MatSortable);
 				this.dataSource.sort = this.sort;
 				this.showEncounterListSection();
 				this.selection.clear();
