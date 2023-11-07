@@ -2,11 +2,15 @@ package net.pladema.establishment.controller;
 
 import com.google.common.base.Joiner;
 
+import net.pladema.establishment.controller.dto.ERuleLevel;
 import net.pladema.establishment.controller.dto.InstitutionalGroupDto;
 import net.pladema.establishment.repository.InstitutionalGroupInstitutionRepository;
 import net.pladema.establishment.repository.InstitutionalGroupRepository;
 import net.pladema.establishment.repository.InstitutionalGroupRuleRepository;
+import net.pladema.establishment.repository.RuleRepository;
 import net.pladema.establishment.repository.entity.InstitutionalGroup;
+import net.pladema.establishment.repository.entity.InstitutionalGroupRule;
+import net.pladema.establishment.repository.entity.Rule;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 
 import org.springframework.data.domain.Example;
@@ -16,6 +20,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,13 +31,16 @@ public class BackofficeInstitutionalGroupStore implements BackofficeStore<Instit
 	private final InstitutionalGroupRepository repository;
 	private final InstitutionalGroupInstitutionRepository institutionsGroupInstitutionRepository;
 	private final InstitutionalGroupRuleRepository institutionalGroupRuleRepository;
+	private final RuleRepository ruleRepository;
 
 	public BackofficeInstitutionalGroupStore(InstitutionalGroupRepository repository,
 											 InstitutionalGroupInstitutionRepository institutionsGroupInstitutionRepository,
-											 InstitutionalGroupRuleRepository institutionalGroupRuleRepository){
+											 InstitutionalGroupRuleRepository institutionalGroupRuleRepository,
+											 RuleRepository ruleRepository){
 		this.repository = repository;
 		this.institutionsGroupInstitutionRepository = institutionsGroupInstitutionRepository;
 		this.institutionalGroupRuleRepository = institutionalGroupRuleRepository;
+		this.ruleRepository = ruleRepository;
 	}
 
 	@Override
@@ -72,6 +80,8 @@ public class BackofficeInstitutionalGroupStore implements BackofficeStore<Instit
 		} else {
 			InstitutionalGroup entityToSave = new InstitutionalGroup(entity);
 			entity.setId(repository.save(entityToSave).getId());
+			List<Integer> generalRuleIds = ruleRepository.findAll().stream().filter(rule -> rule.getLevel().equals(ERuleLevel.GENERAL.getId())).map(Rule::getId).collect(Collectors.toList());
+			addGeneralRulesToGroup(generalRuleIds, entity.getId());
 		}
 		return entity;
 	}
@@ -104,6 +114,15 @@ public class BackofficeInstitutionalGroupStore implements BackofficeStore<Instit
 			institutions = institutions.substring(0,150).concat("...");
 		}
 		return institutions;
+	}
+
+	private void addGeneralRulesToGroup (List<Integer> generalRuleIds, Integer institutionalGroupId){
+		List<InstitutionalGroupRule> result = new ArrayList<>();
+		generalRuleIds.forEach(ruleId -> {
+			InstitutionalGroupRule localRule = new InstitutionalGroupRule(null, ruleId, institutionalGroupId, true, null);
+			result.add(localRule);
+		});
+		institutionalGroupRuleRepository.saveAll(result);
 	}
 
 }

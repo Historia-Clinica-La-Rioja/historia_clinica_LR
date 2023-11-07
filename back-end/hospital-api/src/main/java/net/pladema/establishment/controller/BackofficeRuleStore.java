@@ -87,8 +87,7 @@ public class BackofficeRuleStore implements BackofficeStore <RuleDto, Integer> {
 				.stream().filter(rule -> rule.getLevel().equals(ERuleLevel.LOCAL.getId())).map(Rule::getId).collect(Collectors.toList());
 		institutionalGroupRuleRepository.deleteByRuleIds(localRuleIds);
 		List<Integer> institutionalGroupsIds = institutionalGroupRepository.findAll().stream().map(InstitutionalGroup::getId).collect(Collectors.toList());
-		List<InstitutionalGroupRule> localRules = getLocalRuleList(institutionalGroupsIds, entity.getId());
-		institutionalGroupRuleRepository.saveAll(localRules);
+		addRuleToInstitutionalGroups(institutionalGroupsIds, entity.getId());
 		return entity;
 	}
 
@@ -113,13 +112,13 @@ public class BackofficeRuleStore implements BackofficeStore <RuleDto, Integer> {
 		return result;
 	}
 
-	private List<InstitutionalGroupRule> getLocalRuleList(List<Integer> institutionalGroupIds, Integer ruleId){
+	private void addRuleToInstitutionalGroups(List<Integer> institutionalGroupIds, Integer ruleId){
 		List<InstitutionalGroupRule> result = new ArrayList<>();
 		institutionalGroupIds.forEach(institutionalGroupId -> {
 			InstitutionalGroupRule localRule = new InstitutionalGroupRule(null, ruleId, institutionalGroupId, true, null);
 			result.add(localRule);
 		});
-		return result;
+		institutionalGroupRuleRepository.saveAll(result);
 	}
 
 }
