@@ -5,6 +5,8 @@ import net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryList
 import net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo;
 import net.pladema.medicalconsultation.diary.repository.entity.Diary;
 
+import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -241,5 +243,17 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 			@Param("institutionId") Integer institutionId,
 			@Param("aliasOrClinicalSpecialtyName") String aliasOrClinicalSpecialtyName,
 			@Param("practiceId") Integer practiceId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT d.appointmentDuration " +
+			"FROM Diary d " +
+			"WHERE d.id = :diaryId")
+	Short getDiaryAppointmentDuration(@Param("diaryId") Integer diaryId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT NEW net.pladema.medicalconsultation.diary.service.domain.DiaryBo(d.endDate, d.appointmentDuration) " +
+			"FROM Diary d " +
+			"WHERE d.id = :diaryId")
+	DiaryBo getDiaryEndDateAndAppointmentDuration(@Param("diaryId") Integer diaryId);
 
 }

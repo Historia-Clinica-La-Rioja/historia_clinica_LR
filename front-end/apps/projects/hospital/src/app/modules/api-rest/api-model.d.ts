@@ -1061,6 +1061,11 @@ export interface DiaryOpeningHoursDto extends Overlapping<DiaryOpeningHoursDto> 
     secondOpinionVirtualAttentionAllowed?: boolean;
 }
 
+export interface DiaryOpeningHoursFreeTimesDto {
+    freeTimes: TimeDto[];
+    openingHoursId: number;
+}
+
 export interface DietDto extends IndicationDto {
     description: string;
 }
@@ -1676,6 +1681,12 @@ export interface FormVDto {
     reportDate: Date;
     roomNumber: string;
     sisaCode: string;
+}
+
+export interface FreeAppointmentSearchFilterDto {
+    date: DateDto;
+    modality: EAppointmentModality;
+    mustBeProtected: boolean;
 }
 
 export interface FrequencyDto {

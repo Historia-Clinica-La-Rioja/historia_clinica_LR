@@ -19,6 +19,8 @@ import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentSea
 import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.PatientAppointmentHistoryBo;
 import net.pladema.medicalconsultation.diary.controller.dto.BlockDto;
+import net.pladema.medicalconsultation.diary.domain.FreeAppointmentSearchFilterBo;
+import net.pladema.medicalconsultation.diary.infrastructure.input.dto.FreeAppointmentSearchFilterDto;
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
 
 import org.mapstruct.Mapper;
@@ -116,5 +118,8 @@ public interface AppointmentMapper {
 	@Mapping(source = "date", target = "dateTime.date")
 	@Mapping(source = "time", target = "dateTime.time")
 	PatientAppointmentHistoryDto toPatientAppointmentHistoryDto(PatientAppointmentHistoryBo patientAppointmentHistoryBo);
+
+	@Named("fromFreeAppointmentSearchFilterDto")
+	FreeAppointmentSearchFilterBo fromFreeAppointmentSearchFilterDto(FreeAppointmentSearchFilterDto freeAppointmentSearchFilterDto);
 
 }

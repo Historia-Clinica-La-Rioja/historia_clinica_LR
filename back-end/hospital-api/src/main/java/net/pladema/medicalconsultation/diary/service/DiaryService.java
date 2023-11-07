@@ -4,8 +4,10 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSea
 import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursFreeTimesBo;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
