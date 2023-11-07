@@ -171,9 +171,9 @@ export class HomeComponent implements OnInit {
 		}
 	}
 
-	setProfessional(professional: ProfessionalLicenseNumberDto) {
-		this.idProfessional = professional?.id;
-		this.form.controls.professionalId.setValue(professional?.id);
+	setProfessional(professional: ProfessionalRegistrationNumbersDto) {
+		this.idProfessional = professional?.healthcareProfessionalId;
+		this.form.controls.professionalId.setValue(this.idProfessional);
 	}
 
 	private getProfessionalsFilteredBy(specialty: ProfessionalsByClinicalSpecialtyDto): ProfessionalRegistrationNumbersDto[] {
@@ -225,7 +225,7 @@ export class HomeComponent implements OnInit {
 			return !arr.slice(0, index).some(other => (other.typeId === item.typeId && other.licenseNumber === item.licenseNumber));
 		});
 
-		return `${licenseUnique.map((l) => 
+		return `${licenseUnique.map((l) =>
 			this.licensesTypeMasterData?.find(item => item.id === l.typeId).description + ' ' + l.licenseNumber)
 			.join(' - ')}`;
 	}
