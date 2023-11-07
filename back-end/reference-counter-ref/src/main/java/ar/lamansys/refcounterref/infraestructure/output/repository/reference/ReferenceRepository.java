@@ -32,7 +32,8 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
             "WHERE oc.patientId = :patientId " +
             "AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
             "AND r.clinicalSpecialtyId IN (:clinicalSpecialtyIds) " +
-            "AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId)")
+            "AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
+			"AND r.serviceRequestId is NULL")
     List<ReferenceDataBo> getReferencesFromOutpatientConsultation(@Param("patientId") Integer patientId,
 																  @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds);
 
@@ -52,7 +53,8 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
             "WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
             "AND r.clinicalSpecialtyId IN (:clinicalSpecialtyIds) " +
-			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId)")
+			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
+			"AND r.serviceRequestId IS NULL")
     List<ReferenceDataBo> getReferencesFromOdontologyConsultation(@Param("patientId") Integer patientId,
 																  @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds);
 
