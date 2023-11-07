@@ -76,6 +76,7 @@ import { PrintAmbulatoriaComponent } from './routes/print-ambulatoria/print-ambu
 import { SearchSnomedConceptComponent } from './dialogs/search-snomed-concept/search-snomed-concept.component';
 import { ProblemsOptionsMenuComponent } from './components/problems-options-menu/problems-options-menu.component';
 import { AmendProblemComponent } from './dialogs/amend-problem/amend-problem.component';
+import { AmendedProblemsComponent } from './components/amended-problems/amended-problems.component';
 
 @NgModule({
 	declarations: [
@@ -133,6 +134,7 @@ import { AmendProblemComponent } from './dialogs/amend-problem/amend-problem.com
 		SearchSnomedConceptComponent,
   		ProblemsOptionsMenuComponent,
   		AmendProblemComponent,
+		AmendedProblemsComponent,
 	],
 	imports: [
 		CommonModule,

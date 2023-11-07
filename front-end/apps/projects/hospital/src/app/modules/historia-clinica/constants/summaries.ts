@@ -106,6 +106,11 @@ export const PROBLEMAS_ANTECEDENTES: SummaryHeader = {
 	matIcon: 'error_outline'
 };
 
+export const PROBLEMAS_POR_ERROR: SummaryHeader = {
+	title: 'Registros incorrectos',
+	matIcon: 'report_problem'
+};
+
 export const PROBLEMAS_INTERNACION: SummaryHeader = {
 	title: 'ambulatoria.paciente.problemas.INTERNACION',
 	matIcon: 'check'

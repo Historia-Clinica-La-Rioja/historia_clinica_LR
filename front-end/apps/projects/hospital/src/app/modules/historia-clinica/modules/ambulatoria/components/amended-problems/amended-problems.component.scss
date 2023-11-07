@@ -1,0 +1,10 @@
+.label {
+    width: fit-content;
+    margin-bottom: 10px;
+}
+
+.date {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}

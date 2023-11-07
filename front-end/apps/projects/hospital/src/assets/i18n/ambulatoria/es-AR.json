@@ -375,6 +375,7 @@
                     "OBSERVATIONS": "Observaciones*",
                     "OK_BUTTON": "Marcar como registro incorrecto",
                     "BACK_BUTTON": "Volver",
+                    "AMENDED_PROBLEMS": "Registros incorrectos",
                     "error": {
                         "TITLE": "No se puede marcar el registro como incorrecto",
                         "OK_BUTTON": "Aceptar"
