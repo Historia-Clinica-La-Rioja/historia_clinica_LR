@@ -37,6 +37,7 @@ import net.pladema.staff.domain.ProfessionalLicenseNumberBo;
 import net.pladema.staff.service.HealthcareProfessionalService;
 import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -110,7 +111,7 @@ public class CreateServiceRequestPdf {
 
 	private EmergencyEpisodePatientBedRoomBo getEmergencyEpisodeLastBed(Integer institutionId, Integer patientId, ServiceRequestBo serviceRequestBo) {
 		if (serviceRequestBo.getAssociatedSourceTypeId().equals(SourceType.EMERGENCY_CARE)) {
-			Integer emergencyId = emergencyCareEpisodeService.emergencyCareEpisodeInProgressByInstitution(institutionId, patientId).getId();
+			Integer emergencyId = emergencyCareEpisodeService.getEmergencyEpisodeEpisodeIdByDate(institutionId, patientId, serviceRequestBo.getRequestDate());
 			if (emergencyId != null)
 				return fetchLastBedByEmergencyEpisodePatientDate.run(emergencyId, serviceRequestBo.getRequestDate(), institutionId);
 		}
@@ -119,7 +120,7 @@ public class CreateServiceRequestPdf {
 
 	private InternmentPatientBedRoomBo getInternmentLastBed(Integer institutionId, Integer patientId, ServiceRequestBo serviceRequestBo) {
 		if (serviceRequestBo.getAssociatedSourceTypeId().equals(SourceType.HOSPITALIZATION)) {
-			Integer internmentEpisodeId = internmentPatientService.internmentEpisodeInProcess(institutionId, patientId).getId();
+			Integer internmentEpisodeId = internmentPatientService.getInternmentEpisodeIdByDate(institutionId, patientId, serviceRequestBo.getRequestDate());
 			if (internmentEpisodeId != null)
 				return fetchLastBedByInternmentPatientDate.run(internmentEpisodeId, serviceRequestBo.getRequestDate());
 		}

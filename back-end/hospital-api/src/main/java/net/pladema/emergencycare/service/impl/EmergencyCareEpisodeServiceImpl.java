@@ -31,6 +31,8 @@ import net.pladema.patient.controller.service.PatientExternalService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ValidationException;
@@ -229,6 +231,14 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 		Boolean result = emergencyCareEpisodeRepository.episodeHasEvolutionNote(episodeId);
 		LOG.debug(OUTPUT, result);
 		return result;
+	}
+
+	@Override
+	public Integer getEmergencyEpisodeEpisodeIdByDate(Integer institutionId, Integer patientId, LocalDateTime date) {
+		Page<Integer> id = emergencyCareEpisodeRepository.getInternmentEpisodeIdByDate(institutionId, patientId, date, PageRequest.of(0, 1));
+		if (!id.getContent().isEmpty())
+			return id.getContent().get(0);
+		return null;
 	}
 
 	private void validateUpdate(EmergencyCareEpisode persisted, EmergencyCareBo toUpdate){

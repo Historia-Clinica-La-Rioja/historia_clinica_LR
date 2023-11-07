@@ -24,12 +24,11 @@ public interface HistoricPatientBedRelocationRepository extends SGXAuditableEnti
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.establishment.service.domain.InternmentPatientBedRoomBo(b.bedNumber, r.description) " +
 			"FROM HistoricPatientBedRelocation hpbr " +
-			"JOIN InternmentEpisode ie ON hpbr.internmentEpisodeId = ie.id " +
-			"JOIN Bed b ON hpbr.destinationBedId = b.id " +
+			"JOIN Bed b ON hpbr.originBedId = b.id " +
 			"JOIN Room r ON b.roomId = r.id " +
-			"WHERE hpbr.creationable.createdOn <= :requestDate " +
-			"AND ie.id = :internmentId " +
-			"ORDER BY hpbr.relocationDate DESC")
+			"WHERE hpbr.creationable.createdOn >= :requestDate " +
+			"AND hpbr.internmentEpisodeId = :internmentId " +
+			"ORDER BY hpbr.creationable.createdOn ASC")
 	Page<InternmentPatientBedRoomBo> getLastBedByInternmentPatientDate(@Param("internmentId") Integer internmentId,
 																	   @Param("requestDate") LocalDateTime requestDate,
 																	   Pageable pageable);

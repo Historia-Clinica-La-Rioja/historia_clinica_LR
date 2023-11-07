@@ -9,12 +9,15 @@ import net.pladema.emergencycare.repository.domain.ProfessionalPersonVo;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
 import net.pladema.emergencycare.repository.entity.EmergencyCareState;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -232,5 +235,16 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 			" or ece.emergencyCareStateId = " + EmergencyCareState.CON_ALTA_MEDICA + " ) ")
 	boolean existsActiveEpisodeByPatientId(@Param("patientId") Integer patientId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT ep.id " +
+			"FROM EmergencyCareEpisode ep " +
+			"WHERE ep.institutionId = :institutionId " +
+			"AND ep.patientId = :patientId " +
+			"AND ep.creationable.createdOn <= :date " +
+			"ORDER BY ep.creationable.createdOn DESC")
+	Page<Integer> getInternmentEpisodeIdByDate(@Param("institutionId") Integer institutionId,
+											   @Param("patientId") Integer patientId,
+											   @Param("date") LocalDateTime date,
+											   Pageable pageable);
 
 }
