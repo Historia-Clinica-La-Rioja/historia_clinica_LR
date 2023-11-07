@@ -283,6 +283,13 @@
                     "SUCCESS": "El documento de contrarreferencia se guardó exitosamente"
                 }
             },
+			"surgical-report": {
+				"diagnosis": {
+					"TITLE": "Diagnósticos",
+					"PRE_SURGERY": "Diagnóstico Pre-Operatorio",
+					"ADD": "+ Agregar otro diagnóstico"
+				}
+			},
             "problemas": {
                 "TAB_LABEL": "Problemas",
                 "TITLE": "Problemas y evoluciones",

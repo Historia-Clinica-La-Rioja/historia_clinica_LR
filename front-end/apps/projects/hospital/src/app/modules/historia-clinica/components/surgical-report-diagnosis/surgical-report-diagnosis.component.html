@@ -1,0 +1,34 @@
+<app-new-consultation-expansion-section id="diagnosticos"
+	*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+	[title]="'ambulatoria.paciente.surgical-report.diagnosis.TITLE' | translate" icon="error_outlined" [collapsed]="false" [hideBorder]="true">
+
+	<form [formGroup]="form">
+		<mat-form-field appearance="outline">
+			<mat-select id="diagnosis-select" formControlName="diagnosis"
+				placeholder="{{'ambulatoria.paciente.surgical-report.diagnosis.PRE_SURGERY' | translate}}" (selectionChange)="setDiagnosis($event.value)">
+				<mat-option *ngFor="let diagnose of diagnosis" [value]="diagnose">
+					{{diagnose.snomed.pt}}
+				</mat-option>
+				<mat-option (click)="addDiagnosis()">
+					<button id="clear_identification_type" type="button" mat-button color="primary">
+						{{'ambulatoria.paciente.surgical-report.diagnosis.ADD' | translate}}
+					</button>
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<app-titled-content-card *ngIf="selectedDiagnosis?.length" [title]="'ambulatoria.paciente.surgical-report.diagnosis.PRE_SURGERY' | translate">
+			<div *ngFor="let diagnose of selectedDiagnosis; index as i; last as isLast">
+				<div fxLayout="row" fxLayoutAlign="space-between center">
+					<div fxLayout="column">
+						<span>{{ diagnose.snomed.pt }}</span>
+					</div>
+					<button type="button" mat-icon-button color="warn" (click)="deleteDiagnose(i)">
+						<mat-icon>delete_outline</mat-icon>
+					</button>
+				</div>
+				<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+			</div>
+		</app-titled-content-card>
+	</form>
+</app-new-consultation-expansion-section>

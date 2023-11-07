@@ -1,3 +1,5 @@
 <app-dock-popup [dockPopupRef]="dockPopupRef" [header]="{ title:'Parte Quirúrgico'} ">
-
+	<div body fxLayout="column" fxLayoutGap="20px">
+		<app-surgical-report-diagnosis [diagnosis]="diagnosis"></app-surgical-report-diagnosis>
+	</div>
 </app-dock-popup>

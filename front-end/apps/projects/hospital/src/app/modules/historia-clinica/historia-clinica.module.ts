@@ -66,6 +66,7 @@ import { SurgicalReportDockPopupComponent } from './components/surgical-report-d
 import { ReferenceStateLabelComponent } from './components/reference-state-label/reference-state-label.component';
 import { PersonalHistoriesBackgroundListComponent } from './components/personal-histories-background-list/personal-histories-background-list.component';
 import { PersonalHistoriesSummaryComponent } from './components/personal-histories-summary/personal-histories-summary.component';
+import { SurgicalReportDiagnosisComponent } from './components/surgical-report-diagnosis/surgical-report-diagnosis.component';
 
 @NgModule({
 	declarations: [
@@ -129,6 +130,7 @@ import { PersonalHistoriesSummaryComponent } from './components/personal-histori
   		PersonalHistoriesBackgroundListComponent,
     	PersonalHistoriesSummaryComponent,
   		SurgicalReportDockPopupComponent,
+		SurgicalReportDiagnosisComponent,
 	],
 	imports: [
 		CommonModule,
