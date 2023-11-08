@@ -1,4 +1,4 @@
-package net.pladema.medicalconsultation.virtualConsultation.application.changeResponsibleProfessionalOfVirtualConsultationService;
+package net.pladema.medicalconsultation.virtualConsultation.application.changeVirtualConsultationResponsible;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @AllArgsConstructor
 @Service
-public class ChangeResponsibleProfessionalOfVirtualConsultationServiceImpl implements ChangeResponsibleProfessionalOfVirtualConsultationService {
+public class ChangeVirtualConsultationResponsible {
 
 	private final ObjectMapper objectMapper;
 
@@ -20,7 +20,6 @@ public class ChangeResponsibleProfessionalOfVirtualConsultationServiceImpl imple
 
 	private final VirtualConsultationRepository virtualConsultationRepository;
 
-	@Override
 	public Boolean run(Integer virtualConsultationId, Integer responsibleHealthcareProfessionalId) throws JsonProcessingException {
 		log.debug("input parameters -> virtualConsultationId{}, responsibleHealthcareProfessionalId{}", virtualConsultationId, responsibleHealthcareProfessionalId);
 		virtualConsultationRepository.updateResponsibleId(virtualConsultationId,responsibleHealthcareProfessionalId);

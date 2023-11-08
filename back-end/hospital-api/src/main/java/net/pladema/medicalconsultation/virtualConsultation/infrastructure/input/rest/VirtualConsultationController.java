@@ -5,8 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
-import net.pladema.medicalconsultation.virtualConsultation.application.changeResponsibleProfessionalOfVirtualConsultationService.ChangeResponsibleProfessionalOfVirtualConsultationService;
+import net.pladema.medicalconsultation.virtualConsultation.application.changeVirtualConsultationResponsible.ChangeVirtualConsultationResponsible;
 import net.pladema.medicalconsultation.virtualConsultation.application.getResponsibleProfessionalService.GetResponsibleProfessionalService;
 import net.pladema.medicalconsultation.virtualConsultation.application.notifyVirtualConsultationAcceptedCall.NotifyVirtualConsultationAcceptedCallService;
 import net.pladema.medicalconsultation.virtualConsultation.application.notifyVirtualConsultationCancelledCall.NotifyVirtualConsultationCancelledCallService;
@@ -14,12 +13,10 @@ import net.pladema.medicalconsultation.virtualConsultation.application.notifyVir
 
 import net.pladema.medicalconsultation.virtualConsultation.application.notifyVirtualConsultationRejectedCall.NotifyVirtualConsultationRejectedCallService;
 import net.pladema.medicalconsultation.virtualConsultation.domain.VirtualConsultationFilterBo;
-import net.pladema.medicalconsultation.virtualConsultation.domain.VirtualConsultationResponsibleProfessionalChangeBo;
 import net.pladema.medicalconsultation.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationFilterDto;
 
 import net.pladema.medicalconsultation.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationResponsibleDataDto;
 import net.pladema.medicalconsultation.virtualConsultation.infrastructure.mapper.VirtualConsultationMapper;
-import net.pladema.staff.controller.dto.ProfessionalDto;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -88,7 +85,7 @@ public class VirtualConsultationController {
 
 	private final ChangeVirtualConsultationStatusService changeVirtualConsultationStatusService;
 
-	private final ChangeResponsibleProfessionalOfVirtualConsultationService changeResponsibleProfessionalOfVirtualConsultationService;
+	private final ChangeVirtualConsultationResponsible changeVirtualConsultationResponsible;
 
 	private final ObjectMapper objectMapper;
 
@@ -276,7 +273,7 @@ public class VirtualConsultationController {
 	public Boolean transferResponsibleProfessionaltOfVirtualConsultation(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId,
 											   @RequestBody @Valid Integer responsibleHealthcareProfessionalId) throws JsonProcessingException {
 		log.debug("Input parameters -> virtualConsultationId {}, responsibleProfessionalId {}", virtualConsultationId, responsibleHealthcareProfessionalId);
-		Boolean result = changeResponsibleProfessionalOfVirtualConsultationService.run(virtualConsultationId, responsibleHealthcareProfessionalId);
+		Boolean result = changeVirtualConsultationResponsible.run(virtualConsultationId, responsibleHealthcareProfessionalId);
 		log.debug("Output -> {}", result);
 		return result;
 	}

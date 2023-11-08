@@ -1,8 +1,0 @@
-package net.pladema.medicalconsultation.virtualConsultation.application.changeResponsibleProfessionalOfVirtualConsultationService;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-public interface ChangeResponsibleProfessionalOfVirtualConsultationService {
-
-	Boolean run (Integer virtualConsultationId, Integer responsibleHealthcareProfessionalId) throws JsonProcessingException;
-}
