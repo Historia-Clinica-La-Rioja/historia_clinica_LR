@@ -825,10 +825,9 @@ export class AppointmentComponent implements OnInit {
 
 	cancelObservation(): void {
 		this.hideObservationForm = true;
-		if (!this.observation)
-			this.hideObservationTitle = true;
-		else
-			this.hideObservationTitle = false;
+		this.hideObservationTitle = !this.observation;
+		this.formObservations.controls.observation.setValue(this.observation);
+		this.formObservations.controls.observation.markAsUntouched();
 	}
 
 	copied() {
