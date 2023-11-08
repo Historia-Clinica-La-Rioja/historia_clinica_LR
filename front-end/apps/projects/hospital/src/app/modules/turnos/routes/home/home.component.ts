@@ -74,7 +74,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 	}
 
 	tabChanged(tabChangeEvent: MatTabChangeEvent): void {
-		this.tabsService.setTab(tabChangeEvent.tab.textLabel);
+		const textLabelWithoutWhiteSpace = tabChangeEvent.tab.textLabel.trim();
+		this.tabsService.setTab(textLabelWithoutWhiteSpace);
 	}
 
 }
