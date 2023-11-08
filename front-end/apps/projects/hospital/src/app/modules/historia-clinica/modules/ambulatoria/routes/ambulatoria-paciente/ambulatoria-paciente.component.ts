@@ -410,6 +410,14 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 		});
 	}
 
+
+	//FILTRO DE EDAD PARA ADULTO MAYOR
+	isAdultoMayor(): boolean {
+		const edadPaciente = this.patient.age; 
+
+		return edadPaciente > 60;
+	}
+
 	goToPatient(): void {
 		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/ambulatoria/${AppRoutes.PortalPaciente}/${this.patientId}/${HomeRoutes.Profile}`;
 		this.router.navigate([url]);
