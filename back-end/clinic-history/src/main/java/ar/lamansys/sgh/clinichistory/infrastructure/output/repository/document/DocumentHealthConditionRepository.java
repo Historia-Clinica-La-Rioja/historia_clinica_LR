@@ -3,7 +3,6 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentHealthCondition;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentHealthConditionPK;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,15 +18,17 @@ public interface DocumentHealthConditionRepository extends JpaRepository<Documen
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo(" +
-            "hc.id, s, hc.statusId, hc.main, hc.verificationStatusId, " +
+            "hc.id, s, hc.statusId, ccs.description, hc.main, " +
+            "hc.verificationStatusId, cvs.description, " +
             "hc.problemId, hc.startDate, " +
             "n.id as noteId, n.description as note) " +
             "FROM DocumentHealthCondition dh " +
             "JOIN HealthCondition hc ON (dh.pk.healthConditionId = hc.id) " +
             "JOIN Snomed s ON (s.id = hc.snomedId) " +
             "LEFT JOIN Note n ON (n.id = hc.noteId) " +
-            "WHERE dh.pk.documentId = :documentId " +
-            "AND NOT hc.verificationStatusId = ('" + ConditionVerificationStatus.ERROR + "')")
+            "JOIN ConditionClinicalStatus ccs ON (hc.statusId = ccs.id) " +
+            "JOIN ConditionVerificationStatus cvs ON (hc.verificationStatusId = cvs.id) " +
+            "WHERE dh.pk.documentId = :documentId")
     List<HealthConditionVo> getHealthConditionFromDocument(@Param("documentId") Long documentId);
 
     @Transactional(readOnly = true)
