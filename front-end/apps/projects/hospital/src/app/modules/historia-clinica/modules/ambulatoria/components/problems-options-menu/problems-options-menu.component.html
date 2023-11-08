@@ -4,9 +4,7 @@
     <mat-icon>more_vert</mat-icon>
 </button>
 <mat-menu #menu="matMenu" data-id="menu-dialog">
-    <button mat-menu-item (click)="filterByProblemOnProblemClick()" data-id="view-datails">
-        <span [translate]="'ambulatoria.paciente.problemas.VIEW_DETAIL'"></span>
-    </button>
+    <app-view-datails-btn [problem]="problem" (setProblemOnHistoric)="viewProblemDetails()"></app-view-datails-btn>
     <button *ngIf="hasNewConsultationEnabled$ | async" mat-menu-item
         (click)="openNuevaConsulta()" data-id="new-consultation">
         <span

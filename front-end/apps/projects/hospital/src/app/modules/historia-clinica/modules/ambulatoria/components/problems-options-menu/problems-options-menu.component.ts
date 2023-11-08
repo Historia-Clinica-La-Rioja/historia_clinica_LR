@@ -8,7 +8,6 @@ import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-do
 import { Observable, Subject, take } from 'rxjs';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { SolveProblemComponent } from '@historia-clinica/dialogs/solve-problem/solve-problem.component';
-import { HistoricalProblemsFacadeService } from '../../services/historical-problems-facade.service';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { AmendProblemComponent, AmendProblemData } from '../../dialogs/amend-problem/amend-problem.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
@@ -42,7 +41,6 @@ export class ProblemsOptionsMenuComponent implements OnInit {
 		private ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
         public dialog: MatDialog,
 		private injector: Injector,
-		private readonly historicalProblemsFacadeService: HistoricalProblemsFacadeService,
 		private readonly outpatientConsultationService: OutpatientConsultationService,
 		private readonly featureFlagService: FeatureFlagService,
         ) {
@@ -109,14 +107,7 @@ export class ProblemsOptionsMenuComponent implements OnInit {
 		});
 	}
 
-    filterByProblemOnProblemClick() {
-		this.historicalProblemsFacadeService.sendHistoricalProblemsFilter({
-			specialty: null,
-			professional: null,
-			problem: this.problem.snomed.sctid,
-			consultationDate: null,
-			referenceStateId: null,
-		});
+    viewProblemDetails() {
         this.setProblemOnHistoric.next(this.problem);
     }
 
