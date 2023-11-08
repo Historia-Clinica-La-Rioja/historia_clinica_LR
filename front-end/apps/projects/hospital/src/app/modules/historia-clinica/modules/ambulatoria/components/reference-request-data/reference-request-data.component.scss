@@ -1,0 +1,23 @@
+.container {
+	width: 100%;
+	height: 100%;
+	display: inline-flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	gap: 12px;
+}
+
+.stretch-container {
+	align-self: stretch;
+}
+
+.row-container {
+	width: 100%;
+	margin-right: 12px;
+}
+
+.download-file {
+	width: 100%;
+}
+

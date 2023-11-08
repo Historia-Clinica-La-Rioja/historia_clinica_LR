@@ -1,0 +1,43 @@
+<div *ngIf="reference" class="container" id="main-container" fxLayoutGap="12px">
+
+	<h2 class="capitalize">{{reference.dto.procedure.pt}}</h2>
+
+	<app-colored-label [description]="status.description | uppercase" [color]="status.color"
+		id="colored-label"></app-colored-label>
+
+	<app-colored-icon-text id="closure-type" [coloredIconText]="reference.closureType"></app-colored-icon-text>
+
+	<div class="stretch-container" fxLayout="column" fxLayoutGap="12px" id="refernece-info">
+		<div class="row-container" id="refernece-info-first">
+			<app-identifier-cases fxFlex="50%" [position]="Position.ROW" [showLegend]="true"
+				[description]="reference.problems" [identifierCase]="identiferCases.PROBLEM"
+				id="problem"></app-identifier-cases>
+
+			<app-priority fxFlex="50%" fxLayoutAlign="start" [priority]="reference.priority"
+				id="priority"></app-priority>
+		</div>
+
+		<div class="row-container" id="refernece-info-second">
+			<app-identifier-cases fxFlex="50%" [position]="Position.ROW" [showLegend]="true"
+				[description]="reference.dto?.clinicalSpecialtyDestination.name || '-'"
+				[identifierCase]="identiferCases.SPECIALTY" id="specialty"></app-identifier-cases>
+			<app-identifier-cases fxFlex="50%" [position]="Position.ROW" [showLegend]="true"
+				[description]="reference.dto.careLine.description || '-'" [identifierCase]="identiferCases.CARE_LINE"
+				id="care-line"></app-identifier-cases>
+		</div>
+	</div>
+
+	<span id="note">{{ reference.dto.note }}</span>
+
+	<div *ngFor="let file of reference.dto.files">
+		<a mat-button color="primary" (click)="downloadFile(file)">
+			{{file.fileName}}
+		</a>
+	</div>
+
+	<div class="row-container" fxLayoutAlign="space-between" id="refernece-info-third">
+		<span class="grey" id="professional-name">{{reference.dto.professionalFullName}} </span>
+		<span class="grey" id="date">{{reference.dto.date | viewDateDto: 'localdatetime' | dateFormat:
+			'datetime'}}hs</span>
+	</div>
+</div>

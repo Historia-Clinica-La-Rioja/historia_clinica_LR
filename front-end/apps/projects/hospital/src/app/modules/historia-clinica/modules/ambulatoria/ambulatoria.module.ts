@@ -79,6 +79,8 @@ import { AmendProblemComponent } from './dialogs/amend-problem/amend-problem.com
 import { AmendedProblemsComponent } from './components/amended-problems/amended-problems.component';
 import { ViewDatailsBtnComponent } from './components/view-datails-btn/view-datails-btn.component';
 import { AmendedProblemsInformationComponent } from './components/amended-problems-information/amended-problems-information.component';
+import { ReferenceRequestDataComponent } from './components/reference-request-data/reference-request-data.component';
+import { IdentifierCasesComponent } from '../../../hsi-components/identifier-cases/identifier-cases.component';
 
 @NgModule({
 	declarations: [
@@ -139,6 +141,7 @@ import { AmendedProblemsInformationComponent } from './components/amended-proble
 		AmendedProblemsComponent,
   		ViewDatailsBtnComponent,
     	AmendedProblemsInformationComponent,
+ 		ReferenceRequestDataComponent,
 	],
 	imports: [
 		CommonModule,
@@ -158,7 +161,8 @@ import { AmendedProblemsInformationComponent } from './components/amended-proble
 		EstudioModule,
 		TurnosModule,
 		ClapModule,
-		GuardiaModule
+		GuardiaModule,
+		IdentifierCasesComponent
 	],
 	providers: [
 		AmbulatoriaSummaryFacadeService,

@@ -1,10 +1,11 @@
-import { ClinicalSpecialtyDto, ReferenceAppointmentDto, ReferencePatientDto, ReferenceReportDto, SharedSnomedDto } from "@api-rest/api-model";
+import { ClinicalSpecialtyDto, ReferenceAppointmentDto, ReferenceDataDto, ReferencePatientDto, ReferenceReportDto, SharedSnomedDto } from "@api-rest/api-model";
 import { PatientSummary } from "../../hsi-components/patient-summary/patient-summary.component";
 import { getColoredIconText, getPriority, getState } from "./reference.utils";
 import { TypeaheadOption } from "@presentation/components/typeahead/typeahead.component";
 import { ReferenceReport } from "@access-management/components/reference-summary/reference-summary.component";
 import { AppointmentSummary } from "@access-management/components/appointment-summary/appointment-summary.component";
 import { ContactDetails } from "@access-management/components/contact-details/contact-details.component";
+import { ReferenceCompleteData } from "@historia-clinica/modules/ambulatoria/components/reference-request-data/reference-request-data.component";
 
 export const toPatientSummary = (patient: ReferencePatientDto): PatientSummary => {
     return {
@@ -74,6 +75,15 @@ export const specialtiesToTypeaheadOptions = (specialties: ClinicalSpecialtyDto[
 export const specialtyToTypeaheadOption = (specialty: ClinicalSpecialtyDto): TypeaheadOption<any> => {
     return {
         compareValue: specialty.name,
-        value: specialty.id 
+        value: specialty.id
     }
+}
+
+export const mapToReferenceCompleteData = (referenceData: ReferenceDataDto): ReferenceCompleteData =>{
+	return {
+		dto: referenceData,
+		priority: getPriority(referenceData.priority.id),
+		closureType: getColoredIconText(referenceData.closureType),
+		problems: referenceData.problems.join(', ')
+	};
 }
