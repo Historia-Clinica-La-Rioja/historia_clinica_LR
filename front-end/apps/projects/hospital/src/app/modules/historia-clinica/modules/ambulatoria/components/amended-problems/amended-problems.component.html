@@ -66,6 +66,17 @@
                                 </div>
                             </div>
 
+                            <div fxFlex="5%">
+                                <button
+                                    *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+                                    mat-icon-button [matMenuTriggerFor]="menu">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu" data-id="menu-dialog">
+                                    <!-- <app-view-datails-btn [problem]="problem" (setProblemOnHistoric)="viewProblemDetails(problem)"></app-view-datails-btn> -->
+                                </mat-menu>
+                            </div>
+
                         </mat-list-item>
                         <mat-divider></mat-divider>
                     </div>

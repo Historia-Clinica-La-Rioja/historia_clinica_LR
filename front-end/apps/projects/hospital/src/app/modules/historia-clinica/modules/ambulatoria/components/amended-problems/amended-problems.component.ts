@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { HCEPersonalHistoryDto } from '@api-rest/api-model';
 import { PROBLEMAS_POR_ERROR } from '@historia-clinica/constants/summaries';
+import { Subject } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 
 @Component({
@@ -10,6 +11,7 @@ import { Observable } from 'rxjs/internal/Observable';
 })
 export class AmendedProblemsComponent implements OnInit {
     
+    @Output() setProblemOnHistoric = new Subject<HCEPersonalHistoryDto>();
     public amendedProblems$: Observable<HCEPersonalHistoryDto[]>;
 	public readonly problemasPorError = PROBLEMAS_POR_ERROR;
     isFilterExpanded = false;
@@ -22,5 +24,9 @@ export class AmendedProblemsComponent implements OnInit {
 
     toggleFilter() {
         this.isFilterExpanded = !this.isFilterExpanded;
+    }
+
+    viewProblemDetails(problem: HCEPersonalHistoryDto) {
+        this.setProblemOnHistoric.next(problem);
     }
 }
