@@ -30,11 +30,15 @@ public class TranscribedServiceRequestBo {
 	@Nullable
 	private String institutionName;
 
+	@Nullable
+	private String observations;
+
 	public TranscribedServiceRequestBo (TranscribedPrescriptionDto transcribedPrescriptionDto, Integer patientId){
 		this.patientId = patientId;
 		this.healthCondition =  new SnomedBo(transcribedPrescriptionDto.getHealthCondition().getSctid(), transcribedPrescriptionDto.getHealthCondition().getPt());
 		this.study = new SnomedBo(transcribedPrescriptionDto.getStudy().getSctid(), transcribedPrescriptionDto.getStudy().getPt());
 		this.healthcareProfessionalName = transcribedPrescriptionDto.getHealthcareProfessionalName();
 		this.institutionName = transcribedPrescriptionDto.getInstitutionName();
+		this.observations = transcribedPrescriptionDto.getObservations();
 	}
 }
