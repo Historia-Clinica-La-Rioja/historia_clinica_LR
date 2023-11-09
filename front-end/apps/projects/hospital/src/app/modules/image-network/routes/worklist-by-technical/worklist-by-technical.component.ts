@@ -303,7 +303,7 @@ export class WorklistByTechnicalComponent implements OnInit {
         if (this.nameSelfDeterminationFF) {
             patientName += appointment.patient.person.nameSelfDetermination?.length ? 
                         appointment.patient.person.nameSelfDetermination + ' ' :
-                        appointment.patient.person.firstName + ' ';
+                        (appointment.patient.person.firstName || '') + ' ';
         } else {
             patientName += (appointment.patient.person.firstName || '') + ' ';
         }
