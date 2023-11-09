@@ -4,7 +4,7 @@ import ar.lamansys.refcounterref.application.getreceivedreferences.GetReceivedRe
 import ar.lamansys.refcounterref.application.getreferencecompletedata.GetReferenceCompleteData;
 import ar.lamansys.refcounterref.application.getrequestedreferences.GetRequestedReferences;
 import ar.lamansys.refcounterref.domain.reference.ReferenceCompleteDataBo;
-import ar.lamansys.refcounterref.domain.report.ReferenceReportFilterBo;
+import ar.lamansys.refcounterref.infraestructure.input.ReferenceReportFilterUtils;
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.ReferenceReportDto;
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.ReferenceCompleteDataDto;
 import ar.lamansys.refcounterref.infraestructure.input.rest.mapper.GetReferenceMapper;
@@ -26,15 +26,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-
 @Slf4j
 @RequiredArgsConstructor
 @Validated
 @RequestMapping("/institutions/{institutionId}/references-report")
-@Tag(name = "Reference Report", description = "Reference Report")
+@Tag(name = "Institutional Reference Report", description = "Institutional Reference Report")
 @RestController
-public class ReferenceReportController {
+public class InstitutionalReferenceReportController {
 
 	private final GetReceivedReferences getReceivedReferences;
 
@@ -53,7 +51,7 @@ public class ReferenceReportController {
 																				 @RequestParam(name = "pageNumber") Integer pageNumber,
 																				 @RequestParam(name = "pageSize") Integer pageSize) {
 		log.debug("Input parameters -> institutionId {}, filter {}, pageNumber {}, pageSize {} ", institutionId, filter, pageNumber, pageSize);
-		var reportFilter = this.parseFilter(filter);
+		var reportFilter = ReferenceReportFilterUtils.parseFilter(filter, objectMapper);
 		reportFilter.setDestinationInstitutionId(institutionId);
 		var result = getReceivedReferences.run(reportFilter, PageRequest.of(pageNumber, pageSize))
 				.map(getReferenceMapper::toReferenceReportDto);
@@ -67,7 +65,7 @@ public class ReferenceReportController {
 																				 @RequestParam(name = "pageNumber") Integer pageNumber,
 																				 @RequestParam(name = "pageSize") Integer pageSize) {
 		log.debug("Input parameters -> institutionId {}, filter {}, pageNumber {}, pageSize {} ", institutionId, filter, pageNumber, pageSize);
-		var reportFilter = this.parseFilter(filter);
+		var reportFilter = ReferenceReportFilterUtils.parseFilter(filter, objectMapper);
 		reportFilter.setOriginInstitutionId(institutionId);
 		var result = getRequestedReferences.run(institutionId, reportFilter, PageRequest.of(pageNumber, pageSize))
 				.map(getReferenceMapper::toReferenceReportDto);
@@ -85,14 +83,4 @@ public class ReferenceReportController {
 		return ResponseEntity.ok(result);
 	}
 
-
-	private ReferenceReportFilterBo parseFilter(String filter) {
-		ReferenceReportFilterBo searchFilter = null;
-		try {
-			searchFilter = objectMapper.readValue(filter, ReferenceReportFilterBo.class);
-		} catch (IOException e) {
-			log.error(String.format("Error mapping filter: %s", filter), e);
-		}
-		return searchFilter;
-	}
 }
