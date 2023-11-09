@@ -18,14 +18,11 @@ import lombok.RequiredArgsConstructor;
 import net.pladema.clinichistory.outpatient.application.markaserroraproblem.CanBeMarkAsError;
 import net.pladema.clinichistory.outpatient.application.markaserroraproblem.MarkAsErrorAProblem;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
-import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientEvolutionSummaryDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientUpdateImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientConsultationService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientDocumentService;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.OutpatientSummaryService;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.EvolutionSummaryBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.outpatientReason.OutpatientReasonService;
@@ -83,8 +80,6 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
     @Value("${test.stress.disable.validation:false}")
     private boolean disableValidation;
-    
-    private final OutpatientSummaryService outpatientSummaryService;
 
 	private final SharedAppointmentPort sharedAppointmentPort;
 
@@ -278,18 +273,6 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         ProblemInfoDto result = outpatientConsultationMapper.fromProblemErrorBo(problemInfo);
         return ResponseEntity.ok().body(result);
     }
-
-    @GetMapping("/summary-list")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
-    public ResponseEntity<List<OutpatientEvolutionSummaryDto>> getEvolutionSummaryList(
-            @PathVariable(name = "institutionId") Integer institutionId,
-            @PathVariable(name = "patientId") Integer patientId){
-        List<EvolutionSummaryBo> evolutions = outpatientSummaryService.getSummary(patientId);
-        List<OutpatientEvolutionSummaryDto> result = outpatientConsultationMapper.fromListOutpatientEvolutionSummaryBo(evolutions);
-        LOG.debug("Get summary  => {}", result);
-        return ResponseEntity.ok(result);
-    }
-
 
 	private List<CompleteReferenceDto> mapToCompleteReferenceDto(List<ReferenceDto> references, Integer institutionId,
 											 Integer doctorId, Integer patientMedicalCoverageId,

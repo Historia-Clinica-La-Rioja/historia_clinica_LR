@@ -3,7 +3,6 @@ import { ContextService } from '@core/services/context.service';
 import { HttpClient } from '@angular/common/http';
 import {
 	CreateOutpatientDto,
-	OutpatientEvolutionSummaryDto,
 	HealthConditionNewConsultationDto,
 	ProblemInfoDto
 } from '@api-rest/api-model';
@@ -29,11 +28,6 @@ export class OutpatientConsultationService {
 	solveProblem(solvedProblem: HealthConditionNewConsultationDto, patientId: number): Observable<boolean> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/outpatient/consultations/solveProblem`;
 		return this.http.post<boolean>(url, solvedProblem);
-	}
-
-	getEvolutionSummaryList(patientId: number): Observable<OutpatientEvolutionSummaryDto[]> {
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/outpatient/consultations/summary-list`;
-		return this.http.get<OutpatientEvolutionSummaryDto[]>(url);
 	}
 
 	validateProblemAsError(patientId: number, healthConditionId: number): Observable<ProblemInfoDto[]> {
