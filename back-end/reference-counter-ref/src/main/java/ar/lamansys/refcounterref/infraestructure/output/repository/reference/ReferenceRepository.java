@@ -2,7 +2,9 @@ package ar.lamansys.refcounterref.infraestructure.output.repository.reference;
 
 import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
+import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -233,5 +235,14 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"LEFT JOIN CounterReference cr ON (r.id = cr.referenceId) " +
 			"WHERE r.id = :referenceId ")
 	Optional<ReferenceDataBo> getReferenceDataFromOdontologyConsultation(@Param("referenceId") Integer referenceId);
+
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE Reference r "
+			+ "SET r.deleteable.deleted = true "
+			+ ", r.deleteable.deletedOn = CURRENT_TIMESTAMP "
+			+ ", r.deleteable.deletedBy = ?#{ principal.userId } "
+			+ "WHERE r.id = :id" )
+	void deleteById(@Param("id") @NonNull Integer id);
 
 }

@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.outpatient.application.markaserroraproblem;
 
+import ar.lamansys.refcounterref.application.deletereference.DeleteReference;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
@@ -47,6 +48,7 @@ public class MarkAsErrorAProblem {
     private final ServiceRequestRepository serviceRequestRepository;
     private final AppointmentService appointmentService;
     private final MessageSource messageSource;
+    private final DeleteReference deleteReference;
 
     @Transactional
     public boolean run(Integer institutionId, Integer patientId, ProblemErrorBo problem) {
@@ -62,6 +64,8 @@ public class MarkAsErrorAProblem {
         this.deleteServiceRequestDocuments(problem.getServiceRequestsId());
 
         this.cancelAppointments(problem.getAppointmentsId());
+
+        this.cancelReferences(problem.getReferencesId());
 
         log.debug("Output -> {}", true);
         return true;
@@ -113,5 +117,9 @@ public class MarkAsErrorAProblem {
         appIds.forEach(appId -> appointmentService.updateState(appId, AppointmentState.CANCELLED,
                 UserInfo.getCurrentAuditor(),
                 messageSource.getMessage("app.problems.warning.cancel-appointments", null, LocaleContextHolder.getLocale())));
+    }
+
+    private void cancelReferences(List<Integer> referenceIds) {
+        referenceIds.forEach(deleteReference::run);
     }
 }

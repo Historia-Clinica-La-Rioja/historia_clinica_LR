@@ -140,6 +140,11 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 		return result;
 	}
 
+	@Override
+	public void delete(Integer referenceId) {
+		referenceRepository.deleteById(referenceId);
+	}
+
 	private List<ReferenceDataBo> setReferenceDetails(List<ReferenceDataBo> references) {
 		List<Integer> referenceIds = references.stream().map(ReferenceDataBo::getId).collect(Collectors.toList());
 		var referencesProblems = referenceHealthConditionRepository.getReferencesProblems(referenceIds);

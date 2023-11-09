@@ -18,4 +18,5 @@ public class ProblemErrorBo extends HealthConditionBo {
     private List<Integer> diagnosticReportsId;
     private List<Integer> serviceRequestsId;
     private List<Integer> appointmentsId;
+    private List<Integer> referencesId;
 }

@@ -3150,6 +3150,7 @@ export interface ProblemDto extends HealthConditionDto {
 export interface ProblemInfoDto {
     appointmentsId?: number[];
     diagnosticReportsId?: number[];
+    referencesId?: number[];
     serviceRequestsId?: number[];
 }
 

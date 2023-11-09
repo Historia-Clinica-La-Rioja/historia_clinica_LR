@@ -20,4 +20,7 @@ public class ProblemInfoDto {
 
     @Nullable
     private List<Integer> appointmentsId;
+
+    @Nullable
+    private List<Integer> referencesId;
 }

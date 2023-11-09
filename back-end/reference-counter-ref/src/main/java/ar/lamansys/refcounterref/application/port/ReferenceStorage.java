@@ -20,4 +20,6 @@ public interface ReferenceStorage {
 
 	Optional<ReferenceDataBo> getReferenceData(Integer referenceId);
 
+    void delete(Integer referenceId);
+
 }
