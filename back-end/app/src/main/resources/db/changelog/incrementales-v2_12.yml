@@ -1,5 +1,16 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v2_12 
+    - logicalFilePath: incrementales-v2_12
+
+    - changeSet:
+        id: addColumn-observations-diagnostic_report
+        author: fdemuguruza
+        changes:
+          - addColumn:
+              tableName: diagnostic_report
+              columns:
+                - column:
+                    name: observations
+                    type: text
 
     - changeSet:
         id: add-without-triage-triage-category
