@@ -44,7 +44,7 @@ public class RebuildFile {
 	private void assertSignatureStatus(Long id){
 		documentFileRepository.findById(id)
 				.ifPresent(file -> {
-					if(!file.getSignatureStatusId().equals(ESignatureStatus.PENDING.getId()))
+					if(!file.getSignatureStatusId().equals(ESignatureStatus.PENDING.getId()) && !file.getSignatureStatusId().equals(ESignatureStatus.CANNOT_BE_SIGNED.getId()))
 						throw new RebuildFileException(RebuildFileEnumException.DOCUMENT_SIGNED, "No es posible regenerar debido a que el documento tiene una firma digital vigente.");
 				});
 	}
