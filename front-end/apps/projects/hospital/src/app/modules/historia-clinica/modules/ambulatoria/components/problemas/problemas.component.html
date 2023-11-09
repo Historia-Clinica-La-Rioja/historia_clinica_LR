@@ -137,7 +137,7 @@
 							</div>
 
 							<div fxLayout="row" *ngFor="let problem of (solvedProblems$ | async)">
-								<mat-list-item (click)="filterByProblemOnProblemClick(problem)">
+								<mat-list-item class="solved-problem-item" (click)="filterByProblemOnProblemClick(problem)">
 									<div fxFlex="35%">
 										<span mat-line class="capitalize-first-letter">
 											{{ problem.snomed.pt }}
@@ -210,7 +210,7 @@
 			</div>
 			<app-emergency-care-problems [patientId]="patientId" (goToEpisode)="goToEpisode($event)"></app-emergency-care-problems>
 
-			<app-amended-problems></app-amended-problems>
+			<app-amended-problems (setProblemOnHistoric)="scrollToHistoric()"></app-amended-problems>
 		</div>
 	</section>
 

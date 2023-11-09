@@ -10,10 +10,9 @@
         </ng-template>
     </div>
     <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" *ngIf="isFilterExpanded">
-        <div fxFlex="50%">
+        <div fxFlex="50%" class="amend-problems-card">
             <app-summary-card id="amended_problems" [header]="problemasPorError" [editable]="false">
-                <!-- <mat-list *ngIf="(amendedProblems$ | async )?.length > 0 else noInfo"> -->
-                <mat-list>
+                <mat-list *ngIf="amendedProblems.length > 0 else noInfo">
                     <div fxLayout="row">
                         <mat-list-item class="problems-table-header">
                             <div fxFlex="35%"><span class="problems-table-header-text"
@@ -31,38 +30,34 @@
                         </mat-list-item>
                     </div>
 
-                    <div fxLayout="row">
-                    <!-- <div fxLayout="row" *ngFor="let problem of (amendedProblems$ | async)"> -->
+                    <div fxLayout="row" *ngFor="let problem of amendedProblems">
                         <mat-list-item>
                             <div fxFlex="35%">
                                 <span mat-line class="capitalize-first-letter">
-                                    <!-- {{ problem.snomed.pt }} -->
-                                    Problem
+                                    {{ problem.data.snomed.pt }}
                                 </span>
                             </div>
                             <div fxFlex="20%">
-                                <!-- {{getSeverityTypeDisplayByCode(problem.severity)}} -->
-                                Severity
+                                {{ problem.severity }}
                             </div>
 
                             <div fxFlex="20%" id="start-date">
-                                <!-- <div class="date" fxShow="false" fxShow.md="true"
+                                <div class="date" fxShow="false" fxShow.md="true"
                                     matTooltip="{{ problem.startDate }}">
                                     {{problem.startDate}}
-                                </div> -->
+                                </div>
                                 <div class="date" fxShow.md="false">
-                                    <!-- {{problem.startDate}} --> Fecha inicio
+                                    {{problem.startDate}}
                                 </div>
                             </div>
 
                             <div fxFlex="20%">
-                                <!-- <div class="date" fxShow="false" fxShow.md="true"
-                                    matTooltip="{{ problem.inactivationDate }}">
-                                    {{problem.inactivationDate}}
-                                </div> -->
+                                <div class="date" fxShow="false" fxShow.md="true"
+                                    matTooltip="{{ problem.endDate }}">
+                                    {{problem.endDate}}
+                                </div>
                                 <div class="date" fxShow.md="false">
-                                    <!-- {{problem.inactivationDate}} -->
-                                    Fecha fin
+                                    {{problem.endDate}}
                                 </div>
                             </div>
 
@@ -73,7 +68,7 @@
                                     <mat-icon>more_vert</mat-icon>
                                 </button>
                                 <mat-menu #menu="matMenu" data-id="menu-dialog">
-                                    <!-- <app-view-datails-btn [problem]="problem" (setProblemOnHistoric)="viewProblemDetails(problem)"></app-view-datails-btn> -->
+                                    <app-view-datails-btn [problem]="problem.data" (setProblemOnHistoric)="viewProblemDetails(problem.data)"></app-view-datails-btn>
                                 </mat-menu>
                             </div>
 

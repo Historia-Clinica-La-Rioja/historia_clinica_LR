@@ -8,3 +8,11 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+
+.amend-problems-card {
+	padding-right: 10px;
+
+	@media screen and (max-width: 960px) {
+		padding-right: 0px;
+	}
+}
