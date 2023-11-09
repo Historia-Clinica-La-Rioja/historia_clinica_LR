@@ -31,4 +31,10 @@ public interface ReferenceHealthConditionRepository extends JpaRepository<Refere
             "AND rhc.pk.referenceId NOT IN (SELECT cr.referenceId FROM CounterReference cr)")
     List<ReferenceProblemBo> getReferencesProblemsByPatientId(@Param("patientId") Integer patientId);
 
+    @Transactional(readOnly = true)
+    @Query(value = "SELECT rhc.pk.referenceId " +
+            "FROM ReferenceHealthCondition rhc " +
+            "WHERE rhc.pk.healthConditionId = :healthConditionId")
+    List<Integer> getReferenceIdsByHealthConditionId(@Param("healthConditionId") Integer healthConditionId);
+
 }

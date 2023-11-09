@@ -55,7 +55,7 @@ public class CanBeMarkAsError {
 
         this.assertContextValidDiagnosticReports(studies);
 
-        var appointmentsRDI = getDiagnosticImagingOrders(studies).stream()
+        var appointmentsRDI = this.getDiagnosticImagingOrders(studies).stream()
                 .map(appointmentOrderImageService::getAppointmentIdByOrderId)
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
