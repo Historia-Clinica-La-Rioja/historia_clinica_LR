@@ -21,7 +21,7 @@ public class DiagnosticReportInfoMapper {
     private static final Logger LOG = LoggerFactory.getLogger(DiagnosticReportInfoMapper.class);
 
     @Named("parseTo")
-    public DiagnosticReportInfoDto parseTo(DiagnosticReportBo diagnosticReportBo, ProfessionalDto professionalDto){
+    public DiagnosticReportInfoDto parseTo(DiagnosticReportBo diagnosticReportBo, ProfessionalDto professionalDto, ReferenceRequestDto referenceRequestDto){
         LOG.debug("input -> diagnosticReportBo{},a professionalDto {}", diagnosticReportBo, professionalDto);
         DiagnosticReportInfoDto result = new DiagnosticReportInfoDto();
         result.setId(diagnosticReportBo.getId());
@@ -35,6 +35,7 @@ public class DiagnosticReportInfoMapper {
 		result.setCategory(diagnosticReportBo.getCategory());
 		result.setSource(diagnosticReportBo.getSource());
 		result.setSourceId(diagnosticReportBo.getSourceId());
+		result.setReferenceRequestDto(referenceRequestDto);
         LOG.debug("Output: {}", result);
         return result;
     }

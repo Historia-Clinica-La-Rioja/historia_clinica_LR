@@ -6,13 +6,16 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterrefer
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceRequestDto;
 
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.util.List;
 
-@Mapper
+@Mapper(uses = {LocalDateMapper.class})
 public interface ReferenceMapper {
 
         @Named("fromCompleteReferenceDto")
@@ -23,6 +26,8 @@ public interface ReferenceMapper {
         List<CompleteReferenceBo> fromCompleteReferenceDtoList(List<CompleteReferenceDto> completeReferenceDtoList);
 
 		@Named("fromReferenceRequestBo")
+		@Mapping(target = "closureTypeId", source="closureType.id")
+		@Mapping(target = "closureTypeDescription", source="closureType.description")
 		ReferenceRequestDto fromReferenceRequestBo(ReferenceRequestBo referenceRequestBo);
 
 }

@@ -55,5 +55,6 @@ public class DiagnosticReportInfoDto {
         this.serviceRequestId = diagnosticReportInfoDto.getServiceRequestId();
         this.creationDate = diagnosticReportInfoDto.creationDate;
 		this.category = diagnosticReportInfoDto.getCategory();
+		this.referenceRequestDto = diagnosticReportInfoDto.getReferenceRequestDto();
     }
 }

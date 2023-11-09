@@ -1,5 +1,7 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,5 +24,9 @@ public class ReferenceRequestDto implements Serializable {
 	private String careLineDescription;
 	private String priority;
 	private String observation;
+	private Short closureTypeId;
+	private String closureTypeDescription;
+	private DateTimeDto closureDateTime;
+	private ProfessionalCompleteDto professionalInfo;
 
 }

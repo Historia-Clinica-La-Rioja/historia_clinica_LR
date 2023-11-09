@@ -3232,6 +3232,7 @@ export interface ProfessionalCompleteDto {
     firstName: string;
     id: number;
     lastName: string;
+    middleNames: string;
     nameSelfDetermination: string;
     otherLastNames: string;
     personId: number;
@@ -3508,9 +3509,13 @@ export interface ReferenceRequestDto extends Serializable {
     careLineId: number;
     clinicalSpecialtyId: number;
     clinicalSpecialtyName: string;
+    closureDateTime: DateTimeDto;
+    closureTypeDescription: string;
+    closureTypeId: number;
     id: number;
     observation: string;
     priority: string;
+    professionalInfo: ProfessionalCompleteDto;
 }
 
 export interface ReferenceServiceRequestProcedureDto {

@@ -277,7 +277,8 @@ public class ServiceRequestController {
 
         DiagnosticReportBo resultService = diagnosticReportInfoService.run(diagnosticReportId);
         ProfessionalDto professionalDto = healthcareProfessionalExternalService.findProfessionalByUserId(resultService.getUserId());
-        DiagnosticReportInfoDto driDto = diagnosticReportInfoMapper.parseTo(resultService, professionalDto);
+		ReferenceRequestDto reference = sharedReferenceCounterReference.getReferenceByServiceRequestId(resultService.getEncounterId()).orElse(null);
+		DiagnosticReportInfoDto driDto = diagnosticReportInfoMapper.parseTo(resultService, professionalDto, reference);
         DiagnosticReportInfoWithFilesDto result = new DiagnosticReportInfoWithFilesDto(
                 driDto,
                 fileMapper.parseToList(resultService.getFiles()));

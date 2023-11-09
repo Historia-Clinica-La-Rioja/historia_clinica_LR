@@ -19,6 +19,7 @@ public class ProfessionalCompleteDto {
 	private Integer id;
 	private Integer personId;
     private String firstName;
+	private String middleNames;
     private String lastName;
 	private String nameSelfDetermination;
 	private List<ProfessionCompleteDto> professions;

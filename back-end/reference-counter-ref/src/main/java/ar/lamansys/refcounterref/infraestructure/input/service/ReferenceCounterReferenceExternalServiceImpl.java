@@ -14,6 +14,7 @@ import ar.lamansys.refcounterref.infraestructure.input.service.mapper.CounterRef
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.ReferenceMapper;
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.ReferenceProblemMapper;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referenceappointment.ReferenceAppointmentRepository;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CompleteReferenceDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryProcedureDto;
@@ -50,6 +51,7 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
     private final ReferenceProblemMapper referenceProblemMapper;
     private final ReferenceAppointmentRepository referenceAppointmentRepository;
 	private final GetReferenceByServiceRequest getReferenceByServiceRequest;
+	private final SharedStaffPort sharedStaffPort;
 
     @Override
     public List<ReferenceCounterReferenceFileDto> getReferenceFilesData(Integer referenceId) {
@@ -121,6 +123,8 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
 		Optional<ReferenceRequestDto> result = Optional.empty();
 		if (reference.isPresent()) {
 			result = Optional.of(referenceMapper.fromReferenceRequestBo(reference.get()));
+			if (reference.get().getDoctorId() != null)
+				result.get().setProfessionalInfo(sharedStaffPort.getProfessionalCompleteById(reference.get().getDoctorId()));
 		}
 		return result;
 	};
