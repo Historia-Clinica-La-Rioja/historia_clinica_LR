@@ -11,6 +11,7 @@ import net.pladema.olderadultsreports.repository.OlderAdultsHospitalizationConsu
 import net.pladema.olderadultsreports.repository.OlderAdultsOutpatientConsultationDetail;
 import net.pladema.olderadultsreports.repository.PolypharmacyConsultationDetail;
 import net.pladema.olderadultsreports.service.OlderAdultsReportExcelService;
+import net.pladema.reportformat.DateFormat;
 
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,11 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 	private ICellStyle titleStyle;
 	private ICellStyle fieldStyle;
 	private ICellStyle subTitleStyle;
+	private final DateFormat reformatdate;
+
+	public OlderAdultsReportExcelServiceImpl(DateFormat reformatdate) {
+		this.reformatdate = reformatdate;
+	}
 
 
 	@Override
@@ -267,7 +273,7 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
-		cell5.setCellValue(content.getAttentionDate());
+		cell5.setCellValue(reformatdate.ReformatDateThree(content.getAttentionDate()));
 		cell5.setCellStyle(style);
 
 		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
@@ -291,7 +297,7 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell10.setCellStyle(style);
 
 		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
-		cell11.setCellValue(content.getBirthDate());
+		cell11.setCellValue(reformatdate.ReformatDateFive(content.getBirthDate()));
 		cell11.setCellStyle(style);
 
 		ICell cell12 = row.createCell(rowNumber.getAndIncrement());
@@ -348,7 +354,7 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
-		cell5.setCellValue(content.getBirthDate());
+		cell5.setCellValue(reformatdate.ReformatDateThree(content.getBirthDate()));
 		cell5.setCellStyle(style);
 
 		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
@@ -364,7 +370,7 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell8.setCellStyle(style);
 
 		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
-		cell9.setCellValue(content.getEntrance());
+		cell9.setCellValue(reformatdate.ReformatDateTwo(content.getEntrance()));
 		cell9.setCellStyle(style);
 
 		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
@@ -453,7 +459,7 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell12.setCellStyle(style);
 
 		ICell cell13 = row.createCell(rowNumber.getAndIncrement());
-		cell13.setCellValue(content.getStartDate());
+		cell13.setCellValue(reformatdate.ReformatDateFour(content.getStartDate()));
 		cell13.setCellStyle(style);
 
 		ICell cell14 = row.createCell(rowNumber.getAndIncrement());
