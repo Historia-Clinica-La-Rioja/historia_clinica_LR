@@ -33,16 +33,24 @@ public class StudyAppointmentBo {
 
 	public String getFullName(boolean ffIsOn) {
 
-		String fullName;
+		String fullName = "";
 
-		if (ffIsOn && this.patientNameSelfDetermiantion != null) {
-			fullName = this.patientNameSelfDetermiantion + " " + this.patientLastName;
-		} else {
-			fullName = this.patientFirstName;
-			if (this.patientMiddleNames != null) {
-				fullName += " " + this.patientMiddleNames;
+		if (ffIsOn) {
+			if (this.patientNameSelfDetermiantion != null)
+				fullName = this.patientNameSelfDetermiantion;
+			else{
+				if (this.patientFirstName != null)
+					fullName = this.patientFirstName;
 			}
-			fullName += " " + this.patientLastName;
+			if (this.patientLastName != null)
+				fullName += " " + this.patientLastName;
+		} else {
+			if (this.patientFirstName != null)
+				fullName += " " + this.patientFirstName;
+			if (this.patientMiddleNames != null)
+				fullName += " " + this.patientMiddleNames;
+			if (this.patientLastName != null)
+				fullName += " " + this.patientLastName;
 		}
 		if (this.patientOtherNames != null) {
 			fullName += " " + this.patientOtherNames;
