@@ -81,6 +81,8 @@ import { ViewDatailsBtnComponent } from './components/view-datails-btn/view-data
 import { AmendedProblemsInformationComponent } from './components/amended-problems-information/amended-problems-information.component';
 import { ReferenceRequestDataComponent } from './components/reference-request-data/reference-request-data.component';
 import { IdentifierCasesComponent } from '../../../hsi-components/identifier-cases/identifier-cases.component';
+import { ReferenceStudyCloseComponent } from './components/reference-study-close/reference-study-close.component';
+import { ReferenceCompleteStudyComponent } from './components/reference-complete-study/reference-complete-study.component';
 
 @NgModule({
 	declarations: [
@@ -142,6 +144,8 @@ import { IdentifierCasesComponent } from '../../../hsi-components/identifier-cas
   		ViewDatailsBtnComponent,
     	AmendedProblemsInformationComponent,
  		ReferenceRequestDataComponent,
+   		ReferenceStudyCloseComponent,
+    	ReferenceCompleteStudyComponent,
 	],
 	imports: [
 		CommonModule,

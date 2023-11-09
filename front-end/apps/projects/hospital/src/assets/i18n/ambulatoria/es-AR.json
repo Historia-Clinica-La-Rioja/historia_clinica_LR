@@ -779,6 +779,9 @@
             "COINCIDENCE": "coincidencia",
             "VIEW_BUTTON": "Ver",
             "PRINT_HC_BUTTON": "Imprimir HC"
-        }
+        },
+		"reference-study-close": {
+			"SUCCESS": "El estudio de contrarreferencia se guardó exitosamente"
+		}
     }
 }
