@@ -2,6 +2,7 @@ package ar.lamansys.refcounterref.application.port;
 
 import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
 import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
 
@@ -21,5 +22,7 @@ public interface ReferenceStorage {
 	Optional<ReferenceDataBo> getReferenceData(Integer referenceId);
 
     void delete(Integer referenceId);
+    
+	Optional<ReferenceRequestBo> getReferenceByServiceRequestId(Integer serviceRequestId);
 
 }

@@ -7,6 +7,8 @@ import ar.lamansys.sgh.clinichistory.domain.ips.StudyWithoutOrderReportInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedOrderReportInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceRequestDto;
 import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
@@ -120,6 +122,7 @@ public class ServiceRequestController {
 	private final PatientMedicalCoverageMapper patientMedicalCoverageMapper;
 	private final FetchOrderImageFileById fetchOrderImageFileById;
 	private final CreateServiceRequestPdf createServiceRequestPdf;
+	private final SharedReferenceCounterReference sharedReferenceCounterReference;
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -302,7 +305,8 @@ public class ServiceRequestController {
                 .map(diagnosticReportBo -> {
                     ProfessionalDto professionalDto = healthcareProfessionalExternalService.findProfessionalByUserId(diagnosticReportBo.getUserId());
 					PatientMedicalCoverageBo coverage = patientMedicalCoverageService.getActiveCoveragesByOrderId(diagnosticReportBo.getEncounterId());
-                    return diagnosticReportInfoMapper.parseTo(diagnosticReportBo, professionalDto, patientMedicalCoverageMapper.toPatientMedicalCoverageDto(coverage));
+					ReferenceRequestDto reference = sharedReferenceCounterReference.getReferenceByServiceRequestId(diagnosticReportBo.getEncounterId()).orElse(null);
+                    return diagnosticReportInfoMapper.parseTo(diagnosticReportBo, professionalDto, patientMedicalCoverageMapper.toPatientMedicalCoverageDto(coverage), reference);
 				})
                 .collect(Collectors.toList());
 
@@ -326,7 +330,7 @@ public class ServiceRequestController {
 				.map(diagnosticReportBo -> {
 					ProfessionalDto professionalDto = healthcareProfessionalExternalService.findProfessionalByUserId(diagnosticReportBo.getUserId());
 					PatientMedicalCoverageBo coverage = patientMedicalCoverageService.getActiveCoveragesByOrderId(diagnosticReportBo.getEncounterId());
-					return diagnosticReportInfoMapper.parseTo(diagnosticReportBo, professionalDto, patientMedicalCoverageMapper.toPatientMedicalCoverageDto(coverage));
+					return diagnosticReportInfoMapper.parseTo(diagnosticReportBo, professionalDto, patientMedicalCoverageMapper.toPatientMedicalCoverageDto(coverage), null);
 				})
 				.collect(Collectors.toList());
 

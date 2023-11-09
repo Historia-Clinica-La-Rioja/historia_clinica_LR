@@ -2,12 +2,14 @@ package ar.lamansys.refcounterref.infraestructure.input.service;
 
 import ar.lamansys.refcounterref.application.createreference.CreateReference;
 import ar.lamansys.refcounterref.application.getcounterreference.GetCounterReference;
+import ar.lamansys.refcounterref.application.getreferencebyservicerequest.GetReferenceByServiceRequest;
 import ar.lamansys.refcounterref.application.getreferencefile.GetReferenceFile;
 import ar.lamansys.refcounterref.application.getreferenceproblem.GetReferenceProblem;
 import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceSummaryBo;
 import ar.lamansys.refcounterref.domain.file.ReferenceCounterReferenceFileBo;
 import ar.lamansys.refcounterref.domain.procedure.CounterReferenceProcedureBo;
 import ar.lamansys.refcounterref.domain.reference.ReferencePhoneBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.CounterReferenceSummaryMapper;
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.ReferenceMapper;
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.ReferenceProblemMapper;
@@ -20,6 +22,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounte
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferencePhoneDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceProblemDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,6 +49,7 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
     private final ReferenceMapper referenceMapper;
     private final ReferenceProblemMapper referenceProblemMapper;
     private final ReferenceAppointmentRepository referenceAppointmentRepository;
+	private final GetReferenceByServiceRequest getReferenceByServiceRequest;
 
     @Override
     public List<ReferenceCounterReferenceFileDto> getReferenceFilesData(Integer referenceId) {
@@ -109,6 +113,17 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
 		log.debug("OUTPUT {} ->", result);
 		return result;
 	}
+
+	@Override
+	public Optional<ReferenceRequestDto> getReferenceByServiceRequestId(Integer serviceRequestId){
+		log.debug("Input parameter -> serviceRequestId {}", serviceRequestId);
+		Optional<ReferenceRequestBo> reference = getReferenceByServiceRequest.run(serviceRequestId);
+		Optional<ReferenceRequestDto> result = Optional.empty();
+		if (reference.isPresent()) {
+			result = Optional.of(referenceMapper.fromReferenceRequestBo(reference.get()));
+		}
+		return result;
+	};
 
 	private List<ReferenceCounterReferenceFileDto> mapToReferenceCounterReferenceFileDto(List<ReferenceCounterReferenceFileBo> referenceCounterReferenceFileBos) {
         List<ReferenceCounterReferenceFileDto> referenceCounterReferenceFileDtos = new ArrayList<>();

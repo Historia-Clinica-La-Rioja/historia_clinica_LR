@@ -1,7 +1,10 @@
 package ar.lamansys.refcounterref.infraestructure.input.service.mapper;
 
 import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CompleteReferenceDto;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceRequestDto;
 
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -18,5 +21,8 @@ public interface ReferenceMapper {
         @Named("fromCompleteReferenceDtoList")
         @IterableMapping(qualifiedByName = "fromCompleteReferenceDto")
         List<CompleteReferenceBo> fromCompleteReferenceDtoList(List<CompleteReferenceDto> completeReferenceDtoList);
+
+		@Named("fromReferenceRequestBo")
+		ReferenceRequestDto fromReferenceRequestBo(ReferenceRequestBo referenceRequestBo);
 
 }

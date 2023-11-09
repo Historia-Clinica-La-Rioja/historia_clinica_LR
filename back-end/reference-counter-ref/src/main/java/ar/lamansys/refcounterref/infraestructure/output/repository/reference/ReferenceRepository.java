@@ -1,6 +1,10 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.reference;
 
+import java.util.List;
+import java.util.Optional;
+
 import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -246,5 +250,14 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			+ ", r.deleteable.deletedBy = ?#{ principal.userId } "
 			+ "WHERE r.id = :id" )
 	void deleteById(@Param("id") @NonNull Integer id);
+	
+	@Transactional(readOnly = true)
+	@Query("SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo(r.id, cs.id, cs.name, cl.id, cl.description, r.priority, rn.description) " +
+			"FROM Reference r " +
+			"LEFT JOIN ClinicalSpecialty cs ON (r.clinicalSpecialtyId = cs.id) " +
+			"LEFT JOIN CareLine cl ON (r.careLineId = cl.id) " +
+			"LEFT JOIN ReferenceNote rn ON (r.referenceNoteId = rn.id) " +
+			"WHERE r.serviceRequestId = :serviceRequestId")
+	Optional<ReferenceRequestBo> getReferenceByServiceRequestId(@Param("serviceRequestId") Integer serviceRequestId);
 
 }

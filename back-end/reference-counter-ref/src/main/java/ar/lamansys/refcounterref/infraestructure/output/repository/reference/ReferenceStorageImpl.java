@@ -7,6 +7,7 @@ import ar.lamansys.refcounterref.application.port.ReferenceStudyStorage;
 import ar.lamansys.refcounterref.domain.enums.EReferenceCounterReferenceType;
 import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
 import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
 import ar.lamansys.refcounterref.domain.snomed.SnomedBo;
@@ -160,6 +161,12 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 					ref.setProcedure(referencesProcedures.get(ref.getId()));
 					ref.setProfessionalFullName(sharedPersonPort.getCompletePersonNameById(ref.getProfessionalPersonId()));
 				}).collect(Collectors.toList());
+	}
+
+	@Override
+	public Optional<ReferenceRequestBo> getReferenceByServiceRequestId(Integer serviceRequestId){
+		log.debug("Input parameters -> serviceRequestId {} ", serviceRequestId);
+		return referenceRepository.getReferenceByServiceRequestId(serviceRequestId);
 	}
 
 }

@@ -966,6 +966,7 @@ export interface DiagnosticReportInfoDto {
     id: number;
     link?: string;
     observations?: string;
+    referenceRequestDto?: ReferenceRequestDto;
     serviceRequestId: number;
     snomed: SnomedDto;
     source: string;
@@ -3500,6 +3501,16 @@ export interface ReferenceReportDto {
     priority: EReferencePriority;
     problems: string[];
     procedure: string;
+}
+
+export interface ReferenceRequestDto extends Serializable {
+    careLineDescription: string;
+    careLineId: number;
+    clinicalSpecialtyId: number;
+    clinicalSpecialtyName: string;
+    id: number;
+    observation: string;
+    priority: string;
 }
 
 export interface ReferenceServiceRequestProcedureDto {
