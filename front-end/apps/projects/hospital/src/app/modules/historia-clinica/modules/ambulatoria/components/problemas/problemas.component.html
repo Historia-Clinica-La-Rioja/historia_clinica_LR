@@ -210,7 +210,7 @@
 			</div>
 			<app-emergency-care-problems [patientId]="patientId" (goToEpisode)="goToEpisode($event)"></app-emergency-care-problems>
 
-			<app-amended-problems (setProblemOnHistoric)="scrollToHistoric()"></app-amended-problems>
+			<app-amended-problems *ngIf="isMarkProblemAsErrorActive" (setProblemOnHistoric)="scrollToHistoric()"></app-amended-problems>
 		</div>
 	</section>
 
