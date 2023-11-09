@@ -1,17 +1,15 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.reference;
 
-import java.util.List;
-import java.util.Optional;
-
+import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
@@ -30,6 +28,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
             "LEFT JOIN ReferenceNote rn ON (rn.id = r.referenceNoteId) " +
             "JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId) " +
             "WHERE oc.patientId = :patientId " +
+            "AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
             "AND r.clinicalSpecialtyId IN (:clinicalSpecialtyIds) " +
             "AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId)")
     List<ReferenceDataBo> getReferencesFromOutpatientConsultation(@Param("patientId") Integer patientId,
@@ -49,6 +48,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
             "LEFT JOIN ReferenceNote rn ON (rn.id = r.referenceNoteId) " +
             "JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId) " +
             "WHERE oc.patientId = :patientId " +
+			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
             "AND r.clinicalSpecialtyId IN (:clinicalSpecialtyIds) " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId)")
     List<ReferenceDataBo> getReferencesFromOdontologyConsultation(@Param("patientId") Integer patientId,
@@ -64,6 +64,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN Person p ON p.id = hp.personId " +
 			"JOIN PersonExtended pe ON p.id = pe.id " +
 			"WHERE oc.patientId = :patientId " +
+			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
 			"AND r.clinicalSpecialtyId = :clinicalSpecialtyId " +
 			"AND r.careLineId = :careLineId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
@@ -82,6 +83,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN Person p ON p.id = hp.personId " +
 			"JOIN PersonExtended pe ON p.id = pe.id " +
 			"WHERE oc.patientId = :patientId " +
+			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
 			"AND r.clinicalSpecialtyId = :clinicalSpecialtyId " +
 			"AND r.careLineId = :careLineId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
@@ -104,6 +106,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN DocumentDiagnosticReport ddr ON d.id = ddr.pk.documentId " +
 			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
 			"WHERE oc.patientId = :patientId " +
+			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
 			"AND r.careLineId = :careLineId " +
 			"AND dr.snomedId = :practiceId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
@@ -128,6 +131,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN DocumentDiagnosticReport ddr ON d.id = ddr.pk.documentId " +
 			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
 			"WHERE oc.patientId = :patientId " +
+			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
 			"AND r.careLineId = :careLineId " +
 			"AND dr.snomedId = :practiceId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
@@ -152,6 +156,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN DocumentDiagnosticReport ddr ON d.id = ddr.pk.documentId " +
 			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
 			"WHERE oc.patientId = :patientId " +
+			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
 			"AND r.clinicalSpecialtyId = :clinicalSpecialtyId " +
 			"AND r.careLineId = :careLineId " +
 			"AND dr.snomedId = :practiceId " +
@@ -178,6 +183,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN DocumentDiagnosticReport ddr ON d.id = ddr.pk.documentId " +
 			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
 			"WHERE oc.patientId = :patientId " +
+			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
 			"AND r.clinicalSpecialtyId = :clinicalSpecialtyId " +
 			"AND r.careLineId = :careLineId " +
 			"AND dr.snomedId = :practiceId " +

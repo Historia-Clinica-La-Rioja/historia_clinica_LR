@@ -1,26 +1,21 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.reference;
 
 import ar.lamansys.refcounterref.domain.reference.ReferenceBo;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.io.Serializable;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "reference")
+@EntityListeners(SGXAuditListener.class)
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @AllArgsConstructor
-public class Reference implements Serializable {
+public class Reference extends SGXAuditableEntity<Integer> {
 
     /**
      *

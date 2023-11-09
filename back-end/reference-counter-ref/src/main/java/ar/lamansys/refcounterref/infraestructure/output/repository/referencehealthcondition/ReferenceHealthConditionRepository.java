@@ -25,9 +25,11 @@ public interface ReferenceHealthConditionRepository extends JpaRepository<Refere
     @Query(value = "SELECT new ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo(hc.id, " +
             "s.sctid, s.pt, rhc.pk.referenceId) " +
             "FROM ReferenceHealthCondition rhc " +
+            "JOIN Reference r ON (rhc.pk.referenceId = r.id)" +
             "JOIN HealthCondition hc ON (rhc.pk.healthConditionId = hc.id) " +
             "JOIN Snomed s ON (s.id = hc.snomedId) " +
             "WHERE hc.patientId = :patientId " +
+            "AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
             "AND rhc.pk.referenceId NOT IN (SELECT cr.referenceId FROM CounterReference cr)")
     List<ReferenceProblemBo> getReferencesProblemsByPatientId(@Param("patientId") Integer patientId);
 

@@ -103,7 +103,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 			condition.append(" AND pe.identification_number = '").append(filter.getIdentificationNumber()).append("' ");
         if (filter.getAppointmentStateId() != null && filter.getAppointmentStateId().equals(NO_VALUE.shortValue()))
 			condition.append("AND ra.appointment_id IS null ");
-		
+
 		if (filter.getManagerUserId() != null) {
 			condition.append(" AND igu.user_id = ").append(filter.getManagerUserId());
 			condition.append(" AND igu.deleted IS FALSE ");
@@ -172,7 +172,8 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"LEFT JOIN {h-schema}identification_type it ON (pe.identification_type_id = it.id) " +
 				"LEFT JOIN {h-schema}care_line cl ON (r.care_line_id = cl.id) " +
 				"LEFT JOIN {h-schema}counter_reference cr ON (r.id = cr.reference_id) " +
-				"WHERE (oc.start_date >= :from AND oc.start_date <= :to) ";
+				"WHERE (oc.start_date >= :from AND oc.start_date <= :to) " +
+				"AND (r.deleted = FALSE OR r.deleted IS NULL)";
 	}
 
 	private String getOdontologyReferenceFromStatement(ReferenceReportFilterBo filter) {
@@ -196,7 +197,8 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"LEFT JOIN {h-schema}identification_type it ON (pe.identification_type_id = it.id) " +
 				"LEFT JOIN {h-schema}care_line cl ON (r.care_line_id = cl.id) " +
 				"LEFT JOIN {h-schema}counter_reference cr ON (r.id = cr.reference_id) " +
-				"WHERE (oc.performed_date >= :from AND oc.performed_date <= :to) ";
+				"WHERE (oc.performed_date >= :from AND oc.performed_date <= :to) " +
+				"AND (r.deleted = FALSE OR r.deleted IS NULL)";
 	}
 
 	private List<ReferenceReportBo> mapToReferenceReportBo(List<Object[]> queryResult) {

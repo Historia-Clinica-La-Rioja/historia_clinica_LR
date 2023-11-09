@@ -20,3 +20,47 @@ databaseChangeLog:
           - sql:
               sql: |-
                 INSERT INTO triage_category (id, name, description, color_name, color_code) VALUES (6, 'Sin triage', 'Sin definir', 'Gris', '#E6E6E6');
+
+    - changeSet:
+        id: addColumn-auditable_columns-reference
+        author: mromero
+        changes:
+          - addColumn:
+              tableName: reference
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: '-1'
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: '-1'
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime

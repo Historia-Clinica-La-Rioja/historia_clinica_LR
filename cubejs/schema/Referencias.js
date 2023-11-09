@@ -51,7 +51,8 @@ sql: `SELECT r.id,
         LEFT JOIN person_extended doctex ON (doctex.person_id = doct.id)
         LEFT JOIN appointment_state aps ON (ap.appointment_state_id = aps.id)
     ${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
-    WHERE (oc.institution_id IN (
+    WHERE (r.deleted = FALSE OR r.deleted IS NULL) 
+    AND (oc.institution_id IN (
       SELECT ur.institution_id 
       FROM users as u 
       JOIN user_role ur on u.id = ur.user_id 
@@ -114,7 +115,8 @@ UNION ALL
         LEFT JOIN person_extended doctex ON (doctex.person_id = doct.id)
         LEFT JOIN appointment_state aps ON (ap.appointment_state_id = aps.id)
     ${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
-    WHERE (oc.institution_id IN (
+    WHERE (r.deleted = FALSE OR r.deleted IS NULL) 
+    AND (oc.institution_id IN (
       SELECT ur.institution_id 
       FROM users as u 
       JOIN user_role ur on u.id = ur.user_id 
