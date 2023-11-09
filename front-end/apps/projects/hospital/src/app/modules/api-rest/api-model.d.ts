@@ -1787,6 +1787,7 @@ export interface HCEReferenceCounterReferenceFileDto extends Serializable {
 }
 
 export interface HCEReferenceDto {
+    cancelled?: boolean;
     careLine: string;
     clinicalSpecialty: string;
     counterReference: HCESummaryCounterReferenceDto;

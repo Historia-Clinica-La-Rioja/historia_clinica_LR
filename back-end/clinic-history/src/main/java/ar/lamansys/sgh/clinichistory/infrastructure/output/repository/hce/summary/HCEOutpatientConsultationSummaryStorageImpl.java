@@ -13,6 +13,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -165,13 +166,15 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
 
     @Override
     public List<ReferenceSummaryBo> getReferencesByHealthCondition(Integer healthConditionId, Integer outpatientId) {
-        String sqlString = "SELECT r.id, cl.description , cs.name, rn.description, i.name"
+        String sqlString = "SELECT r.id, cl.description , cs.name, rn.description, i.name,"
+                +" CASE WHEN hc.verificationStatusId = :healthConditionError THEN TRUE ELSE FALSE END AS cancelled"
                 +"  FROM Reference r"
                 +"  JOIN OutpatientConsultation oc ON (r.encounterId = oc.id)"
 				+"  LEFT JOIN Institution i ON (r.destinationInstitutionId = i.id)"
                 +"  LEFT JOIN CareLine cl ON (r.careLineId = cl.id)"
                 +"  JOIN ClinicalSpecialty cs ON (r.clinicalSpecialtyId = cs.id)"
                 +"  JOIN ReferenceHealthCondition rhc ON (r.id = rhc.pk.referenceId)"
+                +"  JOIN HealthCondition hc ON (rhc.pk.healthConditionId = hc.id)"
                 +"  LEFT JOIN ReferenceNote rn ON (r.referenceNoteId = rn.id)"
                 +"  WHERE rhc.pk.healthConditionId = :healthConditionId"
                 +"  AND r.sourceTypeId= " + SourceType.OUTPATIENT
@@ -180,6 +183,7 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
         List<Object[]> queryResult = entityManager.createQuery(sqlString)
                 .setParameter("healthConditionId", healthConditionId)
                 .setParameter("outpatientId", outpatientId)
+                .setParameter("healthConditionError", ConditionVerificationStatus.ERROR)
                 .getResultList();
         List<ReferenceSummaryBo> result = new ArrayList<>();
         queryResult.forEach(a ->
@@ -188,7 +192,8 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
                         (String) a[1],
                         (String) a[2],
                         a[3] != null ? (String) a[3] : null,
-						(String) a[4]))
+						(String) a[4],
+                        (Boolean) a[5]))
         );
         return result;
     }

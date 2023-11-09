@@ -30,12 +30,15 @@ public class ReferenceSummaryBo {
 
 	private String destinationInstitutionName;
 
-    public ReferenceSummaryBo(Integer id, String careLine, String clinicalSpecialty, String note, String destinationInstitutionName) {
+    private Boolean cancelled;
+
+    public ReferenceSummaryBo(Integer id, String careLine, String clinicalSpecialty, String note, String destinationInstitutionName, Boolean cancelled) {
         this.id = id;
         this.careLine = careLine;
         this.clinicalSpecialty = clinicalSpecialty;
         this.note = note;
 		this.destinationInstitutionName = destinationInstitutionName;
+        this.cancelled = cancelled;
     }
 
 }

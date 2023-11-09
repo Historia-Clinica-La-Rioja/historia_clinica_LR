@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 @Getter
@@ -27,4 +28,7 @@ public class HCEReferenceDto {
     private HCESummaryCounterReferenceDto counterReference;
 
 	private String destinationInstitutionName;
+
+    @Nullable
+    private Boolean cancelled;
 }
