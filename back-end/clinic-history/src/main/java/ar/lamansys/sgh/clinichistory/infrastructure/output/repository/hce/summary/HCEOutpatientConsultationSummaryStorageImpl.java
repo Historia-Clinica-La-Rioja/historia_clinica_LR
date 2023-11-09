@@ -183,7 +183,7 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
                 +"  JOIN OutpatientConsultation oc ON (r.encounterId = oc.id)"
 				+"  LEFT JOIN Institution i ON (r.destinationInstitutionId = i.id)"
                 +"  LEFT JOIN CareLine cl ON (r.careLineId = cl.id)"
-                +"  JOIN ClinicalSpecialty cs ON (r.clinicalSpecialtyId = cs.id)"
+                +"  LEFT JOIN ClinicalSpecialty cs ON (r.clinicalSpecialtyId = cs.id)"
                 +"  JOIN ReferenceHealthCondition rhc ON (r.id = rhc.pk.referenceId)"
                 +"  JOIN HealthCondition hc ON (rhc.pk.healthConditionId = hc.id)"
                 +"  LEFT JOIN ReferenceNote rn ON (r.referenceNoteId = rn.id)"
