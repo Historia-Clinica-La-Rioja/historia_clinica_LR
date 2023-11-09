@@ -60,7 +60,7 @@ public class RebuildFile {
 					oldDocument.setTypeId(documentFile.getTypeId());
 					oldDocument.setSourceId(documentFile.getSourceId());
 					oldDocument.setSourceTypeId(documentFile.getSourceTypeId());
-					oldDocument.setSignatureStatusId(documentFile.getSignatureStatusId());
+					documentFile.setSignatureStatusId(oldDocument.getSignatureStatusId());
 					return oldDocument;
 				})
 				.ifPresent(documentFileRepository::save);
