@@ -35,6 +35,7 @@ public class CreateFamilyBgController implements CreateFamilyBgAPI {
 	@Override
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<Boolean> createPatientFamilyBg(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "patientId") Integer patientId, @RequestBody CreateQuestionnaireDTO createFamilyBgDTO) {
+
 		QuestionnaireBO familyBgBO = createFamilyBgDTO(patientId, createFamilyBgDTO);
 
 		createFamilyBgService.execute(familyBgBO);
@@ -45,6 +46,7 @@ public class CreateFamilyBgController implements CreateFamilyBgAPI {
 	}
 
 	private QuestionnaireBO createFamilyBgDTO(Integer patientId, CreateQuestionnaireDTO createFamilyBgDTO) {
+
 		QuestionnaireBO reg = new QuestionnaireBO();
 		QuestionnaireAnswerBO lstReg;
 		reg.setPatientId(patientId);
@@ -56,6 +58,7 @@ public class CreateFamilyBgController implements CreateFamilyBgAPI {
 				lstReg.setAnswerId(eReg.getAnswerId());
 				lstReg.setQuestionId(eReg.getQuestionId());
 				lstReg.setValue(Integer.valueOf(dto.getValue()));
+
 				reg.getAnswers().add(lstReg);
 			}
 		}
