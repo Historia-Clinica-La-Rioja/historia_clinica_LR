@@ -69,11 +69,18 @@
       <!-- CASO 5 -->
       <div class="text">
         <h3 class="tipos" id="67">Pérdida de peso</h3>
-        <p>¿Cuánto pesa con la ropa puesta, pero sin zapatos (peso actual)?</p>
+        <p>- ¿Cuánto pesa con la ropa puesta, pero sin zapatos? (peso actual). 
+          <p>- Hace un año (mes, año)¿Cuánto pesaba con la ropa puesta pero
+          sin zapatos?(peso hace un año).</p>
+          <p>Utilizando los datos obtenidos, aplicamos la siguiente fórmula:</p>
+
+          <img class ="formula" src="assets/images/formula-frail.png" alt="img">
+
         <mat-radio-group id="68" name="weightLoss" [(ngModel)]="selectedWeightLoss" (change)="calculateTotal()">
-          <mat-radio-button color="primary" value="A4">Más de 5kg (lo que representa un 5% de pérdida de peso)</mat-radio-button>
-          <mat-radio-button color="primary" value="B4">Menos de 5kg (peso hace un año - peso actual/peso hace un año)</mat-radio-button>
+          <mat-radio-button color="primary" value="A4"> ≥ 5%</mat-radio-button>
+          <mat-radio-button color="primary" value="B4"> < 5% </mat-radio-button>
         </mat-radio-group>
+
       </div>
   
   
@@ -84,6 +91,7 @@
         <mat-radio-group id="puntaje" name="points" [(ngModel)]="selectedCalificacion" [disabled]="true">
           <mat-radio-button color="primary" id="49" value="A5">Se considera PERSONA PRE FRÁGIL</mat-radio-button>
           <mat-radio-button color="primary" id="50" value="B5">Se considera PERSONA FRÁGIL</mat-radio-button>
+         
         </mat-radio-group>
   
         
