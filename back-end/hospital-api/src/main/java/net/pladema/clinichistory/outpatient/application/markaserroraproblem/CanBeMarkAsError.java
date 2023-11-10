@@ -1,5 +1,7 @@
 package net.pladema.clinichistory.outpatient.application.markaserroraproblem;
 
+import ar.lamansys.refcounterref.application.getreferencecompletedata.GetReferenceCompleteData;
+import ar.lamansys.refcounterref.application.port.ReferenceHealthConditionStorage;
 import ar.lamansys.sgh.clinichistory.application.markaserroraproblem.IsSameUserIdFromHealthCondition;
 import ar.lamansys.sgh.clinichistory.application.markaserroraproblem.IsWithinExpirationTimeLimit;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTerm;
@@ -26,6 +28,7 @@ import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -41,6 +44,8 @@ public class CanBeMarkAsError {
     private final AppointmentService appointmentService;
     private final AppointmentOrderImageService appointmentOrderImageService;
     private final HealthConditionRepository healthConditionRepository;
+    private final ReferenceHealthConditionStorage referenceHealthConditionStorage;
+    private final GetReferenceCompleteData getReferenceCompleteData;
 
     public ProblemErrorBo run(Integer institutionId, Integer patientId, Integer healthConditionId) {
         log.debug("Input parameters -> institutionId {}, patientId {}, healthConditionId {}", institutionId, patientId, healthConditionId);
@@ -67,11 +72,16 @@ public class CanBeMarkAsError {
                 .distinct()
                 .collect(Collectors.toList());
 
+        var references = referenceHealthConditionStorage.getReferenceIds(healthConditionId);
+
+        this.assertContextValidReferences(references);
+
         log.debug("Output -> {}", true);
         return new ProblemErrorBo(null, null,
                 studies.stream().map(ClinicalTerm::getId).collect(Collectors.toList()),
                 serviceRequests,
-                appointmentsRDI);
+                appointmentsRDI,
+                references);
     }
 
     private void assertContextValid(Integer problemId) {
@@ -123,5 +133,15 @@ public class CanBeMarkAsError {
                 .filter(serviceRequest -> serviceRequest.getCategoryId().equals(ServiceRequestCategory.DIAGNOSTIC_IMAGING))
                 .map(ServiceRequest::getId)
                 .collect(Collectors.toList());
+    }
+
+    private void assertContextValidReferences(List<Integer> referencesProblem) {
+        referencesProblem.stream()
+                .map(getReferenceCompleteData::run)
+                .filter(completeReference -> Objects.nonNull(completeReference.getReference().getClosureType()))
+                .findAny()
+                .ifPresent((referenceAdvancedState) -> {
+                    throw new MarkAsErrorAProblemException(MarkAsErrorAProblemExceptionEnum.REFERENCE_ADVANCED_STATE, "app.problems.error.reference-advanced-state");
+                });
     }
 }

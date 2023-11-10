@@ -37,9 +37,11 @@ public class GetReferenceCompleteData {
 
 		ReferencePatientBo patientData = referencePatientStorage.getPatientInfo(referenceData.getPatientId());
 		Optional<ReferenceAppointmentBo> appointmentData = referenceAppointmentStorage.getAppointmentData(referenceData.getId());
-
 		setContactInformation(patientData, referenceData, appointmentData);
-		return new ReferenceCompleteDataBo(referenceData, patientData, appointmentData.orElse(null));
+
+		var result = new ReferenceCompleteDataBo(referenceData, patientData, appointmentData.orElse(null));
+		log.debug("Output -> {}", result);
+		return result;
 	}
 
 	private void assertInfo(Integer referenceId) {
