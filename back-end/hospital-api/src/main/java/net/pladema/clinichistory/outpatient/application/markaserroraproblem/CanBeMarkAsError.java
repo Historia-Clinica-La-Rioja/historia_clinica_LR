@@ -3,6 +3,7 @@ package net.pladema.clinichistory.outpatient.application.markaserroraproblem;
 import ar.lamansys.refcounterref.application.getreferencecompletedata.GetReferenceCompleteData;
 import ar.lamansys.refcounterref.application.port.ReferenceHealthConditionStorage;
 import ar.lamansys.refcounterref.domain.reference.ReferenceCompleteDataBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
 import ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentBo;
 import ar.lamansys.sgh.clinichistory.application.markaserroraproblem.IsSameUserIdFromHealthCondition;
 import ar.lamansys.sgh.clinichistory.application.markaserroraproblem.IsWithinExpirationTimeLimit;
@@ -19,6 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.outpatient.application.markaserroraproblem.exceptions.MarkAsErrorAProblemException;
 import net.pladema.clinichistory.outpatient.application.markaserroraproblem.exceptions.MarkAsErrorAProblemExceptionEnum;
 import net.pladema.clinichistory.outpatient.domain.ProblemErrorBo;
+import net.pladema.clinichistory.requests.servicerequests.application.port.ServiceRequestStorage;
+import net.pladema.clinichistory.requests.servicerequests.domain.ServiceRequestProcedureInfoBo;
 import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequestCategory;
@@ -48,6 +51,7 @@ public class CanBeMarkAsError {
     private final HealthConditionRepository healthConditionRepository;
     private final ReferenceHealthConditionStorage referenceHealthConditionStorage;
     private final GetReferenceCompleteData getReferenceCompleteData;
+    private final ServiceRequestStorage serviceRequestStorage;
 
     public ProblemErrorBo run(Integer institutionId, Integer patientId, Integer healthConditionId) {
         log.debug("Input parameters -> institutionId {}, patientId {}, healthConditionId {}", institutionId, patientId, healthConditionId);
@@ -69,11 +73,6 @@ public class CanBeMarkAsError {
 
         this.assertContextValidAppointmentsRDI(appointmentsIds);
 
-        var serviceRequests = studies.stream()
-                .map(DiagnosticReportBo::getEncounterId)
-                .distinct()
-                .collect(Collectors.toList());
-
         var referenceIds = referenceHealthConditionStorage.getReferenceIds(healthConditionId);
 
         var completeReferences = referenceIds.stream()
@@ -81,6 +80,15 @@ public class CanBeMarkAsError {
                 .collect(Collectors.toList());
 
         this.assertContextValidReferences(completeReferences);
+
+        var serviceRequestReferenceIds = completeReferences.stream()
+                .map(ReferenceCompleteDataBo::getReference)
+                .map(ReferenceDataBo::getServiceRequestId)
+                .collect(Collectors.toList());
+
+        var indirectReferenceProcedures = serviceRequestStorage.getProceduresByServiceRequestIds(serviceRequestReferenceIds);
+
+        this.assertContextValidIndirectProcedureReferences(indirectReferenceProcedures);
 
         var appointmentReferences = completeReferences.stream()
                 .map(completeReference -> Optional.ofNullable(completeReference.getAppointment()))
@@ -90,14 +98,26 @@ public class CanBeMarkAsError {
 
         this.assertContextValidAppointmentsReferences(appointmentReferences);
 
+        var diagnosticReportIds = studies.stream()
+                .map(ClinicalTerm::getId)
+                .collect(Collectors.toList());
+        diagnosticReportIds.addAll(indirectReferenceProcedures.stream()
+                .map(ServiceRequestProcedureInfoBo::getDiagnosticReportId)
+                .collect(Collectors.toList()));
+
+        var serviceRequestsIds = studies.stream()
+                .map(DiagnosticReportBo::getEncounterId)
+                .distinct()
+                .collect(Collectors.toList());
+
         appointmentsIds.addAll(appointmentReferences.stream()
                 .map(ReferenceAppointmentBo::getAppointmentId)
                 .collect(Collectors.toList()));
 
         log.debug("Output -> {}", true);
         return new ProblemErrorBo(null, null,
-                studies.stream().map(ClinicalTerm::getId).collect(Collectors.toList()),
-                serviceRequests,
+                diagnosticReportIds,
+                serviceRequestsIds,
                 appointmentsIds,
                 referenceIds);
     }
@@ -168,6 +188,16 @@ public class CanBeMarkAsError {
                         referenceAppointmentBo.getAppointmentStateId().equals(AppointmentState.SERVED))
                 .findAny()
                 .ifPresent((appointmentConfirmedOrServed) -> {
+                    throw new MarkAsErrorAProblemException(MarkAsErrorAProblemExceptionEnum.REFERENCE_ADVANCED_STATE, "app.problems.error.reference-advanced-state");
+                });
+    }
+
+    private void assertContextValidIndirectProcedureReferences(List<ServiceRequestProcedureInfoBo> procedures) {
+        procedures.stream()
+                .filter(procedureInfo -> procedureInfo.getStatusId().equals(DiagnosticReportStatus.FINAL) ||
+                        procedureInfo.getStatusId().equals(DiagnosticReportStatus.FINAL_RDI))
+                .findAny()
+                .ifPresent((procedureCompleted) -> {
                     throw new MarkAsErrorAProblemException(MarkAsErrorAProblemExceptionEnum.REFERENCE_ADVANCED_STATE, "app.problems.error.reference-advanced-state");
                 });
     }

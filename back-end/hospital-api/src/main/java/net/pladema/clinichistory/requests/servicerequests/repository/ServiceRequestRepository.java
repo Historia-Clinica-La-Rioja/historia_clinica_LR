@@ -37,7 +37,7 @@ public interface ServiceRequestRepository extends SGXAuditableEntityJPARepositor
 
 	@Transactional(readOnly = true)
 	@Query("SELECT new net.pladema.clinichistory.requests.servicerequests.domain.ServiceRequestProcedureInfoBo(sr.id, " +
-			"s.id, s.sctid, s.pt) " +
+			"s.id, s.sctid, s.pt, dr.id, dr.statusId) " +
 			"FROM ServiceRequest sr " +
 			"JOIN Document d ON (sr.id = d.sourceId) " +
 			"JOIN DocumentDiagnosticReport ddr ON (d.id = ddr.pk.documentId) " +
