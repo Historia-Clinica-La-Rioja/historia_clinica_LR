@@ -2,6 +2,8 @@ package net.pladema.clinichistory.outpatient.application.markaserroraproblem;
 
 import ar.lamansys.refcounterref.application.getreferencecompletedata.GetReferenceCompleteData;
 import ar.lamansys.refcounterref.application.port.ReferenceHealthConditionStorage;
+import ar.lamansys.refcounterref.domain.reference.ReferenceCompleteDataBo;
+import ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentBo;
 import ar.lamansys.sgh.clinichistory.application.markaserroraproblem.IsSameUserIdFromHealthCondition;
 import ar.lamansys.sgh.clinichistory.application.markaserroraproblem.IsWithinExpirationTimeLimit;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTerm;
@@ -60,28 +62,44 @@ public class CanBeMarkAsError {
 
         this.assertContextValidDiagnosticReports(studies);
 
-        var appointmentsRDI = this.getDiagnosticImagingOrders(studies).stream()
+        var appointmentsIds = this.getDiagnosticImagingOrders(studies).stream()
                 .map(appointmentOrderImageService::getAppointmentIdByOrderId)
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
 
-        this.assertContextValidAppointmentsRDI(appointmentsRDI);
+        this.assertContextValidAppointmentsRDI(appointmentsIds);
 
         var serviceRequests = studies.stream()
                 .map(DiagnosticReportBo::getEncounterId)
                 .distinct()
                 .collect(Collectors.toList());
 
-        var references = referenceHealthConditionStorage.getReferenceIds(healthConditionId);
+        var referenceIds = referenceHealthConditionStorage.getReferenceIds(healthConditionId);
 
-        this.assertContextValidReferences(references);
+        var completeReferences = referenceIds.stream()
+                .map(getReferenceCompleteData::run)
+                .collect(Collectors.toList());
+
+        this.assertContextValidReferences(completeReferences);
+
+        var appointmentReferences = completeReferences.stream()
+                .map(completeReference -> Optional.ofNullable(completeReference.getAppointment()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+
+        this.assertContextValidAppointmentsReferences(appointmentReferences);
+
+        appointmentsIds.addAll(appointmentReferences.stream()
+                .map(ReferenceAppointmentBo::getAppointmentId)
+                .collect(Collectors.toList()));
 
         log.debug("Output -> {}", true);
         return new ProblemErrorBo(null, null,
                 studies.stream().map(ClinicalTerm::getId).collect(Collectors.toList()),
                 serviceRequests,
-                appointmentsRDI,
-                references);
+                appointmentsIds,
+                referenceIds);
     }
 
     private void assertContextValid(Integer problemId) {
@@ -135,12 +153,21 @@ public class CanBeMarkAsError {
                 .collect(Collectors.toList());
     }
 
-    private void assertContextValidReferences(List<Integer> referencesProblem) {
+    private void assertContextValidReferences(List<ReferenceCompleteDataBo> referencesProblem) {
         referencesProblem.stream()
-                .map(getReferenceCompleteData::run)
                 .filter(completeReference -> Objects.nonNull(completeReference.getReference().getClosureType()))
                 .findAny()
                 .ifPresent((referenceAdvancedState) -> {
+                    throw new MarkAsErrorAProblemException(MarkAsErrorAProblemExceptionEnum.REFERENCE_ADVANCED_STATE, "app.problems.error.reference-advanced-state");
+                });
+    }
+
+    private void assertContextValidAppointmentsReferences(List<ReferenceAppointmentBo> appointmentReferences) {
+        appointmentReferences.stream()
+                .filter(referenceAppointmentBo -> referenceAppointmentBo.getAppointmentStateId().equals(AppointmentState.CONFIRMED) ||
+                        referenceAppointmentBo.getAppointmentStateId().equals(AppointmentState.SERVED))
+                .findAny()
+                .ifPresent((appointmentConfirmedOrServed) -> {
                     throw new MarkAsErrorAProblemException(MarkAsErrorAProblemExceptionEnum.REFERENCE_ADVANCED_STATE, "app.problems.error.reference-advanced-state");
                 });
     }
