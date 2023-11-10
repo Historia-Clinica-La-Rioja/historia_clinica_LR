@@ -1,9 +1,9 @@
 package ar.lamansys.sgh.clinichistory.application.fetchSummaryClinicHistory;
 
 import ar.lamansys.sgh.clinichistory.application.ports.HCEOutpatientConsultationSummaryStorage;
+import ar.lamansys.sgh.clinichistory.application.ports.HCEReferenceCounterReferenceStorage;
 import ar.lamansys.sgh.clinichistory.application.ports.NursingConsultationSummaryStorage;
 import ar.lamansys.sgh.clinichistory.application.ports.OdontologyConsultationSummaryStorage;
-import ar.lamansys.sgh.clinichistory.application.ports.HCEReferenceCounterReferenceStorage;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.CounterReferenceSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.DocumentDataBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.EvolutionSummaryBo;
@@ -19,6 +19,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class FetchSummaryClinicHistory {
 
     public static final String OUTPUT = "Output -> {}";
@@ -44,17 +46,6 @@ public class FetchSummaryClinicHistory {
 	private final DocumentRepository documentRepository;
 
 	private final SharedInstitutionPort sharedInstitutionPort;
-
-    public FetchSummaryClinicHistory(HCEOutpatientConsultationSummaryStorage HCEOutpatientConsultationSummaryStorage,
-									 OdontologyConsultationSummaryStorage odontologyConsultationSummaryStorage,
-									 NursingConsultationSummaryStorage nursingConsultationSummaryStorage, HCEReferenceCounterReferenceStorage hceReferenceCounterReferenceStorage, DocumentRepository documentRepository, SharedInstitutionPort sharedInstitutionPort) {
-        this.HCEOutpatientConsultationSummaryStorage = HCEOutpatientConsultationSummaryStorage;
-        this.odontologyConsultationSummaryStorage = odontologyConsultationSummaryStorage;
-        this.nursingConsultationSummaryStorage = nursingConsultationSummaryStorage;
-        this.hceReferenceCounterReferenceStorage = hceReferenceCounterReferenceStorage;
-		this.documentRepository = documentRepository;
-		this.sharedInstitutionPort = sharedInstitutionPort;
-	}
 
     public List<EvolutionSummaryBo> run(Integer patientId) {
         log.debug("FetchSummaryClinicHistory from patientId {}", patientId);

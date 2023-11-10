@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 @Getter
@@ -18,4 +19,10 @@ public class HCEHealthConditionDto extends HCEPersonalHistoryDto {
     private String problemId;
 
     private List<HCEReferenceDto> references;
+
+    @Nullable
+    private Boolean isMarkedAsError;
+
+    @Nullable
+    private HCEErrorProblemDto errorProblem;
 }

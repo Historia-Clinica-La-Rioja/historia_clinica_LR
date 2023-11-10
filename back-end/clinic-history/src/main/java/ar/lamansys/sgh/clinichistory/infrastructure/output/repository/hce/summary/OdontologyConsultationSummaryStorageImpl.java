@@ -78,12 +78,18 @@ public class OdontologyConsultationSummaryStorageImpl implements OdontologyConsu
                 +"  s.sctid, s.pt, "
                 +"  d.statusId, "
                 +"  hc.startDate, hc.inactivationDate, "
-                +"  hc.main, hc.problemId, oc.id "
+                +"  hc.main, hc.problemId, oc.id, "
+                +"  (hc.verificationStatusId = :verificationStatusError),"
+                +"  hc.updateable.updatedOn AS timePerformedError,"
+                +"  per.reasonId,"
+                +"  n.description AS observationsError"
                 +"  FROM OdontologyConsultation oc"
                 +"  JOIN Document d ON (d.sourceId = oc.id)"
                 +"  JOIN DocumentHealthCondition dhc ON (d.id = dhc.pk.documentId)"
                 +"  JOIN HealthCondition hc ON (dhc.pk.healthConditionId = hc.id)"
                 +"  JOIN Snomed s ON (s.id = hc.snomedId)"
+                +"  LEFT JOIN ProblemErrorReason per ON (hc.id = per.healthConditionId)"
+                +"  LEFT JOIN Note n ON (hc.noteId = n.id)"
                 +"  WHERE d.statusId = '" + DocumentStatus.FINAL + "'"
                 +"  AND d.sourceTypeId =" + SourceType.ODONTOLOGY
                 +"  AND d.typeId = "+ DocumentType.ODONTOLOGY
@@ -94,6 +100,7 @@ public class OdontologyConsultationSummaryStorageImpl implements OdontologyConsu
         List<Object[]> queryResult = entityManager.createQuery(sqlString)
                 .setParameter("patientId", patientId)
                 .setParameter("odontologyConsultationIds", odontologyConsultationIds)
+                .setParameter("verificationStatusError", ConditionVerificationStatus.ERROR)
                 .getResultList();
         List<HealthConditionSummaryBo> result = new ArrayList<>();
         queryResult.forEach(a ->
@@ -106,7 +113,11 @@ public class OdontologyConsultationSummaryStorageImpl implements OdontologyConsu
                         a[6] != null ? (LocalDate)a[6] : null,
                         (boolean)a[7],
                         (String)a[8],
-                        (Integer) a[9]))
+                        (Integer) a[9],
+                        (Boolean) a[10],
+                        (LocalDateTime) a[11],
+                        (Short) a[12],
+                        (String) a[13]))
         );
         return result;
     }

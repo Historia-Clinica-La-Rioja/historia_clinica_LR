@@ -1709,6 +1709,12 @@ export interface HCEEffectiveClinicalObservationDto extends HCEClinicalObservati
     effectiveTime: string;
 }
 
+export interface HCEErrorProblemDto {
+    observations: string;
+    reason: string;
+    timePerformed: DateTimeDto;
+}
+
 export interface HCEEvolutionSummaryDto {
     clinicalSpecialty: ClinicalSpecialtyDto;
     consultationId: number;
@@ -1723,6 +1729,8 @@ export interface HCEEvolutionSummaryDto {
 }
 
 export interface HCEHealthConditionDto extends HCEPersonalHistoryDto {
+    errorProblem?: HCEErrorProblemDto;
+    isMarkedAsError?: boolean;
     main: boolean;
     problemId: string;
     references: HCEReferenceDto[];
