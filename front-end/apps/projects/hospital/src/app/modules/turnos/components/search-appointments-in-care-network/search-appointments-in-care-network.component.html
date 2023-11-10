@@ -11,7 +11,8 @@
 		<app-typeahead id="careline"
 			[titleInput]="'turnos.search-appointments-in-care-network.CARELINE' | translate"
 			[externalSetValue]="externalInformation?.formInformation?.careLine" [disabled]="externalInformation?.disabledInput"
-			[options]="careLineTypeaheadOptions" (selectionChange)="setCareLine($event)">
+			[options]="careLineTypeaheadOptions" [resetOption]="resetTypeahead"
+			(selectionChange)="setCareLine($event)">
 		</app-typeahead>
 		<div class="error-space">
 			<mat-error *ngIf="showCareLineError">{{ 'forms.REQUIRED' | translate }}</mat-error>
@@ -51,6 +52,7 @@
 				[titleInput]="'turnos.search-appointments-in-care-network.SPECIALTY' | translate"
 				[options]="specialtyTypeaheadOptions" (selectionChange)="setClinicalSpecialty($event)"
 				[externalSetValue]="externalInformation?.formInformation?.clinicalSpecialty" [disabled]="externalInformation?.disabledInput"	
+				[resetOption]="resetTypeahead"
 				>
 			</app-typeahead>
 			<div class="error-space">

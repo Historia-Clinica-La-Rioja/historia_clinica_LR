@@ -17,6 +17,10 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	@Output() selectionChange = new EventEmitter();
 	@Input() required :boolean;
 	@Input() disabled? :boolean;
+	@Input() set resetOption(value: boolean) {
+		if (value)
+			this.reset();
+	}
 
 	form: UntypedFormGroup;
 	optionsFiltered: TypeaheadOption<any>[];
@@ -34,7 +38,7 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	ngOnChanges(): void {
 		this.optionsFiltered = this.options;
 
-		if (this.options) {
+		if (this.options && this.externalSetValue) {
 			this.form.controls.searchValue.setValue(this.externalSetValue?.compareValue);
 			this.optionSelected = this.externalSetValue;
 			if (this.externalSetValue) {

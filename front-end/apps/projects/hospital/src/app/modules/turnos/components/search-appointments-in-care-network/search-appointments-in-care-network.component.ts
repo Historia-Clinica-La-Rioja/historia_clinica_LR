@@ -82,6 +82,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 	searchAppointmentCriteria: SearchAppointmentCriteria;
 	externalInformation: SearchAppointmentInformation;
 	showSectionToSearchAppointmentsInInstitution = false;
+	resetTypeahead = false;
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -166,6 +167,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		this.showCareLineError = false;
 		this.searchForm.controls.specialty.reset();
 		if (careLine) {
+			this.resetTypeahead = false;
 			this.specialties = careLine.clinicalSpecialties;
 			if (!this.externalInformation?.formInformation?.careLine)
 				this.careLineInstitutionPracticeService.getPracticesByCareLine(careLine.id).subscribe(practices => this.practicesBehavior.next(practices))
@@ -181,6 +183,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		this.resetResults();
 		this.searchForm.controls.specialty.setValue(clinicalSpecialty);
 		this.showSpecialtyError = false;
+		this.resetTypeahead = false;
 	}
 
 	setDepartment(department: DepartmentDto) {
@@ -347,15 +350,9 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 	}
 
 	clearForm() {
+		this.resetForm();
+		this.resetTypeaheads();
 		this.externalInformation = null;
-		const formControls = this.searchForm.controls;
-		formControls.specialty.setValue(null);
-		formControls.specialty.enable();
-		formControls.practiceId.setValue(null);
-		formControls.practiceId.enable();
-		formControls.careLine.setValue(null);
-		formControls.careLine.enable();
-		this.practicesBehavior.next([]);
 		this.selectedTypeAttention = SearchCriteria.CONSULTATION;
 		this.showSectionToSearchAppointmentsInInstitution = false;
 		this.searchAppointmentsInfoService.clearInfo();
@@ -497,6 +494,22 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		}
 
 		this.searchAppointmentsInfoService.clearInfo();
+	}
+
+	private resetForm() {
+		const formControls = this.searchForm.controls;
+		formControls.specialty.setValue(null);
+		formControls.specialty.enable();
+		formControls.practiceId.setValue(null);
+		formControls.practiceId.enable();
+		formControls.careLine.setValue(null);
+		formControls.careLine.enable();
+	}
+
+	private resetTypeaheads() {
+		this.practicesBehavior.next([]);
+		this.resetTypeahead = true;
+		this.changeDetectorRef.detectChanges();
 	}
 
 }

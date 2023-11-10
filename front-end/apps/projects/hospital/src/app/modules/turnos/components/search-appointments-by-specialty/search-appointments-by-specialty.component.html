@@ -13,7 +13,7 @@
 				</div>
 				<app-typeahead
 					[titleInput]="'turnos.home.SPECIALTY_SEARCH' | translate"
-					[options]="aliasTypeaheadOptions"
+					[options]="aliasTypeaheadOptions" [resetOption]="resetTypeahead"
 					[externalSetValue]="externalSetValueSpecialty" [disabled]="externalInformation?.disabledInput"
 					(selectionChange)="setClinicalSpecialty($event)">
 				</app-typeahead>
