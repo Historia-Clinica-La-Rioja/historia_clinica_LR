@@ -226,9 +226,9 @@
                     <div class="data-text"
                         th:if="${!selfPerceivedFF || patient.person.nameSelfDetermination == null || patient.person.nameSelfDetermination == '' }">
                         <label
-                            th:text="${patient.person.lastName + (patient.person.otherLastNames != null ? ' ' + patient.person.otherLastNames : '') }"></label>
+                            th:text="${(patient.person.lastName != null ? patient.person.lastName : '') + (patient.person.otherLastNames != null ? ' ' + patient.person.otherLastNames : '') }"></label>
                         <label
-                            th:text="${patient.person.firstName + (patient.person.middleNames != null ? ' ' + patient.person.middleNames : '') }"></label>
+                            th:text="${(patient.person.firstName != null ? patient.person.firstName : '')  + (patient.person.middleNames != null ? ' ' + patient.person.middleNames : '') }"></label>
                     </div>
                     <div class="data-text"
                         th:if="${selfPerceivedFF && patient.person.nameSelfDetermination != null && patient.person.nameSelfDetermination != ''}">
