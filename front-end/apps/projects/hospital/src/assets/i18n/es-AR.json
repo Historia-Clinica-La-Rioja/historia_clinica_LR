@@ -19,7 +19,8 @@
 			"LOGOUT": "Cerrar sesión",
 			"AUDIT": "Auditoria",
 			"TELEMEDICINE":"TeleSalud",
-			"DIGITAL_SIGNATURE": "Firma digital"
+			"DIGITAL_SIGNATURE": "Firma digital",
+			"ACCESS_MANAGEMENT": "Gestión de accesos"
 		}
 	},
 	"buttons": {

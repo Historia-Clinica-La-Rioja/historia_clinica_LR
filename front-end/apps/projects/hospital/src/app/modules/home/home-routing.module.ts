@@ -33,7 +33,8 @@ export enum HomeRoutes {
 	Settings = 'settings',			// Configuración
 	Extension = 'extension', 		// Extensión
 	UserKeys = 'user-keys', 		// API Keys del usuario
-	Auditoria = 'auditoria'
+	Auditoria = 'auditoria',
+	AccessManagement = 'gestion-de-accesos', // Gestion de accesos
 }
 
 const routes: Routes = [
@@ -64,6 +65,10 @@ const routes: Routes = [
 			{
 				path: HomeRoutes.Auditoria,
 				loadChildren: () => import('../../modules/auditoria/auditoria.module').then(m => m.AuditoriaModule),
+			},
+			{
+				path: HomeRoutes.AccessManagement,
+				loadChildren: () => import('@access-management/access-management.module').then(m => m.AccessManagementModule),
 			},
 		]
 	}

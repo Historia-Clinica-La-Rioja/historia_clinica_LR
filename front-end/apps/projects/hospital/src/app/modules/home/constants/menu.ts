@@ -1,6 +1,8 @@
 import { AppFeature, ERole } from '@api-rest/api-model';
 import { MenuItemDef } from '@core/core-model';
 
+const MANAGER_ROLES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO];
+
 export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 	{
 		text: 'app.menu.INSTITUCIONES',
@@ -28,6 +30,13 @@ export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 			ERole.AUDITOR_MPI
 		],
 		featureFlag: AppFeature.HABILITAR_MODULO_AUDITORIA
+	},
+	{
+		text: 'app.menu.ACCESS_MANAGEMENT',
+		icon: 'swap_horizontal_circle',
+		id: 'access-management',
+		url: '/home/gestion-de-accesos',
+		permissions: MANAGER_ROLES,
 	},
 ];
 

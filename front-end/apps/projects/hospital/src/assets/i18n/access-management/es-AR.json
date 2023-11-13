@@ -1,5 +1,8 @@
 {
     "access-management": {
+		"home": {
+			"TITLE": "Gestión de accesos"
+		},
         "search_references": {
 			"REQUEST_LIST": "lista de solicitudes:",
 			"RECEIVED": "Recibidas",
