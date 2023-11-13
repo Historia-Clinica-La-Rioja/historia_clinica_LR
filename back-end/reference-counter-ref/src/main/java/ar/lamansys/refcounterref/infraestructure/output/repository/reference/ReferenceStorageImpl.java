@@ -169,4 +169,10 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 		return referenceRepository.getReferenceByServiceRequestId(serviceRequestId);
 	}
 
+	@Override
+	public Optional<Reference> findById(Integer referenceId) {
+		log.debug("Input parameters -> referenceId {} ", referenceId);
+		return referenceRepository.findById(referenceId);
+	}
+
 }

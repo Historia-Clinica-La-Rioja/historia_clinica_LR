@@ -763,6 +763,7 @@ export interface CompleteRequestDto {
     fileIds?: number[];
     link?: string;
     observations?: string;
+    referenceClosure?: ReferenceClosureDto;
 }
 
 export interface ConclusionDto extends HealthConditionDto {
@@ -3415,6 +3416,14 @@ export interface ReferenceAppointmentDto {
 
 export interface ReferenceAppointmentStateDto {
     appointmentStateId: number;
+    referenceId: number;
+}
+
+export interface ReferenceClosureDto {
+    clinicalSpecialtyId: number;
+    closureTypeId: number;
+    counterReferenceNote: string;
+    fileIds: number[];
     referenceId: number;
 }
 

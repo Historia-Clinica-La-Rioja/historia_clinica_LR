@@ -220,7 +220,9 @@ public class ServiceRequestController {
                 patientId,
                 diagnosticReportId,
                 completeRequestDto);
-        Integer result = completeDiagnosticReportService.run(patientId, diagnosticReportId, completeDiagnosticReportMapper.parseTo(completeRequestDto));
+		if (completeRequestDto.getReferenceClosure() != null)
+			completeRequestDto.getReferenceClosure().setFileIds(completeRequestDto.getFileIds());
+		Integer result = completeDiagnosticReportService.run(patientId, diagnosticReportId, completeDiagnosticReportMapper.parseTo(completeRequestDto), institutionId);
         updateDiagnosticReportFileService.run(result, completeRequestDto.getFileIds());
         log.debug(OUTPUT, result);
     }

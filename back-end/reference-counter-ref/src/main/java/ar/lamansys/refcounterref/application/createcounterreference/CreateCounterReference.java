@@ -6,6 +6,7 @@ import ar.lamansys.refcounterref.application.port.CounterReferenceAppointmentSto
 import ar.lamansys.refcounterref.application.port.CounterReferenceDoctorStorage;
 import ar.lamansys.refcounterref.application.port.CounterReferenceDocumentStorage;
 import ar.lamansys.refcounterref.application.port.CounterReferenceStorage;
+import ar.lamansys.refcounterref.application.port.ReferenceStorage;
 import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceBo;
 import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceClinicalTermsValidatorUtils;
 import ar.lamansys.refcounterref.domain.document.CounterReferenceDocumentBo;
@@ -29,16 +30,20 @@ public class CreateCounterReference {
     private final DateTimeProvider dateTimeProvider;
     private final CounterReferenceStorage counterReferenceStorage;
     private final CounterReferenceDocumentStorage counterReferenceDocumentStorage;
+	private final ReferenceStorage referenceStorage;
 
     @Transactional
     public void run(CounterReferenceBo counterReferenceBo) {
 
         log.debug("Input parameters -> counterReferenceBo {}", counterReferenceBo);
 
+		var referenceData = referenceStorage.findById(counterReferenceBo.getReferenceId()).orElseThrow(() ->
+				new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_REFERENCE, "El identificador de la referencia es invalido"));
+		
         var doctorInfoBo = counterReferenceDoctorStorage.getDoctorInfo().orElseThrow(() ->
                 new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_DOCTOR, "El identificador del profesional es invalido"));
 
-        assertContextValid(counterReferenceBo, doctorInfoBo);
+        assertContextValid(counterReferenceBo, doctorInfoBo, referenceData.getConsultation());
 
         LocalDate now = dateTimeProvider.nowDate();
 
@@ -61,16 +66,16 @@ public class CreateCounterReference {
         counterReferenceAppointmentStorage.run(counterReferenceBo.getPatientId(), doctorInfoBo.getId(), now);
     }
 
-    private void assertContextValid(CounterReferenceBo counterReferenceBo, CounterReferenceDoctorInfoBo doctorInfoBo) {
+    private void assertContextValid(CounterReferenceBo counterReferenceBo, CounterReferenceDoctorInfoBo doctorInfoBo, boolean consultation) {
         if (counterReferenceBo.getInstitutionId() == null)
             throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.NULL_INSTITUTION_ID, "El id de la institución es obligatorio");
         if (counterReferenceBo.getCounterReferenceNote() == null)
             throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.NULL_COUNTER_REFERENCE_NOTE, "La contrarreferencia es un dato obligatorio");
         if (counterReferenceBo.getPatientId() == null)
             throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.NULL_PATIENT_ID, "El id del paciente es obligatorio");
-        if (counterReferenceBo.getClinicalSpecialtyId() == null)
-            throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.NULL_CLINICAL_SPECIALTY_ID, "El id de especialidad es obligatorio");
-        if (!doctorInfoBo.hasSpecialty(counterReferenceBo.getClinicalSpecialtyId()))
+		if (consultation && counterReferenceBo.getClinicalSpecialtyId() == null)
+			throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.NULL_CLINICAL_SPECIALTY_ID, "El id de especialidad es obligatorio");
+        if (counterReferenceBo.getClinicalSpecialtyId() != null && !doctorInfoBo.hasSpecialty(counterReferenceBo.getClinicalSpecialtyId()))
             throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_CLINICAL_SPECIALTY_ID, "El doctor no posee la especialidad indicada");
         assertThereAreNoRepeatedConcepts(counterReferenceBo);
     }

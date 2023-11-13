@@ -26,7 +26,9 @@ public class CounterReferenceStorageImpl implements CounterReferenceStorage {
         log.debug("Input parameters -> counterReferenceInfoBo {}", counterReferenceInfoBo);
         CounterReference counterReference = new CounterReference(counterReferenceInfoBo);
         Integer counterReferenceId = counterReferenceRepository.save(counterReference).getId();
-        referenceCounterReferenceFileStorage.updateReferenceCounterReferenceId(counterReferenceId, counterReferenceInfoBo.getFileIds());
+        if(counterReferenceInfoBo.getFileIds() != null && !counterReferenceInfoBo.getFileIds().isEmpty()){
+			referenceCounterReferenceFileStorage.updateReferenceCounterReferenceId(counterReferenceId, counterReferenceInfoBo.getFileIds());
+		}
         log.debug("Output -> {}", counterReferenceId);
         return counterReferenceId;
     }

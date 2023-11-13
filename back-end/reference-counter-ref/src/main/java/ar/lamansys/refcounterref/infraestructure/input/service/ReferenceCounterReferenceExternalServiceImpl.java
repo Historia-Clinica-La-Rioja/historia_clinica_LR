@@ -53,6 +53,7 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
 	private final GetReferenceByServiceRequest getReferenceByServiceRequest;
 	private final SharedStaffPort sharedStaffPort;
 
+
     @Override
     public List<ReferenceCounterReferenceFileDto> getReferenceFilesData(Integer referenceId) {
         log.debug("Input parameter -> referenceId {}", referenceId);
@@ -127,7 +128,7 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
 				result.get().setProfessionalInfo(sharedStaffPort.getProfessionalCompleteById(reference.get().getDoctorId()));
 		}
 		return result;
-	};
+	}
 
 	private List<ReferenceCounterReferenceFileDto> mapToReferenceCounterReferenceFileDto(List<ReferenceCounterReferenceFileBo> referenceCounterReferenceFileBos) {
         List<ReferenceCounterReferenceFileDto> referenceCounterReferenceFileDtos = new ArrayList<>();

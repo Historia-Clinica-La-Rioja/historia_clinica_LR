@@ -5,6 +5,7 @@ import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
 import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
+import ar.lamansys.refcounterref.infraestructure.output.repository.reference.Reference;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,5 +25,7 @@ public interface ReferenceStorage {
     void delete(Integer referenceId);
     
 	Optional<ReferenceRequestBo> getReferenceByServiceRequestId(Integer serviceRequestId);
+
+	Optional<Reference> findById(Integer referenceId);
 
 }

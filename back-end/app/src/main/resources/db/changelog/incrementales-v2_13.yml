@@ -200,3 +200,13 @@ databaseChangeLog:
                 - column:
                     name: deleted_on
                     type: datetime
+
+    - changeSet:
+        id: dropNotNullConstraint-clinical_specialty_id-counter_reference
+        comment: Drop not null constraint in clinical_specialty_id colum in counter-reference table
+        author: fsimaro
+        changes:
+          - dropNotNullConstraint:
+              tableName: counter_reference
+              columnName: clinical_specialty_id
+              columnDataType: int
