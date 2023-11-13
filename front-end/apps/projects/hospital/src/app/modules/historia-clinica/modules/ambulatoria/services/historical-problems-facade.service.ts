@@ -193,5 +193,7 @@ export class HistoricalProblems {
 			procedurePt: string;
 		}[];
 	reference: HCEReferenceDto[];
+	markedAsError?: boolean;
+	color?: string;
 }
 

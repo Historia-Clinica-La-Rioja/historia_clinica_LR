@@ -78,6 +78,7 @@ import { ProblemsOptionsMenuComponent } from './components/problems-options-menu
 import { AmendProblemComponent } from './dialogs/amend-problem/amend-problem.component';
 import { AmendedProblemsComponent } from './components/amended-problems/amended-problems.component';
 import { ViewDatailsBtnComponent } from './components/view-datails-btn/view-datails-btn.component';
+import { AmendedProblemsInformationComponent } from './components/amended-problems-information/amended-problems-information.component';
 
 @NgModule({
 	declarations: [
@@ -137,6 +138,7 @@ import { ViewDatailsBtnComponent } from './components/view-datails-btn/view-data
   		AmendProblemComponent,
 		AmendedProblemsComponent,
   		ViewDatailsBtnComponent,
+    AmendedProblemsInformationComponent,
 	],
 	imports: [
 		CommonModule,

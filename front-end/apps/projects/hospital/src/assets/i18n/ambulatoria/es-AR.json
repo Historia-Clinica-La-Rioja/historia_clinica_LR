@@ -376,6 +376,12 @@
                     "OK_BUTTON": "Marcar como registro incorrecto",
                     "BACK_BUTTON": "Volver",
                     "AMENDED_PROBLEMS": "Registros incorrectos",
+                    "INCORRECT_PROBLEM": "Registro incorrecto",
+                    "information": {
+                        "MOTIVE": "Motivo de error",
+                        "OBSERVATIONS": "Observaciones",
+                        "EDITED_DATE": "Fecha de edición"
+                    },
                     "error": {
                         "TITLE": "No se puede marcar el registro como incorrecto",
                         "OK_BUTTON": "Aceptar"

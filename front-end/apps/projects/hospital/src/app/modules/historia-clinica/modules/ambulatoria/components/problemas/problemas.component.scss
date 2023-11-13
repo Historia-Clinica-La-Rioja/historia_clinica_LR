@@ -114,3 +114,22 @@
 .evolution-space {
 	white-space: pre-wrap;
 }
+
+.problem-title {
+	height: fit-content; 
+	align-items: center;
+	gap: 10px;
+	font-weight: 400;
+}
+
+.mat-typography h2 {
+	margin: 0 !important;
+}
+
+.problem-icon {
+	margin-top: 3px;
+}
+
+.grey {
+	color: grey;
+}

@@ -249,11 +249,11 @@
 							<div fxLayout="column" fxFlex.gt-sm="70" class="historical-list"
 								id="historical-problem-mapping" *ngIf="historicalProblemsList?.length">
 								<div *ngFor="let historicalProblem of historicalProblemsList">
-									<div class="historical-item">
+									<div class="historical-item {{ historicalProblem.markedAsError ? historicalProblem.color : ''}}">
 										<div fxLayout="row" fxLayoutGap="15px">
 											<div fxFlex="7" fxLayout="row" fxLayoutAlign="end">
 												<mat-icon mat-list-icon fontSet="material-icons-outlined"
-													color="primary">
+													class="problem-icon {{ historicalProblem.color }}">
 													assignment
 												</mat-icon>
 											</div>
@@ -264,8 +264,16 @@
 
 													<div fxLayout="column" fxFlex="65" fxFlex.lt-md="100"
 														fxLayoutGap="10px">
-														<h2 class="mat-h2 page-title primary capitalize-first-letter">
-															{{historicalProblem.problemPt}}</h2>
+														<div fxLayout="row wrap" class="problem-title">
+															<h2 class="mat-h2 page-title {{ historicalProblem.color }} capitalize-first-letter">
+																{{historicalProblem.problemPt}}</h2>
+															<ng-container *ngIf="isMarkProblemAsErrorActive && historicalProblem.markedAsError">
+																<app-colored-label
+																	[description]="'ambulatoria.paciente.problemas.amend_problems.INCORRECT_PROBLEM' | translate | uppercase"
+																	[color]="Color.RED">
+																</app-colored-label>
+															</ng-container>
+														</div>
 														<div *ngIf="historicalProblem.specialityPt">
 															<div class="mat-body-strong"
 																[translate]="'ambulatoria.paciente.problemas.historical-problems.SPECIALTY'">
@@ -298,30 +306,32 @@
 														</div>
 
 														<div *ngIf="historicalProblem.consultationEvolutionNote">
-															<h3 class="mat-h2 primary"
+															<h3 class="mat-h2 {{ historicalProblem.color }}"
 																[translate]="'ambulatoria.paciente.problemas.historical-problems.EVOLUTION_NOTE'">
 															</h3>
 															<p class="mat-body capitalize-first-letter evolution-space">
 																{{historicalProblem.consultationEvolutionNote}}</p>
 														</div>
+
+														<app-amended-problems-information *ngIf="historicalProblem.markedAsError"></app-amended-problems-information>
 													</div>
 													<div fxLayout="column" fxLayoutGap="10px" fxFlex="calc(30% - 10px)"
 														fxFlex.lt-md="100">
 
 														<div>
-															<h3 class="mat-h2 primary"
+															<h3 class="mat-h2 {{ historicalProblem.color }}"
 																[translate]="'ambulatoria.paciente.problemas.historical-problems.CONSULTATION_DATE'">
 															</h3>
 															{{historicalProblem.consultationDate | viewDateDto: 'localdatetime' | date : 'dd/MM/yyyy'}}
 														</div>
 														<div>
-															<h3 class="mat-h2 primary"
+															<h3 class="mat-h2 {{ historicalProblem.color }}"
 																[translate]="'ambulatoria.paciente.problemas.historical-problems.PROFESSIONAL'">
 															</h3>
 															{{historicalProblem.professionalFullName}}
 														</div>
 														<div>
-															<h3 class="mat-h2 primary"
+															<h3 class="mat-h2 {{ historicalProblem.color }}"
 																[translate]="'ambulatoria.paciente.problemas.historical-problems.CONSULTATION_INSTITUTION'">
 															</h3>
 															{{historicalProblem.institutionName}}
