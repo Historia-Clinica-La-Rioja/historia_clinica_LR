@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 @Injectable({
 	providedIn: 'root'
 })
-export class ReferenceReportService {
+export class InstitutionalReferenceReportService {
 
 	private readonly BASE_URL: string;
 	private readonly PREFIX_URL: string;

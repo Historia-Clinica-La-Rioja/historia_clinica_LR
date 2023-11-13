@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ReferenceAppointmentDto, ReferenceCompleteDataDto, ReferenceDataDto, ERole, EReferenceClosureType } from '@api-rest/api-model';
-import { ReferenceReportService } from '@api-rest/services/reference-report.service';
+import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { ContactDetails } from '@access-management/components/contact-details/contact-details.component';
 import { PatientSummary } from '../../../hsi-components/patient-summary/patient-summary.component';
 import { Observable, take, tap } from 'rxjs';
@@ -34,7 +34,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	private appointmentId: number;
 
 	constructor(
-		private readonly referenceReportService: ReferenceReportService,
+		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
 		private readonly searchAppointmentsInfoService: SearchAppointmentsInfoService,
 		private readonly permissionService: PermissionsService,
 		public dialogRef: MatDialogRef<ReportCompleteDataPopupComponent>,
@@ -45,7 +45,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
-		this.referenceCompleteData$ = this.referenceReportService.getReferenceDetail(this.data.referenceId).pipe(tap(
+		this.referenceCompleteData$ = this.institutionalReferenceReportService.getReferenceDetail(this.data.referenceId).pipe(tap(
 			referenceDetails => {
 				this.setReportData(referenceDetails);
 				this.colapseContactDetails = referenceDetails.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.SERVED;

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ERole, PageDto, ReferenceReportDto } from '@api-rest/api-model';
-import { ReferenceReportService } from '@api-rest/services/reference-report.service';
+import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { DateFormat, dateMinusDays } from '@core/utils/date.utils';
 import { DateRange } from '@presentation/components/date-range-picker/date-range-picker.component';
 import { DashboardView, DashboardFilters } from '@access-management/components/reference-dashboard-filters/reference-dashboard-filters.component';
@@ -29,7 +29,7 @@ export class DashboardService {
 	pageNumber = INITIAL_PAGE;
 
 	constructor(
-		private readonly referenceReportService: ReferenceReportService,
+		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
 		private readonly permissionsService: PermissionsService,
 	) {
 		this.initializeFilters();
@@ -65,14 +65,14 @@ export class DashboardService {
 	}
 
 	private updateReceivedReferences() {
-		this.referenceReportService.getAllReceivedReferences(this.dashboardFilters, this.pageSize, this.pageNumber).subscribe(reports => {
+		this.institutionalReferenceReportService.getAllReceivedReferences(this.dashboardFilters, this.pageSize, this.pageNumber).subscribe(reports => {
 			this.references.next(reports);
 			this.disabledDashboardActions = false; 
 		});
 	}
 
 	private updateRequestedReferences() {
-		this.referenceReportService.getAllRequestedReferences(this.dashboardFilters, this.pageSize, this.pageNumber).subscribe(reports => {
+		this.institutionalReferenceReportService.getAllRequestedReferences(this.dashboardFilters, this.pageSize, this.pageNumber).subscribe(reports => {
 			this.references.next(reports);
 			this.disabledDashboardActions = false;
 		});
