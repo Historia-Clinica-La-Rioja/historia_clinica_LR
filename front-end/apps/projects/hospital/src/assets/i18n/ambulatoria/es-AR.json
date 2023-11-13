@@ -309,6 +309,7 @@
                     "EVOLUTION_NOTE": "Descripción/Resumen",
                     "CONSULTATION_DATE": "Fecha de consulta",
                     "REFERENCE_REQUEST": "referencia solicitada",
+                    "CANCELLED_REFERENCE": "Referencia cancelada",
                     "CARE_LINE": "Línea de cuidado",
                     "INSTITUTION": "Institución",
                     "SUMMARY_REFERENCE": "Resumen de referencia",

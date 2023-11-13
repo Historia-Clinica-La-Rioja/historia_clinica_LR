@@ -346,8 +346,12 @@
 														fxLayout="column" fxFlex.lt-md="100" fxLayoutGap="10px">
 
 														<ng-container>
-															<app-colored-label
+															<app-colored-label *ngIf="!reference.cancelled"
 																[description]="'ambulatoria.paciente.problemas.historical-problems.REFERENCE_REQUEST' | translate | uppercase"
+																[color]="Color.RED">
+															</app-colored-label>
+															<app-colored-label *ngIf="reference.cancelled"
+																[description]="'ambulatoria.paciente.problemas.historical-problems.CANCELLED_REFERENCE' | translate | uppercase"
 																[color]="Color.RED">
 															</app-colored-label>
 														</ng-container>
