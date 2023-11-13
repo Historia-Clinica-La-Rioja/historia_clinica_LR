@@ -1,18 +1,13 @@
-::ng-deep .mat-dialog-container {
-  padding: 0%;
- }
-
- ::ng-deep .mat-select-panel {
+::ng-deep .mat-select-panel {
   position: relative; 
   top: 15%;
 }
 .popup-container {
-    max-height: 710px;
-    overflow-y: auto;
+    max-height: 600px;
+    // overflow-y: auto;
     border: 1px solid #ccc;
     border-radius: 4px;
-    padding: 30px; //se cambio de 20px a 30px 
- 
+  
   }
 
   .mat-form-field {
@@ -24,11 +19,12 @@
   }
   
   .popup-container mat-label {
-    display: block;
+    display: block; 
     margin-bottom: 10px;
     box-shadow: 0 2px 4px rgba(63, 201, 255, 0.1);
   
   }
+
   
   .popup-container mat-select {
     width: 100%;
@@ -45,7 +41,8 @@
   .mat-button {
   
     float: right;
-    margin-top: -2.5%;  
-  }
+    position: relative;
+    bottom: 8px;
+   }
 
  
