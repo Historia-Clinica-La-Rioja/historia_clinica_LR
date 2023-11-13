@@ -4,7 +4,7 @@
             [translate]="'ambulatoria.paciente.problemas.amend_problems.information.MOTIVE'">
         </div>
         <div class="mat-body capitalize-first-letter">
-            Paciente equivocado
+            {{ errorProblem.reason }}
         </div>
     </div>
     <div>
@@ -12,7 +12,7 @@
             [translate]="'ambulatoria.paciente.problemas.amend_problems.information.OBSERVATIONS'">
         </div>
         <div class="mat-body capitalize-first-letter">
-            Estas son unas observaciones escritas por el profesional
+            {{ errorProblem.observations }}
         </div>
     </div>
     <div>
@@ -20,7 +20,7 @@
             [translate]="'ambulatoria.paciente.problemas.amend_problems.information.EDITED_DATE'">
         </div>
         <div class="mat-body capitalize-first-letter">
-            16/08/2023 - 15:08 hs.
+            {{ errorProblem.timePerformed | viewDateDto: 'localdatetime' | date: 'dd/MM/yyyy  - HH:mm' }} hs.
         </div>
     </div>
 </div>

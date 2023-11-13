@@ -35,7 +35,7 @@ export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 			consultationDate: [null],
 			referenceState: [null],
 		});
-
+		
 		this.setFilterOptions();
 
 		this.historicalProblemsFilter$ = this.historicalProblemsFacadeService.getHistoricalProblemsFilter().subscribe(
@@ -72,11 +72,12 @@ export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 	}
 
 	private setFilterOptions(): void{
-		const filterOptions = this.historicalProblemsFacadeService.getFilterOptions();
-		this.specialties = filterOptions.specialties;
-		this.professionals = filterOptions.professionals;
-		this.problems = filterOptions.problems;
-		this.referenceStates = filterOptions.referenceStates;
+		this.historicalProblemsFacadeService.getFilterOptions().subscribe(filterOptions => {
+			this.specialties = filterOptions.specialties;
+			this.professionals = filterOptions.professionals;
+			this.problems = filterOptions.problems;
+			this.referenceStates = filterOptions.referenceStates;
+		});
 	}
 
 }
@@ -85,6 +86,6 @@ export class HistoricalProblemsFilter {
 	specialty: number;
 	professional: number;
 	problem: string;
-	consultationDate: string;
+	consultationDate?: string;
 	referenceStateId: REFERENCE_STATES;
 }

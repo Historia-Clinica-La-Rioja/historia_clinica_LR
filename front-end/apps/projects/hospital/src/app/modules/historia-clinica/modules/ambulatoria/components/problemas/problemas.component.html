@@ -313,7 +313,8 @@
 																{{historicalProblem.consultationEvolutionNote}}</p>
 														</div>
 
-														<app-amended-problems-information *ngIf="historicalProblem.markedAsError"></app-amended-problems-information>
+														<app-amended-problems-information *ngIf="historicalProblem.markedAsError" 
+															[errorProblem]="historicalProblem.errorProblem"></app-amended-problems-information>
 													</div>
 													<div fxLayout="column" fxLayoutGap="10px" fxFlex="calc(30% - 10px)"
 														fxFlex.lt-md="100">

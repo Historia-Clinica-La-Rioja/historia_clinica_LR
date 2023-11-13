@@ -234,8 +234,9 @@ export class MapperService {
 					consultationReasons: currentOutpatientEvolutionSummary.reasons?.map(r => ({ reasonId: r.snomed.sctid, reasonPt: r.snomed.pt })),
 					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({ procedureDate: p.performedDate, procedureId: p.snomed.sctid, procedurePt: p.snomed.pt })),
 					reference: problem.references?.length > 0 ? problem.references : null,
-					markedAsError: true,
-					color: false ? 'primary' : 'grey',
+					markedAsError: problem.isMarkedAsError,
+					color: problem.isMarkedAsError ? 'grey' : 'primary',
+					errorProblem: problem.errorProblem
 
 				}))] : historicalProblemsList = [...historicalProblemsList, {
 					consultationDate: currentOutpatientEvolutionSummary.startDate,

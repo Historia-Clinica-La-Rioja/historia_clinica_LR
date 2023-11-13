@@ -84,6 +84,11 @@ export class HceGeneralStateService {
 		return this.http.get<HCEPersonalHistoryDto[]>(url);
 	}
 
+	getAmendedProblems(patientId: number): Observable<HCEPersonalHistoryDto[]> {
+		const url = this.URL_BASE + patientId + this.URL_SUFFIX + `problemsMarkedAsError`;
+		return this.http.get<HCEPersonalHistoryDto[]>(url);
+	}
+
 	getChronicConditions(patientId: number): Observable<HCEPersonalHistoryDto[]> {
 		const url = this.URL_BASE + patientId + this.URL_SUFFIX + `chronic`;
 		return this.http.get<HCEPersonalHistoryDto[]>(url);

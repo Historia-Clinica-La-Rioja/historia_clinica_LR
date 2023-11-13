@@ -37,7 +37,7 @@ export class AmendedProblemsComponent implements OnInit {
     }
 
     setAmendedProblems() {
-		this.ambulatoriaSummaryFacadeService.solvedProblems$.subscribe(amendedProblems => {
+		this.ambulatoriaSummaryFacadeService.amendedProblems$.subscribe(amendedProblems => {
             this.amendedProblems = this.mapToProblemsData(amendedProblems)
         })
 	}
