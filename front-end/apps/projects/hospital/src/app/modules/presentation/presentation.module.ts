@@ -89,6 +89,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ButtonComponent } from './components/button/button.component';
 
 @NgModule({
 	declarations: [
@@ -174,6 +175,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
+		ButtonComponent,
 	],
 	imports: [
 		CommonModule,
@@ -195,6 +197,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 		// components
 		AsignPatientButtonComponent,
 		BarComponent,
+		ButtonComponent,
 		CallDetailsComponent,
 		CardComponent,
 		CategoryHeaderDividerComponent,
