@@ -125,7 +125,6 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
 				"WHERE dr.patient_id = :patientId " +
 				"AND d.type_id = :documentType " +
 				"AND d.status_id = :documentStatusId " +
-				"AND (aoi.active = false OR aoi.active IS null) " +
 				") " +
 				"SELECT t.id AS id, s.id AS d_id, s.pt AS m_pt " +
 				", drs.id AS statusId, drs.description AS status " +
