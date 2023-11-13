@@ -6,8 +6,11 @@ import { DateFormat, dateMinusDays } from '@core/utils/date.utils';
 import { DateRange } from '@presentation/components/date-range-picker/date-range-picker.component';
 import { DashboardView, DashboardFilters } from '@access-management/components/reference-dashboard-filters/reference-dashboard-filters.component';
 import format from 'date-fns/format';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { PermissionsService } from '@core/services/permissions.service';
+import { ContextService } from '@core/services/context.service';
+import { NO_INSTITUTION } from '../../home/home.component';
+import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/institutional-network-reference-report.service';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 const MAX_DAYS = 90;
 const MIN_SIZE = 5;
@@ -31,6 +34,8 @@ export class DashboardService {
 	constructor(
 		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
 		private readonly permissionsService: PermissionsService,
+		private readonly institutionalNetworkReferenceReportService: InstitutionalNetworkReferenceReportService,
+		private readonly contextService: ContextService,
 	) {
 		this.initializeFilters();
 		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRATIVO]).subscribe(hasRole => this.isAdministrative = hasRole);
@@ -39,7 +44,7 @@ export class DashboardService {
 	updateReports() {
 		this.disabledDashboardActions = true;
 		this.setRange();
-		this.dashboardView == DashboardView.RECEIVED && this.isAdministrative ? this.updateReceivedReferences() : this.updateRequestedReferences()
+		this.updateReportByAccess();
 	}
 
 	updateDashboardView(dashboardView: DashboardView) {
@@ -64,15 +69,26 @@ export class DashboardService {
 		this.updateReports();
 	}
 
-	private updateReceivedReferences() {
-		this.institutionalReferenceReportService.getAllReceivedReferences(this.dashboardFilters, this.pageSize, this.pageNumber).subscribe(reports => {
-			this.references.next(reports);
-			this.disabledDashboardActions = false; 
-		});
+	private updateReportByAccess() {
+		this.contextService.institutionId === NO_INSTITUTION ? this.updateInsitutionalNetworkReferences() : this.updateInsitutionalReferences();
 	}
 
-	private updateRequestedReferences() {
-		this.institutionalReferenceReportService.getAllRequestedReferences(this.dashboardFilters, this.pageSize, this.pageNumber).subscribe(reports => {
+	private updateInsitutionalNetworkReferences() {
+		this.callReferenceReportService(this.institutionalNetworkReferenceReportService, METHOD_NAMES.MANAGER);
+	}
+
+	private updateInsitutionalReferences() {
+		const methodName = this.isAdministrative && this.dashboardView == DashboardView.RECEIVED ? METHOD_NAMES.RECEIVED : METHOD_NAMES.REQUESTED;
+		this.callReferenceReportService(this.institutionalReferenceReportService, methodName);
+	}
+
+	private callReferenceReportService(service: Service, method: string) {
+		const referenceReports$ = service[method](this.dashboardFilters, this.pageSize, this.pageNumber);
+		this.subscribeAndEmit(referenceReports$);
+	}
+
+	private subscribeAndEmit(obs: Observable<PageDto<ReferenceReportDto>>) {
+		obs.subscribe(reports => {
 			this.references.next(reports);
 			this.disabledDashboardActions = false;
 		});
@@ -87,3 +103,11 @@ export class DashboardService {
 	}
 
 }
+
+enum METHOD_NAMES {
+	RECEIVED = 'getAllReceivedReferences',
+	REQUESTED = 'getAllRequestedReferences',
+	MANAGER = 'getReferencesByManagerRole',
+}
+
+type Service = InstitutionalNetworkReferenceReportService | InstitutionalReferenceReportService;

@@ -1,3 +1,5 @@
+@import "../../../../../assets/styles/mat-mixins";
+
 .mat-button-toggle-group {
     border-radius: 10px;
     height: fit-content;
@@ -6,6 +8,7 @@
 }
 
 .form {
+    @include mat-form-field-background-white;
     min-width: 30%;
 
     div {

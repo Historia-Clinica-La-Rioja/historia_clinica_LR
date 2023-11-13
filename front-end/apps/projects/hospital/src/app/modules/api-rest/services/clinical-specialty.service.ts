@@ -19,8 +19,8 @@ export class ClinicalSpecialtyService {
 	}
 
 	getClinicalSpecialtiesInAllInstitutions(): Observable<ClinicalSpecialtyDto[]> {
-		 const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinicalspecialty`;
-		 return this.http.get<ClinicalSpecialtyDto[]>(url);
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinicalspecialty`;
+		return this.http.get<ClinicalSpecialtyDto[]>(url);
 	}
 
 	getClinicalSpecialties(professionalsIds: number[]): Observable<ProfessionalsByClinicalSpecialtyDto[]> {
