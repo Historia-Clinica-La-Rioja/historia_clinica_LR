@@ -1,11 +1,11 @@
-package net.pladema.nursingreports.service;
+package net.pladema.provincialreports.nursingreports.service;
 
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
-import net.pladema.nursingreports.repository.NursingEmergencyConsultationDetail;
-import net.pladema.nursingreports.repository.NursingHospitalizationConsultationDetail;
-import net.pladema.nursingreports.repository.NursingOutpatientConsultationDetail;
-import net.pladema.nursingreports.repository.NursingProceduresConsultationDetail;
-import net.pladema.nursingreports.repository.NursingVaccineConsultationDetail;
+import net.pladema.provincialreports.nursingreports.repository.NursingEmergencyConsultationDetail;
+import net.pladema.provincialreports.nursingreports.repository.NursingHospitalizationConsultationDetail;
+import net.pladema.provincialreports.nursingreports.repository.NursingOutpatientConsultationDetail;
+import net.pladema.provincialreports.nursingreports.repository.NursingProceduresConsultationDetail;
+import net.pladema.provincialreports.nursingreports.repository.NursingVaccineConsultationDetail;
 
 import java.util.List;
 

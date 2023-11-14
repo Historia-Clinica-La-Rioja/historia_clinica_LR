@@ -2271,7 +2271,7 @@
 		</constructor-result>
 	</sql-result-set-mapping>
 	<sql-result-set-mapping name="NursingReports.NursingEmergencyConsultationDetailResult">
-		<constructor-result target-class="net.pladema.nursingreports.repository.NursingEmergencyConsultationDetail">
+		<constructor-result target-class="net.pladema.provincialreports.nursingreports.repository.NursingEmergencyConsultationDetail">
 			<column name="institution" class="java.lang.String"/>
 			<column name="ambulance" class="java.lang.String"/>
 			<column name="office" class="java.lang.String"/>
@@ -2306,7 +2306,7 @@
 		</constructor-result>
 	</sql-result-set-mapping>
 	<sql-result-set-mapping name="NursingReports.NursingOutpatientConsultationDetailResult">
-		<constructor-result target-class="net.pladema.nursingreports.repository.NursingOutpatientConsultationDetail">
+		<constructor-result target-class="net.pladema.provincialreports.nursingreports.repository.NursingOutpatientConsultationDetail">
 			<column name="institution" class="java.lang.String"/>
 			<column name="operativeUnit" class="java.lang.String"/>
 			<column name="patientProvider" class="java.lang.String"/>
@@ -2343,7 +2343,7 @@
 		</constructor-result>
 	</sql-result-set-mapping>
 	<sql-result-set-mapping name="NursingReports.NursingHospitalizationConsultationDetailResult">
-		<constructor-result target-class="net.pladema.nursingreports.repository.NursingHospitalizationConsultationDetail">
+		<constructor-result target-class="net.pladema.provincialreports.nursingreports.repository.NursingHospitalizationConsultationDetail">
 			<column name="institution" class="java.lang.String"/>
 			<column name="lastName" class="java.lang.String"/>
 			<column name="completeName" class="java.lang.String"/>
@@ -2363,7 +2363,7 @@
 		</constructor-result>
 	</sql-result-set-mapping>
 	<sql-result-set-mapping name="NursingReports.NursingProceduresConsultationDetailResult">
-		<constructor-result target-class="net.pladema.nursingreports.repository.NursingProceduresConsultationDetail">
+		<constructor-result target-class="net.pladema.provincialreports.nursingreports.repository.NursingProceduresConsultationDetail">
 			<column name="institution" class="java.lang.String"/>
 			<column name="source" class="java.lang.String"/>
 			<column name="lender" class="java.lang.String"/>
@@ -2401,7 +2401,7 @@
 		</constructor-result>
 	</sql-result-set-mapping>
 	<sql-result-set-mapping name="NursingReports.NursingVaccineConsultationDetailResult">
-		<constructor-result target-class="net.pladema.nursingreports.repository.NursingVaccineConsultationDetail">
+		<constructor-result target-class="net.pladema.provincialreports.nursingreports.repository.NursingVaccineConsultationDetail">
 			<column name="institution" class="java.lang.String"/>
 			<column name="operativeUnit" class="java.lang.String"/>
 			<column name="provider" class="java.lang.String"/>

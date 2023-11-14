@@ -1,4 +1,4 @@
-package net.pladema.nursingreports.service.impl;
+package net.pladema.provincialreports.nursingreports.service.impl;
 
 import ar.lamansys.sgx.shared.reports.util.CellContent;
 import ar.lamansys.sgx.shared.reports.util.manager.WorkbookCreator;
@@ -7,12 +7,12 @@ import ar.lamansys.sgx.shared.reports.util.struct.ICellStyle;
 import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
-import net.pladema.nursingreports.repository.NursingEmergencyConsultationDetail;
-import net.pladema.nursingreports.repository.NursingHospitalizationConsultationDetail;
-import net.pladema.nursingreports.repository.NursingOutpatientConsultationDetail;
-import net.pladema.nursingreports.repository.NursingProceduresConsultationDetail;
-import net.pladema.nursingreports.repository.NursingVaccineConsultationDetail;
-import net.pladema.nursingreports.service.NursingReportExcelService;
+import net.pladema.provincialreports.nursingreports.repository.NursingEmergencyConsultationDetail;
+import net.pladema.provincialreports.nursingreports.repository.NursingHospitalizationConsultationDetail;
+import net.pladema.provincialreports.nursingreports.repository.NursingOutpatientConsultationDetail;
+import net.pladema.provincialreports.nursingreports.repository.NursingProceduresConsultationDetail;
+import net.pladema.provincialreports.nursingreports.repository.NursingVaccineConsultationDetail;
+import net.pladema.provincialreports.nursingreports.service.NursingReportExcelService;
 import net.pladema.reportformat.DateFormat;
 
 import org.springframework.stereotype.Service;

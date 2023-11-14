@@ -1,11 +1,11 @@
-package net.pladema.nursingreports.controller;
+package net.pladema.provincialreports.nursingreports.controller;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.establishment.repository.entity.Institution;
-import net.pladema.nursingreports.repository.NursingReportQueryFactory;
-import net.pladema.nursingreports.service.NursingReportExcelService;
+import net.pladema.provincialreports.nursingreports.repository.NursingReportQueryFactory;
+import net.pladema.provincialreports.nursingreports.service.NursingReportExcelService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
