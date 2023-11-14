@@ -1,4 +1,4 @@
-package net.pladema.odontologicalreports.service.impl;
+package net.pladema.provincialreports.odontologicalreports.service.impl;
 
 import ar.lamansys.sgx.shared.reports.util.CellContent;
 import ar.lamansys.sgx.shared.reports.util.manager.WorkbookCreator;
@@ -7,9 +7,9 @@ import ar.lamansys.sgx.shared.reports.util.struct.ICellStyle;
 import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
-import net.pladema.odontologicalreports.repository.OdontologicalProceduresConsultationDetail;
-import net.pladema.odontologicalreports.repository.OdontologyConsultationDetail;
-import net.pladema.odontologicalreports.service.OdontologicalReportExcelService;
+import net.pladema.provincialreports.odontologicalreports.repository.OdontologicalProceduresConsultationDetail;
+import net.pladema.provincialreports.odontologicalreports.repository.OdontologyConsultationDetail;
+import net.pladema.provincialreports.odontologicalreports.service.OdontologicalReportExcelService;
 
 import org.springframework.stereotype.Service;
 

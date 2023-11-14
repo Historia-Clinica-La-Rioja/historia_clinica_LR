@@ -1,11 +1,11 @@
-package net.pladema.odontologicalreports.controller;
+package net.pladema.provincialreports.odontologicalreports.controller;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.establishment.repository.entity.Institution;
-import net.pladema.odontologicalreports.repository.OdontologicalReportQueryFactory;
-import net.pladema.odontologicalreports.service.OdontologicalReportExcelService;
+import net.pladema.provincialreports.odontologicalreports.repository.OdontologicalReportQueryFactory;
+import net.pladema.provincialreports.odontologicalreports.service.OdontologicalReportExcelService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

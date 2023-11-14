@@ -1,8 +1,8 @@
-package net.pladema.odontologicalreports.service;
+package net.pladema.provincialreports.odontologicalreports.service;
 
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
-import net.pladema.odontologicalreports.repository.OdontologicalProceduresConsultationDetail;
-import net.pladema.odontologicalreports.repository.OdontologyConsultationDetail;
+import net.pladema.provincialreports.odontologicalreports.repository.OdontologicalProceduresConsultationDetail;
+import net.pladema.provincialreports.odontologicalreports.repository.OdontologyConsultationDetail;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package net.pladema.odontologicalreports.repository;
+package net.pladema.provincialreports.odontologicalreports.repository;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
