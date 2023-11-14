@@ -3,16 +3,20 @@ package ar.lamansys.refcounterref.infraestructure.input.rest;
 import ar.lamansys.refcounterref.application.getreceivedreferences.GetReceivedReferences;
 import ar.lamansys.refcounterref.application.getreferencecompletedata.GetReferenceCompleteData;
 import ar.lamansys.refcounterref.application.getrequestedreferences.GetRequestedReferences;
-import ar.lamansys.refcounterref.domain.ReferenceReportBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceCompleteDataBo;
+import ar.lamansys.refcounterref.domain.report.ReferenceReportFilterBo;
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.ReferenceReportDto;
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.ReferenceCompleteDataDto;
 import ar.lamansys.refcounterref.infraestructure.input.rest.mapper.GetReferenceMapper;
-import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgh.shared.infrastructure.input.service.datastructures.PageDto;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -22,8 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
-import java.util.List;
+import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -41,34 +44,34 @@ public class ReferenceReportController {
 
 	private final GetReferenceMapper getReferenceMapper;
 
-	private final LocalDateMapper localDateMapper;
+	private final ObjectMapper objectMapper;
 
 	@GetMapping("/received")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
-	public ResponseEntity<List<ReferenceReportDto>> getAllReceivedReferences(@PathVariable(name = "institutionId") Integer institutionId,
-																			 @RequestParam(name = "from") String from,
-																			 @RequestParam(name = "to") String to) {
-		log.debug("Input parameters -> institutionId {}, from {}, to {}", institutionId, from, to);
-		LocalDate startDate = localDateMapper.fromStringToLocalDate(from);
-		LocalDate endDate = localDateMapper.fromStringToLocalDate(to);
-		List<ReferenceReportBo> references = getReceivedReferences.run(institutionId, startDate, endDate);
-		List<ReferenceReportDto> result = getReferenceMapper.toReferenceReportDtoList(references);
-		log.debug("Output -> result {}", result.size());
-		return ResponseEntity.ok(result);
+	public ResponseEntity<PageDto<ReferenceReportDto>> getAllReceivedReferences(@PathVariable(name = "institutionId") Integer institutionId,
+																				 @RequestParam(name = "filter") String filter,
+																				 @RequestParam(name = "pageNumber") Integer pageNumber,
+																				 @RequestParam(name = "pageSize") Integer pageSize) {
+		log.debug("Input parameters -> institutionId {}, filter {}, pageNumber {}, pageSize {} ", institutionId, filter, pageNumber, pageSize);
+		var reportFilter = this.parseFilter(filter);
+		reportFilter.setDestinationInstitutionId(institutionId);
+		var result = getReceivedReferences.run(reportFilter, PageRequest.of(pageNumber, pageSize))
+				.map(getReferenceMapper::toReferenceReportDto);
+		return ResponseEntity.ok(PageDto.fromPage(result));
 	}
 
 	@GetMapping("/requested")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
-	public ResponseEntity<List<ReferenceReportDto>> getAllRequestedReferences(@PathVariable(name = "institutionId") Integer institutionId,
-																			  @RequestParam(name = "from") String from,
-																			  @RequestParam(name = "to") String to) {
-		log.debug("Input parameters -> institutionId {}, from {}, to {}", institutionId, from, to);
-		LocalDate startDate = localDateMapper.fromStringToLocalDate(from);
-		LocalDate endDate = localDateMapper.fromStringToLocalDate(to);
-		List<ReferenceReportBo> references = getRequestedReferences.run(institutionId, startDate, endDate);
-		List<ReferenceReportDto> result = getReferenceMapper.toReferenceReportDtoList(references);
-		log.debug("Output -> result {}", result.size());
-		return ResponseEntity.ok(result);
+	public ResponseEntity<PageDto<ReferenceReportDto>> getAllRequestedReferences(@PathVariable(name = "institutionId") Integer institutionId,
+																				 @RequestParam(name = "filter") String filter,
+																				 @RequestParam(name = "pageNumber") Integer pageNumber,
+																				 @RequestParam(name = "pageSize") Integer pageSize) {
+		log.debug("Input parameters -> institutionId {}, filter {}, pageNumber {}, pageSize {} ", institutionId, filter, pageNumber, pageSize);
+		var reportFilter = this.parseFilter(filter);
+		reportFilter.setOriginInstitutionId(institutionId);
+		var result = getRequestedReferences.run(institutionId, reportFilter, PageRequest.of(pageNumber, pageSize))
+				.map(getReferenceMapper::toReferenceReportDto);
+		return ResponseEntity.ok(PageDto.fromPage(result));
 	}
 
 	@GetMapping("/reference-detail/{referenceId}")
@@ -82,4 +85,14 @@ public class ReferenceReportController {
 		return ResponseEntity.ok(result);
 	}
 
+
+	private ReferenceReportFilterBo parseFilter(String filter) {
+		ReferenceReportFilterBo searchFilter = null;
+		try {
+			searchFilter = objectMapper.readValue(filter, ReferenceReportFilterBo.class);
+		} catch (IOException e) {
+			log.error(String.format("Error mapping filter: %s", filter), e);
+		}
+		return searchFilter;
+	}
 }

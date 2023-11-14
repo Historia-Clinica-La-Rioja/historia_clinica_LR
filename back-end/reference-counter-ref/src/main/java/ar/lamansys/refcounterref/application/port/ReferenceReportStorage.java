@@ -1,14 +1,13 @@
 package ar.lamansys.refcounterref.application.port;
 
-import ar.lamansys.refcounterref.domain.ReferenceReportBo;
+import ar.lamansys.refcounterref.domain.report.ReferenceReportBo;
+import ar.lamansys.refcounterref.domain.report.ReferenceReportFilterBo;
 
-import java.time.LocalDate;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ReferenceReportStorage {
 
-	List<ReferenceReportBo> fetchReceivedReferencesReport(Integer institutionId, LocalDate from, LocalDate to);
-
-	List<ReferenceReportBo> fetchRequestedReferencesReport(Integer institutionId, Integer healthcareProfessionalId, LocalDate from, LocalDate to);
+	Page<ReferenceReportBo> fetchReferencesReport(ReferenceReportFilterBo filter, Pageable pageable);
 
 }

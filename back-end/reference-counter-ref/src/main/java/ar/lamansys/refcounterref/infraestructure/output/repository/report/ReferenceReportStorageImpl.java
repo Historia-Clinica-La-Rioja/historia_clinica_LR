@@ -3,12 +3,12 @@ package ar.lamansys.refcounterref.infraestructure.output.repository.report;
 import ar.lamansys.refcounterref.application.port.ReferenceAppointmentStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceReportStorage;
 
-import ar.lamansys.refcounterref.application.port.ReferenceStudyStorage;
-import ar.lamansys.refcounterref.domain.ReferenceReportBo;
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import ar.lamansys.refcounterref.domain.enums.EReferencePriority;
 
 import ar.lamansys.refcounterref.domain.snomed.SnomedBo;
+import ar.lamansys.refcounterref.domain.report.ReferenceReportBo;
+import ar.lamansys.refcounterref.domain.report.ReferenceReportFilterBo;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencehealthcondition.ReferenceHealthConditionRepository;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
@@ -17,10 +17,15 @@ import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,58 +40,113 @@ import java.util.stream.Collectors;
 @Service
 public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 
+	private static final String SELECT_INFO = "SELECT DISTINCT r.id, r.priority, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
+			"pex.name_self_determination, it.description, pe.identification_number, oc.created_on, cs2.name AS clinicalSpecialtyOrigin, " +
+			"i.name AS institutionOrigin, cs.name as clinicalSpecialtyDestination, " +
+			"cl.description AS careLine, cr.closure_type_id, i2.name AS institutionDestination, s.id AS snomedId, s.sctid, s.pt, ra.appointment_id ";
+
+	private static final String SELECT_COUNT = "SELECT COUNT(DISTINCT r.id) as total ";
+
+	private static final Short ASSIGNED_STATE = 1;
+
+	private static final Short CONFIRMED_STATE = 2;
+
+	private static final Integer NO_VALUE = -1;
+
+
 	private final EntityManager entityManager;
 
 	private final ReferenceHealthConditionRepository referenceHealthConditionRepository;
 
 	private final ReferenceAppointmentStorage referenceAppointmentStorage;
 
-	private final ReferenceStudyStorage referenceStudyStorage;
-
 	private final SharedAppointmentPort sharedAppointmentPort;
 
 	private final SharedPersonPort sharedPersonPort;
 
 	@Override
-	public List<ReferenceReportBo> fetchReceivedReferencesReport(Integer institutionId, LocalDate from, LocalDate to) {
-		log.debug("Fetch received references at the institution {} from {} to {}", institutionId, from, to);
-		String condition = "AND r.destination_institution_id = " + institutionId;
-		String sqlString = getOutpatientReferenceQueryFragment() + condition + " UNION ALL " + getOdontologyReferenceQueryFragment() + condition;
-		return executeQueryAndProcessResults(sqlString, from, to);
+	public Page<ReferenceReportBo> fetchReferencesReport(ReferenceReportFilterBo filter, Pageable pageable) {
+		String condition = addFilter(filter);
+		String sqlQueryData = SELECT_INFO + getOutpatientReferenceFromStatement() + condition + " UNION ALL " +
+				SELECT_INFO + getOdontologyReferenceFromStatement() + condition;
+		String sqlCountQuery = SELECT_COUNT + getOutpatientReferenceFromStatement() + condition + " UNION ALL " +
+				SELECT_COUNT + getOdontologyReferenceFromStatement() + condition;
+		return executeQueryAndProcessResults(sqlQueryData, sqlCountQuery, filter, pageable);
 	}
 
-	@Override
-	public List<ReferenceReportBo> fetchRequestedReferencesReport(Integer institutionId, Integer healthcareProfessionalId,
-																  LocalDate from, LocalDate to) {
-		log.debug("Fetch requested references at the institution {} from {} to {}", institutionId, from, to);
-		String condition = "AND oc.institution_id = " + institutionId;
-		if (healthcareProfessionalId != null)
-			condition += " AND oc.doctor_id = " + healthcareProfessionalId;
-		String sqlString = getOutpatientReferenceQueryFragment() + condition + " UNION ALL " + getOdontologyReferenceQueryFragment() + condition;
-		return executeQueryAndProcessResults(sqlString, from, to);
+	private String addFilter(ReferenceReportFilterBo filter) {
+		StringBuilder condition = new StringBuilder();
+		if (filter.getDestinationInstitutionId() != null)
+			condition.append("AND r.destination_institution_id = ").append(filter.getDestinationInstitutionId());
+
+		if (filter.getOriginInstitutionId() != null)
+			condition.append(" AND oc.institution_id = ").append(filter.getOriginInstitutionId());
+
+		if (filter.getHealthcareProfessionalId() != null)
+			condition.append(" AND oc.doctor_id = ").append(filter.getHealthcareProfessionalId());
+
+		if (filter.getClosureTypeId() != null) {
+            if (filter.getClosureTypeId().equals(NO_VALUE)) {
+                condition.append(" AND cr.closure_type_id IS null ");
+            } else {
+                condition.append(" AND cr.closure_type_id = ").append(filter.getClosureTypeId());
+            }
+        }
+
+		if (filter.getClinicalSpecialtyId() != null)
+			condition.append(" AND r.clinical_specialty_id = ").append(filter.getClinicalSpecialtyId());
+		if (filter.getPriorityId() != null)
+			condition.append(" AND r.priority = ").append(filter.getPriorityId());
+		if (filter.getProcedureId() != null)
+			condition.append(" AND s.id = ").append(filter.getProcedureId());
+		if (filter.getIdentificationNumber() != null)
+			condition.append(" AND pe.identification_number = '").append(filter.getIdentificationNumber()).append("' ");
+        if (filter.getAppointmentStateId() != null && filter.getAppointmentStateId().equals(NO_VALUE.shortValue()))
+			condition.append("AND ra.appointment_id IS null ");
+
+		return condition.toString();
 	}
 
-	private List<ReferenceReportBo> executeQueryAndProcessResults(String sqlString, LocalDate from, LocalDate to) {
-		var query = entityManager.createNativeQuery(sqlString)
-				.setParameter("from", from)
-				.setParameter("to", to);
+	private Page<ReferenceReportBo> executeQueryAndProcessResults(String sqlQueryData, String sqlCountQuery,
+																  ReferenceReportFilterBo filter, Pageable pageable) {
 
-		var queryResult = query.getResultList();
+		var query = entityManager.createNativeQuery(sqlQueryData)
+				.setParameter("from", filter.getFrom())
+				.setParameter("to", filter.getTo());
 
-		List<ReferenceReportBo> result = mapToReferenceReportBo(queryResult);
-		result = setReferenceDetails(result);
+		if (filter.getAppointmentStateId() != null && filter.getAppointmentStateId() != NO_VALUE.shortValue()) {
+			List<ReferenceReportBo> result = executeQueryAndSetReferenceDetails(query);
 
-		return result.stream()
-				.sorted(Comparator.comparing(ReferenceReportBo::getDate))
-				.collect(Collectors.toList());
+			result = result.stream()
+					.filter( r -> {
+						Short appointmentId = r.getAppointmentStateId();
+						if (appointmentId != null) {
+							return filter.getAppointmentStateId().equals(ASSIGNED_STATE)
+									? r.getAppointmentStateId().equals(ASSIGNED_STATE) || r.getAppointmentStateId().equals(CONFIRMED_STATE)
+									: r.getAppointmentStateId().equals(filter.getAppointmentStateId());
+						}
+						return false;
+					})
+					.sorted(Comparator.comparing(ReferenceReportBo::getDate))
+					.collect(Collectors.toList());
+
+			return createPage(result, pageable);
+
+		} else {
+			query.setFirstResult(pageable.getPageSize() * pageable.getPageNumber());
+			query.setMaxResults(pageable.getPageSize());
+
+			List<ReferenceReportBo> result = executeQueryAndSetReferenceDetails(query);
+			result = result.stream()
+					.sorted(Comparator.comparing(ReferenceReportBo::getDate))
+					.collect(Collectors.toList());
+
+			return createPage(result, pageable, sqlCountQuery, filter);
+		}
 	}
 
-	private String getOutpatientReferenceQueryFragment() {
-		return "SELECT DISTINCT r.id, r.priority, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
-				"pex.name_self_determination, it.description, pe.identification_number, oc.created_on , cs2.name AS clinicalSpecialtyOrigin, " +
-				"i.name AS institutionOrigin, cs.name AS clinicalSpecialtyDestination, " +
-				"cl.description AS careLine, cr.closure_type_id, i2.name AS institutionDestination, r.service_request_id " +
-				"FROM {h-schema}reference r " +
+	private String getOutpatientReferenceFromStatement() {
+		return 	"FROM {h-schema}reference r " +
 				"LEFT JOIN {h-schema}clinical_specialty cs ON (r.clinical_specialty_id = cs.id) " +
 				"JOIN {h-schema}outpatient_consultation oc ON (r.encounter_id = oc.id) " +
 				"JOIN {h-schema}institution i ON (oc.institution_id = i.id) " +
@@ -94,6 +154,11 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"JOIN {h-schema}patient p ON (oc.patient_id = p.id) " +
 				"JOIN {h-schema}person pe ON (p.person_id = pe.id) " +
 				"JOIN {h-schema}person_extended pex ON (pe.id = pex.person_id) " +
+				"LEFT JOIN {h-schema}reference_appointment ra ON (r.id = ra.reference_id) " +
+				"LEFT JOIN {h-schema}document d ON (r.service_request_id = d.source_id AND d.type_id = 6)  " +
+				"LEFT JOIN {h-schema}document_diagnostic_report ddr ON (d.id = ddr.document_id) " +
+				"LEFT JOIN {h-schema}diagnostic_report dr ON (ddr.diagnostic_report_id = dr.id) " +
+				"LEFT JOIN {h-schema}snomed s ON (dr.snomed_id = s.id)" +
 				"LEFT JOIN {h-schema}institution i2 ON (r.destination_institution_id = i2.id) " +
 				"LEFT JOIN {h-schema}identification_type it ON (pe.identification_type_id = it.id) " +
 				"LEFT JOIN {h-schema}care_line cl ON (r.care_line_id = cl.id) " +
@@ -101,12 +166,8 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"WHERE (oc.start_date >= :from AND oc.start_date <= :to) ";
 	}
 
-	private String getOdontologyReferenceQueryFragment() {
-		return "SELECT DISTINCT r.id, r.priority, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
-				"pex.name_self_determination, it.description, pe.identification_number, oc.created_on, cs2.name AS clinicalSpecialtyOrigin, " +
-				"i.name AS institutionOrigin, cs.name as clinicalSpecialtyDestination, " +
-				"cl.description AS careLine, cr.closure_type_id, i2.name AS institutionDestination, r.service_request_id " +
-				"FROM {h-schema}reference r " +
+	private String getOdontologyReferenceFromStatement() {
+		return 	"FROM {h-schema}reference r " +
 				"LEFT JOIN {h-schema}clinical_specialty cs ON (r.clinical_specialty_id = cs.id) " +
 				"JOIN {h-schema}odontology_consultation oc ON (r.encounter_id = oc.id) " +
 				"JOIN {h-schema}institution i ON (oc.institution_id = i.id)" +
@@ -114,6 +175,11 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"JOIN {h-schema}patient p ON (oc.patient_id = p.id) " +
 				"JOIN {h-schema}person pe ON (p.person_id = pe.id) " +
 				"JOIN {h-schema}person_extended pex ON (pe.id = pex.person_id) " +
+				"LEFT JOIN {h-schema}reference_appointment ra ON (r.id = ra.reference_id) " +
+				"LEFT JOIN {h-schema}document d ON (r.service_request_id = d.source_id AND d.type_id = 6)  " +
+				"LEFT JOIN {h-schema}document_diagnostic_report ddr ON (d.id = ddr.document_id) " +
+				"LEFT JOIN {h-schema}diagnostic_report dr ON (ddr.diagnostic_report_id = dr.id) " +
+				"LEFT JOIN {h-schema}snomed s ON (dr.snomed_id = s.id)" +
 				"LEFT JOIN {h-schema}institution i2 ON (r.destination_institution_id = i2.id) " +
 				"LEFT JOIN {h-schema}identification_type it ON (pe.identification_type_id = it.id) " +
 				"LEFT JOIN {h-schema}care_line cl ON (r.care_line_id = cl.id) " +
@@ -141,32 +207,56 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 					.careLine((String) row[13])
 					.closureType(row[14] != null ? EReferenceClosureType.getById((Short) row[14]) : null)
 					.institutionDestination((String) row[15])
-					.serviceRequestId((Integer) row[16])
+					.procedure(new SnomedBo((Integer) row[16], (String) row[17],(String) row[18]))
 					.build();
 			result.add(reference);
 		});
 		return result;
 	}
 
-	private List<ReferenceReportBo> setReferenceDetails(List<ReferenceReportBo> references) {
+	private void setReferenceDetails(List<ReferenceReportBo> references) {
 		List<Integer> referenceIds = references.stream().map(ReferenceReportBo::getId).collect(Collectors.toList());
 		var referencesProblems = referenceHealthConditionRepository.getReferencesProblems(referenceIds);
-		var referencesStudiesIds = references.stream().filter(r -> r.getServiceRequestId() != null).collect(Collectors.toMap(ReferenceReportBo::getServiceRequestId, ReferenceReportBo::getId));
-		Map<Integer, SnomedBo> referencesProcedures = referenceStudyStorage.getReferencesProcedures(referencesStudiesIds);
 		Map<Integer, List<Integer>> referenceAppointments = this.referenceAppointmentStorage.getReferenceAppointmentsIds(referenceIds);
 		Map<Integer, ReferenceAppointmentStateDto> referencesAppointmentStateData = this.sharedAppointmentPort.getReferencesAppointmentState(referenceAppointments)
 				.stream()
 				.collect(Collectors.toMap(ReferenceAppointmentStateDto::getReferenceId, Function.identity()));
-		return references.stream()
-				.peek(ref -> {
-					ref.setProblems(referencesProblems.stream()
-							.filter(rp -> rp.getReferenceId().equals(ref.getId()))
-							.map(rp -> rp.getSnomed().getPt()).collect(Collectors.toList()));
-					var procedure = referencesProcedures.get(ref.getId());
-					ref.setProcedure(procedure != null ? procedure.getPt() : null);
-					var appointment = referencesAppointmentStateData.get(ref.getId());
-						ref.setAppointmentStateId(appointment != null ? appointment.getAppointmentStateId() : null);
-					ref.setPatientFullName(sharedPersonPort.parseCompletePersonName(ref.getPatientFirstName(), ref.getPatientMiddleNames(), ref.getPatientLastName(), ref.getPatientOtherLastNames(), ref.getPatientNameSelfDetermination()));
-				}).collect(Collectors.toList());
+		references.forEach(ref -> {
+			ref.setProblems(referencesProblems.stream().filter(rp -> rp.getReferenceId().equals(ref.getId())).map(rp -> rp.getSnomed().getPt()).collect(Collectors.toList()));
+			var appointment = referencesAppointmentStateData.get(ref.getId());
+			ref.setAppointmentStateId(appointment != null ? appointment.getAppointmentStateId() : null);
+			ref.setPatientFullName(sharedPersonPort.parseCompletePersonName(ref.getPatientFirstName(), ref.getPatientMiddleNames(), ref.getPatientLastName(), ref.getPatientOtherLastNames(), ref.getPatientNameSelfDetermination()));
+		});
 	}
+
+	private List<ReferenceReportBo> executeQueryAndSetReferenceDetails(Query query) {
+		var queryResult = query.getResultList();
+		List<ReferenceReportBo> result = mapToReferenceReportBo(queryResult);
+		setReferenceDetails(result);
+		return result;
+	}
+
+	private Page<ReferenceReportBo> createPage(List<ReferenceReportBo> references, Pageable pageable) {
+		int totalAmount = references.size();
+		int initialIndex = pageable.getPageSize() * pageable.getPageNumber();
+		int finalIndex = initialIndex + pageable.getPageSize();
+		List<ReferenceReportBo> result = initialIndex < totalAmount
+				? references.subList(initialIndex, Math.min(finalIndex, totalAmount))
+				: references;
+		return new PageImpl<>(result, pageable, totalAmount);
+	}
+
+	private Page<ReferenceReportBo> createPage(List<ReferenceReportBo> result, Pageable pageable,
+											   String sqlCountQuery, ReferenceReportFilterBo filter) {
+		return new PageImpl<>(result, pageable, getTotalAmountOfElements(sqlCountQuery, filter.getFrom(), filter.getTo()));
+	}
+
+	private long getTotalAmountOfElements(String sqlCountQuery, LocalDate from, LocalDate to) {
+		String query = String.format("SELECT SUM(t.total) FROM ( %s) t", sqlCountQuery);
+		return ((BigDecimal) entityManager.createNativeQuery(query)
+				.setParameter("from", from)
+				.setParameter("to", to)
+				.getSingleResult()).longValue();
+	}
+
 }

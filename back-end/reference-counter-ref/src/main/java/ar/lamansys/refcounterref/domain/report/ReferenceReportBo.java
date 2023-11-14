@@ -1,7 +1,8 @@
-package ar.lamansys.refcounterref.domain;
+package ar.lamansys.refcounterref.domain.report;
 
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import ar.lamansys.refcounterref.domain.enums.EReferencePriority;
+import ar.lamansys.refcounterref.domain.snomed.SnomedBo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -54,7 +55,6 @@ public class ReferenceReportBo {
 
 	private Short appointmentStateId;
 
-	private Integer serviceRequestId;
+	private SnomedBo procedure;
 
-	private String procedure;
 }
