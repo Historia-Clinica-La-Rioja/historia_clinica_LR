@@ -54,7 +54,7 @@ export class WorklistFacadeService {
 
     changeInformerFilters = (modalityId?: number, startDate?: string, endDate?: string) => {
         this.restartInterval(this.changeInformerFilters, REFRESH_TIME); // Refresh cada 5 minutos
-        this.modalityId = modalityId ? modalityId : this.modalityId;
+        this.modalityId = modalityId;
         this.startDate = startDate ? startDate : this.startDate;
         this.endDate = endDate ? endDate : this.endDate;
         this.getReports();
