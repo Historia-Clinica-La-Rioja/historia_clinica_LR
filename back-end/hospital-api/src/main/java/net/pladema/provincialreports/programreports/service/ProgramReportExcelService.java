@@ -1,12 +1,12 @@
-package net.pladema.programreports.service;
+package net.pladema.provincialreports.programreports.service;
 
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
-import net.pladema.programreports.repository.EpidemiologyOneConsultationDetail;
-import net.pladema.programreports.repository.EpidemiologyTwoConsultationDetail;
-import net.pladema.programreports.repository.RecuperoGeneralConsultationDetail;
-import net.pladema.programreports.repository.RecuperoOdontologicoConsultationDetail;
-import net.pladema.programreports.repository.SumarGeneralConsultationDetail;
-import net.pladema.programreports.repository.SumarOdontologicoConsultationDetail;
+import net.pladema.provincialreports.programreports.repository.EpidemiologyOneConsultationDetail;
+import net.pladema.provincialreports.programreports.repository.EpidemiologyTwoConsultationDetail;
+import net.pladema.provincialreports.programreports.repository.RecuperoGeneralConsultationDetail;
+import net.pladema.provincialreports.programreports.repository.RecuperoOdontologicoConsultationDetail;
+import net.pladema.provincialreports.programreports.repository.SumarGeneralConsultationDetail;
+import net.pladema.provincialreports.programreports.repository.SumarOdontologicoConsultationDetail;
 
 import java.util.List;
 

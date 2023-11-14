@@ -1,4 +1,4 @@
-package net.pladema.programreports.repository;
+package net.pladema.provincialreports.programreports.repository;
 
 import org.springframework.stereotype.Repository;
 

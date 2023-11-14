@@ -1,4 +1,4 @@
-package net.pladema.programreports.repository;
+package net.pladema.provincialreports.programreports.repository;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

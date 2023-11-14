@@ -1,27 +1,25 @@
-package net.pladema.programreports.repository;
+package net.pladema.provincialreports.programreports.repository;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
-@NoArgsConstructor
-public class RecuperoGeneralConsultationDetail {
+public class SumarOdontologicoConsultationDetail {
 
 	private String institution;
 
-	private String clinicalSpecialty;
+	private String operativeUnit;
 
 	private String provider;
 
 	private String providerDni;
 
 	private String attentionDate;
-
-	private String hour;
 
 	private String consultationNumber;
 
@@ -31,17 +29,35 @@ public class RecuperoGeneralConsultationDetail {
 
 	private String gender;
 
+	private String selfPerceivedGender;
+
+	private String selfPerceivedName;
+
 	private String birthDate;
 
 	private String ageTurn;
 
 	private String ageToday;
 
+	private String ethnicity;
+
 	private String medicalCoverage;
+
+	private String indexCpo;
+
+	private String indexCeo;
+
+	private String permanentTeethPresent;
+
+	private String temporaryTeethPresent;
 
 	private String address;
 
 	private String location;
+
+	private String educationLevel;
+
+	private String occupation;
 
 	private String reasons;
 

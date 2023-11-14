@@ -1,9 +1,9 @@
-package net.pladema.programreports.controller;
+package net.pladema.provincialreports.programreports.controller;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
-import net.pladema.programreports.repository.ProgramReportQueryFactory;
-import net.pladema.programreports.service.ProgramReportExcelService;
+import net.pladema.provincialreports.programreports.repository.ProgramReportQueryFactory;
+import net.pladema.provincialreports.programreports.service.ProgramReportExcelService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

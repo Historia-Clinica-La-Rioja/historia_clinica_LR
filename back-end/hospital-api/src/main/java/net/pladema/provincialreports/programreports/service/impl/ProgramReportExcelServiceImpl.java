@@ -1,4 +1,4 @@
-package net.pladema.programreports.service.impl;
+package net.pladema.provincialreports.programreports.service.impl;
 
 import ar.lamansys.sgx.shared.reports.util.CellContent;
 import ar.lamansys.sgx.shared.reports.util.manager.WorkbookCreator;
@@ -7,13 +7,13 @@ import ar.lamansys.sgx.shared.reports.util.struct.ICellStyle;
 import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
-import net.pladema.programreports.repository.EpidemiologyOneConsultationDetail;
-import net.pladema.programreports.repository.EpidemiologyTwoConsultationDetail;
-import net.pladema.programreports.repository.RecuperoGeneralConsultationDetail;
-import net.pladema.programreports.repository.RecuperoOdontologicoConsultationDetail;
-import net.pladema.programreports.repository.SumarGeneralConsultationDetail;
-import net.pladema.programreports.repository.SumarOdontologicoConsultationDetail;
-import net.pladema.programreports.service.ProgramReportExcelService;
+import net.pladema.provincialreports.programreports.repository.EpidemiologyOneConsultationDetail;
+import net.pladema.provincialreports.programreports.repository.EpidemiologyTwoConsultationDetail;
+import net.pladema.provincialreports.programreports.repository.RecuperoGeneralConsultationDetail;
+import net.pladema.provincialreports.programreports.repository.RecuperoOdontologicoConsultationDetail;
+import net.pladema.provincialreports.programreports.repository.SumarGeneralConsultationDetail;
+import net.pladema.provincialreports.programreports.repository.SumarOdontologicoConsultationDetail;
+import net.pladema.provincialreports.programreports.service.ProgramReportExcelService;
 import net.pladema.reportformat.DateFormat;
 
 import org.springframework.stereotype.Service;
