@@ -16,9 +16,9 @@ import { Moment } from 'moment';
 import { SearchCriteria } from '../search-criteria/search-criteria.component';
 import { BehaviorSubject } from 'rxjs';
 import { CareLineInstitutionPracticeService } from '@api-rest/services/care-line-institution-practice.service';
-import { SearchAppointmentInformation, SearchAppointmentsInfoService } from '@turnos/services/search-appointment-info.service';
 import { TabsService } from '@turnos/services/tabs.service';
 import { Tabs } from '@turnos/constants/tabs';
+import { SearchAppointmentInformation, SearchAppointmentsInfoService } from '@access-management/services/search-appointment-info.service';
 
 const PERIOD_DAYS = 7;
 const PAGE_SIZE_OPTIONS = [5, 10, 25, 100];

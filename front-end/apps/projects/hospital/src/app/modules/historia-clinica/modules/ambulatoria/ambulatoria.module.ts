@@ -11,6 +11,7 @@ import { HistoriaClinicaModule } from '../../historia-clinica.module';
 import { PacientesModule } from '../../../pacientes/pacientes.module';
 import { OdontologiaModule } from '../odontologia/odontologia.module';
 import { AmbulatoriaRoutingModule } from './ambulatoria-routing.module';
+import { AccessManagementModule } from '@access-management/access-management.module';
 
 import { HomeComponent } from './routes/home/home.component';
 import { PatientProfileComponent } from './routes/patient-profile/patient-profile.component';
@@ -142,6 +143,7 @@ import { AmendProblemComponent } from './dialogs/amend-problem/amend-problem.com
 		ExtensionsModule,
 		HistoriaClinicaModule,
 		AmbulatoriaRoutingModule,
+		AccessManagementModule,
 		PacientesModule,
 		OdontologiaModule,
 		ClipboardModule,

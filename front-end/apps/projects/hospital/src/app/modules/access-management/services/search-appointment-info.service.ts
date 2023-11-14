@@ -3,7 +3,9 @@ import { CareLineDto, ClinicalSpecialtyDto, ReferenceDataDto, ReferenceSummaryDt
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { SearchCriteria } from '@turnos/components/search-criteria/search-criteria.component';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class SearchAppointmentsInfoService {
 
 	patientId: number;

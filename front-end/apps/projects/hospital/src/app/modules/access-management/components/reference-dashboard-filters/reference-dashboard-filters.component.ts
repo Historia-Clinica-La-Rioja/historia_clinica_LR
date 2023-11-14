@@ -5,20 +5,20 @@ import { dateMinusDays } from '@core/utils/date.utils';
 import { DateRange } from '@presentation/components/date-range-picker/date-range-picker.component';
 import { FiltersType, SelectedFilterOption, SelectedFilters } from '@presentation/components/filters/filters.component'
 import { differenceInDays } from 'date-fns';
-import { ReferenceReportFacadeService } from '../../services/reference-report-facade.service';
+import { DashboardService } from '@access-management/services/dashboard.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { PracticesService } from '@api-rest/services/practices.service';
 import { forkJoin } from 'rxjs';
-import { DashboardFiltersMapping, EDashboardFilters, setReportFilters } from '@turnos/constants/report-filters';
+import { DashboardFiltersMapping, EDashboardFilters, setReportFilters } from '@access-management/constants/reference-dashboard-filters';
 
 const MAX_DAYS = 90;
 
 @Component({
-	selector: 'app-report-filters',
-	templateUrl: './report-filters.component.html',
-	styleUrls: ['./report-filters.component.scss']
+	selector: 'app-reference-dashboard-filters',
+	templateUrl: './reference-dashboard-filters.component.html',
+	styleUrls: ['./reference-dashboard-filters.component.scss']
 })
-export class ReportFiltersComponent implements OnInit, OnDestroy {
+export class ReferenceDashboardFiltersComponent implements OnInit, OnDestroy {
 	dashboardView = DashboardView;
 	showValidation = false;
 	reports: ReferenceReportDto[] = [];
@@ -26,7 +26,7 @@ export class ReportFiltersComponent implements OnInit, OnDestroy {
 	filters: FiltersType;
 
 	constructor(
-		readonly referenceReportFacade: ReferenceReportFacadeService,
+		readonly dashboardService: DashboardService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly practiceService: PracticesService,
 		private readonly changeDetectorRef: ChangeDetectorRef,
@@ -39,18 +39,18 @@ export class ReportFiltersComponent implements OnInit, OnDestroy {
 		});
 
 		const today = new Date();
-		this.referenceReportFacade.dateRange = {
+		this.dashboardService.dateRange = {
 			start: dateMinusDays(today, MAX_DAYS),
 			end: today
 		}
 
 		this.setFiltersOptions();
 
-		this.referenceReportFacade.updateReports();
+		this.dashboardService.updateReports();
 	}
 
 	ngOnDestroy(): void {
-		this.referenceReportFacade.initializeFilters();
+		this.dashboardService.initializeFilters();
 	}
 
 	checkDays(dateRange: DateRange) {
@@ -60,7 +60,7 @@ export class ReportFiltersComponent implements OnInit, OnDestroy {
 			this.reports = [];
 			return;
 		}
-		this.referenceReportFacade.dateRange = dateRange;
+		this.dashboardService.dateRange = dateRange;
 		this.changeDetectorRef.detectChanges();
 
 	}
@@ -96,14 +96,14 @@ export class ReportFiltersComponent implements OnInit, OnDestroy {
 	}
 
 	private applyFilters(appliedFilters: DashboardFilters) {
-		this.referenceReportFacade.dashboardFilters = appliedFilters;
-		this.referenceReportFacade.updateReports();
+		this.dashboardService.dashboardFilters = appliedFilters;
+		this.dashboardService.updateReports();
 	}
 
 	private applyDocumentFilter(): DashboardFilters {
 		const appliedFilters: DashboardFilters = {} as DashboardFilters;
 		const filterKey = EDashboardFilters.IDENTIFICATION_NUMBER;
-		appliedFilters[DashboardFiltersMapping[filterKey]] = document;
+		appliedFilters[DashboardFiltersMapping[filterKey]] = this.filterByDocument.value.description;
 		return appliedFilters;
 	}
 

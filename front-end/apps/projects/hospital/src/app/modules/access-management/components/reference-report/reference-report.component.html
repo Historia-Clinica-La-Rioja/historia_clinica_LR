@@ -1,0 +1,5 @@
+<app-content>
+    <h2 class="capitalize-first-letter">{{'access-management.search_references.REQUEST_LIST' | translate}}</h2>
+    <app-reference-dashboard-filters></app-reference-dashboard-filters>
+    <app-reference-dashboard [references]="dashboardService.references$ | async"></app-reference-dashboard>
+</app-content>

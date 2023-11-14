@@ -47,6 +47,9 @@
 			],
 			"@extensions/*": [
 				"projects/hospital/src/app/modules/extensions/*"
+			],
+			"@access-management/*": [
+				"projects/hospital/src/app/modules/access-management/*"
 			]
 		},
 		"importHelpers": true,

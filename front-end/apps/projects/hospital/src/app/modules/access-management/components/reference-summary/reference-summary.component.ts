@@ -7,19 +7,19 @@ import { Size } from '@presentation/components/item-summary/item-summary.compone
 import { PatientSummary } from '../../../hsi-components/patient-summary/patient-summary.component';
 
 @Component({
-	selector: 'app-report-information',
-	templateUrl: './report-information.component.html',
-	styleUrls: ['./report-information.component.scss']
+	selector: 'app-reference-summary',
+	templateUrl: './reference-summary.component.html',
+	styleUrls: ['./reference-summary.component.scss']
 })
-export class ReportInformationComponent {
+export class ReferenceSummaryComponent {
 
 	identiferCases = IDENTIFIER_CASES;
 	size = Size.SMALL;
-	@Input() report: Report;
+	@Input() referenceReport: ReferenceReport;
 
 }
 
-export interface Report {
+export interface ReferenceReport {
 	dto: ReferenceReportDto;
 	priority: string;
 	state: ReferenceState;

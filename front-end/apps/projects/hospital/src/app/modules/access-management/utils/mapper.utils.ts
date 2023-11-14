@@ -2,9 +2,9 @@ import { ClinicalSpecialtyDto, ReferenceAppointmentDto, ReferencePatientDto, Ref
 import { PatientSummary } from "../../hsi-components/patient-summary/patient-summary.component";
 import { getColoredIconText, getPriority, getState } from "./reference.utils";
 import { TypeaheadOption } from "@presentation/components/typeahead/typeahead.component";
-import { AppointmentSummary } from "@turnos/components/appointment-summary/appointment-summary.component";
-import { ContactDetails } from "@turnos/components/contact-details/contact-details.component";
-import { Report } from "@turnos/components/report-information/report-information.component";
+import { ReferenceReport } from "@access-management/components/reference-summary/reference-summary.component";
+import { AppointmentSummary } from "@access-management/components/appointment-summary/appointment-summary.component";
+import { ContactDetails } from "@access-management/components/contact-details/contact-details.component";
 
 export const toPatientSummary = (patient: ReferencePatientDto): PatientSummary => {
     return {
@@ -34,7 +34,7 @@ export const toAppointmentSummary = (value: ReferenceAppointmentDto): Appointmen
     }
 }
 
-export const toReport = (report: ReferenceReportDto): Report => {
+export const toReferenceReport = (report: ReferenceReportDto): ReferenceReport => {
     return {
         dto: report,
         priority: getPriority(report.priority.id),

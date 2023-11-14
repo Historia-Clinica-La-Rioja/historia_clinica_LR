@@ -4,7 +4,7 @@ import { ERole, PageDto, ReferenceReportDto } from '@api-rest/api-model';
 import { ReferenceReportService } from '@api-rest/services/reference-report.service';
 import { DateFormat, dateMinusDays } from '@core/utils/date.utils';
 import { DateRange } from '@presentation/components/date-range-picker/date-range-picker.component';
-import { DashboardFilters, DashboardView } from '@turnos/components/report-filters/report-filters.component';
+import { DashboardView, DashboardFilters } from '@access-management/components/reference-dashboard-filters/reference-dashboard-filters.component';
 import format from 'date-fns/format';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { PermissionsService } from '@core/services/permissions.service';
@@ -12,12 +12,14 @@ import { PermissionsService } from '@core/services/permissions.service';
 const MAX_DAYS = 90;
 const MIN_SIZE = 5;
 const INITIAL_PAGE = 0;
-@Injectable()
-export class ReferenceReportFacadeService {
+@Injectable({
+	providedIn: 'root'
+})
+export class DashboardService {
 
 	private isAdministrative = false;
-	private referencesReport = new BehaviorSubject<PageDto<ReferenceReportDto>>(null);
-	readonly referencesReport$ = this.referencesReport.asObservable();
+	private references = new BehaviorSubject<PageDto<ReferenceReportDto>>(null);
+	readonly references$ = this.references.asObservable();
 
 	dateRange: DateRange;
 	dashboardView = DashboardView.RECEIVED;
@@ -63,14 +65,14 @@ export class ReferenceReportFacadeService {
 
 	private updateReceivedReferences() {
 		this.referenceReportService.getAllReceivedReferences(this.dashboardFilters, this.pageSize, this.pageNumber).subscribe(reports => {
-			this.referencesReport.next(reports);
-			this.disabledDashboardActions = false;
+			this.references.next(reports);
+			this.disabledDashboardActions = false; 
 		});
 	}
 
 	private updateRequestedReferences() {
 		this.referenceReportService.getAllRequestedReferences(this.dashboardFilters, this.pageSize, this.pageNumber).subscribe(reports => {
-			this.referencesReport.next(reports);
+			this.references.next(reports);
 			this.disabledDashboardActions = false;
 		});
 	}

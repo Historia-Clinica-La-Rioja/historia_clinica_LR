@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ReferenceCounterReferenceFileDto, ReferenceDataDto } from '@api-rest/api-model';
 import { ColoredIconText } from '@presentation/components/colored-icon-text/colored-icon-text.component';
-import { getColoredIconText, getPriority } from '@turnos/utils/reference.utils';
+import { getColoredIconText, getPriority } from '@access-management/utils/reference.utils';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { IDENTIFIER_CASES } from '../../../hsi-components/identifier-cases/identifier-cases.component';
 import { Position } from '@presentation/components/identifier/identifier.component';

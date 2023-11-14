@@ -267,33 +267,9 @@
 			"CANCEL_BUTTON": "Si, asignar turno"
 		},
 		"search_references": {
-			"REQUEST_LIST": "lista de solicitudes:",
-			"RECEIVED": "Recibidas",
-			"REQUEST": "Solicitadas",
-			"FILTER_BY_PERIOD": "Filtrar por período",
-			"PERIOD_VALIDATIONS": "El rango de fechas no debe superar los 90 días",
-			"ORIGIN": "origen",
-			"DESTINATION": "destino",
-			"REQUESTED_REFERENCE": "Referencia solicitada",
-			"ONE_MORE_PROBLEM": "problema más",
-			"MORE_PROBLEMS": "problemas más",
-			"PRIORITY": "Prioridad",
-			"SHIFT_STATUS": "Estado del turno",
-			"SPECIALTY": "Especialidad de destino",
-			"REQUEST_STATUS": "Estado de solicitud",
 			"CONTINUES_UNDER_OBSERVATION": "Continúa en observación",
 			"TREATMENT_BEGINS_IN_A_EFERENCE_CENTER":"Inicia tratamiento en centro de referencia",
-			"REQUIERES_COMPLEMENTARY_STUDIES":"Requiere estudios complementarios",
-			"COUNTER_REFERENCE":"Contrarreferencia",
-			"VIEW_APPLICATION": "Ver solicitud",
-			"DOCUMENT_SEARCH": "Buscar por documento",
-			"reference": {
-				"TITLE": "Detalle de solicitud",
-				"CONTACT_DATA": "Datos de contacto",
-				"REFERENCE_DATA": "Datos de Referencia",
-				"APPOINTMENT_DATA": "Datos del turno",
-				"ASSIGN_APPOINTMENT_IN_CARE_NETWORK":" asignar turno en red de atencion"
-			}
+			"REQUIERES_COMPLEMENTARY_STUDIES":"Requiere estudios complementarios"
 		}
 	}
 }

@@ -1,7 +1,7 @@
-@mixin app-report-filters($theme) {
+@mixin app-reference-dashboard-filters($theme) {
     $palette-primary: map-get($theme, primary);
 
-    app-report-filters {
+    app-reference-dashboard-filters {
 
         .mat-button-toggle {
             color: mat-color($palette-primary, 500);

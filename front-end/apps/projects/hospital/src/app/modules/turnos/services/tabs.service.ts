@@ -5,7 +5,9 @@ import { pushIfNotExists } from '@core/utils/array.utils';
 import { ROLE_TABS, Tabs } from '@turnos/constants/tabs';
 import { take, map } from 'rxjs';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class TabsService {
 
 	private allUserRolesTabs: Tabs[] = [];

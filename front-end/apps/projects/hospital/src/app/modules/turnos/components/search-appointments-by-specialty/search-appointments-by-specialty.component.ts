@@ -11,7 +11,7 @@ import { Moment } from 'moment';
 import { SearchCriteria } from '../search-criteria/search-criteria.component';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { PracticesService } from '@api-rest/services/practices.service';
-import { SearchAppointmentInformation, SearchAppointmentsInfoService } from '@turnos/services/search-appointment-info.service';
+import { SearchAppointmentInformation, SearchAppointmentsInfoService } from '@access-management/services/search-appointment-info.service';
 import { Tabs } from '@turnos/constants/tabs';
 import { TabsService } from '@turnos/services/tabs.service';
 

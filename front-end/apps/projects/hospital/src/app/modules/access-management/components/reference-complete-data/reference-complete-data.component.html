@@ -26,7 +26,7 @@
 
 	<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start start">
 		<div id="origin" fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start" fxFlex="50">
-			<span class="grey"> {{'turnos.search_references.ORIGIN' | translate | uppercase}}</span>
+			<span class="grey"> {{'access-management.search_references.ORIGIN' | translate | uppercase}}</span>
 
 			<app-identifier-cases [identifierCase]="identiferCases.PROFESSIONAL"
 				[description]="referenceCompleteData.dto.professionalFullName" [position]="Position.COLUMN"
@@ -46,7 +46,7 @@
 		</div>
 
 		<div id="destination" fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start" fxFlex="50">
-			<span class="grey"> {{'turnos.search_references.DESTINATION' | translate | uppercase}}</span>
+			<span class="grey"> {{'access-management.search_references.DESTINATION' | translate | uppercase}}</span>
 
 			<app-identifier-cases *ngIf="referenceCompleteData.dto.procedure" 
                 [identifierCase]="identiferCases.PRACTICE" [description]="referenceCompleteData.dto.procedure.pt" 

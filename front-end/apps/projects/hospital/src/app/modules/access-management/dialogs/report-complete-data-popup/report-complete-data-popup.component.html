@@ -5,21 +5,21 @@
 </div>
 <div *ngIf="referenceCompleteData$ | async">
 	<div mat-dialog-title>
-		<h2>{{'turnos.search_references.reference.TITLE' | translate}}</h2>
+		<h2>{{'access-management.search_references.reference.TITLE' | translate}}</h2>
 		<app-patient-summary [person]="reportCompleteData.patient"></app-patient-summary>
 	</div>
 
 
 	<mat-dialog-content fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="20px">
 		<div fxLayout="column" fxLayoutGap="10px" fxFlex="60">
-			<app-expansion-section [title]="'turnos.search_references.reference.CONTACT_DATA'"
+			<app-expansion-section [title]="'access-management.search_references.reference.CONTACT_DATA'"
 				[collapsed]="colapseContactDetails">
 				<app-contact-details [contactDetails]="reportCompleteData.contactDetails"></app-contact-details>
 			</app-expansion-section>
 
 			<mat-divider></mat-divider>
 
-			<app-expansion-section [title]="'turnos.search_references.reference.REFERENCE_DATA'">
+			<app-expansion-section [title]="'access-management.search_references.reference.REFERENCE_DATA'">
 				<app-reference-complete-data [reference]="reportCompleteData.reference"></app-reference-complete-data>
 			</app-expansion-section>
 		</div>
@@ -33,7 +33,7 @@
 		</button>
 		<button mat-stroked-button color="primary" id="assign-appointment-in-care-network"
 			*ngIf="popupActions?.assignAppointmentInCareNetwork" (click)="assignAppointmentInCareNetwork()">
-			<span class="uppercase">{{'turnos.search_references.reference.ASSIGN_APPOINTMENT_IN_CARE_NETWORK' | translate}}</span>
+			<span class="uppercase">{{'access-management.search_references.reference.ASSIGN_APPOINTMENT_IN_CARE_NETWORK' | translate}}</span>
 		</button>
 		<button mat-flat-button color="warn" id="cancel-appointment" *ngIf="popupActions?.cancelAppointment"
 			(click)="cancelAppointment()">

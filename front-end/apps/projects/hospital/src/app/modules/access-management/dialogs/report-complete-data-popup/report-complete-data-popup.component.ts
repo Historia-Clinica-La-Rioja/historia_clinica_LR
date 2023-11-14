@@ -2,20 +2,20 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ReferenceAppointmentDto, ReferenceCompleteDataDto, ReferenceDataDto, ERole, EReferenceClosureType } from '@api-rest/api-model';
 import { ReferenceReportService } from '@api-rest/services/reference-report.service';
-import { ContactDetails } from '@turnos/components/contact-details/contact-details.component';
+import { ContactDetails } from '@access-management/components/contact-details/contact-details.component';
 import { PatientSummary } from '../../../hsi-components/patient-summary/patient-summary.component';
 import { Observable, take, tap } from 'rxjs';
-import { AppointmentSummary } from '@turnos/components/appointment-summary/appointment-summary.component';
-import { PENDING } from '@turnos/utils/reference.utils';
+import { AppointmentSummary } from '@access-management/components/appointment-summary/appointment-summary.component';
 import { APPOINTMENT_STATES_ID } from '@turnos/constants/appointment';
 import { Tabs } from '@turnos/constants/tabs';
 import { PermissionsService } from '@core/services/permissions.service';
-import { toPatientSummary, toContactDetails, toAppointmentSummary } from '@turnos/utils/mapper.utils';
-import { SearchAppointmentsInfoService } from '@turnos/services/search-appointment-info.service';
+import { toPatientSummary, toContactDetails, toAppointmentSummary } from '@access-management/utils/mapper.utils';
+import { SearchAppointmentsInfoService } from '@access-management/services/search-appointment-info.service';
 import { TabsService } from '@turnos/services/tabs.service';
-import { ReferenceReportFacadeService } from '@turnos/services/reference-report-facade.service';
-import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
-import { DashboardView } from '@turnos/components/report-filters/report-filters.component';
+import { DashboardService } from '@access-management/services/dashboard.service';
+import { CancelAppointmentComponent } from '@turnos/dialogs/cancel-appointment/cancel-appointment.component';
+import { DashboardView } from '@access-management/components/reference-dashboard-filters/reference-dashboard-filters.component';
+import { PENDING } from '@access-management/constants/reference';
 
 @Component({
 	selector: 'app-report-complete-data-popup',
@@ -38,7 +38,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		private readonly searchAppointmentsInfoService: SearchAppointmentsInfoService,
 		private readonly permissionService: PermissionsService,
 		public dialogRef: MatDialogRef<ReportCompleteDataPopupComponent>,
-		private readonly referenceReportFacade: ReferenceReportFacadeService,
+		private readonly dashboardService: DashboardService,
 		private readonly tabsService: TabsService,
 		private readonly dialog: MatDialog,
 		@Inject(MAT_DIALOG_DATA) public data,
@@ -73,7 +73,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe(canceledAppointment => {
 			if (canceledAppointment) {
-				this.referenceReportFacade.updateReports();
+				this.dashboardService.updateReports();
 				this.dialogRef.close();
 			}
 		});
@@ -105,7 +105,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	}
 
 	private setAdministrativeActions(): void {
-		const dashboardView = this.referenceReportFacade.dashboardView;
+		const dashboardView = this.dashboardService.dashboardView;
 		const careLineId = this.reportCompleteData.reference.careLine.id;
 
 		if (dashboardView == DashboardView.RECEIVED) {

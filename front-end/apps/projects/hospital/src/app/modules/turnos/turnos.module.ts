@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { CalendarDateFormatter, CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 // deps
+import { AccessManagementModule } from '@access-management/access-management.module';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { PresentationModule } from '@presentation/presentation.module';
 import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
-import { PatientSummaryComponent } from '../hsi-components/patient-summary/patient-summary.component';
 import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
 // routing
 import { TurnosRoutingModule } from './turnos-routing.module';
@@ -18,19 +18,13 @@ import { EquipmentDiarySetupComponent } from './routes/equipment-diary-setup/equ
 // components
 import { AppointmentDetailsComponent } from './components/appointment-details/appointment-details.component';
 import { AppointmentResultViewComponent } from './components/appointment-result-view/appointment-result-view.component';
-import { AppointmentSummaryComponent } from './components/appointment-summary/appointment-summary.component';
 import { CalendarProfessionalViewComponent } from '@turnos/components/calendar-professional-view/calendar-professional-view.component';
-import { ContactDetailsComponent } from './components/contact-details/contact-details.component';
 import { DateRangeTimeFormComponent } from './components/date-range-time-form/date-range-time-form.component';
 import { EquipmentDiaryComponent } from './components/equipment-diary/equipment-diary.component';
 import { EquipmentTranscribeOrderPopupComponent } from './dialogs/equipment-transcribe-order-popup/equipment-transcribe-order-popup.component';
 import { ImageNetworkAppointmentComponent } from './components/image-network-appointment/image-network-appointment.component';
 import { MedicalOrderInputComponent } from './components/medical-order-input/medical-order-input.component';
 import { ProfessionalSelectComponent } from './components/professional-select/professional-select.component';
-import { ReferenceCompleteDataComponent } from './components/reference-complete-data/reference-complete-data.component';
-import { ReferenceListComponent } from './components/reference-list/reference-list.component';
-import { ReferenceReportComponent } from './components/reference-report/reference-report.component';
-import { ReportInformationComponent } from './components/report-information/report-information.component';
 import { SeachAppointmentsByProfessionalComponent } from './components/seach-appointments-by-professional/seach-appointments-by-professional.component';
 import { SearchAppointmentsByEquipmentComponent } from './components/search-appointments-by-equipment/search-appointments-by-equipment.component';
 import { SearchAppointmentsBySpecialtyComponent } from './components/search-appointments-by-specialty/search-appointments-by-specialty.component';
@@ -47,18 +41,12 @@ import { ConfirmBookingComponent } from './dialogs/confirm-booking/confirm-booki
 import { ConfirmPrintAppointmentComponent } from './dialogs/confirm-print-appointment/confirm-print-appointment.component';
 import { NewAppointmentComponent } from './dialogs/new-appointment/new-appointment.component';
 import { NewAttentionComponent } from './dialogs/new-attention/new-attention.component';
-import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data-popup/report-complete-data-popup.component';
 // services
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { EquipmentAppointmentsFacadeService } from './services/equipment-appointments-facade.service';
-import { ReferenceReportFacadeService } from './services/reference-report-facade.service';
-import { SearchAppointmentsInfoService } from './services/search-appointment-info.service';
-import { TabsService } from './services/tabs.service';
 // pipes
 import { MeetingRoomPipe } from './pipes/meeting-room.pipe';
 import { PracticesPipe } from './pipes/practices.pipe';
-import { ShowProblemsPipe } from './pipes/show-problems.pipe';
-import { ReportFiltersComponent } from './components/report-filters/report-filters.component';
 
 @NgModule({
 	declarations: [
@@ -70,20 +58,13 @@ import { ReportFiltersComponent } from './components/report-filters/report-filte
 		// components
 		AppointmentDetailsComponent,
 		AppointmentResultViewComponent,
-		AppointmentSummaryComponent,
 		CalendarProfessionalViewComponent,
-		ContactDetailsComponent,
 		DateRangeTimeFormComponent,
 		EquipmentDiaryComponent,
 		EquipmentTranscribeOrderPopupComponent,
 		ImageNetworkAppointmentComponent,
 		MedicalOrderInputComponent,
 		ProfessionalSelectComponent,
-		ReferenceCompleteDataComponent,
-		ReferenceListComponent,
-		ReferenceReportComponent,
-		ReportInformationComponent,
-		ReportFiltersComponent,
 		SeachAppointmentsByProfessionalComponent,
 		SearchAppointmentsByEquipmentComponent,
 		SearchAppointmentsBySpecialtyComponent,
@@ -100,11 +81,9 @@ import { ReportFiltersComponent } from './components/report-filters/report-filte
 		ConfirmPrintAppointmentComponent,
 		NewAppointmentComponent,
 		NewAttentionComponent,
-		ReportCompleteDataPopupComponent,
 		//pipes
 		MeetingRoomPipe,
 		PracticesPipe,
-  		ShowProblemsPipe,
 	],
 	imports: [
 		CommonModule,
@@ -112,16 +91,15 @@ import { ReportFiltersComponent } from './components/report-filters/report-filte
 		// routing
 		TurnosRoutingModule,
 		// deps
+		AccessManagementModule,
+		IdentifierCasesComponent,
 		PresentationModule,
 		LazyMaterialModule,
 		HistoriaClinicaModule,
-		PatientSummaryComponent,
-		IdentifierCasesComponent,
 		ClipboardModule,
 	],
 	exports: [
 		CalendarProfessionalViewComponent,
-		ReferenceCompleteDataComponent,
 		SearchCriteriaComponent,
 	],
 	providers: [
@@ -130,9 +108,6 @@ import { ReportFiltersComponent } from './components/report-filters/report-filte
 			useClass: CustomDateFormatter,
 		},
 		EquipmentAppointmentsFacadeService,
-		ReferenceReportFacadeService,
-		SearchAppointmentsInfoService,
-		TabsService,
 	]
 })
 export class TurnosModule {

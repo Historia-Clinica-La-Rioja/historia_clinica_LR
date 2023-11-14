@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { PageDto, ReferenceCompleteDataDto, ReferenceReportDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
-import { DashboardFilters } from '@turnos/components/report-filters/report-filters.component';
+import { DashboardFilters } from '@access-management/components/reference-dashboard-filters/reference-dashboard-filters.component';
 import { Observable } from 'rxjs';
 
 @Injectable({

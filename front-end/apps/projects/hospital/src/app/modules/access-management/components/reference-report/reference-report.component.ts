@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ReferenceReportFacadeService } from '@turnos/services/reference-report-facade.service';
+import { DashboardService } from '@access-management/services/dashboard.service';
 
 @Component({
 	selector: 'app-reference-report',
@@ -9,7 +9,7 @@ import { ReferenceReportFacadeService } from '@turnos/services/reference-report-
 export class ReferenceReportComponent {
 
 	constructor(
-		readonly referenceReportFacade: ReferenceReportFacadeService,
+		readonly dashboardService: DashboardService,
 	) { }
 
 }
