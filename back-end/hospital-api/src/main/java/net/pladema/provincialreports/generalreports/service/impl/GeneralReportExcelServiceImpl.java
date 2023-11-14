@@ -1,4 +1,4 @@
-package net.pladema.generalreports.service.impl;
+package net.pladema.provincialreports.generalreports.service.impl;
 
 import ar.lamansys.sgx.shared.reports.util.CellContent;
 import ar.lamansys.sgx.shared.reports.util.manager.WorkbookCreator;
@@ -7,10 +7,10 @@ import ar.lamansys.sgx.shared.reports.util.struct.ICellStyle;
 import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
-import net.pladema.generalreports.repository.ComplementaryStudiesConsultationDetail;
-import net.pladema.generalreports.repository.DiabeticHypertensionConsultationDetail;
-import net.pladema.generalreports.repository.EmergencyConsultationDetail;
-import net.pladema.generalreports.service.GeneralReportExcelService;
+import net.pladema.provincialreports.generalreports.repository.ComplementaryStudiesConsultationDetail;
+import net.pladema.provincialreports.generalreports.repository.DiabeticHypertensionConsultationDetail;
+import net.pladema.provincialreports.generalreports.repository.EmergencyConsultationDetail;
+import net.pladema.provincialreports.generalreports.service.GeneralReportExcelService;
 import net.pladema.reportformat.DateFormat;
 
 import org.springframework.stereotype.Service;

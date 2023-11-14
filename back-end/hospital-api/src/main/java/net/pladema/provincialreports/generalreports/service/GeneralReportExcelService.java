@@ -1,9 +1,9 @@
-package net.pladema.generalreports.service;
+package net.pladema.provincialreports.generalreports.service;
 
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
-import net.pladema.generalreports.repository.ComplementaryStudiesConsultationDetail;
-import net.pladema.generalreports.repository.DiabeticHypertensionConsultationDetail;
-import net.pladema.generalreports.repository.EmergencyConsultationDetail;
+import net.pladema.provincialreports.generalreports.repository.ComplementaryStudiesConsultationDetail;
+import net.pladema.provincialreports.generalreports.repository.DiabeticHypertensionConsultationDetail;
+import net.pladema.provincialreports.generalreports.repository.EmergencyConsultationDetail;
 
 import java.util.List;
 

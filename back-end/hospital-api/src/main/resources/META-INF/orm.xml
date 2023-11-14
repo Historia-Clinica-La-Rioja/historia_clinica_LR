@@ -2070,7 +2070,7 @@
 		</constructor-result>
 	</sql-result-set-mapping>
 	<sql-result-set-mapping name="GeneralReports.EmergencyConsultationDetailResult">
-		<constructor-result target-class="net.pladema.generalreports.repository.EmergencyConsultationDetail">
+		<constructor-result target-class="net.pladema.provincialreports.generalreports.repository.EmergencyConsultationDetail">
 			<column name="institution" class="java.lang.String"/>
 			<column name="ambulance" class="java.lang.String"/>
 			<column name="office" class="java.lang.String"/>
@@ -2094,7 +2094,7 @@
 		</constructor-result>
 	</sql-result-set-mapping>
 	<sql-result-set-mapping name="GeneralReports.DiabeticsConsultationDetailResult">
-		<constructor-result target-class="net.pladema.generalreports.repository.DiabeticHypertensionConsultationDetail">
+		<constructor-result target-class="net.pladema.provincialreports.generalreports.repository.DiabeticHypertensionConsultationDetail">
 			<column name="id" class="java.lang.String"/>
 			<column name="institution" class="java.lang.String"/>
 			<column name="attentionDate" class="java.lang.String"/>
@@ -2109,7 +2109,7 @@
 		</constructor-result>
 	</sql-result-set-mapping>
 	<sql-result-set-mapping name="GeneralReports.HypertensiveConsultationDetailResult">
-		<constructor-result target-class="net.pladema.generalreports.repository.DiabeticHypertensionConsultationDetail">
+		<constructor-result target-class="net.pladema.provincialreports.generalreports.repository.DiabeticHypertensionConsultationDetail">
 			<column name="id" class="java.lang.String"/>
 			<column name="institution" class="java.lang.String"/>
 			<column name="attentionDate" class="java.lang.String"/>
@@ -2124,7 +2124,7 @@
 		</constructor-result>
 	</sql-result-set-mapping>
 	<sql-result-set-mapping name="GeneralReports.ComplementaryStudiesConsultationDetailResult">
-		<constructor-result target-class="net.pladema.generalreports.repository.ComplementaryStudiesConsultationDetail">
+		<constructor-result target-class="net.pladema.provincialreports.generalreports.repository.ComplementaryStudiesConsultationDetail">
 			<column name="institution" class="java.lang.String"/>
 			<column name="date" class="java.lang.String"/>
 			<column name="category" class="java.lang.String"/>
