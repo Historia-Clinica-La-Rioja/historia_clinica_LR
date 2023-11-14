@@ -40,7 +40,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
-import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentObservationRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
@@ -81,8 +80,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 	private static final String OUTPUT = "Output -> {}";
 
 	private final AppointmentRepository appointmentRepository;
-
-	private final AppointmentAssnRepository appointmentAssnRepository;
 
 	private final AppointmentObservationRepository appointmentObservationRepository;
 
@@ -125,7 +122,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 								  FeatureFlagsService featureFlagsService,
 								  AppointmentStorage appointmentStorage,
 								  AppointmentUpdateRepository appointmentUpdateRepository,
-								  AppointmentAssnRepository appointmentAssnRepository, AppointmentOrderImageRepository appointmentOrderImageRepository,
+								  AppointmentOrderImageRepository appointmentOrderImageRepository,
 								  SharedReferenceCounterReference sharedReferenceCounterReference, LocalDateMapper localDateMapper,
 								  EquipmentAppointmentStorage equipmentAppointmentStorage, OrderImageFileStorage orderImageFileStorage) {
 		this.appointmentRepository = appointmentRepository;
@@ -139,7 +136,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 		this.medicalCoveragePlanRepository = medicalCoveragePlanRepository;
 		this.appointmentStorage = appointmentStorage;
 		this.appointmentUpdateRepository = appointmentUpdateRepository;
-		this.appointmentAssnRepository = appointmentAssnRepository;
 		this.appointmentOrderImageRepository = appointmentOrderImageRepository;
 		this.sharedReferenceCounterReference = sharedReferenceCounterReference;
 		this.localDateMapper = localDateMapper;
@@ -337,15 +333,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 				.createdBy(UserInfo.getCurrentAuditor())
 				.build();
 		appointmentObservationRepository.save(appointmentObservation);
-		log.debug(OUTPUT, Boolean.TRUE);
-		return Boolean.TRUE;
-	}
-
-	@Override
-	public boolean updateDate(Integer appointmentId, LocalDate date, LocalTime time, Integer openingHoursId) {
-		appointmentRepository.updateDate(appointmentId, date, time);
-		appointmentAssnRepository.updateOpeningHoursId(openingHoursId, appointmentId);
-		verifyProtectedCondition(appointmentId);
 		log.debug(OUTPUT, Boolean.TRUE);
 		return Boolean.TRUE;
 	}
@@ -780,12 +767,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 				a.setProtected(false);
 		});
 		return appointments;
-	}
-
-	private void verifyProtectedCondition(Integer appointmentId) {
-		boolean isProtected = sharedReferenceCounterReference.isProtectedAppointment(appointmentId);
-		if (isProtected)
-			sharedReferenceCounterReference.updateProtectedAppointment(appointmentId);
 	}
 
 }

@@ -4138,7 +4138,9 @@ export interface URL extends Serializable {
 export interface UpdateAppointmentDateDto {
     appointmentId: number;
     date: DateTimeDto;
+    modalityId: number;
     openingHoursId: number;
+    patientEmail?: string;
 }
 
 export interface UpdateAppointmentDto {

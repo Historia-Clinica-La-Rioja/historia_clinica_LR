@@ -85,6 +85,16 @@ public class AppointmentBo {
 	private boolean hasAssociatedReference;
 
 	private Short associatedReferenceClosureTypeId;
+	
+	public AppointmentBo(Integer diaryId, Integer patientId, LocalDate date, LocalTime hour, String patientEmail, String callId, String applicantHealthcareProfessionalEmail) {
+		this.diaryId = diaryId;
+		this.patientId = patientId;
+		this.date = date;
+		this.hour = hour;
+		this.patientEmail = patientEmail;
+		this.callId = callId;
+		this.applicantHealthcareProfessionalEmail = applicantHealthcareProfessionalEmail;
+	}
 
 	public static AppointmentBo fromAppointmentDiaryVo(AppointmentDiaryVo appointmentDiaryVo) {
 		return AppointmentBo.builder()

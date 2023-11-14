@@ -99,12 +99,6 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
 		return referenceAppointmentRepository.isProtectedAppointment(appointmentId);
 	}
 
-	@Override
-	public void updateProtectedAppointment(Integer appointmentId) {
-    	log.debug("Delete reference appointment {}, ", appointmentId);
-    	referenceAppointmentRepository.deleteByAppointmentId(appointmentId);
-	}
-
 	public boolean existsProtectedAppointmentInOpeningHour(Integer openingHourId) {
 		log.debug("There are protected appointment in a opening hour with id {}", openingHourId);
 		return referenceAppointmentRepository.existsInOpeningHour(openingHourId, Arrays.asList(ASSIGNED, CONFIRMED));

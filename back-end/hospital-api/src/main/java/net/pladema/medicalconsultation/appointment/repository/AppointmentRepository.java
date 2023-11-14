@@ -20,6 +20,7 @@ import net.pladema.medicalconsultation.appointment.repository.domain.Appointment
 
 import net.pladema.medicalconsultation.appointment.repository.domain.MedicalCoverageAppoinmentOrderBo;
 
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
 
 import net.pladema.medicalconsultation.appointment.service.domain.PatientAppointmentHistoryBo;
@@ -687,4 +688,18 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"AND diary_label_id NOT IN :ids", nativeQuery = true)
 	void deleteLabelFromAppointment(@Param("diaryId") Integer diaryId,
 									@Param("ids") List<Integer> ids);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT NEW net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo(d.id, a.patientId, a.dateTypeId, a.hour, a.patientEmail, a.callId," +
+			"a.applicantHealthcareProfessionalEmail) " +
+			"FROM Appointment a " +
+			"JOIN AppointmentAssn aa ON (aa.pk.appointmentId = a.id) " +
+			"JOIN Diary d ON (d.id = aa.pk.diaryId) " +
+			"WHERE a.id = :appointmentId")
+	AppointmentBo getEmailNotificationData(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE Appointment a SET a.patientEmail = :patientEmail WHERE a.id = :appointmentId")
+	void updateAppointmentPatientEmail(@Param("appointmentId") Integer appointmentId, @Param("patientEmail") String patientEmail);
 }

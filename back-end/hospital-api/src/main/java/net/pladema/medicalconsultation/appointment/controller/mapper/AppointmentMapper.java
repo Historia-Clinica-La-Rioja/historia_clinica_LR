@@ -8,6 +8,8 @@ import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppoin
 import net.pladema.medicalconsultation.appointment.controller.dto.EmptyAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.EquipmentAppointmentListDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.PatientAppointmentHistoryDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointmentDateDto;
+import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentDateBo;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
@@ -121,5 +123,10 @@ public interface AppointmentMapper {
 
 	@Named("fromFreeAppointmentSearchFilterDto")
 	FreeAppointmentSearchFilterBo fromFreeAppointmentSearchFilterDto(FreeAppointmentSearchFilterDto freeAppointmentSearchFilterDto);
+
+	@Named("fromUpdateAppointmentDateDto")
+	@Mapping(target = "time", source = "date.time")
+	@Mapping(target = "date", source = "date.date")
+	UpdateAppointmentDateBo fromUpdateAppointmentDateDto(UpdateAppointmentDateDto updateAppointmentDateDto);
 
 }

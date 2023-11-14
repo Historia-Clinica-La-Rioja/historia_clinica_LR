@@ -2,7 +2,6 @@ package net.pladema.medicalconsultation.appointment.controller;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +15,9 @@ import javax.validation.constraints.Size;
 
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentLabel;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryLabelDto;
+import net.pladema.medicalconsultation.appointment.application.ReassignAppointment;
+
+import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentDateBo;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -40,7 +42,6 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCovera
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalPersonDto;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.security.UserInfo;
@@ -121,7 +122,6 @@ public class AppointmentsController {
 
 	private final MoveStudiesService moveStudiesService;
 
-
 	private final AppointmentValidatorService appointmentValidatorService;
 
 	private final CreateAppointmentService createAppointmentService;
@@ -146,8 +146,6 @@ public class AppointmentsController {
 
 	private final DeriveReportService deriveReportService;
 
-	private final LocalDateMapper dateMapper;
-
 	@Value("${test.stress.disable.validation:false}")
 	private boolean disableValidation;
 
@@ -171,6 +169,8 @@ public class AppointmentsController {
 	private final GetCurrentAppointmentHierarchicalUnit getCurrentAppointmentHierarchicalUnit;
 
 	private final CreateAppointmentLabel createAppointmentLabel;
+	
+	private final ReassignAppointment reassignAppointment;
 
 	@PostMapping
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
@@ -666,17 +666,13 @@ public class AppointmentsController {
 
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
 	@PutMapping(value = "/{appointmentId}/update-date")
-	public ResponseEntity<Boolean> updateDate(
-			@PathVariable(name = "institutionId") Integer institutionId,
-			@PathVariable(name = "appointmentId") Integer appointmentId,
-			@RequestBody UpdateAppointmentDateDto updateAppointmentDate) {
-		log.debug("Input parameters -> institutionId {},appointmentId {}, fullDate {}, openingHoursId {}", institutionId, appointmentId, updateAppointmentDate.getDate(), updateAppointmentDate.getOpeningHoursId());
-		DateTimeDto fullDate = updateAppointmentDate.getDate();
-		LocalDate date = dateMapper.fromDateDto(fullDate.getDate());
-		LocalTime time = dateMapper.fromTimeDto(fullDate.getTime());
-		Integer openingHoursId = updateAppointmentDate.getOpeningHoursId();
-		appointmentValidatorService.validateDateUpdate(institutionId, appointmentId, date, time);
-		boolean result = appointmentService.updateDate(appointmentId, date, time, openingHoursId);
+	public ResponseEntity<Boolean> updateDate(@PathVariable(name = "institutionId") Integer institutionId,
+											  @PathVariable(name = "appointmentId") Integer appointmentId,
+											  @RequestBody UpdateAppointmentDateDto updateAppointmentDate) {
+		log.debug("Input parameters -> institutionId {}, appointmentId {}, updateAppointmentDate {}", institutionId, appointmentId, updateAppointmentDate);
+		UpdateAppointmentDateBo updateAppointmentData = appointmentMapper.fromUpdateAppointmentDateDto(updateAppointmentDate);
+		appointmentValidatorService.validateDateUpdate(institutionId, appointmentId, updateAppointmentData.getDate(), updateAppointmentData.getTime());
+		boolean result = reassignAppointment.run(updateAppointmentData);
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
