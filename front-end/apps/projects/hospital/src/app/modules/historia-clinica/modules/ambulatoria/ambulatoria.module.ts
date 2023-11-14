@@ -78,6 +78,7 @@ import { TablaSapComponent } from './components/tabla-sap/tabla-sap.component';
 import { AdultoMayorComponent } from '@historia-clinica/components/emergente/inicio-estudio/inicio-estudio.component';
 import { EstudiosPopupComponent } from '@historia-clinica/components/emergente/pop-up/estudios-popup.component';
 import { FrailScaleComponent } from './components/cuestionarios/frail-scale/frail-scale.component';
+import { EdmontonComponent } from './components/cuestionarios/edmonton/edmonton.component';
 @NgModule({
 	declarations: [
 		HomeComponent,
@@ -135,7 +136,8 @@ import { FrailScaleComponent } from './components/cuestionarios/frail-scale/frai
   		TablaSapComponent,
 		AdultoMayorComponent,
 		EstudiosPopupComponent,
-  		FrailScaleComponent
+  		FrailScaleComponent,
+    EdmontonComponent
  	],
 	imports: [
 		CommonModule,

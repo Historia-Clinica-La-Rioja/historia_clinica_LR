@@ -8,6 +8,7 @@
     <mat-label>Seleccione estudio</mat-label>
     <mat-select [(ngModel)]="selectedOption">
       <mat-option value="option2">Escala de Frail</mat-option>
+      <mat-option value="option3">Escala de Edmonton</mat-option>
     </mat-select>
   </mat-form-field>
   <div *ngIf="selectedOption === 'option2'">
@@ -15,7 +16,15 @@
       <button id="close-modal" mat-button mat-icon-button aria-label="close" (click)="closeModal(true)">
         <mat-icon>close</mat-icon>
       </button>
-      <app-frail-scale></app-frail-scale>
+      <app-escala-frail></app-escala-frail>
+  </div>
+  </div>
+  <div *ngIf="selectedOption === 'option3'">
+    <div class="form-container">
+      <button id="close-modal" mat-button mat-icon-button aria-label="close" (click)="closeModal(true)">
+        <mat-icon>close</mat-icon>
+      </button>
+      <app-edmonton [patientId]="patientId"></app-edmonton>
   </div>
   </div>
 </div>
