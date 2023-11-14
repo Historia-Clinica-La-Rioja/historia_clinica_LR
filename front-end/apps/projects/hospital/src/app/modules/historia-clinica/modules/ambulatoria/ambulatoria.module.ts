@@ -138,7 +138,7 @@ import { AmendedProblemsInformationComponent } from './components/amended-proble
   		AmendProblemComponent,
 		AmendedProblemsComponent,
   		ViewDatailsBtnComponent,
-    AmendedProblemsInformationComponent,
+    	AmendedProblemsInformationComponent,
 	],
 	imports: [
 		CommonModule,

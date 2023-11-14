@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit, Output } from '@angular/core';
 import { HCEPersonalHistoryDto } from '@api-rest/api-model';
 import { PROBLEMAS_POR_ERROR } from '@historia-clinica/constants/summaries';
-import { Subject } from 'rxjs';
+import { Subject, map } from 'rxjs';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
@@ -14,10 +14,10 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 export class AmendedProblemsComponent implements OnInit {
     
     @Output() setProblemOnHistoric = new Subject<HCEPersonalHistoryDto>();
-    public amendedProblems: ProblemsData[];
-	public readonly problemasPorError = PROBLEMAS_POR_ERROR;
-    public isFilterExpanded = false;
-    public severityTypeMasterData: any[];
+    amendedProblems: ProblemsData[];
+	readonly problemasPorError = PROBLEMAS_POR_ERROR;
+    isFilterExpanded = false;
+    severityTypeMasterData: any[];
 
     // Injected dependencies
     private readonly internacionMasterDataService: InternacionMasterDataService;
@@ -37,9 +37,7 @@ export class AmendedProblemsComponent implements OnInit {
     }
 
     setAmendedProblems() {
-		this.ambulatoriaSummaryFacadeService.amendedProblems$.subscribe(amendedProblems => {
-            this.amendedProblems = this.mapToProblemsData(amendedProblems)
-        })
+		this.ambulatoriaSummaryFacadeService.amendedProblems$.pipe(map(problems => this.amendedProblems = this.mapToProblemsData(problems))).subscribe();
 	}
 
     getSeverityTypeDisplayByCode(severityCode: string): string {
@@ -48,7 +46,7 @@ export class AmendedProblemsComponent implements OnInit {
             : '';
     }
 
-    mapToProblemsData(problems: HCEPersonalHistoryDto[]) {
+    mapToProblemsData(problems: HCEPersonalHistoryDto[]): ProblemsData[] {
 		return problems.map((problem: HCEPersonalHistoryDto) => {
 			return {
 				data: problem,
@@ -59,7 +57,7 @@ export class AmendedProblemsComponent implements OnInit {
 		});
 	}    
 
-    toggleFilter() {
+    toggleChanged() {
         this.isFilterExpanded = !this.isFilterExpanded;
     }
 

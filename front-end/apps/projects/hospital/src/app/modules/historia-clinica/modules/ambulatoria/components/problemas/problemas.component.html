@@ -137,7 +137,7 @@
 							</div>
 
 							<div fxLayout="row" *ngFor="let problem of (solvedProblems$ | async)">
-								<mat-list-item class="solved-problem-item" (click)="filterByProblemOnProblemClick(problem)">
+								<mat-list-item (click)="filterByProblemOnProblemClick(problem)" style="height: 40px;">
 									<div fxFlex="35%">
 										<span mat-line class="capitalize-first-letter">
 											{{ problem.snomed.pt }}
@@ -265,7 +265,7 @@
 													<div fxLayout="column" fxFlex="65" fxFlex.lt-md="100"
 														fxLayoutGap="10px">
 														<div fxLayout="row wrap" class="problem-title">
-															<h2 class="mat-h2 page-title {{ historicalProblem.color }} capitalize-first-letter">
+															<h2 class="mat-h2 page-title {{ historicalProblem.color }} capitalize-first-letter" style="margin: 0;">
 																{{historicalProblem.problemPt}}</h2>
 															<ng-container *ngIf="isMarkProblemAsErrorActive && historicalProblem.markedAsError">
 																<app-colored-label

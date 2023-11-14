@@ -1,6 +1,6 @@
 <div>
     <div class="label">
-        <button mat-button color="primary" id="filter" (click)="toggleFilter()">
+        <button mat-button color="primary" id="filter" (click)="toggleChanged()">
             <span>{{'ambulatoria.paciente.problemas.amend_problems.AMENDED_PROBLEMS' | translate | uppercase}}</span>
             <mat-icon *ngIf="isFilterExpanded; else IsNotExpanded">expand_less</mat-icon>
         </button>
@@ -12,7 +12,7 @@
     <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" *ngIf="isFilterExpanded">
         <div fxFlex="50%" class="amend-problems-card">
             <app-summary-card id="amended_problems" [header]="problemasPorError" [editable]="false">
-                <mat-list *ngIf="amendedProblems.length > 0 else noInfo">
+                <mat-list *ngIf="amendedProblems.length else noInfo">
                     <div fxLayout="row">
                         <mat-list-item class="problems-table-header">
                             <div fxFlex="35%"><span class="problems-table-header-text"
