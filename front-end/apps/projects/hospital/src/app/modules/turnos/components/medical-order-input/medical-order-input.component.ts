@@ -34,6 +34,7 @@ export class MedicalOrderInputComponent implements OnInit {
     newTranscribedOrder() {
 		const dialogRef = this.dialog.open(EquipmentTranscribeOrderPopupComponent, {
 			width: '35%',
+			height:'651px',
 			autoFocus: false,
 			data: {
 				patientId: this.patientId,

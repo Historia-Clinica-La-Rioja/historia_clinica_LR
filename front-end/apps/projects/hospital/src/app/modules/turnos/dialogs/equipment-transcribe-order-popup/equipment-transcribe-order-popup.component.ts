@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { SnomedDto, SnomedECL } from '@api-rest/api-model';
+import { SnomedDto, SnomedECL, TranscribedPrescriptionDto } from '@api-rest/api-model';
 import { HCEPersonalHistoryDto } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { hasError } from '@core/utils/form.utils';
@@ -16,7 +16,7 @@ import { Observable, map, of, switchMap } from 'rxjs';
 })
 export class EquipmentTranscribeOrderPopupComponent implements OnInit {
 
-    transcribeOrderForm: FormGroup;
+    transcribeOrderForm: FormGroup<TranscribedFormModel>;
     public readonly hasError = hasError;
     readonly studyECL = SnomedECL.PROCEDURE;
     readonly problemECL = SnomedECL.DIAGNOSIS;
@@ -38,11 +38,12 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
         ) { }
 
     ngOnInit(): void {
-        this.transcribeOrderForm = this.formBuilder.group({
-            study: [null, Validators.required],
-            assosiatedProblem: [null, Validators.required],
-            professional: [null, Validators.required],
-            institution: [null, Validators.required ]
+        this.transcribeOrderForm = this.formBuilder.group<TranscribedFormModel>({
+            study: new FormControl (null, Validators.required),
+            assosiatedProblem: new FormControl (null, Validators.required),
+            professional: new FormControl (null, Validators.required),
+            institution: new FormControl (null, Validators.required),
+            observations:  new FormControl (null)
         });
         if (this.data.transcribedOrder){
             this.selectedStudy = this.data.transcribedOrder.study;
@@ -75,13 +76,20 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
     }
 
     saveOrder() {
-
-        let orderProfessional = this.transcribeOrderForm.controls.professional?.value;
-        let orderInstitution = this.transcribeOrderForm.controls.institution?.value;
+        let orderProfessionalName = this.transcribeOrderForm.controls.professional?.value;
+        let orderInstitutionName = this.transcribeOrderForm.controls.institution?.value;
 
         this.checkForOrderDeletion();
 
-        this.prescriptionService.createTranscribedOrder(this.data.patientId, this.selectedStudy, this.selectedProblem, orderProfessional, orderInstitution)
+        let transcribedData: TranscribedPrescriptionDto = {
+			study: this.selectedStudy,
+			healthCondition: this.selectedProblem,
+			healthcareProfessionalName: orderProfessionalName,
+			institutionName: orderInstitutionName,
+            observations:  this.transcribeOrderForm.controls.observations.value
+		}
+
+        this.prescriptionService.createTranscribedOrder(this.data.patientId, transcribedData)
         .pipe(
          switchMap(serviceRequestId => this.handleAttachedFilesByCondition(serviceRequestId)),
          switchMap(serviceRequestId => this.buildTranscribedOrderContext(serviceRequestId)))
@@ -206,4 +214,12 @@ export interface InfoTranscribeOrderPopup {
     institution: string
     selectedFiles: File[]
     selectedFilesShow: File[]
+}
+
+export interface TranscribedFormModel {
+    study:  FormControl<string>;
+    assosiatedProblem: FormControl<string>,
+    professional: FormControl<string>,
+    institution:  FormControl<string>,
+    observations:  FormControl<string>
 }

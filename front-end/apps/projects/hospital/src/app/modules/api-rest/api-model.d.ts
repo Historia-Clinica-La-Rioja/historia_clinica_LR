@@ -3928,6 +3928,7 @@ export interface TranscribedPrescriptionDto extends Serializable {
     healthCondition: SnomedDto;
     healthcareProfessionalName: string;
     institutionName?: string;
+    observations?: string;
     study: SnomedDto;
 }
 

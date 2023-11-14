@@ -8,7 +8,6 @@ import {
 	CompleteRequestDto,
 	DiagnosticReportInfoDto, DiagnosticReportInfoWithFilesDto,
 	PrescriptionDto,
-	SnomedDto,
 	StudyWithoutOrderReportInfoDto,
 	TranscribedDiagnosticReportInfoDto,
 	TranscribedOrderReportInfoDto,
@@ -61,15 +60,9 @@ export class ServiceRequestService {
 		return this.http.post<number[]>(url, prescriptionDto);
 	}
 
-	createTranscribedOrder(patientId: number, study: SnomedDto, healthCondition: SnomedDto, professional: string, institution: string){
-		let data: TranscribedPrescriptionDto = {
-			study,
-			healthCondition,
-			healthcareProfessionalName: professional,
-			institutionName: institution
-		}
+	createTranscribedOrder(patientId: number, transcribedInfo: TranscribedPrescriptionDto){
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/transcribed`;
-		return this.http.post<number>(url, data)
+		return this.http.post<number>(url, transcribedInfo)
 	}
 
 	deleteTranscribedOrder(patientId: number, orderId: number): Observable<void>{
