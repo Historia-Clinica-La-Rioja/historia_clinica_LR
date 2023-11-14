@@ -5,7 +5,7 @@ import { RoleGuard } from '@core/guards/RoleGuard';
 import { HomeComponent } from '@access-management/routes/home/home.component';
 
 
-const MANAGER_ROLES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO]
+const MANAGER_ROLES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_REGIONAL, ERole.GESTOR_DE_ACCESO_LOCAL];
 
 const routes: Routes = [
 	{

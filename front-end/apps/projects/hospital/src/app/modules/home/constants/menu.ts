@@ -1,7 +1,7 @@
 import { AppFeature, ERole } from '@api-rest/api-model';
 import { MenuItemDef } from '@core/core-model';
 
-const MANAGER_ROLES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO];
+const MANAGER_ROLES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_REGIONAL, ERole.GESTOR_DE_ACCESO_LOCAL];
 
 export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 	{
