@@ -121,7 +121,7 @@ export class ReferenceDashboardFiltersComponent implements OnInit, OnDestroy {
 	private setFiltersOptions() {
 
 		const clinicalSpecialties$ = this.clinicalSpecialtyService.getAll();
-		const practices$ = this.practiceService.getPracticesFromInstitutions();
+		const practices$ = this.practiceService.getAll();
 
 		forkJoin([clinicalSpecialties$, practices$]).subscribe(([clinicalSpecialties, practices]) =>
 			this.filters = setReportFilters(practices, clinicalSpecialties));
