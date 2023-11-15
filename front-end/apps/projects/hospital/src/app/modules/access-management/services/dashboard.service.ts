@@ -61,6 +61,7 @@ export class DashboardService {
 
 		this.dashboardView = DashboardView.RECEIVED;
 		this.dashboardFilters = {} as DashboardFilters;
+		this.pageSize = MIN_SIZE;
 	}
 
 	updatePaginator(pageInfo: PageEvent) {

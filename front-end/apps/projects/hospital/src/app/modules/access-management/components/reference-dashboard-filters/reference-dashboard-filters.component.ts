@@ -61,6 +61,7 @@ export class ReferenceDashboardFiltersComponent implements OnInit, OnDestroy {
 			return;
 		}
 		this.dashboardService.dateRange = dateRange;
+		this.dashboardService.updateReports();
 		this.changeDetectorRef.detectChanges();
 
 	}
