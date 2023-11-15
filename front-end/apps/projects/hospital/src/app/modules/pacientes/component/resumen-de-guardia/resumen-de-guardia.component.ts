@@ -302,7 +302,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 		});
 
 		function hasHistory(triages: TriageListDto[]) {
-			return triages?.length > 1;
+			return triages?.length > 0;
 		}
 	}
 
