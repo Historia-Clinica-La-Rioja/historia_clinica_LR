@@ -1,11 +1,11 @@
-package net.pladema.olderadultsreports.controller;
+package net.pladema.provincialreports.olderadultsreports.controller;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.establishment.repository.entity.Institution;
-import net.pladema.olderadultsreports.repository.OlderAdultsReportQueryFactory;
-import net.pladema.olderadultsreports.service.OlderAdultsReportExcelService;
+import net.pladema.provincialreports.olderadultsreports.repository.OlderAdultsReportQueryFactory;
+import net.pladema.provincialreports.olderadultsreports.service.OlderAdultsReportExcelService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

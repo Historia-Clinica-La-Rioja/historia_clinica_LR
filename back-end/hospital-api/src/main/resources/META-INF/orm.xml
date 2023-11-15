@@ -2148,7 +2148,7 @@
 		</constructor-result>
 	</sql-result-set-mapping>
 	<sql-result-set-mapping name="OlderAdultsReports.OlderAdultsOutpatientConsultationDetailResult">
-		<constructor-result target-class="net.pladema.olderadultsreports.repository.OlderAdultsOutpatientConsultationDetail">
+		<constructor-result target-class="net.pladema.provincialreports.olderadultsreports.repository.OlderAdultsOutpatientConsultationDetail">
 			<column name="institution" class="java.lang.String"/>
 			<column name="lender" class="java.lang.String"/>
 			<column name="lenderDni" class="java.lang.String"/>
@@ -2169,7 +2169,7 @@
 		</constructor-result>
 	</sql-result-set-mapping>
 	<sql-result-set-mapping name="OlderAdultsReports.OlderAdultsHospitalizationConsultationDetailResult">
-		<constructor-result target-class="net.pladema.olderadultsreports.repository.OlderAdultsHospitalizationConsultationDetail">
+		<constructor-result target-class="net.pladema.provincialreports.olderadultsreports.repository.OlderAdultsHospitalizationConsultationDetail">
 			<column name="institution" class="java.lang.String"/>
 			<column name="lastName" class="java.lang.String"/>
 			<column name="name" class="java.lang.String"/>
@@ -2190,7 +2190,7 @@
 		</constructor-result>
 	</sql-result-set-mapping>
 	<sql-result-set-mapping name="OlderAdultsReports.PolypharmacyConsultationDetailResult">
-		<constructor-result target-class="net.pladema.olderadultsreports.repository.PolypharmacyConsultationDetail">
+		<constructor-result target-class="net.pladema.provincialreports.olderadultsreports.repository.PolypharmacyConsultationDetail">
 			<column name="patientName" class="java.lang.String"/>
 			<column name="patientIdType" class="java.lang.String"/>
 			<column name="patientIdNumber" class="java.lang.String"/>

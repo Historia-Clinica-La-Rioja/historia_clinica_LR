@@ -1,4 +1,4 @@
-package net.pladema.olderadultsreports.repository;
+package net.pladema.provincialreports.olderadultsreports.repository;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

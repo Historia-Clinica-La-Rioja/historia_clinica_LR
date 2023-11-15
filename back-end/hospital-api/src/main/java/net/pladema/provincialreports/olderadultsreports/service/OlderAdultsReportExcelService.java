@@ -1,9 +1,9 @@
-package net.pladema.olderadultsreports.service;
+package net.pladema.provincialreports.olderadultsreports.service;
 
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
-import net.pladema.olderadultsreports.repository.OlderAdultsHospitalizationConsultationDetail;
-import net.pladema.olderadultsreports.repository.OlderAdultsOutpatientConsultationDetail;
-import net.pladema.olderadultsreports.repository.PolypharmacyConsultationDetail;
+import net.pladema.provincialreports.olderadultsreports.repository.OlderAdultsHospitalizationConsultationDetail;
+import net.pladema.provincialreports.olderadultsreports.repository.OlderAdultsOutpatientConsultationDetail;
+import net.pladema.provincialreports.olderadultsreports.repository.PolypharmacyConsultationDetail;
 
 import java.util.List;
 

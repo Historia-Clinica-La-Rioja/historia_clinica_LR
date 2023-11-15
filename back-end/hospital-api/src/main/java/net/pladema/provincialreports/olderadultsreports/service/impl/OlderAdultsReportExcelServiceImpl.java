@@ -1,4 +1,4 @@
-package net.pladema.olderadultsreports.service.impl;
+package net.pladema.provincialreports.olderadultsreports.service.impl;
 
 import ar.lamansys.sgx.shared.reports.util.CellContent;
 import ar.lamansys.sgx.shared.reports.util.manager.WorkbookCreator;
@@ -7,10 +7,10 @@ import ar.lamansys.sgx.shared.reports.util.struct.ICellStyle;
 import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
-import net.pladema.olderadultsreports.repository.OlderAdultsHospitalizationConsultationDetail;
-import net.pladema.olderadultsreports.repository.OlderAdultsOutpatientConsultationDetail;
-import net.pladema.olderadultsreports.repository.PolypharmacyConsultationDetail;
-import net.pladema.olderadultsreports.service.OlderAdultsReportExcelService;
+import net.pladema.provincialreports.olderadultsreports.repository.OlderAdultsHospitalizationConsultationDetail;
+import net.pladema.provincialreports.olderadultsreports.repository.OlderAdultsOutpatientConsultationDetail;
+import net.pladema.provincialreports.olderadultsreports.repository.PolypharmacyConsultationDetail;
+import net.pladema.provincialreports.olderadultsreports.service.OlderAdultsReportExcelService;
 import net.pladema.reportformat.DateFormat;
 
 import org.springframework.stereotype.Service;
