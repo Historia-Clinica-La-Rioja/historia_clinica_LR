@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RequestMapping("/institution/{institutionId}/practices")
+@RequestMapping("/practices")
 @Tag(name = "Practices", description = "Practices")
 @Slf4j
 @RequiredArgsConstructor
@@ -31,7 +31,7 @@ public class PracticesController {
 
 	private final GetPracticesFromInstitutions getPracticesFromInstitutions;
 
-	@GetMapping("/by-institution")
+	@GetMapping("/institution/{institutionId}/by-institution")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA')")
 	public ResponseEntity<List<SharedSnomedDto>> getPractices(@PathVariable(name = "institutionId") Integer institutionId) {
 		log.debug("Input parameters -> institutionId {} ", institutionId);
@@ -40,7 +40,7 @@ public class PracticesController {
 		return ResponseEntity.ok().body(result);
 	}
 
-	@GetMapping("/by-active-diaries")
+	@GetMapping("/institution/{institutionId}/by-active-diaries")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
 	public ResponseEntity<List<SharedSnomedDto>> getByActiveDiaries(
 			@PathVariable(name = "institutionId") Integer institutionId) {
@@ -49,12 +49,20 @@ public class PracticesController {
 		return ResponseEntity.ok(activeDiariesPractices);
 	}
 
-	@GetMapping()
+	@GetMapping("/institution/{institutionId}")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRATIVO')")
 	public ResponseEntity<List<SharedSnomedDto>> getPracticesFromInstitutions(@PathVariable(name = "institutionId") Integer institutionId) {
 		List<SharedSnomedDto> result = getPracticesFromInstitutions.run();
 		log.debug("Get practices from all institutions -> ", result);
 		return ResponseEntity.ok().body(result);
 	}
-	
+
+	@GetMapping()
+	@PreAuthorize("hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ADMINISTRATIVO')")
+	public ResponseEntity<List<SharedSnomedDto>> getAll() {
+		List<SharedSnomedDto> result = getPracticesFromInstitutions.run();
+		log.debug("Get practices from domain -> ", result);
+		return ResponseEntity.ok().body(result);
+	}
+
 }
