@@ -13,7 +13,7 @@ import net.pladema.provincialreports.nursingreports.repository.NursingOutpatient
 import net.pladema.provincialreports.nursingreports.repository.NursingProceduresConsultationDetail;
 import net.pladema.provincialreports.nursingreports.repository.NursingVaccineConsultationDetail;
 import net.pladema.provincialreports.nursingreports.service.NursingReportExcelService;
-import net.pladema.reportformat.DateFormat;
+import net.pladema.provincialreports.reportformat.DateFormat;
 
 import org.springframework.stereotype.Service;
 

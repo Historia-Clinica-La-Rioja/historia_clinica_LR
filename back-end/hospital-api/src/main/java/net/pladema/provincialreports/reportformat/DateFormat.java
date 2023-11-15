@@ -1,4 +1,4 @@
-package net.pladema.reportformat;
+package net.pladema.provincialreports.reportformat;
 import lombok.SneakyThrows;
 
 import org.springframework.stereotype.Service;

@@ -14,7 +14,7 @@ import net.pladema.provincialreports.programreports.repository.RecuperoOdontolog
 import net.pladema.provincialreports.programreports.repository.SumarGeneralConsultationDetail;
 import net.pladema.provincialreports.programreports.repository.SumarOdontologicoConsultationDetail;
 import net.pladema.provincialreports.programreports.service.ProgramReportExcelService;
-import net.pladema.reportformat.DateFormat;
+import net.pladema.provincialreports.reportformat.DateFormat;
 
 import org.springframework.stereotype.Service;
 

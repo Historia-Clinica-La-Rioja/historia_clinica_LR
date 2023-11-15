@@ -11,7 +11,7 @@ import net.pladema.provincialreports.olderadultsreports.repository.OlderAdultsHo
 import net.pladema.provincialreports.olderadultsreports.repository.OlderAdultsOutpatientConsultationDetail;
 import net.pladema.provincialreports.olderadultsreports.repository.PolypharmacyConsultationDetail;
 import net.pladema.provincialreports.olderadultsreports.service.OlderAdultsReportExcelService;
-import net.pladema.reportformat.DateFormat;
+import net.pladema.provincialreports.reportformat.DateFormat;
 
 import org.springframework.stereotype.Service;
 

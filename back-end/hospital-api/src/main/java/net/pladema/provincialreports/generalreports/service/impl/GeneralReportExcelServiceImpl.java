@@ -11,7 +11,7 @@ import net.pladema.provincialreports.generalreports.repository.ComplementaryStud
 import net.pladema.provincialreports.generalreports.repository.DiabeticHypertensionConsultationDetail;
 import net.pladema.provincialreports.generalreports.repository.EmergencyConsultationDetail;
 import net.pladema.provincialreports.generalreports.service.GeneralReportExcelService;
-import net.pladema.reportformat.DateFormat;
+import net.pladema.provincialreports.reportformat.DateFormat;
 
 import org.springframework.stereotype.Service;
 
