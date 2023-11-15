@@ -37,6 +37,8 @@ export enum HomeRoutes {
 	AccessManagement = 'gestion-de-accesos', // Gestion de accesos
 }
 
+const MANAGER_ROLES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_REGIONAL, ERole.GESTOR_DE_ACCESO_LOCAL];
+
 const routes: Routes = [
 	{
 		path: '',
@@ -69,6 +71,11 @@ const routes: Routes = [
 			{
 				path: HomeRoutes.AccessManagement,
 				loadChildren: () => import('@access-management/access-management.module').then(m => m.AccessManagementModule),
+				canActivate: [FeatureFlagGuard, RoleGuard],
+				data: {
+					featureFlag: AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO,
+					allowedRoles: MANAGER_ROLES,
+				},
 			},
 		]
 	}

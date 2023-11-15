@@ -37,6 +37,7 @@ export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 		id: 'access-management',
 		url: '/home/gestion-de-accesos',
 		permissions: MANAGER_ROLES,
+		featureFlag: AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO
 	},
 ];
 
