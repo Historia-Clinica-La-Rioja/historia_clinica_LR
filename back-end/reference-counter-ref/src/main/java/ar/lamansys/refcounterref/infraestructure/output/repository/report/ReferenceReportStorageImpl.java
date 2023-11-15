@@ -67,10 +67,10 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 	@Override
 	public Page<ReferenceReportBo> fetchReferencesReport(ReferenceReportFilterBo filter, Pageable pageable) {
 		String condition = addFilter(filter);
-		String sqlQueryData = SELECT_INFO + getOutpatientReferenceFromStatement() + condition + " UNION ALL " +
-				SELECT_INFO + getOdontologyReferenceFromStatement() + condition;
-		String sqlCountQuery = SELECT_COUNT + getOutpatientReferenceFromStatement() + condition + " UNION ALL " +
-				SELECT_COUNT + getOdontologyReferenceFromStatement() + condition;
+		String sqlQueryData = SELECT_INFO + getOutpatientReferenceFromStatement(filter) + condition + " UNION ALL " +
+				SELECT_INFO + getOdontologyReferenceFromStatement(filter) + condition;
+		String sqlCountQuery = SELECT_COUNT + getOutpatientReferenceFromStatement(filter) + condition + " UNION ALL " +
+				SELECT_COUNT + getOdontologyReferenceFromStatement(filter) + condition;
 		return executeQueryAndProcessResults(sqlQueryData, sqlCountQuery, filter, pageable);
 	}
 
@@ -103,6 +103,12 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 			condition.append(" AND pe.identification_number = '").append(filter.getIdentificationNumber()).append("' ");
         if (filter.getAppointmentStateId() != null && filter.getAppointmentStateId().equals(NO_VALUE.shortValue()))
 			condition.append("AND ra.appointment_id IS null ");
+		
+		if (filter.getManagerUserId() != null) {
+			condition.append(" AND igu.user_id = ").append(filter.getManagerUserId());
+			condition.append(" AND igu.deleted IS FALSE ");
+			condition.append(" AND igi.deleted IS FALSE ");
+		}
 
 		return condition.toString();
 	}
@@ -145,7 +151,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 		}
 	}
 
-	private String getOutpatientReferenceFromStatement() {
+	private String getOutpatientReferenceFromStatement(ReferenceReportFilterBo filter) {
 		return 	"FROM {h-schema}reference r " +
 				"LEFT JOIN {h-schema}clinical_specialty cs ON (r.clinical_specialty_id = cs.id) " +
 				"JOIN {h-schema}outpatient_consultation oc ON (r.encounter_id = oc.id) " +
@@ -155,10 +161,13 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"JOIN {h-schema}person pe ON (p.person_id = pe.id) " +
 				"JOIN {h-schema}person_extended pex ON (pe.id = pex.person_id) " +
 				"LEFT JOIN {h-schema}reference_appointment ra ON (r.id = ra.reference_id) " +
+				(filter.getManagerUserId() != null ?
+						"JOIN {h-schema}institutional_group_institution igi ON (igi.institution_id = r.destination_institution_id) " +
+						"JOIN {h-schema}institutional_group_user igu ON (igi.institutional_group_id = igu.institutional_group_id) " : "") +
 				"LEFT JOIN {h-schema}document d ON (r.service_request_id = d.source_id AND d.type_id = 6)  " +
 				"LEFT JOIN {h-schema}document_diagnostic_report ddr ON (d.id = ddr.document_id) " +
 				"LEFT JOIN {h-schema}diagnostic_report dr ON (ddr.diagnostic_report_id = dr.id) " +
-				"LEFT JOIN {h-schema}snomed s ON (dr.snomed_id = s.id)" +
+				"LEFT JOIN {h-schema}snomed s ON (dr.snomed_id = s.id) " +
 				"LEFT JOIN {h-schema}institution i2 ON (r.destination_institution_id = i2.id) " +
 				"LEFT JOIN {h-schema}identification_type it ON (pe.identification_type_id = it.id) " +
 				"LEFT JOIN {h-schema}care_line cl ON (r.care_line_id = cl.id) " +
@@ -166,7 +175,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"WHERE (oc.start_date >= :from AND oc.start_date <= :to) ";
 	}
 
-	private String getOdontologyReferenceFromStatement() {
+	private String getOdontologyReferenceFromStatement(ReferenceReportFilterBo filter) {
 		return 	"FROM {h-schema}reference r " +
 				"LEFT JOIN {h-schema}clinical_specialty cs ON (r.clinical_specialty_id = cs.id) " +
 				"JOIN {h-schema}odontology_consultation oc ON (r.encounter_id = oc.id) " +
@@ -176,10 +185,13 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"JOIN {h-schema}person pe ON (p.person_id = pe.id) " +
 				"JOIN {h-schema}person_extended pex ON (pe.id = pex.person_id) " +
 				"LEFT JOIN {h-schema}reference_appointment ra ON (r.id = ra.reference_id) " +
+				(filter.getManagerUserId() != null ?
+						"JOIN {h-schema}institutional_group_institution igi ON (igi.institution_id = r.destination_institution_id) " +
+						"JOIN {h-schema}institutional_group_user igu ON (igi.institutional_group_id = igu.institutional_group_id) " : "") +
 				"LEFT JOIN {h-schema}document d ON (r.service_request_id = d.source_id AND d.type_id = 6)  " +
 				"LEFT JOIN {h-schema}document_diagnostic_report ddr ON (d.id = ddr.document_id) " +
 				"LEFT JOIN {h-schema}diagnostic_report dr ON (ddr.diagnostic_report_id = dr.id) " +
-				"LEFT JOIN {h-schema}snomed s ON (dr.snomed_id = s.id)" +
+				"LEFT JOIN {h-schema}snomed s ON (dr.snomed_id = s.id) " +
 				"LEFT JOIN {h-schema}institution i2 ON (r.destination_institution_id = i2.id) " +
 				"LEFT JOIN {h-schema}identification_type it ON (pe.identification_type_id = it.id) " +
 				"LEFT JOIN {h-schema}care_line cl ON (r.care_line_id = cl.id) " +

@@ -46,4 +46,8 @@ public class ReferenceReportFilterBo {
 
 	@Nullable
 	private Integer destinationInstitutionId;
+
+	@Nullable
+	private Integer managerUserId;
+
 }

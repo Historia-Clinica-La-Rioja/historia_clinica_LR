@@ -42,7 +42,7 @@ public class InstitutionalNetworkReferenceReportController {
 	private final ObjectMapper objectMapper;
 
 	@GetMapping("/manager")
-	@PreAuthorize("hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO')")
+	@PreAuthorize("hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
 	public ResponseEntity<PageDto<ReferenceReportDto>> getReferencesByManagerRole(@RequestParam(name = "filter") String filter,
 																				  @RequestParam(name = "pageNumber") Integer pageNumber,
 																				  @RequestParam(name = "pageSize") Integer pageSize) {

@@ -4,4 +4,6 @@ public interface SharedLoggedUserPort {
 
 	boolean hasAdministrativeRole(Integer institutionId);
 
+	boolean hasLocalManagerRoleOrRegionalManagerRole(Integer institutionId);
+
 }
