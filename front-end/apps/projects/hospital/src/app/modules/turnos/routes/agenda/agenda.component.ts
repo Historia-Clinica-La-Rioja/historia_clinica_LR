@@ -94,7 +94,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() showAll = true;
 	@Input() view: CalendarView = CalendarView.Week;
 	@Input() viewDate: Date = new Date();
-	modality: EAppointmentModality;
+	modality: EAppointmentModality = null;
 
 	constructor(
 		private readonly dialog: MatDialog,
@@ -260,11 +260,19 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		}
 		if(diaryOpeningHour.patientVirtualAttentionAllowed){
 			if(this.modality === null){
-				this.modality =EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
+				this.modality = EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
 			}else{
 				this.modality = null;
 			}
 		}
+		if(diaryOpeningHour.secondOpinionVirtualAttentionAllowed){
+			if(this.modality === null){
+				this.modality = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION;
+			}else{
+				this.modality = null;
+			}
+		}
+
 	}
 
 	onClickedSegment(event) {
@@ -340,7 +348,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				modalityAttention: this.modality,
 			}
 		});
-		dialogRef.afterClosed().subscribe(() => this.appointmentFacade.loadAppointments());
+		dialogRef.afterClosed().subscribe(() => this.appointmentFacade.loadAppointments(), this.modality = null);
 	}
 
 	viewAppointment(event: CalendarEvent): void {
