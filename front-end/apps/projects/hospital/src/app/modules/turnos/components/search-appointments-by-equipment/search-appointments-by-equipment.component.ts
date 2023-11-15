@@ -96,9 +96,9 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 		this.searchEquipmentService.search(e?.id);
 	}
 
-	compareDiaries(diaryOne: EquipmentDiaryDto, diaryTwo: EquipmentDiaryDto): boolean {
+	compareDiaries(diaryOne: DiaryList, diaryTwo: DiaryList): boolean {
 		if (diaryOne && diaryTwo) {
-			return diaryOne.id === diaryTwo.id;
+			return diaryOne.diaryList.id === diaryTwo.diaryList.id;
 		}
 		return false;
 	}
@@ -149,10 +149,7 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 		this.diaries = diaries;
 		this.categorizeAgendas(diaries);
 		if (diarySelectedId) {
-			const diariesList: DiaryList[] = this.diaries.map(diary => {return {
-				diaryList: diary,
-				endDate: null,
-				startDate: null }})
+			const diariesList: DiaryList[] = this.activeDiaries.concat(this.expiredDiaries);
 			this.diarySelected = diariesList.find(agenda => agenda.diaryList.id === diarySelectedId);
 		}
 	}
