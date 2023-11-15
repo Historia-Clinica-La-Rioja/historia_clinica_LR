@@ -22,7 +22,6 @@ import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.FetchLastBedByEmergencyEpisodePatientDate;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.service.domain.EmergencyEpisodePatientBedRoomBo;
-import net.pladema.emergencycare.service.domain.PatientECEBo;
 import net.pladema.establishment.service.FetchLastBedByInternmentPatientDate;
 import net.pladema.establishment.service.InstitutionService;
 import net.pladema.establishment.service.domain.InstitutionBo;
@@ -81,10 +80,10 @@ public class CreateServiceRequestPdf {
 
     private StoredFileBo createDeliveryOrderForm(Integer institutionId, Integer patientId, Integer serviceRequestId) {
 		log.debug("Input parameters -> institutionId {}, patientId {}, serviceRequestId {}", institutionId, patientId, serviceRequestId);
-		InstitutionBo institutionBo = institutionService.get(institutionId);
 		Person person = personService.findByPatientId(patientId).orElseThrow();
 		ServiceRequestBo serviceRequestBo = getServiceRequestInfoService.run(serviceRequestId);
-		PatientMedicalCoverageDto medicalCoverage = setMedicalCoverage(serviceRequestBo, institutionId, patientId);
+		InstitutionBo institutionBo = institutionService.get(serviceRequestBo.getInstitutionId());
+		PatientMedicalCoverageDto medicalCoverage = setMedicalCoverage(serviceRequestBo, serviceRequestBo.getInstitutionId(), patientId);
 		HealthcareProfessionalBo professional = healthcareProfessionalService.findActiveProfessionalById(serviceRequestBo.getDoctorId());
 		List<ProfessionalLicenseNumberBo> licenses = getLicenseNumberByProfessional.run(professional.getId());
 		ResponsibleDoctorBo responsibleDoctorBo = new ResponsibleDoctorBo(professional.getId(), professional.getFirstName(), professional.getLastName(), licenses
@@ -92,8 +91,8 @@ public class CreateServiceRequestPdf {
 				.map(ProfessionalLicenseNumberBo::getCompleteTypeLicenseNumber)
 				.collect(Collectors.toList()));
 		BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
-		InternmentPatientBedRoomBo ipbr = getInternmentLastBed(institutionId, patientId, serviceRequestBo);
-		EmergencyEpisodePatientBedRoomBo eepbr = getEmergencyEpisodeLastBed(institutionId, patientId, serviceRequestBo);
+		InternmentPatientBedRoomBo ipbr = getInternmentLastBed(serviceRequestBo.getInstitutionId(), patientId, serviceRequestBo);
+		EmergencyEpisodePatientBedRoomBo eepbr = getEmergencyEpisodeLastBed(serviceRequestBo.getInstitutionId(), patientId, serviceRequestBo);
 		String bedNumber = ipbr != null ? ipbr.getBed() : eepbr != null ? eepbr.getBed() : null;
 		String roomNumber = ipbr != null ? ipbr.getRoom() : eepbr != null ? eepbr.getRoom() : null;
 		FormVDto formVDto = mapToFormVDto(institutionBo, person, serviceRequestBo, patientId, responsibleDoctorBo, bedNumber, roomNumber, sharedPersonPort.getCompletePersonNameById(professional.getPersonId()), medicalCoverage);
