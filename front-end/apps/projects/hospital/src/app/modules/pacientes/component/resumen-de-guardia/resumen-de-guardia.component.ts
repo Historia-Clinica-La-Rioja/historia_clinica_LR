@@ -293,8 +293,8 @@ export class ResumenDeGuardiaComponent implements OnInit {
 
 	private loadTriages() {
 		this.triageService.getAll(this.episodeId).subscribe((triages: TriageListDto[]) => {
-			this.lastTriage = this.guardiaMapperService.triageListDtoToTriage(triages[0]);
 			if (hasHistory(triages)) {
+				this.lastTriage = this.guardiaMapperService.triageListDtoToTriage(triages[0]);
 				this.triagesHistory = triages.map(this.guardiaMapperService.triageListDtoToTriageReduced);
 				this.triagesHistory.shift();
 				this.loadFullNames();
