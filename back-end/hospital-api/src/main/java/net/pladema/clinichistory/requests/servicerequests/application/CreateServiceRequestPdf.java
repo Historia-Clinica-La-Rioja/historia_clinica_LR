@@ -20,7 +20,9 @@ import net.pladema.clinichistory.requests.servicerequests.service.GetServiceRequ
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.FetchLastBedByEmergencyEpisodePatientDate;
+import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.service.domain.EmergencyEpisodePatientBedRoomBo;
+import net.pladema.emergencycare.service.domain.PatientECEBo;
 import net.pladema.establishment.service.FetchLastBedByInternmentPatientDate;
 import net.pladema.establishment.service.InstitutionService;
 import net.pladema.establishment.service.domain.InstitutionBo;
@@ -28,7 +30,6 @@ import net.pladema.establishment.service.domain.InternmentPatientBedRoomBo;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
-import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.service.PersonService;
 import net.pladema.reports.controller.dto.FormVDto;
@@ -37,7 +38,6 @@ import net.pladema.staff.domain.ProfessionalLicenseNumberBo;
 import net.pladema.staff.service.HealthcareProfessionalService;
 import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -84,11 +84,7 @@ public class CreateServiceRequestPdf {
 		InstitutionBo institutionBo = institutionService.get(institutionId);
 		Person person = personService.findByPatientId(patientId).orElseThrow();
 		ServiceRequestBo serviceRequestBo = getServiceRequestInfoService.run(serviceRequestId);
-		Integer internmentEpisodeId = internmentPatientService.internmentEpisodeInProcess(institutionId, patientId).getId();
-		var medicalCoverageOpt = internmentEpisodeService.getMedicalCoverage(internmentEpisodeId);
-		PatientMedicalCoverageBo medicalCoverage = null;
-		if (medicalCoverageOpt.isPresent())
-			medicalCoverage = medicalCoverageOpt.get();
+		PatientMedicalCoverageDto medicalCoverage = setMedicalCoverage(serviceRequestBo, institutionId, patientId);
 		HealthcareProfessionalBo professional = healthcareProfessionalService.findActiveProfessionalById(serviceRequestBo.getDoctorId());
 		List<ProfessionalLicenseNumberBo> licenses = getLicenseNumberByProfessional.run(professional.getId());
 		ResponsibleDoctorBo responsibleDoctorBo = new ResponsibleDoctorBo(professional.getId(), professional.getFirstName(), professional.getLastName(), licenses
@@ -108,6 +104,50 @@ public class CreateServiceRequestPdf {
                 MediaType.APPLICATION_PDF_VALUE,
 				String.format("%s_%s.pdf", patientDto.getIdentificationNumber(), serviceRequestId));
     }
+
+	private PatientMedicalCoverageDto setMedicalCoverage(ServiceRequestBo serviceRequestBo, Integer institutionId, Integer patientId) {
+		PatientMedicalCoverageDto medicalCoverage = new PatientMedicalCoverageDto();
+
+		if (serviceRequestBo.getAssociatedSourceTypeId().equals(SourceType.HOSPITALIZATION))
+			medicalCoverage = setInternmentMedicalCoverageOrder(serviceRequestBo, institutionId, patientId);
+
+		if (serviceRequestBo.getAssociatedSourceTypeId().equals(SourceType.OUTPATIENT))
+			medicalCoverage = setOutpatientMedicalCoverageOrder(serviceRequestBo);
+
+		if (serviceRequestBo.getAssociatedSourceTypeId().equals(SourceType.EMERGENCY_CARE))
+			medicalCoverage = setEmergencyCareEpisodeCoverageOrder(serviceRequestBo, institutionId, patientId);
+
+		return medicalCoverage.getMedicalCoverage() != null ? medicalCoverage : null;
+	}
+
+	private PatientMedicalCoverageDto setEmergencyCareEpisodeCoverageOrder(ServiceRequestBo serviceRequestBo, Integer institutionId, Integer patientId) {
+		PatientMedicalCoverageDto medicalCoverage = new PatientMedicalCoverageDto();
+		Integer emergencyId = emergencyCareEpisodeService.getEmergencyEpisodeEpisodeIdByDate(institutionId, patientId, serviceRequestBo.getRequestDate());
+		EmergencyCareBo emergencyCareBo = emergencyCareEpisodeService.get(emergencyId, institutionId);
+		PatientMedicalCoverageDto patientMedicalCoverageDto = patientExternalMedicalCoverageService.getCoverage(emergencyCareBo.getPatient().getPatientMedicalCoverageId());
+		medicalCoverage.setMedicalCoverage(patientMedicalCoverageDto != null ? patientMedicalCoverageDto.getMedicalCoverage(): null);
+		medicalCoverage.setCondition(patientMedicalCoverageDto != null ? patientMedicalCoverageDto.getCondition(): null);
+		return medicalCoverage;
+	}
+
+	private PatientMedicalCoverageDto setInternmentMedicalCoverageOrder(ServiceRequestBo serviceRequestBo, Integer institutionId, Integer patientId) {
+		PatientMedicalCoverageDto medicalCoverage = new PatientMedicalCoverageDto();
+		Integer internmentEpisodeId = internmentPatientService.getInternmentEpisodeIdByDate(institutionId, patientId, serviceRequestBo.getRequestDate());
+		internmentEpisodeService.getMedicalCoverage(internmentEpisodeId)
+				.ifPresent(medicalCoverageBo -> {
+					medicalCoverage.setMedicalCoverage(medicalCoverageBo.getMedicalCoverage().newInstance());
+					medicalCoverage.setCondition(medicalCoverageBo.getCondition());
+				});
+		return medicalCoverage;
+	}
+
+	private PatientMedicalCoverageDto setOutpatientMedicalCoverageOrder(ServiceRequestBo serviceRequestBo) {
+		PatientMedicalCoverageDto medicalCoverage = new PatientMedicalCoverageDto();
+		PatientMedicalCoverageDto patientMedicalCoverageDto = patientExternalMedicalCoverageService.getCoverage(serviceRequestBo.getMedicalCoverageId());
+		medicalCoverage.setMedicalCoverage(patientMedicalCoverageDto != null ? patientMedicalCoverageDto.getMedicalCoverage(): null);
+		medicalCoverage.setCondition(patientMedicalCoverageDto != null ? patientMedicalCoverageDto.getCondition(): null);
+		return medicalCoverage;
+	}
 
 	private EmergencyEpisodePatientBedRoomBo getEmergencyEpisodeLastBed(Integer institutionId, Integer patientId, ServiceRequestBo serviceRequestBo) {
 		if (serviceRequestBo.getAssociatedSourceTypeId().equals(SourceType.EMERGENCY_CARE)) {
@@ -135,14 +175,14 @@ public class CreateServiceRequestPdf {
 								   String bedNumber,
 								   String roomNumber,
 								   String completeProfessionalName,
-								   PatientMedicalCoverageBo medicalCoverageBo) {
+								   PatientMedicalCoverageDto medicalCoverage) {
 		return new FormVDto(institutionBo.getName(),
 				StringHelper.reverseString(sharedPersonPort.getCompletePersonNameById(person.getId())),
 				sharedPersonPort.getPersonContactInfoById(person.getId()),
 				serviceRequestBo.getRequestDate().toLocalDate(),
-				medicalCoverageBo != null ? medicalCoverageBo.getMedicalCoverageName(): null,
+				medicalCoverage != null ? medicalCoverage.getMedicalCoverageName(): null,
 				serviceRequestBo.getProblems().toString(),
-				medicalCoverageBo != null ? medicalCoverageBo.getConditionValue(): null,
+				medicalCoverage != null ? medicalCoverage.getConditionValue(): null,
 				institutionBo.getProvinceCode(),
 				patientId,
 				completeProfessionalName,
