@@ -241,9 +241,9 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		this.form.controls.sectorId.setValue(diary.sectorId);
 		this.setEquipmentsBySector();
 		this.form.controls.equipmentId.setValue(diary.equipmentId);
-		this.loadCalendar();
 		this.form.controls.startDate.setValue(momentParseDate(diary.startDate));
 		this.form.controls.endDate.setValue(momentParseDate(diary.endDate));
+		this.loadCalendar();
 		this.form.controls.appointmentDuration.setValue(diary.appointmentDuration);
 
 		this.disableNotEditableControls();
