@@ -43,6 +43,7 @@ public class GetFamilyBgController implements GetFamilyBgAPI {
 			regDTO = new QuestionnaireAnswers();
 			regDTO.setQuestionId(qr.getItemId());
 			regDTO.setAnswerId(qr.getAnswerId());
+			regDTO.setValue(qr.getValue());
 			questionnaireLst.add(regDTO);
 		}
 		return questionnaireLst;

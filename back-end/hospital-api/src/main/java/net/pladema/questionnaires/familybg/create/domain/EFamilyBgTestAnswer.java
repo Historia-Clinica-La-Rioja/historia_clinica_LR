@@ -14,56 +14,58 @@ import java.util.stream.Stream;
 public enum EFamilyBgTestAnswer {
 
 	// Convivencia
+	// Madre
 	A1((short) 24, (short) 19, "No", null),
 	A2((short) 24, (short) 26, "En la casa", null),
-	A3((short) 24, (short) 27, "Fuera del cuarto", null),
-
+	A3((short) 24, (short) 27, "En el cuarto", null),
+	// Padre
 	A4((short) 25, (short) 19, "No", null),
 	A5((short) 25, (short) 26, "En la casa", null),
-	A6((short) 25, (short) 27, "Fuera del cuarto", null),
-
+	A6((short) 25, (short) 27, "En el cuarto", null),
+	// Madrastra
 	A7((short) 26, (short) 19, "No", null),
 	A8((short) 26, (short) 26, "En la casa", null),
-	A9((short) 26, (short) 27, "Fuera del cuarto", null),
-
+	A9((short) 26, (short) 27, "En el cuarto", null),
+	// Padrastro
 	A10((short) 27, (short) 19, "No", null),
 	A11((short) 27, (short) 26, "En la casa", null),
-	A12((short) 27, (short) 27, "Fuera del cuarto", null),
-
+	A12((short) 27, (short) 27, "En el cuarto", null),
+	// Hermanos
 	A13((short) 28, (short) 19, "No", null),
 	A14((short) 28, (short) 26, "En la casa", null),
-	A15((short) 28, (short) 27, "Fuera del cuarto", null),
-
+	A15((short) 28, (short) 27, "En el cuarto", null),
+	// Pareja
 	A16((short) 29, (short) 19, "No", null),
 	A17((short) 29, (short) 26, "En la casa", null),
-	A18((short) 29, (short) 27, "Fuera del cuarto", null),
-
+	A18((short) 29, (short) 27, "En el cuarto", null),
+	// Hijos
 	A19((short) 54, (short) 19, "No", null),
 	A20((short) 54, (short) 26, "En la casa", null),
-	A21((short) 54, (short) 27, "Fuera del cuarto", null),
-
+	A21((short) 54, (short) 27, "En el cuarto", null),
+	// Abuelos
 	A22((short) 55, (short) 19, "No", null),
 	A23((short) 55, (short) 26, "En la casa", null),
-	A24((short) 55, (short) 27, "Fuera del cuarto", null),
-
+	A24((short) 55, (short) 27, "En el cuarto", null),
+	// Otros
 	A25((short) 30, (short) 19, "No", null),
 	A26((short) 30, (short) 26, "En la casa", null),
-	A27((short) 30, (short) 27, "Fuera del cuarto", null),
+	A27((short) 30, (short) 27, "En el cuarto", null),
 
 	// Vivienda
+	// En institución
 	A28((short) 32, (short) 19, "No", null),
 	A29((short) 32, (short) 20, "Sí", null),
-
+	// En la calle
 	A30((short) 33, (short) 19, "No", null),
 	A31((short) 33, (short) 20, "Sí", null),
-
+	// Solo
 	A32((short) 34, (short) 19, "No", null),
 	A33((short) 34, (short) 20, "Sí", null),
-
+	// Comparte la cama
 	A34((short) 35, (short) 19, "No", null),
 	A35((short) 35, (short) 20, "Sí", null),
 
-	// Estudios de la madre
+	// Estudios del padre
 	A36((short) 37, (short) 28, "Analfabeto", null),
 	A37((short) 37, (short) 29, "Primario incompleto", null),
 	A38((short) 37, (short) 30, "Primario completo", null),
@@ -71,7 +73,7 @@ public enum EFamilyBgTestAnswer {
 	A40((short) 37, (short) 32, "Secundario completo", null),
 	A41((short) 37, (short) 33, "Universitario o terciario", null),
 
-	// Estudios del padre
+	// Estudios de la madre
 	A42((short) 38, (short) 28, "Analfabeto", null),
 	A43((short) 38, (short) 29, "Primario incompleto", null),
 	A44((short) 38, (short) 30, "Primario completo", null),
@@ -80,46 +82,50 @@ public enum EFamilyBgTestAnswer {
 	A47((short) 38, (short) 33, "Universitario o terciario", null),
 
 	// Madre
+	// Trabajo remunerado
 	A48((short) 40, (short) 19, "No", null),
 	A49((short) 40, (short) 20, "Sí", null),
-
+	// Horas fuera de casa
 	A50((short) 41, (short) 0, "", null),
-
+	// Edad
 	A51((short) 42, (short) 0, "", null),
-
+	// Estado civil
 	A52((short) 43, (short) 34, "Soltera", null),
 	A53((short) 43, (short) 35, "Casada", null),
 	A54((short) 43, (short) 36, "Unión estable", null),
 	A55((short) 43, (short) 37, "Otros", null),
 
 	// Padre
+	// Trabajo remunerado
 	A56((short) 58, (short) 19, "No", null),
 	A57((short) 58, (short) 20, "Sí", null),
-
+	// Horas fuera de casa
 	A58((short) 57, (short) 0, "", null),
-
+	// Edad
 	A59((short) 45, (short) 0, "", null),
-
+	// Estado civil
 	A60((short) 56, (short) 34, "Soltera", null),
 	A61((short) 56, (short) 35, "Casada", null),
 	A62((short) 56, (short) 36, "Unión estable", null),
 	A63((short) 56, (short) 37, "Otros", null),
 
 	// Hermanos
+	// Vivos
 	A64((short) 47, (short) 0, "", null),
-
+	// Fallecidos
 	A65((short) 48, (short) 0, "", null),
 
 	// Vivienda
+	// Número de cuartos
 	A66((short) 50, (short) 0, "", null),
-
+	// Red eléctrica
 	A67((short) 51, (short) 19, "No", null),
 	A68((short) 51, (short) 20, "Sí", null),
-
+	// Agua
 	A69((short) 52, (short) 38, "Conectado a la red", null),
 	A70((short) 52, (short) 39, "Sin conexión a la red", null),
 	A71((short) 52, (short) 40, "Fuera del hogar", null),
-
+	// Excretas
 	A72((short) 53, (short) 38, "Conectado a la red", null),
 	A73((short) 53, (short) 39, "Sin conexión a la red", null),
 	A74((short) 53, (short) 40, "Fuera del hogar", null),

@@ -21,7 +21,10 @@ public class PrintFamilyBgRepositoryImpl implements PrintFamilyBgRepository {
 
 	@Override
 	public Optional<List<Answer>> getQuestionnaireReportInfo(Long questionnaireTestId) {
-		String query = "SELECT ans.item_id, ans.option_id, ans.value " + "FROM {h-schema}minsal_lr_questionnaire_response as qr " + "INNER JOIN {h-schema}minsal_lr_answer ans ON ans.questionnaire_response_id = qr.id " + "WHERE qr.id = :questionnaireTestId";
+		String query = "SELECT ans.item_id, ans.value, ans.option_id " +
+				"FROM {h-schema}minsal_lr_questionnaire_response as qr " +
+				"INNER JOIN {h-schema}minsal_lr_answer ans ON ans.questionnaire_response_id = qr.id " +
+				"WHERE qr.id = :questionnaireTestId";
 
 		List<Object[]> queryResult = entityManager
 				.createNativeQuery(query)
@@ -33,8 +36,8 @@ public class PrintFamilyBgRepositoryImpl implements PrintFamilyBgRepository {
 		for (Object[] row : queryResult) {
 			Answer answer = new Answer();
 			answer.setItemId((Integer) row[0]);
-			answer.setAnswerId((Integer) row[1]);
-			answer.setValue((String) row[2]);
+			answer.setValue((String) row[1]);
+			answer.setAnswerId((Integer) row[2]);
 			answers.add(answer);
 		}
 		return Optional.of(answers);

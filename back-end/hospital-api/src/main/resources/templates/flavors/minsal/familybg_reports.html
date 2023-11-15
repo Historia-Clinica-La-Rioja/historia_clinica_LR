@@ -31,7 +31,6 @@
            margin: 2px 0px;
         }
 
-
     </style>
 </head>
 <body th:fragment="familybg">
@@ -44,110 +43,433 @@
             <h4>¿Con qué familiar(es) convive?</h4>
             <p>Madre</p>
             <label>
-                <input type="checkbox" name="opt1" th:checked="${respuesta.answerId == 19}"></input>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt1" th:checked="${respuesta.answerId == 19}"></input>
                 No
             </label><br></br>
             <label>
-                <input type="checkbox" name="opt2" th:checked="${respuesta.answerId == 26}"></input>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt2" th:checked="${respuesta.answerId == 26}"></input>
                 En la casa
             </label><br></br>
             <label>
-                <input type="checkbox" name="opt3" th:checked="${respuesta.answerId == 27}"></input>
-                Fuera del cuarto
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt3" th:checked="${respuesta.answerId == 27}"></input>
+                En el cuarto
             </label><br></br>
         </div>
+        <hr></hr>
         <div class="itemcontainer" th:each="respuesta : ${answers[1]}">
             <p>Padre</p>
             <label>
-                <input type="checkbox" name="opt4" th:checked="${respuesta.answerId == 19}"></input>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt4" th:checked="${respuesta.answerId == 19}"></input>
                 No
             </label><br></br>
             <label>
-                <input type="checkbox" name="opt5" th:checked="${respuesta.answerId == 26}"></input>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt5" th:checked="${respuesta.answerId == 26}"></input>
                 En la casa
             </label><br></br>
             <label>
-                <input type="checkbox" name="opt6" th:checked="${respuesta.answerId == 27}"></input>
-                Fuera del cuarto
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt6" th:checked="${respuesta.answerId == 27}"></input>
+                En el cuarto
             </label><br></br>
         </div>
+        <hr></hr>
         <div class="itemcontainer" th:each="respuesta : ${answers[2]}">
             <p>Madrastra</p>
             <label>
-                <input type="checkbox" name="opt7" th:checked="${respuesta.answerId == 19}"></input>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt7" th:checked="${respuesta.answerId == 19}"></input>
                 No
             </label><br></br>
             <label>
-                <input type="checkbox" name="opt8" th:checked="${respuesta.answerId == 26}"></input>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt8" th:checked="${respuesta.answerId == 26}"></input>
                 En la casa
             </label><br></br>
             <label>
-                <input type="checkbox" name="opt9" th:checked="${respuesta.answerId == 27}"></input>
-                Fuera del cuarto
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt9" th:checked="${respuesta.answerId == 27}"></input>
+                En el cuarto
             </label><br></br>
         </div>
+        <hr></hr>
         <div class="itemcontainer" th:each="respuesta : ${answers[3]}">
             <p>Padrastro</p>
             <label>
-                <input type="checkbox" name="opt10" th:checked="${respuesta.answerId == 19}"></input>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt10" th:checked="${respuesta.answerId == 19}"></input>
                 No
             </label><br></br>
             <label>
-                <input type="checkbox" name="opt11" th:checked="${respuesta.answerId == 26}"></input>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt11" th:checked="${respuesta.answerId == 26}"></input>
                 En la casa
             </label><br></br>
             <label>
-                <input type="checkbox" name="opt12" th:checked="${respuesta.answerId == 27}"></input>
-                Fuera del cuarto
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt12" th:checked="${respuesta.answerId == 27}"></input>
+                En el cuarto
             </label><br></br>
         </div>
+        <hr></hr>
         <div class="itemcontainer" th:each="respuesta : ${answers[4]}">
-            <p>Padre</p>
+            <p>Hermanos</p>
             <label>
-                <input type="checkbox" name="opt13" th:checked="${respuesta.answerId == 19}"></input>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt13" th:checked="${respuesta.answerId == 19}"></input>
                 No
             </label><br></br>
             <label>
-                <input type="checkbox" name="opt14" th:checked="${respuesta.answerId == 26}"></input>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt14" th:checked="${respuesta.answerId == 26}"></input>
                 En la casa
             </label><br></br>
             <label>
-                <input type="checkbox" name="opt15" th:checked="${respuesta.answerId == 27}"></input>
-                Fuera del cuarto
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt15" th:checked="${respuesta.answerId == 27}"></input>
+                En el cuarto
             </label><br></br>
         </div>
+        <hr></hr>
         <div class="itemcontainer" th:each="respuesta : ${answers[5]}">
-            <p>Padre</p>
+            <p>Pareja</p>
             <label>
-                <input type="checkbox" name="opt16" th:checked="${respuesta.answerId == 19}"></input>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt16" th:checked="${respuesta.answerId == 19}"></input>
                 No
             </label><br></br>
             <label>
-                <input type="checkbox" name="opt17" th:checked="${respuesta.answerId == 26}"></input>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt17" th:checked="${respuesta.answerId == 26}"></input>
                 En la casa
             </label><br></br>
             <label>
-                <input type="checkbox" name="opt18" th:checked="${respuesta.answerId == 27}"></input>
-                Fuera del cuarto
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt18" th:checked="${respuesta.answerId == 27}"></input>
+                En el cuarto
             </label><br></br>
         </div>
+        <hr></hr>
         <div class="itemcontainer" th:each="respuesta : ${answers[6]}">
-            <p>Padre</p>
+            <p>Hijos</p>
             <label>
-                <input type="checkbox" name="opt19" th:checked="${respuesta.answerId == 19}"></input>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt19" th:checked="${respuesta.answerId == 19}"></input>
                 No
             </label><br></br>
             <label>
-                <input type="checkbox" name="opt20" th:checked="${respuesta.answerId == 26}"></input>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt20" th:checked="${respuesta.answerId == 26}"></input>
                 En la casa
             </label><br></br>
             <label>
-                <input type="checkbox" name="opt21" th:checked="${respuesta.answerId == 27}"></input>
-                Fuera del cuarto
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt21" th:checked="${respuesta.answerId == 27}"></input>
+                En el cuarto
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[7]}">
+            <p>Abuelos</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt22" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt23" th:checked="${respuesta.answerId == 26}"></input>
+                En la casa
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt24" th:checked="${respuesta.answerId == 27}"></input>
+                En el cuarto
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <br></br>
+        <br></br>
+        <br></br>
+        <div class="itemcontainer" th:each="respuesta : ${answers[8]}">
+            <p>Otros</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt25" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt26" th:checked="${respuesta.answerId == 26}"></input>
+                En la casa
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt27" th:checked="${respuesta.answerId == 27}"></input>
+                En el cuarto
             </label><br></br>
         </div>
 
         <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[9]}">
+            <h4>¿Dónde vive?</h4>
+            <p>En una institución</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt28" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt29" th:checked="${respuesta.answerId == 20}"></input>
+                Sí
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[10]}">
+            <p>En la calle</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt30" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt31" th:checked="${respuesta.answerId == 20}"></input>
+                Sí
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[11]}">
+            <p>Solo</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt32" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt33" th:checked="${respuesta.answerId == 20}"></input>
+                Sí
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[12]}">
+            <p>Comparto la cama</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt34" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt35" th:checked="${respuesta.answerId == 20}"></input>
+                Sí
+            </label><br></br>
+        </div>
+
+        <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[13]}">
+            <h4>Nivel de instrucción alcanzado</h4>
+            <p>Padre o sustituto</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt42" th:checked="${respuesta.answerId == 28}"></input>
+                Analfabeto
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt43" th:checked="${respuesta.answerId == 29}"></input>
+                Primario incompleto
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt44" th:checked="${respuesta.answerId == 30}"></input>
+                Primario
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt45" th:checked="${respuesta.answerId == 31}"></input>
+                Secundario incompleto
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt46" th:checked="${respuesta.answerId == 32}"></input>
+                Secundario
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt47" th:checked="${respuesta.answerId == 33}"></input>
+                Universitario/terciario
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[14]}">
+            <p>Madre o sustituta</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt36" th:checked="${respuesta.answerId == 28}"></input>
+                Analfabeta
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt37" th:checked="${respuesta.answerId == 29}"></input>
+                Primario incompleto
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt38" th:checked="${respuesta.answerId == 30}"></input>
+                Primario
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt39" th:checked="${respuesta.answerId == 31}"></input>
+                Secundario incompleto
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt40" th:checked="${respuesta.answerId == 32}"></input>
+                Secundario
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt41" th:checked="${respuesta.answerId == 33}"></input>
+                Universitario/terciario
+            </label><br></br>
+        </div>
+        <hr></hr>
+
+        <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[15]}">
+            <h4>Madre</h4>
+            <p>Trabajo remunerado</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt48" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt49" th:checked="${respuesta.answerId == 20}"></input>
+                Sí
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[16]}">
+            <p>Horas diarias afuera de casa</p>
+            <label>
+                <p style="font-weight: normal;" th:text="${answers[16].value}" name="opt50"></p>
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[17]}">
+            <p>Edad (años)</p>
+            <label>
+                <p style="font-weight: normal;" th:text="${answers[17].value}" name="opt51"></p>
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[18]}">
+            <p>Estado civil</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt52" th:checked="${respuesta.answerId == 34}"></input>
+                Soltera
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt53" th:checked="${respuesta.answerId == 35}"></input>
+                Casada
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt54" th:checked="${respuesta.answerId == 36}"></input>
+                Unión estable
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt55" th:checked="${respuesta.answerId == 37}"></input>
+                Otros
+            </label><br></br>
+        </div>
+
+        <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[19]}">
+            <h4>Padre</h4>
+            <p>Trabajo remunerado</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt56" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt57" th:checked="${respuesta.answerId == 20}"></input>
+                Sí
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[20]}">
+            <p>Horas diarias afuera de casa</p>
+            <label>
+                <p style="font-weight: normal;" th:text="${answers[20].value}" name="opt58"></p>
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[21]}">
+            <p>Edad (años)</p>
+            <label>
+                <p style="font-weight: normal;" th:text="${respuesta.value}" name="opt59"></p>
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[22]}">
+            <p>Estado civil</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt60" th:checked="${respuesta.answerId == 34}"></input>
+                Soltero
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt61" th:checked="${respuesta.answerId == 35}"></input>
+                Casado
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt62" th:checked="${respuesta.answerId == 36}"></input>
+                Unión estable
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt63" th:checked="${respuesta.answerId == 37}"></input>
+                Otros
+            </label><br></br>
+        </div>
+
+        <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[23]}">
+            <h4>Hermanos</h4>
+            <p>Vivos</p>
+            <label>
+                <p style="font-weight: normal;" th:text="${answers[23].value}" name="opt64"></p>
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[24]}">
+            <p>Fallecidos</p>
+            <label>
+                <p style="font-weight: normal;" th:text="${answers[24].value}" name="opt65"></p>
+            </label><br></br>
+        </div>
+
+        <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[25]}">
+            <h4>Vivienda</h4>
+            <p>Número de cuartos</p>
+            <label>
+                <p style="font-weight: normal;" th:text="${answers[25].value}" name="opt66"></p>
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[26]}">
+            <p>Energía eléctrica</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt67" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt68" th:checked="${respuesta.answerId == 20}"></input>
+                Sí
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[27]}">
+            <p>Agua corriente</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt69" th:checked="${respuesta.answerId == 38}"></input>
+                Conectado a la red
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt70" th:checked="${respuesta.answerId == 39}"></input>
+                Sin conexión a la red
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt71" th:checked="${respuesta.answerId == 40}"></input>
+                Fuera del hogar
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[28]}">
+            <p>Excretas</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt72" th:checked="${respuesta.answerId == 38}"></input>
+                Conectado a la red
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt73" th:checked="${respuesta.answerId == 39}"></input>
+                Sin conexión a la red
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt74" th:checked="${respuesta.answerId == 40}"></input>
+                Fuera del hogar
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" name="opt75" th:checked="${respuesta.answerId == 41}"></input>
+                Letrina
+            </label><br></br>
+        </div>
 
     </div>
     <!-- Bootstrap's script -->

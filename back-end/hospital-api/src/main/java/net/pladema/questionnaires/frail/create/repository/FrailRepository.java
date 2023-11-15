@@ -13,12 +13,12 @@ import net.pladema.questionnaires.common.domain.QuestionnaireResponse;
 
 public interface FrailRepository extends SGXAuditableEntityJPARepository<QuestionnaireResponse, Integer> {
 
-	@Query(value = "SELECT new net.pladema.questionnaires.common.domain.Answer(qr.id, la.itemId, la.questionnaireResponseId, la.answerId) " +
+	@Query(value = "SELECT new net.pladema.questionnaires.common.domain.Answer(qr.id, la.itemId, la.questionnaireResponseId, la.answerId, la.value) " +
 			"FROM Answer la " +
 			"INNER JOIN QuestionnaireResponse qr ON  qr.id = la.questionnaireResponseId " +
 			"WHERE qr.patientId = :patientId " +
 			"AND qr.statusId = 2" +
-			"ORDER BY qr.id, la.itemId, la.questionnaireResponseId, la.answerId" )
+			"ORDER BY qr.id, la.itemId, la.questionnaireResponseId, la.answerId, la.value" )
 	List<Answer> findPatientFrailTest(@Param("patientId") Integer patientId);
 
 	@Modifying
