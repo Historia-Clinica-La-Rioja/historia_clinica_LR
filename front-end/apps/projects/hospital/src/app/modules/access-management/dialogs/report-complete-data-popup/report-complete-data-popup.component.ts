@@ -16,6 +16,9 @@ import { DashboardService } from '@access-management/services/dashboard.service'
 import { CancelAppointmentComponent } from '@turnos/dialogs/cancel-appointment/cancel-appointment.component';
 import { DashboardView } from '@access-management/components/reference-dashboard-filters/reference-dashboard-filters.component';
 import { PENDING } from '@access-management/constants/reference';
+import { ContextService } from '@core/services/context.service';
+import { NO_INSTITUTION } from '../../../home/home.component';
+import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/institutional-network-reference-report.service';
 
 @Component({
 	selector: 'app-report-complete-data-popup',
@@ -37,19 +40,25 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
 		private readonly searchAppointmentsInfoService: SearchAppointmentsInfoService,
 		private readonly permissionService: PermissionsService,
-		public dialogRef: MatDialogRef<ReportCompleteDataPopupComponent>,
+		private dialogRef: MatDialogRef<ReportCompleteDataPopupComponent>,
 		private readonly dashboardService: DashboardService,
 		private readonly tabsService: TabsService,
 		private readonly dialog: MatDialog,
+		private readonly contextService: ContextService,
+		private readonly institutionalNetworkReferenceReportService: InstitutionalNetworkReferenceReportService,
 		@Inject(MAT_DIALOG_DATA) public data,
 	) { }
 
 	ngOnInit(): void {
-		this.referenceCompleteData$ = this.institutionalReferenceReportService.getReferenceDetail(this.data.referenceId).pipe(tap(
+
+		const referenceDetails$ = this.contextService.institutionId === NO_INSTITUTION ? this.institutionalNetworkReferenceReportService.getReferenceDetail(this.data.referenceId) : this.institutionalReferenceReportService.getReferenceDetail(this.data.referenceId);
+
+		this.referenceCompleteData$ = referenceDetails$.pipe(tap(
 			referenceDetails => {
 				this.setReportData(referenceDetails);
 				this.colapseContactDetails = referenceDetails.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.SERVED;
-				this.setPopUpActions(referenceDetails.appointment, referenceDetails.reference.closureType);
+				if (this.contextService.institutionId !== NO_INSTITUTION)
+					this.setPopUpActions(referenceDetails.appointment, referenceDetails.reference.closureType);
 			}));
 	}
 

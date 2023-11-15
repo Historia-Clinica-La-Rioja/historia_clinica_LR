@@ -1,7 +1,7 @@
 import { DashboardFilters } from '@access-management/components/reference-dashboard-filters/reference-dashboard-filters.component';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PageDto, ReferenceReportDto } from '@api-rest/api-model';
+import { PageDto, ReferenceCompleteDataDto, ReferenceReportDto } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 
@@ -23,5 +23,10 @@ export class InstitutionalNetworkReferenceReportService {
 		params = params.append('pageNumber', pageNumber);
 		params = params.append('pageSize', pageSize);
 		return this.http.get<PageDto<ReferenceReportDto>>(url, { params });
+	}
+
+	getReferenceDetail(id: number): Observable<ReferenceCompleteDataDto> {
+		const url = `${this.BASE_URL}/reference-detail/${id}`;
+		return this.http.get<ReferenceCompleteDataDto>(url);
 	}
 }
