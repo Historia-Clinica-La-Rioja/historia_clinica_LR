@@ -83,6 +83,7 @@ export class ReferenceDashboardFiltersComponent implements OnInit, OnDestroy {
 			const value = filterOptions.value;
 			appliedFilters[DashboardFiltersMapping[key]] = value;
 		});
+		this.dashboardService.pageNumber = 0;
 
 		this.applyFilters(appliedFilters);
 	}
@@ -92,6 +93,7 @@ export class ReferenceDashboardFiltersComponent implements OnInit, OnDestroy {
 		let appliedFilters: DashboardFilters = {} as DashboardFilters;
 		if (document)
 			appliedFilters = this.applyDocumentFilter();
+		this.dashboardService.pageNumber = 0;
 		this.applyFilters(appliedFilters);
 	}
 

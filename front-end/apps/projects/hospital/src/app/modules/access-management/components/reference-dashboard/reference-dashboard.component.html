@@ -12,8 +12,8 @@
 				</div>
 				<mat-divider class="divider-list" inset></mat-divider>
 			</div>
-			<mat-paginator [length]="totalElementsAmount" [pageSizeOptions]="pageSizeOptions"
-				(page)="dashboardService.updatePaginator($event)">
+			<mat-paginator #paginator [length]="totalElementsAmount" [pageSizeOptions]="pageSizeOptions"
+				(page)="updatePage($event)">
 			</mat-paginator>
 		</div>
 		<ng-template #noInfo>

@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { PageDto, ReferenceReportDto } from '@api-rest/api-model';
 import { ReferenceReport } from '../reference-summary/reference-summary.component';
 import { ReportCompleteDataPopupComponent } from '@access-management/dialogs/report-complete-data-popup/report-complete-data-popup.component';
 import { MatDialog } from '@angular/material/dialog';
 import { toReferenceReport } from '@access-management/utils/mapper.utils';
 import { DashboardService } from '@access-management/services/dashboard.service';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 
@@ -18,11 +19,14 @@ export class ReferenceDashboardComponent {
 	referenceReports: ReferenceReport[] = [];
 	pageSizeOptions = PAGE_SIZE_OPTIONS;
 	totalElementsAmount: number;
+	hasToResetToFirstPage = false;
+
+	@ViewChild('paginator') paginator: MatPaginator;
 
 	@Input()
 	set references(list: PageDto<ReferenceReportDto>) {
-		this.referenceReports = (list?.content) ? list?.content.map(report => toReferenceReport(report)) : [];
-		this.totalElementsAmount = list?.totalElementsAmount;
+		this.referenceReports = this.mapToReferencesReport(list);
+		this.updatePaginator(list?.totalElementsAmount);
 	};
 
 	constructor(
@@ -39,6 +43,22 @@ export class ReferenceDashboardComponent {
 			disableClose: true,
 			width: '40%',
 		});
+	}
+
+	updatePage(pageInfo: PageEvent) {
+		this.hasToResetToFirstPage = false;
+		this.dashboardService.updatePaginator(pageInfo);
+	}
+
+	private mapToReferencesReport(list): ReferenceReport[] {
+		return (list?.content) ? list?.content.map(report => toReferenceReport(report)) : [];
+	}
+
+	private updatePaginator(totalElementsAmount: number) {
+		if (this.hasToResetToFirstPage && this.paginator)
+			this.paginator.pageIndex = 0;
+		this.totalElementsAmount = totalElementsAmount;
+		this.hasToResetToFirstPage = true;
 	}
 
 }
