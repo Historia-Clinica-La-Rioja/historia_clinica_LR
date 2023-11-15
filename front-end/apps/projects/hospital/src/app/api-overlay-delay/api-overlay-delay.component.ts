@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { PendingRequestsService } from '../pending-requests.service';
-import { Observable } from 'rxjs';
+import { map } from 'rxjs';
 
 @Component({
 	selector: 'app-api-overlay-delay',
@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class ApiOverlayDelayComponent {
 
-	requestPending$: Observable<boolean> = this.pendingRequests.arePendingRequests$;
+	class$ = this.pendingRequests.arePendingRequests$.pipe(map(requestPending => requestPending ? 'overlay' : null))
 
 	constructor(
 		private readonly pendingRequests: PendingRequestsService
