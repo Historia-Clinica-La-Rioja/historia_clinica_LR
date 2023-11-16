@@ -23,7 +23,14 @@ public class CipresWSConfig extends WSConfig {
 	private static final String CONSULTATION = "/api/consultorio/consulta";
 
 	private static final String DEPENDENCIES = "/api/establecimiento/dependencias";
+
+	private static final String ADDRESS = "/api/domicilio";
+
+	private static final String COUNTRY = "api/geolocalizacion/pais";
+
 	private static final String CITIES = "/api/geolocalizacion/localidades";
+
+	private static final String NACIONALITY = "/api/referencias/nacionalidades";
 
 	private static final Duration DEFAULT_TOKEN_EXPIRATION = Duration.ofSeconds(10L);
 
@@ -62,4 +69,11 @@ public class CipresWSConfig extends WSConfig {
 	public String getDependenciesUrl() { return DEPENDENCIES; }
 
 	public String getCitiesUrl() { return CITIES; }
+
+	public String getAddressUrl() { return ADDRESS; }
+
+	public String getCountryUrl() { return COUNTRY; }
+
+	public String getNacionalityUrl() { return NACIONALITY; }
+
 }

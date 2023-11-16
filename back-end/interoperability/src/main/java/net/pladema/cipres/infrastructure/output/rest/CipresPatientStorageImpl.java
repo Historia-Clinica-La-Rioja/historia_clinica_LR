@@ -3,8 +3,10 @@ package net.pladema.cipres.infrastructure.output.rest;
 import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.exception.RestTemplateApiException;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.cipres.application.port.CipresPatientStorage;
+import net.pladema.cipres.application.port.CipresPersonStorage;
 import net.pladema.cipres.application.port.CipresStorage;
 import net.pladema.cipres.domain.BasicDataPersonBo;
+import net.pladema.cipres.domain.PersonDataBo;
 import net.pladema.cipres.infrastructure.output.rest.domain.CipresCityResponse;
 import net.pladema.cipres.infrastructure.output.rest.domain.CipresPatientResponse;
 import net.pladema.cipres.infrastructure.output.rest.domain.CipresMasterData;
@@ -13,6 +15,9 @@ import net.pladema.cipres.infrastructure.output.rest.domain.CipresPatientPayload
 
 import net.pladema.cipres.infrastructure.output.rest.domain.consultation.CipresEntityResponse;
 
+import net.pladema.cipres.infrastructure.output.rest.domain.patient.CipresPatientAddressPayload;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
@@ -32,87 +37,202 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 
 	public static final short GENDER_MALE = 2;
 
-	public static final short GENDER_NONBINARY = 3;
-
 	public static final short IDENTIFICATION_TYPE_DNI = 1;
+
+	public static final short IDENTIFICATION_TYPE_CI = 2;
+
+	public static final short IDENTIFICATION_TYPE_LC = 3;
+
+	public static final short IDENTIFICATION_TYPE_LE = 4;
+
+	public static final short IDENTIFICATION_TYPE_CUIT = 6;
+
+	public static final short IDENTIFICATION_TYPE_FOREIGN_PASSPORT = 8;
+
+	public static final short IDENTIFICATION_TYPE_FOREIGN_IDENTITY_CARD = 9;
+
+	public static final short IDENTIFICATION_TYPE_OTHER_FOREIGN_DOCUMENT = 10;
+
+	public static final Integer CUIT_LENGTH = 11;
+
+	private static final String ADDRESS = "domicilio";
+
+	private static final String ID = "id";
 
 	private static final String DEPARTMENT_DESCRIPTION = "descripcionPartido";
 
+	private static final String ESTABLISHMENT_URL = "?establecimiento=";
 
-	public CipresPatientStorageImpl (CipresRestTemplate cipresRestTemplate, CipresWSConfig cipresWSConfig) {
+	private static final String GET_PATIENT_URL = "%s?esDocumentoArgentino=%s&numeroDocumento=%s&sexo=%s&esDocumentoPropio=true&incluirRelaciones=false&incluirDomicilio=true&establecimiento=%s";
+
+	private static final List<Short> nationalDocumentTypes = List.of(IDENTIFICATION_TYPE_DNI, IDENTIFICATION_TYPE_CI, IDENTIFICATION_TYPE_LC, IDENTIFICATION_TYPE_LE, IDENTIFICATION_TYPE_CUIT);
+
+	private static final List<Short> foreignDocumentTypes = List.of(IDENTIFICATION_TYPE_FOREIGN_PASSPORT, IDENTIFICATION_TYPE_FOREIGN_IDENTITY_CARD, IDENTIFICATION_TYPE_OTHER_FOREIGN_DOCUMENT);
+
+	private final CipresPersonStorage cipresPersonStorage;
+
+	public CipresPatientStorageImpl (CipresRestTemplate cipresRestTemplate, CipresWSConfig cipresWSConfig,
+									 CipresPersonStorage cipresPersonStorage) {
 		super(cipresRestTemplate, cipresWSConfig);
+		this.cipresPersonStorage = cipresPersonStorage;
 	}
 
 	@Override
-	public Integer getPatientId(BasicDataPersonBo basicDataPersonBo) {
-		ResponseEntity<CipresPatientResponse[]> response = null;
-		String url = this.buildPatientUrl(basicDataPersonBo);
+	public Optional<Integer> getPatientId(BasicDataPersonBo basicDataPersonBo, String establishmentId) {
+		String url = this.buildPatientUrl(basicDataPersonBo, establishmentId);
 		try {
-			response = restClient.exchangeGet(url, CipresPatientResponse[].class);
+			ResponseEntity<CipresPatientResponse[]> response = restClient.exchangeGet(url, CipresPatientResponse[].class);
+			if (isSuccessfulResponse(response))
+				return processPatientSuccessfulResponse(response.getBody(), establishmentId, basicDataPersonBo);
 		} catch (RestTemplateApiException e) {
-			log.debug("Error al intentar obtener un paciente en la api", e);
+			return handlePatientRestTemplateApiException(e, basicDataPersonBo, establishmentId);
 		} catch (ResourceAccessException e) {
-			log.error("Fallo en la comunicación", e);
-			return null;
+			handleResourceAccessException(e);
 		}
-		if (response != null) {
-			List<CipresPatientResponse> cipresPatientResponseList = Arrays.asList(response.getBody());
-			if (cipresPatientResponseList.size() == 0 && isValidIdentificationTypeToCipres(basicDataPersonBo.getIdentificationTypeId())) {
-				return Integer.parseInt(this.createPatient(basicDataPersonBo));
+		return Optional.empty();
+	}
+
+	private Optional<Integer> handlePatientRestTemplateApiException(RestTemplateApiException e, BasicDataPersonBo basicDataPersonBo, String establishmentId) {
+		if (e.getStatusCode().equals(HttpStatus.NOT_FOUND) && validIdentificationData(basicDataPersonBo)) {
+			PersonDataBo person = cipresPersonStorage.getPersonData(basicDataPersonBo.getId());
+			if (validPatientMinimalData(person))
+				return createPatient(person, establishmentId);
+		} else
+			log.warn("Error al intentar obtener un paciente");
+		return Optional.empty();
+	}
+
+	private Optional<Integer> processPatientSuccessfulResponse(CipresPatientResponse[] patients, String establishmentId,
+															   BasicDataPersonBo basicDataPersonBo) {
+		var patient = patients[0].getPaciente();
+
+		if (patient.get(ADDRESS) != null)
+			return Optional.ofNullable((int) patient.get(ID));
+
+		PersonDataBo person = cipresPersonStorage.getPersonData(basicDataPersonBo.getId());
+		if (validAddressData(person)) {
+			var addressId = savePatientAddress(person, patient.get(ID).toString(), establishmentId);
+			if (addressId.isPresent())
+				return Optional.of((int)patient.get(ID));
+		}
+
+		return Optional.empty();
+	}
+
+	public Optional<Integer> savePatientAddress(PersonDataBo person, String patientId, String establishmentId) {
+		String url = cipresWSConfig.getAddressUrl().concat(ESTABLISHMENT_URL+ establishmentId);
+		var body = mapToCipresPatientAddressPayload(person);
+		if (body.getLocalidad() != null && body.getNacionalidad() != null) {
+			body.setPaciente("api/paciente/" + patientId);
+			try {
+				var response = restClient.exchangePost(url, body, CipresEntityResponse.class);
+				if (response != null && response.getBody() != null)
+					return Optional.ofNullable(response.getBody().getId() != null ? Integer.parseInt(response.getBody().getId()) : null);
+			} catch (RestTemplateApiException e) {
+				log.warn("Error al intentar actualizar el domicilio del paciente en la api", e);
+			} catch (ResourceAccessException e) {
+				handleResourceAccessException(e);
 			}
-			return  (Integer) cipresPatientResponseList.get(0).getPersona().get("id");
 		}
-		return null;
+		return Optional.empty();
 	}
 
-	private boolean isValidIdentificationTypeToCipres(Short identificationTypeId) {
-		return identificationTypeId == null ||
-				identificationTypeId.equals(IDENTIFICATION_TYPE_DNI);
-	}
-
-	private String createPatient(BasicDataPersonBo basicDataPersonBo) {
-		String url = cipresWSConfig.getPatientUrl();
-		CipresPatientPayload body = mapToPatientPayload(basicDataPersonBo);
-		ResponseEntity<CipresEntityResponse> response = null;
-		try {
-			response = restClient.exchangePost(url, body, CipresEntityResponse.class);
-		} catch (RestTemplateApiException e) {
-			log.debug("Error al intentar insertar un paciente en la api", e);
-			return null;
+	@Override
+	public Optional<Integer> createPatient(PersonDataBo person, String establishmentId) {
+		String url = cipresWSConfig.getPatientUrl().concat(ESTABLISHMENT_URL + establishmentId);
+		CipresPatientAddressPayload address = mapToCipresPatientAddressPayload(person);
+		if (address.getLocalidad() != null && address.getNacionalidad() != null) {
+			CipresPatientPayload body = mapToPatientPayload(person, address);
+			try {
+				var response = restClient.exchangePost(url, body, CipresEntityResponse.class);
+				if (response != null && response.getBody() != null && response.getBody().getId() != null)
+					return Optional.of(Integer.parseInt(response.getBody().getId()));
+			} catch (RestTemplateApiException e) {
+				log.warn("Error al intentar insertar un paciente en la api");
+			} catch (ResourceAccessException e) {
+				handleResourceAccessException(e);
+			}
 		}
-		if (response != null)
-			return response.getBody().getId();
-		return null;
+		return Optional.empty();
 	}
 
-	public CipresPatientPayload mapToPatientPayload(BasicDataPersonBo basicDataPersonBo) {
-		String firstName = Stream.of(basicDataPersonBo.getFirstName(),  basicDataPersonBo.getMiddleNames())
+	public CipresPatientPayload mapToPatientPayload(PersonDataBo person, CipresPatientAddressPayload address) {
+		String firstName = Stream.of(person.getFirstName(),  person.getMiddleNames())
 				.filter(Objects::nonNull)
 				.collect(Collectors.joining(" "));
-		String lastName = Stream.of(basicDataPersonBo.getOtherLastNames(), basicDataPersonBo.getLastName())
+		String lastName = Stream.of(person.getOtherLastNames(), person.getLastName())
 				.filter(Objects::nonNull)
 				.collect(Collectors.joining(" "));
 		return CipresPatientPayload.builder()
 				.nombre(firstName)
 				.apellido(lastName)
-				.tipoDocumento(CipresMasterData.DNI_DOCUMENT_TYPE)
-				.numeroDocumento(basicDataPersonBo.getIdentificationNumber())
-				.sexo(getCipresGenderMasterData(basicDataPersonBo.getGenderId()))
-				.fechaNacimiento(basicDataPersonBo.getBirthDate().toString())
+				.tipoDocumento(getCipresDocumentType(person.getIdentificationTypeId()))
+				.numeroDocumento(!person.getIdentificationTypeId().equals(IDENTIFICATION_TYPE_CUIT) ? person.getIdentificationNumber() :
+						person.getIdentificationNumber().substring(2, 10))
+				.sexo(getCipresGenderMasterData(person.getGenderId()))
+				.fechaNacimiento(person.getBirthDate().toString())
+				.domicilio(address)
+				.nacionalidad(address.getNacionalidad())
 				.build();
 	}
+
+	private CipresPatientAddressPayload mapToCipresPatientAddressPayload(PersonDataBo personInfo) {
+		String personContact = personInfo.getPhonePrefix() != null &&  personInfo.getPhoneNumber() != null ?
+				personInfo.getPhonePrefix().concat(personInfo.getPhoneNumber()) : null;
+		var city = personInfo.getCityBahraCode() != null
+				? getCityIRI(personInfo.getCityBahraCode(), personInfo.getCity(), personInfo.getDepartment()).orElse(null)
+				: getCityIRIByCityName(personInfo.getCity(), personInfo.getDepartment()).orElse(null);
+		var nationality = getNationalityIRI(personInfo.getCountry()).orElse(null);
+		return CipresPatientAddressPayload.builder()
+				.telefono(personContact)
+				.celular(personContact)
+				.email(personInfo.getEmail())
+				.calle(personInfo.getStreet())
+				.nro(personInfo.getNumber())
+				.piso(personInfo.getFloor() != null && personInfo.getFloor().matches("\\d+") ? Integer.parseInt(personInfo.getFloor()) : null)
+				.departamento(personInfo.getApartment())
+				.barrio((personInfo.getQuarter()))
+				.cp(personInfo.getPostcode())
+				.localidad(city)
+				.nacionalidad(nationality)
+				.build();
+	}
+
+	public Optional<String> getNationalityIRI(String country) {
+		String url = String.format("%s?descripcionPais=%s", cipresWSConfig.getCountryUrl(), country.toUpperCase());
+		try {
+			ResponseEntity<CipresEntityResponse[]>  response = restClient.exchangeGet(url, CipresEntityResponse[].class);
+			if (isSuccessfulResponse(response)) {
+				var cipresCountry = Arrays.asList(response.getBody()).get(0);
+				return Optional.of(cipresWSConfig.getNacionalityUrl().concat("/").concat(cipresCountry.getId()));
+			}
+		} catch (RestTemplateApiException e) {
+			log.debug("Error al intentar obtener la nacionalidad");
+		} catch (ResourceAccessException e) {
+			handleResourceAccessException(e);
+		}
+		return Optional.empty();
+	}
+
 	public Optional<String> getCityIRI(String bahraCode, String city, String department) {
 		String url = String.format("%s?codigoBahra=%s", cipresWSConfig.getCitiesUrl(), bahraCode);
 		try {
 			ResponseEntity<CipresCityResponse[]> response = restClient.exchangeGet(url, CipresCityResponse[].class);
-			if (isSuccessfulResponse(response)) {
-				var cipresCityResponse = Arrays.asList(response.getBody());
-				if (cipresCityResponse.isEmpty())
+			if (response != null ) {
+				if (response.getBody() != null && response.getBody().length > 0) {
+					var cipresCityResponse = Arrays.asList(response.getBody());
+					if (cipresCityResponse.isEmpty())
+						return getCityIRIByCityName(city, department);
+					else {
+						if (cipresCityResponse.size() > 1)
+							return cipresCityResponse.stream().filter(c -> matchesCityAndDepartment(c, city, department))
+									.findFirst()
+									.map(c -> cipresWSConfig.getCitiesUrl() + "/" + c.getId());
+						return Optional.of(cipresWSConfig.getCitiesUrl() + "/" + cipresCityResponse.get(0).getId());
+					}
+
+				} else
 					return getCityIRIByCityName(city, department);
-				else
-					return cipresCityResponse.stream().filter(c -> matchesCityAndDepartment(c, city, department))
-							.findFirst()
-							.map(c -> cipresWSConfig.getCitiesUrl() + "/" + c.getId());
 			}
 		} catch (RestTemplateApiException e) {
 			log.debug("Error al intentar obtener la localidad");
@@ -147,16 +267,33 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 		return Optional.empty();
 	}
 
+	private String buildPatientUrl(BasicDataPersonBo basicDataPersonBo, String establishmentId) {
+		return String.format(
+				GET_PATIENT_URL,
+				cipresWSConfig.getPatientUrl(),
+				!foreignDocumentTypes.contains(basicDataPersonBo.getIdentificationTypeId()),
+				basicDataPersonBo.getIdentificationNumber(),
+				getCipresGenderInitial(basicDataPersonBo.getGenderId()),
+				establishmentId
+		);
+	}
+
+	private String getCipresDocumentType(Short documentType) {
+		if (nationalDocumentTypes.contains(documentType))
+			return CipresMasterData.DNI_DOCUMENT_TYPE;
+		if (foreignDocumentTypes.contains(documentType))
+			return CipresMasterData.FOREIGN_DOCUMENT_TYPE;
+		return CipresMasterData.NOT_SPECIFIED_DOCUMENT_TYPE;
+	}
+
 	private String getCipresGenderMasterData(Short genderId) {
 		switch (genderId) {
 			case GENDER_FEMALE:
 				return CipresMasterData.GENDER_FEMALE;
 			case GENDER_MALE:
 				return CipresMasterData.GENDER_MALE;
-			case GENDER_NONBINARY:
-				return CipresMasterData.GENDER_NONBINARY;
 			default:
-				return CipresMasterData.GENDER_NO_DATA;
+				return CipresMasterData.GENDER_NONBINARY;
 		}
 	}
 
@@ -171,19 +308,19 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 		}
 	}
 
-	private String buildPatientUrl(BasicDataPersonBo basicDataPersonBo) {
-		StringBuilder url = new StringBuilder();
-		url.append(cipresWSConfig.getPatientUrl());
-		url.append("?esDocumentoArgentino=");
-		url.append(basicDataPersonBo.getIdentificationTypeId().equals(IDENTIFICATION_TYPE_DNI) ? true : false);
-		url.append("&numeroDocumento=");
-		url.append(basicDataPersonBo.getIdentificationNumber());
-		url.append("&sexo=");
-		url.append(getCipresGenderInitial(basicDataPersonBo.getGenderId()));
-		url.append("&esDocumentoPropio=true&incluirRelaciones=false&incluirDomicilio=false");
-		return url.toString();
+	private boolean validPatientMinimalData(PersonDataBo person) {
+		return person.getBirthDate() != null && person.getFirstName() != null && person.getLastName() != null && validAddressData(person);
 	}
 
+	private boolean validIdentificationData(BasicDataPersonBo basicDataPersonBo) {
+		boolean isCUITIdentificationType = basicDataPersonBo.getIdentificationTypeId().equals(IDENTIFICATION_TYPE_CUIT);
+		return !isCUITIdentificationType || basicDataPersonBo.getIdentificationNumber().length() == CUIT_LENGTH;
+	}
+
+	private boolean validAddressData (PersonDataBo person) {
+		return person.getCountry() != null && (person.getCityBahraCode() != null || (person.getCity() != null && person.getDepartment() != null));
+	}
+	
 	private void handleResourceAccessException(ResourceAccessException e) {
 		log.debug("Fallo en la comunicación - API SALUD", e);
 	}

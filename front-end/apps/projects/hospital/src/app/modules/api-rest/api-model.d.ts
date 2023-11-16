@@ -715,6 +715,30 @@ export interface CompletePatientDto extends BasicPatientDto {
     patientType: PatientType;
 }
 
+export interface CompletePersonDto {
+    apartment: string;
+    birthDate: Date;
+    city: string;
+    cityBahraCode: string;
+    country: string;
+    department: string;
+    email: string;
+    firstName: string;
+    floor: string;
+    genderId: number;
+    identificationNumber: string;
+    identificationTypeId: number;
+    lastName: string;
+    middleNames: string;
+    number: string;
+    otherLastNames: string;
+    phoneNumber: string;
+    phonePrefix: string;
+    postcode: string;
+    quarter: string;
+    street: string;
+}
+
 export interface CompleteReferenceDto extends ReferenceDto {
     doctorId: number;
     encounterId: number;
