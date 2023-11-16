@@ -189,12 +189,6 @@
         .diagnosis::first-letter {
             text-transform: uppercase;
         }
-
-        .professional-name-licenses {
-            margin-top: 16px;
-            text-align: center;
-        }
-
     </style>
 </head>
 
@@ -310,17 +304,15 @@
         <div class="signature">
             <div>&nbsp;</div>
             <div class="signature-data">23. FIRMA PROFESIONAL</div>
+            <div th:text="${completeProfessionalName}"></div>
+            <span th:each="license,iter: ${licenses}">
+                <div style="margin-top: -30px" th:text="${license}"></div>
+            </span>
             <div class="enrollment-stamp"><p>Sello y Matrícula</p></div>
         </div>
         <div class="total-billing">
             <div class="total-billing-data"><p>24. TOTAL</p></div>
             <div class="affiliate-billing">25. CONFORME AFILIADO</div>
-            <div class="professional-name-licenses">
-                <div th:text="${completeProfessionalName}"></div>
-                <div th:each="license,iter: ${licenses}">
-                    <span th:text="${license}"></span>
-                </div>
-            </div>
         </div>
         <div class="data-billing">
             <div class="border-bottom">&nbsp;</div>
