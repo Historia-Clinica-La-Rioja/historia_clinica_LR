@@ -75,6 +75,7 @@ const routes: Routes = [
 				data: {
 					featureFlag: AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO,
 					allowedRoles: MANAGER_ROLES,
+					needsRoot: true
 				},
 			},
 		]
