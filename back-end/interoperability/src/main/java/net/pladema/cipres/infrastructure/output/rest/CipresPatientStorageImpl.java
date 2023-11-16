@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.cipres.application.port.CipresPatientStorage;
 import net.pladema.cipres.application.port.CipresStorage;
 import net.pladema.cipres.domain.BasicDataPersonBo;
+import net.pladema.cipres.infrastructure.output.rest.domain.CipresCityResponse;
 import net.pladema.cipres.infrastructure.output.rest.domain.CipresPatientResponse;
 import net.pladema.cipres.infrastructure.output.rest.domain.CipresMasterData;
 import net.pladema.cipres.infrastructure.output.rest.domain.CipresPatientPayload;
@@ -19,6 +20,7 @@ import org.springframework.web.client.ResourceAccessException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,6 +35,9 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 	public static final short GENDER_NONBINARY = 3;
 
 	public static final short IDENTIFICATION_TYPE_DNI = 1;
+
+	private static final String DEPARTMENT_DESCRIPTION = "descripcionPartido";
+
 
 	public CipresPatientStorageImpl (CipresRestTemplate cipresRestTemplate, CipresWSConfig cipresWSConfig) {
 		super(cipresRestTemplate, cipresWSConfig);
@@ -96,6 +101,51 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 				.fechaNacimiento(basicDataPersonBo.getBirthDate().toString())
 				.build();
 	}
+	public Optional<String> getCityIRI(String bahraCode, String city, String department) {
+		String url = String.format("%s?codigoBahra=%s", cipresWSConfig.getCitiesUrl(), bahraCode);
+		try {
+			ResponseEntity<CipresCityResponse[]> response = restClient.exchangeGet(url, CipresCityResponse[].class);
+			if (isSuccessfulResponse(response)) {
+				var cipresCityResponse = Arrays.asList(response.getBody());
+				if (cipresCityResponse.isEmpty())
+					return getCityIRIByCityName(city, department);
+				else
+					return cipresCityResponse.stream().filter(c -> matchesCityAndDepartment(c, city, department))
+							.findFirst()
+							.map(c -> cipresWSConfig.getCitiesUrl() + "/" + c.getId());
+			}
+		} catch (RestTemplateApiException e) {
+			log.debug("Error al intentar obtener la localidad");
+		} catch (ResourceAccessException e) {
+			handleResourceAccessException(e);
+		}
+		return Optional.empty();
+	}
+
+	private boolean matchesCityAndDepartment(CipresCityResponse city, String cityName, String departmentName) {
+		return (city.getDescripcionLocalidad()).toLowerCase().replaceAll("[^a-zA-Z0-9]", "")
+				.equals(cityName.toLowerCase().replaceAll("[^a-zA-Z0-9]", "")) &&
+				((String) city.getPartido().get(DEPARTMENT_DESCRIPTION)).toLowerCase().replaceAll("[^a-zA-Z0-9]", "")
+						.equals(departmentName.toLowerCase().replaceAll("[^a-zA-Z0-9]", ""));
+	}
+
+	public Optional<String> getCityIRIByCityName(String city, String department) {
+		String url = String.format("%s?descripcionLocalidad=%s", cipresWSConfig.getCitiesUrl(), city.toUpperCase());
+		try {
+			ResponseEntity<CipresCityResponse[]>  response = restClient.exchangeGet(url, CipresCityResponse[].class);
+			if (isSuccessfulResponse(response)) {
+				var cipresCityResponse = Arrays.asList(response.getBody());
+				return cipresCityResponse.stream().filter(c -> matchesCityAndDepartment(c, city, department))
+						.findFirst()
+						.map(c -> cipresWSConfig.getCitiesUrl() + "/" + c.getId());
+			}
+		} catch (RestTemplateApiException e) {
+			log.debug("Error al intentar obtener la localidad");
+		} catch (ResourceAccessException e) {
+			handleResourceAccessException(e);
+		}
+		return Optional.empty();
+	}
 
 	private String getCipresGenderMasterData(Short genderId) {
 		switch (genderId) {
@@ -132,6 +182,14 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 		url.append(getCipresGenderInitial(basicDataPersonBo.getGenderId()));
 		url.append("&esDocumentoPropio=true&incluirRelaciones=false&incluirDomicilio=false");
 		return url.toString();
+	}
+
+	private void handleResourceAccessException(ResourceAccessException e) {
+		log.debug("Fallo en la comunicación - API SALUD", e);
+	}
+
+	private <T> boolean isSuccessfulResponse(ResponseEntity<T[]> response) {
+		return response != null && response.getBody() != null && response.getBody().length > 0;
 	}
 
 }
