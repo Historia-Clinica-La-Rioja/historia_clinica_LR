@@ -64,3 +64,17 @@ databaseChangeLog:
                 - column:
                     name: deleted_on
                     type: datetime
+
+    - changeSet:
+        id: addColumn-date-cipres_encounter
+        comment: Add column date to table cipres_encounter
+        author: bchacon
+        changes:
+          - addColumn:
+              tableName: cipres_encounter
+              columns:
+                - column:
+                    name: date
+                    type: date
+                    
+
