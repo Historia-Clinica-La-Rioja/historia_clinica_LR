@@ -94,9 +94,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		});
 
 		this.setClinicalSpecialtiesTypeaheadOptions();
-		this.practicesService.getByActiveDiaries().subscribe(practices => {
-			this.practices = practices;
-		});
+		this.setPractices();
 	}
 
 	ngOnChanges(changes: SimpleChanges): void {
@@ -224,6 +222,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		this.resetTypeahead = true;
 		this.selectedSearchCriteria = SearchCriteria.CONSULTATION;
 		this.showCareNetworkSection = false;
+		this.setPractices();
 	}
 
 	setCriteria(selectedCriteria: SearchCriteria) {
@@ -306,7 +305,6 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	}
 
 	private clearLists() {
-		this.practices = [];
 		this.emptyAppointments = null;
 		this.emptyAppointmentsFiltered = null;
 	}
@@ -317,6 +315,12 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		formControls.clinicalSpecialty.enable();
 		formControls.practice.setValue(null);
 		formControls.practice.enable();
+	}
+
+	private setPractices() {
+		this.practicesService.getByActiveDiaries().subscribe(practices => {
+			this.practices = practices;
+		});
 	}
 
 
