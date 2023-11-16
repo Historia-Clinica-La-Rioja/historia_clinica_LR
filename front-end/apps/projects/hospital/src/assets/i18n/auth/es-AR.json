@@ -116,7 +116,11 @@
 				"API_SIPPLUS": "API Sip+",
 				"API_USERS": "API Usuarios",
 				"VIRTUAL_CONSULTATION_RESPONSIBLE": "Responsable de teleconsulta",
-				"VIRTUAL_CONSULTATION_PROFESSIONAL":"Profesional de teleconsulta"
+				"VIRTUAL_CONSULTATION_PROFESSIONAL":"Profesional de teleconsulta",
+				"ADMINISTRADOR_DE_ACCESO_DOMINIO": "Administrador de acceso dominio",
+				"GESTOR_DE_ACCESO_DE_DOMINIO": "Gestor de acceso de dominio",
+				"GESTOR_DE_ACCESO_REGIONAL": "Gestor de acceso regional",
+				"GESTOR_DE_ACCESO_LOCAL": "Gestor de acceso local"
 			}
 		}
 	}
