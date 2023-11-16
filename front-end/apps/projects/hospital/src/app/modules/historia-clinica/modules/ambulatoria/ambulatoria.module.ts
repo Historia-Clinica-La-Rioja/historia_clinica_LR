@@ -83,6 +83,8 @@ import { ReferenceRequestDataComponent } from './components/reference-request-da
 import { IdentifierCasesComponent } from '../../../hsi-components/identifier-cases/identifier-cases.component';
 import { ReferenceStudyCloseComponent } from './components/reference-study-close/reference-study-close.component';
 import { ReferenceCompleteStudyComponent } from './components/reference-complete-study/reference-complete-study.component';
+import { ReferenceStudyClosureInformationComponent } from './components/reference-study-closure-information/reference-study-closure-information.component';
+import { ReferenceStudyComponent } from './components/reference-study/reference-study.component';
 
 @NgModule({
 	declarations: [
@@ -146,6 +148,8 @@ import { ReferenceCompleteStudyComponent } from './components/reference-complete
  		ReferenceRequestDataComponent,
    		ReferenceStudyCloseComponent,
     	ReferenceCompleteStudyComponent,
+     	ReferenceStudyClosureInformationComponent,
+      	ReferenceStudyComponent,
 	],
 	imports: [
 		CommonModule,

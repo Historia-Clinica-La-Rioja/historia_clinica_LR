@@ -16,7 +16,6 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { capitalize } from '@core/utils/core.utils';
 import { DiagnosticWithTypeReportInfoDto, E_TYPE_ORDER, InfoNewStudyOrderDto } from '../../model/ImageModel';
 import { ReferenceCompleteStudyComponent } from '@historia-clinica/modules/ambulatoria/components/reference-complete-study/reference-complete-study.component';
-import { ShowReferenceStudyComponent } from '@historia-clinica/modules/ambulatoria/dialogs/show-reference-study/show-reference-study.component';
 import { ReportReference } from '@historia-clinica/modules/ambulatoria/components/reference-study-closure-information/reference-study-closure-information.component';
 import { REQUESTED_REFERENCE, getColoredIconText } from '@access-management/utils/reference.utils';
 import { Color } from '@presentation/colored-label/colored-label.component';
@@ -137,8 +136,9 @@ export class StudyComponent implements OnInit {
 				{
 					data: {
 						reference: diagnosticReport.referenceRequestDto,
+						referenceId: diagnosticReport.referenceRequestDto.id,
 						patientId: this.patientId,
-						diagnosticReferenceId: diagnosticReport.id,
+						diagnosticReportId: diagnosticReport.id,
 						status: this.getPrescriptionStatus(diagnosticReport.statusId)
 					},
 					width: '45%',
@@ -168,10 +168,10 @@ export class StudyComponent implements OnInit {
 
 	showStudyResults(diagnosticReport: DiagnosticReportInfoDto): void {
 		if (diagnosticReport?.referenceRequestDto) {
-			this.dialog.open(ShowReferenceStudyComponent,
+			this.dialog.open(ReferenceCompleteStudyComponent,
 				{
 					data: {
-						reference: diagnosticReport.referenceRequestDto,
+						referenceId: diagnosticReport.referenceRequestDto.id,
 						reportReference: this.mapperReportReference(diagnosticReport),
 						patientId: this.patientId,
 						diagnosticReportId: diagnosticReport.id,
@@ -261,9 +261,10 @@ export class StudyComponent implements OnInit {
 	}
 
 	private getPrescriptionStatus(diagnosticReportStatusId:string): PrescriptionStatus {
+		const prescriptionStatus = this.prescripcionesService.renderStatusDescription(PrescriptionTypes.STUDY, diagnosticReportStatusId);
 		return {
-			description: this.prescripcionesService.renderStatusDescription(PrescriptionTypes.STUDY, diagnosticReportStatusId),
-			color: this.translateService.instant('ambulatoria.paciente.studies.study_state.PENDING') ? Color.RED : Color.BLUE,
+			description: prescriptionStatus,
+			color: prescriptionStatus === this.translateService.instant('ambulatoria.paciente.studies.study_state.PENDING') ? Color.RED : Color.BLUE,
 		}
 	}
 }
