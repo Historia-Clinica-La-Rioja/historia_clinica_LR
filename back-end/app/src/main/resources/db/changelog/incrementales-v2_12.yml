@@ -78,3 +78,15 @@ databaseChangeLog:
                     type: date
                     
 
+    - changeSet:
+        id: addColumn-bahra_code-city
+        author: bchacon
+        comment: Add column bahra_code to table city
+        changes:
+          - addColumn:
+              tableName: city
+              columns:
+                - column:
+                    name: bahra_code
+                    type: varchar
+
