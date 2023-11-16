@@ -782,6 +782,9 @@
         },
 		"reference-study-close": {
 			"SUCCESS": "El estudio de contrarreferencia se guardó exitosamente"
+		},
+		"reference-study-closure-information":{
+			"OBSERVATIONS": "Observaciones"
 		}
     }
 }
