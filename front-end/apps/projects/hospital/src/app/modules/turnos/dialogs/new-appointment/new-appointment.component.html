@@ -6,8 +6,8 @@
 			<mat-icon>close</mat-icon>
 		</button>
 	</div>
-	<div fxLayout="row" fxLayout.xs="column" class="mat-h3" fxLayoutGap="1rem" fxLayoutAlign.xs="space-around start">
-		<div fxLayout="row" fxLayout.xs="column">
+	<div fxLayout="row" fxLayout.xs="column" class="mat-h3" fxLayoutGap="1rem" fxLayoutAlign="space-around start">
+		<div fxLayout="column" fxLayout.xs="column">
 			<div fxLayout="row" fxLayoutAlign="space-between center">
 				<mat-icon color="primary" class="appointment-title-icon">event</mat-icon>
 				<span>{{data.date | date:dateFormats.FULL_DATE}}</span>
@@ -207,11 +207,6 @@
 						</mat-form-field>
 					</div>
 				</form>
-				<div fxLayout="row">
-					<button mat-stroked-button matStepperPrevious color="primary">
-						<span [translate]="'buttons.BACK'"></span>
-					</button>
-				</div>
 			</mat-card>
 		</mat-step>
 	</mat-stepper>
@@ -219,7 +214,7 @@
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
 	<button id="back" class="back-btn" *ngIf="stepper.selectedIndex > indexStep.MODALITY" mat-stroked-button color="primary"
-		[disabled]="preselectedPatient" (click)="back(stepper)">
+		[disabled]="preselectedPatient && stepper.selectedIndex === indexStep.INFO" (click)="back(stepper)">
 		<span [translate]="'buttons.BACK'"></span>
 	</button>
 	<div fxLayout="row" fxLayoutAlign="end" *ngIf="stepper.selectedIndex === indexStep.SEARCH">

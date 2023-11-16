@@ -186,7 +186,7 @@ export class NewAppointmentComponent implements OnInit {
 		this.formSearch.controls.patientId.patchValue(this.data.patientId);
 		if (this.data.patientId) {
 			this.preselectedPatient = true;
-			this.initialIndex = this.indexStep.SEARCH;
+			this.initialIndex = this.indexStep.INFO;
 			this.patientId = this.data.patientId;
 			this.isFormSubmitted = true;
 			this.patientSearch(this.data.patientId);
@@ -285,7 +285,6 @@ export class NewAppointmentComponent implements OnInit {
 					updateControlValidator(this.appointmentInfoForm, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
 				}
 				this.setMedicalCoverages();
-				this.stepper.next();
 			}, _ => {
 				this.patientNotFound();
 			});
@@ -303,9 +302,9 @@ export class NewAppointmentComponent implements OnInit {
 	private patientFound() {
 		this.formSearch.controls.completed.setValue(true);
 		this.snackBarService.showSuccess('turnos.new-appointment.messages.SUCCESS');
-		if (this.initialIndex !== this.indexStep.SEARCH)
+		if (this.initialIndex !== this.indexStep.INFO)
 			this.stepper.next();
-	}
+		}
 
 	private patientNotFound() {
 		this.snackBarService.showError('turnos.new-appointment.messages.ERROR');
@@ -408,7 +407,8 @@ export class NewAppointmentComponent implements OnInit {
 		} else {
 			valueEmail = this.appointmentInfoForm.controls.patientEmail.value;
 		}
-		this.referenceAppointmentService.associateReferenceAppointment(this.associateReferenceForm.controls.reference.value.referenceId, this.lastAppointmentId).subscribe(
+		console.log(this.associateReferenceForm.controls.reference.value)
+		this.referenceAppointmentService.associateReferenceAppointment(this.associateReferenceForm.controls.reference.value.id, this.lastAppointmentId).subscribe(
 			successfullyAssociated => {
 				if (successfullyAssociated) {
 					this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
