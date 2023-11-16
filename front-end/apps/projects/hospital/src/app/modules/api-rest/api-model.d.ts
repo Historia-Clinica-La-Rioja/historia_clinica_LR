@@ -2761,6 +2761,7 @@ export interface OutpatientConsultationDto {
     date: string;
     id: number;
     institutionSisaCode: string;
+    medications: SharedSnomedDto[];
     patient: BasicPatientDto;
     problems: SharedSnomedDto[];
     procedures: SharedSnomedDto[];

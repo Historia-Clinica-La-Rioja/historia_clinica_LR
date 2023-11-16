@@ -11,24 +11,16 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @AllArgsConstructor
-public class PatientBo {
+public class OutpatientPatientBo {
 
 	private Integer id;
 
-	private String firstName;
-
-	private String middleNames;
-
-	private String lastName;
-
-	private String otherLastNames;
+	private Integer personId;
 
 	private Short identificationType;
 
 	private String identificationNumber;
-
-	private LocalDate birthDate;
-
+	
 	private Short genderId;
 
 }

@@ -31,4 +31,6 @@ public class CipresConsultationPayload {
 
 	private List<CipresSnomedPayload> prestacionesSnomed;
 
+	private List<CipresSnomedPayload> medicacionsSnomed;
+
 }

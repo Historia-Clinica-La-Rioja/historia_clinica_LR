@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.outpatient.repository;
 
+import ar.lamansys.sgh.clinichistory.domain.hce.summary.MedicationSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.ProcedureSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
@@ -95,8 +96,8 @@ public class OutpatientConsultationSummaryStorageImpl implements OutpatientConsu
 	@Transactional(readOnly = true)
 	@Override
 	public List<OutpatientBasicDataBo> getOutpatientConsultationsToCipres(Integer limit) {
-		String sqlString =" SELECT oc.id, d.id, oc.startDate, cs.sctidCode, i.sisaCode, oc.patientId, pe.firstName, pe.middleNames, " +
-				"pe.lastName, pe.otherLastNames, pe.identificationTypeId, pe.identificationNumber, pe.birthDate, pe.genderId " +
+		String sqlString =" SELECT oc.id, d.id, oc.startDate, cs.sctidCode, i.sisaCode, oc.patientId, pe.id, " +
+				"pe.identificationTypeId, pe.identificationNumber, pe.genderId " +
 				"FROM OutpatientConsultation oc " +
 				"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
 				"JOIN Institution i ON (oc.institutionId = i.id) " +
@@ -108,7 +109,7 @@ public class OutpatientConsultationSummaryStorageImpl implements OutpatientConsu
 				"AND d.typeId = " + DocumentType.OUTPATIENT +
 				"AND d.sourceTypeId = " + SourceType.OUTPATIENT +
 				"AND oc.id NOT IN (SELECT ce.encounterId FROM CipresEncounter ce) " +
-				"AND pe.genderId iS NOT NULL " +
+				"AND pe.genderId IS NOT NULL " +
 				"AND pe.identificationNumber IS NOT NULL " +
 				"AND pe.identificationTypeId IS NOT NULL ";
 
@@ -124,16 +125,104 @@ public class OutpatientConsultationSummaryStorageImpl implements OutpatientConsu
 						(String) a[3],
 						(String) a[4],
 						(Integer) a[5],
-						(String)a[6],
-						(String)a[7],
+						(Integer)a[6],
+						(Short)a[7],
 						(String)a[8],
-						(String)a[9],
-						(Short)a[10],
-						(String)a[11],
-						a[12] != null ? (LocalDate)a[12] : null,
-						(Short)a[13]
-						))
+						(Short)a[9])
+				)
 		);
 		return result;
 	}
+
+	@Override
+	public List<ProcedureSummaryBo> getProceduresByOutpatientIds(List<Integer> outpatientIds) {
+		String sqlString = "SELECT p.id, s.id, s.sctid, s.pt, p.performedDate, oc.id"
+				+"  FROM OutpatientConsultation oc"
+				+"  JOIN Document d ON (d.sourceId = oc.id)"
+				+"  JOIN DocumentProcedure dp ON (d.id = dp.pk.documentId)"
+				+"  JOIN Procedure p ON (dp.pk.procedureId = p.id)"
+				+"  JOIN Snomed s ON (p.snomedId = s.id) "
+				+"  WHERE d.statusId = '" + DocumentStatus.FINAL + "'"
+				+"  AND d.typeId = "+ DocumentType.OUTPATIENT
+				+"  AND d.sourceTypeId =" + SourceType.OUTPATIENT
+				+"  AND oc.id IN (:outpatientIds) ";
+
+		List<Object[]> queryResult = entityManager.createQuery(sqlString)
+				.setParameter("outpatientIds", outpatientIds)
+				.getResultList();
+		List<ProcedureSummaryBo> result = new ArrayList<>();
+		queryResult.forEach(a ->
+				result.add(new ProcedureSummaryBo(
+						(Integer)a[0],
+						new SnomedBo((Integer) a[1],(String) a[2],(String) a[3]),
+						a[4] != null ? (LocalDate)a[4] : null,
+						(Integer) a[5])
+				)
+		);
+		return result;
+	}
+
+	@Override
+	public List<HealthConditionSummaryVo> getHealthConditionsByOutpatientIds(List<Integer> outpatientIds) {
+		String sqlString ="SELECT hc.id, s.sctid, s.pt, d.statusId, hc.startDate, hc.inactivationDate, hc.main, hc.problemId, oc.id"
+				+"  FROM OutpatientConsultation oc"
+				+"  JOIN Document d ON (d.sourceId = oc.id)"
+				+"  JOIN DocumentHealthCondition dhc ON (d.id = dhc.pk.documentId)"
+				+"  JOIN HealthCondition hc ON (dhc.pk.healthConditionId = hc.id)"
+				+"  JOIN Snomed s ON (s.id = hc.snomedId)"
+				+"  WHERE d.statusId = '" + DocumentStatus.FINAL + "'"
+				+"  AND d.sourceTypeId =" + SourceType.OUTPATIENT
+				+"  AND d.typeId = "+ DocumentType.OUTPATIENT
+				+"  AND hc.problemId IN ('"+ ProblemType.PROBLEM+"', '"+ ProblemType.CHRONIC+ "')"
+				+"  AND oc.id IN (:outpatientIds) ";
+
+		List<Object[]> queryResult = entityManager.createQuery(sqlString)
+				.setParameter("outpatientIds", outpatientIds)
+				.getResultList();
+		List<HealthConditionSummaryVo> result = new ArrayList<>();
+		queryResult.forEach(a ->
+				result.add(new HealthConditionSummaryVo(
+						(Integer)a[0],
+						(String) a[1],
+						(String) a[2],
+						(String)a[3],
+						a[4] != null ? (LocalDate)a[4] : null,
+						a[5] != null ? (LocalDate)a[5] : null,
+						(boolean)a[6],
+						(String)a[7],
+						(Integer) a[8])
+				)
+		);
+		return result;
+	}
+
+	@Override
+	public List<MedicationSummaryBo> getMedicationsByOutpatientIds(List<Integer> outpatientIds) {
+		String sqlString ="SELECT ms.id, oc.id, s.id, s.sctid, s.pt"
+				+"  FROM OutpatientConsultation oc"
+				+"  JOIN Document d ON (d.sourceId = oc.id) "
+				+"  JOIN DocumentMedicamentionStatement dms ON (d.id = dms.pk.documentId) "
+				+"  JOIN MedicationStatement ms ON (dms.pk.medicationStatementId = ms.id ) "
+				+"  JOIN Snomed s ON (s.id = ms.snomedId) "
+				+"  WHERE d.statusId = '" + DocumentStatus.FINAL + "'"
+				+"  AND d.sourceTypeId =" + SourceType.OUTPATIENT
+				+"  AND d.typeId = "+ DocumentType.OUTPATIENT
+				+"  AND oc.id IN (:outpatientIds)";
+
+		List<Object[]> queryResult = entityManager.createQuery(sqlString)
+				.setParameter("outpatientIds", outpatientIds)
+				.getResultList();
+		List<MedicationSummaryBo> result = new ArrayList<>();
+		queryResult.forEach(a ->
+				result.add(new MedicationSummaryBo(
+						(Integer)a[0],
+						(Integer) a[1],
+						(Integer) a[2],
+						(String) a[3],
+						(String) a[4])
+				)
+		);
+		return result;
+	}
+
 }

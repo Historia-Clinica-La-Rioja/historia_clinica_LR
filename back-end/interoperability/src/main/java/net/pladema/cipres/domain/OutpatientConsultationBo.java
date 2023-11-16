@@ -34,4 +34,5 @@ public class OutpatientConsultationBo {
 
 	private List<SnomedBo> procedures;
 
+	private List<SnomedBo> medications;
 }
