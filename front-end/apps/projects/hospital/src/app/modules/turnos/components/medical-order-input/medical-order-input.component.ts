@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, FormGroupDirective } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { EquipmentTranscribeOrderPopupComponent } from '@turnos/dialogs/equipment-transcribe-order-popup/equipment-transcribe-order-popup.component';
+import { EquipmentTranscribeOrderPopupComponent, InfoTranscribeOrderPopup } from '@turnos/dialogs/equipment-transcribe-order-popup/equipment-transcribe-order-popup.component';
 import { medicalOrderInfo } from '@turnos/dialogs/new-appointment/new-appointment.component';
 
 @Component({
@@ -19,9 +19,10 @@ export class MedicalOrderInputComponent implements OnInit {
     
 	patientMedicalOrderTooltipDescription = '';
 	isOrderTranscribed = false;
-    transcribedOrder = null;
+    transcribedOrder: InfoTranscribeOrderPopup = null;
 
-    constructor(private rootFormGroup: FormGroupDirective,
+    constructor(
+		private rootFormGroup: FormGroupDirective,
 		public dialog: MatDialog,) { }
 
     ngOnInit(): void {
@@ -42,7 +43,7 @@ export class MedicalOrderInputComponent implements OnInit {
 			}
 		});
 
-		dialogRef.afterClosed().subscribe(response =>{
+		dialogRef.afterClosed().subscribe((response:ResponseTranscribedOrderPopUpInfo)  =>{
 			this.patientMedicalOrderTooltipDescription = '';
 			if (response?.order){
 				if (this.isOrderTranscribed) {
@@ -50,14 +51,14 @@ export class MedicalOrderInputComponent implements OnInit {
 				} else {
 					this.patientMedicalOrders.push(response.order);
 				}
-				this.transcribedOrder = response.transcribedOrder;
+				this.transcribedOrder = response.transcribeOrder;
 				this.form.controls.medicalOrder.get('appointmentMedicalOrder').setValue(response.order);
 				this.generateTooltipOnMedicalOrderChange();
 				this.isOrderTranscribed = true;
 			}
 		})
 	}
-    
+
 	cleanInput(){
 		this.form.controls.medicalOrder.get('appointmentMedicalOrder').setValue(null);
 		this.patientMedicalOrderTooltipDescription = '';
@@ -75,3 +76,14 @@ export class MedicalOrderInputComponent implements OnInit {
 		this.selectionChange.emit(this.form.controls.medicalOrder.get('appointmentMedicalOrder')?.value);
 	}
 }
+
+export interface TranscribedOrderInfoEdit {
+	patientId: number,
+	transcribedOrder: InfoTranscribeOrderPopup
+}
+
+export interface ResponseTranscribedOrderPopUpInfo {
+	transcribeOrder: InfoTranscribeOrderPopup,
+	order: medicalOrderInfo
+}
+
