@@ -1,6 +1,8 @@
 package net.pladema.reports.controller.dto;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.EGender;
 import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -59,7 +61,8 @@ public class FormVDto {
 					String medicalCoverageCondition, String establishmentProvinceCode,
 					Integer hcnId, String completeProfessionalName,
 					List<String> licenses, String bedNumber,
-					String roomNumber, String affiliateNumber) {
+					String roomNumber, String affiliateNumber,
+					BasicPatientDto patientDto, Short age) {
 		this.establishment = establishment;
 		this.completePatientName = completePatientName;
 		this.address = contactInfo.getAddress().getCompleteAddress();
@@ -74,5 +77,9 @@ public class FormVDto {
 		this.bedNumber = bedNumber;
 		this.roomNumber = roomNumber;
 		this.affiliateNumber = affiliateNumber;
+		this.patientGender = patientDto.getGender() != null ? EGender.map(patientDto.getGender().getId()).getValue(): null;
+		this.documentType = patientDto.getIdentificationType();
+		this.documentNumber = patientDto.getIdentificationNumber();
+		this.patientAge = age;
 	}
 }

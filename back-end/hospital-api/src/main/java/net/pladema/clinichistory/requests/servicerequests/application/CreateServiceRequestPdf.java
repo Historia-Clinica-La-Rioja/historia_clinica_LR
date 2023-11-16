@@ -38,6 +38,8 @@ import net.pladema.staff.service.HealthcareProfessionalService;
 import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -95,7 +97,7 @@ public class CreateServiceRequestPdf {
 		EmergencyEpisodePatientBedRoomBo eepbr = getEmergencyEpisodeLastBed(serviceRequestBo.getInstitutionId(), patientId, serviceRequestBo);
 		String bedNumber = ipbr != null ? ipbr.getBed() : eepbr != null ? eepbr.getBed() : null;
 		String roomNumber = ipbr != null ? ipbr.getRoom() : eepbr != null ? eepbr.getRoom() : null;
-		FormVDto formVDto = mapToFormVDto(institutionBo, person, serviceRequestBo, patientId, responsibleDoctorBo, bedNumber, roomNumber, sharedPersonPort.getCompletePersonNameById(professional.getPersonId()), medicalCoverage);
+		FormVDto formVDto = mapToFormVDto(institutionBo, person, serviceRequestBo, patientId, responsibleDoctorBo, bedNumber, roomNumber, sharedPersonPort.getCompletePersonNameById(professional.getPersonId()), medicalCoverage, patientDto);
         Map<String, Object> context = createDeliveryOrderFormContext(formVDto, serviceRequestBo);
         String template = "form_report";
 
@@ -177,7 +179,8 @@ public class CreateServiceRequestPdf {
 								   String bedNumber,
 								   String roomNumber,
 								   String completeProfessionalName,
-								   PatientMedicalCoverageDto medicalCoverage) {
+								   PatientMedicalCoverageDto medicalCoverage,
+								   BasicPatientDto patientDto) {
 		return new FormVDto(institutionBo.getName(),
 				StringHelper.reverseString(sharedPersonPort.getCompletePersonNameById(person.getId())),
 				sharedPersonPort.getPersonContactInfoById(person.getId()),
@@ -191,8 +194,9 @@ public class CreateServiceRequestPdf {
 				responsibleDoctorBo.getLicenses(),
 				bedNumber,
 				roomNumber,
-				medicalCoverage != null ? medicalCoverage.getAffiliateNumber(): null
-		);
+				medicalCoverage != null ? medicalCoverage.getAffiliateNumber(): null,
+				patientDto,
+				(short) Period.between(patientDto.getPerson().getBirthDate(), serviceRequestBo.getRequestDate().toLocalDate()).getYears());
 	}
 
     private StoredFileBo createRecipeOrderTable(Integer institutionId, Integer patientId, Integer serviceRequestId) {
@@ -252,6 +256,10 @@ public class CreateServiceRequestPdf {
 		ctx.put("room", formVDto.getRoomNumber());
 		ctx.put("bed", formVDto.getBedNumber());
 		ctx.put("affiliateNumber", formVDto.getAffiliateNumber());
+		ctx.put("patientGender", formVDto.getPatientGender());
+		ctx.put("documentType", formVDto.getDocumentType());
+		ctx.put("documentNumber", formVDto.getDocumentNumber());
+		ctx.put("patientAge", formVDto.getPatientAge());
         log.trace("Output -> {}", ctx);
         return ctx;
     }
