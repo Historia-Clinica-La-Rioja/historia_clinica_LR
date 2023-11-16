@@ -3,7 +3,6 @@ package net.pladema.reports.controller.dto;
 import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
 import lombok.Getter;
 import lombok.Setter;
-import net.pladema.establishment.service.domain.InternmentPatientBedRoomBo;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -60,7 +59,7 @@ public class FormVDto {
 					String medicalCoverageCondition, String establishmentProvinceCode,
 					Integer hcnId, String completeProfessionalName,
 					List<String> licenses, String bedNumber,
-					String roomNumber) {
+					String roomNumber, String affiliateNumber) {
 		this.establishment = establishment;
 		this.completePatientName = completePatientName;
 		this.address = contactInfo.getAddress().getCompleteAddress();
@@ -74,5 +73,6 @@ public class FormVDto {
 		this.licenses = licenses;
 		this.bedNumber = bedNumber;
 		this.roomNumber = roomNumber;
+		this.affiliateNumber = affiliateNumber;
 	}
 }

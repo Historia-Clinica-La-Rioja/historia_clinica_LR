@@ -126,6 +126,7 @@ public class CreateServiceRequestPdf {
 		PatientMedicalCoverageDto patientMedicalCoverageDto = patientExternalMedicalCoverageService.getCoverage(emergencyCareBo.getPatient().getPatientMedicalCoverageId());
 		medicalCoverage.setMedicalCoverage(patientMedicalCoverageDto != null ? patientMedicalCoverageDto.getMedicalCoverage(): null);
 		medicalCoverage.setCondition(patientMedicalCoverageDto != null ? patientMedicalCoverageDto.getCondition(): null);
+		medicalCoverage.setAffiliateNumber(patientMedicalCoverageDto != null ? patientMedicalCoverageDto.getAffiliateNumber(): null);
 		return medicalCoverage;
 	}
 
@@ -136,6 +137,7 @@ public class CreateServiceRequestPdf {
 				.ifPresent(medicalCoverageBo -> {
 					medicalCoverage.setMedicalCoverage(medicalCoverageBo.getMedicalCoverage().newInstance());
 					medicalCoverage.setCondition(medicalCoverageBo.getCondition());
+					medicalCoverage.setAffiliateNumber(medicalCoverageBo.getAffiliateNumber());
 				});
 		return medicalCoverage;
 	}
@@ -145,6 +147,7 @@ public class CreateServiceRequestPdf {
 		PatientMedicalCoverageDto patientMedicalCoverageDto = patientExternalMedicalCoverageService.getCoverage(serviceRequestBo.getMedicalCoverageId());
 		medicalCoverage.setMedicalCoverage(patientMedicalCoverageDto != null ? patientMedicalCoverageDto.getMedicalCoverage(): null);
 		medicalCoverage.setCondition(patientMedicalCoverageDto != null ? patientMedicalCoverageDto.getCondition(): null);
+		medicalCoverage.setAffiliateNumber(patientMedicalCoverageDto != null ? patientMedicalCoverageDto.getAffiliateNumber(): null);
 		return medicalCoverage;
 	}
 
@@ -187,7 +190,8 @@ public class CreateServiceRequestPdf {
 				completeProfessionalName,
 				responsibleDoctorBo.getLicenses(),
 				bedNumber,
-				roomNumber
+				roomNumber,
+				medicalCoverage != null ? medicalCoverage.getAffiliateNumber(): null
 		);
 	}
 
@@ -247,6 +251,7 @@ public class CreateServiceRequestPdf {
 		ctx.put("medicalCoverageCondition", formVDto.getMedicalCoverageCondition());
 		ctx.put("room", formVDto.getRoomNumber());
 		ctx.put("bed", formVDto.getBedNumber());
+		ctx.put("affiliateNumber", formVDto.getAffiliateNumber());
         log.trace("Output -> {}", ctx);
         return ctx;
     }
