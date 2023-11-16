@@ -128,6 +128,11 @@ export class ProblemasService {
 	resetForm(): void {
 		delete this.snomedConcept;
 		this.form.reset();
+		this.resetStartDate();
+	}
+
+	resetStartDate(){
+		this.form.controls.fechaInicio.setValue(newMomentLocal());
 	}
 
 	openSearchDialog(searchValue: string): void {

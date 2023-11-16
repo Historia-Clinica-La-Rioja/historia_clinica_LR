@@ -228,6 +228,10 @@ export class AmbulatoryConsultationProblemsService {
 		return this.data;
 	}
 
+	resetStartDate(){
+		this.form.controls.fechaInicio.setValue(newMomentLocal());
+	}
+
 	remove(index: number): void {
 		this.data = removeFrom<AmbulatoryConsultationProblem>(this.data, index);
 		this.problems.next(this.data);
