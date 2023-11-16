@@ -38,6 +38,7 @@ export class EdmontonComponent {
   patientData: BasicPatientDto | undefined;
   datos: any;
   selectedCalificacion: string = '';
+  patient: number;
 
   
 
@@ -47,14 +48,12 @@ export class EdmontonComponent {
     @Inject (MAT_DIALOG_DATA) public data: any,
     ) 
     {
-      this.patientId = data.patientId;
+      this.patient = data.patientId;
       this.routePrefix = `${this.contextService.institutionId}`;
-      console.log("data en edmonton", this.patientId)
     }
 
     onOptionSelected(questionIndex: number, value: number): void {
       this.selectedValues[questionIndex] = value;
-      console.log('Después de la actualización:', this.selectedValues);
       this.calcularSuma();
     }
       
@@ -295,17 +294,13 @@ export class EdmontonComponent {
   }
 
   enviarFormulario(): void {
-    
     const datos: CreateQuestionnaireDTO = this.construirDatos();
-    console.log("paciente en edmonton",this.patientId)
-    console.log("institucion en edmoton", this.routePrefix)
-    console.log("suma", this.sumaAcumulada)
-    this.edmontonService.crearEdMonton(this.routePrefix, this.patientId, datos).subscribe(
+    this.edmontonService.crearEdMonton(this.routePrefix, this.patient, datos).subscribe(
       () => {
         console.log('Los datos se han enviado correctamente.');
       },
       (error) => {
-        console.log('Los datos no se han enviado correctamente.');
+        console.log('Error Los datos no se han enviado correctamente.');
       }
     );
   }

@@ -149,20 +149,20 @@
         <div class="resultados-titulo">
           Resultados
         </div>
-        <div *ngIf="sumaAcumulada === 0" class="sano">
-          <p>0 - 4: individuo sano</p>
+        <div *ngIf="sumaAcumulada === 21" class="sano">
+          <p>Individuo sano</p>
         </div>
-        <div *ngIf="sumaAcumulada === 1" class="sano">
-          <p>5 - 6: individuo sano</p>
+        <div *ngIf="sumaAcumulada === 22" class="sano">
+          <p>Vulnerable</p>
         </div>
-        <div *ngIf="sumaAcumulada === 2" class="sano">
-          <p>7 - 8: individuo sano</p>
+        <div *ngIf="sumaAcumulada === 23" class="sano">
+          <p>Fragilidad leve</p>
         </div>
-        <div *ngIf="sumaAcumulada === 3" class="sano">
-          <p>9 - 10: individuo sano</p>
+        <div *ngIf="sumaAcumulada === 24" class="sano">
+          <p>Fragilidad moderada</p>
         </div>
-        <div *ngIf="sumaAcumulada >= 4" class="preocupante">
-          <p>>= 11: individuo sano</p>
+        <div *ngIf="sumaAcumulada >= 25" class="preocupante">
+          <p>Fragilidad severa</p>
         </div>
       </div>
       

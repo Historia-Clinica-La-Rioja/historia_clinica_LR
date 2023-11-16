@@ -19,16 +19,11 @@ constructor(
   }
 
 crearEdMonton(institutionId: number, patientId  : number, datos: CreateQuestionnaireDTO): Observable<boolean> {
-  console.log("en servicio ", patientId )
-  console.log("array", datos, " institucion", institutionId)
-
   const url = `${environment.apiBase}/institution/${institutionId}/patient/${patientId}/hce/general-state/edmonton`; 
   return this.http.post<boolean>(url, datos);
 }
 
 getEdMonton(institutionId: number, patientId: number): Observable<EdMontonAnswers> {
-  console.log("en servicio paciente ", patientId )
-  console.log(" institucion", institutionId)
   const url = `${environment.apiBase}/institution/${institutionId}/patient/${patientId}/hce/general-state/edmonton `;
   return this.http.get<EdMontonAnswers>(url);
 }
