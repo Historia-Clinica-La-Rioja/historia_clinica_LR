@@ -439,6 +439,7 @@ const messages = {
                 atentionType: 'Tipo de atención',
                 consultation: 'Consulta',
                 procedure: 'Procedimiento',
+                classified: 'Confidencial'
             }
         },
         clinicalspecialtycarelines: {

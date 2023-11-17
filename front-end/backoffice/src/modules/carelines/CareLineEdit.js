@@ -24,6 +24,8 @@ const CareLineEdit = props => (
 
             <BooleanInput source="procedure" disabled={false} initialValue={false}/>
 
+            <BooleanInput source="classified" disabled={false} initialValue={false}/>
+
             <SectionTitle label="resources.clinicalspecialtycarelines.name"/>
             <CreateRelatedButton
                 reference="clinicalspecialtycarelines"

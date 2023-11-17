@@ -55,6 +55,7 @@ const CareLineShow = props => {
                 <TextField source="description"/>
                 <BooleanField source="consultation"/>
                 <BooleanField source="procedure"/>
+                <BooleanField source="classified"/>
                 <SectionTitle label="resources.clinicalspecialtycarelines.name"/>
                 <CreateRelatedButton
                     reference="clinicalspecialtycarelines"
