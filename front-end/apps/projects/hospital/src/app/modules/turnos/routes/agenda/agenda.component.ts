@@ -265,14 +265,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				this.modality = null;
 			}
 		}
-		if(diaryOpeningHour.secondOpinionVirtualAttentionAllowed){
-			if(this.modality === null){
-				this.modality = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION;
-			}else{
-				this.modality = null;
-			}
-		}
-
 	}
 
 	onClickedSegment(event) {
@@ -282,6 +274,12 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 			const openingHourId: number = this.getOpeningHoursId(event.date);
 			const diaryOpeningHourDto: DiaryOpeningHoursDto =
 				this.diaryOpeningHours.find(diaryOpeningHour => diaryOpeningHour.openingHours.id === openingHourId);
+				
+			if (diaryOpeningHourDto.secondOpinionVirtualAttentionAllowed) {
+				this.snackBarService.showError("La franja horaria seleccionada no admite turnos presenciales");
+				return;
+			}
+
 				this.setModality(diaryOpeningHourDto);
 			forkJoin([
 				this.getAppointmentAt(event.date).pipe(take(1)),
@@ -336,7 +334,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 	private openNewAppointmentDialog(clickedDate: Moment, openingHourId: number, addingOverturn: boolean) {
 		const dialogRef = this.dialog.open(NewAppointmentComponent, {
-			width: '40%',
+			width: '43%',
 			disableClose: true,
 			data: {
 				date: clickedDate.format(DateFormat.API_DATE),

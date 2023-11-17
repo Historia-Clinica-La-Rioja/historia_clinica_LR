@@ -6,8 +6,8 @@
 			<mat-icon>close</mat-icon>
 		</button>
 	</div>
-	<div fxLayout="row" fxLayout.xs="column" class="mat-h3" fxLayoutGap="1rem" fxLayoutAlign="space-around start">
-		<div fxLayout="column" fxLayout.xs="column">
+	<div fxLayout="row" fxLayout.xs="column" class="mat-h3" fxLayoutGap="1rem" fxLayoutAlign="space-between start">
+		<div fxLayout="row" fxLayout.xs="column" fxFlex="60">
 			<div fxLayout="row" fxLayoutAlign="space-between center">
 				<mat-icon color="primary" class="appointment-title-icon">event</mat-icon>
 				<span>{{data.date | date:dateFormats.FULL_DATE}}</span>
@@ -18,8 +18,8 @@
 			</div>
 		</div>
 
-		<div *ngIf="viewModalityLabel$ | async ">
-			<app-modality-label [modalityColorLabel]="modalityColorLabel"></app-modality-label>
+		<div>
+			<app-modality-label *ngIf="viewModalityLabel$ | async " [modalityColorLabel]="modalityColorLabel"></app-modality-label>
 		</div>
 	</div>
 </div>
