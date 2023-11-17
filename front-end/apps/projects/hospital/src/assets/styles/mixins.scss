@@ -93,19 +93,19 @@
     }
 
 	.warn-background {
-        background-color: mat-color($palette-warn,100);
+        background-color: mat-color($palette-warn,200);
 		color: mat-color($palette-warn);
 	}
 
 	.headers-card-background {
-		background-color: mat-color($palette-primary, 50);
+		background-color: mat-color($palette-primary, 100);
 	}
 	.warn {
 		color: mat-color($palette-warn);
 	}
 
 	.black {
-		color: mat-contrast($palette-primary, 50);
+		color: mat-contrast($palette-primary, 100);
 	}
 
 	.grey {

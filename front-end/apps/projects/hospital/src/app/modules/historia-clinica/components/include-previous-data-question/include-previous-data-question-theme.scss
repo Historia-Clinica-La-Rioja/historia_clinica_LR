@@ -2,6 +2,6 @@
     $palette-primary: map-get($theme, primary);
 
     .background-primary {
-        background-color: mat-color($palette-primary, 50);
+        background-color: mat-color($palette-primary, 100);
     }
 }
