@@ -15,7 +15,12 @@ import { CreatedDuring } from '../study-list-element/study-list-element.componen
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { capitalize } from '@core/utils/core.utils';
 import { DiagnosticWithTypeReportInfoDto, E_TYPE_ORDER, InfoNewStudyOrderDto } from '../../model/ImageModel';
+import { ReferenceCompleteStudyComponent } from '@historia-clinica/modules/ambulatoria/components/reference-complete-study/reference-complete-study.component';
+import { ShowReferenceStudyComponent } from '@historia-clinica/modules/ambulatoria/dialogs/show-reference-study/show-reference-study.component';
+import { ReportReference } from '@historia-clinica/modules/ambulatoria/components/reference-study-closure-information/reference-study-closure-information.component';
 import { REQUESTED_REFERENCE, getColoredIconText } from '@access-management/utils/reference.utils';
+import { Color } from '@presentation/colored-label/colored-label.component';
+import { PrescriptionStatus } from '@historia-clinica/modules/ambulatoria/components/reference-request-data/reference-request-data.component';
 
 const IMAGE_DIAGNOSIS = 'Diagnóstico por imágenes';
 const isImageStudy = (study: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto): boolean => {
@@ -43,6 +48,7 @@ export class StudyComponent implements OnInit {
 	@Input() studyHeader: Title;
 	@Input() patientId: number;
 	@Output() updateCurrentReportsEventEmitter = new EventEmitter<void>();
+	Color = Color;
 	STUDY_STATUS = STUDY_STATUS;
 	IMAGE_DIAGNOSIS = IMAGE_DIAGNOSIS;
 	_studies: StudyInformation[] = [];
@@ -122,16 +128,31 @@ export class StudyComponent implements OnInit {
 	}
 
 
-	completeStudy(diagnosticReport: DiagnosticReportInfoDto) : void {
+	completeStudy(diagnosticReport: DiagnosticReportInfoDto) {
 		let reportOrder = diagnosticReport.serviceRequestId;
-		const newCompleteStudy = this.dialog.open(CompletarEstudioComponent,
-			{
-				data: {
-					diagnosticReport: this.sameOrderStudies.has(reportOrder) ? this.sameOrderStudies.get(reportOrder) : [diagnosticReport],
-					patientId: this.patientId,
-				},
-				width: '35%',
-			});
+		let newCompleteStudy;
+		if (diagnosticReport?.referenceRequestDto) {
+
+			newCompleteStudy = this.dialog.open(ReferenceCompleteStudyComponent,
+				{
+					data: {
+						reference: diagnosticReport.referenceRequestDto,
+						patientId: this.patientId,
+						diagnosticReferenceId: diagnosticReport.id,
+						status: this.getPrescriptionStatus(diagnosticReport.statusId)
+					},
+					width: '45%',
+				});
+		} else {
+			newCompleteStudy = this.dialog.open(CompletarEstudioComponent,
+				{
+					data: {
+						diagnosticReport: this.sameOrderStudies.has(reportOrder) ? this.sameOrderStudies.get(reportOrder) : [diagnosticReport],
+						patientId: this.patientId
+					},
+					width: '45%',
+				});
+		}
 
 		newCompleteStudy.afterClosed().subscribe((completed: any) => {
 			if (completed) {
@@ -145,15 +166,30 @@ export class StudyComponent implements OnInit {
 		});
 	}
 
-	showStudyResults(diagnosticReport: DiagnosticReportInfoDto) : void {
-		this.dialog.open(VerResultadosEstudioComponent,
-			{
-				data: {
-					diagnosticReport,
-					patientId: this.patientId,
-				},
-				width: '35%',
-			});
+	showStudyResults(diagnosticReport: DiagnosticReportInfoDto): void {
+		if (diagnosticReport?.referenceRequestDto) {
+			this.dialog.open(ShowReferenceStudyComponent,
+				{
+					data: {
+						reference: diagnosticReport.referenceRequestDto,
+						reportReference: this.mapperReportReference(diagnosticReport),
+						patientId: this.patientId,
+						diagnosticReportId: diagnosticReport.id,
+						status: this.getPrescriptionStatus(diagnosticReport.statusId)
+					},
+					width: '35%',
+				});
+		 }
+		else {
+			this.dialog.open(VerResultadosEstudioComponent,
+				{
+					data: {
+						diagnosticReport,
+						patientId: this.patientId,
+					},
+					width: '35%',
+				});
+		}
 	}
 
 	downloadOrder(serviceRequestId: number) : void {
@@ -213,6 +249,21 @@ export class StudyComponent implements OnInit {
 			dto: reference,
 			priority: reference.priority,
 			coloredIconText: getColoredIconText(REQUESTED_REFERENCE)
+		}
+	}
+
+	private mapperReportReference(diagnosticReport: DiagnosticReportInfoDto):ReportReference{
+		return {
+			professionalFullName: diagnosticReport.doctor.nameSelfDetermination,
+			observations: diagnosticReport.observations,
+			closureTypeDescription: diagnosticReport.referenceRequestDto.closureTypeDescription
+		}
+	}
+
+	private getPrescriptionStatus(diagnosticReportStatusId:string): PrescriptionStatus {
+		return {
+			description: this.prescripcionesService.renderStatusDescription(PrescriptionTypes.STUDY, diagnosticReportStatusId),
+			color: this.translateService.instant('ambulatoria.paciente.studies.study_state.PENDING') ? Color.RED : Color.BLUE,
 		}
 	}
 }

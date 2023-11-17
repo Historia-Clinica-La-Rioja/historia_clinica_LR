@@ -1,0 +1,25 @@
+<div fxLayoutAlign="end">
+	<button id="close" mat-icon-button mat-dialog-close>
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+
+<div *ngIf="_reference$ | async as _reference else spinner" fxLayout="column" fxLayoutGap="32px">
+	<app-reference-request-data [reference]="_reference" [status]="data.status">
+
+	</app-reference-request-data>
+
+	<mat-divider></mat-divider>
+
+	<app-reference-study [patientId]="data.patientId" [reference]="data.reference"
+		[diagnosticReportId]="data.diagnosticReportId" [reportReference]="data?.reportReference">
+
+	</app-reference-study>
+
+</div>
+
+<ng-template #spinner>
+	<div class="centered-spinner">
+		<mat-spinner diameter="70" color="primary"></mat-spinner>
+	</div>
+</ng-template>
