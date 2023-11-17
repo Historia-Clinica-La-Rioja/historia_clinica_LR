@@ -319,6 +319,10 @@
 					"TITLE": "Examen Anatomopatológico",
 					"PATOLOGO": "Patólogo"
 				},
+				"blood-solutions": {
+					"TITLE": "Sangre y soluciones",
+					"TRANSFUSIONISTA": "Transfusionista"
+				},
 				"DESCRIPTION": "Descripción"
 			},
             "problemas": {

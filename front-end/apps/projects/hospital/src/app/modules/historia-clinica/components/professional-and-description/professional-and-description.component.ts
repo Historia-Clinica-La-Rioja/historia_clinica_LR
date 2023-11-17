@@ -11,6 +11,7 @@ export class ProfessionalAndDescriptionComponent implements OnInit {
 	@Input() title: string;
 	@Input() professionalTitle: string;
 	@Input() professionals: ProfessionalDto[];
+	@Input() icon: string;
 
 	constructor() { }
 
