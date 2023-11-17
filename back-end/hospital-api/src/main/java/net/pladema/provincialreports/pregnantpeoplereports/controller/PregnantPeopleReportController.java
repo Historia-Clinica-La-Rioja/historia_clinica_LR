@@ -88,4 +88,40 @@ public class PregnantPeopleReportController {
 		response.flushBuffer();
 	}
 
+	@GetMapping(value = "/{institutionId}/pregnant-controls")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	public @ResponseBody
+	void getPregnantControlsExcelReport(
+			@PathVariable Integer institutionId,
+			@RequestParam(value = "fromDate", required = true)String fromDate,
+			@RequestParam(value = "toDate", required = true)String toDate,
+			HttpServletResponse response
+	) throws Exception {
+		LOG.debug("Se creará el excel {}", institutionId);
+		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate {}", institutionId, fromDate, toDate);
+
+		Institution institution = institutionRepository.getById(institutionId);
+		String institutionName = (institution != null) ? institution.getName() : "";
+
+		String observations = "Este informe presenta a las personas gestantes que han tenido al menos un control prenatal durante un período que incluye los 10 meses previos a la fecha de inicio especificada, manteniendo constante la fecha de fin.";
+
+		String title = "Control de Personas Gestantes";
+		String[] headers = {"DNI del paciente", "Apellido", "Nombre", "Fecha de nacimiento", "Edad actual", "Domicilio", "Teléfono", "Localidad", "N° Consultas", "Consultas"};
+
+		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
+		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
+
+		IWorkbook wb = this.excelService.buildExcelPregnantControls(title, headers, this.queryFactory.queryPregnantControls(institutionId, startDate, endDate), fromDate, toDate, institutionName, observations);
+
+		String filename = title + "." + wb.getExtension();
+		response.addHeader("Content-disposition", "attachment;filename=" + filename);
+		response.setContentType(wb.getContentType());
+
+		OutputStream out = response.getOutputStream();
+		wb.write(out);
+		out.close();
+		out.flush();
+		response.flushBuffer();
+	}
+
 }

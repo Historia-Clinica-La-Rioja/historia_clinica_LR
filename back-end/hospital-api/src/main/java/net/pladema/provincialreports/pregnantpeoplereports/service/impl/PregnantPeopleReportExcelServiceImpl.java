@@ -8,6 +8,7 @@ import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 import net.pladema.provincialreports.pregnantpeoplereports.repository.PregnantAttentionsConsultationDetail;
+import net.pladema.provincialreports.pregnantpeoplereports.repository.PregnantControlsConsultationDetail;
 import net.pladema.provincialreports.pregnantpeoplereports.service.PregnantPeopleReportExcelService;
 
 import org.springframework.stereotype.Service;
@@ -28,6 +29,28 @@ public class PregnantPeopleReportExcelServiceImpl implements PregnantPeopleRepor
 
 	@Override
 	public IWorkbook buildExcelPregnantAttentions(String title, String[] headers, List<PregnantAttentionsConsultationDetail> result, String startDate, String endDate, String institutionName, String observations) {
+		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
+		createCellStyle(wb);
+
+		ISheet sheet = wb.createSheet(title);
+
+		fillRow(sheet, getHeaderData(headers, title, startDate, endDate, institutionName, observations));
+
+		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
+
+		ICellStyle styleDataRow = createDataRowStyle(wb);
+
+		result.forEach(resultData -> {
+			IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
+			fillRowContent(newDataRow, resultData, styleDataRow);
+		});
+
+		setDimensions(sheet);
+		return wb;
+	}
+
+	@Override
+	public IWorkbook buildExcelPregnantControls(String title, String[] headers, List<PregnantControlsConsultationDetail> result, String startDate, String endDate, String institutionName, String observations) {
 		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
 		createCellStyle(wb);
 
@@ -225,4 +248,50 @@ public class PregnantPeopleReportExcelServiceImpl implements PregnantPeopleRepor
 		cell14.setCellValue(content.getEvolution());
 		cell14.setCellStyle(style);
 	}
+
+	private void fillRowContent(IRow row, PregnantControlsConsultationDetail content, ICellStyle style) {
+		AtomicInteger rowNumber = new AtomicInteger(0);
+
+		ICell cell = row.createCell(rowNumber.getAndIncrement());
+		cell.setCellValue(content.getPatientIdentificationNumber());
+		cell.setCellStyle(style);
+
+		ICell cell1 = row.createCell(rowNumber.getAndIncrement());
+		cell1.setCellValue(content.getPatientLastName());
+		cell1.setCellStyle(style);
+
+		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
+		cell2.setCellValue(content.getPatientFirstName());
+		cell2.setCellStyle(style);
+
+		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
+		cell3.setCellValue(content.getPatientBirthDate());
+		cell3.setCellStyle(style);
+
+		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
+		cell4.setCellValue(content.getPatientAgeToday());
+		cell4.setCellStyle(style);
+
+		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
+		cell5.setCellValue(content.getPatientAddress());
+		cell5.setCellStyle(style);
+
+		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
+		cell6.setCellValue(content.getPhoneNumber());
+		cell6.setCellStyle(style);
+
+		ICell cell7 = row.createCell(rowNumber.getAndIncrement());
+		cell7.setCellValue(content.getPatientLocation());
+		cell7.setCellStyle(style);
+
+		ICell cell8 = row.createCell(rowNumber.getAndIncrement());
+		cell8.setCellValue(content.getNumberConsultations());
+		cell8.setCellStyle(style);
+
+		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
+		cell9.setCellValue(content.getConsultations());
+		cell9.setCellStyle(style);
+
+	}
+
 }
