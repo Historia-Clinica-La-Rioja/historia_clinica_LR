@@ -61,7 +61,7 @@ export class ReferenceDashboardFiltersComponent implements OnInit, OnDestroy {
 			return;
 		}
 		this.dashboardService.dateRange = dateRange;
-		this.dashboardService.updateReports();
+		this.updatePaginatorAndReports();
 		this.changeDetectorRef.detectChanges();
 
 	}
@@ -81,13 +81,13 @@ export class ReferenceDashboardFiltersComponent implements OnInit, OnDestroy {
 			appliedFilters[DashboardFiltersMapping[key]] = value;
 		});
 		appliedFilters = this.setDocumentFilter(appliedFilters);
-		this.applyFilters(appliedFilters);
+		this.dashboardService.dashboardFilters = appliedFilters;
+		this.updatePaginatorAndReports();
 	}
 
 	searchByDocument() {
 		this.dashboardService.dashboardFilters = this.setDocumentFilter(this.dashboardService.dashboardFilters);
-		this.dashboardService.pageNumber = 0;
-		this.dashboardService.updateReports();
+		this.updatePaginatorAndReports();
 	}
 
 	private setDocumentFilter(dashboardFilters: DashboardFilters): DashboardFilters {
@@ -99,9 +99,8 @@ export class ReferenceDashboardFiltersComponent implements OnInit, OnDestroy {
 		return dashboardFilters;
 	}
 
-	private applyFilters(appliedFilters: DashboardFilters) {
+	private updatePaginatorAndReports() {
 		this.dashboardService.pageNumber = 0;
-		this.dashboardService.dashboardFilters = appliedFilters;
 		this.dashboardService.updateReports();
 	}
 
