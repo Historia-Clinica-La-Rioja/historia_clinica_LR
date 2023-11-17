@@ -93,7 +93,7 @@ export class HistoricalProblemsFacadeService {
 	private filterByReference(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
 		switch (filter.referenceStateId) {
 			case REFERENCE_STATES.WITH_REFERENCES:
-				return problem.reference !== null;
+				return ((problem.reference !== null) && (!problem.reference.filter(ref => ref.cancelled).length));
 
 			case REFERENCE_STATES.WITHOUT_REFERENCES:
 				return problem.reference === null;
