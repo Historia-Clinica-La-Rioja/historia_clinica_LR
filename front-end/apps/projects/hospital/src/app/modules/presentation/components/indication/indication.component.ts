@@ -1,6 +1,7 @@
-import { EIndicationType, ERole } from '@api-rest/api-model';
+import { EIndicationType, ERole, ReferenceRequestDto } from '@api-rest/api-model';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Subject } from 'rxjs';
+import { ColoredIconText } from '../colored-icon-text/colored-icon-text.component';
 
 @Component({
 	selector: 'app-indication',
@@ -43,6 +44,13 @@ export interface Content {
 	timeElapsed?: string;
 	observations?: string;
 	createdOn?: Date;
+	reference?: ReferenceStudy;
+}
+
+export interface ReferenceStudy {
+	dto: ReferenceRequestDto;
+	priority: string;
+	coloredIconText: ColoredIconText;
 }
 
 export interface Status {

@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DiagnosticReportInfoDto, DoctorInfoDto } from '@api-rest/api-model';
+import { DiagnosticReportInfoDto, DoctorInfoDto, ReferenceRequestDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { STUDY_STATUS } from '@historia-clinica/modules/ambulatoria/constants/prescripciones-masterdata';
 import { CompletarEstudioComponent } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
 import { VerResultadosEstudioComponent } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
 import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { TranslateService } from '@ngx-translate/core';
-import { Content, Title } from '@presentation/components/indication/indication.component';
+import { Content, ReferenceStudy, Title } from '@presentation/components/indication/indication.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { forkJoin } from 'rxjs';
 import { ActionsButtonService } from '../../../indicacion/services/actions-button.service';
@@ -15,7 +15,7 @@ import { CreatedDuring } from '../study-list-element/study-list-element.componen
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { capitalize } from '@core/utils/core.utils';
 import { DiagnosticWithTypeReportInfoDto, E_TYPE_ORDER, InfoNewStudyOrderDto } from '../../model/ImageModel';
-
+import { REQUESTED_REFERENCE, getColoredIconText } from '@access-management/utils/reference.utils';
 
 const IMAGE_DIAGNOSIS = 'Diagnóstico por imágenes';
 const isImageStudy = (study: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto): boolean => {
@@ -66,6 +66,8 @@ export class StudyComponent implements OnInit {
 		const prescriptionStatus =  diagnosticReport.statusId ? this.prescripcionesService.renderStatusDescription(PrescriptionTypes.STUDY, diagnosticReport.statusId) :
 		this.prescripcionesService.renderStatusDescriptionStudyImage(reportImageCase.infoOrderInstances.status)
 		const updateDate = diagnosticReport.creationDate;
+		const closureType = diagnosticReport?.referenceRequestDto?.closureTypeId;
+		const isReferenceStudyPending = diagnosticReport?.referenceRequestDto && !closureType;
 		return {
 			status: {
 				description: prescriptionStatus,
@@ -78,8 +80,8 @@ export class StudyComponent implements OnInit {
 			}]: null  ,
 			createdBy: diagnosticReport.doctor ? this.getProfessionalName(diagnosticReport.doctor) : "",
 			createdOn: updateDate,
-			timeElapsed: diagnosticReport.creationDate ? null : ''
-
+			timeElapsed: diagnosticReport.creationDate ? null : '',
+			reference:  isReferenceStudyPending ? this.getReference(diagnosticReport.referenceRequestDto) : null
 		}
 	}
 
@@ -206,12 +208,17 @@ export class StudyComponent implements OnInit {
 		return reports;
 	}
 
+	private getReference(reference: ReferenceRequestDto): ReferenceStudy {
+		return {
+			dto: reference,
+			priority: reference.priority,
+			coloredIconText: getColoredIconText(REQUESTED_REFERENCE)
+		}
+	}
 }
-
 export interface StudyInformation {
     diagnosticInformation: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto;
     hasActiveAppointment?: boolean;
 	appointmentId?: number | string;
 	reportStatus?: boolean
 }
-

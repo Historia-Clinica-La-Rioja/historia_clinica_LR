@@ -5,6 +5,7 @@ import { ColoredIconText } from "@presentation/components/colored-icon-text/colo
 import { Priority } from "@presentation/components/priority/priority.component";
 import { APPOINTMENT_STATES_ID } from "@turnos/constants/appointment";
 import { PENDING, REFERENCE_STATES } from "@access-management/constants/reference";
+export const REQUESTED_REFERENCE = null;
 
 export function getPriority(id: number): string {
 	if (id === PRIORITY.HIGH)
