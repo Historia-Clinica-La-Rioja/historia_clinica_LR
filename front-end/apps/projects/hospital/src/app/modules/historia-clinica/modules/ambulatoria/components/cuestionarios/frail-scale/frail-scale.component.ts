@@ -118,7 +118,7 @@ export class FrailScaleComponent implements OnInit {
   construirDatos() {
     const totalScore = this.calculateTotal();
     const datos = {
-      "frail": [  
+      "questionnaire": [  
         {
           questionId: 60,
           answerId: this.mappingFatibility(),
