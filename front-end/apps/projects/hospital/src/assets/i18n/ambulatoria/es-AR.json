@@ -291,7 +291,7 @@
 					"SURGERY": "Cirugía Propuesta"
 				},
 				"surgical-team": {
-					"TITLE": "Equipor Quirófano",
+					"TITLE": "Equipo Quirófano",
 					"CIRUJANO": "Cirujano",
 					"AYUDANTE": "Ayudante",
 					"ANESTESIOLOGO": "Anestesiólogo",
@@ -302,6 +302,18 @@
 					"DNI": "DNI",
 					"MATRICULA": "Matrícula",
 					"ADD_AYUDANTE": "+ Agregar ayudante"
+				},
+				"procedures": {
+					"TITLE": "Procedimientos",
+					"SURGERY_START_DATE": "Fecha de inicio de cirugía",
+					"SURGERY_END_DATE": "Fecha de fin de cirugía",
+					"SKIN_OPENING": "Apertura de piel",
+					"SKIN_CLOSURE": "Cierre de piel",
+					"ADD": "Agregar procedimiento",
+					"REGISTERED_PROCEDURES": "Procedimientos registrados",
+					"SURGERY_DESCRIPTION": "Descripción de cirugía realizada",
+					"ADD_DIAGNOSIS": "Agregar diagnóstico post-operatorio",
+					"DIAGNOSIS": "Diagnóstico Post-Operatorio"
 				}
 			},
             "problemas": {

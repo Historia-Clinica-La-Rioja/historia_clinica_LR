@@ -69,6 +69,7 @@ import { PersonalHistoriesSummaryComponent } from './components/personal-histori
 import { SurgicalReportDiagnosisComponent } from './components/surgical-report-diagnosis/surgical-report-diagnosis.component';
 import { SurgicalReportProfessionalTeamComponent } from './components/surgical-report-professional-team/surgical-report-professional-team.component';
 import { SurgicalReportProfessionalInfoComponent } from './components/surgical-report-professional-info/surgical-report-professional-info.component';
+import { SurgicalReportProceduresComponent } from './components/surgical-report-procedures/surgical-report-procedures.component';
 
 @NgModule({
 	declarations: [
@@ -135,6 +136,7 @@ import { SurgicalReportProfessionalInfoComponent } from './components/surgical-r
 		SurgicalReportDiagnosisComponent,
 		SurgicalReportProfessionalTeamComponent,
 		SurgicalReportProfessionalInfoComponent,
+		SurgicalReportProceduresComponent,
 	],
 	imports: [
 		CommonModule,
