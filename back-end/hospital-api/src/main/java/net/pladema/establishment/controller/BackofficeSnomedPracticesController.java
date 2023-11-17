@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("backoffice/snomedprocedurerules")
-public class BackofficeSnomedProcedureRuleController extends AbstractBackofficeController<SnomedProcedureDto, Long> {
+@RequestMapping("backoffice/snomedpractices")
+public class BackofficeSnomedPracticesController extends AbstractBackofficeController<SnomedProcedureDto, Long> {
 
-	public BackofficeSnomedProcedureRuleController(BackofficeSnomedProcedureRuleStore store){
+	public BackofficeSnomedPracticesController(BackofficeSnomedPracticesStore store) {
 		super(store);
 	}
+
 }

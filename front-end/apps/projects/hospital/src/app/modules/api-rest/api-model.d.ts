@@ -649,7 +649,7 @@ export interface CareLineDto extends Serializable {
 
 export interface CareLineProblemDto {
     careLineId: number;
-    conceptSctid: string;
+    conceptId: number;
     id: number;
     snomedId: number;
 }
@@ -3772,6 +3772,15 @@ export interface SnomedDto extends Serializable {
 export interface SnomedEclDto {
     key: SnomedECL;
     value: string;
+}
+
+export interface SnomedProblemDto {
+    conceptId: number;
+    conceptPt: string;
+    conceptSctid: string;
+    groupDescription: string;
+    groupId: number;
+    id: number;
 }
 
 export interface SnomedProcedureDto {

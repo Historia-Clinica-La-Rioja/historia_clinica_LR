@@ -25,7 +25,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class BackofficeSnomedProcedureRuleStore implements BackofficeStore<SnomedProcedureDto, Integer> {
+public class BackofficeSnomedProcedureRuleStore implements BackofficeStore<SnomedProcedureDto, Long> {
 
 	private final VSnomedGroupConceptRepository vSnomedGroupConceptRepository;
 	private final RuleRepository ruleRepository;
@@ -70,13 +70,16 @@ public class BackofficeSnomedProcedureRuleStore implements BackofficeStore<Snome
 	}
 
 	@Override
-	public List<SnomedProcedureDto> findAllById(List<Integer> ids) {
-		return vSnomedGroupConceptRepository.findAllById(ids).stream().map(this::mapToDto).collect(Collectors.toList());
+	public List<SnomedProcedureDto> findAllById(List<Long> ids) {
+		return vSnomedGroupConceptRepository.findAllById(ids.stream().map(Long::intValue).collect(Collectors.toList()))
+				.stream()
+				.map(this::mapToDto)
+				.collect(Collectors.toList());
 	}
 
 	@Override
-	public Optional<SnomedProcedureDto> findById(Integer id) {
-		return Optional.empty();
+	public Optional<SnomedProcedureDto> findById(Long id) {
+		return vSnomedGroupConceptRepository.findById(id.intValue()).map(this::mapToDto);
 	}
 
 	@Override
@@ -85,7 +88,7 @@ public class BackofficeSnomedProcedureRuleStore implements BackofficeStore<Snome
 	}
 
 	@Override
-	public void deleteById(Integer id) {}
+	public void deleteById(Long id) {}
 
 	@Override
 	public Example<SnomedProcedureDto> buildExample(SnomedProcedureDto entity) {
@@ -106,17 +109,17 @@ public class BackofficeSnomedProcedureRuleStore implements BackofficeStore<Snome
 
 	private SnomedProcedureDto mapToDto (VSnomedGroupConcept entity){
 		SnomedProcedureDto result = new SnomedProcedureDto();
-		result.setId(entity.getId());
+		result.setId(entity.getId().longValue());
 		result.setConceptPt(entity.getConceptPt());
-		result.setConceptId(entity.getConceptId());
+		result.setConceptId(entity.getConceptId().longValue());
 		result.setGroupId(entity.getGroupId());
 		return result;
 	}
 
 	private VSnomedGroupConcept mapToEntity (SnomedProcedureDto dto){
 		VSnomedGroupConcept result = new VSnomedGroupConcept();
-		result.setId(dto.getId());
-		result.setConceptId(dto.getConceptId());
+		result.setId(dto.getId().intValue());
+		result.setConceptId(dto.getConceptId().intValue());
 		result.setConceptPt(dto.getConceptPt());
 		result.setConceptSctid(dto.getConceptSctid());
 		result.setGroupId(dto.getGroupId());

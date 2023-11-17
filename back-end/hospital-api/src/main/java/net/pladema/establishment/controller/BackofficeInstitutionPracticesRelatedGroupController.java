@@ -2,6 +2,10 @@ package net.pladema.establishment.controller;
 
 import javax.validation.Valid;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.snowstorm.exceptions.SnowstormPortException;
+import net.pladema.sgx.backoffice.repository.BackofficeRepository;
+import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,54 +23,32 @@ import net.pladema.snowstorm.repository.entity.SnomedRelatedGroup;
 
 @RestController
 @RequestMapping("backoffice/institutionpracticesrelatedgroups")
-public class BackofficeInstitutionPracticesRelatedGroupController extends BackofficeSnomedRelatedGroupController{
+public class BackofficeInstitutionPracticesRelatedGroupController extends AbstractBackofficeController<SnomedRelatedGroup, Integer>{
 
 	private final FeatureFlagsService featureFlagsService;
-
-	private final SnomedService snomedService;
-
 	private final BackofficeSnowstormStore backofficeSnowstormStore;
+	private final BackofficeSnomedRelatedGroupController backofficeSnomedRelatedGroupController;
 
-	private final SnomedRelatedGroupRepository snomedRelatedGroupRepository;
-
-	private final DateTimeProvider dateTimeProvider;
-
-	public BackofficeInstitutionPracticesRelatedGroupController(SnomedRelatedGroupRepository repository,
-																SnomedRelatedGroupRepository snomedRelatedGroupRepository,
-																DateTimeProvider dateTimeProvider,
-																BackofficeSnomedRelatedGroupValidator backofficeSnomedRelatedGroupValidator,
-																FeatureFlagsService featureFlagsService,
-																SnomedService snomedService,
+	public BackofficeInstitutionPracticesRelatedGroupController(FeatureFlagsService featureFlagsService,
+																SnomedRelatedGroupRepository repository,
 																BackofficeSnowstormStore backofficeSnowstormStore,
-																CareLineInstitutionPracticeRepository careLineInstitutionPracticeRepository) {
-		super(repository, snomedRelatedGroupRepository, dateTimeProvider, backofficeSnomedRelatedGroupValidator, careLineInstitutionPracticeRepository);
-		this.snomedRelatedGroupRepository = snomedRelatedGroupRepository;
+																BackofficeSnomedRelatedGroupController backofficeSnomedRelatedGroupController) {
+		super(new BackofficeRepository<>(repository));
 		this.featureFlagsService = featureFlagsService;
-		this.snomedService = snomedService;
 		this.backofficeSnowstormStore = backofficeSnowstormStore;
-		this.dateTimeProvider = dateTimeProvider;
+		this.backofficeSnomedRelatedGroupController = backofficeSnomedRelatedGroupController;
 	}
 
 	@Override
 	public SnomedRelatedGroup create(@Valid @RequestBody SnomedRelatedGroup entity) {
 		if(featureFlagsService.isOn(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS))
-			return super.create(entity);
-
-		BackofficeSnowstormDto concept = backofficeSnowstormStore.findById(entity.getSnomedId().longValue()).orElse(null);
-		if(concept != null) {
-			var snomedBo = new SnomedBo(concept.getConceptId(), concept.getTerm());
-			Integer snomedId = snomedService.getSnomedId(snomedBo).orElse(null);
-			if (snomedId == null)
-				snomedId = snomedService.createSnomedTerm(snomedBo);
-
-			Integer orden = snomedRelatedGroupRepository.getLastOrdenByGroupId(entity.getGroupId()).orElse(0) + 1;
-			entity.setOrden(orden);
-			entity.setLastUpdate(dateTimeProvider.nowDate());
+			return backofficeSnomedRelatedGroupController.create(entity);
+		else try{
+			var snomedId = backofficeSnowstormStore.saveSnowstormConcept(entity.getSnomedId().toString(), entity.getGroupId(), null);
 			entity.setSnomedId(snomedId);
-
-			return snomedRelatedGroupRepository.save(entity);
+			return backofficeSnomedRelatedGroupController.create(entity);
+		} catch (SnowstormPortException e) {
+			throw new RuntimeException(e);
 		}
-
-		return null;
 	}
 }

@@ -22,13 +22,13 @@ const CareLineProblemCreate = props => (
             </ReferenceInput>
 
             <ReferenceInput
-                source="conceptSctid"   
-                reference="snowstormproblems"
+                source="conceptId"   
+                reference="snomedproblems"
                 label="resources.carelineproblems.fields.snomedId"
-                filterToQuery={searchText => ({ term: searchText})}
+                filterToQuery={searchText => ({ conceptPt: searchText})}
                 perPage={30}
             >
-                <AutocompleteInput resettable={false} optionText="term" optionValue="id" validate={[required()]} />
+                <AutocompleteInput resettable={false} optionText="conceptPt" optionValue="id" validate={[required()]} />
             </ReferenceInput>
         </SimpleForm>
     </Create>

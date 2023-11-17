@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SnomedProcedureDto {
+public class SnomedProblemDto {
 
 	private Long id;
 
@@ -17,7 +17,7 @@ public class SnomedProcedureDto {
 
 	private Integer groupId;
 
-	private final String groupDescription = "PROCEDURE";
+	private final String groupDescription = "DIAGNOSIS";
 
 	private String conceptSctid;
 

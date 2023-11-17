@@ -3,6 +3,7 @@ package net.pladema.establishment.controller;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.shared.infrastructure.input.service.snowstorm.exceptions.SnowstormPortException;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.establishment.controller.dto.CareLineProblemDto;
@@ -13,6 +14,15 @@ import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.snowstorm.controller.service.SnowstormExternalService;
 
+
+import net.pladema.snowstorm.repository.SnomedGroupRepository;
+import net.pladema.snowstorm.repository.SnomedRelatedGroupRepository;
+import net.pladema.snowstorm.repository.VSnomedGroupConceptRepository;
+
+import net.pladema.snowstorm.repository.entity.SnomedRelatedGroup;
+import net.pladema.snowstorm.repository.entity.VSnomedGroupConcept;
+
+import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -29,22 +39,22 @@ import java.util.stream.Collectors;
 public class BackofficeCareLineProblemStore implements BackofficeStore<CareLineProblemDto, Integer> {
 
 	private final CareLineProblemRepository careLineProblemRepository;
-
-	private final SnomedService snomedService;
-
-	private final SnowstormExternalService snowstormExternalService;
-
 	private final FeatureFlagsService featureFlagsService;
+	private final VSnomedGroupConceptRepository vSnomedGroupConceptRepository;
+	private final BackofficeSnowstormStore backofficeSnowstormStore;
+
 
 	public BackofficeCareLineProblemStore(CareLineProblemRepository careLineProblemRepository,
-										  SnomedService snomedService,
-										  SnowstormExternalService snowstormExternalService,
-										  FeatureFlagsService featureFlagsService){
+										  FeatureFlagsService featureFlagsService,
+										  VSnomedGroupConceptRepository vSnomedGroupConceptRepository,
+										  BackofficeSnowstormStore backofficeSnowstormStore)
+	{
 		this.careLineProblemRepository=careLineProblemRepository;
-		this.snomedService=snomedService;
-		this.snowstormExternalService=snowstormExternalService;
 		this.featureFlagsService=featureFlagsService;
+		this.vSnomedGroupConceptRepository = vSnomedGroupConceptRepository;
+		this.backofficeSnowstormStore = backofficeSnowstormStore;
 	}
+
 
 
 	@Override
@@ -78,15 +88,13 @@ public class BackofficeCareLineProblemStore implements BackofficeStore<CareLineP
 	@Transactional
 	public CareLineProblemDto save(CareLineProblemDto dto) {
 		Integer snomedId;
-		/* If cached concepts search is active, the id of Snomed entity will be on conceptSctid field */
+		/* If cached concepts search is active, the id of Snomed entity will be on conceptId field */
 		if (featureFlagsService.isOn(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS))
-			snomedId = Integer.valueOf(dto.getConceptSctid());
-		/* If not, search the concept term on snowstorm to check if already exists */
+			snomedId = vSnomedGroupConceptRepository.findById(dto.getConceptId().intValue()).map(VSnomedGroupConcept::getConceptId).orElseThrow(null);
+		/* If not, search the concept term on snowstorm to check if already exists, or it has to be created */
 		else {
 			try {
-				String conceptPt = snowstormExternalService.getConceptById(dto.getConceptSctid()).getPt();
-				var snomedBo = new SnomedBo(dto.getConceptSctid(), conceptPt);
-				snomedId = snomedService.getSnomedId(snomedBo).orElseGet(() -> snomedService.createSnomedTerm(snomedBo));
+				snomedId = backofficeSnowstormStore.saveSnowstormConcept(dto.getConceptId().toString(), null, SnomedECL.DIAGNOSIS);
 			} catch (SnowstormPortException e) {
 				throw new RuntimeException(e);
 			}
