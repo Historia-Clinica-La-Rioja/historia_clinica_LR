@@ -1827,6 +1827,63 @@
 		</query>
 	</named-native-query>
 
+	<named-native-query name="PregnantPeopleReports.PregnantControlsConsultationDetail" result-set-mapping="PregnantPeopleReports.PregnantControlsConsultationDetailResult">
+		<query>
+			WITH base AS (select distinct oc.*, d.source_id, d.source_type_id, d.type_id as document_type_id, d.status_id as document_status_id, d.other_note_id
+			from outpatient_consultation oc
+			left join outpatient_consultation_reasons ocr on ocr.outpatient_consultation_id=oc.id left join reasons r on ocr.reason_id=r.id
+			inner join document d on oc.document_id=d.id
+			left join document_health_condition dhc on dhc.document_id=d.id left join health_condition hc on (dhc.health_condition_id=hc.id AND hc.problem_id&lt;>'57177007') left join snomed s_hc on hc.snomed_id=s_hc.id
+			left join document_procedure dp on dp.document_id=d.id left join procedures proc on (dp.procedure_id=proc.id and proc.status_id&lt;>'723510000') left join snomed s_proc on proc.snomed_id=s_proc.id
+			where (r.id IN ('182947002','237628005','156036003','386322007','169573007','350071000221105','235888006','78558002','429070000','609563008','609564002','44963006','309737007','370383002','171054004','313107007','171055003','440536005','87527008','237240001',
+			'11082009','47200007','134781000119106','237239003','34801009','65147003','459166009','58532003','237233002','169565003','14418008','90968009','237244005','237627000','691000221104','135881001','312891008','274116002','82771000119102','72271000119100',
+			'428165003','44795003','307534009','171000119107','151901000119101','250423000','199154009','243826008','702737001','10761671000119108','127366009','386639001','349971000221103','10750111000119108','428252001','110081000119109','424619006','424441002')
+			OR s_hc.sctid IN ('182947002','237628005','27342004','386322007','169587007','169578003','350071000221105','235888006','127367000','609563008','609564002','44963006','309737007','370383002','171054004','313107007','171055003','440536005','169561007','87527008',
+			'237240001','11082009','47200007','134781000119106','237239003','34801009','65147003','459166009','58532003','169567006','72892002','237233002','169565003','14418008','90968009','237244005','237627000','22879003','55543007','691000221104',
+			'135881001','312891008','313178001','18656007','274116002','288250001','82771000119102','72271000119100','428165003','44795003','307534009','171000119107','200144004','146799005','127364007','151901000119101','250423000','56026007','127365008','199154009',
+			'702737001','74961000119106','10761671000119108','386639001','349971000221103','10750111000119108','428252001','110081000119109','422808006')
+			OR s_proc.sctid IN ('182947002','237628005','386322007','350071000221105','235888006','609563008','609564002','44963006','309737007','370383002','171054004','313107007','171055003','440536005','87527008','237240001','47200007','134781000119106','237239003','34801009',
+			'65147003','459166009','58532003','237233002','90968009','237627000','691000221104','135881001','169712008','169713003','169714009','169715005','169716006','169717002','169718007','169719004','169720005','169721009','169722002','169723007',
+			'169724001','169725000','169726004','169727008','312891008','274116002','82771000119102','72271000119100','428165003','44795003','307534009','171000119107','151901000119101','250423000','199154009','702737001','10761671000119108','386639001','349971000221103','10750111000119108',
+			'428252001','110081000119109'))
+			AND oc.created_on BETWEEN :startDate AND :endDate
+			AND oc.institution_id= :institutionId
+			ORDER BY oc.id ASC, oc.created_on ASC
+			)
+			SELECT pp.identification_number as patientIdentificationNumber,
+			concat(pp.last_name, ' ', pp.other_last_names) as patientLastName,
+			concat(pp.first_name, ' ', pp.middle_names) as patientFirstName,
+			pp.birth_date as patientBirthDate,
+			case
+			when (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)) &lt; 0 then
+			concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			else concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			end as patientAgeToday,
+			concat(ap.street, ' N° ', ap.number, case when ap.floor is not null then concat(' Piso: ', ap.floor, 'Departamento: ', ap.apartment) end) as patientAddress,
+			pex.phone_number as phoneNumber,
+			c.description as patientLocation,
+			(select count(occ.patient_id) from outpatient_consultation occ where (occ.patient_id=b.patient_id and (occ.start_date >= date_trunc('month', (b.created_on + (INTERVAL '-10 month'))) AND occ.start_date &lt;= (select max(bb.start_date) from base bb)))) as numberConsultations,
+			(select string_agg(concat('Consulta con fecha: ', occ.start_date, ' (Motivos: ', (select string_agg(rc.description, ', ') from outpatient_consultation_reasons ocrc inner join reasons rc on ocrc.reason_id=rc.id where ocrc.outpatient_consultation_id=occ.id order by occ.start_date desc), ')'), ', ')
+			from outpatient_consultation occ where (occ.patient_id=b.patient_id and (occ.start_date >= date_trunc('month', (b.created_on + (INTERVAL '-10 month'))) AND occ.start_date &lt;= (select max(bb.start_date) from base bb)))) as consultations
+			FROM base b
+			left join institution ins on b.institution_id=ins.id
+			left join clinical_specialty cs on b.clinical_specialty_id=cs.id
+			left join healthcare_professional hp ON b.doctor_id=hp.id
+			inner join person p on hp.person_id=p.id
+			inner join identification_type itp ON p.identification_type_id=itp.id
+			left join patient pa on b.patient_id=pa.id
+			inner join person pp on pa.person_id=pp.id
+			inner join identification_type itpp ON pp.identification_type_id=itpp.id
+			inner join gender g on pp.gender_id=g.id
+			left join person_extended pex on pex.person_id=pp.id
+			left join address ap on pex.address_id=ap.id
+			left join city c on ap.city_id=c.id
+			left join patient_medical_coverage pmc ON pmc.id=b.patient_medical_coverage_id
+			left join medical_coverage mc on pmc.medical_coverage_id=mc.id
+			left join health_insurance hi on hi.id=mc.id
+		</query>
+	</named-native-query>
+
 	<!-- ========================================== -->
     <!-- ============== Appointment =============== -->
     <!-- ========================================== -->
@@ -2506,6 +2563,20 @@
 			<column name="problems" class="java.lang.String"/>
 			<column name="procedures" class="java.lang.String"/>
 			<column name="evolution" class="java.lang.String"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="PregnantPeopleReports.PregnantControlsConsultationDetailResult">
+		<constructor-result target-class="net.pladema.provincialreports.pregnantpeoplereports.repository.PregnantControlsConsultationDetail">
+			<column name="patientIdentificationNumber" class="java.lang.String"/>
+			<column name="patientLastName" class="java.lang.String"/>
+			<column name="patientFirstName" class="java.lang.String"/>
+			<column name="patientBirthDate" class="java.lang.String"/>
+			<column name="patientAgeToday" class="java.lang.String"/>
+			<column name="patientAddress" class="java.lang.String"/>
+			<column name="phoneNumber" class="java.lang.String"/>
+			<column name="patientLocation" class="java.lang.String"/>
+			<column name="numberConsultations" class="java.lang.String"/>
+			<column name="consultations" class="java.lang.String"/>
 		</constructor-result>
 	</sql-result-set-mapping>
 
