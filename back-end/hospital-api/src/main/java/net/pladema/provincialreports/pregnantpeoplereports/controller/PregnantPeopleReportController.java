@@ -65,6 +65,8 @@ public class PregnantPeopleReportController {
 		Institution institution = institutionRepository.getById(institutionId);
 		String institutionName = (institution != null) ? institution.getName() : "";
 
+		String observations = "";
+
 		String title = "Atenciones a Personas Gestantes";
 		String[] headers = { "Unidad operativa", "DNI del paciente", "Apellido", "Nombre", "Fecha de nacimiento", "Edad actual",
 				"Domicilio", "Teléfono", "Localidad", "Fecha de atención", "Obra social", "Motivo de la atención", "Problemas",
@@ -73,7 +75,7 @@ public class PregnantPeopleReportController {
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
-		IWorkbook wb = this.excelService.buildExcelPregnantAttentions(title, headers, this.queryFactory.queryPregnantAttentions(institutionId, startDate, endDate), fromDate, toDate, institutionName);
+		IWorkbook wb = this.excelService.buildExcelPregnantAttentions(title, headers, this.queryFactory.queryPregnantAttentions(institutionId, startDate, endDate), fromDate, toDate, institutionName, observations);
 
 		String filename = title + "." + wb.getExtension();
 		response.addHeader("Content-disposition", "attachment;filename=" + filename);

@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface PregnantPeopleReportExcelService {
 
-	IWorkbook buildExcelPregnantAttentions(String title, String[] headers, List<PregnantAttentionsConsultationDetail> query, String startDate, String endDate, String institutionName);
+	IWorkbook buildExcelPregnantAttentions(String title, String[] headers, List<PregnantAttentionsConsultationDetail> query, String startDate, String endDate, String institutionName, String observations);
 
 }

@@ -27,13 +27,13 @@ public class PregnantPeopleReportExcelServiceImpl implements PregnantPeopleRepor
 	private ICellStyle subTitleStyle;
 
 	@Override
-	public IWorkbook buildExcelPregnantAttentions(String title, String[] headers, List<PregnantAttentionsConsultationDetail> result, String startDate, String endDate, String institutionName) {
+	public IWorkbook buildExcelPregnantAttentions(String title, String[] headers, List<PregnantAttentionsConsultationDetail> result, String startDate, String endDate, String institutionName, String observations) {
 		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
 		createCellStyle(wb);
 
 		ISheet sheet = wb.createSheet(title);
 
-		fillRow(sheet, getHeaderData(headers, title, startDate, endDate, institutionName));
+		fillRow(sheet, getHeaderData(headers, title, startDate, endDate, institutionName, observations));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
 
@@ -82,7 +82,7 @@ public class PregnantPeopleReportExcelServiceImpl implements PregnantPeopleRepor
 		subTitleStyle.setVAlign(ICellStyle.VALIGNMENT.BOTTOM);
 	}
 
-	private List<CellContent> getHeaderData(String[] subtitles, String title, String startDate, String endDate, String institutionName) {
+	private List<CellContent> getHeaderData(String[] subtitles, String title, String startDate, String endDate, String institutionName, String observations) {
 		List<CellContent> data = new ArrayList<>();
 
 		int nRow = 0;
@@ -100,7 +100,7 @@ public class PregnantPeopleReportExcelServiceImpl implements PregnantPeopleRepor
 
 		nRow++;
 		data.add(new CellContent(nRow, 0, 1, 2, "2. ESTABLECIMIENTO: " + institutionName, fieldStyle));
-		data.add(new CellContent(nRow, 2, 1, 14, "", basicStyle));
+		data.add(new CellContent(nRow, 2, 1, 14, "OBSERVACIONES: " + observations, basicStyle));
 		data.add(new CellContent(nRow, 16, 1, 1, "3. MES", fieldStyle));
 		data.add(new CellContent(nRow, 17, 1, 1, "", basicStyle));
 		data.add(new CellContent(nRow, 18, 1, 1, "4. AÑO", fieldStyle));
