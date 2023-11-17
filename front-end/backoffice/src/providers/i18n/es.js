@@ -637,6 +637,14 @@ const messages = {
                 description: 'Descripción',
             }
         },
+        carelinerole: {
+            name: 'Roles confidenciales',
+            addRelated: 'Agregar roles',
+            fields: {
+                careLineId: 'Línea de cuidado',
+                roleId: 'Rol',
+            }
+        },
         carelineproblems: {
             name: 'Problemas',
             fields: {

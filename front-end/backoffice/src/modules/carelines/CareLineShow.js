@@ -46,6 +46,37 @@ const CreateRelatedButton = ({record, reference, refFieldName, label, disabled})
     );
 };
 
+const ClassifiedCareLineRoles = ({record, roleCreatePermission}) => {
+    if (record.classified) {
+        return (
+            <div>
+                <SectionTitle label="resources.carelinerole.name"/>
+                <CreateRelatedButton
+                    record={record}
+                    reference="carelinerole"
+                    refFieldName="careLineId"
+                    label="resources.carelinerole.addRelated"
+                    disabled={!roleCreatePermission}
+                />
+                <ReferenceManyField
+                    addLabel={false}
+                    reference="carelinerole"
+                    target="careLineId"
+                    sort={{field: 'id', order: 'DESC'}}
+                >
+                    <Datagrid>
+                        <ReferenceField source="roleId" reference="roles" link={false}>
+                            <TextField source="description"/>
+                        </ReferenceField>
+                        <DeleteButton redirect={false} disabled={!roleCreatePermission}/>
+                    </Datagrid>
+                </ReferenceManyField>
+            </div>
+        );
+    }
+    return null;    
+}
+
 const CareLineShow = props => {
     const { permissions } = usePermissions();
     const userIsRootOrAdmin = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR.role) || (roleAssignment.role === ROOT.role)).length > 0;
@@ -56,6 +87,7 @@ const CareLineShow = props => {
                 <BooleanField source="consultation"/>
                 <BooleanField source="procedure"/>
                 <BooleanField source="classified"/>
+
                 <SectionTitle label="resources.clinicalspecialtycarelines.name"/>
                 <CreateRelatedButton
                     reference="clinicalspecialtycarelines"
@@ -97,6 +129,9 @@ const CareLineShow = props => {
                             <DeleteButton redirect={false} disabled={!userIsRootOrAdmin} />
                         </Datagrid>
                     </ReferenceManyField>
+
+                <ClassifiedCareLineRoles roleCreatePermission={userIsRootOrAdmin}/>
+
             </SimpleShowLayout>
         </Show>
     );

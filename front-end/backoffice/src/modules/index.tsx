@@ -31,6 +31,7 @@ import restClientMeasures from './rest-client-measures';
 import medicalCoverage from './medicalcoverage';
 import snomedgroups from './snomedgroups';
 import carelineproblems from './carelineproblems';
+import carelinerole from './carelinerole';
 import userroles from './userroles';
 import hierarchicalunittypes from './hierarchicalunittypes';
 
@@ -131,6 +132,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="clinicalspecialtycarelines" {...clinicalspecialtycarelines} />,
     <Resource name="carelines" {...careLines(permissions)} />,
     <Resource name="carelineproblems" {...carelineproblems} />,
+    <Resource name="carelinerole" {...carelinerole} />,
     <Resource name="carelineinstitution" {...careLineInstitution(permissions)} />,
     <Resource name="carelineinstitutionspecialty" {...carelineinstitutionspecialty(permissions)} />,
     <Resource name="carelineinstitutionpractice" {...careLineInstitutionPractice(permissions)} />,
