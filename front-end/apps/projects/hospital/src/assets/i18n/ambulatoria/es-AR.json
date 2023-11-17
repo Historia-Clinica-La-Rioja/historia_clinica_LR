@@ -289,6 +289,19 @@
 					"PRE_SURGERY": "Diagnóstico Pre-Operatorio",
 					"ADD": "+ Agregar otro diagnóstico",
 					"SURGERY": "Cirugía Propuesta"
+				},
+				"surgical-team": {
+					"TITLE": "Equipor Quirófano",
+					"CIRUJANO": "Cirujano",
+					"AYUDANTE": "Ayudante",
+					"ANESTESIOLOGO": "Anestesiólogo",
+					"CARDIOLOGO": "Cardiólogo",
+					"INSTRUMENTADOR": "Instrumentador",
+					"OBSTETRA": "Obstetra",
+					"PEDIATRA": "Pediatra",
+					"DNI": "DNI",
+					"MATRICULA": "Matrícula",
+					"ADD_AYUDANTE": "+ Agregar ayudante"
 				}
 			},
             "problemas": {

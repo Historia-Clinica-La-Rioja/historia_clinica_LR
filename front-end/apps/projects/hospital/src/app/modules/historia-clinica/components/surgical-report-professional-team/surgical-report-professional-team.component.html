@@ -1,0 +1,39 @@
+<app-new-consultation-expansion-section id="diagnosticos"
+	*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+	[title]="'ambulatoria.paciente.surgical-report.surgical-team.TITLE' | translate" icon="error_outlined"
+	[collapsed]="false" [hideBorder]="false">
+
+	<form [formGroup]="form">
+		<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
+			[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.CIRUJANO' | translate">
+		</app-surgical-report-professional-info>
+
+		<ng-container *ngFor="let index of [].constructor(ayudanteCount); let i = index">
+			<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
+				[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.AYUDANTE' | translate"></app-surgical-report-professional-info>
+		</ng-container>
+		<button type="button" mat-button color="primary" class="add-ayudante" (click)="addAyudante()">
+			{{'ambulatoria.paciente.surgical-report.surgical-team.ADD_AYUDANTE' | translate}}
+		</button>
+
+		<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
+			[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.ANESTESIOLOGO' | translate">
+		</app-surgical-report-professional-info>
+
+		<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
+			[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.CARDIOLOGO' | translate">
+		</app-surgical-report-professional-info>
+
+		<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
+			[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.INSTRUMENTADOR' | translate">
+		</app-surgical-report-professional-info>
+
+		<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
+			[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.OBSTETRA' | translate">
+		</app-surgical-report-professional-info>
+
+		<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
+			[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.PEDIATRA' | translate">
+		</app-surgical-report-professional-info>
+	</form>
+</app-new-consultation-expansion-section>

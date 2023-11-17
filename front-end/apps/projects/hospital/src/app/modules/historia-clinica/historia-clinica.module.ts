@@ -67,6 +67,8 @@ import { ReferenceStateLabelComponent } from './components/reference-state-label
 import { PersonalHistoriesBackgroundListComponent } from './components/personal-histories-background-list/personal-histories-background-list.component';
 import { PersonalHistoriesSummaryComponent } from './components/personal-histories-summary/personal-histories-summary.component';
 import { SurgicalReportDiagnosisComponent } from './components/surgical-report-diagnosis/surgical-report-diagnosis.component';
+import { SurgicalReportProfessionalTeamComponent } from './components/surgical-report-professional-team/surgical-report-professional-team.component';
+import { SurgicalReportProfessionalInfoComponent } from './components/surgical-report-professional-info/surgical-report-professional-info.component';
 
 @NgModule({
 	declarations: [
@@ -127,10 +129,12 @@ import { SurgicalReportDiagnosisComponent } from './components/surgical-report-d
 		FactoresDeRiesgoFormV2Component,
 		AlergiasFormComponent,
 		ProblemConceptSearchDialogComponent,
-  		PersonalHistoriesBackgroundListComponent,
-    	PersonalHistoriesSummaryComponent,
-  		SurgicalReportDockPopupComponent,
+		PersonalHistoriesBackgroundListComponent,
+		PersonalHistoriesSummaryComponent,
+		SurgicalReportDockPopupComponent,
 		SurgicalReportDiagnosisComponent,
+		SurgicalReportProfessionalTeamComponent,
+		SurgicalReportProfessionalInfoComponent,
 	],
 	imports: [
 		CommonModule,
@@ -168,7 +172,7 @@ import { SurgicalReportDiagnosisComponent } from './components/surgical-report-d
 		EpisodeDataComponent,
 		ReferenceStateLabelComponent,
 		PersonalHistoriesBackgroundListComponent,
-    	PersonalHistoriesSummaryComponent,
+		PersonalHistoriesSummaryComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,
 		ConceptsTypeaheadSearchDialogComponent,

@@ -1,0 +1,19 @@
+<app-typeahead *ngIf="professionalsTypeAhead?.length" [options]="professionalsTypeAhead"
+	[titleInput]="professionalTitle" [required]="true"
+	(selectionChange)="setProfessional($event)">
+</app-typeahead>
+<div fxLayout="row" fxLayoutGap="20px" class="professional-info">
+	<mat-form-field appearance="outline">
+		<mat-label>
+			<span>{{'ambulatoria.paciente.surgical-report.surgical-team.DNI' | translate}}</span>
+		</mat-label>
+		<input matInput placeholder="Placeholder" disabled [value]="professional?.identificationNumber">
+	</mat-form-field>
+	<mat-form-field appearance="outline">
+		<mat-label>
+			<span>{{'ambulatoria.paciente.surgical-report.surgical-team.MATRICULA' | translate}}</span>
+		</mat-label>
+		<input matInput placeholder="Placeholder" disabled [value]="professional?.licenceNumber">
+	</mat-form-field>
+</div>
+
