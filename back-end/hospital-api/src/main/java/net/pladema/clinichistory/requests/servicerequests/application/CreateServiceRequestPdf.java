@@ -103,7 +103,7 @@ public class CreateServiceRequestPdf {
 
         return new StoredFileBo(pdfService.generate(template, context),
                 MediaType.APPLICATION_PDF_VALUE,
-				String.format("%s_%s.pdf", patientDto.getIdentificationNumber(), serviceRequestId));
+				String.format("%s%s.pdf", patientDto.getIdentificationNumber() != null ? patientDto.getIdentificationNumber().concat("_") : "", serviceRequestId));
     }
 
 	private PatientMedicalCoverageDto setMedicalCoverage(ServiceRequestBo serviceRequestBo, Integer institutionId, Integer patientId) {
@@ -211,7 +211,7 @@ public class CreateServiceRequestPdf {
 
         return new StoredFileBo(pdfService.generate(template, context),
                 MediaType.APPLICATION_PDF_VALUE,
-				String.format("%s_%s.pdf", patientDto.getIdentificationNumber(), serviceRequestId));
+				String.format("%s%s.pdf", patientDto.getIdentificationNumber() != null ? patientDto.getIdentificationNumber().concat("_") : "", serviceRequestId));
     }
 
     private Map<String, Object> createRecipeOrderTableContext(ServiceRequestBo serviceRequestBo,
