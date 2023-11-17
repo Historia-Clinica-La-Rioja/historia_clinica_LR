@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @ConditionalOnProperty(
-		value="scheduledjobs.cipres-consultations.enabled",
+		value="scheduledjobs.cipresconsultations.enabled",
 		havingValue = "true",
 		matchIfMissing = false)
 @Service
@@ -29,12 +29,12 @@ public class CreateConsultationsJob {
 
 	private final CipresConsultationStorage cipresConsultationStorage;
 
-	@Scheduled(cron = "${scheduledjobs.cipres-consultations.seconds} " +
-			"${scheduledjobs.cipres-consultations.minutes} " +
-			"${scheduledjobs.cipres-consultations.hours} " +
-			"${scheduledjobs.cipres-consultations.dayofmonth} " +
-			"${scheduledjobs.cipres-consultations.month} " +
-			"${scheduledjobs.cipres-consultations.dayofweek}")
+	@Scheduled(cron = "${scheduledjobs.cipresconsultations.seconds} " +
+			"${scheduledjobs.cipresconsultations.minutes} " +
+			"${scheduledjobs.cipresconsultations.hours} " +
+			"${scheduledjobs.cipresconsultations.dayofmonth} " +
+			"${scheduledjobs.cipresconsultations.month} " +
+			"${scheduledjobs.cipresconsultations.dayofweek}")
 	@SchedulerLock(name = "CreateConsultationsJob")
 	public void run() {
 		log.warn("Scheduled CreateConsultationsJob starting at {}", new Date());
