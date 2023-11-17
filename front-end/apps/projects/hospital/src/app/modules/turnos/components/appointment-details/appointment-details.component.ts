@@ -5,11 +5,8 @@ import { EAppointmentModality, EmptyAppointmentDto, ReferenceSummaryDto } from '
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
 import { ConfirmPrintAppointmentComponent } from '@turnos/dialogs/confirm-print-appointment/confirm-print-appointment.component';
-import { HolidaysService } from '@api-rest/services/holidays.service';
-import { DateFormat, momentFormat } from '@core/utils/moment.utils';
-import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { Moment } from 'moment';
-import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
+import { HolidayCheckService } from '@turnos/services/holiday-check.service';
 
 @Component({
 	selector: 'app-appointment-details',
@@ -27,13 +24,11 @@ export class AppointmentDetailsComponent implements OnInit {
 	@Input() referenceSummary?: ReferenceSummaryDto;
 	@Output() resetInformation = new EventEmitter<void>();
 	appointmentTime: Date = new Date();
-	private selectedHolidayDay: Date;
 
 	constructor(
 		private readonly dialog: MatDialog,
 		private readonly datePipe: DatePipe,
-		private readonly holidayService: HolidaysService,
-		private readonly appointmentsFacade: AppointmentsFacadeService,
+		private readonly holidayService: HolidayCheckService,
 	) { }
 
 	ngOnInit(): void {
@@ -43,35 +38,12 @@ export class AppointmentDetailsComponent implements OnInit {
 		this.appointmentTime.setSeconds(+timeData[2]);
 	}
 
-	checkAvailability() {
-		const initialDate = momentFormat(this.searchInitialDate, DateFormat.API_DATE);
-		const endingDate = momentFormat(this.searchEndingDate, DateFormat.API_DATE);
-
-		let isHoliday = false;
-		this.holidayService.getHolidays(initialDate, endingDate).subscribe(holidays => {
-			if (holidays.length) {
-				this.selectedHolidayDay = this.appointmentsFacade.checkIfHoliday(holidays, this.emptyAppointment.date);
-				isHoliday = this.selectedHolidayDay ? true : false;
-
-				if (isHoliday) {
-					const dialogRef = this.dialog.open(DiscardWarningComponent, {
-						data: this.appointmentsFacade.getHolidayData(this.selectedHolidayDay)
-					});
-					dialogRef.afterClosed().subscribe((result: boolean) => {
-						if (result || result == undefined) {
-							dialogRef?.close();
-						}
-						else {
-							this.assignAppointment();
-						}
-					});
-				} else {
-					this.assignAppointment();
-				}
-			}
-			else
+	assign() {
+		this.holidayService.checkAvailability(this.emptyAppointment.date).subscribe(isAvailable => {
+			if (isAvailable) {
 				this.assignAppointment();
-		})
+			}
+		});
 	}
 
 	assignAppointment() {
