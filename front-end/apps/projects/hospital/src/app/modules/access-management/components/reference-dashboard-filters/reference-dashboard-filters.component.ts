@@ -9,7 +9,7 @@ import { DashboardService } from '@access-management/services/dashboard.service'
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { PracticesService } from '@api-rest/services/practices.service';
 import { forkJoin } from 'rxjs';
-import { DashboardFiltersMapping, EDashboardFilters, setReportFilters } from '@access-management/constants/reference-dashboard-filters';
+import { DashboardFiltersMapping, setReportFilters } from '@access-management/constants/reference-dashboard-filters';
 
 const MAX_DAYS = 90;
 
@@ -72,10 +72,6 @@ export class ReferenceDashboardFiltersComponent implements OnInit, OnDestroy {
 
 	setFilters(selectedFilters: SelectedFilters) {
 		let appliedFilters: DashboardFilters = {} as DashboardFilters;
-		const document = this.filterByDocument.value.description;
-
-		if (document)
-			appliedFilters = this.applyDocumentFilter();
 
 		const results = this.concatFilters(selectedFilters);
 
@@ -84,30 +80,29 @@ export class ReferenceDashboardFiltersComponent implements OnInit, OnDestroy {
 			const value = filterOptions.value;
 			appliedFilters[DashboardFiltersMapping[key]] = value;
 		});
-		this.dashboardService.pageNumber = 0;
-
+		appliedFilters = this.setDocumentFilter(appliedFilters);
 		this.applyFilters(appliedFilters);
 	}
 
 	searchByDocument() {
-		const document = this.filterByDocument.value.description;
-		let appliedFilters: DashboardFilters = {} as DashboardFilters;
-		if (document)
-			appliedFilters = this.applyDocumentFilter();
+		this.dashboardService.dashboardFilters = this.setDocumentFilter(this.dashboardService.dashboardFilters);
 		this.dashboardService.pageNumber = 0;
-		this.applyFilters(appliedFilters);
-	}
-
-	private applyFilters(appliedFilters: DashboardFilters) {
-		this.dashboardService.dashboardFilters = appliedFilters;
 		this.dashboardService.updateReports();
 	}
 
-	private applyDocumentFilter(): DashboardFilters {
-		const appliedFilters: DashboardFilters = {} as DashboardFilters;
-		const filterKey = EDashboardFilters.IDENTIFICATION_NUMBER;
-		appliedFilters[DashboardFiltersMapping[filterKey]] = this.filterByDocument.value.description;
-		return appliedFilters;
+	private setDocumentFilter(dashboardFilters: DashboardFilters): DashboardFilters {
+		const document = this.filterByDocument.value.description;
+		dashboardFilters = {
+			...dashboardFilters,
+			identificationNumber: document ? document : null
+		}
+		return dashboardFilters;
+	}
+
+	private applyFilters(appliedFilters: DashboardFilters) {
+		this.dashboardService.pageNumber = 0;
+		this.dashboardService.dashboardFilters = appliedFilters;
+		this.dashboardService.updateReports();
 	}
 
 	private concatFilters(filters: SelectedFilters): SelectedFilterOption[] {
