@@ -78,7 +78,7 @@ public class FormVDto {
 		this.roomNumber = roomNumber;
 		this.affiliateNumber = affiliateNumber;
 		this.patientGender = patientDto.getGender() != null ? EGender.map(patientDto.getGender().getId()).getValue(): null;
-		this.documentType = patientDto.getIdentificationType();
+		this.documentType = patientDto.getIdentificationNumber() != null ? patientDto.getIdentificationType(): null;
 		this.documentNumber = patientDto.getIdentificationNumber();
 		this.patientAge = age;
 	}

@@ -196,7 +196,8 @@ public class CreateServiceRequestPdf {
 				roomNumber,
 				medicalCoverage != null ? medicalCoverage.getAffiliateNumber(): null,
 				patientDto,
-				(short) Period.between(patientDto.getPerson().getBirthDate(), serviceRequestBo.getRequestDate().toLocalDate()).getYears());
+				person.getBirthDate() != null ? (short) Period.between(patientDto.getPerson().getBirthDate(), serviceRequestBo.getRequestDate().toLocalDate()).getYears(): null
+		);
 	}
 
     private StoredFileBo createRecipeOrderTable(Integer institutionId, Integer patientId, Integer serviceRequestId) {
