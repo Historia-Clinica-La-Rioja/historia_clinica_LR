@@ -3,6 +3,7 @@ package ar.lamansys.sgh.shared.infrastructure.input.service;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CompleteReferenceDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceClosureDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceAppointmentStateDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceCounterReferenceFileDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceProblemDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferencePhoneDto;
@@ -32,5 +33,7 @@ public interface SharedReferenceCounterReference {
 	ReferencePhoneDto getReferencePhone(Integer appointmentId);
 
 	Optional<ReferenceRequestDto> getReferenceByServiceRequestId (Integer serviceRequestId);
+	
+	Optional<ReferenceAppointmentStateDto> getReferenceByAppointmentId(Integer appointmentId);
 
 }

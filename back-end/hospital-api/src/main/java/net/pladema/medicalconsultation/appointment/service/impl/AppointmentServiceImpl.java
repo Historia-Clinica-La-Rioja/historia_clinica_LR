@@ -19,6 +19,9 @@ import java.util.stream.Stream;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceAppointmentStateDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -258,6 +261,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 			List<Integer> diaryIds = result.stream().map(AppointmentBo::getDiaryId).collect(Collectors.toList());
 			result = setIsAppointmentProtected(result.stream().collect(Collectors.toList()), diaryIds)
 					.stream().findFirst();
+			var referenceAppointment = sharedReferenceCounterReference.getReferenceByAppointmentId(result.get().getId());
+			result.get().setHasAssociatedReference(referenceAppointment.isPresent());
+			result.get().setAssociatedReferenceClosureTypeId(referenceAppointment.map(ReferenceAppointmentStateDto::getReferenceClosureTypeId).orElse(null));
 		}
 		log.debug(OUTPUT, result);
 		return result;
@@ -487,6 +493,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 			appointment.setRespectiveProfessionalName(professional.getFirstName(),professional.getMiddleNames(),
 					professional.getLastName(), professional.getOtherLastNames(), professional.getNameSelfDetermination(),
 					featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
+			var referenceAppointment = sharedReferenceCounterReference.getReferenceByAppointmentId(appointment.getId());
+			appointment.setHasAssociatedReference(referenceAppointment.isPresent());
+			appointment.setAssociatedReferenceClosureTypeId(referenceAppointment.map(ReferenceAppointmentStateDto::getReferenceClosureTypeId).orElse(null));
 		});
 		log.debug("Result size {}", result.size());
 		log.trace(OUTPUT, result);

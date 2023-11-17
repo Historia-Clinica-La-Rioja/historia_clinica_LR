@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.controller.mapper;
 
+import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import ar.lamansys.sgh.shared.HospitalSharedAutoConfiguration;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentEquipmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
@@ -35,7 +36,7 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDailyAmountBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
 
-@Mapper(uses = {LocalDateMapper.class, EAppointmentModality.class})
+@Mapper(uses = {LocalDateMapper.class, EAppointmentModality.class, EReferenceClosureType.class})
 public interface AppointmentMapper {
 
     @Named("toAppointmentListDto")
@@ -71,6 +72,7 @@ public interface AppointmentMapper {
 	@Mapping(target = "modality", source = "modalityId")
 	@Mapping(target = "callLink", source = "callId", qualifiedByName = "generateCallLink")
 	@Mapping(target = "diaryLabelDto", source = "appointmentBo.diaryLabelBo")
+	@Mapping(target = "associatedReferenceClosureType", source = "associatedReferenceClosureTypeId")
 	AppointmentDto toAppointmentDto(AppointmentBo appointmentBo);
 
 	@Named("generateCallLink")
@@ -89,6 +91,7 @@ public interface AppointmentMapper {
     AppointmentDailyAmountDto toAppointmentDailyAmountDto(AppointmentDailyAmountBo appointmentDailyAmountBo);
 
 	@Named("toAssignedAppointmentDto")
+	@Mapping(target = "associatedReferenceClosureType", source = "associatedReferenceClosureTypeId")
 	AssignedAppointmentDto toAssignedAppointmentDto(AppointmentAssignedBo appointmentAssignedBo);
 
 	@Named("toUpdateAppointmentBo")

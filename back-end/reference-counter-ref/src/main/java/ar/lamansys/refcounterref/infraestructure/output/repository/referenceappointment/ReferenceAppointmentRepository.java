@@ -2,6 +2,7 @@ package ar.lamansys.refcounterref.infraestructure.output.repository.referenceapp
 
 import ar.lamansys.refcounterref.domain.reference.ReferencePhoneBo;
 import ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentBo;
+import ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentSummaryBo;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 
 import org.springframework.data.jpa.repository.Modifying;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ReferenceAppointmentRepository extends SGXAuditableEntityJPARepository<ReferenceAppointment, ReferenceAppointmentPk> {
@@ -67,5 +69,15 @@ public interface ReferenceAppointmentRepository extends SGXAuditableEntityJPARep
 			"WHERE ra.pk.appointmentId = :appointmentId " +
 			"AND ra.deleteable.deleted = false")
 	ReferencePhoneBo getReferencePhone(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentSummaryBo(ra.pk.referenceId, a.appointmentStateId, cr.closureTypeId) " +
+			"FROM ReferenceAppointment ra " +
+			"JOIN Appointment a ON (a.id = ra.pk.appointmentId) " +
+			"JOIN Reference r ON (ra.pk.referenceId = r.id) " +
+			"LEFT JOIN CounterReference cr ON (r.id = cr.referenceId) " +
+			"WHERE ra.deleteable.deleted = false " +
+			"AND ra.pk.appointmentId = :appointmentId ")
+	Optional<ReferenceAppointmentSummaryBo> getReferenceByAppointmentId(@Param("appointmentId")Integer appointmentId);
 
 }

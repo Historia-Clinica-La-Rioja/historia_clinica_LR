@@ -734,7 +734,7 @@ public class AppointmentsController {
 		log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
 		LocalDate minDate = LocalDate.now().minusDays(PAST_DAYS);
 		LocalDate maxDate = LocalDate.now().plusDays(MAX_DAYS);
-		var result = appointmentService.getCompleteAssignedAppointmentInfo(patientId, minDate, maxDate).stream().map(appointmentAssigned -> (appointmentMapper.toAssignedAppointmentDto(appointmentAssigned))).collect(Collectors.toList());
+		var result = appointmentService.getCompleteAssignedAppointmentInfo(patientId, minDate, maxDate).stream().map(appointmentMapper::toAssignedAppointmentDto).collect(Collectors.toList());
 		log.debug("Result size {}", result.size());
 		log.trace(OUTPUT, result);
 		return ResponseEntity.ok(result);

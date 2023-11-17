@@ -240,8 +240,11 @@ export interface AppointmentDataDto {
 
 export interface AppointmentDto extends CreateAppointmentDto {
     appointmentStateId: number;
+    associatedReferenceClosureType: EReferenceClosureType;
     callLink: string;
     diaryLabelDto?: DiaryLabelDto;
+    hasAssociatedReference: boolean;
+    id: number;
     observation?: string;
     observationBy?: string;
     protected: boolean;
@@ -317,8 +320,11 @@ export interface AppointmentTicketImageDto {
 }
 
 export interface AssignedAppointmentDto {
+    associatedReferenceClosureType: EReferenceClosureType;
     date: DateDto;
+    hasAssociatedReference: boolean;
     hour: TimeDto;
+    id: number;
     license: string;
     office: string;
     professionalName: string;
@@ -3416,6 +3422,7 @@ export interface ReferenceAppointmentDto {
 
 export interface ReferenceAppointmentStateDto {
     appointmentStateId: number;
+    referenceClosureTypeId: number;
     referenceId: number;
 }
 

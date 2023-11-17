@@ -10,6 +10,7 @@ import ar.lamansys.refcounterref.domain.file.ReferenceCounterReferenceFileBo;
 import ar.lamansys.refcounterref.domain.procedure.CounterReferenceProcedureBo;
 import ar.lamansys.refcounterref.domain.reference.ReferencePhoneBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
+import ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentSummaryBo;
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.CounterReferenceSummaryMapper;
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.ReferenceMapper;
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.ReferenceProblemMapper;
@@ -18,6 +19,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CompleteReferenceDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryProcedureDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceAppointmentStateDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceCounterReferenceFileDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
@@ -129,6 +131,13 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
 		}
 		return result;
 	}
+	
+	public Optional<ReferenceAppointmentStateDto> getReferenceByAppointmentId(Integer appointmentId){
+		log.debug("Exists reference by appointmentId {}, ", appointmentId);
+		var result = referenceAppointmentRepository.getReferenceByAppointmentId(appointmentId).map(this::mapToReferenceAppointmentStateDto);
+		log.debug("OUTPUT {} ->", result);
+		return result;
+	}
 
 	private List<ReferenceCounterReferenceFileDto> mapToReferenceCounterReferenceFileDto(List<ReferenceCounterReferenceFileBo> referenceCounterReferenceFileBos) {
         List<ReferenceCounterReferenceFileDto> referenceCounterReferenceFileDtos = new ArrayList<>();
@@ -144,5 +153,13 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
                 counterReferenceSummaryProcedureDtoList.add(new CounterReferenceSummaryProcedureDto(new SharedSnomedDto(counterReferenceProcedureBo.getSctid(), counterReferenceProcedureBo.getPt()))));
         return counterReferenceSummaryProcedureDtoList;
     }
+
+	private ReferenceAppointmentStateDto mapToReferenceAppointmentStateDto(ReferenceAppointmentSummaryBo referenceAppointmentSummaryBo) {
+		ReferenceAppointmentStateDto result = new ReferenceAppointmentStateDto();
+		result.setReferenceId(referenceAppointmentSummaryBo.getReferenceId());
+		result.setAppointmentStateId(referenceAppointmentSummaryBo.getAppointmentStateId());
+		result.setReferenceClosureTypeId(referenceAppointmentSummaryBo.getReferenceClosureTypeId());
+		return result;
+	}
 
 }

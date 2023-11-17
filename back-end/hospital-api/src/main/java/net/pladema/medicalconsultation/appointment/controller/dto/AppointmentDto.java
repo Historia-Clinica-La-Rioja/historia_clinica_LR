@@ -3,6 +3,7 @@ package net.pladema.medicalconsultation.appointment.controller.dto;
 
 import javax.annotation.Nullable;
 
+import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,6 +19,9 @@ import net.pladema.medicalconsultation.diary.controller.dto.DiaryLabelDto;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AppointmentDto extends CreateAppointmentDto {
+
+
+	private Integer id;
 
     private Short appointmentStateId;
 
@@ -36,4 +40,9 @@ public class AppointmentDto extends CreateAppointmentDto {
 
 	@Nullable
 	private DiaryLabelDto diaryLabelDto;
+	
+	private boolean hasAssociatedReference;
+
+	private EReferenceClosureType associatedReferenceClosureType;
+
 }

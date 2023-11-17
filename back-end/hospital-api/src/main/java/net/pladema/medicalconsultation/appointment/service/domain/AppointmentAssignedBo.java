@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.service.domain;
 
+import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,8 @@ import java.util.List;
 @NoArgsConstructor
 public class AppointmentAssignedBo {
 
+	private Integer id;
+
 	private String professionalName;
 
 	private String license;
@@ -32,7 +35,13 @@ public class AppointmentAssignedBo {
 
 	private String office;
 
+	private boolean hasAssociatedReference;
+
+	private Short associatedReferenceClosureTypeId;
+
 	public AppointmentAssignedBo(AppointmentAssignedForPatientVo appointmentAssignedForPatientVo) {
+
+		this.id = appointmentAssignedForPatientVo.getId();
 
 		this.license = appointmentAssignedForPatientVo.getLicense();
 

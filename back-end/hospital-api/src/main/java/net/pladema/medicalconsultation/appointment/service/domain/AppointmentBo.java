@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
 
+import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
 import lombok.AllArgsConstructor;
@@ -80,6 +81,10 @@ public class AppointmentBo {
 	private String applicantHealthcareProfessionalEmail;
 
 	private DiaryLabelBo diaryLabelBo;
+	
+	private boolean hasAssociatedReference;
+
+	private Short associatedReferenceClosureTypeId;
 
 	public static AppointmentBo fromAppointmentDiaryVo(AppointmentDiaryVo appointmentDiaryVo) {
 		return AppointmentBo.builder()
