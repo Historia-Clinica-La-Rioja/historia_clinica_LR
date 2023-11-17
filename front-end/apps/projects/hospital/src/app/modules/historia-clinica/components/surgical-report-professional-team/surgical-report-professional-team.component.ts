@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { ProfessionalDto } from '@api-rest/api-model';
-import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 
 @Component({
 	selector: 'app-surgical-report-professional-team',
@@ -20,18 +19,13 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 		pediatra: new FormControl<ProfessionalDto | null>(null),
 	});
 
-	professionals: ProfessionalDto[];
+	@Input() professionals: ProfessionalDto[];
+
 	ayudanteCount: number = 1;
 
 	constructor(
-		private formBuilder: FormBuilder,
-		private readonly healthcareProfessionalByInstitutionService: HealthcareProfessionalByInstitutionService,
-	) {
-		this.healthcareProfessionalByInstitutionService.getAllAssociated().subscribe(response => {
-			if (response)
-				this.professionals = response;
-		});
-	}
+		private formBuilder: FormBuilder
+	) {	}
 
 	ngOnInit(): void { }
 

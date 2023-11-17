@@ -314,7 +314,12 @@
 					"SURGERY_DESCRIPTION": "Descripción de cirugía realizada",
 					"ADD_DIAGNOSIS": "Agregar diagnóstico post-operatorio",
 					"DIAGNOSIS": "Diagnóstico Post-Operatorio"
-				}
+				},
+				"exam": {
+					"TITLE": "Examen Anatomopatológico",
+					"PATOLOGO": "Patólogo"
+				},
+				"DESCRIPTION": "Descripción"
 			},
             "problemas": {
                 "TAB_LABEL": "Problemas",

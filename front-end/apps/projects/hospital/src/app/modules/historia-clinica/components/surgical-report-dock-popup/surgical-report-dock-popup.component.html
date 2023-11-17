@@ -1,7 +1,12 @@
 <app-dock-popup [dockPopupRef]="dockPopupRef" [header]="{ title:'Parte Quirúrgico'} ">
 	<div body fxLayout="column" fxLayoutGap="20px">
 		<app-surgical-report-diagnosis [diagnosis]="diagnosis"></app-surgical-report-diagnosis>
-		<app-surgical-report-professional-team></app-surgical-report-professional-team>
+		<app-surgical-report-professional-team [professionals]="professionals"></app-surgical-report-professional-team>
 		<app-surgical-report-procedures></app-surgical-report-procedures>
+		<app-professional-and-description
+			[title]="'ambulatoria.paciente.surgical-report.exam.TITLE' | translate"
+			[professionalTitle]="'ambulatoria.paciente.surgical-report.exam.PATOLOGO' | translate"
+			[professionals]="professionals">
+		</app-professional-and-description>
 	</div>
 </app-dock-popup>
