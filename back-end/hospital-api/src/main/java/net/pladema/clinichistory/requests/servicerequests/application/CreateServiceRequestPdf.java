@@ -20,7 +20,6 @@ import net.pladema.clinichistory.requests.servicerequests.service.GetServiceRequ
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.FetchLastBedByEmergencyEpisodePatientDate;
-import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.service.domain.EmergencyEpisodePatientBedRoomBo;
 import net.pladema.establishment.service.FetchLastBedByInternmentPatientDate;
 import net.pladema.establishment.service.InstitutionService;
@@ -113,19 +112,17 @@ public class CreateServiceRequestPdf {
 			medicalCoverage = setInternmentMedicalCoverageOrder(serviceRequestBo, institutionId, patientId);
 
 		if (serviceRequestBo.getAssociatedSourceTypeId().equals(SourceType.OUTPATIENT))
-			medicalCoverage = setOutpatientMedicalCoverageOrder(serviceRequestBo);
+			medicalCoverage = setOutpatientAndEmergencyCareEpisodeCoverageOrder(serviceRequestBo);
 
 		if (serviceRequestBo.getAssociatedSourceTypeId().equals(SourceType.EMERGENCY_CARE))
-			medicalCoverage = setEmergencyCareEpisodeCoverageOrder(serviceRequestBo, institutionId, patientId);
+			medicalCoverage = setOutpatientAndEmergencyCareEpisodeCoverageOrder(serviceRequestBo);
 
 		return medicalCoverage.getMedicalCoverage() != null ? medicalCoverage : null;
 	}
 
-	private PatientMedicalCoverageDto setEmergencyCareEpisodeCoverageOrder(ServiceRequestBo serviceRequestBo, Integer institutionId, Integer patientId) {
+	private PatientMedicalCoverageDto setOutpatientAndEmergencyCareEpisodeCoverageOrder(ServiceRequestBo serviceRequestBo) {
 		PatientMedicalCoverageDto medicalCoverage = new PatientMedicalCoverageDto();
-		Integer emergencyId = emergencyCareEpisodeService.getEmergencyEpisodeEpisodeIdByDate(institutionId, patientId, serviceRequestBo.getRequestDate());
-		EmergencyCareBo emergencyCareBo = emergencyCareEpisodeService.get(emergencyId, institutionId);
-		PatientMedicalCoverageDto patientMedicalCoverageDto = patientExternalMedicalCoverageService.getCoverage(emergencyCareBo.getPatient().getPatientMedicalCoverageId());
+		PatientMedicalCoverageDto patientMedicalCoverageDto = patientExternalMedicalCoverageService.getCoverage(serviceRequestBo.getMedicalCoverageId());
 		medicalCoverage.setMedicalCoverage(patientMedicalCoverageDto != null ? patientMedicalCoverageDto.getMedicalCoverage(): null);
 		medicalCoverage.setCondition(patientMedicalCoverageDto != null ? patientMedicalCoverageDto.getCondition(): null);
 		medicalCoverage.setAffiliateNumber(patientMedicalCoverageDto != null ? patientMedicalCoverageDto.getAffiliateNumber(): null);
@@ -141,15 +138,6 @@ public class CreateServiceRequestPdf {
 					medicalCoverage.setCondition(medicalCoverageBo.getCondition());
 					medicalCoverage.setAffiliateNumber(medicalCoverageBo.getAffiliateNumber());
 				});
-		return medicalCoverage;
-	}
-
-	private PatientMedicalCoverageDto setOutpatientMedicalCoverageOrder(ServiceRequestBo serviceRequestBo) {
-		PatientMedicalCoverageDto medicalCoverage = new PatientMedicalCoverageDto();
-		PatientMedicalCoverageDto patientMedicalCoverageDto = patientExternalMedicalCoverageService.getCoverage(serviceRequestBo.getMedicalCoverageId());
-		medicalCoverage.setMedicalCoverage(patientMedicalCoverageDto != null ? patientMedicalCoverageDto.getMedicalCoverage(): null);
-		medicalCoverage.setCondition(patientMedicalCoverageDto != null ? patientMedicalCoverageDto.getCondition(): null);
-		medicalCoverage.setAffiliateNumber(patientMedicalCoverageDto != null ? patientMedicalCoverageDto.getAffiliateNumber(): null);
 		return medicalCoverage;
 	}
 
