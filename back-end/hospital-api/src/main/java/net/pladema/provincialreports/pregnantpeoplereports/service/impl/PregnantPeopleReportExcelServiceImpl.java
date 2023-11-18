@@ -11,6 +11,8 @@ import net.pladema.provincialreports.pregnantpeoplereports.repository.PregnantAt
 import net.pladema.provincialreports.pregnantpeoplereports.repository.PregnantControlsConsultationDetail;
 import net.pladema.provincialreports.pregnantpeoplereports.service.PregnantPeopleReportExcelService;
 
+import net.pladema.provincialreports.reportformat.DateFormat;
+
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +28,12 @@ public class PregnantPeopleReportExcelServiceImpl implements PregnantPeopleRepor
 	private ICellStyle titleStyle;
 	private ICellStyle fieldStyle;
 	private ICellStyle subTitleStyle;
+
+	private final DateFormat reformatdate;
+
+	public PregnantPeopleReportExcelServiceImpl(DateFormat reformatdate) {
+		this.reformatdate = reformatdate;
+	}
 
 	@Override
 	public IWorkbook buildExcelPregnantAttentions(String title, String[] headers, List<PregnantAttentionsConsultationDetail> result, String startDate, String endDate, String institutionName, String observations) {
@@ -118,7 +126,7 @@ public class PregnantPeopleReportExcelServiceImpl implements PregnantPeopleRepor
 		data.add(new CellContent(nRow, 23, 1, 1, "", basicStyle));
 
 		nRow++;
-		data.add(new CellContent(nRow, 0, 1, 2, "PERIODO: " + startDate + " hasta " + endDate, basicStyle));
+		data.add(new CellContent(nRow, 0, 1, 2, "PERIODO: " + reformatdate.ReformatDateThree(startDate) + " hasta " + reformatdate.ReformatDateThree(endDate), basicStyle));
 		data.add(new CellContent(nRow, 19, 1, 5, "", basicStyle));
 
 		nRow++;
@@ -205,7 +213,7 @@ public class PregnantPeopleReportExcelServiceImpl implements PregnantPeopleRepor
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(content.getPatientBirthDate());
+		cell4.setCellValue(reformatdate.ReformatDateThree(content.getPatientBirthDate()));
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
@@ -225,7 +233,7 @@ public class PregnantPeopleReportExcelServiceImpl implements PregnantPeopleRepor
 		cell8.setCellStyle(style);
 
 		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
-		cell9.setCellValue(content.getAttentionDate());
+		cell9.setCellValue(reformatdate.ReformatDateFour(content.getAttentionDate()));
 		cell9.setCellStyle(style);
 
 		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
@@ -265,7 +273,7 @@ public class PregnantPeopleReportExcelServiceImpl implements PregnantPeopleRepor
 		cell2.setCellStyle(style);
 
 		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
-		cell3.setCellValue(content.getPatientBirthDate());
+		cell3.setCellValue(reformatdate.ReformatDateThree(content.getPatientBirthDate()));
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
