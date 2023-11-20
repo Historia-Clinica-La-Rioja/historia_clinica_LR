@@ -21,6 +21,7 @@
 			[buttonTitle]="'ambulatoria.paciente.surgical-report.culture.BUTTON_TITLE' | translate"
 			[icon]="'science'"	>
 		</app-procedure-and-description>
+		<app-surgical-report-prosthesis></app-surgical-report-prosthesis>
 		<app-procedure-and-description
 			[title]="'ambulatoria.paciente.surgical-report.biopsy.TITLE' | translate"
 			[tableTitle]="'ambulatoria.paciente.surgical-report.biopsy.TABLE_TITLE' | translate"
@@ -33,5 +34,14 @@
 			[buttonTitle]="'ambulatoria.paciente.surgical-report.drainage.BUTTON_TITLE' | translate"
 			[icon]="'vaccines'"	>
 		</app-procedure-and-description>
+	</div>
+
+	<div actions id="buttons">
+		<div align="end">
+			<button class="uppercase" mat-raised-button color="primary" (click)="save()"
+				[disabled]="false">
+				<span [translate]="'buttons.CONFIRM'"></span>
+			</button>
+		</div>
 	</div>
 </app-dock-popup>

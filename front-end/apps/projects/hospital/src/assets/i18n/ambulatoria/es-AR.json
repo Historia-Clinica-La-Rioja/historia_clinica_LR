@@ -328,6 +328,11 @@
 					"TABLE_TITLE": "Cultivo registrado",
 					"BUTTON_TITLE": "Agregar cultivo"
 				},
+				"prosthesis": {
+					"TITLE": "Prótesis",
+					"YES": "Si",
+					"NO": "No"
+				},
 				"biopsy": {
 					"TITLE": "Biopsia por congelación",
 					"TABLE_TITLE": "Biopsia registrada",

@@ -39,4 +39,8 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 	ngOnInit(): void {
 	}
 
+	save(): void {
+		console.log("parte quirurgico guardado");
+
+	}
 }
