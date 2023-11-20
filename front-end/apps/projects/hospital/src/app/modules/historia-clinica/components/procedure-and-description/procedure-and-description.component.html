@@ -1,0 +1,22 @@
+<app-new-consultation-expansion-section id="diagnosticos"
+	*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+	[title]="title" [icon]="icon"
+	[collapsed]="false" [hideBorder]="false">
+
+	<div fxLayout="column" fxLayoutGap="20px">
+		<div>
+			<button mat-button type="button" id="add-procedure-button" color="primary" (click)="addProcedure()">
+				+ {{ buttonTitle | translate }}
+			</button>
+		</div>
+		<app-titled-content-card *ngIf="!procedureService.isEmpty()"
+			[title]="tableTitle">
+			<app-procedure-list [service]="procedureService"></app-procedure-list>
+		</app-titled-content-card>
+	</div>
+
+	<mat-form-field appearance="outline">
+		<mat-label [translate]="'ambulatoria.paciente.surgical-report.DESCRIPTION'"></mat-label>
+		<textarea matInput></textarea>
+	</mat-form-field>
+</app-new-consultation-expansion-section>

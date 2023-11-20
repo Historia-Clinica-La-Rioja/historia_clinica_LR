@@ -71,6 +71,7 @@ import { SurgicalReportProfessionalTeamComponent } from './components/surgical-r
 import { SurgicalReportProfessionalInfoComponent } from './components/surgical-report-professional-info/surgical-report-professional-info.component';
 import { SurgicalReportProceduresComponent } from './components/surgical-report-procedures/surgical-report-procedures.component';
 import { ProfessionalAndDescriptionComponent } from './components/professional-and-description/professional-and-description.component';
+import { ProcedureAndDescriptionComponent } from './components/procedure-and-description/procedure-and-description.component';
 
 @NgModule({
 	declarations: [
@@ -139,6 +140,7 @@ import { ProfessionalAndDescriptionComponent } from './components/professional-a
 		SurgicalReportProfessionalInfoComponent,
 		SurgicalReportProceduresComponent,
 		ProfessionalAndDescriptionComponent,
+		ProcedureAndDescriptionComponent,
 	],
 	imports: [
 		CommonModule,

@@ -323,6 +323,21 @@
 					"TITLE": "Sangre y soluciones",
 					"TRANSFUSIONISTA": "Transfusionista"
 				},
+				"culture": {
+					"TITLE": "Cultivo",
+					"TABLE_TITLE": "Cultivo registrado",
+					"BUTTON_TITLE": "Agregar cultivo"
+				},
+				"biopsy": {
+					"TITLE": "Biopsia",
+					"TABLE_TITLE": "Biopsia registrada",
+					"BUTTON_TITLE": "Agregar biopsia"
+				},
+				"drainage": {
+					"TITLE": "Drenaje",
+					"TABLE_TITLE": "Drenaje registrado",
+					"BUTTON_TITLE": "Agregar drenaje"
+				},
 				"DESCRIPTION": "Descripción"
 			},
             "problemas": {
