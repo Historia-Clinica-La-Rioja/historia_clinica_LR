@@ -1,11 +1,14 @@
-package ar.lamansys.sgh.publicapi.application;
+package ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.exceptions.ActivityNotFoundException;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.service.ActivitiesPublicApiPermissions;
 import ar.lamansys.sgh.publicapi.domain.SingleDiagnosticBo;
 
 import ar.lamansys.sgh.publicapi.domain.SnomedCIE10Bo;
@@ -17,7 +20,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ar.lamansys.sgh.publicapi.application.fetchactivitybyid.FetchActivityById;
 import ar.lamansys.sgh.publicapi.application.port.out.ActivityStorage;
 import ar.lamansys.sgh.publicapi.domain.AttentionInfoBo;
 import ar.lamansys.sgh.publicapi.domain.CoverageActivityInfoBo;
@@ -35,13 +37,19 @@ public class FetchActivityByIdTest {
 	@Mock
 	private ActivityStorage activityStorage;
 
+	@Mock
+	private ActivitiesPublicApiPermissions activitiesPublicApiPermissions;
+
 	@BeforeEach
 	void setup() {
-		fetchActivityById = new FetchActivityById(activityStorage);
+		fetchActivityById = new FetchActivityById(
+				activityStorage,
+				activitiesPublicApiPermissions
+		);
 	}
 
 	@Test
-	void activitySuccess() {
+	void activitySuccess() throws ActivityNotFoundException {
 		String refsetCode = "";
 		Long activityId = 10L;
 
@@ -56,8 +64,16 @@ public class FetchActivityByIdTest {
 						new SingleDiagnosticBo(new SnomedCIE10Bo("1", "1", "1"), true, "1234345", "2345435", LocalDateTime.now())
 				)));
 
+		setUserCanAccess(refsetCode, 10);
 		AttentionInfoBo result = fetchActivityById.run(refsetCode, activityId);
 		Assertions.assertNotNull(result);
+	}
+
+	private void setUserCanAccess(String refsetCode, Integer institutionId) {
+		when(activitiesPublicApiPermissions.findInstitutionId(refsetCode))
+				.thenReturn(Optional.of(institutionId));
+		when(activitiesPublicApiPermissions.canAccess(institutionId))
+				.thenReturn(true);
 	}
 
 	@Test
@@ -65,10 +81,18 @@ public class FetchActivityByIdTest {
 		String refsetCode = "";
 		Long activityId = 10L;
 
-		when(activityStorage.getActivityById(refsetCode, activityId)).thenReturn(
-				Optional.empty());
+		when(activityStorage.getActivityById(refsetCode, activityId))
+				.thenReturn(Optional.empty());
 
-		AttentionInfoBo result = fetchActivityById.run(refsetCode, activityId);
-		Assertions.assertNull(result);
+		setUserCanAccess(refsetCode, 10);
+		ActivityNotFoundException exception = Assertions.assertThrows(ActivityNotFoundException.class, () ->
+				fetchActivityById.run(refsetCode, activityId)
+		);
+
+		Assertions.assertNotNull(exception);
+		assertThat(exception.activityId)
+				.isEqualTo(activityId);
+		assertThat(exception.refsetCode)
+				.isEqualTo(refsetCode);
 	}
 }

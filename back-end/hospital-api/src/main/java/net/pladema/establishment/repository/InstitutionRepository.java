@@ -29,6 +29,11 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"WHERE i.sisaCode = :sisaCode ")
 	Optional<Institution> findBySisaCode(@Param("sisaCode") String sisaCode);
 
+	@Query("SELECT i.id "+
+			"FROM Institution AS i " +
+			"WHERE i.sisaCode = :sisaCode ")
+	Optional<Integer> findIdBySisaCode(@Param("sisaCode") String sisaCode);
+
 	@Query("SELECT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) "+
 			"FROM Institution i " +
 			"JOIN Address a ON (i.addressId = a.id) " +

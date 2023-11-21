@@ -1,7 +1,6 @@
 package ar.lamansys.sgh.publicapi.infrastructure.input.rest.exceptions;
 
-import java.util.Locale;
-
+import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.exceptions.ActivityNotFoundException;
 import ar.lamansys.sgh.publicapi.digitalsignature.application.port.out.exception.DigitalSignatureCallbackException;
 
 import org.slf4j.Logger;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import ar.lamansys.sgh.publicapi.application.deleteexternalencounter.exceptions.DeleteExternalEncounterException;
-import ar.lamansys.sgh.publicapi.application.port.out.exceptions.ActivityStorageException;
 import ar.lamansys.sgh.publicapi.application.port.out.exceptions.ExternalClinicalHistoryStorageException;
 import ar.lamansys.sgh.publicapi.application.port.out.exceptions.ExternalEncounterStorageException;
 import ar.lamansys.sgh.publicapi.application.saveexternalencounter.exceptions.SaveExternalEncounterException;
@@ -43,11 +41,14 @@ public class HospitalPublicApiExceptionHandler {
         logger = LoggerFactory.getLogger(HospitalPublicApiExceptionHandler.class);
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler({ ActivityStorageException.class })
-    protected ApiErrorMessageDto handleImmunizationValidatorException(ActivityStorageException ex, Locale locale) {
-        logger.debug("ActivityStorageException exception -> {}", ex.getMessage());
-        return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler({ ActivityNotFoundException.class })
+    protected ApiErrorMessageDto handleActivityNotFoundException(ActivityNotFoundException ex) {
+        logger.debug("ActivityNotFoundException -> {}", ex.toString());
+        return new ApiErrorMessageDto(
+				"activity-not-found",
+				String.format("La actividad %s no existe en %s", ex.activityId, ex.refsetCode)
+		);
     }
 
     @ExceptionHandler({ ExternalPatientBoException.class })

@@ -18,8 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.publicapi.application.port.out.ActivityStorage;
-import ar.lamansys.sgh.publicapi.application.port.out.exceptions.ActivityStorageException;
-import ar.lamansys.sgh.publicapi.application.port.out.exceptions.ActivityStorageExceptionEnum;
 import ar.lamansys.sgh.publicapi.domain.AttentionInfoBo;
 import ar.lamansys.sgh.publicapi.domain.CoverageActivityInfoBo;
 import ar.lamansys.sgh.publicapi.domain.GenderEnum;
@@ -152,12 +150,11 @@ public class ActivityStorageImpl implements ActivityStorage {
 		var queryResult = query.getResultList();
 
 		Object[] resultSearch = queryResult.size() == 1 ? (Object[]) queryResult.get(0) : null;
-		AttentionInfoBo result = Optional.ofNullable(resultSearch).map(this::parseToAttentionInfoBo)
-				.orElseThrow(() -> new ActivityStorageException(ActivityStorageExceptionEnum.ACTIVITY_NOT_EXISTS,
-						"La actividad no existe"));
+
+		Optional<AttentionInfoBo> result = Optional.ofNullable(resultSearch).map(this::parseToAttentionInfoBo);
 
 		LOG.trace("Output -> {}", result);
-		return Optional.of(result);
+		return result;
 	}
 
 	@Override

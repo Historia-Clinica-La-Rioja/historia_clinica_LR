@@ -1,6 +1,5 @@
 package ar.lamansys.sgh.publicapi.infrastructure.input.rest;
 
-import ar.lamansys.sgh.publicapi.application.fetchactivitybyid.FetchActivityById;
 import ar.lamansys.sgh.publicapi.application.fetchbedrelocationbyactivity.FetchBedRelocationByActivity;
 import ar.lamansys.sgh.publicapi.application.fetchdocumentsinfobyactivity.FetchDocumentsInfoByActivity;
 
@@ -38,8 +37,6 @@ class ActivityInfoControllerTest {
 	@Mock
 	private ActivitiesMapper activitiesMapper;
 	@Mock
-	private FetchActivityById fetchActivityById;
-	@Mock
 	private FetchProcedureByActivity fetchProcedureByActivity;
 	@Mock
 	private ProcessActivity processActivity;
@@ -53,7 +50,6 @@ class ActivityInfoControllerTest {
 	@BeforeEach
 	void setUp() {
 		activityInfoController = new ActivityInfoController(activitiesMapper,
-				fetchActivityById,
 				fetchProcedureByActivity,
 				processActivity,
 				fetchSuppliesByActivity,
