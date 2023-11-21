@@ -65,7 +65,7 @@ public class FormVDto {
 					BasicPatientDto patientDto, Short age) {
 		this.establishment = establishment;
 		this.completePatientName = completePatientName;
-		this.address = contactInfo.getAddress().getCompleteAddress();
+		this.address = contactInfo != null ? contactInfo.getAddress().getCompleteAddress(): null;
 		this.reportDate = reportDate;
 		this.medicalCoverage = medicalCoverage;
 		this.problems = problems;
@@ -77,9 +77,9 @@ public class FormVDto {
 		this.bedNumber = bedNumber;
 		this.roomNumber = roomNumber;
 		this.affiliateNumber = affiliateNumber;
-		this.patientGender = patientDto.getGender() != null ? EGender.map(patientDto.getGender().getId()).getValue(): null;
-		this.documentType = patientDto.getIdentificationNumber() != null ? patientDto.getIdentificationType(): null;
-		this.documentNumber = patientDto.getIdentificationNumber();
+		this.patientGender = patientDto != null ? patientDto.getGender() != null ? EGender.map(patientDto.getGender().getId()).getValue(): null: null;
+		this.documentType = patientDto != null ? patientDto.getIdentificationNumber() != null ? patientDto.getIdentificationType(): null: null;
+		this.documentNumber = patientDto != null ? patientDto.getIdentificationNumber(): null;
 		this.patientAge = age;
 	}
 }
