@@ -1,12 +1,10 @@
 package net.pladema.medicalconsultation.doctorsoffice.controller.permissions;
 
-import net.pladema.medicalconsultation.doctorsoffice.repository.DoctorsOfficeRepository;
-import net.pladema.medicalconsultation.doctorsoffice.repository.entity.DoctorsOffice;
-import net.pladema.permissions.repository.enums.ERole;
-import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
-import net.pladema.sgx.backoffice.rest.ItemsAllowed;
-import net.pladema.sgx.exceptions.PermissionDeniedException;
-import net.pladema.user.controller.BackofficeAuthoritiesValidator;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Example;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,10 +12,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import net.pladema.medicalconsultation.doctorsoffice.repository.DoctorsOfficeRepository;
+import net.pladema.medicalconsultation.doctorsoffice.repository.entity.DoctorsOffice;
+import net.pladema.permissions.repository.enums.ERole;
+import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
+import net.pladema.sgx.backoffice.rest.ItemsAllowed;
+import net.pladema.sgx.exceptions.BackofficeValidationException;
+import net.pladema.sgx.exceptions.PermissionDeniedException;
+import net.pladema.user.controller.BackofficeAuthoritiesValidator;
 
 @Component
 public class BackofficeDoctorsOfficeValidator implements BackofficePermissionValidator<DoctorsOffice, Integer> {
@@ -71,8 +73,15 @@ public class BackofficeDoctorsOfficeValidator implements BackofficePermissionVal
     @Override
     @PreAuthorize("hasPermission(#entity.institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE') || hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
     public void assertCreate(DoctorsOffice entity) {
-        //nothing to do
+		assertNotExists(entity);
     }
+
+	private void assertNotExists(DoctorsOffice office){
+		var entity = repository.findByInstitutionIdAndDescription(office.getInstitutionId(), office.getDescription());
+		if (entity.isPresent() && !entity.get().getId().equals(office.getId())){
+			throw new BackofficeValidationException("sector.institution.exists");
+		}
+	}
 
     @Override
     @PreAuthorize("hasPermission(#entity.institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE') || hasAnyAuthority('ROOT', 'ADMINISTRADOR')")

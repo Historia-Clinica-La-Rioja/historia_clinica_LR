@@ -1,14 +1,16 @@
 package net.pladema.medicalconsultation.doctorsoffice.repository;
 
-import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
-import net.pladema.medicalconsultation.doctorsoffice.repository.domain.DoctorsOfficeVo;
-import net.pladema.medicalconsultation.doctorsoffice.repository.entity.DoctorsOffice;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+import net.pladema.medicalconsultation.doctorsoffice.repository.domain.DoctorsOfficeVo;
+import net.pladema.medicalconsultation.doctorsoffice.repository.entity.DoctorsOffice;
 
 @Repository
 public interface DoctorsOfficeRepository extends SGXAuditableEntityJPARepository<DoctorsOffice, Integer> {
@@ -48,4 +50,12 @@ public interface DoctorsOfficeRepository extends SGXAuditableEntityJPARepository
             "WHERE d.institutionId IN :institutionsIds " +
 			"AND d.deleteable.deleted IS FALSE ")
     List<Integer> getAllIdsByInstitutionsId(@Param("institutionsIds") List<Integer> institutionsIds);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT d " +
+			"FROM DoctorsOffice d " +
+			"WHERE d.institutionId = :institutionId " +
+			"AND d.description = :description " +
+			"AND d.deleteable.deleted IS FALSE")
+	Optional<DoctorsOffice> findByInstitutionIdAndDescription(@Param("institutionId") Integer institutionId, @Param("description") String description);
 }
