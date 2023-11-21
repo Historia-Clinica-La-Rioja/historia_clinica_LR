@@ -14,6 +14,7 @@ export class IntermentDocumentEpisodeComponent {
 
 	@Input() documents: EpisodeDocumentResponseDto[];
 	@Input() internmentEpisodeId: number;
+	@Input() disabled: boolean;
 	@Output() updateDocuments: EventEmitter<any> = new EventEmitter();
 
 	constructor(

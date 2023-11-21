@@ -1,7 +1,7 @@
 <section class="episode-document-container">
 	<div>
 		<span class="mat-body-2" [translate]="'internaciones.internacion-paciente.documents.TITLE'"></span>
-		<button mat-button color="primary" (click)="openAttachDialog()">
+		<button mat-button color="primary" (click)="openAttachDialog()" [disabled]="disabled">
 			<span
 				[translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.ADD_DOCUMENT'"></span>
 		</button>

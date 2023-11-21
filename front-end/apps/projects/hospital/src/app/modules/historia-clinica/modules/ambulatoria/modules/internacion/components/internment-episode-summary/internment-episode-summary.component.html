@@ -139,11 +139,13 @@
 
 	<mat-divider inset></mat-divider>
 
-	<app-interment-document-episode 
+	<app-interment-document-episode
 		*appHasRole="ROLES_FOR_ACCESS_EPISODE_DOCUMENTS"
-		[documents]="documents" 
-		[internmentEpisodeId]="this.internmentEpisode.id" 
-		(updateDocuments)="setDocuments()">
+		[documents]="documents"
+		[internmentEpisodeId]="this.internmentEpisode.id"
+		(updateDocuments)="setDocuments()"
+		[disabled]="hasMedicalDischarge"
+		>
 	</app-interment-document-episode>
 
 </mat-list>
