@@ -64,6 +64,7 @@ public class RoleNameMapperImpl implements RoleNameMapper {
 			case GESTOR_DE_ACCESO_DE_DOMINIO: return "Gestor de acceso de dominio";
 			case GESTOR_DE_ACCESO_LOCAL: return "Gestor de acceso local";
 			case GESTOR_DE_ACCESO_REGIONAL: return "Gestor de acceso regional";
+			case ABORDAJE_VIOLENCIAS: return "Abordaje violencias";
 		}
 		throw new NotFoundException("role-not-exists", String.format("El rol %s no existe", eRole));
 	}
