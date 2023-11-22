@@ -522,15 +522,20 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 													 @Param("endDate") LocalDateTime endDate);
 
 	@Transactional(readOnly = true)
-	@Query("SELECT NEW net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmentBo(p.id, pe.firstName, pe.middleNames, pe.lastName, pe.otherLastNames, pex.nameSelfDetermination)" +
-			"FROM Appointment a " +
-			"JOIN Patient p ON p.id = a.patientId " +
-			"JOIN Person pe ON p.personId = pe.id " +
-			"JOIN PersonExtended pex ON pe.id = pex.id " +
+	@Query( "SELECT new net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmentBo(p.personId, " +
+			"doi.completedOn, doi.observations, i.id, i.name) " +
+			"FROM DetailsOrderImage doi " +
+			"JOIN EquipmentAppointmentAssn eaa ON eaa.pk.appointmentId = doi.appointmentId " +
+			"JOIN EquipmentDiary ed ON eaa.pk.equipmentDiaryId = ed.id " +
+			"JOIN Equipment e ON ed.equipmentId = e.id " +
+			"JOIN Sector s ON s.id = e.sectorId " +
+			"JOIN Institution i ON i.id = s.institutionId " +
+			"JOIN Appointment a ON eaa.pk.appointmentId = a.id " +
+			"JOIN Patient p ON a.patientId = p.id " +
 			"WHERE a.id = :appointmentId " +
 			"AND a.appointmentStateId = " + AppointmentState.SERVED + " " +
-			"AND (a.deleteable.deleted = false OR a.deleteable.deleted is null)" )
-	StudyAppointmentBo getPatientInfoByAppointmentId(@Param("appointmentId") Integer appointmentId);
+			"AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL)" )
+	StudyAppointmentBo getCompletionInformationAboutStudy(@Param("appointmentId") Integer appointmentId);
 
 	@Transactional(readOnly = true)
 	@Query( "SELECT a.patientId " +
