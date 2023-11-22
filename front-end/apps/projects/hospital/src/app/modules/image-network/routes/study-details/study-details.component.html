@@ -38,7 +38,7 @@
                             <div class="mat-body capitalize-first-letter" *ngIf="study.info.technicianObservations else noInfo">{{ study.info.technicianObservations }}</div>
                         </div>
 
-                        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+                        <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="5px">
                             <div class="mat-body-strong" translate="image-network.worklist.details_study.IMAGE_SIZE"></div>
                             <div *ngIf="study.imageSize else noInfo">{{ study.imageSize }} MB</div>
                         </div>
@@ -49,8 +49,9 @@
                     </div>
                     
                     <div fxLayout="row wrap" fxLayoutGap="10px">
-                        <app-view-study [appointmentId]="appointmentId"></app-view-study>
-                        <a id="go_to_HC" mat-stroked-button color="primary" target="_blank" class="buttons"
+                        <app-view-study class="btn-margin" [appointmentId]="appointmentId"></app-view-study>
+                        <app-download-study class="btn-margin"></app-download-study>
+                        <a id="go_to_HC" mat-stroked-button color="primary" target="_blank" class="buttons btn-margin"
                             *appHasRole="['ESPECIALISTA_MEDICO']" [href]="url + study.info.patientId">
                             <span>{{'image-network.worklist.details_study.GO_TO_HC' | translate | uppercase }}</span>
                         </a>

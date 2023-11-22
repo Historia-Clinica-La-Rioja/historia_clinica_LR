@@ -22,6 +22,7 @@ import { ImportTemplateComponent } from './dialogs/import-template/import-templa
 import { TooltipOrderComponent } from './components/tooltip-order/tooltip-order.component';
 import { DownloadTranscribedOrderComponent } from './dialogs/download-transcribed-order/download-transcribed-order.component';
 import { DeleteTemplateComponent } from './dialogs/delete-template/delete-template.component';
+import { DownloadStudyComponent } from './components/download-study/download-study.component';
 
 @NgModule({
     declarations: [
@@ -44,7 +45,8 @@ import { DeleteTemplateComponent } from './dialogs/delete-template/delete-templa
         TooltipOrderComponent,
         DownloadTranscribedOrderComponent,
         TooltipOrderComponent,
-        DeleteTemplateComponent
+        DeleteTemplateComponent,
+        DownloadStudyComponent
     ],
     imports: [
         CommonModule,
