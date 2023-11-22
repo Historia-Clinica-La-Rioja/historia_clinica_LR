@@ -18,3 +18,7 @@ export function mapToState(statusId: number): State {
 
 	return { id: statusId, description: 'image-network.worklist.status.COMPLETED', color: Color.GREEN }
 }
+
+export function getImageSizeInMB(sizeInBytes: number): String{
+	return sizeInBytes ? (sizeInBytes / (1024 ** 2)).toFixed(2) : null
+}

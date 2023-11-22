@@ -77,6 +77,8 @@
                 "CONCLUTIONS": "Conclusiones:",
                 "OBSERVATIONS": "Detalle de informe:",
                 "VIEW_STUDY": "ver estudio",
+                "TECHNICIAN_OBSERVATIONS": "Observaciones del técnico",
+                "IMAGE_SIZE": "Peso de la imagen:",
                 "SNACKBAR_ERROR_STUDY": "No es posible abrir el estudio",
                 "conclutions": {
                     "ADD_CONCLUTION": "Agregar conclusión",
