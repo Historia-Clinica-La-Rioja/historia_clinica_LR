@@ -19,7 +19,7 @@
 		</div>
 
 		<div>
-			<app-modality-label *ngIf="viewModalityLabel$ | async " [modalityColorLabel]="modalityColorLabel"></app-modality-label>
+			<app-modality-label *ngIf="viewModalityLabel$ | async " [modality]="modalitySelected"></app-modality-label>
 		</div>
 	</div>
 </div>

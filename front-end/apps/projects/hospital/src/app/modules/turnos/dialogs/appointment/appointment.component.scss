@@ -80,12 +80,6 @@
 	.purple {
 		color: #AA4EF2;
 	}
-
-	.modality{
-		background-color: #EEDAF2;
-		padding: 7px;
-		border-radius: 5px;
-	}
 }
 
 .appointment-details {
@@ -296,6 +290,11 @@ app-colored-label {
 	}
 }
 
+.custom-label-modality{
+	display: flex;
+	justify-content: flex-start;
+}
+	
 @media only screen and (max-width: 426px) {
 	.mat-card-patient-image{
 		display: none;

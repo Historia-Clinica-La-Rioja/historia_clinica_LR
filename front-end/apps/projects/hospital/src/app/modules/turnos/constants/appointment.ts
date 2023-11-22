@@ -156,7 +156,7 @@ export interface modality {
 	description: string;
 }
 
-export const MODALITYS_TYPES = [
+export const MODALITYS_TYPES : modality [] = [
 	{
 		value: EAppointmentModality.ON_SITE_ATTENTION,
 		description: MODALITYS[EAppointmentModality.ON_SITE_ATTENTION]

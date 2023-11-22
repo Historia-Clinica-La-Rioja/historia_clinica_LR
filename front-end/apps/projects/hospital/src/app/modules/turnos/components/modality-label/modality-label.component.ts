@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { EAppointmentModality } from '@api-rest/api-model';
 import { Color, ColoredLabel } from '@presentation/colored-label/colored-label.component';
 import { MODALITYS } from '@turnos/constants/appointment';
@@ -8,13 +8,26 @@ import { MODALITYS } from '@turnos/constants/appointment';
   templateUrl: './modality-label.component.html',
   styleUrls: ['./modality-label.component.scss']
 })
-export class ModalityLabelComponent implements OnInit {
-  @Input() modalityColorLabel: ColoredLabel;
+export class ModalityLabelComponent {
+  @Input() set  modality (modality:string){
 
+    switch (modality){
+      case EAppointmentModality.ON_SITE_ATTENTION: {
+        this.modalityColorLabel = onSiteAttentionColoredLabel;
+        break;
+      }
+      case EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION: {
+        this.modalityColorLabel = secondOpinionAttentionColoredLabel;
+        break;
+      }
+      case EAppointmentModality.PATIENT_VIRTUAL_ATTENTION: {
+        this.modalityColorLabel = virtualAttentionColoredLabel;
+        break;
+      }
+    }
+  };
+  modalityColorLabel: ColoredLabel;
   constructor() { }
-
-  ngOnInit(): void {
-  }
 }
 
 export const onSiteAttentionColoredLabel: ColoredLabel = {

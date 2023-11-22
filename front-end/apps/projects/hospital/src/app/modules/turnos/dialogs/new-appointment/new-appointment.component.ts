@@ -43,8 +43,6 @@ import { PrescripcionesService } from '@historia-clinica/modules/ambulatoria/ser
 import { TranslateService } from '@ngx-translate/core';
 import { differenceInDays } from 'date-fns';
 import { SearchAppointmentCriteria } from '@turnos/components/search-appointments-in-care-network/search-appointments-in-care-network.component';
-import { ColoredLabel } from '@presentation/colored-label/colored-label.component';
-import { virtualAttentionColoredLabel, secondOpinionAttentionColoredLabel, onSiteAttentionColoredLabel } from '@turnos/components/modality-label/modality-label.component';
 import { MODALITYS_TYPES } from '@turnos/constants/appointment';
 
 const ROUTE_SEARCH = 'pacientes/search';
@@ -95,7 +93,6 @@ export class NewAppointmentComponent implements OnInit {
 	readonly MODALITY_PATIENT_VIRTUAL_ATTENTION = EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
 	readonly MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION;
 	modalitySelected: EAppointmentModality = this.MODALITY_ON_SITE_ATTENTION;
-	modalityColorLabel: ColoredLabel;
 	viewModalityLabel$: Observable<boolean> = of(false);
 	modalitys = MODALITYS_TYPES.slice(0, 2);
 
@@ -206,19 +203,16 @@ export class NewAppointmentComponent implements OnInit {
 			case this.MODALITY_PATIENT_VIRTUAL_ATTENTION:
 				this.appointmentInfoForm.setControl('patientEmail', new UntypedFormControl(null, [Validators.required, Validators.email]));
 				this.appointmentInfoForm.controls.patientEmail.updateValueAndValidity();
-				this.modalityColorLabel = virtualAttentionColoredLabel;
 				break;
 
 			case this.MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION:
 				this.associateReferenceForm.setControl('professionalEmail', new UntypedFormControl(null, [Validators.required, Validators.email]));
 				this.associateReferenceForm.controls.professionalEmail.updateValueAndValidity();
-				this.modalityColorLabel = secondOpinionAttentionColoredLabel;
 				break;
 
 			case this.MODALITY_ON_SITE_ATTENTION:
 				this.appointmentInfoForm.setControl('patientEmail', new UntypedFormControl(null, [Validators.email]));
 				this.appointmentInfoForm.controls.patientEmail.updateValueAndValidity();
-				this.modalityColorLabel = onSiteAttentionColoredLabel;
 				break;
 		}
 	}
