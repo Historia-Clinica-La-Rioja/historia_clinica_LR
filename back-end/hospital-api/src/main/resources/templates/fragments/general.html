@@ -20,6 +20,9 @@
             text-justify: inter-word;
             white-space: pre-wrap;
         }
+        .note {
+            word-wrap: break-word;
+        }
 	</style>
 </head>
 <body>
@@ -148,6 +151,8 @@
                     <dd><strong>Estado: </strong><label  th:text="${problem.status}"></label></dd>
                     <dd><strong>Verificación: </strong><label  th:text="${problem.verification}"></label></dd>
                     <dd><strong>Fecha de inicio: </strong><label th:text="${#temporals.format(problem.startDate, 'dd/MM/yyyy')}"></label></dd>
+                    <dd th:if="${problem.errorReason != null}" ><strong>Motivo: </strong><label th:text="${problem.errorReason}"></label></dd>
+                    <dd th:if="${problem.errorReason != null}" ><strong>Observaciones: </strong><label class="note" th:text="${problem.errorObservations}"></label></dd>
                     <dd th:if="${problem.endDate  != null}"><strong>Fecha de fin: </strong><label th:text="${#temporals.format(problem.endDate, 'dd/MM/yyyy')}"></label></dd>
                 </dl>
             </dl>

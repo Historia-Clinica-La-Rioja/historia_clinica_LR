@@ -1,5 +1,13 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.EProblemErrorReason;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,13 +17,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import static java.util.Objects.nonNull;
 
 @Getter
 @Setter
@@ -135,6 +137,9 @@ public class GeneralHealthConditionBo implements Serializable {
 		result.setMain(healthConditionVo.isMain());
 		result.setStartDate(healthConditionVo.getStartDate());
 		result.setChronic(healthConditionVo.isChronic());
+        result.setEndDate(healthConditionVo.getEndDate());
+        result.setErrorReason(nonNull(healthConditionVo.getErrorReasonId()) ? EProblemErrorReason.map(healthConditionVo.getErrorReasonId()).getDescription() : null);
+        result.setErrorObservations(healthConditionVo.getNote());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

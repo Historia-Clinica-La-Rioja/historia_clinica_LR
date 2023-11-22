@@ -20,31 +20,17 @@ public interface DocumentHealthConditionRepository extends JpaRepository<Documen
     @Query("SELECT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo(" +
             "hc.id, s, hc.statusId, ccs.description, hc.main, " +
             "hc.verificationStatusId, cvs.description, " +
-            "hc.problemId, hc.startDate, " +
-            "n.id as noteId, n.description as note) " +
+            "hc.problemId, hc.startDate, hc.inactivationDate, " +
+            "n.id as noteId, n.description as note, per.reasonId as errorReasonId) " +
             "FROM DocumentHealthCondition dh " +
             "JOIN HealthCondition hc ON (dh.pk.healthConditionId = hc.id) " +
             "JOIN Snomed s ON (s.id = hc.snomedId) " +
             "LEFT JOIN Note n ON (n.id = hc.noteId) " +
             "JOIN ConditionClinicalStatus ccs ON (hc.statusId = ccs.id) " +
             "JOIN ConditionVerificationStatus cvs ON (hc.verificationStatusId = cvs.id) " +
+            "LEFT JOIN ProblemErrorReason per ON (hc.id = per.healthConditionId) " +
             "WHERE dh.pk.documentId = :documentId")
     List<HealthConditionVo> getHealthConditionFromDocument(@Param("documentId") Long documentId);
-
-    @Transactional(readOnly = true)
-    @Query("SELECT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo(" +
-            "hc.id, s, hc.statusId, ccs.description as status, hc.main, " +
-            "hc.verificationStatusId, cvs.description as verification, " +
-            "hc.problemId, hc.startDate, " +
-            "n.id as noteId, n.description as note) " +
-            "FROM DocumentHealthCondition dh " +
-            "JOIN HealthCondition hc ON (dh.pk.healthConditionId = hc.id) " +
-            "JOIN Snomed s ON (s.id = hc.snomedId) " +
-            "JOIN ConditionClinicalStatus ccs ON (ccs.id = hc.statusId) " +
-            "JOIN ConditionVerificationStatus cvs ON (cvs.id = hc.verificationStatusId) " +
-            "LEFT JOIN Note n ON (n.id = hc.noteId) " +
-            "WHERE dh.pk.documentId = :documentId ")
-    List<HealthConditionVo> getHealthConditionFromDocumentToReport(@Param("documentId") Long documentId);
 
     @Transactional(readOnly = true)
     @Query("SELECT d.creationable.createdBy " +

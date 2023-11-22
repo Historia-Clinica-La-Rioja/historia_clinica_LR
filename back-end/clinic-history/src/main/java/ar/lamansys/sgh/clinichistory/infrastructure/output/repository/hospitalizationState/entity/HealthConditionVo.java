@@ -33,6 +33,10 @@ public class HealthConditionVo extends ClinicalTermVo {
 
     private boolean main;
 
+    private Short errorReasonId;
+
+    private LocalDate endDate;
+
     public HealthConditionVo(Integer id, Snomed snomed, String statusId, boolean main, String verificationId,
                              String problemId, LocalDate startDate, Long noteId, String note) {
         super(id, snomed, statusId);
@@ -45,11 +49,13 @@ public class HealthConditionVo extends ClinicalTermVo {
     }
 
     public HealthConditionVo(Integer id, Snomed snomed, String statusId, String status, boolean main,  String verificationId,
-                             String verification, String problemId, LocalDate startDate, Long noteId, String note) {
+                             String verification, String problemId, LocalDate startDate, LocalDate endDate, Long noteId, String note, Short errorReasonId) {
         this(id, snomed, statusId, main,  verificationId,
                 problemId, startDate, noteId, note);
         this.verification = verification;
         this.setStatus(status);
+        this.errorReasonId = errorReasonId;
+        this.endDate = endDate;
     }
 
     public boolean isDiagnosis() {
