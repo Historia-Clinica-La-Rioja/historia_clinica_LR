@@ -1,11 +1,9 @@
 <div class="popup-container" style="border: none;">
-  <h2 *ngIf="!selectedOption" >Estudios geriátricos</h2>
-
+  <h2 *ngIf="!selectedOption" >Evaluaciones geriátricas</h2>
 
   <mat-form-field *ngIf="!selectedOption">  
   
-  
-    <mat-label>Seleccione estudio</mat-label>
+    <mat-label>Seleccione evaluación</mat-label>
     <mat-select [(ngModel)]="selectedOption">
       <mat-option value="option2">Escala de Frail</mat-option>
     </mat-select>
