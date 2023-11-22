@@ -3894,10 +3894,13 @@ export interface SourceTypeDto {
 
 export interface StudyAppointmentDto {
     actionTime: DateTimeDto;
-    informerObservations: InformerObservationDto;
+    completionInstitution: InstitutionBasicInfoDto;
+    informerObservations?: InformerObservationDto;
     patientFullName: string;
     patientId: number;
+    sizeImage?: number;
     statusId: number;
+    technicianObservations?: string;
 }
 
 export interface StudyDto extends Serializable {
