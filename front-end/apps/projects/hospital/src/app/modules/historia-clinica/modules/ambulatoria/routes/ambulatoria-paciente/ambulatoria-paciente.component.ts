@@ -108,6 +108,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 	isEmergencyCareTemporalPatient = false;
 	patientType: number;
 	isTemporaryPatient: boolean = false;
+	showCardTabs: boolean = true;
 
 	emergencyCareEpisode: ResponseEmergencyCareDto;
 	emergencyCareEpisodeState: EstadosEpisodio;
@@ -408,6 +409,9 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 			this.hasLaboratoryStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_LABORATORIO]);
 			this.hasPharmacyStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_FARMACIA]);
 			this.hasPrescriptorRole = anyMatch<ERole>(userRoles, [ERole.PRESCRIPTOR]);
+
+			if (userRoles.length === 1 && anyMatch<ERole>(userRoles, [ERole.ABORDAJE_VIOLENCIAS]))
+				this.showCardTabs = false;
 		});
 	}
 

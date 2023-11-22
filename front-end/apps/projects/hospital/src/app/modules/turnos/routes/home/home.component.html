@@ -41,7 +41,7 @@
 
 		<div *ngIf="ffReferenceReportIsOn">
 			<mat-tab label="{{ 'turnos.home.REQUESTS' | translate | uppercase }}" 
-				*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ABORDAJE_SITUACIONES_DE_VIOLENCIA']">
+				*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ABORDAJE_VIOLENCIAS']">
 				<ng-template matTabContent>
 					<app-reference-report></app-reference-report>
 				</ng-template>

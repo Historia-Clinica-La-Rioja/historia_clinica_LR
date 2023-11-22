@@ -18,6 +18,7 @@ import { ReferenceDashboardComponent } from './components/reference-dashboard/re
 import { ReferenceDashboardFiltersComponent } from './components/reference-dashboard-filters/reference-dashboard-filters.component';
 import { ReferenceReportComponent } from './components/reference-report/reference-report.component';
 import { ReferenceSummaryComponent } from './components/reference-summary/reference-summary.component';
+import { ViewMedicalHistoryButtonComponent } from '../hsi-components/view-medical-history-button/view-medical-history-button.component';
 //dialogs
 import { ReasonPopUpComponent } from './dialogs/reason-pop-up/reason-pop-up.component';
 import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data-popup/report-complete-data-popup.component';
@@ -55,6 +56,7 @@ import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module
 		PatientSummaryComponent,
 		PresentationModule,
 		HistoriaClinicaModule,
+		ViewMedicalHistoryButtonComponent,
 	],
 	exports: [
 		ReferenceCompleteDataComponent,

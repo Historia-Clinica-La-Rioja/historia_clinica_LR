@@ -7,6 +7,10 @@
 	<div mat-dialog-title>
 		<h2>{{'access-management.search_references.reference.TITLE' | translate}}</h2>
 		<app-patient-summary [person]="reportCompleteData.patient"></app-patient-summary>
+		<app-view-medical-history-button
+			mat-dialog-close
+			[patientId]="reportCompleteData.patient.id">
+		</app-view-medical-history-button>
 	</div>
 
 	<mat-dialog-content fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="20px">
