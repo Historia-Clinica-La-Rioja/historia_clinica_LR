@@ -151,6 +151,10 @@ export const stateColor = {
     [APPOINTMENT_STATES_ID.CANCELLED]: Color.RED,
     [APPOINTMENT_STATES_ID.ASSIGNED]: Color.BLUE,
 }
+export interface modality {
+	value: EAppointmentModality;
+	description: string;
+}
 
 export const MODALITYS_TYPES = [
 	{

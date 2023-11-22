@@ -164,7 +164,7 @@
 							class="icon-purple">
 							video_call
 						</mat-icon>
-						<span class="mat-body subtitle-size purple"> {{selectedModality | translate}}</span>
+						<span class="mat-body subtitle-size purple"> {{selectedModality.description | translate}}</span>
 					</div>
 					<div fxLayout="column" fxLayoutGap="10px" *ngIf="appointment?.protected">
 						<span class="purple">{{'turnos.appointment.PROTECTED' | translate}}</span>
@@ -204,10 +204,22 @@
 
 			<form [formGroup]="formDate" *ngIf="isDateFormVisible" fxLayout="column" fxLayoutGap="5px" class="dateForm"
 				(ngSubmit)="updateAppointmentDate()">
-				<app-datepicker [minDate]="startAgenda" [maxDate]="endAgenda" [dateToSetInDatepicker]="selectedDate"
-					[availableDays]="availableDays" [disableDays]="disableDays" (selectDate)="selectDate($event)">
-				</app-datepicker>
-
+				<div>
+					<mat-form-field appearance="outline">
+						<mat-select formControlName="modality" [disabled]="formDate.controls.modality.value === SECOND_OPINION_VIRTUAL_ATTENTION">
+							<mat-option
+								*ngFor="let modality of modalitys" [value]="modality.value">
+									{{modality.description | translate}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+				<div fxLayout="row" fxLayoutAlign="space-between end">
+					<app-datepicker-custom-month-year (selectMonth)="loadAvailableDays($event)" [minDate]="startAgenda" [maxDate]="endAgenda"></app-datepicker-custom-month-year>
+					<app-datepicker *ngIf="availableDays.length" [minDate]="startAgenda" [maxDate]="endAgenda" [dateToSetInDatepicker]="selectedMonth$ | async"
+						[availableDays]="availableDays$ | async" (selectDate)="selectDate($event)">
+					</app-datepicker>
+				</div>
 				<div fxLayout="row">
 					<mat-form-field appearance="outline" class="hour">
 						<mat-select formControlName="hour">

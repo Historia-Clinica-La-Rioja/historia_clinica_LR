@@ -11,7 +11,8 @@ import {
 	getAppointmentState,
 	getDiaryLabel,
 	MAX_LENGTH_MOTIVE,
-	MODALITYS,
+	modality,
+	MODALITYS_TYPES,
 } from '../../constants/appointment';
 import {
 	ApiErrorMessageDto,
@@ -94,9 +95,9 @@ const ROLE_TO_MAKE_VIRTUAL_CONSULTATION: ERole[] = [ERole.ENFERMERO, ERole.PROFE
 	styleUrls: ['./appointment.component.scss']
 })
 export class AppointmentComponent implements OnInit {
-
+	readonly SECOND_OPINION_VIRTUAL_ATTENTION = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION;
 	readonly appointmentStatesIds = APPOINTMENT_STATES_ID;
-	readonly modalitys = MODALITYS;
+	readonly modalitys = MODALITYS_TYPES;
 	readonly TEMPORARY_PATIENT = TEMPORARY_PATIENT;
 	readonly BELL_LABEL = BELL_LABEL;
 	readonly Color = Color;
@@ -151,7 +152,7 @@ export class AppointmentComponent implements OnInit {
 	canCoverageBeEdited = false;
 
 	isRejectedPatient: boolean = false;
-	selectedModality: string;
+	selectedModality: modality;
 	isVirtualConsultationModality: boolean = false;
 	canDownloadReport = false;
 
@@ -211,6 +212,7 @@ export class AppointmentComponent implements OnInit {
 
 		this.formDate = this.formBuilder.group({
 			hour: ['', [Validators.required]],
+			modality: ['',[Validators.required]],
 		});
 
 		this.formObservations = this.formBuilder.group({
@@ -257,20 +259,10 @@ export class AppointmentComponent implements OnInit {
 				}
 				this.phoneNumber = this.formatPhonePrefixAndNumber(this.data.appointmentData.phonePrefix, this.data.appointmentData.phoneNumber);
 				this.checkInputUpdatePermissions();
-				switch (this.appointment.modality) {
-					case EAppointmentModality.ON_SITE_ATTENTION: {
-						this.selectedModality = this.modalitys.ON_SITE_ATTENTION;
-						break
-					}
-					case EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION: {
-						this.selectedModality = this.modalitys.SECOND_OPINION_VIRTUAL_ATTENTION;
-						this.isVirtualConsultationModality = true;
-						break
-					}
-					case EAppointmentModality.PATIENT_VIRTUAL_ATTENTION: {
-						this.selectedModality = this.modalitys.PATIENT_VIRTUAL_ATTENTION;
-						this.isVirtualConsultationModality = true;
-					}
+				this.selectedModality = this.modalitys.find( m => m.value === this.appointment.modality);
+				this.formDate.controls.modality.setValue(this.selectedModality.value);
+				if(this.formDate.controls.modality.value !==  this.SECOND_OPINION_VIRTUAL_ATTENTION){
+					this.modalitys.pop();
 				}
 				this.checkDownloadReportAvailability();
 
@@ -408,7 +400,7 @@ export class AppointmentComponent implements OnInit {
 	prepareSearchCriteria(dateSelect: Date): FreeAppointmentSearchFilterDto {
 		const searchCriteria: FreeAppointmentSearchFilterDto = {
 			date: dateToDateDto(dateSelect),
-			modality: this.appointment.modality,
+			modality: this.formDate.controls.modality.value,
 			mustBeProtected: this.appointment.protected,
 		}
 		return searchCriteria;
