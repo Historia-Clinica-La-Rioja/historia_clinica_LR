@@ -20,12 +20,15 @@ import {
 	AppointmentListDto,
 	CompleteDiaryDto,
 	DateTimeDto,
+	DiaryOpeningHoursFreeTimesDto,
 	EAppointmentModality,
 	DiaryLabelDto,
 	ERole,
+	FreeAppointmentSearchFilterDto,
 	PatientMedicalCoverageDto,
 	PersonPhotoDto,
 	ProfessionalPersonDto,
+	TimeDto,
 	UpdateAppointmentDateDto,
 	UpdateAppointmentDto,
 } from '@api-rest/api-model.d';
@@ -58,7 +61,6 @@ import { PersonMasterDataService } from "@api-rest/services/person-master-data.s
 import { SummaryCoverageInformation } from '@historia-clinica/modules/ambulatoria/components/medical-coverage-summary-view/medical-coverage-summary-view.component';
 import { PatientService } from '@api-rest/services/patient.service';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
-import { getDayHoursRangeIntervalsByMinuteValue } from '@core/utils/date.utils';
 import { CalendarEvent } from 'angular-calendar';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { DateFormat, momentFormat, momentParseDate, momentParseTime } from '@core/utils/moment.utils';
@@ -72,6 +74,8 @@ import { DiaryLabelService } from '@api-rest/services/diary-label.service';
 import { Router } from '@angular/router';
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
+import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
+import { DiaryService } from '@api-rest/services/diary.service';
 
 import { PatientNameService } from '@core/services/patient-name.service';
 import { PatientSummary } from '../../../hsi-components/patient-summary/patient-summary.component';
@@ -133,9 +137,8 @@ export class AppointmentComponent implements OnInit {
 	availableDays: number[] = [];
 	disableDays: Date[] = [];
 	openingDateForm = false;
-	possibleScheduleHours: Date[] = [];
-	selectedDate = new Date(this.data.appointmentData.date);
-
+	possibleScheduleHours: TimeDto[] = [];
+	selectedDate = new Date(this.data.appointmentData.date); 
 	isCheckedDownloadAnexo = false;
 	isCheckedDownloadFormulario = false;
 	downloadReportIsEnabled: boolean;
@@ -183,7 +186,8 @@ export class AppointmentComponent implements OnInit {
 		private readonly router: Router,
 		private readonly healthcareProfessionalService: HealthcareProfessionalService,
 		private readonly diaryLabelService: DiaryLabelService,
-		private readonly patientNameService: PatientNameService
+		private readonly patientNameService: PatientNameService,
+		private readonly diaryService: DiaryService,
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_LLAMADO).subscribe(isEnabled => this.isMqttCallEnabled = isEnabled);
@@ -225,12 +229,6 @@ export class AppointmentComponent implements OnInit {
 			updateControlValidator(this.formEdit, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
 			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
 		}
-
-		this.data.agenda.diaryOpeningHours.forEach(DOH => {
-			let day = DOH.openingHours.dayWeekId;
-			if (!this.availableDays.includes(day))
-				this.availableDays.push(day);
-		});
 
 		this.appointmentService.get(this.data.appointmentData.appointmentId)
 			.subscribe(appointment => {
@@ -383,99 +381,47 @@ export class AppointmentComponent implements OnInit {
 
 	openDateForm(): void {
 		this.dateFormToggle();
-		this.loadAppointments(this.selectedDate);
 		this.openingDateForm = true
 	}
 
 	selectDate(date: Date): void {
-		this.loadAppointments(date);
+		this.loadAppointmentsHours(date);
 		this.openingDateForm = false;
 	}
 
-	loadAppointments(date: Date): void {
-		const d = momentFormat(moment(date), DateFormat.API_DATE);
-		this.formDate.controls['hour'].disable();
-		this.appointmentService.getList([this.data.agenda.id], this.data.agenda.healthcareProfessionalId, d, d)
-			.subscribe((appointments: AppointmentListDto[]) => {
-
-				this.appointments = appointments
-					.map(appointment => {
-						const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
-						let to = momentParseTime(from).add(this.data.agenda.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
-						if (from > to) {
-							to = momentParseTime(from).set({ hour: 23, minute: 59 }).format(DateFormat.HOUR_MINUTE);
-						}
-						const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment);
-						return calendarEvent;
-					});
-				this.setDisableDays();
-				this.setPossibleScheduleHours(date);
-				if (this.openingDateForm)
-					this.formDate.controls.hour.setValue(this.possibleScheduleHours.find(item => { return item.getTime() == this.selectedDate.getTime() }));
-				else
-					this.formDate.controls.hour.setValue(this.possibleScheduleHours[0]);
-				this.formDate.controls['hour'].enable();
-			});
-	}
-
-	setPossibleScheduleHours(date: Date): void {
-		this.possibleScheduleHours = [];
-		const startDate = new Date(date);
-		const endDate = new Date(date);
-		this.data.agenda.diaryOpeningHours.forEach(DOH => {
-			let day = DOH.openingHours.dayWeekId;
-			if (startDate.getDay() === day) {
-				startDate.setHours(Number(DOH.openingHours.from.slice(0, 2)));
-				startDate.setMinutes(Number(DOH.openingHours.from.slice(3, 5)));
-				endDate.setHours(Number(DOH.openingHours.to.slice(0, 2)));
-				endDate.setMinutes(Number(DOH.openingHours.to.slice(3, 5)));
-				const hours = getDayHoursRangeIntervalsByMinuteValue(startDate, endDate, this.data.agenda.appointmentDuration);
-				this.possibleScheduleHours = this.possibleScheduleHours.concat(hours);
-			}
+	setAvailableDays(arr: any[]) {
+		this.availableDays = [];
+		arr.forEach(element => {
+			if (!this.availableDays.includes(element.day))
+				this.availableDays.push(element.day);
 		});
-		this.deleteHoursWithAppointment();
-		this.deleteHoursBeforeNow();
+		this.availableDays$ = of(this.availableDays);
 	}
 
-	deleteHoursWithAppointment(): void {
-		this.appointments.forEach(appointment => {
-			if (!appointment.allDay)
-				this.possibleScheduleHours = this.possibleScheduleHours.filter(item => {
-					return ((item.getTime() < appointment.start.getTime()) || (item.getTime() >= appointment.end.getTime()) || (item.getTime() == this.selectedDate.getTime()));
-				});
-		});
+	loadAppointmentsHours(date: Date) {
+		const searchCriteria = this.prepareSearchCriteria(date);
+	 	this.diaryService.getDailyFreeAppointmentTimes(this.data.agenda.id,searchCriteria).subscribe((times: DiaryOpeningHoursFreeTimesDto[]) => {
+			this.possibleScheduleHours = times[0].freeTimes;
+		})
 	}
 
-	deleteHoursBeforeNow(): void {
-		const now = new Date();
-		this.possibleScheduleHours = this.possibleScheduleHours.filter(item => {
-			return ((item.getTime() >= now.getTime()) || (item.getTime() == this.selectedDate.getTime()));
-		});
-	}
-
-	checkDisableDay(date: Date): void {
-		this.setPossibleScheduleHours(date);
-		if (this.possibleScheduleHours.length == 0) {
-			if (!this.disableDays.find(x => x.getTime() == date.getTime())) {
-				this.disableDays.push(date);
-			}
+	prepareSearchCriteria(dateSelect: Date): FreeAppointmentSearchFilterDto {
+		const searchCriteria: FreeAppointmentSearchFilterDto = {
+			date: dateToDateDto(dateSelect),
+			modality: this.appointment.modality,
+			mustBeProtected: this.appointment.protected,
 		}
+		return searchCriteria;
 	}
 
-	setDisableDays(): void {
-		this.disableDays = [];
-		const today = new Date();
-		today.setHours(0, 0, 0, 0);
-		today.setMinutes(0);
-		this.checkDisableDay(today);
-		this.appointments.forEach(appointment => {
-			const appointmentDate = new Date(appointment.start);
-			appointmentDate.setHours(0, 0, 0, 0);
-			appointmentDate.setMinutes(0);
-			if (today.getTime() <= appointmentDate.getTime()) {
-				this.checkDisableDay(appointmentDate);
-			}
-		});
+	loadAvailableDays(date: Date): void {
+		date.setDate(1);
+		const searchCriteria = this.prepareSearchCriteria(date);
+		this.selectedMonth$ = of(date);
+		this.diaryService.getMonthlyFreeAppointmentDates(this.data.agenda.id, searchCriteria).subscribe(res => {
+			this.setAvailableDays(res); 
+		})
+
 	}
 
 	updateAppointmentOverturn(appointmentId: number, appointmentStateId: number, overturn: boolean, patientId: number): void {

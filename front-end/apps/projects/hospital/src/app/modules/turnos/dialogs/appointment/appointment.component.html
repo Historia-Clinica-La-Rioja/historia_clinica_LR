@@ -213,7 +213,7 @@
 						<mat-select formControlName="hour">
 							<mat-option [value]="possibleScheduleHour"
 								*ngFor="let possibleScheduleHour of possibleScheduleHours">
-								{{ possibleScheduleHour | date:'shortTime' }}
+								{{ possibleScheduleHour.hours }}:{{ possibleScheduleHour.minutes }}
 							</mat-option>
 						</mat-select>
 					</mat-form-field>
