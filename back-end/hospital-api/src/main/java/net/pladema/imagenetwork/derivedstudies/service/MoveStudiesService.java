@@ -1,6 +1,7 @@
 package net.pladema.imagenetwork.derivedstudies.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.imagenetwork.SharedLoadStudiesResultPort;
 import net.pladema.imagenetwork.derivedstudies.service.domain.MoveStudiesBO;
@@ -20,4 +21,6 @@ public interface MoveStudiesService extends SharedLoadStudiesResultPort {
 	void getSizeFromOrchestrator( Integer idMove);
 
 	Integer getInstitutionByAppointmetId(Integer appointmentId);
+
+	Optional<Integer> getSizeImageByAppointmentId(Integer appointmentId);
 }

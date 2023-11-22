@@ -171,6 +171,11 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 				.orElse(null);
 	}
 
+	@Override
+	public Optional<Integer> getSizeImageByAppointmentId(Integer appointmentId) {
+		return moveStudiesRepository.getSizeImageByAppointmentId(appointmentId);
+	}
+
 	private MoveStudiesBO createMoveStudyBOInstance(MoveStudies moveStudy){
 		MoveStudiesBO moveStudyBO = new MoveStudiesBO();
 		moveStudyBO.setId(moveStudy.getId());

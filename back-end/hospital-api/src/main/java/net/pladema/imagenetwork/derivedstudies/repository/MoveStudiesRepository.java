@@ -98,4 +98,10 @@ public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Intege
 			"FROM MoveStudies AS mo " +
 			"WHERE mo.appointmentId = :appointmentId")
 	Optional<Integer> getInstitutionIdByAppointmetId(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT mo.sizeImage " +
+			"FROM MoveStudies AS mo " +
+			"WHERE mo.appointmentId = :appointmentId")
+	Optional<Integer> getSizeImageByAppointmentId(@Param("appointmentId") Integer appointmentId);
 }
