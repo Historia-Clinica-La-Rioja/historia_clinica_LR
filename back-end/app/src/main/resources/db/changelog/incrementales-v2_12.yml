@@ -3850,3 +3850,12 @@ databaseChangeLog:
                 UPDATE city SET bahra_code = '0609801002' WHERE id = 455;
                 UPDATE city SET bahra_code = '06112030' WHERE id = 538;
                 UPDATE city SET bahra_code = '06126020' WHERE id = 605;
+
+    - changeSet:
+        id: add-modality
+        comment: Agregar nuevas entradas en la tabla de modality
+        author: amurrie
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO modality (acronym, description) VALUES('MG', 'Mamografía');
