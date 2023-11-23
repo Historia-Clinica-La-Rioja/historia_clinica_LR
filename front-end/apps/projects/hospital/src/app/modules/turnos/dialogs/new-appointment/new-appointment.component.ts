@@ -127,6 +127,10 @@ export class NewAppointmentComponent implements OnInit {
 			this.initialIndex = this.indexStep.SEARCH;
 			this.viewModalityLabel$ = of(true);
 		}
+		if(this.data.isEquipmentAppointment){
+			this.editableStepModality = false;
+			this.initialIndex = this.indexStep.SEARCH;
+		}
 	}
 
 	ngOnInit(): void {
@@ -220,7 +224,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	onStepChange(stepper: MatStepper) {
-		if (stepper.selectedIndex > this.indexStep.MODALITY) {
+		if (stepper.selectedIndex > this.indexStep.MODALITY && !this.data.isEquipmentAppointment) {
 			this.viewModalityLabel$ = of(true);
 		} else {
 			this.viewModalityLabel$ = of(false);
