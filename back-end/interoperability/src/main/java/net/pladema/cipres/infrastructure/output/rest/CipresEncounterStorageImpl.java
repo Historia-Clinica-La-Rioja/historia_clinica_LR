@@ -59,11 +59,8 @@ public class CipresEncounterStorageImpl extends CipresStorage implements CipresE
 		} catch (RestTemplateApiException e) {
 			log.debug("Fallo en la comunicación al intentar obtener el identificador de especialidad", e);
 		}
-		if (response != null && response.getBody() != null) {
-			List<CipresEntityResponse> clinicalSpecialty = Arrays.asList(response.getBody());
-			if (!clinicalSpecialty.isEmpty())
-				return Optional.of(clinicalSpecialty.get(0).getId());
-		}
+		if (isSuccessfulResponse(response))
+				return Optional.of(response.getBody()[0].getId());
 		return Optional.empty();
 	}
 
@@ -76,7 +73,7 @@ public class CipresEncounterStorageImpl extends CipresStorage implements CipresE
 		} catch (RestTemplateApiException e) {
 			log.debug("Fallo en la comunicación al intentar obtener el identificador del establecimiento", e);
 		}
-		if (response != null && response.getBody() != null)
+		if (isSuccessfulResponse(response))
 			return Optional.of(response.getBody()[0]);
 		return Optional.empty();
 	}
@@ -152,6 +149,10 @@ public class CipresEncounterStorageImpl extends CipresStorage implements CipresE
 		if (riskFactorBo != null && riskFactorBo.getDiastolicBloodPressure() != null && riskFactorBo.getSystolicBloodPressure() != null)
 			return StringUtils.leftPad(riskFactorBo.getSystolicBloodPressure(), 3, "0") + "/" + StringUtils.leftPad(riskFactorBo.getDiastolicBloodPressure(), 3, "0");
 		return BLANK;
+	}
+
+	private <T> boolean isSuccessfulResponse(ResponseEntity<T[]> response) {
+		return response != null && response.getBody() != null && response.getBody().length > 0;
 	}
 
 }
