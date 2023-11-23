@@ -20,7 +20,7 @@
 				{{ emptyAppointment.clinicalSpecialtyName }}
 			</span>
 			<ng-template #aliasExists>
-				<div fxLayout="row" fxLayoutGap="5px">
+				<div fxLayoutGap="5px">
 					<span>{{ emptyAppointment.alias }}</span>
 					<span *ngIf="emptyAppointment.clinicalSpecialtyName"> {{" (" + emptyAppointment.clinicalSpecialtyName +") " }}</span>
 				</div>
