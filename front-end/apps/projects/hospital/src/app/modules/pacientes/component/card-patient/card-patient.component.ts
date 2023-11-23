@@ -116,7 +116,7 @@ export class CardPatientComponent {
 					header: header,
 					id: patient.idPatient,
 					identificationTypeId: patient.person.identificationTypeId,
-					dni: patient.person.identificationNumber || "-",
+					dni: patient.person.identificationNumber || "Sin Información",
 					gender: this.genderTableView.find(p => p?.id === patient.person.genderId)?.description,
 					date: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DateFormat.VIEW_DATE) : '',
 					ranking: patient?.ranking,

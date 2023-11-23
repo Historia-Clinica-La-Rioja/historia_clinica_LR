@@ -93,8 +93,8 @@ export class InternmentPatientCardComponent {
 			return {
 				name: person.nameSelfDetermination ? `${this.patientNameService.getPatientName(person.firstName, person.nameSelfDetermination)} ${person.lastName}` : this.getName(person),
 				header: [{ title: "", value: person.nameSelfDetermination ? `${this.patientNameService.getPatientName(person.firstName, person.nameSelfDetermination)} ${person.lastName}` : this.getName(person) }],
-				headerSimple: [{ title: "DNI", value: person.identificationNumber || "-" }],
-				dni: person.identificationNumber || "-",
+				headerSimple: [{ title: "DNI", value: person.identificationNumber || 'internaciones.internment-patient-card.NO_INFO' }],
+				dni: person.identificationNumber || 'internaciones.internment-patient-card.NO_INFO',
 				hasPhysicalDischarge: person.hasPhysicalDischarge,
 				roomNumber: person.bedInfo.roomNumber,
 				bedNumber: person.bedInfo.bedNumber,
