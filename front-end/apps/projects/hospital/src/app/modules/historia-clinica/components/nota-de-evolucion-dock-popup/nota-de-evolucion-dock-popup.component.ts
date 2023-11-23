@@ -6,6 +6,7 @@ import { EmergencyCareStateService } from '@api-rest/services/emergency-care-sta
 import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
 import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/guardia/services/new-emergency-care-evolution-note.service';
+import { NewRiskFactorsService } from '@historia-clinica/modules/guardia/services/new-risk-factors.service';
 import { DockPopUpHeader } from '@presentation/components/dock-popup/dock-popup.component';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
@@ -50,7 +51,8 @@ export class NotaDeEvolucionDockPopupComponent {
 		private readonly snackBarService: SnackBarService,
 		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService,
 		readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
-		private changeDetectorRef: ChangeDetectorRef
+		private changeDetectorRef: ChangeDetectorRef,
+		private readonly newRiskFactorsService: NewRiskFactorsService,
 	) {
 		this.emergencyCareStateService.getEmergencyCareEpisodeDiagnoses(this.data.episodeId).subscribe(
 			diagnoses => {
@@ -97,6 +99,8 @@ export class NotaDeEvolucionDockPopupComponent {
 			saved => {
 				this.snackBarService.showSuccess('Nota de evolución guardada correctamente');
 				this.newEmergencyCareEvolutionNoteService.newEvolutionNote();
+				if (dto.riskFactors)
+					this.newRiskFactorsService.newRiskFactors();
 				this.dockPopupRef.close(true)
 			},
 			error => {

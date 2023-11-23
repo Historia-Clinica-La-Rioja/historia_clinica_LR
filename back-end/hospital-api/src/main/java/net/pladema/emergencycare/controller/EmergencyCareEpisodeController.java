@@ -1,7 +1,9 @@
 package net.pladema.emergencycare.controller;
 
+import ar.lamansys.sgh.clinichistory.application.fetchEmergencyCareEpisodeState.FetchECStateClinicalObservations;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewRiskFactorsObservationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.RiskFactorDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.RiskFactorMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.ReasonExternalService;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.service.RiskFactorExternalService;
@@ -72,14 +74,17 @@ public class EmergencyCareEpisodeController {
 
 	private final RiskFactorMapper riskFactorMapper;
 
-    public EmergencyCareEpisodeController(EmergencyCareEpisodeService emergencyCareEpisodeService,
+	private final FetchECStateClinicalObservations fetchECStateClinicalObservations;
+
+	public EmergencyCareEpisodeController(EmergencyCareEpisodeService emergencyCareEpisodeService,
 										  EmergencyCareMapper emergencyCareMapper,
 										  ReasonExternalService reasonExternalService,
 										  RiskFactorExternalService riskFactorExternalService,
 										  PatientService patientService,
 										  SnomedMapper snomedMapper,
 										  TriageRiskFactorMapper triageRiskFactorMapper, LocalDateMapper localDateMapper,
-										  RiskFactorMapper riskFactorMapper){
+										  RiskFactorMapper riskFactorMapper, 
+                                          FetchECStateClinicalObservations fetchECStateClinicalObservations){
         super();
         this.emergencyCareEpisodeService = emergencyCareEpisodeService;
         this.emergencyCareMapper=emergencyCareMapper;
@@ -90,6 +95,7 @@ public class EmergencyCareEpisodeController {
         this.triageRiskFactorMapper = triageRiskFactorMapper;
         this.localDateMapper = localDateMapper;
 		this.riskFactorMapper = riskFactorMapper;
+		this.fetchECStateClinicalObservations = fetchECStateClinicalObservations;
     }
 
     @GetMapping
@@ -215,6 +221,17 @@ public class EmergencyCareEpisodeController {
 		Boolean output = emergencyCareEpisodeService.hasEvolutionNote(episodeId);
 		LOG.debug("Output -> {}", output);
 		return ResponseEntity.ok().body(output);
+	}
+
+	@GetMapping("/{episodeId}/general/riskFactors")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	public ResponseEntity<RiskFactorDto> getRiskFactorsGeneralState(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "episodeId") Integer episodeId) {
+		LOG.debug("Input parameters -> institutionId {}, episodeId {}", institutionId, episodeId);
+		RiskFactorDto result = riskFactorMapper.fromRiskFactorBo(fetchECStateClinicalObservations.getLastRiskFactorsGeneralState(episodeId));
+		LOG.debug("Output -> {}", result);
+		return ResponseEntity.ok().body(result);
 	}
 
     private List<Integer> getRiskFactorIds(NewRiskFactorsObservationDto riskFactorsObservationDto){

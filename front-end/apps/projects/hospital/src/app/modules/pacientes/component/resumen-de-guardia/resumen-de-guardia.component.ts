@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ERole } from '@api-rest/api-model.d';
@@ -13,7 +13,7 @@ import { anyMatch } from '@core/utils/array.utils';
 import { GUARDIA } from '@historia-clinica/constants/summaries';
 import { EmergencyCareStateChangedService } from '@historia-clinica/modules/ambulatoria/services/emergency-care-state-changed.service';
 import { TriageCategory } from '@historia-clinica/modules/guardia/components/triage-chip/triage-chip.component';
-import { RiskFactorFull, Triage } from '@historia-clinica/modules/guardia/components/triage-details/triage-details.component';
+import { Triage } from '@historia-clinica/modules/guardia/components/triage-details/triage-details.component';
 import { EmergencyCareTypes, EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
 import { SelectConsultorioComponent } from '@historia-clinica/modules/guardia/dialogs/select-consultorio/select-consultorio.component';
 import { EpisodeStateService } from '@historia-clinica/modules/guardia/services/episode-state.service';
@@ -38,7 +38,6 @@ export class ResumenDeGuardiaComponent implements OnInit {
 
 	//En lugar de pasar el id puedo pasar el episodio entero porque ya lo voy a estar calculando desde antes en ambulatoria
 	@Input() episodeId: number;
-	@Output() triageRiskFactors = new EventEmitter<RiskFactorFull[]>();
 	@Input() showNewTriage: boolean = false;
 
 	guardiaSummary: SummaryHeader = GUARDIA;

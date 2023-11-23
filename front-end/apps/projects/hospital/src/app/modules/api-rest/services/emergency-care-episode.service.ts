@@ -6,7 +6,8 @@ import {
 	ECAdultGynecologicalDto,
 	ResponseEmergencyCareDto,
 	EmergencyCareListDto,
-	DateTimeDto
+	DateTimeDto,
+	RiskFactorDto
 } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -79,5 +80,10 @@ export class EmergencyCareEpisodeService {
 		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
 			BASIC_URL_SUFIX}/episodes/` + episodeId + '/has-evolution-note';
 		return this.http.get<boolean>(url);
+	}
+
+	getRiskFactorsGeneralState(episodeId: number): Observable<RiskFactorDto> {
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId + BASIC_URL_SUFIX}/episodes/${episodeId}/general/riskFactors`;
+		return this.http.get<RiskFactorDto>(url);
 	}
 }
