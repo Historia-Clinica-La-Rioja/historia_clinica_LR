@@ -483,7 +483,9 @@ export interface BasicDataPersonDto extends Serializable {
 }
 
 export interface BasicPatientDto extends Serializable {
+    birthDate: Date;
     firstName: string;
+    gender: GenderDto;
     id: number;
     identificationNumber: string;
     identificationType: string;
@@ -1659,7 +1661,7 @@ export interface FormVDto {
     patientGender: string;
     problems: string;
     reportDate: Date;
-    roomDescription: string;
+    roomNumber: string;
     sisaCode: string;
 }
 
