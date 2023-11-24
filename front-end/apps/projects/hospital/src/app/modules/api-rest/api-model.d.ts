@@ -1074,27 +1074,26 @@ export interface DocumentReduceInfoDto extends Serializable {
 }
 
 export interface QuestionnaireAnswerDTO {
-    questionId: number;
-    answerId: number;
-    value: string; 
-  }
-  
+	questionId: number;
+	answerId: number;
+	value: string;
+}
+
 export interface CreateQuestionnaireDTO {
-    questionnaire: QuestionnaireAnswerDTO[];
-  }
-
-export interface EdMontonAnswers{
-    id: number;
-    idQuestion: number;
-    idAnswer: number;   
+	questionnaire: QuestionnaireAnswerDTO[];
 }
 
-export interface EdMontonSummary{
-    institutionId: number;
-    patientId : number;
-    edMontonId: number;
+export interface EdMontonAnswers {
+	id: number;
+	idQuestion: number;
+	idAnswer: number;
 }
 
+export interface EdMontonSummary {
+	institutionId: number;
+	patientId: number;
+	edMontonId: number;
+}
 
 export interface FrailAnswers{
     id: number;
