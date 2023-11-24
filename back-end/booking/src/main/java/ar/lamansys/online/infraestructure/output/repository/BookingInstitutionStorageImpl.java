@@ -61,7 +61,10 @@ public class BookingInstitutionStorageImpl implements BookingInstitutionStorage 
 				"JOIN diary di ON (di.doctors_office_id = dof.id) " +
 				"JOIN diary_opening_hours doh ON (doh.diary_id = di.id) " +
 				"JOIN clinical_specialty cs ON (cs.id = di.clinical_specialty_id) " +
-				"WHERE di.deleted IS NOT TRUE AND cs.clinical_specialty_type_id = 2 AND doh.external_appointments_allowed = true " +
+				"WHERE di.deleted IS NOT TRUE AND di.end_date > CURRENT_DATE " +
+				"AND cs.clinical_specialty_type_id = 2 " +
+				"AND doh.external_appointments_allowed = true " +
+				"AND doh.medical_attention_type_id = 1 " +
 				"ORDER BY i.name, cs.name";
 
 		List<Object[]> rows = entityManager.createNativeQuery(sqlString).getResultList();
