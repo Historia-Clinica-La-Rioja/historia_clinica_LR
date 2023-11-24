@@ -1,17 +1,19 @@
-package net.pladema.questionnaires.frail.create.repository;
+package net.pladema.questionnaires.familybg.create.repository;
 
 import java.util.List;
+
+import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+
+import net.pladema.questionnaires.common.domain.QuestionnaireResponse;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.questionnaires.common.domain.Answer;
-import net.pladema.questionnaires.common.domain.QuestionnaireResponse;
 
-public interface FrailRepository extends SGXAuditableEntityJPARepository<QuestionnaireResponse, Integer> {
+public interface FamilyBgRepository extends SGXAuditableEntityJPARepository<QuestionnaireResponse, Integer> {
 
 	@Query(value = "SELECT new net.pladema.questionnaires.common.domain.Answer(qr.id, la.itemId, la.questionnaireResponseId, la.answerId, la.value) " +
 			"FROM Answer la " +
@@ -19,7 +21,7 @@ public interface FrailRepository extends SGXAuditableEntityJPARepository<Questio
 			"WHERE qr.patientId = :patientId " +
 			"AND qr.statusId = 2" +
 			"ORDER BY qr.id, la.itemId, la.questionnaireResponseId, la.answerId, la.value" )
-	List<Answer> findPatientFrailTest(@Param("patientId") Integer patientId);
+	List<Answer> findPatientFamilyBgTest(@Param("patientId") Integer patientId);
 
 	@Modifying
 	@Transactional

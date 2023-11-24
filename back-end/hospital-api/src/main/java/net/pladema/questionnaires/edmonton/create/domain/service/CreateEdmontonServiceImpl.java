@@ -11,7 +11,6 @@ import net.pladema.questionnaires.common.domain.Answer;
 import net.pladema.questionnaires.common.domain.QuestionnaireResponse;
 import net.pladema.questionnaires.common.domain.model.QuestionnaireAnswerBO;
 import net.pladema.questionnaires.common.domain.model.QuestionnaireBO;
-import net.pladema.questionnaires.common.dto.QuestionnaireDTO;
 import net.pladema.questionnaires.edmonton.create.repository.EdmontonRepository;
 import net.pladema.questionnaires.edmonton.get.domain.service.GetEdmontonService;
 
@@ -31,9 +30,8 @@ public class CreateEdmontonServiceImpl implements CreateEdmontonService {
 
 	@Override
 	public QuestionnaireBO execute(QuestionnaireBO questionnaireBO) {
-		logger.info("Executing the 'execute' method...");
 
-		QuestionnaireDTO questionnaireDTO = new QuestionnaireDTO();
+		logger.info("Executing the 'execute' method...");
 
 		Integer patientId = questionnaireBO.getPatientId();
 
@@ -60,21 +58,22 @@ public class CreateEdmontonServiceImpl implements CreateEdmontonService {
 		QuestionnaireResponse questionnaireResponse = new QuestionnaireResponse();
 		QuestionnaireAnswerBO answerBO;
 		Answer answer;
-		Integer questionnaireId = 1;
+		Integer questionnaireId = 2;
 		Integer statusId = 2;
 
-		questionnaireResponse.setPatientId(Math.toIntExact(questionnaireBO.getPatientId()));
+		questionnaireResponse.setPatientId(questionnaireBO.getPatientId());
 
 		if (questionnaireBO.getAnswers() != null && !questionnaireBO.getAnswers().isEmpty()) {
 			questionnaireResponse.setAnswers(new ArrayList<>());
-			for (QuestionnaireAnswerBO questionnaireAnswerBO : questionnaireBO.getAnswers()) {
-				answerBO = questionnaireAnswerBO;
-				answer = new Answer();
-				answer.setAnswerId(Math.toIntExact(answerBO.getAnswerId()));
-				answer.setItemId(Math.toIntExact(answerBO.getQuestionId()));
-				answer.setValue(String.valueOf(answerBO.getValue()));
-				questionnaireResponse.getAnswers().add(answer);
-			}
+
+            for (QuestionnaireAnswerBO questionnaireAnswerBO : questionnaireBO.getAnswers()) {
+                answerBO = questionnaireAnswerBO;
+                answer = new Answer();
+                answer.setAnswerId(Integer.valueOf(answerBO.getAnswerId()));
+                answer.setItemId(Integer.valueOf(answerBO.getQuestionId()));
+                answer.setValue(String.valueOf(answerBO.getValue()));
+                questionnaireResponse.getAnswers().add(answer);
+            }
 			questionnaireResponse.setQuestionnaireId(questionnaireId);
 			questionnaireResponse.setStatusId(statusId);
 		}
