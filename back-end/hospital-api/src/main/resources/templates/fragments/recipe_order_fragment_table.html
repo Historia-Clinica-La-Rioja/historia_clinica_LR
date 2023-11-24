@@ -194,7 +194,7 @@
                         <td th:text="${#strings.defaultString(order.healthCondition.cie10codes, '-')}"></td>
                         <td th:text="${order.healthCondition.snomed.pt}"></td>
                         <td th:text="${order.snomed.pt}"></td>
-                        <td th:text="${#strings.defaultString(order.observations, '-')}"></td>
+                        <td th:text="${#strings.defaultString(request.observations, '-')}"></td>
                     </tr>
                 </tbody>
             </table>

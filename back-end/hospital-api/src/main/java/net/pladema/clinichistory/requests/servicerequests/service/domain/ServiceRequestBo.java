@@ -47,6 +47,8 @@ public class ServiceRequestBo implements IDocumentBo {
 
 	private Integer associatedSourceId;
 
+	private String observations;
+
 	@Override
     public Integer getPatientId() {
         if (patientInfo != null)

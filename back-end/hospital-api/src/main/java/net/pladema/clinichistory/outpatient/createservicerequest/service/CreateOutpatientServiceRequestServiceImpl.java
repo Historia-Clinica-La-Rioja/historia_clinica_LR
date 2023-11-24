@@ -36,6 +36,7 @@ public class CreateOutpatientServiceRequestServiceImpl implements CreateOutpatie
 				.requestDate(extendedServiceRequestBo.getRequestDate())
 				.associatedSourceTypeId(SourceType.OUTPATIENT)
 				.medicalCoverageId(extendedServiceRequestBo.getMedicalCoverageId())
+				.observations(extendedServiceRequestBo.getObservations())
 				.build();
 	}
 
