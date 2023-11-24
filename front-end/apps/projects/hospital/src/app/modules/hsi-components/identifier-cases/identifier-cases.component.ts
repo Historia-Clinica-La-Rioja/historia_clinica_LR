@@ -45,9 +45,9 @@ export enum IDENTIFIER_CASES {
 	HOUR = 'Hora',
 	DISTRICT = 'Partido',
 	SERVICE = 'Servicio',
-	MEETING_ROOM = 'Sala de reuniones',
-	CLEAN_HANDS = 'Linea de cuidado',
-	GROUP = 'Información de profesionales asociados',
+	SECTOR = 'Sector',
+	ROOM = 'Sala',
+	HIERARCHICAL_UNIT = 'Unidad jerárquica'
 }
 
 const institution: IconLegend = {
@@ -100,20 +100,21 @@ const service: IconLegend = {
 	legend: 'Servicio',
 }
 
-const meeting_room: IconLegend = {
+const sector: IconLegend = {
+	icon: 'add_location',
+	legend: 'Sector',
+}
+
+const room: IconLegend = {
 	icon: 'meeting_room',
-	legend: 'Consultorio y sector',
+	legend: 'Sala',
 }
 
-const clean_hands: IconLegend = {
-	icon: 'clean_hands',
-	legend: 'Consultorio y sector',
+const hierarchicalUnit: IconLegend = {
+	icon: 'lan',
+	legend: 'Unidad jerárquica',
 }
 
-const group: IconLegend = {
-	icon: 'group',
-	legend: 'Agenda conjunta',
-}
 
 const IDENTIFIER_CASES_ALTERNATIVES = {
 	[IDENTIFIER_CASES.INSTITUTION]: institution,
@@ -126,7 +127,7 @@ const IDENTIFIER_CASES_ALTERNATIVES = {
 	[IDENTIFIER_CASES.HOUR]: hour,
 	[IDENTIFIER_CASES.DISTRICT]: district,
 	[IDENTIFIER_CASES.SERVICE]: service,
-	[IDENTIFIER_CASES.MEETING_ROOM]: meeting_room,
-	[IDENTIFIER_CASES.CLEAN_HANDS]: clean_hands,
-	[IDENTIFIER_CASES.GROUP]: group,
+	[IDENTIFIER_CASES.SECTOR]: sector,
+	[IDENTIFIER_CASES.ROOM]: room,
+	[IDENTIFIER_CASES.HIERARCHICAL_UNIT]: hierarchicalUnit,
 }

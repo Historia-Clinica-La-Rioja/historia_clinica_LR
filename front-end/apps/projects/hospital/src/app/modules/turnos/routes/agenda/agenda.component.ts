@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { AppointmentDailyAmountDto, CompleteDiaryDto, DiaryOpeningHoursDto, EAppointmentModality, ERole, MedicalCoverageDto, ProfessionalDto, ProfessionalPersonDto, SnomedDto } from '@api-rest/api-model';
+import { AppointmentDailyAmountDto, CompleteDiaryDto, DiaryOpeningHoursDto, EAppointmentModality, ERole, MedicalCoverageDto } from '@api-rest/api-model';
 import { DiaryService } from '@api-rest/services/diary.service';
 import {
 	buildFullDate,
@@ -38,10 +38,8 @@ import * as moment from 'moment';
 import { forkJoin, Observable, of, Subject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { LoggedUserService } from '../../../auth/services/logged-user.service';
-import { PatientNameService } from '../../../core/services/patient-name.service';
 import { APPOINTMENT_STATES_ID, MINUTES_IN_HOUR } from '../../constants/appointment';
 import { AgendaSearchService } from '../../services/agenda-search.service';
-import { IDENTIFIER_CASES } from '../../../hsi-components/identifier-cases/identifier-cases.component';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -53,7 +51,7 @@ const ROLES_TO_CREATE: ERole[] = [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDIC
 	styleUrls: ['./agenda.component.scss'],
 })
 export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
-	identiferCases = IDENTIFIER_CASES;
+
 	readonly calendarViewEnum = CalendarView;
 	readonly MONDAY = DAYS_OF_WEEK.MONDAY;
 	readonly dateFormats = DatePipeFormat;
@@ -75,9 +73,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	refreshCalendar = new Subject<void>();
 	startDate: string;
 	endDate: string;
-	careLinesToShow: string = "";
-	associatedProfessionalsToShow: string = "";
-	practices: string[] = [];
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 	private patientId: number;
 	private loggedUserHealthcareProfessionalId: number;
@@ -113,7 +108,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		private readonly calendarProfessionalInfo: CalendarProfessionalInformation,
 		private readonly datePipe: DatePipe,
 		private readonly translateService: TranslateService,
-		private readonly patientNameService: PatientNameService,
 	) {
 	}
 
@@ -269,18 +263,18 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 	onClickedSegment(event) {
 		if (this.getOpeningHoursId(event.date) && this.enableAppointmentScheduling) {
-		
+
 			const clickedDate: Moment = dateToMomentTimeZone(event.date);
 			const openingHourId: number = this.getOpeningHoursId(event.date);
 			const diaryOpeningHourDto: DiaryOpeningHoursDto =
 				this.diaryOpeningHours.find(diaryOpeningHour => diaryOpeningHour.openingHours.id === openingHourId);
-				
+
 			if (diaryOpeningHourDto.secondOpinionVirtualAttentionAllowed && !diaryOpeningHourDto.patientVirtualAttentionAllowed && !diaryOpeningHourDto.onSiteAttentionAllowed) {
 				this.snackBarService.showError("La franja horaria seleccionada no admite turnos presenciales");
 				return;
 			}
 
-				this.setModality(diaryOpeningHourDto);
+			this.setModality(diaryOpeningHourDto);
 			forkJoin([
 				this.getAppointmentAt(event.date).pipe(take(1)),
 				this.allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto, clickedDate).pipe(take(1))
@@ -303,31 +297,31 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 					this.snackBarService.showError('turnos.new-appointment.messages.NOT_RESPONSIBLE');
 					return;
 				} else {
-						if (!this.holidays?.find(holiday => holiday.start.getDate() === clickedDate.toDate().getDate())) {
-							this.openNewAppointmentDialog(clickedDate, openingHourId, addingOverturn);
-						}
-						else {
-							const holidayText = this.translateService.instant('turnos.holiday.HOLIDAY_RELATED');
-							const holidayDateText = this.datePipe.transform(clickedDate.toDate(), DatePipeFormat.FULL_DATE);
-							const dialogRef = this.dialog.open(DiscardWarningComponent, {
-								data: {
-									title: 'turnos.holiday.TITLE',
-									content: `${holidayDateText.charAt(0).toUpperCase() + holidayDateText.slice(1)} ${holidayText}`,
-									contentBold: `turnos.holiday.HOLIDAY_DISCLAIMER`,
-									okButtonLabel: 'turnos.holiday.OK_BUTTON',
-									cancelButtonLabel: 'turnos.holiday.CANCEL_BUTTON',
-								}
-							});
-							dialogRef.afterClosed().subscribe((result: boolean) => {
-								if (result) {
-									dialogRef?.close();
-								}
-								else {
-									this.openNewAppointmentDialog(clickedDate, openingHourId, addingOverturn);
-								}
-							});
-						}
+					if (!this.holidays?.find(holiday => holiday.start.getDate() === clickedDate.toDate().getDate())) {
+						this.openNewAppointmentDialog(clickedDate, openingHourId, addingOverturn);
 					}
+					else {
+						const holidayText = this.translateService.instant('turnos.holiday.HOLIDAY_RELATED');
+						const holidayDateText = this.datePipe.transform(clickedDate.toDate(), DatePipeFormat.FULL_DATE);
+						const dialogRef = this.dialog.open(DiscardWarningComponent, {
+							data: {
+								title: 'turnos.holiday.TITLE',
+								content: `${holidayDateText.charAt(0).toUpperCase() + holidayDateText.slice(1)} ${holidayText}`,
+								contentBold: `turnos.holiday.HOLIDAY_DISCLAIMER`,
+								okButtonLabel: 'turnos.holiday.OK_BUTTON',
+								cancelButtonLabel: 'turnos.holiday.CANCEL_BUTTON',
+							}
+						});
+						dialogRef.afterClosed().subscribe((result: boolean) => {
+							if (result) {
+								dialogRef?.close();
+							}
+							else {
+								this.openNewAppointmentDialog(clickedDate, openingHourId, addingOverturn);
+							}
+						});
+					}
+				}
 			});
 		}
 	}
@@ -406,8 +400,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	setAgenda(agenda: CompleteDiaryDto): void {
 		this.resetInformation();
 		this.agenda = agenda;
-		this.practices = this.agenda.practicesInfo.map((p : SnomedDto) => p.pt);
-		this.loadInformationToShow(agenda);
 		this.setEnableAppointmentScheduling();
 		this.viewDate = this._getViewDate();
 		this.setDateRange(this.viewDate);
@@ -579,45 +571,10 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		this.endDate = momentFormat(moment(end), DateFormat.API_DATE);
 	}
 
-	private loadInformationToShow(diary: CompleteDiaryDto) {
-		this.loadCareLinesToShow(diary);
-		this.loadAssociatedProfessionalsToShow(diary);
-	}
-
-	private loadCareLinesToShow(diary: CompleteDiaryDto) {
-		diary.careLinesInfo.forEach((careLine, index) => {
-			if (index === diary.careLinesInfo.length - 1)
-				this.careLinesToShow = this.careLinesToShow.concat(careLine.description);
-			else
-				this.careLinesToShow = this.careLinesToShow.concat(careLine.description + ", ");
-		});
-	}
-
-	private loadAssociatedProfessionalsToShow(diary: CompleteDiaryDto) {
-		if (diary.associatedProfessionalsInfo.length) {
-			this.appointmentFacade.professional$.subscribe(professional => {
-				if (professional) {
-					this.associatedProfessionalsToShow = this.associatedProfessionalsToShow.concat(this.getProfessionalFullName(professional) + ", ");
-					diary.associatedProfessionalsInfo.forEach((associatedProfessional, index) => {
-						if (index === diary.associatedProfessionalsInfo.length - 1)
-							this.associatedProfessionalsToShow = this.associatedProfessionalsToShow.concat(this.getProfessionalFullName(associatedProfessional));
-						else
-							this.associatedProfessionalsToShow = this.associatedProfessionalsToShow.concat(this.getProfessionalFullName(associatedProfessional) + ", ");
-					});
-				}
-			});
-		}
-	}
-
-	private getProfessionalFullName(professional: ProfessionalPersonDto | ProfessionalDto): string {
-		return `${professional?.lastName} ${professional?.otherLastNames?professional?.otherLastNames: ''} ${this.patientNameService.getFullName(professional?.firstName, professional?.nameSelfDetermination, professional?.middleNames)}`;
-	}
 
 	private resetInformation() {
 		delete this.dayEndHour;
 		delete this.dayStartHour;
-		this.careLinesToShow = "";
-		this.associatedProfessionalsToShow = "";
 	}
 
 }

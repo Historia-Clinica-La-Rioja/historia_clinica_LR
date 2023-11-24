@@ -194,50 +194,50 @@ export const serviceFull: Story = {
 	}
 };
 
-export const  meetingRoomMin: Story = {
+export const  roomMin: Story = {
 	args: {
-		identifierCase: IDENTIFIER_CASES.MEETING_ROOM,
-		description: "Ejemplo de sala de reuniones",
+		identifierCase: IDENTIFIER_CASES.ROOM,
+		description: "Ejemplo de Sala",
 	}
 };
 
-export const  meetingRoomFull: Story = {
+export const  roomFull: Story = {
 	args: {
-		identifierCase: IDENTIFIER_CASES.MEETING_ROOM,
+		identifierCase: IDENTIFIER_CASES.ROOM,
 		showLegend: true,
-		description: "Ejemplo de sala de reuniones",
+		description: "Ejemplo de Sala",
 		position: Position.COLUMN
 	}
 };
 
-export const  cleanHandsMin: Story = {
+export const sectorMin: Story = {
 	args: {
-		identifierCase: IDENTIFIER_CASES.CLEAN_HANDS,
-		description: "Ejemplo de linea de cuidado",
+		identifierCase: IDENTIFIER_CASES.SECTOR,
+		description: "Ejemplo de Sector",
 	}
 };
 
-export const cleanHandsFull: Story = {
+export const sectorFull: Story = {
 	args: {
-		identifierCase: IDENTIFIER_CASES.CLEAN_HANDS,
+		identifierCase: IDENTIFIER_CASES.SECTOR,
 		showLegend: true,
-		description: "Ejemplo de linea de cuidado",
+		description: "Ejemplo de Sector",
 		position: Position.COLUMN
 	}
 };
 
-export const groupMin: Story = {
+export const hierarchicalUnitMin: Story = {
 	args: {
-		identifierCase: IDENTIFIER_CASES.GROUP,
-		description: "Ejemplo de información de profesionales asociados",
+		identifierCase: IDENTIFIER_CASES.HIERARCHICAL_UNIT,
+		description: "Ejemplo de Unidad jerárquica",
 	}
 };
 
-export const groupFull: Story = {
+export const hierarchicalUnitFull: Story = {
 	args: {
-		identifierCase: IDENTIFIER_CASES.GROUP,
+		identifierCase: IDENTIFIER_CASES.HIERARCHICAL_UNIT,
 		showLegend: true,
-		description: "Ejemplo de información de profesionales asociados",
+		description: "Ejemplo de Unidad jerárquica",
 		position: Position.COLUMN
 	}
 };

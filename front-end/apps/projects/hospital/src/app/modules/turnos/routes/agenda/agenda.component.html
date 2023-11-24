@@ -1,27 +1,4 @@
-<div fxLayout="column" fxLayoutAlign="start" fxLayoutGap="10px">
-	<div fxLayout="column" fxLayoutGap="10px">
-		<app-identifier-cases [identifierCase]="identiferCases.MEETING_ROOM"
-			[description]="agenda | meetingRoom | uppercase">
-		</app-identifier-cases>
-
-		<div id="care_lines" *ngIf="agenda?.careLinesInfo.length" fxLayout="row" fxLayoutAlign="start center"
-			fxLayoutGap="5px">
-			<app-identifier-cases [identifierCase]="identiferCases.CLEAN_HANDS" [description]="careLinesToShow">
-			</app-identifier-cases>
-		</div>
-
-		<ng-container *ngIf="agenda?.practicesInfo.length">
-			<app-identifier-cases [identifierCase]="identiferCases.PRACTICE"
-				[description]="practices | practiceList | uppercase">
-			</app-identifier-cases>
-		</ng-container>
-	</div>
-
-	<div id="professionals" fxLayout="row" fxLayoutGap="5px" *ngIf="agenda?.associatedProfessionalsInfo.length">
-		<app-identifier-cases [identifierCase]="identiferCases.GROUP" [description]="associatedProfessionalsToShow">
-		</app-identifier-cases>
-	</div>
-</div>
+<app-diary-information [diary]="agenda" ></app-diary-information>
 
 <div class="spinner" *ngIf="loading else calendar">
 	<mat-spinner color="primary"></mat-spinner>

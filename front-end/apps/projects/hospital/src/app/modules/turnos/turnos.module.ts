@@ -20,6 +20,7 @@ import { AppointmentDetailsComponent } from './components/appointment-details/ap
 import { AppointmentResultViewComponent } from './components/appointment-result-view/appointment-result-view.component';
 import { CalendarProfessionalViewComponent } from '@turnos/components/calendar-professional-view/calendar-professional-view.component';
 import { DateRangeTimeFormComponent } from './components/date-range-time-form/date-range-time-form.component';
+import { DiaryInformationComponent } from './components/diary-information/diary-information.component';
 import { EquipmentDiaryComponent } from './components/equipment-diary/equipment-diary.component';
 import { EquipmentTranscribeOrderPopupComponent } from './dialogs/equipment-transcribe-order-popup/equipment-transcribe-order-popup.component';
 import { ImageNetworkAppointmentComponent } from './components/image-network-appointment/image-network-appointment.component';
@@ -48,7 +49,6 @@ import { NewAttentionComponent } from './dialogs/new-attention/new-attention.com
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { EquipmentAppointmentsFacadeService } from './services/equipment-appointments-facade.service';
 // pipes
-import { MeetingRoomPipe } from './pipes/meeting-room.pipe';
 import { PracticesPipe } from './pipes/practices.pipe';
 
 @NgModule({
@@ -63,6 +63,7 @@ import { PracticesPipe } from './pipes/practices.pipe';
 		AppointmentResultViewComponent,
 		CalendarProfessionalViewComponent,
 		DateRangeTimeFormComponent,
+		DiaryInformationComponent,
 		EquipmentDiaryComponent,
 		EquipmentTranscribeOrderPopupComponent,
 		ImageNetworkAppointmentComponent,
@@ -88,7 +89,6 @@ import { PracticesPipe } from './pipes/practices.pipe';
 		NewAppointmentComponent,
 		NewAttentionComponent,
 		//pipes
-		MeetingRoomPipe,
 		PracticesPipe,
 	],
 	imports: [
