@@ -137,7 +137,7 @@ import { EdmontonComponent } from './components/cuestionarios/edmonton/edmonton.
 		AdultoMayorComponent,
 		EstudiosPopupComponent,
   		FrailScaleComponent,
-    EdmontonComponent
+    	EdmontonComponent
  	],
 	imports: [
 		CommonModule,
