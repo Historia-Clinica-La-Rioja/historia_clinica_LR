@@ -317,3 +317,14 @@ databaseChangeLog:
                 UPDATE city SET bahra_code = '22112030' WHERE id = 9404;
                 UPDATE city SET bahra_code = '34035060' WHERE id = 11685;
                 UPDATE city SET bahra_code = '34035070' WHERE id = 11687;
+
+    - changeSet:
+        id: addColumn-observations-service_request
+        author: fdemuguruza
+        changes:
+          - addColumn:
+              tableName: service_request
+              columns:
+                - column:
+                    name: observations
+                    type: text

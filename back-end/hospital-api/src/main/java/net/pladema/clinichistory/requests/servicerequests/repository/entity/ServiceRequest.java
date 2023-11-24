@@ -58,6 +58,9 @@ public class ServiceRequest extends SGXAuditableEntity<Integer> {
 	@Column(name = "source_id")
 	private Integer sourceId;
 
+	@Column(name = "observations", columnDefinition = "TEXT")
+	private String observations;
+
 	public ServiceRequest(Integer institutionId,
 						  Integer patientId,
 						  Integer doctorId,
