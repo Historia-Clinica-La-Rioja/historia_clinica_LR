@@ -3,6 +3,7 @@ package net.pladema.clinichistory.outpatient.application.markaserroraproblem;
 import ar.lamansys.refcounterref.application.deletereference.DeleteReference;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
+import ar.lamansys.sgh.clinichistory.application.rebuildFile.RebuildFile;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DiagnosticReportRepository;
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.outpatient.application.markaserroraproblem.exceptions.MarkAsErrorAProblemException;
 import net.pladema.clinichistory.outpatient.application.markaserroraproblem.exceptions.MarkAsErrorAProblemExceptionEnum;
 import net.pladema.clinichistory.outpatient.domain.ProblemErrorBo;
+import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequestStatus;
@@ -49,6 +51,8 @@ public class MarkAsErrorAProblem {
     private final AppointmentService appointmentService;
     private final MessageSource messageSource;
     private final DeleteReference deleteReference;
+    private final OutpatientConsultationRepository outpatientConsultationRepository;
+    private final RebuildFile rebuildFile;
 
     @Transactional
     public boolean run(Integer institutionId, Integer patientId, ProblemErrorBo problem) {
@@ -66,6 +70,8 @@ public class MarkAsErrorAProblem {
         this.cancelAppointments(problem.getAppointmentsId());
 
         this.cancelReferences(problem.getReferencesId());
+
+        this.regenerateOutpatientDocument(problem.getId());
 
         log.debug("Output -> {}", true);
         return true;
@@ -121,5 +127,11 @@ public class MarkAsErrorAProblem {
 
     private void cancelReferences(List<Integer> referenceIds) {
         referenceIds.forEach(deleteReference::run);
+    }
+
+    private void regenerateOutpatientDocument(Integer healthConditionId) {
+        Long documentId = outpatientConsultationRepository.getOutpatientConsultationDocument(healthConditionId)
+                .orElseThrow(() -> new NotFoundException("OutpatientConsultationDocument-not-found", "OutpatientConsultationDocument not found"));
+        rebuildFile.run(documentId);
     }
 }
