@@ -45,8 +45,8 @@ public class VSnomedGroupConcept {
 	@Column(name = "last_update")
 	private LocalDate lastUpdate;
 
-	public VSnomedGroupConcept(Integer id, String conceptPt) {
-		this.id = id;
+	public VSnomedGroupConcept(Integer groupId, String conceptPt) {
+		this.groupId = groupId;
 		this.conceptPt = conceptPt;
 	}
 

@@ -49,9 +49,8 @@ public class BackofficeSnomedProcedureRuleStore implements BackofficeStore<Snome
 	public Page<SnomedProcedureDto> findAll(SnomedProcedureDto example, Pageable pageable) {
 		List<Integer> existingRulesPracticeProcedureIds = ruleRepository.findAll().stream().filter(rule -> rule.getLevel().equals(ERuleLevel.GENERAL.getId())).map(Rule::getSnomedId).filter(Objects::nonNull).collect(Collectors.toList());
 		List<Integer> snomedRelatedGroupIds = snomedRelatedGroupRepository.getIdsBySnomedIds(existingRulesPracticeProcedureIds);
-		Optional<Integer> groupId = snomedGroupRepository.getIdByDescriptionAndInstitutionId(GROUP_DESCRIPTION, -1);
-		groupId.ifPresent(example::setGroupId);
-		VSnomedGroupConcept exampleEntity = mapToEntity(example);
+		var groupId = snomedGroupRepository.getIdByDescriptionAndInstitutionId(GROUP_DESCRIPTION, -1).orElse(null);
+		VSnomedGroupConcept exampleEntity = new VSnomedGroupConcept(groupId, example.getConceptPt());
 		List<SnomedProcedureDto> concepts = vSnomedGroupConceptRepository.findAll(
 				buildExample(exampleEntity),
 				PageRequest.of(
@@ -113,16 +112,6 @@ public class BackofficeSnomedProcedureRuleStore implements BackofficeStore<Snome
 		result.setConceptPt(entity.getConceptPt());
 		result.setConceptId(entity.getConceptId().longValue());
 		result.setGroupId(entity.getGroupId());
-		return result;
-	}
-
-	private VSnomedGroupConcept mapToEntity (SnomedProcedureDto dto){
-		VSnomedGroupConcept result = new VSnomedGroupConcept();
-		result.setId(dto.getId().intValue());
-		result.setConceptId(dto.getConceptId().intValue());
-		result.setConceptPt(dto.getConceptPt());
-		result.setConceptSctid(dto.getConceptSctid());
-		result.setGroupId(dto.getGroupId());
 		return result;
 	}
 
