@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { PacsUrlDto, StudyIntanceUIDDto, TokenDto, ViewerUrlDto } from '@api-rest/api-model';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { StudyPACAssociationService } from '@api-rest/services/study-PAC-association';
 import { StudyPermissionService } from '@api-rest/services/study-permission.service';
 import { ViewerService } from '@api-rest/services/viewer.service';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { switchMap, reduce, Observable, of } from 'rxjs';
 
 @Component({
@@ -22,8 +23,8 @@ export class ViewStudyComponent {
 		private readonly appointmentService: AppointmentsService,
 		private readonly studyPACAssociationService: StudyPACAssociationService,
 		private readonly studyPermissionService: StudyPermissionService,
-		private readonly snackBarService: SnackBarService,
-		private readonly viewerService: ViewerService
+		private readonly viewerService: ViewerService,
+		public dialog: MatDialog,
 	) { }
 
 	viewStudy() {
@@ -46,7 +47,22 @@ export class ViewStudyComponent {
 			))
 			.subscribe({
 				next: (url) => window.open(url, "_blank"),
-				error: () => this.snackBarService.showError('image-network.worklist.details_study.SNACKBAR_ERROR_STUDY')
+				error: () => {
+					this.dialog.open(DiscardWarningComponent, {
+						data: getErrorDataDialog(),
+						minWidth: '30%'
+					});
+
+					function getErrorDataDialog() {
+						return {
+							title: 'image-network.worklist.details_study.ERROR_STUDY',
+							content: '',
+							okButtonLabel: 'buttons.ACCEPT',
+							errorMode: true,
+							color: 'warn'
+						};
+					}
+				}
 			});
 	}
 
