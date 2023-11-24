@@ -21,6 +21,7 @@ public class StudyAppointmentBo {
 	private InstitutionBasicInfoBo completionInstitution;
 	private String technicianObservations;
 	private Integer sizeImage;
+	private Boolean isAvailableInPACS;
 
 	public StudyAppointmentBo(Integer patientPersonId, LocalDateTime completedOn, String technicianObservations,
 							  Integer completionInstitutionId, String completionInstitutionName) {
@@ -29,5 +30,6 @@ public class StudyAppointmentBo {
 		this.statusId = EDiagnosticImageReportStatus.PENDING.getId();
 		this.technicianObservations = technicianObservations;
 		this.completionInstitution = new InstitutionBasicInfoBo(completionInstitutionId, completionInstitutionName);
+		this.isAvailableInPACS = false;
 	}
 }

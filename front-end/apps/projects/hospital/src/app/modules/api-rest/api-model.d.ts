@@ -3896,6 +3896,7 @@ export interface StudyAppointmentDto {
     actionTime: DateTimeDto;
     completionInstitution: InstitutionBasicInfoDto;
     informerObservations?: InformerObservationDto;
+    isAvailableInPACS: boolean;
     patientFullName: string;
     patientId: number;
     sizeImage?: number;

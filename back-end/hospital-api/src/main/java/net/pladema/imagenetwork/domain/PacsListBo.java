@@ -34,4 +34,8 @@ public class PacsListBo {
 						.toUri())
 				.collect(Collectors.toSet());
 	}
+
+	public final boolean isAvailableInPACS() {
+		return !getPacs().isEmpty();
+	}
 }

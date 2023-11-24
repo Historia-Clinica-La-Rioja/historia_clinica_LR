@@ -20,6 +20,7 @@ import net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmen
 import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
 import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.ListTranscribedDiagnosticReportInfoService;
+import net.pladema.imagenetwork.application.getpacwherestudyishosted.GetPacWhereStudyIsHosted;
 import net.pladema.imagenetwork.derivedstudies.service.MoveStudiesService;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
@@ -31,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.transaction.Transactional;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,6 +56,7 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 	private final ListTranscribedDiagnosticReportInfoService transcribedDiagnosticReportInfoService;
 	private final PersonService personService;
 	private final MoveStudiesService moveStudiesService;
+	private final GetPacWhereStudyIsHosted getPacWhereStudyIsHosted;
 
 	@Override
 	public StudyAppointmentBo getStudyByAppointment(Integer appointmentId) {
@@ -87,6 +90,14 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 
 		moveStudiesService.getSizeImageByAppointmentId(appointmentId)
 				.ifPresent(result::setSizeImage);
+
+		appointmentOrderImageRepository.getIdImage(appointmentId).ifPresent(studyInstanceUID -> {
+			try {
+				result.setIsAvailableInPACS(getPacWhereStudyIsHosted.run(studyInstanceUID).isAvailableInPACS());
+			} catch (MalformedURLException e) {
+				throw new RuntimeException(e);
+			}
+		});
 
 		log.debug("Output -> {}", result);
 		return result;
