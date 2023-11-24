@@ -9,10 +9,9 @@ import javax.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
 import net.pladema.questionnaires.common.domain.Answer;
-import net.pladema.questionnaires.common.repository.PrintQuestionnaireRepository;
 
 @Repository
-public class PrintFrailRepositoryImpl implements PrintQuestionnaireRepository {
+public class PrintFrailRepositoryImpl implements PrintFrailRepository {
 
 	private final EntityManager entityManager;
 

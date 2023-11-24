@@ -19,4 +19,6 @@ public class QuestionnaireAnswers {
 
 	private Integer answerId;
 
+	private String value;
+
 }

@@ -1,4 +1,4 @@
-package net.pladema.questionnaires.edmonton.getpdf.domain.service;
+package net.pladema.questionnaires.familybg.getpdf.domain.service;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,17 +14,17 @@ import org.springframework.stereotype.Service;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.questionnaires.common.domain.Answer;
 import net.pladema.questionnaires.common.dto.PrintQuestionnaireDTO;
-import net.pladema.questionnaires.edmonton.getpdf.repository.PrintEdmontonRepository;
+import net.pladema.questionnaires.familybg.getpdf.repository.PrintFamilyBgRepository;
 
 @Service
-public class PrintEdmontonServiceImpl implements PrintEdmontonService {
+public class PrintFamilyBgServiceImpl implements PrintFamilyBgService {
 
 	public static final String QUESTIONNAIRE_NOT_FOUND = "questionnaire_not_found";
 	public static final String OUTPUT = "output -> {}";
-	private final Logger logger = LoggerFactory.getLogger(PrintEdmontonServiceImpl.class);
-	private final PrintEdmontonRepository printQuestionnaireRepository;
+	private final Logger logger = LoggerFactory.getLogger(PrintFamilyBgServiceImpl.class);
+	private final PrintFamilyBgRepository printQuestionnaireRepository;
 
-	public PrintEdmontonServiceImpl(PrintEdmontonRepository printQuestionnaireRepository) {
+	public PrintFamilyBgServiceImpl(PrintFamilyBgRepository printQuestionnaireRepository) {
 		this.printQuestionnaireRepository = printQuestionnaireRepository;
 	}
 
@@ -52,7 +52,7 @@ public class PrintEdmontonServiceImpl implements PrintEdmontonService {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH_mm_ss");
 		String formattedDate = questionnaireDate.format(formatter);
 		//String outputFileName = String.format("Frail - ID: %s - Fecha: %s.pdf", questionnaireId, questionnaireDate);
-		String outputFileName = String.format("Prueba de Edmonton - %s - %s.pdf", questionnaireId, formattedDate);
+		String outputFileName = String.format("Cuestionario de antecedentes familiares - %s - %s.pdf", questionnaireId, formattedDate);
 		logger.debug(OUTPUT, outputFileName);
 		return outputFileName;
 	}

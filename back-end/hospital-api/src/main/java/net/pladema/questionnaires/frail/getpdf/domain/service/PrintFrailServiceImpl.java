@@ -14,16 +14,16 @@ import org.springframework.stereotype.Service;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.questionnaires.common.domain.Answer;
 import net.pladema.questionnaires.common.dto.PrintQuestionnaireDTO;
-import net.pladema.questionnaires.common.repository.PrintQuestionnaireRepository;
+import net.pladema.questionnaires.frail.getpdf.repository.PrintFrailRepository;
 
 @Service
 public class PrintFrailServiceImpl implements PrintFrailService {
 	public static final String QUESTIONNAIRE_NOT_FOUND = "questionnaire_not_found";
 	public static final String OUTPUT = "output -> {}";
 	private final Logger logger = LoggerFactory.getLogger(PrintFrailServiceImpl.class);
-	private final PrintQuestionnaireRepository printQuestionnaireRepository;
+	private final PrintFrailRepository printQuestionnaireRepository;
 
-	public PrintFrailServiceImpl(PrintQuestionnaireRepository printQuestionnaireRepository) {
+	public PrintFrailServiceImpl(PrintFrailRepository printQuestionnaireRepository) {
 		this.printQuestionnaireRepository = printQuestionnaireRepository;
 	}
 

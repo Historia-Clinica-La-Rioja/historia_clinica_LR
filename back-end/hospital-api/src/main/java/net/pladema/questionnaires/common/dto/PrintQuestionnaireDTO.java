@@ -23,5 +23,6 @@ public class PrintQuestionnaireDTO {
 	public PrintQuestionnaireDTO(Answer answer){
 		this.questionId = answer.getItemId();
 		this.answerId = answer.getAnswerId();
+		this.value = Integer.valueOf(answer.getValue());
 	}
 }

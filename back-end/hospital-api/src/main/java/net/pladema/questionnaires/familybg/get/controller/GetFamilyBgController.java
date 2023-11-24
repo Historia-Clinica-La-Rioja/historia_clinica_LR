@@ -1,29 +1,29 @@
-package net.pladema.questionnaires.frail.get.controller;
+package net.pladema.questionnaires.familybg.get.controller;
 
-import java.util.ArrayList;
-import java.util.List;
+import net.pladema.questionnaires.common.domain.Answer;
+import net.pladema.questionnaires.common.dto.QuestionnaireAnswers;
+import net.pladema.questionnaires.common.dto.QuestionnaireDTO;
+import net.pladema.questionnaires.familybg.get.domain.service.GetFamilyBgService;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.pladema.questionnaires.common.domain.Answer;
-import net.pladema.questionnaires.common.dto.QuestionnaireAnswers;
-import net.pladema.questionnaires.common.dto.QuestionnaireDTO;
-import net.pladema.questionnaires.frail.get.domain.service.GetFrailService;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @Validated
 @RequestMapping("/institution/{institutionId}/patient/{patientId}/hce/general-state")
-public class GetFrailController implements GetFrailAPI {
+public class GetFamilyBgController implements GetFamilyBgAPI {
+	private final GetFamilyBgService getQuestionnaireService;
 
-	private final GetFrailService getQuestionnaireService;
-
-	public GetFrailController(GetFrailService getQuestionnaireService) {
+	public GetFamilyBgController(GetFamilyBgService getQuestionnaireService) {
 		this.getQuestionnaireService = getQuestionnaireService;
 	}
 
-	public QuestionnaireDTO getPatientConsultationFrailTest(Integer institutionId, Integer patientId) {
+	public QuestionnaireDTO getPatientConsultationFamilyBgTest(Integer institutionId, Integer patientId) throws IOException {
 
 		QuestionnaireDTO questionnaireDTO = new QuestionnaireDTO();
 		List<Answer> lst = getQuestionnaireService.findPatientQuestionnaire(patientId);
