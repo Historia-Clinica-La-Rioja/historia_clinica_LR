@@ -29,5 +29,6 @@ public class StudyOrderReportInfoDto {
     private Boolean viewReport = false;
     private Integer serviceRequestId;
     private Integer diagnosticReportId;
+	private Boolean hasActiveAppointment;
 
 }

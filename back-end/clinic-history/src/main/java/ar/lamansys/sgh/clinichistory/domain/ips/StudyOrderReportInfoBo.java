@@ -27,5 +27,6 @@ public class StudyOrderReportInfoBo {
     private String source;
     private Integer serviceRequestId;
     private Integer diagnosticReportId;
+	private Boolean hasActiveAppointment;
 
 }

@@ -3883,6 +3883,7 @@ export interface StudyOrderReportInfoDto {
     creationDate: Date;
     diagnosticReportId: number;
     doctor: DoctorInfoDto;
+    hasActiveAppointment: boolean;
     hceDocumentDataDto: HCEDocumentDataDto;
     healthCondition: string;
     imageId: string;

@@ -33,6 +33,7 @@ public class ListStudyOrderReportRepositoryImpl implements ListStudyOrderReportR
                   "       sr.id          AS serviceRequestId, " +
                   "       dr.snomed_id   AS diagnosticReport_snomed_id, " +
                   "       dr.id          AS diagnosticReportId, " +
+				  "       dr.status_id          , " +
                   "       row_number() OVER (PARTITION by dr.snomed_id, dr.health_condition_id ORDER BY dr.updated_on DESC) AS rw " +
                   "FROM service_request sr " +
                   "         JOIN source_type st ON sr.source_type_id = st.id " +
@@ -44,7 +45,7 @@ public class ListStudyOrderReportRepositoryImpl implements ListStudyOrderReportR
                   "  AND d.type_id = :documentType " +
                   "  AND d.source_type_id = :sourceType " +
                   "  AND sr.category_id = :categoryId) " +
-                  "SELECT COALESCE(aoi.completed, false) AS completed_by_technical, " +
+				  "SELECT COALESCE(CASE WHEN t.status_id = '261782000' THEN true ELSE aoi.completed END, false) AS completed_by_technical, " +
                   "       t.order_doctor_id, " +
                   "       t.request_date, " +
                   "       aoi.image_id, " +
@@ -54,13 +55,15 @@ public class ListStudyOrderReportRepositoryImpl implements ListStudyOrderReportR
                   "       df.file_name   AS report_image_file_name, " +
                   "       t.source, " +
                   "       t.serviceRequestId, " +
-                  "       t.diagnosticReportId " +
+                  "       t.diagnosticReportId, " +
+				  "		  COALESCE(aoi.active,false) as hasActiveAppointment "+
                   "FROM temporal t " +
                   "JOIN snomed s ON t.diagnosticReport_snomed_id = s.id " +
                   "         JOIN snomed s2 ON t.healthCondition_snomed_id = s2.id " +
                   "         LEFT JOIN appointment_order_image aoi ON t.diagnosticReportId = aoi.study_id AND aoi.active = true " +
                   "         LEFT JOIN document_file df ON aoi.document_id = df.id " +
-                  "WHERE rw = 1";
+				  "WHERE t.status_id !='89925002' " +
+				  "AND rw = 1";
 
         Query query = entityManager.createNativeQuery(sqlString);
         query.setParameter("patientId", patientId)

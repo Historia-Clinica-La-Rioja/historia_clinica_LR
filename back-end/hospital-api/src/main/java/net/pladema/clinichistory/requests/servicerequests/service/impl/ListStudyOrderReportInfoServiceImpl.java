@@ -43,6 +43,7 @@ public class ListStudyOrderReportInfoServiceImpl implements ListStudyOrderReport
         result.setSource((String) row[8]);
         result.setServiceRequestId((Integer) row[9]);
         result.setDiagnosticReportId((Integer) row[10]);
+		result.setHasActiveAppointment((Boolean) row[11]);
         return result;
     }
 }

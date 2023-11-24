@@ -34,7 +34,7 @@ public class StudyOrderReportInfoMapper {
         result.setSeeStudy(result.getStatus());
         result.setServiceRequestId(studyOrderReportInfoBo.getServiceRequestId());
         result.setDiagnosticReportId(studyOrderReportInfoBo.getDiagnosticReportId());
-
+		result.setHasActiveAppointment(studyOrderReportInfoBo.getHasActiveAppointment());
         log.trace("Output: {}", result);
         return result;
     }
