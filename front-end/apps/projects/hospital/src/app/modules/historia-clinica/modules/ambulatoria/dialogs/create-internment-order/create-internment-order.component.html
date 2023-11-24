@@ -63,13 +63,10 @@
 
 		<!-- NOTES TEXT FIELD -->
 
-		<div *ngIf="false">
+		<div>
 			<mat-form-field appearance="outline" class="full-width">
 				<mat-label> {{'ambulatoria.paciente.internment-order.create-order-dialog.NOTES' | translate}} </mat-label>
 				<textarea matInput type="text" id="notes" formControlName="notes"></textarea>
-				<mat-error *ngIf="hasError(this.form, 'maxlength', 'notes')" translate="forms.MAX_LENGTH_ERROR"
-						   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
-				</mat-error>
 			</mat-form-field>
 		</div>
 

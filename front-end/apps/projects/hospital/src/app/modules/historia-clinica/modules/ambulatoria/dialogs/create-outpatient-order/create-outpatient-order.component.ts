@@ -6,7 +6,6 @@ import { OutpatientOrderService } from "@api-rest/services/outpatient-order.serv
 import { PatientMedicalCoverageService } from "@api-rest/services/patient-medical-coverage.service";
 import { PatientService } from "@api-rest/services/patient.service";
 import { RequestMasterDataService } from "@api-rest/services/request-masterdata.service";
-import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { MapperService } from "@core/services/mapper.service";
 import { hasError } from '@core/utils/form.utils';
 import { TemplateOrConceptOption, TemplateOrConceptType } from "@historia-clinica/components/template-concept-typeahead-search/template-concept-typeahead-search.component";
@@ -24,7 +23,6 @@ import { map } from "rxjs/operators";
 export class CreateOutpatientOrderComponent implements OnInit {
 
 	readonly ecl = SnomedECL.PROCEDURE;
-	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	hasError = hasError;
 
 	form: UntypedFormGroup;
@@ -59,7 +57,7 @@ export class CreateOutpatientOrderComponent implements OnInit {
 			studyCategory: [null, Validators.required],
 			studySelection: [null, Validators.required],
 			healthProblem: [null, Validators.required],
-			notes: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]]
+			notes: [null]
 		});
 
 		this.setMedicalCoverages();
@@ -186,10 +184,10 @@ export class CreateOutpatientOrderComponent implements OnInit {
 		const newOutpatientOrder: PrescriptionDto = {
 			medicalCoverageId: this.form.controls.patientMedicalCoverage.value?.id,
 			hasRecipe: true,
+			observations: this.form.controls.notes.value,
 			items: this.orderStudiesService.getStudies().map(study => {
 				return {
 					healthConditionId: this.form.controls.healthProblem.value.id,
-					observations: this.form.controls.notes.value,
 					snomed: study.snomed,
 					categoryId: this.form.controls.studyCategory.value,
 					prescriptionLineNumber: ++prescriptionLineNumberAux,

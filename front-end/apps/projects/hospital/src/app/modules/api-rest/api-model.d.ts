@@ -3162,6 +3162,7 @@ export interface PrescriptionDto extends Serializable {
     isPostDated?: boolean;
     items: PrescriptionItemDto[];
     medicalCoverageId?: number;
+    observations?: string;
     repetitions?: number;
 }
 
