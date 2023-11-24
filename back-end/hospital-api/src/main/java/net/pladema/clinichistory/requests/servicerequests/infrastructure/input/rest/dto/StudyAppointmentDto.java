@@ -46,4 +46,7 @@ public class StudyAppointmentDto {
     @NotNull(message = "${value.mandatory}")
     private Boolean isAvailableInPACS;
 
+    @Nullable
+    private String imageId;
+
 }

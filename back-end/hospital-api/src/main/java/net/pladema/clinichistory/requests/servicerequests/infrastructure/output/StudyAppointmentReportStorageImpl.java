@@ -94,6 +94,7 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		appointmentOrderImageRepository.getIdImage(appointmentId).ifPresent(studyInstanceUID -> {
 			try {
 				result.setIsAvailableInPACS(getPacWhereStudyIsHosted.run(studyInstanceUID).isAvailableInPACS());
+				result.setImageId(studyInstanceUID);
 			} catch (MalformedURLException e) {
 				throw new RuntimeException(e);
 			}

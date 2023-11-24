@@ -22,6 +22,7 @@ public class StudyAppointmentBo {
 	private String technicianObservations;
 	private Integer sizeImage;
 	private Boolean isAvailableInPACS;
+	private String imageId;
 
 	public StudyAppointmentBo(Integer patientPersonId, LocalDateTime completedOn, String technicianObservations,
 							  Integer completionInstitutionId, String completionInstitutionName) {

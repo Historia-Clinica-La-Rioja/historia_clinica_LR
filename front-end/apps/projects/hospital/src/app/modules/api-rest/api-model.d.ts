@@ -3895,6 +3895,7 @@ export interface SourceTypeDto {
 export interface StudyAppointmentDto {
     actionTime: DateTimeDto;
     completionInstitution: InstitutionBasicInfoDto;
+    imageId?: string;
     informerObservations?: InformerObservationDto;
     isAvailableInPACS: boolean;
     patientFullName: string;
