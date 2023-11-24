@@ -28,42 +28,42 @@ export class ViewStudyComponent {
 	) { }
 
 	viewStudy() {
-			const sourceView$: Observable<StudyIntanceUIDDto> = this.isImageId ? of( {uid:this.appointmentId.toString()}) : this.appointmentService.getStudyInstanceUID(this.appointmentId)
-			sourceView$.pipe(
-			switchMap((studyInstanceUID: StudyIntanceUIDDto) =>
-				this.studyPACAssociationService.getPacGlobalURL(studyInstanceUID.uid).pipe(
-					switchMap((pacs: PacsUrlDto) =>
-						this.studyPermissionService.getPermissionsJWT(studyInstanceUID.uid).pipe(
-							switchMap((token: TokenDto) =>
-								this.viewerService.getUrl().pipe(
-									switchMap((url: ViewerUrlDto) =>
-										this.buildUrl(url.url, studyInstanceUID.uid, token.token, pacs.pacs[0]) // se queda el primero no dominio
-									),
-									reduce((result, value) => result + value)
-								)
+		const sourceView$: Observable<StudyIntanceUIDDto> = this.isImageId ? of( {uid:this.appointmentId.toString()}) : this.appointmentService.getStudyInstanceUID(this.appointmentId)
+		sourceView$.pipe(
+		switchMap((studyInstanceUID: StudyIntanceUIDDto) =>
+			this.studyPACAssociationService.getPacGlobalURL(studyInstanceUID.uid).pipe(
+				switchMap((pacs: PacsUrlDto) =>
+					this.studyPermissionService.getPermissionsJWT(studyInstanceUID.uid).pipe(
+						switchMap((token: TokenDto) =>
+							this.viewerService.getUrl().pipe(
+								switchMap((url: ViewerUrlDto) =>
+									this.buildUrl(url.url, studyInstanceUID.uid, token.token, pacs.pacs[0]) // se queda el primero no dominio
+								),
+								reduce((result, value) => result + value)
 							)
 						)
-					))
-			))
-			.subscribe({
-				next: (url) => window.open(url, "_blank"),
-				error: () => {
-					this.dialog.open(DiscardWarningComponent, {
-						data: getErrorDataDialog(),
-						minWidth: '30%'
-					});
+					)
+				))
+		))
+		.subscribe({
+			next: (url) => window.open(url, "_blank"),
+			error: () => {
+				this.dialog.open(DiscardWarningComponent, {
+					data: getErrorDataDialog(),
+					minWidth: '30%'
+				});
 
-					function getErrorDataDialog() {
-						return {
-							title: 'image-network.worklist.details_study.ERROR_STUDY',
-							content: '',
-							okButtonLabel: 'buttons.ACCEPT',
-							errorMode: true,
-							color: 'warn'
-						};
-					}
+				function getErrorDataDialog() {
+					return {
+						title: 'image-network.worklist.details_study.ERROR_VIEW_STUDY',
+						content: '',
+						okButtonLabel: 'buttons.ACCEPT',
+						errorMode: true,
+						color: 'warn'
+					};
 				}
-			});
+			}
+		});
 	}
 
 	private buildUrl(url: string, studyInstanceUID: string, token: string, server: string): string {

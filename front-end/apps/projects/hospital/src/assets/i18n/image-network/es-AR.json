@@ -80,7 +80,8 @@
                 "DOWNLOAD_STUDY": "descargar estudio",
                 "TECHNICIAN_OBSERVATIONS": "Observaciones del técnico",
                 "IMAGE_SIZE": "Peso de la imagen:",
-                "ERROR_STUDY": "No es posible visualizar el estudio",
+                "ERROR_VIEW_STUDY": "No es posible visualizar el estudio",
+                "ERROR_DOWNLOAD_STUDY": "No es posible descargar el estudio",
                 "conclutions": {
                     "ADD_CONCLUTION": "Agregar conclusión",
                     "REGISTERED_CONCLUTIONS": "Conclusiones registradas",
