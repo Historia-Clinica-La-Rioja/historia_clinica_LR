@@ -11,6 +11,7 @@ import { ExtensionsModule } from '@extensions/extensions.module';
 import { ReportesEnfermeriaComponent } from './reportes-enfermeria/reportes-enfermeria.component';
 import { ReportesOdontologiaComponent } from './reportes-odontologia/reportes-odontologia.component';
 import { ReportesAdultomayorComponent } from './reportes-adultomayor/reportes-adultomayor.component';
+import { ReportesPersonagestanteComponent } from './reportes-personagestante/reportes-personagestante.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { ReportesAdultomayorComponent } from './reportes-adultomayor/reportes-ad
     ReportesGeneralesComponent,
     ReportesEnfermeriaComponent,
     ReportesOdontologiaComponent,
-    ReportesAdultomayorComponent
+    ReportesAdultomayorComponent,
+    ReportesPersonagestanteComponent
   ],
   imports: [
     CommonModule,

@@ -87,14 +87,12 @@
       <div class="text">
         <h3 class="tipos" id="69">Interpretación de puntaje</h3>
         <p id="70">La sumatoria da como resultado:</p>
-        <mat-radio-group id="puntaje" name="points" [(ngModel)]="selectedCalificacion" [disabled]="true">
-          <mat-radio-button color="primary" id="49" value="A5">Se considera PERSONA PRE FRÁGIL</mat-radio-button>
-          <mat-radio-button color="primary" id="50" value="B5">Se considera PERSONA FRÁGIL</mat-radio-button>
+        <mat-radio-group id="puntaje" name="points" [(ngModel)]="selectedCalificacion">
+          <mat-radio-button color="primary"[style.color]="(selectedCalificacion === 'A5' || selectedCalificacion === 'B5') ? '#2687c5' : ''" id="49" value="A5" [disabled]="selectedCalificacion === 'B5'">Se considera PERSONA PRE FRÁGIL</mat-radio-button>
+          <mat-radio-button color="primary" [style.color]="(selectedCalificacion === 'A5' || selectedCalificacion === 'B5') ? '#2687c5' : ''" id="50" value="B5" [disabled]="selectedCalificacion === 'A5'">Se considera PERSONA FRÁGIL</mat-radio-button>
         </mat-radio-group>
-  
         
         <button mat-raised-button color="primary" [disabled]="isSubmitDisabled()" type="submit">Enviar Formulario</button>
       </div>
     </form>
   </div>
-  
