@@ -9,6 +9,8 @@ import { PatientSummaryComponent } from '../hsi-components/patient-summary/patie
 import { AppointmentSummaryComponent } from './components/appointment-summary/appointment-summary.component';
 import { ContactDetailsComponent } from './components/contact-details/contact-details.component';
 import { HomeComponent } from './routes/home/home.component';
+import { InstitutionalActionsComponent } from './components/institutional-actions/institutional-actions.component';
+import { PopupActionsComponent } from './components/popup-actions/popup-actions.component';
 import { ReferenceCompleteDataComponent } from './components/reference-complete-data/reference-complete-data.component';
 import { ReferenceDashboardComponent } from './components/reference-dashboard/reference-dashboard.component';
 import { ReferenceDashboardFiltersComponent } from './components/reference-dashboard-filters/reference-dashboard-filters.component';
@@ -26,7 +28,9 @@ import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module
 		//components
 		AppointmentSummaryComponent,
 		ContactDetailsComponent,
+		InstitutionalActionsComponent,
 		HomeComponent,
+		PopupActionsComponent,
 		ReferenceCompleteDataComponent,
 		ReferenceDashboardComponent,
 		ReferenceReportComponent,

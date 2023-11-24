@@ -1,20 +1,14 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ReferenceAppointmentDto, ReferenceCompleteDataDto, ReferenceDataDto, ERole, EReferenceClosureType } from '@api-rest/api-model';
+import { MAT_DIALOG_DATA, } from '@angular/material/dialog';
+import { ReferenceCompleteDataDto, ReferenceDataDto } from '@api-rest/api-model';
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { ContactDetails } from '@access-management/components/contact-details/contact-details.component';
 import { PatientSummary } from '../../../hsi-components/patient-summary/patient-summary.component';
-import { Observable, take, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { AppointmentSummary } from '@access-management/components/appointment-summary/appointment-summary.component';
 import { APPOINTMENT_STATES_ID } from '@turnos/constants/appointment';
 import { Tabs } from '@turnos/constants/tabs';
-import { PermissionsService } from '@core/services/permissions.service';
 import { toPatientSummary, toContactDetails, toAppointmentSummary } from '@access-management/utils/mapper.utils';
-import { SearchAppointmentsInfoService } from '@access-management/services/search-appointment-info.service';
-import { TabsService } from '@turnos/services/tabs.service';
-import { DashboardService } from '@access-management/services/dashboard.service';
-import { CancelAppointmentComponent } from '@turnos/dialogs/cancel-appointment/cancel-appointment.component';
-import { DashboardView } from '@access-management/components/reference-dashboard-filters/reference-dashboard-filters.component';
 import { PENDING } from '@access-management/constants/reference';
 import { ContextService } from '@core/services/context.service';
 import { NO_INSTITUTION } from '../../../home/home.component';
@@ -27,23 +21,15 @@ import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/i
 })
 export class ReportCompleteDataPopupComponent implements OnInit {
 
-	referenceCompleteData$: Observable<ReferenceCompleteDataDto>;
+	referenceCompleteData: ReferenceCompleteDataDto;
 	reportCompleteData: ReportCompleteData;
 
 	colapseContactDetails = false;
-	popupActions: PopUpActions;
 
 	Tabs = Tabs;
-	private appointmentId: number;
 
 	constructor(
 		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
-		private readonly searchAppointmentsInfoService: SearchAppointmentsInfoService,
-		private readonly permissionService: PermissionsService,
-		private readonly dialogRef: MatDialogRef<ReportCompleteDataPopupComponent>,
-		private readonly dashboardService: DashboardService,
-		private readonly tabsService: TabsService,
-		private readonly dialog: MatDialog,
 		private readonly contextService: ContextService,
 		private readonly institutionalNetworkReferenceReportService: InstitutionalNetworkReferenceReportService,
 		@Inject(MAT_DIALOG_DATA) public data,
@@ -53,45 +39,17 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 
 		const referenceDetails$ = this.contextService.institutionId === NO_INSTITUTION ? this.institutionalNetworkReferenceReportService.getReferenceDetail(this.data.referenceId) : this.institutionalReferenceReportService.getReferenceDetail(this.data.referenceId);
 
-		this.referenceCompleteData$ = referenceDetails$.pipe(tap(
+		referenceDetails$.subscribe(
 			referenceDetails => {
-				this.setReportData(referenceDetails);
-				this.colapseContactDetails = referenceDetails.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.SERVED;
-				if (this.contextService.institutionId !== NO_INSTITUTION)
-					this.setPopUpActions(referenceDetails.appointment, referenceDetails.reference.closureType);
-			}));
-	}
-
-	assignAppointmentInInstitution(): void {
-		this.searchAppointmentsInfoService.loadInformation(this.reportCompleteData.patient.id, this.reportCompleteData.reference);
-		this.dialogRef.close();
-		this.tabsService.setTab(Tabs.INSTITUTION);
-	}
-
-	assignAppointmentInCareNetwork(): void {
-		this.searchAppointmentsInfoService.loadInformation(this.reportCompleteData.patient.id, this.reportCompleteData.reference);
-		this.dialogRef.close();
-		this.tabsService.setTab(Tabs.CARE_NETWORK);
-	}
-
-	cancelAppointment(): void {
-		const dialogRef = this.dialog.open(CancelAppointmentComponent, {
-			data: {
-				appointmentId: this.appointmentId
-			}
-		});
-		dialogRef.afterClosed().subscribe(canceledAppointment => {
-			if (canceledAppointment) {
-				this.dashboardService.updateReports();
-				this.dialogRef.close();
-			}
-		});
+				this.referenceCompleteData = referenceDetails;
+				this.setReportData(this.referenceCompleteData);
+				this.colapseContactDetails = this.referenceCompleteData.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.SERVED;
+			});
 	}
 
 	private setReportData(referenceDetails: ReferenceCompleteDataDto): void {
 		const patient = referenceDetails.patient;
 		const pendingAppointment: AppointmentSummary = { state: PENDING };
-		this.appointmentId = referenceDetails.appointment?.appointmentId;
 		this.reportCompleteData = {
 			patient: toPatientSummary(patient),
 			contactDetails: toContactDetails(patient),
@@ -99,78 +57,12 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 			appointment: referenceDetails.appointment ? toAppointmentSummary(referenceDetails.appointment) : pendingAppointment
 		}
 	}
-
-	private setPopUpActions(appointment: ReferenceAppointmentDto, closureType: EReferenceClosureType): void {
-		if (!closureType) {
-			this.permissionService.hasContextAssignments$([ERole.ADMINISTRATIVO])
-				.pipe(take(1))
-				.subscribe(hasRole => hasRole ? this.setAdministrativeActions(appointment) : this.setMedicalActions(appointment))
-		}
-	}
-
-	private setAdministrativeActions(appointment: ReferenceAppointmentDto): void {
-		const appointmentInTheLoggedInstitution = this.contextService.institutionId === appointment?.institution?.id;
-		const assignedAppointment = appointment?.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED || appointment?.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED;
-		this.setCancelAppointment(assignedAppointment && appointmentInTheLoggedInstitution);
-		this.setAssingAppointmentActions(appointment);
-	}
-
-	private setAssingAppointmentActions(appointment: ReferenceAppointmentDto): void {
-		if (this.canAssignedAppointment(appointment)) {
-			const dashboardView = this.dashboardService.dashboardView;
-			const careLineId = this.reportCompleteData.reference.careLine.id;
-
-			if (dashboardView == DashboardView.RECEIVED) {
-				this.setAssignAppointmentInInstitution(true);
-				this.searchAppointmentsInfoService.searchAppointmentsInTabs = !!careLineId;
-			} else if (careLineId) {
-				this.setAssignAppointmentInCareNetwork(true);
-				this.searchAppointmentsInfoService.searchAppointmentsInTabs = false;
-			}
-		}
-	}
-
-	private setMedicalActions(appointment: ReferenceAppointmentDto): void {
-		if (this.reportCompleteData.reference.careLine.id && this.canAssignedAppointment(appointment))
-			this.setAssignAppointmentInCareNetwork(true);
-	}
-
-	private canAssignedAppointment(appointment: ReferenceAppointmentDto): boolean {
-		return !appointment || appointment?.appointmentStateId === APPOINTMENT_STATES_ID.ABSENT;
-	}
-
-	private setCancelAppointment(value: boolean): void {
-		this.popupActions = {
-			...this.popupActions,
-			cancelAppointment: value
-		}
-	}
-
-	private setAssignAppointmentInInstitution(value: boolean): void {
-		this.popupActions = {
-			...this.popupActions,
-			assignAppointmentInInstitution: value
-		}
-	}
-
-	private setAssignAppointmentInCareNetwork(value: boolean): void {
-		this.popupActions = {
-			...this.popupActions,
-			assignAppointmentInCareNetwork: value
-		}
-	}
-
 }
 
-interface ReportCompleteData {
+
+export interface ReportCompleteData {
 	patient: PatientSummary;
 	contactDetails: ContactDetails;
 	reference: ReferenceDataDto;
 	appointment: AppointmentSummary;
-}
-
-interface PopUpActions {
-	assignAppointmentInCareNetwork: boolean;
-	assignAppointmentInInstitution: boolean;
-	cancelAppointment: boolean;
 }

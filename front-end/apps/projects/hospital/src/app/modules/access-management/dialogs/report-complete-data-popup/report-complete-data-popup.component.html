@@ -3,7 +3,7 @@
 		<mat-icon>close</mat-icon>
 	</button>
 </div>
-<div *ngIf="referenceCompleteData$ | async">
+<div *ngIf="referenceCompleteData">
 	<div mat-dialog-title>
 		<h2>{{'access-management.search_references.reference.TITLE' | translate}}</h2>
 		<app-patient-summary [person]="reportCompleteData.patient"></app-patient-summary>
@@ -26,19 +26,6 @@
 		<app-appointment-summary fxFlex="40" [appointmentSummary]="reportCompleteData.appointment"></app-appointment-summary>
 	</mat-dialog-content>
 
-	<div actions class="button" fxLayoutAlign="end end">
-		<button mat-flat-button color="primary" id="assign-appointment-in-institution"
-			*ngIf="popupActions?.assignAppointmentInInstitution" (click)="assignAppointmentInInstitution()">
-			<span class="uppercase">{{'turnos.home.ASSIGN_APPOINTMENT' | translate}}</span>
-		</button>
-		<button mat-stroked-button color="primary" id="assign-appointment-in-care-network"
-			*ngIf="popupActions?.assignAppointmentInCareNetwork" (click)="assignAppointmentInCareNetwork()">
-			<span class="uppercase">{{'access-management.search_references.reference.ASSIGN_APPOINTMENT_IN_CARE_NETWORK' | translate}}</span>
-		</button>
-		<button mat-flat-button color="warn" id="cancel-appointment" *ngIf="popupActions?.cancelAppointment"
-			(click)="cancelAppointment()">
-			<span class="uppercase">{{'turnos.cancel.TITLE' | translate}}</span>
-		</button>
-	</div>
+	<app-popup-actions actions [reportCompleteData]="referenceCompleteData"></app-popup-actions>
 
 </div>

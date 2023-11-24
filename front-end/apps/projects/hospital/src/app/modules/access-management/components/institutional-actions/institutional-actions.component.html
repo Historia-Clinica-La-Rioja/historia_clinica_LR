@@ -1,0 +1,13 @@
+<button mat-flat-button color="primary" id="assign-appointment-in-institution"
+    *ngIf="actions?.assignAppointmentInInstitution" (click)="assignAppointmentInInstitution()">
+    <span class="uppercase">{{'turnos.home.ASSIGN_APPOINTMENT' | translate}}</span>
+</button>
+<button mat-stroked-button color="primary" id="assign-appointment-in-care-network"
+    *ngIf="actions?.assignAppointmentInCareNetwork" (click)="assignAppointmentInCareNetwork()">
+    <span class="uppercase">{{'access-management.search_references.reference.ASSIGN_APPOINTMENT_IN_CARE_NETWORK' |
+        translate}}</span>
+</button>
+<button mat-flat-button color="warn" id="cancel-appointment" *ngIf="actions?.cancelAppointment"
+    (click)="cancelAppointment()">
+    <span class="uppercase">{{'turnos.cancel.TITLE' | translate}}</span>
+</button>
