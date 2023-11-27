@@ -27,6 +27,11 @@ export class InstitutionalNetworkActionsComponent {
 		this.openReasonAndUpdateState(reasonData, ReferenceApprovalState.REJECTED);
 	}
 
+	review() {
+		const reasonData = this.toReasonData('suggested-review.TITLE', 'suggested-review.SUBTITLE', 'suggested-review.PLACEHOLDER');
+		this.openReasonAndUpdateState(reasonData, ReferenceApprovalState.SUGGESTED_REVISION);
+	}
+
 	private openReasonAndUpdateState(data: ReasonPopupData, stateId: number) {
 		const dialogRef = this.dialog.open(ReasonPopUpComponent, {
 			data,
