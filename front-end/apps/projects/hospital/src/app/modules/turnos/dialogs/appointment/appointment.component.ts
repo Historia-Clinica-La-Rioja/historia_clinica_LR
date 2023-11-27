@@ -160,6 +160,7 @@ export class AppointmentComponent implements OnInit {
 	isVirtualConsultationModality: boolean = false;
 	canDownloadReport = false;
 	dateAppointment : DateDto;
+	viewInputEmail: boolean = false;
 
 	isLabelSelectorVisible: boolean = false;
 	diaryLabels: DiaryLabelDto[] = [];
@@ -221,6 +222,7 @@ export class AppointmentComponent implements OnInit {
 			month: ['',Validators.required],
 			year: ['',Validators.required],
 			modality: ['',[Validators.required]],
+			email: [''],
 		});
 
 		this.formObservations = this.formBuilder.group({
@@ -272,6 +274,7 @@ export class AppointmentComponent implements OnInit {
 				if(this.formDate.controls.modality.value !==  this.SECOND_OPINION_VIRTUAL_ATTENTION){
 					this.modalitys.pop();
 				}
+				this.setModalityAndValidator();
 				this.checkDownloadReportAvailability();
 
 				if (appointment.diaryLabelDto) {
@@ -447,6 +450,19 @@ export class AppointmentComponent implements OnInit {
 		 for (var i = this.startAgenda; i <= this.endAgenda; i++) {
 			this.availableYears.push(i);
 	  	 }
+	}
+
+	setModalityAndValidator(){
+		switch (this.formDate.controls.modality.value) {
+			case EAppointmentModality.PATIENT_VIRTUAL_ATTENTION : 
+				updateControlValidator(this.formDate, 'email', [Validators.required]);
+				this.viewInputEmail = true;
+				break;
+			case EAppointmentModality.ON_SITE_ATTENTION : 
+				updateControlValidator(this.formDate, 'email', []);
+				this.viewInputEmail = false;
+				break;
+		}
 	}
 
 	loadAppointmentsHours(date: DateDto) {

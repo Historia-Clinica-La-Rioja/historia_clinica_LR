@@ -202,7 +202,7 @@
 				(ngSubmit)="updateAppointmentDate()">
 				<div>
 					<mat-form-field appearance="outline">
-						<mat-select formControlName="modality" [disabled]="formDate.controls.modality.value === SECOND_OPINION_VIRTUAL_ATTENTION">
+						<mat-select formControlName="modality" (selectionChange)="setModalityAndValidator()" [disabled]="formDate.controls.modality.value === SECOND_OPINION_VIRTUAL_ATTENTION">
 							<mat-option
 								*ngFor="let modality of modalitys" [value]="modality.value">
 									{{modality.description | translate}}
@@ -241,6 +241,14 @@
 						</mat-select>
 					</mat-form-field>
 					<span class="hs"> hs.</span>
+				</div>
+				<div fxLayout="row" *ngIf="viewInputEmail">
+					<mat-form-field appearance="outline">
+						<mat-label>{{'turnos.new-appointment.EMAIL_PATIENT' | translate}}</mat-label>
+						<input matInput type="email" formControlName="email">
+						<mat-error *ngIf="hasError(formDate, 'required', 'email')"><span translate="forms.REQUIRED"></span></mat-error>
+						<mat-hint>{{'turnos.new-appointment.MESSAGE_UPDATE_EMAIL' | translate}}</mat-hint>
+					</mat-form-field>
 				</div>
 				<div class="confirm-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px" fxFlex="60%">
 					<button id="cancel-edition" mat-stroked-button color="primary" btn-block type="button"

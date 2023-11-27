@@ -154,6 +154,8 @@
 			"PHONE_NUMBER": "Número Telefónico",
 			"PHONE_PREFIX": "Prefijo",
 			"EMAIL":"Email",
+			"EMAIL_PATIENT":"Mail del paciente",
+			"MESSAGE_UPDATE_EMAIL":"El paciente será notificado via email del cambio de turno",
 			"ACCEPT": "Aceptar",
 			"PRINT_APPOINTMENT_BUTTON": "Imprimir turno",
 			"ASSIGNED_APPOINTMENT": "Turno asignado",
