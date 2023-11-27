@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 
@@ -10,8 +10,10 @@ import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/d
 })
 export class DownloadStudyComponent {
 
+	@Input() studyAvailable?: boolean;
     buttonText: String;
-
+    isLoading: boolean = false;
+    
     constructor(
         translateService: TranslateService,
         public dialog: MatDialog
@@ -20,6 +22,7 @@ export class DownloadStudyComponent {
     }
 
     downloadStudy() {
+        this.isLoading = true;
     //     descargarImagen.subscribe({
     //         next: () => ,
     //         error: () => {

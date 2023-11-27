@@ -17,7 +17,7 @@ export class ViewStudyComponent {
 
 	@Input() appointmentId: number;
 	@Input() isImageId: boolean = false;
-
+	@Input() studyAvailable?: boolean;
 
 	constructor(
 		private readonly appointmentService: AppointmentsService,

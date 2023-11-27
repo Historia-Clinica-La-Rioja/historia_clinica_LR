@@ -13,12 +13,13 @@ export class ButtonComponent implements OnChanges {
 	@Input() isLoading?= false;
 	@Input() text = '';
 	@Input() buttonType?= ButtonType.STOKED
+	@Input() disabled?= false;
 
 	@Output() clicked = new EventEmitter();
 
 	width: number;
 	ngOnChanges(changes: SimpleChanges): void {
-		this.width = changes.isLoading.currentValue ? changes.text.currentValue.length * 11 : null
+		this.width = changes.isLoading.currentValue ? changes.text?.currentValue.length * 11 : null
 	}
 	constructor() { }
 

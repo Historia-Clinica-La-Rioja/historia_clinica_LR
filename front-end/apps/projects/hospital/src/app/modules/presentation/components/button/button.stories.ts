@@ -34,7 +34,8 @@ export const readyToUse: Story = {
 		color: 'primary',
 		text: 'NUEVA CONSULTA',
 		buttonType: ButtonType.RAISED,
-		isLoading: false
+		isLoading: false,
+		disabled: false,
 	},
 };
 
@@ -47,3 +48,12 @@ export const Loading: Story = {
 	},
 };
 
+export const disabledBeforeUse: Story = {
+	args: {
+		color: 'primary',
+		text: 'NUEVA CONSULTA',
+		buttonType: ButtonType.RAISED,
+		isLoading: false,
+		disabled: true,
+	},
+};
