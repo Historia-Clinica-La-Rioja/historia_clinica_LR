@@ -20,6 +20,7 @@ import {
 	AppointmentDto,
 	AppointmentListDto,
 	CompleteDiaryDto,
+	DateDto,
 	DateTimeDto,
 	DiaryOpeningHoursFreeTimesDto,
 	EAppointmentModality,
@@ -89,6 +90,8 @@ const ROLES_TO_EDIT: ERole[]
 	= [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 const ROLE_TO_DOWNDLOAD_REPORTS: ERole[] = [ERole.ADMINISTRATIVO];
 const ROLE_TO_MAKE_VIRTUAL_CONSULTATION: ERole[] = [ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
+const MONTHS = [1,2,3,4,5,6,7,8,9,10,11,12];
+
 @Component({
 	selector: 'app-appointment',
 	templateUrl: './appointment.component.html',
@@ -101,6 +104,7 @@ export class AppointmentComponent implements OnInit {
 	readonly TEMPORARY_PATIENT = TEMPORARY_PATIENT;
 	readonly BELL_LABEL = BELL_LABEL;
 	readonly Color = Color;
+	datestypes = DATESTYPES;
 	getAppointmentState = getAppointmentState;
 	getError = getError;
 	hasError = hasError;
@@ -133,11 +137,11 @@ export class AppointmentComponent implements OnInit {
 	hideFilterPanel = false;
 
 	isDateFormVisible = false;
-	startAgenda = moment();
-	endAgenda = momentParseDate(this.data.agenda.endDate);
-	availableDays: number[] = [];
-	disableDays: Date[] = [];
-	openingDateForm = false;
+	startAgenda = dateToDateDto(new Date()).year;
+	endAgenda = dateToDateDto(new Date(this.data.agenda.endDate)).year;
+	availableDays: number[]= [];
+	availableMonths: number[] = [];
+	availableYears: number[] = [];
 	possibleScheduleHours: TimeDto[] = [];
 	selectedDate = new Date(this.data.appointmentData.date); 
 	isCheckedDownloadAnexo = false;
@@ -155,6 +159,7 @@ export class AppointmentComponent implements OnInit {
 	selectedModality: modality;
 	isVirtualConsultationModality: boolean = false;
 	canDownloadReport = false;
+	dateAppointment : DateDto;
 
 	isLabelSelectorVisible: boolean = false;
 	diaryLabels: DiaryLabelDto[] = [];
@@ -212,6 +217,9 @@ export class AppointmentComponent implements OnInit {
 
 		this.formDate = this.formBuilder.group({
 			hour: ['', [Validators.required]],
+			day: ['', Validators.required],
+			month: ['',Validators.required],
+			year: ['',Validators.required],
 			modality: ['',[Validators.required]],
 		});
 
@@ -275,6 +283,17 @@ export class AppointmentComponent implements OnInit {
 					}
 					this.setSelectedDiaryLabel(diaryLabel);
 				}
+				
+				const date = new Date(this.appointment.date)
+				date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
+				this.dateAppointment = dateToDateDto(date)
+				this.formDate.controls.day.setValue(this.dateAppointment.day);
+				this.formDate.controls.month.setValue(this.dateAppointment.month);
+				this.formDate.controls.year.setValue(this.dateAppointment.year);
+				this.loadAvailableDays(this.dateAppointment);
+				this.setAvailableMonths(this.dateAppointment);
+				this.loadAppointmentsHours(this.dateAppointment);
+				this.setAvailableYears();
 			});
 
 		this.hasRoleToChangeState$ = this.permissionsService.hasContextAssignments$(ROLES_TO_CHANGE_STATE).pipe(take(1));
@@ -373,12 +392,37 @@ export class AppointmentComponent implements OnInit {
 
 	openDateForm(): void {
 		this.dateFormToggle();
-		this.openingDateForm = true
 	}
 
-	selectDate(date: Date): void {
-		this.loadAppointmentsHours(date);
-		this.openingDateForm = false;
+	selectDate(dateType: DATESTYPES): void {
+		switch (dateType){
+			case DATESTYPES.DAY :
+				this.dateAppointment.day = this.formDate.controls.day.value;
+				this.loadAppointmentsHours(this.dateAppointment);
+				break;
+			case DATESTYPES.MONTH :
+				this.dateAppointment.month = this.formDate.controls.month.value;
+				this.dateAppointment.day = 1;
+				this.loadAvailableDays(this.dateAppointment);
+				this.possibleScheduleHours = [];
+				this.formDate.controls.day.setValue(null);
+				this.formDate.controls.hour.setValue(null);
+				break;
+			case DATESTYPES.YEAR : 
+				this.dateAppointment.year = this.formDate.controls.year.value;
+				this.startAgenda = this.dateAppointment.year;
+				const now = dateToDateDto(new Date());
+				if(now.year === this.dateAppointment.year){
+					this.dateAppointment.month = now.month;
+				}else{
+					this.dateAppointment.month = 1;
+				}
+				this.setAvailableMonths(this.dateAppointment);
+				this.formDate.controls.day.setValue(null);
+				this.formDate.controls.hour.setValue(null);
+				this.formDate.controls.month.setValue(null);
+				break;
+		}
 	}
 
 	setAvailableDays(arr: any[]) {
@@ -387,33 +431,46 @@ export class AppointmentComponent implements OnInit {
 			if (!this.availableDays.includes(element.day))
 				this.availableDays.push(element.day);
 		});
-		this.availableDays$ = of(this.availableDays);
+		this.availableDays.sort((a, b) => a - b);
 	}
 
-	loadAppointmentsHours(date: Date) {
+	setAvailableMonths(date:DateDto){
+		this.availableMonths = [];
+		MONTHS.forEach(m =>{
+			if(m >= date.month){
+				this.availableMonths.push(m);
+			}
+		})
+	}
+
+	setAvailableYears(){
+		 for (var i = this.startAgenda; i <= this.endAgenda; i++) {
+			this.availableYears.push(i);
+	  	 }
+	}
+
+	loadAppointmentsHours(date: DateDto) {
+		this.possibleScheduleHours = [];
 		const searchCriteria = this.prepareSearchCriteria(date);
 	 	this.diaryService.getDailyFreeAppointmentTimes(this.data.agenda.id,searchCriteria).subscribe((times: DiaryOpeningHoursFreeTimesDto[]) => {
 			this.possibleScheduleHours = times[0].freeTimes;
 		})
 	}
 
-	prepareSearchCriteria(dateSelect: Date): FreeAppointmentSearchFilterDto {
+	prepareSearchCriteria(dateSelect: DateDto): FreeAppointmentSearchFilterDto {
 		const searchCriteria: FreeAppointmentSearchFilterDto = {
-			date: dateToDateDto(dateSelect),
+			date: dateSelect,
 			modality: this.formDate.controls.modality.value,
 			mustBeProtected: this.appointment.protected,
 		}
 		return searchCriteria;
 	}
 
-	loadAvailableDays(date: Date): void {
-		date.setDate(1);
+	loadAvailableDays(date: DateDto): void {
 		const searchCriteria = this.prepareSearchCriteria(date);
-		this.selectedMonth$ = of(date);
 		this.diaryService.getMonthlyFreeAppointmentDates(this.data.agenda.id, searchCriteria).subscribe(res => {
-			this.setAvailableDays(res); 
+			this.setAvailableDays(res);
 		})
-
 	}
 
 	updateAppointmentOverturn(appointmentId: number, appointmentStateId: number, overturn: boolean, patientId: number): void {
@@ -899,3 +956,4 @@ export interface PatientAppointmentInformation {
 	createdOn: Date;
 	professionalPersonDto: ProfessionalPersonDto;
 }
+export enum DATESTYPES {DAY,MONTH,YEAR};

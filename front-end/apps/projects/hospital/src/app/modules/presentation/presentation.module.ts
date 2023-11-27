@@ -74,7 +74,6 @@ import { TypeaheadFilterOptionsComponent } from './components/typeahead-filter-o
 import { UserBadgeComponent } from './components/user-badge/user-badge.component';
 import { ButtonComponent } from './components/button/button.component';
 import { ColorSelectorComponent } from './components/color-selector/color-selector.component';
-
 // dialogs
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
