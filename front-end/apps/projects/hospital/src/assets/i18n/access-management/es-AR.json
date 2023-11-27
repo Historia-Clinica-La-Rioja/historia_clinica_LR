@@ -43,7 +43,8 @@
 				},
 				"institutional_network_actions": {
 					"REJECT": "rechazar",
-					"SUGGEST_REVIEW": "sugerir revision"
+					"SUGGEST_REVIEW": "sugerir revision",
+					"APPROVE": "aprobar"
 				},
 				"discard_popup": {
 					"rejected": {
