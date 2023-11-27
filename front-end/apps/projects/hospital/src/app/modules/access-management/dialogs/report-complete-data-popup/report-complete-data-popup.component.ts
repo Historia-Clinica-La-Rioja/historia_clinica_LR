@@ -4,7 +4,7 @@ import { ReferenceCompleteDataDto, ReferenceDataDto, ReferenceRegulationDto } fr
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { ContactDetails } from '@access-management/components/contact-details/contact-details.component';
 import { PatientSummary } from '../../../hsi-components/patient-summary/patient-summary.component';
-import { Observable, of } from 'rxjs';
+import { Observable, map, of, tap } from 'rxjs';
 import { AppointmentSummary } from '@access-management/components/appointment-summary/appointment-summary.component';
 import { APPOINTMENT_STATES_ID } from '@turnos/constants/appointment';
 import { Tabs } from '@turnos/constants/tabs';
@@ -45,6 +45,14 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 				this.setReportData(this.referenceCompleteData);
 				this.colapseContactDetails = this.referenceCompleteData.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.SERVED;
 			});
+	}
+
+	updateApprovalStatus() {
+		const referenceDetails$ = this.getObservable();
+		this.referenceRegulationDto$ = referenceDetails$.pipe(
+			map(referenceDetails => { return referenceDetails.regulation }),
+			tap(regulationNewState => this.referenceCompleteData = {...this.referenceCompleteData, regulation: regulationNewState})
+		);
 	}
 
 	private getObservable(): Observable<ReferenceCompleteDataDto> {

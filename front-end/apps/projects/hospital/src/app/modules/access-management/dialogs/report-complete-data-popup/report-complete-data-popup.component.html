@@ -32,7 +32,7 @@
 		</div>
 	</mat-dialog-content>
 
-	<app-popup-actions actions [reportCompleteData]="referenceCompleteData"></app-popup-actions>
+	<app-popup-actions actions [reportCompleteData]="referenceCompleteData" (newState)="updateApprovalStatus()"></app-popup-actions>
 
 </div>
 

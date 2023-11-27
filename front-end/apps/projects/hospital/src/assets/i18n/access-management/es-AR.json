@@ -40,6 +40,16 @@
 						"REJECTED": "solicitud rechazada",
 						"APPROVED": "solicitud aprobada"
 					}
+				},
+				"institutional_network_actions": {
+					"REJECT": "rechazar"
+				},
+				"discard_popup": {
+					"rejected": {
+						"TITLE": "rechazar solicitud",
+						"SUBTITLE": "se marcará la solicitud como rechazada",
+						"PLACEHOLDER": "Explique el motivo de rechazo"
+					}
 				}
 			}
 		}

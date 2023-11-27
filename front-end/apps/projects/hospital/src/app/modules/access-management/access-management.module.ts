@@ -11,6 +11,7 @@ import { AppointmentSummaryComponent } from './components/appointment-summary/ap
 import { ContactDetailsComponent } from './components/contact-details/contact-details.component';
 import { HomeComponent } from './routes/home/home.component';
 import { InstitutionalActionsComponent } from './components/institutional-actions/institutional-actions.component';
+import { InstitutionalNetworkActionsComponent } from './components/institutional-network-actions/institutional-network-actions.component';
 import { PopupActionsComponent } from './components/popup-actions/popup-actions.component';
 import { ReferenceCompleteDataComponent } from './components/reference-complete-data/reference-complete-data.component';
 import { ReferenceDashboardComponent } from './components/reference-dashboard/reference-dashboard.component';
@@ -32,6 +33,7 @@ import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module
 		AppointmentSummaryComponent,
 		ContactDetailsComponent,
 		InstitutionalActionsComponent,
+		InstitutionalNetworkActionsComponent,
 		HomeComponent,
 		PopupActionsComponent,
 		ReferenceCompleteDataComponent,
