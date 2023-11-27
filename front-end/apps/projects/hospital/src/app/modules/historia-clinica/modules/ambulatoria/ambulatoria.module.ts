@@ -74,7 +74,6 @@ import { PatientValidatorPopupComponent } from './dialogs/patient-validator-popu
 import { PrintAmbulatoriaComponent } from './routes/print-ambulatoria/print-ambulatoria.component';
 import { SearchSnomedConceptComponent } from './dialogs/search-snomed-concept/search-snomed-concept.component';
 import { TablaSapComponent } from './components/tabla-sap/tabla-sap.component';
-// import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AdultoMayorComponent } from '@historia-clinica/components/emergente/inicio-estudio/inicio-estudio.component';
 import { EstudiosPopupComponent } from '@historia-clinica/components/emergente/pop-up/estudios-popup.component';
 import { FrailScaleComponent } from './components/cuestionarios/frail-scale/frail-scale.component';
@@ -161,7 +160,6 @@ import { EdmontonComponent } from './components/cuestionarios/edmonton/edmonton.
 	providers: [
 		AmbulatoriaSummaryFacadeService,
 		HistoricalProblemsFacadeService,
-		// { provide: MAT_DIALOG_DATA, useValue: {} }
 	]
 })
 export class AmbulatoriaModule {
