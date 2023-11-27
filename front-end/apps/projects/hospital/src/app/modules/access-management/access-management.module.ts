@@ -18,6 +18,7 @@ import { ReferenceDashboardFiltersComponent } from './components/reference-dashb
 import { ReferenceReportComponent } from './components/reference-report/reference-report.component';
 import { ReferenceSummaryComponent } from './components/reference-summary/reference-summary.component';
 //dialogs
+import { ReasonPopUpComponent } from './dialogs/reason-pop-up/reason-pop-up.component';
 import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data-popup/report-complete-data-popup.component';
 //pipes
 import { ShowProblemsPipe } from './pipes/show-problems.pipe';
@@ -39,6 +40,7 @@ import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module
 		ReferenceDashboardFiltersComponent,
 		ReferenceSummaryComponent,
 		//dialogs
+		ReasonPopUpComponent,
 		ReportCompleteDataPopupComponent,
 		//pipes
 		ShowProblemsPipe,
