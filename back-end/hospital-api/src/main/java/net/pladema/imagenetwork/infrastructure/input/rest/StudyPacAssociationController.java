@@ -28,7 +28,7 @@ public class StudyPacAssociationController {
 	private final GetPacWhereStudyIsHosted getPacWhereStudyIsHosted;
 
 	@GetMapping(value = "/{studyInstanceUID}")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, INFORMADOR, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, INFORMADOR, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES')")
 	public ResponseEntity<PacsUrlDto> getPacGlobalURL(@PathVariable Integer institutionId, @PathVariable String studyInstanceUID) throws MalformedURLException {
 		log.debug("Input -> institutionId '{}' studyInstanceUID '{}'", institutionId, studyInstanceUID);
 		PacsUrlDto url = mapToDto(getPacWhereStudyIsHosted.run(studyInstanceUID));

@@ -24,7 +24,7 @@ public class StudyPermissionController {
 	private final GenerateStudyTokenUUID generateStudyTokenUUID;
 
 	@GetMapping("/generate/uuid")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, INFORMADOR, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, INFORMADOR, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES')")
 	public ResponseEntity<TokenDto> generatePermissionsUUID(@PathVariable String studyInstanceUID, @PathVariable Integer institutionId) {
 		log.trace("Input -> studyInstanceUID '{}' institutionId '{}'", studyInstanceUID, institutionId);
 		String result = generateStudyTokenUUID.run(studyInstanceUID);
@@ -34,7 +34,7 @@ public class StudyPermissionController {
 	}
 
 	@GetMapping("/generate/jwt")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, INFORMADOR, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, INFORMADOR, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES')")
 	public ResponseEntity<TokenDto> generatePermissionsJWT(@PathVariable String studyInstanceUID, @PathVariable Integer institutionId) {
 		log.trace("Input -> studyInstanceUID '{}' institutionId '{}'", studyInstanceUID, institutionId);
 		String result = generateStudyTokenJWT.run(studyInstanceUID);
