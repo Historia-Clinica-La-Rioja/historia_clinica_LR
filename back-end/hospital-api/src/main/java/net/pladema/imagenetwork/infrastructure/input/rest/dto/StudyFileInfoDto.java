@@ -13,7 +13,6 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class StudyPacAssociationDto {
-	private String studyInstanceUID;
-	private String pacGlobalURL;
+public class StudyFileInfoDto {
+    private String uuid;
 }

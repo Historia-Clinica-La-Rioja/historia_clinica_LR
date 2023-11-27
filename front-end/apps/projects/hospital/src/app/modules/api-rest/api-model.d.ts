@@ -2895,8 +2895,8 @@ export interface PacServerTypeDto extends Serializable {
     id: number;
 }
 
-export interface PacsUrlDto {
-    pacs: string[];
+export interface PacsListDto {
+    urls: string[];
 }
 
 export interface PageDto<T> {
@@ -3910,6 +3910,10 @@ export interface StudyDto extends Serializable {
     healthConditionId: number;
     observations?: string;
     snomed: SnomedDto;
+}
+
+export interface StudyFileInfoDto {
+    uuid: string;
 }
 
 export interface StudyIntanceUIDDto {
