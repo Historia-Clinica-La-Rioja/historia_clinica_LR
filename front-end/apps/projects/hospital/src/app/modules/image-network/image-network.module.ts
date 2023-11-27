@@ -23,6 +23,9 @@ import { TooltipOrderComponent } from './components/tooltip-order/tooltip-order.
 import { DownloadTranscribedOrderComponent } from './dialogs/download-transcribed-order/download-transcribed-order.component';
 import { DeleteTemplateComponent } from './dialogs/delete-template/delete-template.component';
 import { DownloadStudyComponent } from './components/download-study/download-study.component';
+import { OrderImageDetailComponent } from './components/order-image-detail/order-image-detail.component';
+import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
+import { ImageOrderColoredIconTextCasesComponent } from './components/image-order-identifier-cases/image-order-coloredIconText-cases.component';
 
 @NgModule({
     declarations: [
@@ -46,13 +49,16 @@ import { DownloadStudyComponent } from './components/download-study/download-stu
         DownloadTranscribedOrderComponent,
         TooltipOrderComponent,
         DeleteTemplateComponent,
-        DownloadStudyComponent
+        DownloadStudyComponent,
+        OrderImageDetailComponent,
+        ImageOrderColoredIconTextCasesComponent,
     ],
     imports: [
         CommonModule,
         PresentationModule,
         ImageNetworkRoutingModule,
-        HistoriaClinicaModule
+        HistoriaClinicaModule,
+        IdentifierCasesComponent
     ],
     exports: [
         ViewStudyComponent,

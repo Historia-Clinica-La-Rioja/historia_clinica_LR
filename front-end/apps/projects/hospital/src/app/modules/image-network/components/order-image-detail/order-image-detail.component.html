@@ -1,0 +1,21 @@
+<div id="main-container" fxLayout="column" fxLayoutGap="15px">
+    <h2>{{detail.title}}</h2>
+    <div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="12px">
+        <app-colored-label [description]="detail.statusOrder.description | uppercase" [color]="detail.statusOrder.color"
+            id="colored-label"></app-colored-label>
+        <div *ngIf="detail.orderNumber" class="grey">
+            <span>Orden#{{detail.orderNumber}}</span>
+        </div>
+        <app-image-order-coloredIconText-cases id="colored-type-order" class="hide-overflow">
+        </app-image-order-coloredIconText-cases>
+    </div>
+    <div fxLayout="column" fxLayoutGap="12px" id="order-info">
+        <app-identifier-cases [position]="position" [showLegend]="true" [description]="detail.problems"
+            [identifierCase]="identifierCases.PROBLEM" id="problem"></app-identifier-cases>
+    </div>
+    <span id="observation">{{ detail.observations }}</span>
+    <div class="row-container" fxLayoutAlign="space-between" id="detail-info-professional">
+        <span class="grey" id="professional-name">{{detail.professional}} </span>
+        <span class="grey" id="date">{{detail.date}}</span>
+    </div>
+</div>

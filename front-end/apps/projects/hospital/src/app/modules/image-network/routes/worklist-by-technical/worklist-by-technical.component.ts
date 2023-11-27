@@ -333,7 +333,7 @@ export class WorklistByTechnicalComponent implements OnInit {
             patientId: this.selectedAppointment.patient.id,
         }
 		const dialogRef = this.dialog.open(FinishStudyComponent, {
-			width: '35%',
+			width: '38%',
 			autoFocus: false,
 			data
 		});
