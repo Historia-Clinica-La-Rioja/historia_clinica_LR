@@ -1,11 +1,8 @@
-import { Input, Inject,Component, ChangeDetectionStrategy} from '@angular/core';
+import { Inject,Component, ChangeDetectionStrategy} from '@angular/core';
 import { EdmontonService } from '@api-rest/services/edmonton.service';
-import { ContextService } from '@core/services/context.service';
-import { BasicPatientDto } from '@api-rest/api-model';
 import Swal from 'sweetalert2';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CreateQuestionnaireDTO, QuestionnaireAnswerDTO } from '@api-rest/api-model';
-
 
 @Component({
   selector: 'app-edmonton',
@@ -15,7 +12,7 @@ import { CreateQuestionnaireDTO, QuestionnaireAnswerDTO } from '@api-rest/api-mo
 })
 export class EdmontonComponent {
   
-  private readonly routePrefix;
+  // private readonly routePrefix;
   totalSum: number;
   selectedCognitiveOption: number;
   selectedHealthStatusOption: number;
@@ -30,138 +27,134 @@ export class EdmontonComponent {
   selectedContingenciaOption: number;
   selectedRendimientoFuncOption: number; 
   selectedCalificacionFuncOption: number;
-  submitted: boolean = false;
-  @Input() patientId: number;
+  // @Input() patientId: number;
   sumaAcumulada: number; 
   selectedValues: number[] = [];
   cumulativeSum: number = 0;
-  patientData: BasicPatientDto | undefined;
+  // patientData: BasicPatientDto | undefined;
   datos: any;
   selectedCalificacion: string = '';
-  patient: number;
-
-  
+  patientId: number;
+  routePrefix: number;
+  submitted: boolean = false;
 
   constructor(
     private edmontonService: EdmontonService,
-    private readonly contextService: ContextService,
-    @Inject (MAT_DIALOG_DATA) public data: any,
-    ) 
-    {
-      this.patient = data.patientId;
-      this.routePrefix = `${this.contextService.institutionId}`;
-    }
+    @Inject(MAT_DIALOG_DATA) public data: any,
+  ){
+    this.patientId = data.patientId;
+  }
 
-    onOptionSelected(questionIndex: number, value: number): void {
-      this.selectedValues[questionIndex] = value;
-      this.calcularSuma();
-    }
+  onOptionSelected(questionIndex: number, value: number): void {
+    this.selectedValues[questionIndex] = value;
+    this.calcularSuma();
+  }
       
-    calcularSuma(): void {
-      const valueToSumMapping = {};
-      for (let i = 1; i <= 20; i++) {
-        if (i % 3 === 1) {
-          valueToSumMapping[i] = 0;
-        } else if (i % 3 === 2) {
-          valueToSumMapping[i] = 1;
-        } else {
-          valueToSumMapping[i] = 2;
+  calcularSuma(): void {
+    const valueToSumMapping = {};
+    for (let i = 1; i <= 20; i++) {
+      if (i % 3 === 1) {
+        valueToSumMapping[i] = 0;
+      } else if (i % 3 === 2) {
+        valueToSumMapping[i] = 1;
+      } else {
+        valueToSumMapping[i] = 2;
+      }
+    }
+  
+    this.sumaAcumulada = this.selectedValues.reduce((acc, value) => {
+      const mappedSum = valueToSumMapping[value] || 0; // Usar el mapeo
+      return acc + mappedSum;
+    }, 0);
+  
+    if (this.sumaAcumulada >= 11) {
+      this.selectedCalificacion = 'A33';
+      this.sumaAcumulada = 25;
+    } else if (this.sumaAcumulada >= 9) {
+      this.selectedCalificacion = 'A32';
+      this.sumaAcumulada = 24;
+    } else if (this.sumaAcumulada >= 7) {
+      this.selectedCalificacion = 'A31';
+      this.sumaAcumulada = 23;
+    } else if (this.sumaAcumulada >= 5) {
+      this.selectedCalificacion = 'A30';
+      this.sumaAcumulada = 22;
+    } else {
+      this.selectedCalificacion = 'A29'
+      this.sumaAcumulada = 21;
+    }
+  }
+    
+  sharedLyric(answerId: number): string {
+    switch (answerId) {
+      case 1:
+        return "A1";
+      case 2:
+        return "A2";
+      case 3:
+        return "A3";
+      case 4: 
+        return "A4";
+      case 5: 
+        return "A5";
+      case 6:
+        return "A6";
+      case 7:
+        return "A7";
+      case 8:
+        return "A8";
+      case 9:
+        return "A9";
+      case 10:
+        return "A10";
+      case 11:
+        return "A11";
+      case 12: 
+        return "A12";
+      case 13:
+        return "A13";
+      case 14:
+        return "A14";
+      case 15:
+        return "A15";
+      case 16: 
+        return "A16";
+      case 17: 
+        return "A17";
+      case 18:
+        return "A18"
+      default:
+        return ""; 
+    }
+  }
+  
+  value_1(questionId:number, answerId:number ): string {
+    if (questionId === 13 && answerId === 19) {
+      return "A19";
+    } else if (questionId === 14 && answerId === 19) {
+      return "A21";
+    } else if (questionId === 16 && answerId === 19) {
+      return "A23";
+    } else if (questionId === 18 && answerId === 19) {
+      return "A25";
+    } else if (questionId === 20 && answerId === 19) {
+      return "A27";
+    } else {
+        if(questionId === 13 && answerId === 20 ){
+          return "A20";
+        }else if (questionId === 14 && answerId === 20) {
+          return "A22";
+        }else if (questionId === 16 && answerId === 20) {
+          return "A24";
+        }else if (questionId === 18 && answerId === 20) {
+          return "A26";
+        }else if (questionId === 20 && answerId === 20) {
+          return "A28";
         }
-      }
-    
-      this.sumaAcumulada = this.selectedValues.reduce((acc, value) => {
-        const mappedSum = valueToSumMapping[value] || 0; // Usar el mapeo
-        return acc + mappedSum;
-      }, 0);
-    
-      if (this.sumaAcumulada >= 11) {
-        this.selectedCalificacion = 'A33';
-        this.sumaAcumulada = 25;
-      } else if (this.sumaAcumulada >= 9) {
-        this.selectedCalificacion = 'A32';
-        this.sumaAcumulada = 24;
-      } else if (this.sumaAcumulada >= 7) {
-        this.selectedCalificacion = 'A31';
-        this.sumaAcumulada = 23;
-      } else if (this.sumaAcumulada >= 5) {
-        this.selectedCalificacion = 'A30';
-        this.sumaAcumulada = 22;
-      } else {
-        this.selectedCalificacion = 'A29'
-        this.sumaAcumulada = 21;
-      }
     }
-    
-    
-    sharedLyric(answerId: number): string {
-      switch (answerId) {
-        case 1:
-          return "A1";
-        case 2:
-          return "A2";
-        case 3:
-          return "A3";
-        case 4: 
-          return "A4";
-        case 5: 
-          return "A5";
-        case 6:
-          return "A6";
-        case 7:
-          return "A7";
-        case 8:
-          return "A8";
-        case 9:
-          return "A9";
-        case 10:
-          return "A10";
-        case 11:
-          return "A11";
-        case 12: 
-          return "A12";
-        case 13:
-          return "A13";
-        case 14:
-          return "A14";
-        case 15:
-          return "A15";
-        case 16: 
-          return "A16";
-        case 17: 
-          return "A17";
-        case 18:
-          return "A18"
-        default:
-          return ""; 
-      }
-    }
-    value_1(questionId:number, answerId:number ): string {
-      if (questionId === 13 && answerId === 19) {
-        return "A19";
-      } else if (questionId === 14 && answerId === 19) {
-        return "A21";
-      } else if (questionId === 16 && answerId === 19) {
-        return "A23";
-      } else if (questionId === 18 && answerId === 19) {
-        return "A25";
-      } else if (questionId === 20 && answerId === 19) {
-        return "A27";
-      } else {
-          if(questionId === 13 && answerId === 20 ){
-            return "A20";
-          }else if (questionId === 14 && answerId === 20) {
-            return "A22";
-          }else if (questionId === 16 && answerId === 20) {
-            return "A24";
-          }else if (questionId === 18 && answerId === 20) {
-            return "A26";
-          }else if (questionId === 20 && answerId === 20) {
-            return "A28";
-          }
-      }
-    }
+  }
 
-    construirDatos(): CreateQuestionnaireDTO {
+  construirDatos(): CreateQuestionnaireDTO {
     this.calcularSuma();
     const questionnaireAnswers: QuestionnaireAnswerDTO[] = [
       {
@@ -229,11 +222,9 @@ export class EdmontonComponent {
     const questionnaireData: CreateQuestionnaireDTO = {
       questionnaire: questionnaireAnswers
     };
-  
     return questionnaireData;
   }
-  
- 
+
   onSubmit(): void {
     this.submitted = true;
       
@@ -295,18 +286,7 @@ export class EdmontonComponent {
 
   enviarFormulario(): void {
     const datos: CreateQuestionnaireDTO = this.construirDatos();
-    this.edmontonService.crearEdMonton(this.routePrefix, this.patient, datos).subscribe(
-      () => {
-        console.log('Los datos se han enviado correctamente.');
-      },
-      (error) => {
-        console.log('Error Los datos no se han enviado correctamente.');
-      }
-    );
+    this.edmontonService.createEdmonton(this.patientId, datos).subscribe();
   }
-  
-  
+ 
 }
-
-
-
