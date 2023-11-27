@@ -43,7 +43,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 	private static final String SELECT_INFO = "SELECT DISTINCT r.id, r.priority, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
 			"pex.name_self_determination, it.description, pe.identification_number, oc.created_on, cs2.name AS clinicalSpecialtyOrigin, " +
 			"i.name AS institutionOrigin, cs.name as clinicalSpecialtyDestination, " +
-			"cl.description AS careLine, cr.closure_type_id, i2.name AS institutionDestination, s.id AS snomedId, s.sctid, s.pt, ra.appointment_id ";
+			"cl.description AS careLine, cr.closure_type_id, i2.name AS institutionDestination, s.id AS snomedId, s.sctid, s.pt ";
 
 	private static final String SELECT_COUNT = "SELECT COUNT(DISTINCT r.id) as total ";
 
@@ -160,7 +160,8 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"JOIN {h-schema}patient p ON (oc.patient_id = p.id) " +
 				"JOIN {h-schema}person pe ON (p.person_id = pe.id) " +
 				"JOIN {h-schema}person_extended pex ON (pe.id = pex.person_id) " +
-				"LEFT JOIN {h-schema}reference_appointment ra ON (r.id = ra.reference_id) " +
+				(filter.getAppointmentStateId() != null ?
+						"LEFT JOIN {h-schema}reference_appointment ra ON (r.id = ra.reference_id) " : "") +
 				(filter.getManagerUserId() != null ?
 						"JOIN {h-schema}institutional_group_institution igi ON (igi.institution_id = r.destination_institution_id) " +
 						"JOIN {h-schema}institutional_group_user igu ON (igi.institutional_group_id = igu.institutional_group_id) " : "") +
@@ -185,7 +186,8 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"JOIN {h-schema}patient p ON (oc.patient_id = p.id) " +
 				"JOIN {h-schema}person pe ON (p.person_id = pe.id) " +
 				"JOIN {h-schema}person_extended pex ON (pe.id = pex.person_id) " +
-				"LEFT JOIN {h-schema}reference_appointment ra ON (r.id = ra.reference_id) " +
+				(filter.getAppointmentStateId() != null ?
+						"LEFT JOIN {h-schema}reference_appointment ra ON (r.id = ra.reference_id) " : "") +
 				(filter.getManagerUserId() != null ?
 						"JOIN {h-schema}institutional_group_institution igi ON (igi.institution_id = r.destination_institution_id) " +
 						"JOIN {h-schema}institutional_group_user igu ON (igi.institutional_group_id = igu.institutional_group_id) " : "") +
