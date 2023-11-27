@@ -20,6 +20,7 @@ import { InProgressCallComponent } from './components/in-progress-call/in-progre
 import { VirtualConsultationsFacadeService } from './virtual-consultations-facade.service';
 import { EntryCallRendererComponent } from './components/entry-call-renderer/entry-call-renderer.component';
 import { TransferRequestComponent } from './dialogs/transfer-request/transfer-request.component';
+import { CallDetailsComponent } from './components/call-details/call-details.component';
 
 
 
@@ -47,6 +48,8 @@ import { TransferRequestComponent } from './dialogs/transfer-request/transfer-re
 		PacientesModule,
 		HistoriaClinicaModule,
 		CoreModule,
+		//Standalone
+		CallDetailsComponent,
 	],
 	providers: [VirtualConsultationsFacadeService,]
 })

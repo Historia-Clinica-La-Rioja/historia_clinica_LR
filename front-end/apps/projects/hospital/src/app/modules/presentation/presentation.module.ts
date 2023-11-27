@@ -10,7 +10,6 @@ import { QuillModule } from 'ngx-quill';
 // components
 import { AsignPatientButtonComponent } from './components/asign-patient-button/asign-patient-button.component';
 import { BarComponent } from './components/bar/bar.component';
-import { CallDetailsComponent } from './components/call-details/call-details.component';
 import { CardComponent } from './components/card/card.component';
 import { CategoryHeaderDividerComponent } from './components/category-header-divider/category-header-divider.component';
 import { CellTemplatesComponent } from './components/cell-templates/cell-templates.component';
@@ -103,7 +102,6 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		// components
 		AsignPatientButtonComponent,
 		BarComponent,
-		CallDetailsComponent,
 		CardComponent,
 		CategoryHeaderDividerComponent,
 		CellTemplatesComponent,
@@ -210,7 +208,6 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		AsignPatientButtonComponent,
 		BarComponent,
 		ButtonComponent,
-		CallDetailsComponent,
 		CardComponent,
 		CategoryHeaderDividerComponent,
 		CellTemplatesComponent,
