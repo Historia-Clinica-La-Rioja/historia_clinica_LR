@@ -1,7 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ProfessionalDto } from '@api-rest/api-model';
-
 @Component({
 	selector: 'app-surgical-report-professional-team',
 	templateUrl: './surgical-report-professional-team.component.html',
@@ -9,27 +7,23 @@ import { ProfessionalDto } from '@api-rest/api-model';
 })
 export class SurgicalReportProfessionalTeamComponent implements OnInit {
 
-	form = this.formBuilder.group({
-		cirujano: new FormControl<ProfessionalDto | null>(null),
-		ayudantes: new FormControl<ProfessionalDto[] | null>(null),
-		anestesiologo: new FormControl<ProfessionalDto | null>(null),
-		cardiologo: new FormControl<ProfessionalDto | null>(null),
-		instrumentador: new FormControl<ProfessionalDto | null>(null),
-		obstetra: new FormControl<ProfessionalDto | null>(null),
-		pediatra: new FormControl<ProfessionalDto | null>(null),
-	});
-
 	@Input() professionals: ProfessionalDto[];
+	@Output() healthcareProfessionalsChange = new EventEmitter();
 
 	ayudanteCount: number = 1;
 
-	constructor(
-		private formBuilder: FormBuilder
-	) {	}
+	healthcareProfessionals: ProfessionalDto[] = [];
+
+	constructor() { }
 
 	ngOnInit(): void { }
 
 	addAyudante() {
 		this.ayudanteCount++;
+	}
+
+	professionalChange(professional: ProfessionalDto, type: string): void {
+		this.healthcareProfessionals.push(professional);
+		this.healthcareProfessionalsChange.emit(this.healthcareProfessionals);
 	}
 }

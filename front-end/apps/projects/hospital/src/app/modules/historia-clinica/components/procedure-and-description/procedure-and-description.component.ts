@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature } from '@api-rest/api-model';
@@ -19,6 +19,7 @@ export class ProcedureAndDescriptionComponent implements OnInit {
 	@Input() tableTitle: string;
 	@Input() buttonTitle: string;
 	@Input() icon: string;
+	@Output() proceduresChange = new EventEmitter();
 
 	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService);
 	searchConceptsLocallyFF = false;
@@ -33,6 +34,7 @@ export class ProcedureAndDescriptionComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
 			this.searchConceptsLocallyFF = isOn;
 		})
+		this.procedureService.procedimientos$.subscribe(procedures => this.changeProcedure(procedures));
 	}
 
 	ngOnInit(): void {
@@ -49,5 +51,9 @@ export class ProcedureAndDescriptionComponent implements OnInit {
 			width: '35%',
 			disableClose: true,
 		});
+	}
+
+	private changeProcedure(procedures): void {
+		this.proceduresChange.emit(procedures);
 	}
 }

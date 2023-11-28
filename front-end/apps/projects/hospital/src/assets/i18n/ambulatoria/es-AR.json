@@ -288,6 +288,7 @@
 					"TITLE": "Diagnósticos",
 					"PRE_SURGERY": "Diagnóstico Pre-Operatorio",
 					"ADD": "+ Agregar otro diagnóstico",
+					"ADD_SURGERY": "Agregar cirugía propuesta",
 					"SURGERY": "Cirugía Propuesta"
 				},
 				"surgical-team": {

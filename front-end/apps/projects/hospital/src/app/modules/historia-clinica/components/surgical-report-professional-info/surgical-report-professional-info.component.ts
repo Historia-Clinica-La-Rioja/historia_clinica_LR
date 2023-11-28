@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AppFeature, ProfessionalDto } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
@@ -14,7 +14,7 @@ export class SurgicalReportProfessionalInfoComponent implements OnInit {
 	professionalsTypeAhead: TypeaheadOption<any>[];
 	@Input() professionalTitle: string;
 	@Input() professionals: ProfessionalDto[];
-
+	@Output() professionalChange = new EventEmitter();
 
 	professional: ProfessionalDto;
 
@@ -46,5 +46,6 @@ export class SurgicalReportProfessionalInfoComponent implements OnInit {
 
 	setProfessional(professional: number): void {
 		this.professional = this.professionals.find(p => p.id === professional);
+		this.professionalChange.emit(this.professional);
 	}
 }

@@ -6,14 +6,14 @@
 	<div fxLayout="row" fxLayoutGap="20px">
 		<mat-form-field appearance="outline">
 			<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SURGERY_START_DATE'"></mat-label>
-			<input matInput id="fecha_inicio" [matDatepicker]="startDatePicker">
+			<input matInput id="fecha_inicio" [matDatepicker]="startDatePicker" (dateChange)="changeStartDateTime($event.value, null)">
 			<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
 			<mat-datepicker #startDatePicker></mat-datepicker>
 		</mat-form-field>
 
 		<mat-form-field appearance="outline">
 			<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SKIN_OPENING'"></mat-label>
-			<input matInput>
+			<input matInput [(ngModel)]="skinOpeningTime" (ngModelChange)="changeStartDateTime(null, skinOpeningTime)">
 			<mat-icon matSuffix>schedule</mat-icon>
 			<mat-hint>HH:MM</mat-hint>
 		</mat-form-field>
@@ -22,14 +22,14 @@
 	<div fxLayout="row" fxLayoutGap="20px">
 		<mat-form-field appearance="outline">
 			<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SURGERY_END_DATE'"></mat-label>
-			<input matInput id="fecha_inicio" [matDatepicker]="endDatePicker">
+			<input matInput id="fecha_inicio" [matDatepicker]="endDatePicker" (dateChange)="changeEndDateTime($event.value, null)">
 			<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
 			<mat-datepicker #endDatePicker></mat-datepicker>
 		</mat-form-field>
 
 		<mat-form-field appearance="outline">
 			<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SKIN_CLOSURE'"></mat-label>
-			<input matInput>
+			<input matInput [(ngModel)]="skinClosureTime" (ngModelChange)="changeStartDateTime(null, skinClosureTime)">
 			<mat-icon matSuffix>schedule</mat-icon>
 			<mat-hint>HH:MM</mat-hint>
 		</mat-form-field>
@@ -49,7 +49,7 @@
 
 	<mat-form-field appearance="outline">
 		<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SURGERY_DESCRIPTION'"></mat-label>
-		<textarea matInput></textarea>
+		<textarea matInput [(ngModel)]="description" (ngModelChange)="changeDescription($event)"></textarea>
 	</mat-form-field>
 
 	<div>

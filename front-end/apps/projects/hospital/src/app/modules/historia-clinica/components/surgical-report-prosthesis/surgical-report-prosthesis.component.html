@@ -11,6 +11,6 @@
 
 	<mat-form-field appearance="outline">
 		<mat-label [translate]="'ambulatoria.paciente.surgical-report.DESCRIPTION'"></mat-label>
-		<textarea matInput [disabled]="!prosthesis"></textarea>
+		<textarea matInput [disabled]="!prosthesis" [(ngModel)]="description" (ngModelChange)="changeDescription($event)"></textarea>
 	</mat-form-field>
 </app-new-consultation-expansion-section>

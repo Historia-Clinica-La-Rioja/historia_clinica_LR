@@ -5,7 +5,9 @@
 
 	<app-surgical-report-professional-info *ngIf="professionals"
 		[professionalTitle]="professionalTitle"
-		[professionals]="professionals"></app-surgical-report-professional-info>
+		[professionals]="professionals"
+		(professionalChange)="changeProfessional($event)">
+	</app-surgical-report-professional-info>
 
 	<mat-form-field appearance="outline">
 		<mat-label [translate]="'ambulatoria.paciente.surgical-report.DESCRIPTION'"></mat-label>

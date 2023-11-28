@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ProfessionalDto } from '@api-rest/api-model';
 
 @Component({
@@ -13,9 +13,14 @@ export class ProfessionalAndDescriptionComponent implements OnInit {
 	@Input() professionals: ProfessionalDto[];
 	@Input() icon: string;
 
+	@Output() professionalChange = new EventEmitter();
+
 	constructor() { }
 
 	ngOnInit(): void {
 	}
 
+	changeProfessional (professional: ProfessionalDto): void {
+		this.professionalChange.emit(professional);
+	}
 }
