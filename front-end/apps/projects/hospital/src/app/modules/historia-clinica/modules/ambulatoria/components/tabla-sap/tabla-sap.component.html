@@ -1,35 +1,34 @@
 <app-content width="full">
-    <h1 class="title2">Tabla antropométrica</h1>
-    
-    <section>
-      <mat-accordion>
-        <div class="contenedor-title">
-          <span class="column-name-title">Nombre</span>
-          <span class="column-title">Sexo</span>
-        </div>
-    
-        <ng-container *ngFor="let element of data">
-          <mat-expansion-panel class="dark-panel" [expanded]="panelOpenState === element.Orden">
-            <mat-expansion-panel-header (click)="togglePanel(element.Orden)">
-              <mat-panel-title>
-                <div class="container-orden">
-                  {{ element.Orden }}.
-                </div>
-                <div class="container-name">
-                  <span [ngClass]="{'nombre-style': panelOpenState === element.Orden}">{{ element.Nombre }}</span>
-                </div>
-                <div class="container-sexo">
-                  <span [ngClass]="{'nombre-style': panelOpenState === element.Orden}">{{ element.Sexo }}</span>
-                </div>
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-    
-            <div class="panel-content">
-              <img class="grafic" [src]="getImagePath(element.Grafic)" alt="Image">
-            </div>
-          </mat-expansion-panel>
-        </ng-container>
-      </mat-accordion>
-    </section>
-</app-content>
+  <h1 class="title2">Tablas Antropométricas</h1>
 
+  <section>
+    <mat-accordion>
+      <div class="contenedor-title">
+        <span class="column-name-title">Nombre</span>
+        <span class="column-title">Sexo</span>
+      </div>
+
+      <ng-container *ngFor="let element of data">
+        <mat-expansion-panel class="dark-panel" [expanded]="panelOpenState === element.Orden">
+          <mat-expansion-panel-header (click)="togglePanel(element.Orden)">
+            <mat-panel-title>
+              <div class="container-orden">
+                {{ element.Orden }}.
+              </div>
+              <div class="container-name">
+                <span [ngClass]="{'nombre-style': panelOpenState === element.Orden}">{{ element.Nombre }}</span>
+              </div>
+              <div class="container-sexo">
+                <span [ngClass]="{'nombre-style': panelOpenState === element.Orden}">{{ element.Sexo }}</span>
+              </div>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="panel-content">
+            <img class="grafic" [src]="getImagePath(element.Grafic)" alt="Image">
+          </div>
+        </mat-expansion-panel>
+      </ng-container>
+    </mat-accordion>
+  </section>
+</app-content>
