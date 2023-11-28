@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { PacsUrlDto, StudyIntanceUIDDto, TokenDto, ViewerUrlDto } from '@api-rest/api-model';
+import { PacsListDto, StudyIntanceUIDDto, TokenDto, ViewerUrlDto } from '@api-rest/api-model';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { StudyPACAssociationService } from '@api-rest/services/study-PAC-association';
 import { StudyPermissionService } from '@api-rest/services/study-permission.service';
@@ -32,12 +32,12 @@ export class ViewStudyComponent {
 		sourceView$.pipe(
 		switchMap((studyInstanceUID: StudyIntanceUIDDto) =>
 			this.studyPACAssociationService.getPacGlobalURL(studyInstanceUID.uid).pipe(
-				switchMap((pacs: PacsUrlDto) =>
+				switchMap((pacs: PacsListDto) =>
 					this.studyPermissionService.getPermissionsJWT(studyInstanceUID.uid).pipe(
 						switchMap((token: TokenDto) =>
 							this.viewerService.getUrl().pipe(
 								switchMap((url: ViewerUrlDto) =>
-									this.buildUrl(url.url, studyInstanceUID.uid, token.token, pacs.pacs[0]) // se queda el primero no dominio
+									this.buildUrl(url.url, studyInstanceUID.uid, token.token, pacs.urls[0]) // se queda el primero no dominio
 								),
 								reduce((result, value) => result + value)
 							)

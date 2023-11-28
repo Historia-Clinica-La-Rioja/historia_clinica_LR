@@ -50,7 +50,7 @@
                     
                     <div fxLayout="row wrap" fxLayoutGap="10px">
                         <app-view-study class="btn-margin" [appointmentId]="appointmentId" [studyAvailable]="study.info.isAvailableInPACS"></app-view-study>
-                        <app-download-study class="btn-margin" [studyAvailable]="study.info.isAvailableInPACS"></app-download-study>
+                        <app-download-study class="btn-margin" [studyAvailable]="study.info.isAvailableInPACS" [imageId]="study.info.imageId"></app-download-study>
                         <a id="go_to_HC" mat-stroked-button color="primary" target="_blank" class="buttons btn-margin"
                             *appHasRole="['ESPECIALISTA_MEDICO']" [href]="url + study.info.patientId">
                             <span>{{'image-network.worklist.details_study.GO_TO_HC' | translate | uppercase }}</span>
