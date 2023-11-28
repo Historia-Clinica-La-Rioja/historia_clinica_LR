@@ -120,4 +120,10 @@ public class AppointmentVo {
 		return appointment.getModalityId();
 	}
 
+	public String getPatientEmail() {
+		if (appointment == null)
+			return null;
+		return appointment.getPatientEmail();
+	}
+
 }

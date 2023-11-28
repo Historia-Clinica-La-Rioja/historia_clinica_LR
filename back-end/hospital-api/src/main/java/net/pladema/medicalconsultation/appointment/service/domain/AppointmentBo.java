@@ -134,6 +134,7 @@ public class AppointmentBo {
 				.callId(appointmentVo.getCallId())
 				.modalityId(appointmentVo.getModalityId())
 				.diaryLabelBo(appointmentVo.getDiaryLabel() != null ? new DiaryLabelBo(appointmentVo.getDiaryLabel()): null)
+				.patientEmail(appointmentVo.getPatientEmail())
 				.build();
 	}
 
