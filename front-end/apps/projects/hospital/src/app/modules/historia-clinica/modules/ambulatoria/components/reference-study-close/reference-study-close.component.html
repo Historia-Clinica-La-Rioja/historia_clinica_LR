@@ -1,8 +1,10 @@
 <div id="main-container" fxLayoutGap="12px">
+	<h2>{{'ambulatoria.reference-study-close.TITLE'|translate}} </h2>
+
 	<form [formGroup]="formReferenceClosure" class="counterreference-form" fxLayout="column">
 		<mat-form-field appearance="outline" class="closureTypes">
 
-			<mat-label [translate]="'ambulatoria.paciente.counterreference.CLOSURE_TYPE'">
+			<mat-label [translate]="'ambulatoria.reference-study-close.CLOSURE_TYPE'">
 			</mat-label>
 			<mat-select formControlName="closureType">
 				<mat-option [value]="closureType" *ngFor="let closureType of closureTypes$ | async">
@@ -14,7 +16,7 @@
 		</mat-form-field>
 
 		<mat-form-field appearance="outline">
-			<mat-label [translate]="'ambulatoria.paciente.counterreference.PLACEHOLDER_DESCRIPTION'">
+			<mat-label [translate]="'ambulatoria.reference-study-close.PLACEHOLDER_DESCRIPTION'">
 			</mat-label>
 			<textarea matInput type="text" name="description" formControlName="description"></textarea>
 			<mat-error translate="forms.REQUIRED"></mat-error>
@@ -26,7 +28,7 @@
 			<button mat-button type="button" id="add-request-button" color="primary" class="add-button"
 				(click)="fileInput.click()">
 				<mat-icon>attachment_icon</mat-icon>
-				{{ 'ambulatoria.paciente.nueva-consulta.reference-dialog.UPLOAD_FILES' | translate }}
+				{{ 'ambulatoria.reference-study-close.UPLOAD_FILES' | translate }}
 			</button>
 			<span [hidden]="true">
 				<input type="file" #fileInput multiple (change)="onSelectFileFormData($event)" />
@@ -46,9 +48,9 @@
 	</div>
 
 	<mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
-		<button mat-flat-button color="primary" (click)="completeStudy()" [disabled]="!formReferenceClosure.valid">
+		<button mat-flat-button color="primary" (click)="completeStudy()" [disabled]="(!formReferenceClosure.valid) || (isLoading$ | async)">
 			<span
-				class="uppercase">{{'ambulatoria.paciente.ordenes_prescripciones.complete_study_dialog.COMPLETE_BUTTON'
+				class="uppercase">{{'ambulatoria.reference-study-close.COMPLETE_BUTTON'
 				| translate}}</span>
 		</button>
 	</mat-dialog-actions>

@@ -1,5 +1,4 @@
 <div *ngIf="reference" class="container" id="main-container" fxLayoutGap="12px">
-
 	<h2 class="capitalize">{{reference.dto.procedure.pt}}</h2>
 
 	<div class="row-container"  fxLayoutAlign="space-between">
@@ -9,6 +8,7 @@
 			Orden #{{order}}
 		</span>
 	</div>
+	<h2>{{'ambulatoria.reference-request-data.TITLE'|translate}}</h2>
 
 	<app-colored-icon-text id="closure-type" [coloredIconText]="reference.closureType"></app-colored-icon-text>
 

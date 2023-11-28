@@ -7,7 +7,7 @@ import { PrescripcionesService } from '../../services/prescripciones.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ReferenceCompleteStudyComponent } from '../reference-complete-study/reference-complete-study.component';
-import { Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { ButtonType } from '@presentation/components/button/button.component';
 
@@ -26,6 +26,7 @@ export class ReferenceStudyCloseComponent implements OnInit {
 	selectedFilesShow = [];
 	closureTypes$: Observable<MasterDataDto[]>;
 	ButtonType: ButtonType;
+	isLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly referenceMasterDataService: ReferenceMasterDataService,
@@ -37,10 +38,10 @@ export class ReferenceStudyCloseComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		this.formReferenceClosure = this.formBuilder.group({
-			closureType: [null, [Validators.required]],
-			description: [null, [Validators.required]]
-		}) as FormGroup & ReferenceClosureForm;
+			this.formReferenceClosure = this.formBuilder.group({
+				closureType: [null, [Validators.required]],
+				description: [null, [Validators.required]]
+			}) as FormGroup & ReferenceClosureForm;
 
 		this.closureTypes$ = this.referenceMasterDataService.getClosureTypes().pipe(
 			map(((closureTypes: MasterDataDto[]) => closureTypes)));
@@ -59,20 +60,21 @@ export class ReferenceStudyCloseComponent implements OnInit {
 	}
 
 	completeStudy() {
+		this.isLoading$.next(true);
 		const completeRequest = this.buildRequest();
 		this.prescripcionesService.completeStudy(this.patientId, this.diagnosticReportId,
 			completeRequest, this.selectedFiles).subscribe(_ => {
-
 				this.snackBarService.showSuccess('ambulatoria.reference-study-close.SUCCESS');
 				this.closeModal(false, true);
 			}, error => {
 				this.dialog.open(DiscardWarningComponent, { data: getConfirmDataDialog() });
+				this.isLoading$.next(false);
 
 				function getConfirmDataDialog() {
 					const keyPrefix = 'ambulatoria.reference-study-close';
 					return {
 						title: `${keyPrefix}.ERROR_TITLE`,
-						content:  `${keyPrefix}.ERROR`,
+						content: `${keyPrefix}.ERROR`,
 						okButtonLabel: `${keyPrefix}.OK_BUTTON`,
 						errorMode: true,
 						color: 'warn',
@@ -94,6 +96,7 @@ export class ReferenceStudyCloseComponent implements OnInit {
 				referenceId: this.reference.id,
 				clinicalSpecialtyId: this.reference.clinicalSpecialtyId,
 				counterReferenceNote: this.formReferenceClosure.value.description,
+				fileIds: [],
 				closureTypeId: this.formReferenceClosure.value.closureType.id
 			}
 		}

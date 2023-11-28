@@ -20,7 +20,6 @@ import { ReportReference } from '@historia-clinica/modules/ambulatoria/component
 import { REQUESTED_REFERENCE, getColoredIconText } from '@access-management/utils/reference.utils';
 import { Color } from '@presentation/colored-label/colored-label.component';
 import { PrescriptionStatus } from '@historia-clinica/modules/ambulatoria/components/reference-request-data/reference-request-data.component';
-import { dateToDateTimeDto } from '@api-rest/mapper/date-dto.mapper';
 
 const IMAGE_DIAGNOSIS = 'Diagnóstico por imágenes';
 const isImageStudy = (study: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto): boolean => {
@@ -257,10 +256,10 @@ export class StudyComponent implements OnInit {
 
 	private mapperReportReference(diagnosticReport: DiagnosticReportInfoDto):ReportReference{
 		return {
-			doctor: diagnosticReport.doctor,
+			doctor: diagnosticReport.referenceRequestDto.professionalInfo,
 			observations: diagnosticReport.observations,
 			closureTypeDescription: diagnosticReport.referenceRequestDto.closureTypeDescription,
-			date: dateToDateTimeDto(diagnosticReport.creationDate)
+			date: diagnosticReport.referenceRequestDto.closureDateTime
 		}
 	}
 

@@ -1,4 +1,5 @@
 <div mat-dialog-content fxLayoutGap="16px" fxLayout="column">
+	<h2>{{'ambulatoria.reference-study-closure-information.TITLE'|translate}}</h2>
 
 	<h3 class="grey">{{'ambulatoria.reference-study-closure-information.OBSERVATIONS'|translate}}</h3>
 	<span id="note">{{ reportReference.observations }}</span>
@@ -11,7 +12,6 @@
 	<div class="row-container" fxLayoutAlign="space-between" id="refernece-info-third">
 		<span class="grey" id="professional-name">
 			{{doctorName}}
-			{{reportReference.doctor.lastName }}
 		</span>
 		<span class="grey" id="date">{{reportReference.date | viewDateDto: 'localdatetime' | dateFormat:
 			'datetime'}}hs</span>
