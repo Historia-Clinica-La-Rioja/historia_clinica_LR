@@ -1,10 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, } from '@angular/material/dialog';
-import { ReferenceCompleteDataDto, ReferenceDataDto } from '@api-rest/api-model';
+import { ReferenceCompleteDataDto, ReferenceDataDto, ReferenceRegulationDto } from '@api-rest/api-model';
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { ContactDetails } from '@access-management/components/contact-details/contact-details.component';
 import { PatientSummary } from '../../../hsi-components/patient-summary/patient-summary.component';
-import { Observable, tap } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { AppointmentSummary } from '@access-management/components/appointment-summary/appointment-summary.component';
 import { APPOINTMENT_STATES_ID } from '@turnos/constants/appointment';
 import { Tabs } from '@turnos/constants/tabs';
@@ -27,6 +27,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	colapseContactDetails = false;
 
 	Tabs = Tabs;
+	referenceRegulationDto$: Observable<ReferenceRegulationDto>;
 
 	constructor(
 		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
@@ -36,15 +37,20 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
-
-		const referenceDetails$ = this.contextService.institutionId === NO_INSTITUTION ? this.institutionalNetworkReferenceReportService.getReferenceDetail(this.data.referenceId) : this.institutionalReferenceReportService.getReferenceDetail(this.data.referenceId);
-
+		const referenceDetails$ = this.getObservable();
 		referenceDetails$.subscribe(
 			referenceDetails => {
 				this.referenceCompleteData = referenceDetails;
+				this.referenceRegulationDto$ = of(this.referenceCompleteData.regulation);
 				this.setReportData(this.referenceCompleteData);
 				this.colapseContactDetails = this.referenceCompleteData.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.SERVED;
 			});
+	}
+
+	private getObservable(): Observable<ReferenceCompleteDataDto> {
+		return this.contextService.institutionId === NO_INSTITUTION ?
+			this.institutionalNetworkReferenceReportService.getReferenceDetail(this.data.referenceId) :
+			this.institutionalReferenceReportService.getReferenceDetail(this.data.referenceId);
 	}
 
 	private setReportData(referenceDetails: ReferenceCompleteDataDto): void {
@@ -54,11 +60,10 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 			patient: toPatientSummary(patient),
 			contactDetails: toContactDetails(patient),
 			reference: referenceDetails.reference,
-			appointment: referenceDetails.appointment ? toAppointmentSummary(referenceDetails.appointment) : pendingAppointment
+			appointment: referenceDetails.appointment ? toAppointmentSummary(referenceDetails.appointment) : pendingAppointment,
 		}
 	}
 }
-
 
 export interface ReportCompleteData {
 	patient: PatientSummary;

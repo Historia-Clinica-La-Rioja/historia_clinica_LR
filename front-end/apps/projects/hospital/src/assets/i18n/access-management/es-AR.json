@@ -30,7 +30,17 @@
 				"CONTACT_DATA": "Datos de contacto",
 				"REFERENCE_DATA": "Datos de Referencia",
 				"APPOINTMENT_DATA": "Datos del turno",
-				"ASSIGN_APPOINTMENT_IN_CARE_NETWORK":" asignar turno en red de atencion"
+				"ASSIGN_APPOINTMENT_IN_CARE_NETWORK":" asignar turno en red de atencion",
+				"approval":{
+					"TITLE": "estado de aprobación",
+					"ENTERED_BY": "Solicitud ingresada por Regla {{rule}}",
+					"states": {
+						"PENDING": "esperando aprobacion",
+						"SUGGESTED": "revision sugerida",
+						"REJECTED": "solicitud rechazada",
+						"APPROVED": "solicitud aprobada"
+					}
+				}
 			}
 		}
     }

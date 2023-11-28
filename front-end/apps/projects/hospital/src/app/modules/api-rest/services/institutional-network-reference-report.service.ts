@@ -29,4 +29,15 @@ export class InstitutionalNetworkReferenceReportService {
 		const url = `${this.BASE_URL}/reference-detail/${id}`;
 		return this.http.get<ReferenceCompleteDataDto>(url);
 	}
+
+	changeReferenceRegulationState(referenceId: number, stateId: number, reason?: string): Observable<boolean> {
+		const url = `${this.BASE_URL}/${referenceId}/change-state`;
+		let params: HttpParams = new HttpParams();
+		params = params.append('stateId', stateId);
+		if (!reason) 
+			return this.http.post<boolean>(url, null, { params });
+
+		params = params.append('reason', reason);
+		return this.http.post<boolean>(url, null, { params });
+	}
 }

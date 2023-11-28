@@ -6,6 +6,7 @@ import { PresentationModule } from '@presentation/presentation.module';
 import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
 import { PatientSummaryComponent } from '../hsi-components/patient-summary/patient-summary.component';
 //components
+import { ApprovalComponent } from './components/approval/approval.component';
 import { AppointmentSummaryComponent } from './components/appointment-summary/appointment-summary.component';
 import { ContactDetailsComponent } from './components/contact-details/contact-details.component';
 import { HomeComponent } from './routes/home/home.component';
@@ -26,6 +27,7 @@ import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module
 @NgModule({
 	declarations: [
 		//components
+		ApprovalComponent,
 		AppointmentSummaryComponent,
 		ContactDetailsComponent,
 		InstitutionalActionsComponent,

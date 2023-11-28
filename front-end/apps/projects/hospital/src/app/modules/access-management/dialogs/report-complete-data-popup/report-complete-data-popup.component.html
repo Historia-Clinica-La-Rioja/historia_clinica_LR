@@ -9,9 +9,8 @@
 		<app-patient-summary [person]="reportCompleteData.patient"></app-patient-summary>
 	</div>
 
-
 	<mat-dialog-content fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="20px">
-		<div fxLayout="column" fxLayoutGap="10px" fxFlex="60">
+		<div fxLayout="column" fxLayoutGap="10px" fxFlex="50">
 			<app-expansion-section [title]="'access-management.search_references.reference.CONTACT_DATA'"
 				[collapsed]="colapseContactDetails">
 				<app-contact-details [contactDetails]="reportCompleteData.contactDetails"></app-contact-details>
@@ -23,9 +22,20 @@
 				<app-reference-complete-data [reference]="reportCompleteData.reference"></app-reference-complete-data>
 			</app-expansion-section>
 		</div>
-		<app-appointment-summary fxFlex="40" [appointmentSummary]="reportCompleteData.appointment"></app-appointment-summary>
+
+		<div fxLayout="column" fxLayoutGap="10px" fxFlex="50">
+			<div *ngIf="referenceRegulationDto$ | async as referenceRegulationDto; else loading">
+				<app-approval [approval]="referenceRegulationDto"></app-approval>
+			</div>
+			<mat-divider></mat-divider>
+			<app-appointment-summary [appointmentSummary]="reportCompleteData.appointment"></app-appointment-summary>
+		</div>
 	</mat-dialog-content>
 
 	<app-popup-actions actions [reportCompleteData]="referenceCompleteData"></app-popup-actions>
 
 </div>
+
+<ng-template #loading>
+	<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</ng-template>
