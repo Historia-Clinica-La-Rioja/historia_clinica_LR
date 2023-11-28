@@ -1,4 +1,4 @@
-import { EReferenceClosureType } from "@api-rest/api-model";
+import { EReferenceAttentionState, EReferenceClosureType } from "@api-rest/api-model";
 import { PRIORITY } from "@historia-clinica/modules/ambulatoria/constants/reference-masterdata";
 import { Color, ColoredLabel } from "@presentation/colored-label/colored-label.component";
 import { ColoredIconText } from "@presentation/components/colored-icon-text/colored-icon-text.component";
@@ -21,7 +21,7 @@ export function getColoredIconText(closureType: EReferenceClosureType): ColoredI
 	return { icon: "swap_horiz", text: "access-management.search_references.REQUESTED_REFERENCE", color: Color.RED }
 }
 
-export function getState(appointmentStateId: number): ColoredLabel {
+export function getAppointmentState(appointmentStateId: number): ColoredLabel {
 
 	if (appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED || appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED)
 		return {
@@ -44,3 +44,25 @@ export function getState(appointmentStateId: number): ColoredLabel {
 	return PENDING;
 }
 
+export function getState(attentionState: EReferenceAttentionState): ColoredLabel {
+
+	if (attentionState === EReferenceAttentionState.ASSIGNED)
+		return {
+			description: REFERENCE_STATES.ASSIGNED,
+			color: Color.BLUE
+		}
+
+	if (attentionState === EReferenceAttentionState.SERVED)
+		return {
+			description: REFERENCE_STATES.SERVED,
+			color: Color.GREEN
+		}
+
+	if (attentionState === EReferenceAttentionState.ABSENT)
+		return {
+			description: REFERENCE_STATES.ABSENT,
+			color: Color.RED
+		}
+
+	return PENDING;
+}

@@ -21,7 +21,7 @@ public class ReferenceReportFilterBo {
 	private Integer closureTypeId;
 
 	@Nullable
-	private Short appointmentStateId;
+	private Short attentionStateId;
 
 	@Nullable
 	private Integer clinicalSpecialtyId;

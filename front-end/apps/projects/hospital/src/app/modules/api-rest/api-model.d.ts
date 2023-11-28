@@ -3503,7 +3503,7 @@ export interface ReferenceProblemDto extends Serializable {
 }
 
 export interface ReferenceReportDto {
-    appointmentStateId: number;
+    attentionState: EReferenceAttentionState;
     careLine: string;
     clinicalSpecialtyDestination: string;
     clinicalSpecialtyOrigin: string;
@@ -4542,6 +4542,13 @@ export const enum EPregnancyTermination {
     VAGINAL = "VAGINAL",
     CESAREAN = "CESAREAN",
     UNDEFINED = "UNDEFINED",
+}
+
+export const enum EReferenceAttentionState {
+    ASSIGNED = "ASSIGNED",
+    SERVED = "SERVED",
+    ABSENT = "ABSENT",
+    PENDING = "PENDING",
 }
 
 export const enum ERole {

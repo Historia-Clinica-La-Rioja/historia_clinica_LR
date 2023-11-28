@@ -1,6 +1,6 @@
 import { ClinicalSpecialtyDto, ReferenceAppointmentDto, ReferenceDataDto, ReferencePatientDto, ReferenceReportDto, SharedSnomedDto } from "@api-rest/api-model";
 import { PatientSummary } from "../../hsi-components/patient-summary/patient-summary.component";
-import { getColoredIconText, getPriority, getState } from "./reference.utils";
+import { getColoredIconText, getPriority, getState, getAppointmentState } from "./reference.utils";
 import { TypeaheadOption } from "@presentation/components/typeahead/typeahead.component";
 import { ReferenceReport } from "@access-management/components/reference-summary/reference-summary.component";
 import { AppointmentSummary } from "@access-management/components/appointment-summary/appointment-summary.component";
@@ -28,7 +28,7 @@ export const toContactDetails = (patient: ReferencePatientDto): ContactDetails =
 
 export const toAppointmentSummary = (value: ReferenceAppointmentDto): AppointmentSummary => {
     return {
-        state: getState(value.appointmentStateId),
+        state: getAppointmentState(value.appointmentStateId),
         date: value.date,
         professionalFullName: value.professionalFullName,
         institution: value.institution.description
@@ -40,7 +40,7 @@ export const toReferenceReport = (report: ReferenceReportDto): ReferenceReport =
         dto: report,
         priority: getPriority(report.priority.id),
         coloredIconText: getColoredIconText(report.closureType),
-        state: getState(report.appointmentStateId),
+        state: getState(report.attentionState),
         patient: toMinPatientSummary(report.patientFullName, report.identificationType, +report.identificationNumber)
     }
 }

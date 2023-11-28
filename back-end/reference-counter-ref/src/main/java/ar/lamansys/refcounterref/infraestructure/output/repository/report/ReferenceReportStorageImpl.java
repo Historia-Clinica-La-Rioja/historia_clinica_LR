@@ -3,6 +3,7 @@ package ar.lamansys.refcounterref.infraestructure.output.repository.report;
 import ar.lamansys.refcounterref.application.port.ReferenceAppointmentStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceReportStorage;
 
+import ar.lamansys.refcounterref.domain.enums.EReferenceAttentionState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import ar.lamansys.refcounterref.domain.enums.EReferencePriority;
 
@@ -47,9 +48,13 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 
 	private static final String SELECT_COUNT = "SELECT COUNT(DISTINCT r.id) as total ";
 
-	private static final Short ASSIGNED_STATE = 1;
+	private static final Short APPOINTMENT_ASSIGNED_STATE = 1;
 
-	private static final Short CONFIRMED_STATE = 2;
+	private static final Short APPOINTMENT_CONFIRMED_STATE = 2;
+
+	private static final Short APPOINTMENT_ABSENT_STATE = 3;
+
+	private static final Short APPOINTMENT_SERVED_STATE = 5;
 
 	private static final Integer NO_VALUE = -1;
 
@@ -101,8 +106,8 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 			condition.append(" AND s.id = ").append(filter.getProcedureId());
 		if (filter.getIdentificationNumber() != null)
 			condition.append(" AND pe.identification_number = '").append(filter.getIdentificationNumber()).append("' ");
-        if (filter.getAppointmentStateId() != null && filter.getAppointmentStateId().equals(NO_VALUE.shortValue()))
-			condition.append("AND ra.appointment_id IS null ");
+        if (filter.getAttentionStateId() != null && filter.getAttentionStateId().equals(EReferenceAttentionState.PENDING.getId()))
+			condition.append(" AND (ra.appointment_id IS null AND cr.closure_type_id IS null) ");
 
 		if (filter.getManagerUserId() != null) {
 			condition.append(" AND igu.user_id = ").append(filter.getManagerUserId());
@@ -120,19 +125,11 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				.setParameter("from", filter.getFrom())
 				.setParameter("to", filter.getTo());
 
-		if (filter.getAppointmentStateId() != null && filter.getAppointmentStateId() != NO_VALUE.shortValue()) {
+		if (filter.getAttentionStateId() != null && !filter.getAttentionStateId().equals(EReferenceAttentionState.PENDING.getId())) {
 			List<ReferenceReportBo> result = executeQueryAndSetReferenceDetails(query);
 
 			result = result.stream()
-					.filter( r -> {
-						Short appointmentId = r.getAppointmentStateId();
-						if (appointmentId != null) {
-							return filter.getAppointmentStateId().equals(ASSIGNED_STATE)
-									? r.getAppointmentStateId().equals(ASSIGNED_STATE) || r.getAppointmentStateId().equals(CONFIRMED_STATE)
-									: r.getAppointmentStateId().equals(filter.getAppointmentStateId());
-						}
-						return false;
-					})
+					.filter( r -> filter.getAttentionStateId().equals(r.getAttentionState().getId()))
 					.sorted(Comparator.comparing(ReferenceReportBo::getDate))
 					.collect(Collectors.toList());
 
@@ -160,7 +157,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"JOIN {h-schema}patient p ON (oc.patient_id = p.id) " +
 				"JOIN {h-schema}person pe ON (p.person_id = pe.id) " +
 				"JOIN {h-schema}person_extended pex ON (pe.id = pex.person_id) " +
-				(filter.getAppointmentStateId() != null ?
+				(filter.getAttentionStateId() != null ?
 						"LEFT JOIN {h-schema}reference_appointment ra ON (r.id = ra.reference_id) " : "") +
 				(filter.getManagerUserId() != null ?
 						"JOIN {h-schema}institutional_group_institution igi ON (igi.institution_id = r.destination_institution_id) " +
@@ -186,7 +183,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"JOIN {h-schema}patient p ON (oc.patient_id = p.id) " +
 				"JOIN {h-schema}person pe ON (p.person_id = pe.id) " +
 				"JOIN {h-schema}person_extended pex ON (pe.id = pex.person_id) " +
-				(filter.getAppointmentStateId() != null ?
+				(filter.getAttentionStateId() != null ?
 						"LEFT JOIN {h-schema}reference_appointment ra ON (r.id = ra.reference_id) " : "") +
 				(filter.getManagerUserId() != null ?
 						"JOIN {h-schema}institutional_group_institution igi ON (igi.institution_id = r.destination_institution_id) " +
@@ -240,9 +237,23 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 		references.forEach(ref -> {
 			ref.setProblems(referencesProblems.stream().filter(rp -> rp.getReferenceId().equals(ref.getId())).map(rp -> rp.getSnomed().getPt()).collect(Collectors.toList()));
 			var appointment = referencesAppointmentStateData.get(ref.getId());
-			ref.setAppointmentStateId(appointment != null ? appointment.getAppointmentStateId() : null);
+			ref.setAttentionState(getAttentionState(ref.getClosureType() != null, appointment != null ? appointment.getAppointmentStateId() : null));
 			ref.setPatientFullName(sharedPersonPort.parseCompletePersonName(ref.getPatientFirstName(), ref.getPatientMiddleNames(), ref.getPatientLastName(), ref.getPatientOtherLastNames(), ref.getPatientNameSelfDetermination()));
 		});
+	}
+
+	private EReferenceAttentionState getAttentionState(boolean hasClosure, Short appointmentState) {
+		if (hasClosure)
+			return EReferenceAttentionState.SERVED;
+		if (appointmentState != null) {
+			if (appointmentState.equals(APPOINTMENT_ASSIGNED_STATE) || appointmentState.equals(APPOINTMENT_CONFIRMED_STATE))
+				return EReferenceAttentionState.ASSIGNED;
+			if (appointmentState.equals(APPOINTMENT_ABSENT_STATE))
+				return EReferenceAttentionState.ABSENT;
+			if (appointmentState.equals(APPOINTMENT_SERVED_STATE))
+				return EReferenceAttentionState.SERVED;
+		}
+		return EReferenceAttentionState.PENDING;
 	}
 
 	private List<ReferenceReportBo> executeQueryAndSetReferenceDetails(Query query) {
