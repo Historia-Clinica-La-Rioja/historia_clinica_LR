@@ -109,4 +109,8 @@ public class BasicDataPersonDto implements Serializable {
         LOG.debug(OUTPUT, result);
         return result;
     }
+
+	public Short getGenderId() {
+		return gender != null ? gender.getId(): null;
+	}
 }

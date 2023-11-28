@@ -471,6 +471,7 @@ export interface BasicDataPersonDto extends Serializable {
     files: PersonFileDto[];
     firstName: string;
     gender: GenderDto;
+    genderId: number;
     id: number;
     identificationNumber: string;
     identificationType: string;

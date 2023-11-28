@@ -27,27 +27,27 @@ export class BedMappingComponent implements OnInit, OnChanges, OnDestroy {
 	) { }
 
 	ngOnInit(): void {
-		this.managementBed$ = this.bedManagementFacadeService.getBedManagement(this.sectorsType).pipe(
-			map((bedsSummary: BedSummaryDto[]) => bedsSummary ? this.mapperService.toBedManagement(bedsSummary) : null)
-		).subscribe(data => this.bedManagementList = data);
+		this.setManagementList();
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
-		if (changes.updateData?.currentValue) {
-			this.managementBed$ = this.bedManagementFacadeService.getBedManagement().pipe(
-				map((bedsSummary: BedSummaryDto[]) => bedsSummary ? this.mapperService.toBedManagement(bedsSummary) : null)
-			).subscribe(data => this.bedManagementList = data);
-		}
+		if (changes.updateData?.currentValue) 
+			this.setManagementList();
 	}
-
+	
 	selectBed(bedId: number, index: number, sectorId: number) {
 		this.selectedBedSectorId = sectorId;
 		this.selectedBedIndex = index;
 		this.selectedBed.emit(bedId);
 	}
-
+	
 	ngOnDestroy(): void {
 		this.managementBed$.unsubscribe();
 	}
-
+	
+	private setManagementList() {
+		this.managementBed$ = this.bedManagementFacadeService.getBedManagement(this.sectorsType).pipe(
+			map((bedsSummary: BedSummaryDto[]) => bedsSummary ? this.mapperService.toBedManagement(bedsSummary) : null)
+		).subscribe(data => this.bedManagementList = data);
+	}
 }
