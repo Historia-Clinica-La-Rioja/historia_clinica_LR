@@ -25,7 +25,7 @@ import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
 
-import net.pladema.staff.service.ClinicalSpecialtyService;
+import net.pladema.staff.repository.ClinicalSpecialtyRepository;
 
 import org.springframework.stereotype.Service;
 
@@ -40,6 +40,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -65,9 +66,9 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 
 	private final DiaryService diaryService;
 
-	private final ClinicalSpecialtyService clinicalSpecialtyService;
-
 	private final DiaryCareLineService diaryCareLineService;
+
+	private final ClinicalSpecialtyRepository clinicalSpecialtyRepository;
 
 	@Override
 	public List<DiaryAvailableProtectedAppointmentsBo> getAvailableProtectedAppointmentsBySearchCriteria(DiaryProtectedAppointmentsSearch searchCriteria,
@@ -78,7 +79,7 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 			searchCriteria.setIncludeNameSelfDetermination(true);
 
 		List<DiaryAvailableProtectedAppointmentsInfoBo> diariesInfo = diaryAvailableProtectedAppointmentsSearchRepository.getAllDiaryProtectedAppointmentsByFilter(searchCriteria);
-		if (searchCriteria.getClinicalSpecialtyId() != null && searchCriteria.getPracticeId() == null)
+		if (searchCriteria.getClinicalSpecialtyIds() != null && !searchCriteria.getClinicalSpecialtyIds().isEmpty() && searchCriteria.getPracticeId() == null)
 			diariesInfo = diariesInfo.stream().filter( diary -> !diaryService.hasPractices(diary.getDiaryId())).collect(Collectors.toList());
 		List<Integer> diaryIds = diariesInfo.stream().map(DiaryAvailableProtectedAppointmentsInfoBo::getDiaryId).collect(Collectors.toList());
 		Collection<AppointmentBo> assignedAppointments = appointmentService.getAppointmentsByDiaries(diaryIds, searchCriteria.getInitialSearchDate(), searchCriteria.getEndSearchDate());
@@ -109,23 +110,44 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 	}
 
 	@Override
-	public Integer geAvailableAppointmentsBySearchCriteriaQuantity(Integer institutionId, Integer clinicalSpecialtyId, AppointmentSearchBo searchCriteria) {
-		log.debug("Input parameters -> institutionId {}, clinicalSpecialtyId {}, searchCriteria {}", institutionId, clinicalSpecialtyId, searchCriteria);
-		searchCriteria.setAliasOrSpecialtyName(clinicalSpecialtyId != null ? clinicalSpecialtyService.getClinicalSpecialty(clinicalSpecialtyId).get().getName() : null);
-		return diaryService.getEmptyAppointmentsBySearchCriteria(institutionId, searchCriteria, false).size();
+	public Integer getAvailableAppointmentsBySearchCriteriaQuantity(Integer institutionId, List<Integer> clinicalSpecialtyIds, AppointmentSearchBo searchCriteria) {
+		log.debug("Input parameters -> institutionId {}, clinicalSpecialtyIds {}, searchCriteria {}", institutionId, clinicalSpecialtyIds, searchCriteria);
+		AtomicInteger result = new AtomicInteger();
+		if (!clinicalSpecialtyIds.isEmpty()) {
+			List<String> clinicalSpecialtyNames = clinicalSpecialtyRepository.getClinicalSpecialtyNamesByIds(clinicalSpecialtyIds);
+			clinicalSpecialtyNames.forEach(clinicalSpecialtyName -> {
+				searchCriteria.setAliasOrSpecialtyName(clinicalSpecialtyName);
+				result.addAndGet(diaryService.getEmptyAppointmentsBySearchCriteria(institutionId, searchCriteria, false).size());
+			});
+		}
+		else
+			result.addAndGet(diaryService.getEmptyAppointmentsBySearchCriteria(institutionId, searchCriteria, false).size());
+		log.debug(OUTPUT, result);
+		return result.get();
 	}
 
 	@Override
-	public Integer geAvailableAppointmentsQuantityByCareLineDiaries(Integer institutionId, Integer clinicalSpecialtyId, AppointmentSearchBo searchCriteria, Integer careLineId) {
+	public Integer getAvailableAppointmentsQuantityByCareLineDiaries(Integer institutionId, List<Integer> clinicalSpecialtyIds, AppointmentSearchBo searchCriteria, Integer careLineId) {
 		log.debug("Fetch available appointments quantity in diaries based on careline and search criteria, " +
-				"input parameters -> institutionId {}, clinicalSpecialtyId {}, careLineId {}, searchCriteria {} ", institutionId, clinicalSpecialtyId, careLineId, searchCriteria);
-		searchCriteria.setAliasOrSpecialtyName(clinicalSpecialtyId != null ? clinicalSpecialtyService.getClinicalSpecialty(clinicalSpecialtyId).get().getName() : null);
+				"input parameters -> institutionId {}, clinicalSpecialtyIds {}, careLineId {}, searchCriteria {} ", institutionId, clinicalSpecialtyIds, careLineId, searchCriteria);
+		AtomicInteger result = new AtomicInteger();
+		if (!clinicalSpecialtyIds.isEmpty()) {
+			List<String> clinicalSpecialtyNames = clinicalSpecialtyRepository.getClinicalSpecialtyNamesByIds(clinicalSpecialtyIds);
+			clinicalSpecialtyNames.forEach(clinicalSpecialtyName -> {
+				searchCriteria.setAliasOrSpecialtyName(clinicalSpecialtyName);
+				result.addAndGet(countAvailableAppointments(institutionId, searchCriteria, careLineId));
+			});
+		}
+		else
+			result.addAndGet(countAvailableAppointments(institutionId, searchCriteria, careLineId));
+		log.debug(OUTPUT, result.get());
+		return result.get();
+	}
+
+	private int countAvailableAppointments(Integer institutionId, AppointmentSearchBo searchCriteria, Integer careLineId) {
 		List<EmptyAppointmentBo> availableAppointments = diaryService.getEmptyAppointmentsBySearchCriteria(institutionId, searchCriteria, false);
 		List<Integer> diariesByCareLineId = diaryCareLineService.getDiaryIdsByCareLineId(careLineId, institutionId);
-		List<EmptyAppointmentBo> result = availableAppointments.stream()
-				.filter(a -> diariesByCareLineId.contains(a.getDiaryId()))
-				.collect(Collectors.toList());
-		return result.size();
+		return (int) availableAppointments.stream().filter(a -> diariesByCareLineId.contains(a.getDiaryId())).count();
 	}
 
 	private List<DiaryAvailableProtectedAppointmentsBo> getDiaryAvailableAppointments(DiaryAvailableProtectedAppointmentsInfoBo diaryInfo,

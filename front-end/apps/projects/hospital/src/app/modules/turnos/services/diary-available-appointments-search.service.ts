@@ -26,24 +26,24 @@ export class DiaryAvailableAppointmentsSearchService {
     return this.http.get<DiaryAvailableProtectedAppointmentsDto[]>(url, { params: queryParams });
   }
 
-  getAvailableProtectedAppointmentsQuantity(institutionDestinationId: number, clinicalSpecialtyId: number, departmentId: number,careLineId: number, practiceSnomedId: number): Observable<number> {
+  getAvailableProtectedAppointmentsQuantity(institutionDestinationId: number, clinicalSpecialtyIds: number[], departmentId: number,careLineId: number, practiceSnomedId: number): Observable<number> {
     const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/${this.URL_PREFIX}/protected-quantity`;
 
-    let queryParams = new HttpParams() 
+    let queryParams = new HttpParams()
       .append('institutionDestinationId', JSON.stringify(institutionDestinationId))
       .append('careLineId', JSON.stringify(careLineId))
       .append('departmentId', JSON.stringify(departmentId));
 
-    if (practiceSnomedId) 
+    if (practiceSnomedId)
       queryParams = queryParams.append('practiceSnomedId', practiceSnomedId);
-    
-    if(clinicalSpecialtyId)
-      queryParams = queryParams.append('clinicalSpecialtyId', JSON.stringify(clinicalSpecialtyId));
+
+    if (clinicalSpecialtyIds)
+    	clinicalSpecialtyIds.forEach(clinicalSpecialtyId => queryParams = queryParams.append('clinicalSpecialtyIds', JSON.stringify(clinicalSpecialtyId)));
 
     return this.http.get<number>(url, { params: queryParams });
   }
 
-  getAvailableAppiuntmentsQuantityByCarelineDiaries(institutionDestinationId: number, careLineId: number, practiceSnomedId: number, clinicalSpecialtyId: number): Observable<number> {
+  getAvailableAppiuntmentsQuantityByCarelineDiaries(institutionDestinationId: number, careLineId: number, practiceSnomedId: number, clinicalSpecialtyIds: number[]): Observable<number> {
     const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/${this.URL_PREFIX}/quantity/by-careline-diaries`;
 
     let queryParams = new HttpParams()
@@ -53,21 +53,21 @@ export class DiaryAvailableAppointmentsSearchService {
     if (practiceSnomedId)
       queryParams = queryParams.append('practiceSnomedId', JSON.stringify(practiceSnomedId));
 
-    if(clinicalSpecialtyId)
-      queryParams = queryParams.append('clinicalSpecialtyId', JSON.stringify(clinicalSpecialtyId));
-      
-    
+    if (clinicalSpecialtyIds)
+		clinicalSpecialtyIds.forEach(clinicalSpecialtyId => queryParams = queryParams.append('clinicalSpecialtyIds', JSON.stringify(clinicalSpecialtyId)));
+
+
     return this.http.get<number>(url, { params: queryParams });
   }
 
-  getAvailableAppointmentsQuantity(institutionDestinationId: number, clinicalSpecialtyId: number, practiceSnomedId: number): Observable<number> {
+  getAvailableAppointmentsQuantity(institutionDestinationId: number, clinicalSpecialtyIds: number[], practiceSnomedId: number): Observable<number> {
     const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/${this.URL_PREFIX}/quantity/by-reference-filter`;
 
     let queryParams = new HttpParams().append('institutionDestinationId', JSON.stringify(institutionDestinationId))
 
-    if (clinicalSpecialtyId) 
-      queryParams = queryParams.append('clinicalSpecialtyId', JSON.stringify(clinicalSpecialtyId));
-    
+    if (clinicalSpecialtyIds)
+		clinicalSpecialtyIds.forEach(clinicalSpecialtyId => queryParams = queryParams.append('clinicalSpecialtyIds', JSON.stringify(clinicalSpecialtyId)));
+
     if(practiceSnomedId)
       queryParams = queryParams.append('practiceSnomedId', JSON.stringify(practiceSnomedId));
 

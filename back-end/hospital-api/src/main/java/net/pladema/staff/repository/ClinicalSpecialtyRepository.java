@@ -105,4 +105,10 @@ public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpeci
 			"WHERE vc.institutionId = :institutionId")
 	List<ClinicalSpecialtyBo> getVirtualConsultationClinicalSpecialtiesByInstitutionId(@Param("institutionId") Integer institutionId);
 
+	@Transactional(readOnly = true)
+	@Query(" SELECT cs.name " +
+			"FROM ClinicalSpecialty cs " +
+			"WHERE cs.id IN :clinicalSpecialtyIds")
+	List<String> getClinicalSpecialtyNamesByIds(@Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds);
+
 }

@@ -22,7 +22,7 @@ import static java.util.stream.Collectors.toList;
 public class DiaryAvailableProtectedAppointmentsSearchQuery {
 
 	private Integer careLineId;
-	private Integer clinicalSpecialtyId;
+	private List<Integer> clinicalSpecialtyIds;
 	private Integer departmentId;
 	private Integer institutionId;
 	private Boolean includeNameSelfDetermination;
@@ -30,7 +30,7 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 
 	public DiaryAvailableProtectedAppointmentsSearchQuery(DiaryProtectedAppointmentsSearch diaryProtectedAppointmentsSearch) {
 		this.careLineId = diaryProtectedAppointmentsSearch.getCareLineId();
-		this.clinicalSpecialtyId = diaryProtectedAppointmentsSearch.getClinicalSpecialtyId();
+		this.clinicalSpecialtyIds = diaryProtectedAppointmentsSearch.getClinicalSpecialtyIds();
 		this.departmentId = diaryProtectedAppointmentsSearch.getDepartmentId();
 		this.institutionId = diaryProtectedAppointmentsSearch.getInstitutionId();
 		this.includeNameSelfDetermination = diaryProtectedAppointmentsSearch.getIncludeNameSelfDetermination();
@@ -95,8 +95,8 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 		if (this.institutionId != null)
 			whereClause = whereClause + " AND i.id = " + this.institutionId;
 
-		if (clinicalSpecialtyId != null)
-			whereClause = whereClause + " AND cs.id = " + this.clinicalSpecialtyId;
+		if (clinicalSpecialtyIds != null && !clinicalSpecialtyIds.isEmpty())
+			whereClause = whereClause + " AND cs.id IN " + this.clinicalSpecialtyIds.toString().replaceAll("\\[([^\\[\\]]+)\\]", "($1)");
 
 		if (practiceId != null) {
 			whereClause = whereClause + " AND dp.snomed_id = " + this.practiceId +

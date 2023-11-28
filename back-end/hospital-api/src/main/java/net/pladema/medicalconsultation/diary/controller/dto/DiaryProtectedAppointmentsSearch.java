@@ -13,6 +13,7 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,7 +26,7 @@ public class DiaryProtectedAppointmentsSearch {
 	private Integer careLineId;
 
 	@Nullable
-	private Integer clinicalSpecialtyId;
+	private List<Integer> clinicalSpecialtyIds;
 
 	@NotNull
 	private Integer departmentId;
