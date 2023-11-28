@@ -1,6 +1,5 @@
 package net.pladema.imagenetwork.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,7 +7,13 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
 public class StudyFileInfoBo {
-    private final String uuid;
+    private String token;
+    private String url;
+    private String uuid;
+
+    public StudyFileInfoBo(String url, String uuid) {
+        this.url = url;
+        this.uuid = uuid;
+    }
 }

@@ -3913,6 +3913,8 @@ export interface StudyDto extends Serializable {
 }
 
 export interface StudyFileInfoDto {
+    token: string;
+    url: string;
     uuid: string;
 }
 

@@ -19,8 +19,9 @@ import net.pladema.imagenetwork.application.generatetokenstudypermissions.Genera
 import net.pladema.imagenetwork.infrastructure.input.rest.dto.TokenDto;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.MalformedURLException;
@@ -67,13 +68,13 @@ public class StudyController {
 				.body(new TokenDto(result));
 	}
 
-	@GetMapping(value = "/file-info")
+	@PostMapping(value = "/file-info")
 	@PreAuthorize("hasPermission(#institutionId, 'INFORMADOR')")
 	public ResponseEntity<StudyFileInfoDto> getStudyFileInfo(@PathVariable Integer institutionId,
 															 @PathVariable String studyInstanceUID,
-															 @RequestParam String pacUrl) throws JsonProcessingException {
-		log.trace("Input -> institutionId '{}' studyInstanceUID '{}' pacUrl '{}'", institutionId, studyInstanceUID, pacUrl);
-		StudyFileInfoBo studyFileInfoBo = getFileUuid.run(studyInstanceUID, pacUrl);
+															 @RequestBody PacsListDto pacs) throws JsonProcessingException {
+		log.trace("Input -> institutionId '{}' studyInstanceUID '{}' pacs '{}'", institutionId, studyInstanceUID, pacs);
+		StudyFileInfoBo studyFileInfoBo = getFileUuid.run(studyInstanceUID, pacs.getUrls());
 		var result = imageNetworkMapper.toStudyFileInfoDto(studyFileInfoBo);
 		log.trace("Output -> {}", result);
 		return ResponseEntity.ok().body(result);

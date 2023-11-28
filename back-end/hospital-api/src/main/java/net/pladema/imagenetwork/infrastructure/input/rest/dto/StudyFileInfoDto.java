@@ -14,5 +14,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudyFileInfoDto {
+    private String token;
+    private String url;
     private String uuid;
 }
