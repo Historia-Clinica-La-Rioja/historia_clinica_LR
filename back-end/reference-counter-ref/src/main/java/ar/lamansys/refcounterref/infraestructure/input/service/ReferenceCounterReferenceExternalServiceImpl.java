@@ -17,6 +17,7 @@ import ar.lamansys.refcounterref.infraestructure.input.service.mapper.ReferenceM
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.ReferenceProblemMapper;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referenceappointment.ReferenceAppointmentRepository;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
+import ar.lamansys.refcounterref.infraestructure.output.repository.referenceclinicalspecialty.ReferenceClinicalSpecialtyRepository;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CompleteReferenceDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryProcedureDto;
@@ -56,6 +57,7 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
 	private final SharedStaffPort sharedStaffPort;
 	private final ApproveReferencesByRuleId approveReferencesByRuleId;
 	private final UpdateRuleOnReferenceRegulation updateRuleIdOnReferences;
+	private final ReferenceClinicalSpecialtyRepository referenceClinicalSpecialtyRepository;
 
     @Override
     public List<ReferenceCounterReferenceFileDto> getReferenceFilesData(Integer referenceId) {
@@ -122,6 +124,14 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
 		log.debug("Exists reference by appointmentId {}, ", appointmentId);
 		var result = referenceAppointmentRepository.getReferenceByAppointmentId(appointmentId).map(this::mapToReferenceAppointmentStateDto);
 		log.debug("OUTPUT {} ->", result);
+		return result;
+	}
+	
+	@Override
+	public List<String> getReferenceClinicalSpecialtiesName(Integer referenceId) {
+		log.debug("Input parameters -> referenceId {}", referenceId);
+		List<String> result = referenceClinicalSpecialtyRepository.getClinicalSpecialtyNamesByReferenceId(referenceId);
+		log.debug("Output -> {}", result);
 		return result;
 	}
 

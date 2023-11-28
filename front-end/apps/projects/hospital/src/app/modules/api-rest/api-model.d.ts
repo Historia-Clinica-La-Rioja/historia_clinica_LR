@@ -1849,7 +1849,7 @@ export interface HCEReferenceCounterReferenceFileDto extends Serializable {
 export interface HCEReferenceDto {
     cancelled?: boolean;
     careLine: string;
-    clinicalSpecialty: string;
+    clinicalSpecialties: string[];
     counterReference: HCESummaryCounterReferenceDto;
     destinationInstitutionName: string;
     files: ReferenceCounterReferenceFileDto[];
@@ -3461,10 +3461,10 @@ export interface ReferenceCounterReferenceFileDto extends Serializable {
 
 export interface ReferenceDataDto {
     careLine: CareLineDto;
-    clinicalSpecialtyDestination: ClinicalSpecialtyDto;
     clinicalSpecialtyOrigin: ClinicalSpecialtyDto;
     closureType: EReferenceClosureType;
     date: DateTimeDto;
+    destinationClinicalSpecialties: ClinicalSpecialtyDto[];
     files: ReferenceCounterReferenceFileDto[];
     id: number;
     institutionDestination: ReferenceInstitutionDto;
@@ -3478,7 +3478,7 @@ export interface ReferenceDataDto {
 
 export interface ReferenceDto extends Serializable {
     careLineId?: number;
-    clinicalSpecialtyId?: number;
+    clinicalSpecialtyIds?: number[];
     consultation?: boolean;
     destinationInstitutionId: number;
     fileIds: number[];
@@ -3514,10 +3514,10 @@ export interface ReferenceProblemDto extends Serializable {
 export interface ReferenceReportDto {
     attentionState: EReferenceAttentionState;
     careLine: string;
-    clinicalSpecialtyDestination: string;
     clinicalSpecialtyOrigin: string;
     closureType: EReferenceClosureType;
     date: DateTimeDto;
+    destinationClinicalSpecialties: string[];
     id: number;
     identificationNumber: string;
     identificationType: string;

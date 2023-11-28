@@ -34,7 +34,7 @@ public class ReferenceDataBo {
 
     private ClinicalSpecialtyBo clinicalSpecialtyOrigin;
 
-	private ClinicalSpecialtyBo clinicalSpecialtyDestination;
+	private List<ClinicalSpecialtyBo> destinationClinicalSpecialties;
 
 	private Integer serviceRequestId;
 
@@ -61,7 +61,6 @@ public class ReferenceDataBo {
 						   Integer clinicalSpecialtyOriginId, String clinicalSpecialtyOriginName,
 						   Integer institutionOriginId, String institutionOriginName,
 						   Integer institutionDestinationId, String institutionDestinationName,
-						   Integer clinicalSpecialtyDestinationId, String clinicalSpecialtyDestinationName,
 						   Integer professionalPersonId, Integer priorityId, Integer serviceRequestId) {
 		this.id = id;
 		this.date = date;
@@ -70,7 +69,6 @@ public class ReferenceDataBo {
 		this.note = note;
 		this.careLine = new CareLineBo(careLineId, careLineDescription);
 		this.clinicalSpecialtyOrigin = new ClinicalSpecialtyBo(clinicalSpecialtyOriginId, clinicalSpecialtyOriginName);
-		this.clinicalSpecialtyDestination = new ClinicalSpecialtyBo(clinicalSpecialtyDestinationId, clinicalSpecialtyDestinationName);
 		this.professionalPersonId = professionalPersonId;
 		this.priority = EReferencePriority.map(priorityId.shortValue());
 		this.serviceRequestId = serviceRequestId;
@@ -81,7 +79,6 @@ public class ReferenceDataBo {
 						   Integer clinicalSpecialtyOriginId, String clinicalSpecialtyOriginName,
 						   Integer institutionOriginId, String institutionOriginName,
 						   Integer institutionDestinationId, String institutionDestinationName,
-						   Integer clinicalSpecialtyDestinationId, String clinicalSpecialtyDestinationName,
 						   Integer professionalPersonId, Integer priorityId, Short closureType,
 						   String phonePrefix, String phoneNumber, Integer serviceRequestId) {
 		this.id = id;
@@ -93,7 +90,6 @@ public class ReferenceDataBo {
 		this.careLine = new CareLineBo(careLineId, careLineDescription);
 		this.clinicalSpecialtyOrigin = new ClinicalSpecialtyBo(clinicalSpecialtyOriginId, clinicalSpecialtyOriginName);
 		this.professionalPersonId = professionalPersonId;
-		this.clinicalSpecialtyDestination = new ClinicalSpecialtyBo(clinicalSpecialtyDestinationId, clinicalSpecialtyDestinationName);
 		this.priority = EReferencePriority.map(priorityId.shortValue());
 		this.closureType = EReferenceClosureType.getById(closureType);
 		this.phonePrefix = phonePrefix;

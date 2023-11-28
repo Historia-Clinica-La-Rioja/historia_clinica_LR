@@ -282,7 +282,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 				result.setNote(r.getNote());
 				result.setConsultation(r.getConsultation());
 				result.setCareLineId(r.getCareLineId());
-				result.setClinicalSpecialtyId(r.getClinicalSpecialtyId());
+				result.setClinicalSpecialtyIds(r.getClinicalSpecialtyIds());
 				result.setProblems(r.getProblems());
 				result.setFileIds(r.getFileIds());
 				result.setDestinationInstitutionId(r.getDestinationInstitutionId());

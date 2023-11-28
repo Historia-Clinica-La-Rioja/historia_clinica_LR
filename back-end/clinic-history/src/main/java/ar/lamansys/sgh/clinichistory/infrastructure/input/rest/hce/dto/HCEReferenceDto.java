@@ -19,7 +19,7 @@ public class HCEReferenceDto {
 
     private String careLine;
 
-    private String clinicalSpecialty;
+    private List<String> clinicalSpecialties;
 
     private String note;
     

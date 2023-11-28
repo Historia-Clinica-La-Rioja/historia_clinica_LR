@@ -343,7 +343,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 			result.setNote(r.getNote());
 			result.setConsultation(r.getConsultation());
 			result.setCareLineId(r.getCareLineId());
-			result.setClinicalSpecialtyId(r.getClinicalSpecialtyId());
+			result.setClinicalSpecialtyIds(r.getClinicalSpecialtyIds());
 			result.setProblems(mapToReferenceProblemDtoList(r.getProblems()));
 			result.setFileIds(r.getFileIds());
 			result.setDestinationInstitutionId(r.getDestinationInstitutionId());

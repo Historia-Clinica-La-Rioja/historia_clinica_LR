@@ -42,9 +42,6 @@ public class Reference extends SGXAuditableEntity<Integer> {
     @Column(name = "care_line_id")
     private Integer careLineId;
 
-    @Column(name = "clinical_specialty_id", nullable = false)
-    private Integer clinicalSpecialtyId;
-
     @Column(name = "reference_note_id")
     private Integer referenceNoteId;
 
@@ -69,7 +66,6 @@ public class Reference extends SGXAuditableEntity<Integer> {
         this.consultation = referenceBo.getConsultation();
         this.procedure = referenceBo.getProcedure();
         this.careLineId = referenceBo.getCareLineId();
-        this.clinicalSpecialtyId = referenceBo.getClinicalSpecialtyId();
         this.destinationInstitutionId = referenceBo.getDestinationInstitutionId();
 		this.phonePrefix = referenceBo.getPhonePrefix();
 		this.phoneNumber = referenceBo.getPhoneNumber();

@@ -20,21 +20,21 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 
     @Transactional(readOnly = true)
     @Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.creationable.createdOn, " +
-            "rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name, cs2.id, cs2.name, "+
+            "rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name,"+
 			"hp.personId, r.priority, r.serviceRequestId) " +
             "FROM Reference r " +
+			"LEFT JOIN ReferenceClinicalSpecialty rcs ON (rcs.pk.referenceId = r.id) " +
             "JOIN OutpatientConsultation oc ON (r.encounterId = oc.id) " +
 			"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
 			"JOIN Institution i ON (oc.institutionId = i.id) " +
 			"LEFT JOIN Institution i2 ON (r.destinationInstitutionId = i2.id) " +
-			"LEFT JOIN ClinicalSpecialty cs2 ON (r.clinicalSpecialtyId = cs2.id) " +
             "LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
 			"LEFT JOIN CareLineRole clr ON (clr.careLineId = cl.id) " +
             "LEFT JOIN ReferenceNote rn ON (rn.id = r.referenceNoteId) " +
             "JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId) " +
             "WHERE oc.patientId = :patientId " +
             "AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
-            "AND r.clinicalSpecialtyId IN (:clinicalSpecialtyIds) " +
+            "AND rcs.pk.clinicalSpecialtyId IN (:clinicalSpecialtyIds) " +
             "AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
 			"AND r.serviceRequestId is NULL " +
 			"AND (cl.id IS NULL OR cl.classified IS FALSE OR (clr.roleId IN :loggedUserRoleIds AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE))")
@@ -44,21 +44,21 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 
     @Transactional(readOnly = true)
     @Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.creationable.createdOn, " +
-			"rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name, cs2.id, cs2.name, "+
+			"rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name,"+
 			"hp.personId , r.priority, r.serviceRequestId) " +
             "FROM Reference r " +
+			"LEFT JOIN ReferenceClinicalSpecialty rcs ON (rcs.pk.referenceId = r.id) " +
             "JOIN OdontologyConsultation oc ON (r.encounterId = oc.id) " +
 			"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
 			"JOIN Institution i ON (oc.institutionId = i.id) " +
 			"LEFT JOIN Institution i2 ON (r.destinationInstitutionId = i2.id) " +
-			"LEFT JOIN ClinicalSpecialty cs2 ON (r.clinicalSpecialtyId = cs2.id) " +
             "LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
 			"LEFT JOIN CareLineRole clr ON (clr.careLineId = cl.id) " +
             "LEFT JOIN ReferenceNote rn ON (rn.id = r.referenceNoteId) " +
             "JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId) " +
             "WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
-            "AND r.clinicalSpecialtyId IN (:clinicalSpecialtyIds) " +
+            "AND rcs.pk.clinicalSpecialtyId IN (:clinicalSpecialtyIds) " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
 			"AND r.serviceRequestId IS NULL " +
 			"AND (cl.id IS NULL OR cl.classified IS FALSE OR (clr.roleId IN :loggedUserRoleIds AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE))")
@@ -70,6 +70,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
 			"oc.startDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId) " +
 			"FROM Reference r " +
+			"LEFT JOIN ReferenceClinicalSpecialty rcs ON (rcs.pk.referenceId = r.id) " +
 			"JOIN OutpatientConsultation oc ON r.encounterId = oc.id " +
 			"JOIN Institution i ON oc.institutionId = i.id " +
 			"JOIN HealthcareProfessional hp ON hp.id = oc.doctorId " +
@@ -77,7 +78,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN PersonExtended pe ON p.id = pe.id " +
 			"WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
-			"AND r.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND rcs.pk.clinicalSpecialtyId = :clinicalSpecialtyId " +
 			"AND r.careLineId = :careLineId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
 			"AND r.serviceRequestId IS NULL ")
@@ -89,6 +90,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
 			"oc.performedDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId) " +
 			"FROM Reference r " +
+			"LEFT JOIN ReferenceClinicalSpecialty rcs ON (rcs.pk.referenceId = r.id) " +
 			"JOIN OdontologyConsultation oc ON r.encounterId = oc.id " +
 			"JOIN Institution i ON oc.institutionId = i.id " +
 			"JOIN HealthcareProfessional hp ON hp.id = oc.doctorId " +
@@ -96,7 +98,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN PersonExtended pe ON p.id = pe.id " +
 			"WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
-			"AND r.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND rcs.pk.clinicalSpecialtyId = :clinicalSpecialtyId " +
 			"AND r.careLineId = :careLineId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
 			"AND r.serviceRequestId IS NULL")
@@ -158,6 +160,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
 			"oc.startDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId) " +
 			"FROM Reference r " +
+			"LEFT JOIN ReferenceClinicalSpecialty rcs ON (rcs.pk.referenceId = r.id) " +
 			"JOIN OutpatientConsultation oc ON r.encounterId = oc.id " +
 			"JOIN Institution i ON oc.institutionId = i.id " +
 			"JOIN HealthcareProfessional hp ON hp.id = oc.doctorId " +
@@ -169,7 +172,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
 			"WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
-			"AND r.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND rcs.pk.clinicalSpecialtyId = :clinicalSpecialtyId " +
 			"AND r.careLineId = :careLineId " +
 			"AND dr.snomedId = :practiceId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId)" +
@@ -185,6 +188,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
 			"oc.performedDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId) " +
 			"FROM Reference r " +
+			"LEFT JOIN ReferenceClinicalSpecialty rcs ON (rcs.pk.referenceId = r.id) " +
 			"JOIN OdontologyConsultation oc ON r.encounterId = oc.id " +
 			"JOIN Institution i ON oc.institutionId = i.id " +
 			"JOIN HealthcareProfessional hp ON hp.id = oc.doctorId " +
@@ -196,7 +200,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
 			"WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
-			"AND r.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND rcs.pk.clinicalSpecialtyId = :clinicalSpecialtyId " +
 			"AND r.careLineId = :careLineId " +
 			"AND dr.snomedId = :practiceId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
@@ -214,14 +218,13 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.patientId, oc.creationable.createdOn, " +
-			"rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name, cs2.id, cs2.name, "+
+			"rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name,"+
 			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId) " +
 			"FROM Reference r " +
 			"JOIN OutpatientConsultation oc ON (r.encounterId = oc.id) " +
 			"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
 			"JOIN Institution i ON (oc.institutionId = i.id) " +
 			"LEFT JOIN Institution i2 ON (r.destinationInstitutionId = i2.id) " +
-			"LEFT JOIN ClinicalSpecialty cs2 ON (r.clinicalSpecialtyId = cs2.id) " +
 			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
 			"LEFT JOIN ReferenceNote rn ON (rn.id = r.referenceNoteId) " +
 			"JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId) " +
@@ -231,14 +234,13 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.patientId, oc.creationable.createdOn, " +
-			"rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name, cs2.id, cs2.name, "+
+			"rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name,"+
 			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId) " +
 			"FROM Reference r " +
 			"JOIN OdontologyConsultation oc ON (r.encounterId = oc.id) " +
 			"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
 			"JOIN Institution i ON (oc.institutionId = i.id) " +
 			"LEFT JOIN Institution i2 ON (r.destinationInstitutionId = i2.id) " +
-			"LEFT JOIN ClinicalSpecialty cs2 ON (r.clinicalSpecialtyId = cs2.id) " +
 			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
 			"LEFT JOIN ReferenceNote rn ON (rn.id = r.referenceNoteId) " +
 			"JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId) " +
@@ -256,9 +258,10 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 	void deleteById(@Param("id") @NonNull Integer id);
 	
 	@Transactional(readOnly = true)
-	@Query("SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo(r.id, cs.id, cs.name, cl.id, cl.description, r.priority, rn.description, cr.closureTypeId, cr.creationable.createdOn, cr.doctorId) " +
+	@Query("SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo(r.id, cs.id, cs.name, cl.id, cl.description, r.priority, rn.description, cr.closureTypeId, cr.creationable.createdOn, cr.doctorId) " +
 			"FROM Reference r " +
-			"LEFT JOIN ClinicalSpecialty cs ON (r.clinicalSpecialtyId = cs.id) " +
+			"LEFT JOIN ReferenceClinicalSpecialty rcs ON (rcs.pk.referenceId = r.id) " +
+			"LEFT JOIN ClinicalSpecialty cs ON (rcs.pk.clinicalSpecialtyId = cs.id) " +
 			"LEFT JOIN CareLine cl ON (r.careLineId = cl.id) " +
 			"LEFT JOIN ReferenceNote rn ON (r.referenceNoteId = rn.id) " +
 			"LEFT JOIN CounterReference cr ON (cr.referenceId = r.id) " +

@@ -19,7 +19,7 @@ public class ReferenceBo {
 
 	private Integer careLineId;
 
-	private Integer clinicalSpecialtyId;
+	private List<Integer> clinicalSpecialtyIds;
 
 	private List<ReferenceProblemBo> problems;
 

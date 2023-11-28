@@ -34,7 +34,7 @@ public class ReferenceDataDto {
 
     private ClinicalSpecialtyDto clinicalSpecialtyOrigin;
 
-	private ClinicalSpecialtyDto clinicalSpecialtyDestination;
+	private List<ClinicalSpecialtyDto> destinationClinicalSpecialties;
 
 	private SharedSnomedDto procedure;
 

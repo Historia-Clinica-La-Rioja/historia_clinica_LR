@@ -32,6 +32,8 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
 
     private final EntityManager entityManager;
 
+	private final MapReferenceSummary mapReferenceSummary;
+
     @SuppressWarnings("unchecked")
     @Transactional(readOnly = true)
     @Override
@@ -176,14 +178,13 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
 
     @Override
     public List<ReferenceSummaryBo> getReferencesByHealthCondition(Integer healthConditionId, Integer outpatientId, List<Short> loggedUserRoleIds) {
-        String sqlString = "SELECT r.id, cl.description , cs.name, rn.description, i.name,"
+        String sqlString = "SELECT r.id, cl.description, rn.description, i.name,"
                 +"  r.deleteable.deleted AS cancelled"
                 +"  FROM Reference r"
                 +"  JOIN OutpatientConsultation oc ON (r.encounterId = oc.id)"
 				+"  LEFT JOIN Institution i ON (r.destinationInstitutionId = i.id)"
                 +"  LEFT JOIN CareLine cl ON (r.careLineId = cl.id)"
 				+"  LEFT JOIN CareLineRole clr ON (clr.careLineId = cl.id)"
-                +"  LEFT JOIN ClinicalSpecialty cs ON (r.clinicalSpecialtyId = cs.id)"
                 +"  JOIN ReferenceHealthCondition rhc ON (r.id = rhc.pk.referenceId)"
                 +"  JOIN HealthCondition hc ON (rhc.pk.healthConditionId = hc.id)"
                 +"  LEFT JOIN ReferenceNote rn ON (r.referenceNoteId = rn.id)"
@@ -198,15 +199,7 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
 				.setParameter("userRoles", loggedUserRoleIds)
                 .getResultList();
         List<ReferenceSummaryBo> result = new ArrayList<>();
-        queryResult.forEach(a ->
-                result.add(new ReferenceSummaryBo(
-                        (Integer)a[0],
-                        (String) a[1],
-                        (String) a[2],
-                        a[3] != null ? (String) a[3] : null,
-						(String) a[4],
-                        (Boolean) a[5]))
-        );
+        queryResult.forEach(a -> result.add(mapReferenceSummary.processReferenceSummaryBo(a)));
         return result;
     }
 }

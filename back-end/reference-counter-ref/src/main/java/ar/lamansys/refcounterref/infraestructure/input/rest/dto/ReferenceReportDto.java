@@ -37,7 +37,7 @@ public class ReferenceReportDto {
 
 	private String	institutionDestination;
 
-	private String clinicalSpecialtyDestination;
+	private List<String> destinationClinicalSpecialties;
 
 	private String careLine;
 

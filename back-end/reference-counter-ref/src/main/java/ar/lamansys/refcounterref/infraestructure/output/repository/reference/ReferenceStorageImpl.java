@@ -12,6 +12,8 @@ import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
 import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
 import ar.lamansys.refcounterref.domain.snomed.SnomedBo;
+import ar.lamansys.refcounterref.infraestructure.output.repository.referenceclinicalspecialty.ReferenceClinicalSpecialty;
+import ar.lamansys.refcounterref.infraestructure.output.repository.referenceclinicalspecialty.ReferenceClinicalSpecialtyRepository;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencehealthcondition.ReferenceHealthConditionRepository;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencenote.ReferenceNote;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencenote.ReferenceNoteRepository;
@@ -54,36 +56,54 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 	private final SharedPersonPort sharedPersonPort;
 
 	private final HistoricReferenceRegulationStorage historicReferenceRegulationStorage;
+	
+	private final ReferenceClinicalSpecialtyRepository referenceClinicalSpecialtyRepository;
 
     @Override
 	@Transactional
     public List<Integer> save(List<CompleteReferenceBo> referenceBoList) {
 		log.debug("Input parameters -> referenceBoList {}", referenceBoList);
 		List<Integer> orderIds = new ArrayList<>();
-		referenceBoList.forEach(referenceBo -> {
-			Reference ref = new Reference(referenceBo);
-			if (referenceBo.getNote() != null) {
-				Integer referenceNoteId = referenceNoteRepository.save(new ReferenceNote(referenceBo.getNote())).getId();
-				ref.setReferenceNoteId(referenceNoteId);
-			}
-			Reference reference = referenceRepository.save(ref);
-			Integer referenceId = reference.getId();
-			List<Integer> referenceHealthConditionIds = referenceHealthConditionStorage.saveProblems(referenceId, referenceBo);
-			log.debug("referenceHealthConditionIds, referenceId -> {} {}", referenceHealthConditionIds, referenceId);
-			if (referenceBo.getStudy() != null) {
-				Integer orderId = referenceStudyStorage.save(referenceBo);
-				reference.setServiceRequestId(orderId);
-				referenceRepository.save(reference);
-				orderIds.add(orderId);
-				log.debug("orderId, referenceId -> {} {}", orderId, referenceId);
-			}
-			historicReferenceRegulationStorage.saveReferenceRegulation(referenceId, referenceBo);
-			referenceCounterReferenceFileStorage.updateReferenceCounterReferenceId(referenceId, referenceBo.getFileIds());
-		});
+        referenceBoList.forEach(referenceBo -> processReference(referenceBo, orderIds));
 		return orderIds;
     }
 
-    @Override
+	private void processReference(CompleteReferenceBo referenceBo, List<Integer> orderIds) {
+		Reference ref = new Reference(referenceBo);
+		if (referenceBo.getNote() != null)
+			saveReferenceNote(referenceBo, ref);
+		Reference reference = referenceRepository.save(ref);
+		Integer referenceId = reference.getId();
+		List<Integer> referenceHealthConditionIds = referenceHealthConditionStorage.saveProblems(referenceId, referenceBo);
+		log.debug("referenceHealthConditionIds, referenceId -> {} {}", referenceHealthConditionIds, referenceId);
+		saveReferenceClinicalSpecialties(referenceId, referenceBo.getClinicalSpecialtyIds());
+		if (referenceBo.getStudy() != null)
+			saveReferenceOrder(referenceBo, orderIds, reference, referenceId);
+		historicReferenceRegulationStorage.saveReferenceRegulation(referenceId, referenceBo);
+		referenceCounterReferenceFileStorage.updateReferenceCounterReferenceId(referenceId, referenceBo.getFileIds());
+	}
+
+	private void saveReferenceOrder(CompleteReferenceBo referenceBo, List<Integer> orderIds, Reference reference, Integer referenceId) {
+		Integer orderId = referenceStudyStorage.save(referenceBo);
+		reference.setServiceRequestId(orderId);
+		referenceRepository.save(reference);
+		orderIds.add(orderId);
+		log.debug("orderId, referenceId -> {} {}", orderId, referenceId);
+	}
+
+	private void saveReferenceNote(CompleteReferenceBo referenceBo, Reference ref) {
+		Integer referenceNoteId = referenceNoteRepository.save(new ReferenceNote(referenceBo.getNote())).getId();
+		ref.setReferenceNoteId(referenceNoteId);
+	}
+
+	private void saveReferenceClinicalSpecialties(Integer referenceId, List<Integer> clinicalSpecialtyIds) {
+		clinicalSpecialtyIds.forEach(clinicalSpecialty -> {
+			ReferenceClinicalSpecialty referenceClinicalSpecialty = new ReferenceClinicalSpecialty(referenceId, clinicalSpecialty);
+			referenceClinicalSpecialtyRepository.save(referenceClinicalSpecialty);
+		});
+	}
+
+	@Override
     public List<ReferenceDataBo> getReferences(Integer patientId, List<Integer> clinicalSpecialtyIds, List<Short> loggedUserRoleIds) {
 		log.debug("Input parameters -> patientId {}, clinicalSpecialtyIds {}, loggedUserRoleIds {}", patientId, clinicalSpecialtyIds, loggedUserRoleIds);
 		List<ReferenceDataBo> queryResult = referenceRepository.getReferencesFromOutpatientConsultation(patientId, clinicalSpecialtyIds, loggedUserRoleIds);
@@ -102,7 +122,7 @@ public class ReferenceStorageImpl implements ReferenceStorage {
     	log.debug("Input parameters -> patientId {}, clinicalSpecialtyid {}, careLineId {}, practiceId {} ", patientId, clinicalSpecialtyId, careLineId, practiceId);
 		List<ReferenceSummaryBo> queryResult = getReferencesSummaryBySearchCriteria(patientId, clinicalSpecialtyId, careLineId, practiceId);
 		boolean featureFlagNameSelfDetermination = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS);
-		queryResult.stream().forEach(r -> r.setIncludeNameSelfDetermination(featureFlagNameSelfDetermination));
+		queryResult.forEach(r -> r.setIncludeNameSelfDetermination(featureFlagNameSelfDetermination));
 		log.debug("Output -> references {} ", queryResult);
 		return queryResult;
 	}
@@ -165,6 +185,7 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 					ref.setFiles(files.get(ref.getId()));
 					ref.setProcedure(referencesProcedures.get(ref.getId()));
 					ref.setProfessionalFullName(sharedPersonPort.getCompletePersonNameById(ref.getProfessionalPersonId()));
+					ref.setDestinationClinicalSpecialties(referenceClinicalSpecialtyRepository.getClinicalSpecialtiesByReferenceId(ref.getId()));
 				}).collect(Collectors.toList());
 	}
 

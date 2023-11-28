@@ -34,4 +34,5 @@ public interface SharedReferenceCounterReference {
 
 	void updateRuleOnReferences(Integer ruleId, Short ruleLevel, List<Integer> ruleIdsToReplace);
 
+	List<String> getReferenceClinicalSpecialtiesName(Integer referenceId);
 }

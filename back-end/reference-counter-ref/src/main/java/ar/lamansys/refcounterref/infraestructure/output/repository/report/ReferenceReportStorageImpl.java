@@ -10,6 +10,7 @@ import ar.lamansys.refcounterref.domain.enums.EReferencePriority;
 import ar.lamansys.refcounterref.domain.snomed.SnomedBo;
 import ar.lamansys.refcounterref.domain.report.ReferenceReportBo;
 import ar.lamansys.refcounterref.domain.report.ReferenceReportFilterBo;
+import ar.lamansys.refcounterref.infraestructure.output.repository.referenceclinicalspecialty.ReferenceClinicalSpecialtyRepository;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencehealthcondition.ReferenceHealthConditionRepository;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedLoggedUserPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
@@ -71,6 +72,8 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 	private final SharedPersonPort sharedPersonPort;
 
 	private final SharedLoggedUserPort sharedLoggedUserPort;
+	
+	private final ReferenceClinicalSpecialtyRepository referenceClinicalSpecialtyRepository;
 
 	@Override
 	public Page<ReferenceReportBo> fetchReferencesReport(ReferenceReportFilterBo filter, Pageable pageable) {
@@ -102,7 +105,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
         }
 
 		if (filter.getClinicalSpecialtyId() != null)
-			condition.append(" AND r.clinical_specialty_id = ").append(filter.getClinicalSpecialtyId());
+			condition.append(" AND rcs.clinical_specialty_id = ").append(filter.getClinicalSpecialtyId());
 		if (filter.getPriorityId() != null)
 			condition.append(" AND r.priority = ").append(filter.getPriorityId());
 		if (filter.getProcedureId() != null)
@@ -157,7 +160,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 
 	private String getOutpatientReferenceFromStatement(ReferenceReportFilterBo filter) {
 		return 	"FROM {h-schema}reference r " +
-				"LEFT JOIN {h-schema}clinical_specialty cs ON (r.clinical_specialty_id = cs.id) " +
+				"LEFT JOIN {h-schema}reference_clinical_specialty rcs ON (rcs.reference_id = r.id) " +
 				"JOIN {h-schema}outpatient_consultation oc ON (r.encounter_id = oc.id) " +
 				"JOIN {h-schema}institution i ON (oc.institution_id = i.id) " +
 				"JOIN {h-schema}clinical_specialty cs2 ON (oc.clinical_specialty_id = cs2.id) " +
@@ -184,7 +187,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 
 	private String getOdontologyReferenceFromStatement(ReferenceReportFilterBo filter) {
 		return 	"FROM {h-schema}reference r " +
-				"LEFT JOIN {h-schema}clinical_specialty cs ON (r.clinical_specialty_id = cs.id) " +
+				"LEFT JOIN {h-schema}reference_clinical_specialty rcs ON (rcs.reference_id = r.id) " +
 				"JOIN {h-schema}odontology_consultation oc ON (r.encounter_id = oc.id) " +
 				"JOIN {h-schema}institution i ON (oc.institution_id = i.id)" +
 				"JOIN {h-schema}clinical_specialty cs2 ON (oc.clinical_specialty_id = cs2.id) " +
@@ -211,29 +214,31 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 
 	private List<ReferenceReportBo> mapToReferenceReportBo(List<Object[]> queryResult) {
 		List<ReferenceReportBo> result = new ArrayList<>();
-		queryResult.forEach(row -> {
-			ReferenceReportBo reference = ReferenceReportBo.builder()
-					.id((Integer) row[0])
-					.priority(EReferencePriority.map(((Integer) row[1]).shortValue()))
-					.patientFirstName((String) row[2])
-					.patientMiddleNames((String) row[3])
-					.patientLastName((String) row[4])
-					.patientOtherLastNames((String) row[5])
-					.patientNameSelfDetermination((String) row[6])
-					.identificationType((String) row[7])
-					.identificationNumber((String) row[8])
-					.date(row[9] != null ? ((Timestamp)row[9]).toLocalDateTime() : null)
-					.clinicalSpecialtyOrigin((String) row[10])
-					.institutionOrigin((String) row[11])
-					.clinicalSpecialtyDestination((String) row[12])
-					.careLine((String) row[13])
-					.closureType(row[14] != null ? EReferenceClosureType.getById((Short) row[14]) : null)
-					.institutionDestination((String) row[15])
-					.procedure(new SnomedBo((Integer) row[16], (String) row[17],(String) row[18]))
-					.build();
-			result.add(reference);
-		});
+		queryResult.forEach(row -> result.add(processReferenceReportBo(row)));
 		return result;
+	}
+
+	private ReferenceReportBo processReferenceReportBo(Object[] row) {
+		List<String> clinicalSpecialties = referenceClinicalSpecialtyRepository.getClinicalSpecialtyNamesByReferenceId((Integer) row[0]);
+		return ReferenceReportBo.builder()
+				.id((Integer) row[0])
+				.priority(EReferencePriority.map(((Integer) row[1]).shortValue()))
+				.patientFirstName((String) row[2])
+				.patientMiddleNames((String) row[3])
+				.patientLastName((String) row[4])
+				.patientOtherLastNames((String) row[5])
+				.patientNameSelfDetermination((String) row[6])
+				.identificationType((String) row[7])
+				.identificationNumber((String) row[8])
+				.date(row[9] != null ? ((Timestamp) row[9]).toLocalDateTime() : null)
+				.clinicalSpecialtyOrigin((String) row[10])
+				.institutionOrigin((String) row[11])
+				.destinationClinicalSpecialties(clinicalSpecialties)
+				.careLine((String) row[13])
+				.closureType(row[14] != null ? EReferenceClosureType.getById((Short) row[14]) : null)
+				.institutionDestination((String) row[15])
+				.procedure(new SnomedBo((Integer) row[16], (String) row[17],(String) row[18]))
+				.build();
 	}
 
 	private void setReferenceDetails(List<ReferenceReportBo> references) {
