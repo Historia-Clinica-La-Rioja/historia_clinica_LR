@@ -781,7 +781,10 @@
             "PRINT_HC_BUTTON": "Imprimir HC"
         },
 		"reference-study-close": {
-			"SUCCESS": "El estudio de contrarreferencia se guardó exitosamente"
+			"SUCCESS": "El estudio de contrarreferencia se guardó exitosamente",
+			"ERROR": "No podes completar el estudio porque tiene una referencia asociada con una especialidad a la que no perteneces",
+			"ERROR_TITLE": "Sin permisos para completar el estudio",
+			"OK_BUTTON": "Aceptar"
 		},
 		"reference-study-closure-information":{
 			"OBSERVATIONS": "Observaciones"

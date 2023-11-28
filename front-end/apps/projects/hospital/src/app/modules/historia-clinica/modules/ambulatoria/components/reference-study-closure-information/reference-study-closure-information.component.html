@@ -1,7 +1,5 @@
 <div mat-dialog-content fxLayoutGap="16px" fxLayout="column">
 
-	<app-colored-label id="closure-type" [description]="reportReference.closureTypeDescription"
-		[color]="Color.GREEN"></app-colored-label>
 	<h3 class="grey">{{'ambulatoria.reference-study-closure-information.OBSERVATIONS'|translate}}</h3>
 	<span id="note">{{ reportReference.observations }}</span>
 	<div *ngFor="let file of diagnosticReportFiles$ | async">
@@ -9,6 +7,13 @@
 			{{file.fileName}}
 		</a>
 	</div>
-	<span class="grey" id="professional-name">{{reportReference.professionalFullName}} </span>
 
+	<div class="row-container" fxLayoutAlign="space-between" id="refernece-info-third">
+		<span class="grey" id="professional-name">
+			{{doctorName}}
+			{{reportReference.doctor.lastName }}
+		</span>
+		<span class="grey" id="date">{{reportReference.date | viewDateDto: 'localdatetime' | dateFormat:
+			'datetime'}}hs</span>
+	</div>
 </div>

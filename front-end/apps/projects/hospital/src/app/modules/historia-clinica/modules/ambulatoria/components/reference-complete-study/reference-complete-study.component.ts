@@ -23,6 +23,7 @@ export class ReferenceCompleteStudyComponent implements OnInit {
 			diagnosticReportId: number,
 			reportReference: ReportReference;
 			status: PrescriptionStatus,
+			order: number,
 		},
 		private readonly institutionaReferenceReportService: InstitutionalReferenceReportService,
 	) { }

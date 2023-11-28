@@ -2,8 +2,13 @@
 
 	<h2 class="capitalize">{{reference.dto.procedure.pt}}</h2>
 
-	<app-colored-label [description]="status.description | uppercase" [color]="status.color"
-		id="colored-label"></app-colored-label>
+	<div class="row-container"  fxLayoutAlign="space-between">
+		<app-colored-label [description]="status.description | uppercase" [color]="status.color" id="colored-label">
+		</app-colored-label>
+		<span class="grey">
+			Orden #{{order}}
+		</span>
+	</div>
 
 	<app-colored-icon-text id="closure-type" [coloredIconText]="reference.closureType"></app-colored-icon-text>
 
@@ -18,11 +23,11 @@
 		</div>
 
 		<div class="row-container" id="refernece-info-second">
-			<app-identifier-cases fxFlex="50%" [position]="Position.ROW" [showLegend]="true"
-				[description]="reference.dto?.clinicalSpecialtyDestination.name || '-'"
+			<app-identifier-cases  *ngIf="reference.dto?.clinicalSpecialtyDestination.name"  fxFlex="50%" [position]="Position.ROW" [showLegend]="true"
+				[description]="reference.dto.clinicalSpecialtyDestination.name"
 				[identifierCase]="identiferCases.SPECIALTY" id="specialty"></app-identifier-cases>
-			<app-identifier-cases fxFlex="50%" [position]="Position.ROW" [showLegend]="true"
-				[description]="reference.dto.careLine.description || '-'" [identifierCase]="identiferCases.CARE_LINE"
+			<app-identifier-cases *ngIf="reference.dto.careLine?.description" fxFlex="50%" [position]="Position.ROW" [showLegend]="true"
+				[description]="reference.dto.careLine.description" [identifierCase]="identiferCases.CARE_LINE"
 				id="care-line"></app-identifier-cases>
 		</div>
 	</div>

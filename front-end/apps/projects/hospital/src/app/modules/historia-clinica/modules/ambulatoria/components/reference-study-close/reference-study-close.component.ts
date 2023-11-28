@@ -4,10 +4,12 @@ import { CompleteRequestDto, MasterDataDto, ReferenceRequestDto } from '@api-res
 import { ReferenceMasterDataService } from '@api-rest/services/reference-master-data.service';
 import { ChangeEvent } from 'react';
 import { PrescripcionesService } from '../../services/prescripciones.service';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ReferenceCompleteStudyComponent } from '../reference-complete-study/reference-complete-study.component';
 import { Observable, map } from 'rxjs';
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
+import { ButtonType } from '@presentation/components/button/button.component';
 
 @Component({
 	selector: 'app-reference-study-close',
@@ -23,13 +25,14 @@ export class ReferenceStudyCloseComponent implements OnInit {
 	selectedFiles: File[] = [];
 	selectedFilesShow = [];
 	closureTypes$: Observable<MasterDataDto[]>;
-
+	ButtonType: ButtonType;
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly referenceMasterDataService: ReferenceMasterDataService,
 		private readonly prescripcionesService: PrescripcionesService,
 		private readonly snackBarService: SnackBarService,
 		public dialogRef: MatDialogRef<ReferenceCompleteStudyComponent>,
+		public dialog: MatDialog,
 
 	) { }
 
@@ -63,7 +66,20 @@ export class ReferenceStudyCloseComponent implements OnInit {
 				this.snackBarService.showSuccess('ambulatoria.reference-study-close.SUCCESS');
 				this.closeModal(false, true);
 			}, error => {
-				this.snackBarService.showError(error.text);
+				this.dialog.open(DiscardWarningComponent, { data: getConfirmDataDialog() });
+
+				function getConfirmDataDialog() {
+					const keyPrefix = 'ambulatoria.reference-study-close';
+					return {
+						title: `${keyPrefix}.ERROR_TITLE`,
+						content:  `${keyPrefix}.ERROR`,
+						okButtonLabel: `${keyPrefix}.OK_BUTTON`,
+						errorMode: true,
+						color: 'warn',
+						buttonClose: true,
+					};
+				}
+
 			});
 	}
 

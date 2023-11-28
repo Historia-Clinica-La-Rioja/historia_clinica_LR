@@ -14,6 +14,7 @@ import { IDENTIFIER_CASES } from 'projects/hospital/src/app/modules/hsi-componen
 export class ReferenceRequestDataComponent {
 
 	@Input() reference: ReferenceCompleteData;
+	@Input() order: number;
 	@Input() status: PrescriptionStatus;
 	Color = Color;
 	Position = Position;
