@@ -77,9 +77,9 @@ public class BackofficeDoctorsOfficeValidator implements BackofficePermissionVal
     }
 
 	private void assertNotExists(DoctorsOffice office){
-		var entity = repository.findByInstitutionIdAndDescription(office.getInstitutionId(), office.getDescription());
+		var entity = repository.findByInstitutionIdAndDescription(office.getInstitutionId(), office.getDescription(), office.getSectorId());
 		if (entity.isPresent() && !entity.get().getId().equals(office.getId())){
-			throw new BackofficeValidationException("sector.institution.exists");
+			throw new BackofficeValidationException("doctorsoffices.institution.exists");
 		}
 	}
 
