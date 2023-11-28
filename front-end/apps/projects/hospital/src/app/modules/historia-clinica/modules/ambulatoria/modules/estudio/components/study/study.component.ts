@@ -14,7 +14,7 @@ import { ActionsButtonService } from '../../../indicacion/services/actions-butto
 import { CreatedDuring } from '../study-list-element/study-list-element.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { capitalize } from '@core/utils/core.utils';
-import { DiagnosticWithTypeReportInfoDto, E_TYPE_ORDER } from '../../model/ImageModel';
+import { DiagnosticWithTypeReportInfoDto, E_TYPE_ORDER, InfoNewStudyOrderDto } from '../../model/ImageModel';
 
 
 const IMAGE_DIAGNOSIS = 'Diagnóstico por imágenes';
@@ -106,7 +106,7 @@ export class StudyComponent implements OnInit {
 	private mapToStudyInformationFromImageOrderCases(report: DiagnosticWithTypeReportInfoDto): StudyInformation {
         return {
             diagnosticInformation: report,
-            hasActiveAppointment: null,
+            hasActiveAppointment: (report.infoOrderInstances as InfoNewStudyOrderDto).hasActiveAppointment,
 			appointmentId: report.infoOrderInstances?.imageId ? report.infoOrderInstances.imageId : null ,
 			reportStatus: report.infoOrderInstances?.viewReport
         }

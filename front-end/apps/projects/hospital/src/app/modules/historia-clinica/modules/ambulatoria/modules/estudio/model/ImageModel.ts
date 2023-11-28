@@ -11,7 +11,7 @@ export enum E_TYPE_ORDER {
 
 export interface DiagnosticWithTypeReportInfoDto extends DiagnosticReportInfoDto{
 	typeOrder: E_TYPE_ORDER,
-	infoOrderInstances: InfoNewTypeOrderDto
+	infoOrderInstances: InfoNewTypeOrderDto | InfoNewStudyOrderDto
 }
 
 
@@ -24,3 +24,6 @@ export interface InfoNewTypeOrderDto {
 }
 
 
+export interface InfoNewStudyOrderDto extends InfoNewTypeOrderDto {
+	hasActiveAppointment?: boolean;
+}
