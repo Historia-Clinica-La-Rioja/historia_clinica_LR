@@ -3,6 +3,7 @@ package net.pladema.medicalconsultation.appointment.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,7 +21,7 @@ public class UpdateAppointmentDateBo {
 
 	private Integer openingHoursId;
 
-	private Short modalityId;
+	private EAppointmentModality modality;
 
 	private String patientEmail;
 

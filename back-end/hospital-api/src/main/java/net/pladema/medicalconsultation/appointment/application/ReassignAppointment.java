@@ -32,21 +32,21 @@ public class ReassignAppointment {
 		log.debug("Input parameters -> appointmentUpdateData {}", appointmentUpdateData);
 		appointmentRepository.updateDate(appointmentUpdateData.getAppointmentId(), appointmentUpdateData.getDate(), appointmentUpdateData.getTime());
 		appointmentAssnRepository.updateOpeningHoursId(appointmentUpdateData.getOpeningHoursId(), appointmentUpdateData.getAppointmentId());
-		if (mustSendEmail(appointmentUpdateData.getModalityId()))
+		if (mustSendEmail(appointmentUpdateData.getModality()))
 			sendNotificationEmail(appointmentUpdateData);
 		log.debug("Output -> {}", Boolean.TRUE);
 		return Boolean.TRUE;
 	}
 
-	private boolean mustSendEmail(Short modalityId) {
+	private boolean mustSendEmail(EAppointmentModality modality) {
 		return featureFlagsService.isOn(AppFeature.HABILITAR_TELEMEDICINA) &&
-				(modalityId.equals(EAppointmentModality.PATIENT_VIRTUAL_ATTENTION.getId()) ||
-						modalityId.equals(EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION.getId()));
+				(modality.equals(EAppointmentModality.PATIENT_VIRTUAL_ATTENTION) ||
+						modality.equals(EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION));
 	}
 
 	private void sendNotificationEmail(UpdateAppointmentDateBo appointmentUpdateData) {
 		AppointmentBo appointmentBo = appointmentRepository.getEmailNotificationData(appointmentUpdateData.getAppointmentId());
-		appointmentBo.setModalityId(appointmentUpdateData.getModalityId());
+		appointmentBo.setModalityId(appointmentUpdateData.getModality().getId());
 		if (appointmentUpdateData.getPatientEmail() != null) {
 			appointmentBo.setPatientEmail(appointmentUpdateData.getPatientEmail());
 			appointmentRepository.updateAppointmentPatientEmail(appointmentUpdateData.getAppointmentId(), appointmentUpdateData.getPatientEmail());

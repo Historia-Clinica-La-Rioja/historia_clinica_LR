@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.appointment.controller.dto;
 
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import lombok.*;
+import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -24,7 +25,7 @@ public class UpdateAppointmentDateDto {
 	private Integer openingHoursId;
 
 	@NotNull
-	private Short modalityId;
+	private EAppointmentModality modality;
 
 	@Nullable
 	private String patientEmail;
