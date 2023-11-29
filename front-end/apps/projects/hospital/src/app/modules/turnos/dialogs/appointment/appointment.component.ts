@@ -136,7 +136,7 @@ export class AppointmentComponent implements OnInit {
 	hideFilterPanel = false;
 
 	isDateFormVisible = false;
-	startAgenda = dateToDateDto(new Date()).year;
+	startAgenda = dateToDateDto(new Date());
 	endAgenda = dateToDateDto(new Date(this.data.agenda.endDate)).year;
 	availableDays: number[]= [];
 	availableMonths: number[] = [];
@@ -294,7 +294,7 @@ export class AppointmentComponent implements OnInit {
 				this.formDate.controls.year.setValue(this.dateAppointment.year);
 				this.loadAvailableDays(this.dateAppointment);
 				this.setAvailableMonths(this.dateAppointment);
-				this.loadAppointmentsHours(this.dateAppointment);
+				this.loadAppointmentsHours(this.dateAppointment,this.isToday());
 				this.setAvailableYears();
 			});
 
@@ -396,11 +396,22 @@ export class AppointmentComponent implements OnInit {
 		this.dateFormToggle();
 	}
 
-	selectDate(dateType: DATESTYPES): void {
+	isToday():boolean{
+		if(this.startAgenda.year === this.dateAppointment.year){
+			if(this.startAgenda.month === this.dateAppointment.month){
+				if(this.startAgenda.day === this.dateAppointment.day){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	selectDate(dateType: DATESTYPES) {
 		switch (dateType){
 			case DATESTYPES.DAY :
 				this.dateAppointment.day = this.formDate.controls.day.value;
-				this.loadAppointmentsHours(this.dateAppointment);
+				this.loadAppointmentsHours(this.dateAppointment,this.isToday());
 				break;
 			case DATESTYPES.MONTH :
 				this.dateAppointment.month = this.formDate.controls.month.value;
@@ -412,7 +423,7 @@ export class AppointmentComponent implements OnInit {
 				break;
 			case DATESTYPES.YEAR : 
 				this.dateAppointment.year = this.formDate.controls.year.value;
-				this.startAgenda = this.dateAppointment.year;
+				this.startAgenda.year = this.dateAppointment.year;
 				const now = dateToDateDto(new Date());
 				if(now.year === this.dateAppointment.year){
 					this.dateAppointment.month = now.month;
@@ -446,7 +457,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	setAvailableYears(){
-		 for (var i = this.startAgenda; i <= this.endAgenda; i++) {
+		 for (var i = this.startAgenda.year; i <= this.endAgenda; i++) {
 			this.availableYears.push(i);
 	  	 }
 	}
@@ -464,12 +475,19 @@ export class AppointmentComponent implements OnInit {
 		}
 	}
 
-	loadAppointmentsHours(date: DateDto) {
+	loadAppointmentsHours(date: DateDto,isToday:boolean) {
 		this.possibleScheduleHours = [];
 		this.selectedOpeningHourId = null;
 		const searchCriteria = this.prepareSearchCriteria(date);
 	 	this.diaryService.getDailyFreeAppointmentTimes(this.data.agenda.id,searchCriteria).subscribe((times: DiaryOpeningHoursFreeTimesDto[]) => {
-			this.possibleScheduleHours = times[0].freeTimes;
+			if(isToday){
+				const now = new Date();
+				this.possibleScheduleHours = times[0].freeTimes.filter(({ hours, minutes }) => {
+					return hours > now.getHours() || (hours === now.getHours() && minutes > now.getMinutes());
+				  });
+			}else{
+				this.possibleScheduleHours = times[0].freeTimes;
+			}
 			this.selectedOpeningHourId = times[0].openingHoursId;
 		})
 	}
