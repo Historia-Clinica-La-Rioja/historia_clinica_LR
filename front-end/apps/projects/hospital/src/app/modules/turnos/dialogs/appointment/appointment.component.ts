@@ -67,7 +67,6 @@ import { CalendarEvent } from 'angular-calendar';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { DateFormat, momentFormat, momentParseDate, momentParseTime } from '@core/utils/moment.utils';
 import * as moment from 'moment';
-import { isBefore, isEqual } from 'date-fns';
 import { Color } from '@presentation/colored-label/colored-label.component';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { toCalendarEvent } from '@turnos/utils/appointment.utils';
@@ -76,7 +75,7 @@ import { DiaryLabelService } from '@api-rest/services/diary-label.service';
 import { Router } from '@angular/router';
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
-import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
+import { dateTimeDtoToDate, dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { DiaryService } from '@api-rest/services/diary.service';
 
 import { PatientNameService } from '@core/services/patient-name.service';
@@ -161,6 +160,7 @@ export class AppointmentComponent implements OnInit {
 	canDownloadReport = false;
 	dateAppointment : DateDto;
 	viewInputEmail: boolean = false;
+	selectedOpeningHourId: number;
 
 	isLabelSelectorVisible: boolean = false;
 	diaryLabels: DiaryLabelDto[] = [];
@@ -246,7 +246,6 @@ export class AppointmentComponent implements OnInit {
 			.subscribe(appointment => {
 				this.appointment = appointment;
 				this.observation = appointment.observation;
-
 				if (this.observation) {
 					this.hideObservationTitle = false;
 					this.formObservations.controls.observation.setValue(this.observation);
@@ -467,9 +466,11 @@ export class AppointmentComponent implements OnInit {
 
 	loadAppointmentsHours(date: DateDto) {
 		this.possibleScheduleHours = [];
+		this.selectedOpeningHourId = null;
 		const searchCriteria = this.prepareSearchCriteria(date);
 	 	this.diaryService.getDailyFreeAppointmentTimes(this.data.agenda.id,searchCriteria).subscribe((times: DiaryOpeningHoursFreeTimesDto[]) => {
 			this.possibleScheduleHours = times[0].freeTimes;
+			this.selectedOpeningHourId = times[0].openingHoursId;
 		})
 	}
 
@@ -501,43 +502,28 @@ export class AppointmentComponent implements OnInit {
 				processErrors(error, (msg) => this.snackBarService.showError(msg));
 			});
 	}
-
-	getAppointmentOpeningHoursId(date: Date): number {
-		const selectedOpeningHour = this.data.agenda.diaryOpeningHours.find(oh => {
-			if (oh.openingHours.dayWeekId === date.getDay()) {
-				const hourFrom = momentParseTime(oh.openingHours.from).toDate();
-				hourFrom.setDate(date.getDate());
-				hourFrom.setMonth(date.getMonth());
-				const hourTo = momentParseTime(oh.openingHours.to).toDate();
-				hourTo.setDate(date.getDate());
-				hourTo.setMonth(date.getMonth());
-				return (isBefore(hourFrom, date) || isEqual(hourFrom, date)) && (isBefore(date, hourTo));
-			}
-		});
-		return selectedOpeningHour?.openingHours.id;
-	}
-
+	
 	updateAppointmentDate(): void {
 		const previousDate = new Date(this.data.appointmentData.date);
-		const newDate = this.formDate.get('hour').value;
-		const openingHoursId = this.getAppointmentOpeningHoursId(newDate);
-		const date: DateTimeDto = {
+		const hour = this.formDate.get('hour').value;
+		const dateNow: DateTimeDto = {
 			date: {
-				year: newDate.getFullYear(),
-				month: newDate.getMonth() + 1,
-				day: newDate.getDate()
+				year: this.formDate.controls.year.value,
+				month: this.formDate.controls.month.value,
+				day: this.formDate.controls.day.value,
 			},
 			time: {
-				hours: newDate.getHours(),
-				minutes: newDate.getMinutes(),
-				seconds: newDate.getSeconds()
+				hours: hour.hours,
+				minutes: hour.minutes,
+				seconds: hour.seconds,
 			}
 		};
-		const id = this.data.appointmentData.appointmentId;
 		const updateAppointmentDate: UpdateAppointmentDateDto = {
-			appointmentId: id,
-			date: date,
-			openingHoursId: openingHoursId
+			appointmentId: this.data.appointmentData.appointmentId,
+			date: dateNow,
+			openingHoursId: this.selectedOpeningHourId,
+			modality: this.formDate.controls.modality.value,
+			patientEmail: this.formDate.controls.email.value,
 		};
 
 		this.appointmentFacade.updateDate(updateAppointmentDate).subscribe(() => {
@@ -564,9 +550,9 @@ export class AppointmentComponent implements OnInit {
 						);
 					}
 					this.snackBarService.showSuccess('turnos.appointment.date.UPDATE_SUCCESS');
-					this.selectedDate = newDate;
-					this.data.appointmentData.date = newDate;
-
+					this.selectedDate = dateTimeDtoToDate(dateNow);
+					this.data.appointmentData.date = this.selectedDate;
+					this.selectedModality = this.modalitys.find( m => m.value === updateAppointmentDate.modality);
 					const appointmentUpdate = appointments.find(a => a.id = this.data.appointmentData.appointmentId);
 					this.appointment.protected = appointmentUpdate?.protected;
 				});
