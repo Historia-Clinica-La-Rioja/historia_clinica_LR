@@ -55,7 +55,7 @@ public class GetFileUuid {
         headers.setContentLength(body.length());
 
         var result = urls.stream()
-                .map(pacUrl -> getFileUUIDFromPACS(pacUrl, headers, body))
+                .map(pacUrl -> getFileUUIDFromPACS(pacUrl, studyInstanceUID, headers, body))
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElseThrow(() -> new StudyException(StudyExceptionEnum.ANY_FILEUUID_WAS_FOUND, "app.imagenetwork.error.any-file-uuid-was-found"));
@@ -67,10 +67,10 @@ public class GetFileUuid {
 
     }
 
-    private StudyFileInfoBo getFileUUIDFromPACS(String pacUrl, HttpHeaders headers, String body) {
+    private StudyFileInfoBo getFileUUIDFromPACS(String pacUrl, String studyInstanceUID, HttpHeaders headers, String body) {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder
                 .fromHttpUrl(pacUrl)
-                .path(pathContextToFindInfo);
+                .path("/".concat(studyInstanceUID).concat(pathContextToFindInfo));
 
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
 
