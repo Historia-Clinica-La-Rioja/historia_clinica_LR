@@ -3768,6 +3768,14 @@ export interface SharedRiskFactorDto {
     systolicBloodPressure: string;
 }
 
+export interface SharedRuleDto {
+    clinicalSpecialtyId: number;
+    id: number;
+    level: number;
+    name: string;
+    snomedId: number;
+}
+
 export interface SharedSnomedDto extends Serializable {
     id?: number;
     parentFsn: string;

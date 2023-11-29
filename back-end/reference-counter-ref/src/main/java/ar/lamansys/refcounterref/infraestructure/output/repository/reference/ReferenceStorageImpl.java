@@ -1,5 +1,6 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.reference;
 
+import ar.lamansys.refcounterref.application.port.HistoricReferenceRegulationStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceFileStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceHealthConditionStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
@@ -52,19 +53,21 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 
 	private final SharedPersonPort sharedPersonPort;
 
+	private final HistoricReferenceRegulationStorage historicReferenceRegulationStorage;
+
     @Override
 	@Transactional
     public List<Integer> save(List<CompleteReferenceBo> referenceBoList) {
-        log.debug("Input parameters -> referenceBoList {}", referenceBoList);
+		log.debug("Input parameters -> referenceBoList {}", referenceBoList);
 		List<Integer> orderIds = new ArrayList<>();
-        referenceBoList.forEach(referenceBo -> {
-            Reference ref = new Reference(referenceBo);
-            if (referenceBo.getNote() != null) {
-                Integer referenceNoteId = referenceNoteRepository.save(new ReferenceNote(referenceBo.getNote())).getId();
-                ref.setReferenceNoteId(referenceNoteId);
-            }
-            Reference reference = referenceRepository.save(ref);
-            Integer referenceId = reference.getId();
+		referenceBoList.forEach(referenceBo -> {
+			Reference ref = new Reference(referenceBo);
+			if (referenceBo.getNote() != null) {
+				Integer referenceNoteId = referenceNoteRepository.save(new ReferenceNote(referenceBo.getNote())).getId();
+				ref.setReferenceNoteId(referenceNoteId);
+			}
+			Reference reference = referenceRepository.save(ref);
+			Integer referenceId = reference.getId();
 			List<Integer> referenceHealthConditionIds = referenceHealthConditionStorage.saveProblems(referenceId, referenceBo);
 			log.debug("referenceHealthConditionIds, referenceId -> {} {}", referenceHealthConditionIds, referenceId);
 			if (referenceBo.getStudy() != null) {
@@ -74,8 +77,9 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 				orderIds.add(orderId);
 				log.debug("orderId, referenceId -> {} {}", orderId, referenceId);
 			}
-            referenceCounterReferenceFileStorage.updateReferenceCounterReferenceId(referenceId, referenceBo.getFileIds());
-        });
+			historicReferenceRegulationStorage.saveReferenceRegulation(referenceId, referenceBo);
+			referenceCounterReferenceFileStorage.updateReferenceCounterReferenceId(referenceId, referenceBo.getFileIds());
+		});
 		return orderIds;
     }
 

@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RuleRepository extends SGXAuditableEntityJPARepository<Rule, Integer> {
 
@@ -34,5 +35,31 @@ public interface RuleRepository extends SGXAuditableEntityJPARepository<Rule, In
 			"OR r.snomedId = :snomedId) " +
 			"AND r.deleteable.deleted = FALSE ")
 	List<Rule> findByClinicalSpecialtyIdOrSnomedId(@Param("clinicalSpecialtyId") Integer clinicalSpecialtyId, @Param("snomedId") Integer snomedId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT r " +
+			"FROM Rule r " +
+			"JOIN InstitutionalGroupRule igr ON (igr.ruleId = r.id) " +
+			"JOIN InstitutionalGroupInstitution igi ON (igr.institutionalGroupId = igi.institutionalGroupId) " +
+			"WHERE r.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND (igi.institutionId = :institutionId) " +
+			"AND igr.regulated IS TRUE " +
+			"AND r.deleteable.deleted IS FALSE " +
+			"AND igr.deleteable.deleted IS FALSE " +
+			"AND igi.deleteable.deleted IS FALSE" )
+	Optional<Rule> findRegulatedRuleByClinicalSpecialtyIdInInstitution(@Param("clinicalSpecialtyId") Integer clinicalSpecialtyId, @Param("institutionId") Integer institutionId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT r " +
+			"FROM Rule r " +
+			"JOIN InstitutionalGroupRule igr ON (igr.ruleId = r.id) " +
+			"JOIN InstitutionalGroupInstitution igi ON (igr.institutionalGroupId = igi.institutionalGroupId) " +
+			"WHERE r.snomedId = :snomedId " +
+			"AND (igi.institutionId = :institutionId) " +
+			"AND igr.regulated IS TRUE " +
+			"AND r.deleteable.deleted IS FALSE " +
+			"AND igr.deleteable.deleted IS FALSE " +
+			"AND igi.deleteable.deleted IS FALSE" )
+	Optional<Rule> findRegulatedRuleBySnomedIdInInstitution(@Param("snomedId") Integer snomedId, @Param("institutionId") Integer institutionId);
 
 }
