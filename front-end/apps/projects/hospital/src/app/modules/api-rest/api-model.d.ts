@@ -3136,6 +3136,8 @@ export interface PersonBasicDataResponseDto extends Serializable {
     birthDate: string;
     cuil: string;
     firstName: string;
+    identificationNumber: string;
+    identificationTypeId: number;
     lastName: string;
     photo: string;
 }
@@ -4055,11 +4057,6 @@ export interface StudyWithoutOrderReportInfoDto {
     viewReport: boolean;
 }
 
-export interface TemplateNamesDto {
-    id: number;
-    name: string;
-}
-
 export interface SurgicalReportDto extends Serializable {
     anesthesia?: HospitalizationProcedureDto[];
     confirmed: boolean;
@@ -4076,6 +4073,11 @@ export interface SurgicalReportDto extends Serializable {
     prosthesisDescription?: string;
     startDateTime?: DateTimeDto;
     surgeryProcedures?: HospitalizationProcedureDto[];
+}
+
+export interface TemplateNamesDto {
+    id: number;
+    name: string;
 }
 
 export interface TerminologyCSVDto {

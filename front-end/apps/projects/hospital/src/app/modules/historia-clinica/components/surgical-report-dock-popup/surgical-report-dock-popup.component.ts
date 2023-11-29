@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { DiagnosisDto, HospitalizationProcedureDto, ProcedureTypeEnum, ProfessionalDto, SurgicalReportDto } from '@api-rest/api-model';
+import { DiagnosisDto, DocumentHealthcareProfessionalDto, EProfessionType, HealthcareProfessionalDto, HospitalizationProcedureDto, ProcedureTypeEnum, SurgicalReportDto } from '@api-rest/api-model';
 import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { SurgicalReportService } from '@api-rest/services/surgical-report.service';
@@ -16,7 +16,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 export class SurgicalReportDockPopupComponent implements OnInit {
 
 	diagnosis: DiagnosisDto[];
-	professionals: ProfessionalDto[];
+	professionals: HealthcareProfessionalDto[];
 
 	form = this.formBuilder.group({
 		preoperativeDiagnosis: [],
@@ -35,6 +35,9 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 		prosthesisDescription: []
 	});
 
+	PATHOLOGIST = EProfessionType.PATHOLOGIST;
+	TRANSFUSIONIST = EProfessionType.TRANSFUSIONIST;
+
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
 		public dockPopupRef: DockPopupRef,
@@ -48,7 +51,7 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 			if (response)
 				this.diagnosis = response;
 		});
-		this.healthcareProfessionalByInstitutionService.getAllAssociated().subscribe(response => {
+		this.healthcareProfessionalByInstitutionService.getAllDoctors().subscribe(response => {
 			if (response)
 				this.professionals = response;
 		});
@@ -72,7 +75,7 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 			cultures: value.cultures?.map(p => this.mapToHospitalizationProcedure(p)),
 			frozenSectionBiopsies: value.frozenSectionBiopsies?.map(p => this.mapToHospitalizationProcedure(p)),
 			drainages: value.drainages?.map(p => this.mapToHospitalizationProcedure(p)),
-			prosthesisDescription: value.prosthesisDescription
+			prosthesisDescription: value.prosthesisDescription,
 		}
 		console.log(surgicalReport);
 
@@ -92,17 +95,27 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 		formControl.setValue(event);
 	}
 
-	professionalChange(event): void {
-		if (this.form.controls.healthcareProfessionals.value)
-			this.form.controls.healthcareProfessionals.value.push(event);
-		else
-			this.form.controls.healthcareProfessionals.setValue(event);
-	}
-
 	private mapToHospitalizationProcedure(procedure): HospitalizationProcedureDto {
 		return {
 			snomed: procedure.snomed,
 			type: ProcedureTypeEnum.PROCEDURE
+		}
+	}
+
+	professionalChange(professional: DocumentHealthcareProfessionalDto, type: EProfessionType): void {
+		professional.type = type;
+		if (!this.form.controls.healthcareProfessionals.value)
+			this.form.controls.healthcareProfessionals.setValue([professional])
+		else {
+			const index = this.form.controls.healthcareProfessionals.value.findIndex(p => p.type === type);
+			if (professional && index == -1)
+				this.form.controls.healthcareProfessionals.value.push(professional);
+
+			if (professional && index != -1)
+				this.form.controls.healthcareProfessionals.value.splice(index, 1, professional);
+
+			if (!professional && index != -1)
+				this.form.controls.healthcareProfessionals.value.splice(index, 1);
 		}
 	}
 }

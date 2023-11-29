@@ -5,13 +5,13 @@
 
 	<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
 		[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.CIRUJANO' | translate"
-		(professionalChange)="professionalChange($event, 'SURGEON')">
+		(professionalChange)="professionalChange($event, SURGEON)">
 	</app-surgical-report-professional-info>
 
 	<ng-container *ngFor="let index of [].constructor(ayudanteCount); let i = index">
 		<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
 			[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.AYUDANTE' | translate"
-			(professionalChange)="professionalChange($event, 'SURGEON_ASSISTANT')">
+			(professionalChange)="professionalChange($event, SURGEON_ASSISTANT)">
 		</app-surgical-report-professional-info>
 	</ng-container>
 	<div>
@@ -22,26 +22,26 @@
 
 	<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
 		[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.ANESTESIOLOGO' | translate"
-		(professionalChange)="professionalChange($event, 'ANESTHESIOLOGIST')">
+		(professionalChange)="professionalChange($event, ANESTHESIOLOGIST)">
 	</app-surgical-report-professional-info>
 
 	<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
 		[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.CARDIOLOGO' | translate"
-		(professionalChange)="professionalChange($event, 'CARDIOLOGIST')">
+		(professionalChange)="professionalChange($event, CARDIOLOGIST)">
 	</app-surgical-report-professional-info>
 
 	<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
 		[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.INSTRUMENTADOR' | translate"
-		(professionalChange)="professionalChange($event, 'SURGICAL_INSTRUMENT_TECHNICIAN')">
+		(professionalChange)="professionalChange($event, SURGICAL_INSTRUMENT_TECHNICIAN)">
 	</app-surgical-report-professional-info>
 
 	<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
 		[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.OBSTETRA' | translate"
-		(professionalChange)="professionalChange($event, 'OBSTETRICIAN')">
+		(professionalChange)="professionalChange($event, OBSTETRICIAN)">
 	</app-surgical-report-professional-info>
 
 	<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
 		[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.PEDIATRA' | translate"
-		(professionalChange)="professionalChange($event, 'PEDIATRICIAN')">
+		(professionalChange)="professionalChange($event, PEDIATRICIAN)">
 	</app-surgical-report-professional-info>
 </app-new-consultation-expansion-section>

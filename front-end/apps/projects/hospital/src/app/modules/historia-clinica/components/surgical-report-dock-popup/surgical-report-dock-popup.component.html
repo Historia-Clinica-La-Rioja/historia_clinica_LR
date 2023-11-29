@@ -21,13 +21,14 @@
 			<app-professional-and-description [title]="'ambulatoria.paciente.surgical-report.exam.TITLE' | translate"
 				[icon]="'blur_circular'"
 				[professionalTitle]="'ambulatoria.paciente.surgical-report.exam.PATOLOGO' | translate"
-				[professionals]="professionals" (professionalChange)="professionalChange($event)">
+				[professionals]="professionals" (professionalChange)="professionalChange($event, PATHOLOGIST)">
 			</app-professional-and-description>
 
 			<app-professional-and-description
 				[title]="'ambulatoria.paciente.surgical-report.blood-solutions.TITLE' | translate" [icon]="'water_drop'"
 				[professionalTitle]="'ambulatoria.paciente.surgical-report.blood-solutions.TRANSFUSIONISTA' | translate"
-				[professionals]="professionals" (professionalChange)="professionalChange($event)">
+				[professionals]="professionals"
+				(professionalChange)="professionalChange($event, TRANSFUSIONIST)">
 			</app-professional-and-description>
 
 			<app-procedure-and-description [title]="'ambulatoria.paciente.surgical-report.culture.TITLE' | translate"
