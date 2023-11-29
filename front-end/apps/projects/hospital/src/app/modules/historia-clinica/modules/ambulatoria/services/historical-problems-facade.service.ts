@@ -40,6 +40,7 @@ export class HistoricalProblemsFacadeService {
 	}
 
 	setPatientId(patientId: number): void {
+		this.resetProblemsFilter();
 		this.loadEvolutionSummaryList(patientId);
 	}
 
@@ -124,6 +125,11 @@ export class HistoricalProblemsFacadeService {
 			problems: this.problems,
 			referenceStates: this.referenceStates,
 		});
+	}
+
+	private resetProblemsFilter() {
+		this.historicalProblemsFilterSubject.next(null);
+		this.problems = [];
 	}
 
 	public getFilterOptions(): Observable<FilterOptions>{
