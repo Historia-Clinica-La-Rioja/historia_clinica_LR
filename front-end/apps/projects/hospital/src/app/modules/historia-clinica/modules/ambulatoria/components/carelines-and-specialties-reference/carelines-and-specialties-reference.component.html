@@ -40,24 +40,24 @@
 
 	<div>
 		<mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
-			<mat-label
-				[translate]="formReference.value.consultation ? 'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY' : 'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY_OPTIONAL'"></mat-label>
-			<mat-select id="specialty" name="clinicalSpecialtyId" formControlName="clinicalSpecialtyId">
-				<mat-option
-					*ngFor="let specialty of (formReference.value.searchByCareLine ? specialtiesSubject$ : allSpecialtiesSubject$) | async"
-					[value]="specialty">
-					{{specialty.name | translate}}
-				</mat-option>
+			<mat-label [translate]="formReference.value.consultation ? 'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY' : 'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY_OPTIONAL'"></mat-label>
+			<mat-select id="specialty" name="clinicalSpecialties" formControlName="clinicalSpecialties" multiple>
+			  <mat-select-trigger>
+				{{formReference.controls.clinicalSpecialties.value?.[0]?.name || ''}}
+				<span *ngIf="(formReference.controls.clinicalSpecialties.value?.length || 0) > 1">
+					(+{{formReference.controls.clinicalSpecialties.value?.length - 1}} {{ 'más' }})
+				</span>
+			  </mat-select-trigger>
+			  <mat-option *ngFor="let specialty of (formReference.value.searchByCareLine ? specialtiesSubject$ : allSpecialtiesSubject$) | async" [value]="specialty">{{specialty.name | translate}}</mat-option>
 			</mat-select>
 			<button id="clear_identification_type" type="button" mat-button
-				*ngIf="formReference?.value.clinicalSpecialtyId && !formReference?.value.consultation" matSuffix
+				*ngIf="formReference?.value.clinicalSpecialties && !formReference?.value.consultation" matSuffix
 				color="warn" mat-icon-button
-				(click)="clear(formReference.controls.clinicalSpecialtyId); $event.stopPropagation()">
+				(click)="clear(formReference.controls.clinicalSpecialties); $event.stopPropagation()">
 				<mat-icon>close</mat-icon>
 			</button>
-			<mat-error *ngIf="formReference.get('clinicalSpecialtyId').hasError('required')"
-				[translate]="'forms.REQUIRED'"></mat-error>
-		</mat-form-field>
+			<mat-error *ngIf="formReference.get('clinicalSpecialties').hasError('required')"[translate]="'forms.REQUIRED'"></mat-error>
+		  </mat-form-field>
 	</div>
 	<ng-container *ngIf="!formReference.value.consultation">
 		<div fxLayout="column">

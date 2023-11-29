@@ -62,11 +62,11 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 	}
 
 	setSpecialtyCareLine() {
-		this.formReference.controls.clinicalSpecialtyId.reset();
+		this.formReference.controls.clinicalSpecialties.reset();
 
 		const careLine = this.formReference.value.careLine;
 		if (careLine) {
-			this.formReference.controls.clinicalSpecialtyId.enable();
+			this.formReference.controls.clinicalSpecialties.enable();
 			this.formReference.controls.studyCategory.enable();
 			this.practiceOrProcedureDisabled = false;
 			this.specialtiesSubject$.next(this.formReference.value.careLine.clinicalSpecialties);
@@ -80,8 +80,8 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 	setSpecialty() {
 		this.formReference.controls.practiceOrProcedure.setValue(null);
 		this.formReference.controls.practiceOrProcedure.reset();
-		this.formReference.controls.clinicalSpecialtyId.setValue(null);
-		this.formReference.controls.clinicalSpecialtyId.reset();
+		this.formReference.controls.clinicalSpecialties.setValue(null);
+		this.formReference.controls.clinicalSpecialties.reset();
 	}
 
 	clearFormFields() {
@@ -92,8 +92,8 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 		this.formReference.controls.careLine.reset();
 
 		if (this.formReference.value.searchByCareLine) {
-			this.formReference.controls.clinicalSpecialtyId.reset();
-			this.formReference.controls.clinicalSpecialtyId.disable();
+			this.formReference.controls.clinicalSpecialties.reset();
+			this.formReference.controls.clinicalSpecialties.disable();
 		}
 
 		if (this.setProblems.length > 0) {
@@ -113,8 +113,8 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 	selectedOption($event: SearchCriteria) {
 		this.formReference.controls.consultation.setValue(!!!$event);
 		if ($event === SearchCriteria.PRACTICES) {
-			this.formReference.controls.clinicalSpecialtyId.removeValidators([Validators.required]);
-			this.formReference.controls.clinicalSpecialtyId.setValue(null);
+			this.formReference.controls.clinicalSpecialties.removeValidators([Validators.required]);
+			this.formReference.controls.clinicalSpecialties.setValue(null);
 			this.formReference.controls.practiceOrProcedure.setValidators([Validators.required]);
 			this.formReference.controls.studyCategory.setValidators([Validators.required]);
 		}
@@ -123,12 +123,12 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 			this.formReference.controls.practiceOrProcedure.setValue(null);
 			this.formReference.controls.studyCategory.removeValidators([Validators.required]);
 			this.formReference.controls.studyCategory.setValue(null);
-			this.formReference.controls.clinicalSpecialtyId.setValue(null);
-			this.formReference.controls.clinicalSpecialtyId.setValidators([Validators.required]);
+			this.formReference.controls.clinicalSpecialties.setValue(null);
+			this.formReference.controls.clinicalSpecialties.setValidators([Validators.required]);
 		}
 
 		this.formReference.controls.practiceOrProcedure.updateValueAndValidity();
-		this.formReference.controls.clinicalSpecialtyId.updateValueAndValidity();
+		this.formReference.controls.clinicalSpecialties.updateValueAndValidity();
 		this.formReference.controls.studyCategory.updateValueAndValidity();
 	}
 
@@ -197,8 +197,8 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 		const formControls = this.formReference.controls;
 		formControls.careLine.setValue(null);
 		formControls.careLine.disable();
-		formControls.clinicalSpecialtyId.setValue(null);
-		formControls.clinicalSpecialtyId.disable();
+		formControls.clinicalSpecialties.setValue(null);
+		formControls.clinicalSpecialties.disable();
 		formControls.practiceOrProcedure.setValue(null);
 		formControls.practiceOrProcedure.disable();
 		this.practiceOrProcedureDisabled = !!formControls.searchByCareLine.value;
@@ -225,10 +225,10 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 	}
 
 	private updateClinicalSpecialtyFormField() {
-		this.formReference.controls.clinicalSpecialtyId.reset();
-		this.formReference.controls.clinicalSpecialtyId.disable();
+		this.formReference.controls.clinicalSpecialties.reset();
+		this.formReference.controls.clinicalSpecialties.disable();
 		this.formReference.controls.careLine.setValidators([Validators.required]);
-		this.formReference.controls.clinicalSpecialtyId.updateValueAndValidity();
+		this.formReference.controls.clinicalSpecialties.updateValueAndValidity();
 	}
 
 	private updateCareLineFormField() {
@@ -250,9 +250,9 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 	private setSpecialties() {
 		const institutionId = this.formReference.value.institutionDestinationId;
 		if (institutionId) {
-			this.formReference.controls.clinicalSpecialtyId.enable();
+			this.formReference.controls.clinicalSpecialties.enable();
 			this.specialties$ = this.clinicalSpecialty.getClinicalSpecialtyByInstitution(institutionId);
-			this.formReference.controls.clinicalSpecialtyId.updateValueAndValidity();
+			this.formReference.controls.clinicalSpecialties.updateValueAndValidity();
 		}
 	}
 
@@ -266,7 +266,7 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 					this.practiceOrProcedureDisabled = true;
 			} else {
 				this.practiceOrProcedureDisabled = false;
-				this.formReference.controls.clinicalSpecialtyId.enable();
+				this.formReference.controls.clinicalSpecialties.enable();
 				this.updateCareLineFormField();
 				this.setSpecialties();
 				this.formReference.controls.studyCategory.enable();
