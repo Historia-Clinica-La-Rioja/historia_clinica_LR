@@ -210,3 +210,47 @@ databaseChangeLog:
               tableName: counter_reference
               columnName: clinical_specialty_id
               columnDataType: int
+
+    - changeSet:
+        id: createTable-problem_error_reasons_list
+        author: mromero
+        changes:
+          - createTable:
+              tableName: problem_error_reasons_list
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_problem_error_reasons_list
+                    name: id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(60)
+
+    - changeSet:
+        id: add-metadata-problem_error_reasons_list
+        author: mromero
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO problem_error_reasons_list (id, description) VALUES 
+                (1, 'Problema incorrecto'),
+                (2, 'Paciente asignado incorrectamente');
+
+    - changeSet:
+        id: addForeignKey-problem_error_reason
+        author: mromero
+        changes:
+          - addForeignKeyConstraint:
+              baseColumnNames: reason_id
+              baseTableName: problem_error_reason
+              constraintName: FK_problem_error_reason_reason_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: problem_error_reasons_list
+              validate: true
