@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -71,10 +72,10 @@ public class AddressMasterDataController {
 	@GetMapping(value = "/institution/{institutionId}/departments/by-reference-clinical-specialty-filter")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
 	public ResponseEntity<Collection<AddressProjection>> getDeparmentsByCareLineAndClinicalSpecialty(@PathVariable("institutionId") Integer institutionId,
-																									 @RequestParam("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																									 @RequestParam("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds,
 																									 @RequestParam(name = "careLineId", required = false) Integer careLineId) {
 		LOG.debug("{}", "All departments by reference for clinical specialty filter");
-		return ResponseEntity.ok().body(addressMasterDataService.getDepartmentsByReferenceFilterByClinicalSpecialty(careLineId, clinicalSpecialtyId, AddressProjection.class));
+		return ResponseEntity.ok().body(addressMasterDataService.getDepartmentsByReferenceFilterByClinicalSpecialty(careLineId, clinicalSpecialtyIds, AddressProjection.class));
 	}
 
 	@GetMapping(value = "/institution/{institutionId}/departments/by-reference-practice-filter")

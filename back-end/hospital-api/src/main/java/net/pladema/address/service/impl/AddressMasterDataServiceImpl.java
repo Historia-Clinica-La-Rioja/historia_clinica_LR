@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class AddressMasterDataServiceImpl implements AddressMasterDataService {
@@ -100,10 +101,11 @@ public class AddressMasterDataServiceImpl implements AddressMasterDataService {
 	}
 
 	@Override
-	public <T> Collection<T> getDepartmentsByReferenceFilterByClinicalSpecialty(Integer careLineId, Integer clinicalSpecialtyId, Class<T> clazz) {
+	public <T> Collection<T> getDepartmentsByReferenceFilterByClinicalSpecialty(Integer careLineId, List<Integer> clinicalSpecialtyIds, Class<T> clazz) {
+		LOG.debug("Input parameters -> careLineId {}, clinicalSpecialtyIds {}, clazz {}", careLineId, clinicalSpecialtyIds, clazz);
 		if (careLineId != null)
-			return departmentRepository.findAllByCareLineIdAndClinicalSpecialtyId(careLineId, clinicalSpecialtyId, clazz);
-		return departmentRepository.findAllByProfessionalsWithClinicalSpecialtyId(clinicalSpecialtyId, clazz);
+			return departmentRepository.findAllByCareLineIdAndClinicalSpecialtyId(careLineId, clinicalSpecialtyIds, (long) clinicalSpecialtyIds.size(), clazz);
+		return departmentRepository.findAllByProfessionalsWithClinicalSpecialtyId(clinicalSpecialtyIds, (long) clinicalSpecialtyIds.size(), clazz);
 	}
 
 	@Override

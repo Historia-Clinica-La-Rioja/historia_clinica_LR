@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.List;
 
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, Short> {
@@ -41,11 +42,15 @@ public interface DepartmentRepository extends JpaRepository<Department, Short> {
 			"JOIN Institution i ON (i.addressId = a.id) " +
 			"JOIN CareLineInstitution cli ON (i.id = cli.institutionId) " +
 			"JOIN CareLineInstitutionSpecialty clis ON (cli.id = clis.careLineInstitutionId) " +
-			"WHERE clis.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"WHERE clis.clinicalSpecialtyId IN :clinicalSpecialtyIds " +
 			"AND cli.careLineId = :careLineId " +
-			"AND cli.deleted IS FALSE ")
+			"AND cli.deleted IS FALSE " +
+			"GROUP BY d.id, d.provinceId, d.description " +
+			"HAVING COUNT(DISTINCT clis.clinicalSpecialtyId) = :clinicalSpecialtiesAmount")
 	<T> Collection<T> findAllByCareLineIdAndClinicalSpecialtyId(@Param("careLineId") Integer careLineId,
-																@Param("clinicalSpecialtyId") Integer clinicalSpecialtyId, Class<T> clazz);
+																@Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds,
+																@Param("clinicalSpecialtiesAmount") Long clinicalSpecialtiesAmount,
+																Class<T> clazz);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT d " +
@@ -58,12 +63,16 @@ public interface DepartmentRepository extends JpaRepository<Department, Short> {
 			"JOIN HealthcareProfessional hp ON (up.pk.personId = hp.personId) " +
 			"JOIN ProfessionalProfessions pp ON (hp.id = pp.healthcareProfessionalId) " +
 			"JOIN HealthcareProfessionalSpecialty hps ON (pp.id = hps.professionalProfessionId) " +
-			"WHERE hps.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"WHERE hps.clinicalSpecialtyId IN :clinicalSpecialtyIds " +
 			"AND ur.deleteable.deleted IS FALSE " +
 			"AND hp.deleteable.deleted IS FALSE " +
 			"AND pp.deleteable.deleted IS FALSE " +
-			"AND hps.deleteable.deleted IS FALSE ")
-	<T> Collection<T> findAllByProfessionalsWithClinicalSpecialtyId(@Param("clinicalSpecialtyId") Integer clinicalSpecialtyId, Class<T> clazz);
+			"AND hps.deleteable.deleted IS FALSE " +
+			"GROUP BY d.id, d.provinceId, d.description " +
+			"HAVING COUNT(DISTINCT hps.clinicalSpecialtyId) = :clinicalSpecialtiesAmount")
+	<T> Collection<T> findAllByProfessionalsWithClinicalSpecialtyId(@Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds,
+																	@Param("clinicalSpecialtiesAmount") Long clinicalSpecialtiesAmount,
+																	Class<T> clazz);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT d " +

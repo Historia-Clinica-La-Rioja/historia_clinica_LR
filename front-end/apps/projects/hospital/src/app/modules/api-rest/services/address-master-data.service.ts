@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import { DepartmentDto } from '@api-rest/api-model';
@@ -39,11 +39,12 @@ export class AddressMasterDataService {
 		return this.http.get<DepartmentDto>(url);
 	}
 
-	getDeparmentsByCareLineAndClinicalSpecialty(clinicalSpecialtyId: number, careLineId?: number) {
+	getDeparmentsByCareLineAndClinicalSpecialty(clinicalSpecialtyIds: number[], careLineId?: number) {
 		const url = `${environment.apiBase}/address/masterdata/institution/${this.contextService.institutionId}/departments/by-reference-clinical-specialty-filter`;
-		let queryParams = { clinicalSpecialtyId: clinicalSpecialtyId.toString() };
+		let queryParams = new HttpParams();
+		clinicalSpecialtyIds.forEach(clinicalSpecialtyId => queryParams = queryParams.append('clinicalSpecialtyIds', JSON.stringify(clinicalSpecialtyId)));
 		if (careLineId !== undefined && careLineId !== null)
-			queryParams['careLineId'] = careLineId.toString();
+			queryParams = queryParams.append('careLineId', JSON.stringify(careLineId));
 		return this.http.get<any[]>(url, { params: queryParams });
 	}
 
