@@ -14,6 +14,7 @@ import net.pladema.medicalconsultation.appointment.service.SendVirtualAppointmen
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @AllArgsConstructor
 @Slf4j
@@ -28,10 +29,12 @@ public class ReassignAppointment {
 
 	private SendVirtualAppointmentEmailService sendVirtualAppointmentEmailService;
 
+	@Transactional
 	public boolean run(UpdateAppointmentDateBo appointmentUpdateData) {
 		log.debug("Input parameters -> appointmentUpdateData {}", appointmentUpdateData);
 		appointmentRepository.updateDate(appointmentUpdateData.getAppointmentId(), appointmentUpdateData.getDate(), appointmentUpdateData.getTime());
 		appointmentAssnRepository.updateOpeningHoursId(appointmentUpdateData.getOpeningHoursId(), appointmentUpdateData.getAppointmentId());
+		appointmentRepository.updateAppointmentModalityId(appointmentUpdateData.getAppointmentId(), appointmentUpdateData.getModality().getId());
 		if (mustSendEmail(appointmentUpdateData.getModality()))
 			sendNotificationEmail(appointmentUpdateData);
 		log.debug("Output -> {}", Boolean.TRUE);

@@ -702,4 +702,9 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	@Modifying
 	@Query("UPDATE Appointment a SET a.patientEmail = :patientEmail WHERE a.id = :appointmentId")
 	void updateAppointmentPatientEmail(@Param("appointmentId") Integer appointmentId, @Param("patientEmail") String patientEmail);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE Appointment a SET a.modalityId = :modalityId WHERE a.id = :appointmentId")
+	void updateAppointmentModalityId(@Param("appointmentId") Integer appointmentId, @Param("modalityId") Short modalityId);
 }
