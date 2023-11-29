@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 
 import { AddressDto, InstitutionBasicInfoDto, InstitutionDto } from '@api-rest/api-model';
@@ -56,11 +56,12 @@ export class InstitutionService {
 		return this.http.get<InstitutionBasicInfoDto[]>(`${environment.apiBase}/institution/province/${provinceId}`);
 	}
 
-	getInstitutionsByReferenceByClinicalSpecialtyFilter(departmentId: number,clinicalSpecialtyId: number, careLine: number): Observable<InstitutionBasicInfoDto[]> {
+	getInstitutionsByReferenceByClinicalSpecialtyFilter(departmentId: number, clinicalSpecialtyIds: number[], careLine: number): Observable<InstitutionBasicInfoDto[]> {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/by-reference-clinical-specialty-filter`;
-		const queryParams = {departmentId: departmentId.toString(), clinicalSpecialtyId: clinicalSpecialtyId.toString()};
+		let queryParams = new HttpParams().append('departmentId', JSON.stringify(departmentId));
+		clinicalSpecialtyIds.forEach(clinicalSpecialtyId => queryParams = queryParams.append('clinicalSpecialtyIds', JSON.stringify(clinicalSpecialtyId)));
 		if (careLine) {
-			queryParams['careLineId'] = careLine.toString();
+			queryParams = queryParams.append('careLineId', JSON.stringify(careLine));
 			return this.http.get<any[]>(url, { params: queryParams });
 		}
 		else

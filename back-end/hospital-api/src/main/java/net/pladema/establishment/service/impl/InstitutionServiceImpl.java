@@ -67,12 +67,12 @@ public class InstitutionServiceImpl implements InstitutionService {
 	}
 
 	@Override
-	public List<InstitutionBasicInfoBo> getInstitutionsByReferenceByClinicalSpecialtyFilter(Short departmentId, Integer clinicalSpecialtyId, Integer careLineId) {
+	public List<InstitutionBasicInfoBo> getInstitutionsByReferenceByClinicalSpecialtyFilter(Short departmentId, List<Integer> clinicalSpecialtyIds, Integer careLineId) {
 		log.debug("Fetch all institutions by reference by clinical specialty filter and active diaries");
 		if (careLineId == null )
-			return institutionRepository.getByDepartmentIdHavingActiveDiaryWithClinicalSpecialty(departmentId, clinicalSpecialtyId);
+			return institutionRepository.getByDepartmentIdHavingActiveDiaryWithClinicalSpecialty(departmentId, clinicalSpecialtyIds, (long) clinicalSpecialtyIds.size());
 		else
-			return institutionRepository.getByDepartmentIdHavingActiveDiaryWithCareLineClinicalSpecialty(departmentId, careLineId, clinicalSpecialtyId);
+			return institutionRepository.getByDepartmentIdHavingActiveDiaryWithCareLineClinicalSpecialty(departmentId, careLineId, clinicalSpecialtyIds, (long) clinicalSpecialtyIds.size());
 	}
 
 	@Override

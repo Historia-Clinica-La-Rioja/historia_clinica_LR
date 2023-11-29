@@ -71,16 +71,19 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"JOIN DoctorsOffice do ON (do.institutionId = i.id) " +
 			"JOIN Diary di ON (di.doctorsOfficeId = do.id) " +
 			"WHERE c.departmentId = :departmentId " +
-			"AND di.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND di.clinicalSpecialtyId IN :clinicalSpecialtyIds " +
 			"AND di.active = TRUE " +
 			"AND di.endDate >= CURRENT_DATE " +
 			"AND di.deleteable.deleted IS FALSE " +
 			"AND ur.deleteable.deleted IS FALSE " +
 			"AND hp.deleteable.deleted IS FALSE " +
 			"AND pp.deleteable.deleted IS FALSE " +
-			"AND hps.deleteable.deleted IS FALSE")
+			"AND hps.deleteable.deleted IS FALSE " +
+			"GROUP BY i.id, i.name " +
+			"HAVING COUNT(DISTINCT di.clinicalSpecialtyId) = :clinicalSpecialtiesAmount")
 	List<InstitutionBasicInfoBo> getByDepartmentIdHavingActiveDiaryWithClinicalSpecialty(@Param("departmentId") Short departmentId,
-																						 @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
+																						 @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds,
+																						 @Param("clinicalSpecialtiesAmount") Long clinicalSpecialtiesAmount);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) " +
@@ -100,9 +103,9 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"WHERE c.departmentId = :departmentId " +
 			"AND di.active = TRUE " +
 			"AND di.endDate >= CURRENT_DATE " +
-			"AND di.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND di.clinicalSpecialtyId IN :clinicalSpecialtyIds " +
 			"AND dcl.pk.careLineId = :careLineId " +
-			"AND clis.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND clis.clinicalSpecialtyId IN :clinicalSpecialtyIds " +
 			"AND cli.careLineId = :careLineId " +
 			"AND cli.deleted = FALSE " +
 			"AND di.deleteable.deleted IS FALSE " +
@@ -110,10 +113,14 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"AND ur.deleteable.deleted IS FALSE " +
 			"AND hp.deleteable.deleted IS FALSE " +
 			"AND pp.deleteable.deleted IS FALSE " +
-			"AND hps.deleteable.deleted IS FALSE")
+			"AND hps.deleteable.deleted IS FALSE " +
+			"GROUP BY i.id, i.name " +
+			"HAVING COUNT(DISTINCT clis.clinicalSpecialtyId) = :clinicalSpecialtiesAmount " +
+			"AND COUNT(DISTINCT di.clinicalSpecialtyId) = :clinicalSpecialtiesAmount")
 	List<InstitutionBasicInfoBo> getByDepartmentIdHavingActiveDiaryWithCareLineClinicalSpecialty(@Param("departmentId") Short departmentId,
 																								 @Param("careLineId") Integer careLineId,
-																								 @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
+																								 @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds,
+																								 @Param("clinicalSpecialtiesAmount") Long clinicalSpecialtiesAmount);
 
 	@Transactional(readOnly = true)
 	@Query(" SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) " +
