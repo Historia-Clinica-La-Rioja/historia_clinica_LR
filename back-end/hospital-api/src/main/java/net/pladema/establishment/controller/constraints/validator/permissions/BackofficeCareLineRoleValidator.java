@@ -59,13 +59,11 @@ public class BackofficeCareLineRoleValidator implements BackofficePermissionVali
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
 	public ItemsAllowed<Integer> itemsAllowedToList(CareLineRole entity) {
 		return new ItemsAllowed<>();
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
 	public ItemsAllowed<Integer> itemsAllowedToList() {
 		return null;
 	}
