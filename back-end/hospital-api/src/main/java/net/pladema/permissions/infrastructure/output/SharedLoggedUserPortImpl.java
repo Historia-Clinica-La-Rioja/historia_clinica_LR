@@ -2,14 +2,21 @@ package net.pladema.permissions.infrastructure.output;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedLoggedUserPort;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
 
 import net.pladema.permissions.repository.enums.ERole;
 
 import net.pladema.user.application.port.UserRoleStorage;
 
+import net.pladema.user.domain.UserRoleBo;
+
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class SharedLoggedUserPortImpl implements SharedLoggedUserPort {
@@ -29,5 +36,17 @@ public class SharedLoggedUserPortImpl implements SharedLoggedUserPort {
 				.stream()
 				.anyMatch(ur -> ur.getRoleId() == ERole.GESTOR_DE_ACCESO_REGIONAL.getId() ||
 						ur.getRoleId() == ERole.GESTOR_DE_ACCESO_LOCAL.getId());
+	}
+
+	@Override
+	public List<Short> getLoggedUserRoleIds(Integer institutionId, Integer userId) {
+		log.debug("Input parameters -> institutionId {}, userId {}", institutionId, userId);
+		List<Short> result = userRoleStorage.getRolesByUser(userId).stream().filter(role -> institutionIsValid(institutionId, role)).map(UserRoleBo::getRoleId).collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	private boolean institutionIsValid(Integer institutionId, UserRoleBo role) {
+		return role.getInstitutionId().equals(institutionId) || role.getInstitutionId().equals(-1);
 	}
 }

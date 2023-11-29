@@ -11,9 +11,11 @@ import ar.lamansys.refcounterref.domain.snomed.SnomedBo;
 import ar.lamansys.refcounterref.domain.report.ReferenceReportBo;
 import ar.lamansys.refcounterref.domain.report.ReferenceReportFilterBo;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencehealthcondition.ReferenceHealthConditionRepository;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedLoggedUserPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceAppointmentStateDto;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +30,6 @@ import javax.persistence.Query;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -68,6 +69,8 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 	private final SharedAppointmentPort sharedAppointmentPort;
 
 	private final SharedPersonPort sharedPersonPort;
+
+	private final SharedLoggedUserPort sharedLoggedUserPort;
 
 	@Override
 	public Page<ReferenceReportBo> fetchReferencesReport(ReferenceReportFilterBo filter, Pageable pageable) {
@@ -115,15 +118,19 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 			condition.append(" AND igi.deleted IS FALSE ");
 		}
 
+		condition.append("AND (cl.id IS NULL OR cl.classified IS FALSE OR (clr.role_id IN (:userRoles) AND cl.classified IS TRUE AND clr.deleted IS FALSE OR r.created_by = :loggedUserId))");
+
 		return condition.toString();
 	}
 
-	private Page<ReferenceReportBo> executeQueryAndProcessResults(String sqlQueryData, String sqlCountQuery,
-																  ReferenceReportFilterBo filter, Pageable pageable) {
-
+	private Page<ReferenceReportBo> executeQueryAndProcessResults(String sqlQueryData, String sqlCountQuery, ReferenceReportFilterBo filter, Pageable pageable) {
+		filter.setLoggedUserId(UserInfo.getCurrentAuditor());
+		filter.setLoggedUserRoleIds(sharedLoggedUserPort.getLoggedUserRoleIds(filter.getDestinationInstitutionId(), filter.getLoggedUserId()));
 		var query = entityManager.createNativeQuery(sqlQueryData)
 				.setParameter("from", filter.getFrom())
-				.setParameter("to", filter.getTo());
+				.setParameter("to", filter.getTo())
+				.setParameter("userRoles", filter.getLoggedUserRoleIds())
+				.setParameter("loggedUserId", filter.getLoggedUserId());
 
 		if (filter.getAttentionStateId() != null && !filter.getAttentionStateId().equals(EReferenceAttentionState.PENDING.getId())) {
 			List<ReferenceReportBo> result = executeQueryAndSetReferenceDetails(query);
@@ -170,6 +177,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"LEFT JOIN {h-schema}identification_type it ON (pe.identification_type_id = it.id) " +
 				"LEFT JOIN {h-schema}care_line cl ON (r.care_line_id = cl.id) " +
 				"LEFT JOIN {h-schema}counter_reference cr ON (r.id = cr.reference_id) " +
+				"LEFT JOIN {h-schema}care_line_role clr ON (clr.care_line_id = cl.id) " +
 				"WHERE (oc.start_date >= :from AND oc.start_date <= :to) " +
 				"AND (r.deleted = FALSE OR r.deleted IS NULL)";
 	}
@@ -196,6 +204,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"LEFT JOIN {h-schema}identification_type it ON (pe.identification_type_id = it.id) " +
 				"LEFT JOIN {h-schema}care_line cl ON (r.care_line_id = cl.id) " +
 				"LEFT JOIN {h-schema}counter_reference cr ON (r.id = cr.reference_id) " +
+				"LEFT JOIN {h-schema}care_line_role clr ON (clr.care_line_id = cl.id) " +
 				"WHERE (oc.performed_date >= :from AND oc.performed_date <= :to) " +
 				"AND (r.deleted = FALSE OR r.deleted IS NULL)";
 	}
@@ -273,16 +282,17 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 		return new PageImpl<>(result, pageable, totalAmount);
 	}
 
-	private Page<ReferenceReportBo> createPage(List<ReferenceReportBo> result, Pageable pageable,
-											   String sqlCountQuery, ReferenceReportFilterBo filter) {
-		return new PageImpl<>(result, pageable, getTotalAmountOfElements(sqlCountQuery, filter.getFrom(), filter.getTo()));
+	private Page<ReferenceReportBo> createPage(List<ReferenceReportBo> result, Pageable pageable, String sqlCountQuery, ReferenceReportFilterBo filter) {
+		return new PageImpl<>(result, pageable, getTotalAmountOfElements(sqlCountQuery, filter));
 	}
 
-	private long getTotalAmountOfElements(String sqlCountQuery, LocalDate from, LocalDate to) {
+	private long getTotalAmountOfElements(String sqlCountQuery, ReferenceReportFilterBo filter) {
 		String query = String.format("SELECT SUM(t.total) FROM ( %s) t", sqlCountQuery);
 		return ((BigDecimal) entityManager.createNativeQuery(query)
-				.setParameter("from", from)
-				.setParameter("to", to)
+				.setParameter("from", filter.getFrom())
+				.setParameter("to", filter.getTo())
+				.setParameter("userRoles", filter.getLoggedUserRoleIds())
+				.setParameter("loggedUserId", filter.getLoggedUserId())
 				.getSingleResult()).longValue();
 	}
 

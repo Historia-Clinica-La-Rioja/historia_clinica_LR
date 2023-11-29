@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -49,5 +50,11 @@ public class ReferenceReportFilterBo {
 
 	@Nullable
 	private Integer managerUserId;
+
+	@Nullable
+	private Integer loggedUserId;
+
+	@Nullable
+	private List<Short> loggedUserRoleIds;
 
 }
