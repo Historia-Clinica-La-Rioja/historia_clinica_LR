@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, ReferenceProblemDto, MasterDataDto, ReferenceStudyDto } from '@api-rest/api-model';
+import { CareLineDto, HCEPersonalHistoryDto, ReferenceProblemDto, MasterDataDto, ReferenceStudyDto, ClinicalSpecialtyDto } from '@api-rest/api-model';
 import { ReferenceOriginInstitutionService } from '../../services/reference-origin-institution.service';
 import { ReferenceProblemsService } from '../../services/reference-problems.service';
 import { Observable, tap } from 'rxjs';
@@ -66,14 +66,14 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 
 	private markInputsAsTouched() {
 		this.formReference.controls.careLine.markAllAsTouched();
-		this.formReference.controls.clinicalSpecialtyId.markAllAsTouched();
+		this.formReference.controls.clinicalSpecialties.markAllAsTouched();
 		this.formReference.controls.problems.markAsTouched();
 	}
 
 	private buildReference(): Reference {
 		return {
 			careLine: this.formReference.controls.careLine.value,
-			clinicalSpecialty: this.formReference.controls.clinicalSpecialtyId.value,
+			clinicalSpecialties: this.formReference.controls.clinicalSpecialties.value,
 			consultation: this.formReference.controls.consultation.value,
 			note: this.formReference.value.summary,
 			problems: this.referenceProblemsService.mapProblems(),
@@ -147,7 +147,7 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 			consultation: [true],
 			procedure: [null],
 			careLine: [null, [Validators.required]],
-			clinicalSpecialtyId: [null, [Validators.required]],
+			clinicalSpecialties: [null, [Validators.required]],
 			institutionDestinationId: [null, [Validators.required]],
 			summary: [null],
 			provinceOrigin: [null],
@@ -162,7 +162,7 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 	}
 
 	private disableInputs() {
-		this.formReference.controls.clinicalSpecialtyId.disable();
+		this.formReference.controls.clinicalSpecialties.disable();
 	}
 
 }
@@ -174,7 +174,7 @@ export interface HCEPersonalHistory {
 
 export interface Reference {
 	careLine: CareLineDto,
-	clinicalSpecialty: ClinicalSpecialtyDto,
+	clinicalSpecialties: ClinicalSpecialtyDto[],
 	consultation: boolean;
 	destinationInstitutionId: number;
 	fileIds: number[];

@@ -286,11 +286,11 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
 		this.patientId = patientId;
 
-		const { searchCriteria, clinicalSpecialty, practice } = formInformation;
+		const { searchCriteria, clinicalSpecialties, practice } = formInformation;
 		this.setCriteria(searchCriteria);
 
-		if (clinicalSpecialty) {
-			const specialtyValue = clinicalSpecialty.value;
+		if (clinicalSpecialties.length) {
+			const specialtyValue = clinicalSpecialties[0].value;
 			this.externalSetValueSpecialty = this.toTypeaheadOption(specialtyValue.name);
 			this.aliasTypeaheadOptions = [this.toTypeaheadOption(specialtyValue.name)];
 			this.setClinicalSpecialty(specialtyValue);

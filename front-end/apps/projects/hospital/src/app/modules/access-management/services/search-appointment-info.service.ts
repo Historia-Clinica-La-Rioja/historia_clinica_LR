@@ -42,7 +42,7 @@ export class SearchAppointmentsInfoService {
 		const practice = this.referenceData.procedure;
 		return {
 			careLine: this.careLineToTypeaheadOption(this.referenceData.careLine),
-			clinicalSpecialty: this.referenceData.clinicalSpecialtyDestination.id ? this.specialtyToTypeaheadOption(this.referenceData.clinicalSpecialtyDestination) : null,
+			clinicalSpecialties: this.referenceData.destinationClinicalSpecialties.length ? this.specialtyToTypeaheadOption(this.referenceData.destinationClinicalSpecialties) : null,
 			practice,
 			searchCriteria: practice ? SearchCriteria.PRACTICES : SearchCriteria.CONSULTATION
 		}
@@ -66,12 +66,12 @@ export class SearchAppointmentsInfoService {
 		};
 	}
 
-	private specialtyToTypeaheadOption(specialty: ClinicalSpecialtyDto): TypeaheadOption<ClinicalSpecialtyDto> {
-		return {
+	private specialtyToTypeaheadOption(specialties: ClinicalSpecialtyDto[]): TypeaheadOption<ClinicalSpecialtyDto>[] {
+		return specialties.map(specialty => ({
 			compareValue: specialty.name,
 			value: specialty,
 			viewValue: specialty.name
-		};
+		}));
 	}
 }
 
@@ -87,6 +87,6 @@ export interface SearchAppointmentInformation {
 export interface ExternalSetValues {
 	careLine: TypeaheadOption<CareLineDto>;
 	practice: SharedSnomedDto;
-	clinicalSpecialty: TypeaheadOption<ClinicalSpecialtyDto>;
+	clinicalSpecialties: TypeaheadOption<ClinicalSpecialtyDto>[];
 	searchCriteria: SearchCriteria;
 }

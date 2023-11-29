@@ -479,13 +479,13 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 
 		this.patientId = patientId;
 
-		const { searchCriteria, careLine, clinicalSpecialty, practice } = formInformation;
+		const { searchCriteria, careLine, clinicalSpecialties, practice } = formInformation;
 		this.setCriteria(searchCriteria);
 		this.setCareLine(careLine.value);
 
-		if (clinicalSpecialty) {
-			this.specialtyTypeaheadOptions = [clinicalSpecialty];
-			this.setClinicalSpecialty(clinicalSpecialty.value);
+		if (clinicalSpecialties.length) {
+			this.specialtyTypeaheadOptions = clinicalSpecialties;
+			this.setClinicalSpecialty(clinicalSpecialties[0].value);
 		}
 
 		if (practice) {

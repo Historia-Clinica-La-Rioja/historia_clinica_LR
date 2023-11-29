@@ -189,7 +189,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 					verificationId: null,
 				};
 			}),
-			clinicalSpecialtyId: this.data.reference.clinicalSpecialtyDestination.id,
+			clinicalSpecialtyId: this.data.reference.destinationClinicalSpecialties[0].id,
 			counterReferenceNote: this.formReferenceClosure.value.description,
 			medications: this.medicacionesNuevaConsultaService.getMedicaciones().map((medicacion: Medicacion) => {
 				return {

@@ -9,7 +9,9 @@
 
 	<div fxLayout="row" fxLayoutGap="20px">
 		<div fxFlex="70" *ngIf="!referenceCompleteData.dto.procedure else showPractice">
-			<span class="bold">{{referenceCompleteData.dto.clinicalSpecialtyDestination.name}}</span>
+			<div *ngFor="let specialty of referenceCompleteData.dto.destinationClinicalSpecialties">
+				<span class="bold">{{specialty.name}}</span>
+			</div>
 		</div>
 		<ng-template #showPractice>
 			<span class="bold">{{referenceCompleteData.dto.procedure.pt}}</span>
@@ -53,11 +55,13 @@
                 [position]="Position.COLUMN" [showLegend]="true">
 			</app-identifier-cases>
 
-			<app-identifier-cases *ngIf="referenceCompleteData.dto.clinicalSpecialtyDestination.id"
-                [identifierCase]="identiferCases.SPECIALTY" [description]="referenceCompleteData.dto.clinicalSpecialtyDestination.name" 
-                [position]="Position.COLUMN"
-				[showLegend]="true">
-			</app-identifier-cases>
+			<div *ngFor="let specialty of referenceCompleteData.dto.destinationClinicalSpecialties">
+				<app-identifier-cases
+					[identifierCase]="identiferCases.SPECIALTY" [description]="specialty.name" 
+					[position]="Position.COLUMN"
+					[showLegend]="true">
+				</app-identifier-cases>
+			</div>
 
 			<app-identifier-cases *ngIf="referenceCompleteData.dto.careLine.id"
                 [identifierCase]="identiferCases.CARE_LINE"

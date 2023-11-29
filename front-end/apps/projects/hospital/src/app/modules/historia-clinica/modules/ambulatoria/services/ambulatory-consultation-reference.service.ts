@@ -59,7 +59,7 @@ export class AmbulatoryConsultationReferenceService {
 			consultation: reference.consultation,
 			procedure: reference.procedure,
 			careLine: reference.careLine ? reference.careLine : null,
-			clinicalSpecialty: reference.clinicalSpecialty ? reference.clinicalSpecialty : null,
+			clinicalSpecialties: reference.clinicalSpecialties,
 			note: reference.note,
 			index: index
 		})));
@@ -98,9 +98,10 @@ export class AmbulatoryConsultationReferenceService {
 	}
 
 	private mapToReferenceDto(reference: Reference): ReferenceDto {
+		console.log(reference);
 		return {
 			careLineId: reference.careLine ? reference.careLine.id : null,
-			clinicalSpecialtyId: reference.clinicalSpecialty?.id || null,
+			clinicalSpecialtyIds: reference.clinicalSpecialties.map(specialty => specialty.id),
 			consultation: reference.consultation,
 			note: reference.note,
 			problems: reference.problems,

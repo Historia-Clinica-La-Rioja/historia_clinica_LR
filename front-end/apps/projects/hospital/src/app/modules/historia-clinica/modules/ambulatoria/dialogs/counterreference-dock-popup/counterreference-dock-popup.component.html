@@ -13,7 +13,9 @@
 				</div>
 				<div class="reference-description" fxLayout="row" fxLayoutGap="10px" fxFlex="30px">
 					<span>{{data.reference.careLine?.description}}</span>
-					<span>{{data.reference.clinicalSpecialtyDestination?.name}}</span>
+					<div *ngFor="let specialty of data.reference.destinationClinicalSpecialties">
+						<span>{{specialty.name}}</span>
+					</div>
 				</div>
 
 				<span *ngIf="data.reference.note">“{{data.reference.note}}”</span>

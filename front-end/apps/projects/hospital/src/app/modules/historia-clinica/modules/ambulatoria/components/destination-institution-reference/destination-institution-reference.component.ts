@@ -33,14 +33,14 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 	institutionDestinationId: number;
 	departmentId: number;
 	originInstitutionInfo: AddressDto;
-	specialtyId: number;
+	specialtyIds: number[];
 	institutionSelection = false;
 	careLineId: number;
 	appointment$ = new BehaviorSubject<number>(undefined);
 	protectedAppointment$ = new BehaviorSubject<number>(undefined);
 	practiceOrProcedure = false;
 	practiceSnomedId;
-	clinicalSpecialtyId;
+	clinicalSpecialties;
 
 	constructor(
 		private readonly institutionService: InstitutionService,
@@ -58,7 +58,7 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 			distinctUntilChanged()
 		);
 
-		const clinicalSpecialtyId$ = this.formReference.controls.clinicalSpecialtyId.valueChanges.pipe(
+		const clinicalSpecialtyId$ = this.formReference.controls.clinicalSpecialties.valueChanges.pipe(
 			debounceTime(300),
 			distinctUntilChanged()
 		);
@@ -68,15 +68,15 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 			distinctUntilChanged()
 		);
 
-		combineLatest([practiceOrProcedure$, clinicalSpecialtyId$, careLine$]).subscribe(([practiceOrProcedure, clinicalSpecialtyId, careLine]) => {
+		combineLatest([practiceOrProcedure$, clinicalSpecialtyId$, careLine$]).subscribe(([practiceOrProcedure, clinicalSpecialties, careLine]) => {
 			this.practiceOrProcedure = !!practiceOrProcedure;
 			this.cleanFields();
 			if (practiceOrProcedure) {
-				this.adressMasterData.getDepartmentsByCareLineAndPracticesAndClinicalSpecialty(practiceOrProcedure.id, clinicalSpecialtyId?.id, careLine?.id).subscribe(data => {
+				this.adressMasterData.getDepartmentsByCareLineAndPracticesAndClinicalSpecialty(practiceOrProcedure.id, clinicalSpecialties.length, careLine?.id).subscribe(data => {
 					this.departments = this.toTypeaheadOptions(data, 'description');
 					this.departmentDisable = false;
 					this.practiceSnomedId = practiceOrProcedure.id;
-					this.clinicalSpecialtyId = clinicalSpecialtyId?.id;
+					this.clinicalSpecialties = clinicalSpecialties;
 				});
 			} else {
 				if (this.formReference.controls.practiceOrProcedure.value) this.practiceSnomedId = this.formReference.controls.practiceOrProcedure.value.id;
@@ -85,15 +85,15 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 		});
 
 		careLine$.subscribe(data => {
-			this.specialtyId = null;
+			this.specialtyIds = null;
 			this.careLineId = data?.id;
 			this.setDepartaments();
 			this.onSpecialtySelectionChange();
 		})
 
 		clinicalSpecialtyId$.subscribe(data => {
-			this.specialtyId = null;
-			this.specialtyId = data?.id;
+			this.specialtyIds = null;
+			this.specialtyIds = data?.map(specialty => specialty.id);
 			this.setDepartaments();
 		});
 
@@ -121,13 +121,13 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 		if (departmentId) {
 			if (this.practiceOrProcedure) {
 				this.institutionService.getInstitutionsByReferenceByPracticeFilter
-					(this.formReference.controls.practiceOrProcedure.value.id, departmentId, this.careLineId, this.clinicalSpecialtyId).subscribe((institutions: InstitutionBasicInfoDto[]) => {
+					(this.formReference.controls.practiceOrProcedure.value.id, departmentId, this.careLineId, this.clinicalSpecialties).subscribe((institutions: InstitutionBasicInfoDto[]) => {
 						this.institutions = this.toTypeaheadOptions(institutions, 'name');
 						this.institutionsDisable = false;
 					});
 			}
 			else {
-				this.institutionService.getInstitutionsByReferenceByClinicalSpecialtyFilter(departmentId, this.specialtyId, this.careLineId).subscribe((institutions: InstitutionBasicInfoDto[]) => {
+				this.institutionService.getInstitutionsByReferenceByClinicalSpecialtyFilter(departmentId, this.specialtyIds, this.careLineId).subscribe((institutions: InstitutionBasicInfoDto[]) => {
 					this.institutions = this.toTypeaheadOptions(institutions, 'name');
 					this.institutionsDisable = false;
 				});
@@ -150,20 +150,20 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 
 	setAppointments(institutionDestinationId: number) {
 		if (this.careLineId) {
-			this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointmentsQuantity(institutionDestinationId, this.specialtyId, this.departmentId, this.careLineId, this.practiceSnomedId).subscribe(rs =>
+			this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointmentsQuantity(institutionDestinationId, this.specialtyIds, this.departmentId, this.careLineId, this.practiceSnomedId).subscribe(rs =>
 				this.protectedAppointment$.next(rs));
-			this.diaryAvailableAppointmentsSearchService.getAvailableAppiuntmentsQuantityByCarelineDiaries(institutionDestinationId, this.careLineId, this.practiceSnomedId, this.specialtyId).subscribe(rs =>
+			this.diaryAvailableAppointmentsSearchService.getAvailableAppiuntmentsQuantityByCarelineDiaries(institutionDestinationId, this.careLineId, this.practiceSnomedId, this.specialtyIds).subscribe(rs =>
 				this.appointment$.next(rs));
 		}
 		else
-			this.diaryAvailableAppointmentsSearchService.getAvailableAppointmentsQuantity(institutionDestinationId, this.specialtyId, this.practiceSnomedId).subscribe(rs =>
+			this.diaryAvailableAppointmentsSearchService.getAvailableAppointmentsQuantity(institutionDestinationId, this.specialtyIds, this.practiceSnomedId).subscribe(rs =>
 				this.appointment$.next(rs));
 	}
 
 	private setDepartaments() {
 		this.cleanFields();
-		if (this.formReference.value.consultation && this.specialtyId) {
-			this.adressMasterData.getDeparmentsByCareLineAndClinicalSpecialty(this.specialtyId, this.careLineId).subscribe(e => {
+		if (this.formReference.value.consultation && this.specialtyIds?.length) {
+			this.adressMasterData.getDeparmentsByCareLineAndClinicalSpecialty(this.specialtyIds, this.careLineId).subscribe(e => {
 				this.departments = this.toTypeaheadOptions(e, 'description');
 				this.departmentDisable = false;
 			});

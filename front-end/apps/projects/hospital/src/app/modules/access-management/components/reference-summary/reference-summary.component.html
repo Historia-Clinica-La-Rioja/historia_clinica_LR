@@ -35,9 +35,9 @@
                 [description]="referenceReport.dto.procedure" id="procedure">
             </app-identifier-cases>
             
-            <app-identifier-cases *ngIf="referenceReport.dto.clinicalSpecialtyDestination" [identifierCase]="identiferCases.SPECIALTY"
-                [description]="referenceReport.dto.clinicalSpecialtyDestination" id="specialty">
-            </app-identifier-cases>
+            <app-identifier-cases *ngIf="referenceReport.dto.destinationClinicalSpecialties.length" [identifierCase]="identiferCases.SPECIALTY"
+                [description]="referenceReport.dto.destinationClinicalSpecialties[0]" id="specialty">
+            </app-identifier-cases> 
 
             <app-identifier-cases *ngIf="referenceReport.dto.careLine" [identifierCase]="identiferCases.CARE_LINE"
                 [description]="referenceReport.dto.careLine" id="careLine">
