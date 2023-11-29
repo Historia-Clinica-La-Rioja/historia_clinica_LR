@@ -639,7 +639,7 @@ const messages = {
         },
         carelinerole: {
             name: 'Roles confidenciales',
-            addRelated: 'Agregar roles',
+            addRelated: 'Agregar rol',
             fields: {
                 careLineId: 'Línea de cuidado',
                 roleId: 'Rol',
