@@ -24,8 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.MalformedURLException;
-
 @RequestMapping("/institutions/{institutionId}/imagenetwork/{studyInstanceUID}")
 @Tag(name = "Image Network", description = "Image Network")
 @Slf4j
@@ -40,9 +38,9 @@ public class StudyController {
 
 	@GetMapping(value = "/pacs")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, INFORMADOR, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
-	public ResponseEntity<PacsListDto> getPACS(@PathVariable Integer institutionId, @PathVariable String studyInstanceUID) throws MalformedURLException {
+	public ResponseEntity<PacsListDto> getPACS(@PathVariable Integer institutionId, @PathVariable String studyInstanceUID) {
 		log.trace("Input -> institutionId '{}' studyInstanceUID '{}'", institutionId, studyInstanceUID);
-		PacsListBo pacsListBo = getPacWhereStudyIsHosted.run(studyInstanceUID);
+		PacsListBo pacsListBo = getPacWhereStudyIsHosted.run(studyInstanceUID, true);
 		PacsListDto result = imageNetworkMapper.toPacsUrlDto(pacsListBo);
 		log.trace("Output -> {}", result);
 		return ResponseEntity.ok().body(result);

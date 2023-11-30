@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 @ToString
 public class StudyAppointmentBo {
 
-	private Integer patientPersonId;
+	private Integer patientId;
+	private Integer personId;
 	private String patientFullName;
 	private LocalDateTime actionTime;
 	private Short statusId;
@@ -24,9 +25,10 @@ public class StudyAppointmentBo {
 	private Boolean isAvailableInPACS;
 	private String imageId;
 
-	public StudyAppointmentBo(Integer patientPersonId, LocalDateTime completedOn, String technicianObservations,
+	public StudyAppointmentBo(Integer patientId, Integer personId, LocalDateTime completedOn, String technicianObservations,
 							  Integer completionInstitutionId, String completionInstitutionName) {
-		this.patientPersonId = patientPersonId;
+		this.patientId = patientId;
+		this.personId = personId;
 		this.actionTime = completedOn;
 		this.statusId = EDiagnosticImageReportStatus.PENDING.getId();
 		this.technicianObservations = technicianObservations;

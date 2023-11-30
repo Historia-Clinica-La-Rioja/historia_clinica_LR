@@ -5,7 +5,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.StudyOrderReportInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.StudyWithoutOrderReportInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedOrderReportInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.StudyTranscribedOrderReportInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceRequestDto;
@@ -27,7 +27,7 @@ import net.pladema.clinichistory.requests.servicerequests.controller.dto.Diagnos
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyOrderReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyWithoutOrderReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.TranscribedDiagnosticReportInfoDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.TranscribedOrderReportInfoDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyTranscribedOrderReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CompleteDiagnosticReportMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CreateServiceRequestMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.DiagnosticReportInfoMapper;
@@ -364,14 +364,13 @@ public class ServiceRequestController {
 
 	@GetMapping("/studyTranscribedOrder")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES')")
-	public List<TranscribedOrderReportInfoDto> getListStudyTranscribedOrder(@PathVariable(name = "institutionId") Integer institutionId,
-													  @PathVariable(name = "patientId") Integer patientId) {
-		log.debug("Input parameters -> patientId {}) {}",
-				patientId);
+	public List<StudyTranscribedOrderReportInfoDto> getListStudyTranscribedOrder(@PathVariable(name = "institutionId") Integer institutionId,
+																				 @PathVariable(name = "patientId") Integer patientId) {
+		log.debug("Input parameters -> patientId {}", patientId);
 
-		List<TranscribedOrderReportInfoBo> resultService = listTranscribedDiagnosticReportInfoService.getListTranscribedOrder(patientId);
+		List<StudyTranscribedOrderReportInfoBo> resultService = listTranscribedDiagnosticReportInfoService.getListTranscribedOrder(patientId);
 
-		List<TranscribedOrderReportInfoDto> result = resultService.stream()
+		List<StudyTranscribedOrderReportInfoDto> result = resultService.stream()
 				.map(transcribedDiagnosticReportInfoMapper::parseToDto)
 				.collect(Collectors.toList());
 
@@ -383,8 +382,7 @@ public class ServiceRequestController {
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES')")
 	public List<StudyWithoutOrderReportInfoDto> getListStudyWithoutOrder(@PathVariable(name = "institutionId") Integer institutionId,
 																		 @PathVariable(name = "patientId") Integer patientId) {
-		log.debug("Input parameters -> patientId {}) {}",
-				patientId);
+		log.debug("Input parameters -> patientId {}", patientId);
 
 		List<StudyWithoutOrderReportInfoBo> resultService = listStudyWithoutOrderReportInfoService.execute(patientId);
 

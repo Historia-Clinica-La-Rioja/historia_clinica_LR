@@ -1,11 +1,11 @@
 package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.StudyWithoutOrderReportInfoBo;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.repository.ListStudyWithoutOrderReportRepository;
 import net.pladema.clinichistory.requests.servicerequests.service.ListStudyWithoutOrderReportInfoService;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.pladema.imagenetwork.application.getpacwherestudyishosted.GetPacWhereStudyIsHosted;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -13,35 +13,35 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class ListStudyWithoutOrderReportInfoServiceImpl implements ListStudyWithoutOrderReportInfoService {
 
-    ListStudyWithoutOrderReportRepository listStudyWithoutOrderReportRepository;
-
-    private static final Logger LOG = LoggerFactory.getLogger(ListStudyWithoutOrderReportInfoServiceImpl.class);
-    private static final String OUTPUT = "create result -> {}";
-
-    public ListStudyWithoutOrderReportInfoServiceImpl(ListStudyWithoutOrderReportRepository listStudyWithoutOrderReportRepository) {
-        this.listStudyWithoutOrderReportRepository = listStudyWithoutOrderReportRepository;
-    }
+    private final ListStudyWithoutOrderReportRepository listStudyWithoutOrderReportRepository;
+    private final GetPacWhereStudyIsHosted getPacWhereStudyIsHosted;
 
     @Override
     public List<StudyWithoutOrderReportInfoBo> execute(Integer patientId) {
+        log.debug("Input -> patientId {}", patientId);
         List<StudyWithoutOrderReportInfoBo> result = listStudyWithoutOrderReportRepository.execute(patientId).stream()
                 .map(this::createDiagnosticReportBo)
+                .peek(studyWithoutOrderReportInfoBo -> studyWithoutOrderReportInfoBo.setIsAvailableInPACS(
+                        getPacWhereStudyIsHosted.run(studyWithoutOrderReportInfoBo.getImageId(), false)
+                                .isAvailableInPACS()))
                 .collect(Collectors.toList());
-        LOG.trace("OUTPUT List -> {}", result);
+        log.debug("Output -> {}", result);
         return result;
     }
 
     private StudyWithoutOrderReportInfoBo createDiagnosticReportBo(Object[] row) {
-        LOG.debug("Input parameters -> row {}", row);
-		StudyWithoutOrderReportInfoBo result = new StudyWithoutOrderReportInfoBo();
-		result.setStatus((Boolean) row[0]);
+        log.trace("Input parameters -> row {}", row);
+        StudyWithoutOrderReportInfoBo result = new StudyWithoutOrderReportInfoBo();
+        result.setStatus((Boolean) row[0]);
         result.setImageId((String) row[1]);
         result.setDocumentId((BigInteger) row[2]);
-		result.setFileName((String) row[3]);
-		result.setDocumentStatus((String) row[4]);
-        LOG.trace(OUTPUT, result);
+        result.setFileName((String) row[3]);
+        result.setDocumentStatus((String) row[4]);
+        log.trace("Output -> {}", result);
         return result;
     }
 

@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigInteger;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudyWithoutOrderReportInfoBo {
@@ -17,4 +19,5 @@ public class StudyWithoutOrderReportInfoBo {
 	private String documentStatus;
 	private String fileName;
 	private Boolean status;
+	private Boolean isAvailableInPACS;
 }

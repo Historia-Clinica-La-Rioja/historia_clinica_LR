@@ -28,5 +28,6 @@ public class StudyOrderReportInfoBo {
     private Integer serviceRequestId;
     private Integer diagnosticReportId;
 	private Boolean hasActiveAppointment;
+    private Boolean isAvailableInPACS;
 
 }

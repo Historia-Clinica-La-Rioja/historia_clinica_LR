@@ -14,7 +14,6 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
@@ -35,10 +34,11 @@ public class GetPacWhereStudyIsHosted {
         restTemplate.setErrorHandler(new PacsResponseErrorHandler());
     }
 
-    public PacsListBo run(String studyInstanceUID) throws MalformedURLException {
+    public PacsListBo run(String studyInstanceUID, boolean doHealthcheck) {
         log.debug("Get PAC URL where the study '{}' is hosted", studyInstanceUID);
         List<PacServer> pacServers = studyStorage.getPacServersBy(studyInstanceUID);
-        var result = this.filterUnrecheablePACS(new PacsListBo(pacServers));
+        var pacListBo = new PacsListBo(pacServers);
+        var result = doHealthcheck ? this.filterUnrecheablePACS(pacListBo): pacListBo;
         log.debug("Output -> {}", result);
         return result;
     }

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.repository.ListStudyOrderReportRepository;
 import net.pladema.clinichistory.requests.servicerequests.service.ListStudyOrderReportInfoService;
+import net.pladema.imagenetwork.application.getpacwherestudyishosted.GetPacWhereStudyIsHosted;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -18,12 +19,16 @@ import java.util.stream.Collectors;
 public class ListStudyOrderReportInfoServiceImpl implements ListStudyOrderReportInfoService {
 
     private final ListStudyOrderReportRepository listStudyOrderReportRepository;
+    private final GetPacWhereStudyIsHosted getPacWhereStudyIsHosted;
 
     @Override
     public List<StudyOrderReportInfoBo> getListStudyOrder(Integer patientId) {
         log.debug("Input -> patientId {}", patientId);
         List<StudyOrderReportInfoBo> result = listStudyOrderReportRepository.execute(patientId).stream()
                 .map(this::createStudyOrderReportInfoBo)
+                .peek(studyOrderReportInfoBo -> studyOrderReportInfoBo.setIsAvailableInPACS(
+                        getPacWhereStudyIsHosted.run(studyOrderReportInfoBo.getImageId(), false)
+                                .isAvailableInPACS()))
                 .collect(Collectors.toList());
         log.debug("Output -> {}", result);
         return result;
@@ -43,7 +48,8 @@ public class ListStudyOrderReportInfoServiceImpl implements ListStudyOrderReport
         result.setSource((String) row[8]);
         result.setServiceRequestId((Integer) row[9]);
         result.setDiagnosticReportId((Integer) row[10]);
-		result.setHasActiveAppointment((Boolean) row[11]);
+        result.setHasActiveAppointment((Boolean) row[11]);
+        log.trace("Output -> {}", result);
         return result;
     }
 }

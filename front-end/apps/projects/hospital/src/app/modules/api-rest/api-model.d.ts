@@ -3927,10 +3927,10 @@ export interface StudyOrderReportInfoDto {
     diagnosticReportId: number;
     doctor: DoctorInfoDto;
     hasActiveAppointment: boolean;
-    hceDocumentDataDto: HCEDocumentDataDto;
+    hceDocumentDataDto?: HCEDocumentDataDto;
     healthCondition: string;
-    imageId: string;
-    seeStudy: boolean;
+    imageId?: string;
+    isAvailableInPACS: boolean;
     serviceRequestId: number;
     snomed: string;
     source: string;
@@ -3938,15 +3938,22 @@ export interface StudyOrderReportInfoDto {
     viewReport: boolean;
 }
 
-export interface StudyPacAssociationDto {
-    pacGlobalURL: string;
-    studyInstanceUID: string;
+export interface StudyTranscribedOrderReportInfoDto {
+    creationDate: Date;
+    hceDocumentDataDto?: HCEDocumentDataDto;
+    healthCondition: string;
+    imageId?: string;
+    isAvailableInPACS: boolean;
+    professionalName: string;
+    snomed: string;
+    status: boolean;
+    viewReport: boolean;
 }
 
 export interface StudyWithoutOrderReportInfoDto {
-    hceDocumentDataDto: HCEDocumentDataDto;
-    imageId: string;
-    seeStudy: boolean;
+    hceDocumentDataDto?: HCEDocumentDataDto;
+    imageId?: string;
+    isAvailableInPACS: boolean;
     snomed: string;
     status: boolean;
     viewReport: boolean;
@@ -4020,18 +4027,6 @@ export interface TranscribedDiagnosticReportInfoDto {
     serviceRequestId: number;
     studyId: number;
     studyName: string;
-}
-
-export interface TranscribedOrderReportInfoDto {
-    creationDate: Date;
-    hceDocumentDataDto: HCEDocumentDataDto;
-    healthCondition: string;
-    imageId: string;
-    professionalName: string;
-    seeStudy: boolean;
-    snomed: string;
-    status: boolean;
-    viewReport: boolean;
 }
 
 export interface TranscribedPrescriptionDto extends Serializable {

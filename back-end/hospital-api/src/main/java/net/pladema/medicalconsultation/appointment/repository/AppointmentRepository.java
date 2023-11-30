@@ -522,7 +522,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 													 @Param("endDate") LocalDateTime endDate);
 
 	@Transactional(readOnly = true)
-	@Query( "SELECT new net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmentBo(p.personId, " +
+	@Query( "SELECT new net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmentBo(p.id, p.personId, " +
 			"doi.completedOn, doi.observations, i.id, i.name) " +
 			"FROM DetailsOrderImage doi " +
 			"JOIN EquipmentAppointmentAssn eaa ON eaa.pk.appointmentId = doi.appointmentId " +

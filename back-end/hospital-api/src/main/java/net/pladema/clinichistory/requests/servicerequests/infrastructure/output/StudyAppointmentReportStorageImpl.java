@@ -32,7 +32,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.transaction.Transactional;
-import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,7 +63,7 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 
 		StudyAppointmentBo result = appointmentRepository.getCompletionInformationAboutStudy(appointmentId);
 
-		result.setPatientFullName(personService.getCompletePersonNameById(result.getPatientPersonId()));
+		result.setPatientFullName(personService.getCompletePersonNameById(result.getPersonId()));
 
 		appointmentOrderImageRepository.getReportDocumentIdByAppointmentId(appointmentId)
 			.ifPresent(documentId -> {
@@ -92,12 +91,8 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 				.ifPresent(result::setSizeImage);
 
 		appointmentOrderImageRepository.getIdImage(appointmentId).ifPresent(studyInstanceUID -> {
-			try {
-				result.setIsAvailableInPACS(getPacWhereStudyIsHosted.run(studyInstanceUID).isAvailableInPACS());
-				result.setImageId(studyInstanceUID);
-			} catch (MalformedURLException e) {
-				throw new RuntimeException(e);
-			}
+			result.setIsAvailableInPACS(getPacWhereStudyIsHosted.run(studyInstanceUID, false).isAvailableInPACS());
+			result.setImageId(studyInstanceUID);
 		});
 
 		log.debug("Output -> {}", result);
