@@ -13,7 +13,9 @@ import { IDENTIFIER_CASES } from 'projects/hospital/src/app/modules/hsi-componen
 })
 export class ReferenceRequestDataComponent {
 
-	@Input() reference: ReferenceCompleteData;
+	@Input() set reference(ref: ReferenceCompleteData) {
+		this.clinicalSpecialtiesName = ref.dto.destinationClinicalSpecialties.map(specialty => specialty.name);
+	};
 	@Input() order: number;
 	@Input() status: PrescriptionStatus;
 	Color = Color;
@@ -21,6 +23,8 @@ export class ReferenceRequestDataComponent {
 	identiferCases = IDENTIFIER_CASES;
 	_reference: ReferenceCompleteData = null;
 	title = '';
+	clinicalSpecialtiesName: string[] = []
+
 	constructor(
 		private readonly referenceFileService: ReferenceFileService,
 	) { }

@@ -170,7 +170,7 @@ import { ReferenceStudyComponent } from './components/reference-study/reference-
 		TurnosModule,
 		ClapModule,
 		GuardiaModule,
-		IdentifierCasesComponent
+		IdentifierCasesComponent,
 	],
 	providers: [
 		AmbulatoriaSummaryFacadeService,

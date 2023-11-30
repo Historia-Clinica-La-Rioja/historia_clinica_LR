@@ -17,6 +17,7 @@ import { HasRoleDirective } from './directives/has-role.directive';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { StringSeparatorPipe } from './pipes/string-separator.pipe';
 
 @NgModule({
 	declarations: [
@@ -26,6 +27,8 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 		// directives
 		FeatureFlagDirective,
 		HasRoleDirective,
+		//pipes
+		StringSeparatorPipe
 	],
 	imports: [
 		CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
@@ -60,6 +63,8 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 		// directives
 		FeatureFlagDirective,
 		HasRoleDirective,
+		//pipes
+		StringSeparatorPipe
 	],
 	providers: []
 })

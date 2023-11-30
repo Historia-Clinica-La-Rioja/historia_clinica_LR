@@ -24,8 +24,8 @@
 		</div>
 
 		<div class="row-container" id="refernece-info-second">
-			<app-identifier-cases  *ngIf="reference.dto?.clinicalSpecialtyDestination.name"  fxFlex="50%" [position]="Position.ROW" [showLegend]="true"
-				[description]="reference.dto.clinicalSpecialtyDestination.name"
+			<app-identifier-cases *ngIf="reference.dto?.destinationClinicalSpecialties.length"  fxFlex="50%" [position]="Position.ROW" [showLegend]="true"
+				[description]="clinicalSpecialtiesName | stringSeparator"
 				[identifierCase]="identiferCases.SPECIALTY" id="specialty"></app-identifier-cases>
 			<app-identifier-cases *ngIf="reference.dto.careLine?.description" fxFlex="50%" [position]="Position.ROW" [showLegend]="true"
 				[description]="reference.dto.careLine.description" [identifierCase]="identiferCases.CARE_LINE"

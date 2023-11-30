@@ -40,7 +40,7 @@ export enum IDENTIFIER_CASES {
 	PROBLEM = 'Problema',
 	PROFESSIONAL = 'Profesional',
 	PRACTICE = 'Práctica/Procedimiento',
-	SPECIALTY = 'Especialidad',
+	SPECIALTY = 'Especialidades',
 	DATE = 'Fecha',
 	HOUR = 'Hora',
 	DISTRICT = 'Partido',
@@ -77,7 +77,7 @@ const practice: IconLegend = {
 
 const specialty: IconLegend = {
 	icon: 'medical_services',
-	legend: 'Especialidad',
+	legend: 'Especialidades',
 }
 
 const date: IconLegend = {

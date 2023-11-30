@@ -16,11 +16,14 @@ export class ReferenceCompleteDataComponent {
 	referenceCompleteData: ReferenceCompleteData;
 	Position = Position;
 	identiferCases = IDENTIFIER_CASES;
+	clinicalSpecialtiesName: string[] = [];
 
 	@Input()
 	set reference(value: ReferenceDataDto) {
-		if (value)
+		if (value) {
 			this.referenceCompleteData = mapToReferenceCompleteData(value);
+			this.clinicalSpecialtiesName = this.referenceCompleteData.dto.destinationClinicalSpecialties.map(specialty => specialty.name);
+		}
 	};
 
 	constructor(

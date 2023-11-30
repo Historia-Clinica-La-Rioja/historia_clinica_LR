@@ -55,13 +55,11 @@
                 [position]="Position.COLUMN" [showLegend]="true">
 			</app-identifier-cases>
 
-			<div *ngFor="let specialty of referenceCompleteData.dto.destinationClinicalSpecialties">
-				<app-identifier-cases
-					[identifierCase]="identiferCases.SPECIALTY" [description]="specialty.name" 
-					[position]="Position.COLUMN"
-					[showLegend]="true">
-				</app-identifier-cases>
-			</div>
+			<app-identifier-cases
+				[identifierCase]="identiferCases.SPECIALTY" [description]="clinicalSpecialtiesName | stringSeparator" 
+				[position]="Position.COLUMN"
+				[showLegend]="true">
+			</app-identifier-cases>
 
 			<app-identifier-cases *ngIf="referenceCompleteData.dto.careLine.id"
                 [identifierCase]="identiferCases.CARE_LINE"
