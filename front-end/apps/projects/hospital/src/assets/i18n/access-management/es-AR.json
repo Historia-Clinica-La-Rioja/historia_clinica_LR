@@ -15,7 +15,7 @@
 			"ONE_MORE_PROBLEM": "problema más",
 			"MORE_PROBLEMS": "problemas más",
 			"PRIORITY": "Prioridad",
-			"SHIFT_STATUS": "Estado del turno",
+			"SHIFT_STATUS": "Estado de la atención",
 			"SPECIALTY": "Especialidad de destino",
 			"REQUEST_STATUS": "Estado de solicitud",
 			"CONTINUES_UNDER_OBSERVATION": "Continúa en observación",
@@ -24,7 +24,7 @@
 			"COUNTER_REFERENCE":"Contrarreferencia",
 			"VIEW_APPLICATION": "Ver solicitud",
 			"DOCUMENT_SEARCH": "Buscar por documento",
-            "PRACTICE": "Práctica/Procedimiento", 
+            "PRACTICE": "Práctica/Procedimiento",
 			"reference": {
 				"TITLE": "Detalle de solicitud",
 				"CONTACT_DATA": "Datos de contacto",

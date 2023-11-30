@@ -12,6 +12,13 @@ export enum REFERENCE_STATES {
     SERVED = 'ATENDIDO',
 }
 
+export enum REFERENCE_STATES_ID {
+    PENDING = -1,
+    ASSIGNED = 1,
+    ABSENT = 3,
+    SERVED = 2,
+}
+
 export const APPOINTMENT_STATE = [
     {
         id: APPOINTMENT_STATES_ID.ASSIGNED,
@@ -28,6 +35,25 @@ export const APPOINTMENT_STATE = [
     {
         id: NO_APPOINTMENT,
         description: REFERENCE_STATES.PENDING
+    }
+];
+
+export const ATTENTION_STATE = [
+    {
+        id: REFERENCE_STATES_ID.ASSIGNED,
+        description: REFERENCE_STATES.ASSIGNED
+    },
+    {
+        id: REFERENCE_STATES_ID.ABSENT,
+        description: REFERENCE_STATES.ABSENT
+    },
+    {
+        id: REFERENCE_STATES_ID.SERVED,
+        description: REFERENCE_STATES.SERVED
+    },
+    {
+        id: REFERENCE_STATES_ID.PENDING,
+        description:  REFERENCE_STATES.PENDING
     }
 ];
 

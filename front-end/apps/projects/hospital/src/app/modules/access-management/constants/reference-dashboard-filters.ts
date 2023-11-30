@@ -2,11 +2,12 @@ import { SharedSnomedDto, ClinicalSpecialtyDto } from "@api-rest/api-model";
 import { filter } from "@presentation/components/filters-select/filters-select.component";
 import { FilterTypeahead, FiltersType } from "@presentation/components/filters/filters.component";
 import { practicesToTypeaheadOptions, specialtiesToTypeaheadOptions } from "@access-management/utils/mapper.utils";
-import { CLOSURE_OPTIONS, APPOINTMENT_STATE, PRIORITY_OPTIONS } from "@access-management/constants/reference";
+import { ATTENTION_STATE, CLOSURE_OPTIONS, PRIORITY_OPTIONS } from "@access-management/constants/reference";
 
 export enum EDashboardFilters {
     CLOSURE_TYPE = 'closureType',
     APPOINTMENT_STATE = 'appointmentState',
+    ATTENTION_STATE = 'attentionState',
     PRIORITY = 'priority',
     PRACTICE = 'practice',
     SPECIALTY = 'specialty',
@@ -16,6 +17,7 @@ export enum EDashboardFilters {
 export const DashboardFiltersMapping = {
     [EDashboardFilters.CLOSURE_TYPE]: 'closureTypeId',
     [EDashboardFilters.APPOINTMENT_STATE]: 'appointmentStateId',
+    [EDashboardFilters.ATTENTION_STATE]: 'attentionStateId',
     [EDashboardFilters.PRIORITY]: 'priorityId',
     [EDashboardFilters.PRACTICE]: 'procedureId',
     [EDashboardFilters.SPECIALTY]: 'clinicalSpecialtyId',
@@ -27,12 +29,12 @@ export const setReportFilters = (practices: SharedSnomedDto[], clinicalSpecialti
         {
             key: EDashboardFilters.CLOSURE_TYPE,
             name: "access-management.search_references.REQUEST_STATUS",
-            options: CLOSURE_OPTIONS,
+             options: CLOSURE_OPTIONS,
         },
         {
-            key: EDashboardFilters.APPOINTMENT_STATE,
+            key: EDashboardFilters.ATTENTION_STATE,
             name: "access-management.search_references.SHIFT_STATUS",
-            options: APPOINTMENT_STATE,
+            options: ATTENTION_STATE,
         },
         {
             key: EDashboardFilters.PRIORITY,
