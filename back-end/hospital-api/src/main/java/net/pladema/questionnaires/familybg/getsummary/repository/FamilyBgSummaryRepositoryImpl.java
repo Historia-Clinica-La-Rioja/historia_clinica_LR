@@ -17,7 +17,7 @@ public class FamilyBgSummaryRepositoryImpl implements FamilyBgSummaryRepository 
 		this.entityManager = entityManager;
 	}
 
-	public Optional<QuestionnaireSummary> getQuestionnaireSumaryReport(Integer questionnaireId) {
+	public Optional<QuestionnaireSummary> getQuestionnaireSummaryReport(Integer questionnaireId) {
 		String query = query = "SELECT p.first_name, p.middle_names, p.last_name, hp.license_number, to_char(qr.created_on, 'YYYY-MM-DD') " + "FROM  {h-schema}minsal_lr_questionnaire_response qr " + "INNER JOIN {h-schema}healthcare_professional hp ON hp.id = qr.created_by " + "INNER JOIN {h-schema}person p ON p.id = hp.person_id " + "WHERE qr.id = :questionnaireId";
 
 		Optional<Object[]> queryResult = entityManager.createNativeQuery(query).setParameter("questionnaireId", questionnaireId).getResultList().stream().findFirst();

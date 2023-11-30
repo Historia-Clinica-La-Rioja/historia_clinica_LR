@@ -29,6 +29,6 @@ public class GetFamilyBgSummaryServiceImpl implements GetFamilyBgService {
 	}
 
 	public Optional<QuestionnaireSummary> findQuestionnaireSummary(Integer questionnaireId) {
-		return this.questionnaireSummaryRepository.getQuestionnaireSumaryReport(questionnaireId);
+		return this.questionnaireSummaryRepository.getQuestionnaireSummaryReport(questionnaireId);
 	}
 }

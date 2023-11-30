@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface FamilyBgSummaryRepository {
 
-	Optional<QuestionnaireSummary> getQuestionnaireSumaryReport(Integer questionnaireId);
+	Optional<QuestionnaireSummary> getQuestionnaireSummaryReport(Integer questionnaireId);
 }
