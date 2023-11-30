@@ -14,7 +14,7 @@ public interface ReferenceStorage {
 
 	List<Integer> save(List<CompleteReferenceBo> referenceBos);
 
-    List<ReferenceDataBo> getReferences(Integer patientId, List<Integer> clinicalSpecialtyIds);
+    List<ReferenceDataBo> getReferences(Integer patientId, List<Integer> clinicalSpecialtyIds, List<Short> loggedUserRoleIds);
 
     List<ReferenceProblemBo> getReferencesProblems(Integer patientId);
 

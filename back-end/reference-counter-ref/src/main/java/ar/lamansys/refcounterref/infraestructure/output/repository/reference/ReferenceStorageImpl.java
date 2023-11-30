@@ -84,9 +84,10 @@ public class ReferenceStorageImpl implements ReferenceStorage {
     }
 
     @Override
-    public List<ReferenceDataBo> getReferences(Integer patientId, List<Integer> clinicalSpecialtyIds) {
-		List<ReferenceDataBo> queryResult = referenceRepository.getReferencesFromOutpatientConsultation(patientId, clinicalSpecialtyIds);
-       	queryResult.addAll(referenceRepository.getReferencesFromOdontologyConsultation(patientId, clinicalSpecialtyIds));
+    public List<ReferenceDataBo> getReferences(Integer patientId, List<Integer> clinicalSpecialtyIds, List<Short> loggedUserRoleIds) {
+		log.debug("Input parameters -> patientId {}, clinicalSpecialtyIds {}, loggedUserRoleIds {}", patientId, clinicalSpecialtyIds, loggedUserRoleIds);
+		List<ReferenceDataBo> queryResult = referenceRepository.getReferencesFromOutpatientConsultation(patientId, clinicalSpecialtyIds, loggedUserRoleIds);
+       	queryResult.addAll(referenceRepository.getReferencesFromOdontologyConsultation(patientId, clinicalSpecialtyIds, loggedUserRoleIds));
 		return setReferenceDetails(queryResult);
     }
 
