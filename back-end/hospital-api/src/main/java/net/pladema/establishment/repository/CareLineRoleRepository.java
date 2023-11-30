@@ -18,7 +18,7 @@ public interface CareLineRoleRepository extends SGXAuditableEntityJPARepository<
 			"WHERE clr.careLineId = :careLineId " +
 			"AND clr.roleId = :roleId " +
 			"AND clr.deleteable.deleted IS FALSE")
-	Boolean alreadyExistsCareLineAssignedRole(@Param("careLineId") Integer careLineId, @Param("roleId") Integer roleId);
+	Boolean alreadyExistsCareLineAssignedRole(@Param("careLineId") Integer careLineId, @Param("roleId") Short roleId);
 
 	@Transactional(readOnly = true)
 	@Query(" SELECT COUNT(1) > 0 " +

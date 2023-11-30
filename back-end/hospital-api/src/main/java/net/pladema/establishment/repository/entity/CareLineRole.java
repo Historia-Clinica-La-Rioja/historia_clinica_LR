@@ -31,6 +31,6 @@ public class CareLineRole extends SGXAuditableEntity<Integer> {
 	private Integer careLineId;
 
 	@Column(name = "role_id", nullable = false)
-	private Integer roleId;
+	private Short roleId;
 
 }
