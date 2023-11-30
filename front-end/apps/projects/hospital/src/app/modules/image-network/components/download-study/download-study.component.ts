@@ -35,13 +35,12 @@ export class DownloadStudyComponent {
                         switchMap((studyInfo: StudyFileInfoDto) => 
                             this.studyPACAssociationService.downloadStudy(studyInfo.uuid, this.imageId, studyInfo.url, studyInfo.token).pipe(
                                 catchError((error) => {
-                                    console.log(error)
-                                    throw error; 
+                                    throw error;
                                 })
                             )
                         ),
                         catchError((error) => {
-                            throw error; 
+                            throw error;
                         })
                     )
                 )

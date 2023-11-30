@@ -19,7 +19,7 @@ export class ButtonComponent implements OnChanges {
 
 	width: number;
 	ngOnChanges(changes: SimpleChanges): void {
-		this.width = changes.isLoading.currentValue ? changes.text?.currentValue.length * 11 : null
+		this.width = changes.isLoading?.currentValue ? changes.text?.currentValue.length * 11 : null
 	}
 	constructor() { }
 

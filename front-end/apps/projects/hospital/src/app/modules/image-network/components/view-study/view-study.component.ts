@@ -6,7 +6,7 @@ import { StudyPACAssociationService } from '@api-rest/services/study-PAC-associa
 import { StudyPermissionService } from '@api-rest/services/study-permission.service';
 import { ViewerService } from '@api-rest/services/viewer.service';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
-import { switchMap, reduce, Observable, of } from 'rxjs';
+import { switchMap, reduce, Observable, of, throwError } from 'rxjs';
 
 @Component({
 	selector: 'app-view-study',
@@ -32,18 +32,23 @@ export class ViewStudyComponent {
 		sourceView$.pipe(
 		switchMap((studyInstanceUID: StudyIntanceUIDDto) =>
 			this.studyPACAssociationService.getPacGlobalURL(studyInstanceUID.uid).pipe(
-				switchMap((pacs: PacsListDto) =>
-					this.studyPermissionService.getPermissionsJWT(studyInstanceUID.uid).pipe(
-						switchMap((token: TokenDto) =>
-							this.viewerService.getUrl().pipe(
-								switchMap((url: ViewerUrlDto) =>
-									this.buildUrl(url.url, studyInstanceUID.uid, token.token, pacs.urls[0]) // se queda el primero no dominio
-								),
-								reduce((result, value) => result + value)
+				switchMap((pacs: PacsListDto) => {
+					if (pacs.urls.length) {
+						return this.studyPermissionService.getPermissionsJWT(studyInstanceUID.uid).pipe(
+							switchMap((token: TokenDto) =>
+								this.viewerService.getUrl().pipe(
+									switchMap((url: ViewerUrlDto) =>
+										this.buildUrl(url.url, studyInstanceUID.uid, token.token, pacs.urls[0]) // se queda el primero no dominio
+									),
+									reduce((result, value) => result + value)
+								)
 							)
-						)
-					)
-				))
+						) 
+					} else {
+						throwError;
+					}
+				})
+			)
 		))
 		.subscribe({
 			next: (url) => window.open(url, "_blank"),
