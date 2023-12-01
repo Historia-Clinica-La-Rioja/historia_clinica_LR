@@ -78,6 +78,7 @@ import { AdultoMayorComponent } from '@historia-clinica/components/emergente/ini
 import { EstudiosPopupComponent } from '@historia-clinica/components/emergente/pop-up/estudios-popup.component';
 import { FrailScaleComponent } from './components/cuestionarios/frail-scale/frail-scale.component';
 import { EdmontonComponent } from './components/cuestionarios/edmonton/edmonton.component';
+import { DesempenoFisicoComponent } from './components/cuestionarios/desempeno-fisico/desempeno-fisico.component';
 @NgModule({
 	declarations: [
 		HomeComponent,
@@ -130,14 +131,15 @@ import { EdmontonComponent } from './components/cuestionarios/edmonton/edmonton.
 		EpisodeSummaryComponent,
 		EmergencyCareProblemsComponent,
 		PatientValidatorPopupComponent,
-    	PrintAmbulatoriaComponent,
+		PrintAmbulatoriaComponent,
 		SearchSnomedConceptComponent,
-  		TablaSapComponent,
+		TablaSapComponent,
 		AdultoMayorComponent,
 		EstudiosPopupComponent,
-  		FrailScaleComponent,
-    	EdmontonComponent
- 	],
+		FrailScaleComponent,
+		EdmontonComponent,
+		DesempenoFisicoComponent
+	],
 	imports: [
 		CommonModule,
 		FormsModule,
