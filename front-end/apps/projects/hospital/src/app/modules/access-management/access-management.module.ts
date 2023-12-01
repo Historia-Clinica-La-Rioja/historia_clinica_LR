@@ -19,6 +19,7 @@ import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data
 //pipes
 import { ShowProblemsPipe } from './pipes/show-problems.pipe';
 import { AccessManagementRoutingModule } from './access-management-routing.module';
+import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
 
 @NgModule({
 	declarations: [
@@ -43,6 +44,7 @@ import { AccessManagementRoutingModule } from './access-management-routing.modul
 		LazyMaterialModule,
 		PatientSummaryComponent,
 		PresentationModule,
+		HistoriaClinicaModule,
 	],
 	exports: [
 		ReferenceCompleteDataComponent,

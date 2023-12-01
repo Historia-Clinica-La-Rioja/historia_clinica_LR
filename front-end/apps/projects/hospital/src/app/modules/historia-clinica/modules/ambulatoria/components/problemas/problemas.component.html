@@ -36,10 +36,8 @@
 										</span>
 										<div *ngIf="problem.hasPendingReference" class="pending-reference-label">
 											<ng-container>
-												<app-colored-label
-													[description]="'ambulatoria.paciente.problemas.PENDING_REFERENCE' | translate | uppercase"
-													[color]="Color.RED">
-												</app-colored-label>
+												<app-reference-state-label fxLayoutAlign="start" class="reference-label" [reference]="undefined">
+												</app-reference-state-label>
 											</ng-container>
 										</div>
 									</div>
@@ -359,10 +357,8 @@
 														fxLayout="column" fxFlex.lt-md="100" fxLayoutGap="10px">
 
 														<ng-container>
-															<app-colored-label *ngIf="!reference.cancelled"
-																[description]="'ambulatoria.paciente.problemas.historical-problems.REFERENCE_REQUEST' | translate | uppercase"
-																[color]="Color.RED">
-															</app-colored-label>
+															<app-reference-state-label *ngIf="!reference.cancelled" fxLayoutAlign="start" class="reference-label" [reference]="undefined">
+															</app-reference-state-label>
 															<app-colored-label *ngIf="reference.cancelled"
 																[description]="'ambulatoria.paciente.problemas.historical-problems.CANCELLED_REFERENCE' | translate | uppercase"
 																[color]="Color.RED">

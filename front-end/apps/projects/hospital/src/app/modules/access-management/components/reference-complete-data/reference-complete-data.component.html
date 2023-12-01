@@ -1,6 +1,6 @@
 <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start">
 	<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start center">
-		<app-colored-icon-text id="closure-type" [coloredIconText]="referenceCompleteData.closureType"></app-colored-icon-text>
+		<app-reference-state-label [reference]="referenceCompleteData.dto.closureType"></app-reference-state-label>
 
 		<span class="grey">
 			{{referenceCompleteData.dto.date | viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}hs
