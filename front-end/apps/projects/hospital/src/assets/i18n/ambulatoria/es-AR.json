@@ -259,7 +259,8 @@
                 "OMIT_REFERENCE": "Si no desea responder a la referencia y realizar una consulta independientemente seleccione 'Consulta clásica'.",
                 "DESCRIPTION": "Si no desea responder a la referencia y realizar una consulta independiente seleccione “Consulta clásica”.",
                 "NEW_CONSULTATION": "CONSULTA CLÁSICA",
-                "COUNTERREFERENCE": "CONTRARREFERENCIA"
+                "COUNTERREFERENCE": "CONTRARREFERENCIA",
+                "SPECIALTY": "Especialidad"
             },
             "counterreference": {
                 "TITLE": "Responder referencia",
