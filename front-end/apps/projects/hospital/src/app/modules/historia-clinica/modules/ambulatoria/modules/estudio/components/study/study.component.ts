@@ -20,6 +20,7 @@ import { ReportReference } from '@historia-clinica/modules/ambulatoria/component
 import { REQUESTED_REFERENCE, getColoredIconText } from '@access-management/utils/reference.utils';
 import { Color } from '@presentation/colored-label/colored-label.component';
 import { PrescriptionStatus } from '@historia-clinica/modules/ambulatoria/components/reference-request-data/reference-request-data.component';
+import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
 
 const IMAGE_DIAGNOSIS = 'Diagnóstico por imágenes';
 const isImageStudy = (study: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto): boolean => {
@@ -63,7 +64,9 @@ export class StudyComponent implements OnInit {
 		private readonly translateService: TranslateService,
 		private readonly dialog: MatDialog,
 		private snackBarService: SnackBarService,
-		private featureFlagService: FeatureFlagService
+		private featureFlagService: FeatureFlagService,
+		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
+
 	) { }
 
 	contentBuilder(diagnosticReport: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto): Content {
@@ -143,6 +146,7 @@ export class StudyComponent implements OnInit {
 						status: this.getPrescriptionStatus(diagnosticReport.statusId)
 					},
 					width: '45%',
+					disableClose: true,
 				});
 		} else {
 			newCompleteStudy = this.dialog.open(CompletarEstudioComponent,
@@ -152,12 +156,20 @@ export class StudyComponent implements OnInit {
 						patientId: this.patientId
 					},
 					width: '45%',
+					disableClose: true,
 				});
 		}
 
 		newCompleteStudy.afterClosed().subscribe((completed: any) => {
 			if (completed) {
 				if (completed.completed) {
+					if (diagnosticReport?.referenceRequestDto) {
+						this.ambulatoriaSummaryFacadeService.setFieldsToUpdate( {
+							allergies: false,
+							medications: false,
+							problems: true,
+						});
+					}
 					this.updateCurrentReportsEventEmitter.emit();
 					this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_SUCCESS');
 				}

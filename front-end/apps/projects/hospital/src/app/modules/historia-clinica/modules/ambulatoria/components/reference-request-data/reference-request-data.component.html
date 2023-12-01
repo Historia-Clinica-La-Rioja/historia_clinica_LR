@@ -1,5 +1,5 @@
 <div *ngIf="reference" class="container" id="main-container" fxLayoutGap="12px">
-	<h2 class="capitalize">{{reference.dto.procedure.pt}}</h2>
+	<h1 class="capitalize">{{reference.dto.procedure.pt}}</h1>
 
 	<div class="row-container"  fxLayoutAlign="space-between">
 		<app-colored-label [description]="status.description | uppercase" [color]="status.color" id="colored-label">
@@ -8,11 +8,12 @@
 			Orden #{{order}}
 		</span>
 	</div>
-	<h2>{{'ambulatoria.reference-request-data.TITLE'|translate}}</h2>
-
-	<app-colored-icon-text id="closure-type" [coloredIconText]="reference.closureType"></app-colored-icon-text>
 
 	<div class="stretch-container" fxLayout="column" fxLayoutGap="12px" id="refernece-info">
+		<h2>{{'ambulatoria.reference-request-data.TITLE'|translate}}</h2>
+
+		<app-colored-icon-text id="closure-type" fxLayoutAlign="start" [coloredIconText]="reference.closureType"></app-colored-icon-text>
+
 		<div class="row-container" id="refernece-info-first">
 			<app-identifier-cases fxFlex="50%" [position]="Position.ROW" [showLegend]="true"
 				[description]="reference.problems" [identifierCase]="identiferCases.PROBLEM"
@@ -32,12 +33,14 @@
 		</div>
 	</div>
 
-	<span id="note">{{ reference.dto.note }}</span>
+	<div>
+		<span id="note">{{ reference.dto.note }}</span>
 
-	<div *ngFor="let file of reference.dto.files">
-		<a mat-button color="primary" (click)="downloadFile(file)">
-			{{file.fileName}}
-		</a>
+		<div *ngFor="let file of reference.dto.files">
+			<a mat-button color="primary" (click)="downloadFile(file)">
+				{{file.fileName}}
+			</a>
+		</div>
 	</div>
 
 	<div class="row-container" fxLayoutAlign="space-between" id="refernece-info-third">

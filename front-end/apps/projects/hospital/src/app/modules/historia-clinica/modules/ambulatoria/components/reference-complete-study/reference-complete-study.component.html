@@ -4,7 +4,7 @@
 	</button>
 </div>
 
-<div *ngIf="_reference$ | async as _reference else spinner" fxLayout="column" fxLayoutGap="32px">
+<div *ngIf="_reference$ | async as _reference else spinner" fxLayout="column" fxLayoutGap="22px">
 	<app-reference-request-data [reference]="_reference" [status]="data.status" [order]="data.order">
 
 	</app-reference-request-data>

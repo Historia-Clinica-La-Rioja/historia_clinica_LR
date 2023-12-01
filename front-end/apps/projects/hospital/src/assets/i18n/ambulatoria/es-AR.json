@@ -785,7 +785,7 @@
 			"CLOSURE_TYPE": "Tipo de cierre",
 			"PLACEHOLDER_DESCRIPTION": "Descripción",
 			"SUCCESS": "El estudio de contrarreferencia se guardó exitosamente",
-			"ERROR": "No podes completar el estudio porque tiene una referencia asociada con una especialidad a la que no perteneces",
+			"ERROR": "No podés completar el estudio porque tiene una referencia asociada con una especialidad a la que no pertenecés",
 			"ERROR_TITLE": "Sin permisos para completar el estudio",
 			"COMPLETE_BUTTON": "Completar",
 			"UPLOAD_FILES": "Adjuntar archivos",
