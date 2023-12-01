@@ -22,6 +22,8 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingA
 
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
 
+import net.pladema.medicalconsultation.diary.service.DiaryService;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
@@ -68,6 +70,9 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	private static final String OUTPUT = "Output -> {}";
 
 	private final AppointmentService appointmentService;
+
+	private final DiaryService diaryService;
+
 	private final AppointmentValidatorService appointmentValidatorService;
 	private final CreateAppointmentService createAppointmentService;
 	private final BookingPersonService bookingPersonService;
@@ -81,7 +86,7 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 										  CreateAppointmentService createAppointmentService, BookingPersonService bookingPersonService,
 										  CreateBookingAppointmentService createBookingAppointmentService, DocumentAppointmentService documentAppointmentService,
 										  FetchAppointments fetchAppointments, LocalDateMapper localDateMapper,
-										  SharedPersonPort sharedPersonPort) {
+										  SharedPersonPort sharedPersonPort, DiaryService diaryService) {
 		this.appointmentService = appointmentService;
 		this.appointmentValidatorService = appointmentValidatorService;
 		this.createAppointmentService = createAppointmentService;
@@ -91,6 +96,7 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 		this.fetchAppointments = fetchAppointments;
 		this.localDateMapper = localDateMapper;
 		this.sharedPersonPort = sharedPersonPort;
+		this.diaryService = diaryService;
 	}
 
 	@Override
@@ -232,11 +238,16 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	}
 
 	@Override
-	public Boolean openingHourAllowedProtectedAppointments(Integer appointmentId) {
-		log.debug("Input parameters -> appointmentId {}", appointmentId);
-		Boolean result = appointmentService.openingHourAllowedProtectedAppointment(appointmentId);
+	public Boolean openingHourAllowedProtectedAppointments(Integer appointmentId, Integer diaryId) {
+		log.debug("Input parameters -> appointmentId {}, diaryId {} ", appointmentId, diaryId);
+		Boolean result = appointmentService.openingHourAllowedProtectedAppointment(appointmentId, diaryId);
 		log.debug(OUTPUT , result);
 		return result;
+	}
+
+	@Override
+	public Integer getDiaryId(Integer appointmentId) {
+		return diaryService.getDiaryIdByAppointment(appointmentId);
 	}
 
 	private Optional<AppointmentSummaryBo> getNearestAppointment(List<Integer> appointmentIds) {

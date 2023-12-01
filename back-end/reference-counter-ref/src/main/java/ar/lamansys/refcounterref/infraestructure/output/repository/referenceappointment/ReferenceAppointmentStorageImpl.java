@@ -32,7 +32,8 @@ public class ReferenceAppointmentStorageImpl implements ReferenceAppointmentStor
 	@Override
 	public void save(Integer referenceId, Integer appointmentId) {
 		log.debug("Input parameters -> referenceId {}, appointmentId {}", referenceId, appointmentId);
-		var allowedProtectedAppointment = sharedAppointmentPort.openingHourAllowedProtectedAppointments(appointmentId);
+		var diaryId = sharedAppointmentPort.getDiaryId(appointmentId);
+		var allowedProtectedAppointment = sharedAppointmentPort.openingHourAllowedProtectedAppointments(appointmentId, diaryId);
 		referenceAppointmentRepository.save(new ReferenceAppointment(referenceId, appointmentId, allowedProtectedAppointment));
 	}
 

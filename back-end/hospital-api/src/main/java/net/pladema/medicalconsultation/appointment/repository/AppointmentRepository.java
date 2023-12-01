@@ -673,8 +673,10 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	@Query(" SELECT (case when doh.protectedAppointmentsAllowed IS TRUE then true else false end) " +
 			"FROM AppointmentAssn asn " +
 			"JOIN DiaryOpeningHours doh ON (asn.pk.openingHoursId = doh.pk.openingHoursId) " +
-			"WHERE asn.pk.appointmentId = :appointmentId ")
-	Boolean openingHourAllowedProtectedAppointment(@Param("appointmentId") Integer appointmentId);
+			"WHERE asn.pk.appointmentId = :appointmentId " +
+			"AND doh.pk.diaryId = :diaryId")
+	Boolean openingHourAllowedProtectedAppointment(@Param("appointmentId") Integer appointmentId,
+												   @Param("diaryId") Integer diaryId);
 	
 	@Transactional
 	@Modifying

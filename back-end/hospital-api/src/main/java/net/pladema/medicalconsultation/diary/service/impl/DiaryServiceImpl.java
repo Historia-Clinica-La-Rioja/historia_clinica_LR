@@ -391,6 +391,15 @@ public class DiaryServiceImpl implements DiaryService {
 	}
 
 	@Override
+	public Integer getDiaryIdByAppointment(Integer appointmentId) {
+		LOG.debug("Input parameters -> appointmentId {}", appointmentId);
+		Integer result = diaryRepository.getDiaryByAppointment(appointmentId).map(Diary::getId).orElse(null);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+
+	@Override
 	public Optional<CompleteDiaryBo> getCompleteDiaryByAppointment(Integer appointmentId){
 		LOG.debug("Input parameters -> appointmentId {}", appointmentId);
 		Optional<CompleteDiaryBo> result = diaryRepository.getCompleteDiaryByAppointment(appointmentId).map(this::createCompleteDiaryBoInstance);
