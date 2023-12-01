@@ -72,7 +72,7 @@ export class ViewStudyComponent {
 	}
 
 	private buildUrl(url: string, studyInstanceUID: string, token: string, server: string): string {
-		return `${url}/${studyInstanceUID}?server=${server}&token=${token}`;
+		return `${url}/?StudyInstanceUIDs=${studyInstanceUID}&server=${server}&token=${token}`;
 	}
 
 }
