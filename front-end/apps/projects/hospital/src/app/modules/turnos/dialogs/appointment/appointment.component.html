@@ -175,6 +175,9 @@
 						<span>{{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn
 							| date:"dd/MM/yyyy H:mm"}}hs.</span>
 					</div>
+					<div *ngIf="appointment" fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
+						<app-reference-state-label [reference]="appointment.associatedReferenceClosureType"></app-reference-state-label>
+					</div>
 				</div>
 				<div fxLayout="column" fxLayoutGap="10px" class="motive" *ngIf="isVirtualConsultationModality && canMakeVirtualConsultation && selectedState !== appointmentStatesIds.SERVED">
 						<button type="button" mat-raised-button color="primary" (click)="entryCall()">
