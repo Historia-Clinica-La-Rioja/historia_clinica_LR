@@ -98,7 +98,6 @@ export class AmbulatoryConsultationReferenceService {
 	}
 
 	private mapToReferenceDto(reference: Reference): ReferenceDto {
-		console.log(reference);
 		return {
 			careLineId: reference.careLine ? reference.careLine.id : null,
 			clinicalSpecialtyIds: reference.clinicalSpecialties.map(specialty => specialty.id),

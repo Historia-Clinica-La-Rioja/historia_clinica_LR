@@ -2,7 +2,7 @@
 	"historia-clinica": {
 		"reference-request-list": {
 			"CARE_LINE": "Línea de cuidado",
-			"SPECIALTY": "Especialidad",
+			"SPECIALTIES": "Especialidades",
 			"PROBLEMS": "Problemas"
 		},
 		"new-consultation-expansion-section": {
