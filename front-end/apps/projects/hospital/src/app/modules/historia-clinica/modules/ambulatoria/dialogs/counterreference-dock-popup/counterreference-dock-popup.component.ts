@@ -186,6 +186,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 				this.professionalSpecialties = specialties.filter(professionalSpecialty =>
 					this.data.reference.destinationClinicalSpecialties.some(referenceSpecialty => referenceSpecialty.id === professionalSpecialty.id)
 				);
+				this.formReferenceClosure.controls.specialty.setValue(this.professionalSpecialties[0]);
 			});
 	}
 
