@@ -178,7 +178,7 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
     @Override
     public List<ReferenceSummaryBo> getReferencesByHealthCondition(Integer healthConditionId, Integer outpatientId) {
         String sqlString = "SELECT r.id, cl.description , cs.name, rn.description, i.name,"
-                +" CASE WHEN hc.verificationStatusId = :healthConditionError THEN TRUE ELSE FALSE END AS cancelled"
+                +"  r.deleteable.deleted AS cancelled"
                 +"  FROM Reference r"
                 +"  JOIN OutpatientConsultation oc ON (r.encounterId = oc.id)"
 				+"  LEFT JOIN Institution i ON (r.destinationInstitutionId = i.id)"
@@ -194,7 +194,6 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
         List<Object[]> queryResult = entityManager.createQuery(sqlString)
                 .setParameter("healthConditionId", healthConditionId)
                 .setParameter("outpatientId", outpatientId)
-                .setParameter("healthConditionError", ConditionVerificationStatus.ERROR)
                 .getResultList();
         List<ReferenceSummaryBo> result = new ArrayList<>();
         queryResult.forEach(a ->
