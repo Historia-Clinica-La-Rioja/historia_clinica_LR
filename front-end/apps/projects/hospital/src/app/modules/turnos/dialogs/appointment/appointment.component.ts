@@ -99,10 +99,10 @@ const MONTHS = [1,2,3,4,5,6,7,8,9,10,11,12];
 export class AppointmentComponent implements OnInit {
 	readonly SECOND_OPINION_VIRTUAL_ATTENTION = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION;
 	readonly appointmentStatesIds = APPOINTMENT_STATES_ID;
-	readonly modalitys = MODALITYS_TYPES;
 	readonly TEMPORARY_PATIENT = TEMPORARY_PATIENT;
 	readonly BELL_LABEL = BELL_LABEL;
 	readonly Color = Color;
+	modalitys : modality [] = [];
 	datestypes = DATESTYPES;
 	getAppointmentState = getAppointmentState;
 	getError = getError;
@@ -268,10 +268,15 @@ export class AppointmentComponent implements OnInit {
 				}
 				this.phoneNumber = this.formatPhonePrefixAndNumber(this.data.appointmentData.phonePrefix, this.data.appointmentData.phoneNumber);
 				this.checkInputUpdatePermissions();
-				this.selectedModality = this.modalitys.find( m => m.value === this.appointment.modality);
+				this.selectedModality = MODALITYS_TYPES.find( m => m.value === this.appointment.modality);
 				this.formDate.controls.modality.setValue(this.selectedModality.value);
-				if(this.formDate.controls.modality.value !==  this.SECOND_OPINION_VIRTUAL_ATTENTION){
-					this.modalitys.pop();
+				this.modalitys.push(MODALITYS_TYPES[0]);
+				this.modalitys.push(MODALITYS_TYPES[1]);
+				if(this.formDate.controls.modality.value ===  this.SECOND_OPINION_VIRTUAL_ATTENTION){
+				this.modalitys.push(MODALITYS_TYPES[2])
+				}
+				if(this.appointment.patientEmail){
+					this.formDate.controls.email.setValue(this.appointment.patientEmail);
 				}
 				this.setModalityAndValidator();
 				this.checkDownloadReportAvailability();
@@ -480,15 +485,17 @@ export class AppointmentComponent implements OnInit {
 		this.selectedOpeningHourId = null;
 		const searchCriteria = this.prepareSearchCriteria(date);
 	 	this.diaryService.getDailyFreeAppointmentTimes(this.data.agenda.id,searchCriteria).subscribe((times: DiaryOpeningHoursFreeTimesDto[]) => {
-			if(isToday){
-				const now = new Date();
-				this.possibleScheduleHours = times[0].freeTimes.filter(({ hours, minutes }) => {
-					return hours > now.getHours() || (hours === now.getHours() && minutes > now.getMinutes());
-				  });
-			}else{
-				this.possibleScheduleHours = times[0].freeTimes;
+			if(times.length){
+				if(isToday){
+					const now = new Date();
+					this.possibleScheduleHours = times[0].freeTimes.filter(({ hours, minutes }) => {
+						return hours > now.getHours() || (hours === now.getHours() && minutes > now.getMinutes());
+					  });
+				}else{
+					this.possibleScheduleHours = times[0].freeTimes;
+				}
+				this.selectedOpeningHourId = times[0].openingHoursId;
 			}
-			this.selectedOpeningHourId = times[0].openingHoursId;
 		})
 	}
 

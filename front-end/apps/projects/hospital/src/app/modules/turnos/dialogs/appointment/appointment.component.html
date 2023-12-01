@@ -200,7 +200,7 @@
 
 			<form [formGroup]="formDate" *ngIf="isDateFormVisible" fxLayout="column" fxLayoutGap="5px" class="dateForm"
 				(ngSubmit)="updateAppointmentDate()">
-				<div>
+				<div fxLayoutGap="10px">
 					<mat-form-field appearance="outline">
 						<mat-select formControlName="modality" (selectionChange)="setModalityAndValidator()" [disabled]="formDate.controls.modality.value === SECOND_OPINION_VIRTUAL_ATTENTION">
 							<mat-option
@@ -210,7 +210,7 @@
 						</mat-select>
 					</mat-form-field>
 				</div>
-				<div fxLayout="row" fxLayoutAlign="space-between end">
+				<div fxLayout="row" fxLayoutAlign="space-between end" fxLayoutGap="10px grid">
 					<mat-form-field appearance="outline" class="hour">
 						<mat-label>{{'turnos.appointment.DAY' | translate}}</mat-label>
 						<mat-select formControlName="day" (selectionChange)="selectDate(datestypes.DAY)">
@@ -230,7 +230,7 @@
 						</mat-select>
 					  </mat-form-field>
 				</div>
-				<div fxLayout="row">
+				<div fxLayout="row" fxLayoutGap="20px grid">
 					<mat-form-field appearance="outline" class="hour">
 						<mat-label>{{'turnos.appointment.HOUR' | translate}}</mat-label>
 						<mat-select formControlName="hour">
@@ -242,7 +242,7 @@
 					</mat-form-field>
 					<span class="hs"> hs.</span>
 				</div>
-				<div fxLayout="row" *ngIf="viewInputEmail">
+				<div fxLayout="row" *ngIf="viewInputEmail" fxLayoutGap="20px">
 					<mat-form-field appearance="outline">
 						<mat-label>{{'turnos.new-appointment.EMAIL_PATIENT' | translate}}</mat-label>
 						<input matInput type="email" formControlName="email">
