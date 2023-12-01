@@ -288,7 +288,8 @@
 		"search_references": {
 			"CONTINUES_UNDER_OBSERVATION": "Continúa en observación",
 			"TREATMENT_BEGINS_IN_A_EFERENCE_CENTER":"Inicia tratamiento en centro de referencia",
-			"REQUIERES_COMPLEMENTARY_STUDIES":"Requiere estudios complementarios"
+			"REQUIERES_COMPLEMENTARY_STUDIES":"Requiere estudios complementarios",
+			"REFERENCE_REQUESTED": "Referencia Solicitada"
 		}
 	}
 }

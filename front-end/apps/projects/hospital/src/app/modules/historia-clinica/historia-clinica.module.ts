@@ -62,6 +62,7 @@ import { AlergiasFormComponent } from './components/alergias-form/alergias-form.
 import { EmergencyCareEpisodeAttendService } from './services/emergency-care-episode-attend.service';
 import { EpisodeDataComponent } from './components/episode-data/episode-data.component';
 import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-search-dialog/problem-concept-search-dialog.component';
+import { ReferenceStateLabelComponent } from './components/reference-state-label/reference-state-label.component';
 
 @NgModule({
 	declarations: [
@@ -90,6 +91,7 @@ import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-s
 		MedicationListComponent,
 		ReferenceRequestListComponent,
 		EpisodeDataComponent,
+		ReferenceStateLabelComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
@@ -156,6 +158,7 @@ import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-s
 		ReferenceRequestListComponent,
 		BedAssignmentComponent,
 		EpisodeDataComponent,
+		ReferenceStateLabelComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,
 		ConceptsTypeaheadSearchDialogComponent,
