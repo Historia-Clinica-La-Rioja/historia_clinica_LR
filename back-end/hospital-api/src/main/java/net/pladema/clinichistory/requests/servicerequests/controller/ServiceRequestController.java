@@ -9,6 +9,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedOrderReportInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceRequestDto;
+import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
@@ -66,6 +67,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -423,5 +425,12 @@ public class ServiceRequestController {
 		log.trace(OUTPUT, result);
 		return StoredFileResponse.sendFile(result);
     }
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ RuntimeException.class })
+	public ApiErrorDto handleValidationExceptions(RuntimeException ex) {
+		log.error("Constraint violation -> {}", ex.getMessage());
+		return new ApiErrorDto("Constraint violation", ex.getMessage());
+	}
 
 }
