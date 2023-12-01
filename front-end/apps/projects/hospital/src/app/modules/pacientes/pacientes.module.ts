@@ -52,6 +52,7 @@ import { WarningEditIdentificationNumberComponent } from './dialogs/warning-edit
 
 // pipes
 import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-and-specialty.pipe';
+import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
 
 
 
@@ -124,6 +125,7 @@ import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-
 		InternacionesModule,
 		GuardiaModule,
 		IdentifierCasesComponent,
+		HistoriaClinicaModule,
 	]
 })
 export class PacientesModule {
