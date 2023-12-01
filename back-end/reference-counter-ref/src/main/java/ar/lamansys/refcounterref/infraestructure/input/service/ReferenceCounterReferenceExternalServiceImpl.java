@@ -84,9 +84,9 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
     }
 
     @Override
-    public List<ReferenceProblemDto> getReferencesProblemsByPatient(Integer patientId) {
-        log.debug("Input parameters -> patientId {} ", patientId);
-        return referenceProblemMapper.fromReferenceProblemBoList(getReferenceProblem.run(patientId));
+    public List<ReferenceProblemDto> getReferencesProblemsByPatient(Integer patientId, List<Short> loggedUserRoleIds) {
+        log.debug("Input parameters -> patientId {}, loggedUserRoleIds {}", patientId, loggedUserRoleIds);
+        return referenceProblemMapper.fromReferenceProblemBoList(getReferenceProblem.run(patientId, loggedUserRoleIds));
     }
 
 	@Override

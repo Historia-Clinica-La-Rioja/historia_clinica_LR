@@ -248,7 +248,7 @@ public class HCEGeneralStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId) {
         LOG.debug(LOGGING_INPUT, institutionId, patientId);
-        List<HCEPersonalHistoryBo> resultService = hceHealthConditionsService.getChronicConditions(patientId);
+        List<HCEPersonalHistoryBo> resultService = hceHealthConditionsService.getChronicConditions(institutionId, patientId);
         List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
         LOG.debug(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
@@ -259,9 +259,8 @@ public class HCEGeneralStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId) {
         LOG.debug(LOGGING_INPUT, institutionId, patientId);
-		List<HCEPersonalHistoryBo> activeProblems = hceHealthConditionsService.getActiveProblems(patientId);
-		List<HCEPersonalHistoryBo> resultService = activeProblems;
-        List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
+		List<HCEPersonalHistoryBo> activeProblems = hceHealthConditionsService.getActiveProblems(institutionId, patientId);
+		List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(activeProblems);
         LOG.debug(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
@@ -346,7 +345,8 @@ public class HCEGeneralStateController {
     public ResponseEntity<List<HCEEvolutionSummaryDto>> getEvolutionSummaryList(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId){
-        List<EvolutionSummaryBo> evolutions = fetchSummaryClinicHistory.run(patientId);
+		LOG.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
+        List<EvolutionSummaryBo> evolutions = fetchSummaryClinicHistory.run(institutionId, patientId);
         List<HCEEvolutionSummaryDto> result = hceGeneralStateMapper.fromListOutpatientEvolutionSummaryBo(evolutions);
         LOG.debug("Get summary  => {}", result);
         return ResponseEntity.ok(result);

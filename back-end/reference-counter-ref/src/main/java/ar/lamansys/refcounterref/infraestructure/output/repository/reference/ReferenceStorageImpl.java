@@ -92,9 +92,9 @@ public class ReferenceStorageImpl implements ReferenceStorage {
     }
 
     @Override
-    public List<ReferenceProblemBo> getReferencesProblems(Integer patientId) {
-        log.debug("Input parameters -> patientId {} ", patientId);
-        return referenceHealthConditionRepository.getReferencesProblemsByPatientId(patientId);
+    public List<ReferenceProblemBo> getReferencesProblems(Integer patientId, List<Short> loggedUserRoleIds) {
+        log.debug("Input parameters -> patientId {}, loggedUserRoleIds {}", patientId, loggedUserRoleIds);
+        return referenceHealthConditionRepository.getReferencesProblemsByPatientId(patientId, loggedUserRoleIds);
     }
 
 	@Override

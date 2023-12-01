@@ -13,9 +13,9 @@ public interface HCEHealthConditionsService {
 
     List<HCEPersonalHistoryBo> getFamilyHistories(Integer patientId);
 
-    List<HCEPersonalHistoryBo> getChronicConditions(Integer patientId);
+    List<HCEPersonalHistoryBo> getChronicConditions(Integer institutionId, Integer patientId);
 
-    List<HCEPersonalHistoryBo> getActiveProblems(Integer patientId);
+    List<HCEPersonalHistoryBo> getActiveProblems(Integer institutionId, Integer patientId);
 
     List<HCEPersonalHistoryBo> getSolvedProblems(Integer patientId);
 

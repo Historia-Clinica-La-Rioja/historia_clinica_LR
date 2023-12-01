@@ -15,6 +15,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
+import lombok.AllArgsConstructor;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,14 +26,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@AllArgsConstructor
 @Repository
 public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatientConsultationSummaryStorage {
 
     private final EntityManager entityManager;
-
-    public HCEOutpatientConsultationSummaryStorageImpl(EntityManager entityManager){
-        this.entityManager = entityManager;
-    }
 
     @SuppressWarnings("unchecked")
     @Transactional(readOnly = true)
@@ -176,24 +175,27 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
     }
 
     @Override
-    public List<ReferenceSummaryBo> getReferencesByHealthCondition(Integer healthConditionId, Integer outpatientId) {
+    public List<ReferenceSummaryBo> getReferencesByHealthCondition(Integer healthConditionId, Integer outpatientId, List<Short> loggedUserRoleIds) {
         String sqlString = "SELECT r.id, cl.description , cs.name, rn.description, i.name,"
                 +"  r.deleteable.deleted AS cancelled"
                 +"  FROM Reference r"
                 +"  JOIN OutpatientConsultation oc ON (r.encounterId = oc.id)"
 				+"  LEFT JOIN Institution i ON (r.destinationInstitutionId = i.id)"
                 +"  LEFT JOIN CareLine cl ON (r.careLineId = cl.id)"
+				+"  LEFT JOIN CareLineRole clr ON (clr.careLineId = cl.id)"
                 +"  LEFT JOIN ClinicalSpecialty cs ON (r.clinicalSpecialtyId = cs.id)"
                 +"  JOIN ReferenceHealthCondition rhc ON (r.id = rhc.pk.referenceId)"
                 +"  JOIN HealthCondition hc ON (rhc.pk.healthConditionId = hc.id)"
                 +"  LEFT JOIN ReferenceNote rn ON (r.referenceNoteId = rn.id)"
                 +"  WHERE rhc.pk.healthConditionId = :healthConditionId"
                 +"  AND r.sourceTypeId= " + SourceType.OUTPATIENT
-                +"  AND oc.id = :outpatientId ";
+                +"  AND oc.id = :outpatientId"
+				+"  AND (cl.id IS NULL OR cl.classified IS FALSE OR (clr.roleId IN (:userRoles) AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE))";
 
         List<Object[]> queryResult = entityManager.createQuery(sqlString)
                 .setParameter("healthConditionId", healthConditionId)
                 .setParameter("outpatientId", outpatientId)
+				.setParameter("userRoles", loggedUserRoleIds)
                 .getResultList();
         List<ReferenceSummaryBo> result = new ArrayList<>();
         queryResult.forEach(a ->

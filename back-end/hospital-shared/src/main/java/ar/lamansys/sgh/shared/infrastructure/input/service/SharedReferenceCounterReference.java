@@ -18,7 +18,7 @@ public interface SharedReferenceCounterReference {
 
 	List<Integer> saveReferences(List<CompleteReferenceDto> references);
 
-    List<ReferenceProblemDto> getReferencesProblemsByPatient(Integer patientId);
+    List<ReferenceProblemDto> getReferencesProblemsByPatient(Integer patientId, List<Short> loggedUserRoleIds);
 
 	List<Integer> getProtectedAppointmentsIds(List<Integer> diaryIds);
 

@@ -9,6 +9,8 @@ import ar.lamansys.sgh.clinichistory.domain.hce.HCEReferenceProblemBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.HCEHealthConditionRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEHealthConditionVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEHospitalizationVo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedLoggedUserPort;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,8 @@ public class HCEHealthConditionsServiceImpl implements HCEHealthConditionsServic
     private final IsSameUserIdFromHealthCondition isSameUserIdFromHealthCondition;
     
     private final IsWithinExpirationTimeLimit isWithinExpirationTimeLimit;
+
+	private final SharedLoggedUserPort sharedLoggedUserPort;
 
     @Override
     public List<HCEPersonalHistoryBo> getActivePersonalHistories(Integer patientId) {
@@ -70,7 +74,7 @@ public class HCEHealthConditionsServiceImpl implements HCEHealthConditionsServic
     }
 
     @Override
-    public List<HCEPersonalHistoryBo> getChronicConditions(Integer patientId) {
+    public List<HCEPersonalHistoryBo> getChronicConditions(Integer institutionId, Integer patientId) {
         log.debug(LOGGING_INPUT, patientId);
         List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getPersonalHistories(patientId);
         List<HCEPersonalHistoryBo> result = resultQuery.stream()
@@ -80,20 +84,19 @@ public class HCEHealthConditionsServiceImpl implements HCEHealthConditionsServic
                 .sorted(Comparator.comparing(HCEPersonalHistoryBo::getStartDate, Comparator.nullsFirst(Comparator.naturalOrder())).reversed())
                 .collect(Collectors.toList());
 
-        List<HCEReferenceProblemBo> problemsWithReferences = hceReferenceCounterReferenceStorage.getProblemsWithReferences(patientId);
-        result.stream().forEach(p -> {
-            problemsWithReferences.stream().forEach(pwr -> {
-                if (p.getSnomedSctid().equals(pwr.getSnomedSctid()) && p.getSnomedPt().equals(pwr.getSnomedPt()))
-                    p.setHasPendingReference(true);
-            });
-        });
+		List<Short> loggedUserRoleIds = sharedLoggedUserPort.getLoggedUserRoleIds(institutionId, UserInfo.getCurrentAuditor());
+        List<HCEReferenceProblemBo> problemsWithReferences = hceReferenceCounterReferenceStorage.getProblemsWithReferences(patientId, loggedUserRoleIds);
+        result.forEach(p -> problemsWithReferences.forEach(pwr -> {
+			if (p.getSnomedSctid().equals(pwr.getSnomedSctid()) && p.getSnomedPt().equals(pwr.getSnomedPt()))
+				p.setHasPendingReference(true);
+		}));
 
         log.debug(LOGGING_OUTPUT, result);
         return result;
     }
 
     @Override
-    public List<HCEPersonalHistoryBo> getActiveProblems(Integer patientId) {
+    public List<HCEPersonalHistoryBo> getActiveProblems(Integer institutionId, Integer patientId) {
         log.debug(LOGGING_INPUT, patientId);
         List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getPersonalHistories(patientId);
         List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new)
@@ -102,13 +105,12 @@ public class HCEHealthConditionsServiceImpl implements HCEHealthConditionsServic
                 .sorted(Comparator.comparing(HCEPersonalHistoryBo::getStartDate, Comparator.nullsFirst(Comparator.naturalOrder())).reversed())
                 .collect(Collectors.toList());
 
-        List<HCEReferenceProblemBo> problemsWithReferences = hceReferenceCounterReferenceStorage.getProblemsWithReferences(patientId);
-        result.stream().forEach(p -> {
-            problemsWithReferences.stream().forEach(pwr -> {
-                if (p.getSnomedSctid().equals(pwr.getSnomedSctid()) && p.getSnomedPt().equals(pwr.getSnomedPt()))
-                    p.setHasPendingReference(true);
-            });
-        });
+		List<Short> loggedUserRoleIds = sharedLoggedUserPort.getLoggedUserRoleIds(institutionId, UserInfo.getCurrentAuditor());
+        List<HCEReferenceProblemBo> problemsWithReferences = hceReferenceCounterReferenceStorage.getProblemsWithReferences(patientId, loggedUserRoleIds);
+        result.forEach(p -> problemsWithReferences.forEach(pwr -> {
+			if (p.getSnomedSctid().equals(pwr.getSnomedSctid()) && p.getSnomedPt().equals(pwr.getSnomedPt()))
+				p.setHasPendingReference(true);
+		}));
 
         log.debug(LOGGING_OUTPUT, result);
         return result;
