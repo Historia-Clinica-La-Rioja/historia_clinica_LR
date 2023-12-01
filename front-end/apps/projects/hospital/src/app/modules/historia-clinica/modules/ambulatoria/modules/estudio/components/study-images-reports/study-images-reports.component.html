@@ -3,7 +3,8 @@
     <div [ngClass]="isImageOrderCasesIncomplete ? 'files-section' : ''"  fxLayout="row" fxLayoutGap="18px" fxLayoutAlign="center center">
         <ng-container *ngIf="showAccessToFiles">
             <app-view-study class="view-study-btn"
-                [isImageId]="studyInfo.infoOrderInstances?.seeStudy"
+                [isImageId]="studyInfo.infoOrderInstances?.isAvailableInPACS"
+                [studyAvailable]="studyInfo.infoOrderInstances?.isAvailableInPACS"
                 [appointmentId]="appointmentId">
             </app-view-study>
             <div class="report-status">

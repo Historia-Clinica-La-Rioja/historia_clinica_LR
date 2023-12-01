@@ -10,7 +10,7 @@ import {
 	StudyOrderReportInfoDto,
 	StudyWithoutOrderReportInfoDto,
 	TranscribedDiagnosticReportInfoDto,
-	TranscribedOrderReportInfoDto,
+	StudyTranscribedOrderReportInfoDto,
 	TranscribedPrescriptionDto,
 } from '@api-rest/api-model';
 
@@ -132,10 +132,10 @@ export class ServiceRequestService {
 		this.viewPdfService.showDialog(url, 'Orden ' + serviceRequestId);
 	}
 
-	getStudyTranscribedOrder(patientId: number): Observable<TranscribedOrderReportInfoDto[]>
+	getStudyTranscribedOrder(patientId: number): Observable<StudyTranscribedOrderReportInfoDto[]>
 	{
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/studyTranscribedOrder`;
-		return this.http.get<TranscribedOrderReportInfoDto[]>(url)
+		return this.http.get<StudyTranscribedOrderReportInfoDto[]>(url)
 	}
 
 	getStudyWithoutOrder(patientId: number): Observable<StudyWithoutOrderReportInfoDto[]>

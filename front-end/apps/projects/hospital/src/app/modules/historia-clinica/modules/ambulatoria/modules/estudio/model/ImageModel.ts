@@ -19,7 +19,7 @@ export interface InfoNewTypeOrderDto {
 	imageId?: string;
 	hceDocumentDataDto?: HCEDocumentDataDto ;
 	status?: boolean;
-	seeStudy?: boolean;
+	isAvailableInPACS?: boolean;
 	viewReport?: boolean;
 }
 

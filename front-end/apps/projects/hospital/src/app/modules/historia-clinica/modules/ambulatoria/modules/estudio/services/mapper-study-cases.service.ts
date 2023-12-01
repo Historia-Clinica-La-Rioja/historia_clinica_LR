@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DiagnosticReportInfoDto, StudyOrderReportInfoDto, StudyWithoutOrderReportInfoDto, TranscribedOrderReportInfoDto } from '@api-rest/api-model';
+import { DiagnosticReportInfoDto, StudyOrderReportInfoDto, StudyWithoutOrderReportInfoDto, StudyTranscribedOrderReportInfoDto } from '@api-rest/api-model';
 import { CATEGORY_IMAGE, DiagnosticWithTypeReportInfoDto, E_TYPE_ORDER, InfoNewStudyOrderDto, InfoNewTypeOrderDto } from '../model/ImageModel';
 import { STUDY_STATUS } from '@historia-clinica/modules/ambulatoria/constants/prescripciones-masterdata';
 
@@ -14,12 +14,12 @@ constructor() { }
 		return diagnosticsReport.map(diagnostic => {return {...diagnostic,typeOrder: typeOrderSlected, infoOrderInstances: null}})
 	}
 
-	mapToInfoNewTypeOrderDto(source: TranscribedOrderReportInfoDto | StudyWithoutOrderReportInfoDto | StudyOrderReportInfoDto): InfoNewTypeOrderDto {
+	mapToInfoNewTypeOrderDto(source: StudyTranscribedOrderReportInfoDto | StudyWithoutOrderReportInfoDto | StudyOrderReportInfoDto): InfoNewTypeOrderDto {
 		return {
 			imageId: source.imageId,
 			hceDocumentDataDto: source.hceDocumentDataDto,
 			status: source.status,
-			seeStudy: source.seeStudy,
+			isAvailableInPACS: source.isAvailableInPACS,
 			viewReport: source.viewReport,
 		}
 	}
@@ -29,14 +29,14 @@ constructor() { }
 			imageId: source.imageId,
 			hceDocumentDataDto: source.hceDocumentDataDto,
 			status: source.status,
-			seeStudy: source.seeStudy,
+			isAvailableInPACS: source.isAvailableInPACS,
 			viewReport: source.viewReport,
 			hasActiveAppointment: source.hasActiveAppointment
 		}
 	}
 
 
-	mapDiagnosticTranscriptaToDiagnosticWithTypeReportInfoDto(diagnosticsReport: TranscribedOrderReportInfoDto[] ): DiagnosticWithTypeReportInfoDto[] {
+	mapDiagnosticTranscriptaToDiagnosticWithTypeReportInfoDto(diagnosticsReport: StudyTranscribedOrderReportInfoDto[] ): DiagnosticWithTypeReportInfoDto[] {
 		return diagnosticsReport.map(transcripta =>
 			{
 			return {
