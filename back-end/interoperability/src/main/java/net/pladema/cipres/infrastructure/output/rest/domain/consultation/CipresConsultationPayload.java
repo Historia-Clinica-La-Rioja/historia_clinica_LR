@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 public class CipresConsultationPayload {
 
-	private Integer idPaciente;
+	private Long idPaciente;
 
 	private String fecha;
 

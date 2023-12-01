@@ -39,7 +39,7 @@ public class CipresConsultationStorageImpl implements CipresConsultationStorage 
 			var establishment = cipresEncounterStorage.getEstablishmentBySisaCode(c.getInstitutionSisaCode());
 			if (establishment.isPresent()) {
 				var establishmentId = establishment.get().getId();
-				var apiPatientId = cipresPatientStorage.getPatientId(c.getPatient().getPerson(), establishmentId);
+				var apiPatientId = cipresPatientStorage.getPatientId(c.getPatient(), establishmentId);
 				if (apiPatientId.isPresent()) {
 					c.setApiPatientId(apiPatientId.get());
 					createOutpatientConsultation(c, establishmentId);

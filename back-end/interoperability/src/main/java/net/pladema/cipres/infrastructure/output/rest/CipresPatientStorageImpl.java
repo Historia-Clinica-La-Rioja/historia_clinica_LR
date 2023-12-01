@@ -5,8 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.cipres.application.port.CipresPatientStorage;
 import net.pladema.cipres.application.port.CipresPersonStorage;
 import net.pladema.cipres.application.port.CipresStorage;
+import net.pladema.cipres.domain.BasicDataPatientBo;
 import net.pladema.cipres.domain.BasicDataPersonBo;
 import net.pladema.cipres.domain.PersonDataBo;
+import net.pladema.cipres.infrastructure.output.repository.CipresPatient;
+import net.pladema.cipres.infrastructure.output.repository.CipresPatientPk;
+import net.pladema.cipres.infrastructure.output.repository.CipresPatientRepository;
 import net.pladema.cipres.infrastructure.output.rest.domain.CipresCityResponse;
 import net.pladema.cipres.infrastructure.output.rest.domain.CipresPatientResponse;
 import net.pladema.cipres.infrastructure.output.rest.domain.CipresMasterData;
@@ -22,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -36,21 +41,14 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 	public static final short GENDER_FEMALE = 1;
 
 	public static final short GENDER_MALE = 2;
-
 	public static final short IDENTIFICATION_TYPE_DNI = 1;
-
 	public static final short IDENTIFICATION_TYPE_CI = 2;
-
 	public static final short IDENTIFICATION_TYPE_LC = 3;
-
 	public static final short IDENTIFICATION_TYPE_LE = 4;
-
+	public static final short IDENTIFICATION_TYPE_CEDULA_MERCOSUR = 5;
 	public static final short IDENTIFICATION_TYPE_CUIT = 6;
-
 	public static final short IDENTIFICATION_TYPE_FOREIGN_PASSPORT = 8;
-
 	public static final short IDENTIFICATION_TYPE_FOREIGN_IDENTITY_CARD = 9;
-
 	public static final short IDENTIFICATION_TYPE_OTHER_FOREIGN_DOCUMENT = 10;
 
 	public static final Integer CUIT_LENGTH = 11;
@@ -67,53 +65,68 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 
 	private static final List<Short> nationalDocumentTypes = List.of(IDENTIFICATION_TYPE_DNI, IDENTIFICATION_TYPE_CI, IDENTIFICATION_TYPE_LC, IDENTIFICATION_TYPE_LE, IDENTIFICATION_TYPE_CUIT);
 
-	private static final List<Short> foreignDocumentTypes = List.of(IDENTIFICATION_TYPE_FOREIGN_PASSPORT, IDENTIFICATION_TYPE_FOREIGN_IDENTITY_CARD, IDENTIFICATION_TYPE_OTHER_FOREIGN_DOCUMENT);
+	private static final List<Short> foreignDocumentTypes = List.of(IDENTIFICATION_TYPE_FOREIGN_PASSPORT, IDENTIFICATION_TYPE_FOREIGN_IDENTITY_CARD, IDENTIFICATION_TYPE_OTHER_FOREIGN_DOCUMENT, IDENTIFICATION_TYPE_CEDULA_MERCOSUR);
 
 	private final CipresPersonStorage cipresPersonStorage;
 
-	public CipresPatientStorageImpl (CipresRestTemplate cipresRestTemplate, CipresWSConfig cipresWSConfig,
-									 CipresPersonStorage cipresPersonStorage) {
+	private final CipresPatientRepository cipresPatientRepository;
+
+	public CipresPatientStorageImpl (CipresRestTemplate cipresRestTemplate,
+									 CipresWSConfig cipresWSConfig,
+									 CipresPersonStorage cipresPersonStorage,
+									 CipresPatientRepository cipresPatientRepository) {
 		super(cipresRestTemplate, cipresWSConfig);
 		this.cipresPersonStorage = cipresPersonStorage;
+		this.cipresPatientRepository = cipresPatientRepository;
 	}
 
 	@Override
-	public Optional<Integer> getPatientId(BasicDataPersonBo basicDataPersonBo, String establishmentId) {
-		String url = this.buildPatientUrl(basicDataPersonBo, establishmentId);
+	public Optional<Long> getPatientId(BasicDataPatientBo patientData, String establishmentId) {
+		var cipresPatientId = this.cipresPatientRepository.getCipresPatientId(patientData.getId());
+		return cipresPatientId.or(() -> foundPatientId(patientData, establishmentId));
+	}
+
+	private Optional<Long> foundPatientId(BasicDataPatientBo patientData, String establishmentId) {
+		String url = this.buildPatientUrl(patientData.getPerson(), establishmentId);
+		Optional<Long> result = Optional.empty();
 		try {
 			ResponseEntity<CipresPatientResponse[]> response = restClient.exchangeGet(url, CipresPatientResponse[].class);
 			if (isSuccessfulResponse(response))
-				return processPatientSuccessfulResponse(response.getBody(), establishmentId, basicDataPersonBo);
+				result = processPatientSuccessfulResponse(response.getBody(), establishmentId, patientData);
 		} catch (RestTemplateApiException e) {
-			return handlePatientRestTemplateApiException(e, basicDataPersonBo, establishmentId);
+			result = handlePatientRestTemplateApiException(e, patientData, establishmentId);
 		} catch (ResourceAccessException e) {
 			handleResourceAccessException(e);
 		}
-		return Optional.empty();
+        result.ifPresent(cipresPatientId -> createCipresPatient(patientData.getId(), cipresPatientId));
+		return result;
 	}
 
-	private Optional<Integer> handlePatientRestTemplateApiException(RestTemplateApiException e, BasicDataPersonBo basicDataPersonBo, String establishmentId) {
-		if (e.getStatusCode().equals(HttpStatus.NOT_FOUND) && validIdentificationData(basicDataPersonBo)) {
-			PersonDataBo person = cipresPersonStorage.getPersonData(basicDataPersonBo.getId());
+	private Optional<Long> handlePatientRestTemplateApiException(RestTemplateApiException e, BasicDataPatientBo patientData,
+																	String establishmentId) {
+		var personData = patientData.getPerson();
+		if (e.getStatusCode().equals(HttpStatus.NOT_FOUND) && validIdentificationData(personData)) {
+			PersonDataBo person = cipresPersonStorage.getPersonData(personData.getId());
 			if (validPatientMinimalData(person))
 				return createPatient(person, establishmentId);
 		} else
-			log.warn("Error al intentar obtener un paciente");
+			log.debug("Error al intentar obtener un paciente");
 		return Optional.empty();
 	}
 
-	private Optional<Integer> processPatientSuccessfulResponse(CipresPatientResponse[] patients, String establishmentId,
-															   BasicDataPersonBo basicDataPersonBo) {
+	private Optional<Long> processPatientSuccessfulResponse(CipresPatientResponse[] patients, String establishmentId,
+															   BasicDataPatientBo patientData) {
 		var patient = patients[0].getPaciente();
+		var patientId = patient.get(ID).toString();
 
 		if (patient.get(ADDRESS) != null)
-			return Optional.ofNullable((int) patient.get(ID));
+			return Optional.of(Long.parseLong(patientId));
 
-		PersonDataBo person = cipresPersonStorage.getPersonData(basicDataPersonBo.getId());
+		PersonDataBo person = cipresPersonStorage.getPersonData(patientData.getPerson().getId());
 		if (validAddressData(person)) {
-			var addressId = savePatientAddress(person, patient.get(ID).toString(), establishmentId);
+			var addressId = savePatientAddress(person, patientId, establishmentId);
 			if (addressId.isPresent())
-				return Optional.of((int)patient.get(ID));
+				return Optional.of(Long.parseLong(patientId));
 		}
 
 		return Optional.empty();
@@ -138,7 +151,7 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 	}
 
 	@Override
-	public Optional<Integer> createPatient(PersonDataBo person, String establishmentId) {
+	public Optional<Long> createPatient(PersonDataBo person, String establishmentId) {
 		String url = cipresWSConfig.getPatientUrl().concat(ESTABLISHMENT_URL + establishmentId);
 		CipresPatientAddressPayload address = mapToCipresPatientAddressPayload(person);
 		if (address.getLocalidad() != null && address.getNacionalidad() != null) {
@@ -146,7 +159,7 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 			try {
 				var response = restClient.exchangePost(url, body, CipresEntityResponse.class);
 				if (response != null && response.getBody() != null && response.getBody().getId() != null)
-					return Optional.of(Integer.parseInt(response.getBody().getId()));
+					return Optional.of(Long.parseLong(response.getBody().getId()));
 			} catch (RestTemplateApiException e) {
 				log.warn("Error al intentar insertar un paciente en la api");
 			} catch (ResourceAccessException e) {
@@ -306,6 +319,10 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 			default:
 				return CipresMasterData.GENDER_NONBINARY_INITIAL;
 		}
+	}
+
+	private void createCipresPatient(Integer patientId, Long cipresPatientId) {
+		cipresPatientRepository.save(new CipresPatient(new CipresPatientPk(patientId, cipresPatientId), LocalDate.now()));
 	}
 
 	private boolean validPatientMinimalData(PersonDataBo person) {

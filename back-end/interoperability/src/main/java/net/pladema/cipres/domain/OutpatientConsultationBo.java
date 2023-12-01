@@ -18,7 +18,7 @@ public class OutpatientConsultationBo {
 
 	private BasicDataPatientBo patient;
 
-	private Integer apiPatientId;
+	private Long apiPatientId;
 
 	private String date;
 
