@@ -48,10 +48,9 @@
 	</div>
 
 	<mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
-		<button mat-flat-button color="primary" (click)="completeStudy()" [disabled]="(!formReferenceClosure.valid) || (isLoading$ | async)">
-			<span
-				class="uppercase">{{'ambulatoria.reference-study-close.COMPLETE_BUTTON'
-				| translate}}</span>
-		</button>
+		<app-button [buttonType]='buttonTypeFlat' text='ambulatoria.reference-study-close.COMPLETE_BUTTON'
+			[isLoading]="isLoading$|async" [disabled]="!formReferenceClosure.valid || (disabled$ | async)"
+			(clicked)="completeStudy()">
+		</app-button>
 	</mat-dialog-actions>
 </div>

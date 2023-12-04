@@ -25,7 +25,8 @@ export class ReferenceStudyCloseComponent implements OnInit {
 	selectedFiles: File[] = [];
 	selectedFilesShow = [];
 	closureTypes$: Observable<MasterDataDto[]>;
-	ButtonType: ButtonType;
+	buttonTypeFlat = ButtonType.FLAT;
+	disabled$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	isLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,

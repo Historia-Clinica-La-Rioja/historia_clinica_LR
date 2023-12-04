@@ -2,6 +2,6 @@
 	[style.width.px]="width" (click)="onClicked()">
 	<mat-spinner *ngIf="isLoading; else showContent" diameter="30" [color]="color" style="margin: 0.25rem;"></mat-spinner>
 	<ng-template #showContent>
-		<span>{{text}}</span>
+		<span>{{text | translate | uppercase}}</span>
 	</ng-template>
 </button>

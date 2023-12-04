@@ -7,7 +7,7 @@ import { ThemePalette } from '@angular/material/core';
 	templateUrl: './button.component.html',
 	styleUrls: ['./button.component.scss']
 })
-export class ButtonComponent implements OnChanges {
+export class ButtonComponent implements OnChanges{
 
 	@Input() color?: ThemePalette = 'primary';
 	@Input() isLoading?= false;
@@ -21,7 +21,6 @@ export class ButtonComponent implements OnChanges {
 	ngOnChanges(changes: SimpleChanges): void {
 		this.width = changes.isLoading?.currentValue ? changes.text?.currentValue.length * 11 : null
 	}
-	constructor() { }
 
 	onClicked() {
 		this.clicked.emit('Clicked!')

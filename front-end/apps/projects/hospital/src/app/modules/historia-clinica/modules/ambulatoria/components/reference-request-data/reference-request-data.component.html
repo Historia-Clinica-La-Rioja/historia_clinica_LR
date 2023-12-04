@@ -1,5 +1,5 @@
 <div *ngIf="reference" class="container" id="main-container" fxLayoutGap="12px">
-	<h1 class="capitalize">{{reference.dto.procedure.pt}}</h1>
+	<h1 class="capitalize-first-letter">{{reference.dto.procedure.pt }}</h1>
 
 	<div class="row-container"  fxLayoutAlign="space-between">
 		<app-colored-label [description]="status.description | uppercase" [color]="status.color" id="colored-label">
