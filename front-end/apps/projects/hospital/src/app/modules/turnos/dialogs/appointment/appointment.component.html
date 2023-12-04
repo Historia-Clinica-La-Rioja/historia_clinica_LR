@@ -175,7 +175,7 @@
 						<span>{{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn
 							| date:"dd/MM/yyyy H:mm"}}hs.</span>
 					</div>
-					<div *ngIf="appointment" fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
+					<div *ngIf="appointment?.associatedReferenceClosureType || appointment?.hasAssociatedReference" fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
 						<app-reference-state-label [reference]="appointment.associatedReferenceClosureType"></app-reference-state-label>
 					</div>
 				</div>

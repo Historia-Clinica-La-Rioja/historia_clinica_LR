@@ -29,7 +29,7 @@
 		<mat-icon class="icon" fontSet="material-icons-outlined"> meeting_room </mat-icon>
 		<span class="mat-body text"> {{ appointment.office }} </span>
 	</div>
-	<div *ngIf="appointment" fxLayout="row" fxLayoutGap="10px">
+	<div *ngIf="appointment?.associatedReferenceClosureType || appointment?.hasAssociatedReference" fxLayout="row" fxLayoutGap="10px">
 		<app-reference-state-label [reference]="appointment.associatedReferenceClosureType"></app-reference-state-label>
 	</div>
 </div>
