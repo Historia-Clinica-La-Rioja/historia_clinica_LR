@@ -1,9 +1,13 @@
 package net.pladema.establishment.controller;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
+import lombok.RequiredArgsConstructor;
 import net.pladema.establishment.controller.dto.ERuleLevel;
 import net.pladema.establishment.controller.dto.InstitutionalGroupRuleDto;
+import net.pladema.establishment.repository.InstitutionalGroupInstitutionRepository;
 import net.pladema.establishment.repository.InstitutionalGroupRuleRepository;
 import net.pladema.establishment.repository.RuleRepository;
+import net.pladema.establishment.repository.domain.InstitutionalGroupInstitutionVo;
 import net.pladema.establishment.repository.domain.InstitutionalGroupRuleVo;
 import net.pladema.establishment.repository.entity.InstitutionalGroupRule;
 import net.pladema.establishment.repository.entity.Rule;
@@ -24,19 +28,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class BackofficeInstitutionalGroupRuleStore implements BackofficeStore<InstitutionalGroupRuleDto, Integer> {
 
 	private final InstitutionalGroupRuleRepository institutionalGroupRuleRepository;
 	private final RuleRepository ruleRepository;
-	private final SnomedRelatedGroupRepository snomedRelatedGroupRepository;
-
-	public BackofficeInstitutionalGroupRuleStore(InstitutionalGroupRuleRepository institutionalGroupRuleRepository,
-												 RuleRepository ruleRepository,
-												 SnomedRelatedGroupRepository snomedRelatedGroupRepository){
-		this.institutionalGroupRuleRepository = institutionalGroupRuleRepository;
-		this.ruleRepository = ruleRepository;
-		this.snomedRelatedGroupRepository = snomedRelatedGroupRepository;
-	}
+	private final SharedReferenceCounterReference sharedReferenceCounterReference;
+	private final InstitutionalGroupInstitutionRepository institutionalGroupInstitutionRepository;
 
 	@Override
 	public Page<InstitutionalGroupRuleDto> findAll(InstitutionalGroupRuleDto example, Pageable pageable) {
@@ -87,11 +85,20 @@ public class BackofficeInstitutionalGroupRuleStore implements BackofficeStore<In
 			entity.setRegulated(true);
 			entity.setId(institutionalGroupRuleRepository.save(new InstitutionalGroupRule(entity)).getId());
 		}
+		if (!entity.isRegulated()){
+			List<Integer> institutionIds = institutionalGroupInstitutionRepository.findInstitutionIdsByInstitutionalGroupId(entity.getInstitutionalGroupId());
+			sharedReferenceCounterReference.approveReferencesByRuleId(entity.getRuleId(), institutionIds);
+		}
 		return entity;
 	}
 
 	@Override
 	public void deleteById(Integer id) {
+		Optional<InstitutionalGroupRule> institutionalGroupRule = institutionalGroupRuleRepository.findById(id);
+		institutionalGroupRule.ifPresent(igr -> {
+			List<Integer> institutionIds = institutionalGroupInstitutionRepository.findInstitutionIdsByInstitutionalGroupId(igr.getInstitutionalGroupId());
+			sharedReferenceCounterReference.approveReferencesByRuleId(igr.getRuleId(), institutionIds);
+		});
 		institutionalGroupRuleRepository.deleteById(id);
 	}
 

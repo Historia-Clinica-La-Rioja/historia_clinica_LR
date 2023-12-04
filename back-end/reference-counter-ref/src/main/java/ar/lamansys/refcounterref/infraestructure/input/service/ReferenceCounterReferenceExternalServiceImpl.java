@@ -1,10 +1,12 @@
 package ar.lamansys.refcounterref.infraestructure.input.service;
 
+import ar.lamansys.refcounterref.application.approvereferencesbyruleid.ApproveReferencesByRuleId;
 import ar.lamansys.refcounterref.application.createreference.CreateReference;
 import ar.lamansys.refcounterref.application.getcounterreference.GetCounterReference;
 import ar.lamansys.refcounterref.application.getreferencebyservicerequest.GetReferenceByServiceRequest;
 import ar.lamansys.refcounterref.application.getreferencefile.GetReferenceFile;
 import ar.lamansys.refcounterref.application.getreferenceproblem.GetReferenceProblem;
+import ar.lamansys.refcounterref.application.updateruleonreferenceregulation.UpdateRuleOnReferenceRegulation;
 import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceSummaryBo;
 import ar.lamansys.refcounterref.domain.file.ReferenceCounterReferenceFileBo;
 import ar.lamansys.refcounterref.domain.procedure.CounterReferenceProcedureBo;
@@ -54,7 +56,8 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
     private final ReferenceAppointmentRepository referenceAppointmentRepository;
 	private final GetReferenceByServiceRequest getReferenceByServiceRequest;
 	private final SharedStaffPort sharedStaffPort;
-
+	private final ApproveReferencesByRuleId approveReferencesByRuleId;
+	private final UpdateRuleOnReferenceRegulation updateRuleIdOnReferences;
 
     @Override
     public List<ReferenceCounterReferenceFileDto> getReferenceFilesData(Integer referenceId) {
@@ -131,6 +134,18 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
 		var result = referenceAppointmentRepository.getReferenceByAppointmentId(appointmentId).map(this::mapToReferenceAppointmentStateDto);
 		log.debug("OUTPUT {} ->", result);
 		return result;
+	}
+
+	@Override
+	public void approveReferencesByRuleId(Integer ruleId, List<Integer> institutionIds){
+		log.debug("Input parameter -> ruleId {}", ruleId);
+		approveReferencesByRuleId.run(ruleId, institutionIds);
+	}
+
+	@Override
+	public void updateRuleOnReferences(Integer ruleId, Short ruleLevel, List<Integer> ruleIdsToReplace){
+		log.debug("Input parameter -> ruleId {}, ruleLevel {}, ruleIdsToReplace {}", ruleId, ruleLevel, ruleIdsToReplace);
+		updateRuleIdOnReferences.run(ruleId, ruleLevel, ruleIdsToReplace);
 	}
 
 	private List<ReferenceCounterReferenceFileDto> mapToReferenceCounterReferenceFileDto(List<ReferenceCounterReferenceFileBo> referenceCounterReferenceFileBos) {

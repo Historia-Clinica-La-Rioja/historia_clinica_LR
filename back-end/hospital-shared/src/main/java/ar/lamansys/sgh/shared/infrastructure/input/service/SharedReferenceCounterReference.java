@@ -34,4 +34,8 @@ public interface SharedReferenceCounterReference {
 	
 	Optional<ReferenceAppointmentStateDto> getReferenceByAppointmentId(Integer appointmentId);
 
+	void approveReferencesByRuleId(Integer ruleId, List<Integer> institutionIds);
+
+	void updateRuleOnReferences(Integer ruleId, Short ruleLevel, List<Integer> ruleIdsToReplace);
+
 }

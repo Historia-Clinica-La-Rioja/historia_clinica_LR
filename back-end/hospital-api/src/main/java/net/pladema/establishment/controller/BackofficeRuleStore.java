@@ -1,12 +1,16 @@
 package net.pladema.establishment.controller;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.SnomedRepository;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
+import lombok.RequiredArgsConstructor;
 import net.pladema.establishment.controller.dto.ERuleLevel;
 import net.pladema.establishment.controller.dto.RuleDto;
+import net.pladema.establishment.repository.InstitutionalGroupInstitutionRepository;
 import net.pladema.establishment.repository.InstitutionalGroupRepository;
 import net.pladema.establishment.repository.InstitutionalGroupRuleRepository;
 import net.pladema.establishment.repository.RuleRepository;
 import net.pladema.establishment.repository.entity.InstitutionalGroup;
+import net.pladema.establishment.repository.entity.InstitutionalGroupInstitution;
 import net.pladema.establishment.repository.entity.InstitutionalGroupRule;
 import net.pladema.establishment.repository.entity.Rule;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
@@ -27,6 +31,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class BackofficeRuleStore implements BackofficeStore <RuleDto, Integer> {
 
 	private final RuleRepository ruleRepository;
@@ -35,20 +40,9 @@ public class BackofficeRuleStore implements BackofficeStore <RuleDto, Integer> {
 	private final SnomedRelatedGroupRepository snomedRelatedGroupRepository;
 	private final InstitutionalGroupRepository institutionalGroupRepository;
 	private final InstitutionalGroupRuleRepository institutionalGroupRuleRepository;
+	private final InstitutionalGroupInstitutionRepository institutionalGroupInstitutionRepository;
+	private final SharedReferenceCounterReference sharedReferenceCounterReference;
 
-	public BackofficeRuleStore (RuleRepository ruleRepository,
-								ClinicalSpecialtyRepository clinicalSpecialtyRepository,
-								SnomedRepository snomedRepository,
-								SnomedRelatedGroupRepository snomedRelatedGroupRepository,
-								InstitutionalGroupRepository institutionalGroupRepository,
-								InstitutionalGroupRuleRepository institutionalGroupRuleRepository) {
-		this.ruleRepository = ruleRepository;
-		this.clinicalSpecialtyRepository = clinicalSpecialtyRepository;
-		this.snomedRepository = snomedRepository;
-		this.snomedRelatedGroupRepository = snomedRelatedGroupRepository;
-		this.institutionalGroupRepository = institutionalGroupRepository;
-		this.institutionalGroupRuleRepository = institutionalGroupRuleRepository;
-	}
 	@Override
 	public Page<RuleDto> findAll(RuleDto example, Pageable pageable) {
 		List<RuleDto> rules = ruleRepository.findAll().stream().filter(rule -> rule.getLevel().equals(ERuleLevel.GENERAL.getId())).map(this::mapToDto).collect(Collectors.toList());
@@ -88,11 +82,13 @@ public class BackofficeRuleStore implements BackofficeStore <RuleDto, Integer> {
 		institutionalGroupRuleRepository.deleteByRuleIds(localRuleIds);
 		List<Integer> institutionalGroupsIds = institutionalGroupRepository.findAll().stream().map(InstitutionalGroup::getId).collect(Collectors.toList());
 		addRuleToInstitutionalGroups(institutionalGroupsIds, entity.getId());
+		sharedReferenceCounterReference.updateRuleOnReferences(entity.getId(), entity.getLevel(), localRuleIds);
 		return entity;
 	}
 
 	@Override
 	public void deleteById(Integer id) {
+		sharedReferenceCounterReference.approveReferencesByRuleId(id, new ArrayList<>());
 		institutionalGroupRuleRepository.deleteByRuleIds(List.of(id));
 		ruleRepository.deleteById(id);
 	}

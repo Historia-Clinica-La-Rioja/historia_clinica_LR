@@ -42,4 +42,11 @@ public interface InstitutionalGroupInstitutionRepository extends SGXAuditableEnt
 			"AND igi.deleteable.deleted = FALSE ")
 	boolean existsByInstitutionId (@Param("institutionId") Integer institutionId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT igi.institutionId " +
+			"FROM InstitutionalGroupInstitution igi " +
+			"WHERE igi.institutionalGroupId = :institutionalGroupId " +
+			"AND igi.deleteable.deleted = FALSE")
+	List<Integer> findInstitutionIdsByInstitutionalGroupId(@Param("institutionalGroupId")Integer institutionalGroupId);
+
 }

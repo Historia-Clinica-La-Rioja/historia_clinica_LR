@@ -8,6 +8,11 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.rule.SharedRulePort;
 
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class HistoricReferenceRegulationStorageImpl implements HistoricReferenceRegulationStorage {
 
@@ -32,6 +37,33 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 			return historicReferenceRegulationRepository.save(new HistoricReferenceRegulation(null, referenceId, null, null, EReferenceRegulationState.APPROVED.getId(), null)).getId();
 		}
 		return historicReferenceRegulationRepository.save(new HistoricReferenceRegulation(null, referenceId, rule.getId(), rule.getLevel(), EReferenceRegulationState.WAITING_APPROVAL.getId(), null)).getId();
+	}
+
+	@Override
+	public void approveReferencesByRuleId(Integer ruleId, List<Integer> institutionIds){
+		List<HistoricReferenceRegulation> historicReferenceRegulations;
+		if (institutionIds.isEmpty())
+			historicReferenceRegulations = historicReferenceRegulationRepository.findByRuleId(ruleId);
+		else
+			historicReferenceRegulations = historicReferenceRegulationRepository.findByRuleIdInInstitutions(ruleId, institutionIds);
+		Map<Integer, Short> referencesMap = new HashMap<>();
+		historicReferenceRegulations.forEach(hrr -> {
+			if(!referencesMap.containsKey(hrr.getReferenceId()))
+				referencesMap.put(hrr.getReferenceId(), hrr.getStateId());
+		});
+		referencesMap.forEach((referenceId, stateId) -> {
+			if (stateId.equals(EReferenceRegulationState.WAITING_APPROVAL.getId())){
+				HistoricReferenceRegulation entity = new HistoricReferenceRegulation();
+				entity.setReferenceId(referenceId);
+				entity.setStateId(EReferenceRegulationState.APPROVED.getId());
+				historicReferenceRegulationRepository.save(entity);
+			}
+		});
+	}
+
+	@Override
+	public void updateRuleOnReferences(Integer ruleId, Short ruleLevel, List<Integer> ruleIdsToReplace){
+		historicReferenceRegulationRepository.updateRuleOnReferences(ruleId, ruleLevel, ruleIdsToReplace);
 	}
 
 }
