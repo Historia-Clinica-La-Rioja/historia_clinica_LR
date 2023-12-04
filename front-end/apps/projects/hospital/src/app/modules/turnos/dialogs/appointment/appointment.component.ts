@@ -271,8 +271,8 @@ export class AppointmentComponent implements OnInit {
 				this.selectedModality = MODALITYS_TYPES.find( m => m.value === this.appointment.modality);
 				this.modalitys.push(MODALITYS_TYPES[0]);
 				this.modalitys.push(MODALITYS_TYPES[1]);
-				if(this.formDate.controls.modality.value ===  this.SECOND_OPINION_VIRTUAL_ATTENTION){
-				this.modalitys.push(MODALITYS_TYPES[2])
+				if(this.appointment.modality ===  this.SECOND_OPINION_VIRTUAL_ATTENTION){
+					this.modalitys.push(MODALITYS_TYPES[2])
 				}
 				if(this.appointment.patientEmail){
 					this.formDate.controls.email.setValue(this.appointment.patientEmail);
