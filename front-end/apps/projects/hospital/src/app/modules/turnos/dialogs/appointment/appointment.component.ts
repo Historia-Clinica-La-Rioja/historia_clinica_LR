@@ -75,7 +75,7 @@ import { DiaryLabelService } from '@api-rest/services/diary-label.service';
 import { Router } from '@angular/router';
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
-import { dateTimeDtoToDate, dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
+import { dateTimeDtoToDate, dateToDateDto, dateToTimeDto } from '@api-rest/mapper/date-dto.mapper';
 import { DiaryService } from '@api-rest/services/diary.service';
 
 import { PatientNameService } from '@core/services/patient-name.service';
@@ -292,7 +292,7 @@ export class AppointmentComponent implements OnInit {
 				this.initializeFormDate();
 				this.loadAvailableDays(this.dateAppointment);
 				this.setAvailableMonths(this.dateAppointment);
-				this.loadAppointmentsHours(this.dateAppointment,this.isToday());
+				this.loadAppointmentsHours(this.dateAppointment,this.isToday(),true);
 				this.setAvailableYears();
 				this.setModalityAndValidator(false);
 			});
@@ -454,6 +454,9 @@ export class AppointmentComponent implements OnInit {
 			if (!this.availableDays.includes(element.day))
 				this.availableDays.push(element.day);
 		});
+		if(!this.availableDays.includes(this.dateAppointment.day)){
+			this.availableDays.push(this.dateAppointment.day);
+		}
 		this.availableDays.sort((a, b) => a - b);
 	}
 
@@ -488,7 +491,18 @@ export class AppointmentComponent implements OnInit {
 		}
 	}
 
-	loadAppointmentsHours(date: DateDto,isToday:boolean) {
+	setDefaultTime(){
+		let appointmentHour: TimeDto = dateToTimeDto(new Date()) ;
+		let partes = this.appointment.hour.split(':');
+		appointmentHour.hours = parseInt(partes[0]);
+		appointmentHour.minutes = parseInt(partes[1]);
+		appointmentHour.seconds = parseInt(partes[2]);
+		this.possibleScheduleHours.push(appointmentHour);
+		this.possibleScheduleHours.sort((a, b) => a.hours - b.hours || a.minutes - b.minutes);
+		this.formDate.controls.hour.setValue(appointmentHour);
+	}
+
+	loadAppointmentsHours(date: DateDto,isToday:boolean,isInitial?:boolean) {
 		this.possibleScheduleHours = [];
 		this.selectedOpeningHourId = null;
 		const searchCriteria = this.prepareSearchCriteria(date);
@@ -501,6 +515,9 @@ export class AppointmentComponent implements OnInit {
 					  });
 				}else{
 					this.possibleScheduleHours = times[0].freeTimes;
+					if(isInitial){
+						this.setDefaultTime();
+					}
 				}
 				this.selectedOpeningHourId = times[0].openingHoursId;
 			}
