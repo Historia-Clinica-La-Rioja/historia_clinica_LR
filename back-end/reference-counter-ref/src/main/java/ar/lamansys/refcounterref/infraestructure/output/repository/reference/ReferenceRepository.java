@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 
     @Transactional(readOnly = true)
-    @Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.creationable.createdOn, " +
+    @Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.creationable.createdOn, " +
             "rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name,"+
 			"hp.personId, r.priority, r.serviceRequestId) " +
             "FROM Reference r " +
@@ -43,7 +43,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 																  @Param("loggedUserRoleIds") List<Short> loggedUserRoleIds);
 
     @Transactional(readOnly = true)
-    @Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.creationable.createdOn, " +
+    @Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.creationable.createdOn, " +
 			"rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name,"+
 			"hp.personId , r.priority, r.serviceRequestId) " +
             "FROM Reference r " +
@@ -67,7 +67,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 																  @Param("loggedUserRoleIds") List<Short> loggedUserRoleIds);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
+	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
 			"oc.startDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId) " +
 			"FROM Reference r " +
 			"LEFT JOIN ReferenceClinicalSpecialty rcs ON (rcs.pk.referenceId = r.id) " +
@@ -87,7 +87,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 																								 @Param("careLineId") Integer careLineId);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
+	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
 			"oc.performedDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId) " +
 			"FROM Reference r " +
 			"LEFT JOIN ReferenceClinicalSpecialty rcs ON (rcs.pk.referenceId = r.id) " +
@@ -157,7 +157,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 																						@Param("careLineId") Integer careLineId);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
+	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
 			"oc.startDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId) " +
 			"FROM Reference r " +
 			"LEFT JOIN ReferenceClinicalSpecialty rcs ON (rcs.pk.referenceId = r.id) " +
@@ -185,7 +185,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 																											  @Param("practiceId") Integer practiceId);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
+	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
 			"oc.performedDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId) " +
 			"FROM Reference r " +
 			"LEFT JOIN ReferenceClinicalSpecialty rcs ON (rcs.pk.referenceId = r.id) " +
