@@ -269,7 +269,6 @@ export class AppointmentComponent implements OnInit {
 				this.phoneNumber = this.formatPhonePrefixAndNumber(this.data.appointmentData.phonePrefix, this.data.appointmentData.phoneNumber);
 				this.checkInputUpdatePermissions();
 				this.selectedModality = MODALITYS_TYPES.find( m => m.value === this.appointment.modality);
-				this.formDate.controls.modality.setValue(this.selectedModality.value);
 				this.modalitys.push(MODALITYS_TYPES[0]);
 				this.modalitys.push(MODALITYS_TYPES[1]);
 				if(this.formDate.controls.modality.value ===  this.SECOND_OPINION_VIRTUAL_ATTENTION){
@@ -278,7 +277,7 @@ export class AppointmentComponent implements OnInit {
 				if(this.appointment.patientEmail){
 					this.formDate.controls.email.setValue(this.appointment.patientEmail);
 				}
-				this.setModalityAndValidator();
+				
 				this.checkDownloadReportAvailability();
 
 				if (appointment.diaryLabelDto) {
@@ -290,17 +289,12 @@ export class AppointmentComponent implements OnInit {
 					}
 					this.setSelectedDiaryLabel(diaryLabel);
 				}
-				
-				const date = new Date(this.appointment.date)
-				date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
-				this.dateAppointment = dateToDateDto(date)
-				this.formDate.controls.day.setValue(this.dateAppointment.day);
-				this.formDate.controls.month.setValue(this.dateAppointment.month);
-				this.formDate.controls.year.setValue(this.dateAppointment.year);
+				this.initializeFormDate();
 				this.loadAvailableDays(this.dateAppointment);
 				this.setAvailableMonths(this.dateAppointment);
 				this.loadAppointmentsHours(this.dateAppointment,this.isToday());
 				this.setAvailableYears();
+				this.setModalityAndValidator(false);
 			});
 
 		this.hasRoleToChangeState$ = this.permissionsService.hasContextAssignments$(ROLES_TO_CHANGE_STATE).pipe(take(1));
@@ -339,6 +333,16 @@ export class AppointmentComponent implements OnInit {
 				}
 			});
 		this.setDiaryLabels();
+	}
+
+	initializeFormDate(){
+		const date = new Date(this.appointment.date)
+		date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
+		this.dateAppointment = dateToDateDto(date)
+		this.formDate.controls.day.setValue(this.dateAppointment.day);
+		this.formDate.controls.month.setValue(this.dateAppointment.month);
+		this.formDate.controls.year.setValue(this.dateAppointment.year);
+		this.formDate.controls.modality.setValue(this.selectedModality.value);
 	}
 
 	private setDiaryLabels() {
@@ -394,6 +398,7 @@ export class AppointmentComponent implements OnInit {
 
 	cancelDateForm(): void {
 		this.formDate.reset();
+		this.initializeFormDate();
 		this.dateFormToggle();
 	}
 
@@ -467,7 +472,7 @@ export class AppointmentComponent implements OnInit {
 	  	 }
 	}
 
-	setModalityAndValidator(){
+	setModalityAndValidator(change:boolean){
 		switch (this.formDate.controls.modality.value) {
 			case EAppointmentModality.PATIENT_VIRTUAL_ATTENTION : 
 				updateControlValidator(this.formDate, 'email', [Validators.required]);
@@ -477,6 +482,9 @@ export class AppointmentComponent implements OnInit {
 				updateControlValidator(this.formDate, 'email', []);
 				this.viewInputEmail = false;
 				break;
+		}
+		if(change){
+			this.selectDate(DATESTYPES.MONTH);
 		}
 	}
 
@@ -983,4 +991,4 @@ export interface PatientAppointmentInformation {
 	createdOn: Date;
 	professionalPersonDto: ProfessionalPersonDto;
 }
-export enum DATESTYPES {DAY,MONTH,YEAR};
+export enum DATESTYPES {DAY,MONTH,YEAR,MODALITY};

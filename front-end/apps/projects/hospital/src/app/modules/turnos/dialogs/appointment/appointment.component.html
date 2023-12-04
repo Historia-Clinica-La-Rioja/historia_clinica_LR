@@ -202,7 +202,7 @@
 				(ngSubmit)="updateAppointmentDate()">
 				<div fxLayoutGap="10px">
 					<mat-form-field appearance="outline">
-						<mat-select formControlName="modality" (selectionChange)="setModalityAndValidator()" [disabled]="formDate.controls.modality.value === SECOND_OPINION_VIRTUAL_ATTENTION">
+						<mat-select formControlName="modality" (selectionChange)="setModalityAndValidator(true)" [disabled]="formDate.controls.modality.value === SECOND_OPINION_VIRTUAL_ATTENTION">
 							<mat-option
 								*ngFor="let modality of modalitys" [value]="modality.value">
 									{{modality.description | translate}}
