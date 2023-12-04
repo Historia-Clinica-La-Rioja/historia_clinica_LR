@@ -1,6 +1,6 @@
 import { Component, Injector, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ApiErrorMessageDto, AppFeature, HCEPersonalHistoryDto, ProblemInfoDto } from '@api-rest/api-model';
+import { ApiErrorMessageDto, HCEPersonalHistoryDto, ProblemInfoDto } from '@api-rest/api-model';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
@@ -10,7 +10,6 @@ import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { SolveProblemComponent } from '@historia-clinica/dialogs/solve-problem/solve-problem.component';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { AmendProblemComponent, AmendProblemData } from '../../dialogs/amend-problem/amend-problem.component';
-import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 
 @Component({
@@ -31,7 +30,6 @@ export class ProblemsOptionsMenuComponent implements OnInit {
 	@Input() patientId: number;
     @Output() setProblemOnHistoric = new Subject<HCEPersonalHistoryDto>();
     hasNewConsultationEnabled$: Observable<boolean>;
-	isMarkProblemAsErrorActive: boolean;
 	private nuevaConsultaAmbulatoriaRef: DockPopupRef;
 	private nuevaConsultaFromProblemaRef: DockPopupRef;
 
@@ -42,12 +40,8 @@ export class ProblemsOptionsMenuComponent implements OnInit {
         public dialog: MatDialog,
 		private injector: Injector,
 		private readonly outpatientConsultationService: OutpatientConsultationService,
-		private readonly featureFlagService: FeatureFlagService,
         ) {
             this.dockPopupService = this.injector.get<DockPopupService>(DockPopupService);
-			this.featureFlagService.isActive(AppFeature.HABILITAR_RESOLUCION_PROBLEMAS_CARGADOS_COMO_ERROR_EN_DESARROLLO).subscribe(isOn => {
-				this.isMarkProblemAsErrorActive = isOn;
-			});
         }
 
     ngOnInit(): void {

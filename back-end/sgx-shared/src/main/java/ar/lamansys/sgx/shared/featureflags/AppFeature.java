@@ -161,9 +161,6 @@ public enum AppFeature implements Feature {
 
 	@Label("Indica si está habilitada la firma digital")
 	HABILITAR_FIRMA_DIGITAL,
-
-	@Label("Indica si está habilitada la acción de marcar un problema como cargado por error en HC")
-	HABILITAR_RESOLUCION_PROBLEMAS_CARGADOS_COMO_ERROR_EN_DESARROLLO,
 	
 	@Label("Indica si está habilitado utilizar nuevo formato PDF para la generación de órdenes de prestación")
 	HABILITAR_NUEVO_FORMATO_PDF_ORDENES_PRESTACION,

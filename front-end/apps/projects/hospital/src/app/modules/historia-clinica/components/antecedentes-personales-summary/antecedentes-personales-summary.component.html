@@ -32,7 +32,7 @@
 						<button mat-menu-item (click)="solveProblemPopUp(problem)">
 							<span [translate]="'ambulatoria.paciente.problemas.END'"></span>
 						</button>
-						<button *ngIf="isMarkProblemAsErrorActive && problem.data.canBeMarkAsError" mat-menu-item (click)="amendProblem(problem.data)">
+						<button *ngIf="problem.data.canBeMarkAsError" mat-menu-item (click)="amendProblem(problem.data)">
 							<span [translate]="'ambulatoria.paciente.problemas.amend_problems.AMEND_PROBLEM'"></span>
 						</button>
 					</mat-menu>

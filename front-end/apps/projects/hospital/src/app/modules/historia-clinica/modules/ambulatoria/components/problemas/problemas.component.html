@@ -208,7 +208,7 @@
 			</div>
 			<app-emergency-care-problems [patientId]="patientId" (goToEpisode)="goToEpisode($event)"></app-emergency-care-problems>
 
-			<app-amended-problems *ngIf="isMarkProblemAsErrorActive" (setProblemOnHistoric)="scrollToHistoric()"></app-amended-problems>
+			<app-amended-problems (setProblemOnHistoric)="scrollToHistoric()"></app-amended-problems>
 		</div>
 	</section>
 
@@ -265,7 +265,7 @@
 														<div fxLayout="row wrap" class="problem-title">
 															<h2 class="mat-h2 page-title {{ historicalProblem.color }} capitalize-first-letter" style="margin: 0;">
 																{{historicalProblem.problemPt}}</h2>
-															<ng-container *ngIf="isMarkProblemAsErrorActive && historicalProblem.markedAsError">
+															<ng-container *ngIf="historicalProblem.markedAsError">
 																<app-colored-label
 																	[description]="'ambulatoria.paciente.problemas.amend_problems.INCORRECT_PROBLEM' | translate | uppercase"
 																	[color]="Color.RED">

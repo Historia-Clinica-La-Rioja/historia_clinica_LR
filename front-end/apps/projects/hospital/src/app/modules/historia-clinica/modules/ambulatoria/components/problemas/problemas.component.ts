@@ -67,7 +67,6 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	private severityTypeMasterData: any[];
 
 	public selectedTab: number = 0;
-	public isMarkProblemAsErrorActive = false;
 
 	// External clinical history attributes
 	public externalClinicalHistoryList: ExternalClinicalHistorySummaryDto[];
@@ -128,10 +127,6 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 				if (this.showExternalClinicalHistoryTab) this.loadExternalClinicalHistoryList();
 			}
 		);
-
-		this.featureFlagService.isActive(AppFeature.HABILITAR_RESOLUCION_PROBLEMAS_CARGADOS_COMO_ERROR_EN_DESARROLLO).subscribe(isOn => {
-			this.isMarkProblemAsErrorActive = isOn;
-		});
 	}
 
 	ngOnDestroy(): void {

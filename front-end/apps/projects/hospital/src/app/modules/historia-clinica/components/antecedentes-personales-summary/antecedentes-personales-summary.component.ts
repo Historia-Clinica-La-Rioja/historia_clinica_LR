@@ -1,5 +1,5 @@
 import {Component, Injector, Input, OnInit} from '@angular/core';
-import {ApiErrorMessageDto, AppFeature, HCEPersonalHistoryDto, ProblemInfoDto} from '@api-rest/api-model';
+import {ApiErrorMessageDto, HCEPersonalHistoryDto, ProblemInfoDto} from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import {SummaryHeader} from '@presentation/components/summary-card/summary-card.component';
 import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
@@ -16,7 +16,6 @@ import { anyMatch } from '@core/utils/array.utils';
 import { PermissionsService } from '@core/services/permissions.service';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { AmendProblemComponent, AmendProblemData } from '@historia-clinica/modules/ambulatoria/dialogs/amend-problem/amend-problem.component';
-import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 
 @Component({
@@ -44,7 +43,6 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 	set personalHistory(personalHistory: HCEPersonalHistoryDto[]){
 		this.onPersonalHistoryChange(personalHistory);
 	};
-	isMarkProblemAsErrorActive = false;
 
 	constructor(
 		private readonly internacionMasterDataService: InternacionMasterDataService,
@@ -53,15 +51,11 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 		public dialog: MatDialog,
 		private route: ActivatedRoute,
 		private injector: Injector,
-		private readonly featureFlagService: FeatureFlagService,
 		private outpatientConsultationService: OutpatientConsultationService,
 	) {
 		this.dockPopupService = this.injector.get<DockPopupService>(DockPopupService);
 		this.route.paramMap.subscribe(
 			(params) => this.patientId = Number(params.get('idPaciente')));
-		this.featureFlagService.isActive(AppFeature.HABILITAR_RESOLUCION_PROBLEMAS_CARGADOS_COMO_ERROR_EN_DESARROLLO).subscribe(isOn => {
-			this.isMarkProblemAsErrorActive = isOn;
-		});
 	}
 
 	ngOnInit(): void {
