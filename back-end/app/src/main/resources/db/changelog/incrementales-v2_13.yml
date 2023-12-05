@@ -819,3 +819,14 @@ databaseChangeLog:
                 - column:
                     name: deleted_on
                     type: datetime
+
+    - changeSet:
+        id: add-references-on-historic_reference_regulation
+        author: fsimaro
+        comment: Add created references as approved on historic_reference_regulation
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO historic_reference_regulation (reference_id, state_id) 
+                SELECT r.id, 1 FROM reference r WHERE r.deleted = false;
