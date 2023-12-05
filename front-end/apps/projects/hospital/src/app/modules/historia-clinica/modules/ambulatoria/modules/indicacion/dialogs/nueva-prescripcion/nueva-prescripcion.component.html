@@ -221,9 +221,9 @@
 
     <mat-error class="mb-1" *ngIf="this.showAddMedicationError" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.REQUIRED_MEDICATION'"></mat-error>
 
-    <button mat-stroked-button color="primary" (click)="openPharmacosFrequestDialog()" [disabled]="submitted" fxFlexFill.xs>
-        <span class="uppercase">{{data.addLabel | translate}}</span>
-    </button>
+    <app-button id="download_study" [color]="'primary'" [isLoading]="isLoading" [text]="data.addLabel" [disabled]="submitted"
+        [buttonType]="'mat-stroked-button'" (clicked)="openPharmacosFrequestDialog()" fxFlexFill.xs>
+    </app-button>
 </div>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
