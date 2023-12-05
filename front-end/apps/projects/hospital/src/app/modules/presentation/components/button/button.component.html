@@ -1,7 +1,7 @@
-<button mat-button [ngClass]="buttonType" [color]="color" [disabled]="isLoading || disabled"
-	[style.width.px]="width" (click)="onClicked()">
-	<mat-spinner *ngIf="isLoading; else showContent" diameter="30" [color]="color" style="margin: 0.25rem;"></mat-spinner>
-	<ng-template #showContent>
-		<span>{{text | translate | uppercase}}</span>
-	</ng-template>
+<button id="button" mat-button [ngClass]="buttonType" [color]="color" [disabled]="isLoading || disabled"
+    (click)="onClicked()">
+    <mat-spinner *ngIf="isLoading; else showContent" diameter="25" [color]="color" style="margin: 0.25rem;"></mat-spinner>
+    <ng-template #showContent>
+        <span>{{text | translate | uppercase}}</span>
+    </ng-template>
 </button>

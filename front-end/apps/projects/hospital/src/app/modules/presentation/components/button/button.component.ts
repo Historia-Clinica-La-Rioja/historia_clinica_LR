@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 
 
@@ -7,7 +7,7 @@ import { ThemePalette } from '@angular/material/core';
 	templateUrl: './button.component.html',
 	styleUrls: ['./button.component.scss']
 })
-export class ButtonComponent implements OnChanges{
+export class ButtonComponent {
 
 	@Input() color?: ThemePalette = 'primary';
 	@Input() isLoading?= false;
@@ -17,13 +17,17 @@ export class ButtonComponent implements OnChanges{
 
 	@Output() clicked = new EventEmitter();
 
-	width: number;
-	ngOnChanges(changes: SimpleChanges): void {
-		this.width = changes.isLoading?.currentValue ? changes.text?.currentValue.length * 11 : null
+	ngAfterViewInit() {
+		this.getButtonDimensions();
 	}
 
 	onClicked() {
 		this.clicked.emit('Clicked!')
+	}
+
+	private getButtonDimensions(){
+		document.getElementById("button").style.width = document.getElementById("button").offsetWidth.toString() + 'px';
+		document.getElementById("button").style.height = document.getElementById("button").offsetHeight.toString() + 'px';
 	}
 }
 
