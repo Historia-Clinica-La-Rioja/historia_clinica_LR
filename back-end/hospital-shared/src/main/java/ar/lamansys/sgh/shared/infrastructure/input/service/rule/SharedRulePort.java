@@ -9,4 +9,6 @@ public interface SharedRulePort {
 
 	Optional<SharedRuleDto> findRegulatedRuleBySnomedIdInInstitution(Integer snomedId, Integer institutionId);
 
+	String getRuleLevelDescription (Short ruleLevelId);
+
 }

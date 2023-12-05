@@ -6,6 +6,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 import lombok.Getter;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 @Getter
 public enum EReferenceRegulationState {
 
@@ -30,6 +34,11 @@ public enum EReferenceRegulationState {
 			if(e.id.equals(id)) return e;
 		}
 		throw new NotFoundException("referenceRegulationStatus-not-exists", String.format("El valor %s es inválido", id));
+	}
+
+	@JsonCreator
+	public static List<EReferenceRegulationState> getAll(){
+		return Stream.of(EReferenceRegulationState.values()).collect(Collectors.toList());
 	}
 
 }

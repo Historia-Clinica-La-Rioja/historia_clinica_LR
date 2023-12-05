@@ -3452,6 +3452,7 @@ export interface ReferenceCompleteDataDto {
     appointment: ReferenceAppointmentDto;
     patient: ReferencePatientDto;
     reference: ReferenceDataDto;
+    regulation: ReferenceRegulationDto;
 }
 
 export interface ReferenceCounterReferenceFileDto extends Serializable {
@@ -3509,6 +3510,16 @@ export interface ReferencePatientDto {
 export interface ReferenceProblemDto extends Serializable {
     id?: number;
     snomed: SharedSnomedDto;
+}
+
+export interface ReferenceRegulationDto {
+    createdOn: DateTimeDto;
+    professionalName: string;
+    reason: string;
+    referenceId: number;
+    ruleId: number;
+    ruleLevel: string;
+    state: EReferenceRegulationState;
 }
 
 export interface ReferenceReportDto {
@@ -4573,6 +4584,13 @@ export const enum EReferenceAttentionState {
     ASSIGNED = "ASSIGNED",
     SERVED = "SERVED",
     ABSENT = "ABSENT",
+}
+
+export const enum EReferenceRegulationState {
+    WAITING_APPROVAL = "WAITING_APPROVAL",
+    APPROVED = "APPROVED",
+    REJECTED = "REJECTED",
+    SUGGESTED_REVISION = "SUGGESTED_REVISION",
 }
 
 export const enum ERole {

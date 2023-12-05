@@ -1,6 +1,7 @@
 package ar.lamansys.refcounterref.domain.reference;
 
 import ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentBo;
+import ar.lamansys.refcounterref.domain.referenceregulation.ReferenceRegulationBo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,5 +18,7 @@ public class ReferenceCompleteDataBo {
 	private ReferencePatientBo patient;
 
 	private ReferenceAppointmentBo appointment;
+
+	private ReferenceRegulationBo regulation;
 
 }

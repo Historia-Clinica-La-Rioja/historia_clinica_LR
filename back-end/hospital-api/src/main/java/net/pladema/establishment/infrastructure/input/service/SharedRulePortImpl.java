@@ -5,6 +5,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.rule.SharedRulePort;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.pladema.establishment.controller.dto.ERuleLevel;
 import net.pladema.establishment.infrastructure.input.rest.mapper.RuleMapper;
 
 import net.pladema.establishment.repository.RuleRepository;
@@ -32,5 +33,14 @@ public class SharedRulePortImpl implements SharedRulePort {
 	public Optional<SharedRuleDto> findRegulatedRuleBySnomedIdInInstitution(Integer snomedId, Integer institutionId) {
 		log.debug("Input parameters -> snomedId {}, institutionId {}", snomedId, institutionId);
 		return ruleRepository.findRegulatedRuleBySnomedIdInInstitution(snomedId, institutionId).map(ruleMapper::fromRule);
-    }
+	}
+
+	@Override
+	public String getRuleLevelDescription(Short ruleLevelId){
+		log.debug("Input parameters -> ruleLevelId {}", ruleLevelId);
+		String result = ERuleLevel.map(ruleLevelId).getValue();
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
 }

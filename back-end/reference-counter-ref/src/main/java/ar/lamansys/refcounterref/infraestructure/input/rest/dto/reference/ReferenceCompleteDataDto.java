@@ -15,4 +15,6 @@ public class ReferenceCompleteDataDto {
 
 	private ReferencePatientDto patient;
 
+	private ReferenceRegulationDto regulation;
+
 }

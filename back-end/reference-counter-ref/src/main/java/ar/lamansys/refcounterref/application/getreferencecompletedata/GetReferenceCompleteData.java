@@ -2,6 +2,7 @@ package ar.lamansys.refcounterref.application.getreferencecompletedata;
 
 import ar.lamansys.refcounterref.application.getreferencecompletedata.exceptions.GetReferenceCompleteDataException;
 import ar.lamansys.refcounterref.application.getreferencecompletedata.exceptions.GetReferenceCompleteDataExceptionEnum;
+import ar.lamansys.refcounterref.application.port.HistoricReferenceRegulationStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceAppointmentStorage;
 import ar.lamansys.refcounterref.application.port.ReferencePatientStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
@@ -9,6 +10,7 @@ import ar.lamansys.refcounterref.domain.reference.ReferenceCompleteDataBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
 import ar.lamansys.refcounterref.domain.reference.ReferencePatientBo;
 import ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentBo;
+import ar.lamansys.refcounterref.domain.referenceregulation.ReferenceRegulationBo;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,8 @@ public class GetReferenceCompleteData {
 
 	private final ReferencePatientStorage referencePatientStorage;
 
+	private final HistoricReferenceRegulationStorage historicReferenceRegulationStorage;
+
 	public ReferenceCompleteDataBo run(Integer referenceId) {
 		log.debug("Input parameter -> referenceId {}", referenceId);
 		assertInfo(referenceId);
@@ -38,8 +42,9 @@ public class GetReferenceCompleteData {
 		ReferencePatientBo patientData = referencePatientStorage.getPatientInfo(referenceData.getPatientId());
 		Optional<ReferenceAppointmentBo> appointmentData = referenceAppointmentStorage.getAppointmentData(referenceData.getId());
 		setContactInformation(patientData, referenceData, appointmentData);
+		Optional<ReferenceRegulationBo> referenceRegulation = historicReferenceRegulationStorage.getByReferenceId(referenceId);
 
-		var result = new ReferenceCompleteDataBo(referenceData, patientData, appointmentData.orElse(null));
+		var result = new ReferenceCompleteDataBo(referenceData, patientData, appointmentData.orElse(null), referenceRegulation.orElse(null));
 		log.debug("Output -> {}", result);
 		return result;
 	}

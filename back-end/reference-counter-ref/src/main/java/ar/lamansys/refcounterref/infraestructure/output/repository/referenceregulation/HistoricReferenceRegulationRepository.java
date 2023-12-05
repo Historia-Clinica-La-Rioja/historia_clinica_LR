@@ -38,4 +38,11 @@ public interface HistoricReferenceRegulationRepository extends SGXAuditableEntit
 			"WHERE hrr.ruleId IN :ruleIdsToReplace ")
 	void updateRuleOnReferences(@Param("ruleId")Integer ruleId, @Param("ruleLevel")Short ruleLevel, @Param("ruleIdsToReplace")List<Integer> ruleIdsToReplace);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT hrr " +
+			"FROM HistoricReferenceRegulation hrr " +
+			"WHERE hrr.referenceId = :referenceId " +
+			"AND hrr.deleteable.deleted = FALSE " +
+			"ORDER BY hrr.creationable.createdOn DESC")
+	List<HistoricReferenceRegulation> getByReferenceId(@Param("referenceId") Integer referenceId);
 }

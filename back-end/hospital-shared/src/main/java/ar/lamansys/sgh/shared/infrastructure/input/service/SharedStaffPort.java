@@ -16,4 +16,7 @@ public interface SharedStaffPort {
 	ProfessionalCompleteDto getProfessionalComplete(Integer userId);
 
 	ProfessionalCompleteDto getProfessionalCompleteById(Integer professionalId);
+
+	Optional<String> getProfessionalCompleteNameByUserId(Integer professionalId);
+
 }
