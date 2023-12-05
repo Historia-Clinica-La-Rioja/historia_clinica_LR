@@ -1,0 +1,15 @@
+<form [formGroup]="form">
+	<div fxLayout="column" formArrayName="labels">
+		<span [translate]="'turnos.agenda-setup.CREATE_COLOR_LABEL'"></span>
+		<span class="color-grey color-label-description">{{'turnos.agenda-setup.COLOR_LABEL_DESCRIPTION' | translate}}</span>
+		<div *ngFor="let control of getControl('labels')?.controls; index as formChild">
+			<div [formGroupName]="formChild" class="color-label">
+				<app-diary-label formControlName="combo" [colorList]="colorList" [currentColor]="control.value.combo.color"></app-diary-label>
+				<button mat-icon-button matSuffix type="button" (click)="removeLabel(formChild, control.value.combo.color)">
+					<mat-icon color="warn">delete_outline</mat-icon>
+				</button>
+			</div>
+		</div>
+		<app-color-selector *ngIf="colorList.length" [addButtonText]="'turnos.agenda-setup.ADD_LABEL'" [colorList]="colorList" (newColor)="createLabel($event)"></app-color-selector>
+	</div>
+</form>

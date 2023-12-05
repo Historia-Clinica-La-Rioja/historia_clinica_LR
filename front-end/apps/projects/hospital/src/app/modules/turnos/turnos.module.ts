@@ -51,6 +51,7 @@ import { EquipmentAppointmentsFacadeService } from './services/equipment-appoint
 // pipes
 import { PracticesPipe } from './pipes/practices.pipe';
 import { PatientSummaryComponent } from '../hsi-components/patient-summary/patient-summary.component';
+import { DiaryLabelsComponent } from './components/diary-labels/diary-labels.component';
 
 
 @NgModule({
@@ -92,6 +93,7 @@ import { PatientSummaryComponent } from '../hsi-components/patient-summary/patie
 		NewAttentionComponent,
 		//pipes
 		PracticesPipe,
+  DiaryLabelsComponent,
 	],
 	imports: [
 		CommonModule,

@@ -30,7 +30,7 @@ import {
 } from '@api-rest/api-model';
 import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
 import { DiaryService } from '@api-rest/services/diary.service';
-import { APPOINTMENT_DURATIONS, COLOR, DIARY_LABEL_COLORS, MINUTES_IN_HOUR, getDiaryLabel } from '../../constants/appointment';
+import { APPOINTMENT_DURATIONS, COLOR, DIARY_LABEL_COLORS, MINUTES_IN_HOUR } from '../../constants/appointment';
 import { AgendaHorarioService, EDiaryType } from '../../services/agenda-horario.service';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { SpecialtyService } from '@api-rest/services/specialty.service';
@@ -40,8 +40,6 @@ import { DiaryCareLineService } from '@api-rest/services/diary-care-line.service
 import { PracticesService } from '@api-rest/services/practices.service';
 import { ChipsOption } from '@presentation/components/chips-autocomplete/chips-autocomplete.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { DiaryLabelService } from '@api-rest/services/diary-label.service';
-import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 
 const ROUTE_APPOINTMENT = 'turnos';
 const ROUTE_AGENDAS = "agenda";
@@ -87,7 +85,7 @@ export class AgendaSetupComponent implements OnInit {
 	careLinesSelected: CareLineDto[] = [];
 	hierarchicalUnits: HierarchicalUnitDto[] = [];
 	professionalsWithoutResponsibility = [];
-	private editingDiaryId = null;
+	editingDiaryId = null;
 	private readonly routePrefix;
 	private mappedCurrentWeek = {};
 	lineOfCareAndPercentageOfProtectedAppointmentsValid = true;
@@ -123,7 +121,6 @@ export class AgendaSetupComponent implements OnInit {
 		private readonly diaryCareLine: DiaryCareLineService,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly practicesService: PracticesService,
-		private readonly diaryLabelService: DiaryLabelService,
 		private changeDetector: ChangeDetectorRef,
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
@@ -157,7 +154,6 @@ export class AgendaSetupComponent implements OnInit {
 			diaryType: new UntypedFormControl(this.CONSULTATION),
 			practices: new UntypedFormControl([]),
 			protectedAppointmentsPercentage: new UntypedFormControl({ value: 0, disabled: true }, [Validators.pattern(PATTERN), Validators.max(MAX_INPUT)]),
-			labels: new UntypedFormArray([])
 		});
 
 		if (this.fieldHierarchicalUnitRequired) {
@@ -277,21 +273,6 @@ export class AgendaSetupComponent implements OnInit {
 
 	}
 
-	addCombo(color: COLOR, description?: string, id?: number): void {
-		const array = this.form.get('labels') as UntypedFormArray;
-		array.push(this.add(color, description, id));
-	}
-
-	private add(color: COLOR, description?: string, id?: number): UntypedFormGroup {
-		return new UntypedFormGroup({
-			combo: new UntypedFormControl({
-				id: id ? id : null,
-				color,
-				description: description ? description : null,
-			}),
-		});
-	}
-
 	get careLinesAssociated(): UntypedFormControl {
 		return this.form.get('careLines') as UntypedFormControl;
 	}
@@ -371,7 +352,6 @@ export class AgendaSetupComponent implements OnInit {
 
 		this.setSpecialityId(diary.clinicalSpecialtyId);
 		this.setAlias(diary.alias);
-		this.setDiaryLabels();
 		diary.predecessorProfessionalId ? this.setHierarchicalUnits(diary.predecessorProfessionalId, diary) : this.setHierarchicalUnits(diary.healthcareProfessionalId, diary);
 
 		this.form.controls.diaryType.disable();
@@ -398,20 +378,6 @@ export class AgendaSetupComponent implements OnInit {
 
 	ngAfterContentChecked(): void {
 		this.changeDetector.detectChanges();
-	}
-
-	private setDiaryLabels() {
-		this.diaryLabelService.getLabelsByDiary(this.editingDiaryId)
-			.subscribe((result: DiaryLabelDto[]) => {
-				this.diaryLabels = result;
-				this.diaryLabels.forEach((diaryLabel: DiaryLabelDto) => {
-					const color: COLOR = {
-						id: diaryLabel.colorId,
-						color: getDiaryLabel(diaryLabel.colorId).color
-					}
-					this.createLabel(color, diaryLabel.description, diaryLabel.id);
-				});
-			});
 	}
 
 	private setSpecialityId(healthcareProfesionalId) {
@@ -484,16 +450,15 @@ export class AgendaSetupComponent implements OnInit {
 
 			dialogRef.afterClosed().subscribe(confirmed => {
 				if (confirmed) {
-					const diaryLabels: DiaryLabelDto[] = this.buildDiaryLabelDto();
 					this.errors = [];
 					if (this.editMode) {
-						const agendaEdit: DiaryDto = this.addAgendaId(this.buildDiaryADto(diaryLabels));
+						const agendaEdit: DiaryDto = this.addAgendaId(this.buildDiaryADto(this.diaryLabels));
 						this.diaryService.updateDiary(agendaEdit)
 							.subscribe((agendaId: number) => {
 								this.processSuccess(agendaId);
 							}, error => processErrors(error, (msg) => this.errors.push(msg)));
 					} else {
-						const agenda: DiaryADto = this.buildDiaryADto(diaryLabels);
+						const agenda: DiaryADto = this.buildDiaryADto(this.diaryLabels);
 						this.diaryService.addDiary(agenda)
 							.subscribe((agendaId: number) => {
 								this.processSuccess(agendaId);
@@ -502,22 +467,6 @@ export class AgendaSetupComponent implements OnInit {
 				}
 			});
 		});
-	}
-
-	private buildDiaryLabelDto(): DiaryLabelDto[] {
-		const diaryLabel: DiaryLabelDto[] = [];
-		const labelsControl = this.form.get("labels") as UntypedFormArray;
-		labelsControl.controls.forEach(control => {
-			if (control.value.combo.description != null && control.value.combo.description.trim() != '') {
-				diaryLabel.push({
-					id: control.value.combo.id,
-					colorId: control.value.combo.color.id,
-					description: control.value.combo.description,
-					diaryId: this.editingDiaryId
-				});
-			}
-		});
-		return diaryLabel;
 	}
 
 	setAllWeeklyDoctorsOfficeOcupation(): void {
@@ -536,33 +485,6 @@ export class AgendaSetupComponent implements OnInit {
 			.getAllWeeklyDoctorsOfficeOcupation(formValue.doctorOffice.id, this.editingDiaryId, startDate, endDate);
 
 		this.agendaHorarioService.setWeeklyOcupation(ocupations$);
-	}
-
-	createLabel(color: COLOR, description?: string, id?: number) {
-		this.colorList.splice(this.colorList.findIndex((c: COLOR) => c.id === color.id), 1);
-		this.addCombo(color, description, id);
-	}
-
-	removeLabel(index: number, color: COLOR) {
-		this.dialog.open(DiscardWarningComponent, {
-			data: {
-				title: 'turnos.agenda-setup.DELETE_LABEL',
-				content: 'turnos.agenda-setup.DELETE_SUBTITLE',
-				contentBold: 'turnos.agenda-setup.DELETE_CONFIRMATION',
-				okButtonLabel: 'turnos.agenda-setup.OK_BUTTON_DELETE',
-				cancelButtonLabel: 'turnos.agenda-setup.CANCEL_BUTTON_DELETE',
-				okBottonColor: 'warn',
-				errorMode: true,
-				buttonClose: true
-			}
-		}).afterClosed()
-		.subscribe((result: boolean) => {
-			if (result) {
-				const labelsControl = this.form.get("labels") as UntypedFormArray;
-				labelsControl.removeAt(index);
-				this.colorList.push(color);
-			}
-		})
 	}
 
 	private processSuccess(agendaId: number) {
@@ -689,6 +611,10 @@ export class AgendaSetupComponent implements OnInit {
 	addAssociatedProfessional() {
 		const currentOtherProfessionals = this.form.controls.otherProfessionals as UntypedFormArray;
 		currentOtherProfessionals.push(this.initializeAnotherProfessional());
+	}
+
+	setLabelsArray(labels: DiaryLabelDto[]) {
+		this.diaryLabels = labels;
 	}
 
 	private initializeAnotherProfessional(): UntypedFormGroup {

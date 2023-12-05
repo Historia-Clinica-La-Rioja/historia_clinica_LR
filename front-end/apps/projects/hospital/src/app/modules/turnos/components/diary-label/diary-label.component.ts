@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, forwardRef } from '@angular/core';
+import { Component, Input, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { COLOR } from '@turnos/constants/appointment';
 import { Subscription } from 'rxjs';
@@ -8,13 +8,12 @@ import { Subscription } from 'rxjs';
   templateUrl: './diary-label.component.html',
   styleUrls: ['./diary-label.component.scss'],
   providers: [
-	{
-		provide: NG_VALUE_ACCESSOR,
-		useExisting: forwardRef(() => DiaryLabelComponent),
-		multi: true,
-	}
-],
-changeDetection: ChangeDetectionStrategy.OnPush
+		{
+			provide: NG_VALUE_ACCESSOR,
+			useExisting: forwardRef(() => DiaryLabelComponent),
+			multi: true,
+		}
+	],
 })
 export class DiaryLabelComponent {
 

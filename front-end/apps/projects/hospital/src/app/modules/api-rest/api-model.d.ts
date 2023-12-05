@@ -4569,10 +4569,10 @@ export const enum EPregnancyTermination {
 }
 
 export const enum EReferenceAttentionState {
+    PENDING = "PENDING",
     ASSIGNED = "ASSIGNED",
     SERVED = "SERVED",
     ABSENT = "ABSENT",
-    PENDING = "PENDING",
 }
 
 export const enum ERole {
