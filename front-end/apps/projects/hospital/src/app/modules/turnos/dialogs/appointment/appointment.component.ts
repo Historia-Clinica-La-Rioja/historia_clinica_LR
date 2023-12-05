@@ -294,7 +294,7 @@ export class AppointmentComponent implements OnInit {
 					this.setSelectedDiaryLabel(diaryLabel);
 				}
 				this.initializeFormDate();
-				this.loadAvailableDays(this.dateAppointment);
+				this.loadAvailableDays(this.dateAppointment,true);
 				this.setAvailableMonths(this.dateAppointment);
 				this.loadAppointmentsHours(this.dateAppointment,this.isToday(),true);
 				this.setAvailableYears();
@@ -410,14 +410,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	isToday():boolean{
-		if(this.startAgenda.year === this.dateAppointment.year){
-			if(this.startAgenda.month === this.dateAppointment.month){
-				if(this.startAgenda.day === this.dateAppointment.day){
-					return true;
-				}
-			}
-		}
-		return false;
+		return (this.startAgenda.year === this.dateAppointment.year && this.startAgenda.month === this.dateAppointment.month && this.startAgenda.day === this.dateAppointment.day )
 	}
 
 	selectDate(dateType: DATESTYPES) {
@@ -428,7 +421,11 @@ export class AppointmentComponent implements OnInit {
 				break;
 			case DATESTYPES.MONTH :
 				this.dateAppointment.month = this.formDate.controls.month.value;
-				this.dateAppointment.day = 1;
+				if(this.startAgenda.month === this.dateAppointment.month && this.startAgenda.year === this.dateAppointment.year){
+					this.dateAppointment.day = this.startAgenda.day;
+				}else{
+					this.dateAppointment.day = 1;
+				}
 				this.loadAvailableDays(this.dateAppointment);
 				this.possibleScheduleHours = [];
 				this.formDate.controls.day.setValue(null);
@@ -451,13 +448,13 @@ export class AppointmentComponent implements OnInit {
 		}
 	}
 
-	setAvailableDays(arr: any[]) {
+	setAvailableDays(arr: any[], isInitial?:boolean) {
 		this.availableDays = [];
 		arr.forEach(element => {
 			if (!this.availableDays.includes(element.day))
 				this.availableDays.push(element.day);
 		});
-		if(!this.availableDays.includes(this.dateAppointment.day)){
+		if(this.selectedDate.getUTCDate() === this.dateAppointment.day && isInitial && !this.availableDays.includes(this.dateAppointment.day)){
 			this.availableDays.push(this.dateAppointment.day);
 		}
 		this.availableDays.sort((a, b) => a - b);
@@ -536,10 +533,13 @@ export class AppointmentComponent implements OnInit {
 		return searchCriteria;
 	}
 
-	loadAvailableDays(date: DateDto): void {
+	loadAvailableDays(date: DateDto, isInitial?:boolean): void {
 		const searchCriteria = this.prepareSearchCriteria(date);
 		this.diaryService.getMonthlyFreeAppointmentDates(this.data.agenda.id, searchCriteria).subscribe(res => {
-			this.setAvailableDays(res);
+			this.setAvailableDays(res,isInitial);
+		},error => {
+			this.availableDays= [];
+			processErrors(error, (msg) => this.snackBarService.showError(msg));
 		})
 	}
 
