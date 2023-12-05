@@ -256,4 +256,10 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 			"WHERE d.id = :diaryId")
 	DiaryBo getDiaryEndDateAndAppointmentDuration(@Param("diaryId") Integer diaryId);
 
+	@Transactional(readOnly = true)
+	@Query(" SELECT NEW net.pladema.medicalconsultation.diary.service.domain.DiaryBo(d.startDate, d.endDate) " +
+			"FROM Diary d " +
+			"WHERE d.id = :diaryId")
+	DiaryBo getDiaryStartAndEndDate(@Param("diaryId") Integer diaryId);
+
 }

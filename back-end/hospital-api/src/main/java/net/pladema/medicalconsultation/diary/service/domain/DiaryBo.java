@@ -71,4 +71,9 @@ public class DiaryBo {
 		this.appointmentDuration = appointmentDuration;
 	}
 
+	public DiaryBo(LocalDate startDate, LocalDate endDate) {
+		this.startDate = startDate;
+		this.endDate = endDate;
+	}
+
 }

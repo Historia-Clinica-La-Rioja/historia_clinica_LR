@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.diary.application;
 
+import io.jsonwebtoken.lang.Assert;
 import lombok.AllArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -10,11 +11,13 @@ import net.pladema.medicalconsultation.diary.domain.FreeAppointmentSearchFilterB
 import net.pladema.medicalconsultation.diary.domain.service.FreeAppointmentsUtils;
 import net.pladema.medicalconsultation.diary.repository.DiaryRepository;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursFreeTimesBo;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,6 +40,7 @@ public class GetDailyFreeAppointmentTimes {
 
 	public List<DiaryOpeningHoursFreeTimesBo> run(Integer diaryId, FreeAppointmentSearchFilterBo filter) {
 		log.debug("Input parameters -> diaryId {}, filter {}", diaryId, filter);
+		assertValidDate(diaryId, filter.getDate());
 		Short diaryAppointmentDuration = diaryRepository.getDiaryAppointmentDuration(diaryId);
 		Collection<AppointmentBo> assignedAppointments = appointmentService.getAppointmentsByDiaries(List.of(diaryId), filter.getDate(), filter.getDate());
 		Collection<DiaryOpeningHoursBo> openingHours = diaryOpeningHoursService.getDiaryOpeningHours(diaryId);
@@ -44,6 +48,11 @@ public class GetDailyFreeAppointmentTimes {
 				.map(diaryOpeningHours -> calculateDiaryOpeningHoursFreeTimes(diaryOpeningHours, diaryAppointmentDuration, assignedAppointments)).collect(toList());
 		log.debug("Output -> {}", result);
 		return result;
+	}
+
+	private void assertValidDate(Integer diaryId, LocalDate date) {
+		DiaryBo diaryLimitDates = diaryRepository.getDiaryStartAndEndDate(diaryId);
+		Assert.isTrue((date.equals(diaryLimitDates.getEndDate()) || date.isBefore(diaryLimitDates.getEndDate())) && (date.equals(diaryLimitDates.getStartDate()) || date.isAfter(diaryLimitDates.getStartDate())), "La fecha solicitada se encuentra fuera del rango definido por la agenda");
 	}
 
 	private boolean isOpeningHoursValid(FreeAppointmentSearchFilterBo filter, DiaryOpeningHoursBo diaryOpeningHours) {
