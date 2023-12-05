@@ -1,6 +1,6 @@
 <app-dock-popup [dockPopupRef]="dockPopupRef" [header]="{ title:'Parte Quirúrgico'} ">
 	<div body fxLayout="column" fxLayoutGap="20px">
-		<form [formGroup]="form">
+		<form [formGroup]="form" fxLayoutGap="20px">
 			<app-surgical-report-diagnosis [diagnosis]="diagnosis"
 				(preoperativeDiagnosisChange)="formControlChange($event, form.controls.preoperativeDiagnosis)"
 				(surgeryProceduresChange)="formControlChange($event, form.controls.surgeryProcedures)">

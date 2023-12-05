@@ -274,6 +274,10 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 
 	openSurgicalReport() {
 		this.internmentActions.openSurgicalReport();
+		this.internmentActions.surgicalReport$.subscribe(fieldsToUpdate => {
+			if (fieldsToUpdate)
+				this.updateInternmentSummary(fieldsToUpdate);
+		});
 	}
 
 	newTriage() {

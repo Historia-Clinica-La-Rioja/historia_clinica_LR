@@ -29,7 +29,7 @@
 
 		<mat-form-field appearance="outline">
 			<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SKIN_CLOSURE'"></mat-label>
-			<input matInput [(ngModel)]="skinClosureTime" (ngModelChange)="changeStartDateTime(null, skinClosureTime)">
+			<input matInput [(ngModel)]="skinClosureTime" (ngModelChange)="changeEndDateTime(null, skinClosureTime)">
 			<mat-icon matSuffix>schedule</mat-icon>
 			<mat-hint>HH:MM</mat-hint>
 		</mat-form-field>

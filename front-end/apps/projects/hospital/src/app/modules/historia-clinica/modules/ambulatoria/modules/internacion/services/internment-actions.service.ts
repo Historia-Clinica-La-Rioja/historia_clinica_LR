@@ -33,6 +33,9 @@ export class InternmentActionsService {
 	medicalDischargeSubject = new Subject<InternmentFields>();
 	medicalDischarge$ = this.medicalDischargeSubject.asObservable();
 
+	surgicalReportSubject = new Subject<InternmentFields>();
+	surgicalReport$ = this.surgicalReportSubject.asObservable();
+
 	popUpOpenSubject = new Subject<boolean>();
 	popUpOpen$ = this.popUpOpenSubject.asObservable();
 
@@ -154,8 +157,9 @@ export class InternmentActionsService {
 				disableClose: true,
 			});
 			this.popUpOpenSubject.next(true);
-			this.dialogRef.afterClosed().pipe(take(1)).subscribe(() => {
+			this.dialogRef.afterClosed().pipe(take(1)).subscribe((fieldsToUpdate: InternmentFields) => {
 				delete this.dialogRef;
+				this.surgicalReportSubject.next(fieldsToUpdate);
 				this.popUpOpenSubject.next(false);
 			});
 		} else {

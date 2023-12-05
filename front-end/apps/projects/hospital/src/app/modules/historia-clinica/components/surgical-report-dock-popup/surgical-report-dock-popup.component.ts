@@ -1,9 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { DiagnosisDto, DocumentHealthcareProfessionalDto, EProfessionType, HealthcareProfessionalDto, HospitalizationProcedureDto, ProcedureTypeEnum, SurgicalReportDto } from '@api-rest/api-model';
+import { DiagnosisDto, DocumentHealthcareProfessionalDto, EProfessionType, HealthcareProfessionalDto, HospitalizationProcedureDto, ProblemTypeEnum, ProcedureTypeEnum, SurgicalReportDto } from '@api-rest/api-model';
 import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { SurgicalReportService } from '@api-rest/services/surgical-report.service';
+import { InternmentFields } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -64,25 +65,24 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 		const value = this.form.value;
 		const surgicalReport: SurgicalReportDto = {
 			confirmed: true,
-			preoperativeDiagnosis: value.preoperativeDiagnosis,
-			surgeryProcedures: value.surgeryProcedures?.map(p => this.mapToHospitalizationProcedure(p)),
-			healthcareProfessionals: value.healthcareProfessionals,
+			preoperativeDiagnosis: value.preoperativeDiagnosis?.map(d => this.setProblemType(d, ProblemTypeEnum.PREOPERATIVE_DIAGNOSIS)) || [],
+			surgeryProcedures: value.surgeryProcedures?.map(p => this.mapToHospitalizationProcedure(p, ProcedureTypeEnum.SURGICAL_PROCEDURE)) || [],
+			healthcareProfessionals: value.healthcareProfessionals || [],
 			startDateTime: value.startDateTime,
 			endDateTime: value.endDateTime,
-			procedures: value.procedures?.map(p => this.mapToHospitalizationProcedure(p)),
-			postoperativeDiagnosis: value.postoperativeDiagnosis,
+			procedures: value.procedures?.map(p => this.mapToHospitalizationProcedure(p, ProcedureTypeEnum.PROCEDURE)) || [],
+			postoperativeDiagnosis: value.postoperativeDiagnosis?.map(d => this.setProblemType(d, ProblemTypeEnum.POSTOPERATIVE_DIAGNOSIS)) || [],
 			description: value.description,
-			cultures: value.cultures?.map(p => this.mapToHospitalizationProcedure(p)),
-			frozenSectionBiopsies: value.frozenSectionBiopsies?.map(p => this.mapToHospitalizationProcedure(p)),
-			drainages: value.drainages?.map(p => this.mapToHospitalizationProcedure(p)),
+			cultures: value.cultures?.map(p => this.mapToHospitalizationProcedure(p, ProcedureTypeEnum.CULTURE)) || [],
+			frozenSectionBiopsies: value.frozenSectionBiopsies?.map(p => this.mapToHospitalizationProcedure(p, ProcedureTypeEnum.FROZEN_SECTION_BIOPSY)) || [],
+			drainages: value.drainages?.map(p => this.mapToHospitalizationProcedure(p, ProcedureTypeEnum.DRAINAGE)) || [],
 			prosthesisDescription: value.prosthesisDescription,
 		}
-		console.log(surgicalReport);
 
 		this.surgicalReportService.saveSurgicalReport(this.data.patientInfo.internmentEpisodeId, surgicalReport).subscribe(
 			saved => {
 				this.snackBarService.showSuccess('Parte quirúrgico generado correctamente');
-				this.dockPopupRef.close(true)
+				this.dockPopupRef.close(this.setFieldsToUpdate(surgicalReport));
 			},
 			error => {
 				this.snackBarService.showError(error.text)
@@ -95,11 +95,16 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 		formControl.setValue(event);
 	}
 
-	private mapToHospitalizationProcedure(procedure): HospitalizationProcedureDto {
+	private mapToHospitalizationProcedure(procedure, type: ProcedureTypeEnum): HospitalizationProcedureDto {
 		return {
 			snomed: procedure.snomed,
-			type: ProcedureTypeEnum.PROCEDURE
+			type: type
 		}
+	}
+
+	private setProblemType(diagnosis: DiagnosisDto, type: ProblemTypeEnum): DiagnosisDto {
+		diagnosis.type = type;
+		return diagnosis;
 	}
 
 	professionalChange(professional: DocumentHealthcareProfessionalDto, type: EProfessionType): void {
@@ -116,6 +121,13 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 
 			if (!professional && index != -1)
 				this.form.controls.healthcareProfessionals.value.splice(index, 1);
+		}
+	}
+
+	private setFieldsToUpdate(surgicalReport: SurgicalReportDto): InternmentFields {
+		return {
+			diagnosis: !!surgicalReport.preoperativeDiagnosis || !!surgicalReport.postoperativeDiagnosis,
+			evolutionClinical: !!surgicalReport.confirmed
 		}
 	}
 }
