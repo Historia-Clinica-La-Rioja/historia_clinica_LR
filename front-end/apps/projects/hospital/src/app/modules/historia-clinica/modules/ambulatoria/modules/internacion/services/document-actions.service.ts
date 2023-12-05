@@ -57,8 +57,6 @@ export class DocumentActionsService {
 			return false;
 		if (this.hasMedicalDischarge)
 			return false;
-		if (document.documentType === "Parte quirúrgico de internación")
-			return false;
 		return true;
 	}
 
@@ -83,8 +81,6 @@ export class DocumentActionsService {
 		if (document.documentType === "Epicrisis")
 			if (this.hasMedicalDischarge)
 				return false;
-		if (document.documentType === "Parte quirúrgico de internación")
-			return false;
 		return true;
 	}
 

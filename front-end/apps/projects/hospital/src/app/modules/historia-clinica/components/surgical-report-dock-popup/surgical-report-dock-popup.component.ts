@@ -1,9 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { DiagnosisDto, DocumentHealthcareProfessionalDto, EProfessionType, HealthcareProfessionalDto, HospitalizationProcedureDto, ProblemTypeEnum, ProcedureTypeEnum, SurgicalReportDto } from '@api-rest/api-model';
 import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { SurgicalReportService } from '@api-rest/services/surgical-report.service';
+import { DocumentActionReasonComponent } from '@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/document-action-reason/document-action-reason.component';
 import { InternmentFields } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
@@ -18,6 +20,8 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 
 	diagnosis: DiagnosisDto[];
 	professionals: HealthcareProfessionalDto[];
+	surgicalReport: SurgicalReportDto;
+	isLoading = false;
 
 	form = this.formBuilder.group({
 		preoperativeDiagnosis: [],
@@ -47,8 +51,9 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 		private readonly surgicalReportService: SurgicalReportService,
 		private formBuilder: FormBuilder,
 		private readonly snackBarService: SnackBarService,
+		private readonly dialog: MatDialog,
 	) {
-		this.internmentStateService.getDiagnosesGeneralState(this.data.patientInfo.internmentEpisodeId).subscribe(response => {
+		this.internmentStateService.getDiagnosesGeneralState(this.data.internmentEpisodeId).subscribe(response => {
 			if (response)
 				this.diagnosis = response;
 		});
@@ -59,9 +64,15 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		if (this.data.surgicalReportId) {
+			this.surgicalReportService.getSurgicalReport(this.data.internmentEpisodeId, this.data.surgicalReportId).subscribe(response => {
+				this.surgicalReport = response;
+			})
+		}
 	}
 
 	save(): void {
+		this.isLoading = true;
 		const value = this.form.value;
 		const surgicalReport: SurgicalReportDto = {
 			confirmed: true,
@@ -78,8 +89,11 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 			drainages: value.drainages?.map(p => this.mapToHospitalizationProcedure(p, ProcedureTypeEnum.DRAINAGE)) || [],
 			prosthesisDescription: value.prosthesisDescription,
 		}
-
-		this.surgicalReportService.saveSurgicalReport(this.data.patientInfo.internmentEpisodeId, surgicalReport).subscribe(
+		if (this.data.surgicalReportId) {
+			this.openEditReason(surgicalReport);
+			return;
+		}
+		this.surgicalReportService.saveSurgicalReport(this.data.internmentEpisodeId, surgicalReport).subscribe(
 			saved => {
 				this.snackBarService.showSuccess('Parte quirúrgico generado correctamente');
 				this.dockPopupRef.close(this.setFieldsToUpdate(surgicalReport));
@@ -89,6 +103,31 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 			}
 		);
 
+	}
+
+	private openEditReason(surgicalReport: SurgicalReportDto) {
+		const dialogRef = this.dialog.open(DocumentActionReasonComponent, {
+			data: {
+				title: 'internaciones.dialogs.actions-document.EDIT_TITLE',
+				subtitle: 'internaciones.dialogs.actions-document.SUBTITLE',
+			},
+			width: "50vh",
+			autoFocus: false,
+			disableClose: true
+		});
+		dialogRef.afterClosed().subscribe(reason => {
+			if (reason) {
+				surgicalReport.modificationReason = reason;
+				this.surgicalReportService.editSurgicalReport(this.data.internmentEpisodeId, this.data.surgicalReportId, surgicalReport).subscribe(
+					success => {
+						this.snackBarService.showSuccess('Parte quirúrgico editado correctamente');
+						this.dockPopupRef.close(this.setFieldsToUpdate(surgicalReport));
+					},
+					error => {
+						this.snackBarService.showError(error.text)
+					});
+			}
+		});
 	}
 
 	formControlChange(event, formControl: FormControl): void {

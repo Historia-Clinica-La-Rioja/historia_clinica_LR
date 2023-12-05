@@ -82,7 +82,7 @@ public class SurgicalHospitalizationReportController {
 		return  ResponseEntity.ok().body(result);
 	}
 
-	@DeleteMapping("/{reportId}")
+	@DeleteMapping("/{surgicalReportId}")
 	public ResponseEntity<Boolean> delete(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
@@ -95,14 +95,14 @@ public class SurgicalHospitalizationReportController {
 		return  ResponseEntity.ok().body(Boolean.TRUE);
 	}
 
-	@PutMapping("/{reportId}")
+	@PutMapping("/{surgicalReportId}")
 	public ResponseEntity<Long> update(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-			@PathVariable(name = "reportId") Long reportId,
+			@PathVariable(name = "surgicalReportId") Long surgicalReportId,
 			@RequestBody SurgicalReportDto surgicalReportDto) {
-		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, reportId {}, surgicalReportDto {}",
-				institutionId, internmentEpisodeId, reportId, surgicalReportDto);
+		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, surgicalReportId {}, surgicalReportDto {}",
+				institutionId, internmentEpisodeId, surgicalReportId, surgicalReportDto);
 		SurgicalReportBo newReport = surgicalReportMapper.fromSurgicalReportDto(surgicalReportDto);
 		internmentEpisodeService.getPatient(internmentEpisodeId)
 				.map(patientExternalService::getBasicDataFromPatient)
@@ -111,7 +111,7 @@ public class SurgicalHospitalizationReportController {
 		newReport.setPatientId(newReport.getPatientInfo().getId());
 		newReport.setInstitutionId(institutionId);
 		newReport.setEncounterId(internmentEpisodeId);
-		Long result = updateSurgicalReport.execute(internmentEpisodeId, reportId, newReport);
+		Long result = updateSurgicalReport.execute(internmentEpisodeId, surgicalReportId, newReport);
 		log.debug(OUTPUT, result);
 		return  ResponseEntity.ok().body(result);
 	}

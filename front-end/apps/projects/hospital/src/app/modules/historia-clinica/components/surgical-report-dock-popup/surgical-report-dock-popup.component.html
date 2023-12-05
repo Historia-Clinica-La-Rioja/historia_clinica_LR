@@ -27,8 +27,7 @@
 			<app-professional-and-description
 				[title]="'ambulatoria.paciente.surgical-report.blood-solutions.TITLE' | translate" [icon]="'water_drop'"
 				[professionalTitle]="'ambulatoria.paciente.surgical-report.blood-solutions.TRANSFUSIONISTA' | translate"
-				[professionals]="professionals"
-				(professionalChange)="professionalChange($event, TRANSFUSIONIST)">
+				[professionals]="professionals" (professionalChange)="professionalChange($event, TRANSFUSIONIST)">
 			</app-professional-and-description>
 
 			<app-procedure-and-description [title]="'ambulatoria.paciente.surgical-report.culture.TITLE' | translate"
@@ -56,11 +55,13 @@
 		</form>
 	</div>
 
-	<div actions id="buttons">
-		<div align="end">
-			<button class="uppercase" mat-raised-button color="primary" (click)="save()" [disabled]="false">
-				<span [translate]="'buttons.CONFIRM'"></span>
-			</button>
-		</div>
+	<div actions id="buttons" fxLayoutAlign="end">
+		<app-button
+			[color]="'primary'"
+			[isLoading]="isLoading"
+			[text]="'buttons.CONFIRM' | translate | uppercase"
+			[buttonType]="'mat-raised-button'"
+			(clicked)="save()">
+		</app-button>
 	</div>
 </app-dock-popup>

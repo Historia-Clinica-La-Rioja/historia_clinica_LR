@@ -18,4 +18,21 @@ export class SurgicalReportService {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/surgical-report`;
 		return this.http.post<boolean>(url, surgicalReport);
 	}
+
+	getSurgicalReport(internmentEpisodeId: number, surgicalReportId: number){
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/surgical-report/${surgicalReportId}`;
+		return this.http.get<SurgicalReportDto>(url);
+	}
+
+	deleteSurgicalReport(surgicalReportId: number, internmentEpisodeId: number, reason: string){
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/surgical-report/${surgicalReportId}`;
+		return this.http.delete<boolean>(url, {
+			body: reason
+		});
+	}
+
+	editSurgicalReport(internmentEpisodeId: number, surgicalReportId: number, surgicalReport: SurgicalReportDto){
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/surgical-report/${surgicalReportId}`;
+		return this.http.put<number>(url, surgicalReport);
+	}
 }

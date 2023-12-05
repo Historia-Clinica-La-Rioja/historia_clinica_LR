@@ -146,13 +146,12 @@ export class InternmentActionsService {
 		});
 	}
 
-	openSurgicalReport(): void {
+	openSurgicalReport(id?: number): void {
 		if (!this.dialogRef) {
 			this.dialogRef = this.dockPopupService.open(SurgicalReportDockPopupComponent, {
-				patientInfo: {
-					patientId: this.patientId,
-					internmentEpisodeId: this.internmentEpisodeId,
-				},
+				patientId: this.patientId,
+				internmentEpisodeId: this.internmentEpisodeId,
+				surgicalReportId: id,
 				autoFocus: false,
 				disableClose: true,
 			});
