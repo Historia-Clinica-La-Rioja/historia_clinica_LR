@@ -1,42 +1,161 @@
 <div class="container">
-    <h2 class="title1">Prueba corta de desempeño fisico</h2>
+    <div class="box">
+        <h2 class="title1">Prueba corta de desempeño fisico</h2>
 
-    <div class="tipos">
-        <h3>ANTES DE EMPEZAR</h3>
-        <div class="intro">
-            Para la correcta realización de esta prueba es necesario contar con los siguientes elementos:
-            <div class="intro-requeriments">
-                <p>- Silla sin descansa brazo y con respaldo recto.</p>
-                <p>- Distancia de 4 metros delimitada, puede encontrarse señalada con una cinta en el suelo.</p>
-                <p>- Cronómetro o teléfono celular para llevar registro del tiempo en segundos.</p>
+        <div class="tipos">
+            <h3>ANTES DE EMPEZAR</h3>
+            <div class="intro">
+                Para la correcta realización de esta prueba es necesario contar con los siguientes elementos:
+                <div class="intro-requeriments">
+                    <p>- Silla sin descansa brazo y con respaldo recto.</p>
+                    <p>- Distancia de 4 metros delimitada, puede encontrarse señalada con una cinta en el suelo.</p>
+                    <p>- Cronómetro o teléfono celular para llevar registro del tiempo en segundos.</p>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="requeriment">
-        Se recomienda posicionarse al lado del paciente al momento de comenzar cada una de las pruebas para evitar
-        posibles caídas durante su ejecución.
-    </div>
+        <div class="requeriment">
+            Se recomienda posicionarse al lado del paciente al momento de comenzar cada una de las pruebas para evitar
+            posibles caídas durante su ejecución.
+        </div>
+        
+        <!-- PRIMERA SECCION -->
 
-    <h3 class="title-test">PRUEBA DE BALANCE</h3>
-    <div>
-        A. Pararse con los pies uno al lado del otro.
+        <h3 class="title-test">PRUEBA DE BALANCE</h3>
+        <div>
+            <h3 class="title-consignas">A. Pararse con los pies uno al lado del otro.</h3>
 
-    </div>
-    <div class="slogans">
+        </div>
+        <div class="slogans">
 
-        <img class="icon" src="assets/icons/icon-06.png" alt="icon1">
+            <img class="icon" src="assets/icons/icon-06.png" alt="icon1">
 
-        ¿Mantuvo la posición al menos por 10 segundos?
-        Si el participante no logró completarlo, finaliza la prueba de balance.
+            ¿Mantuvo la posición al menos por 10 segundos?
+            Si el participante no logró completarlo, finaliza la prueba de balance.
 
-    </div>
+        </div>
 
         <div class="radio">
-            <mat-radio-button>Si</mat-radio-button>
-            <mat-radio-button>No</mat-radio-button>
-            <mat-radio-button>Se rehúsa</mat-radio-button>
+            <mat-radio-button color="primary">Si</mat-radio-button>
+            <mat-radio-button color="primary">No</mat-radio-button>
+            <mat-radio-button color="primary">Se rehúsa</mat-radio-button>
+        </div>
+
+        <div class="counter">
+            <label for="number">Tiempo en segundos:</label>
+            <input id="ticketNum" type="number" name="Num" value="0" />
 
         </div>
 
 
+        <div>
+            <h3 class="title-consignas">B. Pararse en posición semi-tándem.</h3>
+        </div>
+
+        <div class="slogans">
+
+            <img class="icon" src="assets/icons/icon-07.png" alt="icon2">
+
+            ¿Mantuvo la posición al menos por 10 segundos?
+            Si el participante no logró completarlo, finaliza la prueba de balance.
+
+        </div>
+
+        <div class="radio">
+            <mat-radio-button color="primary">Si</mat-radio-button>
+            <mat-radio-button color="primary">No</mat-radio-button>
+            <mat-radio-button color="primary">Se rehúsa</mat-radio-button>
+
+        </div>
+
+
+        <div class="counter">
+            <label for="number">Tiempo en segundos:</label>
+            <input id="ticketNum" type="number" name="Num" value="0" />
+
+        </div>
+
+        <div>
+            <h3 class="title-consignas">C. Pararse en posición tándem</h3>
+
+        </div>
+
+        <div class="slogans">
+
+            <img class="icon" src="assets/icons/icon-08.png" alt="icon3">
+
+            Si el participante no se rehusa a realizar la prueba,
+            complete la siguiente casilla con el tiempo que obtuvo la medición
+
+        </div>
+
+
+        <div class="counter2">
+            <label for="number">Tiempo en segundos:</label>
+            <input id="ticketNum" type="number" name="Num" value="0" />(Máx.15)
+
+        </div>
+
+        <div class="radio2">
+            <mat-radio-button color="primary">Se rehúsa</mat-radio-button>
+
+        </div>
+
+
+        <!-- SEGUNDA SECCION -->
+        <div>
+            <h3 class="title-test">VELOCIDAD DE MARCHA - RECORRIDO DE 4 METROS</h3>
+        </div>
+
+        <div>
+            <h3 class="title-consignas">A. Primera medición.</h3>
+
+        </div>
+
+        <div class="slogans2">
+
+            Tiempo requerido para recorrer la distancia.
+            Si el participante no logró completarlo, finaliza la prueba de velocidad de marcha.
+
+        </div>
+
+        <div class="counter3">
+            <label for="number">Tiempo en segundos:</label>
+            <input id="ticketNum" type="number" name="Num" value="0" />
+
+        </div>
+
+        <div class="radio3">
+
+            <mat-radio-button color="primary">Se rehúsa</mat-radio-button>
+
+        </div>
+
+
+
+        <div>
+            <h3 class="title-consignas">A. Segunda medición.</h3>
+
+        </div>
+
+
+        <div class="slogans2">
+
+            Tiempo requerido para recorrer la distancia.
+
+        </div>
+
+
+        <div class="counter3">
+            <label for="number">Tiempo en segundos:</label>
+            <input id="ticketNum" type="number" name="Num" value="0" />
+
+        </div>
+
+        <div class="radio3">
+
+            <mat-radio-button color="primary">Se rehúsa</mat-radio-button>
+
+        </div>
+
+    </div>
 </div>

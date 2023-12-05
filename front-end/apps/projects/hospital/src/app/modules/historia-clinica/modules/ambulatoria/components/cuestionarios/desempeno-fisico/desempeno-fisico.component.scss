@@ -1,12 +1,19 @@
 .container {
     padding: 28px;
     max-width: 92%;
-    border: 1px solid #e0eef7;
-    box-shadow: 0px 3px 3px 0px rgba(179,177,179,1);
-    height: 600px;    
-     
-  }
-   
+    // border: 1px solid #e0eef7;
+    // box-shadow: 0px 3px 3px 0px rgba(179, 177, 179, 1);
+    height: 600px;
+
+
+}
+
+// .box {
+//     height: 600px;
+// }
+
+
+
 .title1 {
     text-align: center;
     background-color: #E0EEF7;
@@ -19,6 +26,10 @@ h3 {
     text-align: center;
     font-weight: 500;
 
+}
+
+.title-consignas{
+    text-align: left;
 }
 
 .tipos {
@@ -64,10 +75,46 @@ p {
     display: flex;
 }
 
+.slogans2 {
+    display: flex;
+}
+
+
+.counter {
+
+    margin: auto;
+    display: table;
+    position: relative;
+    left: 58px;
+    bottom: 100px;
+}
+
+.counter2 {
+
+    margin: auto;
+    display: table;
+    position: relative;
+    left: 86px;
+    bottom: 150px;
+}
+
+.radio2 {
+    margin-left: 33.5%;
+    position: relative; 
+    bottom: 120px;
+
+}
+
 .radio {
     display: flex;
     justify-content: space-evenly;
     position: relative;
     margin-left: 20%;
     bottom: 144px;
+}
+
+
+label {
+
+    margin-right: 20px;
 }
