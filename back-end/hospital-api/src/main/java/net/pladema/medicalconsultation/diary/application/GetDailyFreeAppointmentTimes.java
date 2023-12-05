@@ -18,6 +18,7 @@ import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursFre
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -64,12 +65,18 @@ public class GetDailyFreeAppointmentTimes {
 		var startTime = diaryOpeningHours.getOpeningHours().getFrom();
 		var endTime = diaryOpeningHours.getOpeningHours().getTo();
 		List<LocalTime> time = new ArrayList<>();
-		while (startTime.isBefore(endTime)) {
-			time.add(startTime);
-			startTime = startTime.plusMinutes(appointmentDuration);
-		}
+		LocalTime maxTime = LocalTime.of(0,0);
+		startTime = updateTime(appointmentDuration, time, startTime);
+		while (startTime.isBefore(endTime) && !startTime.equals(maxTime))
+			startTime = updateTime(appointmentDuration, time, startTime);
 		assignedAppointments.forEach(appointment -> time.remove(appointment.getHour()));
 		return new DiaryOpeningHoursFreeTimesBo(diaryOpeningHours.getOpeningHours().getId(), time);
+	}
+
+	private LocalTime updateTime(Short appointmentDuration, List<LocalTime> time, LocalTime startTime) {
+		time.add(startTime);
+		startTime = startTime.plusMinutes(appointmentDuration);
+		return startTime;
 	}
 
 }
