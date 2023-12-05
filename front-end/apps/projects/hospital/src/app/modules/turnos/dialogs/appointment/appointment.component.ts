@@ -86,7 +86,7 @@ const REJECTED_PATIENT = 6;
 const BELL_LABEL = 'Llamar paciente'
 const ROLES_TO_CHANGE_STATE: ERole[] = [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 const ROLES_TO_EDIT: ERole[]
-	= [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
+	= [ERole.ADMINISTRATIVO];
 const ROLE_TO_DOWNDLOAD_REPORTS: ERole[] = [ERole.ADMINISTRATIVO];
 const ROLE_TO_MAKE_VIRTUAL_CONSULTATION: ERole[] = [ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 const MONTHS = [1,2,3,4,5,6,7,8,9,10,11,12];
@@ -127,10 +127,11 @@ export class AppointmentComponent implements OnInit {
 	phoneNumber: string;
 	summaryCoverageData: SummaryCoverageInformation = {};
 	hasRoleToChangeState$: Observable<boolean>;
-	hasRoleToEdit$: Observable<boolean>;
+	hasRoleAdmin$: Observable<boolean>;
 	hasRoleToDownloadReports$: Observable<boolean>;
 	hasRoleToAddObservations$: Observable<boolean>;
-	canMakeVirtualConsultation: boolean;
+	agendaOwner : boolean;
+	attachProfessional : boolean;
 	patientMedicalCoverages: PatientMedicalCoverage[];
 
 	hideFilterPanel = false;
@@ -271,8 +272,11 @@ export class AppointmentComponent implements OnInit {
 				this.selectedModality = MODALITYS_TYPES.find( m => m.value === this.appointment.modality);
 				this.modalitys.push(MODALITYS_TYPES[0]);
 				this.modalitys.push(MODALITYS_TYPES[1]);
-				if(this.appointment.modality ===  this.SECOND_OPINION_VIRTUAL_ATTENTION){
+				if(this.selectedModality.value ===  this.SECOND_OPINION_VIRTUAL_ATTENTION){
 					this.modalitys.push(MODALITYS_TYPES[2])
+				}
+				if(this.selectedModality.value ===  this.SECOND_OPINION_VIRTUAL_ATTENTION || this.selectedModality.value === EAppointmentModality.PATIENT_VIRTUAL_ATTENTION){
+					this.isVirtualConsultationModality = true;
 				}
 				if(this.appointment.patientEmail){
 					this.formDate.controls.email.setValue(this.appointment.patientEmail);
@@ -299,7 +303,7 @@ export class AppointmentComponent implements OnInit {
 
 		this.hasRoleToChangeState$ = this.permissionsService.hasContextAssignments$(ROLES_TO_CHANGE_STATE).pipe(take(1));
 
-		this.hasRoleToEdit$ = this.permissionsService.hasContextAssignments$(ROLES_TO_EDIT).pipe(take(1));
+		this.hasRoleAdmin$ = this.permissionsService.hasContextAssignments$(ROLES_TO_EDIT).pipe(take(1));
 
 		this.hasRoleToDownloadReports$ = this.permissionsService.hasContextAssignments$(ROLE_TO_DOWNDLOAD_REPORTS).pipe(take(1));
 
@@ -307,9 +311,8 @@ export class AppointmentComponent implements OnInit {
 		const loggedUserHasRoleToMakeVirtualConsultation$ = this.permissionsService.hasContextAssignments$(ROLE_TO_MAKE_VIRTUAL_CONSULTATION).pipe(take(1));
 
 		combineLatest([loggedUserHealthcareProfessionalId$, loggedUserHasRoleToMakeVirtualConsultation$]).subscribe(([healthcareProfessionalId, hasRole]) => {
-			this.canMakeVirtualConsultation = (this.data.agenda.healthcareProfessionalId === healthcareProfessionalId ||
-			this.data.agenda.associatedProfessionalsInfo.find(professional => professional.id === healthcareProfessionalId)) &&
-			hasRole;
+			this.agendaOwner = (this.data.agenda.healthcareProfessionalId === healthcareProfessionalId) && hasRole;
+			this.attachProfessional= (this.data.agenda.associatedProfessionalsInfo.find(professional => professional.id === healthcareProfessionalId) && hasRole) 
 		});
 
 		this.personMasterDataService.getIdentificationTypes()

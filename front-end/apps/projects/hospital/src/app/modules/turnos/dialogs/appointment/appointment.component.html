@@ -61,7 +61,7 @@
 						class="mat-body patient-info coverage-text subtitle-size">{{phoneNumber}}</span>
 				</div>
 				<button type="button" mat-icon-button color="primary"
-					*ngIf="( hasRoleToEdit$ | async ) && !isRejectedPatient" (click)="hideFilters()">
+					*ngIf="!isRejectedPatient && (( hasRoleAdmin$ | async ) || agendaOwner || attachProfessional )" (click)="hideFilters()">
 					<mat-icon class="material-icons-outlined">edit</mat-icon>
 					<span class="mat-body strong-size">
 						{{'turnos.appointment.EDIT_PATIENT_INFO' | translate}}
@@ -175,7 +175,7 @@
 						<app-reference-state-label [reference]="appointment.associatedReferenceClosureType"></app-reference-state-label>
 					</div>
 				</div>
-				<div fxLayout="column" fxLayoutGap="10px" class="motive" *ngIf="isVirtualConsultationModality && canMakeVirtualConsultation && selectedState !== appointmentStatesIds.SERVED">
+				<div fxLayout="column" fxLayoutGap="10px" class="motive" *ngIf="isVirtualConsultationModality && selectedState !== appointmentStatesIds.SERVED && (attachProfessional || agendaOwner)">
 						<button type="button" mat-raised-button color="primary" (click)="entryCall()">
 							<mat-icon class="material-icons-outlined">video_call</mat-icon>
 							<span class="mat-body strong-size">
@@ -190,7 +190,7 @@
 						</div>	
 				</div>
 				<button type="button" mat-icon-button color="primary"
-					*ngIf="(selectedState === appointmentStatesIds.ASSIGNED) && ( hasRoleToEdit$ | async ) && !isVirtualConsultationModality" (click)="openDateForm()">
+					*ngIf="((selectedState === appointmentStatesIds.ASSIGNED) && (( hasRoleAdmin$ | async ) || (agendaOwner && data.hasPermissionToAssignShift)))" (click)="openDateForm()">
 					<mat-icon class="material-icons-outlined">edit</mat-icon>
 					<span class="mat-body strong-size">
 						{{'turnos.appointment.date.EDIT_DATE_TIME' | translate}}
