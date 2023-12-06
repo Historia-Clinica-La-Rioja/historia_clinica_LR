@@ -1001,3 +1001,72 @@ databaseChangeLog:
                 - column:
                     name: deleted_on
                     type: datetime
+                    
+    - changeSet:
+        id: createTable-personal_history_type
+        author: mromero
+        changes:
+          - createTable:
+              tableName: personal_history_type
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_personal_history_type
+                    name: id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(20)
+
+    - changeSet:
+        id: add-metadata-personal_history_type
+        author: mromero
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO personal_history_type (id, description) VALUES 
+                (1, 'Hábito'),
+                (2, 'Clínico'),
+                (3, 'Quirúrgico');
+
+    - changeSet:
+        id: createTable-personal_history
+        author: mromero
+        changes:
+          - createTable:
+              tableName: personal_history
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_personal_history
+                    name: health_condition_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: type_id
+                    type: smallint
+          - addForeignKeyConstraint:
+              baseColumnNames: health_condition_id
+              baseTableName: personal_history
+              constraintName: FK_personal_history_health_condition_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: health_condition
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: type_id
+              baseTableName: personal_history
+              constraintName: FK_personal_history_type_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: personal_history_type
+              validate: true
+              
