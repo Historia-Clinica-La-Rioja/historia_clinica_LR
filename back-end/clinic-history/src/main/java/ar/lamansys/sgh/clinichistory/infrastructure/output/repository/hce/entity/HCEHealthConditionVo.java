@@ -54,7 +54,7 @@ public class HCEHealthConditionVo extends HCEClinicalTermVo {
     }
 
     public boolean isFamilyHistory() {
-        return problemId.equals(ProblemType.HISTORY);
+        return problemId.equals(ProblemType.FAMILY_HISTORY);
     }
 
     public boolean isChronic() {

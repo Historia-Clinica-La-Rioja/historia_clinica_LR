@@ -1070,3 +1070,11 @@ databaseChangeLog:
               referencedTableName: personal_history_type
               validate: true
               
+    - changeSet:
+        id: add-metadata-problem_type
+        author: mromero
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO problem_type (id, description) VALUES ('00000002', 'Antecedente personal');

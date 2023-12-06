@@ -205,7 +205,7 @@ public class HealthConditionService {
     private HealthCondition buildFamilyHistory(PatientInfoBo patientInfo, HealthHistoryConditionBo info) {
         LOG.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
         HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
-        healthCondition.setProblemId(ProblemType.HISTORY);
+        healthCondition.setProblemId(ProblemType.FAMILY_HISTORY);
         LocalDate date = info.getStartDate();
         healthCondition.setStartDate(date);
         healthCondition.setNoteId(noteService.createNote(info.getNote()));

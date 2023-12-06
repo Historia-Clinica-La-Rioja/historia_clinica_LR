@@ -169,7 +169,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 .setParameter("verificationId", ConditionVerificationStatus.ERROR)
                 .setParameter("hcStatusId", ConditionClinicalStatus.ACTIVE)
                 .setParameter("patientId", patientId)
-                .setParameter("problemType", ProblemType.HISTORY)
+                .setParameter("problemType", ProblemType.FAMILY_HISTORY)
                 .setParameter("invalidDocumentTypes", Arrays.asList(DocumentType.ANAMNESIS, DocumentType.EVALUATION_NOTE, DocumentType.EPICRISIS))
                 .getResultList();
 
