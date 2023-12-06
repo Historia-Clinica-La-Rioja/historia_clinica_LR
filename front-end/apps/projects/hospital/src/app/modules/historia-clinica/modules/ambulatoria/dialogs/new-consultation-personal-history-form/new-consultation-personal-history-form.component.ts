@@ -1,0 +1,46 @@
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { NewConsultationPersonalHistoriesService } from '../../services/new-consultation-personal-histories.service';
+import { MIN_DATE } from '../../modules/internacion/routes/new-internment/new-internment.component';
+import { FormGroup } from '@angular/forms';
+import { hasError } from '@core/utils/form.utils';
+
+@Component({
+    selector: 'app-new-consultation-personal-history-form',
+    templateUrl: './new-consultation-personal-history-form.component.html',
+    styleUrls: ['./new-consultation-personal-history-form.component.scss']
+})
+
+export class NewConsultationPersonalHistoryFormComponent {
+    
+    form: FormGroup;
+    minDate = MIN_DATE;
+	hasError = hasError;
+    historyTypeList = [{id: 1, description: "Hábito"},{id: 2, description: "Quirúrgico"},{id: 3, description: "Clínico"}]
+
+    constructor(
+        public dialogRef: MatDialogRef<NewConsultationPersonalHistoryFormComponent>,
+        @Inject(MAT_DIALOG_DATA) public readonly data: PersonalHistoryData) { }
+
+    ngOnInit() {
+        this.form = this.data.personalHistoryService.getForm();
+    }
+
+    addPersonalHistory(): void {
+        // if (this.data.personalHistoryService.addToList()) {
+        //     this.dialogRef.close();
+        // }
+        console.log(this.data.personalHistoryService.getForm())
+        console.log("Adding...")
+    }
+
+    close(): void {
+        this.data.personalHistoryService.resetForm();
+        this.dialogRef.close()
+    }
+}
+
+interface PersonalHistoryData {
+    personalHistoryService: NewConsultationPersonalHistoriesService,
+    searchConceptsLocallyFF: boolean,
+}

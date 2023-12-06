@@ -85,6 +85,7 @@ import { ReferenceStudyCloseComponent } from './components/reference-study-close
 import { ReferenceCompleteStudyComponent } from './components/reference-complete-study/reference-complete-study.component';
 import { ReferenceStudyClosureInformationComponent } from './components/reference-study-closure-information/reference-study-closure-information.component';
 import { ReferenceStudyComponent } from './components/reference-study/reference-study.component';
+import { NewConsultationPersonalHistoryFormComponent } from './dialogs/new-consultation-personal-history-form/new-consultation-personal-history-form.component';
 
 @NgModule({
 	declarations: [
@@ -150,6 +151,7 @@ import { ReferenceStudyComponent } from './components/reference-study/reference-
     	ReferenceCompleteStudyComponent,
      	ReferenceStudyClosureInformationComponent,
       	ReferenceStudyComponent,
+       NewConsultationPersonalHistoryFormComponent,
 	],
 	imports: [
 		CommonModule,

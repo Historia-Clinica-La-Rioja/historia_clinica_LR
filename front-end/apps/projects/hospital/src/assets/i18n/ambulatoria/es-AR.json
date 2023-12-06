@@ -175,9 +175,12 @@
                         }
                     },
                     "TITLE": "Antecedentes personales",
-                    "ANTECEDENTES_PERSONALES": "Antecedentes personales",
-                    "TIPO_DE_PROBLEMA": "Tipo de problema",
-                    "FECHA": "Fecha de registro"
+                    "PERSONAL_HISTORIES": "Antecedentes personales",
+                    "SEARCH_PLACEHOLDER": "Buscar antecedentes personales",
+                    "HISTORY_TYPE": "Tipo",
+                    "START_DATE": "Fecha de inicio",
+                    "END_DATE": "Fecha de fin",
+                    "OBSERVATIONS": "Observaciones"
                 },
                 "datos-antropometricos": {
                     "TITLE": "Datos antropométricos",

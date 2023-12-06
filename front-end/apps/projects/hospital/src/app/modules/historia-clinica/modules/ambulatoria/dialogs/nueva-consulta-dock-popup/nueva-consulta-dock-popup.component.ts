@@ -49,6 +49,7 @@ import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical
 import { ConfirmarPrescripcionComponent } from '../ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { PrescriptionTypes } from '../../services/prescripciones.service';
 import { NewConsultationPersonalHistoriesService } from '../../services/new-consultation-personal-histories.service';
+import { NewConsultationPersonalHistoryFormComponent } from '../new-consultation-personal-history-form/new-consultation-personal-history-form.component';
 
 const TIME_OUT = 5000;
 
@@ -562,6 +563,18 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.dialog.open(NewConsultationAddReasonFormComponent, {
 			data: {
 				reasonService: this.motivoNuevaConsultaService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+	
+	addPersonalHistory(): void {
+		this.dialog.open(NewConsultationPersonalHistoryFormComponent, {
+			data: {
+				personalHistoryService: this.personalHistoriesNewConsultationService,
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
 			autoFocus: false,

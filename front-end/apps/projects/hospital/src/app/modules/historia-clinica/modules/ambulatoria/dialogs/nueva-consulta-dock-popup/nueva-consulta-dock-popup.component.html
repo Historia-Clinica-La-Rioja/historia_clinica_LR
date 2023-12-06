@@ -78,6 +78,12 @@
 			[isEmpty]="personalHistoriesNewConsultationService.isEmpty()">
 			<div fxLayout="column" fxLayoutGap="2vh">
 				
+				<div>
+					<button mat-button type="button" id="add-personal-history-button" color="primary" class="add-button"
+						(click)="addPersonalHistory()">
+						+ {{ 'ambulatoria.paciente.nueva-consulta.antecedentes-personales.buttons.ADD' | translate }}
+					</button>
+				</div>
 			</div>
 		</app-new-consultation-expansion-section>
 

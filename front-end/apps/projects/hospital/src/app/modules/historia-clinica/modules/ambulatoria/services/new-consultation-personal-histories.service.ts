@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SnomedDto, SnomedECL } from "@api-rest/api-model";
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/snomed.service';
@@ -32,9 +32,9 @@ export class NewConsultationPersonalHistoriesService {
         private readonly snackBarService: SnackBarService) 
     {
         this.form = new FormGroup<PersonalHistoriesForm>({
-            snomed: new FormControl(null, {nonNullable: true}),
-            type: new FormControl(null, {nonNullable: true}),
-            startDate: new FormControl(null, {nonNullable: true}),
+            snomed: new FormControl(null, Validators.required),
+            type: new FormControl(null, Validators.required),
+            startDate: new FormControl(null, Validators.required),
             endDate: new FormControl(null),
             observations: new FormControl(''),
         });
@@ -113,6 +113,10 @@ export class NewConsultationPersonalHistoriesService {
 
     getMaxDate(): Date {
         return new Date();
+    }
+
+    getMinDate(): Date {
+        return this.form.value.startDate;
     }
 
     getECL(): SnomedECL {
