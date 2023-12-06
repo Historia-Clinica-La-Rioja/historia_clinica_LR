@@ -34,7 +34,6 @@ export class EntryCallRendererComponent implements OnInit {
 	ngOnInit(): void {
 		this.showEntryCallService.$entryCall.subscribe(
 			(entryCall: VirtualConsultationNotificationDataDto) => {
-				console.log('Recibo valor');
 
 				if (entryCall) {
 					const data = toCallDetails(entryCall)

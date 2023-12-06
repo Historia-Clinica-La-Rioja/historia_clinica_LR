@@ -33,8 +33,7 @@ export class UsageCardComponent implements OnInit {
 	sendReport(): void {
 		this.status$ = undefined;
 		this.usageReportService.sendReport().subscribe(
-			result => {
-				console.log('result', result);
+			_ => {
 				this.ngOnInit();
 			}
 		);

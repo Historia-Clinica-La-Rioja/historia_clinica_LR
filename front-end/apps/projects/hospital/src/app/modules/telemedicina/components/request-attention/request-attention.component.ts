@@ -260,8 +260,6 @@ export class RequestAttentionComponent implements OnInit {
 		if (this.applySearchFilter.length) {
 		this.virtualConsultationsFiltered$= of(this.filter());
 		}else{
-			console.log(this.virtualConsultationsFiltered$)
-			console.log(this.virtualConsultationsBackUp$)
 			this.virtualConsultationsFiltered$ = this.virtualConsultationsBackUp$;
 		}
 	}

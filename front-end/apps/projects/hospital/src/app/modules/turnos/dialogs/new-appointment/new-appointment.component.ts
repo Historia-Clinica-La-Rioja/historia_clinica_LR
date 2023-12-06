@@ -98,7 +98,7 @@ export class NewAppointmentComponent implements OnInit {
 	modalityColorLabel: ColoredLabel;
 	viewModalityLabel$: Observable<boolean> = of(false);
 	modalitys = MODALITYS_TYPES.slice(0, 2);
-	
+
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: NewAppointmentData,
 		public dialogRef: MatDialogRef<NewAppointmentComponent>,
@@ -411,7 +411,6 @@ export class NewAppointmentComponent implements OnInit {
 		} else {
 			valueEmail = this.appointmentInfoForm.controls.patientEmail.value;
 		}
-		console.log(this.associateReferenceForm.controls.reference.value)
 		this.referenceAppointmentService.associateReferenceAppointment(this.associateReferenceForm.controls.reference.value.id, this.lastAppointmentId).subscribe(
 			successfullyAssociated => {
 				if (successfullyAssociated) {
