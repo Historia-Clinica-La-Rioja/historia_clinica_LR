@@ -9,8 +9,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.ObservationRiskFactor;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalObservationBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.EObservationLab;
-import ar.lamansys.sgh.clinichistory.domain.ips.ERiskFactor;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EObservationLab;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.ERiskFactor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

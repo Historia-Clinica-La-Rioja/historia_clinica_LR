@@ -4,7 +4,7 @@ import ar.lamansys.sgh.clinichistory.UnitRepository;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnitsOfTimeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;

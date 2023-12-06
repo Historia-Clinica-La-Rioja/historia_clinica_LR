@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.clinichistory.application.ports.ParenteralPlanStorage;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnitsOfTimeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.FrequencyBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.IndicationMinimalBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherPharmacoBo;

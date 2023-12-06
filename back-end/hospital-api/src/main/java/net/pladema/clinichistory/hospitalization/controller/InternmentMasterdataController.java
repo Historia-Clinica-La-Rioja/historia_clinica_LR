@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.EUnit;
-import ar.lamansys.sgh.clinichistory.domain.ips.EVia;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnit;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EVia;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.indication.OtherIndicationType;

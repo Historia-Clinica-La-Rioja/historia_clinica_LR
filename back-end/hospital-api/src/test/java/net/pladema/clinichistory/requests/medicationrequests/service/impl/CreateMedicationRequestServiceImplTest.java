@@ -3,7 +3,7 @@ package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnitsOfTimeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionNewConsultationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;

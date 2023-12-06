@@ -13,7 +13,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnitsOfTimeBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

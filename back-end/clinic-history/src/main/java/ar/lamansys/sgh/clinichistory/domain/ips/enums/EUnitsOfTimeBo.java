@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.clinichistory.domain.ips;
+package ar.lamansys.sgh.clinichistory.domain.ips.enums;
 
 import lombok.Getter;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;

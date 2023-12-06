@@ -1,6 +1,6 @@
 package net.pladema.reports.controller.dto;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.EGender;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EGender;
 import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import lombok.Getter;
