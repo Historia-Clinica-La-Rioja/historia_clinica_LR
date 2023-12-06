@@ -278,10 +278,6 @@ export class AppointmentComponent implements OnInit {
 				if(this.selectedModality.value ===  this.SECOND_OPINION_VIRTUAL_ATTENTION || this.selectedModality.value === EAppointmentModality.PATIENT_VIRTUAL_ATTENTION){
 					this.isVirtualConsultationModality = true;
 				}
-				if(this.appointment.patientEmail){
-					this.formDate.controls.email.setValue(this.appointment.patientEmail);
-				}
-				
 				this.checkDownloadReportAvailability();
 
 				if (appointment.diaryLabelDto) {
@@ -480,10 +476,14 @@ export class AppointmentComponent implements OnInit {
 			case EAppointmentModality.PATIENT_VIRTUAL_ATTENTION : 
 				updateControlValidator(this.formDate, 'email', [Validators.required]);
 				this.viewInputEmail = true;
+				if(this.appointment.patientEmail){
+					this.formDate.controls.email.setValue(this.appointment.patientEmail);
+				}
 				break;
 			case EAppointmentModality.ON_SITE_ATTENTION : 
 				updateControlValidator(this.formDate, 'email', []);
-				this.viewInputEmail = false;
+				this.formDate.controls.email.setValue(null);
+				this.viewInputEmail = false;		
 				break;
 		}
 		if(change){
