@@ -48,6 +48,7 @@ import { EpisodeData } from '@historia-clinica/components/episode-data/episode-d
 import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
 import { ConfirmarPrescripcionComponent } from '../ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { PrescriptionTypes } from '../../services/prescripciones.service';
+import { NewConsultationPersonalHistoriesService } from '../../services/new-consultation-personal-histories.service';
 
 const TIME_OUT = 5000;
 
@@ -66,6 +67,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	datosAntropometricosNuevaConsultaService: DatosAntropometricosNuevaConsultaService;
 	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
 	antecedentesFamiliaresNuevaConsultaService: AntecedentesFamiliaresNuevaConsultaService;
+	personalHistoriesNewConsultationService: NewConsultationPersonalHistoriesService;
 	alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
 	apiErrors: string[] = [];
 	public today = newMoment();
@@ -118,6 +120,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.datosAntropometricosNuevaConsultaService =
 			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService, this.translateService, this.datePipe);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService, this.hceGeneralStateService, this.data.idPaciente, this.datePipe);
+		this.personalHistoriesNewConsultationService = new NewConsultationPersonalHistoriesService(this.snomedService, this.snackBarService);
 		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService, this.internacionMasterDataService);
 		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService);

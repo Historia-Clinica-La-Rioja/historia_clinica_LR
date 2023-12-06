@@ -73,6 +73,14 @@
 
 		</app-new-consultation-expansion-section>
 
+		<app-new-consultation-expansion-section id="personal_histories"
+			[title]="'ambulatoria.paciente.nueva-consulta.antecedentes-personales.TITLE' | translate" icon="report"
+			[isEmpty]="personalHistoriesNewConsultationService.isEmpty()">
+			<div fxLayout="column" fxLayoutGap="2vh">
+				
+			</div>
+		</app-new-consultation-expansion-section>
+
 		<app-new-consultation-expansion-section id="antecedentes-familiares"
 			[title]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.TITLE' | translate" icon="report"
 			[isEmpty]="antecedentesFamiliaresNuevaConsultaService.isEmpty()">
