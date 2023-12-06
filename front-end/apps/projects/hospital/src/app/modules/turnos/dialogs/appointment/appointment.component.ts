@@ -9,7 +9,6 @@ import { ContextService } from '@core/services/context.service';
 import {
 	APPOINTMENT_STATES_ID,
 	getAppointmentState,
-	getDiaryLabel,
 	MAX_LENGTH_MOTIVE,
 	modality,
 	MODALITYS_TYPES,
@@ -24,7 +23,6 @@ import {
 	DateTimeDto,
 	DiaryOpeningHoursFreeTimesDto,
 	EAppointmentModality,
-	DiaryLabelDto,
 	ERole,
 	FreeAppointmentSearchFilterDto,
 	PatientMedicalCoverageDto,
@@ -71,7 +69,6 @@ import { Color } from '@presentation/colored-label/colored-label.component';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { toCalendarEvent } from '@turnos/utils/appointment.utils';
 import { JitsiCallService } from '../../../jitsi/jitsi-call.service';
-import { DiaryLabelService } from '@api-rest/services/diary-label.service';
 import { Router } from '@angular/router';
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
@@ -163,10 +160,6 @@ export class AppointmentComponent implements OnInit {
 	viewInputEmail = false;
 	selectedOpeningHourId: number;
 
-	isLabelSelectorVisible: boolean = false;
-	diaryLabels: DiaryLabelDto[] = [];
-	formLabel: UntypedFormGroup;
-	selectedDiaryLabelId: number;
 	diaryOpeningHoursFreeTimes : DiaryOpeningHoursFreeTimesDto[];
 
 	patientSummary: PatientSummary;
@@ -194,7 +187,6 @@ export class AppointmentComponent implements OnInit {
 		private readonly jitsiCallService: JitsiCallService,
 		private readonly router: Router,
 		private readonly healthcareProfessionalService: HealthcareProfessionalService,
-		private readonly diaryLabelService: DiaryLabelService,
 		private readonly patientNameService: PatientNameService,
 		private readonly diaryService: DiaryService,
 	) {
@@ -230,11 +222,6 @@ export class AppointmentComponent implements OnInit {
 
 		this.formObservations = this.formBuilder.group({
 			observation: ['', [Validators.required]]
-		});
-
-		this.formLabel = this.formBuilder.group({
-			color: [null],
-			description: [null]
 		});
 
 		this.setMedicalCoverages();
@@ -281,16 +268,6 @@ export class AppointmentComponent implements OnInit {
 					this.isVirtualConsultationModality = true;
 				}
 				this.checkDownloadReportAvailability();
-
-				if (appointment.diaryLabelDto) {
-					const diaryLabel: DiaryLabelDto = {
-						colorId: appointment.diaryLabelDto.colorId,
-						description: appointment.diaryLabelDto.description,
-						id: appointment.diaryLabelDto.id,
-						diaryId: appointment.diaryLabelDto.diaryId
-					}
-					this.setSelectedDiaryLabel(diaryLabel);
-				}
 				this.initializeFormDate();
 				this.loadAvailableDays(this.dateAppointment,true);
 				this.setAvailableMonths(this.dateAppointment);
@@ -333,7 +310,6 @@ export class AppointmentComponent implements OnInit {
 					this.decodedPhoto$ = this.imageDecoderService.decode(personPhotoDto.imageData);
 				}
 			});
-		this.setDiaryLabels();
 	}
 
 	initializeFormDate(){
@@ -344,31 +320,6 @@ export class AppointmentComponent implements OnInit {
 		this.formDate.controls.month.setValue(this.dateAppointment.month);
 		this.formDate.controls.year.setValue(this.dateAppointment.year);
 		this.formDate.controls.modality.setValue(this.selectedModality.value);
-	}
-
-	private setDiaryLabels() {
-		this.diaryLabelService.getLabelsByDiary(this.data.agenda.id)
-			.subscribe((result: DiaryLabelDto[]) => this.diaryLabels = result);
-	}
-
-	updateLabel(value?: DiaryLabelDto) {
-		this.appointmentService.setAppointmentLabel(value ? value.id: null, this.data.appointmentData.appointmentId)
-		.subscribe({
-			next: (result: boolean) => {
-				if (result) {
-					this.snackBarService.showSuccess('turnos.appointment.labels.UPDATED_LABEL');
-					this.setSelectedDiaryLabel(value);
-				}
-			},
-			error: () => this.snackBarService.showError('turnos.appointment.labels.ERROR_UPDATE_LABEL')
-		})
-	}
-
-	private setSelectedDiaryLabel(diaryLabel?: DiaryLabelDto) {
-		this.isLabelSelectorVisible = diaryLabel ? true : false;
-		this.selectedDiaryLabelId = diaryLabel ? diaryLabel.id: null;
-		this.formLabel.get('color').setValue(diaryLabel ? getDiaryLabel(diaryLabel.colorId): null);
-		this.formLabel.get('description').setValue(diaryLabel ? diaryLabel.description: null);
 	}
 
 	private checkInputUpdatePermissions() {

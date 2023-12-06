@@ -18,14 +18,18 @@ import { EquipmentDiarySetupComponent } from './routes/equipment-diary-setup/equ
 // components
 import { AppointmentDetailsComponent } from './components/appointment-details/appointment-details.component';
 import { AppointmentResultViewComponent } from './components/appointment-result-view/appointment-result-view.component';
+import { AppointmentLabelComponent } from './components/appointment-label/appointment-label.component';
 import { CalendarProfessionalViewComponent } from '@turnos/components/calendar-professional-view/calendar-professional-view.component';
 import { DateRangeTimeFormComponent } from './components/date-range-time-form/date-range-time-form.component';
 import { DiaryInformationComponent } from './components/diary-information/diary-information.component';
+import { DiaryLabelComponent } from './components/diary-label/diary-label.component';
 import { EquipmentDiaryComponent } from './components/equipment-diary/equipment-diary.component';
+import { DiaryLabelsComponent } from './components/diary-labels/diary-labels.component';
 import { EquipmentTranscribeOrderPopupComponent } from './dialogs/equipment-transcribe-order-popup/equipment-transcribe-order-popup.component';
 import { ImageNetworkAppointmentComponent } from './components/image-network-appointment/image-network-appointment.component';
 import { MedicalOrderInputComponent } from './components/medical-order-input/medical-order-input.component';
 import { ProfessionalSelectComponent } from './components/professional-select/professional-select.component';
+import { PatientSummaryComponent } from '../hsi-components/patient-summary/patient-summary.component';
 import { SeachAppointmentsByProfessionalComponent } from './components/seach-appointments-by-professional/seach-appointments-by-professional.component';
 import { SearchAppointmentsByEquipmentComponent } from './components/search-appointments-by-equipment/search-appointments-by-equipment.component';
 import { SearchAppointmentsBySpecialtyComponent } from './components/search-appointments-by-specialty/search-appointments-by-specialty.component';
@@ -35,7 +39,6 @@ import { SelectAgendaComponent } from './components/select-agenda/select-agenda.
 import { TypeaheadPracticesComponent } from './components/typeahead-practices/typeahead-practices.component';
 import { ModalityLabelComponent } from './components/modality-label/modality-label.component';
 import { ModalityRadioButtonFormComponent } from './components/modality-radio-button-form/modality-radio-button-form.component';
-import { DiaryLabelComponent } from './components/diary-label/diary-label.component';
 // dialogs
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
 import { BlockAgendaRangeComponent } from './dialogs/block-agenda-range/block-agenda-range.component';
@@ -50,8 +53,6 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { EquipmentAppointmentsFacadeService } from './services/equipment-appointments-facade.service';
 // pipes
 import { PracticesPipe } from './pipes/practices.pipe';
-import { PatientSummaryComponent } from '../hsi-components/patient-summary/patient-summary.component';
-import { DiaryLabelsComponent } from './components/diary-labels/diary-labels.component';
 
 
 @NgModule({
@@ -64,9 +65,12 @@ import { DiaryLabelsComponent } from './components/diary-labels/diary-labels.com
 		// components
 		AppointmentDetailsComponent,
 		AppointmentResultViewComponent,
+		AppointmentLabelComponent,
 		CalendarProfessionalViewComponent,
 		DateRangeTimeFormComponent,
 		DiaryInformationComponent,
+		DiaryLabelComponent,
+		DiaryLabelsComponent,
 		EquipmentDiaryComponent,
 		EquipmentTranscribeOrderPopupComponent,
 		ImageNetworkAppointmentComponent,
@@ -81,7 +85,6 @@ import { DiaryLabelsComponent } from './components/diary-labels/diary-labels.com
 		TypeaheadPracticesComponent,
 		ModalityLabelComponent,
 		ModalityRadioButtonFormComponent,
-		DiaryLabelComponent,
 		// dialogs
 		AppointmentComponent,
 		BlockAgendaRangeComponent,
@@ -93,7 +96,6 @@ import { DiaryLabelsComponent } from './components/diary-labels/diary-labels.com
 		NewAttentionComponent,
 		//pipes
 		PracticesPipe,
-  DiaryLabelsComponent,
 	],
 	imports: [
 		CommonModule,
