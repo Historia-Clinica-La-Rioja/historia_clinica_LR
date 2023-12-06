@@ -160,7 +160,7 @@ export class AppointmentComponent implements OnInit {
 	isVirtualConsultationModality: boolean = false;
 	canDownloadReport = false;
 	dateAppointment : DateDto;
-	viewInputEmail: boolean = false;
+	viewInputEmail = false;
 	selectedOpeningHourId: number;
 
 	isLabelSelectorVisible: boolean = false;
@@ -444,9 +444,9 @@ export class AppointmentComponent implements OnInit {
 		}
 	}
 
-	setAvailableDays(arr: any[], isInitial?:boolean) {
+	setAvailableDays(dates: DateDto[], isInitial?:boolean) {
 		this.availableDays = [];
-		arr.forEach(element => {
+		dates.forEach(element => {
 			if (!this.availableDays.includes(element.day))
 				this.availableDays.push(element.day);
 		});
@@ -457,12 +457,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	setAvailableMonths(date:DateDto){
-		this.availableMonths = [];
-		MONTHS.forEach(m =>{
-			if(m >= date.month){
-				this.availableMonths.push(m);
-			}
-		})
+		this.availableMonths = MONTHS.filter(month => month >= date.month);
 	}
 
 	setAvailableYears(){
@@ -533,10 +528,10 @@ export class AppointmentComponent implements OnInit {
 		return searchCriteria;
 	}
 
-	loadAvailableDays(date: DateDto, isInitial?:boolean): void {
+	loadAvailableDays(date: DateDto, isInitial?:boolean) {
 		const searchCriteria = this.prepareSearchCriteria(date);
-		this.diaryService.getMonthlyFreeAppointmentDates(this.data.agenda.id, searchCriteria).subscribe(res => {
-			this.setAvailableDays(res,isInitial);
+		this.diaryService.getMonthlyFreeAppointmentDates(this.data.agenda.id, searchCriteria).subscribe((dates : DateDto[]) => {
+			this.setAvailableDays(dates,isInitial);
 		},error => {
 			this.availableDays= [];
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
@@ -556,7 +551,7 @@ export class AppointmentComponent implements OnInit {
 			});
 	}
 	
-	updateAppointmentDate(): void {
+	updateAppointmentDate() {
 		const previousDate = new Date(this.data.appointmentData.date);
 		const hour = this.formDate.get('hour').value;
 		const dateNow: DateTimeDto = {
