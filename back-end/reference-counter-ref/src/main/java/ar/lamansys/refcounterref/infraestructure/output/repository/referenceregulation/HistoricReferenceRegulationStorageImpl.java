@@ -81,6 +81,21 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 		return result;
 	}
 
+	@Override
+	public Boolean updateReferenceRegulationState(Integer referenceId, Short stateId, String reason){
+		log.debug("Input parameters -> referenceId {}, stateId {}, reason {}", referenceId, stateId, reason);
+		Optional<HistoricReferenceRegulation> hrr = historicReferenceRegulationRepository.getByReferenceId(referenceId).stream().findFirst();
+		if(validRegulationState(hrr)){
+			historicReferenceRegulationRepository.save(new HistoricReferenceRegulation(null, referenceId, hrr.get().getRuleId(), hrr.get().getRuleLevel(), stateId, reason));
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+
+	private boolean validRegulationState(Optional<HistoricReferenceRegulation> hrr){
+		return hrr.isPresent() && hrr.get().getStateId().equals(EReferenceRegulationState.WAITING_APPROVAL.getId());
+	}
+
 	ReferenceRegulationBo mapToBo(HistoricReferenceRegulation entity){
 		ReferenceRegulationBo result = new ReferenceRegulationBo();
 		result.setId(entity.getId());

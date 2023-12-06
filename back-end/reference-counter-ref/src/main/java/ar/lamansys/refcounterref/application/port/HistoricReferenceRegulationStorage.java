@@ -16,4 +16,6 @@ public interface HistoricReferenceRegulationStorage {
 
 	Optional<ReferenceRegulationBo> getByReferenceId(Integer referenceId);
 
+	Boolean updateReferenceRegulationState(Integer referenceId, Short regulationStatusId, String reason);
+
 }

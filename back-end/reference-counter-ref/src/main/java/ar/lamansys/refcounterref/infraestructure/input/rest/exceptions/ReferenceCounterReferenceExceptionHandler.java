@@ -7,6 +7,7 @@ import ar.lamansys.refcounterref.application.getcounterreferencefile.exceptions.
 import ar.lamansys.refcounterref.application.getreference.exceptions.ReferenceException;
 import ar.lamansys.refcounterref.application.getreferencecompletedata.exceptions.GetReferenceCompleteDataException;
 import ar.lamansys.refcounterref.application.getreferencefile.exceptions.GetReferenceFileException;
+import ar.lamansys.refcounterref.application.updatereferenceregulationstate.exceptions.UpdateReferenceRegulationStateException;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import lombok.RequiredArgsConstructor;
@@ -74,4 +75,12 @@ public class ReferenceCounterReferenceExceptionHandler {
 		log.debug("GetReferenceCompleteDataException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({UpdateReferenceRegulationStateException.class})
+	protected ApiErrorMessageDto handleUpdateReferenceRegulationStateException(UpdateReferenceRegulationStateException ex, Locale locale) {
+		log.debug("GetReferenceCompleteDataException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
 }

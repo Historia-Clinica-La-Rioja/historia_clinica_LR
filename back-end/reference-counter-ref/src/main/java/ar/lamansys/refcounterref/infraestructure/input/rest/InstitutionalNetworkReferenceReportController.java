@@ -2,6 +2,7 @@ package ar.lamansys.refcounterref.infraestructure.input.rest;
 
 import ar.lamansys.refcounterref.application.getreferencecompletedata.GetReferenceCompleteData;
 import ar.lamansys.refcounterref.application.getreferencesbymanagerrole.GetReferencesByManagerRole;
+import ar.lamansys.refcounterref.application.updatereferenceregulationstate.UpdateReferenceRegulationState;
 import ar.lamansys.refcounterref.domain.reference.ReferenceCompleteDataBo;
 import ar.lamansys.refcounterref.infraestructure.input.ReferenceReportFilterUtils;
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.ReferenceReportDto;
@@ -21,6 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,6 +42,8 @@ public class InstitutionalNetworkReferenceReportController {
 	private final GetReferenceMapper getReferenceMapper;
 
 	private final ObjectMapper objectMapper;
+
+	private final UpdateReferenceRegulationState updateReferenceRegulationState;
 
 	@GetMapping("/manager")
 	@PreAuthorize("hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
@@ -61,6 +65,17 @@ public class InstitutionalNetworkReferenceReportController {
 		ReferenceCompleteDataDto result = getReferenceMapper.toReferenceCompleteDataDto(reference);
 		log.debug("Output -> result {}", result);
 		return ResponseEntity.ok(result);
+	}
+
+	@PostMapping("/{referenceId}/change-state")
+	@PreAuthorize("hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_LOCAL', 'GESTOR_DE_ACCESO_REGIONAL')")
+	public Boolean changeReferenceRegulationState(@PathVariable(name = "referenceId") Integer referenceId,
+														  @RequestParam(name = "stateId") Short stateId,
+														  @RequestParam(name = "reason", required = false) String reason) {
+		log.debug("Input parameters -> referenceId {}, stateId {}, reason {}", referenceId, stateId, reason);
+		Boolean result = updateReferenceRegulationState.run(referenceId, stateId, reason);
+		log.debug("Output -> {}", result);
+		return result;
 	}
 
 }
