@@ -786,7 +786,8 @@
 				"ERROR_REPEAT_VALUE": "No es posible sobrescribir gestas"
 			},
             "violence-situations": {
-                "TAB_LABEL": "Situaciones de violencia"
+                "TAB_LABEL": "Situaciones de violencia",
+                "NEW_VIOLENCE_SITUATION": "+ Nueva situación de violencia"
             }
         },
 		"print":{
