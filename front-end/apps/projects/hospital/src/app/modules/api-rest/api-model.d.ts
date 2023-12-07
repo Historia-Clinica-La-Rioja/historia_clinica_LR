@@ -3452,6 +3452,7 @@ export interface ReferenceClosureDto {
 
 export interface ReferenceCompleteDataDto {
     appointment: ReferenceAppointmentDto;
+    observation: ReferenceObservationDto;
     patient: ReferencePatientDto;
     reference: ReferenceDataDto;
     regulation: ReferenceRegulationDto;
@@ -3497,6 +3498,12 @@ export interface ReferenceDto extends Serializable {
 export interface ReferenceInstitutionDto {
     description: string;
     id: number;
+}
+
+export interface ReferenceObservationDto {
+    createdBy: string;
+    date: DateTimeDto;
+    observation: string;
 }
 
 export interface ReferencePatientDto {

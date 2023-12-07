@@ -21,4 +21,6 @@ public class ReferenceCompleteDataBo {
 
 	private ReferenceRegulationBo regulation;
 
+	private ReferenceObservationBo observation;
+
 }
