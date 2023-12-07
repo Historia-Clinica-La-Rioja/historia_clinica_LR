@@ -1,5 +1,6 @@
 package ar.lamansys.refcounterref.infraestructure.input.rest;
 
+import ar.lamansys.refcounterref.application.createreferenceobservation.CreateReferenceObservation;
 import ar.lamansys.refcounterref.application.getreferencecompletedata.GetReferenceCompleteData;
 import ar.lamansys.refcounterref.application.getreferencesbymanagerrole.GetReferencesByManagerRole;
 import ar.lamansys.refcounterref.application.updatereferenceregulationstate.UpdateReferenceRegulationState;
@@ -39,6 +40,8 @@ public class InstitutionalNetworkReferenceReportController {
 
 	private final GetReferencesByManagerRole getReferencesByManagerRole;
 
+	private final CreateReferenceObservation createReferenceObservation;
+
 	private final GetReferenceMapper getReferenceMapper;
 
 	private final ObjectMapper objectMapper;
@@ -76,6 +79,15 @@ public class InstitutionalNetworkReferenceReportController {
 		Boolean result = updateReferenceRegulationState.run(referenceId, stateId, reason);
 		log.debug("Output -> {}", result);
 		return result;
+	}
+
+	@PostMapping(value = "/{referenceId}/add-observation")
+	@PreAuthorize("hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
+	public ResponseEntity<Boolean> addObservation(@PathVariable(name = "referenceId") Integer referenceId,
+												  @RequestParam(name = "observation") String observation) {
+		log.debug("Input parameters -> referenceId {}, observation {}", referenceId, observation);
+		createReferenceObservation.run(referenceId, observation);
+		return ResponseEntity.ok().body(Boolean.TRUE);
 	}
 
 }
