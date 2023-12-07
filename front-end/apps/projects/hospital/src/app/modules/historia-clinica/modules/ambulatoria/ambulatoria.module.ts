@@ -89,6 +89,7 @@ import { NewConsultationPersonalHistoryFormComponent } from './dialogs/new-consu
 import { PersonalHistoryViewDetailsComponent } from './dialogs/personal-history-view-details/personal-history-view-details.component';
 import { ReferenceStateLabelComponent } from '../../../hsi-components/reference-state-label/reference-state-label.component';
 import { ViolenceSituationsComponent } from './components/violence-situations/violence-situations.component';
+import { ViolenceSituationDockPopupComponent } from './dialogs/violence-situation-dock-popup/violence-situation-dock-popup.component';
 
 @NgModule({
 	declarations: [
@@ -157,6 +158,7 @@ import { ViolenceSituationsComponent } from './components/violence-situations/vi
        	NewConsultationPersonalHistoryFormComponent,
        	PersonalHistoryViewDetailsComponent,
        	ViolenceSituationsComponent,
+		ViolenceSituationDockPopupComponent
 	],
 	imports: [
 		CommonModule,

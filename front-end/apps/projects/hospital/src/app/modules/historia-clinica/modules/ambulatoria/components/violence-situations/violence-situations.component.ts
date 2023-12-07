@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ViolenceSituationDockPopupComponent } from '../../dialogs/violence-situation-dock-popup/violence-situation-dock-popup.component';
+import { DockPopupService } from '@presentation/services/dock-popup.service';
 
 @Component({
 	selector: 'app-violence-situations',
@@ -7,9 +9,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ViolenceSituationsComponent implements OnInit {
 
-	constructor() { }
+	constructor(private readonly dockPopupService: DockPopupService) { }
 
 	ngOnInit(): void {
+	}
+
+	openViolenceSituationDockPopUp() {
+		this.dockPopupService.open(ViolenceSituationDockPopupComponent);
 	}
 
 }

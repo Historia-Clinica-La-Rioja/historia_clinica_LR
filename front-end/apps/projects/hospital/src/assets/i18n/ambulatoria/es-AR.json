@@ -787,7 +787,7 @@
 			},
             "violence-situations": {
                 "TAB_LABEL": "Situaciones de violencia",
-                "NEW_VIOLENCE_SITUATION": "+ Nueva situación de violencia"
+                "NEW_VIOLENCE_SITUATION": "Nueva situación de violencia"
             }
         },
 		"print":{
