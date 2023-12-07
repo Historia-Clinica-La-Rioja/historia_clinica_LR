@@ -167,6 +167,7 @@ export class AppointmentComponent implements OnInit {
 	diaryLabels: DiaryLabelDto[] = [];
 	formLabel: UntypedFormGroup;
 	selectedDiaryLabelId: number;
+	diaryOpeningHoursFreeTimes : DiaryOpeningHoursFreeTimesDto[];
 
 	patientSummary: PatientSummary;
 	constructor(
@@ -292,7 +293,7 @@ export class AppointmentComponent implements OnInit {
 				this.initializeFormDate();
 				this.loadAvailableDays(this.dateAppointment,true);
 				this.setAvailableMonths(this.dateAppointment);
-				this.loadAppointmentsHours(this.dateAppointment,this.isToday(),true);
+				this.loadAppointmentsHours(this.dateAppointment,true);
 				this.setAvailableYears();
 				this.setModalityAndValidator(false);
 			});
@@ -413,7 +414,7 @@ export class AppointmentComponent implements OnInit {
 		switch (dateType){
 			case DATESTYPES.DAY :
 				this.dateAppointment.day = this.formDate.controls.day.value;
-				this.loadAppointmentsHours(this.dateAppointment,this.isToday());
+				this.loadAppointmentsHours(this.dateAppointment);
 				break;
 			case DATESTYPES.MONTH :
 				this.dateAppointment.month = this.formDate.controls.month.value;
@@ -486,7 +487,7 @@ export class AppointmentComponent implements OnInit {
 		}
 	}
 
-	setDefaultTime(){
+	setDefaultAppointmentHour(){
 		let appointmentHour: TimeDto = dateToTimeDto(new Date()) ;
 		let partes = this.appointment.hour.split(':');
 		appointmentHour.hours = parseInt(partes[0]);
@@ -497,26 +498,44 @@ export class AppointmentComponent implements OnInit {
 		this.formDate.controls.hour.setValue(appointmentHour);
 	}
 
-	loadAppointmentsHours(date: DateDto,isToday:boolean,isInitial?:boolean) {
+	loadAppointmentsHours(date: DateDto,isInitial?:boolean) {
 		this.possibleScheduleHours = [];
 		this.selectedOpeningHourId = null;
 		const searchCriteria = this.prepareSearchCriteria(date);
-	 	this.diaryService.getDailyFreeAppointmentTimes(this.data.agenda.id,searchCriteria).subscribe((times: DiaryOpeningHoursFreeTimesDto[]) => {
-			if(times.length){
-				if(isToday){
+	 	this.diaryService.getDailyFreeAppointmentTimes(this.data.agenda.id,searchCriteria).subscribe(( diaryOpeningHours: DiaryOpeningHoursFreeTimesDto[]) => {
+			if(diaryOpeningHours.length){
+				this.filterAndUpdateDiaryOpeningHoursFreeTimes(diaryOpeningHours)
+				if(isInitial){
+					this.setDefaultAppointmentHour();
+				}}
+		})
+	}
+
+	filterAndUpdateDiaryOpeningHoursFreeTimes(diaryOpeningHours: DiaryOpeningHoursFreeTimesDto[]){
+		diaryOpeningHours.forEach(times =>{
+			times.freeTimes.forEach(time =>{
+				if(this.isToday()){
 					const now = new Date();
-					this.possibleScheduleHours = times[0].freeTimes.filter(({ hours, minutes }) => {
-						return hours > now.getHours() || (hours === now.getHours() && minutes > now.getMinutes());
-					  });
-				}else{
-					this.possibleScheduleHours = times[0].freeTimes;
-					if(isInitial){
-						this.setDefaultTime();
+					if(time.hours > now.getHours() || (time.hours === now.getHours() && time.minutes > now.getMinutes())){
+						this.possibleScheduleHours.push(time);
 					}
+				}else{
+					this.possibleScheduleHours.push(time);
 				}
-				this.selectedOpeningHourId = times[0].openingHoursId;
+			})
+		})
+		this.diaryOpeningHoursFreeTimes = diaryOpeningHours;
+	}
+	
+	getSelectedOpeningHourId(): number{
+		let timeSelected = this.formDate.controls.hour.value;
+		let openingHoursId = null;
+		this.diaryOpeningHoursFreeTimes.forEach(times =>{
+			if(times.freeTimes.find(t => t = timeSelected)){
+				openingHoursId = times.openingHoursId
 			}
 		})
+		return openingHoursId
 	}
 
 	prepareSearchCriteria(dateSelect: DateDto): FreeAppointmentSearchFilterDto {
@@ -550,7 +569,7 @@ export class AppointmentComponent implements OnInit {
 				processErrors(error, (msg) => this.snackBarService.showError(msg));
 			});
 	}
-	
+
 	updateAppointmentDate() {
 		const previousDate = new Date(this.data.appointmentData.date);
 		const hour = this.formDate.get('hour').value;
@@ -569,7 +588,7 @@ export class AppointmentComponent implements OnInit {
 		const updateAppointmentDate: UpdateAppointmentDateDto = {
 			appointmentId: this.data.appointmentData.appointmentId,
 			date: dateNow,
-			openingHoursId: this.selectedOpeningHourId,
+			openingHoursId: this.getSelectedOpeningHourId(),
 			modality: this.formDate.controls.modality.value,
 			patientEmail: this.formDate.controls.email.value,
 		};
