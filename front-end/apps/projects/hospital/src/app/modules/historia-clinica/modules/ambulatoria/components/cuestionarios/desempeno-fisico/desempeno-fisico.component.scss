@@ -1,18 +1,18 @@
 .container {
     padding: 28px;
     max-width: 92%;
-    // border: 1px solid #e0eef7;
-    // box-shadow: 0px 3px 3px 0px rgba(179, 177, 179, 1);
+
     height: 600px;
 
 
 }
 
-// .box {
-//     height: 600px;
-// }
+.box {
+    border: 1px solid #e0eef7;
+    box-shadow: 0px 5px 3px 0px rgb(179, 177, 179);
+    padding: 3%;
 
-
+}
 
 .title1 {
     text-align: center;
@@ -28,15 +28,20 @@ h3 {
 
 }
 
-.title-consignas{
+.title-consignas {
     text-align: left;
 }
+
 
 .tipos {
     border-radius: 5px;
     color: #2687c5;
     padding: 2%;
     background-color: aliceblue;
+}
+
+.icon {
+    height: 150px;
 }
 
 .intro {
@@ -70,6 +75,18 @@ p {
 
 }
 
+.title-final {
+
+    text-align: center;
+    border-radius: 5px;
+    font-size: 20px;
+    color: #2687c5;
+    padding: 2%;
+    background-color: aliceblue;
+    font-weight: 500;
+
+}
+
 .slogans {
 
     display: flex;
@@ -85,8 +102,8 @@ p {
     margin: auto;
     display: table;
     position: relative;
-    left: 58px;
-    bottom: 100px;
+    left: 3px;
+    bottom: 61px;
 }
 
 .counter2 {
@@ -94,27 +111,60 @@ p {
     margin: auto;
     display: table;
     position: relative;
-    left: 86px;
-    bottom: 150px;
+    left: 30px;
+    bottom: 86px;
+}
+
+.counter3 {
+
+    padding: 2%;
+    position: relative;
+    right: 12px;
 }
 
 .radio2 {
     margin-left: 33.5%;
-    position: relative; 
-    bottom: 120px;
+    position: relative;
+    bottom: 66px;
+    right: 62px;
 
 }
+
+.radio3 {
+    padding: 2%;
+    position: relative;
+    right: 13px;
+
+}
+
 
 .radio {
     display: flex;
     justify-content: space-evenly;
     position: relative;
     margin-left: 20%;
-    bottom: 144px;
+    bottom: 90px;
+    right: 60px;
 }
 
 
 label {
 
     margin-right: 20px;
+}
+
+
+.mat-raised-button{
+  
+    display: block;
+    margin: 0 auto;
+    margin-top: 5%;
+}
+
+
+.resultado {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;  
+
 }

@@ -17,11 +17,15 @@
             Se recomienda posicionarse al lado del paciente al momento de comenzar cada una de las pruebas para evitar
             posibles caídas durante su ejecución.
         </div>
-        
+
         <!-- PRIMERA SECCION -->
 
         <h3 class="title-test">PRUEBA DE BALANCE</h3>
+
+        <!-- PRIMERA CONSULTA -->
+
         <div>
+
             <h3 class="title-consignas">A. Pararse con los pies uno al lado del otro.</h3>
 
         </div>
@@ -33,12 +37,14 @@
             Si el participante no logró completarlo, finaliza la prueba de balance.
 
         </div>
+        <mat-radio-group id="1" name="balance1">
+            <div class="radio">
+                <mat-radio-button value="1A" color="primary">Si</mat-radio-button>
+                <mat-radio-button value="2A" color="primary">No</mat-radio-button>
+                <mat-radio-button value="3A" color="primary">Se rehúsa</mat-radio-button>
+            </div>
+        </mat-radio-group>
 
-        <div class="radio">
-            <mat-radio-button color="primary">Si</mat-radio-button>
-            <mat-radio-button color="primary">No</mat-radio-button>
-            <mat-radio-button color="primary">Se rehúsa</mat-radio-button>
-        </div>
 
         <div class="counter">
             <label for="number">Tiempo en segundos:</label>
@@ -46,11 +52,12 @@
 
         </div>
 
+        <!-- SEGUNDA CONSULTA -->
 
         <div>
+
             <h3 class="title-consignas">B. Pararse en posición semi-tándem.</h3>
         </div>
-
         <div class="slogans">
 
             <img class="icon" src="assets/icons/icon-07.png" alt="icon2">
@@ -60,12 +67,13 @@
 
         </div>
 
-        <div class="radio">
-            <mat-radio-button color="primary">Si</mat-radio-button>
-            <mat-radio-button color="primary">No</mat-radio-button>
-            <mat-radio-button color="primary">Se rehúsa</mat-radio-button>
-
-        </div>
+        <mat-radio-group id="2" name="balance2">
+            <div class="radio">
+                <mat-radio-button value="1B" color="primary">Si</mat-radio-button>
+                <mat-radio-button value="2B" color="primary">No</mat-radio-button>
+                <mat-radio-button value="3B" color="primary">Se rehúsa</mat-radio-button>
+            </div>
+        </mat-radio-group>
 
 
         <div class="counter">
@@ -73,6 +81,8 @@
             <input id="ticketNum" type="number" name="Num" value="0" />
 
         </div>
+
+        <!-- TERCERA CONSULTA -->
 
         <div>
             <h3 class="title-consignas">C. Pararse en posición tándem</h3>
@@ -95,13 +105,15 @@
 
         </div>
 
-        <div class="radio2">
-            <mat-radio-button color="primary">Se rehúsa</mat-radio-button>
-
-        </div>
+        <mat-radio-group id="3" name="balance3">
+            <div class="radio2">
+                <mat-radio-button value="4A" color="primary">Se rehúsa</mat-radio-button>
+            </div>
+        </mat-radio-group>
 
 
         <!-- SEGUNDA SECCION -->
+
         <div>
             <h3 class="title-test">VELOCIDAD DE MARCHA - RECORRIDO DE 4 METROS</h3>
         </div>
@@ -111,10 +123,12 @@
 
         </div>
 
+        <!-- CUARTA CONSULTA -->
+
         <div class="slogans2">
 
             Tiempo requerido para recorrer la distancia.
-            Si el participante no logró completarlo, finaliza la prueba de velocidad de marcha.
+            <br>Si el participante no logró completarlo, finaliza la prueba de velocidad de marcha.<br />
 
         </div>
 
@@ -124,16 +138,16 @@
 
         </div>
 
-        <div class="radio3">
+        <mat-radio-group id="4" name="marcha1">
+            <div class="radio3">
+                <mat-radio-button value="1B" color="primary">Se rehúsa</mat-radio-button>
+            </div>
+        </mat-radio-group>
 
-            <mat-radio-button color="primary">Se rehúsa</mat-radio-button>
-
-        </div>
-
-
+        <!-- QUINTA CONSULTA -->
 
         <div>
-            <h3 class="title-consignas">A. Segunda medición.</h3>
+            <h3 class="title-consignas">B. Segunda medición.</h3>
 
         </div>
 
@@ -151,11 +165,85 @@
 
         </div>
 
-        <div class="radio3">
+        <mat-radio-group id="5" name="marcha2">
+            <div class="radio3">
+                <mat-radio-button value="2B" color="primary">Se rehúsa</mat-radio-button>
+            </div>
+        </mat-radio-group>
 
-            <mat-radio-button color="primary">Se rehúsa</mat-radio-button>
+        <!-- TERCERA SECCION -->
+
+        <div>
+            <h3 class="title-test">LEVANTARSE DE UNA SILLA</h3>
+        </div>
+
+        <!-- SEXTA CONSULTA -->
+
+        <div>
+            <h3 class="title-consignas">A. Prueba previa (no se califica).</h3>
+        </div>
+
+        <div class="slogans">
+            <img class="icon" src="assets/icons/icon-13.png" alt="icon4">
+
+            ¿El paciente se levanta sin apoyarse en los brazos?
+            <br>Si el participante no logró completarlo, finaliza la prueba.<br />
 
         </div>
+
+        <mat-radio-group id="6" name="marcha3">
+            <div class="radio">
+                <mat-radio-button value="1C" color="primary">Si</mat-radio-button>
+                <mat-radio-button value="2C" color="primary">No</mat-radio-button>
+                <mat-radio-button value="3C" color="primary">Se rehúsa</mat-radio-button>
+
+            </div>
+
+        </mat-radio-group>
+
+        <div>
+            <h3 class="title-consignas">B. Prueba repetida de levantarse de una silla (5 veces).</h3>
+        </div>
+
+        <!-- SEPTIMA CONSULTA -->
+
+        <div class="slogans">
+            <img class="icon" src="assets/icons/icon-12.png" alt="icon5">
+
+            ¿El paciente puede levatarse 5 veces de la <br> silla sin usar sus brazos?<br />
+
+        </div>
+
+
+        <mat-radio-group id="7" name="marcha4">
+            <div class="radio">
+                <mat-radio-button value="1D" color="primary">Si</mat-radio-button>
+                <mat-radio-button value="2D" color="primary">No</mat-radio-button>
+                <mat-radio-button value="3D" color="primary">Se rehúsa</mat-radio-button>
+
+            </div>
+
+        </mat-radio-group>
+
+        <!-- RESULTADO FINAL -->
+
+        <div>
+            <h3 class="title-final">RESULTADOS</h3>
+        </div>
+
+        <div class="options">
+
+        <mat-radio-group class="resultado">
+                <mat-radio-button value="1E" color="primary">DESEMPEÑO FISICO BAJO</mat-radio-button>
+                <mat-radio-button value="2E" color="primary">DESEMPEÑO FISICO ALTO</mat-radio-button>
+
+        </mat-radio-group>
+    </div>
+
+        <!-- SUBMIT  -->
+
+        <button mat-raised-button color="primary" type="submit">Enviar Formulario</button>
+
 
     </div>
 </div>
