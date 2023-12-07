@@ -10,12 +10,15 @@ import net.pladema.establishment.repository.entity.ClinicalSpecialtySector;
 import net.pladema.establishment.repository.entity.Room;
 import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.establishment.repository.entity.SectorOrganization;
+import net.pladema.establishment.repository.entity.SectorType;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -60,6 +63,11 @@ class BedSummaryRepositoryTest extends UnitRepository {
         bc.setDescription("Bed category 1");
         bc = save(bc);
 
+		SectorType st = new SectorType();
+		st.setId(SectorType.INTERNMENT_ID);
+		st.setDescription("Internación");
+		save(st);
+
         Sector s1 = mockSector(institutionId, ct, so, ag1);
         Sector s2 = mockSector(institutionId, ct, so, ag2);
 
@@ -81,7 +89,9 @@ class BedSummaryRepositoryTest extends UnitRepository {
         mockBed(bc, r2, "Bed 4");
         mockBed(bc, r2, "Bed 5");
 
-        List<BedSummaryVo> bedSummaries = bedSummaryRepository.execute(institutionId, null);
+		Short[] sectorsType = new Short[SectorType.INTERNMENT_ID];
+		sectorsType[0] = SectorType.INTERNMENT_ID;
+        List<BedSummaryVo> bedSummaries = bedSummaryRepository.execute(institutionId, sectorsType);
 
         assertThat(bedSummaries)
                 .hasSize(5);
@@ -111,6 +121,7 @@ class BedSummaryRepositoryTest extends UnitRepository {
         s.setCareTypeId(ct.getId());
         s.setSectorOrganizationId(so.getId());
         s.setAgeGroupId(ag.getId());
+		s.setSectorTypeId(SectorType.INTERNMENT_ID);
         s = save(s);
         return s;
     }

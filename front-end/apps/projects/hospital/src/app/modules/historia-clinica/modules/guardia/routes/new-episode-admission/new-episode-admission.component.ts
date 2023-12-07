@@ -7,7 +7,8 @@ import { TriageDefinitionsService } from '../../services/triage-definitions.serv
 @Component({
 	selector: 'app-new-episode-admission',
 	templateUrl: './new-episode-admission.component.html',
-	styleUrls: ['./new-episode-admission.component.scss']
+	styleUrls: ['./new-episode-admission.component.scss'],
+	providers: [TriageDefinitionsService]
 })
 export class NewEpisodeAdmissionComponent implements OnInit {
 

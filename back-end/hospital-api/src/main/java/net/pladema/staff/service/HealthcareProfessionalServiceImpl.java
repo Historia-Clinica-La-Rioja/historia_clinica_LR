@@ -93,6 +93,14 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
     }
 
     @Override
+    public Integer getUserIdHealthcareProfessionalId(Integer healthcareProfessionalId) {
+        LOG.debug("Input parameters -> healthcareProfessionalId {}", healthcareProfessionalId);
+        Integer result = healthcareProfessionalRepository.getUserIdByHealthcareProfessionalId(healthcareProfessionalId);
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+	 @Override
     public Integer getProfessionalId(Integer userId) {
         LOG.debug("Input parameters -> userId {}", userId);
         Integer result = healthcareProfessionalRepository.getProfessionalId(userId);
@@ -139,6 +147,14 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
 	public Optional<Integer> getProfessionalIdByPersonId(Integer personId) {
 		LOG.debug("Input parameters -> personId {}", personId);
 		Optional<Integer> result = healthcareProfessionalRepository.findByPersonId(personId).map(HealthcareProfessional::getId);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<HealthcareProfessionalBo> getVirtualConsultationProfessionalsByInstitutionId(Integer institutionId) {
+		LOG.debug("Input parameters -> institutionId {}", institutionId);
+		List<HealthcareProfessionalBo> result = healthcareProfessionalRepository.getVirtualConsultationProfessionalsByInstitutionId(institutionId).stream().map(HealthcareProfessionalBo::new).collect(Collectors.toList());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

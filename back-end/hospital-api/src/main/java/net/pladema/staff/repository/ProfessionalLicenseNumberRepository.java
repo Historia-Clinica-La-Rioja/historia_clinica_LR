@@ -2,6 +2,7 @@ package net.pladema.staff.repository;
 
 import java.util.List;
 
+import net.pladema.staff.repository.domain.ProfessionalRegistrationNumberVo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -59,4 +60,18 @@ public interface ProfessionalLicenseNumberRepository extends JpaRepository<Profe
 			"AND hps.deleteable.deleted = false OR hps.deleteable.deleted IS NULL) ")
 	List<ProfessionalLicenseNumber> findByHealthcareProfessionalId(@Param("healthcareProfessionalId") Integer healthcareProfessionalId);
 
+	@Transactional(readOnly = true)
+	@Query(value =
+			"SELECT DISTINCT new net.pladema.staff.repository.domain.ProfessionalRegistrationNumberVo(hp.id, p.firstName, p.lastName, pe.nameSelfDetermination, pln) " +
+			"FROM ProfessionalLicenseNumber pln " +
+			"JOIN ProfessionalProfessions pp ON (pln.professionalProfessionId = pp.id AND pln.healthcareProfessionalSpecialtyId IS NULL)" +
+			"RIGHT JOIN HealthcareProfessional hp ON (pp.healthcareProfessionalId = hp.id AND hp.deleteable.deleted = false) " +
+			"JOIN Person p ON hp.personId = p.id " +
+			"LEFT JOIN PersonExtended pe ON p.id = pe.id " +
+			"JOIN UserPerson up ON p.id = up.pk.personId " +
+			"JOIN UserRole ur ON (up.pk.userId = ur.userId AND ur.institutionId = :institutionId) " +
+			"AND ur.roleId IN (:professionalERolIds) " +
+			"ORDER BY hp.id")
+	List<ProfessionalRegistrationNumberVo> findAllProfessionalRegistrationNumbers(@Param("institutionId") Integer institutionId,
+																				  @Param("professionalERolIds") List<Short> professionalERoleIds);
 }

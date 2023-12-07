@@ -4,7 +4,8 @@ import {
     Datagrid,
     DeleteButton,
     EditButton,
-    ListButton,
+    ListButton, 
+    Pagination,
     ReferenceField,
     ReferenceManyField,
     Show,
@@ -82,18 +83,19 @@ const CareLineShow = props => {
                     disabled={!userIsRootOrAdmin}
                 />
                 <ReferenceManyField
-                    addLabel={false}
-                    reference="carelineproblems"
-                    target="careLineId"
-                    sort={{field: 'id', order: 'DESC'}}
+                        pagination={<Pagination />}
+                        addLabel={false}
+                        reference="carelineproblems"
+                        target="careLineId"
+                        sort={{field: 'id', order: 'DESC'}}
                 >
-                    <Datagrid>
-                        <ReferenceField source="snomedId" reference="snomedconcepts" link="show">
-                            <TextField source="pt"/>
-                        </ReferenceField>
-                        <DeleteButton redirect={false} disabled={!userIsRootOrAdmin} />
-                    </Datagrid>
-                </ReferenceManyField>
+                        <Datagrid>
+                            <ReferenceField source="snomedId" reference="snomedconcepts" link="show">
+                                <TextField source="pt"/>
+                            </ReferenceField>
+                            <DeleteButton redirect={false} disabled={!userIsRootOrAdmin} />
+                        </Datagrid>
+                    </ReferenceManyField>
             </SimpleShowLayout>
         </Show>
     );

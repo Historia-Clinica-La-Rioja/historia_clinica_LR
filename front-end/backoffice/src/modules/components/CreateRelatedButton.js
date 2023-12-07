@@ -17,11 +17,13 @@ const CreateRelatedButton = ({ customRecord, record, reference, refFieldName, la
     const translate = useTranslate();
     return (
         <Button
-        component={Link}
-        to={{
-            pathname: `/${reference}/create`,
-            state: { record: customRecord ? customRecord : newRecordValues },
-        }}
+            component={Link}
+            to={{
+                pathname: `/${reference}/create`,
+                state: { record: customRecord ? customRecord : newRecordValues },
+            }}
+            style={{ border: '1px solid #3F51B5', color: '#3F51B5'}}
+            size='small'
         >{translate(label)}</Button>
     );
 };

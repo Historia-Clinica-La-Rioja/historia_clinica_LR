@@ -15,6 +15,7 @@ import { GuardiaRouterService } from '../../services/guardia-router.service';
 })
 export class NewEpisodeAdminTriageComponent {
 
+	disable = false;
 	private triage: TriageAdministrativeDto;
 	private emergencyCareDto = {} as ECAdministrativeDto;
 	private readonly routePrefix;
@@ -31,11 +32,13 @@ export class NewEpisodeAdminTriageComponent {
 	}
 
 	confirmEvent(triage: TriageAdministrativeDto): void {
+		this.disable = true;
 		this.triage = triage;
 		this.emergencyCareDto.triage = this.triage;
 		this.emergencyCareDto.administrative = this.newEpisodeService.getAdministrativeAdmissionDto();
 		this.emergencyCareEpisodeService.createAdministrative(this.emergencyCareDto).subscribe(
 			emergencyCareId => {
+				this.disable = false;
 				this.emergencyCareEpisodeService.getAdministrative(emergencyCareId).subscribe((dto: ResponseEmergencyCareDto) => {
 					this.guardiaRouterService.goToEpisode(dto.emergencyCareState.id, dto.patient)
 					this.snackBarService.showSuccess('guardia.new-episode.SUCCESS');

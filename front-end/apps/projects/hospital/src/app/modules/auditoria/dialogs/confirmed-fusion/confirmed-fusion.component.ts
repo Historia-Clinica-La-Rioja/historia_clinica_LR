@@ -7,12 +7,17 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 	styleUrls: ['./confirmed-fusion.component.scss']
 })
 export class ConfirmedFusionComponent implements OnInit {
-
+	isFusion:boolean=true;
 	constructor(@Inject(MAT_DIALOG_DATA) public data: {
-		idPatient: string,
+		idPatients: string[],
 	}) { }
 
 	ngOnInit(): void {
+		if(!this.data.idPatients.length){
+			this.isFusion=true;
+		}else{
+			this.isFusion=false;
+		}
 	}
 
 }

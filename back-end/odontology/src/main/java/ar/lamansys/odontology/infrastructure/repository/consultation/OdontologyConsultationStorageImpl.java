@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OdontologyConsultationStorageImpl implements OdontologyConsultationStorage {
@@ -75,6 +76,14 @@ public class OdontologyConsultationStorageImpl implements OdontologyConsultation
 		LOG.debug("Input parameter -> patientId {}", patientId);
 		List<OdontologyConsultation> partialResult = odontologyConsultationRepository.getLastOdontologyConsultationFromPatient(patientId);
 		OdontologyConsultation result = partialResult.get(partialResult.size()-1);
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public Optional<Integer> getPatientMedicalCoverageId(Integer id) {
+		LOG.debug("Input parameter -> id {}", id);
+		Optional<Integer> result = odontologyConsultationRepository.getPatientMedicalCoverageId(id);
 		LOG.debug("Output -> {}", result);
 		return result;
 	}

@@ -16,16 +16,16 @@ export class CareLineService {
 		private readonly http: HttpClient,
 		private readonly contextService: ContextService,
 	) {
-		this.BASE_URL = `${environment.apiBase}/institution/${this.contextService.institutionId}`
+		this.BASE_URL = `${environment.apiBase}/institution`;
 	}
 
 	getCareLines(): Observable<CareLineDto[]> {
-		const url = `${this.BASE_URL}/carelines`;
+		const url = `${this.BASE_URL}/${this.contextService.institutionId}/carelines`;
 		return this.http.get<CareLineDto[]>(url);
 	}
 
-	getCareLinesBySpecialty(specialtyId: number): Observable<CareLineDto[]> {
-		const url = `${this.BASE_URL}/diary-care-lines/${specialtyId} `;
+	getCareLinesByProvinceId(provinceId: number): Observable<CareLineDto[]> {
+		const url = `${this.BASE_URL}/carelines/by-province/${provinceId} `;
 		return this.http.get<CareLineDto[]>(url);
 	}
 
@@ -37,8 +37,33 @@ export class CareLineService {
 		return this.http.get<CareLineDto[]>(url, { params });
 	}
 
-	getCareLinesAttachedToInstitution(institutionId: number): Observable<CareLineDto[]> {
+	getByProblemSnomedSctids(problemSnomedSctids: string[]) {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/carelines/by-problems`;
+		let params = new HttpParams();
+		params = params.append('snomedSctids', problemSnomedSctids.join(', '));
+		return this.http.get<CareLineDto[]>(url, { params });
+	 }
+
+	getCareLinesAttachedToInstitutions(institutionId: number): Observable<CareLineDto[]> {
 		const url = `${environment.apiBase}/institution/${institutionId}/carelines/attached`;
 		return this.http.get<CareLineDto[]>(url);
 	}
+
+	getCareLinesAttachedToInstitution(institutionId: number): Observable<CareLineDto[]> {
+		const url = `${environment.apiBase}/institution/${institutionId}/carelines/attached-to-institution`;
+		return this.http.get<CareLineDto[]>(url);
+	}
+
+	getAllByProblemsAndProvince(problemSnomedIds: string[]) {
+        const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/carelines/problems`;
+        let params = new HttpParams();
+        params = params.append('snomedSctids', problemSnomedIds.join(', '));
+        return this.http.get<CareLineDto[]>(url, { params });
+    }
+
+	getVirtualConsultationCareLinesByInstitutionId(): Observable<CareLineDto[]>{
+		const url = `${this.BASE_URL}/${this.contextService.institutionId}/carelines/virtual-consultation `;
+		return this.http.get<CareLineDto[]>(url);
+	}
+
 }

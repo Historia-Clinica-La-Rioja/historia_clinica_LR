@@ -1,3 +1,5 @@
+@import "../../../../../assets/styles/mat-mixins";
+
 .content {
 	padding: 12px 0 12px 0;
 	@media screen and (max-width: 600px) {
@@ -10,4 +12,18 @@
 }
 .bold{
 	font-weight: 500;
+}
+.serch {
+	height: 100%;
+	min-height: 100%;
+	min-width: 80%;
+	width: 80%;
+	@media screen and (min-width: 960px) {
+		min-width: 40%;
+		width: 40%;
+	}
+}
+
+.content-patient-filter{
+	@include mat-form-field-background-white;
 }

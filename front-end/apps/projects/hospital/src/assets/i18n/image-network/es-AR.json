@@ -30,12 +30,12 @@
 			"FINISH_STUDY": "Finalizar estudio",
 			"CONFIRM": "Completar",
 			"WORKLIST": "Lista de trabajo",
-			"FILTER_BY_STATE": "Filtrar por estado",
 			"MEDICAL_COVERAGE": "Cobertura Médica",
-			"NEW_MEDICAL_ORDER": "Nueva Orden Médica",
+			"MEDICAL_ORDER": "Orden Médica",
 			"ORDER": "Orden",
 			"STUDY_COMPLETED": "El estudio se ha marcado como completado",
 			"STUDY_ERROR": "El estudio no pudo marcarse como completado porque no se encontraron resultados",
+            "NO_APPOINTMENTS": "No se han encontrado resultados para la búsqueda realizada",
 			"medical-order": {
                 "NEW_MEDICAL_ORDER": "Nueva Orden Médica",
                 "ORDER": "Orden",
@@ -48,7 +48,13 @@
                 "INSTITUTION": "Institución",
                 "ATTACH_EXTERNAL_ORDER": "Adjuntar orden externa",
                 "FILES_EXTENSION": "El tipo de archivo debe estar en formato JPG, JPEG, PNG o PDF"
-            }
+            },
+            "confirm-dialog": {
+				"CONTENT": "Si confirma el turno no podrá actualizar la cobertura ni la orden médica luego.",
+				"CANCEL": "Si, actualizar datos",
+				"CONFIRM": "No, confirmar turno",
+				"QUESTION": "¿Desea actualizarla ahora?"
+			}
 		},
         "worklist": {
             "status": {
@@ -67,20 +73,60 @@
                 "REPORT": "INFORME:" ,
                 "DRAFT_REPORT": "Borrador editado - ",
                 "CONTINUE_EDITING": "Seguir editando",
-                "PROBLEMS": "Problemas:",
-                "OBSERVATIONS": "Observaciones:",
+                "CONCLUTIONS": "Conclusiones:",
+                "OBSERVATIONS": "Detalle de informe:",
                 "VIEW_STUDY": "ver estudio",
-                "SNACKBAR_ERROR_STUDY": "No es posible abrir el estudio"               
+                "SNACKBAR_ERROR_STUDY": "No es posible abrir el estudio",
+                "conclutions": {
+                    "ADD_CONCLUTION": "Agregar conclusión",
+                    "REGISTERED_CONCLUTIONS": "Conclusiones registradas",
+                    "SEARCH_CONCLUTION": "Buscar conclusión",
+                    "CONCEPT_LABEL": "Conclusión"
+                },
+                "DETAILED_REPORT": "Informe detallado: ",
+                "PENDING_ORDER": "Orden pendiente",
+                "TEMPLATE": "Plantillas",
+                "SAVE_TEMPLATE_TITLE":"Guardar como plantilla",
+                "IMPORT_TEMPLATE":"Importar plantilla",
+                "NAME_TEMPLATE":"Nombre de la plantilla",
+                "NAME_EXISTS":"Ya existe una plantilla con ese nombre. Por favor, elija otro",
+                "SNACKBAR_SUCCESS_TEMPLATE": "Plantilla guardada exitosamente",
+                "TEMPLATE_CONFIRM_TITLE":"¿Reemplazar datos?",
+                "TEMPLATE_CONFIRM_CONTENT":"Si importa una plantilla la información actualmente ingresada en el campo “Detalle de informe” será reemplazada por el contenido de la plantilla que seleccione para importar.",
+                "TEMPLATE_CONFIRM_BUTTON_OK":"SI, SELECCIONAR PLANTILLA",
+                "TEMPLATE_CONFIRM_BUTTON_CANCEL":"NO, CANCELAR",
+                "SELECT_TEMPLATE_IMPORT": "Seleccione plantilla a importar",
+                "SNACKBAR_SUCCESS_IMPORT": "Plantilla importada exitosamente"
+
+            },
+            "filters": {
+                "MODALITY": "Seleccione modalidad",
+                "FILTER_BY_STATE": "Filtrar por estado",
+			    "FILTER_BY_NAME": "Nombre del paciente",
+                "FILTER_BY_IDENTIFICATION": "Documento del paciente",
+                "DATE_SELECT": "Filtrar por periodo"
             },
             "WORKLIST_BY_INFORMER": "Lista de informes",
-            "MODALITIES": "Seleccione modalidades",
+            "MODALITIES": "Seleccione modalidad",
+            "DATE_RANGE": "Rango de fechas",
+            "START_DATE": "Fecha inicio",
+            "END_DATE": "Fecha fin",
+            "PATIENT_NAME": "Nombre de paciente",
+            "PATIENT_DOCUMENT": "Documento de paciente",
+            "INSTITUTION": "Institución",
+            "STATUS": "Estado",
             "FINISH": "finalizar",
             "VIEW_DETAILS": "ver detalle",
 			"DERIVE_REPORT": "Derivar informe",
-			"REQUEST_REPORT": "Solicitar informe a ",
+			"REQUEST_REPORT": "Solicitar informe",
+			"REQUEST_REPORT_TO": "Solicitar informe a ",
 			"REPORT_REFERRED": "El informe se ha derivado a ",
             "PENDING_REPORT": "Informe pendiente",
-            "DERIVED_REPORT": "Informe derivado a "
+            "DERIVED_REPORT": "Informe derivado a ",
+            "VIEW_REPORT": "Ver informe",
+            "DOWNLOAD_REPORT": "Descargar informe",
+            "REPORT_NOT_REQUIRED": "No requiere informe",
+            "REPORT_REQUIRED": "Informe solicitado"
 		}
 
 	}

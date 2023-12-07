@@ -13,32 +13,38 @@ import { AgendaSetupComponent } from './routes/agenda-setup/agenda-setup.compone
 import { HomeComponent } from './routes/home/home.component';
 import { EquipmentDiarySetupComponent } from './routes/equipment-diary-setup/equipment-diary-setup.component';
 // components
-import { CalendarProfessionalViewComponent } from '@turnos/components/calendar-professional-view/calendar-professional-view.component';
-import { EquipmentDiaryComponent } from './components/equipment-diary/equipment-diary.component';
-import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
-import { DateRangeTimeFormComponent } from './components/date-range-time-form/date-range-time-form.component';
-import { ProfessionalSelectComponent } from './components/professional-select/professional-select.component';
-import { SeachAppointmentsByProfessionalComponent } from './components/seach-appointments-by-professional/seach-appointments-by-professional.component';
-import { SearchAppointmentsBySpecialtyComponent } from './components/search-appointments-by-specialty/search-appointments-by-specialty.component';
 import { AppointmentDetailsComponent } from './components/appointment-details/appointment-details.component';
-import { SearchAppointmentsInCareNetworkComponent } from './components/search-appointments-in-care-network/search-appointments-in-care-network.component';
-import { SearchAppointmentsByEquipmentComponent } from './components/search-appointments-by-equipment/search-appointments-by-equipment.component';
+import { AppointmentResultViewComponent } from './components/appointment-result-view/appointment-result-view.component';
+import { CalendarProfessionalViewComponent } from '@turnos/components/calendar-professional-view/calendar-professional-view.component';
+import { DateRangeTimeFormComponent } from './components/date-range-time-form/date-range-time-form.component';
+import { EquipmentDiaryComponent } from './components/equipment-diary/equipment-diary.component';
 import { EquipmentTranscribeOrderPopupComponent } from './dialogs/equipment-transcribe-order-popup/equipment-transcribe-order-popup.component';
-
+import { ImageNetworkAppointmentComponent } from './components/image-network-appointment/image-network-appointment.component';
+import { ProfessionalSelectComponent } from './components/professional-select/professional-select.component';
+import { ReferenceListComponent } from './components/reference-list/reference-list.component';
+import { ReferenceReportComponent } from './components/reference-report/reference-report.component';
+import { ReportInformationComponent } from './components/report-information/report-information.component';
+import { SeachAppointmentsByProfessionalComponent } from './components/seach-appointments-by-professional/seach-appointments-by-professional.component';
+import { SearchAppointmentsByEquipmentComponent } from './components/search-appointments-by-equipment/search-appointments-by-equipment.component';
+import { SearchAppointmentsBySpecialtyComponent } from './components/search-appointments-by-specialty/search-appointments-by-specialty.component';
+import { SearchAppointmentsInCareNetworkComponent } from './components/search-appointments-in-care-network/search-appointments-in-care-network.component';
+import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
+import { SearchCriteriaComponent } from './components/search-criteria/search-criteria.component';
+import { TypeaheadPracticesComponent } from './components/typeahead-practices/typeahead-practices.component';
 // dialogs
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
 import { BlockAgendaRangeComponent } from './dialogs/block-agenda-range/block-agenda-range.component';
 import { CalendarProfessionalViewDockPopupComponent } from './dialogs/calendar-professional-view-dock-popup/calendar-professional-view-dock-popup.component';
 import { CancelAppointmentComponent } from './dialogs/cancel-appointment/cancel-appointment.component';
 import { ConfirmBookingComponent } from './dialogs/confirm-booking/confirm-booking.component';
+import { ConfirmPrintAppointmentComponent } from './dialogs/confirm-print-appointment/confirm-print-appointment.component';
 import { NewAppointmentComponent } from './dialogs/new-appointment/new-appointment.component';
 import { NewAttentionComponent } from './dialogs/new-attention/new-attention.component';
-import { ConfirmPrintAppointmentComponent } from './dialogs/confirm-print-appointment/confirm-print-appointment.component';
-import { ImageNetworkAppointmentComponent } from './components/image-network-appointment/image-network-appointment.component';
 // services
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
-import { AppointmentResultViewComponent } from './components/appointment-result-view/appointment-result-view.component';
 import { EquipmentAppointmentsFacadeService } from './services/equipment-appointments-facade.service';
+import { MedicalOrderInputComponent } from './components/medical-order-input/medical-order-input.component';
+
 
 @NgModule({
 	declarations: [
@@ -53,23 +59,29 @@ import { EquipmentAppointmentsFacadeService } from './services/equipment-appoint
 		CalendarProfessionalViewComponent,
 		DateRangeTimeFormComponent,
 		EquipmentDiaryComponent,
+		EquipmentTranscribeOrderPopupComponent,
+		ImageNetworkAppointmentComponent,
 		ProfessionalSelectComponent,
-		SelectAgendaComponent,
+		ReferenceListComponent,
+		ReferenceReportComponent,
+		ReportInformationComponent,
 		SeachAppointmentsByProfessionalComponent,
-		SearchAppointmentsBySpecialtyComponent,
 		SearchAppointmentsByEquipmentComponent,
+		SearchAppointmentsBySpecialtyComponent,
 		SearchAppointmentsInCareNetworkComponent,
+		SearchCriteriaComponent,
+		SelectAgendaComponent,
+		TypeaheadPracticesComponent,
 		// dialogs
 		AppointmentComponent,
 		BlockAgendaRangeComponent,
 		CalendarProfessionalViewDockPopupComponent,
 		CancelAppointmentComponent,
 		ConfirmBookingComponent,
+		ConfirmPrintAppointmentComponent,
 		NewAppointmentComponent,
 		NewAttentionComponent,
-		ConfirmPrintAppointmentComponent,
-		ImageNetworkAppointmentComponent,
-  		EquipmentTranscribeOrderPopupComponent,
+  MedicalOrderInputComponent,
 	],
 	imports: [
 		CommonModule,
@@ -82,7 +94,8 @@ import { EquipmentAppointmentsFacadeService } from './services/equipment-appoint
 		HistoriaClinicaModule
 	],
 	exports: [
-		CalendarProfessionalViewComponent
+		CalendarProfessionalViewComponent,
+		SearchCriteriaComponent
 	],
 	providers: [
 		{

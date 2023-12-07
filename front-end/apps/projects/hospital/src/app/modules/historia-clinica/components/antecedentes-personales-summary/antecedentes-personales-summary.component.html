@@ -1,6 +1,6 @@
 <app-summary-card [header]="personalHistoriesHeader">
 	<mat-list id="active-problems-list"
-		*ngIf="problems.length > 0 else noInfo">
+		*ngIf="problems?.length > 0 else noInfo">
 		<div fxLayout="row" *ngFor="let problem of problems; first as first">
 			<mat-list-item fxLayout="column" fxLayoutAlign="center">
 				<div fxFlex="50%">

@@ -28,12 +28,16 @@ public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
 
     private final LoadUserAuthentication loadUserAuthentication;
 
-    @Override
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+		return !filterEnabled;
+	}
+
+	@Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
 
         SecurityContext securityContext = SecurityContextHolder.getContext();
-        if (this.filterEnabled
-                && securityContext.getAuthentication() == null) {
+        if (securityContext.getAuthentication() == null) {
             String accessToken = httpServletRequest.getHeader("Authorization");
             if (accessToken != null) {
                 Optional<OAuthUserInfoBo> opUserInfo = fetchUserInfo.run(accessToken);
@@ -44,4 +48,5 @@ public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
+
 }

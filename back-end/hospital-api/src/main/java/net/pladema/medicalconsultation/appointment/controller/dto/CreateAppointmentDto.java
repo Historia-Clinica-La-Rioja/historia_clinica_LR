@@ -1,17 +1,22 @@
 package net.pladema.medicalconsultation.appointment.controller.dto;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
-import org.hibernate.validator.constraints.Length;
-
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.TranscribedDiagnosticReportInfoDto;
+import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 
 @Getter
 @Setter
@@ -51,4 +56,20 @@ public class CreateAppointmentDto {
     @Nullable
     @Length(max = 20, message = "{appointment.new.phoneNumber.invalid}")
     private String phoneNumber;
+
+	@Nullable
+	private String patientEmail;
+
+	@NotNull(message = "{value.mandatory}")
+	private EAppointmentModality modality;
+
+	@Nullable
+	private TranscribedDiagnosticReportInfoDto transcribedOrderData;
+
+	@Nullable
+	private DiagnosticReportInfoDto orderData;
+	
+	@Nullable
+	private String applicantHealthcareProfessionalEmail;
+
 }

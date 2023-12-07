@@ -8,6 +8,10 @@
 	background-color: white;
 }
 
+textarea {
+	white-space: pre-wrap;
+}
+
 mat-form-field {
 	width: 100%;
 }
@@ -21,5 +25,9 @@ h2 {
 }
 
 .bold {
-    font-weight: 500;
+	font-weight: 500;
+}
+
+.mat-icon {
+	overflow: unset;
 }

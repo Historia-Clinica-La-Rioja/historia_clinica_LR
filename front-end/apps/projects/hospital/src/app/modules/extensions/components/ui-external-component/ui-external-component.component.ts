@@ -65,15 +65,16 @@ export class UiExternalComponentComponent implements OnChanges {
 	private setCustomElement(hostElement: HTMLElement, params: WCParams) {
 		const customElement = document.createElement(params.componentName);
 		customElement.setAttribute('params', JSON.stringify(this.params));
-/* 		customElement.setAttribute('data-type', this.type);
-		customElement.setAttribute('type', this.type);
-		customElement.setAttribute('data-url', params.url); */
 		// append the element, so it's attached to the DOM
 		hostElement.appendChild(customElement);
 	}
 }
 
 export interface WCParams {
+	title: string;
 	componentName: string;
 	url: string;
+	params: {
+		[key:string]: any
+	}
 }

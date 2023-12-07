@@ -5,11 +5,8 @@ import HierarchicalUnitTypeEdit from './HierarchicalUnitTypeEdit';
 import SGXPermissions from "../../libs/sgx/auth/SGXPermissions";
 import { ADMINISTRADOR } from "../roles";
 
-const check = (permissions: SGXPermissions) =>
-    permissions.isOn('HABILITAR_UNIDADES_JERARQUICAS_EN_DESARROLLO') && permissions.hasAnyAssignment(ADMINISTRADOR);
-
 const hierarchicalunittypes = (permissions: SGXPermissions) => ({
-    list: check(permissions) ? HierarchicalUnitTypeList : undefined,
+    list: permissions.hasAnyAssignment(ADMINISTRADOR) ? HierarchicalUnitTypeList : undefined,
     show: permissions.hasAnyAssignment(ADMINISTRADOR) ? HierarchicalUnitTypeShow : undefined,
     create: permissions.hasAnyAssignment(ADMINISTRADOR) ? HierarchicalUnitTypeCreate : undefined,
     edit: permissions.hasAnyAssignment(ADMINISTRADOR) ?  HierarchicalUnitTypeEdit : undefined,

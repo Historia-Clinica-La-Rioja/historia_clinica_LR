@@ -3,6 +3,8 @@ package net.pladema.staff.infrastructure.input.rest;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.staff.application.gethealthcareprofessional.GetHealthcareProfessional;
 import net.pladema.staff.application.gethealthcareprofessionalbyuserid.GetHealthcareProfessionalByUserId;
+import net.pladema.staff.application.getUserIdByHealthcareProfessionalId.GetUserIdByHealthcareProfessionalId;
+
 import net.pladema.staff.application.saveprofessional.SaveHealthcareProfessional;
 import net.pladema.staff.controller.dto.HealthcareProfessionalCompleteDto;
 import net.pladema.staff.controller.dto.ProfessionalDto;
@@ -39,19 +41,23 @@ public class HealthcareProfessionalController {
 	private final GetHealthcareProfessional getHealthcareProfessional;
 
 	private final SaveHealthcareProfessional saveHealthcareProfessional;
-
 	private final GetHealthcareProfessionalByUserId getHealthcareProfessionalByUserId;
+
+	private final GetUserIdByHealthcareProfessionalId getUserIdByHealthcareProfessionalId;	
+	
 
 	public HealthcareProfessionalController(HealthcareProfessionalService healthcareProfessionalService,
 											HealthcareProfessionalMapper healthcareProfessionalMapper,
 											GetHealthcareProfessional getHealthcareProfessional,
 											SaveHealthcareProfessional saveHealthcareProfessional,
-											GetHealthcareProfessionalByUserId getHealthcareProfessionalByUserId) {
+											GetHealthcareProfessionalByUserId getHealthcareProfessionalByUserId,
+											GetUserIdByHealthcareProfessionalId getUserIdByHealthcareProfessionalId) {
 		this.healthcareProfessionalService = healthcareProfessionalService;
 		this.healthcareProfessionalMapper = healthcareProfessionalMapper;
 		this.getHealthcareProfessional = getHealthcareProfessional;
 		this.saveHealthcareProfessional = saveHealthcareProfessional;
-		this.getHealthcareProfessionalByUserId = getHealthcareProfessionalByUserId;
+		this.getHealthcareProfessionalByUserId = getHealthcareProfessionalByUserId;		
+		this.getUserIdByHealthcareProfessionalId = getUserIdByHealthcareProfessionalId;
 	}
 
 	@GetMapping
@@ -70,6 +76,14 @@ public class HealthcareProfessionalController {
 											   @PathVariable(name = "personId") Integer personId) {
 		LOG.debug("Input parameters -> {}", personId);
 		ProfessionalDto result = healthcareProfessionalMapper.fromProfessionalBo(getHealthcareProfessional.execute(personId));
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping(value = "/{healthcareProfessionalId}")
+	public ResponseEntity<Integer> getUserIdByHealthcareProfessionalId(@PathVariable(name = "healthcareProfessionalId") Integer healthcareProfessionalId) {
+		LOG.debug("Input parameters -> {}", healthcareProfessionalId);
+		Integer result = getUserIdByHealthcareProfessionalId.execute(healthcareProfessionalId);
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}

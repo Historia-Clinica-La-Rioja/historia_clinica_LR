@@ -1,23 +1,20 @@
 package net.pladema.person.controller;
 
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-
 import lombok.RequiredArgsConstructor;
 import net.pladema.person.repository.PersonRepository;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,12 +25,10 @@ public class BackofficePersonStore implements BackofficeStore<Person, Integer> {
 
 	@Override
 	public Page<Person> findAll(Person entity, Pageable pageable) {
-		List<Integer> activePersonIds = personRepository.findAllActive();
-		List<Person> result =  personRepository.findAll(buildExample(entity), PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.unsorted()))
-				.filter(p -> activePersonIds.contains(p.getId())).toList();
-		int minIndex = pageable.getPageNumber() * pageable.getPageSize();
-		int maxIndex = minIndex + pageable.getPageSize();
-		return new PageImpl<>(result.subList(minIndex, Math.min(maxIndex, result.size())), pageable, result.size());
+		if ((entity.getIdentificationNumber() != null))
+			entity.setIdentificationNumber(entity.getIdentificationNumber().replace(".", ""));
+
+		return personRepository.findAll(buildExample(entity), pageable);
 	}
 
 	@Override
@@ -68,6 +63,7 @@ public class BackofficePersonStore implements BackofficeStore<Person, Integer> {
 	public Example<Person> buildExample(Person entity) {
 		ExampleMatcher customExampleMatcher = ExampleMatcher.matching().withMatcher("identificationNumber",
 				ExampleMatcher.GenericPropertyMatcher::startsWith)
+				.withMatcher("identificationNumber", ExampleMatcher.GenericPropertyMatcher::startsWith)
 				.withMatcher("firstName", x -> x.ignoreCase().contains())
 				.withMatcher("lastName", x -> x.ignoreCase().contains());
 		return Example.of(entity, customExampleMatcher);

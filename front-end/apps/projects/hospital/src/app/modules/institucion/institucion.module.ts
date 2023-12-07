@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 // deps
 import { ExtensionsModule } from '@extensions/extensions.module';
+import { JitsiModule } from '../jitsi/jitsi.module';
 import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 import { PresentationModule } from '@presentation/presentation.module';
 // routing
@@ -12,7 +13,8 @@ import { BedDetailComponent } from './components/bed-detail/bed-detail.component
 import { BedFiltersComponent } from './components/bed-filters/bed-filters.component';
 import { BedMappingComponent } from './components/bed-mapping/bed-mapping.component';
 import { InstitucionComponent } from './institucion.component';
-import { SearchPatientComponent } from '../pacientes/component/search-patient/search-patient.component';
+import { EntryCallComponent } from './components/entry-call/entry-call.component';
+import { RejectedCallComponent } from './components/rejected-call/rejected-call.component';
 
 
 @NgModule({
@@ -23,8 +25,9 @@ import { SearchPatientComponent } from '../pacientes/component/search-patient/se
 		BedDetailComponent,
 		BedFiltersComponent,
 		BedMappingComponent,
+		EntryCallComponent,
 		InstitucionComponent,
-		SearchPatientComponent
+		RejectedCallComponent,
 	],
 	imports: [
 		CommonModule,
@@ -34,12 +37,12 @@ import { SearchPatientComponent } from '../pacientes/component/search-patient/se
 		ExtensionsModule,
 		LazyMaterialModule,
 		PresentationModule,
+		JitsiModule
 	],
 	exports: [
 		BedDetailComponent,
 		BedFiltersComponent,
 		BedMappingComponent,
-		SearchPatientComponent
 	]
 })
 export class InstitucionModule { }

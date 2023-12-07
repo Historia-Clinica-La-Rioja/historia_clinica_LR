@@ -33,7 +33,7 @@ import { PatientAllergiesService } from '../../services/patient-allergies.servic
 import { SummaryCoverageInformation } from '../../components/medical-coverage-summary-view/medical-coverage-summary-view.component';
 import { EMedicalCoverageType } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
 import { InternmentActionsService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-actions.service";
-import { Slot, SlotedInfo, WCExtensionsService } from '@extensions/services/wc-extensions.service';
+import { WCExtensionsService } from '@extensions/services/wc-extensions.service';
 import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-care-episode-state.service';
 import { EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
 import { PatientType } from '@historia-clinica/constants/summaries';
@@ -43,6 +43,7 @@ import { PatientToMergeService } from '@api-rest/services/patient-to-merge.servi
 import { Patient } from '@pacientes/component/search-patient/search-patient.component';
 import { PatientValidatorPopupComponent } from '../../dialogs/patient-validator-popup/patient-validator-popup.component';
 import { PATIENT_TYPE } from '@core/utils/patient.utils';
+import { WCParams } from '@extensions/components/ui-external-component/ui-external-component.component';
 
 const RESUMEN_INDEX = 0;
 const VOLUNTARY_ID = 1;
@@ -64,7 +65,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 	patientId: number;
 	personId: number;
 	extensionTabs$: Observable<{ head: MenuItem, body$: Observable<UIPageDto> }[]>;
-	extensionWCTabs$: Observable<SlotedInfo[]>;
+	extensionWCTabs$: Observable<WCParams[]>;
 	medicamentStatus$: Observable<any>;
 	studyCategories$: Observable<any>;
 	diagnosticReportsStatus$: Observable<any>;
@@ -263,7 +264,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 		this.extensionTabs$ = this.extensionPatientService.getTabs(this.patientId);
 
 
-		this.extensionWCTabs$ = this.wcExtensionsService.getComponentsFromSlot(Slot.CLINIC_HISTORY_TAB);
+		this.extensionWCTabs$ = this.wcExtensionsService.getClinicHistoryComponents(this.patientId);
 
 		this.odontogramService.resetOdontogram();
 
@@ -407,6 +408,14 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 			this.hasPharmacyStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_FARMACIA]);
 			this.hasPrescriptorRole = anyMatch<ERole>(userRoles, [ERole.PRESCRIPTOR]);
 		});
+	}
+
+
+	//FILTRO DE EDAD PARA ADULTO MAYOR
+	isAdultoMayor(): boolean {
+		const edadPaciente = this.patient.age; 
+
+		return edadPaciente > 60;
 	}
 
 	goToPatient(): void {

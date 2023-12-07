@@ -60,6 +60,7 @@ public class FeaturesStatusController {
 			"card",
 				Map.of(
 						"title", title,
+						"mode", "white-box",
 						"content", content
 				)
 		);

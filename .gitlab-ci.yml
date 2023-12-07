@@ -14,3 +14,23 @@ build_frontend:
     paths:
       - front-end/apps/node_modules
       - front-end/backoffice/node_modules
+
+code_freeze:
+  stage: publish-docker-image
+  image: bitnami/git:2.42.0
+  script:
+    - apt-get update
+    - apt-get install -y maven
+    - ./scripts/run-code-freeze.sh
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: manual
+
+generar_release:
+  stage: publish-docker-image
+  image: bitnami/git:2.42.0
+  script:
+    - ./scripts/run-release.sh
+  only:
+    - /^rc-.*$/ 
+  when: manual

@@ -29,7 +29,7 @@
 			*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ADMINISTRADOR_AGENDA', 'ENFERMERO']">
 			<app-seach-appointments-by-professional [isVisible]="tabActiveIndex === 0"></app-seach-appointments-by-professional>
 		</mat-tab>
-		<mat-tab label="{{ 'turnos.home.SEARCH_BY_SPECIALTY' | translate | uppercase }}"
+		<mat-tab label="{{ 'turnos.home.SEARCH_BY_INSTITUTION' | translate | uppercase }}"
 			*appHasRole="['ADMINISTRATIVO']">
 			<app-search-appointments-by-specialty [isVisible]="tabActiveIndex === 1"></app-search-appointments-by-specialty>
 		</mat-tab>
@@ -43,6 +43,13 @@
 			<app-search-appointments-by-equipment [selectedEquipment]="selectedEquipment" [editedDiary]="selectedDiary">
 			</app-search-appointments-by-equipment>
 		</mat-tab>
+
+		<div *ngIf="ffReferenceReportIsOn">
+			<mat-tab label="{{ 'turnos.home.REQUESTS' | translate | uppercase }}" 
+				*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+				<app-reference-report></app-reference-report>
+			</mat-tab>
+		</div>
 	</mat-tab-group>
 
 	<div *ngIf="noPermission">

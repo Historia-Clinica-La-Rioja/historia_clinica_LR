@@ -209,6 +209,13 @@ export class InternmentSummaryFacadeService {
 	private loadHistoric(): void {
 		this.documentSearchService.getHistoric(this.internmentEpisodeId, this.searchFilter).subscribe(historicalData => this.clinicalEvaluationSubject.next(historicalData));
 	}
+
+	clearInternment() {
+		this.anamnesisSubject.next([]);
+		this.epicrisisSubject.next([]);
+		this.evolutionNoteSubject.next([]);
+		this.hasMedicalDischargeSubject.next([]);
+	}
 }
 
 export interface InternmentFields {

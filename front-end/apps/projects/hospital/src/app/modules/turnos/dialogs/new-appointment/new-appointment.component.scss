@@ -1,8 +1,6 @@
 @import '../../../../../assets/styles/mixins';
 
 .mat-card {
-	margin-top: 15px;
-
 	mat-card-content {
 		@include card-content;
 	}
@@ -31,6 +29,17 @@
 	padding-bottom: 10px
 }
 
-.back-btn{
-	margin-top: 25px;
+.appointment-title-icon {
+	margin-right: .5rem;
+}
+
+.appointment-title-dot {
+	font-size: .75rem;
+	margin-left: .25rem;
+	margin-right: .25rem;
+}
+
+.dialog-content {
+	height: 100%;
+	overflow: auto;
 }

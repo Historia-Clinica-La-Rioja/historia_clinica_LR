@@ -13,6 +13,12 @@ import { HistoriaClinicaModule } from "../historia-clinica/historia-clinica.modu
 import { ReportStudyComponent } from './components/report-study/report-study.component';
 import { ViewStudyComponent } from './components/view-study/view-study.component';
 import { DeriveReportComponent } from './dialogs/derive-report/derive-report.component';
+import { AddConclusionFormComponent } from './dialogs/add-conclusion-form/add-conclusion-form.component';
+import { ViewReportComponent } from './components/view-report/view-report.component';
+import { WorklistFiltersComponent } from './components/worklist-filters/worklist-filters.component';
+import { SaveTemplateComponent } from './dialogs/save-template/save-template.component';
+import { ViewInformerObservationsComponent } from './components/view-informer-observations/view-informer-observations.component';
+import { ImportTemplateComponent } from './dialogs/import-template/import-template.component';
 
 @NgModule({
     declarations: [
@@ -25,13 +31,23 @@ import { DeriveReportComponent } from './dialogs/derive-report/derive-report.com
         StudyDetailsComponent,
         ReportStudyComponent,
         ViewStudyComponent,
-        DeriveReportComponent
+        DeriveReportComponent,
+        AddConclusionFormComponent,
+        ViewReportComponent,
+        WorklistFiltersComponent,
+        SaveTemplateComponent,
+        ViewInformerObservationsComponent,
+        ImportTemplateComponent,
     ],
     imports: [
         CommonModule,
         PresentationModule,
         ImageNetworkRoutingModule,
         HistoriaClinicaModule
+    ],
+    exports: [
+        ViewStudyComponent,
+        ViewReportComponent
     ]
 })
 

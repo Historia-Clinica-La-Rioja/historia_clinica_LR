@@ -1,0 +1,14 @@
+@import '../../../../../assets/styles/mixins';
+
+mat-card.mat-card {
+	@include card-centered;
+}
+
+.title {
+	margin-top: 12px;
+}
+
+mat-card-actions {
+	display: flex;
+	justify-content: flex-end;
+}

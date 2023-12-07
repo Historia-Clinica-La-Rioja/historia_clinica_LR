@@ -33,4 +33,6 @@ public class CounterReferenceInfoBo {
     private List<Integer> fileIds;
 
 	private Short closureTypeId;
+
+	private Integer hierarchicalUnitId;
 }

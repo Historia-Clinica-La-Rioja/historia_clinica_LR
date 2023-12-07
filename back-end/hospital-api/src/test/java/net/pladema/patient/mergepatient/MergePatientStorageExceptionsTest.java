@@ -41,6 +41,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -156,11 +157,8 @@ public class MergePatientStorageExceptionsTest {
 		List<Integer> inactivePatientsIds = Arrays.asList(1,2);
 
 		PatientToMergeDto patientToMerge = getPatientToMergeDto(inactivePatientsIds,3,"John","Doe","11111111",s,"011","22222222",s,"Juan");
-
-		when(mergedInactivePatientRepository.findAllInactivePatientIdByActivePatientId(patientToMerge.getActivePatientId()))
-				.thenReturn(inactivePatientsIds);
-		when(mergedInactivePatientRepository.findByInactivePatientId(1))
-				.thenReturn(Optional.empty());
+		doReturn(inactivePatientsIds).when(mergedInactivePatientRepository).findAllInactivePatientIdByActivePatientId(patientToMerge.getActivePatientId());
+		doReturn(Optional.empty()).when(mergedInactivePatientRepository).findByInactivePatientId(1);
 
 		var thrown = catchThrowable(() -> unmergePatient.run(institutionId, patientToMerge));
 

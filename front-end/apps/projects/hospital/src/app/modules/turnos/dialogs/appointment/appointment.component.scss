@@ -12,6 +12,10 @@
 	margin-left: 3px;
 }
 
+.assigned-by {
+	color: #828282;
+}
+
 .dateForm {
 	.date {
 		width: 276px;
@@ -45,6 +49,10 @@
 		color: #A8A8A8;
 		font-size: 20px;
 	}
+	.icon-purple{
+		color: #AA4EF2;
+		font-size: 20px;
+	}
 
 	.icon-close {
 		mat-icon {
@@ -71,6 +79,12 @@
 
 	.purple {
 		color: #AA4EF2;
+	}
+
+	.modality{
+		background-color: #EEDAF2;
+		padding: 7px;
+		border-radius: 5px;
 	}
 }
 

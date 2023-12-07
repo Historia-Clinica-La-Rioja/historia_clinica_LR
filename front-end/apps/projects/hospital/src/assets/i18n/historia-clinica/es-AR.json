@@ -87,6 +87,11 @@
 			"MEDICATION": "Medicación",
 			"OBSERVACIONES": "Observaciones",
 			"SUSPENDIDO": "Suspendido"
+		},
+		"hierarhical-unit-section": {
+			"TITLE": "Unidad jerárquica",
+			"IS_A_REPLACEMENT": "Es un reemplazo",
+			"PLACEHOLDER": "Seleccione una unidad jerárquica"
 		}
 	}
 }

@@ -4,7 +4,6 @@ import { HealthHistoryConditionDto, SnomedDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { SearchSnomedConceptComponent } from '@historia-clinica/modules/ambulatoria/dialogs/search-snomed-concept/search-snomed-concept.component';
-import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
 
 @Component({
 	selector: 'app-antecedentes-personales',
@@ -23,7 +22,6 @@ export class AntecedentesPersonalesComponent {
 
 
 	constructor(
-		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
 		private readonly dialog: MatDialog,
 
 
@@ -45,13 +43,11 @@ export class AntecedentesPersonalesComponent {
 
 	add(ap: HealthHistoryConditionDto): void {
 		this.personalHistories = pushTo<HealthHistoryConditionDto>(this.personalHistories, ap);
-		this.componentEvaluationManagerService.personalHistories = this.personalHistories;
 		this.personalHistoriesChange.next(this.personalHistories);
 	}
 
 	remove(index: number): void {
 		this.personalHistories = removeFrom<HealthHistoryConditionDto>(this.personalHistories, index);
-		this.componentEvaluationManagerService.personalHistories = this.personalHistories;
 		this.personalHistoriesChange.next(this.personalHistories);
 	}
 

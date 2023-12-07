@@ -50,13 +50,13 @@ export class PatientProfilePopupComponent implements OnInit {
 		private contextService: ContextService,
 		@Inject(MAT_DIALOG_DATA) public data: {
 			patientId: number,
+			viewCardToAudit: boolean
 		}) {
 			this.patientId = this.data.patientId;
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
 	ngOnInit(): void {
-
 		this.patientService.getPatientCompleteData<CompletePatientDto>(this.patientId)
 			.subscribe(completeData => {
 				if (completeData?.auditablePatientInfo) {
@@ -103,7 +103,8 @@ export class PatientProfilePopupComponent implements OnInit {
 	}
 
 	goToEditPatient() {
-		this.router.navigate([this.routePrefix + ROUTE_EDIT_PATIENT], {
+		const route: string = this.data.viewCardToAudit ? '/home/auditoria/pacientes/edit' : this.routePrefix + ROUTE_EDIT_PATIENT;
+		this.router.navigate([route], {
 			queryParams: { id: this.patientId }
 		});
 	}

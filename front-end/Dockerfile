@@ -8,6 +8,7 @@ WORKDIR /app
 
 COPY .docker/front-end     /app/front-end/
 COPY .docker/backoffice    /app/backoffice/
+COPY .docker/storybook     /app/storybook/
 
 COPY entrypoint.sh /entrypoint.sh
 

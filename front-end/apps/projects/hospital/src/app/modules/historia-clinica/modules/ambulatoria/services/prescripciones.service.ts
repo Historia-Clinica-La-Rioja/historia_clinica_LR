@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+	AppointmentOrderImageExistCheckDto,
 	CompleteRequestDto,
 	DiagnosticReportInfoDto,
 	DiagnosticReportInfoWithFilesDto,
@@ -51,6 +52,10 @@ export class PrescripcionesService {
 		return this.serviceRequestService.deleteTranscribedOrder(patientId, serviceRequestId);
 	}
 
+	getMedicalOrders(patientId: number, statusId: string, categoryId: string): Observable<DiagnosticReportInfoDto[]> {
+		return this.serviceRequestService.getMedicalOrders(patientId, statusId, categoryId);
+	}
+
 	getTranscribedOrders(patientId: number): Observable<TranscribedDiagnosticReportInfoDto[]> {
 		return this.serviceRequestService.getTranscribedOrders(patientId);
 	}
@@ -72,8 +77,8 @@ export class PrescripcionesService {
 			return this.medicationRequestService.medicationRequestListByRoles(patientId, statusId, medicationStatement, healthCondition);
 	}
 
-	getPrescriptionStatus(patientId: number, serviceRequestId: number): Observable<boolean>{
-		return this.serviceRequestService.getStudyStatus(patientId, serviceRequestId);
+	getPrescriptionStatus(patientId: number, diagnosticReportId: number): Observable<AppointmentOrderImageExistCheckDto>{
+		return this.serviceRequestService.getStudyStatus(patientId, diagnosticReportId);
 	}
 
 	changeMedicationStatus(statusChange: string, patientId: number, medicationsIds: number[], dayQuantity?: number, observations?: string): Observable<void> {
@@ -110,6 +115,10 @@ export class PrescripcionesService {
 
 	completeStudy(patientId: number, diagnosticReportId: number, completeRequestDto: CompleteRequestDto, files: File[]): Observable<void> {
 		return this.serviceRequestService.complete(patientId, diagnosticReportId, completeRequestDto, files);
+	}
+
+	completeStudyByRdi(patientId: number, appointmentId: number): Observable<void> {
+		return this.serviceRequestService.completeByRdi(patientId, appointmentId);
 	}
 
 	showStudyResults(patientId: number, diagnosticReportId: number): Observable<DiagnosticReportInfoWithFilesDto> {
@@ -204,9 +213,15 @@ export class PrescripcionesService {
 				return this.STUDY_STATUS.REGISTERED.description;
 			case this.STUDY_STATUS.FINAL.id:
 				return this.STUDY_STATUS.FINAL.description;
+			case this.STUDY_STATUS.FINAL_RDI.id:
+				return this.STUDY_STATUS.FINAL_RDI.description;
 			case this.STUDY_STATUS.ERROR.id:
 				return this.STUDY_STATUS.ERROR.description;
 		}
+	}
+
+	renderStatusDescriptionStudyImage(stateComplete: boolean): string {
+		return stateComplete ? this.STUDY_STATUS.FINAL.description : this.STUDY_STATUS.REGISTERED.description
 	}
 
 	renderPrescriptionLineState(prescriptionLineState: number): PrescriptionLineState {

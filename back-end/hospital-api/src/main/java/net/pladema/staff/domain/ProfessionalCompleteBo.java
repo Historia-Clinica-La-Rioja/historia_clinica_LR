@@ -31,4 +31,9 @@ public class ProfessionalCompleteBo {
 		this.nameSelfDetermination = (nameSelfDetermination == null || nameSelfDetermination.isEmpty() || nameSelfDetermination.isBlank()) ? firstName : nameSelfDetermination;
 		this.otherLastNames = otherLastNames;
     }
+
+	public String getCompleteName(String name){
+		return String.format("%s %s", name, lastName);
+	}
+
 }

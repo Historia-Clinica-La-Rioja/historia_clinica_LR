@@ -79,8 +79,6 @@ export class QueryRendererComponent {
 	@Input('defaultColor')
 	defaultColor?: string;
 
-	@Input() listOnTab: string = null;
-
 	@Input() title: string
 	chartOptions: ChartOptions;
 	chartType: any = null;

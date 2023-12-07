@@ -21,11 +21,12 @@ export class WorklistService {
     return this.http.get<MasterDataDto[]>(url);
   }
 
-  getByModalityAndInstitution(modalityId?: number): Observable<WorklistDto[]> {
+  getByModalityAndInstitution(modalityId: number, from: string, to: string): Observable<WorklistDto[]> {
     let url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/worklist/by-modality`;
-
     let queryParams: HttpParams = new HttpParams();
     if (modalityId) queryParams = queryParams.append('modalityId', JSON.stringify(modalityId));
+    if (from) queryParams = queryParams.append('from', from);
+    if (to) queryParams = queryParams.append('to', to);
 
     return this.http.get<WorklistDto[]>(url, { params: queryParams });
   }

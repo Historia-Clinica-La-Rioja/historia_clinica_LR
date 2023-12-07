@@ -48,21 +48,22 @@ public class PersonSearchQuery {
 
 	public QueryPart from() {
 		String from = " {h-schema}person as person \n" +
-				"	join {h-schema}patient as patient on (patient.person_id = person.id) and (patient.deleted != true) and (patient.type_id != 6) \n" +
+				"	join {h-schema}patient as patient on (patient.person_id = person.id) and (patient.deleted != true) \n" +
 				"	join {h-schema}person_extended as person_extended on (person_extended.person_id = person.id) \n";
 		return new QueryPart(from);
 	}
 
 	public QueryPart where() {
 		String where = "";
+		boolean hasNameCriteria = (firstName != null || middleNames != null || lastName != null || otherLastNames != null);
+		if (hasNameCriteria) {
 		if (firstName != null && !firstName.isEmpty())
-			where += " person.first_name = '" + firstName + "' AND \n";
-		if (middleNames != null && !middleNames.isEmpty())
-			where += " person.middle_names = '" + middleNames + "' AND \n";
+			where += " LOWER(person.first_name) = '" + firstName.toLowerCase() + "' AND \n";
+			where += (middleNames != null && !middleNames.isEmpty()) ? " LOWER(person.middle_names) = '" + middleNames.toLowerCase() + "' AND \n" : " person.middle_names IS NULL AND \n";
 		if (lastName != null && !lastName.isEmpty())
-			where += " person.last_name = '" + lastName + "' AND \n";
-		if (otherLastNames != null && !otherLastNames.isEmpty())
-			where += " person.other_last_names = '" + otherLastNames + "' AND \n";
+			where += " LOWER(person.last_name) = '" + lastName.toLowerCase() + "' AND \n";
+			where += (otherLastNames != null && !otherLastNames.isEmpty()) ? " LOWER(person.other_last_names) = '" + otherLastNames.toLowerCase() + "' AND \n" : " person.other_last_names IS NULL AND \n";
+		}
 		if (identificationTypeId != null)
 			where += " person.identification_type_id = " + identificationTypeId + " AND \n";
 		if (identificationNumber != null && !identificationNumber.isEmpty())

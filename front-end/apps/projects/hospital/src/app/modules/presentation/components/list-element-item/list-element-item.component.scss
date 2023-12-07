@@ -1,3 +1,9 @@
+app-colored-label {
+	align-self: flex-start;
+	justify-self: flex-start;
+	margin-right: 20px;
+}
+
 .label {
 	border-radius: 6px;
 	padding: 3px 8px;
@@ -36,4 +42,14 @@
 
 .medication {
 	font-size: 16px;
+}
+
+.report-status {
+    align-items: center;
+}
+
+@media (max-width: 1280px) {
+	.report-status {
+		align-items: baseline;
+	}
 }

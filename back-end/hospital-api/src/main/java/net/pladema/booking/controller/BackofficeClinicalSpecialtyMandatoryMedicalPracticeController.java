@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("backoffice/clinicalspecialtymandatorymedicalpractices")
 public class BackofficeClinicalSpecialtyMandatoryMedicalPracticeController
         extends AbstractBackofficeController<BackofficeClinicalSpecialtyMandatoryMedicalPractice, Integer> {
-    public BackofficeClinicalSpecialtyMandatoryMedicalPracticeController(BackofficeClinicalSpecialtyMandatoryMedicalPracticeRepository repository) {
-        super(repository);
+    public BackofficeClinicalSpecialtyMandatoryMedicalPracticeController(BackofficeClinicalSpecialtyMandatoryMedicalPracticeRepository repository,
+																		 BackofficeClinicalSpecialtyMandatoryMedicalPracticeValidator validator) {
+        super(repository, validator);
     }
 }

@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -35,7 +35,7 @@ public abstract class JWTFilter extends OncePerRequestFilter implements Authenti
 		tokenExtractor.apply(request)
 				.map(this::removeBearer)
 				.flatMap(authenticationLoader::apply)
-				.ifPresent(opA -> SecurityContextHolder.getContext().setAuthentication(opA));
+				.ifPresent(SecurityContextUtils::setAuthentication);
 
 		log.debug("Request {}", request.getRequestURL());
 		chain.doFilter(request, response);

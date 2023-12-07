@@ -4,6 +4,7 @@ import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
+import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.UpdateAppointmentOpeningHoursService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
@@ -16,6 +17,7 @@ import net.pladema.medicalconsultation.diary.repository.entity.Diary;
 import net.pladema.medicalconsultation.diary.service.DiaryAssociatedProfessionalService;
 import net.pladema.medicalconsultation.diary.service.DiaryCareLineService;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
+import net.pladema.medicalconsultation.diary.service.DiaryPracticeService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
@@ -25,6 +27,7 @@ import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitExcept
 import net.pladema.medicalconsultation.diary.service.exception.DiaryEnumException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryException;
 import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
+import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryNotFoundEnumException;
@@ -83,13 +86,14 @@ public class DiaryServiceImpl implements DiaryService {
 
 	private final DateTimeProvider dateTimeProvider;
 
+	private final DiaryPracticeService diaryPracticeService;
+
 	@Override
+	@Transactional
 	public Integer addDiary(DiaryBo diaryToSave) throws DiaryException {
 		LOG.debug("Input parameters -> diaryToSave {}", diaryToSave);
 
-		if(diaryToSave.getProtectedAppointmentsPercentage() > 0 && diaryToSave.getCareLines().isEmpty()) {
-			throw new DiaryException(DiaryEnumException.PROTECTED_APPOINTMENTS_PERCENTAGE_WITHOUT_CARELINES, "No se puede ingresar un porcentaje de turnos protegidos mayor a cero sin asociar lineas de cuidado a la agenda");
-		}
+		validateDiary(diaryToSave);
 
 		Diary diary = createDiaryInstance(diaryToSave);
 		Integer diaryId = persistDiary(diaryToSave, diary);
@@ -99,13 +103,13 @@ public class DiaryServiceImpl implements DiaryService {
 		return diaryId;
 	}
 
-	@Transactional
 	private Integer persistDiary(DiaryBo diaryToSave, Diary diary) {
 		diary = diaryRepository.save(diary);
 		Integer diaryId = diary.getId();
 		diaryOpeningHoursService.update(diaryId, diaryToSave.getDiaryOpeningHours());
 		diaryCareLineService.updateCareLinesAssociatedToDiary(diaryId, diaryToSave.getCareLines());
 		diaryAssociatedProfessionalService.updateDiaryAssociatedProfessionals(diaryToSave.getDiaryAssociatedProfessionalsId(), diaryId);
+		diaryPracticeService.updateDiaryPractices(diaryToSave.getPracticesId(), diaryId);
 		return diaryId;
 	}
 
@@ -127,7 +131,8 @@ public class DiaryServiceImpl implements DiaryService {
 		diary.setActive(true);
 		diary.setClinicalSpecialtyId(diaryBo.getClinicalSpecialtyId());
 		diary.setAlias(diaryBo.getAlias());
-		diary.setProtectedAppointmentsPercentage(diaryBo.getProtectedAppointmentsPercentage().shortValue());
+		diary.setPredecessorProfessionalId(diaryBo.getPredecessorProfessionalId());
+		diary.setHierarchicalUnitId(diaryBo.getHierarchicalUnitId());
 		return diary;
 	}
 
@@ -149,13 +154,13 @@ public class DiaryServiceImpl implements DiaryService {
 	public Integer updateDiary(DiaryBo diaryToUpdate) throws DiaryException {
 		LOG.debug("Input parameters -> diaryToUpdate {}", diaryToUpdate);
 
-		if(diaryToUpdate.getProtectedAppointmentsPercentage() > 0 && diaryToUpdate.getCareLines().isEmpty()) {
-			throw new DiaryException(DiaryEnumException.PROTECTED_APPOINTMENTS_PERCENTAGE_WITHOUT_CARELINES, "No se puede ingresar un porcentaje de turnos protegidos mayor a cero sin asociar lineas de cuidado a la agenda");
-		}
+		validateDiary(diaryToUpdate);
 
 		return diaryRepository.findById(diaryToUpdate.getId()).map(savedDiary -> {
 			HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH = new HashMap<>();
 			diaryToUpdate.getDiaryOpeningHours().forEach( doh -> {
+				if (doh.getProtectedAppointmentsAllowed() != null && doh.getProtectedAppointmentsAllowed() && diaryToUpdate.getCareLines().isEmpty())
+					doh.setProtectedAppointmentsAllowed(false);
 				doh.setDiaryId(savedDiary.getId());
 				apmtsByNewDOH.put(doh, new ArrayList<>());
 			});
@@ -203,41 +208,16 @@ public class DiaryServiceImpl implements DiaryService {
 				&& isBetween(apmt.getHour(), doh.getOpeningHours().getFrom(), doh.getOpeningHours().getTo());
 	}
 
-	/**
-	 *
-	 * @param healthcareProfessionalId ID profesional de salud
-	 * @param doctorsOfficeId          ID consultorio
-	 * @param newDiaryStart            nueva fecha de comienzo para agenda
-	 * @param newDiaryEnd              nueva fecha de fin para agenda
-	 * @return lista con todos los ID de agendas definidas en rangos de fecha
-	 *         superpuestas para un mismo profesional de salud y consultorio.
-	 */
 	@Override
-	public List<Integer> getAllOverlappingDiaryByProfessional(Integer healthcareProfessionalId, Integer doctorsOfficeId,
-															  LocalDate newDiaryStart, LocalDate newDiaryEnd, Short appointmentDuration, Optional<Integer> excludeDiaryId) {
-		LOG.debug(
-				"Input parameters -> healthcareProfessionalId {}, doctorsOfficeId {}, newDiaryStart {}, newDiaryEnd {}",
-				healthcareProfessionalId, doctorsOfficeId, newDiaryStart, newDiaryEnd);
-		List<Integer> diaryIds = excludeDiaryId.isPresent()
-				? diaryRepository.findAllOverlappingDiaryByProfessionalExcludingDiary(healthcareProfessionalId, doctorsOfficeId,
-						newDiaryStart, newDiaryEnd, appointmentDuration, excludeDiaryId.get())
-				: diaryRepository.findAllOverlappingDiaryByProfessional(healthcareProfessionalId, doctorsOfficeId, newDiaryStart,
-						newDiaryEnd, appointmentDuration);
-		LOG.debug("Diary saved -> {}", diaryIds);
-		return diaryIds;
-
-	}
-
-	@Override
-	public List<DiaryBo> getAllOverlappingDiary(@NotNull Integer doctorsOfficeId,
+	public List<DiaryBo> getAllOverlappingDiary(@NotNull Integer healthcareProfessionalId, @NotNull Integer doctorsOfficeId,
 												@NotNull LocalDate newDiaryStart, @NotNull  LocalDate newDiaryEnd, Optional<Integer> excludeDiaryId) {
 		LOG.debug(
 				"Input parameters -> doctorsOfficeId {}, newDiaryStart {}, newDiaryEnd {}",
 				doctorsOfficeId, newDiaryStart, newDiaryEnd);
 		List<Diary> diaries = excludeDiaryId.isPresent()
-				? diaryRepository.findAllOverlappingDiaryExcludingDiary(doctorsOfficeId,
+				? diaryRepository.findAllOverlappingDiaryExcludingDiary(healthcareProfessionalId, doctorsOfficeId,
 				newDiaryStart, newDiaryEnd, excludeDiaryId.get())
-				: diaryRepository.findAllOverlappingDiary(doctorsOfficeId, newDiaryStart,
+				: diaryRepository.findAllOverlappingDiary(healthcareProfessionalId, doctorsOfficeId, newDiaryStart,
 				newDiaryEnd);
 		List<DiaryBo> result = diaries.stream().map(this::createDiaryBoInstance).collect(Collectors.toList());
 		LOG.debug(OUTPUT, result);
@@ -279,6 +259,8 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setIncludeHoliday(diaryListVo.isIncludeHoliday());
 		result.setAlias(diaryListVo.getAlias());
 		result.setClinicalSpecialtyName(diaryListVo.getClinicalSpecialtyName());
+		result.setPredecessorProfessionalId(diaryListVo.getPredecessorProfessionalId());
+		result.setHierarchicalUnitId(diaryListVo.getHierarchicalUnitId());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
@@ -296,7 +278,8 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setDoctorMiddleNames(completeDiaryListVo.getDoctorMiddleNames());
 		result.setDoctorOtherLastNames(completeDiaryListVo.getDoctorOtherLastNames());
 		result.setDoctorNameSelfDetermination(completeDiaryListVo.getDoctorNameSelfDetermination());
-		result.setProtectedAppointmentsPercentage(completeDiaryListVo.getProtectedAppointmentsPercentage() != null ? completeDiaryListVo.getProtectedAppointmentsPercentage().intValue() : 0);
+		result.setHierarchicalUnitId(completeDiaryListVo.getHierarchicalUnitId());
+		result.setHierarchicalUnitAlias(completeDiaryListVo.getHierarchicalUnitAlias());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
@@ -309,6 +292,7 @@ public class DiaryServiceImpl implements DiaryService {
 		result.ifPresent(completeDiaryBo -> {
 			completeDiaryBo.setAssociatedProfessionalsInfo(diaryAssociatedProfessionalService.getAllDiaryAssociatedProfessionalsInfo(diaryId));
 			completeDiaryBo.setCareLinesInfo(diaryCareLineService.getAllCareLinesByDiaryId(diaryId, completeDiaryBo.getHealthcareProfessionalId()));
+			completeDiaryBo.setPracticesInfo(diaryPracticeService.getAllByDiaryId(diaryId));
 		});
 		LOG.debug(OUTPUT, result);
 		return result;
@@ -368,6 +352,15 @@ public class DiaryServiceImpl implements DiaryService {
 	}
 
 	@Override
+	public Optional<CompleteDiaryBo> getCompleteDiaryByAppointment(Integer appointmentId){
+		LOG.debug("Input parameters -> appointmentId {}", appointmentId);
+		Optional<CompleteDiaryBo> result = diaryRepository.getCompleteDiaryByAppointment(appointmentId).map(this::createCompleteDiaryBoInstance);
+		LOG.debug(OUTPUT, result);
+		return result;
+
+	}
+
+	@Override
 	public Boolean hasActiveDiariesInInstitution(Integer healthcareProfessionalId, Integer institutionId){
 		LOG.debug("Input parameters -> healthcareProfessionalId {}, institutionId {}", healthcareProfessionalId, institutionId);
 		Boolean result = diaryRepository.hasActiveDiariesInInstitution(healthcareProfessionalId, institutionId);
@@ -384,16 +377,25 @@ public class DiaryServiceImpl implements DiaryService {
 	}
 
 	@Override
-	public List<EmptyAppointmentBo> getEmptyAppointmentsBySearchCriteria(Integer institutionId, AppointmentSearchBo searchCriteria) {
-		LOG.debug("Input parameters -> institutionId {}, searchCriteria {}", institutionId, searchCriteria);
+	public List<EmptyAppointmentBo> getEmptyAppointmentsBySearchCriteria(Integer institutionId, AppointmentSearchBo searchCriteria, Boolean mustFilterByModality) {
+		LOG.debug("Input parameters -> institutionId {}, searchCriteria {}, mustFilterByModality {}", institutionId, searchCriteria, mustFilterByModality);
 		List<EmptyAppointmentBo> emptyAppointments = new ArrayList<>();
-		List<CompleteDiaryBo> diariesBySpecialty = getActiveDiariesByAliasOrClinicalSpecialtyName(institutionId, searchCriteria.getAliasOrSpecialtyName());
+		validateSearchCriteria(searchCriteria);
+		List<CompleteDiaryBo> diaries =  getActiveDiariesByAliasOrClinicalSpecialtyNameOrPracticeId(institutionId, searchCriteria.getAliasOrSpecialtyName(), searchCriteria.getPracticeId());
+
+		if (mustFilterByModality)
+			filterOpeningHoursByModality(searchCriteria, diaries);
 		LocalDateTime currentDateTime = dateTimeProvider.nowDateTimeWithZone(institutionExternalService.getTimezone(institutionId));
-		for (CompleteDiaryBo diary: diariesBySpecialty)
+		for (CompleteDiaryBo diary: diaries)
 			emptyAppointments = getEmptyAppointmentBos(searchCriteria, emptyAppointments, diary, currentDateTime);
 		emptyAppointments.sort(Comparator.comparing(EmptyAppointmentBo::getDate).thenComparing(EmptyAppointmentBo::getHour));
 		LOG.debug(OUTPUT, emptyAppointments);
 		return emptyAppointments;
+	}
+
+	private void filterOpeningHoursByModality(AppointmentSearchBo searchCriteria, List<CompleteDiaryBo> diariesBySpecialty) {
+		diariesBySpecialty.forEach(diary -> diary.setDiaryOpeningHours(diary.getDiaryOpeningHours().stream().filter(openingHours -> (searchCriteria.getModality().equals(EAppointmentModality.ON_SITE_ATTENTION) && openingHours.getOnSiteAttentionAllowed()) ||
+				(searchCriteria.getModality().equals(EAppointmentModality.PATIENT_VIRTUAL_ATTENTION) && openingHours.getPatientVirtualAttentionAllowed())).collect(toList())));
 	}
 
 	private List<EmptyAppointmentBo> getEmptyAppointmentBos(AppointmentSearchBo searchCriteria,
@@ -406,12 +408,25 @@ public class DiaryServiceImpl implements DiaryService {
 		return emptyAppointments;
 	}
 
-	private List<CompleteDiaryBo> getActiveDiariesByAliasOrClinicalSpecialtyName(Integer institutionId, String aliasOrClinicalSpecialtyName) {
-		LOG.debug("Input parameters -> institutionId {}, aliasOrClinicalSpecialtyName {}", institutionId, aliasOrClinicalSpecialtyName);
-		List<CompleteDiaryBo> result = diaryRepository.getActiveDiariesByAliasOrClinicalSpecialtyName(institutionId, aliasOrClinicalSpecialtyName).stream()
-				.map(this::createCompleteDiaryBoInstance).map(completeOpeningHours()).collect(toList());
-		LOG.debug(OUTPUT, result);
-		return result;
+
+	private List<CompleteDiaryBo> getActiveDiariesByAliasOrClinicalSpecialtyNameOrPracticeId(Integer institutionId, String aliasOrClinicalSpecialtyName, Integer practiceId) {
+		LOG.debug("Input parameters -> institutionId {}, aliasOrClinicalSpecialtyName {}, practice {}", institutionId, aliasOrClinicalSpecialtyName, practiceId);
+		if (aliasOrClinicalSpecialtyName != null && practiceId != null)
+			 return diaryRepository.getActiveDiariesByAliasOrClinicalSpecialtyNameAndPracticeId(institutionId, aliasOrClinicalSpecialtyName, practiceId).stream()
+					 .map(this::createCompleteDiaryBoInstanceWithPractice)
+					 .map(cd -> completeOpeningHoursByMedicalAttentionType(cd, MedicalAttentionType.PROGRAMMED))
+					 .collect(toList());
+
+		if (aliasOrClinicalSpecialtyName != null && practiceId == null)
+			return diaryRepository.getActiveDiariesByAliasOrClinicalSpecialtyName(institutionId, aliasOrClinicalSpecialtyName).stream()
+					.map(this::createCompleteDiaryBoInstance)
+					.map(cd -> completeOpeningHoursByMedicalAttentionType(cd, MedicalAttentionType.PROGRAMMED))
+					.collect(toList());
+
+		return diaryRepository.getActiveDiariesByPracticeId(institutionId, practiceId).stream()
+				.map(this::createCompleteDiaryBoInstanceWithPractice)
+				.map(cd -> completeOpeningHoursByMedicalAttentionType(cd, MedicalAttentionType.PROGRAMMED))
+				.collect(toList());
 	}
 
 	private List<EmptyAppointmentBo> getDiaryAvailableAppointments(CompleteDiaryBo diary,
@@ -491,6 +506,36 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setClinicalSpecialtyName(diary.getClinicalSpecialtyName());
 		result.setAlias(diary.getAlias());
 		return result;
+	}
+
+	private void validateDiary(DiaryBo diaryBo) {
+		if (diaryBo.getPredecessorProfessionalId() != null && diaryBo.getHierarchicalUnitId() == null)
+			throw new DiaryException(DiaryEnumException.PREDECESSOR_PROFESSIONAL_WITHOUT_HIERARCHICAL_UNIT,
+					"No se puede ingresar un profesional a reemplazar sin seleccionar la unidad jerárquica a la que pertenece");
+		diaryBo.getDiaryOpeningHours().forEach(openingHour -> {
+			if (openingHour.getOnSiteAttentionAllowed() == null && openingHour.getPatientVirtualAttentionAllowed() == null && openingHour.getSecondOpinionVirtualAttentionAllowed() == null)
+				throw new DiaryException(DiaryEnumException.MODALITY_NOT_FOUND,	"Una de las franjas horarias no cuenta con una modalidad definida");
+		});
+	}
+
+	private CompleteDiaryBo createCompleteDiaryBoInstanceWithPractice(CompleteDiaryListVo vo) {
+		var bo = this.createCompleteDiaryBoInstance(vo);
+		bo.setPracticesInfo(diaryPracticeService.getAllByDiaryId(vo.getId()));
+		return bo;
+	}
+
+	private void validateSearchCriteria(AppointmentSearchBo searchCriteria) {
+		if (searchCriteria.getAliasOrSpecialtyName() == null && searchCriteria.getPracticeId() == null) {
+			throw new DiaryException(DiaryEnumException.SEARCH_CRITERIA_NOT_FOUND,
+					"No se puede realizar la búsqueda sin seleccionar el tipo de atención ");
+		}
+	}
+	
+	private CompleteDiaryBo completeOpeningHoursByMedicalAttentionType(CompleteDiaryBo completeDiary, short medicalAttentionTypeId) {
+		Collection<DiaryOpeningHoursBo> diaryOpeningHours = diaryOpeningHoursService
+				.getDiariesOpeningHoursByMedicalAttentionType(Stream.of(completeDiary.getId()).collect(toList()), medicalAttentionTypeId);
+		completeDiary.setDiaryOpeningHours(new ArrayList<>(diaryOpeningHours));
+		return completeDiary;
 	}
 
 }

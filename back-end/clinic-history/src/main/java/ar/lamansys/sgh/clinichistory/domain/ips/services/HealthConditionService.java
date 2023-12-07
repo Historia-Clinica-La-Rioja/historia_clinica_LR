@@ -87,7 +87,7 @@ public class HealthConditionService {
             md.setStatusId(healthCondition.getStatusId());
             md.setVerification(getVerification(md.getVerificationId()));
             md.setStatus(getStatus(md.getStatusId()));
-
+			healthConditionRepository.setMain(healthCondition.getId(), true);
             documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
         HealthConditionBo result = mainDiagnosis.orElse(null);
@@ -117,7 +117,7 @@ public class HealthConditionService {
             d.setStatusId(healthCondition.getStatusId());
             d.setVerification(getVerification(d.getVerificationId()));
             d.setStatus(getStatus(d.getStatusId()));
-
+			healthConditionRepository.setMain(healthCondition.getId(), false);
             documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
 

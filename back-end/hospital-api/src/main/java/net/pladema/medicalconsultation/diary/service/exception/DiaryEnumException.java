@@ -1,5 +1,7 @@
 package net.pladema.medicalconsultation.diary.service.exception;
 
 public enum DiaryEnumException {
-	PROTECTED_APPOINTMENTS_PERCENTAGE_WITHOUT_CARELINES,
+	PREDECESSOR_PROFESSIONAL_WITHOUT_HIERARCHICAL_UNIT,
+	MODALITY_NOT_FOUND,
+	SEARCH_CRITERIA_NOT_FOUND
 }

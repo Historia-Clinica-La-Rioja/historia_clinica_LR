@@ -3,7 +3,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitali
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -12,9 +12,9 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
 @AllArgsConstructor
-public class ProcedureVo  extends ClinicalTermVo {
+@RequiredArgsConstructor
+public class ProcedureVo extends ClinicalTermVo {
 
 	private LocalDate performedDate;
 

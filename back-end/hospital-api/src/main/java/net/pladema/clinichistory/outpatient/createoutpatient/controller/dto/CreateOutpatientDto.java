@@ -49,4 +49,8 @@ public class CreateOutpatientDto {
 	@Nullable
 	private Integer patientMedicalCoverageId;
 
+	@Valid
+	@Nullable
+	private Integer hierarchicalUnitId;
+
 }

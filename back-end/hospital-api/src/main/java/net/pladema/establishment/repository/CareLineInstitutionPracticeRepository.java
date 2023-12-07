@@ -3,6 +3,9 @@ package net.pladema.establishment.repository;
 import java.util.List;
 import java.util.Optional;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import net.pladema.establishment.service.domain.CareLinePracticeBo;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,4 +31,22 @@ public interface CareLineInstitutionPracticeRepository extends JpaRepository<Car
 			"WHERE clip.snomedRelatedGroupId = :snomedRelatedGroupId ")
 	List<CareLineInstitutionPractice> findBySnomedRelatedGroupId(@Param("snomedRelatedGroupId") Integer snomedRelatedGroupId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT new net.pladema.establishment.service.domain.CareLinePracticeBo(cli.careLineId, s.id, s.sctid, s.pt) " +
+			"FROM CareLineInstitutionPractice clip " +
+			"JOIN CareLineInstitution cli ON clip.careLineInstitutionId = cli.id " +
+			"JOIN SnomedRelatedGroup srg ON clip.snomedRelatedGroupId = srg.id " +
+			"JOIN Snomed s ON (srg.snomedId = s.id) " +
+			"WHERE cli.careLineId IN (:careLineIds) ")
+	List<CareLinePracticeBo> getAllByCareLineIds(@Param("careLineIds") List<Integer> careLineIds);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT NEW ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo(s.id, s.sctid, s.pt) " +
+			"FROM CareLineInstitutionPractice clip " +
+			"JOIN CareLineInstitution cli ON (clip.careLineInstitutionId = cli.id) " +
+			"JOIN SnomedRelatedGroup srg ON (clip.snomedRelatedGroupId = srg.id) " +
+			"JOIN Snomed s ON (srg.snomedId = s.id) " +
+			"WHERE cli.careLineId = :careLineId " +
+			"AND cli.deleted IS FALSE")
+	List<SnomedBo> getPracticesByCareLineId(@Param("careLineId") Integer careLineId);
 }

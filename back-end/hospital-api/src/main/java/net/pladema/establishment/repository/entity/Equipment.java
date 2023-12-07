@@ -37,4 +37,7 @@ public class Equipment {
 	@Column(name = "modality_id", nullable = false)
 	private Integer modalityId;
 
+	@Column(name = "create_id", nullable = false)
+	private Boolean createId;
+
 }

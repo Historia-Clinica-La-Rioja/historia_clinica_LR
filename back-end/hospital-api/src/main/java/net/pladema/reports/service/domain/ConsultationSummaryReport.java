@@ -7,6 +7,7 @@ import ar.lamansys.sgx.shared.reports.util.struct.ICellStyle;
 import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
+import net.pladema.establishment.application.hierarchicalunits.FetchDescendantsByHierarchicalUnitId;
 import net.pladema.person.repository.entity.Gender;
 import net.pladema.reports.repository.ConsultationSummary;
 import net.pladema.reports.repository.QueryFactory;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +28,9 @@ public class ConsultationSummaryReport {
     private static final Logger LOG = LoggerFactory.getLogger(ConsultationSummaryReport.class);
 
     private final QueryFactory queryFactory;
+
+	private final FetchDescendantsByHierarchicalUnitId fetchDescendantsByHierarchicalUnitId;
+
 
     private ICellStyle basicStyle;
     private ICellStyle titleStyle;
@@ -38,12 +43,14 @@ public class ConsultationSummaryReport {
     private static final int FIRST_COLUMN_DATA =4;
     private static final int LAST_COLUMN_DATA =22;
 
-    public ConsultationSummaryReport(QueryFactory queryFactory){
+    public ConsultationSummaryReport(QueryFactory queryFactory, FetchDescendantsByHierarchicalUnitId fetchDescendantsByHierarchicalUnitId){
         this.queryFactory = queryFactory;
+		this.fetchDescendantsByHierarchicalUnitId = fetchDescendantsByHierarchicalUnitId;
     }
 
     public IWorkbook build(Integer institutionId, LocalDate from, LocalDate to,
-                           Integer professionalId, Integer specialtyId) {
+                           Integer professionalId, Integer specialtyId, Integer hierarchicalUnitTypeId,
+						   Integer hierarchicalUnitId, boolean includeHierarchicalUnitDescendants) {
 
         //The report must show summary information of the outpatient—consultations
         // organized by specialty, sex and age.
@@ -59,7 +66,8 @@ public class ConsultationSummaryReport {
 
             //Content
             int firstDataRow = sheet.getCantRows();
-            Map<Integer, List<ConsultationSummary>> data = processData(institutionId, from, to, professionalId, specialtyId);
+            Map<Integer, List<ConsultationSummary>> data = processData(institutionId, from, to, professionalId, specialtyId,
+					hierarchicalUnitTypeId, hierarchicalUnitId, includeHierarchicalUnitDescendants);
             fillRow(sheet, convertDataIntoContent(sheet, data, firstDataRow));
             int lastDataRow = sheet.getCantRows();
 
@@ -76,16 +84,26 @@ public class ConsultationSummaryReport {
     }
 
     private Map<Integer, List<ConsultationSummary>> processData(Integer institutionId, LocalDate from, LocalDate to,
-                                                                Integer professionalId, Integer specialtyId) {
+                                                                Integer professionalId, Integer specialtyId,
+																Integer hierarchicalUnitTypeId, Integer hierarchicalUnitId,
+																boolean includeHierarchicalUnitDescendants) {
         //Data from database
         List<ConsultationSummary> data = queryFactory.fetchConsultationSummaryData(institutionId, from, to);
 
         //Required filter: discard records without gender or date of birth
-        //Optional filter: by specialty or professional if specified
         List<ConsultationSummary> validData = data.stream().filter(c -> c.hasGender() && c.hasBirthdate())
-                .filter(professionalId != null ? c -> c.getProfessionalId().equals(professionalId) : c -> true)
-                .filter(specialtyId != null ? c -> c.getSpecialtyId().equals(specialtyId) : c -> true)
+				.filter(cs -> professionalId == null || Objects.equals(professionalId, cs.getProfessionalId()))
+				.filter(cs -> specialtyId == null || Objects.equals(specialtyId, cs.getSpecialtyId()))
+				.filter(cs -> hierarchicalUnitTypeId == null || Objects.equals(hierarchicalUnitTypeId, cs.getHierarchicalUnitTypeId()))
                 .collect(Collectors.toList());
+
+		if (!validData.isEmpty() && hierarchicalUnitId != null) {
+			List<Integer> hierarchicalUnitIds = new ArrayList<>();
+			hierarchicalUnitIds.add(hierarchicalUnitId);
+			if (includeHierarchicalUnitDescendants)
+				hierarchicalUnitIds.addAll(fetchDescendantsByHierarchicalUnitId.run(hierarchicalUnitId));
+			validData = validData.stream().filter(c -> hierarchicalUnitIds.contains(c.getHierarchicalUnitId())).collect(Collectors.toList());
+		}
 
         return validData.stream()
                 .collect(Collectors.groupingBy(ConsultationSummary::getSpecialtyId));

@@ -4,6 +4,8 @@ import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import net.pladema.establishment.controller.dto.InstitutionBasicInfoDto;
+import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
 
 @Getter
 @Setter
@@ -24,7 +26,10 @@ public class WorklistDto {
 
 	private Integer appointmentId;
 
-	public WorklistDto(Integer patientId, Short patientIdentificationTypeId, String patientIdentificationNumber, String patientFullName, Short statusId, Integer appointmentId, DateTimeDto actionTime) {
+	private InstitutionBasicInfoDto completionInstitution;
+
+	public WorklistDto(Integer patientId, Short patientIdentificationTypeId, String patientIdentificationNumber, String patientFullName, Short statusId, Integer appointmentId, DateTimeDto actionTime,
+					   InstitutionBasicInfoBo completionInstitution) {
 		this.patientId = patientId;
 		this.patientIdentificationTypeId = patientIdentificationTypeId;
 		this.patientIdentificationNumber = patientIdentificationNumber;
@@ -32,6 +37,7 @@ public class WorklistDto {
 		this.statusId = statusId;
 		this.appointmentId = appointmentId;
 		this.actionTime = actionTime;
+		this.completionInstitution = new InstitutionBasicInfoDto(completionInstitution.getId(), completionInstitution.getName());
 	}
 
 }

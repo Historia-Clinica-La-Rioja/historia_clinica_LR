@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges, forwardRef } from '@angular/core';
 import { FormBuilder, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DiagnosisDto, HealthConditionDto } from '@api-rest/api-model';
+import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -39,6 +40,7 @@ export class DiagnosticosFormComponent implements OnChanges {
 
 	constructor(
 		private formBuilder: FormBuilder,
+		readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
 	) { }
 
 	diagnosisChange(event) {

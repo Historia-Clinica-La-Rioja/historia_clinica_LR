@@ -46,21 +46,22 @@ public class BookingInstitutionStorageImpl implements BookingInstitutionStorage 
 				"i.name AS description, " +
 				"i.sisa_code AS refset, " +
 				"CASE WHEN d.description IS NOT NULL THEN d.description ELSE "+ " 'No informada' " + " END AS dependency, " +
-				"CONCAT(ad.street, ' ', ad.number, ', ', c.description, ', ', d2.description) as address, " +
-				"cs.name " +
+				"CONCAT(ad.street, ' ', ad.number) AS address, " +
+				"c.description AS city, " +
+				"d2.description AS department, " +
+				"cs.name, " +
+				"di.alias " +
 				"FROM booking_institution bi " +
 				"JOIN institution i ON (i.id = bi.institution_id) " +
 				"LEFT JOIN dependency d ON (d.id = i.dependency_id) " +
-				"JOIN address ad ON (i.address_id = ad.id) " +
-				"JOIN city c ON (ad.city_id = c.id) " +
-				"JOIN department d2 ON (c.department_id = d2.id) " +
+				"LEFT JOIN address ad ON (i.address_id = ad.id) " +
+				"LEFT JOIN city c ON (ad.city_id = c.id) " +
+				"LEFT JOIN department d2 ON (c.department_id = d2.id) " +
 				"JOIN doctors_office dof ON (dof.institution_id = i.id) " +
 				"JOIN diary di ON (di.doctors_office_id = dof.id) " +
-				"JOIN healthcare_professional hp ON (hp.id = di.healthcare_professional_id) " +
-				"JOIN professional_professions pp ON(pp.healthcare_professional_id = hp.id) " +
-				"JOIN healthcare_professional_specialty hps ON (hps.professional_profession_id = pp.id) " +
-				"JOIN clinical_specialty cs ON cs.id = hps.clinical_specialty_id " +
-				"WHERE cs.clinical_specialty_type_id = 1 " +
+				"JOIN diary_opening_hours doh ON (doh.diary_id = di.id) " +
+				"JOIN clinical_specialty cs ON (cs.id = di.clinical_specialty_id) " +
+				"WHERE di.deleted IS NOT TRUE AND cs.clinical_specialty_type_id = 2 AND doh.external_appointments_allowed = true " +
 				"ORDER BY i.name, cs.name";
 
 		List<Object[]> rows = entityManager.createNativeQuery(sqlString).getResultList();
@@ -85,7 +86,10 @@ public class BookingInstitutionStorageImpl implements BookingInstitutionStorage 
 					.sisaCode((String) row[2])
 					.dependency((String) row[3])
 					.address((String) row[4])
-					.clinicalSpecialtiesNames(new ArrayList<>(List.of((String) row[5])))
+					.city((String) row[5])
+					.department((String) row[6])
+					.clinicalSpecialtiesNames(new ArrayList<>(List.of((String) row[7])))
+					.aliases(row[8] == null ? null : new ArrayList<>(List.of((String) row[8])))
 					.build();
 
 			var index = result.indexOf(toInsert);
@@ -93,7 +97,17 @@ public class BookingInstitutionStorageImpl implements BookingInstitutionStorage 
 			if (index == -1) {
 				result.add(toInsert);
 			} else {
-				result.get(index).getClinicalSpecialtiesNames().add((String) row[5]);
+				var names = result.get(index).getClinicalSpecialtiesNames();
+				if(!names.contains((String) row[7])) {
+					names.add((String) row[7]);
+				}
+
+				if(result.get(index) != null && result.get(index).getAliases() != null) {
+					var aliases = result.get(index).getAliases();
+					if (row[8] != null && aliases != null && !aliases.contains((String) row[8])) {
+						aliases.add((String) row[8]);
+					}
+				}
 			}
 		}
 

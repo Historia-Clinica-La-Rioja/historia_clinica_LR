@@ -1,6 +1,7 @@
 package net.pladema.establishment.controller.constraints.validator.permissions;
 
 import lombok.RequiredArgsConstructor;
+import net.pladema.establishment.repository.HierarchicalUnitRelationshipRepository;
 import net.pladema.establishment.repository.HierarchicalUnitRepository;
 import net.pladema.establishment.repository.entity.HierarchicalUnit;
 import net.pladema.permissions.repository.enums.ERole;
@@ -26,6 +27,8 @@ import static net.pladema.establishment.repository.entity.HierarchicalUnitType.S
 public class BackofficeHierarchicalUnitValidator implements BackofficePermissionValidator<HierarchicalUnit, Integer> {
 
 	private final HierarchicalUnitRepository repository;
+
+	private final HierarchicalUnitRelationshipRepository hierarchicalUnitRelationshipRepository;
 
 	private final BackofficeAuthoritiesValidator authoritiesValidator;
 
@@ -68,15 +71,20 @@ public class BackofficeHierarchicalUnitValidator implements BackofficePermission
 	@Override
 	@PreAuthorize("hasAnyAuthority('ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertDelete(Integer id) {
-
+		if (hierarchicalUnitRelationshipRepository.existsParentRelationship(id))
+			throw new BackofficeValidationException("hierarchical-unit.affected");
 	}
 
 	@Override
 	public ItemsAllowed itemsAllowedToList(HierarchicalUnit entity) {
-		List<HierarchicalUnit> entitiesByExample = repository.findAll(Example.of(entity));
+		List<HierarchicalUnit> entitiesByExample = null;
+		if(entity.getId() != null){
+			entitiesByExample = getHierarchicalUnitParents(entity.getId());
+		} else {
+			entitiesByExample = repository.findAll(Example.of(entity));
+		}
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return new ItemsAllowed(true, entitiesByExample);
-
 		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
 		if (allowedInstitutions.isEmpty())
 			return new ItemsAllowed<>(false, Collections.emptyList());
@@ -93,6 +101,10 @@ public class BackofficeHierarchicalUnitValidator implements BackofficePermission
 	private void validateClinicalSpecialtyIdData(HierarchicalUnit entity) {
 		if (entity.getClinicalSpecialtyId() != null && !entity.getTypeId().equals((int)SERVICIO))
 			entity.setClinicalSpecialtyId(null);
+	}
+
+	private List<HierarchicalUnit> getHierarchicalUnitParents(Integer hierarchicalUnitId){
+		return hierarchicalUnitRelationshipRepository.findParentsIdsByHierarchicalUnitChildId(hierarchicalUnitId);
 	}
 
 }

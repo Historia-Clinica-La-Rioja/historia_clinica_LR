@@ -1,11 +1,16 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.ConsultationResponseDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CompleteReferenceDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,7 +110,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
     @Override
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
-    public ResponseEntity<Boolean> createOutpatientConsultation(
+    public ResponseEntity<ConsultationResponseDto> createOutpatientConsultation(
             Integer institutionId,
             Integer patientId,
             CreateOutpatientDto createOutpatientDto) {
@@ -118,7 +123,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 			patientMedicalCoverageId= appointmentExternalService.getMedicalCoverage(patientId, doctorId);
 
         OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, true,
-                createOutpatientDto.getClinicalSpecialtyId(), patientMedicalCoverageId);
+                createOutpatientDto.getClinicalSpecialtyId(), patientMedicalCoverageId, createOutpatientDto.getHierarchicalUnitId());
 
         OutpatientDocumentBo outpatient = outpatientConsultationMapper.fromCreateOutpatientDto(createOutpatientDto);
         outpatient.setEncounterId(newOutPatient.getId());
@@ -132,7 +137,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         outpatient.setReasons(reasons);
         outpatientReasonService.addReasons(newOutPatient.getId(), reasons);
 
-        Long documentId = createOutpatientDocumentService.execute(outpatient).getId();
+        Long documentId = createOutpatientDocumentService.execute(outpatient, true).getId();
 		Integer appointmentId = null;
         if (!disableValidation && (appointmentExternalService.hasCurrentAppointment(patientId,doctorId,dateTimeProvider.nowDate())
 				|| appointmentExternalService.hasOldAppointment(patientId,doctorId))) {
@@ -141,12 +146,14 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 		if(appointmentId != null)
 			this.sharedAppointmentPort.saveDocumentAppointment(new DocumentAppointmentDto(documentId, appointmentId));
 
-        if(!createOutpatientDto.getReferences().isEmpty()) {
-            sharedReferenceCounterReference.saveReferences(newOutPatient.getId(), (int)SourceType.OUTPATIENT, createOutpatientDto.getReferences());
+		List<Integer> orderIds = new ArrayList<>();
+        if (!createOutpatientDto.getReferences().isEmpty()) {
+			orderIds = sharedReferenceCounterReference.saveReferences(mapToCompleteReferenceDto(createOutpatientDto.getReferences(), institutionId,
+					doctorId, patientMedicalCoverageId, patientId, newOutPatient.getId()));
         }
-
-        LOG.debug(OUTPUT, true);
-        return  ResponseEntity.ok().body(true);
+		ConsultationResponseDto result = new ConsultationResponseDto(newOutPatient.getId(), orderIds);
+        LOG.debug(OUTPUT, result);
+        return  ResponseEntity.ok().body(result);
     }
 
     @Override
@@ -160,7 +167,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
         Integer clinicalSpecialtyId = getClinicalSpecialtyId(vaccineDto);
 
-        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, true, clinicalSpecialtyId, null);
+        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, true, clinicalSpecialtyId, null, null);
         OutpatientDocumentBo outpatient = new OutpatientDocumentBo();
         outpatient.setEncounterId(newOutPatient.getId());
         outpatient.setInstitutionId(institutionId);
@@ -174,7 +181,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
         outpatient.setClinicalSpecialtyId(clinicalSpecialtyId);
 
-        createOutpatientDocumentService.execute(outpatient);
+        createOutpatientDocumentService.execute(outpatient, true);
 
 
         if (!disableValidation && appointmentExternalService.hasCurrentAppointment(patientId,doctorId,dateTimeProvider.nowDate()))
@@ -216,7 +223,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
             OutpatientUpdateImmunizationDto outpatientUpdateImmunization) {
         LOG.debug("Input parameters -> institutionId {}, patientId {}, OutpatientImmunizationDto {}", institutionId, patientId, outpatientUpdateImmunization);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, false, null, null);
+        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, false, null, null, null);
 
         OutpatientDocumentBo outpatient = new OutpatientDocumentBo();
         outpatient.setEncounterId(newOutPatient.getId());
@@ -230,7 +237,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         immunizationBo.setInstitutionId(institutionId);
         outpatient.setImmunizations(Collections.singletonList(immunizationBo));
 
-        createOutpatientDocumentService.execute(outpatient);
+        createOutpatientDocumentService.execute(outpatient, true);
 
         LOG.debug(OUTPUT, true);
         return  ResponseEntity.ok().body(true);
@@ -245,7 +252,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
             @Valid HealthConditionNewConsultationDto solvedProblemDto) {
         LOG.debug("Input parameters -> institutionId {}, patientId {}, HealthConditionNewConsultationDto {}", institutionId, patientId, solvedProblemDto);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, false, null, null);
+        OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, false, null, null, null);
         OutpatientDocumentBo outpatient = new OutpatientDocumentBo();
         outpatient.setEncounterId(newOutPatient.getId());
         outpatient.setInstitutionId(institutionId);
@@ -256,7 +263,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
         outpatient.setProblems(Collections.singletonList(outpatientConsultationMapper.fromHealthConditionNewConsultationDto(solvedProblemDto)));
         outpatient.getProblems().forEach(p->p.setId(null));
-		createOutpatientDocumentService.execute(outpatient);
+		createOutpatientDocumentService.execute(outpatient, false);
 
         return ResponseEntity.ok().body(true);
     }
@@ -272,4 +279,32 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         LOG.debug("Get summary  => {}", result);
         return ResponseEntity.ok(result);
     }
+
+
+	private List<CompleteReferenceDto> mapToCompleteReferenceDto(List<ReferenceDto> references, Integer institutionId,
+											 Integer doctorId, Integer patientMedicalCoverageId,
+											 Integer patientId, Integer encounterId) {
+		return references.stream().map(r -> {
+				CompleteReferenceDto result = new CompleteReferenceDto();
+				result.setNote(r.getNote());
+				result.setConsultation(r.getConsultation());
+				result.setCareLineId(r.getCareLineId());
+				result.setClinicalSpecialtyId(r.getClinicalSpecialtyId());
+				result.setProblems(r.getProblems());
+				result.setFileIds(r.getFileIds());
+				result.setDestinationInstitutionId(r.getDestinationInstitutionId());
+				result.setPhonePrefix(r.getPhoneNumber());
+				result.setPhonePrefix(r.getPhonePrefix());
+				result.setPriority(r.getPriority());
+				result.setStudy(r.getStudy());
+				result.setInstitutionId(institutionId);
+				result.setDoctorId(doctorId);
+				result.setPatientMedicalCoverageId(patientMedicalCoverageId);
+				result.setPatientId(patientId);
+				result.setEncounterId(encounterId);
+				result.setSourceTypeId((int)SourceType.OUTPATIENT);
+				return result;
+		}).collect(Collectors.toList());
+	}
+    
 }

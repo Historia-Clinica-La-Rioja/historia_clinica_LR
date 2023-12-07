@@ -14,8 +14,7 @@ import CreateRelatedButton from "../components/CreateRelatedButton";
 import UserRoleSection from "./UserRoleSection";
 import {TextField} from "react-admin";
 import {BooleanField} from "react-admin";
-
-
+import HierarchicalUnitSection from "./HierarchicalUnitSection";
 
 const UserShow = props => {
     const translate = useTranslate();
@@ -38,6 +37,7 @@ const UserShow = props => {
                     label="resources.users.buttons.linkRole"
                 />
                 <UserRoleSection/>
+               <HierarchicalUnitSection {...props}/>
             </SimpleShowLayout>
         </Show>
     );

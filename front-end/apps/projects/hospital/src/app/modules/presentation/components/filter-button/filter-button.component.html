@@ -1,0 +1,9 @@
+<button mat-button color="primary" id="filter" (click)="filter()">
+    <mat-icon>filter_list</mat-icon> 
+    <span>{{'presentation.filter-button.FILTER' | translate | uppercase}}</span>
+    <mat-icon *ngIf="isExpanded; else IsNotExpanded">expand_more</mat-icon>
+</button>
+
+<ng-template #IsNotExpanded>
+    <mat-icon>expand_less</mat-icon>
+</ng-template>

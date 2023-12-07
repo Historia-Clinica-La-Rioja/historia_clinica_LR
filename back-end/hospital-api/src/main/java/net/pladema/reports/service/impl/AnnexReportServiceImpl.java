@@ -206,7 +206,6 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 				reportDataDto.getAttentionDate() != null ? reportDataDto.getAttentionDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 					: null);
         ctx.put("medicalCoverage", reportDataDto.getMedicalCoverage());
-        ctx.put("affiliateNumber", reportDataDto.getAffiliateNumber());
 		ctx.put("existsConsultation", reportDataDto.getExistsConsultation());
 		ctx.put("hasProcedures", reportDataDto.getHasProcedures());
 		ctx.put("specialty", reportDataDto.getSpecialty());
@@ -226,7 +225,6 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 
     private Map<String, Object> loadBasicContext(AnnexIIDto reportDataDto) {
         Map<String, Object> ctx = new HashMap<>();
-        ctx.put("reportDate", reportDataDto.getReportDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         ctx.put("establishment", reportDataDto.getEstablishment());
         ctx.put("completePatientName", reportDataDto.getCompletePatientName());
         ctx.put("documentType", reportDataDto.getDocumentType());

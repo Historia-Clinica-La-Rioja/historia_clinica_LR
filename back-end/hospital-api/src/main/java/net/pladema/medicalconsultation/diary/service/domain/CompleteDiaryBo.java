@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.diary.service.domain;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,6 +33,10 @@ public class CompleteDiaryBo extends DiaryBo {
 
 	private List<ProfessionalPersonBo> associatedProfessionalsInfo;
 
+	private String hierarchicalUnitAlias;
+	
+	private List<SnomedBo> practicesInfo;
+
 	public CompleteDiaryBo(DiaryBo diaryBo) {
 		appointmentDuration = diaryBo.getAppointmentDuration();
 		id = diaryBo.getId();
@@ -44,7 +49,8 @@ public class CompleteDiaryBo extends DiaryBo {
 		professionalAssignShift = diaryBo.isProfessionalAssignShift();
 		includeHoliday = diaryBo.isIncludeHoliday();
 		alias = diaryBo.getAlias();
-		protectedAppointmentsPercentage = diaryBo.getProtectedAppointmentsPercentage();
+		predecessorProfessionalId = diaryBo.getPredecessorProfessionalId();
+		hierarchicalUnitId = diaryBo.getHierarchicalUnitId();
 	}
 
 }

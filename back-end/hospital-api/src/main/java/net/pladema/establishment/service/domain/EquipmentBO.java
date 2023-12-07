@@ -22,4 +22,6 @@ public class EquipmentBO {
 	private Integer pacServerId;
 
 	private Integer modalityId;
+
+	private Boolean createId;
 }

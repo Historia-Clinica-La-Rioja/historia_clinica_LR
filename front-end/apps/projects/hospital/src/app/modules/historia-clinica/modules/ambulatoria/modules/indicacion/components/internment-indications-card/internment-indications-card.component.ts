@@ -117,6 +117,9 @@ export class InternmentIndicationsCardComponent implements OnInit {
 
 	openPharmacos() {
 		this.indicationByProfessionalService.getMostFrequentPharmacos().subscribe((pharmacos: PharmacoSummaryDto[]) => {
+			let recentlyPrescribedPharmacos = filterLastThreeDays(this.pharmacos);
+			let pharmacosWithoutRepetition = filterUniqueBySctidAndQuantity(recentlyPrescribedPharmacos);
+			pharmacos = pharmacosWithoutRepetition.concat(pharmacos);
 			const mostFrequent = pharmacos.map((p: PharmacoSummaryDto) => {
 				return { description: p.snomed.pt, value: p }
 			});
@@ -165,6 +168,43 @@ export class InternmentIndicationsCardComponent implements OnInit {
 				}
 			})
 		})
+
+		function filterLastThreeDays(patientPharmacos) {
+			const currentDate = new Date();
+			const threeDaysAgo = new Date();
+			threeDaysAgo.setDate(currentDate.getDate() - 3);
+
+			const result = patientPharmacos.filter((element) => {
+				const indicationDate = new Date(
+					element.indicationDate.year,
+					element.indicationDate.month - 1,
+					element.indicationDate.day
+				);
+
+				return indicationDate >= threeDaysAgo && indicationDate <= currentDate;
+			});
+
+			return result;
+		}
+
+		function filterUniqueBySctidAndQuantity(recentlyPrescribedPharmacos) {
+			const uniqueRecords = {};
+			const result = recentlyPrescribedPharmacos.filter((element) => {
+				const sctid = element.snomed.sctid;
+				const quantity = element.dosage.quantity.value;
+				const key = `${sctid}_${quantity}`;
+
+				if (uniqueRecords[key]) {
+					return false;
+				}
+
+				uniqueRecords[key] = true;
+				return true;
+			});
+
+			return result;
+		}
+
 	}
 
 	openOtherIndication() {

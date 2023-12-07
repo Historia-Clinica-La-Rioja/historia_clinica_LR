@@ -132,6 +132,7 @@ export class OtherIndicationComponent implements OnInit {
 	}
 
 	submit(): void {
+		this.form.markAllAsTouched();
 		if (this.form.valid) {
 			if (this.form.controls.frequencyHour?.value)
 				this.form.controls.interval.setValue(this.form.controls.frequencyHour.value);

@@ -1,67 +1,137 @@
 <app-content width="full">
 	<section class="page">
-		<h2 class="page-title" [translate]="editMode ? 'turnos.agenda-setup.EDIT_AGENDA' : 'turnos.agenda-setup.NEW_AGENDA' "></h2>
+		<h2 class="page-title"
+			[translate]="editMode ? 'turnos.agenda-setup.EDIT_AGENDA' : 'turnos.agenda-setup.NEW_AGENDA' "></h2>
 		<br>
 		<form [formGroup]="form" (ngSubmit)="save()">
 			<section>
-				<div fxLayout="row" fxLayoutAlign="start start">
+				<div style="padding-top: 20px" fxLayout="row">
 					<div class="professional-form-sector" fxLayout="column">
 						<span [translate]="'turnos.agenda-setup.RESPONSIBLE_PROFESSIONAL'"></span>
+
 						<mat-form-field class="mat-form-field-on-div" appearance="outline">
 							<mat-select id="healthcareProfessionalId" name="healthcareProfessionalId"
-										formControlName="healthcareProfessionalId"
-										placeholder="{{'pacientes.form.SELECT' | translate}}"
-										(selectionChange)="getProfessionalSpecialties()">
+								formControlName="healthcareProfessionalId"
+								placeholder="{{'pacientes.form.SELECT' | translate}}"
+								(selectionChange)="getProfessionalSpecialties()">
 								<mat-option *ngFor="let professional of professionals" [value]="professional.id">
 									<span class="mat-body">{{getFullName(professional)}}</span>
 								</mat-option>
 							</mat-select>
 							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 						</mat-form-field>
+
 						<section class="checkbox">
-							<mat-checkbox formControlName="conjointDiary" (change)="updateAssociatedProfessionalsForm()">
-								{{ 'turnos.agenda-setup.CONJOINT_DIARY' | translate }}
-							</mat-checkbox>
+							<mat-slide-toggle [disabled]="!form.value.healthcareProfessionalId"
+								formControlName="temporaryReplacement" (change)="updateTemporaryReplacementForm()">{{
+								'turnos.agenda-setup.TEMPORARY_REMPLACEMENT' | translate }}</mat-slide-toggle>
 						</section>
 					</div>
-					<div class="professional-form-sector" fxLayout="column" *ngIf="form.value.conjointDiary">
-						<span [translate]="'turnos.agenda-setup.OTHER_PROFESSIONALS'"></span>
-						<div formArrayName="otherProfessionals">
-							<div *ngFor="let otherProfessional of getControl('otherProfessionals')?.controls;index as currentProfessional">
-								<div [formGroupName]="currentProfessional">
-									<mat-form-field class="mat-form-field-on-div" appearance="outline">
-										<button type="button" mat-button matSuffix color="warn" mat-icon-button
+
+					<div *ngIf="((!!form.value.healthcareProfessionalId || hasHealthcareProfessional) && !form.value.temporaryReplacement || loadSavedData) && !temporary"
+					class="professional-form-sector" fxLayout="column">
+						<span>{{ 'turnos.agenda-setup.HIERARCHICAL_UNIT' | translate }}</span>
+						<mat-form-field class="mat-form-field-on-div" appearance="outline" >
+							<mat-select id="hierarchicalUnit" name="hierarchicalUnit" formControlName="hierarchicalUnit"
+								placeholder="{{'pacientes.form.SELECT' | translate}}">
+								<mat-option *ngFor="let hu of hierarchicalUnits" [value]="hu.id" >
+									<span class="mat-body">{{hu.name}}</span>
+								</mat-option>
+							</mat-select>
+							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+						</mat-form-field>
+					</div>
+				</div>
+				<div *ngIf="form.value.temporaryReplacement || temporary" style="padding-top: 20px" fxLayout="row">
+
+					<div class="professional-form-sector" fxLayout="column">
+						<span [translate]="'turnos.agenda-setup.PROFESSIONAL_REMPLACEMENT'"></span>
+						<mat-form-field class="mat-form-field-on-div" appearance="outline" >
+							<mat-select id="professionalReplacedId" name="professionalReplacedId"
+								formControlName="professionalReplacedId"
+								placeholder="{{'pacientes.form.SELECT' | translate}}">
+								<mat-option *ngFor="let professional of professionalsWithoutResponsibility" [value]="professional.id">
+									<span class="mat-body">{{getFullName(professional)}}</span>
+								</mat-option>
+							</mat-select>
+							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+						</mat-form-field>
+					</div>
+					<div class="professional-form-sector" fxLayout="column">
+						<span>{{ 'turnos.agenda-setup.HIERARCHICAL_UNIT' | translate }}</span>
+						<mat-form-field class="mat-form-field-on-div" appearance="outline">
+							<mat-select id="hierarchicalUnitTemporary" name="hierarchicalUnitTemporary" formControlName="hierarchicalUnitTemporary"
+								placeholder="{{'pacientes.form.SELECT' | translate}}">
+								<mat-option *ngFor="let hu of hierarchicalUnits" [value]="hu.id">
+									<span class="mat-body">{{hu.name}}</span>
+								</mat-option>
+							</mat-select>
+							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+						</mat-form-field>
+					</div>
+				</div>
+
+				<section class="checkbox">
+					<mat-slide-toggle formControlName="conjointDiary" (change)="updateAssociatedProfessionalsForm()">{{
+						'turnos.agenda-setup.CONJOINT_DIARY' | translate }}</mat-slide-toggle>
+				</section>
+
+				<div *ngIf="form.value.conjointDiary" class="professional-form-sector" fxLayout="column">
+					<span [translate]="'turnos.agenda-setup.OTHER_PROFESSIONALS'"></span>
+					<div formArrayName="otherProfessionals">
+						<div
+							*ngFor="let otherProfessional of getControl('otherProfessionals')?.controls;index as currentProfessional">
+							<div [formGroupName]="currentProfessional">
+								<mat-form-field class="mat-form-field-on-div" appearance="outline">
+									<button type="button" mat-button matSuffix color="warn" mat-icon-button
 										(click)="clear(currentProfessional); $event.stopPropagation()">
-											<mat-icon>close</mat-icon>
-										</button>
-										<mat-select name="healthcareProfessionalId"
-												formControlName="healthcareProfessionalId"
-												placeholder="{{'turnos.agenda-setup.CHOOSE_PROFESSIONAL' | translate}}">
-											<mat-option *ngFor="let professional of getNonResponsibleProfessional()" [value]="professional.id"
+										<mat-icon>close</mat-icon>
+									</button>
+									<mat-select id="healthcareProfessionalId" name="healthcareProfessionalId"
+										formControlName="healthcareProfessionalId"
+										placeholder="{{'turnos.agenda-setup.CHOOSE_PROFESSIONAL' | translate}}">
+										<mat-option *ngFor="let professional of getNonResponsibleProfessional()"
+											[value]="professional.id"
 											[disabled]="isProfessionalNonSelectable(professional.id)">
-												<span class="mat-body">{{getFullName(professional)}}</span>
-											</mat-option>
-										</mat-select>
-										<mat-error [translate]="'turnos.agenda-setup.CHOOSE_PROFESSIONAL_ERROR'"></mat-error>
-									</mat-form-field>
-								</div>
+											<span class="mat-body">{{getFullName(professional)}}</span>
+										</mat-option>
+									</mat-select>
+									<mat-error
+										[translate]="'turnos.agenda-setup.CHOOSE_PROFESSIONAL_ERROR'"></mat-error>
+								</mat-form-field>
 							</div>
 						</div>
-						<button class="add-prefessional-button" mat-button type="button" color="primary" id="add-button"
-						(click)="addAssociatedProfessional()" [disabled]="!validExtraProfessionalsList()">
-							+ {{ 'turnos.agenda-setup.ADD_ANOTHER_PROFESSIONAL' | translate }}
-						</button>
 					</div>
+					<button class="add-prefessional-button" mat-button type="button" color="primary" id="add-button"
+						(click)="addAssociatedProfessional()" [disabled]="!validExtraProfessionalsList()">
+						+ {{ 'turnos.agenda-setup.ADD_ANOTHER_PROFESSIONAL' | translate }}
+					</button>
+				</div>
+
+				<div fxLayout="column" fxLayoutGap="10px">
+					<mat-label fxLayout="column" [translate]="'turnos.agenda-setup.DIARY_TYPE'"></mat-label>
+					<mat-radio-group id="diaryType" fxLayout="row" fxLayoutGap="40px" formControlName="diaryType">
+						<mat-radio-button color="primary" [value]="CONSULTATION">
+							{{'turnos.CONSULTATION' | translate}}
+						</mat-radio-button>
+						<mat-radio-button color="primary" [value]="PRACTICE">
+							{{'turnos.PRACTICE' | translate}}
+						</mat-radio-button>
+					</mat-radio-group>
+
 				</div>
 
 				<div style="padding-top: 20px" fxLayout="row">
 					<div class="professional-form-sector" fxLayout="column">
-						<span [translate]="'turnos.home.SPECIALTY_SEARCH'"></span>
+						<div fxLayout="row" fxLayoutGap="3px">
+							<span [translate]="'turnos.home.SPECIALTY_SEARCH'"></span>
+							<span *ngIf="showPractices">{{ 'turnos.OPTIONAL' | translate}}</span>
+						</div>
 						<mat-form-field class="mat-form-field-on-div" appearance="outline">
 							<mat-select id="healthcareProfessionalSpecialtyId" name="healthcareProfessionalSpecialtyId"
 										formControlName="healthcareProfessionalSpecialtyId"
 										placeholder="{{'pacientes.form.SELECT' | translate}}"
-										(selectionChange)="getCareLines()">
+										(selectionChange)="setCarelinesBySpecialty()">
 								<mat-option *ngFor="let specialty of professionalSpecialties" [value]="specialty.id">
 									<span class="mat-body">{{ specialty.name }}</span>
 								</mat-option>
@@ -77,7 +147,17 @@
 					</div>
 				</div>
 
-				<div fxLayout="column">
+				<div fxLayout="column" *ngIf="showPractices" class="practices-section">
+					<mat-label [translate]="'turnos.PRACTICE'"></mat-label>
+					<app-chips-autocomplete [placeholder]="'turnos.agenda-setup.PRACTICE_PLACEHOLDER' | translate"
+						[options]="practicesOptions" [externalSetValues]="practicesSelected" (selectionChange)="setDiaryPracticesAndGetCarelines($event)">
+					</app-chips-autocomplete>
+
+					<mat-error *ngIf="hasError(form, 'required', 'practices')" [translate]="'forms.REQUIRED'">
+					</mat-error>
+				</div>
+
+				<div fxLayout="column" class="padding">
 					<span [translate]="'turnos.agenda-setup.OPTIONAL_CARELINE'"></span>
 					<mat-form-field appearance="outline">
 						<mat-select id="care_lines" name="careLines" formControlName="careLines" multiple
@@ -163,28 +243,6 @@
 					</div>
 				</div>
 
-				<section class="protected-appointments-percentage-container" fxLayout="column">
-					<span translate="turnos.agenda-setup.PROTECTED_APPOINTMENT_PERCENTAGE"></span>
-					<div fxLayout="column">
-						<mat-form-field appearance="outline">
-							<input id="protected_appointments_percentage" type="number" matInput
-								[placeholder]="'0%'"
-								formControlName="protectedAppointmentsPercentage" (change)="validateLineOfCareAndPercentageOfProtectedAppointments()">
-						</mat-form-field>
-						<mat-error *ngIf="!lineOfCareAndPercentageOfProtectedAppointmentsValid" class="required">{{'turnos.agenda-setup.VALIDATION_PROTECTED_APPOINTMENT_PERCENTAGE_AND_CARELINE' | translate}}</mat-error>
-						<mat-error *ngIf="form.hasError('required', 'protectedAppointmentsPercentage')" [translate]="'forms.REQUIRED'" ></mat-error>
-						<mat-error *ngIf="hasError(form, 'pattern', 'protectedAppointmentsPercentage')">
-							{{ 'forms.FORMAT_NUMERIC_INTEGER' | translate }}
-						</mat-error>
-						<mat-error *ngIf="hasError(this.form, 'max', 'protectedAppointmentsPercentage')"
-							[translate]="'forms.MAX_ERROR'"
-							[translateParams]="{max: getError(this.form, 'max', 'protectedAppointmentsPercentage').max}">
-						</mat-error>
-						<span class="color-grey">{{'turnos.agenda-setup.PROTECTED_APPOINTMENT_PERCENTAGE_RANGE' | translate}}</span>
-						<span class="color-grey">{{'turnos.agenda-setup.PROTECTED_APPOINTMENT_PERCENTAGE_RANGE_EXAMPLE' | translate}}</span>
-					</div>
-				</section>
-
 				<div fxLayout="row">
 					<span [translate]="'Duración de la consulta'"></span>
 				</div>
@@ -203,8 +261,8 @@
 				</div>
 
 			</section>
-
-			<section *ngIf="form.valid && lineOfCareAndPercentageOfProtectedAppointmentsValid" fxLayout="column" fxLayoutAlign="space-around" fxLayoutGap="15px">
+			<section *ngIf="form.valid" fxLayout="column"
+				fxLayoutAlign="space-around" fxLayoutGap="15px">
 				<h3 [translate]="'turnos.agenda-setup.SELECT_DAYS_TYPE'"></h3>
 				<div fxLayout="row">
 					<span [translate]="'turnos.agenda-setup.SELECT_DAYS_TYPE_SUBTITLE'"></span>
@@ -215,7 +273,8 @@
 					<div #segmentElement class="cal-hour-segment" [style.height.px]="segmentHeight"
 						[class.cal-hour-start]="segment.isStart" [class.cal-after-hour-start]="!segment.isStart"
 						[ngClass]="segment.cssClass"
-						(mousedown)="agendaHorarioService.startDragToCreate(segment, segmentElement)">
+						(mousedown)="agendaHorarioService.startDragToCreate(segment, segmentElement,
+						form.value.careLines?.length > 0, editMode )">
 						<div class="cal-time" *ngIf="isTimeLabel">
 							{{ segment.date | calendarDate:'weekViewHour':locale }}
 						</div>
@@ -233,11 +292,13 @@
 				</ng-template>
 
 				<mwl-calendar-week-view [viewDate]="TODAY"
-										[events]="agendaHorarioService.getEvents()" [hourSegmentTemplate]="weekViewHourSegmentTemplate"
-										[headerTemplate]="headerTemplate" [dayStartHour]="openingTime" [dayEndHour]="closingTime"
-										[hourSegments]="hourSegments"
-										[weekStartsOn]="MONDAY"
-										(eventClicked)="agendaHorarioService.eventClicked($event)">
+					[events]="agendaHorarioService.getEvents()"
+					[hourSegmentTemplate]="weekViewHourSegmentTemplate"
+					[headerTemplate]="headerTemplate"
+					[dayStartHour]="openingTime" [dayEndHour]="closingTime"
+					[hourSegments]="hourSegments"
+					[weekStartsOn]="MONDAY"
+					(eventClicked)="agendaHorarioService.eventClicked($event, form.value.careLines?.length > 0)">
 				</mwl-calendar-week-view>
 
 				<mat-card *ngIf="errors.length">
@@ -246,10 +307,10 @@
 			</section>
 
 
-			<div *ngIf="form.valid && lineOfCareAndPercentageOfProtectedAppointmentsValid" align="end">
-					<button mat-flat-button color="primary" name="confirmAgenda" id="confirmAgenda">
-						<span [translate]="'buttons.CONFIRM'"></span>
-					</button>
+			<div *ngIf="form.valid" align="end">
+				<button mat-flat-button color="primary" name="confirmAgenda" id="confirmAgenda">
+					<span [translate]="'buttons.CONFIRM'"></span>
+				</button>
 			</div>
 		</form>
 	</section>

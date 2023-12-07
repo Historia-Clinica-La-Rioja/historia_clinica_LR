@@ -45,9 +45,6 @@ export class ViewPdfComponent {
 		});
 
 		pdf.getMetadata().then(data => this.metadataFilename = data['contentDispositionFilename']);
-		// pdf.getOutline().then(data => console.log('getOutline', data));
-		// pdf.getMetadata().then(data => console.log('getMetadata', data));
-		// pdf.
 	}
 
 	onError(error: any) {

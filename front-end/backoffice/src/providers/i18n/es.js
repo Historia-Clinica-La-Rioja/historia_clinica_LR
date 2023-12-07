@@ -366,7 +366,8 @@ const messages = {
                 institutionId: 'Institución',
                 roleId: 'Rol',
                 email: "E-mail",
-                roles: 'Roles'
+                roles: 'Roles',
+                hierarchicalUnits: 'Unidades jerárquicas'
             },
             fieldGroups: {
                 passwordResets: 'Establecer clave de acceso',
@@ -380,7 +381,8 @@ const messages = {
             createRelated: 'Crear Usuario',
             noEmail: "Sin información",
             buttons: {
-                linkRole: 'Asociar rol'
+                linkRole: 'Asociar rol',
+                addHierarchicalUnit: 'Asociar unidad jerárquica'
             }
         },
         admin: {
@@ -711,7 +713,8 @@ const messages = {
         episodedocumenttypes: {
             name: 'Tipos de documentos de episodios',
             fields: {
-                description: 'Descripción'
+                description: 'Descripción',
+                body: 'Estimado(a) paciente,<br>antes de llevar a cabo el procedimiento quirúrgico al que ha sido programado(a), es importante que comprenda y acepte plenamente los detalles de la intervención y los riesgos asociados. Por lo tanto, le solicitamos que lea detenidamente y firme este formulario de consentimiento informado. Procedimiento quirúrgico propuesto: [Describir el procedimiento quirúrgico específico]<br>Objetivo de la cirugía: [Explicar el propósito o el objetivo de la cirugía]<br>Riesgos y complicaciones: Aunque se espera que esta cirugía sea beneficiosa, es importante tener en cuenta que existen ciertos riesgos y complicaciones asociados. Estos pueden incluir, pero no se limitan a:<br><ol><li>Sangrado excesivo durante o después de la cirugía.</li><li>Infección en el sitio quirúrgico.</li><li>Reacciones adversas a la anestesia o medicamentos utilizados durante la cirugía.</li><li>Lesiones a órganos o tejidos adyacentes durante la cirugía.</li><li>Formación de coágulos sanguíneos.</li><li>Dolor o malestar persistente después de la cirugía.</li><li>Resultados estéticos o insatisfactorios.</li><li>Necesidad de procedimientos adicionales o revisiones quirúrgicas.</li></ol><br>Alternativas: Existen alternativas al procedimiento quirúrgico propuesto, como [mencionar las alternativas disponibles]. Sinembargo, es importante tener en cuenta que estas alternativas pueden no proporcionar los mismos resultados o beneficiosque la cirugía propuesta.',
             }
         },
         pacservers: {
@@ -727,6 +730,7 @@ const messages = {
                 password: 'Contraseña',
                 urlStow: 'url_stow',
                 urlAuth: 'url_auth',
+                active:'Activo para el envió de estudios',
             },
         },
         pacserversimagelvl: {
@@ -768,10 +772,29 @@ const messages = {
                 orchestratorId: 'Orquestador asociado',
                 sectorId: 'Sector',
                 pacServerId: 'Nombre del servidor PAC',
-                modalityId: 'Modalidad'
+                modalityId: 'Modalidad',
+                createId:'El equipo genera el ID del estudio'
             },
             createRelated: 'Crear Equipo',
             detailLabel: 'Detalle de Equipo'
+        },
+        movestudies: {
+            name: 'Monitoreo de Estudios',
+            pending:'Pendiente',
+            moving:'Moviendo',
+            finished:'Finalizado',
+            errorPriority:'La prioridad puede ser 0 o 1',
+            fields: {
+                institutionId: 'Intitución',
+                imageId: 'Id del estudio',
+                sizeImage: 'Tamaño en bytes del estudio',
+                orchestratorId: 'Orquestador asociado',
+                attempsNumber: 'Número de fallos',
+                pacServerId: 'PAC Destino',
+                result: 'Resultado',
+                status:'Estado',
+                priorityMax:'Prioridad Máxima'
+            }
         },
         hierarchicalunittypes: {
             name: 'Tipo de unidad jerárquica |||| Tipos de unidades jerárquicas',
@@ -783,13 +806,76 @@ const messages = {
         hierarchicalunits: {
             name: 'Unidad jerárquica |||| Unidades jerárquicas',
             fields: {
+                id: 'Id',
                 institutionId: 'Institución',
                 classificationId: 'Clasificación',
                 typeId: 'Tipo',
                 alias: 'Alias',
-                clinicalSpecialtyId: 'Servicio'
+                clinicalSpecialtyId: 'Servicio',
+                hierarchicalUnitIdToReport: 'Productividad asociada a'
             },
-            createRelated: 'Crear Unidad jérarquica'
+            createRelated: 'Crear Unidad jerárquica'
+        },
+        hierarchicalunitrelationships: {
+            name: 'Relación entre unidades jerárquicas',
+            fields : {
+                hierarchicalUnitChildId: 'Unidad jerárquica hija',
+                hierarchicalUnitParentId: 'Unidad jerárquica padre',
+            },
+            parents : {
+                name: 'Unidades jerárquicas padres',
+                addRelated: 'Asociar unidad padre'
+            },
+            childs: {
+                name: 'Unidades jerárquicas hijas',
+                createRelated: 'Crear unidad hija'
+            },
+            createRelated: 'Asociar Unidad jeárquica'
+        },
+        hierarchicalunitstaff: {
+            name: 'Usuarios',
+            fields: {
+                hierarchicalUnitId: 'Unidad jerárquica',
+                userId: 'Usuario',
+                responsible: 'Responsable'
+            },
+            addRelated: 'Asociar usuario'
+        },
+        hierarchicalunitsectors: {
+            name: 'Sectores asociados a Unidad Jerárquica',
+            fields: {
+                hierarchicalUnitId: 'Unidad jerárquica',
+                sectorId: 'Sector'
+            },
+            sectors: {
+                name: 'Sectores'
+            },
+            addRelated: "Asociar sector"
+        },
+        rules: {
+            name: 'Reglas',
+            tabs: {
+                general: 'Generales',
+                local: 'Locales'
+            },
+            createRelated: 'Crear regla'
+        },
+        clinicalspecialtyrules: {
+            fields: {
+                name: 'Nombre',
+                description: 'Descripción',
+                sctidCode: 'Código SNOMED',
+            },
+        },
+        practiceprocedurerules: {
+            fields: {
+                orden: 'Orden',
+                lastUpdate: 'Última actualización',
+                groupId: 'Grupo de terminología',
+                snomedId: 'Concepto Snomed',
+                conceptSctid: 'Snomed CT ID',
+                conceptPt: 'Término'
+            },
         }
     }
 };

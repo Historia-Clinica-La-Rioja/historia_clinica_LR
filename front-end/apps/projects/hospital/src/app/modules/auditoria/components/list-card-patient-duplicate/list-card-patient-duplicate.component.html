@@ -1,3 +1,12 @@
+<div fxLayout="row" class="content-patient-filter">
+		<mat-form-field appearance="outline" class="serch" >
+			<mat-label>{{'internaciones.internment-patient-card.SEARCH' |
+				translate}}</mat-label>
+			<input matInput id="patient-filter" [(ngModel)]="patientFilter" (keyup)="applyFilter($event)">
+			<mat-icon matSuffix>search</mat-icon>
+		</mat-form-field>
+</div>
+
 <mat-card *ngIf="pageSlice?.length else noInfo">
 	<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="50px" class="content bold grey">
 		<div fxLayoutAlign="none center" class="content" fxFlex="20%">
@@ -21,8 +30,7 @@
 
 		<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="50px" class="content">
 			<div fxLayoutAlign="none center" class="content bold" fxFlex="20%">
-				<span *ngIf="patient.firstName else noData">{{patient?.firstName}} {{patient?.middleNames}} {{patient?.lastName}}
-				 {{patient?.otherLastNames}}</span>
+				<span class="capitalize" *ngIf="patient.firstName else noData">{{getFullName(patient)}}</span>
 			</div>
 
 			<div fxLayoutAlign="none center" class="content" fxFlex="30%">

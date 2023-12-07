@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +34,21 @@ public interface SnomedCacheFileRepository extends JpaRepository<SnomedCacheFile
 	@Query("SELECT scf FROM SnomedCacheFile scf " +
 			" WHERE scf.ingestedOn IS NULL " +
 			" OR scf.ingestedError IS NOT NULL " +
+			" OR scf.ingestedOn IS NOT NULL " +
+			" AND scf.conceptsLoaded IS NULL " +
 			" ORDER BY scf.createdOn ASC")
 	List<SnomedCacheFile> findToProcessByAge();
+
+	@Transactional
+	@Modifying
+	@Query("DELETE FROM SnomedCacheFile scf " +
+			"WHERE scf.id = :terminologyId")
+	void delete(@Param("terminologyId") Integer terminologyId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT scf FROM SnomedCacheFile scf WHERE scf.id = (" +
+			"SELECT MAX(sc.id) FROM SnomedCacheFile sc WHERE sc.ingestedOn IS NOT NULL AND sc.ingestedError IS NULL AND sc.conceptsLoaded IS NOT NULL AND sc.ecl = scf.ecl" +
+			")")
+	List<SnomedCacheFile> lastSuccessfulByECL();
 
 }

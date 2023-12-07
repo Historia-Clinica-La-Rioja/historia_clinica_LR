@@ -24,6 +24,7 @@ WORKDIR /app
 COPY app.jar        /app/app.jar
 COPY front-end     /app/front-end/
 COPY backoffice    /app/backoffice/
+COPY storybook     /app/storybook/
 COPY docker.properties /app/env.properties
 
 EXPOSE 8280

@@ -62,9 +62,9 @@ public class UserExternalServiceImpl implements UserExternalService {
     }
 
     @Override
-    public Optional<UserInfoDto> getUser(String key) {
+    public Optional<UserInfoDto> getUser(String username) {
         try {
-            UserBo userBo = userStorage.getUser(key);
+            UserBo userBo = userStorage.getUser(username);
             return Optional.of(mapUserDto(userBo));
         } catch (Exception e) {
             return Optional.empty();
@@ -129,4 +129,10 @@ public class UserExternalServiceImpl implements UserExternalService {
     public Boolean fetchUserHasTwoFactorAuthenticationEnabled(Integer userId) {
         return fetchUserHasTwoFactorAuthenticationEnabled.run(userId);
     }
+
+	@Override
+	public Boolean userIsEnabled(Integer userId) { return userStorage.userIsEnabled(userId); }
+
+	@Override
+	public Boolean findById(Integer userId) { return userStorage.findById(userId); }
 }

@@ -1,6 +1,7 @@
 package ar.lamansys.refcounterref.application.createreference;
 
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
+import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,12 +16,8 @@ public class CreateReference {
 
     private final ReferenceStorage referenceStorage;
 
-    public void run(Integer encounterId, Integer sourceTypeId, List<ReferenceBo> referenceBoList) {
-        log.debug("Input parameters -> encounterId {}, sourceTypeId {}, referenceBoList {}", encounterId, sourceTypeId, referenceBoList);
-        referenceBoList.stream().forEach(referenceBo -> {
-            referenceBo.setEncounterId(encounterId);
-            referenceBo.setSourceTypeId(sourceTypeId);
-        });
-        referenceStorage.save(referenceBoList);
+    public List<Integer> run(List<CompleteReferenceBo> references) {
+        log.debug("Input parameters -> references {} ", references);
+        return referenceStorage.save(references);
     }
 }

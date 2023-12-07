@@ -7,6 +7,7 @@ import { InstitutionExtensionComponent } from '@extensions/routes/extension/exte
 import { InstitucionComponent } from './institucion.component';
 import { HomeComponent } from './routes/home/home.component';
 import { FeatureFlagGuard } from '@core/guards/FeatureFlagGuard';
+import { InstitutionRoutedExternalComponent } from '@extensions/institution-routed-external/institution-routed-external.component';
 
 const routes: Routes = [
 	{
@@ -59,14 +60,21 @@ const routes: Routes = [
 				canActivate: [FeatureFlagGuard],
 				data: { featureFlag: AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES }
 			},
+			{ path: 'web-components/:wcId', component: InstitutionRoutedExternalComponent },
+			{
+				path: 'telesalud',
+				loadChildren: () => import('../telemedicina/telemedicina.module').then(m => m.TelemedicinaModule),
+				canActivate: [FeatureFlagGuard],
+				data: { featureFlag: AppFeature.HABILITAR_TELEMEDICINA }
+			}
 		],
 		canActivate: [RoleGuard],
 		data: {
 			allowedRoles: [ERole.ADMINISTRADOR, ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRATIVO,
 			ERole.ENFERMERO, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ROOT, ERole.ESPECIALISTA_EN_ODONTOLOGIA,
 			ERole.ADMINISTRADOR_DE_CAMAS, ERole.PERSONAL_DE_IMAGENES, ERole.PERSONAL_DE_LABORATORIO, ERole.PERSONAL_DE_FARMACIA, ERole.PERSONAL_DE_ESTADISTICA,
-			ERole.ADMINISTRATIVO_RED_DE_IMAGENES, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, ERole.PRESCRIPTOR, ERole.AUDITOR_MPI, ERole.TECNICO, 
-			ERole.PERSONAL_DE_LEGALES, ERole.INFORMADOR]
+			ERole.ADMINISTRATIVO_RED_DE_IMAGENES, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, ERole.PRESCRIPTOR, ERole.AUDITOR_MPI, ERole.TECNICO,
+			ERole.PERSONAL_DE_LEGALES, ERole.INFORMADOR, ERole.VIRTUAL_CONSULTATION_PROFESSIONAL, ERole.VIRTUAL_CONSULTATION_RESPONSIBLE]
 		},
 
 	}

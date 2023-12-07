@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Triage } from '../components/triage-details/triage-details.component';
-import { dateTimeDtoToDate, dateToDateDto, dateToTimeDto, dateToDateTimeDto, dateDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { dateTimeDtoToDate, dateToDateDto, dateToTimeDto, dateToDateTimeDto, dateDtoToDate, timeDtoToDate, dateToDateTimeDtoUTC } from '@api-rest/mapper/date-dto.mapper';
 import {
 	AdministrativeDischargeDto,
 	AMedicalDischargeDto,
@@ -155,11 +155,9 @@ export class GuardiaMapperService {
 	}
 
 	private static _mapFormToAMedicalDischargeDto(s: MedicalDischargeForm): AMedicalDischargeDto {
+		const medicalDischargeOn = dateToDateTimeDtoUTC(getDateTime(s.dateTime));
 		return {
-			medicalDischargeOn: {
-				date: dateToDateDto(s.dateTime.date.toDate()),
-				time: dateToTimeDto(parse(s.dateTime.time, 'HH:mm', new Date()))
-			},
+			medicalDischargeOn,
 			problems: s.problems.map(
 				(problema: Problema) => {
 					return {
@@ -173,19 +171,31 @@ export class GuardiaMapperService {
 			),
 			dischargeTypeId: s.dischargeTypeId,
 			autopsy: s.autopsy,
-		};
+		}
+
+		function getDateTime(dateTime): Date {
+			const date: Date = dateTime.date;
+			const time = dateTime.time.split(":");
+			date.setHours(+time[0], +time[1]);
+			return date;
+		}
 
 	}
 
 	private static _toAdministrativeDischargeDto(s: AdministrativeForm): AdministrativeDischargeDto {
+		const administrativeDischargeOn = dateToDateTimeDtoUTC(getDateTime(s.dateTime));
 		return {
-			administrativeDischargeOn: {
-				date: dateToDateDto(s.dateTime.date.toDate()),
-				time: dateToTimeDto(parse(s.dateTime.time, 'HH:mm', new Date()))
-			},
+			administrativeDischargeOn,
 			ambulanceCompanyId: s.ambulanceCompanyId,
 			hospitalTransportId: s.hospitalTransportId,
 		};
+
+		function getDateTime(dateTime): Date {
+			const date: Date = dateTime.date.toDate();
+			const time = dateTime.time.split(":");
+			date.setHours(+time[0], +time[1]);
+			return date;
+		}
 	}
 
 	static _mapRiskFactorsValuetoNewRiskFactorsObservationDto(riskFactorsValue: RiskFactorsValue): NewRiskFactorsObservationDto {

@@ -17,7 +17,7 @@
                         "type" : "cubejs-card",
                         "args" : {
                           "header" : {
-                            "title" : "Evolución de consultas por fecha"
+                            "title" : "Evolución de consultas por fecha y especialidad"
                           },
                           "content" : {
                             "type" : "cubejs-dashboard",
@@ -373,15 +373,6 @@
                                         "type" : "cubejs-chart",
                                         "args" : {
                                           "query" : "cantidadConsultasTotal",
-                                          "chartOptions" : {
-                                            "responsive" : true,
-                                            "maintainAspectRatio" : false,
-                                            "plugins" : {
-                                              "legend" : {
-                                                "display" : false
-                                              }
-                                            }
-                                          },
                                           "title" : {
                                             "text" : "CONSULTAS"
                                           }
@@ -393,15 +384,6 @@
                                           "query" : "cantidadConsultasTotalSexoF",
                                           "title" : {
                                             "text" : "FEMENINO"
-                                          },
-                                          "chartOptions" : {
-                                            "responsive" : true,
-                                            "maintainAspectRatio" : false,
-                                            "plugins" : {
-                                              "legend" : {
-                                                "display" : false
-                                              }
-                                            }
                                           }
                                         }
                                       },
@@ -411,15 +393,6 @@
                                           "query" : "cantidadConsultasTotalSexoM",
                                           "title" : {
                                             "text" : "MASCULINO"
-                                          },
-                                          "chartOptions" : {
-                                            "responsive" : true,
-                                            "maintainAspectRatio" : false,
-                                            "plugins" : {
-                                              "legend" : {
-                                                "display" : false
-                                              }
-                                            }
                                           }
                                         }
                                       },
@@ -429,15 +402,6 @@
                                           "query" : "cantidadConsultasTotalSexoX",
                                           "title" : {
                                             "text" : "X"
-                                          },
-                                          "chartOptions" : {
-                                            "responsive" : true,
-                                            "maintainAspectRatio" : false,
-                                            "plugins" : {
-                                              "legend" : {
-                                                "display" : false
-                                              }
-                                            }
                                           }
                                         }
                                       }
@@ -659,15 +623,6 @@
                                           "query" : "cantidadTurnosTotal",
                                           "title" : {
                                             "text" : "TURNOS"
-                                          },
-                                          "chartOptions" : {
-                                            "responsive" : true,
-                                            "maintainAspectRatio" : false,
-                                            "plugins" : {
-                                              "legend" : {
-                                                "display" : false
-                                              }
-                                            }
                                           }
                                         }
                                       },
@@ -677,15 +632,6 @@
                                           "query" : "cantidadTurnosTotalAsignados",
                                           "title" : {
                                             "text" : "ASIGNADOS"
-                                          },
-                                          "chartOptions" : {
-                                            "responsive" : true,
-                                            "maintainAspectRatio" : false,
-                                            "plugins" : {
-                                              "legend" : {
-                                                "display" : false
-                                              }
-                                            }
                                           }
                                         }
                                       },
@@ -695,15 +641,6 @@
                                           "query" : "cantidadTurnosTotalCancelados",
                                           "title" : {
                                             "text" : "CANCELADOS"
-                                          },
-                                          "chartOptions" : {
-                                            "responsive" : true,
-                                            "maintainAspectRatio" : false,
-                                            "plugins" : {
-                                              "legend" : {
-                                                "display" : false
-                                              }
-                                            }
                                           }
                                         }
                                       },
@@ -713,15 +650,6 @@
                                           "query" : "cantidadTurnosTotalAtendidos",
                                           "title" : {
                                             "text" : "ATENDIDOS"
-                                          },
-                                          "chartOptions" : {
-                                            "responsive" : true,
-                                            "maintainAspectRatio" : false,
-                                            "plugins" : {
-                                              "legend" : {
-                                                "display" : false
-                                              }
-                                            }
                                           }
                                         }
                                       },
@@ -731,15 +659,6 @@
                                           "query" : "cantidadTurnosTotalAusentes",
                                           "title" : {
                                             "text" : "AUSENTES"
-                                          },
-                                          "chartOptions" : {
-                                            "responsive" : true,
-                                            "maintainAspectRatio" : false,
-                                            "plugins" : {
-                                              "legend" : {
-                                                "display" : false
-                                              }
-                                            }
                                           }
                                         }
                                       }

@@ -6,7 +6,7 @@ import { ApiErrorMessageDto, RecaptchaPublicConfigDto } from '@api-rest/api-mode
 import { AppFeature } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { PublicService } from '@api-rest/services/public.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatDialog } from "@angular/material/dialog";
 import { LoginPinCodeComponent } from "../../dialogs/login-pin-code/login-pin-code.component";
 import { FeatureFlagService } from "@core/services/feature-flag.service";
@@ -25,13 +25,10 @@ export class HospitalLoginComponent implements OnInit {
 	hidePassword = true;
 	ffRecoverPasswordIsOn: boolean;
 
-	private returnUrl: string;
-
 	constructor(
 		private formBuilder: UntypedFormBuilder,
 		private authenticationService: AuthenticationService,
 		private publicService: PublicService,
-		private route: ActivatedRoute,
 		private router: Router,
 		private readonly dialog: MatDialog,
 		private readonly featureFlagService: FeatureFlagService
@@ -55,13 +52,6 @@ export class HospitalLoginComponent implements OnInit {
 				}
 			}
 		});
-
-		this.route.queryParams.subscribe(params => {
-			if (params.returnUrl) {
-				this.returnUrl = params.returnUrl;
-			}
-		});
-
 		this.featureFlagService.isActive(AppFeature.HABILITAR_RECUPERAR_PASSWORD).subscribe(isOn => this.ffRecoverPasswordIsOn = isOn);
 	}
 
@@ -114,7 +104,7 @@ export class HospitalLoginComponent implements OnInit {
 	}
 
 	private doRedirect() {
-		this.returnUrl ? this.authenticationService.go(this.returnUrl) : this.authenticationService.go();
+		this.authenticationService.go();
 	}
 
 	reCaptchaResolved(captchaResponse: string) {

@@ -13,11 +13,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Table(name = "snomed_cache_file")
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity
+@Table(name = "snomed_cache_file")
 public class SnomedCacheFile {
 	@Id
 	@Column(name = "id")

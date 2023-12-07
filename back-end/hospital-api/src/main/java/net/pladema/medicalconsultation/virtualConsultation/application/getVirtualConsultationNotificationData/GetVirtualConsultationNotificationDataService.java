@@ -1,0 +1,9 @@
+package net.pladema.medicalconsultation.virtualConsultation.application.getVirtualConsultationNotificationData;
+
+import net.pladema.medicalconsultation.virtualConsultation.domain.VirtualConsultationNotificationDataBo;
+
+public interface GetVirtualConsultationNotificationDataService {
+
+	VirtualConsultationNotificationDataBo run(Integer virtualConsultationId);
+
+}

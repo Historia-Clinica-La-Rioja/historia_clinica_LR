@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,12 +29,13 @@ public class BedSummaryRepositoryImpl implements BedSummaryRepository{
 
     @Override
     @Transactional(readOnly = true)
-    public List<BedSummaryVo> execute(Integer institutionId, Integer sectorType) {
+    public List<BedSummaryVo> execute(Integer institutionId, Short[] sectorsType) {
         String sqlQuery =
-                " SELECT b, s, MAX(ie.probableDischargeDate), cs, ct.description, so.description, ag.description "
+                " SELECT b, s, MAX(ie.probableDischargeDate), cs, ct.description, so.description, ag.description, st "
                 + " FROM Bed b "
                 + " JOIN Room r ON b.roomId = r.id "
                 + " JOIN Sector s ON r.sectorId = s.id "
+				+ " JOIN SectorType st ON s.sectorTypeId = st.id "
                 + " LEFT JOIN CareType ct ON s.careTypeId = ct.id "
                 + " LEFT JOIN SectorOrganization so ON s.sectorOrganizationId = so.id "
                 + " LEFT JOIN AgeGroup ag ON s.ageGroupId = ag.id "
@@ -41,14 +43,14 @@ public class BedSummaryRepositoryImpl implements BedSummaryRepository{
                 + " LEFT JOIN ClinicalSpecialty cs ON vcs.clinicalSpecialtyId = cs.id "
                 + " LEFT JOIN InternmentEpisode ie ON b.id = ie.bedId "
                 + " WHERE s.institutionId = :institutionId "
-                + " AND (s.sectorTypeId = :sectorType OR s.sectorTypeId IS NULL) "
+				+ " AND s.sectorTypeId IN (:sectorsType) "
                 + " AND (b.free=true OR ( b.free=false AND ie.statusId = :internmentEpisodeActiveStatus OR s.sectorTypeId = "+SectorType.EMERGENCY_CARE_ID+") ) "
-                + " GROUP BY b, s, cs, so, ct, ag "
+                + " GROUP BY b, s, cs, so, ct, ag, st "
                 + " ORDER BY s.id, cs.id ";
 
         List<Object[]> result = entityManager.createQuery(sqlQuery)
                 .setParameter("institutionId", institutionId)
-                .setParameter("sectorType", sectorType == null ? SectorType.INTERNMENT_ID : SectorType.EMERGENCY_CARE_ID)
+                .setParameter("sectorsType", Arrays.asList(sectorsType))
                 .setParameter("internmentEpisodeActiveStatus", InternmentEpisodeStatus.ACTIVE_ID)
                 .getResultList();
 
@@ -63,7 +65,7 @@ public class BedSummaryRepositoryImpl implements BedSummaryRepository{
                         String sectorOrganization = (String) r[5];
                         String ageGroup = (String) r[6];
                         BedSummaryVo bedSummary = new BedSummaryVo(bed, (Sector) r[1], (LocalDateTime) r[2],
-                                careType, sectorOrganization, ageGroup);
+                                careType, sectorOrganization, ageGroup, (SectorType) r[7]);
                         ClinicalSpecialty clinicalSpecialty =  (ClinicalSpecialty) r[3];
                         if (clinicalSpecialty != null)
                             bedSummary.addSpecialty(new ClinicalSpecialtyVo(clinicalSpecialty));

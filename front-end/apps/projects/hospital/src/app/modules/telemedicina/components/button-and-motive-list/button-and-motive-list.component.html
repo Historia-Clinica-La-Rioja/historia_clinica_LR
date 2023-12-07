@@ -1,0 +1,15 @@
+<div>
+	<section>
+		<app-titled-content-card *ngIf="!motivoNuevaConsultaService.isEmpty()"
+			title="{{ 'ambulatoria.paciente.nueva-consulta.motivo.LIST_CARD_TITLE' }}">
+			<app-reason-list [service]="motivoNuevaConsultaService"></app-reason-list>
+		</app-titled-content-card>
+	</section>
+
+	<section>
+		<button *ngIf="motives?.length < limit" mat-button type="button" id="add-reason-button" color="primary" class="add-button"
+			(click)="addReason()">
+			+ {{ 'ambulatoria.paciente.nueva-consulta.motivo.ADD' | translate }}
+		</button>
+	</section>
+</div>

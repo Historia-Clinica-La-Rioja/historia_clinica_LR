@@ -11,7 +11,7 @@ import net.pladema.clinichistory.requests.servicerequests.application.GetWorklis
 import net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo;
 import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.rest.dto.WorklistDto;
 
-import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EInformerWorklistStatus;
+import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,19 +41,23 @@ public class WorklistController {
 	@PreAuthorize("hasPermission(#institutionId, 'INFORMADOR')")
 	public ResponseEntity<List<WorklistDto>> getWorklistByModalityAndInstitution(
 			@PathVariable(name = "institutionId") Integer institutionId,
-			@RequestParam(name = "modalityId", required = false) Integer modalityId
+			@RequestParam(name = "modalityId", required = false) Integer modalityId,
+			@RequestParam(name = "from") String from,
+			@RequestParam(name = "to") String to
 	) {
 		log.debug("Input parameters -> institutionId {}, modalityId {}", institutionId, modalityId);
-		List<WorklistBo> worklistBo = getWorklist.run(modalityId, institutionId);
+		LocalDateTime startDate = localDateMapper.fromStringToLocalDate(from).atStartOfDay();
+		LocalDateTime endDate = localDateMapper.fromStringToLocalDate(to).atTime(LocalTime.MAX);
+		List<WorklistBo> worklistBo = getWorklist.run(modalityId, institutionId, startDate, endDate);
 		List<WorklistDto> result = worklistBo.stream().map(this::mapToWorklistDto).collect(Collectors.toList());
-		log.debug("Get worklist by modality and institution ", result);
+		log.debug("Get worklist by modality and institution {}", result);
 		return ResponseEntity.ok().body(result);
 	}
 
 	@GetMapping(value = "/informer-status")
 	public ResponseEntity<Collection<MasterDataDto>> getStatus() {
-		log.debug("{}", "All informer status");
-		return ResponseEntity.ok().body(EnumWriter.writeList(EInformerWorklistStatus.getAll()));
+		log.debug("All diagnostic image report status in informer worklist");
+		return ResponseEntity.ok().body(EnumWriter.writeList(EDiagnosticImageReportStatus.getAll()));
 	}
 
 	private WorklistDto mapToWorklistDto(WorklistBo bo) {
@@ -62,7 +68,8 @@ public class WorklistController {
 				bo.getPatientFullName(),
 				bo.getStatusId(),
 				bo.getAppointmentId(),
-				localDateMapper.toDateTimeDto(bo.getActionTime())
+				localDateMapper.toDateTimeDto(bo.getActionTime()),
+				bo.getCompletionInstitution()
 		);
 	}
 }

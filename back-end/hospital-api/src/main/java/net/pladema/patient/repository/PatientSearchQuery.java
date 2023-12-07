@@ -1,5 +1,6 @@
 package net.pladema.patient.repository;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatientType;
 import ar.lamansys.sgx.shared.repositories.QueryStringHelper;
 import lombok.NoArgsConstructor;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
@@ -193,7 +194,7 @@ public class PatientSearchQuery {
 				.concatPart(this.from())
 				.concat(" WHERE ")
 				.concatPart(whereWithAllAttributesAndNameSelfDetermination(AND_JOINING_OPERATOR, LIKE_COMPARATOR))
-				.concat(" AND patient.deleted = false ");
+				.concat(" AND patient.deleted = false AND patient.type_id != " + EPatientType.REJECTED.getId() + " ");
 	}
 
     private String getJoiningOperator(Integer joiningOperator) {

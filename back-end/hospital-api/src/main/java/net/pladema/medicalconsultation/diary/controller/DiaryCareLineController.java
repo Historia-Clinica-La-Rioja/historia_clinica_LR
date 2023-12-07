@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -35,6 +36,16 @@ public class DiaryCareLineController {
 																		  @PathVariable(name = "clinicalSpecialtyId") Integer clinicalSpecialtyId) {
 		log.debug("Input parameters -> institutionId {}, clinicalSpecialtyId {} ", institutionId, clinicalSpecialtyId);
 		List<CareLineBo> careLinesBo = diaryCareLineService.getPossibleCareLinesForDiary(institutionId, clinicalSpecialtyId);
+		log.debug("Get all care lines  => {}", careLinesBo);
+		return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLinesBo));
+	}
+
+	@GetMapping("/practices")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA')")
+	public ResponseEntity<List<CareLineDto>> getPossibleCareLinesForDiaryByPractices(@PathVariable(name = "institutionId") Integer institutionId,
+																					 @RequestParam(name = "practicesId") List<Integer> practicesId) {
+		log.debug("Input parameters -> institutionId {}, practicesId {} ", institutionId, practicesId);
+		List<CareLineBo> careLinesBo = diaryCareLineService.getPossibleCareLinesForDiaryByPractices(institutionId, practicesId);
 		log.debug("Get all care lines  => {}", careLinesBo);
 		return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLinesBo));
 	}

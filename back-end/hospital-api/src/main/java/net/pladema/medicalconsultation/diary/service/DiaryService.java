@@ -18,10 +18,7 @@ public interface DiaryService {
 	
 	Boolean deleteDiary(Integer diaryId);
 
-	List<Integer> getAllOverlappingDiaryByProfessional(Integer healthcareProfessionalId, Integer doctorsOfficeId,
-													   LocalDate newDiaryStart, LocalDate newDiaryEnd, Short appointmentDuration, Optional<Integer> excludeDiaryId);
-
-    List<DiaryBo> getAllOverlappingDiary(Integer doctorsOfficeId,
+    List<DiaryBo> getAllOverlappingDiary(Integer healthcareProfessionalId, Integer doctorsOfficeId,
                                          LocalDate newDiaryStart, LocalDate newDiaryEnd, Optional<Integer> excludeDiaryId);
 
     Collection<DiaryBo> getActiveDiariesBy(Integer associatedHealthcareProfessionalId, Integer healthcareProfessionalId, Integer specialtyId, Integer institutionId);
@@ -38,6 +35,8 @@ public interface DiaryService {
 
 	List<String> getActiveDiariesAliases(Integer institutionId);
 
-	List<EmptyAppointmentBo> getEmptyAppointmentsBySearchCriteria(Integer institutionId, AppointmentSearchBo searchCriteria);
+	List<EmptyAppointmentBo> getEmptyAppointmentsBySearchCriteria(Integer institutionId, AppointmentSearchBo searchCriteria, Boolean mustFilterByModality);
+
+	Optional<CompleteDiaryBo> getCompleteDiaryByAppointment (Integer appointmentId);
 
 }

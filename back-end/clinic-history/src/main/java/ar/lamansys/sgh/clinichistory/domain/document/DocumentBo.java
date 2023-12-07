@@ -2,6 +2,7 @@ package ar.lamansys.sgh.clinichistory.domain.document;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
@@ -90,6 +91,8 @@ public class DocumentBo implements IDocumentBo {
 	private OtherRiskFactorBo otherRiskFactors;
 
 	private ObstetricEventBo obstetricEvent;
+
+    private List<ConclusionBo> conclusions = new ArrayList<>();
 
 
     public String getDocumentStatusId(){

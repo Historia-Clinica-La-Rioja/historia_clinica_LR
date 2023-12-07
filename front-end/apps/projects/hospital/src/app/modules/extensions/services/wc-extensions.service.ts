@@ -1,14 +1,19 @@
 import { Injectable } from '@angular/core';
 import { ExtensionComponentDto } from '@extensions/extensions-model';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { ExtensionsService } from './extensions.service';
-
-
-const slotedInfoMapper = (definition: ExtensionComponentDto) => (element: WCInfo): SlotedInfo  => ({
-	componentName: element.componentName,
-	url: (new URL(element.url, definition.path)).toString(),
-	title: element.title,
-});
+import { WCParams } from '@extensions/components/ui-external-component/ui-external-component.component';
+import {
+	findSlotedInfoById,
+	toClinicHistoryWCParams,
+	toSystemHomeWCParams,
+	toInstitutionWCParamsList,
+	toSystemHomeWCParamsList,
+	toMenuItemList,
+	toInstitutionHomeWCParams,
+} from './wc-extensions.mappers';
+import { SlotsStorageService } from './storages/slots-storage.service';
+import { MenuItem } from '@presentation/components/menu/menu.component';
 
 @Injectable({
 	providedIn: 'root'
@@ -25,7 +30,58 @@ export class WCExtensionsService {
 		this.fetchExtensions();
 	}
 
-	getComponentsFromSlot(slot: Slot): Observable<SlotedInfo[]> {
+	getSystemHomeComponents(): Observable<WCParams[]> {
+		return this.listComponentsFromSlot(Slot.SYSTEM_HOME_PAGE)
+			.pipe(
+				map(toSystemHomeWCParamsList)
+			);
+	}
+
+	getSystemHomeMenu(): Observable<MenuItem[]> {
+		return this.listComponentsFromSlot(Slot.HOME_MENU)
+			.pipe(
+				map(toMenuItemList),
+			);
+	}
+
+	getSystemHomeMenuPage(wcId: string): Observable<WCParams> {
+		return this.listComponentsFromSlot(Slot.HOME_MENU)
+			.pipe(
+				map(findSlotedInfoById(wcId)),
+				map(toSystemHomeWCParams),
+			);
+	}
+
+	getClinicHistoryComponents(patientId: number): Observable<WCParams[]> {
+		return this.listComponentsFromSlot(Slot.CLINIC_HISTORY_TAB)
+			.pipe(
+				map(sloted => sloted.map(toClinicHistoryWCParams(patientId)))
+			);
+	}
+
+	getInstitutionHomeComponents(institutionId: number): Observable<WCParams[]> {
+		return this.listComponentsFromSlot(Slot.INSTITUTION_HOME_PAGE)
+			.pipe(
+				map(toInstitutionWCParamsList(institutionId)),
+			);
+	}
+
+	getInstitutionMenu(): Observable<any> {
+		return this.listComponentsFromSlot(Slot.INSTITUTION_MENU)
+			.pipe(
+				map(toMenuItemList),
+			)
+	}
+
+	getInstitutionMenuPage(wcId: string, institutionId: number): Observable<WCParams> {
+		return this.listComponentsFromSlot(Slot.INSTITUTION_MENU)
+			.pipe(
+				map(findSlotedInfoById(wcId)),
+				map(data => toInstitutionHomeWCParams(data, institutionId))
+			);
+	}
+
+	private listComponentsFromSlot(slot: Slot): Observable<SlotedInfo[]> {
 		return this.slotedComponents.find(a => a.slot === slot).components$;
 	}
 
@@ -42,33 +98,22 @@ export class WCExtensionsService {
 		* 		parametros para el wc?
 		*/
 
-		const valuesToEmit = {
-			[Slot.INSTITUTION_HOME_PAGE]: [],
-			[Slot.CLINIC_HISTORY_TAB]: [],
-			[Slot.HOME_MENU]: [],
-			[Slot.SYSTEM_HOME_PAGE]: [],
-		}
 		const allPlugins$: Observable<ExtensionComponentDto[]> = this.extensionService.getExtensions();
 
 		allPlugins$.subscribe(
 			allPlugins => {
 				allPlugins.forEach(plugin => {
-					const mapper = slotedInfoMapper(plugin);
-					this.fetchDefinicion(plugin.path).subscribe(
+					this.extensionService.getDefinition(plugin.path).subscribe(
 						(defPluginArr: WCInfo[]) => {
-
+							// console.log('getdef ', defPluginArr);
+							const slotsStorageService = new SlotsStorageService(plugin.path);
 							defPluginArr.forEach(d => {
-								if (!valuesToEmit[d.slot]) {
-									console.warn(`Extension ${d.slot} inexistente`);
-								} else {
-									valuesToEmit[d.slot].push(mapper(d));
-								}
-
+								slotsStorageService.put(d);
 							});
-							const filledSlotsNames = this.allUsedExtensions(defPluginArr);
-							filledSlotsNames.forEach(slotName => {
-								this.emitters.find(sc => sc.slot === slotName).emitter.next(valuesToEmit[slotName]);
-							})
+							slotsStorageService.forEachSlot(
+								(slotName, valuesToEmit) =>
+									this.emitters.find(sc => sc.slot === slotName).emitter.next(valuesToEmit)
+							)
 						}
 					)
 				})
@@ -84,15 +129,6 @@ export class WCExtensionsService {
 				this.slotedComponents.push({ slot, components$: emitter.asObservable() }); // Initial value null means not fetched, [] means no components
 			}
 		)
-	}
-
-	private allUsedExtensions(defPluginArr: WCInfo[]): Set<string> { // Cambiar a que devuelva slot
-		return new Set(defPluginArr.map(e => e.slot).
-			filter(value => Object.keys(Slot).some(a => a == value)));
-	}
-
-	private fetchDefinicion(url: string): Observable<WCInfo[]> {
-		return this.extensionService.getDefinition(url);
 	}
 
 }

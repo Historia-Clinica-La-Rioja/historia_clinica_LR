@@ -7,6 +7,9 @@ import { ControlPatientDuplicateComponent } from './routes/control-patient-dupli
 import { HomeComponent } from './routes/home/home.component';
 import { PatientFusionComponent } from './routes/patient-fusion/patient-fusion.component';
 import { EmpadronamientoComponent } from './routes/empadronamiento/empadronamiento.component';
+import { UnlinkPatientComponent } from './routes/unlink-patient/unlink-patient.component';
+import { UnmergePatientComponent } from './routes/unmerge-patient/unmerge-patient.component';
+import { EditPatientComponent } from '@pacientes/routes/edit-patient/edit-patient.component';
 
 
 const routes: Routes = [{
@@ -27,10 +30,22 @@ const routes: Routes = [{
 		{
 			path:"empadronamiento",
 			component: EmpadronamientoComponent
+		},
+		{
+			path: "desvincular-pacientes",
+			component: UnlinkPatientComponent
+		},
+		{
+			path:"desvincular-pacientes/:id",
+			component: UnmergePatientComponent
+		},
+		{
+			path: 'pacientes/edit',
+			component: EditPatientComponent
 		}
 	],
 	canActivate: [RoleGuard,FeatureFlagGuard],
-		data: { allowedRoles: [ERole.AUDITOR_MPI] , featureFlag: AppFeature.HABILITAR_MODULO_AUDITORIA }
+		data: { needsRoot: true, allowedRoles: [ERole.AUDITOR_MPI] , featureFlag: AppFeature.HABILITAR_MODULO_AUDITORIA }
 }
 ];
 

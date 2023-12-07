@@ -173,7 +173,7 @@ public class PatientPortalController {
 		if (!this.featureFlagsService.isOn(AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE))
 			throw new MethodNotSupportedException("Funcionalidad no soportada");
 		Integer patientId = patientPortalService.getPatientId();
-		Patient patient = patientService.getPatient(patientId)
+		Patient patient = patientService.getActivePatient(patientId)
 				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
 		BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
 		BasicPatientDto result = new BasicPatientDto(patient.getId(), personData, patient.getTypeId());
@@ -186,7 +186,7 @@ public class PatientPortalController {
 		if (!this.featureFlagsService.isOn(AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE))
 			throw new MethodNotSupportedException("Funcionalidad no soportada");
 		Integer patientId = patientPortalService.getPatientId();
-		Patient patient = patientService.getPatient(patientId)
+		Patient patient = patientService.getActivePatient(patientId)
 				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
 		PersonPhotoDto personPhotoDto = personExternalService.getPersonPhoto(patient.getPersonId());
 		LOG.debug(LOGGING_OUTPUT, personPhotoDto);
@@ -198,7 +198,7 @@ public class PatientPortalController {
 		if (!this.featureFlagsService.isOn(AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE))
 			throw new MethodNotSupportedException("Funcionalidad no soportada");
 		Integer patientId = patientPortalService.getPatientId();
-		Patient patient = patientService.getPatient(patientId)
+		Patient patient = patientService.getActivePatient(patientId)
 				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
 		DoctorsBo doctorsBo = additionalDoctorService.getAdditionalDoctors(patientId);
 		BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());

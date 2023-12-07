@@ -10,4 +10,3 @@ ENV CUBEJS_JWT_ALGS=HS512
 
 COPY schema/ /cube/conf/schema/
 COPY cube.js /cube/conf/
-

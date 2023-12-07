@@ -10,6 +10,7 @@
 	<h1 mat-dialog-title>{{ data.title | translate}}</h1>
 	<div mat-dialog-content fxFill="50" >
 		<div innerHTML="{{ data.content | translate}}"></div>
+		<div innerHTML="{{ data.message | translate}}"></div>
 	</div>
 	<button id="print-appointment" mat-raised-button color="primary" btn-block type="button"
 	(click)="getAppointmentTicketReport()">

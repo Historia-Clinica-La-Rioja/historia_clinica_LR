@@ -1,0 +1,20 @@
+<form [formGroup]="form" fxLayout="column">
+	<mat-form-field appearance="outline">
+		<input placeholder="{{ placeholder | translate}}" [formControl]="searchValue"
+			 matInput [matAutocomplete]="auto" #input />
+		<mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+			<mat-option *ngFor="let option of optionsFiltered | async" [value]="option">
+				{{option.compareValue}}
+			</mat-option>
+		</mat-autocomplete>
+	</mat-form-field>
+
+	<mat-chip-list #chipGrid>
+		<mat-chip selected color="primary" *ngFor="let option of optionsSelected" (removed)="remove(option)">
+			{{option.compareValue}}
+			<button matChipRemove>
+				<mat-icon>cancel</mat-icon>
+			</button>
+		</mat-chip>
+	</mat-chip-list>
+</form>

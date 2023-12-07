@@ -9,7 +9,7 @@ public interface MoveStudiesService extends SharedLoadStudiesResultPort {
 
 	Integer save(MoveStudiesBO appointmentOrderImageBo);
 
-	Integer create(Integer appointmentId);
+	Integer create(Integer appointmentId, Integer institutionId);
 
 	List<MoveStudiesBO> getMoveStudies();
 

@@ -1,5 +1,6 @@
 package ar.lamansys.sgx.auth.apiKey.infrastructure.output.repository.userkey;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,25 +8,22 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "user_key")
+@Table(name = "user_key", uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"user_id", "name"})
+})
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserKey {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = -7104748562864239397L;
+	@Id
+	@Column(name = "key", nullable = false, length = 255)
+	private String key;
 
-	@EmbeddedId
-	private UserKeyPK pk;
+	@Column(name = "user_id", nullable = false)
+	private Integer userId;
 
-	public UserKey(Integer userId, String key){
-		pk = new UserKeyPK(userId, key);
-	}
-
-	public Integer getUserId(){
-		return pk.getUserId();
-	}
+	@Column(name = "name", nullable = false, length = 255)
+	private String name;
 }

@@ -9,7 +9,8 @@ import { InstitutionService } from '@api-rest/services/institution.service';
 import { AppRoutes } from '../../../../app-routing.module';
 import { mapToAddress } from '@api-presentation/mappers/institution-dto.mapper';
 import { PermissionsService } from '@core/services/permissions.service';
-import { Slot, SlotedInfo, WCExtensionsService } from '@extensions/services/wc-extensions.service';
+import { WCExtensionsService } from '@extensions/services/wc-extensions.service';
+import { WCParams } from '@extensions/components/ui-external-component/ui-external-component.component';
 
 
 @Component({
@@ -21,7 +22,7 @@ export class HomeComponent implements OnInit {
 	institucion$: Observable<InstitutionDto>;
 	roles = [];
 
-	extensions$: Observable<SlotedInfo[]>;
+	extensions$: Observable<WCParams[]>;
 
 	constructor(
 		private contextService: ContextService,
@@ -37,14 +38,11 @@ export class HomeComponent implements OnInit {
 			this.institucion$ = this.institutionService.getInstitutions([id]).pipe(
 				map(list => list && list.length ? list[0] : undefined),
 			);
-
 		});
 		this.permissionsService.contextRoleAssignments$.subscribe(
 			roles => this.roles = roles.map(role => role.roleDescription)
 		);
-
-
-		this.extensions$ = this.wcExtensionsService.getComponentsFromSlot(Slot.INSTITUTION_HOME_PAGE);
+		this.extensions$ = this.wcExtensionsService.getInstitutionHomeComponents(1);
 	}
 
 	address(institution: InstitutionDto) {

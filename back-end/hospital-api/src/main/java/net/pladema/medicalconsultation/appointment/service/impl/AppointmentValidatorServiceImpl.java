@@ -1,5 +1,29 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.dates.utils.DateUtils;
+import ar.lamansys.sgx.shared.security.UserInfo;
+import net.pladema.establishment.controller.service.InstitutionExternalService;
+import net.pladema.medicalconsultation.appointment.service.AppointmentService;
+import net.pladema.medicalconsultation.appointment.service.AppointmentValidatorService;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentEnumException;
+import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentException;
+import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateException;
+import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateExceptionEnum;
+import net.pladema.medicalconsultation.diary.service.DiaryAssociatedProfessionalService;
+import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
+import net.pladema.medicalconsultation.diary.service.DiaryService;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
+import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
+import net.pladema.permissions.controller.external.LoggedUserExternalService;
+import net.pladema.permissions.repository.enums.ERole;
+import net.pladema.staff.service.HealthcareProfessionalService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -8,36 +32,17 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
-import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import net.pladema.establishment.controller.service.InstitutionExternalService;
-import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentEnumException;
-import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentException;
-import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateException;
-import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateExceptionEnum;
-import net.pladema.medicalconsultation.diary.service.DiaryAssociatedProfessionalService;
-import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
-import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
-
-import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import ar.lamansys.sgx.shared.security.UserInfo;
-import net.pladema.medicalconsultation.appointment.service.AppointmentService;
-import net.pladema.medicalconsultation.appointment.service.AppointmentValidatorService;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import net.pladema.medicalconsultation.diary.service.DiaryService;
-import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
-import net.pladema.permissions.controller.external.LoggedUserExternalService;
-import net.pladema.permissions.repository.enums.ERole;
-import net.pladema.staff.service.HealthcareProfessionalService;
-
-import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.*;
+import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.ABSENT;
+import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.ASSIGNED;
+import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.BOOKED;
+import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.CANCELLED;
+import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.CONFIRMED;
+import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.OUT_OF_DIARY;
+import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.SERVED;
 
 @Service
 public class AppointmentValidatorServiceImpl implements AppointmentValidatorService {
@@ -133,7 +138,7 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_BEFORE_NOW, String.format("El horario del turno es anterior a la hora actual."));
 		}
 
-		if ((diary.get().getStartDate().isAfter(date)) || (diary.get().getEndDate().isBefore(date))){
+		if ((diary.get().getStartDate().isAfter(date)) || (diary.get().getEndDate().isBefore(date))) {
 			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_OUT_OF_DIARY_RANGE, String.format("La fecha del turno se encuentra fuera del rango de la agenda."));
 		}
 		if (appointmentBo.get().getAppointmentStateId() != 1){
@@ -147,7 +152,7 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 		Collection<DiaryOpeningHoursBo> diaryOpeningHours = diaryOpeningHoursService.getDiaryOpeningHours(diary.get().getId());
 		for (DiaryOpeningHoursBo doh: diaryOpeningHours) {
 			OpeningHoursBo oh = doh.getOpeningHours();
-			if(oh.getDayWeekId() == date.getDayOfWeek().getValue()){
+			if (Objects.equals(oh.getDayWeekId(), DateUtils.getWeekDay(date))) {
 				if(((oh.getFrom().isBefore(time)) && (oh.getTo().isAfter(time))) || (oh.getFrom().equals(time))) {
 					return true;
 				}

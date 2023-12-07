@@ -10,9 +10,11 @@ import net.pladema.address.service.AddressMasterDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
@@ -64,6 +66,25 @@ public class AddressMasterDataController {
 		DepartmentBo result = addressMasterDataService.findDepartmentById(departmentId);
 		DepartmentDto resultDto = departmentMapper.fromDepartmentBo(result);
 		return ResponseEntity.ok().body(resultDto);
+	}
+
+	@GetMapping(value = "/institution/{institutionId}/departments/with-specialty/{clinicalSpecialtyId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<Collection<AddressProjection>> getDeparmentsByCareLineAndClinicalSpecialty(@PathVariable("institutionId") Integer institutionId,
+																					@PathVariable("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																					@RequestParam(name = "careLineId", required = false) Integer careLineId) {
+		LOG.debug("{}", "All departments in province having clinical specialty");
+		return ResponseEntity.ok().body(addressMasterDataService.getDepartmentsForReference(institutionId, careLineId, clinicalSpecialtyId, AddressProjection.class));
+	}
+
+	@GetMapping(value = "/institution/{institutionId}/departments/by-reference-practice-filter")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<Collection<AddressProjection>> getDepartmentsByCareLineAndPracticesAndClinicalSpecialty(@PathVariable("institutionId") Integer institutionId,
+																												  @RequestParam("practiceSnomedId") Integer practiceSnomedId,
+																												  @RequestParam(name = "careLineId", required = false) Integer careLineId,
+																												  @RequestParam(name = "clinicalSpecialtyId", required = false) Integer clinicalSpecialtyId) {
+		LOG.debug("{}", "All departments by reference for practice filter");
+		return ResponseEntity.ok().body(addressMasterDataService.getDepartmentsByReferenceFilterByPractice(practiceSnomedId, careLineId, clinicalSpecialtyId, AddressProjection.class));
 	}
 
 }

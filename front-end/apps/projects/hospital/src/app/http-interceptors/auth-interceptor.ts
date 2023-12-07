@@ -10,10 +10,11 @@ import { throwError, EMPTY, Observable, ReplaySubject } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 
 import { AuthenticationService } from '../modules/auth/services/authentication.service';
+import { Router } from '@angular/router';
 
 const shouldAuthorize = (url: string) => !url.startsWith('http'); // any absolute request (another domain)
 
-const isUnauthorized = (error: any): boolean =>  error instanceof HttpErrorResponse && error.status === 401;
+const isUnauthorized = (error: any): boolean => error instanceof HttpErrorResponse && error.status === 401;
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -21,6 +22,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
 	constructor(
 		private readonly authenticationService: AuthenticationService,
+		private readonly router: Router,
 	) { }
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -36,7 +38,7 @@ export class AuthInterceptor implements HttpInterceptor {
 					}
 					return throwError(error);
 				},
-			));
+				));
 	}
 
 	private refreshToken(): Observable<any> {
@@ -45,13 +47,17 @@ export class AuthInterceptor implements HttpInterceptor {
 			this.authenticationService.tokenRefresh().pipe(
 				catchError(_ => {
 					this.refreshTokenSubject = undefined;
-					this.authenticationService.logout();
+					this.authenticationService.logout().subscribe(finished => {
+						this.router.navigate(['/auth/login']);
+					});
 					return EMPTY;
 				}),
 			).subscribe(token => {
 				if (!token) {
 					this.refreshTokenSubject = undefined;
-					this.authenticationService.logout();
+					this.authenticationService.logout().subscribe(finished => {
+						this.router.navigate(['/auth/login']);
+					});
 					return;
 				}
 				this.refreshTokenSubject.next(token);

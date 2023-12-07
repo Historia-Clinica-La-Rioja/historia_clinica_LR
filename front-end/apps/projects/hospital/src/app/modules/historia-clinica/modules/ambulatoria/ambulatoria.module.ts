@@ -73,7 +73,11 @@ import { EmergencyCareProblemsComponent } from './components/emergency-care-prob
 import { PatientValidatorPopupComponent } from './dialogs/patient-validator-popup/patient-validator-popup.component';
 import { PrintAmbulatoriaComponent } from './routes/print-ambulatoria/print-ambulatoria.component';
 import { SearchSnomedConceptComponent } from './dialogs/search-snomed-concept/search-snomed-concept.component';
-
+import { TablaSapComponent } from './components/tabla-sap/tabla-sap.component';
+import { AdultoMayorComponent } from '@historia-clinica/components/emergente/inicio-estudio/inicio-estudio.component';
+import { EstudiosPopupComponent } from '@historia-clinica/components/emergente/pop-up/estudios-popup.component';
+import { FrailScaleComponent } from './components/cuestionarios/frail-scale/frail-scale.component';
+import { EdmontonComponent } from './components/cuestionarios/edmonton/edmonton.component';
 @NgModule({
 	declarations: [
 		HomeComponent,
@@ -128,7 +132,12 @@ import { SearchSnomedConceptComponent } from './dialogs/search-snomed-concept/se
 		PatientValidatorPopupComponent,
     	PrintAmbulatoriaComponent,
 		SearchSnomedConceptComponent,
-	],
+  		TablaSapComponent,
+		AdultoMayorComponent,
+		EstudiosPopupComponent,
+  		FrailScaleComponent,
+    	EdmontonComponent
+ 	],
 	imports: [
 		CommonModule,
 		FormsModule,
@@ -150,7 +159,7 @@ import { SearchSnomedConceptComponent } from './dialogs/search-snomed-concept/se
 	],
 	providers: [
 		AmbulatoriaSummaryFacadeService,
-		HistoricalProblemsFacadeService
+		HistoricalProblemsFacadeService,
 	]
 })
 export class AmbulatoriaModule {

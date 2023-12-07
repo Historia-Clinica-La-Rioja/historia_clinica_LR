@@ -65,7 +65,7 @@ public class DiaryOpeningHoursValidatorServiceImpl implements DiaryOpeningHoursV
 
     private boolean overlapWithOthersDiaries(@NotNull DiaryBo diaryBo, @NotNull  List<DiaryOpeningHoursBo> openingHours){
         LOG.debug("Input parameters -> diaryBo {}, openingHours {}", diaryBo, openingHours);
-        List<DiaryBo> overlapDiaries = diaryService.getAllOverlappingDiary(diaryBo.getDoctorsOfficeId(), diaryBo.getStartDate(),
+        List<DiaryBo> overlapDiaries = diaryService.getAllOverlappingDiary(diaryBo.getHealthcareProfessionalId(), diaryBo.getDoctorsOfficeId(), diaryBo.getStartDate(),
                 diaryBo.getEndDate(), Optional.ofNullable(diaryBo.getId()));
         boolean overlap = overlapDiaries.stream().anyMatch(od ->
                     diaryBo.getDiaryOpeningHours().stream().anyMatch(doh -> overlapWithOthers(diaryBo, od, doh)));
@@ -79,11 +79,6 @@ public class DiaryOpeningHoursValidatorServiceImpl implements DiaryOpeningHoursV
         Objects.requireNonNull(overlapDiary.getDoctorsOfficeId());
         Objects.requireNonNull(diaryOpeningHoursBo.getOpeningHours());
         Objects.requireNonNull(diaryOpeningHoursBo.getOpeningHours().getDayWeekId());
-
-        if (!diaryBo.getDoctorsOfficeId().equals(overlapDiary.getDoctorsOfficeId())) {
-            LOG.debug(OUTPUT, Boolean.FALSE);
-            return Boolean.FALSE;
-        }
 
         List<Short> overlappingDays = diaryOpeningHoursService.overlappingDays(diaryBo.getStartDate(),
                 diaryBo.getEndDate(), overlapDiary.getStartDate(), overlapDiary.getEndDate());

@@ -50,6 +50,9 @@ public class DocumentSearchServiceImpl implements DocumentSearchService {
                 case CREATED_ON:
                     structuredQuery = new DocumentCreatedOnSearchQuery(plainText);
                     break;
+				case DOCUMENT_TYPE:
+					structuredQuery = new DocumentTypeSearchQuery(plainText);
+					break;
                 default:
                     structuredQuery = new DocumentSearchQuery(plainText);
             }

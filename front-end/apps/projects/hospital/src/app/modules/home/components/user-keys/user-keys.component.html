@@ -1,0 +1,27 @@
+<mat-card>
+	<mat-card-header>
+		<mat-card-title>{{'profile.api-key.TITLE' | translate}}</mat-card-title>
+	</mat-card-header>
+	<mat-card-content fxLayout="column" fxLayoutGap="12px">
+		<mat-list role="list" *ngIf="(userKeys$ | async) as userKeys; else loading">
+			<mat-divider></mat-divider>
+			<div mat-header class="title" *ngIf="userKeys?.length else noInfo">{{'profile.api-key.SUBTITLE' | translate}}</div>
+			<mat-list-item *ngFor="let userKey of userKeys" role="listitem">
+				<mat-icon color="primary" mat-list-icon fontSet="material-icons-outlined">lock</mat-icon>
+				<h3 matLine >{{userKey.name}}</h3>
+				<button mat-stroked-button color="warn" (click)="delete(userKey.name)">Eliminar</button>
+			</mat-list-item>
+		</mat-list>
+	</mat-card-content>
+	<ng-template #loading>
+		<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+	</ng-template>
+	<ng-template #noInfo>
+		<app-no-data message="profile.api-key.EMPTY"></app-no-data>
+	</ng-template>
+
+	<mat-card-actions>
+		<button mat-button mat-raised-button (click)="volver()" >VOLVER</button>
+		<button mat-button mat-raised-button color="primary" (click)="generate()">AGREGAR</button>
+	</mat-card-actions>
+</mat-card>

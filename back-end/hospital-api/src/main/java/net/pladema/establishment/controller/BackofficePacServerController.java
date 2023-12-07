@@ -27,25 +27,9 @@ public class BackofficePacServerController extends AbstractBackofficeController<
 	private final int SERVIDOR_CENTRAL = 1;
 
 	private final int CENTRO_DE_DIAGNOSTICO = 2;
-	private final Pattern usernamePattern;
-
-	private final TwoWayEncryptionService twoWayEncryptionService;
 
 	public BackofficePacServerController(PacServerRepository repository, @Value("${authentication.username.pattern:.+}") String pattern, TwoWayEncryptionService twoWayEncryptionService) {
 		super(repository);
-		this.usernamePattern = Pattern.compile(pattern);
-		this.twoWayEncryptionService = twoWayEncryptionService;
-	}
-
-	@Override
-	public PacServer getOne(@PathVariable("id") Integer id) {
-		var entity = super.getOne(id);
-		try {
-			entity.setPassword(twoWayEncryptionService.decrypt(entity.getPassword()));
-		} catch (Exception e) {
-			entity.setPassword(null);
-		}
-		return entity;
 	}
 
 	@Override
@@ -58,27 +42,18 @@ public class BackofficePacServerController extends AbstractBackofficeController<
 						entity.getDomain(),
 						entity.getPacServerType(),
 						entity.getPacServerProtocol(),
-						entity.getUsername(),
-						entity.getPassword(),
-						entity.getUrlStow(),
-						entity.getUrlAuth(),
+						entity.getActive(),
 						null);
 		}
-		try {
-			entity.setPassword(twoWayEncryptionService.encrypt(entity.getPassword()));
-		} catch (Exception e) {
-			throw new BackofficeValidationException("Contraseña invalida");
-		}
+
 		return super.update(id, entity);
 	}
 
 	@Override
 	public PacServer create(@Valid @RequestBody PacServer entity) {
 		validations(entity);
-		try {
-			entity.setPassword(twoWayEncryptionService.encrypt(entity.getPassword()));
-		} catch (Exception e) {
-			throw new BackofficeValidationException("Contraseña invalida");
+		if(entity.getActive() == null){
+			entity.setActive(false);
 		}
 		return super.create(entity);
 	}
@@ -90,15 +65,5 @@ public class BackofficePacServerController extends AbstractBackofficeController<
 			throw new BackofficeValidationException("Un Centro de diagnóstico debe tener asociada una institución");
 		if(entity.getPacServerProtocol() == null)
 			throw new BackofficeValidationException("No se definió el protocolo de imagen");
-		var username = entity.getUsername();
-		if(username == null)
-			throw new RegisterUserException(RegisterUserEnumException.NULL_USERNAME, "El nombre de usuario es obligatorio");
-		if (!usernamePattern.matcher(username).matches()){
-			throw new RegisterUserException(RegisterUserEnumException.INVALID_USERNAME_PATTERN,
-					String.format("El username %s no cumple con el patrón %s obligatorio", username, usernamePattern.pattern()));
-		}
-		var password = entity.getPassword();
-		if(password == null || password.isBlank())
-			throw new BackofficeValidationException("Contraseña invalida");
 	}
 }
