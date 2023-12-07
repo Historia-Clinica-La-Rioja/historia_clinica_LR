@@ -98,6 +98,7 @@ export class CardPatientComponent {
 					ERole.PERSONAL_DE_IMAGENES,
 					ERole.PERSONAL_DE_FARMACIA,
 					ERole.PRESCRIPTOR,
+					ERole.ABORDAJE_VIOLENCIAS
 				]);
 			legalPerson = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_LEGALES]);
 			auditor = anyMatch<ERole>(userRoles, [ERole.AUDITOR_MPI]);

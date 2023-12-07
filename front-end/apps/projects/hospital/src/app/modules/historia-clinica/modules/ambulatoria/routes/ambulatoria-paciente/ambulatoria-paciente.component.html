@@ -150,7 +150,7 @@
 			</div>
 		</div>
 
-		<mat-card id="tab_container" class="mat-typography" *ngIf="showCardTabs">
+		<mat-card id="tab_container" class="mat-typography">
 			<mat-card-content>
 				<mat-tab-group (selectedTabChange)="onTabChanged($event)" [(selectedIndex)]="selectedTab"
 					*ngIf="hasInternmentEpisodeInThisInstitution !== undefined">
@@ -284,6 +284,10 @@
 							</ng-template>
 						</mat-tab>
 					</section>
+					<mat-tab id="tab_violence_situations" *appHasRole="['ABORDAJE_VIOLENCIAS']"
+						label="{{'ambulatoria.paciente.violence-situations.TAB_LABEL' | translate | uppercase}}">
+						<app-violence-situations></app-violence-situations>
+					</mat-tab>
 				</mat-tab-group>
 			</mat-card-content>
 		</mat-card>

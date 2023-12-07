@@ -784,7 +784,10 @@
 				"VALUE_ERROR":"Ingrese un numero entre 1 y 30.",
 				"ERROR_NOT_HAS_GESTATION": "Aún no se han registrado gestas",
 				"ERROR_REPEAT_VALUE": "No es posible sobrescribir gestas"
-			}
+			},
+            "violence-situations": {
+                "TAB_LABEL": "Situaciones de violencia"
+            }
         },
 		"print":{
             "TITLE": "Imprimir historia clínica",
