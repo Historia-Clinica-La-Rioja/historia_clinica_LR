@@ -1569,4 +1569,93 @@ databaseChangeLog:
                 join institution i on (i.id=d.institution_id)
                 left outer join clinical_specialty cs on (d.clinical_specialty_id=cs.id)
                 where d.deleted=false and d.status_id = '445665009';
-              
+
+    - changeSet:
+        id: procedure_template-createTable
+        comment: Create table procedure_template
+        author: mvalin
+        changes:
+          - createTable:
+              tableName: procedure_template
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_procedure_template
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      unique: true
+                    name: uuid
+                    type: uuid
+                - column:
+                    name: description
+                    type: varchar(50)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: procedure_template_snomed-createTable
+        comment: creation of procedure_template_snomed table
+        author: mvalin
+        changes:
+          - createTable:
+              tableName: procedure_template_snomed
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: procedure_template(id)
+                      foreignKeyName: FK_procedure_template_snomed_procedure_template_id
+                    name: procedure_template_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: snomed(id)
+                      foreignKeyName: FK_procedure_template_snomed_snomed_id
+                    name: snomed_id
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: procedure_template_id, snomed_id
+              constraintName: PK_procedure_template_snomed
+              tableName: procedure_template_snomed
+              validate: true
