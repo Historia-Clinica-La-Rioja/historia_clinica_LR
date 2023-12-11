@@ -36,7 +36,7 @@ const concatIdentifications = (id: number, identification: { type: string, numbe
 	}
 	let identificationText;
 	if (identification) {
-		identificationText = `${identification?.type} ${identification?.number}`
+		identificationText = `${identification?.type} ${identification?.number ? identification.number : 'Sin información' }`
 	}
 	return (idText && identificationText) ? `${idText} - ${identificationText}` : (idText || identificationText);
 }
