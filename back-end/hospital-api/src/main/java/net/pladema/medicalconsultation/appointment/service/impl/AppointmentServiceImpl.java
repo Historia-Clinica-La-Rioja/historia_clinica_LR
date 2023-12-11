@@ -19,9 +19,9 @@ import java.util.stream.Stream;
 
 import javax.validation.ConstraintViolationException;
 
-import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
-
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceAppointmentStateDto;
+import lombok.AllArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,6 +73,7 @@ import net.pladema.patient.controller.service.PatientExternalMedicalCoverageServ
 import net.pladema.patient.service.domain.PatientCoverageInsuranceDetailsBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
+@AllArgsConstructor
 @Slf4j
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -110,38 +111,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 	private final EquipmentAppointmentStorage equipmentAppointmentStorage;
 
 	private final OrderImageFileStorage orderImageFileStorage;
-
-	public AppointmentServiceImpl(AppointmentRepository appointmentRepository,
-								  AppointmentObservationRepository appointmentObservationRepository,
-								  HistoricAppointmentStateRepository historicAppointmentStateRepository,
-								  SharedStaffPort sharedStaffPort,
-								  DateTimeProvider dateTimeProvider,
-								  PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
-								  InstitutionExternalService institutionExternalService,
-								  MedicalCoveragePlanRepository medicalCoveragePlanRepository,
-								  FeatureFlagsService featureFlagsService,
-								  AppointmentStorage appointmentStorage,
-								  AppointmentUpdateRepository appointmentUpdateRepository,
-								  AppointmentOrderImageRepository appointmentOrderImageRepository,
-								  SharedReferenceCounterReference sharedReferenceCounterReference, LocalDateMapper localDateMapper,
-								  EquipmentAppointmentStorage equipmentAppointmentStorage, OrderImageFileStorage orderImageFileStorage) {
-		this.appointmentRepository = appointmentRepository;
-		this.appointmentObservationRepository = appointmentObservationRepository;
-		this.historicAppointmentStateRepository = historicAppointmentStateRepository;
-		this.sharedStaffPort = sharedStaffPort;
-		this.featureFlagsService = featureFlagsService;
-		this.dateTimeProvider = dateTimeProvider;
-		this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
-		this.institutionExternalService = institutionExternalService;
-		this.medicalCoveragePlanRepository = medicalCoveragePlanRepository;
-		this.appointmentStorage = appointmentStorage;
-		this.appointmentUpdateRepository = appointmentUpdateRepository;
-		this.appointmentOrderImageRepository = appointmentOrderImageRepository;
-		this.sharedReferenceCounterReference = sharedReferenceCounterReference;
-		this.localDateMapper = localDateMapper;
-		this.equipmentAppointmentStorage = equipmentAppointmentStorage;
-		this.orderImageFileStorage = orderImageFileStorage;
-	}
 
 	@Override
 	public Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds, LocalDate from, LocalDate to) {
@@ -753,19 +722,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private Collection<AppointmentBo> setIsAppointmentProtected(Collection<AppointmentBo> appointments, List<Integer> diaryIds) {
 		List<Integer> protectedAppointments = sharedReferenceCounterReference.getProtectedAppointmentsIds(diaryIds);
-		appointments.stream().forEach(a -> {
-			if (protectedAppointments.contains(a.getId())) {
-				a.setProtected(true);
-				if (a.getPhonePrefix() == null && a.getPhoneNumber() == null) {
-					var referencePhone = sharedReferenceCounterReference.getReferencePhone(a.getId());
-					a.setPhonePrefix(referencePhone.getPhonePrefix());
-					a.setPhoneNumber(referencePhone.getPhoneNumber());
-				}
-			}
-
-			else
-				a.setProtected(false);
-		});
+		appointments.forEach(a -> a.setProtected(protectedAppointments.contains(a.getId())));
 		return appointments;
 	}
 

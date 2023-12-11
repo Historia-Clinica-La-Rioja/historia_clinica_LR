@@ -44,7 +44,7 @@ public class DailyAppointmentVo {
     }
 
 	private String parseAppointmentPhone(String phonePrefix, String phoneNumber) {
-		return phoneNumber != null ? phonePrefix != null ? phonePrefix.concat(phoneNumber) : phoneNumber : null;
+		return phoneNumber != null ? phonePrefix != null ? phonePrefix + "-" + phoneNumber : phoneNumber : null;
 	}
 
 }

@@ -2,11 +2,9 @@ package ar.lamansys.sgh.shared.infrastructure.input.service;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CompleteReferenceDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceClosureDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceAppointmentStateDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceCounterReferenceFileDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceProblemDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferencePhoneDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceRequestDto;
 
 import java.util.List;
@@ -27,8 +25,6 @@ public interface SharedReferenceCounterReference {
 	boolean isProtectedAppointment(Integer appointmentId);
 
 	boolean existsProtectedAppointmentInOpeningHour(Integer openingHourId);
-
-	ReferencePhoneDto getReferencePhone(Integer appointmentId);
 
 	Optional<ReferenceRequestDto> getReferenceByServiceRequestId (Integer serviceRequestId);
 	

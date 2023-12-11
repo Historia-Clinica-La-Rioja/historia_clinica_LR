@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
+import ar.lamansys.refcounterref.domain.reference.ReferencePhoneBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
 import lombok.NonNull;
@@ -259,9 +260,9 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 	Optional<ReferenceRequestBo> getReferenceByServiceRequestId(@Param("serviceRequestId") Integer serviceRequestId);
 
 	@Transactional(readOnly = true)
-	@Query(" SELECT NEW ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.phonePrefix, r.phoneNumber) " +
+	@Query(" SELECT NEW ar.lamansys.refcounterref.domain.reference.ReferencePhoneBo(r.phoneNumber, r.phonePrefix) " +
 			"FROM Reference r " +
 			"WHERE r.id = :referenceId")
-	ReferenceDataBo getReferencePhoneData(@Param("referenceId") Integer referenceId);
+	ReferencePhoneBo getReferencePhoneData(@Param("referenceId") Integer referenceId);
 
 }

@@ -1,6 +1,5 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.referenceappointment;
 
-import ar.lamansys.refcounterref.domain.reference.ReferencePhoneBo;
 import ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentBo;
 import ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentSummaryBo;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
@@ -61,14 +60,6 @@ public interface ReferenceAppointmentRepository extends SGXAuditableEntityJPARep
 			"WHERE ra.pk.referenceId IN (:referenceIds)" +
 			"AND ra.deleteable.deleted = false")
 	List<ReferenceAppointmentBo> getAppointmentIdsByReferenceIds(@Param("referenceIds") List<Integer> referenceIds);
-
-	@Transactional(readOnly = true)
-	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferencePhoneBo(r.phonePrefix,r.phoneNumber)" +
-			"FROM ReferenceAppointment ra " +
-			"JOIN Reference r ON ra.pk.referenceId = r.id " +
-			"WHERE ra.pk.appointmentId = :appointmentId " +
-			"AND ra.deleteable.deleted = false")
-	ReferencePhoneBo getReferencePhone(@Param("appointmentId") Integer appointmentId);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentSummaryBo(ra.pk.referenceId, a.appointmentStateId, cr.closureTypeId) " +

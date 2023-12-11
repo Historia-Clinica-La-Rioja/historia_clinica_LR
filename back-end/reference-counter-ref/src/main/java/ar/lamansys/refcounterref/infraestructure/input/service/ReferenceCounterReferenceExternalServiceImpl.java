@@ -10,7 +10,6 @@ import ar.lamansys.refcounterref.application.updateruleonreferenceregulation.Upd
 import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceSummaryBo;
 import ar.lamansys.refcounterref.domain.file.ReferenceCounterReferenceFileBo;
 import ar.lamansys.refcounterref.domain.procedure.CounterReferenceProcedureBo;
-import ar.lamansys.refcounterref.domain.reference.ReferencePhoneBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
 import ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentSummaryBo;
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.CounterReferenceSummaryMapper;
@@ -25,7 +24,6 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterrefer
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceCounterReferenceFileDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferencePhoneDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceProblemDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -105,15 +103,6 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
 	public boolean existsProtectedAppointmentInOpeningHour(Integer openingHourId) {
 		log.debug("There are protected appointment in a opening hour with id {}", openingHourId);
 		return referenceAppointmentRepository.existsInOpeningHour(openingHourId, Arrays.asList(ASSIGNED, CONFIRMED));
-	}
-
-	@Override
-	public ReferencePhoneDto getReferencePhone(Integer appointmentId) {
-		log.debug("Get reference appointment number {}, ", appointmentId);
-		ReferencePhoneBo referencePhone= referenceAppointmentRepository.getReferencePhone(appointmentId);
-		var result = new ReferencePhoneDto(referencePhone.getPhonePrefix(), referencePhone.getPhoneNumber());
-		log.debug("OUTPUT {} ->", result);
-		return result;
 	}
 
 	@Override
