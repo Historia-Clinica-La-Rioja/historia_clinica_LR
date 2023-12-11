@@ -1539,3 +1539,73 @@ databaseChangeLog:
                 ('us', 'microsecond', false),
                 ('wk', 'week', false)
                 ;
+
+    - changeSet:
+        id: reference_forwarding-createTable
+        comment: Create table reference_forwarding
+        author: bchacon
+        changes:
+          - createTable:
+              tableName: reference_forwarding
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_reference_forwarding
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: reference(id)
+                      foreignKeyName: FK_reference_forwarding_reference_id
+                    name: reference_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: observation
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: forwarding_type_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
