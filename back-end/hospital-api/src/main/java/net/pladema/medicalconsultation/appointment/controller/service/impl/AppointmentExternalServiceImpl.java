@@ -250,6 +250,13 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 		return diaryService.getDiaryIdByAppointment(appointmentId);
 	}
 
+	@Override
+	public void updateAppointmentPhoneNumber(Integer appointmentId, String phonePrefix, String phoneNumber) {
+		log.debug("Input parameters -> appointmentId {}, phonePrefix {}, phoneNumber {}", appointmentId, phonePrefix, phoneNumber);
+		Integer loggedUserId = UserInfo.getCurrentAuditor();
+		appointmentService.updatePhoneNumber(appointmentId, phonePrefix, phoneNumber, loggedUserId);
+	}
+
 	private Optional<AppointmentSummaryBo> getNearestAppointment(List<Integer> appointmentIds) {
 		List<AppointmentSummaryBo> appointments = this.appointmentService.getAppointmentDataByAppointmentIds(appointmentIds);
 		List<AppointmentSummaryBo> futureAppointments = appointments.stream()

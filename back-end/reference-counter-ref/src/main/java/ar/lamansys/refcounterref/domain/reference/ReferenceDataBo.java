@@ -101,4 +101,9 @@ public class ReferenceDataBo {
 		this.serviceRequestId = serviceRequestId;
 	}
 
+	public ReferenceDataBo(String phonePrefix, String phoneNumber) {
+		this.phonePrefix = phonePrefix;
+		this.phoneNumber = phoneNumber;
+	}
+
 }

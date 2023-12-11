@@ -258,4 +258,10 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"WHERE r.serviceRequestId = :serviceRequestId")
 	Optional<ReferenceRequestBo> getReferenceByServiceRequestId(@Param("serviceRequestId") Integer serviceRequestId);
 
+	@Transactional(readOnly = true)
+	@Query(" SELECT NEW ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.phonePrefix, r.phoneNumber) " +
+			"FROM Reference r " +
+			"WHERE r.id = :referenceId")
+	ReferenceDataBo getReferencePhoneData(@Param("referenceId") Integer referenceId);
+
 }

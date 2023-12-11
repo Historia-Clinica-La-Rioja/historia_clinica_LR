@@ -34,7 +34,6 @@ import { DatePipeFormat } from "@core/utils/date.utils";
 import { DatePipe } from "@angular/common";
 import { DiscardWarningComponent } from "@presentation/dialogs/discard-warning/discard-warning.component";
 import { ReferenceService } from '@api-rest/services/reference.service';
-import { ReferenceAppointmentService } from '@api-rest/services/reference-appointment.service';
 import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { EquipmentAppointmentsFacadeService } from '@turnos/services/equipment-appointments-facade.service';
@@ -111,7 +110,6 @@ export class NewAppointmentComponent implements OnInit {
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly patientNameService: PatientNameService,
 		private readonly referenceService: ReferenceService,
-		private readonly referenceAppointmentService: ReferenceAppointmentService,
 		private readonly datePipe: DatePipe,
 		private readonly equipmentAppointmentFacade: EquipmentAppointmentsFacadeService,
 		private prescripcionesService: PrescripcionesService,
@@ -364,11 +362,14 @@ export class NewAppointmentComponent implements OnInit {
 			modality: this.modalitySelected,
 			patientEmail: this.appointmentInfoForm.controls.patientEmail.value,
 			applicantHealthcareProfessionalEmail: this.associateReferenceForm.controls.professionalEmail.value ? this.associateReferenceForm.controls.professionalEmail.value : null,
+			referenceId: this.associateReferenceForm?.controls?.reference?.value?.id
 		};
 		this.addAppointment(newAppointment).subscribe((appointmentId: number) => {
 			this.lastAppointmentId = appointmentId;
 			if (itComesFromStep3) {
-				this.assignAppointment();
+				const valueEmail = this.getEmail();
+				this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
+				this.dialogRef.close({ id: this.lastAppointmentId, email: valueEmail });
 			}
 			else {
 				this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
@@ -378,6 +379,10 @@ export class NewAppointmentComponent implements OnInit {
 			this.isSubmitButtonDisabled = false;
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
 		});
+	}
+
+	private getEmail(): string {
+		return this.data.modalityAttention === this.MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION ? this.associateReferenceForm.controls.professionalEmail.value : this.appointmentInfoForm.controls.patientEmail.value;
 	}
 
 	goCreatePatient() {
@@ -397,25 +402,6 @@ export class NewAppointmentComponent implements OnInit {
 
 	disableConfirmButtonStep3(): boolean {
 		return !(this.formSearch.controls.completed.value && this.isAppointmentFormValid() && this.data.protectedAppointment && this.associateReferenceForm.valid);
-	}
-
-	private assignAppointment(): void {
-		if (this.data.modalityAttention === this.MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION) {
-			var valueEmail = this.associateReferenceForm.controls.professionalEmail.value;
-		} else {
-			valueEmail = this.appointmentInfoForm.controls.patientEmail.value;
-		}
-		this.referenceAppointmentService.associateReferenceAppointment(this.associateReferenceForm.controls.reference.value.id, this.lastAppointmentId).subscribe(
-			successfullyAssociated => {
-				if (successfullyAssociated) {
-					this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
-					this.dialogRef.close({ id: this.lastAppointmentId, email: valueEmail });
-				}
-				else {
-					this.snackBarService.showError('turnos.new-appointment.messages.COULD_NOT_ASSOCIATE')
-				}
-			}
-		);
 	}
 
 	disablePreviuosStep(stepperParam: MatStepper) {

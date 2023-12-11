@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ReferenceAppointmentStorage {
 
-	void save(Integer referenceId, Integer appointmentId);
+	void save(Integer referenceId, Integer appointmentId, Boolean alreadyHasPhone);
 
 	Map<Integer, List<Integer>>  getReferenceAppointmentsIds(List<Integer> referenceId);
 

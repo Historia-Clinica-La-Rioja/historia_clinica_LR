@@ -2,8 +2,10 @@ package ar.lamansys.refcounterref.infraestructure.output.repository.referenceapp
 
 import ar.lamansys.refcounterref.application.port.ReferenceAppointmentStorage;
 
+import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceInstitutionBo;
 import ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentBo;
+import ar.lamansys.refcounterref.infraestructure.output.repository.reference.ReferenceRepository;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.AppointmentDataDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
@@ -27,14 +29,20 @@ public class ReferenceAppointmentStorageImpl implements ReferenceAppointmentStor
 
 	private final SharedAppointmentPort sharedAppointmentPort;
 
+	private final ReferenceRepository referenceRepository;
+
 	private final LocalDateMapper localDateMapper;
 
 	@Override
-	public void save(Integer referenceId, Integer appointmentId) {
-		log.debug("Input parameters -> referenceId {}, appointmentId {}", referenceId, appointmentId);
+	public void save(Integer referenceId, Integer appointmentId, Boolean alreadyHasPhone) {
+		log.debug("Input parameters -> referenceId {}, appointmentId {}, alreadyHasPhone {}", referenceId, appointmentId, alreadyHasPhone);
 		var diaryId = sharedAppointmentPort.getDiaryId(appointmentId);
 		var allowedProtectedAppointment = sharedAppointmentPort.openingHourAllowedProtectedAppointments(appointmentId, diaryId);
 		referenceAppointmentRepository.save(new ReferenceAppointment(referenceId, appointmentId, allowedProtectedAppointment));
+		if (!alreadyHasPhone) {
+			ReferenceDataBo referencePhoneData = referenceRepository.getReferencePhoneData(referenceId);
+			sharedAppointmentPort.updateAppointmentPhoneNumber(appointmentId, referencePhoneData.getPhonePrefix(), referencePhoneData.getPhoneNumber());
+		}
 	}
 
 	@Override

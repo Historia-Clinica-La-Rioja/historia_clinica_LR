@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
+import ar.lamansys.refcounterref.application.associatereferenceappointment.AssociateReferenceAppointment;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentLabel;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryLabelDto;
 import net.pladema.medicalconsultation.appointment.application.ReassignAppointment;
@@ -146,6 +147,8 @@ public class AppointmentsController {
 
 	private final DeriveReportService deriveReportService;
 
+	private final AssociateReferenceAppointment associateReferenceAppointment;
+
 	@Value("${test.stress.disable.validation:false}")
 	private boolean disableValidation;
 
@@ -183,6 +186,10 @@ public class AppointmentsController {
 		AppointmentBo newAppointmentBo = appointmentMapper.toAppointmentBo(createAppointmentDto);
 		newAppointmentBo = createAppointmentService.execute(newAppointmentBo);
 		Integer result = newAppointmentBo.getId();
+		if (createAppointmentDto.getReferenceId() != null) {
+			boolean alreadyHasPhone = newAppointmentBo.getPhoneNumber() != null;
+			associateReferenceAppointment.run(createAppointmentDto.getReferenceId(), result, alreadyHasPhone);
+		}
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}

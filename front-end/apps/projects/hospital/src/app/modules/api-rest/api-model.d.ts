@@ -346,6 +346,7 @@ export interface AttentionTypeReportDto {
 
 export interface AttentionTypeReportItemDto {
     appointmentState: string;
+    completePhone: string;
     firstName: string;
     hour: Date;
     identificationNumber: string;
@@ -871,6 +872,7 @@ export interface CreateAppointmentDto {
     patientMedicalCoverageId?: number;
     phoneNumber?: string;
     phonePrefix?: string;
+    referenceId?: number;
     transcribedOrderData?: TranscribedDiagnosticReportInfoDto;
 }
 
