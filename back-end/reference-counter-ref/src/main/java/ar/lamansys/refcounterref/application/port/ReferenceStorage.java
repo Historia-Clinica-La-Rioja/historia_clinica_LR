@@ -28,4 +28,6 @@ public interface ReferenceStorage {
 
 	Optional<Reference> findById(Integer referenceId);
 
+	Short getReferenceRegulationStateId(Integer referenceId);
+
 }

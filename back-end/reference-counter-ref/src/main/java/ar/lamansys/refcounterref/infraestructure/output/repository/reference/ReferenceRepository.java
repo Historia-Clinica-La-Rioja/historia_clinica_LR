@@ -402,4 +402,12 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"WHERE r.id = :referenceId")
 	ReferencePhoneBo getReferencePhoneData(@Param("referenceId") Integer referenceId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT hrr.stateId " +
+			"FROM Reference r " +
+			"JOIN HistoricReferenceRegulation hrr ON (r.id = hrr.referenceId) " +
+			"WHERE r.id = :referenceId " +
+			"ORDER BY hrr.creationable.createdOn DESC")
+	List<Short> getReferenceRegulationStateId(@Param("referenceId") Integer referenceId);
+
 }

@@ -7,7 +7,6 @@ import ar.lamansys.refcounterref.application.port.ReferenceStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStudyStorage;
 import ar.lamansys.refcounterref.domain.clinicalspecialty.ClinicalSpecialtyBo;
 import ar.lamansys.refcounterref.domain.enums.EReferenceCounterReferenceType;
-import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
@@ -223,8 +222,9 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 	}
 
 	@Override
-	public EReferenceRegulationState getReferenceRegulationState(Integer referenceId) {
-		return EReferenceRegulationState.getById(referenceRepository.getReferenceRegulationStateId(referenceId));
+	public Short getReferenceRegulationStateId(Integer referenceId) {
+		log.debug("Input parameters -> referenceId {} ", referenceId);
+		return referenceRepository.getReferenceRegulationStateId(referenceId).get(0);
 	}
 
 	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialtyIdAndCareLineId(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId){
