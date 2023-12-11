@@ -1,14 +1,24 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.service.domain;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.*;
+import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,6 +26,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class OutpatientDocumentBo implements IDocumentBo {
@@ -40,7 +51,7 @@ public class OutpatientDocumentBo implements IDocumentBo {
 
     private List<ProcedureBo> procedures = new ArrayList<>();
 
-    private List<HealthHistoryConditionBo> familyHistories = new ArrayList<>();
+    private List<FamilyHistoryBo> familyHistories = new ArrayList<>();
 
     private List<MedicationBo> medications = new ArrayList<>();
 

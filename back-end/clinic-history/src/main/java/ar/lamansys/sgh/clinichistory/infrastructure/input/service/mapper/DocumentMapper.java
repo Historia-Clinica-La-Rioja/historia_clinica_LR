@@ -24,8 +24,8 @@ public interface DocumentMapper {
     @Mapping(target = "medications", source = "medications", qualifiedByName = "toListMedicationBo")
     @Mapping(target = "immunizations", source = "immunizations", qualifiedByName = "toListImmunizationBo")
     @Mapping(target = "allergies", source = "allergies", qualifiedByName = "toListAllergyConditionBo")
-    @Mapping(target = "personalHistories", source = "personalHistories", qualifiedByName = "toListHealthHistoryConditionBo")
-    @Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toListHealthHistoryConditionBo")
+    @Mapping(target = "personalHistories", source = "personalHistories", qualifiedByName = "toListPersonalHistoryBoFromHealthHistory")
+    @Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toListFamilyHistoryBoFromHealthHistory")
     DocumentBo fromDto(DocumentDto documentDto);
 
 	@Named("fromDocumentBo")
@@ -34,8 +34,8 @@ public interface DocumentMapper {
 	@Mapping(target = "medications", source = "medications", qualifiedByName = "toListMedicationDto")
 	@Mapping(target = "immunizations", source = "immunizations", qualifiedByName = "toListImmunizationDto")
 	@Mapping(target = "allergies", source = "allergies", qualifiedByName = "toListAllergyConditionDto")
-	@Mapping(target = "personalHistories", source = "personalHistories", qualifiedByName = "toListHealthHistoryConditionDto")
-	@Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toListHealthHistoryConditionDto")
+	@Mapping(target = "personalHistories", source = "personalHistories", qualifiedByName = "toHealthHistoryConditionDto")
+	@Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toHealthHistoryConditionDto")
 	DocumentDto fromBo(DocumentBo documentBo);
 
 }

@@ -8,12 +8,13 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.PersonalHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
@@ -60,9 +61,9 @@ public class DocumentBo implements IDocumentBo {
 
     private List<ProcedureBo> procedures = new ArrayList<>();
 
-    private List<HealthHistoryConditionBo> personalHistories = new ArrayList<>();
+    private List<PersonalHistoryBo> personalHistories = new ArrayList<>();
 
-    private List<HealthHistoryConditionBo> familyHistories = new ArrayList<>();
+    private List<FamilyHistoryBo> familyHistories = new ArrayList<>();
 
     private List<MedicationBo> medications = new ArrayList<>();
 

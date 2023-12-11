@@ -9,13 +9,16 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-public class HealthHistoryConditionBo extends HealthConditionBo {
+public class FamilyHistoryBo extends HealthConditionBo {
 
     private LocalDate startDate;
-
     private String note;
 
-    public HealthHistoryConditionBo() {
+    public FamilyHistoryBo(SnomedBo snomed) {
+        super(snomed);
+    }
+
+    public FamilyHistoryBo() {
         super();
     }
 }

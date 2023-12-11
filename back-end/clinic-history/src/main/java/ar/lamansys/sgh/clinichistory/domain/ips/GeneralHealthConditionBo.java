@@ -5,8 +5,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,10 +20,9 @@ import static java.util.Objects.nonNull;
 
 @Getter
 @Setter
+@Slf4j
 @ToString
 public class GeneralHealthConditionBo implements Serializable {
-
-    private static final Logger LOG = LoggerFactory.getLogger(GeneralHealthConditionBo.class);
 
     public static final String OUTPUT = "Output -> {}";
 
@@ -32,9 +30,9 @@ public class GeneralHealthConditionBo implements Serializable {
 
     private List<DiagnosisBo> diagnosis = new ArrayList<>();
 
-    private List<HealthHistoryConditionBo> personalHistories = new ArrayList<>();
+    private List<PersonalHistoryBo> personalHistories = new ArrayList<>();
 
-    private List<HealthHistoryConditionBo> familyHistories = new ArrayList<>();
+    private List<FamilyHistoryBo> familyHistories = new ArrayList<>();
 
 	private List<ProblemBo> problems = new ArrayList<>();
 
@@ -50,12 +48,12 @@ public class GeneralHealthConditionBo implements Serializable {
         setPersonalHistories(buildGeneralState(
                 healthConditionVos,
                 HealthConditionVo::isPersonalHistory,
-                this::mapHealthHistoryConditionBo)
+                this::mapPersonalHistoryBo)
         );
         setFamilyHistories(buildGeneralState(
                 healthConditionVos,
                 HealthConditionVo::isFamilyHistory,
-                this::mapHealthHistoryConditionBo));
+                this::mapFamilyHistoryBo));
 		setProblems(buildGeneralState(
 				healthConditionVos,
 				HealthConditionVo::isProblem,
@@ -77,7 +75,7 @@ public class GeneralHealthConditionBo implements Serializable {
     }
 
     private DiagnosisBo mapDiagnosis(HealthConditionVo healthConditionVo){
-        LOG.debug("Input parameters -> HealthConditionVo {}", healthConditionVo);
+        log.debug("Input parameters -> HealthConditionVo {}", healthConditionVo);
         DiagnosisBo result = new DiagnosisBo();
         result.setId(healthConditionVo.getId());
         result.setStatusId(healthConditionVo.getStatusId());
@@ -87,14 +85,14 @@ public class GeneralHealthConditionBo implements Serializable {
         result.setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
         result.setPresumptive(healthConditionVo.isPresumptive());
         result.setMain(healthConditionVo.isMain());
-        LOG.debug(OUTPUT, result);
+        log.debug(OUTPUT, result);
         return result;
 
     }
 
-    private HealthHistoryConditionBo mapHealthHistoryConditionBo(HealthConditionVo healthConditionVo){
-        LOG.debug("Input parameters -> HealthConditionVo {}", healthConditionVo);
-        HealthHistoryConditionBo result = new HealthHistoryConditionBo();
+    private PersonalHistoryBo mapPersonalHistoryBo(HealthConditionVo healthConditionVo){
+        log.debug("Input parameters -> HealthConditionVo {}", healthConditionVo);
+        PersonalHistoryBo result = new PersonalHistoryBo();
         result.setId(healthConditionVo.getId());
         result.setStatusId(healthConditionVo.getStatusId());
         result.setStatus(healthConditionVo.getStatus());
@@ -103,13 +101,29 @@ public class GeneralHealthConditionBo implements Serializable {
         result.setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
         result.setStartDate(healthConditionVo.getStartDate());
         result.setMain(healthConditionVo.isMain());
-        LOG.debug(OUTPUT, result);
+        log.debug(OUTPUT, result);
+        return result;
+
+    }
+
+    private FamilyHistoryBo mapFamilyHistoryBo(HealthConditionVo healthConditionVo){
+        log.debug("Input parameters -> HealthConditionVo {}", healthConditionVo);
+        FamilyHistoryBo result = new FamilyHistoryBo();
+        result.setId(healthConditionVo.getId());
+        result.setStatusId(healthConditionVo.getStatusId());
+        result.setStatus(healthConditionVo.getStatus());
+        result.setVerificationId(healthConditionVo.getVerificationId());
+        result.setVerification(healthConditionVo.getVerification());
+        result.setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
+        result.setStartDate(healthConditionVo.getStartDate());
+        result.setMain(healthConditionVo.isMain());
+        log.debug(OUTPUT, result);
         return result;
 
     }
 
     public HealthConditionBo buildMainDiagnosis(Optional<HealthConditionVo> optionalHealthConditionVo) {
-        LOG.debug("Input parameters -> optionalHealthConditionVo {}", optionalHealthConditionVo);
+        log.debug("Input parameters -> optionalHealthConditionVo {}", optionalHealthConditionVo);
         AtomicReference<HealthConditionBo> result = new AtomicReference<>(null);
         optionalHealthConditionVo.ifPresent(healthConditionVo -> {
             result.set(new HealthConditionBo());
@@ -121,12 +135,12 @@ public class GeneralHealthConditionBo implements Serializable {
             result.get().setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
             result.get().setMain(healthConditionVo.isMain());
         });
-        LOG.debug(OUTPUT, result);
+        log.debug(OUTPUT, result);
         return result.get();
     }
 
 	public ProblemBo buildProblem(HealthConditionVo healthConditionVo) {
-		LOG.debug("Input parameters -> healthConditionVo {}", healthConditionVo);
+		log.debug("Input parameters -> healthConditionVo {}", healthConditionVo);
 		ProblemBo result = new ProblemBo();
 		result.setId(healthConditionVo.getId());
 		result.setStatusId(healthConditionVo.getStatusId());
@@ -140,12 +154,12 @@ public class GeneralHealthConditionBo implements Serializable {
         result.setEndDate(healthConditionVo.getEndDate());
         result.setErrorReason(nonNull(healthConditionVo.getErrorReasonId()) ? EProblemErrorReason.map(healthConditionVo.getErrorReasonId()).getDescription() : null);
         result.setErrorObservations(healthConditionVo.getNote());
-		LOG.debug(OUTPUT, result);
+		log.debug(OUTPUT, result);
 		return result;
 	}
 
 	private HealthConditionBo mapToHealthConditionBo(HealthConditionVo healthConditionVo){
-		LOG.debug("Input parameters -> HealthConditionVo {}", healthConditionVo);
+		log.debug("Input parameters -> HealthConditionVo {}", healthConditionVo);
 		HealthHistoryConditionBo result = new HealthHistoryConditionBo();
 		result.setId(healthConditionVo.getId());
 		result.setStatusId(healthConditionVo.getStatusId());
@@ -154,7 +168,7 @@ public class GeneralHealthConditionBo implements Serializable {
 		result.setVerification(healthConditionVo.getVerification());
 		result.setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
 		result.setMain(healthConditionVo.isMain());
-		LOG.debug(OUTPUT, result);
+		log.debug(OUTPUT, result);
 		return result;
 	}
 

@@ -2,7 +2,7 @@ package net.pladema.clinichistory.outpatient.createoutpatient.service;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
@@ -73,7 +73,7 @@ class CreateOutpatientDocumentServiceImplTest extends UnitRepository {
         var outpatientDocumentBo = validOutpatientConsultation(8, 5);
         outpatientDocumentBo.setReasons(List.of(new ReasonBo(new SnomedBo("SCTID", "PT")), new ReasonBo(new SnomedBo("SCTID", "PT"))));
         outpatientDocumentBo.setProblems(List.of(new ProblemBo(new SnomedBo("SCTID", "PT")), new ProblemBo(new SnomedBo("SCTID", "PT"))));
-        outpatientDocumentBo.setFamilyHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("SCTID", "PT")), new HealthHistoryConditionBo(new SnomedBo("SCTID", "PT"))));
+        outpatientDocumentBo.setFamilyHistories(List.of(new FamilyHistoryBo(new SnomedBo("SCTID", "PT")), new FamilyHistoryBo(new SnomedBo("SCTID", "PT"))));
         outpatientDocumentBo.setAllergies(List.of(new AllergyConditionBo(new SnomedBo("SCTID", "PT")), new AllergyConditionBo(new SnomedBo("SCTID", "PT"))));
         outpatientDocumentBo.setProcedures(List.of(new ProcedureBo(new SnomedBo("SCTID", "PT")), new ProcedureBo(new SnomedBo("SCTID", "PT"))));
         CreateOutpatientDocumentException exception = Assertions.assertThrows(CreateOutpatientDocumentException.class, () ->

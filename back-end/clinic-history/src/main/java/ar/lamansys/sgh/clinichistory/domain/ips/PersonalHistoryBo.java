@@ -9,13 +9,18 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-public class HealthHistoryConditionBo extends HealthConditionBo {
+public class PersonalHistoryBo extends HealthConditionBo {
 
     private LocalDate startDate;
-
+    private LocalDate inactivationDate;
+    private Short typeId;
     private String note;
 
-    public HealthHistoryConditionBo() {
+    public PersonalHistoryBo(SnomedBo snomed) {
+        super(snomed);
+    }
+
+    public PersonalHistoryBo() {
         super();
     }
 }

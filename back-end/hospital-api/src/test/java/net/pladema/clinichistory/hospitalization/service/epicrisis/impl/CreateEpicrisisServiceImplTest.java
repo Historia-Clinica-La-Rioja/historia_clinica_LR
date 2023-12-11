@@ -10,6 +10,16 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalObservationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.PersonalHistoryBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgx.shared.files.pdf.PdfService;
 import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
@@ -28,15 +38,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
-import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalObservationBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
@@ -322,18 +323,18 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         );
         Assertions.assertTrue(exception.getMessage().contains("personalHistories: {value.mandatory}"));
 
-        epicrisis.setPersonalHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("", ""))));
+        epicrisis.setPersonalHistories(List.of(new PersonalHistoryBo(new SnomedBo("", ""))));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEpicrisisService.execute(epicrisis, draft)
         );
 
-        epicrisis.setPersonalHistories(List.of(new HealthHistoryConditionBo(new SnomedBo(null, null))));
+        epicrisis.setPersonalHistories(List.of(new PersonalHistoryBo(new SnomedBo(null, null))));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEpicrisisService.execute(epicrisis, draft)
         );
 
-        epicrisis.setPersonalHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("REPEATED", "REPEATED")),
-                new HealthHistoryConditionBo(new SnomedBo("REPEATED", "REPEATED"))));
+        epicrisis.setPersonalHistories(List.of(new PersonalHistoryBo(new SnomedBo("REPEATED", "REPEATED")),
+                new PersonalHistoryBo(new SnomedBo("REPEATED", "REPEATED"))));
         exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEpicrisisService.execute(epicrisis, draft)
         );
@@ -354,18 +355,18 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         );
         Assertions.assertTrue(exception.getMessage().contains("familyHistories: {value.mandatory}"));
 
-        epicrisis.setFamilyHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("", ""))));
+        epicrisis.setFamilyHistories(List.of(new FamilyHistoryBo(new SnomedBo("", ""))));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEpicrisisService.execute(epicrisis, draft)
         );
 
-        epicrisis.setFamilyHistories(List.of(new HealthHistoryConditionBo(new SnomedBo(null, null))));
+        epicrisis.setFamilyHistories(List.of(new FamilyHistoryBo(new SnomedBo(null, null))));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEpicrisisService.execute(epicrisis, draft)
         );
 
-        epicrisis.setFamilyHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("REPEATED", "REPEATED")),
-                new HealthHistoryConditionBo(new SnomedBo("REPEATED", "REPEATED"))));
+        epicrisis.setFamilyHistories(List.of(new FamilyHistoryBo(new SnomedBo("REPEATED", "REPEATED")),
+                new FamilyHistoryBo(new SnomedBo("REPEATED", "REPEATED"))));
         exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEpicrisisService.execute(epicrisis, draft)
         );

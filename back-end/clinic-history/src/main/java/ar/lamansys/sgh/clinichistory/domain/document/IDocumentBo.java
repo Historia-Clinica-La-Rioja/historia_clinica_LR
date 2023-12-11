@@ -13,12 +13,13 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.PersonalHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
@@ -59,11 +60,11 @@ public interface IDocumentBo {
         return Collections.emptyList();
     }
 
-    default List<HealthHistoryConditionBo> getPersonalHistories() {
+    default List<PersonalHistoryBo> getPersonalHistories() {
         return Collections.emptyList();
     }
 
-    default List<HealthHistoryConditionBo> getFamilyHistories() {
+    default List<FamilyHistoryBo> getFamilyHistories() {
         return Collections.emptyList();
     }
 
@@ -123,11 +124,11 @@ public interface IDocumentBo {
 
     default List<DiagnosticReportBo> getDiagnosticReports(){
         return Collections.emptyList();
-    };
+    }
 
 	default TranscribedDiagnosticReportBo getTranscribedDiagnosticReport(){
 		return null;
-	};
+	}
 
 	default String getEvolutionNote(){
 		return null;
