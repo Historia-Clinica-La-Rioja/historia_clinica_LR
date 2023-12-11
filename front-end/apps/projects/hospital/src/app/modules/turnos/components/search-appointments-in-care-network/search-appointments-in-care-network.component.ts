@@ -82,7 +82,6 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 	searchAppointmentCriteria: SearchAppointmentCriteria;
 	externalInformation: SearchAppointmentInformation;
 	showSectionToSearchAppointmentsInInstitution = false;
-	resetTypeahead = false;
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -98,7 +97,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		private readonly careLineInstitutionPracticeService: CareLineInstitutionPracticeService,
 		private readonly searchAppointmentsInfoService: SearchAppointmentsInfoService,
 		private readonly tabsService: TabsService,
-	) { 
+	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.isEnableTelemedicina = isEnabled);
 	}
 
@@ -167,7 +166,6 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		this.showCareLineError = false;
 		this.searchForm.controls.specialty.reset();
 		if (careLine) {
-			this.resetTypeahead = false;
 			this.specialties = careLine.clinicalSpecialties;
 			if (!this.externalInformation?.formInformation?.careLine)
 				this.careLineInstitutionPracticeService.getPracticesByCareLine(careLine.id).subscribe(practices => this.practicesBehavior.next(practices))
@@ -183,7 +181,6 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		this.resetResults();
 		this.searchForm.controls.specialty.setValue(clinicalSpecialty);
 		this.showSpecialtyError = false;
-		this.resetTypeahead = false;
 	}
 
 	setDepartment(department: DepartmentDto) {
@@ -351,7 +348,6 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 
 	clearForm() {
 		this.resetForm();
-		this.resetTypeaheads();
 		this.externalInformation = null;
 		this.selectedTypeAttention = SearchCriteria.CONSULTATION;
 		this.showSectionToSearchAppointmentsInInstitution = false;
@@ -504,12 +500,6 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		formControls.practiceId.enable();
 		formControls.careLine.setValue(null);
 		formControls.careLine.enable();
-	}
-
-	private resetTypeaheads() {
-		this.practicesBehavior.next([]);
-		this.resetTypeahead = true;
-		this.changeDetectorRef.detectChanges();
 	}
 
 }

@@ -50,7 +50,6 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	externalInformation: SearchAppointmentInformation;
 	externalSetValueSpecialty: TypeaheadOption<string>;
 	showCareNetworkSection = false;
-	resetTypeahead = false;
 
 	dateSearchFilter = (d: Moment): boolean => {
 		const parsedDate = d?.toDate();
@@ -149,7 +148,6 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	setClinicalSpecialty(clinicalSpecialty: ClinicalSpecialtyDto) {
 		this.form.controls.clinicalSpecialty.setValue(null);
 		if (clinicalSpecialty) {
-			this.resetTypeahead = false;
 			this.form.controls.clinicalSpecialty.setValue(clinicalSpecialty);
 			this.showClinicalSpecialtyError = false;
 		} else {
@@ -218,8 +216,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		this.externalInformation = null;
 		this.externalSetValueSpecialty = null;
 		this.resetControls();
-		this.clearLists();		
-		this.resetTypeahead = true;
+		this.clearLists();
 		this.selectedSearchCriteria = SearchCriteria.CONSULTATION;
 		this.showCareNetworkSection = false;
 		this.setPractices();

@@ -1,7 +1,7 @@
 <div fxLayout="column" fxLayoutGap="40px">
 	<form [formGroup]="form" fxLayout="column" fxLayoutGap="32px" style="padding-top: 16px;" (ngSubmit)="submit()">
 		<span [translate]="'turnos.home.SEARCH_BY_INSTITUTION_CRITERIA'"></span>
-		<app-search-criteria [label]="'turnos.TYPE_ATTENTION'" [searchCriteryStyle]="'bold'" 
+		<app-search-criteria [label]="'turnos.TYPE_ATTENTION'" [searchCriteryStyle]="'bold'"
 			[defaultOption]="selectedSearchCriteria" [disabled]="externalInformation?.disabledInput"
 			(selectedOption)="setCriteria($event)"></app-search-criteria>
 
@@ -9,22 +9,23 @@
 			<div fxLayout="column" fxLayoutGap="8px">
 				<div fxLayoutGap="5px">
 					<span class="category-title" [translate]="'turnos.home.SPECIALTY_SEARCH'"></span>
-					<span *ngIf="searchCriteria.PRACTICES == selectedSearchCriteria" [translate]="'turnos.OPTIONAL'"></span>
+					<span *ngIf="searchCriteria.PRACTICES == selectedSearchCriteria"
+						[translate]="'turnos.OPTIONAL'"></span>
 				</div>
-				<app-typeahead
-					[titleInput]="'turnos.home.SPECIALTY_SEARCH' | translate"
-					[options]="aliasTypeaheadOptions" [resetOption]="resetTypeahead"
-					[externalSetValue]="externalSetValueSpecialty" [disabled]="externalInformation?.disabledInput"
-					(selectionChange)="setClinicalSpecialty($event)">
+				<app-typeahead [titleInput]="'turnos.home.SPECIALTY_SEARCH' | translate"
+					[options]="aliasTypeaheadOptions" [externalSetValue]="externalSetValueSpecialty"
+					[disabled]="externalInformation?.disabledInput" (selectionChange)="setClinicalSpecialty($event)">
 				</app-typeahead>
 
-				<mat-error class="error-space" *ngIf="showClinicalSpecialtyError">{{ 'forms.REQUIRED' | translate }}</mat-error>
+				<mat-error class="error-space" *ngIf="showClinicalSpecialtyError">{{ 'forms.REQUIRED' | translate
+					}}</mat-error>
 			</div>
 
 			<div *ngIf="searchCriteria.PRACTICES == selectedSearchCriteria" fxLayout="column" fxLayoutGap="8px"
 				style="max-width: 25%;">
-				<app-typeahead-practices [practices]="practices" 
-					[externalValue]="externalInformation?.formInformation?.practice" [disabled]="externalInformation?.disabledInput"
+				<app-typeahead-practices [practices]="practices"
+					[externalValue]="externalInformation?.formInformation?.practice"
+					[disabled]="externalInformation?.disabledInput"
 					(selectedOption)="setPractice($event)"></app-typeahead-practices>
 				<mat-error class="error-space" *ngIf="showPracticeError">{{ 'forms.REQUIRED' | translate }}</mat-error>
 			</div>
@@ -33,23 +34,33 @@
 		<div fxLayout="column" fxLayoutGap="16px">
 			<span class="category-title" [translate]="'turnos.MODALITY_ATTENTION'"></span>
 			<mat-radio-group formControlName="modality">
-				<mat-radio-button color="primary" [value]="MODALITY_ON_SITE_ATTENTION">{{'turnos.ON_SITE_ATTENTION' | translate}}</mat-radio-button>
-				<mat-radio-button color="primary" [value]="MODALITY_PATIENT_VIRTUAL_ATTENTION" [disabled]="!isEnableTelemedicina">{{'turnos.PATIENT_VIRTUAL_ATTENTION' | translate}}</mat-radio-button>
+				<mat-radio-button color="primary" [value]="MODALITY_ON_SITE_ATTENTION">{{'turnos.ON_SITE_ATTENTION' |
+					translate}}</mat-radio-button>
+				<mat-radio-button color="primary" [value]="MODALITY_PATIENT_VIRTUAL_ATTENTION"
+					[disabled]="!isEnableTelemedicina">{{'turnos.PATIENT_VIRTUAL_ATTENTION' |
+					translate}}</mat-radio-button>
 			</mat-radio-group>
 		</div>
-		<div  fxLayout="column" fxLayoutGap="16px">
+		<div fxLayout="column" fxLayoutGap="16px">
 			<span class="category-title" [translate]="'turnos.home.AVAILABLE_DAYS'"></span>
 			<div fxLayout="row" fxLayoutGap="16px">
-				<mat-checkbox color="primary" formControlName="mondayControl">{{ 'turnos.day-of-week.MONDAY' | translate | slice:0:3 }}</mat-checkbox>
-				<mat-checkbox color="primary" formControlName="tuesdayControl">{{ 'turnos.day-of-week.TUESDAY' | translate | slice:0:3 }}</mat-checkbox>
-				<mat-checkbox color="primary"formControlName="wednesdayControl">{{ 'turnos.day-of-week.WEDNESDAY' | translate | slice:0:3 }}</mat-checkbox>
-				<mat-checkbox color="primary" formControlName="thursdayControl">{{ 'turnos.day-of-week.THURSDAY' | translate | slice:0:3 }}</mat-checkbox>
-				<mat-checkbox color="primary" formControlName="fridayControl">{{ 'turnos.day-of-week.FRIDAY' | translate | slice:0:3 }}</mat-checkbox>
-				<mat-checkbox color="primary" formControlName="saturdayControl">{{ 'turnos.day-of-week.SATURDAY' | translate | slice:0:3 }}</mat-checkbox>
-				<mat-checkbox color="primary" formControlName="sundayControl">{{ 'turnos.day-of-week.SUNDAY' | translate | slice:0:3 }}</mat-checkbox>
+				<mat-checkbox color="primary" formControlName="mondayControl">{{ 'turnos.day-of-week.MONDAY' | translate
+					| slice:0:3 }}</mat-checkbox>
+				<mat-checkbox color="primary" formControlName="tuesdayControl">{{ 'turnos.day-of-week.TUESDAY' |
+					translate | slice:0:3 }}</mat-checkbox>
+				<mat-checkbox color="primary" formControlName="wednesdayControl">{{ 'turnos.day-of-week.WEDNESDAY' |
+					translate | slice:0:3 }}</mat-checkbox>
+				<mat-checkbox color="primary" formControlName="thursdayControl">{{ 'turnos.day-of-week.THURSDAY' |
+					translate | slice:0:3 }}</mat-checkbox>
+				<mat-checkbox color="primary" formControlName="fridayControl">{{ 'turnos.day-of-week.FRIDAY' | translate
+					| slice:0:3 }}</mat-checkbox>
+				<mat-checkbox color="primary" formControlName="saturdayControl">{{ 'turnos.day-of-week.SATURDAY' |
+					translate | slice:0:3 }}</mat-checkbox>
+				<mat-checkbox color="primary" formControlName="sundayControl">{{ 'turnos.day-of-week.SUNDAY' | translate
+					| slice:0:3 }}</mat-checkbox>
 			</div>
 		</div>
-		<div  fxLayout="column" fxLayoutGap="8px">
+		<div fxLayout="column" fxLayoutGap="8px">
 			<span class="category-title" [translate]="'turnos.home.TIME_RANGE'"></span>
 			<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
 				<mat-form-field appearance="outline" class="time_selector">
@@ -76,8 +87,8 @@
 			<div style="height: 60px;" fxLayout="row" fxLayoutGap="8px">
 				<mat-form-field style="max-width: 25%;" appearance="outline">
 					<mat-label [translate]="'turnos.home.START_DATE'"></mat-label>
-					<input formControlName="searchInitialDate" matInput [matDatepicker]="startDatePicker" [matDatepickerFilter]="dateSearchFilter"
-					(dateChange)="updateSearchEndingDate($event)">
+					<input formControlName="searchInitialDate" matInput [matDatepicker]="startDatePicker"
+						[matDatepickerFilter]="dateSearchFilter" (dateChange)="updateSearchEndingDate($event)">
 					<mat-error [translate]="'turnos.home.messages.NO_SPECIFIED_DATE'"></mat-error>
 					<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
 					<mat-datepicker #startDatePicker></mat-datepicker>
@@ -103,14 +114,19 @@
 		<div *ngIf="emptyAppointments.length > 0 else noInfo" fxLayout="column" fxLayoutGap="8px">
 			<span style="font-style: italic;" [translate]="'turnos.home.RESULT_DISCLAIMER'"></span>
 			<mat-card>
-				<div style="padding-top: 15px; padding-bottom: 15px;" *ngFor="let emptyAppointment of emptyAppointmentsFiltered; let last = last">
-					<app-appointment-details (resetInformation)="clearInformation()" [emptyAppointment]="emptyAppointment" [patientId]="patientId"
-					[searchInitialDate]="form.controls.searchInitialDate.value" [referenceSummary]="externalInformation?.referenceSummary"
-					[searchEndingDate]="form.controls.searchEndingDate.value" [modalityAttention]="form.controls.modality.value"></app-appointment-details>
+				<div style="padding-top: 15px; padding-bottom: 15px;"
+					*ngFor="let emptyAppointment of emptyAppointmentsFiltered; let last = last">
+					<app-appointment-details (resetInformation)="clearInformation()"
+						[emptyAppointment]="emptyAppointment" [patientId]="patientId"
+						[searchInitialDate]="form.controls.searchInitialDate.value"
+						[referenceSummary]="externalInformation?.referenceSummary"
+						[searchEndingDate]="form.controls.searchEndingDate.value"
+						[modalityAttention]="form.controls.modality.value"></app-appointment-details>
 					<mat-divider style="margin-top: 15px;" *ngIf="!last"></mat-divider>
 				</div>
-				<mat-paginator #paginator (page)="onPageChange($event)" [pageSizeOptions]="[5, 10, 25, emptyAppointments.length]"
-				[length]="emptyAppointments.length"></mat-paginator>
+				<mat-paginator #paginator (page)="onPageChange($event)"
+					[pageSizeOptions]="[5, 10, 25, emptyAppointments.length]"
+					[length]="emptyAppointments.length"></mat-paginator>
 			</mat-card>
 		</div>
 		<ng-template #noInfo>
