@@ -63,6 +63,7 @@ import { EmergencyCareEpisodeAttendService } from './services/emergency-care-epi
 import { EpisodeDataComponent } from './components/episode-data/episode-data.component';
 import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-search-dialog/problem-concept-search-dialog.component';
 import { ReferenceStateLabelComponent } from './components/reference-state-label/reference-state-label.component';
+import { PersonalHistoriesBackgroundListComponent } from './components/personal-histories-background-list/personal-histories-background-list.component';
 
 @NgModule({
 	declarations: [
@@ -123,6 +124,7 @@ import { ReferenceStateLabelComponent } from './components/reference-state-label
 		FactoresDeRiesgoFormV2Component,
 		AlergiasFormComponent,
 		ProblemConceptSearchDialogComponent,
+  		PersonalHistoriesBackgroundListComponent,
 	],
 	imports: [
 		CommonModule,
@@ -159,6 +161,7 @@ import { ReferenceStateLabelComponent } from './components/reference-state-label
 		BedAssignmentComponent,
 		EpisodeDataComponent,
 		ReferenceStateLabelComponent,
+		PersonalHistoriesBackgroundListComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,
 		ConceptsTypeaheadSearchDialogComponent,

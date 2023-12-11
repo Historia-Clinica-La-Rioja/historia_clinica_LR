@@ -73,8 +73,8 @@ export class NewConsultationPersonalHistoriesService {
                 snomed: this.snomedConcept,
                 type: this.form.value.type,
                 startDate: this.form.value.startDate,
-                endDate: this.form.value.endDate || null,
-                observations: this.form.value.observations || null,
+                endDate: this.form.value.endDate,
+                observations: this.form.value.observations,
             };
             if (this.add(personalHistory))
                 this.snackBarService.showError("Antecedente personal duplicado");

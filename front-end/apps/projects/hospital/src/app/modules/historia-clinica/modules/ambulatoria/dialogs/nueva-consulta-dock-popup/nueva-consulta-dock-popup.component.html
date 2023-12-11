@@ -77,7 +77,12 @@
 			[title]="'ambulatoria.paciente.nueva-consulta.antecedentes-personales.TITLE' | translate" icon="report"
 			[isEmpty]="personalHistoriesNewConsultationService.isEmpty()">
 			<div fxLayout="column" fxLayoutGap="2vh">
-				
+
+				<app-titled-content-card *ngIf="!personalHistoriesNewConsultationService.isEmpty()"
+					title="{{ 'ambulatoria.paciente.nueva-consulta.antecedentes-personales.REGISTERED_PERSONAL_HISTORIES' }}">
+					<app-personal-histories-background-list [service]="personalHistoriesNewConsultationService"></app-personal-histories-background-list>
+				</app-titled-content-card>
+
 				<div>
 					<button mat-button type="button" id="add-personal-history-button" color="primary" class="add-button"
 						(click)="addPersonalHistory()">

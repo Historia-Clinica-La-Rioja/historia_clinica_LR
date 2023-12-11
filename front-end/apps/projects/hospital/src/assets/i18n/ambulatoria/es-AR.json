@@ -176,8 +176,11 @@
                     },
                     "TITLE": "Antecedentes personales",
                     "PERSONAL_HISTORIES": "Antecedentes personales",
+                    "REGISTERED_PERSONAL_HISTORIES": "Antecedentes personales registrados",
                     "SEARCH_PLACEHOLDER": "Buscar antecedentes personales",
                     "HISTORY_TYPE": "Tipo",
+                    "FROM_DATE_PREFIX": "Desde",
+                    "TO_DATE_PREFIX": "Hasta",
                     "START_DATE": "Fecha de inicio",
                     "END_DATE": "Fecha de fin",
                     "OBSERVATIONS": "Observaciones"

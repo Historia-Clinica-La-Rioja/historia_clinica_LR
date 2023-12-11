@@ -27,11 +27,9 @@ export class NewConsultationPersonalHistoryFormComponent {
     }
 
     addPersonalHistory(): void {
-        // if (this.data.personalHistoryService.addToList()) {
-        //     this.dialogRef.close();
-        // }
-        console.log(this.data.personalHistoryService.getForm())
-        console.log("Adding...")
+        if (this.data.personalHistoryService.addToList()) {
+            this.dialogRef.close();
+        }
     }
 
     close(): void {

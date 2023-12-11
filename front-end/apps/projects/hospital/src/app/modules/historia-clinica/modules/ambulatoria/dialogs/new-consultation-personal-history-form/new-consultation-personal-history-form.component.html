@@ -41,7 +41,7 @@
                 <mat-form-field appearance="outline">
                     <mat-select id="historyType" formControlName="type"
                         placeholder="{{'ambulatoria.paciente.nueva-consulta.antecedentes-personales.HISTORY_TYPE' | translate}}">
-                        <mat-option *ngFor="let historyType of historyTypeList" [value]="historyType.id">
+                        <mat-option *ngFor="let historyType of historyTypeList" [value]="historyType">
                             {{historyType.description}}
                         </mat-option>
                     </mat-select>
