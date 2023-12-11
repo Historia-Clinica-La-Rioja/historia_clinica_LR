@@ -1,0 +1,47 @@
+
+::ng-deep .mat-select-panel {
+    position: relative; 
+    top: 15%;
+  }
+  .popup-container {
+    max-height: 600px;
+    // overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+   
+    }
+  
+    .mat-form-field {
+      width: 100%;
+    }
+  
+    .popup-container h2 {
+      margin-top: 0;
+    }
+    
+    .popup-container mat-label {
+      display: block;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 4px rgba(63, 201, 255, 0.1);
+    
+    }
+    
+    .popup-container mat-select {
+      width: 100%;
+      box-shadow: 0 2px 4px rgba(150, 201, 255, 0.1);
+     
+    }
+    
+    .popup-container app-escala-frail {
+      margin-top: 20px;
+      height: 300px;
+    }
+    
+    //BOTON DE CIERRE 
+    .mat-button {
+    
+      float: right;
+      margin-top: -2.5%;  
+    }
+  
+   
