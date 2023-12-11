@@ -4704,6 +4704,11 @@ export const enum EReferenceAttentionState {
     ABSENT = "ABSENT",
 }
 
+export const enum EReferenceForwardingType {
+    REGIONAL = "REGIONAL",
+    DOMAIN = "DOMAIN",
+}
+
 export const enum EReferenceRegulationState {
     WAITING_APPROVAL = "WAITING_APPROVAL",
     APPROVED = "APPROVED",

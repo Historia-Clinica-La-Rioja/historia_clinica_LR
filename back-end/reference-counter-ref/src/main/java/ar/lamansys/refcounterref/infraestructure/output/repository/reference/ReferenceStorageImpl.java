@@ -7,6 +7,7 @@ import ar.lamansys.refcounterref.application.port.ReferenceStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStudyStorage;
 import ar.lamansys.refcounterref.domain.clinicalspecialty.ClinicalSpecialtyBo;
 import ar.lamansys.refcounterref.domain.enums.EReferenceCounterReferenceType;
+import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
@@ -221,6 +222,11 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 		return referenceRepository.findById(referenceId);
 	}
 
+	@Override
+	public EReferenceRegulationState getReferenceRegulationState(Integer referenceId) {
+		return EReferenceRegulationState.getById(referenceRepository.getReferenceRegulationStateId(referenceId));
+	}
+
 	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialtyIdAndCareLineId(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId){
 		List<ReferenceSummaryBo> result;
 		result = referenceRepository.getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyIdAndCareLineId(patientId, clinicalSpecialtyId, careLineId);
@@ -262,6 +268,5 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 		result.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyIdAndPracticeId(patientId, clinicalSpecialtyId, practiceId));
 		return result;
 	}
-
 
 }

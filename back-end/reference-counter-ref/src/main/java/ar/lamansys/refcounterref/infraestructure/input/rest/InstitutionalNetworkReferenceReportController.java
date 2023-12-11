@@ -1,6 +1,7 @@
 package ar.lamansys.refcounterref.infraestructure.input.rest;
 
 import ar.lamansys.refcounterref.application.createreferenceobservation.CreateReferenceObservation;
+import ar.lamansys.refcounterref.application.referenceforwarding.ReferenceForwarding;
 import ar.lamansys.refcounterref.application.getreferencecompletedata.GetReferenceCompleteData;
 import ar.lamansys.refcounterref.application.getreferencesbymanagerrole.GetReferencesByManagerRole;
 import ar.lamansys.refcounterref.application.updatereferenceregulationstate.UpdateReferenceRegulationState;
@@ -41,6 +42,8 @@ public class InstitutionalNetworkReferenceReportController {
 	private final GetReferencesByManagerRole getReferencesByManagerRole;
 
 	private final CreateReferenceObservation createReferenceObservation;
+
+	private final ReferenceForwarding referenceForwarding;
 
 	private final GetReferenceMapper getReferenceMapper;
 
@@ -88,6 +91,15 @@ public class InstitutionalNetworkReferenceReportController {
 		log.debug("Input parameters -> referenceId {}, observation {}", referenceId, observation);
 		createReferenceObservation.run(referenceId, observation);
 		return ResponseEntity.ok().body(Boolean.TRUE);
+	}
+
+	@PostMapping("/forwarding/{referenceId}")
+	@PreAuthorize("hasAnyAuthority('GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
+	public ResponseEntity<Boolean> addReferenceForwarding(@PathVariable(name = "referenceId") Integer referenceId,
+														  @RequestParam(name = "observation") String observation) {
+		log.debug("Input parameters -> referenceId {}, observation {} ", referenceId, observation);
+		referenceForwarding.run(referenceId, observation);
+		return ResponseEntity.ok(Boolean.TRUE);
 	}
 
 }

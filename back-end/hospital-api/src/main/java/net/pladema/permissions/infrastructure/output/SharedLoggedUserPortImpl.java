@@ -1,5 +1,6 @@
 package net.pladema.permissions.infrastructure.output;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.RoleInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedLoggedUserPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,5 +49,13 @@ public class SharedLoggedUserPortImpl implements SharedLoggedUserPort {
 
 	private boolean institutionIsValid(Integer institutionId, UserRoleBo role) {
 		return role.getInstitutionId().equals(institutionId) || role.getInstitutionId().equals(-1);
+	}
+
+	@Override
+	public List<RoleInfoDto> getRoles(Integer userId) {
+		return userRoleStorage.getRolesByUser(userId)
+				.stream()
+				.map(r -> new RoleInfoDto(r.getRoleId(), r.getInstitutionId(), r.getRoleDescription()))
+				.collect(Collectors.toList());
 	}
 }
