@@ -3255,6 +3255,13 @@ export interface ProcedureReduced {
     procedure: string;
 }
 
+export interface ProcedureTemplateDto {
+    associatedPractices: SnomedPracticeDto[];
+    description: string;
+    id: number;
+    uuid: string;
+}
+
 export interface ProfessionCompleteDto {
     allLicenses: LicenseNumberDto[];
     description: string;
@@ -3874,6 +3881,12 @@ export interface SnomedDto extends Serializable {
 export interface SnomedEclDto {
     key: SnomedECL;
     value: string;
+}
+
+export interface SnomedPracticeDto {
+    id: number;
+    pt: string;
+    sctid: string;
 }
 
 export interface SnomedProblemDto {

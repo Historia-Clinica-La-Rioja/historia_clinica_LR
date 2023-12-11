@@ -2,8 +2,10 @@ package net.pladema.procedure.infrastructure.output.repository.entity;
 
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -25,6 +27,8 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @EntityListeners(SGXAuditListener.class)
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProcedureTemplate extends SGXAuditableEntity<Integer> {
 
 	@Id
