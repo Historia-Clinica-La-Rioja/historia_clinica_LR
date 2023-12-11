@@ -10,9 +10,12 @@ import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionNewConsultationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PersonalHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EPersonalHistoryType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.GetLastHealthConditionRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.HealthConditionRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.PersonalHistoryRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.HealthCondition;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.PersonalHistory;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.ConditionClinicalStatusRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.ConditionVerificationStatusRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
@@ -32,6 +35,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
 
 @Service
 @Slf4j
@@ -57,6 +62,8 @@ public class HealthConditionService {
     private final DateTimeProvider dateTimeProvider;
 
     private final GetLastHealthConditionRepository getLastHealthConditionRepository;
+
+    private final PersonalHistoryRepository personalHistoryRepository;
 
     private HealthCondition save(HealthCondition healthCondition){
         log.debug("Input parameters -> healthCondition {}", healthCondition);
@@ -145,14 +152,18 @@ public class HealthConditionService {
         log.debug("Input parameters -> patientInfo {}, documentId {}, personalHistories {}", patientInfo, documentId, personalHistories);
         personalHistories.forEach(ph -> {
             HealthCondition healthCondition = buildPersonalHistory(patientInfo, ph);
-			if(ph.getId()==null)
+			if (ph.getId() == null) {
 	            healthCondition = save(healthCondition);
+                if (nonNull(ph.getTypeId()))
+                    personalHistoryRepository.save(new PersonalHistory(healthCondition.getId(), ph.getTypeId()));
+            }
 
             ph.setId(healthCondition.getId());
             ph.setVerificationId(healthCondition.getVerificationStatusId());
             ph.setVerification(getVerification(ph.getVerificationId()));
             ph.setStatusId(healthCondition.getStatusId());
             ph.setStatus(getStatus(ph.getStatusId()));
+            ph.setType(nonNull(ph.getTypeId()) ? EPersonalHistoryType.map(ph.getTypeId()).getDescription() : null);
 
             documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
@@ -163,9 +174,9 @@ public class HealthConditionService {
     private HealthCondition buildPersonalHistory(PatientInfoBo patientInfo, PersonalHistoryBo info) {
         log.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
         HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
-        healthCondition.setProblemId(ProblemType.PROBLEM);
-        LocalDate date = info.getStartDate();
-        healthCondition.setStartDate(date);
+        healthCondition.setProblemId(ProblemType.PERSONAL_HISTORY);
+        healthCondition.setStartDate(info.getStartDate());
+        healthCondition.setInactivationDate(info.getInactivationDate());
         healthCondition.setNoteId(noteService.createNote(info.getNote()));
         log.debug(OUTPUT, healthCondition);
         return healthCondition;

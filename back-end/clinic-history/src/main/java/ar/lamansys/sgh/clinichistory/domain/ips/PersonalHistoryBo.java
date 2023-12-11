@@ -14,6 +14,7 @@ public class PersonalHistoryBo extends HealthConditionBo {
     private LocalDate startDate;
     private LocalDate inactivationDate;
     private Short typeId;
+    private String type;
     private String note;
 
     public PersonalHistoryBo(SnomedBo snomed) {

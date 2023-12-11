@@ -37,6 +37,8 @@ public class HealthConditionVo extends ClinicalTermVo {
 
     private LocalDate endDate;
 
+    private Short specificType;
+
     public HealthConditionVo(Integer id, Snomed snomed, String statusId, boolean main, String verificationId,
                              String problemId, LocalDate startDate, Long noteId, String note) {
         super(id, snomed, statusId);
@@ -49,12 +51,14 @@ public class HealthConditionVo extends ClinicalTermVo {
     }
 
     public HealthConditionVo(Integer id, Snomed snomed, String statusId, String status, boolean main,  String verificationId,
-                             String verification, String problemId, LocalDate startDate, LocalDate endDate, Long noteId, String note, Short errorReasonId) {
+                             String verification, String problemId, LocalDate startDate, LocalDate endDate, Long noteId,
+                             String note, Short errorReasonId, Short specificType) {
         this(id, snomed, statusId, main,  verificationId,
                 problemId, startDate, noteId, note);
         this.verification = verification;
         this.setStatus(status);
         this.errorReasonId = errorReasonId;
+        this.specificType = specificType;
         this.endDate = endDate;
     }
 
@@ -63,7 +67,7 @@ public class HealthConditionVo extends ClinicalTermVo {
     }
 
     public boolean isPersonalHistory() {
-        return problemId.equals(ProblemType.PROBLEM);
+        return ProblemType.PERSONAL_HISTORY.equals(problemId);
     }
 
     public boolean isFamilyHistory() {

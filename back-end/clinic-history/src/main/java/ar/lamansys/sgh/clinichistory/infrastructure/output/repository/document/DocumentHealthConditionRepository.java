@@ -21,7 +21,8 @@ public interface DocumentHealthConditionRepository extends JpaRepository<Documen
             "hc.id, s, hc.statusId, ccs.description, hc.main, " +
             "hc.verificationStatusId, cvs.description, " +
             "hc.problemId, hc.startDate, hc.inactivationDate, " +
-            "n.id as noteId, n.description as note, per.reasonId as errorReasonId) " +
+            "n.id as noteId, n.description as note, per.reasonId as errorReasonId, " +
+            "ph.typeId as specificTypeIfPersonalHistory) " +
             "FROM DocumentHealthCondition dh " +
             "JOIN HealthCondition hc ON (dh.pk.healthConditionId = hc.id) " +
             "JOIN Snomed s ON (s.id = hc.snomedId) " +
@@ -29,6 +30,7 @@ public interface DocumentHealthConditionRepository extends JpaRepository<Documen
             "JOIN ConditionClinicalStatus ccs ON (hc.statusId = ccs.id) " +
             "JOIN ConditionVerificationStatus cvs ON (hc.verificationStatusId = cvs.id) " +
             "LEFT JOIN ProblemErrorReason per ON (hc.id = per.healthConditionId) " +
+            "LEFT JOIN PersonalHistory ph ON (hc.id = ph.healthConditionId) " +
             "WHERE dh.pk.documentId = :documentId")
     List<HealthConditionVo> getHealthConditionFromDocument(@Param("documentId") Long documentId);
 

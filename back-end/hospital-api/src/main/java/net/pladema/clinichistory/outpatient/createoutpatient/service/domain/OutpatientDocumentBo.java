@@ -6,6 +6,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.PersonalHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
@@ -50,6 +51,8 @@ public class OutpatientDocumentBo implements IDocumentBo {
     private List<ProblemBo> problems = new ArrayList<>();
 
     private List<ProcedureBo> procedures = new ArrayList<>();
+
+    private List<PersonalHistoryBo> personalHistories = new ArrayList<>();
 
     private List<FamilyHistoryBo> familyHistories = new ArrayList<>();
 

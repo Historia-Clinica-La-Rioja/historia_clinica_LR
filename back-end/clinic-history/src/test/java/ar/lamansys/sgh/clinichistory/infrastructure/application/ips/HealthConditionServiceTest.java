@@ -11,6 +11,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.GetLastHealthConditionRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.HealthConditionRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.PersonalHistoryRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.GetLastHealthConditionRepositotyImpl;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.HealthCondition;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.ConditionClinicalStatusRepository;
@@ -74,6 +75,9 @@ class HealthConditionServiceTest extends UnitRepository {
 	@MockBean
 	private DocumentFileRepository documentFileRepository;
 
+    @MockBean
+    private PersonalHistoryRepository personalHistoryRepository;
+
     @BeforeEach
     void setUp(){
 
@@ -89,7 +93,8 @@ class HealthConditionServiceTest extends UnitRepository {
                 documentService,
                 noteService,
                 dateTimeProvider,
-                getLastHealthConditionRepository
+                getLastHealthConditionRepository,
+                personalHistoryRepository
         );
     }
 

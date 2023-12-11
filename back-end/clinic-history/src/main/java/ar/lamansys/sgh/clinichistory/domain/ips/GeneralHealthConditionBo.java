@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EPersonalHistoryType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.EProblemErrorReason;
 import lombok.Getter;
@@ -100,7 +101,10 @@ public class GeneralHealthConditionBo implements Serializable {
         result.setVerification(healthConditionVo.getVerification());
         result.setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
         result.setStartDate(healthConditionVo.getStartDate());
+        result.setInactivationDate(healthConditionVo.getEndDate());
+        result.setNote(healthConditionVo.getNote());
         result.setMain(healthConditionVo.isMain());
+        result.setType(nonNull(healthConditionVo.getSpecificType()) ? EPersonalHistoryType.map(healthConditionVo.getSpecificType()).getDescription() : null);
         log.debug(OUTPUT, result);
         return result;
 
