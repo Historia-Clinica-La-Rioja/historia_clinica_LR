@@ -5,6 +5,7 @@ import ar.lamansys.refcounterref.application.referenceforwarding.ReferenceForwar
 import ar.lamansys.refcounterref.application.getreferencecompletedata.GetReferenceCompleteData;
 import ar.lamansys.refcounterref.application.getreferencesbymanagerrole.GetReferencesByManagerRole;
 import ar.lamansys.refcounterref.application.updatereferenceregulationstate.UpdateReferenceRegulationState;
+import ar.lamansys.refcounterref.application.updatereferenceforwarding.UpdateReferenceForwarding;
 import ar.lamansys.refcounterref.domain.reference.ReferenceCompleteDataBo;
 import ar.lamansys.refcounterref.infraestructure.input.ReferenceReportFilterUtils;
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.ReferenceReportDto;
@@ -25,6 +26,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,6 +46,8 @@ public class InstitutionalNetworkReferenceReportController {
 	private final CreateReferenceObservation createReferenceObservation;
 
 	private final ReferenceForwarding referenceForwarding;
+
+	private final UpdateReferenceForwarding updateReferenceForwarding;
 
 	private final GetReferenceMapper getReferenceMapper;
 
@@ -99,6 +103,15 @@ public class InstitutionalNetworkReferenceReportController {
 														  @RequestParam(name = "observation") String observation) {
 		log.debug("Input parameters -> referenceId {}, observation {} ", referenceId, observation);
 		referenceForwarding.run(referenceId, observation);
+		return ResponseEntity.ok(Boolean.TRUE);
+	}
+
+	@PutMapping("/update-forwarding/{forwardingId}")
+	@PreAuthorize("hasAnyAuthority('GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
+	public ResponseEntity<Boolean> updateReferenceForwarding(@PathVariable(name = "forwardingId") Integer forwardingId,
+															 @RequestParam(name = "observation") String observation) {
+		log.debug("Input parameters -> forwardingId {}, observation {} ", forwardingId, observation);
+		updateReferenceForwarding.run(forwardingId, observation);
 		return ResponseEntity.ok(Boolean.TRUE);
 	}
 

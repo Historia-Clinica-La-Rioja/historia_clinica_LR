@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+
 @ToString
 @Getter
 @Setter
@@ -28,6 +29,8 @@ public class ReferenceForwardingBo {
 	private LocalDateTime date;
 
 	private String createdBy;
+
+	private Integer referenceId;
 
 	public ReferenceForwardingBo(Integer id, Integer personId, Integer userId,
 								 String observation, Short type, LocalDateTime date) {

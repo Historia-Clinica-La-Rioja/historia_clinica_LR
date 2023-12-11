@@ -1,5 +1,7 @@
 package ar.lamansys.refcounterref.application.port;
 
+import ar.lamansys.refcounterref.domain.reference.ReferenceForwardingBo;
+
 public interface ReferenceForwardingStorage {
 
 	void save(Integer referenceId, String observation, short forwardingTypeId);
@@ -7,5 +9,7 @@ public interface ReferenceForwardingStorage {
 	boolean hasRegionalForwarding(Integer referenceId);
 
 	boolean hasDomainForwarding(Integer referenceId);
+
+	ReferenceForwardingBo getForwarding(Integer forwardingId);
 
 }
