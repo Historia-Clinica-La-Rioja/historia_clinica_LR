@@ -895,6 +895,7 @@ export interface CreateOutpatientDto {
     hierarchicalUnitId?: number;
     medications: OutpatientMedicationDto[];
     patientMedicalCoverageId?: number;
+    personalHistories?: OutpatientPersonalHistoryDto[];
     problems: OutpatientProblemDto[];
     procedures: OutpatientProcedureDto[];
     reasons: OutpatientReasonDto[];
@@ -2838,6 +2839,14 @@ export interface OutpatientMedicationDto {
     snomed: SnomedDto;
     statusId?: string;
     suspended: boolean;
+}
+
+export interface OutpatientPersonalHistoryDto {
+    inactivationDate?: string;
+    note?: string;
+    snomed: SnomedDto;
+    startDate: string;
+    typeId: number;
 }
 
 export interface OutpatientProblemDto {
