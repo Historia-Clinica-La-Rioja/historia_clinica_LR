@@ -97,8 +97,8 @@ export class FrailScaleComponent implements OnInit {
 
   mappingWeightloss() {
     const weightlossMap = {
-      'A4' : 20,
-      'B4' : 19,
+      'A4' : 47,
+      'B4' : 48,
     };
 
     return weightlossMap[this.selectedWeightLoss] || undefined;
