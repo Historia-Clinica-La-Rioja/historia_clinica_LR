@@ -242,13 +242,8 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 	}
 
 	private setEditionPermission(orderHasCoverage?: boolean) {
-		let hasMedicalOrder = this.hasMedicalOrder(this.appointment);
 		this.canCoverageBeEdited = this.isAssigned() && !orderHasCoverage;
-		if (hasMedicalOrder) {
-			this.canOrderBeEdited = this.isAssigned();
-		} else {
-			this.canOrderBeEdited = true;
-		}
+		this.canOrderBeEdited = this.isAssigned();
 	}
 
 	formatPhonePrefixAndNumber(phonePrefix: string, phoneNumber: string): string {
