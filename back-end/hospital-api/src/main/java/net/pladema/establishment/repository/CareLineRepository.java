@@ -38,9 +38,11 @@ public interface CareLineRepository extends SGXAuditableEntityJPARepository<Care
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.CareLineBo(cl.id, cl.description) " +
 			"FROM CareLine cl " +
+			"LEFT JOIN CareLineRole clr ON (clr.careLineId = cl.id) " +
 			"JOIN CareLineInstitution cli ON (cl.id = cli.careLineId) " +
-			"WHERE cli.deleted = false")
-	List<CareLineBo> getCareLinesAttachedToInstitutions();
+			"WHERE cli.deleted IS FALSE " +
+			"AND cl.classified IS FALSE OR (clr.roleId IN :loggedUserRoleIds AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE)")
+	List<CareLineBo> getCareLinesAttachedToInstitutions(@Param("loggedUserRoleIds") List<Short> loggedUsedRoleIds);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.CareLineBo(cl.id, cl.description) " +

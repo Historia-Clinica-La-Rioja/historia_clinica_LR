@@ -1,6 +1,7 @@
 package net.pladema.establishment.service.impl;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedLoggedUserPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.establishment.application.port.CareLineInstitutionPracticeStorage;
@@ -8,8 +9,9 @@ import net.pladema.establishment.application.port.carelineproblem.CareLineProble
 import net.pladema.establishment.repository.CareLineInstitutionSpecialtyRepository;
 import net.pladema.establishment.repository.CareLineRepository;
 import net.pladema.establishment.service.CareLineService;
-import net.pladema.establishment.service.InstitutionService;
 import net.pladema.establishment.service.domain.CareLineBo;
+
+import net.pladema.user.application.port.UserRoleStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +36,9 @@ public class CareLineServiceImpl implements CareLineService {
 
 	private final CareLineProblemStorage careLineProblemStorage;
 
-	private final InstitutionService institutionService;
-
 	private final CareLineInstitutionPracticeStorage careLineInstitutionPracticeStorage;
+
+	private final SharedLoggedUserPort sharedLoggedUserPort;
 
     @Override
     public List<CareLineBo> getCareLines() {
@@ -58,9 +60,10 @@ public class CareLineServiceImpl implements CareLineService {
     }
 
     @Override
-	public List<CareLineBo> getAllByProblems(List<String> snomedSctids) {
-		LOG.debug("Input parameters -> snomedSctids {}", snomedSctids);
-		List<CareLineBo> careLines = careLineRepository.getCareLinesAttachedToInstitutions();
+	public List<CareLineBo> getAllByProblems(List<String> snomedSctids, Integer institutionId, Integer loggedUserId) {
+		LOG.debug("Input parameters -> snomedSctids {}, institutionId {}, loggedUserId {}", snomedSctids, institutionId, loggedUserId);
+		List<Short> loggedUserRoleIds = sharedLoggedUserPort.getLoggedUserRoleIds(institutionId, loggedUserId);
+		List<CareLineBo> careLines = careLineRepository.getCareLinesAttachedToInstitutions(loggedUserRoleIds);
 		List<CareLineBo> result = this.getCareLinesWithAllProblems(careLines, snomedSctids);
 		result.forEach(careLine -> careLine.setClinicalSpecialties(careLineInstitutionSpecialtyRepository.getClinicalSpecialtiesByCareLineId(careLine.getId())));
 		LOG.trace(OUTPUT, result);
@@ -68,9 +71,11 @@ public class CareLineServiceImpl implements CareLineService {
 	}
 
 	@Override
-	public List<CareLineBo> getCareLinesAttachedToInstitutions() {
-		List<CareLineBo> result = careLineRepository.getCareLinesAttachedToInstitutions();
-		result.stream().forEach(careLine -> careLine.setClinicalSpecialties(careLineInstitutionSpecialtyRepository.getClinicalSpecialtiesByCareLineId(careLine.getId())));
+	public List<CareLineBo> getCareLinesAttachedToInstitutions(Integer institutionId, Integer loggedUserId) {
+		log.debug("Input parameters -> institutionId {}, loggedUserId {}", institutionId, loggedUserId);
+		List<Short> loggedUserRoleIds = sharedLoggedUserPort.getLoggedUserRoleIds(institutionId, loggedUserId);
+		List<CareLineBo> result = careLineRepository.getCareLinesAttachedToInstitutions(loggedUserRoleIds);
+		result.forEach(careLine -> careLine.setClinicalSpecialties(careLineInstitutionSpecialtyRepository.getClinicalSpecialtiesByCareLineId(careLine.getId())));
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
