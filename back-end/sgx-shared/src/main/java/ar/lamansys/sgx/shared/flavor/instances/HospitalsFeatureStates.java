@@ -63,6 +63,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_TELEMEDICINA, false);
 		map.put(AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO, false);
 		map.put(AppFeature.HABILITAR_OBLIGATORIEDAD_UNIDADES_JERARQUICAS, false);
+		map.put(AppFeature.HABILITAR_CUESTIONARIOS, false);
 	}
 
 	@Override

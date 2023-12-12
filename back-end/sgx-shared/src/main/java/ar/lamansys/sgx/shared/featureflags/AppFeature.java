@@ -158,6 +158,9 @@ public enum AppFeature implements Feature {
 	
 	@Label("Habilita la obligatoriedad del campo de unidades jerárquicas como requerido")
 	HABILITAR_OBLIGATORIEDAD_UNIDADES_JERARQUICAS,
+
+	@Label("Indica si el módulo de cuestionarios está activo")
+	HABILITAR_CUESTIONARIOS,
 	;
 
     public boolean isActive() {
