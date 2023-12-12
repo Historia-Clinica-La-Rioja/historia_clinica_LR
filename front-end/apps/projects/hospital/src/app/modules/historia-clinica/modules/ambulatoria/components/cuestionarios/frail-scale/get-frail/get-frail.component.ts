@@ -49,10 +49,10 @@ export class GetFrailComponent implements OnInit {
 
           window.URL.revokeObjectURL(url);
 
-          // console.log("Descarga exitosa");
+          
         },
         (error) => {
-          //  console.error("Error en la descarga", error);
+          
         }
       );
     }
