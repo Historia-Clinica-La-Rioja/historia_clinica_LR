@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SnomedDto, SnomedECL, TranscribedPrescriptionDto } from '@api-rest/api-model';
-import { HCEPersonalHistoryDto } from '@api-rest/api-model';
+import { HCEHealthConditionDto } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { hasError } from '@core/utils/form.utils';
 import { PrescripcionesService } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
@@ -66,10 +66,10 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
     }
 
     private getPatientHealthProblems() {
-        this.hceGeneralStateService.getActiveProblems(this.data.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
+        this.hceGeneralStateService.getActiveProblems(this.data.patientId).subscribe((activeProblems: HCEHealthConditionDto[]) => {
 			const activeProblemsList = activeProblems.map(problem => ({id: problem.id, description: problem.snomed.pt, sctId: problem.snomed.sctid}));
 
-			this.hceGeneralStateService.getChronicConditions(this.data.patientId).subscribe((chronicProblems: HCEPersonalHistoryDto[]) => {
+			this.hceGeneralStateService.getChronicConditions(this.data.patientId).subscribe((chronicProblems: HCEHealthConditionDto[]) => {
 				const chronicProblemsList = chronicProblems.map(problem => ({id: problem.id, description: problem.snomed.pt,  sctId: problem.snomed.sctid}));
 				const healthProblems = activeProblemsList.concat(chronicProblemsList);
                 this.healthProblems = healthProblems;

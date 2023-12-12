@@ -1,5 +1,5 @@
 import { Component, Input, Output } from '@angular/core';
-import { HCEPersonalHistoryDto } from '@api-rest/api-model';
+import { HCEHealthConditionDto } from '@api-rest/api-model';
 import { Subject } from 'rxjs';
 import { HistoricalProblemsFacadeService } from '../../services/historical-problems-facade.service';
 
@@ -10,8 +10,8 @@ import { HistoricalProblemsFacadeService } from '../../services/historical-probl
 })
 export class ViewDatailsBtnComponent {
 
-    @Input() problem: HCEPersonalHistoryDto;
-    @Output() setProblemOnHistoric = new Subject<HCEPersonalHistoryDto>();
+    @Input() problem: HCEHealthConditionDto;
+    @Output() setProblemOnHistoric = new Subject<HCEHealthConditionDto>();
     
     constructor(
 		private readonly historicalProblemsFacadeService: HistoricalProblemsFacadeService,)

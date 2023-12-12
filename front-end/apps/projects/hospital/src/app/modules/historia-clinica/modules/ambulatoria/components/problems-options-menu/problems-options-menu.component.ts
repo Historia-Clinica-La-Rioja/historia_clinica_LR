@@ -1,6 +1,6 @@
 import { Component, Injector, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ApiErrorMessageDto, HCEPersonalHistoryDto, ProblemInfoDto } from '@api-rest/api-model';
+import { ApiErrorMessageDto, HCEHealthConditionDto, ProblemInfoDto } from '@api-rest/api-model';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
@@ -19,7 +19,7 @@ import { OutpatientConsultationService } from '@api-rest/services/outpatient-con
 })
 export class ProblemsOptionsMenuComponent implements OnInit {
 
-    @Input() problem: HCEPersonalHistoryDto;
+    @Input() problem: HCEHealthConditionDto;
     @Input() set nuevaConsultaRef(nuevaConsultaRef: DockPopupRef) {
 		this.nuevaConsultaAmbulatoriaRef = nuevaConsultaRef;
 		if (nuevaConsultaRef) {
@@ -28,7 +28,7 @@ export class ProblemsOptionsMenuComponent implements OnInit {
 		}
 	}
 	@Input() patientId: number;
-    @Output() setProblemOnHistoric = new Subject<HCEPersonalHistoryDto>();
+    @Output() setProblemOnHistoric = new Subject<HCEHealthConditionDto>();
     hasNewConsultationEnabled$: Observable<boolean>;
 	private nuevaConsultaAmbulatoriaRef: DockPopupRef;
 	private nuevaConsultaFromProblemaRef: DockPopupRef;
@@ -96,7 +96,7 @@ export class ProblemsOptionsMenuComponent implements OnInit {
 			}
 		}).afterClosed().subscribe(submitted => {
 			if (submitted) {
-				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({ problems: true, personalHistories: true });
+				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({ problems: true, patientProblems: true });
 			}
 		});
 	}

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { DiagnosesGeneralStateDto, DiagnosticReportInfoDto, EmergencyCareListDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
+import { DiagnosesGeneralStateDto, DiagnosticReportInfoDto, EmergencyCareListDto, HCEHealthConditionDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { ESTUDIOS, PatientType } from '@historia-clinica/constants/summaries';
@@ -234,10 +234,10 @@ export class CardEstudiosComponent implements OnInit {
 	}
 
 	openNewOutpatientOrderDialog() {
-		this.hceGeneralStateService.getActiveProblems(this.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
+		this.hceGeneralStateService.getActiveProblems(this.patientId).subscribe((activeProblems: HCEHealthConditionDto[]) => {
 			const activeProblemsList = activeProblems.map(problem => ({ id: problem.id, description: problem.snomed.pt, sctId: problem.snomed.sctid }));
 
-			this.hceGeneralStateService.getChronicConditions(this.patientId).subscribe((chronicProblems: HCEPersonalHistoryDto[]) => {
+			this.hceGeneralStateService.getChronicConditions(this.patientId).subscribe((chronicProblems: HCEHealthConditionDto[]) => {
 				const chronicProblemsList = chronicProblems.map(problem => ({ id: problem.id, description: problem.snomed.pt, sctId: problem.snomed.sctid }));
 				const healthProblems = activeProblemsList.concat(chronicProblemsList);
 

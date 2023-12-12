@@ -403,9 +403,9 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	private mapToOdontologyDiagnosticDto(problem: HCEPersonalHistory): OdontologyDiagnosticDto {
 		return {
 			chronic: problem.chronic,
-			severity: problem.hcePersonalHistoryDto.severity,
-			snomed: problem.hcePersonalHistoryDto.snomed,
-			startDate: this.buildDateDto(problem.hcePersonalHistoryDto.startDate),
+			severity: problem.HCEHealthConditionDto.severity,
+			snomed: problem.HCEHealthConditionDto.snomed,
+			startDate: this.buildDateDto(problem.HCEHealthConditionDto.startDate),
 		}
 	}
 

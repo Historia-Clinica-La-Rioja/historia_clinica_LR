@@ -6,7 +6,7 @@ import { PresentationModule } from '@presentation/presentation.module';
 // components
 import { AlergiasSummaryComponent } from './components/alergias-summary/alergias-summary.component';
 import { AntecedentesFamiliaresSummaryComponent } from './components/antecedentes-familiares-summary/antecedentes-familiares-summary.component';
-import { AntecedentesPersonalesSummaryComponent } from './components/antecedentes-personales-summary/antecedentes-personales-summary.component';
+import { PatientProblemsSummaryComponent } from './components/patient-problems-summary/patient-problems-summary.component';
 import { AntropometricosSummaryComponent } from './components/antropometricos-summary/antropometricos-summary.component';
 import { ConceptsSearchComponent } from './components/concepts-search/concepts-search.component';
 import { ConceptTypeaheadSearchComponent } from './components/concept-typeahead-search/concept-typeahead-search.component';
@@ -70,7 +70,7 @@ import { PersonalHistoriesBackgroundListComponent } from './components/personal-
 		// components
 		AlergiasSummaryComponent,
 		AntecedentesFamiliaresSummaryComponent,
-		AntecedentesPersonalesSummaryComponent,
+		PatientProblemsSummaryComponent,
 		AntropometricosSummaryComponent,
 		ConceptsSearchComponent,
 		DocumentsSummaryComponent,
@@ -137,7 +137,7 @@ import { PersonalHistoriesBackgroundListComponent } from './components/personal-
 		// components
 		AlergiasSummaryComponent,
 		AntecedentesFamiliaresSummaryComponent,
-		AntecedentesPersonalesSummaryComponent,
+		PatientProblemsSummaryComponent,
 		AntropometricosSummaryComponent,
 		ConceptsSearchComponent,
 		DocumentsSummaryComponent,

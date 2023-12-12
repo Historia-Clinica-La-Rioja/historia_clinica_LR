@@ -12,8 +12,8 @@ export class AmbulatoriaSummaryFacadeService {
 
 	private allergiesSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private familyHistoriesSubject: Subject<any> = new BehaviorSubject<any>([]);
-	private personalHistoriesSubject: Subject<any> = new BehaviorSubject<any>([]);
-	private personalHistoriesByRoleSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private patientProblemsSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private patientProblemsByRoleSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private medicationsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private riskFactorsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private bloodTypeSubject: Subject<string> = new BehaviorSubject<string>(null);
@@ -27,8 +27,8 @@ export class AmbulatoriaSummaryFacadeService {
 
 	public readonly allergies$ = this.allergiesSubject.asObservable();
 	public readonly familyHistories$ = this.familyHistoriesSubject.asObservable();
-	public readonly personalHistories$ = this.personalHistoriesSubject.asObservable();
-	public readonly personalHistoriesByRole$ = this.personalHistoriesByRoleSubject.asObservable();
+	public readonly patientProblems$ = this.patientProblemsSubject.asObservable();
+	public readonly patientProblemsByRole$ = this.patientProblemsByRoleSubject.asObservable();
 	public readonly medications$ = this.medicationsSubject.asObservable();
 	public readonly riskFactors$ = this.riskFactorsSubject.asObservable();
 	public readonly bloodType$ = this.bloodTypeSubject.asObservable();
@@ -52,8 +52,8 @@ export class AmbulatoriaSummaryFacadeService {
 		this.setFieldsToUpdate({
 			allergies: true,
 			familyHistories: true,
-			personalHistories: true,
-			personalHistoriesByRole: true,
+			patientProblems: true,
+			patientProblemsByRole: true,
 			riskFactors: true,
 			medications: true,
 			anthropometricData: true,
@@ -70,12 +70,12 @@ export class AmbulatoriaSummaryFacadeService {
 			this.hceGeneralStateService.getFamilyHistories(this.idPaciente).subscribe(fH => this.familyHistoriesSubject.next(fH));
 		}
 
-		if (fieldsToUpdate.personalHistories) {
-			this.hceGeneralStateService.getPersonalHistories(this.idPaciente).subscribe(ph => this.personalHistoriesSubject.next(ph));
+		if (fieldsToUpdate.patientProblems) {
+			this.hceGeneralStateService.getPatientProblems(this.idPaciente).subscribe(ph => this.patientProblemsSubject.next(ph));
 		}
 	
-		if (fieldsToUpdate.personalHistoriesByRole) {
-			this.hceGeneralStateService.getPersonalHistoriesByRole(this.idPaciente).subscribe(ph => this.personalHistoriesByRoleSubject.next(ph));
+		if (fieldsToUpdate.patientProblemsByRole) {
+			this.hceGeneralStateService.getPersonalHistoriesByRole(this.idPaciente).subscribe(ph => this.patientProblemsByRoleSubject.next(ph));
 		}
 
 		if (fieldsToUpdate.riskFactors) {
@@ -122,8 +122,8 @@ export class AmbulatoriaSummaryFacadeService {
 export interface AmbulatoriaFields {
 	allergies?: boolean;
 	familyHistories?: boolean;
-	personalHistories?: boolean;
-	personalHistoriesByRole?: boolean;
+	patientProblems?: boolean;
+	patientProblemsByRole?: boolean;
 	riskFactors?: boolean;
 	medications?: boolean;
 	anthropometricData?: boolean;

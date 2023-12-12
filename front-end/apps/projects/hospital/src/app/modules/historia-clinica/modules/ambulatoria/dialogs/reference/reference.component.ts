@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CareLineDto, HCEPersonalHistoryDto, ReferenceProblemDto, MasterDataDto, ReferenceStudyDto, ClinicalSpecialtyDto } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, HCEHealthConditionDto, ReferenceProblemDto, MasterDataDto, ReferenceStudyDto } from '@api-rest/api-model';
 import { ReferenceOriginInstitutionService } from '../../services/reference-origin-institution.service';
 import { ReferenceProblemsService } from '../../services/reference-problems.service';
 import { Observable, tap } from 'rxjs';
@@ -168,7 +168,7 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 }
 
 export interface HCEPersonalHistory {
-	hcePersonalHistoryDto: HCEPersonalHistoryDto;
+	HCEHealthConditionDto: HCEHealthConditionDto;
 	chronic: boolean
 }
 

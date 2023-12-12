@@ -7,7 +7,7 @@ import {
 	HCEAnthropometricDataDto,
 	HCELast2RiskFactorsDto,
 	HCEMedicationDto,
-	HCEPersonalHistoryDto,
+	HCEHealthConditionDto,
 	MedicationInteroperabilityDto,
 	PatientSummaryDto
 } from '@api-rest/api-model';
@@ -31,8 +31,8 @@ export class ResumenComponent implements OnInit, OnChanges {
 	readonly medicationsHeader = MEDICACION_HABITUAL;
 	allergies$: Observable<HCEAllergyDto[]>;
 	patientId: number;
-	familyHistories$: Observable<HCEPersonalHistoryDto[]>;
-	personalHistory$: Observable<HCEPersonalHistoryDto[]>;
+	familyHistories$: Observable<HCEHealthConditionDto[]>;
+	patientProblems$: Observable<HCEHealthConditionDto[]>;
 	medications$: Observable<HCEMedicationDto[]>;
 	riskFactors$: Observable<HCELast2RiskFactorsDto>;
 	anthropometricDataList$: Observable<HCEAnthropometricDataDto[]>;
@@ -67,13 +67,13 @@ export class ResumenComponent implements OnInit, OnChanges {
 
 	initSummaries(): void {
 		if (this.canOnlyViewSelfAddedProblems){
-			this.personalHistory$ = this.ambulatoriaSummaryFacadeService.personalHistoriesByRole$.pipe(
+			this.patientProblems$ = this.ambulatoriaSummaryFacadeService.patientProblemsByRole$.pipe(
 				map(this.formatProblemsDates)
 				);
 		} else {
 			this.allergies$ = this.ambulatoriaSummaryFacadeService.allergies$;
 			this.familyHistories$ = this.ambulatoriaSummaryFacadeService.familyHistories$;
-			this.personalHistory$ = this.ambulatoriaSummaryFacadeService.personalHistories$.pipe(
+			this.patientProblems$ = this.ambulatoriaSummaryFacadeService.patientProblems$.pipe(
 				map(this.formatProblemsDates)
 				);
 			this.medications$ = this.ambulatoriaSummaryFacadeService.medications$;
@@ -82,8 +82,8 @@ export class ResumenComponent implements OnInit, OnChanges {
 		}
 	}
 
-	private formatProblemsDates(problemas: HCEPersonalHistoryDto[]) {
-		return problemas.map((problema: HCEPersonalHistoryDto) => {
+	private formatProblemsDates(problemas: HCEHealthConditionDto[]) {
+		return problemas.map((problema: HCEHealthConditionDto) => {
 			return {
 				...problema,
 				startDate: problema.startDate ? momentFormat(momentParseDate(problema.startDate), DateFormat.VIEW_DATE) : undefined,

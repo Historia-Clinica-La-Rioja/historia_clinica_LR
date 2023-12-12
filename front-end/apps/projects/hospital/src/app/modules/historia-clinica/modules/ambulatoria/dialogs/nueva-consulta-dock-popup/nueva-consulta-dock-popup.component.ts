@@ -521,10 +521,10 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	private mapToOutpatientProblemDto(problem: HCEPersonalHistory): OutpatientProblemDto {
 		return {
 			chronic: problem.chronic,
-			severity: problem.hcePersonalHistoryDto.severity,
-			snomed: problem.hcePersonalHistoryDto.snomed,
-			startDate: problem.hcePersonalHistoryDto.startDate,
-			statusId: problem.hcePersonalHistoryDto.statusId,
+			severity: problem.HCEHealthConditionDto.severity,
+			snomed: problem.HCEHealthConditionDto.snomed,
+			startDate: problem.HCEHealthConditionDto.startDate,
+			statusId: problem.HCEHealthConditionDto.statusId,
 		}
 	}
 

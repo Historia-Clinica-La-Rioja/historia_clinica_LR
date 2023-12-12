@@ -2,7 +2,7 @@ import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core'
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature } from '@api-rest/api-model';
-import { ClinicalSpecialtyDto, ClinicalTermDto, HCEPersonalHistoryDto, NursingConsultationDto } from '@api-rest/api-model';
+import { ClinicalSpecialtyDto, ClinicalTermDto, HCEHealthConditionDto, NursingConsultationDto } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { NursingPatientConsultationService } from '@api-rest/services/nursing-patient-consultation.service';
@@ -61,7 +61,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	fixedSpecialty = true;
 	fixedProblem = true;
 	defaultSpecialty: ClinicalSpecialtyDto;
-	defaultProblem: HCEPersonalHistoryDto;
+	defaultProblem: HCEHealthConditionDto;
 	specialties: ClinicalSpecialtyDto[];
 	problems: ClinicalTermDto[];
 	searchConceptsLocallyFFIsOn = false;
@@ -102,7 +102,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	}
 
 	setProblem() {
-		this.hceGeneralStateService.getActiveProblems(this.data.idPaciente).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
+		this.hceGeneralStateService.getActiveProblems(this.data.idPaciente).subscribe((activeProblems: HCEHealthConditionDto[]) => {
 			const activeProblemsList = activeProblems.map(problem =>
 			({
 				severity: problem.severity,
@@ -114,7 +114,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 				statusId: problem.statusId
 			}))
 
-			this.hceGeneralStateService.getChronicConditions(this.data.idPaciente).subscribe((chronicProblems: HCEPersonalHistoryDto[]) => {
+			this.hceGeneralStateService.getChronicConditions(this.data.idPaciente).subscribe((chronicProblems: HCEHealthConditionDto[]) => {
 				const chronicProblemsList = chronicProblems.map(problem =>
 				({
 					severity: problem.severity,

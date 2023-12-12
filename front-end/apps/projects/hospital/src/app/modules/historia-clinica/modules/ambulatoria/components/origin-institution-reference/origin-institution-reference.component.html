@@ -35,8 +35,8 @@
                         </span>
                     </mat-select-trigger>
                     <mat-option *ngFor="let problem of problemsList$ | async"
-                        [value]="problem.hcePersonalHistoryDto.snomed.pt">
-                        {{problem.hcePersonalHistoryDto.snomed.pt | translate}}
+                        [value]="problem.HCEHealthConditionDto.snomed.pt">
+                        {{problem.HCEHealthConditionDto.snomed.pt | translate}}
                     </mat-option>
                 </mat-select>
                 <mat-error *ngIf="!referenceProblems.length" [translate]="'forms.REQUIRED'"></mat-error>

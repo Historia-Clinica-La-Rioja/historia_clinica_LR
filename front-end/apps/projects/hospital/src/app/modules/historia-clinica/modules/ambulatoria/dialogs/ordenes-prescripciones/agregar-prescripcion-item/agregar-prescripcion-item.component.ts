@@ -1,7 +1,7 @@
 import { AfterContentChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AppFeature, CreateOutpatientDto, ERole, HCEPersonalHistoryDto, OutpatientProblemDto, QuantityDto, SnomedDto, SnomedECL } from '@api-rest/api-model.d';
+import { AppFeature, CreateOutpatientDto, ERole, HCEHealthConditionDto, OutpatientProblemDto, QuantityDto, SnomedDto, SnomedECL } from '@api-rest/api-model.d';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
@@ -42,7 +42,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	snomedConcept: SnomedDto;
 	prescriptionItemForm: UntypedFormGroup;
 	conceptsResultsTable: TableModel<any>;
-	healthProblemOptions: HCEPersonalHistoryDto[] = [];
+	healthProblemOptions: HCEHealthConditionDto[] = [];
 	studyCategoryOptions = [];
 	DEFAULT_RADIO_OPTION = 1;
 	OTHER_RADIO_OPTION = 0;
@@ -122,9 +122,9 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	getProblems() {
 		if (this.hasPrescriptorRole)
 			this.hceGeneralStateService.getPersonalHistoriesByRole(this.data.patientId)
-				.subscribe((result: HCEPersonalHistoryDto[]) => this.healthProblemOptions = result);
+				.subscribe((result: HCEHealthConditionDto[]) => this.healthProblemOptions = result);
 		else
-			this.hceGeneralStateService.getPersonalHistories(this.data.patientId).subscribe((result: HCEPersonalHistoryDto[]) => this.healthProblemOptions = result);
+			this.hceGeneralStateService.getPatientProblems(this.data.patientId).subscribe((result: HCEHealthConditionDto[]) => this.healthProblemOptions = result);
 	}
 
 	ngAfterContentChecked(): void {

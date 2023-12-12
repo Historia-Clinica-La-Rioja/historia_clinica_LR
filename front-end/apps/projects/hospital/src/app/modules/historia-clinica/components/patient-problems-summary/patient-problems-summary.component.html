@@ -1,4 +1,4 @@
-<app-summary-card [header]="personalHistoriesHeader">
+<app-summary-card [header]="personalProblemsHeader">
 	<mat-list id="active-problems-list"
 		*ngIf="problems?.length > 0 else noInfo">
 		<div fxLayout="row" *ngFor="let problem of problems; first as first">

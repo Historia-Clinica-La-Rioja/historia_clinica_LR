@@ -1,5 +1,5 @@
 import { Component, Injector, OnInit, Output } from '@angular/core';
-import { HCEPersonalHistoryDto } from '@api-rest/api-model';
+import { HCEHealthConditionDto } from '@api-rest/api-model';
 import { PROBLEMAS_POR_ERROR } from '@historia-clinica/constants/summaries';
 import { Subject, map } from 'rxjs';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
@@ -13,7 +13,7 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 })
 export class AmendedProblemsComponent implements OnInit {
     
-    @Output() setProblemOnHistoric = new Subject<HCEPersonalHistoryDto>();
+    @Output() setProblemOnHistoric = new Subject<HCEHealthConditionDto>();
     amendedProblems: ProblemsData[];
 	readonly problemasPorError = PROBLEMAS_POR_ERROR;
     isFilterExpanded = false;
@@ -46,8 +46,8 @@ export class AmendedProblemsComponent implements OnInit {
             : '';
     }
 
-    mapToProblemsData(problems: HCEPersonalHistoryDto[]): ProblemsData[] {
-		return problems.map((problem: HCEPersonalHistoryDto) => {
+    mapToProblemsData(problems: HCEHealthConditionDto[]): ProblemsData[] {
+		return problems.map((problem: HCEHealthConditionDto) => {
 			return {
 				data: problem,
 				startDate: problem.startDate ? momentFormat(momentParseDate(problem.startDate), DateFormat.VIEW_DATE) : undefined,
@@ -61,14 +61,14 @@ export class AmendedProblemsComponent implements OnInit {
         this.isFilterExpanded = !this.isFilterExpanded;
     }
 
-    viewProblemDetails(problem: HCEPersonalHistoryDto) {
+    viewProblemDetails(problem: HCEHealthConditionDto) {
         this.setProblemOnHistoric.next(problem);
     }
 }
 
 
 export interface ProblemsData {
-    data: HCEPersonalHistoryDto,
+    data: HCEHealthConditionDto,
     startDate: string,
     endDate: string,
     severity: string,

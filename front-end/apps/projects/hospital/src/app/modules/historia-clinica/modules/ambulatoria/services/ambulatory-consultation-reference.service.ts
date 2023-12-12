@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, ReferenceDto } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, HCEHealthConditionDto, ReferenceDto } from '@api-rest/api-model';
 import { removeFrom } from '@core/utils/array.utils';
 import { AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
@@ -16,7 +16,7 @@ export class AmbulatoryConsultationReferenceService {
 	outpatientReferences: ReferenceDto[] = [];
 	referencesInformation: ReferenceInformation[] = [];
 	references: Reference[] = [];
-	referenceProblems: HCEPersonalHistoryDto[] = [];
+	referenceProblems: HCEHealthConditionDto[] = [];
 
 	constructor(
 		private readonly dialog: MatDialog,

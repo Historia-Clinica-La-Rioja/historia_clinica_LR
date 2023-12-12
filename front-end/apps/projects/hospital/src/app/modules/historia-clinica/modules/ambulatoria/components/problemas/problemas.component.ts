@@ -9,7 +9,7 @@ import {
 	ExternalClinicalHistorySummaryDto,
 	HCEDocumentDataDto,
 	HCEHospitalizationHistoryDto,
-	HCEPersonalHistoryDto,
+	HCEHealthConditionDto,
 	InternmentEpisodeProcessDto,
 	ReferenceCounterReferenceFileDto
 } from '@api-rest/api-model';
@@ -55,9 +55,9 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	public readonly resueltos = PROBLEMAS_RESUELTOS;
 	public readonly internacion = PROBLEMAS_INTERNACION;
 	private readonly routePrefix;
-	public activeProblems$: Observable<HCEPersonalHistoryDto[]>;
-	public solvedProblems$: Observable<HCEPersonalHistoryDto[]>;
-	public chronicProblems$: Observable<HCEPersonalHistoryDto[]>;
+	public activeProblems$: Observable<HCEHealthConditionDto[]>;
+	public solvedProblems$: Observable<HCEHealthConditionDto[]>;
+	public chronicProblems$: Observable<HCEHealthConditionDto[]>;
 	public hospitalizationProblems$: Observable<HCEHospitalizationHistoryDto[]>;
 	public historicalProblemsList: HistoricalProblems[];
 	public historicalProblemsAmount: number;
@@ -157,8 +157,8 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		);
 	}
 
-	private formatProblemsDates(problemas: HCEPersonalHistoryDto[]) {
-		return problemas.map((problema: HCEPersonalHistoryDto) => {
+	private formatProblemsDates(problemas: HCEHealthConditionDto[]) {
+		return problemas.map((problema: HCEHealthConditionDto) => {
 			return {
 				...problema,
 				startDate: problema.startDate ? momentFormat(momentParseDate(problema.startDate), DateFormat.VIEW_DATE) : undefined,
@@ -190,7 +190,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		historic.scrollIntoView({behavior: 'smooth'});
 	}
 
-	filterByProblemOnProblemClick(problem: HCEPersonalHistoryDto) {
+	filterByProblemOnProblemClick(problem: HCEHealthConditionDto) {
 		this.historicalProblemsFacadeService.sendHistoricalProblemsFilter({
 			specialty: null,
 			professional: null,

@@ -374,8 +374,8 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 			this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({
 				allergies: false,
 				familyHistories: false,
-				personalHistories: false,
-				personalHistoriesByRole: true,
+				patientProblems: false,
+				patientProblemsByRole: true,
 				riskFactors: false,
 				medications: true,
 				anthropometricData: false,

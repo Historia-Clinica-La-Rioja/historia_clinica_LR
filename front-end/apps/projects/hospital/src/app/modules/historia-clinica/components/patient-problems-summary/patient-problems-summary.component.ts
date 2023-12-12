@@ -1,5 +1,5 @@
 import {Component, Injector, Input, OnInit} from '@angular/core';
-import {ApiErrorMessageDto, HCEPersonalHistoryDto, ProblemInfoDto} from '@api-rest/api-model';
+import {ApiErrorMessageDto, HCEHealthConditionDto, ProblemInfoDto} from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import {SummaryHeader} from '@presentation/components/summary-card/summary-card.component';
 import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
@@ -19,11 +19,11 @@ import { AmendProblemComponent, AmendProblemData } from '@historia-clinica/modul
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 
 @Component({
-	selector: 'app-antecedentes-personales-summary',
-	templateUrl: './antecedentes-personales-summary.component.html',
-	styleUrls: ['./antecedentes-personales-summary.component.scss']
+	selector: 'app-patient-problems-summary',
+	templateUrl: './patient-problems-summary.component.html',
+	styleUrls: ['./patient-problems-summary.component.scss']
 })
-export class AntecedentesPersonalesSummaryComponent implements OnInit{
+export class PatientProblemsSummaryComponent implements OnInit{
 
 	readonly MILD_SEVERITY:string = 'LA6752-5';
 	readonly MODERATE_SEVERITY:string = 'LA6751-7';
@@ -38,10 +38,10 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 	private dockPopupService: DockPopupService;
 	canOnlyViewSelfAddedProblems = false;
 	rolesThatCanOnlyViewSelfAddedProblems = [ERole.PRESCRIPTOR];
-	@Input() personalHistoriesHeader: SummaryHeader;
+	@Input() personalProblemsHeader: SummaryHeader;
 	@Input()
-	set personalHistory(personalHistory: HCEPersonalHistoryDto[]){
-		this.onPersonalHistoryChange(personalHistory);
+	set patientProblems(patientProblems: HCEHealthConditionDto[]){
+		this.onPatientProblemsChange(patientProblems);
 	};
 
 	constructor(
@@ -63,9 +63,9 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 		this.hasNewConsultationEnabled$ = this.ambulatoriaSummaryFacadeService.hasNewConsultationEnabled$;
 	}
 
-	private async onPersonalHistoryChange(personalHistory: HCEPersonalHistoryDto[]){
+	private async onPatientProblemsChange(patientProblems: HCEHealthConditionDto[]){
 		await this.setSeverityMasterData();
-		this.setProblems(personalHistory);
+		this.setProblems(patientProblems);
 	}
 
 	private setPermissions(): void {
@@ -128,13 +128,13 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 		}).afterClosed().subscribe(submitted => {
 			if (submitted) {
 				this.canOnlyViewSelfAddedProblems ?
-				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({ personalHistoriesByRole: true, problems: true })
-				: this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({ personalHistories: true, problems: true });
+				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({ patientProblemsByRole: true, problems: true })
+				: this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({ patientProblems: true, problems: true });
 			}
 		});
 	}
 	
-	amendProblem(problem: HCEPersonalHistoryDto) {
+	amendProblem(problem: HCEHealthConditionDto) {
 		const warnignComponent = this.dialog.open(DiscardWarningComponent,
 			{
 				disableClose: true,
@@ -157,7 +157,7 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 		});
 	}
 
-	private openAmendProblemDialog(problem: HCEPersonalHistoryDto, problemInfo: ProblemInfoDto[]) {
+	private openAmendProblemDialog(problem: HCEHealthConditionDto, problemInfo: ProblemInfoDto[]) {
 		let amendProblemData: AmendProblemData = {
 			problemId: problem.id,
 			patientId: this.patientId,
@@ -199,7 +199,7 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 		});
 	}
 
-	private setProblems(problems: HCEPersonalHistoryDto[]){
+	private setProblems(problems: HCEHealthConditionDto[]){
 		this.problems = problems?.map(prob => {
 			return this.mapToProblem(prob);
 		});
@@ -220,7 +220,7 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 		  });
 	}
 
-	private mapToProblem(problem: HCEPersonalHistoryDto): Problem {
+	private mapToProblem(problem: HCEHealthConditionDto): Problem {
 		return {
 			data: problem,
 			severityName: this.getSeverityTypeDisplayByCode(problem.severity),
@@ -230,7 +230,7 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 }
 
 interface Problem {
-	data: HCEPersonalHistoryDto;
+	data: HCEHealthConditionDto;
 	severityName: string;
 	severityColor: string;
 }

@@ -5,7 +5,7 @@ import {
 	HCEMedicationDto,
 	HCELast2RiskFactorsDto,
 	HCEAnthropometricDataDto,
-	HCEPersonalHistoryDto,
+	HCEHealthConditionDto,
 	HCEAllergyDto,
 	HCEHospitalizationHistoryDto,
 	HCEToothRecordDto, HCEEvolutionSummaryDto,
@@ -39,19 +39,19 @@ export class HceGeneralStateService {
 		return this.http.get<HCEAllergyDto[]>(url);
 	}
 
-	getFamilyHistories(patientId: number): Observable<HCEPersonalHistoryDto[]> {
+	getFamilyHistories(patientId: number): Observable<HCEHealthConditionDto[]> {
 		const url = this.URL_BASE + patientId + this.URL_SUFFIX + `familyHistories`;
-		return this.http.get<HCEPersonalHistoryDto[]>(url);
+		return this.http.get<HCEHealthConditionDto[]>(url);
 	}
 
-	getPersonalHistories(patientId: number): Observable<HCEPersonalHistoryDto[]> {
-		const url = this.URL_BASE + patientId + this.URL_SUFFIX + `personalHistories`;
-		return this.http.get<HCEPersonalHistoryDto[]>(url);
+	getPatientProblems(patientId: number): Observable<HCEHealthConditionDto[]> {
+		const url = this.URL_BASE + patientId + this.URL_SUFFIX + `summaryProblems`;
+		return this.http.get<HCEHealthConditionDto[]>(url);
 	}
 
-	getPersonalHistoriesByRole(patientId: number): Observable<HCEPersonalHistoryDto[]> {
-		const url = this.URL_BASE + patientId + this.URL_SUFFIX + `personalHistoriesByRole`;
-		return this.http.get<HCEPersonalHistoryDto[]>(url);
+	getPersonalHistoriesByRole(patientId: number): Observable<HCEHealthConditionDto[]> {
+		const url = this.URL_BASE + patientId + this.URL_SUFFIX + `summaryProblemsByRole`;
+		return this.http.get<HCEHealthConditionDto[]>(url);
 	}
 
 	getMedications(patientId: number): Observable<HCEMedicationDto[]> {
@@ -74,24 +74,24 @@ export class HceGeneralStateService {
 		return this.http.get<HCEAnthropometricDataDto>(url);
 	}
 
-	getActiveProblems(patientId: number): Observable<HCEPersonalHistoryDto[]> {
+	getActiveProblems(patientId: number): Observable<HCEHealthConditionDto[]> {
 		const url = this.URL_BASE + patientId + this.URL_SUFFIX + `activeProblems`;
-		return this.http.get<HCEPersonalHistoryDto[]>(url);
+		return this.http.get<HCEHealthConditionDto[]>(url);
 	}
 
-	getSolvedProblems(patientId: number): Observable<HCEPersonalHistoryDto[]> {
+	getSolvedProblems(patientId: number): Observable<HCEHealthConditionDto[]> {
 		const url = this.URL_BASE + patientId + this.URL_SUFFIX + `solvedProblems`;
-		return this.http.get<HCEPersonalHistoryDto[]>(url);
+		return this.http.get<HCEHealthConditionDto[]>(url);
 	}
 
-	getAmendedProblems(patientId: number): Observable<HCEPersonalHistoryDto[]> {
+	getAmendedProblems(patientId: number): Observable<HCEHealthConditionDto[]> {
 		const url = this.URL_BASE + patientId + this.URL_SUFFIX + `problemsMarkedAsError`;
-		return this.http.get<HCEPersonalHistoryDto[]>(url);
+		return this.http.get<HCEHealthConditionDto[]>(url);
 	}
 
-	getChronicConditions(patientId: number): Observable<HCEPersonalHistoryDto[]> {
+	getChronicConditions(patientId: number): Observable<HCEHealthConditionDto[]> {
 		const url = this.URL_BASE + patientId + this.URL_SUFFIX + `chronic`;
-		return this.http.get<HCEPersonalHistoryDto[]>(url);
+		return this.http.get<HCEHealthConditionDto[]>(url);
 	}
 
 	getHospitalizationHistory(patientId: number): Observable<HCEHospitalizationHistoryDto[]> {

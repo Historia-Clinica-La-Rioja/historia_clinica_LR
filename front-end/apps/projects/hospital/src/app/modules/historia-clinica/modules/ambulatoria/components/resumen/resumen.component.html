@@ -4,9 +4,9 @@
 		<div fxLayout="column" fxLayoutGap="20px">
 			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="0px">
-					<app-antecedentes-personales-summary [personalHistory]="personalHistory$ | async"
-						[personalHistoriesHeader]="personalProblemsHeader">
-					</app-antecedentes-personales-summary>
+					<app-patient-problems-summary [patientProblems]="patientProblems$ | async"
+						[personalProblemsHeader]="personalProblemsHeader">
+					</app-patient-problems-summary>
 					<app-external-summary-card *ngIf="loadExternal"
 						[header]="this.patientExternalSummary.organization.name">
 						<app-table [showTableHeader]="false" [model]="this.healthConditionsTable"
