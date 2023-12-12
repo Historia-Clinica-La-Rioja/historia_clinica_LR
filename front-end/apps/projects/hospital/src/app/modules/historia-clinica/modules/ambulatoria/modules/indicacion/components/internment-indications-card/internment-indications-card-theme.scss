@@ -1,8 +1,0 @@
-@mixin app-internment-indications-card($theme) {
-	$palette-primary: map-get($theme, primary);
-	app-internment-indications-card {
-		.color-primary {
-			color: mat-color($palette-primary, 400);
-		}
-	}
-}
