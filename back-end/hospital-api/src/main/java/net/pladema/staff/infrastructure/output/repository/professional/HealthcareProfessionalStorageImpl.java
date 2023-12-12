@@ -32,7 +32,7 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 	public ProfessionalCompleteBo fetchProfessionalByUserId(Integer userId) {
 		log.debug("fetchProfessionalByUserId -> userId={}", userId);
 		String sqlString = "" +
-				"SELECT hp.id, p.id, p.firstName, p.lastName, p.middleNames, pe.nameSelfDetermination, p.otherLastNames " +
+				"SELECT hp.id, p.id, p.firstName, p.middleNames, p.lastName, pe.nameSelfDetermination, p.otherLastNames " +
 				"FROM HealthcareProfessional AS hp " +
 				"RIGHT JOIN UserPerson AS up ON (up.pk.personId = hp.personId) " +
 				"JOIN Person p ON (up.pk.personId = p.id) " +
