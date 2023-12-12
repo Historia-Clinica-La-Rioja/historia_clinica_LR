@@ -19,4 +19,9 @@ export class HceMasterdataService {
 		const url = this.URL_SUFFIX + `health/error-reasons`;
 		return this.http.get<MasterDataDto[]>(url);
 	}
+
+    getPersonalHistoryTypes(): Observable<MasterDataDto[]> {
+        const url = this.URL_SUFFIX + `health/personal-history`;
+		return this.http.get<MasterDataDto[]>(url);
+    }
 }

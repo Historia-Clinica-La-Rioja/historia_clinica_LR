@@ -4,13 +4,14 @@ import { SnomedDto, SnomedECL } from "@api-rest/api-model";
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/snomed.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { Moment } from 'moment';
 import { Subject } from 'rxjs';
 
 export interface PersonalHistory {
     snomed: SnomedDto;
-    type: string;
-    startDate: Date;
-    endDate?: Date;
+    type: PersonalHistoryType;
+    startDate: Moment;
+    endDate?: Moment;
     observations?: string;
 }
 
@@ -115,7 +116,7 @@ export class NewConsultationPersonalHistoriesService {
         return new Date();
     }
 
-    getMinDate(): Date {
+    getMinDate(): Moment {
         return this.form.value.startDate;
     }
 
@@ -130,8 +131,13 @@ export class NewConsultationPersonalHistoriesService {
 
 export interface PersonalHistoriesForm {
     snomed: FormControl<SnomedDto>;
-    type: FormControl<string>;
-    startDate: FormControl<Date>;
-    endDate?: FormControl<Date>;
+    type: FormControl<PersonalHistoryType>;
+    startDate: FormControl<Moment>;
+    endDate?: FormControl<Moment>;
     observations: FormControl<string>;
+}
+
+export interface PersonalHistoryType {
+    description: string;
+    id: number;
 }

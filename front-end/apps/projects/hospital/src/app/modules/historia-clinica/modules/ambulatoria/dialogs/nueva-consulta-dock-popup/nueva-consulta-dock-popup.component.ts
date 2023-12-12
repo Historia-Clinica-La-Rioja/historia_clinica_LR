@@ -48,7 +48,7 @@ import { EpisodeData } from '@historia-clinica/components/episode-data/episode-d
 import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
 import { ConfirmarPrescripcionComponent } from '../ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { PrescriptionTypes } from '../../services/prescripciones.service';
-import { NewConsultationPersonalHistoriesService } from '../../services/new-consultation-personal-histories.service';
+import { NewConsultationPersonalHistoriesService, PersonalHistory } from '../../services/new-consultation-personal-histories.service';
 import { NewConsultationPersonalHistoryFormComponent } from '../new-consultation-personal-history-form/new-consultation-personal-history-form.component';
 
 const TIME_OUT = 5000;
@@ -438,6 +438,15 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			}
 			),
 			patientMedicalCoverageId: this.episodeData.medicalCoverageId,
+			personalHistories: this.personalHistoriesNewConsultationService.getPersonalHistories().map((personalHistory: PersonalHistory) => {
+				return {
+					inactivationDate: personalHistory.endDate ? momentFormat(personalHistory.endDate, DateFormat.API_DATE) : null,
+					note: personalHistory.observations,
+					snomed: personalHistory.snomed,
+					startDate: momentFormat(personalHistory.startDate, DateFormat.API_DATE),
+					typeId: personalHistory.type.id,
+				}
+			}),
 			problems: this.ambulatoryConsultationProblemsService.getProblemas().map(
 				(problema: Problema) => {
 					return {

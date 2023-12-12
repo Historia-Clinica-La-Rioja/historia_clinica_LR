@@ -4,6 +4,8 @@ import { NewConsultationPersonalHistoriesService } from '../../services/new-cons
 import { MIN_DATE } from '../../modules/internacion/routes/new-internment/new-internment.component';
 import { FormGroup } from '@angular/forms';
 import { hasError } from '@core/utils/form.utils';
+import { HceMasterdataService } from '@api-rest/services/hce-masterdata.service';
+import { MasterDataDto } from '@api-rest/api-model';
 
 @Component({
     selector: 'app-new-consultation-personal-history-form',
@@ -16,14 +18,19 @@ export class NewConsultationPersonalHistoryFormComponent {
     form: FormGroup;
     minDate = MIN_DATE;
 	hasError = hasError;
-    historyTypeList = [{id: 1, description: "Hábito"},{id: 2, description: "Quirúrgico"},{id: 3, description: "Clínico"}]
+    historyTypeList: MasterDataDto[];
 
     constructor(
         public dialogRef: MatDialogRef<NewConsultationPersonalHistoryFormComponent>,
-        @Inject(MAT_DIALOG_DATA) public readonly data: PersonalHistoryData) { }
+        @Inject(MAT_DIALOG_DATA) public readonly data: PersonalHistoryData,
+        private readonly HCEMasterDataService: HceMasterdataService) { }
 
     ngOnInit() {
         this.form = this.data.personalHistoryService.getForm();
+
+        this.HCEMasterDataService.getPersonalHistoryTypes().subscribe(types => {
+            this.historyTypeList = types;
+        });
     }
 
     addPersonalHistory(): void {
