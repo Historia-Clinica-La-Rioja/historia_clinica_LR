@@ -93,6 +93,7 @@ import { TimeDtoToLocalTimePipe } from './pipes/time-dto-to-local-time.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
+import { AddObservationsComponent } from './components/add-observations/add-observations.component';
 
 
 
@@ -100,6 +101,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 	declarations: [
 		// components
 		AsignPatientButtonComponent,
+		AddObservationsComponent,
 		BarComponent,
 		CardComponent,
 		CategoryHeaderDividerComponent,
@@ -205,6 +207,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		AppMaterialModule,
 		// components
 		AsignPatientButtonComponent,
+		AddObservationsComponent,
 		BarComponent,
 		ButtonComponent,
 		CardComponent,
