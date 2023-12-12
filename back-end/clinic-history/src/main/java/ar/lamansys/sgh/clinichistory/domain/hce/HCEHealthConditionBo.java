@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @NoArgsConstructor
-public class HCEPersonalHistoryBo extends HCEClinicalTermBo {
+public class HCEHealthConditionBo extends HCEClinicalTermBo {
 
     private String verificationId;
 
@@ -35,7 +35,7 @@ public class HCEPersonalHistoryBo extends HCEClinicalTermBo {
 
     private Boolean canBeMarkAsError;
 
-    public HCEPersonalHistoryBo(HCEHealthConditionVo source) {
+    public HCEHealthConditionBo(HCEHealthConditionVo source) {
         super(source.getId(), source.getSnomed(), source.getStatusId(), source.getStatus(), source.getPatientId());
         this.verificationId = source.getVerificationId();
         this.verification = source.getVerification();

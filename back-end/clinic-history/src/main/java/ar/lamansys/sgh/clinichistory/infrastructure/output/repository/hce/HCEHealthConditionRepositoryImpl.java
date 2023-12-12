@@ -38,7 +38,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
     @SuppressWarnings("unchecked")
     @Override
     @Transactional(readOnly = true)
-    public List<HCEHealthConditionVo> getPersonalHistories(Integer patientId) {
+    public List<HCEHealthConditionVo> getSummaryProblems(Integer patientId) {
         LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
         String sqlString = "WITH t AS (" +
                 "   SELECT hc.id, snomed_id, hc.status_id, hc.main, verification_status_id, problem_id, severity, start_date, inactivation_date, hc.note_id, hc.updated_on, hc.patient_id, " +
@@ -86,7 +86,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<HCEHealthConditionVo> getPersonalHistoriesByUser(Integer patientId, Integer userId) {
+	public List<HCEHealthConditionVo> getSummaryProblemsByUser(Integer patientId, Integer userId) {
 		LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
 		String sqlString = "WITH t AS (" +
 				"   SELECT hc.id, snomed_id, hc.status_id, hc.main, verification_status_id, problem_id, severity, hc.start_date, inactivation_date, hc.note_id, hc.updated_on, hc.patient_id, " +

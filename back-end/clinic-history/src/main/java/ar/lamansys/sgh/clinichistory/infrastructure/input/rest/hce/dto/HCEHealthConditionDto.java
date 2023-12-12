@@ -1,28 +1,32 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto;
 
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.annotation.Nullable;
-import java.util.List;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HCEHealthConditionDto extends HCEPersonalHistoryDto {
+public class HCEHealthConditionDto extends HCEClinicalTermDto {
 
-    private boolean main;
+    @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
+    private String startDate;
 
-    private String problemId;
+    @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
+    private String inactivationDate;
 
-    private List<HCEReferenceDto> references;
+    @NotNull(message = "{value.mandatory}")
+    private String severity;
+
+    private Boolean hasPendingReference;
 
     @Nullable
-    private Boolean isMarkedAsError;
-
-    @Nullable
-    private HCEErrorProblemDto errorProblem;
+    private Boolean canBeMarkAsError;
 }

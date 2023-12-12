@@ -21,7 +21,7 @@ public class HCEEvolutionSummaryDto {
 
     private ClinicalSpecialtyDto clinicalSpecialty;
 
-    private List<HCEHealthConditionDto> healthConditions;
+    private List<HCEProblemDto> healthConditions;
 
     private DateTimeDto startDate;
 

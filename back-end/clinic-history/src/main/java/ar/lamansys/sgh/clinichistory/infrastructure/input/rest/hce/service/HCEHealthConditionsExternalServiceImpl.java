@@ -1,19 +1,19 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.service;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEPersonalHistoryDto;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEHealthConditionBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEHealthConditionDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.mapper.HCEGeneralStateMapper;
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEHealthConditionsService;
-import ar.lamansys.sgh.clinichistory.domain.hce.HCEPersonalHistoryBo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class HCEHealthConditionsExternalServiceImpl implements HCEHealthConditionsExternalService {
-
-	private static final Logger LOG = LoggerFactory.getLogger(HCEHealthConditionsExternalServiceImpl.class);
 
 	private static final String LOGGING_OUTPUT = "Output -> {}";
 	private static final String LOGGING_INPUT = "Input parameters -> patientId {} ";
@@ -22,26 +22,21 @@ public class HCEHealthConditionsExternalServiceImpl implements HCEHealthConditio
 
 	private final HCEGeneralStateMapper hceGeneralStateMapper;
 
-	public HCEHealthConditionsExternalServiceImpl(HCEHealthConditionsService hceHealthConditionsService, HCEGeneralStateMapper hceGeneralStateMapper){
-		this.hceHealthConditionsService = hceHealthConditionsService;
-		this.hceGeneralStateMapper = hceGeneralStateMapper;
-	}
-
 	@Override
-	public List<HCEPersonalHistoryDto> getFamilyHistories(Integer patientId) {
-		LOG.debug(LOGGING_INPUT, patientId);
-		List<HCEPersonalHistoryBo> resultService = hceHealthConditionsService.getFamilyHistories(patientId);
-		List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
-		LOG.debug(LOGGING_OUTPUT, result);
+	public List<HCEHealthConditionDto> getFamilyHistories(Integer patientId) {
+		log.debug(LOGGING_INPUT, patientId);
+		List<HCEHealthConditionBo> resultService = hceHealthConditionsService.getFamilyHistories(patientId);
+		List<HCEHealthConditionDto> result = hceGeneralStateMapper.toListHealthConditionDto(resultService);
+		log.debug(LOGGING_OUTPUT, result);
 		return result;
 	}
 
 	@Override
-	public List<HCEPersonalHistoryDto> getActivePersonalHistories(Integer patientId) {
-		LOG.debug(LOGGING_INPUT, patientId);
-		List<HCEPersonalHistoryBo> resultService = hceHealthConditionsService.getActivePersonalHistories(patientId);
-		List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
-		LOG.debug(LOGGING_OUTPUT, result);
+	public List<HCEHealthConditionDto> getSummaryProblems(Integer patientId) {
+		log.debug(LOGGING_INPUT, patientId);
+		List<HCEHealthConditionBo> resultService = hceHealthConditionsService.getSummaryProblems(patientId);
+		List<HCEHealthConditionDto> result = hceGeneralStateMapper.toListHealthConditionDto(resultService);
+		log.debug(LOGGING_OUTPUT, result);
 		return result;
 	}
 

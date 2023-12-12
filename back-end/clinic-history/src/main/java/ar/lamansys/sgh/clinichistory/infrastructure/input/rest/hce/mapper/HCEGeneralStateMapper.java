@@ -2,9 +2,9 @@ package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.mapper;
 
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEAllergyBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEAnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEHospitalizationBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEMedicationBo;
-import ar.lamansys.sgh.clinichistory.domain.hce.HCEPersonalHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEToothRecordBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.Last2HCERiskFactorsBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.EvolutionSummaryBo;
@@ -12,9 +12,9 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAllerg
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAnthropometricDataDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEDiagnoseDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEEvolutionSummaryDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEHealthConditionDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCELast2RiskFactorsDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEMedicationDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEPersonalHistoryDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEToothRecordDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
@@ -28,12 +28,12 @@ import java.util.List;
 @Mapper(uses = {LocalDateMapper.class, SnomedMapper.class})
 public interface HCEGeneralStateMapper {
 
-    @Named("toHCEPersonalHistoryDto")
-    HCEPersonalHistoryDto toHCEPersonalHistoryDto(HCEPersonalHistoryBo source);
+    @Named("toHCEHealthConditionDto")
+    HCEHealthConditionDto toHCEHealthConditionDto(HCEHealthConditionBo source);
 
-    @Named("toListHCEPersonalHistoryDto")
-    @IterableMapping(qualifiedByName = "toHCEPersonalHistoryDto")
-    List<HCEPersonalHistoryDto> toListHCEPersonalHistoryDto(List<HCEPersonalHistoryBo> sourceList);
+    @Named("toListHCEHealthConditionDto")
+    @IterableMapping(qualifiedByName = "toHCEHealthConditionDto")
+    List<HCEHealthConditionDto> toListHealthConditionDto(List<HCEHealthConditionBo> sourceList);
 
     @Named("toHCELast2RiskFactorsDto")
 	HCELast2RiskFactorsDto toHCELast2RiskFactorsDto(Last2HCERiskFactorsBo resultService);

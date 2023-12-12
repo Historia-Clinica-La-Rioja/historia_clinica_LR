@@ -1754,7 +1754,7 @@ export interface HCEClinicalObservationDto extends Serializable {
     value: string;
 }
 
-export interface HCEClinicalTermDto extends Serializable {
+export interface HCEClinicalTermDto {
     id?: number;
     snomed: SnomedDto;
     statusId?: string;
@@ -1784,7 +1784,7 @@ export interface HCEEvolutionSummaryDto {
     consultationId: number;
     document: HCEDocumentDataDto;
     evolutionNote: string;
-    healthConditions: HCEHealthConditionDto[];
+    healthConditions: HCEProblemDto[];
     institutionName: string;
     procedures: HCEProcedureDto[];
     professional: HCEHealthcareProfessionalDto;
@@ -1792,12 +1792,12 @@ export interface HCEEvolutionSummaryDto {
     startDate: DateTimeDto;
 }
 
-export interface HCEHealthConditionDto extends HCEPersonalHistoryDto {
-    errorProblem?: HCEErrorProblemDto;
-    isMarkedAsError?: boolean;
-    main: boolean;
-    problemId: string;
-    references: HCEReferenceDto[];
+export interface HCEHealthConditionDto extends HCEClinicalTermDto {
+    canBeMarkAsError?: boolean;
+    hasPendingReference: boolean;
+    inactivationDate: string;
+    severity: string;
+    startDate: string;
 }
 
 export interface HCEHealthcareProfessionalDto {
@@ -1837,12 +1837,12 @@ export interface HCEMedicationDto extends ClinicalTermDto {
     suspended: boolean;
 }
 
-export interface HCEPersonalHistoryDto extends HCEClinicalTermDto {
-    canBeMarkAsError?: boolean;
-    hasPendingReference: boolean;
-    inactivationDate: string;
-    severity: string;
-    startDate: string;
+export interface HCEProblemDto extends HCEHealthConditionDto {
+    errorProblem?: HCEErrorProblemDto;
+    isMarkedAsError?: boolean;
+    main: boolean;
+    problemId: string;
+    references: HCEReferenceDto[];
 }
 
 export interface HCEProcedureDto extends HCEClinicalTermDto {

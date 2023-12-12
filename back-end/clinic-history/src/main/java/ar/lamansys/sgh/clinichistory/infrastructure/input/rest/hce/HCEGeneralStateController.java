@@ -11,10 +11,10 @@ import ar.lamansys.sgh.clinichistory.application.getactiveepisodemedicalcoverage
 import ar.lamansys.sgh.clinichistory.application.getcriticalallergies.GetCriticalAllergies;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEAllergyBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEAnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEHospitalizationBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEMedicationBo;
-import ar.lamansys.sgh.clinichistory.domain.hce.HCEPersonalHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEToothRecordBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.Last2HCERiskFactorsBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.EvolutionSummaryBo;
@@ -22,11 +22,11 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationDoseBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAllergyDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAnthropometricDataDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEEvolutionSummaryDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEHealthConditionDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEHospitalizationHistoryDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEImmunizationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCELast2RiskFactorsDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEMedicationDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEPersonalHistoryDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEToothRecordDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.mapper.HCEGeneralStateMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
@@ -97,35 +97,35 @@ public class HCEGeneralStateController {
 
 	private final GetCriticalAllergies getCriticalAllergies;
 
-    @GetMapping("/personalHistories")
-    public ResponseEntity<List<HCEPersonalHistoryDto>> getPersonalHistories(
+    @GetMapping("/summaryProblems")
+    public ResponseEntity<List<HCEHealthConditionDto>> getSummaryProblems(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId) {
         LOG.debug(LOGGING_INPUT, institutionId, patientId);
-        List<HCEPersonalHistoryBo> resultService = hceHealthConditionsService.getActivePersonalHistories(patientId);
-        List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
+        List<HCEHealthConditionBo> resultService = hceHealthConditionsService.getSummaryProblems(patientId);
+        List<HCEHealthConditionDto> result = hceGeneralStateMapper.toListHealthConditionDto(resultService);
         LOG.debug(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
 
-	@GetMapping("/personalHistoriesByRole")
-	public ResponseEntity<List<HCEPersonalHistoryDto>> getPersonalHistoriesByUser(
+	@GetMapping("/summaryProblemsByRole")
+	public ResponseEntity<List<HCEHealthConditionDto>> getSummaryProblemsByUser(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "patientId") Integer patientId) {
 		LOG.debug(LOGGING_INPUT, institutionId, patientId);
-		List<HCEPersonalHistoryBo> resultService = hceHealthConditionsService.getActivePersonalHistoriesByUser(patientId, UserInfo.getCurrentAuditor());
-		List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
+		List<HCEHealthConditionBo> resultService = hceHealthConditionsService.getSummaryProblemsByUser(patientId, UserInfo.getCurrentAuditor());
+		List<HCEHealthConditionDto> result = hceGeneralStateMapper.toListHealthConditionDto(resultService);
 		LOG.debug(LOGGING_OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
 
     @GetMapping("/familyHistories")
-    public ResponseEntity<List<HCEPersonalHistoryDto>> getFamilyHistories(
+    public ResponseEntity<List<HCEHealthConditionDto>> getFamilyHistories(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId) {
         LOG.debug(LOGGING_INPUT, institutionId, patientId);
-        List<HCEPersonalHistoryBo> resultService = hceHealthConditionsService.getFamilyHistories(patientId);
-        List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
+        List<HCEHealthConditionBo> resultService = hceHealthConditionsService.getFamilyHistories(patientId);
+        List<HCEHealthConditionDto> result = hceGeneralStateMapper.toListHealthConditionDto(resultService);
         LOG.debug(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
@@ -244,45 +244,45 @@ public class HCEGeneralStateController {
 	}
 
     @GetMapping("/chronic")
-    public ResponseEntity<List<HCEPersonalHistoryDto>> getChronicConditions(
+    public ResponseEntity<List<HCEHealthConditionDto>> getChronicConditions(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId) {
         LOG.debug(LOGGING_INPUT, institutionId, patientId);
-        List<HCEPersonalHistoryBo> resultService = hceHealthConditionsService.getChronicConditions(institutionId, patientId);
-        List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
+        List<HCEHealthConditionBo> resultService = hceHealthConditionsService.getChronicConditions(institutionId, patientId);
+        List<HCEHealthConditionDto> result = hceGeneralStateMapper.toListHealthConditionDto(resultService);
         LOG.debug(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
 
     @GetMapping("/activeProblems")
-    public ResponseEntity<List<HCEPersonalHistoryDto>> getActiveProblems(
+    public ResponseEntity<List<HCEHealthConditionDto>> getActiveProblems(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId) {
         LOG.debug(LOGGING_INPUT, institutionId, patientId);
-		List<HCEPersonalHistoryBo> activeProblems = hceHealthConditionsService.getActiveProblems(institutionId, patientId);
-		List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(activeProblems);
+		List<HCEHealthConditionBo> activeProblems = hceHealthConditionsService.getActiveProblems(institutionId, patientId);
+        List<HCEHealthConditionDto> result = hceGeneralStateMapper.toListHealthConditionDto(activeProblems);
         LOG.debug(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
 
     @GetMapping("/solvedProblems")
-    public ResponseEntity<List<HCEPersonalHistoryDto>> getSolvedProblems(
+    public ResponseEntity<List<HCEHealthConditionDto>> getSolvedProblems(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId) {
         LOG.debug(LOGGING_INPUT, institutionId, patientId);
-        List<HCEPersonalHistoryBo> resultService = hceHealthConditionsService.getSolvedProblems(patientId);
-        List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
+        List<HCEHealthConditionBo> resultService = hceHealthConditionsService.getSolvedProblems(patientId);
+        List<HCEHealthConditionDto> result = hceGeneralStateMapper.toListHealthConditionDto(resultService);
         LOG.debug(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
 
     @GetMapping("/problemsMarkedAsError")
-    public ResponseEntity<List<HCEPersonalHistoryDto>> getProblemsMarkedAsError(
+    public ResponseEntity<List<HCEHealthConditionDto>> getProblemsMarkedAsError(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId) {
         LOG.debug(LOGGING_INPUT, institutionId, patientId);
-        List<HCEPersonalHistoryBo> resultService = hceHealthConditionsService.getProblemsAndChronicConditionsMarkedAsError(patientId);
-        List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
+        List<HCEHealthConditionBo> resultService = hceHealthConditionsService.getProblemsAndChronicConditionsMarkedAsError(patientId);
+        List<HCEHealthConditionDto> result = hceGeneralStateMapper.toListHealthConditionDto(resultService);
         LOG.debug(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }

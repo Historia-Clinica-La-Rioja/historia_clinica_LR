@@ -65,7 +65,7 @@ class HCEHealthConditionRepositoryTest extends UnitRepository {
 		createSecondDocument(patientId);
 		createThirdDocument(patientId, personalSnomed1, personalSnomed2, mainDiagnose1);
 
-		List<HCEHealthConditionVo> resultQuery = hCEHealthConditionRepository.getPersonalHistories(patientId);
+		List<HCEHealthConditionVo> resultQuery = hCEHealthConditionRepository.getSummaryProblems(patientId);
 
 		Assertions.assertThat(resultQuery)
 				.isNotNull()
