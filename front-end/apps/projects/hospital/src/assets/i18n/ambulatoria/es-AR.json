@@ -826,6 +826,12 @@
                             "QUESTION_6": "Nivel de escolarización",
                             "QUESTION_7": "Evaluación de nivel de riesgo"
                         }
+                    },
+                    "relevant-information": {
+                        "TITLE": "Información relevante",
+                        "questions": {
+                            "QUESTION_1": "Observaciones"
+                        }
                     }
                 }
             }
