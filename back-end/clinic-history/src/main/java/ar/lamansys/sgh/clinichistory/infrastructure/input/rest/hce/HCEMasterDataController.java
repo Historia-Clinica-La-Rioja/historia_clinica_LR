@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EPersonalHistoryType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.EProblemErrorReason;
 import ar.lamansys.sgx.shared.masterdata.domain.EnumWriter;
 import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
@@ -24,5 +25,11 @@ public class HCEMasterDataController {
     public ResponseEntity<Collection<MasterDataDto>> getProblemErrorReasons() {
         log.debug("Return all health condition error reasons");
         return ResponseEntity.ok().body(EnumWriter.writeList(EProblemErrorReason.getAll()));
+    }
+
+    @GetMapping(value = "/health/personal-history")
+    public ResponseEntity<Collection<MasterDataDto>> getPersonalHistoryTypes() {
+        log.debug("Return all personal history types");
+        return ResponseEntity.ok().body(EnumWriter.writeList(EPersonalHistoryType.getAll()));
     }
 }
