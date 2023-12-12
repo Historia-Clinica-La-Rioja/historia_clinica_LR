@@ -61,6 +61,7 @@ import { PersonalInformationComponent } from './components/personal-information/
 import { PersonShortDescriptionComponent } from './components/person-short-description/person-short-description.component';
 import { PriorityComponent } from './components/priority/priority.component';
 import { PrioritySelectComponent } from './components/priority-select/priority-select.component';
+import { RegisterEditorInfoComponent } from './components/register-editor-info/register-editor-info.component';
 import { RichTextEditorComponent } from './components/rich-text-editor/rich-text-editor.component';
 import { SearchComponent } from './components/search/search.component';
 import { SelectableCardComponent } from './components/selectable-card/selectable-card.component';
@@ -153,6 +154,7 @@ import { AddObservationsComponent } from './components/add-observations/add-obse
 		PersonShortDescriptionComponent,
 		PriorityComponent,
 		PrioritySelectComponent,
+		RegisterEditorInfoComponent,
 		RichTextEditorComponent,
 		SearchComponent,
 		SelectableCardComponent,
@@ -257,6 +259,7 @@ import { AddObservationsComponent } from './components/add-observations/add-obse
 		PersonShortDescriptionComponent,
 		PriorityComponent,
 		PrioritySelectComponent,
+		RegisterEditorInfoComponent,
 		RichTextEditorComponent,
 		SearchComponent,
 		SelectableCardComponent,

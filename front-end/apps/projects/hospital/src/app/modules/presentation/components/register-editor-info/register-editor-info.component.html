@@ -1,0 +1,16 @@
+<div class="grey" fxLayoutAlign="space-between">
+	<p>
+		<span>
+			{{registerEditor.createdBy}}
+		</span>
+		<span *ngIf="registerEditor.institution">
+			- {{registerEditor.institution}}
+		</span>
+	</p>
+	<div *ngIf="(registerEditorCase === registerEditorCasesDate )else DETE_HOUR">
+		<span class="grey">{{registerEditor.date | viewDateDto: 'date' | date: 'dd/MM/yyyy'}}</span>
+	</div>
+	<ng-template #DETE_HOUR>
+		<span class="grey">{{registerEditor.date | viewDateDto: 'localdatetime' | date: 'dd/MM/yyyy - HH:mm'}} hs</span>
+	</ng-template>
+</div>
