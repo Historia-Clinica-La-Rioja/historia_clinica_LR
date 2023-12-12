@@ -248,7 +248,9 @@
 						<input matInput type="email" formControlName="email">
 						<mat-error *ngIf="hasError(formDate, 'required', 'email')"><span translate="forms.REQUIRED"></span></mat-error>
 						<mat-hint>{{'turnos.new-appointment.MESSAGE_UPDATE_EMAIL' | translate}}</mat-hint>
-					</mat-form-field>
+						<mat-error *ngIf="hasError(formDate,'email', 'email')"
+							[translate]="'pacientes.form.INVALID'"></mat-error>
+						</mat-form-field>
 				</div>
 				<div class="confirm-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px" fxFlex="60%">
 					<button id="cancel-edition" mat-stroked-button color="primary" btn-block type="button"

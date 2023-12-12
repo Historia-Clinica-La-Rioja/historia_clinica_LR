@@ -472,7 +472,7 @@ export class AppointmentComponent implements OnInit {
 	setModalityAndValidator(change:boolean){
 		switch (this.formDate.controls.modality.value) {
 			case EAppointmentModality.PATIENT_VIRTUAL_ATTENTION : 
-				updateControlValidator(this.formDate, 'email', [Validators.required]);
+				updateControlValidator(this.formDate, 'email', [Validators.required, Validators.email]);
 				this.viewInputEmail = true;
 				if(this.appointment.patientEmail){
 					this.formDate.controls.email.setValue(this.appointment.patientEmail);
