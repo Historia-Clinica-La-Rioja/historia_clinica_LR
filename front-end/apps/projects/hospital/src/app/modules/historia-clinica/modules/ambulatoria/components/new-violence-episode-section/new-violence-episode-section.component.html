@@ -1,0 +1,78 @@
+<app-new-consultation-expansion-section [title]="'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.TITLE' | translate" icon="cancel">
+
+	<form [formGroup]="form">
+		<mat-form-field appearance="outline" class="full-width">
+			<mat-label [translate]="'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_1'"></mat-label>
+			<input matInput [matDatepicker]="picker" formControlName="episodeDate">
+			<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+			<mat-datepicker #picker></mat-datepicker>
+			<mat-error *ngIf="hasError(form, 'required', 'episodeDate')" [translate]="'forms.REQUIRED'"></mat-error>
+		</mat-form-field>
+
+		<div class="violence-situation">
+			<app-concept-typeahead-search [ecl]="ecl"
+				[placeholder]="'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_2'"
+				(conceptSelected)="addViolenceSituation($event)">
+			</app-concept-typeahead-search>
+	
+			<app-titled-content-card *ngIf="violenceSituations.length"
+				title="{{ 'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.VIOLENCE_TYPE_REGISTERED' }}">
+				<app-violence-situations-list></app-violence-situations-list>
+			</app-titled-content-card>
+		</div>
+
+		<div>
+			<app-concept-typeahead-search [ecl]="ecl"
+				[placeholder]="'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_3'"
+				(conceptSelected)="addViolenceModality($event)">
+			</app-concept-typeahead-search>
+	
+			<app-titled-content-card *ngIf="violenceModalities.length"
+				title="{{ 'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.VIOLENCE_MODALITY_REGISTERED' }}">
+				<app-violence-modalities-list></app-violence-modalities-list>
+			</app-titled-content-card>
+		</div>
+
+		<label id="violence-situation-age-type-label">{{'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_4' | translate}}</label>
+		<mat-radio-group class="basic-options"
+			aria-labelledby="violence-situation-age-type-label"
+			formControlName="ageTypeKid">
+			<mat-radio-button *ngFor="let opt of violenceTypes" [value]="opt">
+				{{opt}}
+			</mat-radio-button>
+		</mat-radio-group>
+
+		<div *ngIf="ageTypeKid === violenceType.DIRECT || ageTypeKid === violenceType.INDIRECT" class="aside">
+			<label id="is-kid-escolarized">{{'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_5' | translate}}</label>
+			<mat-radio-group class="basic-options"
+				aria-labelledby="is-kid-escolarized"
+				formControlName="isKidEscolarized">
+				<mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
+					{{opt.text}}
+				</mat-radio-button>
+			</mat-radio-group>
+
+			<div *ngIf="isKidEscolarized" class="aside">
+				<label id="escolarization-level">{{'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_6' | translate}}</label>
+				<mat-radio-group class="basic-options"
+					aria-labelledby="escolarization-level"
+					formControlName="escolarizationLevel">
+					<mat-radio-button *ngFor="let opt of escolarizationLevels" [value]="opt">
+						{{opt}}
+					</mat-radio-button>
+				</mat-radio-group>
+			</div>
+		</div>
+
+		<label id="risk-level-test">{{'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_7' | translate}}</label>
+		<mat-radio-group class="basic-options"
+			aria-labelledby="risk-level-test"
+			formControlName="riskLevelTest">
+			<mat-radio-button *ngFor="let opt of riskLevels" [value]="opt">
+				{{opt}}
+			</mat-radio-button>
+		</mat-radio-group>
+
+	</form>
+
+</app-new-consultation-expansion-section>

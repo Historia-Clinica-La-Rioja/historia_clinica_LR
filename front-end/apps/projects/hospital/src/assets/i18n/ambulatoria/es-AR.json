@@ -812,6 +812,20 @@
                             "QUESTION_8": "¿La persona en situación de violencia es un niño, niña, adolescente o persona con alguna condición que lo requiera?",
                             "QUESTION_9": "¿En qué sector?"
                         }
+                    },
+                    "new-violence-episode": {
+                        "TITLE": "Nuevo episodio de violencia",
+                        "VIOLENCE_TYPE_REGISTERED": "Tipo de violencia registrada",
+                        "VIOLENCE_MODALITY_REGISTERED": "Modalidad de violencia registrada",
+                        "questions": {
+                            "QUESTION_1": "Fecha del episodio",
+                            "QUESTION_2": "Tipo de violencia",
+                            "QUESTION_3": "Modalidad de violencia",
+                            "QUESTION_4": "¿El episodio de violencia involucra niños, niñas y/o adolescentes?",
+                            "QUESTION_5": "¿La niña, niño o adolescente se encuentra escolarizada/o?",
+                            "QUESTION_6": "Nivel de escolarización",
+                            "QUESTION_7": "Evaluación de nivel de riesgo"
+                        }
                     }
                 }
             }

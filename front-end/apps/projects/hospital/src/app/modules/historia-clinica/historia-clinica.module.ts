@@ -72,6 +72,8 @@ import { SurgicalReportProceduresComponent } from './components/surgical-report-
 import { ProfessionalAndDescriptionComponent } from './components/professional-and-description/professional-and-description.component';
 import { ProcedureAndDescriptionComponent } from './components/procedure-and-description/procedure-and-description.component';
 import { SurgicalReportProsthesisComponent } from './components/surgical-report-prosthesis/surgical-report-prosthesis.component';
+import { ViolenceSituationsListComponent } from './components/violence-situations-list/violence-situations-list.component';
+import { ViolenceModalitiesListComponent } from './components/violence-modalities-list/violence-modalities-list.component';
 
 @NgModule({
 	declarations: [
@@ -141,6 +143,8 @@ import { SurgicalReportProsthesisComponent } from './components/surgical-report-
 		ProfessionalAndDescriptionComponent,
 		ProcedureAndDescriptionComponent,
 		SurgicalReportProsthesisComponent,
+  		ViolenceSituationsListComponent,
+    	ViolenceModalitiesListComponent,
 	],
 	imports: [
 		CommonModule,
@@ -178,6 +182,8 @@ import { SurgicalReportProsthesisComponent } from './components/surgical-report-
 		EpisodeDataComponent,
 		PersonalHistoriesBackgroundListComponent,
 		PersonalHistoriesSummaryComponent,
+		ViolenceSituationsListComponent,
+		ViolenceModalitiesListComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,
 		ConceptsTypeaheadSearchDialogComponent,

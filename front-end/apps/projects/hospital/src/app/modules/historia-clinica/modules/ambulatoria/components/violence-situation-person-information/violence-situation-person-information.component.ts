@@ -5,12 +5,12 @@ import { AddressMasterDataService } from '@api-rest/services/address-master-data
 import { DEFAULT_COUNTRY_ID, hasError } from '@core/utils/form.utils';
 import { Observable } from 'rxjs';
 
-interface BasicOption {
+export interface BasicOption {
 	text: string,
 	value: boolean
 }
 
-enum FormOption {
+export enum FormOption {
 	YES = 'Sí',
 	NO = 'No',
 	IN_PROCESS = "En trámite",

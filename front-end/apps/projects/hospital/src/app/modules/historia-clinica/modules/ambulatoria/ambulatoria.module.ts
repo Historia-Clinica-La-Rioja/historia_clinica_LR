@@ -91,6 +91,7 @@ import { ReferenceStateLabelComponent } from '../../../hsi-components/reference-
 import { ViolenceSituationsComponent } from './components/violence-situations/violence-situations.component';
 import { ViolenceSituationDockPopupComponent } from './dialogs/violence-situation-dock-popup/violence-situation-dock-popup.component';
 import { ViolenceSituationPersonInformationComponent } from './components/violence-situation-person-information/violence-situation-person-information.component';
+import { NewViolenceEpisodeSectionComponent } from './components/new-violence-episode-section/new-violence-episode-section.component';
 
 @NgModule({
 	declarations: [
@@ -160,7 +161,8 @@ import { ViolenceSituationPersonInformationComponent } from './components/violen
        	PersonalHistoryViewDetailsComponent,
        	ViolenceSituationsComponent,
 		ViolenceSituationDockPopupComponent,
-  		ViolenceSituationPersonInformationComponent
+  		ViolenceSituationPersonInformationComponent,
+    	NewViolenceEpisodeSectionComponent
 	],
 	imports: [
 		CommonModule,
