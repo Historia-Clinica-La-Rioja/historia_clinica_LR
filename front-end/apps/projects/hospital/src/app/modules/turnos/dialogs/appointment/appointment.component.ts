@@ -137,7 +137,7 @@ export class AppointmentComponent implements OnInit {
 	hideFilterPanel = false;
 
 	isDateFormVisible = false;
-	startAgenda = dateToDateDto(new Date());
+	startAgenda = dateToDateDto(new Date(this.data.agenda.startDate));
 	endAgenda = dateToDateDto(new Date(this.data.agenda.endDate)).year;
 	availableDays: number[]= [];
 	availableMonths: number[] = [];
@@ -203,6 +203,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.startAgenda.day = this.startAgenda.day + 1;
 		this.medicalCoverageInfo.clearAll();
 		if (this.data.appointmentData.patient.typeId === REJECTED_PATIENT) {
 			this.isRejectedPatient = true;
@@ -407,7 +408,8 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	isToday():boolean{
-		return (this.startAgenda.year === this.dateAppointment.year && this.startAgenda.month === this.dateAppointment.month && this.startAgenda.day === this.dateAppointment.day )
+		const today = dateToDateDto(new Date())
+		return (today.year === this.dateAppointment.year && today.month === this.dateAppointment.month && today.day === this.dateAppointment.day )
 	}
 
 	selectDate(dateType: DATESTYPES) {
