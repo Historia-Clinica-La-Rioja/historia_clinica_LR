@@ -1078,3 +1078,21 @@ databaseChangeLog:
           - sql:
               sql: |-
                 INSERT INTO problem_type (id, description) VALUES ('00000002', 'Antecedente personal');
+
+    - changeSet:
+        id: update-personalHistories-problem_id-health_condition
+        author: mromero
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE health_condition hc
+                    SET problem_id = '00000002'
+                    WHERE EXISTS (
+                        SELECT 1
+                        FROM document_health_condition dhc
+                        JOIN document d on (dhc.document_id = d.id)
+                        WHERE dhc.health_condition_id = hc.id
+                        AND d.source_type_id IN (0,6)
+                        AND hc.problem_id = '55607006'
+                    );
