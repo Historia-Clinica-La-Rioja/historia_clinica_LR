@@ -16,7 +16,7 @@ import { TableModel } from '@presentation/components/table/table.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ANTECEDENTES_FAMILIARES, MEDICACION_HABITUAL, PROBLEMAS_ANTECEDENTES } from '../../../../constants/summaries';
+import { ANTECEDENTES_FAMILIARES, ANTECEDENTES_PERSONALES, MEDICACION_HABITUAL, PROBLEMAS_ANTECEDENTES } from '../../../../constants/summaries';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 
 @Component({
@@ -27,6 +27,7 @@ import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summ
 export class ResumenComponent implements OnInit, OnChanges {
 
 	readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
+	readonly personalHistoriesHeader = ANTECEDENTES_PERSONALES;
 	readonly personalProblemsHeader = PROBLEMAS_ANTECEDENTES;
 	readonly medicationsHeader = MEDICACION_HABITUAL;
 	allergies$: Observable<HCEAllergyDto[]>;

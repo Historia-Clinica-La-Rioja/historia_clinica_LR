@@ -1,0 +1,31 @@
+<app-summary-card id="personal-histories" [header]="personalHistoriesHeader" [editable]="false">
+    <mat-list id="personal-histories-list" *ngIf="personalHistories?.length > 0 else noInfo">
+        <div fxLayout="row" *ngFor="let personalHistory of personalHistories">
+            <mat-list-item>
+                <div fxFlex="30%">
+                    <span mat-line class="capitalize-first-letter"
+                        matTooltip="{{personalHistory.snomed.pt | titlecase }}">
+                        {{ personalHistory.snomed.pt }}
+                    </span>
+                </div>
+                <div fxFlex="30%" class="grey capitalize-first-letter">
+                    <span mat-line matTooltip="{{personalHistory.snomed.pt | titlecase }}">
+                        {{ personalHistory.snomed.pt }}</span>
+                </div>
+
+                <div fxFlex="15%" class="grey smaller-font">
+                    {{ personalHistory.startDate }}
+                </div>
+
+                <div fxFlex="15%" class="grey smaller-font">
+                    {{ personalHistory.startDate }}
+                </div>
+                <mat-divider></mat-divider>
+            </mat-list-item>
+        </div>
+    </mat-list>
+</app-summary-card>
+
+<ng-template #noInfo>
+    <app-no-data></app-no-data>
+</ng-template>

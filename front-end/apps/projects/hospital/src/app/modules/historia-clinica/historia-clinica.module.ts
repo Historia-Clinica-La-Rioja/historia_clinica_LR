@@ -64,6 +64,7 @@ import { EpisodeDataComponent } from './components/episode-data/episode-data.com
 import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-search-dialog/problem-concept-search-dialog.component';
 import { ReferenceStateLabelComponent } from './components/reference-state-label/reference-state-label.component';
 import { PersonalHistoriesBackgroundListComponent } from './components/personal-histories-background-list/personal-histories-background-list.component';
+import { PersonalHistoriesSummaryComponent } from './components/personal-histories-summary/personal-histories-summary.component';
 
 @NgModule({
 	declarations: [
@@ -125,6 +126,7 @@ import { PersonalHistoriesBackgroundListComponent } from './components/personal-
 		AlergiasFormComponent,
 		ProblemConceptSearchDialogComponent,
   		PersonalHistoriesBackgroundListComponent,
+    	PersonalHistoriesSummaryComponent,
 	],
 	imports: [
 		CommonModule,
@@ -162,6 +164,7 @@ import { PersonalHistoriesBackgroundListComponent } from './components/personal-
 		EpisodeDataComponent,
 		ReferenceStateLabelComponent,
 		PersonalHistoriesBackgroundListComponent,
+    	PersonalHistoriesSummaryComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,
 		ConceptsTypeaheadSearchDialogComponent,

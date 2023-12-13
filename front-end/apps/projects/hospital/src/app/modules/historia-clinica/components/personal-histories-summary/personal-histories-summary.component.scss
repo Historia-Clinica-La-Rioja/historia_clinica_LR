@@ -1,0 +1,7 @@
+.smaller-font {
+    font-size: 14px;
+}
+
+:host ::ng-deep .mat-list-item-content {
+    gap: 5px;
+}
