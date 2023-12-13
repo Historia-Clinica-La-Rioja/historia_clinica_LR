@@ -1794,10 +1794,14 @@ export interface HCEEvolutionSummaryDto {
 
 export interface HCEHealthConditionDto extends HCEClinicalTermDto {
     canBeMarkAsError?: boolean;
+    createdOn?: DateTimeDto;
     hasPendingReference: boolean;
-    inactivationDate: string;
-    severity: string;
-    startDate: string;
+    inactivationDate?: string;
+    institutionName?: string;
+    note?: string;
+    professionalName?: string;
+    severity?: string;
+    startDate?: string;
 }
 
 export interface HCEHealthcareProfessionalDto {
@@ -1835,6 +1839,10 @@ export interface HCELast2RiskFactorsDto extends Serializable {
 
 export interface HCEMedicationDto extends ClinicalTermDto {
     suspended: boolean;
+}
+
+export interface HCEPersonalHistoryDto extends HCEHealthConditionDto {
+    type?: string;
 }
 
 export interface HCEProblemDto extends HCEHealthConditionDto {

@@ -15,6 +15,7 @@ import ar.lamansys.sgh.clinichistory.domain.hce.HCEHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEHospitalizationBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEMedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEPersonalHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEToothRecordBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.Last2HCERiskFactorsBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.EvolutionSummaryBo;
@@ -27,6 +28,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEHospit
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEImmunizationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCELast2RiskFactorsDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEMedicationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEPersonalHistoryDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEToothRecordDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.mapper.HCEGeneralStateMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
@@ -118,6 +120,17 @@ public class HCEGeneralStateController {
 		LOG.debug(LOGGING_OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
+
+    @GetMapping("/personalHistories")
+    public ResponseEntity<List<HCEPersonalHistoryDto>> getPersonalHistories(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "patientId") Integer patientId) {
+        LOG.debug(LOGGING_INPUT, institutionId, patientId);
+        List<HCEPersonalHistoryBo> resultService = hceHealthConditionsService.getPersonalHistories(patientId);
+        List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
+        LOG.debug(LOGGING_OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
 
     @GetMapping("/familyHistories")
     public ResponseEntity<List<HCEHealthConditionDto>> getFamilyHistories(
