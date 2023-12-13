@@ -107,10 +107,8 @@ public class BackofficeProcedureTemplateStore implements BackofficeStore<Procedu
 	public void deleteById(Integer id) {
 	}
 
-	public void deleteByProcedureTemplateIdSctid(Integer id, String sctid, String pt) {
-		Integer snomedId = sharedSnomedPort.getSnomedIdByTerm(sctid,pt);
-		if (snomedId != null)
-			procedureTemplateSnomedRepository.deleteById(new ProcedureTemplateSnomedPK(id,snomedId));
+	public void deleteByProcedureTemplateIdSctid(Integer id, Integer snomedId) {
+		procedureTemplateSnomedRepository.deleteById(new ProcedureTemplateSnomedPK(id,snomedId));
 	}
 
 	@Override
