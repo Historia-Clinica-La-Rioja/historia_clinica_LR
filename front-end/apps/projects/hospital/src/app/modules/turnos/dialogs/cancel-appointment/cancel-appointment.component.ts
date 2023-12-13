@@ -6,9 +6,10 @@ import { AppointmentsFacadeService } from '../../services/appointments-facade.se
 import { EquipmentAppointmentsFacadeService } from '@turnos/services/equipment-appointments-facade.service';
 
 @Component({
-  selector: 'app-cancel-appointment',
-  templateUrl: './cancel-appointment.component.html',
-  styleUrls: ['./cancel-appointment.component.scss']
+	selector: 'app-cancel-appointment',
+	templateUrl: './cancel-appointment.component.html',
+	styleUrls: ['./cancel-appointment.component.scss'],
+	providers: [EquipmentAppointmentsFacadeService]
 })
 export class CancelAppointmentComponent implements OnInit {
 

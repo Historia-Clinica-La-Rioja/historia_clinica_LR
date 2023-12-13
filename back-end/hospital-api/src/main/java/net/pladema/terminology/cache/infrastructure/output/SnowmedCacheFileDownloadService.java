@@ -32,6 +32,7 @@ public class SnowmedCacheFileDownloadService {
 	}
 
 	private void saveSnomedCacheFile(SnomedCacheFile cacheFile) {
+		// siempre que pasó por el proceso de descarga (mal o bien) se guarda la hora
 		cacheFile.setDownloadedOn(LocalDateTime.now());
 		snomedCacheFileRepository.save(cacheFile);
 	}

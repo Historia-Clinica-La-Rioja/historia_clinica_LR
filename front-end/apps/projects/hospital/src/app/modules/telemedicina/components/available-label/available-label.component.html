@@ -1,0 +1,6 @@
+<ng-container *ngIf="available ; else notAvailable">
+<span class="color-green">{{'telemedicina.AVAILABLE' | translate}}</span>
+</ng-container>
+<ng-template #notAvailable>
+	<span class="warn">{{'telemedicina.NOT_AVAILABLE' | translate}}</span>
+</ng-template>

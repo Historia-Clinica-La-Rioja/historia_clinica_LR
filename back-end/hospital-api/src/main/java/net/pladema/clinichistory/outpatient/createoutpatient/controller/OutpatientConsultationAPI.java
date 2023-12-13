@@ -6,6 +6,7 @@ import java.io.IOException;
 import javax.validation.Valid;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ConsultationResponseDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints.HasAppointment;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
@@ -24,7 +25,7 @@ import java.util.List;
 public interface OutpatientConsultationAPI {
 
     @PostMapping("/billable")
-    ResponseEntity<Boolean> createOutpatientConsultation(
+    ResponseEntity<ConsultationResponseDto> createOutpatientConsultation(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") @HasAppointment Integer patientId,
             @RequestBody @Valid CreateOutpatientDto createOutpatientDto) throws IOException, PDFDocumentException;

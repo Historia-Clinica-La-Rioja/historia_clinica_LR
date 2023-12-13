@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -34,4 +35,10 @@ public class SharedNursingConsultationPortImpl implements SharedNursingConsultat
 						nc.getDoctorId(),nc.getBillable(),
 						nc.getPerformedDate())).collect(Collectors.toList());
 	}
+
+	@Override
+	public Optional<Integer> getPatientMedicalCoverageId(Integer id){
+		return nursingConsultationStorage.getPatientMedicalCoverageId(id);
+	}
+
 }

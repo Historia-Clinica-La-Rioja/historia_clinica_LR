@@ -2,15 +2,19 @@ package net.pladema.patient.service;
 
 import net.pladema.audit.service.domain.enums.EActionType;
 import net.pladema.patient.controller.dto.AuditablePatientInfoDto;
+import net.pladema.patient.controller.dto.MergedPatientSearchFilter;
 import net.pladema.patient.controller.dto.PatientRegistrationSearchFilter;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.repository.domain.PatientPersonVo;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.domain.LimitedPatientSearchBo;
+import net.pladema.patient.service.domain.MergedPatientSearch;
 import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.patient.service.domain.PatientSearch;
+import net.pladema.person.repository.domain.PersonSearchResultVo;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -21,9 +25,11 @@ public interface PatientService {
 
     LimitedPatientSearchBo searchPatientOptionalFilters(PatientSearchFilter searchFilter);
 
-    Optional<Patient> getPatient(Integer patientId);
+    Optional<Patient> getActivePatient(Integer patientId);
 
-    List<Patient> getPatients(Set<Integer> patients);
+	Optional<Patient> getPatient(Integer patientId);
+
+	List<Patient> getPatients(Set<Integer> patients);
     
     Patient addPatient(Patient patientToSave);
 
@@ -44,5 +50,15 @@ public interface PatientService {
 	List<PatientRegistrationSearch> getPatientRegistrationById(Integer patientId);
 
 	List<PatientType> getPatientTypesForAuditor();
+	
+	List<MergedPatientSearch> getMergedPatientsByFilter(MergedPatientSearchFilter searchFilter);
+
+	List<PersonSearchResultVo> getMergedPersonsByPatientId(Integer activePatientId);
+
+	List<PatientRegistrationSearch> getPatientsToAudit();
+
+	void assertHasActiveEncountersByPatientId(Integer patientId);
+
+	List<Patient> getLongTermTemporaryPatientIds(LocalDateTime maxDate, Short limit);
 
 }

@@ -37,7 +37,8 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo( " +
-            "d.id, oh, doh.medicalAttentionTypeId, doh.overturnCount, doh.externalAppointmentsAllowed) " +
+            "d.id, oh, doh.medicalAttentionTypeId, doh.overturnCount, doh.externalAppointmentsAllowed, " +
+			"doh.protectedAppointmentsAllowed, doh.onSiteAttentionAllowed, doh.patientVirtualAttentionAllowed, doh.secondOpinionVirtualAttentionAllowed) " +
             "FROM DiaryOpeningHours AS doh " +
             "JOIN Diary AS d ON ( doh.pk.diaryId = d.id ) " +
             "JOIN OpeningHours AS oh ON ( doh.pk.openingHoursId = oh.id ) " +
@@ -48,7 +49,21 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo( " +
-			"d.id, oh, doh.medicalAttentionTypeId, doh.overturnCount, doh.externalAppointmentsAllowed) " +
+			"d.id, oh, doh.medicalAttentionTypeId, doh.overturnCount, doh.externalAppointmentsAllowed, " +
+			"doh.protectedAppointmentsAllowed, doh.onSiteAttentionAllowed, doh.patientVirtualAttentionAllowed, " +
+			"doh.secondOpinionVirtualAttentionAllowed) " +
+			"FROM DiaryOpeningHours AS doh " +
+			"JOIN Diary AS d ON ( doh.pk.diaryId = d.id AND doh.medicalAttentionTypeId = :medicalAttentionTypeId) " +
+			"JOIN OpeningHours AS oh ON ( doh.pk.openingHoursId = oh.id ) " +
+			"WHERE doh.pk.diaryId IN (:diaryIds) " +
+			"AND d.deleteable.deleted = false ")
+	List<DiaryOpeningHoursVo> getDiariesOpeningHoursByMedicalAttentionType(@Param("diaryIds") List<Integer> diaryIds,
+																		   @Param("medicalAttentionTypeId") Short medicalAttentionTypeId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo( " +
+			"d.id, oh, doh.medicalAttentionTypeId, doh.overturnCount, doh.externalAppointmentsAllowed, " +
+			"doh.protectedAppointmentsAllowed, doh.onSiteAttentionAllowed, doh.patientVirtualAttentionAllowed, doh.secondOpinionVirtualAttentionAllowed) " +
 			"FROM DiaryOpeningHours AS doh " +
 			"JOIN Diary AS d ON ( doh.pk.diaryId = d.id ) " +
 			"JOIN OpeningHours AS oh ON ( doh.pk.openingHoursId = oh.id ) " +
@@ -95,4 +110,17 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
                                                    @NotNull @Param("doctorsOfficeId") Integer doctorsOfficeId,
                                                    @NotNull @Param("dayWeekId") Short dayWeekId,
                                                    @NotNull @Param("from") LocalTime from, @Param("to") LocalTime to);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT doh.patientVirtualAttentionAllowed " +
+			"FROM DiaryOpeningHours doh " +
+			"WHERE doh.pk.diaryId = :diaryId AND doh.pk.openingHoursId = :openingHoursId")
+	Boolean isPatientVirtualConsultationAllowed(@Param("diaryId") Integer diaryId, @Param("openingHoursId") Integer openingHoursId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT doh.secondOpinionVirtualAttentionAllowed " +
+			"FROM DiaryOpeningHours doh " +
+			"WHERE doh.pk.diaryId = :diaryId AND doh.pk.openingHoursId = :openingHoursId")
+	Boolean isSecondOpinionVirtualConsultationAllowed(@Param("diaryId") Integer diaryId, @Param("openingHoursId") Integer openingHoursId);
+
 }

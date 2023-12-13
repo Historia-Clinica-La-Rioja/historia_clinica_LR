@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.appointment.service.domain;
 
 import lombok.*;
+import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
 
 @Getter
 @Setter
@@ -24,6 +25,8 @@ public class AppointmentOrderImageBo {
 
 	private Integer destInstitutionId;
 
+	private Short reportStatusId;
+
 	//Asocia orden estandar al turno
 	public AppointmentOrderImageBo(Integer appointmentId, Integer orderId, Integer studyId, Boolean completed, String imageId, Integer institutionId){
 		this.appointmentId = appointmentId;
@@ -32,6 +35,7 @@ public class AppointmentOrderImageBo {
 		this.completed = completed;
 		this.imageId = imageId;
 		this.destInstitutionId = institutionId;
+		this.reportStatusId = EDiagnosticImageReportStatus.PENDING.getId();
 	}
 
 	//Asocia orden transcripta al turno
@@ -41,5 +45,6 @@ public class AppointmentOrderImageBo {
 		this.imageId = imageId;
 		this.transcribedOrderId = transcribedOrderId;
 		this.destInstitutionId = institutionId;
+		this.reportStatusId = EDiagnosticImageReportStatus.PENDING.getId();
 	}
 }

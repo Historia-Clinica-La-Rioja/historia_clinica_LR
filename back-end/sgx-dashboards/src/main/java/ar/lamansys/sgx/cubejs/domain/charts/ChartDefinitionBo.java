@@ -10,6 +10,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * 	* pivotConfig: manipulación de datos
  */
 public class ChartDefinitionBo {
+	/**
+	 * Tipo de gráfico: "line" | "bar" | "table" | "area" | "number" | "pie"
+	 */
 	public final String chartType;
 	/**
 	 * Cube Queries are plain JavaScript objects, describing an analytics query

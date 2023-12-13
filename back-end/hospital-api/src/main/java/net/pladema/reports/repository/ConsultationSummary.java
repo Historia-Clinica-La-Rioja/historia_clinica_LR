@@ -16,14 +16,21 @@ public class ConsultationSummary {
     private Short genderId;
     private boolean coverage;
 
+	private Integer hierarchicalUnitId;
+
+	private Integer hierarchicalUnitTypeId;
+
     public ConsultationSummary(Integer professionalId, Integer specialtyId, String specialty,
-                               Short specialtyType, Integer age, Short genderId, boolean coverage){
+                               Short specialtyType, Integer age, Short genderId, boolean coverage,
+							   Integer hierarchicalUnitId, Integer hierarchicalUnitTypeId){
         this.professionalId = professionalId;
         this.specialtyId = specialtyId != null ? specialtyId : 0;
         fixSpecialtyName(specialty, specialtyType);
         this.age = age;
         this.genderId = genderId;
         this.coverage = coverage;
+		this.hierarchicalUnitId = hierarchicalUnitId;
+		this.hierarchicalUnitTypeId = hierarchicalUnitTypeId;
     }
 
     private void fixSpecialtyName(String name, Short type){

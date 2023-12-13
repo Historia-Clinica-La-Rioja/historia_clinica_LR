@@ -1,7 +1,7 @@
 <mat-card>
 	<mat-card-content [formGroup]="form">
 
-		<div id="specialty" fxLayoutGap="10px">
+		<div id="specialty" fxLayoutGap="10px" *ngIf="showSpecialty">
 			<div fxLayoutAlign="start center" fxLayoutGap="10px">
 				<mat-icon color="gray" fontSet="material-icons-outlined">medical_services</mat-icon>
 				<span class="title">
@@ -10,7 +10,7 @@
 			</div>
 			<mat-form-field appearance="outline">
 				<mat-select id="clinicalSpecialtyId" name="clinicalSpecialty" formControlName="clinicalSpecialty"
-					(selectionChange)="setDefaultSpecialty()" [attr.disabled]="fixedSpecialty">
+					(selectionChange)="setEpisodeData()">
 					<mat-option *ngFor="let clinicalSpecialty of specialties" [value]="clinicalSpecialty">
 						<span>{{clinicalSpecialty.name}}</span>
 					</mat-option>
@@ -28,8 +28,9 @@
 				</span>
 			</div>
 			<mat-form-field appearance="outline">
-				<mat-select [disabled]="disabledCoverage" [placeholder]="'ambulatoria.paciente.nueva-consulta.NO_MEDICAL_COVERAGE'|translate"
-					(selectionChange)="setMedicalCoverage()" formControlName="patientMedicalCoverage">
+				<mat-select
+					[placeholder]="'ambulatoria.paciente.nueva-consulta.NO_MEDICAL_COVERAGE'|translate"
+					(selectionChange)="setEpisodeData()" formControlName="patientMedicalCoverage">
 					<mat-option name="coverage" *ngFor="let patientMedicalCoverage of patientMedicalCoverages"
 						[value]="patientMedicalCoverage">
 						{{ patientMedicalCoverage | fullMedicalCoverage }}
@@ -43,6 +44,10 @@
 				</mat-select>
 
 			</mat-form-field>
+		</div>
+
+		<div id="hierarchical-units-consultation">
+			<app-hierarchical-unit-consultation [patientId]="_patientId" (response)="setHUId($event)"></app-hierarchical-unit-consultation>
 		</div>
 
 	</mat-card-content>

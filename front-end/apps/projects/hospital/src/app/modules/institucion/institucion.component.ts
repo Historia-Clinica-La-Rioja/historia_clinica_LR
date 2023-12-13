@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 
 import { ContextService } from '@core/services/context.service';
 import { PermissionsService } from '@core/services/permissions.service';
@@ -21,7 +21,8 @@ import { MenuService } from '@extensions/services/menu.service';
 import { HomeRoutes } from '../home/home-routing.module';
 import { AppRoutes } from '../../app-routing.module';
 import { SIDEBAR_MENU } from './constants/menu';
-import {AppFeature} from "@api-rest/api-model";
+import { AppFeature} from "@api-rest/api-model";
+import { WCExtensionsService } from '@extensions/services/wc-extensions.service';
 
 @Component({
 	selector: 'app-institucion',
@@ -35,7 +36,7 @@ export class InstitucionComponent implements OnInit {
 	institution: LocationInfo;
 	userInfo: UserInfo;
 	roles = [];
-	nameSelfDeterminationFF: boolean
+	nameSelfDeterminationFF: boolean;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -45,14 +46,16 @@ export class InstitucionComponent implements OnInit {
 		private institutionService: InstitutionService,
 		private accountService: AccountService,
 		private featureFlagService: FeatureFlagService,
+		private readonly wcExtensionsService: WCExtensionsService,
 	) {
-		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn =>{
-			this.nameSelfDeterminationFF = isOn});
+		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
+			this.nameSelfDeterminationFF = isOn
+		});
 	}
 
 	ngOnInit(): void {
 
-		this.activatedRoute.paramMap.subscribe(params => {
+		this.activatedRoute.paramMap.pipe(take(1)).subscribe(params => {
 			const institutionId = Number(params.get('id'));
 			this.contextService.setInstitutionId(institutionId);
 			this.institutionHomeLink = ['/', AppRoutes.Institucion, this.contextService.institutionId];
@@ -64,6 +67,7 @@ export class InstitucionComponent implements OnInit {
 					switchMap(items => this.extensionMenuService.getInstitutionMenu(institutionId).pipe(
 						map(extesionItems => [...items, ...extesionItems]),
 					)),
+					switchMap(items => this.wcExtensionsService.getInstitutionMenu().pipe(map(extensiones => [...items, ...extensiones])))
 				);
 
 			this.institutionService.getInstitutions(Array.of(institutionId))
@@ -80,5 +84,6 @@ export class InstitucionComponent implements OnInit {
 		);
 
 	}
+
 
 }

@@ -20,8 +20,6 @@ public class DiaryAvailableProtectedAppointmentsInfoBo {
 
 	private Integer diaryId;
 
-	private Short protectedAppointmentsPercentage;
-
 	private Short appointmentDuration;
 
 	private LocalDate startDate;
@@ -50,15 +48,13 @@ public class DiaryAvailableProtectedAppointmentsInfoBo {
 
 	private Boolean isJointDiary;
 
-	public DiaryAvailableProtectedAppointmentsInfoBo(Integer diaryId, Short protectedAppointmentsPercentage,
-													 Short appointmentDuration, LocalDate startDate,
+	public DiaryAvailableProtectedAppointmentsInfoBo(Integer diaryId, Short appointmentDuration, LocalDate startDate,
 													 LocalDate endDate, InstitutionBasicInfoBo institution,
 													 DepartmentBo department, String professionalFulName,
 													 ClinicalSpecialtyBo clinicalSpecialty, String doctorOffice,
 													 Boolean isJointDiary) {
 		this.diaryId = diaryId;
 		this.institution = institution;
-		this.protectedAppointmentsPercentage = protectedAppointmentsPercentage;
 		this.appointmentDuration = appointmentDuration;
 		this.startDate = startDate;
 		this.endDate = endDate;

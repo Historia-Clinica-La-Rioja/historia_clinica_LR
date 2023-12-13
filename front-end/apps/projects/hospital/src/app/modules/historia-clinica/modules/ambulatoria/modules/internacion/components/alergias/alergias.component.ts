@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AllergyConditionDto, SnomedDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model';
-import { pushTo, removeFrom } from '@core/utils/array.utils';
-import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
+import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { SearchSnomedConceptComponent } from '@historia-clinica/modules/ambulatoria/dialogs/search-snomed-concept/search-snomed-concept.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
@@ -20,10 +19,9 @@ export class AlergiasComponent {
 
 
 	constructor(
-		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
 		private readonly dialog: MatDialog,
 
-	) {	}
+	) { }
 
 	addSnomedConcept(snomedConcept: SnomedDto) {
 		if (snomedConcept) {
@@ -40,17 +38,20 @@ export class AlergiasComponent {
 		}
 	}
 
-
-
 	add(a: AllergyConditionDto) {
-		this.allergies = pushTo<AllergyConditionDto>(this.allergies, a);
-		this.componentEvaluationManagerService.allergies = this.allergies;
-		this.allergiesChange.emit(this.allergies);
+		const lenght = this.allergies?.length;
+		this.allergies = pushIfNotExists<AllergyConditionDto>(this.allergies, a, this.compare);
+		if (this.allergies.length > lenght) {
+			this.allergiesChange.emit(this.allergies);
+		}
+	}
+
+	compare(concept1: AllergyConditionDto, concept2: AllergyConditionDto): boolean {
+		return concept1.snomed.sctid === concept2.snomed.sctid
 	}
 
 	remove(index: number) {
 		this.allergies = removeFrom<AllergyConditionDto>(this.allergies, index);
-		this.componentEvaluationManagerService.allergies = this.allergies;
 		this.allergiesChange.emit(this.allergies);
 	}
 

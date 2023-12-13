@@ -1,0 +1,26 @@
+<div>
+    <div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between">
+        <div translate="profile.api-key.generate-dialog.TITLE"></div>
+        <button id="cancel_button" name="cancel_button" mat-icon-button (click)="closeDialog()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <ng-container *ngIf="!loading && !generated">
+		<app-user-keys-form (values)="newUserKey($event)"></app-user-keys-form>
+		<button mat-button mat-raised-button (click)="addKey()" [disabled]="!userKeyToAdd" color="primary" translate="buttons.GENERATE"></button>
+    </ng-container>
+    <ng-container *ngIf="!loading && generated">
+        <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px">
+            <span>{{ 'profile.api-key.generate-dialog.WARNING_CONFIRMATION' | translate }}</span>
+            <mat-dialog-content fxLayout="row" fxLayoutAlign="center center">
+                <mat-card *ngIf="generated" class="generated-secret">
+                    <strong>{{ secret }}</strong>
+                </mat-card>
+                <button mat-icon-button color="primary" (click)="copied()" [cdkCopyToClipboard]="secret" [disabled]="isCopied"><mat-icon>content_copy_outlined</mat-icon></button>
+            </mat-dialog-content>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="loading">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </ng-container>
+</div>

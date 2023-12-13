@@ -2,6 +2,8 @@ package net.pladema.establishment.service.impl;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
 import net.pladema.establishment.service.domain.InstitutionBo;
 
 @Service
+@Slf4j
 public class InstitutionServiceImpl implements InstitutionService {
 
     private static final Logger LOG = LoggerFactory.getLogger(InstitutionServiceImpl.class);
@@ -58,4 +61,34 @@ public class InstitutionServiceImpl implements InstitutionService {
 	public AddressBo getAddress(Integer institutionId) {
 		return addressService.getAddressByInstitution(institutionId);
 	}
+
+	@Override
+	public List<InstitutionBasicInfoBo> getFromInstitutionDestinationReference(Short departmentId, Integer clinicalSpecialtyId, Integer careLineId) {
+		log.debug("Fetch all institutions with active diaries filter by clinical specialty id and care line id");
+		if (careLineId == null )
+			return institutionRepository.getByDepartmentIdHavingActiveDiaryWithClinicalSpecialty(departmentId, clinicalSpecialtyId);
+		else
+			return institutionRepository.getByDepartmentIdHavingActiveDiaryWithCareLineClinicalSpecialty(departmentId, careLineId, clinicalSpecialtyId);
+	}
+
+	@Override
+	public List<InstitutionBasicInfoBo> getVirtualConsultationInstitutions() {
+		List<InstitutionBasicInfoBo> result = institutionRepository.getVirtualConsultationInstitutions();
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public List<InstitutionBasicInfoBo> getInstitutionsByReferenceByPracticeFilter(Short departmentId, Integer practiceSnomedId,
+																				   Integer clinicalSpecialtyId, Integer careLineId) {
+		log.debug("Fetch all institutions by reference by practice filter");
+		if (careLineId != null && clinicalSpecialtyId != null)
+			return institutionRepository.getByDepartmentAndCareLineAndPracticeAndClinicalSpecialty(departmentId, clinicalSpecialtyId, careLineId, practiceSnomedId);
+		if (careLineId != null)
+			return institutionRepository.getByDepartmentAndCareLineAndPractice(departmentId, careLineId, practiceSnomedId);
+		if (clinicalSpecialtyId != null)
+			return institutionRepository.getAllByDepartmentAndClinicalSpecialtyAndPractice(departmentId, clinicalSpecialtyId, practiceSnomedId);
+		return institutionRepository.getByDepartmentAndPractice(departmentId, practiceSnomedId);
+	}
+
 }

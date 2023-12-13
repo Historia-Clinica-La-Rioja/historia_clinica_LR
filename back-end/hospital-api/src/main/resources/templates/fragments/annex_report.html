@@ -4,7 +4,14 @@
 <head th:fragment="headerfiles">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
+    <th:block th:include="fragments/bootstrap-css.html :: style-inline"></th:block>
+
     <style type="text/css">
+
+        @page {
+            size: A4;
+        }
+
         .table {
             font-size: 11px;
         }
@@ -14,44 +21,52 @@
             padding: 1em;
             border: 1px solid black;
         }
-        
-        .row-space {
-            height: 5px;
-            border-left: 1px solid black;
-            border-right: 1px solid black;
-        }
-        
+
         .table,
-        .company-data {
+        .signature-section,
+        .nhpdgd-data,
+        .beneficiary-data {
             width: 650px;
         }
-        
-        .title,
-        .hospital,
-        .attention-type {
-            width: 550px;
+
+        .designation {
+            width: 530px;
         }
-        
+
+        .title,
+        .attention-type,
+        .medical-coverage-title,
+        .medical-coverage {
+            width: 500px;
+        }
+
+        .beneficiary-data,
+        .medical-coverage-title,
+        .rnos-title {
+            background: #c5cfc6;
+        }
+
+        .title,
+        .beneficiary-data,
         .date,
-        .code-hpgd,
+        .code-hpdgd,
         .doc-number,
         .beneficiary-type,
         .relationship-type,
         .gender,
         .age,
         .attention-type,
-        .coverage-code,
-        .company-data,
-        .coverage-number,
-        .coverage-emision-date,
-        .coverage-expiration,
         .receipt,
         .month,
         .year,
-        .company-cuit,
-        .administratives-signature,
+        .administrative-signature,
         .signature-clarification,
-        .beneficiarys-signature {
+        .beneficiaries-signature,
+        .signature-section,
+        .medical-coverage-title,
+        .medical-coverage,
+        .rnos-title,
+        .rnos {
             text-align: center;
         }
         
@@ -62,13 +77,18 @@
         }
         
         .date,
-        .doc-type,
-        .gender,
-        .code-hpgd {
-            width: 100px;
+        .rnos-title,
+        .rnos {
+            width: 120px;
         }
-        
-        .code-hpgd {
+
+        .gender,
+        .doc-type {
+            width: 150px;
+        }
+
+        .code-hpdgd {
+            width: 120px;
             height: 50px;
         }
         
@@ -82,11 +102,14 @@
             border-bottom: 1px solid black;
         }
         
-        .relationship-type,
-        .beneficiary-type {
-            width: 250px;
+        .relationship-type {
+            width: 230px;
         }
-        
+
+        .beneficiary-type {
+            width: 280px;
+        }
+
         .relationship-type,
         .beneficiary-type div {
             display: inline;
@@ -95,7 +118,7 @@
         .relationship-type div>div,
         .beneficiary-type div>div {
             display: inline-block;
-            margin-right: 30px;
+            margin-right: 15px;
         }
         
         .consultation,
@@ -134,61 +157,25 @@
             width: 200px;
         }
         
-        .signature-section {
-            width: 650px;
-            display: inline;
-        }
-        
-        .text-hpgd,
-        .text-cie10 {
-            display: inline-block;
-        }
-        
-        .text-cie10 {
-            margin-left: 20px;
-        }
-        
-        .doctors-signature {
-            text-align: center;
-            margin-top: 16%
-        }
-        
-        .coverage-data {
-            width: 600px;
-        }
-        
         .doc-number,
-        .coverage-code,
         .receipt {
             width: 150px;
         }
-        
-        .coverage-number {
-            width: 500px;
-        }
-        
-        .coverage-emision-date,
-        .coverage-expiration {
-            width: 125px;
-        }
-        
-        .business-name,
-        .addresses-company {
-            width: 400px;
-        }
-        
-        .company-cuit {
-            width: 250px;
-        }
-        
-        .administratives-signature,
+
+        .administrative-signature,
         .signature-clarification {
             width: 175px;
         }
+
+        .signature-section,
+        .administrative-signature,
+        .signature-clarification,
+        .beneficiaries-signature {
+            height: 135px;
+        }
         
-        .beneficiarys-signature {
+        .beneficiaries-signature {
             width: 300px;
-            height: 125px;
         }
 
         .problem::first-letter {
@@ -203,23 +190,30 @@
     <div class="table">
         <div>
             <div class="title">
-                COMPROBANTE DE ATENCIÓN <br></br>
-                DE BENEFICIARIOS DE OBRAS SOCIALES
+                COMPROBANTE DE ATENCIÓN DE BENEFICIARIOS DE AGENTES<br></br>
+                DEL SEGURO DE SALUD
             </div>
             <div class="date">
                 <div class="border-bottom">FECHA</div>
-                <div th:text="${reportDate}"></div>
+                <!--<div th:text="${reportDate}"></div>-->
+                <label th:if="${consultationDate != null}" th:text="${consultationDate}"></label>
+                <label th:unless="${consultationDate != null}" th:text="${attentionDate}"></label>
             </div>
         </div>
-        <div class="row-space"></div>
         <div>
-            <div class="hospital" th:text="${'HOSPITAL: ' + establishment}"></div>
-            <div class="code-hpgd">
-                <div class="border-bottom">Código HPGD</div>
+            <!--<div class="hospital" th:text="${'HOSPITAL: ' + establishment}"></div>-->
+            <div class="designation">Denominación HPdGD</div>
+            <div class="code-hpdgd">
+                <div class="border-bottom">Código HPdGD-REFES</div>
+                <div>&nbsp;</div>
                 <div th:text="${sisaCode}"></div>
             </div>
         </div>
-        <div class="row-space"></div>
+        <div>
+            <div class="beneficiary-data">
+                <div>Datos del Beneficiario</div>
+            </div>
+        </div>
         <div>
             <div class="complete-name">
                 <div class="border-bottom">APELLIDOS Y NOMBRES</div>
@@ -234,7 +228,6 @@
                 <div th:text="${documentNumber}"></div>
             </div>
         </div>
-        <div class="row-space"></div>
         <div>
             <div class="beneficiary-type">Tipo de Beneficiario</div>
             <div class="relationship-type">Parentesco</div>
@@ -245,13 +238,14 @@
             <div class="beneficiary-type">
                 <div>
                     <div>Titular</div>
-                    <div>No titu</div>
-                    <div>Adhiere</div>
+                    <div>Familiar</div>
+                    <div>Adherente</div>
+                    <div>Otro</div>
                 </div>
             </div>
             <div class="relationship-type">
                 <div>
-                    <div>Conyug.</div>
+                    <div>Cónyugue</div>
                     <div>Hijo</div>
                     <div>Otro</div>
                 </div>
@@ -259,14 +253,16 @@
             <div class="gender" th:text="${patientGender}"></div>
             <div class="age" th:text="${patientAge}"></div>
         </div>
-        <div class="row-space"></div>
         <div>
-            <div class="attention-type">TIPO DE ATENCIÓN</div>
+            <div class="beneficiary-data">&nbsp;</div>
+        </div>
+        <div>
+            <div class="attention-type">TIPO DE ATENCION</div>
             <div class="date">
-                <div class="border-bottom">FECHA</div>
+                <div class="border-bottom">Fecha de Prestación</div>
                 <div>
                     <label th:if="${consultationDate != null}" th:text="${consultationDate}"></label>
-                    <label th:unless="${consultationDate != null}" th:text="${attentionDate}"></label>
+                    <label th:unless="${consultationDate != null}" th:text="${attentionDate}">&nbsp;</label>
                 </div>
             </div>
         </div>
@@ -296,7 +292,7 @@
                 <label th:if="${hasProcedures}">X</label>
                 <label th:unless="${hasProcedures}">&nbsp;</label>
             </div>
-            <div class="code-nhpgd">Códigos NHPGD:</div>
+            <div class="code-nhpgd">Códigos NHPdGD:</div>
         </div>
         <div>
             <div class="internment">INTERNACIÓN</div>
@@ -306,49 +302,15 @@
             <div class="other-codes">OTROS CÓDIGOS:</div>
         </div>
         <div>
+            <div class="nhpdgd-data">
+                NHPdGD: Nomenclador Hospitales Públicos de Gestión Descentralizada - CIE 10: Clasificación Internacional de Enfermedades
+            </div>
+        </div>
+        <div>
             <div class="signature-section">
-                <div class="text-hpgd">HPGD: Nomenclador Hospitales Públicos de Gestión Descentralizada</div>
-                <div class="text-cie10">CIE 10: Clasificación Internacional de Enfermedades</div>
-                <div class="doctors-signature">Firma del Médico y sello con N° de matrícula</div>
-            </div>
-        </div>
-
-        <div>
-            <div class="coverage-data">
-                <div class="border-bottom">DATOS DE LA OBRA SOCIAL: Nombre completo</div>
-                <div th:text="${medicalCoverage}"></div>
-            </div>
-            <div class="coverage-code">
-                <div class="border-bottom">Código</div>
-                <div th:text="${rnos}"></div>
-            </div>
-        </div>
-        <div class="row-space"></div>
-        <div>
-            <div class="coverage-number">
-                <div class="border-bottom">N° de Carnet de Obra Social</div>
-                <div th:text="${affiliateNumber}"></div>
-            </div>
-            <div class="coverage-emision-date">
-                <div class="border-bottom">Fecha de Emisión</div>
-                <div>&nbsp;</div>
-            </div>
-            <div class="coverage-expiration">
-                <div class="border-bottom">Vencimiento</div>
-                <div>&nbsp;</div>
-            </div>
-        </div>
-        <div class="row-space"></div>
-        <div>
-            <div class="company-data">DATOS DE LA EMPRESA</div>
-        </div>
-        <div>
-            <div class="business-name">
-                <div class="border-bottom">NOMBRE O RAZÓN SOCIAL</div>
-                <div>&nbsp;</div>
+                <div>Firma del Médico y sello con N° de matrícula</div>
             </div>
             <div class="receipt">
-                <div class="border-bottom">&nbsp;</div>
                 <div>Último recibo de sueldo</div>
             </div>
             <div class="month">
@@ -359,23 +321,33 @@
             </div>
         </div>
         <div>
-            <div class="addresses-company">
-                <div class="border-bottom">DIRECCIÓN DE LA EMPRESA</div>
-                <div>&nbsp;</div>
+            <div class="medical-coverage-title">
+                NOMBRE DEL AGENTE DEL SEGURO DE SALUD
             </div>
-            <div class="company-cuit">
-                <div class="border-bottom">CUIT DE LA EMPRESA</div>
-                <div>&nbsp;</div>
+            <div class="rnos-title">
+                <div>RNOS</div>
             </div>
         </div>
         <div>
-            <div class="administratives-signature">
-                <div class="border-bottom">FIRMA DEL RESPONSABLE ADMINISTRATIVO-CONTABLE</div>
+            <div class="medical-coverage">
+                <label th:if="${medicalCoverage != null}" th:text="${medicalCoverage}"></label>
+                <label th:unless="${medicalCoverage != null}">&nbsp;</label>
+            </div>
+            <div class="rnos">
+                <label th:if="${rnos != null}" th:text="${rnos}"></label>
+                <label th:unless="${rnos != null}">&nbsp;</label>
+            </div>
+        </div>
+        <div>
+            <div class="administrative-signature">
+                <div class="border-bottom">Firma del Responsable Administrativo/Contable</div>
             </div>
             <div class="signature-clarification">
-                <div class="border-bottom">ACLARACIÓN DE LA FIRMA</div>
+                <div class="border-bottom">Aclaración Firma</div>
             </div>
-            <div class="beneficiarys-signature">FIRMA DEL BENEFICIARIO</div>
+            <div class="beneficiaries-signature">
+                <div class="border-bottom">Firma del Beneficiario</div>
+            </div>
         </div>
     </div>
 

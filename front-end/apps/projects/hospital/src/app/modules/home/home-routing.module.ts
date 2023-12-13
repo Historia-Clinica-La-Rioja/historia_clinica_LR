@@ -9,19 +9,31 @@ import { HomeComponent } from './home.component';
 import { InstitucionesComponent } from './routes/instituciones/instituciones.component';
 import { ProfileComponent } from './routes/profile/profile.component';
 import { SettingsComponent } from './routes/settings/settings.component';
-import {UpdatePasswordComponent} from "../auth/components/update-password/update-password.component";
+import { ManageKeysComponent } from './routes/manage-keys/manage-keys.component';
+import { UpdatePasswordComponent } from "../auth/components/update-password/update-password.component";
 import {
 	UpdatePasswordSuccessComponent
 } from "../auth/components/update-password-success/update-password-success.component";
 import { RoutedExternalComponent } from '@extensions/components/routed-external/routed-external.component';
-import { Slot } from '@extensions/services/wc-extensions.service';
 
+export const PUBLIC_API_ROLES = [
+	ERole.API_FACTURACION,
+	ERole.API_TURNOS,
+	ERole.API_PACIENTES,
+	ERole.API_RECETAS,
+	ERole.API_SIPPLUS,
+	ERole.API_USERS,
+	ERole.API_IMAGENES,
+	ERole.API_ORQUESTADOR,
+];
 
 export enum HomeRoutes {
 	Home = '',						// pantalla inicial
 	Profile = 'profile',			// Perfil del usuario
 	Settings = 'settings',			// Configuración
 	Extension = 'extension', 		// Extensión
+	UserKeys = 'user-keys', 		// API Keys del usuario
+	Auditoria = 'auditoria'
 }
 
 const routes: Routes = [
@@ -31,21 +43,33 @@ const routes: Routes = [
 		children: [
 			{ path: '', pathMatch: 'full', component: InstitucionesComponent },
 			{ path: HomeRoutes.Profile, component: ProfileComponent },
+			{
+				path: HomeRoutes.Profile + '/' + HomeRoutes.UserKeys,
+				component: ManageKeysComponent,
+			},
 			{ path: `${HomeRoutes.Extension}/:menuItemId`, component: SystemExtensionComponent },
 			{
 				path: HomeRoutes.Settings,
 				component: SettingsComponent,
 				canActivate: [FeatureFlagGuard, RoleGuard],
-				data: { featureFlag: AppFeature.HABILITAR_CONFIGURACION,
-						allowedRoles: [ERole.ROOT],
-						needsRoot: true},
+				data: {
+					featureFlag: AppFeature.HABILITAR_CONFIGURACION,
+					allowedRoles: [ERole.ROOT],
+					needsRoot: true
+				},
 			},
 			{ path: 'update-password', component: UpdatePasswordComponent },
 			{ path: 'update-password-success', component: UpdatePasswordSuccessComponent },
-			{ path: 'web-components/:wcId', component: RoutedExternalComponent, data: {slot: Slot.HOME_MENU}}
+			{ path: 'web-components/:wcId', component: RoutedExternalComponent },
+			{
+				path: HomeRoutes.Auditoria,
+				loadChildren: () => import('../../modules/auditoria/auditoria.module').then(m => m.AuditoriaModule),
+			},
 		]
 	}
 ];
+
+
 
 @NgModule({
 	imports: [RouterModule.forChild(routes)],

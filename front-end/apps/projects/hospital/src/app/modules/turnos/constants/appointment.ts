@@ -1,3 +1,4 @@
+import { EAppointmentModality } from "@api-rest/api-model";
 
 export const APPOINTMENT_DURATIONS = [
 	{
@@ -133,4 +134,10 @@ export const enum COLORES {
 	RESERVA_VALIDACION = '#EB5757',
 	FUERA_DE_AGENDA = '#FF0000',
 	PROTECTED = '#AF26C5'
+}
+
+export const MODALITYS = {
+		[EAppointmentModality.ON_SITE_ATTENTION]: 'turnos.ON_SITE_ATTENTION',
+		[EAppointmentModality.PATIENT_VIRTUAL_ATTENTION]: 'turnos.PATIENT_VIRTUAL_ATTENTION',
+		[EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION]: 'turnos.SECOND_OPINION_VIRTUAL_ATTENTION'
 }

@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import net.pladema.patient.controller.dto.AuditPatientSearch;
+import net.pladema.person.repository.domain.CompletePersonNameBo;
 import net.pladema.person.repository.domain.DuplicatePersonVo;
 
 import net.pladema.person.repository.domain.PersonSearchResultVo;
@@ -129,6 +130,14 @@ public class PersonServiceImpl implements PersonService {
 	public List<PersonSearchResultVo> getPatientsPersonalInfo(DuplicatePersonVo duplicatePersonVo) {
 		LOG.debug("Input parameters -> DuplicatePersonVo", duplicatePersonVo);
 		List<PersonSearchResultVo> result = personRepository.getPersonSearchResultByAttributes(duplicatePersonVo);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public Optional<CompletePersonNameBo> findByHealthcareProfessionalPersonDataByDiaryId(Integer diaryId) {
+		LOG.debug("Input parameters -> diaryId {}", diaryId);
+		Optional<CompletePersonNameBo> result = personRepository.findProfessionalNameByDiaryId(diaryId);
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

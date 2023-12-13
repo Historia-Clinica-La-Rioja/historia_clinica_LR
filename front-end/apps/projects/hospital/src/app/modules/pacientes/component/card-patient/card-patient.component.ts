@@ -15,8 +15,10 @@ import { DateFormat } from '@core/utils/date.utils';
 import { CardModel, ValueAction } from '@presentation/components/card/card.component';
 import { Observable, of } from 'rxjs';
 import { PatientProfilePopupComponent } from '../../../auditoria/dialogs/patient-profile-popup/patient-profile-popup.component';
-import { ROUTE_EMPADRONAMIENTO } from '../../../auditoria/routes/home/home.component';
+import { ROUTE_EMPADRONAMIENTO, ROUTE_UNLINK_PATIENT } from '../../../auditoria/routes/home/home.component';
 import { ViewPatientDetailComponent } from '../view-patient-detail/view-patient-detail.component';
+import { momentParseDateTime, newMoment } from '@core/utils/moment.utils';
+import { Moment } from 'moment';
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 const PAGE_MIN_SIZE = 5;
@@ -81,9 +83,10 @@ export class CardPatientComponent {
 		this.initialSize = of(PAGE_MIN_SIZE);
 	}
 
-	private mapToPatientContent(): CardModel[] {
+	private mapToPatientContent(): CardPatient[] {
 		let medicalSpecialist = false;
 		let legalPerson = false;
+		let auditor = false;
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			medicalSpecialist = anyMatch<ERole>(userRoles,
 				[
@@ -95,32 +98,35 @@ export class CardPatientComponent {
 					ERole.PERSONAL_DE_IMAGENES,
 					ERole.PERSONAL_DE_FARMACIA,
 					ERole.PRESCRIPTOR,
-					ERole.AUDITOR_MPI,
 				]);
 			legalPerson = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_LEGALES]);
+			auditor = anyMatch<ERole>(userRoles, [ERole.AUDITOR_MPI]);
 		});
 
 		return this.patientData?.map((patient: any) => {
 			let header;
-			if (this.router.url.includes(ROUTE_EMPADRONAMIENTO) && this.nameSelfDeterminationFF) {
-				header = [{ title: this.patientNameService.getFullName(patient.person.firstName, null, patient.person?.middleNames) + ' ' + this.getLastNames(patient), value: patient.nameSelfDetermination? patient.nameSelfDetermination +" (autopercibido)" : " "}];
+			if ((this.router.url.includes(ROUTE_EMPADRONAMIENTO) || this.router.url.includes(ROUTE_UNLINK_PATIENT) ) && this.nameSelfDeterminationFF) {
+				header = [{ title: this.patientNameService.getFullName(patient.person.firstName, null, patient.person?.middleNames) + ' ' + this.getLastNames(patient), value: patient.nameSelfDetermination ? patient.nameSelfDetermination + " (autopercibido)" : " " }];
 			} else {
 				header = [{ title: " ", value: this.patientNameService.getFullName(patient.person.firstName, patient.person.nameSelfDetermination, patient.person?.middleNames) + ' ' + this.getLastNames(patient) }];
 			}
 
 			return {
-				header: header,
-				id: patient.idPatient,
-				identificationTypeId: patient.person.identificationTypeId,
-				dni: patient.person.identificationNumber || "-",
-				gender: this.genderTableView.find(p => p?.id === patient.person.genderId)?.description,
-				date: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DateFormat.VIEW_DATE) : '',
-				ranking: patient?.ranking,
-				patientTypeId: patient?.patientTypeId,
-				auditType: patient?.auditType,
-				actions: this.setActionsByRole(medicalSpecialist, legalPerson, patient.idPatient)
+				cardModel: {
+					header: header,
+					id: patient.idPatient,
+					identificationTypeId: patient.person.identificationTypeId,
+					dni: patient.person.identificationNumber || "-",
+					gender: this.genderTableView.find(p => p?.id === patient.person.genderId)?.description,
+					date: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DateFormat.VIEW_DATE) : '',
+					ranking: patient?.ranking,
+					patientTypeId: patient?.patientTypeId,
+					auditType: patient?.auditType,
+					actions: this.setActionsByRole(medicalSpecialist, legalPerson, auditor, patient.idPatient),
+				},
+				numberOfMergedPatients: patient.numberOfMergedPatients,
 			}
-		});
+		})
 	}
 	private getLastNames(patient: PatientSearchDto): string {
 		return patient.person?.otherLastNames ? patient.person?.lastName + ' ' + patient.person?.otherLastNames : patient.person?.lastName;
@@ -131,7 +137,7 @@ export class CardPatientComponent {
 		this.pageSlice = this.patientContent.slice(startPage, $event.pageSize + startPage);
 	}
 
-	private setActionsByRole(medicalSpecialist: boolean, legalPerson: boolean, idPatient: number): ValueAction[] {
+	private setActionsByRole(medicalSpecialist: boolean, legalPerson: boolean, auditor: boolean, idPatient: number): ValueAction[] {
 		const valueActions: ValueAction[] = [];
 		if (legalPerson && this.printClinicalHistoryFFIsOn)
 			valueActions.push({
@@ -143,10 +149,15 @@ export class CardPatientComponent {
 				display: 'ambulatoria.card-patient.VIEW_BUTTON',
 				do: `${this.routePrefix}ambulatoria/paciente/${idPatient}`
 			});
-		if (!legalPerson && !medicalSpecialist)
+		if (!legalPerson && !medicalSpecialist && !auditor)
 			valueActions.push({
 				display: 'ambulatoria.card-patient.VIEW_BUTTON',
 				do: `${this.routePrefix}paciente/profile/${idPatient}`
+			});
+		if (auditor && !this.router.url.includes(ROUTE_EMPADRONAMIENTO) )
+			valueActions.push({
+				display: 'pacientes.audit.LABEL_BUTTON_AUDIT',
+				do: `home/auditoria/desvincular-pacientes/${idPatient}`
 			});
 		return valueActions;
 	}
@@ -170,15 +181,16 @@ export class CardPatientComponent {
 			})
 
 		function calculateAge(birthDate: string): number {
-				const todayDate: Date = new Date();
-				const birthDateDate: Date = new Date(birthDate);
-				return todayDate.getFullYear() - birthDateDate.getFullYear();
+				const todayDate: Moment = newMoment();
+				const birthDateDate: Moment = momentParseDateTime(birthDate);
+				return todayDate.diff(birthDateDate, 'years');
 			}
 
 		} else {
 			this.dialog.open(PatientProfilePopupComponent, {
 				data: {
 					patientId: idPatient,
+					viewCardToAudit: this.viewCardToAudit
 				},
 				height: "600px",
 				width: '30%',
@@ -199,4 +211,9 @@ export class CardPatientComponent {
 	}
 
 
+}
+
+interface CardPatient {
+	cardModel: CardModel,
+	numberOfMergedPatients: number,
 }

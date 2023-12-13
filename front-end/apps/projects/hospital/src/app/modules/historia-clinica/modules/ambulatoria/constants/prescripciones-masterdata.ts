@@ -28,6 +28,10 @@ export const STUDY_STATUS = {
 		id: '261782000',
 		description: 'Completado'
 	},
+	FINAL_RDI: {
+		id: '2',
+		description: 'Completado'
+	},
 	ERROR: {
 		id: '89925002',
 		description: 'Eliminado'

@@ -1,0 +1,12 @@
+@import "../../../../../assets/styles/mat-mixins";
+
+.mat-form-field-appearance-outline {
+    margin: .25em 0.75em;
+	min-width: 30%
+}
+#filters{
+	@include mat-form-field-background-white;
+}
+#button-filter{
+	margin-bottom: 3%;
+}

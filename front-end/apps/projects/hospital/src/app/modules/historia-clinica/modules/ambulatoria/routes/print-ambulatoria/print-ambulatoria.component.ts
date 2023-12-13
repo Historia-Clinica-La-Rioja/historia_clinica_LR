@@ -10,23 +10,22 @@ import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { MapperService } from '@presentation/services/mapper.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { DateFormat, momentFormat} from '@core/utils/moment.utils';
+import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import * as moment from 'moment';
-import { EncounterTypes, DocumentTypes, ROUTE_HISTORY_CLINIC, EncounterType, TableColumns } from '../../constants/print-ambulatoria-masterdata';
+import { EncounterTypes, DocumentTypes, ROUTE_HISTORY_CLINIC, EncounterType, DocumentType, TableColumns } from '../../constants/print-ambulatoria-masterdata';
 import { ECHEncounterType } from "@api-rest/api-model";
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { ContextService } from '@core/services/context.service';
-import { DatePipeFormat } from '@core/utils/date.utils';
+import { DatePipeFormat, fromStringToDate } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
-import { AccountService } from '@api-rest/services/account.service';
-import { mapToFullName} from '@api-presentation/mappers/user-person-dto.mapper';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PrintAmbulatoryService } from '@api-rest/services/print-ambulatory.service';
-import { mapDateWithHypenToDateWithSlash } from '@api-rest/mapper/date-dto.mapper';
+import { dateTimeDtotoLocalDate, mapDateWithHypenToDateWithSlash } from '@api-rest/mapper/date-dto.mapper';
 import { Observable, take } from 'rxjs';
+import { MatSort, MatSortable } from '@angular/material/sort';
 
 @Component({
 	selector: 'app-print-ambulatoria',
@@ -37,11 +36,13 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 	datePipeFormat = DatePipeFormat;
 	nowDate: string;
-	userFullName: string;
+	userLastDownload: string;
+	dateLastDownload: Date;
 	nameSelfDeterminationFF: boolean;
 
 	patient: PatientBasicData;
 	patientId: number;
+	patientDni: string;
 	personInformation: AdditionalInfo[] = [];
 	personPhoto$: Observable<PersonPhotoDto>
 
@@ -65,16 +66,14 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	allChecked = true;
 	showDocuments = true;
 
-	showTable = true;
 	showLastPrinted = false;
 
 	noInfo = false;
 	loadingTable = false;
 
-	columns = TableColumns;
+	displayedColumns: string[] = TableColumns;
+	dataSource: MatTableDataSource<CHDocumentSummaryDto>;
 
-	displayedColumns = ['select'].concat(this.columns.map(c => c.columnDef).concat('download'));
-	dataSource = new MatTableDataSource<CHDocumentSummaryDto>();
 	selection = new SelectionModel<CHDocumentSummaryDto>(true, []);
 
 	constructor(
@@ -86,7 +85,6 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		private readonly router: Router,
 		readonly datePipe: DatePipe,
 		private featureFlagService: FeatureFlagService,
-		private readonly accountService: AccountService,
 		private readonly printAmbulatoryService: PrintAmbulatoryService,
 	) {
 		this.route.paramMap.pipe(take(1)).subscribe(
@@ -96,6 +94,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 					patient => {
 						this.personInformation.push({ description: patient.person.identificationType, data: patient.person.identificationNumber });
 						this.patient = this.mapperService.toPatientBasicData(patient);
+						this.patientDni = patient.person.identificationNumber;
 					}
 				);
 				this.personPhoto$ = this.patientService.getPatientPhoto(this.patientId);
@@ -107,6 +106,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	}
 
 	@ViewChild(MatPaginator) paginator: MatPaginator;
+	@ViewChild(MatSort) sort: MatSort;
 
 	ngOnInit(): void {
 		this.dateRangeForm.valueChanges.subscribe(range => {
@@ -128,10 +128,14 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		});
 
 		this.documentTypeForm = this.formBuilder.group(documentTypeControls, { validators: this.atLeastOneChecked });
-		this.accountService.getInfo()
-			.subscribe(userInfo =>
-				this.userFullName = mapToFullName(userInfo.personDto, this.nameSelfDeterminationFF)
-			);
+
+		this.printAmbulatoryService.getPatientClinicHistoryLastDownload(this.patientId).subscribe(response => {
+			if (response.user && response.downloadDate) {
+				this.showLastPrinted = true;
+				this.userLastDownload = response.user;
+				this.dateLastDownload = dateTimeDtotoLocalDate(response.downloadDate);
+			}
+		});
 	}
 
 	dateRangeChange(range): void {
@@ -203,6 +207,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	}
 
 	search(): void {
+		this.hideEncounterListSection();
 		const selectedEncounterTypes: ECHEncounterType[] = [];
 		this.encounterTypes.forEach(elem => {
 			if (this.encounterTypeForm.get(elem.value).value)
@@ -224,8 +229,20 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		this.printAmbulatoryService.getPatientClinicHistory(this.patientId, this.dateRange.start, this.dateRange.end, searchFilterStr)
 			.subscribe(response => {
 				this.noInfo = response.length > 0 ? false : true;
-				this.dataSource.data = response.map(data => this.mapToDocumentSummary(data));
+				const tableData = response.map(data => this.mapToDocumentSummary(data));
+				this.dataSource = new MatTableDataSource(tableData);
 				this.dataSource.paginator = this.paginator;
+				this.dataSource.sortingDataAccessor = (item, property) => {
+					switch (property) {
+						case 'startDate':
+							return new Date(fromStringToDate(item.startDate));
+						case 'endDate':
+							return new Date(fromStringToDate(item.endDate));
+						default: return item[property];
+					}
+				};
+				this.sort.sort(({ id: 'startDate', start: 'desc' }) as MatSortable);
+				this.dataSource.sort = this.sort;
 				this.showEncounterListSection();
 				this.selection.clear();
 				this.toggleAllRows();
@@ -242,14 +259,36 @@ export class PrintAmbulatoriaComponent implements OnInit {
 				encounterType: EncounterType[data.encounterType],
 				institution: data.institution,
 				problems: data.problems,
-				professional: data.professional
+				professional: data.professional,
+				documentType: DocumentType[data.documentType]
 			}
 		}
 		return null;
 	}
 
-	download(): void {
-		this.nowDate = this.datePipe.transform(Date.now(), DatePipeFormat.SHORT);
-		this.showLastPrinted = true;
+	download(document) {
+		this.printAmbulatoryService.downloadClinicHistory(this.patientDni, [document.id]).subscribe();
 	}
+
+	downloadSelected() {
+		const activeSortColumn = this.sort.active;
+		const activeSortDirection = this.sort.direction;
+		const selectedItems = [...this.selection.selected];
+
+		selectedItems.sort((a, b) => {
+			const isAsc = activeSortDirection === 'asc';
+			const dateA = fromStringToDate(a[activeSortColumn]);
+			const dateB = fromStringToDate(b[activeSortColumn]);
+
+			if (isAsc) {
+				return dateA.getTime() - dateB.getTime();
+			} else {
+				return dateB.getTime() - dateA.getTime();
+			}
+		});
+
+		const selectedIds = selectedItems.map(item => item.id);
+		this.printAmbulatoryService.downloadClinicHistory(this.patientDni, selectedIds).subscribe();
+	}
+
 }

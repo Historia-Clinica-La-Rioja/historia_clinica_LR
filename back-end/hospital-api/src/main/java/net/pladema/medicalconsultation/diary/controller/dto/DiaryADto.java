@@ -46,7 +46,7 @@ public class DiaryADto {
     @Valid
     private List<DiaryOpeningHoursDto> diaryOpeningHours;
 
-	@NotNull
+	@Nullable
 	private Integer clinicalSpecialtyId;
 
 	@NotNull
@@ -58,6 +58,15 @@ public class DiaryADto {
 	@Nullable
 	private List<Integer> careLines;
 
-	@NotNull
+	@Nullable
 	private Integer protectedAppointmentsPercentage;
+
+	@Nullable
+	private Integer predecessorProfessionalId;
+
+	@Nullable
+	private Integer hierarchicalUnitId;
+
+	@Nullable
+	private List<Integer> practicesId;
 }

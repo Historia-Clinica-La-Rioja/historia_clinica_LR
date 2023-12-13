@@ -295,7 +295,7 @@ export enum EMedicalCoverageType {
 	PREPAGA = 1, OBRASOCIAL, ART
 	}
 
-export function determineIfIsHealthInsurance(toBeDetermined: HealthInsurance | PrivateHealthInsurance): toBeDetermined is HealthInsurance {
+export function determineIfIsHealthInsurance(toBeDetermined: HealthInsurance | PrivateHealthInsurance | CoverageDto): toBeDetermined is HealthInsurance {
 	if ((toBeDetermined as HealthInsurance).type) {
 		return true;
 	}

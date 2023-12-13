@@ -33,6 +33,11 @@
 			</mat-card>
 		</div>
 
+		<app-new-consultation-expansion-section id="episode-data" [title]="'ambulatoria.paciente.nueva-consulta.EPISODE_DATA' | translate"
+			icon="calendar_today" [isEmpty]="false" [collapsed]="false" [hideBorder]="true">
+			<app-episode-data [patientId]="data.patientId" [showSpecialty]="false" (episodeData)="episodeData = $event"></app-episode-data>
+		</app-new-consultation-expansion-section>
+
 		<app-new-consultation-expansion-section id="procedures"
 			[title]="'ambulatoria.paciente.nueva-consulta.procedimientos.TITLE' | translate" icon="library_add"
 			[isEmpty]="procedimientoNuevaConsultaService.isEmpty()">
@@ -142,7 +147,7 @@
 	</div>
 	<div actions id="buttons">
 		<div align="end">
-			<button class="uppercase" mat-raised-button color="primary" (click)="save()">
+			<button class="uppercase" [disabled]="disableConfirmButton" mat-raised-button color="primary" (click)="save()">
 				<span [translate]="'ambulatoria.paciente.counterreference.CONFIRM_CLOSURE'"></span>
 			</button>
 		</div>

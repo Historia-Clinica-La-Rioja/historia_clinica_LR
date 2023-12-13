@@ -14,7 +14,7 @@
             </button>
         </div>
         <div fxLayout="row" fxLayoutGap="5px" fxLayout.lt-md="column" fxLayoutGap.lt-md="5px">
-            <div fxFlex="50" fxLayout="column">
+            <div *ngIf="request.clinicalSpecialty?.name" fxFlex="50" fxLayout="column">
                 <span class="bold">
                     {{
                     'historia-clinica.reference-request-list.SPECIALTY' |

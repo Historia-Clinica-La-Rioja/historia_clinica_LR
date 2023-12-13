@@ -8,5 +8,7 @@ import java.util.List;
 
 @Service
 public interface ListDiagnosticReportInfoService {
-    List<DiagnosticReportBo> execute(DiagnosticReportFilterBo diagnosticReportFilterBo);
+    List<DiagnosticReportBo> getList(DiagnosticReportFilterBo diagnosticReportFilterBo);
+
+	List<DiagnosticReportBo> getMedicalOrderList(DiagnosticReportFilterBo filter);
 }

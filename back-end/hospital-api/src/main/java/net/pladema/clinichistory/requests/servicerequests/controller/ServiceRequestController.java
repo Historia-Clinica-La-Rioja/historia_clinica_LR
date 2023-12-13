@@ -10,8 +10,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import net.pladema.clinichistory.requests.servicerequests.service.DeleteTranscribedOrderService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -35,7 +33,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.StudyWithoutOrderReportInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedOrderReportInfoBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
@@ -52,24 +52,31 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import net.pladema.clinichistory.requests.controller.dto.TranscribedPrescriptionDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.AppointmentOrderImageExistCheckDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.CompleteRequestDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoWithFilesDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyWithoutOrderReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.TranscribedDiagnosticReportInfoDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.TranscribedOrderReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CompleteDiagnosticReportMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CreateServiceRequestMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.DiagnosticReportInfoMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.FileMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyMapper;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyWithoutOrderReportInfoMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.TranscribedDiagnosticReportInfoMapper;
+import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportRDIService;
 import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportService;
 import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
 import net.pladema.clinichistory.requests.servicerequests.service.CreateTranscribedServiceRequestService;
 import net.pladema.clinichistory.requests.servicerequests.service.DeleteDiagnosticReportService;
+import net.pladema.clinichistory.requests.servicerequests.service.DeleteTranscribedOrderService;
 import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.ExistCheckDiagnosticReportService;
 import net.pladema.clinichistory.requests.servicerequests.service.GetServiceRequestInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.ListDiagnosticReportInfoService;
+import net.pladema.clinichistory.requests.servicerequests.service.ListStudyWithoutOrderReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.ListTranscribedDiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.UpdateDiagnosticReportFileService;
 import net.pladema.clinichistory.requests.servicerequests.service.UploadDiagnosticReportCompletedFileService;
@@ -79,8 +86,11 @@ import net.pladema.clinichistory.requests.servicerequests.service.domain.Service
 import net.pladema.events.EHospitalApiTopicDto;
 import net.pladema.events.HospitalApiPublisher;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
+import net.pladema.patient.controller.mapper.PatientMedicalCoverageMapper;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.patient.service.PatientMedicalCoverageService;
+import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 
@@ -102,12 +112,18 @@ public class ServiceRequestController {
     private final ListDiagnosticReportInfoService listDiagnosticReportInfoService;
 
 	private final ListTranscribedDiagnosticReportInfoService listTranscribedDiagnosticReportInfoService;
+
+	private final ListStudyWithoutOrderReportInfoService listStudyWithoutOrderReportInfoService;
     private final DiagnosticReportInfoMapper diagnosticReportInfoMapper;
 
 	private final UploadTranscribedOrderFileService uploadTranscribedOrderFileService;
 	private final TranscribedDiagnosticReportInfoMapper transcribedDiagnosticReportInfoMapper;
+
+	private final StudyWithoutOrderReportInfoMapper studyWithoutOrderReportInfoMapper;
     private final DeleteDiagnosticReportService deleteDiagnosticReportService;
     private final CompleteDiagnosticReportService completeDiagnosticReportService;
+
+	private final CompleteDiagnosticReportRDIService completeDiagnosticReportRDIService;
     private final CompleteDiagnosticReportMapper completeDiagnosticReportMapper;
     private final UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService;
     private final UpdateDiagnosticReportFileService updateDiagnosticReportFileService;
@@ -122,8 +138,10 @@ public class ServiceRequestController {
 	private final FeatureFlagsService featureFlagsService;
 	private final Function<Long, ProfessionalCompleteDto> authorFromDocumentFunction;
     private final SharedInstitutionPort sharedInstitutionPort;
-
 	private final ExistCheckDiagnosticReportService existCheckDiagnosticReportService;
+	private final PatientMedicalCoverageService patientMedicalCoverageService;
+
+	private final PatientMedicalCoverageMapper patientMedicalCoverageMapper;
 
 
 	public ServiceRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService,
@@ -132,8 +150,7 @@ public class ServiceRequestController {
 									StudyMapper studyMapper,
 									DiagnosticReportInfoMapper diagnosticReportInfoMapper,
 									ListDiagnosticReportInfoService listDiagnosticReportInfoService, ListTranscribedDiagnosticReportInfoService listTranscribedDiagnosticReportInfoService, UploadTranscribedOrderFileService uploadTranscribedOrderFileService, TranscribedDiagnosticReportInfoMapper transcribedDiagnosticReportInfoMapper, DeleteDiagnosticReportService deleteDiagnosticReportService,
-									CompleteDiagnosticReportService completeDiagnosticReportService,
-									CompleteDiagnosticReportMapper completeDiagnosticReportMapper,
+									CompleteDiagnosticReportService completeDiagnosticReportService, CompleteDiagnosticReportRDIService completeDiagnosticReportRDIService, CompleteDiagnosticReportMapper completeDiagnosticReportMapper,
 									UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService,
 									UpdateDiagnosticReportFileService updateDiagnosticReportFileService,
 									DiagnosticReportInfoService diagnosticReportInfoService, DeleteTranscribedOrderService deleteTranscribedOrderService, FileMapper fileMapper,
@@ -141,7 +158,8 @@ public class ServiceRequestController {
 									PdfService pdfService, GetServiceRequestInfoService getServiceRequestInfoService,
 									HospitalApiPublisher hospitalApiPublisher, FeatureFlagsService featureFlagsService,
 									DocumentAuthorFinder documentAuthorFinder,
-									SharedInstitutionPort sharedInstitutionPort, ExistCheckDiagnosticReportService existCheckDiagnosticReportService) {
+									SharedInstitutionPort sharedInstitutionPort, ExistCheckDiagnosticReportService existCheckDiagnosticReportService,
+									ListStudyWithoutOrderReportInfoService listStudyWithoutOrderReportInfoService, StudyWithoutOrderReportInfoMapper studyWithoutOrderReportInfoMapper, PatientMedicalCoverageService patientMedicalCoverageService, PatientMedicalCoverageMapper patientMedicalCoverageMapper) {
 		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
 		this.createServiceRequestService = createServiceRequestService;
 		this.createTranscribedServiceRequestService = createTranscribedServiceRequestService;
@@ -155,6 +173,7 @@ public class ServiceRequestController {
 		this.transcribedDiagnosticReportInfoMapper = transcribedDiagnosticReportInfoMapper;
 		this.deleteDiagnosticReportService = deleteDiagnosticReportService;
 		this.completeDiagnosticReportService = completeDiagnosticReportService;
+		this.completeDiagnosticReportRDIService = completeDiagnosticReportRDIService;
 		this.completeDiagnosticReportMapper = completeDiagnosticReportMapper;
 		this.uploadDiagnosticReportCompletedFileService = uploadDiagnosticReportCompletedFileService;
 		this.updateDiagnosticReportFileService = updateDiagnosticReportFileService;
@@ -169,6 +188,10 @@ public class ServiceRequestController {
 		this.authorFromDocumentFunction = (Long documentId) -> documentAuthorFinder.getAuthor(documentId);
         this.sharedInstitutionPort = sharedInstitutionPort;
 		this.existCheckDiagnosticReportService = existCheckDiagnosticReportService;
+		this.listStudyWithoutOrderReportInfoService = listStudyWithoutOrderReportInfoService;
+		this.studyWithoutOrderReportInfoMapper = studyWithoutOrderReportInfoMapper;
+		this.patientMedicalCoverageService = patientMedicalCoverageService;
+		this.patientMedicalCoverageMapper = patientMedicalCoverageMapper;
 	}
 
     @PostMapping
@@ -261,6 +284,19 @@ public class ServiceRequestController {
         LOG.debug(OUTPUT, result);
     }
 
+	@PutMapping("/{appointmentId}/completeByRDI")
+	@Transactional
+	@ResponseStatus(code = HttpStatus.OK)
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, TECNICO')")
+	public void completeByRDI(@PathVariable(name = "institutionId") Integer institutionId,
+						 @PathVariable(name = "patientId") Integer patientId,
+						 @PathVariable(name = "appointmentId") Integer appointmentId,
+						 @RequestBody() CompleteRequestDto completeRequestDto) {
+		LOG.debug("Input parameters ->  {} institutionIdpatientId {}, appointmentId {}", institutionId, patientId, appointmentId);
+		Integer result = completeDiagnosticReportRDIService.run(patientId, appointmentId);
+		LOG.debug(OUTPUT, result);
+	}
+
     @PostMapping(value = "/{diagnosticReportId}/uploadFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO')")
@@ -317,7 +353,7 @@ public class ServiceRequestController {
                                                  @RequestParam(value = "study", required = false) String study,
                                                  @RequestParam(value = "category", required = false) String category,
                                                  @RequestParam(value = "healthCondition", required = false) String healthCondition) {
-        LOG.debug("Input parameters -> institutionId {} patientId {}, status {}, diagnosticReport {}, healthCondition {}, categpry {}",
+        LOG.debug("Input parameters -> institutionId {} patientId {}, status {}, diagnosticReport {}, healthCondition {}, category {}",
                 institutionId,
                 patientId,
                 status,
@@ -325,7 +361,7 @@ public class ServiceRequestController {
                 healthCondition,
                 category);
 
-        List<DiagnosticReportBo> resultService = listDiagnosticReportInfoService.execute(new DiagnosticReportFilterBo(
+        List<DiagnosticReportBo> resultService = listDiagnosticReportInfoService.getList(new DiagnosticReportFilterBo(
                 patientId,
                 status,
                 study,
@@ -335,13 +371,82 @@ public class ServiceRequestController {
         List<DiagnosticReportInfoDto> result = resultService.stream()
                 .map(diagnosticReportBo -> {
                     ProfessionalDto professionalDto = healthcareProfessionalExternalService.findProfessionalByUserId(diagnosticReportBo.getUserId());
-                    return diagnosticReportInfoMapper.parseTo(diagnosticReportBo, professionalDto);
-                })
+					PatientMedicalCoverageBo coverage = patientMedicalCoverageService.getActiveCoveragesByOrderId(diagnosticReportBo.getEncounterId());
+                    return diagnosticReportInfoMapper.parseTo(diagnosticReportBo, professionalDto, patientMedicalCoverageMapper.toPatientMedicalCoverageDto(coverage));
+				})
                 .collect(Collectors.toList());
 
         LOG.trace(OUTPUT, result);
         return result;
     }
+
+	@GetMapping("/medicalOrders")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	public List<DiagnosticReportInfoDto> getMedicalOrderList(@PathVariable(name = "institutionId") Integer institutionId,
+												 @PathVariable(name = "patientId") Integer patientId,
+												 @RequestParam(value = "statusId", required = false) String status,
+												 @RequestParam(value = "category", required = false) String category) {
+		LOG.debug("Input parameters -> institutionId {} patientId {}, status {}, diagnosticReport {}, category {}",
+				institutionId,
+				patientId,
+				status,
+				category);
+
+		List<DiagnosticReportBo> resultService = listDiagnosticReportInfoService.getMedicalOrderList(new DiagnosticReportFilterBo(
+				patientId,
+				status,
+				null, null,
+				category));
+
+		List<DiagnosticReportInfoDto> result = resultService.stream()
+				.map(diagnosticReportBo -> {
+					ProfessionalDto professionalDto = healthcareProfessionalExternalService.findProfessionalByUserId(diagnosticReportBo.getUserId());
+					PatientMedicalCoverageBo coverage = patientMedicalCoverageService.getActiveCoveragesByOrderId(diagnosticReportBo.getEncounterId());
+					return diagnosticReportInfoMapper.parseTo(diagnosticReportBo, professionalDto, patientMedicalCoverageMapper.toPatientMedicalCoverageDto(coverage));
+				})
+				.collect(Collectors.toList());
+
+		LOG.trace(OUTPUT, result);
+		return result;
+	}
+
+	@GetMapping("/studyTranscribedOrder")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	public List<TranscribedOrderReportInfoDto> getListStudy(@PathVariable(name = "institutionId") Integer institutionId,
+													  @PathVariable(name = "patientId") Integer patientId) {
+		LOG.debug("Input parameters -> patientId {}) {}",
+				patientId);
+
+		List<TranscribedOrderReportInfoBo> resultService = listTranscribedDiagnosticReportInfoService.getListTranscribedOrder(patientId);
+
+		List<TranscribedOrderReportInfoDto> result = resultService.stream()
+				.map(transcribedOrderReportInfoBo -> {
+					return transcribedDiagnosticReportInfoMapper.parseToDto(transcribedOrderReportInfoBo);
+				})
+				.collect(Collectors.toList());
+
+		LOG.trace(OUTPUT, result);
+		return result;
+	}
+
+	@GetMapping("/studyWithoutOrder")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	public List<StudyWithoutOrderReportInfoDto> getListStudyWithoutOrder(@PathVariable(name = "institutionId") Integer institutionId,
+																		 @PathVariable(name = "patientId") Integer patientId) {
+		LOG.debug("Input parameters -> patientId {}) {}",
+				patientId);
+
+		List<StudyWithoutOrderReportInfoBo> resultService = listStudyWithoutOrderReportInfoService.execute(patientId);
+
+		List<StudyWithoutOrderReportInfoDto> result = resultService.stream()
+				.map(studyWithoutOrderReportInfoBo -> {
+					return studyWithoutOrderReportInfoMapper.parseTo(studyWithoutOrderReportInfoBo);
+				})
+				.collect(Collectors.toList());
+
+		LOG.trace(OUTPUT, result);
+		return result;
+	}
 
 	@GetMapping("/transcribedOrders")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES')")
@@ -365,17 +470,17 @@ public class ServiceRequestController {
 	}
 
 	@ResponseStatus(code = HttpStatus.OK)
-	@GetMapping(value = "/{serviceRequestId}/existCheck")
+	@GetMapping(value = "/{diagnosticReportId}/existCheck")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO')")
-	public boolean serviceRequestExistCheck(
+	public AppointmentOrderImageExistCheckDto serviceRequestExistCheck(
 			@PathVariable(name = "institutionId") Integer institutionId,
-			@PathVariable(name = "serviceRequestId") Integer serviceRequestId) {
-		LOG.debug("Input parameters -> orderId {}", serviceRequestId);
-		return existCheckDiagnosticReportService.execute(serviceRequestId);
+			@PathVariable(name = "diagnosticReportId") Integer diagnosticReportId) {
+		LOG.debug("Input parameters -> orderId {}", diagnosticReportId);
+		return new AppointmentOrderImageExistCheckDto(existCheckDiagnosticReportService.execute(diagnosticReportId));
 	}
 
     @GetMapping(value = "/{serviceRequestId}/download-pdf")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, TECNICO')")
     public ResponseEntity<Resource> downloadPdf(@PathVariable(name = "institutionId") Integer institutionId,
 												@PathVariable(name = "patientId") Integer patientId,
 												@PathVariable(name = "serviceRequestId") Integer serviceRequestId) throws PDFDocumentException {

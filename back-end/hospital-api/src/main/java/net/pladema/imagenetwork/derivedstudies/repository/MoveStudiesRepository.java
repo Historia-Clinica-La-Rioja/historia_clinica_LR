@@ -8,7 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Integer> {
 
@@ -38,6 +40,14 @@ public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Intege
 	@Transactional
 	@Modifying
 	@Query("UPDATE MoveStudies AS mo " +
+			"SET mo.imageId = :imageId " +
+			"WHERE mo.id = :idMove")
+	void updateImageId(@Param("idMove") Integer idMove,
+					@Param("imageId") String imageId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE MoveStudies AS mo " +
 			"SET mo.status = :status, mo.result= :result " +
 			"WHERE mo.id = :idMove")
 	void updateStatusandResult(@Param("idMove") Integer idMove,
@@ -47,10 +57,39 @@ public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Intege
 	@Transactional
 	@Modifying
 	@Query("UPDATE MoveStudies AS mo " +
+			"SET mo.beginOfMove = :date " +
+			"WHERE mo.id = :idMove")
+	void updateBeginOfMove(@Param("idMove") Integer idMove,
+							   @Param("date") Date date);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE MoveStudies AS mo " +
+			"SET mo.endOfMove = :date " +
+			"WHERE mo.id = :idMove")
+	void updateEndOfMove(@Param("idMove") Integer idMove,
+						   @Param("date") Date date);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE MoveStudies AS mo " +
 			"SET mo.attempsNumber = :attempsNumbers " +
 			"WHERE mo.id = :idMove")
 	void updateAttemps(@Param("idMove") Integer idMove,
 					@Param("attempsNumbers") Integer attempsNumbers);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT mo " +
+			"FROM MoveStudies AS mo " +
+			"WHERE mo.result != '200' " +
+			"ORDER BY mo.orchestratorId ")
 
+	List<MoveStudies> listFailed();
+
+
+	@Transactional(readOnly = true)
+	@Query("SELECT mo.institutionId " +
+			"FROM MoveStudies AS mo " +
+			"WHERE mo.id = :idMove")
+	Optional<Integer> findInstitutionId(@Param("idMove") Integer idMove);
 }

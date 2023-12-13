@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.snowstorm.services.SnowstormInferredService;
 import net.pladema.snowstorm.services.SnowstormService;
 import net.pladema.snowstorm.services.domain.SnowstormItemResponse;
-import net.pladema.snowstorm.services.exceptions.SnowstormApiException;
 import net.pladema.snowstorm.services.inferredrules.InferredAllergyAttributes;
 import net.pladema.snowstorm.services.inferredrules.InferredAllergyRules;
 import org.springframework.stereotype.Service;
@@ -27,8 +26,9 @@ public class SnowstormInferredServiceImpl implements SnowstormInferredService {
             List<SnowstormItemResponse> ancestors = snowstormService.getConceptAncestors(conceptId);
             if(!ancestors.isEmpty())
                 return InferredAllergyRules.inferred(ancestors);
-        } catch (SnowstormApiException e) {
-            log.error("Error snowstorm service");
+        } catch (Exception e) {
+			e.printStackTrace();
+            return new InferredAllergyAttributes(InferredAllergyAttributes.TYPE.NULL, InferredAllergyAttributes.CATEGORY.NULL);
         }
         return null;
     }

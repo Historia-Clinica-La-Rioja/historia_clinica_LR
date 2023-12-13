@@ -91,4 +91,17 @@ public class AppointmentVo {
 			return null;
 		return appointment.getPatientMedicalCoverageId();
 	}
+
+	public String getCallId() {
+		if (appointment == null)
+			return null;
+		return appointment.getCallId();
+	}
+
+	public Short getModalityId() {
+		if (appointment == null)
+			return null;
+		return appointment.getModalityId();
+	}
+
 }

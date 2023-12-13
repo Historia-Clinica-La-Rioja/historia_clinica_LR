@@ -51,6 +51,10 @@
 	line-height: 14px;
 }
 
+.assigned-by {
+	color: #828282;
+}
+
 .appointment-actions {
 
 	margin-top: 10px;
@@ -165,12 +169,22 @@ section {
 	display: none;
 }
 
-.coverage-text {
+.info-card {
+	padding-bottom: 10px;
+}
+
+.description-text {
 	display: inline-block;
 	max-width: 285px;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+.medical-order-description {
+	display: inline-block;
+	overflow-wrap: break-word;
+	max-width: auto;
 }
 
 .confirm-buttons {
@@ -222,4 +236,8 @@ mat-form-field {
 	.window{
 		padding-left: 5px;
 	}
+}
+
+.none {
+	display: none;
 }

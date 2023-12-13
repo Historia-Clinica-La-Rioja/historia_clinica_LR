@@ -37,6 +37,17 @@ public  class EquipmentServiceImpl implements EquipmentService {
 
 	}
 
+	@Override
+	public List<EquipmentBO> getEquipmentByModalityInInstitution(Integer modalityId, Integer institutionId){
+		LOG.debug("Input parameter -> modalityId {}, institutionId {}", modalityId, institutionId);
+		List<EquipmentBO> result = equipmentRepository.getEquipmentByModalityInInstitution(modalityId, institutionId).stream()
+				.map(this::createEquipmentBoInstance)
+				.collect(Collectors.toList());
+		LOG.debug("Result size {}", result.size());
+		LOG.trace(OUTPUT, result);
+		return result;
+	}
+
 	private EquipmentBO createEquipmentBoInstance(Equipment equipment) {
 
 		LOG.debug("Input parameters -> Equipo {}", equipment);
@@ -48,6 +59,7 @@ public  class EquipmentServiceImpl implements EquipmentService {
 		result.setModalityId(equipment.getModalityId());
 		result.setOrchestratorId(equipment.getOrchestratorId());
 		result.setPacServerId(equipment.getPacServerId());
+		result.setCreateId(equipment.getCreateId());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

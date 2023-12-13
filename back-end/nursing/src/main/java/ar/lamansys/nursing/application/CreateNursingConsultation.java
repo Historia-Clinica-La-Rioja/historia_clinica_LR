@@ -68,7 +68,8 @@ public class CreateNursingConsultation {
                         medicalCoverageId,
                         doctorInfoBo.getId(),
                         now,
-                        false));
+                        false,
+						nursingConsultationBo.getHierarchicalUnitId()));
 
         Long documentId = nursingDocumentStorage.save(new NursingDocumentBo(null, nursingConsultationBo, encounterId, doctorInfoBo.getId(), now));
         Integer appointmentId = nursingAppointmentStorage.run(nursingConsultationBo.getPatientId(), doctorInfoBo.getId(), now);

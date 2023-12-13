@@ -1,10 +1,16 @@
 <section class="section">
     <mat-card class="main-card" fxLayout="column" fxLayoutGap="10px">
 
-        <button mat-icon-button color="primary" (click)="goBack()" fxLayoutGap="5px">
-            <mat-icon>arrow_back</mat-icon>
-            <span>{{'image-network.worklist.details_study.BACK_TO_WORKLIST' | translate}}</span>
-        </button>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <button mat-icon-button color="primary" (click)="goBack()" fxLayoutGap="5px">
+                <mat-icon>arrow_back</mat-icon>
+                <span>{{'image-network.worklist.details_study.BACK_TO_WORKLIST' | translate}}</span>
+            </button>
+            
+            <div>
+                <app-view-report *ngIf="reportIsDone" [appointmentId]="appointmentId" [buttonText]="'image-network.worklist.DOWNLOAD_REPORT'" [buttonIcon]="'download_icon'"></app-view-report>
+            </div>
+        </div>
 
         <div fxLayout="column" fxFlex="100">
             <h3 fxFlex="10" class="bold" translate="image-network.worklist.details_study.DETAILS_STUDY"></h3>
@@ -36,7 +42,7 @@
 
                 <mat-divider fxFlex="5" [vertical]="true"></mat-divider>
 
-                <app-report-study fxFlex="50" (update)="study$ = $event"></app-report-study>
+                <app-report-study fxFlex="50" (update)="setUpdatedStatus($event)"></app-report-study>
             </div>
         </div>
     </mat-card>

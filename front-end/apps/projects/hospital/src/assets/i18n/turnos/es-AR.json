@@ -1,5 +1,7 @@
 {
 	"turnos": {
+		"CONSULTATION": "Consulta",
+		"PRACTICE": "Práctica/Procedimiento",
 		"home": {
 			"TITLE": "Gestión de turnos",
 			"actions": {
@@ -10,6 +12,7 @@
 			},
 			"PROFESSIONAL_SEARCH": "Profesional",
 			"SPECIALTY_SEARCH": "Especialidad",
+			"MODALITY_SEARCH": "Modalidad",
 			"SELECT_AGENDA": "Seleccione una agenda",
 			"NO_AGENDA_MSG_TITLE": "El profesional no posee una agenda activa.",
 			"NO_AGENDA_MSG_SUBTITLE": "Creá una agenda para gestionar turnos.",
@@ -17,9 +20,9 @@
 			"ACTIVES_AGENDAS_LABEL": "ACTIVAS",
 			"EXPIRED_AGENDAS_LABEL": "VENCIDAS",
 			"SEARCH_BY_PROFESSIONAL": "Oferta por profesional",
-			"SEARCH_BY_SPECIALTY": "Oferta por especialidad",
+			"SEARCH_BY_INSTITUTION": "Oferta en institución",
 			"CARE_NETWORK_OFFER": "Oferta en red de atención",
-			"SEARCH_BY_SPECIALTY_CRITERIA": "Seleccione los criterios para la búsqueda de turnos disponibles por especialidad:",
+			"SEARCH_BY_INSTITUTION_CRITERIA": "Seleccione los criterios para la búsqueda de turnos disponibles por institución:",
 			"AVAILABLE_DAYS": "Días disponibles",
 			"TIME_RANGE": "Rango horario",
 			"START_DATE": "Fecha de inicio",
@@ -31,16 +34,24 @@
 			"RESULT_DISCLAIMER": "Si no se encuentra el resultado esperado, por favor refine la búsqueda.",
 			"CARE_LINE_TOOLTIP": "Línea de cuidado",
 			"SECTOR_CONSULTORY_TOOLTIP": "Consultorio y sector",
-			"PROTECTED_APPOINTMENT_TOOLTIP": "Turnos protegidos",
 			"PROFESSIONALS_TOOLTIP": "Profesionales",
 			"PERCENTAGE_PROTECTED_APPOINTMENT": "% de turnos protegidos por día",
+			"REQUESTS": "solicitudes",
+			"PRACTICES": "Prácticas",
 			"messages": {
 				"NO_SPECIFIED_DATE": "Por favor ingrese una fecha para realizar la búsqueda"
 			}
 		},
+		"MODALITY_ATTENTION":"Modalidad de atención",
+		"ON_SITE_ATTENTION": "Presencial",
+		"PATIENT_VIRTUAL_ATTENTION": "Teleconsulta con paciente",
+		"SECOND_OPINION_VIRTUAL_ATTENTION":"Teleconsulta de 2da opinión",
+		"TYPE_ATTENTION": "Tipo de atención",
+		"CONSULTATION": "Consulta",
+		"PRACTICE": "Práctica/Procedimiento",
+		"OPTIONAL": "(Opcional)",
 		"search-appointments-in-care-network": {
 			"SEARCH_IN_CARE_NETWORK_CRITERIA": "Seleccione los criterios para la búsqueda de turnos disponibles en la red de atención:",
-			"OPTIONAL": "(Opcional)",
 			"CARELINE": "Línea de cuidado",
 			"PROVINCE": "Provincia",
 			"DEPARTMENT": "Partido",
@@ -66,6 +77,8 @@
 			"SELECT_DAYS_TYPE_SUBTITLE": "Seleccione tipos de consulta para cada día",
 			"RESPONSIBLE_PROFESSIONAL": "Profesional responsable",
 			"CONJOINT_DIARY": "Agenda conjunta",
+			"TEMPORARY_REMPLACEMENT":"Es un reemplazo temporal",
+			"PROFESSIONAL_REMPLACEMENT":"Profesional reemplazado",
 			"OTHER_PROFESSIONALS": "Otros profesionales",
 			"ADD_ANOTHER_PROFESSIONAL": "Añadir otro profesional",
 			"CHOOSE_PROFESSIONAL": "Seleccione profesional",
@@ -74,17 +87,28 @@
 			"ALIAS_HINT_TEXT": "Identificador para la oferta de turnos",
 			"OPTIONAL_CARELINE": "Línea de cuidado (Opcional)",
 			"CARELINE": "Seleccionar línea de cuidado",
-			"PROTECTED_APPOINTMENT_PERCENTAGE": "Porcentajes de turnos protegidos por día",
 			"PROTECTED_APPOINTMENT_PERCENTAGE_RANGE": "Ingrese un valor entre 0 y 100%. Considere que se redondea hacia abajo.",
 			"PROTECTED_APPOINTMENT_PERCENTAGE_RANGE_EXAMPLE": "Por ej. valores entre 1 y 9% pueden no implicar turnos protegidos en una agenda con menos de 10 turnos totales.",
 			"VALIDATION_PROTECTED_APPOINTMENT_PERCENTAGE_AND_CARELINE": "Ingrese 0 como porcentaje de turnos protegidos o agregue al menos una linea de cuidado.",
 			"MORE": "más",
 			"DURATION_OF_THE_CONSULTATION":"Duración de la consulta",
 			"SECTOR": "Sector",
+			"HIERARCHICAL_UNIT": "Unidad Jerárquica",
+			"DIARY_TYPE": "Tipo de agenda",
+			"PRACTICE_PLACEHOLDER": "Seleccionar prácticas",
 			"dialog": {
-				"TITLE": "Nueva atención",
-				"EDIT": "Editar atención",
-				"BOOKING": "Disponible para turnos online"
+				"TITLE": "Nueva franja horaria",
+				"EDIT": "Editar franja horaria",
+				"BOOKING": "Disponible para turnos online",
+				"MODALITY": "Modalidad",
+				"TAKE_SHIFTS_TITLE": "Atención de turnos",
+				"ATTENDS_FACE_TO_FACE": "Atiende presencial",
+				"TAKE_PROTECTED_ONLINE": "Atiende turnos protegidos por linea de cuidado",
+				"ATTEND_ONLINE": "Atiende turnos online",
+				"ATTEND_SHIFTS_PROTECTED_BY_LINES_OF_CARE": "Atiende turnos protegidos por líneas de cuidado",
+				"ERROR": "No se puede destildar esta opción porque hay turno asignados de este tipo",
+				"ATTENDS_BY_TELECONSULTATION_OF_PATIENT": "Atiende teleconsultas a pacientes",
+				"ATTENDS_BY_TELECONSULTATION_OF_SECOND_OPINION":"Atiende teleconsultas de segunda opinion"
 			},
 			"messages": {
 				"SUCCESS": "La agenda se guardó exitosamente",
@@ -108,16 +132,22 @@
 			"BUTTON_ADD_PATIENT": "Crear paciente",
 			"BUTTON_SEARCH": "Buscar",
 			"STEP_1": "Búsqueda de paciente",
-			"STEP_2": "Confirmar turno",
+			"STEP_2": "Información paciente",
 			"STEP_3": "Referencia",
 			"ASSOCIATED_REFERENCE": "Referencia asociada",
 			"TEMPORARY_PATIENT": "Paciente temporal",
 			"PATIENT_ID": "ID del paciente",
 			"PHONE_NUMBER": "Número Telefónico",
 			"PHONE_PREFIX": "Prefijo",
+			"EMAIL":"Email",
 			"ACCEPT": "Aceptar",
 			"PRINT_APPOINTMENT_BUTTON": "Imprimir turno",
 			"ASSIGNED_APPOINTMENT": "Turno asignado",
+			"PROFESSIONAL_EMAIL":"Mail del profesional solicitante",
+			"fields": {
+				"DOCUMENT_TYPE": "Tipo de documento",
+				"DOCUMENT_NUMBER": "Nº de documento"
+			},
 			"messages": {
 				"ERROR": "Paciente no encontrado",
 				"SUCCESS": "Paciente encontrado",
@@ -159,6 +189,9 @@
 			"CANCEL": "Cancelar",
 			"NO-INFO": "Sin información",
 			"PROTECTED": "*solicitado como turno protegido",
+			"ASSIGNED_BY": "Asignado por",
+			"BOOKING": "Turno online",
+			"JOIN_CALL":"Unirse a la teleconsulta",
 			"date": {
 				"EDIT_DATE_TIME": "Editar fecha y hora del turno",
 				"UPDATE_SUCCESS": "La fecha y hora del turno se actualizaron exitosamente"
@@ -228,6 +261,18 @@
 			"HOLIDAY_DISCLAIMER": "¿Desea asignar un turno de todos modos?",
 			"OK_BUTTON": "No, elegir otra fecha",
 			"CANCEL_BUTTON": "Si, asignar turno"
+		},
+		"search_references": {
+			"REQUEST_LIST": "lista de solicitudes:",
+			"RECEIVED": "Recibidas",
+			"REQUEST": "Solicitadas",
+			"FILTER_BY_PERIOD": "Filtrar por período",
+			"PERIOD_VALIDATIONS": "El rango de fechas no debe superar los 90 días",
+			"ORIGIN": "origen",
+			"DESTINATION": "destino",
+			"REQUESTED_REFERENCE": "Referencia solicitada",
+			"ONE_MORE_PROBLEM": "problema más",
+			"MORE_PROBLEMS": "problemas más"
 		}
 	}
 }

@@ -70,7 +70,7 @@ class PatientControllerIntegrationTest extends IntegrationController {
 	void test_getBasicData() throws Exception {
 		final Integer patientId = 1;
 		final String URL = "/patient/"+patientId +"/basicdata";
-		when(patientService.getPatient(any())).thenReturn(Optional.empty());
+		when(patientService.getActivePatient(any())).thenReturn(Optional.empty());
 		mockMvc.perform(get(URL))
 			.andDo(log())
 			.andExpect(status().is4xxClientError());

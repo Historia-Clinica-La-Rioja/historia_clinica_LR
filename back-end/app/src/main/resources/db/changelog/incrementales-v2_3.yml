@@ -1,0 +1,250 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v2_3
+
+    - changeSet:
+        id: dropPrimaryKey-user_key
+        author: sperruolo
+        changes:
+          - dropPrimaryKey:
+              constraintName: pk_user_key
+              dropIndex: true
+              tableName: user_key
+          - addPrimaryKey:
+              columnNames: key
+              constraintName: pk_user_key
+              tableName: user_key
+              validate: true
+
+    -  changeSet:
+         id: reformat-user_key
+         author: sperruolo
+         changes:
+           -  dropPrimaryKey:
+                constraintName: pk_user_key
+                dropIndex: true
+                tableName: user_key
+           -  addPrimaryKey:
+                columnNames:  key
+                constraintName:  pk_user_key
+                tableName:  user_key
+                validate:  true
+           - addColumn:
+               tableName: user_key
+               columns:
+                 - column:
+                     name: name
+                     type: varchar(255)
+           - sql:
+               sql: |-
+                 UPDATE user_key SET name = LOWER(SUBSTRING(MD5(''||NOW()::TEXT||RANDOM()::TEXT) FOR 8));
+           - addNotNullConstraint:
+               columnDataType: varchar(255)
+               columnName: name
+               constraintName: name_not_null
+               tableName: user_key
+               validate: true
+           -  addUniqueConstraint:
+                columnNames:  user_id, name
+                constraintName:  user_key_unique
+                tableName:  user_key
+                validate:  true
+
+    - changeSet:
+        id: hierarchical_unit_relationship-createTable
+        comment: Create table hierarchical_unit_relationship
+        author: bchacon
+        changes:
+          - createTable:
+              tableName: hierarchical_unit_relationship
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_hierarchical_unit_relationship
+                    name: id
+                    type: int
+                - column:
+                    name: hierarchical_unit_parent_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: hierarchical_unit_child_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: hierarchical_unit_parent_id
+              baseTableName: hierarchical_unit_relationship
+              constraintName: FK_hierarchical_unit_relationship_hierarchical_unit_parent_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: hierarchical_unit
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: hierarchical_unit_child_id
+              baseTableName: hierarchical_unit_relationship
+              constraintName: FK_hierarchical_unit_relationship_hierarchical_unit_child_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: hierarchical_unit
+              validate: true
+
+    - changeSet:
+        id: hierarchical_unit_staff-createTable
+        comment: Create table hierarchical_unit_staff
+        author: bchacon
+        changes:
+          - createTable:
+              tableName: hierarchical_unit_staff
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_hierarchical_unit_staff
+                    name: id
+                    type: int
+                - column:
+                    name: hierarchical_unit_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: user_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: responsible
+                    type: boolean
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: hierarchical_unit_id
+              baseTableName: hierarchical_unit_staff
+              constraintName: FK_hierarchical_unit_staff_hierarchical_unit_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: hierarchical_unit
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: user_id
+              baseTableName: hierarchical_unit_staff
+              constraintName: FK_hierarchical_unit_staff_user_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true
+
+
+    - changeSet:
+        id: addColumn-create_id-to-sector
+        author: amurrie
+        changes:
+          - addColumn:
+              tableName: equipment
+              columns:
+                - column:
+                   name: create_id
+                   type: BOOLEAN
+                   defaultValue: ${boolean.false}
+                   constraints:
+                     nullable: false
+    - changeSet:
+        id: addColumn-institution_id-to-move_studies
+        author: amurrie
+        changes:
+          - addColumn:
+              tableName: move_studies
+              columns:
+                - column:
+                    name: institution_id
+                    type: int
+                    constraints:
+                      nullable: true
+                
+    - changeSet:
+        id: diagnostic_report_status-metadata
+        comment: Set new data of diagnostic_report_status
+        author: lbergottini
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO diagnostic_report_status (id,description) VALUES (2,'Completado desde RDI');

@@ -1,5 +1,6 @@
 package net.pladema.patient.repository;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatientType;
 import net.pladema.patient.controller.dto.PatientRegistrationSearchFilter;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.service.domain.PatientRegistrationSearch;
@@ -47,7 +48,7 @@ public class PatientRepositorySearchImpl implements PatientRepositorySearch {
                 .concatPart(patientSearchQuery.select())
                 .concat(" FROM ")
                 .concatPart(patientSearchQuery.from());
-		queryPart.concat("WHERE patient.deleted = false");
+		queryPart.concat("WHERE patient.deleted = false AND patient.type_id != " + EPatientType.REJECTED.getId() +" ");
         if (hasBasicSearchAttributes(searchFilter))
                 queryPart.concatPart(patientSearchQuery.whereWithBasicAttributes(OR_JOINING_OPERATOR));
         return queryPart;
@@ -87,6 +88,8 @@ public class PatientRepositorySearchImpl implements PatientRepositorySearch {
 		if (searchFilter.getTemporary() != null && searchFilter.getTemporary())
 			return true;
 		if (searchFilter.getPermanent() != null && searchFilter.getPermanent())
+			return true;
+		if (searchFilter.getRejected() != null && searchFilter.getRejected())
 			return true;
 		return false;
 	}

@@ -1,0 +1,19 @@
+<app-content width="full">
+	<div forRender>
+		<app-entry-call-renderer></app-entry-call-renderer>
+	</div>
+	<section>
+		<h2 class="page-title">{{'telemedicina.TITLE' | translate}}</h2>
+	</section>
+	<mat-tab-group>
+		<mat-tab label="SOLICITUDES"
+			*appHasRole="['VIRTUAL_CONSULTATION_RESPONSIBLE','VIRTUAL_CONSULTATION_PROFESSIONAL']">
+			<app-requests [priorityOptions]="priorityOptions" [availitibyOptions]="availitibyOptions"
+				[virtualConsultationsFacadeService]="virtualConsultationsFacadeService"></app-requests>
+		</mat-tab>
+		<mat-tab label="ATENCIÓN ONLINE" *appHasRole="['VIRTUAL_CONSULTATION_PROFESSIONAL']">
+			<app-request-attention [priorityOptions]="priorityOptions" [availitibyOptions]="availitibyOptions"
+				[virtualConsultationsFacadeService]="virtualConsultationsFacadeService"></app-request-attention>
+		</mat-tab>
+	</mat-tab-group>
+</app-content>

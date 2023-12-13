@@ -13,8 +13,15 @@ import lombok.ToString;
 @NoArgsConstructor
 public class SnomedBo {
 
+	private Integer id;
+
 	private String sctid;
 
 	private String pt;
+
+	public SnomedBo(String sctid, String pt) {
+		this.sctid = sctid;
+		this.pt = pt;
+	}
 
 }

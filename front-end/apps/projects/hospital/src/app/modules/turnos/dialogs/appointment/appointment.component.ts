@@ -4,10 +4,31 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { NewAttentionComponent } from '../new-attention/new-attention.component';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVE } from '../../constants/appointment';
-import { ContextService } from '@core/services/context.service';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { AppFeature, AppointmentDto, CompleteDiaryDto, DateTimeDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto, UpdateAppointmentDto, AppointmentListDto, UpdateAppointmentDateDto } from '@api-rest/api-model.d';
+import { ContextService } from '@core/services/context.service';
+import {
+	APPOINTMENT_STATES_ID,
+	getAppointmentState,
+	MAX_LENGTH_MOTIVE,
+	MODALITYS,
+} from '../../constants/appointment';
+import {
+	ApiErrorMessageDto,
+	AppFeature,
+	AppointmentDto,
+	AppointmentListDto,
+	CompleteDiaryDto,
+	DateTimeDto,
+	EAppointmentModality,
+	ERole,
+	IdentificationTypeDto,
+	PatientMedicalCoverageDto,
+	PersonPhotoDto,
+	ProfessionalPersonDto,
+	UpdateAppointmentDateDto,
+	UpdateAppointmentDto,
+} from '@api-rest/api-model.d';
+
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { VALIDATIONS, getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
@@ -19,10 +40,18 @@ import {
 	PatientMedicalCoverage,
 	PrivateHealthInsurance
 } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
-import { map, take } from 'rxjs/operators';
+import {
+	catchError,
+	map,
+	take,
+} from 'rxjs/operators';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PermissionsService } from '@core/services/permissions.service';
-import { Observable } from 'rxjs';
+import {
+	EMPTY,
+	Observable,
+	combineLatest,
+} from 'rxjs';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { PatientNameService } from "@core/services/patient-name.service";
 import { PersonMasterDataService } from "@api-rest/services/person-master-data.service";
@@ -38,14 +67,19 @@ import { isBefore, isEqual } from 'date-fns';
 import { Color } from '@presentation/colored-label/colored-label.component';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { toCalendarEvent } from '@turnos/utils/appointment.utils';
+import { JitsiCallService } from '../../../jitsi/jitsi-call.service';
+import { Router } from '@angular/router';
+import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
+import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 
 const TEMPORARY_PATIENT = 3;
+const REJECTED_PATIENT = 6;
 const BELL_LABEL = 'Llamar paciente'
 const ROLES_TO_CHANGE_STATE: ERole[] = [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 const ROLES_TO_EDIT: ERole[]
 	= [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 const ROLE_TO_DOWNDLOAD_REPORTS: ERole[] = [ERole.ADMINISTRATIVO];
-
+const ROLE_TO_MAKE_VIRTUAL_CONSULTATION: ERole[] = [ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 @Component({
 	selector: 'app-appointment',
 	templateUrl: './appointment.component.html',
@@ -54,6 +88,7 @@ const ROLE_TO_DOWNDLOAD_REPORTS: ERole[] = [ERole.ADMINISTRATIVO];
 export class AppointmentComponent implements OnInit {
 
 	readonly appointmentStatesIds = APPOINTMENT_STATES_ID;
+	readonly modalitys = MODALITYS;
 	readonly TEMPORARY_PATIENT = TEMPORARY_PATIENT;
 	readonly BELL_LABEL = BELL_LABEL;
 	readonly Color = Color;
@@ -83,6 +118,7 @@ export class AppointmentComponent implements OnInit {
 	hasRoleToEdit$: Observable<boolean>;
 	hasRoleToDownloadReports$: Observable<boolean>;
 	hasRoleToAddObservations$: Observable<boolean>;
+	canMakeVirtualConsultation: boolean;
 	patientMedicalCoverages: PatientMedicalCoverage[];
 	identificationType: IdentificationTypeDto;
 
@@ -106,6 +142,11 @@ export class AppointmentComponent implements OnInit {
 	hideObservationTitle = true;
 	observation: string;
 	firstCoverage: number;
+	canCoverageBeEdited = false;
+
+	isRejectedPatient: boolean = false;
+	selectedModality: string;
+	isVirtualConsultationModality: boolean = true;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			appointmentData: PatientAppointmentInformation,
@@ -127,14 +168,20 @@ export class AppointmentComponent implements OnInit {
 		private readonly personMasterDataService: PersonMasterDataService,
 		private readonly patientService: PatientService,
 		private readonly imageDecoderService: ImageDecoderService,
-		private readonly medicalCoverageInfo: MedicalCoverageInfoService
-
+		private readonly medicalCoverageInfo: MedicalCoverageInfoService,
+		private readonly jitsiCallService: JitsiCallService,
+		private readonly router: Router,
+		private readonly healthcareProfessionalService: HealthcareProfessionalService,
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_LLAMADO).subscribe(isEnabled => this.isMqttCallEnabled = isEnabled);
 	}
 
 	ngOnInit(): void {
+		this.medicalCoverageInfo.clearAll();
+		if (this.data.appointmentData.patient.typeId === REJECTED_PATIENT){
+			this.isRejectedPatient = true;
+		}
 		this.formMotive = this.formBuilder.group({
 			motive: ['', [Validators.required, Validators.maxLength(MAX_LENGTH_MOTIVE)]]
 		});
@@ -158,8 +205,8 @@ export class AppointmentComponent implements OnInit {
 		this.formEdit.controls.phoneNumber.setValue(this.data.appointmentData.phoneNumber);
 		this.formEdit.controls.phonePrefix.setValue(this.data.appointmentData.phonePrefix);
 		if (this.data.appointmentData.phoneNumber) {
-			updateControlValidator(this.formEdit, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
-			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
+			updateControlValidator(this.formEdit, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
+			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
 		}
 
 		this.data.agenda.diaryOpeningHours.forEach(DOH => {
@@ -194,6 +241,21 @@ export class AppointmentComponent implements OnInit {
 						});
 				}
 				this.phoneNumber = this.formatPhonePrefixAndNumber(this.data.appointmentData.phonePrefix, this.data.appointmentData.phoneNumber);
+				this.checkInputUpdatePermissions();
+				switch (this.appointment.modality) {
+					case EAppointmentModality.ON_SITE_ATTENTION: {
+						this.selectedModality = this.modalitys.ON_SITE_ATTENTION;
+						this.isVirtualConsultationModality = false;
+						break
+					}
+					case EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION: {
+						this.selectedModality = this.modalitys.SECOND_OPINION_VIRTUAL_ATTENTION;
+						break
+					}
+					case EAppointmentModality.PATIENT_VIRTUAL_ATTENTION: {
+						this.selectedModality = this.modalitys.PATIENT_VIRTUAL_ATTENTION;
+					}
+				}
 			});
 
 		this.hasRoleToChangeState$ = this.permissionsService.hasContextAssignments$(ROLES_TO_CHANGE_STATE).pipe(take(1));
@@ -201,6 +263,15 @@ export class AppointmentComponent implements OnInit {
 		this.hasRoleToEdit$ = this.permissionsService.hasContextAssignments$(ROLES_TO_EDIT).pipe(take(1));
 
 		this.hasRoleToDownloadReports$ = this.permissionsService.hasContextAssignments$(ROLE_TO_DOWNDLOAD_REPORTS).pipe(take(1));
+
+		const loggedUserHealthcareProfessionalId$ = this.healthcareProfessionalService.getHealthcareProfessionalByUserId().pipe(take(1));
+		const loggedUserHasRoleToMakeVirtualConsultation$ = this.permissionsService.hasContextAssignments$(ROLE_TO_MAKE_VIRTUAL_CONSULTATION).pipe(take(1));
+
+		combineLatest([loggedUserHealthcareProfessionalId$, loggedUserHasRoleToMakeVirtualConsultation$]).subscribe(([healthcareProfessionalId, hasRole]) => {
+			this.canMakeVirtualConsultation = (this.data.agenda.healthcareProfessionalId === healthcareProfessionalId ||
+			this.data.agenda.associatedProfessionalsInfo.find(professional => professional.id === healthcareProfessionalId)) &&
+			hasRole;
+		});
 
 		this.personMasterDataService.getIdentificationTypes()
 			.subscribe(identificationTypes => {
@@ -214,6 +285,22 @@ export class AppointmentComponent implements OnInit {
 					this.decodedPhoto$ = this.imageDecoderService.decode(personPhotoDto.imageData);
 				}
 			});
+	}
+
+	private checkInputUpdatePermissions() {
+		this.canCoverageBeEdited = this.isAssigned();
+		this.changeInputUpdatePermissions();
+	}
+
+	private changeInputUpdatePermissions(){
+		this.canCoverageBeEdited ? this.formEdit.get('newCoverageData').enable()
+							: this.formEdit.get('newCoverageData').disable();
+	}
+
+	entryCall(){
+		this.jitsiCallService.open(this.appointment.callLink);
+		this.closeDialog();
+		this.router.navigate([`${AppRoutes.Institucion}/${this.contextService.institutionId}/ambulatoria/paciente/${this.appointment.patientId}`]);
 	}
 
 	dateFormToggle(): void {
@@ -335,9 +422,9 @@ export class AppointmentComponent implements OnInit {
 			});
 	}
 
-	getAppointmentOpeningHoursId(date: Date): number{
+	getAppointmentOpeningHoursId(date: Date): number {
 		const selectedOpeningHour = this.data.agenda.diaryOpeningHours.find(oh => {
-			if (oh.openingHours.dayWeekId === date.getDay()){
+			if (oh.openingHours.dayWeekId === date.getDay()) {
 				const hourFrom = momentParseTime(oh.openingHours.from).toDate();
 				hourFrom.setDate(date.getDate());
 				hourFrom.setMonth(date.getMonth());
@@ -418,8 +505,8 @@ export class AppointmentComponent implements OnInit {
 
 	updatePhoneValidators() {
 		if (this.formEdit.controls.phoneNumber.value || this.formEdit.controls.phonePrefix.value) {
-			updateControlValidator(this.formEdit, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
-			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
+			updateControlValidator(this.formEdit, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
+			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
 		} else {
 			updateControlValidator(this.formEdit, 'phoneNumber', []);
 			updateControlValidator(this.formEdit, 'phonePrefix', []);
@@ -544,6 +631,7 @@ export class AppointmentComponent implements OnInit {
 				this.updatePhoneNumber(this.formEdit.controls.phonePrefix.value, this.formEdit.controls.phoneNumber.value);
 				this.phoneNumber = this.formatPhonePrefixAndNumber(this.formEdit.controls.phonePrefix.value, this.formEdit.controls.phoneNumber.value);
 			}
+			this.checkInputUpdatePermissions();
 			this.hideFilters();
 		}
 	}
@@ -644,7 +732,14 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	callPatient() {
-		this.appointmentService.mqttCall(this.data.appointmentData.appointmentId).subscribe();
+		this.appointmentService.mqttCall(this.data.appointmentData.appointmentId)
+		.pipe(
+			catchError((error: ApiErrorMessageDto) => {
+                this.snackBarService.showError(error.text);
+                return EMPTY;
+            })
+		)
+		.subscribe();
 	}
 
 	hideFilters(): void {
@@ -787,4 +882,6 @@ export interface PatientAppointmentInformation {
 	medicalCoverageName: string;
 	affiliateNumber: string;
 	overturn: boolean;
+	createdOn: Date;
+	professionalPersonDto: ProfessionalPersonDto;
 }

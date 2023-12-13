@@ -5,6 +5,7 @@ import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPAReposito
 
 import ar.lamansys.sgx.shared.migratable.SGXDocumentEntityRepository;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -28,6 +29,11 @@ public interface HealthConditionRepository extends SGXAuditableEntityJPAReposito
 			"JOIN HealthCondition hc ON dhc.pk.healthConditionId = hc.id " +
 			"WHERE dhc.pk.documentId IN :documentIds")
 	List<HealthCondition> getEntitiesByDocuments(@Param("documentIds") List<Long> documentIds);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE HealthCondition hc SET hc.main = :isMain WHERE hc.id = :healthConditionId")
+	void setMain(@Param("healthConditionId") Integer healthConditionId, @Param("isMain") Boolean isMain);
 
 
 }

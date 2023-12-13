@@ -27,4 +27,8 @@ public interface UserExternalService {
 	void resetTwoFactorAuthentication(Integer userId);
 
     Boolean fetchUserHasTwoFactorAuthenticationEnabled(Integer userId);
+
+	Boolean userIsEnabled(Integer userId);
+
+	Boolean findById(Integer userId);
 }

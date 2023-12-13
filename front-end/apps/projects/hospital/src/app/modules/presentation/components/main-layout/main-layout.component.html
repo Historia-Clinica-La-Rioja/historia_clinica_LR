@@ -1,5 +1,6 @@
-<div class="layout-container" [class.layout-is-mobile]="mobileQuery.matches" >
-	<app-bar *ngIf="menuItems" [position]="mobileQuery.matches ? 'fixed' : 'static'" (mouseover)="toggleSidebarHoverOut()" >
+<div class="layout-container" [class.layout-is-mobile]="mobileQuery.matches">
+	<app-bar *ngIf="menuItems" [position]="mobileQuery.matches ? 'fixed' : 'static'"
+		(mouseover)="toggleSidebarHoverOut()">
 		<ng-container *ngIf="mobileQuery.matches else menuDesktop">
 			<button id="menu" mat-icon-button (click)="sidenav.toggle()">
 				<mat-icon color="primary">menu</mat-icon>
@@ -15,7 +16,7 @@
 	<mat-sidenav-container class="layout-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 57 : 0">
 
 		<mat-sidenav #sidenav [(opened)]="opened" [mode]="mobileQuery.matches ? 'over' : 'side'"
-		[ngClass]="{'mat-sidenav-open':!isCollapsed }" fixedTopGap="57" (mouseover)="toggleSidebarHoverOver()">
+			[ngClass]="{'mat-sidenav-open':!isCollapsed }" fixedTopGap="57" (mouseover)="toggleSidebarHoverOver()">
 
 			<div class="custom-container">
 				<div class="top">
@@ -43,8 +44,10 @@
 			</div>
 		</mat-sidenav>
 
-		<mat-sidenav-content (mouseover)="toggleSidebarHoverOut()" [style.margin-left.px]="!mobileQuery.matches && menuItems ? marginLeft : 0">
+		<mat-sidenav-content (mouseover)="toggleSidebarHoverOut()"
+			[style.margin-left.px]="!mobileQuery.matches && menuItems ? marginLeft : 0">
 			<div class="panel">
+				<ng-content select="[forRender]"></ng-content>
 				<router-outlet></router-outlet>
 			</div>
 			<app-footer></app-footer>

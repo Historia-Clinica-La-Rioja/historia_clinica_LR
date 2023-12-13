@@ -1,0 +1,60 @@
+{
+  "type": "cubejs-card",
+  "args": {
+    "header": {
+      "title": "Reporte epidemiológico semanal"
+    },
+    "content":
+    {
+      "type": "cubejs-dashboard",
+      "args": {
+        "filters": {
+          "name": {
+            "filter": {
+              "member": "TablaEpidemiologia.nombre",
+              "operator": "contains"
+            },
+            "type": "freeText",
+            "label": "Nombre"
+          },
+          "lastName": {
+            "filter": {
+              "member": "TablaEpidemiologia.apellido",
+              "operator": "contains"
+            },
+            "type": "freeText",
+            "label": "Apellido"
+          },
+          "identificationNumber": {
+            "filter": {
+              "member": "TablaEpidemiologia.identificacion",
+              "operator": "contains"
+            },
+            "type": "freeText",
+            "label": "Nro. Identificación"
+          },
+          "epidemiologicalWeek": {
+            "filter": {
+              "member": "TablaEpidemiologia.concepto_snomed",
+              "operator": "contains"
+            },
+            "type": "freeText",
+            "label": "Problema"
+          }
+        },
+        "content": [
+          {
+            "type" : "cubejs-chart",
+            "args" : {
+              "query" : "tablaReporteEpidemiologico",
+              "chartOptions" : {
+                "responsive" : true,
+                "maintainAspectRatio" : false
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

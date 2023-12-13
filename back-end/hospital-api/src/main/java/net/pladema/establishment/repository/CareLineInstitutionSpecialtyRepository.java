@@ -44,5 +44,4 @@ public interface CareLineInstitutionSpecialtyRepository extends JpaRepository<Ca
 			"AND cli.deleted = false")
 	List<ClinicalSpecialtyBo> getClinicalSpecialtiesByCareLineId(@Param("careLineId") Integer careLineId);
 
-
 }

@@ -61,4 +61,7 @@ public class OdontologyConsultationDto implements Serializable {
 
 	@Nullable
 	private Integer patientMedicalCoverageId;
+
+	@Nullable
+	private Integer hierarchicalUnitId;
 }

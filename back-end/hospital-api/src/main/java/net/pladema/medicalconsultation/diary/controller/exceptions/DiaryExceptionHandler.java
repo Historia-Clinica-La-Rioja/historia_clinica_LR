@@ -1,10 +1,9 @@
 package net.pladema.medicalconsultation.diary.controller.exceptions;
 
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -15,23 +14,22 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.Locale;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
+@Slf4j
 @RestControllerAdvice(basePackages = "net.pladema.medicalconsultation.diary")
 public class DiaryExceptionHandler {
-
-	private static final Logger LOG = LoggerFactory.getLogger(DiaryExceptionHandler.class);
 
 	@ResponseStatus(HttpStatus.PRECONDITION_FAILED)
 	@ExceptionHandler({ DiaryOpeningHoursException.class })
 	protected ApiErrorMessageDto handleDiaryOpeningHoursException(DiaryOpeningHoursException ex, Locale locale) {
-		LOG.debug("DiaryOpeningHoursException exception -> {}", ex.getMessage());
+		log.debug("DiaryOpeningHoursException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(null, ex.getMessage());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ DiaryException.class })
 	protected ApiErrorMessageDto handleDiaryException(DiaryException ex, Locale locale) {
-		LOG.debug("DiaryException exception -> {}", ex.getMessage());
-		return new ApiErrorMessageDto(null, ex.getMessage());
+		log.debug("DiaryException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
 	}
 
 }

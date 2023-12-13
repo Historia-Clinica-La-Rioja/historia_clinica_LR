@@ -13,7 +13,7 @@ import { map } from 'rxjs/operators';
 })
 export class BedMappingComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() updateData: boolean;
-	@Input() sectorType?: number;
+	@Input() sectorsType?: number[];
 	@Output() selectedBed = new EventEmitter<number>();
 
 	public bedManagementList: BedManagement[];
@@ -25,7 +25,7 @@ export class BedMappingComponent implements OnInit, OnChanges, OnDestroy {
 	) { }
 
 	ngOnInit(): void {
-		this.managementBed$ = this.bedManagementFacadeService.getBedManagement(this.sectorType).pipe(
+		this.managementBed$ = this.bedManagementFacadeService.getBedManagement(this.sectorsType).pipe(
 			map((bedsSummary: BedSummaryDto[]) => bedsSummary ? this.mapperService.toBedManagement(bedsSummary) : null)
 		).subscribe(data => this.bedManagementList = data);
 	}

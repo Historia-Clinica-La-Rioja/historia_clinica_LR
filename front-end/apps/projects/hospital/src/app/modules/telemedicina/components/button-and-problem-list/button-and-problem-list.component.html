@@ -1,0 +1,15 @@
+<div>
+	<section>
+		<app-titled-content-card *ngIf="!consultationProblemsService.isEmpty()"
+		title="{{ 'ambulatoria.paciente.nueva-consulta.problemas.PROBLEMA' }}">
+			<app-problem-list [canEdit]="canEdit" [problemsService]="consultationProblemsService"></app-problem-list>
+		</app-titled-content-card>
+	</section>
+
+	<section>
+		<button *ngIf="problems?.length < problemLimit" mat-button type="button" id="add-reason-button" color="primary" class="add-button"
+			(click)="addProblem()">
+			+ {{ 'ambulatoria.paciente.nueva-consulta.problemas.buttons.ADD' | translate }}
+		</button>
+	</section>
+</div>

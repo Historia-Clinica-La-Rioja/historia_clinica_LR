@@ -104,14 +104,14 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		featureFlag: AppFeature.HABILITAR_REPORTES
 	},
 	{
-		text: 'app.menu.AUDIT',
-		icon: 'groups',
-		id: 'auditoria',
-		url: './auditoria',
+		text: 'app.menu.REPORTES_PROVINCIALES',
+		icon: 'description',
+		id: 'reportes-larioja',
+		url: './reportes-larioja',
 		permissions: [
-		ERole.AUDITOR_MPI
+			ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE,
+			ERole.PERSONAL_DE_ESTADISTICA,
 		],
-		featureFlag: AppFeature.HABILITAR_MODULO_AUDITORIA
 	},
 	{
 		text: 'app.menu.LISTADO_DE_TRABAJO',
@@ -120,5 +120,13 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		url: './imagenes/lista-trabajos',
 		permissions: [ERole.TECNICO, ERole.INFORMADOR],
 		featureFlag: AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES
+	},
+	{
+		text: 'app.menu.TELEMEDICINE',
+		icon: 'calendar_today',
+		id: 'telemedicina',
+		url: './telesalud',
+		permissions: [ERole.VIRTUAL_CONSULTATION_PROFESSIONAL, ERole.VIRTUAL_CONSULTATION_RESPONSIBLE],
+		featureFlag: AppFeature.HABILITAR_TELEMEDICINA
 	},
 ];

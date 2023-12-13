@@ -189,7 +189,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 			map((problemas: HCEHospitalizationHistoryDto[]) => {
 				return problemas.map((problema: HCEHospitalizationHistoryDto) => {
 					problema.entryDate = dateToDateTimeDto(dateTimeDtotoLocalDate(problema.entryDate));
-					problema.dischargeDate = problema.dischargeDate ? dateToDateTimeDto(dateTimeDtotoLocalDate(problema.entryDate)) : undefined;
+					problema.dischargeDate = problema.dischargeDate ? dateToDateTimeDto(dateTimeDtotoLocalDate(problema.dischargeDate)) : undefined;
 					return problema;
 				});
 			})

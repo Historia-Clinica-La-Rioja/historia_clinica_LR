@@ -1,6 +1,12 @@
 package net.pladema.patient.repository;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatientType;
+import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
+import net.pladema.emergencycare.repository.entity.EmergencyCareState;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
+import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.domain.PatientSearch;
 import ar.lamansys.sgx.shared.repositories.QueryPart;
 import org.springframework.stereotype.Repository;
@@ -10,6 +16,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static net.pladema.patient.repository.PatientSearchQuery.AND_JOINING_OPERATOR;
@@ -37,7 +44,7 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
                 .concatPart(patientSearchQuery.from())
                 .concat("WHERE ")
                 .concatPart(patientSearchQuery.whereWithAllAttributes(AND_JOINING_OPERATOR, LIKE_COMPARATOR))
-				.concat(" AND patient.deleted = false ");
+				.concat(" AND patient.deleted = false AND patient.type_id != " + EPatientType.REJECTED.getId() + " ");
 
         if (searchFilter.getFilterByNameSelfDetermination()) {
 			queryPart.concat("UNION ");
@@ -82,4 +89,37 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
 		BigInteger result = (BigInteger) query.getSingleResult();
 		return result.intValue();
     }
+
+	@Override
+	public List<Patient> getLongTermTemporaryPatientIds(LocalDateTime maxDate, Short limit) {
+		String sqlQuery = "SELECT p " +
+				"FROM Patient p " +
+				"WHERE p.typeId = :typeId " +
+				"AND p.deleteable.deleted = false " +
+				"AND p.id IN (" +
+				"SELECT DISTINCT ph.patientId " +
+				"FROM PatientHistory ph " +
+				"WHERE ph.typeId = 3 AND ph.createdOn <= :maxDate) " +
+				"AND NOT EXISTS (SELECT 1 " +
+				"FROM InternmentEpisode ie " +
+				"WHERE ie.statusId = :activeStatusId " +
+				"AND ie.patientId = p.id ) " +
+				"AND NOT EXISTS (SELECT 1 " +
+				"FROM EmergencyCareEpisode ece " +
+				"WHERE ece.emergencyCareStateId in (:emergencyCareStateIds) " +
+				"AND ece.patientId = p.id ) " +
+				"AND NOT EXISTS (SELECT 1 " +
+				"FROM Appointment a " +
+				"WHERE a.appointmentStateId NOT IN (:appointmentStatsIds) " +
+				"AND a.patientId = p.id )";
+		List<Patient> result = entityManager.createQuery(sqlQuery)
+				.setParameter("typeId", PatientType.TEMPORARY)
+				.setParameter("maxDate", maxDate)
+				.setParameter("activeStatusId", InternmentEpisodeStatus.ACTIVE_ID)
+				.setParameter("emergencyCareStateIds", List.of(EmergencyCareState.EN_ATENCION, EmergencyCareState.EN_ESPERA, EmergencyCareState.CON_ALTA_MEDICA))
+				.setParameter("appointmentStatsIds", List.of(AppointmentState.CANCELLED, AppointmentState.SERVED))
+				.setMaxResults(limit)
+				.getResultList();
+		return result;
+	}
 }

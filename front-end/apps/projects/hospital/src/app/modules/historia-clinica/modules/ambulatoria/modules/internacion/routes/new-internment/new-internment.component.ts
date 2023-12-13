@@ -41,6 +41,7 @@ import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.co
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import { map } from 'rxjs/operators';
+import { INTERNMENT_SECTOR } from '@historia-clinica/modules/guardia/constants/masterdata';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 
@@ -206,7 +207,10 @@ export class NewInternmentComponent implements OnInit {
 	openBedAssignmentDialog(): void {
 
 		const dialogRef = this.dialog.open(BedAssignmentComponent, {
-			width: '80%'
+			width: '80%',
+			data: {
+				sectorsType: [INTERNMENT_SECTOR]
+			}
 		});
 
 		dialogRef.afterClosed().subscribe((bedInfo: BedInfoDto) => {

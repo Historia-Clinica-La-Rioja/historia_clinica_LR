@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.application.document;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentServiceImpl;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentAllergyIntoleranceRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentDiagnosticReportRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentExternalCauseRepository;
@@ -12,6 +13,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentOdontologyDiagnosticRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentOdontologyProcedureRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentProcedureRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentReportSnomedConceptRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentTriageRepository;
@@ -73,12 +75,18 @@ class DocumentServiceImplTest {
 	@MockBean
 	private DocumentTriageRepository documentTriageRepository;
 
+	@MockBean
+	private DocumentReportSnomedConceptRepository documentReportSnomedConceptRepository;
+
+	@MockBean
+	private SnomedService snomedService;
+
 	@BeforeEach
 	void setUp() {
 		documentServiceImpl = new DocumentServiceImpl(documentRepository, documentHealthConditionRepository,
                 documentImmunizationRepository, documentProcedureRepository, documentRiskFactorRepository, documentLabRepository,
 				documentAllergyIntoleranceRepository, documentMedicamentionStatementRepository, documentDiagnosticReportRepository,
-				documentOdontologyProcedureRepository, documentOdontologyDiagnosticRepository, documentExternalCauseRepository, documentObstetricEventRepository, documentTriageRepository);
+				documentOdontologyProcedureRepository, documentOdontologyDiagnosticRepository, documentExternalCauseRepository, documentObstetricEventRepository, documentTriageRepository, documentReportSnomedConceptRepository, snomedService);
 	}
 
 	@Test

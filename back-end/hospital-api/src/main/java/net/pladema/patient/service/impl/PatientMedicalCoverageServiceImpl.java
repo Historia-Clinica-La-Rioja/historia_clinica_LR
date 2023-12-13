@@ -54,6 +54,18 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 	}
 
 	@Override
+	public PatientMedicalCoverageBo getActiveCoveragesByOrderId(Integer orderId) {
+		LOG.debug(INPUT_DATA, orderId);
+		Optional<PatientMedicalCoverageVo> queryResult = patientMedicalCoverageRepository.getActivePatientCoverageByOrderId(orderId);
+		PatientMedicalCoverageBo result = null;
+		if (queryResult.isPresent()){
+			result = new PatientMedicalCoverageBo(queryResult.get());
+		}
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
 	public Optional<PatientMedicalCoverageBo> getCoverage(Integer patientMedicalCoverageId) {
 		LOG.debug(INPUT_DATA, patientMedicalCoverageId);
 		Optional<PatientMedicalCoverageBo> result = patientMedicalCoverageRepository.getPatientCoverage(patientMedicalCoverageId)

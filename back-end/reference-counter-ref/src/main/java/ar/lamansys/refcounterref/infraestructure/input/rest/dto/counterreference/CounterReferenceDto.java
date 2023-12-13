@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.annotation.Nullable;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -36,4 +37,10 @@ public class CounterReferenceDto implements Serializable {
 
 	@NotNull
 	private Short closureTypeId;
+
+	@Nullable
+	private Integer patientMedicalCoverageId;
+
+	@Nullable
+	private Integer hierarchicalUnitId;
 }

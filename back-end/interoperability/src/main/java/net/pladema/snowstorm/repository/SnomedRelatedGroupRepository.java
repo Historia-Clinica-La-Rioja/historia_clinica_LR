@@ -1,6 +1,10 @@
 package net.pladema.snowstorm.repository;
 
+import java.util.List;
 import java.util.Optional;
+
+
+import net.pladema.cipres.domain.SnomedBo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -9,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.pladema.snowstorm.repository.entity.SnomedRelatedGroup;
+
 
 @Repository
 public interface SnomedRelatedGroupRepository extends JpaRepository<SnomedRelatedGroup, Integer> {
@@ -32,5 +37,37 @@ public interface SnomedRelatedGroupRepository extends JpaRepository<SnomedRelate
 			"FROM SnomedRelatedGroup srg " +
 			"WHERE srg.id = :id ")
 	Optional<Integer> getSnomedIdById(@Param("id") Integer id);
+
+	@Transactional(readOnly = true)
+	@Query( "SELECT DISTINCT new net.pladema.cipres.domain.SnomedBo(s.id, s.sctid, s.pt) " +
+			"FROM SnomedGroup sg " +
+			"JOIN SnomedGroup baseGroup ON sg.groupId = baseGroup.id " +
+			"JOIN SnomedRelatedGroup srg ON sg.id = srg.groupId " +
+			"JOIN Snomed s ON srg.snomedId = s.id " +
+			"WHERE sg.groupType = :snomedGroupTypeId " +
+			"AND baseGroup.description = :description " +
+			"AND sg.institutionId = :institutionId " +
+			"AND sg.userId is null ")
+	List<SnomedBo> getAllByInstitutionAndDescriptionAndGroupType(@Param("institutionId") Integer institutionId,
+																 @Param("description") String description,
+																 @Param("snomedGroupTypeId") Short snomedGroupTypeId);
+
+	@Transactional(readOnly = true)
+	@Query( "SELECT DISTINCT new net.pladema.cipres.domain.SnomedBo(s.id, s.sctid, s.pt) " +
+			"FROM SnomedGroup sg " +
+			"JOIN SnomedGroup baseGroup ON (sg.groupId = baseGroup.id) " +
+			"JOIN SnomedRelatedGroup srg ON (sg.id = srg.groupId) " +
+			"JOIN Snomed s ON (srg.snomedId = s.id) " +
+			"WHERE sg.groupType = :snomedGroupTypeId " +
+			"AND baseGroup.description = :description " +
+			"AND sg.userId is null ")
+	List<SnomedBo> getAllByDescriptionAndGroupType(@Param("description") String description,
+												   @Param("snomedGroupTypeId") Short snomedGroupTypeId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT srg.id " +
+			"FROM SnomedRelatedGroup srg " +
+			"WHERE srg.snomedId IN :snomedIds")
+	List<Integer> getIdsBySnomedIds(@Param("snomedIds") List<Integer> snomedIds);
 
 }

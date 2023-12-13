@@ -1,9 +1,13 @@
 import { Component, Inject, OnInit, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, ReferenceProblemDto } from '@api-rest/api-model';
+import { AddressDto, CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, ReferenceProblemDto, MasterDataDto, ReferenceStudyDto } from '@api-rest/api-model';
 import { ReferenceOriginInstitutionService } from '../../services/reference-origin-institution.service';
 import { ReferenceProblemsService } from '../../services/reference-problems.service';
+import { Observable, tap } from 'rxjs';
+import { ReferenceMasterDataService } from '@api-rest/services/reference-master-data.service';
+import { PRIORITY } from '../../constants/reference-masterdata';
+import { NUMBER_PATTERN } from '@core/utils/form.utils';
 
 @Component({
 	selector: 'app-reference',
@@ -12,27 +16,43 @@ import { ReferenceProblemsService } from '../../services/reference-problems.serv
 	providers: [ReferenceOriginInstitutionService, ReferenceProblemsService]
 })
 export class ReferenceComponent implements OnInit, AfterContentChecked {
-
 	formReference: UntypedFormGroup;
 	selectedFiles: File[] = [];
 	selectedFilesShow: any[] = [];
-	DEFAULT_RADIO_OPTION = '0';
+	DEFAULT_RADIO_OPTION = true;
 	submitForm = false;
+	updateDepartamentsAndInstitution = false;
 	updateSpecialtiesAndCarelineFields = false;
 	clearCarelinesAndSpecialties = false;
+	priorities$: Observable<MasterDataDto[]>;
+
+	PRIORITY = PRIORITY;
+	provinceId: number;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: any,
+		readonly referenceProblemsService: ReferenceProblemsService,
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly dialogRef: MatDialogRef<ReferenceComponent>,
 		private changeDetector: ChangeDetectorRef,
-		private readonly referenceProblemsService: ReferenceProblemsService
+		private readonly referenceMasterData: ReferenceMasterDataService,
+		private readonly referenceOriginInstitutionService: ReferenceOriginInstitutionService,
 	) { }
 
 	ngOnInit(): void {
+		this.referenceOriginInstitutionService.originInstitutionInfo$.subscribe((info: AddressDto) => {
+			this.provinceId = info?.provinceId
+		});
+
 		this.createReferenceForm();
 
 		this.disableInputs();
+
+		this.priorities$ = this.referenceMasterData.getPriorities().pipe(
+			tap((priorities) => {
+				const lowPriority = priorities.find(priority => priority.id === PRIORITY.LOW);
+				this.formReference.controls.priority.setValue(lowPriority);
+			}));
 	}
 
 	ngAfterContentChecked(): void {
@@ -58,15 +78,27 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 		return {
 			careLine: this.formReference.controls.careLine.value,
 			clinicalSpecialty: this.formReference.controls.clinicalSpecialtyId.value,
-			consultation: true,
+			consultation: this.formReference.controls.consultation.value,
 			note: this.formReference.value.summary,
 			problems: this.referenceProblemsService.mapProblems(),
 			procedure: false,
 			fileIds: [],
 			destinationInstitutionId: this.formReference.value.institutionDestinationId,
 			phonePrefix: this.formReference.value.phonePrefix,
-			phoneNumber: this.formReference.value.phoneNumber
+			phoneNumber: this.formReference.value.phoneNumber,
+			priority: this.formReference.value.priority.id,
+			referenceStudy: this.createReferenceStudy(),
 		}
+	}
+
+	private createReferenceStudy(): ReferenceStudyDto {
+		if (!this.formReference.value.consultation)
+			return {
+				problem:  this.referenceProblemsService.firstProblem(),
+				practice: this.formReference.controls.practiceOrProcedure.value || null,
+				categoryId: this.formReference.value.studyCategory?.id.toString(),
+			}
+		return null;
 	}
 
 	onSelectFileFormData($event): void {
@@ -88,18 +120,16 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 
 	onDepartmentSelectionChange(department: number) {
 		this.formReference.controls.departmentId.setValue(department);
-		if (department) {
-			this.clearCarelinesAndSpecialties = true;
-		}
 	}
 
 	onInstitutionSelectionChange(institutionId: number) {
 		this.formReference.controls.institutionDestinationId.setValue(institutionId);
-		this.activateSpecialtiesAndCarelineFields()
+		this.activateSpecialtiesAndCarelineFields();
+		this.activateDepartamentsAndInstitution();
 	}
 
-	activateSpecialtiesAndCarelineFields() {
-		this.updateSpecialtiesAndCarelineFields = true;
+	activateDepartamentsAndInstitution() {
+		this.updateDepartamentsAndInstitution = true;
 	}
 
 	resetControls() {
@@ -108,13 +138,17 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 		this.changeDetector.detectChanges();
 	}
 
+	activateSpecialtiesAndCarelineFields() {
+		this.updateSpecialtiesAndCarelineFields = true;
+	}
+
 	private createReferenceForm() {
 		this.formReference = this.formBuilder.group({
 			problems: [null, [Validators.required]],
 			searchByCareLine: [this.DEFAULT_RADIO_OPTION],
 			provinceId: [null],
 			departmentId: [null],
-			consultation: [null],
+			consultation: [true],
 			procedure: [null],
 			careLine: [null, [Validators.required]],
 			clinicalSpecialtyId: [null, [Validators.required]],
@@ -123,15 +157,16 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 			provinceOrigin: [null],
 			departmentOrigin: [null],
 			institutionOrigin: [null],
-			phoneNumber: [null, [Validators.required, Validators.maxLength(20)]],
-			phonePrefix: [null, [Validators.required, Validators.maxLength(10)]]
+			phoneNumber: [null, [Validators.required, Validators.maxLength(20), Validators.pattern(NUMBER_PATTERN)]],
+			phonePrefix: [null, [Validators.required, Validators.maxLength(10), Validators.pattern(NUMBER_PATTERN)]],
+			priority: [null],
+			studyCategory: [null],
+			practiceOrProcedure: [null],
 		});
 	}
 
 	private disableInputs() {
 		this.formReference.controls.clinicalSpecialtyId.disable();
-		this.formReference.controls.procedure.disable();
-		this.formReference.controls.careLine.disable();
 	}
 
 }
@@ -152,4 +187,6 @@ export interface Reference {
 	procedure?: boolean;
 	phoneNumber: string;
 	phonePrefix: string;
+	priority: number;
+	referenceStudy: ReferenceStudyDto;
 }

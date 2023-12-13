@@ -8,6 +8,7 @@ import {
 	DetailsOrderImageDto,
 	EquipmentAppointmentListDto,
 	ExternalPatientCoverageDto,
+	HierarchicalUnitDto,
 	InstitutionBasicInfoDto,
 	StudyIntanceUIDDto,
 	UpdateAppointmentDateDto,
@@ -119,6 +120,15 @@ export class AppointmentsService {
 		return this.http.post<number>(url, appointment);
 	}
 
+	updateAppointmentMedicalOrder(appointmentId: number, orderId: number, studyId: number, transcribed: boolean): Observable<boolean> {
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = orderId ? queryParams.append('orderId', JSON.stringify(orderId)) : queryParams;
+		queryParams = studyId ? queryParams.append('studyId', JSON.stringify(studyId)) : queryParams;
+		queryParams = transcribed != undefined ? queryParams.append('transcribed', transcribed) : queryParams.append('transcribed', false);
+		const url = `${this.BASE_URL}/${appointmentId}/update-orderId`;
+		return this.http.put<boolean>(url, {}, { params: queryParams });
+	}
+
 	get(appoinmentId: number): Observable<AppointmentDto> {
 		const url = `${this.BASE_URL}/${appoinmentId}`;
 		return this.http.get<AppointmentDto>(url);
@@ -129,9 +139,13 @@ export class AppointmentsService {
 		return this.http.get<AppointmentDto>(url);
 	}
 
-	getAppointmentsByEquipment(equipmentId: number): Observable<EquipmentAppointmentListDto[]> {
+	getAppointmentsByEquipment(equipmentId: number, from?: string, to?: string): Observable<EquipmentAppointmentListDto[]> {
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = from ? queryParams.append('from', from) : queryParams;
+		queryParams = to ? queryParams.append('to', to) : queryParams;
+
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/list-appoiments-by-equipment/${equipmentId}`;
-		return this.http.get<EquipmentAppointmentListDto[]>(url)
+		return this.http.get<EquipmentAppointmentListDto[]>(url, { params: queryParams })
 	}
 
 	deriveReport(appointmentId: number, destInstitutionId: number): Observable<boolean> {
@@ -140,6 +154,11 @@ export class AppointmentsService {
 
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/derive-report`;
 		return this.http.put<boolean>(url, queryParams)
+	}
+
+	requireReport(appointmentId: number): Observable<boolean> {
+		const url = `${this.BASE_URL}/${appointmentId}/require-report`;
+		return this.http.post<boolean>(url, {})
 	}
 
 	appointmentCanBeDerived(appointmentId: number): Observable<InstitutionBasicInfoDto>{
@@ -199,9 +218,9 @@ export class AppointmentsService {
 		return this.http.put<boolean>(url, updateAppointmentDate);
 	}
 
-	mqttCall(appointmentId: number): Observable<any> {
+	mqttCall(appointmentId: number): Observable<void> {
 		const url = `${this.BASE_URL}/${appointmentId}/notifyPatient`;
-		return this.http.post(url, {});
+		return this.http.post<void>(url, {});
 	}
 
 	getDailyAmounts(diaryId: number, from: string, to: string): Observable<AppointmentDailyAmountDto[]> {
@@ -231,6 +250,12 @@ export class AppointmentsService {
 
 	getAppointmentTicketPdf(appointmentId: number): Observable<any> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointment-ticket-report/${appointmentId}`;
+		const responseType = 'arraybuffer' as 'json';
+		return this.http.get<any>(url, { responseType });
+	}
+
+	getAppointmentImageTicketPdf(appointmentId: number, isTranscribed: boolean): Observable<any> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointment-ticket-report/${appointmentId}/image/transcribed-order/${isTranscribed}`;
 		const responseType = 'arraybuffer' as 'json';
 		return this.http.get<any>(url, { responseType });
 	}
@@ -271,5 +296,15 @@ export class AppointmentsService {
 	getStudyInstanceUID(appointmentId: number): Observable<StudyIntanceUIDDto> {
 		const url = `${this.BASE_URL}/get-study-instance-UID/${appointmentId}`;
 		return this.http.get<StudyIntanceUIDDto>(url);
+	}
+
+	getCurrentAppointmentHierarchicalUnit(patientId: number): Observable<HierarchicalUnitDto> {
+		const url = `${this.BASE_URL}/patient/${patientId}/get-hierarchical-unit`;
+		return this.http.get<HierarchicalUnitDto>(url);
+	}
+
+	hasCurrentAppointment(patientId: number): Observable<number> {
+		const url = `${this.BASE_URL}/patient/${patientId}/has-current-appointment`;
+		return this.http.get<number>(url);
 	}
 }

@@ -1,5 +1,24 @@
 package net.pladema.patient.service.impl;
 
+import static net.pladema.patient.service.MathScore.calculateMatch;
+
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import net.pladema.patient.repository.entity.PatientHistory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatientType;
 import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
@@ -8,14 +27,26 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.audit.repository.HospitalAuditRepository;
 import net.pladema.audit.repository.entity.HospitalAudit;
 import net.pladema.audit.service.domain.enums.EActionType;
+import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
+import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.federar.services.FederarService;
+import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.patient.controller.dto.AuditablePatientInfoDto;
+import net.pladema.patient.controller.dto.MergedPatientSearchFilter;
 import net.pladema.patient.controller.dto.PatientRegistrationSearchFilter;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
+import net.pladema.patient.controller.service.exception.RejectedPatientException;
+import net.pladema.patient.controller.service.exception.RejectedPatientExceptionEnum;
 import net.pladema.patient.repository.AuditablePatientRepository;
+import net.pladema.patient.repository.MedicalCoverageRepository;
+import net.pladema.patient.repository.MergedInactivePatientRepository;
+import net.pladema.patient.repository.MergedPatientRepository;
 import net.pladema.patient.repository.PatientAuditRepository;
+import net.pladema.patient.repository.PatientHistoryRepository;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
 import net.pladema.patient.repository.PatientRepository;
+import net.pladema.patient.repository.PatientRepositoryImpl;
 import net.pladema.patient.repository.PatientTypeRepository;
 import net.pladema.patient.repository.PrivateHealthInsuranceDetailsRepository;
 import net.pladema.patient.repository.domain.PatientPersonVo;
@@ -26,23 +57,11 @@ import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.AuditablePatientInfoBo;
 import net.pladema.patient.service.domain.LimitedPatientSearchBo;
+import net.pladema.patient.service.domain.MergedPatientSearch;
 import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.patient.service.domain.PatientSearch;
-import net.pladema.patient.repository.MedicalCoverageRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import net.pladema.person.repository.domain.PersonSearchResultVo;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static net.pladema.patient.service.MathScore.calculateMatch;
 
 @Service
 public class PatientServiceImpl implements PatientService {
@@ -63,6 +82,14 @@ public class PatientServiceImpl implements PatientService {
 	private final FeatureFlagsService featureFlagsService;
 	private final LocalDateMapper localDateMapper;
 	private final PatientTypeRepository patientTypeRepository;
+	private final MergedPatientRepository mergedPatientRepository;
+
+	private final InternmentEpisodeRepository internmentEpisodeRepository;
+	private final EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;
+	private final AppointmentRepository appointmentRepository;
+	private final PatientHistoryRepository patientHistoryRepository;
+	private final MergedInactivePatientRepository mergedInactivePatientRepository;
+	private final PatientRepositoryImpl patientRepositoryCustom;
 
 	public PatientServiceImpl(PatientRepository patientRepository,
 							  PatientMedicalCoverageRepository patientMedicalCoverageRepository,
@@ -73,7 +100,14 @@ public class PatientServiceImpl implements PatientService {
 							  PatientAuditRepository patientAuditRepository,
 							  FeatureFlagsService featureFlagsService,
 							  AuditablePatientRepository auditablePatientRepository,
-							  LocalDateMapper localDateMapper, PatientTypeRepository patientTypeRepository) {
+							  LocalDateMapper localDateMapper, PatientTypeRepository patientTypeRepository,
+							  InternmentEpisodeRepository internmentEpisodeRepository,
+							  EmergencyCareEpisodeRepository emergencyCareEpisodeRepository,
+							  AppointmentRepository appointmentRepository,
+							  PatientHistoryRepository patientHistoryRepository,
+							  MergedPatientRepository mergedPatientRepository,
+							  MergedInactivePatientRepository mergedInactivePatientRepository,
+							  PatientRepositoryImpl patientRepositoryCustom) {
 		this.patientRepository = patientRepository;
 		this.hospitalAuditRepository = hospitalAuditRepository;
 		this.patientAuditRepository = patientAuditRepository;
@@ -81,6 +115,13 @@ public class PatientServiceImpl implements PatientService {
 		this.auditablePatientRepository = auditablePatientRepository;
 		this.localDateMapper = localDateMapper;
 		this.patientTypeRepository = patientTypeRepository;
+		this.internmentEpisodeRepository = internmentEpisodeRepository;
+		this.emergencyCareEpisodeRepository = emergencyCareEpisodeRepository;
+		this.appointmentRepository = appointmentRepository;
+		this.patientHistoryRepository = patientHistoryRepository;
+		this.mergedPatientRepository = mergedPatientRepository;
+		this.mergedInactivePatientRepository = mergedInactivePatientRepository;
+		this.patientRepositoryCustom = patientRepositoryCustom;
 	}
 
 	@Override
@@ -111,6 +152,14 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
+	public Optional<Patient> getActivePatient(Integer patientId) {
+		LOG.debug(INPUT_DATA, patientId);
+		Optional<Patient> result = patientRepository.findActivePatientById(patientId);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
 	public Optional<Patient> getPatient(Integer patientId) {
 		LOG.debug(INPUT_DATA, patientId);
 		Optional<Patient> result = patientRepository.findById(patientId);
@@ -131,7 +180,14 @@ public class PatientServiceImpl implements PatientService {
 	@Override
 	public Patient addPatient(Patient patientToSave) {
 		LOG.debug("Going to save -> {}", patientToSave);
+		Short auditTypeId = patientToSave.getAuditTypeId();
+		if (auditTypeId == null){
+			patientToSave.setAuditTypeId(EAuditType.UNAUDITED.getId());
+		}
+		boolean shouldPersistPatientHistory = hasDifferentPatientData(patientToSave);
 		Patient patientSaved = patientRepository.save(patientToSave);
+		if(shouldPersistPatientHistory)
+			patientHistoryRepository.save(new PatientHistory(patientSaved));
 		LOG.debug("Saved -> {}", patientSaved);
 		return patientSaved;
 	}
@@ -148,7 +204,7 @@ public class PatientServiceImpl implements PatientService {
 		Patient patient = new Patient(patientPersonVo);
 		patient.setNationalId(nationalId);
 		patient.setTypeId(PatientType.PERMANENT);
-		patientRepository.save(patient);
+		addPatient(patient);
 		this.auditActionPatient(null, patient.getId(), EActionType.UPDATE);
 	}
 
@@ -238,6 +294,52 @@ public class PatientServiceImpl implements PatientService {
 		List<PatientType> result = patientTypeRepository.findAll()
 				.stream().filter(i -> patientTypesId.contains(i.getId())).collect(Collectors.toList());
 		LOG.debug(OUTPUT, result);
+		return result;
+	}
+	
+	@Override
+	public List<MergedPatientSearch> getMergedPatientsByFilter(MergedPatientSearchFilter searchFilter) {
+		LOG.debug("Input parameter -> searchFilter {}", searchFilter);
+		List<MergedPatientSearch> result = mergedPatientRepository.getAllByFilter(searchFilter);
+		LOG.debug(OUTPUT,  result);
+		return  result;
+	}
+
+	@Override
+	public List<PersonSearchResultVo> getMergedPersonsByPatientId(Integer activePatientId) {
+		LOG.debug("Input parameter -> activePatientId {}", activePatientId);
+		List<PersonSearchResultVo> result = mergedInactivePatientRepository.findMergedPersonInfoByActivePatientId(activePatientId);
+		LOG.debug(OUTPUT,  result);
+		return  result;
+	}
+
+	@Override
+	public List<PatientRegistrationSearch> getPatientsToAudit() {
+		PatientRegistrationSearchFilter filter = new PatientRegistrationSearchFilter();
+		filter.setToAudit(true);
+		List<PatientRegistrationSearch> allPatientsToAudit = patientRepository.getAllRegistrationByFilter(filter);
+		LOG.debug(OUTPUT, allPatientsToAudit);
+		return allPatientsToAudit;
+	}
+
+	@Override
+	public void assertHasActiveEncountersByPatientId(Integer patientId) {
+		if(internmentEpisodeRepository.isPatientHospitalized(patientId) || emergencyCareEpisodeRepository.existsActiveEpisodeByPatientId(patientId) || appointmentRepository.existsAppointmentByStatesAndPatientId(List.of(AppointmentState.ASSIGNED, AppointmentState.CONFIRMED), patientId))
+			throw new RejectedPatientException(RejectedPatientExceptionEnum.ENCOUNTER_ACTIVE_EXISTS, "El paciente posee un encuentro activo");
+	}
+	
+	private boolean hasDifferentPatientData(Patient newData) {
+		return Optional.ofNullable(newData.getId()).map(id ->
+			patientRepository.findById(id).map(old -> !(old.getTypeId().equals(newData.getTypeId()) && old.getAuditTypeId().equals(newData.getAuditTypeId()) && Objects.equals(old.getNationalId(),newData.getNationalId())))
+					.orElse(true)
+		).orElse(true);
+	}
+	
+	@Override
+	public List<Patient> getLongTermTemporaryPatientIds(LocalDateTime maxDate, Short limit) {
+		LOG.debug("Input parameters -> maxDate {}, limit {}", maxDate, limit);
+		List<Patient> result = patientRepositoryCustom.getLongTermTemporaryPatientIds(maxDate, limit);
+		LOG.debug("Output result -> {}", result);
 		return result;
 	}
 

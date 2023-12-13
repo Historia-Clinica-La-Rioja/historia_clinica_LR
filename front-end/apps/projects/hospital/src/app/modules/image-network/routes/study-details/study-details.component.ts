@@ -16,6 +16,7 @@ export class StudyDetailsComponent implements OnInit {
 	url: string;
 	study$: Observable<StudyAppointment>;
 	appointmentId: number;
+	reportIsDone = false;
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -44,6 +45,11 @@ export class StudyDetailsComponent implements OnInit {
 			.pipe(
 				map(study => toStudyAppointment(study))
 			);
+	}
+
+	setUpdatedStatus(event: any) {
+		this.study$ = event;
+		this.reportIsDone = true;
 	}
 
 }

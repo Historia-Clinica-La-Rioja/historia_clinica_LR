@@ -29,7 +29,8 @@ public enum EPatientType {
 				PERMANENT.id,
 				VALIDATED.id,
 				TEMPORARY.id,
-				NOT_VALIDATED_PERMANENT.id
+				NOT_VALIDATED_PERMANENT.id,
+				REJECTED.id
 		);
 	}
 

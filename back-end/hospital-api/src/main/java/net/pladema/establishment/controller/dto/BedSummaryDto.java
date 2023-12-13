@@ -22,4 +22,6 @@ public class BedSummaryDto {
     @Nullable
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_TIME_FORMAT)
     private String probableDischargeDate;
+
+	private SectorTypeDto sectorType;
 }

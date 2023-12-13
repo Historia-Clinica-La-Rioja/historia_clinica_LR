@@ -1,6 +1,7 @@
 package ar.lamansys.odontology.infrastructure.input.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -55,4 +56,10 @@ public class SharedOdontologyConsultationPortImpl implements SharedOdontologyCon
 	public void modifyLastOdontogramDrawing(List<OdontologyDiagnosticProcedureInfoDto> odp, Integer newPatientId) {
 		modifyOdontogramAndIndices.run(odp,newPatientId);
 	}
+
+	@Override
+	public Optional<Integer> getPatientMedicalCoverageId(Integer id){
+		return odontologyConsultationStorage.getPatientMedicalCoverageId(id);
+	}
+
 }

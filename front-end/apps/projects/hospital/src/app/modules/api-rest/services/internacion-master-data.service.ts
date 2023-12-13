@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
-import { MasterDataInterface } from '@api-rest/api-model';
+import {MasterDataDto, MasterDataInterface} from '@api-rest/api-model';
 import { OtherIndicationTypeDto } from './internment-indication.service';
 
 @Injectable({
@@ -101,5 +101,10 @@ export class InternacionMasterDataService {
 	getUnits(): Observable<any[]> {
 		const url = `${environment.apiBase}/internments/masterdata/units`;
 		return this.http.get<any[]>(url);
+	}
+
+	getDocumentTypes(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}/internments/masterdata/document/type`;
+		return this.http.get<MasterDataDto[]>(url);
 	}
 }

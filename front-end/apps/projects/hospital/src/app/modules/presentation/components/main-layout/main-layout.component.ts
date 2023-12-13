@@ -4,6 +4,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { AuthenticationService } from '../../../auth/services/authentication.service';
 import { MenuItem } from '../menu/menu.component';
 import { OauthAuthenticationService } from "../../../auth/services/oauth-authentication.service";
+import { Router } from '@angular/router';
 
 const MARGIN_LEFT_COLLAPSED = 94;
 const MARGIN_LEFT_NOT_COLLAPSED = 194;
@@ -26,6 +27,7 @@ export class MainLayoutComponent implements OnDestroy {
 	constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
 		private authenticationService: AuthenticationService,
 		private oauthAuthenticationService: OauthAuthenticationService,
+		private readonly router: Router,
 	) {
 		this.mobileQuery = media.matchMedia('(max-width: 600px)');
 		this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -46,9 +48,11 @@ export class MainLayoutComponent implements OnDestroy {
 	}
 
 	logout(): void {
-		this.authenticationService.logout();
+		this.authenticationService.logout().subscribe(finished => {
+			this.router.navigate(['/auth/login']);
+		});
 		this.oauthAuthenticationService.logout();
-	}
+	};
 
 	toggleSidebarBlock() {
 		this.isCollapsedBolck = !this.isCollapsedBolck;

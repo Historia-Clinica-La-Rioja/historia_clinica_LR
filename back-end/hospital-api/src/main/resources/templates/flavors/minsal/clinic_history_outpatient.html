@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <th:block th:include="fragments/clinic_history_general.html :: headerfiles"></th:block>
+    <style>
+        .bordered {
+            padding: 8px;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div th:replace="fragments/clinic_history_general.html :: footer"></div>
+
+    <table>
+        <thead>
+            <tr>
+                <td colspan="2">
+                    <div th:replace="fragments/clinic_history_general.html :: header"></div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div th:replace="fragments/clinic_history_general.html :: encounterData"></div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div th:replace="fragments/clinic_history_general.html :: professionalData"></div>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding-top: 10px;" colspan="2">
+                    <h3>Registro Clínico</h3>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="bordered" th:each="record, iter: ${clinicalRecords}">
+                <td class="bordered wide_wrapped_text" style="width: 12%; text-align: center;" th:text="${record.prefix}"></td>
+                <td class="bordered wide_wrapped_text" style="width: 64%;" th:utext="${record.description}"></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2">
+                    <div style="height: 25px;"></div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+</body>
+</html>

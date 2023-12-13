@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Patient, SearchPatientComponent } from '@pacientes/component/search-patient/search-patient.component';
+import { Patient } from '@pacientes/component/search-patient/search-patient.component';
+import { SearchPatientDialogComponent } from '@pacientes/dialogs/search-patient-dialog/search-patient-dialog.component';
 
 @Component({
 	selector: 'app-asign-patient-button',
@@ -16,7 +17,7 @@ export class AsignPatientButtonComponent {
 	) { }
 
 	asignPatient() {
-		const dialogRef = this.dialog.open(SearchPatientComponent);
+		const dialogRef = this.dialog.open(SearchPatientDialogComponent);
 		dialogRef.afterClosed()
 			.subscribe((foundPatient: Patient) => {
 				if (foundPatient)

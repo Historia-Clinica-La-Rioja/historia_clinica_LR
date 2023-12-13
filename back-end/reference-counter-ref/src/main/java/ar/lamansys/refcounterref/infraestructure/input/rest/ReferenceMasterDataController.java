@@ -1,6 +1,7 @@
 package ar.lamansys.refcounterref.infraestructure.input.rest;
 
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
+import ar.lamansys.refcounterref.domain.enums.EReferencePriority;
 import ar.lamansys.sgx.shared.masterdata.domain.EnumWriter;
 import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,9 +17,16 @@ import java.util.Collection;
 @Slf4j
 @Tag(name = "Reference Master Data", description = "Reference Master Data")
 public class ReferenceMasterDataController {
+
 	@GetMapping(value = "/closure-types")
 	public ResponseEntity<Collection<MasterDataDto>> getClosureTypes() {
 		log.debug("{}", "All closure types");
 		return ResponseEntity.ok().body(EnumWriter.writeList(EReferenceClosureType.getAll()));
+	}
+
+	@GetMapping(value = "/priorities")
+	public ResponseEntity<Collection<MasterDataDto>> getPriorities() {
+		log.debug("{}", "All priorities");
+		return ResponseEntity.ok().body(EnumWriter.writeList(EReferencePriority.getAll()));
 	}
 }

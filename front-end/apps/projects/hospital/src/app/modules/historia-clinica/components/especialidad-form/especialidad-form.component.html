@@ -5,7 +5,7 @@
 		<app-document-section>
 			<ng-container concept-form>
 				<div fxLayout="row" [formGroup]="formEvolucion">
-					<mat-form-field appearance="outline">
+					<mat-form-field appearance="outline" fxFlex>
 						<mat-select id="clinicalSpecialtyId" name="clinicalSpecialty"
 							formControlName="clinicalSpecialty" attr.disabled="false">
 							<mat-option *ngFor="let clinicalSpecialty of this.specialties" [value]="clinicalSpecialty">

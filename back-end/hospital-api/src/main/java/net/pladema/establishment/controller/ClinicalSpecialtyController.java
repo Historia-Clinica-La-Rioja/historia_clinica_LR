@@ -106,7 +106,7 @@ public class ClinicalSpecialtyController {
     }
 
     @GetMapping("/institution/{institutionId}/clinicalspecialty/loggedProfessionalClinicalSpecialty")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PRESCRIPTOR')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PRESCRIPTOR, VIRTUAL_CONSULTATION_PROFESSIONAL')")
     public ResponseEntity<List<ClinicalSpecialtyDto>> getLoggedInProfessionalClinicalSpecialties(
             @PathVariable(name = "institutionId") Integer institutionId) {
         Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
@@ -160,6 +160,23 @@ public class ClinicalSpecialtyController {
 		return ResponseEntity.ok(clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(clinicalSpecialties));
 	}
 
+	@GetMapping("/institution/{institutionId}/clinicalspecialty/by-province/{provinceId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<List<ClinicalSpecialtyDto>> getClinicalSpecialtiesByProvinceId(@PathVariable(name = "institutionId") Integer institutionId,
+																						 @PathVariable(name = "provinceId") Short provinceId){
+		LOG.debug("Input parameteres => provinceId {}", provinceId);
+		List<ClinicalSpecialtyBo> clinicalSpecialties = clinicalSpecialtyService.getClinicalSpecialtiesByProvinceId(provinceId);
+		LOG.debug("Get all Clinical Specialties by province {}", clinicalSpecialties);
+		return ResponseEntity.ok(clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(clinicalSpecialties));
+	}
+
+	@GetMapping("/institution/{institutionId}/clinical-specialty/virtual-consultation")
+	public List<ClinicalSpecialtyDto> getVirtualConsultationClinicalSpecialtiesByInstitutionId(@PathVariable(name = "institutionId") Integer institutionId) {
+		LOG.debug("Input parameters -> institutionId {}", institutionId);
+		List<ClinicalSpecialtyDto> result = clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(clinicalSpecialtyService.getVirtualConsultationClinicalSpecialtiesByInstitutionId(institutionId));
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
 
 }
 

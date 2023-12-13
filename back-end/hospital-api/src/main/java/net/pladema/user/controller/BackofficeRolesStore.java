@@ -1,41 +1,40 @@
 package net.pladema.user.controller;
 
-import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-import net.pladema.permissions.repository.RoleRepository;
-import net.pladema.permissions.repository.entity.Role;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import ar.lamansys.sgx.shared.security.UserInfo;
+
 import net.pladema.permissions.repository.enums.ERole;
-import net.pladema.sgx.backoffice.repository.BackofficeStore;
+
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import lombok.AllArgsConstructor;
+import net.pladema.permissions.repository.RoleRepository;
+import net.pladema.permissions.repository.entity.Role;
+import net.pladema.sgx.backoffice.repository.BackofficeStore;
+import net.pladema.user.controller.filters.BackofficeRolesFilter;
 
+@AllArgsConstructor
 @Service
 public class BackofficeRolesStore implements BackofficeStore<Role, Short> {
 	private final RoleRepository roleRepository;
-
-	private final FeatureFlagsService featureFlagsService;
-	public BackofficeRolesStore(RoleRepository roleRepository,FeatureFlagsService featureFlagsService ) {
-		this.roleRepository = roleRepository;
-		this.featureFlagsService = featureFlagsService;
-	}
+	private final BackofficeRolesFilter backofficeRolesFilter;
+	private final BackofficeAuthoritiesValidator backofficeAuthoritiesValidator;
 
 	@Override
 	public Page<Role> findAll(Role example, Pageable pageable) {
-		List<Role> content = toList(roleRepository.findAll()).stream().filter(this::filterRoles).collect(Collectors.toList());
+		List<Role> content = toList(roleRepository.findAll()).stream().filter(backofficeRolesFilter::filterRoles).collect(Collectors.toList());
+		if(!backofficeAuthoritiesValidator.hasRole(ERole.ROOT)){
+			content = content.stream().filter(role -> !role.getId().equals(ERole.ADMINISTRADOR_DE_ACCESO_DOMINIO.getId())).collect(Collectors.toList());
+		}
 		return new PageImpl<>(content, pageable, content.size());
-	}
-
-	private boolean filterRoles(Role role) {
-		return !role.getId().equals(ERole.ROOT.getId()) &&
-				!role.getId().equals(ERole.API_CONSUMER.getId()) &&
-				!role.getId().equals(ERole.PARTIALLY_AUTHENTICATED.getId());
 	}
 
 	@Override

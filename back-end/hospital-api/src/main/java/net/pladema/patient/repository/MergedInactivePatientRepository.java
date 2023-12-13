@@ -3,6 +3,8 @@ package net.pladema.patient.repository;
 import java.util.List;
 import java.util.Optional;
 
+import net.pladema.person.repository.domain.PersonSearchResultVo;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -38,5 +40,18 @@ public interface MergedInactivePatientRepository extends SGXAuditableEntityJPARe
 			"WHERE mip.mergedPatientId IN :mergedPatientId " +
 			"AND mip.deleteable.deleted = false")
 	Boolean existsByMergePatientId(@Param("mergedPatientId") Integer mergedPatientId);
+
+	@Query(value = "SELECT new net.pladema.person.repository.domain.PersonSearchResultVo(" +
+			"pa.id, p.firstName, p.middleNames, p.lastName, p.otherLastNames, p.identificationTypeId," +
+			"p.identificationNumber, p.birthDate, p.genderId, pex.phoneNumber, pex.phonePrefix, pex.nameSelfDetermination, pa.typeId )" +
+			"FROM MergedInactivePatient mip " +
+			"JOIN MergedPatient mp ON mip.mergedPatientId = mp.id " +
+			"JOIN Patient pa ON mip.inactivePatientId = pa.id " +
+			"JOIN Person p ON pa.personId = p.id " +
+			"JOIN PersonExtended pex ON pex.id = p.id " +
+			"WHERE mp.activePatientId = :activePatientId " +
+			"AND mip.deleteable.deleted = false ")
+	List<PersonSearchResultVo> findMergedPersonInfoByActivePatientId(@Param("activePatientId") Integer activePatientId);
+
 
 }

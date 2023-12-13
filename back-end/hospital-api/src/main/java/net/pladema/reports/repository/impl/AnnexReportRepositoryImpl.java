@@ -31,7 +31,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
     public Optional<AnnexIIAppointmentVo> getAppointmentAnnexInfo(Integer appointmentId) {
         String query = "SELECT NEW net.pladema.reports.repository.entity.AnnexIIAppointmentVo(i.name, pe.firstName, pe.middleNames, " +
                 "           pe.lastName, pe.otherLastNames, g.description, pe.birthDate, it.description, pe.identificationNumber, " +
-                "           aps.description, a.dateTypeId, mc.name, pmca.affiliateNumber, i.sisaCode, hi.rnos) " +
+                "           aps.description, a.dateTypeId, mc.name, i.sisaCode, hi.rnos) " +
                 "       FROM Appointment AS a " +
                 "           JOIN AppointmentAssn AS assn ON (a.id = assn.pk.appointmentId) " +
                 "           JOIN Diary AS d ON (assn.pk.diaryId = d.id) " +
@@ -68,8 +68,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
                 "       )" +
                 "       SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
                 "               pe.birth_date, it.description as idType, pe.identification_number, t.start_date, pr.proced as hasProcedures, " +
-                "               cs.name, i.sisa_code, prob.descriptions as problems, mc.name as medicalCoverageName, pmc.affiliate_number, " +
-				"				pmc.start_date as medicalCoverageStartDate, pmc.end_date as medicalCoverageEndDate, hi.rnos  " +
+                "               cs.name, i.sisa_code, prob.descriptions as problems, mc.name as medicalCoverageName, hi.rnos  " +
                 "       FROM t " +
                 "           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
                 "           JOIN {h-schema}Patient AS pa ON (t.patient_id = pa.id) " +
@@ -117,10 +116,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
                 (String) a[12],
                 (String) a[13],
 				(String) a[14],
-				(String) a[15],
-				a[16] != null ? ((Date) a[16]).toLocalDate() : null,
-				a[17] != null ? ((Date) a[17]).toLocalDate() : null,
-				(Integer) a[18]
+				(Integer) a[15]
         ));
         return result;
     }
@@ -134,8 +130,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 				"       WHERE d.id = :documentId) " +
 				"       SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
 				"               pe.birth_date, it.description as idType, pe.identification_number, t.performed_date, null as hasProcedures, " +
-				"               null, i.sisa_code, null as problems, mc.name as medicalCoverageName, pmc.affiliate_number, " +
-				"  				pmc.start_date as medicalCoverageStartDate, pmc.end_date as medicalCoverageEndDate, hi.rnos	" +
+				"               null, i.sisa_code, null as problems, mc.name as medicalCoverageName, hi.rnos	" +
 				"       FROM t " +
 				"           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
 				"           JOIN {h-schema}Patient AS pa ON (t.patient_id = pa.id) " +
@@ -168,10 +163,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 				(String) a[12],
 				(String) a[13],
 				(String) a[14],
-				(String) a[15],
-				a[16] != null ? ((Date) a[16]).toLocalDate() : null,
-				a[17] != null ? ((Date) a[17]).toLocalDate() : null,
-				(Integer) a[18]
+				(Integer) a[15]
 		));
 		return result;
 	}
@@ -245,8 +237,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 				"       WHERE d.id = :documentId) " +
 				"       SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
 				"               pe.birth_date, it.description as idType, pe.identification_number, t.performed_date, null as hasProcedures, " +
-				"               null, i.sisa_code, null as problems, mc.name as medicalCoverageName, pmc.affiliate_number, " +
-				"				pmc.start_date as medicalCoverageStartDate, pmc.end_date as medicalCoverageEndDate, hi.rnos   " +
+				"               null, i.sisa_code, null as problems, mc.name as medicalCoverageName, hi.rnos   " +
 				"       FROM t " +
 				"           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
 				"           JOIN {h-schema}Patient AS pa ON (t.patient_id = pa.id) " +
@@ -279,10 +270,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 				(String) a[12],
 				(String) a[13],
 				(String) a[14],
-				(String) a[15],
-				a[16] != null ? ((Date) a[16]).toLocalDate() : null,
-				a[17] != null ? ((Date) a[17]).toLocalDate() : null,
-				(Integer) a[18]
+				(Integer) a[15]
 		));
 		return result;
 	}

@@ -72,6 +72,30 @@ public class ClinicalSpecialtyServiceImpl implements ClinicalSpecialtyService{
 		return clinicalSpecialties;
 	}
 
+	@Override
+	public List<ClinicalSpecialtyBo> getClinicalSpecialtiesByProvinceId(Short provinceId) {
+		LOG.debug("Input parameters => provinceId {}", provinceId);
+		List<ClinicalSpecialtyBo> clinicalSpecialties = clinicalSpecialtyRepository.getClinicalSpecialtiesByProvinceId(provinceId);
+		LOG.trace(OUTPUT, clinicalSpecialties);
+		return clinicalSpecialties;
+	}
+
+	@Override
+	public String getClinicalSpecialtyNameByDiaryId(Integer diaryId) {
+		LOG.debug("Input parameters -> diaryId {}", diaryId);
+		String result = clinicalSpecialtyRepository.getClinicalSpecialtyByDiary(diaryId).getName();
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<ClinicalSpecialtyBo> getVirtualConsultationClinicalSpecialtiesByInstitutionId(Integer institutionId) {
+		LOG.debug("Input parameters -> institutionId {}", institutionId);
+		List<ClinicalSpecialtyBo> result = clinicalSpecialtyRepository.getVirtualConsultationClinicalSpecialtiesByInstitutionId(institutionId);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
 	private ClinicalSpecialtyBo mapToBo(ClinicalSpecialty entiy){
         return new ClinicalSpecialtyBo(entiy.getId(), entiy.getName());
     }

@@ -34,10 +34,40 @@ public class ProfessionalPersonBo {
 	}
 
 	public ProfessionalPersonBo(ProfessionalPersonVo professionalPerson) {
+		this.id = professionalPerson.getId();
 		this.firstName = professionalPerson.getFirstName();
 		this.lastName = professionalPerson.getLastName();
 		this.nameSelfDetermination = professionalPerson.getNameSelfDetermination();
 		this.middleNames = professionalPerson.getMiddleNames();
 		this.otherLastNames = professionalPerson.getOtherLastNames();
 	}
+
+	public String getFullName(boolean ffIsOn) {
+
+		StringBuilder fullNameBuilder = new StringBuilder();
+
+		if (ffIsOn && this.nameSelfDetermination != null) {
+			fullNameBuilder.append(this.lastName)
+					.append(" ")
+					.append(this.nameSelfDetermination);
+		} else {
+			fullNameBuilder.append(this.lastName);
+
+			if (this.otherLastNames != null) {
+				fullNameBuilder.append(" ")
+						.append(this.otherLastNames);
+			}
+
+			fullNameBuilder.append(" ")
+					.append(this.firstName);
+
+			if (this.middleNames != null) {
+				fullNameBuilder.append(" ")
+						.append(this.middleNames);
+			}
+		}
+
+		return fullNameBuilder.toString();
+	}
+
 }

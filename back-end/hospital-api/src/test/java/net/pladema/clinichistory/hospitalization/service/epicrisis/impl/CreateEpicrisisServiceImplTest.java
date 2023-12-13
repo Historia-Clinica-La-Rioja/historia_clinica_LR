@@ -360,6 +360,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         result.setFamilyHistories(Collections.emptyList());
         result.setMedications(Collections.emptyList());
         result.setDiagnosis(Collections.emptyList());
+		result.setProcedures(Collections.emptyList());
         result.setImmunizations(Collections.emptyList());
         result.setAllergies(Collections.emptyList());
         return result;

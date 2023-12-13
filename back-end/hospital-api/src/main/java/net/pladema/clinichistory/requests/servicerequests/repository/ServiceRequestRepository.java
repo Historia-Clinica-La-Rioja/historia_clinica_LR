@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ServiceRequestRepository extends SGXAuditableEntityJPARepository<ServiceRequest, Integer> {
@@ -25,4 +26,11 @@ public interface ServiceRequestRepository extends SGXAuditableEntityJPARepositor
 			"WHERE sr.sourceId IN :sourceIds " +
 			"AND sr.sourceTypeId = :typeId")
 	List<Integer> getServiceRequestIdsFromIdSourceType(@Param("sourceIds") List<Integer> sourceIds, @Param("typeId") Short typeId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT sr.medicalCoverageId " +
+			"FROM ServiceRequest sr " +
+			"WHERE sr.id = :id")
+	Optional<Integer> getMedicalCoverageId(@Param("id") Integer id);
+
 }

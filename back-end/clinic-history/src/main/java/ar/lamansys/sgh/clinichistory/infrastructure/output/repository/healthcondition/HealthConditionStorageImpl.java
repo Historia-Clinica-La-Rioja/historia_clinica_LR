@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -17,7 +19,7 @@ public class HealthConditionStorageImpl implements HealthConditionStorage {
     private final EntityManager entityManager;
 
     @Override
-    public Integer getHealthConditionIdByEncounterAndSnomedConcept(Integer encounterId, Integer sourceTypeId, String sctid, String pt) {
+    public List<Integer> getHealthConditionIdByEncounterAndSnomedConcept(Integer encounterId, Integer sourceTypeId, String sctid, String pt) {
         log.debug("Input parameters encounterId {}, sourceTypeId {} , sctid {} , pt {}", encounterId, sourceTypeId, sctid, pt);
 
         String sqlString = "SELECT hc.id as id "
@@ -32,12 +34,12 @@ public class HealthConditionStorageImpl implements HealthConditionStorage {
                 +"  AND s.sctid = :sctid"
                 +"  AND s.pt = :pt";
 
-        Integer result = (Integer) entityManager.createQuery(sqlString)
+        List<Integer> result = entityManager.createQuery(sqlString)
                 .setParameter("encounterId", encounterId)
                 .setParameter("sourceTypeId", sourceTypeId.shortValue())
                 .setParameter("sctid", sctid)
                 .setParameter("pt", pt)
-                .getSingleResult();
+				.getResultList();
 
         log.debug("Output parameter -> result {}", result);
         return result;

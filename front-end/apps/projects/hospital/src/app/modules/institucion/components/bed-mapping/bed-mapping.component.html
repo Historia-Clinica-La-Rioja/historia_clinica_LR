@@ -1,6 +1,7 @@
 <div fxLayout="column" *ngFor="let sector of bedManagementList">
-    <div id="title">
+    <div id="title" class="header">
         <h2 class="mat-h2 page-title">{{sector.sectorDescription}}</h2>
+		<h4>{{sector.sectorTypeDescription}}</h4>
     </div>
 
 	<div class="sector-characteristic-block">

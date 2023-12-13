@@ -1,0 +1,28 @@
+<div class="popup-container" style="border: none;">
+  <h2 *ngIf="!selectedOption">Evaluaciones geriátricas</h2>
+
+  <mat-form-field *ngIf="!selectedOption">
+    <mat-label>Seleccione evaluación</mat-label>
+    <mat-select [(ngModel)]="selectedOption">
+      <mat-option value="option2">Escala de Frail</mat-option>
+      <mat-option value="option3">Edmonton</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div *ngIf="selectedOption === 'option2'">
+    <div class="form-container">
+      <button id="close-modal" mat-button mat-icon-button aria-label="close" (click)="closeModal(true)">
+        <mat-icon>close</mat-icon>
+      </button>
+      <app-frail-scale></app-frail-scale>
+    </div>
+  </div>
+
+  <div *ngIf="selectedOption === 'option3'">
+    <div class="form-container">
+      <button id="close-modal" mat-button mat-icon-button aria-label="close" (click)="closeModal(true)">
+        <mat-icon>close</mat-icon>
+      </button>
+      <app-edmonton></app-edmonton>
+    </div>
+  </div>
+</div>

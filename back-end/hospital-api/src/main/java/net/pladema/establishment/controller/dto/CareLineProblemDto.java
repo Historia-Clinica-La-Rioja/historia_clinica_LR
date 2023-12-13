@@ -19,4 +19,10 @@ public class CareLineProblemDto {
 
 	private String conceptSctid;
 
+	public CareLineProblemDto(Integer id, Integer careLineId, Integer snomedId) {
+		this.id = id;
+		this.careLineId = careLineId;
+		this.snomedId = snomedId;
+	}
+
 }

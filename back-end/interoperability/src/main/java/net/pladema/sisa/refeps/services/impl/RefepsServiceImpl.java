@@ -1,25 +1,9 @@
 package net.pladema.sisa.refeps.services.impl;
 
-import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.exception.RestTemplateApiException;
-import ar.lamansys.sgx.shared.restclient.services.RestClient;
-import ar.lamansys.sgx.shared.restclient.services.RestClientInterface;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.extern.slf4j.Slf4j;
-import net.pladema.sisa.refeps.controller.dto.LicenseDataDto;
-import net.pladema.sisa.refeps.controller.dto.ValidatedLicenseDataDto;
-import net.pladema.sisa.refeps.services.RefepsService;
-import net.pladema.sisa.refeps.configuration.RefepsWSConfig;
-import net.pladema.sisa.refeps.services.domain.ELicenseNumberType;
-import net.pladema.sisa.refeps.services.domain.ValidatedLicenseNumberBo;
-import net.pladema.sisa.refeps.services.domain.RefepsLicensePayload;
-import net.pladema.sisa.refeps.services.domain.RefepsLicenseSearchResponse;
-
-import net.pladema.sisa.refeps.services.exceptions.RefepsApiException;
-import net.pladema.sisa.refeps.services.exceptions.RefepsExceptionsEnum;
-import net.pladema.sisa.refeps.services.exceptions.RefepsLicenseException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -27,10 +11,25 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import ar.lamansys.sgh.shared.infrastructure.output.repository.SharedHealthcareProfessionalRepository;
+import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.exception.RestTemplateApiException;
+import ar.lamansys.sgx.shared.restclient.services.RestClient;
+import ar.lamansys.sgx.shared.restclient.services.RestClientInterface;
+import lombok.extern.slf4j.Slf4j;
+import net.pladema.sisa.refeps.configuration.RefepsWSConfig;
+import net.pladema.sisa.refeps.controller.dto.LicenseDataDto;
+import net.pladema.sisa.refeps.controller.dto.ValidatedLicenseDataDto;
+import net.pladema.sisa.refeps.services.RefepsService;
+import net.pladema.sisa.refeps.services.domain.ELicenseNumberType;
+import net.pladema.sisa.refeps.services.domain.RefepsLicensePayload;
+import net.pladema.sisa.refeps.services.domain.RefepsLicenseSearchResponse;
+import net.pladema.sisa.refeps.services.domain.ValidatedLicenseNumberBo;
+import net.pladema.sisa.refeps.services.exceptions.RefepsApiException;
+import net.pladema.sisa.refeps.services.exceptions.RefepsExceptionsEnum;
+import net.pladema.sisa.refeps.services.exceptions.RefepsLicenseException;
 
 @Service
 @ConditionalOnProperty(
@@ -44,6 +43,8 @@ public class RefepsServiceImpl implements RefepsService {
 
 	private final RestClientInterface restClientInterface;
 
+	private final SharedHealthcareProfessionalRepository sharedHealthcareProfessionalRepository;
+
 	private final String NOT_FOUND = "REGISTRO_NO_ENCONTRADO";
 
 	private final String MULTIPLE_RESULTS = "MULTIPLE_RESULTADO";
@@ -53,25 +54,31 @@ public class RefepsServiceImpl implements RefepsService {
 
 
 	public RefepsServiceImpl(RestTemplateBuilder restTemplateBuilder,
-							 RefepsWSConfig wsConfig) {
+							 RefepsWSConfig wsConfig,
+							 SharedHealthcareProfessionalRepository sharedHealthcareProfessionalRepository) {
 		this.refepsWSConfig = wsConfig;
 		this.restClientInterface = new RestClient(restTemplateBuilder.build(), wsConfig);
+		this.sharedHealthcareProfessionalRepository = sharedHealthcareProfessionalRepository;
 	}
 
 	@Override
-	public List<ValidatedLicenseNumberBo> validateLicenseNumber(String identificationNumber, List<String> licenses) throws RefepsApiException, RefepsLicenseException {
+	public List<ValidatedLicenseNumberBo> validateLicenseNumber(Integer healthcareProfessionalId, String identificationNumber, List<String> licenses) throws RefepsApiException, RefepsLicenseException {
 		log.debug("Parameters: identificationNumber {}, licenses {}", identificationNumber, licenses);
 		List<ValidatedLicenseNumberBo> processedLicenses = new ArrayList<>();
-		String responseMessage = null;
 		String url = "&nrodoc=" + identificationNumber;
 		try {
 			RefepsLicenseSearchResponse response = restClientInterface.exchangeGet(url, RefepsLicenseSearchResponse.class).getBody();
-			if (response != null) {
+			assertValidLicenseResponse(response);
+			String responseMessage = response.getResultMessage();
+			if (responseMessage.equals(MULTIPLE_RESULTS)) {
+				url = url.concat("&apellido=" + sharedHealthcareProfessionalRepository.getHealthcareProfessionalLastName(healthcareProfessionalId).toUpperCase());
+				response = restClientInterface.exchangeGet(url, RefepsLicenseSearchResponse.class).getBody();
+				assertValidLicenseResponse(response);
 				responseMessage = response.getResultMessage();
-				if (response.getResponse() != null) {
-					processExistingLicensesNumber(licenses, processedLicenses, response);
-					return processedLicenses;
-				}
+			}
+			if (response.getResponse() != null) {
+				processExistingLicensesNumber(licenses, processedLicenses, response);
+				return processedLicenses;
 			}
 			throw generateCustomException(Objects.requireNonNull(responseMessage));
 		} catch (RestTemplateApiException e) {
@@ -79,18 +86,27 @@ public class RefepsServiceImpl implements RefepsService {
 		}
 	}
 
+	private void assertValidLicenseResponse(RefepsLicenseSearchResponse response) throws RefepsApiException {
+		if (response == null)
+			throw new RefepsApiException(RefepsExceptionsEnum.SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR, "El servicio REFEPS no se encuentra disponible en éstos momentos");
+	}
+
 	@Override
-	public List<ValidatedLicenseDataDto> validateLicenseNumberAndType(String identificationNumber, List<LicenseDataDto> licensesData) throws RefepsApiException, RefepsLicenseException {
+	public List<ValidatedLicenseDataDto> validateLicenseNumberAndType(Integer healthcareProfessionalId, String identificationNumber, List<LicenseDataDto> licensesData) throws RefepsApiException, RefepsLicenseException {
 		log.debug("Parameters: identificationNumber {}, licenses {}", identificationNumber, licensesData);
-		String responseMessage = null;
 		String url = "&nrodoc=" + identificationNumber;
 		try {
 			RefepsLicenseSearchResponse response = restClientInterface.exchangeGet(url, RefepsLicenseSearchResponse.class).getBody();
-			if (response != null) {
+            assertValidLicenseResponse(response);
+            String responseMessage = response.getResultMessage();
+			if (responseMessage.equals(MULTIPLE_RESULTS)) {
+				url = url.concat("&apellido=" + sharedHealthcareProfessionalRepository.getHealthcareProfessionalLastName(healthcareProfessionalId).toUpperCase());
+				response = restClientInterface.exchangeGet(url, RefepsLicenseSearchResponse.class).getBody();
+				assertValidLicenseResponse(response);
 				responseMessage = response.getResultMessage();
-				if (response.getResponse() != null)
-					return processExistingLicensesData(licensesData, response);
 			}
+			if (response.getResponse() != null)
+				return processExistingLicensesData(licensesData, response);
 			throw generateCustomException(Objects.requireNonNull(responseMessage));
 		} catch (RestTemplateApiException e) {
 			throw processRestTemplateException(e);

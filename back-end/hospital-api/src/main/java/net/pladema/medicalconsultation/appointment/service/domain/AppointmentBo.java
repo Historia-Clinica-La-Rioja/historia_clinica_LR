@@ -1,18 +1,23 @@
 package net.pladema.medicalconsultation.appointment.service.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
+import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 
 @Getter
 @Setter
@@ -58,6 +63,22 @@ public class AppointmentBo {
 
 	private boolean isProtected;
 
+	private LocalDateTime createdOn;
+
+	private ProfessionalPersonBo professionalPersonBo;
+
+	private String patientEmail;
+
+	private String callId;
+
+	private Short modalityId;
+	
+	private DiagnosticReportBo orderData;
+
+	private TranscribedDiagnosticReportBo transcribedData;
+
+	private String applicantHealthcareProfessionalEmail;
+
 	public static AppointmentBo fromAppointmentDiaryVo(AppointmentDiaryVo appointmentDiaryVo) {
 		return AppointmentBo.builder()
 				.id(appointmentDiaryVo.getId())
@@ -72,6 +93,8 @@ public class AppointmentBo {
 				.phonePrefix(appointmentDiaryVo.getPhonePrefix())
 				.phoneNumber(appointmentDiaryVo.getPhoneNumber())
 				.appointmentBlockMotiveId(appointmentDiaryVo.getAppointmentBlockMotiveId())
+				.createdOn(appointmentDiaryVo.getCreatedOn())
+				.professionalPersonBo(appointmentDiaryVo.getProfessionalPersonVo() != null ? new ProfessionalPersonBo(appointmentDiaryVo.getProfessionalPersonVo()) : null)
 				.build();
 	}
 
@@ -89,6 +112,8 @@ public class AppointmentBo {
 				.diaryId(appointmentVo.getDiaryId())
 				.observation(appointmentVo.getObservation())
 				.observationBy(appointmentVo.getObservationBy())
+				.callId(appointmentVo.getCallId())
+				.modalityId(appointmentVo.getModalityId())
 				.build();
 	}
 

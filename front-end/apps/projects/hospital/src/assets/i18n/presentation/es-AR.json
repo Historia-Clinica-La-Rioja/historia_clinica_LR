@@ -5,7 +5,9 @@
         },
 		"indications": {
             "INDICATE": "indicar"
-
-		}
+		},
+        "filter-button": {
+            "FILTER": "Filtrar"
+        }
     }
 }

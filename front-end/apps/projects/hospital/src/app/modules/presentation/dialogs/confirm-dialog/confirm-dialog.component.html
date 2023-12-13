@@ -1,5 +1,5 @@
 <div fxLayout="column" fxLayoutGap="15px" fxLayoutAlign="start center">
-	<mat-icon [inline]="true" class="material-icons-outlined" id="warning-icon" color="primary" *ngIf="data.showMatIconError == true">
+	<mat-icon [inline]="true" class="material-icons-outlined" id="warning-icon" [color]='okBottonColor' *ngIf="data.showMatIconError == true">
 		error_outline
 	</mat-icon>
 	<h1 mat-dialog-title>{{ data.title | translate}}</h1>

@@ -12,7 +12,7 @@ public interface AppointmentOrderImageService {
 
 	boolean isAlreadyCompleted(Integer appointmentId);
 
-	boolean updateCompleted(DetailsOrderImageBo detailsOrderImageBo, boolean finished);
+	void updateCompleted(DetailsOrderImageBo detailsOrderImageBo);
 
 	Optional<String> getImageId(Integer appointmentId);
 
@@ -21,4 +21,8 @@ public interface AppointmentOrderImageService {
 	void setImageId(Integer appointmentId, String imageId);
 
 	void setDestInstitutionId(Integer institutionId, Integer appointmentId);
+
+	void setReportStatusId(Integer appointmentId, Short reportStatusId);
+
+    boolean updateOrderId(Integer appointmentId, Integer orderId, Boolean transcribed, Integer studyId);
 }

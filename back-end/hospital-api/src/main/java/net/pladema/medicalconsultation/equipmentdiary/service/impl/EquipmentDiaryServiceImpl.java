@@ -58,6 +58,7 @@ public class EquipmentDiaryServiceImpl implements EquipmentDiaryService {
 	private final UpdateAppointmentOpeningHoursService updateApmtOHService;
 
 	@Override
+	@Transactional
 	public Integer addDiary(EquipmentDiaryBo equipmentDiaryToSave) throws DiaryException {
 		LOG.debug("Input parameters -> equipmentDiaryToSave {}", equipmentDiaryToSave);
 		EquipmentDiary equipmentDiary = createDiaryInstance(equipmentDiaryToSave);
@@ -68,7 +69,6 @@ public class EquipmentDiaryServiceImpl implements EquipmentDiaryService {
 		return diaryId;
 	}
 
-	@Transactional
 	private Integer persistDiary(EquipmentDiaryBo equipmentDiaryToSave, EquipmentDiary equipmentDiary) {
 		equipmentDiary = equipmentDiaryRepository.save(equipmentDiary);
 		Integer equipmentDiaryId = equipmentDiary.getId();

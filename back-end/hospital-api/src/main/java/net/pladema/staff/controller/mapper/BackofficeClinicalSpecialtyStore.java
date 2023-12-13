@@ -37,7 +37,7 @@ public class BackofficeClinicalSpecialtyStore implements BackofficeStore<Clinica
                 PageRequest.of(
                         pageable.getPageNumber(),
                         pageable.getPageSize(),
-                        Sort.by(Sort.Direction.ASC, "name")
+                        pageable.getSort()
                 )
         );
     }

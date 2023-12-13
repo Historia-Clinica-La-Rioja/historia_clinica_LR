@@ -24,6 +24,8 @@
 			"textdescription":	"",
 			"roles":	[{
 					"rolename":	"PublicadorHSI"
+				}, {
+					"rolename":	"R_ConsultaTelemedicina"
 				}],
 			"password":	"ZO/H6Gn9dqC0u12CryvlWHBEnsvwOd1jjU1QaKoQF0C+OEQeXKvRxbImzvhdJC93MgTU/Tsxo6L2+A5h3zbJZg==",
 			"salt":	"YHWSHcOnlNh4UHbz",
@@ -60,7 +62,7 @@
 			"textdescription":	"Permite publicar bajo cualquier topico con el prefijo HSI",
 			"acls":	[{
 					"acltype":	"publishClientSend",
-					"topic":	"HSI/#",
+					"topic":	"/HSI/#",
 					"priority":	0,
 					"allow":	true
 				}]
@@ -70,7 +72,17 @@
 			"textdescription":	"",
 			"acls":	[{
 					"acltype":	"publishClientReceive",
-					"topic":	"HSI/HOSPITAL_API/ALTA_MEDICA",
+					"topic":	"/HSI/HOSPITAL_API/ALTA_MEDICA",
+					"priority":	0,
+					"allow":	true
+				}]
+		}, {
+			"rolename":	"R_ConsultaTelemedicina",
+			"textname":	"Consulta telemedicina",
+			"textdescription":	"Éste rol es utilizado para la gestión de consultas de telemedicina en HSI",
+			"acls":	[{
+					"acltype":	"publishClientReceive",
+					"topic":	"/HSI/VIRTUAL-CONSULTATION/#",
 					"priority":	0,
 					"allow":	true
 				}]
@@ -80,7 +92,7 @@
 			"textdescription":	"",
 			"acls":	[{
 					"acltype":	"publishClientReceive",
-					"topic":	"HSI/HOSPITAL_API/PACIENTE_LLAMADO/#",
+					"topic":	"/HSI/HOSPITAL_API/PACIENTE_LLAMADO/#",
 					"priority":	0,
 					"allow":	true
 				}]
@@ -90,7 +102,7 @@
 			"textdescription":	"",
 			"acls":	[{
 					"acltype":	"publishClientReceive",
-					"topic":	"HSI/ODONTOLOGY/NUEVA_CONSULTA",
+					"topic":	"/HSI/ODONTOLOGY/NUEVA_CONSULTA",
 					"priority":	0,
 					"allow":	true
 				}]
@@ -100,7 +112,7 @@
 			"textdescription":	"",
 			"acls":	[{
 					"acltype":	"publishClientReceive",
-					"topic":	"HSI/HOSPITAL_API/SOLICITUD_ESTUDIO",
+					"topic":	"/HSI/HOSPITAL_API/SOLICITUD_ESTUDIO",
 					"priority":	0,
 					"allow":	true
 				}]

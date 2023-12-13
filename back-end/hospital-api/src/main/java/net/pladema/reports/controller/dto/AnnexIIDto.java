@@ -9,8 +9,6 @@ import lombok.Setter;
 @Setter
 public class AnnexIIDto {
 
-    private LocalDate reportDate;
-
     private String establishment;
 
     private String completePatientName;
@@ -28,8 +26,6 @@ public class AnnexIIDto {
     private LocalDate attentionDate;
 
     private String medicalCoverage;
-
-    private String affiliateNumber;
 
     private Boolean existsConsultation;
 

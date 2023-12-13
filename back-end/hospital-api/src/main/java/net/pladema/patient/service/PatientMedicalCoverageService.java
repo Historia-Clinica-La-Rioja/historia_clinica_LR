@@ -9,7 +9,9 @@ public interface PatientMedicalCoverageService {
 
     List<PatientMedicalCoverageBo> getActiveCoverages(Integer patientId);
 
-    Optional<PatientMedicalCoverageBo> getCoverage(Integer patientMedicalCoverageId);
+	PatientMedicalCoverageBo getActiveCoveragesByOrderId(Integer orderId);
+
+	Optional<PatientMedicalCoverageBo> getCoverage(Integer patientMedicalCoverageId);
 
     List<PatientMedicalCoverageBo> getActiveHealthInsurances(Integer patientId);
 

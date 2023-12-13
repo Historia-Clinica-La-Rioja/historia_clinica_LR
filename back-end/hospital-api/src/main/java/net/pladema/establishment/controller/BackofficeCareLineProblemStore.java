@@ -16,7 +16,6 @@ import net.pladema.snowstorm.controller.service.SnowstormExternalService;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -50,11 +49,7 @@ public class BackofficeCareLineProblemStore implements BackofficeStore<CareLineP
 
 	@Override
 	public Page<CareLineProblemDto> findAll(CareLineProblemDto entity, Pageable pageable) {
-		List<CareLineProblemDto> content = careLineProblemRepository.findByCareLineId(entity.getCareLineId())
-				.stream()
-				.map(this::mapToCareLineProblemDto)
-				.collect(Collectors.toList());
-		return new PageImpl<>(content, pageable, content.size());
+		return careLineProblemRepository.findByCareLineId(entity.getCareLineId(), pageable);
 	}
 
 	@Override
