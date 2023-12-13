@@ -65,6 +65,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_OBLIGATORIEDAD_UNIDADES_JERARQUICAS, false);
 		map.put(AppFeature.HABILITAR_FIRMA_DIGITAL, false);
 		map.put(AppFeature.HABILITAR_NUEVO_FORMATO_PDF_ORDENES_PRESTACION, false);
+		map.put(AppFeature.HABILITAR_RESULTADOS_DE_ESTUDIO_EN_DESAROLLO, false);
 	}
 
 	@Override
