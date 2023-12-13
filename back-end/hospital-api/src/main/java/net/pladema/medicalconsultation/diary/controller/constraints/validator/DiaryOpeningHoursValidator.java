@@ -104,7 +104,7 @@ public class DiaryOpeningHoursValidator implements ConstraintValidator<DiaryOpen
 
 	private boolean validateProtectedAppointmentsForSpontaneousOpeningHours(List<DiaryOpeningHoursBo> openingHours) {
 		return openingHours.stream()
-				.anyMatch(oh -> oh.getMedicalAttentionTypeId().equals(MedicalAttentionType.SPONTANEOUS) && oh.getProtectedAppointmentsAllowed());
+				.anyMatch(oh -> oh.getMedicalAttentionTypeId().equals(MedicalAttentionType.SPONTANEOUS) && (oh.getProtectedAppointmentsAllowed() || (oh.getRegulationProtectedAppointmentsAllowed() != null && oh.getRegulationProtectedAppointmentsAllowed())));
 	}
 
 	private String overlapDiariesValidationMessage(DiaryBo diaryBo) {

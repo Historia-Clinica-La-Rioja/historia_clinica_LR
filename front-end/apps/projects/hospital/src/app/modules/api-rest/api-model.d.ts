@@ -1072,6 +1072,7 @@ export interface DiaryOpeningHoursDto extends Overlapping<DiaryOpeningHoursDto> 
     overturnCount?: number;
     patientVirtualAttentionAllowed?: boolean;
     protectedAppointmentsAllowed: boolean;
+    regulationProtectedAppointmentsAllowed?: boolean;
     secondOpinionVirtualAttentionAllowed?: boolean;
 }
 
@@ -1549,6 +1550,7 @@ export interface EquipmentDiaryOpeningHoursDto extends Overlapping<EquipmentDiar
     openingHours: EquipmentOpeningHoursDto;
     overturnCount?: number;
     protectedAppointmentsAllowed: boolean;
+    regulationProtectedAppointmentsAllowed?: boolean;
 }
 
 export interface EquipmentDto extends Serializable {

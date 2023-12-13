@@ -128,7 +128,8 @@ public class EditDiaryOpeningHoursValidator implements ConstraintValidator<EditD
 
 	private boolean validateProtectedAppointmentsForSpontaneousOpeningHours(List<DiaryOpeningHoursBo> openingHours) {
 		return openingHours.stream()
-				.anyMatch(oh -> oh.getMedicalAttentionTypeId().equals(MedicalAttentionType.SPONTANEOUS) && oh.getProtectedAppointmentsAllowed() != null && oh.getProtectedAppointmentsAllowed());
+				.anyMatch(oh -> oh.getMedicalAttentionTypeId().equals(MedicalAttentionType.SPONTANEOUS) &&
+						((oh.getProtectedAppointmentsAllowed() != null && oh.getProtectedAppointmentsAllowed()) || (oh.getRegulationProtectedAppointmentsAllowed() != null && oh.getRegulationProtectedAppointmentsAllowed())));
 	}
 
 	private String overlapDiariesValidationMessage(DiaryBo diaryBo) {

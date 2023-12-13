@@ -28,6 +28,8 @@ public class DiaryOpeningHoursVo {
 
 	private final Boolean secondOpinionVirtualAttentionAllowed;
 
+	private final Boolean regulationProtectedAppointmentsAllowed;
+
     public DiaryOpeningHoursVo(Integer diaryId, OpeningHours op, Short medicalAttentionTypeId,
 							   Short overturnCount, Boolean externalAppointmentsAllowed){
         this.diaryId = diaryId;
@@ -39,12 +41,13 @@ public class DiaryOpeningHoursVo {
 		this.onSiteAttentionAllowed = null;
 		this.patientVirtualAttentionAllowed = null;
 		this.secondOpinionVirtualAttentionAllowed = null;
+		this.regulationProtectedAppointmentsAllowed = null;
     }
 
 	public DiaryOpeningHoursVo(Integer diaryId, OpeningHours op, Short medicalAttentionTypeId,
 							   Short overturnCount, Boolean externalAppointmentsAllowed,
 							   Boolean protectedAppointmentsAllowed, Boolean onSiteAttentionAllowed,
-							   Boolean patientVirtualAttentionAllowed, Boolean secondOpinionVirtualAttentionAllowed){
+							   Boolean patientVirtualAttentionAllowed, Boolean secondOpinionVirtualAttentionAllowed, Boolean regulationProtectedAppointmentsAllowed){
 		this.diaryId = diaryId;
 		this.openingHours = op;
 		this.medicalAttentionTypeId = medicalAttentionTypeId;
@@ -54,6 +57,7 @@ public class DiaryOpeningHoursVo {
 		this.onSiteAttentionAllowed = onSiteAttentionAllowed;
 		this.patientVirtualAttentionAllowed = patientVirtualAttentionAllowed;
 		this.secondOpinionVirtualAttentionAllowed = secondOpinionVirtualAttentionAllowed;
+		this.regulationProtectedAppointmentsAllowed = regulationProtectedAppointmentsAllowed;
 	}
 
 }
