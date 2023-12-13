@@ -272,14 +272,17 @@
 						</ng-template>
 					</mat-tab>
 
-					<mat-tab id="tab_adultomayor" *ngIf="isAdultoMayor()">
-						<ng-template mat-tab-label>
-							<span>ADULTO MAYOR</span>
-						</ng-template>
-						<ng-template matTabContent>
-							<app-adulto-mayor></app-adulto-mayor>
-						</ng-template>
-					</mat-tab>
+					<section *appFeatureFlag="'HABILITAR_CUESTIONARIOS'">
+						<mat-tab id="tab_adultomayor" *ngIf="isAdultoMayor()">
+							<ng-template mat-tab-label>
+								<span>ADULTO MAYOR</span>
+							</ng-template>
+							<ng-template matTabContent>
+								<app-adulto-mayor></app-adulto-mayor>
+							</ng-template>
+						</mat-tab>
+					</section>
+
 					<mat-tab *ngFor="let extensionWCTab of extensionWCTabs$ | async" [id]="extensionWCTab.title">
 						<ng-template mat-tab-label>
 							<span>{{extensionWCTab.title | uppercase}}</span>

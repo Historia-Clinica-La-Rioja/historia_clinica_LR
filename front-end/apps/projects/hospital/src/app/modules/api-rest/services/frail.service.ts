@@ -29,10 +29,10 @@ export class FrailService {
     return this.http.get<FrailAnswers[]>(url);
   }
 
-  getPdf(questionnaireId: number) {
+  getPdf(questionnaireId: number): Observable<Blob> {
     const url = `${environment.apiBase}/institution/patient/outpatient/consultation/frail/${questionnaireId}/pdf-download`; 
-    return this.http.get<boolean>(url);
-  
+    return this.http.get(url, { responseType: 'blob' });
+    
   }
 
 }
