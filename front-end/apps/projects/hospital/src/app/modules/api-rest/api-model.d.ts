@@ -818,6 +818,25 @@ export interface ConsultationsDto extends Serializable {
     specialty: string;
 }
 
+export interface CoordinationActionDto<T> {
+    organizations: T[];
+    other: string;
+    within: boolean;
+}
+
+export interface CoordinationInsideHealthSectorDto {
+    healthInstitutionOrganization: CoordinationActionDto<EHealthInstitutionOrganization>;
+    healthSystemOrganization: CoordinationActionDto<EHealthSystemOrganization>;
+    wereInternmentIndicated: EIntermentIndicationStatus;
+}
+
+export interface CoordinationOutsideHealthSectorDto {
+    municipalGovernmentDevices: EMunicipalGovernmentDevice[];
+    nationalGovernmentDevices: ENationalGovernmentDevice[];
+    provincialGovernmentDevices: EProvincialGovernmentDevice[];
+    withOtherSocialOrganizations: boolean;
+}
+
 export interface CounterReferenceAllergyDto extends Serializable {
     categoryId: string;
     criticalityId: number;
@@ -1977,6 +1996,11 @@ export interface HealthConditionNewConsultationDto extends Serializable {
     verificationStatusId: string;
 }
 
+export interface HealthCoordinationDto {
+    coordinationInsideHealthSector: CoordinationInsideHealthSectorDto;
+    coordinationOutsideHealthSector: CoordinationOutsideHealthSectorDto;
+}
+
 export interface HealthHistoryConditionDto extends HealthConditionDto {
     note: string;
     startDate?: string;
@@ -2188,6 +2212,13 @@ export interface InstitutionInfoDto extends Serializable {
     name: string;
     phone: string;
     sisaCode: string;
+}
+
+export interface InstitutionReportDto {
+    institutionReportPlaces: EInstitutionReportPlace[];
+    otherInstitutionReportPlace: string;
+    reportReasons: EInstitutionReportReason[];
+    reportWasDoneByInstitution: boolean;
 }
 
 export interface InstitutionUserPersonDto {
@@ -3849,6 +3880,12 @@ export interface SectorTypeDto {
     id: number;
 }
 
+export interface SecurityForceRelatedDto {
+    belongsToSecurityForces: boolean;
+    inDuty: boolean;
+    securityForceTypes: ESecurityForceType;
+}
+
 export interface SelfPerceivedGenderDto extends AbstractMasterdataDto<number> {
     id: number;
 }
@@ -3863,6 +3900,11 @@ export interface Serializable {
 export interface ServiceRequestCategoryDto {
     description: string;
     id: string;
+}
+
+export interface SexualViolenceDto {
+    implementedActions: ESexualViolenceAction[];
+    wasSexualViolence: boolean;
 }
 
 export interface SharedAnthropometricDataDto {
@@ -4437,8 +4479,92 @@ export interface VerificationCodeDto {
     code: string;
 }
 
+export interface VictimKeeperReportDto {
+    reportPlaces: EVictimKeeperReportPlace[];
+    werePreviousEpisodesWithVictimOrKeeper: boolean;
+}
+
 export interface ViewerUrlDto {
     url: string;
+}
+
+export interface ViolenceEpisodeDetailDto {
+    episodeDate: DateDto;
+    riskLevel: EViolenceEvaluationRiskLevel;
+    violenceModalitySnomedList: SnomedDto[];
+    violenceTowardsUnderage: ViolenceTowardsUnderageDto;
+    violenceTypeSnomedList: SnomedDto[];
+}
+
+export interface ViolenceReportActorDto<T> {
+    actorPersonalData: ViolenceReportPersonDto;
+    otherRelationshipWithVictim: string;
+    relationshipWithVictim: T;
+}
+
+export interface ViolenceReportAggressorDto {
+    aggressorData: ViolenceReportActorDto<EAggressorRelationship>;
+    hasBeenTreated: boolean;
+    hasGuns: boolean;
+    hasPreviousEpisodes: ECriminalRecordStatus;
+    livesWithVictim: ELiveTogetherStatus;
+    relationshipLength: ERelationshipLength;
+    securityForceRelatedData: SecurityForceRelatedDto;
+    violenceViolenceFrequency: EViolenceFrequency;
+}
+
+export interface ViolenceReportDisabilityDto {
+    disabilityCertificateStatus: EDisabilityCertificateStatus;
+    hasDisability: boolean;
+}
+
+export interface ViolenceReportDto {
+    aggressorData: ViolenceReportAggressorDto[];
+    episodeData: ViolenceEpisodeDetailDto;
+    implementedActions: ViolenceReportImplementedActionsDto;
+    observation: string;
+    victimData: ViolenceReportVictimDto;
+}
+
+export interface ViolenceReportImplementedActionsDto {
+    healthCoordination: HealthCoordinationDto;
+    institutionReport: InstitutionReportDto;
+    sexualViolence: SexualViolenceDto;
+    victimKeeperReport: VictimKeeperReportDto;
+}
+
+export interface ViolenceReportIncomeInformationDto {
+    hasIncome: boolean;
+    worksAtFormalSector: boolean;
+}
+
+export interface ViolenceReportInstitutionalizedDto {
+    institutionalizedDetails: string;
+    isInstitutionalized: boolean;
+}
+
+export interface ViolenceReportPersonDto {
+    address: string;
+    age: number;
+    firstName: string;
+    lastName: string;
+    municipalityId: number;
+}
+
+export interface ViolenceReportVictimDto {
+    canReadAndWrite: boolean;
+    disabilityData: ViolenceReportDisabilityDto;
+    hasSocialPlan: boolean;
+    incomeData: ViolenceReportIncomeInformationDto;
+    institutionalizedData: ViolenceReportInstitutionalizedDto;
+    keeperData: ViolenceReportActorDto<EKeeperRelationship>;
+    lackOfLegalCapacity: boolean;
+}
+
+export interface ViolenceTowardsUnderageDto {
+    schoolLevel: ESchoolLevel;
+    schooled: boolean;
+    type: EViolenceTowardsUnderageType;
 }
 
 export interface VirtualConsultationAvailableProfessionalAmountDto {
@@ -4605,6 +4731,23 @@ export const enum AppFeature {
     HABILITAR_RESULTADOS_DE_ESTUDIO_EN_DESAROLLO = "HABILITAR_RESULTADOS_DE_ESTUDIO_EN_DESAROLLO",
 }
 
+export const enum EAggressorRelationship {
+    PARTNER = "PARTNER",
+    EX_PARTNER = "EX_PARTNER",
+    FATHER = "FATHER",
+    STEPFATHER = "STEPFATHER",
+    MOTHER = "MOTHER",
+    STEPMOTHER = "STEPMOTHER",
+    SON = "SON",
+    DAUGHTER = "DAUGHTER",
+    SIBLING = "SIBLING",
+    SUPERIOR = "SUPERIOR",
+    ACQUAINTANCE = "ACQUAINTANCE",
+    NO_RELATIONSHIP = "NO_RELATIONSHIP",
+    NO_INFORMATION = "NO_INFORMATION",
+    DOES_NOT_ANSWER = "DOES_NOT_ANSWER",
+}
+
 export const enum EAppointmentModality {
     NO_MODALITY = "NO_MODALITY",
     ON_SITE_ATTENTION = "ON_SITE_ATTENTION",
@@ -4637,6 +4780,20 @@ export const enum ECHEncounterType {
     OUTPATIENT = "OUTPATIENT",
 }
 
+export const enum ECriminalRecordStatus {
+    YES = "YES",
+    WITH_OTHER_PEOPLE = "WITH_OTHER_PEOPLE",
+    NO = "NO",
+    NO_INFORMATION = "NO_INFORMATION",
+}
+
+export const enum EDisabilityCertificateStatus {
+    HAS_CERTIFICATE = "HAS_CERTIFICATE",
+    HAS_NOT_CERTIFICATE = "HAS_NOT_CERTIFICATE",
+    PENDING = "PENDING",
+    NO_INFORMATION = "NO_INFORMATION",
+}
+
 export const enum EDocumentSearch {
     DIAGNOSIS = "DIAGNOSIS",
     DOCTOR = "DOCTOR",
@@ -4664,6 +4821,35 @@ export const enum EGender {
     X = "X",
 }
 
+export const enum EHealthInstitutionOrganization {
+    MEDICAL_CLINIC = "MEDICAL_CLINIC",
+    PEDIATRICS = "PEDIATRICS",
+    GYNECOLOGY_OBSTETRICS = "GYNECOLOGY_OBSTETRICS",
+    SOCIAL_WORK = "SOCIAL_WORK",
+    MENTAL_HEALTH = "MENTAL_HEALTH",
+    NURSING = "NURSING",
+    SAPS = "SAPS",
+    EDA = "EDA",
+    EMERGENCY_CARE = "EMERGENCY_CARE",
+    COMMITTEE = "COMMITTEE",
+    MANAGEMENT = "MANAGEMENT",
+    OTHERS = "OTHERS",
+}
+
+export const enum EHealthSystemOrganization {
+    PROVINCIAL_HOSPITAL = "PROVINCIAL_HOSPITAL",
+    SANITARY_REGION = "SANITARY_REGION",
+    UPA = "UPA",
+    CPA = "CPA",
+    POSTAS = "POSTAS",
+    SIES = "SIES",
+    VACCINATION_CENTER = "VACCINATION_CENTER",
+    CETEC = "CETEC",
+    MINISTRY_CENTER = "MINISTRY_CENTER",
+    CAPS = "CAPS",
+    OTHERS = "OTHERS",
+}
+
 export const enum EIndicationStatus {
     INDICATED = "INDICATED",
     SUSPENDED = "SUSPENDED",
@@ -4679,10 +4865,72 @@ export const enum EIndicationType {
     OTHER_INDICATION = "OTHER_INDICATION",
 }
 
+export const enum EInstitutionReportPlace {
+    POLICE_STATION = "POLICE_STATION",
+    POLICE_STATION_WOMEN_OFFICE = "POLICE_STATION_WOMEN_OFFICE",
+    PUBLIC_PROSECUTORS_OFFICE = "PUBLIC_PROSECUTORS_OFFICE",
+    FAMILY_COURT = "FAMILY_COURT",
+    PEACE_COURT = "PEACE_COURT",
+    DIGITAL_SECURITY_REPORT = "DIGITAL_SECURITY_REPORT",
+    OTHER = "OTHER",
+}
+
+export const enum EInstitutionReportReason {
+    SERIOUS_EXTREMELY_INJURIES = "SERIOUS_EXTREMELY_INJURIES",
+    AGAINST_CHILDHOOD_ADOLESCENCE = "AGAINST_CHILDHOOD_ADOLESCENCE",
+    OTHER = "OTHER",
+}
+
+export const enum EIntermentIndicationStatus {
+    YES = "YES",
+    AS_PROTECTIVE_MEASURE = "AS_PROTECTIVE_MEASURE",
+    NO = "NO",
+}
+
+export const enum EKeeperRelationship {
+    MOTHER = "MOTHER",
+    FATHER = "FATHER",
+    GRANDPARENT = "GRANDPARENT",
+    UNCLE_OR_AUNT = "UNCLE_OR_AUNT",
+    BROTHER_OR_SISTER = "BROTHER_OR_SISTER",
+    RELATED = "RELATED",
+    OTHER = "OTHER",
+}
+
+export const enum ELiveTogetherStatus {
+    YES = "YES",
+    SAME_SPACE = "SAME_SPACE",
+    NO = "NO",
+    NOT_NOW = "NOT_NOW",
+    NO_INFORMATION = "NO_INFORMATION",
+}
+
 export const enum EMedicalCoverageTypeDto {
     PREPAGA = "PREPAGA",
     OBRASOCIAL = "OBRASOCIAL",
     ART = "ART",
+}
+
+export const enum EMunicipalGovernmentDevice {
+    GENDER_DIVERSITY = "GENDER_DIVERSITY",
+    LOCAL_COMMITTEE_AGAINST_VIOLENCE = "LOCAL_COMMITTEE_AGAINST_VIOLENCE",
+    PROTECTION_CHILDREN_TEENS = "PROTECTION_CHILDREN_TEENS",
+    DIRECTORATE_CHILDHOOD = "DIRECTORATE_CHILDHOOD",
+    SOCIAL_DEVELOPMENT_AREA = "SOCIAL_DEVELOPMENT_AREA",
+    PREVENTION_TREATMENT = "PREVENTION_TREATMENT",
+    EDUCATIONAL_INSTITUTION = "EDUCATIONAL_INSTITUTION",
+}
+
+export const enum ENationalGovernmentDevice {
+    WOMEN_GENDER_DIVERSITY_MINISTRY = "WOMEN_GENDER_DIVERSITY_MINISTRY",
+    CHILDHOOD_ADOLESCENCE_FAMILY_MINISTRY = "CHILDHOOD_ADOLESCENCE_FAMILY_MINISTRY",
+    SOCIAL_DEVELOPMENT_MINISTRY = "SOCIAL_DEVELOPMENT_MINISTRY",
+    SEDRONAR = "SEDRONAR",
+    ANSES = "ANSES",
+    CIVIL_REGISTRY = "CIVIL_REGISTRY",
+    EDUCATIONAL_INSTITUTION = "EDUCATIONAL_INSTITUTION",
+    SECURITY_FORCES = "SECURITY_FORCES",
+    JUSTICE_MINISTRY = "JUSTICE_MINISTRY",
 }
 
 export const enum ENursingRecordStatus {
@@ -4718,6 +4966,18 @@ export const enum EProfessionType {
     TRANSFUSIONIST = "TRANSFUSIONIST",
 }
 
+export const enum EProvincialGovernmentDevice {
+    WOMEN_GENDER_DIVERSITY_MINISTRY = "WOMEN_GENDER_DIVERSITY_MINISTRY",
+    PROMOTION_PROTECTION_RIGHTS_ZONAL_SERVICE = "PROMOTION_PROTECTION_RIGHTS_ZONAL_SERVICE",
+    COMMUNITY_DEVELOPMENT_MINISTRY = "COMMUNITY_DEVELOPMENT_MINISTRY",
+    EDUCATIONAL_INSTITUTION = "EDUCATIONAL_INSTITUTION",
+    SECURITY_FORCES = "SECURITY_FORCES",
+    JUDICIAL_SYSTEM = "JUDICIAL_SYSTEM",
+    PAROLE_BOARD = "PAROLE_BOARD",
+    JUVENILE_JUSTICE_INSTITUTION = "JUVENILE_JUSTICE_INSTITUTION",
+    JUSTICE_MINISTRY = "JUSTICE_MINISTRY",
+}
+
 export const enum EReferenceAttentionState {
     PENDING = "PENDING",
     ASSIGNED = "ASSIGNED",
@@ -4735,6 +4995,12 @@ export const enum EReferenceRegulationState {
     APPROVED = "APPROVED",
     REJECTED = "REJECTED",
     SUGGESTED_REVISION = "SUGGESTED_REVISION",
+}
+
+export const enum ERelationshipLength {
+    UP_TO_SIX_MONTHS = "UP_TO_SIX_MONTHS",
+    ONE_YEAR = "ONE_YEAR",
+    MORE_THAN_ONE_YEAR = "MORE_THAN_ONE_YEAR",
 }
 
 export const enum ERole {
@@ -4781,6 +5047,31 @@ export const enum ERole {
     ABORDAJE_VIOLENCIAS = "ABORDAJE_VIOLENCIAS",
 }
 
+export const enum ESchoolLevel {
+    NURSERY_SCHOOL = "NURSERY_SCHOOL",
+    KINDERGARTEN = "KINDERGARTEN",
+    ELEMENTARY_SCHOOL = "ELEMENTARY_SCHOOL",
+    HIGH_SCHOOL = "HIGH_SCHOOL",
+}
+
+export const enum ESecurityForceType {
+    EX_COMBATANT = "EX_COMBATANT",
+    ARMED_FORCES = "ARMED_FORCES",
+    FEDERAL_POLICE = "FEDERAL_POLICE",
+    PROVINCIAL_POLICE = "PROVINCIAL_POLICE",
+    PRIVATE_SECURITY = "PRIVATE_SECURITY",
+    PENITENTIARY_SERVICE = "PENITENTIARY_SERVICE",
+    OTHER = "OTHER",
+    NO_INFORMATION = "NO_INFORMATION",
+}
+
+export const enum ESexualViolenceAction {
+    STI_LABORATORY_PRESCRIPTION = "STI_LABORATORY_PRESCRIPTION",
+    HIV_STI_HEPATITIS_PROPHYLAXIS = "HIV_STI_HEPATITIS_PROPHYLAXIS",
+    EMERGENCY_CONTRACEPTION_PRESCRIPTION = "EMERGENCY_CONTRACEPTION_PRESCRIPTION",
+    LEGAL_INTERRUPTION_PREGNANCY_COUNSELING = "LEGAL_INTERRUPTION_PREGNANCY_COUNSELING",
+}
+
 export const enum ESignatureStatus {
     CANNOT_BE_SIGNED = "CANNOT_BE_SIGNED",
     PENDING = "PENDING",
@@ -4794,6 +5085,34 @@ export const enum ESurfacePositionDto {
     LEFT = "LEFT",
     RIGHT = "RIGHT",
     CENTRAL = "CENTRAL",
+}
+
+export const enum EVictimKeeperReportPlace {
+    POLICE_STATION = "POLICE_STATION",
+    POLICE_STATION_WOMEN_OFFICE = "POLICE_STATION_WOMEN_OFFICE",
+    PUBLIC_PROSECUTORS_OFFICE = "PUBLIC_PROSECUTORS_OFFICE",
+    FAMILY_COURT = "FAMILY_COURT",
+    PEACE_COURT = "PEACE_COURT",
+}
+
+export const enum EViolenceEvaluationRiskLevel {
+    LOW = "LOW",
+    MEDIUM = "MEDIUM",
+    HIGH = "HIGH",
+}
+
+export const enum EViolenceFrequency {
+    FIRST_TIME = "FIRST_TIME",
+    SOMETIMES = "SOMETIMES",
+    FREQUENT = "FREQUENT",
+    NO_INFORMATION = "NO_INFORMATION",
+}
+
+export const enum EViolenceTowardsUnderageType {
+    DIRECT_VIOLENCE = "DIRECT_VIOLENCE",
+    INDIRECT_VIOLENCE = "INDIRECT_VIOLENCE",
+    NO_VIOLENCE = "NO_VIOLENCE",
+    NO_INFORMATION = "NO_INFORMATION",
 }
 
 export const enum EVirtualConsultationEvent {
