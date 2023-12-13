@@ -5,12 +5,15 @@ import ar.lamansys.sgh.clinichistory.application.markaserroraproblem.IsWithinExp
 import ar.lamansys.sgh.clinichistory.application.ports.HCEReferenceCounterReferenceStorage;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEHospitalizationBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEPersonalHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEReferenceProblemBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.HCEHealthConditionRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEHealthConditionVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEHospitalizationVo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedLoggedUserPort;
 import ar.lamansys.sgx.shared.security.UserInfo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEPersonalHistoryVo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,7 @@ public class HCEHealthConditionsServiceImpl implements HCEHealthConditionsServic
     private static final String LOGGING_INPUT = "Input parameters -> patientId {} ";
 
     private final HCEHealthConditionRepository hceHealthConditionRepository;
+
     private final HCEReferenceCounterReferenceStorage hceReferenceCounterReferenceStorage;
     
     private final IsSameUserIdFromHealthCondition isSameUserIdFromHealthCondition;
@@ -35,6 +39,8 @@ public class HCEHealthConditionsServiceImpl implements HCEHealthConditionsServic
     private final IsWithinExpirationTimeLimit isWithinExpirationTimeLimit;
 
 	private final SharedLoggedUserPort sharedLoggedUserPort;
+
+    private final SharedPersonPort sharedPersonPort;
 
     @Override
     public List<HCEHealthConditionBo> getSummaryProblems(Integer patientId) {
@@ -63,6 +69,18 @@ public class HCEHealthConditionsServiceImpl implements HCEHealthConditionsServic
 		log.debug(LOGGING_OUTPUT, result);
 		return result;
 	}
+
+    @Override
+    public List<HCEPersonalHistoryBo> getPersonalHistories(Integer patientId) {
+        log.debug(LOGGING_INPUT, patientId);
+        List<HCEPersonalHistoryVo> resultQuery = hceHealthConditionRepository.getPersonalHistories(patientId);
+        List<HCEPersonalHistoryBo> result = resultQuery.stream()
+                .map(HCEPersonalHistoryBo::new)
+                .peek(personalHistory -> personalHistory.setProfessionalName(sharedPersonPort.getCompletePersonNameById(personalHistory.getProfessionalPersonId())))
+                .collect(Collectors.toList());
+        log.debug(LOGGING_OUTPUT, result);
+        return result;
+    }
 
     @Override
     public List<HCEHealthConditionBo> getFamilyHistories(Integer patientId) {

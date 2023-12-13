@@ -80,7 +80,7 @@ class HCEHealthConditionRepositoryTest extends UnitRepository {
 				.hasSize(0);
 
 		Assertions.assertThat(resultQuery.stream().filter(HCEHealthConditionVo::isPersonalHistory))
-				.hasSize(1);
+				.hasSize(0);
 
 		Assertions.assertThat(resultQuery.stream().filter(HCEHealthConditionVo::isChronic))
 				.hasSize(2);

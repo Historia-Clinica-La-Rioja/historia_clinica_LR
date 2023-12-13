@@ -4,6 +4,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,6 +32,16 @@ public class HCEHealthConditionBo extends HCEClinicalTermBo {
 
     private boolean main;
 
+    private String institutionName;
+
+    private Integer professionalPersonId;
+
+    private String professionalName;
+
+    private LocalDateTime createdOn;
+
+    private String note;
+
     private boolean hasPendingReference;
 
     private Boolean canBeMarkAsError;
@@ -44,6 +55,10 @@ public class HCEHealthConditionBo extends HCEClinicalTermBo {
         this.startDate = source.getStartDate();
         this.inactivationDate = source.getInactivationDate();
         this.main = source.isMain();
+        this.institutionName = source.getInstitutionName();
+        this.professionalPersonId = source.getProfessionalUserId();
+        this.createdOn = source.getCreatedOn();
+        this.note = source.getNote();
         this.canBeMarkAsError = !isSolvedProblem();
     }
 
