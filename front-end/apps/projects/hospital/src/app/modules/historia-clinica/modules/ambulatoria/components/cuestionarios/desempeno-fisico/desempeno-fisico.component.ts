@@ -7,9 +7,34 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DesempenoFisicoComponent implements OnInit {
 
+  selectedoptionA: string = '';
+
   constructor() { }
 
   ngOnInit(): void {
+    
   }
 
+
+isSubmitDisabled(): boolean {
+  return! (
+this.selectedoptionA === '1A' || this.selectedoptionA === '2A'
+
+  )
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
 }
