@@ -130,6 +130,12 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 			if (moveStudy.isPresent()) {
 				MoveStudies ms = moveStudy.get();
 				savePacWhereStudyIsHosted.run(new StudyPacBo(ms.getImageId(), ms.getPacServerId()));
+				Optional<String> imageId = appointmentOrderImageService.getImageId(ms.getAppointmentId());
+				if (imageId.isPresent()){
+					if (!imageId.get().equals(ms.getImageId())){
+						appointmentOrderImageService.setImageId(ms.getAppointmentId(), ms.getImageId());
+					}
+				}
 			}
 		}
 
