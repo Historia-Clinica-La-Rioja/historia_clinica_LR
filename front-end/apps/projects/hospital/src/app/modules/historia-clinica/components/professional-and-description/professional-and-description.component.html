@@ -6,6 +6,7 @@
 	<app-surgical-report-professional-info *ngIf="professionals"
 		[professionalTitle]="professionalTitle"
 		[professionals]="professionals"
+		[externalSetProfessional]="professional?.healthcareProfessional"
 		(professionalChange)="changeProfessional($event)">
 	</app-surgical-report-professional-info>
 

@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { DocumentHealthcareProfessionalDto, EProfessionType, HCEHealthcareProfessionalDto, HealthcareProfessionalDto } from '@api-rest/api-model';
+import { Component, Input, OnInit } from '@angular/core';
+import { DocumentHealthcareProfessionalDto, EProfessionType, HCEHealthcareProfessionalDto, HealthcareProfessionalDto, SurgicalReportDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-surgical-report-professional-team',
@@ -10,8 +10,7 @@ import { DocumentHealthcareProfessionalDto, EProfessionType, HCEHealthcareProfes
 export class SurgicalReportProfessionalTeamComponent implements OnInit {
 
 	@Input() professionals: HealthcareProfessionalDto[];
-	@Output() healthcareProfessionalsChange = new EventEmitter();
-
+	@Input() surgicalReport: SurgicalReportDto;
 	ayudanteCount: number = 1;
 
 	healthcareProfessionals: DocumentHealthcareProfessionalDto[] = [];
@@ -24,9 +23,47 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 	OBSTETRICIAN = EProfessionType.OBSTETRICIAN;
 	PEDIATRICIAN = EProfessionType.PEDIATRICIAN;
 
-	constructor() { }
+	surgeon: DocumentHealthcareProfessionalDto;
+	surgeonAssistant: DocumentHealthcareProfessionalDto;
+	anesthesiologist: DocumentHealthcareProfessionalDto;
+	cardiologist: DocumentHealthcareProfessionalDto;
+	surgicalInstrumentTechnician: DocumentHealthcareProfessionalDto;
+	obstetrician: DocumentHealthcareProfessionalDto;
+	pediatrician: DocumentHealthcareProfessionalDto;
 
-	ngOnInit(): void { }
+	loading = false;
+
+	constructor() {	}
+
+	ngOnInit(): void {
+		this.loading = true;
+		this.surgicalReport?.healthcareProfessionals.forEach(p => {
+			switch (p.type) {
+				case EProfessionType.SURGEON:
+					this.surgeon = p;
+					break;
+				case EProfessionType.SURGEON_ASSISTANT:
+					this.surgeonAssistant = p;
+					break;
+				case EProfessionType.ANESTHESIOLOGIST:
+					this.anesthesiologist = p;
+					break;
+				case EProfessionType.CARDIOLOGIST:
+					this.cardiologist = p;
+					break;
+				case EProfessionType.SURGICAL_INSTRUMENT_TECHNICIAN:
+					this.surgicalInstrumentTechnician = p;
+					break;
+				case EProfessionType.OBSTETRICIAN:
+					this.obstetrician = p;
+					break;
+				case EProfessionType.PEDIATRICIAN:
+					this.pediatrician = p;
+					break;
+			}
+		})
+		this.loading = false;
+	}
 
 	addAyudante() {
 		this.ayudanteCount++;
@@ -42,7 +79,7 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 
 		if (!professional && index != -1)
 			this.healthcareProfessionals.splice(index, 1);
-		this.healthcareProfessionalsChange.emit(this.healthcareProfessionals);
+		this.surgicalReport.healthcareProfessionals = this.healthcareProfessionals;
 	}
 
 	private mapToDocumentHealthcareProfessionalDto(professional: HCEHealthcareProfessionalDto, type: EProfessionType): DocumentHealthcareProfessionalDto {

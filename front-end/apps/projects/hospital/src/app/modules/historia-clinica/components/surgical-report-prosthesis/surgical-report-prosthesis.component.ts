@@ -1,4 +1,5 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { SurgicalReportDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-surgical-report-prosthesis',
@@ -7,7 +8,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 })
 export class SurgicalReportProsthesisComponent implements OnInit {
 
-	@Output() descriptionChange = new EventEmitter();
+	@Input() surgicalReport: SurgicalReportDto;
 
 	prosthesis = true;
 	description: string;
@@ -15,9 +16,10 @@ export class SurgicalReportProsthesisComponent implements OnInit {
 	constructor() { }
 
 	ngOnInit(): void {
+		this.description = this.surgicalReport.prosthesisDescription;
 	}
 
 	changeDescription(description): void {
-		this.descriptionChange.emit(description);
+		this.surgicalReport.prosthesisDescription = description;
 	}
 }

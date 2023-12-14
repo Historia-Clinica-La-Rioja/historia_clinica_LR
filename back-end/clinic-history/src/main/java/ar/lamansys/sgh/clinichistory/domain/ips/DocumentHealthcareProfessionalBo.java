@@ -29,26 +29,21 @@ public class DocumentHealthcareProfessionalBo {
 	@Nullable
 	private String comments;
 
-	@Nullable
-	private Integer professionalLicenseNumberId;
-
-	public DocumentHealthcareProfessionalBo(Integer id, Integer healthcareProfessionalId, EProfessionType type, String comments, Integer professionalLicenseNumberId){
+	public DocumentHealthcareProfessionalBo(Integer id, Integer healthcareProfessionalId, EProfessionType type, String comments){
 		this.id = id;
 		this.healthcareProfessional = new HealthcareProfessionalBo(healthcareProfessionalId);
 		this.type = type;
 		this.comments = comments;
-		this.professionalLicenseNumberId = professionalLicenseNumberId;
 	}
 
 	public DocumentHealthcareProfessionalBo(Integer id, Integer healthcareProfessionalId, String licenceNumber,
 											Integer personId, String firstName, String lastName, String identificationNumber,
 											String nameSelfDetermination,String middleNames,String otherLastNames, Short type,
-											String comments, Integer professionalLicenseNumberId){
+											String comments){
 		this.id = id;
 		this.healthcareProfessional = new HealthcareProfessionalBo(healthcareProfessionalId, licenceNumber, personId, firstName, lastName, identificationNumber, nameSelfDetermination, middleNames, otherLastNames);
 		this.type = EProfessionType.map(type);
 		this.comments = comments;
-		this.professionalLicenseNumberId = professionalLicenseNumberId;
 	}
 
 }

@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { AppFeature, DiagnosisDto } from '@api-rest/api-model';
+import { AppFeature, DiagnosisDto, HospitalizationProcedureDto, ProcedureTypeEnum, SurgicalReportDto } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { DiagnosisCreationEditionComponent } from '@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
@@ -14,13 +15,10 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 	templateUrl: './surgical-report-diagnosis.component.html',
 	styleUrls: ['./surgical-report-diagnosis.component.scss']
 })
-export class SurgicalReportDiagnosisComponent implements OnInit {
+export class SurgicalReportDiagnosisComponent {
 
 	@Input() diagnosis: DiagnosisDto[];
-	@Output() preoperativeDiagnosisChange = new EventEmitter();
-	@Output() surgeryProceduresChange = new EventEmitter();
-
-	selectedDiagnosis: DiagnosisDto[] = [];
+	@Input() surgicalReport: SurgicalReportDto;
 
 	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService);
 	searchConceptsLocallyFF = false;
@@ -36,21 +34,20 @@ export class SurgicalReportDiagnosisComponent implements OnInit {
 			this.searchConceptsLocallyFF = isOn;
 		})
 		this.procedureService.procedimientos$.subscribe(procedures => this.changeSurgeryProcedure(procedures));
+
 	}
 
-	ngOnInit(): void { }
-
-	setDiagnosis(diagnose: DiagnosisDto): void {
-		if (diagnose)
-			if (!this.selectedDiagnosis.includes(diagnose)) {
-				this.selectedDiagnosis.push(diagnose);
-				this.preoperativeDiagnosisChange.emit(this.selectedDiagnosis);
-			}
+	setDiagnosis(diagnosis: DiagnosisDto): void {
+		if (diagnosis)
+			this.surgicalReport.preoperativeDiagnosis = pushIfNotExists(this.surgicalReport.preoperativeDiagnosis, diagnosis, this.compare);
 	}
 
-	deleteDiagnose(index: number): void {
-		this.selectedDiagnosis.splice(index, 1);
-		this.preoperativeDiagnosisChange.emit(this.selectedDiagnosis);
+	private compare(first, second): boolean {
+		return first.snomed.sctid === second.snomed.sctid;
+	}
+
+	deleteDiagnosis(index: number): void {
+		this.surgicalReport.preoperativeDiagnosis.splice(index, 1);
 	}
 
 	addDiagnosis(): void {
@@ -62,16 +59,12 @@ export class SurgicalReportDiagnosisComponent implements OnInit {
 			}
 		});
 
-		dialogRef.afterClosed().subscribe(diagnose => {
-			if (diagnose) {
-				this.diagnosis.push(diagnose);
-				this.selectedDiagnosis.push(diagnose);
-				this.preoperativeDiagnosisChange.emit(this.selectedDiagnosis);
-			}
+		dialogRef.afterClosed().subscribe(diagnosis => {
+			this.setDiagnosis(diagnosis);
 		});
 	}
 
-	addProcedure() {
+	addProcedure(): void  {
 		this.dialog.open(NewConsultationProcedureFormComponent, {
 			data: {
 				procedureService: this.procedureService,
@@ -84,7 +77,19 @@ export class SurgicalReportDiagnosisComponent implements OnInit {
 		});
 	}
 
+	deleteProcedure(index: number): void {
+		this.surgicalReport.surgeryProcedures = removeFrom(this.surgicalReport.surgeryProcedures, index);
+	}
+
 	private changeSurgeryProcedure(procedures): void {
-		this.surgeryProceduresChange.emit(procedures);
+		procedures.forEach(procedure =>
+			this.surgicalReport.surgeryProcedures = pushIfNotExists(this.surgicalReport.surgeryProcedures, this.mapToHospitalizationProcedure(procedure, ProcedureTypeEnum.SURGICAL_PROCEDURE), this.compare));
+	}
+
+	private mapToHospitalizationProcedure(procedure, type: ProcedureTypeEnum): HospitalizationProcedureDto {
+		return {
+			snomed: procedure.snomed,
+			type: type
+		}
 	}
 }

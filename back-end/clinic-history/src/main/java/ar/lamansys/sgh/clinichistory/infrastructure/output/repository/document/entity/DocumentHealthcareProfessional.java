@@ -46,8 +46,4 @@ public class DocumentHealthcareProfessional implements Serializable {
 
 	@Column(name = "comments", columnDefinition = "TEXT")
 	private String comments;
-
-	@Column(name = "professional_license_number_id")
-	private Integer professionalLicenseNumberId;
-
 }

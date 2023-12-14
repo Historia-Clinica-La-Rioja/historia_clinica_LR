@@ -46,6 +46,7 @@ public class ProcedureBo extends ClinicalTerm {
 		setPerformedDate(procedureVo.getPerformedDate());
 		setIsPrimary(procedureVo.getIsPrimary());
 		setNote(procedureVo.getNote());
+		setType(ProcedureTypeEnum.map(procedureVo.getProcedureTypeId()));
 	}
 
 	public boolean equals (ClinicalTerm bo){

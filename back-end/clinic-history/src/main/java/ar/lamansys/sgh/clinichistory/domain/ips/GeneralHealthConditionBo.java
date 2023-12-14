@@ -74,7 +74,7 @@ public class GeneralHealthConditionBo implements Serializable {
 				healthConditionVo -> healthConditionVo.isOfType(ProblemTypeEnum.PREOPERATIVE_DIAGNOSIS),
 				this::mapDiagnosis
 		));
-		setPreoperativeDiagnosis(buildGeneralState(
+		setPostoperativeDiagnosis(buildGeneralState(
 				healthConditionVos,
 				healthConditionVo -> healthConditionVo.isOfType(ProblemTypeEnum.POSTOPERATIVE_DIAGNOSIS),
 				this::mapDiagnosis
@@ -101,6 +101,7 @@ public class GeneralHealthConditionBo implements Serializable {
         result.setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
         result.setPresumptive(healthConditionVo.isPresumptive());
         result.setMain(healthConditionVo.isMain());
+		result.setType(ProblemTypeEnum.map(healthConditionVo.getProblemId()));
         log.debug(OUTPUT, result);
         return result;
 

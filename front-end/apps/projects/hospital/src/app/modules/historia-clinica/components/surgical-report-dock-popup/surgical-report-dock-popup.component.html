@@ -1,67 +1,55 @@
 <app-dock-popup [dockPopupRef]="dockPopupRef" [header]="{ title:'Parte Quirúrgico'} ">
-	<div body fxLayout="column" fxLayoutGap="20px">
-		<form [formGroup]="form" fxLayoutGap="20px">
-			<app-surgical-report-diagnosis [diagnosis]="diagnosis"
-				(preoperativeDiagnosisChange)="formControlChange($event, form.controls.preoperativeDiagnosis)"
-				(surgeryProceduresChange)="formControlChange($event, form.controls.surgeryProcedures)">
-			</app-surgical-report-diagnosis>
+	<div body fxLayout="column" fxLayoutGap="20px" *ngIf="!loadingReport">
+		<app-surgical-report-diagnosis [diagnosis]="diagnosis" [(surgicalReport)]="surgicalReport">
+		</app-surgical-report-diagnosis>
 
-			<app-surgical-report-professional-team [professionals]="professionals"
-				(healthcareProfessionalsChange)="formControlChange($event, form.controls.healthcareProfessionals)">
-			</app-surgical-report-professional-team>
+		<app-surgical-report-professional-team [professionals]="professionals" [(surgicalReport)]="surgicalReport">
+		</app-surgical-report-professional-team>
 
-			<app-surgical-report-procedures
-				(startDateTimeChange)="formControlChange($event, form.controls.startDateTime)"
-				(endDateTimeChange)="formControlChange($event, form.controls.endDateTime)"
-				(proceduresChange)="formControlChange($event, form.controls.procedures)"
-				(postoperativeDiagnosisChange)="formControlChange($event, form.controls.postoperativeDiagnosis)"
-				(descriptionChange)="formControlChange($event, form.controls.description)">
-			</app-surgical-report-procedures>
+		<app-surgical-report-procedures [(surgicalReport)]="surgicalReport">
+		</app-surgical-report-procedures>
 
-			<app-professional-and-description [title]="'ambulatoria.paciente.surgical-report.exam.TITLE' | translate"
-				[icon]="'blur_circular'"
-				[professionalTitle]="'ambulatoria.paciente.surgical-report.exam.PATOLOGO' | translate"
-				[professionals]="professionals" (professionalChange)="professionalChange($event, PATHOLOGIST)">
-			</app-professional-and-description>
+		<app-professional-and-description [title]="'ambulatoria.paciente.surgical-report.exam.TITLE' | translate"
+			[icon]="'blur_circular'"
+			[professionalTitle]="'ambulatoria.paciente.surgical-report.exam.PATOLOGO' | translate"
+			[professionals]="professionals" [type]="PATHOLOGIST" [(surgicalReport)]="surgicalReport">
+		</app-professional-and-description>
 
-			<app-professional-and-description
-				[title]="'ambulatoria.paciente.surgical-report.blood-solutions.TITLE' | translate" [icon]="'water_drop'"
-				[professionalTitle]="'ambulatoria.paciente.surgical-report.blood-solutions.TRANSFUSIONISTA' | translate"
-				[professionals]="professionals" (professionalChange)="professionalChange($event, TRANSFUSIONIST)">
-			</app-professional-and-description>
+		<app-professional-and-description
+			[title]="'ambulatoria.paciente.surgical-report.blood-solutions.TITLE' | translate" [icon]="'water_drop'"
+			[professionalTitle]="'ambulatoria.paciente.surgical-report.blood-solutions.TRANSFUSIONISTA' | translate"
+			[professionals]="professionals" [type]="TRANSFUSIONIST" [(surgicalReport)]="surgicalReport">
+		</app-professional-and-description>
 
-			<app-procedure-and-description [title]="'ambulatoria.paciente.surgical-report.culture.TITLE' | translate"
-				[tableTitle]="'ambulatoria.paciente.surgical-report.culture.TABLE_TITLE' | translate"
-				[buttonTitle]="'ambulatoria.paciente.surgical-report.culture.BUTTON_TITLE' | translate"
-				[icon]="'science'" (proceduresChange)="formControlChange($event, form.controls.cultures)">
-			</app-procedure-and-description>
+		<app-procedure-and-description [title]="'ambulatoria.paciente.surgical-report.culture.TITLE' | translate"
+			[tableTitle]="'ambulatoria.paciente.surgical-report.culture.TABLE_TITLE' | translate"
+			[buttonTitle]="'ambulatoria.paciente.surgical-report.culture.BUTTON_TITLE' | translate" [icon]="'science'"
+			[type]="CULTURE" [(surgicalReport)]="surgicalReport">
+		</app-procedure-and-description>
 
-			<app-surgical-report-prosthesis
-				(descriptionChange)="formControlChange($event, form.controls.prosthesisDescription)">
-			</app-surgical-report-prosthesis>
+		<app-surgical-report-prosthesis [(surgicalReport)]="surgicalReport">
+		</app-surgical-report-prosthesis>
 
-			<app-procedure-and-description [title]="'ambulatoria.paciente.surgical-report.biopsy.TITLE' | translate"
-				[tableTitle]="'ambulatoria.paciente.surgical-report.biopsy.TABLE_TITLE' | translate"
-				[buttonTitle]="'ambulatoria.paciente.surgical-report.biopsy.BUTTON_TITLE' | translate"
-				[icon]="'thermostat'"
-				(proceduresChange)="formControlChange($event, form.controls.frozenSectionBiopsies)">
-			</app-procedure-and-description>
+		<app-procedure-and-description [title]="'ambulatoria.paciente.surgical-report.biopsy.TITLE' | translate"
+			[tableTitle]="'ambulatoria.paciente.surgical-report.biopsy.TABLE_TITLE' | translate"
+			[buttonTitle]="'ambulatoria.paciente.surgical-report.biopsy.BUTTON_TITLE' | translate" [icon]="'thermostat'"
+			[type]="FROZEN_SECTION_BIOPSY" [(surgicalReport)]="surgicalReport">
+		</app-procedure-and-description>
 
-			<app-procedure-and-description [title]="'ambulatoria.paciente.surgical-report.drainage.TITLE' | translate"
-				[tableTitle]="'ambulatoria.paciente.surgical-report.drainage.TABLE_TITLE' | translate"
-				[buttonTitle]="'ambulatoria.paciente.surgical-report.drainage.BUTTON_TITLE' | translate"
-				[icon]="'vaccines'" (proceduresChange)="formControlChange($event, form.controls.drainages)">
-			</app-procedure-and-description>
-		</form>
+		<app-procedure-and-description [title]="'ambulatoria.paciente.surgical-report.drainage.TITLE' | translate"
+			[tableTitle]="'ambulatoria.paciente.surgical-report.drainage.TABLE_TITLE' | translate"
+			[buttonTitle]="'ambulatoria.paciente.surgical-report.drainage.BUTTON_TITLE' | translate" [icon]="'vaccines'"
+			[type]="DRAINAGE" [(surgicalReport)]="surgicalReport">
+		</app-procedure-and-description>
+
+		<div class="spinner" *ngIf="loadingReport">
+			<mat-spinner color="primary" style="margin: auto"></mat-spinner>
+		</div>
 	</div>
 
 	<div actions id="buttons" fxLayoutAlign="end">
-		<app-button
-			[color]="'primary'"
-			[isLoading]="isLoading"
-			[text]="'buttons.CONFIRM' | translate | uppercase"
-			[buttonType]="'mat-raised-button'"
-			(clicked)="save()">
+		<app-button [color]="'primary'" [isLoading]="isLoading" [text]="'buttons.CONFIRM' | translate | uppercase"
+			[buttonType]="'mat-raised-button'" (clicked)="save()">
 		</app-button>
 	</div>
 </app-dock-popup>

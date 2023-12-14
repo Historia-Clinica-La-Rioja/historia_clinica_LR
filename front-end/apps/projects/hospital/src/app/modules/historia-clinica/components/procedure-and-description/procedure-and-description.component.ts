@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { AppFeature } from '@api-rest/api-model';
+import { AppFeature, HospitalizationProcedureDto, ProcedureTypeEnum, SurgicalReportDto } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
@@ -19,10 +20,12 @@ export class ProcedureAndDescriptionComponent implements OnInit {
 	@Input() tableTitle: string;
 	@Input() buttonTitle: string;
 	@Input() icon: string;
-	@Output() proceduresChange = new EventEmitter();
+	@Input() surgicalReport: SurgicalReportDto;
+	@Input() type: ProcedureTypeEnum;
 
 	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService);
 	searchConceptsLocallyFF = false;
+	procedures: HospitalizationProcedureDto[];
 
 	constructor(
 		private readonly snackBarService: SnackBarService,
@@ -38,6 +41,17 @@ export class ProcedureAndDescriptionComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		switch (this.type) {
+			case ProcedureTypeEnum.DRAINAGE:
+				this.procedures = this.surgicalReport.drainages;
+				break;
+			case ProcedureTypeEnum.CULTURE:
+				this.procedures = this.surgicalReport.cultures;
+				break;
+			case ProcedureTypeEnum.FROZEN_SECTION_BIOPSY:
+				this.procedures = this.surgicalReport.frozenSectionBiopsies;
+				break;
+		}
 	}
 
 	addProcedure() {
@@ -54,6 +68,33 @@ export class ProcedureAndDescriptionComponent implements OnInit {
 	}
 
 	private changeProcedure(procedures): void {
-		this.proceduresChange.emit(procedures);
+		procedures.forEach(procedure =>
+			this.procedures = pushIfNotExists(this.procedures, this.mapToHospitalizationProcedure(procedure, this.type), this.compare));
+			switch (this.type) {
+				case ProcedureTypeEnum.DRAINAGE:
+					this.surgicalReport.drainages = this.procedures;
+					break;
+				case ProcedureTypeEnum.CULTURE:
+					this.surgicalReport.cultures = this.procedures;
+					break;
+				case ProcedureTypeEnum.FROZEN_SECTION_BIOPSY:
+					this.surgicalReport.frozenSectionBiopsies = this.procedures;
+					break;
+			}
+	}
+
+	private compare(first, second): boolean {
+		return first.snomed.sctid === second.snomed.sctid;
+	}
+
+	deleteProcedure(index: number): void {
+		this.procedures = removeFrom(this.procedures, index);
+	}
+
+	private mapToHospitalizationProcedure(procedure, type: ProcedureTypeEnum): HospitalizationProcedureDto {
+		return {
+			snomed: procedure.snomed,
+			type: type
+		}
 	}
 }

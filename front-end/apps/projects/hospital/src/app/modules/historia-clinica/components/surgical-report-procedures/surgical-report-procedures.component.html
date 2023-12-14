@@ -3,47 +3,68 @@
 	[title]="'ambulatoria.paciente.surgical-report.procedures.TITLE' | translate" icon="library_add" [collapsed]="false"
 	[hideBorder]="false">
 
-	<div fxLayout="row" fxLayoutGap="20px">
-		<mat-form-field appearance="outline">
-			<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SURGERY_START_DATE'"></mat-label>
-			<input matInput id="fecha_inicio" [matDatepicker]="startDatePicker" (dateChange)="changeStartDateTime($event.value, null)">
-			<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-			<mat-datepicker #startDatePicker></mat-datepicker>
-		</mat-form-field>
+	<form [formGroup]="dateForm">
+		<div fxLayout="row" fxLayoutGap="20px">
+			<mat-form-field appearance="outline">
+				<mat-label
+					[translate]="'ambulatoria.paciente.surgical-report.procedures.SURGERY_START_DATE'"></mat-label>
+				<input matInput id="start" [matDatepicker]="startDatePicker" formControlName="startDate"
+					(dateChange)="changeStartDateTime($event.value, null)">
+				<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+				<mat-datepicker #startDatePicker></mat-datepicker>
+				<mat-error *ngIf="dateForm.get('startDate').hasError('required')">Fecha requerida</mat-error>
+			</mat-form-field>
 
-		<mat-form-field appearance="outline">
-			<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SKIN_OPENING'"></mat-label>
-			<input matInput [(ngModel)]="skinOpeningTime" (ngModelChange)="changeStartDateTime(null, skinOpeningTime)">
-			<mat-icon matSuffix>schedule</mat-icon>
-			<mat-hint>HH:MM</mat-hint>
-		</mat-form-field>
-	</div>
 
-	<div fxLayout="row" fxLayoutGap="20px">
-		<mat-form-field appearance="outline">
-			<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SURGERY_END_DATE'"></mat-label>
-			<input matInput id="fecha_inicio" [matDatepicker]="endDatePicker" (dateChange)="changeEndDateTime($event.value, null)">
-			<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-			<mat-datepicker #endDatePicker></mat-datepicker>
-		</mat-form-field>
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SKIN_OPENING'"></mat-label>
+				<input matInput formControlName="startTime">
+				<mat-icon matSuffix>schedule</mat-icon>
+				<mat-hint>HH:MM</mat-hint>
+				<mat-error *ngIf="dateForm.get('startTime').hasError('required')">Hora requerida</mat-error>
+				<mat-error *ngIf="!dateForm.get('startTime').hasError('required') && dateForm.get('startTime').hasError('invalidTime')">Hora inválida</mat-error>
+			</mat-form-field>
+		</div>
 
-		<mat-form-field appearance="outline">
-			<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SKIN_CLOSURE'"></mat-label>
-			<input matInput [(ngModel)]="skinClosureTime" (ngModelChange)="changeEndDateTime(null, skinClosureTime)">
-			<mat-icon matSuffix>schedule</mat-icon>
-			<mat-hint>HH:MM</mat-hint>
-		</mat-form-field>
-	</div>
+		<div fxLayout="row" fxLayoutGap="20px">
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SURGERY_END_DATE'"></mat-label>
+				<input matInput id="end" [matDatepicker]="endDatePicker" formControlName="endDate"
+					(dateChange)="changeEndDateTime($event.value, null)">
+				<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+				<mat-datepicker #endDatePicker></mat-datepicker>
+				<mat-error *ngIf="dateForm.get('endDate').hasError('required')">Fecha requerida</mat-error>
+			</mat-form-field>
 
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SKIN_CLOSURE'"></mat-label>
+				<input matInput formControlName="endTime">
+				<mat-icon matSuffix>schedule</mat-icon>
+				<mat-hint>HH:MM</mat-hint>
+				<mat-error *ngIf="dateForm.get('endTime').hasError('required')">Hora requerida</mat-error>
+				<mat-error *ngIf="!dateForm.get('endTime').hasError('required') && dateForm.get('endTime').hasError('invalidTime')">Hora inválida</mat-error>
+			</mat-form-field>
+		</div>
+	</form>
 	<div fxLayout="column" fxLayoutGap="20px">
 		<div>
 			<button mat-button type="button" id="add-procedure-button" color="primary" (click)="addProcedure()">
 				+ {{ 'ambulatoria.paciente.surgical-report.procedures.ADD' | translate }}
 			</button>
 		</div>
-		<app-titled-content-card *ngIf="!procedureService.isEmpty()"
+		<app-titled-content-card *ngIf="!procedureService.isEmpty() || surgicalReport.procedures.length"
 			[title]="'ambulatoria.paciente.surgical-report.procedures.REGISTERED_PROCEDURES'">
-			<app-procedure-list [service]="procedureService"></app-procedure-list>
+			<div *ngFor="let procedure of surgicalReport.procedures; index as i; last as isLast">
+				<div fxLayout="row" fxLayoutAlign="space-between center">
+					<div fxLayout="column">
+						<span>{{ procedure.snomed.pt }}</span>
+					</div>
+					<button type="button" mat-icon-button color="warn" (click)="deleteProcedure(i)">
+						<mat-icon>delete_outline</mat-icon>
+					</button>
+				</div>
+				<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+			</div>
 		</app-titled-content-card>
 	</div>
 
@@ -58,11 +79,12 @@
 		</button>
 	</div>
 
-	<app-titled-content-card *ngIf="diagnosis?.length" [title]="'ambulatoria.paciente.surgical-report.procedures.DIAGNOSIS' | translate">
-		<div *ngFor="let diagnose of diagnosis; index as i; last as isLast">
+	<app-titled-content-card *ngIf="surgicalReport.postoperativeDiagnosis.length"
+		[title]="'ambulatoria.paciente.surgical-report.procedures.DIAGNOSIS' | translate">
+		<div *ngFor="let diagnosis of surgicalReport.postoperativeDiagnosis; index as i; last as isLast">
 			<div fxLayout="row" fxLayoutAlign="space-between center">
 				<div fxLayout="column">
-					<span>{{ diagnose.snomed.pt }}</span>
+					<span>{{ diagnosis.snomed.pt }}</span>
 				</div>
 				<button type="button" mat-icon-button color="warn" (click)="deleteDiagnosis(i)">
 					<mat-icon>delete_outline</mat-icon>
@@ -71,6 +93,5 @@
 			<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
 		</div>
 	</app-titled-content-card>
-
 
 </app-new-consultation-expansion-section>

@@ -100,3 +100,9 @@ export const mapDateWithHypenToDateWithSlash = (date: string): string => {
 export const mapToString = (date: DateDto): string => {
 	return date.year.toString() + date.month.toString() + date.day.toString();
 }
+
+export const timeDtotoString = (time: TimeDto): string => {
+	const hours = time.hours.toString().padStart(2, '0');
+	const minutes = time.minutes.toString().padStart(2, '0');
+	return `${hours}:${minutes}`;
+}

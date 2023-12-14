@@ -3,6 +3,7 @@ package net.pladema.clinichistory.hospitalization.service.surgicalreport;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SurgicalReportRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProcedureTypeEnum;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
@@ -23,6 +24,8 @@ public class GetSurgicalReport {
 
 	private final DocumentService documentService;
 
+	private final SurgicalReportRepository surgicalReportRepository;
+
 	public SurgicalReportBo run(Long surgicalReportId){
 		log.debug("Input parameter -> surgicalReportId {}", surgicalReportId);
 		SurgicalReportBo result = new SurgicalReportBo();
@@ -40,11 +43,13 @@ public class GetSurgicalReport {
 		result.setProcedures(filterProceduresByType(procedures, ProcedureTypeEnum.PROCEDURE));
 		result.setAnesthesia(filterProceduresByType(procedures, ProcedureTypeEnum.ANESTHESIA_PROCEDURE));
 		result.setSurgeryProcedures(filterProceduresByType(procedures, ProcedureTypeEnum.SURGICAL_PROCEDURE));
-		result.setCulture(filterProceduresByType(procedures, ProcedureTypeEnum.CULTURE).stream().findFirst().orElse(null));
-		result.setFrozenSectionBiopsy(filterProceduresByType(procedures, ProcedureTypeEnum.FROZEN_SECTION_BIOPSY).stream().findFirst().orElse(null));
-		result.setDrainage(filterProceduresByType(procedures, ProcedureTypeEnum.DRAINAGE).stream().findFirst().orElse(null));
+		result.setCultures(filterProceduresByType(procedures, ProcedureTypeEnum.CULTURE));
+		result.setFrozenSectionBiopsies(filterProceduresByType(procedures, ProcedureTypeEnum.FROZEN_SECTION_BIOPSY));
+		result.setDrainages(filterProceduresByType(procedures, ProcedureTypeEnum.DRAINAGE));
 		result.setHealthcareProfessionals(documentService.getHealthcareProfessionalsFromDocument(documentId));
 		result.setProsthesisDescription(documentService.getProsthesisDescriptionFromDocument(documentId).orElse(null));
+		result.setStartDateTime(surgicalReportRepository.getStartDateTime(documentId));
+		result.setEndDateTime(surgicalReportRepository.getEndDateTime(documentId));
 		log.debug("Output result -> {}", result);
 		return result;
 	}

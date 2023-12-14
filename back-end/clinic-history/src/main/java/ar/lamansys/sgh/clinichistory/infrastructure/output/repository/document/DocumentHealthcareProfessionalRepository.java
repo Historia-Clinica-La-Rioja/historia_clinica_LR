@@ -14,14 +14,13 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 public interface DocumentHealthcareProfessionalRepository extends JpaRepository<DocumentHealthcareProfessional, Integer> {
 
 	@Query("SELECT new ar.lamansys.sgh.clinichistory.domain.ips.DocumentHealthcareProfessionalBo(" +
-			"dhp.id, hp.id, pln.licenseNumber, p.id, p.firstName, p.lastName, p.identificationNumber, pex.nameSelfDetermination," +
+			"dhp.id, hp.id, hp.licenseNumber, p.id, p.firstName, p.lastName, p.identificationNumber, pex.nameSelfDetermination," +
 			"p.middleNames, p.otherLastNames, " +
-			"dhp.professionTypeId, dhp.comments, dhp.professionalLicenseNumberId) " +
+			"dhp.professionTypeId, dhp.comments) " +
 			"FROM DocumentHealthcareProfessional dhp " +
 			"JOIN HealthcareProfessional hp ON (hp.id = dhp.healthcareProfessionalId) " +
 			"JOIN Person p ON (p.id = hp.personId) " +
 			"JOIN PersonExtended pex ON (pex.id = p.id) " +
-			"JOIN ProfessionalLicenseNumber pln ON (pln.id = dhp.professionalLicenseNumberId) " +
 			"WHERE dhp.documentId = :documentId")
 	List<DocumentHealthcareProfessionalBo> getFromDocument(@Param("documentId") Long documentId);
 }

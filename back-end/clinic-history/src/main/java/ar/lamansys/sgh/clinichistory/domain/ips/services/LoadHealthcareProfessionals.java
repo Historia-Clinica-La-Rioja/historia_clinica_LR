@@ -33,7 +33,7 @@ public class LoadHealthcareProfessionals {
 	}
 
 	private DocumentHealthcareProfessionalBo mapToBo(DocumentHealthcareProfessional entity) {
-		return new DocumentHealthcareProfessionalBo(entity.getId(), entity.getHealthcareProfessionalId(), EProfessionType.map(entity.getProfessionTypeId()), entity.getComments(), entity.getProfessionalLicenseNumberId());
+		return new DocumentHealthcareProfessionalBo(entity.getId(), entity.getHealthcareProfessionalId(), EProfessionType.map(entity.getProfessionTypeId()), entity.getComments());
 	}
 
 }

@@ -27,7 +27,4 @@ public class DocumentHealthcareProfessionalDto {
 	@Nullable
 	private String comments;
 
-	@Nullable
-	private Integer professionalLicenseNumberId;
-
 }

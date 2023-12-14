@@ -18,7 +18,7 @@ public interface DocumentProcedureRepository extends JpaRepository<DocumentProce
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ProcedureVo( " +
-			"p.id, s, p.statusId, p.performedDate, p.isPrimary, n.description) " +
+			"p.id, s, p.statusId, p.performedDate, p.isPrimary, n.description, p.procedureTypeId) " +
 			"FROM DocumentProcedure dp " +
 			"JOIN Procedure p ON (dp.pk.procedureId = p.id) " +
 			"JOIN Snomed s ON (p.snomedId = s.id) " +

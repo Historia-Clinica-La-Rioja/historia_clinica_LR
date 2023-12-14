@@ -10,13 +10,14 @@ import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.co
 })
 export class SurgicalReportProfessionalInfoComponent implements OnInit {
 
-	nameSelfDeterminationFF: boolean;
-	professionalsTypeAhead: TypeaheadOption<any>[];
 	@Input() professionalTitle: string;
 	@Input() professionals: HealthcareProfessionalDto[];
+	@Input() externalSetProfessional: HCEHealthcareProfessionalDto;
 	@Output() professionalChange = new EventEmitter();
 
 	professional: HealthcareProfessionalDto;
+	nameSelfDeterminationFF: boolean;
+	professionalsTypeAhead: TypeaheadOption<any>[];
 
 	constructor(
 		private readonly featureFlagService: FeatureFlagService
@@ -27,14 +28,8 @@ export class SurgicalReportProfessionalInfoComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.professionalsTypeAhead = this.professionals?.map(professional => {
-			const professionalName = this.getFullNameByFF(professional);
-			return {
-				compareValue: professionalName,
-				value: professional.id,
-				viewValue: professionalName
-			}
-		})
+		this.professionalsTypeAhead = this.professionals?.map(professional => this.mapToTypeaheadOption(this.getFullNameByFF(professional), professional.id));
+		this.setProfessional(this.externalSetProfessional?.id);
 	}
 
 	private getFullNameByFF(professional: HealthcareProfessionalDto): string {
@@ -42,6 +37,14 @@ export class SurgicalReportProfessionalInfoComponent implements OnInit {
 		return (this.nameSelfDeterminationFF) ?
 			professional.person.lastName + ", " + nameSelfDetermination :
 			professional.person.lastName + ", " + professional.person.firstName;
+	}
+
+	private mapToTypeaheadOption(professionalName: string, professionalId: number): TypeaheadOption<any> {
+		return {
+			compareValue: professionalName,
+			value: professionalId,
+			viewValue: professionalName
+		}
 	}
 
 	setProfessional(professional: number): void {

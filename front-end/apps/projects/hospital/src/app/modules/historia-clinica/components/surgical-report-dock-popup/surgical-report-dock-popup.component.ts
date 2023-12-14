@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { DiagnosisDto, DocumentHealthcareProfessionalDto, EProfessionType, HealthcareProfessionalDto, HospitalizationProcedureDto, ProblemTypeEnum, ProcedureTypeEnum, SurgicalReportDto } from '@api-rest/api-model';
+import { DiagnosisDto, EProfessionType, HealthcareProfessionalDto, ProcedureTypeEnum, SurgicalReportDto } from '@api-rest/api-model';
 import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { SurgicalReportService } from '@api-rest/services/surgical-report.service';
@@ -20,28 +20,52 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 
 	diagnosis: DiagnosisDto[];
 	professionals: HealthcareProfessionalDto[];
-	surgicalReport: SurgicalReportDto;
 	isLoading = false;
+	loadingReport = false;
 
-	form = this.formBuilder.group({
-		preoperativeDiagnosis: [],
-		surgeryProcedures: [],
-		healthcareProfessionals: [],
-		startDateTime: [],
-		endDateTime: [],
-		procedures: [],
-		postoperativeDiagnosis: [],
-		description: [],
+	surgicalReport: SurgicalReportDto = {
+		confirmed: undefined,
 		anesthesia: [],
 		cultures: [],
+		description: undefined,
 		drainages: [],
+		endDateTime: {
+			date: {
+				year: undefined,
+				month: undefined,
+				day: undefined
+			},
+			time: {
+				hours: undefined,
+				minutes: undefined
+			}
+		},
 		frozenSectionBiopsies: [],
-		modificationReason: [],
-		prosthesisDescription: []
-	});
+		healthcareProfessionals: [],
+		modificationReason: undefined,
+		postoperativeDiagnosis: [],
+		preoperativeDiagnosis: [],
+		procedures: [],
+		prosthesisDescription: undefined,
+		startDateTime: {
+			date: {
+				year: undefined,
+				month: undefined,
+				day: undefined
+			},
+			time: {
+				hours: undefined,
+				minutes: undefined
+			}
+		},
+		surgeryProcedures: []
+	};
 
 	PATHOLOGIST = EProfessionType.PATHOLOGIST;
 	TRANSFUSIONIST = EProfessionType.TRANSFUSIONIST;
+	DRAINAGE = ProcedureTypeEnum.DRAINAGE;
+	CULTURE = ProcedureTypeEnum.CULTURE;
+	FROZEN_SECTION_BIOPSY = ProcedureTypeEnum.FROZEN_SECTION_BIOPSY;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
@@ -49,7 +73,6 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 		private readonly internmentStateService: InternmentStateService,
 		private readonly healthcareProfessionalByInstitutionService: HealthcareProfessionalByInstitutionService,
 		private readonly surgicalReportService: SurgicalReportService,
-		private formBuilder: FormBuilder,
 		private readonly snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,
 	) {
@@ -61,42 +84,33 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 			if (response)
 				this.professionals = response;
 		});
-	}
 
-	ngOnInit(): void {
 		if (this.data.surgicalReportId) {
+			this.loadingReport = true;
 			this.surgicalReportService.getSurgicalReport(this.data.internmentEpisodeId, this.data.surgicalReportId).subscribe(response => {
 				this.surgicalReport = response;
+				console.log(response);
+
+				this.loadingReport = false;
 			})
 		}
 	}
 
+	ngOnInit(): void {
+	}
+
 	save(): void {
 		this.isLoading = true;
-		const value = this.form.value;
-		const surgicalReport: SurgicalReportDto = {
-			confirmed: true,
-			preoperativeDiagnosis: value.preoperativeDiagnosis?.map(d => this.setProblemType(d, ProblemTypeEnum.PREOPERATIVE_DIAGNOSIS)) || [],
-			surgeryProcedures: value.surgeryProcedures?.map(p => this.mapToHospitalizationProcedure(p, ProcedureTypeEnum.SURGICAL_PROCEDURE)) || [],
-			healthcareProfessionals: value.healthcareProfessionals || [],
-			startDateTime: value.startDateTime,
-			endDateTime: value.endDateTime,
-			procedures: value.procedures?.map(p => this.mapToHospitalizationProcedure(p, ProcedureTypeEnum.PROCEDURE)) || [],
-			postoperativeDiagnosis: value.postoperativeDiagnosis?.map(d => this.setProblemType(d, ProblemTypeEnum.POSTOPERATIVE_DIAGNOSIS)) || [],
-			description: value.description,
-			cultures: value.cultures?.map(p => this.mapToHospitalizationProcedure(p, ProcedureTypeEnum.CULTURE)) || [],
-			frozenSectionBiopsies: value.frozenSectionBiopsies?.map(p => this.mapToHospitalizationProcedure(p, ProcedureTypeEnum.FROZEN_SECTION_BIOPSY)) || [],
-			drainages: value.drainages?.map(p => this.mapToHospitalizationProcedure(p, ProcedureTypeEnum.DRAINAGE)) || [],
-			prosthesisDescription: value.prosthesisDescription,
-		}
 		if (this.data.surgicalReportId) {
-			this.openEditReason(surgicalReport);
+			this.openEditReason();
+			this.isLoading = false;
 			return;
 		}
-		this.surgicalReportService.saveSurgicalReport(this.data.internmentEpisodeId, surgicalReport).subscribe(
+
+		this.surgicalReportService.saveSurgicalReport(this.data.internmentEpisodeId, this.surgicalReport).subscribe(
 			saved => {
 				this.snackBarService.showSuccess('Parte quirúrgico generado correctamente');
-				this.dockPopupRef.close(this.setFieldsToUpdate(surgicalReport));
+				this.dockPopupRef.close(this.setFieldsToUpdate());
 			},
 			error => {
 				this.snackBarService.showError(error.text)
@@ -105,7 +119,7 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 
 	}
 
-	private openEditReason(surgicalReport: SurgicalReportDto) {
+	private openEditReason() {
 		const dialogRef = this.dialog.open(DocumentActionReasonComponent, {
 			data: {
 				title: 'internaciones.dialogs.actions-document.EDIT_TITLE',
@@ -117,11 +131,11 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe(reason => {
 			if (reason) {
-				surgicalReport.modificationReason = reason;
-				this.surgicalReportService.editSurgicalReport(this.data.internmentEpisodeId, this.data.surgicalReportId, surgicalReport).subscribe(
+				this.surgicalReport.modificationReason = reason;
+				this.surgicalReportService.editSurgicalReport(this.data.internmentEpisodeId, this.data.surgicalReportId, this.surgicalReport).subscribe(
 					success => {
 						this.snackBarService.showSuccess('Parte quirúrgico editado correctamente');
-						this.dockPopupRef.close(this.setFieldsToUpdate(surgicalReport));
+						this.dockPopupRef.close(this.setFieldsToUpdate());
 					},
 					error => {
 						this.snackBarService.showError(error.text)
@@ -134,39 +148,10 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 		formControl.setValue(event);
 	}
 
-	private mapToHospitalizationProcedure(procedure, type: ProcedureTypeEnum): HospitalizationProcedureDto {
+	private setFieldsToUpdate(): InternmentFields {
 		return {
-			snomed: procedure.snomed,
-			type: type
-		}
-	}
-
-	private setProblemType(diagnosis: DiagnosisDto, type: ProblemTypeEnum): DiagnosisDto {
-		diagnosis.type = type;
-		return diagnosis;
-	}
-
-	professionalChange(professional: DocumentHealthcareProfessionalDto, type: EProfessionType): void {
-		professional.type = type;
-		if (!this.form.controls.healthcareProfessionals.value)
-			this.form.controls.healthcareProfessionals.setValue([professional])
-		else {
-			const index = this.form.controls.healthcareProfessionals.value.findIndex(p => p.type === type);
-			if (professional && index == -1)
-				this.form.controls.healthcareProfessionals.value.push(professional);
-
-			if (professional && index != -1)
-				this.form.controls.healthcareProfessionals.value.splice(index, 1, professional);
-
-			if (!professional && index != -1)
-				this.form.controls.healthcareProfessionals.value.splice(index, 1);
-		}
-	}
-
-	private setFieldsToUpdate(surgicalReport: SurgicalReportDto): InternmentFields {
-		return {
-			diagnosis: !!surgicalReport.preoperativeDiagnosis || !!surgicalReport.postoperativeDiagnosis,
-			evolutionClinical: !!surgicalReport.confirmed
+			diagnosis: !!this.surgicalReport.preoperativeDiagnosis || !!this.surgicalReport.postoperativeDiagnosis,
+			evolutionClinical: !!this.surgicalReport.confirmed
 		}
 	}
 }
