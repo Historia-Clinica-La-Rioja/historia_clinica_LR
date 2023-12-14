@@ -3,6 +3,7 @@ import {
 	differenceInHours,
 	differenceInMinutes,
 	formatISO,
+	format
 } from 'date-fns'
 
 const MIN_YEAR = 1900;
@@ -31,6 +32,12 @@ export enum DatePipeFormat {
 	LONG_TIME = 'longTime',// es-AR format: 03:24:19 GMT-3
 	FULL_TIME = 'fullTime',// es-AR format: 03:24:19 GMT-03:00
 }
+
+export const dateToViewDate = (date: Date): string => format(date, DateFormat.VIEW_DATE);
+
+export const timeToHourMinute = (time: Date): string => format(time, DateFormat.HOUR_MINUTE);
+
+export const dateTimeToViewDateHourMinute = (dateTime: Date): string => `${dateToViewDate(dateTime)} - ${timeToHourMinute(dateTime)}`;
 
 export function formatDateOnlyISO(date: Date) {
 	return formatISO(date, { representation: 'date' });

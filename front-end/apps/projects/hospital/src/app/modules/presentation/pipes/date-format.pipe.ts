@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { dateTimeToViewDateHourMinute, dateToViewDate, timeToHourMinute } from '@api-rest/mapper/date-dto.mapper';
+import { dateTimeToViewDateHourMinute, dateToViewDate, timeToHourMinute } from '@core/utils/date.utils';
 
 @Pipe({
 	name: 'dateFormat'

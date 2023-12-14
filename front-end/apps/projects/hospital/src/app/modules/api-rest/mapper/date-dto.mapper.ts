@@ -1,6 +1,6 @@
 import { DateDto, DateTimeDto, TimeDto } from '@api-rest/api-model';
-import { DateFormat, formatDateOnlyISO, formatTimeOnlyISO } from '@core/utils/date.utils';
-import { format, parse } from 'date-fns';
+import { formatDateOnlyISO, formatTimeOnlyISO } from '@core/utils/date.utils';
+import { parse } from 'date-fns';
 
 const TIME_FORMAT = 'HH:mm:ss';
 
@@ -68,12 +68,6 @@ export const dateToDateTimeDtoUTC = (date: Date): DateTimeDto => {
 		},
 	};
 };
-
-export const dateToViewDate = (date: Date): string => format(date, DateFormat.VIEW_DATE);
-
-export const timeToHourMinute = (time: Date): string => format(time, DateFormat.HOUR_MINUTE);
-
-export const dateTimeToViewDateHourMinute = (dateTime: Date): string => `${dateToViewDate(dateTime)} - ${timeToHourMinute(dateTime)}`;
 
 export const stringToTimeDto = (date: string): TimeDto => {
 	const timeArray = date.split(":");
