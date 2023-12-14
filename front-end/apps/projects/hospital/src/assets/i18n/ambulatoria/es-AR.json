@@ -827,6 +827,26 @@
                             "QUESTION_7": "Evaluación de nivel de riesgo"
                         }
                     },
+                    "implemented-actions": {
+                        "TITLE": "Acciones implementadas",
+                        "SUBTITLE_1": "Articulación al interior del sistema de salud",
+                        "SUBTITLE_2": "Articulación al interior del establecimiento de salud",
+                        "questions": {
+                            "QUESTION_1": "¿Ante qué área/organismo?",
+                            "QUESTION_2": "Nombre de área/organismo",
+                            "QUESTION_3": "Establecimiento",
+                            "QUESTION_4": "Nombre del establecimiento",
+                            "QUESTION_5": "Se indica internación",
+                            "QUESTION_6": "La persona en situación de violencia y/o la persona referente de cuidado, ¿realizó denuncias por esta u otras situaciones?",
+                            "QUESTION_7": "¿Ante qué organismo?",
+                            "QUESTION_8": "¿Desde la institución de salud se realizó la denuncia ante la autoridad pertinente?",
+                            "QUESTION_9": "Denuncia por:",
+                            "QUESTION_10": "¿Ante qué autiridad/organismo?",
+                            "QUESTION_11": "Nombre de autoridad/organismo",
+                            "QUESTION_12": "¿Se registra violencia sexual?",
+                            "QUESTION_13": "Acciones implementadas"
+                        }
+                    },
                     "relevant-information": {
                         "TITLE": "Información relevante",
                         "questions": {
