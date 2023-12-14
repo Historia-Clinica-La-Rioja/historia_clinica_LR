@@ -11,7 +11,10 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import ar.lamansys.sgh.publicapi.domain.SnomedCIE10Bo;
+import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateBo;
+import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateTimeBo;
+
+import ar.lamansys.sgh.publicapi.domain.datetimeutils.TimeBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +30,8 @@ import ar.lamansys.sgh.publicapi.domain.ProfessionalBo;
 import ar.lamansys.sgh.publicapi.domain.ScopeEnum;
 import ar.lamansys.sgh.publicapi.domain.SingleDiagnosticBo;
 import ar.lamansys.sgh.publicapi.domain.SnomedBo;
+import ar.lamansys.sgh.publicapi.domain.SnomedCIE10Bo;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 @Service
 public class ActivityStorageImpl implements ActivityStorage {
 
@@ -76,7 +81,8 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"hc.verification_status_id, " +
 					"hc.updated_on, " +
 					"mcp.plan, " +
-					"hc.cie10_codes " +
+					"hc.cie10_codes, " +
+					"va.created_on " +
 					"FROM {h-schema}v_attention va " +
 					"LEFT JOIN {h-schema}attention_reads ar ON (ar.attention_id = va.id) " +
 					"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
@@ -115,7 +121,8 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"hc.verification_status_id, " +
 					"hc.updated_on, " +
 					"mcp.plan, " +
-					"hc.cie10_codes " +
+					"hc.cie10_codes, " +
+					"va.created_on " +
 					"FROM {h-schema} v_attention va " +
 					"LEFT JOIN {h-schema} attention_reads ar ON (ar.attention_id = va.id) " +
 					"JOIN {h-schema} institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
@@ -272,7 +279,20 @@ public class ActivityStorageImpl implements ActivityStorage {
 				ScopeEnum.map((Short) rawAttention[10]),
 				buildInternmentBo(rawAttention),
 				buildProfessionalBo(rawAttention),
-				buildDiagnoses(rawAttention)
+				buildDiagnoses(rawAttention),
+				buildDateTimeBo(rawAttention)
+		);
+	}
+
+	private DateTimeBo buildDateTimeBo(Object[] rawAttention) {
+		var localDate = ((Timestamp) rawAttention[27]).toLocalDateTime();
+		return new DateTimeBo(
+				new DateBo(localDate.toLocalDate().getYear(),
+							localDate.toLocalDate().getMonthValue(),
+							localDate.toLocalDate().getDayOfMonth()),
+				new TimeBo(localDate.getHour(),
+							localDate.getMinute(),
+							localDate.getSecond())
 		);
 	}
 

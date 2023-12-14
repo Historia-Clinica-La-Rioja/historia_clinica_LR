@@ -7,12 +7,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.exceptions.ActivityNotFoundException;
-import ar.lamansys.sgh.publicapi.activities.infrastructure.input.service.ActivitiesPublicApiPermissions;
-import ar.lamansys.sgh.publicapi.domain.SingleDiagnosticBo;
-
-import ar.lamansys.sgh.publicapi.domain.SnomedCIE10Bo;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.exceptions.ActivityNotFoundException;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.service.ActivitiesPublicApiPermissions;
 import ar.lamansys.sgh.publicapi.application.port.out.ActivityStorage;
 import ar.lamansys.sgh.publicapi.domain.AttentionInfoBo;
 import ar.lamansys.sgh.publicapi.domain.CoverageActivityInfoBo;
@@ -28,7 +24,12 @@ import ar.lamansys.sgh.publicapi.domain.InternmentBo;
 import ar.lamansys.sgh.publicapi.domain.PersonInfoBo;
 import ar.lamansys.sgh.publicapi.domain.ProfessionalBo;
 import ar.lamansys.sgh.publicapi.domain.ScopeEnum;
+import ar.lamansys.sgh.publicapi.domain.SingleDiagnosticBo;
 import ar.lamansys.sgh.publicapi.domain.SnomedBo;
+import ar.lamansys.sgh.publicapi.domain.SnomedCIE10Bo;
+import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateBo;
+import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateTimeBo;
+import ar.lamansys.sgh.publicapi.domain.datetimeutils.TimeBo;
 @ExtendWith(MockitoExtension.class)
 public class FetchActivityByIdTest {
 
@@ -61,7 +62,8 @@ public class FetchActivityByIdTest {
 						new CoverageActivityInfoBo(), ScopeEnum.AMBULATORIA,
 						new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
 						new ProfessionalBo(1, "Juan", "Perez", "DOC-30000000", "30000000"),
-						new SingleDiagnosticBo(new SnomedCIE10Bo("1", "1", "1"), true, "1234345", "2345435", LocalDateTime.now())
+						new SingleDiagnosticBo(new SnomedCIE10Bo("1", "1", "1"), true, "1234345", "2345435", LocalDateTime.now()),
+						new DateTimeBo(new DateBo(2020, 1, 1), new TimeBo(20, 30, 45))
 				)));
 
 		setUserCanAccess(refsetCode, 10);
