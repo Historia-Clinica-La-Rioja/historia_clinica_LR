@@ -45,4 +45,10 @@ export class InstitutionalReferenceReportService {
 		return this.http.get<ReferenceCompleteDataDto>(url);
 	}
 
+	addObservation(referenceId: number, observation: string): Observable<Object> {
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = (observation) ? queryParams.append('observation', observation) : queryParams;
+		const url = `${this.BASE_URL}/${this.contextService.institutionId}/references-report/${referenceId}/add-observation`;
+		return this.http.post<boolean>(url, {}, { params: queryParams });
+	}
 }

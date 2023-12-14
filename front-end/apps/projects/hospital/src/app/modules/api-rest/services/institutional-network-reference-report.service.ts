@@ -34,10 +34,18 @@ export class InstitutionalNetworkReferenceReportService {
 		const url = `${this.BASE_URL}/${referenceId}/change-state`;
 		let params: HttpParams = new HttpParams();
 		params = params.append('stateId', stateId);
-		if (!reason) 
+		if (!reason)
 			return this.http.post<boolean>(url, null, { params });
 
 		params = params.append('reason', reason);
 		return this.http.post<boolean>(url, null, { params });
 	}
+
+	addObservation(referenceId: number, observation: string): Observable<Object> {
+		const url = `${this.BASE_URL}/${referenceId}/add-observation`;
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = (observation) ? queryParams.append('observation', observation) : queryParams;
+		return this.http.post<boolean>(url, {}, { params: queryParams });
+	}
+
 }
