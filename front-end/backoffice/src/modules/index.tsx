@@ -84,6 +84,7 @@ import institutionalgrouprules from './institutionalgrouprules';
 import procedureTemplates from './proceduretemplate';
 import procedureTemplateSnomeds from './proceduretemplatesnomeds';
 import loincCodes from './loinc-codes';
+import unitsOfMeasure from './units-of-measure';
 
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
@@ -183,7 +184,8 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="loinc-codes" {...loincCodes(permissions)} />,
     <Resource name="loinc-statuses" />,
     <Resource name="loinc-systems" />,
-
+    <Resource name="units-of-measure" {...unitsOfMeasure(permissions)} />,
+    
     // more
     <Resource name="identificationTypes" />,
     <Resource name="patient" />,

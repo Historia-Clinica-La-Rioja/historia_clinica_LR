@@ -952,6 +952,13 @@ const messages = {
                 systemId: 'System',
                 displayName: 'DisplayName',
                 customDisplayName: 'Nombre en sistema'
+            }
+        },
+        "units-of-measure": {
+            name: 'Unidades de estudios',
+            fields: {
+                code: 'Unidad',
+                enabled: 'Disponible en sistema'
             },
         }
     }
