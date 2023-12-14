@@ -27,8 +27,10 @@
 			<div *ngIf="referenceRegulationDto$ | async as referenceRegulationDto; else loading">
 				<app-approval [approval]="referenceRegulationDto"></app-approval>
 			</div>
-			<mat-divider></mat-divider>
-			<app-appointment-summary [appointmentSummary]="reportCompleteData.appointment"></app-appointment-summary>
+			<div *ngIf="referenceCompleteData.regulation.state == approvedState"> 
+				<mat-divider></mat-divider>
+				<app-appointment-summary [appointmentSummary]="reportCompleteData.appointment"></app-appointment-summary>
+			</div>
 		</div>
 	</mat-dialog-content>
 

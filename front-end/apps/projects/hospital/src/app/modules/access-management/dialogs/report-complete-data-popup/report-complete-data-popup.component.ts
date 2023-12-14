@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, } from '@angular/material/dialog';
-import { ReferenceCompleteDataDto, ReferenceDataDto, ReferenceRegulationDto } from '@api-rest/api-model';
+import { EReferenceRegulationState, ReferenceCompleteDataDto, ReferenceDataDto, ReferenceRegulationDto } from '@api-rest/api-model';
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { ContactDetails } from '@access-management/components/contact-details/contact-details.component';
 import { PatientSummary } from '../../../hsi-components/patient-summary/patient-summary.component';
@@ -28,6 +28,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 
 	Tabs = Tabs;
 	referenceRegulationDto$: Observable<ReferenceRegulationDto>;
+	approvedState = EReferenceRegulationState.APPROVED;
 
 	constructor(
 		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
