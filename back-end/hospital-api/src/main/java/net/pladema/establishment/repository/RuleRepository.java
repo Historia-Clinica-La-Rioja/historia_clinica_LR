@@ -41,13 +41,13 @@ public interface RuleRepository extends SGXAuditableEntityJPARepository<Rule, In
 			"FROM Rule r " +
 			"JOIN InstitutionalGroupRule igr ON (igr.ruleId = r.id) " +
 			"JOIN InstitutionalGroupInstitution igi ON (igr.institutionalGroupId = igi.institutionalGroupId) " +
-			"WHERE r.clinicalSpecialtyId = :clinicalSpecialtyId " +
-			"AND (igi.institutionId = :institutionId) " +
+			"WHERE r.clinicalSpecialtyId IN :clinicalSpecialtyIds " +
+			"AND igi.institutionId = :institutionId " +
 			"AND igr.regulated IS TRUE " +
 			"AND r.deleteable.deleted IS FALSE " +
 			"AND igr.deleteable.deleted IS FALSE " +
 			"AND igi.deleteable.deleted IS FALSE" )
-	Optional<Rule> findRegulatedRuleByClinicalSpecialtyIdInInstitution(@Param("clinicalSpecialtyId") Integer clinicalSpecialtyId, @Param("institutionId") Integer institutionId);
+	Optional<Rule> findRegulatedRuleByClinicalSpecialtyIdInInstitution(@Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds, @Param("institutionId") Integer institutionId);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT r " +
