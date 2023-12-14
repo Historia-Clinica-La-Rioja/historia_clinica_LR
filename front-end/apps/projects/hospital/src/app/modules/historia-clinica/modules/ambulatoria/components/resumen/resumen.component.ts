@@ -9,7 +9,8 @@ import {
 	HCEMedicationDto,
 	HCEHealthConditionDto,
 	MedicationInteroperabilityDto,
-	PatientSummaryDto
+	PatientSummaryDto,
+	HCEPersonalHistoryDto
 } from '@api-rest/api-model';
 import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
 import { TableModel } from '@presentation/components/table/table.component';
@@ -32,6 +33,7 @@ export class ResumenComponent implements OnInit, OnChanges {
 	readonly medicationsHeader = MEDICACION_HABITUAL;
 	allergies$: Observable<HCEAllergyDto[]>;
 	patientId: number;
+	personalHistories$: Observable<HCEPersonalHistoryDto[]>;
 	familyHistories$: Observable<HCEHealthConditionDto[]>;
 	patientProblems$: Observable<HCEHealthConditionDto[]>;
 	medications$: Observable<HCEMedicationDto[]>;
@@ -73,6 +75,7 @@ export class ResumenComponent implements OnInit, OnChanges {
 				);
 		} else {
 			this.allergies$ = this.ambulatoriaSummaryFacadeService.allergies$;
+			this.personalHistories$ = this.ambulatoriaSummaryFacadeService.personalHistories$;
 			this.familyHistories$ = this.ambulatoriaSummaryFacadeService.familyHistories$;
 			this.patientProblems$ = this.ambulatoriaSummaryFacadeService.patientProblems$.pipe(
 				map(this.formatProblemsDates)

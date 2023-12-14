@@ -70,6 +70,7 @@ export class AmendProblemComponent implements OnInit {
 				if(succedeed){
 					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({
 						allergies: false,
+                        personalHistories: false,
 						familyHistories: false,
 						patientProblems: true,
 						patientProblemsByRole: true,

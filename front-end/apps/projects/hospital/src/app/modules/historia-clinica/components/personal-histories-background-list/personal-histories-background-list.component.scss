@@ -7,7 +7,10 @@
 }
 
 .observations {
-    word-wrap: break-word
+    font-family: inherit;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 0;
 }
 
 mat-divider.mat-divider-horizontal.mat-divider-inset.separation {

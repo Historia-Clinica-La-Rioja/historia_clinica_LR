@@ -11,6 +11,7 @@ export class AmbulatoriaSummaryFacadeService {
 	private idPaciente: number;
 
 	private allergiesSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private personalHistoriesSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private familyHistoriesSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private patientProblemsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private patientProblemsByRoleSubject: Subject<any> = new BehaviorSubject<any>([]);
@@ -26,6 +27,7 @@ export class AmbulatoriaSummaryFacadeService {
 	private isNewConsultationOpenSubject: Subject<any> = new BehaviorSubject<boolean>(false);
 
 	public readonly allergies$ = this.allergiesSubject.asObservable();
+	public readonly personalHistories$ = this.personalHistoriesSubject.asObservable();
 	public readonly familyHistories$ = this.familyHistoriesSubject.asObservable();
 	public readonly patientProblems$ = this.patientProblemsSubject.asObservable();
 	public readonly patientProblemsByRole$ = this.patientProblemsByRoleSubject.asObservable();
@@ -51,6 +53,7 @@ export class AmbulatoriaSummaryFacadeService {
 		this.idPaciente = idPaciente;
 		this.setFieldsToUpdate({
 			allergies: true,
+			personalHistories: true,
 			familyHistories: true,
 			patientProblems: true,
 			patientProblemsByRole: true,
@@ -66,6 +69,10 @@ export class AmbulatoriaSummaryFacadeService {
 			this.hceGeneralStateService.getAllergies(this.idPaciente).subscribe(a => this.allergiesSubject.next(a));
 		}
 
+		if (fieldsToUpdate.personalHistories) {
+			this.hceGeneralStateService.getPersonalHistories(this.idPaciente).subscribe(pH => this.personalHistoriesSubject.next(pH));
+		}
+
 		if (fieldsToUpdate.familyHistories) {
 			this.hceGeneralStateService.getFamilyHistories(this.idPaciente).subscribe(fH => this.familyHistoriesSubject.next(fH));
 		}
@@ -75,7 +82,7 @@ export class AmbulatoriaSummaryFacadeService {
 		}
 	
 		if (fieldsToUpdate.patientProblemsByRole) {
-			this.hceGeneralStateService.getPersonalHistoriesByRole(this.idPaciente).subscribe(ph => this.patientProblemsByRoleSubject.next(ph));
+			this.hceGeneralStateService.getPatientProblemsByRole(this.idPaciente).subscribe(ph => this.patientProblemsByRoleSubject.next(ph));
 		}
 
 		if (fieldsToUpdate.riskFactors) {
@@ -121,6 +128,7 @@ export class AmbulatoriaSummaryFacadeService {
 
 export interface AmbulatoriaFields {
 	allergies?: boolean;
+	personalHistories?: boolean;
 	familyHistories?: boolean;
 	patientProblems?: boolean;
 	patientProblemsByRole?: boolean;

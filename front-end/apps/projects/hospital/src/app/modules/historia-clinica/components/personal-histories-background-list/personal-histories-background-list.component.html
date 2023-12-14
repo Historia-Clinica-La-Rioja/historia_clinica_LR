@@ -3,7 +3,7 @@
         <div fxLayout="column" fxLayoutGap="10px">
             <span class="bold-text">{{ personalHistories.snomed.pt | titlecase}}</span>
             <span class="italic-text">{{ personalHistories.type.description }}</span>
-            <span *ngIf="personalHistories?.observations" class="observations">{{ personalHistories.observations }}</span>
+            <div *ngIf="personalHistories?.observations"><pre class="observations">{{ personalHistories.observations }}</pre></div>
             
             <div data-id="personal-history-dates" fxLayout="row" fxLayoutGap="30px" class="mat-caption gray-caption">
                 <span>

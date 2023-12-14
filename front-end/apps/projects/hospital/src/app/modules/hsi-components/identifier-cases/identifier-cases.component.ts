@@ -42,6 +42,8 @@ export enum IDENTIFIER_CASES {
 	PRACTICE = 'Práctica/Procedimiento',
 	SPECIALTY = 'Especialidades',
 	DATE = 'Fecha',
+	STARTDATE = 'FechaInicio',
+	ENDDATE = 'FechaFin',
 	HOUR = 'Hora',
 	DISTRICT = 'Partido',
 	SERVICE = 'Servicio',
@@ -85,6 +87,16 @@ const date: IconLegend = {
 	legend: 'Fecha',
 }
 
+const startDate: IconLegend = {
+	icon: 'event',
+	legend: 'Fecha de inicio',
+}
+
+const endDate: IconLegend = {
+	icon: 'event',
+	legend: 'Fecha de fin',
+}
+
 const hour: IconLegend = {
 	icon: 'schedule',
 	legend: 'Hora',
@@ -124,6 +136,8 @@ const IDENTIFIER_CASES_ALTERNATIVES = {
 	[IDENTIFIER_CASES.PRACTICE]: practice,
 	[IDENTIFIER_CASES.SPECIALTY]: specialty,
 	[IDENTIFIER_CASES.DATE]: date,
+	[IDENTIFIER_CASES.STARTDATE]: startDate,
+	[IDENTIFIER_CASES.ENDDATE]: endDate,
 	[IDENTIFIER_CASES.HOUR]: hour,
 	[IDENTIFIER_CASES.DISTRICT]: district,
 	[IDENTIFIER_CASES.SERVICE]: service,

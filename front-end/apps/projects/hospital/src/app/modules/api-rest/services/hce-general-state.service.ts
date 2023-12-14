@@ -9,7 +9,8 @@ import {
 	HCEAllergyDto,
 	HCEHospitalizationHistoryDto,
 	HCEToothRecordDto, HCEEvolutionSummaryDto,
-	ExternalPatientCoverageDto
+	ExternalPatientCoverageDto,
+	HCEPersonalHistoryDto
 } from '@api-rest/api-model';
 import { HttpClient } from '@angular/common/http';
 import { ContextService } from '@core/services/context.service';
@@ -44,12 +45,17 @@ export class HceGeneralStateService {
 		return this.http.get<HCEHealthConditionDto[]>(url);
 	}
 
+	getPersonalHistories(patientId: number): Observable<HCEPersonalHistoryDto[]> {
+		const url = this.URL_BASE + patientId + this.URL_SUFFIX + `personalHistories`;
+		return this.http.get<HCEPersonalHistoryDto[]>(url);
+	}
+
 	getPatientProblems(patientId: number): Observable<HCEHealthConditionDto[]> {
 		const url = this.URL_BASE + patientId + this.URL_SUFFIX + `summaryProblems`;
 		return this.http.get<HCEHealthConditionDto[]>(url);
 	}
 
-	getPersonalHistoriesByRole(patientId: number): Observable<HCEHealthConditionDto[]> {
+	getPatientProblemsByRole(patientId: number): Observable<HCEHealthConditionDto[]> {
 		const url = this.URL_BASE + patientId + this.URL_SUFFIX + `summaryProblemsByRole`;
 		return this.http.get<HCEHealthConditionDto[]>(url);
 	}

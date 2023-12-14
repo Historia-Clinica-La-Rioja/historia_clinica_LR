@@ -361,7 +361,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		function mapToFieldsToUpdate(nuevaConsultaDto: CreateOutpatientDto) {
 			return {
 				allergies: !!nuevaConsultaDto.allergies?.length,
-				personalHistories: !!nuevaConsultaDto.problems?.length,
+				personalHistories: !!nuevaConsultaDto.personalHistories?.length,
 				familyHistories: !!nuevaConsultaDto.familyHistories?.length,
 				riskFactors: !!nuevaConsultaDto.riskFactors,
 				medications: !!nuevaConsultaDto.medications?.length,
@@ -587,7 +587,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
 			autoFocus: false,
-			width: '35%',
+			width: '30%',
 			disableClose: true,
 		});
 	}

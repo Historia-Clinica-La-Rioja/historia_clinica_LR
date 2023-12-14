@@ -121,7 +121,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 
 	getProblems() {
 		if (this.hasPrescriptorRole)
-			this.hceGeneralStateService.getPersonalHistoriesByRole(this.data.patientId)
+			this.hceGeneralStateService.getPatientProblemsByRole(this.data.patientId)
 				.subscribe((result: HCEHealthConditionDto[]) => this.healthProblemOptions = result);
 		else
 			this.hceGeneralStateService.getPatientProblems(this.data.patientId).subscribe((result: HCEHealthConditionDto[]) => this.healthProblemOptions = result);

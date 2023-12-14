@@ -373,6 +373,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 		if (event.index == RESUMEN_INDEX) {
 			this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({
 				allergies: false,
+				personalHistories: false,
 				familyHistories: false,
 				patientProblems: false,
 				patientProblemsByRole: true,

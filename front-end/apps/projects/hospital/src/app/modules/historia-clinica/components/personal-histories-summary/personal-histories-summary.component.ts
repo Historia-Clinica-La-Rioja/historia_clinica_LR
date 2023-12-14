@@ -1,20 +1,50 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { HealthHistoryConditionDto } from '@api-rest/api-model';
+import { Component, Input } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { HCEPersonalHistoryDto } from '@api-rest/api-model';
+import { DateFormat, fromStringToDateByDelimeter } from '@core/utils/date.utils';
+import { PersonalHistoryViewDetailsComponent } from '@historia-clinica/modules/ambulatoria/dialogs/personal-history-view-details/personal-history-view-details.component';
 import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
+import { format } from 'date-fns';
 
 @Component({
     selector: 'app-personal-histories-summary',
     templateUrl: './personal-histories-summary.component.html',
     styleUrls: ['./personal-histories-summary.component.scss']
 })
-export class PersonalHistoriesSummaryComponent implements OnInit {
+export class PersonalHistoriesSummaryComponent {
 
-    @Input() personalHistories: HealthHistoryConditionDto[];
+    @Input() set personalHistories (personalHistories: HCEPersonalHistoryDto[]) {
+        this.personalHistories_ = this.mapToPersonalHistoryData(personalHistories);
+    }
     @Input() personalHistoriesHeader: SummaryHeader;
+    personalHistories_: PersonalHistoryData[];
+    format = format;
+    DateFormat = DateFormat
+    
+    constructor(
+		private readonly dialog: MatDialog) { }
 
-    constructor() { }
-
-    ngOnInit(): void {
+    private mapToPersonalHistoryData(data: HCEPersonalHistoryDto[]): PersonalHistoryData[] {
+        return data.map((data: HCEPersonalHistoryDto) => {
+            return {
+                personalHistoryInfo: data,
+                startDate: data.startDate ? fromStringToDateByDelimeter(data.startDate, '-') : null,
+                inactivationDate: data.inactivationDate ? fromStringToDateByDelimeter(data.inactivationDate, '-') : null,
+            };
+        });
     }
 
+    openViewDetailsDialog(personalHistory: PersonalHistoryData){
+        this.dialog.open(PersonalHistoryViewDetailsComponent, {
+			data: personalHistory,
+			autoFocus: false,
+			width: '40%',
+		});
+    }
+}
+
+export interface PersonalHistoryData {
+    personalHistoryInfo: HCEPersonalHistoryDto,
+    startDate: Date,
+    inactivationDate: Date,
 }

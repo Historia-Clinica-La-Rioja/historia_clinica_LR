@@ -183,7 +183,8 @@
                     "TO_DATE_PREFIX": "Hasta",
                     "START_DATE": "Fecha de inicio",
                     "END_DATE": "Fecha de fin",
-                    "OBSERVATIONS": "Observaciones"
+                    "OBSERVATIONS": "Observaciones",
+                    "PERSONAL_HISTORIES_DETAILS": "Detalle de antecedente personal"
                 },
                 "datos-antropometricos": {
                     "TITLE": "Datos antropométricos",
