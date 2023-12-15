@@ -45,8 +45,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 
 	private static final String SELECT_INFO = "SELECT DISTINCT r.id, r.priority, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
 			"pex.name_self_determination, it.description, pe.identification_number, oc.created_on, cs2.name AS clinicalSpecialtyOrigin, " +
-			"i.name AS institutionOrigin, cs.name as clinicalSpecialtyDestination, " +
-			"cl.description AS careLine, cr.closure_type_id, i2.name AS institutionDestination, s.id AS snomedId, s.sctid, s.pt ";
+			"i.name AS institutionOrigin, cl.description AS careLine, cr.closure_type_id, i2.name AS institutionDestination, s.id AS snomedId, s.sctid, s.pt ";
 
 	private static final String SELECT_COUNT = "SELECT COUNT(DISTINCT r.id) as total ";
 
@@ -234,10 +233,10 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				.clinicalSpecialtyOrigin((String) row[10])
 				.institutionOrigin((String) row[11])
 				.destinationClinicalSpecialties(clinicalSpecialties)
-				.careLine((String) row[13])
-				.closureType(row[14] != null ? EReferenceClosureType.getById((Short) row[14]) : null)
-				.institutionDestination((String) row[15])
-				.procedure(new SnomedBo((Integer) row[16], (String) row[17],(String) row[18]))
+				.careLine((String) row[12])
+				.closureType(row[13] != null ? EReferenceClosureType.getById((Short) row[13]) : null)
+				.institutionDestination((String) row[14])
+				.procedure(new SnomedBo((Integer) row[15], (String) row[16],(String) row[17]))
 				.build();
 	}
 
