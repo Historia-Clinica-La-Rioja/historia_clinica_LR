@@ -14,6 +14,7 @@ import { ContentComponent } from './components/content/content.component';
 import { ExchangeableThemeComponent } from './components/exchangeable-theme/exchangeable-theme.component';
 // directives
 import { HasRoleDirective } from './directives/has-role.directive';
+import { HasRoleWithoutContextDirective } from './directives/has-role-without-context.directive';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
@@ -27,8 +28,9 @@ import { StringSeparatorPipe } from './pipes/string-separator.pipe';
 		// directives
 		FeatureFlagDirective,
 		HasRoleDirective,
+		HasRoleWithoutContextDirective,
 		//pipes
-		StringSeparatorPipe
+		StringSeparatorPipe,
 	],
 	imports: [
 		CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
@@ -63,6 +65,7 @@ import { StringSeparatorPipe } from './pipes/string-separator.pipe';
 		// directives
 		FeatureFlagDirective,
 		HasRoleDirective,
+		HasRoleWithoutContextDirective,
 		//pipes
 		StringSeparatorPipe
 	],
