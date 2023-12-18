@@ -164,7 +164,7 @@ public class EquipmentAppointmentServiceImpl implements EquipmentAppointmentServ
 		String startDate = "    \"ScheduledProcedureStepStartDate\": \"" + date + "\",\n";
 		String startTime = "    \"ScheduledProcedureStepStartTime\": \"" + time + "\",\n";
 		String patientIdStr = "    \"PatientID\": \"" + basicDataPatient.getIdentificationNumber() + "\",\n";
-		String patientName = "    \"PatientName\": \"" + basicDataPatient.getFirstName() + " " + basicDataPatient.getLastName() + "\",\n";
+		String patientName = "    \"PatientName\": \"" + basicDataPatient.getLastName() + " " + basicDataPatient.getFirstName() + "\",\n";
 		String patientBirthDate = "    \"PatientBirthDate\": \"" + birthDate + "\",\n";
 		String patientSex = "    \"PatientSex\": \"" + gender + "\",\n";
 		String studyDescription = "    \"StudyDescription\": \"" + "description order" + "\",\n";
