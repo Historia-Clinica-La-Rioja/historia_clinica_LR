@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.appointment.service;
 
 
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentOrderDetailImageBO;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentOrderImageBo;
 import net.pladema.medicalconsultation.appointment.service.domain.DetailsOrderImageBo;
 
@@ -30,4 +31,6 @@ public interface AppointmentOrderImageService {
 	Optional<Integer> getDiagnosticImagingOrderAuthorId(Integer appointmentId);
 
     List<Integer> getAppointmentIdByOrderId(Integer orderId);
+
+	AppointmentOrderDetailImageBO getDetailOrdenImageTechnical(Integer appointmentId, boolean isTranscribed);
 }

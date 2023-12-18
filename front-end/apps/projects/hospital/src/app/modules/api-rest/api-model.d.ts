@@ -280,6 +280,15 @@ export interface AppointmentListDto {
     protected: boolean;
 }
 
+export interface AppointmentOrderDetailImageDto {
+    creationDate: Date;
+    healthCondition: string;
+    idServiceRequest: number;
+    observations: string;
+    professional: DoctorInfoDto;
+    professionalOrderTranscribed: string;
+}
+
 export interface AppointmentSearchDto {
     aliasOrSpecialtyName?: string;
     daysOfWeek: number[];

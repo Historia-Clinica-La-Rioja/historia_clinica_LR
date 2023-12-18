@@ -1,21 +1,28 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
 
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.imagenetwork.SharedDiagnosticImagingOrder;
 import lombok.RequiredArgsConstructor;
 import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
 import net.pladema.clinichistory.requests.servicerequests.repository.TranscribedServiceRequestRepository;
+import net.pladema.medicalconsultation.appointment.repository.AppointmentDetailOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.DetailsOrderImageRepository;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentOrderDetailImageBO;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentOrderImage;
 import net.pladema.medicalconsultation.appointment.repository.entity.DetailsOrderImage;
 import net.pladema.medicalconsultation.appointment.service.AppointmentOrderImageService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentOrderImageBo;
 import net.pladema.medicalconsultation.appointment.service.domain.DetailsOrderImageBo;
+import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentEnumException;
+import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,10 +31,13 @@ import java.util.Optional;
 public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageService, SharedDiagnosticImagingOrder {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AppointmentOrderImageServiceImpl.class);
+	private static final String OUTPUT = "Output -> {}";
 
 	private final AppointmentOrderImageRepository appointmentOrderImageRepository;
 	private final DetailsOrderImageRepository detailsOrderImageRepository;
 	private final TranscribedServiceRequestRepository transcribedServiceRequestRepository;
+	private final AppointmentDetailOrderImageRepository appointmentDetailOrderImageRepository;
+
 
 	@Override
 	public boolean isAlreadyCompleted(Integer appointmentId) {
@@ -113,4 +123,16 @@ public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageSe
 		LOG.debug("Input parameters -> orderId '{}'", orderId);
 		return appointmentOrderImageRepository.getAppointmentIdsByOrderId(orderId);
 	}
+
+	@Override
+	public AppointmentOrderDetailImageBO getDetailOrdenImageTechnical(Integer appointmentId, boolean isTranscribed) {
+		LOG.debug("Input parameters -> appointmentId '{}'", appointmentId);
+		LOG.debug("Input parameters -> isTranscribed '{}'", isTranscribed);
+		AppointmentOrderDetailImageBO result;
+		result = isTranscribed ? this.appointmentDetailOrderImageRepository.getOrderTranscribedDetailImage(appointmentId):
+				this.appointmentDetailOrderImageRepository.getOrderDetailImage(appointmentId);
+
+		return result;
+	}
+
 }

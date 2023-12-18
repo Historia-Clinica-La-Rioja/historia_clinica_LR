@@ -14,14 +14,23 @@ import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
 import ar.lamansys.refcounterref.application.associatereferenceappointment.AssociateReferenceAppointment;
+import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
+import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentOrderDetailImageDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentTicketImageDto;
+import net.pladema.medicalconsultation.appointment.controller.mapper.DetailOrderImageMapper;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentLabel;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryLabelDto;
 import net.pladema.medicalconsultation.appointment.application.ReassignAppointment;
 
 import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentDateBo;
 
+import net.pladema.staff.controller.dto.ProfessionalDto;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -158,6 +167,9 @@ public class AppointmentsController {
 	private final LocalDateMapper localDateMapper;
 
 	private final PatientMedicalCoverageMapper patientMedicalCoverageMapper;
+
+
+	private final DetailOrderImageMapper detailOrderImageMapper;
 
 	private final MqttClientService mqttClientService;
 
@@ -820,4 +832,28 @@ public class AppointmentsController {
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
+
+
+
+	@GetMapping("{appointmentId}/detailOrderImage/transcribed-order/{transcribed}")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_AGENDA, ADMINISTRATIVO_RED_DE_IMAGENES ')")
+	public ResponseEntity<AppointmentOrderDetailImageDto> getOrderDetailImage(@PathVariable(name = "institutionId") Integer institutionId,
+												   @PathVariable(name = "appointmentId") Integer appointmentId,
+												   @PathVariable(name = "transcribed") Boolean isTranscribed
+	)  {
+		log.debug("Input parameters -> appointmentId {}", appointmentId);
+		log.debug("Input parameters -> isTranscribed {}", isTranscribed);
+		AppointmentOrderDetailImageDto result;
+		var bo = this.appointmentOrderImageService.getDetailOrdenImageTechnical(appointmentId, isTranscribed);
+		if (!isTranscribed){
+			ProfessionalDto professionalDto = bo.getIdDoctor() == null ? null :
+					healthcareProfessionalExternalService.findProfessionalByUserId(bo.getIdDoctor());
+			result = this.detailOrderImageMapper.parseToAppointmentOrderDetailDto(bo, professionalDto);
+		}
+		else {
+			result = this.detailOrderImageMapper.parseToAppointmentOrderTranscribedDetailDto(bo);
+		}
+		return ResponseEntity.ok(result);
+	}
+
 }
