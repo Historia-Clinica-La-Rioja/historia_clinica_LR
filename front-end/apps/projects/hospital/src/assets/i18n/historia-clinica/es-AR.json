@@ -21,7 +21,7 @@
 				"TOOLTIP": "Agregar alergia"
 			},
 			"factores-de-riesgo": {
-				"TOOLTIP": "Actualizar factores de riesgo"
+				"TOOLTIP": "Actualizar signos vitales y factores de riesgo"
 			},
 			"datos-antropometricos": {
 				"TOOLTIP": "Agregar información antropométrica"
@@ -40,8 +40,8 @@
 			"CONCEPTS_COULD_NOT_BE_OBTAINED": "Los conceptos de SNOMED no pudieron ser obtenidos."
 		},
 		"factores-de-riesgo-form": {
-			"TITLE": "Factores de Riesgo",
-			"NAME": "factores de riesgo",
+			"TITLE": "Signos vitales y factores de Riesgo",
+			"NAME": "Signos vitales y factores de riesgo",
 			"HEART_RATE": "Frecuencia cardíaca (/min)",
 			"RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",
 			"TEMPERATURE": "Temperatura corporal",

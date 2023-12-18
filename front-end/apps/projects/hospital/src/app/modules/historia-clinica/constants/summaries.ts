@@ -23,7 +23,7 @@ export const DIAGNOSTICOS: SummaryHeader = {
 };
 
 export const FACTORES_DE_RIESGO: SummaryHeader = {
-	title: 'Factores de riesgo',
+	title: 'Signos vitales y factores de riesgo',
 	matIcon: 'favorite_border'
 };
 

@@ -199,8 +199,8 @@
                     "DISCARD": "NO, DESCARTARLOS",
                     "ASK": "¿Desea incluirlos en la consulta?",
                     "CONTENT_ANTHROMETRIC": "Hay datos antropométricos cargados previamente.",
-                    "CONTENT_RISK_FACTORS": "Hay factores de riesgo cargados previamente.",
-                    "CONTENT": "Hay datos antropométricos y factores de riesgo cargados previamente."
+                    "CONTENT_RISK_FACTORS": "Hay signos vitales y factores de riesgo cargados previamente.",
+                    "CONTENT": "Hay datos antropométricos, signos vitales y factores de riesgo cargados previamente."
                 },
                 "alergias": {
                     "TITLE": "Alergias",
@@ -616,7 +616,7 @@
                 "NOT_ACTIVE": "El episodio de guardia no se encuentra activo",
                 "HISTORIAL_TRIAGE": "Historial de triages",
                 "NUEVO_TRIAGE": "Nuevo triage",
-                "RISK_FACTORS_TOOLTIP": "Factores de riesgo"
+                "RISK_FACTORS_TOOLTIP": "Signos vitales y factores de riesgo"
             },
             "vacunas": {
                 "TAB_LABEL": "Vacunas",

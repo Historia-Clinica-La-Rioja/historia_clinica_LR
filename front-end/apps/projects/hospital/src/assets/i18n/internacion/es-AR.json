@@ -539,8 +539,8 @@
 			},
 			"risk-factors-summary": {
 				"save": {
-					"SUCCESS": "Los factores de riesgo se actualizaron exitosamente",
-					"ERROR": "Error al actualizar factores de riesgo"
+					"SUCCESS": "Los signos vitales y factores de riesgo se actualizaron exitosamente",
+					"ERROR": "Error al actualizar signos vitales y factores de riesgo"
 				}
 			}
 		},
