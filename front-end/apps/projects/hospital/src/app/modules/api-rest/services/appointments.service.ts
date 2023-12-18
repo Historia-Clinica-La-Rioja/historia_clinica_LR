@@ -3,6 +3,7 @@ import {
 	AppointmentDailyAmountDto,
 	AppointmentDto,
 	AppointmentListDto,
+	AppointmentOrderDetailImageDto,
 	AppointmentShortSummaryDto,
 	AssignedAppointmentDto,
 	CreateAppointmentDto,
@@ -324,5 +325,10 @@ export class AppointmentsService {
 	setAppointmentLabel(labelId: number, appointmentId: number) {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/label`;
 		return this.http.post<boolean>(url, labelId);
+	}
+
+	getAppoinmentOrderDetail(appointmentId: number, isOrderTranscribed: boolean): Observable<AppointmentOrderDetailImageDto>{
+		const url = `${this.BASE_URL}/${appointmentId}/detailOrderImage/transcribed-order/${isOrderTranscribed}`;
+		return this.http.get<AppointmentOrderDetailImageDto>(url);
 	}
 }

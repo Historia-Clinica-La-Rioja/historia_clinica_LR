@@ -324,13 +324,17 @@ export class WorklistByTechnicalComponent implements OnInit {
 
 	finishStudy(appointment: EquipmentAppointmentListDto) {
 		this.selectedAppointment = appointment;
-		this.openFinishStudyDialog();
+		this.openFinishStudyDialog(appointment);
 	}
 
-	private openFinishStudyDialog() {
+	private openFinishStudyDialog(appointment: EquipmentAppointmentListDto) {
+        appointment.studyName
         const data: StudyInfo = {
             appointmentId: this.selectedAppointment.id,
             patientId: this.selectedAppointment.patient.id,
+            studyName: appointment.studyName,
+            isTranscribed: !appointment.serviceRequestId && !!appointment.studyName,
+            hasOrder: !!appointment.serviceRequestId
         }
 		const dialogRef = this.dialog.open(FinishStudyComponent, {
 			width: '38%',

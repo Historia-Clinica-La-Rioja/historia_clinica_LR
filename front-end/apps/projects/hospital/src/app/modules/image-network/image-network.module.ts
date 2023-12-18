@@ -26,6 +26,7 @@ import { DownloadStudyComponent } from './components/download-study/download-stu
 import { OrderImageDetailComponent } from './components/order-image-detail/order-image-detail.component';
 import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
 import { ImageOrderColoredIconTextCasesComponent } from './components/image-order-identifier-cases/image-order-coloredIconText-cases.component';
+import { ProfessionalFullNamePipe } from './pipes/professional-full-name.pipe';
 
 @NgModule({
     declarations: [
@@ -52,6 +53,7 @@ import { ImageOrderColoredIconTextCasesComponent } from './components/image-orde
         DownloadStudyComponent,
         OrderImageDetailComponent,
         ImageOrderColoredIconTextCasesComponent,
+        ProfessionalFullNamePipe,
     ],
     imports: [
         CommonModule,
@@ -64,6 +66,7 @@ import { ImageOrderColoredIconTextCasesComponent } from './components/image-orde
         ViewStudyComponent,
         ViewReportComponent,
         TooltipOrderComponent,
+        ProfessionalFullNamePipe
     ]
 })
 

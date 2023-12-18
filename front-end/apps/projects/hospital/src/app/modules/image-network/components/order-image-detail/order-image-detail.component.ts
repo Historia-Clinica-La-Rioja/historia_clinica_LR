@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { Color, ColoredLabel } from '@presentation/colored-label/colored-label.component';
 import { Position } from '@presentation/components/identifier/identifier.component';
 import { IDENTIFIER_CASES } from '../../../hsi-components/identifier-cases/identifier-cases.component';
+import { AppointmentOrderDetailImageDto } from '@api-rest/api-model';
+import { IDENTIFIER_IMAGE_CASES } from '../image-order-identifier-cases/image-order-coloredIconText-cases.component';
 
 @Component({
   selector: 'app-order-image-detail',
@@ -11,39 +12,23 @@ import { IDENTIFIER_CASES } from '../../../hsi-components/identifier-cases/ident
 })
 export class OrderImageDetailComponent implements OnInit {
 
-  @Input() detailOrden: DetailOrdenImage;
+  @Input() detailOrder: DetailOrderImage;
 
-  detail:DetailOrdenImage
+  detail:DetailOrderImage
   position = Position.ROW
   identifierCases= IDENTIFIER_CASES
+  typeOrder: IDENTIFIER_IMAGE_CASES
+  currentTypeOrder: IDENTIFIER_IMAGE_CASES
 
   constructor() { }
 
   ngOnInit(): void {
-    this.detail = MOCK_DETAIL_ORDER
+    this.currentTypeOrder = this.detailOrder.idServiceRequest && this.detailOrder.studyName  ? IDENTIFIER_IMAGE_CASES.TRANSCRIBED_ORDER : IDENTIFIER_IMAGE_CASES.WITHOUT_ORDER
   }
 
 }
 
-export interface DetailOrdenImage {
-  title: string,
-  statusOrder: ColoredLabel,
-  orderNumber: number,
-  problems: string,
-  observations: string,
-  professional: string,
-  date: string
-}
-
-export const MOCK_DETAIL_ORDER:DetailOrdenImage = {
-  title: 'Radiogradia de torax',
-  statusOrder: {
-    description: 'En Sala',
-          color:  Color.YELLOW
-  },
-  orderNumber: null,
-  problems: 'Dolor, Pinzamiento Lumbar, otro, buenas tardes',
-  observations: 'Esto es un texto que representa el texto de la solicitud de la referencia. Esto es un texto que representa el texto de la solicitud de la referencia.',
-  professional: 'ARIEL AREVALOS',
-  date: '2023-10-11'
+export interface DetailOrderImage extends AppointmentOrderDetailImageDto {
+  studyName: string,
+  hasOrder: boolean,
 }

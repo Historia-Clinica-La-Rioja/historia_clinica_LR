@@ -6,13 +6,13 @@ import { AppointmentsService } from "@api-rest/services/appointments.service";
 import { ApiErrorMessageDto, DetailsOrderImageDto } from "@api-rest/api-model";
 import { APPOINTMENT_STATES_ID } from "@turnos/constants/appointment";
 
-import {catchError, concatMap, switchMap, tap} from 'rxjs/operators';
-import { EMPTY, Observable, of } from "rxjs";
+import {catchError, concatMap, map, switchMap, tap} from 'rxjs/operators';
+import { EMPTY, Observable } from "rxjs";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { processErrors } from "@core/utils/form.utils";
 import { PrescripcionesService } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { DetailOrdenImage, MOCK_DETAIL_ORDER } from '../../components/order-image-detail/order-image-detail.component';
+import { DetailOrderImage } from '../../components/order-image-detail/order-image-detail.component';
 
 @Component({
 	selector: 'app-finish-study',
@@ -24,7 +24,7 @@ export class FinishStudyComponent  implements OnInit {
 	observations: string;
 	reportNotRequired = false;
 	private served =  APPOINTMENT_STATES_ID.SERVED;
-	detailOrdenInfo$: Observable<DetailOrdenImage>
+	detailOrderInfo$: Observable<DetailOrderImage>
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: StudyInfo,
@@ -37,7 +37,12 @@ export class FinishStudyComponent  implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.detailOrdenInfo$ = of(MOCK_DETAIL_ORDER)
+		this.detailOrderInfo$ = this.appointmentsService.getAppoinmentOrderDetail(this.data.appointmentId, this.data.isTranscribed)
+		.pipe(
+			map(orderDetail =>{return { ...orderDetail ,
+				studyName: this.data.studyName,
+				hasOrder: this.data.hasOrder,
+				creationDate: new Date(orderDetail.creationDate) }}))
 	}
 
 	confirm() {
@@ -90,9 +95,14 @@ export class FinishStudyComponent  implements OnInit {
 	closeDialog() {
 		this.dialogRef.close()
 	}
+
+
 }
 
 export interface StudyInfo {
+	hasOrder?: boolean;
+	isTranscribed?: boolean;
+	studyName?: string;
 	appointmentId: number,
 	patientId: number,
 }
