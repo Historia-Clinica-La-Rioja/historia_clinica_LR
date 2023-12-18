@@ -12,3 +12,139 @@ databaseChangeLog:
                     name: regulation_protected_appointments_allowed
                     type: boolean
 
+    - changeSet:
+        id: loinc-createTable
+        comment: Create tables loinc_code, loinc_system and loinc_status
+        author: efernandez
+        changes:
+          - createTable:
+              tableName: loinc_system
+              columns:
+                - column:
+                    autoIncrement: false
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_loinc_system
+                    name: id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(256)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description_variant
+                    type: varchar(256)
+
+          - createTable:
+              tableName: loinc_status
+              columns:
+                - column:
+                    autoIncrement: false
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_loinc_status
+                    name: id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(256)
+
+          - createTable:
+              tableName: loinc_code
+              columns:
+                - column:
+                    autoIncrement: false
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_loinc_code
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: loinc_status(id)
+                      foreignKeyName: FK_loinc_status_loinc_code
+                    name: status_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                      references: loinc_system(id)
+                      foreignKeyName: FK_loinc_system_loinc_code
+                    name: system_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(256)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: code
+                    type: varchar(10)
+                - column:
+                    constraints:
+                      nullable: true
+                    name: display_name
+                    type: varchar(256)
+                - column:
+                    constraints:
+                      nullable: true
+                    name: custom_display_name
+                    type: varchar(256)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_loinc_code_code" ON loinc_code (code);
+
+    - changeSet:
+        id: loinc-load-data
+        comment: Fill tables loinc_code, loinc_system and loinc_status
+        author: efernandez
+        changes:
+          - sqlFile:
+              encoding: UTF-8
+              path: data/load_loinc_data.sql
+              relativeToChangelogFile: true
+              splitStatements: false
