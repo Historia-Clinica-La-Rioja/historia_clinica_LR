@@ -1,10 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, } from '@angular/material/dialog';
-import { EReferenceRegulationState, ReferenceCompleteDataDto, ReferenceDataDto, ReferenceRegulationDto } from '@api-rest/api-model';
+import { EReferenceRegulationState, ERole, ReferenceCompleteDataDto, ReferenceDataDto, ReferenceRegulationDto } from '@api-rest/api-model';
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { ContactDetails } from '@access-management/components/contact-details/contact-details.component';
 import { PatientSummary } from '../../../hsi-components/patient-summary/patient-summary.component';
-import { Observable, map, of, tap } from 'rxjs';
+import { BehaviorSubject, Observable, map, of, switchMap, take, tap } from 'rxjs';
 import { AppointmentSummary } from '@access-management/components/appointment-summary/appointment-summary.component';
 import { APPOINTMENT_STATES_ID } from '@turnos/constants/appointment';
 import { Tabs } from '@turnos/constants/tabs';
@@ -13,6 +13,12 @@ import { PENDING } from '@access-management/constants/reference';
 import { ContextService } from '@core/services/context.service';
 import { NO_INSTITUTION } from '../../../home/home.component';
 import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/institutional-network-reference-report.service';
+import { RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
+import { AccountService } from '@api-rest/services/account.service';
+import { dateToDateTimeDtoUTC } from '@api-rest/mapper/date-dto.mapper';
+import { PermissionsService } from '@core/services/permissions.service';
+
+const GESTORES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_LOCAL, ERole.GESTOR_DE_ACCESO_REGIONAL];
 
 @Component({
 	selector: 'app-report-complete-data-popup',
@@ -29,11 +35,17 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	Tabs = Tabs;
 	referenceRegulationDto$: Observable<ReferenceRegulationDto>;
 	approvedState = EReferenceRegulationState.APPROVED;
+	observation: string;
+	registerEditor: RegisterEditor = null;
+	registerEditor$: BehaviorSubject<RegisterEditor> = new BehaviorSubject<RegisterEditor>(null);
+
 
 	constructor(
 		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
 		private readonly contextService: ContextService,
 		private readonly institutionalNetworkReferenceReportService: InstitutionalNetworkReferenceReportService,
+		private readonly accountService: AccountService,
+		private readonly permissionService: PermissionsService,
 		@Inject(MAT_DIALOG_DATA) public data,
 	) { }
 
@@ -41,11 +53,18 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		const referenceDetails$ = this.getObservable();
 		referenceDetails$.subscribe(
 			referenceDetails => {
+				if (referenceDetails?.observation) {
+					const { observation, createdBy, date } = referenceDetails.observation;
+					this.observation = observation;
+					this.registerEditor = { createdBy, date };
+					this.registerEditor$.next(this.registerEditor);
+				}
 				this.referenceCompleteData = referenceDetails;
 				this.referenceRegulationDto$ = of(this.referenceCompleteData.regulation);
 				this.setReportData(this.referenceCompleteData);
 				this.colapseContactDetails = this.referenceCompleteData.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.SERVED;
 			});
+		this.registerEditor$.next(null)
 	}
 
 	updateApprovalStatus() {
@@ -60,6 +79,38 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		return this.contextService.institutionId === NO_INSTITUTION ?
 			this.institutionalNetworkReferenceReportService.getReferenceDetail(this.data.referenceId) :
 			this.institutionalReferenceReportService.getReferenceDetail(this.data.referenceId);
+	}
+
+	addObservation(observation: string) {
+		this.permissionService.hasContextAssignments$(GESTORES)
+			.pipe(
+				take(1),
+				switchMap(hasRole => hasRole
+					? this.addObservationGestores(observation)
+					: this.addObservationOtherRoles(observation))
+			)
+			.subscribe(res => {
+				if (res)
+					this.setNewobservation(observation);
+			}
+			);
+	}
+
+	private addObservationGestores(observation: string) {
+		return this.institutionalNetworkReferenceReportService.addObservation(this.data.referenceId, observation);
+	}
+
+	private addObservationOtherRoles(observation: string) {
+		return this.institutionalReferenceReportService.addObservation(this.data.referenceId, observation);
+	}
+
+	private setNewobservation(observation: string) {
+		this.accountService.getInfo().subscribe(res => {
+			this.observation = observation;
+			const createdBy = res.personDto.firstName + " " + res.personDto.lastName;
+			const date = dateToDateTimeDtoUTC(new Date);
+			this.registerEditor$.next({ createdBy, date });
+		});
 	}
 
 	private setReportData(referenceDetails: ReferenceCompleteDataDto): void {
