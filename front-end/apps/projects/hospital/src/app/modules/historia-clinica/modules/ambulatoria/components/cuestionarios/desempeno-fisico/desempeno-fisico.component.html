@@ -46,7 +46,7 @@
         </mat-radio-group>
 
 
-        <div class="counter" *ngIf="!isSubmitDisabled()">
+        <div class="counter" *ngIf="!isCounterDisabled()">
             <label for="number">Tiempo en segundos:</label>
             <input id="ticketNum" type="number" name="Num" value="0" />
 
@@ -60,7 +60,11 @@
         </div>
         <div class="slogans">
 
-            <img class="icon" src="assets/icons/icon-07.png" alt="icon2">
+
+            <img class="icon" src="assets/icons/icon-07.png" alt="iconActive">
+            <!-- <img class="icon" src="assets/icons/icon-10.png" alt="iconDisable"> -->
+
+
 
             ¿Mantuvo la posición al menos por 10 segundos?
             Si el participante no logró completarlo, finaliza la prueba de balance.
@@ -76,7 +80,7 @@
         </mat-radio-group>
 
 
-        <div class="counter" *ngIf="!isSubmitDisabled()">
+        <div class="counter" *ngIf="!isCounterDisabled2()">
             <label for="number">Tiempo en segundos:</label>
             <input id="ticketNum" type="number" name="Num" value="0" />
 
@@ -99,13 +103,13 @@
         </div>
 
 
-        <div class="counter2">
+        <div class="counter2" *ngIf="!isCounterDisabled3()">
             <label for="number">Tiempo en segundos:</label>
             <input id="ticketNum" type="number" name="Num" value="0" />(Máx.15)
 
         </div>
 
-        <mat-radio-group id="3" name="balance3">
+        <mat-radio-group id="3" name="balance3" [disabled]="isSubmitDisabled3()">
             <div class="radio2">
                 <mat-radio-button value="4A" color="primary">Se rehúsa</mat-radio-button>
             </div>
@@ -233,12 +237,12 @@
 
         <div class="options">
 
-        <mat-radio-group class="resultado">
+            <mat-radio-group class="resultado">
                 <mat-radio-button value="1E" color="primary">DESEMPEÑO FISICO BAJO</mat-radio-button>
                 <mat-radio-button value="2E" color="primary">DESEMPEÑO FISICO ALTO</mat-radio-button>
 
-        </mat-radio-group>
-    </div>
+            </mat-radio-group>
+        </div>
 
         <!-- SUBMIT  -->
 
