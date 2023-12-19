@@ -178,7 +178,7 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
 
     @Override
     public List<ReferenceSummaryBo> getReferencesByHealthCondition(Integer healthConditionId, Integer outpatientId, List<Short> loggedUserRoleIds) {
-        String sqlString = "SELECT r.id, cl.description, rn.description, i.name,"
+        String sqlString = "SELECT DISTINCT r.id, cl.description, rn.description, i.name,"
                 +"  r.deleteable.deleted AS cancelled"
                 +"  FROM Reference r"
                 +"  JOIN OutpatientConsultation oc ON (r.encounterId = oc.id)"

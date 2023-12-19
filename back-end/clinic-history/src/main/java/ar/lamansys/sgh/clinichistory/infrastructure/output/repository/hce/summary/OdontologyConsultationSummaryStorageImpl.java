@@ -179,7 +179,7 @@ public class OdontologyConsultationSummaryStorageImpl implements OdontologyConsu
 
     @Override
     public List<ReferenceSummaryBo> getReferencesByHealthCondition(Integer healthConditionId, Integer consultationId, List<Short> loggedUserRoleIds) {
-        String sqlString = "SELECT r.id, cl.description, rn.description, i.name,"
+        String sqlString = "SELECT DISTINCT r.id, cl.description, rn.description, i.name,"
                 +" CASE WHEN hc.verificationStatusId = :healthConditionError THEN TRUE ELSE FALSE END AS cancelled"
                 +"  FROM Reference r"
                 +"  JOIN OdontologyConsultation oc ON (r.encounterId = oc.id)"
