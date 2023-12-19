@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { EReferenceRegulationState, ReferenceCompleteDataDto } from '@api-rest/api-model';
+import { ContextService } from '@core/services/context.service';
+import { NO_INSTITUTION } from '../../../home/home.component';
 
 @Component({
 	selector: 'app-popup-actions',
@@ -7,6 +9,8 @@ import { EReferenceRegulationState, ReferenceCompleteDataDto } from '@api-rest/a
 	styleUrls: ['./popup-actions.component.scss']
 })
 export class PopupActionsComponent {
+
+	NO_INSTITUTION = NO_INSTITUTION;
 
 	referenceApprovalState = {
 		approved: EReferenceRegulationState.APPROVED,
@@ -16,5 +20,7 @@ export class PopupActionsComponent {
 	@Input() reportCompleteData: ReferenceCompleteDataDto;
 	@Output() newState = new EventEmitter<boolean>();
 
-	constructor() { }
+	constructor(
+		readonly contextService: ContextService,
+	) { }
 }
