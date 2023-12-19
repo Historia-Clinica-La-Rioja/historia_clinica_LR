@@ -277,15 +277,15 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 		references.forEach(ref -> {
 			ref.setProblems(referencesProblems.stream().filter(rp -> rp.getReferenceId().equals(ref.getId())).map(rp -> rp.getSnomed().getPt()).collect(Collectors.toList()));
 			var appointment = referencesAppointmentStateData.get(ref.getId());
-			ref.setAttentionState(getAttentionState(ref.getClosureType() != null, appointment != null ? appointment.getAppointmentStateId() : null));
+			ref.setAttentionState(getAttentionState(ref.getClosureType() != null, appointment != null ? appointment.getAppointmentStateId() : null, ref.getRegulationState()));
 			ref.setPatientFullName(sharedPersonPort.parseCompletePersonName(ref.getPatientFirstName(), ref.getPatientMiddleNames(), ref.getPatientLastName(), ref.getPatientOtherLastNames(), ref.getPatientNameSelfDetermination()));
 		});
 	}
 
-	private EReferenceAttentionState getAttentionState(boolean hasClosure, Short appointmentState) {
+	private EReferenceAttentionState getAttentionState(boolean hasClosure, Short appointmentState, EReferenceRegulationState regulationState) {
 		if (hasClosure)
 			return EReferenceAttentionState.SERVED;
-		if (appointmentState != null) {
+		if (regulationState.equals(EReferenceRegulationState.APPROVED) && appointmentState != null) {
 			if (appointmentState.equals(APPOINTMENT_ASSIGNED_STATE) || appointmentState.equals(APPOINTMENT_CONFIRMED_STATE))
 				return EReferenceAttentionState.ASSIGNED;
 			if (appointmentState.equals(APPOINTMENT_ABSENT_STATE))
@@ -293,7 +293,9 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 			if (appointmentState.equals(APPOINTMENT_SERVED_STATE))
 				return EReferenceAttentionState.SERVED;
 		}
-		return EReferenceAttentionState.PENDING;
+		if (regulationState.equals(EReferenceRegulationState.APPROVED))
+			return EReferenceAttentionState.PENDING;
+		return null;
 	}
 
 	private List<ReferenceReportBo> executeQueryAndSetReferenceDetails(Query query) {
