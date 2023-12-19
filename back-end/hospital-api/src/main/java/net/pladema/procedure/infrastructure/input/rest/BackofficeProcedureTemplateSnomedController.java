@@ -1,6 +1,7 @@
 package net.pladema.procedure.infrastructure.input.rest;
 
 import net.pladema.procedure.infrastructure.input.rest.dto.ProcedureTemplateDto;
+import net.pladema.procedure.infrastructure.input.rest.validator.permission.BackofficeProcedureTemplateSnomedValidator;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 
 import net.pladema.sgx.backoffice.rest.dto.BackofficeDeleteResponse;
@@ -18,8 +19,9 @@ public class BackofficeProcedureTemplateSnomedController extends AbstractBackoff
 
 	BackofficeProcedureTemplateStore procedureTemplateStore;
 
-	public BackofficeProcedureTemplateSnomedController(BackofficeProcedureTemplateStore repository) {
-		super(repository);
+	public BackofficeProcedureTemplateSnomedController(BackofficeProcedureTemplateStore repository,
+													   BackofficeProcedureTemplateSnomedValidator procedureTemplateSnomedValidator) {
+		super(repository,procedureTemplateSnomedValidator);
 		this.procedureTemplateStore = repository;
 	}
 
