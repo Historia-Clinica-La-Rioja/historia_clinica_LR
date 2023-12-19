@@ -3,6 +3,7 @@ package ar.lamansys.refcounterref.domain.report;
 import ar.lamansys.refcounterref.domain.enums.EReferenceAttentionState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import ar.lamansys.refcounterref.domain.enums.EReferencePriority;
+import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import ar.lamansys.refcounterref.domain.snomed.SnomedBo;
 import lombok.Builder;
 import lombok.Getter;
@@ -57,5 +58,7 @@ public class ReferenceReportBo {
 	private EReferenceAttentionState attentionState;
 
 	private SnomedBo procedure;
+
+	private EReferenceRegulationState regulationState;
 
 }

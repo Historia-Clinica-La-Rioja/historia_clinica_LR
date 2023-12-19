@@ -3672,6 +3672,7 @@ export interface ReferenceReportDto {
     priority: EReferencePriority;
     problems: string[];
     procedure: string;
+    regulationState: EReferenceRegulationState;
 }
 
 export interface ReferenceRequestDto extends Serializable {

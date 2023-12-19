@@ -30,7 +30,7 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 	private final SharedStaffPort sharedStaffPort;
 
 	@Override
-	public void saveReferenceRegulation(Integer referenceId, CompleteReferenceBo reference) {
+	public Short saveReferenceRegulation(Integer referenceId, CompleteReferenceBo reference) {
 		log.debug("Input parameters -> referenceId {}, reference {}", referenceId, reference);
 		List<SharedRuleDto> rules = new ArrayList<>();
 		if (reference.getStudy() != null && reference.getStudy().getPractice() != null)
@@ -38,13 +38,16 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 		else
 			rules = sharedRulePort.findRegulatedRuleByClinicalSpecialtyIdInInstitution(reference.getClinicalSpecialtyIds(), reference.getDestinationInstitutionId());
 		if (rules.isEmpty())
-			saveEmptyRegulation(referenceId);
+			return saveEmptyRegulation(referenceId);
 		rules.forEach(rule -> saveHistoricReferenceRegulation(referenceId, rule));
+		return EReferenceRegulationState.WAITING_APPROVAL.getId();
 	}
 
-	private void saveEmptyRegulation(Integer referenceId) {
-		HistoricReferenceRegulation emptyRegulation = new HistoricReferenceRegulation(null, referenceId, null, null, EReferenceRegulationState.APPROVED.getId(), null);
+	private Short saveEmptyRegulation(Integer referenceId) {
+		Short regulationStateId =  EReferenceRegulationState.APPROVED.getId();
+		HistoricReferenceRegulation emptyRegulation = new HistoricReferenceRegulation(null, referenceId, null, null, regulationStateId, null);
 		historicReferenceRegulationRepository.save(emptyRegulation);
+		return regulationStateId;
 	}
 
 	private void saveHistoricReferenceRegulation(Integer referenceId, SharedRuleDto rule) {

@@ -7,6 +7,7 @@ import ar.lamansys.refcounterref.domain.enums.EReferenceAttentionState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import ar.lamansys.refcounterref.domain.enums.EReferencePriority;
 
+import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import ar.lamansys.refcounterref.domain.snomed.SnomedBo;
 import ar.lamansys.refcounterref.domain.report.ReferenceReportBo;
 import ar.lamansys.refcounterref.domain.report.ReferenceReportFilterBo;
@@ -45,7 +46,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 
 	private static final String SELECT_INFO = "SELECT DISTINCT r.id, r.priority, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
 			"pex.name_self_determination, it.description, pe.identification_number, oc.created_on, cs2.name AS clinicalSpecialtyOrigin, " +
-			"i.name AS institutionOrigin, cl.description AS careLine, cr.closure_type_id, i2.name AS institutionDestination, s.id AS snomedId, s.sctid, s.pt ";
+			"i.name AS institutionOrigin, cl.description AS careLine, cr.closure_type_id, i2.name AS institutionDestination, s.id AS snomedId, s.sctid, s.pt, r.regulation_state_id ";
 
 	private static final String SELECT_COUNT = "SELECT COUNT(DISTINCT r.id) as total ";
 
@@ -259,6 +260,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				.closureType(row[13] != null ? EReferenceClosureType.getById((Short) row[13]) : null)
 				.institutionDestination((String) row[14])
 				.procedure(new SnomedBo((Integer) row[15], (String) row[16],(String) row[17]))
+				.regulationState(row[18] != null ? EReferenceRegulationState.getById((Short) row[18]) : null)
 				.build();
 	}
 

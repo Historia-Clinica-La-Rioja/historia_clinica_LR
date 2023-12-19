@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface HistoricReferenceRegulationStorage {
 
-	void saveReferenceRegulation(Integer referenceId, CompleteReferenceBo reference);
+	Short saveReferenceRegulation(Integer referenceId, CompleteReferenceBo reference);
 
 	void approveReferencesByRuleId(Integer ruleId, List<Integer> institutionIds);
 

@@ -46,4 +46,10 @@ public class HistoricReferenceRegulation extends SGXAuditableEntity<Integer> {
 	@Column(name = "reason")
 	private String reason;
 
+	public HistoricReferenceRegulation(Integer referenceId, Integer ruleId, Short ruleLevel, Short stateId) {
+		this.referenceId = referenceId;
+		this.ruleId = ruleId;
+		this.ruleLevel = ruleLevel;
+		this.stateId = stateId;
+	}
 }

@@ -80,8 +80,14 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 		saveReferenceClinicalSpecialties(referenceId, referenceBo.getClinicalSpecialtyIds());
 		if (referenceBo.getStudy() != null)
 			saveReferenceOrder(referenceBo, orderIds, reference, referenceId);
-		historicReferenceRegulationStorage.saveReferenceRegulation(referenceId, referenceBo);
+		saveReferenceRegulationState(reference, referenceBo);
 		referenceCounterReferenceFileStorage.updateReferenceCounterReferenceId(referenceId, referenceBo.getFileIds());
+	}
+
+	private void saveReferenceRegulationState(Reference reference, CompleteReferenceBo referenceBo) {
+		var regulationStateId = historicReferenceRegulationStorage.saveReferenceRegulation(reference.getId(), referenceBo);
+		reference.setRegulationStateId(regulationStateId);
+		referenceRepository.save(reference);
 	}
 
 	private void saveReferenceOrder(CompleteReferenceBo referenceBo, List<Integer> orderIds, Reference reference, Integer referenceId) {
