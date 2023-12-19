@@ -54,4 +54,7 @@ public class ReferenceReportFilterBo {
 	@Nullable
 	private List<Short> loggedUserRoleIds;
 
+	@Nullable
+	private Short regulationStateId;
+
 }

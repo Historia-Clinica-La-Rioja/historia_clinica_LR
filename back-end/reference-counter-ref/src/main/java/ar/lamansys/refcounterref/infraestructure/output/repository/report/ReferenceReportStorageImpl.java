@@ -145,6 +145,9 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 			condition.append(" AND igi.deleted IS FALSE ");
 		}
 
+		if (filter.getRegulationStateId() != null)
+			condition.append(" AND r.regulation_state_id = ").append(filter.getRegulationStateId());
+		
 		return condition;
 	}
 
