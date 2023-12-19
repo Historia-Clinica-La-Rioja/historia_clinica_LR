@@ -81,6 +81,8 @@ import institutionalgroups from './institutionalgroups';
 import institutionalgroupinstitutions from './institutionalgroupinstitutions';
 import institutionalgroupusers from './institutionalgroupusers';
 import institutionalgrouprules from './institutionalgrouprules';
+import procedureTemplates from './proceduretemplate';
+
 
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
@@ -175,6 +177,8 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="rules" {...rules(permissions)} />,
     <Resource name="clinicalspecialtyrules" />,
     <Resource name="snomedprocedurerules" />,
+    <Resource name="proceduretemplates" {...procedureTemplates(permissions)}/>,
+    <Resource name="proceduretemplatesnomeds"/>,
 
     // more
     <Resource name="identificationTypes" />,

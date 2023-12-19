@@ -923,6 +923,13 @@ const messages = {
                 institutionalGroupId: 'Grupo de instituciones'
             },
             createRelated: 'Crear regla local'
+        },
+        proceduretemplates: {
+            name: 'Resultados de estudios',
+            fields: {
+                description: 'Nombre de estudio',
+                associatedPractices: 'Prácticas asociadas'
+            },
         }
     }
 };
