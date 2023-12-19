@@ -97,6 +97,11 @@ const messages = {
             "invalid-cuit": "El CUIT debe ser numérico",
             "plan-exists": "El plan ya se encuentra asociado a la cobertura médica",
         },
+        "loinc-code": {
+            "create-disallowed" : "La creación de códigos LOINC esta deshabilitada",
+            "editable-fields-disallowed" : "Solo se puede editar el campo 'Nombre en sistema'",
+            "delete-disallowed" : "La eliminación de códigos LOINC esta deshabilitada"
+        }
     },
     files: {
         cant_download: 'No se pudo descargar el archivo'
@@ -937,6 +942,17 @@ const messages = {
             },
             addRelated: 'Asociar práctica',
             deleteRelated: 'Desasociar práctica',
+        },
+        'loinc-codes': {
+            name: 'LOINC',
+            fields: {
+                code: 'Código LOINC',
+                description: 'Component',
+                statusId: 'Status',
+                systemId: 'System',
+                displayName: 'DisplayName',
+                customDisplayName: 'Nombre en sistema'
+            },
         }
     }
 };

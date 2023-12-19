@@ -83,7 +83,7 @@ import institutionalgroupusers from './institutionalgroupusers';
 import institutionalgrouprules from './institutionalgrouprules';
 import procedureTemplates from './proceduretemplate';
 import procedureTemplateSnomeds from './proceduretemplatesnomeds';
-
+import loincCodes from './loinc-codes';
 
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
@@ -180,6 +180,9 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="snomedprocedurerules" />,
     <Resource name="proceduretemplates" {...procedureTemplates(permissions)}/>,
     <Resource name="proceduretemplatesnomeds" {...procedureTemplateSnomeds(permissions)}/>,
+    <Resource name="loinc-codes" {...loincCodes(permissions)} />,
+    <Resource name="loinc-statuses" />,
+    <Resource name="loinc-systems" />,
 
     // more
     <Resource name="identificationTypes" />,
