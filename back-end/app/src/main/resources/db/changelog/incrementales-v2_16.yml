@@ -624,3 +624,25 @@ databaseChangeLog:
                 - column:
                     name: deleted_on
                     type: datetime
+
+    - changeSet:
+        id: addColumn-regulation_state_id-reference and fillColumn-regulation_state_id-reference
+        author: bchacon
+        changes:
+          - addColumn:
+              tableName: reference
+              columns:
+                - column:
+                    name: regulation_state_id
+                    type: smallint
+
+          - sql:
+              sql: |-
+                UPDATE reference
+                SET regulation_state_id = (
+                  SELECT state_id
+                  FROM historic_reference_regulation
+                  WHERE reference.id = historic_reference_regulation.reference_id
+                  ORDER BY historic_reference_regulation.created_on DESC
+                  LIMIT 1
+                )
