@@ -127,7 +127,8 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 
 	private Page<ReferenceReportBo> executeQueryAndProcessResults(String sqlQueryData, String sqlCountQuery, ReferenceReportFilterBo filter, Pageable pageable) {
 		filter.setLoggedUserId(UserInfo.getCurrentAuditor());
-		filter.setLoggedUserRoleIds(sharedLoggedUserPort.getLoggedUserRoleIds(filter.getDestinationInstitutionId(), filter.getLoggedUserId()));
+		Integer institutionId = filter.getOriginInstitutionId() != null ? filter.getOriginInstitutionId() : filter.getDestinationInstitutionId();
+		filter.setLoggedUserRoleIds(sharedLoggedUserPort.getLoggedUserRoleIds(institutionId, filter.getLoggedUserId()));
 		var query = entityManager.createNativeQuery(sqlQueryData)
 				.setParameter("from", filter.getFrom())
 				.setParameter("to", filter.getTo())
