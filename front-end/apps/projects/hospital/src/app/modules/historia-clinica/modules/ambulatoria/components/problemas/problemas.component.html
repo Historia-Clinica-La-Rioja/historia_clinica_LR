@@ -381,7 +381,7 @@
 														<div fxLayout="row" fxLayoutGap="10px">
 															<strong
 																[translate]="'ambulatoria.paciente.problemas.historical-problems.SPECIALTY'"></strong>
-															<span>{{reference.clinicalSpecialty}}</span>
+															<span *ngFor="let clinicalSpecialty of reference.clinicalSpecialties">{{clinicalSpecialty}}</span>
 														</div>
 
 														<div *ngIf="reference.note" fxLayout="column"
