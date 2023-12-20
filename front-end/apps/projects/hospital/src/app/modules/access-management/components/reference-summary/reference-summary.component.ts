@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ReferenceReportDto } from '@api-rest/api-model';
 import { Color } from '@presentation/colored-label/colored-label.component';
 import { ColoredIconText } from '@presentation/components/colored-icon-text/colored-icon-text.component';
@@ -11,12 +11,16 @@ import { PatientSummary } from '../../../hsi-components/patient-summary/patient-
 	templateUrl: './reference-summary.component.html',
 	styleUrls: ['./reference-summary.component.scss']
 })
-export class ReferenceSummaryComponent {
+export class ReferenceSummaryComponent implements OnInit {
 
 	identiferCases = IDENTIFIER_CASES;
 	size = Size.SMALL;
 	@Input() referenceReport: ReferenceReport;
+	clinicalSpecialtiesName: string[] = [];
 
+	ngOnInit(): void {
+		this.clinicalSpecialtiesName = this.referenceReport.dto.destinationClinicalSpecialties.map(specialty => specialty);
+	}
 }
 
 export interface ReferenceReport {

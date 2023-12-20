@@ -36,7 +36,7 @@
             </app-identifier-cases>
             
             <app-identifier-cases *ngIf="referenceReport.dto.destinationClinicalSpecialties.length" [identifierCase]="identiferCases.SPECIALTY"
-                [description]="referenceReport.dto.destinationClinicalSpecialties[0]" id="specialty">
+                [description]="clinicalSpecialtiesName" id="specialty">
             </app-identifier-cases> 
 
             <app-identifier-cases *ngIf="referenceReport.dto.careLine" [identifierCase]="identiferCases.CARE_LINE"
