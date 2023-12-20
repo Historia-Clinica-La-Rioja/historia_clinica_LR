@@ -852,6 +852,29 @@
                         "questions": {
                             "QUESTION_1": "Observaciones"
                         }
+                    },
+                    "violent-person-information":{
+                        "TITLE": "Información sobre la persona que ejerce violencia",
+                        "SUBTITLE": "Persona/s que ejercen violencia registrada/s",
+                        "ADD_BUTTON": "Agregar persona que ejerce violencia",
+                        "SUBMIT_BUTTON": "Agregar persona agresora",
+                        "PERSON_LABEL": "Persona",
+                        "questions": {
+                                "QUESTION_1": "¿Posee armas de fuego?",
+                                "QUESTION_2": "¿Transita un abordaje por su ejercicio de violencia?",
+                                "QUESTION_3": "¿Pertence a fuerzas de seguridad o FFAA?",
+                                "QUESTION_4": "¿A cuál institución/es?",
+                                "PLACEHOLDER_QUESTION_4": "Seleccionar institución/es",
+                                "QUESTION_5": "Vinculo con la persona",
+                                "PLACEHOLDER_QUESTION_5": "Seleccionar vinculo",
+                                "QUESTION_6": "¿Qué tipo de vínculo?",
+                                "PLACEHOLDER_QUESTION_6":"Texto libre",
+                                "QUESTION_7": "¿Convive?",
+                                "QUESTION_8": "Antigüedad del vínculo",
+                                "QUESTION_9": "Frecuencia del maltrato",
+                                "QUESTION_10" : "¿Tiene antecedentes de incumplimiento de medidas de restricción y/o denuncias previas?",
+                                "STATE": "Estado"
+                            } 
                     }
                 }
             }

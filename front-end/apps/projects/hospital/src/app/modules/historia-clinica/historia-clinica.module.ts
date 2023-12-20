@@ -74,6 +74,7 @@ import { ProcedureAndDescriptionComponent } from './components/procedure-and-des
 import { SurgicalReportProsthesisComponent } from './components/surgical-report-prosthesis/surgical-report-prosthesis.component';
 import { ViolenceSituationsListComponent } from './components/violence-situations-list/violence-situations-list.component';
 import { ViolenceModalitiesListComponent } from './components/violence-modalities-list/violence-modalities-list.component';
+import { ViolentPersonListComponent } from './components/violent-person-list/violent-person-list.component';
 
 @NgModule({
 	declarations: [
@@ -145,6 +146,7 @@ import { ViolenceModalitiesListComponent } from './components/violence-modalitie
 		SurgicalReportProsthesisComponent,
   		ViolenceSituationsListComponent,
     	ViolenceModalitiesListComponent,
+     	ViolentPersonListComponent,
 	],
 	imports: [
 		CommonModule,
@@ -190,7 +192,8 @@ import { ViolenceModalitiesListComponent } from './components/violence-modalitie
 		NewConsultationAddProblemFormComponent,
 		DiagnosticosComponent,
 		DatosAntropometricosNuevaConsultaComponent,
-		ProblemListComponent
+		ProblemListComponent,
+		ViolentPersonListComponent,
 	],
 	providers: [
 		InternmentSummaryFacadeService,

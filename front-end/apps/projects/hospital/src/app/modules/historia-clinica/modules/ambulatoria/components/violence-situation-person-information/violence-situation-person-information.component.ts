@@ -10,6 +10,11 @@ export interface BasicOption {
 	value: boolean
 }
 
+export interface ValueOption {
+	text: string,
+	value: string
+}
+
 export enum FormOption {
 	YES = 'Sí',
 	NO = 'No',
