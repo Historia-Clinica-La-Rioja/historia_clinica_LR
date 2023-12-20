@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -137,15 +138,15 @@ public class EquipmentAppointmentServiceImpl implements EquipmentAppointmentServ
 		if (basicDataPatient == null){
 			return null;
 		}
-
-
+		String identificationNumber = basicDataPatient.getIdentificationNumber();
+		String identification = identificationNumber == null ?basicDataPatient.getId()+"": identificationNumber;
 		String UID= "1." + ThreadLocalRandom.current().nextInt(1,10) + "." +
 				ThreadLocalRandom.current().nextInt(1,10) + "." +
 				ThreadLocalRandom.current().nextInt(1,100) + "." +
 				ThreadLocalRandom.current().nextInt(1,100) + "." +
 				ThreadLocalRandom.current().nextInt(1,1000) + "." +
 				ThreadLocalRandom.current().nextInt(1,1000) + "." +
-				basicDataPatient.getIdentificationNumber();
+				identification;
 		String date = appointment.getDate().toString().replace("-","");
 		String time = appointment.getHour().toString().replace(":","") + "00";
 		String birthDate = null;
@@ -163,7 +164,7 @@ public class EquipmentAppointmentServiceImpl implements EquipmentAppointmentServ
 		String aeTitle =   "    \"ScheduledStationAETitle\": \"" + equipmentBO.getAeTitle() + "\",\n";
 		String startDate = "    \"ScheduledProcedureStepStartDate\": \"" + date + "\",\n";
 		String startTime = "    \"ScheduledProcedureStepStartTime\": \"" + time + "\",\n";
-		String patientIdStr = "    \"PatientID\": \"" + basicDataPatient.getIdentificationNumber() + "\",\n";
+		String patientIdStr = "    \"PatientID\": \"" + identification + "\",\n";
 		String patientName = "    \"PatientName\": \"" + basicDataPatient.getLastName() + " " + basicDataPatient.getFirstName() + "\",\n";
 		String patientBirthDate = "    \"PatientBirthDate\": \"" + birthDate + "\",\n";
 		String patientSex = "    \"PatientSex\": \"" + gender + "\",\n";
