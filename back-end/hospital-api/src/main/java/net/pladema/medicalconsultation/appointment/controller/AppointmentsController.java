@@ -168,7 +168,7 @@ public class AppointmentsController {
 	@Value("${scheduledjobs.updateappointmentsstate.pastdays:1}")
 	private Long PAST_DAYS;
 
-	private Long MAX_DAYS = 30L;
+	private final Long MAX_DAYS = 90L;
 	private final GetCurrentAppointmentHierarchicalUnit getCurrentAppointmentHierarchicalUnit;
 
 	private final CreateAppointmentLabel createAppointmentLabel;
