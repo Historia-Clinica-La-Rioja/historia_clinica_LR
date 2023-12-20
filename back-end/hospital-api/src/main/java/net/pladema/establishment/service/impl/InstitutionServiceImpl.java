@@ -84,14 +84,14 @@ public class InstitutionServiceImpl implements InstitutionService {
 
 	@Override
 	public List<InstitutionBasicInfoBo> getInstitutionsByReferenceByPracticeFilter(Short departmentId, Integer practiceSnomedId,
-																				   Integer clinicalSpecialtyId, Integer careLineId) {
-		log.debug("Fetch all institutions by reference by practice filter and active diaries");
-		if (careLineId != null && clinicalSpecialtyId != null)
-			return institutionRepository.getByDepartmentAndCareLineAndPracticeAndClinicalSpecialty(departmentId, clinicalSpecialtyId, careLineId, practiceSnomedId);
+																				   List<Integer> clinicalSpecialtyIds, Integer careLineId) {
+		log.debug("Input parameters -> departmentId {}, practiceSnomedId {}, clinicalSpecialtyIds {}, careLineId {}", departmentId, practiceSnomedId, clinicalSpecialtyIds, careLineId);
+		if (careLineId != null && clinicalSpecialtyIds != null && !clinicalSpecialtyIds.isEmpty())
+			return institutionRepository.getByDepartmentAndCareLineAndPracticeAndClinicalSpecialty(departmentId, clinicalSpecialtyIds, careLineId, practiceSnomedId);
 		if (careLineId != null)
 			return institutionRepository.getByDepartmentAndCareLineAndPractice(departmentId, careLineId, practiceSnomedId);
-		if (clinicalSpecialtyId != null)
-			return institutionRepository.getAllByDepartmentAndClinicalSpecialtyAndPractice(departmentId, clinicalSpecialtyId, practiceSnomedId);
+		if (clinicalSpecialtyIds != null && !clinicalSpecialtyIds.isEmpty())
+			return institutionRepository.getAllByDepartmentAndClinicalSpecialtyAndPractice(departmentId, clinicalSpecialtyIds, practiceSnomedId);
 		return institutionRepository.getByDepartmentAndPractice(departmentId, practiceSnomedId);
 	}
 }

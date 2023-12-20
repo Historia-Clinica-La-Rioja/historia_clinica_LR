@@ -48,18 +48,16 @@ export class AddressMasterDataService {
 		return this.http.get<any[]>(url, { params: queryParams });
 	}
 
-	getDepartmentsByCareLineAndPracticesAndClinicalSpecialty(practiceSnomedId: number, clinicalSpecialtyId?: number, careLineId?: number,) {
+	getDepartmentsByCareLineAndPracticesAndClinicalSpecialty(practiceSnomedId: number, clinicalSpecialtyIds?: number[], careLineId?: number,) {
 		const url = `${environment.apiBase}/address/masterdata/institution/${this.contextService.institutionId}/departments/by-reference-practice-filter`;
 
-		let queryParams = { practiceSnomedId: practiceSnomedId.toString() };
+		let queryParams = new HttpParams().append('practiceSnomedId', practiceSnomedId.toString());
 
-		if (careLineId !== undefined && careLineId !== null) {
-			queryParams['careLineId'] = careLineId.toString();
-		}
+		if (careLineId !== undefined && careLineId !== null)
+			queryParams = queryParams.append('careLineId', careLineId.toString());
 
-		if (clinicalSpecialtyId !== undefined && clinicalSpecialtyId !== null) {
-			queryParams['clinicalSpecialtyId'] = clinicalSpecialtyId.toString();
-		}
+		if (clinicalSpecialtyIds !== undefined && clinicalSpecialtyIds !== null && clinicalSpecialtyIds.length)
+			clinicalSpecialtyIds.forEach(clinicalSpecialtyId => queryParams = queryParams.append('clinicalSpecialtyIds', clinicalSpecialtyId.toString()));
 		return this.http.get<any[]>(url, { params: queryParams });
 	}
 }

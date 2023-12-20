@@ -140,14 +140,14 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"WHERE c.departmentId = :departmentId " +
 			"AND dp.snomedId = :practiceSnomedId " +
 			"AND dcl.pk.careLineId = :careLineId " +
-			"AND di.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND di.clinicalSpecialtyId IN :clinicalSpecialtyIds " +
 			"AND di.active = TRUE " +
 			"AND di.endDate >= CURRENT_DATE " +
 			"AND di.deleteable.deleted IS FALSE " +
 			"AND dcl.deleteable.deleted IS FALSE " +
 			"AND dp.deleteable.deleted IS FALSE ")
 	List<InstitutionBasicInfoBo> getByDepartmentAndCareLineAndPracticeAndClinicalSpecialty(@Param("departmentId") Short departmentId,
-																						   @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																						   @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds,
 																						   @Param("careLineId") Integer careLineId,
 																						   @Param("practiceSnomedId") Integer practiceSnomedId);
 
@@ -182,13 +182,13 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"JOIN DiaryPractice dp ON (di.id = dp.diaryId) " +
 			"WHERE c.departmentId = :departmentId " +
 			"AND dp.snomedId = :practiceSnomedId " +
-			"AND di.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND di.clinicalSpecialtyId IN :clinicalSpecialtyIds " +
 			"AND di.active = TRUE " +
 			"AND di.endDate >= CURRENT_DATE " +
 			"AND di.deleteable.deleted IS FALSE " +
 			"AND dp.deleteable.deleted IS FALSE ")
 	List<InstitutionBasicInfoBo> getAllByDepartmentAndClinicalSpecialtyAndPractice(@Param("departmentId") Short departmentId,
-																	  @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																	  @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds,
 																	  @Param("practiceSnomedId") Integer practiceSnomedId);
 
 	@Transactional(readOnly = true)

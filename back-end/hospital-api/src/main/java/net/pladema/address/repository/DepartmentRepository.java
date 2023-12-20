@@ -101,10 +101,10 @@ public interface DepartmentRepository extends JpaRepository<Department, Short> {
 			"JOIN SnomedRelatedGroup srg ON (clip.snomedRelatedGroupId = srg.id)  " +
 			"WHERE cli.careLineId = :careLineId " +
 			"AND srg.snomedId = :practiceSnomedId " +
-			"AND clis.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND clis.clinicalSpecialtyId IN :clinicalSpecialtyIds " +
 			"AND cli.deleted = FALSE")
 	<T> Collection<T> findAllByCareLineIdClinicalSpecialtyIdAndPracticeSnomedId(@Param("careLineId") Integer careLineId,
-																				@Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																				@Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds,
 																				@Param("practiceSnomedId") Integer practiceSnomedId , Class<T> clazz);
 
 	@Transactional(readOnly = true)
@@ -122,14 +122,14 @@ public interface DepartmentRepository extends JpaRepository<Department, Short> {
 			"JOIN SnomedGroup baseGroup ON (sg.groupId = baseGroup.id) " +
 			"JOIN SnomedRelatedGroup srg ON (sg.id = srg.groupId) " +
 			"WHERE srg.snomedId = :practiceSnomedId " +
-			"AND hps.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND hps.clinicalSpecialtyId IN :clinicalSpecialtyIds " +
 			"AND baseGroup.description = :sgDescription " +
 			"AND sg.groupType = :sgTypeId " +
 			"AND ur.deleteable.deleted IS FALSE " +
 			"AND hp.deleteable.deleted IS FALSE " +
 			"AND pp.deleteable.deleted IS FALSE " +
 			"AND hps.deleteable.deleted IS FALSE")
-	<T> Collection<T> findAllByClinicalSpecialtyIdAndPracticeSnomedId(@Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+	<T> Collection<T> findAllByClinicalSpecialtyIdAndPracticeSnomedId(@Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds,
 																	  @Param("practiceSnomedId") Integer practiceSnomedId ,
 																	  @Param("sgDescription") String sgDescription,
 																	  @Param("sgTypeId") Short sgTypeId, Class<T> clazz);

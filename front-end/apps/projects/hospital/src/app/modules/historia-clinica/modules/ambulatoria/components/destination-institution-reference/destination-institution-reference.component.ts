@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AddressDto, InstitutionBasicInfoDto } from '@api-rest/api-model';
+import { AddressDto, ClinicalSpecialtyDto, InstitutionBasicInfoDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
@@ -40,7 +40,7 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 	protectedAppointment$ = new BehaviorSubject<number>(undefined);
 	practiceOrProcedure = false;
 	practiceSnomedId;
-	clinicalSpecialties;
+	clinicalSpecialties: ClinicalSpecialtyDto[];
 
 	constructor(
 		private readonly institutionService: InstitutionService,
@@ -121,7 +121,7 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 		if (departmentId) {
 			if (this.practiceOrProcedure) {
 				this.institutionService.getInstitutionsByReferenceByPracticeFilter
-					(this.formReference.controls.practiceOrProcedure.value.id, departmentId, this.careLineId, this.clinicalSpecialties).subscribe((institutions: InstitutionBasicInfoDto[]) => {
+					(this.formReference.controls.practiceOrProcedure.value.id, departmentId, this.careLineId, this.clinicalSpecialties.map(clinicalSpecialty => clinicalSpecialty.id)).subscribe((institutions: InstitutionBasicInfoDto[]) => {
 						this.institutions = this.toTypeaheadOptions(institutions, 'name');
 						this.institutionsDisable = false;
 					});

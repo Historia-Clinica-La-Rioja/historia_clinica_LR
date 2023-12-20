@@ -83,9 +83,9 @@ public class AddressMasterDataController {
 	public ResponseEntity<Collection<AddressProjection>> getDepartmentsByCareLineAndPracticesAndClinicalSpecialty(@PathVariable("institutionId") Integer institutionId,
 																												  @RequestParam("practiceSnomedId") Integer practiceSnomedId,
 																												  @RequestParam(name = "careLineId", required = false) Integer careLineId,
-																												  @RequestParam(name = "clinicalSpecialtyId", required = false) Integer clinicalSpecialtyId) {
-		LOG.debug("{}", "All departments by reference for practice filter");
-		return ResponseEntity.ok().body(addressMasterDataService.getDepartmentsByReferenceFilterByPractice(practiceSnomedId, careLineId, clinicalSpecialtyId, AddressProjection.class));
+																												  @RequestParam(name = "clinicalSpecialtyIds", required = false) List<Integer> clinicalSpecialtyIds) {
+		LOG.debug("Input parameters -> institutionId {}, practiceSnomedId {}, careLineId {}, clinicalSpecialtyIds {}", institutionId, practiceSnomedId, careLineId, clinicalSpecialtyIds);
+		return ResponseEntity.ok().body(addressMasterDataService.getDepartmentsByReferenceFilterByPractice(practiceSnomedId, careLineId, clinicalSpecialtyIds, AddressProjection.class));
 	}
 
 }

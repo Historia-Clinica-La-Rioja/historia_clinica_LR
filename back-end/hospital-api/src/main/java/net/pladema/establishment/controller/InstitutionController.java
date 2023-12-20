@@ -160,10 +160,9 @@ public class InstitutionController {
 																									@RequestParam("practiceSnomedId") Integer practiceSnomedId,
 																									@RequestParam("departmentId") Short departmentId,
 																								 	@RequestParam(name="careLineId", required = false) Integer careLineId,
-																								 	@RequestParam(name="clinicalSpecialtyId", required = false) Integer clinicalSpecialtyId) {
-		logger.debug("Input parameter -> institutionId {}, practiceSnomedId {}, departmentId {}, careLineId {}, clinicalSpecialtyId {}",
-				institutionId, practiceSnomedId, departmentId, careLineId, clinicalSpecialtyId);
-		var institutions = institutionService.getInstitutionsByReferenceByPracticeFilter(departmentId, practiceSnomedId, clinicalSpecialtyId, careLineId);
+																								 	@RequestParam(name="clinicalSpecialtyIds", required = false) List<Integer> clinicalSpecialtyIds) {
+		logger.debug("Input parameter -> institutionId {}, practiceSnomedId {}, departmentId {}, careLineId {}, clinicalSpecialtyIds {}", institutionId, practiceSnomedId, departmentId, careLineId, clinicalSpecialtyIds);
+		var institutions = institutionService.getInstitutionsByReferenceByPracticeFilter(departmentId, practiceSnomedId, clinicalSpecialtyIds, careLineId);
 		var result = institutionMapper.fromListInstitutionBasicInfoBo(institutions);
 		logger.trace("result -> {}", result);
 		return ResponseEntity.ok(result);
