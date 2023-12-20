@@ -21,6 +21,13 @@ export const dateTimeDtoToDate = (dateTimeDto: DateTimeDto): Date => {
 	return dateTimeMapped;
 };
 
+export const convertDateTimeDtoToDate = (dateTimeDto: DateTimeDto): Date => {
+	const { day, month, year } = dateTimeDto.date;
+	const { hours, minutes = 0 } = dateTimeDto.time;
+	return new Date(Date.UTC(year, month - 1, day, hours, minutes));
+}
+
+
 export const dateTimeDtotoLocalDate = (dateTimeDto: DateTimeDto): Date => {
 	return new Date(dateTimeDtoToStringDate(dateTimeDto));
 }

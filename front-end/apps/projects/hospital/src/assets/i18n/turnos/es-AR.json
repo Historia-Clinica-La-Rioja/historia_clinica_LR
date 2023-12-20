@@ -304,6 +304,10 @@
 			"TREATMENT_BEGINS_IN_A_EFERENCE_CENTER":"Inicia tratamiento en centro de referencia",
 			"REQUIERES_COMPLEMENTARY_STUDIES":"Requiere estudios complementarios",
 			"REFERENCE_REQUESTED": "Referencia solicitada"
+		},
+		"report-complete-data": {
+			"SHOW_SUCCESS_OBSERVATION": "La observación se agregó correctamente",
+			"SHOW_ERROR_OBSERVATION": "Error al cargar la observación"
 		}
 	}
 }

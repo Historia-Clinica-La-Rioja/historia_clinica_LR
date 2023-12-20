@@ -15,6 +15,8 @@ import { NO_INSTITUTION } from '../../../home/home.component';
 import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/institutional-network-reference-report.service';
 import { RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
 import { PermissionsService } from '@core/services/permissions.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { convertDateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 
 
 const GESTORES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_LOCAL, ERole.GESTOR_DE_ACCESO_REGIONAL];
@@ -44,6 +46,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		private readonly contextService: ContextService,
 		private readonly institutionalNetworkReferenceReportService: InstitutionalNetworkReferenceReportService,
 		private readonly permissionService: PermissionsService,
+		private readonly snackBarService: SnackBarService,
 		@Inject(MAT_DIALOG_DATA) public data,
 	) { }
 
@@ -57,14 +60,13 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 				this.setReportData(this.referenceCompleteData);
 				this.colapseContactDetails = this.referenceCompleteData.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.SERVED;
 			});
-		this.registerEditor$.next(null)
 	}
 
 	updateApprovalStatus() {
 		const referenceDetails$ = this.getObservable();
 		this.referenceRegulationDto$ = referenceDetails$.pipe(
 			map(referenceDetails => { return referenceDetails.regulation }),
-			tap(regulationNewState => this.referenceCompleteData = {...this.referenceCompleteData, regulation: regulationNewState})
+			tap(regulationNewState => this.referenceCompleteData = { ...this.referenceCompleteData, regulation: regulationNewState })
 		);
 	}
 
@@ -83,10 +85,13 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 					: this.addObservationOtherRoles(observation))
 			)
 			.subscribe(res => {
-				if (res)
+				if (res) {
+					this.snackBarService.showSuccess('turnos.report-complete-data.SHOW_SUCCESS_OBSERVATION');
 					this.updateObservations();
-			}
-			);
+				}
+				else
+					this.snackBarService.showError('turnos.report-complete-data.SHOW_ERROR_OBSERVATION');
+			});
 	}
 
 	private updateObservations() {
@@ -110,7 +115,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		if (referenceDetails?.observation) {
 			const { observation, createdBy, date } = referenceDetails.observation;
 			this.observation = observation;
-			this.registerEditor = { createdBy, date };
+			this.registerEditor = { createdBy, date: convertDateTimeDtoToDate(date) };
 			this.registerEditor$.next(this.registerEditor);
 		}
 	}

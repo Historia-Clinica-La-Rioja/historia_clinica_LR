@@ -24,11 +24,7 @@ export const NameDate: Story = {
 		registerEditorCase: REGISTER_EDITOR_CASES.DATE,
 		registerEditor: {
 			createdBy: 'Jose Perez',
-			date: {
-				day: 4,
-				month: 4,
-				year: 2023
-			}
+			date: new Date()
 		}
 	}
 }
@@ -38,18 +34,8 @@ export const NameDateHours: Story = {
 		registerEditorCase: REGISTER_EDITOR_CASES.DATE_HOUR,
 		registerEditor: {
 			createdBy: 'Jose Perez',
-			date: {
-				date: {
-					day: 4,
-					month: 4,
-					year: 2023
-				},
-				time: {
-					hours: 4,
-					minutes: 15
-				},
+			date: new Date()
 
-			}
 		}
 	}
 }
@@ -60,11 +46,7 @@ export const NameInstitutionDate: Story = {
 		registerEditor: {
 			createdBy: 'Jose Perez',
 			institution: 'Hospital Ramon Santamarina',
-			date: {
-				day: 4,
-				month: 4,
-				year: 2023
-			}
+			date: new Date()
 		}
 	}
 }
@@ -75,17 +57,7 @@ export const NameInstitutionDateHours: Story = {
 		registerEditor: {
 			createdBy: 'Jose Perez',
 			institution: 'Hospital Ramon Santamarina',
-			date: {
-				date: {
-					day: 4,
-					month: 4,
-					year: 2023
-				},
-				time: {
-					hours: 4,
-					minutes: 15
-				},
-			}
+			date: new Date()
 		}
 	}
 }
