@@ -10,10 +10,13 @@ import net.pladema.establishment.infrastructure.input.rest.mapper.RuleMapper;
 
 import net.pladema.establishment.repository.RuleRepository;
 
+import net.pladema.establishment.repository.entity.Rule;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -24,9 +27,12 @@ public class SharedRulePortImpl implements SharedRulePort {
 	private final RuleMapper ruleMapper;
 
 	@Override
-	public Optional<SharedRuleDto> findRegulatedRuleByClinicalSpecialtyIdInInstitution(List<Integer> clinicalSpecialtyIds, Integer institutionId) {
+	public List<SharedRuleDto> findRegulatedRuleByClinicalSpecialtyIdInInstitution(List<Integer> clinicalSpecialtyIds, Integer institutionId) {
 		log.debug("Input parameters -> clinicalSpecialtyIds {}, institutionId {}", clinicalSpecialtyIds, institutionId);
-		return ruleRepository.findRegulatedRuleByClinicalSpecialtyIdInInstitution(clinicalSpecialtyIds, institutionId).map(ruleMapper::fromRule);
+		List<Rule> rules = ruleRepository.findRegulatedRuleByClinicalSpecialtyIdInInstitution(clinicalSpecialtyIds, institutionId);
+		List<SharedRuleDto> result = rules.stream().map(ruleMapper::fromRule).collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
 	}
 
 	@Override

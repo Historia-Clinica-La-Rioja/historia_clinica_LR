@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,17 +30,31 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 	private final SharedStaffPort sharedStaffPort;
 
 	@Override
-	public Integer saveReferenceRegulation(Integer referenceId, CompleteReferenceBo reference) {
+	public void saveReferenceRegulation(Integer referenceId, CompleteReferenceBo reference) {
 		log.debug("Input parameters -> referenceId {}, reference {}", referenceId, reference);
-		SharedRuleDto rule;
+		List<SharedRuleDto> rules = new ArrayList<>();
 		if (reference.getStudy() != null && reference.getStudy().getPractice() != null)
-			rule = sharedRulePort.findRegulatedRuleBySnomedIdInInstitution(reference.getStudy().getPractice().getId(), reference.getDestinationInstitutionId()).orElse(null);
+			addRegulatedRuleBySnomedAndInstitution(reference, rules);
 		else
-			rule = sharedRulePort.findRegulatedRuleByClinicalSpecialtyIdInInstitution(reference.getClinicalSpecialtyIds(), reference.getDestinationInstitutionId()).orElse(null);
-		if (rule == null)
-			return historicReferenceRegulationRepository.save(new HistoricReferenceRegulation(null, referenceId, null, null, EReferenceRegulationState.APPROVED.getId(), null)).getId();
-		return historicReferenceRegulationRepository.save(new HistoricReferenceRegulation(null, referenceId, rule.getId(), rule.getLevel(), EReferenceRegulationState.WAITING_APPROVAL.getId(), null)).getId();
+			rules = sharedRulePort.findRegulatedRuleByClinicalSpecialtyIdInInstitution(reference.getClinicalSpecialtyIds(), reference.getDestinationInstitutionId());
+		if (rules.isEmpty())
+			saveEmptyRegulation(referenceId);
+		rules.forEach(rule -> saveHistoricReferenceRegulation(referenceId, rule));
 	}
+
+	private void saveEmptyRegulation(Integer referenceId) {
+		HistoricReferenceRegulation emptyRegulation = new HistoricReferenceRegulation(null, referenceId, null, null, EReferenceRegulationState.APPROVED.getId(), null);
+		historicReferenceRegulationRepository.save(emptyRegulation);
+	}
+
+	private void saveHistoricReferenceRegulation(Integer referenceId, SharedRuleDto rule) {
+		HistoricReferenceRegulation historicReferenceRegulation = new HistoricReferenceRegulation(null, referenceId, rule.getId(), rule.getLevel(), EReferenceRegulationState.WAITING_APPROVAL.getId(), null);
+		historicReferenceRegulationRepository.save(historicReferenceRegulation);
+	}
+
+	private void addRegulatedRuleBySnomedAndInstitution(CompleteReferenceBo reference, List<SharedRuleDto> rules) {
+        sharedRulePort.findRegulatedRuleBySnomedIdInInstitution(reference.getStudy().getPractice().getId(), reference.getDestinationInstitutionId()).ifPresent(rules::add);
+    }
 
 	@Override
 	public void approveReferencesByRuleId(Integer ruleId, List<Integer> institutionIds){
