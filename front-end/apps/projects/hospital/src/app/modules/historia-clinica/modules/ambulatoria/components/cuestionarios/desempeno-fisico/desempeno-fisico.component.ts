@@ -9,6 +9,9 @@ export class DesempenoFisicoComponent implements OnInit {
 
   selectedoptionA: string = '';
   selectedoptionB: string = '';
+  selectedoptionC: string = '';
+  selectedoptionD: string = '';
+
   imageInactive1: boolean;
   iconActive: boolean;
   constructor() { }
@@ -46,7 +49,6 @@ export class DesempenoFisicoComponent implements OnInit {
     return !(
 
       this.selectedoptionB === '1B'
-
     )
 
   }
@@ -57,17 +59,43 @@ export class DesempenoFisicoComponent implements OnInit {
     )
   }
 
+  isCounterDisabled4(): boolean {
+    return !(
+      this.selectedoptionC !== '2C'
 
-//   imgActive(value: string) {
-//     this.iconActive = false;
-//     this.imageInactive1 = false;
 
-//     if (value === '1A') {
-//         this.iconActive = true;
-//     } else if (value === '2A' || value === '3A') {
-//         this.imageInactive1 = true;
-//     }
-// }
+    )
 
-   }
+  }
+
+  isCounterDisabled5(): boolean {
+    return !(
+      this.selectedoptionD !== '3C'
+
+    )
+  }
+
+  isSubmitDisabled4(): boolean {
+    return !(
+      this.selectedoptionC !== '2C'
+
+    )
+  }
+
+
+
+
+
+  //   imgActive(value: string) {
+  //     this.iconActive = false;
+  //     this.imageInactive1 = false;
+
+  //     if (value === '1A') {
+  //         this.iconActive = true;
+  //     } else if (value === '2A' || value === '3A') {
+  //         this.imageInactive1 = true;
+  //     }
+  // }
+
+}
 
