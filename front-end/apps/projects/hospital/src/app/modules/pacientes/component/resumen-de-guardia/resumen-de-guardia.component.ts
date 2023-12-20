@@ -85,7 +85,8 @@ export class ResumenDeGuardiaComponent implements OnInit {
 	ngOnInit(): void {
 		this.permissionsService.contextAssignments$().subscribe(
 			(userRoles: ERole[]) => {
-				this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD]);
+				this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA
+				]);
 				this.hasRoleAdministrative = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES]);
 
 				this.setEpisodeState();

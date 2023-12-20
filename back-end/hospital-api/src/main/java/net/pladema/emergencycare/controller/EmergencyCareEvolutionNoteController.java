@@ -60,7 +60,7 @@ public class EmergencyCareEvolutionNoteController {
 	private final CreateEmergencyCareEvolutionNoteDocumentService createEmergencyCareEvolutionNoteDocumentService;
 
 	@PostMapping
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<Boolean> saveEmergencyCareEvolutionNote(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "episodeId") Integer episodeId,

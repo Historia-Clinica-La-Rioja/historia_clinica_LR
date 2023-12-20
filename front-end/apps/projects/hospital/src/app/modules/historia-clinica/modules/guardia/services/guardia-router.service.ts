@@ -19,7 +19,7 @@ export class GuardiaRouterService {
 		private readonly permissionsService: PermissionsService,
 	) {
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
-			this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD]);
+			this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA]);
 		});
 	}
 

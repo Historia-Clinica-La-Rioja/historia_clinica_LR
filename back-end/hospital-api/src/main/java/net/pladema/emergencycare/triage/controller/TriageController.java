@@ -102,7 +102,7 @@ public class TriageController {
     }
 
     @GetMapping
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
     public ResponseEntity<Collection<TriageListDto>> getAll(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name="episodeId") Integer episodeId) {
@@ -118,7 +118,7 @@ public class TriageController {
     }
 
     @PostMapping
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
     public ResponseEntity<Integer> createAdministrative(
             @PathVariable("institutionId") Integer institutionId,
             @PathVariable("episodeId") Integer episodeId,
@@ -137,7 +137,7 @@ public class TriageController {
 
     @Transactional
     @PostMapping("/adult-gynecological")
-    @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
     public ResponseEntity<Integer> newAdultGynecological(
             @PathVariable("institutionId") Integer institutionId,
             @PathVariable("episodeId") Integer episodeId,
@@ -158,7 +158,7 @@ public class TriageController {
 
     @Transactional
     @PostMapping("/pediatric")
-    @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
     public ResponseEntity<Integer> newPediatric(
             @PathVariable("institutionId") Integer institutionId,
             @PathVariable("episodeId") Integer episodeId,

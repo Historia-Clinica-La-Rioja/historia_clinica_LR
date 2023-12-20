@@ -99,7 +99,7 @@ public class EmergencyCareEpisodeController {
     }
 
     @GetMapping
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
     public ResponseEntity<Collection<EmergencyCareListDto>> getAll(
             @PathVariable(name = "institutionId") Integer institutionId) {
         LOG.debug("Input parameters -> institutionId {}", institutionId);
@@ -111,7 +111,7 @@ public class EmergencyCareEpisodeController {
 
     @Transactional
     @PostMapping
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
     public ResponseEntity<Integer> createAdministrative(
             @PathVariable(name = "institutionId") Integer institutionId,
             @Valid @RequestBody ECAdministrativeDto body) {
@@ -130,7 +130,7 @@ public class EmergencyCareEpisodeController {
 
     @Transactional
     @PutMapping("/{emergencyCareEpisodeId}")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
     public ResponseEntity<Integer> updateAdministrative(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "emergencyCareEpisodeId") Integer emergencyCareEpisodeId,
@@ -148,7 +148,7 @@ public class EmergencyCareEpisodeController {
 
     @Transactional
     @PostMapping("/adult-gynecological")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
     public ResponseEntity<Integer> createAdult(
             @PathVariable(name = "institutionId") Integer institutionId,
             @RequestBody ECAdultGynecologicalDto body) {
@@ -176,7 +176,7 @@ public class EmergencyCareEpisodeController {
 
     @Transactional
     @PostMapping("/pediatric")
-    @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
     public ResponseEntity<Integer> createPediatric(@PathVariable(name = "institutionId") Integer institutionId,
                                                    @RequestBody ECPediatricDto body) {
         LOG.debug("Add emergency care pediatric episode -> institutionId {}, body {}", institutionId, body);
@@ -202,7 +202,7 @@ public class EmergencyCareEpisodeController {
     }
 
     @GetMapping("/{episodeId}/creation-date")
-    @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
     public ResponseEntity<DateTimeDto> getCreationDate(@PathVariable(name = "institutionId") Integer institutionId,
                                                        @PathVariable(name = "episodeId") Integer episodeId) {
         LOG.debug("Get episode creation date -> institutionId {}, episodeId {}", institutionId, episodeId);
@@ -214,7 +214,7 @@ public class EmergencyCareEpisodeController {
     }
 
 	@GetMapping("/{episodeId}/has-evolution-note")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<Boolean> hasEvolutionNote(@PathVariable(name = "institutionId") Integer institutionId,
 													   @PathVariable(name = "episodeId") Integer episodeId) {
 		LOG.debug("Get episode creation date -> institutionId {}, episodeId {}", institutionId, episodeId);

@@ -8,7 +8,7 @@ import { Observable, combineLatest } from 'rxjs';
 import { SECTOR_AMBULATORIO, TRIAGE_LEVEL_V_ID } from '../../constants/masterdata';
 import { PermissionsService } from '@core/services/permissions.service';
 
-const WITHOUT_TRIAGE_LEVEL_NOT_VALID_ROLES: ERole[] = [ERole.ENFERMERO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD];
+const WITHOUT_TRIAGE_LEVEL_NOT_VALID_ROLES: ERole[] = [ERole.ENFERMERO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 const WITHOUT_TRIAGE_CATEGORY_ID = 6;
 
 @Component({
