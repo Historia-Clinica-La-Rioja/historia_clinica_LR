@@ -859,3 +859,91 @@ databaseChangeLog:
                 join institution i on (i.id=d.institution_id)
                 left outer join clinical_specialty cs on (d.clinical_specialty_id=cs.id)
                 where d.deleted=false and d.status_id = '445665009';
+
+    - changeSet:
+        id: createTable-historic_reference_regulation
+        author: fsimaro
+        comment: Create table historic_reference_regulation
+        changes:
+          - createTable:
+              tableName: historic_reference_regulation
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_historic_reference_regulation
+                    name: id
+                    type: int
+                - column:
+                    name: reference_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      foreignKeyName: FK_historic_reference_regulation_reference_id
+                      references: reference(id)
+                - column:
+                    name: rule_id
+                    type: int
+                    constraints:
+                      nullable: true
+                      foreignKeyName: FK_historic_reference_regulation_rule_id
+                      references: rule(id)
+                - column:
+                    name: rule_level
+                    type: smallint
+                - column:
+                    name: state_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                - column:
+                    name: reason
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: add-references-on-historic_reference_regulation
+        author: fsimaro
+        comment: Add created references as approved on historic_reference_regulation
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO historic_reference_regulation (reference_id, state_id) 
+                SELECT r.id, 1 FROM reference r WHERE r.deleted = false;
