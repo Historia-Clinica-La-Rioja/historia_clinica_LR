@@ -31,11 +31,6 @@
 				<mat-divider></mat-divider>
 				<app-appointment-summary [appointmentSummary]="reportCompleteData.appointment"></app-appointment-summary>
 			</div>
-		</div>
-		<div fxLayout="column" fxLayoutGap="10px"  fxFlex="40">
-			<app-appointment-summary
-			[appointmentSummary]="reportCompleteData.appointment"></app-appointment-summary>
-
 			<mat-divider></mat-divider>
 			<app-add-observations [observation]="observation" [registerEditor]="registerEditor$ | async"
 				(observationEmmiter)="addObservation($event)">
@@ -45,20 +40,6 @@
 
 	<app-popup-actions actions [reportCompleteData]="referenceCompleteData" (newState)="updateApprovalStatus()"></app-popup-actions>
 
-	<div actions class="button" fxLayoutAlign="end end">
-		<button mat-flat-button color="primary" id="assign-appointment-in-institution"
-			*ngIf="popupActions?.assignAppointmentInInstitution" (click)="assignAppointmentInInstitution()">
-			<span class="uppercase">{{'turnos.home.ASSIGN_APPOINTMENT' | translate}}</span>
-		</button>
-		<button mat-stroked-button color="primary" id="assign-appointment-in-care-network"
-			*ngIf="popupActions?.assignAppointmentInCareNetwork" (click)="assignAppointmentInCareNetwork()">
-			<span class="uppercase">{{'access-management.search_references.reference.ASSIGN_APPOINTMENT_IN_CARE_NETWORK' | translate}}</span>
-		</button>
-		<button mat-flat-button color="warn" id="cancel-appointment" *ngIf="popupActions?.cancelAppointment"
-			(click)="cancelAppointment()">
-			<span class="uppercase">{{'turnos.cancel.TITLE' | translate}}</span>
-		</button>
-	</div>
 </div>
 
 <ng-template #loading>

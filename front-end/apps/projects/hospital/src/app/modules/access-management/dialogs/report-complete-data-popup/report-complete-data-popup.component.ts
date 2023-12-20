@@ -14,9 +14,8 @@ import { ContextService } from '@core/services/context.service';
 import { NO_INSTITUTION } from '../../../home/home.component';
 import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/institutional-network-reference-report.service';
 import { RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
-import { AccountService } from '@api-rest/services/account.service';
-import { dateToDateTimeDtoUTC } from '@api-rest/mapper/date-dto.mapper';
 import { PermissionsService } from '@core/services/permissions.service';
+
 
 const GESTORES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_LOCAL, ERole.GESTOR_DE_ACCESO_REGIONAL];
 
@@ -44,7 +43,6 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
 		private readonly contextService: ContextService,
 		private readonly institutionalNetworkReferenceReportService: InstitutionalNetworkReferenceReportService,
-		private readonly accountService: AccountService,
 		private readonly permissionService: PermissionsService,
 		@Inject(MAT_DIALOG_DATA) public data,
 	) { }
@@ -53,12 +51,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		const referenceDetails$ = this.getObservable();
 		referenceDetails$.subscribe(
 			referenceDetails => {
-				if (referenceDetails?.observation) {
-					const { observation, createdBy, date } = referenceDetails.observation;
-					this.observation = observation;
-					this.registerEditor = { createdBy, date };
-					this.registerEditor$.next(this.registerEditor);
-				}
+				this.setObservation(referenceDetails);
 				this.referenceCompleteData = referenceDetails;
 				this.referenceRegulationDto$ = of(this.referenceCompleteData.regulation);
 				this.setReportData(this.referenceCompleteData);
@@ -91,9 +84,18 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 			)
 			.subscribe(res => {
 				if (res)
-					this.setNewobservation(observation);
+					this.updateObservations();
 			}
 			);
+	}
+
+	private updateObservations() {
+		const referenceDetails$ = this.getObservable();
+
+		referenceDetails$.subscribe(
+			referenceDetails => {
+				this.setObservation(referenceDetails)
+			})
 	}
 
 	private addObservationGestores(observation: string) {
@@ -104,13 +106,13 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		return this.institutionalReferenceReportService.addObservation(this.data.referenceId, observation);
 	}
 
-	private setNewobservation(observation: string) {
-		this.accountService.getInfo().subscribe(res => {
+	private setObservation(referenceDetails: ReferenceCompleteDataDto) {
+		if (referenceDetails?.observation) {
+			const { observation, createdBy, date } = referenceDetails.observation;
 			this.observation = observation;
-			const createdBy = res.personDto.firstName + " " + res.personDto.lastName;
-			const date = dateToDateTimeDtoUTC(new Date);
-			this.registerEditor$.next({ createdBy, date });
-		});
+			this.registerEditor = { createdBy, date };
+			this.registerEditor$.next(this.registerEditor);
+		}
 	}
 
 	private setReportData(referenceDetails: ReferenceCompleteDataDto): void {
