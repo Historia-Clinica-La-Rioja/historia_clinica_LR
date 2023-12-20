@@ -392,16 +392,6 @@ databaseChangeLog:
               viewName: v_clinic_history
 
     - changeSet:
-        id: drop-reference-column-clinical_specialty_id
-        author: mmalyvarni
-        changes:
-          - dropColumn:
-              columns:
-                - column:
-                    name: clinical_specialty_id
-              tableName: reference
-
-    - changeSet:
         id: createView-v_clinic_history_8
         comment: Create view v_clinic_history_8
         author: mmalyvarni
