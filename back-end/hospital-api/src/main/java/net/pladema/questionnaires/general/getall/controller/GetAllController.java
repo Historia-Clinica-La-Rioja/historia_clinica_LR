@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +32,8 @@ public class GetAllController {
         this.getAllService = getAllService;
     }
 
-	@GetMapping("/patient/{patientId}/all-questionnaire-responses")
+	@PreAuthorize("hasRole('ESPECIALISTA_MEDICO') or hasRole('PROFESIONAL_DE_SALUD') or hasRole('ENFERMERO_ADULTO_MAYOR') or hasRole('ENFERMERO') or hasRole('ESPECIALISTA_EN_ODONTOLOGIA')")
+	@GetMapping("institution/{institutionId}/patient/{patientId}/all-questionnaire-responses")
 	public ResponseEntity<List<QuestionnaireResponseII>> getResponsesByPatientIdWithDetails (
 			@PathVariable Integer patientId
 	) {
