@@ -259,7 +259,7 @@
 			LEFT JOIN observation_vital_sign ovs ON (dvs.observation_vital_sign_id = ovs.id)
 			WHERE oc.institution_id = :institutionId
 			AND oc.billable = true
-			AND oc.start_date BETWEEN :startDate AND :endDate
+			AND oc.created_on BETWEEN :startDate AND :endDate
 			GROUP BY oc.id, oc.patient_id , oc.patient_medical_coverage_id , oc.clinical_specialty_id , oc.doctor_id, oc.doctor_id, reasons.description, problems.description, proced.description
 			UNION ALL
 			SELECT  vc.patient_id, vc.patient_medical_coverage_id, vc.clinical_specialty_id,
