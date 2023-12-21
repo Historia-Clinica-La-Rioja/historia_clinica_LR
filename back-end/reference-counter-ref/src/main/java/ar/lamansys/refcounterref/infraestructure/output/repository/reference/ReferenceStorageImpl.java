@@ -97,10 +97,13 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 	}
 
 	private void saveReferenceClinicalSpecialties(Integer referenceId, List<Integer> clinicalSpecialtyIds) {
-		clinicalSpecialtyIds.forEach(clinicalSpecialty -> {
-			ReferenceClinicalSpecialty referenceClinicalSpecialty = new ReferenceClinicalSpecialty(referenceId, clinicalSpecialty);
-			referenceClinicalSpecialtyRepository.save(referenceClinicalSpecialty);
-		});
+		if (clinicalSpecialtyIds != null)
+			clinicalSpecialtyIds.forEach(clinicalSpecialty -> saveReferenceClinicalSpecialty(referenceId, clinicalSpecialty));
+	}
+
+	private void saveReferenceClinicalSpecialty(Integer referenceId, Integer clinicalSpecialty) {
+		ReferenceClinicalSpecialty referenceClinicalSpecialty = new ReferenceClinicalSpecialty(referenceId, clinicalSpecialty);
+		referenceClinicalSpecialtyRepository.save(referenceClinicalSpecialty);
 	}
 
 	@Override
