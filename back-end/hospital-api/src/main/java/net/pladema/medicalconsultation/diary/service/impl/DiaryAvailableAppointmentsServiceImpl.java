@@ -113,7 +113,7 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 	public Integer getAvailableAppointmentsBySearchCriteriaQuantity(Integer institutionId, List<Integer> clinicalSpecialtyIds, AppointmentSearchBo searchCriteria) {
 		log.debug("Input parameters -> institutionId {}, clinicalSpecialtyIds {}, searchCriteria {}", institutionId, clinicalSpecialtyIds, searchCriteria);
 		AtomicInteger result = new AtomicInteger();
-		if (!clinicalSpecialtyIds.isEmpty()) {
+		if (clinicalSpecialtyIds != null && !clinicalSpecialtyIds.isEmpty()) {
 			List<String> clinicalSpecialtyNames = clinicalSpecialtyRepository.getClinicalSpecialtyNamesByIds(clinicalSpecialtyIds);
 			clinicalSpecialtyNames.forEach(clinicalSpecialtyName -> {
 				searchCriteria.setAliasOrSpecialtyName(clinicalSpecialtyName);
@@ -131,7 +131,7 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 		log.debug("Fetch available appointments quantity in diaries based on careline and search criteria, " +
 				"input parameters -> institutionId {}, clinicalSpecialtyIds {}, careLineId {}, searchCriteria {} ", institutionId, clinicalSpecialtyIds, careLineId, searchCriteria);
 		AtomicInteger result = new AtomicInteger();
-		if (!clinicalSpecialtyIds.isEmpty()) {
+		if (clinicalSpecialtyIds != null && !clinicalSpecialtyIds.isEmpty()) {
 			List<String> clinicalSpecialtyNames = clinicalSpecialtyRepository.getClinicalSpecialtyNamesByIds(clinicalSpecialtyIds);
 			clinicalSpecialtyNames.forEach(clinicalSpecialtyName -> {
 				searchCriteria.setAliasOrSpecialtyName(clinicalSpecialtyName);
