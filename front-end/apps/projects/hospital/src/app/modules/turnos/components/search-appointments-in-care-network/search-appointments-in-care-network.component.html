@@ -158,7 +158,7 @@
 				<mat-divider class="divider-list" inset *ngIf="!isLast"></mat-divider>
 			</div>
 			<mat-paginator [length]="protectedAvaibleAppointments?.length" [pageSizeOptions]="pageSizeOptions"
-				[pageSize]="pageSizeOptions[0]" (page)="onPageChange($event)">
+				[pageSize]="pageSize" (page)="onPageChange($event)">
 			</mat-paginator>
 		</mat-card>
 	</div>

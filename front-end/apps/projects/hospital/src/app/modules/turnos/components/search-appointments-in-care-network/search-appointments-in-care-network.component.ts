@@ -14,7 +14,7 @@ import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.co
 import { DiaryAvailableAppointmentsSearchService, ProtectedAppointmentsFilter } from '@turnos/services/diary-available-appointments-search.service';
 import { Moment } from 'moment';
 import { SearchCriteria } from '../search-criteria/search-criteria.component';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { CareLineInstitutionPracticeService } from '@api-rest/services/care-line-institution-practice.service';
 import { TabsService } from '@turnos/services/tabs.service';
 import { Tabs } from '@turnos/constants/tabs';
@@ -67,6 +67,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 
 	appointmentsCurrentPage: DiaryAvailableProtectedAppointmentsDto[] = [];
 	readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
+	pageSize: Observable<number>;
 	patientId: number;
 	careLineId: number;
 	showModalityError: boolean = false;
@@ -279,6 +280,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 					this.showAppointmentResults = !this.showAppointmentsNotFoundMessage;
 					this.careLineId = this.searchForm.value.careLine.id;
 					this.showSectionToSearchAppointmentsInInstitution = this.externalInformation?.enableSectionToSearchAppointmentInOtherTab;
+					this.pageSize = of(this.pageSizeOptions[0]);
 					if (this.showAppointmentResults) {
 						this.loadFirstPage();
 					}
