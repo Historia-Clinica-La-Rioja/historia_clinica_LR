@@ -291,6 +291,11 @@
 					</div>
 				</ng-template>
 
+				<ng-template #templatePlan let-event="event" class="calendar-event">
+					<app-calendar-event-view [event]="event" [appointmentDuration]="form.controls.appointmentDuration.value"
+					></app-calendar-event-view>
+				</ng-template>
+
 				<mwl-calendar-week-view [viewDate]="TODAY"
 					[events]="agendaHorarioService.getEvents()"
 					[hourSegmentTemplate]="weekViewHourSegmentTemplate"
@@ -298,6 +303,7 @@
 					[dayStartHour]="openingTime" [dayEndHour]="closingTime"
 					[hourSegments]="hourSegments"
 					[weekStartsOn]="MONDAY"
+					[eventTitleTemplate]="templatePlan"
 					(eventClicked)="agendaHorarioService.eventClicked($event, form.value.careLines?.length > 0)">
 				</mwl-calendar-week-view>
 

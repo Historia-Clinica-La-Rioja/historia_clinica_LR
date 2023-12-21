@@ -60,11 +60,7 @@ export class AgendaHorarioService {
 
 	getMedicalAttentionTypeText(medicalAttentionTypeId: number): string {
 		const medicalAttentionType = medicalAttentionTypeId === 2 ? 'Espontánea' : 'Programada';
-		return `<strong>Atención ${medicalAttentionType} </strong> <br>`;
-	}
-
-	getOverturnsText(overturnCount: number): string {
-		return overturnCount > 0 ? '<span>Atiende sobreturnos</span>' : '<span>No atiende sobreturnos</span>';
+		return `Atención ${medicalAttentionType}`;
 	}
 
 	startDragToCreate(segment: WeekViewHourSegment, segmentElement: HTMLElement, hasSelectedLinesOfCare?: boolean, editMode?: boolean): void {
@@ -289,8 +285,7 @@ export class AgendaHorarioService {
 		return {
 			start: this.getFullDate(diaryOpeningHour.openingHours.dayWeekId, diaryOpeningHour.openingHours.from),
 			end: this.getFullDate(diaryOpeningHour.openingHours.dayWeekId, diaryOpeningHour.openingHours.to),
-			title: this.getMedicalAttentionTypeText(diaryOpeningHour.medicalAttentionTypeId)
-				+ this.getOverturnsText(diaryOpeningHour.overturnCount),
+			title: this.getMedicalAttentionTypeText(diaryOpeningHour.medicalAttentionTypeId),
 			color: this.getMedicalAttentionColor(diaryOpeningHour.medicalAttentionTypeId),
 			meta: {
 				diaryOpeningHourId: diaryOpeningHour.openingHours.id,
@@ -360,7 +355,6 @@ export class AgendaHorarioService {
 			event.meta = dialogInfo;
 			event.title = this.getMedicalAttentionTypeText(dialogInfo.medicalAttentionType.id);
 			event.color = this.getMedicalAttentionColor(dialogInfo.medicalAttentionType.id);
-			event.title += this.getOverturnsText(dialogInfo.overturnCount);
 		}
 	}
 
