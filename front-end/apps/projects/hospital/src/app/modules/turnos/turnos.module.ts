@@ -53,6 +53,9 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { EquipmentAppointmentsFacadeService } from './services/equipment-appointments-facade.service';
 // pipes
 import { PracticesPipe } from './pipes/practices.pipe';
+import { CalendarEventViewComponent } from './components/calendar-event-view/calendar-event-view.component';
+import { ShowAppointmentOverTurnPipe } from './pipes/show-appointment-over-turn.pipe';
+import { ShowProtectedAppointmentPipe } from './pipes/show-protected-appointment.pipe';
 
 
 @NgModule({
@@ -85,6 +88,7 @@ import { PracticesPipe } from './pipes/practices.pipe';
 		TypeaheadPracticesComponent,
 		ModalityLabelComponent,
 		ModalityRadioButtonFormComponent,
+		CalendarEventViewComponent,
 		// dialogs
 		AppointmentComponent,
 		BlockAgendaRangeComponent,
@@ -96,6 +100,8 @@ import { PracticesPipe } from './pipes/practices.pipe';
 		NewAttentionComponent,
 		//pipes
 		PracticesPipe,
+		ShowAppointmentOverTurnPipe,
+		ShowProtectedAppointmentPipe,
 	],
 	imports: [
 		CommonModule,

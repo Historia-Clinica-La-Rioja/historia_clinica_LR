@@ -67,6 +67,14 @@
 		"appointment-result-view": {
 			"JOINT_DIARY": "agenda conjunta"
 		},
+		"appointment-event": {
+			"OVERTURN": "Atiende {{overturnCount}} sobreturno",
+			"OVERTURNS": "Atiende {{overturnCount}} sobreturnos",
+			"NO_OVERTURN": "No atiende sobreturnos",
+			"PROTECTED_APPOINTMENT_REGULATION": "Regulación",
+			"PROTECTED_APPOINTMENT_WEB": "Web",
+			"NO_PROTECTED_APPOINTMENT": "No atiende turnos protegidos"
+		},
 		"agenda-setup": {
 			"NEW_AGENDA": "Nueva agenda",
 			"EDIT_AGENDA": "Editar agenda",
