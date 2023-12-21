@@ -66,33 +66,4 @@ public class GetAllService {
 		return fullNameBuilder.toString().trim();
 	}
 
-//	public List<QuestionnaireResponseDto> convertResponsesToDto(List<QuestionnaireResponseII> responses) {
-//		List<QuestionnaireResponseDto> dtos = new ArrayList<>();
-//
-//		for (QuestionnaireResponseII response : responses) {
-//			QuestionnaireResponseDto dto = new QuestionnaireResponseDto();
-//
-//			dto.setId(response.getId());
-//			dto.setStatusId(response.getStatusId());
-//			dto.setCreatedByFullName(response.getCreatedByFullName());
-//			dto.setCreatedByLicenseNumber(response.getCreatedByLicenseNumber());
-//			dto.setCreatedOn(response.getCreatedOn());
-//			dto.setQuestionnaireType(response.getQuestionnaireType());
-//
-//			if (response.getCreatedOn().isEqual(response.getUpdatedOn())) {
-//
-//			} else {
-//				dto.setUpdatedByFullName(response.getUpdatedByFullName());
-//				dto.setUpdatedByLicenseNumber(response.getUpdatedByLicenseNumber());
-//				dto.setUpdatedOn(response.getUpdatedOn());
-//			}
-//
-//			dtos.add(dto);
-//
-//		}
-//
-//		return dtos;
-//
-//	}
-
 }
