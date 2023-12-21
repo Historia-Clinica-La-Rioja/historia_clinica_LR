@@ -23,8 +23,8 @@ export class FinishStudyComponent  implements OnInit {
 
 	observations: string;
 	reportNotRequired = false;
-	private served =  APPOINTMENT_STATES_ID.SERVED;
 	detailOrderInfo$: Observable<DetailOrderImage>
+	private served =  APPOINTMENT_STATES_ID.SERVED;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: StudyInfo,
@@ -42,7 +42,7 @@ export class FinishStudyComponent  implements OnInit {
 			map(orderDetail =>{return { ...orderDetail ,
 				studyName: this.data.studyName,
 				hasOrder: this.data.hasOrder,
-				creationDate: new Date(orderDetail.creationDate) }}))
+				creationDate:  orderDetail.creationDate ? new Date(orderDetail.creationDate) : null}}))
 	}
 
 	confirm() {

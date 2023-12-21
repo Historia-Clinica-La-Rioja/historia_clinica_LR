@@ -11,7 +11,9 @@ export class ProfessionalFullNamePipe implements PipeTransform {
     const middleNames = value.middleNames || ''
     const baseNameProffesionalFF = value.nameSelfDetermination + " " + value.lastName
     if (ffIsOn) {
-        return baseNameProffesionalFF + otherLastNames
+      const hasNameProffesionalFF = !!value.nameSelfDetermination
+      return hasNameProffesionalFF ? baseNameProffesionalFF + " " + otherLastNames :
+        value.firstName + " " + middleNames + " " + value.lastName + " " + otherLastNames
     }
     return value.firstName + " " + middleNames + " " + value.lastName + " " + otherLastNames
   }
