@@ -285,7 +285,7 @@ export interface AppointmentOrderDetailImageDto {
     healthCondition: string;
     idServiceRequest: number;
     observations: string;
-    professional: DoctorInfoDto;
+    professional: ProfessionalDto;
     professionalOrderTranscribed: string;
 }
 

@@ -1,11 +1,9 @@
 package net.pladema.medicalconsultation.appointment.controller.mapper;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.StudyOrderReportInfoBo;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEDocumentDataDto;
+
 import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DoctorInfoDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyOrderReportInfoDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentOrderDetailImageDto;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentOrderDetailImageBO;
 import net.pladema.staff.controller.dto.ProfessionalDto;
@@ -23,7 +21,7 @@ public class DetailOrderImageMapper {
 		AppointmentOrderDetailImageDto result = new AppointmentOrderDetailImageDto();
 
 		result.setObservations(appointmentOrderDetailBO.getObservations());
-		result.setProfessional(DoctorInfoDto.from(professionalDto));
+		result.setProfessional(professionalDto);
 		result.setCreationDate(appointmentOrderDetailBO.getCreationDate());
 		result.setProfessionalOrderTranscribed(null);
 		result.setHealthCondition(appointmentOrderDetailBO.getHealthCondition());

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class AppointmentOrderDetailImageDto {
 
-	private DoctorInfoDto professional;
+	private ProfessionalDto professional;
 
 	private Integer idServiceRequest;
 
