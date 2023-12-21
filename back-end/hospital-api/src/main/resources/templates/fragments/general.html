@@ -257,12 +257,12 @@
             <dl th:each="personalHistory,iter: ${personalHistories}">
                 <dd><p  th:text="${'- ' + personalHistory.snomed.pt}"></p></dd>
                 <dl>
-                    <dd th:if="${personalHistory.type != null}"        ><strong>Tipo: </strong><label th:text="${personalHistory.type}"></label></dd>
-                    <dd th:if="${personalHistory.startDate != null}"   ><strong>Fecha de inicio: </strong><label th:text="${#temporals.format(personalHistory.startDate, 'dd/MM/yyyy')}"></label></dd>
-                    <dd th:if="${personalHistory.note != null}"        ><strong>Observaciones: </strong>
+                    <dd th:if="${personalHistory.type != null}"><strong>Tipo: </strong><label th:text="${personalHistory.type}"></label></dd>
+                    <dd th:if="${personalHistory.startDate != null}"><strong>Fecha de inicio: </strong><label th:text="${#temporals.format(personalHistory.startDate, 'dd/MM/yyyy')}"></label></dd>
+                    <dd th:if="${personalHistory.note != null && personalHistory.note != ''}"><strong>Observaciones: </strong>
                         <p class="wide_wrapped_text" th:text="${personalHistory.note}"></p>
                     </dd>
-                    <dd th:if="${personalHistory.inactivationDate != null}"     ><strong>Fecha de fin: </strong><label th:text="${#temporals.format(personalHistory.inactivationDate, 'dd/MM/yyyy')}"></label></dd>
+                    <dd th:if="${personalHistory.inactivationDate != null}"><strong>Fecha de fin: </strong><label th:text="${#temporals.format(personalHistory.inactivationDate, 'dd/MM/yyyy')}"></label></dd>
                 </dl>
             </dl>
         </div>
