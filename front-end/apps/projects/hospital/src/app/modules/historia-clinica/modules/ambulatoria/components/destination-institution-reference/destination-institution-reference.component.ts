@@ -72,7 +72,7 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 			this.practiceOrProcedure = !!practiceOrProcedure;
 			this.cleanFields();
 			if (practiceOrProcedure) {
-				this.adressMasterData.getDepartmentsByCareLineAndPracticesAndClinicalSpecialty(practiceOrProcedure.id, clinicalSpecialties.length, careLine?.id).subscribe(data => {
+				this.adressMasterData.getDepartmentsByCareLineAndPracticesAndClinicalSpecialty(practiceOrProcedure.id, clinicalSpecialties?.length, careLine?.id).subscribe(data => {
 					this.departments = this.toTypeaheadOptions(data, 'description');
 					this.departmentDisable = false;
 					this.practiceSnomedId = practiceOrProcedure.id;
@@ -121,7 +121,7 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 		if (departmentId) {
 			if (this.practiceOrProcedure) {
 				this.institutionService.getInstitutionsByReferenceByPracticeFilter
-					(this.formReference.controls.practiceOrProcedure.value.id, departmentId, this.careLineId, this.clinicalSpecialties.map(clinicalSpecialty => clinicalSpecialty.id)).subscribe((institutions: InstitutionBasicInfoDto[]) => {
+					(this.formReference.controls.practiceOrProcedure.value.id, departmentId, this.careLineId, this.clinicalSpecialties?.map(clinicalSpecialty => clinicalSpecialty.id)).subscribe((institutions: InstitutionBasicInfoDto[]) => {
 						this.institutions = this.toTypeaheadOptions(institutions, 'name');
 						this.institutionsDisable = false;
 					});
