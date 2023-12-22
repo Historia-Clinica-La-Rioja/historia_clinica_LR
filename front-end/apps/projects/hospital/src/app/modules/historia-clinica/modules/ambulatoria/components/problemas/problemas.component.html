@@ -378,7 +378,7 @@
 															<span>{{reference.careLine}}</span>
 														</div>
 
-														<div fxLayout="column" fxLayoutGap="10px">
+														<div fxLayout="column" fxLayoutGap="10px" *ngIf="reference.clinicalSpecialties.length">
 															<strong
 																[translate]="'ambulatoria.paciente.problemas.historical-problems.SPECIALTY'"></strong>
 															<span *ngFor="let clinicalSpecialty of reference.clinicalSpecialties">{{clinicalSpecialty}}</span>

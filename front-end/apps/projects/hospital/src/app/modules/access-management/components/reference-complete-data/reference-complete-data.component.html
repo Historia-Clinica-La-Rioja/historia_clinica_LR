@@ -55,7 +55,7 @@
                 [position]="Position.COLUMN" [showLegend]="true">
 			</app-identifier-cases>
 
-			<app-identifier-cases
+			<app-identifier-cases *ngIf="clinicalSpecialtiesName.length"
 				[identifierCase]="identiferCases.SPECIALTY" [description]="clinicalSpecialtiesName | stringSeparator" 
 				[position]="Position.COLUMN"
 				[showLegend]="true">
