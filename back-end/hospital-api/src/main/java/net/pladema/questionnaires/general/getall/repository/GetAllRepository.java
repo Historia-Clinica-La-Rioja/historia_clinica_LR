@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import net.pladema.questionnaires.general.getall.domain.QuestionnaireResponseII;
+import net.pladema.questionnaires.common.domain.QuestionnaireResponseII;
 
 @Repository
 public interface GetAllRepository extends JpaRepository<QuestionnaireResponseII, Integer> {

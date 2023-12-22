@@ -1,4 +1,4 @@
-package net.pladema.questionnaires.general.getall.domain;
+package net.pladema.questionnaires.common.domain;
 
 import java.time.LocalDateTime;
 

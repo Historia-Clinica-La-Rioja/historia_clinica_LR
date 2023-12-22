@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import net.pladema.questionnaires.general.getall.domain.QuestionnaireResponseII;
+import net.pladema.questionnaires.common.domain.QuestionnaireResponseII;
 import net.pladema.questionnaires.general.getall.domain.service.GetAllService;
 
 
