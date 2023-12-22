@@ -16,6 +16,7 @@ import { Tabs } from '@turnos/constants/tabs';
 import { TabsService } from '@turnos/services/tabs.service';
 
 const PAGE_MIN_SIZE = 5;
+const ONE_ELEMENT = 1;
 
 @Component({
 	selector: 'app-search-appointments-by-specialty',
@@ -285,12 +286,10 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
 		const { searchCriteria, clinicalSpecialties, practice } = formInformation;
 		this.setCriteria(searchCriteria);
-
 		if (clinicalSpecialties.length) {
-			const specialtyValue = clinicalSpecialties[0].value;
-			this.externalSetValueSpecialty = this.toTypeaheadOption(specialtyValue.name);
-			this.aliasTypeaheadOptions = [this.toTypeaheadOption(specialtyValue.name)];
-			this.setClinicalSpecialty(specialtyValue);
+			this.aliasTypeaheadOptions = clinicalSpecialties.map(specialty => this.toTypeaheadOption(specialty.name));
+			if (this.aliasTypeaheadOptions.length === ONE_ELEMENT)
+				this.externalSetValueSpecialty = this.aliasTypeaheadOptions[0];
 		}
 
 		if (practice) {

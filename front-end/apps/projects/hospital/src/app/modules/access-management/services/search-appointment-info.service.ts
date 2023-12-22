@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CareLineDto, ClinicalSpecialtyDto, ReferenceDataDto, ReferenceSummaryDto, SharedSnomedDto } from '@api-rest/api-model';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
+import { objectToTypeaheadOption } from '@presentation/utils/typeahead.mapper.utils';
 import { SearchCriteria } from '@turnos/components/search-criteria/search-criteria.component';
 
 @Injectable({
@@ -26,7 +27,10 @@ export class SearchAppointmentsInfoService {
 	getSearchAppointmentInfo(): SearchAppointmentInformation {
 		return this.referenceData ? {
 			formInformation: this.getExteralValues(),
-			disabledInput: true,
+			disabledInput: {
+				specialty: this.enableSpecialtyActions(),
+				others: true
+			},
 			referenceCompleteData: this.referenceData,
 			referenceSummary: this.getReferenceSummary(),
 			enableSectionToSearchAppointmentInOtherTab: this.searchAppointmentsInTabs,
@@ -41,8 +45,8 @@ export class SearchAppointmentsInfoService {
 	private getExteralValues(): ExternalSetValues {
 		const practice = this.referenceData.procedure;
 		return {
-			careLine: this.careLineToTypeaheadOption(this.referenceData.careLine),
-			clinicalSpecialties: this.referenceData.destinationClinicalSpecialties.length ? this.specialtyToTypeaheadOption(this.referenceData.destinationClinicalSpecialties) : null,
+			careLine: objectToTypeaheadOption(this.referenceData.careLine, 'description'),
+			clinicalSpecialties: this.referenceData.destinationClinicalSpecialties.length ? this.referenceData.destinationClinicalSpecialties : null,
 			practice,
 			searchCriteria: practice ? SearchCriteria.PRACTICES : SearchCriteria.CONSULTATION
 		}
@@ -58,26 +62,18 @@ export class SearchAppointmentsInfoService {
 		}
 	}
 
-	private careLineToTypeaheadOption(careLine: CareLineDto): TypeaheadOption<CareLineDto> {
-		return {
-			compareValue: careLine.description,
-			value: careLine,
-			viewValue: careLine.description
-		};
+	private enableSpecialtyActions(): boolean {
+		return this.referenceData.destinationClinicalSpecialties.length <= 1
 	}
 
-	private specialtyToTypeaheadOption(specialties: ClinicalSpecialtyDto[]): TypeaheadOption<ClinicalSpecialtyDto>[] {
-		return specialties.map(specialty => ({
-			compareValue: specialty.name,
-			value: specialty,
-			viewValue: specialty.name
-		}));
-	}
 }
 
 export interface SearchAppointmentInformation {
 	formInformation: ExternalSetValues;
-	disabledInput: boolean;
+	disabledInput: {
+		specialty: boolean,
+		others: boolean
+	}
 	referenceCompleteData: ReferenceDataDto;
 	referenceSummary: ReferenceSummaryDto;
 	enableSectionToSearchAppointmentInOtherTab: boolean;
@@ -87,6 +83,6 @@ export interface SearchAppointmentInformation {
 export interface ExternalSetValues {
 	careLine: TypeaheadOption<CareLineDto>;
 	practice: SharedSnomedDto;
-	clinicalSpecialties: TypeaheadOption<ClinicalSpecialtyDto>[];
+	clinicalSpecialties: ClinicalSpecialtyDto[];
 	searchCriteria: SearchCriteria;
 }

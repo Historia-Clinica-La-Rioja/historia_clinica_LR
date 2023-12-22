@@ -19,9 +19,12 @@ import { CareLineInstitutionPracticeService } from '@api-rest/services/care-line
 import { TabsService } from '@turnos/services/tabs.service';
 import { Tabs } from '@turnos/constants/tabs';
 import { SearchAppointmentInformation, SearchAppointmentsInfoService } from '@access-management/services/search-appointment-info.service';
+import { listToTypeaheadOptions } from '@presentation/utils/typeahead.mapper.utils';
 
 const PERIOD_DAYS = 7;
 const PAGE_SIZE_OPTIONS = [5, 10, 25, 100];
+const ONE_ELEMENT = 1;
+
 @Component({
 	selector: 'app-search-appointments-in-care-network',
 	templateUrl: './search-appointments-in-care-network.component.html',
@@ -62,6 +65,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 	initialProvinceTypeaheadOptionSelected: TypeaheadOption<ProvinceDto>;
 	initialDepartmentTypeaheadOptionSelected: TypeaheadOption<DepartmentDto>;
 	initialInstitutionTypeaheadOptionSelected: TypeaheadOption<InstitutionBasicInfoDto>;
+	externalSpecialty: TypeaheadOption<ClinicalSpecialtyDto>;
 
 	protectedAvaibleAppointments: DiaryAvailableProtectedAppointmentsDto[] = [];
 
@@ -258,7 +262,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 
 			const filters: ProtectedAppointmentsFilter = {
 				careLineId: this.searchForm.value.careLine.id,
-				clinicalSpecialtyId: this.searchForm.value.specialty?.id,
+				clinicalSpecialtyIds: [this.searchForm.value.specialty?.id],
 				departmentId: this.searchForm.value.department.id,
 				endSearchDate: endDateString,
 				initialSearchDate: startDateString,
@@ -346,6 +350,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		this.appointmentsCurrentPage = [];
 		this.showSectionToSearchAppointmentsInInstitution = false;
 		this.externalInformation = null;
+		this.externalSpecialty = null;
 	}
 
 	clearForm() {
@@ -481,9 +486,10 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		this.setCriteria(searchCriteria);
 		this.setCareLine(careLine.value);
 
-		if (clinicalSpecialties.length) {
-			this.specialtyTypeaheadOptions = clinicalSpecialties;
-			this.setClinicalSpecialty(clinicalSpecialties[0].value);
+		if (clinicalSpecialties?.length) {
+			this.specialtyTypeaheadOptions = listToTypeaheadOptions(clinicalSpecialties, 'name');
+			if (clinicalSpecialties.length === ONE_ELEMENT)
+				this.externalSpecialty = this.specialtyTypeaheadOptions[0];
 		}
 
 		if (practice) {

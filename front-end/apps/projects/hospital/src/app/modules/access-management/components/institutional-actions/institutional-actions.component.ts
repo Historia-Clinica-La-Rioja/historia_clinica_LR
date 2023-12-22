@@ -11,6 +11,7 @@ import { CancelAppointmentComponent } from '@turnos/dialogs/cancel-appointment/c
 import { TabsService } from '@turnos/services/tabs.service';
 import { take } from 'rxjs';
 import { DashboardView } from '../reference-dashboard-filters/reference-dashboard-filters.component';
+import { ContextService } from '@core/services/context.service';
 
 @Component({
 	selector: 'app-institutional-actions',
@@ -36,6 +37,7 @@ export class InstitutionalActionsComponent {
 		private readonly dashboardService: DashboardService,
 		private readonly tabsService: TabsService,
 		private readonly dialog: MatDialog,
+		private readonly contextService: ContextService,
 	) { }
 
 	assignAppointmentInInstitution(): void {
@@ -65,36 +67,45 @@ export class InstitutionalActionsComponent {
 	}
 
 	private setActions(): void {
-		const appointment = this.refenceCompleteDto.appointment;
-		const canCancelAppointment = appointment?.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED || appointment?.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED;
-		this.setCancelAppointment(canCancelAppointment);
 		if (!this.refenceCompleteDto.reference.closureType) {
-			const assignAppointment = !appointment || appointment?.appointmentStateId === APPOINTMENT_STATES_ID.ABSENT;
-
-			if (assignAppointment)
-				this.permissionService.hasContextAssignments$([ERole.ADMINISTRATIVO])
-					.pipe(take(1))
-					.subscribe(hasRole => hasRole ? this.setAdministrativeActions() : this.setMedicalActions())
+			this.permissionService.hasContextAssignments$([ERole.ADMINISTRATIVO])
+				.pipe(take(1))
+				.subscribe(hasRole => hasRole ? this.setAdministrativeActions() : this.setMedicalActions())
 		}
 	}
 
 	private setAdministrativeActions(): void {
-		const dashboardView = this.dashboardService.dashboardView;
-		const careLineId = this.refenceCompleteDto.reference.careLine.id;
+		const referenceAppointment = this.refenceCompleteDto.appointment;
+		const appointmentInTheLoggedInstitution = this.contextService.institutionId === referenceAppointment?.institution?.id;
+		const assignedAppointment = referenceAppointment?.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED || referenceAppointment?.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED;
+		this.setCancelAppointment(assignedAppointment && appointmentInTheLoggedInstitution);
+		this.setAssingAppointmentActions();
+	}
 
-		if (dashboardView == DashboardView.RECEIVED) {
-			this.setAssignAppointmentInInstitution(true);
-			this.searchAppointmentsInfoService.searchAppointmentsInTabs = !!careLineId;
-		} else if (careLineId) {
-			this.setAssignAppointmentInCareNetwork(true);
-			this.searchAppointmentsInfoService.searchAppointmentsInTabs = false;
+	private setAssingAppointmentActions(): void {
+		if (this.canAssignedAppointment()) {
+			const dashboardView = this.dashboardService.dashboardView;
+			const careLineId = this.refenceCompleteDto.reference.careLine.id;
+
+			if (dashboardView == DashboardView.RECEIVED) {
+				this.setAssignAppointmentInInstitution(true);
+				this.searchAppointmentsInfoService.searchAppointmentsInTabs = !!careLineId;
+			} else if (careLineId) {
+				this.setAssignAppointmentInCareNetwork(true);
+				this.searchAppointmentsInfoService.searchAppointmentsInTabs = false;
+			}
 		}
-
 	}
 
 	private setMedicalActions(): void {
-		if (this.refenceCompleteDto.reference.careLine.id)
+		this.searchAppointmentsInfoService.searchAppointmentsInTabs = false;
+		if (this.refenceCompleteDto.reference.careLine.id && this.canAssignedAppointment())
 			this.setAssignAppointmentInCareNetwork(true);
+	}
+
+	private canAssignedAppointment(): boolean {
+		const appointment = this.refenceCompleteDto.appointment;
+		return !appointment || appointment?.appointmentStateId === APPOINTMENT_STATES_ID.ABSENT;
 	}
 
 	private setCancelAppointment(value: boolean): void {
@@ -117,7 +128,6 @@ export class InstitutionalActionsComponent {
 			assignAppointmentInCareNetwork: value
 		}
 	}
-
 }
 
 export interface InstitutionalActions {

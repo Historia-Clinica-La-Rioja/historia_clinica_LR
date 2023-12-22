@@ -19,7 +19,7 @@
 	</div>
 
 	<app-search-criteria class="padding-bottom" [label]="'turnos.TYPE_ATTENTION'" [searchCriteryStyle]="'bold'"
-		[defaultOption]="selectedTypeAttention" [disabled]="externalInformation?.disabledInput"
+		[defaultOption]="selectedTypeAttention" [disabled]="externalInformation?.disabledInput.others"
 		(selectedOption)="setCriteria($event)"></app-search-criteria>
 
 	<div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column">
@@ -51,8 +51,7 @@
 			<app-typeahead id="specialty"
 				[titleInput]="'turnos.search-appointments-in-care-network.SPECIALTY' | translate"
 				[options]="specialtyTypeaheadOptions" (selectionChange)="setClinicalSpecialty($event)"
-				[externalSetValue]="externalInformation?.formInformation?.clinicalSpecialty"
-				[disabled]="externalInformation?.disabledInput">
+				[externalSetValue]="externalSpecialty" [disabled]="externalInformation?.disabledInput.specialty">
 			</app-typeahead>
 			<div class="error-space">
 				<mat-error *ngIf="showSpecialtyError">{{ 'forms.REQUIRED' | translate }}</mat-error>
@@ -61,7 +60,7 @@
 		<div>
 			<app-typeahead-practices *ngIf="selectedTypeAttention == searchCriteria.PRACTICES"
 				[practices]="practices$ | async" [externalValue]="externalInformation?.formInformation?.practice"
-				[disabled]="externalInformation?.disabledInput" (selectedOption)="setPractice($event)">
+				[disabled]="externalInformation?.disabledInput.others" (selectedOption)="setPractice($event)">
 			</app-typeahead-practices>
 			<div class="error-space">
 				<mat-error *ngIf="showPracticeError">{{ 'forms.REQUIRED' | translate }}</mat-error>

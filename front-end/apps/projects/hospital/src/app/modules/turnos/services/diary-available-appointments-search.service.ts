@@ -77,7 +77,7 @@ export class DiaryAvailableAppointmentsSearchService {
 
 export interface ProtectedAppointmentsFilter {
   careLineId?: number,
-  clinicalSpecialtyId: number,
+  clinicalSpecialtyIds: number[],
   departmentId: number,
   endSearchDate: string,
   initialSearchDate: string,
