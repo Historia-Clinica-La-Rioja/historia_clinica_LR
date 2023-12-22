@@ -142,7 +142,8 @@ public class BackofficeUserRolesStore implements BackofficeStore<UserRole, Long>
 				ERole.PROFESIONAL_DE_SALUD.getId().equals(roleId) ||
 				ERole.ESPECIALISTA_EN_ODONTOLOGIA.getId().equals(roleId) ||
 				ERole.VIRTUAL_CONSULTATION_PROFESSIONAL.getId().equals(roleId) ||
-				ERole.VIRTUAL_CONSULTATION_RESPONSIBLE.getId().equals(roleId);
+				ERole.VIRTUAL_CONSULTATION_RESPONSIBLE.getId().equals(roleId) ||
+				ERole.ABORDAJE_VIOLENCIAS.getId().equals(roleId);
 	}
 
 	@Override
