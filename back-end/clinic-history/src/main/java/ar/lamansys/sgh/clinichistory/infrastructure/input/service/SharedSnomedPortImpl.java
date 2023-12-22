@@ -53,15 +53,6 @@ public class SharedSnomedPortImpl implements SharedSnomedPort {
 		return new SharedSnomedDto(result.getSctid(), result.getPt(), result.getParentId(),result.getParentFsn());
 	}
 
-	@Override
-	public Integer getSnomedIdByTerm(String sctid, String pt) {
-		log.debug("Input parameter -> snomed sctid {}", sctid);
-		Optional<Integer> opResult = snomedService.getSnomedId(new SnomedBo(sctid,pt));
-		Integer result = opResult.orElse(null);
-		log.debug("Output -> {}", result);
-		return result;
-	}
-
 	private List<SnomedBo> mapToSnomedBoList(List<SharedSnomedDto> concepts) {
         return concepts.stream()
                 .map(this::mapToSnomedBo)

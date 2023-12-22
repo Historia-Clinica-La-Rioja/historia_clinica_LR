@@ -930,6 +930,13 @@ const messages = {
                 description: 'Nombre de estudio',
                 associatedPractices: 'Prácticas asociadas'
             },
+        },
+        proceduretemplatesnomeds: {
+            name: 'Prácticas asociadas',
+            fields: {
+            },
+            addRelated: 'Asociar práctica',
+            deleteRelated: 'Desasociar práctica',
         }
     }
 };

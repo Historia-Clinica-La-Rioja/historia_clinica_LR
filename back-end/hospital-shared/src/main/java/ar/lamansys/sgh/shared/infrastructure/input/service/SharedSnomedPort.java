@@ -10,5 +10,4 @@ public interface SharedSnomedPort {
 
 	SharedSnomedDto getSnomed(Integer id);
 
-	Integer getSnomedIdByTerm(String sctid, String pt);
 }

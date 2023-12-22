@@ -19,10 +19,10 @@ public class BackofficeProcedureTemplateSnomedController extends AbstractBackoff
 
 	BackofficeProcedureTemplateStore procedureTemplateStore;
 
-	public BackofficeProcedureTemplateSnomedController(BackofficeProcedureTemplateStore repository,
+	public BackofficeProcedureTemplateSnomedController(BackofficeProcedureTemplateStore store,
 													   BackofficeProcedureTemplateSnomedValidator procedureTemplateSnomedValidator) {
-		super(repository,procedureTemplateSnomedValidator);
-		this.procedureTemplateStore = repository;
+		super(store, procedureTemplateSnomedValidator);
+		this.procedureTemplateStore = store;
 	}
 
 	@DeleteMapping("/{id}/{snomedId}")

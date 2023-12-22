@@ -44,7 +44,7 @@ public class BackofficeProcedureTemplateValidator implements BackofficePermissio
 
 	@Override
 	public void assertCreate(ProcedureTemplate entity) {
-		assertNotExists(entity);
+		assertIdIsNull(entity);
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return;
 	}
@@ -76,9 +76,9 @@ public class BackofficeProcedureTemplateValidator implements BackofficePermissio
 		return new ItemsAllowed<>(false, Collections.emptyList());
 	}
 
-	private void assertNotExists(ProcedureTemplate procedureTemplate) {
-		if (repository.existsById(procedureTemplate.getId())) {
-			throw new BackofficeValidationException("Ya existe un procedure template con ese id.");
+	private void assertIdIsNull(ProcedureTemplate procedureTemplate) {
+		if (procedureTemplate.getId() != null) {
+			throw new BackofficeValidationException("El campo id debe ser vacío");
 		}
 	}
 

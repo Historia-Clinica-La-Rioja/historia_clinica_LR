@@ -1,5 +1,6 @@
 package net.pladema.procedure.infrastructure.input.rest;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedPort;
 import lombok.AllArgsConstructor;
 import net.pladema.procedure.domain.SnomedPracticeVo;
@@ -96,9 +97,10 @@ public class BackofficeProcedureTemplateStore implements BackofficeStore<Procedu
 		if ((entity.getId() != null) && (procedureTemplateRepository.existsById(entity.getId())))
 			if (entity.getAssociatedPractices() != null)
 				for (SnomedPracticeDto associatedPractice : entity.getAssociatedPractices()) {
-					Integer snomedId = sharedSnomedPort.getSnomedIdByTerm(associatedPractice.getSctid(), associatedPractice.getPt());
-					if (snomedId != null && !procedureTemplateSnomedRepository.existsById(new ProcedureTemplateSnomedPK(entity.getId(), snomedId)))
-						procedureTemplateSnomedRepository.save(new ProcedureTemplateSnomed(entity.getId(), snomedId));
+					var conceptId = associatedPractice.getId();
+					SharedSnomedDto concept = sharedSnomedPort.getSnomed(conceptId);
+					if (concept != null && !procedureTemplateSnomedRepository.existsById(new ProcedureTemplateSnomedPK(entity.getId(), conceptId)))
+						procedureTemplateSnomedRepository.save(new ProcedureTemplateSnomed(entity.getId(), conceptId));
 				}
 		return entity;
 	}
