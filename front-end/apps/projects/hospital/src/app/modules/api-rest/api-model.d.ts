@@ -3585,8 +3585,7 @@ export interface ReferenceReportDto {
 export interface ReferenceRequestDto extends Serializable {
     careLineDescription: string;
     careLineId: number;
-    clinicalSpecialtyId: number;
-    clinicalSpecialtyName: string;
+    clinicalSpecialties: string[];
     closureDateTime: DateTimeDto;
     closureTypeDescription: string;
     closureTypeId: number;

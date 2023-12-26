@@ -41,7 +41,8 @@ export class ReferenceStudyCloseComponent implements OnInit {
 	ngOnInit() {
 			this.formReferenceClosure = this.formBuilder.group({
 				closureType: [null, [Validators.required]],
-				description: [null, [Validators.required]]
+				description: [null, [Validators.required]],
+				clinicalSpecialtyId: [null]
 			}) as FormGroup & ReferenceClosureForm;
 
 		this.closureTypes$ = this.referenceMasterDataService.getClosureTypes().pipe(
@@ -95,7 +96,7 @@ export class ReferenceStudyCloseComponent implements OnInit {
 			observations: this.formReferenceClosure.value.description,
 			referenceClosure: {
 				referenceId: this.reference.id,
-				clinicalSpecialtyId: this.reference.clinicalSpecialtyId,
+				clinicalSpecialtyId: this.formReferenceClosure.value.clinicalSpecialtyId,
 				counterReferenceNote: this.formReferenceClosure.value.description,
 				fileIds: [],
 				closureTypeId: this.formReferenceClosure.value.closureType.id

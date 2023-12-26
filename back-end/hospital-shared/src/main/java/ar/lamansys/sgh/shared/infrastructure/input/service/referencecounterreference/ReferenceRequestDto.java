@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,15 +19,23 @@ public class ReferenceRequestDto implements Serializable {
 	private static final long serialVersionUID = -1284231271112634238L;
 
 	private Integer id;
-	private Integer clinicalSpecialtyId;
-	private String clinicalSpecialtyName;
+
+	private List<String> clinicalSpecialties;
+
 	private Integer careLineId;
+
 	private String careLineDescription;
+
 	private String priority;
+
 	private String observation;
+
 	private Short closureTypeId;
+
 	private String closureTypeDescription;
+
 	private DateTimeDto closureDateTime;
+
 	private ProfessionalCompleteDto professionalInfo;
 
 }

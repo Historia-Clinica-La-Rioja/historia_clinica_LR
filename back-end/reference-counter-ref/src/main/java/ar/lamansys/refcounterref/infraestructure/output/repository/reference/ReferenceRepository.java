@@ -258,10 +258,9 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 	void deleteById(@Param("id") @NonNull Integer id);
 	
 	@Transactional(readOnly = true)
-	@Query("SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo(r.id, cs.id, cs.name, cl.id, cl.description, r.priority, rn.description, cr.closureTypeId, cr.creationable.createdOn, cr.doctorId) " +
+	@Query("SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo(r.id, cl.id, cl.description, " +
+			"r.priority, rn.description, cr.closureTypeId, cr.creationable.createdOn, cr.doctorId) " +
 			"FROM Reference r " +
-			"LEFT JOIN ReferenceClinicalSpecialty rcs ON (rcs.pk.referenceId = r.id) " +
-			"LEFT JOIN ClinicalSpecialty cs ON (rcs.pk.clinicalSpecialtyId = cs.id) " +
 			"LEFT JOIN CareLine cl ON (r.careLineId = cl.id) " +
 			"LEFT JOIN ReferenceNote rn ON (r.referenceNoteId = rn.id) " +
 			"LEFT JOIN CounterReference cr ON (cr.referenceId = r.id) " +
