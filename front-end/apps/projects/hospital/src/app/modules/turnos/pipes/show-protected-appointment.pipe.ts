@@ -18,9 +18,12 @@ export class ShowProtectedAppointmentPipe implements PipeTransform {
 		if (protectedAppointments[1])
             typesOfProtectedAppointments.push(this.translate.instant('turnos.appointment-event.PROTECTED_APPOINTMENT_WEB'));
 
-        if(!protectedAppointments[0] && !protectedAppointments[1])
+		if (protectedAppointments[2])
+            typesOfProtectedAppointments.push(this.translate.instant('turnos.appointment-event.PROTECTED_APPOINTMENT_REGULATION'));
+
+        if(!protectedAppointments[0] && !protectedAppointments[1] && !protectedAppointments[2])
             typesOfProtectedAppointments.push(this.translate.instant('turnos.appointment-event.NO_PROTECTED_APPOINTMENT'));
-        
+
         return typesOfProtectedAppointments.join(', ');
 	}
 

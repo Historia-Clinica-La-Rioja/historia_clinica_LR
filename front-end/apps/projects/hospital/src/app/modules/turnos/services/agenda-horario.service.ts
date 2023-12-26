@@ -112,10 +112,12 @@ export class AgendaHorarioService {
 					patientVirtualAttentionAllowed: !!event.meta.patientVirtualAttentionAllowed,
 					secondOpinionVirtualAttentionAllowed: !!event.meta.secondOpinionVirtualAttentionAllowed,
 					onSiteAttentionAllowed: true,
-					diaryType: this.diaryType
+					diaryType: this.diaryType,
+					regulationProtectedAppointmentsAllowed: !!event.meta.regulationProtectedAppointmentsAllowed,
 				},
 				maxHeight: 'fit-content',
 				autoFocus: false,
+				height: '95%'
 			});
 		dialogRef.afterClosed().subscribe(dialogInfo => {
 			if (!dialogInfo) {
@@ -171,7 +173,8 @@ export class AgendaHorarioService {
 						patientVirtualAttentionAllowed: !!event.meta.patientVirtualAttentionAllowed,
 						secondOpinionVirtualAttentionAllowed: !!event.meta.secondOpinionVirtualAttentionAllowed,
 						onSiteAttentionAllowed: !!event.meta.onSiteAttentionAllowed,
-						diaryType: this.diaryType
+						diaryType: this.diaryType,
+						regulationProtectedAppointmentsAllowed: !!event.meta.regulationProtectedAppointmentsAllowed,
 					},
 					maxHeight: 'fit-content',
 					autoFocus: false,
@@ -253,6 +256,7 @@ export class AgendaHorarioService {
 				patientVirtualAttentionAllowed: event.meta.patientVirtualAttentionAllowed,
 				secondOpinionVirtualAttentionAllowed: event.meta.secondOpinionVirtualAttentionAllowed,
 				onSiteAttentionAllowed: event.meta.onSiteAttentionAllowed,
+				regulationProtectedAppointmentsAllowed: event.meta.regulationProtectedAppointmentsAllowed
 			};
 		}
 	}
@@ -296,6 +300,7 @@ export class AgendaHorarioService {
 				patientVirtualAttentionAllowed: diaryOpeningHour.patientVirtualAttentionAllowed,
 				secondOpinionVirtualAttentionAllowed: diaryOpeningHour.secondOpinionVirtualAttentionAllowed,
 				onSiteAttentionAllowed: diaryOpeningHour.onSiteAttentionAllowed,
+				regulationProtectedAppointmentsAllowed: diaryOpeningHour.regulationProtectedAppointmentsAllowed
 			}
 
 		};

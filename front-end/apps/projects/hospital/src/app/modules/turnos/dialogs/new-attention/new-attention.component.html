@@ -112,6 +112,13 @@
 						</span>
 					</mat-checkbox>
 				</div>
+				<div *ngIf="isEnableReportReference">
+					<mat-checkbox (change)="changeAvailbleProtectedByRegulation()" [checked]="form.value.regulationProtectedAppointmentsAllowed">
+						<span>
+							{{'turnos.agenda-setup.dialog.SERVES_SHIFTS_PROTECTED_BY_REGULATION' | translate}}
+						</span>
+					</mat-checkbox>
+				</div>
 				<div>
 					<mat-checkbox (change)="changeAvailableForBooking()" [disabled]="!isEnableOnlineAppointments"
 						[checked]="form.value.availableForBooking">

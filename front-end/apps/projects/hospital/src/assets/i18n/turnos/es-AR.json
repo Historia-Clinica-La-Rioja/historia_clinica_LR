@@ -121,6 +121,7 @@
 				"TAKE_SHIFTS_TITLE": "Turnos Protegidos",
 				"ATTENDS_FACE_TO_FACE": "Atiende presencial",
 				"TAKE_PROTECTED_ONLINE": "Atiende turnos protegidos por linea de cuidado",
+				"SERVES_SHIFTS_PROTECTED_BY_REGULATION": "Atiende turnos protegidos por regulación",
 				"ATTEND_ONLINE": "Atiende turnos online",
 				"ATTEND_SHIFTS_PROTECTED_BY_LINES_OF_CARE": "Atiende turnos protegidos por líneas de cuidado",
 				"ERROR": "No se puede destildar esta opción porque hay turno asignados de este tipo",
