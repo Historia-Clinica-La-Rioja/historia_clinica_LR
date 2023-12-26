@@ -262,7 +262,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 
 			const filters: ProtectedAppointmentsFilter = {
 				careLineId: this.searchForm.value.careLine.id,
-				clinicalSpecialtyIds: [this.searchForm.value.specialty?.id],
+				clinicalSpecialtyIds: this.searchForm.value.specialty?.id ? [this.searchForm.value.specialty.id] : null,
 				departmentId: this.searchForm.value.department.id,
 				endSearchDate: endDateString,
 				initialSearchDate: startDateString,
