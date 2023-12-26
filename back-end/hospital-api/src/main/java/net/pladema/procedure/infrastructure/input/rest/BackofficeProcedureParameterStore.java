@@ -92,6 +92,7 @@ public class BackofficeProcedureParameterStore implements BackofficeStore<Proced
 
 	@Override
 	public ProcedureParameterDto save(ProcedureParameterDto entity) {
+		ProcedureParameter entitySaved;
 		if (entity.getId() != null) {
 			Optional<ProcedureParameter> opProcedureParameter = procedureParameterRepository.findById(entity.getId());
 			if (opProcedureParameter.isPresent()) {
@@ -128,11 +129,9 @@ public class BackofficeProcedureParameterStore implements BackofficeStore<Proced
 			}
 		} else {
 			List<Short> orders = procedureParameterRepository.getLastOrderParameterFromProcedureTemplateId(entity.getProcedureTemplateId());
-			if (orders.isEmpty())
-				entity.setOrderNumber((short) 1);
-			else
-				entity.setOrderNumber((short) (orders.get(0)+1));
-			var entitySaved = procedureParameterRepository.save(mapDtoToEntity(entity));
+			if (orders.isEmpty()) entity.setOrderNumber((short) 1);
+			else entity.setOrderNumber((short) (orders.get(0) + 1));
+			entitySaved = procedureParameterRepository.save(mapDtoToEntity(entity));
 			if (entity.getTypeId().equals(ProcedureParameterType.NUMERIC))
 				if (entity.getUnitsOfMeasureIds().size() >= entity.getInputCount())
 					for (Integer unitsOfMeasureId : entity.getUnitsOfMeasureIds())
@@ -144,8 +143,10 @@ public class BackofficeProcedureParameterStore implements BackofficeStore<Proced
 					procedureParameterTextOption.setProcedureParameterId(entitySaved.getId());
 					procedureParameterTextOptionRepository.save(procedureParameterTextOption);
 				}
+			//ecls
+			return this.findById(entitySaved.getId()).get();
 		}
-		return entity;
+		return null;
 	}
 
 	private void updateTextOptions(ProcedureParameterDto entity) {

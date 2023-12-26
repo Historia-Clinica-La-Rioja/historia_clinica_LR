@@ -933,7 +933,8 @@ const messages = {
             name: 'Resultados de estudios',
             fields: {
                 description: 'Nombre de estudio',
-                associatedPractices: 'Prácticas asociadas'
+                associatedPractices: 'Prácticas asociadas',
+                associatedParameters: 'Parámetros asociados'
             },
         },
         proceduretemplatesnomeds: {
@@ -960,6 +961,33 @@ const messages = {
                 code: 'Unidad',
                 enabled: 'Disponible en sistema'
             },
+        },
+        proceduretemplateparameters: {
+            name: 'Parametros asociados',
+            fields: {
+                loincId: 'Código LOINC',
+                description: 'Descripción',
+                typeId: 'Tipo de parámetro',
+                order: 'Orden',
+                unitsOfMeasure: 'Unidades de medida',
+                inputCount: 'Cantidad de valores a ingresar',
+                eclId: 'ECL',
+                option: 'Opción',
+                textOptions: 'Opciones'
+            },
+            typeChoices: {
+                numeric: 'Numérico',
+                options: 'Lista de opciones',
+                snomed: 'SNOMED (ECL)',
+                text: 'Texto libre'
+            },
+            errors: {
+                inputCountLte0: 'El número de valores a ingresar debe ser mayor a 0',
+                inputCountGtUomCount: 'La cantidad de valores a ingresar debe ser menor o igual al número de unidades de medida',
+                optionsMinLength: 'El número de opciones debe ser mayor o igual a 2'
+            },
+            addRelated: 'Asociar parámetro',
+            deleteRelated: 'Desasociar parámetro'
         }
     }
 };

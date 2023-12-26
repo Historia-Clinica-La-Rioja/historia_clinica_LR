@@ -1,0 +1,107 @@
+import React, {Fragment} from 'react';
+import {
+    TextField,
+    useRecordContext,
+    Datagrid,
+    ReferenceField,
+    DeleteButton,
+    ReferenceManyField,
+    FunctionField,
+    SingleFieldList,
+    ChipField,
+    SelectField,
+    ReferenceArrayField
+} from 'react-admin';
+import SectionTitle from '../components/SectionTitle';
+import CreateRelatedButton from '../components/CreateRelatedButton';
+import { TYPE_CHOICES_IDS } from '../proceduretemplateparameters/parameter-type';
+
+const AddParameter = ({ record }) => {
+    if (!record) return null;
+    return record ? ( <CreateRelatedButton
+            customRecord={{procedureTemplateId: record.id}}
+            record={{procedureTemplateId: record.id}}
+            reference="proceduretemplateparameters"
+            refFieldName="otroVal"
+            label="resources.proceduretemplateparameters.addRelated"
+            />
+    ) : null;
+  
+};
+
+const DeleteParameter = ({procedureTemplateId, ...props}) => {
+    const record = useRecordContext(props);
+    if (!record || !procedureTemplateId) return null;
+    return (<DeleteButton
+        redirect={false} 
+        basePath=""
+        record={{id: `${procedureTemplateId}/${record.id}`}}
+        resource={'proceduretemplatesnomeds'}
+        undoable={false}
+        confirmTitle='resources.proceduretemplateparameters.deleteRelated'
+    />);
+}
+
+const AssociatedParametersDataGrid = (props) => {
+    return (
+        <ReferenceManyField
+        addLabel={false}
+        reference="proceduretemplateparameters"
+        target="templateParameterId"
+        sort={{ field: 'orderNumber', order: 'ASC' }}
+        >
+            <Datagrid rowClick={'edit'} empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin parámetros asociados</p>}>
+                
+                {/**
+                 * Description
+                */}
+                <ReferenceField
+                    source="loincId"
+                    reference="loinc-codes"
+                    link={false}
+                    label='resources.proceduretemplateparameters.fields.description'
+                >
+                    <FunctionField render={(x) => x?.customDisplayName || x?.displayName || x?.description || ''} />
+                </ReferenceField>
+
+                {/**
+                 * LOINC Code
+                */}
+                <ReferenceField
+                    source="loincId"
+                    reference="loinc-codes"
+                    link={false}
+                >
+                    <TextField source="code"/>
+                </ReferenceField>
+
+                {/**
+                 * Type
+                */}
+                <SelectField source='typeId' choices={TYPE_CHOICES_IDS} />
+
+                {/**
+                 * Units of measure
+                */}
+                <ReferenceArrayField label="resources.proceduretemplateparameters.fields.unitsOfMeasure" reference="units-of-measure" source="unitsOfMeasureIds">
+                    <SingleFieldList>
+                        <ChipField source="code" />
+                    </SingleFieldList>
+                </ReferenceArrayField>
+                <DeleteParameter/>
+
+            </Datagrid>
+        </ReferenceManyField>
+    );
+
+}
+
+export const AssociatedParameters = (props) => {
+    return (
+            <Fragment>
+                <SectionTitle label="resources.proceduretemplates.fields.associatedParameters"/>
+                <AddParameter {...props} />
+                <AssociatedParametersDataGrid/>
+            </Fragment>
+        );
+}

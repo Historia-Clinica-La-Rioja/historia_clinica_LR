@@ -85,6 +85,7 @@ import procedureTemplates from './proceduretemplate';
 import procedureTemplateSnomeds from './proceduretemplatesnomeds';
 import loincCodes from './loinc-codes';
 import unitsOfMeasure from './units-of-measure';
+import procedureTemplateParameters from './proceduretemplateparameters'; 
 
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
@@ -185,6 +186,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="loinc-statuses" />,
     <Resource name="loinc-systems" />,
     <Resource name="units-of-measure" {...unitsOfMeasure(permissions)} />,
+    <Resource name="proceduretemplateparameters" {...procedureTemplateParameters(permissions)} />,
     
     // more
     <Resource name="identificationTypes" />,
