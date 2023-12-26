@@ -52,9 +52,6 @@ public class ReferenceReportFilterBo {
 	private Integer managerUserId;
 
 	@Nullable
-	private Integer loggedUserId;
-
-	@Nullable
 	private List<Short> loggedUserRoleIds;
 
 }
