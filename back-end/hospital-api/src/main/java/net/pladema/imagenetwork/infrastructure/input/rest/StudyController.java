@@ -40,7 +40,7 @@ public class StudyController {
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, INFORMADOR, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
 	public ResponseEntity<PacsListDto> getPACS(@PathVariable Integer institutionId, @PathVariable String studyInstanceUID) {
 		log.trace("Input -> institutionId '{}' studyInstanceUID '{}'", institutionId, studyInstanceUID);
-		PacsListBo pacsListBo = getPacWhereStudyIsHosted.run(studyInstanceUID, true);
+		PacsListBo pacsListBo = getPacWhereStudyIsHosted.run(studyInstanceUID, false);
 		PacsListDto result = imageNetworkMapper.toPacsUrlDto(pacsListBo);
 		log.trace("Output -> {}", result);
 		return ResponseEntity.ok().body(result);
