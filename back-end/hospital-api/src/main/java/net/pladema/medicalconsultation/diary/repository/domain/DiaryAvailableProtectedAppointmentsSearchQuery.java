@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.diary.repository.domain;
 
 import ar.lamansys.sgx.shared.repositories.QueryPart;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import net.pladema.address.controller.service.domain.DepartmentBo;
 import net.pladema.establishment.service.domain.ClinicalSpecialtyBo;
 import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 
 @NoArgsConstructor
+@Setter
 public class DiaryAvailableProtectedAppointmentsSearchQuery {
 
 	private Integer careLineId;
@@ -27,6 +29,8 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 	private Integer institutionId;
 	private Boolean includeNameSelfDetermination;
 	private Integer practiceId;
+	private Boolean regulationProtected = false;
+
 
 	public DiaryAvailableProtectedAppointmentsSearchQuery(DiaryProtectedAppointmentsSearch diaryProtectedAppointmentsSearch) {
 		this.careLineId = diaryProtectedAppointmentsSearch.getCareLineId();
@@ -35,6 +39,7 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 		this.institutionId = diaryProtectedAppointmentsSearch.getInstitutionId();
 		this.includeNameSelfDetermination = diaryProtectedAppointmentsSearch.getIncludeNameSelfDetermination();
 		this.practiceId = diaryProtectedAppointmentsSearch.getPracticeId();
+		this.regulationProtected = diaryProtectedAppointmentsSearch.getRegulationProtected();
 	}
 
 	public QueryPart select() {
@@ -72,7 +77,7 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 				" 	LEFT JOIN {h-schema}clinical_specialty cs ON (d.clinical_specialty_id = cs.id) " +
 				" 	JOIN {h-schema}healthcare_professional hp ON (d.healthcare_professional_id = hp.id) " +
 				" 	JOIN {h-schema}person p ON (hp.person_id = p.id) " +
-				"	JOIN {h-schema}diary_care_line dcl on (d.id = dcl.diary_id) " +
+				"	LEFT JOIN {h-schema}diary_care_line dcl on (d.id = dcl.diary_id) " +
 				"	JOIN {h-schema}diary_opening_hours doh on (d.id = doh.diary_id) ";
 
 		if (includeNameSelfDetermination)
@@ -86,11 +91,11 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 
 	public QueryPart where() {
 		String whereClause = " dpt.id = " + this.departmentId +
-				" AND doh.protected_appointments_allowed = true" +
 				" AND d.active = true " +
-				" AND d.end_date >= CURRENT_DATE" +
-				" AND dcl.care_line_id = " + this.careLineId +
-				" AND dcl.deleted = false ";
+				" AND d.end_date >= CURRENT_DATE";
+
+		if (this.careLineId != null)
+			whereClause = whereClause + " AND dcl.care_line_id = " + this.careLineId + " AND dcl.deleted = false ";
 
 		if (this.institutionId != null)
 			whereClause = whereClause + " AND i.id = " + this.institutionId;
@@ -101,8 +106,11 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 		if (practiceId != null) {
 			whereClause = whereClause + " AND dp.snomed_id = " + this.practiceId +
 							"AND (dp.deleted = false OR dp.deleted IS NULL) ";
-
 		}
+		if (regulationProtected)
+			whereClause = whereClause + " AND doh.regulation_protected_appointments_allowed = true";
+		else
+			whereClause = whereClause + " AND doh.protected_appointments_allowed = true";
 
 		return new QueryPart(whereClause);
 	}

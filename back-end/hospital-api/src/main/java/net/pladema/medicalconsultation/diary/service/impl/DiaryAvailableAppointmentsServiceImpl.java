@@ -33,9 +33,11 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -69,11 +71,14 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 	private final DiaryCareLineService diaryCareLineService;
 
 	private final ClinicalSpecialtyRepository clinicalSpecialtyRepository;
+	
+	private final static Integer NO_INSTITUTION = -1;
+
 
 	@Override
 	public List<DiaryAvailableProtectedAppointmentsBo> getAvailableProtectedAppointmentsBySearchCriteria(DiaryProtectedAppointmentsSearch searchCriteria,
 																										 Integer institutionId) {
-		log.debug("Input parameter -> diaryProtectedAppointmentsSearch {}", searchCriteria);
+	log.debug("Input parameter -> diaryProtectedAppointmentsSearch {}", searchCriteria);
 
 		if (featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS))
 			searchCriteria.setIncludeNameSelfDetermination(true);
@@ -99,8 +104,11 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 		return result;
 	}
 
-	private boolean filterByTypeAndModality(DiaryProtectedAppointmentsSearch searchCriteria, DiaryOpeningHoursBo doh) {
-		return doh.getProtectedAppointmentsAllowed() != null && doh.getProtectedAppointmentsAllowed() &&
+ 	private boolean filterByTypeAndModality(DiaryProtectedAppointmentsSearch searchCriteria, DiaryOpeningHoursBo doh) {
+		return (
+				(doh.getProtectedAppointmentsAllowed() != null && doh.getProtectedAppointmentsAllowed()) ||
+				(searchCriteria.getRegulationProtected() && doh.getRegulationProtectedAppointmentsAllowed() != null && doh.getRegulationProtectedAppointmentsAllowed())
+				) &&
 				(
 						(searchCriteria.getModality().equals(EAppointmentModality.ON_SITE_ATTENTION) && doh.getOnSiteAttentionAllowed()) ||
 						(searchCriteria.getModality().equals(EAppointmentModality.PATIENT_VIRTUAL_ATTENTION) && doh.getPatientVirtualAttentionAllowed()) ||
@@ -190,9 +198,13 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 																					  LocalDate day,
 																					  Collection<AppointmentBo> assignedAppointments,
 																					  Integer institutionId) {
-		LocalDateTime currentDateTime = dateTimeProvider.nowDateTimeWithZone(institutionExternalService.getTimezone(institutionId));
-		int currentDayOfWeek = day.getDayOfWeek().getValue() == WEEK_DAY_NUMBER ? 0 : day.getDayOfWeek().getValue();
+		LocalDateTime currentDateTime;
+		if(institutionId == NO_INSTITUTION)
+			currentDateTime = dateTimeProvider.nowDateTimeWithZone(ZonedDateTime.now().getZone());
+		else
+			currentDateTime = dateTimeProvider.nowDateTimeWithZone(institutionExternalService.getTimezone(institutionId));
 
+		int currentDayOfWeek = day.getDayOfWeek().getValue() == WEEK_DAY_NUMBER ? 0 : day.getDayOfWeek().getValue();
 		List<DiaryAvailableProtectedAppointmentsBo> result = new ArrayList<>();
 		Map<Integer, List<LocalTime>> availableAppointmentTimes = potentialAppointmentTimesByDay.get((short) currentDayOfWeek);
 		if (availableAppointmentTimes != null) {

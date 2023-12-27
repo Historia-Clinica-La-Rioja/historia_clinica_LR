@@ -22,7 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 public class DiaryProtectedAppointmentsSearch {
 
-	@NotNull
+	@Nullable
 	private Integer careLineId;
 
 	@Nullable
@@ -49,4 +49,20 @@ public class DiaryProtectedAppointmentsSearch {
 	@Nullable
 	private Integer practiceId;
 
+	private Boolean regulationProtected = false;
+
+	public DiaryProtectedAppointmentsSearch(Integer careLineId, List<Integer> clinicalSpecialtyIds, Integer departmentId,
+											Integer institutionId, LocalDate initialSearchDate, LocalDate endSearchDate,
+											Boolean includeNameSelfDetermination, EAppointmentModality modality, Integer practiceId) {
+		this.careLineId = careLineId;
+		this.clinicalSpecialtyIds = clinicalSpecialtyIds;
+		this.departmentId = departmentId;
+		this.institutionId = institutionId;
+		this.initialSearchDate = initialSearchDate;
+		this.endSearchDate = endSearchDate;
+		this.includeNameSelfDetermination = includeNameSelfDetermination;
+		this.modality = modality;
+		this.practiceId = practiceId;
+	}
+	
 }

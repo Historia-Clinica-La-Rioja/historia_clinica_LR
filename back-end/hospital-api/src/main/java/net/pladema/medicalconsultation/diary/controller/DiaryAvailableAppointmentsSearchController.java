@@ -46,13 +46,16 @@ public class DiaryAvailableAppointmentsSearchController {
 	private final DiaryMapper diaryMapper;
 	private final DiaryAvailableAppointmentsService diaryAvailableAppointmentsService;
 	private final ObjectMapper jackson;
+	private final static Integer NO_INSTITUTION = -1;
+
 
 	@GetMapping("/protected")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA') || hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
 	public ResponseEntity<List<DiaryAvailableProtectedAppointmentsDto>> getAvailableProtectedAppointments(@PathVariable(name = "institutionId") Integer institutionId,
 																										  @RequestParam String diaryProtectedAppointmentsSearch) {
 		log.debug("Get all available protected appointments by filters {}, ", diaryProtectedAppointmentsSearch);
-		List<DiaryAvailableProtectedAppointmentsBo> diaryAvailableProtectedAppointmentsBoList = diaryAvailableAppointmentsService.getAvailableProtectedAppointmentsBySearchCriteria(parseFilter(diaryProtectedAppointmentsSearch), institutionId);
+		DiaryProtectedAppointmentsSearch filter = parseFilter(diaryProtectedAppointmentsSearch, institutionId);
+		List<DiaryAvailableProtectedAppointmentsBo> diaryAvailableProtectedAppointmentsBoList = diaryAvailableAppointmentsService.getAvailableProtectedAppointmentsBySearchCriteria(filter, institutionId);
 		List<DiaryAvailableProtectedAppointmentsDto> result = diaryAvailableProtectedAppointmentsBoList.stream().map(diaryMapper::toDiaryAvailableProtectedAppointmentsDto).collect(Collectors.toList());
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
@@ -109,10 +112,12 @@ public class DiaryAvailableAppointmentsSearchController {
 		return ResponseEntity.ok(result);
 	}
 
-	private DiaryProtectedAppointmentsSearch parseFilter(String diaryProtectedAppointmentsSearch) {
+	private DiaryProtectedAppointmentsSearch parseFilter(String diaryProtectedAppointmentsSearch, Integer institutionId) {
 		DiaryProtectedAppointmentsSearch searchFilter = null;
 		try {
 			searchFilter = jackson.readValue(diaryProtectedAppointmentsSearch, DiaryProtectedAppointmentsSearch.class);
+			if (institutionId == NO_INSTITUTION)
+				searchFilter.setRegulationProtected(true);
 		} catch (IOException e) {
 			log.error(String.format("Error mapping filter: %s", diaryProtectedAppointmentsSearch), e);
 		}
