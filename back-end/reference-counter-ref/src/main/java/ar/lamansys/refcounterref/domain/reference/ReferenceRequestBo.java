@@ -1,5 +1,6 @@
 package ar.lamansys.refcounterref.domain.reference;
 
+import ar.lamansys.refcounterref.domain.clinicalspecialty.ClinicalSpecialtyBo;
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import ar.lamansys.refcounterref.domain.enums.EReferencePriority;
 import lombok.Getter;
@@ -18,7 +19,7 @@ public class ReferenceRequestBo {
 
 	private Integer id;
 
-	private List<String> clinicalSpecialties;
+	private List<ClinicalSpecialtyBo> clinicalSpecialties;
 
 	private Integer careLineId;
 

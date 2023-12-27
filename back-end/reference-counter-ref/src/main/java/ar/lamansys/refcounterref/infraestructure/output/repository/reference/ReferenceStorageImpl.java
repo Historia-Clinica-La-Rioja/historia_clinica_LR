@@ -196,11 +196,10 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 	@Override
 	public Optional<ReferenceRequestBo> getReferenceByServiceRequestId(Integer serviceRequestId){
 		log.debug("Input parameters -> serviceRequestId {} ", serviceRequestId);
-		var ref =  referenceRepository.getReferenceByServiceRequestId(serviceRequestId);
-		ref.ifPresent(r -> r.setClinicalSpecialties(referenceClinicalSpecialtyRepository.getClinicalSpecialtiesByReferenceId(r.getId())
-				.stream()
-				.map(ClinicalSpecialtyBo::getName)
-				.collect(Collectors.toList())));
+		Optional<ReferenceRequestBo> ref =  referenceRepository.getReferenceByServiceRequestId(serviceRequestId);
+		ref.ifPresent(r ->
+				r.setClinicalSpecialties(referenceClinicalSpecialtyRepository.getClinicalSpecialtiesByReferenceId(r.getId())
+		));
 		return ref;
 	}
 

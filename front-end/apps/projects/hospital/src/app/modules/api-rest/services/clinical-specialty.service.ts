@@ -43,7 +43,7 @@ export class ClinicalSpecialtyService {
 
 	getLoggedInProfessionalClinicalSpecialties(): Observable<ClinicalSpecialtyDto[]> {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinicalspecialty/loggedProfessionalClinicalSpecialty`;
-		return this.http.get<any[]>(url);
+		return this.http.get<ClinicalSpecialtyDto[]>(url);
 	}
 
 	getActiveDiariesByProfessionalsClinicalSpecialties(professionalsIds: number[]): Observable<ProfessionalsByClinicalSpecialtyDto[]> {

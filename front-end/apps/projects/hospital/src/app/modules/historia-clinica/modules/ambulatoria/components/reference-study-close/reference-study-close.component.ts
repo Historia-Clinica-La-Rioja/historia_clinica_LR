@@ -1,15 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
-import { CompleteRequestDto, MasterDataDto, ReferenceRequestDto } from '@api-rest/api-model';
+import { ClinicalSpecialtyDto, CompleteRequestDto, MasterDataDto, ReferenceRequestDto } from '@api-rest/api-model';
 import { ReferenceMasterDataService } from '@api-rest/services/reference-master-data.service';
 import { ChangeEvent } from 'react';
 import { PrescripcionesService } from '../../services/prescripciones.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ReferenceCompleteStudyComponent } from '../reference-complete-study/reference-complete-study.component';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, forkJoin, map, of, tap } from 'rxjs';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { ButtonType } from '@presentation/components/button/button.component';
+import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 
 @Component({
 	selector: 'app-reference-study-close',
@@ -28,25 +29,36 @@ export class ReferenceStudyCloseComponent implements OnInit {
 	buttonTypeFlat = ButtonType.FLAT;
 	disabled$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	isLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+	clinicalSpecialties$: Observable<ClinicalSpecialtyDto[]>;
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly referenceMasterDataService: ReferenceMasterDataService,
 		private readonly prescripcionesService: PrescripcionesService,
 		private readonly snackBarService: SnackBarService,
+		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		public dialogRef: MatDialogRef<ReferenceCompleteStudyComponent>,
 		public dialog: MatDialog,
 
 	) { }
 
 	ngOnInit() {
-			this.formReferenceClosure = this.formBuilder.group({
-				closureType: [null, [Validators.required]],
-				description: [null, [Validators.required]],
-				clinicalSpecialtyId: [null]
-			}) as FormGroup & ReferenceClosureForm;
+		this.formReferenceClosure = this.formBuilder.group({
+			closureType: [null, [Validators.required]],
+			description: [null, [Validators.required]],
+			clinicalSpecialty: [null, [Validators.required]]
+		}) as FormGroup & ReferenceClosureForm;
 
 		this.closureTypes$ = this.referenceMasterDataService.getClosureTypes().pipe(
 			map(((closureTypes: MasterDataDto[]) => closureTypes)));
+
+		this.clinicalSpecialties$ = forkJoin([this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties(), of(this.reference.clinicalSpecialties)])
+			.pipe(
+				map(([csProfessional, csReference]) => {
+					return csReference.length ?
+						csProfessional.filter(csp => csReference.some(csr => csr.id === csp.id))
+						: csProfessional;
+				}),
+				tap(clinicalSpecialties => this.handleClinicalSpecialties(clinicalSpecialties)));
 	}
 
 	removeSelectedFile(index: number) {
@@ -96,11 +108,18 @@ export class ReferenceStudyCloseComponent implements OnInit {
 			observations: this.formReferenceClosure.value.description,
 			referenceClosure: {
 				referenceId: this.reference.id,
-				clinicalSpecialtyId: this.formReferenceClosure.value.clinicalSpecialtyId,
+				clinicalSpecialtyId: this.formReferenceClosure.value.clinicalSpecialty.id,
 				counterReferenceNote: this.formReferenceClosure.value.description,
 				fileIds: [],
 				closureTypeId: this.formReferenceClosure.value.closureType.id
 			}
+		}
+	}
+
+	private handleClinicalSpecialties(clinicalSpecialties: ClinicalSpecialtyDto[]) {
+		if (clinicalSpecialties.length) {
+			const firstCS = clinicalSpecialties[0];
+			this.formReferenceClosure.controls.clinicalSpecialty.setValue(firstCS);
 		}
 	}
 }
@@ -116,4 +135,5 @@ export interface ReferenceClosureDto {
 interface ReferenceClosureForm {
 	closureType: FormControl<MasterDataDto[]>;
 	description: FormControl<string>;
+	clinicalSpecialty: FormControl<ClinicalSpecialtyDto>;
 }

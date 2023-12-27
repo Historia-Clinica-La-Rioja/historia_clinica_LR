@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import lombok.Getter;
@@ -20,7 +21,7 @@ public class ReferenceRequestDto implements Serializable {
 
 	private Integer id;
 
-	private List<String> clinicalSpecialties;
+	private List<ClinicalSpecialtyDto> clinicalSpecialties;
 
 	private Integer careLineId;
 

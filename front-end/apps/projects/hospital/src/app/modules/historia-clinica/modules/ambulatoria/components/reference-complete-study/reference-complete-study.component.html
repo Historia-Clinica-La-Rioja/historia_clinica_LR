@@ -4,7 +4,7 @@
 	</button>
 </div>
 
-<div *ngIf="_reference$ | async as _reference else spinner" fxLayout="column" fxLayoutGap="22px">
+<mat-dialog-content *ngIf="_reference$ | async as _reference else spinner" fxLayout="column" fxLayoutGap="22px">
 	<app-reference-request-data [setReference]="_reference" [status]="data.status" [order]="data.order">
 
 	</app-reference-request-data>
@@ -16,7 +16,7 @@
 
 	</app-reference-study>
 
-</div>
+</mat-dialog-content>
 
 <ng-template #spinner>
 	<div class="centered-spinner">

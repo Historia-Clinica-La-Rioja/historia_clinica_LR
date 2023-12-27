@@ -861,7 +861,9 @@
 			"ERROR_TITLE": "Sin permisos para completar el estudio",
 			"COMPLETE_BUTTON": "Completar",
 			"UPLOAD_FILES": "Adjuntar archivos",
-			"OK_BUTTON": "Aceptar"
+			"OK_BUTTON": "Aceptar",
+            "SPECIALTIES": "Especialidades",
+            "NO_PERMISSION": "El profesional no posee las especialidades de la referencia para realizar el cierre de la misma"
 		},
 		"reference-study-closure-information":{
 			"TITLE": "Resultados del estudio",
