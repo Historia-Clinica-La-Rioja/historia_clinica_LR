@@ -28,4 +28,554 @@ databaseChangeLog:
                 LEFT JOIN identification_type it ON it.id = p.identification_type_id
                 LEFT JOIN gender g ON g.id = p.gender_id;
 
+    - changeSet:
+        id: violence_report-createTable
+        comment: Create table violence_report
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: violence_report
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_violence_report
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      foreignKeyName: FK_patient_violence_report
+                      references: patient(id)
+                      nullable: false
+                    name: patient_id
+                    type: integer
+                - column:
+                    constraints:
+                      nullable: false
+                    name: situation_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: evolution_id
+                    type: smallint
+                - column:
+                    name: can_read_and_write
+                    type: boolean
+                - column:
+                    name: has_income
+                    type: boolean
+                - column:
+                    name: works_at_formal_sector
+                    type: boolean
+                - column:
+                    name: has_social_plan
+                    type: boolean
+                - column:
+                    name: has_disability
+                    type: boolean
+                - column:
+                    name: disability_certificate_status_id
+                    type: smallint
+                - column:
+                    name: is_institutionalized
+                    type: boolean
+                - column:
+                    name: institutionalized_details
+                    type: varchar(200)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: lack_of_legal_capacity
+                    type: boolean
+                - column:
+                    constraints:
+                      nullable: false
+                    name: episode_date
+                    type: date
+                - column:
+                    constraints:
+                      nullable: false
+                    name: violence_towards_underage_type_id
+                    type: smallint
+                - column:
+                    name: schooled
+                    type: boolean
+                - column:
+                    name: school_level_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: risk_level_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: coordination_inside_health_sector
+                    type: boolean
+                - column:
+                    name: coordination_within_health_system
+                    type: boolean
+                - column:
+                    name: coordination_within_health_institution
+                    type: boolean
+                - column:
+                    name: internment_indicated_status_id
+                    type: smallint
+                - column:
+                    name: coordination_with_other_social_organizations
+                    type: boolean
+                - column:
+                    constraints:
+                      nullable: false
+                    name: were_previous_episode_with_victim_or_keeper
+                    type: boolean
+                - column:
+                    constraints:
+                      nullable: false
+                    name: institution_reported
+                    type: boolean
+                - column:
+                    constraints:
+                      nullable: false
+                    name: was_sexual_violence
+                    type: boolean
+                - column:
+                    name: observations
+                    type: varchar(200)
 
+    - changeSet:
+        id: violence_report_keeper-createTable
+        comment: Create table violence_report_keeper
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: violence_report_keeper
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_violence_report_keeper
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    name: first_name
+                    type: varchar(20)
+                - column:
+                    name: last_name
+                    type: varchar(20)
+                - column:
+                    name: age
+                    type: smallint
+                - column:
+                    name: address
+                    type: varchar(30)
+                - column:
+                    constraints:
+                      foreignKeyName: FK_department_violence_keeper
+                      references: department(id)
+                    name: municipality_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: relationship_with_victim_id
+                    type: smallint
+                - column:
+                    name: other_relationship_with_victim
+                    type: varchar(15)
+
+    - changeSet:
+        id: violence_type-createTable
+        comment: Create table violence_type
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: violence_type
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: snomed_id
+                    type: int
+                - addPrimaryKey:
+                    clustered: true
+                    columnNames: report_id, snomed_id
+                    constraintName: PK_violence_type
+                    tableName: violence_type
+                    validate: true
+
+    - changeSet:
+        id: violence_modality-createTable
+        comment: Create table violence_modality
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: violence_modality
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: snomed_id
+                    type: int
+                - addPrimaryKey:
+                    clustered: true
+                    columnNames: report_id, snomed_id
+                    constraintName: PK_violence_modality
+                    tableName: violence_modality
+                    validate: true
+
+    - changeSet:
+        id: violence_report_aggressor-createTable
+        comment: Create table violence_report_aggressor
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: violence_report_aggressor
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_violence_report_aggressor
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    name: first_name
+                    type: varchar(20)
+                - column:
+                    name: last_name
+                    type: varchar(20)
+                - column:
+                    name: age
+                    type: smallint
+                - column:
+                    name: address
+                    type: varchar(30)
+                - column:
+                    constraints:
+                      foreignKeyName: FK_department_violence_aggressor
+                      references: department(id)
+                    name: municipality_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: relationship_with_victim_id
+                    type: smallint
+                - column:
+                    name: other_relationship_with_victim
+                    type: varchar(15)
+                - column:
+                    name: has_guns
+                    type: boolean
+                - column:
+                    name: has_been_treated
+                    type: boolean
+                - column:
+                    name: belongs_to_security_forces
+                    type: boolean
+                - column:
+                    name: in_duty
+                    type: boolean
+                - column:
+                    name: security_force_type_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: live_together_status_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: relationship_length_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: violence_frequency_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: criminal_record_status_id
+                    type: smallint
+
+    - changeSet:
+        id: health_system_organization_coordination-createTable
+        comment: Create table health_system_organization_coordination
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: health_system_organization_coordination
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: health_system_organization_id
+                    type: smallint
+                - column:
+                    name: other_health_system_organization
+                    type: varchar(20)
+                - addPrimaryKey:
+                    clustered: true
+                    columnNames: report_id, health_system_organization_id
+                    constraintName: PK_health_system_organization_coordination
+                    tableName: health_system_organization_coordination
+                    validate: true
+
+    - changeSet:
+        id: health_institution_organization_coordination-createTable
+        comment: Create table health_institution_organization_coordination
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: health_institution_organization_coordination
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: health_institution_organization_id
+                    type: smallint
+                - column:
+                    name: other_health_institution_organization
+                    type: varchar(20)
+                - addPrimaryKey:
+                    clustered: true
+                    columnNames: report_id, health_institution_organization_id
+                    constraintName: PK_health_institution_organization_coordination
+                    tableName: health_institution_organization_coordination
+                    validate: true
+
+    - changeSet:
+        id: municipal_state_device-createTable
+        comment: Create table municipal_state_device
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: municipal_state_device
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: municipal_state_device_id
+                    type: smallint
+                - addPrimaryKey:
+                    clustered: true
+                    columnNames: report_id, municipal_state_device_id
+                    constraintName: PK_municipal_state_device
+                    tableName: municipal_state_device
+                    validate: true
+
+    - changeSet:
+        id: provincial_state_device-createTable
+        comment: Create table provincial_state_device
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: provincial_state_device
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: provincial_state_device_id
+                    type: smallint
+                - addPrimaryKey:
+                    clustered: true
+                    columnNames: report_id, provincial_state_device_id
+                    constraintName: PK_provincial_state_device
+                    tableName: provincial_state_device
+                    validate: true
+
+    - changeSet:
+        id: national_state_device-createTable
+        comment: Create table national_state_device
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: national_state_device
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: national_state_device_id
+                    type: smallint
+                - addPrimaryKey:
+                    clustered: true
+                    columnNames: report_id, national_state_device_id
+                    constraintName: PK_national_state_device
+                    tableName: national_state_device
+                    validate: true
+
+    - changeSet:
+        id: victim_keeper_report_place-createTable
+        comment: Create table victim_keeper_report_place
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: victim_keeper_report_place
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: report_place_id
+                    type: smallint
+                - addPrimaryKey:
+                    clustered: true
+                    columnNames: report_id, report_place_id
+                    constraintName: PK_victim_keeper_report_place
+                    tableName: victim_keeper_report_place
+                    validate: true
+
+    - changeSet:
+        id: institution_report_reason-createTable
+        comment: Create table institution_report_reason
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: institution_report_reason
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: reason_id
+                    type: smallint
+                - addPrimaryKey:
+                    clustered: true
+                    columnNames: report_id, reason_id
+                    constraintName: PK_institution_report_reason
+                    tableName: institution_report_reason
+                    validate: true
+
+    - changeSet:
+        id: institution_report_place-createTable
+        comment: Create table institution_report_place
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: institution_report_place
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: report_place_id
+                    type: smallint
+                - column:
+                    name: other_report_place
+                    type: varchar(20)
+                - addPrimaryKey:
+                    clustered: true
+                    columnNames: report_id, report_place_id
+                    constraintName: PK_institution_report_place
+                    tableName: institution_report_place
+                    validate: true
+
+    - changeSet:
+        id: sexual_violence_action-createTable
+        comment: Create table sexual_violence_action
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: sexual_violence_action
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: action_id
+                    type: smallint
+                - addPrimaryKey:
+                    clustered: true
+                    columnNames: report_id, action_id
+                    constraintName: PK_sexual_violence_action
+                    tableName: sexual_violence_action
+                    validate: true

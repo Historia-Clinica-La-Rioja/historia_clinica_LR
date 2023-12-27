@@ -1,0 +1,11 @@
+package net.pladema.violencereport.infrastructure.output.repository;
+
+import net.pladema.violencereport.infrastructure.output.repository.embedded.HealthInstitutionOrganizationCoordinationPK;
+import net.pladema.violencereport.infrastructure.output.repository.entity.HealthInstitutionOrganizationCoordination;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface HealthInstitutionOrganizationCoordinationRepository extends JpaRepository<HealthInstitutionOrganizationCoordination, HealthInstitutionOrganizationCoordinationPK> {
+}
