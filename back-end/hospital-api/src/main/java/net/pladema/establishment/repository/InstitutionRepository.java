@@ -78,12 +78,9 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"AND ur.deleteable.deleted IS FALSE " +
 			"AND hp.deleteable.deleted IS FALSE " +
 			"AND pp.deleteable.deleted IS FALSE " +
-			"AND hps.deleteable.deleted IS FALSE " +
-			"GROUP BY i.id, i.name " +
-			"HAVING COUNT(DISTINCT di.clinicalSpecialtyId) = :clinicalSpecialtiesAmount")
+			"AND hps.deleteable.deleted IS FALSE ")
 	List<InstitutionBasicInfoBo> getByDepartmentIdHavingActiveDiaryWithClinicalSpecialty(@Param("departmentId") Short departmentId,
-																						 @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds,
-																						 @Param("clinicalSpecialtiesAmount") Long clinicalSpecialtiesAmount);
+																						 @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) " +
@@ -113,14 +110,10 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"AND ur.deleteable.deleted IS FALSE " +
 			"AND hp.deleteable.deleted IS FALSE " +
 			"AND pp.deleteable.deleted IS FALSE " +
-			"AND hps.deleteable.deleted IS FALSE " +
-			"GROUP BY i.id, i.name " +
-			"HAVING COUNT(DISTINCT clis.clinicalSpecialtyId) = :clinicalSpecialtiesAmount " +
-			"AND COUNT(DISTINCT di.clinicalSpecialtyId) = :clinicalSpecialtiesAmount")
+			"AND hps.deleteable.deleted IS FALSE ")
 	List<InstitutionBasicInfoBo> getByDepartmentIdHavingActiveDiaryWithCareLineClinicalSpecialty(@Param("departmentId") Short departmentId,
 																								 @Param("careLineId") Integer careLineId,
-																								 @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds,
-																								 @Param("clinicalSpecialtiesAmount") Long clinicalSpecialtiesAmount);
+																								 @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds);
 
 	@Transactional(readOnly = true)
 	@Query(" SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) " +

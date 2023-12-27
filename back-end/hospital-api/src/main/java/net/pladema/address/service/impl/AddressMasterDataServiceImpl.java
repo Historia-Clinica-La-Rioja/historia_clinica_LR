@@ -100,8 +100,8 @@ public class AddressMasterDataServiceImpl implements AddressMasterDataService {
 	public <T> Collection<T> getDepartmentsByReferenceFilterByClinicalSpecialty(Integer careLineId, List<Integer> clinicalSpecialtyIds, Class<T> clazz) {
 		LOG.debug("Input parameters -> careLineId {}, clinicalSpecialtyIds {}, clazz {}", careLineId, clinicalSpecialtyIds, clazz);
 		if (careLineId != null)
-			return departmentRepository.findAllByCareLineIdAndClinicalSpecialtyId(careLineId, clinicalSpecialtyIds, (long) clinicalSpecialtyIds.size(), clazz);
-		return departmentRepository.findAllByProfessionalsWithClinicalSpecialtyId(clinicalSpecialtyIds, (long) clinicalSpecialtyIds.size(), clazz);
+			return departmentRepository.findAllByCareLineIdAndClinicalSpecialtyId(careLineId, clinicalSpecialtyIds, clazz);
+		return departmentRepository.findAllByProfessionalsWithClinicalSpecialtyId(clinicalSpecialtyIds, clazz);
 	}
 
 	@Override

@@ -70,9 +70,9 @@ public class InstitutionServiceImpl implements InstitutionService {
 	public List<InstitutionBasicInfoBo> getInstitutionsByReferenceByClinicalSpecialtyFilter(Short departmentId, List<Integer> clinicalSpecialtyIds, Integer careLineId) {
 		log.debug("Fetch all institutions by reference by clinical specialty filter and active diaries");
 		if (careLineId == null )
-			return institutionRepository.getByDepartmentIdHavingActiveDiaryWithClinicalSpecialty(departmentId, clinicalSpecialtyIds, (long) clinicalSpecialtyIds.size());
+			return institutionRepository.getByDepartmentIdHavingActiveDiaryWithClinicalSpecialty(departmentId, clinicalSpecialtyIds);
 		else
-			return institutionRepository.getByDepartmentIdHavingActiveDiaryWithCareLineClinicalSpecialty(departmentId, careLineId, clinicalSpecialtyIds, (long) clinicalSpecialtyIds.size());
+			return institutionRepository.getByDepartmentIdHavingActiveDiaryWithCareLineClinicalSpecialty(departmentId, careLineId, clinicalSpecialtyIds);
 	}
 
 	@Override

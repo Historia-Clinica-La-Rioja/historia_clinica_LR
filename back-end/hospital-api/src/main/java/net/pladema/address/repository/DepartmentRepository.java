@@ -44,12 +44,9 @@ public interface DepartmentRepository extends JpaRepository<Department, Short> {
 			"JOIN CareLineInstitutionSpecialty clis ON (cli.id = clis.careLineInstitutionId) " +
 			"WHERE clis.clinicalSpecialtyId IN :clinicalSpecialtyIds " +
 			"AND cli.careLineId = :careLineId " +
-			"AND cli.deleted IS FALSE " +
-			"GROUP BY d.id, d.provinceId, d.description " +
-			"HAVING COUNT(DISTINCT clis.clinicalSpecialtyId) = :clinicalSpecialtiesAmount")
+			"AND cli.deleted IS FALSE ")
 	<T> Collection<T> findAllByCareLineIdAndClinicalSpecialtyId(@Param("careLineId") Integer careLineId,
 																@Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds,
-																@Param("clinicalSpecialtiesAmount") Long clinicalSpecialtiesAmount,
 																Class<T> clazz);
 
 	@Transactional(readOnly = true)
@@ -67,12 +64,8 @@ public interface DepartmentRepository extends JpaRepository<Department, Short> {
 			"AND ur.deleteable.deleted IS FALSE " +
 			"AND hp.deleteable.deleted IS FALSE " +
 			"AND pp.deleteable.deleted IS FALSE " +
-			"AND hps.deleteable.deleted IS FALSE " +
-			"GROUP BY d.id, d.provinceId, d.description " +
-			"HAVING COUNT(DISTINCT hps.clinicalSpecialtyId) = :clinicalSpecialtiesAmount")
-	<T> Collection<T> findAllByProfessionalsWithClinicalSpecialtyId(@Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds,
-																	@Param("clinicalSpecialtiesAmount") Long clinicalSpecialtiesAmount,
-																	Class<T> clazz);
+			"AND hps.deleteable.deleted IS FALSE ")
+	<T> Collection<T> findAllByProfessionalsWithClinicalSpecialtyId(@Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds, Class<T> clazz);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT d " +
