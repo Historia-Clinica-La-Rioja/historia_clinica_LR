@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.pladema.establishment.application.institutionpractices.GetPracticesFromInstitutionsByCareLineId;
 import net.pladema.establishment.application.practices.GetPracticesByActiveDiaries;
 import net.pladema.establishment.application.institutionpractices.GetPracticesByInstitution;
 import net.pladema.establishment.application.institutionpractices.GetPracticesFromInstitutions;
@@ -14,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -30,6 +32,8 @@ public class PracticesController {
 	private final GetPracticesByActiveDiaries getPracticesByActiveDiaries;
 
 	private final GetPracticesFromInstitutions getPracticesFromInstitutions;
+
+	private final GetPracticesFromInstitutionsByCareLineId getPracticesFromInstitutionsByCareLineId;
 
 	@GetMapping("/institution/{institutionId}/by-institution")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA')")
@@ -59,8 +63,9 @@ public class PracticesController {
 
 	@GetMapping()
 	@PreAuthorize("hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ADMINISTRATIVO', 'ABORDAJE_VIOLENCIAS')")
-	public ResponseEntity<List<SharedSnomedDto>> getAll() {
-		List<SharedSnomedDto> result = getPracticesFromInstitutions.run();
+	public ResponseEntity<List<SharedSnomedDto>> getAll(@RequestParam(name = "careLineId", required = false) Integer careLineId) {
+		log.debug("Input parameteres -> careLineId {}", careLineId);
+		List<SharedSnomedDto> result = getPracticesFromInstitutionsByCareLineId.run(careLineId);
 		log.debug("Get practices from domain -> ", result);
 		return ResponseEntity.ok().body(result);
 	}
