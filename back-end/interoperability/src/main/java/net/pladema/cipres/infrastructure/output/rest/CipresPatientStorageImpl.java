@@ -53,6 +53,10 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 
 	public static final Integer CUIT_LENGTH = 11;
 
+	public static final Integer MIN_PERSON_CONTACT_LENGTH = 10;
+
+	public static final Integer MAX_PERSON_CONTACT_LENGTH = 13;
+
 	private static final String ADDRESS = "domicilio";
 
 	private static final String ID = "id";
@@ -190,8 +194,7 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 	}
 
 	private CipresPatientAddressPayload mapToCipresPatientAddressPayload(PersonDataBo personInfo) {
-		String personContact = personInfo.getPhonePrefix() != null &&  personInfo.getPhoneNumber() != null ?
-				personInfo.getPhonePrefix().concat(personInfo.getPhoneNumber()) : null;
+		String personContact = getPersonContact(personInfo.getPhonePrefix(), personInfo.getPhoneNumber());
 		var city = personInfo.getCityBahraCode() != null
 				? getCityIRI(personInfo.getCityBahraCode(), personInfo.getCity(), personInfo.getDepartment()).orElse(null)
 				: getCityIRIByCityName(personInfo.getCity(), personInfo.getDepartment()).orElse(null);
@@ -209,6 +212,18 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 				.localidad(city)
 				.nacionalidad(nationality)
 				.build();
+	}
+
+	private String getPersonContact(String phonePrefix, String phoneNumber) {
+		if (phonePrefix != null && phoneNumber != null) {
+			String personContact = phonePrefix.concat(phoneNumber);
+			if (personContact.length() >= MIN_PERSON_CONTACT_LENGTH && personContact.length() <= MAX_PERSON_CONTACT_LENGTH) {
+				StringBuilder finalPersonContact = new StringBuilder(phonePrefix.concat(phoneNumber));
+				finalPersonContact.insert(3, "-");
+				return finalPersonContact.toString();
+			}
+		}
+		return null;
 	}
 
 	public Optional<String> getNationalityIRI(String country) {
