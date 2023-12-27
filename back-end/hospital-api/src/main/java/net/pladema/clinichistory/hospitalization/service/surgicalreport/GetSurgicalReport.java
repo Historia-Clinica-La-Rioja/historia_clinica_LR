@@ -26,12 +26,11 @@ public class GetSurgicalReport {
 
 	private final SurgicalReportRepository surgicalReportRepository;
 
-	public SurgicalReportBo run(Long surgicalReportId){
-		log.debug("Input parameter -> surgicalReportId {}", surgicalReportId);
+	public SurgicalReportBo run(Long documentId){
+		log.debug("Input parameter -> documentId {}", documentId);
 		SurgicalReportBo result = new SurgicalReportBo();
-		Document document = documentService.findById(surgicalReportId)
-				.orElseThrow(()-> new NotFoundException("surgical-report-not-found", String.format("El parte quirurgico con id %s no existe", surgicalReportId)));
-		Long documentId = document.getId();
+		Document document = documentService.findById(documentId)
+				.orElseThrow(()-> new NotFoundException("surgical-report-not-found", String.format("El parte quirurgico con id %s no existe", documentId)));
 		result.setId(documentId);
 		result.setPatientId(document.getPatientId());
 		result.setEncounterId(document.getSourceId());
@@ -50,6 +49,7 @@ public class GetSurgicalReport {
 		result.setProsthesisDescription(documentService.getProsthesisDescriptionFromDocument(documentId).orElse(null));
 		result.setStartDateTime(surgicalReportRepository.getStartDateTime(documentId));
 		result.setEndDateTime(surgicalReportRepository.getEndDateTime(documentId));
+		result.setDescription((surgicalReportRepository.getDescription(documentId)));
 		log.debug("Output result -> {}", result);
 		return result;
 	}

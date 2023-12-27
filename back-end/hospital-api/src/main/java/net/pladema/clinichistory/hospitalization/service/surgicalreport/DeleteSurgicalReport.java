@@ -21,11 +21,11 @@ public class DeleteSurgicalReport {
 	private final SharedDocumentPort sharedDocumentPort;
 
 	@Transactional
-	public void run(Integer intermentEpisodeId, Long surgicalReportId, String reason) {
-		log.debug("Input parameters -> intermentEpisodeId {}, surgicalReportId {}, reason {}", intermentEpisodeId, surgicalReportId, reason);
-		internmentDocumentModificationValidator.execute(intermentEpisodeId, surgicalReportId, reason, EDocumentType.SURGICAL_HOSPITALIZATION_REPORT);
-		sharedDocumentPort.deleteDocument(surgicalReportId, DocumentStatus.ERROR);
-		sharedDocumentPort.updateDocumentModificationReason(surgicalReportId, reason);
+	public void run(Integer intermentEpisodeId, Long documentId, String reason) {
+		log.debug("Input parameters -> intermentEpisodeId {}, documentId {}, reason {}", intermentEpisodeId, documentId, reason);
+		internmentDocumentModificationValidator.execute(intermentEpisodeId, documentId, reason, EDocumentType.SURGICAL_HOSPITALIZATION_REPORT);
+		sharedDocumentPort.deleteDocument(documentId, DocumentStatus.ERROR);
+		sharedDocumentPort.updateDocumentModificationReason(documentId, reason);
 		internmentEpisodeService.deleteEpicrisisDocumentId(intermentEpisodeId);
 	}
 

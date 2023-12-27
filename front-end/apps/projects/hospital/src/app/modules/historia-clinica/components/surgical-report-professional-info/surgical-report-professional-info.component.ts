@@ -3,6 +3,8 @@ import { AppFeature, HCEHealthcareProfessionalDto, HealthcareProfessionalDto } f
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 
+const NO_INFO = 'Sin información';
+
 @Component({
 	selector: 'app-surgical-report-professional-info',
 	templateUrl: './surgical-report-professional-info.component.html',
@@ -18,6 +20,9 @@ export class SurgicalReportProfessionalInfoComponent implements OnInit {
 	professional: HealthcareProfessionalDto;
 	nameSelfDeterminationFF: boolean;
 	professionalsTypeAhead: TypeaheadOption<any>[];
+	identificationNumber: string = '';
+	licenseNumber: string = '';
+	externalSetValue: TypeaheadOption<any>;
 
 	constructor(
 		private readonly featureFlagService: FeatureFlagService
@@ -29,7 +34,11 @@ export class SurgicalReportProfessionalInfoComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.professionalsTypeAhead = this.professionals?.map(professional => this.mapToTypeaheadOption(this.getFullNameByFF(professional), professional.id));
-		this.setProfessional(this.externalSetProfessional?.id);
+		if (this.externalSetProfessional){
+			this.identificationNumber = this.externalSetProfessional.person.identificationNumber || NO_INFO;
+			this.licenseNumber = this.externalSetProfessional.licenseNumber || NO_INFO;
+			this.externalSetValue = this.professionalsTypeAhead.find(p => p.value === this.externalSetProfessional.id);
+		}
 	}
 
 	private getFullNameByFF(professional: HealthcareProfessionalDto): string {
@@ -49,6 +58,14 @@ export class SurgicalReportProfessionalInfoComponent implements OnInit {
 
 	setProfessional(professional: number): void {
 		this.professional = this.professionals.find(p => p.id === professional);
+		if (this.professional) {
+			this.identificationNumber = this.professional?.person.identificationNumber || NO_INFO;
+			this.licenseNumber = this.professional?.licenseNumber || NO_INFO;
+		}
+		else {
+			this.identificationNumber = '';
+			this.licenseNumber = '';
+		}
 		this.professionalChange.emit(this.mapToHCEHealthcareProfessionalDto(this.professional));
 	}
 

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { AppFeature, DiagnosisDto, HospitalizationProcedureDto, ProcedureTypeEnum, SurgicalReportDto } from '@api-rest/api-model';
+import { AppFeature, DiagnosisDto, HospitalizationProcedureDto, ProblemTypeEnum, ProcedureTypeEnum, SurgicalReportDto } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
@@ -38,8 +38,12 @@ export class SurgicalReportDiagnosisComponent {
 	}
 
 	setDiagnosis(diagnosis: DiagnosisDto): void {
-		if (diagnosis)
+		if (diagnosis){
+			diagnosis.id = null;
+			diagnosis.type = ProblemTypeEnum.PREOPERATIVE_DIAGNOSIS;
 			this.surgicalReport.preoperativeDiagnosis = pushIfNotExists(this.surgicalReport.preoperativeDiagnosis, diagnosis, this.compare);
+		}
+
 	}
 
 	private compare(first, second): boolean {

@@ -9,7 +9,7 @@
 				<mat-label
 					[translate]="'ambulatoria.paciente.surgical-report.procedures.SURGERY_START_DATE'"></mat-label>
 				<input matInput id="start" [matDatepicker]="startDatePicker" formControlName="startDate"
-					(dateChange)="changeStartDateTime($event.value, null)">
+					(dateChange)="changeStartDateTime($event.value)">
 				<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
 				<mat-datepicker #startDatePicker></mat-datepicker>
 				<mat-error *ngIf="dateForm.get('startDate').hasError('required')">Fecha requerida</mat-error>
@@ -30,7 +30,7 @@
 			<mat-form-field appearance="outline">
 				<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SURGERY_END_DATE'"></mat-label>
 				<input matInput id="end" [matDatepicker]="endDatePicker" formControlName="endDate"
-					(dateChange)="changeEndDateTime($event.value, null)">
+					(dateChange)="changeEndDateTime($event.value)">
 				<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
 				<mat-datepicker #endDatePicker></mat-datepicker>
 				<mat-error *ngIf="dateForm.get('endDate').hasError('required')">Fecha requerida</mat-error>

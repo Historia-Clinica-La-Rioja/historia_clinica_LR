@@ -22,6 +22,9 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 	professionals: HealthcareProfessionalDto[];
 	isLoading = false;
 	loadingReport = false;
+	disabled = true;
+	validDate = false;
+	validProsthesis = true;
 
 	surgicalReport: SurgicalReportDto = {
 		confirmed: undefined,
@@ -89,9 +92,9 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 			this.loadingReport = true;
 			this.surgicalReportService.getSurgicalReport(this.data.internmentEpisodeId, this.data.surgicalReportId).subscribe(response => {
 				this.surgicalReport = response;
-				console.log(response);
-
 				this.loadingReport = false;
+				if (this.surgicalReport.startDateTime && this.surgicalReport.endDateTime)
+					this.disabled = false;
 			})
 		}
 	}
@@ -99,7 +102,22 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 	ngOnInit(): void {
 	}
 
+	setDisabled(): void {
+		this.disabled = !this.validDate || !this.validProsthesis;
+	}
+
+	setValidProsthesis(event: boolean): void {
+		this.validProsthesis = event;
+		this.setDisabled();
+	}
+
+	setValidDate(event: boolean): void {
+		this.validDate = event;
+		this.setDisabled();
+	}
+
 	save(): void {
+		this.surgicalReport.confirmed = true;
 		this.isLoading = true;
 		if (this.data.surgicalReportId) {
 			this.openEditReason();
@@ -154,4 +172,5 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 			evolutionClinical: !!this.surgicalReport.confirmed
 		}
 	}
+
 }

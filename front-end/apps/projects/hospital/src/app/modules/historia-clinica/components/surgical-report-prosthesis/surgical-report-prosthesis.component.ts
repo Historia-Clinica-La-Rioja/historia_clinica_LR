@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SurgicalReportDto } from '@api-rest/api-model';
 
 @Component({
@@ -9,17 +10,41 @@ import { SurgicalReportDto } from '@api-rest/api-model';
 export class SurgicalReportProsthesisComponent implements OnInit {
 
 	@Input() surgicalReport: SurgicalReportDto;
+	@Output() validProsthesis = new EventEmitter();
 
-	prosthesis = true;
-	description: string;
 
-	constructor() { }
+	form = new FormGroup({
+		prosthesis: new FormControl(),
+		description: new FormControl(),
+	});
 
-	ngOnInit(): void {
-		this.description = this.surgicalReport.prosthesisDescription;
+	constructor() {
+
 	}
 
-	changeDescription(description): void {
-		this.surgicalReport.prosthesisDescription = description;
+	ngOnInit(): void {
+		this.form.controls.prosthesis.valueChanges.subscribe(value => {
+			const descriptionControl = this.form.controls.description;
+			if (value) {
+				descriptionControl.enable();
+				descriptionControl.setValidators([Validators.required]);
+			} else {
+				descriptionControl.disable();
+				descriptionControl.clearValidators();
+			}
+			descriptionControl.updateValueAndValidity();
+		});
+
+		this.form.controls.description.setValue(this.surgicalReport.prosthesisDescription);
+		this.form.controls.prosthesis.setValue(!!this.surgicalReport.prosthesisDescription);
+
+		this.form.valueChanges.subscribe(data => {
+			this.surgicalReport.prosthesisDescription = data.prosthesis ? data.description : null;
+			this.validateForm();
+		});
+	}
+
+	validateForm(): void {
+		this.validProsthesis.emit(this.form.valid);
 	}
 }

@@ -31,12 +31,9 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 	obstetrician: DocumentHealthcareProfessionalDto;
 	pediatrician: DocumentHealthcareProfessionalDto;
 
-	loading = false;
-
 	constructor() {	}
 
 	ngOnInit(): void {
-		this.loading = true;
 		this.surgicalReport?.healthcareProfessionals.forEach(p => {
 			switch (p.type) {
 				case EProfessionType.SURGEON:
@@ -62,7 +59,6 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 					break;
 			}
 		})
-		this.loading = false;
 	}
 
 	addAyudante() {

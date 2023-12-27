@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.NoteRepository;
+
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SurgicalReportRepository;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,12 +38,14 @@ public class UpdateSurgicalReport {
 	private final DateTimeProvider dateTimeProvider;
 	private final DocumentFactory documentFactory;
 	private final GetSurgicalReport getSurgicalReport;
+	private final NoteRepository noteRepository;
+	private final SurgicalReportRepository surgicalReportRepository;
 
 	@Transactional
-	public Long execute(Integer intermentEpisodeId, Long oldSurgicalReportId, SurgicalReportBo newReport) {
-		log.debug("Input parameters -> intermentEpisodeId {}, oldSurgicalReportId {}, newReport {} ", intermentEpisodeId, oldSurgicalReportId, newReport);
+	public Long execute(Integer intermentEpisodeId, Long oldDocumentId, SurgicalReportBo newReport) {
+		log.debug("Input parameters -> intermentEpisodeId {}, oldDocumentId {}, newReport {} ", intermentEpisodeId, oldDocumentId, newReport);
 		surgicalReportValidator.assertContextValid(newReport);
-		SurgicalReportBo oldReport = getSurgicalReport.run(oldSurgicalReportId);
+		SurgicalReportBo oldReport = getSurgicalReport.run(oldDocumentId);
 		newReport.setInitialDocumentId(oldReport.getInitialDocumentId() != null ? oldReport.getInitialDocumentId() : oldReport.getId());
 		newReport.setPerformedDate(dateTimeProvider.nowDateTime());
 		documentModificationValidator.execute(intermentEpisodeId, oldReport.getId(), newReport.getModificationReason(), EDocumentType.SURGICAL_HOSPITALIZATION_REPORT);
@@ -47,25 +53,15 @@ public class UpdateSurgicalReport {
 		sharedDocumentPort.updateDocumentModificationReason(oldReport.getId(), newReport.getModificationReason());
 		sharedDocumentPort.deleteDocument(oldReport.getId(), DocumentStatus.ERROR);
 		newReport.setPatientInternmentAge(internmentEpisodeService.getEntryDate(newReport.getEncounterId()).toLocalDate());
-
-		if (oldReport.isConfirmed()) mapToPosibleDischargedConcepts(newReport, oldReport);
-		else mapToNewConcepts(newReport);
-
+		mapToNewConcepts(newReport);
+		if (surgicalReportRepository.surgicalReportHasNote(oldDocumentId))
+			noteRepository.updateSurgicalReportNoteByDocumentId(oldDocumentId, newReport.getDescription());
 		newReport.setId(documentFactory.run(newReport, newReport.isConfirmed()));
+		surgicalReportRepository.updateDocumentIdByDocumentId(oldDocumentId, newReport.getId());
+		surgicalReportRepository.updateStartDateTimeIdByDocumentId(newReport.getId(), newReport.getStartDateTime());
+		surgicalReportRepository.updateEndDateTimeIdByDocumentId(newReport.getId(), newReport.getEndDateTime());
 		log.debug("Output -> {}", newReport.getId());
 		return newReport.getId();
-	}
-
-	private void mapToPosibleDischargedConcepts(SurgicalReportBo newReport, SurgicalReportBo oldReport) {
-		newReport.getPreoperativeDiagnosis().addAll(getDischargedConcepts(newReport.getPreoperativeDiagnosis(), oldReport.getPreoperativeDiagnosis(), ConditionClinicalStatus.INACTIVE));
-		newReport.getPostoperativeDiagnosis().addAll(getDischargedConcepts(newReport.getPostoperativeDiagnosis(), oldReport.getPostoperativeDiagnosis(), ConditionClinicalStatus.INACTIVE));
-		newReport.getSurgeryProcedures().addAll(getDischargedConcepts(newReport.getSurgeryProcedures(), oldReport.getSurgeryProcedures(), ProceduresStatus.ERROR));
-		newReport.getProcedures().addAll(getDischargedConcepts(newReport.getProcedures(), oldReport.getProcedures(), ProceduresStatus.ERROR));
-		newReport.getAnesthesia().addAll(getDischargedConcepts(newReport.getAnesthesia(), oldReport.getAnesthesia(), ProceduresStatus.ERROR));
-		Optional.ofNullable(newReport.getHealthcareProfessionals()).ifPresent(list -> list.forEach(d -> d.setId(null)));
-		newReport.getCultures().addAll(getDischargedConcepts(newReport.getCultures(), oldReport.getCultures(), ProceduresStatus.ERROR));
-		newReport.getFrozenSectionBiopsies().addAll(getDischargedConcepts(newReport.getFrozenSectionBiopsies(), oldReport.getFrozenSectionBiopsies(), ProceduresStatus.ERROR));
-		newReport.getDrainages().addAll(getDischargedConcepts(newReport.getDrainages(), oldReport.getDrainages(), ProceduresStatus.ERROR));
 	}
 
 	private void mapToNewConcepts(SurgicalReportBo newReport) {
@@ -80,15 +76,4 @@ public class UpdateSurgicalReport {
 		Optional.ofNullable(newReport.getDrainages()).ifPresent(list -> list.forEach(d -> d.setId(null)));
 		Optional.ofNullable(newReport.getHealthcareProfessionals()).ifPresent(list -> list.forEach(d -> d.setId(null)));
 	}
-
-
-	private <T extends ClinicalTerm> List<T> getDischargedConcepts(List<T> newTerms, List<T> oldTerms, String errorCode) {
-		if (newTerms.isEmpty() || oldTerms.isEmpty()) return new ArrayList<>();
-		return oldTerms.stream().filter(term -> newTerms.stream().noneMatch(term::equals)).peek(p -> {
-			p.setId(null);
-			p.setStatusId(errorCode);
-		}).collect(Collectors.toList());
-	}
-
-
 }
