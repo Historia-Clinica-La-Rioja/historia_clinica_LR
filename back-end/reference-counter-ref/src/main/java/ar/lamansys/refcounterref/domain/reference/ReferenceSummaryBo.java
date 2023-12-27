@@ -2,6 +2,7 @@ package ar.lamansys.refcounterref.domain.reference;
 
 import ar.lamansys.refcounterref.domain.InstitutionBo;
 
+import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,10 +35,14 @@ public class ReferenceSummaryBo {
 
 	private boolean includeNameSelfDetermination;
 
+	private Integer destinationInstitutionId;
+
+	private EReferenceRegulationState regulationState;
+
 
 	public ReferenceSummaryBo(Integer id, String institutionName,
 							  LocalDate date, String firstName, String middleNames, String lastName,
-							  String otherLastNames, String nameSelfDetermination, Integer careLineId) {
+							  String otherLastNames, String nameSelfDetermination, Integer careLineId, Integer destinationInstitutionId) {
 		this.id = id;
 		this.institution = institutionName;
 		this.date = date;
@@ -47,6 +52,7 @@ public class ReferenceSummaryBo {
 		this.otherLastNames = otherLastNames;
 		this.nameSelfDetermination = nameSelfDetermination;
 		this.careLineId = careLineId;
+		this.destinationInstitutionId = destinationInstitutionId;
 	}
 
 
