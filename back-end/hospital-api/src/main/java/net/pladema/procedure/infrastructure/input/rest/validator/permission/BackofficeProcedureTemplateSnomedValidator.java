@@ -87,7 +87,7 @@ public class BackofficeProcedureTemplateSnomedValidator implements BackofficePer
 		var practices = procedureTemplate.getAssociatedPractices();
 		if (practices != null) for (SnomedPracticeDto practice : practices) {
 			if (repository.existsById(new ProcedureTemplateSnomedPK(procedureTemplate.getId(),practice.getId()))) {
-				throw new BackofficeValidationException("Ya existe la relación del procedureTemplate con id: " + procedureTemplate.getId() + ", y la practica con id: " + practice.getId());
+				throw new BackofficeValidationException("La práctica seleccionada ya pertenece al estudio");
 			}
 		}
 	}
