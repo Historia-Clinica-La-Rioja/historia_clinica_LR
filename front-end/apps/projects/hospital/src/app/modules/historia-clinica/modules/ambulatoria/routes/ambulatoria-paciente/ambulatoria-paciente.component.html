@@ -88,6 +88,29 @@
 									</div>
 								</div>
 							</div>
+							<div fxLayout="column" style="margin-top: 12px;">
+								<span class="allergy-item capitalize-first-letter">
+									<ng-container *ngIf="embarazoAdolescente()">
+									<button *ngIf="pacienteMenorDe15()" mat-raised-button color="warn" (click)="openDialogAclaracion()" style="background-color: #F44336;">
+										Embarazo en menor de 15 años
+									</button>
+									<button *ngIf="pacienteMenorDe15()" mat-raised-button color="warn" (click)="openDialogAclaracionMayorDe15()" style="background-color: #F46055; margin-top: 8px;">
+										Embarazo adolescente
+									</button>
+									<button *ngIf="!pacienteMenorDe15()" mat-raised-button color="warn" (click)="openDialogAclaracionMayorDe15()" style="background-color: #F46055;">
+										Embarazo adolescente
+									</button>
+									<mat-icon class="error-icon" *ngIf="inconsistenciaDeAlertas()" (click)="openDialogInconsistencia()">error_outline</mat-icon>
+									</ng-container>
+								</span>
+	
+								<div style="margin-top: 12px;">
+									<span class="allergy-item capitalize-first-letter" style="margin-left: 16px;" *ngIf="birth_control_pills()">
+										<img src="../../assets/images/icon_diu.png" alt="Ícono de anticonceptivo" style="vertical-align: middle; margin-right: 8px; width: 20px; height: 20px;">
+										<strong>Alerta de anticonceptivo</strong>
+									</span>
+								</div>
+							</div>
 						</div>
 						<mat-divider class="header-divider" [vertical]="true"></mat-divider>
 
