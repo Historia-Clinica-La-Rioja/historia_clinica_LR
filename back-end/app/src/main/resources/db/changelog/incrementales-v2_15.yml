@@ -1,3 +1,14 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v2_15 
 
+    - changeSet:
+        id: addColumn-regulation_protected_appointments_allowed-diary_opening_hours
+        author: fsimaro
+        changes:
+          - addColumn:
+              tableName: diary_opening_hours
+              columns:
+                - column:
+                    name: regulation_protected_appointments_allowed
+                    type: boolean
+
