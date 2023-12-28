@@ -3332,6 +3332,17 @@ export interface ProcedureDto {
     snomed: SnomedDto;
 }
 
+export interface ProcedureParameterDto {
+    id: number;
+    inputCount: number;
+    loincId: number;
+    orderNumber: number;
+    procedureTemplateId: number;
+    textOptions: string[];
+    typeId: number;
+    unitsOfMeasureIds: number[];
+}
+
 export interface ProcedureReduced {
     performedDate: Date;
     procedure: string;
