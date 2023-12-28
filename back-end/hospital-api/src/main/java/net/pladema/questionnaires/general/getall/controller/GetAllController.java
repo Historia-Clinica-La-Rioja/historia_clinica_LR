@@ -32,8 +32,8 @@ public class GetAllController {
         this.getAllService = getAllService;
     }
 
-	@PreAuthorize("hasRole('ESPECIALISTA_MEDICO') or hasRole('PROFESIONAL_DE_SALUD') or hasRole('ENFERMERO_ADULTO_MAYOR') or hasRole('ENFERMERO') or hasRole('ESPECIALISTA_EN_ODONTOLOGIA')")
-	@GetMapping("institution/{institutionId}/patient/{patientId}/all-questionnaire-responses")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO_ADULTO_MAYOR, ENFERMERO, ESPECIALISTA_EN_ODONTOLOGIA')")
+	@GetMapping("patient/{patientId}/all-questionnaire-responses")
 	public ResponseEntity<List<QuestionnaireResponseII>> getResponsesByPatientIdWithDetails (
 			@PathVariable Integer patientId
 	) {
