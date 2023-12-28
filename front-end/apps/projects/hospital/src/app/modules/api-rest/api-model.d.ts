@@ -1164,7 +1164,7 @@ export interface DocumentDto {
     notes: DocumentObservationsDto;
     patientId: number;
     performedDate: DateDto;
-    personalHistories: HealthHistoryConditionDto[];
+    personalHistories: PersonalHistoryDto[];
     problems: ProblemDto[];
     procedures: ProcedureDto[];
     reasons: ReasonDto[];
@@ -3167,6 +3167,13 @@ export interface PersonOccupationDto extends Serializable {
 export interface PersonPhotoDto {
     imageData: string;
     personId?: number;
+}
+
+export interface PersonalHistoryDto extends HealthConditionDto {
+    inactivationDate?: string;
+    note?: string;
+    startDate: string;
+    typeId?: number;
 }
 
 export interface PersonalInformationDto {

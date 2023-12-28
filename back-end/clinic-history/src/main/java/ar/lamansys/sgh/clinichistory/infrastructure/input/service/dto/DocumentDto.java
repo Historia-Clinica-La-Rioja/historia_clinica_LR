@@ -11,6 +11,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthCon
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthHistoryConditionDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ImmunizationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.MedicationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.PersonalHistoryDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ProblemDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ProcedureDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.RiskFactorDto;
@@ -49,7 +50,7 @@ public class DocumentDto {
 
     private List<DiagnosisDto> diagnosis = new ArrayList<>();
 
-    private List<HealthHistoryConditionDto> personalHistories = new ArrayList<>();
+    private List<PersonalHistoryDto> personalHistories = new ArrayList<>();
 
     private List<ProblemDto> problems = new ArrayList<>();
 

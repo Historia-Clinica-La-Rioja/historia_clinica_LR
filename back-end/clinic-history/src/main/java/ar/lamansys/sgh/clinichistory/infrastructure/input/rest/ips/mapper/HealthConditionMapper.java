@@ -9,6 +9,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.Diagnoses
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosisDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthHistoryConditionDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.PersonalHistoryDto;
 import jdk.jfr.Name;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.IterableMapping;
@@ -22,10 +23,6 @@ public interface HealthConditionMapper {
 
     @Named("toPersonalHistoryBo")
     PersonalHistoryBo toPersonalHistoryBo(HealthHistoryConditionDto healthHistoryConditionDto);
-
-    @Named("toListPersonalHistoryBoFromHealthHistory")
-    @IterableMapping(qualifiedByName = "toPersonalHistoryBo")
-    List<PersonalHistoryBo> toListPersonalHistoryBoFromHealthHistory(List<HealthHistoryConditionDto> healthHistoryConditionDto);
 
     @Named("toFamilyHistoryBo")
     FamilyHistoryBo toFamilyHistoryBo(HealthHistoryConditionDto healthHistoryConditionDto);
@@ -48,5 +45,15 @@ public interface HealthConditionMapper {
 
     @Name("toHealthConditionNewConsultationDto")
     HealthConditionNewConsultationDto toHealthConditionNewConsultationDto(HealthConditionNewConsultationBo bo);
+
+    @Named("toListPersonalHistoryBoFromPersonalHistoryDto")
+    @IterableMapping(qualifiedByName = "toPersonalHistoryBo")
+    List<PersonalHistoryBo> toListPersonalHistoryBoFromPersonalHistoryDto(List<PersonalHistoryDto> personalHistories);
+
+    @Named("toPersonalHistoryDto")
+    PersonalHistoryDto toPersonalHistoryDto(PersonalHistoryBo personalHistory);
+
+    @Named("toPersonalHistoryBo")
+    PersonalHistoryBo toPersonalHistoryBo(PersonalHistoryDto personalHistory);
 
 }
