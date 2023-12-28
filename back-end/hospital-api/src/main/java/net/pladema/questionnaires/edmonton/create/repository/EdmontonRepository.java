@@ -13,7 +13,7 @@ import net.pladema.questionnaires.common.domain.QuestionnaireResponse;
 
 public interface EdmontonRepository extends SGXAuditableEntityJPARepository<QuestionnaireResponse, Integer> {
 
-	@Query(value = "SELECT new net.pladema.questionnaires.common.domain.Answer(qr.id, la.itemId, la.questionnaireResponseId, la.answerId, la.value) " +
+	@Query(value = "SELECT new net.pladema.questionnaires.common.domain.Answer(qr.id, la.itemId, la.questionnaireResponseId, la.value, la.answerId) " +
 			"FROM Answer la " +
 			"INNER JOIN QuestionnaireResponse qr ON  qr.id = la.questionnaireResponseId " +
 			"WHERE qr.patientId = :patientId " +

@@ -1,4 +1,4 @@
-package net.pladema.questionnaires.general.getall.repository;
+package net.pladema.questionnaires.common.repository;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import net.pladema.questionnaires.common.domain.QuestionnaireResponseII;
 
 @Repository
-public interface GetAllRepository extends JpaRepository<QuestionnaireResponseII, Integer> {
+public interface QuestionnaireResponseRepository extends JpaRepository<QuestionnaireResponseII, Integer> {
 
 	@Query("SELECT qr FROM QuestionnaireResponseII qr " +
 			"LEFT JOIN FETCH qr.createdByUser cu " +
