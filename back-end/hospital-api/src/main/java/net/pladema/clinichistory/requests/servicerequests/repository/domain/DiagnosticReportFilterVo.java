@@ -16,4 +16,6 @@ public class DiagnosticReportFilterVo {
     private final String healthCondition;
     private final String category;
     private final List<String> categoriesToBeExcluded;
+	private final Integer userId;
+	private final List<Short> loggedUserRoleIds;
 }

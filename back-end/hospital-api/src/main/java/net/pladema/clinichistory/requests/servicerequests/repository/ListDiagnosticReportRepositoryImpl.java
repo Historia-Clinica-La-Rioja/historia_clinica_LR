@@ -39,9 +39,13 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
                 "JOIN {h-schema}service_request sr ON d.source_id = sr.id " +
 				"JOIN {h-schema}service_request_category src ON sr.category_id = src.id " +
 				"JOIN {h-schema}source_type st ON sr.source_type_id = st.id " +
+				"LEFT JOIN {h-schema}reference r ON (r.service_request_id = sr.id) " +
+				"LEFT JOIN {h-schema}care_line cl ON (cl.id = r.care_line_id) " +
+				"LEFT JOIN {h-schema}care_line_role clr ON (clr.care_line_id = cl.id) " +
                 "WHERE dr.patient_id = :patientId " +
                 "AND d.type_id = :documentType " +
                 "AND d.status_id = :documentStatusId " +
+				(filter.getLoggedUserRoleIds() != null && filter.getUserId() != null ? "AND (cl.id IS NULL OR cl.classified IS FALSE OR (clr.role_id IN :loggedUserRoleIds AND cl.classified IS TRUE AND clr.deleted IS FALSE) OR r.created_by = :userId) " : " ") +
                 ") " +
                 "SELECT t.id AS id, s.id AS d_id, s.pt AS m_pt " +
                 ", drs.id AS statusId, drs.description AS status " +
@@ -80,6 +84,11 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
                 .setParameter("documentType", DocumentType.ORDER)
                 .setParameter("invalidStatus", DiagnosticReportStatus.ERROR)
 				.setParameter("cancelled", DiagnosticReportStatus.CANCELLED);
+
+		if (filter.getLoggedUserRoleIds() != null && filter.getUserId() != null) {
+			query.setParameter("loggedUserRoleIds", filter.getLoggedUserRoleIds());
+			query.setParameter("userId", filter.getUserId());
+		}
 
 		if (filter.getStatus() != null){
 			if (Stream.of(DiagnosticReportStatus.FINAL_RDI, DiagnosticReportStatus.FINAL).anyMatch(e -> e.equals(filter.getStatus()))){

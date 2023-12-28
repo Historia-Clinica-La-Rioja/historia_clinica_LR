@@ -303,8 +303,8 @@ public class ServiceRequestController {
 						"category {}, categoriesToBeExcluded {}",
                 institutionId, patientId, status, study, healthCondition, category, categoriesToBeExcluded);
 
-        List<DiagnosticReportBo> resultService = listDiagnosticReportInfoService.getList(new DiagnosticReportFilterBo(
-                patientId, status, study, healthCondition, category, categoriesToBeExcluded));
+        List<DiagnosticReportBo> resultService = listDiagnosticReportInfoService.getListIncludingConfidential(new DiagnosticReportFilterBo(
+                patientId, status, study, healthCondition, category, categoriesToBeExcluded), institutionId);
 
         List<DiagnosticReportInfoDto> result = resultService.stream()
                 .map(diagnosticReportBo -> {
