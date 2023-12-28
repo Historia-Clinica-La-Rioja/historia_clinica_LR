@@ -17,7 +17,7 @@ public interface FrailRepository extends SGXAuditableEntityJPARepository<Questio
 			"FROM Answer la " +
 			"INNER JOIN QuestionnaireResponse qr ON  qr.id = la.questionnaireResponseId " +
 			"WHERE qr.patientId = :patientId " +
-			"AND qr.statusId = 2" +
+			"AND qr.statusId = 2 " +
 			"ORDER BY qr.id, la.itemId, la.questionnaireResponseId, la.answerId, la.value" )
 	List<Answer> findPatientFrailTest(@Param("patientId") Integer patientId);
 
