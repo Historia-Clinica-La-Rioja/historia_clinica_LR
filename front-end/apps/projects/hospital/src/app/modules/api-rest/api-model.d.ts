@@ -2678,7 +2678,7 @@ export interface OdontologyConceptDto extends Serializable {
     snomed: OdontologySnomedDto;
 }
 
-export interface OdontologyConsultationDto extends Serializable {
+export interface OdontologyConsultationDto {
     allergies?: OdontologyAllergyConditionDto[];
     clinicalSpecialtyId: number;
     dentalActions?: OdontologyDentalActionDto[];
@@ -2755,11 +2755,12 @@ export interface OdontologyMedicationDto {
     suspended: boolean;
 }
 
-export interface OdontologyPersonalHistoryDto extends Serializable {
+export interface OdontologyPersonalHistoryDto {
+    inactivationDate?: string;
+    note?: string;
     snomed: SnomedDto;
-    startDate?: DateDto;
-    statusId?: string;
-    verificationId?: string;
+    startDate: string;
+    typeId: number;
 }
 
 export interface OdontologyProcedureDto extends Serializable {
