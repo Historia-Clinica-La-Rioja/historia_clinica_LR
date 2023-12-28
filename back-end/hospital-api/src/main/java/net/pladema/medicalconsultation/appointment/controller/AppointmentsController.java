@@ -14,10 +14,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
 import ar.lamansys.refcounterref.application.associatereferenceappointment.AssociateReferenceAppointment;
-import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
-import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentOrderDetailImageDto;
-import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentTicketImageDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.DetailOrderImageMapper;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentLabel;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryLabelDto;
@@ -28,9 +25,7 @@ import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentDateB
 import net.pladema.staff.controller.dto.ProfessionalDto;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;

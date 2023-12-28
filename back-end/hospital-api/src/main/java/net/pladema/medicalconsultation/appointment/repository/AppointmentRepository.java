@@ -690,7 +690,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 									@Param("ids") List<Integer> ids);
 
 	@Transactional(readOnly = true)
-	@Query(" SELECT NEW net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo(d.id, a.patientId, a.dateTypeId, a.hour, a.patientEmail, a.callId," +
+	@Query(" SELECT NEW net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo(d.id, a.patientId, a.dateTypeId, a.hour, a.modalityId, a.patientEmail, a.callId," +
 			"a.applicantHealthcareProfessionalEmail) " +
 			"FROM Appointment a " +
 			"JOIN AppointmentAssn aa ON (aa.pk.appointmentId = a.id) " +
@@ -707,4 +707,14 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	@Modifying
 	@Query("UPDATE Appointment a SET a.modalityId = :modalityId WHERE a.id = :appointmentId")
 	void updateAppointmentModalityId(@Param("appointmentId") Integer appointmentId, @Param("modalityId") Short modalityId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE Appointment a SET a.callId = :callId WHERE a.id = :appointmentId")
+	void updateCallId(@Param("appointmentId") Integer appointmentId, @Param("callId") String callId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE Appointment a SET a.callId = NULL, a.patientEmail = NULL WHERE a.id = :appointmentId")
+	void removeVirtualAttentionAttributes(@Param("appointmentId") Integer appointmentId);
 }

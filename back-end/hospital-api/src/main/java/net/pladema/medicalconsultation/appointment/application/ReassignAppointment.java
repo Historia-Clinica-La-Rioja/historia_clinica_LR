@@ -16,6 +16,8 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @AllArgsConstructor
 @Slf4j
 @Service
@@ -34,11 +36,19 @@ public class ReassignAppointment {
 		log.debug("Input parameters -> appointmentUpdateData {}", appointmentUpdateData);
 		appointmentRepository.updateDate(appointmentUpdateData.getAppointmentId(), appointmentUpdateData.getDate(), appointmentUpdateData.getTime());
 		appointmentAssnRepository.updateOpeningHoursId(appointmentUpdateData.getOpeningHoursId(), appointmentUpdateData.getAppointmentId());
-		appointmentRepository.updateAppointmentModalityId(appointmentUpdateData.getAppointmentId(), appointmentUpdateData.getModality().getId());
+		AppointmentBo appointment = appointmentRepository.getEmailNotificationData(appointmentUpdateData.getAppointmentId());
+		updateModalityRelatedData(appointment, appointmentUpdateData);
 		if (mustSendEmail(appointmentUpdateData.getModality()))
-			sendNotificationEmail(appointmentUpdateData);
+			sendNotificationEmail(appointment, appointmentUpdateData);
 		log.debug("Output -> {}", Boolean.TRUE);
 		return Boolean.TRUE;
+	}
+
+	private void updateModalityRelatedData(AppointmentBo appointment, UpdateAppointmentDateBo appointmentUpdateData) {
+		boolean modalityChanged = !appointment.getModalityId().equals(appointmentUpdateData.getModality().getId());
+		if (modalityChanged && appointmentUpdateData.getModality().equals(EAppointmentModality.ON_SITE_ATTENTION))
+			appointmentRepository.removeVirtualAttentionAttributes(appointmentUpdateData.getAppointmentId());
+		appointmentRepository.updateAppointmentModalityId(appointmentUpdateData.getAppointmentId(), appointmentUpdateData.getModality().getId());
 	}
 
 	private boolean mustSendEmail(EAppointmentModality modality) {
@@ -47,14 +57,24 @@ public class ReassignAppointment {
 						modality.equals(EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION));
 	}
 
-	private void sendNotificationEmail(UpdateAppointmentDateBo appointmentUpdateData) {
-		AppointmentBo appointmentBo = appointmentRepository.getEmailNotificationData(appointmentUpdateData.getAppointmentId());
-		appointmentBo.setModalityId(appointmentUpdateData.getModality().getId());
-		if (appointmentUpdateData.getPatientEmail() != null) {
-			appointmentBo.setPatientEmail(appointmentUpdateData.getPatientEmail());
-			appointmentRepository.updateAppointmentPatientEmail(appointmentUpdateData.getAppointmentId(), appointmentUpdateData.getPatientEmail());
-		}
-		sendVirtualAppointmentEmailService.run(appointmentBo);
+	private void sendNotificationEmail(AppointmentBo appointment, UpdateAppointmentDateBo appointmentUpdateData) {
+		appointment.setModalityId(appointmentUpdateData.getModality().getId());
+		if (appointmentUpdateData.getPatientEmail() != null)
+			updatePatientEmail(appointmentUpdateData, appointment);
+		if (appointment.getCallId() == null)
+			updateCallId(appointment, appointmentUpdateData);
+		sendVirtualAppointmentEmailService.run(appointment);
+	}
+
+	private void updateCallId(AppointmentBo appointment, UpdateAppointmentDateBo appointmentUpdateData) {
+		String callId = UUID.randomUUID().toString();
+		appointmentRepository.updateCallId(appointmentUpdateData.getAppointmentId(), callId);
+		appointment.setCallId(callId);
+	}
+
+	private void updatePatientEmail(UpdateAppointmentDateBo appointmentUpdateData, AppointmentBo appointmentBo) {
+		appointmentBo.setPatientEmail(appointmentUpdateData.getPatientEmail());
+		appointmentRepository.updateAppointmentPatientEmail(appointmentUpdateData.getAppointmentId(), appointmentUpdateData.getPatientEmail());
 	}
 
 }

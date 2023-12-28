@@ -85,11 +85,13 @@ public class AppointmentBo {
 
 	private Short associatedReferenceClosureTypeId;
 	
-	public AppointmentBo(Integer diaryId, Integer patientId, LocalDate date, LocalTime hour, String patientEmail, String callId, String applicantHealthcareProfessionalEmail) {
+	public AppointmentBo(Integer diaryId, Integer patientId, LocalDate date, LocalTime hour, Short modalityId, String patientEmail, String callId,
+						 String applicantHealthcareProfessionalEmail) {
 		this.diaryId = diaryId;
 		this.patientId = patientId;
 		this.date = date;
 		this.hour = hour;
+		this.modalityId = modalityId;
 		this.patientEmail = patientEmail;
 		this.callId = callId;
 		this.applicantHealthcareProfessionalEmail = applicantHealthcareProfessionalEmail;
