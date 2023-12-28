@@ -370,9 +370,12 @@ export class AppointmentComponent implements OnInit {
 				this.loadAppointmentsHours(this.dateAppointment);
 				break;
 			case DATESTYPES.MONTH :
+				const today = dateToDateDto(new Date())
 				this.dateAppointment.month = this.formDate.controls.month.value;
-				if(this.startAgenda.month === this.dateAppointment.month && this.startAgenda.year === this.dateAppointment.year){
+				if(this.startAgenda.month === this.dateAppointment.month && this.startAgenda.year === this.dateAppointment.year && !(this.startAgenda.day < today.day)){
 					this.dateAppointment.day = this.startAgenda.day;
+				} else if (this.startAgenda.day < today.day){
+					this.dateAppointment.day = today.day;
 				}else{
 					this.dateAppointment.day = 1;
 				}
@@ -399,6 +402,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	setAvailableDays(dates: DateDto[], isInitial?:boolean) {
+		console.log(dates)
 		this.availableDays = [];
 		dates.forEach(element => {
 			if (!this.availableDays.includes(element.day))
