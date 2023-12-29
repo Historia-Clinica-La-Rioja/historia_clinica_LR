@@ -356,7 +356,7 @@ public class GeneralReportExcelServiceImpl implements GeneralReportExcelService 
 		cell.setCellStyle(style);
 
 		ICell cell1 = row.createCell(rowNumber.getAndIncrement());
-		cell1.setCellValue(reformatdate.ReformatDateTwo(content.getDate()));
+		cell1.setCellValue(reformatdate.reformatDateTwo(content.getDate()));
 		cell1.setCellStyle(style);
 
 		ICell cell2 = row.createCell(rowNumber.getAndIncrement());

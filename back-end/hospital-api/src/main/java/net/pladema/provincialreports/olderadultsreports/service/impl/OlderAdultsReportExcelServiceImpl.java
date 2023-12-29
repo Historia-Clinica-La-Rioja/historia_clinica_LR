@@ -370,7 +370,7 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell8.setCellStyle(style);
 
 		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
-		cell9.setCellValue(reformatdate.ReformatDateTwo(content.getEntrance()));
+		cell9.setCellValue(reformatdate.reformatDateTwo(content.getEntrance()));
 		cell9.setCellStyle(style);
 
 		ICell cell10 = row.createCell(rowNumber.getAndIncrement());

@@ -18,7 +18,7 @@ public class DateFormat {
 		return outputFormat.format(date);
 	}
 
-	public String ReformatDateTwo(String previousDate) {
+	public String reformatDateTwo(String previousDate) {
 		SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date= null;
 		try {
