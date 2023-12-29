@@ -102,13 +102,14 @@
 			[title]="'odontologia.odontology-consultation-dock-popup.PERSONAL_HISTORY' | translate" icon="report"
 			[isEmpty]="personalHistoriesNewConsultationService.isEmpty()">
 			<div fxLayout="column" fxLayoutGap="2vh">
+
 				<app-titled-content-card *ngIf="!personalHistoriesNewConsultationService.isEmpty()"
 					title="{{ 'odontologia.odontology-consultation-dock-popup.REGISTERED_PERSONAL_HISTORY' }}">
-					<app-background-list [service]="personalHistoriesNewConsultationService"></app-background-list>
+					<app-personal-histories-background-list [service]="personalHistoriesNewConsultationService"></app-personal-histories-background-list>
 				</app-titled-content-card>
 
 				<div>
-					<button mat-button type="button" id="add-allergy-button" color="primary" class="add-button"
+					<button mat-button type="button" id="add-personal-history-button" color="primary" class="add-button"
 						(click)="addPersonalHistory()">
 						+ {{ 'odontologia.odontology-consultation-dock-popup.ADD_PERSONAL_HISTORY' | translate }}
 					</button>

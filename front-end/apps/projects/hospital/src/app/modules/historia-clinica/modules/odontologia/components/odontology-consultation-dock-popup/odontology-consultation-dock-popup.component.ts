@@ -18,7 +18,7 @@ import { AlergiasNuevaConsultaService } from '@historia-clinica/modules/ambulato
 import { ReferenceInformation } from '@historia-clinica/modules/ambulatoria/services/ambulatory-consultation-reference.service';
 import { MedicacionesNuevaConsultaService } from "@historia-clinica/modules/ambulatoria/services/medicaciones-nueva-consulta.service";
 import { MotivoNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
-import { PersonalHistoriesNewConsultationService } from "@historia-clinica/modules/ambulatoria/services/personal-histories-new-consultation.service";
+import { NewConsultationPersonalHistoriesService } from '@historia-clinica/modules/ambulatoria/services/new-consultation-personal-histories.service';
 import { toDentalAction, toOdontologyAllergyConditionDto, toOdontologyDiagnosticDto, toOdontologyMedicationDto, toOdontologyPersonalHistoryDto, toOdontologyProcedureDto } from '@historia-clinica/modules/odontologia/utils/mapper.utils';
 import { ProblemasService } from '@historia-clinica/services/problemas.service';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
@@ -31,7 +31,6 @@ import { combineLatest, forkJoin, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { OdontologyConsultationService } from '../../api-rest/odontology-consultation.service';
 import { NewConsultationAddDiagnoseFormComponent } from '../../dialogs/new-consultation-add-diagnose-form/new-consultation-add-diagnose-form.component';
-import { NewConsultationPersonalHistoryFormComponent } from '../../dialogs/new-consultation-personal-history-form/new-consultation-personal-history-form.component';
 import { ActionsNewConsultationService } from '../../services/actions-new-consultation.service';
 import { ActionType } from '../../services/actions.service';
 import { ConceptsFacadeService } from '../../services/concepts-facade.service';
@@ -43,6 +42,7 @@ import { EpisodeData } from '@historia-clinica/components/episode-data/episode-d
 import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
 import { ConfirmarPrescripcionComponent } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
+import { NewConsultationPersonalHistoryFormComponent } from '@historia-clinica/modules/ambulatoria/dialogs/new-consultation-personal-history-form/new-consultation-personal-history-form.component';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -59,7 +59,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	severityTypes: any[];
 	allergiesNewConsultationService: AlergiasNuevaConsultaService;
 	criticalityTypes: any[];
-	personalHistoriesNewConsultationService: PersonalHistoriesNewConsultationService;
+	personalHistoriesNewConsultationService: NewConsultationPersonalHistoriesService;
 	medicationsNewConsultationService: MedicacionesNuevaConsultaService;
 	form: UntypedFormGroup;
 	clinicalSpecialties: ClinicalSpecialtyDto[];
@@ -98,7 +98,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.reasonNewConsultationService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.allergiesNewConsultationService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService, internmentMasterDataService);
 		this.medicationsNewConsultationService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
-		this.personalHistoriesNewConsultationService = new PersonalHistoriesNewConsultationService(formBuilder, this.snomedService, this.snackBarService);
+		this.personalHistoriesNewConsultationService = new NewConsultationPersonalHistoriesService(this.snomedService, this.snackBarService);
 		this.otherDiagnosticsNewConsultationService = new ProblemasService(formBuilder, this.snomedService, this.snackBarService);
 		this.diagnosticsNewConsultationService = new ActionsNewConsultationService(this.odontogramService, this.surfacesNamesFacadeService, ActionType.DIAGNOSTIC, this.conceptsFacadeService);
 		this.proceduresNewConsultationService = new ActionsNewConsultationService(this.odontogramService, this.surfacesNamesFacadeService, ActionType.PROCEDURE, this.conceptsFacadeService);
@@ -220,7 +220,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
 			autoFocus: false,
-			width: '35%',
+			width: '30%',
 			disableClose: true,
 		});
 	}
@@ -321,7 +321,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			reasons: this.reasonNewConsultationService.getMotivosConsulta(),
 			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
 			dentalActions,
-			personalHistories: this.personalHistoriesNewConsultationService.getAntecedentes().map(toOdontologyPersonalHistoryDto),
+			personalHistories: this.personalHistoriesNewConsultationService.getPersonalHistories().map(toOdontologyPersonalHistoryDto),
 			permanentTeethPresent: this.form.value.permanentTeethPresent,
 			temporaryTeethPresent: this.form.value.temporaryTeethPresent,
 			references: this.odontologyReferenceService.getOdontologyReferences(),
