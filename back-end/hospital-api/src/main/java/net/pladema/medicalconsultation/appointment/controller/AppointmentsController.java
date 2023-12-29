@@ -729,13 +729,17 @@ public class AppointmentsController {
 		BasicDataPersonDto basicPatientDto = basicData.getPerson();
 		BasicPersonalDataDto basicPersonalDataDto = new BasicPersonalDataDto(
 				basicPatientDto.getFirstName(),
+				basicPatientDto.getMiddleNames(),
 				basicPatientDto.getLastName(),
+				basicPatientDto.getOtherLastNames(),
 				basicPatientDto.getIdentificationNumber(),
 				basicPatientDto.getIdentificationTypeId(),
 				phonePrefix,
 				phoneNumber,
 				basicPatientDto.getGender().getId(),
-				basicPatientDto.getNameSelfDetermination()
+				basicPatientDto.getNameSelfDetermination(),
+				null,
+				basicPatientDto.getBirthDate()
 		);
 		return new AppointmentBasicPatientDto(basicData.getId(), basicPersonalDataDto, basicData.getTypeId());
 	}

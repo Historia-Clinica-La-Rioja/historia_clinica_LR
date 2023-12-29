@@ -9,6 +9,7 @@ import { mapDateWithHypenToDateWithSlash, timeToString } from '@api-rest/mapper/
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { EquipmentService } from '@api-rest/services/equipment.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { PatientNameService } from "@core/services/patient-name.service";
 import {
 	WORKLIST_APPOINTMENT_STATES,
 	APPOINTMENT_STATES_ID,
@@ -91,11 +92,8 @@ export class WorklistByTechnicalComponent implements OnInit {
 	    public dialog: MatDialog,
 		private readonly formBuilder: UntypedFormBuilder,
         private readonly worklistFacadeService: WorklistFacadeService,
+        private readonly patientNameService: PatientNameService,
 	) {
-		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
-			this.nameSelfDeterminationFF = isOn
-		});
-
         this.featureFlagService.isActive(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES).subscribe(isOn => {
             this.permission = isOn;
         })
@@ -281,7 +279,7 @@ export class WorklistByTechnicalComponent implements OnInit {
         return WORKLIST_APPOINTMENT_STATES.find(a => a.id == appointmentStateId).description
     }
 
-    private mapAppointmentsToDetailedAppointments(appointments){
+    private mapAppointmentsToDetailedAppointments(appointments: EquipmentAppointmentListDto[]){
         return appointments.map(appointment => {
             return {
                 data: appointment,
@@ -292,23 +290,10 @@ export class WorklistByTechnicalComponent implements OnInit {
                 canBeFinished: appointment.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED,
                 derive: appointment.derivedTo.id ? appointment.derivedTo : null,
                 reportStatus: this.getReportStatus(appointment.reportStatusId),
-                patientFullName: this.getPatientName(appointment),
+                patientFullName: this.patientNameService.completeName(appointment.patient.person.firstName, appointment.patient.person.nameSelfDetermination, appointment.patient.person.lastName, appointment.patient.person.middleNames, appointment.patient.person.otherLastNames),
                 canBeDerived: appointment.reportStatusId === this.reportStates.PENDING,
             }
         })
-    }
-
-    private getPatientName(appointment: EquipmentAppointmentListDto) {
-        let patientName = '';
-        if (this.nameSelfDeterminationFF) {
-            patientName += appointment.patient.person.nameSelfDetermination?.length ? 
-                        appointment.patient.person.nameSelfDetermination + ' ' :
-                        (appointment.patient.person.firstName || '') + ' ';
-        } else {
-            patientName += (appointment.patient.person.firstName || '') + ' ';
-        }
-        patientName += appointment.patient.person.lastName || '';
-        return patientName;
     }
 
     private getReportStatus(reportStatusId): ReportState{
