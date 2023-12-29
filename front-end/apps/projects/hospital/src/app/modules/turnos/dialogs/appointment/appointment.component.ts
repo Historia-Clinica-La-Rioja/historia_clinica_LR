@@ -374,7 +374,7 @@ export class AppointmentComponent implements OnInit {
 				this.dateAppointment.month = this.formDate.controls.month.value;
 				if(this.startAgenda.month === this.dateAppointment.month && this.startAgenda.year === this.dateAppointment.year && !(this.startAgenda.day < today.day)){
 					this.dateAppointment.day = this.startAgenda.day;
-				} else if (this.startAgenda.day < today.day){
+				} else if (this.startAgenda.month === this.dateAppointment.month && this.startAgenda.year === this.dateAppointment.year && this.startAgenda.day < today.day){
 					this.dateAppointment.day = today.day;
 				}else{
 					this.dateAppointment.day = 1;
