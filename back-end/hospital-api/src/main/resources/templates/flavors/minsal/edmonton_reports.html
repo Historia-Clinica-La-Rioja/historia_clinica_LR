@@ -43,6 +43,11 @@
            font-weight: normal;
         }
 
+        .bold-text {
+           font-weight: bold;
+        }
+
+
     </style>
 </head>
 <body th:fragment="frail">
@@ -245,23 +250,23 @@
         <div class="itemcontainer" th:each="respuesta : ${answers[11]}">
             <h4>Total</h4>
             <p>El puntaje final de la prueba realizada se interpreta como:</p>
-            <label>
+            <label th:class="${respuesta.answerId == 21} ? 'bold-text' : ''">
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt29" th:checked="${respuesta.answerId == 21}"></input>
                 4 o menor: individuo sano
             </label><br></br>
-            <label>
+            <label th:class="${respuesta.answerId == 22} ? 'bold-text' : ''">
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt30" th:checked="${respuesta.answerId == 22}"></input>
                 5 o 6: vulnerable
             </label><br></br>
-            <label>
+            <label th:class="${respuesta.answerId == 23} ? 'bold-text' : ''">
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt31" th:checked="${respuesta.answerId == 23}"></input>
                 7 u 8: fragilidad leve
             </label><br></br>
-            <label>
+            <label th:class="${respuesta.answerId == 24} ? 'bold-text' : ''">
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt32" th:checked="${respuesta.answerId == 24}"></input>
                 9 o 10: fragilidad moderada
             </label><br></br>
-            <label>
+            <label th:class="${respuesta.answerId == 25} ? 'bold-text' : ''">
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt33" th:checked="${respuesta.answerId == 25}"></input>
                 11 o mayor: fragilidad severa
             </label><br></br>

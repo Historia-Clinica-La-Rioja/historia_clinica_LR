@@ -43,6 +43,10 @@
            font-weight: normal;
         }
 
+        .bold-text {
+           font-weight: bold;
+        }
+
     </style>
 </head>
 <body th:fragment="frail">
@@ -164,11 +168,11 @@
         <div class="itemcontainer" th:each="respuesta : ${answers[5]}">
             <h4>Interpretación de puntaje</h4>
             <p>La sumatoria da como resultado</p>
-            <label>
+            <label th:class="${respuesta.answerId == 49} ? 'bold-text' : ''">
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt14" th:checked="${respuesta.answerId == 49}"></input>
                 0 a 2 - persona pre-frágil
             </label><br></br>
-            <label>
+            <label th:class="${respuesta.answerId == 50} ? 'bold-text' : ''">
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt15" th:checked="${respuesta.answerId == 50}"></input>
                 3 a 5 - persona frágil
             </label><br></br>
