@@ -1,0 +1,37 @@
+<button *ngIf="!showDeriveForm && !showDeriveRequest" (click)="openFormToDeriveRequest()" mat-button type="button" color="primary">
+    <span>
+        {{'access-management.derive_request.BUTTON_TITLE' | translate}}
+    </span>
+</button>
+
+<div *ngIf="showDeriveForm" fxLayout="column" fxLayoutGap="10px">
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+        <span class="title">
+            {{'access-management.derive_request.FORM_TITLE' | translate}}
+        </span>
+    </div>
+
+    <div>
+        <form [formGroup]="formDeriveRequest" fxLayout="column" fxLayoutGap="5px">
+            <mat-form-field appearance="outline">
+                <textarea formControlName="coment"
+                    placeholder="{{'access-management.derive_request.FORM_PLACEHOLDER' | translate }}"
+                    rows="4" matInput type="text">
+                </textarea>
+            </mat-form-field>
+
+            <div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px">
+                <button mat-stroked-button color="primary" btn-block type="button" (click)="cancelDerivation()">
+                    <span> {{'turnos.appointment.CANCEL' | translate}}</span>
+                </button>
+                <button mat-flat-button color="primary" btn-block type="button" [disabled]="!formDeriveRequest.valid" (click)="saveDerivation()">
+                    <span> {{'turnos.appointment.SAVE' | translate}}</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div *ngIf="showDeriveRequest">
+    <p>Muestro el texto que va: {{_derivation}}</p>
+</div>

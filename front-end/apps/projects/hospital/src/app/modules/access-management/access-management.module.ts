@@ -22,11 +22,11 @@ import { ReferenceCompleteDataComponent } from './components/reference-complete-
 import { RegulationAppointmentResultViewComponent } from './components/regulation-appointment-result-view/regulation-appointment-result-view.component';
 import { RegulationSearchCriteriaComponent } from './components/regulation-search-criteria/regulation-search-criteria.component';
 import { SearchAppointmentsForRegulationComponent } from './components/search-appointments-for-regulation/search-appointments-for-regulation.component';
+import { DeriveRequestComponent } from './components/derive-request/derive-request.component';
 //dialogs
 import { ReasonPopUpComponent } from './dialogs/reason-pop-up/reason-pop-up.component';
 import { RegulationNewAppointmentPopUpComponent } from './dialogs/regulation-new-appointment-pop-up/regulation-new-appointment-pop-up.component';
 import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data-popup/report-complete-data-popup.component';
-
 
 @NgModule({
 	declarations: [
@@ -42,6 +42,7 @@ import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data
 		RegulationAppointmentResultViewComponent,
 		RegulationSearchCriteriaComponent,
 		SearchAppointmentsForRegulationComponent,
+		DeriveRequestComponent,
 		//dialogs
 		ReasonPopUpComponent,
 		ReportCompleteDataPopupComponent,

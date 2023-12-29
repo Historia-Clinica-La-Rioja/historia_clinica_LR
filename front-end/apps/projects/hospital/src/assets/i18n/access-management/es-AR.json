@@ -89,6 +89,14 @@
 		"appointment_result_view": {
 			"ASSIGN_APPOINTMENT": "asignar turno",
 			"JOINT_DIARY": "agenda conjunta"
+		},
+		"derive_request": {
+			"BUTTON_TITLE": "Derivar a gestor de acceso superior",
+			"FORM_TITLE": "Derivar a regulador superior",
+			"FORM_PLACEHOLDER": "Comentario para el regulador superior",
+			"SHOW_SUCCESS_DERIVATION": "La derivación se ha llevado a cabo exitosamente",
+			"SHOW_SUCCESS_EDIT": "La derivación se ha modificado exitosamente",
+			"SHOW_ERROR_DERIVATION:": "Error al cargar la derivación"
 		}
 	}
 }

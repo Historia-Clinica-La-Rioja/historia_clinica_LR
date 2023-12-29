@@ -48,4 +48,11 @@ export class InstitutionalNetworkReferenceReportService {
 		return this.http.post<boolean>(url, {}, { params: queryParams });
 	}
 
+	addDerivation(referenceId: number, derivation: string): Observable<Object> {
+		const url = `${this.BASE_URL}/forwarding/${referenceId}`;
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = (derivation) ? queryParams.append('observation', derivation) : queryParams;
+		return this.http.post<boolean>(url, {}, { params: queryParams });
+	}
+
 }

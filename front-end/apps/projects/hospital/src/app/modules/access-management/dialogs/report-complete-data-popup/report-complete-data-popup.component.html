@@ -37,10 +37,21 @@
 				<mat-divider></mat-divider>
 				<app-appointment-summary [appointmentSummary]="reportCompleteData.appointment"></app-appointment-summary>
 			</div>
+
 			<mat-divider></mat-divider>
+
 			<app-add-observations [observation]="observation" [registerEditor]="registerEditor$ | async"
 				(observationEmmiter)="addObservation($event)">
 			</app-add-observations>
+
+			<mat-divider *ngIf="observation || derivation"></mat-divider>
+
+			<div *ngIf="referenceRegulationDto$ | async as referenceRegulationDto">
+				<app-derive-request *ngIf="showDerivationRequest && referenceRegulationDto.state === (approvedState || waitingApprovalState)"
+					[derivation]="derivation" (derivationEmmiter)="addDerivation($event)">
+				</app-derive-request>
+			</div>
+
 		</div>
 	</mat-dialog-content>
 

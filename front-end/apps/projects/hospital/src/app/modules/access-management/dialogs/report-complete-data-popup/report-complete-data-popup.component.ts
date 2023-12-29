@@ -36,10 +36,18 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	Tabs = Tabs;
 	referenceRegulationDto$: Observable<ReferenceRegulationDto>;
 	approvedState = EReferenceRegulationState.APPROVED;
+	waitingApprovalState = EReferenceRegulationState.WAITING_APPROVAL;
 	observation: string;
+	derivation: string;
 	registerEditor: RegisterEditor = null;
 	registerEditor$: BehaviorSubject<RegisterEditor> = new BehaviorSubject<RegisterEditor>(null);
 	domainRole = false;
+	registerDeriveEditor: RegisterEditor = null;
+	registerDeriveEditor$: BehaviorSubject<RegisterEditor> = new BehaviorSubject<RegisterEditor>(null);
+	hasObservation: boolean = false;
+	hasDerivationRequest = false;
+	showDerivationRequest: boolean;
+
 
 	constructor(
 		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
@@ -56,11 +64,13 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		referenceDetails$.subscribe(
 			referenceDetails => {
 				this.setObservation(referenceDetails);
+				this.setDerivation(referenceDetails);
 				this.referenceCompleteData = referenceDetails;
 				this.referenceRegulationDto$ = of(this.referenceCompleteData.regulation);
 				this.setReportData(this.referenceCompleteData);
 				this.colapseContactDetails = this.referenceCompleteData.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.SERVED;
 			});
+		this.permissionService.hasContextAssignments$(GESTORES).subscribe(hasRole => this.showDerivationRequest = hasRole);
 	}
 
 	updateApprovalStatus() {
@@ -89,10 +99,31 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 				if (res) {
 					this.snackBarService.showSuccess('turnos.report-complete-data.SHOW_SUCCESS_OBSERVATION');
 					this.updateObservations();
+					this.hasObservation = true;
 				}
 				else
 					this.snackBarService.showError('turnos.report-complete-data.SHOW_ERROR_OBSERVATION');
 			});
+	}
+
+	addDerivation(derivation: string): void {
+		this.derivation = derivation;
+		this.institutionalNetworkReferenceReportService.addDerivation(this.data.referenceId, derivation)
+		.subscribe(res => {
+			if (res) {
+				this.snackBarService.showSuccess('access-management.derive_request.SHOW_SUCCESS_DERIVATION');
+				this.updateDerivation();
+				this.hasDerivationRequest = true;
+			}
+			else
+				this.snackBarService.showError('access-management.derive_request.SHOW_ERROR_DERIVATION');
+		});
+	}
+
+	private updateDerivation() {
+		this.institutionalNetworkReferenceReportService.getReferenceDetail(this.data.referenceId).subscribe(
+			referenceDetails => this.setDerivation(referenceDetails)
+		)
 	}
 
 	private updateObservations() {
@@ -110,6 +141,16 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 
 	private addObservationOtherRoles(observation: string) {
 		return this.institutionalReferenceReportService.addObservation(this.data.referenceId, observation);
+	}
+
+	private setDerivation(referenceDetails: ReferenceCompleteDataDto) {
+		if(referenceDetails?.forwarding) {
+			const { observation, managerCompleteName, date } = referenceDetails.forwarding;
+			const createdBy = managerCompleteName;
+			this.derivation = observation;
+			this.registerDeriveEditor = { createdBy, date: convertDateTimeDtoToDate(date) };
+			this.registerDeriveEditor$.next(this.registerDeriveEditor);
+		}
 	}
 
 	private setObservation(referenceDetails: ReferenceCompleteDataDto) {
