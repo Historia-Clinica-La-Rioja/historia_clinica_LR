@@ -37,7 +37,7 @@ export class NewConsultationPersonalHistoriesService {
             type: new FormControl(null, Validators.required),
             startDate: new FormControl(null, Validators.required),
             endDate: new FormControl(null),
-            observations: new FormControl(''),
+            observations: new FormControl(null),
         });
 
         this.data = [];
@@ -75,7 +75,7 @@ export class NewConsultationPersonalHistoriesService {
                 type: this.form.value.type,
                 startDate: this.form.value.startDate,
                 endDate: this.form.value.endDate,
-                observations: this.form.value.observations,
+                observations: this.form.value.observations || null,
             };
             if (this.add(personalHistory))
                 this.snackBarService.showError("Antecedente personal duplicado");
