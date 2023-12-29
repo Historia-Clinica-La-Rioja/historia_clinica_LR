@@ -22,6 +22,8 @@ import javax.validation.ConstraintViolationException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceAppointmentStateDto;
 import lombok.AllArgsConstructor;
 
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -316,6 +318,15 @@ public class AppointmentServiceImpl implements AppointmentService {
 		});
 		log.debug(OUTPUT, Boolean.TRUE);
 		return Boolean.TRUE;
+	}
+
+	@Override
+	public List<AppointmentBookingBo> getCompleteBookingAppointmentInfo(String identificationNumber) {
+		log.debug("Input parameters -> identificationNumber {}", identificationNumber);
+		List<AppointmentBookingBo> result = appointmentRepository.getCompleteBookingAppointmentInfo(identificationNumber).stream().map(AppointmentBookingBo::new)
+				.collect(Collectors.toList());
+		log.debug(OUTPUT, result);
+		return result;
 	}
 
 	@Override

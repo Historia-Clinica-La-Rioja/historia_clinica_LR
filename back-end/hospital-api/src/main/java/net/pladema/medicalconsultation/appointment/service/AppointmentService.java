@@ -12,6 +12,7 @@ import net.pladema.medicalconsultation.appointment.repository.domain.Appointment
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketImageBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
@@ -25,6 +26,8 @@ public interface AppointmentService {
 	Optional<AppointmentBo> getAppointment(Integer appointmentId);
 
 	Optional<AppointmentBo> getAppointmentSummary(Integer appointmentId);
+
+	List<AppointmentBookingBo> getCompleteBookingAppointmentInfo(String identificationNumber);
 
 	Optional<AppointmentBo> getEquipmentAppointment(Integer appointmentId);
 

@@ -12,6 +12,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo;
 import net.pladema.establishment.repository.entity.HierarchicalUnit;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentBookingVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import ar.lamansys.sgx.shared.migratable.SGXDocumentEntityRepository;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
@@ -321,6 +322,25 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"AND (a.deleteable.deleted = false OR a.deleteable.deleted is null)")
 	List<Appointment> findBlockedAppointmentBy(@Param("diaryId") Integer diaryId,
 											   @Param("date") LocalDate date, @Param("hour") LocalTime hour);
+
+	@Transactional(readOnly = true)
+	@Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentBookingVo(" +
+			"p.firstName, p.middleNames, p.lastName, p.otherLastNames, a.dateTypeId, a.hour, do.description, cs.name) " +
+			"FROM Appointment AS a " +
+			"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+			"JOIN Diary d ON (d.id = aa.pk.diaryId ) " +
+			"JOIN ClinicalSpecialty cs ON (d.clinicalSpecialtyId = cs.id) " +
+			"JOIN HealthcareProfessional AS hp ON (hp.id = d.healthcareProfessionalId) " +
+			"JOIN Person p ON (hp.personId = p.id) " +
+			"JOIN UserPerson AS up ON (up.pk.personId = hp.personId ) " +
+			"JOIN DoctorsOffice do ON (do.id = d.doctorsOfficeId ) " +
+			"JOIN BookingAppointment ba ON (a.id = ba.pk.appointmentId) " +
+			"JOIN BookingPerson bp ON (ba.pk.bookingPersonId = bp.id) " +
+			"WHERE bp.identificationNumber LIKE :identificationNumber AND (d.deleteable.deleted = false OR d.deleteable.deleted is null ) " +
+			"AND a.dateTypeId > current_date " +
+			"AND a.appointmentStateId = " + AppointmentState.BOOKED )
+	List<AppointmentBookingVo> getCompleteBookingAppointmentInfo(@Param("identificationNumber") String identificationNumber);
+
 
 	@Transactional(readOnly = true)
 	@Query(	"SELECT DISTINCT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketImageBo(" +

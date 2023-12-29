@@ -5,6 +5,7 @@ import ar.lamansys.sgh.shared.HospitalSharedAutoConfiguration;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentEquipmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.BookedAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.EmptyAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.EquipmentAppointmentListDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.PatientAppointmentHistoryDto;
@@ -12,6 +13,7 @@ import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointm
 import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentDateBo;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
@@ -25,6 +27,7 @@ import net.pladema.medicalconsultation.diary.domain.FreeAppointmentSearchFilterB
 import net.pladema.medicalconsultation.diary.infrastructure.input.dto.FreeAppointmentSearchFilterDto;
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
 
+import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -39,6 +42,8 @@ import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointm
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDailyAmountBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
+
+import java.util.List;
 
 @Mapper(uses = {LocalDateMapper.class, EAppointmentModality.class, EReferenceClosureType.class})
 public interface AppointmentMapper {
@@ -97,6 +102,13 @@ public interface AppointmentMapper {
 	@Named("toAssignedAppointmentDto")
 	@Mapping(target = "associatedReferenceClosureType", source = "associatedReferenceClosureTypeId")
 	AssignedAppointmentDto toAssignedAppointmentDto(AppointmentAssignedBo appointmentAssignedBo);
+
+	@Named("toBookingAppointmentDto")
+	BookedAppointmentDto toBookingAppointmentDto(AppointmentBookingBo appointmentBookingBo);
+
+	@IterableMapping(qualifiedByName = "toBookingAppointmentDto")
+	@Named("toBookingAppointmentDtoList")
+	List<BookedAppointmentDto> toBookingAppointmentDtoList(List<AppointmentBookingBo> appointmentBookingBos);
 
 	@Named("toUpdateAppointmentBo")
 	UpdateAppointmentBo toUpdateAppointmentBo(UpdateAppointmentDto updateAppointmentDto);

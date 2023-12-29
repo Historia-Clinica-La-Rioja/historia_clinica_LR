@@ -17,6 +17,7 @@ import ar.lamansys.refcounterref.application.associatereferenceappointment.Assoc
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentOrderDetailImageDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.DetailOrderImageMapper;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentLabel;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryLabelDto;
 import net.pladema.medicalconsultation.appointment.application.ReassignAppointment;
 
@@ -73,6 +74,7 @@ import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentEqu
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.BookedAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.DetailsOrderImageDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.EquipmentAppointmentListDto;
@@ -748,6 +750,16 @@ public class AppointmentsController {
 		log.debug("Result size {}", result.size());
 		log.trace(OUTPUT, result);
 		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/{identificationNumber}/get-booking-appointments")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	public List<BookedAppointmentDto> getBookingAppointmentsList(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "identificationNumber") String identificationNumber) {
+		log.debug("Input parameters -> institutionId {}, identificationNumber {}", institutionId, identificationNumber);
+		List<AppointmentBookingBo> bookedAppointments = appointmentService.getCompleteBookingAppointmentInfo(identificationNumber);
+		List<BookedAppointmentDto> result = appointmentMapper.toBookingAppointmentDtoList(bookedAppointments);
+		log.debug(OUTPUT, result);
+		return result;
 	}
 
 	@GetMapping("/patient/{patientId}/get-medical-coverage")
