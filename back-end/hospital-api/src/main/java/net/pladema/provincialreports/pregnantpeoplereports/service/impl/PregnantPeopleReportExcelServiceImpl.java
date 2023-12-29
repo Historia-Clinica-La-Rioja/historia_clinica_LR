@@ -126,7 +126,7 @@ public class PregnantPeopleReportExcelServiceImpl implements PregnantPeopleRepor
 		data.add(new CellContent(nRow, 23, 1, 1, "", basicStyle));
 
 		nRow++;
-		data.add(new CellContent(nRow, 0, 1, 2, "PERIODO: " + reformatdate.ReformatDateThree(startDate) + " hasta " + reformatdate.ReformatDateThree(endDate), basicStyle));
+		data.add(new CellContent(nRow, 0, 1, 2, "PERIODO: " + reformatdate.reformatDateThree(startDate) + " hasta " + reformatdate.reformatDateThree(endDate), basicStyle));
 		data.add(new CellContent(nRow, 19, 1, 5, "", basicStyle));
 
 		nRow++;
@@ -213,7 +213,7 @@ public class PregnantPeopleReportExcelServiceImpl implements PregnantPeopleRepor
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(reformatdate.ReformatDateThree(content.getPatientBirthDate()));
+		cell4.setCellValue(reformatdate.reformatDateThree(content.getPatientBirthDate()));
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
@@ -273,7 +273,7 @@ public class PregnantPeopleReportExcelServiceImpl implements PregnantPeopleRepor
 		cell2.setCellStyle(style);
 
 		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
-		cell3.setCellValue(reformatdate.ReformatDateThree(content.getPatientBirthDate()));
+		cell3.setCellValue(reformatdate.reformatDateThree(content.getPatientBirthDate()));
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());

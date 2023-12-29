@@ -394,7 +394,7 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(reformatdate.ReformatDateThree(content.getAttentionDate()));
+		cell4.setCellValue(reformatdate.reformatDateThree(content.getAttentionDate()));
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
@@ -483,7 +483,7 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(reformatdate.ReformatDateThree(content.getAttentionDate()));
+		cell4.setCellValue(reformatdate.reformatDateThree(content.getAttentionDate()));
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
@@ -725,7 +725,7 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(reformatdate.ReformatDateThree(content.getAttentionDate()));
+		cell4.setCellValue(reformatdate.reformatDateThree(content.getAttentionDate()));
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());

@@ -273,7 +273,7 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
-		cell5.setCellValue(reformatdate.ReformatDateThree(content.getAttentionDate()));
+		cell5.setCellValue(reformatdate.reformatDateThree(content.getAttentionDate()));
 		cell5.setCellStyle(style);
 
 		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
@@ -354,7 +354,7 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
-		cell5.setCellValue(reformatdate.ReformatDateThree(content.getBirthDate()));
+		cell5.setCellValue(reformatdate.reformatDateThree(content.getBirthDate()));
 		cell5.setCellStyle(style);
 
 		ICell cell6 = row.createCell(rowNumber.getAndIncrement());

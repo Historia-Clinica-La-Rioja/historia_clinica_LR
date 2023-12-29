@@ -35,7 +35,7 @@ public class DateFormat {
 
 	@SneakyThrows
 
-	public String ReformatDateThree(String previousDate) {
+	public String reformatDateThree(String previousDate) {
 		SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date= null;
 		try {

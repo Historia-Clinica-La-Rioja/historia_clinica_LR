@@ -453,7 +453,7 @@ public class NursingReportExcelServiceImpl implements NursingReportExcelService 
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(reformatdate.ReformatDateThree(content.getAttentionDate()));
+		cell4.setCellValue(reformatdate.reformatDateThree(content.getAttentionDate()));
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
@@ -687,7 +687,7 @@ public class NursingReportExcelServiceImpl implements NursingReportExcelService 
 		cell10.setCellStyle(style);
 
 		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
-		cell11.setCellValue(reformatdate.ReformatDateThree(content.getBirthday()));
+		cell11.setCellValue(reformatdate.reformatDateThree(content.getBirthday()));
 		cell11.setCellStyle(style);
 
 		ICell cell12 = row.createCell(rowNumber.getAndIncrement());
@@ -796,7 +796,7 @@ public class NursingReportExcelServiceImpl implements NursingReportExcelService 
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(reformatdate.ReformatDateThree(content.getAttentionDate()));
+		cell4.setCellValue(reformatdate.reformatDateThree(content.getAttentionDate()));
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
@@ -812,7 +812,7 @@ public class NursingReportExcelServiceImpl implements NursingReportExcelService 
 		cell7.setCellStyle(style);
 
 		ICell cell8 = row.createCell(rowNumber.getAndIncrement());
-		cell8.setCellValue(reformatdate.ReformatDateThree(content.getPatientBirthDate()));
+		cell8.setCellValue(reformatdate.reformatDateThree(content.getPatientBirthDate()));
 		cell8.setCellStyle(style);
 
 		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
