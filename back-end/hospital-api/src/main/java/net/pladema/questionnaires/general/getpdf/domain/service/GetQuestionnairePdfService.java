@@ -9,20 +9,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
 import org.webjars.NotFoundException;
 
 import com.lowagie.text.DocumentException;
 
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.establishment.repository.entity.Institution;
-import net.pladema.patient.repository.PatientRepository;
+import net.pladema.person.repository.IdentificationTypeRepository;
 import net.pladema.person.repository.PersonRepository;
+import net.pladema.person.repository.entity.IdentificationType;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.questionnaires.common.domain.Answer;
 import net.pladema.questionnaires.common.domain.QuestionnaireResponseII;
@@ -49,19 +46,21 @@ public class GetQuestionnairePdfService {
 	@Autowired
 	private final PersonRepository personRepository;
 
-    private final Logger logger = LoggerFactory.getLogger(GetQuestionnairePdfService.class);
+	@Autowired
+	private final IdentificationTypeRepository identificationTypeRepository;
 
-    public GetQuestionnairePdfService(AnswerRepository answerRepository, QuestionnaireResponseRepository questionnaireResponseRepository, HealthcareProfessionalRepository healthcareProfessionalRepository, PatientRepository patientRepository, InstitutionRepository institutionRepository, PersonRepository personRepository, TemplateEngine templateEngine) {
+    public GetQuestionnairePdfService(AnswerRepository answerRepository, QuestionnaireResponseRepository questionnaireResponseRepository, HealthcareProfessionalRepository healthcareProfessionalRepository, InstitutionRepository institutionRepository, PersonRepository personRepository, IdentificationTypeRepository identificationTypeRepository) {
         this.answerRepository = answerRepository;
         this.questionnaireResponseRepository = questionnaireResponseRepository;
         this.healthcareProfessionalRepository = healthcareProfessionalRepository;
         this.institutionRepository = institutionRepository;
         this.personRepository = personRepository;
+        this.identificationTypeRepository = identificationTypeRepository;
     }
 
     public Map<String, Object> createQuestionnaireContext(Integer questionnaireResponseId, Integer institutionId) throws DocumentException, IOException {
 		QuestionnaireResponseII response = questionnaireResponseRepository.findById(questionnaireResponseId)
-				.orElseThrow(() -> new NotFoundException("Questionnaire response not found with id %s"));
+				.orElseThrow(() -> new NotFoundException("Questionnaire response not found"));
 
 		List<Answer> answers = answerRepository.findByQuestionnaireResponseId(questionnaireResponseId);
 
@@ -79,14 +78,19 @@ public class GetQuestionnairePdfService {
 		Person patientPerson = personRepository.findPersonByPatientId(response.getPatientId())
 				.orElseThrow(() -> new NotFoundException("Patient person not found"));
 
-		String professionalPersonFullName = fullNameFromPerson(professionalPerson);
+		IdentificationType patientIdType = identificationTypeRepository.findById(patientPerson.getIdentificationTypeId())
+				.orElseThrow(() -> new NotFoundException("Patient person not found"));
 
+		String professionalPersonFullName = fullNameFromPerson(professionalPerson);
 		String patientPersonFullName = fullNameFromPerson(patientPerson);
 
 		Period patientAgePeriod = calculateAgeAtQuestionnaireResponseCreation(response);
 		String patientAge = formatAge(patientAgePeriod);
 
+		String formattedCreatedOn = formatDbTimestamp(response.getCreatedOn());
+
 		Map<String, Object> context = new HashMap<>();
+		context.put("response", response);
 		context.put("answers", answers);
 		context.put("professional", professional);
 		context.put("professionalPerson", professionalPerson);
@@ -95,6 +99,8 @@ public class GetQuestionnairePdfService {
 		context.put("patientPerson", patientPerson);
 		context.put("patientPersonFullName", patientPersonFullName);
 		context.put("patientAge", patientAge);
+		context.put("patientIdType", patientIdType);
+		context.put("formattedCreatedOn", formattedCreatedOn);
 
 		return context;
 	}
