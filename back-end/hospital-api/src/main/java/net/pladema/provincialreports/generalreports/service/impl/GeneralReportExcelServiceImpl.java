@@ -238,7 +238,7 @@ public class GeneralReportExcelServiceImpl implements GeneralReportExcelService 
 		cell5.setCellStyle(style);
 
 		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
-		cell6.setCellValue(reformatdate.ReformatDate(content.getAttentionDate()));
+		cell6.setCellValue(reformatdate.reformatDate(content.getAttentionDate()));
 		cell6.setCellStyle(style);
 
 		ICell cell7 = row.createCell(rowNumber.getAndIncrement());

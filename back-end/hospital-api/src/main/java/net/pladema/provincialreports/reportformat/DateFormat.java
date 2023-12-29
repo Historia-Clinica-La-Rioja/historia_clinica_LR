@@ -10,7 +10,7 @@ import java.util.Date;
 @Service
 public class DateFormat {
 	@SneakyThrows
-	public String ReformatDate (String previousDate) {
+	public String reformatDate (String previousDate) {
 
 		SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = inputFormat.parse(previousDate);
