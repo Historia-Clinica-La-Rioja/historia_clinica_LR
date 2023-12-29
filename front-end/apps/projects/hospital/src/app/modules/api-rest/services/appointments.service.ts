@@ -6,6 +6,7 @@ import {
 	AppointmentOrderDetailImageDto,
 	AppointmentShortSummaryDto,
 	AssignedAppointmentDto,
+	BookedAppointmentDto,
 	CreateAppointmentDto,
 	DetailsOrderImageDto,
 	EquipmentAppointmentListDto,
@@ -279,6 +280,11 @@ export class AppointmentsService {
 	getAssignedAppointmentsList(patientId: number): Observable<AssignedAppointmentDto[]> {
 		const url = `${this.BASE_URL}/${patientId}/get-assigned-appointments`;
 		return this.http.get<AssignedAppointmentDto[]>(url);
+	}
+
+	getBookingAppointmentsList(identificationNumber: string): Observable<BookedAppointmentDto[]> {
+		const url = `${this.BASE_URL}/${identificationNumber}/get-booking-appointments`;
+		return this.http.get<BookedAppointmentDto[]>(url);
 	}
 
 	getAppointmentHistoric(pageNumber: number, patientId: number): Observable<PatientAppointmentHistoryDto[]> {

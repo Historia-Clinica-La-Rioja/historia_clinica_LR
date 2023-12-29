@@ -53,6 +53,7 @@ import { WarningEditIdentificationNumberComponent } from './dialogs/warning-edit
 // pipes
 import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-and-specialty.pipe';
 import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
+import { BookingAppointmentsComponent } from './component/booking-appointments/booking-appointments.component';
 
 
 
@@ -103,6 +104,7 @@ import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module
 		WarningEditIdentificationNumberComponent,
 		// pipes
 		ViewNameProfessionAndSpecialtyPipe,
+  BookingAppointmentsComponent,
 
 	],
 	exports: [
