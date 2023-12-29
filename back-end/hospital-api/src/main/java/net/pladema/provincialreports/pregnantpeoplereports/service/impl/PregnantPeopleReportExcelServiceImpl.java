@@ -233,7 +233,7 @@ public class PregnantPeopleReportExcelServiceImpl implements PregnantPeopleRepor
 		cell8.setCellStyle(style);
 
 		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
-		cell9.setCellValue(reformatdate.ReformatDateFour(content.getAttentionDate()));
+		cell9.setCellValue(reformatdate.reformatDateFour(content.getAttentionDate()));
 		cell9.setCellStyle(style);
 
 		ICell cell10 = row.createCell(rowNumber.getAndIncrement());

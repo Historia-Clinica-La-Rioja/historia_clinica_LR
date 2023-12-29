@@ -459,7 +459,7 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell12.setCellStyle(style);
 
 		ICell cell13 = row.createCell(rowNumber.getAndIncrement());
-		cell13.setCellValue(reformatdate.ReformatDateFour(content.getStartDate()));
+		cell13.setCellValue(reformatdate.reformatDateFour(content.getStartDate()));
 		cell13.setCellStyle(style);
 
 		ICell cell14 = row.createCell(rowNumber.getAndIncrement());

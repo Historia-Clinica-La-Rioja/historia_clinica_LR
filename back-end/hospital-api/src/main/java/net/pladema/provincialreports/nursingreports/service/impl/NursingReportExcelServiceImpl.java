@@ -659,7 +659,7 @@ public class NursingReportExcelServiceImpl implements NursingReportExcelService 
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(reformatdate.ReformatDateFour(content.getAttentionDate()));
+		cell4.setCellValue(reformatdate.reformatDateFour(content.getAttentionDate()));
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());

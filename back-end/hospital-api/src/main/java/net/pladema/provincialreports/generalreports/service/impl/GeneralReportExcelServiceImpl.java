@@ -311,7 +311,7 @@ public class GeneralReportExcelServiceImpl implements GeneralReportExcelService 
 		cell1.setCellStyle(style);
 
 		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
-		cell2.setCellValue(reformatdate.ReformatDateFour(content.getAttentionDate()));
+		cell2.setCellValue(reformatdate.reformatDateFour(content.getAttentionDate()));
 		cell2.setCellStyle(style);
 
 		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
@@ -416,7 +416,7 @@ public class GeneralReportExcelServiceImpl implements GeneralReportExcelService 
 		cell17.setCellStyle(style);
 
 		ICell cell19 = row.createCell(rowNumber.getAndIncrement());
-		cell19.setCellValue(reformatdate.ReformatDateFour(content.getDateOfIssue()));
+		cell19.setCellValue(reformatdate.reformatDateFour(content.getDateOfIssue()));
 		cell19.setCellStyle(style);
 
 		ICell cell20 = row.createCell(rowNumber.getAndIncrement());
