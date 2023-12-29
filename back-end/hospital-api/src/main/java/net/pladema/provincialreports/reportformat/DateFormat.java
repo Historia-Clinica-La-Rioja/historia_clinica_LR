@@ -65,7 +65,7 @@ public class DateFormat {
 
 
 	@SneakyThrows
-	public String ReformatDateFive (String previousDate) {
+	public String reformatDateFive (String previousDate) {
 
 		if (previousDate !=null) {
 			SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");

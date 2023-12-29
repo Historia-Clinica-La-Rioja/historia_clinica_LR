@@ -297,7 +297,7 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell10.setCellStyle(style);
 
 		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
-		cell11.setCellValue(reformatdate.ReformatDateFive(content.getBirthDate()));
+		cell11.setCellValue(reformatdate.reformatDateFive(content.getBirthDate()));
 		cell11.setCellStyle(style);
 
 		ICell cell12 = row.createCell(rowNumber.getAndIncrement());
