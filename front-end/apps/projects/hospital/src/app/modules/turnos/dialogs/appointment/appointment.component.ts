@@ -402,7 +402,6 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	setAvailableDays(dates: DateDto[], isInitial?:boolean) {
-		console.log(dates)
 		this.availableDays = [];
 		dates.forEach(element => {
 			if (!this.availableDays.includes(element.day))
