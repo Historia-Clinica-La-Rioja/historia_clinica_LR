@@ -1,4 +1,4 @@
-import { Component, Input  } from '@angular/core';
+import { Component, Input, Output  } from '@angular/core';
 import { ReferenceRequestDto } from '@api-rest/api-model';
 import { ReportReference } from '../reference-study-closure-information/reference-study-closure-information.component';
 
@@ -12,4 +12,5 @@ export class ReferenceStudyComponent {
 	@Input() reference: ReferenceRequestDto;
 	@Input() diagnosticReportId: number;
 	@Input() reportReference?: ReportReference;
+	@Output() reportReferenc?: ReportReference;
 }

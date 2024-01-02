@@ -11,6 +11,7 @@ import { BehaviorSubject, Observable, forkJoin, map, of, tap } from 'rxjs';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { ButtonType } from '@presentation/components/button/button.component';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
+import { ButtonService } from '../../services/button.service';
 
 @Component({
 	selector: 'app-reference-study-close',
@@ -38,6 +39,7 @@ export class ReferenceStudyCloseComponent implements OnInit {
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		public dialogRef: MatDialogRef<ReferenceCompleteStudyComponent>,
 		public dialog: MatDialog,
+		readonly buttonService: ButtonService,
 
 	) { }
 
@@ -59,6 +61,17 @@ export class ReferenceStudyCloseComponent implements OnInit {
 						: csProfessional;
 				}),
 				tap(clinicalSpecialties => this.handleClinicalSpecialties(clinicalSpecialties)));
+		this.formReferenceClosure.valueChanges.subscribe(_ =>
+			this.buttonService.updateFormStatus(!this.formReferenceClosure.valid)
+		);
+
+		this.buttonService.submit$.subscribe(submit => {
+			if (submit)
+				this.completeStudy();
+		});
+
+
+
 	}
 
 	removeSelectedFile(index: number) {
@@ -74,7 +87,7 @@ export class ReferenceStudyCloseComponent implements OnInit {
 	}
 
 	completeStudy() {
-		this.isLoading$.next(true);
+		this.buttonService.updateLoading(true);
 		const completeRequest = this.buildRequest();
 		this.prescripcionesService.completeStudy(this.patientId, this.diagnosticReportId,
 			completeRequest, this.selectedFiles).subscribe(_ => {
@@ -82,7 +95,7 @@ export class ReferenceStudyCloseComponent implements OnInit {
 				this.closeModal(false, true);
 			}, error => {
 				this.dialog.open(DiscardWarningComponent, { data: getConfirmDataDialog() });
-				this.isLoading$.next(false);
+				this.buttonService.updateLoading(false);
 
 				function getConfirmDataDialog() {
 					const keyPrefix = 'ambulatoria.reference-study-close';

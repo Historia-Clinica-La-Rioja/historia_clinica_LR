@@ -1,22 +1,37 @@
-<div fxLayoutAlign="end">
-	<button id="close" mat-icon-button mat-dialog-close>
-		<mat-icon>close</mat-icon>
-	</button>
-</div>
+<ng-container *ngIf="_reference$ | async as _reference else spinner">
 
-<mat-dialog-content *ngIf="_reference$ | async as _reference else spinner" fxLayout="column" fxLayoutGap="22px">
-	<app-reference-request-data [setReference]="_reference" [status]="data.status" [order]="data.order">
+	<div fxLayout="row" fxLayoutAlign="space-between start">
+		<h1 class="capitalize-first-letter">{{_reference.dto.procedure.pt }}</h1>
 
-	</app-reference-request-data>
+		<div>
+			<button id="close" mat-icon-button mat-dialog-close>
+				<mat-icon>close</mat-icon>
+			</button>
+		</div>
+	</div>
 
-	<mat-divider></mat-divider>
+	<mat-dialog-content fxLayout="column" fxLayoutGap="22px">
+		<div fxLayout="row" fxLayoutGap="22px">
+			<app-reference-request-data fxFlex="45%" [setReference]="_reference" [status]="data.status"
+				[order]="data.order">
+			</app-reference-request-data>
 
-	<app-reference-study [patientId]="data.patientId" [reference]="data.reference"
-		[diagnosticReportId]="data.diagnosticReportId" [reportReference]="data?.reportReference">
+			<mat-divider></mat-divider>
+			<mat-divider [vertical]="true"></mat-divider>
 
-	</app-reference-study>
+			<app-reference-study fxFlex="45%" [patientId]="data.patientId" [reference]="data.reference"
+				[diagnosticReportId]="data.diagnosticReportId" [reportReference]="data?.reportReference">
+			</app-reference-study>
+		</div>
+	</mat-dialog-content>
 
-</mat-dialog-content>
+	<mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
+		<app-button [buttonType]='buttonTypeFlat' text='ambulatoria.reference-study-close.COMPLETE_BUTTON'
+			[isLoading]="buttonService.isLoading$ | async" [disabled]="(buttonService.formDisabled$ | async)"
+			(clicked)="completeStudy()">
+		</app-button>
+	</mat-dialog-actions>
+</ng-container>
 
 <ng-template #spinner>
 	<div class="centered-spinner">

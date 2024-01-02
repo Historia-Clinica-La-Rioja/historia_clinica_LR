@@ -145,7 +145,7 @@ export class StudyComponent implements OnInit {
 						diagnosticReportId: diagnosticReport.id,
 						status: this.getPrescriptionStatus(diagnosticReport.statusId)
 					},
-					width: '45%',
+					width: '50%',
 					disableClose: true,
 				});
 		} else {
@@ -191,7 +191,8 @@ export class StudyComponent implements OnInit {
 						diagnosticReportId: diagnosticReport.id,
 						status: this.getPrescriptionStatus(diagnosticReport.statusId)
 					},
-					width: '35%',
+					width: '50%',
+					height: '55%',
 				});
 		 }
 		else {

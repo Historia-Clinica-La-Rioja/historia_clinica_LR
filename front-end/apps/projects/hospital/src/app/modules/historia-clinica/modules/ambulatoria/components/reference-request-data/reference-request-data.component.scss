@@ -12,12 +12,13 @@
 	align-self: stretch;
 }
 
-.row-container {
-	width: 100%;
-	margin-right: 12px;
-}
-
 .download-file {
 	width: 100%;
 }
 
+.row-container {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	flex-wrap: wrap;
+}

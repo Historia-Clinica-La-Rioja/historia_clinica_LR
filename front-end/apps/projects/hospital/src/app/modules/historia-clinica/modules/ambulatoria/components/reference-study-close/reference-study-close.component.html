@@ -60,13 +60,6 @@
 				</div>
 			</div>
 		</div>
-
-		<mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
-			<app-button [buttonType]='buttonTypeFlat' text='ambulatoria.reference-study-close.COMPLETE_BUTTON'
-				[isLoading]="isLoading$|async" [disabled]="!formReferenceClosure.valid || (disabled$ | async)"
-				(clicked)="completeStudy()">
-			</app-button>
-		</mat-dialog-actions>
 	</div>
 
 	<ng-template #noPermission>
