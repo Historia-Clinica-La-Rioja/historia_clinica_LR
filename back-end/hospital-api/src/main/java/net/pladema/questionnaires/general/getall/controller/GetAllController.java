@@ -33,9 +33,10 @@ public class GetAllController {
     }
 
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO_ADULTO_MAYOR, ENFERMERO, ESPECIALISTA_EN_ODONTOLOGIA')")
-	@GetMapping("patient/{patientId}/all-questionnaire-responses")
+	@GetMapping("institution/{institutionId}/patient/{patientId}/all-questionnaire-responses")
 	public ResponseEntity<List<QuestionnaireResponseII>> getResponsesByPatientIdWithDetails (
-			@PathVariable Integer patientId
+			@PathVariable Integer patientId,
+			@PathVariable Integer institutionId
 	) {
 		try {
 			List<QuestionnaireResponseII> responses = getAllService.getResponsesByPatientIdWithDetails(patientId);
