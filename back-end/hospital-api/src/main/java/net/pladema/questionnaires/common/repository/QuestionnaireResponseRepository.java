@@ -13,7 +13,6 @@ import net.pladema.questionnaires.common.domain.QuestionnaireResponseII;
 public interface QuestionnaireResponseRepository extends JpaRepository<QuestionnaireResponseII, Integer> {
 
 	@Query("SELECT qr FROM QuestionnaireResponseII qr " +
-			"LEFT JOIN FETCH qr.createdByUser cu " +
 			"LEFT JOIN FETCH qr.createdByHealthcareProfessional chp " +
 			"WHERE qr.patientId = :patientId")
 	List<QuestionnaireResponseII> findResponsesWithCreatedByDetails(@Param("patientId") Integer patientId);

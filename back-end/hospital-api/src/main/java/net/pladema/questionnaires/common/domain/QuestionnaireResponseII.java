@@ -98,16 +98,6 @@ public class QuestionnaireResponseII {
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "created_by", insertable = false, updatable = false)
-	private User createdByUser;
-
-	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name = "updated_by", insertable = false, updatable = false)
-	private User updatedByUser;
-
-	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name = "created_by", insertable = false, updatable = false)
 	private HealthcareProfessional createdByHealthcareProfessional;
 
 	@JsonIgnore
