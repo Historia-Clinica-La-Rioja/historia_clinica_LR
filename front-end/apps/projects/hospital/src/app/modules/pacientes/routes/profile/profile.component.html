@@ -195,7 +195,13 @@
 				<app-resumen-de-guardia *ngIf="showEmergencyCareSummary" [episodeId]="episodeId" showNewTriage="true">
 				</app-resumen-de-guardia>
 
-				<app-assigned-appointments *appHasRole="['ADMINISTRATIVO']" [patientId]="patientId" (newAppointmentRequired)="newAppointment()">
+				<app-booking-appointments *appHasRole="['ADMINISTRATIVO']"
+					[identificationNumber]="personalInformation?.identificationNumber"
+					(newAppointmentRequired)="newAppointment()">
+				</app-booking-appointments>
+
+				<app-assigned-appointments *appHasRole="['ADMINISTRATIVO']" [patientId]="patientId"
+					(newAppointmentRequired)="newAppointment()">
 				</app-assigned-appointments>
 			</div>
 		</div>

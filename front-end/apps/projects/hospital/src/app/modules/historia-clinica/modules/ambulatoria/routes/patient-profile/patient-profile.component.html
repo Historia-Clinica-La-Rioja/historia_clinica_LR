@@ -3,23 +3,29 @@
 		<section fxLayout="column" fxFlex="50" fxFlex.lt-md="100">
 			<div>
 				<app-patient-card *ngIf="personPhoto" [patient]="patientBasicData" [personPhoto]="personPhoto"
-								[internmentEpisodeInProgress]="internmentEpisode?.id && internmentEpisode?.inProgress"
-								[emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress?.id && emergencyCareEpisodeInProgress?.inProgress">
+					[internmentEpisodeInProgress]="internmentEpisode?.id && internmentEpisode?.inProgress"
+					[emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress?.id && emergencyCareEpisodeInProgress?.inProgress">
 					<div header class="header">
 						<app-patient-type-logo [patientTypeData]="patientTypeData"></app-patient-type-logo>
 					</div>
 					<div content>
 						<app-personal-information [personalInformation]="personalInformation"
-												[patientMedicalCoverage]="patientMedicalCoverage"
-												[showButtonGoToMedicalHistory]="showButtonGoToMedicalHistory"
-												(goToMedicalHistory)="goToMedicalHistory()">
+							[patientMedicalCoverage]="patientMedicalCoverage"
+							[showButtonGoToMedicalHistory]="showButtonGoToMedicalHistory"
+							(goToMedicalHistory)="goToMedicalHistory()">
 						</app-personal-information>
 					</div>
 				</app-patient-card>
 			</div>
 		</section>
-		<section fxFlex="50" fxFlex.lt-md="100">
-			<app-assigned-appointments *appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"  
+		<section fxFlex="50" fxFlex.lt-md="100" fxLayoutGap="20px">
+			<app-booking-appointments
+				*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+				[identificationNumber]="personalInformation?.identificationNumber"
+				(newAppointmentRequired)="newAppointment()">
+			</app-booking-appointments>
+			<app-assigned-appointments
+				*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 				[patientId]="patientId" (newAppointmentRequired)="newAppointment()">
 			</app-assigned-appointments>
 		</section>

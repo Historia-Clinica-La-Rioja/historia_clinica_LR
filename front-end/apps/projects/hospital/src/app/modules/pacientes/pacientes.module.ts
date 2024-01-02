@@ -104,14 +104,14 @@ import { BookingAppointmentsComponent } from './component/booking-appointments/b
 		WarningEditIdentificationNumberComponent,
 		// pipes
 		ViewNameProfessionAndSpecialtyPipe,
-  BookingAppointmentsComponent,
-
+		BookingAppointmentsComponent,
 	],
 	exports: [
 		// routing
 		EditPatientComponent,
 		// components
 		AssignedAppointmentsComponent,
+		BookingAppointmentsComponent,
 		CardPatientComponent,
 		ResumenDeGuardiaComponent,
 		SearchPatientComponent,
