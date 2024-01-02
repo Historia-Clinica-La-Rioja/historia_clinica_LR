@@ -93,6 +93,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 	hasLaboratoryStaffRole = false;
 	hasPharmacyStaffRole = false;
 	hasEmergencyCareRelatedRole = false;
+	hasViolenceRole = false;
 	showNursingSection = false;
 	femenino = FEMENINO;
 	selectedTab = 0;
@@ -108,7 +109,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 	isEmergencyCareTemporalPatient = false;
 	patientType: number;
 	isTemporaryPatient: boolean = false;
-	showCardTabs: boolean = true;
+	showCardTabs: boolean = false;
 
 	emergencyCareEpisode: ResponseEmergencyCareDto;
 	emergencyCareEpisodeState: EstadosEpisodio;
@@ -409,9 +410,12 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 			this.hasLaboratoryStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_LABORATORIO]);
 			this.hasPharmacyStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_FARMACIA]);
 			this.hasPrescriptorRole = anyMatch<ERole>(userRoles, [ERole.PRESCRIPTOR]);
+			this.hasViolenceRole = anyMatch<ERole>(userRoles, [ERole.ABORDAJE_VIOLENCIAS]);
 
-			if (userRoles.length === 1 && anyMatch<ERole>(userRoles, [ERole.ABORDAJE_VIOLENCIAS]))
-				this.showCardTabs = false;
+			if (this.hasHealthRelatedRole || this.hasPrescriptorRole || this.hasEmergencyCareRelatedRole || 
+				this.hasPharmacyStaffRole || this.hasPicturesStaffRole || this.hasLaboratoryStaffRole)	{
+					this.showCardTabs = true;
+				}
 		});
 	}
 
