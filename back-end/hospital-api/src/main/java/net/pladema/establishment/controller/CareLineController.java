@@ -29,7 +29,7 @@ public class CareLineController {
     private final CareLineMapper careLineMapper;
 
     @GetMapping()
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO') || hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
     public ResponseEntity<List<CareLineDto>> getAll(@PathVariable(name = "institutionId") Integer institutionId) {
         List<CareLineBo> careLinesBo = careLineService.getCareLines();
         log.debug("Get all care lines  => {}", careLinesBo);
