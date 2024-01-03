@@ -1,15 +1,13 @@
-package net.pladema.violencereport.infrastructure.input.rest.dto;
+package net.pladema.violencereport.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
-@ToString
 @Getter
 @Setter
 @NoArgsConstructor
-public class ViolenceReportPersonDto {
+public class ViolenceReportActorBo {
 
 	private String lastName;
 
@@ -20,5 +18,9 @@ public class ViolenceReportPersonDto {
 	private String address;
 
 	private Short municipalityId;
+
+	private Short relationshipWithVictimId;
+
+	private String otherRelationshipWithVictim;
 
 }

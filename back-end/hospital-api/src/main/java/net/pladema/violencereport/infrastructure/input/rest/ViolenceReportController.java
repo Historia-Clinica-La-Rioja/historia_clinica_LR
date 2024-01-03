@@ -1,13 +1,23 @@
 package net.pladema.violencereport.infrastructure.input.rest;
 
+import javax.validation.Valid;
+
+import net.pladema.violencereport.application.SaveNewViolenceEpisode;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.violencereport.domain.ViolenceReportBo;
+import net.pladema.violencereport.infrastructure.input.rest.dto.ViolenceReportDto;
+import net.pladema.violencereport.infrastructure.input.rest.mapper.ViolenceReportMapper;
 
 @Slf4j
 @Tag(name = "Violence report", description = "Controller used to handle violence report related operations")
@@ -17,5 +27,26 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @RequestMapping(value = "/institution/{institutionId}/violence-report")
 public class ViolenceReportController {
+
+	private ViolenceReportMapper violenceReportMapper;
+
+	private SaveNewViolenceEpisode saveNewViolenceReport;
+
+	@PostMapping(value = "/patient/{patientId}")
+	public Integer saveNewViolenceReport(@PathVariable("institutionId") Integer institutionId,
+										 @PathVariable("patientId") Integer patientId,
+										 @RequestBody @Valid ViolenceReportDto violenceReport) {
+		log.debug("Input parameters -> institutionId {}, patientId {}, violenceReport {}", institutionId, patientId, violenceReport);
+		ViolenceReportBo violenceReportBo = parseViolenceReportDto(patientId, violenceReport);
+		Integer result = saveNewViolenceReport.run(violenceReportBo);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	private ViolenceReportBo parseViolenceReportDto(Integer patientId, ViolenceReportDto violenceReport) {
+		ViolenceReportBo violenceReportBo = violenceReportMapper.fromViolenceReportDto(violenceReport);
+		violenceReportBo.setPatientId(patientId);
+		return violenceReportBo;
+	}
 
 }
