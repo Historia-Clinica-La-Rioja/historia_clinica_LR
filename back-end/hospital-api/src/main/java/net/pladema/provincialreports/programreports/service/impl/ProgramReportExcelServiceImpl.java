@@ -365,7 +365,7 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 		cell.setCellStyle(style);
 
 		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
-		cell2.setCellValue(content.getRange());
+		cell2.setCellValue(content.getGrp());
 		cell2.setCellStyle(style);
 
 		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
