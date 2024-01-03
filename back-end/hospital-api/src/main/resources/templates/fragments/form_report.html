@@ -260,10 +260,10 @@
         <div class="code">17. CÓDIGO</div>
     </div>
     <div th:if="${problems != null}">
-        <div class="row-data" th:each="problem, iter: ${#strings.arraySplit(problems,'|')}" th:style="${iter.index == 0 ? 'margin-top: 0px' : 'margin-top:5px'}"
-             th:with="cie10CodesList = ${#strings.arraySplit(cie10Codes,'|')}">
-            <div class="diagnosis" th:text="${problem}"></div>
-            <div th:if="${cie10Codes != null}" class="code" th:text="${cie10CodesList[iter.index]}"></div>
+        <div class="row-data" th:each="problem, iter: ${problems}" th:style="${iter.index == 0 ? 'margin-top: 0px' : 'margin-top:5px'}"
+             th:with="cie10CodesList = ${cie10Codes}">
+            <div class="diagnosis" th:text="${!iter.last} ? ${problem} + ',' : ${problem}"></div>
+            <div th:if="${cie10Codes != null}" class="code" th:text="${!iter.last} ? ${cie10CodesList[iter.index]} + ',' : ${cie10CodesList[iter.index]}"></div>
             <div th:unless="${cie10Codes != null}" class="code">&nbsp;</div>
         </div>
     </div>
@@ -281,8 +281,8 @@
         <div class="concept">
             <div class="concept-title">19. CONCEPTO</div>
             <div class="space"><p class="rp-concept">Rp/</p>
-                <div th:each="study,iter: ${studies}">
-                    <span th:text="${study}"></span>
+                <div th:each="study, iter: ${studies}">
+                    <span th:text="${!iter.last} ? ${study} + ',' : ${study}"></span>
                 </div>
             </div>
         </div>

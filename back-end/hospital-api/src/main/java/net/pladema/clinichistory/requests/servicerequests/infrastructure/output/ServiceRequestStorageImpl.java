@@ -8,6 +8,8 @@ import net.pladema.clinichistory.requests.servicerequests.domain.ServiceRequestP
 
 import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
 
+import net.pladema.clinichistory.requests.servicerequests.repository.TranscribedServiceRequestRepository;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.TranscribedServiceRequestBo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,11 +20,18 @@ import java.util.List;
 public class ServiceRequestStorageImpl implements ServiceRequestStorage {
 
 	private final ServiceRequestRepository serviceRequestRepository;
+	private final TranscribedServiceRequestRepository transcribedServiceRequestRepository;
 
 	@Override
 	public List<ServiceRequestProcedureInfoBo> getProceduresByServiceRequestIds(List<Integer> serviceRequestIds) {
 		log.debug("Input parameter -> serviceRequestIds {} ", serviceRequestIds);
 		return serviceRequestRepository.getServiceRequestsProcedures(serviceRequestIds);
+	}
+
+	@Override
+	public TranscribedServiceRequestBo getTranscribedServiceRequest(Integer transcribedServiceRequestId) {
+		return transcribedServiceRequestRepository.get(transcribedServiceRequestId)
+				.orElse(null);
 	}
 
 }

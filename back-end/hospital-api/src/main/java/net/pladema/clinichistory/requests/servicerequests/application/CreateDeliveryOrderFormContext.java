@@ -17,7 +17,7 @@ public class CreateDeliveryOrderFormContext {
     public Map<String, Object> run(FormVDto formVDto, IServiceRequestBo serviceRequestBo) {
         log.trace("Input parameters -> formVDto {}, serviceRequestBo {}", formVDto, serviceRequestBo);
         Map<String, Object> ctx = new HashMap<>();
-        ctx.put("completePatientName", formVDto.getCompletePatientName());
+        ctx.put("formalPatientName", formVDto.getFormalPatientName());
         ctx.put("address", formVDto.getAddress());
         ctx.put("reportDate", formVDto.getReportDate());
         ctx.put("hcnId", formVDto.getHcnId());

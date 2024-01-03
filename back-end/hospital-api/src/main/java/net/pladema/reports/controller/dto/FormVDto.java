@@ -3,15 +3,19 @@ package net.pladema.reports.controller.dto;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EGender;
 import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
+@AllArgsConstructor
 @Builder
 public class FormVDto {
 

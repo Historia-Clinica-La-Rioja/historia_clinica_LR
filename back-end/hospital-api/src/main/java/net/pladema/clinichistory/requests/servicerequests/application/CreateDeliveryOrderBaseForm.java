@@ -4,7 +4,6 @@ import ar.lamansys.sgh.clinichistory.domain.ips.enums.EGender;
 import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
-import ar.lamansys.sgx.shared.strings.StringHelper;
 import java.time.LocalDate;
 import java.time.Period;
 import lombok.RequiredArgsConstructor;
@@ -25,24 +24,22 @@ public class CreateDeliveryOrderBaseForm {
 
     public FormVDto run(Integer patientId, IServiceRequestBo serviceRequestBo, BasicPatientDto patientDto) {
         Person patientPerson = personService.findByPatientId(patientId).orElseThrow();
-        String completePatientPersonName = sharedPersonPort.getCompletePersonNameById(patientPerson.getId());
+        String formalPatientPersonName = personService.getFormalPersonNameById(patientPerson.getId());
         var contactInfo = sharedPersonPort.getPersonContactInfoById(patientPerson.getId());
 
         LocalDate reportDate = serviceRequestBo.getReportDate();
 
-        FormVDto formVDto = mapToBaseFormVDto(completePatientPersonName, contactInfo, patientId, reportDate, patientDto);
+        FormVDto formVDto = mapToBaseFormVDto(formalPatientPersonName, contactInfo, patientId, reportDate, patientDto);
         log.trace("Output -> {}", formVDto);
         return formVDto;
     }
 
     private FormVDto mapToBaseFormVDto(
-            String completePatientPersonName,
+            String formalPatientPersonName,
             ContactInfoBo contactInfo,
             Integer patientId,
             LocalDate reportDate,
             BasicPatientDto patientDto) {
-
-        var completePatientName = StringHelper.reverseString(completePatientPersonName);
 
         var address = contactInfo != null
                 ? contactInfo.getAddress().getCompleteAddress()
@@ -63,7 +60,7 @@ public class CreateDeliveryOrderBaseForm {
                 : null;
 
         return FormVDto.builder()
-                .completePatientName(completePatientName)
+                .formalPatientName(formalPatientPersonName)
                 .address(address)
                 .reportDate(reportDate)
                 .hcnId(patientId)
