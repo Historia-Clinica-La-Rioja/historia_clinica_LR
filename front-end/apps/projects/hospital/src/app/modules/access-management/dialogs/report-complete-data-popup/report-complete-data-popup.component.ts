@@ -13,7 +13,7 @@ import { PENDING } from '@access-management/constants/reference';
 import { ContextService } from '@core/services/context.service';
 import { NO_INSTITUTION } from '../../../home/home.component';
 import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/institutional-network-reference-report.service';
-import { RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
+import { RegisterDerivationEditor, RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
 import { PermissionsService } from '@core/services/permissions.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { convertDateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
@@ -42,8 +42,8 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	registerEditor: RegisterEditor = null;
 	registerEditor$: BehaviorSubject<RegisterEditor> = new BehaviorSubject<RegisterEditor>(null);
 	domainRole = false;
-	registerDeriveEditor: RegisterEditor = null;
-	registerDeriveEditor$: BehaviorSubject<RegisterEditor> = new BehaviorSubject<RegisterEditor>(null);
+	registerDeriveEditor: RegisterDerivationEditor = null;
+	registerDeriveEditor$: BehaviorSubject<RegisterDerivationEditor> = new BehaviorSubject<RegisterDerivationEditor>(null);
 	hasObservation: boolean = false;
 	hasDerivationRequest = false;
 	showDerivationRequest: boolean;
@@ -145,10 +145,10 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 
 	private setDerivation(referenceDetails: ReferenceCompleteDataDto) {
 		if(referenceDetails?.forwarding) {
-			const { observation, managerCompleteName, date } = referenceDetails.forwarding;
+			const { observation, managerCompleteName, date, type } = referenceDetails.forwarding;
 			const createdBy = managerCompleteName;
 			this.derivation = observation;
-			this.registerDeriveEditor = { createdBy, date: convertDateTimeDtoToDate(date) };
+			this.registerDeriveEditor = { createdBy, date: convertDateTimeDtoToDate(date), type };
 			this.registerDeriveEditor$.next(this.registerDeriveEditor);
 		}
 	}

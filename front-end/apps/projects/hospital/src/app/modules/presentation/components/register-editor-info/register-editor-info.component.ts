@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { EReferenceForwardingType } from '@api-rest/api-model';
 import { DatePipeFormat } from '@core/utils/date.utils';
 
 @Component({
@@ -22,4 +23,9 @@ export interface RegisterEditor {
 	createdBy: string;
 	institution?: string;
 	date: Date;
+}
+
+export interface RegisterDerivationEditor extends RegisterEditor {
+	type: EReferenceForwardingType;
+	derivationType?: string;
 }

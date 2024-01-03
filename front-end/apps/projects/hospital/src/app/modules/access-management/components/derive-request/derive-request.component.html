@@ -32,6 +32,18 @@
     </div>
 </div>
 
-<div *ngIf="showDeriveRequest">
-    <p>Muestro el texto que va: {{_derivation}}</p>
+<div *ngIf="showDeriveRequest" class="derivation" fxLayout="column" fxLayoutGap="10px">
+    <div fxLayout="row" fxLayoutAlign="start center">
+        <mat-icon class="title-icon">error</mat-icon>
+        <span class="title" [translate]="'access-management.derive_request.DERIVATION_MESSAGE_TITLE'" 
+            [translateParams]="{forwardingType: registerDerivationEditor.derivationType}">
+        </span>
+    </div>
+    <div>
+        <span>"{{_derivation}}"</span>
+        <app-register-editor-info *ngIf="registerDerivationEditor"
+            [registerEditor]="registerDerivationEditor"
+            [registerEditorCase]="REGISTER_EDITOR_CASES_DATE_HOUR">
+        </app-register-editor-info>
+    </div>
 </div>

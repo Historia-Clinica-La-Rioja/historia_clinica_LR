@@ -48,7 +48,7 @@
 
 			<div *ngIf="referenceRegulationDto$ | async as referenceRegulationDto">
 				<app-derive-request *ngIf="showDerivationRequest && referenceRegulationDto.state === (approvedState || waitingApprovalState)"
-					[derivation]="derivation" (derivationEmmiter)="addDerivation($event)">
+					[derivation]="derivation" [registerDerivationEditor]="registerDeriveEditor$.getValue()" (derivationEmmiter)="addDerivation($event)">
 				</app-derive-request>
 			</div>
 
