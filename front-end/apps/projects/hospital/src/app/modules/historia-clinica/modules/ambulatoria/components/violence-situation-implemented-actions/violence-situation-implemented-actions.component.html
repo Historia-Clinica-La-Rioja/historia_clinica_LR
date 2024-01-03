@@ -1,7 +1,7 @@
 <app-new-consultation-expansion-section [title]="'ambulatoria.paciente.violence-situations.dialog.implemented-actions.TITLE' | translate" icon="cancel">
 
     <form [formGroup]="form">
-        <mat-radio-group class="basic-options"
+        <mat-radio-group class="basic-options" color="primary"
             formControlName="articulation">
             <mat-radio-button *ngFor="let opt of articulations" [value]="opt">
                 {{opt}}
@@ -9,17 +9,16 @@
         </mat-radio-group>
 
         <div *ngIf="articulation === articulationEnum.IN" class="aside column">
-            <span>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.SUBTITLE_1' | translate}}</span>
-
-			<mat-radio-group class="basic-options"
+			<mat-radio-group class="basic-options" color="primary"
             	formControlName="healthSystemArticulation">
+                <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.SUBTITLE_1' | translate}}</label>
 				<mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
 					{{opt.text}}
 				</mat-radio-button>
         	</mat-radio-group>
 
-            <mat-form-field appearance="outline" *ngIf="healthSystemArticulation">
-				<mat-label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_1' | translate}}</mat-label>
+            <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_1' | translate}}</label>
+            <mat-form-field appearance="outline" *ngIf="healthSystemArticulation" class="mt-10">
 				<mat-select id="violence-situation-area-label" multiple
 					formControlName="area"
 					placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_1' | translate}}">
@@ -36,27 +35,25 @@
 				<mat-error *ngIf="hasError(form, 'required', 'area')" [translate]="'forms.REQUIRED'"></mat-error>
 			</mat-form-field>
 
-            <div *ngIf="area?.includes(areaEnum.OTHER)" class="column">
-                <span>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_2' | translate}}</span>
+            <div *ngIf="area?.includes(areaEnum.OTHER)" class="column mt-10">
+                <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_2' | translate}}</label>
                 <mat-form-field appearance="outline">
-                    <textarea matInput type="text" id="violence-situation-other-area" formControlName="otherArea"
-                        placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_2' | translate }}" required>
-                    </textarea>
+                    <input matInput type="text" id="violence-situation-other-area" formControlName="otherArea"
+                    placeholder="{{'ambulatoria.paciente.violence-situations.dialog.TEXT_FREE_LABEL' | translate}}"required>
                     <mat-error *ngIf="hasError(form, 'required', 'otherArea')" [translate]="'forms.REQUIRED'"></mat-error>
                 </mat-form-field>
             </div>
 
-            <span>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.SUBTITLE_2' | translate}}</span>
-
-            <mat-radio-group class="basic-options"
+            <mat-radio-group class="basic-options" color="primary"
                 formControlName="articulationEstablishment">
+                <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.SUBTITLE_2' | translate}}</label>
                 <mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
                     {{opt.text}}
                 </mat-radio-button>
             </mat-radio-group>
-            
+           
+            <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_3' | translate}}</label>
             <mat-form-field appearance="outline" *ngIf="articulationEstablishment">
-				<mat-label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_3' | translate}}</mat-label>
 				<mat-select id="violence-situation-establishment" multiple
 					formControlName="articulationEstablishmentList"
 					placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_3' | translate}}">
@@ -74,18 +71,17 @@
 			</mat-form-field>
 
             <div *ngIf="articulationEstablishmentList?.includes(establishmentsEnum.OTHER)" class="column">
-                <span>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_4' | translate}}</span>
+                <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_4' | translate}}</label>
                 <mat-form-field appearance="outline">
-                    <textarea matInput type="text" id="violence-situation-other-establishment" formControlName="otherArticulationEstablishment"
-                        placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_4' | translate }}" required>
-                    </textarea>
+                    <input matInput type="text" id="violence-situation-other-establishment" formControlName="otherArticulationEstablishment"
+                    placeholder="{{'ambulatoria.paciente.violence-situations.dialog.TEXT_FREE_LABEL' | translate}}" required>
                     <mat-error *ngIf="hasError(form, 'required', 'otherArticulationEstablishment')" [translate]="'forms.REQUIRED'"></mat-error>
                 </mat-form-field>
             </div>
 
-            <span>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_5' | translate}}</span>
-            <mat-radio-group class="basic-options"
+            <mat-radio-group class="basic-options" color="primary"
                 formControlName="internmentIndication">
+                <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_5' | translate}}</label>
                 <mat-radio-button *ngFor="let opt of intermentIndicationOptions" [value]="opt">
                     {{opt}}
                 </mat-radio-button>
@@ -93,32 +89,32 @@
 
         </div>
 
-        <div *ngIf="articulation === articulationEnum.OUT" class="aside column">
-            <mat-checkbox (click)="setDevice(devicesEnum.MUNICIPAL_DEVICES)">{{ devicesEnum.MUNICIPAL_DEVICES }}</mat-checkbox>
+        <div *ngIf="articulation === articulationEnum.OUT" class="aside column" fxLayoutGap="10px">
+            <mat-checkbox (click)="setDevice(devicesEnum.MUNICIPAL_DEVICES)"  color="primary">{{ devicesEnum.MUNICIPAL_DEVICES }}</mat-checkbox>
 
             <div *ngIf="devices.includes(devicesEnum.MUNICIPAL_DEVICES)" class="aside column">
-                <mat-checkbox *ngFor="let mdev of municipalDevicesList" (click)="setMunicipalDevices(mdev)">{{ mdev }}</mat-checkbox>
+                <mat-checkbox *ngFor="let mdev of municipalDevicesList" (click)="setMunicipalDevices(mdev)" color="primary">{{ mdev }}</mat-checkbox>
             </div>
 
-            <mat-checkbox (click)="setDevice(devicesEnum.PROVINCIAL_DEVICES)">{{ devicesEnum.PROVINCIAL_DEVICES }}</mat-checkbox>
+            <mat-checkbox (click)="setDevice(devicesEnum.PROVINCIAL_DEVICES)" color="primary">{{ devicesEnum.PROVINCIAL_DEVICES }}</mat-checkbox>
 
             <div *ngIf="devices.includes(devicesEnum.PROVINCIAL_DEVICES)" class="aside column">
-                <mat-checkbox *ngFor="let pdev of provincialDevicesList" (click)="setProvincialDevices(pdev)">{{ pdev }}</mat-checkbox>
+                <mat-checkbox *ngFor="let pdev of provincialDevicesList" (click)="setProvincialDevices(pdev)" color="primary">{{ pdev }}</mat-checkbox>
             </div>
 
-            <mat-checkbox (click)="setDevice(devicesEnum.NATIONAL_DEVICES)">{{ devicesEnum.NATIONAL_DEVICES }}</mat-checkbox>
+            <mat-checkbox (click)="setDevice(devicesEnum.NATIONAL_DEVICES)" color="primary">{{ devicesEnum.NATIONAL_DEVICES }}</mat-checkbox>
 
             <div *ngIf="devices.includes(devicesEnum.NATIONAL_DEVICES)" class="aside column">
-                <mat-checkbox *ngFor="let ndev of nationalDevicesList" (click)="setNationalDevices(ndev)">{{ ndev }}</mat-checkbox>
+                <mat-checkbox *ngFor="let ndev of nationalDevicesList" (click)="setNationalDevices(ndev)" color="primary">{{ ndev }}</mat-checkbox>
             </div>
 
-            <mat-checkbox (click)="setDevice(devicesEnum.SOCIAL_ORGANIZATION)">{{ devicesEnum.SOCIAL_ORGANIZATION }}</mat-checkbox>
+            <mat-checkbox (click)="setDevice(devicesEnum.SOCIAL_ORGANIZATION)" color="primary">{{ devicesEnum.SOCIAL_ORGANIZATION }}</mat-checkbox>
         </div>
 
-        <span>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_6' | translate}}</span>
 
-        <mat-radio-group class="basic-options"
+        <mat-radio-group class="basic-options" color="primary"
             formControlName="personComplaint">
+            <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_6' | translate}}</label>
             <mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
                 {{opt.text}}
             </mat-radio-button>
@@ -144,19 +140,18 @@
 			</mat-form-field>
         </div>
 
-        <span>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_8' | translate}}</span>
-
-        <mat-radio-group class="basic-options"
+        <mat-radio-group class="basic-options" color="primary"
             formControlName="isInstitutionComplaint">
+            <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_8' | translate}}</label>
             <mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
                 {{opt.text}}
             </mat-radio-button>
         </mat-radio-group>
 
         <div *ngIf="isInstitutionComplaint" class="aside column">
-            <span>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_9' | translate}}</span>
+            <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_9' | translate}}</label>
 
-            <mat-checkbox *ngFor="let opt of complaints" (click)="setComplaints(opt)">
+            <mat-checkbox *ngFor="let opt of complaints" (click)="setComplaints(opt)" color="primary">
                 {{opt}}
             </mat-checkbox>
 
@@ -179,7 +174,7 @@
 			</mat-form-field>
 
             <div *ngIf="institutionComplaintsOrganizations?.includes(organizationsExtendedEnum.OTHER)" class="column">
-                <span>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_11' | translate}}</span>
+                <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_11' | translate}}</label>
                 <mat-form-field appearance="outline">
                     <textarea matInput type="text" id="violence-situation-name-autority" formControlName="autorityName"
                         placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_11' | translate }}" required>
@@ -189,23 +184,22 @@
             </div>
         </div>
 
-        <span>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_12' | translate}}</span>
-
-        <mat-radio-group class="basic-options"
+    
+        <mat-radio-group class="basic-options" color="primary"
             formControlName="isSexualViolence">
+            <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_12' | translate}}</label>
             <mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
                 {{opt.text}}
             </mat-radio-button>
         </mat-radio-group>
 
         <div *ngIf="isSexualViolence" class="column aside">
-            <span>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_13' | translate}}</span>
+            <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_13' | translate}}</label>
 
-            <mat-checkbox *ngFor="let opt of implementedActions" (click)="setImplementedActions(opt)">
+            <mat-checkbox *ngFor="let opt of implementedActions" (click)="setImplementedActions(opt)" color="primary">
                 {{opt}}
             </mat-checkbox>
         </div>
-
     </form>
 
 </app-new-consultation-expansion-section>

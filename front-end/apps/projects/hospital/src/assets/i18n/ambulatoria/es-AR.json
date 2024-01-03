@@ -789,6 +789,7 @@
                 "TAB_LABEL": "Situaciones de violencia",
                 "NEW_VIOLENCE_SITUATION": "Nueva situación de violencia",
                 "dialog": {
+                    "TEXT_FREE_LABEL":"Texto libre",
                     "expanded-person-information": {
                         "TITLE": "Información ampliada de la persona",
                         "CARE_REFERENCE_PERSON_INFORMATION": "Información de la persona referente de cuidado",
@@ -868,7 +869,6 @@
                                 "QUESTION_5": "Vinculo con la persona",
                                 "PLACEHOLDER_QUESTION_5": "Seleccionar vinculo",
                                 "QUESTION_6": "¿Qué tipo de vínculo?",
-                                "PLACEHOLDER_QUESTION_6":"Texto libre",
                                 "QUESTION_7": "¿Convive?",
                                 "QUESTION_8": "Antigüedad del vínculo",
                                 "QUESTION_9": "Frecuencia del maltrato",

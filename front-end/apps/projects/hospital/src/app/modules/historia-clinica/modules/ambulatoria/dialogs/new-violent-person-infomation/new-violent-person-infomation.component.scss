@@ -1,12 +1,2 @@
-.basic-options {
-	display: flex;
-	flex-direction: column;
-	gap: 1rem;
-}
-.aside {
-	margin-left: 2.5rem;
-}
-label{
-	margin-top: 1rem;
-	font-weight: 500;
-}
+@import '../../ambulatoria-mixins.scss';
+@include violence-mixins();

@@ -1,90 +1,92 @@
 <app-new-consultation-expansion-section [title]="'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.TITLE' | translate" icon="cancel">
     
 	<form [formGroup]="form">
-		<label id="know-how-to-read-write-label">{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_1' | translate}}</label>
-		<mat-radio-group class="basic-options"
+		<mat-radio-group class="basic-options" color="primary"
 			aria-labelledby="know-how-to-read-write-label"
 			formControlName="knowHowToReadWrite">
+			<label id="know-how-to-read-write-label">{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_1' | translate}}</label>
 			<mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
 				{{opt.text}}
 			</mat-radio-button>
 		</mat-radio-group>
 	
-		<label id="receive-income-label">{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_2' | translate}}</label>
-		<mat-radio-group class="basic-options"
+		<mat-radio-group class="basic-options" color="primary"
 			aria-labelledby="receive-income-label"
 			formControlName="receiveIncome">
+			<label id="receive-income-label">{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_2' | translate}}</label>
 			<mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
 				{{opt.text}}
 			</mat-radio-button>
 		</mat-radio-group>
 
 		<div *ngIf="receiveIncome" class="aside">
-			<label id="sector-label">{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_9' | translate}}</label>
-			<mat-radio-group class="basic-options"
+			<mat-radio-group class="basic-options" color="primary"
 				aria-labelledby="sector-label"
 				formControlName="whichSector">
+				<label id="sector-label">{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_9' | translate}}</label>
 				<mat-radio-button *ngFor="let opt of sectors" [value]="opt">
 					{{opt}}
 				</mat-radio-button>
 			</mat-radio-group>
 		</div>
 
-		<label id="receive-plan-assistance-label">{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_3' | translate}}</label>
-		<mat-radio-group class="basic-options"
+		<mat-radio-group class="basic-options" color="primary"
 			aria-labelledby="receive-plan-assistance-label"
 			formControlName="receivePlanAssistance">
+			<label id="receive-plan-assistance-label">{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_3' | translate}}</label>
 			<mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
 				{{opt.text}}
 			</mat-radio-button>
 		</mat-radio-group>
 
-		<label id="have-disability-label">{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_4' | translate}}</label>
-		<mat-radio-group class="basic-options"
+		<mat-radio-group class="basic-options" color="primary"
 			aria-labelledby="have-disability-label"
 			formControlName="haveDisability">
+			<label id="have-disability-label">{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_4' | translate}}</label>
 			<mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
 				{{opt.text}}
 			</mat-radio-button>
 		</mat-radio-group>
 
 		<div *ngIf="haveDisability" class="aside">
-			<label id="have-disability-certificate-label">{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_5' | translate}}</label>
-			<mat-radio-group class="basic-options"
+			<mat-radio-group class="basic-options" color="primary"
 				aria-labelledby="have-disability-certificate-label"
 				formControlName="haveDisabilityCertificate">
+				<label id="have-disability-certificate-label">{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_5' | translate}}</label>
 				<mat-radio-button *ngFor="let opt of basicOptionsExtended" [value]="opt">
 					{{opt}}
 				</mat-radio-button>
 			</mat-radio-group>
 		</div>
 
-		<label id="is-person-institutionalized-label">{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_6' | translate}}</label>
-		<mat-radio-group class="basic-options"
+		<mat-radio-group class="basic-options" color="primary"
 			aria-labelledby="is-person-institutionalized-label"
 			formControlName="isPersonInstitutionalized">
+			<label id="is-person-institutionalized-label">{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_6' | translate}}</label>
 			<mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
 				{{opt.text}}
 			</mat-radio-button>
 		</mat-radio-group>
 
-		<mat-form-field class="full-width" *ngIf="isPersonInstitutionalized" appearance="outline">
-            <mat-label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_7' | translate}}</mat-label>
-            <input matInput formControlName="inWhichInstitution">
-			<mat-error *ngIf="hasError(form, 'required', 'inWhichInstitution')" [translate]="'forms.REQUIRED'"></mat-error>
-        </mat-form-field>
+		<div *ngIf="isPersonInstitutionalized" class="mt-10 aside">
+			<label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_7' | translate}}</label>
+			<mat-form-field class="full-width" appearance="outline" >
+				<input matInput formControlName="inWhichInstitution" placeholder="{{'ambulatoria.paciente.violence-situations.dialog.TEXT_FREE_LABEL' | translate}}">
+				<mat-error *ngIf="hasError(form, 'required', 'inWhichInstitution')" [translate]="'forms.REQUIRED'"></mat-error>
+			</mat-form-field>
+		</div>
 
-		<label id="person-type-age-label">{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_8' | translate}}</label>
-		<mat-radio-group class="basic-options"
+		<mat-radio-group class="basic-options" color="primary"
 			aria-labelledby="person-type-age-label"
 			formControlName="personTypeAge">
+			<label id="person-type-age-label">{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_8' | translate}}</label>
 			<mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
 				{{opt.text}}
 			</mat-radio-button>
 		</mat-radio-group>
 
-		<div *ngIf="personTypeAge" class="aside">
-			<h3>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.CARE_REFERENCE_PERSON_INFORMATION' | translate}}</h3>
+		<div *ngIf="personTypeAge" class="aside mt-10">
+			<label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.CARE_REFERENCE_PERSON_INFORMATION' | translate}}</label>
 
 			<mat-form-field class="full-width" appearance="outline">
 				<mat-label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.LASTNAME' | translate}}</mat-label>
@@ -174,15 +176,14 @@
 				<mat-error *ngIf="hasError(form, 'required', 'relationPersonViolenceSituation')" [translate]="'forms.REQUIRED'"></mat-error>
 			</mat-form-field>
 
-			<div *ngIf="relationPersonViolenceSituation === relationOption.OTHER">
+			<div *ngIf="relationPersonViolenceSituation === relationOption.OTHER" class="aside">
+				<label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.WHICH_TYPE_RELATION' | translate}}</label>
 				<mat-form-field class="full-width" appearance="outline">
-					<mat-label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.WHICH_TYPE_RELATION' | translate}}</mat-label>
-					<input matInput formControlName="whichTypeRelation">
+					<input matInput formControlName="whichTypeRelation" placeholder="{{'ambulatoria.paciente.violence-situations.dialog.TEXT_FREE_LABEL' | translate}}">
 					<mat-error *ngIf="hasError(form, 'required', 'whichTypeRelation')" [translate]="'forms.REQUIRED'"></mat-error>
 				</mat-form-field>
 			</div>
 		</div>
 	</form>
-	
 
 </app-new-consultation-expansion-section>

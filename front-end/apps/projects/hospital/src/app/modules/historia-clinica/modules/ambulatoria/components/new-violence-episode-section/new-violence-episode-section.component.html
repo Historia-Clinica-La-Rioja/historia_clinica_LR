@@ -33,30 +33,30 @@
 			</app-titled-content-card>
 		</div>
 
-		<label id="violence-situation-age-type-label">{{'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_4' | translate}}</label>
-		<mat-radio-group class="basic-options"
+		<mat-radio-group class="basic-options" color="primary" color="primary"
 			aria-labelledby="violence-situation-age-type-label"
 			formControlName="ageTypeKid">
+			<label id="violence-situation-age-type-label">{{'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_4' | translate}}</label>
 			<mat-radio-button *ngFor="let opt of violenceTypes" [value]="opt">
 				{{opt}}
 			</mat-radio-button>
 		</mat-radio-group>
 
 		<div *ngIf="ageTypeKid === violenceType.DIRECT || ageTypeKid === violenceType.INDIRECT" class="aside">
-			<label id="is-kid-escolarized">{{'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_5' | translate}}</label>
-			<mat-radio-group class="basic-options"
+			<mat-radio-group class="basic-options" color="primary"
 				aria-labelledby="is-kid-escolarized"
 				formControlName="isKidEscolarized">
+				<label id="is-kid-escolarized">{{'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_5' | translate}}</label>
 				<mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
 					{{opt.text}}
 				</mat-radio-button>
 			</mat-radio-group>
 
 			<div *ngIf="isKidEscolarized" class="aside">
-				<label id="escolarization-level">{{'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_6' | translate}}</label>
-				<mat-radio-group class="basic-options"
+				<mat-radio-group class="basic-options" color="primary"
 					aria-labelledby="escolarization-level"
 					formControlName="escolarizationLevel">
+					<label id="escolarization-level">{{'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_6' | translate}}</label>
 					<mat-radio-button *ngFor="let opt of escolarizationLevels" [value]="opt">
 						{{opt}}
 					</mat-radio-button>
@@ -64,10 +64,10 @@
 			</div>
 		</div>
 
-		<label id="risk-level-test">{{'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_7' | translate}}</label>
-		<mat-radio-group class="basic-options"
+		<mat-radio-group class="basic-options" color="primary"
 			aria-labelledby="risk-level-test"
 			formControlName="riskLevelTest">
+			<label id="risk-level-test">{{'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_7' | translate}}</label>
 			<mat-radio-button *ngFor="let opt of riskLevels" [value]="opt">
 				{{opt}}
 			</mat-radio-button>
