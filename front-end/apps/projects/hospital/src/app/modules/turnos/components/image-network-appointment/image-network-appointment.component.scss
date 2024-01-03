@@ -217,6 +217,11 @@ mat-form-field {
 	padding-right: 0px;
 }
 
+.download-link {
+	line-height: inherit; 
+	padding: 0;
+}
+
 @media only screen and (max-width: 426px) {
 	.mat-card-patient-image{
 		display: none;

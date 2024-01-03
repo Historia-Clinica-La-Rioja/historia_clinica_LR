@@ -32,7 +32,9 @@
 					<div fxLayout="row" fxLayoutGap="5px" fxLayout.xs="column">
 						<span class="mat-body subtitle-size medical-order-description" *ngIf="medicalOrder else noInfo"
 							matTooltip="{{medicalOrder.displayText | titlecase}}">
-							{{medicalOrder.displayText | titlecase}}</span>
+							<a mat-button color="primary" (click)="downloadMedicalOrder(medicalOrder)" 
+								class="download-link">{{medicalOrder.displayText | titlecase}}</a>
+						</span>
 					</div>
 				</div>
 				<div class="info-card" fxLayout="column" fxLayoutGap="5px">

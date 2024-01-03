@@ -49,7 +49,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { CancelAppointmentComponent } from '@turnos/dialogs/cancel-appointment/cancel-appointment.component';
 import { toCalendarEvent } from '../../utils/appointment.utils';
 import { medicalOrderInfo } from '@turnos/dialogs/new-appointment/new-appointment.component';
-import { PrescripcionesService } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
+import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { differenceInDays } from 'date-fns';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -342,6 +342,12 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 				})
 			}).filter(value => value !== null && value !== undefined);
 		});
+	}
+
+	downloadMedicalOrder(medicalOrder: medicalOrderInfo){
+		medicalOrder.isTranscribed ?
+			console.log('Transcribed order')
+			: this.prescripcionesService.downloadPrescriptionPdf(this.data.appointmentData.patient?.id, [medicalOrder.serviceRequestId], PrescriptionTypes.STUDY);
 	}
 
 	private setMedicalCoverages(): void {
