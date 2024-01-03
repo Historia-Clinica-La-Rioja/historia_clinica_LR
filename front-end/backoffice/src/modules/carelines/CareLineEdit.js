@@ -17,7 +17,7 @@ const CareLineEdit = props => (
 
             <BooleanInput source="procedure" disabled={false} initialValue={false}/>
 
-            <BooleanInput source="classified" disabled={false} initialValue={false}/>
+            <BooleanInput source="classified" disabled={true} initialValue={false}/>
 
         </SimpleForm>
     </Edit>
