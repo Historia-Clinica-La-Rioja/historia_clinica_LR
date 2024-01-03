@@ -21,6 +21,7 @@ import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import net.pladema.clinichistory.requests.controller.dto.TranscribedPrescriptionDto;
 import net.pladema.clinichistory.requests.servicerequests.application.CreateServiceRequestPdf;
+import net.pladema.clinichistory.requests.servicerequests.application.CreateTranscribedServiceRequestPdf;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.CompleteRequestDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoWithFilesDto;
@@ -125,6 +126,7 @@ public class ServiceRequestController {
 	private final FetchOrderImageFileById fetchOrderImageFileById;
 	private final CreateServiceRequestPdf createServiceRequestPdf;
 	private final SharedReferenceCounterReference sharedReferenceCounterReference;
+	private final CreateTranscribedServiceRequestPdf createTranscribedServiceRequestPdf;
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -423,6 +425,17 @@ public class ServiceRequestController {
 		log.trace(OUTPUT, result);
 		return StoredFileResponse.sendFile(result);
     }
+
+	@GetMapping(value = "/transcribed/{transcribedServiceRequestId}/download-pdf")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, TECNICO')")
+	public ResponseEntity<Resource> downloadTranscribedOrderPdf(@PathVariable(name = "institutionId") Integer institutionId,
+												@PathVariable(name = "patientId") Integer patientId,
+												@PathVariable(name = "transcribedServiceRequestId") Integer transcribedServiceRequestId) throws PDFDocumentException {
+		log.trace("Input parameters -> institutionId {}, patientId {}, transcribedServiceRequestId {}", institutionId, patientId, transcribedServiceRequestId);
+		StoredFileBo result = createTranscribedServiceRequestPdf.run(institutionId, patientId, transcribedServiceRequestId);
+		log.trace(OUTPUT, result);
+		return StoredFileResponse.sendFile(result);
+	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ RuntimeException.class })
