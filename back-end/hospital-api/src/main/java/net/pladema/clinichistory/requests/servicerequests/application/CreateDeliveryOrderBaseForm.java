@@ -1,0 +1,76 @@
+package net.pladema.clinichistory.requests.servicerequests.application;
+
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EGender;
+import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
+import ar.lamansys.sgx.shared.strings.StringHelper;
+import java.time.LocalDate;
+import java.time.Period;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.pladema.clinichistory.requests.servicerequests.domain.IServiceRequestBo;
+import net.pladema.person.repository.entity.Person;
+import net.pladema.person.service.PersonService;
+import net.pladema.reports.controller.dto.FormVDto;
+import org.springframework.stereotype.Service;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class CreateDeliveryOrderBaseForm {
+
+    private final PersonService personService;
+    private final SharedPersonPort sharedPersonPort;
+
+    public FormVDto run(Integer patientId, IServiceRequestBo serviceRequestBo, BasicPatientDto patientDto) {
+        Person patientPerson = personService.findByPatientId(patientId).orElseThrow();
+        String completePatientPersonName = sharedPersonPort.getCompletePersonNameById(patientPerson.getId());
+        var contactInfo = sharedPersonPort.getPersonContactInfoById(patientPerson.getId());
+
+        LocalDate reportDate = serviceRequestBo.getReportDate();
+
+        FormVDto formVDto = mapToBaseFormVDto(completePatientPersonName, contactInfo, patientId, reportDate, patientDto);
+        log.trace("Output -> {}", formVDto);
+        return formVDto;
+    }
+
+    private FormVDto mapToBaseFormVDto(
+            String completePatientPersonName,
+            ContactInfoBo contactInfo,
+            Integer patientId,
+            LocalDate reportDate,
+            BasicPatientDto patientDto) {
+
+        var completePatientName = StringHelper.reverseString(completePatientPersonName);
+
+        var address = contactInfo != null
+                ? contactInfo.getAddress().getCompleteAddress()
+                : null;
+
+        var patientGender = patientDto != null && patientDto.getGender() != null
+                ? EGender.map(patientDto.getGender().getId()).getValue()
+                : null;
+        var documentType = patientDto != null && patientDto.getIdentificationNumber() != null
+                ? patientDto.getIdentificationType()
+                : null;
+        var documentNumber = patientDto != null
+                ? patientDto.getIdentificationNumber()
+                : null;
+
+        var patientAge = patientDto != null && patientDto.getBirthDate() != null
+                ? (short) Period.between(patientDto.getBirthDate(), reportDate).getYears()
+                : null;
+
+        return FormVDto.builder()
+                .completePatientName(completePatientName)
+                .address(address)
+                .reportDate(reportDate)
+                .hcnId(patientId)
+                .patientGender(patientGender)
+                .documentType(documentType)
+                .documentNumber(documentNumber)
+                .patientAge(patientAge)
+                .build();
+    }
+}

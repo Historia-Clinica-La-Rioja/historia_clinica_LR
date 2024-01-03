@@ -3,6 +3,7 @@ package net.pladema.reports.controller.dto;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EGender;
 import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
 public class FormVDto {
 
     private String establishment;
