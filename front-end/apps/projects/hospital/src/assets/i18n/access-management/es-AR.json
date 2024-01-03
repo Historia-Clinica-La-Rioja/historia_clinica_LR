@@ -1,7 +1,10 @@
 {
     "access-management": {
 		"home": {
-			"TITLE": "Gestión de accesos"
+			"TITLE": "Gestión de accesos",
+			"tabs": {
+				"REQUESTS": "solicitudes"
+			}
 		},
         "search_references": {
 			"REQUEST_LIST": "lista de solicitudes:",

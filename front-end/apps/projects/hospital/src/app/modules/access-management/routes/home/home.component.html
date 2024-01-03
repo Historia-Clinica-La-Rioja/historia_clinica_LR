@@ -1,4 +1,11 @@
 <app-content>
-    <h2 id="title" class="page-title" [translate]="'access-management.home.TITLE'"></h2>
-    <app-reference-report></app-reference-report>
+	<h2 id="title" class="page-title" [translate]="'access-management.home.TITLE'"></h2>
+
+	<mat-tab-group>
+		<mat-tab label="{{'access-management.home.tabs.REQUESTS' | translate | uppercase}}">
+			<ng-template matTabContent>
+				<app-reference-report></app-reference-report>
+			</ng-template>
+		</mat-tab>
+	</mat-tab-group>
 </app-content>
