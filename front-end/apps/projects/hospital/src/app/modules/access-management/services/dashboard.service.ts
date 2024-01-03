@@ -4,7 +4,7 @@ import { ERole, PageDto, ReferenceReportDto } from '@api-rest/api-model';
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { DateFormat, dateMinusDays } from '@core/utils/date.utils';
 import { DateRange } from '@presentation/components/date-range-picker/date-range-picker.component';
-import { DashboardView, DashboardFilters } from '@access-management/components/reference-dashboard-filters/reference-dashboard-filters.component';
+import { DashboardView, DashboardFilters } from '@shared-appointment-access-management/components/reference-dashboard-filters/reference-dashboard-filters.component';
 import format from 'date-fns/format';
 import { PermissionsService } from '@core/services/permissions.service';
 import { ContextService } from '@core/services/context.service';

@@ -2,11 +2,14 @@ import { Component, Input, OnInit } from '@angular/core';
 import { EReferenceClosureType } from '@api-rest/api-model';
 import { Color } from '@presentation/colored-label/colored-label.component';
 import { ColoredIconText } from '@presentation/components/colored-icon-text/colored-icon-text.component';
+import { PresentationModule } from '@presentation/presentation.module';
 
 @Component({
   selector: 'app-reference-state-label',
   templateUrl: './reference-state-label.component.html',
-  styleUrls: ['./reference-state-label.component.scss']
+  styleUrls: ['./reference-state-label.component.scss'],
+  standalone: true,
+	imports: [PresentationModule]
 })
 export class ReferenceStateLabelComponent implements OnInit {
 

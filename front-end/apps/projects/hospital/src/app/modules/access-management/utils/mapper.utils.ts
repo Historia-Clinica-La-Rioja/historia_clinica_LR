@@ -2,7 +2,7 @@ import { ClinicalSpecialtyDto, ReferenceAppointmentDto, ReferenceDataDto, Refere
 import { PatientSummary } from "../../hsi-components/patient-summary/patient-summary.component";
 import { getColoredIconText, getPriority, getState, getAppointmentState } from "./reference.utils";
 import { TypeaheadOption } from "@presentation/components/typeahead/typeahead.component";
-import { ReferenceReport } from "@access-management/components/reference-summary/reference-summary.component";
+import { ReferenceReport } from "@shared-appointment-access-management/components/reference-summary/reference-summary.component";
 import { AppointmentSummary } from "@access-management/components/appointment-summary/appointment-summary.component";
 import { ContactDetails } from "@access-management/components/contact-details/contact-details.component";
 import { ReferenceCompleteData } from "@historia-clinica/modules/ambulatoria/components/reference-request-data/reference-request-data.component";

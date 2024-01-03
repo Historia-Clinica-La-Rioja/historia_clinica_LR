@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HolidaysService } from '@api-rest/services/holidays.service';
-import { AppointmentsFacadeService } from './appointments-facade.service';
+import { AppointmentsFacadeService } from '../../turnos/services/appointments-facade.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { HolidayDto } from '@api-rest/api-model';

@@ -5,10 +5,10 @@ import { DiaryAvailableProtectedAppointmentsDto, EAppointmentModality, Reference
 import { dateDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DateFormat, dateToMoment } from '@core/utils/moment.utils';
-import { ConfirmPrintAppointmentComponent } from '@turnos/dialogs/confirm-print-appointment/confirm-print-appointment.component';
 import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-appointment.component';
 import { SearchAppointmentCriteria } from '../search-appointments-in-care-network/search-appointments-in-care-network.component';
-import { HolidayCheckService } from '@turnos/services/holiday-check.service';
+import { HolidayCheckService } from '@shared-appointment-access-management/services/holiday-check.service';
+import { ConfirmPrintAppointmentComponent } from '@shared-appointment-access-management/dialogs/confirm-print-appointment/confirm-print-appointment.component';
 
 @Component({
 	selector: 'app-appointment-result-view',

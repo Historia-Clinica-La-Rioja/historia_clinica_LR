@@ -5,7 +5,6 @@ import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 import { PresentationModule } from '@presentation/presentation.module';
 import { InternacionesModule } from '@historia-clinica/modules/ambulatoria/modules/internacion/internaciones.module';
 import { GuardiaModule } from '@historia-clinica/modules/guardia/guardia.module';
-import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
 
 // routing
 import { PacientesRoutingModule } from './pacientes-routing.module';
@@ -34,6 +33,9 @@ import { ResumenDeGuardiaComponent } from './component/resumen-de-guardia/resume
 import { SearchCreateComponent } from './component/search-create/search-create.component';
 import { SearchPatientComponent } from './component/search-patient/search-patient.component';
 import { ViewPatientDetailComponent } from './component/view-patient-detail/view-patient-detail.component';
+//Standalone component
+import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
+import { ReferenceStateLabelComponent } from '../hsi-components/reference-state-label/reference-state-label.component';
 // dialogs
 import { AppointmentHistoricComponent } from './dialogs/appointment-historic/appointment-historic.component';
 import { ArtComponent } from './dialogs/art/art.component';
@@ -52,7 +54,6 @@ import { WarningEditIdentificationNumberComponent } from './dialogs/warning-edit
 
 // pipes
 import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-and-specialty.pipe';
-import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
 import { BookingAppointmentsComponent } from './component/booking-appointments/booking-appointments.component';
 
 
@@ -126,8 +127,9 @@ import { BookingAppointmentsComponent } from './component/booking-appointments/b
 		PresentationModule,
 		InternacionesModule,
 		GuardiaModule,
+		//Standalone Components
 		IdentifierCasesComponent,
-		HistoriaClinicaModule,
+		ReferenceStateLabelComponent,
 	]
 })
 export class PacientesModule {

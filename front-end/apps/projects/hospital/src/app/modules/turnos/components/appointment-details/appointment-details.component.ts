@@ -4,9 +4,9 @@ import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-app
 import { EAppointmentModality, EmptyAppointmentDto, ReferenceSummaryDto } from '@api-rest/api-model';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
-import { ConfirmPrintAppointmentComponent } from '@turnos/dialogs/confirm-print-appointment/confirm-print-appointment.component';
 import { Moment } from 'moment';
-import { HolidayCheckService } from '@turnos/services/holiday-check.service';
+import { HolidayCheckService } from '@shared-appointment-access-management/services/holiday-check.service';
+import { ConfirmPrintAppointmentComponent } from '@shared-appointment-access-management/dialogs/confirm-print-appointment/confirm-print-appointment.component';
 
 @Component({
 	selector: 'app-appointment-details',

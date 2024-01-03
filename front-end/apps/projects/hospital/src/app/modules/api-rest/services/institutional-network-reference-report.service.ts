@@ -1,4 +1,4 @@
-import { DashboardFilters } from '@access-management/components/reference-dashboard-filters/reference-dashboard-filters.component';
+import { DashboardFilters } from '@shared-appointment-access-management/components/reference-dashboard-filters/reference-dashboard-filters.component';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PageDto, ReferenceCompleteDataDto, ReferenceReportDto } from '@api-rest/api-model';

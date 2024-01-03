@@ -87,6 +87,7 @@ import { ReferenceStudyClosureInformationComponent } from './components/referenc
 import { ReferenceStudyComponent } from './components/reference-study/reference-study.component';
 import { NewConsultationPersonalHistoryFormComponent } from './dialogs/new-consultation-personal-history-form/new-consultation-personal-history-form.component';
 import { PersonalHistoryViewDetailsComponent } from './dialogs/personal-history-view-details/personal-history-view-details.component';
+import { ReferenceStateLabelComponent } from '../../../hsi-components/reference-state-label/reference-state-label.component';
 
 @NgModule({
 	declarations: [
@@ -174,7 +175,9 @@ import { PersonalHistoryViewDetailsComponent } from './dialogs/personal-history-
 		TurnosModule,
 		ClapModule,
 		GuardiaModule,
+		//Standalone Component
 		IdentifierCasesComponent,
+		ReferenceStateLabelComponent,
 	],
 	providers: [
 		AmbulatoriaSummaryFacadeService,

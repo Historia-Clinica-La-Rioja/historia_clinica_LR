@@ -63,7 +63,6 @@ import { EmergencyCareEpisodeAttendService } from './services/emergency-care-epi
 import { EpisodeDataComponent } from './components/episode-data/episode-data.component';
 import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-search-dialog/problem-concept-search-dialog.component';
 import { SurgicalReportDockPopupComponent } from './components/surgical-report-dock-popup/surgical-report-dock-popup.component';
-import { ReferenceStateLabelComponent } from './components/reference-state-label/reference-state-label.component';
 import { PersonalHistoriesBackgroundListComponent } from './components/personal-histories-background-list/personal-histories-background-list.component';
 import { PersonalHistoriesSummaryComponent } from './components/personal-histories-summary/personal-histories-summary.component';
 import { SurgicalReportDiagnosisComponent } from './components/surgical-report-diagnosis/surgical-report-diagnosis.component';
@@ -101,7 +100,6 @@ import { SurgicalReportProsthesisComponent } from './components/surgical-report-
 		MedicationListComponent,
 		ReferenceRequestListComponent,
 		EpisodeDataComponent,
-		ReferenceStateLabelComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
@@ -178,7 +176,6 @@ import { SurgicalReportProsthesisComponent } from './components/surgical-report-
 		ReferenceRequestListComponent,
 		BedAssignmentComponent,
 		EpisodeDataComponent,
-		ReferenceStateLabelComponent,
 		PersonalHistoriesBackgroundListComponent,
 		PersonalHistoriesSummaryComponent,
 		// dialogs

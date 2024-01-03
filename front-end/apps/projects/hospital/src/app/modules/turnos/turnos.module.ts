@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { CalendarDateFormatter, CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 // deps
-import { AccessManagementModule } from '@access-management/access-management.module';
 import { ClipboardModule } from '@angular/cdk/clipboard';
-import { PresentationModule } from '@presentation/presentation.module';
-import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
 import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
+import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
+import { PresentationModule } from '@presentation/presentation.module';
+import { SharedAppointmentAccessManagementModule } from '@shared-appointment-access-management/shared-appointment-access-management.module';
 // routing
 import { TurnosRoutingModule } from './turnos-routing.module';
 import { AgendaComponent } from './routes/agenda/agenda.component';
@@ -29,23 +29,21 @@ import { EquipmentTranscribeOrderPopupComponent } from './dialogs/equipment-tran
 import { ImageNetworkAppointmentComponent } from './components/image-network-appointment/image-network-appointment.component';
 import { MedicalOrderInputComponent } from './components/medical-order-input/medical-order-input.component';
 import { ProfessionalSelectComponent } from './components/professional-select/professional-select.component';
-import { PatientSummaryComponent } from '../hsi-components/patient-summary/patient-summary.component';
 import { SeachAppointmentsByProfessionalComponent } from './components/seach-appointments-by-professional/seach-appointments-by-professional.component';
 import { SearchAppointmentsByEquipmentComponent } from './components/search-appointments-by-equipment/search-appointments-by-equipment.component';
 import { SearchAppointmentsBySpecialtyComponent } from './components/search-appointments-by-specialty/search-appointments-by-specialty.component';
 import { SearchAppointmentsInCareNetworkComponent } from './components/search-appointments-in-care-network/search-appointments-in-care-network.component';
 import { SearchCriteriaComponent } from './components/search-criteria/search-criteria.component';
 import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
-import { TypeaheadPracticesComponent } from './components/typeahead-practices/typeahead-practices.component';
-import { ModalityLabelComponent } from './components/modality-label/modality-label.component';
-import { ModalityRadioButtonFormComponent } from './components/modality-radio-button-form/modality-radio-button-form.component';
+//Standalone Component
+import { PatientSummaryComponent } from '../hsi-components/patient-summary/patient-summary.component';
+import { ReferenceStateLabelComponent } from '../hsi-components/reference-state-label/reference-state-label.component';
 // dialogs
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
 import { BlockAgendaRangeComponent } from './dialogs/block-agenda-range/block-agenda-range.component';
 import { CalendarProfessionalViewDockPopupComponent } from './dialogs/calendar-professional-view-dock-popup/calendar-professional-view-dock-popup.component';
 import { CancelAppointmentComponent } from './dialogs/cancel-appointment/cancel-appointment.component';
 import { ConfirmBookingComponent } from './dialogs/confirm-booking/confirm-booking.component';
-import { ConfirmPrintAppointmentComponent } from './dialogs/confirm-print-appointment/confirm-print-appointment.component';
 import { NewAppointmentComponent } from './dialogs/new-appointment/new-appointment.component';
 import { NewAttentionComponent } from './dialogs/new-attention/new-attention.component';
 // services
@@ -85,9 +83,6 @@ import { ShowProtectedAppointmentPipe } from './pipes/show-protected-appointment
 		SearchAppointmentsInCareNetworkComponent,
 		SearchCriteriaComponent,
 		SelectAgendaComponent,
-		TypeaheadPracticesComponent,
-		ModalityLabelComponent,
-		ModalityRadioButtonFormComponent,
 		CalendarEventViewComponent,
 		// dialogs
 		AppointmentComponent,
@@ -95,7 +90,6 @@ import { ShowProtectedAppointmentPipe } from './pipes/show-protected-appointment
 		CalendarProfessionalViewDockPopupComponent,
 		CancelAppointmentComponent,
 		ConfirmBookingComponent,
-		ConfirmPrintAppointmentComponent,
 		NewAppointmentComponent,
 		NewAttentionComponent,
 		//pipes
@@ -109,14 +103,15 @@ import { ShowProtectedAppointmentPipe } from './pipes/show-protected-appointment
 		// routing
 		TurnosRoutingModule,
 		// deps
-		AccessManagementModule,
-		IdentifierCasesComponent,
-		PresentationModule,
-		LazyMaterialModule,
-		HistoriaClinicaModule,
 		ClipboardModule,
+		HistoriaClinicaModule,
+		IdentifierCasesComponent,
+		LazyMaterialModule,
+		SharedAppointmentAccessManagementModule,
+		PresentationModule,		
 		//Standalone Components
-		PatientSummaryComponent
+		PatientSummaryComponent,
+		ReferenceStateLabelComponent,
 	],
 	exports: [
 		CalendarProfessionalViewComponent,

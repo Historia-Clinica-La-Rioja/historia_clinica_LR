@@ -3,7 +3,7 @@
 @import "./../../app/modules/presentation/presentation-mixins.scss";
 @import "./../../app/modules/turnos/turnos-mixins.scss";
 @import "./../../app/modules/historia-clinica/historia-clinica-mixins.scss";
-@import "./../../app/modules/access-management/access-management-mixins.scss";
+@import "./../../app/modules/shared-appointment-access-management/shared-appointment-access-management-mixins.scss";
 
 @mixin form-row {
 	display: flex;
@@ -83,7 +83,7 @@
 	@include presentation-mixins($theme);
 	@include turnos-mixins($theme);
 	@include historia-clinica-mixins($theme);
-	@include access-management-mixins($theme);
+	@include shared-appointment-access-management-mixins($theme);
 
 	$palette-primary: map-get($theme, primary);
 	$palette-warn: map-get($theme, warn);

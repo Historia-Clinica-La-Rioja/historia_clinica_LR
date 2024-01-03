@@ -10,7 +10,7 @@ import { Tabs } from '@turnos/constants/tabs';
 import { CancelAppointmentComponent } from '@turnos/dialogs/cancel-appointment/cancel-appointment.component';
 import { TabsService } from '@turnos/services/tabs.service';
 import { take } from 'rxjs';
-import { DashboardView } from '../reference-dashboard-filters/reference-dashboard-filters.component';
+import { DashboardView } from '@shared-appointment-access-management/components/reference-dashboard-filters/reference-dashboard-filters.component';
 import { ContextService } from '@core/services/context.service';
 
 @Component({
