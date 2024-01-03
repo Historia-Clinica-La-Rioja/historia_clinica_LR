@@ -15,6 +15,9 @@ import net.pladema.hsi.extensions.infrastructure.controller.dto.UIComponentDto;
 import net.pladema.hsi.extensions.utils.JsonResourceUtils;
 
 import net.pladema.reports.application.fetchnominalconsultationdetail.FetchNominalConsultationDetail;
+import net.pladema.reports.application.fetchnominalappointmentdetail.FetchNominalAppointmentDetail;
+
+import net.pladema.reports.domain.NominalAppointmentDetailFiterlBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,13 +85,15 @@ public class ReportsController {
 
 	private final FetchNominalConsultationDetail fetchNominalConsultationDetail;
 
+	private final FetchNominalAppointmentDetail fetchNominalAppointmentDetail;
 
     public ReportsController(NominalDetailExcelService nominalDetailExcelService, ConsultationSummaryReport consultationSummaryReport,
 							 QueryFactory queryFactory, LocalDateMapper localDateMapper,
 							 PdfService pdfService, AnnexReportService annexReportService,
 							 FormReportService formReportService, ReportsMapper reportsMapper,
 							 FetchConsultations fetchConsultations, FeatureFlagsService featureFlagsService,
-							 FetchNominalConsultationDetail fetchNominalConsultationDetail){
+							 FetchNominalConsultationDetail fetchNominalConsultationDetail,
+							 FetchNominalAppointmentDetail fetchNominalAppointmentDetail){
         this.nominalDetailExcelService = nominalDetailExcelService;
         this.consultationSummaryReport = consultationSummaryReport;
         this.queryFactory = queryFactory;
@@ -99,6 +104,7 @@ public class ReportsController {
         this.reportsMapper = reportsMapper;
         this.fetchConsultations = fetchConsultations;
 		this.featureFlagsService = featureFlagsService;
+		this.fetchNominalAppointmentDetail = fetchNominalAppointmentDetail;
 		this.fetchNominalConsultationDetail = fetchNominalConsultationDetail;
 	}
 
@@ -319,4 +325,34 @@ public class ReportsController {
 		return ResponseEntity.ok(result);
 	}
 
+	@GetMapping(value = "/institution/{institutionId}/nominal-appointment-detail")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, PERSONAL_DE_ESTADISTICA')")
+	public ResponseEntity<Resource> getNominalAppointmentDetailReport(@PathVariable Integer institutionId,
+																	  @RequestParam(value="fromDate") String fromDate,
+																	  @RequestParam(value="toDate") String toDate,
+																	  @RequestParam(value="clinicalSpecialtyId", required = false) Integer clinicalSpecialtyId,
+																	  @RequestParam(value="doctorId", required = false) Integer doctorId,
+																	  @RequestParam(value="hierarchicalUnitTypeId", required = false) Integer hierarchicalUnitTypeId,
+																	  @RequestParam(value="hierarchicalUnitId", required = false) Integer hierarchicalUnitId,
+																	  @RequestParam(value="appointmentStateId", required = false) Short appointmentStateId,
+																	  @RequestParam(value="includeHierarchicalUnitDescendants", required = false) boolean includeHierarchicalUnitDescendants) throws Exception {
+		LOG.debug("Input parameters -> institutionId {}, fromDate {}, toDate {}, hierarchicalUnitTypeId {}, hierarchicalUnitId {}, appointmentStateId {}, includeHierarchicalUnitDescendants {}" ,
+				institutionId, fromDate, toDate, hierarchicalUnitTypeId, hierarchicalUnitId, appointmentStateId, includeHierarchicalUnitDescendants);
+
+		String title = "DNT";
+
+		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
+		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
+
+		IWorkbook wb = fetchNominalAppointmentDetail.run(title, new NominalAppointmentDetailFiterlBo(institutionId, startDate, endDate, clinicalSpecialtyId,
+				doctorId, hierarchicalUnitTypeId, hierarchicalUnitId, appointmentStateId, includeHierarchicalUnitDescendants));
+
+		String filename = title + "." + wb.getExtension();
+
+		return StoredFileResponse.sendFile(
+				buildReport(wb),
+				filename,
+				wb.getContentType()
+		);
+	}
 }
