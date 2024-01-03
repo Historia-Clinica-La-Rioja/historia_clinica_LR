@@ -12,7 +12,6 @@ import {
 } from 'react-admin';
 
 export const validateInputCount = (value, allValues) => {
-
     const uomCount = (allValues?.unitsOfMeasureIds && allValues.unitsOfMeasureIds.length) || 0;
     const inputCount = allValues?.inputCount || 0;
     if (inputCount <= 0)

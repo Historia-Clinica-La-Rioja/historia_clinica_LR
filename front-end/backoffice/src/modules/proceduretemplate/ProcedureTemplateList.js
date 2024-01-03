@@ -13,7 +13,7 @@ const ProcedureTemplateList = props => (
         {...props}
         exporter={false}
         bulkActionButtons={false}
-        sort={{ field: 'description', order: 'ASC' }}
+        sort={{ field: 'id', order: 'ASC' }}
         filter={{ deleted: false }}
     >
         <Datagrid rowClick="show">

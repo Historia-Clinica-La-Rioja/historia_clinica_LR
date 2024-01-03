@@ -49,7 +49,6 @@ public class BackofficeProcedureTemplateSnomedValidator implements BackofficePer
 
 	@Override
 	public void assertCreate(ProcedureTemplateDto entity) {
-		assertNotExists(entity);
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return;
 	}

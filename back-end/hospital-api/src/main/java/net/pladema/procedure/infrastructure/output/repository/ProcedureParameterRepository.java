@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProcedureParameterRepository extends SGXAuditableEntityJPARepository<ProcedureParameter, Integer> {
@@ -21,7 +22,6 @@ public interface ProcedureParameterRepository extends SGXAuditableEntityJPARepos
 			"ORDER BY pp.orderNumber desc")
 	List<Short> getLastOrderParameterFromProcedureTemplateId(@Param("procedureTemplateId") Integer procedureTemplateId);
 
-	@Transactional(readOnly = true)
 	@Modifying
 	@Query(value = "UPDATE ProcedureParameter pp " +
 			"SET pp.orderNumber = pp.orderNumber-1 " +
@@ -37,4 +37,6 @@ public interface ProcedureParameterRepository extends SGXAuditableEntityJPARepos
 			"AND pp.deleteable.deleted = false")
 	boolean templateHasSpecificLoincId(@Param("procedureTemplateId") Integer procedureTemplateId, @Param("loincId") Integer loincId);
 
+	@Transactional(readOnly = true)
+	Optional<ProcedureParameter> findByProcedureTemplateIdAndOrderNumber(Integer id, Short order);
 }

@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import org.hibernate.annotations.Where;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -26,6 +28,7 @@ import javax.persistence.Table;
 @EntityListeners(SGXAuditListener.class)
 @AllArgsConstructor
 @NoArgsConstructor
+@Where(clause = "deleted=false")
 public class ProcedureParameter extends SGXAuditableEntity<Integer> {
 
 	@Id
@@ -51,4 +54,11 @@ public class ProcedureParameter extends SGXAuditableEntity<Integer> {
 	@Column(name = "snomed_group_id")
 	private Integer snomedGroupId;
 
+	/**
+	 * Sets appropriate field values
+	 * to store when deleted
+	 */
+	public void delete() {
+		this.orderNumber = (short) -1;
+	}
 }

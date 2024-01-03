@@ -3,8 +3,8 @@ import {
     Show,
     SimpleShowLayout,
     TextField} from 'react-admin';
-import { AssociatedParameters } from './ProcedureTemplateParameters';
-import { AssociatedPractices } from './ProcedureTemplatePractices';
+import { AssociatedParameters } from './AssociatedParameters';
+import { AssociatedPractices } from './AssociatedPractices';
 
 const ProcedureTemplateShow = props => (
     <Show {...props}>

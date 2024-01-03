@@ -969,7 +969,7 @@ const messages = {
                 description: 'Descripción',
                 typeId: 'Tipo de parámetro',
                 order: 'Orden',
-                unitsOfMeasure: 'Unidades de medida',
+                unitsOfMeasureIds: 'Unidades de medida',
                 inputCount: 'Cantidad de valores a ingresar',
                 eclId: 'ECL',
                 option: 'Opción',

@@ -45,7 +45,7 @@ const ProcedureTemplateParameterEdit = props => (
              */}
              <FormDataConsumer>
                  {({formData, ...props}) => formData && isNumeric(formData) &&
-                    <NumberInput source='inputCount' validate={[required(), validateInputCount]} step={false} min={1} {...props}/> }
+                    <NumberInput source='inputCount' validate={[required(), validateInputCount]} step={1} min={1} {...props}/> }
              </FormDataConsumer>
              
             {/**

@@ -11,11 +11,12 @@ import {
     ChipField,
     SelectField,
     ReferenceArrayField,
-    EditButton
+    EditButton,
 } from 'react-admin';
 import SectionTitle from '../components/SectionTitle';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import { TYPE_CHOICES_IDS } from '../proceduretemplateparameters/parameter-type';
+import ChangeOrderButtons from './ChangeOrderButton';
 
 const AddParameter = ({ record }) => {
     if (!record) return null;
@@ -30,7 +31,7 @@ const AddParameter = ({ record }) => {
   
 };
 
-const EditParameter = ({procedureTemplateId, ...props}) => {
+const EditParameter = (props) => {
     const record = useRecordContext(props);
     if (!record || !record.id) return null;
     return (<EditButton
@@ -43,7 +44,7 @@ const EditParameter = ({procedureTemplateId, ...props}) => {
     />);
 }
 
-const DeleteParameter = ({procedureTemplateId, ...props}) => {
+const DeleteParameter = (props) => {
     const record = useRecordContext(props);
     if (!record || !record.id) return null;
     return (<DeleteButton
@@ -61,11 +62,10 @@ const AssociatedParametersDataGrid = (props) => {
         <ReferenceManyField
         addLabel={false}
         reference="proceduretemplateparameters"
-        target="templateParameterId"
+        target="procedureTemplateId"
         sort={{ field: 'orderNumber', order: 'ASC' }}
         >
             <Datagrid
-                rowClick={false}
                 empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin parámetros asociados</p>}
             >
                 
@@ -100,11 +100,12 @@ const AssociatedParametersDataGrid = (props) => {
                 {/**
                  * Units of measure
                 */}
-                <ReferenceArrayField label="resources.proceduretemplateparameters.fields.unitsOfMeasure" reference="units-of-measure" source="unitsOfMeasureIds">
+                <ReferenceArrayField label="resources.proceduretemplateparameters.fields.unitsOfMeasureIds" reference="units-of-measure" source="unitsOfMeasureIds">
                     <SingleFieldList>
                         <ChipField source="code" />
                     </SingleFieldList>
                 </ReferenceArrayField>
+                <ChangeOrderButtons/>
                 <EditParameter/>
                 <DeleteParameter/>
 
