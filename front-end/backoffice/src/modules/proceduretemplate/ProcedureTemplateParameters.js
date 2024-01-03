@@ -10,7 +10,8 @@ import {
     SingleFieldList,
     ChipField,
     SelectField,
-    ReferenceArrayField
+    ReferenceArrayField,
+    EditButton
 } from 'react-admin';
 import SectionTitle from '../components/SectionTitle';
 import CreateRelatedButton from '../components/CreateRelatedButton';
@@ -29,14 +30,27 @@ const AddParameter = ({ record }) => {
   
 };
 
+const EditParameter = ({procedureTemplateId, ...props}) => {
+    const record = useRecordContext(props);
+    if (!record || !record.id) return null;
+    return (<EditButton
+        redirect={false} 
+        basePath=""
+        record={{id: record.id}}
+        resource={'proceduretemplateparameters'}
+        undoable={false}
+        confirmTitle='resources.proceduretemplateparameters.editRelated'
+    />);
+}
+
 const DeleteParameter = ({procedureTemplateId, ...props}) => {
     const record = useRecordContext(props);
-    if (!record || !procedureTemplateId) return null;
+    if (!record || !record.id) return null;
     return (<DeleteButton
         redirect={false} 
         basePath=""
-        record={{id: `${procedureTemplateId}/${record.id}`}}
-        resource={'proceduretemplatesnomeds'}
+        record={{id: record.id}}
+        resource={'proceduretemplateparameters'}
         undoable={false}
         confirmTitle='resources.proceduretemplateparameters.deleteRelated'
     />);
@@ -50,7 +64,10 @@ const AssociatedParametersDataGrid = (props) => {
         target="templateParameterId"
         sort={{ field: 'orderNumber', order: 'ASC' }}
         >
-            <Datagrid rowClick={'edit'} empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin parámetros asociados</p>}>
+            <Datagrid
+                rowClick={false}
+                empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin parámetros asociados</p>}
+            >
                 
                 {/**
                  * Description
@@ -88,6 +105,7 @@ const AssociatedParametersDataGrid = (props) => {
                         <ChipField source="code" />
                     </SingleFieldList>
                 </ReferenceArrayField>
+                <EditParameter/>
                 <DeleteParameter/>
 
             </Datagrid>

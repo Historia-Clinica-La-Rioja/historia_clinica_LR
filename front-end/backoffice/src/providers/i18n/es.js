@@ -987,7 +987,8 @@ const messages = {
                 optionsMinLength: 'El número de opciones debe ser mayor o igual a 2'
             },
             addRelated: 'Asociar parámetro',
-            deleteRelated: 'Desasociar parámetro'
+            deleteRelated: 'Desasociar parámetro',
+            editRelated: 'Editar parámetro'
         }
     }
 };

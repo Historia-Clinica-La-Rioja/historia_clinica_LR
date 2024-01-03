@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    Create,
+    Edit,
     FormDataConsumer,
     NumberInput,
     required,
@@ -11,8 +11,8 @@ import CustomToolbar from '../components/CustomToolbar';
 import { LoincCode, LoincDescription, UnitsOfMeasure, validateInputCount, SnomedECL, Options } from './fields';
 import { TYPE_CHOICES_IDS, isNumeric, isOptions, isSnomed } from './parameter-type';
 
-const ProcedureTemplateParameterCreate = props => (
-    <Create {...props}>
+const ProcedureTemplateParameterEdit = props => (
+    <Edit {...props}>
         <SimpleForm
             toolbar={<CustomToolbar/>}
             redirect={(basePath, id, data) => `/proceduretemplates/${data.procedureTemplateId}/show`}
@@ -63,7 +63,7 @@ const ProcedureTemplateParameterCreate = props => (
              </FormDataConsumer>
 
         </SimpleForm>
-    </Create>
+    </Edit>
 );
 
-export default ProcedureTemplateParameterCreate;
+export default ProcedureTemplateParameterEdit;
