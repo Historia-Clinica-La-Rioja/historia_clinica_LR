@@ -132,6 +132,11 @@ export class ServiceRequestService {
 		this.viewPdfService.showDialog(url, 'Orden ' + serviceRequestId);
 	}
 
+	downloadTranscribedOrderPdf(patientId: number, serviceRequestId: number, appointmentId: number) {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/transcribed/${serviceRequestId}/download-pdf`;
+		this.viewPdfService.showDialog(url, 'Orden ' + serviceRequestId, { appointmentId: appointmentId.toString() });
+	}
+
 	getStudyTranscribedOrder(patientId: number): Observable<StudyTranscribedOrderReportInfoDto[]>
 	{
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/studyTranscribedOrder`;

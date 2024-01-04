@@ -106,6 +106,12 @@ export class PrescripcionesService {
 		}
 	}
 
+	downloadTranscribedOrderPdf(patientId: number, prescriptionPdfInfo: number[], appointmentId: number): void {
+		prescriptionPdfInfo.forEach(orderId => {
+			this.serviceRequestService.downloadTranscribedOrderPdf(patientId, orderId, appointmentId);
+		});
+	}
+
 	getTranscribedAttachedFileUrl(patientId: number, documentId: number): string{
 		return this.documentService.getTranscribedFileUrl(documentId, patientId)
 	}

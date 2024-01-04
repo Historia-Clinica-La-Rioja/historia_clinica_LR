@@ -346,7 +346,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 
 	downloadMedicalOrder(medicalOrder: medicalOrderInfo){
 		medicalOrder.isTranscribed ?
-			console.log('Transcribed order')
+			this.prescripcionesService.downloadTranscribedOrderPdf(this.data.appointmentData.patient?.id, [medicalOrder.serviceRequestId], this.data.appointmentData.appointmentId)
 			: this.prescripcionesService.downloadPrescriptionPdf(this.data.appointmentData.patient?.id, [medicalOrder.serviceRequestId], PrescriptionTypes.STUDY);
 	}
 
