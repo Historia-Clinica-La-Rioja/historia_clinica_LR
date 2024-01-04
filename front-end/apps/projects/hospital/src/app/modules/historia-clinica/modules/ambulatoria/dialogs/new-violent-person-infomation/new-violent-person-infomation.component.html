@@ -94,7 +94,6 @@
                 <mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
                     {{opt.text}}
                 </mat-radio-button>
-                <mat-error *ngIf="hasError(form, 'required', 'hasAfirearm') && form.get('hasAfirearm').touched" [translate]="'forms.REQUIRED'"></mat-error>
             </mat-radio-group>
 
 
@@ -106,7 +105,6 @@
                 <mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
                     {{opt.text}}
                 </mat-radio-button>
-                <mat-error *ngIf="hasError(form, 'required', 'hasBeenTreated') && form.get('hasBeenTreated').touched" [translate]="'forms.REQUIRED'"></mat-error>
             </mat-radio-group>
 
 
@@ -118,7 +116,6 @@
                 <mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
                     {{opt.text}}
                 </mat-radio-button>
-                <mat-error *ngIf="hasError(form, 'required', 'belongsToSecurityForces') && form.get('belongsToSecurityForces').touched" [translate]="'forms.REQUIRED'"></mat-error>
             </mat-radio-group>
 
             <div *ngIf="form.controls.belongsToSecurityForces.value === true" class="aside">

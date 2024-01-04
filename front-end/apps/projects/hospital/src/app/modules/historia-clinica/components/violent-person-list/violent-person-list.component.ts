@@ -22,7 +22,6 @@ export class ViolentPersonListComponent {
 
   setAggressors() {
     this.violenceAggressorsNewConsultationService.violenceAggressors$.subscribe((concepts: CustomViolenceReportAggressorDto[]) => this.aggressorsList = concepts);
-    console.log(this.aggressorsList)
   }
 
   getDescriptionBasicOptions(value: any): string {

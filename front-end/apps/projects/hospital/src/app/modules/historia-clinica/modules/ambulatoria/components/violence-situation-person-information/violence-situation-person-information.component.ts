@@ -143,7 +143,7 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 	}
 
 	setDepartments() {
-		this.provinces$ = this.addressMasterDataService.getDepartmentsByProvince(this.form.value.addressProvinceId);
+		this.departments$ = this.addressMasterDataService.getDepartmentsByProvince(this.form.value.addressProvinceId);
 	}
 
 	setCities() {
