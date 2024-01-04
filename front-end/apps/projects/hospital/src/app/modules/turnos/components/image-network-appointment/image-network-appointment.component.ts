@@ -99,6 +99,9 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 	patientMedicalCoverages: PatientMedicalCoverage[];
 
 	hideFilterPanel = false;
+	hideAbsentMotiveForm = true;
+	absentMotive: string;
+	absentAppointment = false;
 
 	isDateFormVisible = false;
 	startAgenda = moment();
@@ -185,8 +188,10 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 					this.patientMedicalOrders.unshift(this.medicalOrder)
 				}
 
-				if (this.appointment.stateChangeReason) {
-					this.formMotive.controls.motive.setValue(this.appointment.stateChangeReason);
+				this.absentAppointment = this.isMotiveRequired();
+				this.absentMotive = this.appointment.stateChangeReason;
+				if (this.absentMotive) {
+					this.formMotive.controls.motive.setValue(this.absentMotive);
 				}
 				if ((this.appointment.patientMedicalCoverageId && this.data.appointmentData.patient?.id) || appointment.orderData?.coverageDto) {
 					let coverageId = appointment.orderData?.coverageDto?.id || this.appointment.patientMedicalCoverageId;
@@ -388,6 +393,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 
 	onClickedState(newStateId: APPOINTMENT_STATES_ID): void {
 		if (this.selectedState !== newStateId) {
+			this.checkIfAbsent(newStateId);
 			if (this.selectedState === APPOINTMENT_STATES_ID.ASSIGNED && newStateId === APPOINTMENT_STATES_ID.CONFIRMED && this.coverageIsNotUpdate()) {
 				this.confirmChangeState(newStateId);
 			} else {
@@ -396,8 +402,22 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		}
 	}
 
+	private checkIfAbsent(newStateId: APPOINTMENT_STATES_ID) {
+		this.absentAppointment = newStateId === APPOINTMENT_STATES_ID.ABSENT;
+		this.hideAbsentMotiveForm = !(newStateId === APPOINTMENT_STATES_ID.ABSENT);
+	}
+
 	private isANewState(newStateId: APPOINTMENT_STATES_ID) {
 		return newStateId !== this.appointment?.appointmentStateId;
+	}
+
+	setHideAbsentMotiveForm(value: boolean): void {
+		this.hideAbsentMotiveForm = value;
+	}
+
+	cancelEditMotive(): void {
+		this.hideAbsentMotiveForm = true;
+		this.formMotive.controls.motive.setValue(this.absentMotive);
 	}
 
 	cancelAppointment(): void {

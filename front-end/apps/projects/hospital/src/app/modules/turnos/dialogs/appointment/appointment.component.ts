@@ -146,6 +146,9 @@ export class AppointmentComponent implements OnInit {
 	downloadReportIsEnabled: boolean;
 	isMqttCallEnabled = false;
 
+	hideAbsentMotiveForm = true;
+	absentMotive: string;
+	absentAppointment = false;
 	hideObservationForm = true;
 	hideObservationTitle = true;
 	observation: string;
@@ -241,8 +244,10 @@ export class AppointmentComponent implements OnInit {
 					this.formObservations.controls.observation.setValue(this.observation);
 				}
 				this.selectedState = this.appointment?.appointmentStateId;
-				if (this.appointment.stateChangeReason) {
-					this.formMotive.controls.motive.setValue(this.appointment.stateChangeReason);
+				this.absentAppointment = this.isMotiveRequired();
+				this.absentMotive = this.appointment.stateChangeReason;
+				if (this.absentMotive) {
+					this.formMotive.controls.motive.setValue(this.absentMotive);
 				}
 				if (this.appointment.patientMedicalCoverageId && this.data.appointmentData.patient?.id) {
 					this.patientMedicalCoverageService.getPatientMedicalCoverage(this.appointment.patientMedicalCoverageId)
@@ -654,12 +659,18 @@ export class AppointmentComponent implements OnInit {
 
 	onClickedState(newStateId: APPOINTMENT_STATES_ID): void {
 		if (this.selectedState !== newStateId) {
+			this.checkIfAbsent(newStateId);
 			if (this.selectedState === APPOINTMENT_STATES_ID.ASSIGNED && newStateId === APPOINTMENT_STATES_ID.CONFIRMED && this.coverageIsNotUpdate()) {
 				this.confirmChangeState(newStateId);
 			} else {
 				this.updateState(newStateId);
 			}
 		}
+	}
+
+	private checkIfAbsent(newStateId: APPOINTMENT_STATES_ID) {
+		this.absentAppointment = newStateId === APPOINTMENT_STATES_ID.ABSENT;
+		this.hideAbsentMotiveForm = !(newStateId === APPOINTMENT_STATES_ID.ABSENT);
 	}
 
 	private isANewState(newStateId: APPOINTMENT_STATES_ID) {
@@ -888,6 +899,10 @@ export class AppointmentComponent implements OnInit {
 		this.hideObservationForm = value;
 	}
 
+	setHideAbsentMotiveForm(value: boolean): void {
+		this.hideAbsentMotiveForm = value;
+	}
+
 	updateObservation(): void {
 		this.observation = this.formObservations.get('observation').value;
 		this.appointmentFacade.updateObservation(this.data.appointmentData.appointmentId, this.formObservations.controls.observation.value).subscribe(() => {
@@ -903,6 +918,11 @@ export class AppointmentComponent implements OnInit {
 		this.hideObservationTitle = !this.observation;
 		this.formObservations.controls.observation.setValue(this.observation);
 		this.formObservations.controls.observation.markAsUntouched();
+	}
+
+	cancelEditMotive(): void {
+		this.hideAbsentMotiveForm = true;
+		this.formMotive.controls.motive.setValue(this.absentMotive);
 	}
 
 	copied() {

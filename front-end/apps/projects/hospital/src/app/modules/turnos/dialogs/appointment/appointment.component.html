@@ -313,27 +313,49 @@
 					</button>
 				</div>
 
-				<form [formGroup]="formMotive" (ngSubmit)="saveAbsent()" class="motive"
-					*ngIf="isMotiveRequired() && !isRejectedPatient" fxLayout="column">
-					<span class="mat-body-strong strong-size">{{'turnos.appointment.ABSENCE_MOTIVE' | translate}}</span>
-					<mat-form-field appearance="outline">
-						<textarea formControlName="motive"
-							placeholder="{{'turnos.appointment.ABSENCE_MOTIVE' | translate }}" matInput type="text"
-							id="motive"></textarea>
-						<mat-error *ngIf="hasError(formMotive, 'required', 'motive')" [translate]="'forms.REQUIRED'">
-						</mat-error>
-						<mat-error *ngIf="hasError(formMotive, 'maxlength', 'motive')"
-							[translate]="'forms.MAX_LENGTH_ERROR'"
-							[translateParams]="{max: getError(formMotive, 'maxlength', 'motive')?.requiredLength}">
-						</mat-error>
-					</mat-form-field>
-					<div fxLayoutAlign="end">
-						<button mat-flat-button color="primary" id="save">
-							<span> {{'turnos.appointment.SAVE' | translate}}</span>
+
+				<div class="observation-section" data-id="absent-motive" *ngIf="absentAppointment">
+					<span class="mat-body-strong strong-size" 
+						*ngIf="absentMotive || !hideAbsentMotiveForm">
+						{{'turnos.appointment.ABSENCE_MOTIVE' | translate}}
+					</span>
+					<div *ngIf="absentMotive && hideAbsentMotiveForm" fxLayout="row"
+						fxLayoutAlign="space-between" fxLayoutGap="20px">
+						<p class="mat-body strong-size">
+							{{absentMotive}}
+						</p>
+						<button type="button" mat-icon-button color="primary" *ngIf="!isRejectedPatient"
+							(click)="setHideAbsentMotiveForm(false)">
+							<mat-icon class="material-icons-outlined">edit</mat-icon>
 						</button>
 					</div>
-
-				</form>
+					<form [formGroup]="formMotive" (ngSubmit)="saveAbsent()" class="motive"
+						*ngIf="isMotiveRequired() && !hideAbsentMotiveForm && !isRejectedPatient" fxLayout="column">
+						<mat-form-field appearance="outline">
+							<textarea formControlName="motive"
+								placeholder="{{'turnos.appointment.ABSENCE_MOTIVE' | translate }}" matInput type="text"
+								id="motive"></textarea>
+							<mat-error *ngIf="hasError(formMotive, 'required', 'motive')" [translate]="'forms.REQUIRED'">
+							</mat-error>
+							<mat-error *ngIf="hasError(formMotive, 'maxlength', 'motive')"
+								[translate]="'forms.MAX_LENGTH_ERROR'"
+								[translateParams]="{max: getError(formMotive, 'maxlength', 'motive')?.requiredLength}">
+							</mat-error>
+						</mat-form-field>
+						<div fxLayoutAlign="end">
+							<div class="absent-motive-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px">
+								<button mat-stroked-button color="primary" btn-block type="button"
+									*ngIf="absentMotive" (click)="cancelEditMotive()">
+									<span> {{'turnos.appointment.CANCEL' | translate}}</span>
+								</button>
+								<button mat-flat-button color="primary" id="save">
+									<span> {{'turnos.appointment.SAVE' | translate}}</span>
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				
 			</section>
 
 			<section id="observation-section" class="observation-section">
