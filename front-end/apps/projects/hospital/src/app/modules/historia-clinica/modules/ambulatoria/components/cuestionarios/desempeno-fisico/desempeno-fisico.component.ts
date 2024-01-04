@@ -17,6 +17,7 @@ export class DesempenoFisicoComponent implements OnInit {
   counterB2: number = 0;
   counterC2: number = 0;
   counterC3: number = 0;
+  counterE1: number = 0;
   totalScore: number = 0;
   calculatePoints: number;
   ticketNum1: number = 0;
@@ -97,6 +98,19 @@ export class DesempenoFisicoComponent implements OnInit {
     )
   }
 
+  isCounterDisabled6(): boolean {
+    return !(
+      this.selectedoptionE === '1D'
+
+    )
+  }
+
+  isCounterDisabled7(): boolean {
+    return ! (
+      this.selectedoptionE2 === '1E'
+
+    )
+  }
   calculePoints(): number {
     let balance1 = (this.selectedoptionA === '1A') ? 1 : 0;
     let balance2 = (this.selectedoptionB === '1B') ? 1 : 0;
@@ -126,24 +140,37 @@ export class DesempenoFisicoComponent implements OnInit {
     let counterC3Points = 0;
 
     if (this.counterC3 < 4.82) {
-      counterC3Points = 4; 
+      counterC3Points = 4;
 
-    } else if (this.counterC3 >= 4.82 && this.counterC3 < 6.2){
+    } else if (this.counterC3 >= 4.82 && this.counterC3 < 6.2) {
       counterC3Points = 3;
 
     } else if (this.counterC3 >= 6.2 && this.counterC3 < 8.7) {
       counterC3Points = 2;
- 
+
     } else if (this.counterC3 >= 8.7) {
       counterC3Points = 1;
     }
 
 
-    let totalScore = balance1 + balance2 + 
-    sillaTest1 + sillaTest2 + counterB2Points + counterC2Points 
-    + counterC3Points;
+    let counterE1Points = 0;
+    if (this.counterE1 <= 11.19) {
+      counterE1Points = 4
+    } else if (this.counterE1 >= 11.2 && this.counterE1 <= 13.69) {
+      counterE1Points = 3;
+    } else if (this.counterE1 >= 13.69 && this.counterE1 <= 16.69) {
+      counterE1Points = 2;
+    } else if (this.counterE1 >= 16.69 && this.counterE1 <= 60) {
+      counterE1Points = 1;
+    } else if (this.counterE1 > 60.00) {
+      counterE1Points = 0;
+    }
 
-    return totalScore
+    let totalScore = balance1 + balance2 +
+      sillaTest1 + sillaTest2 + counterB2Points + counterC2Points
+      + counterC3Points + counterE1Points;
+
+    return totalScore;
 
   }
 

@@ -69,7 +69,8 @@
 
         </div>
 
-        <mat-radio-group id="2" name="balance2" [disabled]="isSubmitDisabled()" [(ngModel)]="selectedoptionB" (change)="calculePoints()">
+        <mat-radio-group id="2" name="balance2" [disabled]="isSubmitDisabled()" [(ngModel)]="selectedoptionB"
+            (change)="calculePoints()">
             <div class="radio">
                 <mat-radio-button value="1B" color="primary">Si</mat-radio-button>
                 <mat-radio-button value="2B" color="primary">No</mat-radio-button>
@@ -101,13 +102,15 @@
         </div>
 
 
-        <div class="counter2" *ngIf="!isCounterDisabled3()" >
+        <div class="counter2" *ngIf="!isCounterDisabled3()">
             <label for="number">Tiempo en segundos:</label>
-            <input id="ticketNum" type="number" [(ngModel)]="counterB2" (change)="calculePoints()" name="Num" value="0" />(Máx.15)
+            <input id="ticketNum" type="number" [(ngModel)]="counterB2" (change)="calculePoints()" name="Num"
+                value="0" />(Máx.15)
 
         </div>
 
-        <mat-radio-group id="3" name="balance3" [disabled]="isSubmitDisabled3()" [(ngModel)]="selectedoptionB2" (change)="calculePoints()">
+        <mat-radio-group id="3" name="balance3" [disabled]="isSubmitDisabled3()" [(ngModel)]="selectedoptionB2"
+            (change)="calculePoints()">
             <div class="radio2">
                 <mat-radio-button value="1C" color="primary">Se rehúsa</mat-radio-button>
             </div>
@@ -135,13 +138,14 @@
 
         </div>
 
-        <div class="counter3"  *ngIf="!isCounterDisabled4()">
+        <div class="counter3" *ngIf="!isCounterDisabled4()">
             <label for="number">Tiempo en segundos:</label>
-            <input id="ticketNum" type="number" [(ngModel)]="counterC2" (change)="calculePoints()" name="Num" value="1" />(Máx.15)
+            <input id="ticketNum" type="number" [(ngModel)]="counterC2" (change)="calculePoints()" name="Num"
+                value="1" />(Máx.15)
 
         </div>
 
-        <mat-radio-group id="4" name="marcha1"[(ngModel)]="selectedoptionC">
+        <mat-radio-group id="4" name="marcha1" [(ngModel)]="selectedoptionC">
             <div class="radio3">
                 <mat-radio-button value="2C" color="primary">Se rehúsa</mat-radio-button>
             </div>
@@ -164,11 +168,13 @@
 
         <div class="counter3" *ngIf="!isCounterDisabled4() && !isCounterDisabled5() ">
             <label for="number">Tiempo en segundos:</label>
-            <input id="ticketNum" type="number" [(ngModel)]="counterC3" (change)="calculePoints()" name="Num" value="2" />(Máx.15)
+            <input id="ticketNum" type="number" [(ngModel)]="counterC3" (change)="calculePoints()" name="Num"
+                value="2" />(Máx.15)
 
         </div>
 
-        <mat-radio-group id="5" name="marcha2" [(ngModel)]="selectedoptionD" [disabled]="isSubmitDisabled4()" (change)="calculePoints()">
+        <mat-radio-group id="5" name="marcha2" [(ngModel)]="selectedoptionD" [disabled]="isSubmitDisabled4()"
+            (change)="calculePoints()">
             <div class="radio3">
                 <mat-radio-button value="3C" color="primary">Se rehúsa</mat-radio-button>
             </div>
@@ -215,12 +221,11 @@
         <div class="slogans">
             <img class="icon" src="assets/icons/icon-12.png" alt="icon5">
 
-            ¿El paciente puede levatarse 5 veces de la <br> silla sin usar sus brazos?<br />
+            ¿El paciente puede levantarse 5 veces de la <br> silla sin usar sus brazos?<br />
 
         </div>
-
-
-        <mat-radio-group id="7" name="marcha4" [disabled]="isSubmitDisabled5()" [(ngModel)]="selectedoptionE2" (change)="calculePoints()">
+        <mat-radio-group id="7" name="marcha4" [disabled]="isSubmitDisabled5()" [(ngModel)]="selectedoptionE2"
+            (change)="calculePoints()">
             <div class="radio">
                 <mat-radio-button value="1E" color="primary">Si</mat-radio-button>
                 <mat-radio-button value="2E" color="primary">No</mat-radio-button>
@@ -229,6 +234,14 @@
             </div>
 
         </mat-radio-group>
+
+
+        <div class="counter4" *ngIf="!isCounterDisabled6() && !isCounterDisabled7()">
+            <label for="number">Tiempo en segundos:</label>
+            <input id="ticketNum" type="number" [(ngModel)]="counterE1" (change)="calculePoints()" name="Num"
+                value="3" />
+
+        </div>
 
         <!-- RESULTADO FINAL -->
 
