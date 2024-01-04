@@ -39,7 +39,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	observation: string;
 	registerEditor: RegisterEditor = null;
 	registerEditor$: BehaviorSubject<RegisterEditor> = new BehaviorSubject<RegisterEditor>(null);
-
+	domainRole = false;
 
 	constructor(
 		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
@@ -51,6 +51,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
+		this.domainRole = this.contextService.institutionId === NO_INSTITUTION;
 		const referenceDetails$ = this.getObservable();
 		referenceDetails$.subscribe(
 			referenceDetails => {
@@ -71,7 +72,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	}
 
 	private getObservable(): Observable<ReferenceCompleteDataDto> {
-		return this.contextService.institutionId === NO_INSTITUTION ?
+		return this.domainRole ?
 			this.institutionalNetworkReferenceReportService.getReferenceDetail(this.data.referenceId) :
 			this.institutionalReferenceReportService.getReferenceDetail(this.data.referenceId);
 	}
