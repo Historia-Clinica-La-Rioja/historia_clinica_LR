@@ -2,6 +2,7 @@ package net.pladema.establishment.service.impl;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedLoggedUserPort;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.establishment.application.port.CareLineInstitutionPracticeStorage;
@@ -9,9 +10,9 @@ import net.pladema.establishment.application.port.carelineproblem.CareLineProble
 import net.pladema.establishment.repository.CareLineInstitutionSpecialtyRepository;
 import net.pladema.establishment.repository.CareLineRepository;
 import net.pladema.establishment.service.CareLineService;
+import net.pladema.establishment.service.ClinicalSpecialtyCareLineService;
 import net.pladema.establishment.service.domain.CareLineBo;
 
-import net.pladema.user.application.port.UserRoleStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,13 +41,18 @@ public class CareLineServiceImpl implements CareLineService {
 
 	private final SharedLoggedUserPort sharedLoggedUserPort;
 
+	private final ClinicalSpecialtyCareLineService clinicalSpecialtyCareLineService;
+
     @Override
     public List<CareLineBo> getCareLines() {
         LOG.debug("No input parameters");
-        List<CareLineBo> careLines = careLineRepository.getCareLinesWhitClinicalSpecialties()
+		Integer loggedUserId = UserInfo.getCurrentAuditor();
+		List<Short> loggedUserRoleIds = sharedLoggedUserPort.getLoggedUserRoleIds(-1, loggedUserId);
+		List<CareLineBo> careLines = careLineRepository.getCareLinesWhitClinicalSpecialties(loggedUserRoleIds)
                 .stream()
                 .map(careLine -> new CareLineBo(careLine.getId(), careLine.getDescription()))
-                .collect(Collectors.toList());
+				.collect(Collectors.toList());
+		careLines.forEach(careLine -> careLine.setClinicalSpecialties(clinicalSpecialtyCareLineService.getClinicalSpecialties(careLine.getId())));
         LOG.trace(OUTPUT, careLines);
         return careLines;
     }

@@ -17,11 +17,12 @@ public interface CareLineRepository extends SGXAuditableEntityJPARepository<Care
 
 	@Transactional(readOnly = true)
     @Query("SELECT cl FROM CareLine as cl " +
-            "JOIN ClinicalSpecialtyCareLine cscl " +
-            "ON cl.id = cscl.careLineId " +
+            "JOIN ClinicalSpecialtyCareLine cscl ON (cl.id = cscl.careLineId) " +
+			"LEFT JOIN CareLineRole clr ON (clr.careLineId = cl.id) " +
             "WHERE cscl.deleteable.deleted = false " +
+			"AND cl.classified IS FALSE OR (clr.roleId IN :loggedUserRoleIds AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE) " +
             "GROUP BY cl.id")
-    List<CareLine> getCareLinesWhitClinicalSpecialties();
+    List<CareLine> getCareLinesWhitClinicalSpecialties(@Param("loggedUserRoleIds") List<Short> loggedUserRoleIds);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.establishment.service.domain.CareLineBo(cl.id, cl.description) " +
