@@ -94,8 +94,10 @@ public class CreateTranscribedServiceRequestServiceImpl implements CreateTranscr
 		result.setPatientId(patientInfoBo.getId());
 		result.setSnomedId(getSnomedId(transcribedServiceRequestBo.getStudy()));
 		result.setObservations(transcribedServiceRequestBo.getObservations());
-		Integer healthConditionId = healthConditionRepository.save(buildBasicHealthCondition(patientInfoBo, transcribedServiceRequestBo.getHealthCondition())).getId();
+		HealthCondition savedHealthCondition = healthConditionRepository.save(buildBasicHealthCondition(patientInfoBo, transcribedServiceRequestBo.getHealthCondition()));
+		Integer healthConditionId = savedHealthCondition.getId();
 		result.setHealthConditionId(healthConditionId);
+		transcribedServiceRequestBo.setCie10Codes(savedHealthCondition.getCie10Codes());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

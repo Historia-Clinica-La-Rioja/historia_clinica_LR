@@ -430,9 +430,10 @@ public class ServiceRequestController {
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, TECNICO')")
 	public ResponseEntity<Resource> downloadTranscribedOrderPdf(@PathVariable(name = "institutionId") Integer institutionId,
 												@PathVariable(name = "patientId") Integer patientId,
-												@PathVariable(name = "transcribedServiceRequestId") Integer transcribedServiceRequestId) throws PDFDocumentException {
-		log.trace("Input parameters -> institutionId {}, patientId {}, transcribedServiceRequestId {}", institutionId, patientId, transcribedServiceRequestId);
-		StoredFileBo result = createTranscribedServiceRequestPdf.run(institutionId, patientId, transcribedServiceRequestId);
+												@PathVariable(name = "transcribedServiceRequestId") Integer transcribedServiceRequestId,
+												@RequestParam(name = "appointmentId") String appointmentId) throws PDFDocumentException {
+		log.trace("Input parameters -> institutionId {}, patientId {}, transcribedServiceRequestId {}, appointmentId {}", institutionId, patientId, transcribedServiceRequestId, appointmentId);
+		StoredFileBo result = createTranscribedServiceRequestPdf.run(institutionId, patientId, transcribedServiceRequestId, Integer.valueOf(appointmentId));
 		log.trace(OUTPUT, result);
 		return StoredFileResponse.sendFile(result);
 	}

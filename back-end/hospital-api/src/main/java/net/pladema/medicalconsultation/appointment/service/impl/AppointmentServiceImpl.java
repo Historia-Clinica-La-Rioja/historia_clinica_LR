@@ -340,6 +340,14 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
+	public PatientMedicalCoverageDto getMedicalCoverageFromAppointment(Integer appointmentId) {
+		log.debug("Input parameters -> appointmentId {}", appointmentId);
+		return appointmentRepository.getAppointmentMedicalCoverageId(appointmentId)
+				.map(patientExternalMedicalCoverageService::getCoverage)
+				.orElse(null);
+	}
+
+	@Override
 	public PatientMedicalCoverageBo getCurrentAppointmentMedicalCoverage(Integer patientId, Integer institutionId) {
 		log.debug("Input parameters -> patientId {}, institutionId {}", patientId, institutionId);
 

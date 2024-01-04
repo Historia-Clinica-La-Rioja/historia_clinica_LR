@@ -19,6 +19,7 @@ import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppoi
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
+import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
 public interface AppointmentService {
@@ -98,4 +99,6 @@ public interface AppointmentService {
 	Boolean openingHourAllowedProtectedAppointment(Integer appointmentId, Integer diaryId);
 
 	void deleteLabelFromAppointment(Integer diaryId, List<Integer> ids);
+
+	PatientMedicalCoverageDto getMedicalCoverageFromAppointment(Integer appointmentId);
 }
