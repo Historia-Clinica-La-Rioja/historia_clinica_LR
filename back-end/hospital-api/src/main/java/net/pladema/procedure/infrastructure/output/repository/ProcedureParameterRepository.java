@@ -29,4 +29,12 @@ public interface ProcedureParameterRepository extends SGXAuditableEntityJPARepos
 			"AND pp.orderNumber > :orderNumberDeleted")
 	void updateOrderNumberAfterDelete(@Param("procedureTemplateId") Integer procedureTemplateId, @Param("orderNumberDeleted") Short orderNumberDeleted);
 
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT (CASE WHEN count(pp.id) > 0 THEN TRUE ELSE FALSE END) " +
+			"FROM ProcedureParameter pp " +
+			"WHERE pp.procedureTemplateId = :procedureTemplateId " +
+			"AND pp.loincId = :loincId " +
+			"AND pp.deleteable.deleted = false")
+	boolean templateHasSpecificLoincId(@Param("procedureTemplateId") Integer procedureTemplateId, @Param("loincId") Integer loincId);
+
 }
