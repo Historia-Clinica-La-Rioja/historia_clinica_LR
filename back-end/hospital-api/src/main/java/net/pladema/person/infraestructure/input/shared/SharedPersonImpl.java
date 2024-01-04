@@ -53,6 +53,12 @@ public class SharedPersonImpl implements SharedPersonPort {
 	}
 
 	@Override
+	public String getFormalPersonNameById(Integer personId) {
+		log.debug("Input paremeters -> personId {}", personId);
+		return personService.getFormalPersonNameById(personId);
+	}
+
+	@Override
 	public ContactInfoBo getPersonContactInfoById(Integer personId) {
 		log.debug("Input paremeters -> personId {}", personId);
 		ContactInfoBo result = personService.getContactInfoById(personId);

@@ -15,6 +15,8 @@ public interface SharedPersonPort {
 	
 	CompletePersonDto getCompletePersonData(Integer personId);
 
+	String getFormalPersonNameById(Integer personId);
+
 	ContactInfoBo getPersonContactInfoById(Integer personId);
 
 }
