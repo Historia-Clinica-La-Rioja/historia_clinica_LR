@@ -382,15 +382,15 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 		cell.setCellStyle(style);
 
 		ICell cell1 = row.createCell(rowNumber.getAndIncrement());
-		cell1.setCellValue(content.getClinicalSpecialty());
+		cell1.setCellValue(content.getOperativeUnit());
 		cell1.setCellStyle(style);
 
 		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
-		cell2.setCellValue(content.getProvider());
+		cell2.setCellValue(content.getLender());
 		cell2.setCellStyle(style);
 
 		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
-		cell3.setCellValue(content.getProviderDni());
+		cell3.setCellValue(content.getLenderDni());
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
