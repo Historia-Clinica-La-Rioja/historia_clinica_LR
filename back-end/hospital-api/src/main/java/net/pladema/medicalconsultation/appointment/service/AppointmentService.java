@@ -100,4 +100,8 @@ public interface AppointmentService {
 	void deleteLabelFromAppointment(Integer diaryId, List<Integer> ids);
 
 	PatientMedicalCoverageBo getMedicalCoverageFromAppointment(Integer appointmentId);
+	
+	Boolean hasOldAppointmentWithMinDateLimit(Integer patientId, Integer healthcareProfessionalId, Short minDateLimit);
+
+	Boolean hasFutureAppointmentByPatientId(Integer patientId, Integer healthcareProfessionalId);
 }

@@ -634,6 +634,23 @@ public class AppointmentServiceImpl implements AppointmentService {
 		appointmentRepository.deleteLabelFromAppointment(diaryId, ids);
 	}
 
+	@Override
+	public Boolean hasOldAppointmentWithMinDateLimit(Integer patientId, Integer healthcareProfessionalId, Short minDateLimit) {
+		log.debug("Input parameters -> patientId {}, healthcareProfessionalId {}, minDateLimit {}", patientId, healthcareProfessionalId, minDateLimit);
+		LocalDate fiveDaysAgo = LocalDate.now().minus(minDateLimit, ChronoUnit.DAYS);
+		Boolean result = appointmentRepository.hasOldAppointmentWithMinDateLimitByPatientId(patientId, healthcareProfessionalId, fiveDaysAgo);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public Boolean hasFutureAppointmentByPatientId(Integer patientId, Integer healthcareProfessionalId) {
+		log.debug("Input parameters -> patientId {}, healthcareProfessionalId {}", patientId, healthcareProfessionalId);
+		Boolean result = appointmentRepository.hasFutureAppointmentsByPatientId(patientId, healthcareProfessionalId);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
 	private boolean dayIsIncludedInOpeningHours(LocalDate date, DiaryOpeningHoursBo diaryOpeningHours) {
 		final int SUNDAY_DB_VALUE = 0;
 		if (date.getDayOfWeek().getValue() == DayOfWeek.SUNDAY.getValue())

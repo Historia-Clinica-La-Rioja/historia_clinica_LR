@@ -693,6 +693,10 @@ export interface CityDto extends AbstractMasterdataDto<number> {
     id: number;
 }
 
+export interface ClinicHistoryAccessDto {
+    eclinicHistoryAccessReason: EClinicHistoryAccessReason;
+}
+
 export interface ClinicalObservationDto extends Serializable {
     id?: number;
     value?: string;
@@ -4817,6 +4821,13 @@ export const enum EDisabilityCertificateStatus {
     HAS_NOT_CERTIFICATE = "HAS_NOT_CERTIFICATE",
     PENDING = "PENDING",
     NO_INFORMATION = "NO_INFORMATION",
+}
+
+export const enum EClinicHistoryAccessReason {
+    MEDICAL_EMERGENCY = "MEDICAL_EMERGENCY",
+    PROFESSIONAL_CONSULTATION = "PROFESSIONAL_CONSULTATION",
+    PATIENT_CONSULTATION = "PATIENT_CONSULTATION",
+    AUDIT = "AUDIT",
 }
 
 export const enum EDocumentSearch {

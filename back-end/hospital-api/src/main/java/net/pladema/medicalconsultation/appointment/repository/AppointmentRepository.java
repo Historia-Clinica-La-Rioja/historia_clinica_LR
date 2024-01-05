@@ -739,4 +739,34 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	@Modifying
 	@Query("UPDATE Appointment a SET a.callId = NULL, a.patientEmail = NULL WHERE a.id = :appointmentId")
 	void removeVirtualAttentionAttributes(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query( "SELECT (CASE WHEN COUNT(a.id) > 0 THEN TRUE ELSE FALSE END) " +
+			"FROM Appointment AS a " +
+			"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+			"JOIN Diary AS d ON (d.id = aa.pk.diaryId) " +
+			"LEFT JOIN DiaryAssociatedProfessional AS dap ON (dap.diaryId = d.id) " +
+			"WHERE a.patientId = :patientId " +
+			"AND (d.healthcareProfessionalId = :healthcareProfessionalId " +
+			"OR dap.healthcareProfessionalId = :healthcareProfessionalId) " +
+			"AND a.appointmentStateId <> " + AppointmentState.CANCELLED_STR + " " +
+			"AND a.dateTypeId < CURRENT_DATE " +
+			"AND a.dateTypeId >= :minDateLimit")
+	Boolean hasOldAppointmentWithMinDateLimitByPatientId(@Param("patientId") Integer patientId,
+											  @Param("healthcareProfessionalId") Integer healthcareProfessionalId,
+											  @Param("minDateLimit") LocalDate minDateLimit);
+
+	@Transactional(readOnly = true)
+	@Query( "SELECT (CASE WHEN COUNT(a.id) > 0 THEN TRUE ELSE FALSE END) " +
+			"FROM Appointment AS a " +
+			"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+			"JOIN Diary AS d ON (d.id = aa.pk.diaryId) " +
+			"LEFT JOIN DiaryAssociatedProfessional AS dap ON (dap.diaryId = d.id) " +
+			"WHERE a.patientId = :patientId " +
+			"AND (d.healthcareProfessionalId = :healthcareProfessionalId " +
+			"OR dap.healthcareProfessionalId = :healthcareProfessionalId) " +
+			"AND a.appointmentStateId <> " + AppointmentState.CANCELLED_STR + " " +
+			"AND a.dateTypeId > CURRENT_DATE")
+	Boolean hasFutureAppointmentsByPatientId(@Param("patientId") Integer patientId,
+								 			 @Param("healthcareProfessionalId") Integer healthcareProfessionalId);
 }
