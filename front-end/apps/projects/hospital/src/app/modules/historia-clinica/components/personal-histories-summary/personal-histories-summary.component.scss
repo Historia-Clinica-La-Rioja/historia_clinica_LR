@@ -13,3 +13,9 @@
 .wrap-text {
     word-wrap: break-word;
 }
+
+@media (max-width: 1279px) {
+    .hide-date {
+        display: none;
+    }
+}
