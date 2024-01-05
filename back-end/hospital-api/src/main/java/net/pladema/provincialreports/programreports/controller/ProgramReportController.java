@@ -198,7 +198,7 @@ public class ProgramReportController {
 		IWorkbook wb = this.excelService.buildExcelSumarOdontologico(title, headers, this.programReportQueryFactory.querySumarOdontologico(institutionId, startDate, endDate));
 
 		String filename = title + "." + wb.getExtension();
-		response.addHeader("Content-disposition", "attachment;filename= " + filename);
+		response.addHeader("Content-disposition", "attachment;filename=" + filename);
 		response.setContentType(wb.getContentType());
 
 		OutputStream out = response.getOutputStream();
@@ -232,7 +232,7 @@ public class ProgramReportController {
 		IWorkbook wb = this.excelService.buildExcelRecuperoOdontologico(title, headers, this.programReportQueryFactory.queryRecuperoOdontologico(institutionId, startDate, endDate));
 
 		String filename = title + "." + wb.getExtension();
-		response.addHeader("Content-disposition", "attachment;filename= " + filename);
+		response.addHeader("Content-disposition", "attachment;filename=" + filename);
 		response.setContentType(wb.getContentType());
 
 		OutputStream out = response.getOutputStream();
