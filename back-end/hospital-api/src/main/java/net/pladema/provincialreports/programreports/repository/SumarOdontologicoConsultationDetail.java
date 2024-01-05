@@ -15,11 +15,13 @@ public class SumarOdontologicoConsultationDetail {
 
 	private String operativeUnit;
 
-	private String provider;
+	private String lender;
 
-	private String providerDni;
+	private String lenderDni;
 
 	private String attentionDate;
+
+	private String attentionHour;
 
 	private String patientDni;
 
@@ -33,18 +35,22 @@ public class SumarOdontologicoConsultationDetail {
 
 	private String medicalCoverage;
 
+	private String direction;
+
+	private String location;
+
 	private String indexCpo;
 
 	private String indexCeo;
-
-	private String address;
-
-	private String location;
 
 	private String reasons;
 
 	private String procedures;
 
+	private String dentalProcedures;
+
 	private String problems;
+
+	private String dentistryDiagnostics;
 
 }
