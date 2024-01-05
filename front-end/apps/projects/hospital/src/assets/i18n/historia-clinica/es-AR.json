@@ -40,7 +40,7 @@
 			"CONCEPTS_COULD_NOT_BE_OBTAINED": "Los conceptos de SNOMED no pudieron ser obtenidos."
 		},
 		"factores-de-riesgo-form": {
-			"TITLE": "Signos vitales y factores de Riesgo",
+			"TITLE": "Signos vitales y factores de riesgo",
 			"NAME": "Signos vitales y factores de riesgo",
 			"HEART_RATE": "Frecuencia cardíaca (/min)",
 			"RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",
