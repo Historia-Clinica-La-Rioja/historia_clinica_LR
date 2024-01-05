@@ -888,3 +888,59 @@ databaseChangeLog:
                 - column:
                     name: deleted_on
                     type: datetime
+
+    - changeSet:
+        id: clinic_history_audit-createTable
+        comment: Create table clinic_history_audit
+        author: fdemuguruza
+        changes:
+          - createTable:
+              tableName: clinic_history_audit
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_clinic_history_audit
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: patient(id)
+                      foreignKeyName: FK_clinic_history_audit_patient
+                    name: patient_id
+                    type: int
+                - column:
+                    name: observations
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                      references: users(id)
+                      foreignKeyName: FK_clinic_history_audit_user
+                    name: user_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: institution(id)
+                      foreignKeyName: FK_clinic_history_audit_institution
+                    name: institution_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: access_date
+                    type: datetime
+                - column:
+                    constraints:
+                      nullable: false
+                    name: reason_id
+                    type: smallint
+                - column:
+                    name: scope
+                    type: smallint
+                    constraints:
+                      references: sector_type(id)
+                      foreignKeyName: FK_clinic_history_audit_sector_type
