@@ -579,3 +579,48 @@ databaseChangeLog:
               constraintName: PK_sexual_violence_action
               tableName: sexual_violence_action
               validate: true
+
+    - changeSet:
+        id: violence_report-add-auditable-columns
+        comment: Add auditable data columns to violence_report table
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: violence_report
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
