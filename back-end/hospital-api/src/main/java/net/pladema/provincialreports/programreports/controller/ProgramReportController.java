@@ -187,11 +187,10 @@ public class ProgramReportController {
 		LOG.debug("Inputs parameters -> institutionID {}, fromDate {}, toDate{}", institutionId);
 
 		String title = "Reporte de Sumar - Odontológico";
-		String[] headers = new String[]{"Institucion", "Unidad Operativa", "Prestador", "DNI", "Fecha de atencion", "N° Consulta",
-				"DNI Paciente", "Nombre Paciente", "Sexo", "Genero", "Nombre con el que se identifica", "Fecha de nacimiento",
-				"Edad a fecha del turno", "Edad a Hoy", "Etnia", "Obra/s social/es", "Indice CPO - Permanentes", "Indice CEO - Temporarios",
-				"Dientes Permanentes Presentes", "Dientes Temporales Presentes", "Domicilio", "Localidad", "Nivel de Instruccion",
-				"Situacion laboral", "Motivos", "Procedimientos", "problemas", "Medicacion", "Evolucion"};
+		String[] headers = new String[]{"Institucion", "Unidad Operativa", "Prestador", "DNI", "Fecha de atencion", "Hora",
+				"DNI Paciente", "Nombre Paciente", "Sexo", "Fecha de nacimiento", "Edad a fecha del turno", "Obra/s social/es",
+				"Domicilio", "Localidad", "Indice CPO - Permanentes", "Indice CEO - Temporarios", "Motivos", "Procedimientos",
+				"Procedimientos de Odontología", "Problemas", "Diagnósticos de Odontología"};
 
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
