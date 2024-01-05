@@ -4551,6 +4551,15 @@ export interface ViolenceReportPersonDto {
     municipalityId: number;
 }
 
+export interface ViolenceReportSituationDto {
+    initialDate: DateDto;
+    lastModificationDate: DateDto;
+    riskLevel: EViolenceEvaluationRiskLevel;
+    situationId: number;
+    violenceModalities: string[];
+    violenceTypes: string[];
+}
+
 export interface ViolenceReportVictimDto {
     canReadAndWrite: boolean;
     disabilityData: ViolenceReportDisabilityDto;

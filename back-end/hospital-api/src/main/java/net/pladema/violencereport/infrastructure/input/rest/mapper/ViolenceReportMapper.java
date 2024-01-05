@@ -12,6 +12,7 @@ import net.pladema.violencereport.domain.ViolenceReportAggressorBo;
 import net.pladema.violencereport.domain.ViolenceReportBo;
 
 import net.pladema.violencereport.domain.ViolenceReportImplementedActionsBo;
+import net.pladema.violencereport.domain.ViolenceReportSituationBo;
 import net.pladema.violencereport.domain.ViolenceReportVictimBo;
 import net.pladema.violencereport.domain.enums.EAggressorRelationship;
 import net.pladema.violencereport.domain.enums.EHealthInstitutionOrganization;
@@ -24,9 +25,11 @@ import net.pladema.violencereport.domain.enums.ENationalGovernmentDevice;
 import net.pladema.violencereport.domain.enums.EProvincialGovernmentDevice;
 import net.pladema.violencereport.domain.enums.ESexualViolenceAction;
 import net.pladema.violencereport.domain.enums.EVictimKeeperReportPlace;
+import net.pladema.violencereport.domain.enums.EViolenceEvaluationRiskLevel;
 import net.pladema.violencereport.infrastructure.input.rest.dto.ViolenceReportActorDto;
 import net.pladema.violencereport.infrastructure.input.rest.dto.ViolenceReportDto;
 
+import net.pladema.violencereport.infrastructure.input.rest.dto.ViolenceReportSituationDto;
 import net.pladema.violencereport.infrastructure.input.rest.dto.aggressordetail.ViolenceReportAggressorDto;
 import net.pladema.violencereport.infrastructure.input.rest.dto.episodedetail.ViolenceEpisodeDetailDto;
 import net.pladema.violencereport.infrastructure.input.rest.dto.implementedactions.CoordinationActionDto;
@@ -43,7 +46,7 @@ import org.mapstruct.Named;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Mapper(uses = {LocalDateMapper.class, SnomedMapper.class})
+@Mapper(uses = {LocalDateMapper.class, SnomedMapper.class, EViolenceEvaluationRiskLevel.class})
 public interface ViolenceReportMapper {
 
 	@Mapping(target = "lastName", source = "actorPersonalData.lastName")
@@ -188,5 +191,9 @@ public interface ViolenceReportMapper {
 	@Mapping(target = "aggressors", source = "aggressorData", qualifiedByName = "fromViolenceReportAggressorDtoList")
 	@Mapping(target = "implementedActions", source = "implementedActions", qualifiedByName = "fromViolenceReportImplementedActionsDto")
 	ViolenceReportBo fromViolenceReportDto(ViolenceReportDto violenceReportDto);
+
+	@Mapping(target = "riskLevel", source = "riskLevelId")
+	@Named("toViolenceReportSituationDto")
+	ViolenceReportSituationDto toViolenceReportSituationDto(ViolenceReportSituationBo violenceReportSituationBo);
 
 }

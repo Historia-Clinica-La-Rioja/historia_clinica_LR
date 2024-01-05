@@ -24,6 +24,6 @@ public interface ViolenceReportRepository extends SGXAuditableEntityJPARepositor
 			"FROM ViolenceReport vr " +
 			"WHERE vr.patientId = :patientId " +
 			"AND vr.situationId = :situationId")
-	List<Integer> getAllSituationReportIdsByPatientIdAndSituationId(@Param("patientId") Integer patientId, @Param("situationId") Short situationId);
+	List<Integer> getAllReportIdsByPatientIdAndSituationId(@Param("patientId") Integer patientId, @Param("situationId") Short situationId);
 
 }
