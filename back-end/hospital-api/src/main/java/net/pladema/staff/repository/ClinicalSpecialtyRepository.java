@@ -2,6 +2,8 @@ package net.pladema.staff.repository;
 
 import java.util.List;
 
+import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,7 +14,7 @@ import net.pladema.staff.repository.entity.ClinicalSpecialty;
 import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
 
 @Repository
-public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpecialty, Integer>{
+public interface ClinicalSpecialtyRepository extends SGXAuditableEntityJPARepository<ClinicalSpecialty, Integer> {
 
 	@Transactional(readOnly = true)
     @Query(value = " SELECT cs "
@@ -41,6 +43,7 @@ public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpeci
 	@Query(value = " SELECT cs " +
 					"FROM ClinicalSpecialty cs " +
 					"WHERE cs.clinicalSpecialtyTypeId = 2 " +
+					"AND cs.deleteable.deleted = FALSE " +
 					"ORDER BY cs.name ")
 	List<ClinicalSpecialty> findAllSpecialties();
 

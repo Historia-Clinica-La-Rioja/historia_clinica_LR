@@ -1897,3 +1897,103 @@ databaseChangeLog:
               columnNames: document_id
               constraintName: UQ_document_id_document_prosthesis
 
+    - changeSet:
+        id: add-auditable-columns-clinical_specialty
+        author: fsimaro
+        changes:
+          - addColumn:
+              tableName: clinical_specialty
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: delete-duplicated-clinical_specialty
+        comment: Set as deleted duplicated clinical specialty 'Diagnóstico por imágenes pediátrico'
+        author: fsimaro
+        context: "!schema-only"
+        changes:
+          - sql:
+              endDelimiter: ;;
+              sql: |-
+                DO $$
+                declare
+                	ids INTEGER[];
+                BEGIN
+                 IF (SELECT COUNT(1) FROM clinical_specialty cs WHERE (cs.sctid_code = '320541000221105' and cs.clinical_specialty_type_id = 2)) > 1 THEN
+                    SELECT array_agg(cs.id) into ids FROM clinical_specialty cs WHERE (cs.sctid_code = '320541000221105' and cs.clinical_specialty_type_id = 2);
+                    UPDATE clinical_specialty SET deleted = TRUE where id = ids[2];
+                 END IF;
+                END $$;
+
+    - changeSet:
+        id: delete-duplicated-clinical_specialty_2
+        comment: Set as deleted duplicated clinical specialty 'Dermatología'
+        author: fsimaro
+        context: "!schema-only"
+        changes:
+          - sql:
+              endDelimiter: ;;
+              sql: |-
+                DO $$
+                declare
+                	ids INTEGER[];
+                BEGIN
+                 IF (SELECT COUNT(1) FROM clinical_specialty cs WHERE (cs.sctid_code = '700241009' and cs.clinical_specialty_type_id = 1)) > 1 THEN
+                    SELECT array_agg(cs.id) into ids FROM clinical_specialty cs WHERE (cs.sctid_code = '700241009' and cs.clinical_specialty_type_id = 1);
+                    UPDATE clinical_specialty SET deleted = TRUE where id = ids[2];
+                 END IF;
+                END $$; 
+
+    - changeSet:
+        id: delete-duplicated-clinical_specialty_3
+        comment: Set as deleted duplicated clinical specialty 'Obstetricia'
+        author: fsimaro
+        context: "!schema-only"
+        changes:
+          - sql:
+              endDelimiter: ;;
+              sql: |-
+                DO $$
+                declare
+                	ids INTEGER[];
+                BEGIN
+                 IF (SELECT COUNT(1) FROM clinical_specialty cs WHERE (cs.sctid_code = '408470005' and cs.clinical_specialty_type_id = 2)) > 1 THEN
+                    SELECT array_agg(cs.id) into ids FROM clinical_specialty cs WHERE (cs.sctid_code = '408470005' and cs.clinical_specialty_type_id = 2);
+                    UPDATE clinical_specialty SET deleted = TRUE where id = ids[2];
+                 END IF;
+                END $$; 
