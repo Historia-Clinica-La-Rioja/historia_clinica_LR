@@ -30,7 +30,7 @@ public class ServiceRequestStorageImpl implements ServiceRequestStorage {
 
 	@Override
 	public TranscribedServiceRequestBo getTranscribedServiceRequest(Integer transcribedServiceRequestId) {
-		return transcribedServiceRequestRepository.get(transcribedServiceRequestId)
+		return transcribedServiceRequestRepository.getTranscribedServiceRequest(transcribedServiceRequestId)
 				.orElse(null);
 	}
 

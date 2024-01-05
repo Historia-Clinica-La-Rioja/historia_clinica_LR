@@ -32,7 +32,9 @@ import net.pladema.establishment.service.domain.InternmentPatientBedRoomBo;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
-import net.pladema.reports.controller.dto.FormVDto;
+import net.pladema.patient.service.PatientMedicalCoverageService;
+import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
+import net.pladema.reports.service.domain.FormVBo;
 import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNumberByProfessional;
 import net.pladema.staff.domain.ProfessionalLicenseNumberBo;
 import net.pladema.staff.service.HealthcareProfessionalService;
@@ -40,9 +42,9 @@ import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
-@Service
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class CreateServiceRequestPdf {
 
     private final GetServiceRequestInfoService getServiceRequestInfoService;
@@ -63,6 +65,7 @@ public class CreateServiceRequestPdf {
 	private final InternmentEpisodeService internmentEpisodeService;
 	private final CreateDeliveryOrderBaseForm createDeliveryOrderBaseForm;
 	private final CreateDeliveryOrderFormContext createDeliveryOrderFormContext;
+	private final PatientMedicalCoverageService patientMedicalCoverageService;
 
     public StoredFileBo run(Integer institutionId, Integer patientId, Integer serviceRequestId) {
         log.debug("Input parameters -> institutionId {}, patientId {}, serviceRequestId {}", institutionId, patientId, serviceRequestId);
@@ -77,11 +80,11 @@ public class CreateServiceRequestPdf {
 
 	private StoredFileBo createDeliveryOrderForm(Integer patientId, Integer serviceRequestId) {
 
-		ServiceRequestBo serviceRequestBo = getServiceRequestInfoService.run(serviceRequestId);
+		ServiceRequestBo serviceRequest = getServiceRequestInfoService.run(serviceRequestId);
 		BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
-		FormVDto baseFormVDto = createDeliveryOrderBaseForm.run(patientId, serviceRequestBo, patientDto);
-		FormVDto formVDto = completeFormV(baseFormVDto, serviceRequestBo);
-		Map<String, Object> context = createDeliveryOrderFormContext.run(formVDto, serviceRequestBo);
+		FormVBo baseFormV = createDeliveryOrderBaseForm.run(patientId, serviceRequest, patientDto);
+		FormVBo formV = completeFormV(baseFormV, serviceRequest);
+		Map<String, Object> context = createDeliveryOrderFormContext.run(formV, serviceRequest);
         String template = "form_report";
 
         return new StoredFileBo(pdfService.generate(template, context),
@@ -89,15 +92,15 @@ public class CreateServiceRequestPdf {
 				this.resolveNameFile(patientDto, serviceRequestId));
 	}
 
-	private FormVDto completeFormV(FormVDto formVDto, ServiceRequestBo serviceRequestBo) {
+	private FormVBo completeFormV(FormVBo formV, ServiceRequestBo serviceRequest) {
 
-		Integer patientId = formVDto.getHcnId();
+		Integer patientId = formV.getHcnId();
 
-		InstitutionBo institutionBo = institutionService.get(serviceRequestBo.getInstitutionId());
+		InstitutionBo institutionBo = institutionService.get(serviceRequest.getInstitutionId());
 		String institutionName = institutionBo.getName();
 		String institutionProvinceCode = institutionBo.getProvinceCode();
 
-		HealthcareProfessionalBo professional = healthcareProfessionalService.findActiveProfessionalById(serviceRequestBo.getDoctorId());
+		HealthcareProfessionalBo professional = healthcareProfessionalService.findActiveProfessionalById(serviceRequest.getDoctorId());
 		String completeProfessionalName = sharedPersonPort.getCompletePersonNameById(professional.getPersonId());
 
 		List<ProfessionalLicenseNumberBo> licenses = getLicenseNumberByProfessional.run(professional.getId());
@@ -107,24 +110,24 @@ public class CreateServiceRequestPdf {
 				.collect(Collectors.toList()));
 		List<String> responsibleNumberLicenses = responsibleDoctorBo.getLicenses();
 
-		String problems = serviceRequestBo.getProblems().toString();
+		String problems = serviceRequest.getProblems().toString();
 
-		PatientMedicalCoverageDto medicalCoverage = setMedicalCoverage(patientId, serviceRequestBo);
-		InternmentPatientBedRoomBo ipbr = getInternmentLastBed(patientId, serviceRequestBo);
-		EmergencyEpisodePatientBedRoomBo eepbr = getEmergencyEpisodeLastBed(patientId, serviceRequestBo);
+		PatientMedicalCoverageBo medicalCoverage = setMedicalCoverage(patientId, serviceRequest);
+		InternmentPatientBedRoomBo ipbr = getInternmentLastBed(patientId, serviceRequest);
+		EmergencyEpisodePatientBedRoomBo eepbr = getEmergencyEpisodeLastBed(patientId, serviceRequest);
 
-		return mapToCompleteFormV(formVDto, institutionName, institutionProvinceCode, completeProfessionalName, responsibleNumberLicenses, problems, medicalCoverage, ipbr, eepbr);
+		return mapToCompleteFormV(formV, institutionName, institutionProvinceCode, completeProfessionalName, responsibleNumberLicenses, problems, medicalCoverage, ipbr, eepbr);
 	}
 
-	private FormVDto mapToCompleteFormV(FormVDto formVDto,
-										String institutionName,
-										String institutionProvinceCode,
-										String completeProfessionalName,
-										List<String> responsibleNumberLicenses,
-										String problems,
-										PatientMedicalCoverageDto medicalCoverage,
-										InternmentPatientBedRoomBo ipbr,
-										EmergencyEpisodePatientBedRoomBo eepbr) {
+	private FormVBo mapToCompleteFormV(FormVBo formV,
+									   String institutionName,
+									   String institutionProvinceCode,
+									   String completeProfessionalName,
+									   List<String> responsibleNumberLicenses,
+									   String problems,
+									   PatientMedicalCoverageBo medicalCoverage,
+									   InternmentPatientBedRoomBo ipbr,
+									   EmergencyEpisodePatientBedRoomBo eepbr) {
 
 		var medicalCoverageName = medicalCoverage != null
 				? medicalCoverage.getMedicalCoverageName()
@@ -148,51 +151,39 @@ public class CreateServiceRequestPdf {
 				? eepbr.getRoom()
 				: null;
 
-		formVDto.setEstablishment(institutionName);
-		formVDto.setEstablishmentProvinceCode(institutionProvinceCode);
-		formVDto.setCompleteProfessionalName(completeProfessionalName);
-		formVDto.setLicenses(responsibleNumberLicenses);
-		formVDto.setProblems(problems);
-		formVDto.setMedicalCoverage(medicalCoverageName);
-		formVDto.setMedicalCoverageCondition(medicalCoverageConditionValue);
-		formVDto.setAffiliateNumber(medicalCoverageAffiliateNumber);
-		formVDto.setBedNumber(bedNumber);
-		formVDto.setRoomNumber(roomNumber);
+		formV.setEstablishment(institutionName);
+		formV.setEstablishmentProvinceCode(institutionProvinceCode);
+		formV.setCompleteProfessionalName(completeProfessionalName);
+		formV.setLicenses(responsibleNumberLicenses);
+		formV.setProblems(problems);
+		formV.setMedicalCoverage(medicalCoverageName);
+		formV.setMedicalCoverageCondition(medicalCoverageConditionValue);
+		formV.setAffiliateNumber(medicalCoverageAffiliateNumber);
+		formV.setBedNumber(bedNumber);
+		formV.setRoomNumber(roomNumber);
 
-		return formVDto;
+		return formV;
 	}
 
-	private PatientMedicalCoverageDto setMedicalCoverage(Integer patientId, ServiceRequestBo serviceRequestBo) {
-		PatientMedicalCoverageDto medicalCoverage = new PatientMedicalCoverageDto();
+	private PatientMedicalCoverageBo setMedicalCoverage(Integer patientId, ServiceRequestBo serviceRequest) {
+		PatientMedicalCoverageBo medicalCoverage = new PatientMedicalCoverageBo();
 
-		if (serviceRequestBo.getAssociatedSourceTypeId().equals(SourceType.HOSPITALIZATION))
-			medicalCoverage = setInternmentMedicalCoverageOrder(patientId, serviceRequestBo);
+		if (serviceRequest.getAssociatedSourceTypeId().equals(SourceType.HOSPITALIZATION))
+			medicalCoverage = setInternmentMedicalCoverageOrder(patientId, serviceRequest);
 
-		if (List.of(SourceType.OUTPATIENT, SourceType.EMERGENCY_CARE).contains(serviceRequestBo.getAssociatedSourceTypeId()))
-			medicalCoverage = setOutpatientAndEmergencyCareEpisodeCoverageOrder(serviceRequestBo);
+		if (List.of(SourceType.OUTPATIENT, SourceType.EMERGENCY_CARE).contains(serviceRequest.getAssociatedSourceTypeId()))
+			medicalCoverage = setOutpatientAndEmergencyCareEpisodeCoverageOrder(serviceRequest);
 
 		return medicalCoverage.getMedicalCoverage() != null ? medicalCoverage : null;
 	}
 
-	private PatientMedicalCoverageDto setOutpatientAndEmergencyCareEpisodeCoverageOrder(ServiceRequestBo serviceRequestBo) {
-		PatientMedicalCoverageDto medicalCoverage = new PatientMedicalCoverageDto();
-		PatientMedicalCoverageDto patientMedicalCoverageDto = patientExternalMedicalCoverageService.getCoverage(serviceRequestBo.getMedicalCoverageId());
-		medicalCoverage.setMedicalCoverage(patientMedicalCoverageDto != null ? patientMedicalCoverageDto.getMedicalCoverage(): null);
-		medicalCoverage.setCondition(patientMedicalCoverageDto != null ? patientMedicalCoverageDto.getCondition(): null);
-		medicalCoverage.setAffiliateNumber(patientMedicalCoverageDto != null ? patientMedicalCoverageDto.getAffiliateNumber(): null);
-		return medicalCoverage;
+	private PatientMedicalCoverageBo setOutpatientAndEmergencyCareEpisodeCoverageOrder(ServiceRequestBo serviceRequestBo) {
+		return patientMedicalCoverageService.getCoverage(serviceRequestBo.getMedicalCoverageId()).orElse(new PatientMedicalCoverageBo());
 	}
 
-	private PatientMedicalCoverageDto setInternmentMedicalCoverageOrder(Integer patientId, ServiceRequestBo serviceRequestBo) {
-		PatientMedicalCoverageDto medicalCoverage = new PatientMedicalCoverageDto();
+	private PatientMedicalCoverageBo setInternmentMedicalCoverageOrder(Integer patientId, ServiceRequestBo serviceRequestBo) {
 		Integer internmentEpisodeId = internmentPatientService.getInternmentEpisodeIdByDate(serviceRequestBo.getInstitutionId(), patientId, serviceRequestBo.getRequestDate());
-		internmentEpisodeService.getMedicalCoverage(internmentEpisodeId)
-				.ifPresent(medicalCoverageBo -> {
-					medicalCoverage.setMedicalCoverage(medicalCoverageBo.getMedicalCoverage().newInstance());
-					medicalCoverage.setCondition(medicalCoverageBo.getCondition());
-					medicalCoverage.setAffiliateNumber(medicalCoverageBo.getAffiliateNumber());
-				});
-		return medicalCoverage;
+		return internmentEpisodeService.getMedicalCoverage(internmentEpisodeId).orElse(new PatientMedicalCoverageBo());
 	}
 
 	private EmergencyEpisodePatientBedRoomBo getEmergencyEpisodeLastBed(Integer patientId, ServiceRequestBo serviceRequestBo) {

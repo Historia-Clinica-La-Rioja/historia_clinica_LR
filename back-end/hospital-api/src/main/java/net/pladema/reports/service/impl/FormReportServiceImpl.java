@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import net.pladema.reports.controller.dto.FormVDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,9 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.S
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.medicalconsultation.appointment.service.DocumentAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.DocumentAppointmentBo;
-import net.pladema.reports.controller.dto.FormVDto;
 import net.pladema.reports.repository.FormReportRepository;
 import net.pladema.reports.repository.entity.FormVReportDataVo;
 import net.pladema.reports.service.FormReportService;
-import net.pladema.reports.service.domain.FormVBo;
 
 @Service
 public class FormReportServiceImpl implements FormReportService {
@@ -41,9 +40,9 @@ public class FormReportServiceImpl implements FormReportService {
 	}
 
     @Override
-    public FormVBo getAppointmentData(Integer appointmentId) {
+    public net.pladema.reports.service.domain.FormVBo getAppointmentData(Integer appointmentId) {
         LOG.debug("Input parameter -> appointmentId {}", appointmentId);
-        FormVBo result = formReportRepository.getAppointmentFormVInfo(appointmentId).map(FormVBo::new)
+        net.pladema.reports.service.domain.FormVBo result = formReportRepository.getAppointmentFormVInfo(appointmentId).map(net.pladema.reports.service.domain.FormVBo::new)
                 .orElseThrow(() ->new NotFoundException("bad-appointment-id", APPOINTMENT_NOT_FOUND));
 
 		Optional<DocumentAppointmentBo> documentAppointmentOpt = this.documentAppointmentService.getDocumentAppointmentForAppointment(appointmentId);
@@ -96,7 +95,7 @@ public class FormReportServiceImpl implements FormReportService {
 	}
 
 	@Override
-	public FormVBo getConsultationData(Long documentId) {
+	public net.pladema.reports.service.domain.FormVBo getConsultationData(Long documentId) {
 
 		Optional<DocumentAppointmentBo> documentAppointmentOpt = this.documentAppointmentService.getDocumentAppointmentForDocument(documentId);
 		if(documentAppointmentOpt.isPresent()){
@@ -104,7 +103,7 @@ public class FormReportServiceImpl implements FormReportService {
 		}
 
 		LOG.debug("Input parameter -> documentId {}", documentId);
-		FormVBo result;
+		net.pladema.reports.service.domain.FormVBo result;
 
 		Short sourceType = this.documentService.getSourceType(documentId);
 		Short documentSourceType = sourceType == SourceType.IMMUNIZATION ? SourceType.OUTPATIENT : sourceType;
@@ -114,7 +113,7 @@ public class FormReportServiceImpl implements FormReportService {
 			case SourceType.OUTPATIENT: {
 				var outpatientResultOpt = formReportRepository.getConsultationFormVInfo(documentId);
 				if(outpatientResultOpt.isPresent()) {
-					result = new FormVBo(outpatientResultOpt.get());
+					result = new net.pladema.reports.service.domain.FormVBo(outpatientResultOpt.get());
 					LOG.debug("Output -> {}", result);
 					return result;
 				}
@@ -124,7 +123,7 @@ public class FormReportServiceImpl implements FormReportService {
 			case SourceType.ODONTOLOGY: {
 				var odontologyResultOpt = formReportRepository.getOdontologyConsultationFormVGeneralInfo(documentId);
 				if(odontologyResultOpt.isPresent()) {
-					result = new FormVBo(odontologyResultOpt.get());
+					result = new net.pladema.reports.service.domain.FormVBo(odontologyResultOpt.get());
 					List<FormVReportDataVo> odontologyListData = formReportRepository.getOdontologyConsultationFormVDataInfo(documentId);
 					odontologyListData.addAll(formReportRepository.getOdontologyConsultationFormVOtherDataInfo(documentId));
 					var completeResult = completeFormVBo(result, odontologyListData);
@@ -137,7 +136,7 @@ public class FormReportServiceImpl implements FormReportService {
 			case SourceType.NURSING: {
 				var nursingResultOpt = formReportRepository.getNursingConsultationFormVGeneralInfo(documentId);
 				if(nursingResultOpt.isPresent()) {
-					result = new FormVBo(nursingResultOpt.get());
+					result = new net.pladema.reports.service.domain.FormVBo(nursingResultOpt.get());
 					Optional<FormVReportDataVo> nursingListData = formReportRepository.getNursingConsultationFormVDataInfo(documentId);
 					var completeResult = completeFormVBo(result, nursingListData);
 					LOG.debug("Output -> {}", completeResult);
@@ -150,7 +149,7 @@ public class FormReportServiceImpl implements FormReportService {
 		throw new NotFoundException("bad-consultation-id", CONSULTATION_NOT_FOUND);
 	}
 
-	private FormVBo completeFormVBo(FormVBo result, List<FormVReportDataVo> listData) {
+	private net.pladema.reports.service.domain.FormVBo completeFormVBo(net.pladema.reports.service.domain.FormVBo result, List<FormVReportDataVo> listData) {
 		if(!listData.isEmpty()){
 			for(FormVReportDataVo reportData : listData){
 				result = this.setProblems(result, reportData.getDiagnostics());
@@ -160,7 +159,7 @@ public class FormReportServiceImpl implements FormReportService {
 		return result;
 	}
 
-	private FormVBo completeFormVBo(FormVBo result, Optional<FormVReportDataVo> dataOpt) {
+	private net.pladema.reports.service.domain.FormVBo completeFormVBo(net.pladema.reports.service.domain.FormVBo result, Optional<FormVReportDataVo> dataOpt) {
 		if(dataOpt.isPresent()){
 			var data = dataOpt.get();
 			result = this.setProblems(result, data.getDiagnostics());
@@ -169,7 +168,7 @@ public class FormReportServiceImpl implements FormReportService {
 		return result;
 	}
 
-	private FormVBo setProblems(FormVBo report, String problems){
+	private net.pladema.reports.service.domain.FormVBo setProblems(net.pladema.reports.service.domain.FormVBo report, String problems){
 		if(report.getProblems() == null)
 			report.setProblems(problems);
 		else
@@ -177,7 +176,7 @@ public class FormReportServiceImpl implements FormReportService {
 		return report;
 	}
 
-	private FormVBo setCie10Codes(FormVBo report, String cie10Codes){
+	private net.pladema.reports.service.domain.FormVBo setCie10Codes(net.pladema.reports.service.domain.FormVBo report, String cie10Codes){
 		if(cie10Codes == null)
 			cie10Codes = "-";
 		if(report.getCie10Codes() == null)

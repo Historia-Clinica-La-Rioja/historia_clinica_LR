@@ -8,15 +8,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.TranscribedServiceRequestBo;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
-import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalService;
-import net.pladema.reports.controller.dto.FormVDto;
+import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
+import net.pladema.reports.service.domain.FormVBo;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
-@Service
+
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class CreateTranscribedServiceRequestPdf {
 
     private final GetTranscribedServiceRequest getTranscribedServiceRequest;
@@ -40,10 +41,10 @@ public class CreateTranscribedServiceRequestPdf {
         TranscribedServiceRequestBo transcribedServiceRequestBo = getTranscribedServiceRequest.run(transcribedServiceRequestId);
 
         BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
-        FormVDto baseFormVDto = createDeliveryOrderBaseForm.run(patientId, transcribedServiceRequestBo, patientDto);
-        PatientMedicalCoverageDto patientMedicalCoverageDto = appointmentService.getMedicalCoverageFromAppointment(appointmentId);
-        FormVDto formVDto = completeFormV(baseFormVDto, transcribedServiceRequestBo, patientMedicalCoverageDto);
-        Map<String, Object> context = createDeliveryOrderFormContext.run(formVDto, transcribedServiceRequestBo);
+        FormVBo baseFormV = createDeliveryOrderBaseForm.run(patientId, transcribedServiceRequestBo, patientDto);
+        PatientMedicalCoverageBo patientMedicalCoverage = appointmentService.getMedicalCoverageFromAppointment(appointmentId);
+        FormVBo formV = completeFormV(baseFormV, transcribedServiceRequestBo, patientMedicalCoverage);
+        Map<String, Object> context = createDeliveryOrderFormContext.run(formV, transcribedServiceRequestBo);
         String template = "form_report";
 
         return new StoredFileBo(pdfService.generate(template, context),
@@ -51,19 +52,19 @@ public class CreateTranscribedServiceRequestPdf {
                 this.resolveNameFile(patientDto, transcribedServiceRequestId));
     }
 
-    private FormVDto completeFormV(FormVDto formVDto, TranscribedServiceRequestBo transcribedServiceRequestBo, PatientMedicalCoverageDto medicalCoverage) {
+    private FormVBo completeFormV(FormVBo formV, TranscribedServiceRequestBo transcribedServiceRequest, PatientMedicalCoverageBo medicalCoverage) {
 
-        formVDto.setEstablishment(transcribedServiceRequestBo.getInstitutionName());
-        formVDto.setCompleteProfessionalName(transcribedServiceRequestBo.getHealthcareProfessionalName());
-        formVDto.setProblems(transcribedServiceRequestBo.getHealthCondition().getPt());
+        formV.setEstablishment(transcribedServiceRequest.getInstitutionName());
+        formV.setCompleteProfessionalName(transcribedServiceRequest.getHealthcareProfessionalName());
+        formV.setProblems(transcribedServiceRequest.getHealthCondition().getPt());
 
         if (medicalCoverage != null) {
-            formVDto.setMedicalCoverage(medicalCoverage.getMedicalCoverageName());
-            formVDto.setMedicalCoverageCondition(medicalCoverage.getConditionValue());
-            formVDto.setAffiliateNumber(medicalCoverage.getAffiliateNumber());
+            formV.setMedicalCoverage(medicalCoverage.getMedicalCoverageName());
+            formV.setMedicalCoverageCondition(medicalCoverage.getConditionValue());
+            formV.setAffiliateNumber(medicalCoverage.getAffiliateNumber());
         }
 
-        return formVDto;
+        return formV;
     }
 
 

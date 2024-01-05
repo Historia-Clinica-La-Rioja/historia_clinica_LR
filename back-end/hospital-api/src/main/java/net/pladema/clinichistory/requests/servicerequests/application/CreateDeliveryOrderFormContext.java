@@ -6,38 +6,38 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.domain.IServiceRequestBo;
-import net.pladema.reports.controller.dto.FormVDto;
+import net.pladema.reports.service.domain.FormVBo;
 import org.springframework.stereotype.Service;
 
-@Service
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class CreateDeliveryOrderFormContext {
 
-    public Map<String, Object> run(FormVDto formVDto, IServiceRequestBo serviceRequestBo) {
-        log.trace("Input parameters -> formVDto {}, serviceRequestBo {}", formVDto, serviceRequestBo);
+    public Map<String, Object> run(FormVBo formV, IServiceRequestBo serviceRequest) {
+        log.trace("Input parameters -> formV {}, serviceRequest {}", formV, serviceRequest);
         Map<String, Object> ctx = new HashMap<>();
-        ctx.put("formalPatientName", formVDto.getFormalPatientName());
-        ctx.put("address", formVDto.getAddress());
-        ctx.put("reportDate", formVDto.getReportDate());
-        ctx.put("hcnId", formVDto.getHcnId());
-        ctx.put("medicalCoverage", formVDto.getMedicalCoverage());
-        ctx.put("establishment", formVDto.getEstablishment());
-        ctx.put("code", formVDto.getEstablishmentProvinceCode());
-        ctx.put("ce", serviceRequestBo.getAssociatedSourceTypeId().equals(SourceType.OUTPATIENT));
-        ctx.put("problems", serviceRequestBo.getProblemsPt());
-        ctx.put("studies", serviceRequestBo.getStudies());
-        ctx.put("cie10Codes", serviceRequestBo.getCie10Codes());
-        ctx.put("completeProfessionalName", formVDto.getCompleteProfessionalName());
-        ctx.put("licenses", formVDto.getLicenses());
-        ctx.put("medicalCoverageCondition", formVDto.getMedicalCoverageCondition());
-        ctx.put("room", formVDto.getRoomNumber());
-        ctx.put("bed", formVDto.getBedNumber());
-        ctx.put("affiliateNumber", formVDto.getAffiliateNumber());
-        ctx.put("patientGender", formVDto.getPatientGender());
-        ctx.put("documentType", formVDto.getDocumentType());
-        ctx.put("documentNumber", formVDto.getDocumentNumber());
-        ctx.put("patientAge", formVDto.getPatientAge());
+        ctx.put("formalPatientName", formV.getFormalPatientName());
+        ctx.put("address", formV.getAddress());
+        ctx.put("reportDate", formV.getReportDate());
+        ctx.put("hcnId", formV.getHcnId());
+        ctx.put("medicalCoverage", formV.getMedicalCoverage());
+        ctx.put("establishment", formV.getEstablishment());
+        ctx.put("code", formV.getEstablishmentProvinceCode());
+        ctx.put("ce", serviceRequest.getAssociatedSourceTypeId().equals(SourceType.OUTPATIENT));
+        ctx.put("problems", serviceRequest.getProblemsPt());
+        ctx.put("studies", serviceRequest.getStudies());
+        ctx.put("cie10Codes", serviceRequest.getCie10Codes());
+        ctx.put("completeProfessionalName", formV.getCompleteProfessionalName());
+        ctx.put("licenses", formV.getLicenses());
+        ctx.put("medicalCoverageCondition", formV.getMedicalCoverageCondition());
+        ctx.put("room", formV.getRoomNumber());
+        ctx.put("bed", formV.getBedNumber());
+        ctx.put("affiliateNumber", formV.getAffiliateNumber());
+        ctx.put("patientGender", formV.getPatientGender());
+        ctx.put("documentType", formV.getDocumentType());
+        ctx.put("documentNumber", formV.getDocumentNumber());
+        ctx.put("patientAge", formV.getPatientAge());
         log.trace("Output -> {}", ctx);
         return ctx;
     }

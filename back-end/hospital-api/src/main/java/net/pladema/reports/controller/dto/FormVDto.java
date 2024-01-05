@@ -1,22 +1,18 @@
 package net.pladema.reports.controller.dto;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.enums.EGender;
-import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
-import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
-
 import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class FormVDto {
 
     private String establishment;
@@ -63,31 +59,4 @@ public class FormVDto {
 
 	private String roomNumber;
 
-	public FormVDto(String establishment, String completePatientName,
-					ContactInfoBo contactInfo, LocalDate reportDate,
-					String medicalCoverage, String problems,
-					String medicalCoverageCondition, String establishmentProvinceCode,
-					Integer hcnId, String completeProfessionalName,
-					List<String> licenses, String bedNumber,
-					String roomNumber, String affiliateNumber,
-					BasicPatientDto patientDto, Short age) {
-		this.establishment = establishment;
-		this.completePatientName = completePatientName;
-		this.address = contactInfo != null ? contactInfo.getAddress().getCompleteAddress(): null;
-		this.reportDate = reportDate;
-		this.medicalCoverage = medicalCoverage;
-		this.problems = problems;
-		this.medicalCoverageCondition = medicalCoverageCondition;
-		this.establishmentProvinceCode = establishmentProvinceCode;
-		this.hcnId = hcnId;
-		this.completeProfessionalName = completeProfessionalName;
-		this.licenses = licenses;
-		this.bedNumber = bedNumber;
-		this.roomNumber = roomNumber;
-		this.affiliateNumber = affiliateNumber;
-		this.patientGender = patientDto != null ? patientDto.getGender() != null ? EGender.map(patientDto.getGender().getId()).getValue(): null: null;
-		this.documentType = patientDto != null ? patientDto.getIdentificationNumber() != null ? patientDto.getIdentificationType(): null: null;
-		this.documentNumber = patientDto != null ? patientDto.getIdentificationNumber(): null;
-		this.patientAge = age;
-	}
 }

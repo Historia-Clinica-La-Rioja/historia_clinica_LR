@@ -23,6 +23,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterrefer
 import lombok.AllArgsConstructor;
 
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
+import net.pladema.patient.service.PatientMedicalCoverageService;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -113,6 +114,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 	private final EquipmentAppointmentStorage equipmentAppointmentStorage;
 
 	private final OrderImageFileStorage orderImageFileStorage;
+
+	private final PatientMedicalCoverageService patientMedicalCoverageService;
 
 	@Override
 	public Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds, LocalDate from, LocalDate to) {
@@ -340,10 +343,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public PatientMedicalCoverageDto getMedicalCoverageFromAppointment(Integer appointmentId) {
+	public PatientMedicalCoverageBo getMedicalCoverageFromAppointment(Integer appointmentId) {
 		log.debug("Input parameters -> appointmentId {}", appointmentId);
 		return appointmentRepository.getAppointmentMedicalCoverageId(appointmentId)
-				.map(patientExternalMedicalCoverageService::getCoverage)
+				.flatMap(patientMedicalCoverageService::getCoverage)
 				.orElse(null);
 	}
 

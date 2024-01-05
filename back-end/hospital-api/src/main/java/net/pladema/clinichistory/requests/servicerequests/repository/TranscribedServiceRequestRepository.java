@@ -37,6 +37,6 @@ public interface TranscribedServiceRequestRepository extends JpaRepository<Trans
 			"JOIN HealthCondition hc ON (dr.healthConditionId = hc.id) " +
 			"JOIN Snomed s_problem ON (hc.snomedId = s_problem.id) " +
 			"WHERE tsr.id = :id ")
-	Optional<TranscribedServiceRequestBo> get(@Param("id") Integer id);
+	Optional<TranscribedServiceRequestBo> getTranscribedServiceRequest(@Param("id") Integer id);
 
 }

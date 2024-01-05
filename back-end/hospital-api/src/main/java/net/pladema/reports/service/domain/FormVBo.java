@@ -1,7 +1,11 @@
 package net.pladema.reports.service.domain;
 
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import net.pladema.reports.repository.entity.FormVAppointmentVo;
 import net.pladema.reports.repository.entity.FormVOutpatientVo;
 
@@ -12,6 +16,9 @@ import java.util.stream.Stream;
 
 @Getter
 @Setter
+@ToString
+@AllArgsConstructor
+@Builder
 public class FormVBo {
 
     private String establishment;
@@ -43,6 +50,20 @@ public class FormVBo {
     private String sisaCode;
 
     private String cie10Codes;
+
+    private String medicalCoverageCondition;
+
+    private String establishmentProvinceCode;
+
+    private Integer hcnId;
+
+    private String completeProfessionalName;
+
+    private List<String> licenses;
+
+    private String bedNumber;
+
+    private String roomNumber;
 
     public FormVBo(FormVOutpatientVo formVOutpatientVo){
         this.establishment = formVOutpatientVo.getEstablishment();

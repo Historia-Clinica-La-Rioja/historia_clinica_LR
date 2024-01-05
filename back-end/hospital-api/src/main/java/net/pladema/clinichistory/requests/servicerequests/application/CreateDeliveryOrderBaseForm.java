@@ -11,30 +11,30 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.domain.IServiceRequestBo;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.service.PersonService;
-import net.pladema.reports.controller.dto.FormVDto;
+import net.pladema.reports.service.domain.FormVBo;
 import org.springframework.stereotype.Service;
 
-@Service
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class CreateDeliveryOrderBaseForm {
 
     private final PersonService personService;
     private final SharedPersonPort sharedPersonPort;
 
-    public FormVDto run(Integer patientId, IServiceRequestBo serviceRequestBo, BasicPatientDto patientDto) {
+    public FormVBo run(Integer patientId, IServiceRequestBo serviceRequest, BasicPatientDto patientDto) {
         Person patientPerson = personService.findByPatientId(patientId).orElseThrow();
         String formalPatientPersonName = personService.getFormalPersonNameById(patientPerson.getId());
         var contactInfo = sharedPersonPort.getPersonContactInfoById(patientPerson.getId());
 
-        LocalDate reportDate = serviceRequestBo.getReportDate();
+        LocalDate reportDate = serviceRequest.getReportDate();
 
-        FormVDto formVDto = mapToBaseFormVDto(formalPatientPersonName, contactInfo, patientId, reportDate, patientDto);
-        log.trace("Output -> {}", formVDto);
-        return formVDto;
+        FormVBo formV = mapToBaseFormVBo(formalPatientPersonName, contactInfo, patientId, reportDate, patientDto);
+        log.trace("Output -> {}", formV);
+        return formV;
     }
 
-    private FormVDto mapToBaseFormVDto(
+    private FormVBo mapToBaseFormVBo(
             String formalPatientPersonName,
             ContactInfoBo contactInfo,
             Integer patientId,
@@ -59,7 +59,7 @@ public class CreateDeliveryOrderBaseForm {
                 ? (short) Period.between(patientDto.getBirthDate(), reportDate).getYears()
                 : null;
 
-        return FormVDto.builder()
+        return FormVBo.builder()
                 .formalPatientName(formalPatientPersonName)
                 .address(address)
                 .reportDate(reportDate)
