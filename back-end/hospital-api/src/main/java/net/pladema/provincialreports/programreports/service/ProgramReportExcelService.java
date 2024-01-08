@@ -22,6 +22,6 @@ public interface ProgramReportExcelService {
 
 	IWorkbook buildExcelSumarGeneral(String title, String[] headers, List<SumarGeneralConsultationDetail> query);
 
-	IWorkbook buildExcelSumarOdontologico(String title, String[] headers, List<OdontologicalConsultationDetail> query);
+	IWorkbook buildExcelOdontological(String title, String[] headers, List<OdontologicalConsultationDetail> query);
 
 }

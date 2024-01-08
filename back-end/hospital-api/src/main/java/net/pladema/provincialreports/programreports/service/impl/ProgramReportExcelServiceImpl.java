@@ -173,7 +173,7 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 	}
 
 	@Override
-	public IWorkbook buildExcelSumarOdontologico(String title, String[] headers, List<OdontologicalConsultationDetail> result) {
+	public IWorkbook buildExcelOdontological(String title, String[] headers, List<OdontologicalConsultationDetail> result) {
 		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
 		createCellStyle(wb);
 
