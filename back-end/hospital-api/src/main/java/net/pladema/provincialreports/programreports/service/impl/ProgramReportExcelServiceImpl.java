@@ -12,7 +12,7 @@ import net.pladema.provincialreports.programreports.repository.EpidemiologyTwoCo
 import net.pladema.provincialreports.programreports.repository.RecuperoGeneralConsultationDetail;
 import net.pladema.provincialreports.programreports.repository.RecuperoOdontologicoConsultationDetail;
 import net.pladema.provincialreports.programreports.repository.SumarGeneralConsultationDetail;
-import net.pladema.provincialreports.programreports.repository.SumarOdontologicoConsultationDetail;
+import net.pladema.provincialreports.programreports.repository.OdontologicalConsultationDetail;
 import net.pladema.provincialreports.programreports.service.ProgramReportExcelService;
 import net.pladema.provincialreports.reportformat.DateFormat;
 
@@ -173,7 +173,7 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 	}
 
 	@Override
-	public IWorkbook buildExcelSumarOdontologico(String title, String[] headers, List<SumarOdontologicoConsultationDetail> result) {
+	public IWorkbook buildExcelSumarOdontologico(String title, String[] headers, List<OdontologicalConsultationDetail> result) {
 		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
 		createCellStyle(wb);
 
@@ -705,7 +705,7 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 
 	}
 
-	private void fillRowContent(IRow row, SumarOdontologicoConsultationDetail content, ICellStyle style) {
+	private void fillRowContent(IRow row, OdontologicalConsultationDetail content, ICellStyle style) {
 		AtomicInteger rowNumber = new AtomicInteger(0);
 
 		ICell cell = row.createCell(rowNumber.getAndIncrement());

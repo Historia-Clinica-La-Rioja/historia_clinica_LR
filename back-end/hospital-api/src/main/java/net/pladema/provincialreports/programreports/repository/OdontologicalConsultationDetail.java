@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
-public class SumarOdontologicoConsultationDetail {
+public class OdontologicalConsultationDetail {
 
 	private String institution;
 
