@@ -2,7 +2,7 @@ import { SharedSnomedDto, ClinicalSpecialtyDto } from "@api-rest/api-model";
 import { filter } from "@presentation/components/filters-select/filters-select.component";
 import { FilterTypeahead, FiltersType } from "@presentation/components/filters/filters.component";
 import { practicesToTypeaheadOptions, specialtiesToTypeaheadOptions } from "@access-management/utils/mapper.utils";
-import { ATTENTION_STATE, CLOSURE_OPTIONS, PRIORITY_OPTIONS } from "@access-management/constants/reference";
+import { ATTENTION_STATE, CLOSURE_OPTIONS, PRIORITY_OPTIONS, REGULATION_OPTIONS } from "@access-management/constants/reference";
 
 export enum EDashboardFilters {
     CLOSURE_TYPE = 'closureType',
@@ -11,7 +11,8 @@ export enum EDashboardFilters {
     PRIORITY = 'priority',
     PRACTICE = 'practice',
     SPECIALTY = 'specialty',
-    IDENTIFICATION_NUMBER = 'identificationNumber'
+    IDENTIFICATION_NUMBER = 'identificationNumber',
+    REGULATION_STATES = 'regulationState'
 }
 
 export const DashboardFiltersMapping = {
@@ -21,7 +22,8 @@ export const DashboardFiltersMapping = {
     [EDashboardFilters.PRIORITY]: 'priorityId',
     [EDashboardFilters.PRACTICE]: 'procedureId',
     [EDashboardFilters.SPECIALTY]: 'clinicalSpecialtyId',
-    [EDashboardFilters.IDENTIFICATION_NUMBER]: 'identificationNumber'
+    [EDashboardFilters.IDENTIFICATION_NUMBER]: 'identificationNumber',
+    [EDashboardFilters.REGULATION_STATES]: 'regulationStateId',
 }
 
 export const setReportFilters = (practices: SharedSnomedDto[], clinicalSpecialties: ClinicalSpecialtyDto[]): FiltersType => {
@@ -40,6 +42,11 @@ export const setReportFilters = (practices: SharedSnomedDto[], clinicalSpecialti
             key: EDashboardFilters.PRIORITY,
             name: "access-management.search_references.PRIORITY",
             options: PRIORITY_OPTIONS,
+        },
+        {
+            key: EDashboardFilters.REGULATION_STATES,
+            name: "access-management.search_references.REGULATION_STATES",
+            options: REGULATION_OPTIONS,
         },
     ];
 

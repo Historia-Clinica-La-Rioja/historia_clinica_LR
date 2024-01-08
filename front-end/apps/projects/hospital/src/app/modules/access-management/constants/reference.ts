@@ -98,3 +98,22 @@ export const PENDING: ColoredLabel = {
     description: REFERENCE_STATES.PENDING,
     color: Color.YELLOW
 }
+
+export const REGULATION_OPTIONS = [
+    {
+        id: 0,
+        description: "Esperando aprobación"
+    },
+    {
+        id: 1,
+        description: "Solicitud aprobada"
+    },
+    {
+        id: 2,
+        description: "Solicitud rechazada"
+    },
+    {
+        id: 3,
+        description: "Revisión sugerida"
+    }
+];

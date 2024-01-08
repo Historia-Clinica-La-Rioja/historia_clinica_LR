@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { filter } from '../filters-select/filters-select.component';
 import { TypeaheadFilterOptions } from '../typeahead-filter-options/typeahead-filter-options.component';
+import { Option } from '@presentation/components/filters-select/filters-select.component';
 
 @Component({
 	selector: 'app-filters',
@@ -38,7 +38,7 @@ export class FiltersComponent {
 }
 
 export interface FiltersType {
-	selects?: filter[];
+	selects?: Filter[];
 	typeaheads?: FilterTypeahead[];
 }
 
@@ -55,4 +55,10 @@ export interface SelectedFilterOption {
 export interface SelectedFilters {
 	select?: SelectedFilterOption[];
 	typeahead?: SelectedFilterOption[];
+}
+
+export interface Filter {
+	key: string,
+	name: string,
+	options: Option[]
 }

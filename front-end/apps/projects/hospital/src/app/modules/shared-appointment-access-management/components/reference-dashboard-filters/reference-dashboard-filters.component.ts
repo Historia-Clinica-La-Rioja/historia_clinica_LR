@@ -140,6 +140,7 @@ export interface DashboardFilters {
 	closureTypeId?: number;
 	clinicalSpecialtyId?: number;
 	priorityId?: number;
+	regulationStateId?: number;
 	from: string;
 	to: string;
 }

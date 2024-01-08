@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { filter } from '../filters-select/filters-select.component';
-import { SelectedFilterOption } from '../filters/filters.component';
+import { Filter, SelectedFilterOption } from '../filters/filters.component';
+import { Option } from '../filters-select/filters-select.component';
 
 @Component({
 	selector: 'app-filters-select-v2',
@@ -11,10 +11,10 @@ import { SelectedFilterOption } from '../filters/filters.component';
 export class FiltersSelectV2Component {
 
 	filterForm: FormGroup;
-	filters: filter[] = [];
+	filters: Filter[] = [];
 	selectedFilterOptions: SelectedFilterOption[] = [];
 
-	@Input() set setFilters(filters: filter[]) {
+	@Input() set setFilters(filters: Filter[]) {
 		if (filters.length) {
 			this.filters = filters;
 			this.filterForm = this.toFormGroup(this.filters);
@@ -35,7 +35,7 @@ export class FiltersSelectV2Component {
 		this.selectedFilters.emit(this.selectedFilterOptions);
 	}
 
-	private toFormGroup(filters: filter[]): FormGroup {
+	private toFormGroup(filters: Filter[]): FormGroup {
 		const group: any = {};
 		filters.forEach(filter => group[filter.key] = new FormControl(null));
 		return new FormGroup(group);
@@ -57,8 +57,8 @@ export class FiltersSelectV2Component {
 		});
 	}
 
-	private toSelectedFilterOption(key: string, value: string): SelectedFilterOption {
-		return { key, value }
+	private toSelectedFilterOption(key: string, value: Option): SelectedFilterOption {
+		return { key, value: value.id }
 	}
 }
 

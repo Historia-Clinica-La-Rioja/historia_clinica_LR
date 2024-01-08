@@ -28,7 +28,8 @@
 			"COUNTER_REFERENCE": "Contrarreferencia",
 			"VIEW_APPLICATION": "Ver solicitud",
 			"DOCUMENT_SEARCH": "Buscar por documento",
-			"PRACTICE": "Práctica/Procedimiento",
+            "PRACTICE": "Práctica/Procedimiento",
+			"REGULATION_STATES": "Estado de aprobación",
 			"reference": {
 				"TITLE": "Detalle de solicitud",
 				"CONTACT_DATA": "Datos de contacto",
