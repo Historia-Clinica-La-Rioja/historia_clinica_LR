@@ -3338,6 +3338,7 @@ export interface ProcedureParameterDto {
     loincId: number;
     orderNumber: number;
     procedureTemplateId: number;
+    snomedGroupId: number;
     textOptions: string[];
     typeId: number;
     unitsOfMeasureIds: number[];

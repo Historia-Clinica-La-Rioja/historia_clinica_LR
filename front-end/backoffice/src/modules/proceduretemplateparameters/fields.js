@@ -6,7 +6,6 @@ import {
     minLength,
     ReferenceInput,
     required,
-    SelectInput,
     SimpleFormIterator,
     TextInput
 } from 'react-admin';
@@ -49,16 +48,16 @@ export const UnitsOfMeasure = (props) => {
 export const SnomedECL = (props) => {
     return (
         <ReferenceInput
-        source="eclId"
-        reference="snomed-ecls"
-        sort={{ field: 'code', order: 'ASC' }}
-        label="resources.proceduretemplateparameters.fields.eclId"
-        filterToQuery={searchText => ({code: searchText ? searchText : -1})}
-    >
-        <SelectInput optionText="code" optionValue="id" validate={[required()]} options={{ disabled: false }} />
-    </ReferenceInput>
-    );
-}
+            reference="snomedgroups"
+            source="snomedGroupId"
+            sort={{ field: 'description', order: 'ASC' }}
+            filterToQuery={searchText => ({description: searchText ? searchText : ''})}
+            isRequired={true}
+            validate={required()}
+        >
+            <AutocompleteInput optionText="description" optionValue="id"/>
+        </ReferenceInput>);
+};
 
 export const Options = (props) => {
     return (
