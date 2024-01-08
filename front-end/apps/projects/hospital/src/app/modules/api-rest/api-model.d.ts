@@ -694,7 +694,9 @@ export interface CityDto extends AbstractMasterdataDto<number> {
 }
 
 export interface ClinicHistoryAccessDto {
-    eclinicHistoryAccessReason: EClinicHistoryAccessReason;
+    observations: string;
+    reason: EClinicHistoryAccessReason;
+    scope: number;
 }
 
 export interface ClinicalObservationDto extends Serializable {

@@ -3,6 +3,8 @@ package net.pladema.access.infrastructure.output.repository.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.access.domain.bo.ClinicHistoryAccessBo;
+import net.pladema.access.infrastructure.input.dto.ClinicHistoryAccessDto;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,4 +47,10 @@ public class ClinicHistoryAudit {
 
 	@Column(name = "scope")
 	private Short scope;
+
+	public ClinicHistoryAudit(ClinicHistoryAccessBo bo) {
+		this.observations = bo.getObservations();
+		this.reasonId = bo.getReasonId();
+		this.scope = bo.getScope();
+	}
 }

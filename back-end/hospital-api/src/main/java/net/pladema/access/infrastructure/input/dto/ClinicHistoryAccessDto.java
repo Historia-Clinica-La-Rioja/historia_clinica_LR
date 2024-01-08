@@ -2,11 +2,17 @@ package net.pladema.access.infrastructure.input.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import net.pladema.access.domain.enums.EClinicHistoryAccessReason;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
+@Setter
 public class ClinicHistoryAccessDto {
 
-	private EClinicHistoryAccessReason eClinicHistoryAccessReason;
+	private String observations;
+	private EClinicHistoryAccessReason reason;
+	private Short scope;
 }
