@@ -337,7 +337,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN BookingAppointment ba ON (a.id = ba.pk.appointmentId) " +
 			"JOIN BookingPerson bp ON (ba.pk.bookingPersonId = bp.id) " +
 			"WHERE bp.identificationNumber LIKE :identificationNumber AND (d.deleteable.deleted = false OR d.deleteable.deleted is null ) " +
-			"AND a.dateTypeId > current_date " +
+			"AND a.dateTypeId >= current_date " +
 			"AND a.appointmentStateId = " + AppointmentState.BOOKED )
 	List<AppointmentBookingVo> getCompleteBookingAppointmentInfo(@Param("identificationNumber") String identificationNumber);
 
