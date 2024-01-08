@@ -1,98 +1,55 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MasterDataDto } from '@api-rest/api-model';
+import { EDisabilityCertificateStatus, EKeeperRelationship, MasterDataDto, ViolenceReportVictimDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { DEFAULT_COUNTRY_ID, hasError } from '@core/utils/form.utils';
 import { Observable } from 'rxjs';
-
-export interface BasicOption {
-	text: string,
-	value: boolean
-}
-
-export interface ValueOption {
-	text: string,
-	value: string
-}
-
-export enum FormOption {
-	YES = 'Sí',
-	NO = 'No',
-	IN_PROCESS = "En trámite",
-	WITHOUT_DATA = 'Sin información',
-}
-
-enum RelationOption {
-	MOTHER = 'Madre',
-	FATHER = 'Padre',
-	GRANDFATHERMOTHER = 'Abuelo/a',
-	AUNT = 'Tío/a',
-	SIBLING = 'Hermano/a',
-	REFERRER = 'Referente',
-	OTHER = 'Otro'
-}
-
-enum SectorOption {
-	FORMAL = 'Formal',
-	INFORMAL = 'Informal'
-}
-
+import { BasicOptions, BasicTwoOptions, DisabilityCertificateStatus, FormOption, RelationOption, Sectors } from '../../constants/violence-masterdata';
 @Component({
 	selector: 'app-violence-situation-person-information',
 	templateUrl: './violence-situation-person-information.component.html',
 	styleUrls: ['./violence-situation-person-information.component.scss']
 })
 export class ViolenceSituationPersonInformationComponent implements OnInit {
+	@Output() personInformation = new EventEmitter<any>();
+	@Input() confirmForm: Observable<boolean>;
 
-	basicOptions: BasicOption[] = [
-		{
-			text: FormOption.YES,
-			value: true
-		},
-		{
-			text: FormOption.NO,
-			value: false
-		},
-		{
-			text: FormOption.WITHOUT_DATA,
-			value: null
-		}
-	]
+	disabilityCertificateStatus = DisabilityCertificateStatus;
 
-	basicOptionsExtended: string[] = [FormOption.YES, FormOption.NO, FormOption.IN_PROCESS, FormOption.WITHOUT_DATA];
+	relations =  RelationOption;
 
-	relations: string[] = [RelationOption.MOTHER, RelationOption.FATHER, RelationOption.GRANDFATHERMOTHER, RelationOption.AUNT, RelationOption.SIBLING, RelationOption.REFERRER, RelationOption.OTHER];
-
-	sectors: string[] = [SectorOption.FORMAL, SectorOption.INFORMAL];
+	sectors = Sectors;
 
 	formOption = FormOption;
 
-	relationOption = RelationOption;
+	relationOptionOther = EKeeperRelationship.OTHER;
+
+	basicOptions = BasicOptions;
+
+	basicTwoOptions = BasicTwoOptions;
 
 	provinces$: Observable<MasterDataDto[]>;
 	departments$: Observable<MasterDataDto[]>;
-	cities$: Observable<MasterDataDto[]>;
 
 	hasError = hasError;
 
 	form: FormGroup<{
 		knowHowToReadWrite: FormControl<boolean>
 		receiveIncome: FormControl<boolean>
-		whichSector: FormControl<string>
+		whichSector: FormControl<boolean>
 		receivePlanAssistance: FormControl<boolean>
 		haveDisability: FormControl<boolean>
-		haveDisabilityCertificate: FormControl<FormOption>
+		haveDisabilityCertificate: FormControl<EDisabilityCertificateStatus>
 		isPersonInstitutionalized: FormControl<boolean>
 		inWhichInstitution: FormControl<string>
 		personTypeAge: FormControl<boolean>
 		lastname: FormControl<string>
 		name: FormControl<string>
-		age: FormControl<string>
+		age: FormControl<number>
 		address: FormControl<string>,
 		addressProvinceId: FormControl<number>,
 		addressDepartmentId: FormControl<number>,
-		addressCityId: FormControl<number>,
-		relationPersonViolenceSituation: FormControl<string>,
+		relationPersonViolenceSituation: FormControl<EKeeperRelationship>,
 		whichTypeRelation: FormControl<string>,
 	}>;
 
@@ -115,11 +72,48 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 			address: new FormControl(null, Validators.required),
 			addressProvinceId: new FormControl(null, Validators.required),
 			addressDepartmentId: new FormControl(null, Validators.required),
-			addressCityId: new FormControl(null, Validators.required),
 			relationPersonViolenceSituation: new FormControl(null, Validators.required),
 			whichTypeRelation: new FormControl(null, Validators.required),
 		});
 		this.provinces$ = this.addressMasterDataService.getByCountry(DEFAULT_COUNTRY_ID);
+
+	}
+
+	ngOnChanges(changes: SimpleChanges) {
+		if (!changes.confirmForm.isFirstChange()) {
+			this.personInformation.emit(this.mapPersonInformatio());
+		}
+	}
+
+	mapPersonInformatio(): ViolenceReportVictimDto {
+		return {
+			canReadAndWrite:this.form.value.knowHowToReadWrite,
+			hasSocialPlan: this.form.value.receivePlanAssistance,
+			lackOfLegalCapacity: this.form.value.personTypeAge,
+			disabilityData: {
+				disabilityCertificateStatus: this.form.value.haveDisabilityCertificate,
+				hasDisability: this.form.value.haveDisability,
+			},
+			incomeData: {
+				hasIncome: this.form.value.receiveIncome,
+				worksAtFormalSector: this.form.value.whichSector,
+			},
+			institutionalizedData: {
+				institutionalizedDetails: this.form.value.inWhichInstitution,
+				isInstitutionalized: this.form.value.isPersonInstitutionalized,
+			},
+			keeperData: {
+				actorPersonalData: {
+					address: this.form.value.address,
+					age: this.form.value.age,
+					firstName: this.form.value.name,
+					lastName: this.form.value.lastname,
+					municipalityId: this.form.value.addressDepartmentId,
+				},
+				otherRelationshipWithVictim: this.form.value.whichTypeRelation,
+				relationshipWithVictim: this.form.value.relationPersonViolenceSituation,
+			}
+		}
 	}
 
 	get haveDisability() {
@@ -146,18 +140,13 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 		this.departments$ = this.addressMasterDataService.getDepartmentsByProvince(this.form.value.addressProvinceId);
 	}
 
-	setCities() {
-		this.cities$ = this.addressMasterDataService.getCitiesByDepartment(this.form.value.addressDepartmentId);
-	}
-
 	resetAllLocaltyControls(event: Event) {
-		this.resetDepartmentAndCityControl(event);
+		this.resetDepartmentControl(event);
 		this.form.controls.addressProvinceId.reset();
 	}
 
-	resetDepartmentAndCityControl(event: Event) {
+	resetDepartmentControl(event: Event) {
 		event.stopPropagation();
 		this.form.controls.addressDepartmentId.reset();
-		this.form.controls.addressCityId.reset();
 	}
 }

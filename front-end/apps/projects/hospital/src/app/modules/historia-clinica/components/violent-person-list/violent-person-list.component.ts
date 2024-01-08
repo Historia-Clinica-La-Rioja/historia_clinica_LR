@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { EAggressorRelationship, ECriminalRecordStatus, ELiveTogetherStatus, ERelationshipLength, ESecurityForceType, EViolenceFrequency, ViolenceReportAggressorDto } from '@api-rest/api-model';
-import { FormOption } from '@historia-clinica/modules/ambulatoria/components/violence-situation-person-information/violence-situation-person-information.component';
-import { AggressorRelationship, CriminalRecordStatus, InstitutionOptions, LiveTogetherStatus, RelationshipLengths, ViolenceFrequencys } from '@historia-clinica/modules/ambulatoria/constants/violence-masterdata';
+import { AggressorRelationship, CriminalRecordStatus, FormOption, InstitutionOptions, LiveTogetherStatus, RelationshipLengths, ViolenceFrequencys } from '@historia-clinica/modules/ambulatoria/constants/violence-masterdata';
 import { CustomViolenceReportAggressorDto, ViolenceAggressorsNewConsultationService } from '@historia-clinica/modules/ambulatoria/services/violence-aggressors-new-consultation.service';
 
 @Component({

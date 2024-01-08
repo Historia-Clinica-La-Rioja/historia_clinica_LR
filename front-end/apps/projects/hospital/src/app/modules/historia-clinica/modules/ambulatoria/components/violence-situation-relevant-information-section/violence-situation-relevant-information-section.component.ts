@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-violence-situation-relevant-information-section',
@@ -7,7 +8,9 @@ import { FormControl, FormGroup } from '@angular/forms';
 	styleUrls: ['./violence-situation-relevant-information-section.component.scss']
 })
 export class ViolenceSituationRelevantInformationSectionComponent implements OnInit {
-
+	@Input() confirmForm: Observable<boolean>;
+	@Output() relevantInformation = new EventEmitter<any>();
+	
 	form: FormGroup<{
 		observations: FormControl<string>,
 	}>;
@@ -20,4 +23,9 @@ export class ViolenceSituationRelevantInformationSectionComponent implements OnI
 		});
 	}
 
+	ngOnChanges(changes: SimpleChanges) {
+		if(!changes.confirmForm.isFirstChange()){
+			this.relevantInformation.emit(this.form.value);
+		}
+	}
 }

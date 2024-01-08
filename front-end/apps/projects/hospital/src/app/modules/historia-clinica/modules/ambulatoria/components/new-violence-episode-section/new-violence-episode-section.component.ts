@@ -1,31 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { SnomedDto, SnomedECL } from '@api-rest/api-model';
+import { EViolenceTowardsUnderageType, SnomedDto, SnomedECL, ViolenceEpisodeDetailDto } from '@api-rest/api-model';
 import { hasError } from '@core/utils/form.utils';
-import { Moment } from 'moment';
 import { ViolenceSituationsNewConsultationService } from '../../services/violence-situations-new-consultation.service';
 import { ViolenceModalityNewConsultationService } from '../../services/violence-modality-new-consultation.service';
-import { BasicOption, FormOption } from '../violence-situation-person-information/violence-situation-person-information.component';
+import { Observable } from 'rxjs';
+import { BasicOptions, EscolarizationLevels, RiskLevels, ViolenceTypes } from '../../constants/violence-masterdata';
+import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 
-enum ViolenceType {
-	DIRECT = 'Sí, es violencia directa contra NNyA',
-	INDIRECT = 'Sí, es una violencia indirecta contra NNyA',
-	NO = 'No',
-	WITHOUT_DATA = 'Sin información',
-}
-
-enum EscolarizationLevel {
-	MATERNAL = 'Maternal',
-	INITIAL = 'Inicial',
-	PRIMARY = 'Primario',
-	SECONDARY = 'Secundario'
-}
-
-enum RiskLevel {
-	LOW = 'Bajo',
-	MEDIUM = 'Medio',
-	HIGH = 'Alto'
-}
 
 @Component({
 	selector: 'app-new-violence-episode-section',
@@ -33,44 +15,28 @@ enum RiskLevel {
 	styleUrls: ['./new-violence-episode-section.component.scss']
 })
 export class NewViolenceEpisodeSectionComponent implements OnInit {
-
+	@Input() confirmForm: Observable<boolean>;
+	@Output() violenceEpisodeInfo = new EventEmitter<any>();
+	
 	hasError = hasError;
 
-	form: FormGroup<{
-		episodeDate: FormControl<Moment>,
-		ageTypeKid: FormControl<string>,
-		isKidEscolarized: FormControl<boolean>,
-		escolarizationLevel: FormControl<string>
-		riskLevelTest: FormControl<string>
-	}>;
+	form: FormGroup;
 
 	ecl: SnomedECL = SnomedECL.EVENT;
 
 	violenceSituations: SnomedDto[] = [];
 	violenceModalities: SnomedDto[] = [];
 
-	violenceType = ViolenceType;
+	violenceTypeDirect = EViolenceTowardsUnderageType.DIRECT_VIOLENCE;
+	violenceTypeIndirect = EViolenceTowardsUnderageType.INDIRECT_VIOLENCE;
 
-	violenceTypes: string[] = [ViolenceType.DIRECT, ViolenceType.INDIRECT, ViolenceType.NO, ViolenceType.WITHOUT_DATA];
+	violenceTypes = ViolenceTypes;
 
-	escolarizationLevels: string[] = [EscolarizationLevel.MATERNAL, EscolarizationLevel.INITIAL, EscolarizationLevel.PRIMARY, EscolarizationLevel.SECONDARY];
+	escolarizationLevels = EscolarizationLevels;
 
-	riskLevels: string[]= [RiskLevel.LOW, RiskLevel.MEDIUM, RiskLevel.HIGH];
+	riskLevels = RiskLevels;
 
-	basicOptions: BasicOption[] = [
-		{
-			text: FormOption.YES,
-			value: true
-		},
-		{
-			text: FormOption.NO,
-			value: false
-		},
-		{
-			text: FormOption.WITHOUT_DATA,
-			value: null
-		}
-	]
+	basicOptions = BasicOptions;
 
 	constructor(private readonly violenceSituationService: ViolenceSituationsNewConsultationService,
 				private readonly violenceModalityService: ViolenceModalityNewConsultationService) {}
@@ -85,7 +51,15 @@ export class NewViolenceEpisodeSectionComponent implements OnInit {
 		});
 	}
 
+	
+	ngOnChanges(changes: SimpleChanges) {
+		if(!changes.confirmForm.isFirstChange()){
+			this.violenceEpisodeInfo.emit(this.mapViolenceEpisode());
+		}
+	}
+
 	addViolenceSituation(violenceConcept: SnomedDto) {
+
 		this.violenceSituationService.addToList(violenceConcept);
 		this.setViolenceSituations();
 	}
@@ -93,6 +67,20 @@ export class NewViolenceEpisodeSectionComponent implements OnInit {
 	addViolenceModality(violenceConcept: SnomedDto) {
 		this.violenceModalityService.addToList(violenceConcept);
 		this.setViolenceModalities();
+	}
+
+	mapViolenceEpisode() : ViolenceEpisodeDetailDto {
+		return {
+			episodeDate : dateToDateDto(new Date(this.form.value.episodeDate)),
+			riskLevel: this.form.value.riskLevelTest,
+			violenceTowardsUnderage: {
+				schoolLevel: this.form.value.escolarizationLevel,
+				schooled: this.form.value.isKidEscolarized,
+				type: this.form.value.ageTypeKid,
+			},
+			violenceModalitySnomedList: this.violenceModalities,
+			violenceTypeSnomedList: this.violenceSituations,
+		}
 	}
 
 	get ageTypeKid() {

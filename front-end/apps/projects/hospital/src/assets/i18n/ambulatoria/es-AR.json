@@ -790,6 +790,8 @@
                 "NEW_VIOLENCE_SITUATION": "Nueva situación de violencia",
                 "dialog": {
                     "TEXT_FREE_LABEL":"Texto libre",
+                    "SAVE": "Guardar situación de violencia",
+                    "SUCCESS": "Reporte guardado exitosamente",
                     "expanded-person-information": {
                         "TITLE": "Información ampliada de la persona",
                         "CARE_REFERENCE_PERSON_INFORMATION": "Información de la persona referente de cuidado",

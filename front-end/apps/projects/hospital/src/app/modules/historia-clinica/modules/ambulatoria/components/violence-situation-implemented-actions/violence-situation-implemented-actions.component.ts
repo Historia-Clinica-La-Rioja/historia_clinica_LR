@@ -1,140 +1,42 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { BasicOption, FormOption } from '../violence-situation-person-information/violence-situation-person-information.component';
 import { hasError } from '@core/utils/form.utils';
+import { Observable } from 'rxjs';
+import { FormOption, Areas, Establishments, InternmentIndication, MunicipalDevices, ProvincialDevices, NationalDevices, OrganizationsExtended, Organizations, Complaints, Devices, ImplementedActions, BasicTwoOptions } from '../../constants/violence-masterdata';
+import { EHealthInstitutionOrganization, EHealthSystemOrganization, EInstitutionReportPlace, EInstitutionReportReason, EIntermentIndicationStatus, EMunicipalGovernmentDevice, ENationalGovernmentDevice, EProvincialGovernmentDevice, ESexualViolenceAction, EVictimKeeperReportPlace, ViolenceReportImplementedActionsDto } from '@api-rest/api-model';
 
 enum Articulation {
-	IN = 'Articulación con otras áreas/organismos del sector salud',
-	OUT = 'Articulación con otros organismos fuera del sector salud'
+    IN = 'Articulación con otras áreas/organismos del sector salud',
+    OUT = 'Articulación con otros organismos fuera del sector salud'
 }
-
-enum Area {
-	PROVINCIAL_HOSPITAL = 'Hospital provincial',
-	HEALTH_REGION = 'Sede región sanitaria',
-	UPA = 'UPA',
-	CPA = 'CPA',
-	POSTAS = 'Postas',
-	SIES = 'SIES',
-	VACCINATION = 'Vacunatorio',
-	CETEC = 'CETEC',
-	MINISTRY_HEADQUARTERS = 'Sede Central del Ministerio',
-	CAPS = 'CAPS',
-	OTHER = 'Otros'
-}
-
-enum Establishments {
-	CLINIC = 'Clínica médica',
-	PEDIATRIC = 'Pediatría',
-	GYNECOLOGIC_OBSTRETRIC = 'Ginecología/Obstetricia',
-	SOCIAL_WORK = 'Trabajo social',
-	MENTAL_HEALTH = 'Salud mental',
-	NURSING = 'Enfermería',
-	SAPS = 'SAPS',
-	EDA = 'EDA',
-	EMERGENCY_CARE = 'Guardia',
-	AGAINST_VIOLENCE = 'Comité contras las violencias',
-	ADDRESS = 'Dirección',
-	OTHER = 'Otros'
-}
-
-enum InternmentIndication {
-	YES = 'Sí',
-	YES_PROTECTION_MEASURE = 'Sí, como medida de resguardo',
-	NO = 'No',
-}
-
-enum Devices {
-	MUNICIPAL_DEVICES = 'Dispositivos estatales municipales',
-	PROVINCIAL_DEVICES = 'Dispositivos estatales provinciales',
-	NATIONAL_DEVICES = 'Dispositivos estatales nacionales',
-	SOCIAL_ORGANIZATION = 'Organizaciones sociales y de la sociedad civil'
-}
-
-enum MunicipalDevices {
-	GENDER_DIVERSITY = 'Área de Género y diversidad',
-	AGAINST_VIOLENCE = 'Mesa local contra las Violencias',
-	PROTECTION = 'Servicio Local de Promoción y Protección de Derechos de NNyA',
-	CHILDHOOD_ADOLESCENCE_AREA = 'Dirección/área de Niñez y Adolescencia',
-	SOCIAL_DEVELOPMENT_AREA = 'Área de Desarrollo Social',
-	ADDICTION_PREVENTION_AREA = 'Dirección/área de prevención y atención de adicciones',
-	EDUCATIONAL_INSTITUTIONS= 'Instituciones educativas'
-}
-
-enum ProvincialDevices {
-	WOMAN_MINISTERY_GENDER_POLITICS_SEXUAL_DIVERSITY = 'Ministerio de Mujeres, Políticas de Género y Diversidad Sexual',
-	RIGHT_PROTECION = 'Servicio Zonal de Promoción y Protección de Derechos de NNyA',
-	COMMUNITY_RIGHTS = 'Ministerio de Desarrollo de la Comunidad',
-	EDUCATIONAL_INSTITUTIONS = 'Instituciones educativas',
-	SECURITY_FORCES = 'Fuerzas de seguridad/Comisarías',
-	JUDICAL_SYSTEM = 'Sistema judicial/juzgados de paz y de familia',
-	PATRONAGE = 'Patronato de liberados',
-	JUVENILE_PRISON = 'Instituciones del sistema de responsabilidad penal juvenil',
-	JUSTICE_RIGHTS = 'Ministerio de Justicia y Derechos Humanos'
-}
-
-enum NationalDevices {
-	WOMAN_MINISTERY_GENDER_DIVERSITY = 'Ministerio de Mujeres, Géneros y Diversidad',
-	SECRETARY = 'Secretaría Nacional de Niñez, Adolescencia y Familia',
-	SOCIAL_DEVELOPMENT = 'Ministerio de Desarrollo Social',
-	SEDRONAR = 'SEDRONAR',
-	ANSES = 'ANSES',
-	PERSON_REGISTRY = 'Registro de las personas',
-	EDUCATIONAL_INSTITUTIONS = 'Instituciones educativas',
-	SECURITY_FORCES = 'Fuerzas de seguridad',
-	JUSTICE_RIGHTS = 'Ministerio de Justicia y Derechos Humanos'
-}
-
-enum Organizations {
-	POLICE_STATION = 'Comisaría',
-	WOMEN_OFFICE_POLICE_STATION = 'Comisaría/Oficina de la Mujer',
-	PROSECUTOR = 'Fiscalía',
-	FAMILY_COURT = 'Juzgado de la Familia',
-	PEACE_COURT = 'Juzgado de Paz'
-}
-
-enum Complaints {
-	INJURIES = 'Lesiones graves o gravísimas a personas adultas',
-	VIOLENCE = 'Violencias contra niñeces y adolescencias',
-	OTHER = 'Otro'
-}
-
-enum OrganizationsExtended {
-	COMPLAINT = 'Denuncia medio digital de seguridad pasa a fiscalía',
-	OTHER = 'Otro'
-}
-
-enum ImplementedActions {
-	ITS = 'Indicación de estudios de laboratorio para determinar ITS',
-	VIH_ITS_HEPATITIS = 'Profilaxis para VIH, ITS y Hepatitis virales frente la exposición a fluidos potencialmente infecciosos',
-	EMERGENCY = 'Indicación de anticoncepción de emergencia',
-	ILE = 'Consejería de acceso a Interrupción Legal de Embarazo (ILE) frente a confirmación de embarazo producto de violación.'
-}
-
 @Component({
 	selector: 'app-violence-situation-implemented-actions',
 	templateUrl: './violence-situation-implemented-actions.component.html',
   	styleUrls: ['./violence-situation-implemented-actions.component.scss']
 })
-export class ViolenceSituationImplementedActionsComponent implements OnInit {
 
+export class ViolenceSituationImplementedActionsComponent implements OnInit {
+	@Input() confirmForm: Observable<boolean>;
+	@Output() implementedActionsInfo = new EventEmitter<any>();
+	
 	form: FormGroup<{
 		articulation: FormControl<string>,
 		healthSystemArticulation: FormControl<boolean>,
-		area: FormControl<string[]>,
+		area: FormControl<EHealthSystemOrganization[]>,
 		otherArea: FormControl<string>,
 		articulationEstablishment: FormControl<boolean>,
-		articulationEstablishmentList: FormControl<string[]>,
+		articulationEstablishmentList: FormControl<EHealthInstitutionOrganization[]>,
 		otherArticulationEstablishment: FormControl<string>
-		internmentIndication: FormControl<string>,
+		internmentIndication: FormControl<EIntermentIndicationStatus>,
 		devices: FormControl<string[]>,
 		municipalDevices: FormControl<string[]>,
 		provincialDevices: FormControl<string[]>,
 		nationalDevices: FormControl<string[]>
 		personComplaint: FormControl<boolean>,
-		agencyComplaint: FormControl<string[]>,
+		agencyComplaint: FormControl<EVictimKeeperReportPlace[]>,
 		isInstitutionComplaint: FormControl<boolean>,
 		institutionComplaints: FormControl<string[]>
-		institutionComplaintsOrganizations: FormControl<string[]>
+		institutionComplaintsOrganizations: FormControl<EInstitutionReportPlace[]>
 		autorityName: FormControl<string>,
 		isSexualViolence: FormControl<boolean>,
 		implementedActions: FormControl<string[]>
@@ -144,69 +46,51 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 
 	devicesEnum = Devices;
 
-	selectedComplains: string[] = [];
+	selectedComplains: EInstitutionReportReason[] = [];
 
-	implementedActions: string[] = [ImplementedActions.ITS, ImplementedActions.VIH_ITS_HEPATITIS, ImplementedActions.EMERGENCY, ImplementedActions.ILE];
+	implementedActions = ImplementedActions;
 
-	municipalDevicesList: string[] = [MunicipalDevices.GENDER_DIVERSITY, MunicipalDevices.AGAINST_VIOLENCE, MunicipalDevices.PROTECTION, 
-									MunicipalDevices.CHILDHOOD_ADOLESCENCE_AREA, MunicipalDevices.SOCIAL_DEVELOPMENT_AREA, MunicipalDevices.ADDICTION_PREVENTION_AREA,
-									MunicipalDevices.EDUCATIONAL_INSTITUTIONS];
+	municipalDevicesList = MunicipalDevices; 
 
-	provincialDevicesList: string[] = [ProvincialDevices.WOMAN_MINISTERY_GENDER_POLITICS_SEXUAL_DIVERSITY, ProvincialDevices.RIGHT_PROTECION, ProvincialDevices.COMMUNITY_RIGHTS,
-										ProvincialDevices.EDUCATIONAL_INSTITUTIONS, ProvincialDevices.SECURITY_FORCES, ProvincialDevices.JUDICAL_SYSTEM,
-										ProvincialDevices.PATRONAGE, ProvincialDevices.JUVENILE_PRISON, ProvincialDevices.JUSTICE_RIGHTS];
+	provincialDevicesList = ProvincialDevices;
 	
-	nationalDevicesList: string[] = [NationalDevices.WOMAN_MINISTERY_GENDER_DIVERSITY, NationalDevices.SECRETARY, NationalDevices.SOCIAL_DEVELOPMENT,
-									NationalDevices.SEDRONAR, NationalDevices.ANSES, NationalDevices.PERSON_REGISTRY, NationalDevices.EDUCATIONAL_INSTITUTIONS,
-									NationalDevices.SECURITY_FORCES, NationalDevices.JUSTICE_RIGHTS];
+	nationalDevicesList = NationalDevices;
 
-	organizations: string[] = [Organizations.POLICE_STATION, Organizations.WOMEN_OFFICE_POLICE_STATION, Organizations.PROSECUTOR,
-									Organizations.FAMILY_COURT, Organizations.PEACE_COURT];
+	organizations = Organizations;
 
-	organizationsExtended: string[] = [...this.organizations, OrganizationsExtended.COMPLAINT, OrganizationsExtended.OTHER];
+	organizationsExtended = OrganizationsExtended;
 
-	complaints: string[] = [Complaints.INJURIES, Complaints.VIOLENCE, Complaints.OTHER];
+	complaints = Complaints;
 
-	selectedDevices: string[] = [];
+	selectedDevices: Devices[] = [];
 
-	selectedMunicipalDevices: string[] = [];
+	selectedMunicipalDevices: EMunicipalGovernmentDevice[] = [];
 
-	selectedProvincialDevices: string[] = [];
+	selectedProvincialDevices: EProvincialGovernmentDevice[] = [];
 
-	selectedNationalDevices: string[] = [];
+	selectedNationalDevices: ENationalGovernmentDevice[] = [];
 
-	selectedImplementedActions: string[] = [];
+	selectedImplementedActions: ESexualViolenceAction[] = [];
 
-	establishments: string[] = [Establishments.CLINIC, Establishments.PEDIATRIC, Establishments.GYNECOLOGIC_OBSTRETRIC, 
-								Establishments.SOCIAL_WORK, Establishments.MENTAL_HEALTH, Establishments.NURSING,
-								Establishments.SAPS, Establishments.EDA, Establishments.EMERGENCY_CARE,
-								Establishments.AGAINST_VIOLENCE, Establishments.ADDRESS, Establishments.OTHER];
+	establishments = Establishments;
 
 	articulations: string[] = [Articulation.IN, Articulation.OUT];
 
-	intermentIndicationOptions: string[] = [InternmentIndication.YES, InternmentIndication.YES_PROTECTION_MEASURE, InternmentIndication.NO];
+	articulationEnum = Articulation;
+
+	intermentIndicationOptions = InternmentIndication;
 
 	establishmentsEnum = Establishments;
 
-	articulationEnum = Articulation;
-
 	formOption = FormOption;
 
-	areaEnum = Area;
+	areas = Areas;
 
-	areas: string[] = [Area.PROVINCIAL_HOSPITAL, Area.HEALTH_REGION, Area.UPA, Area.CPA, Area.POSTAS, Area.SIES, Area.VACCINATION, Area.CETEC, Area.MINISTRY_HEADQUARTERS, Area.CAPS, Area.OTHER];
+	areaOther =  EHealthSystemOrganization.OTHERS;
+	articulationEstablishmentOther =EHealthSystemOrganization.OTHERS;
+	institutionComplaintsOrganizationsOther	=EInstitutionReportPlace.OTHER;
 
-	basicOptions: BasicOption[] = [
-		{
-			text: FormOption.YES,
-			value: true
-		},
-		{
-			text: FormOption.NO,
-			value: false
-		},
-	];
-
+	basicOptions = BasicTwoOptions;
 	hasError = hasError;
 
 	constructor() { }
@@ -236,6 +120,52 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 		});
 	}
 
+	ngOnChanges(changes: SimpleChanges) {
+		if(!changes.confirmForm.isFirstChange()){
+			this.implementedActionsInfo.emit(this.mapImplementedActionsDto());
+		}
+	}
+	
+	mapImplementedActionsDto():ViolenceReportImplementedActionsDto{
+		return {
+			healthCoordination: {
+				coordinationInsideHealthSector:{
+					healthInstitutionOrganization:{ 
+						organizations: this.form.value.articulationEstablishmentList,
+						other: this.form.value.otherArticulationEstablishment ,
+						within: this.form.value.articulationEstablishment ,
+					},
+					healthSystemOrganization:{
+						organizations: this.form.value.area ,
+						other: this.form.value.otherArea  ,
+						within: this.form.value.healthSystemArticulation,
+					},
+					wereInternmentIndicated: this.form.value.internmentIndication
+			
+				},
+				coordinationOutsideHealthSector:{
+					municipalGovernmentDevices: this.selectedMunicipalDevices,
+					nationalGovernmentDevices : this.selectedNationalDevices,
+					provincialGovernmentDevices: this.selectedProvincialDevices,
+					withOtherSocialOrganizations: this.selectedDevices.includes(this.devicesEnum.SOCIAL_ORGANIZATION),
+				}
+			},
+			institutionReport: {
+				institutionReportPlaces: this.form.value.institutionComplaintsOrganizations,
+				otherInstitutionReportPlace: this.form.value.autorityName,
+				reportReasons: this.selectedComplains,
+				reportWasDoneByInstitution: this.form.value.isInstitutionComplaint,
+			},
+			sexualViolence: {
+				implementedActions: this.selectedImplementedActions,
+				wasSexualViolence: this.form.value.isSexualViolence,
+			},
+			victimKeeperReport: {
+				reportPlaces: this.form.value.agencyComplaint,
+				werePreviousEpisodesWithVictimOrKeeper: this.form.value.personComplaint,
+			}
+		}
+	}
 	setImplementedActions(iac: string) {
 		this.pushOrRemove(
 			iac, 

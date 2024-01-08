@@ -56,35 +56,17 @@
             <mat-form-field appearance="outline">
                 <mat-select id="addressDepartmentId" name="addressDepartmentId" formControlName="addressDepartmentId"
                     placeholder="{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.DEPARTMENT' | translate}}">
-                    <mat-option *ngFor="let department of departments$ | async" [value]="department.id"
-                        (click)="setCities()">
+                    <mat-option *ngFor="let department of departments$ | async" [value]="department">
                         {{department.description}}
                     </mat-option>
                 </mat-select>
                 <button id="clear_address_departament" type="button" mat-button *ngIf="form.value.addressDepartmentId"
-                    matSuffix color="warn" mat-icon-button (click)="resetDepartmentAndCityControl($event)">
+                    matSuffix color="warn" mat-icon-button (click)="resetDepartmentControl($event)">
                     <mat-icon>close</mat-icon>
                 </button>
                 <mat-error *ngIf="hasError(form, 'required', 'addressDepartmentId')"
                     [translate]="'forms.REQUIRED'"></mat-error>
             </mat-form-field>
-
-            <mat-form-field appearance="outline">
-                <mat-select id="addressCityId" name="addressCityId" formControlName="addressCityId"
-                    placeholder="{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.LOCALTY' | translate}}">
-                    <mat-option *ngFor="let city of cities$ | async" [value]="city">
-                        {{city.description}}
-                    </mat-option>
-                </mat-select>
-                <button id="clear_address_city" type="button" mat-button *ngIf="form.value.addressCityId" matSuffix
-                    color="warn" mat-icon-button
-                    (click)="form.controls.addressCityId.reset(); $event.stopPropagation()">
-                    <mat-icon>close</mat-icon>
-                </button>
-                <mat-error *ngIf="hasError(form, 'required', 'addressCityId')"
-                    [translate]="'forms.REQUIRED'"></mat-error>
-            </mat-form-field>
-
 
             <mat-radio-group class="basic-options" aria-labelledby="has-a-firearm-label" formControlName="hasAfirearm"
                 color="primary">

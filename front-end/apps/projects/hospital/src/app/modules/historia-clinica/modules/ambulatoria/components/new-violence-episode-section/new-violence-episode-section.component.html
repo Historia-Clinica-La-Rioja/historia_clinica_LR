@@ -37,12 +37,12 @@
 			aria-labelledby="violence-situation-age-type-label"
 			formControlName="ageTypeKid">
 			<label id="violence-situation-age-type-label">{{'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_4' | translate}}</label>
-			<mat-radio-button *ngFor="let opt of violenceTypes" [value]="opt">
-				{{opt}}
+			<mat-radio-button *ngFor="let opt of violenceTypes" [value]="opt.value">
+				{{opt.text}}
 			</mat-radio-button>
 		</mat-radio-group>
 
-		<div *ngIf="ageTypeKid === violenceType.DIRECT || ageTypeKid === violenceType.INDIRECT" class="aside">
+		<div *ngIf="ageTypeKid === violenceTypeDirect || ageTypeKid === violenceTypeIndirect" class="aside">
 			<mat-radio-group class="basic-options" color="primary"
 				aria-labelledby="is-kid-escolarized"
 				formControlName="isKidEscolarized">
@@ -57,8 +57,8 @@
 					aria-labelledby="escolarization-level"
 					formControlName="escolarizationLevel">
 					<label id="escolarization-level">{{'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_6' | translate}}</label>
-					<mat-radio-button *ngFor="let opt of escolarizationLevels" [value]="opt">
-						{{opt}}
+					<mat-radio-button *ngFor="let opt of escolarizationLevels" [value]="opt.value">
+						{{opt.text}}
 					</mat-radio-button>
 				</mat-radio-group>
 			</div>
@@ -68,8 +68,8 @@
 			aria-labelledby="risk-level-test"
 			formControlName="riskLevelTest">
 			<label id="risk-level-test">{{'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_7' | translate}}</label>
-			<mat-radio-button *ngFor="let opt of riskLevels" [value]="opt">
-				{{opt}}
+			<mat-radio-button *ngFor="let opt of riskLevels" [value]="opt.value">
+				{{opt.text}}
 			</mat-radio-button>
 		</mat-radio-group>
 

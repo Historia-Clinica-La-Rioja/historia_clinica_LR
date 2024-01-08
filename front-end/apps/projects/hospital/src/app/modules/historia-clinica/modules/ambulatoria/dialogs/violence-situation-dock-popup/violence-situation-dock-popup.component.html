@@ -1,14 +1,20 @@
-<app-dock-popup [dockPopupRef]="dockPopupRef" [header]="{ title:'ambulatoria.paciente.violence-situations.NEW_VIOLENCE_SITUATION' }">
+<app-dock-popup [dockPopupRef]="dockPopupRef"
+    [header]="{ title:'ambulatoria.paciente.violence-situations.NEW_VIOLENCE_SITUATION' }">
     <div body>
-        <app-violence-situation-person-information></app-violence-situation-person-information>
+        <app-violence-situation-person-information (personInformation)="setPersonInformation($event)" [confirmForm]="confirmForm"></app-violence-situation-person-information>
 
-        <app-new-violence-episode-section></app-new-violence-episode-section>
+        <app-new-violence-episode-section (violenceEpisodeInfo)="setViolenceEpisodeInfo($event)"  [confirmForm]="confirmForm"></app-new-violence-episode-section>
 
-        <app-violence-situation-violent-person-information></app-violence-situation-violent-person-information>
+        <app-violence-situation-violent-person-information (aggressorsListInfo)="setAggressorsListInfo($event)" [confirmForm]="confirmForm"></app-violence-situation-violent-person-information>
 
-        <app-violence-situation-implemented-actions></app-violence-situation-implemented-actions>
+        <app-violence-situation-implemented-actions (implementedActionsInfo)="setImplementedActionsInfo($event)" [confirmForm]="confirmForm"></app-violence-situation-implemented-actions>
 
-        <app-violence-situation-relevant-information-section></app-violence-situation-relevant-information-section>
+        <app-violence-situation-relevant-information-section (relevantInformation)="setRelevantInformation($event)" [confirmForm]="confirmForm"></app-violence-situation-relevant-information-section>
+    </div>
+    <div actions id="buttons">
+        <div align="end">
+            <button mat-raised-button type="button" (click)="confirmViolenceForm()" color="primary">{{'ambulatoria.paciente.violence-situations.dialog.SAVE' |
+                translate}}</button>
+        </div>
     </div>
 </app-dock-popup>
-
