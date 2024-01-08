@@ -229,7 +229,7 @@ public class ProgramReportController {
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
-		IWorkbook wb = this.excelService.buildExcelRecuperoOdontologico(title, headers, this.programReportQueryFactory.queryRecuperoOdontologico(institutionId, startDate, endDate));
+		IWorkbook wb = this.excelService.buildExcelOdontological(title, headers, this.programReportQueryFactory.queryRecuperoOdontologico(institutionId, startDate, endDate));
 
 		String filename = title + "." + wb.getExtension();
 		response.addHeader("Content-disposition", "attachment;filename=" + filename);
