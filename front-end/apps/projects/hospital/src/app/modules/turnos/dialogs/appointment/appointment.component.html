@@ -358,8 +358,8 @@
 				
 			</section>
 
-			<section id="observation-section" class="observation-section">
-				<div *ngIf="!observation && hideObservationForm && hideObservationTitle && !isRejectedPatient">
+			<section id="observation-section" class="observation-section"> 
+				<div *ngIf="!observation && hideObservationForm && hideObservationTitle && !isRejectedPatient && (( hasRoleAdmin$ | async ) || agendaOwner || attachProfessional )">
 					<a class="mat-body" (click)="setHideObservationForm(false); setHideObservationTitle(false)">
 						{{'turnos.appointment.observations.ADD_OBSERVATION' | translate}}
 					</a>
@@ -374,7 +374,7 @@
 						<p class="mat-body strong-size">
 							{{observation}}
 						</p>
-						<button type="button" mat-icon-button color="primary" *ngIf="!isRejectedPatient"
+						<button type="button" mat-icon-button color="primary" *ngIf="!isRejectedPatient && (( hasRoleAdmin$ | async ) || agendaOwner || attachProfessional )"
 							(click)="setHideObservationForm(false)">
 							<mat-icon class="material-icons-outlined">edit</mat-icon>
 						</button>
