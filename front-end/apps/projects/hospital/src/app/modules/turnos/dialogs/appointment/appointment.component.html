@@ -161,7 +161,7 @@
 					</div>
 					<div>
 						<app-modality-label class="custom-label-modality" [modality]="selectedModality?.value"></app-modality-label>
-					</div>	
+					</div>
 					<div fxLayout="column" fxLayoutGap="10px" *ngIf="appointment?.protected">
 						<span class="purple">{{'turnos.appointment.PROTECTED' | translate}}</span>
 					</div>
@@ -187,7 +187,7 @@
 							<button mat-icon-button (click)="copied()" [cdkCopyToClipboard]="appointment?.callLink">
 								<mat-icon>content_copy</mat-icon>
 							  </button>
-						</div>	
+						</div>
 				</div>
 				<button type="button" mat-icon-button color="primary"
 					*ngIf="((selectedState === appointmentStatesIds.ASSIGNED) && (( hasRoleAdmin$ | async ) || (agendaOwner && data.hasPermissionToAssignShift)))" (click)="openDateForm()">
@@ -380,7 +380,7 @@
 			</section>
 		</section>
 
-		<app-appointment-label 
+		<app-appointment-label
 			[appointment]="appointment"
 			[diaryId]="data.agenda.id">
 		</app-appointment-label>
@@ -436,7 +436,7 @@
 <ng-template #bookingAppointment>
 	<div class="assigned-by" fxLayout="column">
 		<span>{{'turnos.appointment.ASSIGNED_BY' | translate}}</span>
-		<span>{{'turnos.appointment.BOOKING' | translate}} - {{data.appointmentData.createdOn | date:"dd/mm/yyyy
+		<span>{{'turnos.appointment.BOOKING' | translate}} - {{data.appointmentData.createdOn | date:"dd/MM/yyyy
 			H:mm"}}hs.</span>
 	</div>
 </ng-template>
