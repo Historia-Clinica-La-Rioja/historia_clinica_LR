@@ -1,28 +1,19 @@
 package net.pladema.access.application;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.userlogged.UserLogged;
-import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import net.pladema.clinichistory.hospitalization.service.InternmentPatientService;
-
-import net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeProcessBo;
-
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
-
-import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
-
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Service
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class GetIsValidAccessImpl implements GetIsValidAccess {
 
 	private final InternmentPatientService internmentPatientService;
@@ -33,7 +24,8 @@ public class GetIsValidAccessImpl implements GetIsValidAccess {
 
 	private final UserLogged userLogged;
 
-	private final Short MIN_DATE_LIMIT = 5;
+	@Value("${clinic.history.appointment.min.days:5}")
+	private Short MIN_DATE_LIMIT;
 
 	@Override
 	public boolean run(Integer institutionId, Integer patientId) {
