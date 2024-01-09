@@ -19,6 +19,8 @@
 			"HIERARCHICAL_UNIT": "Unidad jerárquica",
 			"HIERARCHICAL_UNIT_PLACEHOLDER": "Unidades jerárquicas",
 			"INCLUDE_DESCENDANTS": "Incluir descendientes",
+			"APPOINTMENT_STATE": "Estado de turno",
+			"APPOINTMENT_STATE_PLACEHOLDER": "Estados de turno",
 			"errors": {
 				"FECHA_INICIO_POSTERIOR_FECHA_FIN": "La fecha de inicio debe ser menor o igual a la fecha de fin",
 				"FECHA_INICIO_POSTERIOR_HOY": "La fecha de inicio debe ser anterior o igual a la fecha actual",
