@@ -100,7 +100,7 @@ public class GetQuestionnairePdfController {
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
 		InputStreamResource resource = new InputStreamResource(inputStream);
 		ResponseEntity<InputStreamResource> response;
-		response = ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= " + outputFileName).contentType(MediaType.APPLICATION_PDF).contentLength(outputStream.size()).body(resource);
+		response = ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + outputFileName).contentType(MediaType.APPLICATION_PDF).contentLength(outputStream.size()).body(resource);
 
 		return response;
 	}
