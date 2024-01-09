@@ -12,6 +12,14 @@
            padding: 10px;
            font-family: Tahoma, Verdana, sans-serif;
         }
+
+        h5 {
+           font-weight: bold;
+           font-size: 15px;
+           margin: 15px 0px;
+           border-top: 1px solid black;
+        }
+
         h4 {
            margin: 15px 0px;
            color: #2687c5;
@@ -31,10 +39,26 @@
            margin: 2px 0px;
         }
 
+        span {
+           font-weight: normal;
+        }
+
     </style>
 </head>
 <body th:fragment="familybg">
     <div class="container">
+        <p style="text-align:right;">Fecha de atención: <span th:text="${formattedCreatedOn}"></span></p>
+        <p>Institución: <span th:text="${institution.name}"></span></p>
+        <hr></hr>
+        <h5>Detalles del paciente</h5>
+        <p>Apellido y nombre: <span th:text="${patientPersonFullName}"></span></p>
+        <p><span th:utext="${'<b>' + patientIdType.description + ':</b> ' + patientPerson.identificationNumber}"></span></p>
+        <p>Edad a la fecha de atención: <span th:text="${patientAge}"></span></p>
+        <hr></hr>
+        <h5>Detalles del profesional</h5>
+        <p>Apellido y nombre: <span th:text="${professionalPersonFullName}"></span></p>
+        <p>Licencia: <span th:text="${professional.licenseNumber}"></span></p>
+
         <h3>Cuestionario de antecedentes familiares - Resultados de informe</h3>
 
         <hr></hr>
@@ -120,6 +144,10 @@
             </label><br></br>
         </div>
         <hr></hr>
+        <br></br>
+        <br></br>
+        <br></br>
+        <p style="text-align:right;">1/4</p>
         <div class="itemcontainer" th:each="respuesta : ${answers[5]}">
             <p>Pareja</p>
             <label>
@@ -168,9 +196,6 @@
             </label><br></br>
         </div>
         <hr></hr>
-        <br></br>
-        <br></br>
-        <br></br>
         <div class="itemcontainer" th:each="respuesta : ${answers[8]}">
             <p>Otros</p>
             <label>
@@ -239,6 +264,16 @@
         </div>
 
         <hr></hr>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <p style="text-align:right;">2/4</p>
 
         <div class="itemcontainer" th:each="respuesta : ${answers[13]}">
             <h4>Nivel de instrucción alcanzado</h4>
@@ -317,7 +352,7 @@
             <p>Horas diarias afuera de casa</p>
             <label>
                 <p style="font-weight: normal;" th:text="${answers[16].value}" name="opt50"></p>
-            </label><br></br>
+            </label>
         </div>
         <hr></hr>
         <div class="itemcontainer" th:each="respuesta : ${answers[17]}">
@@ -360,6 +395,9 @@
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt57" th:checked="${respuesta.answerId == 20}"></input>
                 Sí
             </label><br></br>
+            <br></br>
+            <br></br>
+            <p style="text-align:right;">3/4</p>
         </div>
         <hr></hr>
         <div class="itemcontainer" th:each="respuesta : ${answers[20]}">
@@ -469,6 +507,8 @@
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt75" th:checked="${respuesta.answerId == 41}"></input>
                 Letrina
             </label><br></br>
+            <br></br>
+            <p style="text-align:right;">4/4</p>
         </div>
 
     </div>
