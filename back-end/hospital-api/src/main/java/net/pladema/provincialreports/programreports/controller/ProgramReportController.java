@@ -174,6 +174,11 @@ public class ProgramReportController {
 		response.flushBuffer();
 	}
 
+	String[] headers = new String[]{"Institucion", "Unidad Operativa", "Prestador", "DNI", "Fecha de atencion", "Hora",
+			"DNI Paciente", "Nombre Paciente", "Sexo", "Fecha de nacimiento", "Edad a fecha del turno", "Obra/s social/es",
+			"Domicilio", "Localidad", "Indice CPO - Permanentes", "Indice CEO - Temporarios", "Motivos", "Procedimientos",
+			"Procedimientos de Odontología", "Problemas", "Diagnósticos de Odontología"};
+
 	@GetMapping(value = "/{institutionId}/sumar-odontologico")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
 	public @ResponseBody
@@ -187,10 +192,6 @@ public class ProgramReportController {
 		LOG.debug("Inputs parameters -> institutionID {}, fromDate {}, toDate{}", institutionId);
 
 		String title = "Reporte de Sumar - Odontológico";
-		String[] headers = new String[]{"Institucion", "Unidad Operativa", "Prestador", "DNI", "Fecha de atencion", "Hora",
-				"DNI Paciente", "Nombre Paciente", "Sexo", "Fecha de nacimiento", "Edad a fecha del turno", "Obra/s social/es",
-				"Domicilio", "Localidad", "Indice CPO - Permanentes", "Indice CEO - Temporarios", "Motivos", "Procedimientos",
-				"Procedimientos de Odontología", "Problemas", "Diagnósticos de Odontología"};
 
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
@@ -221,10 +222,6 @@ public class ProgramReportController {
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId);
 
 		String title = "Reporte de Recupero Odontológico - Obras Sociales";
-		String[] headers = new String[]{"Institucion", "Unidad Operativa", "Prestador", "DNI", "Fecha de Atencion", "Hora",
-				"DNI paciente", "Nombre Paciente", "Sexo", "Fecha de nacimiento", "Edad a fecha de turno", "Obra social",
-				"Domicilio", "Localidad", "CPO permanentes", "CEO permanentes", "Motivos", "procedimientos",
-				"Procedimientos de odontologia", "Problemas", "Diagnosticos de odontologia"};
 
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
