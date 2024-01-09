@@ -100,7 +100,7 @@
                                     </span>
                                 </div>
 								<div fxFlex.gt-sm="20" fxFlex.gt-md="17" fxLayoutAlign="center center">
-									<button mat-raised-button color="primary" fxFlex="90" *ngIf="appointment.canBeFinished" (click)="finishStudy(appointment.data)">
+									<button mat-raised-button color="primary" fxFlex="90" *ngIf="appointment.canBeFinished" (click)="finishStudy(appointment.data, appointment.patientFullName)">
 										<span class="uppercase" [translate]="'image-network.appointments.FINISH'"></span>
 									</button>
                                     <div *ngIf="appointment.data.appointmentStateId === appointmentStatesId.SERVED" fxFlexLayout="row">

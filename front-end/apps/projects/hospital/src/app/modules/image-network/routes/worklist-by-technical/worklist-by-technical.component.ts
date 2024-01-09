@@ -307,20 +307,20 @@ export class WorklistByTechnicalComponent implements OnInit {
 		this.pageSlice = this.detailedAppointments.slice(this.startPage, this.endPage);
 	}
 
-	finishStudy(appointment: EquipmentAppointmentListDto) {
+	finishStudy(appointment: EquipmentAppointmentListDto, patientFullName: string ) {
 		this.selectedAppointment = appointment;
-		this.openFinishStudyDialog(appointment);
+		this.openFinishStudyDialog(appointment, patientFullName);
 	}
 
-	private openFinishStudyDialog(appointment: EquipmentAppointmentListDto) {
-		appointment.studyName
-		const data: StudyInfo = {
-			appointmentId: this.selectedAppointment.id,
-			patientId: this.selectedAppointment.patient.id,
-			studyName: appointment.studyName,
-			isTranscribed: !appointment.serviceRequestId && !!appointment.studyName,
-			hasOrder: !!appointment.serviceRequestId
-		}
+	private openFinishStudyDialog(appointment: EquipmentAppointmentListDto, patientFullName: string) {
+        const data: StudyInfo = {
+            appointmentId: this.selectedAppointment.id,
+            patientId: this.selectedAppointment.patient.id,
+            studyName: appointment.studyName,
+            isTranscribed: !appointment.serviceRequestId && !!appointment.studyName,
+            hasOrder: !!appointment.serviceRequestId,
+            patient: patientFullName,
+        }
 		const dialogRef = this.dialog.open(FinishStudyComponent, {
 			width: '38%',
 			autoFocus: false,

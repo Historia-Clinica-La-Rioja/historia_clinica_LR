@@ -1,9 +1,12 @@
 <div id="main-container" fxLayout="column" fxLayoutGap="15px">
     <h2>{{detailOrder.studyName | titlecase}}</h2>
     <div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="12px">
-        <div *ngIf="detailOrder.hasOrder" class="grey">
-            <span>Orden#{{detailOrder.idServiceRequest}}</span>
-        </div>
+        <span class="grey">
+            {{detailOrder.patient | titlecase}}
+        </span>
+        <ng-container *ngIf="detailOrder.hasOrder">
+            <span class="grey">Orden#{{detailOrder.idServiceRequest}}</span>
+        </ng-container>
         <app-image-order-coloredIconText-cases *ngIf="!detailOrder.hasOrder" id="colored-type-order" class="hide-overflow" [descriptionCases]="currentTypeOrder">
         </app-image-order-coloredIconText-cases>
     </div>
