@@ -14,11 +14,17 @@ import lombok.Setter;
 public class ReferenceRegulationDto {
 
 	private Integer referenceId;
+
 	private Integer ruleId;
+
 	private String ruleLevel;
+
 	private EReferenceRegulationState state;
+
 	private String reason;
+
 	private String professionalName;
+
 	private DateTimeDto createdOn;
 
 }

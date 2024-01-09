@@ -3525,6 +3525,7 @@ export interface ReferenceClosureDto {
 
 export interface ReferenceCompleteDataDto {
     appointment: ReferenceAppointmentDto;
+    forwarding: ReferenceForwardingDto;
     observation: ReferenceObservationDto;
     patient: ReferencePatientDto;
     reference: ReferenceDataDto;
@@ -3566,6 +3567,15 @@ export interface ReferenceDto extends Serializable {
     problems: ReferenceProblemDto[];
     procedure?: boolean;
     study?: ReferenceStudyDto;
+}
+
+export interface ReferenceForwardingDto {
+    createdBy: string;
+    date: DateTimeDto;
+    id: number;
+    observation: string;
+    type: EReferenceForwardingType;
+    userId: number;
 }
 
 export interface ReferenceInstitutionDto {

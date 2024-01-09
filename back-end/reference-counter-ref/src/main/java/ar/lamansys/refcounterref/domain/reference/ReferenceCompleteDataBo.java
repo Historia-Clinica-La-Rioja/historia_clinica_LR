@@ -23,4 +23,16 @@ public class ReferenceCompleteDataBo {
 
 	private ReferenceObservationBo observation;
 
+	private ReferenceForwardingBo forwarding;
+
+	public ReferenceCompleteDataBo(ReferenceDataBo reference, ReferencePatientBo patient,
+								   ReferenceAppointmentBo appointment, ReferenceRegulationBo regulation,
+								   ReferenceObservationBo observation) {
+		this.reference = reference;
+		this.patient = patient;
+		this.appointment = appointment;
+		this.regulation = regulation;
+		this.observation = observation;
+	}
+
 }

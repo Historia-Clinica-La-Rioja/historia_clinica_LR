@@ -19,16 +19,16 @@ public class ReferenceForwardingBo {
 	private Integer id;
 
 	private Integer personId;
-
+	
 	private Integer userId;
+
+	private String createdBy;
 
 	private String observation;
 
 	private EReferenceForwardingType type;
 
 	private LocalDateTime date;
-
-	private String createdBy;
 
 	private Integer referenceId;
 

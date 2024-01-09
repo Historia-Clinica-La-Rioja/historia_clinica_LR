@@ -19,4 +19,6 @@ public class ReferenceCompleteDataDto {
 	
 	private ReferenceObservationDto observation;
 
+	private ReferenceForwardingDto forwarding;
+	
 }

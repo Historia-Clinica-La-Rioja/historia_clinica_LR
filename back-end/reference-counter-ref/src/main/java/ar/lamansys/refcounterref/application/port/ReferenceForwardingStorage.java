@@ -12,4 +12,6 @@ public interface ReferenceForwardingStorage {
 
 	ReferenceForwardingBo getForwarding(Integer forwardingId);
 
+	ReferenceForwardingBo getForwardingByReferenceId(Integer referenceId);
+
 }

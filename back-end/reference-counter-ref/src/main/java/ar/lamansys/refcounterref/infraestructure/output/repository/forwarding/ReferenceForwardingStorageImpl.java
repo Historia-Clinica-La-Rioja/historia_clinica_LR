@@ -44,6 +44,18 @@ public class ReferenceForwardingStorageImpl implements ReferenceForwardingStorag
 				.anyMatch(f -> f.getType().equals(EReferenceForwardingType.DOMAIN));
 	}
 
+	@Override
+	public ReferenceForwardingBo getForwardingByReferenceId(Integer referenceId) {
+		log.debug("Input parameter -> referenceId {}", referenceId);
+		var forwardings = referenceForwardingRepository.findByReferenceId(referenceId);
+		return forwardings.stream()
+				.findFirst()
+				.map(rf -> {
+					rf.setCreatedBy(sharedPersonPort.getCompletePersonNameById(rf.getPersonId()));
+					return rf;
+				}).orElse(null);
+	}
+
 	private ReferenceForwardingBo mapToReferenceForwardingBo(ReferenceForwarding entity) {
 		return ReferenceForwardingBo.builder()
 				.id(entity.getId())

@@ -5,6 +5,7 @@ import ar.lamansys.refcounterref.application.getreferencecompletedata.exceptions
 import ar.lamansys.refcounterref.application.port.HistoricReferenceRegulationStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceAppointmentStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceObservationStorage;
+import ar.lamansys.refcounterref.application.port.ReferenceForwardingStorage;
 import ar.lamansys.refcounterref.application.port.ReferencePatientStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
 import ar.lamansys.refcounterref.domain.reference.ReferenceCompleteDataBo;
@@ -13,6 +14,8 @@ import ar.lamansys.refcounterref.domain.reference.ReferenceObservationBo;
 import ar.lamansys.refcounterref.domain.reference.ReferencePatientBo;
 import ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentBo;
 import ar.lamansys.refcounterref.domain.referenceregulation.ReferenceRegulationBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedLoggedUserPort;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +39,10 @@ public class GetReferenceCompleteData {
 	private final HistoricReferenceRegulationStorage historicReferenceRegulationStorage;
 	
 	private final ReferenceObservationStorage referenceObservationStorage;
+	
+	private final ReferenceForwardingStorage referenceForwardingStorage;
+
+	private final SharedLoggedUserPort sharedLoggedUserPort;
 
 	public ReferenceCompleteDataBo run(Integer referenceId) {
 		log.debug("Input parameter -> referenceId {}", referenceId);
@@ -50,6 +57,10 @@ public class GetReferenceCompleteData {
 		var observation = referenceObservationStorage.getReferenceObservation(referenceId).orElse(null);
 
 		var result = new ReferenceCompleteDataBo(referenceData, patientData, appointmentData.orElse(null), referenceRegulation.orElse(null), observation);
+
+		if (sharedLoggedUserPort.hasManagerRole(UserInfo.getCurrentAuditor()))
+			result.setForwarding(referenceForwardingStorage.getForwardingByReferenceId(referenceId));
+
 		log.debug("Output -> {}", result);
 		return result;
 	}

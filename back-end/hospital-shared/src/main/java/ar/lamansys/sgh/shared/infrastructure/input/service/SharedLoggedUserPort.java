@@ -8,6 +8,8 @@ public interface SharedLoggedUserPort {
 
 	boolean hasLocalManagerRoleOrRegionalManagerRole(Integer userId);
 
+	boolean hasManagerRole(Integer userId);
+
 	List<RoleInfoDto> getRoles(Integer userId);
 
 	List<Short> getLoggedUserRoleIds(Integer institutionId, Integer userId);
