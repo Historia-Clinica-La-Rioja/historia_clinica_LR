@@ -56,7 +56,6 @@ export class InstitutionalNetworkReferenceReportService {
 	}
 
 	updateDerivation(forwardingId: number, derivation: string): Observable<Object> {
-		console.log('editando: ', forwardingId)
 		const url = `${this.BASE_URL}/update-forwarding/${forwardingId}`;
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = (derivation) ? queryParams.append('observation', derivation) : queryParams;
