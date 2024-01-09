@@ -1,10 +1,10 @@
-package net.pladema.questionnaires.edmonton.getsummary.repository;
-
-import java.util.Optional;
+package net.pladema.questionnaires.familybg.get.repository;
 
 import net.pladema.questionnaires.common.dto.QuestionnaireSummary;
 
-public interface EdmontonSummaryRepository {
+import java.util.Optional;
+
+public interface FamilyBgSummaryRepository {
 
 	Optional<QuestionnaireSummary> getQuestionnaireSummaryReport(Integer questionnaireId);
 }

@@ -1,9 +1,10 @@
-package net.pladema.questionnaires.edmonton.getsummary.repository;
+package net.pladema.questionnaires.edmonton.get.repository;
 
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
+import net.pladema.questionnaires.edmonton.get.repository.EdmontonSummaryRepository;
 import org.springframework.stereotype.Repository;
 
 import net.pladema.questionnaires.common.dto.QuestionnaireSummary;

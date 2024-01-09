@@ -1,6 +1,8 @@
-package net.pladema.questionnaires.familybg.getsummary.repository;
+package net.pladema.questionnaires.familybg.get.repository;
 
 import net.pladema.questionnaires.common.dto.QuestionnaireSummary;
+
+import net.pladema.questionnaires.familybg.get.repository.FamilyBgSummaryRepository;
 
 import org.springframework.stereotype.Repository;
 

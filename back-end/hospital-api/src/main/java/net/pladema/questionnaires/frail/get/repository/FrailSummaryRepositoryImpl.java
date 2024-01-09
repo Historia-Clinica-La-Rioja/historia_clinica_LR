@@ -1,4 +1,4 @@
-package net.pladema.questionnaires.frail.getsummary.repository;
+package net.pladema.questionnaires.frail.get.repository;
 
 import java.util.Optional;
 
