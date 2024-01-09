@@ -26,6 +26,8 @@ export interface RegisterEditor {
 }
 
 export interface RegisterDerivationEditor extends RegisterEditor {
+	id: number;
 	type: EReferenceForwardingType;
 	derivationType?: string;
+	userId: number;
 }

@@ -6,7 +6,7 @@
 
 <div *ngIf="showDeriveForm" fxLayout="column" fxLayoutGap="10px">
     <div fxLayout="row" fxLayoutAlign="space-between center">
-        <span class="title">
+        <span class="title bold">
             {{'access-management.derive_request.FORM_TITLE' | translate}}
         </span>
     </div>
@@ -33,11 +33,17 @@
 </div>
 
 <div *ngIf="showDeriveRequest" class="derivation" fxLayout="column" fxLayoutGap="10px">
-    <div fxLayout="row" fxLayoutAlign="start center">
-        <mat-icon class="title-icon">error</mat-icon>
-        <span class="title" [translate]="'access-management.derive_request.DERIVATION_MESSAGE_TITLE'" 
-            [translateParams]="{forwardingType: registerDerivationEditor.derivationType}">
-        </span>
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxLayout="row" fxLayoutAlign="start center">
+            <mat-icon class="title-icon">error</mat-icon>
+            <span class="title" [translate]="'access-management.derive_request.DERIVATION_MESSAGE_TITLE'" 
+                [translateParams]="{forwardingType: registerDerivationEditor?.derivationType}">
+            </span>
+        </div>
+        <button *ngIf="canEditDerivation" type="button" mat-icon-button color="primary"
+            (click)="setEditDerivation()">
+            <mat-icon class="material-icons-outlined">edit</mat-icon>
+		</button>
     </div>
     <div>
         <span>"{{_derivation}}"</span>

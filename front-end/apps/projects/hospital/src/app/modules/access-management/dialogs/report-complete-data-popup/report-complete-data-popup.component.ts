@@ -106,9 +106,19 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 			});
 	}
 
-	addDerivation(derivation: string): void {
-		this.derivation = derivation;
-		this.institutionalNetworkReferenceReportService.addDerivation(this.data.referenceId, derivation)
+	addDerivation(derivation: [string, boolean]): void {
+		this.derivation = derivation[0];
+		if (derivation[1]) 
+			this.institutionalNetworkReferenceReportService.updateDerivation(this.registerDeriveEditor$.getValue().id, derivation[0])
+			.subscribe(res => {
+				if (res) {
+					this.snackBarService.showSuccess('access-management.derive_request.SHOW_SUCCESS_EDIT');
+					this.updateDerivation();
+				}
+				else
+					this.snackBarService.showError('access-management.derive_request.SHOW_ERROR_DERIVATION');
+			});
+		else this.institutionalNetworkReferenceReportService.addDerivation(this.data.referenceId, derivation[0])
 		.subscribe(res => {
 			if (res) {
 				this.snackBarService.showSuccess('access-management.derive_request.SHOW_SUCCESS_DERIVATION');
@@ -145,10 +155,9 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 
 	private setDerivation(referenceDetails: ReferenceCompleteDataDto) {
 		if(referenceDetails?.forwarding) {
-			const { observation, managerCompleteName, date, type } = referenceDetails.forwarding;
-			const createdBy = managerCompleteName;
+			const { observation, userId, date, type, createdBy, id } = referenceDetails.forwarding;
 			this.derivation = observation;
-			this.registerDeriveEditor = { createdBy, date: convertDateTimeDtoToDate(date), type };
+			this.registerDeriveEditor = { createdBy, date: convertDateTimeDtoToDate(date), type, userId, id };
 			this.registerDeriveEditor$.next(this.registerDeriveEditor);
 		}
 	}
