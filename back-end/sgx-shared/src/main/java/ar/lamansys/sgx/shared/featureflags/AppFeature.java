@@ -174,6 +174,8 @@ public enum AppFeature implements Feature {
 	@Label("Indica si está habilitada la funcionalidad para asignar turnos desde el módulo centro de llamado")
 	HABILITAR_TURNOS_CENTRO_LLAMADO,
 
+	@Label("Indica si esta habilitada la auditoria de acceso a la historia clinica de un paciente")
+	HABILITAR_AUDITORIA_DE_ACCESO_EN_HC,
 
 	;
 
