@@ -50,6 +50,9 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
 
     private final InstitutionExternalService institutionExternalService;
 
+	private final static Integer NO_INSTITUTION = -1;
+
+
 	@Value("${test.stress.disable.validation:false}")
 	private boolean disableValidation;
 
@@ -64,7 +67,11 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
 		CreateAppointmentDto createAppointmentDto = (CreateAppointmentDto) parameters[1];
 		LOG.debug("Input parameters -> institutionId {}, createAppointmentDto {}", institutionId, createAppointmentDto);
 
-		ZoneId timezone = institutionExternalService.getTimezone(institutionId);
+		ZoneId timezone;
+		if (institutionId == NO_INSTITUTION)
+			timezone = ZonedDateTime.now().getZone();
+		else
+			timezone = institutionExternalService.getTimezone(institutionId);
 
 		DiaryBo diary = diaryService.getDiaryById(createAppointmentDto.getDiaryId());
 		return validAppoinment(context, createAppointmentDto, timezone)
@@ -122,7 +129,10 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
 		boolean hasAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
                 ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRATIVO);
 
-        if (!hasAdministrativeRole) {
+		boolean hasManagerRole = loggedUserExternalService.hasAnyRoleInstitution(NO_INSTITUTION,
+				ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_REGIONAL, ERole.GESTOR_DE_ACCESO_LOCAL);
+
+        if (!hasAdministrativeRole && !hasManagerRole) {
             boolean hasProfessionalRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
                     ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ENFERMERO);
 
