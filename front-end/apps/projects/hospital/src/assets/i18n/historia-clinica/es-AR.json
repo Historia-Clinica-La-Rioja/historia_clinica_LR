@@ -92,6 +92,15 @@
 			"TITLE": "Unidad jerárquica",
 			"IS_A_REPLACEMENT": "Es un reemplazo",
 			"PLACEHOLDER": "Seleccione una unidad jerárquica"
+		},
+		"audit-access":{
+			"TITLE": "Alerta de acceso",
+			"RESUME": "Esta historia clínica es confidencial y tiene restricciones de acceso. Para verla, indicar motivo de consulta.",
+			"MOTIVE": "Motivo de ingreso",
+			"SELECT": "Seleccionar motivo",
+			"OBSERVATIONS": "Observaciones",
+			"GO_TO_PATIENT": "Ver historia clinica"
 		}
+
 	}
 }

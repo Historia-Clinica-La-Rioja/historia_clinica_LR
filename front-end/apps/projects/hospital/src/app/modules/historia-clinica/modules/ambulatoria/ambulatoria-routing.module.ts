@@ -8,6 +8,7 @@ import { ERole } from '@api-rest/api-model';
 import { PendingChangesGuard } from '@core/guards/PendingChangesGuard';
 import { EpisodeSummaryComponent } from './routes/episode-summary/episode-summary.component';
 import { PrintAmbulatoriaComponent } from './routes/print-ambulatoria/print-ambulatoria.component';
+import { AuditAccessGuard } from '@core/guards/AuditAccess.guard';
 
 const ALLOWED_ROLES = [
 	ERole.ESPECIALISTA_MEDICO,
@@ -43,7 +44,7 @@ const routes: Routes = [
 				path: 'paciente/:idPaciente',
 				component: AmbulatoriaPacienteComponent,
 				canDeactivate: [PendingChangesGuard],
-				canActivate: [RoleGuard],
+				canActivate: [RoleGuard, AuditAccessGuard],
 				data: { allowedRoles: ALLOWED_ROLES }
 			},
 			{

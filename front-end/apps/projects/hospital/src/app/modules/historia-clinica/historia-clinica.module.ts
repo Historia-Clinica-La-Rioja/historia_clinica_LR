@@ -75,6 +75,7 @@ import { SurgicalReportProsthesisComponent } from './components/surgical-report-
 import { ViolenceSituationsListComponent } from './components/violence-situations-list/violence-situations-list.component';
 import { ViolenceModalitiesListComponent } from './components/violence-modalities-list/violence-modalities-list.component';
 import { ViolentPersonListComponent } from './components/violent-person-list/violent-person-list.component';
+import { AuditAccessRegisterComponent } from './dialogs/audit-access-register/audit-access-register.component';
 
 @NgModule({
 	declarations: [
@@ -147,6 +148,7 @@ import { ViolentPersonListComponent } from './components/violent-person-list/vio
   		ViolenceSituationsListComponent,
     	ViolenceModalitiesListComponent,
      	ViolentPersonListComponent,
+  		AuditAccessRegisterComponent,
 	],
 	imports: [
 		CommonModule,
