@@ -1,0 +1,49 @@
+@import '../../../../../assets/styles/mixins';
+
+.mat-card {
+	mat-card-content {
+		@include card-content;
+	}
+
+	.mat-radio-button {
+		@include form-radio-button;
+	}
+
+	.mat-form-field {
+		width: 100%;
+	}
+
+	::ng-deep mat-list-item.patient-data-list {
+		.mat-list-item-content {
+			padding: 0;
+		}
+	}
+
+}
+
+::ng-deep .mat-stepper-header {
+	pointer-events: none !important;
+}
+
+.padding-bottom {
+	padding-bottom: 10px
+}
+
+.appointment-title-icon {
+	margin-right: .5rem;
+}
+
+.appointment-title-dot {
+	font-size: .75rem;
+	margin-left: .25rem;
+	margin-right: .25rem;
+}
+
+.dialog-content {
+	height: 100%;
+	overflow: auto;
+}
+
+.bold{
+	@include font-weight-bold;
+}

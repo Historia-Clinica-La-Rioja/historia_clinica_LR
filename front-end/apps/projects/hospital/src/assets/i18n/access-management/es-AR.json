@@ -1,12 +1,13 @@
 {
-    "access-management": {
+	"access-management": {
 		"home": {
 			"TITLE": "Gestión de accesos",
 			"tabs": {
-				"REQUESTS": "solicitudes"
+				"REQUESTS": "solicitudes",
+				"REGULATION_OFFER": "oferta por regulacion"
 			}
 		},
-        "search_references": {
+		"search_references": {
 			"REQUEST_LIST": "lista de solicitudes:",
 			"RECEIVED": "Recibidas",
 			"REQUEST": "Solicitadas",
@@ -22,19 +23,19 @@
 			"SPECIALTY": "Especialidad de destino",
 			"REQUEST_STATUS": "Estado de solicitud",
 			"CONTINUES_UNDER_OBSERVATION": "Continúa en observación",
-			"TREATMENT_BEGINS_IN_A_EFERENCE_CENTER":"Inicia tratamiento en centro de referencia",
-			"REQUIERES_COMPLEMENTARY_STUDIES":"Requiere estudios complementarios",
-			"COUNTER_REFERENCE":"Contrarreferencia",
+			"TREATMENT_BEGINS_IN_A_EFERENCE_CENTER": "Inicia tratamiento en centro de referencia",
+			"REQUIERES_COMPLEMENTARY_STUDIES": "Requiere estudios complementarios",
+			"COUNTER_REFERENCE": "Contrarreferencia",
 			"VIEW_APPLICATION": "Ver solicitud",
 			"DOCUMENT_SEARCH": "Buscar por documento",
-            "PRACTICE": "Práctica/Procedimiento",
+			"PRACTICE": "Práctica/Procedimiento",
 			"reference": {
 				"TITLE": "Detalle de solicitud",
 				"CONTACT_DATA": "Datos de contacto",
 				"REFERENCE_DATA": "Datos de Referencia",
 				"APPOINTMENT_DATA": "Datos del turno",
-				"ASSIGN_APPOINTMENT_IN_CARE_NETWORK":" asignar turno en red de atencion",
-				"approval":{
+				"ASSIGN_APPOINTMENT_IN_CARE_NETWORK": " asignar turno en red de atencion",
+				"approval": {
 					"TITLE": "estado de aprobación",
 					"ENTERED_BY": "Solicitud ingresada por Regla {{rule}}",
 					"states": {
@@ -62,6 +63,32 @@
 					}
 				}
 			}
+		},
+		"regulation_offer": {
+			"SEARCH_IN_REGULATION_OFFER_CRITERIA": "Seleccione los criterios para la búsqueda de turnos disponibles en la red de regulación:",
+			"CARELINE": "Línea de cuidado",
+			"PROVINCE": "Provincia",
+			"DEPARTMENT": "Partido",
+			"INSTITUTION": "Institución",
+			"SPECIALTY": "Especialidad",
+			"DATE_PERIOD_NOTE": "Se traerán resultados desde la fecha seleccionada hasta 7 días en adelante",
+			"SEARCH_START_DATE": "Fecha de inicio de búsqueda",
+			"NOT_FOUND_APPOINTMENTS": "No se han encontrado turnos disponibles con esos criterios de búsqueda.",
+			"INVALID_FORM_MESSAGE": "Debe ingresar todos los campos obligatorios marcados para la búsqueda",
+			"AVAILABLE_APPOINTMENTS_TITLE": "Turnos disponibles encontrados",
+			"START_DATE": "Fecha de inicio",
+			"END_DATE": "Fecha de fin",
+			"PRACTICES": "Prácticas",
+			"OPTIONAL": "(Opcional)",
+			"MODALITY_ATTENTION": "Modalidad de atención",
+			"ON_SITE_ATTENTION": "Presencial",
+			"PATIENT_VIRTUAL_ATTENTION": "Teleconsulta con paciente",
+			"SECOND_OPINION_VIRTUAL_ATTENTION": "Teleconsulta con segunda opinión",
+			"SEARCH_APPOINTMENTS": "Buscar turnos"
+		},
+		"appointment_result_view": {
+			"ASSIGN_APPOINTMENT": "asignar turno",
+			"JOINT_DIARY": "agenda conjunta"
 		}
-    }
+	}
 }

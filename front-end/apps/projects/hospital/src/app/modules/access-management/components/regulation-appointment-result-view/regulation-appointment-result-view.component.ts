@@ -1,30 +1,27 @@
+import { RegulationNewAppointmentData, RegulationNewAppointmentPopUpComponent } from '@access-management/dialogs/regulation-new-appointment-pop-up/regulation-new-appointment-pop-up.component';
 import { DatePipe } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DiaryAvailableProtectedAppointmentsDto, EAppointmentModality, ReferenceSummaryDto } from '@api-rest/api-model';
+import { EAppointmentModality, DiaryAvailableProtectedAppointmentsDto } from '@api-rest/api-model';
 import { dateDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
-import { DatePipeFormat } from '@core/utils/date.utils';
-import { DateFormat, dateToMoment } from '@core/utils/moment.utils';
-import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-appointment.component';
-import { SearchAppointmentCriteria } from '../search-appointments-in-care-network/search-appointments-in-care-network.component';
-import { HolidayCheckService } from '@shared-appointment-access-management/services/holiday-check.service';
+import { DateFormat, DatePipeFormat } from '@core/utils/date.utils';
 import { ConfirmPrintAppointmentComponent } from '@shared-appointment-access-management/dialogs/confirm-print-appointment/confirm-print-appointment.component';
+import { HolidayCheckService } from '@shared-appointment-access-management/services/holiday-check.service';
+import { SearchAppointmentCriteria } from '@turnos/components/search-appointments-in-care-network/search-appointments-in-care-network.component';
+import format from 'date-fns/format';
 
 @Component({
-	selector: 'app-appointment-result-view',
-	templateUrl: './appointment-result-view.component.html',
-	styleUrls: ['./appointment-result-view.component.scss']
+	selector: 'app-regulation-appointment-result-view',
+	templateUrl: './regulation-appointment-result-view.component.html',
+	styleUrls: ['./regulation-appointment-result-view.component.scss']
 })
-export class AppointmentResultViewComponent implements OnInit {
+export class RegulationAppointmentResultViewComponent {
+
 	readonly MODALITY_ON_SITE_ATTENTION = EAppointmentModality.ON_SITE_ATTENTION;
 	@Input() modalityAttention?: EAppointmentModality;
 	@Input() appointment: DiaryAvailableProtectedAppointmentsDto;
-	@Input() patientId: number;
 	@Input() searchAppointmentCriteria: SearchAppointmentCriteria;
-	@Input() referenceSummary?: ReferenceSummaryDto;
 	@Output() resetInformation = new EventEmitter<void>();
-	viewDate: string = '';
-	viewMinutes: string = '';
 
 	constructor(
 		private readonly datePipe: DatePipe,
@@ -32,34 +29,25 @@ export class AppointmentResultViewComponent implements OnInit {
 		private readonly holidayService: HolidayCheckService,
 	) { }
 
-	ngOnInit(): void {
-		this.viewDate = this.datePipe.transform(dateDtoToDate(this.appointment.date), DatePipeFormat.FULL_DATE);
-		this.viewMinutes = this.appointment.hour.minutes < 10 ?
-			'0' + this.appointment.hour.minutes :
-			this.appointment.hour.minutes.toString();
-	}
-
 	assign(): void {
-		const appointmentDate = dateToMoment(dateDtoToDate(this.appointment.date)).format(DateFormat.API_DATE);
+		const appointmentDate = format(dateDtoToDate(this.appointment.date), DateFormat.API_DATE);
 		const appointmentHour = this.datePipe.transform(timeDtoToDate(this.appointment.hour), DatePipeFormat.MEDIUM_TIME);
 		this.holidayService.checkAvailability(appointmentDate).subscribe(isAvailable => {
 			if (isAvailable) {
-				const dialogRef = this.dialog.open(NewAppointmentComponent, {
+				const data: RegulationNewAppointmentData = {
+					date: appointmentDate,
+					diaryId: this.appointment.diaryId,
+					hour: appointmentHour,
+					openingHoursId: this.appointment.openingHoursId,
+					overturnMode: this.appointment.overturnMode,
+					modalityAttention: this.modalityAttention,
+					searchAppointmentCriteria: this.searchAppointmentCriteria,
+					institutionId: this.appointment.institution.id
+				}
+				const dialogRef = this.dialog.open(RegulationNewAppointmentPopUpComponent, {
 					width: '45%',
 					disableClose: true,
-					data: {
-						date: appointmentDate,
-						diaryId: this.appointment.diaryId,
-						hour: appointmentHour,
-						openingHoursId: this.appointment.openingHoursId,
-						overturnMode: this.appointment.overturnMode,
-						patientId: this.patientId ? this.patientId : null,
-						protectedAppointment: true,
-						modalityAttention: this.modalityAttention,
-						searchAppointmentCriteria: this.searchAppointmentCriteria,
-						referenceSummary: this.referenceSummary,
-						institutionId: this.appointment.institution.id
-					}
+					data,
 				});
 				dialogRef.afterClosed().subscribe(
 					(result: any) => {

@@ -299,8 +299,8 @@ export class AppointmentsService {
 		return this.http.get<ExternalPatientCoverageDto>(url);
 	}
 
-	verifyExistingAppointments(patientId: number, date: string, hour: string): Observable<AppointmentShortSummaryDto> {
-		const url = `${this.BASE_URL}/patient/${patientId}/verify-existing-appointments`;
+	verifyExistingAppointments(institutionId: number, patientId: number, date: string, hour: string): Observable<AppointmentShortSummaryDto> {
+		const url = `${environment.apiBase}/institutions/${institutionId}/medicalConsultations/appointments/patient/${patientId}/verify-existing-appointments`;
 		let queryParam: HttpParams = new HttpParams();
 		queryParam = queryParam.append('date', date).append('hour', hour);
 		return this.http.get<AppointmentShortSummaryDto>(url, { params: queryParam });

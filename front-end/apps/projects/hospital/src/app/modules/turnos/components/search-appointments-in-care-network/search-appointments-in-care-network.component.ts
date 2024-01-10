@@ -277,7 +277,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 				specialtyId: this.searchForm.value.specialty?.id
 			}
 
-			this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointments(this.contextService.institutionId, filters).subscribe(
+			this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointments(filters).subscribe(
 				(availableAppointments: DiaryAvailableProtectedAppointmentsDto[]) => {
 					this.protectedAvaibleAppointments = availableAppointments;
 					this.showAppointmentsNotFoundMessage = !this.protectedAvaibleAppointments?.length

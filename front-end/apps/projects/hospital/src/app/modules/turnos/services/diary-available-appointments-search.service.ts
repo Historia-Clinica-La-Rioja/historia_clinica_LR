@@ -18,11 +18,11 @@ export class DiaryAvailableAppointmentsSearchService {
 
   ) { }
 
-  getAvailableProtectedAppointments(institutionId: number, filters: ProtectedAppointmentsFilter): Observable<DiaryAvailableProtectedAppointmentsDto[]> {
+  getAvailableProtectedAppointments(filters: ProtectedAppointmentsFilter): Observable<DiaryAvailableProtectedAppointmentsDto[]> {
     let queryParams: HttpParams = new HttpParams();
     queryParams = queryParams.append('diaryProtectedAppointmentsSearch', JSON.stringify(filters));
 
-    const url = `${environment.apiBase}/institutions/${institutionId}/${this.URL_PREFIX}/protected`;
+    const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/${this.URL_PREFIX}/protected`;
     return this.http.get<DiaryAvailableProtectedAppointmentsDto[]>(url, { params: queryParams });
   }
 

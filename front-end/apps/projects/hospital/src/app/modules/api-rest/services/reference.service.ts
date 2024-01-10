@@ -39,7 +39,9 @@ export class ReferenceService {
 		if (searchAppointmentCriteria.practiceId)
 			params = params.append("practiceId", searchAppointmentCriteria.practiceId);
 
-		params = params.append("careLineId", searchAppointmentCriteria.careLineId);
+		if (searchAppointmentCriteria.careLineId)
+			params = params.append("careLineId", searchAppointmentCriteria.careLineId);
+
 		return this.http.get<ReferenceSummaryDto[]>(url, { params });
 	}
 }

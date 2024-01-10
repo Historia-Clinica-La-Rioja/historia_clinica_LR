@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { AccessManagementRoutingModule } from './access-management-routing.module';
 //deps
 import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
-import { PresentationModule } from '@presentation/presentation.module';
 import { SharedAppointmentAccessManagementModule } from '@shared-appointment-access-management/shared-appointment-access-management.module';
+import { PresentationModule } from '@presentation/presentation.module';
 //Standalone Components
 import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
 import { PatientSummaryComponent } from '../hsi-components/patient-summary/patient-summary.component';
@@ -19,9 +19,14 @@ import { InstitutionalActionsComponent } from './components/institutional-action
 import { InstitutionalNetworkActionsComponent } from './components/institutional-network-actions/institutional-network-actions.component';
 import { PopupActionsComponent } from './components/popup-actions/popup-actions.component';
 import { ReferenceCompleteDataComponent } from './components/reference-complete-data/reference-complete-data.component';
+import { RegulationAppointmentResultViewComponent } from './components/regulation-appointment-result-view/regulation-appointment-result-view.component';
+import { RegulationSearchCriteriaComponent } from './components/regulation-search-criteria/regulation-search-criteria.component';
+import { SearchAppointmentsForRegulationComponent } from './components/search-appointments-for-regulation/search-appointments-for-regulation.component';
 //dialogs
 import { ReasonPopUpComponent } from './dialogs/reason-pop-up/reason-pop-up.component';
+import { RegulationNewAppointmentPopUpComponent } from './dialogs/regulation-new-appointment-pop-up/regulation-new-appointment-pop-up.component';
 import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data-popup/report-complete-data-popup.component';
+
 
 @NgModule({
 	declarations: [
@@ -34,9 +39,13 @@ import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data
 		HomeComponent,
 		PopupActionsComponent,
 		ReferenceCompleteDataComponent,
+		RegulationAppointmentResultViewComponent,
+		RegulationSearchCriteriaComponent,
+		SearchAppointmentsForRegulationComponent,
 		//dialogs
 		ReasonPopUpComponent,
 		ReportCompleteDataPopupComponent,
+		RegulationNewAppointmentPopUpComponent,
 	],
 	imports: [
 		AccessManagementRoutingModule,

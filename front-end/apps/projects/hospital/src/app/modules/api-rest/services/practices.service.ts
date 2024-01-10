@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SharedSnomedDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
@@ -32,8 +32,11 @@ export class PracticesService {
 		return this.http.get<SharedSnomedDto[]>(url);
 	}
 
-	getAll(): Observable<SharedSnomedDto[]> {
+	getAll(careLineId?: number): Observable<SharedSnomedDto[]> {
 		const url = `${environment.apiBase}/practices`;
-		return this.http.get<SharedSnomedDto[]>(url);
+		if (!careLineId)
+			return this.http.get<SharedSnomedDto[]>(url)
+		const params: HttpParams = new HttpParams().append('careLineId', careLineId);
+		return this.http.get<SharedSnomedDto[]>(url, { params });
 	}
 }

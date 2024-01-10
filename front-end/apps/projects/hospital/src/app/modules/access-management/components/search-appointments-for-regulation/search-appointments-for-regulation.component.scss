@@ -1,0 +1,42 @@
+#container,
+#search-appointments {
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+mat-hint {
+    margin-top: -15px;
+}
+
+span.mat-h1 {
+    font-weight: 500;
+}
+
+.mat-card .mat-divider-horizontal.mat-divider-inset.divider-list {
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.error-space {
+    height: 20px;
+
+    mat-error {
+        font-size: 75%;
+        padding: 0 1em;
+    }
+}
+
+span.bottom-separation {
+    padding-bottom: 12px;
+}
+.mat-radio-button{
+	margin-right: 3%;
+}
+
+.max-width {
+    max-width: 25%;
+}
+
+.padding-bottom {
+    padding-bottom: 20px;
+}
