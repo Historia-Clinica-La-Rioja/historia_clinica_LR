@@ -55,9 +55,9 @@ public interface InstitutionalGroupInstitutionRepository extends SGXAuditableEnt
 			"FROM InstitutionalGroupInstitution igi " +
 			"JOIN InstitutionalGroup ig ON (ig.id = igi.institutionalGroupId) " +
 			"JOIN InstitutionalGroupUser igu ON (igu.institutionalGroupId = ig.id) " +
-			"WHERE igi.institutionalGroupId = :institutionalGroupId " +
+			"WHERE igu.userId = :userId " +
 			"AND igu.deleteable.deleted = FALSE " +
 			"AND igi.deleteable.deleted = FALSE")
-	List<Integer> findInstitutionIdsByUserId(Integer userId);
+	List<Integer> findInstitutionIdsByUserId(@Param("userId") Integer userId);
 
 }
