@@ -3,13 +3,12 @@ package net.pladema.access.infrastructure.input.rest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.pladema.access.application.CreateHistoryClinicAccess;
-import net.pladema.access.application.GetIsValidAccess;
+import net.pladema.access.application.CreateClinicHistoryAccess;
 
+import net.pladema.access.application.GetIsValidAccess;
 import net.pladema.access.domain.bo.ClinicHistoryAccessBo;
 import net.pladema.access.infrastructure.input.dto.ClinicHistoryAccessDto;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,22 +28,23 @@ public class ClinicHistoryAccessController {
 
 	private final GetIsValidAccess getIsValidAccess;
 
-	private final CreateHistoryClinicAccess createHistoryClinicAccess;
+	private final CreateClinicHistoryAccess createClinicHistoryAccess;
 
-	@GetMapping()
-	public ResponseEntity<Boolean> isValid(@PathVariable(name = "institutionId") Integer institutionId,
-										   @PathVariable(name = "patientId") Integer patientId){
+	@GetMapping
+	public Boolean isValid(@PathVariable(name = "institutionId") Integer institutionId,
+						   @PathVariable(name = "patientId") Integer patientId) {
 		log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
 		boolean isValid = getIsValidAccess.run(institutionId, patientId);
 		log.debug(OUTPUT, isValid);
-		return ResponseEntity.ok().body(isValid);
+		return isValid;
 	}
 
-	@PostMapping()
+	@PostMapping
 	public void saveAudit(@PathVariable(name = "institutionId") Integer institutionId,
 						  @PathVariable(name = "patientId") Integer patientId,
 						  @RequestBody ClinicHistoryAccessDto clinicHistoryAccess) {
 		log.debug("Input parameters -> institutionId {}, patientId {}, clinicHistoryAccess {}", institutionId, patientId, clinicHistoryAccess);
-		createHistoryClinicAccess.run(institutionId, patientId, new ClinicHistoryAccessBo(clinicHistoryAccess));
+		ClinicHistoryAccessBo clinicHistoryAccessBo = new ClinicHistoryAccessBo(clinicHistoryAccess);
+		createClinicHistoryAccess.run(institutionId, patientId, clinicHistoryAccessBo);
 	}
 }

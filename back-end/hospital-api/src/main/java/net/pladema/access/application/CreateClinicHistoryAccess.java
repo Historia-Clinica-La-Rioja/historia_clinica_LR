@@ -6,14 +6,13 @@ import net.pladema.access.domain.bo.ClinicHistoryAccessBo;
 
 import org.springframework.stereotype.Service;
 
-@Service
 @Slf4j
 @AllArgsConstructor
-public class CreateHistoryClinicAccessImpl implements CreateHistoryClinicAccess {
+@Service
+public class CreateClinicHistoryAccess {
 
 	private final ClinicHistoryAccessStorage clinicHistoryAccessStorage;
 
-	@Override
 	public void run(Integer institutionId, Integer patientId, ClinicHistoryAccessBo clinicHistoryAccessBo) {
 		log.debug("Input parameters -> institutionId {}, patientId {}, clinicHistoryAccessBo {}", institutionId, patientId, clinicHistoryAccessBo);
 		clinicHistoryAccessStorage.createClinicHistoryAccess(institutionId, patientId, clinicHistoryAccessBo);

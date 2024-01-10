@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.access.domain.bo.ClinicHistoryAccessBo;
-import net.pladema.access.infrastructure.input.dto.ClinicHistoryAccessDto;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,11 +13,11 @@ import javax.persistence.Table;
 
 import java.time.LocalDateTime;
 
-@Entity
 @Setter
 @Getter
 @NoArgsConstructor
 @Table(name = "clinic_history_audit")
+@Entity
 public class ClinicHistoryAudit {
 
 	@Id
@@ -48,9 +46,9 @@ public class ClinicHistoryAudit {
 	@Column(name = "scope")
 	private Short scope;
 
-	public ClinicHistoryAudit(ClinicHistoryAccessBo bo) {
-		this.observations = bo.getObservations();
-		this.reasonId = bo.getReasonId();
-		this.scope = bo.getScope();
+	public ClinicHistoryAudit(ClinicHistoryAccessBo clinicHistoryAccessBo) {
+		this.observations = clinicHistoryAccessBo.getObservations();
+		this.reasonId = clinicHistoryAccessBo.getReasonId();
+		this.scope = clinicHistoryAccessBo.getScope();
 	}
 }

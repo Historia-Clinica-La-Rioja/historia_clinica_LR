@@ -12,21 +12,26 @@ import net.pladema.access.infrastructure.output.repository.entity.ClinicHistoryA
 
 import org.springframework.stereotype.Service;
 
-@Service
 @Slf4j
 @AllArgsConstructor
+@Service
 public class ClinicHistoryAccessStorageImpl implements ClinicHistoryAccessStorage {
 
 	private final ClinicHistoryAccessRepository clinicHistoryAccessRepository;
 
 	@Override
 	public void createClinicHistoryAccess(Integer institutionId, Integer patientId, ClinicHistoryAccessBo clinicHistoryAccessBo) {
-		log.debug("Input parameters -> institutionId {}, patientId {}, clinicHistoryAccessBo {}", clinicHistoryAccessBo);
+		log.debug("Input parameters -> institutionId {}, patientId {}, clinicHistoryAccessBo {}", institutionId, patientId, clinicHistoryAccessBo);
+		ClinicHistoryAudit clinicHistoryAudit = setClinicHistoryAudit(clinicHistoryAccessBo, patientId, institutionId);
+		clinicHistoryAccessRepository.save(clinicHistoryAudit);
+	}
+
+	private ClinicHistoryAudit setClinicHistoryAudit(ClinicHistoryAccessBo clinicHistoryAccessBo, Integer patientId, Integer institutionId) {
 		ClinicHistoryAudit clinicHistoryAudit = new ClinicHistoryAudit(clinicHistoryAccessBo);
 		Integer userId = UserInfo.getCurrentAuditor();
 		clinicHistoryAudit.setUserId(userId);
 		clinicHistoryAudit.setPatientId(patientId);
 		clinicHistoryAudit.setInstitutionId(institutionId);
-		clinicHistoryAccessRepository.save(clinicHistoryAudit);
+		return clinicHistoryAudit;
 	}
 }

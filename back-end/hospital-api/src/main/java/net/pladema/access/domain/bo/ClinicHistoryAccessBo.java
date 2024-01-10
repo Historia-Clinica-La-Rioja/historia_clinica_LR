@@ -3,11 +3,13 @@ package net.pladema.access.domain.bo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import net.pladema.access.infrastructure.input.dto.ClinicHistoryAccessDto;
 
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class ClinicHistoryAccessBo {
 
 	private String observations;
