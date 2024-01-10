@@ -2,9 +2,10 @@
 	<mat-card>
 		<div *ngIf="referenceReports.length else noInfo" fxLayout="column" fxLayoutGap="10px">
 			<div fxLayout="column" *ngFor="let referenceReport of referenceReports">
-				<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
-					<app-reference-summary fxFlex="85" [referenceReport]="referenceReport"></app-reference-summary>
-					<div fxFlex="15">
+
+				<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="10px" fxLayoutAlign="center">
+					<app-reference-summary fxFlex="90" [referenceReport]="referenceReport"></app-reference-summary>
+					<div fxFlex="10" fxLayoutAlign.lt-lg="end">
 						<button mat-stroked-button (click)="openRequest(referenceReport.dto.id)" color="primary">
 							{{ 'access-management.search_references.VIEW_APPLICATION' | translate}}
 						</button>

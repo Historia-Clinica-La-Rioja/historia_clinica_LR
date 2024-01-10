@@ -6,6 +6,20 @@ export const capitalize = (word: string): string => {
 	return word[0].toUpperCase() + word.slice(1);
 }
 
+export function capitalizeSentence(input: string): string {
+	if (!input) {
+	  return '';
+	}
+
+	const words = input.toLowerCase().split(' ');
+
+	for (let i = 0; i < words.length; i++) {
+	  words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+	}
+
+	return words.join(' ');
+  }
+
 export function removeAccents(input: string): string {
 	const accentsMap: { [key: string]: string } = {
 		á: 'a',

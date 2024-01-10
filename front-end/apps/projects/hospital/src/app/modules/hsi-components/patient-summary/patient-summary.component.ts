@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { capitalizeSentence } from '@core/utils/core.utils';
 import { ItemSummary, Size } from '@presentation/components/item-summary/item-summary.component';
 import { PresentationModule } from '@presentation/presentation.module';
 
@@ -13,7 +14,7 @@ export class PatientSummaryComponent {
 
 	@Input() set person(p: PatientSummary) {
 		this.itemSummary = {
-			title: p.fullName,
+			title: capitalizeSentence(p.fullName),
 			subtitle: concatIdentifications(p.id, p.identification),
 			subtitle2: concatAgeAndGender(p.gender, p.age),
 			avatar: p.photo
