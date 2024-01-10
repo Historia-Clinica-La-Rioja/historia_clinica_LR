@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.diary.service.impl;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.dates.repository.entity.EDayOfWeek;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
@@ -215,7 +216,10 @@ public class DiaryServiceImpl implements DiaryService {
 		apmtsByNewDOH.forEach((doh, apmtsList) -> {
 			apmtsList.addAll(apmts.stream().filter(apmt -> belong(apmt, doh)).collect(toList()));
 			if (overturnsOutOfLimit(doh, apmtsList)) {
-				throw new OverturnsLimitException();
+				throw new OverturnsLimitException(
+						"Se encuentran asignados una cantidad mayor de sobreturnos al límite establecido en la franja del dia " +
+								EDayOfWeek.map(doh.getOpeningHours().getDayWeekId()).getDescription() +
+								", en el horario de " + doh.getOpeningHours().getFrom() + " a " + doh.getOpeningHours().getTo());
 			}
 		});
 
