@@ -28,7 +28,7 @@ const PAGE_SIZE_OPTIONS = [5, 10, 25, 100];
 })
 export class SearchAppointmentsForRegulationComponent implements OnInit {
 
-	searchForm: FormGroup;
+	searchForm: FormGroup<SearchAppointmentForRegulationForm>;
 	allPractices: SnomedDto[] = [];
 	allSpecialties: ClinicalSpecialtyDto[] = [];
 	readonly today = new Date();
@@ -196,8 +196,8 @@ export class SearchAppointmentsForRegulationComponent implements OnInit {
 			if (!this.searchForm.value.specialty && this.searchForm.controls.specialty.hasValidator(Validators.required)) {
 				this.showTypeaheadErrors.specialty = true;
 			}
-			
-			if (!this.searchForm.value.praticeId && this.searchForm.controls.practiceId.hasValidator(Validators.required)) {
+
+			if (!this.searchForm.value.practiceId && this.searchForm.controls.practiceId.hasValidator(Validators.required)) {
 				this.showTypeaheadErrors.practice = true;
 			}
 
