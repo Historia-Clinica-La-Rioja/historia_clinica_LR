@@ -291,7 +291,7 @@ export class AppointmentsService {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/appointment-history/patient/${patientId}/by-professional-diaries`;
 		let queryParam: HttpParams = new HttpParams();
 		queryParam = queryParam.append('page', pageNumber);
-        return this.http.get<PatientAppointmentHistoryDto[]>(url, { params: queryParam});
+		return this.http.get<PatientAppointmentHistoryDto[]>(url, { params: queryParam});
 	}
 
 	getCurrentAppointmentMedicalCoverage(patientId: number): Observable<ExternalPatientCoverageDto> {
@@ -299,11 +299,17 @@ export class AppointmentsService {
 		return this.http.get<ExternalPatientCoverageDto>(url);
 	}
 
-	verifyExistingAppointments(institutionId: number, patientId: number, date: string, hour: string): Observable<AppointmentShortSummaryDto> {
-		const url = `${environment.apiBase}/institutions/${institutionId}/medicalConsultations/appointments/patient/${patientId}/verify-existing-appointments`;
+	verifyExistingAppointments(patientId: number, date: string, hour: string, institutionId?: number,): Observable<AppointmentShortSummaryDto> {
+		const url = this.getVerifyExistingAppointmentUrl(patientId, institutionId);
 		let queryParam: HttpParams = new HttpParams();
 		queryParam = queryParam.append('date', date).append('hour', hour);
-		return this.http.get<AppointmentShortSummaryDto>(url, { params: queryParam });
+		return this.http.get<AppointmentShortSummaryDto>(url, { params: queryParam });		
+	}
+
+	private getVerifyExistingAppointmentUrl(patientId: number, institutionId?: number): string {
+		return institutionId ?
+			`${environment.apiBase}/institutions/${institutionId}/medicalConsultations/appointments/patient/${patientId}/verify-existing-appointments`
+			: `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/patient/${patientId}/verify-existing-appointments`;
 	}
 
 	verifyExistingEquipmentAppointments(patientId: number, date: string): Observable<AppointmentShortSummaryDto> {

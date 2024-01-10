@@ -3,6 +3,7 @@ import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl } 
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { ReferenceSummaryDto, IdentificationTypeDto, GenderDto, MedicalCoverageDto, ReducedPatientDto, EAppointmentModality, BasicPersonalDataDto, CreateAppointmentDto, AppointmentShortSummaryDto } from '@api-rest/api-model';
+import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
@@ -21,7 +22,6 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { SearchAppointmentCriteria } from '@turnos/components/search-appointments-in-care-network/search-appointments-in-care-network.component';
 import { MODALITYS_TYPES } from '@turnos/constants/appointment';
 import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-appointment.component';
-import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
 import { Observable, of, map } from 'rxjs';
 
 const TEMPORARY_PATIENT_ID = 3;
@@ -72,7 +72,7 @@ export class RegulationNewAppointmentPopUpComponent implements OnInit {
 		private readonly personMasterDataService: PersonMasterDataService,
 		private readonly patientService: PatientService,
 		private readonly snackBarService: SnackBarService,
-		private readonly appointmentFacade: AppointmentsFacadeService,
+		private readonly appointmentService: AppointmentsService,
 		public dialog: MatDialog,
 		private readonly mapperService: MapperService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
@@ -302,7 +302,7 @@ export class RegulationNewAppointmentPopUpComponent implements OnInit {
 			applicantHealthcareProfessionalEmail: this.associateReferenceForm.controls.professionalEmail.value ? this.associateReferenceForm.controls.professionalEmail.value : null,
 			referenceId: this.associateReferenceForm?.controls?.reference?.value?.id
 		};
-		this.addAppointment(newAppointment).subscribe((appointmentId: number) => {
+		this.create(newAppointment).subscribe((appointmentId: number) => {
 			this.lastAppointmentId = appointmentId;
 			const valueEmail = this.getEmail();
 			this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
@@ -363,11 +363,11 @@ export class RegulationNewAppointmentPopUpComponent implements OnInit {
 	}
 
 	private verifyExistingAppointment(): Observable<AppointmentShortSummaryDto> {
-		return this.appointmentFacade.verifyExistingAppointment(this.data.institutionId, this.patientId, this.data.date, this.data.hour)
+		return this.appointmentService.verifyExistingAppointments(this.patientId, this.data.date, this.data.hour, this.data.institutionId);
 	}
 
-	private addAppointment(newAppointment: CreateAppointmentDto): Observable<number> {
-		return this.appointmentFacade.addAppointment(newAppointment);
+	private create(newAppointment: CreateAppointmentDto): Observable<number> {
+		return this.appointmentService.create(newAppointment);
 	}
 
 	private setReferenceInformation() {

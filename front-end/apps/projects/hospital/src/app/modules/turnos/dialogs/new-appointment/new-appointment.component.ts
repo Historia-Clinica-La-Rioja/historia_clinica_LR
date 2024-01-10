@@ -536,7 +536,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	private verifyExistingAppointment(): Observable<any> {
-		return this.data.isEquipmentAppointment ? this.equipmentAppointmentFacade.verifyExistingEquipmentAppointment(this.patientId, this.data.date) : this.appointmentFacade.verifyExistingAppointment(this.data.institutionId, this.patientId, this.data.date, this.data.hour)
+		return this.data.isEquipmentAppointment ? this.equipmentAppointmentFacade.verifyExistingEquipmentAppointment(this.patientId, this.data.date) : this.appointmentFacade.verifyExistingAppointment(this.patientId, this.data.date, this.data.hour, this.data.institutionId)
 	}
 
 	private addAppointment(newAppointment: CreateAppointmentDto): Observable<number> {
@@ -577,7 +577,7 @@ export interface NewAppointmentData {
 	modalityAttention: EAppointmentModality,
 	searchAppointmentCriteria?: SearchAppointmentCriteria,
 	referenceSummary?: ReferenceSummaryDto,
-	institutionId: number,
+	institutionId?: number,
 }
 
 export interface medicalOrderInfo {
