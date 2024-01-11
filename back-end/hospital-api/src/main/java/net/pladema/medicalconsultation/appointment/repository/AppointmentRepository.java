@@ -691,7 +691,9 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	Page<PatientAppointmentHistoryBo> getPatientHistory(@Param("patientId") Integer patientId, Pageable pageable);
 
 	@Transactional(readOnly = true)
-	@Query(" SELECT (case when doh.protectedAppointmentsAllowed IS TRUE then true else false end) " +
+	@Query(" SELECT (CASE WHEN doh.protectedAppointmentsAllowed IS TRUE THEN TRUE" +
+			"				WHEN doh.regulationProtectedAppointmentsAllowed IS TRUE THEN TRUE " +
+			"				ELSE false END) " +
 			"FROM AppointmentAssn asn " +
 			"JOIN DiaryOpeningHours doh ON (asn.pk.openingHoursId = doh.pk.openingHoursId) " +
 			"WHERE asn.pk.appointmentId = :appointmentId " +
