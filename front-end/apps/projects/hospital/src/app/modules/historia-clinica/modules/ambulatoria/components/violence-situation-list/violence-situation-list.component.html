@@ -1,0 +1,31 @@
+<div fxLayout="column">
+    <div fxLayout="column" *ngFor="let vs of violenceSituations">
+        <mat-list-item id="violence-situation-list">
+            <span fxFlex="20" class="situation-number">{{vs.id}}</span>
+            <div fxLayout="column" fxFlex="15">
+                <span class="violence-situation-header" [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.TYPE'"></span>
+                <span>{{vs.type}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="15">
+                <span class="violence-situation-header" [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.MODALITY'"></span>
+                <span>{{vs.modality}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="15">
+                <span class="violence-situation-header" [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.RISK_LEVEL'"></span>
+                <span>{{vs.riskLevel}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="15">
+                <span class="violence-situation-header" [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.INIT_DATE'"></span>
+                <span>{{vs.initDate}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="15">
+                <span class="violence-situation-header" [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.LAST_UPDATE'"></span>
+                <span>{{vs.lastUpdate}}</span>
+            </div>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+    </div>
+    <mat-list-item>
+        <button class="see-all" mat-button color="primary">{{'ambulatoria.paciente.violence-situations.violence-situation-list.SEE_ALL' | translate}}</button>
+    </mat-list-item>
+</div>

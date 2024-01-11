@@ -67,6 +67,11 @@ export const DOCUMENTS: SummaryHeader = {
 	matIcon: 'assignment'
 };
 
+export const VIOLENCE_SITUATION: SummaryHeader = {
+	title: 'ambulatoria.paciente.violence-situations.violence-situation-list.TITLE',
+	matIcon: 'history'
+}
+
 export const DOCUMENTS_SEARCH_FIELDS: SearchField[] = [
 	{
 		field: EDocumentSearch.DIAGNOSIS,

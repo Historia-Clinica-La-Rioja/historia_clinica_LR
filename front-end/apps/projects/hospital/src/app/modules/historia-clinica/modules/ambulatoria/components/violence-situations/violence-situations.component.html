@@ -1,3 +1,13 @@
-<section class="violence-situation-content">
-    <button id="new-violence-situation" mat-raised-button color="primary" (click)="openViolenceSituationDockPopUp()">+ {{'ambulatoria.paciente.violence-situations.NEW_VIOLENCE_SITUATION' | translate | uppercase}}</button>
+<section>
+    <button id="new-violence-situation" class="new-violence-situation" mat-raised-button color="primary" (click)="openViolenceSituationDockPopUp()">+ {{'ambulatoria.paciente.violence-situations.NEW_VIOLENCE_SITUATION' | translate | uppercase}}</button>
+
+    <app-summary-card [header]="header">
+        <ng-container *ngIf="!violenceSituations.length">
+            <span class="no-info" fxLayoutAlign="center" [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.NO_INFO'"></span>
+        </ng-container>
+
+        <ng-container *ngIf="violenceSituations.length">
+            <app-violence-situation-list [violenceSituations]="violenceSituations"></app-violence-situation-list>
+        </ng-container>
+    </app-summary-card>
 </section>
