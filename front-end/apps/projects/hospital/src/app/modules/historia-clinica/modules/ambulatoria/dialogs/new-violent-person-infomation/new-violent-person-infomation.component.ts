@@ -106,10 +106,12 @@ export class NewViolentPersonInfomationComponent implements OnInit {
   }
 
   resetSecurityForceTypesControl(event: Event) {
-    this.form.controls.securityForceTypes.reset();
+    event.stopPropagation();
+    this.form.controls.securityForceType.reset();
   }
 
   resetAggressorRelationControl(event: Event) {
+    event.stopPropagation();
     this.form.controls.aggressorRelation.reset();
   }
 
