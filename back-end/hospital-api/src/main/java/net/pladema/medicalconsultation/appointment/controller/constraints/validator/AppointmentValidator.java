@@ -69,7 +69,7 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
 
 		ZoneId timezone;
 		if (institutionId == NO_INSTITUTION)
-			timezone = ZonedDateTime.now().getZone();
+			timezone = ZoneId.of("UTC-3");
 		else
 			timezone = institutionExternalService.getTimezone(institutionId);
 

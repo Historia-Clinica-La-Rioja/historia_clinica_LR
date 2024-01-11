@@ -3,6 +3,7 @@ package net.pladema.medicalconsultation.diary.service.impl;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -200,7 +202,7 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 																					  Integer institutionId) {
 		LocalDateTime currentDateTime;
 		if(institutionId == NO_INSTITUTION)
-			currentDateTime = dateTimeProvider.nowDateTimeWithZone(ZonedDateTime.now().getZone());
+			currentDateTime = dateTimeProvider.nowDateTimeWithZone(ZoneId.of("UTC-3"));
 		else
 			currentDateTime = dateTimeProvider.nowDateTimeWithZone(institutionExternalService.getTimezone(institutionId));
 
