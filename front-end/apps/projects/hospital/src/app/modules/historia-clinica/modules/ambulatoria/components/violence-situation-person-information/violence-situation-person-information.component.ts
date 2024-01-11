@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { EDisabilityCertificateStatus, EKeeperRelationship, MasterDataDto, ViolenceReportVictimDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
-import { DEFAULT_COUNTRY_ID, hasError } from '@core/utils/form.utils';
+import { DEFAULT_COUNTRY_ID, hasError, updateControlValidator } from '@core/utils/form.utils';
 import { Observable } from 'rxjs';
 import { BasicOptions, BasicTwoOptions, DisabilityCertificateStatus, FormOption, RelationOption, Sectors } from '../../constants/violence-masterdata';
 @Component({
@@ -16,7 +16,7 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 
 	disabilityCertificateStatus = DisabilityCertificateStatus;
 
-	relations =  RelationOption;
+	relations = RelationOption;
 
 	sectors = Sectors;
 
@@ -57,23 +57,23 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.form = new FormGroup({
-			knowHowToReadWrite: new FormControl(null, Validators.required),
-			receiveIncome: new FormControl(null, Validators.required),
-			whichSector: new FormControl(null, Validators.required),
-			receivePlanAssistance: new FormControl(null, Validators.required),
-			haveDisability: new FormControl(null, Validators.required),
-			haveDisabilityCertificate: new FormControl(null, Validators.required),
-			isPersonInstitutionalized: new FormControl(null, Validators.required),
-			inWhichInstitution: new FormControl('', Validators.required),
+			knowHowToReadWrite: new FormControl(null),
+			receiveIncome: new FormControl(null),
+			whichSector: new FormControl(null),
+			receivePlanAssistance: new FormControl(null),
+			haveDisability: new FormControl(null),
+			haveDisabilityCertificate: new FormControl(null),
+			isPersonInstitutionalized: new FormControl(null),
+			inWhichInstitution: new FormControl(''),
 			personTypeAge: new FormControl(null, Validators.required),
-			lastname: new FormControl(null, Validators.required),
-			name: new FormControl(null, Validators.required),
-			age: new FormControl(null, Validators.required),
-			address: new FormControl(null, Validators.required),
-			addressProvinceId: new FormControl(null, Validators.required),
-			addressDepartmentId: new FormControl(null, Validators.required),
-			relationPersonViolenceSituation: new FormControl(null, Validators.required),
-			whichTypeRelation: new FormControl(null, Validators.required),
+			lastname: new FormControl(null),
+			name: new FormControl(null),
+			age: new FormControl(null),
+			address: new FormControl(null),
+			addressProvinceId: new FormControl(null),
+			addressDepartmentId: new FormControl(null),
+			relationPersonViolenceSituation: new FormControl(null),
+			whichTypeRelation: new FormControl(null),
 		});
 		this.provinces$ = this.addressMasterDataService.getByCountry(DEFAULT_COUNTRY_ID);
 
@@ -81,13 +81,15 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 
 	ngOnChanges(changes: SimpleChanges) {
 		if (!changes.confirmForm.isFirstChange()) {
-			this.personInformation.emit(this.mapPersonInformatio());
+			if (this.form.valid) {
+				this.personInformation.emit(this.mapPersonInformatio());
+			}
 		}
 	}
 
 	mapPersonInformatio(): ViolenceReportVictimDto {
 		return {
-			canReadAndWrite:this.form.value.knowHowToReadWrite,
+			canReadAndWrite: this.form.value.knowHowToReadWrite,
 			hasSocialPlan: this.form.value.receivePlanAssistance,
 			lackOfLegalCapacity: this.form.value.personTypeAge,
 			disabilityData: {
@@ -148,5 +150,42 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 	resetDepartmentControl(event: Event) {
 		event.stopPropagation();
 		this.form.controls.addressDepartmentId.reset();
+	}
+
+	updateValidationsPersonTypeAge() {
+		if (this.form.value.personTypeAge) {
+			updateControlValidator(this.form, 'lastname', Validators.required);
+			updateControlValidator(this.form, 'name', Validators.required);
+			updateControlValidator(this.form, 'age', Validators.required);
+			updateControlValidator(this.form, 'address', Validators.required);
+			updateControlValidator(this.form, 'addressDepartmentId', Validators.required);
+			updateControlValidator(this.form, 'relationPersonViolenceSituation', Validators.required);
+			updateControlValidator(this.form, 'whichTypeRelation', Validators.required);
+
+		} else {
+			updateControlValidator(this.form, 'lastname', []);
+			updateControlValidator(this.form, 'name', []);
+			updateControlValidator(this.form, 'age', []);
+			updateControlValidator(this.form, 'address', []);
+			updateControlValidator(this.form, 'addressDepartmentId', []);
+			updateControlValidator(this.form, 'relationPersonViolenceSituation', []);
+			updateControlValidator(this.form, 'whichTypeRelation', []);
+		}
+	}
+
+	updateValidationsHaveDisability() {
+		if (this.form.value.haveDisability) {
+			updateControlValidator(this.form, 'haveDisabilityCertificate', Validators.required);
+		} else {
+			updateControlValidator(this.form, 'haveDisabilityCertificate', []);
+		}
+	}
+
+	updateValidationsReceiveIncome(){
+		if (this.form.value.receiveIncome) {
+			updateControlValidator(this.form, 'whichSector', Validators.required);
+		} else {
+			updateControlValidator(this.form, 'whichSector', []);
+		}
 	}
 }

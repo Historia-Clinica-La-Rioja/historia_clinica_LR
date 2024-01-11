@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { EViolenceTowardsUnderageType, SnomedDto, SnomedECL, ViolenceEpisodeDetailDto } from '@api-rest/api-model';
-import { hasError } from '@core/utils/form.utils';
+import { hasError, updateControlValidator } from '@core/utils/form.utils';
 import { ViolenceSituationsNewConsultationService } from '../../services/violence-situations-new-consultation.service';
 import { ViolenceModalityNewConsultationService } from '../../services/violence-modality-new-consultation.service';
 import { Observable } from 'rxjs';
@@ -45,8 +45,8 @@ export class NewViolenceEpisodeSectionComponent implements OnInit {
 		this.form = new FormGroup({
 			episodeDate: new FormControl(null, Validators.required),
 			ageTypeKid: new FormControl(null, Validators.required),
-			isKidEscolarized: new FormControl(null, Validators.required),
-			escolarizationLevel: new FormControl(null, Validators.required),
+			isKidEscolarized: new FormControl(null),
+			escolarizationLevel: new FormControl(null),
 			riskLevelTest: new FormControl(null, Validators.required),
 		});
 	}
@@ -54,12 +54,13 @@ export class NewViolenceEpisodeSectionComponent implements OnInit {
 	
 	ngOnChanges(changes: SimpleChanges) {
 		if(!changes.confirmForm.isFirstChange()){
-			this.violenceEpisodeInfo.emit(this.mapViolenceEpisode());
+			if(this.form.valid){
+				this.violenceEpisodeInfo.emit(this.mapViolenceEpisode());
+			}
 		}
 	}
 
 	addViolenceSituation(violenceConcept: SnomedDto) {
-
 		this.violenceSituationService.addToList(violenceConcept);
 		this.setViolenceSituations();
 	}
@@ -101,4 +102,19 @@ export class NewViolenceEpisodeSectionComponent implements OnInit {
 			.subscribe((concepts: SnomedDto[]) => this.violenceModalities = concepts);
 	}
 
+	updateValidationAgeTypeKid(){
+		if (this.form.value.ageTypeKid === EViolenceTowardsUnderageType.DIRECT_VIOLENCE || this.form.value.ageTypeKid === EViolenceTowardsUnderageType.INDIRECT_VIOLENCE) {
+			updateControlValidator(this.form, 'isKidEscolarized', Validators.required);
+		} else {
+			updateControlValidator(this.form, 'isKidEscolarized', []);
+		}
+	}
+
+	updateValidationKidEscolarized(){
+		if (this.form.value.isKidEscolarized) {
+			updateControlValidator(this.form, 'escolarizationLevel', Validators.required);
+		} else {
+			updateControlValidator(this.form, 'escolarizationLevel', []);
+		}
+	}
 }

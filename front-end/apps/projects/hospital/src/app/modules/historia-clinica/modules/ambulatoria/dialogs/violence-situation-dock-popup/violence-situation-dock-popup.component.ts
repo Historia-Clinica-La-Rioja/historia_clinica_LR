@@ -14,6 +14,7 @@ import { Observable, of } from 'rxjs';
 export class ViolenceSituationDockPopupComponent {
 	confirmForm: Observable<boolean> = of(false);
 	newViolenceSituation: ViolenceReportDto;
+	viewError = false;
 	constructor(@Inject(OVERLAY_DATA) public patientId: number,public dockPopupRef: DockPopupRef,
 	 private readonly violenceReportService: ViolenceReportService, private snackbarServices: SnackBarService) {
 		this.newViolenceSituation = {
@@ -49,13 +50,24 @@ export class ViolenceSituationDockPopupComponent {
 	confirmViolenceForm(){
 		this.confirmForm = of(true);
 		setTimeout(() => {
-			this.saveSituationViolence();;
+			if(this.isValidForm()){
+				this.viewError = false;
+				this.saveSituationViolence();
+			}else{
+				this.viewError= true;
+			}
 		}, 1000);
 		
 	}
+
+	isValidForm(): boolean{
+		return (this.newViolenceSituation.aggressorData.length && this.newViolenceSituation.episodeData !== null && this.newViolenceSituation.implementedActions !== null && this.newViolenceSituation.victimData !== null)
+	}
+
 	saveSituationViolence() {
 		this.violenceReportService.saveNewViolenceReport(this.newViolenceSituation, this.patientId).subscribe(res=>{
 		this.snackbarServices.showSuccess('ambulatoria.paciente.violence-situations.dialog.SUCCESS')
-		})
+		this.dockPopupRef.close();
+	})
 	}
 }

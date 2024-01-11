@@ -12,7 +12,7 @@
 	
 		<mat-radio-group class="basic-options" color="primary"
 			aria-labelledby="receive-income-label"
-			formControlName="receiveIncome">
+			formControlName="receiveIncome" (change)="updateValidationsReceiveIncome()">
 			<label id="receive-income-label">{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_2' | translate}}</label>
 			<mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
 				{{opt.text}}
@@ -41,7 +41,7 @@
 
 		<mat-radio-group class="basic-options" color="primary"
 			aria-labelledby="have-disability-label"
-			formControlName="haveDisability">
+			formControlName="haveDisability" (change)="updateValidationsHaveDisability()">
 			<label id="have-disability-label">{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_4' | translate}}</label>
 			<mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
 				{{opt.text}}
@@ -78,7 +78,7 @@
 
 		<mat-radio-group class="basic-options" color="primary"
 			aria-labelledby="person-type-age-label"
-			formControlName="personTypeAge">
+			formControlName="personTypeAge" (change)="updateValidationsPersonTypeAge()">
 			<label id="person-type-age-label">{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_8' | translate}}</label>
 			<mat-radio-button *ngFor="let opt of basicTwoOptions" [value]="opt.value">
 				{{opt.text}}

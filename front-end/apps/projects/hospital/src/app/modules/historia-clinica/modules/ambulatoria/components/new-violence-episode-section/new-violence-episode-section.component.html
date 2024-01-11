@@ -35,7 +35,7 @@
 
 		<mat-radio-group class="basic-options" color="primary" color="primary"
 			aria-labelledby="violence-situation-age-type-label"
-			formControlName="ageTypeKid">
+			formControlName="ageTypeKid" (change)="updateValidationAgeTypeKid()">
 			<label id="violence-situation-age-type-label">{{'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_4' | translate}}</label>
 			<mat-radio-button *ngFor="let opt of violenceTypes" [value]="opt.value">
 				{{opt.text}}
@@ -45,7 +45,7 @@
 		<div *ngIf="ageTypeKid === violenceTypeDirect || ageTypeKid === violenceTypeIndirect" class="aside">
 			<mat-radio-group class="basic-options" color="primary"
 				aria-labelledby="is-kid-escolarized"
-				formControlName="isKidEscolarized">
+				formControlName="isKidEscolarized" (change)="updateValidationKidEscolarized()">
 				<label id="is-kid-escolarized">{{'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_5' | translate}}</label>
 				<mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
 					{{opt.text}}
