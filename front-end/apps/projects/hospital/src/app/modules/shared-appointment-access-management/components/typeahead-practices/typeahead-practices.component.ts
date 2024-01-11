@@ -26,7 +26,7 @@ export class TypeaheadPracticesComponent {
 		else
 			this.externalSetValue = null;	
 	};
-	@Input() disabled?: boolean;
+	@Input() disabled = false;
 	@Output() selectedOption = new EventEmitter<SharedSnomedDto>();
 
 	constructor() { }
