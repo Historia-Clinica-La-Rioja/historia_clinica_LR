@@ -131,6 +131,8 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 			if (medicalDischarge)
 				this.internmentSummaryFacadeService.updateInternmentEpisode();
 		});
+
+		this.internmentActions.dialogRef$.subscribe(dialogRef => this.popUpOpen.next(dialogRef));
 	}
 
 	setInternmentInformation(internmentId: number) {
