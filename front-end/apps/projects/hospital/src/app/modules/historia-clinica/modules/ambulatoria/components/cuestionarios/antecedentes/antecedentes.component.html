@@ -1,0 +1,388 @@
+<div class="full" _ngcontent-rsa-c295="" >
+    <mat-card _ngcontent-kda-c377="" class="mat-card mat-focus-indicator box">
+      <mat-card-header _ngcontent-kda-c377="" class="mat-card-header">
+        <div class="mat-card-header-text">
+          <mat-card-title _ngcontent-kda-c377="" class="mat-card-title">
+            <div _ngcontent-kda-c377="" fxlayout="row" fxlayoutalign="center center" fxlayoutgap="16px" ng-reflect-fx-layout="row" ng-reflect-fx-layout-align="center center" ng-reflect-fx-layout-gap="16px" style="flex-direction: row; box-sizing: border-box; display: flex; place-content: center; align-items: center;">
+              <mat-icon _ngcontent-kda-c377=""
+                role="img" fontset="material-icons-outlined" 
+                class="mat-icon notranslate material-icons-outlined mat-icon-no-color" 
+                aria-hidden="true" ng-reflect-font-set="material-icons-outlined" 
+                style="margin-right: 16px;" data-mat-icon-type="font" 
+                data-mat-icon-namespace="material-icons-outlined">
+                medical_services
+              </mat-icon>
+              <span _ngcontent-kda-c377="">
+                Cuestionario de antecedentes familiares
+              </span>
+            </div>
+          </mat-card-title>
+        </div>
+      </mat-card-header>
+        <mat-menu _ngcontent-kda-c621="" class="ng-tns-c107-64 ng-star-inserted"></mat-menu>
+        <div _ngcontent-kda-c621="" fxlayout="row" fxlayoutgap="15px" class="header-filters ng-star-inserted" ng-reflect-fx-layout="row" ng-reflect-fx-layout-gap="15px" style="flex-direction: row; box-sizing: border-box; display: flex;"></div>
+        <mat-divider _ngcontent-kda-c621="" role="separator" class="mat-divider mat-divider-horizontal" aria-orientation="horizontal">
+        </mat-divider>
+        <mat-divider _ngcontent-kda-c621="" role="separator" class="mat-divider mat-divider-horizontal ng-star-inserted" aria-orientation="horizontal">
+        </mat-divider>
+            
+        <div _ngcontent-yer-c638="" _ngcontent-dtl-c638="" _ngcontent-dbc-c621="" fxlayout="column" ng-reflect-fx-layout="column" class="ng-star-inserted" style="flex-direction: column; box-sizing: border-box; display: flex;">
+          <app-content _ngcontent-yer-c613="" width="full" _nghost-yer-c295="" ng-reflect-width="full"><div _ngcontent-yer-c295="" class="full">
+            <!-- <app-study _ngcontent-yer-c613="" _nghost-yer-c612="" ng-reflect-study-header="[object Object]"> -->
+              <div _ngcontent-yer-c612="" fxlayout="column" fxlayoutgap="30px" ng-reflect-fx-layout="column" ng-reflect-fx-layout-gap="30px" style="flex-direction: column; box-sizing: border-box; display: flex;">
+                <div _ngcontent-yvu-c347="" id="title" fxlayoutgap="10px" fxlayoutalign="start center" ng-reflect-fx-layout-gap="10px" ng-reflect-fx-layout-align="start center" style="place-content: center flex-start; align-items: center; flex-direction: row; box-sizing: border-box; display: flex;">
+                  <div _ngcontent-yvu-c347="" fxlayout="row" fxflex="20px" ng-reflect-fx-layout="row" ng-reflect-fx-flex="20px" style="margin-right: 10px; flex-direction: row; box-sizing: border-box; display: flex; flex: 1 1 20px; max-width: 20px; min-width: 20px;">
+                    <mat-icon _ngcontent-yvu-c347="" role="img" fontset="material-icons-outlined" class="mat-icon notranslate color-primary material-icons-outlined mat-icon-no-color ng-star-inserted" aria-hidden="true" ng-reflect-font-set="material-icons-outlined" data-mat-icon-type="font" data-mat-icon-namespace="material-icons-outlined"> 
+                      group
+                    </mat-icon>
+                  </div>
+                  <span _ngcontent-yvu-c347="" class="color-primary title" style="margin-right: 10px; font-size: 20px;">
+                    FAMILIA
+                  </span>
+                  <mat-divider _ngcontent-yvu-c347="" role="separator" inset="" class="mat-divider mat-divider-horizontal mat-divider-inset" ng-reflect-inset="" aria-orientation="horizontal"></mat-divider>
+                </div>
+              <div _ngcontent-yer-c612="" id="content" fxlayout="column" fxlayoutgap="50px" ng-reflect-fx-layout="column" ng-reflect-fx-layout-gap="50px" style="flex-direction: column; box-sizing: border-box; display: flex;">
+                <table>
+                  <tr>
+                    <th>CONVIVE CON</th>
+                    <th>No</th>
+                    <th>En la casa</th>
+                    <th>En el cuarto</th>
+                  </tr>
+                  <tr *ngFor="let pregunta of preguntasFamilia">
+                    <td>{{ pregunta.texto }}</td>
+                    <td><input type="checkbox" [checked]="pregunta.respuesta === 1" (change)="cambiarRespuesta(pregunta, 1)"></td>
+                    <td><input type="checkbox" [checked]="pregunta.respuesta === 2" (change)="cambiarRespuesta(pregunta, 2)"></td>
+                    <td><input type="checkbox" [checked]="pregunta.respuesta === 3" [value]="pregunta.value" (change)="cambiarRespuesta(pregunta, 3)" [class]="getCheckboxClass(pregunta.value)"></td>
+                  </tr>
+                  
+              
+                  <!-- Repite las filas necesarias para las demás preguntas -->
+                </table>
+                
+                <div *ngIf="viveConOtros()">
+                  <mat-form-field class="example-form-field">
+                    <mat-label>¿Quiénes?</mat-label>
+                    <input matInput type="text" [(ngModel)]="otrosFamiliares">
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          <!-- </app-study> -->
+        </div>
+        </app-content>
+        </div>
+        
+        <div _ngcontent-yer-c638="" _ngcontent-dtl-c638="" _ngcontent-dbc-c621="" fxlayout="column" ng-reflect-fx-layout="column" class="ng-star-inserted" style="flex-direction: column; box-sizing: border-box; display: flex;">
+          <app-content _ngcontent-yer-c613="" width="full" _nghost-yer-c295="" ng-reflect-width="full"><div _ngcontent-yer-c295="" class="full">
+            <!-- <app-study _ngcontent-yer-c613="" _nghost-yer-c612="" ng-reflect-study-header="[object Object]"> -->
+              <div _ngcontent-yer-c612="" fxlayout="column" fxlayoutgap="30px" ng-reflect-fx-layout="column" ng-reflect-fx-layout-gap="30px" style="flex-direction: column; box-sizing: border-box; display: flex;">
+                <div _ngcontent-yvu-c347="" id="title" fxlayoutgap="10px" fxlayoutalign="start center" ng-reflect-fx-layout-gap="10px" ng-reflect-fx-layout-align="start center" style="place-content: center flex-start; align-items: center; flex-direction: row; box-sizing: border-box; display: flex;">
+                  <div _ngcontent-yvu-c347="" fxlayout="row" fxflex="20px" ng-reflect-fx-layout="row" ng-reflect-fx-flex="20px" style="margin-right: 10px; flex-direction: row; box-sizing: border-box; display: flex; flex: 1 1 20px; max-width: 20px; min-width: 20px;">
+                    <mat-icon _ngcontent-yvu-c347="" role="img" fontset="material-icons-outlined" class="mat-icon notranslate color-primary material-icons-outlined mat-icon-no-color ng-star-inserted" aria-hidden="true" ng-reflect-font-set="material-icons-outlined" data-mat-icon-type="font" data-mat-icon-namespace="material-icons-outlined"> 
+                      home
+                    </mat-icon>
+                  </div>
+                  <span _ngcontent-yvu-c347="" class="color-primary title" style="margin-right: 10px; font-size: 20px;">
+                    VIVE
+                  </span>
+                  <mat-divider _ngcontent-yvu-c347="" role="separator" inset="" class="mat-divider mat-divider-horizontal mat-divider-inset" ng-reflect-inset="" aria-orientation="horizontal"></mat-divider>
+                </div>
+              <div _ngcontent-yer-c612="" id="content" fxlayout="column" fxlayoutgap="50px" ng-reflect-fx-layout="column" ng-reflect-fx-layout-gap="50px" style="flex-direction: column; box-sizing: border-box; display: flex;">
+                <table>
+                  <tr>
+                    <th> </th>
+                    <th>No</th>
+                    <th>Sí</th>
+                  </tr>
+                  <tr *ngFor="let pregunta of preguntasVive">
+                    <td>{{ pregunta.texto }}</td>
+                    <td><input type="checkbox" [checked]="pregunta.respuesta === 1" (change)="cambiarRespuesta(pregunta, 1)"></td>
+                    <td><input type="checkbox" [checked]="pregunta.respuesta === 2" (change)="cambiarRespuesta(pregunta, 2)" class="checkbox-color"></td>
+                  </tr>
+                </table>
+                <div *ngIf="viveEnInstitucion()">
+                  <mat-form-field class="example-form-field">
+                    <mat-label>¿Qué institución?</mat-label>
+                    <input matInput type="text" [(ngModel)]="institucion">
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          <!-- </app-study> -->
+        </div>
+        </app-content>
+        </div>
+    
+    
+        <div _ngcontent-yer-c638="" _ngcontent-dtl-c638="" _ngcontent-dbc-c621="" fxlayout="column" ng-reflect-fx-layout="column" class="ng-star-inserted" style="flex-direction: column; box-sizing: border-box; display: flex;">
+          <app-content _ngcontent-yer-c613="" width="full" _nghost-yer-c295="" ng-reflect-width="full"><div _ngcontent-yer-c295="" class="full">
+            <!-- <app-study _ngcontent-yer-c613="" _nghost-yer-c612="" ng-reflect-study-header="[object Object]"> -->
+              <div _ngcontent-yer-c612="" fxlayout="column" fxlayoutgap="30px" ng-reflect-fx-layout="column" ng-reflect-fx-layout-gap="30px" style="flex-direction: column; box-sizing: border-box; display: flex;">
+                <div _ngcontent-yvu-c347="" id="title" fxlayoutgap="10px" fxlayoutalign="start center" ng-reflect-fx-layout-gap="10px" ng-reflect-fx-layout-align="start center" style="place-content: center flex-start; align-items: center; flex-direction: row; box-sizing: border-box; display: flex;">
+                  <div _ngcontent-yvu-c347="" fxlayout="row" fxflex="20px" ng-reflect-fx-layout="row" ng-reflect-fx-flex="20px" style="margin-right: 10px; flex-direction: row; box-sizing: border-box; display: flex; flex: 1 1 20px; max-width: 20px; min-width: 20px;">
+                    <mat-icon _ngcontent-yvu-c347="" role="img" fontset="material-icons-outlined" class="mat-icon notranslate color-primary material-icons-outlined mat-icon-no-color ng-star-inserted" aria-hidden="true" ng-reflect-font-set="material-icons-outlined" data-mat-icon-type="font" data-mat-icon-namespace="material-icons-outlined"> 
+                      library_books
+                    </mat-icon>
+                  </div>
+                  <span _ngcontent-yvu-c347="" class="color-primary title" style="margin-right: 10px; font-size: 20px;">
+                    INSTRUCCIÓN
+                  </span>
+                  <mat-divider _ngcontent-yvu-c347="" role="separator" inset="" class="mat-divider mat-divider-horizontal mat-divider-inset" ng-reflect-inset="" aria-orientation="horizontal"></mat-divider>
+                </div>
+              <div _ngcontent-yer-c612="" id="content" fxlayout="column" fxlayoutgap="50px" ng-reflect-fx-layout="column" ng-reflect-fx-layout-gap="50px" style="flex-direction: column; box-sizing: border-box; display: flex;">
+                <table>
+                  <tr>
+                    <th> </th>
+                    <th>Padre o sustituto</th>
+                    <th>Madre o sustituta</th>
+                  </tr>
+                  <tr *ngFor="let pregunta of preguntasNivelDeInstruccion">
+                    <td>{{ pregunta.texto }}</td>
+                    <td><input type="checkbox" [checked]="pregunta.respuestas[0] === 1" (change)="cambiarRespuestaNivelDeInstruccion(pregunta, 0, 1)" [class]="getCheckboxClass(pregunta.value)"></td>
+                    <td><input type="checkbox" [checked]="pregunta.respuestas[1] === 1" (change)="cambiarRespuestaNivelDeInstruccion(pregunta, 1, 1)" [class]="getCheckboxClass(pregunta.value)"></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          <!-- </app-study> -->
+        </div>
+        </app-content>
+        </div>
+    
+        <div _ngcontent-yer-c638="" _ngcontent-dtl-c638="" _ngcontent-dbc-c621="" fxlayout="column" ng-reflect-fx-layout="column" class="ng-star-inserted" style="flex-direction: column; box-sizing: border-box; display: flex;">
+          <app-content _ngcontent-yer-c613="" width="full" _nghost-yer-c295="" ng-reflect-width="full"><div _ngcontent-yer-c295="" class="full">
+            <!-- <app-study _ngcontent-yer-c613="" _nghost-yer-c612="" ng-reflect-study-header="[object Object]"> -->
+              <div _ngcontent-yer-c612="" fxlayout="column" fxlayoutgap="30px" ng-reflect-fx-layout="column" ng-reflect-fx-layout-gap="30px" style="flex-direction: column; box-sizing: border-box; display: flex;">
+                <div _ngcontent-yvu-c347="" id="title" fxlayoutgap="10px" fxlayoutalign="start center" ng-reflect-fx-layout-gap="10px" ng-reflect-fx-layout-align="start center" style="place-content: center flex-start; align-items: center; flex-direction: row; box-sizing: border-box; display: flex;">
+                  <div _ngcontent-yvu-c347="" fxlayout="row" fxflex="20px" ng-reflect-fx-layout="row" ng-reflect-fx-flex="20px" style="margin-right: 10px; flex-direction: row; box-sizing: border-box; display: flex; flex: 1 1 20px; max-width: 20px; min-width: 20px;">
+                    <mat-icon _ngcontent-yvu-c347="" role="img" fontset="material-icons-outlined" class="mat-icon notranslate color-primary material-icons-outlined mat-icon-no-color ng-star-inserted" aria-hidden="true" ng-reflect-font-set="material-icons-outlined" data-mat-icon-type="font" data-mat-icon-namespace="material-icons-outlined"> 
+                      woman
+                    </mat-icon>
+                  </div>
+                  <span _ngcontent-yvu-c347="" class="color-primary title" style="margin-right: 10px; font-size: 20px;">
+                    MADRE
+                  </span>
+                  <mat-divider _ngcontent-yvu-c347="" role="separator" inset="" class="mat-divider mat-divider-horizontal mat-divider-inset" ng-reflect-inset="" aria-orientation="horizontal"></mat-divider>
+                </div>
+              <div _ngcontent-yer-c612="" id="content" fxlayout="column" fxlayoutgap="50px" ng-reflect-fx-layout="column" ng-reflect-fx-layout-gap="50px" style="flex-direction: column; box-sizing: border-box; display: flex;">
+                <div>
+                
+                  <div class="row">
+                    <div class="col-md-4">
+                      <h2 style="font-size: 16px;">Edad</h2>
+                      <mat-form-field class="example-form-field">
+                        <mat-label>Edad</mat-label>
+                        <input matInput type="number" [(ngModel)]="edadMadre">
+                      </mat-form-field>
+    
+                      <h2 style="font-size: 16px;">Horas fuera de la casa</h2>
+                      <mat-form-field class="example-form-field">
+                        <mat-label>Horas fuera de la casa</mat-label>
+                        <input matInput type="number" [(ngModel)]="horasFueraDeLaCasaMadre">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                      <h2 style="font-size: 16px;">Estado civil</h2>
+                        <mat-radio-group
+                          aria-labelledby="example-radio-group-label"
+                          class="example-radio-group"
+                          [(ngModel)]="estadoCivilMadre">
+                          <mat-radio-button class="example-radio-button" *ngFor="let estado of estadosCivilesMadre" [value]="estado">
+                            {{estado}}
+                          </mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                    <div class="col-md-4">
+                      <h2 style="font-size: 16px;">Trabajo remunerado</h2>
+                        <mat-radio-group
+                          aria-labelledby="example-radio-group-label"
+                          class="example-radio-group"
+                          [(ngModel)]="trabajoRemuneradoMadre">
+                          <mat-radio-button value="1">Sí</mat-radio-button>
+                          <mat-radio-button value="2">No</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <!-- </app-study> -->
+        </div>
+        </app-content>
+        </div>
+    
+        <div _ngcontent-yer-c638="" _ngcontent-dtl-c638="" _ngcontent-dbc-c621="" fxlayout="column" ng-reflect-fx-layout="column" class="ng-star-inserted" style="flex-direction: column; box-sizing: border-box; display: flex;">
+          <app-content _ngcontent-yer-c613="" width="full" _nghost-yer-c295="" ng-reflect-width="full"><div _ngcontent-yer-c295="" class="full">
+            <!-- <app-study _ngcontent-yer-c613="" _nghost-yer-c612="" ng-reflect-study-header="[object Object]"> -->
+              <div _ngcontent-yer-c612="" fxlayout="column" fxlayoutgap="30px" ng-reflect-fx-layout="column" ng-reflect-fx-layout-gap="30px" style="flex-direction: column; box-sizing: border-box; display: flex;">
+                <div _ngcontent-yvu-c347="" id="title" fxlayoutgap="10px" fxlayoutalign="start center" ng-reflect-fx-layout-gap="10px" ng-reflect-fx-layout-align="start center" style="place-content: center flex-start; align-items: center; flex-direction: row; box-sizing: border-box; display: flex;">
+                  <div _ngcontent-yvu-c347="" fxlayout="row" fxflex="20px" ng-reflect-fx-layout="row" ng-reflect-fx-flex="20px" style="margin-right: 10px; flex-direction: row; box-sizing: border-box; display: flex; flex: 1 1 20px; max-width: 20px; min-width: 20px;">
+                    <mat-icon _ngcontent-yvu-c347="" role="img" fontset="material-icons-outlined" class="mat-icon notranslate color-primary material-icons-outlined mat-icon-no-color ng-star-inserted" aria-hidden="true" ng-reflect-font-set="material-icons-outlined" data-mat-icon-type="font" data-mat-icon-namespace="material-icons-outlined"> 
+                      man
+                    </mat-icon>
+                  </div>
+                  <span _ngcontent-yvu-c347="" class="color-primary title" style="margin-right: 10px; font-size: 20px;">
+                    PADRE
+                  </span>
+                  <mat-divider _ngcontent-yvu-c347="" role="separator" inset="" class="mat-divider mat-divider-horizontal mat-divider-inset" ng-reflect-inset="" aria-orientation="horizontal"></mat-divider>
+                </div>
+              <div _ngcontent-yer-c612="" id="content" fxlayout="column" fxlayoutgap="50px" ng-reflect-fx-layout="column" ng-reflect-fx-layout-gap="50px" style="flex-direction: column; box-sizing: border-box; display: flex;">
+              <div>
+                
+                <div class="row">
+                  <div class="col-md-4">
+                    <h2 style="font-size: 16px;">Edad</h2>
+                    <mat-form-field class="example-form-field">
+                      <mat-label>Edad</mat-label>
+                      <input matInput type="number" [(ngModel)]="edadPadre">
+                    </mat-form-field>
+  
+                    <h2 style="font-size: 16px;">Horas fuera de la casa</h2>
+                    <mat-form-field class="example-form-field">
+                      <mat-label>Horas fuera de la casa</mat-label>
+                      <input matInput type="number" [(ngModel)]="horasFueraDeLaCasaPadre">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <h2 style="font-size: 16px;">Estado civil</h2>
+                      <mat-radio-group
+                        aria-labelledby="example-radio-group-label"
+                        class="example-radio-group"
+                        [(ngModel)]="estadoCivilPadre">
+                        <mat-radio-button class="example-radio-button" *ngFor="let estado of estadosCivilesPadre" [value]="estado">
+                          {{estado}}
+                        </mat-radio-button>
+                      </mat-radio-group>
+                  </div>
+                  <div class="col-md-4">
+                    <h2 style="font-size: 16px;">Trabajo remunerado</h2>
+                      <mat-radio-group
+                        aria-labelledby="example-radio-group-label"
+                        class="example-radio-group"
+                        [(ngModel)]="trabajoRemuneradoPadre">
+                        <mat-radio-button value="1">Sí</mat-radio-button>
+                        <mat-radio-button value="2">No</mat-radio-button>
+                      </mat-radio-group>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
+          <!-- </app-study> -->
+        </div>
+        </app-content>
+        </div>
+    
+        <div _ngcontent-yer-c638="" _ngcontent-dtl-c638="" _ngcontent-dbc-c621="" fxlayout="column" ng-reflect-fx-layout="column" class="ng-star-inserted" style="flex-direction: column; box-sizing: border-box; display: flex;">
+          <app-content _ngcontent-yer-c613="" width="full" _nghost-yer-c295="" ng-reflect-width="full"><div _ngcontent-yer-c295="" class="full">
+            <!-- <app-study _ngcontent-yer-c613="" _nghost-yer-c612="" ng-reflect-study-header="[object Object]"> -->
+              <div _ngcontent-yer-c612="" fxlayout="column" fxlayoutgap="30px" ng-reflect-fx-layout="column" ng-reflect-fx-layout-gap="30px" style="flex-direction: column; box-sizing: border-box; display: flex;">
+                <div _ngcontent-yvu-c347="" id="title" fxlayoutgap="10px" fxlayoutalign="start center" ng-reflect-fx-layout-gap="10px" ng-reflect-fx-layout-align="start center" style="place-content: center flex-start; align-items: center; flex-direction: row; box-sizing: border-box; display: flex;">
+                  <div _ngcontent-yvu-c347="" fxlayout="row" fxflex="20px" ng-reflect-fx-layout="row" ng-reflect-fx-flex="20px" style="margin-right: 10px; flex-direction: row; box-sizing: border-box; display: flex; flex: 1 1 20px; max-width: 20px; min-width: 20px;">
+                    <mat-icon _ngcontent-yvu-c347="" role="img" fontset="material-icons-outlined" class="mat-icon notranslate color-primary material-icons-outlined mat-icon-no-color ng-star-inserted" aria-hidden="true" ng-reflect-font-set="material-icons-outlined" data-mat-icon-type="font" data-mat-icon-namespace="material-icons-outlined"> 
+                      group
+                    </mat-icon>
+                  </div>
+                  <span _ngcontent-yvu-c347="" class="color-primary title" style="margin-right: 10px; font-size: 20px;">
+                    HERMANOS
+                  </span>
+                  <mat-divider _ngcontent-yvu-c347="" role="separator" inset="" class="mat-divider mat-divider-horizontal mat-divider-inset" ng-reflect-inset="" aria-orientation="horizontal"></mat-divider>
+                </div>
+              <div _ngcontent-yer-c612="" id="content" fxlayout="column" fxlayoutgap="50px" ng-reflect-fx-layout="column" ng-reflect-fx-layout-gap="50px" style="flex-direction: column; box-sizing: border-box; display: flex;">
+                <div>
+                <section class="row">
+                    <section class="col-md-12">
+                      <section class="row">
+                        <div class="col-md-6">
+                          <h2 style="font-size: 16px;">Vivos</h2>
+                          <mat-form-field class="example-form-field">
+                            <mat-label>Vivos</mat-label>
+                            <input matInput type="number" [(ngModel)]="hermanosVivos">
+                          </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                          <h2 style="font-size: 16px;">Muertos</h2>
+                          <mat-form-field class="example-form-field">
+                            <mat-label>Muertos</mat-label>
+                            <input matInput type="number" [(ngModel)]="hermanosMuertos">
+                          </mat-form-field>
+                        </div>
+                      </section>
+                    </section>
+                  </section>
+              </div>
+              </div>
+            </div>
+            <!-- </app-study> -->
+            </div>
+        </app-content>
+        </div>
+  
+        <div _ngcontent-yer-c638="" _ngcontent-dtl-c638="" _ngcontent-dbc-c621="" fxlayout="column" ng-reflect-fx-layout="column" class="ng-star-inserted" style="flex-direction: column; box-sizing: border-box; display: flex;">
+          <app-content _ngcontent-yer-c613="" width="full" _nghost-yer-c295="" ng-reflect-width="full"><div _ngcontent-yer-c295="" class="full">
+            <!-- <app-study _ngcontent-yer-c613="" _nghost-yer-c612="" ng-reflect-study-header="[object Object]"> -->
+              <div _ngcontent-yer-c612="" fxlayout="column" fxlayoutgap="30px" ng-reflect-fx-layout="column" ng-reflect-fx-layout-gap="30px" style="flex-direction: column; box-sizing: border-box; display: flex;">
+                <div _ngcontent-yvu-c347="" id="title" fxlayoutgap="10px" fxlayoutalign="start center" ng-reflect-fx-layout-gap="10px" ng-reflect-fx-layout-align="start center" style="place-content: center flex-start; align-items: center; flex-direction: row; box-sizing: border-box; display: flex;">
+                  <div _ngcontent-yvu-c347="" fxlayout="row" fxflex="20px" ng-reflect-fx-layout="row" ng-reflect-fx-flex="20px" style="margin-right: 10px; flex-direction: row; box-sizing: border-box; display: flex; flex: 1 1 20px; max-width: 20px; min-width: 20px;">
+                    <mat-icon _ngcontent-yvu-c347="" role="img" fontset="material-icons-outlined" class="mat-icon notranslate color-primary material-icons-outlined mat-icon-no-color ng-star-inserted" aria-hidden="true" ng-reflect-font-set="material-icons-outlined" data-mat-icon-type="font" data-mat-icon-namespace="material-icons-outlined"> 
+                      house
+                    </mat-icon>
+                  </div>
+                  <span _ngcontent-yvu-c347="" class="color-primary title" style="margin-right: 10px; font-size: 20px;">
+                    VIVIENDA
+                  </span>
+                  <mat-divider _ngcontent-yvu-c347="" role="separator" inset="" class="mat-divider mat-divider-horizontal mat-divider-inset" ng-reflect-inset="" aria-orientation="horizontal"></mat-divider>
+                </div>
+              <div _ngcontent-yer-c612="" id="content" fxlayout="column" fxlayoutgap="50px" ng-reflect-fx-layout="column" ng-reflect-fx-layout-gap="50px" style="flex-direction: column; box-sizing: border-box; display: flex;">
+                <div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h2 style="font-size: 16px;">Número de cuartos</h2>
+                      <mat-form-field class="example-form-field">
+                        <mat-label>Número de cuartos</mat-label>
+                        <input matInput type="number" [(ngModel)]="numeroDeCuartos">
+                      </mat-form-field>
+  
+                      <h2 style="font-size: 16px;">Energía eléctrica</h2>
+                      <mat-radio-group
+                        aria-labelledby="example-radio-group-label"
+                        class="example-radio-group"
+                        [(ngModel)]="energiaElectrica">
+                        <mat-radio-button value="1">Sí</mat-radio-button>
+                        <mat-radio-button value="2">No</mat-radio-button>
+                      </mat-radio-group>
+                    </div>
+                    <div class="col-md-6">
+                      <div _ngcontent-yer-c612="" id="content" fxlayout="column" fxlayoutgap="50px" ng-reflect-fx-layout="column" ng-reflect-fx-layout-gap="50px" style="flex-direction: column; box-sizing: border-box; display: flex;">
+                        <table>
+                          <tr>
+                            <th> </th>
+                            <th>Agua</th>
+                            <th>Excretas</th>
+                          </tr>
+                          <tr *ngFor="let pregunta of preguntasVivienda">
+                            <td>{{ pregunta.texto }}</td>
+                            <td><input type="checkbox" [checked]="pregunta.respuestas[0] === 1" (change)="cambiarRespuestaVivienda(pregunta, 0, 1)" [class]="getCheckboxClass(pregunta.value)"></td>
+                            <td><input type="checkbox" [checked]="pregunta.respuestas[1] === 1" (change)="cambiarRespuestaVivienda(pregunta, 1, 1)" [class]="getCheckboxClass(pregunta.value)"></td>
+                            <!-- <td><input type="checkbox" [(ngModel)]="pregunta.respuesta" value="1"></td>
+                            <td><input type="checkbox" [value]="pregunta.value" [class]="getCheckboxClass(pregunta.value)" [(ngModel)]="pregunta.respuesta" value="2"></td> -->
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+              </div>
+            </div>
+            <!-- </app-study> -->
+            </div>
+  
+            <div>
+              <button (click)="enviarDatos()">Enviar formulario</button>
+            </div>
+        </app-content>
+        </div>
+    </mat-card>
+    
+</div>

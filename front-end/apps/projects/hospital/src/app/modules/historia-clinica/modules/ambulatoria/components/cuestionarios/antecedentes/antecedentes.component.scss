@@ -1,0 +1,98 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 10px;
+    text-align: center;
+  }
+  
+  th:nth-child(1),
+  td:nth-child(1) {
+    width: 30%;
+  }
+  
+  th:nth-child(2),
+  td:nth-child(2),
+  th:nth-child(3),
+  td:nth-child(3),
+  th:nth-child(4),
+  td:nth-child(4) {
+    width: 23.33%;
+  }
+  
+  .example-form-field {
+    width: 200px;
+    background-color: lightgray;
+  }
+  
+  .example-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+    align-items: flex-start;
+  }
+  
+  .example-radio-button {
+    margin: 5px;
+  }
+  
+  
+  mat-card {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    margin-top: 15px;
+  }
+  
+  mat-card-header {
+      text-align: center;
+  
+      mat-card-subtitle {
+          width: 292px;
+          padding-top: 10px;
+      }
+      
+    span {
+      font-size: 20px; /* Ajusta el valor del tamaño de fuente según tus necesidades */
+    }
+    
+  }
+  
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  
+  .checkbox-color {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 13px;
+    height: 12px;
+    border: 2px solid gray;
+    border-radius: 4px;
+    background-color: yellow;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .checkbox-color:checked::before {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 6px;
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    top: 50%;
+    left: 50%;
+    margin-top: -3px;
+    margin-left: -0.5px;
+  }
+  
