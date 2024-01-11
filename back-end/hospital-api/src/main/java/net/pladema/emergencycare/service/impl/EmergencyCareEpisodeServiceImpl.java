@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ValidationException;
@@ -89,23 +90,21 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 		this.patientExternalService = patientExternalService;
     }
 
-    @Override
-    public List<EmergencyCareBo> getAll(Integer institutionId) {
-        LOG.debug("Input parameters -> institutionId {}", institutionId);
-        List<EmergencyCareVo> resultQuery = emergencyCareEpisodeRepository.getAll(institutionId);
-        List<EmergencyCareBo> result = resultQuery.stream().map(EmergencyCareBo::new)
-                .sorted(Comparator.comparing(EmergencyCareBo::getEmergencyCareStateId).thenComparing(EmergencyCareBo::getTriageCategoryId).thenComparing(EmergencyCareBo::getCreatedOn))
-                        .collect(Collectors.toList());
-        result.forEach(ec -> {
+	@Override
+	public Page<EmergencyCareBo> getAll(Integer institutionId, Pageable pageable) {
+		LOG.debug("Input parameters -> institutionId {}", institutionId);
+		Page<EmergencyCareVo> resultQuery = emergencyCareEpisodeRepository.getAll(institutionId, pageable);
+		Page<EmergencyCareBo> result = resultQuery.map(EmergencyCareBo::new);
+		result.forEach(ec -> {
 			ec.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, ec.getCreatedOn()));
 			if (ec.getEmergencyCareStateId().equals(EEmergencyCareState.ATENCION.getId())) {
 				ProfessionalPersonBo professional = new ProfessionalPersonBo(emergencyCareEpisodeRepository.getEmergencyCareEpisodeRelatedProfessionalInfo(ec.getId()));
 				ec.setRelatedProfessional(professional);
 			}
 		});
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
 
 	@Override
 	public EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgressByInstitution(Integer institutionId, Integer patientId) {

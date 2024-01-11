@@ -9,6 +9,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.service.ReasonExternal
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.service.RiskFactorExternalService;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
+import ar.lamansys.sgh.shared.infrastructure.input.service.datastructures.PageDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.emergencycare.controller.dto.ECAdministrativeDto;
@@ -30,6 +31,10 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatien
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +43,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,7 +51,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -100,14 +105,17 @@ public class EmergencyCareEpisodeController {
 
     @GetMapping
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
-    public ResponseEntity<Collection<EmergencyCareListDto>> getAll(
-            @PathVariable(name = "institutionId") Integer institutionId) {
-        LOG.debug("Input parameters -> institutionId {}", institutionId);
-        List<EmergencyCareBo> episodes = emergencyCareEpisodeService.getAll(institutionId);
-        List<EmergencyCareListDto> result = emergencyCareMapper.toListEmergencyCareListDto(episodes);
-        LOG.debug("Output -> {}", result);
-        return ResponseEntity.ok().body(result);
-    }
+	public PageDto<EmergencyCareListDto> getAll(@PathVariable(name = "institutionId") Integer institutionId,
+												@RequestParam(name = "pageNumber") Integer pageNumber,
+												@RequestParam(name = "pageSize") Integer pageSize) {
+		LOG.debug("Input parameters -> institutionId {}, pageNumber {}, pageSize {}", institutionId, pageNumber, pageSize);
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+		Page<EmergencyCareBo> episodes = emergencyCareEpisodeService.getAll(institutionId, pageable);
+		Page<EmergencyCareListDto> result = episodes.map(emergencyCareMapper::toEmergencyCareListDto);
+		LOG.debug("Output -> {}", result);
+		return PageDto.fromPage(result);
+	}
+
 
     @Transactional
     @PostMapping

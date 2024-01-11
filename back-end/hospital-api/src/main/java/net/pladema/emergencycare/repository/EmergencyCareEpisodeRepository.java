@@ -39,8 +39,9 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 				" OR ece.emergencyCareStateId = " + EmergencyCareState.EN_ESPERA +
 				" OR ece.emergencyCareStateId = " + EmergencyCareState.CON_ALTA_MEDICA +
 				" OR ece.emergencyCareStateId = " + EmergencyCareState.CON_ALTA_ADMINISTRATIVA + " ) " +
-			" AND ece.institutionId = :institutionId ")
-	List<EmergencyCareVo> getAll(@Param("institutionId") Integer institutionId);
+			" AND ece.institutionId = :institutionId " +
+			"ORDER BY ece.emergencyCareStateId, ece.triageCategoryId, ece.creationable.createdOn")
+	Page<EmergencyCareVo> getAll(@Param("institutionId") Integer institutionId, Pageable pageable);
 
 	@Transactional(readOnly = true)
 	@Query( value = "SELECT ece.id " +
