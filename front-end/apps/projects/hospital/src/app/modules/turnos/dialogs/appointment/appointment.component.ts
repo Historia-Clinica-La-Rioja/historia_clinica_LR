@@ -166,6 +166,8 @@ export class AppointmentComponent implements OnInit {
 	diaryOpeningHoursFreeTimes : DiaryOpeningHoursFreeTimesDto[];
 
 	patientSummary: PatientSummary;
+
+	today = dateToDateDto(new Date())
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			appointmentData: PatientAppointmentInformation,
@@ -275,8 +277,8 @@ export class AppointmentComponent implements OnInit {
 				this.checkDownloadReportAvailability();
 				this.initializeFormDate();
 				this.loadAvailableDays(this.dateAppointment,true);
-				this.setAvailableMonths(this.dateAppointment);
-				this.loadAppointmentsHours(this.dateAppointment,true);
+				this.setAvailableMonths();
+				this.loadAppointmentsHours(dateToDateDto(this.selectedDate),true);
 				this.setAvailableYears();
 				this.setModalityAndValidator(false);
 			});
@@ -321,7 +323,12 @@ export class AppointmentComponent implements OnInit {
 		const date = new Date(this.appointment.date)
 		date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
 		this.dateAppointment = dateToDateDto(date)
-		this.formDate.controls.day.setValue(this.dateAppointment.day);
+		if(this.today.month === this.dateAppointment.month && this.today.year === this.dateAppointment.year && this.dateAppointment.day > this.today.day){
+			this.dateAppointment.day = this.today.day;
+		}else{
+			this.calculateSetAppointmentDay();
+		}
+		this.formDate.controls.day.setValue(this.selectedDate.getUTCDate());
 		this.formDate.controls.month.setValue(this.dateAppointment.month);
 		this.formDate.controls.year.setValue(this.dateAppointment.year);
 		this.formDate.controls.modality.setValue(this.selectedModality.value);
@@ -364,8 +371,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	isToday():boolean{
-		const today = dateToDateDto(new Date())
-		return (today.year === this.dateAppointment.year && today.month === this.dateAppointment.month && today.day === this.dateAppointment.day )
+		return (this.today.year === this.dateAppointment.year && this.today.month === this.dateAppointment.month && this.today.day === this.dateAppointment.day )
 	}
 
 	selectDate(dateType: DATESTYPES) {
@@ -375,15 +381,8 @@ export class AppointmentComponent implements OnInit {
 				this.loadAppointmentsHours(this.dateAppointment);
 				break;
 			case DATESTYPES.MONTH :
-				const today = dateToDateDto(new Date())
 				this.dateAppointment.month = this.formDate.controls.month.value;
-				if(this.startAgenda.month === this.dateAppointment.month && this.startAgenda.year === this.dateAppointment.year && !(this.startAgenda.day < today.day)){
-					this.dateAppointment.day = this.startAgenda.day;
-				} else if (this.startAgenda.month === this.dateAppointment.month && this.startAgenda.year === this.dateAppointment.year && this.startAgenda.day < today.day){
-					this.dateAppointment.day = today.day;
-				}else{
-					this.dateAppointment.day = 1;
-				}
+				this.calculateSetAppointmentDay();
 				this.loadAvailableDays(this.dateAppointment);
 				this.possibleScheduleHours = [];
 				this.formDate.controls.day.setValue(null);
@@ -398,11 +397,25 @@ export class AppointmentComponent implements OnInit {
 				}else{
 					this.dateAppointment.month = 1;
 				}
-				this.setAvailableMonths(this.dateAppointment);
+				this.setAvailableMonths();
 				this.formDate.controls.day.setValue(null);
 				this.formDate.controls.hour.setValue(null);
 				this.formDate.controls.month.setValue(null);
 				break;
+		}
+	}
+
+	calculateSetAppointmentDay(){
+		if(this.startAgenda.month === this.dateAppointment.month && this.startAgenda.year === this.dateAppointment.year && !(this.startAgenda.day < this.today.day)){
+			this.dateAppointment.day = this.startAgenda.day;
+		} else if (this.startAgenda.month === this.dateAppointment.month && this.startAgenda.year === this.dateAppointment.year && this.startAgenda.day < this.today.day){
+			this.dateAppointment.day = this.today.day;
+		}else{
+			if(this.today.month === this.dateAppointment.month && this.today.year === this.dateAppointment.year){
+				this.dateAppointment.day = this.today.day;
+			}else{
+				this.dateAppointment.day = 1;
+			}
 		}
 	}
 
@@ -412,14 +425,14 @@ export class AppointmentComponent implements OnInit {
 			if (!this.availableDays.includes(element.day))
 				this.availableDays.push(element.day);
 		});
-		if(this.selectedDate.getUTCDate() === this.dateAppointment.day && isInitial && !this.availableDays.includes(this.dateAppointment.day)){
-			this.availableDays.push(this.dateAppointment.day);
+		if(isInitial && !this.availableDays.includes(this.selectedDate.getUTCDate())){
+			this.availableDays.push(this.selectedDate.getUTCDate());
 		}
 		this.availableDays.sort((a, b) => a - b);
 	}
 
-	setAvailableMonths(date:DateDto){
-		this.availableMonths = MONTHS.filter(month => month >= date.month);
+	setAvailableMonths(){
+		this.availableMonths = MONTHS.filter(month => month >= this.today.month);
 	}
 
 	setAvailableYears(){
