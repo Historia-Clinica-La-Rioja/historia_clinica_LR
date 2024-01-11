@@ -9,6 +9,7 @@ import {
 	MasterDataDto, MasterDataInterface,
 	PatientPhotoDto,
 	ProfessionalPersonDto,
+	PageDto
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
@@ -21,7 +22,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { TriageDefinitionsService } from '../../services/triage-definitions.service';
 import { PatientService } from '@api-rest/services/patient.service';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { EpisodeFilterService } from '../../services/episode-filter.service';
 import { TriageCategoryDto, TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
@@ -55,11 +56,14 @@ export class HomeComponent implements OnInit {
 	readonly triages = Triages;
 	readonly PACIENTE_TEMPORAL = 3;
 	readonly EMERGENCY_CARE_TEMPORARY = PatientType.EMERGENCY_CARE_TEMPORARY;
+	readonly PAGE_SIZE = 20;
+	readonly FIRST_PAGE = 0;
 
 	loading = true;
 	episodes: Episode[];
 	episodesOriginal: Episode[];
 	patientsPhotos: PatientPhotoDto[];
+	elementsAmount: number;
 
 	triageCategories$: Observable<TriageCategoryDto[]>;
 	emergencyCareTypes$: Observable<MasterDataInterface<number>[]>;
@@ -95,7 +99,7 @@ export class HomeComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.loadEpisodes();
+		this.loadEpisodes(this.FIRST_PAGE);
 		this.triageCategories$ = this.filterService.getTriageCategories();
 		this.emergencyCareTypes$ = this.filterService.getEmergencyCareTypes();
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
@@ -103,11 +107,12 @@ export class HomeComponent implements OnInit {
 		});
 	}
 
-	loadEpisodes(): void {
-		this.emergencyCareEpisodeService.getAll()
+	loadEpisodes(pageNumber: number): void {
+		this.emergencyCareEpisodeService.getAll(this.PAGE_SIZE, pageNumber)
 			.pipe(
-				map((episodes: EmergencyCareListDto[]) =>
-					episodes.map(episode => this.setWaitingTime(episode))
+				tap(result => this.elementsAmount = result.totalElementsAmount),
+				map((episodes: PageDto<EmergencyCareListDto>) =>
+					episodes.content.map(episode => this.setWaitingTime(episode))
 				)
 			)
 			.subscribe((episodes: any[]) => {
@@ -149,7 +154,7 @@ export class HomeComponent implements OnInit {
 					if (changed) {
 						this.snackBarService
 							.showSuccess(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.SUCCESS`);
-						this.loadEpisodes();
+						this.loadEpisodes(this.FIRST_PAGE);
 					} else {
 						this.snackBarService
 							.showError(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.ERROR`);
@@ -167,7 +172,7 @@ export class HomeComponent implements OnInit {
 				const dialogRef = this.dialog.open(component, { data: episode.id });
 				dialogRef.afterClosed().subscribe(idReturned => {
 					if (idReturned) {
-						this.loadEpisodes();
+						this.loadEpisodes(this.FIRST_PAGE);
 					}
 				});
 			});
@@ -241,6 +246,10 @@ export class HomeComponent implements OnInit {
 	private getFullProfessionalName(professional: ProfessionalPersonDto) {
 		const professionalName = `${this.patientNameService.getPatientName(professional.firstName, professional.nameSelfDetermination)}`;
 		professional.fullName = `${professionalName} ${professional.middleNames == null ? "" : professional.middleNames} ${professional.lastName} ${professional.otherLastNames == null ? "" : professional.otherLastNames}`;
+	}
+
+	handlePageEvent(event) {
+		this.loadEpisodes(event.pageIndex);
 	}
 
 }

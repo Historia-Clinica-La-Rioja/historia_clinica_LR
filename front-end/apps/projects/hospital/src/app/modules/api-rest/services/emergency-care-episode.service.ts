@@ -7,10 +7,11 @@ import {
 	ResponseEmergencyCareDto,
 	EmergencyCareListDto,
 	DateTimeDto,
-	RiskFactorDto
+	RiskFactorDto,
+	PageDto
 } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { ContextService } from '@core/services/context.service';
 
 
@@ -28,10 +29,10 @@ export class EmergencyCareEpisodeService {
 	) {
 	}
 
-	getAll(): Observable<EmergencyCareListDto[]> {
-		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
-			BASIC_URL_SUFIX}/episodes`;
-		return this.http.get<EmergencyCareListDto[]>(url);
+	getAll(pageSize: number, pageNumber: number): Observable<PageDto<EmergencyCareListDto>> {
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId + BASIC_URL_SUFIX}/episodes`;
+		let queryParam = new HttpParams().append('pageNumber', pageNumber).append('pageSize', pageSize);
+		return this.http.get<PageDto<EmergencyCareListDto>>(url, { params: queryParam });
 	}
 
 	createAdministrative(newEpisode: ECAdministrativeDto): Observable<number> {

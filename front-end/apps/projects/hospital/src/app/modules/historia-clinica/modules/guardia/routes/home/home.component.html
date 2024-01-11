@@ -267,6 +267,13 @@
 								</div>
 							</div>
 						</mat-card>
+						<mat-paginator #paginator
+							(page)="handlePageEvent($event)"
+							[length]="elementsAmount"
+							[pageSize]="PAGE_SIZE"
+							[hidePageSize]="true"
+							[showFirstLastButtons]="true">
+						</mat-paginator>
 					</ng-container>
 				</ng-template>
 			</div>
