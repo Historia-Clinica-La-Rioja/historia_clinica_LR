@@ -12,7 +12,7 @@
         <app-violence-situation-relevant-information-section (relevantInformation)="setRelevantInformation($event)" [confirmForm]="confirmForm"></app-violence-situation-relevant-information-section>
     </div>
     <div actions id="buttons">
-        <div *ngIf="viewError" ><mat-error>{{'ambulatoria.paciente.violence-situation.dialog.ERROR_FORM' | translate}}</mat-error ></div>
+        <div *ngIf="viewError" ><mat-error>{{'ambulatoria.paciente.violence-situations.dialog.ERROR_FORM' | translate}}</mat-error></div>
         <div align="end">
             <button mat-raised-button type="button" (click)="confirmViolenceForm()" color="primary">{{'ambulatoria.paciente.violence-situations.dialog.SAVE' |
                 translate}}</button>

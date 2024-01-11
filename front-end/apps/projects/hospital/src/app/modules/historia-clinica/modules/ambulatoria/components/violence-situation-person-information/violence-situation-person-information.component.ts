@@ -83,6 +83,8 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 		if (!changes.confirmForm.isFirstChange()) {
 			if (this.form.valid) {
 				this.personInformation.emit(this.mapPersonInformatio());
+			}else{
+				this.form.markAllAsTouched();
 			}
 		}
 	}
@@ -159,6 +161,7 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 			updateControlValidator(this.form, 'age', Validators.required);
 			updateControlValidator(this.form, 'address', Validators.required);
 			updateControlValidator(this.form, 'addressDepartmentId', Validators.required);
+			updateControlValidator(this.form, 'addressProvinceId', Validators.required);
 			updateControlValidator(this.form, 'relationPersonViolenceSituation', Validators.required);
 			updateControlValidator(this.form, 'whichTypeRelation', Validators.required);
 
@@ -168,6 +171,7 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 			updateControlValidator(this.form, 'age', []);
 			updateControlValidator(this.form, 'address', []);
 			updateControlValidator(this.form, 'addressDepartmentId', []);
+			updateControlValidator(this.form, 'addressProvinceId', []);
 			updateControlValidator(this.form, 'relationPersonViolenceSituation', []);
 			updateControlValidator(this.form, 'whichTypeRelation', []);
 		}

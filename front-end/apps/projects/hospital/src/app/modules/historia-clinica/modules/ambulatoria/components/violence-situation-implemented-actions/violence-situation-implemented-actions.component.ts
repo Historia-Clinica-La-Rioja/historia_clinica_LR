@@ -124,6 +124,8 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 		if (!changes.confirmForm.isFirstChange()) {
 			if (this.form.valid) {
 				this.implementedActionsInfo.emit(this.mapImplementedActionsDto());
+			}else{
+				this.form.markAllAsTouched();
 			}
 		}
 	}

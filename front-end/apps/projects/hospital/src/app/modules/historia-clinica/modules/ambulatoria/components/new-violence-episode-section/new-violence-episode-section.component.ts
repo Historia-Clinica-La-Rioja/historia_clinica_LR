@@ -56,6 +56,8 @@ export class NewViolenceEpisodeSectionComponent implements OnInit {
 		if(!changes.confirmForm.isFirstChange()){
 			if(this.form.valid){
 				this.violenceEpisodeInfo.emit(this.mapViolenceEpisode());
+			}else{
+				this.form.markAllAsTouched();
 			}
 		}
 	}

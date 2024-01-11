@@ -83,6 +83,7 @@
 			<mat-radio-button *ngFor="let opt of basicTwoOptions" [value]="opt.value">
 				{{opt.text}}
 			</mat-radio-button>
+			<mat-error *ngIf="hasError(form, 'required', 'personTypeAge') && form.controls.personTypeAge.touched" [translate]="'forms.REQUIRED'"></mat-error>
 		</mat-radio-group>
 
 		<div *ngIf="personTypeAge" class="aside mt-10">

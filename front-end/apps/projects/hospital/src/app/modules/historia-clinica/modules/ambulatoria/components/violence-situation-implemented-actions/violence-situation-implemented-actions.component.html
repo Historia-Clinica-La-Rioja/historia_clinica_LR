@@ -6,6 +6,8 @@
             <mat-radio-button *ngFor="let opt of articulations" [value]="opt">
                 {{opt}}
             </mat-radio-button>
+            <mat-error *ngIf="hasError(form, 'required', 'articulation') && form.controls.articulation.touched"
+            [translate]="'forms.REQUIRED'"></mat-error>
         </mat-radio-group>
 
         <div *ngIf="articulation === articulationEnum.IN" class="aside column">
@@ -172,6 +174,8 @@
             <mat-checkbox *ngFor="let opt of complaints" (click)="setComplaints(opt.value)" color="primary">
                 {{opt.text}}
             </mat-checkbox>
+            <mat-error *ngIf="hasError(form, 'required', 'institutionComplaints') && form.controls.institutionComplaints.touched"
+            [translate]="'forms.REQUIRED'"></mat-error>
 
             <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_10' |
                 translate}}</label>
@@ -221,6 +225,8 @@
             <mat-checkbox *ngFor="let opt of implementedActions" (click)="setImplementedActions(opt.value)" color="primary">
                 {{opt.text}}
             </mat-checkbox>
+            <mat-error *ngIf="hasError(form, 'required', 'implementedActions') && form.controls.implementedActions.touched"
+            [translate]="'forms.REQUIRED'"></mat-error>
         </div>
     </form>
 
