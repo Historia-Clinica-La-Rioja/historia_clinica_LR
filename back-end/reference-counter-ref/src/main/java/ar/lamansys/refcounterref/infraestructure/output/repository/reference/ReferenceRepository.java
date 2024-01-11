@@ -249,7 +249,8 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
 			"WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
-			"AND rcs.pk.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND (rcs.pk.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"	OR NOT EXISTS (SELECT 1 from ReferenceClinicalSpecialty rcs2 WHERE rcs2.pk.referenceId = r.id)) " +
 			"AND r.careLineId = :careLineId " +
 			"AND dr.snomedId = :practiceId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId)" +
@@ -276,7 +277,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
 			"WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
-			"AND rcs.pk.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND (rcs.pk.clinicalSpecialtyId = :clinicalSpecialtyId OR NOT EXISTS (SELECT 1 from ReferenceClinicalSpecialty rcs2 WHERE rcs2.pk.referenceId = r.id)) " +
 			"AND dr.snomedId = :practiceId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId)" +
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" +
@@ -302,7 +303,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
 			"WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
-			"AND rcs.pk.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND (rcs.pk.clinicalSpecialtyId = :clinicalSpecialtyId OR NOT EXISTS (SELECT 1 from ReferenceClinicalSpecialty rcs2 WHERE rcs2.pk.referenceId = r.id)) " +
 			"AND r.careLineId = :careLineId " +
 			"AND dr.snomedId = :practiceId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
@@ -330,7 +331,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
 			"WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
-			"AND rcs.pk.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND (rcs.pk.clinicalSpecialtyId = :clinicalSpecialtyId OR NOT EXISTS (SELECT 1 from ReferenceClinicalSpecialty rcs2 WHERE rcs2.pk.referenceId = r.id)) " +
 			"AND dr.snomedId = :practiceId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" +
