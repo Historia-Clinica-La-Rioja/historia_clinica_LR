@@ -49,6 +49,7 @@ export class DeriveRequestComponent implements OnInit {
       this.getDerivationType();
       this.editDerivationAvailable();
     }
+    this.setActions();
   }
 
   ngOnChanges(): void {
@@ -62,12 +63,14 @@ export class DeriveRequestComponent implements OnInit {
   setActions(): void {
     //DOMAIN
     this.permissionService.hasContextAssignments$([GESTORES[0]]).subscribe(hasRole => { if(hasRole) this.canDerive = false });
-    //LOCAL
-    this.permissionService.hasContextAssignments$([GESTORES[1]]).subscribe(hasRole => { if(hasRole) this.canDerive = false });
-    //REGIONAL
-    this.permissionService.hasContextAssignments$([GESTORES[2]]).subscribe(hasRole => {
-      if (hasRole && this.registerDerivationEditor?.type === DOMAIN) { this.canDerive = false; }
-    });
+    if (this.registerDerivationEditor) {
+      //LOCAL
+      this.permissionService.hasContextAssignments$([GESTORES[1]]).subscribe(hasRole => { if(hasRole) this.canDerive = false });
+      //REGIONAL
+      this.permissionService.hasContextAssignments$([GESTORES[2]]).subscribe(hasRole => {
+        if (hasRole && this.registerDerivationEditor?.type === DOMAIN) { this.canDerive = false; }
+      });
+    }
   }
 
   editDerivationAvailable(): void {
