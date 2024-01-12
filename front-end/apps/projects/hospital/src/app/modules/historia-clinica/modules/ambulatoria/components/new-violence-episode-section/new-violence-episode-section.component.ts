@@ -104,14 +104,6 @@ export class NewViolenceEpisodeSectionComponent implements OnInit {
 			.subscribe((concepts: SnomedDto[]) => this.violenceModalities = concepts);
 	}
 
-	updateValidationAgeTypeKid(){
-		if (this.form.value.ageTypeKid === EViolenceTowardsUnderageType.DIRECT_VIOLENCE || this.form.value.ageTypeKid === EViolenceTowardsUnderageType.INDIRECT_VIOLENCE) {
-			updateControlValidator(this.form, 'isKidEscolarized', Validators.required);
-		} else {
-			updateControlValidator(this.form, 'isKidEscolarized', []);
-		}
-	}
-
 	updateValidationKidEscolarized(){
 		if (this.form.value.isKidEscolarized) {
 			updateControlValidator(this.form, 'escolarizationLevel', Validators.required);

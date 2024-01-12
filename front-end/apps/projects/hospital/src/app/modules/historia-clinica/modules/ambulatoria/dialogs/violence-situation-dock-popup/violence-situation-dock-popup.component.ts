@@ -72,6 +72,7 @@ export class ViolenceSituationDockPopupComponent implements OnInit{
 	}
 
 	isValidForm(): boolean{
+		console.log(this.newViolenceSituation)
 		return (this.newViolenceSituation.aggressorData.length && this.newViolenceSituation.episodeData !== null && this.newViolenceSituation.implementedActions !== null && this.newViolenceSituation.victimData !== null)
 	}
 
