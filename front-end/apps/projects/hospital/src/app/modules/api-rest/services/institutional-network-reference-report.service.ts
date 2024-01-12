@@ -48,14 +48,14 @@ export class InstitutionalNetworkReferenceReportService {
 		return this.http.post<boolean>(url, {}, { params: queryParams });
 	}
 
-	addDerivation(referenceId: number, derivation: string): Observable<Object> {
+	addDerivation(referenceId: number, derivation: string): Observable<boolean> {
 		const url = `${this.BASE_URL}/forwarding/${referenceId}`;
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = (derivation) ? queryParams.append('observation', derivation) : queryParams;
 		return this.http.post<boolean>(url, {}, { params: queryParams });
 	}
 
-	updateDerivation(forwardingId: number, derivation: string): Observable<Object> {
+	updateDerivation(forwardingId: number, derivation: string): Observable<boolean> {
 		const url = `${this.BASE_URL}/update-forwarding/${forwardingId}`;
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = (derivation) ? queryParams.append('observation', derivation) : queryParams;

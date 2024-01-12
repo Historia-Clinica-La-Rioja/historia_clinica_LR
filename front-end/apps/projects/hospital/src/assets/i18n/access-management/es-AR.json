@@ -97,7 +97,7 @@
 			"SHOW_SUCCESS_DERIVATION": "La derivación se ha llevado a cabo exitosamente",
 			"SHOW_SUCCESS_EDIT": "La derivación se ha modificado exitosamente",
 			"SHOW_ERROR_DERIVATION:": "Error al cargar la derivación",
-			"DERIVATION_MESSAGE_TITLE": "DERIVADO A GESTION {{forwardingType}}"
+			"DERIVATION_MESSAGE_TITLE": "DERIVADO A GESTIÓN {{forwardingType}}"
 		}
 	}
 }

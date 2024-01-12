@@ -1,14 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ERole } from '@api-rest/api-model';
+import { EReferenceForwardingType, ERole } from '@api-rest/api-model';
+import { NoWhitespaceValidator } from '@core/utils/form.utils';
+import { REGISTER_EDITOR_CASES, RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
 import { AccountService } from '@api-rest/services/account.service';
 import { PermissionsService } from '@core/services/permissions.service';
-import { NoWhitespaceValidator } from '@core/utils/form.utils';
-import { REGISTER_EDITOR_CASES, RegisterDerivationEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
 
 const DERIVACION_DE_DOMINIO = 'DE DOMINIO';
 const DOMAIN = 'DOMAIN';
-const GESTORES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_LOCAL, ERole.GESTOR_DE_ACCESO_REGIONAL];
 
 @Component({
   selector: 'app-derive-request',
@@ -22,6 +21,7 @@ export class DeriveRequestComponent implements OnInit {
 
   formDeriveRequest: FormGroup<FormDeriveRequest>;
   _derivation = '';
+  derivationEditor: RegisterDerivationEditor;
   showDeriveRequest = false;
   showDeriveForm = false;
   editingDerivation = false;
@@ -30,58 +30,54 @@ export class DeriveRequestComponent implements OnInit {
 		if (derivation) {
 			this._derivation = derivation;
       this.showDeriveRequest = true;
-      this.setActions();
+      this.hideButtonByGestor();
 		}
 	};
-  @Input() registerDerivationEditor?: RegisterDerivationEditor;
-	@Output() derivationEmmiter: EventEmitter<[string, boolean]> = new EventEmitter<[string, boolean]>();
+  @Input() set registerDerivationEditor(derivationEditor: RegisterDerivationEditor) {
+    if (derivationEditor) {
+      this.derivationEditor = derivationEditor;
+      this.getDerivationType();
+      this.showDeriveRequest = true;
+      this.hideButtonByGestor();
+    }
+  }
+	@Output() derivationEmmiter: EventEmitter<DerivationEmmiter> = new EventEmitter<DerivationEmmiter>();
 
   constructor(private readonly formBuilder: FormBuilder,
-    private accountService: AccountService,
+    private readonly accountService: AccountService,
     private readonly permissionService: PermissionsService,
   ) { }
 
   ngOnInit(): void {
     this.formDeriveRequest = this.formBuilder.group({
-			coment: new FormControl(this._derivation, { validators: [Validators.required, NoWhitespaceValidator()] })
+			comment: new FormControl(this._derivation, { validators: [Validators.required, NoWhitespaceValidator()] })
 		});
     if (this.showDeriveRequest) {
-      this.getDerivationType();
-      this.editDerivationAvailable();
+      this.checkIfCanEditDerivation();
     }
-    this.setActions();
+    this.hideButtonByGestor();
   }
 
-  ngOnChanges(): void {
-    if (this.registerDerivationEditor) {
-      this.getDerivationType();
-      this.showDeriveRequest = true;
-      this.setActions();
-    }
+  hideButtonByGestor(): void {
+    this.permissionService.contextAssignments$().subscribe(role => { 
+      if (role.includes(ERole.GESTOR_DE_ACCESO_DE_DOMINIO)) this.canDerive = false;
+
+      if (this.derivationEditor){
+        if (role.includes(ERole.GESTOR_DE_ACCESO_LOCAL)) this.canDerive = false;
+        if (role.includes(ERole.GESTOR_DE_ACCESO_REGIONAL) && this.derivationEditor?.type === DOMAIN) this.canDerive = false;
+      }
+    });
   }
 
-  setActions(): void {
-    //DOMAIN
-    this.permissionService.hasContextAssignments$([GESTORES[0]]).subscribe(hasRole => { if(hasRole) this.canDerive = false });
-    if (this.registerDerivationEditor) {
-      //LOCAL
-      this.permissionService.hasContextAssignments$([GESTORES[1]]).subscribe(hasRole => { if(hasRole) this.canDerive = false });
-      //REGIONAL
-      this.permissionService.hasContextAssignments$([GESTORES[2]]).subscribe(hasRole => {
-        if (hasRole && this.registerDerivationEditor?.type === DOMAIN) { this.canDerive = false; }
-      });
-    }
-  }
-
-  editDerivationAvailable(): void {
+  checkIfCanEditDerivation(): void {
     this.accountService.getInfo().subscribe(userInfo => {
-      if (this.registerDerivationEditor.userId === userInfo.id) this.canEditDerivation = true;
+      if (this.derivationEditor.userId === userInfo.id) this.canEditDerivation = true;
     });
   }
 
   getDerivationType(): void {
-    if (this.registerDerivationEditor?.type === DOMAIN) this.registerDerivationEditor.derivationType = DERIVACION_DE_DOMINIO;
-    else this.registerDerivationEditor.derivationType = this.registerDerivationEditor?.type;
+    if (this.derivationEditor?.type === DOMAIN) this.derivationEditor.derivationType = DERIVACION_DE_DOMINIO;
+    else this.derivationEditor.derivationType = this.derivationEditor?.type;
   }
 
   openFormToDeriveRequest(): void {
@@ -89,20 +85,22 @@ export class DeriveRequestComponent implements OnInit {
     this.showDeriveForm = true;
   }
 
-  cancelDerivation(): void {
+  closeDerivationForm(): void {
     this.showDeriveForm = false;
+    if(this.editingDerivation) this.editingDerivation = false;
+    if (this.derivationEditor) this.showDeriveRequest = true;
   }
 
-  saveDerivation(): void {
-    this._derivation = this.formDeriveRequest.value.coment;
+  performDerivation(): void {
+    this._derivation = this.formDeriveRequest.value.comment;
 		this.showDeriveForm = false;
-    this.derivationEmmiter.emit([this._derivation, this.editingDerivation]);
+    this.derivationEmmiter.emit({derivation: this._derivation, canEdit: this.editingDerivation});
     this.editingDerivation = false;
     this.canEditDerivation = true;
-    this.setActions();
+    this.hideButtonByGestor();
   }
 
-  setEditDerivation(): void {
+  enableEditDerivation(): void {
     this.showDeriveRequest = false;
     this.showDeriveForm = true;
     this.editingDerivation = true;
@@ -111,5 +109,17 @@ export class DeriveRequestComponent implements OnInit {
 }
 
 interface FormDeriveRequest {
-  coment: FormControl<string | null>;
+  comment: FormControl<string | null>;
+}
+
+export interface DerivationEmmiter {
+  derivation: string;
+  canEdit: boolean;
+}
+
+export interface RegisterDerivationEditor extends RegisterEditor {
+	id: number;
+	type: EReferenceForwardingType;
+	derivationType?: string;
+	userId: number;
 }

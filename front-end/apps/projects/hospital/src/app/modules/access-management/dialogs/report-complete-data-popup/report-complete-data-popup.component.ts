@@ -13,10 +13,11 @@ import { PENDING } from '@access-management/constants/reference';
 import { ContextService } from '@core/services/context.service';
 import { NO_INSTITUTION } from '../../../home/home.component';
 import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/institutional-network-reference-report.service';
-import { RegisterDerivationEditor, RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
+import { RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
 import { PermissionsService } from '@core/services/permissions.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { convertDateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { DerivationEmmiter, RegisterDerivationEditor } from '../../components/derive-request/derive-request.component'
 
 
 const GESTORES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_LOCAL, ERole.GESTOR_DE_ACCESO_REGIONAL];
@@ -106,28 +107,37 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 			});
 	}
 
-	addDerivation(derivation: [string, boolean]): void {
-		this.derivation = derivation[0];
-		if (derivation[1]) 
-			this.institutionalNetworkReferenceReportService.updateDerivation(this.registerDeriveEditor$.getValue().id, derivation[0])
-			.subscribe(res => {
-				if (res) {
-					this.snackBarService.showSuccess('access-management.derive_request.SHOW_SUCCESS_EDIT');
-					this.updateDerivation();
-				}
-				else
-					this.snackBarService.showError('access-management.derive_request.SHOW_ERROR_DERIVATION');
-			});
-		else this.institutionalNetworkReferenceReportService.addDerivation(this.data.referenceId, derivation[0])
-		.subscribe(res => {
-			if (res) {
+	performDerivationAction (derivation: DerivationEmmiter): void {
+		this.derivation = derivation.derivation;
+		if (derivation.canEdit) 
+			this.editDerivation(derivation.derivation);
+		else 
+			this.addDerivation(derivation.derivation);
+	}
+
+	editDerivation(derivation: string): void {
+		this.institutionalNetworkReferenceReportService.updateDerivation(this.registerDeriveEditor$.getValue().id, derivation)
+		.subscribe(editSuccess => { 
+			if (editSuccess) {
+				this.snackBarService.showSuccess('access-management.derive_request.SHOW_SUCCESS_EDIT');
+				this.updateDerivation();
+			}
+			else
+				this.snackBarService.showError('access-management.derive_request.SHOW_ERROR_DERIVATION');
+		});
+	}
+
+	addDerivation(derivation: string): void {
+		this.institutionalNetworkReferenceReportService.addDerivation(this.data.referenceId, derivation)
+		.subscribe(creationSuccess => {
+			if (creationSuccess) {
 				this.snackBarService.showSuccess('access-management.derive_request.SHOW_SUCCESS_DERIVATION');
 				this.updateDerivation();
 				this.hasDerivationRequest = true;
 			}
 			else
 				this.snackBarService.showError('access-management.derive_request.SHOW_ERROR_DERIVATION');
-		});
+		})
 	}
 
 	private updateDerivation() {
