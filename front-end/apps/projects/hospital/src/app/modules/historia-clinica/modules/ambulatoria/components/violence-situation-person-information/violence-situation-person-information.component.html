@@ -148,7 +148,7 @@
 				<mat-label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.RELATION_PERSON_IN_VIOLENCE_SITUATION' | translate}}</mat-label>
 				<mat-select id="relation-person-violence-situation-label"
 					formControlName="relationPersonViolenceSituation"
-					placeholder="{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.RELATION_PERSON_IN_VIOLENCE_SITUATION' | translate}}">
+					placeholder="{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.RELATION_PERSON_IN_VIOLENCE_SITUATION' | translate}}"  (selectionChange)="updateValidationOtherRelation()">
 					<mat-option *ngFor="let opt of relations"
 						[value]="opt.value" >
 						{{opt.text}}

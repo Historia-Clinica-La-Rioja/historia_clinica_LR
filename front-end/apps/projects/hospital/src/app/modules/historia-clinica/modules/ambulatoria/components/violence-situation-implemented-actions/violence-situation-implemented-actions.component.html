@@ -22,7 +22,7 @@
                 <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_1' |
                     translate}}</label>
                 <mat-form-field appearance="outline" class="mt-10">
-                    <mat-select id="violence-situation-area-label" multiple formControlName="area" (change)="updateValidationOtherArea()"
+                    <mat-select id="violence-situation-area-label" multiple formControlName="area" (selectionChange)="updateValidationOtherArea()"
                         placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_1' | translate}}">
                         <mat-option *ngFor="let opt of areas" [value]="opt.value">
                             {{opt.text}}
@@ -63,7 +63,7 @@
                 <mat-form-field appearance="outline">
                     <mat-select id="violence-situation-establishment" multiple
                         formControlName="articulationEstablishmentList"
-                        placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_3' | translate}}">
+                        placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_3' | translate}}" (selectionChange)="updateValidationArticulationEstablishmentOther()">
                         <mat-option *ngFor="let opt of establishments" [value]="opt.value">
                             {{opt.text}}
                         </mat-option>
@@ -181,7 +181,7 @@
                 translate}}</label>
             <mat-form-field appearance="outline">
                 <mat-select id="violence-situation-organizations-extended" multiple
-                    formControlName="institutionComplaintsOrganizations" (change)="updateValidationAutorityName()"
+                    formControlName="institutionComplaintsOrganizations" (selectionChange)="updateValidationAutorityName()"
                     placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_10' | translate}}">
                     <mat-option *ngFor="let opt of organizationsExtended" [value]="opt.value">
                         {{opt.text}}

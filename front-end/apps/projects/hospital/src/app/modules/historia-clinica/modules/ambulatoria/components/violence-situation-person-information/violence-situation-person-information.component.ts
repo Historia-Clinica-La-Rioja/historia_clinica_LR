@@ -163,7 +163,6 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 			updateControlValidator(this.form, 'addressDepartmentId', Validators.required);
 			updateControlValidator(this.form, 'addressProvinceId', Validators.required);
 			updateControlValidator(this.form, 'relationPersonViolenceSituation', Validators.required);
-			updateControlValidator(this.form, 'whichTypeRelation', Validators.required);
 
 		} else {
 			updateControlValidator(this.form, 'lastname', []);
@@ -173,6 +172,13 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 			updateControlValidator(this.form, 'addressDepartmentId', []);
 			updateControlValidator(this.form, 'addressProvinceId', []);
 			updateControlValidator(this.form, 'relationPersonViolenceSituation', []);
+		}
+	}
+	
+	updateValidationOtherRelation(){
+		if(this.form.value.relationPersonViolenceSituation.includes(this.relationOptionOther)){
+			updateControlValidator(this.form, 'whichTypeRelation', Validators.required);
+		}else{
 			updateControlValidator(this.form, 'whichTypeRelation', []);
 		}
 	}
