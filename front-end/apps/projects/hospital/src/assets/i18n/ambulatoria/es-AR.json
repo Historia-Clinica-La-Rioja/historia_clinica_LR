@@ -796,7 +796,9 @@
                     "RISK_LEVEL": "Nivel de riesgo:",
                     "INIT_DATE": "Inicio:",
                     "LAST_UPDATE": "Última modificación:",
-                    "SEE_ALL": "Ver todas las situaciones de violencia"
+                    "SEE_ALL": "Ver todas las situaciones de violencia",
+                    "SEE_LESS": "Ver menos",
+                    "SITUATION_NUMBER": "Situación #{{id}}"
                 },
                 "dialog": {
                     "TEXT_FREE_LABEL":"Texto libre",

@@ -1,4 +1,6 @@
 import { Component, Input } from '@angular/core';
+import { EViolenceEvaluationRiskLevel, ViolenceReportSituationDto } from '@api-rest/api-model';
+import { DateFormat } from '@core/utils/date.utils';
 
 @Component({
 	selector: 'app-violence-situation-list',
@@ -7,5 +9,11 @@ import { Component, Input } from '@angular/core';
 })
 export class ViolenceSituationListComponent {
 
-	@Input() violenceSituations = [];
+	@Input() violenceSituations: ViolenceReportSituationDto[] = [];
+
+	DateFormat = DateFormat;
+
+	LOW = EViolenceEvaluationRiskLevel.LOW;
+	MEDIUM = EViolenceEvaluationRiskLevel.MEDIUM;
+	HIGH = EViolenceEvaluationRiskLevel.HIGH;
 }

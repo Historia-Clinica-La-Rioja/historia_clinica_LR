@@ -4,6 +4,8 @@ import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { ActivatedRoute } from '@angular/router';
 import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
 import { VIOLENCE_SITUATION } from '@historia-clinica/constants/summaries';
+import { PageDto, ViolenceReportSituationDto } from '@api-rest/api-model';
+import { ViolenceReportFacadeService } from '@api-rest/services/violence-report-facade.service';
 
 @Component({
 	selector: 'app-violence-situations',
@@ -12,37 +14,33 @@ import { VIOLENCE_SITUATION } from '@historia-clinica/constants/summaries';
 })
 export class ViolenceSituationsComponent implements OnInit {
 	
-	constructor(private readonly dockPopupService: DockPopupService, private route: ActivatedRoute) { }
+	constructor(private readonly dockPopupService: DockPopupService, 
+				private route: ActivatedRoute,
+				private violenceSituationReportFacadeService: ViolenceReportFacadeService) { }
 
 	patientId: number;
 	header: SummaryHeader = VIOLENCE_SITUATION;
-	violenceSituations = [
-		{
-			id: 'Situación #1',
-			type: 'Física',
-			modality: 'Doméstica',
-			riskLevel: 'Alto',
-			initDate: '11/08/23',
-			lastUpdate: '18/08/23'
-		},
-		{
-			id: 'Situación #2',
-			type: 'Física',
-			modality: 'Doméstica',
-			riskLevel: 'Alto',
-			initDate: '11/08/23',
-			lastUpdate: '18/08/23'
-		},
-	];
+	violenceSituations: PageDto<ViolenceReportSituationDto>;
+	showSeeAll: boolean = true;
 
 	ngOnInit(): void {
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
-			})
+			});
+		this.setPatientViolenceSituations(true);
+		this.violenceSituationReportFacadeService.violenceSituations$
+			.subscribe((result: PageDto<ViolenceReportSituationDto>) => {
+				this.violenceSituations = result;
+				this.showSeeAll = result?.content.length !== result?.totalElementsAmount;
+			});
 	}
 
 	openViolenceSituationDockPopUp() {
 		this.dockPopupService.open(ViolenceSituationDockPopupComponent,this.patientId);
 	}
+
+	setPatientViolenceSituations(mustBeLimited: boolean) {
+		this.violenceSituationReportFacadeService.setAllPatientViolenceSituations(this.patientId, mustBeLimited);
+	}	
 }

@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { ViolenceReportDto } from '@api-rest/api-model';
+import { ViolenceReportFacadeService } from '@api-rest/services/violence-report-facade.service';
 import { ViolenceReportService } from '@api-rest/services/violence-report.service';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
@@ -18,11 +19,14 @@ export class ViolenceSituationDockPopupComponent implements OnInit{
 	confirmForm: Observable<boolean> = of(false);
 	newViolenceSituation: ViolenceReportDto;
 	viewError = false;
-	constructor(@Inject(OVERLAY_DATA) public patientId: number,public dockPopupRef: DockPopupRef,
-	 private readonly violenceReportService: ViolenceReportService, private snackbarServices: SnackBarService, 
-	 private readonly violenceAggressorsNewConsultationService: ViolenceAggressorsNewConsultationService,
-	 private readonly violenceSituationService: ViolenceSituationsNewConsultationService,
-	 private readonly violenceModalityService: ViolenceModalityNewConsultationService) {
+	constructor(@Inject(OVERLAY_DATA) public patientId: number,
+				public dockPopupRef: DockPopupRef,
+				private readonly violenceReportService: ViolenceReportService, 
+				private snackbarServices: SnackBarService, 
+				private readonly violenceAggressorsNewConsultationService: ViolenceAggressorsNewConsultationService,
+				private readonly violenceSituationService: ViolenceSituationsNewConsultationService,
+				private readonly violenceModalityService: ViolenceModalityNewConsultationService, 
+	 			private readonly violenceReportFacadeService: ViolenceReportFacadeService) {
 		this.newViolenceSituation = {
 			aggressorData: null,
 			episodeData: null,
@@ -77,6 +81,7 @@ export class ViolenceSituationDockPopupComponent implements OnInit{
 
 	saveSituationViolence() {
 		this.violenceReportService.saveNewViolenceReport(this.newViolenceSituation, this.patientId).subscribe(res=>{
+		this.violenceReportFacadeService.setAllPatientViolenceSituations(this.patientId, true);
 		this.snackbarServices.showSuccess('ambulatoria.paciente.violence-situations.dialog.SUCCESS')
 		this.dockPopupRef.close();
 	})
