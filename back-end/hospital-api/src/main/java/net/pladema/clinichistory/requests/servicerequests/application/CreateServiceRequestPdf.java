@@ -228,13 +228,14 @@ public class CreateServiceRequestPdf {
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("recipe", false);
         ctx.put("order", true);
+		ctx.put("transcribed", false);
         ctx.put("request", serviceRequestBo);
         ctx.put("patient", patientDto);
-        ctx.put("professional", documentAuthorFinder.getAuthor(serviceRequestBo.getId()));
+		var professionalPersonId = documentAuthorFinder.getAuthor(serviceRequestBo.getId()).getPersonId();
+        ctx.put("professionalName", sharedPersonPort.getCompletePersonNameById(professionalPersonId));
         ctx.put("patientCoverage", patientCoverageDto);
         ctx.put("institution", institutionDto);
         var date = serviceRequestBo.getRequestDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        ctx.put("nameSelfDeterminationFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
         ctx.put("requestDate", date);
 
         log.trace("Output -> {}", ctx);

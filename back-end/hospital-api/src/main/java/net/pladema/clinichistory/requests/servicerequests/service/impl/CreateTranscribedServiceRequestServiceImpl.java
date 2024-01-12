@@ -68,7 +68,7 @@ public class CreateTranscribedServiceRequestServiceImpl implements CreateTranscr
 		Integer studyId = diagnosticReportRepository.save(getNewDiagnosticReport(patientInfoBo, transcribedServiceRequestBo)).getId();
 
         TranscribedServiceRequest newServiceRequest = createServiceRequest(transcribedServiceRequestBo, studyId);
-		transcribedServiceRequestBo.setId(newServiceRequest.getId());
+		transcribedServiceRequestBo.setTranscribedServiceRequestId(newServiceRequest.getId());
 		LOG.debug(OUTPUT, transcribedServiceRequestBo);
         return newServiceRequest.getId();
     }

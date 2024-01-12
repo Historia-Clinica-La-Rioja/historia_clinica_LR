@@ -19,7 +19,7 @@ import net.pladema.clinichistory.requests.servicerequests.domain.IServiceRequest
 @NoArgsConstructor
 public class TranscribedServiceRequestBo implements IServiceRequestBo {
 
-    private Integer id;
+    private Integer transcribedServiceRequestId;
 
     private Integer patientId;
 
@@ -37,10 +37,10 @@ public class TranscribedServiceRequestBo implements IServiceRequestBo {
 
     private LocalDateTime creationDate;
 
-    public TranscribedServiceRequestBo(Integer id, Integer patientId, String healthConditionSctid, String healthConditionPt, String cie10Codes, String studySctid, String studyPt,
+    public TranscribedServiceRequestBo(Integer transcribedServiceRequestId, Integer patientId, String healthConditionSctid, String healthConditionPt, String cie10Codes, String studySctid, String studyPt,
                                        String healthcareProfessionalName, String institutionName,
                                        LocalDateTime creationDate) {
-        this.id = id;
+        this.transcribedServiceRequestId = transcribedServiceRequestId;
         this.patientId = patientId;
         this.healthCondition = new SnomedBo(healthConditionSctid, healthConditionPt);
         this.cie10Codes = cie10Codes;
@@ -57,6 +57,11 @@ public class TranscribedServiceRequestBo implements IServiceRequestBo {
         this.healthcareProfessionalName = transcribedPrescriptionDto.getHealthcareProfessionalName();
         this.institutionName = transcribedPrescriptionDto.getInstitutionName();
         this.observations = transcribedPrescriptionDto.getObservations();
+    }
+
+    @Override
+    public Integer getServiceRequestId() {
+        return transcribedServiceRequestId;
     }
 
     @Override

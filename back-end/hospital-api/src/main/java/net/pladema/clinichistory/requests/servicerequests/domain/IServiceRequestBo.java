@@ -5,6 +5,8 @@ import java.util.List;
 
 public interface IServiceRequestBo {
 
+    Integer getServiceRequestId();
+
     LocalDate getReportDate();
 
     List<String> getProblemsPt();
