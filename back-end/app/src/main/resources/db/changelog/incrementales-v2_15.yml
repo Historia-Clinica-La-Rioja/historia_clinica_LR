@@ -2,7 +2,7 @@ databaseChangeLog:
     - logicalFilePath: incrementales-v2_15
 
     - changeSet:
-          id: dropView-v_clinic_history_9
+          id: dropView-v_clinic_history_10
           author: mromero
           dbms: "postgresql"
           changes:
@@ -10,8 +10,8 @@ databaseChangeLog:
                     viewName: v_clinic_history
 
     - changeSet:
-          id: createView-v_clinic_history_10
-          comment: Create view v_clinic_history_10
+          id: createView-v_clinic_history_11
+          comment: Create view v_clinic_history_11
           author: mromero
           changes:
               - createView:
@@ -298,7 +298,7 @@ databaseChangeLog:
                         join diagnostic_report dr on (dr.id = ddr.diagnostic_report_id)
                         join health_condition hc on (hc.id=dr.health_condition_id)
                         where ddr.document_id = d.id and d.type_id = 6 and dr.status_id <> '89925002')
-                        select string_agg('Estudio: ' || s.pt || (case when dr.note_id is not null and dr.status_id = '261782000' then '. Resultado: ' || n.description || ' (' || to_char(dr.effective_time, 'dd-mm-yyyy') || ')' else ' (Pendiente)' end),'\n')
+                        select string_agg('Estudio: ' || s.pt || (case when dr.note_id is not null and dr.status_id = '261782000' then '.\nResultado: ' || n.description || ' (' || to_char(dr.effective_time, 'dd-mm-yyyy') || ')' else '. (Pendiente)' end),'\n')
                         from document_diagnostic_report ddr
                         join diagnostic_report dr on (dr.id=ddr.diagnostic_report_id)
                         join health_condition hc on (hc.id=dr.health_condition_id)

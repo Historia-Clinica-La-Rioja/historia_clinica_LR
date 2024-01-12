@@ -34,7 +34,8 @@ public class CHNursingConsultationBo extends CHDocumentBo {
 
 	@Override
 	public List<ClinicalRecordBo> getClinicalRecords() {
-		List<String> terms = Stream.of(bloodType.replace("−", "&ndash;"), anthropometricData, riskFactors, problems, note).filter(term-> term!=null && !term.isBlank()).collect(Collectors.toList());
+		List<String> terms = Stream.of(bloodType, anthropometricData, riskFactors, problems, note).filter(term-> term!=null && !term.isBlank()).collect(Collectors.toList());
+		terms = terms.stream().map(term -> term.replace("&", "&#38;").replace("<", "&lt;").replace(">", "&gt;").replace("'", "&#39;").replace("\"", "&#34;").replace("−", "&ndash;")).collect(Collectors.toList());
 		List<ClinicalRecordBo> result = new ArrayList<>();
 		if(!terms.isEmpty()) {
 			String evolution = Joiner.on(". <br />").join(terms);
