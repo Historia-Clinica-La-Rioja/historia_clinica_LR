@@ -44,7 +44,7 @@
     <div fxLayout="row">
         <span>{{'ambulatoria.paciente.violence-situations.dialog.violent-person-information.questions.QUESTION_3' |
             translate}}: &nbsp;</span>
-        <span> {{ getDescriptionBasicOptions(person.securityForceRelatedData?.belongsToSecurityForces) }} {{person.securityForceRelatedData?.inDuty? 'Activo' : 'Retirado'}}  {{ person.securityForceRelatedData?.securityForceTypes? getDescriptionSecurityForceType(person.securityForceRelatedData?.securityForceTypes) : ''}} </span>
+        <span> {{ getDescriptionBasicOptions(person.securityForceRelatedData?.belongsToSecurityForces) }} {{ person.securityForceRelatedData.inDuty === true ? 'Activo' : (person.securityForceRelatedData.inDuty === false ? 'Retirado' : '') }} {{ person.securityForceRelatedData?.securityForceTypes? getDescriptionSecurityForceType(person.securityForceRelatedData?.securityForceTypes) : ''}} </span>
     </div>
     <div fxLayout="row">
         <span>{{'ambulatoria.paciente.violence-situations.dialog.violent-person-information.questions.QUESTION_5' |
