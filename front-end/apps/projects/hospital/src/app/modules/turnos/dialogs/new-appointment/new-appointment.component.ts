@@ -43,6 +43,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { differenceInDays } from 'date-fns';
 import { SearchAppointmentCriteria } from '@turnos/components/search-appointments-in-care-network/search-appointments-in-care-network.component';
 import { MODALITYS_TYPES } from '@turnos/constants/appointment';
+import { TranscribedOrderService } from '@turnos/services/transcribed-order.service';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -114,6 +115,7 @@ export class NewAppointmentComponent implements OnInit {
 		private readonly equipmentAppointmentFacade: EquipmentAppointmentsFacadeService,
 		private prescripcionesService: PrescripcionesService,
 		private readonly translateService: TranslateService,
+		private readonly transcribedOrderService: TranscribedOrderService,
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		if (this.data.modalityAttention) {
@@ -192,6 +194,10 @@ export class NewAppointmentComponent implements OnInit {
 			this.editableStep1 = false;
 		}
 		this.setModalityValidation(this.modalitySelected);
+
+		this.transcribedOrderService.transcribedOrder$.subscribe(transcribedOrder => {
+			this.transcribedOrder = transcribedOrder;
+		})
 	}
 
 	setModalityValidation(modality) {
@@ -428,8 +434,7 @@ export class NewAppointmentComponent implements OnInit {
 			this.patientMedicalOrders = [];
 			if (this.transcribedOrder) {
 				this.prescripcionesService.deleteTranscribedOrder(this.patientId, this.transcribedOrder.serviceRequestId).subscribe(() => {
-					this.transcribedOrder = null;
-					this.patientMedicalOrderTooltipDescription = ''
+					this.transcribedOrderService.resetTranscribedOrder();
 				});
 			}
 		}
@@ -483,7 +488,10 @@ export class NewAppointmentComponent implements OnInit {
 
 	cancelBtnActions() {
 		if (this.transcribedOrder) {
-			this.prescripcionesService.deleteTranscribedOrder(this.patientId, this.transcribedOrder.serviceRequestId).subscribe();
+			this.prescripcionesService.deleteTranscribedOrder(this.patientId, this.transcribedOrder.serviceRequestId).subscribe(() => {
+				this.transcribedOrderService.resetTranscribedOrder();
+			});
+			
 		}
 		this.clearQueryParams();
 	}
@@ -545,6 +553,7 @@ export class NewAppointmentComponent implements OnInit {
 			let orderId = medicalOrder?.serviceRequestId;
 			let studyId = medicalOrder?.studyId;
 			if (medicalOrder?.isTranscribed) {
+				this.transcribedOrderService.resetTranscribedOrder();
 				return this.equipmentAppointmentFacade.addAppointmentWithTranscribedOrder(newAppointment, orderId);
 			}
 			return this.equipmentAppointmentFacade.addAppointment(newAppointment, orderId, studyId);
