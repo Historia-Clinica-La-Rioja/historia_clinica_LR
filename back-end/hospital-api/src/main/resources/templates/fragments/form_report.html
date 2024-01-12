@@ -31,6 +31,13 @@
             padding: 3px;
         }
 
+        .row-data > div, .professional-name {
+            font-family: inherit;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            vertical-align: middle;
+        }
+
         .space {
             height: 25px;
         }
@@ -213,10 +220,7 @@
     <div class="row-data">
         <div class="complete-name" th:text="${formalPatientName}"></div>
         <div class="address" th:text="${address}"></div>
-        <div class="date">
-            <label th:if="${consultationDate != null}" th:text="${consultationDate}"></label>
-            <label th:unless="${consultationDate != null}" th:text="${reportDate}"></label>
-        </div>
+        <div class="date" th:text="${consultationDate != null} ? ${consultationDate} : ${reportDate}"></div>
     </div>
     <div class="row">
         <div class="gender">4. SEXO</div>
@@ -233,12 +237,7 @@
         <div class="age" th:text="${patientAge}"></div>
         <div class="doc-number" th:text="${documentNumber}"></div>
         <div class="doc-type" th:text="${documentType}"></div>
-        <div class="ce">
-            <label th:if="${ce}">X</label>
-            <label th:unless="${ce}">
-                &nbsp;
-            </label>
-        </div>
+        <div class="ce" th:text="${ce} ? 'X' : ''" ></div>
         <div class="room" th:text="${room}"></div>
         <div class="bed" th:text="${bed}"></div>
         <div class="hcn" th:text="${hcnId}"></div>
@@ -304,7 +303,7 @@
         <div class="signature">
             <div>&nbsp;</div>
             <div class="signature-data">23. FIRMA PROFESIONAL</div>
-            <div th:text="${completeProfessionalName}"></div>
+            <div class="professional-name" th:text="${completeProfessionalName}"></div>
             <span th:each="license,iter: ${licenses}">
                 <div style="margin-bottom: -30px" th:text="${license}"></div>
             </span>
