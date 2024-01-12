@@ -20,27 +20,23 @@ import net.pladema.emergencycare.service.domain.EmergencyCareEpisodeInProgressBo
 import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
 import net.pladema.emergencycare.service.domain.PatientECEBo;
 import net.pladema.emergencycare.service.domain.PoliceInterventionDetailsBo;
-import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.emergencycare.triage.service.TriageService;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
-import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 import net.pladema.patient.controller.service.PatientExternalService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -89,22 +85,6 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         this.historicEmergencyEpisodeService = historicEmergencyEpisodeService;
 		this.patientExternalService = patientExternalService;
     }
-
-	@Override
-	public Page<EmergencyCareBo> getAll(Integer institutionId, Pageable pageable) {
-		LOG.debug("Input parameters -> institutionId {}", institutionId);
-		Page<EmergencyCareVo> resultQuery = emergencyCareEpisodeRepository.getAll(institutionId, pageable);
-		Page<EmergencyCareBo> result = resultQuery.map(EmergencyCareBo::new);
-		result.forEach(ec -> {
-			ec.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, ec.getCreatedOn()));
-			if (ec.getEmergencyCareStateId().equals(EEmergencyCareState.ATENCION.getId())) {
-				ProfessionalPersonBo professional = new ProfessionalPersonBo(emergencyCareEpisodeRepository.getEmergencyCareEpisodeRelatedProfessionalInfo(ec.getId()));
-				ec.setRelatedProfessional(professional);
-			}
-		});
-		LOG.debug(OUTPUT, result);
-		return result;
-	}
 
 	@Override
 	public EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgressByInstitution(Integer institutionId, Integer patientId) {

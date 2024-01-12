@@ -2,6 +2,8 @@ package net.pladema.emergencycare.controller.mapper;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import net.pladema.emergencycare.controller.dto.*;
+import net.pladema.emergencycare.domain.EmergencyCareEpisodeFilterBo;
+import net.pladema.emergencycare.infrastructure.input.dto.EmergencyCareEpisodeFilterDto;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.service.domain.EmergencyCareEpisodeInProgressBo;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareEntrance;
@@ -116,5 +118,6 @@ public interface EmergencyCareMapper {
 	@Named("toEmergencyCareEpisodeInProgressDto")
 	EmergencyCareEpisodeInProgressDto toEmergencyCareEpisodeInProgressDto(EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgressBo);
 
-
+	@Named("fromEmergencyCareEpisodeFilterDto")
+	EmergencyCareEpisodeFilterBo fromEmergencyCareEpisodeFilterDto(EmergencyCareEpisodeFilterDto emergencyCareEpisodeFilterDto);
 }

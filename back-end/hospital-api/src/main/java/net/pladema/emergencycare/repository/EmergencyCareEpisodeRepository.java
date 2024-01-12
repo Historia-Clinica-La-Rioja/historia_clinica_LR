@@ -25,25 +25,6 @@ import java.util.Optional;
 public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARepository<EmergencyCareEpisode, Integer> {
 
 	@Transactional(readOnly = true)
-	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe, pa.typeId, " +
-			"petd.nameSelfDetermination, dso.description, tc, s.description, b) "+
-			" FROM EmergencyCareEpisode ece "+
-			" LEFT JOIN Patient pa ON (pa.id = ece.patientId) "+
-			" LEFT JOIN Person pe ON (pe.id = pa.personId) "+
-			" LEFT JOIN DoctorsOffice dso ON (dso.id = ece.doctorsOfficeId) "+
-			" LEFT JOIN PersonExtended petd ON (pe.id = petd.id) "+
-			" JOIN TriageCategory tc ON (tc.id = ece.triageCategoryId) " +
-			" LEFT JOIN Shockroom s ON (s.id = ece.shockroomId)" +
-			" LEFT JOIN Bed b ON (ece.bedId = b.id) " +
-			" WHERE (ece.emergencyCareStateId = " + EmergencyCareState.EN_ATENCION +
-				" OR ece.emergencyCareStateId = " + EmergencyCareState.EN_ESPERA +
-				" OR ece.emergencyCareStateId = " + EmergencyCareState.CON_ALTA_MEDICA +
-				" OR ece.emergencyCareStateId = " + EmergencyCareState.CON_ALTA_ADMINISTRATIVA + " ) " +
-			" AND ece.institutionId = :institutionId " +
-			"ORDER BY ece.emergencyCareStateId, ece.triageCategoryId, ece.creationable.createdOn")
-	Page<EmergencyCareVo> getAll(@Param("institutionId") Integer institutionId, Pageable pageable);
-
-	@Transactional(readOnly = true)
 	@Query( value = "SELECT ece.id " +
 			" FROM EmergencyCareEpisode ece " +
 			" WHERE ece.patientId = :patientId AND ( ece.emergencyCareStateId = " + EmergencyCareState.EN_ESPERA +

@@ -1,0 +1,78 @@
+package net.pladema.emergencycare.infrastructure.output;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatientType;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import lombok.AllArgsConstructor;
+import net.pladema.emergencycare.application.port.output.EmergencyCareEpisodeListStorage;
+import net.pladema.emergencycare.domain.EmergencyCareEpisodeFilterBo;
+import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
+import net.pladema.emergencycare.repository.entity.EmergencyCareState;
+import net.pladema.emergencycare.service.domain.EmergencyCareBo;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@AllArgsConstructor
+@Repository
+public class EmergencyCareEpisodeListStorageImpl implements EmergencyCareEpisodeListStorage {
+
+	private EntityManager entityManager;
+
+	private FeatureFlagsService featureFlagsService;
+
+	@Override
+	public Page<EmergencyCareBo> getAllEpisodeListByFilter(Integer institutionId, EmergencyCareEpisodeFilterBo filter, Pageable pageable) {
+		String sqlDataSelectStatement =
+				"SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe, pa.typeId, petd.nameSelfDetermination, " +
+						"dso.description, tc, s.description, b) ";
+
+		String sqlFromStatement =
+				"FROM EmergencyCareEpisode ece " +
+						"LEFT JOIN Patient pa ON (pa.id = ece.patientId) " +
+						"LEFT JOIN Person pe ON (pe.id = pa.personId) " +
+						"LEFT JOIN DoctorsOffice dso ON (dso.id = ece.doctorsOfficeId) " +
+						"LEFT JOIN PersonExtended petd ON (pe.id = petd.id) " +
+						"JOIN TriageCategory tc ON (tc.id = ece.triageCategoryId) " +
+						"LEFT JOIN Shockroom s ON (s.id = ece.shockroomId) " +
+						"LEFT JOIN Bed b ON (ece.bedId = b.id) ";
+
+		String sqlWhereStatement =
+				"WHERE (ece.emergencyCareStateId = " + EmergencyCareState.EN_ATENCION +
+						" OR ece.emergencyCareStateId = " + EmergencyCareState.EN_ESPERA +
+						" OR ece.emergencyCareStateId = " + EmergencyCareState.CON_ALTA_MEDICA + " ) " +
+						"AND ece.institutionId = " + institutionId +
+						(filter.getTriageCategoryId() != null ? " AND ece.triageCategoryId = " + filter.getTriageCategoryId() : " ") +
+						(filter.getTypeId() != null ? " AND ece.emergencyCareTypeId = " + filter.getTypeId() : " ") +
+						(filter.getPatientId() != null ? " AND pa.id = " + filter.getPatientId() : " ") +
+						(filter.getIdentificationNumber() != null ? " AND pe.identificationNumber LIKE '%" + filter.getIdentificationNumber() + "%'" : " ") +
+						(filter.getPatientFirstName() != null ? featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) ? " AND ((petd.nameSelfDetermination IS NOT NULL AND petd.nameSelfDetermination LIKE '%" + filter.getPatientFirstName() + "%') OR (petd.nameSelfDetermination IS NULL AND pe.firstName LIKE '%" + filter.getPatientFirstName() + "%'))" : " AND pe.firstName LIKE '%" + filter.getPatientFirstName() + "%'" : " ") +
+						(filter.getPatientLastName() != null ? " AND pe.lastName LIKE '%" + filter.getPatientLastName() + "%'" : " ") +
+						(filter.getMustBeTemporal() != null && filter.getMustBeTemporal() ? " AND pa.typeId = " + EPatientType.TEMPORARY.getId() : " ") +
+						(filter.getMustBeEmergencyCareTemporal() != null && filter.getMustBeEmergencyCareTemporal() ? " AND pa.typeId = " + EPatientType.EMERGENCY_CARE_TEMPORARY.getId() : " ");
+
+		String sqlOrderByStatement = "ORDER BY ece.emergencyCareStateId, ece.triageCategoryId, ece.creationable.createdOn";
+
+		List<EmergencyCareVo> resultData = entityManager.createQuery(sqlDataSelectStatement + sqlFromStatement + sqlWhereStatement + sqlOrderByStatement)
+				.setMaxResults(pageable.getPageSize()) //LIMIT
+				.setFirstResult(pageable.getPageSize() * pageable.getPageNumber()) //OFFSET
+				.getResultList();
+
+		long totalResultAmount = countTotalAmountOfElements(sqlFromStatement + sqlWhereStatement);
+		List<EmergencyCareBo> result = resultData.stream().map(EmergencyCareBo::new).collect(Collectors.toList());
+		return new PageImpl<>(result, pageable, totalResultAmount);
+	}
+
+	private long countTotalAmountOfElements(String fromAndWhereStatement) {
+		String sqlCountSelectStatement = "SELECT COUNT(1) ";
+		return (long) entityManager.createQuery(sqlCountSelectStatement + fromAndWhereStatement).getSingleResult();
+	}
+
+}

@@ -5,15 +5,10 @@ import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.service.domain.EmergencyCareEpisodeInProgressBo;
 import net.pladema.emergencycare.service.domain.PatientECEBo;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface  EmergencyCareEpisodeService {
-
-	Page<EmergencyCareBo> getAll(Integer institutionId, Pageable pageable);
 
     EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgressByInstitution(Integer institutionId, Integer patientId);
 

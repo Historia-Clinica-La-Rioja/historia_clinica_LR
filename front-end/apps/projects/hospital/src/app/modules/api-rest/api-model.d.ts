@@ -1357,6 +1357,17 @@ export interface EmergencyCareDto extends Serializable {
     reasons: SnomedDto[];
 }
 
+export interface EmergencyCareEpisodeFilterDto {
+    identificationNumber: string;
+    mustBeEmergencyCareTemporal: boolean;
+    mustBeTemporal: boolean;
+    patientFirstName: string;
+    patientId: number;
+    patientLastName: string;
+    triageCategoryId: number;
+    typeId: number;
+}
+
 export interface EmergencyCareEpisodeInProgressDto {
     id?: number;
     inProgress: boolean;

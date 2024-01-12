@@ -11,7 +11,11 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import ar.lamansys.sgh.shared.infrastructure.input.service.datastructures.PageDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import net.pladema.emergencycare.application.GetAllEpisodeListByFilter;
 import net.pladema.emergencycare.controller.dto.ECAdministrativeDto;
 import net.pladema.emergencycare.controller.dto.ECAdultGynecologicalDto;
 import net.pladema.emergencycare.controller.dto.ECPediatricDto;
@@ -19,6 +23,8 @@ import net.pladema.emergencycare.controller.dto.EmergencyCareListDto;
 import net.pladema.emergencycare.controller.dto.NewEmergencyCareDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.controller.mapper.TriageRiskFactorMapper;
+import net.pladema.emergencycare.domain.EmergencyCareEpisodeFilterBo;
+import net.pladema.emergencycare.infrastructure.input.dto.EmergencyCareEpisodeFilterDto;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
@@ -53,6 +59,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/institution/{institutionId}/emergency-care/episodes")
 @Tag(name = "Emergency care episodes", description = "Emergency care episodes")
@@ -81,36 +88,19 @@ public class EmergencyCareEpisodeController {
 
 	private final FetchECStateClinicalObservations fetchECStateClinicalObservations;
 
-	public EmergencyCareEpisodeController(EmergencyCareEpisodeService emergencyCareEpisodeService,
-										  EmergencyCareMapper emergencyCareMapper,
-										  ReasonExternalService reasonExternalService,
-										  RiskFactorExternalService riskFactorExternalService,
-										  PatientService patientService,
-										  SnomedMapper snomedMapper,
-										  TriageRiskFactorMapper triageRiskFactorMapper, LocalDateMapper localDateMapper,
-										  RiskFactorMapper riskFactorMapper, 
-                                          FetchECStateClinicalObservations fetchECStateClinicalObservations){
-        super();
-        this.emergencyCareEpisodeService = emergencyCareEpisodeService;
-        this.emergencyCareMapper=emergencyCareMapper;
-        this.reasonExternalService = reasonExternalService;
-        this.riskFactorExternalService = riskFactorExternalService;
-		this.patientService = patientService;
-        this.snomedMapper = snomedMapper;
-        this.triageRiskFactorMapper = triageRiskFactorMapper;
-        this.localDateMapper = localDateMapper;
-		this.riskFactorMapper = riskFactorMapper;
-		this.fetchECStateClinicalObservations = fetchECStateClinicalObservations;
-    }
+	private final ObjectMapper objectMapper;
+
+	private final GetAllEpisodeListByFilter getAllEpisodeListByFilter;
 
     @GetMapping
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
-	public PageDto<EmergencyCareListDto> getAll(@PathVariable(name = "institutionId") Integer institutionId,
-												@RequestParam(name = "pageNumber") Integer pageNumber,
-												@RequestParam(name = "pageSize") Integer pageSize) {
+	public PageDto<EmergencyCareListDto> getAll(@PathVariable(name = "institutionId") Integer institutionId,												@RequestParam(name = "pageNumber") Integer pageNumber,
+												@RequestParam(name = "pageSize") Integer pageSize,
+												@RequestParam(name = "filter") String filterData) throws JsonProcessingException {
 		LOG.debug("Input parameters -> institutionId {}, pageNumber {}, pageSize {}", institutionId, pageNumber, pageSize);
+		EmergencyCareEpisodeFilterBo filter = emergencyCareMapper.fromEmergencyCareEpisodeFilterDto(objectMapper.readValue(filterData, EmergencyCareEpisodeFilterDto.class));
 		Pageable pageable = PageRequest.of(pageNumber, pageSize);
-		Page<EmergencyCareBo> episodes = emergencyCareEpisodeService.getAll(institutionId, pageable);
+		Page<EmergencyCareBo> episodes = getAllEpisodeListByFilter.run(institutionId, filter, pageable);
 		Page<EmergencyCareListDto> result = episodes.map(emergencyCareMapper::toEmergencyCareListDto);
 		LOG.debug("Output -> {}", result);
 		return PageDto.fromPage(result);
