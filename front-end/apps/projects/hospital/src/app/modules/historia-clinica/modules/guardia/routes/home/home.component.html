@@ -148,18 +148,8 @@
 							<mat-slide-toggle (change)="filter()" formControlName="emergencyCareTemporary">
 							</mat-slide-toggle>
 						</div>
-
-						<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px"
-							class="slide-toggle-wrapper">
-							<mat-label translate="guardia.home.episodes.filters.EMERGENCY_CARE_ADMINISTRATIVE_DISCHARGE"></mat-label>
-							<mat-slide-toggle (change)="filter()" formControlName="administrativeDischarge">
-							</mat-slide-toggle>
-						</div>
-
 					</form>
-
 				</div>
-
 			</div>
 
 			<div results fxLayout="column" fxLayoutGap="15px" fxFlexFill>
@@ -284,7 +274,7 @@
 
 <ng-template #noData>
 	<div id="no-data" fxFlex="100%" fxLayout="column" fxLayoutAlign="center">
-		<h2 *ngIf="episodesOriginal?.length || filterService.hasFilters() else noActiveEpisodes" class="mat-h2"
+		<h2 *ngIf="episodes?.length || filterService.hasFilters() else noActiveEpisodes" class="mat-h2"
 			style="text-align: center" translate="guardia.home.episodes.NO_DATA_FOR_FILTER">
 		</h2>
 		<ng-template #noActiveEpisodes>

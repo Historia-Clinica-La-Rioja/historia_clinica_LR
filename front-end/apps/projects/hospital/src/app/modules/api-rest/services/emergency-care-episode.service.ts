@@ -8,7 +8,8 @@ import {
 	EmergencyCareListDto,
 	DateTimeDto,
 	RiskFactorDto,
-	PageDto
+	PageDto,
+	EmergencyCareEpisodeFilterDto
 } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -29,9 +30,9 @@ export class EmergencyCareEpisodeService {
 	) {
 	}
 
-	getAll(pageSize: number, pageNumber: number): Observable<PageDto<EmergencyCareListDto>> {
+	getAll(pageSize: number, pageNumber: number, filter: EmergencyCareEpisodeFilterDto): Observable<PageDto<EmergencyCareListDto>> {
 		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId + BASIC_URL_SUFIX}/episodes`;
-		let queryParam = new HttpParams().append('pageNumber', pageNumber).append('pageSize', pageSize);
+		let queryParam = new HttpParams().append('pageNumber', pageNumber).append('pageSize', pageSize).append('filter', JSON.stringify(filter));
 		return this.http.get<PageDto<EmergencyCareListDto>>(url, { params: queryParam });
 	}
 

@@ -9,7 +9,8 @@ import {
 	MasterDataDto, MasterDataInterface,
 	PatientPhotoDto,
 	ProfessionalPersonDto,
-	PageDto
+	PageDto,
+	EmergencyCareEpisodeFilterDto
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
@@ -61,7 +62,6 @@ export class HomeComponent implements OnInit {
 
 	loading = true;
 	episodes: Episode[];
-	episodesOriginal: Episode[];
 	patientsPhotos: PatientPhotoDto[];
 	elementsAmount: number;
 
@@ -108,24 +108,37 @@ export class HomeComponent implements OnInit {
 	}
 
 	loadEpisodes(pageNumber: number): void {
-		this.emergencyCareEpisodeService.getAll(this.PAGE_SIZE, pageNumber)
+		const filterData: EmergencyCareEpisodeFilterDto = this.getFilterData();
+		this.emergencyCareEpisodeService.getAll(this.PAGE_SIZE, pageNumber, filterData)
 			.pipe(
 				tap(result => this.elementsAmount = result.totalElementsAmount),
 				map((episodes: PageDto<EmergencyCareListDto>) =>
 					episodes.content.map(episode => this.setWaitingTime(episode))
 				)
 			)
-			.subscribe((episodes: any[]) => {
-				this.episodes = this.setPatientNames(episodes);
-				this.episodesOriginal = episodes;
+			.subscribe((episodes: Episode[]) => {
+				this.episodes = episodes;
+				this.setPatientNames(this.episodes);
 				this.loading = false;
 				this.completePatientPhotos();
-				this.episodes = this.episodesOriginal.filter(episode => this.filterService.filter(episode));
 				this.episodes.forEach(episode => {
 					if (episode.relatedProfessional)
 						this.getFullProfessionalName(episode.relatedProfessional);
 				});
 			}, _ => this.loading = false);
+	}
+
+	private getFilterData(): EmergencyCareEpisodeFilterDto {
+		return {
+			mustBeEmergencyCareTemporal: this.filterService.getForm().value.emergencyCareTemporary,
+			identificationNumber: this.filterService.getForm().value.identificationNumber,
+			patientFirstName: this.filterService.getForm().value.firstName,
+			patientId: this.filterService.getForm().value.patientId,
+			patientLastName: this.filterService.getForm().value.lastName,
+			mustBeTemporal: this.filterService.getForm().value.temporal,
+			triageCategoryId: this.filterService.getForm().value.triage,
+			typeId: this.filterService.getForm().value.emergencyCareType,
+		};
 	}
 
 	goToEpisode(episode: Episode, patient: { typeId: number, id: number }) {
@@ -181,8 +194,7 @@ export class HomeComponent implements OnInit {
 	filter(): void {
 		this.filterService.markAsFiltered();
 		if (this.filterService.isValid()) {
-			this.episodes = this.episodesOriginal
-				.filter(episode => this.filterService.filter(episode));
+			this.loadEpisodes(this.FIRST_PAGE);
 		}
 	}
 
@@ -236,8 +248,8 @@ export class HomeComponent implements OnInit {
 		};
 	}
 
-	setPatientNames(episodes: any[]) {
-		return episodes.filter(e => {
+	setPatientNames(episodes: Episode[]) {
+		episodes.forEach(e => {
 			if (e.patient?.person)
 				e.patient.person.firstName = this.patientNameService.getPatientName(e.patient.person.firstName, e.patient.person.nameSelfDetermination);
 		})
