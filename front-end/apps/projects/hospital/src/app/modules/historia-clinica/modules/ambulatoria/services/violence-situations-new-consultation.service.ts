@@ -24,4 +24,9 @@ export class ViolenceSituationsNewConsultationService {
 		this.violenceSituations.splice(index, 1);
 		this.violenceSituations$.next(this.violenceSituations);
 	}
+
+	reset(){
+		this.violenceSituations = [];
+		this.violenceSituations$.next(this.violenceSituations);
+	}
 }

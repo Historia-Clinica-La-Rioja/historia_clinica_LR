@@ -1,22 +1,28 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { ViolenceReportDto } from '@api-rest/api-model';
 import { ViolenceReportService } from '@api-rest/services/violence-report.service';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Observable, of } from 'rxjs';
+import { ViolenceAggressorsNewConsultationService } from '../../services/violence-aggressors-new-consultation.service';
+import { ViolenceModalityNewConsultationService } from '../../services/violence-modality-new-consultation.service';
+import { ViolenceSituationsNewConsultationService } from '../../services/violence-situations-new-consultation.service';
 
 @Component({
 	selector: 'app-violence-situation-dock-popup',
 	templateUrl: './violence-situation-dock-popup.component.html',
 	styleUrls: ['./violence-situation-dock-popup.component.scss']
 })
-export class ViolenceSituationDockPopupComponent {
+export class ViolenceSituationDockPopupComponent implements OnInit{
 	confirmForm: Observable<boolean> = of(false);
 	newViolenceSituation: ViolenceReportDto;
 	viewError = false;
 	constructor(@Inject(OVERLAY_DATA) public patientId: number,public dockPopupRef: DockPopupRef,
-	 private readonly violenceReportService: ViolenceReportService, private snackbarServices: SnackBarService) {
+	 private readonly violenceReportService: ViolenceReportService, private snackbarServices: SnackBarService, 
+	 private readonly violenceAggressorsNewConsultationService: ViolenceAggressorsNewConsultationService,
+	 private readonly violenceSituationService: ViolenceSituationsNewConsultationService,
+	 private readonly violenceModalityService: ViolenceModalityNewConsultationService) {
 		this.newViolenceSituation = {
 			aggressorData: null,
 			episodeData: null,
@@ -26,6 +32,11 @@ export class ViolenceSituationDockPopupComponent {
 		}
 	}
 
+	ngOnInit() {
+		this.dockPopupRef.afterClosed().subscribe(close =>{
+			this.resetServices();
+		})
+	}
 
 	setPersonInformation(event) {
 		this.newViolenceSituation.victimData = event;
@@ -69,5 +80,11 @@ export class ViolenceSituationDockPopupComponent {
 		this.snackbarServices.showSuccess('ambulatoria.paciente.violence-situations.dialog.SUCCESS')
 		this.dockPopupRef.close();
 	})
+	}
+
+	resetServices() {
+		this.violenceAggressorsNewConsultationService.reset();
+		this.violenceModalityService.reset();
+		this.violenceSituationService.reset();
 	}
 }

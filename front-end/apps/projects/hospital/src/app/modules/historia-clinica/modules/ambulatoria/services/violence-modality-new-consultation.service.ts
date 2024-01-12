@@ -24,4 +24,9 @@ export class ViolenceModalityNewConsultationService {
 		this.violenceModalities.splice(index, 1);
 		this.violenceModalities$.next(this.violenceModalities);
 	}
+
+	reset(){
+		this.violenceModalities = [];
+		this.violenceModalities$.next(this.violenceModalities);
+	}
 }

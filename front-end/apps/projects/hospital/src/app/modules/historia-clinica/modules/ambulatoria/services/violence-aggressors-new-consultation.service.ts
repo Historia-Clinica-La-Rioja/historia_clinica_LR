@@ -19,6 +19,11 @@ export class ViolenceAggressorsNewConsultationService {
 		this.violenceAggressors.splice(index, 1);
 		this.violenceAggressors$.next(this.violenceAggressors);
 	}
+	
+	reset(){
+		this.violenceAggressors = [];
+		this.violenceAggressors$.next(this.violenceAggressors);
+	}
 }
 
 export interface CustomViolenceReportAggressorDto extends ViolenceReportAggressorDto{
