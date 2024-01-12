@@ -1,6 +1,6 @@
 <h2 class="subtitle" [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.DESTINATION'"></h2>
 <form [formGroup]="formReference">
-	<div class="reference-type" fxLayoutGap="10px">
+	<div class="reference-type font-size-16" fxLayoutGap="10px">
 		<mat-label fxLayout="column"
 			[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.SEARCH_BY_CARE_LINE'"></mat-label>
 		<mat-radio-group id="search_by_carelines" formControlName="searchByCareLine" fxLayoutGap="5px">
@@ -31,7 +31,7 @@
 				</ng-template>
 			</mat-form-field>
 		</div>
-		<div class="search-criteria">
+		<div class="search-criteria font-size-16">
 			<app-search-criteria searchCriteryStyle="'search-criteria'"
 				label="ambulatoria.paciente.nueva-consulta.reference-dialog.REFERENCE_TYPE"
 				(selectedOption)="selectedOption($event)" fxLayoutGap="7px"></app-search-criteria>

@@ -12,16 +12,16 @@
 		<mat-dialog-content fxLayout="column" fxLayoutGap="10px">
 
 			<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="20px">
-				<div>
+				<div class="section">
 					<app-origin-institution-reference [formReference]="formReference" [data]="data"
 						(updateSpecialtiesAndCarelineFields)="activateSpecialtiesAndCarelineFields()">
 					</app-origin-institution-reference>
 
 					<section fxLayout="column">
 
-						<span class="subtitle"
+						<h2 class="subtitle"
 							[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PRIORITY_CRITERIA'">
-						</span>
+						</h2>
 
 						<mat-form-field appearance="outline">
 							<mat-select id="priority" formControlName="priority">
@@ -46,8 +46,8 @@
 
 					</section>
 
-					<span class="subtitle"
-						[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PATIENT_PHONE'"></span>
+					<h2 class="subtitle"
+						[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PATIENT_PHONE'"></h2>
 					<div fxLayout="row" fxLayoutGap="10px">
 						<mat-form-field fxFlex="30%" appearance="outline">
 							<mat-label
