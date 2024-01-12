@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;
+import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.snowstorm.repository.SnomedGroupRepository;
 import net.pladema.snowstorm.repository.SnomedRelatedGroupRepository;
@@ -18,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -51,6 +53,7 @@ public class BackofficeSnomedRelatedGroupValidator implements BackofficePermissi
 	@Override
 	@PreAuthorize("hasAnyAuthority('ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertCreate(SnomedRelatedGroup entity) {
+		assertNotExist(entity.getGroupId(),entity.getSnomedId());
 		if (authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return;
 		SnomedGroup snomedGroup = snomedGroupRepository.getById(entity.getGroupId());
@@ -96,6 +99,12 @@ public class BackofficeSnomedRelatedGroupValidator implements BackofficePermissi
 			throw new PermissionDeniedException(NO_CUENTA_CON_SUFICIENTES_PRIVILEGIOS);
 		if (!permissionEvaluator.hasPermission(authentication, institutionId, "Institution", "ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE"))
 			throw new PermissionDeniedException(NO_CUENTA_CON_SUFICIENTES_PRIVILEGIOS);
+	}
+
+	private void assertNotExist(Integer groupId, Integer snomedId) {
+		Optional<SnomedRelatedGroup> optionalSnomedRelatedGroup = snomedRelatedGroupRepository.getByGroupIdAndSnomedId(groupId,snomedId);
+		if (optionalSnomedRelatedGroup.isPresent())
+			throw new BackofficeValidationException("El concepto que desea agregar ya se encuentra relacionado al grupo.");
 	}
 
 

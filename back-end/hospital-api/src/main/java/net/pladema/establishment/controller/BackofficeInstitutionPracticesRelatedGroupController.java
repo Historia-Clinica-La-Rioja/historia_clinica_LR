@@ -5,6 +5,8 @@ import javax.validation.Valid;
 import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 
+import net.pladema.sgx.exceptions.BackofficeValidationException;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +16,8 @@ import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.snowstorm.repository.SnomedRelatedGroupRepository;
 import net.pladema.snowstorm.repository.entity.SnomedRelatedGroup;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("backoffice/institutionpracticesrelatedgroups")
@@ -44,11 +48,13 @@ public class BackofficeInstitutionPracticesRelatedGroupController extends Abstra
 		} else {
 			snomedId = snomedRelatedGroupRepository.getById(entity.getSnomedId()).getSnomedId();
 		}
-		entity.setSnomedId(snomedId);
+		Integer groupId = entity.getGroupId();
 		Integer orden = snomedRelatedGroupRepository.getLastOrdenByGroupId(entity.getGroupId()).orElse(0) + 1;
-		entity.setOrden(orden);
-		entity.setLastUpdate(dateTimeProvider.nowDate());
-		return snomedRelatedGroupRepository.save(entity);
+		Optional<SnomedRelatedGroup> snomedRelatedGroup = snomedRelatedGroupRepository.getByGroupIdAndSnomedId(groupId, snomedId);
+		if (snomedRelatedGroup.isPresent()){
+			throw new BackofficeValidationException("La practica ya se encuentra asociada al grupo de practicas.");
+		}
+		return snomedRelatedGroupRepository.save(new SnomedRelatedGroup(snomedId, groupId, orden, dateTimeProvider.nowDate()));
 	}
 
 }
