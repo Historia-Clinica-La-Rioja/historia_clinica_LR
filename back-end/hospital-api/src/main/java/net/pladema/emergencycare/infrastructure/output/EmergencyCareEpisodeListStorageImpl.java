@@ -52,9 +52,9 @@ public class EmergencyCareEpisodeListStorageImpl implements EmergencyCareEpisode
 						(filter.getTriageCategoryId() != null ? " AND ece.triageCategoryId = " + filter.getTriageCategoryId() : " ") +
 						(filter.getTypeId() != null ? " AND ece.emergencyCareTypeId = " + filter.getTypeId() : " ") +
 						(filter.getPatientId() != null ? " AND pa.id = " + filter.getPatientId() : " ") +
-						(filter.getIdentificationNumber() != null ? " AND pe.identificationNumber LIKE '%" + filter.getIdentificationNumber() + "%'" : " ") +
-						(filter.getPatientFirstName() != null ? featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) ? " AND ((petd.nameSelfDetermination IS NOT NULL AND petd.nameSelfDetermination LIKE '%" + filter.getPatientFirstName() + "%') OR (petd.nameSelfDetermination IS NULL AND pe.firstName LIKE '%" + filter.getPatientFirstName() + "%'))" : " AND pe.firstName LIKE '%" + filter.getPatientFirstName() + "%'" : " ") +
-						(filter.getPatientLastName() != null ? " AND pe.lastName LIKE '%" + filter.getPatientLastName() + "%'" : " ") +
+						(filter.getIdentificationNumber() != null ? " AND LOWER(pe.identificationNumber) LIKE '%" + filter.getIdentificationNumber().toLowerCase() + "%'" : " ") +
+						(filter.getPatientFirstName() != null ? featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) ? " AND ((petd.nameSelfDetermination IS NOT NULL AND LOWER(petd.nameSelfDetermination) LIKE '%" + filter.getPatientFirstName().toLowerCase() + "%') OR (petd.nameSelfDetermination IS NULL AND LOWER(pe.firstName) LIKE '%" + filter.getPatientFirstName().toLowerCase() + "%'))" : " AND LOWER(pe.firstName) LIKE '%" + filter.getPatientFirstName().toLowerCase() + "%'" : " ") +
+						(filter.getPatientLastName() != null ? " AND LOWER(pe.lastName) LIKE '%" + filter.getPatientLastName().toLowerCase() + "%'" : " ") +
 						(filter.getMustBeTemporal() != null && filter.getMustBeTemporal() ? " AND pa.typeId = " + EPatientType.TEMPORARY.getId() : " ") +
 						(filter.getMustBeEmergencyCareTemporal() != null && filter.getMustBeEmergencyCareTemporal() ? " AND pa.typeId = " + EPatientType.EMERGENCY_CARE_TEMPORARY.getId() : " ");
 
