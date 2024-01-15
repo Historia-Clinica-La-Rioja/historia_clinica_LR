@@ -59,6 +59,8 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 
 	private static final Integer NO_VALUE = -1;
 
+	private static final Short REJECTED_PATIENT_TYPE = 6;
+
 
 	private final EntityManager entityManager;
 
@@ -76,8 +78,8 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 
 	@Override
 	public Page<ReferenceReportBo> fetchReferencesReport(ReferenceReportFilterBo filter, Pageable pageable) {
-		String outpatientDateFilter = " (oc.start_date >= :from AND oc.start_date <= :to) AND (r.deleted = FALSE OR r.deleted IS NULL) ";
-		String odontologyDateFilter = " (oc.performed_date >= :from AND oc.performed_date <= :to) AND (r.deleted = FALSE OR r.deleted IS NULL) ";
+		String outpatientDateFilter = " AND (oc.start_date >= :from AND oc.start_date <= :to) ";
+		String odontologyDateFilter = " AND (oc.performed_date >= :from AND oc.performed_date <= :to) ";
 
 		String outpatientConsultationCondition = getCondition(filter, outpatientDateFilter);
 		String odontologyConsultationCondition = getCondition(filter, odontologyDateFilter);
@@ -93,9 +95,9 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 	private String getCondition(ReferenceReportFilterBo filter, String dateFilter) {
 		StringBuilder condition = new StringBuilder();
 		String conditionWithoutClassifiedData = getCommonFilterDataIncludingProfessional(filter);
-		condition.append("(".concat(dateFilter));
+		condition.append(dateFilter);
 		condition.append(conditionWithoutClassifiedData);
-		condition.append(") OR ((clr.role_id IN (:userRoles) AND cl.classified IS TRUE AND clr.deleted IS FALSE) AND ");
+		condition.append(") OR ((clr.role_id IN (:userRoles) AND cl.classified IS TRUE AND clr.deleted IS FALSE) ");
 		condition.append(dateFilter);
 		condition.append(getSharedFilterData(filter));
 		condition.append(")");
@@ -112,7 +114,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 	private StringBuilder getSharedFilterData(ReferenceReportFilterBo filter) {
 		StringBuilder condition = new StringBuilder();
 		if (filter.getDestinationInstitutionId() != null)
-			condition.append("AND r.destination_institution_id = ").append(filter.getDestinationInstitutionId());
+			condition.append(" AND r.destination_institution_id = ").append(filter.getDestinationInstitutionId());
 
 		if (filter.getOriginInstitutionId() != null)
 			condition.append(" AND oc.institution_id = ").append(filter.getOriginInstitutionId());
@@ -200,7 +202,8 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"LEFT JOIN {h-schema}care_line cl ON (r.care_line_id = cl.id) " +
 				"LEFT JOIN {h-schema}counter_reference cr ON (r.id = cr.reference_id) " +
 				"LEFT JOIN {h-schema}care_line_role clr ON (clr.care_line_id = cl.id) " +
-				"WHERE ";
+				"WHERE ((r.deleted = FALSE OR r.deleted IS NULL) " +
+				"AND p.type_id <> " + REJECTED_PATIENT_TYPE;
 	}
 
 	private String getOdontologyReferenceFromStatement(ReferenceReportFilterBo filter) {
@@ -226,7 +229,8 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"LEFT JOIN {h-schema}care_line cl ON (r.care_line_id = cl.id) " +
 				"LEFT JOIN {h-schema}counter_reference cr ON (r.id = cr.reference_id) " +
 				"LEFT JOIN {h-schema}care_line_role clr ON (clr.care_line_id = cl.id) " +
-				"WHERE ";
+				"WHERE ((r.deleted = FALSE OR r.deleted IS NULL) " +
+				"AND p.type_id <> " + REJECTED_PATIENT_TYPE;
 	}
 
 	private List<ReferenceReportBo> mapToReferenceReportBo(List<Object[]> queryResult) {
