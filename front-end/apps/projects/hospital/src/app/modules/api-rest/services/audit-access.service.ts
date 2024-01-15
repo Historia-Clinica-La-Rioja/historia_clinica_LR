@@ -6,16 +6,19 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { isValueInStringEnum } from '@core/utils/enum.utils';
 import { AuditAccessRegisterComponent } from '@historia-clinica/dialogs/audit-access-register/audit-access-register.component';
 import { INTERNMENT_SECTOR, SECTOR_AMBULATORIO, SECTOR_GUARDIA } from '@historia-clinica/modules/guardia/constants/masterdata';
-import { Observable, map } from 'rxjs';
+import { Observable, map, of, switchMap } from 'rxjs';
+import { ClinicHistoryAccessService } from './clinic-history-access.service';
+import { ContextClinicHistoryUrl } from '@historia-clinica/modules/ambulatoria/guards/AuditAccess.guard';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuditAccessService {
 
+  private sourceUrl: string = this.router.url
   private NEW_TAB_ROUTE = '/'
   private  isValueInMyStrEnum = isValueInStringEnum(SCOPE_REQUEST_HC)
-  private isNewTabRoute = () => this.router.url === this.NEW_TAB_ROUTE
+  private isNewTabRoute = () => this.sourceUrl === this.NEW_TAB_ROUTE
   private isScopeAllowed = (valueTocheck: string) => this.isValueInMyStrEnum(valueTocheck)
   private getScopeSector = (scope: SCOPE_AUDIT_ACCESS): Number => hashMapScopeSectors.get(scope)
 
@@ -23,17 +26,20 @@ export class AuditAccessService {
     private readonly dialog: MatDialog,
     private readonly router: Router,
     private readonly featureFlagService: FeatureFlagService,
-  ) { }
-
-
-  verifyConditionToAccessToHC(): Observable<boolean> {
-    return this.featureFlagService.isActive(AppFeature.HABILITAR_AUDITORIA_DE_ACCESO_EN_HC)
+    private readonly clinicHistoryAccessService: ClinicHistoryAccessService,
+  ) {
   }
 
 
-  getResultAccessDialogAudit(): Observable<boolean> {
-    const scope: Number = this.router.url !== this.NEW_TAB_ROUTE && this.isScopeAllowed(this.getScopeFromCurrentUrl())
-    ? this.getScopeSector(this.getScopeFromCurrentUrl()) : null
+  verifyConditionToAccessToHC(context: ContextClinicHistoryUrl): Observable<boolean> {
+    return this.featureFlagService.isActive(AppFeature.HABILITAR_AUDITORIA_DE_ACCESO_EN_HC).pipe(
+      switchMap(isActive => isActive ? this.clinicHistoryAccessService.isValid(context.idPatient, context.idInstitution) : of(false)))
+  }
+
+
+  getResultAccessDialogAudit(context: ContextClinicHistoryUrl): Observable<boolean> {
+    const scope: Number = !this.isNewTabRoute() && this.isScopeAllowed(this.getScopeFromCurrentUrl())
+    ? this.getScopeSector(this.getScopeFromCurrentUrl() as SCOPE_AUDIT_ACCESS) : null
 
     const dialog = this.dialog.open(AuditAccessRegisterComponent,
       {
@@ -43,6 +49,8 @@ export class AuditAccessService {
         disableClose: true,
         data: {
           scopeRequest: scope,
+          patientId: context.idPatient,
+          institutionId: context.idInstitution
         }
       });
     return dialog.afterClosed().pipe(
@@ -58,24 +66,24 @@ export class AuditAccessService {
     return false
   }
 
-  private getScopeFromCurrentUrl(): SCOPE_REQUEST_HC {
+  private getScopeFromCurrentUrl(): string {
     const SLASH_CHAR= '/'
-    const urlParameters: string[] = this.router.url.split(SLASH_CHAR)
-    return urlParameters[urlParameters.length -1] as SCOPE_REQUEST_HC
+    const urlParameters: string[] = this.sourceUrl.split(SLASH_CHAR)
+    return urlParameters[urlParameters.length -1]
   }
 
 
 }
 
-export enum SCOPE_REQUEST_HC {
+enum SCOPE_REQUEST_HC {
   INTERNACION = 'internaciones',
   AMBULATORIA = 'ambulatoria',
   GUARDIA = 'guardia',
 }
 
-export const hashMapScopeSectors = new Map<SCOPE_REQUEST_HC, number>();
+const hashMapScopeSectors = new Map<SCOPE_REQUEST_HC, number>();
 hashMapScopeSectors.set(SCOPE_REQUEST_HC.AMBULATORIA, SECTOR_AMBULATORIO )
 hashMapScopeSectors.set(SCOPE_REQUEST_HC.INTERNACION,  INTERNMENT_SECTOR)
 hashMapScopeSectors.set(SCOPE_REQUEST_HC.GUARDIA, SECTOR_GUARDIA )
 
-export type SCOPE_AUDIT_ACCESS = SCOPE_REQUEST_HC.INTERNACION | SCOPE_REQUEST_HC.AMBULATORIA | SCOPE_REQUEST_HC.GUARDIA
+type SCOPE_AUDIT_ACCESS = SCOPE_REQUEST_HC.INTERNACION | SCOPE_REQUEST_HC.AMBULATORIA | SCOPE_REQUEST_HC.GUARDIA

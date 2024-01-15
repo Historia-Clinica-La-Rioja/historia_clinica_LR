@@ -1,7 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { IdentificationTypeDto } from '@api-rest/api-model';
+import { ClinicHistoryAccessDto, EClinicHistoryAccessReason } from '@api-rest/api-model';
+import { ClinicHistoryAccessService } from '@api-rest/services/clinic-history-access.service';
 import { hasError } from '@core/utils/form.utils';
 
 @Component({
@@ -13,12 +14,13 @@ export class AuditAccessRegisterComponent implements OnInit {
 
   auditAccessForm: FormGroup<AuditAccessFormModel>;
   hasError = hasError;
-  identificationMotiveList:IdentificationTypeDto[] = MOTIVES ;
+  identificationMotiveList:SelectTypeAuditDto[] = MOTIVES ;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: {scopeRequest: number},
+    @Inject(MAT_DIALOG_DATA) public data: {scopeRequest: number, patientId: number , institutionId: number},
     private readonly formBuilder: FormBuilder,
-    private dialogRef: MatDialogRef<AuditAccessRegisterComponent>,
+    private readonly dialogRef: MatDialogRef<AuditAccessRegisterComponent>,
+    private readonly clinicHistoryAccessService: ClinicHistoryAccessService,
   ) { }
 
   ngOnInit(): void {
@@ -28,8 +30,17 @@ export class AuditAccessRegisterComponent implements OnInit {
   });
   }
 
-  goToHC(): void {
-    this.dialogRef.close(true)
+  saveAuditAccess(): void {
+    const clinicHistoryAccessDto: ClinicHistoryAccessDto   = {
+      observations: this.auditAccessForm.get('observations').value,
+      reason: this.auditAccessForm.get('motive').value ,
+      scope: this.data.scopeRequest,
+    }
+    this.clinicHistoryAccessService
+		.saveAudit(this.data.patientId, clinicHistoryAccessDto, this.data.institutionId)
+		.subscribe( _ => {
+			this.dialogRef.close(true);
+		});
   }
 
   cancel(): void {
@@ -43,25 +54,31 @@ export class AuditAccessRegisterComponent implements OnInit {
 }
 
 export interface AuditAccessFormModel {
-  motive:  FormControl<string>,
+  motive:  FormControl<EClinicHistoryAccessReason>,
   observations:  FormControl<string>
 }
 
-export const MOTIVES: IdentificationTypeDto[] = [
+export interface SelectTypeAuditDto {
+  id: EClinicHistoryAccessReason,
+  description: string
+}
+
+
+export const MOTIVES: SelectTypeAuditDto[] = [
   {
-    id: 1,
+    id:  EClinicHistoryAccessReason.MEDICAL_EMERGENCY,
     description: 'Urgencia médica'
   },
   {
-    id: 2,
+    id: EClinicHistoryAccessReason.PROFESSIONAL_CONSULTATION,
     description: 'Consulta profesional'
   },
   {
-    id: 3,
+    id: EClinicHistoryAccessReason.PROFESSIONAL_CONSULTATION,
     description: 'Consulta de paciente'
   },
   {
-    id: 4,
+    id: EClinicHistoryAccessReason.AUDIT,
     description: 'Auditoría'
   },
 ]

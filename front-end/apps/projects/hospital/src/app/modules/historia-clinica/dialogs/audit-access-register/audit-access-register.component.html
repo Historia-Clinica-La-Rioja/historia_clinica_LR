@@ -39,10 +39,10 @@
                     [translate]="'forms.REQUIRED'"></mat-error>
             </mat-form-field>
             <mat-dialog-actions fxLayout="row" fxLayoutAlign="end" class="confirm-btn">
-                <button mat-stroked-button color="primary" (click)="cancel()">
+                <button id="cancel" mat-stroked-button color="primary" (click)="cancel()">
                     <span [translate]="'buttons.CANCEL'"></span>
                 </button>
-                <button mat-raised-button color="primary" [disabled]="!isFormValid()" (click)="goToHC()">
+                <button  id="saveAudit" mat-raised-button color="primary" [disabled]="!isFormValid()" (click)="saveAuditAccess()">
                     <span [translate]="'historia-clinica.audit-access.GO_TO_PATIENT'"></span>
                 </button>
             </mat-dialog-actions>
