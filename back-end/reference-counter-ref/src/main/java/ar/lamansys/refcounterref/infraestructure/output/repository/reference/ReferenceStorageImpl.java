@@ -40,6 +40,8 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 
 	private static final Integer OUTPATIENT_SOURCE_TYPE_ID = 1;
 
+	private static final Short APPROVED_REGULATION_STATE = 1;
+
     private final ReferenceRepository referenceRepository;
 
     private final ReferenceNoteRepository referenceNoteRepository;
@@ -116,8 +118,8 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 	@Override
     public List<ReferenceDataBo> getReferences(Integer patientId, List<Integer> clinicalSpecialtyIds, List<Short> loggedUserRoleIds) {
 		log.debug("Input parameters -> patientId {}, clinicalSpecialtyIds {}, loggedUserRoleIds {}", patientId, clinicalSpecialtyIds, loggedUserRoleIds);
-		List<ReferenceDataBo> queryResult = referenceRepository.getReferencesFromOutpatientConsultation(patientId, clinicalSpecialtyIds, loggedUserRoleIds);
-       	queryResult.addAll(referenceRepository.getReferencesFromOdontologyConsultation(patientId, clinicalSpecialtyIds, loggedUserRoleIds));
+		List<ReferenceDataBo> queryResult = referenceRepository.getReferencesFromOutpatientConsultation(patientId, clinicalSpecialtyIds, loggedUserRoleIds, APPROVED_REGULATION_STATE);
+       	queryResult.addAll(referenceRepository.getReferencesFromOdontologyConsultation(patientId, clinicalSpecialtyIds, loggedUserRoleIds, APPROVED_REGULATION_STATE));
 		return setReferenceDetails(queryResult);
     }
 
