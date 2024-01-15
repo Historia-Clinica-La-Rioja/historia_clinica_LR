@@ -87,6 +87,9 @@ export class AntecedentesComponent implements OnInit {
     { texto: 'Universitario/Terciario', respuestas: [0, 0], value: 19,  amarillo: true},
   ];
 
+  submitted: boolean;
+  consultation: number;
+  questionnaireId: number;
 
   constructor(
     private antecedentesFamiliares: FamilyRecordService,
@@ -364,7 +367,6 @@ export class AntecedentesComponent implements OnInit {
       }
     );
   }
-
 }
 
 @NgModule({
