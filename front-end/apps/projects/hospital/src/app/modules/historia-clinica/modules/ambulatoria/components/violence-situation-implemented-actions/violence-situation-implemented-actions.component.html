@@ -108,6 +108,8 @@
             <div *ngIf="devices.includes(devicesEnum.MUNICIPAL_DEVICES)" class="aside column">
                 <mat-checkbox *ngFor="let mdev of municipalDevicesList" (click)="setMunicipalDevices(mdev.value)"
                     color="primary">{{ mdev.text }}</mat-checkbox>
+
+					<mat-error *ngIf="hasError(form, 'required', 'municipalDevices')" [translate]="'forms.REQUIRED'"></mat-error>
             </div>
 
             <mat-checkbox (click)="setDevice(devicesEnum.PROVINCIAL_DEVICES)" color="primary">{{
@@ -116,6 +118,8 @@
             <div *ngIf="devices.includes(devicesEnum.PROVINCIAL_DEVICES)" class="aside column">
                 <mat-checkbox *ngFor="let pdev of provincialDevicesList" (click)="setProvincialDevices(pdev.value)"
                     color="primary">{{ pdev.text }}</mat-checkbox>
+
+					<mat-error *ngIf="hasError(form, 'required', 'provincialDevices')" [translate]="'forms.REQUIRED'"></mat-error>
             </div>
 
             <mat-checkbox (click)="setDevice(devicesEnum.NATIONAL_DEVICES)" color="primary">{{
@@ -124,6 +128,8 @@
             <div *ngIf="devices.includes(devicesEnum.NATIONAL_DEVICES)" class="aside column">
                 <mat-checkbox *ngFor="let ndev of nationalDevicesList" (click)="setNationalDevices(ndev.value)"
                     color="primary">{{ ndev.text }}</mat-checkbox>
+
+					<mat-error *ngIf="hasError(form, 'required', 'nationalDevices')" [translate]="'forms.REQUIRED'"></mat-error>
             </div>
 
             <mat-checkbox (click)="setDevice(devicesEnum.SOCIAL_ORGANIZATION)" color="primary">{{
