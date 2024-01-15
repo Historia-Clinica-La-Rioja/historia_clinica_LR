@@ -15,23 +15,33 @@ import net.pladema.violencereport.domain.ViolenceReportImplementedActionsBo;
 import net.pladema.violencereport.domain.ViolenceReportSituationBo;
 import net.pladema.violencereport.domain.ViolenceReportVictimBo;
 import net.pladema.violencereport.domain.enums.EAggressorRelationship;
+import net.pladema.violencereport.domain.enums.ECriminalRecordStatus;
+import net.pladema.violencereport.domain.enums.EDisabilityCertificateStatus;
 import net.pladema.violencereport.domain.enums.EHealthInstitutionOrganization;
 import net.pladema.violencereport.domain.enums.EHealthSystemOrganization;
 import net.pladema.violencereport.domain.enums.EInstitutionReportPlace;
 import net.pladema.violencereport.domain.enums.EInstitutionReportReason;
+import net.pladema.violencereport.domain.enums.EIntermentIndicationStatus;
 import net.pladema.violencereport.domain.enums.EKeeperRelationship;
+import net.pladema.violencereport.domain.enums.ELiveTogetherStatus;
 import net.pladema.violencereport.domain.enums.EMunicipalGovernmentDevice;
 import net.pladema.violencereport.domain.enums.ENationalGovernmentDevice;
 import net.pladema.violencereport.domain.enums.EProvincialGovernmentDevice;
+import net.pladema.violencereport.domain.enums.ERelationshipLength;
+import net.pladema.violencereport.domain.enums.ESchoolLevel;
+import net.pladema.violencereport.domain.enums.ESecurityForceType;
 import net.pladema.violencereport.domain.enums.ESexualViolenceAction;
 import net.pladema.violencereport.domain.enums.EVictimKeeperReportPlace;
 import net.pladema.violencereport.domain.enums.EViolenceEvaluationRiskLevel;
+import net.pladema.violencereport.domain.enums.EViolenceFrequency;
+import net.pladema.violencereport.domain.enums.EViolenceTowardsUnderageType;
 import net.pladema.violencereport.infrastructure.input.rest.dto.ViolenceReportActorDto;
 import net.pladema.violencereport.infrastructure.input.rest.dto.ViolenceReportDto;
 
 import net.pladema.violencereport.infrastructure.input.rest.dto.ViolenceReportSituationDto;
 import net.pladema.violencereport.infrastructure.input.rest.dto.aggressordetail.ViolenceReportAggressorDto;
 import net.pladema.violencereport.infrastructure.input.rest.dto.episodedetail.ViolenceEpisodeDetailDto;
+import net.pladema.violencereport.infrastructure.input.rest.dto.episodedetail.ViolenceTowardsUnderageDto;
 import net.pladema.violencereport.infrastructure.input.rest.dto.implementedactions.CoordinationActionDto;
 import net.pladema.violencereport.infrastructure.input.rest.dto.implementedactions.CoordinationInsideHealthSectorDto;
 import net.pladema.violencereport.infrastructure.input.rest.dto.implementedactions.CoordinationOutsideHealthSectorDto;
@@ -42,18 +52,21 @@ import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.NullValueCheckStrategy;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Mapper(uses = {LocalDateMapper.class, SnomedMapper.class, EViolenceEvaluationRiskLevel.class})
+@Mapper(uses = {LocalDateMapper.class, SnomedMapper.class, EDisabilityCertificateStatus.class, EKeeperRelationship.class, EViolenceTowardsUnderageType.class,
+		ESchoolLevel.class, EViolenceEvaluationRiskLevel.class, EAggressorRelationship.class, ESecurityForceType.class, ELiveTogetherStatus.class,
+		ERelationshipLength.class, EViolenceFrequency.class, ECriminalRecordStatus.class, EIntermentIndicationStatus.class})
 public interface ViolenceReportMapper {
 
 	@Mapping(target = "lastName", source = "actorPersonalData.lastName")
 	@Mapping(target = "firstName", source = "actorPersonalData.firstName")
 	@Mapping(target = "age", source = "actorPersonalData.age")
 	@Mapping(target = "address", source = "actorPersonalData.address")
-	@Mapping(target = "municipalityId", source = "actorPersonalData.municipalityId")
+	@Mapping(target = "municipalityId", source = "actorPersonalData.municipality.id")
 	@Mapping(target = "relationshipWithVictimId", source = "relationshipWithVictim.id")
 	@Named("fromViolenceReportKeeperDto")
 	ViolenceReportActorBo fromViolenceReportKeeperDto(ViolenceReportActorDto<EKeeperRelationship> violenceReportActorDto);
@@ -79,7 +92,7 @@ public interface ViolenceReportMapper {
 	@Mapping(target = "firstName", source = "actorPersonalData.firstName")
 	@Mapping(target = "age", source = "actorPersonalData.age")
 	@Mapping(target = "address", source = "actorPersonalData.address")
-	@Mapping(target = "municipalityId", source = "actorPersonalData.municipalityId")
+	@Mapping(target = "municipalityId", source = "actorPersonalData.municipality.id")
 	@Mapping(target = "relationshipWithVictimId", source = "relationshipWithVictim.id")
 	@Named("fromViolenceReportAggressorDto")
 	ViolenceReportActorBo fromViolenceReportAggressorDto(ViolenceReportActorDto<EAggressorRelationship> violenceReportActorDto);
@@ -144,11 +157,11 @@ public interface ViolenceReportMapper {
 		return null;
 	}
 
-	@Mapping(target = "municipalGovernmentDeviceIds", expression = "java(fromEMunicipalGovernmentDevice(coordinationInsideHealthSectorDto.getMunicipalGovernmentDevices()))")
-	@Mapping(target = "provincialGovernmentDeviceIds", expression = "java(fromEProvincialGovernmentDevice(coordinationInsideHealthSectorDto.getProvincialGovernmentDevices()))")
-	@Mapping(target = "nationalGovernmentDeviceIds", expression = "java(fromENationalGovernmentDevice(coordinationInsideHealthSectorDto.getNationalGovernmentDevices()))")
+	@Mapping(target = "municipalGovernmentDeviceIds", expression = "java(fromEMunicipalGovernmentDevice(coordinationOutsideHealthSectorDto.getMunicipalGovernmentDevices()))")
+	@Mapping(target = "provincialGovernmentDeviceIds", expression = "java(fromEProvincialGovernmentDevice(coordinationOutsideHealthSectorDto.getProvincialGovernmentDevices()))")
+	@Mapping(target = "nationalGovernmentDeviceIds", expression = "java(fromENationalGovernmentDevice(coordinationOutsideHealthSectorDto.getNationalGovernmentDevices()))")
 	@Named("fromCoordinationOutsideHealthSectorDto")
-	CoordinationOutsideHealthSectorBo fromCoordinationOutsideHealthSectorDto (CoordinationOutsideHealthSectorDto coordinationInsideHealthSectorDto);
+	CoordinationOutsideHealthSectorBo fromCoordinationOutsideHealthSectorDto (CoordinationOutsideHealthSectorDto coordinationOutsideHealthSectorDto);
 
 	default List<Short> fromEVictimKeeperReportPlace(List<EVictimKeeperReportPlace> eVictimKeeperReportPlaces) {
 		if (eVictimKeeperReportPlaces != null)
@@ -195,5 +208,166 @@ public interface ViolenceReportMapper {
 	@Mapping(target = "riskLevel", source = "riskLevelId")
 	@Named("toViolenceReportSituationDto")
 	ViolenceReportSituationDto toViolenceReportSituationDto(ViolenceReportSituationBo violenceReportSituationBo);
+
+	@Mapping(source = "lastName", target = "actorPersonalData.lastName")
+	@Mapping(source = "firstName", target = "actorPersonalData.firstName")
+	@Mapping(source = "age", target = "actorPersonalData.age")
+	@Mapping(source = "address", target = "actorPersonalData.address")
+	@Mapping(source = "municipalityId", target = "actorPersonalData.municipality.id")
+	@Mapping(source = "municipalityName", target = "actorPersonalData.municipality.description")
+	@Mapping(source = "provinceId", target = "actorPersonalData.municipality.provinceId")
+	@Mapping(source = "relationshipWithVictimId", target = "relationshipWithVictim")
+	@Named("toViolenceReportKeeperDto")
+	ViolenceReportActorDto<EKeeperRelationship> toViolenceReportKeeperDto(ViolenceReportActorBo violenceReportActorBo);
+
+	@Mapping(source = "hasIncome", target = "incomeData.hasIncome")
+	@Mapping(source = "worksAtFormalSector", target = "incomeData.worksAtFormalSector")
+	@Mapping(source = "hasDisability", target = "disabilityData.hasDisability")
+	@Mapping(source = "disabilityCertificateStatusId", target = "disabilityData.disabilityCertificateStatus", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+	@Mapping(source = "isInstitutionalized", target = "institutionalizedData.isInstitutionalized")
+	@Mapping(source = "institutionalizedDetails", target = "institutionalizedData.institutionalizedDetails")
+	@Mapping(source = "keeperData", target = "keeperData", qualifiedByName = "toViolenceReportKeeperDto")
+	@Named("toViolenceReportVictimDto")
+	ViolenceReportVictimDto toViolenceReportVictimDto(ViolenceReportVictimBo violenceReportVictimBo);
+
+	@Mapping(target = "violenceTowardsUnderage", expression = "java(toViolenceTowardsUnderageDto(violenceEpisodeDetailBo))")
+	@Mapping(source = "riskLevelId", target = "riskLevel", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+	@Named("toViolenceEpisodeDetailDto")
+	ViolenceEpisodeDetailDto toViolenceEpisodeDetailDto (ViolenceEpisodeDetailBo violenceEpisodeDetailBo);
+
+	@Named("toViolenceTowardsUnderageDto")
+	default ViolenceTowardsUnderageDto toViolenceTowardsUnderageDto(ViolenceEpisodeDetailBo violenceEpisodeDetailBo) {
+		Short violenceTowardsUnderageTypeId = violenceEpisodeDetailBo.getViolenceTowardsUnderageTypeId();
+		Short schoolLevelId = violenceEpisodeDetailBo.getSchoolLevelId();
+		Boolean schooled = violenceEpisodeDetailBo.getSchooled();
+		if (violenceTowardsUnderageTypeId == null && schoolLevelId == null && schooled == null)
+			return null;
+		ViolenceTowardsUnderageDto result = new ViolenceTowardsUnderageDto();
+		result.setSchooled(violenceEpisodeDetailBo.getSchooled());
+		if (violenceTowardsUnderageTypeId != null)
+			result.setType(EViolenceTowardsUnderageType.map(violenceTowardsUnderageTypeId));
+		if (schoolLevelId != null)
+			result.setSchoolLevel(ESchoolLevel.map(schoolLevelId));
+		return result;
+	}
+
+	@Mapping(source = "lastName", target = "actorPersonalData.lastName")
+	@Mapping(source = "firstName", target = "actorPersonalData.firstName")
+	@Mapping(source = "age", target = "actorPersonalData.age")
+	@Mapping(source = "address", target = "actorPersonalData.address")
+	@Mapping(source = "municipalityId", target = "actorPersonalData.municipality.id")
+	@Mapping(source = "municipalityName", target = "actorPersonalData.municipality.description")
+	@Mapping(source = "relationshipWithVictimId", target = "relationshipWithVictim")
+	@Named("toViolenceReportAggressorDto")
+	ViolenceReportActorDto<EAggressorRelationship> toViolenceReportAggressorDto(ViolenceReportActorBo violenceReportActorBo);
+
+	@Mapping(source = "aggressorData", target = "aggressorData", qualifiedByName = "toViolenceReportAggressorDto")
+	@Mapping(source = "belongsToSecurityForces", target = "securityForceRelatedData.belongsToSecurityForces")
+	@Mapping(source = "inDuty", target = "securityForceRelatedData.inDuty")
+	@Mapping(source = "securityForceTypeId", target = "securityForceRelatedData.securityForceTypes", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+	@Mapping(source = "livesWithVictimId", target = "livesWithVictim")
+	@Mapping(source = "relationshipLengthId", target = "relationshipLength")
+	@Mapping(source = "violenceViolenceFrequencyId", target = "violenceViolenceFrequency")
+	@Mapping(source = "hasPreviousEpisodesId", target = "hasPreviousEpisodes")
+	@Named("toViolenceReportAggressorDto")
+	ViolenceReportAggressorDto toViolenceReportAggressorDto (ViolenceReportAggressorBo violenceReportAggressorBo);
+
+	@IterableMapping(qualifiedByName = "toViolenceReportAggressorDto")
+	@Named("toViolenceReportAggressorDtoList")
+	List<ViolenceReportAggressorDto> toViolenceReportAggressorDtoList (List<ViolenceReportAggressorBo> violenceReportAggressorBos);
+
+	default List<EHealthSystemOrganization> toEHealthSystemOrganization(List<Short> eHealthSystemOrganizationIds) {
+		if (eHealthSystemOrganizationIds != null)
+			return eHealthSystemOrganizationIds.stream().map(EHealthSystemOrganization::map).collect(Collectors.toList());
+		return null;
+	}
+
+	@Mapping(target = "organizations", expression = "java(toEHealthSystemOrganization(coordinationActionBo.getOrganizations()))")
+	@Named("toHealthSystemCoordinationActionDto")
+	CoordinationActionDto<EHealthSystemOrganization> toHealthSystemCoordinationActionDto (CoordinationActionBo coordinationActionBo);
+
+	default List<EHealthInstitutionOrganization> toEHealthInstitutionOrganization(List<Short> eHealthInstitutionOrganizationIds) {
+		if (eHealthInstitutionOrganizationIds != null)
+			return eHealthInstitutionOrganizationIds.stream().map(EHealthInstitutionOrganization::map).collect(Collectors.toList());
+		return null;
+	}
+
+	@Mapping(target = "organizations", expression = "java(toEHealthInstitutionOrganization(coordinationActionBo.getOrganizations()))")
+	@Named("toHealthInstitutionCoordinationActionDto")
+	CoordinationActionDto<EHealthInstitutionOrganization> toHealthInstitutionCoordinationActionDto (CoordinationActionBo coordinationActionBo);
+
+	@Mapping(source = "healthSystemOrganization", target = "healthSystemOrganization", qualifiedByName = "toHealthSystemCoordinationActionDto")
+	@Mapping(source = "healthInstitutionOrganization", target = "healthInstitutionOrganization", qualifiedByName = "toHealthInstitutionCoordinationActionDto")
+	@Mapping(source = "wereInternmentIndicatedId", target = "wereInternmentIndicated")
+	@Named("toCoordinationInsideHealthSectorDto")
+	CoordinationInsideHealthSectorDto toCoordinationInsideHealthSectorDto (CoordinationInsideHealthSectorBo coordinationInsideHealthSectorBo);
+
+	default List<EMunicipalGovernmentDevice> toEMunicipalGovernmentDevice(List<Short> eMunicipalGovernmentDeviceIds) {
+		if (eMunicipalGovernmentDeviceIds != null)
+			return eMunicipalGovernmentDeviceIds.stream().map(EMunicipalGovernmentDevice::map).collect(Collectors.toList());
+		return null;
+	}
+
+	default List<EProvincialGovernmentDevice> toEProvincialGovernmentDevice(List<Short> eProvincialGovernmentDeviceIds) {
+		if (eProvincialGovernmentDeviceIds != null)
+			return eProvincialGovernmentDeviceIds.stream().map(EProvincialGovernmentDevice::map).collect(Collectors.toList());
+		return null;
+	}
+
+	default List<ENationalGovernmentDevice> toENationalGovernmentDevice(List<Short> eNationalGovernmentDeviceIds) {
+		if (eNationalGovernmentDeviceIds != null)
+			return eNationalGovernmentDeviceIds.stream().map(ENationalGovernmentDevice::map).collect(Collectors.toList());
+		return null;
+	}
+
+	@Mapping(target = "municipalGovernmentDevices", expression = "java(toEMunicipalGovernmentDevice(coordinationOutsideHealthSectorBo.getMunicipalGovernmentDeviceIds()))")
+	@Mapping(target = "provincialGovernmentDevices", expression = "java(toEProvincialGovernmentDevice(coordinationOutsideHealthSectorBo.getProvincialGovernmentDeviceIds()))")
+	@Mapping(target = "nationalGovernmentDevices", expression = "java(toENationalGovernmentDevice(coordinationOutsideHealthSectorBo.getNationalGovernmentDeviceIds()))")
+	@Named("toCoordinationOutsideHealthSectorDto")
+	CoordinationOutsideHealthSectorDto toCoordinationOutsideHealthSectorDto (CoordinationOutsideHealthSectorBo coordinationOutsideHealthSectorBo);
+
+	//Nuevo
+
+	default List<EVictimKeeperReportPlace> toEVictimKeeperReportPlace(List<Short> eVictimKeeperReportPlaceIds) {
+		if (eVictimKeeperReportPlaceIds != null)
+			return eVictimKeeperReportPlaceIds.stream().map(EVictimKeeperReportPlace::map).collect(Collectors.toList());
+		return null;
+	}
+
+	default List<EInstitutionReportReason> toEInstitutionReportReason(List<Short> eInstitutionReportReasonIds) {
+		if (eInstitutionReportReasonIds != null)
+			return eInstitutionReportReasonIds.stream().map(EInstitutionReportReason::map).collect(Collectors.toList());
+		return null;
+	}
+
+	default List<EInstitutionReportPlace> toEInstitutionReportPlace(List<Short> eInstitutionReportPlaceIds) {
+		if (eInstitutionReportPlaceIds != null)
+			return eInstitutionReportPlaceIds.stream().map(EInstitutionReportPlace::map).collect(Collectors.toList());
+		return null;
+	}
+
+	default List<ESexualViolenceAction> toESexualViolenceAction(List<Short> eSexualViolenceActionIds) {
+		if (eSexualViolenceActionIds != null)
+			return eSexualViolenceActionIds.stream().map(ESexualViolenceAction::map).collect(Collectors.toList());
+		return null;
+	}
+
+	@Mapping(source = "coordinationInsideHealthSector", target = "healthCoordination.coordinationInsideHealthSector", qualifiedByName = "toCoordinationInsideHealthSectorDto")
+	@Mapping(source = "coordinationOutsideHealthSector", target = "healthCoordination.coordinationOutsideHealthSector", qualifiedByName = "toCoordinationOutsideHealthSectorDto")
+	@Mapping(source = "werePreviousEpisodesWithVictimOrKeeper", target = "victimKeeperReport.werePreviousEpisodesWithVictimOrKeeper")
+	@Mapping(target = "victimKeeperReport.reportPlaces", expression = "java(toEVictimKeeperReportPlace(violenceReportImplementedActionsBo.getReportPlaceIds()))")
+	@Mapping(source = "reportWasDoneByInstitution", target = "institutionReport.reportWasDoneByInstitution")
+	@Mapping(target = "institutionReport.reportReasons", expression = "java(toEInstitutionReportReason(violenceReportImplementedActionsBo.getReportReasonIds()))")
+	@Mapping(target = "institutionReport.institutionReportPlaces", expression = "java(toEInstitutionReportPlace(violenceReportImplementedActionsBo.getInstitutionReportPlaceIds()))")
+	@Mapping(source = "wasSexualViolence", target = "sexualViolence.wasSexualViolence")
+	@Mapping(target = "sexualViolence.implementedActions", expression = "java(toESexualViolenceAction(violenceReportImplementedActionsBo.getImplementedActionIds()))")
+	@Named("toViolenceReportImplementedActionsDto")
+	ViolenceReportImplementedActionsDto toViolenceReportImplementedActionsDto (ViolenceReportImplementedActionsBo violenceReportImplementedActionsBo);
+
+	@Mapping(target = "victimData", source = "victimData", qualifiedByName = "toViolenceReportVictimDto")
+	@Mapping(target = "episodeData", source = "episodeData", qualifiedByName = "toViolenceEpisodeDetailDto")
+	@Mapping(target = "aggressorData", source = "aggressors", qualifiedByName = "toViolenceReportAggressorDtoList")
+	@Mapping(target = "implementedActions", source = "implementedActions", qualifiedByName = "toViolenceReportImplementedActionsDto")
+	ViolenceReportDto toViolenceReportDto(ViolenceReportBo violenceReportBo);
 
 }

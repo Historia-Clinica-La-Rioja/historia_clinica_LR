@@ -27,4 +27,66 @@ public class ViolenceReportBo {
 
 	private String observation;
 
+	public ViolenceReportBo(Boolean canReadAndWrite, Boolean hasIncome, Boolean worksAtFormalSector, Boolean hasSocialPlan, Boolean hasDisability,
+							Short disabilityCertificateStatusId, Boolean isInstitutionalized, String institutionalizedDetails, Boolean lackOfLegalCapacity,
+							Boolean coordinationWithinHealthSystem, Boolean coordinationWithinHealthInstitution, Short internmentIndicatedStatusId,
+							Boolean coordinationWithOtherSocialOrganizations, Boolean werePreviousEpisodeWithVictimOrKeeper, Boolean institutionReported,
+							Boolean wasSexualViolence, String observations) {
+		victimData = initializeVictimData(canReadAndWrite, hasIncome, worksAtFormalSector, hasSocialPlan, hasDisability, disabilityCertificateStatusId, isInstitutionalized, institutionalizedDetails, lackOfLegalCapacity);
+		implementedActions = initializeImplementedActions(coordinationWithinHealthSystem, coordinationWithinHealthInstitution, internmentIndicatedStatusId, coordinationWithOtherSocialOrganizations, werePreviousEpisodeWithVictimOrKeeper, institutionReported, wasSexualViolence);
+		this.observation = observations;
+	}
+
+	private ViolenceReportImplementedActionsBo initializeImplementedActions(Boolean coordinationWithinHealthSystem, Boolean coordinationWithinHealthInstitution,
+																			Short internmentIndicatedStatusId, Boolean coordinationWithOtherSocialOrganizations,
+																			Boolean werePreviousEpisodeWithVictimOrKeeper, Boolean institutionReported,
+																			Boolean wasSexualViolence) {
+		ViolenceReportImplementedActionsBo result = new ViolenceReportImplementedActionsBo();
+		CoordinationInsideHealthSectorBo coordinationInsideHealthSectorBo = parseCoordinationInsideHealthSector(coordinationWithinHealthSystem, coordinationWithinHealthInstitution, internmentIndicatedStatusId);
+		CoordinationOutsideHealthSectorBo coordinationOutsideHealthSectorBo = new CoordinationOutsideHealthSectorBo();
+		coordinationOutsideHealthSectorBo.setWithOtherSocialOrganizations(coordinationWithOtherSocialOrganizations);
+		result.setCoordinationInsideHealthSector(coordinationInsideHealthSectorBo);
+		result.setCoordinationOutsideHealthSector(coordinationOutsideHealthSectorBo);
+		result.setWerePreviousEpisodesWithVictimOrKeeper(werePreviousEpisodeWithVictimOrKeeper);
+		result.setReportWasDoneByInstitution(institutionReported);
+		result.setWasSexualViolence(wasSexualViolence);
+		return result;
+	}
+
+	private CoordinationInsideHealthSectorBo parseCoordinationInsideHealthSector(Boolean coordinationWithinHealthSystem, Boolean coordinationWithinHealthInstitution,
+																				 Short internmentIndicatedStatusId) {
+		if (coordinationWithinHealthSystem != null && coordinationWithinHealthInstitution != null && internmentIndicatedStatusId != null)
+            return initializeCoordinationInsideHealthSectorBo(coordinationWithinHealthSystem, coordinationWithinHealthInstitution, internmentIndicatedStatusId);
+		return null;
+	}
+
+	private CoordinationInsideHealthSectorBo initializeCoordinationInsideHealthSectorBo(Boolean coordinationWithinHealthSystem, Boolean coordinationWithinHealthInstitution,
+																						Short internmentIndicatedStatusId) {
+		CoordinationActionBo healthSystemOrganization = new CoordinationActionBo();
+		healthSystemOrganization.setWithin(coordinationWithinHealthSystem);
+		CoordinationActionBo healthInstitutionOrganization = new CoordinationActionBo();
+		healthInstitutionOrganization.setWithin(coordinationWithinHealthInstitution);
+		CoordinationInsideHealthSectorBo coordinationInsideHealthSectorBo = new CoordinationInsideHealthSectorBo();
+		coordinationInsideHealthSectorBo.setHealthSystemOrganization(healthSystemOrganization);
+		coordinationInsideHealthSectorBo.setHealthInstitutionOrganization(healthInstitutionOrganization);
+		coordinationInsideHealthSectorBo.setWereInternmentIndicatedId(internmentIndicatedStatusId);
+		return coordinationInsideHealthSectorBo;
+	}
+
+	private ViolenceReportVictimBo initializeVictimData(Boolean canReadAndWrite, Boolean hasIncome, Boolean worksAtFormalSector, Boolean hasSocialPlan,
+														Boolean hasDisability, Short disabilityCertificateStatusId, Boolean isInstitutionalized,
+														String institutionalizedDetails, Boolean lackOfLegalCapacity) {
+		ViolenceReportVictimBo result = new ViolenceReportVictimBo();
+		result.setCanReadAndWrite(canReadAndWrite);
+		result.setHasIncome(hasIncome);
+		result.setWorksAtFormalSector(worksAtFormalSector);
+		result.setHasSocialPlan(hasSocialPlan);
+		result.setHasDisability(hasDisability);
+		result.setDisabilityCertificateStatusId(disabilityCertificateStatusId);
+		result.setIsInstitutionalized(isInstitutionalized);
+		result.setInstitutionalizedDetails(institutionalizedDetails);
+		result.setLackOfLegalCapacity(lackOfLegalCapacity);
+		return result;
+	}
+
 }

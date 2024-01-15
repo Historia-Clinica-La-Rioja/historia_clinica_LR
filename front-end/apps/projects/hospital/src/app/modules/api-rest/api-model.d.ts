@@ -4562,7 +4562,7 @@ export interface ViolenceReportPersonDto {
     age: number;
     firstName: string;
     lastName: string;
-    municipalityId: number;
+    municipality: DepartmentDto;
 }
 
 export interface ViolenceReportSituationDto {

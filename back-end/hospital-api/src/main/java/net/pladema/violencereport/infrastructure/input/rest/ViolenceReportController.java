@@ -19,6 +19,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.datastructures.PageDt
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.violencereport.application.GetLastSituationEvolutionReport;
 import net.pladema.violencereport.application.GetPatientSituations;
 import net.pladema.violencereport.application.SaveNewViolenceEpisode;
 import net.pladema.violencereport.domain.ViolenceReportBo;
@@ -41,6 +42,8 @@ public class ViolenceReportController {
 	private SaveNewViolenceEpisode saveNewViolenceReport;
 
 	private GetPatientSituations getPatientSituations;
+
+	private GetLastSituationEvolutionReport getLastSituationEvolutionReport;
 
 	@PostMapping(value = "/patient/{patientId}")
 	public Integer saveNewViolenceReport(@PathVariable("institutionId") Integer institutionId,
@@ -65,6 +68,17 @@ public class ViolenceReportController {
 		Page<ViolenceReportSituationBo> patientSituations = getPatientSituations.run(patientId, mustBeLimited, pageable);
 		Page<ViolenceReportSituationDto> violenceReportSituationDtos = patientSituations.map(violenceReportMapper::toViolenceReportSituationDto);
 		PageDto<ViolenceReportSituationDto> result = PageDto.fromPage(violenceReportSituationDtos);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@GetMapping(value = "/patient/{patientId}/situation/{situationId}")
+	public ViolenceReportDto getLastSituationEvolutionReport(@PathVariable("institutionId") Integer institutionId,
+															 @PathVariable("patientId") Integer patientId,
+															 @PathVariable("situationId") Integer situationId) {
+		log.debug("Input parameters -> institutionId {}, patientId {}, situationId {}", institutionId, patientId, situationId);
+		ViolenceReportBo violenceReportBo = getLastSituationEvolutionReport.run(patientId, situationId);
+		ViolenceReportDto result = violenceReportMapper.toViolenceReportDto(violenceReportBo);
 		log.debug("Output -> {}", result);
 		return result;
 	}

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.address.controller.dto.DepartmentDto;
 
 @ToString
 @Getter
@@ -19,6 +20,6 @@ public class ViolenceReportPersonDto {
 
 	private String address;
 
-	private Short municipalityId;
+	private DepartmentDto municipality;
 
 }
