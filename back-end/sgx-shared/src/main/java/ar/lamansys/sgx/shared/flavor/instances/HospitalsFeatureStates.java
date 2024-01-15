@@ -61,7 +61,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_IMPRESION_HISTORIA_CLINICA_EN_DESARROLLO, false);
 		map.put(AppFeature.HABILITAR_API_CONSUMER, true);
 		map.put(AppFeature.HABILITAR_TELEMEDICINA, false);
-		map.put(AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO, false);
+		map.put(AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO, true);
 		map.put(AppFeature.HABILITAR_OBLIGATORIEDAD_UNIDADES_JERARQUICAS, false);
 		map.put(AppFeature.HABILITAR_FIRMA_DIGITAL, false);
 		map.put(AppFeature.HABILITAR_NUEVO_FORMATO_PDF_ORDENES_PRESTACION, false);
