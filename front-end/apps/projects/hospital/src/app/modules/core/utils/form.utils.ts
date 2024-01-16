@@ -4,6 +4,7 @@ import { Moment } from 'moment';
 import { momentFormat, newMoment } from './moment.utils';
 import { DateFormat } from './date.utils';
 import { format } from 'date-fns';
+import { NATURAL_NUMBERS } from './core.utils';
 
 export const VALIDATIONS = {
 	MAX_LENGTH: {
@@ -188,4 +189,9 @@ export function NoWhitespaceValidator(): ValidatorFn {
 	  const isValid = !isWhitespace;
 	  return isValid ? null : { 'whitespace': true };
 	};
-  }
+}
+
+export function onlyNaturalNumbers(event: KeyboardEvent) {   
+	const code = event.code;
+	return NATURAL_NUMBERS.includes(code);
+}
