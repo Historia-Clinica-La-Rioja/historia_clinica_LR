@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { EAggressorRelationship, ECriminalRecordStatus, ELiveTogetherStatus, ERelationshipLength, ESecurityForceType, EViolenceFrequency, ViolenceReportAggressorDto } from '@api-rest/api-model';
+import { EAggressorRelationship, ECriminalRecordStatus, ELiveTogetherStatus, ERelationshipLength, ESecurityForceType, EViolenceFrequency, ViolenceReportActorDto, ViolenceReportAggressorDto } from '@api-rest/api-model';
 import { AggressorRelationship, CriminalRecordStatus, FormOption, InstitutionOptions, LiveTogetherStatus, RelationshipLengths, ViolenceFrequencys } from '@historia-clinica/modules/ambulatoria/constants/violence-masterdata';
 import { CustomViolenceReportAggressorDto, ViolenceAggressorsNewConsultationService } from '@historia-clinica/modules/ambulatoria/services/violence-aggressors-new-consultation.service';
 
@@ -38,8 +38,12 @@ export class ViolentPersonListComponent {
     return InstitutionOptions.find(type => type.value === value).text;
   }
 
-  getDescriptionAggressorRelationship(value: EAggressorRelationship): string {
-    return AggressorRelationship.find(relation => relation.value === value).text;
+  getDescriptionAggressorRelationship(value: ViolenceReportActorDto<EAggressorRelationship>): string {
+	const relationshipWithVictim: EAggressorRelationship = value.relationshipWithVictim;
+	let result: string = AggressorRelationship.find(relation => relation.value === relationshipWithVictim).text;
+	if (relationshipWithVictim === EAggressorRelationship.ACQUAINTANCE)
+		result = `${result} - ${value.otherRelationshipWithVictim}`;
+    return result;
   }
 
   getDescriptionLivesWithVictim(value: ELiveTogetherStatus): string {
