@@ -2,6 +2,7 @@ import * as moment from 'moment';
 import { Moment } from 'moment';
 import { DEFAULT_LANG } from '../../../app.component';
 import { DateDto } from '@api-rest/api-model';
+import { parseISO } from 'date-fns';
 
 moment.locale(DEFAULT_LANG);
 
@@ -56,6 +57,7 @@ export const dateToMoment = (date: Date): Moment => moment.utc(date);
 export const dateToMomentTimeZone = (date: Date): Moment => moment(date);
 
 export const momentParseDate = (dateStr: string): Moment => momentParseDateTime(`${dateStr}T00:00:00.000-0300`);
+export const dateISOParseDate = (dateISO: string): Date => parseISO(dateISO);
 
 export const momentParseDateTime = (dateStr: string): Moment => moment.parseZone(dateStr);
 
