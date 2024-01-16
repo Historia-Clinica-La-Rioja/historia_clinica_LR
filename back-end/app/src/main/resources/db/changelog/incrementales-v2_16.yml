@@ -1,3 +1,31 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v2_16 
+    - logicalFilePath: incrementales-v2_16
+
+    - changeSet:
+        id: createView-v_user_person_data
+        comment: Create view v_user_person_data
+        author: lmanterola
+        changes:
+          - createView:
+              viewName: v_user_person_data
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT 
+                up.user_id AS id,
+                u.username AS sub,
+                pe.email AS email,
+                CASE WHEN p.middle_names IS NOT NULL THEN CONCAT(p.first_name, ' ', p.middle_names) ELSE p.first_name END AS given_name,
+                CASE WHEN p.other_last_names IS NOT NULL THEN CONCAT(p.last_name, ' ', p.other_last_names) ELSE p.last_name END AS family_name,
+                pe.cuil AS cuil,
+                it.description AS identification_type,
+                p.identification_number AS identification_number,
+                g.description AS gender
+                FROM users u 
+                LEFT JOIN user_person up on u.id = up.user_id 
+                LEFT JOIN person p ON p.id = up.person_id
+                LEFT JOIN person_extended pe ON pe.person_id = p.id
+                LEFT JOIN identification_type it ON it.id = p.identification_type_id
+                LEFT JOIN gender g ON g.id = p.gender_id;
+
 
