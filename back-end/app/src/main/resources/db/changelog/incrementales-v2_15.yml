@@ -1609,3 +1609,291 @@ databaseChangeLog:
                     name: deleted_on
                     type: datetime
 
+    - changeSet:
+        id: createTable-surgical_report
+        comment: Create table surgical_report
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: surgical_report
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_surgical_report
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: patient(id)
+                      foreignKeyName: FK_patient_id_surgical_report
+                    name: patient_id
+                    type: int
+                - column:
+                    constraints:
+                      references: clinical_specialty(id)
+                      foreignKeyName: FK_clinical_specialty_id_surgical_report
+                    name: clinical_specialty_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: institution(id)
+                      foreignKeyName: FK_institution_id_surgical_report
+                    name: institution_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: document(id)
+                      foreignKeyName: FK_document_id_surgical_report
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      references: healthcare_professional(id)
+                      foreignKeyName: FK_doctor_id_surgical_report
+                    name: doctor_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: billable
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      references: patient_medical_coverage(id)
+                      foreignKeyName: FK_patient_medical_coverage_id_surgical_report
+                    name: patient_medical_coverage_id
+                    type: int
+                - column:
+                    name: start_date_time
+                    type: datetime
+                - column:
+                    name: end_date_time
+                    type: datetime
+                - column:
+                    constraints:
+                      references: note(id)
+                      foreignKeyName: FK_note_id_surgical_report
+                    name: note_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+                    constraints:
+                      nullable: true
+
+    - changeSet:
+        id: createTable-procedure_type
+        comment: Create table procedure_type
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: procedure_type
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_procedure_type
+                    name: id
+                    type: smallint
+                - column:
+                    name: sctid_code
+                    type: varchar(20)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(100)
+
+    - changeSet:
+        id: procedure_type-masterdata
+        comment: Carga de datos procedure_type
+        author: mvenere
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO procedure_type VALUES (1, '71388002', 'Procedimiento');
+                INSERT INTO procedure_type VALUES (2, '387713003', 'Procedimiento quirúrgico');
+                INSERT INTO procedure_type VALUES (3, '1263452006', 'Procedimiento de anestesia y/o sedación');
+                INSERT INTO procedure_type VALUES (4, null, 'Cultivo');
+                INSERT INTO procedure_type VALUES (5, null, 'Biopsia por congelación');
+                INSERT INTO procedure_type VALUES (6, null, 'Drenaje');
+
+    - changeSet:
+        id: addColumn-procedure_type_id_procedure
+        author: mvenere
+        changes:
+          - addColumn:
+              tableName: procedures
+              columns:
+                - column:
+                    name: procedure_type_id
+                    type: smallint
+                    defaultValueDate: 1
+          - addForeignKeyConstraint:
+              baseColumnNames: procedure_type_id
+              baseTableName: procedures
+              constraintName: FK_procedure_type_procedures
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: procedure_type
+              validate: true
+
+    - changeSet:
+        id: createTable-document_healthcare_professional
+        comment: Create table document_healthcare_professional
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: document_healthcare_professional
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_document_healthcare_professional
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: document(id)
+                      foreignKeyName: FK_document_id_document_healthcare_professional
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                      references: healthcare_professional(id)
+                      foreignKeyName: FK_healthcare_professional_id_document_healthcare_professional
+                    name: healthcare_professional_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: profession_type_id
+                    type: smallint
+                - column:
+                    name: professional_license_number_id
+                    type: int
+                - column:
+                    name: comments
+                    type: text
+
+    - changeSet:
+        id: addColumn-is_primary_procedure
+        author: mvenere
+        changes:
+          - addColumn:
+              tableName: procedures
+              columns:
+                - column:
+                    name: is_primary
+                    type: boolean
+                    defaultValueDate: ${boolean.true}
+
+    - changeSet:
+        id: document_type-surgical-data
+        comment: Actualizar datos document_type
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO document_type VALUES (18, 'Parte quirúrgico de internación');
+                INSERT INTO document_type VALUES (19, 'Parte quirúrgico de guardia');
+
+    - changeSet:
+        id: problem_type-surgical-data
+        comment: Actualizar datos problem_type
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO problem_type VALUES ('406520001', 'Diagnóstico pre-operatorio');
+                INSERT INTO problem_type VALUES ('406521002', 'Diagnóstico post-operatorio');
+
+    - changeSet:
+        id: modifyDataType-document_file-file_name
+        author: mvenere
+        changes:
+          - modifyDataType:
+              columnName: file_name
+              newDataType: varchar(60)
+              tableName: document_file
+
+    - changeSet:
+        id: modifyDataType-document_file_history-file_name
+        author: mvenere
+        changes:
+          - modifyDataType:
+              columnName: file_name
+              newDataType: varchar(60)
+              tableName: document_file_history
+
+    - changeSet:
+        id: createTable-document_prosthesis
+        comment: Create table document_prosthesis
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: document_prosthesis
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_document_prosthesis
+                      references: document(id)
+                      foreignKeyName: FK_document_id_document_prosthesis
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: text
+          - addUniqueConstraint:
+              tableName: document_prosthesis
+              columnNames: document_id
+              constraintName: UQ_document_id_document_prosthesis
+
