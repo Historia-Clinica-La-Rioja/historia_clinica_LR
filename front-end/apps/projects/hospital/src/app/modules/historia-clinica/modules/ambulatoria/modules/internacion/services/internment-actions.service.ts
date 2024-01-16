@@ -10,6 +10,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { DiagnosisDto, HealthConditionDto } from "@api-rest/api-model";
 import { Subject, take } from 'rxjs';
 import { SurgicalReportDockPopupComponent } from '@historia-clinica/components/surgical-report-dock-popup/surgical-report-dock-popup.component';
+import { AnestheticReportDockPopupComponent } from '@historia-clinica/components/anesthetic-report-dock-popup/anesthetic-report-dock-popup.component';
 
 @Injectable({
 	providedIn: 'root'
@@ -153,6 +154,21 @@ export class InternmentActionsService {
 				this.medicalDischargeSubject.next(medicalDischarge);
 			this.popUpOpenSubject.next(false);
 		});
+	}
+
+	openAnestheticReport() {
+		if (!this.dialogRef) {
+			this.dialogRef = this.dockPopupService.open(AnestheticReportDockPopupComponent, {});
+			this.popUpOpenSubject.next(true);
+			this.dialogRef.afterClosed().pipe(take(1)).subscribe(() => {
+				delete this.dialogRef;
+				this.popUpOpenSubject.next(false);
+			});
+		} else {
+			if (this.dialogRef.isMinimized()) {
+				this.dialogRef.maximize();
+			}
+		}
 	}
 
 	openSurgicalReport(id?: number): void {

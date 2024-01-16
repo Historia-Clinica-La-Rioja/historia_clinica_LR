@@ -275,7 +275,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	}
 
 	openAnestheticReport() {
-		
+		this.internmentActions.openAnestheticReport();
 	}
 
 	openSurgicalReport() {

@@ -1,0 +1,10 @@
+<app-dock-popup [dockPopupRef]="dockPopupRef" [header]="{ title:'Parte Anestésico'} ">
+    <div body fxLayout="column" fxLayoutGap="20px">
+	</div>
+
+	<div actions id="buttons" fxLayoutAlign="end">
+		<app-button [color]="'primary'" [isLoading]="isLoading" [text]="'buttons.CONFIRM' | translate | uppercase"
+			[buttonType]="'mat-raised-button'" (clicked)="save()">
+		</app-button>
+	</div>
+</app-dock-popup>
