@@ -3,7 +3,7 @@
 		<br>
 		<app-elemento-diagnostico [diagnosis]="mainDiagnosis" [isMain]="true" (removeDiagnosis)="removeMainDiagnosis()"
 			[type]="type"></app-elemento-diagnostico>
-		<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+		<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']">
 			<br>
 			<button id="modify-main-diagnosis" class="change-main-diagnosis" *ngIf="mainDiagnosis"
 				class="diagnoses-action-button" mat-button color="primary" [disabled]="!diagnosticos?.length"
@@ -15,7 +15,7 @@
 
 </ng-container>
 
-<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']" fxLayout="column" fxLayoutAlign="start start">
+<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']" fxLayout="column" fxLayoutAlign="start start">
 	<button id="add-main-diagnosis" *ngIf="!mainDiagnosis && type === 'ANAMNESIS'" class="diagnoses-action-button"
 		mat-button color="primary" (click)="openCreationDialog(true); $event.preventDefault()">
 		{{ 'internaciones.anamnesis.diagnosticos.ADD_MAIN_DIAGNOSIS' | translate }}
@@ -39,7 +39,7 @@
 		</div>
 	</app-titled-content-card>
 </ng-container>
-<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']" fxLayout="column" fxLayoutAlign="start start">
+<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']" fxLayout="column" fxLayoutAlign="start start">
 	<br>
 	<button id="add-diagnosis" class="diagnoses-action-button" mat-button color="primary"
 		(click)="openCreationDialog(false); $event.preventDefault()">
