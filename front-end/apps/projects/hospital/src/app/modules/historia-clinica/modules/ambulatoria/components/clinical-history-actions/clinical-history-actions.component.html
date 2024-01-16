@@ -72,6 +72,12 @@
 				</button>
 			</ng-container>
 			<ng-container>
+				<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']" class="actions"
+					(click)="openAnestheticReport()">
+					{{'ambulatoria.paciente.card.buttons.actions.ANESTHETIC_REPORT' | translate}}
+				</button>
+			</ng-container>
+			<ng-container>
 				<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO']" class="actions"
 					(click)="openSurgicalReport()">
 					{{'ambulatoria.paciente.card.buttons.actions.SURGICAL_REPORT' | translate}}

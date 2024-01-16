@@ -274,6 +274,10 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		this.documentActions.editEpicrisisDraft(this.documentEpicrisisDraft);
 	}
 
+	openAnestheticReport() {
+		
+	}
+
 	openSurgicalReport() {
 		this.internmentActions.openSurgicalReport();
 		this.internmentActions.surgicalReport$.subscribe(fieldsToUpdate => {

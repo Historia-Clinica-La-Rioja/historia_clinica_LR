@@ -49,6 +49,7 @@
                         "AMBULATORY": "Ambulatoria",
                         "NURSING": "Enfermería",
                         "EPICRISIS_DRAFT": "Continuar epicrisis",
+                        "ANESTHETIC_REPORT": "Parte anestésico",
 						"SURGICAL_REPORT": "Parte quirúrgico"
                     }
                 },
