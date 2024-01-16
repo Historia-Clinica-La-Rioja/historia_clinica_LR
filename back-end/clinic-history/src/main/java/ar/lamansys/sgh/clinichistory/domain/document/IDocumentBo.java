@@ -176,4 +176,8 @@ public interface IDocumentBo {
 	default String getProsthesisDescription() { return null; }
 
 	default String getDescription() { return null; }
+
+    default boolean isTranscribed() {
+        return false;
+    }
 }

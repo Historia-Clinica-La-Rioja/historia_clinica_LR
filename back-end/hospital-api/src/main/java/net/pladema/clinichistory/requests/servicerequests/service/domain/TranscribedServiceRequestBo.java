@@ -88,4 +88,9 @@ public class TranscribedServiceRequestBo implements IServiceRequestBo {
     public Short getAssociatedSourceTypeId() {
         return SourceType.OUTPATIENT;
     }
+
+    public boolean isTranscribed() {
+        return true;
+    }
 }
+

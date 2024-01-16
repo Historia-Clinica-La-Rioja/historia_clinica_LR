@@ -91,4 +91,8 @@ public class ServiceRequestBo implements IDocumentBo, IServiceRequestBo {
         return List.of(getDiagnosticReports().get(0).getHealthCondition().getCie10codes());
     }
 
+    @Override
+    public boolean isTranscribed() {
+        return false;
+    }
 }

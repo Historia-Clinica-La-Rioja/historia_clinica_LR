@@ -69,6 +69,8 @@ public class AuditableContextBuilder {
 
 	private final Function<Integer, ContactInfoBo> personContactInfoFunction;
 
+	private final SharedPersonPort sharedPersonPort;
+
 	@Value("${prescription.domain.number}")
 	private Integer recipeDomain;
 
@@ -81,8 +83,8 @@ public class AuditableContextBuilder {
 			LocalDateMapper localDateMapper,
 			FeatureFlagsService featureFlagsService, SharedInstitutionPort sharedInstitutionPort,
 			PatientMedicalCoverageService patientMedicalCoverageService,
-			AssetsService assetsService, 
-			SharedStaffPort sharedStaffPort, 
+			AssetsService assetsService,
+			SharedStaffPort sharedStaffPort,
 			SharedDiagnosticImagingOrder sharedDiagnosticImagingOrder,
 			SharedPersonPort sharedPersonPort) {
 		this.sharedImmunizationPort = sharedImmunizationPort;
@@ -100,6 +102,7 @@ public class AuditableContextBuilder {
 		this.patientMedicalCoverageService = patientMedicalCoverageService;
 		this.assetsService = assetsService;
 		this.personContactInfoFunction = sharedPersonPort::getPersonContactInfoById;
+		this.sharedPersonPort = sharedPersonPort;
 	}
 
 	public <T extends IDocumentBo> Map<String,Object> buildContext(T document, Integer patientId){
@@ -182,14 +185,16 @@ public class AuditableContextBuilder {
 		ctx.put("recipe", true);
 		ctx.put("order", false);
 		ctx.put("request", document);
-		ctx.put("professional", authorFromDocumentFunction.apply(document.getId()));
+		var professional = authorFromDocumentFunction.apply(document.getId());
+		ctx.put("professional", professional);
+		ctx.put("professionalName", sharedPersonPort.getCompletePersonNameById(professional.getPersonId()));
+
 		ctx.put("contactInfo", personContactInfoFunction.apply(((BasicPatientDto) ctx.get("patient")).getPerson().getId()));
 
 		var patientCoverage = patientMedicalCoverageService.getCoverage(document.getMedicalCoverageId());
 		patientCoverage.ifPresent(sharedPatientMedicalCoverageBo -> ctx.put("patientCoverage", sharedPatientMedicalCoverageBo));
 
 		var date = document.getPerformedDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-		ctx.put("nameSelfDeterminationFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
 		ctx.put("requestDate", date);
 		ctx.put("institution",sharedInstitutionPort.fetchInstitutionById(document.getInstitutionId()));
 	}

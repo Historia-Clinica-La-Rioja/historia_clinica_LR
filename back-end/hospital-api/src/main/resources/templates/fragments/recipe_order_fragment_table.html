@@ -93,13 +93,13 @@
                 <strong> N° de Orden: </strong>
                 <label th:text="${request.getServiceRequestId()}"></label>
                 <br/>
-                <div th:if="${!transcribed}">
+                <div th:if="${!request.isTranscribed()}">
                     <strong> Institución: </strong>
                     <label th:text="${institution.name}"></label>
                     <strong> REFES: </strong>
                     <label th:text="${institution.sisaCode}"></label>
                 </div>
-                <div th:if="${transcribed}">
+                <div th:if="${request.isTranscribed()}">
                     <strong> Institución: </strong>
                     <label th:text="${institutionName}"></label>
                     <strong> REFES: </strong>
@@ -198,7 +198,7 @@
                         <th scope="col">Observaciones </th>
                     </tr>
                     </thead>
-                    <tbody th:if="${!transcribed}">
+                    <tbody th:if="${!request.isTranscribed()}">
                         <tr th:each="order,iter: ${request.diagnosticReports}">
                             <td class="centered-cell" th:text="${(iter.index + 1)}"></td>
                             <td th:text="${#strings.defaultString(order.healthCondition.cie10codes, '-')}"></td>
@@ -207,7 +207,7 @@
                             <td th:text="${#strings.defaultString(request.observations, '-')}"></td>
                         </tr>
                     </tbody>
-                    <tbody th:if="${transcribed}">
+                    <tbody th:if="${request.isTranscribed()}">
                         <tr>
                             <td class="centered-cell" th:text="${(1)}"></td>
                             <td th:text="${#strings.defaultString(request.cie10Codes[0], '-')}"></td>
@@ -224,7 +224,7 @@
     <footer style="page-break-inside: avoid;">
         <div class="footer-left">
             <strong>Profesional: </strong><label th:text="${professionalName}"></label>
-            <p><strong>Matrículas: </strong><label th:text="${!transcribed} ? ${professional.getCompleteLicenseInfo()} : ''"></label></p>
+            <p><strong>Matrículas: </strong><label th:text="${!request.isTranscribed()} ? ${professional.getCompleteLicenseInfo()} : ''"></label></p>
         </div>
         <div class="footer-right">
             <hr/>

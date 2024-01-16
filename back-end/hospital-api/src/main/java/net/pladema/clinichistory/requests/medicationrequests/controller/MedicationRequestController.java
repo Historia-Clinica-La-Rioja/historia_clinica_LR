@@ -1,5 +1,9 @@
 package net.pladema.clinichistory.requests.medicationrequests.controller;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -39,9 +43,6 @@ import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.FetchDocument
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
-import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
@@ -128,6 +129,8 @@ public class MedicationRequestController {
 
 	private final FetchDocumentFileById fetchDocumentFileById;
 
+	private final SharedPersonPort sharedPersonPort;
+
 	public MedicationRequestController(CreateMedicationRequestService createMedicationRequestService,
 									   HealthcareProfessionalExternalService healthcareProfessionalExternalService,
 									   CreateMedicationRequestMapper createMedicationRequestMapper,
@@ -146,7 +149,8 @@ public class MedicationRequestController {
 									   GetMedicationRequestByDocument getMedicationRequestByDocument,
 									   FetchMostFrequentPharmacos fetchMostFrequentPharmacos,
 									   CancelPrescriptionLineState cancelPrescriptionLineState,
-									   FetchDocumentFileById fetchDocumentFileById) {
+									   FetchDocumentFileById fetchDocumentFileById,
+									   SharedPersonPort sharedPersonPort) {
         this.createMedicationRequestService = createMedicationRequestService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createMedicationRequestMapper = createMedicationRequestMapper;
@@ -166,6 +170,7 @@ public class MedicationRequestController {
 		this.fetchMostFrequentPharmacos = fetchMostFrequentPharmacos;
 		this.cancelPrescriptionLineState = cancelPrescriptionLineState;
 		this.fetchDocumentFileById = fetchDocumentFileById;
+		this.sharedPersonPort = sharedPersonPort;
 	}
 
 
@@ -342,18 +347,21 @@ public class MedicationRequestController {
 	private Map<String, Object> createContext(MedicationRequestBo medicationRequestBo,
                                               BasicPatientDto patientDto,
                                               PatientMedicalCoverageDto patientCoverageDto){
-        LOG.debug("Input parameters -> medicationRequestBo {}, patientDto {}, professionalDto {}, patientCoverageDto {}",
+        LOG.debug("Input parameters -> medicationRequestBo {}, patientDto {}, patientCoverageDto {}",
                 medicationRequestBo, patientDto, patientCoverageDto);
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("recipe", true);
         ctx.put("order", false);
         ctx.put("request", medicationRequestBo);
         ctx.put("patient", patientDto);
-		ctx.put("professional", authorFromDocumentFunction.apply(medicationRequestBo.getId()));
+		var professional = authorFromDocumentFunction.apply(medicationRequestBo.getId());
+		ctx.put("professional", professional);
+		ctx.put("professionalName", sharedPersonPort.getCompletePersonNameById(professional.getPersonId()));
         ctx.put("patientCoverage", patientCoverageDto);
         var date = medicationRequestBo.getRequestDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-		ctx.put("nameSelfDeterminationFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
-        ctx.put("requestDate", date); LOG.debug("Output -> {}", ctx);
+        ctx.put("requestDate", date);
+
+		LOG.debug("Output -> {}", ctx);
         return ctx;
     }
 

@@ -91,7 +91,6 @@ public class CreateTranscribedServiceRequestPdf {
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("recipe", false);
         ctx.put("order", true);
-        ctx.put("transcribed", true);
         ctx.put("request", transcribedServiceRequest);
         ctx.put("patient", patientDto);
         ctx.put("professionalName", transcribedServiceRequest.getHealthcareProfessionalName());

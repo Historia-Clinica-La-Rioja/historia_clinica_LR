@@ -16,4 +16,6 @@ public interface IServiceRequestBo {
     List<String> getCie10Codes();
 
     Short getAssociatedSourceTypeId();
+
+    boolean isTranscribed();
 }
