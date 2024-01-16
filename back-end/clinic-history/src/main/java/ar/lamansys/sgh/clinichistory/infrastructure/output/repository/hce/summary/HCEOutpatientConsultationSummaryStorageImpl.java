@@ -30,6 +30,8 @@ import java.util.List;
 @Repository
 public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatientConsultationSummaryStorage {
 
+	private static final Short REJECTED_REGULATION_STATE = 2;
+
     private final EntityManager entityManager;
 
 	private final MapReferenceSummary mapReferenceSummary;
@@ -191,12 +193,14 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
                 +"  WHERE rhc.pk.healthConditionId = :healthConditionId"
                 +"  AND r.sourceTypeId= " + SourceType.OUTPATIENT
                 +"  AND oc.id = :outpatientId"
-				+"  AND (cl.id IS NULL OR cl.classified IS FALSE OR (clr.roleId IN (:userRoles) AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE))";
+				+"  AND (cl.id IS NULL OR cl.classified IS FALSE OR (clr.roleId IN (:userRoles) AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE))"
+				+"  AND r.regulationStateId <> :regulationStateId" ;
 
         List<Object[]> queryResult = entityManager.createQuery(sqlString)
                 .setParameter("healthConditionId", healthConditionId)
                 .setParameter("outpatientId", outpatientId)
 				.setParameter("userRoles", loggedUserRoleIds)
+				.setParameter("regulationStateId", REJECTED_REGULATION_STATE)
                 .getResultList();
         List<ReferenceSummaryBo> result = new ArrayList<>();
         queryResult.forEach(a -> result.add(mapReferenceSummary.processReferenceSummaryBo(a)));
