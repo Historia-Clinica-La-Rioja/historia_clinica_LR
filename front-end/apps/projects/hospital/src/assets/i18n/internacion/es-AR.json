@@ -323,6 +323,11 @@
 				"NO_DATA": "No se registraron datos en el episodio"
 			}
 		},
+		"anesthesic-report": {
+			"diagnosis": {
+				"TITLE": "Diagnósticos"
+			}
+		},
 		"clinical-assessment-diagnosis": {
 			"TITLE": "Evaluación clínica de diagnósticos",
 			"SUBTITLE": "Completá los siguientes datos.",

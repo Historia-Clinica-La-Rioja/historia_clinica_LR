@@ -275,7 +275,18 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	}
 
 	openAnestheticReport() {
-		this.internmentActions.openAnestheticReport();
+		this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisode.id).subscribe(diagnoses => {
+			diagnoses.forEach(modifiedDiagnosis => modifiedDiagnosis.presumptive = modifiedDiagnosis.verificationId === this.PRESUMPTIVE);
+			this.internmentActions.mainDiagnosis = diagnoses.filter(diagnosis => diagnosis.main)[0];
+			if (this.internmentActions.mainDiagnosis)
+				this.internmentActions.mainDiagnosis.isAdded = true;
+			this.internmentActions.diagnosticos = diagnoses.filter(diagnosis => !diagnosis.main);
+			this.internmentActions.openAnestheticReport();
+			this.internmentActions.evolutionNote$.subscribe(fieldsToUpdate => {
+				if (fieldsToUpdate)
+					this.updateInternmentSummary(fieldsToUpdate);
+			});
+		})
 	}
 
 	openSurgicalReport() {

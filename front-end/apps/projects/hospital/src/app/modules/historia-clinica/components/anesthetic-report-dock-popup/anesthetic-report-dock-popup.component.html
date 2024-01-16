@@ -1,10 +1,16 @@
 <app-dock-popup [dockPopupRef]="dockPopupRef" [header]="{ title:'Parte Anestésico'} ">
     <div body fxLayout="column" fxLayoutGap="20px">
-	</div>
+        <app-new-consultation-expansion-section id="diagnosis-expansion-section"
+            [title]="'internaciones.anesthesic-report.diagnosis.TITLE' | translate" icon="error_outlined" [collapsed]="false"
+            [isEmpty]="false" [hideBorder]="true">
+            <app-diagnosticos id="diagnosis" [showTitle]="false" [(mainDiagnosis)]="mainDiagnosis"
+                [(listDiagnosis)]="diagnosis" [type]="'PARTE ANESTESICO'"></app-diagnosticos>
+        </app-new-consultation-expansion-section>
+    </div>
 
-	<div actions id="buttons" fxLayoutAlign="end">
-		<app-button [color]="'primary'" [isLoading]="isLoading" [text]="'buttons.CONFIRM' | translate | uppercase"
-			[buttonType]="'mat-raised-button'" (clicked)="save()">
-		</app-button>
-	</div>
+    <div actions id="buttons" fxLayoutAlign="end">
+        <app-button [color]="'primary'" [isLoading]="isLoading" [text]="'buttons.CONFIRM' | translate | uppercase"
+            [buttonType]="'mat-raised-button'" (clicked)="save()">
+        </app-button>
+    </div>
 </app-dock-popup>

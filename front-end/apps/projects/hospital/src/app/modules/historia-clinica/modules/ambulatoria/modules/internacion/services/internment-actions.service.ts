@@ -158,7 +158,12 @@ export class InternmentActionsService {
 
 	openAnestheticReport() {
 		if (!this.dialogRef) {
-			this.dialogRef = this.dockPopupService.open(AnestheticReportDockPopupComponent, {});
+			this.dialogRef = this.dockPopupService.open(AnestheticReportDockPopupComponent, {
+				autoFocus: false,
+				disableClose: true,
+				mainDiagnosis: this.mainDiagnosis,
+				diagnosis: this.diagnosticos,
+			});
 			this.popUpOpenSubject.next(true);
 			this.dialogRef.afterClosed().pipe(take(1)).subscribe(() => {
 				delete this.dialogRef;
