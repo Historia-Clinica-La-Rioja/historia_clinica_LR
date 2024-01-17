@@ -134,6 +134,8 @@
 
             <mat-checkbox (click)="setDevice(devicesEnum.SOCIAL_ORGANIZATION)" color="primary">{{
                 devicesEnum.SOCIAL_ORGANIZATION }}</mat-checkbox>
+
+            <mat-error *ngIf="hasError(form, 'required', 'devices') && form.controls.devices.touched"  [translate]="'forms.REQUIRED'"></mat-error>
         </div>
 
 

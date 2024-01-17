@@ -61,7 +61,8 @@
 
 		<mat-radio-group class="basic-options" color="primary"
 			aria-labelledby="is-person-institutionalized-label"
-			formControlName="isPersonInstitutionalized">
+			formControlName="isPersonInstitutionalized"
+			(change)="updateValidationsIsPersonInstitutionalized()">
 			<label id="is-person-institutionalized-label">{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_6' | translate}}</label>
 			<mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
 				{{opt.text}}

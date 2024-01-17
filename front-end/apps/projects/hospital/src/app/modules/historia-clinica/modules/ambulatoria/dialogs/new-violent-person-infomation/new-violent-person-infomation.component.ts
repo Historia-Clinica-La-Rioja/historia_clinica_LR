@@ -142,6 +142,7 @@ export class NewViolentPersonInfomationComponent implements OnInit {
       updateControlValidator(this.form, 'aggressorRelationTextFree', Validators.required);
     } else {
       updateControlValidator(this.form, 'aggressorRelationTextFree', []);
+	  this.form.controls.aggressorRelationTextFree.reset();
     }
   }
 

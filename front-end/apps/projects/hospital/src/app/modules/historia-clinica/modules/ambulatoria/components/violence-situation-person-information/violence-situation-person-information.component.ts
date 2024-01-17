@@ -5,6 +5,7 @@ import { AddressMasterDataService } from '@api-rest/services/address-master-data
 import { DEFAULT_COUNTRY_ID, hasError, onlyNaturalNumbers, updateControlValidator } from '@core/utils/form.utils';
 import { Observable } from 'rxjs';
 import { BasicOptions, BasicTwoOptions, DisabilityCertificateStatus, FormOption, RelationOption, Sectors } from '../../constants/violence-masterdata';
+
 @Component({
 	selector: 'app-violence-situation-person-information',
 	templateUrl: './violence-situation-person-information.component.html',
@@ -66,7 +67,7 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 			haveDisability: new FormControl(null),
 			haveDisabilityCertificate: new FormControl(null),
 			isPersonInstitutionalized: new FormControl(null),
-			inWhichInstitution: new FormControl(''),
+			inWhichInstitution: new FormControl(null),
 			personTypeAge: new FormControl(null, Validators.required),
 			lastname: new FormControl(null),
 			name: new FormControl(null),
@@ -86,6 +87,7 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 			if (this.form.valid) {
 				this.personInformation.emit(this.mapPersonInformatio());
 			}else{
+				this.personInformation.emit(null);
 				this.form.markAllAsTouched();
 			}
 		}
@@ -165,7 +167,6 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 			updateControlValidator(this.form, 'addressDepartmentId', Validators.required);
 			updateControlValidator(this.form, 'addressProvinceId', Validators.required);
 			updateControlValidator(this.form, 'relationPersonViolenceSituation', Validators.required);
-
 		} else {
 			updateControlValidator(this.form, 'lastname', []);
 			updateControlValidator(this.form, 'name', []);
@@ -174,14 +175,27 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 			updateControlValidator(this.form, 'addressDepartmentId', []);
 			updateControlValidator(this.form, 'addressProvinceId', []);
 			updateControlValidator(this.form, 'relationPersonViolenceSituation', []);
+			this.resetPersonTypeAgeControls();
 		}
 	}
+
+	private resetPersonTypeAgeControls() {
+		this.form.controls.lastname.setValue(null);
+		this.form.controls.name.setValue(null);
+		this.form.controls.age.setValue(null);
+		this.form.controls.address.setValue(null);
+		this.form.controls.addressDepartmentId.setValue(null);
+		this.form.controls.addressProvinceId.setValue(null);
+		this.form.controls.relationPersonViolenceSituation.setValue(null);
+		this.form.controls.whichTypeRelation.setValue(null);
+	}	
 	
 	updateValidationOtherRelation(){
-		if(this.form.value.relationPersonViolenceSituation.includes(this.relationOptionOther)){
+		if(this.form.value.relationPersonViolenceSituation === EKeeperRelationship.OTHER){
 			updateControlValidator(this.form, 'whichTypeRelation', Validators.required);
 		}else{
 			updateControlValidator(this.form, 'whichTypeRelation', []);
+			this.form.controls.whichTypeRelation.setValue(null);
 		}
 	}
 
@@ -190,6 +204,7 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 			updateControlValidator(this.form, 'haveDisabilityCertificate', Validators.required);
 		} else {
 			updateControlValidator(this.form, 'haveDisabilityCertificate', []);
+			this.form.controls.haveDisabilityCertificate.setValue(null);
 		}
 	}
 
@@ -198,6 +213,16 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 			updateControlValidator(this.form, 'whichSector', Validators.required);
 		} else {
 			updateControlValidator(this.form, 'whichSector', []);
+			this.form.controls.whichSector.setValue(null);
+		}
+	}
+
+	updateValidationsIsPersonInstitutionalized() {
+		if (this.form.value.isPersonInstitutionalized) {
+			updateControlValidator(this.form, 'inWhichInstitution', Validators.required);
+		} else {
+			updateControlValidator(this.form, 'inWhichInstitution', []);
+			this.form.controls.inWhichInstitution.setValue(null);
 		}
 	}
 }

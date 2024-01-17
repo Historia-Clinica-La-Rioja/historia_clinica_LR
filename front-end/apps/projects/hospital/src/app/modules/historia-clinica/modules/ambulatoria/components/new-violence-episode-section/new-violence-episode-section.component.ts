@@ -109,6 +109,17 @@ export class NewViolenceEpisodeSectionComponent implements OnInit {
 			updateControlValidator(this.form, 'escolarizationLevel', Validators.required);
 		} else {
 			updateControlValidator(this.form, 'escolarizationLevel', []);
+			this.form.controls.escolarizationLevel.setValue(null);
+		}
+	}
+
+	updateValidationAgeTypeKid() {
+		if (this.form.value.ageTypeKid === EViolenceTowardsUnderageType.DIRECT_VIOLENCE || this.form.value.ageTypeKid === EViolenceTowardsUnderageType.INDIRECT_VIOLENCE) {
+			updateControlValidator(this.form, 'isKidEscolarized', Validators.required);
+		} else {
+			updateControlValidator(this.form, 'isKidEscolarized', []);
+			this.form.controls.isKidEscolarized.reset();
+			this.updateValidationKidEscolarized();
 		}
 	}
 }

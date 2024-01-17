@@ -125,6 +125,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 			if (this.form.valid) {
 				this.implementedActionsInfo.emit(this.mapImplementedActionsDto());
 			}else{
+				this.implementedActionsInfo.emit(null);
 				this.form.markAllAsTouched();
 			}
 		}
@@ -133,7 +134,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 	mapImplementedActionsDto(): ViolenceReportImplementedActionsDto {
 		return {
 			healthCoordination: {
-				coordinationInsideHealthSector: {
+				coordinationInsideHealthSector: this.form.value.articulation === Articulation.IN ? {
 					healthInstitutionOrganization: {
 						organizations: this.form.value.articulationEstablishmentList,
 						other: this.form.value.otherArticulationEstablishment,
@@ -146,13 +147,13 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 					},
 					wereInternmentIndicated: this.form.value.internmentIndication
 
-				},
-				coordinationOutsideHealthSector: {
+				}: null,
+				coordinationOutsideHealthSector: this.form.value.articulation === Articulation.OUT ? {
 					municipalGovernmentDevices: this.selectedMunicipalDevices,
 					nationalGovernmentDevices: this.selectedNationalDevices,
 					provincialGovernmentDevices: this.selectedProvincialDevices,
 					withOtherSocialOrganizations: this.selectedDevices.includes(this.devicesEnum.SOCIAL_ORGANIZATION),
-				}
+				}: null
 			},
 			institutionReport: {
 				institutionReportPlaces: this.form.value.institutionComplaintsOrganizations,
@@ -233,17 +234,32 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 
 	setDevicesValidators(value: string, required: boolean) {
 		if (value === Devices.MUNICIPAL_DEVICES) {
-			this.form.controls.municipalDevices.setValidators(required ? Validators.required: []);
+			if (required) {
+				this.form.controls.municipalDevices.setValidators(Validators.required);
+			} else {
+				this.selectedMunicipalDevices = [];
+				this.form.controls.municipalDevices.setValidators([]);
+			}
 			this.form.controls.municipalDevices.updateValueAndValidity();
 		}
 
 		if (value === Devices.PROVINCIAL_DEVICES) {
-			this.form.controls.provincialDevices.setValidators(required ? Validators.required: []);
+			if (required) {
+				this.form.controls.provincialDevices.setValidators(Validators.required);
+			} else {
+				this.selectedProvincialDevices = [];
+				this.form.controls.provincialDevices.setValidators([]);
+			}
 			this.form.controls.provincialDevices.updateValueAndValidity();
 		}
 
 		if (value === Devices.NATIONAL_DEVICES) {
-			this.form.controls.nationalDevices.setValidators(required ? Validators.required: []);
+			if (required) {
+				this.form.controls.nationalDevices.setValidators(Validators.required);				
+			} else {
+				this.selectedNationalDevices = [];
+				this.form.controls.provincialDevices.setValidators([]);
+			}
 			this.form.controls.nationalDevices.updateValueAndValidity();
 		}
 	}
@@ -293,6 +309,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 			updateControlValidator(this.form, 'area', Validators.required);
 		} else {
 			updateControlValidator(this.form, 'area', []);
+			this.form.controls.area.reset();
 		}
 	}
 
@@ -327,6 +344,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 			updateControlValidator(this.form, 'otherArea', Validators.required);
 		} else {
 			updateControlValidator(this.form, 'otherArea', []);
+			this.form.controls.otherArea.reset();
 		}
 	}
 
@@ -335,6 +353,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 			updateControlValidator(this.form, 'otherArticulationEstablishment', Validators.required);
 		} else {
 			updateControlValidator(this.form, 'otherArticulationEstablishment', []);
+			this.form.controls.otherArticulationEstablishment.reset();
 		}
 	}
 
@@ -360,8 +379,24 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 			updateControlValidator(this.form, 'devices', Validators.required);
 			updateControlValidator(this.form, 'healthSystemArticulation', []);
 			updateControlValidator(this.form, 'articulationEstablishment', []);
+			updateControlValidator(this.form, 'otherArticulationEstablishment', []);
+			updateControlValidator(this.form, 'articulationEstablishmentList', []);
+			updateControlValidator(this.form, 'area', []);
+			updateControlValidator(this.form, 'otherArea', []);
 			updateControlValidator(this.form, 'internmentIndication', []);
+			this.resetFirstArticulation();
 		}
+	}
+
+	private resetFirstArticulation() {
+		this.form.controls.healthSystemArticulation.reset();
+		this.form.controls.articulationEstablishment.reset();
+		this.form.controls.internmentIndication.reset();
+		this.form.controls.area.reset();
+		this.form.controls.otherArea.reset();
+		this.form.controls.articulationEstablishment.reset();
+		this.form.controls.otherArticulationEstablishment.reset();
+		this.form.controls.articulationEstablishmentList.reset();
 	}
 
 	private resetDevices() {

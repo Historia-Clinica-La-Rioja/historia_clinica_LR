@@ -37,6 +37,7 @@
 
 		<mat-radio-group class="basic-options" color="primary" color="primary"
 			aria-labelledby="violence-situation-age-type-label"
+			(change)="updateValidationAgeTypeKid()"
 			formControlName="ageTypeKid">
 			<label id="violence-situation-age-type-label">{{'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_4' | translate}}</label>
 			<mat-radio-button *ngFor="let opt of violenceTypes" [value]="opt.value">
