@@ -48,6 +48,7 @@ import { IntermentDocumentEpisodeComponent } from './components/interment-docume
 import { AttachDocumentPopupComponent } from './dialogs/attach-document-popup/attach-document-popup.component';
 import { DeleteDocumentPopupComponent } from './dialogs/delete-document-popup/delete-document-popup.component';
 import { MedicationComponent } from './components/medication/medication.component';
+import { AnesthesicReportAddProposedSurgeryComponent } from './dialogs/anesthesic-report-add-proposed-surgery/anesthesic-report-add-proposed-surgery.component';
 
 @NgModule({
 	declarations: [
@@ -90,6 +91,7 @@ import { MedicationComponent } from './components/medication/medication.componen
 		IntermentDocumentEpisodeComponent,
 		AttachDocumentPopupComponent,
 		DeleteDocumentPopupComponent,
+  AnesthesicReportAddProposedSurgeryComponent,
 	],
 	exports: [
 		InternmentEpisodeSummaryComponent,

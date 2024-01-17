@@ -6,6 +6,12 @@
             <app-diagnosticos id="diagnosis" [showTitle]="false" [(mainDiagnosis)]="mainDiagnosis"
                 [(listDiagnosis)]="diagnosis" [type]="'PARTE ANESTESICO'"></app-diagnosticos>
         </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="proposed-surgery-expansion-section"
+            [title]="'internaciones.anesthesic-report.proposed-surgery.TITLE' | translate" icon="error_outlined" [collapsed]="true"
+            [isEmpty]="true" [hideBorder]="false">
+            <app-proposed-surgery></app-proposed-surgery>
+        </app-new-consultation-expansion-section>
     </div>
 
     <div actions id="buttons" fxLayoutAlign="end">

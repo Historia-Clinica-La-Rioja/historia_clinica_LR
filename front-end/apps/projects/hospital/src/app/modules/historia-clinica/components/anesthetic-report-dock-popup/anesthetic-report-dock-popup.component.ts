@@ -14,6 +14,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
     
     mainDiagnosis: HealthConditionDto;
 	diagnosis: DiagnosisDto[] = [];
+
 	isLoading = false;
 
     constructor(
@@ -21,8 +22,8 @@ export class AnestheticReportDockPopupComponent implements OnInit {
 		public dockPopupRef: DockPopupRef,
 		readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
     ) {
-        this.diagnosis = data.diagnosis;
         this.mainDiagnosis = data.mainDiagnosis;
+        this.diagnosis = data.diagnosis;
     }
 
     ngOnInit(): void {
