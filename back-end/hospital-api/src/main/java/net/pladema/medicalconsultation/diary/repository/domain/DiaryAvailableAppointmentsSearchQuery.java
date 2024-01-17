@@ -6,8 +6,8 @@ import lombok.Setter;
 import net.pladema.address.controller.service.domain.DepartmentBo;
 import net.pladema.establishment.service.domain.ClinicalSpecialtyBo;
 import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryProtectedAppointmentsSearch;
-import net.pladema.medicalconsultation.diary.service.domain.DiaryAvailableProtectedAppointmentsInfoBo;
+import net.pladema.medicalconsultation.diary.domain.DiaryAppointmentsSearchBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryAvailableAppointmentsInfoBo;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -21,7 +21,7 @@ import static java.util.stream.Collectors.toList;
 
 @NoArgsConstructor
 @Setter
-public class DiaryAvailableProtectedAppointmentsSearchQuery {
+public class DiaryAvailableAppointmentsSearchQuery {
 
 	private Integer careLineId;
 	private List<Integer> clinicalSpecialtyIds;
@@ -32,14 +32,14 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 	private Boolean regulationProtected = false;
 
 
-	public DiaryAvailableProtectedAppointmentsSearchQuery(DiaryProtectedAppointmentsSearch diaryProtectedAppointmentsSearch) {
-		this.careLineId = diaryProtectedAppointmentsSearch.getCareLineId();
-		this.clinicalSpecialtyIds = diaryProtectedAppointmentsSearch.getClinicalSpecialtyIds();
-		this.departmentId = diaryProtectedAppointmentsSearch.getDepartmentId();
-		this.institutionId = diaryProtectedAppointmentsSearch.getInstitutionId();
-		this.includeNameSelfDetermination = diaryProtectedAppointmentsSearch.getIncludeNameSelfDetermination();
-		this.practiceId = diaryProtectedAppointmentsSearch.getPracticeId();
-		this.regulationProtected = diaryProtectedAppointmentsSearch.getRegulationProtected();
+	public DiaryAvailableAppointmentsSearchQuery(DiaryAppointmentsSearchBo diaryAppointmentsSearchBo) {
+		this.careLineId = diaryAppointmentsSearchBo.getCareLineId();
+		this.clinicalSpecialtyIds = diaryAppointmentsSearchBo.getClinicalSpecialtyIds();
+		this.departmentId = diaryAppointmentsSearchBo.getDepartmentId();
+		this.institutionId = diaryAppointmentsSearchBo.getInstitutionId();
+		this.includeNameSelfDetermination = diaryAppointmentsSearchBo.getIncludeNameSelfDetermination();
+		this.practiceId = diaryAppointmentsSearchBo.getPracticeId();
+		this.regulationProtected = diaryAppointmentsSearchBo.getRegulationProtected();
 	}
 
 	public QueryPart select() {
@@ -115,8 +115,8 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 		return new QueryPart(whereClause);
 	}
 
-	public List<DiaryAvailableProtectedAppointmentsInfoBo> construct(List<Object[]> resultQuery){
-		List<DiaryAvailableProtectedAppointmentsInfoBo> result = new ArrayList<>();
+	public List<DiaryAvailableAppointmentsInfoBo> construct(List<Object[]> resultQuery){
+		List<DiaryAvailableAppointmentsInfoBo> result = new ArrayList<>();
 
 		Map<Integer, List<Object[]>> diaries = resultQuery
 				.stream()
@@ -132,7 +132,7 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 		return result;
 	}
 
-	private DiaryAvailableProtectedAppointmentsInfoBo mapToDiaryAvailableProtectedAppointmentsBo(Object[] tuple) {
+	private DiaryAvailableAppointmentsInfoBo mapToDiaryAvailableProtectedAppointmentsBo(Object[] tuple) {
 		int index = 0;
 		Integer diaryId = (Integer) tuple[index++];
 		Short appointmentDuration = (Short) tuple[index++];
@@ -160,7 +160,7 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 
 		ClinicalSpecialtyBo clinicalSpecialtyBo = clinicalSpecialtyId != null ? new ClinicalSpecialtyBo(clinicalSpecialtyId, clinicalSpecialtyName) : null;
 
-		return new DiaryAvailableProtectedAppointmentsInfoBo(
+		return new DiaryAvailableAppointmentsInfoBo(
 				diaryId,
 				appointmentDuration,
 				startDate,

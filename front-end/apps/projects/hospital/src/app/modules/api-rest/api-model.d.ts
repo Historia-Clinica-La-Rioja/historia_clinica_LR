@@ -1059,7 +1059,7 @@ export interface DiaryAvailabilityDto {
     slots: AvailabilityDto;
 }
 
-export interface DiaryAvailableProtectedAppointmentsDto {
+export interface DiaryAvailableAppointmentsDto {
     clinicalSpecialty: ClinicalSpecialtyDto;
     date: DateDto;
     department: DepartmentDto;

@@ -18,7 +18,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DiaryAvailableProtectedAppointmentsBo {
+public class DiaryAvailableAppointmentsBo {
 
 	private Integer diaryId;
 

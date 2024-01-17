@@ -14,7 +14,7 @@ import net.pladema.establishment.controller.dto.InstitutionBasicInfoDto;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DiaryAvailableProtectedAppointmentsDto {
+public class DiaryAvailableAppointmentsDto {
 
 	private Integer diaryId;
 

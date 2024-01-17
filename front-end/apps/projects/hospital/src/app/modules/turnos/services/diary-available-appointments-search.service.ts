@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DiaryAvailableProtectedAppointmentsDto, EAppointmentModality } from '@api-rest/api-model';
+import { DiaryAvailableAppointmentsDto, EAppointmentModality } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -18,12 +18,12 @@ export class DiaryAvailableAppointmentsSearchService {
 
   ) { }
 
-  getAvailableProtectedAppointments(filters: ProtectedAppointmentsFilter): Observable<DiaryAvailableProtectedAppointmentsDto[]> {
+  getAvailableProtectedAppointments(filters: ProtectedAppointmentsFilter): Observable<DiaryAvailableAppointmentsDto[]> {
     let queryParams: HttpParams = new HttpParams();
     queryParams = queryParams.append('diaryProtectedAppointmentsSearch', JSON.stringify(filters));
 
     const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/${this.URL_PREFIX}/protected`;
-    return this.http.get<DiaryAvailableProtectedAppointmentsDto[]>(url, { params: queryParams });
+    return this.http.get<DiaryAvailableAppointmentsDto[]>(url, { params: queryParams });
   }
 
   getAvailableProtectedAppointmentsQuantity(institutionDestinationId: number, clinicalSpecialtyIds: number[], departmentId: number,careLineId: number, practiceSnomedId: number): Observable<number> {

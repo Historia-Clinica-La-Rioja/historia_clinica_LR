@@ -1,4 +1,4 @@
-package net.pladema.medicalconsultation.diary.controller.dto;
+package net.pladema.medicalconsultation.diary.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -20,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @AllArgsConstructor
-public class DiaryProtectedAppointmentsSearch {
+public class DiaryAppointmentsSearchBo {
 
 	@Nullable
 	private Integer careLineId;
@@ -51,9 +51,9 @@ public class DiaryProtectedAppointmentsSearch {
 
 	private Boolean regulationProtected = false;
 
-	public DiaryProtectedAppointmentsSearch(Integer careLineId, List<Integer> clinicalSpecialtyIds, Integer departmentId,
-											Integer institutionId, LocalDate initialSearchDate, LocalDate endSearchDate,
-											Boolean includeNameSelfDetermination, EAppointmentModality modality, Integer practiceId) {
+	public DiaryAppointmentsSearchBo(Integer careLineId, List<Integer> clinicalSpecialtyIds, Integer departmentId,
+									 Integer institutionId, LocalDate initialSearchDate, LocalDate endSearchDate,
+									 Boolean includeNameSelfDetermination, EAppointmentModality modality, Integer practiceId) {
 		this.careLineId = careLineId;
 		this.clinicalSpecialtyIds = clinicalSpecialtyIds;
 		this.departmentId = departmentId;

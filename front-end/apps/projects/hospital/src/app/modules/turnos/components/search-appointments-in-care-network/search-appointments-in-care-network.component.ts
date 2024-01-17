@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { AddressDto, AppFeature, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableProtectedAppointmentsDto, EAppointmentModality, InstitutionBasicInfoDto, ProvinceDto, SharedSnomedDto, SnomedDto } from '@api-rest/api-model';
+import { AddressDto, AppFeature, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableAppointmentsDto, EAppointmentModality, InstitutionBasicInfoDto, ProvinceDto, SharedSnomedDto, SnomedDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
@@ -61,9 +61,9 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 	initialInstitutionTypeaheadOptionSelected: TypeaheadOption<InstitutionBasicInfoDto>;
 	externalSpecialty: TypeaheadOption<ClinicalSpecialtyDto>;
 
-	protectedAvaibleAppointments: DiaryAvailableProtectedAppointmentsDto[] = [];
+	protectedAvaibleAppointments: DiaryAvailableAppointmentsDto[] = [];
 
-	appointmentsCurrentPage: DiaryAvailableProtectedAppointmentsDto[] = [];
+	appointmentsCurrentPage: DiaryAvailableAppointmentsDto[] = [];
 	readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
 	pageSize: Observable<number>;
 	patientId: number;
@@ -265,7 +265,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 			}
 
 			this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointments(filters).subscribe(
-				(availableAppointments: DiaryAvailableProtectedAppointmentsDto[]) => {
+				(availableAppointments: DiaryAvailableAppointmentsDto[]) => {
 					this.protectedAvaibleAppointments = availableAppointments;
 					this.showAppointmentsNotFoundMessage = !this.protectedAvaibleAppointments?.length
 					this.showAppointmentResults = !this.showAppointmentsNotFoundMessage;

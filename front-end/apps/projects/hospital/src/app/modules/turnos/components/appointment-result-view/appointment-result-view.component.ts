@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DiaryAvailableProtectedAppointmentsDto, EAppointmentModality, ReferenceSummaryDto } from '@api-rest/api-model';
+import { DiaryAvailableAppointmentsDto, EAppointmentModality, ReferenceSummaryDto } from '@api-rest/api-model';
 import { dateDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DateFormat, dateToMoment } from '@core/utils/moment.utils';
@@ -18,7 +18,7 @@ import { ConfirmPrintAppointmentComponent } from '@shared-appointment-access-man
 export class AppointmentResultViewComponent implements OnInit {
 	readonly MODALITY_ON_SITE_ATTENTION = EAppointmentModality.ON_SITE_ATTENTION;
 	@Input() modalityAttention?: EAppointmentModality;
-	@Input() appointment: DiaryAvailableProtectedAppointmentsDto;
+	@Input() appointment: DiaryAvailableAppointmentsDto;
 	@Input() patientId: number;
 	@Input() searchAppointmentCriteria: SearchAppointmentCriteria;
 	@Input() referenceSummary?: ReferenceSummaryDto;

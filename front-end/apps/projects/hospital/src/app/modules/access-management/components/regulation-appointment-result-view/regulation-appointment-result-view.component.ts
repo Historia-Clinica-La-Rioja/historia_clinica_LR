@@ -2,7 +2,7 @@ import { RegulationNewAppointmentData, RegulationNewAppointmentPopUpComponent } 
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { EAppointmentModality, DiaryAvailableProtectedAppointmentsDto } from '@api-rest/api-model';
+import { EAppointmentModality, DiaryAvailableAppointmentsDto } from '@api-rest/api-model';
 import { dateDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DateFormat, DatePipeFormat } from '@core/utils/date.utils';
 import { ConfirmPrintAppointmentComponent } from '@shared-appointment-access-management/dialogs/confirm-print-appointment/confirm-print-appointment.component';
@@ -19,7 +19,7 @@ export class RegulationAppointmentResultViewComponent {
 
 	readonly MODALITY_ON_SITE_ATTENTION = EAppointmentModality.ON_SITE_ATTENTION;
 	@Input() modalityAttention?: EAppointmentModality;
-	@Input() appointment: DiaryAvailableProtectedAppointmentsDto;
+	@Input() appointment: DiaryAvailableAppointmentsDto;
 	@Input() searchAppointmentCriteria: SearchAppointmentCriteria;
 	@Output() resetInformation = new EventEmitter<void>();
 

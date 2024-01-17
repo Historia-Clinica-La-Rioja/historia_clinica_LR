@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, AbstractControl, FormControl, FormGroup } from '@angular/forms';
-import { ProvinceDto, DepartmentDto, InstitutionBasicInfoDto, CareLineDto, ClinicalSpecialtyDto, DiaryAvailableProtectedAppointmentsDto, EAppointmentModality, AppFeature, SharedSnomedDto, SnomedDto } from '@api-rest/api-model';
+import { ProvinceDto, DepartmentDto, InstitutionBasicInfoDto, CareLineDto, ClinicalSpecialtyDto, DiaryAvailableAppointmentsDto, EAppointmentModality, AppFeature, SharedSnomedDto, SnomedDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
@@ -51,9 +51,9 @@ export class SearchAppointmentsForRegulationComponent implements OnInit {
 	provinceTypeaheadOptions$: Observable<TypeaheadOption<ProvinceDto>[]>;
 	clearTypeaheadOption: TypeaheadOption<any>;
 
-	protectedAvaibleAppointments: DiaryAvailableProtectedAppointmentsDto[] = [];
+	protectedAvaibleAppointments: DiaryAvailableAppointmentsDto[] = [];
 
-	appointmentsCurrentPage: DiaryAvailableProtectedAppointmentsDto[] = [];
+	appointmentsCurrentPage: DiaryAvailableAppointmentsDto[] = [];
 	readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
 	pageSize: Observable<number>;
 	showModalityError: boolean = false;
@@ -173,7 +173,7 @@ export class SearchAppointmentsForRegulationComponent implements OnInit {
 			}
 
 			this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointments(filters).subscribe(
-				(availableAppointments: DiaryAvailableProtectedAppointmentsDto[]) => {
+				(availableAppointments: DiaryAvailableAppointmentsDto[]) => {
 					this.protectedAvaibleAppointments = availableAppointments;
 					this.showAppointmentsNotFoundMessage = !this.protectedAvaibleAppointments?.length
 					this.showAppointmentResults = !this.showAppointmentsNotFoundMessage;

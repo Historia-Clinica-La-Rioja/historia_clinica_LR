@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DiaryAvailableProtectedAppointmentsInfoBo {
+public class DiaryAvailableAppointmentsInfoBo {
 
 	private Integer diaryId;
 
@@ -48,11 +48,11 @@ public class DiaryAvailableProtectedAppointmentsInfoBo {
 
 	private Boolean isJointDiary;
 
-	public DiaryAvailableProtectedAppointmentsInfoBo(Integer diaryId, Short appointmentDuration, LocalDate startDate,
-													 LocalDate endDate, InstitutionBasicInfoBo institution,
-													 DepartmentBo department, String professionalFulName,
-													 ClinicalSpecialtyBo clinicalSpecialty, String doctorOffice,
-													 Boolean isJointDiary) {
+	public DiaryAvailableAppointmentsInfoBo(Integer diaryId, Short appointmentDuration, LocalDate startDate,
+											LocalDate endDate, InstitutionBasicInfoBo institution,
+											DepartmentBo department, String professionalFulName,
+											ClinicalSpecialtyBo clinicalSpecialty, String doctorOffice,
+											Boolean isJointDiary) {
 		this.diaryId = diaryId;
 		this.institution = institution;
 		this.appointmentDuration = appointmentDuration;
