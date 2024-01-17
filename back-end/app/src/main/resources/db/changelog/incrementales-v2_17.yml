@@ -28,7 +28,7 @@ databaseChangeLog:
                     name: institution_id
                     type: int
                     defaultValue: -1
-        
+
     - changeSet:
         id: set-snomed_group-ecl-text-data-type-default
         author: mmalyvarni
@@ -77,3 +77,12 @@ databaseChangeLog:
                       nullable: false
                     name: old_situation_id
                     type: smallint
+
+    - changeSet:
+          id: document_type-anesthetic_report
+          author: mromero
+          context: "!schema-only"
+          changes:
+              - sql:
+                    sql: |-
+                        INSERT INTO document_type VALUES (20, 'Parte anestésico');

@@ -26,7 +26,9 @@ public enum EDocumentType {
 	TRIAGE(15, "triage","triage"),
 	EMERGENCY_CARE_EVOLUTION(16, "emergencyCareEvolutionNote", "emergency_care_evolution_note"),
 	MEDICAL_IMAGE_REPORT(17, "medicalImageReport", "report_image"),
-	SURGICAL_HOSPITALIZATION_REPORT(18, "surgicalReport", "surgical_report");
+	SURGICAL_HOSPITALIZATION_REPORT(18, "surgicalReport", "surgical_report"),
+	ANESTHETIC_REPORT(20, "anestheticReport", "no_template_yet"),
+    ;
 
     private Short id;
     private String value;
@@ -57,7 +59,8 @@ public enum EDocumentType {
 
 	public static List<EDocumentType> getAllInternmentDocumentTypes(){
 		return Stream.of(EDocumentType.ANAMNESIS, EDocumentType.EVALUATION_NOTE,
-						EDocumentType.NURSING_EVOLUTION_NOTE, EDocumentType.EPICRISIS)
+						EDocumentType.NURSING_EVOLUTION_NOTE, EDocumentType.EPICRISIS,
+                        EDocumentType.ANESTHETIC_REPORT)
 				.collect(Collectors.toList());
 	}
 }
