@@ -303,48 +303,64 @@ public class GeneralReportExcelServiceImpl implements GeneralReportExcelService 
 		AtomicInteger rowNumber = new AtomicInteger(0);
 
 		ICell cell = row.createCell(rowNumber.getAndIncrement());
-		cell.setCellValue(content.getId());
+		cell.setCellValue(content.getInstitution());
 		cell.setCellStyle(style);
 
 		ICell cell1 = row.createCell(rowNumber.getAndIncrement());
-		cell1.setCellValue(content.getInstitution());
+		cell1.setCellValue(reformatdate.reformatDateFour(content.getAttentionDate()));
 		cell1.setCellStyle(style);
 
 		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
-		cell2.setCellValue(reformatdate.reformatDateFour(content.getAttentionDate()));
+		cell2.setCellValue(content.getLenderLastNames());
 		cell2.setCellStyle(style);
 
 		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
-		cell3.setCellValue(content.getLender());
+		cell3.setCellValue(content.getLenderNames());
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(content.getIdentificationLender());
+		cell4.setCellValue(content.getLenderDni());
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
-		cell5.setCellValue(content.getPatient());
+		cell5.setCellValue(content.getPatientLastNames());
 		cell5.setCellStyle(style);
 
 		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
-		cell6.setCellValue(content.getIdentificationPatient());
+		cell6.setCellValue(content.getPatientNames());
 		cell6.setCellStyle(style);
 
 		ICell cell7 = row.createCell(rowNumber.getAndIncrement());
-		cell7.setCellValue(content.getProblem());
+		cell7.setCellValue(content.getPatientDni());
 		cell7.setCellStyle(style);
 
 		ICell cell8 = row.createCell(rowNumber.getAndIncrement());
-		cell8.setCellValue(content.getReasons());
+		cell8.setCellValue(content.getGender());
 		cell8.setCellStyle(style);
 
 		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
-		cell9.setCellValue(content.getGlycosylatedHemoglobinBloodPressure());
+		cell9.setCellValue(content.getBirthDate());
 		cell9.setCellStyle(style);
 
 		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
-		cell10.setCellValue(content.getMedication());
+		cell10.setCellValue(content.getAgeTurn());
 		cell10.setCellStyle(style);
+
+		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
+		cell11.setCellValue(content.getReasons());
+		cell11.setCellStyle(style);
+
+		ICell cell12 = row.createCell(rowNumber.getAndIncrement());
+		cell12.setCellValue(content.getProblem());
+		cell12.setCellStyle(style);
+
+		ICell cell13 = row.createCell(rowNumber.getAndIncrement());
+		cell13.setCellValue(content.getGlycosylatedHemoglobinBloodPressure());
+		cell13.setCellStyle(style);
+
+		ICell cell14 = row.createCell(rowNumber.getAndIncrement());
+		cell14.setCellValue(content.getMedication());
+		cell14.setCellStyle(style);
 
 	}
 
