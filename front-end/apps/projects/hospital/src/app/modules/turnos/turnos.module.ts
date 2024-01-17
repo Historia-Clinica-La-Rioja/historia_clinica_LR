@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CalendarDateFormatter, CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 // deps
+import { AccessManagementModule } from '@access-management/access-management.module';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
 import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
@@ -103,6 +104,7 @@ import { ShowProtectedAppointmentPipe } from './pipes/show-protected-appointment
 		// routing
 		TurnosRoutingModule,
 		// deps
+		AccessManagementModule,
 		ClipboardModule,
 		HistoriaClinicaModule,
 		IdentifierCasesComponent,
