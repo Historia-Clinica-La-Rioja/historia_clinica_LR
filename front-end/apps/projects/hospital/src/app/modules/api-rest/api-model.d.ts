@@ -1095,11 +1095,20 @@ export interface EdMontonSummary {
 	edMontonId: number;
 }
 
-export interface FrailAnswers{
+export interface FrailAnswers {
     id: number;
     idQuestion: number;
-    idAnswer: number;   
+    idAnswer: number;
+    statusId: number;
+    createdOn: string;
+    createdByFullName: string;
+    createdByLicenseNumber: string;
+    updatedOn: string;
+    updatedByFullName: string;
+    updatedByLicenseNumber: string;
+    questionnaireType: string;
 }
+
 
 export interface FrailSummary{
     institutionId: number;
