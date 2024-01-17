@@ -8,9 +8,9 @@
 
 	<section id="content" fxLayout="column" fxLayoutGap="20px">
 		<mat-card id="patient_card">
-			<div id="layout_header" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="5px" fxLayoutGap.lt-lg="20px" 
+			<div id="layout_header" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="5px" fxLayoutGap.lt-lg="20px"
 				fxLayout.lt-lg="column">
-				<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="5px" fxLayoutGap.lt-md="20px" 
+				<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="5px" fxLayoutGap.lt-md="20px"
 				fxLayout.lt-md="column">
 					<mat-card-header>
 						<div *ngIf="!isEmergencyCareTemporalPatient else temporalGuardPatient">
@@ -284,10 +284,12 @@
 							</ng-template>
 						</mat-tab>
 					</section>
-					<mat-tab id="tab_violence_situations" *appHasRole="['ABORDAJE_VIOLENCIAS']"
+					<section *appFeatureFlag="'ENABLE_VIOLENCE_REPORT_DEVELOPMENT'">
+						<mat-tab id="tab_violence_situations" *appHasRole="['ABORDAJE_VIOLENCIAS']"
 						label="{{'ambulatoria.paciente.violence-situations.TAB_LABEL' | translate | uppercase}}">
-						<app-violence-situations></app-violence-situations>
-					</mat-tab>
+							<app-violence-situations></app-violence-situations>
+						</mat-tab>
+					</section>
 				</mat-tab-group>
 			</mat-card-content>
 		</mat-card>

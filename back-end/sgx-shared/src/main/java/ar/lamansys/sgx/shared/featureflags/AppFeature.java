@@ -168,6 +168,9 @@ public enum AppFeature implements Feature {
 	@Label("Indica si están habilitados los resultados de estudio en desarrollo")
 	HABILITAR_RESULTADOS_DE_ESTUDIO_EN_DESAROLLO,
 
+	@Label("Indica si están habilitados los reportes de violencias en desarrollo")
+	ENABLE_VIOLENCE_REPORT_DEVELOPMENT,
+
 	;
 
 	public boolean isActive() {
