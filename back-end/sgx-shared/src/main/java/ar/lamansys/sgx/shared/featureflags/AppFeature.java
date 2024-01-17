@@ -176,6 +176,10 @@ public enum AppFeature implements Feature {
 
 	@Label("Indica si esta habilitada la pantalla de monitoreo de integreación con CIPRES")
 	HABILITAR_MONITOREO_CIPRES,
+
+	@Label("Indica si está habilitado generar el documento parte anestésico en internación")
+	HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO,
+
 	;
 
 	public boolean isActive() {
