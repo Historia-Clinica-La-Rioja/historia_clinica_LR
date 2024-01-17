@@ -429,10 +429,13 @@ public class SaveViolenceReport {
 			violenceReport.setSchoolLevelId(violenceReportBo.getEpisodeData().getSchoolLevelId());
 		violenceReport.setRiskLevelId(violenceReportBo.getEpisodeData().getRiskLevelId());
 		violenceReport.setCoordinationInsideHealthSector(violenceReportBo.getImplementedActions().getCoordinationInsideHealthSector() != null);
-		violenceReport.setCoordinationWithinHealthSystem(violenceReportBo.getImplementedActions().getCoordinationInsideHealthSector().getHealthSystemOrganization().getWithin());
-		violenceReport.setCoordinationWithinHealthInstitution(violenceReportBo.getImplementedActions().getCoordinationInsideHealthSector().getHealthInstitutionOrganization().getWithin());
-		violenceReport.setInternmentIndicatedStatusId(violenceReportBo.getImplementedActions().getCoordinationInsideHealthSector().getWereInternmentIndicatedId());
-		violenceReport.setCoordinationWithOtherSocialOrganizations(violenceReportBo.getImplementedActions().getCoordinationOutsideHealthSector().getWithOtherSocialOrganizations());
+		if (violenceReportBo.getImplementedActions().getCoordinationInsideHealthSector() != null) {
+			violenceReport.setCoordinationWithinHealthSystem(violenceReportBo.getImplementedActions().getCoordinationInsideHealthSector().getHealthSystemOrganization().getWithin());
+			violenceReport.setCoordinationWithinHealthInstitution(violenceReportBo.getImplementedActions().getCoordinationInsideHealthSector().getHealthInstitutionOrganization().getWithin());
+			violenceReport.setInternmentIndicatedStatusId(violenceReportBo.getImplementedActions().getCoordinationInsideHealthSector().getWereInternmentIndicatedId());
+		}
+		else
+			violenceReport.setCoordinationWithOtherSocialOrganizations(violenceReportBo.getImplementedActions().getCoordinationOutsideHealthSector().getWithOtherSocialOrganizations());
 		violenceReport.setWerePreviousEpisodeWithVictimOrKeeper(violenceReportBo.getImplementedActions().getWerePreviousEpisodesWithVictimOrKeeper());
 		violenceReport.setInstitutionReported(violenceReportBo.getImplementedActions().getReportWasDoneByInstitution());
 		violenceReport.setWasSexualViolence(violenceReportBo.getImplementedActions().getWasSexualViolence());
