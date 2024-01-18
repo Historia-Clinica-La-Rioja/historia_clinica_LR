@@ -1,16 +1,17 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, AbstractControl } from '@angular/forms';
 import { BedManagementFacadeService, Sector, Service } from '../../services/bed-management-facade.service';
-import { momentFormat, DateFormat, momentParse } from '@core/utils/moment.utils';
 import { Observable, Subscription } from 'rxjs';
 import { SECTOR_GUARDIA } from '@historia-clinica/modules/guardia/constants/masterdata';
 import { HierarchicalUnitsService } from '@api-rest/services/hierarchical-units.service';
 import { HierarchicalUnitDto } from '@api-rest/api-model';
+import { fixDate } from '@core/utils/date/format';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 @Component({
-  selector: 'app-bed-filters',
-  templateUrl: './bed-filters.component.html',
-  styleUrls: ['./bed-filters.component.scss']
+	selector: 'app-bed-filters',
+	templateUrl: './bed-filters.component.html',
+	styleUrls: ['./bed-filters.component.scss']
 })
 export class BedFiltersComponent implements OnInit, OnDestroy {
 
@@ -28,8 +29,8 @@ export class BedFiltersComponent implements OnInit, OnDestroy {
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly bedManagementFacadeService: BedManagementFacadeService,
 		private readonly hierarchicalUnitsService: HierarchicalUnitsService
-  	) { }
-	
+	) { }
+
 	ngOnInit(): void {
 		this.isEmergencyEpisode = this.sectorTypeId === SECTOR_GUARDIA;
 		this.form = this.formBuilder.group({
@@ -40,7 +41,7 @@ export class BedFiltersComponent implements OnInit, OnDestroy {
 			hierarchicalUnits: [null]
 		});
 
-		this.bedManagementFacadeService.getBedSummary().subscribe( data => {
+		this.bedManagementFacadeService.getBedSummary().subscribe(data => {
 			const filterOptions = this.bedManagementFacadeService.getFilterOptions();
 			this.sectors = filterOptions.sectors;
 			this.services = filterOptions.services;
@@ -48,15 +49,15 @@ export class BedFiltersComponent implements OnInit, OnDestroy {
 
 		this.bedManagementFilter$ = this.bedManagementFacadeService.getBedManagementFilter().subscribe(
 			data => {
+				const fixedDate: Date = fixDate(this.form.value.probableDischargeDate);
 				this.form.controls.sector.setValue(data.sector);
 				this.form.controls.service.setValue(data.service);
 				this.form.controls.probableDischargeDate
-					.setValue(data.probableDischargeDate ?
-						momentParse(data.probableDischargeDate, DateFormat.API_DATE) : null);
+					.setValue(fixedDate ? toApiFormat(fixedDate) : null,);
 				this.form.controls.filled.setValue(data.filled);
 			});
 		this.setHierarchicalUnits();
-  	}
+	}
 
 	public sendAllFiltersOnFilterChange() {
 		this.bedManagementFacadeService.sendBedManagementFilter(this.getBedManagementFilter());
@@ -67,11 +68,12 @@ export class BedFiltersComponent implements OnInit, OnDestroy {
 	}
 
 	private getBedManagementFilter(): BedManagementFilter {
+
+		const fixedDate: Date = fixDate(this.form.value.probableDischargeDate);
 		return {
 			sector: this.form.value.sector,
 			service: this.form.value.service,
-			probableDischargeDate: this.form.value.probableDischargeDate ?
-				momentFormat(this.form.value.probableDischargeDate, DateFormat.API_DATE) : null,
+			probableDischargeDate: fixedDate ? toApiFormat(fixedDate) : null,
 			filled: this.form.value.filled,
 			hierarchicalUnits: this.form.value.hierarchicalUnits?.map(hu => hu.id)
 		};
@@ -84,7 +86,7 @@ export class BedFiltersComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.bedManagementFilter$.unsubscribe();
-  	}
+	}
 
 	private setHierarchicalUnits() {
 		this.hierarchicalUnits$ = this.hierarchicalUnitsService.getByInstitution();
