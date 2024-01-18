@@ -28,18 +28,10 @@ public class CreateAnestheticReport {
     private final AnestheticStorage anestheticStorage;
 
     @Transactional
-    public Integer run(Integer institutionId, Integer patientId, Integer encounterId) {
-        log.debug("Input parameter -> institutionId {} patientId {} encounterId {}", institutionId, patientId, encounterId);
+    public Integer run(AnestheticReportBo anestheticReport) {
+        log.debug("Input parameter -> anestheticReport {}", anestheticReport);
 
-        LocalDate entryDate = internmentEpisodeService.getEntryDate(encounterId).toLocalDate();
-
-        AnestheticReportBo anestheticReport = AnestheticReportBo.builder()
-                .institutionId(institutionId)
-                .encounterId(encounterId)
-                .patientInternmentAge(entryDate)
-                .performedDate(LocalDateTime.now())
-                .initialDocumentId(null)
-                .build();
+        Integer encounterId = anestheticReport.getEncounterId();
 
         internmentEpisodeService.getPatient(encounterId)
                 .map(patientExternalService::getBasicDataFromPatient)
@@ -48,6 +40,11 @@ public class CreateAnestheticReport {
                     anestheticReport.setPatientInfo(patientInfo);
                     anestheticReport.setPatientId(patientInfo.getId());
                 }, PatientNotFoundException::new);
+
+        LocalDate entryDate = internmentEpisodeService.getEntryDate(encounterId).toLocalDate();
+        anestheticReport.setPatientInternmentAge(entryDate);
+
+        anestheticReport.setPerformedDate(LocalDateTime.now());
 
         anestheticReportValidator.assertContextValid(anestheticReport);
 

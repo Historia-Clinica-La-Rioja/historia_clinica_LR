@@ -158,6 +158,10 @@ export interface AnamnesisDto extends Serializable {
 export interface AnamnesisSummaryDto extends DocumentSummaryDto {
 }
 
+export interface AnestheticReportDto {
+
+}
+
 export interface AnnexIIDto {
     appointmentState: string;
     attentionDate: Date;
