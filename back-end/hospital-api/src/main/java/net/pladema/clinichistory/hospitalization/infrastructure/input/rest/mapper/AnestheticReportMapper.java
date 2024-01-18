@@ -11,4 +11,7 @@ import org.mapstruct.Named;
 public interface AnestheticReportMapper {
     @Named("fromAnestheticReportDto")
     AnestheticReportBo fromAnestheticReportDto(AnestheticReportDto anestheticReport);
+
+    @Named("fromAnestheticReportBo")
+    AnestheticReportDto fromAnestheticReportBo(AnestheticReportBo anestheticReport);
 }

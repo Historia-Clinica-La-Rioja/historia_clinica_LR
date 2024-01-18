@@ -1,7 +1,9 @@
 package net.pladema.clinichistory.hospitalization.infrastructure.output;
 
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.anestheticreport.AnestheticReport;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.anestheticreport.AnestheticReportRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ public class AnestheticStorageImpl implements AnestheticStorage {
     private final AnestheticReportRepository anestheticReportRepository;
     private final InternmentEpisodeRepository internmentEpisodeRepository;
     private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
+    private final DocumentService documentService;
 
     public Integer save(AnestheticReportBo anestheticReport) {
         log.trace("Input parameters -> anestheticReport {}", anestheticReport);
@@ -39,6 +42,12 @@ public class AnestheticStorageImpl implements AnestheticStorage {
         return result;
     }
 
+    @Override
+    public Optional<AnestheticReportBo> get(Long documentId) {
+        return documentService.findById(documentId)
+                .map(this::mapToBo);
+    }
+
     private AnestheticReport mapToEntity(AnestheticReportBo anestheticReport) {
         return AnestheticReport.builder()
                 .institutionId(anestheticReport.getInstitutionId())
@@ -46,6 +55,16 @@ public class AnestheticStorageImpl implements AnestheticStorage {
                 .documentId(anestheticReport.getId())
                 .clinicalSpecialtyId(anestheticReport.getClinicalSpecialtyId())
                 .billable(false)
+                .build();
+    }
+
+    private AnestheticReportBo mapToBo(Document document) {
+        return AnestheticReportBo.builder()
+                .id(document.getId())
+                .encounterId(document.getSourceId())
+                .institutionId(document.getInstitutionId())
+                .patientId(document.getPatientId())
+                .performedDate(document.getCreatedOn())
                 .build();
     }
 
