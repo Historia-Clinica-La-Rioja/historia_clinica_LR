@@ -277,7 +277,7 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell5.setCellStyle(style);
 
 		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
-		cell6.setCellValue(content.getHour());
+		cell6.setCellValue(content.getAttentionHour());
 		cell6.setCellStyle(style);
 
 		ICell cell7 = row.createCell(rowNumber.getAndIncrement());
@@ -313,11 +313,11 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell14.setCellStyle(style);
 
 		ICell cell15 = row.createCell(rowNumber.getAndIncrement());
-		cell15.setCellValue(content.getAddress());
+		cell15.setCellValue(content.getDirection());
 		cell15.setCellStyle(style);
 
 		ICell cell16 = row.createCell(rowNumber.getAndIncrement());
-		cell16.setCellValue(content.getLocationPatient());
+		cell16.setCellValue(content.getPatientLocation());
 		cell16.setCellStyle(style);
 
 		ICell cell17 = row.createCell(rowNumber.getAndIncrement());
