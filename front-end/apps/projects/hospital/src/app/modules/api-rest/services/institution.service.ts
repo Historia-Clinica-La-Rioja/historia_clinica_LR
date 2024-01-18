@@ -53,7 +53,6 @@ export class InstitutionService {
 		return this.http.get<InstitutionBasicInfoDto[]>(`${environment.apiBase}/institution/province/${provinceId}`);
 	}
 
-
 	getVirtualConsultationInstitutions():Observable<InstitutionBasicInfoDto[]>{
 		return this.http.get<InstitutionBasicInfoDto[]>(`${environment.apiBase}/institution/virtual-consultation`);
 	}

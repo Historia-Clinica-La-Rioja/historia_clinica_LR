@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { InstitutionBasicInfoDto, ClinicalSpecialtyDto, ProfessionalDto, SharedSnomedDto } from "@api-rest/api-model";
-import { AddresProjection, AddressMasterDataService } from "@api-rest/services/address-master-data.service";
+import { AddressProjection, AddressMasterDataService } from "@api-rest/services/address-master-data.service";
 import { ClinicalSpecialtyService } from "@api-rest/services/clinical-specialty.service";
 import { HealthcareProfessionalByInstitutionService } from "@api-rest/services/healthcare-professional-by-institution.service";
 import { HealthcareProfessionalService } from "@api-rest/services/healthcare-professional.service";
@@ -13,7 +13,7 @@ import { Observable, map } from "rxjs";
 @Injectable()
 export class SearchAppointmentsForThirdPartyDataService {
 
-	departmentTypeaheadOptions$: Observable<TypeaheadOption<AddresProjection>[]>;
+	departmentTypeaheadOptions$: Observable<TypeaheadOption<AddressProjection>[]>;
 	institutionTypeaheadOptions: TypeaheadOption<InstitutionBasicInfoDto>[] = [];
 	specialtyTypeaheadOptions: TypeaheadOption<ClinicalSpecialtyDto>[] = [];
 	professionalTypeaheadOptions: TypeaheadOption<ProfessionalDto>[] = [];
