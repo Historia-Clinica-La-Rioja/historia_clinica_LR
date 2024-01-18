@@ -11,7 +11,7 @@ import {
 	PatientMedicalCoverage,
 	PrivateHealthInsurance
 } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
-import { newMoment } from "@core/utils/moment.utils";
+import { newDate } from "@core/utils/moment.utils";
 import { MatOptionSelectionChange } from "@angular/material/core";
 import { PrivateHealthInsuranceService } from "@api-rest/services/private-health-insurance.service";
 
@@ -121,7 +121,7 @@ export class PrivateHealthInsuranceComponent implements OnInit {
 		const toAdd: PatientMedicalCoverage = {
 			medicalCoverage,
 			affiliateNumber: this.prepagaForm.value.affiliateNumber,
-			validDate: newMoment(),
+			validDate: newDate(),
 			condition: this.prepagaForm.value.condition,
 			startDate: this.prepagaForm.value.startDate,
 			endDate: this.prepagaForm.value.endDate,

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { DateFormat, momentFormat, momentParse, momentParseDate, newMoment } from '@core/utils/moment.utils';
+import { DateFormat, dateISOParseDate, dateParse, newDate } from '@core/utils/moment.utils';
 import { EMedicalCoverageType, HealthInsurance, PatientMedicalCoverage, PrivateHealthInsurance } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { HealthInsuranceDto, PatientMedicalCoverageDto, PrivateHealthInsuranceDto } from '@api-rest/api-model';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 @Injectable({
 	providedIn: 'root'
@@ -18,11 +19,11 @@ export class MapperService {
 		return {
 			affiliateNumber: s.affiliateNumber,
 			medicalCoverage: s.medicalCoverage.toMedicalCoverageDto(),
-			startDate: s.startDate ? momentFormat(s.startDate, DateFormat.API_DATE) : null,
-			endDate: s.endDate ? momentFormat(s.endDate, DateFormat.API_DATE) : null,
+			startDate: s.startDate ? toApiFormat(s.startDate) : null,
+			endDate: s.endDate ? toApiFormat(s.endDate) : null,
 			planId: s.planId,
 			planName: s.planName,
-			vigencyDate: s.validDate ? momentFormat(s.validDate, DateFormat.API_DATE) : null,
+			vigencyDate: s.validDate ? toApiFormat(s.validDate) : null,
 			id: s.id,
 			active: s.active,
 			condition: s.condition
@@ -35,10 +36,10 @@ export class MapperService {
 			id: s.id,
 			affiliateNumber: s.affiliateNumber,
 			validDate: s.vigencyDate ?
-				momentParse(s.vigencyDate, DateFormat.API_DATE) : newMoment(),
+				dateParse(s.vigencyDate, DateFormat.API_DATE) : newDate(),
 			medicalCoverage: toMedicalCoverage(s.medicalCoverage),
-			startDate: s.startDate ? momentParseDate(s.startDate) : undefined,
-			endDate: s.endDate ? momentParseDate(s.endDate) : undefined,
+			startDate: s.startDate ? dateISOParseDate(s.startDate) : undefined,
+			endDate: s.endDate ? dateISOParseDate(s.endDate) : undefined,
 			planId: s.planId,
 			planName: s.planName,
 			active: s.active,

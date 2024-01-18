@@ -88,6 +88,7 @@ enum FormatosFecha {
 	FechaHora = 'yyyy-MM-dd HH:mm',
 	HoraMinutosSegundos = 'HH:mm:ss',
 	HoraMinutos = 'HH:mm',
+	AnioMes = 'yyyyMM'
 }
 const mappedFormats = {
 	[DateFormat.API_DATE]: FormatosFecha.AnioMesDia,
@@ -95,6 +96,8 @@ const mappedFormats = {
 	[DateFormat.VIEW_DATE]: FormatosFecha.DiaMesAnio,
 	[DateFormat.HOUR_MINUTE_SECONDS]: FormatosFecha.HoraMinutosSegundos,
 	[DateFormat.HOUR_MINUTE]: FormatosFecha.HoraMinutos,
+	[DateFormat.YEAR_MONTH]: FormatosFecha.AnioMes,
+
 }
 
 export const isMoment = (date: any): boolean => moment.isMoment(date);
