@@ -15,6 +15,7 @@ import { ApprovalComponent } from './components/approval/approval.component';
 import { ApprovalActionsComponent } from './components/approval-actions/approval-actions.component';
 import { AppointmentSummaryComponent } from './components/appointment-summary/appointment-summary.component';
 import { ContactDetailsComponent } from './components/contact-details/contact-details.component';
+import { DeriveRequestComponent } from './components/derive-request/derive-request.component';
 import { HomeComponent } from './routes/home/home.component';
 import { InstitutionalActionsComponent } from './components/institutional-actions/institutional-actions.component';
 import { InstitutionalNetworkActionsComponent } from './components/institutional-network-actions/institutional-network-actions.component';
@@ -23,10 +24,10 @@ import { ReferenceCompleteDataComponent } from './components/reference-complete-
 import { RegulationAppointmentResultViewComponent } from './components/regulation-appointment-result-view/regulation-appointment-result-view.component';
 import { RegulationSearchCriteriaComponent } from './components/regulation-search-criteria/regulation-search-criteria.component';
 import { SearchAppointmentsForRegulationComponent } from './components/search-appointments-for-regulation/search-appointments-for-regulation.component';
-import { DeriveRequestComponent } from './components/derive-request/derive-request.component';
 //dialogs
 import { ReasonPopUpComponent } from './dialogs/reason-pop-up/reason-pop-up.component';
 import { RegulationNewAppointmentPopUpComponent } from './dialogs/regulation-new-appointment-pop-up/regulation-new-appointment-pop-up.component';
+import { ReferenceEditionPopUpComponent } from './dialogs/reference-edition-pop-up/reference-edition-pop-up.component';
 import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data-popup/report-complete-data-popup.component';
 //services
 import { TabsService } from './services/tabs.service';
@@ -39,6 +40,7 @@ import { TabsService } from './services/tabs.service';
 		ApprovalActionsComponent,
 		AppointmentSummaryComponent,
 		ContactDetailsComponent,
+		DeriveRequestComponent,
 		InstitutionalActionsComponent,
 		InstitutionalNetworkActionsComponent,
 		HomeComponent,
@@ -47,11 +49,11 @@ import { TabsService } from './services/tabs.service';
 		RegulationAppointmentResultViewComponent,
 		RegulationSearchCriteriaComponent,
 		SearchAppointmentsForRegulationComponent,
-		DeriveRequestComponent,
 		//dialogs
 		ReasonPopUpComponent,
-		ReportCompleteDataPopupComponent,
+		ReferenceEditionPopUpComponent,
 		RegulationNewAppointmentPopUpComponent,
+		ReportCompleteDataPopupComponent,
 	],
 	providers: [
 		TabsService
@@ -65,12 +67,12 @@ import { TabsService } from './services/tabs.service';
 		SharedAppointmentAccessManagementModule,
 		//Standalone Components
 		IdentifierCasesComponent,
-		PatientSummaryComponent,		
+		PatientSummaryComponent,
 		ReferenceStateLabelComponent,
 		ViewMedicalHistoryButtonComponent,
 	],
 	exports: [
-		ReferenceCompleteDataComponent,		
+		ReferenceCompleteDataComponent,
 	]
 })
 export class AccessManagementModule { }

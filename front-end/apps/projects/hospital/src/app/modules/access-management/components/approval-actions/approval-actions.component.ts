@@ -1,10 +1,13 @@
+import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
+import { ReferenceEditionPopUpComponent } from '@access-management/dialogs/reference-edition-pop-up/reference-edition-pop-up.component';
 import { ReportCompleteDataPopupComponent } from '@access-management/dialogs/report-complete-data-popup/report-complete-data-popup.component';
 import { DashboardService } from '@access-management/services/dashboard.service';
 import { Component, Input } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { ButtonType } from '@presentation/components/button/button.component';
+import { ReferenceDataDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-approval-actions',
@@ -13,14 +16,15 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 })
 export class ApprovalActionsComponent {
 
-	@Input() referenceId: number;
+	ButtonType = ButtonType;
+	@Input() referenceDataDto: ReferenceDataDto;
 
 	constructor(
-		private dialogRef: MatDialogRef<ReportCompleteDataPopupComponent>,
-		private readonly dialog: MatDialog,
+		private reportCompleteDataDialogRef: MatDialogRef<ReportCompleteDataPopupComponent>,
 		private readonly snackBarService: SnackBarService,
 		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
 		private readonly dashboardService: DashboardService,
+		private readonly dialog: MatDialog,
 	) { }
 
 	cancel() {
@@ -36,17 +40,36 @@ export class ApprovalActionsComponent {
 		confirmDialog.afterClosed().subscribe(
 			cancelReference => {
 				if (cancelReference) {
-					this.institutionalReferenceReportService.cancelReference(this.referenceId).subscribe({
+					this.institutionalReferenceReportService.cancelReference(this.referenceDataDto.id).subscribe({
 						next: (response) => {
 							this.snackBarService.showSuccess('access-management.search_references.reference.approval_actions.CANCEL_SUCCESS');
 							this.dashboardService.updateReports();
-							this.dialogRef.close();
+							this.reportCompleteDataDialogRef.close();
 						},
 						error: (_) => this.snackBarService.showError('access-management.search_references.reference.approval_actions.CANCEL_ERROR')
 					});
 				}
 			}
 		)
+	}
+
+	edit() {
+
+		const referenceEditionDialogRef = this.dialog.open(ReferenceEditionPopUpComponent, {
+			data: {
+				referenceDataDto: this.referenceDataDto
+			},
+			autoFocus: false,
+			disableClose: true,
+			width: '50%',
+		});
+
+		referenceEditionDialogRef.afterClosed().subscribe(edited => {
+			if (edited) {
+				this.dashboardService.updateReports();
+				this.reportCompleteDataDialogRef.close();
+			}
+		});
 	}
 
 }
