@@ -338,11 +338,11 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell.setCellStyle(style);
 
 		ICell cell1 = row.createCell(rowNumber.getAndIncrement());
-		cell1.setCellValue(content.getLastName());
+		cell1.setCellValue(content.getPatientLastNames());
 		cell1.setCellStyle(style);
 
 		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
-		cell2.setCellValue(content.getName());
+		cell2.setCellValue(content.getPatientNames());
 		cell2.setCellStyle(style);
 
 		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
@@ -370,11 +370,11 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell8.setCellStyle(style);
 
 		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
-		cell9.setCellValue(reformatdate.reformatDateTwo(content.getEntrance()));
+		cell9.setCellValue(reformatdate.reformatDateTwo(content.getEntryDate()));
 		cell9.setCellStyle(style);
 
 		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
-		cell10.setCellValue(content.getProbableEnablement());
+		cell10.setCellValue(content.getProbableDischargeDate());
 		cell10.setCellStyle(style);
 
 		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
@@ -394,11 +394,11 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell14.setCellStyle(style);
 
 		ICell cell15 = row.createCell(rowNumber.getAndIncrement());
-		cell15.setCellValue(content.getMedicalClearance());
+		cell15.setCellValue(content.getDischargeDate());
 		cell15.setCellStyle(style);
 
 		ICell cell16 = row.createCell(rowNumber.getAndIncrement());
-		cell16.setCellValue(content.getProblem());
+		cell16.setCellValue(content.getProblems());
 		cell16.setCellStyle(style);
 
 	}
