@@ -372,39 +372,39 @@ public class GeneralReportExcelServiceImpl implements GeneralReportExcelService 
 		cell.setCellStyle(style);
 
 		ICell cell1 = row.createCell(rowNumber.getAndIncrement());
-		cell1.setCellValue(reformatdate.reformatDateTwo(content.getDate()));
+		cell1.setCellValue(reformatdate.reformatDateTwo(content.getServiceRequestDate()));
 		cell1.setCellStyle(style);
 
 		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
-		cell2.setCellValue(content.getCategory());
+		cell2.setCellValue(content.getServiceRequestCategory());
 		cell2.setCellStyle(style);
 
 		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
-		cell3.setCellValue(content.getOrder());
+		cell3.setCellValue(content.getOrderStatus());
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(content.getTypeOfRequest());
+		cell4.setCellValue(content.getRequestType());
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
-		cell5.setCellValue(content.getOrigin());
+		cell5.setCellValue(content.getRequestOrigin());
 		cell5.setCellStyle(style);
 
 		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
-		cell6.setCellValue(content.getPatientName());
+		cell6.setCellValue(content.getPatientFullName());
 		cell6.setCellStyle(style);
 
 		ICell cell7 = row.createCell(rowNumber.getAndIncrement());
-		cell7.setCellValue(content.getDocumentTypePatient());
+		cell7.setCellValue(content.getPatientDocumentType());
 		cell7.setCellStyle(style);
 
 		ICell cell8 = row.createCell(rowNumber.getAndIncrement());
-		cell8.setCellValue(content.getDocumentNumberPatient());
+		cell8.setCellValue(content.getPatientDocumentNumber());
 		cell8.setCellStyle(style);
 
 		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
-		cell9.setCellValue(content.getSocialWork());
+		cell9.setCellValue(content.getMedicalCoverage());
 		cell9.setCellStyle(style);
 
 		ICell cell12 = row.createCell(rowNumber.getAndIncrement());
@@ -412,15 +412,15 @@ public class GeneralReportExcelServiceImpl implements GeneralReportExcelService 
 		cell12.setCellStyle(style);
 
 		ICell cell13 = row.createCell(rowNumber.getAndIncrement());
-		cell13.setCellValue(content.getProfessionalName());
+		cell13.setCellValue(content.getProfessionalFullName());
 		cell13.setCellStyle(style);
 
 		ICell cell14 = row.createCell(rowNumber.getAndIncrement());
-		cell14.setCellValue(content.getDocumentTypeProfessional());
+		cell14.setCellValue(content.getProfessionalDocumentType());
 		cell14.setCellStyle(style);
 
 		ICell cell15 = row.createCell(rowNumber.getAndIncrement());
-		cell15.setCellValue(content.getDocumentNumberProfessional());
+		cell15.setCellValue(content.getProfessionalDocumentNumber());
 		cell15.setCellStyle(style);
 
 		ICell cell16 = row.createCell(rowNumber.getAndIncrement());
@@ -432,7 +432,7 @@ public class GeneralReportExcelServiceImpl implements GeneralReportExcelService 
 		cell17.setCellStyle(style);
 
 		ICell cell19 = row.createCell(rowNumber.getAndIncrement());
-		cell19.setCellValue(reformatdate.reformatDateFour(content.getDateOfIssue()));
+		cell19.setCellValue(reformatdate.reformatDateFour(content.getIssueDate()));
 		cell19.setCellStyle(style);
 
 		ICell cell20 = row.createCell(rowNumber.getAndIncrement());
@@ -444,7 +444,7 @@ public class GeneralReportExcelServiceImpl implements GeneralReportExcelService 
 		cell21.setCellStyle(style);
 
 		ICell cell22 = row.createCell(rowNumber.getAndIncrement());
-		cell22.setCellValue(content.getAssociatedProblems());
+		cell22.setCellValue(content.getAssociatedProblem());
 		cell22.setCellStyle(style);
 
 	}
