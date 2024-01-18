@@ -1,5 +1,6 @@
 package ar.lamansys.refcounterref.infraestructure.input.rest.exceptions;
 
+import ar.lamansys.refcounterref.application.cancelreference.exceptions.CancelReferenceException;
 import ar.lamansys.refcounterref.application.createcounterreference.exceptions.CreateCounterReferenceException;
 import ar.lamansys.refcounterref.application.createcounterreferencefile.exceptions.CreateCounterReferenceFileException;
 import ar.lamansys.refcounterref.application.createreferencefile.exceptions.CreateReferenceFileException;
@@ -96,6 +97,13 @@ public class ReferenceCounterReferenceExceptionHandler {
 	@ExceptionHandler({ReferenceForwardingException.class})
 	protected ApiErrorMessageDto handleForwardingReferenceException(ReferenceForwardingException ex, Locale locale) {
 		log.debug("ForwardingReferenceException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({CancelReferenceException.class})
+	protected ApiErrorMessageDto handleCancelReferenceException(CancelReferenceException ex, Locale locale) {
+		log.debug("CancelReferenceException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 

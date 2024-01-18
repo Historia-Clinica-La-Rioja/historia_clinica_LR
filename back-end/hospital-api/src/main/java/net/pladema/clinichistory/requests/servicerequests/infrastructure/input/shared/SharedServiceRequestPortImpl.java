@@ -74,4 +74,10 @@ public class SharedServiceRequestPortImpl implements SharedServiceRequestPort {
 		return result;
 	}
 
+	@Override
+	public void cancelServiceRequest(Integer serviceRequestId){
+		log.debug("Input parameters -> serviceRequestId{}", serviceRequestId);
+		serviceRequestStorage.cancelServiceRequest(serviceRequestId);
+	}
+
 }

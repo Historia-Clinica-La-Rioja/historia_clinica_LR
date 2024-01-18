@@ -1,5 +1,6 @@
 package ar.lamansys.refcounterref.infraestructure.input.rest;
 
+import ar.lamansys.refcounterref.application.cancelreference.CancelReference;
 import ar.lamansys.refcounterref.application.createreferenceobservation.CreateReferenceObservation;
 import ar.lamansys.refcounterref.application.getreceivedreferences.GetReceivedReferences;
 import ar.lamansys.refcounterref.application.getreferencecompletedata.GetReferenceCompleteData;
@@ -11,6 +12,8 @@ import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.Refere
 import ar.lamansys.refcounterref.infraestructure.input.rest.mapper.GetReferenceMapper;
 import ar.lamansys.sgh.shared.infrastructure.input.service.datastructures.PageDto;
 
+import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,11 +22,13 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,6 +50,8 @@ public class InstitutionalReferenceReportController {
 	private final CreateReferenceObservation createReferenceObservation;
 
 	private final GetReferenceMapper getReferenceMapper;
+
+	private final CancelReference cancelReference;
 
 	private final ObjectMapper objectMapper;
 
@@ -95,6 +102,17 @@ public class InstitutionalReferenceReportController {
 		log.debug("Input parameters -> institutionId {}, referenceId {}, observation {}", institutionId, referenceId, observation);
 		createReferenceObservation.run(referenceId, observation);
 		return ResponseEntity.ok().body(Boolean.TRUE);
+	}
+
+	@PutMapping("/{referenceId}/cancel")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ABORDAJE_VIOLENCIAS')")
+	public ResponseEntity<Boolean> cancelReference(@PathVariable(name = "institutionId") Integer institutionId,
+												   @PathVariable(name = "referenceId") Integer referenceId){
+		log.debug("Input parameters -> institutionId {}, referenceId {}", institutionId, referenceId);
+		Integer currentUserId = SecurityContextUtils.getUserDetails().getUserId();
+		Boolean result = cancelReference.run(currentUserId, referenceId);
+		log.debug("Output -> {}", result);
+		return ResponseEntity.ok().body(result);
 	}
 
 }

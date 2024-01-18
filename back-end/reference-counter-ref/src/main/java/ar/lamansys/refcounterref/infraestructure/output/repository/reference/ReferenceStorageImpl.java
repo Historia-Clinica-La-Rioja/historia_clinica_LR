@@ -5,8 +5,8 @@ import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceFileS
 import ar.lamansys.refcounterref.application.port.ReferenceHealthConditionStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStudyStorage;
-import ar.lamansys.refcounterref.domain.clinicalspecialty.ClinicalSpecialtyBo;
 import ar.lamansys.refcounterref.domain.enums.EReferenceCounterReferenceType;
+import ar.lamansys.refcounterref.domain.enums.EReferenceStatus;
 import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
@@ -190,7 +190,7 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 
 	@Override
 	public void delete(Integer referenceId) {
-		referenceRepository.deleteById(referenceId);
+		referenceRepository.deleteAndUpdateStatus(referenceId, EReferenceStatus.ERROR.getId());
 	}
 
 	private List<ReferenceDataBo> setReferenceDetails(List<ReferenceDataBo> references) {
@@ -273,6 +273,12 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 		result = referenceRepository.getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyIdAndPracticeId(patientId, clinicalSpecialtyId, practiceId);
 		result.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyIdAndPracticeId(patientId, clinicalSpecialtyId, practiceId));
 		return result;
+	}
+
+	@Override
+	public void deleteAndUpdateStatus(Integer referenceId, Short statusId){
+		log.debug("Input parameters -> referenceId {}, statusId {}", referenceId, statusId);
+		referenceRepository.deleteAndUpdateStatus(referenceId, statusId);
 	}
 
 }

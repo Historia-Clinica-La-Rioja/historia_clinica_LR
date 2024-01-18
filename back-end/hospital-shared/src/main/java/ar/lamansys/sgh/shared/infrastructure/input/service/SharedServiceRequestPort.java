@@ -11,4 +11,6 @@ public interface SharedServiceRequestPort {
 
 	List<ReferenceServiceRequestProcedureDto> getProceduresByServiceRequestIds(List<Integer> serviceRequestIds);
 
+	void cancelServiceRequest(Integer serviceRequestId);
+
 }

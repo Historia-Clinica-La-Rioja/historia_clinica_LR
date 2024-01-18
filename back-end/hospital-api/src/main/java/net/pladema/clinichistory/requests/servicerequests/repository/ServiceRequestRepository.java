@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.requests.servicerequests.repository;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.DiagnosticReportStatus;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.clinichistory.requests.servicerequests.domain.ServiceRequestProcedureInfoBo;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;
@@ -46,4 +47,22 @@ public interface ServiceRequestRepository extends SGXAuditableEntityJPARepositor
 			"WHERE sr.id IN (:serviceRequestIds) " +
 			"AND d.typeId = "+ DocumentType.ORDER)
 	List<ServiceRequestProcedureInfoBo> getServiceRequestsProcedures(@Param("serviceRequestIds") List<Integer> serviceRequestIds);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT new net.pladema.clinichistory.requests.servicerequests.domain.ServiceRequestProcedureInfoBo(sr.id, " +
+			"s.id, s.sctid, s.pt, dr.id, dr.statusId) " +
+			"FROM ServiceRequest sr " +
+			"JOIN Document d ON (sr.id = d.sourceId) " +
+			"JOIN DocumentDiagnosticReport ddr ON (d.id = ddr.pk.documentId) " +
+			"JOIN DiagnosticReport dr ON (ddr.pk.diagnosticReportId = dr.id) " +
+			"JOIN Snomed s ON (dr.snomedId = s.id) " +
+			"WHERE sr.id = :serviceRequestId " +
+			"AND d.typeId = " + DocumentType.ORDER + " " +
+			"AND NOT EXISTS " +
+			"	(SELECT 1 " +
+			"	FROM DocumentDiagnosticReport ddr2 " +
+			"	JOIN DiagnosticReport dr2 ON (ddr2.pk.diagnosticReportId = dr.id) " +
+			"	WHERE ddr2.pk.documentId = d.id AND dr2.statusId != " + DiagnosticReportStatus.REGISTERED + ")")
+	List<ServiceRequestProcedureInfoBo> getActiveServiceRequestProcedures(@Param("serviceRequestId") Integer serviceRequestId);
+
 }

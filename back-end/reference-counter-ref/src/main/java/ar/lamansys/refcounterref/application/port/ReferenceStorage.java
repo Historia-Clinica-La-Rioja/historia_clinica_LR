@@ -30,4 +30,6 @@ public interface ReferenceStorage {
 
 	Short getReferenceRegulationStateId(Integer referenceId);
 
+	void deleteAndUpdateStatus(Integer referenceId, Short statusId);
+
 }

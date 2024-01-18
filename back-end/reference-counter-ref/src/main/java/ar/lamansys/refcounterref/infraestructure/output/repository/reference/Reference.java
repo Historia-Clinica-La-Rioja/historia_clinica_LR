@@ -1,5 +1,6 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.reference;
 
+import ar.lamansys.refcounterref.domain.enums.EReferenceStatus;
 import ar.lamansys.refcounterref.domain.reference.ReferenceBo;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
@@ -76,6 +77,7 @@ public class Reference extends SGXAuditableEntity<Integer> {
 		this.phonePrefix = referenceBo.getPhonePrefix();
 		this.phoneNumber = referenceBo.getPhoneNumber();
 		this.priority = referenceBo.getPriority();
+		this.statusId = EReferenceStatus.ACTIVE.getId();
     }
 
 }

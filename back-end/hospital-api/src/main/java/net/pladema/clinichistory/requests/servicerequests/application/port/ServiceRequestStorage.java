@@ -10,4 +10,6 @@ public interface ServiceRequestStorage {
 	List<ServiceRequestProcedureInfoBo> getProceduresByServiceRequestIds(List<Integer> serviceRequestIds);
 
 	TranscribedServiceRequestBo getTranscribedServiceRequest(Integer transcribedServiceRequestId);
+
+	void cancelServiceRequest(Integer serviceRequestId);
 }

@@ -7,6 +7,8 @@ import ar.lamansys.refcounterref.domain.careline.CareLineBo;
 import ar.lamansys.refcounterref.domain.clinicalspecialty.ClinicalSpecialtyBo;
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import ar.lamansys.refcounterref.domain.enums.EReferencePriority;
+import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
+import ar.lamansys.refcounterref.domain.enums.EReferenceStatus;
 import ar.lamansys.refcounterref.domain.file.ReferenceCounterReferenceFileBo;
 import ar.lamansys.refcounterref.domain.snomed.SnomedBo;
 import lombok.Getter;
@@ -58,6 +60,10 @@ public class ReferenceDataBo {
 
 	private Integer createdBy;
 
+	private EReferenceStatus status;
+
+	private EReferenceRegulationState regulationState;
+
 	public ReferenceDataBo(Integer id, LocalDateTime date, String note,
 						   Integer careLineId, String careLineDescription,
 						   Integer clinicalSpecialtyOriginId, String clinicalSpecialtyOriginName,
@@ -82,7 +88,8 @@ public class ReferenceDataBo {
 						   Integer institutionOriginId, String institutionOriginName,
 						   Integer institutionDestinationId, String institutionDestinationName,
 						   Integer professionalPersonId, Integer priorityId, Short closureType,
-						   String phonePrefix, String phoneNumber, Integer serviceRequestId, Integer createdBy) {
+						   String phonePrefix, String phoneNumber, Integer serviceRequestId,
+						   Integer createdBy, Short statusId, Short regulationStateId) {
 		this.id = id;
 		this.patientId = patientId;
 		this.date = date;
@@ -98,6 +105,8 @@ public class ReferenceDataBo {
 		this.phoneNumber = phoneNumber;
 		this.serviceRequestId = serviceRequestId;
 		this.createdBy = createdBy;
+		this.status = EReferenceStatus.map(statusId);
+		this.regulationState = EReferenceRegulationState.getById(regulationStateId);
 	}
 
 	public ReferenceDataBo(String phonePrefix, String phoneNumber) {
