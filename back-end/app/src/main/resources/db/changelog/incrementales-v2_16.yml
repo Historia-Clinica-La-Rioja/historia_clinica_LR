@@ -646,3 +646,18 @@ databaseChangeLog:
                   ORDER BY historic_reference_regulation.created_on DESC
                   LIMIT 1
                 )
+
+    - changeSet:
+        id: addColumn-status_id-to-reference
+        author: fsimaro
+        changes:
+          - addColumn:
+              tableName: reference
+              columns:
+                - column:
+                    name: status_id
+                    type: smallint
+                    defaultValue: 1
+                    constraints:
+                      nullable: false
+
