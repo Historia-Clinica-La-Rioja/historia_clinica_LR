@@ -56,6 +56,8 @@ public class ReferenceDataBo {
 
 	private String phoneNumber;
 
+	private Integer createdBy;
+
 	public ReferenceDataBo(Integer id, LocalDateTime date, String note,
 						   Integer careLineId, String careLineDescription,
 						   Integer clinicalSpecialtyOriginId, String clinicalSpecialtyOriginName,
@@ -80,7 +82,7 @@ public class ReferenceDataBo {
 						   Integer institutionOriginId, String institutionOriginName,
 						   Integer institutionDestinationId, String institutionDestinationName,
 						   Integer professionalPersonId, Integer priorityId, Short closureType,
-						   String phonePrefix, String phoneNumber, Integer serviceRequestId) {
+						   String phonePrefix, String phoneNumber, Integer serviceRequestId, Integer createdBy) {
 		this.id = id;
 		this.patientId = patientId;
 		this.date = date;
@@ -95,6 +97,7 @@ public class ReferenceDataBo {
 		this.phonePrefix = phonePrefix;
 		this.phoneNumber = phoneNumber;
 		this.serviceRequestId = serviceRequestId;
+		this.createdBy = createdBy;
 	}
 
 	public ReferenceDataBo(String phonePrefix, String phoneNumber) {

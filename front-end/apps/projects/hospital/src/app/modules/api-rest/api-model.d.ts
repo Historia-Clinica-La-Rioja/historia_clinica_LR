@@ -3583,6 +3583,7 @@ export interface ReferenceDataDto {
     careLine: CareLineDto;
     clinicalSpecialtyOrigin: ClinicalSpecialtyDto;
     closureType: EReferenceClosureType;
+    createdBy: number;
     date: DateTimeDto;
     destinationClinicalSpecialties: ClinicalSpecialtyDto[];
     files: ReferenceCounterReferenceFileDto[];

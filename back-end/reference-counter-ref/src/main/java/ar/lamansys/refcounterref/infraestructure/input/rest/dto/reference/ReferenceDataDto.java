@@ -48,4 +48,6 @@ public class ReferenceDataDto {
 
 	private EReferenceClosureType closureType;
 
+	private Integer createdBy;
+
 }

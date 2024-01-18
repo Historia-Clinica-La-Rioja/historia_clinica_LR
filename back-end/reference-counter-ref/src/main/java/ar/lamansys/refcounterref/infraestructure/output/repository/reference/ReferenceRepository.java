@@ -348,7 +348,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.patientId, oc.creationable.createdOn, " +
 			"rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name,"+
-			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId) " +
+			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId, oc.creationable.createdBy) " +
 			"FROM Reference r " +
 			"JOIN OutpatientConsultation oc ON (r.encounterId = oc.id) " +
 			"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
@@ -364,7 +364,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.patientId, oc.creationable.createdOn, " +
 			"rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name,"+
-			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId) " +
+			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId, oc.creationable.createdBy) " +
 			"FROM Reference r " +
 			"JOIN OdontologyConsultation oc ON (r.encounterId = oc.id) " +
 			"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
