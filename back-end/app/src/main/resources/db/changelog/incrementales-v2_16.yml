@@ -661,3 +661,12 @@ databaseChangeLog:
                     constraints:
                       nullable: false
 
+    - changeSet:
+        id: reference-update
+        author: fsimaro
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE reference SET status_id = 2 WHERE deleted = TRUE;
+
