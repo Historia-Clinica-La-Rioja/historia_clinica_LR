@@ -51,4 +51,9 @@ export class InstitutionalReferenceReportService {
 		const url = `${this.BASE_URL}/${this.contextService.institutionId}/references-report/${referenceId}/add-observation`;
 		return this.http.post<boolean>(url, {}, { params: queryParams });
 	}
+
+	cancelReference(referenceId: number): Observable<boolean> {
+		const url = `${this.BASE_URL}/${this.contextService.institutionId}/references-report/${referenceId}/cancel`;
+		return this.http.put<boolean>(url, {});
+	}
 }

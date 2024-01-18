@@ -12,6 +12,7 @@ import { ReferenceStateLabelComponent } from '../hsi-components/reference-state-
 import { ViewMedicalHistoryButtonComponent } from '../hsi-components/view-medical-history-button/view-medical-history-button.component';
 //components
 import { ApprovalComponent } from './components/approval/approval.component';
+import { ApprovalActionsComponent } from './components/approval-actions/approval-actions.component';
 import { AppointmentSummaryComponent } from './components/appointment-summary/appointment-summary.component';
 import { ContactDetailsComponent } from './components/contact-details/contact-details.component';
 import { HomeComponent } from './routes/home/home.component';
@@ -33,6 +34,7 @@ import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data
 	declarations: [
 		//components
 		ApprovalComponent,
+		ApprovalActionsComponent,
 		AppointmentSummaryComponent,
 		ContactDetailsComponent,
 		InstitutionalActionsComponent,

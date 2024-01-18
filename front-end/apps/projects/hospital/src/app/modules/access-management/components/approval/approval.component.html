@@ -20,4 +20,7 @@
 
 	</div>
 
+	<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+		<app-approval-actions *ngIf="loggedUserCanDoActions" [referenceId]="referenceRegulationDto.referenceId"></app-approval-actions>
+	</div>
 </div>

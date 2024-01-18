@@ -62,6 +62,11 @@
 						"SUBTITLE": "se marcará la solicitud como revisión sugerida",
 						"PLACEHOLDER": "Explique el motivo de la revisión"
 					}
+				},
+				"approval_actions": {
+					"CANCEL": "cancelar solicitud",
+					"CANCEL_SUCCESS": "Se cancelo la solicitud exitosamente",
+					"CANCEL_ERROR": "Error al cancelar la solicitud"
 				}
 			}
 		},
