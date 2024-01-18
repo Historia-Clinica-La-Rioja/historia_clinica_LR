@@ -2,8 +2,8 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {ActionDisplays, TableModel} from "@presentation/components/table/table.component";
 import {ConsultationsDto} from "@api-rest/api-model";
-import {DateFormat, momentFormat, momentParseDate} from "@core/utils/moment.utils";
 import {PatientReportsService} from "@api-rest/services/patient-reports.service";
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 @Component({
 	selector: 'app-reports',
@@ -21,7 +21,8 @@ export class ReportsComponent implements OnInit {
 	constructor(
 		private readonly dialogRef: MatDialogRef<ReportsComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: { patientId: number, patientName: string },
-		private readonly patientReportsService: PatientReportsService
+		private readonly patientReportsService: PatientReportsService,
+		private readonly dateFormatPipe: DateFormatPipe
 	) {
 	}
 
@@ -60,7 +61,7 @@ export class ReportsComponent implements OnInit {
 				{
 					columnDef: 'date',
 					header: 'pacientes.reports.table.columns.DATE',
-					text: (row) => momentFormat(momentParseDate(String(row.consultationDate)), DateFormat.VIEW_DATE)
+					text: (row) => this.dateFormatPipe.transform(row.consultationDate, 'date')
 				},
 				{
 					columnDef: 'specialty',
