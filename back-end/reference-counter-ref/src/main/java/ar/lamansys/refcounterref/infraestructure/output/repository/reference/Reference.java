@@ -62,6 +62,9 @@ public class Reference extends SGXAuditableEntity<Integer> {
 
 	@Column(name = "regulation_state_id")
 	private Short regulationStateId;
+    
+	@Column(name = "status_id")
+	private Short statusId;
 
     public Reference(ReferenceBo referenceBo) {
         this.encounterId = referenceBo.getEncounterId();
