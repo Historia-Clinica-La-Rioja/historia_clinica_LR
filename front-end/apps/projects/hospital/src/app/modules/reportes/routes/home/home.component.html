@@ -146,7 +146,7 @@
 							</mat-select>
 							<button *ngIf="form.value.appointmentStateId" id="clear-appointment-state" type="button" mat-button
 									matSuffix color="warn"
-									mat-icon-button (click)="clearAppointmentStateId()">
+									mat-icon-button (click)="clearAppointmentStateId(); $event.stopPropagation()">
 								<mat-icon>close</mat-icon>
 							</button>
 						</mat-form-field>

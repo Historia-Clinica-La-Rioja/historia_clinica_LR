@@ -315,7 +315,7 @@ export class HomeComponent implements OnInit {
 	}
 
 	clearAppointmentStateId(): void {
-		this.form.controls.hierarchicalUnitId = null;
+		this.form.controls.appointmentStateId.setValue(null);
 	}
 
 	private getAppointmentStates() : AppointmentState[] {
