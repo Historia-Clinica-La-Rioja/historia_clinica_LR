@@ -334,6 +334,13 @@
 				"INCLUDE_ALL": "Incluir todas las cirugías propuestas en el Parte Anestésico",
 				"ADD_SURGERY": "Agregar cirugía propuesta",
 				"PROPOSED_SURGERY": "Cirugía propuesta"
+			},
+			"anthropometric-data": {
+				"TITLE": "Datos antropométricos",
+				"BLOOD_TYPE": "Grupo sanguíneo",
+				"BLOOD_TYPE_PLACEHOLDER": "Tipo y factor",
+				"HEIGHT": "Talla (cm)",
+				"WEIGHT": "Peso (kg)"
 			}
 		},
 		"clinical-assessment-diagnosis": {

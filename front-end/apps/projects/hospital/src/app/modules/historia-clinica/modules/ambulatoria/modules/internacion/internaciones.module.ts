@@ -31,6 +31,7 @@ import { ProcedureComponent } from './components/procedure/procedure.component';
 import { ListConceptComponent } from './components/list-concept/list-concept.component';
 import { ComponentEvaluationManagerService } from '../../services/component-evaluation-manager.service';
 import { SearchCasesComponent } from 'projects/hospital/src/app/modules/hsi-components/search-cases/search-cases.component';
+import { AnesthesicReportAddProposedSurgeryComponent } from './dialogs/anesthesic-report-add-proposed-surgery/anesthesic-report-add-proposed-surgery.component';
 // dialogs
 import { AnamnesisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/anamnesis-dock-popup/anamnesis-dock-popup.component";
 import { ConceptDateFormComponent } from './dialogs/concept-date-form/concept-date-form.component';
@@ -48,7 +49,6 @@ import { IntermentDocumentEpisodeComponent } from './components/interment-docume
 import { AttachDocumentPopupComponent } from './dialogs/attach-document-popup/attach-document-popup.component';
 import { DeleteDocumentPopupComponent } from './dialogs/delete-document-popup/delete-document-popup.component';
 import { MedicationComponent } from './components/medication/medication.component';
-import { AnesthesicReportAddProposedSurgeryComponent } from './dialogs/anesthesic-report-add-proposed-surgery/anesthesic-report-add-proposed-surgery.component';
 
 @NgModule({
 	declarations: [
@@ -91,7 +91,7 @@ import { AnesthesicReportAddProposedSurgeryComponent } from './dialogs/anesthesi
 		IntermentDocumentEpisodeComponent,
 		AttachDocumentPopupComponent,
 		DeleteDocumentPopupComponent,
-  AnesthesicReportAddProposedSurgeryComponent,
+		AnesthesicReportAddProposedSurgeryComponent,
 	],
 	exports: [
 		InternmentEpisodeSummaryComponent,

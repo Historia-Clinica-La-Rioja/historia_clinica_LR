@@ -20,6 +20,8 @@ import { FactoresDeRiesgoFormComponent } from './components/factores-de-riesgo-f
 import { NewConsultationExpansionSectionComponent } from './components/new-consultation-expansion-section/new-consultation-expansion-section.component';
 import { ProcedureListComponent } from './components/procedure-list/procedure-list.component';
 import { ProposedSurgeryComponent } from './modules/ambulatoria/modules/internacion/components/proposed-surgery/proposed-surgery.component';
+import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/proposed-surgery-background-list/proposed-surgery-background-list.component';
+import { AnestheticReportAnthropometricDataComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-anthropometric-data/anesthetic-report-anthropometric-data.component';
 // dialogs
 import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
 import { AddAnthropometricComponent } from './dialogs/add-anthropometric/add-anthropometric.component';
@@ -78,7 +80,6 @@ import { ViolenceModalitiesListComponent } from './components/violence-modalitie
 import { ViolentPersonListComponent } from './components/violent-person-list/violent-person-list.component';
 import { AuditAccessRegisterComponent } from './dialogs/audit-access-register/audit-access-register.component';
 import { AnestheticReportDockPopupComponent } from './components/anesthetic-report-dock-popup/anesthetic-report-dock-popup.component';
-import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/proposed-surgery-background-list/proposed-surgery-background-list.component';
 
 @NgModule({
 	declarations: [
@@ -156,6 +157,7 @@ import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/mo
   		AnestheticReportDockPopupComponent,
 		ProposedSurgeryComponent,
 		ProposedSurgeryBackgroundListComponent,
+		AnestheticReportAnthropometricDataComponent,
 	],
 	imports: [
 		CommonModule,

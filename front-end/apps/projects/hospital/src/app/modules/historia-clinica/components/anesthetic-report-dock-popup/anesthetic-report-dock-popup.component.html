@@ -1,16 +1,23 @@
 <app-dock-popup [dockPopupRef]="dockPopupRef" [header]="{ title:'Parte Anestésico'} ">
     <div body fxLayout="column" fxLayoutGap="20px">
         <app-new-consultation-expansion-section id="diagnosis-expansion-section"
-            [title]="'internaciones.anesthesic-report.diagnosis.TITLE' | translate" icon="error_outlined" [collapsed]="false"
-            [isEmpty]="false" [hideBorder]="true">
+            [title]="'internaciones.anesthesic-report.diagnosis.TITLE' | translate" icon="error_outlined"
+            [collapsed]="false" [isEmpty]="false" [hideBorder]="true">
             <app-diagnosticos id="diagnosis" [showTitle]="false" [(mainDiagnosis)]="mainDiagnosis"
                 [(listDiagnosis)]="diagnosis" [type]="'PARTE ANESTESICO'"></app-diagnosticos>
         </app-new-consultation-expansion-section>
 
         <app-new-consultation-expansion-section id="proposed-surgery-expansion-section"
-            [title]="'internaciones.anesthesic-report.proposed-surgery.TITLE' | translate" icon="error_outlined" [collapsed]="true"
-            [isEmpty]="true" [hideBorder]="false">
+            [title]="'internaciones.anesthesic-report.proposed-surgery.TITLE' | translate" icon="error_outlined"
+            [collapsed]="true" [isEmpty]="true" [hideBorder]="false">
             <app-proposed-surgery></app-proposed-surgery>
+        </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="proposed-surgery-expansion-section"
+            [title]="'internaciones.anesthesic-report.anthropometric-data.TITLE' | translate" icon="error_outlined"
+            [collapsed]="true" [isEmpty]="true" [hideBorder]="false">
+            <app-anesthetic-report-anthropometric-data
+                [patientId]="data.patientId"></app-anesthetic-report-anthropometric-data>
         </app-new-consultation-expansion-section>
     </div>
 

@@ -161,6 +161,7 @@ export class InternmentActionsService {
 			this.dialogRef = this.dockPopupService.open(AnestheticReportDockPopupComponent, {
 				autoFocus: false,
 				disableClose: true,
+				patientId: this.patientId,
 				mainDiagnosis: this.mainDiagnosis,
 				diagnosis: this.diagnosticos,
 			});
