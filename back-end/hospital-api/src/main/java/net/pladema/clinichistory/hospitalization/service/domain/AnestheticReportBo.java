@@ -2,17 +2,19 @@ package net.pladema.clinichistory.hospitalization.domain;
 
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -37,6 +39,10 @@ public class AnestheticReportBo implements IDocumentBo {
     private LocalDateTime performedDate;
 
     private Long initialDocumentId;
+
+    private HealthConditionBo mainDiagnosis;
+
+    private List<DiagnosisBo> diagnosis;
 
     @Override
     public Integer getPatientId() {

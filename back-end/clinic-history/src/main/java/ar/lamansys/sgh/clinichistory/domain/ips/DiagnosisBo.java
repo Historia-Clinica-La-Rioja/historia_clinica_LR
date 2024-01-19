@@ -2,14 +2,13 @@ package ar.lamansys.sgh.clinichistory.domain.ips;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProblemTypeEnum;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 public class DiagnosisBo extends HealthConditionBo {
 
@@ -26,8 +25,29 @@ public class DiagnosisBo extends HealthConditionBo {
             return false;
         return presumptive;
     }
-	@Override
-	public boolean equals(ClinicalTerm bo){
+
+    @Override
+    public String toString() {
+        return "DiagnosisBo{" + "presumptive=" + presumptive +
+                ", type=" + type +
+                ", super=" + super.toString() +
+                '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSnomedSctid(), getSnomed());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DiagnosisBo otherDiagnosis = (DiagnosisBo) o;
+        return this.specificEquals(otherDiagnosis);
+    }
+
+	private boolean specificEquals(ClinicalTerm bo){
 		return super.equals(bo)&&((DiagnosisBo)bo).isPresumptive()==isPresumptive();
 	}
 }

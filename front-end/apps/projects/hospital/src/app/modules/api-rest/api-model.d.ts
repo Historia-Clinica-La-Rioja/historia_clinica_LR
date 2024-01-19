@@ -159,7 +159,8 @@ export interface AnamnesisSummaryDto extends DocumentSummaryDto {
 }
 
 export interface AnestheticReportDto {
-
+    diagnosis?: DiagnosisDto[];
+    mainDiagnosis?: DiagnosisDto;
 }
 
 export interface AnnexIIDto {
@@ -1744,6 +1745,10 @@ export interface FilterOptionDto {
     id: number;
 }
 
+export interface FoodIntakeDto {
+    clockTime: number;
+}
+
 export interface FormVDto {
     address: string;
     affiliateNumber: string;
@@ -3286,6 +3291,11 @@ export interface PracticeDto {
     description: string;
     id: number;
     snomedId: number;
+}
+
+export interface PreMedicationDto extends ClinicalTermDto {
+    dosage: NewDosageDto;
+    viaId: number;
 }
 
 export interface PreferredTermDto {

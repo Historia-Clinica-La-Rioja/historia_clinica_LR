@@ -4,14 +4,12 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-@ToString
 public class HealthConditionBo extends ClinicalTerm {
 
     private String verificationId;
@@ -44,5 +42,14 @@ public class HealthConditionBo extends ClinicalTerm {
 
     public boolean isActive(){
         return getStatusId().equals(ConditionClinicalStatus.ACTIVE);
+    }
+
+    @Override
+    public String toString() {
+        return "HealthConditionBo{ verificationId=" + verificationId +
+                ", verification=" + verification +
+                ", main=" + main +
+                ", super=" + super.toString() +
+                '}';
     }
 }

@@ -1,5 +1,7 @@
 package net.pladema.clinichistory.hospitalization.application.anestheticreport;
 
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.application.anestheticreport.exceptions.AnestheticReportException;
@@ -14,14 +16,19 @@ import org.springframework.stereotype.Service;
 public class GetAnestheticReport {
 
     private final AnestheticStorage anestheticStorage;
+    private final DocumentService documentService;
 
-    public AnestheticReportBo run(Long documentId) {
-        log.debug("Input parameters -> documentId {}", documentId);
+    public AnestheticReportBo run(Long documentId, Integer internmentEpisodeId) {
+        log.debug("Input parameters -> documentId {} internmentEpisodeId {}", documentId, internmentEpisodeId);
 
         AnestheticReportBo result = anestheticStorage.get(documentId)
-                .orElseThrow(()-> new AnestheticReportException(
+                .orElseThrow(() -> new AnestheticReportException(
                         AnestheticReportEnumException.ANESTHETIC_REPORT_NOT_FOUND,
                         "anesthetic-report.not-found"));
+
+        GeneralHealthConditionBo generalHealthConditionBo = documentService.getHealthConditionFromDocument(documentId);
+        result.setMainDiagnosis(generalHealthConditionBo.getMainDiagnosis());
+        result.setDiagnosis(generalHealthConditionBo.getDiagnosis());
 
         log.debug("Output -> anestheticReport {}", result);
         return result;

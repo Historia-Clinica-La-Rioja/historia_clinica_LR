@@ -55,7 +55,7 @@ public class AnestheticReportController {
             @PathVariable(name = "documentId") Long documentId) {
         log.trace("Input parameters -> institutionId {}, internmentEpisodeId {}, documentId {}",
                 institutionId, internmentEpisodeId, documentId);
-        AnestheticReportBo anestheticReport = getAnestheticReport.run(documentId);
+        AnestheticReportBo anestheticReport = getAnestheticReport.run(documentId, internmentEpisodeId);
         AnestheticReportDto result = anestheticReportMapper.fromAnestheticReportBo(anestheticReport);
         log.trace("Output -> {}", result);
         return ResponseEntity.ok().body(result);

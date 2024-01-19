@@ -37,8 +37,25 @@ public interface HealthConditionMapper {
     @Named("toHealthHistoryConditionDto")
     HealthHistoryConditionDto toHealthHistoryConditionDto(FamilyHistoryBo familyHistory);
 
+    @Named("toListDiagnosisDto")
+    @IterableMapping(qualifiedByName = "toDiagnosisDto")
+    List<DiagnosisDto> toListDiagnosisDto(List<DiagnosisBo> diagnosisBo);
+
     @Named("toDiagnosisDto")
     DiagnosisDto toDiagnosisDto(DiagnosisBo diagnosisBo);
+
+    @Named("toListDiagnosisBo")
+    @IterableMapping(qualifiedByName = "toDiagnosisBo")
+    List<DiagnosisBo> toListDiagnosisBo(List<DiagnosisDto> diagnosisDto);
+
+    @Named("toDiagnosisBo")
+    DiagnosisBo toDiagnosisBo(DiagnosisDto diagnosisDto);
+
+    @Named("toHealthConditionBoFromDiagnosisDto")
+    HealthConditionBo toHealthConditionBoFromDiagnosisDto(DiagnosisDto diagnosisDto);
+
+    @Named("toDiagnosisDtoFromHealthConditionBo")
+    DiagnosisDto toDiagnosisDtoFromHealthConditionBo(HealthConditionBo healthConditionBo);
 
     @Named("toDiagnosesGeneralStateDto")
     DiagnosesGeneralStateDto toDiagnosesGeneralStateDto(HealthConditionBo healthConditionBo);
