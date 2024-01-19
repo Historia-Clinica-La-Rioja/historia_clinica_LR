@@ -1,3 +1,4 @@
+import { TabsService } from '@access-management/services/tabs.service';
 import { Component } from '@angular/core';
 
 @Component({
@@ -7,6 +8,26 @@ import { Component } from '@angular/core';
 })
 export class HomeComponent {
 
-  constructor() { }
+  Tabs = Tabs;
+  currentTab: Tabs;
 
+  constructor( readonly tabsService: TabsService ) { }
+
+  ngOnChanges(): void {
+    this.currentTab = this.tabsService.getTabActive();
+  }
+
+  ngOnDestroy(): void {
+    this.tabsService.clearInfo();
+  }
+
+  tabChanged(tabChangeIndex: number): void {
+    this.tabsService.setTabActive(tabChangeIndex);
+  }
+
+}
+
+export enum Tabs {
+  REGULATION_OFFER = "OFERTA POR REGULACION",
+  REQUESTS = 'SOLICITUDES'
 }

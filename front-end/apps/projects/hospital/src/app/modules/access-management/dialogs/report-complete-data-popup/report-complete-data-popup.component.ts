@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, } from '@angular/material/dialog';
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef, } from '@angular/material/dialog';
 import { EReferenceRegulationState, ERole, ReferenceCompleteDataDto, ReferenceDataDto, ReferenceRegulationDto } from '@api-rest/api-model';
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { ContactDetails } from '@access-management/components/contact-details/contact-details.component';
@@ -17,6 +17,9 @@ import { PermissionsService } from '@core/services/permissions.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { convertDateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DerivationEmmiter, RegisterDerivationEditor } from '../../components/derive-request/derive-request.component'
+import { SearchAppointmentsInfoService } from '@access-management/services/search-appointment-info.service';
+import { Tabs } from '@access-management/routes/home/home.component';
+import { TabsService } from '@access-management/services/tabs.service';
 
 
 const GESTORES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_LOCAL, ERole.GESTOR_DE_ACCESO_REGIONAL];
@@ -45,8 +48,9 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	registerDeriveEditor$: BehaviorSubject<RegisterDerivationEditor> = new BehaviorSubject<RegisterDerivationEditor>(null);
 	hasObservation: boolean = false;
 	hasDerivationRequest = false;
-	showDerivationRequest: boolean;
+	isRoleGestor: boolean;
 
+	@Output() assignTurn: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	constructor(
 		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
@@ -54,6 +58,9 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		private readonly institutionalNetworkReferenceReportService: InstitutionalNetworkReferenceReportService,
 		private readonly permissionService: PermissionsService,
 		private readonly snackBarService: SnackBarService,
+		private readonly searchAppointmentsInfoService: SearchAppointmentsInfoService,
+		private readonly tabsService: TabsService,
+		private dialogRef: MatDialogRef<ReportCompleteDataPopupComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
 	) { }
 
@@ -69,7 +76,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 				this.setReportData(this.referenceCompleteData);
 				this.colapseContactDetails = this.referenceCompleteData.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.SERVED;
 			});
-		this.permissionService.hasContextAssignments$(GESTORES).subscribe(hasRole => this.showDerivationRequest = hasRole);
+		this.permissionService.hasContextAssignments$(GESTORES).subscribe(hasRole => this.isRoleGestor = hasRole);
 	}
 
 	updateApprovalStatus() {
@@ -136,6 +143,12 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 			else
 				this.snackBarService.showError('access-management.derive_request.SHOW_ERROR_DERIVATION');
 		})
+	}
+
+	redirectToOfferByRegulation(): void {
+		this.searchAppointmentsInfoService.loadInformation(this.reportCompleteData.patient.id, this.reportCompleteData.reference);
+		this.tabsService.setTabActive(1);
+		this.dialogRef.close();
 	}
 
 	private updateDerivation() {
