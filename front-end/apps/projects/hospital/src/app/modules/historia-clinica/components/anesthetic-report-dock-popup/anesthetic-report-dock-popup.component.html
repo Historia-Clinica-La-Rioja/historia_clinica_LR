@@ -13,11 +13,17 @@
             <app-proposed-surgery></app-proposed-surgery>
         </app-new-consultation-expansion-section>
 
-        <app-new-consultation-expansion-section id="proposed-surgery-expansion-section"
+        <app-new-consultation-expansion-section id="anthropometric-data-expansion-section"
             [title]="'internaciones.anesthesic-report.anthropometric-data.TITLE' | translate" icon="error_outlined"
             [collapsed]="true" [isEmpty]="true" [hideBorder]="false">
             <app-anesthetic-report-anthropometric-data
                 [patientId]="data.patientId"></app-anesthetic-report-anthropometric-data>
+        </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="anesthesic-clinical-evaluation-expansion-section"
+            [title]="'internaciones.anesthesic-report.anesthesic-clinical-evaluation.TITLE' | translate" icon="error_outlined"
+            [collapsed]="true" [isEmpty]="true" [hideBorder]="false">
+            <app-anesthetic-report-clinical-evaluation></app-anesthetic-report-clinical-evaluation>
         </app-new-consultation-expansion-section>
     </div>
 

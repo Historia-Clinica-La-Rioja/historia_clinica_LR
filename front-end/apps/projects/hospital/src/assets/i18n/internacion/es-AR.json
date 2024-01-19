@@ -328,7 +328,7 @@
 				"TITLE": "Diagnósticos"
 			},
 			"proposed-surgery": {
-				"TITLE": "Cirugía Propuesta",
+				"TITLE": "Cirugía propuesta",
 				"ADD_PROPOSED_SURGERY": "+ Agregar cirugía propuesta",
 				"REGISTERED_PROPOSED_SURGERIES": "Cirugías propuestas registradas",
 				"INCLUDE_ALL": "Incluir todas las cirugías propuestas en el Parte Anestésico",
@@ -341,6 +341,12 @@
 				"BLOOD_TYPE_PLACEHOLDER": "Tipo y factor",
 				"HEIGHT": "Talla (cm)",
 				"WEIGHT": "Peso (kg)"
+			},
+			"anesthesic-clinical-evaluation": {
+				"TITLE": "Evaluación clínica anestésica",
+				"MIN_BLOOD_PRESSURE": "Tensión arterial Min (mm/Hg)",
+				"MAX_BLOOD_PRESSURE": "Tensión arterial Max (mm/Hg)",
+				"HEMATOCRIT": "Hematocritos (%)"
 			}
 		},
 		"clinical-assessment-diagnosis": {

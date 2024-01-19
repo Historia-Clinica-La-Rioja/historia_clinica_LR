@@ -22,6 +22,7 @@ import { ProcedureListComponent } from './components/procedure-list/procedure-li
 import { ProposedSurgeryComponent } from './modules/ambulatoria/modules/internacion/components/proposed-surgery/proposed-surgery.component';
 import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/proposed-surgery-background-list/proposed-surgery-background-list.component';
 import { AnestheticReportAnthropometricDataComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-anthropometric-data/anesthetic-report-anthropometric-data.component';
+import { AnestheticReportClinicalEvaluationComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-clinical-evaluation/anesthetic-report-clinical-evaluation.component';
 // dialogs
 import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
 import { AddAnthropometricComponent } from './dialogs/add-anthropometric/add-anthropometric.component';
@@ -108,6 +109,10 @@ import { AnestheticReportDockPopupComponent } from './components/anesthetic-repo
 		MedicationListComponent,
 		ReferenceRequestListComponent,
 		EpisodeDataComponent,
+		ProposedSurgeryComponent,
+		ProposedSurgeryBackgroundListComponent,
+		AnestheticReportAnthropometricDataComponent,
+		AnestheticReportClinicalEvaluationComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
@@ -155,9 +160,6 @@ import { AnestheticReportDockPopupComponent } from './components/anesthetic-repo
   		AuditAccessRegisterComponent,
  		AnestheticReportDockPopupComponent,
   		AnestheticReportDockPopupComponent,
-		ProposedSurgeryComponent,
-		ProposedSurgeryBackgroundListComponent,
-		AnestheticReportAnthropometricDataComponent,
 	],
 	imports: [
 		CommonModule,
