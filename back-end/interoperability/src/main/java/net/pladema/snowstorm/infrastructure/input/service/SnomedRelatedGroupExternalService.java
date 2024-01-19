@@ -12,4 +12,6 @@ public interface SnomedRelatedGroupExternalService {
 
 	List<SharedSnomedDto> getPracticesFromAllInstitutionsByCareLineId(Integer careLineId);
 
+	List<SharedSnomedDto> getPracticesByDepartmentId(Short departmentId);
+
 }
