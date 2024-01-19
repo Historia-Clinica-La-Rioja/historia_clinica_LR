@@ -35,4 +35,6 @@ public interface HealthcareProfessionalService {
 	List<HealthcareProfessionalBo> getVirtualConsultationProfessionalsByInstitutionId(Integer institutionId);
 
 	List<HealthcareProfessionalBo> getVirtualConsultationResponsiblesByInstitutionId(Integer institutionId);
+
+	List<HealthcareProfessionalBo> getAllProfessionalsByDepartment(Short departmentId);
 }

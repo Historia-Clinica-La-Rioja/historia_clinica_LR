@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import net.pladema.permissions.RoleUtils;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.staff.repository.HealthcareProfessionalSpecialtyRepository;
@@ -37,18 +38,14 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
 
     private final HealthcareProfessionalRepository healthcareProfessionalRepository;
 
-	private final ProfessionalProfessionRepository professionalProfessionRepository;
-
-	private final HealthcareProfessionalSpecialtyRepository healthcareProfessionalSpecialtyRepository;
+	private final SharedPersonPort sharedPersonPort;
 
     public HealthcareProfessionalServiceImpl(HealthcareProfessionalGroupRepository healthcareProfessionalGroupRepository,
                                              HealthcareProfessionalRepository healthcareProfessionalRepository,
-											 ProfessionalProfessionRepository professionalProfessionRepository,
-											 HealthcareProfessionalSpecialtyRepository healthcareProfessionalSpecialtyRepository) {
+											 SharedPersonPort sharedPersonPort) {
         this.healthcareProfessionalGroupRepository = healthcareProfessionalGroupRepository;
         this.healthcareProfessionalRepository = healthcareProfessionalRepository;
-		this.professionalProfessionRepository = professionalProfessionRepository;
-		this.healthcareProfessionalSpecialtyRepository = healthcareProfessionalSpecialtyRepository;
+		this.sharedPersonPort = sharedPersonPort;
     }
 
     @Override
@@ -172,6 +169,18 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
 				result.add(new HealthcareProfessionalBo(hcp))
 		);
 		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<HealthcareProfessionalBo> getAllProfessionalsByDepartment(Short departmentId) {
+		LOG.debug("Input parameters -> departmentId {}", departmentId);
+		List<Short> professionalERolIds = RoleUtils.getProfessionalERoleIds();
+		List<HealthcareProfessionalVo> professionals = healthcareProfessionalRepository.getAllProfessionalsByDepartment(departmentId, professionalERolIds);
+		List<HealthcareProfessionalBo> result = professionals.stream()
+				.map(HealthcareProfessionalBo::new)
+				.collect(Collectors.toList());
+		LOG.debug("Output result -> {} ", result);
 		return result;
 	}
 
