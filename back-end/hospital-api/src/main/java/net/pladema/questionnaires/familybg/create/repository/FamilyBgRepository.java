@@ -15,11 +15,11 @@ import net.pladema.questionnaires.common.domain.Answer;
 
 public interface FamilyBgRepository extends SGXAuditableEntityJPARepository<QuestionnaireResponse, Integer> {
 
-	@Query(value = "SELECT new net.pladema.questionnaires.common.domain.Answer(qr.id, la.itemId, la.questionnaireResponseId, la.answerId, la.value) " +
+	@Query(value = "SELECT new net.pladema.questionnaires.common.domain.Answer(qr.id, la.itemId, la.questionnaireResponseId, la.value, la.answerId) " +
 			"FROM Answer la " +
 			"INNER JOIN QuestionnaireResponse qr ON  qr.id = la.questionnaireResponseId " +
 			"WHERE qr.patientId = :patientId " +
-			"AND qr.statusId = 2" +
+			"AND qr.statusId = 2 " +
 			"ORDER BY qr.id, la.itemId, la.questionnaireResponseId, la.answerId, la.value" )
 	List<Answer> findPatientFamilyBgTest(@Param("patientId") Integer patientId);
 
