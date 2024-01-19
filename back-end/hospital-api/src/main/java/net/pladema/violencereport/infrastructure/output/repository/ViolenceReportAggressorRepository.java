@@ -23,4 +23,15 @@ public interface ViolenceReportAggressorRepository extends JpaRepository<Violenc
 			"WHERE vra.reportId = :reportId")
 	List<ViolenceReportAggressorBo> getAllByReportId(@Param("reportId") Integer reportId);
 
+	@Transactional(readOnly = true)
+	@Query(" SELECT NEW net.pladema.violencereport.domain.ViolenceReportAggressorBo(vra.lastName, vra.firstName, vra.age, vra.address, d.id, " +
+			"vra.relationshipWithVictimId, vra.otherRelationShipWithVictim, vra.hasGuns, vra.hasBeenTreated, vra.belongsToSecurityForces, vra.inDuty, " +
+			"vra.securityForceTypeId, vra.liveTogetherStatusId, vra.relationshipLengthId, vra.violenceFrequencyId, vra.criminalRecordStatusId) " +
+			"FROM ViolenceReportAggressor vra " +
+			"JOIN ViolenceReport vr ON (vra.reportId = vr.id) " +
+			"LEFT JOIN Department d ON (d.id = vra.municipalityId) " +
+			"WHERE vr.patientId = :patientId " +
+			"AND vr.situationId = :situationId " +
+			"AND vr.evolutionId = :evolutionId")
+	List<ViolenceReportAggressorBo> getAllFromLastEvolution(@Param("patientId") Integer patientId, @Param("situationId") Short situationId, @Param("evolutionId") Short evolutionId);
 }

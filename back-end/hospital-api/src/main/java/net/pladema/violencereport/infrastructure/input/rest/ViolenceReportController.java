@@ -2,6 +2,8 @@ package net.pladema.violencereport.infrastructure.input.rest;
 
 import javax.validation.Valid;
 
+import net.pladema.violencereport.application.SaveSituationEvolution;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -45,12 +47,14 @@ public class ViolenceReportController {
 
 	private GetLastSituationEvolutionReport getLastSituationEvolutionReport;
 
+	private SaveSituationEvolution saveSituationEvolution;
+
 	@PostMapping(value = "/patient/{patientId}")
 	public Integer saveNewViolenceReport(@PathVariable("institutionId") Integer institutionId,
 										 @PathVariable("patientId") Integer patientId,
 										 @RequestBody @Valid ViolenceReportDto violenceReport) {
 		log.debug("Input parameters -> institutionId {}, patientId {}, violenceReport {}", institutionId, patientId, violenceReport);
-		ViolenceReportBo violenceReportBo = parseViolenceReportDto(patientId, violenceReport);
+		ViolenceReportBo violenceReportBo = parseViolenceReportDtoWithoutSituationId(patientId, violenceReport);
 		Integer result = saveNewViolenceReport.run(violenceReportBo);
 		log.debug("Output -> {}", result);
 		return result;
@@ -83,7 +87,25 @@ public class ViolenceReportController {
 		return result;
 	}
 
-	private ViolenceReportBo parseViolenceReportDto(Integer patientId, ViolenceReportDto violenceReport) {
+	@PostMapping(value = "/patient/{patientId}/situation/{situationId}/evolve")
+	public Integer saveSituationEvolution(@PathVariable("institutionId") Integer institutionId,
+										  @PathVariable("patientId") Integer patientId,
+										  @PathVariable("situationId") Short situationId,
+										  @RequestBody @Valid ViolenceReportDto violenceReport) {
+		log.debug("Input parameters -> institutionId {}, patientId {}, situationId {}, violenceReport {}", institutionId, patientId, situationId, violenceReport);
+		ViolenceReportBo violenceReportBo = parseViolenceReportDtoWithSituationId(patientId, situationId, violenceReport);
+		Integer result = saveSituationEvolution.run(violenceReportBo);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	private ViolenceReportBo parseViolenceReportDtoWithSituationId(Integer patientId, Short situationId, ViolenceReportDto violenceReport) {
+		ViolenceReportBo violenceReportBo = parseViolenceReportDtoWithoutSituationId(patientId, violenceReport);
+		violenceReportBo.setSituationId(situationId);
+		return violenceReportBo;
+	}
+
+	private ViolenceReportBo parseViolenceReportDtoWithoutSituationId(Integer patientId, ViolenceReportDto violenceReport) {
 		ViolenceReportBo violenceReportBo = violenceReportMapper.fromViolenceReportDto(violenceReport);
 		violenceReportBo.setPatientId(patientId);
 		return violenceReportBo;

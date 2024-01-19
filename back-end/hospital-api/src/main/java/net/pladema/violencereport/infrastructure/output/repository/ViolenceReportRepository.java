@@ -47,4 +47,12 @@ public interface ViolenceReportRepository extends SGXAuditableEntityJPARepositor
 			"FROM ViolenceReport vr " +
 			"WHERE vr.id = :reportId")
 	ViolenceReportBo getViolenceReportDataWithoutEpisodeById(@Param("reportId") Integer reportId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT MAX(vr.evolutionId) " +
+			"FROM ViolenceReport vr " +
+			"WHERE vr.patientId = :patientId " +
+			"AND vr.situationId = :situationId")
+	Short getSituationLastEvolutionId(@Param("patientId") Integer patientId, @Param("situationId") Short situationId);
+
 }
