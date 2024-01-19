@@ -25,6 +25,12 @@
             [collapsed]="true" [isEmpty]="true" [hideBorder]="false">
             <app-anesthetic-report-clinical-evaluation></app-anesthetic-report-clinical-evaluation>
         </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="anesthesic-history-expansion-section"
+            [title]="'internaciones.anesthesic-report.anesthetic-history.TITLE' | translate" icon="error_outlined"
+            [collapsed]="true" [isEmpty]="anestheticReportAnestheticHistoryService.isEmpty()" [hideBorder]="false">
+            <app-anesthetic-report-anesthetic-history [service]="anestheticReportAnestheticHistoryService"></app-anesthetic-report-anesthetic-history>
+        </app-new-consultation-expansion-section>
     </div>
 
     <div actions id="buttons" fxLayoutAlign="end">

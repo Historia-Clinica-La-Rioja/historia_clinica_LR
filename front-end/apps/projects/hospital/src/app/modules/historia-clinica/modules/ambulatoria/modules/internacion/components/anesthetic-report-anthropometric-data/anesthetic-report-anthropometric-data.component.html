@@ -1,4 +1,4 @@
-<form [formGroup]="anthropometricDataService.getForm()">
+<form [formGroup]="form">
     <div fxLayout="column" fxLayoutAlign="space-between start">
         <mat-label [translate]="'internaciones.anesthesic-report.anthropometric-data.BLOOD_TYPE'">
         </mat-label>
@@ -11,9 +11,9 @@
                 </mat-option>
             </mat-select>
             <button id="clear_blood_type" type="button" mat-button
-                *ngIf="anthropometricDataService.getForm().value.bloodType"
+                *ngIf="form.value.bloodType"
                 matSuffix color="warn" mat-icon-button
-                (click)="anthropometricDataService.getForm().controls.bloodType.reset(); $event.stopPropagation()">
+                (click)="form.controls.bloodType.reset(); $event.stopPropagation()">
                 <mat-icon>close</mat-icon>
             </button>
         </mat-form-field>

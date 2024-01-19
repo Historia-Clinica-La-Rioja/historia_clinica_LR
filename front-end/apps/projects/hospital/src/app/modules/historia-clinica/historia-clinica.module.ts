@@ -23,6 +23,7 @@ import { ProposedSurgeryComponent } from './modules/ambulatoria/modules/internac
 import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/proposed-surgery-background-list/proposed-surgery-background-list.component';
 import { AnestheticReportAnthropometricDataComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-anthropometric-data/anesthetic-report-anthropometric-data.component';
 import { AnestheticReportClinicalEvaluationComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-clinical-evaluation/anesthetic-report-clinical-evaluation.component';
+import { AnestheticReportAnestheticHistoryComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-anesthetic-history/anesthetic-report-anesthetic-history.component';
 // dialogs
 import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
 import { AddAnthropometricComponent } from './dialogs/add-anthropometric/add-anthropometric.component';
@@ -113,6 +114,7 @@ import { AnestheticReportDockPopupComponent } from './components/anesthetic-repo
 		ProposedSurgeryBackgroundListComponent,
 		AnestheticReportAnthropometricDataComponent,
 		AnestheticReportClinicalEvaluationComponent,
+		AnestheticReportAnestheticHistoryComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,

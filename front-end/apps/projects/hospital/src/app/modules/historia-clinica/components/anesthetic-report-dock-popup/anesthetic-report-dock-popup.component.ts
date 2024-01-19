@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { DiagnosisDto, HealthConditionDto } from '@api-rest/api-model';
+import { AnestheticReportAnestheticHistoryService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-anesthetic-history.service';
 import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
@@ -17,6 +18,8 @@ export class AnestheticReportDockPopupComponent implements OnInit {
 
 	isLoading = false;
 
+    anestheticReportAnestheticHistoryService: AnestheticReportAnestheticHistoryService;
+
     constructor(
         @Inject(OVERLAY_DATA) public data: any,
 		public dockPopupRef: DockPopupRef,
@@ -24,6 +27,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
     ) {
         this.mainDiagnosis = data.mainDiagnosis;
         this.diagnosis = data.diagnosis;
+        this.anestheticReportAnestheticHistoryService = new AnestheticReportAnestheticHistoryService();
     }
 
     ngOnInit(): void {

@@ -5,6 +5,7 @@ import { HceGeneralStateService } from '@api-rest/services/hce-general-state.ser
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { AnestheticReportAnthropometricDataService } from '../../services/anesthetic-report-anthropometric-data.service';
 import { HCEAnthropometricDataDto } from '@api-rest/api-model';
+import { FormGroup } from '@angular/forms';
 
 @Component({
     selector: 'app-anesthetic-report-anthropometric-data',
@@ -14,6 +15,7 @@ import { HCEAnthropometricDataDto } from '@api-rest/api-model';
 export class AnestheticReportAnthropometricDataComponent implements OnInit {
     
     @Input() patientId: number;
+	form: FormGroup;
     anthropometricDataService: AnestheticReportAnthropometricDataService;
     readonly isNumberOrDot = isNumberOrDot;
 
@@ -28,6 +30,7 @@ export class AnestheticReportAnthropometricDataComponent implements OnInit {
 
     ngOnInit(): void {
         this.setPreviousAnthropometricData();
+		this.form = this.anthropometricDataService.getForm();
     }
 
 	setPreviousAnthropometricData(): void {

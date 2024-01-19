@@ -347,6 +347,20 @@
 				"MIN_BLOOD_PRESSURE": "Tensión arterial Min (mm/Hg)",
 				"MAX_BLOOD_PRESSURE": "Tensión arterial Max (mm/Hg)",
 				"HEMATOCRIT": "Hematocritos (%)"
+			},
+			"anesthetic-history": {
+				"TITLE": "Antecedentes anestésicos",
+				"PREVIOUS_ANESTHESIA": "El paciente se realizó algún tipo de anestesia previamente?",
+				"anesthetic-history-options": {
+					"YES": "Si",
+					"NO": "No",
+					"CANT_ANSWER": "No puede contestar",
+					"anesthetic-zone": {
+						"REGIONAL": "Regional",
+						"GENERAL": "General",
+						"BOTH": "Ambas"
+					}
+				}
 			}
 		},
 		"clinical-assessment-diagnosis": {

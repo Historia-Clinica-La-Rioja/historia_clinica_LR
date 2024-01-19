@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AnestheticReportClinicalEvaluationService } from '../../services/anesthetic-report-clinical-evaluation.service';
 import { TranslateService } from '@ngx-translate/core';
+import { FormGroup } from '@angular/forms';
 
 @Component({
     selector: 'app-anesthetic-report-clinical-evaluation',
@@ -9,6 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class AnestheticReportClinicalEvaluationComponent implements OnInit {
 
+    form: FormGroup;
     anestheticReportClinicalEvaluationService: AnestheticReportClinicalEvaluationService;
 
     constructor(
@@ -20,6 +22,7 @@ export class AnestheticReportClinicalEvaluationComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.form = this.anestheticReportClinicalEvaluationService.getForm();
     }
 
 }
