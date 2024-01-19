@@ -24,7 +24,7 @@ export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 		icon: 'home',
 		id: 'home',
 		url: '/home',
-		options: {exact: true},
+		options: { exact: true },
 	},
 	{
 		text: 'app.menu.CONFIGURACION',
@@ -54,6 +54,15 @@ export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 		permissions: MANAGER_ROLES,
 		featureFlag: AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO
 	},
+	{
+		text: 'app.menu.CALL_CENTER',
+		icon: 'calendar_today',
+		id: 'call-center',
+		url: '/home/centro-de-llamadas',
+		permissions: [
+			ERole.GESTOR_CENTRO_LLAMADO
+		],
+	},
 ];
 
 export const NO_ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
@@ -62,6 +71,6 @@ export const NO_ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 		icon: 'home',
 		id: 'home',
 		url: '/home',
-		options: {exact: true},
+		options: { exact: true },
 	},
 ];

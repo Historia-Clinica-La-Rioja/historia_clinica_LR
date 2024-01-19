@@ -20,7 +20,8 @@
 			"AUDIT": "Auditoria",
 			"TELEMEDICINE":"TeleSalud",
 			"DIGITAL_SIGNATURE": "Firma digital",
-			"ACCESS_MANAGEMENT": "Gestión de accesos"
+			"ACCESS_MANAGEMENT": "Gestión de accesos",
+			"CALL_CENTER": "Centro de llamadas"
 		}
 	},
 	"buttons": {

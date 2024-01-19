@@ -25,6 +25,7 @@ export enum HomeRoutes {
 	UserKeys = 'user-keys', 		// API Keys del usuario
 	Auditoria = 'auditoria',
 	AccessManagement = 'gestion-de-accesos', // Gestion de accesos
+	CallCenter = 'centro-de-llamadas', // Centro de llamadas
 }
 
 const routes: Routes = [
@@ -64,6 +65,15 @@ const routes: Routes = [
 					featureFlag: AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO,
 					allowedRoles: MANAGER_ROLES,
 					needsRoot: true
+				},
+			},
+			{
+				path: HomeRoutes.CallCenter,
+				loadChildren: () => import('@call-center/call-center.module').then(m => m.CallCenterModule),
+				canActivate: [RoleGuard],
+				data: {
+					allowedRoles: [ERole.GESTOR_CENTRO_LLAMADO],
+					needsRoot: true,
 				},
 			},
 		]
