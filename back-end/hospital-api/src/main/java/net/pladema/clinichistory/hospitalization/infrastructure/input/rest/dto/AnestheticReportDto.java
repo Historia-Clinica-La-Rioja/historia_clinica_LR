@@ -2,6 +2,7 @@ package net.pladema.clinichistory.hospitalization.infrastructure.input.rest.dto;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.AnthropometricDataDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosisDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.MedicationDto;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
@@ -29,5 +30,8 @@ public class AnestheticReportDto {
 
     @Nullable
     private @Valid AnthropometricDataDto anthropometricData;
+
+    @Nullable
+    private @Valid List<MedicationDto> medications = new ArrayList<>();
 
 }

@@ -162,6 +162,7 @@ export interface AnestheticReportDto {
     anthropometricData?: AnthropometricDataDto;
     diagnosis?: DiagnosisDto[];
     mainDiagnosis?: DiagnosisDto;
+    medications?: MedicationDto[];
 }
 
 export interface AnnexIIDto {
