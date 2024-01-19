@@ -35,7 +35,7 @@ public class BackofficeDepartmentInstitutionsStore implements BackofficeStore<De
 		institutionExample.setName(example.getName());
 		List<Institution> institutions = repository.findAll(Example.of(institutionExample, customExampleMatcher), pageable.getSort());
 		if (example.getDepartmentId() != null) {
-			List<Integer> departmentInstitutionIds = repository.findByDeparmentId(example.getDepartmentId()).stream().map(InstitutionBasicInfoBo::getId).collect(Collectors.toList());
+			List<Integer> departmentInstitutionIds = repository.findByDepartmentId(example.getDepartmentId()).stream().map(InstitutionBasicInfoBo::getId).collect(Collectors.toList());
 			institutions = institutions.stream().filter(institution -> departmentInstitutionIds.contains(institution.getId())).collect(Collectors.toList());
 		} else if (example.getProvinceId() != null) {
 			List<Integer> provinceInstitutionsIds = repository.findByProvinceId(example.getProvinceId()).stream().map(InstitutionBasicInfoBo::getId).collect(Collectors.toList());

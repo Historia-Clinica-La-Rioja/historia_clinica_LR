@@ -26,7 +26,7 @@ public class FetchAllInstitutions {
     }
 
 	public List<InstitutionBasicInfoBo> findByDepartmentId(Short departmentId) {
-		return institutionRepository.findByDeparmentId(departmentId);
+		return institutionRepository.findByDepartmentId(departmentId);
 	}
 
 	public List<InstitutionBasicInfoBo> findByProvinceId(Short provinceId) {

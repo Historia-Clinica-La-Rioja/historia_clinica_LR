@@ -88,4 +88,11 @@ public class AddressMasterDataController {
 		return ResponseEntity.ok().body(addressMasterDataService.getDepartmentsByReferenceFilterByPractice(practiceSnomedId, careLineId, clinicalSpecialtyIds, AddressProjection.class));
 	}
 
+	@GetMapping(value = "/departments")
+	@PreAuthorize("hasAnyAuthority('GESTOR_CENTRO_LLAMADO')")
+	public ResponseEntity<Collection<AddressProjection>> getDepartmentsByInstitutions() {
+		Collection<AddressProjection> result = addressMasterDataService.getDepartmentsByInstitutions();
+		LOG.debug("Output result -> {}", result);
+		return ResponseEntity.ok().body(result);
+	}
 }

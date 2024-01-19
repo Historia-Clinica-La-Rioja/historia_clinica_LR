@@ -142,4 +142,11 @@ public interface DepartmentRepository extends JpaRepository<Department, Short> {
 										@Param("sgDescription") String sgDescription,
 										@Param("sgTypeId") Short sgTypeId, Class<T> clazz);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT d " +
+			"FROM Department d " +
+			"JOIN City c ON (d.id = c.departmentId) " +
+			"JOIN Address a ON (c.id = a.cityId) "+
+			"JOIN Institution i ON (a.id = i.addressId) ")
+	<T> Collection<T> findAllByInstitutions();
 }

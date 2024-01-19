@@ -29,4 +29,6 @@ public interface AddressMasterDataService {
 
 	<T> Collection<T> getDepartmentsByReferenceFilterByPractice(Integer practiceId, Integer careLineId, List<Integer> clinicalSpecialtyIds, Class<T> clazz);
 
+	<T> Collection<T> getDepartmentsByInstitutions();
+
 }
