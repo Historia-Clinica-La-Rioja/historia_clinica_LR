@@ -1,36 +1,44 @@
 package net.pladema.questionnaires.common.domain;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import ar.lamansys.sgx.auth.user.infrastructure.output.user.User;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.questionnaires.general.create.repository.entity.AnswerII;
 import net.pladema.staff.repository.entity.HealthcareProfessional;
 
 @Entity
 @Table(name = "minsal_lr_questionnaire_response", schema = "public")
+@EntityListeners(SGXAuditListener.class)
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class QuestionnaireResponseII {
+@JsonIgnoreProperties({"creationable", "updateable", "deleteable", "createdBy", "updatedBy"})
+public class QuestionnaireResponseII extends SGXAuditableEntity<Integer> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,44 +55,17 @@ public class QuestionnaireResponseII {
 	@Column(name = "patient_id", nullable = false)
 	private Integer patientId;
 
-	@JsonIgnore
-	@Column(name = "created_by")
-	private Integer createdBy;
-
-	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-	@Column(name = "created_on", nullable = false)
-	private LocalDateTime createdOn;
-
 	@Transient
 	private String createdByFullName;
 
 	@Transient
 	private String createdByLicenseNumber;
 
-	@JsonIgnore
-	@Column(name = "updated_by")
-	private Integer updatedBy;
-
-	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-	@Column(name = "updated_on", nullable = false)
-	private LocalDateTime updatedOn;
-
 	@Transient
 	private String updatedByFullName;
 
 	@Transient
 	private String updatedByLicenseNumber;
-
-	@JsonIgnore
-	@Column(name = "deleted", nullable = false)
-	private Boolean deleted;
-
-	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-	@Column(name = "deleted_on")
-	private LocalDateTime deletedOn;
-
-	@Column(name = "deleted_by")
-	private Integer deletedBy;
 
 	@Setter
 	@Transient
@@ -104,6 +85,10 @@ public class QuestionnaireResponseII {
 	@ManyToOne
 	@JoinColumn(name = "updated_by", insertable = false, updatable = false)
 	private HealthcareProfessional updatedByHealthcareProfessional;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "questionnaireResponse", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<AnswerII> answers = new ArrayList<>();
 
 	public String getQuestionnaireType() {
 		if (questionnaireData != null) {

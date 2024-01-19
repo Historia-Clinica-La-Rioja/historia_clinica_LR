@@ -3,6 +3,7 @@ package net.pladema.questionnaires.general.getall.domain.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
@@ -32,7 +33,9 @@ public class GetAllService {
     }
 
 	public List<QuestionnaireResponseII> getResponsesByPatientIdWithDetails(Integer patientId) {
-		return questionnaireResponseRepository.findResponsesWithCreatedByDetails(patientId);
+		Sort sort = Sort.by(Sort.Order.desc("id"));
+
+		return questionnaireResponseRepository.findResponsesWithCreatedByDetails(patientId, sort);
 	}
 
 	public String getFullNameByHealthcareProfessionalId(Integer healthcareProfessionalId) {
