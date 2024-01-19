@@ -77,7 +77,7 @@ public class GetQuestionnairePdfController {
 	}
 
 	private ResponseEntity<InputStreamResource> generatePdfResponse(Map<String, Object> context, String outputFileName, Integer questionnaireId) throws IOException {
-		logger.debug("input parameters -> context: {}, outputFileName {}", context, outputFileName);
+		logger.debug("input parameters -> context: {}, outputFileName {}, questionnaireId: {}", context, outputFileName, questionnaireId);
 		String templateName = "";
 		if (questionnaireId == 1) {
 			templateName = "edmonton_reports";
@@ -87,6 +87,9 @@ public class GetQuestionnairePdfController {
 		}
 		if (questionnaireId == 3) {
 			templateName = "frail_reports";
+		}
+		if (questionnaireId == 4) {
+			templateName = "physicalperformance_reports";
 		}
 
 		FileContentBo fileContentBo = pdfService.generate(templateName, context);
