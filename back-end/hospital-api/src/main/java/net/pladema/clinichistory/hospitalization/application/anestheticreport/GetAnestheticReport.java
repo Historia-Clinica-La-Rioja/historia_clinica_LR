@@ -29,6 +29,7 @@ public class GetAnestheticReport {
         GeneralHealthConditionBo generalHealthConditionBo = documentService.getHealthConditionFromDocument(documentId);
         result.setMainDiagnosis(generalHealthConditionBo.getMainDiagnosis());
         result.setDiagnosis(generalHealthConditionBo.getDiagnosis());
+        result.setAnthropometricData(documentService.getAnthropometricDataStateFromDocument(documentId));
 
         log.debug("Output -> anestheticReport {}", result);
         return result;

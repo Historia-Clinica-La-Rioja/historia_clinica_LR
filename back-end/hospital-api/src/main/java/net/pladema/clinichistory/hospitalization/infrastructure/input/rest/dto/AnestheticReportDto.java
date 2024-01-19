@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.hospitalization.infrastructure.input.rest.dto;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.AnthropometricDataDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosisDto;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,5 +26,8 @@ public class AnestheticReportDto {
 
     @Nullable
     private @Valid List<DiagnosisDto> diagnosis = new ArrayList<>();
+
+    @Nullable
+    private @Valid AnthropometricDataDto anthropometricData;
 
 }
