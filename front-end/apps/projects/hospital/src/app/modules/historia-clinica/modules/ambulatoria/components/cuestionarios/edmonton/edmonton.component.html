@@ -42,22 +42,7 @@
         </mat-radio-group>
       </fieldset>
       </div><br>
-      <div class="text">
-        <h3 class="tipos"><mat-list-item>Independencia funcional</mat-list-item></h3>
-        <p>
-          Me gustaría que se sentara en esta silla con su espalda y brazos relajados.
-            Luego, cuando yo diga “YA”, por favor párese y camine a un ritmo cómodo y seguro a la marca del suelo" +
-          (aproximadamente a 3 metros de distancia), regrese a su silla y se sienta.
-        </p>
-        <fieldset>
-        <mat-radio-group id="FunctionIndOption" [(ngModel)]="selectedFunctionIndOption" name="FunctionIndOption" (ngModelChange)="onOptionSelected(3, $event)">
-          <mat-radio-button color="primary" [value]="10" [attr.data-sum]="0">0 a 10 segundos</mat-radio-button>
-          <mat-radio-button color="primary" [value]="11" [attr.data-sum]="1">11 a 20 segundos</mat-radio-button>
-          <mat-radio-button color="primary" [value]="12" [attr.data-sum]="2">Más de 20 segundos</mat-radio-button>
-        </mat-radio-group>
-      </fieldset>
-      </div>
-  
+      
       <div class="text">
         <h3 class="tipos"><mat-list-item>Necesita ayuda</mat-list-item></h3>
         <p>
@@ -144,6 +129,22 @@
         </mat-radio-group>
       </fieldset>
       </div> 
+      <div class="text">
+        <h3 class="tipos"><mat-list-item>Rendimiento Funcional</mat-list-item></h3>
+        <p>
+          Me gustaría que se sentara en esta silla con su espalda y brazos relajados.
+            Luego, cuando yo diga “YA”, por favor párese y camine a un ritmo cómodo y seguro a la marca del suelo" +
+          (aproximadamente a 3 metros de distancia), regrese a su silla y se sienta.
+        </p>
+        <fieldset>
+        <mat-radio-group id="FunctionIndOption" [(ngModel)]="selectedFunctionIndOption" name="FunctionIndOption" (ngModelChange)="onOptionSelected(3, $event)">
+          <mat-radio-button color="primary" [value]="10" [attr.data-sum]="0">0 a 10 segundos</mat-radio-button>
+          <mat-radio-button color="primary" [value]="11" [attr.data-sum]="1">11 a 20 segundos</mat-radio-button>
+          <mat-radio-button color="primary" [value]="12" [attr.data-sum]="2">Más de 20 segundos</mat-radio-button>
+        </mat-radio-group>
+      </fieldset>
+      </div>
+  
 
       <div class="resultados-container">
         <div class="resultados-titulo">
