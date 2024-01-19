@@ -134,6 +134,7 @@ export class NewViolentPersonInfomationComponent implements OnInit {
       updateControlValidator(this.form, 'securityForceType', Validators.required);
     } else {
       updateControlValidator(this.form, 'securityForceType', []);
+	  this.form.controls.securityForceType.setValue(null);
     }
   }
 
