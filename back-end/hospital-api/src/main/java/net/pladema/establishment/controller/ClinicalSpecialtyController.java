@@ -176,5 +176,14 @@ public class ClinicalSpecialtyController {
 		return result;
 	}
 
+	@GetMapping("/clinical-specialty/department/{departmentId}")
+	@PreAuthorize("hasAnyAuthority('GESTOR_CENTRO_LLAMADO')")
+	public List<ClinicalSpecialtyDto> getClinicalSpecialtiesByDepartmentId(@PathVariable(name = "departmentId") Short departmentId) {
+		LOG.debug("Input parameters -> departmentId {}", departmentId);
+		List<ClinicalSpecialtyBo> clinicalSpecialties = clinicalSpecialtyService.getClinicalSpecialtiesByDepartmentId(departmentId);
+		List<ClinicalSpecialtyDto> result = clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(clinicalSpecialties);
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
 }
 

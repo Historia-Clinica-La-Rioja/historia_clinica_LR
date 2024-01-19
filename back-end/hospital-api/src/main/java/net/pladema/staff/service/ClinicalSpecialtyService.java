@@ -23,4 +23,6 @@ public interface ClinicalSpecialtyService {
 	
 	List<ClinicalSpecialtyBo> getVirtualConsultationClinicalSpecialtiesByInstitutionId(Integer institutionId);
 
+	List<ClinicalSpecialtyBo> getClinicalSpecialtiesByDepartmentId(Short departmentId);
+
 }

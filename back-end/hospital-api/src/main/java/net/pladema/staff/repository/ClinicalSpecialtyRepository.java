@@ -114,4 +114,22 @@ public interface ClinicalSpecialtyRepository extends SGXAuditableEntityJPAReposi
 			"WHERE cs.id IN :clinicalSpecialtyIds")
 	List<String> getClinicalSpecialtyNamesByIds(@Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT NEW net.pladema.staff.service.domain.ClinicalSpecialtyBo(cs.id, cs.name) " +
+			"FROM ClinicalSpecialty cs " +
+			"JOIN HealthcareProfessionalSpecialty hps ON (cs.id = hps.clinicalSpecialtyId) " +
+			"JOIN ProfessionalProfessions pp ON (hps.professionalProfessionId = pp.id) " +
+			"JOIN HealthcareProfessional hp ON (hp.id = pp.healthcareProfessionalId) " +
+			"JOIN UserPerson up ON (hp.personId = up.pk.personId) " +
+			"JOIN UserRole ur ON (up.pk.userId = ur.userId) " +
+			"JOIN Institution i ON (ur.institutionId = i.id) " +
+			"JOIN Address a ON (i.addressId = a.id) " +
+			"JOIN City c ON (a.cityId = c.id) " +
+			"WHERE c.departmentId = :departmentId " +
+			"AND hps.deleteable.deleted IS FALSE " +
+			"AND pp.deleteable.deleted IS FALSE " +
+			"AND hp.deleteable.deleted IS FALSE " +
+			"AND ur.deleteable.deleted IS FALSE " +
+			"ORDER BY cs.name")
+	List<ClinicalSpecialtyBo> getClinicalSpecialtiesByDepartmentId(@Param("departmentId") Short departmentId);
 }
