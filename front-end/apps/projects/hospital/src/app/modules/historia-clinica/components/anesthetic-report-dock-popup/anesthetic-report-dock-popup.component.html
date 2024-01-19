@@ -9,27 +9,30 @@
 
         <app-new-consultation-expansion-section id="proposed-surgery-expansion-section"
             [title]="'internaciones.anesthesic-report.proposed-surgery.TITLE' | translate" icon="error_outlined"
-            [collapsed]="true" [isEmpty]="true" [hideBorder]="false">
-            <app-proposed-surgery></app-proposed-surgery>
+            [collapsed]="true" [isEmpty]="anesthesicReportProposedSurgeryService.isEmpty()" [hideBorder]="false">
+            <app-proposed-surgery [service]="anesthesicReportProposedSurgeryService"></app-proposed-surgery>
         </app-new-consultation-expansion-section>
 
         <app-new-consultation-expansion-section id="anthropometric-data-expansion-section"
             [title]="'internaciones.anesthesic-report.anthropometric-data.TITLE' | translate" icon="error_outlined"
-            [collapsed]="true" [isEmpty]="true" [hideBorder]="false">
-            <app-anesthetic-report-anthropometric-data
-                [patientId]="data.patientId"></app-anesthetic-report-anthropometric-data>
+            [collapsed]="true" [isEmpty]="anesthesicReportAnthropometricDataService.isEmpty()" [hideBorder]="false">
+            <app-anesthetic-report-anthropometric-data [patientId]="data.patientId"
+                [service]="anesthesicReportAnthropometricDataService"></app-anesthetic-report-anthropometric-data>
         </app-new-consultation-expansion-section>
 
         <app-new-consultation-expansion-section id="anesthesic-clinical-evaluation-expansion-section"
-            [title]="'internaciones.anesthesic-report.anesthesic-clinical-evaluation.TITLE' | translate" icon="error_outlined"
-            [collapsed]="true" [isEmpty]="true" [hideBorder]="false">
-            <app-anesthetic-report-clinical-evaluation></app-anesthetic-report-clinical-evaluation>
+            [title]="'internaciones.anesthesic-report.anesthesic-clinical-evaluation.TITLE' | translate"
+            icon="error_outlined" [collapsed]="true" [isEmpty]="anestheticReportClinicalEvaluationService.isEmpty()"
+            [hideBorder]="false">
+            <app-anesthetic-report-clinical-evaluation
+                [service]="anestheticReportClinicalEvaluationService"></app-anesthetic-report-clinical-evaluation>
         </app-new-consultation-expansion-section>
 
         <app-new-consultation-expansion-section id="anesthesic-history-expansion-section"
             [title]="'internaciones.anesthesic-report.anesthetic-history.TITLE' | translate" icon="error_outlined"
             [collapsed]="true" [isEmpty]="anestheticReportAnestheticHistoryService.isEmpty()" [hideBorder]="false">
-            <app-anesthetic-report-anesthetic-history [service]="anestheticReportAnestheticHistoryService"></app-anesthetic-report-anesthetic-history>
+            <app-anesthetic-report-anesthetic-history
+                [service]="anestheticReportAnestheticHistoryService"></app-anesthetic-report-anesthetic-history>
         </app-new-consultation-expansion-section>
     </div>
 

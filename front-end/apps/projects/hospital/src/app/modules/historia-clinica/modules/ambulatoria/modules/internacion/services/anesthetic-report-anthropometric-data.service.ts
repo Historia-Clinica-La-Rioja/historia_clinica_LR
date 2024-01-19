@@ -114,6 +114,10 @@ export class AnestheticReportAnthropometricDataService {
 		if (bloodDescription != null)
 			this.form.get('bloodType').setValue(this.bloodTypes?.find(b => b.description === bloodDescription));
 	}
+
+    isEmpty(): boolean {
+        return !(this.form.get("bloodType").value || this.form.get("height").value || this.form.get("weight").value)
+    }
 }
 
 export interface AnthropometricDataForm {

@@ -119,6 +119,10 @@ export class AnestheticReportClinicalEvaluationService {
     getForm(): FormGroup {
         return this.form;
     }
+
+    isEmpty(): boolean {
+        return !(this.form.get("minBloodPressure").value || this.form.get("maxBloodPressure").value || this.form.get("hematocrit").value)
+    }
 }
 
 export interface ClinicalEvaluationDataForm {

@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AnestheticReportClinicalEvaluationService } from '../../services/anesthetic-report-clinical-evaluation.service';
-import { TranslateService } from '@ngx-translate/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -10,19 +9,13 @@ import { FormGroup } from '@angular/forms';
 })
 export class AnestheticReportClinicalEvaluationComponent implements OnInit {
 
+    @Input() service: AnestheticReportClinicalEvaluationService;
     form: FormGroup;
-    anestheticReportClinicalEvaluationService: AnestheticReportClinicalEvaluationService;
 
-    constructor(
-        /* private readonly internacionMasterDataService: InternacionMasterDataService,*/
-        private readonly translateService: TranslateService,
-
-    ) {
-        this.anestheticReportClinicalEvaluationService = new AnestheticReportClinicalEvaluationService(this.translateService);
-    }
+    constructor( ) {}
 
     ngOnInit(): void {
-        this.form = this.anestheticReportClinicalEvaluationService.getForm();
+        this.form = this.service.getForm();
     }
 
 }
