@@ -8,8 +8,6 @@ import java.util.stream.Collectors;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import net.pladema.permissions.RoleUtils;
 import net.pladema.permissions.repository.enums.ERole;
-import net.pladema.staff.repository.HealthcareProfessionalSpecialtyRepository;
-import net.pladema.staff.repository.ProfessionalProfessionRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,10 +71,9 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
         List<Short> professionalERolIds = RoleUtils.getProfessionalERoleIds();
         List<HealthcareProfessionalVo> queryResults = healthcareProfessionalRepository
                 .findAllByInstitution(institutionId, professionalERolIds);
-        List<HealthcareProfessionalBo> result = new ArrayList<>();
-        queryResults.forEach(hcp ->
-                result.add(new HealthcareProfessionalBo(hcp))
-        );
+		List<HealthcareProfessionalBo> result = queryResults.stream()
+				.map(this::mapToHealthcareProfessionalBo)
+				.collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
         return result;
     }
@@ -178,7 +175,7 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
 		List<Short> professionalERolIds = RoleUtils.getProfessionalERoleIds();
 		List<HealthcareProfessionalVo> professionals = healthcareProfessionalRepository.getAllProfessionalsByDepartment(departmentId, professionalERolIds);
 		List<HealthcareProfessionalBo> result = professionals.stream()
-				.map(HealthcareProfessionalBo::new)
+				.map(this::mapToHealthcareProfessionalBo)
 				.collect(Collectors.toList());
 		LOG.debug("Output result -> {} ", result);
 		return result;
@@ -196,4 +193,16 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
         Integer result = saved.getId();
         return result;
     }
+
+	private HealthcareProfessionalBo mapToHealthcareProfessionalBo(HealthcareProfessionalVo hcp) {
+		String completePersonName = sharedPersonPort.parseCompletePersonName(
+				hcp.getFirstName(),
+				hcp.getMiddleNames(),
+				hcp.getLastName(),
+				hcp.getOtherLastNames(),
+				hcp.getNameSelfDetermination()
+		);
+		return new HealthcareProfessionalBo(hcp, completePersonName);
+	}
+
 }

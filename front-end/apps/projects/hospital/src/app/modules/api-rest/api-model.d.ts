@@ -3397,6 +3397,7 @@ export interface ProfessionalCompleteDto {
 
 export interface ProfessionalDto {
     firstName: string;
+    fullName: string;
     id: number;
     identificationNumber: string;
     lastName: string;

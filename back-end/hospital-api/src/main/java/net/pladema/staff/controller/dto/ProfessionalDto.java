@@ -29,6 +29,8 @@ public class ProfessionalDto {
 
 	private String otherLastNames;
 
+	private String fullName;
+
     public String getCompleteName(String name){
 		return String.format("%s %s", name, lastName);
     }

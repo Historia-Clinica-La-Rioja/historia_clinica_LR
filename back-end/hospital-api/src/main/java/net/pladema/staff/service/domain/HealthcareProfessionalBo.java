@@ -25,8 +25,15 @@ public class HealthcareProfessionalBo extends BasicPersonalDataBo {
         this.personId = p.getId();
     }
 
-    public HealthcareProfessionalBo(HealthcareProfessionalVo vo){
-        super(vo.getFirstName(), vo.getLastName(), vo.getIdentificationNumber(), vo.getNameSelfDetermination(),vo.getMiddleNames(), vo.getOtherLastNames());
+	public HealthcareProfessionalBo(HealthcareProfessionalVo vo){
+		super(vo.getFirstName(), vo.getLastName(), vo.getIdentificationNumber(), vo.getNameSelfDetermination(),vo.getMiddleNames(), vo.getOtherLastNames());
+		this.id = vo.getId();
+		this.licenceNumber = vo.getLicenceNumber();
+		this.personId = vo.getPersonId();
+	}
+
+    public HealthcareProfessionalBo(HealthcareProfessionalVo vo, String fullName){
+        super(vo.getFirstName(), vo.getLastName(), vo.getIdentificationNumber(), vo.getNameSelfDetermination(),vo.getMiddleNames(), vo.getOtherLastNames(), fullName);
         this.id = vo.getId();
         this.licenceNumber = vo.getLicenceNumber();
         this.personId = vo.getPersonId();
