@@ -46,7 +46,7 @@ export class ViolenceSituationViolentPersonInformationComponent  {
 				  lastName: concept.aggressorData.actorPersonalData.lastName,
 				  address: concept.aggressorData.actorPersonalData.address,
 				  age: concept.aggressorData.actorPersonalData.age,
-				  municipalityId: concept.aggressorData.actorPersonalData.municipalityId,
+				  municipality: concept.aggressorData.actorPersonalData.municipality,
 				},
 				relationshipWithVictim: concept.aggressorData.relationshipWithVictim,
 				otherRelationshipWithVictim: concept.aggressorData.otherRelationshipWithVictim,

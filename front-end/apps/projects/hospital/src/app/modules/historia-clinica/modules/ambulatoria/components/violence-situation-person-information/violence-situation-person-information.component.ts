@@ -117,7 +117,11 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 					age: this.form.value.age,
 					firstName: this.form.value.name,
 					lastName: this.form.value.lastname,
-					municipalityId: this.form.value.addressDepartmentId? this.form.value.addressDepartmentId : null,
+					municipality: {
+						id: this.form.value.addressDepartmentId ? this.form.value.addressDepartmentId : null,
+						provinceId: null,
+						description: null
+					},
 				},
 				otherRelationshipWithVictim: this.form.value.whichTypeRelation,
 				relationshipWithVictim: this.form.value.relationPersonViolenceSituation,
@@ -194,8 +198,8 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 		this.form.controls.addressProvinceId.setValue(null);
 		this.form.controls.relationPersonViolenceSituation.setValue(null);
 		this.form.controls.whichTypeRelation.setValue(null);
-	}	
-	
+	}
+
 	updateValidationOtherRelation(){
 		if(this.form.value.relationPersonViolenceSituation === EKeeperRelationship.OTHER){
 			updateControlValidator(this.form, 'whichTypeRelation', Validators.required);

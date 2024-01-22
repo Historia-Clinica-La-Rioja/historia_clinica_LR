@@ -43,7 +43,7 @@ export class NewViolentPersonInfomationComponent implements OnInit {
       age: new FormControl(null, Validators.required),
       address: new FormControl(null, Validators.required),
       addressProvinceId: new FormControl(null, Validators.required),
-      addressDepartmentId: new FormControl(null, Validators.required),
+      addressDepartment: new FormControl(null, Validators.required),
       hasAfirearm: new FormControl(null),
       hasBeenTreated: new FormControl(null),
       belongsToSecurityForces: new FormControl(null),
@@ -68,30 +68,34 @@ export class NewViolentPersonInfomationComponent implements OnInit {
   }
 
   mapAggressor(): CustomViolenceReportAggressorDto {
-    return {
-      aggressorData: {
-        actorPersonalData: {
-          firstName: this.form.value.name,
-          lastName: this.form.value.lastname,
-          address: this.form.value.address,
-          age: this.form.value.age,
-          municipalityId: this.form.value.addressDepartmentId? this.form.value.addressDepartmentId.id : null,
-        },
-        relationshipWithVictim: this.form.value.aggressorRelation,
-        otherRelationshipWithVictim: this.form.value.aggressorRelationTextFree,
-      },
-      hasBeenTreated: this.form.value.hasBeenTreated,
-      hasGuns: this.form.value.hasAfirearm,
-      hasPreviousEpisodes: this.form.value.hasPreviousEpisodes,
-      livesWithVictim: this.form.value.livesWithVictim,
-      relationshipLength: this.form.value.relationshipLength,
-      securityForceRelatedData: {
-        belongsToSecurityForces: this.form.value.belongsToSecurityForces,
-        inDuty: this.form.value.inDuty,
-        securityForceTypes: this.form.value.securityForceType,
-      },
-      violenceViolenceFrequency: this.form.value.violenceFrequency,
-      descriptionMunicipality: this.form.value.addressDepartmentId ? this.form.value.addressDepartmentId.description: FormOption.WITHOUT_DATA ,
+	return {
+    	aggressorData: {
+        	actorPersonalData: {
+          		firstName: this.form.value.name,
+				lastName: this.form.value.lastname,
+				address: this.form.value.address,
+				age: this.form.value.age,
+				municipality: {
+					id: this.form.value.addressDepartmentId ? this.form.value.addressDepartmentId.id : null,
+					provinceId: null,
+					description: null
+				},
+        	},
+			relationshipWithVictim: this.form.value.aggressorRelation,
+			otherRelationshipWithVictim: this.form.value.aggressorRelationTextFree,
+      	},
+		hasBeenTreated: this.form.value.hasBeenTreated,
+		hasGuns: this.form.value.hasAfirearm,
+		hasPreviousEpisodes: this.form.value.hasPreviousEpisodes,
+		livesWithVictim: this.form.value.livesWithVictim,
+		relationshipLength: this.form.value.relationshipLength,
+		securityForceRelatedData: {
+    		belongsToSecurityForces: this.form.value.belongsToSecurityForces,
+        	inDuty: this.form.value.inDuty,
+        	securityForceTypes: this.form.value.securityForceType,
+      	},
+      	violenceViolenceFrequency: this.form.value.violenceFrequency,
+      	descriptionMunicipality: this.form.value.addressDepartmentId ? this.form.value.addressDepartmentId.description : FormOption.WITHOUT_DATA,
     }
   }
 
@@ -111,7 +115,7 @@ export class NewViolentPersonInfomationComponent implements OnInit {
 
   resetDepartmentControl(event: Event) {
     event.stopPropagation();
-    this.form.controls.addressDepartmentId.reset();
+    this.form.controls.addressDepartment.reset();
   }
 
   resetSecurityForceTypesControl(event: Event) {

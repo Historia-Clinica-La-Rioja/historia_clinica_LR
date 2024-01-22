@@ -54,17 +54,17 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-                <mat-select id="addressDepartmentId" name="addressDepartmentId" formControlName="addressDepartmentId"
+                <mat-select id="addressDepartment" name="addressDepartment" formControlName="addressDepartment"
                     placeholder="{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.DEPARTMENT' | translate}}">
                     <mat-option *ngFor="let department of departments$ | async" [value]="department">
                         {{department.description}}
                     </mat-option>
                 </mat-select>
-                <button id="clear_address_departament" type="button" mat-button *ngIf="form.value.addressDepartmentId"
+                <button id="clear_address_departament" type="button" mat-button *ngIf="form.value.addressDepartment"
                     matSuffix color="warn" mat-icon-button (click)="resetDepartmentControl($event)">
                     <mat-icon>close</mat-icon>
                 </button>
-                <mat-error *ngIf="hasError(form, 'required', 'addressDepartmentId')"
+                <mat-error *ngIf="hasError(form, 'required', 'addressDepartment')"
                     [translate]="'forms.REQUIRED'"></mat-error>
             </mat-form-field>
 

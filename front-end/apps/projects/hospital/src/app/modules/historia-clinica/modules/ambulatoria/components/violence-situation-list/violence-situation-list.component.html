@@ -32,6 +32,16 @@
             <span class="violence-situation-header" [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.LAST_UPDATE'"></span>
             <span>{{vs.lastModificationDate | viewDateDto: 'date' | date: DateFormat.VIEW_DATE}}</span>
         </div>
+        <div>
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item>
+                    <span [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.buttons.CONTINUE'"></span>
+                </button>
+            </mat-menu>
+        </div>
     </mat-list-item>
     <mat-divider></mat-divider>
 </div>

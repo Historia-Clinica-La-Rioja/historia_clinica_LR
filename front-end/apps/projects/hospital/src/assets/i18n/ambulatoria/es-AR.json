@@ -798,7 +798,10 @@
                     "LAST_UPDATE": "Última modificación:",
                     "SEE_ALL": "Ver todas las situaciones de violencia",
                     "SEE_LESS": "Ver menos",
-                    "SITUATION_NUMBER": "Situación #{{id}}"
+                    "SITUATION_NUMBER": "Situación #{{id}}",
+                    "buttons": {
+                        "CONTINUE": "Continuar registro"
+                    }
                 },
                 "dialog": {
                     "TEXT_FREE_LABEL":"Texto libre",
