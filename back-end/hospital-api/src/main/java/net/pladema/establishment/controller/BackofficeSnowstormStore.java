@@ -2,7 +2,6 @@ package net.pladema.establishment.controller;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
 import ar.lamansys.sgh.shared.infrastructure.input.service.snowstorm.SharedSnowstormSearchItemDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.snowstorm.exceptions.SnowstormPortException;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
@@ -16,7 +15,6 @@ import net.pladema.snowstorm.controller.service.SnowstormExternalService;
 
 import net.pladema.snowstorm.repository.SnomedGroupRepository;
 import net.pladema.snowstorm.repository.SnomedRelatedGroupRepository;
-import net.pladema.snowstorm.repository.entity.SnomedRelatedGroup;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 
 import org.springframework.data.domain.Example;
@@ -40,10 +38,7 @@ public class BackofficeSnowstormStore implements BackofficeStore<BackofficeSnows
 
 	private final SnowstormExternalService snowstormExternalService;
 	private final SnomedService snomedService;
-	private final SnomedGroupRepository snomedGroupRepository;
-	private final SnomedRelatedGroupRepository snomedRelatedGroupRepository;
-	private final DateTimeProvider dateTimeProvider;
-	
+
 	private final String SNOWSTORM_EXCEPTION = "snowstorm.port.exception";
 	
 	public Page<BackofficeSnowstormDto> findAll(BackofficeSnowstormDto example, Pageable pageable, SnomedECL ecl) {
@@ -126,21 +121,16 @@ public class BackofficeSnowstormStore implements BackofficeStore<BackofficeSnows
 	}
 
 	@Transactional
-	public Integer saveSnowstormConcept(String conceptId, Integer groupId, SnomedECL ecl) throws SnowstormPortException {
-		String conceptPt = snowstormExternalService.getConceptById(conceptId).getPt();
-		if (!conceptPt.isEmpty()) {
+	public Integer saveSnowstormConcept(String conceptId) {
+		try {
+			String conceptPt = snowstormExternalService.getConceptById(conceptId).getPt();
+			if (conceptPt.isEmpty())
+				throw new BackofficeValidationException(SNOWSTORM_EXCEPTION);
 			var snomedBo = new SnomedBo(conceptId, conceptPt);
-			Integer snomedId = snomedService.getSnomedId(snomedBo).orElseGet(() -> snomedService.createSnomedTerm(snomedBo));
-			if (ecl != null) {
-				groupId = snomedGroupRepository.getIdByDescriptionAndInstitutionId(ecl.toString(), -1).orElse(null);
-			}
-			if (groupId != null) {
-				Integer orden = snomedRelatedGroupRepository.getLastOrdenByGroupId(groupId).orElse(0) + 1;
-				snomedRelatedGroupRepository.save(new SnomedRelatedGroup(snomedId, groupId, orden, dateTimeProvider.nowDate()));
-			}
-			return snomedId;
+			return snomedService.getSnomedId(snomedBo).orElseGet(() -> snomedService.createSnomedTerm(snomedBo));
+		} catch (SnowstormPortException e) {
+			throw new BackofficeValidationException(SNOWSTORM_EXCEPTION);
 		}
-		return -1;
 	}
 
 }
