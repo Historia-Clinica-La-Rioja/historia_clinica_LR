@@ -1,17 +1,21 @@
-package net.pladema.questionnaires.common.domain;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+package net.pladema.questionnaires.general.create.repository.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.questionnaires.common.domain.QuestionnaireResponseII;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "minsal_lr_answer", schema = "public")
@@ -20,15 +24,16 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Answer {
+public class AnswerII {
 
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(name = "questionnaire_response_id", nullable = false, insertable = false, updatable = false)
-	private Integer questionnaireResponseId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "questionnaire_response_id")
+	private QuestionnaireResponseII questionnaireResponse;
 
 	@Column(name = "item_id", nullable = false)
 	private Integer itemId;
@@ -38,4 +43,5 @@ public class Answer {
 
 	@Column(name = "option_id")
 	private Integer answerId;
+
 }
