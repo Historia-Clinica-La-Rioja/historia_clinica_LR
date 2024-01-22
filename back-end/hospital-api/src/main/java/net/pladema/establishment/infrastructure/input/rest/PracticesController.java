@@ -40,7 +40,7 @@ public class PracticesController {
 	private final GetPracticesByDepartmentId getPracticesByDepartmentId;
 
 	@GetMapping("/institution/{institutionId}/by-institution")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA') || hasAnyAuthority('GESTOR_CENTRO_LLAMADO')")
 	public ResponseEntity<List<SharedSnomedDto>> getPractices(@PathVariable(name = "institutionId") Integer institutionId) {
 		log.debug("Input parameters -> institutionId {} ", institutionId);
 		List<SharedSnomedDto> result = getPracticesByInstitution.run(institutionId);
