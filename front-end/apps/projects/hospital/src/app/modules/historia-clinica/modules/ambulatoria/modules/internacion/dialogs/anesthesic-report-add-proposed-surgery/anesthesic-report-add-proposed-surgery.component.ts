@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AnestheticReportProposedSurgeryService } from '../../services/anesthetic-report-proposed-surgery.service';
 
@@ -7,18 +7,16 @@ import { AnestheticReportProposedSurgeryService } from '../../services/anestheti
     templateUrl: './anesthesic-report-add-proposed-surgery.component.html',
     styleUrls: ['./anesthesic-report-add-proposed-surgery.component.scss']
 })
-export class AnesthesicReportAddProposedSurgeryComponent implements OnInit {
+export class AnesthesicReportAddProposedSurgeryComponent {
 
     constructor(
         public dialogRef: MatDialogRef<AnesthesicReportAddProposedSurgeryComponent>,
         @Inject(MAT_DIALOG_DATA) public readonly data: ProposedSurgeryData,
     ) { }
 
-    ngOnInit(): void {
-    }
-
     close(): void {
         this.dialogRef.close()
+        this.data.proposedSurgeryService.resetForm();
     }
 
     addProposedSurgery(){

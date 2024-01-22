@@ -1,0 +1,22 @@
+<div fxLayout="column" fxLayoutGap="2vh">
+    <app-titled-content-card *ngIf="!service.isEmpty()"
+        title="{{ 'internaciones.anesthesic-report.premedication-and-food-intake.REGISTERED_PREMEDICATION' }}">
+        <app-anesthetic-report-premedication-background-list [service]="service"></app-anesthetic-report-premedication-background-list>
+    </app-titled-content-card>
+
+    <div>
+        <button id="add-premedication" mat-button color="primary" class="premedication-button"
+            (click)="addPremedication()">
+            {{ 'internaciones.anesthesic-report.premedication-and-food-intake.ADD_PREMEDICATION' | translate }}
+        </button>
+    </div>
+
+    <mat-card fxLayout="column">
+        <h3>{{ 'internaciones.anesthesic-report.premedication-and-food-intake.LAST_FOOD_INTAKE' | translate }}</h3>
+        <mat-label [translate]="'internaciones.anesthesic-report.premedication-and-food-intake.HOUR'"></mat-label>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+            <ng-content select="[food-intake-form]"></ng-content>
+            <span>hs.</span>
+        </div>
+    </mat-card>
+</div>

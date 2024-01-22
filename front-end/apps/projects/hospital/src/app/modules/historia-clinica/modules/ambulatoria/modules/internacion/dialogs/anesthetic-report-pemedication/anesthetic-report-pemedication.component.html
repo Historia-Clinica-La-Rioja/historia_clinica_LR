@@ -1,0 +1,90 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <span mat-dialog-title
+        [translate]="'internaciones.anesthesic-report.premedication-and-food-intake.ADD_PREMEDICATION_TITLE'"></span>
+    <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <ng-container *ngIf="!data.premedicationService.snomedConcept else premedication">
+        <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else premedicationTypeaheadSearch"
+            [label]="'internaciones.anesthesic-report.premedication-and-food-intake.PREMEDICATION'"
+            (search)="data.premedicationService.openSearchDialog($event)">
+        </app-concepts-search>
+
+        <ng-template #premedicationTypeaheadSearch>
+            <app-concept-typeahead-search [ecl]="data.premedicationService.getECL()"
+                [placeholder]="'internaciones.anesthesic-report.premedication-and-food-intake.PREMEDICATION'"
+                (conceptSelected)="data.premedicationService.setConcept($event)">
+            </app-concept-typeahead-search>
+        </ng-template>
+    </ng-container>
+</div>
+
+<ng-template #premedication>
+    <form [formGroup]="form" (ngSubmit)="addPremedication()">
+        <div fxLayout="column" fxLayoutGap="5px">
+            <mat-label [translate]="'internaciones.anesthesic-report.premedication-and-food-intake.DRUG'"></mat-label>
+            <mat-form-field appearance="outline">
+                <input id="premedication-input" matInput type="text" formControlName="snomed" name="snomed" readonly
+                    matTooltip="{{ data.premedicationService.snomedConcept.pt }}">
+                <button id="clear-premedication" mat-button matSuffix color="warn" mat-icon-button
+                    (click)="data.premedicationService.resetForm()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <div fxLayout="row wrap" fxLayoutAlign="space-between">
+                <div fxLayout="column" data-id="dosis-data" class="input-width">
+                    <mat-label
+                        [translate]="'internaciones.anesthesic-report.premedication-and-food-intake.DOSIS'"></mat-label>
+                    <mat-form-field appearance="outline">
+                        <input id="dosis-input" matInput type="number" formControlName="dosis" name="dosis"
+                            placeholder="{{ 'internaciones.anesthesic-report.premedication-and-food-intake.DOSIS_PLACEHOLDER' | translate }}">
+                        <mat-error> {{ data.premedicationService.dosisError$ | async }} </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div fxLayout="column" data-id="unit-data" class="input-width">
+                    <mat-label
+                        [translate]="'internaciones.anesthesic-report.premedication-and-food-intake.UNIT'"></mat-label>
+                    <mat-form-field appearance="outline">
+                        <input id="unit-input" matInput type="text" formControlName="unit" name="unit"
+                            placeholder="{{ 'internaciones.anesthesic-report.premedication-and-food-intake.UNIT_PLACEHOLDER' | translate }}">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <mat-label [translate]="'internaciones.anesthesic-report.premedication-and-food-intake.VIA'"></mat-label>
+            <mat-form-field appearance="outline">
+                <mat-select formControlName="via" placeholder="{{ 'internaciones.anesthesic-report.premedication-and-food-intake.VIA_PLACEHOLDER' | translate }}">
+                    <mat-option id="via" name="via"
+                        *ngFor="let via of viaArray" [value]="via.id">
+                        {{via.description}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <div fxLayout="column">
+                <mat-label [translate]="'internaciones.anesthesic-report.premedication-and-food-intake.HOUR'"></mat-label>
+                <div fxLayoutGap="10px">
+                    <mat-form-field appearance="outline" data-id="time_selector">
+                        <mat-select id="time" formControlName="time">
+                            <mat-option [value]="time" *ngFor="let time of possibleTimesList">
+                                {{ time | viewDateDto:'time' | date:'shortTime' }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <span>hs.</span>
+                </div>
+            </div>
+
+            <div align="end">
+                <button id="submit_premedication" mat-raised-button color="primary" type="submit">
+                    <span class="uppercase" [translate]="'buttons.ADD'"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+</ng-template>

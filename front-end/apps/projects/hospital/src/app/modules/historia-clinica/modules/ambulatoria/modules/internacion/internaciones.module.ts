@@ -49,7 +49,7 @@ import { AttachDocumentPopupComponent } from './dialogs/attach-document-popup/at
 import { DeleteDocumentPopupComponent } from './dialogs/delete-document-popup/delete-document-popup.component';
 import { MedicationComponent } from './components/medication/medication.component';
 import { AnesthesicReportAddProposedSurgeryComponent } from './dialogs/anesthesic-report-add-proposed-surgery/anesthesic-report-add-proposed-surgery.component';
-
+import { AnestheticReportPemedicationComponent } from './dialogs/anesthetic-report-pemedication/anesthetic-report-pemedication.component';
 @NgModule({
 	declarations: [
 		// routing
@@ -92,6 +92,7 @@ import { AnesthesicReportAddProposedSurgeryComponent } from './dialogs/anesthesi
 		AttachDocumentPopupComponent,
 		DeleteDocumentPopupComponent,
 		AnesthesicReportAddProposedSurgeryComponent,
+		AnestheticReportPemedicationComponent,
 	],
 	exports: [
 		InternmentEpisodeSummaryComponent,

@@ -368,6 +368,22 @@
 				"ADD_USUAL_MEDICATION": "+ Agregar medicación habitual",
 				"ADD_MEDICATION": "Agregar medicación habitual",
 				"USUAL_MEDICATION": "Medicación habitual"
+			},
+			"premedication-and-food-intake": {
+				"TITLE": "Premedicación e ingesta alimentaria",
+				"REGISTERED_PREMEDICATION": "Premedicación registrada",
+				"ADD_PREMEDICATION": "+ Agregar premedicación",
+				"ADD_PREMEDICATION_TITLE": "Agregar premedicación",
+				"PREMEDICATION": "Premedicación",
+				"DRUG": "Droga",
+				"DOSIS": "Dosis: ",
+				"DOSIS_PLACEHOLDER": "Ingresar dosis",
+				"UNIT": "Unidad: ",
+				"UNIT_PLACEHOLDER": "Ingresar unidad",
+				"VIA": "Via: ",
+				"VIA_PLACEHOLDER": "Ingresar via",
+				"HOUR": "Hora",
+				"LAST_FOOD_INTAKE": "Última ingesta de comida:"
 			}
 		},
 		"clinical-assessment-diagnosis": {

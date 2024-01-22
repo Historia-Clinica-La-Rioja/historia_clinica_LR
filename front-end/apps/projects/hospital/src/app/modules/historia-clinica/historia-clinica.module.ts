@@ -25,6 +25,8 @@ import { AnestheticReportAnthropometricDataComponent } from './modules/ambulator
 import { AnestheticReportClinicalEvaluationComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-clinical-evaluation/anesthetic-report-clinical-evaluation.component';
 import { AnestheticReportAnestheticHistoryComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-anesthetic-history/anesthetic-report-anesthetic-history.component';
 import { AnestheticReportUsualMedicationComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-usual-medication/anesthetic-report-usual-medication.component';
+import { AnestheticReportPremedicationAndFoodIntakeComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-premedication-and-food-intake/anesthetic-report-premedication-and-food-intake.component';
+import { AnestheticReportPremedicationBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-premedication-background-list/anesthetic-report-premedication-background-list.component';
 // dialogs
 import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
 import { AddAnthropometricComponent } from './dialogs/add-anthropometric/add-anthropometric.component';
@@ -117,6 +119,8 @@ import { AnestheticReportDockPopupComponent } from './components/anesthetic-repo
 		AnestheticReportClinicalEvaluationComponent,
 		AnestheticReportAnestheticHistoryComponent,
 		AnestheticReportUsualMedicationComponent,
+		AnestheticReportPremedicationAndFoodIntakeComponent,
+		AnestheticReportPremedicationBackgroundListComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,

@@ -46,3 +46,9 @@ export const CLINICAL_EVALUATION = {
         hematocrit: 100,
     },
 }
+
+export const PREMEDICATION = {
+    MIN: {
+        dosis: 0,
+    }
+}
