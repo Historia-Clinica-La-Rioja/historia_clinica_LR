@@ -1,11 +1,20 @@
 package net.pladema.reports.service.impl;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
+
+import net.pladema.hsi.addons.billing.infrastructure.input.BillProcedureExternalService;
+import net.pladema.hsi.addons.billing.infrastructure.input.domain.BillProceduresRequestDto;
+import net.pladema.hsi.addons.billing.infrastructure.input.domain.BillProceduresResponseDto;
+import net.pladema.reports.service.domain.AnnexIIProcedureBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,11 +44,18 @@ public class AnnexReportServiceImpl implements AnnexReportService {
     private final AnnexReportRepository annexReportRepository;
 	private final DocumentAppointmentService documentAppointmentService;
 	private final DocumentService documentService;
+	private final BillProcedureExternalService billProcedureExternalService;
 
-    public AnnexReportServiceImpl(AnnexReportRepository annexReportRepository, DocumentAppointmentService documentAppointmentService, DocumentService documentService){
+    public AnnexReportServiceImpl(
+    	AnnexReportRepository annexReportRepository,
+    	DocumentAppointmentService documentAppointmentService,
+    	DocumentService documentService,
+    	BillProcedureExternalService billProcedureExternalService)
+	{
         this.annexReportRepository = annexReportRepository;
 		this.documentAppointmentService = documentAppointmentService;
 		this.documentService = documentService;
+		this.billProcedureExternalService = billProcedureExternalService;
 	}
 
     @Override
@@ -67,6 +83,18 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 						result.setProblems(outpatientconsultationData.getProblems());
 						result.setHasProcedures(outpatientconsultationData.getHasProcedures());
 						result.setExistsConsultation(outpatientconsultationData.getExistsConsultation());
+
+						var billedProcedures = getBilledProcedures(
+							result.getMedicalCoverageCuit() == null ? "30222222221" : result.getMedicalCoverageCuit(),
+							result.getConsultationOrAttentionDate().atStartOfDay(),
+							documentService.getProcedureStateFromDocument(documentId)
+						);
+
+						result.setProcedures(mapProcedures(billedProcedures));
+						result.setProceduresIngressDate(outpatientconsultationData.getConsultationDate());
+						result.setProceduresEgressDate(outpatientconsultationData.getConsultationDate());
+						result.setProceduresTotal(billedProcedures.getPatientTotal());
+
 						LOG.debug("Output -> {}", result);
 						return result;
 					}
@@ -101,7 +129,32 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 		return result;
 	}
 
-    @Override
+	private List<AnnexIIProcedureBo> mapProcedures(BillProceduresResponseDto billedProcedures) {
+		return billedProcedures
+			.getProcedures()
+			.stream().map(x ->
+				AnnexIIProcedureBo.builder()
+					.description(x.getDescription())
+					.code(x.getCode())
+					.amount(x.getAmount())
+					.date(x.getDate())
+					.rate(x.getRate())
+					.coveragePercentage(x.getCoveragePercentage())
+					.coverageRate(x.getCoverageRate())
+					.patientRate(x.getPatientRate())
+					.total(x.getTotal())
+					.build()
+			).collect(Collectors.toList());
+	}
+
+	private BillProceduresResponseDto getBilledProcedures(String medicalCoverageCuit, LocalDateTime date, List<ProcedureBo> procedures) {
+		BillProceduresRequestDto request = new BillProceduresRequestDto(medicalCoverageCuit, date);
+		procedures.stream().forEach(p -> request.addProcedure(p.getSnomed().getSctid(), p.getSnomed().getPt()));
+		BillProceduresResponseDto billedProcedures = billProcedureExternalService.getBilledProcedures(request);
+		return billedProcedures;
+	}
+
+	@Override
     public AnnexIIBo getConsultationData(Long documentId) {
 
 		Optional<DocumentAppointmentBo> documentAppointmentOpt = this.documentAppointmentService.getDocumentAppointmentForDocument(documentId);
@@ -211,6 +264,12 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 		ctx.put("specialty", reportDataDto.getSpecialty());
 		ctx.put("problems", reportDataDto.getProblems());
 		ctx.put("rnos", reportDataDto.getRnos());
+		ctx.put("procedureLines", reportDataDto.getProcedures());
+
+		ctx.put("procedureLinesIngressDate", reportDataDto.getProceduresIngressDate());
+		ctx.put("procedureLinesEgressDate", reportDataDto.getProceduresEgressDate());
+		ctx.put("procedureLinesTotal", reportDataDto.getProceduresTotal());
+
         return ctx;
     }
 

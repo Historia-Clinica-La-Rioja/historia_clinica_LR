@@ -1,6 +1,7 @@
 package net.pladema.reports.service.domain;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +31,7 @@ public class AnnexIIBo {
     private LocalDate attentionDate;
 
     private String medicalCoverage;
+	private String medicalCoverageCuit;
 
     private String affiliateNumber;
 
@@ -51,6 +53,14 @@ public class AnnexIIBo {
 
 	private LocalDate medicalCoverageEndDate;
 
+	private List<AnnexIIProcedureBo> procedures;
+
+	private LocalDate proceduresIngressDate;
+
+	private LocalDate proceduresEgressDate;
+
+	private Float proceduresTotal;
+
     public AnnexIIBo(AnnexIIOutpatientVo annexIIOutpatientVo){
         this.establishment = annexIIOutpatientVo.getEstablishment();
         this.completePatientName = annexIIOutpatientVo.getCompletePatientName();
@@ -68,6 +78,7 @@ public class AnnexIIBo {
         this.problems = annexIIOutpatientVo.getProblems();
 
 		this.medicalCoverage = annexIIOutpatientVo.getMedicalCoverage();
+		this.medicalCoverageCuit = annexIIOutpatientVo.getMedicalCoverageCuit();
 		this.rnos = annexIIOutpatientVo.getRnos();
     }
 
@@ -84,7 +95,15 @@ public class AnnexIIBo {
         this.attentionDate = annexIIAppointmentVo.getAttentionDate();
         this.appointmentState = annexIIAppointmentVo.getAppointmentState();
         this.medicalCoverage = annexIIAppointmentVo.getMedicalCoverage();
+        this.medicalCoverageCuit = annexIIAppointmentVo.getMedicalCoverageCuit();
 		this.rnos = annexIIAppointmentVo.getRnos();
+    }
+
+    public LocalDate getConsultationOrAttentionDate(){
+    	if (this.getConsultationDate() != null)
+    		return this.getConsultationDate();
+    	else
+    		return this.getAttentionDate();
     }
 
 }

@@ -1,6 +1,7 @@
 package net.pladema.reports.controller.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -42,4 +43,12 @@ public class AnnexIIDto {
     private String problems;
 
 	private Integer rnos;
+
+	private List<AnnexIIProcedureDto> procedures;
+
+	private LocalDate proceduresIngressDate;
+
+	private LocalDate proceduresEgressDate;
+
+	private Float proceduresTotal;
 }

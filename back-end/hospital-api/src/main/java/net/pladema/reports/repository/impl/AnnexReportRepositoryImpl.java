@@ -26,12 +26,34 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
         this.entityManager = entityManager;
     }
 
-    @Override
+	private static AnnexIIOutpatientVo toAnnexIIOutpatientVo(Object[] a) {
+		return new AnnexIIOutpatientVo(
+			(String) a[0],
+			(String) a[1],
+			(String) a[2],
+			(String) a[3],
+			(String) a[4],
+			(String) a[5],
+			a[6] != null ? ((Date) a[6]).toLocalDate() : null,
+			(String) a[7],
+			(String) a[8],
+			a[9] != null ? ((Date) a[9]).toLocalDate() : null,
+			(Boolean) a[10],
+			(String) a[11],
+			(String) a[12],
+			(String) a[13],
+			(String) a[14],
+			(String) a[15],
+			(Integer) a[16]
+		);
+	}
+
+	@Override
     @Transactional(readOnly = true)
     public Optional<AnnexIIAppointmentVo> getAppointmentAnnexInfo(Integer appointmentId) {
         String query = "SELECT NEW net.pladema.reports.repository.entity.AnnexIIAppointmentVo(i.name, pe.firstName, pe.middleNames, " +
                 "           pe.lastName, pe.otherLastNames, g.description, pe.birthDate, it.description, pe.identificationNumber, " +
-                "           aps.description, a.dateTypeId, mc.name, i.sisaCode, hi.rnos) " +
+                "           aps.description, a.dateTypeId, mc.name, mc.cuit, i.sisaCode, hi.rnos) " +
                 "       FROM Appointment AS a " +
                 "           JOIN AppointmentAssn AS assn ON (a.id = assn.pk.appointmentId) " +
                 "           JOIN Diary AS d ON (assn.pk.diaryId = d.id) " +
@@ -68,7 +90,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
                 "       )" +
                 "       SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
                 "               pe.birth_date, it.description as idType, pe.identification_number, t.start_date, pr.proced as hasProcedures, " +
-                "               cs.name, i.sisa_code, prob.descriptions as problems, mc.name as medicalCoverageName, hi.rnos  " +
+                "               cs.name, i.sisa_code, prob.descriptions as problems, mc.name as medicalCoverageName, mc.cuit as medicalCoverageCuit, hi.rnos  " +
                 "       FROM t " +
                 "           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
                 "           JOIN {h-schema}Patient AS pa ON (t.patient_id = pa.id) " +
@@ -100,24 +122,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
                 .setMaxResults(1)
                 .getResultList().stream().findFirst();
 
-        Optional<AnnexIIOutpatientVo> result = queryResult.map(a -> new AnnexIIOutpatientVo(
-                (String) a[0],
-                (String) a[1],
-                (String) a[2],
-                (String) a[3],
-                (String) a[4],
-                (String) a[5],
-                a[6] != null ? ((Date) a[6]).toLocalDate() : null,
-                (String) a[7],
-                (String) a[8],
-                a[9] != null ? ((Date) a[9]).toLocalDate() : null,
-                (Boolean) a[10],
-                (String) a[11],
-                (String) a[12],
-                (String) a[13],
-				(String) a[14],
-				(Integer) a[15]
-        ));
+        Optional<AnnexIIOutpatientVo> result = queryResult.map(AnnexReportRepositoryImpl::toAnnexIIOutpatientVo);
         return result;
     }
 
@@ -130,7 +135,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 				"       WHERE d.id = :documentId) " +
 				"       SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
 				"               pe.birth_date, it.description as idType, pe.identification_number, t.performed_date, null as hasProcedures, " +
-				"               null, i.sisa_code, null as problems, mc.name as medicalCoverageName, hi.rnos	" +
+				"               null, i.sisa_code, null as problems, mc.name as medicalCoverageName, mc.cuit as medicalCoverageCuit, hi.rnos	" +
 				"       FROM t " +
 				"           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
 				"           JOIN {h-schema}Patient AS pa ON (t.patient_id = pa.id) " +
@@ -147,24 +152,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 				.setMaxResults(1)
 				.getResultList().stream().findFirst();
 
-		Optional<AnnexIIOutpatientVo> result = queryResult.map(a -> new AnnexIIOutpatientVo(
-				(String) a[0],
-				(String) a[1],
-				(String) a[2],
-				(String) a[3],
-				(String) a[4],
-				(String) a[5],
-				a[6] != null ? ((Date) a[6]).toLocalDate() : null,
-				(String) a[7],
-				(String) a[8],
-				a[9] != null ? ((Date) a[9]).toLocalDate() : null,
-				(Boolean) a[10],
-				(String) a[11],
-				(String) a[12],
-				(String) a[13],
-				(String) a[14],
-				(Integer) a[15]
-		));
+		Optional<AnnexIIOutpatientVo> result = queryResult.map(AnnexReportRepositoryImpl::toAnnexIIOutpatientVo);
 		return result;
 	}
 
@@ -237,7 +225,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 				"       WHERE d.id = :documentId) " +
 				"       SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
 				"               pe.birth_date, it.description as idType, pe.identification_number, t.performed_date, null as hasProcedures, " +
-				"               null, i.sisa_code, null as problems, mc.name as medicalCoverageName, hi.rnos   " +
+				"               null, i.sisa_code, null as problems, mc.name as medicalCoverageName, mc.cuit as medicalCoverageCuit, hi.rnos   " +
 				"       FROM t " +
 				"           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
 				"           JOIN {h-schema}Patient AS pa ON (t.patient_id = pa.id) " +
@@ -254,24 +242,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 				.setMaxResults(1)
 				.getResultList().stream().findFirst();
 
-		Optional<AnnexIIOutpatientVo> result = queryResult.map(a -> new AnnexIIOutpatientVo(
-				(String) a[0],
-				(String) a[1],
-				(String) a[2],
-				(String) a[3],
-				(String) a[4],
-				(String) a[5],
-				a[6] != null ? ((Date) a[6]).toLocalDate() : null,
-				(String) a[7],
-				(String) a[8],
-				a[9] != null ? ((Date) a[9]).toLocalDate() : null,
-				(Boolean) a[10],
-				(String) a[11],
-				(String) a[12],
-				(String) a[13],
-				(String) a[14],
-				(Integer) a[15]
-		));
+		Optional<AnnexIIOutpatientVo> result = queryResult.map(AnnexReportRepositoryImpl::toAnnexIIOutpatientVo);
 		return result;
 	}
 

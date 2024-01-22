@@ -222,9 +222,21 @@ export interface AnnexIIDto {
     patientAge: number;
     patientGender: string;
     problems: string;
+    procedures: AnnexIIProcedureDto[];
+    proceduresEgressDate: Date;
+    proceduresIngressDate: Date;
+    proceduresTotal: number;
     rnos: number;
     sisaCode: string;
     specialty: string;
+}
+
+export interface AnnexIIProcedureDto {
+    amount: number;
+    code: string;
+    description: string;
+    rate: number;
+    total: number;
 }
 
 export interface AnthropometricDataDto extends Serializable {
