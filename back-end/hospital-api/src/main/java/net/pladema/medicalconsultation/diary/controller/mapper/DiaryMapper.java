@@ -52,4 +52,7 @@ public interface DiaryMapper {
 	@Named("toDiaryAvailableAppointmentsDto")
 	DiaryAvailableAppointmentsDto toDiaryAvailableAppointmentsDto(DiaryAvailableAppointmentsBo diaryAvailableAppointmentsBo);
 
+	@Named("toListDiaryAvailableAppointmentsDto")
+	List<DiaryAvailableAppointmentsDto> toListDiaryAvailableAppointmentsDto(List<DiaryAvailableAppointmentsBo> diaryAvailableAppointmentsBoList);
+
 }

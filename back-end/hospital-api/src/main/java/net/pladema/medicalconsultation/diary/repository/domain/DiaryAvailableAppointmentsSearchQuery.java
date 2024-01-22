@@ -29,8 +29,10 @@ public class DiaryAvailableAppointmentsSearchQuery {
 	private Integer institutionId;
 	private Boolean includeNameSelfDetermination;
 	private Integer practiceId;
-	private Boolean regulationProtected = false;
-
+	private Boolean regulationProtectedAppointment = false;
+	private Integer healthcareProfessionalId;
+	private Boolean protectedAppointment = false;
+	private Boolean externalBookingAppointment = false;
 
 	public DiaryAvailableAppointmentsSearchQuery(DiaryAppointmentsSearchBo diaryAppointmentsSearchBo) {
 		this.careLineId = diaryAppointmentsSearchBo.getCareLineId();
@@ -39,7 +41,10 @@ public class DiaryAvailableAppointmentsSearchQuery {
 		this.institutionId = diaryAppointmentsSearchBo.getInstitutionId();
 		this.includeNameSelfDetermination = diaryAppointmentsSearchBo.getIncludeNameSelfDetermination();
 		this.practiceId = diaryAppointmentsSearchBo.getPracticeId();
-		this.regulationProtected = diaryAppointmentsSearchBo.getRegulationProtected();
+		this.regulationProtectedAppointment = diaryAppointmentsSearchBo.getRegulationProtectedAppointment();
+		this.healthcareProfessionalId = diaryAppointmentsSearchBo.getHealthcareProfessionalId();
+		this.externalBookingAppointment = diaryAppointmentsSearchBo.getExternalBookingAppointment();
+		this.protectedAppointment = diaryAppointmentsSearchBo.getProtectedAppointment();
 	}
 
 	public QueryPart select() {
@@ -107,10 +112,18 @@ public class DiaryAvailableAppointmentsSearchQuery {
 			whereClause = whereClause + " AND dp.snomed_id = " + this.practiceId +
 							"AND (dp.deleted = false OR dp.deleted IS NULL) ";
 		}
-		if (regulationProtected)
+
+		if (regulationProtectedAppointment)
 			whereClause = whereClause + " AND doh.regulation_protected_appointments_allowed = true";
-		else
+
+		if (protectedAppointment)
 			whereClause = whereClause + " AND doh.protected_appointments_allowed = true";
+
+		if (externalBookingAppointment)
+			whereClause = whereClause + " AND doh.external_appointments_allowed = true";
+
+		if (healthcareProfessionalId != null)
+			whereClause = whereClause + " AND (d.healthcare_professional_id = " + this.healthcareProfessionalId + " OR dap.healthcare_professional_id = " + this.healthcareProfessionalId + " ) ";
 
 		return new QueryPart(whereClause);
 	}

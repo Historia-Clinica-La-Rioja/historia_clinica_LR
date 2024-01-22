@@ -46,17 +46,28 @@ public class DiaryAvailableAppointmentsSearchController {
 	private final DiaryMapper diaryMapper;
 	private final DiaryAvailableAppointmentsService diaryAvailableAppointmentsService;
 	private final ObjectMapper jackson;
-	private final static Integer NO_INSTITUTION = -1;
-
 
 	@GetMapping("/protected")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA') || hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA') ||" +
+			" hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
 	public ResponseEntity<List<DiaryAvailableAppointmentsDto>> getAvailableProtectedAppointments(@PathVariable(name = "institutionId") Integer institutionId,
-																								 @RequestParam String diaryProtectedAppointmentsSearch) {
+																										  @RequestParam String diaryProtectedAppointmentsSearch) {
 		log.debug("Get all available protected appointments by filters {}, ", diaryProtectedAppointmentsSearch);
-		DiaryAppointmentsSearchBo filter = parseFilter(diaryProtectedAppointmentsSearch, institutionId);
+		DiaryAppointmentsSearchBo filter = parseFilter(diaryProtectedAppointmentsSearch);
 		List<DiaryAvailableAppointmentsBo> diaryAvailableAppointmentsBoList = diaryAvailableAppointmentsService.getAvailableProtectedAppointmentsBySearchCriteria(filter, institutionId);
 		List<DiaryAvailableAppointmentsDto> result = diaryAvailableAppointmentsBoList.stream().map(diaryMapper::toDiaryAvailableAppointmentsDto).collect(Collectors.toList());
+		log.debug(OUTPUT, result);
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/third-party-booking")
+	@PreAuthorize("hasAnyAuthority('GESTOR_CENTRO_LLAMADO')")
+	public ResponseEntity<List<DiaryAvailableAppointmentsDto>> getAvailableAppointmentsToThirdPartyBooking(@PathVariable(name = "institutionId") Integer institutionId,
+																										   @RequestParam String searchFilter) {
+		log.debug("Get all available appointments for third party booking by filter {}, ", searchFilter);
+		DiaryAppointmentsSearchBo filter = parseFilter(searchFilter);
+		List<DiaryAvailableAppointmentsBo> availableAppointments = diaryAvailableAppointmentsService.getAvailableAppointmentsToThirdPartyBooking(filter, institutionId);
+		List<DiaryAvailableAppointmentsDto> result = diaryMapper.toListDiaryAvailableAppointmentsDto(availableAppointments);
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}
@@ -74,7 +85,7 @@ public class DiaryAvailableAppointmentsSearchController {
 		LocalDate from = LocalDate.now();
 		LocalDate to = from.plusDays(60);
 		Integer result = diaryAvailableAppointmentsService.getAvailableProtectedAppointmentsBySearchCriteria(new DiaryAppointmentsSearchBo(
-				careLineId, clinicalSpecialtyIds, departmentId, institutionDestinationId, from, to, false, EAppointmentModality.NO_MODALITY, practiceSnomedId), institutionId).size();
+				careLineId, clinicalSpecialtyIds, departmentId, institutionDestinationId, from, to, false, EAppointmentModality.NO_MODALITY, practiceSnomedId, true), institutionId).size();
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}
@@ -112,12 +123,10 @@ public class DiaryAvailableAppointmentsSearchController {
 		return ResponseEntity.ok(result);
 	}
 
-	private DiaryAppointmentsSearchBo parseFilter(String diaryProtectedAppointmentsSearch, Integer institutionId) {
+	private DiaryAppointmentsSearchBo parseFilter(String diaryProtectedAppointmentsSearch) {
 		DiaryAppointmentsSearchBo searchFilter = null;
 		try {
 			searchFilter = jackson.readValue(diaryProtectedAppointmentsSearch, DiaryAppointmentsSearchBo.class);
-			if (institutionId == NO_INSTITUTION)
-				searchFilter.setRegulationProtected(true);
 		} catch (IOException e) {
 			log.error(String.format("Error mapping filter: %s", diaryProtectedAppointmentsSearch), e);
 		}

@@ -14,4 +14,6 @@ public interface DiaryAvailableAppointmentsService {
 
 	Integer getAvailableAppointmentsQuantityByCareLineDiaries(Integer institutionId, List<Integer> clinicalSpecialtyIds, AppointmentSearchBo searchCriteria, Integer careLineId);
 
+	List<DiaryAvailableAppointmentsBo> getAvailableAppointmentsToThirdPartyBooking(DiaryAppointmentsSearchBo searchCriteria, Integer institutionId);
+
 }

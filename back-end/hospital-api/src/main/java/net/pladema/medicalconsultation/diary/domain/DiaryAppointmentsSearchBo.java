@@ -49,11 +49,20 @@ public class DiaryAppointmentsSearchBo {
 	@Nullable
 	private Integer practiceId;
 
-	private Boolean regulationProtected = false;
+	private Boolean regulationProtectedAppointment = false;
+
+	private Boolean externalBookingAppointment = false;
+
+	private Boolean protectedAppointment = false;
+
+	@Nullable
+	private Integer healthcareProfessionalId;
+
 
 	public DiaryAppointmentsSearchBo(Integer careLineId, List<Integer> clinicalSpecialtyIds, Integer departmentId,
-									 Integer institutionId, LocalDate initialSearchDate, LocalDate endSearchDate,
-									 Boolean includeNameSelfDetermination, EAppointmentModality modality, Integer practiceId) {
+											Integer institutionId, LocalDate initialSearchDate, LocalDate endSearchDate,
+											Boolean includeNameSelfDetermination, EAppointmentModality modality, Integer practiceId,
+											Boolean protectedAppointment) {
 		this.careLineId = careLineId;
 		this.clinicalSpecialtyIds = clinicalSpecialtyIds;
 		this.departmentId = departmentId;
@@ -63,6 +72,7 @@ public class DiaryAppointmentsSearchBo {
 		this.includeNameSelfDetermination = includeNameSelfDetermination;
 		this.modality = modality;
 		this.practiceId = practiceId;
+		this.protectedAppointment = protectedAppointment;
 	}
 	
 }

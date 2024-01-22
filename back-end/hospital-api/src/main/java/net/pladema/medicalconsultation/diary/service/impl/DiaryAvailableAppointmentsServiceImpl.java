@@ -10,6 +10,8 @@ import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSearchBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
+import net.pladema.medicalconsultation.diary.application.exceptions.DiaryAvailableAppointmentsException;
+import net.pladema.medicalconsultation.diary.application.exceptions.DiaryAvailableAppointmentsExceptionEnum;
 import net.pladema.medicalconsultation.diary.domain.DiaryAppointmentsSearchBo;
 import net.pladema.medicalconsultation.diary.repository.DiaryAvailableAppointmentsSearchRepository;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
@@ -51,7 +53,11 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 
 	private static final String OUTPUT = "Output -> {}";
 
-	public final int WEEK_DAY_NUMBER = 7;
+	private static final String OUTPUT_SIZE = "Output size -> {}";
+
+	private static final Integer NO_INSTITUTION = -1;
+
+	private static final int WEEK_DAY_NUMBER = 7;
 
 	private final DiaryAvailableAppointmentsSearchRepository diaryAvailableAppointmentsSearchRepository;
 
@@ -70,21 +76,39 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 	private final DiaryCareLineService diaryCareLineService;
 
 	private final ClinicalSpecialtyRepository clinicalSpecialtyRepository;
-	
-	private final static Integer NO_INSTITUTION = -1;
-
 
 	@Override
-	public List<DiaryAvailableAppointmentsBo> getAvailableProtectedAppointmentsBySearchCriteria(DiaryAppointmentsSearchBo searchCriteria,
-																								Integer institutionId) {
-	log.debug("Input parameter -> searchCriteria {}", searchCriteria);
+	public List<DiaryAvailableAppointmentsBo> getAvailableProtectedAppointmentsBySearchCriteria(DiaryAppointmentsSearchBo searchCriteria, Integer institutionId) {
+	log.debug("Input parameter -> searchCriteria {}, institutionId {}", searchCriteria, institutionId);
+		if (institutionId.equals(NO_INSTITUTION))
+			searchCriteria.setRegulationProtectedAppointment(true);
+		else
+			searchCriteria.setProtectedAppointment(true);
+		List<DiaryAvailableAppointmentsBo> result = this.getAvailableAppointmentsBySearchCriteria(searchCriteria, institutionId);
+		log.debug(OUTPUT_SIZE, result.size());
+		return result;
+	}
 
+	@Override
+	public List<DiaryAvailableAppointmentsBo> getAvailableAppointmentsToThirdPartyBooking(DiaryAppointmentsSearchBo searchCriteria, Integer institutionId) {
+		log.debug("Input parameter -> searchCriteria {}, institutionId {}", searchCriteria, institutionId);
+		assertMinimalThirdPartyBookingSearchData(searchCriteria);
+		searchCriteria.setExternalBookingAppointment(true);
+		searchCriteria.setModality(EAppointmentModality.ON_SITE_ATTENTION);
+		List<DiaryAvailableAppointmentsBo> result = this.getAvailableAppointmentsBySearchCriteria(searchCriteria, institutionId);
+		log.debug(OUTPUT_SIZE, result.size());
+		return result;
+	}
+
+	private List<DiaryAvailableAppointmentsBo> getAvailableAppointmentsBySearchCriteria(DiaryAppointmentsSearchBo searchCriteria, Integer institutionId) {
 		if (featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS))
 			searchCriteria.setIncludeNameSelfDetermination(true);
 
 		List<DiaryAvailableAppointmentsInfoBo> diariesInfo = diaryAvailableAppointmentsSearchRepository.getAllDiaryAppointmentsByFilter(searchCriteria);
+
 		if (searchCriteria.getClinicalSpecialtyIds() != null && !searchCriteria.getClinicalSpecialtyIds().isEmpty() && searchCriteria.getPracticeId() == null)
 			diariesInfo = diariesInfo.stream().filter( diary -> !diaryService.hasPractices(diary.getDiaryId())).collect(Collectors.toList());
+
 		List<Integer> diaryIds = diariesInfo.stream().map(DiaryAvailableAppointmentsInfoBo::getDiaryId).collect(Collectors.toList());
 		Collection<AppointmentBo> assignedAppointments = appointmentService.getAppointmentsByDiaries(diaryIds, searchCriteria.getInitialSearchDate(), searchCriteria.getEndSearchDate());
 
@@ -92,7 +116,7 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 
 		for (DiaryAvailableAppointmentsInfoBo diaryInfo : diariesInfo) {
 			diaryInfo.setOpeningHours(diaryOpeningHoursService.getDiaryOpeningHours(
-					diaryInfo.getDiaryId())
+							diaryInfo.getDiaryId())
 					.stream()
 					.filter(doh -> filterByTypeAndModality(searchCriteria, doh))
 					.collect(Collectors.toList()));
@@ -103,16 +127,17 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 		return result;
 	}
 
- 	private boolean filterByTypeAndModality(DiaryAppointmentsSearchBo searchCriteria, DiaryOpeningHoursBo doh) {
+	private boolean filterByTypeAndModality(DiaryAppointmentsSearchBo searchCriteria, DiaryOpeningHoursBo doh) {
 		return (
-				(doh.getProtectedAppointmentsAllowed() != null && doh.getProtectedAppointmentsAllowed()) ||
-				(searchCriteria.getRegulationProtected() && doh.getRegulationProtectedAppointmentsAllowed() != null && doh.getRegulationProtectedAppointmentsAllowed())
+				(searchCriteria.getProtectedAppointment() && doh.getProtectedAppointmentsAllowed() != null && doh.getProtectedAppointmentsAllowed()) ||
+						(searchCriteria.getRegulationProtectedAppointment() && doh.getRegulationProtectedAppointmentsAllowed() != null && doh.getRegulationProtectedAppointmentsAllowed()) ||
+						(searchCriteria.getExternalBookingAppointment() && doh.getExternalAppointmentsAllowed() != null && doh.getExternalAppointmentsAllowed())
 				) &&
 				(
 						(searchCriteria.getModality().equals(EAppointmentModality.ON_SITE_ATTENTION) && doh.getOnSiteAttentionAllowed()) ||
-						(searchCriteria.getModality().equals(EAppointmentModality.PATIENT_VIRTUAL_ATTENTION) && doh.getPatientVirtualAttentionAllowed()) ||
-						(searchCriteria.getModality().equals(EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION) && doh.getSecondOpinionVirtualAttentionAllowed()) ||
-						searchCriteria.getModality().equals(EAppointmentModality.NO_MODALITY)
+								(searchCriteria.getModality().equals(EAppointmentModality.PATIENT_VIRTUAL_ATTENTION) && doh.getPatientVirtualAttentionAllowed()) ||
+								(searchCriteria.getModality().equals(EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION) && doh.getSecondOpinionVirtualAttentionAllowed()) ||
+								searchCriteria.getModality().equals(EAppointmentModality.NO_MODALITY)
 				);
 	}
 
@@ -252,6 +277,14 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 				.professionalFullName(diary.getProfessionalFullName())
 				.isJointDiary(diary.getIsJointDiary())
 				.build();
+	}
+
+	private void assertMinimalThirdPartyBookingSearchData(DiaryAppointmentsSearchBo searchCriteria) {
+		if (searchCriteria.getDepartmentId() == null)
+			throw new DiaryAvailableAppointmentsException(DiaryAvailableAppointmentsExceptionEnum.NULL_DEPARTMENT_ID, "Partido/Departamento es un dato obligatorio para efectuar la búsqueda");
+		if (searchCriteria.getHealthcareProfessionalId() == null && searchCriteria.getPracticeId() == null
+				&& (searchCriteria.getClinicalSpecialtyIds() == null || searchCriteria.getClinicalSpecialtyIds().isEmpty()))
+			throw new DiaryAvailableAppointmentsException(DiaryAvailableAppointmentsExceptionEnum.MINIMAL_SEARCH_DATA, "Para efectuar la búsqueda de turnos debe ingresar al menos especialidad, profesional o practica");
 	}
 
 }

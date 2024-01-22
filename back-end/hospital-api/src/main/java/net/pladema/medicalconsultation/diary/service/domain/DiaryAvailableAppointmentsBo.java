@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import net.pladema.address.controller.service.domain.DepartmentBo;
 import net.pladema.establishment.service.domain.ClinicalSpecialtyBo;
 import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
@@ -18,6 +19,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class DiaryAvailableAppointmentsBo {
 
 	private Integer diaryId;
