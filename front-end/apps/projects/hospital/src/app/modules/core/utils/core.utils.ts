@@ -27,7 +27,8 @@ export function removeAccents(input: string): string {
 	return input.replace(/[áéíóúüñÁÉÍÓÚÜÑ]/g, (match) => accentsMap[match] || match);
 }
 
-export enum ENaturalNumbers {
+export enum ENumbersEventCode {
+	DIGIT_0 = "Digit0",
 	DIGIT_1 = "Digit1",
 	DIGIT_2 = "Digit2",
 	DIGIT_3 = "Digit3",
@@ -37,6 +38,7 @@ export enum ENaturalNumbers {
 	DIGIT_7 = "Digit7",
 	DIGIT_8 = "Digit8",
 	DIGIT_9 = "Digit9",
+	NUMPAD_0 = "Numpad0",
 	NUMPAD_1 = "Numpad1",
     NUMPAD_2 = "Numpad2",
     NUMPAD_3 = "Numpad3",
@@ -48,9 +50,10 @@ export enum ENaturalNumbers {
     NUMPAD_9 = "Numpad9"
 }
 
-export const NATURAL_NUMBERS: string[] = [ENaturalNumbers.DIGIT_1, ENaturalNumbers.DIGIT_2, ENaturalNumbers.DIGIT_3,
-										ENaturalNumbers.DIGIT_4, ENaturalNumbers.DIGIT_5, ENaturalNumbers.DIGIT_6,
-										ENaturalNumbers.DIGIT_7, ENaturalNumbers.DIGIT_8, ENaturalNumbers.DIGIT_9,
-										ENaturalNumbers.NUMPAD_1, ENaturalNumbers.NUMPAD_2, ENaturalNumbers.NUMPAD_3,
-										ENaturalNumbers.NUMPAD_4, ENaturalNumbers.NUMPAD_5, ENaturalNumbers.NUMPAD_6,
-										ENaturalNumbers.NUMPAD_7, ENaturalNumbers.NUMPAD_8, ENaturalNumbers.NUMPAD_9]
+export const EVENT_CODE_NUMBERS: string[] = [ENumbersEventCode.DIGIT_0, ENumbersEventCode.DIGIT_1, ENumbersEventCode.DIGIT_2, 
+										ENumbersEventCode.DIGIT_3, ENumbersEventCode.DIGIT_4, ENumbersEventCode.DIGIT_5, 
+										ENumbersEventCode.DIGIT_6, ENumbersEventCode.DIGIT_7, ENumbersEventCode.DIGIT_8, 
+										ENumbersEventCode.DIGIT_9, ENumbersEventCode.NUMPAD_0, ENumbersEventCode.NUMPAD_1, 
+										ENumbersEventCode.NUMPAD_2, ENumbersEventCode.NUMPAD_3, ENumbersEventCode.NUMPAD_4, 
+										ENumbersEventCode.NUMPAD_5, ENumbersEventCode.NUMPAD_6, ENumbersEventCode.NUMPAD_7, 
+										ENumbersEventCode.NUMPAD_8, ENumbersEventCode.NUMPAD_9]

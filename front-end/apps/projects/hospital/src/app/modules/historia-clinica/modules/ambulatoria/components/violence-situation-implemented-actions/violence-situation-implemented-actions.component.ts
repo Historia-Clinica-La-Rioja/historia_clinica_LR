@@ -318,6 +318,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 			updateControlValidator(this.form, 'articulationEstablishmentList', Validators.required);
 		} else {
 			updateControlValidator(this.form, 'articulationEstablishmentList', []);
+			this.form.controls.articulationEstablishmentList.reset();
 		}
 	}
 
@@ -326,6 +327,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 			updateControlValidator(this.form, 'agencyComplaint', Validators.required);
 		} else {
 			updateControlValidator(this.form, 'agencyComplaint', []);
+			this.form.controls.agencyComplaint.reset();
 		}
 	}
 
@@ -336,6 +338,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 		} else {
 			updateControlValidator(this.form, 'institutionComplaintsOrganizations', []);
 			updateControlValidator(this.form, 'institutionComplaints', []);
+			this.form.controls.institutionComplaintsOrganizations.reset();
 		}
 	}
 
