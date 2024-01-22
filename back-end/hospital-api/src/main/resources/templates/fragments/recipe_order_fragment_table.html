@@ -101,8 +101,8 @@
                 </div>
                 <div th:if="${request.isTranscribed()}">
                     <strong> Institución: </strong>
-                    <label th:text="${institutionName}"></label>
-                    <strong> REFES: </strong>
+                    <label th:text="${#strings.length(institutionName) > 30 ? #strings.substring(institutionName, 0, 30) + '...' : institutionName}"></label>
+                    <strong> REFES: </strong><label> </label>
                 </div>
             </div>
         </div>
@@ -223,7 +223,7 @@
     <br/>
     <footer style="page-break-inside: avoid;">
         <div class="footer-left">
-            <strong>Profesional: </strong><label th:text="${professionalName}"></label>
+            <strong>Profesional: </strong><label th:text="${#strings.length(professionalName) > 52 ? #strings.substring(professionalName, 0, 52) + '...' : professionalName}"></label>
             <p><strong>Matrículas: </strong><label th:text="${!request.isTranscribed()} ? ${professional.getCompleteLicenseInfo()} : ''"></label></p>
         </div>
         <div class="footer-right">

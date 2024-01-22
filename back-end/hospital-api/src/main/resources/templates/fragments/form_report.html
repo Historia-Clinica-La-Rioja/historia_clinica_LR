@@ -209,7 +209,7 @@
         <div class="code">CÓDIGO</div>
     </div>
     <div class="row-data">
-        <div class="establishment" th:text="${establishment}"></div>
+        <div class="establishment" th:text="${#strings.length(establishment) > 67 ? #strings.substring(establishment, 0, 67) + '...' : establishment}"></div>
         <div class="code" th:text="${code}"></div>
     </div>
     <div class="row">
@@ -219,7 +219,7 @@
     </div>
     <div class="row-data">
         <div class="complete-name" th:text="${formalPatientName}"></div>
-        <div class="address" th:text="${address}"></div>
+        <div class="address" th:text="${address} ? ${#strings.length(address) > 52 ? #strings.substring(address, 0, 52) + '...' : address} : ''"></div>
         <div class="date" th:text="${consultationDate != null} ? ${consultationDate} : ${reportDate}"></div>
     </div>
     <div class="row">
@@ -303,7 +303,7 @@
         <div class="signature">
             <div>&nbsp;</div>
             <div class="signature-data">23. FIRMA PROFESIONAL</div>
-            <div class="professional-name" th:text="${completeProfessionalName}"></div>
+            <div class="professional-name" th:text="${#strings.length(completeProfessionalName) > 67 ? #strings.substring(completeProfessionalName, 0, 67) + '...' : completeProfessionalName}"></div>
             <span th:each="license,iter: ${licenses}">
                 <div style="margin-bottom: -30px" th:text="${license}"></div>
             </span>
