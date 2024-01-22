@@ -24,6 +24,7 @@ import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/mo
 import { AnestheticReportAnthropometricDataComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-anthropometric-data/anesthetic-report-anthropometric-data.component';
 import { AnestheticReportClinicalEvaluationComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-clinical-evaluation/anesthetic-report-clinical-evaluation.component';
 import { AnestheticReportAnestheticHistoryComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-anesthetic-history/anesthetic-report-anesthetic-history.component';
+import { AnestheticReportUsualMedicationComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-usual-medication/anesthetic-report-usual-medication.component';
 // dialogs
 import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
 import { AddAnthropometricComponent } from './dialogs/add-anthropometric/add-anthropometric.component';
@@ -115,6 +116,7 @@ import { AnestheticReportDockPopupComponent } from './components/anesthetic-repo
 		AnestheticReportAnthropometricDataComponent,
 		AnestheticReportClinicalEvaluationComponent,
 		AnestheticReportAnestheticHistoryComponent,
+		AnestheticReportUsualMedicationComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,

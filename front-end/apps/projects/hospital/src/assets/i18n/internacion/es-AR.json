@@ -361,6 +361,13 @@
 						"BOTH": "Ambas"
 					}
 				}
+			},
+			"usual-medication": {
+				"TITLE": "Medicación habitual",
+				"REGISTERED_USUAL_MEDICATION": "Medicación habitual registrada",
+				"ADD_USUAL_MEDICATION": "+ Agregar medicación habitual",
+				"ADD_MEDICATION": "Agregar medicación habitual",
+				"USUAL_MEDICATION": "Medicación habitual"
 			}
 		},
 		"clinical-assessment-diagnosis": {
