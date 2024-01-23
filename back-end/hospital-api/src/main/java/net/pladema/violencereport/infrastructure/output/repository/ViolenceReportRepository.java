@@ -2,6 +2,7 @@ package net.pladema.violencereport.infrastructure.output.repository;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.violencereport.domain.ViolenceReportBo;
+import net.pladema.violencereport.domain.ViolenceReportSituationEvolutionBo;
 import net.pladema.violencereport.infrastructure.output.repository.entity.ViolenceReport;
 
 import org.springframework.data.jpa.repository.Query;
@@ -54,5 +55,12 @@ public interface ViolenceReportRepository extends SGXAuditableEntityJPARepositor
 			"WHERE vr.patientId = :patientId " +
 			"AND vr.situationId = :situationId")
 	Short getSituationLastEvolutionId(@Param("patientId") Integer patientId, @Param("situationId") Short situationId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT NEW net.pladema.violencereport.domain.ViolenceReportSituationEvolutionBo(vr.situationId, vr.evolutionId, vr.episodeDate, vr.creationable.createdOn, up.pk.personId) " +
+			"FROM ViolenceReport vr " +
+			"JOIN UserPerson up on (up.pk.userId = vr.creationable.createdBy) " +
+			"ORDER BY vr.creationable.createdOn DESC")
+    List<ViolenceReportSituationEvolutionBo> getPatientHistoric(@Param("patientId") Integer patientId);
 
 }

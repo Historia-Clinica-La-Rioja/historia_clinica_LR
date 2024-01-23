@@ -2,7 +2,11 @@ package net.pladema.violencereport.infrastructure.input.rest;
 
 import javax.validation.Valid;
 
+import net.pladema.violencereport.application.GetHistoricList;
 import net.pladema.violencereport.application.SaveSituationEvolution;
+
+import net.pladema.violencereport.domain.ViolenceReportSituationEvolutionBo;
+import net.pladema.violencereport.infrastructure.input.rest.dto.ViolenceReportSituationEvolutionDto;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +34,8 @@ import net.pladema.violencereport.infrastructure.input.rest.dto.ViolenceReportDt
 import net.pladema.violencereport.infrastructure.input.rest.dto.ViolenceReportSituationDto;
 import net.pladema.violencereport.infrastructure.input.rest.mapper.ViolenceReportMapper;
 
+import java.util.List;
+
 @Slf4j
 @Tag(name = "Violence report", description = "Controller used to handle violence report related operations")
 @RestController
@@ -48,6 +54,8 @@ public class ViolenceReportController {
 	private GetLastSituationEvolutionReport getLastSituationEvolutionReport;
 
 	private SaveSituationEvolution saveSituationEvolution;
+
+	private GetHistoricList getHistoricList;
 
 	@PostMapping(value = "/patient/{patientId}")
 	public Integer saveNewViolenceReport(@PathVariable("institutionId") Integer institutionId,
@@ -96,6 +104,15 @@ public class ViolenceReportController {
 		ViolenceReportBo violenceReportBo = parseViolenceReportDtoWithSituationId(patientId, situationId, violenceReport);
 		Integer result = saveSituationEvolution.run(violenceReportBo);
 		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@GetMapping(value = "/patient/{patientId}/historic")
+	public List<ViolenceReportSituationEvolutionDto> getHistoric(@PathVariable("institutionId") Integer institutionId, @PathVariable("patientId") Integer patientId) {
+		log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
+		List<ViolenceReportSituationEvolutionBo> violenceReportSituationEvolutionBos = getHistoricList.run(patientId);
+		List<ViolenceReportSituationEvolutionDto> result = violenceReportMapper.toViolenceReportSituationEvolutionDtoList(violenceReportSituationEvolutionBos);
+		log.debug("Output -> result {}", result);
 		return result;
 	}
 

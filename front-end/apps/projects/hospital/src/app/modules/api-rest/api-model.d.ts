@@ -4581,6 +4581,14 @@ export interface ViolenceReportSituationDto {
     violenceTypes: string[];
 }
 
+export interface ViolenceReportSituationEvolutionDto {
+    createdOn: DateTimeDto;
+    episodeDate: DateDto;
+    evolutionId: number;
+    professionalFullName: string;
+    situationId: number;
+}
+
 export interface ViolenceReportVictimDto {
     canReadAndWrite: boolean;
     disabilityData: ViolenceReportDisabilityDto;
