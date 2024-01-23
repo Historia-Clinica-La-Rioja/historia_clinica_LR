@@ -539,6 +539,12 @@ const messages = {
             },
             addRelated: 'Agregar plan',
         },
+        vclinichistoryaudit: {
+            name: 'Auditoria de Acceso',
+            fields: {
+
+            }
+        },
         snomedgroups: {
             name: 'Grupo de terminología |||| Grupos de terminología',
             fields: {

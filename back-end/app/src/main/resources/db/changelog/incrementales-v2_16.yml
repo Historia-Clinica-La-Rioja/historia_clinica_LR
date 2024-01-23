@@ -944,3 +944,22 @@ databaseChangeLog:
                     constraints:
                       references: sector_type(id)
                       foreignKeyName: FK_clinic_history_audit_sector_type
+
+    - changeSet:
+        id: update-create-clinic-history-audit-view
+        comment: create view v_clinic_history_audit
+        author: amurrie
+        changes:
+          - createView:
+              - viewName: v_clinic_history_audit
+              - replaceIfExists:  true
+              - fullDefinition: false
+              - selectQuery: |-
+                  (select cha.id ,per.first_name ,per.last_name , pe.name_self_determination,it.description, per.identification_number ,u.username ,date(cha.access_date) ,cha.reason_id,cha.observations,cha.scope, i.name  
+                   from clinic_history_audit cha
+                   join patient p  on p.id = cha.patient_id
+                   join person per on per.id = p.person_id
+                   join person_extended pe on pe.person_id = per.id  
+                   join institution i on  i.id = cha.institution_id
+                   join users u on u.id = cha.user_id
+                   join identification_type it on it.id = per.identification_type_id)

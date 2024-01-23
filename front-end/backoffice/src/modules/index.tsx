@@ -76,7 +76,7 @@ import hierarchicalunitrelationships from "./hierarchicalunitrelationships";
 import hierarchicalunitstaff from "./hierarchicalunitstaff";
 import institutionuserpersons from "./institutionuserpersons";
 import movestudies from './movestudies';
-import clinichistoryaudit from './clinichistoryaudit';
+import vclinichistoryaudit from './vclinichistoryaudit';
 
 import hierarchicalunitsectors from './hierarchicalunitsectors';
 import rules from './rules';
@@ -219,7 +219,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="equipment" {...equipment} />,
     <Resource name="modality" {...modality} />,
     <Resource name="movestudies" {...movestudies(permissions)} />,
-    <Resource name="clinichistoryaudit" {...clinichistoryaudit(permissions)} />,
+    <Resource name="vclinichistoryaudit" {...vclinichistoryaudit(permissions)} />,
 
     <Resource name="snomedgroupconcepts" />,
     <Resource name="snomedrelatedgroups"  {...snomedrelatedgroups} />,
