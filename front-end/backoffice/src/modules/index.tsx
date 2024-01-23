@@ -39,6 +39,7 @@ import {
     ROOT,
     ADMINISTRADOR,
     ADMINISTRADOR_DE_ACCESO_DOMINIO,
+    AUDITORIA_DE_ACCESO,
 } from './roles';
 import snomedconcepts from './snomedconcepts';
 import snomedrelatedgroups from './snomedrelatedgroups';
@@ -75,6 +76,8 @@ import hierarchicalunitrelationships from "./hierarchicalunitrelationships";
 import hierarchicalunitstaff from "./hierarchicalunitstaff";
 import institutionuserpersons from "./institutionuserpersons";
 import movestudies from './movestudies';
+import clinichistoryaudit from './clinichistoryaudit';
+
 import hierarchicalunitsectors from './hierarchicalunitsectors';
 import rules from './rules';
 import institutionalgroups from './institutionalgroups';
@@ -113,7 +116,7 @@ const resourcesAdminRoot = (permissions: SGXPermissions) => [
 
 const resourcesFor = (permissions: SGXPermissions) =>
     permissions.hasAnyAssignment(
-        ROOT, ADMINISTRADOR, ADMINISTRADOR_DE_ACCESO_DOMINIO
+        ROOT, ADMINISTRADOR, ADMINISTRADOR_DE_ACCESO_DOMINIO,AUDITORIA_DE_ACCESO
     ) ? resourcesAdminRoot(permissions): resourcesAdminInstitucional(permissions);
 
 const resources = (permissions: SGXPermissions) => [
@@ -216,6 +219,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="equipment" {...equipment} />,
     <Resource name="modality" {...modality} />,
     <Resource name="movestudies" {...movestudies(permissions)} />,
+    <Resource name="clinichistoryaudit" {...clinichistoryaudit(permissions)} />,
 
     <Resource name="snomedgroupconcepts" />,
     <Resource name="snomedrelatedgroups"  {...snomedrelatedgroups} />,

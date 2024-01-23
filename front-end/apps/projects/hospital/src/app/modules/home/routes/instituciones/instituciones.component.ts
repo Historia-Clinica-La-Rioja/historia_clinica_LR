@@ -119,7 +119,8 @@ export class InstitucionesComponent {
 			.filter((ra) => ra.role === ERole.ROOT ||
 				ra.role === ERole.ADMINISTRADOR ||
 				ra.role === ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE ||
-				ra.role === ERole.ADMINISTRADOR_DE_ACCESO_DOMINIO).length > 0;
+				ra.role === ERole.ADMINISTRADOR_DE_ACCESO_DOMINIO ||
+				ra.role === ERole.AUDITORIA_DE_ACCESO).length > 0;
 	}
 
 	hasAccessToWebappInstitutions(allRoles: RoleAssignmentDto[]) {
