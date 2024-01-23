@@ -20,7 +20,7 @@ import net.pladema.questionnaires.general.getall.domain.service.GetAllService;
 
 @RestController
 @RequestMapping
-@Tag(name = "Patient consultation - General", description = "Patient consultation - General")
+@Tag(name = "Patient questionnaires and assessments", description = "Patient questionnaires and assessments")
 public class GetAllController {
 
 	private final Logger logger = LoggerFactory.getLogger(GetAllController.class);

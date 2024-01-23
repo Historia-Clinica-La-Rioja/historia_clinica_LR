@@ -17,7 +17,7 @@ import net.pladema.questionnaires.general.create.domain.service.CreateQuestionna
 
 @RestController
 @RequestMapping
-@Tag(name = "Patient consultation - General", description = "Patient consultation - General")
+@Tag(name = "Patient questionnaires and assessments", description = "Patient questionnaires and assessments")
 public class CreateQuestionnaireController {
 
 	@Autowired

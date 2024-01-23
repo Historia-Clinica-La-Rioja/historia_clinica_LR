@@ -33,7 +33,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping
-@Tag(name = "Patient consultation - General", description = "Patient consultation - General")
+@Tag(name = "Patient questionnaires and assessments", description = "Patient questionnaires and assessments")
 public class GetQuestionnairePdfController {
 	private final Logger logger = LoggerFactory.getLogger(GetQuestionnairePdfController.class);
 
