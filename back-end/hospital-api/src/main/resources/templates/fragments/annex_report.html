@@ -183,36 +183,16 @@
         }
 
         /* Procedure lines */
-
-        .procedure-lines-code {
-            width: 60px;
+        .procedure-lines-table table,
+        .procedure-lines-table td,
+        .procedure-lines-table th {
+            border: 1px solid black;
         }
 
-        .procedure-lines-description {
-            width: 410px;
+        .procedure-lines-table td,
+        .procedure-lines-table th {
+            padding: 1em;
         }
-
-        .procedure-lines-rate {
-            width: 68px;
-        }
-
-        .procedure-lines-amount {
-            width: 52px;
-        }
-
-        .procedure-lines-patient-rate {
-            width: 60px;
-        }
-
-        .procedure-lines-ingress
-        .procedure-lines-egress
-        .procedure-lines-total-label {
-            width: 60px;
-        }
-        .procedure-lines-total-value {
-            width: 60px;
-        }
-
 
 
     </style>
@@ -331,26 +311,42 @@
     </div>
 
     <!-- Procedure lines-->
-    <div th:if="${showProcedureLines}">
-        <div class="procedure-lines-code">CÓDIGO</div>
-        <div class="procedure-lines-description">PRESTACIÓN</div>
-        <div class="procedure-lines-rate">$ UNITARIO</div>
-        <div class="procedure-lines-amount">CANTIDAD</div>
-        <div class="procedure-lines-patient-rate">IMPORTE</div>
+    <div th:if="${showProcedureLines}" class="procedure-lines-table">
+        <table>
+            <colgroup>
+                <col style="width: 10%;"/>
+                <col style="width: 50%;"/>
+                <col style="width: 15%;"/>
+                <col style="width: 5%;"/>
+                <col style="width: 25%;"/>
+            </colgroup>
+            <tbody>
+            <tr>
+                <th class="thead-light"> CÓDIGO </th>
+                <th class="thead-light"> PRESTACIÓN </th>
+                <th class="thead-light"> $ UNITARIO </th>
+                <th class="thead-light"> CANTIDAD </th>
+                <th class="thead-light"> IMPORTE </th>
+            </tr>
+            <tr th:if="${showProcedureLines}" th:each="procedureLine, iter: ${procedureLines}">
+                <td th:text="${procedureLine.code}"></td>
+                <td th:text="${procedureLine.description}"></td>
+                <td th:text="${#numbers.formatDecimal(procedureLine.rate, 1, 2)}"></td>
+                <td th:text="${procedureLine.amount}"></td>
+                <td th:text="${#numbers.formatDecimal(procedureLine.patientRate, 1, 2)}"></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <strong>Fecha ingreso:</strong> <span th:text="${#temporals.format(procedureLinesIngressDate, 'dd/MM/yyyy HH:mm:SS')}"></span>
+                    <strong>Fecha egreso:</strong> <span th:text="${#temporals.format(procedureLinesEgressDate, 'dd/MM/yyyy HH:mm:SS')}"></span>
+                </td>
+                <td><strong>TOTAL</strong></td>
+                <td th:text="${#numbers.formatDecimal(procedureLinesTotal, 1, 2)}"></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-    <div th:if="${showProcedureLines}" th:each="procedureLine, iter: ${procedureLines}">
-        <div th:text="${procedureLine.code}" class="procedure-lines-code">1.04</div>
-        <div th:text="${procedureLine.description}" class="procedure-lines-description">Atención en guardia o consultorio externo</div>
-        <div th:text="${#numbers.formatDecimal(procedureLine.rate, 1, 2)}" class="procedure-lines-rate">357,78</div>
-        <div th:text="${procedureLine.amount}" class="procedure-lines-amount">10</div>
-        <div th:text="${#numbers.formatDecimal(procedureLine.patientRate, 1, 2)}" class="procedure-lines-patient-rate">3577,8</div>
-    </div>
-    <div th:if="${showProcedureLines}">
-        <div class="procedure-lines-ingress-label">Fecha ingreso: <span th:text="${procedureLinesIngressDate}">11/01/2024 12:05:03</span></div>
-        <div class="procedure-lines-egress-label">Fecha egreso: <span th:text="${procedureLinesEgressDate}">11/01/2024 12:07:13</span></div>
-        <div class="procedure-lines-total-label">TOTAL</div>
-        <div th:text="${procedureLinesTotal}" class="procedure-lines-ingress-value">3577,8</div>
-    </div>
+
 
     <div>
         <div class="internment">INTERNACIÓN</div>

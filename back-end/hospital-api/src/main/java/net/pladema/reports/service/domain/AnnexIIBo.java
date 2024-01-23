@@ -1,6 +1,7 @@
 package net.pladema.reports.service.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.Getter;
@@ -55,9 +56,9 @@ public class AnnexIIBo {
 
 	private List<AnnexIIProcedureBo> procedures;
 
-	private LocalDate proceduresIngressDate;
+	private LocalDateTime proceduresIngressDate;
 
-	private LocalDate proceduresEgressDate;
+	private LocalDateTime proceduresEgressDate;
 
 	private Float proceduresTotal;
 
