@@ -171,6 +171,10 @@ public enum AppFeature implements Feature {
 	@Label("Indica si están habilitados los reportes de violencias en desarrollo")
 	ENABLE_VIOLENCE_REPORT_DEVELOPMENT,
 
+	@Label("Indica si está habilitada la funcionalidad para asignar turnos desde el módulo centro de llamado")
+	HABILITAR_TURNOS_CENTRO_LLAMADO,
+
+
 	;
 
 	public boolean isActive() {
