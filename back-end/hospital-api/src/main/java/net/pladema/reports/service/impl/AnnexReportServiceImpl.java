@@ -89,11 +89,13 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 							result.getConsultationOrAttentionDate().atStartOfDay(),
 							documentService.getProcedureStateFromDocument(documentId)
 						);
-
-						result.setProcedures(mapProcedures(billedProcedures));
-						result.setProceduresIngressDate(outpatientconsultationData.getConsultationDate());
-						result.setProceduresEgressDate(outpatientconsultationData.getConsultationDate());
-						result.setProceduresTotal(billedProcedures.getPatientTotal());
+						result.setShowProcedures(billedProcedures.isEnabled());
+						if (billedProcedures.isEnabled()) {
+							result.setProcedures(mapProcedures(billedProcedures));
+							result.setProceduresIngressDate(outpatientconsultationData.getConsultationDate());
+							result.setProceduresEgressDate(outpatientconsultationData.getConsultationDate());
+							result.setProceduresTotal(billedProcedures.getPatientTotal());
+						}
 
 						LOG.debug("Output -> {}", result);
 						return result;
@@ -269,6 +271,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 		ctx.put("procedureLinesIngressDate", reportDataDto.getProceduresIngressDate());
 		ctx.put("procedureLinesEgressDate", reportDataDto.getProceduresEgressDate());
 		ctx.put("procedureLinesTotal", reportDataDto.getProceduresTotal());
+		ctx.put("showProcedureLines", reportDataDto.getShowProcedures());
 
         return ctx;
     }

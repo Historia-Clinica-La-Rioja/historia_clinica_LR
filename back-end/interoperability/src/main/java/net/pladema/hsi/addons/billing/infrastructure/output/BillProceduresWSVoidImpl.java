@@ -24,6 +24,6 @@ public class BillProceduresWSVoidImpl implements BillProceduresPort {
 	}
 
 	private BillProceduresResponseBo buildResponse() {
-		return new BillProceduresResponseBo(Collections.emptyList(), 0.0F, 0.0F, "", "");
+		return new BillProceduresResponseBo(Collections.emptyList(), 0.0F, 0.0F, "", "", false);
 	}
 }

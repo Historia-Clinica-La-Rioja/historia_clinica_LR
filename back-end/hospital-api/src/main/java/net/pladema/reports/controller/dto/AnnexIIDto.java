@@ -51,4 +51,6 @@ public class AnnexIIDto {
 	private LocalDate proceduresEgressDate;
 
 	private Float proceduresTotal;
+
+	private Boolean showProcedures;
 }

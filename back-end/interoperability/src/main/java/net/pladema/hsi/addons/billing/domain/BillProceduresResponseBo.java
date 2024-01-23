@@ -11,4 +11,5 @@ public class BillProceduresResponseBo {
 	private Float patientTotal;
 	private String medicalCoverageName;
 	private String medicalCoverageCuit;
+	private boolean enabled;
 }

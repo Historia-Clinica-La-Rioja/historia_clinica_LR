@@ -61,6 +61,8 @@ public class AnnexIIBo {
 
 	private Float proceduresTotal;
 
+	private Boolean showProcedures;
+
     public AnnexIIBo(AnnexIIOutpatientVo annexIIOutpatientVo){
         this.establishment = annexIIOutpatientVo.getEstablishment();
         this.completePatientName = annexIIOutpatientVo.getCompletePatientName();
@@ -105,5 +107,4 @@ public class AnnexIIBo {
     	else
     		return this.getAttentionDate();
     }
-
 }

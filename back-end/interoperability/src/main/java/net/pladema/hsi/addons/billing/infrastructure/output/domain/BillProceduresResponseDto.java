@@ -42,7 +42,8 @@ public class BillProceduresResponseDto {
 				this.getMedicalCoverageTotal(),
 				this.getPatientTotal(),
 				this.getMedicalCoverageName(),
-				this.getMedicalCoverageCuit()
+				this.getMedicalCoverageCuit(),
+				true
 		);
 	}
 }

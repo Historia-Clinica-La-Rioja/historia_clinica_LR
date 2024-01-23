@@ -15,13 +15,16 @@ public class BillProceduresResponseDto {
 	private String medicalCoverageName;
 	private String medicalCoverageCuit;
 
+	private boolean enabled;
+
 	public static BillProceduresResponseDto fromBo(BillProceduresResponseBo response) {
 		return new BillProceduresResponseDto(
 				response.getProcedures().stream().map(BillProceduresResponseItemDto::fromBo).collect(Collectors.toList()),
 				response.getMedicalCoverageTotal(),
 				response.getPatientTotal(),
 				response.getMedicalCoverageName(),
-				response.getMedicalCoverageCuit()
+				response.getMedicalCoverageCuit(),
+				response.isEnabled()
 		);
 	}
 }

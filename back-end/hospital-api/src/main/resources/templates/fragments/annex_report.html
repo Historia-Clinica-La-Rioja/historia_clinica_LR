@@ -331,21 +331,21 @@
     </div>
 
     <!-- Procedure lines-->
-    <div>
+    <div th:if="${showProcedureLines}">
         <div class="procedure-lines-code">CÓDIGO</div>
         <div class="procedure-lines-description">PRESTACIÓN</div>
         <div class="procedure-lines-rate">$ UNITARIO</div>
         <div class="procedure-lines-amount">CANTIDAD</div>
         <div class="procedure-lines-patient-rate">IMPORTE</div>
     </div>
-    <div th:each="procedureLine, iter: ${procedureLines}">
+    <div th:if="${showProcedureLines}" th:each="procedureLine, iter: ${procedureLines}">
         <div th:text="${procedureLine.code}" class="procedure-lines-code">1.04</div>
         <div th:text="${procedureLine.description}" class="procedure-lines-description">Atención en guardia o consultorio externo</div>
         <div th:text="${#numbers.formatDecimal(procedureLine.rate, 1, 2)}" class="procedure-lines-rate">357,78</div>
         <div th:text="${procedureLine.amount}" class="procedure-lines-amount">10</div>
         <div th:text="${#numbers.formatDecimal(procedureLine.patientRate, 1, 2)}" class="procedure-lines-patient-rate">3577,8</div>
     </div>
-    <div>
+    <div th:if="${showProcedureLines}">
         <div class="procedure-lines-ingress-label">Fecha ingreso: <span th:text="${procedureLinesIngressDate}">11/01/2024 12:05:03</span></div>
         <div class="procedure-lines-egress-label">Fecha egreso: <span th:text="${procedureLinesEgressDate}">11/01/2024 12:07:13</span></div>
         <div class="procedure-lines-total-label">TOTAL</div>
