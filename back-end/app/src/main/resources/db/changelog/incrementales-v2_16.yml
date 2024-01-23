@@ -210,12 +210,12 @@ databaseChangeLog:
                       nullable: false
                     name: snomed_id
                     type: int
-                - addPrimaryKey:
-                    clustered: true
-                    columnNames: report_id, snomed_id
-                    constraintName: PK_violence_type
-                    tableName: violence_type
-                    validate: true
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, snomed_id
+              constraintName: PK_violence_type
+              tableName: violence_type
+              validate: true
 
     - changeSet:
         id: violence_modality-createTable
@@ -237,12 +237,12 @@ databaseChangeLog:
                       nullable: false
                     name: snomed_id
                     type: int
-                - addPrimaryKey:
-                    clustered: true
-                    columnNames: report_id, snomed_id
-                    constraintName: PK_violence_modality
-                    tableName: violence_modality
-                    validate: true
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, snomed_id
+              constraintName: PK_violence_modality
+              tableName: violence_modality
+              validate: true
 
     - changeSet:
         id: violence_report_aggressor-createTable
@@ -351,12 +351,12 @@ databaseChangeLog:
                 - column:
                     name: other_health_system_organization
                     type: varchar(20)
-                - addPrimaryKey:
-                    clustered: true
-                    columnNames: report_id, health_system_organization_id
-                    constraintName: PK_health_system_organization_coordination
-                    tableName: health_system_organization_coordination
-                    validate: true
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, health_system_organization_id
+              constraintName: PK_health_system_organization_coordination
+              tableName: health_system_organization_coordination
+              validate: true
 
     - changeSet:
         id: health_institution_organization_coordination-createTable
@@ -381,12 +381,12 @@ databaseChangeLog:
                 - column:
                     name: other_health_institution_organization
                     type: varchar(20)
-                - addPrimaryKey:
-                    clustered: true
-                    columnNames: report_id, health_institution_organization_id
-                    constraintName: PK_health_institution_organization_coordination
-                    tableName: health_institution_organization_coordination
-                    validate: true
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, health_institution_organization_id
+              constraintName: PK_health_institution_organization_coordination
+              tableName: health_institution_organization_coordination
+              validate: true
 
     - changeSet:
         id: municipal_state_device-createTable
@@ -408,12 +408,12 @@ databaseChangeLog:
                       nullable: false
                     name: municipal_state_device_id
                     type: smallint
-                - addPrimaryKey:
-                    clustered: true
-                    columnNames: report_id, municipal_state_device_id
-                    constraintName: PK_municipal_state_device
-                    tableName: municipal_state_device
-                    validate: true
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, municipal_state_device_id
+              constraintName: PK_municipal_state_device
+              tableName: municipal_state_device
+              validate: true
 
     - changeSet:
         id: provincial_state_device-createTable
@@ -435,12 +435,12 @@ databaseChangeLog:
                       nullable: false
                     name: provincial_state_device_id
                     type: smallint
-                - addPrimaryKey:
-                    clustered: true
-                    columnNames: report_id, provincial_state_device_id
-                    constraintName: PK_provincial_state_device
-                    tableName: provincial_state_device
-                    validate: true
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, provincial_state_device_id
+              constraintName: PK_provincial_state_device
+              tableName: provincial_state_device
+              validate: true
 
     - changeSet:
         id: national_state_device-createTable
@@ -462,12 +462,12 @@ databaseChangeLog:
                       nullable: false
                     name: national_state_device_id
                     type: smallint
-                - addPrimaryKey:
-                    clustered: true
-                    columnNames: report_id, national_state_device_id
-                    constraintName: PK_national_state_device
-                    tableName: national_state_device
-                    validate: true
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, national_state_device_id
+              constraintName: PK_national_state_device
+              tableName: national_state_device
+              validate: true
 
     - changeSet:
         id: victim_keeper_report_place-createTable
@@ -489,12 +489,12 @@ databaseChangeLog:
                       nullable: false
                     name: report_place_id
                     type: smallint
-                - addPrimaryKey:
-                    clustered: true
-                    columnNames: report_id, report_place_id
-                    constraintName: PK_victim_keeper_report_place
-                    tableName: victim_keeper_report_place
-                    validate: true
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, report_place_id
+              constraintName: PK_victim_keeper_report_place
+              tableName: victim_keeper_report_place
+              validate: true
 
     - changeSet:
         id: institution_report_reason-createTable
@@ -516,12 +516,12 @@ databaseChangeLog:
                       nullable: false
                     name: reason_id
                     type: smallint
-                - addPrimaryKey:
-                    clustered: true
-                    columnNames: report_id, reason_id
-                    constraintName: PK_institution_report_reason
-                    tableName: institution_report_reason
-                    validate: true
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, reason_id
+              constraintName: PK_institution_report_reason
+              tableName: institution_report_reason
+              validate: true
 
     - changeSet:
         id: institution_report_place-createTable
@@ -546,12 +546,12 @@ databaseChangeLog:
                 - column:
                     name: other_report_place
                     type: varchar(20)
-                - addPrimaryKey:
-                    clustered: true
-                    columnNames: report_id, report_place_id
-                    constraintName: PK_institution_report_place
-                    tableName: institution_report_place
-                    validate: true
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, report_place_id
+              constraintName: PK_institution_report_place
+              tableName: institution_report_place
+              validate: true
 
     - changeSet:
         id: sexual_violence_action-createTable
@@ -573,9 +573,9 @@ databaseChangeLog:
                       nullable: false
                     name: action_id
                     type: smallint
-                - addPrimaryKey:
-                    clustered: true
-                    columnNames: report_id, action_id
-                    constraintName: PK_sexual_violence_action
-                    tableName: sexual_violence_action
-                    validate: true
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, action_id
+              constraintName: PK_sexual_violence_action
+              tableName: sexual_violence_action
+              validate: true
