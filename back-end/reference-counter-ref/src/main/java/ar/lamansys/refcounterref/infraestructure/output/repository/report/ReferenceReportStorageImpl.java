@@ -79,11 +79,11 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 
 	@Override
 	public Page<ReferenceReportBo> fetchReferencesReport(ReferenceReportFilterBo filter, Pageable pageable) {
-		String outpatientDateFilter = " AND (oc.start_date >= :from AND oc.start_date <= :to) ";
-		String odontologyDateFilter = " AND (oc.performed_date >= :from AND oc.performed_date <= :to) ";
+		String outpatientDateFilterAndCommonData = " (oc.start_date >= :from AND oc.start_date <= :to) AND (r.deleted = FALSE OR r.deleted IS NULL) AND p.type_id <> " + REJECTED_PATIENT_TYPE;
+		String odontologyDateFilterAndCommonData = " (oc.performed_date >= :from AND oc.performed_date <= :to) AND (r.deleted = FALSE OR r.deleted IS NULL) AND p.type_id <> " + REJECTED_PATIENT_TYPE;
 
-		String outpatientConsultationCondition = getCondition(filter, outpatientDateFilter);
-		String odontologyConsultationCondition = getCondition(filter, odontologyDateFilter);
+		String outpatientConsultationCondition = getCondition(filter, outpatientDateFilterAndCommonData);
+		String odontologyConsultationCondition = getCondition(filter, odontologyDateFilterAndCommonData);
 
 		String sqlQueryData = SELECT_INFO + getOutpatientReferenceFromStatement(filter) + outpatientConsultationCondition + " UNION ALL " +
 				SELECT_INFO + getOdontologyReferenceFromStatement(filter) + odontologyConsultationCondition;
@@ -93,13 +93,13 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 	}
 
 
-	private String getCondition(ReferenceReportFilterBo filter, String dateFilter) {
+	private String getCondition(ReferenceReportFilterBo filter, String dateFilterAndCommonData) {
 		StringBuilder condition = new StringBuilder();
 		String conditionWithoutClassifiedData = getCommonFilterDataIncludingProfessional(filter);
-		condition.append(dateFilter);
+		condition.append("(".concat(dateFilterAndCommonData));
 		condition.append(conditionWithoutClassifiedData);
-		condition.append(") OR ((clr.role_id IN (:userRoles) AND cl.classified IS TRUE AND clr.deleted IS FALSE) ");
-		condition.append(dateFilter);
+		condition.append(") OR ((clr.role_id IN (:userRoles) AND cl.classified IS TRUE AND clr.deleted IS FALSE) AND");
+		condition.append(dateFilterAndCommonData);
 		condition.append(getSharedFilterData(filter));
 		condition.append(")");
 		return condition.toString();
@@ -206,8 +206,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"LEFT JOIN {h-schema}care_line cl ON (r.care_line_id = cl.id) " +
 				"LEFT JOIN {h-schema}counter_reference cr ON (r.id = cr.reference_id) " +
 				"LEFT JOIN {h-schema}care_line_role clr ON (clr.care_line_id = cl.id) " +
-				"WHERE ((r.deleted = FALSE OR r.deleted IS NULL) " +
-				"AND p.type_id <> " + REJECTED_PATIENT_TYPE;
+				"WHERE ";
 	}
 
 	private String getOdontologyReferenceFromStatement(ReferenceReportFilterBo filter) {
@@ -233,8 +232,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"LEFT JOIN {h-schema}care_line cl ON (r.care_line_id = cl.id) " +
 				"LEFT JOIN {h-schema}counter_reference cr ON (r.id = cr.reference_id) " +
 				"LEFT JOIN {h-schema}care_line_role clr ON (clr.care_line_id = cl.id) " +
-				"WHERE ((r.deleted = FALSE OR r.deleted IS NULL) " +
-				"AND p.type_id <> " + REJECTED_PATIENT_TYPE;
+				"WHERE ";
 	}
 
 	private List<ReferenceReportBo> mapToReferenceReportBo(List<Object[]> queryResult) {
