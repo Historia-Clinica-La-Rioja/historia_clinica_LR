@@ -1,0 +1,45 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <span mat-dialog-title
+        [translate]="'internaciones.anesthesic-report.record.ADD_RECORD_TITLE'"></span>
+    <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <ng-container *ngIf="!data.anestheticReportRecordService.snomedConcept else record">
+        <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else recordTypeaheadSearch"
+            [label]="'internaciones.anesthesic-report.record.RECORD'"
+            (search)="data.anestheticReportRecordService.openSearchDialog($event)">
+        </app-concepts-search>
+
+        <ng-template #recordTypeaheadSearch>
+            <app-concept-typeahead-search [ecl]="data.anestheticReportRecordService.getECL()"
+                [placeholder]="'internaciones.anesthesic-report.record.RECORD'"
+                (conceptSelected)="data.anestheticReportRecordService.setConcept($event)">
+            </app-concept-typeahead-search>
+        </ng-template>
+    </ng-container>
+</div>
+
+<ng-template #record>
+    <form [formGroup]="form" (ngSubmit)="addRecord()">
+        <div fxLayout="column" fxLayoutGap="5px">
+            <mat-label [translate]="'internaciones.anesthesic-report.record.RECORD'">
+            </mat-label>
+            <mat-form-field appearance="outline">
+                <input data-id="record-input" matInput type="text" formControlName="snomed" name="snomed" readonly
+                    matTooltip="{{ data.anestheticReportRecordService.snomedConcept.pt }}">
+                <button data-id="clear-record" mat-button matSuffix color="warn" mat-icon-button
+                    (click)="data.anestheticReportRecordService.resetForm()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+            <div align="end">
+                <button data-id="record" mat-raised-button color="primary" type="submit">
+                    <span class="uppercase" [translate]="'buttons.ADD'"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+</ng-template>

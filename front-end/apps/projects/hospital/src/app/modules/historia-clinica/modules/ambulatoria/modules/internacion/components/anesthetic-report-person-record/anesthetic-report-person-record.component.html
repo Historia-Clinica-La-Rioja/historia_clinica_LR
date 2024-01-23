@@ -1,0 +1,26 @@
+<div fxLayout="column" fxLayoutGap="1vh">
+    <app-titled-content-card *ngIf="!service.isEmpty()"
+        title="{{ 'internaciones.anesthesic-report.record.REGISTERED_RECORDS' }}">
+        <div *ngFor="let record of (service.getRecord() | async); index as i; last as isLast">
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <span>{{ record.pt | titlecase }}</span>
+                <button type="button" mat-icon-button color="warn" (click)="service.remove(i)">
+                    <mat-icon>delete_outline</mat-icon>
+                </button>
+            </div>
+            <mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+        </div>
+    </app-titled-content-card>
+
+    <div>
+        <button data-id="add-record" mat-button color="primary" class="record-button" (click)="addRecord()">
+            {{ 'internaciones.anesthesic-report.record.ADD_RECORD' | translate }}
+        </button>
+    </div>
+
+    <mat-card>
+        <mat-card-content>
+            <ng-content select="[person-record-form]"></ng-content>
+        </mat-card-content>
+    </mat-card>
+</div>

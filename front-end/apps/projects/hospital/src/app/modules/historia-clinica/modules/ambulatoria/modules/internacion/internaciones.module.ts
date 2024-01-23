@@ -50,6 +50,8 @@ import { DeleteDocumentPopupComponent } from './dialogs/delete-document-popup/de
 import { MedicationComponent } from './components/medication/medication.component';
 import { AnesthesicReportAddProposedSurgeryComponent } from './dialogs/anesthesic-report-add-proposed-surgery/anesthesic-report-add-proposed-surgery.component';
 import { AnestheticReportPemedicationComponent } from './dialogs/anesthetic-report-pemedication/anesthetic-report-pemedication.component';
+import { AnestheticReportAddRecordComponent } from './dialogs/anesthetic-report-add-record/anesthetic-report-add-record.component';
+
 @NgModule({
 	declarations: [
 		// routing
@@ -93,6 +95,7 @@ import { AnestheticReportPemedicationComponent } from './dialogs/anesthetic-repo
 		DeleteDocumentPopupComponent,
 		AnesthesicReportAddProposedSurgeryComponent,
 		AnestheticReportPemedicationComponent,
+		AnestheticReportAddRecordComponent,
 	],
 	exports: [
 		InternmentEpisodeSummaryComponent,

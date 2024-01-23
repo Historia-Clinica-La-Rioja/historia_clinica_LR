@@ -384,6 +384,16 @@
 				"VIA_PLACEHOLDER": "Ingresar via",
 				"HOUR": "Hora",
 				"LAST_FOOD_INTAKE": "Última ingesta de comida:"
+			},
+			"record": {
+				"TITLE": "Antecedentes",
+				"REGISTERED_RECORDS": "Antecedentes registrados",
+				"ADD_RECORD": "+ Agregar antecedente",
+				"ADD_RECORD_TITLE": "Agregar antecedente",
+				"RECORD": "Antecedente",
+				"OBSERVATIONS": "Observaciones: ",
+				"ADD_OBSERVATIONS": "Agregar observaciones",
+				"ASA": "ASA"
 			}
 		},
 		"clinical-assessment-diagnosis": {
