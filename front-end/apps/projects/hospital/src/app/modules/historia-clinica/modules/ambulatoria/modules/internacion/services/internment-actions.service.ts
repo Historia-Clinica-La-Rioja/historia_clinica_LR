@@ -166,9 +166,11 @@ export class InternmentActionsService {
 				diagnosis: this.diagnosticos,
 			});
 			this.popUpOpenSubject.next(true);
+			this.dialogRefSubject.next(this.dialogRef);
 			this.dialogRef.afterClosed().pipe(take(1)).subscribe(() => {
 				delete this.dialogRef;
 				this.popUpOpenSubject.next(false);
+				this.dialogRefSubject.next(this.dialogRef);
 			});
 		} else {
 			if (this.dialogRef.isMinimized()) {

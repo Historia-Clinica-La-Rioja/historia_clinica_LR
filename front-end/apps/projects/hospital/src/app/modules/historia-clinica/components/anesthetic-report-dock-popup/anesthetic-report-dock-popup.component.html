@@ -43,8 +43,8 @@
 
         <app-new-consultation-expansion-section id="premedication-and-food-intake-expansion-section"
             [title]="'internaciones.anesthesic-report.premedication-and-food-intake.TITLE' | translate" icon="assignment"
-            [collapsed]="true" [isEmpty]="premedicationAndFoodIntakeService.isEmpty() && !formFoodIntake.value.lastFoodIntake" [hideBorder]="false">
-            <app-anesthetic-report-premedication-and-food-intake [service]="premedicationAndFoodIntakeService">
+            [collapsed]="true" [isEmpty]="anestheticReportPremedicationAndFoodIntakeService.isEmpty() && !formFoodIntake.value.lastFoodIntake" [hideBorder]="false">
+            <app-anesthetic-report-premedication-and-food-intake [service]="anestheticReportPremedicationAndFoodIntakeService">
                 <ng-container food-intake-form>
 
 					<form [formGroup]="formFoodIntake">
