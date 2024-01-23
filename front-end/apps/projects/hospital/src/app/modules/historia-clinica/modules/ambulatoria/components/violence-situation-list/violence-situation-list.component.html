@@ -1,21 +1,21 @@
 <div fxLayout="column" *ngFor="let vs of violenceSituations">
     <mat-list-item id="violence-situation-list">
-        <span fxFlex="20" class="situation-number" 
+        <span fxFlex="15" class="situation-number" 
             [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.SITUATION_NUMBER'"
             [translateParams]="{id: vs.situationId}">
         </span>
         <div fxLayout="column" fxFlex="15">
             <span class="violence-situation-header" [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.TYPE'"></span>
-            <div>
+            <div class="violence-types-modalities">
                 <span>{{vs.violenceTypes[0]}}</span>
-                <span *ngIf="vs.violenceTypes.length > 1">(+{{vs.violenceTypes.length}})</span>
+                <span *ngIf="vs.violenceTypes.length > 1">(+{{vs.violenceTypes.length - 1}})</span>
             </div>
         </div>
         <div fxLayout="column" fxFlex="15">
             <span class="violence-situation-header" [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.MODALITY'"></span>
-            <div>
+            <div class="violence-types-modalities">
                 <span>{{vs.violenceModalities[0]}}</span>
-                <span *ngIf="vs.violenceModalities.length > 1">(+{{vs.violenceModalities.length}})</span>
+                <span *ngIf="vs.violenceModalities.length > 1">(+{{vs.violenceModalities.length - 1}})</span>
             </div>
         </div>
         <div fxLayout="column" fxFlex="15">
